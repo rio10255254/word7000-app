@@ -6,6 +6,7 @@ import {
   filterWords,
   markKnown,
   markReview,
+  selectStudyWords,
   selectQuizWords,
   toggleFavorite,
   type ProgressState,
@@ -118,6 +119,22 @@ describe('library and quiz helpers', () => {
         initial: 'B',
         level: 'Core 1',
       }).every((word) => word.group === 'Core 1' && word.word.toUpperCase().startsWith('B')),
+    ).toBe(true);
+  });
+
+  test('selectStudyWords uses the same filters for the learning flow', () => {
+    const state = toggleFavorite(
+      markReview(markKnown(emptyProgress(), sampleWords[0].id, today), sampleWords[1].id, today),
+      sampleWords[0].id,
+    );
+
+    expect(selectStudyWords(sampleWords, state, 'mastered').map((word) => word.id)).toEqual([sampleWords[0].id]);
+    expect(selectStudyWords(sampleWords, state, 'review').map((word) => word.id)).toEqual([sampleWords[1].id]);
+    expect(
+      selectStudyWords(sampleWords, state, 'all', {
+        initial: 'C',
+        level: 'Core 1',
+      }).every((word) => word.group === 'Core 1' && word.word.toUpperCase().startsWith('C')),
     ).toBe(true);
   });
 });

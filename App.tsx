@@ -20,6 +20,7 @@ import {
   Target,
   Trophy,
   User,
+  X,
 } from 'lucide-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -35,7 +36,9 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  type StyleProp,
   View,
+  type ViewStyle,
 } from 'react-native';
 import { sampleWords, type WordEntry } from './src/data/words';
 import { scrollThumbOffset, wordWindowStartFromSlider } from './src/lib/libraryNavigation';
@@ -46,6 +49,7 @@ import {
   markKnown,
   markReview,
   selectQuizWords,
+  selectStudyWords,
   toggleFavorite,
   type QuizOption,
   type LibraryFilter,
@@ -121,16 +125,22 @@ export default function App() {
   const appScrollRef = useRef<ScrollView | null>(null);
   const launchAnim = useRef(new Animated.Value(0)).current;
   const screenAnim = useRef(new Animated.Value(1)).current;
+  const cardAnim = useRef(new Animated.Value(1)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
   const [progressReady, setProgressReady] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
+  const [studyFilter, setStudyFilter] = useState<LibraryFilter>('all');
+  const [studyLevel, setStudyLevel] = useState('all');
+  const [studyInitial, setStudyInitial] = useState('all');
+  const [studyFiltersOpen, setStudyFiltersOpen] = useState(false);
   const [quizIndex, setQuizIndex] = useState(4);
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
   const [answeredQuizWord, setAnsweredQuizWord] = useState<WordEntry | null>(null);
   const [lockedQuizOptions, setLockedQuizOptions] = useState<QuizOption[] | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>('all');
   const [activeLevel, setActiveLevel] = useState('all');
   const [activeInitial, setActiveInitial] = useState('all');
@@ -146,7 +156,15 @@ export default function App() {
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
 
   const stats = useMemo(() => computeStats(sampleWords, progress), [progress]);
-  const studyWord = sampleWords[wordIndex % sampleWords.length];
+  const studyWords = useMemo(
+    () =>
+      selectStudyWords(sampleWords, progress, studyFilter, {
+        initial: studyInitial,
+        level: studyLevel,
+      }),
+    [progress, studyFilter, studyInitial, studyLevel],
+  );
+  const studyWord = studyWords.length > 0 ? studyWords[wordIndex % studyWords.length] : null;
   const quizWords = useMemo(
     () =>
       selectQuizWords(sampleWords, progress, quizFilter, {
@@ -180,6 +198,23 @@ export default function App() {
         translateY: screenAnim.interpolate({
           inputRange: [0, 1],
           outputRange: [8, 0],
+        }),
+      },
+    ],
+  };
+  const cardMotionStyle = {
+    opacity: cardAnim,
+    transform: [
+      {
+        translateY: cardAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [12, 0],
+        }),
+      },
+      {
+        scale: cardAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.985, 1],
         }),
       },
     ],
@@ -234,7 +269,7 @@ export default function App() {
   useEffect(() => {
     screenAnim.setValue(0);
     Animated.timing(screenAnim, {
-      duration: 220,
+      duration: 260,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
       useNativeDriver: true,
@@ -242,10 +277,42 @@ export default function App() {
   }, [activeTab, screenAnim]);
 
   useEffect(() => {
+    cardAnim.setValue(0);
+    Animated.timing(cardAnim, {
+      duration: 240,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  }, [
+    activeFilter,
+    activeInitial,
+    activeLevel,
+    activeTab,
+    cardAnim,
+    libraryFiltersOpen,
+    quizFilter,
+    quizFiltersOpen,
+    quizIndex,
+    quizInitial,
+    quizLevel,
+    searchQuery,
+    studyFilter,
+    studyFiltersOpen,
+    studyInitial,
+    studyLevel,
+    wordIndex,
+  ]);
+
+  useEffect(() => {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
     setScrollY(0);
     setLibraryWindowStart(0);
   }, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);
+
+  useEffect(() => {
+    setWordIndex(0);
+  }, [studyFilter, studyInitial, studyLevel]);
 
   useEffect(() => {
     setQuizIndex(0);
@@ -360,7 +427,7 @@ export default function App() {
   }, [account.userId, progress, progressReady, supabaseClient]);
 
   function nextStudyWord() {
-    setWordIndex((current) => (current + 1) % sampleWords.length);
+    setWordIndex((current) => (studyWords.length > 0 ? (current + 1) % studyWords.length : 0));
   }
 
   function handleKnown(wordId: string) {
@@ -371,6 +438,16 @@ export default function App() {
   function handleReview(wordId: string) {
     setProgress((current) => markReview(current, wordId, today));
     nextStudyWord();
+  }
+
+  function handleLibraryQueryChange(query: string) {
+    setSearchQuery(query);
+    setLibraryWindowStart(0);
+  }
+
+  function clearLibrarySearch() {
+    setSearchQuery('');
+    setLibraryWindowStart(0);
   }
 
   function handleQuizAnswer(correct: boolean) {
@@ -589,11 +666,21 @@ export default function App() {
           )}
           {activeTab === 'study' && (
             <StudyView
+              activeFilter={studyFilter}
+              activeInitial={studyInitial}
+              activeLevel={studyLevel}
+              filtersOpen={studyFiltersOpen}
+              motionStyle={cardMotionStyle}
+              wordCount={studyWords.length}
               word={studyWord}
               progress={progress}
-              onKnown={() => handleKnown(studyWord.id)}
-              onReview={() => handleReview(studyWord.id)}
-              onFavorite={() => setProgress((current) => toggleFavorite(current, studyWord.id))}
+              onFilterChange={setStudyFilter}
+              onFiltersToggle={() => setStudyFiltersOpen((current) => !current)}
+              onInitialChange={setStudyInitial}
+              onKnown={() => studyWord && handleKnown(studyWord.id)}
+              onLevelChange={setStudyLevel}
+              onReview={() => studyWord && handleReview(studyWord.id)}
+              onFavorite={() => studyWord && setProgress((current) => toggleFavorite(current, studyWord.id))}
             />
           )}
           {activeTab === 'quiz' && (
@@ -602,6 +689,7 @@ export default function App() {
               activeInitial={quizInitial}
               activeLevel={quizLevel}
               filtersOpen={quizFiltersOpen}
+              motionStyle={cardMotionStyle}
               options={visibleQuizOptions}
               result={quizResult}
               word={visibleQuizWord}
@@ -620,8 +708,10 @@ export default function App() {
               activeInitial={activeInitial}
               activeLevel={activeLevel}
               filtersOpen={libraryFiltersOpen}
+              motionStyle={cardMotionStyle}
               progress={progress}
               query={searchQuery}
+              searchFocused={searchFocused}
               visibleStart={libraryWindowStart}
               visibleWindowSize={LIBRARY_WINDOW_SIZE}
               words={libraryWords}
@@ -630,8 +720,11 @@ export default function App() {
               onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
               onInitialChange={setActiveInitial}
               onLevelChange={setActiveLevel}
-              onQueryChange={setSearchQuery}
+              onQueryChange={handleLibraryQueryChange}
+              onQueryClear={clearLibrarySearch}
               onReturnTop={returnLibraryToTop}
+              onSearchBlur={() => setSearchFocused(false)}
+              onSearchFocus={() => setSearchFocused(true)}
             />
           )}
           {activeTab === 'profile' && (
@@ -707,6 +800,7 @@ export default function App() {
             testID="launch-overlay"
           >
             <View style={styles.launchIcon}>
+              <View style={styles.launchDot} />
               <Text style={styles.launchIconText}>W7</Text>
             </View>
             <Text style={styles.launchTitle}>Word7000</Text>
@@ -904,24 +998,68 @@ function HomeView({
 }
 
 function StudyView({
+  activeFilter,
+  activeInitial,
+  activeLevel,
+  filtersOpen,
+  motionStyle,
+  wordCount,
   word,
   progress,
+  onFilterChange,
+  onFiltersToggle,
   onFavorite,
+  onInitialChange,
   onKnown,
+  onLevelChange,
   onReview,
 }: {
-  word: WordEntry;
+  activeFilter: LibraryFilter;
+  activeInitial: string;
+  activeLevel: string;
+  filtersOpen: boolean;
+  motionStyle: StyleProp<ViewStyle>;
+  word: WordEntry | null;
+  wordCount: number;
   progress: ProgressState;
+  onFilterChange: (filter: LibraryFilter) => void;
+  onFiltersToggle: () => void;
   onFavorite: () => void;
+  onInitialChange: (initial: string) => void;
   onKnown: () => void;
+  onLevelChange: (level: string) => void;
   onReview: () => void;
 }) {
-  const wordProgress = progress.words[word.id];
+  const wordProgress = word ? progress.words[word.id] : undefined;
   const favorited = Boolean(wordProgress?.favorite);
 
   return (
     <View style={styles.screenStack}>
-      <View style={styles.wordCard}>
+      <FilterControlPanel
+        activeFilter={activeFilter}
+        activeInitial={activeInitial}
+        activeLevel={activeLevel}
+        count={wordCount}
+        open={filtersOpen}
+        showStatus
+        testID="study-filter-toggle"
+        title="學習篩選"
+        onFilterChange={onFilterChange}
+        onInitialChange={onInitialChange}
+        onLevelChange={onLevelChange}
+        onToggle={onFiltersToggle}
+      />
+
+      {!word && (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>沒有符合的學習單字</Text>
+          <Text style={styles.emptyText}>可以放寬狀態、分級或字首篩選。</Text>
+        </View>
+      )}
+
+      {word && (
+        <>
+      <Animated.View style={[styles.wordCard, motionStyle]}>
         <View style={styles.rowBetween}>
           <View style={styles.groupPill}>
             <Text style={styles.groupText}>{word.group}</Text>
@@ -945,7 +1083,7 @@ function StudyView({
           <Text style={styles.example}>{word.example}</Text>
           <Text style={styles.exampleZh}>{word.exampleZh}</Text>
         </View>
-      </View>
+      </Animated.View>
 
       <View style={styles.actionGrid}>
         <Pressable accessibilityRole="button" onPress={onReview} style={styles.secondaryButton}>
@@ -957,6 +1095,8 @@ function StudyView({
           <Text style={styles.confirmButtonText}>已會</Text>
         </Pressable>
       </View>
+        </>
+      )}
     </View>
   );
 }
@@ -1078,6 +1218,7 @@ function QuizView({
   activeInitial,
   activeLevel,
   filtersOpen,
+  motionStyle,
   options,
   result,
   wordCount,
@@ -1093,6 +1234,7 @@ function QuizView({
   activeInitial: string;
   activeLevel: string;
   filtersOpen: boolean;
+  motionStyle: StyleProp<ViewStyle>;
   options: ReturnType<typeof buildQuizOptions>;
   result: 'correct' | 'wrong' | null;
   word: WordEntry | null;
@@ -1130,7 +1272,7 @@ function QuizView({
 
       {word && (
         <>
-      <View style={styles.quizCard}>
+      <Animated.View style={[styles.quizCard, motionStyle]}>
         <Text style={styles.eyebrow}>QUIZ</Text>
         <Text style={styles.bigWord}>{word.word}</Text>
         <Text style={styles.pronunciation}>{word.pronunciation}</Text>
@@ -1153,17 +1295,17 @@ function QuizView({
             </Pressable>
           ))}
         </View>
-      </View>
+      </Animated.View>
 
       {result && (
-        <View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong]}>
+        <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, motionStyle]}>
           <Text style={styles.resultTitle}>{result === 'correct' ? '答對了' : '先放進複習'}</Text>
           <Text style={styles.resultText}>{word.exampleZh}</Text>
           <Pressable accessibilityRole="button" onPress={onNext} style={styles.nextButton}>
             <Text style={styles.nextButtonText}>下一題</Text>
             <ChevronRight size={18} color="#172033" strokeWidth={2.3} />
           </Pressable>
-        </View>
+        </Animated.View>
       )}
         </>
       )}
@@ -1176,8 +1318,10 @@ function LibraryView({
   activeInitial,
   activeLevel,
   filtersOpen,
+  motionStyle,
   progress,
   query,
+  searchFocused,
   visibleStart,
   visibleWindowSize,
   words,
@@ -1187,14 +1331,19 @@ function LibraryView({
   onInitialChange,
   onLevelChange,
   onQueryChange,
+  onQueryClear,
   onReturnTop,
+  onSearchBlur,
+  onSearchFocus,
 }: {
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
   filtersOpen: boolean;
+  motionStyle: StyleProp<ViewStyle>;
   progress: ProgressState;
   query: string;
+  searchFocused: boolean;
   visibleStart: number;
   visibleWindowSize: number;
   words: WordEntry[];
@@ -1204,11 +1353,15 @@ function LibraryView({
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
   onQueryChange: (query: string) => void;
+  onQueryClear: () => void;
   onReturnTop: () => void;
+  onSearchBlur: () => void;
+  onSearchFocus: () => void;
 }) {
   const safeStart = Math.min(visibleStart, Math.max(0, words.length - visibleWindowSize));
   const visibleEnd = Math.min(words.length, safeStart + visibleWindowSize);
   const visibleWords = words.slice(safeStart, visibleEnd);
+  const hasQuery = query.trim().length > 0;
 
   return (
     <View style={styles.screenStack}>
@@ -1223,16 +1376,35 @@ function LibraryView({
         </Pressable>
       </View>
 
-      <View style={styles.searchBox}>
+      <View style={[styles.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
         <Search size={18} color="#717987" strokeWidth={2.2} />
         <TextInput
           onChangeText={onQueryChange}
-          placeholder="Search words"
+          onBlur={onSearchBlur}
+          onFocus={onSearchFocus}
+          placeholder="搜尋英文、中文或例句"
           placeholderTextColor="#9ca3af"
           style={styles.searchInput}
           value={query}
         />
+        {hasQuery && (
+          <Pressable
+            accessibilityLabel="清除搜尋"
+            accessibilityRole="button"
+            onPress={onQueryClear}
+            style={styles.searchClearButton}
+            testID="library-search-clear"
+          >
+            <X size={16} color="#64748b" strokeWidth={2.5} />
+          </Pressable>
+        )}
       </View>
+
+      {hasQuery && (
+        <View style={styles.searchMetaBox}>
+          <Text style={styles.searchMetaText}>搜尋「{query.trim()}」：找到 {words.length} 個結果</Text>
+        </View>
+      )}
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
         {filters.map((filter) => {
@@ -1273,7 +1445,7 @@ function LibraryView({
         {visibleWords.map((word) => {
           const wordProgress = progress.words[word.id];
           return (
-            <View key={word.id} style={styles.libraryItem}>
+            <Animated.View key={word.id} style={[styles.libraryItem, motionStyle]}>
               <View style={styles.flexOne}>
                 <View style={styles.wordLine}>
                   <Text style={styles.libraryWord}>{word.word}</Text>
@@ -1298,13 +1470,15 @@ function LibraryView({
                 </Pressable>
                 <Text style={styles.statusText}>{statusLabel(wordProgress?.status)}</Text>
               </View>
-            </View>
+            </Animated.View>
           );
         })}
         {words.length === 0 && (
           <View style={styles.emptyState}>
             <Text style={styles.emptyTitle}>沒有符合的單字</Text>
-            <Text style={styles.emptyText}>可以清除搜尋或換一個分級、字首。</Text>
+            <Text style={styles.emptyText}>
+              {hasQuery ? '可以清除搜尋，或換一個分級、字首。' : '可以換一個分級、字首。'}
+            </Text>
           </View>
         )}
         </View>
@@ -1577,17 +1751,27 @@ const styles = StyleSheet.create({
   },
   launchIcon: {
     alignItems: 'center',
-    backgroundColor: '#172033',
-    borderColor: '#334155',
+    backgroundColor: '#2563eb',
+    borderColor: '#bfdbfe',
     borderRadius: 8,
     borderWidth: 1,
     height: 82,
     justifyContent: 'center',
+    overflow: 'hidden',
     shadowColor: '#172033',
     shadowOffset: { height: 14, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 24,
     width: 82,
+  },
+  launchDot: {
+    backgroundColor: '#f97316',
+    borderRadius: 99,
+    height: 18,
+    position: 'absolute',
+    right: 10,
+    top: 10,
+    width: 18,
   },
   launchIconText: {
     color: '#fff',
@@ -1995,10 +2179,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     paddingVertical: 10,
   },
+  searchBoxActive: {
+    borderColor: '#bfdbfe',
+    shadowColor: '#2563eb',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+  },
+  searchBoxFocused: {
+    borderColor: '#2563eb',
+  },
   searchInput: {
     color: '#172033',
     flex: 1,
     fontSize: 15,
+  },
+  searchClearButton: {
+    alignItems: 'center',
+    backgroundColor: '#f1f5f9',
+    borderRadius: 8,
+    height: 30,
+    justifyContent: 'center',
+    width: 30,
+  },
+  searchMetaBox: {
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+  },
+  searchMetaText: {
+    color: '#1d4ed8',
+    fontSize: 12,
+    fontWeight: '800',
   },
   foldedFilterCard: {
     backgroundColor: '#fff',

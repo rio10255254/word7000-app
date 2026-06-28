@@ -2,11 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PNG } from 'pngjs';
 
-const navy = [23, 32, 51, 255];
-const slate = [51, 65, 85, 255];
+const navy = [30, 47, 85, 255];
 const blue = [37, 99, 235, 255];
-const white = [248, 250, 252, 255];
-const light = [230, 244, 254, 255];
+const white = [255, 255, 255, 255];
+const orange = [249, 115, 22, 255];
 const transparent = [0, 0, 0, 0];
 
 const outputs = [
@@ -37,50 +36,55 @@ console.log(`Generated ${outputs.length} Word7000 brand assets`);
 function render(png, kind) {
   if (kind === 'foreground' || kind === 'mono') {
     fill(png, transparent);
-    drawMark(png, kind === 'mono' ? navy : navy, kind === 'mono' ? navy : blue, false);
+    drawSun(png, kind === 'mono' ? navy : orange);
+    drawMark(png, kind === 'mono' ? navy : white);
     return;
   }
 
   if (kind === 'background') {
-    fillGradient(png, light, [248, 250, 252, 255]);
+    fillGradient(png, navy, blue);
     return;
   }
 
-  fillGradient(png, navy, slate);
-  const cardInset = kind === 'splash' ? 160 : 150;
-  roundRect(png, cardInset, 218, 724, 588, 92, white);
-  drawMark(png, navy, blue, true);
+  fillGradient(png, navy, blue);
+  drawSun(png, orange);
+  drawMark(png, white);
 }
 
-function drawMark(png, primary, accent, onCard) {
-  const offsetY = onCard ? 0 : 40;
+function drawSun(png, color) {
+  const scale = png.width / 1024;
+  circle(png, 758 * scale, 205 * scale, 102 * scale, color);
+}
+
+function drawMark(png, color) {
   const w = [
-    [220, 330 + offsetY],
-    [303, 330 + offsetY],
-    [351, 594 + offsetY],
-    [421, 418 + offsetY],
-    [491, 594 + offsetY],
-    [539, 330 + offsetY],
-    [622, 330 + offsetY],
-    [532, 710 + offsetY],
-    [456, 710 + offsetY],
-    [421, 594 + offsetY],
-    [386, 710 + offsetY],
-    [310, 710 + offsetY],
+    [282, 378],
+    [328, 378],
+    [360, 526],
+    [400, 378],
+    [450, 378],
+    [488, 526],
+    [520, 378],
+    [562, 378],
+    [520, 592],
+    [466, 592],
+    [425, 434],
+    [382, 592],
+    [335, 592],
   ];
   const seven = [
-    [632, 330 + offsetY],
-    [822, 330 + offsetY],
-    [822, 406 + offsetY],
-    [742, 406 + offsetY],
-    [668, 710 + offsetY],
-    [582, 710 + offsetY],
-    [662, 406 + offsetY],
-    [632, 406 + offsetY],
+    [584, 382],
+    [724, 382],
+    [724, 420],
+    [676, 420],
+    [634, 592],
+    [612, 592],
+    [654, 420],
+    [584, 420],
   ];
 
-  polygon(png, w, primary);
-  polygon(png, seven, accent);
+  polygon(png, w, color);
+  polygon(png, seven, color);
 }
 
 function fill(png, color) {
@@ -119,6 +123,24 @@ function roundRect(png, x, y, width, height, radius, color) {
       const dy = Math.max(sr - Math.min(top, bottom), 0);
       if (dx * dx + dy * dy <= sr * sr) {
         setPixel(png, px, py, color);
+      }
+    }
+  }
+}
+
+function circle(png, cx, cy, radius, color) {
+  const minX = Math.max(0, Math.floor(cx - radius));
+  const maxX = Math.min(png.width - 1, Math.ceil(cx + radius));
+  const minY = Math.max(0, Math.floor(cy - radius));
+  const maxY = Math.min(png.height - 1, Math.ceil(cy + radius));
+  const r2 = radius * radius;
+
+  for (let y = minY; y <= maxY; y += 1) {
+    for (let x = minX; x <= maxX; x += 1) {
+      const dx = x + 0.5 - cx;
+      const dy = y + 0.5 - cy;
+      if (dx * dx + dy * dy <= r2) {
+        setPixel(png, x, y, color);
       }
     }
   }

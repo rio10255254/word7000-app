@@ -170,6 +170,15 @@ export function selectQuizWords(
   return filterWords(words, state, '', filter, options);
 }
 
+export function selectStudyWords(
+  words: WordEntry[],
+  state: ProgressState,
+  filter: LibraryFilter,
+  options: LibraryFilterOptions = {},
+): WordEntry[] {
+  return filterWords(words, state, '', filter, options);
+}
+
 export function buildQuizOptions(words: WordEntry[], wordId: string): QuizOption[] {
   const correctWord = words.find((word) => word.id === wordId) ?? words[0];
   if (!correctWord) {

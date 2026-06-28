@@ -16,6 +16,8 @@ The upload-ready zip is:
 
 This keeps one public URL and updates the app every time the GitHub repository is pushed.
 
+The current GitHub repository is private. Free GitHub Pages only publishes public repositories on the GitHub Free plan, so use Cloudflare Pages if the repository should stay private and the public app should still be free.
+
 1. Push this project to GitHub.
 2. Log in to Cloudflare.
 3. Open Workers & Pages.

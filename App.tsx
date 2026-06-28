@@ -49,6 +49,7 @@ import { sampleWords, type WordEntry } from './src/data/words';
 import { scrollThumbOffset, wordWindowStartFromSlider } from './src/lib/libraryNavigation';
 import {
   buildQuizOptions,
+  buildQuizSession,
   computeStats,
   filterWords,
   markKnown,
@@ -94,6 +95,7 @@ const today = new Date().toISOString().slice(0, 10);
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_WINDOW_SIZE = 260;
+const quizQuestionCounts = [10, 20, 50] as const;
 const installGuideSteps = [
   {
     icon: 'safari',
@@ -170,10 +172,16 @@ export default function App() {
   const [studyLevel, setStudyLevel] = useState('all');
   const [studyInitial, setStudyInitial] = useState('all');
   const [studyFiltersOpen, setStudyFiltersOpen] = useState(false);
-  const [quizIndex, setQuizIndex] = useState(4);
+  const [quizIndex, setQuizIndex] = useState(0);
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
   const [answeredQuizWord, setAnsweredQuizWord] = useState<WordEntry | null>(null);
   const [lockedQuizOptions, setLockedQuizOptions] = useState<QuizOption[] | null>(null);
+  const [quizQuestionCount, setQuizQuestionCount] = useState<(typeof quizQuestionCounts)[number]>(10);
+  const [quizSession, setQuizSession] = useState<WordEntry[]>([]);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [quizCorrectCount, setQuizCorrectCount] = useState(0);
+  const [quizSeed, setQuizSeed] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>('all');
@@ -211,14 +219,15 @@ export default function App() {
       }),
     [progress, quizFilter, quizInitial, quizLevel],
   );
-  const quizWord = quizWords.length > 0 ? quizWords[quizIndex % quizWords.length] : null;
+  const quizWord = quizStarted && quizSession.length > 0 ? quizSession[quizIndex] ?? null : null;
   const quizOptionSource = quizWords.length >= 3 ? quizWords : sampleWords;
   const quizOptions = useMemo(
-    () => (quizWord ? buildQuizOptions(quizOptionSource, quizWord.id) : []),
-    [quizOptionSource, quizWord],
+    () => (quizWord ? buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`) : []),
+    [quizIndex, quizOptionSource, quizSeed, quizWord],
   );
   const visibleQuizWord = answeredQuizWord ?? quizWord;
   const visibleQuizOptions = lockedQuizOptions ?? quizOptions;
+  const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
   const libraryWords = useMemo(
     () =>
       filterWords(sampleWords, progress, searchQuery, activeFilter, {
@@ -367,6 +376,9 @@ export default function App() {
     quizIndex,
     quizInitial,
     quizLevel,
+    quizQuestionCount,
+    quizStarted,
+    quizFinished,
     searchQuery,
     studyFilter,
     studyFiltersOpen,
@@ -390,6 +402,11 @@ export default function App() {
     setQuizResult(null);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
+    setQuizSession([]);
+    setQuizStarted(false);
+    setQuizFinished(false);
+    setQuizCorrectCount(0);
+    setQuizSeed('');
   }, [quizFilter, quizInitial, quizLevel]);
 
   useEffect(() => {
@@ -528,14 +545,46 @@ export default function App() {
     setAnsweredQuizWord(quizWord);
     setLockedQuizOptions(quizOptions);
     setQuizResult(correct ? 'correct' : 'wrong');
+    if (correct) {
+      setQuizCorrectCount((current) => current + 1);
+    }
     setProgress((current) => (correct ? markKnown(current, quizWord.id, today) : markReview(current, quizWord.id, today)));
+  }
+
+  function startQuiz() {
+    const seed = `${Date.now()}:${Math.random()}`;
+    const session = buildQuizSession(quizWords, quizQuestionCount, seed);
+    setQuizSession(session);
+    setQuizSeed(seed);
+    setQuizIndex(0);
+    setQuizCorrectCount(0);
+    setQuizResult(null);
+    setAnsweredQuizWord(null);
+    setLockedQuizOptions(null);
+    setQuizFinished(false);
+    setQuizStarted(session.length > 0);
+  }
+
+  function restartQuiz() {
+    setQuizIndex(0);
+    setQuizResult(null);
+    setAnsweredQuizWord(null);
+    setLockedQuizOptions(null);
+    setQuizStarted(false);
+    setQuizFinished(false);
+    setQuizCorrectCount(0);
   }
 
   function nextQuiz() {
     setQuizResult(null);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
-    setQuizIndex((current) => (quizWords.length > 0 ? (current + 1) % quizWords.length : 0));
+    if (quizIndex >= quizSession.length - 1) {
+      setQuizStarted(false);
+      setQuizFinished(true);
+      return;
+    }
+    setQuizIndex((current) => current + 1);
   }
 
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -797,7 +846,14 @@ export default function App() {
               filtersOpen={quizFiltersOpen}
               motionStyle={cardMotionStyle}
               options={visibleQuizOptions}
+              questionCount={quizQuestionCount}
+              questionCounts={quizQuestionCounts}
+              questionIndex={quizIndex}
+              quizFinished={quizFinished}
+              quizStarted={quizStarted}
               result={quizResult}
+              sessionTotal={quizSessionTotal}
+              correctCount={quizCorrectCount}
               word={visibleQuizWord}
               wordCount={quizWords.length}
               onAnswer={handleQuizAnswer}
@@ -806,6 +862,9 @@ export default function App() {
               onInitialChange={setQuizInitial}
               onLevelChange={setQuizLevel}
               onNext={nextQuiz}
+              onQuestionCountChange={setQuizQuestionCount}
+              onRestart={restartQuiz}
+              onStart={startQuiz}
             />
           )}
           {activeTab === 'library' && (
@@ -1572,10 +1631,17 @@ function QuizView({
   activeFilter,
   activeInitial,
   activeLevel,
+  correctCount,
   filtersOpen,
   motionStyle,
   options,
+  questionCount,
+  questionCounts,
+  questionIndex,
+  quizFinished,
+  quizStarted,
   result,
+  sessionTotal,
   wordCount,
   word,
   onAnswer,
@@ -1584,14 +1650,24 @@ function QuizView({
   onInitialChange,
   onLevelChange,
   onNext,
+  onQuestionCountChange,
+  onRestart,
+  onStart,
 }: {
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  correctCount: number;
   filtersOpen: boolean;
   motionStyle: StyleProp<ViewStyle>;
   options: ReturnType<typeof buildQuizOptions>;
+  questionCount: (typeof quizQuestionCounts)[number];
+  questionCounts: readonly (typeof quizQuestionCounts)[number][];
+  questionIndex: number;
+  quizFinished: boolean;
+  quizStarted: boolean;
   result: 'correct' | 'wrong' | null;
+  sessionTotal: number;
   word: WordEntry | null;
   wordCount: number;
   onAnswer: (correct: boolean) => void;
@@ -1600,6 +1676,9 @@ function QuizView({
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
   onNext: () => void;
+  onQuestionCountChange: (count: (typeof quizQuestionCounts)[number]) => void;
+  onRestart: () => void;
+  onStart: () => void;
 }) {
   return (
     <View style={styles.screenStack}>
@@ -1618,17 +1697,73 @@ function QuizView({
         onToggle={onFiltersToggle}
       />
 
-      {!word && (
+      {!quizStarted && !quizFinished && (
+        <Animated.View style={[styles.quizSetupCard, motionStyle]}>
+          <View style={styles.rowBetween}>
+            <View>
+              <Text style={styles.sectionTitle}>選擇題數</Text>
+              <Text style={styles.cardMeta}>目前題庫 {wordCount} 個單字</Text>
+            </View>
+            <Target size={22} color="#2563eb" strokeWidth={2.3} />
+          </View>
+          <View style={styles.quizCountRow}>
+            {questionCounts.map((count) => {
+              const selected = questionCount === count;
+              const cappedCount = Math.min(count, wordCount);
+              return (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  key={count}
+                  onPress={() => onQuestionCountChange(count)}
+                  pressTone="chip"
+                  style={[styles.quizCountChip, selected && styles.quizCountChipActive]}
+                >
+                  <Text style={[styles.quizCountText, selected && styles.quizCountTextActive]}>{count} 題</Text>
+                  {cappedCount < count && <Text style={[styles.quizCountMeta, selected && styles.quizCountTextActive]}>出 {cappedCount}</Text>}
+                </AnimatedPressable>
+              );
+            })}
+          </View>
+          <AnimatedPressable
+            accessibilityRole="button"
+            disabled={wordCount === 0}
+            onPress={onStart}
+            pressTone="primary"
+            style={[styles.primaryButton, wordCount === 0 && styles.disabledButton]}
+          >
+            <Target size={18} color="#fff" strokeWidth={2.3} />
+            <Text style={styles.primaryButtonText}>開始測驗</Text>
+          </AnimatedPressable>
+        </Animated.View>
+      )}
+
+      {quizFinished && (
+        <Animated.View style={[styles.quizSetupCard, motionStyle]}>
+          <Text style={styles.eyebrow}>RESULT</Text>
+          <Text style={styles.resultTitle}>測驗完成</Text>
+          <Text style={styles.quizScoreText}>
+            答對 {correctCount} / {sessionTotal} 題
+          </Text>
+          <AnimatedPressable accessibilityRole="button" onPress={onRestart} pressTone="primary" style={styles.primaryButton}>
+            <RotateCcw size={18} color="#fff" strokeWidth={2.3} />
+            <Text style={styles.primaryButtonText}>重新選題</Text>
+          </AnimatedPressable>
+        </Animated.View>
+      )}
+
+      {quizStarted && !word && (
         <View style={styles.emptyState}>
           <Text style={styles.emptyTitle}>沒有符合的測驗題目</Text>
           <Text style={styles.emptyText}>可以放寬狀態、分級或字首篩選。</Text>
         </View>
       )}
 
-      {word && (
+      {quizStarted && word && (
         <>
       <Animated.View style={[styles.quizCard, motionStyle]}>
-        <Text style={styles.eyebrow}>QUIZ</Text>
+        <Text style={styles.eyebrow}>
+          QUIZ {questionIndex + 1} / {sessionTotal}
+        </Text>
         <Text style={styles.bigWord}>{word.word}</Text>
         <Text style={styles.pronunciation}>{word.pronunciation}</Text>
         <View style={styles.quizOptions}>
@@ -2715,6 +2850,48 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 18,
   },
+  quizSetupCard: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 14,
+    padding: 18,
+  },
+  quizCountRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  quizCountChip: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 54,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  quizCountChipActive: {
+    backgroundColor: '#2563eb',
+    borderColor: '#2563eb',
+  },
+  quizCountText: {
+    color: '#172033',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  quizCountTextActive: {
+    color: '#fff',
+  },
+  quizCountMeta: {
+    color: '#717987',
+    fontSize: 11,
+    fontWeight: '800',
+    marginTop: 3,
+  },
   quizOptions: {
     gap: 10,
     marginTop: 8,
@@ -2763,6 +2940,11 @@ const styles = StyleSheet.create({
   resultText: {
     color: '#5f6675',
     fontSize: 14,
+  },
+  quizScoreText: {
+    color: '#172033',
+    fontSize: 24,
+    fontWeight: '900',
   },
   nextButton: {
     alignItems: 'center',

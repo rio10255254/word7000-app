@@ -86,4 +86,14 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('install-guide-overlay');
     expect(appSource).toContain('重新查看加入主畫面教學');
   });
+
+  test('includes quiz session setup with selectable question counts', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('選擇題數');
+    expect(appSource).toContain('開始測驗');
+    expect(appSource).toContain('const quizQuestionCounts = [10, 20, 50] as const;');
+    expect(appSource).toContain('{count} 題');
+    expect(appSource).toContain('測驗完成');
+  });
 });

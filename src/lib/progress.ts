@@ -179,14 +179,21 @@ export function selectStudyWords(
   return filterWords(words, state, '', filter, options);
 }
 
-export function buildQuizOptions(words: WordEntry[], wordId: string): QuizOption[] {
+export function buildQuizSession(words: WordEntry[], requestedCount: number, seed = createRuntimeSeed()): WordEntry[] {
+  const count = Math.max(0, Math.min(requestedCount, words.length));
+  return shuffleWithSeed(words, seed).slice(0, count);
+}
+
+export function buildQuizOptions(words: WordEntry[], wordId: string, seed = createRuntimeSeed()): QuizOption[] {
   const correctWord = words.find((word) => word.id === wordId) ?? words[0];
   if (!correctWord) {
     return [];
   }
 
-  const wrongOptions = words
-    .filter((word) => word.id !== correctWord.id)
+  const wrongOptions = shuffleWithSeed(
+    words.filter((word) => word.id !== correctWord.id),
+    `${seed}:wrong:${wordId}`,
+  )
     .slice(0, 2)
     .map((word) => ({
       meaning: word.meaningZh,
@@ -198,5 +205,35 @@ export function buildQuizOptions(words: WordEntry[], wordId: string): QuizOption
     correct: true,
   };
 
-  return [wrongOptions[0], correctOption, wrongOptions[1]].filter(Boolean);
+  return shuffleWithSeed([correctOption, ...wrongOptions], `${seed}:options:${wordId}`);
+}
+
+function shuffleWithSeed<T>(values: T[], seed: string): T[] {
+  const shuffled = [...values];
+  let randomState = hashText(seed || 'word7000');
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    randomState = nextRandomState(randomState);
+    const swapIndex = randomState % (index + 1);
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
+function nextRandomState(value: number): number {
+  return (value * 1664525 + 1013904223) >>> 0;
+}
+
+function hashText(value: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function createRuntimeSeed(): string {
+  return `${Date.now()}:${Math.random()}`;
 }

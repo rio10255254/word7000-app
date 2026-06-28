@@ -146,6 +146,46 @@ const fixedExamples = new Map(
     ['show', ['Please show me your answer.', '請把你的答案給我看。']],
     ['why', ['Why did the train stop here?', '火車為什麼停在這裡？']],
     ['always', ['She always checks her work twice.', '她總是把作業檢查兩次。']],
+    ['see', ['I can see the mountains from my window.', '我可以從窗戶看到山。']],
+    ['other', ['Please use the other door.', '請走另一扇門。']],
+    ['look', ['Look at the picture carefully.', '仔細看這張圖片。']],
+    ['back', ['He hurt his back while lifting the box.', '他搬箱子時傷到了背。']],
+    ['need', ['We need more time to finish the work.', '我們需要更多時間完成這項工作。']],
+    ['same', ['We live on the same street.', '我們住在同一條街上。']],
+    ['keep', ['Please keep the door closed.', '請保持門關著。']],
+    ['big', ['They live in a big house near the park.', '他們住在公園附近的一棟大房子裡。']],
+    ['line', ['Please write your name on this line.', '請把你的名字寫在這一行。']],
+    ['sit', ['Please sit near the window.', '請坐在窗戶旁邊。']],
+    ['name', ['Write your name at the top of the page.', '把你的名字寫在頁面上方。']],
+    ['nothing', ['Nothing changed after the meeting.', '會議後什麼都沒有改變。']],
+    ['idea', ['Her idea helped the team solve the problem.', '她的想法幫助團隊解決了問題。']],
+    ['mr', ['Mr. Lin will join the meeting today.', '林先生今天會參加會議。']],
+    ['allow', ['The teacher will allow one more question.', '老師會允許再問一個問題。']],
+    ['bad', ['The bad weather delayed the train.', '壞天氣讓火車誤點。']],
+    ['development', ['The development of the city was fast.', '這座城市的發展很快。']],
+    ['war', ['The war changed many families forever.', '戰爭永遠改變了許多家庭。']],
+    ['offer', ['The company made a generous offer.', '公司提出了一個優厚的提議。']],
+    ['expect', ['We expect the bus to arrive soon.', '我們預期公車很快會到。']],
+    ['girl', ['The girl smiled at her teacher.', '那個女孩對老師微笑。']],
+    ['sure', ['Are you sure about your answer?', '你確定你的答案嗎？']],
+    ['force', ['The wind hit the window with great force.', '風以很大的力量吹打窗戶。']],
+    ['learn', ['Children learn new words every day.', '孩子們每天學習新單字。']],
+    ['spend', ['I spend thirty minutes reading each night.', '我每晚花三十分鐘閱讀。']],
+    ['enough', ['We have enough chairs for everyone.', '我們有足夠的椅子給每個人。']],
+    ['walk', ['We walk to school every morning.', '我們每天早上走路去學校。']],
+    ['class', ['Our class starts at nine.', '我們的課九點開始。']],
+    ['build', ['They will build a new bridge next year.', '他們明年會建一座新橋。']],
+    ['boy', ['The boy carried his bag to school.', '那個男孩背著書包去學校。']],
+    ['action', ['Quick action saved the project.', '快速行動拯救了這個專案。']],
+    ['less', ['This box has less sugar than that one.', '這盒糖比那盒少。']],
+    ['decision', ['The final decision came after lunch.', '最後的決定是在午餐後做出的。']],
+    ['matter', ['This matter needs careful attention.', '這件事需要仔細處理。']],
+    ['return', ['Her return surprised the whole team.', '她的回來讓整個團隊很驚訝。']],
+    ['agree', ['I agree with your suggestion.', '我同意你的建議。']],
+    ['raise', ['The school will raise money for new books.', '學校會為新書募款。']],
+    ['general', ['The general rule is easy to understand.', '一般規則很容易理解。']],
+    ['international', ['The international meeting begins tomorrow.', '國際會議明天開始。']],
+    ['clear', ['Her clear explanation helped everyone.', '她清楚的說明幫助了每個人。']],
     ['provide', ['The school will provide lunch today.', '學校今天會提供午餐。']],
     ['fact', ['The fact surprised everyone in the room.', '這個事實讓房間裡每個人都很驚訝。']],
     ['believe', ['I believe this answer is correct.', '我相信這個答案是正確的。']],
@@ -229,6 +269,12 @@ const fixedExamples = new Map(
     ['hometown', ['He visits his hometown every summer.', '他每年夏天都會回故鄉。']],
     ['suit', ['This dark suit is for formal meetings.', '這套深色西裝適合正式會議。']],
     ['object', ['A small object was lying under the chair.', '椅子下方有一個小物品。']],
+    ['option', ['The cheapest option is not always the best.', '最便宜的選項不一定總是最好的。']],
+    ['quiz', ['The quiz has ten short questions.', '這份小考有十題簡短的題目。']],
+    ['operation', ['The operation of the machine is simple.', '這台機器的操作很簡單。']],
+    ['compound', ['Water is not a compound of oxygen alone.', '水不是只由氧組成的化合物。']],
+    ['proportion', ['A large proportion of students chose English.', '很大比例的學生選擇了英文。']],
+    ['optional', ['The final question is optional.', '最後一題是選答題。']],
     ['accurate', ['The accurate report helped us avoid a mistake.', '準確的報告幫助我們避免錯誤。']],
     ['agriculture', ['Agriculture supports many rural families.', '農業支持許多農村家庭。']],
     ['annual', ['The annual report was published in March.', '年度報告在三月發布。']],
@@ -731,10 +777,10 @@ function nounExample(word, zhHead, profile, index) {
       [`The ${word} changed after the ${event}.`, `${zhHead}在${zhEvent}後改變了。`],
     ],
     general: [
-      [`The ${actor} explained the ${word} after the ${event}.`, `${zhActor}在${zhEvent}後說明了${zhHead}。`],
-      [`We noticed the ${word} during the ${event}.`, `我們在${zhEvent}中注意到${zhHead}。`],
-      [`The ${actor} treated the ${word} as important during the ${event}.`, `${zhActor}在${zhEvent}中把${zhHead}視為重要。`],
-      [`The ${word} was easy to find in the ${object}.`, `${zhObject}裡很容易找到${zhHead}。`],
+      [`The ${actor} gave a clear example of ${word} during the ${event}.`, `${zhActor}在${zhEvent}中舉了一個關於${zhHead}的清楚例子。`],
+      [`We discussed ${word} in the ${event} before ${time}.`, `我們在${zhTime}前的${zhEvent}中討論了${zhHead}。`],
+      [`This ${object} includes ${article}${word} for the ${event}.`, `這份${zhObject}為${zhEvent}包含了${zhHead}。`],
+      [`The ${actor} asked about ${word} before ${time}.`, `${zhActor}在${zhTime}前問到了${zhHead}。`],
     ],
   };
 
@@ -752,7 +798,7 @@ function verbExample(word, zhHead, profile, pos, index) {
   const zhEvent = pick(zhEvents, word, index + 6);
   const quality = pick(contextQualities, word, index + 8);
   const zhQuality = pick(zhQualities, word, index + 8);
-  const intransitive = /\bvi\b/i.test(pos) && !/\bvt\b/i.test(pos);
+  const intransitive = /\bvi\b/i.test(pos);
 
   const templates = {
     communication: [
@@ -787,15 +833,15 @@ function verbExample(word, zhHead, profile, pos, index) {
     ],
     general: intransitive
       ? [
-          [`The ${object} may ${word} before ${time}.`, `${zhObject}可能會在${zhTime}前${zhHead}。`],
+          [`The ${actor} may ${word} before ${time}.`, `${zhActor}可能會在${zhTime}前${zhHead}。`],
           [`The ${actor} will ${word} after the ${event}.`, `${zhActor}會在${zhEvent}後${zhHead}。`],
           [`The ${quality} began to ${word} during the ${event}.`, `${zhQuality}在${zhEvent}期間開始${zhHead}。`],
         ]
       : [
-          [`Please ${word} the ${object} carefully.`, `請仔細${zhHead}${zhObject}。`],
-          [`The ${actor} tried to ${word} the plan after the ${event}.`, `${zhActor}在${zhEvent}後試著${zhHead}這個計畫。`],
-          [`A clear ${quality} helped us ${word} the next step.`, `清楚的${zhQuality}幫助我們${zhHead}下一步。`],
-          [`They need to ${word} the problem before ${time}.`, `他們需要在${zhTime}前${zhHead}這個問題。`],
+          [`They tried to ${word} it before ${time}.`, `他們試著在${zhTime}前${zhHead}它。`],
+          [`Please ${word} it when you are ready for the ${event}.`, `準備好參加${zhEvent}時，請${zhHead}它。`],
+          [`We need to ${word} it carefully before ${time}.`, `我們需要在${zhTime}前仔細${zhHead}它。`],
+          [`The ${actor} learned how to ${word} it after the ${event}.`, `${zhActor}在${zhEvent}後學會如何${zhHead}它。`],
         ],
   };
 
@@ -811,6 +857,8 @@ function adjectiveExample(word, zhHead, profile, index) {
   const zhActor = pick(zhActors, word, index + 4);
   const event = pick(contextEvents, word, index + 6);
   const zhEvent = pick(zhEvents, word, index + 6);
+  const time = pick(contextTimes, word, index + 8);
+  const zhTime = pick(zhTimes, word, index + 8);
   const article = articleForAdjective(word);
 
   const templates = {
@@ -835,10 +883,10 @@ function adjectiveExample(word, zhHead, profile, index) {
       [`The ${object} used ${article}${word} finish.`, `${zhObject}用了${zhHead}的表面處理。`],
     ],
     general: [
-      [`${capitalize(article)}${word} ${quality} helped the ${actor} during the ${event}.`, `${zhHead}的${zhQuality}在${zhEvent}中幫助了${zhActor}。`],
-      [`The ${word} ${object} made the ${event} easier to manage.`, `${zhHead}的${zhObject}讓${zhEvent}更容易處理。`],
-      [`The ${actor} noticed ${article}${word} detail in the ${object}.`, `${zhActor}注意到${zhObject}中一個${zhHead}的細節。`],
-      [`${capitalize(article)}${word} choice saved time during the ${event}.`, `${zhHead}的選擇在${zhEvent}時節省了時間。`],
+      [`The ${word} ${quality} was easy to notice during the ${event}.`, `${zhEvent}中，${zhHead}的${zhQuality}很容易注意到。`],
+      [`She gave ${article}${word} ${quality} before ${time}.`, `她在${zhTime}前給了一個${zhHead}的${zhQuality}。`],
+      [`The ${word} rule helped the ${actor} during the ${event}.`, `${zhHead}的規則在${zhEvent}中幫助了${zhActor}。`],
+      [`${capitalize(article)}${word} choice changed the ${object}.`, `一個${zhHead}的選擇改變了${zhObject}。`],
     ],
   };
 

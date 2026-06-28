@@ -105,6 +105,26 @@ describe('full vocabulary dataset', () => {
     expect(awkwardExamples.slice(0, 20).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
   });
 
+  test('does not keep high-risk generic examples that often produce unreasonable meanings', () => {
+    const highRiskPatterns = [
+      /\bexplained the [a-z]+ after the (meeting|lesson|interview|workshop|trip|review|practice|discussion|training|visit|trial|festival|inspection|presentation|debate|rehearsal)\b/i,
+      /\btreated the [a-z]+ as important\b/i,
+      /\bwas easy to find in the\b/i,
+      /\bnoticed an? [a-z]+ detail in the\b/i,
+      /\bhelped us [a-z]+ the next step\b/i,
+      /\bPlease [a-z]+ the (plan|report|schedule|project|message|lesson|file|room|budget|map|letter|ticket|device|garden|contract|display) carefully\b/i,
+      /在.+後說明了/,
+      /視為重要/,
+      /裡很容易找到/,
+      /幫助我們.+下一步/,
+    ];
+    const highRiskExamples = sampleWords.filter((word) =>
+      highRiskPatterns.some((pattern) => pattern.test(`${word.example} ${word.exampleZh}`)),
+    );
+
+    expect(highRiskExamples.slice(0, 40).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
   test('uses polished examples for words that exposed machine-generated phrasing', () => {
     const expectedExamples = new Map([
       ['first', ['First, read the question carefully.', '首先，仔細閱讀題目。']],
@@ -123,6 +143,12 @@ describe('full vocabulary dataset', () => {
       ['ourselves', ['We made the cake ourselves.', '我們自己做了這個蛋糕。']],
       ['beneath', ['The cat slept beneath the table.', '貓睡在桌子底下。']],
       ['sideways', ['The sign was hanging sideways after the storm.', '暴風雨後，那個招牌歪向一邊掛著。']],
+      ['option', ['The cheapest option is not always the best.', '最便宜的選項不一定總是最好的。']],
+      ['quiz', ['The quiz has ten short questions.', '這份小考有十題簡短的題目。']],
+      ['operation', ['The operation of the machine is simple.', '這台機器的操作很簡單。']],
+      ['compound', ['Water is not a compound of oxygen alone.', '水不是只由氧組成的化合物。']],
+      ['proportion', ['A large proportion of students chose English.', '很大比例的學生選擇了英文。']],
+      ['optional', ['The final question is optional.', '最後一題是選答題。']],
     ]);
 
     for (const [word, [example, exampleZh]] of expectedExamples) {

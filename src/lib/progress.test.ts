@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { sampleWords } from '../data/words';
 import {
   buildQuizOptions,
+  buildQuizSession,
   computeStats,
   filterWords,
   markKnown,
@@ -99,11 +100,36 @@ describe('library and quiz helpers', () => {
   });
 
   test('buildQuizOptions returns three choices with the correct meaning included once', () => {
-    const options = buildQuizOptions(sampleWords, sampleWords[0].id);
+    const options = buildQuizOptions(sampleWords, sampleWords[0].id, 'seed-a');
 
     expect(options).toHaveLength(3);
     expect(options.filter((option) => option.correct)).toHaveLength(1);
     expect(options.some((option) => option.meaning === sampleWords[0].meaningZh)).toBe(true);
+  });
+
+  test('buildQuizOptions does not keep the correct answer in one fixed position', () => {
+    const correctIndexes = new Set(
+      Array.from({ length: 12 }, (_, index) =>
+        buildQuizOptions(sampleWords, sampleWords[0].id, `seed-${index}`).findIndex((option) => option.correct),
+      ),
+    );
+
+    expect(correctIndexes.size).toBeGreaterThan(1);
+    expect(correctIndexes.has(1)).toBe(true);
+  });
+
+  test('buildQuizSession creates a distinct shuffled question bank with the requested count', () => {
+    const session = buildQuizSession(sampleWords.slice(0, 50), 10, 'quiz-seed');
+
+    expect(session).toHaveLength(10);
+    expect(new Set(session.map((word) => word.id)).size).toBe(10);
+    expect(session.map((word) => word.id)).not.toEqual(sampleWords.slice(0, 10).map((word) => word.id));
+  });
+
+  test('buildQuizSession caps the count when the filtered bank is smaller than requested', () => {
+    const session = buildQuizSession(sampleWords.slice(0, 6), 10, 'small-bank');
+
+    expect(session).toHaveLength(6);
   });
 
   test('selectQuizWords uses status, level, and first-letter filters for quiz targets', () => {

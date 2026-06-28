@@ -82,7 +82,9 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('INSTALL_GUIDE_STORAGE_KEY');
     expect(appSource).toContain('Safari');
     expect(appSource).toContain('SquareArrowUp');
-    expect(appSource).toContain('Safari 分享');
+    expect(appSource).toContain('installGuideIconGraphic');
+    expect(appSource).not.toContain('Safari 分享');
+    expect(appSource).not.toContain('safariShareIconText');
     expect(appSource).toContain('分享');
     expect(appSource).toContain('加入主畫面');
     expect(appSource).toContain('install-guide-overlay');
@@ -118,5 +120,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('返回字庫');
     expect(appSource).toContain('完整資訊');
     expect(appSource).toContain('onOpenWord');
+    expect(appSource).toContain('libraryDetailAnim');
+    expect(appSource).toContain('detailMotionStyle');
+    expect(appSource).toContain('libraryDetailAnim.setValue(0)');
   });
 });

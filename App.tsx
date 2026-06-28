@@ -164,6 +164,7 @@ export default function App() {
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const screenAnim = useRef(new Animated.Value(1)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
+  const libraryDetailAnim = useRef(new Animated.Value(1)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
@@ -285,6 +286,23 @@ export default function App() {
       },
     ],
   });
+  const detailMotionStyle = {
+    opacity: libraryDetailAnim,
+    transform: [
+      {
+        translateY: libraryDetailAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [14, 0],
+        }),
+      },
+      {
+        scale: libraryDetailAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.975, 1],
+        }),
+      },
+    ],
+  };
   const launchOpacity = launchAnim.interpolate({
     inputRange: [0, 0.22, 1.62, 2],
     outputRange: [0, 1, 1, 0],
@@ -382,6 +400,7 @@ export default function App() {
     quizStarted,
     quizFinished,
     searchQuery,
+    selectedLibraryWord?.id,
     studyFilter,
     studyFiltersOpen,
     studyInitial,
@@ -875,6 +894,7 @@ export default function App() {
               activeFilter={activeFilter}
               activeInitial={activeInitial}
               activeLevel={activeLevel}
+              detailMotionStyle={detailMotionStyle}
               filtersOpen={libraryFiltersOpen}
               listMotionStyle={listMotionStyle}
               progress={progress}
@@ -891,8 +911,15 @@ export default function App() {
               onLevelChange={setActiveLevel}
               onCloseWord={() => setSelectedLibraryWord(null)}
               onOpenWord={(word) => {
+                libraryDetailAnim.setValue(0);
                 setSelectedLibraryWord(word);
                 appScrollRef.current?.scrollTo({ y: 0, animated: true });
+                Animated.timing(libraryDetailAnim, {
+                  duration: interactionMotion.cardMs + 90,
+                  easing: Easing.out(Easing.cubic),
+                  toValue: 1,
+                  useNativeDriver: true,
+                }).start();
               }}
               onQueryChange={handleLibraryQueryChange}
               onQueryClear={clearLibrarySearch}
@@ -1336,7 +1363,9 @@ function InstallGuideOverlay({
               },
             ]}
           />
-          <InstallGuideStepIcon icon={current.icon} />
+          <View style={styles.installGuideIconGraphic}>
+            <InstallGuideStepIcon icon={current.icon} />
+          </View>
         </Animated.View>
         <Animated.View style={[styles.installGuideCopyBlock, stepMotionStyle]}>
           <Text style={styles.installGuideTitle}>{current.title}</Text>
@@ -1388,12 +1417,7 @@ function InstallGuideStepIcon({ icon }: { icon: (typeof installGuideSteps)[numbe
     return <Compass size={56} color="#2563eb" strokeWidth={2.1} />;
   }
   if (icon === 'share') {
-    return (
-      <View style={styles.safariShareIcon}>
-        <SquareArrowUp size={56} color="#2563eb" strokeWidth={2.1} />
-        <Text style={styles.safariShareIconText}>Safari 分享</Text>
-      </View>
-    );
+    return <SquareArrowUp size={56} color="#2563eb" strokeWidth={2.1} />;
   }
   if (icon === 'add') {
     return <SquarePlus size={56} color="#2563eb" strokeWidth={2.1} />;
@@ -1879,6 +1903,7 @@ function LibraryView({
   activeFilter,
   activeInitial,
   activeLevel,
+  detailMotionStyle,
   filtersOpen,
   listMotionStyle,
   progress,
@@ -1904,6 +1929,7 @@ function LibraryView({
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  detailMotionStyle: StyleProp<ViewStyle>;
   filtersOpen: boolean;
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
   progress: ProgressState;
@@ -1966,7 +1992,7 @@ function LibraryView({
   if (selectedWord) {
     return (
       <LibraryWordDetailView
-        motionStyle={listMotionStyle(0)}
+        motionStyle={detailMotionStyle}
         progress={progress}
         word={selectedWord}
         onBack={onCloseWord}
@@ -2609,19 +2635,16 @@ const styles = StyleSheet.create({
     height: 84,
     position: 'absolute',
     width: 84,
+    zIndex: 0,
+  },
+  installGuideIconGraphic: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
   },
   installGuideCopyBlock: {
     alignItems: 'center',
     gap: 8,
-  },
-  safariShareIcon: {
-    alignItems: 'center',
-    gap: 6,
-  },
-  safariShareIconText: {
-    color: '#1d4ed8',
-    fontSize: 11,
-    fontWeight: '900',
   },
   installGuideTitle: {
     color: '#172033',

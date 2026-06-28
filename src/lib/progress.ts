@@ -2,6 +2,10 @@ import type { WordEntry } from '../data/words';
 
 export type WordStatus = 'new' | 'mastered' | 'review';
 export type LibraryFilter = 'all' | 'favorites' | 'review' | 'mastered' | 'new';
+export type LibraryFilterOptions = {
+  initial?: string;
+  level?: string;
+};
 
 export type WordProgress = {
   status: WordStatus;
@@ -114,8 +118,11 @@ export function filterWords(
   state: ProgressState,
   query: string,
   filter: LibraryFilter,
+  options: LibraryFilterOptions = {},
 ): WordEntry[] {
   const normalizedQuery = query.trim().toLowerCase();
+  const level = options.level && options.level !== 'all' ? options.level : null;
+  const initial = options.initial && options.initial !== 'all' ? options.initial.toUpperCase() : null;
 
   return words.filter((word) => {
     const progress = currentProgress(state, word.id);
@@ -126,6 +133,14 @@ export function filterWords(
       word.example.toLowerCase().includes(normalizedQuery);
 
     if (!matchesQuery) {
+      return false;
+    }
+
+    if (level && word.group !== level) {
+      return false;
+    }
+
+    if (initial && !word.word.toUpperCase().startsWith(initial)) {
       return false;
     }
 

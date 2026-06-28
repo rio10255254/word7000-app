@@ -57,8 +57,15 @@ type AccountState = {
   status: AccountStatus;
   message: string;
 };
+type UpdateState = {
+  available: boolean;
+  message: string;
+  refresh: () => void;
+};
 
 const today = new Date().toISOString().slice(0, 10);
+const UPDATE_STORAGE_KEY = 'word7000-version-v1';
+const LIBRARY_BATCH_SIZE = 240;
 const initialProgress: ProgressState = {
   dailyTarget: 20,
   streak: 1,
@@ -82,6 +89,21 @@ const tabs: Array<{ id: Tab; label: string; icon: typeof Home }> = [
   { id: 'profile', label: '我的', icon: User },
 ];
 
+const levelFilters = [
+  { id: 'all', label: '全部分級' },
+  ...Array.from(new Set(sampleWords.map((word) => word.group))).map((group) => ({
+    id: group,
+    label: group.replace('Core ', 'L'),
+  })),
+];
+const alphabetFilters = [
+  { id: 'all', label: '全部' },
+  ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((letter) => ({
+    id: letter,
+    label: letter,
+  })),
+];
+
 export default function App() {
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
@@ -92,6 +114,8 @@ export default function App() {
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>('all');
+  const [activeLevel, setActiveLevel] = useState('all');
+  const [activeInitial, setActiveInitial] = useState('all');
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
 
   const stats = useMemo(() => computeStats(sampleWords, progress), [progress]);
@@ -99,10 +123,15 @@ export default function App() {
   const quizWord = sampleWords[quizIndex % sampleWords.length];
   const quizOptions = useMemo(() => buildQuizOptions(sampleWords, quizWord.id), [quizWord.id]);
   const libraryWords = useMemo(
-    () => filterWords(sampleWords, progress, searchQuery, activeFilter),
-    [activeFilter, progress, searchQuery],
+    () =>
+      filterWords(sampleWords, progress, searchQuery, activeFilter, {
+        initial: activeInitial,
+        level: activeLevel,
+      }),
+    [activeFilter, activeInitial, activeLevel, progress, searchQuery],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
+  const updateState = useAppUpdateCheck();
 
   useWebServiceWorker();
 
@@ -373,6 +402,14 @@ export default function App() {
             <Text style={styles.levelText}>Day {progress.streak}</Text>
           </View>
         </View>
+        {updateState.available && (
+          <View style={styles.updateBanner}>
+            <Text style={styles.updateText}>{updateState.message}</Text>
+            <Pressable accessibilityRole="button" onPress={updateState.refresh} style={styles.updateButton}>
+              <Text style={styles.updateButtonText}>更新</Text>
+            </Pressable>
+          </View>
+        )}
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           {activeTab === 'home' && (
@@ -380,6 +417,7 @@ export default function App() {
               dailyPercent={dailyPercent}
               progress={progress}
               stats={stats}
+              onOpenAccount={() => setActiveTab('profile')}
               onStartStudy={() => setActiveTab('study')}
               onOpenReview={() => {
                 setActiveFilter('review');
@@ -408,11 +446,15 @@ export default function App() {
           {activeTab === 'library' && (
             <LibraryView
               activeFilter={activeFilter}
+              activeInitial={activeInitial}
+              activeLevel={activeLevel}
               progress={progress}
               query={searchQuery}
               words={libraryWords}
               onFilterChange={setActiveFilter}
               onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
+              onInitialChange={setActiveInitial}
+              onLevelChange={setActiveLevel}
               onQueryChange={setSearchQuery}
             />
           )}
@@ -472,6 +514,76 @@ function useWebServiceWorker() {
   }, []);
 }
 
+function useAppUpdateCheck(): UpdateState {
+  const [available, setAvailable] = useState(false);
+  const [latestVersion, setLatestVersion] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function checkVersion() {
+      try {
+        const response = await fetch(`/version.json?t=${Date.now()}`, {
+          cache: 'no-store',
+        });
+        const data: unknown = await response.json();
+        const version = typeof (data as { version?: unknown }).version === 'string' ? (data as { version: string }).version : '';
+        const storage = getBrowserStorage();
+        const storedVersion = storage?.getItem(UPDATE_STORAGE_KEY);
+
+        if (!version || cancelled) {
+          return;
+        }
+
+        if (!storedVersion) {
+          storage?.setItem(UPDATE_STORAGE_KEY, version);
+          return;
+        }
+
+        if (storedVersion !== version) {
+          setLatestVersion(version);
+          setAvailable(true);
+        }
+      } catch {
+        // Version checks should never block studying.
+      }
+    }
+
+    checkVersion();
+
+    const visibilityDocument = (globalThis as { document?: Document }).document;
+    const handleVisibility = () => {
+      if (visibilityDocument?.visibilityState === 'visible') {
+        checkVersion();
+      }
+    };
+    visibilityDocument?.addEventListener?.('visibilitychange', handleVisibility);
+
+    return () => {
+      cancelled = true;
+      visibilityDocument?.removeEventListener?.('visibilitychange', handleVisibility);
+    };
+  }, []);
+
+  function refresh() {
+    const storage = getBrowserStorage();
+    if (latestVersion) {
+      storage?.setItem(UPDATE_STORAGE_KEY, latestVersion);
+    }
+    (globalThis as { location?: { reload: () => void } }).location?.reload();
+  }
+
+  return {
+    available,
+    message: '有新版本可用',
+    refresh,
+  };
+}
+
 function getBrowserStorage(): StorageLike | undefined {
   if (Platform.OS !== 'web') {
     return undefined;
@@ -501,12 +613,14 @@ function HomeView({
   dailyPercent,
   progress,
   stats,
+  onOpenAccount,
   onOpenReview,
   onStartStudy,
 }: {
   dailyPercent: number;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
+  onOpenAccount: () => void;
   onOpenReview: () => void;
   onStartStudy: () => void;
 }) {
@@ -538,6 +652,10 @@ function HomeView({
           <BookOpen size={18} color="#fff" strokeWidth={2.3} />
           <Text style={styles.primaryButtonText}>開始學習</Text>
           <ChevronRight size={18} color="#fff" strokeWidth={2.3} />
+        </Pressable>
+        <Pressable accessibilityRole="button" onPress={onOpenAccount} style={styles.accountShortcut}>
+          <User size={17} color="#172033" strokeWidth={2.3} />
+          <Text style={styles.accountShortcutText}>帳號登入與同步</Text>
         </Pressable>
       </View>
 
@@ -673,22 +791,35 @@ function QuizView({
 
 function LibraryView({
   activeFilter,
+  activeInitial,
+  activeLevel,
   progress,
   query,
   words,
   onFavorite,
   onFilterChange,
+  onInitialChange,
+  onLevelChange,
   onQueryChange,
 }: {
   activeFilter: LibraryFilter;
+  activeInitial: string;
+  activeLevel: string;
   progress: ProgressState;
   query: string;
   words: WordEntry[];
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
+  onInitialChange: (initial: string) => void;
+  onLevelChange: (level: string) => void;
   onQueryChange: (query: string) => void;
 }) {
-  const visibleWords = words.slice(0, 80);
+  const [visibleLimit, setVisibleLimit] = useState(LIBRARY_BATCH_SIZE);
+  const visibleWords = words.slice(0, visibleLimit);
+
+  useEffect(() => {
+    setVisibleLimit(LIBRARY_BATCH_SIZE);
+  }, [activeFilter, activeInitial, activeLevel, query]);
 
   return (
     <View style={styles.screenStack}>
@@ -719,9 +850,44 @@ function LibraryView({
         })}
       </ScrollView>
 
-      <View style={styles.wordList}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+        {levelFilters.map((level) => {
+          const selected = activeLevel === level.id;
+          return (
+            <Pressable
+              accessibilityLabel={`分級 ${level.label}`}
+              accessibilityRole="button"
+              key={level.id}
+              onPress={() => onLevelChange(level.id)}
+              style={[styles.filterChip, selected && styles.levelChipActive]}
+            >
+              <Text style={[styles.filterText, selected && styles.filterTextActive]}>{level.label}</Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.letterRow}>
+        {alphabetFilters.map((initial) => {
+          const selected = activeInitial === initial.id;
+          return (
+            <Pressable
+              accessibilityLabel={initial.id === 'all' ? '字首 全部' : `字首 ${initial.id}`}
+              accessibilityRole="button"
+              key={initial.id}
+              onPress={() => onInitialChange(initial.id)}
+              style={[styles.letterChip, selected && styles.letterChipActive]}
+            >
+              <Text style={[styles.letterText, selected && styles.letterTextActive]}>{initial.label}</Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      <View style={styles.libraryPanel}>
+        <View style={styles.wordList}>
         <Text style={styles.resultCount}>
-          {words.length} 個結果{words.length > visibleWords.length ? `，先顯示前 ${visibleWords.length} 個` : ''}
+          共 {words.length} 個結果，目前顯示 {visibleWords.length} 個
         </Text>
         {visibleWords.map((word) => {
           const wordProgress = progress.words[word.id];
@@ -730,6 +896,7 @@ function LibraryView({
               <View style={styles.flexOne}>
                 <View style={styles.wordLine}>
                   <Text style={styles.libraryWord}>{word.word}</Text>
+                  <Text style={styles.libraryGroup}>{word.group}</Text>
                   <Text style={styles.libraryPos}>{word.partOfSpeech}</Text>
                 </View>
                 <Text style={styles.libraryMeaning}>{word.meaningZh}</Text>
@@ -753,6 +920,38 @@ function LibraryView({
             </View>
           );
         })}
+        {visibleWords.length < words.length && (
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => setVisibleLimit((current) => Math.min(words.length, current + LIBRARY_BATCH_SIZE))}
+            style={styles.loadMoreButton}
+          >
+            <Text style={styles.loadMoreText}>載入更多單字</Text>
+          </Pressable>
+        )}
+        {words.length === 0 && (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyTitle}>沒有符合的單字</Text>
+            <Text style={styles.emptyText}>可以清除搜尋或換一個分級、字首。</Text>
+          </View>
+        )}
+        </View>
+        <View style={styles.alphabetRail}>
+          {alphabetFilters.slice(1).map((initial) => {
+            const selected = activeInitial === initial.id;
+            return (
+              <Pressable
+                accessibilityLabel={`跳到 ${initial.id} 開頭`}
+                accessibilityRole="button"
+                key={initial.id}
+                onPress={() => onInitialChange(initial.id)}
+                style={[styles.railLetterButton, selected && styles.railLetterButtonActive]}
+              >
+                <Text style={[styles.railLetterText, selected && styles.railLetterTextActive]}>{initial.id}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
     </View>
   );
@@ -802,20 +1001,19 @@ function ProfileView({
           <Text style={styles.cardMeta}>{account.configured ? (signedIn ? '已登入' : '未登入') : '本機'}</Text>
         </View>
 
-        {!account.configured && (
-          <View style={styles.localOnlyBox}>
-            <Text style={styles.localOnlyTitle}>本機記憶</Text>
-            <Text style={styles.localOnlyText}>進度會保留在這台裝置。</Text>
-          </View>
-        )}
-
-        {account.configured && !signedIn && (
+        {!signedIn && (
           <View style={styles.inputStack}>
+            {!account.configured && (
+              <View style={styles.localOnlyBox}>
+                <Text style={styles.localOnlyTitle}>帳號登入尚未啟用</Text>
+                <Text style={styles.localOnlyText}>目前先用本機記憶；Cloudflare 設好 Supabase 後，這裡就能登入同步。</Text>
+              </View>
+            )}
             <View style={styles.inputBox}>
               <Mail size={17} color="#717987" strokeWidth={2.2} />
               <TextInput
                 autoCapitalize="none"
-                editable={!account.busy}
+                editable={account.configured && !account.busy}
                 keyboardType="email-address"
                 onChangeText={onEmailChange}
                 placeholder="Email"
@@ -827,7 +1025,7 @@ function ProfileView({
             <View style={styles.inputBox}>
               <Lock size={17} color="#717987" strokeWidth={2.2} />
               <TextInput
-                editable={!account.busy}
+                editable={account.configured && !account.busy}
                 onChangeText={onPasswordChange}
                 placeholder="密碼"
                 placeholderTextColor="#9ca3af"
@@ -839,18 +1037,18 @@ function ProfileView({
             <View style={styles.buttonRow}>
               <Pressable
                 accessibilityRole="button"
-                disabled={account.busy}
+                disabled={!account.configured || account.busy}
                 onPress={onSignIn}
-                style={[styles.accountButton, account.busy && styles.disabledButton]}
+                style={[styles.accountButton, (!account.configured || account.busy) && styles.disabledButton]}
               >
                 <LogIn size={17} color="#fff" strokeWidth={2.4} />
                 <Text style={styles.accountButtonText}>登入</Text>
               </Pressable>
               <Pressable
                 accessibilityRole="button"
-                disabled={account.busy}
+                disabled={!account.configured || account.busy}
                 onPress={onSignUp}
-                style={[styles.outlineButton, account.busy && styles.disabledButton]}
+                style={[styles.outlineButton, (!account.configured || account.busy) && styles.disabledButton]}
               >
                 <Text style={styles.outlineButtonText}>註冊</Text>
               </Pressable>
@@ -953,6 +1151,34 @@ const styles = StyleSheet.create({
     color: '#166534',
     fontSize: 13,
     fontWeight: '700',
+  },
+  updateBanner: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderBottomColor: '#bfdbfe',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'space-between',
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+  },
+  updateText: {
+    color: '#1d4ed8',
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  updateButton: {
+    backgroundColor: '#172033',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  updateButtonText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '900',
   },
   content: {
     padding: 18,
@@ -1060,6 +1286,23 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     color: '#fff',
     fontSize: 15,
+    fontWeight: '800',
+  },
+  accountShortcut: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 7,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: 12,
+  },
+  accountShortcutText: {
+    color: '#172033',
+    fontSize: 14,
     fontWeight: '800',
   },
   statsGrid: {
@@ -1337,6 +1580,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#172033',
     borderColor: '#172033',
   },
+  levelChipActive: {
+    backgroundColor: '#2563eb',
+    borderColor: '#2563eb',
+  },
   filterText: {
     color: '#717987',
     fontSize: 13,
@@ -1345,8 +1592,39 @@ const styles = StyleSheet.create({
   filterTextActive: {
     color: '#fff',
   },
+  letterRow: {
+    gap: 6,
+    paddingRight: 10,
+  },
+  letterChip: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 34,
+    justifyContent: 'center',
+    minWidth: 34,
+    paddingHorizontal: 9,
+  },
+  letterChipActive: {
+    backgroundColor: '#172033',
+    borderColor: '#172033',
+  },
+  letterText: {
+    color: '#717987',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  letterTextActive: {
+    color: '#fff',
+  },
+  libraryPanel: {
+    position: 'relative',
+  },
   wordList: {
     gap: 10,
+    paddingRight: 36,
   },
   libraryItem: {
     backgroundColor: '#fff',
@@ -1367,6 +1645,18 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 20,
     fontWeight: '900',
+  },
+  libraryGroup: {
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 6,
+    borderWidth: 1,
+    color: '#1d4ed8',
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
   },
   libraryPos: {
     color: '#2563eb',
@@ -1399,6 +1689,67 @@ const styles = StyleSheet.create({
     color: '#717987',
     fontSize: 12,
     fontWeight: '700',
+  },
+  loadMoreButton: {
+    alignItems: 'center',
+    backgroundColor: '#172033',
+    borderRadius: 8,
+    justifyContent: 'center',
+    minHeight: 46,
+    paddingHorizontal: 14,
+  },
+  loadMoreText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  emptyState: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 16,
+  },
+  emptyTitle: {
+    color: '#172033',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  emptyText: {
+    color: '#717987',
+    fontSize: 13,
+    marginTop: 5,
+  },
+  alphabetRail: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 1,
+    paddingHorizontal: 2,
+    paddingVertical: 4,
+    position: 'absolute',
+    right: 2,
+    top: 28,
+  },
+  railLetterButton: {
+    alignItems: 'center',
+    borderRadius: 6,
+    height: 18,
+    justifyContent: 'center',
+    width: 20,
+  },
+  railLetterButtonActive: {
+    backgroundColor: '#172033',
+  },
+  railLetterText: {
+    color: '#717987',
+    fontSize: 9,
+    fontWeight: '900',
+    lineHeight: 11,
+  },
+  railLetterTextActive: {
+    color: '#fff',
   },
   profileCard: {
     alignItems: 'center',

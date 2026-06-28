@@ -85,6 +85,17 @@ describe('library and quiz helpers', () => {
     expect(filterWords(sampleWords, state, '', 'new')).not.toContain(sampleWords[0]);
   });
 
+  test('filterWords narrows by level and first letter together', () => {
+    const coreTwoBWords = filterWords(sampleWords, emptyProgress(), '', 'all', {
+      initial: 'B',
+      level: 'Core 2',
+    });
+
+    expect(coreTwoBWords.length).toBeGreaterThan(0);
+    expect(coreTwoBWords.every((word) => word.group === 'Core 2')).toBe(true);
+    expect(coreTwoBWords.every((word) => word.word.toUpperCase().startsWith('B'))).toBe(true);
+  });
+
   test('buildQuizOptions returns three choices with the correct meaning included once', () => {
     const options = buildQuizOptions(sampleWords, sampleWords[0].id);
 

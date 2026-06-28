@@ -4,6 +4,7 @@ import { describe, expect, test } from 'vitest';
 import app from '../app.json';
 
 const manifestPath = path.join(process.cwd(), 'public', 'manifest.json');
+const versionPath = path.join(process.cwd(), 'public', 'version.json');
 const serviceWorkerPath = path.join(process.cwd(), 'public', 'service-worker.js');
 const headersPath = path.join(process.cwd(), 'public', '_headers');
 const appPath = path.join(process.cwd(), 'App.tsx');
@@ -41,8 +42,18 @@ describe('free web launch configuration', () => {
     expect(serviceWorker).toContain('self.clients.claim');
     expect(serviceWorker).toContain("request.mode === 'navigate'");
     expect(headers).toContain('/service-worker.js');
+    expect(headers).toContain('/version.json');
     expect(headers).toContain('Cache-Control: no-cache');
     expect(appSource).toContain('/service-worker.js');
+    expect(appSource).toContain('/version.json');
     expect(prepareExport).toContain('rel="manifest"');
+    expect(prepareExport).toContain('version.json');
+  });
+
+  test('provides a version endpoint for mobile web app update checks', () => {
+    const version = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
+
+    expect(typeof version.version).toBe('string');
+    expect(version.version.length).toBeGreaterThan(0);
   });
 });

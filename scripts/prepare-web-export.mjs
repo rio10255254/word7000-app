@@ -3,6 +3,8 @@ import path from 'node:path';
 
 const distDir = path.resolve('dist');
 const indexPath = path.join(distDir, 'index.html');
+const packagePath = path.resolve('package.json');
+const versionPath = path.join(distDir, 'version.json');
 
 if (!fs.existsSync(indexPath)) {
   throw new Error(`Missing exported index.html at ${indexPath}`);
@@ -32,4 +34,18 @@ for (const tag of tags) {
 }
 
 fs.writeFileSync(indexPath, html, 'utf8');
+const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+const buildVersion = `${packageJson.version}-${Date.now()}`;
+fs.writeFileSync(
+  versionPath,
+  `${JSON.stringify(
+    {
+      version: buildVersion,
+      builtAt: new Date().toISOString(),
+    },
+    null,
+    2,
+  )}\n`,
+  'utf8',
+);
 console.log(`Prepared web export at ${distDir}`);

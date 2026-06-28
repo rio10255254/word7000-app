@@ -37,7 +37,9 @@ EXPO_PUBLIC_SUPABASE_URL
 EXPO_PUBLIC_SUPABASE_ANON_KEY
 ```
 
-After this, pushing to GitHub triggers a new Cloudflare deployment.
+After this, pushing to GitHub triggers a new Cloudflare deployment. The automatic update only happens after Cloudflare Pages is connected to this GitHub repository with the Git integration. A GitHub push by itself does not update the public website unless Cloudflare is watching that repository.
+
+For the mobile web app experience, the app checks `/version.json` when opened or resumed. When a newer deployment is available, users see an update prompt and can refresh into the latest version. Users who are actively using an already-open tab may not change screens instantly in the middle of a session, but the next open, resume, or refresh will detect the newer build.
 
 ## Supabase Account Memory Setup
 

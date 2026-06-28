@@ -75,4 +75,15 @@ describe('free web launch configuration', () => {
     expect(typeof version.version).toBe('string');
     expect(version.version.length).toBeGreaterThan(0);
   });
+
+  test('includes a first-launch Safari add-to-home-screen guide', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('INSTALL_GUIDE_STORAGE_KEY');
+    expect(appSource).toContain('Safari');
+    expect(appSource).toContain('分享');
+    expect(appSource).toContain('加入主畫面');
+    expect(appSource).toContain('install-guide-overlay');
+    expect(appSource).toContain('重新查看加入主畫面教學');
+  });
 });

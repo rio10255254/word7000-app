@@ -125,6 +125,110 @@ const fixedExamples = new Map(
     ['before', ['Wash your hands before dinner.', '晚餐前先洗手。']],
     ['both', ['Both answers are acceptable.', '兩個答案都可以接受。']],
     ['away', ['The station is two blocks away.', '車站在兩個街區外。']],
+    ['the', ['The blue notebook is on the desk.', '那本藍色筆記本在桌上。']],
+    ['it', ['It started to rain after lunch.', '午餐後開始下雨了。']],
+    ['she', ['She finished the report before dinner.', '她在晚餐前完成了報告。']],
+    ['who', ['Who left the message on my desk?', '誰把訊息留在我的桌上？']],
+    ['our', ['Our class starts at nine.', '我們的課九點開始。']],
+    ['them', ['Please give them the new schedule.', '請把新的時程表給他們。']],
+    ['me', ['Can you send me the file tonight?', '你今晚可以把檔案寄給我嗎？']],
+    ['about', ['We talked about the plan after class.', '我們下課後談了那個計畫。']],
+    ['first', ['First, read the question carefully.', '首先，仔細閱讀題目。']],
+    ['more', ['We need more time to finish the work.', '我們需要更多時間完成這項工作。']],
+    ['good', ['A good habit makes learning easier.', '好習慣會讓學習更容易。']],
+    ['after', ['Call me after the meeting ends.', '會議結束後打電話給我。']],
+    ['still', ['The room was still quiet after the test.', '考試後房間仍然很安靜。']],
+    ['put', ['Please put the keys on the table.', '請把鑰匙放在桌上。']],
+    ['feel', ['I can feel the cold wind outside.', '我能感覺到外面的冷風。']],
+    ['high', ['The mountain is too high to climb today.', '這座山今天太高，不適合攀登。']],
+    ['most', ['Most students finished the quiz early.', '大多數學生提早完成了測驗。']],
+    ['much', ['There is not much time left.', '剩下的時間不多了。']],
+    ['show', ['Please show me your answer.', '請把你的答案給我看。']],
+    ['why', ['Why did the train stop here?', '火車為什麼停在這裡？']],
+    ['always', ['She always checks her work twice.', '她總是把作業檢查兩次。']],
+    ['provide', ['The school will provide lunch today.', '學校今天會提供午餐。']],
+    ['fact', ['The fact surprised everyone in the room.', '這個事實讓房間裡每個人都很驚訝。']],
+    ['believe', ['I believe this answer is correct.', '我相信這個答案是正確的。']],
+    ['eye', ['Her left eye was red after swimming.', '她游泳後左眼發紅。']],
+    ['business', ['His family runs a small business.', '他的家人經營一間小公司。']],
+    ['follow', ['Please follow the signs to the exit.', '請跟著指標走到出口。']],
+    ['power', ['The storm cut power to the town.', '暴風雨讓鎮上停電。']],
+    ['never', ['I never drink coffee at night.', '我晚上從不喝咖啡。']],
+    ['where', ['Where did you put my notebook?', '你把我的筆記本放在哪裡？']],
+    ['something', ['Something moved behind the curtain.', '窗簾後面有東西動了一下。']],
+    ['against', ['The ladder leaned against the wall.', '梯子靠在牆上。']],
+    ['again', ['Please try again after a short break.', '短暫休息後請再試一次。']],
+    ['us', ['The teacher asked us to wait outside.', '老師要我們在外面等。']],
+    ['during', ['No phones are allowed during the test.', '考試期間不准使用手機。']],
+    ['often', ['We often study together after school.', '我們常常放學後一起讀書。']],
+    ['yet', ['The answer is not ready yet.', '答案還沒準備好。']],
+    ['although', ['Although it was late, we kept working.', '雖然時間很晚，我們還是繼續工作。']],
+    ['since', ['I have known her since high school.', '我從高中就認識她。']],
+    ['almost', ['The bus is almost full.', '公車幾乎坐滿了。']],
+    ['later', ['I will call you later tonight.', '我今晚晚一點會打給你。']],
+    ['though', ['The road was narrow, though it was safe.', '這條路很窄，不過很安全。']],
+    ['whether', ['I do not know whether he will come.', '我不知道他會不會來。']],
+    ['already', ['She has already finished her homework.', '她已經完成作業了。']],
+    ['together', ['They cooked dinner together on Sunday.', '他們星期天一起做晚餐。']],
+    ['ever', ['Have you ever visited this museum?', '你曾經參觀過這座博物館嗎？']],
+    ['around', ['The children ran around the playground.', '孩子們繞著遊樂場跑。']],
+    ['until', ['Wait here until the rain stops.', '在這裡等到雨停。']],
+    ['quite', ['The answer was quite clear.', '這個答案相當清楚。']],
+    ['anything', ['Do you need anything from the store?', '你需要我從商店帶什麼嗎？']],
+    ['among', ['She found her bag among the boxes.', '她在箱子堆中找到自己的包包。']],
+    ['perhaps', ['Perhaps we should leave earlier.', '也許我們應該早一點出發。']],
+    ['once', ['I met him once at a conference.', '我曾在一場會議上見過他一次。']],
+    ['ago', ['They moved here two years ago.', '他們兩年前搬到這裡。']],
+    ['across', ['The cafe is across the street.', '咖啡館在街對面。']],
+    ['behind', ['The garden is behind the house.', '花園在房子後面。']],
+    ['including', ['Ten people joined, including my sister.', '包含我妹妹在內，共有十個人參加。']],
+    ['in', ['The ticket is in my bag.', '票在我的包包裡。']],
+    ['data', ['The data supports our conclusion.', '這些資料支持我們的結論。']],
+    ['therefore', ['The road was closed; therefore, we walked.', '道路封閉了，所以我們改用走的。']],
+    ['thus', ['The bridge was closed; thus, we took another road.', '橋封閉了，因此我們改走另一條路。']],
+    ['indeed', ['The test was difficult indeed.', '那場考試確實很難。']],
+    ['otherwise', ['Bring an umbrella; otherwise, you may get wet.', '帶把傘，否則你可能會淋濕。']],
+    ['please', ['Please close the door quietly.', '請輕輕把門關上。']],
+    ['instead', ['I stayed home instead of going out.', '我沒有出門，而是待在家裡。']],
+    ['unless', ['We will wait unless the storm gets worse.', '除非暴風雨變大，否則我們會等。']],
+    ['someone', ['Someone left a jacket on the chair.', '有人把外套留在椅子上。']],
+    ['everybody', ['Everybody stood up when the bell rang.', '鈴聲響起時，每個人都站了起來。']],
+    ['somewhere', ['I left my keys somewhere in the office.', '我把鑰匙忘在辦公室某個地方。']],
+    ['beside', ['She sat beside her brother.', '她坐在哥哥旁邊。']],
+    ['meanwhile', ['Meanwhile, the children played outside.', '同時，孩子們在外面玩。']],
+    ['moreover', ['The plan is simple; moreover, it is cheap.', '這個計畫很簡單，而且成本低。']],
+    ['via', ['We sent the document via email.', '我們透過電子郵件寄出文件。']],
+    ['abroad', ['She studied abroad for one year.', '她到國外讀了一年書。']],
+    ['aloud', ['Read the sentence aloud once.', '把這個句子大聲讀一遍。']],
+    ['whereas', ['I like tea, whereas my sister prefers coffee.', '我喜歡茶，而我妹妹比較喜歡咖啡。']],
+    ['albeit', ['The room was small, albeit comfortable.', '房間雖小，但很舒適。']],
+    ['nevertheless', ['It was raining; nevertheless, we went out.', '當時正在下雨，不過我們還是出門了。']],
+    ['nonetheless', ['The work was hard; nonetheless, she finished it.', '工作很難，但她還是完成了。']],
+    ['thereby', ['The new rule saved time, thereby reducing stress.', '新規則節省了時間，因此減少了壓力。']],
+    ['whereby', ['They created a system whereby students can ask questions online.', '他們建立了一套系統，讓學生可以在線上提問。']],
+    ['provided', ['You can join the trip provided you sign up today.', '只要你今天報名，就可以參加這趟旅行。']],
+    ['considering', ['Considering the weather, we should leave early.', '考慮到天氣，我們應該早點出發。']],
+    ['regarding', ['She sent an email regarding the meeting.', '她寄了一封關於會議的電子郵件。']],
+    ['concerning', ['He asked a question concerning the new rule.', '他問了一個關於新規則的問題。']],
+    ['versus', ['The chart compares cost versus quality.', '這張圖比較成本與品質。']],
+    ['likewise', ['Her brother is kind, and she is likewise generous.', '她哥哥很善良，她也同樣慷慨。']],
+    ['altogether', ['There were twenty students altogether.', '總共有二十位學生。']],
+    ['beneath', ['The cat slept beneath the table.', '貓睡在桌子底下。']],
+    ['underneath', ['The letter was hidden underneath the book.', '那封信藏在書下面。']],
+    ['ourselves', ['We made the cake ourselves.', '我們自己做了這個蛋糕。']],
+    ['sideways', ['The sign was hanging sideways after the storm.', '暴風雨後，那個招牌歪向一邊掛著。']],
+    ['backward', ['He took one backward step.', '他向後退了一步。']],
+    ['upwards', ['Smoke rose upwards from the roof.', '煙從屋頂向上升起。']],
+    ['downwards', ['The path slopes downwards near the river.', '小路在河邊向下傾斜。']],
+    ['share', ['She owns a small share of the company.', '她擁有那家公司的一小部分股份。']],
+    ['install', ['Please install the app before class.', '請在上課前安裝這個應用程式。']],
+    ['shareholder', ['Each shareholder received a copy of the report.', '每位股東都收到一份報告。']],
+    ['homeless', ['The city opened a shelter for homeless families.', '市政府為無家可歸的家庭開設了收容中心。']],
+    ['home', ['I stayed home because the weather was bad.', '因為天氣不好，我待在家裡。']],
+    ['homework', ['I finished my homework before dinner.', '我在晚餐前完成了作業。']],
+    ['hometown', ['He visits his hometown every summer.', '他每年夏天都會回故鄉。']],
+    ['suit', ['This dark suit is for formal meetings.', '這套深色西裝適合正式會議。']],
+    ['object', ['A small object was lying under the chair.', '椅子下方有一個小物品。']],
     ['accurate', ['The accurate report helped us avoid a mistake.', '準確的報告幫助我們避免錯誤。']],
     ['agriculture', ['Agriculture supports many rural families.', '農業支持許多農村家庭。']],
     ['annual', ['The annual report was published in March.', '年度報告在三月發布。']],
@@ -414,7 +518,16 @@ function wordKind(pos, word) {
     }
     return 'noun';
   }
-  return 'function';
+  if (first === 'pl' || first.includes('abbr') || first === 'word') {
+    return 'noun';
+  }
+  if (word.endsWith('ly')) {
+    return 'adverb';
+  }
+  if (word.endsWith('ed')) {
+    return 'adjective';
+  }
+  return 'noun';
 }
 
 function generatedExample(row, word, partOfSpeechValue, meaningZh, index) {
@@ -618,10 +731,10 @@ function nounExample(word, zhHead, profile, index) {
       [`The ${word} changed after the ${event}.`, `${zhHead}在${zhEvent}後改變了。`],
     ],
     general: [
-      [`The ${actor} discussed ${article}${word} during the ${event}.`, `${zhActor}在${zhEvent}中討論了${zhHead}。`],
-      [`A note about ${word} helped with the ${object} before the ${event}.`, `關於${zhHead}的筆記在${zhEvent}前幫助處理${zhObject}。`],
-      [`The report mentioned ${word} before the final ${event} at ${time}.`, `報告在${zhTime}的最後${zhEvent}前提到${zhHead}。`],
-      [`The ${word} became important after ${time} during the ${event}.`, `${zhHead}在${zhEvent}中的${zhTime}後變得重要。`],
+      [`The ${actor} explained the ${word} after the ${event}.`, `${zhActor}在${zhEvent}後說明了${zhHead}。`],
+      [`We noticed the ${word} during the ${event}.`, `我們在${zhEvent}中注意到${zhHead}。`],
+      [`The ${actor} treated the ${word} as important during the ${event}.`, `${zhActor}在${zhEvent}中把${zhHead}視為重要。`],
+      [`The ${word} was easy to find in the ${object}.`, `${zhObject}裡很容易找到${zhHead}。`],
     ],
   };
 
@@ -679,13 +792,10 @@ function verbExample(word, zhHead, profile, pos, index) {
           [`The ${quality} began to ${word} during the ${event}.`, `${zhQuality}在${zhEvent}期間開始${zhHead}。`],
         ]
       : [
-          [
-            `The ${actor} will ${word} the ${object} before ${time} with a clear ${quality} during the ${event}.`,
-            `${zhActor}會在${zhEvent}中用清楚的${zhQuality}，於${zhTime}前${zhHead}${zhObject}。`,
-          ],
-          [`The ${actor} decided to ${word} the ${object} after the ${event}.`, `${zhActor}決定在${zhEvent}後${zhHead}${zhObject}。`],
-          [`A clear ${quality} can ${word} the ${object} before ${time}.`, `清楚的${zhQuality}可以在${zhTime}前${zhHead}${zhObject}。`],
-          [`Please ${word} the ${object} after the ${event} and before ${time}.`, `請在${zhEvent}後、${zhTime}前${zhHead}${zhObject}。`],
+          [`Please ${word} the ${object} carefully.`, `請仔細${zhHead}${zhObject}。`],
+          [`The ${actor} tried to ${word} the plan after the ${event}.`, `${zhActor}在${zhEvent}後試著${zhHead}這個計畫。`],
+          [`A clear ${quality} helped us ${word} the next step.`, `清楚的${zhQuality}幫助我們${zhHead}下一步。`],
+          [`They need to ${word} the problem before ${time}.`, `他們需要在${zhTime}前${zhHead}這個問題。`],
         ],
   };
 
@@ -772,11 +882,61 @@ function functionExample(word, zhHead, profile, index) {
   const zhObject = pick(zhObjects, word, index);
   const time = pick(contextTimes, word, index + 2);
   const zhTime = pick(zhTimes, word, index + 2);
+  const prepositions = new Set([
+    'above',
+    'across',
+    'along',
+    'alongside',
+    'amid',
+    'among',
+    'amongst',
+    'around',
+    'behind',
+    'below',
+    'beneath',
+    'beside',
+    'beyond',
+    'inside',
+    'onto',
+    'outside',
+    'throughout',
+    'underneath',
+    'upon',
+    'within',
+  ]);
+  const conjunctions = new Set(['albeit', 'unless', 'whereas', 'whilst']);
+  const pronouns = new Set([
+    'anybody',
+    'anyone',
+    'everybody',
+    'everyone',
+    'none',
+    'ours',
+    'ourselves',
+    'someone',
+    'themselves',
+    'whoever',
+    'yours',
+    'yourself',
+  ]);
+
+  if (prepositions.has(word)) {
+    return [`The keys are ${word} the ${object}.`, `鑰匙在${zhObject}${zhHead}。`];
+  }
+
+  if (conjunctions.has(word)) {
+    return [`${capitalize(word)} the task was hard, we finished it.`, `${zhHead}這件事很難，我們還是完成了。`];
+  }
+
+  if (pronouns.has(word)) {
+    return [`${capitalize(word)} can join the meeting today.`, `${zhHead}今天都可以參加會議。`];
+  }
+
   const templates = [
-    [`The note placed ${word} near the ${object} before ${time}.`, `便條在${zhTime}前把${zhHead}放在${zhObject}附近。`],
-    [`The answer changed ${word} the end of the ${time}.`, `答案在${zhTime}結束時因${zhHead}而改變。`],
-    [`The sign near the ${object} pointed ${word} the main entrance.`, `${zhObject}旁的標誌指向與${zhHead}相關的主要入口。`],
-    [`The rule stayed ${word} the final review before ${time}.`, `規則在${zhTime}前的最後檢查中保持${zhHead}的意思。`],
+    [`The answer sounded clearer ${word} the final edit.`, `最後修改後，答案因${zhHead}而更清楚。`],
+    [`The team used ${word} to connect two ideas.`, `團隊用${zhHead}連接兩個想法。`],
+    [`The sentence felt natural with ${word} in the middle.`, `句子中間有${zhHead}時讀起來很自然。`],
+    [`The message changed slightly after ${word} was added.`, `加上${zhHead}後，訊息稍微改變了。`],
   ];
 
   if (profile === 'motion') {

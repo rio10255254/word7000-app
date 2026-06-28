@@ -6,7 +6,7 @@ import {
   ChevronDown,
   ChevronRight,
   Cloud,
-  SlidersHorizontal,
+  Compass,
   GripVertical,
   Home,
   Library,
@@ -16,6 +16,10 @@ import {
   Mail,
   RotateCcw,
   Search,
+  Share2,
+  SlidersHorizontal,
+  Smartphone,
+  SquarePlus,
   Star,
   Target,
   Trophy,
@@ -61,6 +65,11 @@ import { loadProgressFromStorage, saveProgressToStorage, type StorageLike } from
 import { loadCloudProgress, saveCloudProgress, type CloudProgressClient } from './src/lib/supabaseProgress';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
+import {
+  INSTALL_GUIDE_STORAGE_KEY,
+  markInstallGuideSeen,
+  shouldShowInstallGuide,
+} from './src/lib/installGuide';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
@@ -85,6 +94,28 @@ const today = new Date().toISOString().slice(0, 10);
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_WINDOW_SIZE = 260;
+const installGuideSteps = [
+  {
+    icon: 'safari',
+    title: '先用 Safari 開啟',
+    text: '在 iPhone 上用 Safari 打開 Word7000，這樣才能加入主畫面。',
+  },
+  {
+    icon: 'share',
+    title: '點下方分享',
+    text: '按 Safari 底部工具列中間的分享按鈕。',
+  },
+  {
+    icon: 'add',
+    title: '選「加入主畫面」',
+    text: '在選單往下找，點一下「加入主畫面」。',
+  },
+  {
+    icon: 'phone',
+    title: '完成後像 App 一樣使用',
+    text: '之後從手機桌面打開，就會是全螢幕 App 體驗。',
+  },
+] as const;
 const initialProgress: ProgressState = {
   dailyTarget: 20,
   streak: 1,
@@ -127,6 +158,7 @@ const MotionPressable = Animated.createAnimatedComponent(Pressable);
 export default function App() {
   const appScrollRef = useRef<ScrollView | null>(null);
   const launchAnim = useRef(new Animated.Value(0)).current;
+  const installGuideAnim = useRef(new Animated.Value(0)).current;
   const screenAnim = useRef(new Animated.Value(1)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
@@ -153,6 +185,9 @@ export default function App() {
   const [quizInitial, setQuizInitial] = useState('all');
   const [quizFiltersOpen, setQuizFiltersOpen] = useState(false);
   const [showLaunch, setShowLaunch] = useState(true);
+  const [installGuideChecked, setInstallGuideChecked] = useState(false);
+  const [showInstallGuide, setShowInstallGuide] = useState(false);
+  const [installGuideStep, setInstallGuideStep] = useState(0);
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
   const [scrollY, setScrollY] = useState(0);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
@@ -247,6 +282,11 @@ export default function App() {
     inputRange: [0, 1, 2],
     outputRange: [0.94, 1, 1.04],
   });
+  const installGuideOpacity = installGuideAnim;
+  const installGuideTranslateY = installGuideAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [24, 0],
+  });
   const librarySliderVisible = activeTab === 'library' && libraryWords.length > LIBRARY_WINDOW_SIZE;
   const libraryThumbOffset = scrollThumbOffset(
     libraryWindowStart,
@@ -285,6 +325,17 @@ export default function App() {
       }),
     ]).start(() => setShowLaunch(false));
   }, [launchAnim]);
+
+  useEffect(() => {
+    if (showLaunch || installGuideChecked) {
+      return;
+    }
+
+    setInstallGuideChecked(true);
+    if (shouldShowInstallGuide(getBrowserStorage(), isInstalledWebApp())) {
+      openInstallGuide();
+    }
+  }, [installGuideChecked, showLaunch]);
 
   useEffect(() => {
     screenAnim.setValue(0);
@@ -510,6 +561,41 @@ export default function App() {
     setLibraryWindowStart(0);
     appScrollRef.current?.scrollTo({ y: 0, animated: true });
     setScrollY(0);
+  }
+
+  function openInstallGuide() {
+    setInstallGuideStep(0);
+    setShowInstallGuide(true);
+    installGuideAnim.setValue(0);
+    Animated.timing(installGuideAnim, {
+      duration: 260,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function dismissInstallGuide() {
+    markInstallGuideSeen(getBrowserStorage());
+    Animated.timing(installGuideAnim, {
+      duration: 220,
+      easing: Easing.inOut(Easing.cubic),
+      toValue: 0,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) {
+        setShowInstallGuide(false);
+      }
+    });
+  }
+
+  function nextInstallGuideStep() {
+    if (installGuideStep >= installGuideSteps.length - 1) {
+      dismissInstallGuide();
+      return;
+    }
+
+    setInstallGuideStep((current) => Math.min(current + 1, installGuideSteps.length - 1));
   }
 
   async function activateSignedInUser(user: SupabaseUser, fallback: ProgressState) {
@@ -755,6 +841,7 @@ export default function App() {
               stats={stats}
               onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
+              onShowInstallGuide={openInstallGuide}
               onSignIn={handleSignIn}
               onSignOut={handleSignOut}
               onSignUp={handleSignUp}
@@ -831,6 +918,15 @@ export default function App() {
               <View style={styles.launchBarFill} />
             </View>
           </Animated.View>
+        )}
+        {showInstallGuide && (
+          <InstallGuideOverlay
+            opacity={installGuideOpacity}
+            step={installGuideStep}
+            translateY={installGuideTranslateY}
+            onDismiss={dismissInstallGuide}
+            onNext={nextInstallGuideStep}
+          />
         )}
       </View>
     </SafeAreaView>
@@ -932,6 +1028,19 @@ function getBrowserStorage(): StorageLike | undefined {
   }
 
   return (globalThis as { localStorage?: StorageLike }).localStorage;
+}
+
+function isInstalledWebApp(): boolean {
+  if (Platform.OS !== 'web') {
+    return true;
+  }
+
+  const browserWindow = globalThis as {
+    matchMedia?: (query: string) => { matches: boolean };
+    navigator?: { standalone?: boolean };
+  };
+
+  return Boolean(browserWindow.navigator?.standalone || browserWindow.matchMedia?.('(display-mode: standalone)').matches);
 }
 
 function asCloudProgressClient(client: AppSupabaseClient): CloudProgressClient {
@@ -1067,6 +1176,104 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
       {children}
     </Animated.View>
   );
+}
+
+function InstallGuideOverlay({
+  opacity,
+  step,
+  translateY,
+  onDismiss,
+  onNext,
+}: {
+  opacity: Animated.Value;
+  step: number;
+  translateY: Animated.AnimatedInterpolation<number>;
+  onDismiss: () => void;
+  onNext: () => void;
+}) {
+  const current = installGuideSteps[step];
+  const isLastStep = step === installGuideSteps.length - 1;
+
+  return (
+    <Animated.View
+      style={[styles.installGuideOverlay, { opacity, transform: [{ translateY }] }]}
+      testID="install-guide-overlay"
+    >
+      <View style={styles.installGuideTopBar}>
+        <View style={styles.installGuideLogo}>
+          <View style={styles.installGuideLogoDot} />
+          <Text style={styles.installGuideLogoText}>W7</Text>
+        </View>
+        <AnimatedPressable
+          accessibilityLabel="關閉加入主畫面教學"
+          accessibilityRole="button"
+          onPress={onDismiss}
+          pressTone="icon"
+          style={styles.installGuideClose}
+        >
+          <X size={18} color="#172033" strokeWidth={2.4} />
+        </AnimatedPressable>
+      </View>
+
+      <View style={styles.installGuideCard}>
+        <View style={styles.installGuideStepPill}>
+          <Text style={styles.installGuideStepText}>
+            {step + 1} / {installGuideSteps.length}
+          </Text>
+        </View>
+        <View style={styles.installGuideIconWrap}>
+          <InstallGuideStepIcon icon={current.icon} />
+        </View>
+        <Text style={styles.installGuideTitle}>{current.title}</Text>
+        <Text style={styles.installGuideText}>{current.text}</Text>
+
+        <View style={styles.installGuidePreview}>
+          <View style={styles.installGuideBrowserBar} />
+          <View style={styles.installGuidePreviewRow}>
+            {installGuideSteps.map((item, index) => (
+              <View
+                key={item.title}
+                style={[styles.installGuideMiniStep, index <= step && styles.installGuideMiniStepActive]}
+              >
+                <Text style={[styles.installGuideMiniText, index <= step && styles.installGuideMiniTextActive]}>
+                  {index + 1}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.installGuideDots}>
+        {installGuideSteps.map((item, index) => (
+          <View key={item.title} style={[styles.installGuideDot, index === step && styles.installGuideDotActive]} />
+        ))}
+      </View>
+
+      <View style={styles.installGuideActions}>
+        <AnimatedPressable accessibilityRole="button" onPress={onDismiss} pressTone="secondary" style={styles.installGuideSecondary}>
+          <Text style={styles.installGuideSecondaryText}>我先自己操作</Text>
+        </AnimatedPressable>
+        <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={styles.installGuidePrimary}>
+          <Text style={styles.installGuidePrimaryText}>{isLastStep ? '完成' : '下一步'}</Text>
+          <ChevronRight size={18} color="#fff" strokeWidth={2.5} />
+        </AnimatedPressable>
+      </View>
+    </Animated.View>
+  );
+}
+
+function InstallGuideStepIcon({ icon }: { icon: (typeof installGuideSteps)[number]['icon'] }) {
+  if (icon === 'safari') {
+    return <Compass size={56} color="#2563eb" strokeWidth={2.1} />;
+  }
+  if (icon === 'share') {
+    return <Share2 size={56} color="#2563eb" strokeWidth={2.1} />;
+  }
+  if (icon === 'add') {
+    return <SquarePlus size={56} color="#2563eb" strokeWidth={2.1} />;
+  }
+  return <Smartphone size={56} color="#2563eb" strokeWidth={2.1} />;
 }
 
 function HomeView({
@@ -1684,6 +1891,7 @@ function ProfileView({
   dailyPercent,
   onEmailChange,
   onPasswordChange,
+  onShowInstallGuide,
   onSignIn,
   onSignOut,
   onSignUp,
@@ -1696,6 +1904,7 @@ function ProfileView({
   stats: ReturnType<typeof computeStats>;
   onEmailChange: (email: string) => void;
   onPasswordChange: (password: string) => void;
+  onShowInstallGuide: () => void;
   onSignIn: () => void;
   onSignOut: () => void;
   onSignUp: () => void;
@@ -1795,6 +2004,16 @@ function ProfileView({
       </View>
 
       <View style={styles.settingsCard}>
+        <AnimatedPressable
+          accessibilityRole="button"
+          onPress={onShowInstallGuide}
+          pressTone="secondary"
+          style={styles.installGuideReplayButton}
+        >
+          <Smartphone size={17} color="#172033" strokeWidth={2.3} />
+          <Text style={styles.installGuideReplayText}>重新查看加入主畫面教學</Text>
+          <ChevronRight size={17} color="#64748b" strokeWidth={2.3} />
+        </AnimatedPressable>
         <View style={styles.rowBetween}>
           <Text style={styles.sectionTitle}>每日目標</Text>
           <Text style={styles.settingValue}>{progress.dailyTarget} words</Text>
@@ -1998,6 +2217,206 @@ const styles = StyleSheet.create({
     borderRadius: 99,
     height: 5,
     width: '68%',
+  },
+  installGuideOverlay: {
+    backgroundColor: '#f8fafc',
+    bottom: 0,
+    justifyContent: 'space-between',
+    left: 0,
+    paddingHorizontal: 22,
+    paddingVertical: 24,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 80,
+  },
+  installGuideTopBar: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  installGuideLogo: {
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 48,
+    justifyContent: 'center',
+    overflow: 'hidden',
+    width: 48,
+  },
+  installGuideLogoDot: {
+    backgroundColor: '#f97316',
+    borderRadius: 99,
+    height: 11,
+    position: 'absolute',
+    right: 6,
+    top: 6,
+    width: 11,
+  },
+  installGuideLogoText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  installGuideClose: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  installGuideCard: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 12,
+    padding: 20,
+    shadowColor: '#172033',
+    shadowOffset: { height: 12, width: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 22,
+  },
+  installGuideStepPill: {
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  installGuideStepText: {
+    color: '#1d4ed8',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  installGuideIconWrap: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 108,
+    justifyContent: 'center',
+    marginTop: 4,
+    width: 108,
+  },
+  installGuideTitle: {
+    color: '#172033',
+    fontSize: 25,
+    fontWeight: '900',
+    lineHeight: 31,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  installGuideText: {
+    color: '#5f6675',
+    fontSize: 15,
+    lineHeight: 23,
+    textAlign: 'center',
+  },
+  installGuidePreview: {
+    alignSelf: 'stretch',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginTop: 4,
+    padding: 12,
+  },
+  installGuideBrowserBar: {
+    alignSelf: 'center',
+    backgroundColor: '#cbd5e1',
+    borderRadius: 99,
+    height: 5,
+    marginBottom: 12,
+    width: 86,
+  },
+  installGuidePreviewRow: {
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+  },
+  installGuideMiniStep: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 34,
+    justifyContent: 'center',
+    width: 34,
+  },
+  installGuideMiniStepActive: {
+    backgroundColor: '#2563eb',
+    borderColor: '#2563eb',
+  },
+  installGuideMiniText: {
+    color: '#64748b',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  installGuideMiniTextActive: {
+    color: '#fff',
+  },
+  installGuideDots: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 7,
+    justifyContent: 'center',
+  },
+  installGuideDot: {
+    backgroundColor: '#cbd5e1',
+    borderRadius: 99,
+    height: 7,
+    width: 7,
+  },
+  installGuideDotActive: {
+    backgroundColor: '#2563eb',
+    width: 22,
+  },
+  installGuideActions: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  installGuideSecondary: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 50,
+    paddingHorizontal: 12,
+  },
+  installGuideSecondaryText: {
+    color: '#172033',
+    fontSize: 14,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  installGuidePrimary: {
+    alignItems: 'center',
+    backgroundColor: '#172033',
+    borderRadius: 8,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 6,
+    justifyContent: 'center',
+    minHeight: 50,
+    paddingHorizontal: 12,
+  },
+  installGuidePrimaryText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '900',
   },
   screenStack: {
     gap: 14,
@@ -2923,6 +3342,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 16,
     padding: 16,
+  },
+  installGuideReplayButton: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 8,
+    minHeight: 46,
+    paddingHorizontal: 12,
+  },
+  installGuideReplayText: {
+    color: '#172033',
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '900',
   },
   settingValue: {
     color: '#172033',

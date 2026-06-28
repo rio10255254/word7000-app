@@ -86,6 +86,52 @@ describe('full vocabulary dataset', () => {
     expect(repeatedFrames.slice(0, 10)).toEqual([]);
   });
 
+  test('does not keep awkward generated scaffolding in examples or translations', () => {
+    const awkwardPatterns = [
+      /A note about [a-z]+ helped/i,
+      /The report mentioned [a-z]+ before/i,
+      /became important after/i,
+      /pointed [a-z]+ the main entrance/i,
+      /with a clear [a-z]+ during/i,
+      /關於.+的筆記/,
+      /標誌指向與.+相關/,
+      /幫助處理/,
+      /用清楚的.+於/,
+    ];
+    const awkwardExamples = sampleWords.filter((word) =>
+      awkwardPatterns.some((pattern) => pattern.test(`${word.example} ${word.exampleZh}`)),
+    );
+
+    expect(awkwardExamples.slice(0, 20).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
+  test('uses polished examples for words that exposed machine-generated phrasing', () => {
+    const expectedExamples = new Map([
+      ['first', ['First, read the question carefully.', '首先，仔細閱讀題目。']],
+      ['share', ['She owns a small share of the company.', '她擁有那家公司的一小部分股份。']],
+      ['install', ['Please install the app before class.', '請在上課前安裝這個應用程式。']],
+      ['homeless', ['The city opened a shelter for homeless families.', '市政府為無家可歸的家庭開設了收容中心。']],
+      ['homework', ['I finished my homework before dinner.', '我在晚餐前完成了作業。']],
+      ['hometown', ['He visits his hometown every summer.', '他每年夏天都會回故鄉。']],
+      ['suit', ['This dark suit is for formal meetings.', '這套深色西裝適合正式會議。']],
+      ['object', ['A small object was lying under the chair.', '椅子下方有一個小物品。']],
+      ['whereas', ['I like tea, whereas my sister prefers coffee.', '我喜歡茶，而我妹妹比較喜歡咖啡。']],
+      ['albeit', ['The room was small, albeit comfortable.', '房間雖小，但很舒適。']],
+      ['thereby', ['The new rule saved time, thereby reducing stress.', '新規則節省了時間，因此減少了壓力。']],
+      ['whereby', ['They created a system whereby students can ask questions online.', '他們建立了一套系統，讓學生可以在線上提問。']],
+      ['provided', ['You can join the trip provided you sign up today.', '只要你今天報名，就可以參加這趟旅行。']],
+      ['ourselves', ['We made the cake ourselves.', '我們自己做了這個蛋糕。']],
+      ['beneath', ['The cat slept beneath the table.', '貓睡在桌子底下。']],
+      ['sideways', ['The sign was hanging sideways after the storm.', '暴風雨後，那個招牌歪向一邊掛著。']],
+    ]);
+
+    for (const [word, [example, exampleZh]] of expectedExamples) {
+      const entry = sampleWords.find((item) => item.word === word);
+      expect(entry?.example).toBe(example);
+      expect(entry?.exampleZh).toBe(exampleZh);
+    }
+  });
+
   test('uses each word directly inside its English example', () => {
     const missingWordExamples = sampleWords.filter((word) => {
       const pattern = new RegExp(`(^|[^a-z])${word.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`, 'i');

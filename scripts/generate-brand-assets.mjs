@@ -1,12 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { chromium } from 'playwright';
 import { PNG } from 'pngjs';
 
-const navy = [30, 47, 85, 255];
-const blue = [37, 99, 235, 255];
-const white = [255, 255, 255, 255];
-const orange = [249, 115, 22, 255];
-const transparent = [0, 0, 0, 0];
+const colors = {
+  blue: '#2563eb',
+  navy: '#1e2f55',
+  orange: '#f97316',
+  white: '#ffffff',
+};
 
 const outputs = [
   ['assets/icon.png', 1024, 'icon'],
@@ -26,163 +28,138 @@ const outputs = [
   ['public/assets/maskable-icon.png', 512, 'icon'],
 ];
 
-for (const [file, size, kind] of outputs) {
-  const png = new PNG({ width: size, height: size });
-  render(png, kind);
-  const target = path.resolve(file);
-  fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, PNG.sync.write(png));
+const browser = await launchBrowser();
+
+try {
+  for (const [file, size, kind] of outputs) {
+    const target = path.resolve(file);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+
+    if (kind === 'background') {
+      writeSolidPng(target, size, hexToRgba(colors.blue));
+      continue;
+    }
+
+    await renderBrandIcon(target, size, kind);
+  }
+} finally {
+  await browser.close();
 }
 
 console.log(`Generated ${outputs.length} Word7000 brand assets`);
 
-function render(png, kind) {
-  if (kind === 'foreground' || kind === 'mono') {
-    fill(png, transparent);
-    drawSun(png, kind === 'mono' ? navy : orange);
-    drawMark(png, kind === 'mono' ? navy : white);
-    return;
-  }
+async function renderBrandIcon(target, size, kind) {
+  const page = await browser.newPage({
+    deviceScaleFactor: 1,
+    viewport: { height: size, width: size },
+  });
 
-  if (kind === 'background') {
-    fillGradient(png, navy, blue);
-    return;
-  }
-
-  fillGradient(png, navy, blue);
-  drawSun(png, orange);
-  drawMark(png, white);
+  await page.setContent(iconHtml(size, kind), { waitUntil: 'load' });
+  await page.evaluate(() => document.fonts?.ready);
+  await page.screenshot({
+    fullPage: false,
+    omitBackground: kind === 'foreground' || kind === 'mono',
+    path: target,
+  });
+  await page.close();
 }
 
-function drawSun(png, color) {
-  const scale = png.width / 1024;
-  circle(png, 758 * scale, 205 * scale, 102 * scale, color);
+function iconHtml(size, kind) {
+  const transparent = kind === 'foreground' || kind === 'mono';
+  const textColor = kind === 'mono' ? colors.navy : colors.white;
+  const dotColor = kind === 'mono' ? colors.navy : colors.orange;
+  const fontSize = Math.round(size * 0.366);
+  const dotSize = Math.round(size * 0.22);
+  const dotOffset = Math.round(size * 0.122);
+  const textLift = Math.round(size * 0.006);
+
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html,
+      body {
+        background: transparent;
+        height: ${size}px;
+        margin: 0;
+        overflow: hidden;
+        width: ${size}px;
+      }
+
+      #capture {
+        align-items: center;
+        background: ${transparent ? 'transparent' : colors.blue};
+        display: flex;
+        height: ${size}px;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        width: ${size}px;
+      }
+
+      .mark {
+        color: ${textColor};
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        font-size: ${fontSize}px;
+        font-weight: 900;
+        letter-spacing: 0;
+        line-height: 1;
+        transform: translateY(${textLift}px);
+      }
+
+      .dot {
+        background: ${dotColor};
+        border-radius: 999px;
+        height: ${dotSize}px;
+        position: absolute;
+        right: ${dotOffset}px;
+        top: ${dotOffset}px;
+        width: ${dotSize}px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="capture">
+      <div class="dot"></div>
+      <div class="mark">W7</div>
+    </div>
+  </body>
+</html>`;
 }
 
-function drawMark(png, color) {
-  const w = [
-    [282, 378],
-    [328, 378],
-    [360, 526],
-    [400, 378],
-    [450, 378],
-    [488, 526],
-    [520, 378],
-    [562, 378],
-    [520, 592],
-    [466, 592],
-    [425, 434],
-    [382, 592],
-    [335, 592],
-  ];
-  const seven = [
-    [584, 382],
-    [724, 382],
-    [724, 420],
-    [676, 420],
-    [634, 592],
-    [612, 592],
-    [654, 420],
-    [584, 420],
-  ];
-
-  polygon(png, w, color);
-  polygon(png, seven, color);
-}
-
-function fill(png, color) {
+function writeSolidPng(target, size, color) {
+  const png = new PNG({ height: size, width: size });
   for (let y = 0; y < png.height; y += 1) {
     for (let x = 0; x < png.width; x += 1) {
-      setPixel(png, x, y, color);
+      const index = (png.width * y + x) * 4;
+      png.data[index] = color[0];
+      png.data[index + 1] = color[1];
+      png.data[index + 2] = color[2];
+      png.data[index + 3] = color[3];
     }
   }
+  fs.writeFileSync(target, PNG.sync.write(png));
 }
 
-function fillGradient(png, top, bottom) {
-  for (let y = 0; y < png.height; y += 1) {
-    const ratio = y / Math.max(1, png.height - 1);
-    const color = top.map((value, index) => Math.round(value + (bottom[index] - value) * ratio));
-    for (let x = 0; x < png.width; x += 1) {
-      setPixel(png, x, y, color);
+function hexToRgba(hex) {
+  const normalized = hex.replace('#', '');
+  return [
+    Number.parseInt(normalized.slice(0, 2), 16),
+    Number.parseInt(normalized.slice(2, 4), 16),
+    Number.parseInt(normalized.slice(4, 6), 16),
+    255,
+  ];
+}
+
+async function launchBrowser() {
+  for (const channel of ['msedge', 'chrome']) {
+    try {
+      return await chromium.launch({ channel, headless: true });
+    } catch {
+      // Try the next installed browser before falling back to Playwright's bundled one.
     }
   }
-}
 
-function roundRect(png, x, y, width, height, radius, color) {
-  const scale = png.width / 1024;
-  const sx = Math.round(x * scale);
-  const sy = Math.round(y * scale);
-  const sw = Math.round(width * scale);
-  const sh = Math.round(height * scale);
-  const sr = Math.round(radius * scale);
-
-  for (let py = sy; py < sy + sh; py += 1) {
-    for (let px = sx; px < sx + sw; px += 1) {
-      const left = px - sx;
-      const right = sx + sw - 1 - px;
-      const top = py - sy;
-      const bottom = sy + sh - 1 - py;
-      const dx = Math.max(sr - Math.min(left, right), 0);
-      const dy = Math.max(sr - Math.min(top, bottom), 0);
-      if (dx * dx + dy * dy <= sr * sr) {
-        setPixel(png, px, py, color);
-      }
-    }
-  }
-}
-
-function circle(png, cx, cy, radius, color) {
-  const minX = Math.max(0, Math.floor(cx - radius));
-  const maxX = Math.min(png.width - 1, Math.ceil(cx + radius));
-  const minY = Math.max(0, Math.floor(cy - radius));
-  const maxY = Math.min(png.height - 1, Math.ceil(cy + radius));
-  const r2 = radius * radius;
-
-  for (let y = minY; y <= maxY; y += 1) {
-    for (let x = minX; x <= maxX; x += 1) {
-      const dx = x + 0.5 - cx;
-      const dy = y + 0.5 - cy;
-      if (dx * dx + dy * dy <= r2) {
-        setPixel(png, x, y, color);
-      }
-    }
-  }
-}
-
-function polygon(png, basePoints, color) {
-  const scale = png.width / 1024;
-  const points = basePoints.map(([x, y]) => [x * scale, y * scale]);
-  const minX = Math.max(0, Math.floor(Math.min(...points.map(([x]) => x))));
-  const maxX = Math.min(png.width - 1, Math.ceil(Math.max(...points.map(([x]) => x))));
-  const minY = Math.max(0, Math.floor(Math.min(...points.map(([, y]) => y))));
-  const maxY = Math.min(png.height - 1, Math.ceil(Math.max(...points.map(([, y]) => y))));
-
-  for (let y = minY; y <= maxY; y += 1) {
-    for (let x = minX; x <= maxX; x += 1) {
-      if (insidePolygon(x + 0.5, y + 0.5, points)) {
-        setPixel(png, x, y, color);
-      }
-    }
-  }
-}
-
-function insidePolygon(x, y, points) {
-  let inside = false;
-  for (let i = 0, j = points.length - 1; i < points.length; j = i, i += 1) {
-    const [xi, yi] = points[i];
-    const [xj, yj] = points[j];
-    const crosses = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-    if (crosses) {
-      inside = !inside;
-    }
-  }
-  return inside;
-}
-
-function setPixel(png, x, y, color) {
-  const index = (png.width * y + x) * 4;
-  png.data[index] = color[0];
-  png.data[index + 1] = color[1];
-  png.data[index + 2] = color[2];
-  png.data[index + 3] = color[3];
+  return chromium.launch({ headless: true });
 }

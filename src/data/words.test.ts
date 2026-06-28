@@ -52,6 +52,61 @@ describe('full vocabulary dataset', () => {
     expect(placeholderExamples.slice(0, 20).map((word) => word.word)).toEqual([]);
   });
 
+  test('uses contextual examples instead of meta-learning templates', () => {
+    const metaPatterns = [
+      /\bthe word\b/i,
+      /\bsimple (sentence|example)\b/i,
+      /\blearner/i,
+      /\bcan show how\b/i,
+      /\bpractical context\b/i,
+      /\bmeaning clearer\b/i,
+      /\bcomplete sentence\b/i,
+      /\blong definition\b/i,
+      /\bfamiliar idea\b/i,
+    ];
+    const metaExamples = sampleWords.filter((word) =>
+      metaPatterns.some((pattern) => pattern.test(`${word.example} ${word.exampleZh}`)),
+    );
+
+    expect(metaExamples.slice(0, 20).map((word) => word.word)).toEqual([]);
+  });
+
+  test('keeps generated example frames varied across the full dataset', () => {
+    const frameCounts = new Map<string, number>();
+
+    for (const word of sampleWords) {
+      const frame = word.example.toLowerCase().replaceAll(word.word.toLowerCase(), '{word}');
+      frameCounts.set(frame, (frameCounts.get(frame) ?? 0) + 1);
+    }
+
+    const repeatedFrames = Array.from(frameCounts.entries())
+      .filter(([, count]) => count > 35)
+      .sort((a, b) => b[1] - a[1]);
+
+    expect(repeatedFrames.slice(0, 10)).toEqual([]);
+  });
+
+  test('uses each word directly inside its English example', () => {
+    const missingWordExamples = sampleWords.filter((word) => {
+      const pattern = new RegExp(`(^|[^a-z])${word.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`, 'i');
+      return !pattern.test(word.example);
+    });
+
+    expect(missingWordExamples.slice(0, 20).map((word) => word.word)).toEqual([]);
+  });
+
+  test('keeps examples free of obvious grammar artifacts', () => {
+    const grammarArtifacts = sampleWords.filter(
+      (word) =>
+        /^[a-z]/.test(word.example) ||
+        /\b[Aa] [aeiou]/.test(word.example) ||
+        /\b[Aa]n [^aeiou\s]/.test(word.example) ||
+        /的的/.test(word.exampleZh),
+    );
+
+    expect(grammarArtifacts.slice(0, 20).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
   test('keeps English example sentences in English', () => {
     const mixedLanguageExamples = sampleWords.filter((word) => /[\u4e00-\u9fff]/.test(word.example));
 

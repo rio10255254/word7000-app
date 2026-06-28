@@ -2,21 +2,21 @@ import type { StorageLike } from './progressStorage';
 
 export const INSTALL_GUIDE_STORAGE_KEY = 'word7000-install-guide-v1';
 
-export function shouldShowInstallGuide(storage: StorageLike | undefined, installed: boolean): boolean {
-  if (installed) {
-    return false;
-  }
+export function installGuideStorageKey(installed: boolean): string {
+  return `${INSTALL_GUIDE_STORAGE_KEY}-${installed ? 'installed' : 'browser'}`;
+}
 
+export function shouldShowInstallGuide(storage: StorageLike | undefined, installed: boolean): boolean {
   try {
-    return storage?.getItem(INSTALL_GUIDE_STORAGE_KEY) !== 'seen';
+    return storage?.getItem(installGuideStorageKey(installed)) !== 'seen';
   } catch {
     return false;
   }
 }
 
-export function markInstallGuideSeen(storage: StorageLike | undefined): void {
+export function markInstallGuideSeen(storage: StorageLike | undefined, installed = false): void {
   try {
-    storage?.setItem(INSTALL_GUIDE_STORAGE_KEY, 'seen');
+    storage?.setItem(installGuideStorageKey(installed), 'seen');
   } catch {
     // Private browsing can block storage writes. Dismissing the guide should still work in memory.
   }

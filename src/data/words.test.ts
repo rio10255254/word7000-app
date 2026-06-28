@@ -149,6 +149,7 @@ describe('full vocabulary dataset', () => {
       ['compound', ['Water is not a compound of oxygen alone.', '水不是只由氧組成的化合物。']],
       ['proportion', ['A large proportion of students chose English.', '很大比例的學生選擇了英文。']],
       ['optional', ['The final question is optional.', '最後一題是選答題。']],
+      ['crow', ['The child watched the crow from the fence.', '孩子從圍欄旁看著那隻烏鴉。']],
     ]);
 
     for (const [word, [example, exampleZh]] of expectedExamples) {

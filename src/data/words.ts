@@ -69957,7 +69957,7 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/krәu/",
     "meaningZh": "啼叫, 烏鴉, 雞鳴, 撬棍；啼叫, 報曉",
     "example": "The child watched the crow from the fence.",
-    "exampleZh": "孩子從圍欄旁看著啼叫。",
+    "exampleZh": "孩子從圍欄旁看著那隻烏鴉。",
     "group": "Core 14"
   },
   {

@@ -3,6 +3,7 @@ import {
   ArrowUp,
   BookOpen,
   Check,
+  ChevronLeft,
   ChevronDown,
   ChevronRight,
   Cloud,
@@ -16,9 +17,9 @@ import {
   Mail,
   RotateCcw,
   Search,
-  Share2,
   SlidersHorizontal,
   Smartphone,
+  SquareArrowUp,
   SquarePlus,
   Star,
   Target,
@@ -200,6 +201,7 @@ export default function App() {
   const [scrollY, setScrollY] = useState(0);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
+  const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
 
   const stats = useMemo(() => computeStats(sampleWords, progress), [progress]);
   const studyWords = useMemo(
@@ -296,7 +298,7 @@ export default function App() {
     inputRange: [0, 1],
     outputRange: [24, 0],
   });
-  const librarySliderVisible = activeTab === 'library' && libraryWords.length > LIBRARY_WINDOW_SIZE;
+  const librarySliderVisible = activeTab === 'library' && !selectedLibraryWord && libraryWords.length > LIBRARY_WINDOW_SIZE;
   const libraryThumbOffset = scrollThumbOffset(
     libraryWindowStart,
     Math.max(libraryWords.length, LIBRARY_WINDOW_SIZE + 1),
@@ -391,6 +393,7 @@ export default function App() {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
     setScrollY(0);
     setLibraryWindowStart(0);
+    setSelectedLibraryWord(null);
   }, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);
 
   useEffect(() => {
@@ -625,7 +628,7 @@ export default function App() {
   }
 
   function dismissInstallGuide() {
-    markInstallGuideSeen(getBrowserStorage());
+    markInstallGuideSeen(getBrowserStorage(), isInstalledWebApp());
     Animated.timing(installGuideAnim, {
       duration: 220,
       easing: Easing.inOut(Easing.cubic),
@@ -877,6 +880,7 @@ export default function App() {
               progress={progress}
               query={searchQuery}
               searchFocused={searchFocused}
+              selectedWord={selectedLibraryWord}
               visibleStart={libraryWindowStart}
               visibleWindowSize={LIBRARY_WINDOW_SIZE}
               words={libraryWords}
@@ -885,6 +889,11 @@ export default function App() {
               onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
               onInitialChange={setActiveInitial}
               onLevelChange={setActiveLevel}
+              onCloseWord={() => setSelectedLibraryWord(null)}
+              onOpenWord={(word) => {
+                setSelectedLibraryWord(word);
+                appScrollRef.current?.scrollTo({ y: 0, animated: true });
+              }}
               onQueryChange={handleLibraryQueryChange}
               onQueryClear={clearLibrarySearch}
               onReturnTop={returnLibraryToTop}
@@ -909,7 +918,7 @@ export default function App() {
           </Animated.View>
         </ScrollView>
 
-        {activeTab === 'library' && (
+        {activeTab === 'library' && !selectedLibraryWord && (
           <View pointerEvents="box-none" style={styles.libraryFixedControls}>
             {scrollY > 180 && (
               <AnimatedPressable
@@ -1252,6 +1261,35 @@ function InstallGuideOverlay({
 }) {
   const current = installGuideSteps[step];
   const isLastStep = step === installGuideSteps.length - 1;
+  const installGuideStepProgress = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    installGuideStepProgress.setValue(0);
+    Animated.timing(installGuideStepProgress, {
+      duration: 260,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  }, [installGuideStepProgress, step]);
+
+  const stepMotionStyle = {
+    opacity: installGuideStepProgress,
+    transform: [
+      {
+        translateY: installGuideStepProgress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [10, 0],
+        }),
+      },
+      {
+        scale: installGuideStepProgress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.96, 1],
+        }),
+      },
+    ],
+  };
 
   return (
     <Animated.View
@@ -1280,24 +1318,47 @@ function InstallGuideOverlay({
             {step + 1} / {installGuideSteps.length}
           </Text>
         </View>
-        <View style={styles.installGuideIconWrap}>
+        <Animated.View style={[styles.installGuideIconWrap, stepMotionStyle]}>
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              styles.installGuideIconGlow,
+              {
+                opacity: installGuideStepProgress,
+                transform: [
+                  {
+                    scale: installGuideStepProgress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0.82, 1.08],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          />
           <InstallGuideStepIcon icon={current.icon} />
-        </View>
-        <Text style={styles.installGuideTitle}>{current.title}</Text>
-        <Text style={styles.installGuideText}>{current.text}</Text>
+        </Animated.View>
+        <Animated.View style={[styles.installGuideCopyBlock, stepMotionStyle]}>
+          <Text style={styles.installGuideTitle}>{current.title}</Text>
+          <Text style={styles.installGuideText}>{current.text}</Text>
+        </Animated.View>
 
         <View style={styles.installGuidePreview}>
           <View style={styles.installGuideBrowserBar} />
           <View style={styles.installGuidePreviewRow}>
             {installGuideSteps.map((item, index) => (
-              <View
+              <Animated.View
                 key={item.title}
-                style={[styles.installGuideMiniStep, index <= step && styles.installGuideMiniStepActive]}
+                style={[
+                  styles.installGuideMiniStep,
+                  index <= step && styles.installGuideMiniStepActive,
+                  index === step && styles.installGuideStepProgress,
+                ]}
               >
                 <Text style={[styles.installGuideMiniText, index <= step && styles.installGuideMiniTextActive]}>
                   {index + 1}
                 </Text>
-              </View>
+              </Animated.View>
             ))}
           </View>
         </View>
@@ -1327,7 +1388,12 @@ function InstallGuideStepIcon({ icon }: { icon: (typeof installGuideSteps)[numbe
     return <Compass size={56} color="#2563eb" strokeWidth={2.1} />;
   }
   if (icon === 'share') {
-    return <Share2 size={56} color="#2563eb" strokeWidth={2.1} />;
+    return (
+      <View style={styles.safariShareIcon}>
+        <SquareArrowUp size={56} color="#2563eb" strokeWidth={2.1} />
+        <Text style={styles.safariShareIconText}>Safari 分享</Text>
+      </View>
+    );
   }
   if (icon === 'add') {
     return <SquarePlus size={56} color="#2563eb" strokeWidth={2.1} />;
@@ -1791,7 +1857,12 @@ function QuizView({
       {result && (
         <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, motionStyle]}>
           <Text style={styles.resultTitle}>{result === 'correct' ? '答對了' : '先放進複習'}</Text>
-          <Text style={styles.resultText}>{word.exampleZh}</Text>
+          <View style={styles.quizExampleCard}>
+            <Text style={styles.quizExampleLabel}>英文例句</Text>
+            <Text style={styles.resultText}>{word.example}</Text>
+            <Text style={styles.quizExampleLabel}>中文翻譯</Text>
+            <Text style={styles.resultText}>{word.exampleZh}</Text>
+          </View>
           <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="secondary" style={styles.nextButton}>
             <Text style={styles.nextButtonText}>下一題</Text>
             <ChevronRight size={18} color="#172033" strokeWidth={2.3} />
@@ -1813,14 +1884,17 @@ function LibraryView({
   progress,
   query,
   searchFocused,
+  selectedWord,
   visibleStart,
   visibleWindowSize,
   words,
+  onCloseWord,
   onFavorite,
   onFilterChange,
   onFiltersToggle,
   onInitialChange,
   onLevelChange,
+  onOpenWord,
   onQueryChange,
   onQueryClear,
   onReturnTop,
@@ -1835,14 +1909,17 @@ function LibraryView({
   progress: ProgressState;
   query: string;
   searchFocused: boolean;
+  selectedWord: WordEntry | null;
   visibleStart: number;
   visibleWindowSize: number;
   words: WordEntry[];
+  onCloseWord: () => void;
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
+  onOpenWord: (word: WordEntry) => void;
   onQueryChange: (query: string) => void;
   onQueryClear: () => void;
   onReturnTop: () => void;
@@ -1885,6 +1962,18 @@ function LibraryView({
       },
     ],
   };
+
+  if (selectedWord) {
+    return (
+      <LibraryWordDetailView
+        motionStyle={listMotionStyle(0)}
+        progress={progress}
+        word={selectedWord}
+        onBack={onCloseWord}
+        onFavorite={() => onFavorite(selectedWord.id)}
+      />
+    );
+  }
 
   return (
     <View style={styles.screenStack}>
@@ -1979,7 +2068,13 @@ function LibraryView({
           const wordProgress = progress.words[word.id];
           return (
             <Animated.View key={word.id} style={[styles.libraryItem, listMotionStyle(index)]}>
-              <View style={styles.flexOne}>
+              <AnimatedPressable
+                accessibilityLabel={`查看 ${word.word} 完整資訊`}
+                accessibilityRole="button"
+                onPress={() => onOpenWord(word)}
+                pressTone="list"
+                style={styles.libraryItemMain}
+              >
                 <View style={styles.wordLine}>
                   <Text style={styles.libraryWord}>{word.word}</Text>
                   <Text style={styles.libraryGroup}>{word.group}</Text>
@@ -1987,7 +2082,8 @@ function LibraryView({
                 </View>
                 <Text style={styles.libraryMeaning}>{word.meaningZh}</Text>
                 <Text style={styles.libraryExample}>{word.example}</Text>
-              </View>
+                <Text style={styles.libraryDetailHint}>完整資訊</Text>
+              </AnimatedPressable>
               <View style={styles.librarySide}>
                 <AnimatedPressable
                   accessibilityLabel={`${wordProgress?.favorite ? '取消收藏' : '收藏'} ${word.word}`}
@@ -2017,6 +2113,70 @@ function LibraryView({
         )}
         </View>
       </View>
+    </View>
+  );
+}
+
+function LibraryWordDetailView({
+  motionStyle,
+  progress,
+  word,
+  onBack,
+  onFavorite,
+}: {
+  motionStyle: StyleProp<ViewStyle>;
+  progress: ProgressState;
+  word: WordEntry;
+  onBack: () => void;
+  onFavorite: () => void;
+}) {
+  const wordProgress = progress.words[word.id];
+  const favorite = Boolean(wordProgress?.favorite);
+
+  return (
+    <View style={styles.screenStack}>
+      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={styles.libraryDetailBack}>
+        <ChevronLeft size={18} color="#172033" strokeWidth={2.5} />
+        <Text style={styles.libraryDetailBackText}>返回字庫</Text>
+      </AnimatedPressable>
+
+      <Animated.View style={[styles.libraryDetailPage, motionStyle]} testID="library-word-detail">
+        <View style={styles.libraryDetailHeader}>
+          <View style={styles.flexOne}>
+            <Text style={styles.eyebrow}>完整資訊</Text>
+            <Text style={styles.libraryDetailWord}>{word.word}</Text>
+            <Text style={styles.libraryDetailPronunciation}>{word.pronunciation}</Text>
+          </View>
+          <AnimatedPressable
+            accessibilityLabel={`${favorite ? '取消收藏' : '收藏'} ${word.word}`}
+            accessibilityRole="button"
+            onPress={onFavorite}
+            pressTone="icon"
+            style={styles.libraryDetailFavorite}
+          >
+            <Star size={21} color={favorite ? '#f59e0b' : '#717987'} fill={favorite ? '#f59e0b' : 'transparent'} />
+          </AnimatedPressable>
+        </View>
+
+        <View style={styles.libraryDetailMetaRow}>
+          <Text style={styles.libraryDetailBadge}>{word.group}</Text>
+          <Text style={styles.libraryDetailBadge}>{word.partOfSpeech}</Text>
+          <Text style={styles.libraryDetailBadge}>{statusLabel(wordProgress?.status)}</Text>
+        </View>
+
+        <View style={styles.libraryDetailSection}>
+          <Text style={styles.libraryDetailLabel}>中文意思</Text>
+          <Text style={styles.libraryDetailMeaning}>{word.meaningZh}</Text>
+        </View>
+
+        <View style={styles.libraryDetailExampleCard}>
+          <Text style={styles.libraryDetailLabel}>英文例句</Text>
+          <Text style={styles.libraryDetailExample}>{word.example}</Text>
+          <View style={styles.libraryDetailDivider} />
+          <Text style={styles.libraryDetailLabel}>中文翻譯</Text>
+          <Text style={styles.libraryDetailExampleZh}>{word.exampleZh}</Text>
+        </View>
+      </Animated.View>
     </View>
   );
 }
@@ -2440,7 +2600,28 @@ const styles = StyleSheet.create({
     height: 108,
     justifyContent: 'center',
     marginTop: 4,
+    overflow: 'hidden',
     width: 108,
+  },
+  installGuideIconGlow: {
+    backgroundColor: '#dbeafe',
+    borderRadius: 99,
+    height: 84,
+    position: 'absolute',
+    width: 84,
+  },
+  installGuideCopyBlock: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  safariShareIcon: {
+    alignItems: 'center',
+    gap: 6,
+  },
+  safariShareIconText: {
+    color: '#1d4ed8',
+    fontSize: 11,
+    fontWeight: '900',
   },
   installGuideTitle: {
     color: '#172033',
@@ -2491,6 +2672,13 @@ const styles = StyleSheet.create({
   installGuideMiniStepActive: {
     backgroundColor: '#2563eb',
     borderColor: '#2563eb',
+  },
+  installGuideStepProgress: {
+    shadowColor: '#2563eb',
+    shadowOffset: { height: 3, width: 0 },
+    shadowOpacity: 0.16,
+    shadowRadius: 7,
+    transform: [{ scale: 1.08 }],
   },
   installGuideMiniText: {
     color: '#64748b',
@@ -2940,6 +3128,21 @@ const styles = StyleSheet.create({
   resultText: {
     color: '#5f6675',
     fontSize: 14,
+    lineHeight: 21,
+  },
+  quizExampleCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderColor: 'rgba(203, 213, 225, 0.72)',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 6,
+    padding: 12,
+  },
+  quizExampleLabel: {
+    color: '#64748b',
+    fontSize: 11,
+    fontWeight: '900',
+    marginTop: 2,
   },
   quizScoreText: {
     color: '#172033',
@@ -3170,6 +3373,10 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
   },
+  libraryItemMain: {
+    flex: 1,
+    minWidth: 0,
+  },
   wordLine: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -3209,6 +3416,120 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 19,
     marginTop: 5,
+  },
+  libraryDetailHint: {
+    color: '#2563eb',
+    fontSize: 12,
+    fontWeight: '900',
+    marginTop: 8,
+  },
+  libraryDetailBack: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: '#fff',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    minHeight: 42,
+    paddingHorizontal: 12,
+  },
+  libraryDetailBackText: {
+    color: '#172033',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  libraryDetailPage: {
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 16,
+    padding: 18,
+  },
+  libraryDetailHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  libraryDetailWord: {
+    color: '#172033',
+    fontSize: 42,
+    fontWeight: '900',
+    lineHeight: 48,
+  },
+  libraryDetailPronunciation: {
+    color: '#717987',
+    fontSize: 16,
+    marginTop: 4,
+  },
+  libraryDetailFavorite: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
+  },
+  libraryDetailMetaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  libraryDetailBadge: {
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 7,
+    borderWidth: 1,
+    color: '#1d4ed8',
+    fontSize: 12,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+  },
+  libraryDetailSection: {
+    borderTopColor: '#edf0f5',
+    borderTopWidth: 1,
+    gap: 7,
+    paddingTop: 15,
+  },
+  libraryDetailLabel: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  libraryDetailMeaning: {
+    color: '#172033',
+    fontSize: 24,
+    fontWeight: '900',
+    lineHeight: 31,
+  },
+  libraryDetailExampleCard: {
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 8,
+    padding: 15,
+  },
+  libraryDetailExample: {
+    color: '#172033',
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  libraryDetailDivider: {
+    backgroundColor: '#e5e7eb',
+    height: 1,
+    marginVertical: 2,
+  },
+  libraryDetailExampleZh: {
+    color: '#5f6675',
+    fontSize: 15,
+    lineHeight: 23,
   },
   resultCount: {
     color: '#717987',

@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
   INSTALL_GUIDE_STORAGE_KEY,
+  installGuideStorageKey,
   markInstallGuideSeen,
   shouldShowInstallGuide,
 } from './installGuide';
@@ -24,18 +25,29 @@ describe('install guide storage', () => {
     expect(shouldShowInstallGuide(storage, false)).toBe(true);
   });
 
-  test('does not show after the user has seen it once', () => {
+  test('shows the guide on first installed launch too', () => {
     const storage = new MemoryStorage();
 
-    markInstallGuideSeen(storage);
-
-    expect(storage.getItem(INSTALL_GUIDE_STORAGE_KEY)).toBe('seen');
-    expect(shouldShowInstallGuide(storage, false)).toBe(false);
+    expect(shouldShowInstallGuide(storage, true)).toBe(true);
   });
 
-  test('does not show when already running as a home-screen app', () => {
+  test('stores browser and installed guide state separately', () => {
     const storage = new MemoryStorage();
 
+    markInstallGuideSeen(storage, false);
+
+    expect(storage.getItem(installGuideStorageKey(false))).toBe('seen');
+    expect(shouldShowInstallGuide(storage, false)).toBe(false);
+    expect(shouldShowInstallGuide(storage, true)).toBe(true);
+  });
+
+  test('does not show after the user has seen it in the current launch mode', () => {
+    const storage = new MemoryStorage();
+
+    markInstallGuideSeen(storage, true);
+
+    expect(storage.getItem(INSTALL_GUIDE_STORAGE_KEY)).toBeNull();
+    expect(storage.getItem(installGuideStorageKey(true))).toBe('seen');
     expect(shouldShowInstallGuide(storage, true)).toBe(false);
   });
 });

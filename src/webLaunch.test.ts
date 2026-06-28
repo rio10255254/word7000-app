@@ -81,9 +81,12 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('INSTALL_GUIDE_STORAGE_KEY');
     expect(appSource).toContain('Safari');
+    expect(appSource).toContain('SquareArrowUp');
+    expect(appSource).toContain('Safari 分享');
     expect(appSource).toContain('分享');
     expect(appSource).toContain('加入主畫面');
     expect(appSource).toContain('install-guide-overlay');
+    expect(appSource).toContain('installGuideStepProgress');
     expect(appSource).toContain('重新查看加入主畫面教學');
   });
 
@@ -95,5 +98,25 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('const quizQuestionCounts = [10, 20, 50] as const;');
     expect(appSource).toContain('{count} 題');
     expect(appSource).toContain('測驗完成');
+  });
+
+  test('shows full quiz feedback with English and Chinese examples after answering', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('quizExampleCard');
+    expect(appSource).toContain('英文例句');
+    expect(appSource).toContain('中文翻譯');
+    expect(appSource).toContain('{word.example}');
+    expect(appSource).toContain('{word.exampleZh}');
+  });
+
+  test('lets library words open a full detail view', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('selectedLibraryWord');
+    expect(appSource).toContain('library-word-detail');
+    expect(appSource).toContain('返回字庫');
+    expect(appSource).toContain('完整資訊');
+    expect(appSource).toContain('onOpenWord');
   });
 });

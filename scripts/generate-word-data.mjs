@@ -193,6 +193,7 @@ const fixedExamples = new Map(
     ['business', ['His family runs a small business.', '他的家人經營一間小公司。']],
     ['follow', ['Please follow the signs to the exit.', '請跟著指標走到出口。']],
     ['power', ['The storm cut power to the town.', '暴風雨讓鎮上停電。']],
+    ['crow', ['The child watched the crow from the fence.', '孩子從圍欄旁看著那隻烏鴉。']],
     ['never', ['I never drink coffee at night.', '我晚上從不喝咖啡。']],
     ['where', ['Where did you put my notebook?', '你把我的筆記本放在哪裡？']],
     ['something', ['Something moved behind the curtain.', '窗簾後面有東西動了一下。']],

@@ -1,0 +1,24 @@
+{
+  "name": "Word7000",
+  "short_name": "Word7000",
+  "description": "A simple offline 7000-word English vocabulary app for daily learning and review.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8FAFC",
+  "theme_color": "#172033",
+  "icons": [
+    {
+      "src": "/assets/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

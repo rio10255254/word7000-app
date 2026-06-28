@@ -1,12 +1,15 @@
 {
   "expo": {
-    "name": "word7000-app",
-    "slug": "word7000-app",
+    "name": "Word7000",
+    "slug": "word7000",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "description": "A simple offline 7000-word English vocabulary app for daily learning and review.",
     "ios": {
+      "bundleIdentifier": "com.rio.word7000",
+      "buildNumber": "1",
       "supportsTablet": true
     },
     "android": {
@@ -20,6 +23,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F8FAFC"
     }
   }
 }

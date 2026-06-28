@@ -22,7 +22,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Animated,
   Easing,
@@ -30,6 +30,7 @@ import {
   type NativeSyntheticEvent,
   PanResponder,
   Pressable,
+  type PressableProps,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -59,6 +60,7 @@ import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supab
 import { loadProgressFromStorage, saveProgressToStorage, type StorageLike } from './src/lib/progressStorage';
 import { loadCloudProgress, saveCloudProgress, type CloudProgressClient } from './src/lib/supabaseProgress';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
@@ -120,6 +122,7 @@ const alphabetFilters = [
     label: letter,
   })),
 ];
+const MotionPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function App() {
   const appScrollRef = useRef<ScrollView | null>(null);
@@ -219,6 +222,23 @@ export default function App() {
       },
     ],
   };
+  const listMotionStyle = (index: number) => ({
+    opacity: cardAnim,
+    transform: [
+      {
+        translateY: cardAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [listEnterOffset(index), 0],
+        }),
+      },
+      {
+        scale: cardAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.992, 1],
+        }),
+      },
+    ],
+  });
   const launchOpacity = launchAnim.interpolate({
     inputRange: [0, 0.22, 1.62, 2],
     outputRange: [0, 1, 1, 0],
@@ -269,7 +289,7 @@ export default function App() {
   useEffect(() => {
     screenAnim.setValue(0);
     Animated.timing(screenAnim, {
-      duration: 260,
+      duration: interactionMotion.screenMs,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
       useNativeDriver: true,
@@ -279,7 +299,7 @@ export default function App() {
   useEffect(() => {
     cardAnim.setValue(0);
     Animated.timing(cardAnim, {
-      duration: 240,
+      duration: interactionMotion.cardMs,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
       useNativeDriver: true,
@@ -637,9 +657,9 @@ export default function App() {
         {updateState.available && (
           <View style={styles.updateBanner}>
             <Text style={styles.updateText}>{updateState.message}</Text>
-            <Pressable accessibilityRole="button" onPress={updateState.refresh} style={styles.updateButton}>
+            <AnimatedPressable accessibilityRole="button" onPress={updateState.refresh} pressTone="primary" style={styles.updateButton}>
               <Text style={styles.updateButtonText}>更新</Text>
-            </Pressable>
+            </AnimatedPressable>
           </View>
         )}
 
@@ -708,7 +728,7 @@ export default function App() {
               activeInitial={activeInitial}
               activeLevel={activeLevel}
               filtersOpen={libraryFiltersOpen}
-              motionStyle={cardMotionStyle}
+              listMotionStyle={listMotionStyle}
               progress={progress}
               query={searchQuery}
               searchFocused={searchFocused}
@@ -746,15 +766,16 @@ export default function App() {
         {activeTab === 'library' && (
           <View pointerEvents="box-none" style={styles.libraryFixedControls}>
             {scrollY > 180 && (
-              <Pressable
+              <AnimatedPressable
                 accessibilityRole="button"
                 onPress={returnLibraryToTop}
+                pressTone="secondary"
                 style={styles.libraryFloatingTopButton}
                 testID="library-floating-top"
               >
                 <ArrowUp size={15} color="#172033" strokeWidth={2.5} />
                 <Text style={styles.libraryFloatingTopText}>回頂端</Text>
-              </Pressable>
+              </AnimatedPressable>
             )}
             {librarySliderVisible && (
               <View
@@ -780,15 +801,16 @@ export default function App() {
             const Icon = tab.icon;
             const selected = activeTab === tab.id;
             return (
-              <Pressable
+              <AnimatedPressable
                 accessibilityRole="button"
                 key={tab.id}
                 onPress={() => setActiveTab(tab.id)}
+                pressTone="tab"
                 style={[styles.tabButton, selected && styles.tabButtonActive]}
               >
                 <Icon size={18} color={selected ? '#172033' : '#717987'} strokeWidth={2.2} />
                 <Text style={[styles.tabLabel, selected && styles.tabLabelActive]}>{tab.label}</Text>
-              </Pressable>
+              </AnimatedPressable>
             );
           })}
         </View>
@@ -929,6 +951,124 @@ function createInitialAccountState(configured: boolean): AccountState {
   };
 }
 
+type AnimatedPressableProps = Omit<PressableProps, 'children' | 'style'> & {
+  children: ReactNode;
+  pressTone?: InteractionTone;
+  style?: StyleProp<ViewStyle>;
+};
+
+function AnimatedPressable({
+  children,
+  disabled,
+  onPressIn,
+  onPressOut,
+  pressTone = 'secondary',
+  style,
+  ...props
+}: AnimatedPressableProps) {
+  const pressAnim = useRef(new Animated.Value(0)).current;
+  const pressMotion = pressMotionFor(pressTone);
+  const pressStyle = {
+    transform: [
+      {
+        scale: pressAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [1, pressMotion.pressedScale],
+        }),
+      },
+      {
+        translateY: pressAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, pressMotion.pressedTranslateY],
+        }),
+      },
+    ],
+  };
+
+  function animatePress(toValue: number, duration: number) {
+    Animated.timing(pressAnim, {
+      duration,
+      easing: Easing.out(Easing.cubic),
+      toValue,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function handlePressIn(event: Parameters<NonNullable<PressableProps['onPressIn']>>[0]) {
+    if (!disabled) {
+      animatePress(1, interactionMotion.pressInMs);
+    }
+    onPressIn?.(event);
+  }
+
+  function handlePressOut(event: Parameters<NonNullable<PressableProps['onPressOut']>>[0]) {
+    if (!disabled) {
+      animatePress(0, interactionMotion.releaseMs);
+    }
+    onPressOut?.(event);
+  }
+
+  return (
+    <MotionPressable
+      {...props}
+      disabled={disabled}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[style, !disabled && pressStyle]}
+    >
+      {children}
+    </MotionPressable>
+  );
+}
+
+function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; open: boolean; testID: string }) {
+  const [rendered, setRendered] = useState(open);
+  const panelAnim = useRef(new Animated.Value(open ? 1 : 0)).current;
+
+  useEffect(() => {
+    if (open) {
+      setRendered(true);
+    }
+
+    Animated.timing(panelAnim, {
+      duration: interactionMotion.panelMs,
+      easing: Easing.out(Easing.cubic),
+      toValue: open ? 1 : 0,
+      useNativeDriver: false,
+    }).start(({ finished }) => {
+      if (finished && !open) {
+        setRendered(false);
+      }
+    });
+  }, [open, panelAnim]);
+
+  if (!rendered) {
+    return null;
+  }
+
+  const panelMotionStyle = {
+    maxHeight: panelAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, interactionMotion.panelMaxHeight],
+    }),
+    opacity: panelAnim,
+    transform: [
+      {
+        translateY: panelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-8, 0],
+        }),
+      },
+    ],
+  };
+
+  return (
+    <Animated.View style={[styles.filterPanel, panelMotionStyle]} testID={testID}>
+      {children}
+    </Animated.View>
+  );
+}
+
 function HomeView({
   dailyPercent,
   progress,
@@ -968,15 +1108,15 @@ function HomeView({
         <View style={styles.progressTrack}>
           <View style={[styles.progressFill, { width: `${dailyPercent}%` }]} />
         </View>
-        <Pressable accessibilityRole="button" onPress={onStartStudy} style={styles.primaryButton}>
+        <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton}>
           <BookOpen size={18} color="#fff" strokeWidth={2.3} />
           <Text style={styles.primaryButtonText}>開始學習</Text>
           <ChevronRight size={18} color="#fff" strokeWidth={2.3} />
-        </Pressable>
-        <Pressable accessibilityRole="button" onPress={onOpenAccount} style={styles.accountShortcut}>
+        </AnimatedPressable>
+        <AnimatedPressable accessibilityRole="button" onPress={onOpenAccount} pressTone="secondary" style={styles.accountShortcut}>
           <User size={17} color="#172033" strokeWidth={2.3} />
           <Text style={styles.accountShortcutText}>帳號登入與同步</Text>
-        </Pressable>
+        </AnimatedPressable>
       </View>
 
       <View style={styles.statsGrid}>
@@ -985,14 +1125,14 @@ function HomeView({
         <StatCard label="待複習" value={stats.review.toString()} tone="orange" />
       </View>
 
-      <Pressable accessibilityRole="button" onPress={onOpenReview} style={styles.reviewStrip}>
+      <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={styles.reviewStrip}>
         <RotateCcw size={20} color="#d97706" strokeWidth={2.4} />
         <View style={styles.flexOne}>
           <Text style={styles.reviewTitle}>複習清單</Text>
           <Text style={styles.reviewText}>{stats.review > 0 ? `${stats.review} 個單字需要再看一次` : '目前沒有卡住的單字'}</Text>
         </View>
         <ChevronRight size={18} color="#6b7280" strokeWidth={2.2} />
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }
@@ -1064,14 +1204,15 @@ function StudyView({
           <View style={styles.groupPill}>
             <Text style={styles.groupText}>{word.group}</Text>
           </View>
-          <Pressable
+          <AnimatedPressable
             accessibilityLabel={favorited ? '取消收藏這個單字' : '收藏這個單字'}
             accessibilityRole="button"
             onPress={onFavorite}
+            pressTone="icon"
             style={styles.iconButton}
           >
             <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
-          </Pressable>
+          </AnimatedPressable>
         </View>
         <Text style={styles.bigWord}>{word.word}</Text>
         <Text style={styles.pronunciation}>{word.pronunciation}</Text>
@@ -1086,14 +1227,14 @@ function StudyView({
       </Animated.View>
 
       <View style={styles.actionGrid}>
-        <Pressable accessibilityRole="button" onPress={onReview} style={styles.secondaryButton}>
+        <AnimatedPressable accessibilityRole="button" onPress={onReview} pressTone="secondary" style={styles.secondaryButton}>
           <RotateCcw size={18} color="#9a3412" strokeWidth={2.3} />
           <Text style={styles.secondaryButtonText}>再複習</Text>
-        </Pressable>
-        <Pressable accessibilityRole="button" onPress={onKnown} style={styles.confirmButton}>
+        </AnimatedPressable>
+        <AnimatedPressable accessibilityRole="button" onPress={onKnown} pressTone="primary" style={styles.confirmButton}>
           <Check size={18} color="#fff" strokeWidth={2.4} />
           <Text style={styles.confirmButtonText}>已會</Text>
-        </Pressable>
+        </AnimatedPressable>
       </View>
         </>
       )}
@@ -1132,7 +1273,13 @@ function FilterControlPanel({
 
   return (
     <View style={styles.foldedFilterCard}>
-      <Pressable accessibilityRole="button" onPress={onToggle} style={styles.filterSummaryButton} testID={testID}>
+      <AnimatedPressable
+        accessibilityRole="button"
+        onPress={onToggle}
+        pressTone="secondary"
+        style={styles.filterSummaryButton}
+        testID={testID}
+      >
         <View style={styles.flexOne}>
           <Text style={styles.filterSummaryTitle}>{title}</Text>
           <Text style={styles.filterSummaryText}>
@@ -1143,10 +1290,9 @@ function FilterControlPanel({
           <SlidersHorizontal size={16} color="#172033" strokeWidth={2.4} />
           <ChevronDown size={15} color="#172033" strokeWidth={2.4} style={open ? styles.filterChevronOpen : undefined} />
         </View>
-      </Pressable>
+      </AnimatedPressable>
 
-      {open && (
-        <View style={styles.filterPanel} testID={`${testID}-panel`}>
+      <AnimatedFilterPanel open={open} testID={`${testID}-panel`}>
           {showStatus && (
             <View style={styles.filterSection}>
               <Text style={styles.filterSectionTitle}>狀態</Text>
@@ -1154,14 +1300,15 @@ function FilterControlPanel({
                 {filters.map((filter) => {
                   const selected = activeFilter === filter.id;
                   return (
-                    <Pressable
+                    <AnimatedPressable
                       accessibilityRole="button"
                       key={filter.id}
                       onPress={() => onFilterChange(filter.id)}
+                      pressTone="chip"
                       style={[styles.filterChip, selected && styles.filterChipActive]}
                     >
                       <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filter.label}</Text>
-                    </Pressable>
+                    </AnimatedPressable>
                   );
                 })}
               </ScrollView>
@@ -1174,15 +1321,16 @@ function FilterControlPanel({
               {levelFilters.map((level) => {
                 const selected = activeLevel === level.id;
                 return (
-                  <Pressable
+                  <AnimatedPressable
                     accessibilityLabel={`分級 ${level.label}`}
                     accessibilityRole="button"
                     key={level.id}
                     onPress={() => onLevelChange(level.id)}
+                    pressTone="chip"
                     style={[styles.filterChip, selected && styles.levelChipActive]}
                   >
                     <Text style={[styles.filterText, selected && styles.filterTextActive]}>{level.label}</Text>
-                  </Pressable>
+                  </AnimatedPressable>
                 );
               })}
             </ScrollView>
@@ -1194,21 +1342,21 @@ function FilterControlPanel({
               {alphabetFilters.map((initial) => {
                 const selected = activeInitial === initial.id;
                 return (
-                  <Pressable
+                  <AnimatedPressable
                     accessibilityLabel={initial.id === 'all' ? '字首 全部' : `字首 ${initial.id}`}
                     accessibilityRole="button"
                     key={initial.id}
                     onPress={() => onInitialChange(initial.id)}
+                    pressTone="chip"
                     style={[styles.letterChip, selected && styles.letterChipActive]}
                   >
                     <Text style={[styles.letterText, selected && styles.letterTextActive]}>{initial.label}</Text>
-                  </Pressable>
+                  </AnimatedPressable>
                 );
               })}
             </ScrollView>
           </View>
-        </View>
-      )}
+      </AnimatedFilterPanel>
     </View>
   );
 }
@@ -1278,11 +1426,12 @@ function QuizView({
         <Text style={styles.pronunciation}>{word.pronunciation}</Text>
         <View style={styles.quizOptions}>
           {options.map((option) => (
-            <Pressable
+            <AnimatedPressable
               accessibilityRole="button"
               disabled={result !== null}
               key={option.meaning}
               onPress={() => onAnswer(option.correct)}
+              pressTone="list"
               style={[
                 styles.quizOption,
                 result !== null && option.correct && styles.quizOptionCorrect,
@@ -1292,7 +1441,7 @@ function QuizView({
               <Text style={[styles.quizOptionText, result !== null && option.correct && styles.quizOptionTextCorrect]}>
                 {option.meaning}
               </Text>
-            </Pressable>
+            </AnimatedPressable>
           ))}
         </View>
       </Animated.View>
@@ -1301,10 +1450,10 @@ function QuizView({
         <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, motionStyle]}>
           <Text style={styles.resultTitle}>{result === 'correct' ? '答對了' : '先放進複習'}</Text>
           <Text style={styles.resultText}>{word.exampleZh}</Text>
-          <Pressable accessibilityRole="button" onPress={onNext} style={styles.nextButton}>
+          <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="secondary" style={styles.nextButton}>
             <Text style={styles.nextButtonText}>下一題</Text>
             <ChevronRight size={18} color="#172033" strokeWidth={2.3} />
-          </Pressable>
+          </AnimatedPressable>
         </Animated.View>
       )}
         </>
@@ -1318,7 +1467,7 @@ function LibraryView({
   activeInitial,
   activeLevel,
   filtersOpen,
-  motionStyle,
+  listMotionStyle,
   progress,
   query,
   searchFocused,
@@ -1340,7 +1489,7 @@ function LibraryView({
   activeInitial: string;
   activeLevel: string;
   filtersOpen: boolean;
-  motionStyle: StyleProp<ViewStyle>;
+  listMotionStyle: (index: number) => StyleProp<ViewStyle>;
   progress: ProgressState;
   query: string;
   searchFocused: boolean;
@@ -1362,6 +1511,38 @@ function LibraryView({
   const visibleEnd = Math.min(words.length, safeStart + visibleWindowSize);
   const visibleWords = words.slice(safeStart, visibleEnd);
   const hasQuery = query.trim().length > 0;
+  const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(searchAnim, {
+      duration: interactionMotion.hoverMs,
+      easing: Easing.out(Easing.cubic),
+      toValue: searchFocused || hasQuery ? 1 : 0,
+      useNativeDriver: true,
+    }).start();
+  }, [hasQuery, searchAnim, searchFocused]);
+
+  const searchMotionStyle = {
+    transform: [
+      {
+        scale: searchAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [1, 1.008],
+        }),
+      },
+    ],
+  };
+  const searchMetaMotionStyle = {
+    opacity: searchAnim,
+    transform: [
+      {
+        translateY: searchAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-5, 0],
+        }),
+      },
+    ],
+  };
 
   return (
     <View style={styles.screenStack}>
@@ -1370,54 +1551,64 @@ function LibraryView({
           <Text style={styles.libraryHeaderTitle}>完整字庫</Text>
           <Text style={styles.libraryHeaderMeta}>目前篩選後 {words.length} 個單字</Text>
         </View>
-        <Pressable accessibilityRole="button" onPress={onReturnTop} style={styles.libraryTopButton} testID="library-top-return">
+        <AnimatedPressable
+          accessibilityRole="button"
+          onPress={onReturnTop}
+          pressTone="secondary"
+          style={styles.libraryTopButton}
+          testID="library-top-return"
+        >
           <ArrowUp size={16} color="#172033" strokeWidth={2.5} />
           <Text style={styles.libraryTopButtonText}>回到頂端</Text>
-        </Pressable>
+        </AnimatedPressable>
       </View>
 
-      <View style={[styles.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
-        <Search size={18} color="#717987" strokeWidth={2.2} />
-        <TextInput
-          onChangeText={onQueryChange}
-          onBlur={onSearchBlur}
-          onFocus={onSearchFocus}
-          placeholder="搜尋英文、中文或例句"
-          placeholderTextColor="#9ca3af"
-          style={styles.searchInput}
-          value={query}
-        />
-        {hasQuery && (
-          <Pressable
-            accessibilityLabel="清除搜尋"
-            accessibilityRole="button"
-            onPress={onQueryClear}
-            style={styles.searchClearButton}
-            testID="library-search-clear"
-          >
-            <X size={16} color="#64748b" strokeWidth={2.5} />
-          </Pressable>
-        )}
-      </View>
+      <Animated.View style={searchMotionStyle}>
+        <View style={[styles.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
+          <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
+          <TextInput
+            onChangeText={onQueryChange}
+            onBlur={onSearchBlur}
+            onFocus={onSearchFocus}
+            placeholder="搜尋英文、中文或例句"
+            placeholderTextColor="#9ca3af"
+            style={styles.searchInput}
+            value={query}
+          />
+          {hasQuery && (
+            <AnimatedPressable
+              accessibilityLabel="清除搜尋"
+              accessibilityRole="button"
+              onPress={onQueryClear}
+              pressTone="icon"
+              style={styles.searchClearButton}
+              testID="library-search-clear"
+            >
+              <X size={16} color="#64748b" strokeWidth={2.5} />
+            </AnimatedPressable>
+          )}
+        </View>
+      </Animated.View>
 
       {hasQuery && (
-        <View style={styles.searchMetaBox}>
+        <Animated.View style={[styles.searchMetaBox, searchMetaMotionStyle]}>
           <Text style={styles.searchMetaText}>搜尋「{query.trim()}」：找到 {words.length} 個結果</Text>
-        </View>
+        </Animated.View>
       )}
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
         {filters.map((filter) => {
           const selected = activeFilter === filter.id;
           return (
-            <Pressable
+            <AnimatedPressable
               accessibilityRole="button"
               key={filter.id}
               onPress={() => onFilterChange(filter.id)}
+              pressTone="chip"
               style={[styles.filterChip, selected && styles.filterChipActive]}
             >
               <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filter.label}</Text>
-            </Pressable>
+            </AnimatedPressable>
           );
         })}
       </ScrollView>
@@ -1442,10 +1633,10 @@ function LibraryView({
         <Text style={styles.resultCount}>
           共 {words.length} 個結果，顯示第 {words.length === 0 ? 0 : safeStart + 1}-{visibleEnd} 個
         </Text>
-        {visibleWords.map((word) => {
+        {visibleWords.map((word, index) => {
           const wordProgress = progress.words[word.id];
           return (
-            <Animated.View key={word.id} style={[styles.libraryItem, motionStyle]}>
+            <Animated.View key={word.id} style={[styles.libraryItem, listMotionStyle(index)]}>
               <View style={styles.flexOne}>
                 <View style={styles.wordLine}>
                   <Text style={styles.libraryWord}>{word.word}</Text>
@@ -1456,10 +1647,11 @@ function LibraryView({
                 <Text style={styles.libraryExample}>{word.example}</Text>
               </View>
               <View style={styles.librarySide}>
-                <Pressable
+                <AnimatedPressable
                   accessibilityLabel={`${wordProgress?.favorite ? '取消收藏' : '收藏'} ${word.word}`}
                   accessibilityRole="button"
                   onPress={() => onFavorite(word.id)}
+                  pressTone="icon"
                   style={styles.iconButton}
                 >
                   <Star
@@ -1467,7 +1659,7 @@ function LibraryView({
                     color={wordProgress?.favorite ? '#f59e0b' : '#717987'}
                     fill={wordProgress?.favorite ? '#f59e0b' : 'transparent'}
                   />
-                </Pressable>
+                </AnimatedPressable>
                 <Text style={styles.statusText}>{statusLabel(wordProgress?.status)}</Text>
               </View>
             </Animated.View>
@@ -1565,37 +1757,40 @@ function ProfileView({
               />
             </View>
             <View style={styles.buttonRow}>
-              <Pressable
+              <AnimatedPressable
                 accessibilityRole="button"
                 disabled={!account.configured || account.busy}
                 onPress={onSignIn}
+                pressTone="primary"
                 style={[styles.accountButton, (!account.configured || account.busy) && styles.disabledButton]}
               >
                 <LogIn size={17} color="#fff" strokeWidth={2.4} />
                 <Text style={styles.accountButtonText}>登入</Text>
-              </Pressable>
-              <Pressable
+              </AnimatedPressable>
+              <AnimatedPressable
                 accessibilityRole="button"
                 disabled={!account.configured || account.busy}
                 onPress={onSignUp}
+                pressTone="secondary"
                 style={[styles.outlineButton, (!account.configured || account.busy) && styles.disabledButton]}
               >
                 <Text style={styles.outlineButtonText}>註冊</Text>
-              </Pressable>
+              </AnimatedPressable>
             </View>
           </View>
         )}
 
         {account.configured && signedIn && (
-          <Pressable
+          <AnimatedPressable
             accessibilityRole="button"
             disabled={account.busy}
             onPress={onSignOut}
+            pressTone="secondary"
             style={[styles.signOutButton, account.busy && styles.disabledButton]}
           >
             <LogOut size={17} color="#9a3412" strokeWidth={2.4} />
             <Text style={styles.signOutButtonText}>登出</Text>
-          </Pressable>
+          </AnimatedPressable>
         )}
       </View>
 
@@ -2253,6 +2448,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#edf0f5',
     borderTopWidth: 1,
     gap: 12,
+    overflow: 'hidden',
     paddingHorizontal: 12,
     paddingVertical: 12,
   },

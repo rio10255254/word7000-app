@@ -18,26 +18,28 @@ const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 const buildVersion = `${packageJson.version}-${Date.now()}`;
 const installIconLinks = cacheBustInstallIcons();
 
-const tags = [
+const metaTags = [
   '<meta name="description" content="A simple offline 7000-word English vocabulary app for daily learning and review." />',
   '<meta name="theme-color" content="#172033" />',
   '<meta name="apple-mobile-web-app-capable" content="yes" />',
   '<meta name="apple-mobile-web-app-title" content="Word7000" />',
+];
+const installTags = [
   `<link rel="manifest" href="${installIconLinks.manifestHref}" />`,
   `<link rel="apple-touch-icon" sizes="180x180" href="${installIconLinks.appleTouchIconHref}" />`,
+  `<link rel="apple-touch-icon-precomposed" sizes="180x180" href="${installIconLinks.appleTouchIconHref}" />`,
 ];
 
-for (const tag of tags) {
-  const marker = tag.includes('rel="manifest"')
-    ? 'rel="manifest"'
-    : tag.includes('apple-touch-icon')
-      ? 'apple-touch-icon'
-      : tag.match(/name="([^"]+)"/)?.[1];
+for (const tag of metaTags) {
+  const marker = tag.match(/name="([^"]+)"/)?.[1];
 
   if (marker && !html.includes(marker)) {
     html = html.replace('</head>', `  ${tag}\n</head>`);
   }
 }
+
+html = replaceInstallTag(html, /<link\b(?=[^>]*rel=["']manifest["'])[^>]*\/?>/gi, installTags[0]);
+html = replaceInstallTag(html, /<link\b(?=[^>]*rel=["']apple-touch-icon(?:-precomposed)?["'])[^>]*\/?>/gi, installTags.slice(1).join('\n  '));
 
 fs.writeFileSync(indexPath, html, 'utf8');
 refreshServiceWorkerCacheName(buildVersion);
@@ -67,9 +69,11 @@ function cacheBustInstallIcons() {
   }));
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 
-  const appleTouchSource = fs.existsSync(path.join(distDir, 'assets', 'apple-touch-icon.png'))
-    ? '/assets/apple-touch-icon.png'
-    : '/assets/icon.png';
+  const appleTouchSource = fs.existsSync(path.join(distDir, 'apple-touch-icon.png'))
+    ? '/apple-touch-icon.png'
+    : fs.existsSync(path.join(distDir, 'assets', 'apple-touch-icon.png'))
+      ? '/assets/apple-touch-icon.png'
+      : '/assets/icon.png';
   const appleTouchIconHref = cacheBustAsset(appleTouchSource);
   const manifestHash = fileHash(manifestPath);
 
@@ -77,6 +81,11 @@ function cacheBustInstallIcons() {
     appleTouchIconHref,
     manifestHref: `/manifest.json?v=${manifestHash}`,
   };
+}
+
+function replaceInstallTag(source, matcher, tag) {
+  const withoutPrevious = source.replace(matcher, '');
+  return withoutPrevious.replace('</head>', `  ${tag}\n</head>`);
 }
 
 function cacheBustAsset(src) {

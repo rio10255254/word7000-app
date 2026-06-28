@@ -16,6 +16,8 @@ const outputs = [
   ['assets/android-icon-background.png', 1024, 'background'],
   ['assets/android-icon-foreground.png', 1024, 'foreground'],
   ['assets/android-icon-monochrome.png', 1024, 'mono'],
+  ['public/apple-touch-icon.png', 180, 'icon'],
+  ['public/apple-touch-icon-precomposed.png', 180, 'icon'],
   ['public/assets/favicon.png', 64, 'icon'],
   ['public/assets/apple-touch-icon.png', 180, 'icon'],
   ['public/assets/icon.png', 1024, 'icon'],

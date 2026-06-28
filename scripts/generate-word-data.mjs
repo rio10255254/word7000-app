@@ -96,6 +96,89 @@ function cleanMeaning(value = '') {
     .replace(/[，,;；\s]+$/g, '');
 }
 
+function meaningHead(value = '') {
+  const head = cleanText(value)
+    .split(/[；;,，、]/)[0]
+    ?.replace(/^[的地得\s]+/g, '')
+    .replace(/[^\u4e00-\u9fffA-Za-z\s-]/g, '')
+    .trim();
+  return head || '這個概念';
+}
+
+function wordKind(pos, word) {
+  const value = pos.toLowerCase();
+  if (value.includes('prep') || value.includes('conj') || value.includes('pron') || value.includes('aux')) {
+    return 'function';
+  }
+  if (value.includes('adv') || value.split('/').map((item) => item.trim()).includes('r')) {
+    return word.endsWith('ly') ? 'adverb' : 'function';
+  }
+  if (value.includes('v')) {
+    return 'verb';
+  }
+  if (value.includes('a') || value.includes('adj')) {
+    return 'adjective';
+  }
+  if (value.includes('n')) {
+    return 'noun';
+  }
+  return 'function';
+}
+
+function generatedExample(row, word, partOfSpeechValue, meaningZh, index) {
+  const kind = wordKind(partOfSpeechValue, word);
+  const zhHead = meaningHead(meaningZh);
+  const variant = index % 4;
+
+  if (kind === 'noun') {
+    const examples = [
+      [`The word "${word}" appears as the main idea in a short passage.`, `「${word}」在短文中作為主要概念出現。`],
+      [`A learner can connect "${word}" with a real situation.`, `學習者可以把「${word}」和真實情境連起來。`],
+      [`This example places "${word}" in a practical context.`, `這個例句把「${word}」放進實用情境。`],
+      [`The sentence helps explain "${word}" without a long definition.`, `這句話不用長篇解釋，也能幫助理解「${word}」。`],
+    ];
+    return examples[variant];
+  }
+
+  if (kind === 'verb') {
+    const examples = [
+      [`The word "${word}" can describe an action or state in context.`, `「${word}」可以在情境中表達動作或狀態。`],
+      [`A simple sentence can show how "${word}" is used.`, `簡單句子可以示範「${word}」的用法。`],
+      [`This passage uses "${word}" to make the meaning clearer.`, `這段文字用「${word}」讓意思更清楚。`],
+      [`Learners can practice "${word}" in a complete sentence.`, `學習者可以在完整句子中練習「${word}」。`],
+    ];
+    return examples[variant];
+  }
+
+  if (kind === 'adjective') {
+    const examples = [
+      [`The word "${word}" adds a clear detail to the sentence.`, `「${word}」為句子增加清楚的細節。`],
+      [`A short example can make "${word}" easier to remember.`, `短例句能讓「${word}」更容易記住。`],
+      [`This sentence shows "${word}" in a useful context.`, `這句話示範「${word}」在實用情境中的樣子。`],
+      [`The lesson connects "${word}" with a familiar idea.`, `這課把「${word}」和熟悉的想法連起來。`],
+    ];
+    return examples[variant];
+  }
+
+  if (kind === 'adverb') {
+    const examples = [
+      [`The word "${word}" changes how the action feels.`, `「${word}」會改變動作呈現的感覺。`],
+      [`This example shows "${word}" beside an action.`, `這個例句示範「${word}」如何搭配動作。`],
+      [`A clear context helps learners remember "${word}".`, `清楚的情境能幫助學習者記住「${word}」。`],
+      [`The sentence uses "${word}" to adjust the meaning.`, `這句話用「${word}」調整意思。`],
+    ];
+    return examples[variant];
+  }
+
+  const examples = [
+    [`Writers use "${word}" to connect ideas in a sentence.`, `寫作者用「${word}」連接句子裡的想法。`],
+    [`In this sentence, "${word}" helps the meaning stay clear.`, `在這個句子裡，「${word}」讓意思更清楚。`],
+    [`A simple example shows where "${word}" can fit.`, `簡單例句會示範「${word}」可以放在哪裡。`],
+    [`The word "${word}" is useful when the sentence connects two ideas.`, `談到${zhHead}時，可以用「${word}」。`],
+  ];
+  return examples[variant];
+}
+
 function partOfSpeech(row) {
   if (row.pos?.trim()) {
     return row.pos.trim();
@@ -137,15 +220,19 @@ function toEntry(row, index) {
   const meaningZh = override?.meaningZh ?? cleanMeaning(row.translation);
   const pronunciation = row.phonetic?.trim() ? `/${row.phonetic.trim()}/` : '/-/';
   const group = `Core ${Math.floor(index / 500) + 1}`;
+  const partOfSpeechValue = partOfSpeech(row);
+  const [example, exampleZh] = override
+    ? [override.example, override.exampleZh]
+    : generatedExample(row, word, partOfSpeechValue, meaningZh, index);
 
   return {
     id: `w${String(index + 1).padStart(4, '0')}`,
     word,
-    partOfSpeech: partOfSpeech(row),
+    partOfSpeech: partOfSpeechValue,
     pronunciation,
     meaningZh,
-    example: override?.example ?? `Review "${word}" with this meaning: ${meaningZh}.`,
-    exampleZh: override?.exampleZh ?? `「${word}」：${meaningZh}`,
+    example,
+    exampleZh,
     group,
   };
 }

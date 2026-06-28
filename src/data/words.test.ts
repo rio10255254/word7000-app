@@ -42,6 +42,22 @@ describe('full vocabulary dataset', () => {
     expect(incomplete).toEqual([]);
   });
 
+  test('uses sentence examples instead of dictionary placeholder text', () => {
+    const placeholderExamples = sampleWords.filter(
+      (word) =>
+        word.example.startsWith(`Review "${word.word}" with this meaning:`) ||
+        word.exampleZh === `「${word.word}」：${word.meaningZh}`,
+    );
+
+    expect(placeholderExamples.slice(0, 20).map((word) => word.word)).toEqual([]);
+  });
+
+  test('keeps English example sentences in English', () => {
+    const mixedLanguageExamples = sampleWords.filter((word) => /[\u4e00-\u9fff]/.test(word.example));
+
+    expect(mixedLanguageExamples.slice(0, 20).map((word) => word.word)).toEqual([]);
+  });
+
   test('contains single-word English entries only', () => {
     const invalid = sampleWords.filter((word) => !/^[a-z]{2,18}$/.test(word.word));
 

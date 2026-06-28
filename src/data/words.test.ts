@@ -6,6 +6,18 @@ describe('full vocabulary dataset', () => {
     expect(sampleWords).toHaveLength(7000);
   });
 
+  test('is split into 14 complete 500-word levels', () => {
+    const groupCounts = sampleWords.reduce<Record<string, number>>((counts, word) => {
+      counts[word.group] = (counts[word.group] ?? 0) + 1;
+      return counts;
+    }, {});
+
+    expect(Object.keys(groupCounts)).toHaveLength(14);
+    for (let level = 1; level <= 14; level += 1) {
+      expect(groupCounts[`Core ${level}`]).toBe(500);
+    }
+  });
+
   test('uses unique ids and unique lowercase words', () => {
     const ids = new Set(sampleWords.map((word) => word.id));
     const words = new Set(sampleWords.map((word) => word.word.toLowerCase()));

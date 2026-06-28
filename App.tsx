@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import {
+  ArrowUp,
   BookOpen,
   Check,
   ChevronRight,
   Cloud,
+  GripVertical,
   Home,
   Library,
   Lock,
@@ -17,8 +19,11 @@ import {
   Trophy,
   User,
 } from 'lucide-react-native';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  PanResponder,
   Pressable,
   Platform,
   SafeAreaView,
@@ -29,6 +34,7 @@ import {
   View,
 } from 'react-native';
 import { sampleWords, type WordEntry } from './src/data/words';
+import { scrollThumbOffset, wordWindowStartFromSlider } from './src/lib/libraryNavigation';
 import {
   buildQuizOptions,
   computeStats,
@@ -65,7 +71,8 @@ type UpdateState = {
 
 const today = new Date().toISOString().slice(0, 10);
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
-const LIBRARY_BATCH_SIZE = 240;
+const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
+const LIBRARY_WINDOW_SIZE = 260;
 const initialProgress: ProgressState = {
   dailyTarget: 20,
   streak: 1,
@@ -105,6 +112,7 @@ const alphabetFilters = [
 ];
 
 export default function App() {
+  const appScrollRef = useRef<ScrollView | null>(null);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
@@ -117,6 +125,9 @@ export default function App() {
   const [activeLevel, setActiveLevel] = useState('all');
   const [activeInitial, setActiveInitial] = useState('all');
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
+  const [scrollY, setScrollY] = useState(0);
+  const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
+  const [libraryWindowStart, setLibraryWindowStart] = useState(0);
 
   const stats = useMemo(() => computeStats(sampleWords, progress), [progress]);
   const studyWord = sampleWords[wordIndex % sampleWords.length];
@@ -132,8 +143,36 @@ export default function App() {
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const updateState = useAppUpdateCheck();
+  const librarySliderVisible = activeTab === 'library' && libraryWords.length > LIBRARY_WINDOW_SIZE;
+  const libraryThumbOffset = scrollThumbOffset(
+    libraryWindowStart,
+    Math.max(libraryWords.length, LIBRARY_WINDOW_SIZE + 1),
+    LIBRARY_WINDOW_SIZE,
+    sliderTrackHeight,
+    LIBRARY_SLIDER_THUMB_HEIGHT,
+  );
+  const librarySliderResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: () => activeTab === 'library',
+        onStartShouldSetPanResponder: () => activeTab === 'library',
+        onPanResponderGrant: (event) => handleLibrarySliderDrag(event.nativeEvent.locationY),
+        onPanResponderMove: (event) => handleLibrarySliderDrag(event.nativeEvent.locationY),
+      }),
+    [activeTab, libraryWords.length, sliderTrackHeight],
+  );
 
   useWebServiceWorker();
+
+  useEffect(() => {
+    appScrollRef.current?.scrollTo({ y: 0, animated: false });
+    setScrollY(0);
+    setLibraryWindowStart(0);
+  }, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);
+
+  useEffect(() => {
+    setLibraryWindowStart((current) => Math.min(current, Math.max(0, libraryWords.length - LIBRARY_WINDOW_SIZE)));
+  }, [libraryWords.length]);
 
   useEffect(() => {
     const localProgress = loadProgressFromStorage(getBrowserStorage(), initialProgress);
@@ -258,6 +297,31 @@ export default function App() {
   function nextQuiz() {
     setQuizResult(null);
     setQuizIndex((current) => (current + 1) % sampleWords.length);
+  }
+
+  function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    if (activeTab === 'library') {
+      setScrollY(event.nativeEvent.contentOffset.y);
+    }
+  }
+
+  function handleLibrarySliderDrag(locationY: number) {
+    const target = wordWindowStartFromSlider(
+      locationY,
+      sliderTrackHeight,
+      libraryWords.length,
+      LIBRARY_WINDOW_SIZE,
+      LIBRARY_SLIDER_THUMB_HEIGHT,
+    );
+    setLibraryWindowStart(target);
+    appScrollRef.current?.scrollTo({ y: 0, animated: false });
+    setScrollY(0);
+  }
+
+  function returnLibraryToTop() {
+    setLibraryWindowStart(0);
+    appScrollRef.current?.scrollTo({ y: 0, animated: true });
+    setScrollY(0);
   }
 
   async function activateSignedInUser(user: SupabaseUser, fallback: ProgressState) {
@@ -411,7 +475,13 @@ export default function App() {
           </View>
         )}
 
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          onScroll={handleScroll}
+          ref={appScrollRef}
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+        >
           {activeTab === 'home' && (
             <HomeView
               dailyPercent={dailyPercent}
@@ -450,12 +520,15 @@ export default function App() {
               activeLevel={activeLevel}
               progress={progress}
               query={searchQuery}
+              visibleStart={libraryWindowStart}
+              visibleWindowSize={LIBRARY_WINDOW_SIZE}
               words={libraryWords}
               onFilterChange={setActiveFilter}
               onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
               onInitialChange={setActiveInitial}
               onLevelChange={setActiveLevel}
               onQueryChange={setSearchQuery}
+              onReturnTop={returnLibraryToTop}
             />
           )}
           {activeTab === 'profile' && (
@@ -472,6 +545,38 @@ export default function App() {
             />
           )}
         </ScrollView>
+
+        {activeTab === 'library' && (
+          <View pointerEvents="box-none" style={styles.libraryFixedControls}>
+            {scrollY > 180 && (
+              <Pressable
+                accessibilityRole="button"
+                onPress={returnLibraryToTop}
+                style={styles.libraryFloatingTopButton}
+                testID="library-floating-top"
+              >
+                <ArrowUp size={15} color="#172033" strokeWidth={2.5} />
+                <Text style={styles.libraryFloatingTopText}>回頂端</Text>
+              </Pressable>
+            )}
+            {librarySliderVisible && (
+              <View
+                {...librarySliderResponder.panHandlers}
+                onLayout={(event) => setSliderTrackHeight(event.nativeEvent.layout.height)}
+                style={styles.libraryDragSlider}
+                testID="library-drag-slider"
+              >
+                <View style={styles.libraryDragTrack} />
+                <View
+                  style={[styles.libraryDragThumb, { transform: [{ translateY: libraryThumbOffset }] }]}
+                  testID="library-drag-thumb"
+                >
+                  <GripVertical size={17} color="#172033" strokeWidth={2.4} />
+                </View>
+              </View>
+            )}
+          </View>
+        )}
 
         <View style={styles.tabBar}>
           {tabs.map((tab) => {
@@ -795,34 +900,48 @@ function LibraryView({
   activeLevel,
   progress,
   query,
+  visibleStart,
+  visibleWindowSize,
   words,
   onFavorite,
   onFilterChange,
   onInitialChange,
   onLevelChange,
   onQueryChange,
+  onReturnTop,
 }: {
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
   progress: ProgressState;
   query: string;
+  visibleStart: number;
+  visibleWindowSize: number;
   words: WordEntry[];
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
   onQueryChange: (query: string) => void;
+  onReturnTop: () => void;
 }) {
-  const [visibleLimit, setVisibleLimit] = useState(LIBRARY_BATCH_SIZE);
-  const visibleWords = words.slice(0, visibleLimit);
-
-  useEffect(() => {
-    setVisibleLimit(LIBRARY_BATCH_SIZE);
-  }, [activeFilter, activeInitial, activeLevel, query]);
+  const safeStart = Math.min(visibleStart, Math.max(0, words.length - visibleWindowSize));
+  const visibleEnd = Math.min(words.length, safeStart + visibleWindowSize);
+  const visibleWords = words.slice(safeStart, visibleEnd);
 
   return (
     <View style={styles.screenStack}>
+      <View style={styles.libraryHeaderCard}>
+        <View>
+          <Text style={styles.libraryHeaderTitle}>完整字庫</Text>
+          <Text style={styles.libraryHeaderMeta}>目前篩選後 {words.length} 個單字</Text>
+        </View>
+        <Pressable accessibilityRole="button" onPress={onReturnTop} style={styles.libraryTopButton} testID="library-top-return">
+          <ArrowUp size={16} color="#172033" strokeWidth={2.5} />
+          <Text style={styles.libraryTopButtonText}>回到頂端</Text>
+        </Pressable>
+      </View>
+
       <View style={styles.searchBox}>
         <Search size={18} color="#717987" strokeWidth={2.2} />
         <TextInput
@@ -887,7 +1006,7 @@ function LibraryView({
       <View style={styles.libraryPanel}>
         <View style={styles.wordList}>
         <Text style={styles.resultCount}>
-          共 {words.length} 個結果，目前顯示 {visibleWords.length} 個
+          共 {words.length} 個結果，顯示第 {words.length === 0 ? 0 : safeStart + 1}-{visibleEnd} 個
         </Text>
         {visibleWords.map((word) => {
           const wordProgress = progress.words[word.id];
@@ -920,37 +1039,12 @@ function LibraryView({
             </View>
           );
         })}
-        {visibleWords.length < words.length && (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => setVisibleLimit((current) => Math.min(words.length, current + LIBRARY_BATCH_SIZE))}
-            style={styles.loadMoreButton}
-          >
-            <Text style={styles.loadMoreText}>載入更多單字</Text>
-          </Pressable>
-        )}
         {words.length === 0 && (
           <View style={styles.emptyState}>
             <Text style={styles.emptyTitle}>沒有符合的單字</Text>
             <Text style={styles.emptyText}>可以清除搜尋或換一個分級、字首。</Text>
           </View>
         )}
-        </View>
-        <View style={styles.alphabetRail}>
-          {alphabetFilters.slice(1).map((initial) => {
-            const selected = activeInitial === initial.id;
-            return (
-              <Pressable
-                accessibilityLabel={`跳到 ${initial.id} 開頭`}
-                accessibilityRole="button"
-                key={initial.id}
-                onPress={() => onInitialChange(initial.id)}
-                style={[styles.railLetterButton, selected && styles.railLetterButtonActive]}
-              >
-                <Text style={[styles.railLetterText, selected && styles.railLetterTextActive]}>{initial.id}</Text>
-              </Pressable>
-            );
-          })}
         </View>
       </View>
     </View>
@@ -1619,12 +1713,50 @@ const styles = StyleSheet.create({
   letterTextActive: {
     color: '#fff',
   },
+  libraryHeaderCard: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'space-between',
+    padding: 14,
+  },
+  libraryHeaderTitle: {
+    color: '#172033',
+    fontSize: 17,
+    fontWeight: '900',
+  },
+  libraryHeaderMeta: {
+    color: '#717987',
+    fontSize: 13,
+    fontWeight: '700',
+    marginTop: 3,
+  },
+  libraryTopButton: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    minHeight: 40,
+    paddingHorizontal: 11,
+  },
+  libraryTopButtonText: {
+    color: '#172033',
+    fontSize: 13,
+    fontWeight: '900',
+  },
   libraryPanel: {
     position: 'relative',
   },
   wordList: {
     gap: 10,
-    paddingRight: 36,
+    paddingRight: 44,
   },
   libraryItem: {
     backgroundColor: '#fff',
@@ -1750,6 +1882,80 @@ const styles = StyleSheet.create({
   },
   railLetterTextActive: {
     color: '#fff',
+  },
+  libraryFixedControls: {
+    height: 600,
+    position: 'absolute',
+    right: 10,
+    top: 94,
+    width: 86,
+    zIndex: 20,
+  },
+  libraryFloatingTopButton: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    backgroundColor: '#ffffff',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    elevation: 4,
+    flexDirection: 'row',
+    gap: 5,
+    marginBottom: 10,
+    minHeight: 38,
+    paddingHorizontal: 9,
+    position: 'absolute',
+    right: 0,
+    shadowColor: '#172033',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    top: 0,
+  },
+  libraryFloatingTopText: {
+    color: '#172033',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  libraryDragSlider: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    backgroundColor: '#ffffff',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    elevation: 5,
+    height: 500,
+    paddingHorizontal: 4,
+    paddingVertical: 5,
+    position: 'absolute',
+    right: 0,
+    shadowColor: '#172033',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.14,
+    shadowRadius: 7,
+    top: 100,
+    width: 34,
+  },
+  libraryDragTrack: {
+    backgroundColor: '#e5e7eb',
+    borderRadius: 8,
+    bottom: 8,
+    position: 'absolute',
+    top: 8,
+    width: 4,
+  },
+  libraryDragThumb: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#93c5fd',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: LIBRARY_SLIDER_THUMB_HEIGHT,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 5,
+    width: 24,
   },
   profileCard: {
     alignItems: 'center',

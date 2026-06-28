@@ -50,6 +50,18 @@ describe('free web launch configuration', () => {
     expect(prepareExport).toContain('version.json');
   });
 
+  test('keeps add-to-home-screen icon metadata fresh after icon changes', () => {
+    const serviceWorker = fs.readFileSync(serviceWorkerPath, 'utf8');
+    const prepareExport = fs.readFileSync(prepareExportPath, 'utf8');
+
+    expect(serviceWorker).not.toContain("const APP_SHELL = ['/', '/manifest.json'");
+    expect(serviceWorker).toContain('NETWORK_FIRST_PATHS');
+    expect(serviceWorker).toContain("const NETWORK_FIRST_PATHS = ['/manifest.json'");
+    expect(prepareExport).toContain('cacheBustInstallIcons');
+    expect(prepareExport).toContain('manifest.json?v=');
+    expect(prepareExport).toContain('apple-touch-icon');
+  });
+
   test('provides a version endpoint for mobile web app update checks', () => {
     const version = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
 

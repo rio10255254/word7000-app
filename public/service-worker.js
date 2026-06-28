@@ -1,5 +1,6 @@
-const CACHE_NAME = 'word7000-static-v2';
-const APP_SHELL = ['/', '/manifest.json', '/favicon.ico'];
+const CACHE_NAME = 'word7000-static-v3';
+const APP_SHELL = ['/', '/favicon.ico'];
+const NETWORK_FIRST_PATHS = ['/manifest.json', '/version.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -21,6 +22,19 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  if (shouldUseNetworkFirst(event.request)) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request)),
+    );
     return;
   }
 
@@ -51,3 +65,8 @@ self.addEventListener('fetch', (event) => {
     }),
   );
 });
+
+function shouldUseNetworkFirst(request) {
+  const url = new URL(request.url);
+  return NETWORK_FIRST_PATHS.includes(url.pathname);
+}

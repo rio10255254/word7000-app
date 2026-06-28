@@ -1,24 +1,30 @@
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 
 const distDir = path.resolve('dist');
 const indexPath = path.join(distDir, 'index.html');
 const packagePath = path.resolve('package.json');
 const versionPath = path.join(distDir, 'version.json');
+const manifestPath = path.join(distDir, 'manifest.json');
+const serviceWorkerPath = path.join(distDir, 'service-worker.js');
 
 if (!fs.existsSync(indexPath)) {
   throw new Error(`Missing exported index.html at ${indexPath}`);
 }
 
 let html = fs.readFileSync(indexPath, 'utf8');
+const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+const buildVersion = `${packageJson.version}-${Date.now()}`;
+const installIconLinks = cacheBustInstallIcons();
 
 const tags = [
   '<meta name="description" content="A simple offline 7000-word English vocabulary app for daily learning and review." />',
   '<meta name="theme-color" content="#172033" />',
   '<meta name="apple-mobile-web-app-capable" content="yes" />',
   '<meta name="apple-mobile-web-app-title" content="Word7000" />',
-  '<link rel="manifest" href="/manifest.json" />',
-  '<link rel="apple-touch-icon" href="/assets/icon.png" />',
+  `<link rel="manifest" href="${installIconLinks.manifestHref}" />`,
+  `<link rel="apple-touch-icon" sizes="180x180" href="${installIconLinks.appleTouchIconHref}" />`,
 ];
 
 for (const tag of tags) {
@@ -34,8 +40,7 @@ for (const tag of tags) {
 }
 
 fs.writeFileSync(indexPath, html, 'utf8');
-const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-const buildVersion = `${packageJson.version}-${Date.now()}`;
+refreshServiceWorkerCacheName(buildVersion);
 fs.writeFileSync(
   versionPath,
   `${JSON.stringify(
@@ -49,3 +54,57 @@ fs.writeFileSync(
   'utf8',
 );
 console.log(`Prepared web export at ${distDir}`);
+
+function cacheBustInstallIcons() {
+  if (!fs.existsSync(manifestPath)) {
+    throw new Error(`Missing web manifest at ${manifestPath}`);
+  }
+
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.icons = manifest.icons.map((icon) => ({
+    ...icon,
+    src: cacheBustAsset(icon.src),
+  }));
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+
+  const appleTouchSource = fs.existsSync(path.join(distDir, 'assets', 'apple-touch-icon.png'))
+    ? '/assets/apple-touch-icon.png'
+    : '/assets/icon.png';
+  const appleTouchIconHref = cacheBustAsset(appleTouchSource);
+  const manifestHash = fileHash(manifestPath);
+
+  return {
+    appleTouchIconHref,
+    manifestHref: `/manifest.json?v=${manifestHash}`,
+  };
+}
+
+function cacheBustAsset(src) {
+  const relativeSource = src.replace(/^\//, '').split('?')[0];
+  const sourcePath = path.join(distDir, relativeSource);
+  if (!fs.existsSync(sourcePath)) {
+    throw new Error(`Missing install icon asset at ${sourcePath}`);
+  }
+
+  const parsed = path.parse(relativeSource);
+  const hash = fileHash(sourcePath);
+  const versionedRelative = path.join(parsed.dir, `${parsed.name}-${hash}${parsed.ext}`).replaceAll(path.sep, '/');
+  fs.copyFileSync(sourcePath, path.join(distDir, versionedRelative));
+  return `/${versionedRelative}`;
+}
+
+function fileHash(filePath) {
+  return crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex').slice(0, 12);
+}
+
+function refreshServiceWorkerCacheName(version) {
+  if (!fs.existsSync(serviceWorkerPath)) {
+    return;
+  }
+
+  const safeVersion = version.replace(/[^a-zA-Z0-9_-]/g, '-');
+  const serviceWorker = fs
+    .readFileSync(serviceWorkerPath, 'utf8')
+    .replace(/word7000-static-v[0-9a-zA-Z_-]+/g, `word7000-static-${safeVersion}`);
+  fs.writeFileSync(serviceWorkerPath, serviceWorker, 'utf8');
+}

@@ -6,6 +6,7 @@ import {
   filterWords,
   markKnown,
   markReview,
+  selectQuizWords,
   toggleFavorite,
   type ProgressState,
 } from './progress';
@@ -102,5 +103,21 @@ describe('library and quiz helpers', () => {
     expect(options).toHaveLength(3);
     expect(options.filter((option) => option.correct)).toHaveLength(1);
     expect(options.some((option) => option.meaning === sampleWords[0].meaningZh)).toBe(true);
+  });
+
+  test('selectQuizWords uses status, level, and first-letter filters for quiz targets', () => {
+    const state = toggleFavorite(
+      markReview(markKnown(emptyProgress(), sampleWords[0].id, today), sampleWords[1].id, today),
+      sampleWords[0].id,
+    );
+
+    expect(selectQuizWords(sampleWords, state, 'favorites').map((word) => word.id)).toEqual([sampleWords[0].id]);
+    expect(selectQuizWords(sampleWords, state, 'review').map((word) => word.id)).toEqual([sampleWords[1].id]);
+    expect(
+      selectQuizWords(sampleWords, state, 'all', {
+        initial: 'B',
+        level: 'Core 1',
+      }).every((word) => word.group === 'Core 1' && word.word.toUpperCase().startsWith('B')),
+    ).toBe(true);
   });
 });

@@ -3,8 +3,10 @@ import {
   ArrowUp,
   BookOpen,
   Check,
+  ChevronDown,
   ChevronRight,
   Cloud,
+  SlidersHorizontal,
   GripVertical,
   Home,
   Library,
@@ -21,6 +23,8 @@ import {
 } from 'lucide-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Animated,
+  Easing,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   PanResponder,
@@ -41,7 +45,9 @@ import {
   filterWords,
   markKnown,
   markReview,
+  selectQuizWords,
   toggleFavorite,
+  type QuizOption,
   type LibraryFilter,
   type ProgressState,
 } from './src/lib/progress';
@@ -113,6 +119,8 @@ const alphabetFilters = [
 
 export default function App() {
   const appScrollRef = useRef<ScrollView | null>(null);
+  const launchAnim = useRef(new Animated.Value(0)).current;
+  const screenAnim = useRef(new Animated.Value(1)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
@@ -120,10 +128,18 @@ export default function App() {
   const [wordIndex, setWordIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(4);
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
+  const [answeredQuizWord, setAnsweredQuizWord] = useState<WordEntry | null>(null);
+  const [lockedQuizOptions, setLockedQuizOptions] = useState<QuizOption[] | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>('all');
   const [activeLevel, setActiveLevel] = useState('all');
   const [activeInitial, setActiveInitial] = useState('all');
+  const [libraryFiltersOpen, setLibraryFiltersOpen] = useState(false);
+  const [quizFilter, setQuizFilter] = useState<LibraryFilter>('all');
+  const [quizLevel, setQuizLevel] = useState('all');
+  const [quizInitial, setQuizInitial] = useState('all');
+  const [quizFiltersOpen, setQuizFiltersOpen] = useState(false);
+  const [showLaunch, setShowLaunch] = useState(true);
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
   const [scrollY, setScrollY] = useState(0);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
@@ -131,8 +147,22 @@ export default function App() {
 
   const stats = useMemo(() => computeStats(sampleWords, progress), [progress]);
   const studyWord = sampleWords[wordIndex % sampleWords.length];
-  const quizWord = sampleWords[quizIndex % sampleWords.length];
-  const quizOptions = useMemo(() => buildQuizOptions(sampleWords, quizWord.id), [quizWord.id]);
+  const quizWords = useMemo(
+    () =>
+      selectQuizWords(sampleWords, progress, quizFilter, {
+        initial: quizInitial,
+        level: quizLevel,
+      }),
+    [progress, quizFilter, quizInitial, quizLevel],
+  );
+  const quizWord = quizWords.length > 0 ? quizWords[quizIndex % quizWords.length] : null;
+  const quizOptionSource = quizWords.length >= 3 ? quizWords : sampleWords;
+  const quizOptions = useMemo(
+    () => (quizWord ? buildQuizOptions(quizOptionSource, quizWord.id) : []),
+    [quizOptionSource, quizWord],
+  );
+  const visibleQuizWord = answeredQuizWord ?? quizWord;
+  const visibleQuizOptions = lockedQuizOptions ?? quizOptions;
   const libraryWords = useMemo(
     () =>
       filterWords(sampleWords, progress, searchQuery, activeFilter, {
@@ -143,6 +173,25 @@ export default function App() {
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const updateState = useAppUpdateCheck();
+  const screenMotionStyle = {
+    opacity: screenAnim,
+    transform: [
+      {
+        translateY: screenAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [8, 0],
+        }),
+      },
+    ],
+  };
+  const launchOpacity = launchAnim.interpolate({
+    inputRange: [0, 0.22, 1.62, 2],
+    outputRange: [0, 1, 1, 0],
+  });
+  const launchScale = launchAnim.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: [0.94, 1, 1.04],
+  });
   const librarySliderVisible = activeTab === 'library' && libraryWords.length > LIBRARY_WINDOW_SIZE;
   const libraryThumbOffset = scrollThumbOffset(
     libraryWindowStart,
@@ -165,10 +214,45 @@ export default function App() {
   useWebServiceWorker();
 
   useEffect(() => {
+    Animated.sequence([
+      Animated.timing(launchAnim, {
+        duration: 280,
+        easing: Easing.out(Easing.cubic),
+        toValue: 1,
+        useNativeDriver: true,
+      }),
+      Animated.delay(520),
+      Animated.timing(launchAnim, {
+        duration: 300,
+        easing: Easing.inOut(Easing.cubic),
+        toValue: 2,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowLaunch(false));
+  }, [launchAnim]);
+
+  useEffect(() => {
+    screenAnim.setValue(0);
+    Animated.timing(screenAnim, {
+      duration: 220,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  }, [activeTab, screenAnim]);
+
+  useEffect(() => {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
     setScrollY(0);
     setLibraryWindowStart(0);
   }, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);
+
+  useEffect(() => {
+    setQuizIndex(0);
+    setQuizResult(null);
+    setAnsweredQuizWord(null);
+    setLockedQuizOptions(null);
+  }, [quizFilter, quizInitial, quizLevel]);
 
   useEffect(() => {
     setLibraryWindowStart((current) => Math.min(current, Math.max(0, libraryWords.length - LIBRARY_WINDOW_SIZE)));
@@ -290,13 +374,20 @@ export default function App() {
   }
 
   function handleQuizAnswer(correct: boolean) {
+    if (!quizWord) {
+      return;
+    }
+    setAnsweredQuizWord(quizWord);
+    setLockedQuizOptions(quizOptions);
     setQuizResult(correct ? 'correct' : 'wrong');
     setProgress((current) => (correct ? markKnown(current, quizWord.id, today) : markReview(current, quizWord.id, today)));
   }
 
   function nextQuiz() {
     setQuizResult(null);
-    setQuizIndex((current) => (current + 1) % sampleWords.length);
+    setAnsweredQuizWord(null);
+    setLockedQuizOptions(null);
+    setQuizIndex((current) => (quizWords.length > 0 ? (current + 1) % quizWords.length : 0));
   }
 
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -482,6 +573,7 @@ export default function App() {
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
         >
+          <Animated.View style={[styles.screenMotion, screenMotionStyle]}>
           {activeTab === 'home' && (
             <HomeView
               dailyPercent={dailyPercent}
@@ -506,10 +598,19 @@ export default function App() {
           )}
           {activeTab === 'quiz' && (
             <QuizView
-              options={quizOptions}
+              activeFilter={quizFilter}
+              activeInitial={quizInitial}
+              activeLevel={quizLevel}
+              filtersOpen={quizFiltersOpen}
+              options={visibleQuizOptions}
               result={quizResult}
-              word={quizWord}
+              word={visibleQuizWord}
+              wordCount={quizWords.length}
               onAnswer={handleQuizAnswer}
+              onFilterChange={setQuizFilter}
+              onFiltersToggle={() => setQuizFiltersOpen((current) => !current)}
+              onInitialChange={setQuizInitial}
+              onLevelChange={setQuizLevel}
               onNext={nextQuiz}
             />
           )}
@@ -518,12 +619,14 @@ export default function App() {
               activeFilter={activeFilter}
               activeInitial={activeInitial}
               activeLevel={activeLevel}
+              filtersOpen={libraryFiltersOpen}
               progress={progress}
               query={searchQuery}
               visibleStart={libraryWindowStart}
               visibleWindowSize={LIBRARY_WINDOW_SIZE}
               words={libraryWords}
               onFilterChange={setActiveFilter}
+              onFiltersToggle={() => setLibraryFiltersOpen((current) => !current)}
               onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
               onInitialChange={setActiveInitial}
               onLevelChange={setActiveLevel}
@@ -544,6 +647,7 @@ export default function App() {
               onSignUp={handleSignUp}
             />
           )}
+          </Animated.View>
         </ScrollView>
 
         {activeTab === 'library' && (
@@ -595,6 +699,23 @@ export default function App() {
             );
           })}
         </View>
+
+        {showLaunch && (
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.launchOverlay, { opacity: launchOpacity, transform: [{ scale: launchScale }] }]}
+            testID="launch-overlay"
+          >
+            <View style={styles.launchIcon}>
+              <Text style={styles.launchIconText}>W7</Text>
+            </View>
+            <Text style={styles.launchTitle}>Word7000</Text>
+            <Text style={styles.launchText}>每日輕學單字</Text>
+            <View style={styles.launchBar}>
+              <View style={styles.launchBarFill} />
+            </View>
+          </Animated.View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -840,21 +961,175 @@ function StudyView({
   );
 }
 
+function FilterControlPanel({
+  activeFilter,
+  activeInitial,
+  activeLevel,
+  count,
+  open,
+  showStatus,
+  testID,
+  title,
+  onFilterChange,
+  onInitialChange,
+  onLevelChange,
+  onToggle,
+}: {
+  activeFilter: LibraryFilter;
+  activeInitial: string;
+  activeLevel: string;
+  count: number;
+  open: boolean;
+  showStatus: boolean;
+  testID: string;
+  title: string;
+  onFilterChange: (filter: LibraryFilter) => void;
+  onInitialChange: (initial: string) => void;
+  onLevelChange: (level: string) => void;
+  onToggle: () => void;
+}) {
+  const summary = filterSummary(activeFilter, activeLevel, activeInitial, showStatus);
+
+  return (
+    <View style={styles.foldedFilterCard}>
+      <Pressable accessibilityRole="button" onPress={onToggle} style={styles.filterSummaryButton} testID={testID}>
+        <View style={styles.flexOne}>
+          <Text style={styles.filterSummaryTitle}>{title}</Text>
+          <Text style={styles.filterSummaryText}>
+            {summary} · {count} 個
+          </Text>
+        </View>
+        <View style={styles.filterSummaryIcon}>
+          <SlidersHorizontal size={16} color="#172033" strokeWidth={2.4} />
+          <ChevronDown size={15} color="#172033" strokeWidth={2.4} style={open ? styles.filterChevronOpen : undefined} />
+        </View>
+      </Pressable>
+
+      {open && (
+        <View style={styles.filterPanel} testID={`${testID}-panel`}>
+          {showStatus && (
+            <View style={styles.filterSection}>
+              <Text style={styles.filterSectionTitle}>狀態</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+                {filters.map((filter) => {
+                  const selected = activeFilter === filter.id;
+                  return (
+                    <Pressable
+                      accessibilityRole="button"
+                      key={filter.id}
+                      onPress={() => onFilterChange(filter.id)}
+                      style={[styles.filterChip, selected && styles.filterChipActive]}
+                    >
+                      <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filter.label}</Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          )}
+
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionTitle}>分級</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+              {levelFilters.map((level) => {
+                const selected = activeLevel === level.id;
+                return (
+                  <Pressable
+                    accessibilityLabel={`分級 ${level.label}`}
+                    accessibilityRole="button"
+                    key={level.id}
+                    onPress={() => onLevelChange(level.id)}
+                    style={[styles.filterChip, selected && styles.levelChipActive]}
+                  >
+                    <Text style={[styles.filterText, selected && styles.filterTextActive]}>{level.label}</Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          </View>
+
+          <View style={styles.filterSection}>
+            <Text style={styles.filterSectionTitle}>字首</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.letterRow}>
+              {alphabetFilters.map((initial) => {
+                const selected = activeInitial === initial.id;
+                return (
+                  <Pressable
+                    accessibilityLabel={initial.id === 'all' ? '字首 全部' : `字首 ${initial.id}`}
+                    accessibilityRole="button"
+                    key={initial.id}
+                    onPress={() => onInitialChange(initial.id)}
+                    style={[styles.letterChip, selected && styles.letterChipActive]}
+                  >
+                    <Text style={[styles.letterText, selected && styles.letterTextActive]}>{initial.label}</Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      )}
+    </View>
+  );
+}
+
 function QuizView({
+  activeFilter,
+  activeInitial,
+  activeLevel,
+  filtersOpen,
   options,
   result,
+  wordCount,
   word,
   onAnswer,
+  onFilterChange,
+  onFiltersToggle,
+  onInitialChange,
+  onLevelChange,
   onNext,
 }: {
+  activeFilter: LibraryFilter;
+  activeInitial: string;
+  activeLevel: string;
+  filtersOpen: boolean;
   options: ReturnType<typeof buildQuizOptions>;
   result: 'correct' | 'wrong' | null;
-  word: WordEntry;
+  word: WordEntry | null;
+  wordCount: number;
   onAnswer: (correct: boolean) => void;
+  onFilterChange: (filter: LibraryFilter) => void;
+  onFiltersToggle: () => void;
+  onInitialChange: (initial: string) => void;
+  onLevelChange: (level: string) => void;
   onNext: () => void;
 }) {
   return (
     <View style={styles.screenStack}>
+      <FilterControlPanel
+        activeFilter={activeFilter}
+        activeInitial={activeInitial}
+        activeLevel={activeLevel}
+        count={wordCount}
+        open={filtersOpen}
+        showStatus
+        testID="quiz-filter-toggle"
+        title="測驗篩選"
+        onFilterChange={onFilterChange}
+        onInitialChange={onInitialChange}
+        onLevelChange={onLevelChange}
+        onToggle={onFiltersToggle}
+      />
+
+      {!word && (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>沒有符合的測驗題目</Text>
+          <Text style={styles.emptyText}>可以放寬狀態、分級或字首篩選。</Text>
+        </View>
+      )}
+
+      {word && (
+        <>
       <View style={styles.quizCard}>
         <Text style={styles.eyebrow}>QUIZ</Text>
         <Text style={styles.bigWord}>{word.word}</Text>
@@ -890,6 +1165,8 @@ function QuizView({
           </Pressable>
         </View>
       )}
+        </>
+      )}
     </View>
   );
 }
@@ -898,6 +1175,7 @@ function LibraryView({
   activeFilter,
   activeInitial,
   activeLevel,
+  filtersOpen,
   progress,
   query,
   visibleStart,
@@ -905,6 +1183,7 @@ function LibraryView({
   words,
   onFavorite,
   onFilterChange,
+  onFiltersToggle,
   onInitialChange,
   onLevelChange,
   onQueryChange,
@@ -913,6 +1192,7 @@ function LibraryView({
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  filtersOpen: boolean;
   progress: ProgressState;
   query: string;
   visibleStart: number;
@@ -920,6 +1200,7 @@ function LibraryView({
   words: WordEntry[];
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
+  onFiltersToggle: () => void;
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
   onQueryChange: (query: string) => void;
@@ -969,39 +1250,20 @@ function LibraryView({
         })}
       </ScrollView>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
-        {levelFilters.map((level) => {
-          const selected = activeLevel === level.id;
-          return (
-            <Pressable
-              accessibilityLabel={`分級 ${level.label}`}
-              accessibilityRole="button"
-              key={level.id}
-              onPress={() => onLevelChange(level.id)}
-              style={[styles.filterChip, selected && styles.levelChipActive]}
-            >
-              <Text style={[styles.filterText, selected && styles.filterTextActive]}>{level.label}</Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
-
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.letterRow}>
-        {alphabetFilters.map((initial) => {
-          const selected = activeInitial === initial.id;
-          return (
-            <Pressable
-              accessibilityLabel={initial.id === 'all' ? '字首 全部' : `字首 ${initial.id}`}
-              accessibilityRole="button"
-              key={initial.id}
-              onPress={() => onInitialChange(initial.id)}
-              style={[styles.letterChip, selected && styles.letterChipActive]}
-            >
-              <Text style={[styles.letterText, selected && styles.letterTextActive]}>{initial.label}</Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
+      <FilterControlPanel
+        activeFilter={activeFilter}
+        activeInitial={activeInitial}
+        activeLevel={activeLevel}
+        count={words.length}
+        open={filtersOpen}
+        showStatus={false}
+        testID="library-filter-toggle"
+        title="分級 / 字首"
+        onFilterChange={onFilterChange}
+        onInitialChange={onInitialChange}
+        onLevelChange={onLevelChange}
+        onToggle={onFiltersToggle}
+      />
 
       <View style={styles.libraryPanel}>
         <View style={styles.wordList}>
@@ -1200,6 +1462,26 @@ function statusLabel(status?: string) {
   return '未背';
 }
 
+function filterSummary(filter: LibraryFilter, level: string, initial: string, showStatus: boolean): string {
+  const parts = [levelLabel(level), initialLabel(initial)];
+  if (showStatus) {
+    parts.unshift(filterLabel(filter));
+  }
+  return parts.join(' / ');
+}
+
+function filterLabel(filter: LibraryFilter): string {
+  return filters.find((item) => item.id === filter)?.label ?? '全部';
+}
+
+function levelLabel(level: string): string {
+  return levelFilters.find((item) => item.id === level)?.label ?? '全部分級';
+}
+
+function initialLabel(initial: string): string {
+  return alphabetFilters.find((item) => item.id === initial)?.label ?? '全部';
+}
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -1277,6 +1559,66 @@ const styles = StyleSheet.create({
   content: {
     padding: 18,
     paddingBottom: 102,
+  },
+  screenMotion: {
+    gap: 14,
+  },
+  launchOverlay: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    paddingHorizontal: 24,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 60,
+  },
+  launchIcon: {
+    alignItems: 'center',
+    backgroundColor: '#172033',
+    borderColor: '#334155',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 82,
+    justifyContent: 'center',
+    shadowColor: '#172033',
+    shadowOffset: { height: 14, width: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 24,
+    width: 82,
+  },
+  launchIconText: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: '900',
+  },
+  launchTitle: {
+    color: '#172033',
+    fontSize: 24,
+    fontWeight: '900',
+    marginTop: 14,
+  },
+  launchText: {
+    color: '#64748b',
+    fontSize: 14,
+    fontWeight: '700',
+    marginTop: 4,
+  },
+  launchBar: {
+    backgroundColor: '#dbeafe',
+    borderRadius: 99,
+    height: 5,
+    marginTop: 18,
+    overflow: 'hidden',
+    width: 112,
+  },
+  launchBarFill: {
+    backgroundColor: '#2563eb',
+    borderRadius: 99,
+    height: 5,
+    width: '68%',
   },
   screenStack: {
     gap: 14,
@@ -1657,6 +1999,55 @@ const styles = StyleSheet.create({
     color: '#172033',
     flex: 1,
     fontSize: 15,
+  },
+  foldedFilterCard: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  filterSummaryButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+    minHeight: 54,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  filterSummaryTitle: {
+    color: '#172033',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  filterSummaryText: {
+    color: '#717987',
+    fontSize: 12,
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  filterSummaryIcon: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+  },
+  filterChevronOpen: {
+    transform: [{ rotate: '180deg' }],
+  },
+  filterPanel: {
+    borderTopColor: '#edf0f5',
+    borderTopWidth: 1,
+    gap: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  filterSection: {
+    gap: 8,
+  },
+  filterSectionTitle: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '900',
   },
   filterRow: {
     gap: 8,

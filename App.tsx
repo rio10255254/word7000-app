@@ -2027,7 +2027,7 @@ function LibraryView({
             onChangeText={onQueryChange}
             onBlur={onSearchBlur}
             onFocus={onSearchFocus}
-            placeholder="搜尋英文、中文或例句"
+            placeholder="搜尋英文、中文、例句或翻譯"
             placeholderTextColor="#9ca3af"
             style={styles.searchInput}
             value={query}

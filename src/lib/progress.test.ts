@@ -12,6 +12,7 @@ import {
   toggleFavorite,
   type ProgressState,
 } from './progress';
+import type { WordEntry } from '../data/words';
 
 const today = '2026-06-28';
 
@@ -21,6 +22,20 @@ function emptyProgress(): ProgressState {
     streak: 1,
     studiedToday: 0,
     words: {},
+  };
+}
+
+function wordFixture(id: string, values: Partial<WordEntry> = {}): WordEntry {
+  return {
+    id,
+    word: id,
+    pronunciation: `/${id}/`,
+    partOfSpeech: 'n',
+    meaningZh: `${id} 的意思`,
+    example: `This example uses ${id}.`,
+    exampleZh: `這個例句使用 ${id}。`,
+    group: 'Core 1',
+    ...values,
   };
 }
 
@@ -97,6 +112,103 @@ describe('library and quiz helpers', () => {
     expect(coreTwoBWords.length).toBeGreaterThan(0);
     expect(coreTwoBWords.every((word) => word.group === 'Core 2')).toBe(true);
     expect(coreTwoBWords.every((word) => word.word.toUpperCase().startsWith('B'))).toBe(true);
+  });
+
+  test('filterWords keeps the full library in its stable vocabulary order when not searching or filtering', () => {
+    const words = [
+      wordFixture('mastered-word'),
+      wordFixture('review-word'),
+      wordFixture('fresh-word'),
+    ];
+    const state = markReview(markKnown(emptyProgress(), 'mastered-word', today), 'review-word', today);
+
+    expect(filterWords(words, state, '', 'all').map((word) => word.id)).toEqual(['mastered-word', 'review-word', 'fresh-word']);
+  });
+
+  test('filterWords puts newly favorited words first in the favorites list', () => {
+    const words = [wordFixture('old-favorite'), wordFixture('new-favorite')];
+    const state = toggleFavorite(
+      toggleFavorite(emptyProgress(), 'old-favorite', '2026-06-28T08:00:00.000Z'),
+      'new-favorite',
+      '2026-06-28T09:00:00.000Z',
+    );
+
+    expect(filterWords(words, state, '', 'favorites').map((word) => word.id)).toEqual(['new-favorite', 'old-favorite']);
+  });
+
+  test('filterWords puts newly reviewed words first in the review list', () => {
+    const words = [wordFixture('old-review'), wordFixture('new-review')];
+    const state = markReview(
+      markReview(emptyProgress(), 'old-review', today, '2026-06-28T08:00:00.000Z'),
+      'new-review',
+      today,
+      '2026-06-28T09:00:00.000Z',
+    );
+
+    expect(filterWords(words, state, '', 'review').map((word) => word.id)).toEqual(['new-review', 'old-review']);
+  });
+
+  test('filterWords puts newly mastered words first in the mastered list', () => {
+    const words = [wordFixture('old-mastered'), wordFixture('new-mastered')];
+    const state = markKnown(
+      markKnown(emptyProgress(), 'old-mastered', today, '2026-06-28T08:00:00.000Z'),
+      'new-mastered',
+      today,
+      '2026-06-28T09:00:00.000Z',
+    );
+
+    expect(filterWords(words, state, '', 'mastered').map((word) => word.id)).toEqual(['new-mastered', 'old-mastered']);
+  });
+
+  test('filterWords ranks exact and prefix English matches above looser matches while searching', () => {
+    const words = [
+      wordFixture('contains-match', {
+        word: 'cartoon',
+        meaningZh: '卡通',
+        example: 'The cartoon stayed on the table.',
+      }),
+      wordFixture('prefix-match', {
+        word: 'artist',
+        meaningZh: '藝術家',
+        example: 'The artist arrived early.',
+      }),
+      wordFixture('exact-match', {
+        word: 'art',
+        meaningZh: '藝術',
+        example: 'Art can change a quiet room.',
+      }),
+      wordFixture('example-match', {
+        word: 'museum',
+        meaningZh: '博物館',
+        example: 'The guide explained art history.',
+      }),
+    ];
+
+    expect(filterWords(words, emptyProgress(), 'art', 'all').map((word) => word.id)).toEqual([
+      'exact-match',
+      'prefix-match',
+      'contains-match',
+      'example-match',
+    ]);
+  });
+
+  test('filterWords searches Chinese translations and supports multiple query terms', () => {
+    const words = [
+      wordFixture('clear', {
+        word: 'clear',
+        meaningZh: '清楚的；明確的',
+        example: 'A clear routine helped the class.',
+        exampleZh: '清楚的規律幫助了班級。',
+      }),
+      wordFixture('routine', {
+        word: 'routine',
+        meaningZh: '常規；例行程序',
+        example: 'The routine changed on Monday.',
+        exampleZh: '這個例行程序在星期一改變了。',
+      }),
+    ];
+
+    expect(filterWords(words, emptyProgress(), '清楚 規律', 'all').map((word) => word.id)).toEqual(['clear']);
   });
 
   test('buildQuizOptions returns three choices with the correct meaning included once', () => {

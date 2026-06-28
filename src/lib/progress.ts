@@ -12,7 +12,9 @@ export type WordProgress = {
   favorite: boolean;
   difficult: boolean;
   reviewCount: number;
+  favoritedAt?: string;
   lastStudied?: string;
+  statusUpdatedAt?: string;
 };
 
 export type ProgressState = {
@@ -62,7 +64,7 @@ function updateWord(
   };
 }
 
-export function markKnown(state: ProgressState, wordId: string, today: string): ProgressState {
+export function markKnown(state: ProgressState, wordId: string, today: string, changedAt = createRuntimeTimestamp()): ProgressState {
   return updateWord(
     state,
     wordId,
@@ -71,12 +73,13 @@ export function markKnown(state: ProgressState, wordId: string, today: string): 
       status: 'mastered',
       difficult: false,
       lastStudied: today,
+      statusUpdatedAt: changedAt,
     }),
     true,
   );
 }
 
-export function markReview(state: ProgressState, wordId: string, today: string): ProgressState {
+export function markReview(state: ProgressState, wordId: string, today: string, changedAt = createRuntimeTimestamp()): ProgressState {
   return updateWord(
     state,
     wordId,
@@ -86,16 +89,21 @@ export function markReview(state: ProgressState, wordId: string, today: string):
       difficult: true,
       reviewCount: progress.reviewCount + 1,
       lastStudied: today,
+      statusUpdatedAt: changedAt,
     }),
     true,
   );
 }
 
-export function toggleFavorite(state: ProgressState, wordId: string): ProgressState {
-  return updateWord(state, wordId, (progress) => ({
-    ...progress,
-    favorite: !progress.favorite,
-  }));
+export function toggleFavorite(state: ProgressState, wordId: string, changedAt = createRuntimeTimestamp()): ProgressState {
+  return updateWord(state, wordId, (progress) => {
+    const favorite = !progress.favorite;
+    return {
+      ...progress,
+      favorite,
+      favoritedAt: favorite ? changedAt : undefined,
+    };
+  });
 }
 
 export function computeStats(words: WordEntry[], state: ProgressState): ProgressStats {
@@ -121,44 +129,115 @@ export function filterWords(
   options: LibraryFilterOptions = {},
 ): WordEntry[] {
   const normalizedQuery = query.trim().toLowerCase();
+  const queryTerms = normalizedQuery.length > 0 ? normalizedQuery.split(/\s+/).filter(Boolean) : [];
   const level = options.level && options.level !== 'all' ? options.level : null;
   const initial = options.initial && options.initial !== 'all' ? options.initial.toUpperCase() : null;
 
-  return words.filter((word) => {
-    const progress = currentProgress(state, word.id);
-    const matchesQuery =
-      normalizedQuery.length === 0 ||
-      word.word.toLowerCase().includes(normalizedQuery) ||
-      word.meaningZh.toLowerCase().includes(normalizedQuery) ||
-      word.example.toLowerCase().includes(normalizedQuery);
+  return words
+    .map((word, index) => ({ index, progress: currentProgress(state, word.id), score: searchScore(word, queryTerms), word }))
+    .filter(({ progress, score, word }) => {
+      const matchesQuery = queryTerms.length === 0 || score > 0;
 
-    if (!matchesQuery) {
-      return false;
-    }
+      if (!matchesQuery) {
+        return false;
+      }
 
-    if (level && word.group !== level) {
-      return false;
-    }
+      if (level && word.group !== level) {
+        return false;
+      }
 
-    if (initial && !word.word.toUpperCase().startsWith(initial)) {
-      return false;
-    }
+      if (initial && !word.word.toUpperCase().startsWith(initial)) {
+        return false;
+      }
 
-    if (filter === 'favorites') {
-      return progress.favorite;
-    }
-    if (filter === 'review') {
-      return progress.status === 'review';
-    }
-    if (filter === 'mastered') {
-      return progress.status === 'mastered';
-    }
-    if (filter === 'new') {
-      return progress.status === 'new';
-    }
+      if (filter === 'favorites') {
+        return progress.favorite;
+      }
+      if (filter === 'review') {
+        return progress.status === 'review';
+      }
+      if (filter === 'mastered') {
+        return progress.status === 'mastered';
+      }
+      if (filter === 'new') {
+        return progress.status === 'new';
+      }
 
-    return true;
-  });
+      return true;
+    })
+    .sort((a, b) => {
+      if (queryTerms.length > 0 && b.score !== a.score) {
+        return b.score - a.score;
+      }
+
+      const bTime = recencyTimeForFilter(b.progress, filter);
+      const aTime = recencyTimeForFilter(a.progress, filter);
+      if (bTime !== aTime) {
+        return bTime - aTime;
+      }
+
+      return a.index - b.index;
+    })
+    .map(({ word }) => word);
+}
+
+function searchScore(word: WordEntry, terms: string[]): number {
+  if (terms.length === 0) {
+    return 0;
+  }
+
+  let total = 0;
+  for (const term of terms) {
+    const score = searchTermScore(word, term);
+    if (score === 0) {
+      return 0;
+    }
+    total += score;
+  }
+  return total;
+}
+
+function searchTermScore(word: WordEntry, term: string): number {
+  const english = word.word.toLowerCase();
+  const meaning = word.meaningZh.toLowerCase();
+  const example = word.example.toLowerCase();
+  const exampleZh = word.exampleZh.toLowerCase();
+
+  if (english === term) {
+    return 1000;
+  }
+  if (english.startsWith(term)) {
+    return 900;
+  }
+  if (english.includes(term)) {
+    return 760;
+  }
+  if (meaning.includes(term)) {
+    return 680;
+  }
+  if (example.includes(term)) {
+    return 540;
+  }
+  if (exampleZh.includes(term)) {
+    return 520;
+  }
+  return 0;
+}
+
+function recencyTimeForFilter(progress: WordProgress, filter: LibraryFilter): number {
+  const value =
+    filter === 'favorites'
+      ? progress.favoritedAt
+      : filter === 'review' || filter === 'mastered'
+        ? progress.statusUpdatedAt ?? progress.lastStudied
+        : undefined;
+
+  if (!value) {
+    return 0;
+  }
+
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 export function selectQuizWords(
@@ -236,4 +315,8 @@ function hashText(value: string): number {
 
 function createRuntimeSeed(): string {
   return `${Date.now()}:${Math.random()}`;
+}
+
+function createRuntimeTimestamp(): string {
+  return new Date().toISOString();
 }

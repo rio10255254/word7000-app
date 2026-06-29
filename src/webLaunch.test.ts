@@ -98,7 +98,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('選擇題數');
     expect(appSource).toContain('開始測驗');
     expect(appSource).toContain('const quizQuestionCounts = [10, 20, 50] as const;');
-    expect(appSource).toContain('{count} 題');
+    expect(appSource).toContain('{count} {ui.questionUnit}');
     expect(appSource).toContain('測驗完成');
   });
 
@@ -167,7 +167,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("type StudyMode = 'english' | 'chinese'");
     expect(appSource).toContain('word7000-study-mode-v1');
     expect(appSource).toContain('切到中文單字');
-    expect(appSource).toContain('切回英文單字');
+    expect(appSource).toContain('Switch back to English words');
     expect(appSource).toContain('ModeSwitchOverlay');
     expect(appSource).toContain('modeTransitionAnim');
     expect(appSource).toContain('accessibilityLabel={copy.toggleTitle}');
@@ -176,5 +176,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('formatWordPrimary');
     expect(appSource).toContain('formatQuizAnswer');
     expect(appSource).toContain("buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`, studyMode === 'chinese' ? 'word' : 'meaning')");
+  });
+
+  test('uses an English interface and full-page transition in Chinese word mode', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("brand: 'Chinese7000'");
+    expect(appSource).toContain("toggleTitle: 'Switch back to English words'");
+    expect(appSource).toContain("libraryTitle: 'Chinese Word Library'");
+    expect(appSource).toContain("searchPlaceholder: 'Search Chinese, English words, examples, or translations'");
+    expect(appSource).toContain("studyFilterTitle: 'Study Filters'");
+    expect(appSource).toContain("quizFilterTitle: 'Quiz Filters'");
+    expect(appSource).toContain("questionBankUnit: 'Chinese words'");
+    expect(appSource).toContain('modeInterfaceCopy');
+    expect(appSource).toContain('styles.modeSwitchBackdrop');
+    expect(appSource).toContain('styles.modeSwitchPanel');
+    expect(appSource).toContain('bottom: 0');
+    expect(appSource).toContain('top: 0');
   });
 });

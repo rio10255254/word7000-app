@@ -251,4 +251,27 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);');
     expect(appSource).not.toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, profilePanel, searchQuery]);');
   });
+
+  test('returns from word detail to the previous library position without replaying the list', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('libraryReturnScrollYRef');
+    expect(appSource).toContain('restoreLibraryScrollPosition');
+    expect(appSource).toContain('libraryReturnScrollYRef.current = scrollY;');
+    expect(appSource).toContain('appScrollRef.current?.scrollTo({ y: libraryReturnScrollYRef.current, animated: false });');
+    expect(appSource).toContain('LIBRARY_ANIMATED_ITEM_COUNT');
+    expect(appSource).toContain("activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT");
+    expect(appSource).not.toContain('selectedLibraryWord?.id,');
+  });
+
+  test('uses a full-page fade when toggling dark mode colors', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('themeTransitionAnim');
+    expect(appSource).toContain('showThemeTransition');
+    expect(appSource).toContain('themeTransitionTarget');
+    expect(appSource).toContain('function triggerThemeModeChange(nextMode: ThemeMode)');
+    expect(appSource).toContain('onThemeModeChange={triggerThemeModeChange}');
+    expect(appSource).toContain('styles.themeTransitionOverlay');
+  });
 });

@@ -123,6 +123,7 @@ const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_WINDOW_SIZE = 260;
+const LIBRARY_ANIMATED_ITEM_COUNT = 28;
 const quizQuestionCounts = [10, 20, 50] as const;
 const installGuideSteps = [
   {
@@ -445,6 +446,8 @@ export default function App() {
   const cardAnim = useRef(new Animated.Value(1)).current;
   const libraryDetailAnim = useRef(new Animated.Value(1)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
+  const themeTransitionAnim = useRef(new Animated.Value(0)).current;
+  const libraryReturnScrollYRef = useRef(0);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
@@ -486,6 +489,8 @@ export default function App() {
     loadStudyMode(getBrowserStorage()) === 'english' ? 'chinese' : 'english',
   );
   const [showModeSwitch, setShowModeSwitch] = useState(false);
+  const [showThemeTransition, setShowThemeTransition] = useState(false);
+  const [themeTransitionTarget, setThemeTransitionTarget] = useState<ThemeMode>(() => loadThemeMode(getBrowserStorage()));
   const [scrollY, setScrollY] = useState(0);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
@@ -567,23 +572,29 @@ export default function App() {
       },
     ],
   };
-  const listMotionStyle = (index: number) => ({
-    opacity: cardAnim,
-    transform: [
-      {
-        translateY: cardAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [listEnterOffset(index), 0],
-        }),
-      },
-      {
-        scale: cardAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.992, 1],
-        }),
-      },
-    ],
-  });
+  const listMotionStyle = (index: number) => {
+    if (activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT) {
+      return undefined;
+    }
+
+    return {
+      opacity: cardAnim,
+      transform: [
+        {
+          translateY: cardAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [listEnterOffset(index), 0],
+          }),
+        },
+        {
+          scale: cardAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0.992, 1],
+          }),
+        },
+      ],
+    };
+  };
   const libraryDetailPanelMotionStyle = {
     opacity: libraryDetailAnim,
     transform: [
@@ -609,6 +620,10 @@ export default function App() {
     inputRange: [0, 1],
     outputRange: [18, 0],
   });
+  const themeTransitionMotionStyle = {
+    backgroundColor: themeTransitionTarget === 'dark' ? '#020617' : '#f8fafc',
+    opacity: themeTransitionAnim,
+  };
   const launchOpacity = launchAnim.interpolate({
     inputRange: [0, 0.22, 1.62, 2],
     outputRange: [0, 1, 1, 0],
@@ -720,7 +735,6 @@ export default function App() {
     quizStarted,
     quizFinished,
     searchQuery,
-    selectedLibraryWord?.id,
     studyMode,
     studyFilter,
     studyFiltersOpen,
@@ -1031,7 +1045,22 @@ export default function App() {
     setScrollY(0);
   }
 
+  function restoreLibraryScrollPosition() {
+    const restore = () => {
+      appScrollRef.current?.scrollTo({ y: libraryReturnScrollYRef.current, animated: false });
+      setScrollY(libraryReturnScrollYRef.current);
+    };
+
+    if (typeof globalThis.requestAnimationFrame === 'function') {
+      globalThis.requestAnimationFrame(() => restore());
+      return;
+    }
+
+    setTimeout(restore, 0);
+  }
+
   function openLibraryWordDetail(word: WordEntry) {
+    libraryReturnScrollYRef.current = scrollY;
     libraryDetailAnim.setValue(0);
     setSelectedLibraryWord(word);
     appScrollRef.current?.scrollTo({ y: 0, animated: true });
@@ -1052,6 +1081,7 @@ export default function App() {
     }).start(({ finished }) => {
       if (finished) {
         setSelectedLibraryWord(null);
+        restoreLibraryScrollPosition();
       }
     });
   }
@@ -1253,6 +1283,38 @@ export default function App() {
     });
   }
 
+  function triggerThemeModeChange(nextMode: ThemeMode) {
+    if (nextMode === themeMode || showThemeTransition) {
+      return;
+    }
+
+    setThemeTransitionTarget(nextMode);
+    setShowThemeTransition(true);
+    themeTransitionAnim.setValue(0);
+    Animated.timing(themeTransitionAnim, {
+      duration: 180,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start(({ finished }) => {
+      if (!finished) {
+        return;
+      }
+
+      setThemeMode(nextMode);
+      Animated.timing(themeTransitionAnim, {
+        duration: 260,
+        easing: Easing.inOut(Easing.cubic),
+        toValue: 0,
+        useNativeDriver: Platform.OS !== 'web',
+      }).start(({ finished: fadeFinished }) => {
+        if (fadeFinished) {
+          setShowThemeTransition(false);
+        }
+      });
+    });
+  }
+
   return (
     <ThemeContext.Provider value={themeMode}>
     <SafeAreaView style={[styles.safeArea, themeStyles?.safeArea]}>
@@ -1407,7 +1469,7 @@ export default function App() {
               onSignIn={handleSignIn}
               onSignOut={handleSignOut}
               onSignUp={handleSignUp}
-              onThemeModeChange={setThemeMode}
+              onThemeModeChange={triggerThemeModeChange}
             />
           )}
           </Animated.View>
@@ -1501,6 +1563,13 @@ export default function App() {
             translateY={installGuideTranslateY}
             onDismiss={dismissInstallGuide}
             onNext={nextInstallGuideStep}
+          />
+        )}
+        {showThemeTransition && (
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.themeTransitionOverlay, themeTransitionMotionStyle]}
+            testID="theme-transition-overlay"
           />
         )}
       </View>
@@ -3692,6 +3761,14 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 60,
+  },
+  themeTransitionOverlay: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 70,
   },
   launchIcon: {
     alignItems: 'center',

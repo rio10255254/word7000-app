@@ -447,7 +447,6 @@ export default function App() {
   const libraryDetailAnim = useRef(new Animated.Value(1)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
-  const libraryReturnScrollYRef = useRef(0);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
@@ -1045,25 +1044,9 @@ export default function App() {
     setScrollY(0);
   }
 
-  function restoreLibraryScrollPosition() {
-    const restore = () => {
-      appScrollRef.current?.scrollTo({ y: libraryReturnScrollYRef.current, animated: false });
-      setScrollY(libraryReturnScrollYRef.current);
-    };
-
-    if (typeof globalThis.requestAnimationFrame === 'function') {
-      globalThis.requestAnimationFrame(() => restore());
-      return;
-    }
-
-    setTimeout(restore, 0);
-  }
-
   function openLibraryWordDetail(word: WordEntry) {
-    libraryReturnScrollYRef.current = scrollY;
     libraryDetailAnim.setValue(0);
     setSelectedLibraryWord(word);
-    appScrollRef.current?.scrollTo({ y: 0, animated: true });
     Animated.timing(libraryDetailAnim, {
       duration: interactionMotion.settingsPanelMs,
       easing: Easing.out(Easing.cubic),
@@ -1081,7 +1064,6 @@ export default function App() {
     }).start(({ finished }) => {
       if (finished) {
         setSelectedLibraryWord(null);
-        restoreLibraryScrollPosition();
       }
     });
   }
@@ -1419,14 +1401,12 @@ export default function App() {
               activeFilter={activeFilter}
               activeInitial={activeInitial}
               activeLevel={activeLevel}
-              detailMotionStyle={libraryDetailPanelMotionStyle}
               filtersOpen={libraryFiltersOpen}
               levelOptions={levelFilterOptions}
               listMotionStyle={listMotionStyle}
               progress={progress}
               query={searchQuery}
               searchFocused={searchFocused}
-              selectedWord={selectedLibraryWord}
               studyMode={studyMode}
               visibleStart={libraryWindowStart}
               visibleWindowSize={LIBRARY_WINDOW_SIZE}
@@ -1436,7 +1416,6 @@ export default function App() {
               onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
               onInitialChange={setActiveInitial}
               onLevelChange={setActiveLevel}
-              onCloseWord={closeLibraryWordDetail}
               onOpenWord={openLibraryWordDetail}
               onQueryChange={handleLibraryQueryChange}
               onQueryClear={clearLibrarySearch}
@@ -1506,6 +1485,23 @@ export default function App() {
               </View>
             )}
           </View>
+        )}
+
+        {activeTab === 'library' && selectedLibraryWord && (
+          <Animated.View
+            pointerEvents={selectedLibraryWord ? 'auto' : 'none'}
+            style={[styles.libraryDetailOverlay, themeStyles?.libraryDetailOverlay, libraryDetailPanelMotionStyle]}
+          >
+            <ScrollView contentContainerStyle={styles.libraryDetailOverlayContent} showsVerticalScrollIndicator={false}>
+              <LibraryWordDetailView
+                progress={progress}
+                studyMode={studyMode}
+                word={selectedLibraryWord}
+                onBack={closeLibraryWordDetail}
+                onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
+              />
+            </ScrollView>
+          </Animated.View>
         )}
 
         <View style={[styles.tabBar, themeStyles?.tabBar]}>
@@ -2770,19 +2766,16 @@ function LibraryView({
   activeFilter,
   activeInitial,
   activeLevel,
-  detailMotionStyle,
   filtersOpen,
   levelOptions,
   listMotionStyle,
   progress,
   query,
   searchFocused,
-  selectedWord,
   studyMode,
   visibleStart,
   visibleWindowSize,
   words,
-  onCloseWord,
   onFavorite,
   onFilterChange,
   onFiltersToggle,
@@ -2798,19 +2791,16 @@ function LibraryView({
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
-  detailMotionStyle: StyleProp<ViewStyle>;
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
   progress: ProgressState;
   query: string;
   searchFocused: boolean;
-  selectedWord: WordEntry | null;
   studyMode: StudyMode;
   visibleStart: number;
   visibleWindowSize: number;
   words: WordEntry[];
-  onCloseWord: () => void;
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
@@ -2864,19 +2854,6 @@ function LibraryView({
       },
     ],
   };
-
-  if (selectedWord) {
-    return (
-      <LibraryWordDetailView
-        motionStyle={detailMotionStyle}
-        progress={progress}
-        studyMode={studyMode}
-        word={selectedWord}
-        onBack={onCloseWord}
-        onFavorite={() => onFavorite(selectedWord.id)}
-      />
-    );
-  }
 
   return (
     <View style={styles.screenStack}>
@@ -3031,14 +3008,12 @@ function LibraryView({
 }
 
 function LibraryWordDetailView({
-  motionStyle,
   progress,
   studyMode,
   word,
   onBack,
   onFavorite,
 }: {
-  motionStyle: StyleProp<ViewStyle>;
   progress: ProgressState;
   studyMode: StudyMode;
   word: WordEntry;
@@ -3052,7 +3027,7 @@ function LibraryWordDetailView({
   const ui = modeInterfaceCopy[studyMode];
 
   return (
-    <Animated.View style={[styles.screenStack, motionStyle]}>
+    <View style={styles.screenStack}>
       <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}>
         <ChevronLeft size={18} color={bodyIconColor} strokeWidth={2.5} />
         <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>{ui.backLibrary}</Text>
@@ -3113,7 +3088,7 @@ function LibraryWordDetailView({
           </Text>
         </View>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
@@ -4898,6 +4873,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 4,
   },
+  libraryDetailOverlay: {
+    backgroundColor: '#f8fafc',
+    bottom: 0,
+    left: 0,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 50,
+  },
+  libraryDetailOverlayContent: {
+    paddingBottom: 110,
+  },
   libraryDetailFavorite: {
     alignItems: 'center',
     backgroundColor: '#f8fafc',
@@ -5919,6 +5908,9 @@ const darkStyles = StyleSheet.create({
   },
   libraryDetailPronunciation: {
     color: '#94a3b8',
+  },
+  libraryDetailOverlay: {
+    backgroundColor: '#0f172a',
   },
   libraryDetailSection: {
     borderTopColor: '#334155',

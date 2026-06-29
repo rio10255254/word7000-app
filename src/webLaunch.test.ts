@@ -122,7 +122,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('完整資訊');
     expect(appSource).toContain('onOpenWord');
     expect(appSource).toContain('libraryDetailAnim');
-    expect(appSource).toContain('detailMotionStyle');
+    expect(appSource).toContain('libraryDetailOverlay');
     expect(appSource).toContain('libraryDetailAnim.setValue(0)');
   });
 
@@ -232,14 +232,14 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
-    expect(appSource).toContain('detailMotionStyle={libraryDetailPanelMotionStyle}');
+    expect(appSource).toContain('styles.libraryDetailOverlay');
+    expect(appSource).toContain('libraryDetailPanelMotionStyle');
     expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
     expect(appSource).toContain('function closeLibraryWordDetail()');
     expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
     expect(appSource).toContain('easing: Easing.out(Easing.cubic),\n      toValue: 0');
     expect(appSource).toContain('toValue: 0');
-    expect(appSource).toContain('onCloseWord={closeLibraryWordDetail}');
-    expect(appSource).toContain('Animated.View style={[styles.screenStack, motionStyle]}');
+    expect(appSource).toContain('onBack={closeLibraryWordDetail}');
   });
 
   test('keeps the current scroll position during profile settings transitions', () => {
@@ -255,12 +255,15 @@ describe('free web launch configuration', () => {
   test('returns from word detail to the previous library position without replaying the list', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('libraryReturnScrollYRef');
-    expect(appSource).toContain('restoreLibraryScrollPosition');
-    expect(appSource).toContain('libraryReturnScrollYRef.current = scrollY;');
-    expect(appSource).toContain('appScrollRef.current?.scrollTo({ y: libraryReturnScrollYRef.current, animated: false });');
+    expect(appSource).toContain('styles.libraryDetailOverlay');
+    expect(appSource).toContain('pointerEvents={selectedLibraryWord ?');
+    expect(appSource).toContain('selectedLibraryWord &&');
     expect(appSource).toContain('LIBRARY_ANIMATED_ITEM_COUNT');
     expect(appSource).toContain("activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT");
+    expect(appSource).not.toContain('if (selectedWord) {');
+    expect(appSource).not.toContain('libraryReturnScrollYRef.current = scrollY;');
+    expect(appSource).not.toContain('setSelectedLibraryWord(word);\n    appScrollRef.current?.scrollTo({ y: 0, animated: true });');
+    expect(appSource).not.toContain('restoreLibraryScrollPosition');
     expect(appSource).not.toContain('selectedLibraryWord?.id,');
   });
 

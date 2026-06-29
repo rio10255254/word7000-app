@@ -23,6 +23,8 @@ export type ProgressState = {
   dailyTarget: number;
   streak: number;
   studiedToday: number;
+  dailyProgressDate?: string;
+  lastStudyDate?: string;
   words: Record<string, WordProgress>;
 };
 
@@ -55,14 +57,15 @@ function updateWord(
   state: ProgressState,
   wordId: string,
   update: (progress: WordProgress) => WordProgress,
-  countAsStudied = false,
+  studiedDate?: string,
 ): ProgressState {
+  const baseState = studiedDate ? advanceDailyProgress(state, studiedDate) : state;
+
   return {
-    ...state,
-    studiedToday: countAsStudied ? state.studiedToday + 1 : state.studiedToday,
+    ...baseState,
     words: {
-      ...state.words,
-      [wordId]: update(currentProgress(state, wordId)),
+      ...baseState.words,
+      [wordId]: update(currentProgress(baseState, wordId)),
     },
   };
 }
@@ -78,7 +81,7 @@ export function markKnown(state: ProgressState, wordId: string, today: string, c
       lastStudied: today,
       statusUpdatedAt: changedAt,
     }),
-    true,
+    today,
   );
 }
 
@@ -94,7 +97,7 @@ export function markReview(state: ProgressState, wordId: string, today: string, 
       lastStudied: today,
       statusUpdatedAt: changedAt,
     }),
-    true,
+    today,
   );
 }
 
@@ -269,6 +272,26 @@ export function selectStudyWords(
   return filterWords(words, state, '', filter, options);
 }
 
+export function normalizeProgressForDate(state: ProgressState, today: string): ProgressState {
+  const nextState =
+    state.dailyProgressDate === today
+      ? state
+      : {
+          ...state,
+          dailyProgressDate: today,
+          studiedToday: 0,
+        };
+
+  if (!nextState.lastStudyDate || nextState.lastStudyDate === today || isPreviousDate(nextState.lastStudyDate, today)) {
+    return nextState;
+  }
+
+  return {
+    ...nextState,
+    streak: 0,
+  };
+}
+
 export function buildQuizSession(words: WordEntry[], requestedCount: number, seed = createRuntimeSeed()): WordEntry[] {
   const count = Math.max(0, Math.min(requestedCount, words.length));
   return shuffleWithSeed(words, seed).slice(0, count);
@@ -305,6 +328,49 @@ export function buildQuizOptions(
 
 function answerTextForMode(word: WordEntry, answerMode: QuizAnswerMode): string {
   return answerMode === 'word' ? word.word : word.meaningZh;
+}
+
+function advanceDailyProgress(state: ProgressState, today: string): ProgressState {
+  const normalized = normalizeProgressForDate(state, today);
+  const alreadyStudiedToday = normalized.lastStudyDate === today;
+  const nextStreak = alreadyStudiedToday
+    ? normalized.streak
+    : normalized.lastStudyDate && isPreviousDate(normalized.lastStudyDate, today)
+      ? Math.max(1, normalized.streak + 1)
+      : 1;
+
+  return {
+    ...normalized,
+    dailyProgressDate: today,
+    lastStudyDate: today,
+    streak: nextStreak,
+    studiedToday: normalized.studiedToday + 1,
+  };
+}
+
+function isPreviousDate(previousDate: string, today: string): boolean {
+  const previous = dateOnlyToDayNumber(previousDate);
+  const current = dateOnlyToDayNumber(today);
+  return previous !== null && current !== null && current - previous === 1;
+}
+
+function dateOnlyToDayNumber(value: string): number | null {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    return null;
+  }
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const time = Date.UTC(year, month - 1, day);
+  const date = new Date(time);
+
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
+    return null;
+  }
+
+  return Math.floor(time / 86_400_000);
 }
 
 function shuffleWithSeed<T>(values: T[], seed: string): T[] {

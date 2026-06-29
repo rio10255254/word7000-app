@@ -7,6 +7,7 @@ import {
   filterWords,
   markKnown,
   markReview,
+  normalizeProgressForDate,
   selectStudyWords,
   selectQuizWords,
   toggleFavorite,
@@ -48,6 +49,61 @@ describe('progress state', () => {
       lastStudied: today,
     });
     expect(state.studiedToday).toBe(1);
+  });
+
+  test('markKnown starts a real daily streak on the first studied word of the day', () => {
+    const state = markKnown(emptyProgress(), sampleWords[0].id, today);
+
+    expect(state).toMatchObject({
+      dailyProgressDate: today,
+      lastStudyDate: today,
+      streak: 1,
+      studiedToday: 1,
+    });
+  });
+
+  test('same-day study increments today count without inflating streak', () => {
+    const state = markReview(markKnown(emptyProgress(), sampleWords[0].id, today), sampleWords[1].id, today);
+
+    expect(state.streak).toBe(1);
+    expect(state.studiedToday).toBe(2);
+    expect(state.lastStudyDate).toBe(today);
+  });
+
+  test('consecutive-day study resets the daily count and extends streak once', () => {
+    const dayOne = markKnown(emptyProgress(), sampleWords[0].id, '2026-06-28');
+    const dayTwo = markReview(dayOne, sampleWords[1].id, '2026-06-29');
+
+    expect(dayTwo.streak).toBe(2);
+    expect(dayTwo.studiedToday).toBe(1);
+    expect(dayTwo.dailyProgressDate).toBe('2026-06-29');
+    expect(dayTwo.lastStudyDate).toBe('2026-06-29');
+  });
+
+  test('study after a missed day starts a new streak', () => {
+    const dayOne = markKnown(emptyProgress(), sampleWords[0].id, '2026-06-28');
+    const dayFour = markReview(dayOne, sampleWords[1].id, '2026-07-01');
+
+    expect(dayFour.streak).toBe(1);
+    expect(dayFour.studiedToday).toBe(1);
+    expect(dayFour.lastStudyDate).toBe('2026-07-01');
+  });
+
+  test('normalizing progress for a new date resets today count and expires stale streaks', () => {
+    const current = normalizeProgressForDate(
+      {
+        ...emptyProgress(),
+        dailyProgressDate: '2026-06-28',
+        lastStudyDate: '2026-06-28',
+        streak: 3,
+        studiedToday: 8,
+      },
+      '2026-06-30',
+    );
+
+    expect(current.studiedToday).toBe(0);
+    expect(current.streak).toBe(0);
+    expect(current.dailyProgressDate).toBe('2026-06-30');
   });
 
   test('markReview records a difficult word without counting it as mastered', () => {

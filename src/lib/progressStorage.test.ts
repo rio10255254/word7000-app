@@ -34,6 +34,8 @@ describe('local progress storage', () => {
       dailyTarget: 25,
       streak: 3,
       studiedToday: 7,
+      dailyProgressDate: '2026-06-29',
+      lastStudyDate: '2026-06-29',
       words: {
         w001: {
           status: 'mastered',
@@ -57,8 +59,24 @@ describe('local progress storage', () => {
     expect(loadProgressFromStorage(storage, fallbackProgress())).toEqual(fallbackProgress());
   });
 
+  test('falls back when stored streak dates are invalid', () => {
+    const storage = new MemoryStorage();
+    storage.setItem(
+      'word7000-progress-v1',
+      JSON.stringify({
+        dailyTarget: 20,
+        streak: 2,
+        studiedToday: 4,
+        dailyProgressDate: 123,
+        lastStudyDate: false,
+        words: {},
+      }),
+    );
+
+    expect(loadProgressFromStorage(storage, fallbackProgress())).toEqual(fallbackProgress());
+  });
+
   test('falls back when storage is unavailable', () => {
     expect(loadProgressFromStorage(undefined, fallbackProgress())).toEqual(fallbackProgress());
   });
 });
-

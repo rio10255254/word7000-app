@@ -20,6 +20,8 @@ export function isProgressState(value: unknown): value is ProgressState {
     typeof progress.dailyTarget !== 'number' ||
     typeof progress.streak !== 'number' ||
     typeof progress.studiedToday !== 'number' ||
+    (progress.dailyProgressDate !== undefined && typeof progress.dailyProgressDate !== 'string') ||
+    (progress.lastStudyDate !== undefined && typeof progress.lastStudyDate !== 'string') ||
     !progress.words ||
     typeof progress.words !== 'object' ||
     Array.isArray(progress.words)
@@ -75,4 +77,3 @@ function isWordProgress(value: unknown): value is WordProgress {
     (progress.lastStudied === undefined || typeof progress.lastStudied === 'string')
   );
 }
-

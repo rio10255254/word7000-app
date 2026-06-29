@@ -64,6 +64,7 @@ import {
   filterWords,
   markKnown,
   markReview,
+  normalizeProgressForDate,
   selectQuizWords,
   selectStudyWords,
   toggleFavorite,
@@ -161,6 +162,7 @@ const initialProgress: ProgressState = {
   dailyTarget: 20,
   streak: 1,
   studiedToday: 0,
+  dailyProgressDate: today,
   words: {},
 };
 
@@ -566,6 +568,7 @@ export default function App() {
   const updateState = useAppUpdateCheck();
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
   const darkMode = themeMode === 'dark';
+  const libraryDragIconColor = darkMode ? '#bfdbfe' : '#172033';
   const activeModeCopy = modeCopy[studyMode];
   const screenMotionStyle = {
     opacity: screenAnim,
@@ -863,7 +866,7 @@ export default function App() {
   }, [developerVocabulary?.importedAt, studyMode]);
 
   useEffect(() => {
-    const localProgress = loadProgressFromStorage(getBrowserStorage(), initialProgress);
+    const localProgress = normalizeProgressForDate(loadProgressFromStorage(getBrowserStorage(), initialProgress), today);
     setProgress(localProgress);
     setProgressReady(true);
 
@@ -1172,7 +1175,10 @@ export default function App() {
       return;
     }
 
-    const loadedProgress = await loadCloudProgress(asCloudProgressClient(supabaseClient), user.id, fallback);
+    const loadedProgress = normalizeProgressForDate(
+      await loadCloudProgress(asCloudProgressClient(supabaseClient), user.id, fallback),
+      today,
+    );
     setProgress(loadedProgress);
     saveProgressToStorage(getBrowserStorage(), loadedProgress);
     setAccount((current) => ({
@@ -1522,26 +1528,26 @@ export default function App() {
                 accessibilityRole="button"
                 onPress={returnLibraryToTop}
                 pressTone="secondary"
-                style={styles.libraryFloatingTopButton}
+                style={[styles.libraryFloatingTopButton, themeStyles?.libraryFloatingTopButton]}
                 testID="library-floating-top"
               >
-                <ArrowUp size={15} color="#172033" strokeWidth={2.5} />
-                <Text style={styles.libraryFloatingTopText}>{modeInterfaceCopy[studyMode].floatingTop}</Text>
+                <ArrowUp size={15} color={libraryDragIconColor} strokeWidth={2.5} />
+                <Text style={[styles.libraryFloatingTopText, themeStyles?.libraryFloatingTopText]}>{modeInterfaceCopy[studyMode].floatingTop}</Text>
               </AnimatedPressable>
             )}
             {librarySliderVisible && (
               <View
                 {...librarySliderResponder.panHandlers}
                 onLayout={(event) => setSliderTrackHeight(event.nativeEvent.layout.height)}
-                style={styles.libraryDragSlider}
+                style={[styles.libraryDragSlider, themeStyles?.libraryDragSlider]}
                 testID="library-drag-slider"
               >
-                <View style={styles.libraryDragTrack} />
+                <View style={[styles.libraryDragTrack, themeStyles?.libraryDragTrack]} />
                 <View
-                  style={[styles.libraryDragThumb, { transform: [{ translateY: libraryThumbOffset }] }]}
+                  style={[styles.libraryDragThumb, themeStyles?.libraryDragThumb, { transform: [{ translateY: libraryThumbOffset }] }]}
                   testID="library-drag-thumb"
                 >
-                  <GripVertical size={17} color="#172033" strokeWidth={2.4} />
+                  <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
                 </View>
               </View>
             )}
@@ -6083,6 +6089,26 @@ const darkStyles = StyleSheet.create({
   },
   nextButtonText: {
     color: '#e2e8f0',
+  },
+  libraryFloatingTopButton: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+    shadowColor: '#000',
+  },
+  libraryFloatingTopText: {
+    color: '#e2e8f0',
+  },
+  libraryDragSlider: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+    shadowColor: '#000',
+  },
+  libraryDragTrack: {
+    backgroundColor: '#334155',
+  },
+  libraryDragThumb: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#3b82f6',
   },
   libraryHeaderCard: {
     backgroundColor: '#111827',

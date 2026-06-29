@@ -351,4 +351,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('onThemeModeChange={triggerThemeModeChange}');
     expect(appSource).toContain('styles.themeTransitionOverlay');
   });
+
+  test('keeps the fixed library drag slider themed in dark mode', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('themeStyles?.libraryFloatingTopButton');
+    expect(appSource).toContain('themeStyles?.libraryFloatingTopText');
+    expect(appSource).toContain('themeStyles?.libraryDragSlider');
+    expect(appSource).toContain('themeStyles?.libraryDragTrack');
+    expect(appSource).toContain('themeStyles?.libraryDragThumb');
+    expect(appSource).toContain('libraryDragIconColor');
+    expect(appSource).toContain('libraryDragSlider:');
+    expect(appSource).toContain('libraryDragTrack:');
+    expect(appSource).toContain('libraryDragThumb:');
+  });
 });

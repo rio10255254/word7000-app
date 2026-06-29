@@ -1,25 +1,29 @@
 export type InteractionTone = 'primary' | 'secondary' | 'chip' | 'icon' | 'tab' | 'list';
 
 type PressMotion = {
+  pressedOpacity: number;
   pressedScale: number;
   pressedTranslateY: number;
 };
 
 const pressMotions: Record<InteractionTone, PressMotion> = {
-  primary: { pressedScale: 0.972, pressedTranslateY: 1 },
-  secondary: { pressedScale: 0.976, pressedTranslateY: 1 },
-  chip: { pressedScale: 0.965, pressedTranslateY: 0 },
-  icon: { pressedScale: 0.955, pressedTranslateY: 0 },
-  tab: { pressedScale: 0.96, pressedTranslateY: 1 },
-  list: { pressedScale: 0.985, pressedTranslateY: 1 },
+  primary: { pressedOpacity: 0.92, pressedScale: 0.972, pressedTranslateY: 1 },
+  secondary: { pressedOpacity: 0.94, pressedScale: 0.976, pressedTranslateY: 1 },
+  chip: { pressedOpacity: 0.92, pressedScale: 0.965, pressedTranslateY: 0 },
+  icon: { pressedOpacity: 0.9, pressedScale: 0.955, pressedTranslateY: 0 },
+  tab: { pressedOpacity: 0.92, pressedScale: 0.96, pressedTranslateY: 1 },
+  list: { pressedOpacity: 0.96, pressedScale: 0.985, pressedTranslateY: 1 },
 };
 
 export const interactionMotion = {
   cardMs: 260,
-  hoverMs: 130,
+  hoverMs: 150,
   listMs: 280,
-  panelMaxHeight: 360,
-  panelMs: 230,
+  panelCloseMs: 380,
+  panelCollapsedHeight: 0,
+  panelFadeMs: 180,
+  panelMeasureMs: 80,
+  panelMs: 260,
   press: pressMotions,
   pressInMs: 88,
   releaseMs: 180,

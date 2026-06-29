@@ -194,4 +194,19 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('bottom: 0');
     expect(appSource).toContain('top: 0');
   });
+
+  test('polishes interaction motion and avoids stuttery filter collapse', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('pressedOpacity');
+    expect(appSource).toContain('filterPanelMeasuredHeight');
+    expect(appSource).toContain('onLayout={handlePanelContentLayout}');
+    expect(appSource).toContain('pointerEvents={open ?');
+    expect(appSource).toContain('styles.filterPanelContent');
+    expect(appSource).toContain('filterPanelWebTransition');
+    expect(appSource).toContain("transitionProperty: 'height, opacity, border-top-width, transform'");
+    expect(appSource).toContain('styles.filterSummaryButtonOpen');
+    expect(appSource).toContain('styles.libraryItemPressed');
+    expect(appSource).not.toContain('maxHeight: panelAnim.interpolate');
+  });
 });

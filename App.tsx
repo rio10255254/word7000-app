@@ -39,6 +39,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState, type R
 import {
   Animated,
   Easing,
+  type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   PanResponder,
@@ -1744,7 +1745,13 @@ function createInitialAccountState(configured: boolean): AccountState {
 type AnimatedPressableProps = Omit<PressableProps, 'children' | 'style'> & {
   children: ReactNode;
   pressTone?: InteractionTone;
+  pressedStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+};
+type WebTransitionStyle = ViewStyle & {
+  transitionDuration?: string;
+  transitionProperty?: string;
+  transitionTimingFunction?: string;
 };
 
 function AnimatedPressable({
@@ -1753,12 +1760,18 @@ function AnimatedPressable({
   onPressIn,
   onPressOut,
   pressTone = 'secondary',
+  pressedStyle,
   style,
   ...props
 }: AnimatedPressableProps) {
+  const [pressed, setPressed] = useState(false);
   const pressAnim = useRef(new Animated.Value(0)).current;
   const pressMotion = pressMotionFor(pressTone);
   const pressStyle = {
+    opacity: pressAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [1, pressMotion.pressedOpacity],
+    }),
     transform: [
       {
         scale: pressAnim.interpolate({
@@ -1786,6 +1799,7 @@ function AnimatedPressable({
 
   function handlePressIn(event: Parameters<NonNullable<PressableProps['onPressIn']>>[0]) {
     if (!disabled) {
+      setPressed(true);
       animatePress(1, interactionMotion.pressInMs);
     }
     onPressIn?.(event);
@@ -1793,6 +1807,7 @@ function AnimatedPressable({
 
   function handlePressOut(event: Parameters<NonNullable<PressableProps['onPressOut']>>[0]) {
     if (!disabled) {
+      setPressed(false);
       animatePress(0, interactionMotion.releaseMs);
     }
     onPressOut?.(event);
@@ -1804,7 +1819,7 @@ function AnimatedPressable({
       disabled={disabled}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      style={[style, !disabled && pressStyle]}
+      style={[style, pressed && !disabled && pressedStyle, !disabled && pressStyle]}
     >
       {children}
     </MotionPressable>
@@ -1813,49 +1828,95 @@ function AnimatedPressable({
 
 function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; open: boolean; testID: string }) {
   const themeStyles = useThemeStyles();
-  const [rendered, setRendered] = useState(open);
+  const [filterPanelMeasuredHeight, setFilterPanelMeasuredHeight] = useState(0);
   const panelAnim = useRef(new Animated.Value(open ? 1 : 0)).current;
 
   useEffect(() => {
-    if (open) {
-      setRendered(true);
+    if (Platform.OS === 'web') {
+      return;
     }
 
     Animated.timing(panelAnim, {
-      duration: interactionMotion.panelMs,
-      easing: Easing.out(Easing.cubic),
+      duration: open ? interactionMotion.panelMs : interactionMotion.panelCloseMs,
+      easing: open ? Easing.out(Easing.cubic) : Easing.out(Easing.cubic),
       toValue: open ? 1 : 0,
       useNativeDriver: false,
-    }).start(({ finished }) => {
-      if (finished && !open) {
-        setRendered(false);
-      }
-    });
+    }).start();
   }, [open, panelAnim]);
 
-  if (!rendered) {
-    return null;
+  function handlePanelContentLayout(event: LayoutChangeEvent) {
+    const nextHeight = Math.ceil(event.nativeEvent.layout.height);
+    if (nextHeight > 0 && Math.abs(nextHeight - filterPanelMeasuredHeight) > 1) {
+      setFilterPanelMeasuredHeight(nextHeight);
+    }
   }
 
-  const panelMotionStyle = {
-    maxHeight: panelAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, interactionMotion.panelMaxHeight],
-    }),
-    opacity: panelAnim,
-    transform: [
-      {
-        translateY: panelAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [-8, 0],
-        }),
-      },
-    ],
-  };
+  const measuredHeight = Math.max(filterPanelMeasuredHeight, interactionMotion.panelCollapsedHeight);
+  const filterPanelWebTransition: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          transitionDuration: `${open ? interactionMotion.panelMs : interactionMotion.panelCloseMs}ms`,
+          transitionProperty: 'height, opacity, border-top-width, transform',
+          transitionTimingFunction: open ? 'cubic-bezier(0.22, 1, 0.36, 1)' : 'cubic-bezier(0.4, 0, 0.2, 1)',
+        }
+      : undefined;
+  const panelMotionStyle =
+    Platform.OS === 'web'
+      ? {
+          borderTopWidth: open && measuredHeight > 0 ? 1 : 0,
+          height: open ? measuredHeight : interactionMotion.panelCollapsedHeight,
+          opacity: open ? 1 : 0,
+        }
+      : {
+          borderTopWidth: panelAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 1],
+          }),
+          height: panelAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [interactionMotion.panelCollapsedHeight, measuredHeight],
+          }),
+          opacity: panelAnim.interpolate({
+            inputRange: [0, 0.24, 1],
+            outputRange: [0, 0.72, 1],
+          }),
+        };
+  const contentMotionStyle =
+    Platform.OS === 'web'
+      ? {
+          opacity: open ? 1 : 0,
+          transform: [{ translateY: open ? 0 : -6 }, { scale: open ? 1 : 0.985 }],
+        }
+      : {
+          opacity: panelAnim.interpolate({
+            inputRange: [0, 0.18, 1],
+            outputRange: [0, 0.65, 1],
+          }),
+          transform: [
+            {
+              translateY: panelAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-6, 0],
+              }),
+            },
+            {
+              scale: panelAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.985, 1],
+              }),
+            },
+          ],
+        };
 
   return (
-    <Animated.View style={[styles.filterPanel, themeStyles?.filterPanel, panelMotionStyle]} testID={testID}>
-      {children}
+    <Animated.View
+      pointerEvents={open ? 'auto' : 'none'}
+      style={[styles.filterPanel, themeStyles?.filterPanel, filterPanelWebTransition, panelMotionStyle]}
+      testID={testID}
+    >
+      <Animated.View onLayout={handlePanelContentLayout} style={[styles.filterPanelContent, filterPanelWebTransition, contentMotionStyle]}>
+        {children}
+      </Animated.View>
     </Animated.View>
   );
 }
@@ -2315,7 +2376,7 @@ function FilterControlPanel({
         accessibilityRole="button"
         onPress={onToggle}
         pressTone="secondary"
-        style={styles.filterSummaryButton}
+        style={[styles.filterSummaryButton, open && styles.filterSummaryButtonOpen, open && themeStyles?.filterSummaryButtonOpen]}
         testID={testID}
       >
         <View style={styles.flexOne}>
@@ -2566,6 +2627,7 @@ function QuizView({
               key={option.meaning}
               onPress={() => onAnswer(option.correct)}
               pressTone="list"
+              pressedStyle={[styles.quizOptionPressed, themeStyles?.quizOptionPressed]}
               style={[
                 styles.quizOption,
                 themeStyles?.quizOption,
@@ -2821,6 +2883,7 @@ function LibraryView({
                 accessibilityRole="button"
                 onPress={() => onOpenWord(word)}
                 pressTone="list"
+                pressedStyle={[styles.libraryItemPressed, themeStyles?.libraryItemPressed]}
                 style={styles.libraryItemMain}
               >
                 <View style={styles.wordLine}>
@@ -4276,6 +4339,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 15,
   },
+  quizOptionPressed: {
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+  },
   quizOptionCorrect: {
     backgroundColor: '#ecfdf3',
     borderColor: '#86efac',
@@ -4414,6 +4481,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
+  filterSummaryButtonOpen: {
+    backgroundColor: '#f8fafc',
+  },
   filterSummaryTitle: {
     color: '#172033',
     fontSize: 14,
@@ -4435,9 +4505,10 @@ const styles = StyleSheet.create({
   },
   filterPanel: {
     borderTopColor: '#edf0f5',
-    borderTopWidth: 1,
-    gap: 12,
     overflow: 'hidden',
+  },
+  filterPanelContent: {
+    gap: 12,
     paddingHorizontal: 12,
     paddingVertical: 12,
   },
@@ -4559,8 +4630,14 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   libraryItemMain: {
+    borderRadius: 8,
     flex: 1,
     minWidth: 0,
+    paddingHorizontal: 2,
+    paddingVertical: 2,
+  },
+  libraryItemPressed: {
+    backgroundColor: 'rgba(37, 99, 235, 0.06)',
   },
   wordLine: {
     alignItems: 'center',
@@ -5463,6 +5540,9 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#111827',
     borderColor: '#334155',
   },
+  filterSummaryButtonOpen: {
+    backgroundColor: '#182033',
+  },
   filterPanel: {
     borderTopColor: '#334155',
   },
@@ -5504,6 +5584,10 @@ const darkStyles = StyleSheet.create({
   quizOption: {
     backgroundColor: '#182033',
     borderColor: '#334155',
+  },
+  quizOptionPressed: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
   },
   quizOptionText: {
     color: '#e2e8f0',
@@ -5575,6 +5659,9 @@ const darkStyles = StyleSheet.create({
   libraryItem: {
     backgroundColor: '#111827',
     borderColor: '#334155',
+  },
+  libraryItemPressed: {
+    backgroundColor: 'rgba(37, 99, 235, 0.18)',
   },
   libraryWord: {
     color: '#f8fafc',

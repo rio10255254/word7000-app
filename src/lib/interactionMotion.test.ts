@@ -9,8 +9,17 @@ describe('interaction motion presets', () => {
       const motion = pressMotionFor(tone);
       expect(motion.pressedScale).toBeLessThan(1);
       expect(motion.pressedScale).toBeGreaterThan(0.95);
+      expect(motion.pressedOpacity).toBeLessThan(1);
+      expect(motion.pressedOpacity).toBeGreaterThan(0.86);
       expect(motion.pressedTranslateY).toBeLessThanOrEqual(1);
     }
+  });
+
+  test('uses measured filter panel motion instead of large max-height collapsing', () => {
+    expect(interactionMotion.panelCollapsedHeight).toBe(0);
+    expect(interactionMotion.panelCloseMs).toBeGreaterThan(interactionMotion.panelMs);
+    expect(interactionMotion.panelMeasureMs).toBeLessThan(interactionMotion.panelMs);
+    expect(interactionMotion.panelFadeMs).toBeLessThanOrEqual(interactionMotion.panelMs);
   });
 
   test('staggers list entry movement without growing forever', () => {

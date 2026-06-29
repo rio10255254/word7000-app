@@ -135,4 +135,15 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('applyVocabularyImportRows');
     expect(appSource).toContain('清除本機預覽');
   });
+
+  test('opens app settings from the profile page before showing developer tools', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("type ProfilePanel = 'overview' | 'settings'");
+    expect(appSource).toContain('profile-settings-panel');
+    expect(appSource).toContain('開啟設定');
+    expect(appSource).toContain('返回我的');
+    expect(appSource).toContain('App 設定');
+    expect(appSource).toContain('DeveloperVocabularyPanel');
+  });
 });

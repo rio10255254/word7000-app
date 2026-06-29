@@ -19,6 +19,7 @@ import {
   Mail,
   RotateCcw,
   Search,
+  Settings,
   SlidersHorizontal,
   Smartphone,
   SquareArrowUp,
@@ -87,6 +88,7 @@ import {
 } from './src/lib/developerVocabulary';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
+type ProfilePanel = 'overview' | 'settings';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 
 type AccountState = {
@@ -210,6 +212,7 @@ export default function App() {
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [installGuideStep, setInstallGuideStep] = useState(0);
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
+  const [profilePanel, setProfilePanel] = useState<ProfilePanel>('overview');
   const [scrollY, setScrollY] = useState(0);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
@@ -411,6 +414,7 @@ export default function App() {
     cardAnim,
     developerVocabulary?.importedAt,
     libraryFiltersOpen,
+    profilePanel,
     quizFilter,
     quizFiltersOpen,
     quizIndex,
@@ -433,7 +437,13 @@ export default function App() {
     setScrollY(0);
     setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
-  }, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);
+  }, [activeTab, activeFilter, activeInitial, activeLevel, profilePanel, searchQuery]);
+
+  useEffect(() => {
+    if (activeTab !== 'profile') {
+      setProfilePanel('overview');
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     setWordIndex(0);
@@ -1027,13 +1037,16 @@ export default function App() {
               dailyPercent={dailyPercent}
               developerMessage={developerVocabularyMessage}
               developerVocabulary={developerVocabulary}
+              panel={profilePanel}
               progress={progress}
               stats={stats}
               vocabularyCount={vocabularyWords.length}
               onClearDeveloperVocabulary={handleClearDeveloperVocabulary}
+              onCloseSettings={() => setProfilePanel('overview')}
               onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
+              onOpenSettings={() => setProfilePanel('settings')}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
               onShowInstallGuide={openInstallGuide}
               onSignIn={handleSignIn}
@@ -2374,10 +2387,13 @@ function ProfileView({
   dailyPercent,
   developerMessage,
   developerVocabulary,
+  panel,
   onEmailChange,
   onClearDeveloperVocabulary,
+  onCloseSettings,
   onExportVocabulary,
   onImportVocabulary,
+  onOpenSettings,
   onPasswordChange,
   onShowInstallGuide,
   onSignIn,
@@ -2391,13 +2407,16 @@ function ProfileView({
   dailyPercent: number;
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
+  panel: ProfilePanel;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
   vocabularyCount: number;
   onClearDeveloperVocabulary: () => void;
+  onCloseSettings: () => void;
   onEmailChange: (email: string) => void;
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
+  onOpenSettings: () => void;
   onPasswordChange: (password: string) => void;
   onShowInstallGuide: () => void;
   onSignIn: () => void;
@@ -2406,6 +2425,23 @@ function ProfileView({
 }) {
   const signedIn = Boolean(account.userId);
   const syncError = account.status === 'error';
+
+  if (panel === 'settings') {
+    return (
+      <ProfileSettingsView
+        developerMessage={developerMessage}
+        developerVocabulary={developerVocabulary}
+        progress={progress}
+        stats={stats}
+        vocabularyCount={vocabularyCount}
+        onBack={onCloseSettings}
+        onClearDeveloperVocabulary={onClearDeveloperVocabulary}
+        onExportVocabulary={onExportVocabulary}
+        onImportVocabulary={onImportVocabulary}
+        onShowInstallGuide={onShowInstallGuide}
+      />
+    );
+  }
 
   return (
     <View style={styles.screenStack}>
@@ -2498,10 +2534,63 @@ function ProfileView({
         )}
       </View>
 
+      <AnimatedPressable
+        accessibilityLabel="開啟設定"
+        accessibilityRole="button"
+        onPress={onOpenSettings}
+        pressTone="list"
+        style={styles.settingsEntryButton}
+      >
+        <View style={styles.settingsEntryIcon}>
+          <Settings size={20} color="#172033" strokeWidth={2.3} />
+        </View>
+        <View style={styles.flexOne}>
+          <Text style={styles.settingsEntryTitle}>設定</Text>
+          <Text style={styles.settingsEntryText}>App 設定、加入主畫面教學與資料匯入工具</Text>
+        </View>
+        <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+      </AnimatedPressable>
+    </View>
+  );
+}
+
+function ProfileSettingsView({
+  developerMessage,
+  developerVocabulary,
+  onBack,
+  onClearDeveloperVocabulary,
+  onExportVocabulary,
+  onImportVocabulary,
+  onShowInstallGuide,
+  progress,
+  stats,
+  vocabularyCount,
+}: {
+  developerMessage: string;
+  developerVocabulary: DeveloperVocabularySnapshot | null;
+  progress: ProgressState;
+  stats: ReturnType<typeof computeStats>;
+  vocabularyCount: number;
+  onBack: () => void;
+  onClearDeveloperVocabulary: () => void;
+  onExportVocabulary: () => void;
+  onImportVocabulary: () => void;
+  onShowInstallGuide: () => void;
+}) {
+  return (
+    <View style={styles.screenStack} testID="profile-settings-panel">
+      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={styles.libraryDetailBack}>
+        <ChevronLeft size={18} color="#172033" strokeWidth={2.5} />
+        <Text style={styles.libraryDetailBackText}>返回我的</Text>
+      </AnimatedPressable>
+
       <View style={styles.settingsCard}>
         <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>設定</Text>
-          <Text style={styles.cardMeta}>我的工具</Text>
+          <View>
+            <Text style={styles.sectionTitle}>App 設定</Text>
+            <Text style={styles.cardMeta}>學習體驗與本機工具</Text>
+          </View>
+          <Settings size={21} color="#2563eb" strokeWidth={2.3} />
         </View>
         <AnimatedPressable
           accessibilityRole="button"
@@ -2527,55 +2616,82 @@ function ProfileView({
         </View>
       </View>
 
-      <View style={styles.developerCard} testID="developer-vocabulary-panel">
-        <View style={styles.rowBetween}>
-          <View style={styles.flexOne}>
-            <Text style={styles.sectionTitle}>開發人員資料窗口</Text>
-            <Text style={styles.cardMeta}>{developerVocabulary ? '本機預覽啟用中' : '目前使用內建字庫'}</Text>
-          </View>
-          <Database size={22} color="#2563eb" strokeWidth={2.3} />
+      <DeveloperVocabularyPanel
+        developerMessage={developerMessage}
+        developerVocabulary={developerVocabulary}
+        vocabularyCount={vocabularyCount}
+        onClearDeveloperVocabulary={onClearDeveloperVocabulary}
+        onExportVocabulary={onExportVocabulary}
+        onImportVocabulary={onImportVocabulary}
+      />
+    </View>
+  );
+}
+
+function DeveloperVocabularyPanel({
+  developerMessage,
+  developerVocabulary,
+  onClearDeveloperVocabulary,
+  onExportVocabulary,
+  onImportVocabulary,
+  vocabularyCount,
+}: {
+  developerMessage: string;
+  developerVocabulary: DeveloperVocabularySnapshot | null;
+  vocabularyCount: number;
+  onClearDeveloperVocabulary: () => void;
+  onExportVocabulary: () => void;
+  onImportVocabulary: () => void;
+}) {
+  return (
+    <View style={styles.developerCard} testID="developer-vocabulary-panel">
+      <View style={styles.rowBetween}>
+        <View style={styles.flexOne}>
+          <Text style={styles.sectionTitle}>開發人員資料窗口</Text>
+          <Text style={styles.cardMeta}>{developerVocabulary ? '本機預覽啟用中' : '目前使用內建字庫'}</Text>
         </View>
+        <Database size={22} color="#2563eb" strokeWidth={2.3} />
+      </View>
 
-        <Text style={styles.developerText}>
-          匯出目前字庫後，可以在外部修改例句與翻譯；匯入後會先套用在這台裝置，方便檢查正式更新前的效果。
-        </Text>
+      <Text style={styles.developerText}>
+        匯出目前字庫後，可以在外部修改例句與翻譯；匯入後會先套用在這台裝置，方便檢查正式更新前的效果。
+      </Text>
 
-        <View style={styles.developerStats}>
-          <View>
-            <Text style={styles.developerLabel}>目前字庫</Text>
-            <Text style={styles.developerValue}>{vocabularyCount} 筆</Text>
-          </View>
-          <View>
-            <Text style={styles.developerLabel}>資料狀態</Text>
-            <Text style={styles.developerValue}>{developerVocabulary ? '本機預覽' : '內建版本'}</Text>
-          </View>
+      <View style={styles.developerStats}>
+        <View>
+          <Text style={styles.developerLabel}>目前字庫</Text>
+          <Text style={styles.developerValue}>{vocabularyCount} 筆</Text>
         </View>
-
-        {developerVocabulary && <Text style={styles.developerSummary}>{developerVocabulary.summary}</Text>}
-        <Text style={styles.developerMessage}>{developerMessage}</Text>
-
-        <View style={styles.buttonRow}>
-          <AnimatedPressable accessibilityRole="button" onPress={onExportVocabulary} pressTone="secondary" style={styles.developerActionButton}>
-            <Download size={16} color="#172033" strokeWidth={2.3} />
-            <Text style={styles.developerActionText}>匯出 CSV</Text>
-          </AnimatedPressable>
-          <AnimatedPressable accessibilityRole="button" onPress={onImportVocabulary} pressTone="primary" style={styles.developerPrimaryButton}>
-            <Upload size={16} color="#fff" strokeWidth={2.3} />
-            <Text style={styles.developerPrimaryText}>匯入資料</Text>
-          </AnimatedPressable>
+        <View>
+          <Text style={styles.developerLabel}>資料狀態</Text>
+          <Text style={styles.developerValue}>{developerVocabulary ? '本機預覽' : '內建版本'}</Text>
         </View>
+      </View>
 
-        <AnimatedPressable
-          accessibilityRole="button"
-          disabled={!developerVocabulary}
-          onPress={onClearDeveloperVocabulary}
-          pressTone="secondary"
-          style={[styles.developerClearButton, !developerVocabulary && styles.disabledButton]}
-        >
-          <Trash2 size={16} color="#9a3412" strokeWidth={2.3} />
-          <Text style={styles.developerClearText}>清除本機預覽</Text>
+      {developerVocabulary && <Text style={styles.developerSummary}>{developerVocabulary.summary}</Text>}
+      <Text style={styles.developerMessage}>{developerMessage}</Text>
+
+      <View style={styles.buttonRow}>
+        <AnimatedPressable accessibilityRole="button" onPress={onExportVocabulary} pressTone="secondary" style={styles.developerActionButton}>
+          <Download size={16} color="#172033" strokeWidth={2.3} />
+          <Text style={styles.developerActionText}>匯出 CSV</Text>
+        </AnimatedPressable>
+        <AnimatedPressable accessibilityRole="button" onPress={onImportVocabulary} pressTone="primary" style={styles.developerPrimaryButton}>
+          <Upload size={16} color="#fff" strokeWidth={2.3} />
+          <Text style={styles.developerPrimaryText}>匯入資料</Text>
         </AnimatedPressable>
       </View>
+
+      <AnimatedPressable
+        accessibilityRole="button"
+        disabled={!developerVocabulary}
+        onPress={onClearDeveloperVocabulary}
+        pressTone="secondary"
+        style={[styles.developerClearButton, !developerVocabulary && styles.disabledButton]}
+      >
+        <Trash2 size={16} color="#9a3412" strokeWidth={2.3} />
+        <Text style={styles.developerClearText}>清除本機預覽</Text>
+      </AnimatedPressable>
     </View>
   );
 }
@@ -4106,6 +4222,39 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 16,
     padding: 16,
+  },
+  settingsEntryButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    minHeight: 68,
+    padding: 14,
+  },
+  settingsEntryIcon: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  settingsEntryTitle: {
+    color: '#172033',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  settingsEntryText: {
+    color: '#717987',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 17,
+    marginTop: 3,
   },
   developerCard: {
     backgroundColor: '#fff',

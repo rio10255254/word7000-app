@@ -24,7 +24,10 @@ export function supplementalChineseMeaning(meaning: string): string {
 }
 
 export function chineseMeaningPinyin(meaning: string): string {
-  return pinyin(meaning, { toneType: 'none', type: 'array', nonZh: 'removed' }).join(' ');
+  return meaningParts(meaning)
+    .map((part) => pinyin(part, { toneType: 'none', type: 'array', nonZh: 'removed' }).join(' '))
+    .filter(Boolean)
+    .join('；');
 }
 
 export function chineseMeaningDisplay(meaning: string): {

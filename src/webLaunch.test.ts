@@ -114,6 +114,21 @@ describe('free web launch configuration', () => {
     expect(quizSource).not.toContain('styles.pronunciation');
   });
 
+  test('keeps the quiz next button at the top-right of the question card after answering', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const quizStart = appSource.indexOf('function QuizView({');
+    const libraryStart = appSource.indexOf('function LibraryView({');
+    const quizSource = appSource.slice(quizStart, libraryStart);
+    const resultCardStart = quizSource.indexOf('styles.resultCard');
+    const resultCardSource = quizSource.slice(resultCardStart);
+
+    expect(quizSource).toContain('styles.quizQuestionHeader');
+    expect(quizSource).toContain('styles.quizNextTopButton');
+    expect(quizSource).toContain('{result && (');
+    expect(quizSource).toContain('accessibilityLabel={ui.nextQuestion}');
+    expect(resultCardSource).not.toContain('styles.nextButton');
+  });
+
   test('shows full quiz feedback with English and Chinese examples after answering', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
@@ -244,6 +259,21 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('ui.filterSort');
     expect(appSource).toContain('ui.sortAlphabetical');
     expect(appSource).toContain('sortLabel(sort, studyMode)');
+  });
+
+  test('remembers filter preferences and defaults library sorting to alphabetical', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const preferencesSource = fs.readFileSync(path.join(process.cwd(), 'src/lib/filterPreferences.ts'), 'utf8');
+
+    expect(appSource).toContain("from './src/lib/filterPreferences'");
+    expect(appSource).toContain('loadFilterPreferences(getBrowserStorage())');
+    expect(appSource).toContain('saveFilterPreferences(getBrowserStorage()');
+    expect(appSource).toContain("sort: activeSort");
+    expect(appSource).toContain('study: {');
+    expect(appSource).toContain('quiz: {');
+    expect(appSource).toContain('library: {');
+    expect(preferencesSource).toContain('FILTER_PREFERENCES_STORAGE_KEY');
+    expect(preferencesSource).toContain("sort: 'alphabetical'");
   });
 
   test('animates profile settings and fully darkens the install guide', () => {

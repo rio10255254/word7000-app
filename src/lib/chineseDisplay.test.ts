@@ -23,10 +23,10 @@ describe('Chinese word display helpers', () => {
 
     expect(display.primary).toBe('中文；漢語');
     expect(display.supplemental).toBe('中國話');
-    expect(display.pinyin).toBe('zhong wen han yu');
+    expect(display.pinyin).toBe('zhong wen；han yu');
   });
 
   test('normalizes tone marks so pinyin is easy to scan in compact cards', () => {
-    expect(chineseMeaningPinyin('適應；調整')).toBe('shi ying tiao zheng');
+    expect(chineseMeaningPinyin('適應；調整')).toBe('shi ying；tiao zheng');
   });
 });

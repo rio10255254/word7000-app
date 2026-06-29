@@ -96,6 +96,10 @@ import {
   conciseChineseMeaning,
   supplementalChineseMeaning,
 } from './src/lib/chineseDisplay';
+import {
+  loadFilterPreferences,
+  saveFilterPreferences,
+} from './src/lib/filterPreferences';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
@@ -465,19 +469,20 @@ export default function App() {
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
+  const [initialFilterPreferences] = useState(() => loadFilterPreferences(getBrowserStorage()));
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
   const [progressReady, setProgressReady] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
-  const [studyFilter, setStudyFilter] = useState<LibraryFilter>('all');
-  const [studyLevel, setStudyLevel] = useState('all');
-  const [studyInitial, setStudyInitial] = useState('all');
+  const [studyFilter, setStudyFilter] = useState<LibraryFilter>(initialFilterPreferences.study.filter);
+  const [studyLevel, setStudyLevel] = useState(initialFilterPreferences.study.level);
+  const [studyInitial, setStudyInitial] = useState(initialFilterPreferences.study.initial);
   const [studyFiltersOpen, setStudyFiltersOpen] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
   const [answeredQuizWord, setAnsweredQuizWord] = useState<WordEntry | null>(null);
   const [lockedQuizOptions, setLockedQuizOptions] = useState<QuizOption[] | null>(null);
-  const [quizQuestionCount, setQuizQuestionCount] = useState<(typeof quizQuestionCounts)[number]>(10);
+  const [quizQuestionCount, setQuizQuestionCount] = useState<(typeof quizQuestionCounts)[number]>(initialFilterPreferences.quiz.questionCount);
   const [quizSession, setQuizSession] = useState<WordEntry[]>([]);
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
@@ -485,14 +490,14 @@ export default function App() {
   const [quizSeed, setQuizSeed] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<LibraryFilter>('all');
-  const [activeLevel, setActiveLevel] = useState('all');
-  const [activeInitial, setActiveInitial] = useState('all');
-  const [activeSort, setActiveSort] = useState<LibrarySort>('default');
+  const [activeFilter, setActiveFilter] = useState<LibraryFilter>(initialFilterPreferences.library.filter);
+  const [activeLevel, setActiveLevel] = useState(initialFilterPreferences.library.level);
+  const [activeInitial, setActiveInitial] = useState(initialFilterPreferences.library.initial);
+  const [activeSort, setActiveSort] = useState<LibrarySort>(initialFilterPreferences.library.sort);
   const [libraryFiltersOpen, setLibraryFiltersOpen] = useState(false);
-  const [quizFilter, setQuizFilter] = useState<LibraryFilter>('all');
-  const [quizLevel, setQuizLevel] = useState('all');
-  const [quizInitial, setQuizInitial] = useState('all');
+  const [quizFilter, setQuizFilter] = useState<LibraryFilter>(initialFilterPreferences.quiz.filter);
+  const [quizLevel, setQuizLevel] = useState(initialFilterPreferences.quiz.level);
+  const [quizInitial, setQuizInitial] = useState(initialFilterPreferences.quiz.initial);
   const [quizFiltersOpen, setQuizFiltersOpen] = useState(false);
   const [showLaunch, setShowLaunch] = useState(true);
   const [installGuideChecked, setInstallGuideChecked] = useState(false);
@@ -705,6 +710,40 @@ export default function App() {
   useEffect(() => {
     saveStudyMode(getBrowserStorage(), studyMode);
   }, [studyMode]);
+
+  useEffect(() => {
+    saveFilterPreferences(getBrowserStorage(), {
+      library: {
+        filter: activeFilter,
+        initial: activeInitial,
+        level: activeLevel,
+        sort: activeSort,
+      },
+      quiz: {
+        filter: quizFilter,
+        initial: quizInitial,
+        level: quizLevel,
+        questionCount: quizQuestionCount,
+      },
+      study: {
+        filter: studyFilter,
+        initial: studyInitial,
+        level: studyLevel,
+      },
+    });
+  }, [
+    activeFilter,
+    activeInitial,
+    activeLevel,
+    activeSort,
+    quizFilter,
+    quizInitial,
+    quizLevel,
+    quizQuestionCount,
+    studyFilter,
+    studyInitial,
+    studyLevel,
+  ]);
 
   useEffect(() => {
     if (showLaunch || installGuideChecked) {
@@ -2771,9 +2810,23 @@ function QuizView({
       {quizStarted && word && (
         <>
       <Animated.View style={[styles.quizCard, themeStyles?.quizCard, motionStyle]}>
-        <Text style={styles.eyebrow}>
-          QUIZ {questionIndex + 1} / {sessionTotal}
-        </Text>
+        <View style={styles.quizQuestionHeader}>
+          <Text style={styles.eyebrow}>
+            QUIZ {questionIndex + 1} / {sessionTotal}
+          </Text>
+          {result && (
+            <AnimatedPressable
+              accessibilityLabel={ui.nextQuestion}
+              accessibilityRole="button"
+              onPress={onNext}
+              pressTone="secondary"
+              style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
+            >
+              <Text style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
+              <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
+            </AnimatedPressable>
+          )}
+        </View>
         <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
           {formatWordPrimary(word, studyMode)}
         </Text>
@@ -2825,10 +2878,6 @@ function QuizView({
               </>
             )}
           </View>
-          <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="secondary" style={[styles.nextButton, themeStyles?.nextButton]}>
-            <Text style={[styles.nextButtonText, themeStyles?.nextButtonText]}>{ui.nextQuestion}</Text>
-            <ChevronRight size={18} color={bodyIconColor} strokeWidth={2.3} />
-          </AnimatedPressable>
         </Animated.View>
       )}
         </>
@@ -4561,6 +4610,28 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 18,
   },
+  quizQuestionHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 38,
+  },
+  quizNextTopButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 4,
+    minHeight: 34,
+    paddingHorizontal: 10,
+  },
+  quizNextTopText: {
+    color: '#172033',
+    fontSize: 12,
+    fontWeight: '900',
+  },
   quizSetupCard: {
     backgroundColor: '#fff',
     borderColor: '#e5e7eb',
@@ -5967,6 +6038,13 @@ const darkStyles = StyleSheet.create({
   quizCard: {
     backgroundColor: '#111827',
     borderColor: '#334155',
+  },
+  quizNextTopButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  quizNextTopText: {
+    color: '#e2e8f0',
   },
   quizOption: {
     backgroundColor: '#182033',

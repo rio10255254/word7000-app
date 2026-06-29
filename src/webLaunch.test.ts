@@ -69,6 +69,14 @@ describe('free web launch configuration', () => {
     expect(fs.existsSync(rootApplePrecomposedIconPath)).toBe(true);
   });
 
+  test('exports iPhone standalone web app viewport and status bar metadata', () => {
+    const prepareExport = fs.readFileSync(prepareExportPath, 'utf8');
+
+    expect(prepareExport).toContain('viewport-fit=cover');
+    expect(prepareExport).toContain('apple-mobile-web-app-status-bar-style');
+    expect(prepareExport).toContain('black-translucent');
+  });
+
   test('provides a version endpoint for mobile web app update checks', () => {
     const version = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
 

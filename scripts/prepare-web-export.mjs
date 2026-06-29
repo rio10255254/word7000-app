@@ -22,6 +22,7 @@ const metaTags = [
   '<meta name="description" content="A simple offline 7000-word English vocabulary app for daily learning and review." />',
   '<meta name="theme-color" content="#172033" />',
   '<meta name="apple-mobile-web-app-capable" content="yes" />',
+  '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />',
   '<meta name="apple-mobile-web-app-title" content="Word7000" />',
 ];
 const installTags = [
@@ -38,6 +39,7 @@ for (const tag of metaTags) {
   }
 }
 
+html = ensureViewportFit(html);
 html = replaceInstallTag(html, /<link\b(?=[^>]*rel=["']manifest["'])[^>]*\/?>/gi, installTags[0]);
 html = replaceInstallTag(html, /<link\b(?=[^>]*rel=["']apple-touch-icon(?:-precomposed)?["'])[^>]*\/?>/gi, installTags.slice(1).join('\n  '));
 
@@ -86,6 +88,28 @@ function cacheBustInstallIcons() {
 function replaceInstallTag(source, matcher, tag) {
   const withoutPrevious = source.replace(matcher, '');
   return withoutPrevious.replace('</head>', `  ${tag}\n</head>`);
+}
+
+function ensureViewportFit(source) {
+  const viewportMatcher = /<meta\s+name=["']viewport["']\s+content=["']([^"']*)["']\s*\/?>/i;
+  const match = source.match(viewportMatcher);
+
+  if (!match) {
+    return source.replace(
+      '</head>',
+      '  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />\n</head>',
+    );
+  }
+
+  const viewportContent = match[1];
+  if (viewportContent.includes('viewport-fit=cover')) {
+    return source;
+  }
+
+  return source.replace(
+    viewportMatcher,
+    `<meta name="viewport" content="${viewportContent}, viewport-fit=cover" />`,
+  );
 }
 
 function cacheBustAsset(src) {

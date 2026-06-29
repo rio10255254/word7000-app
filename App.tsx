@@ -8,6 +8,8 @@ import {
   ChevronRight,
   Cloud,
   Compass,
+  Database,
+  Download,
   GripVertical,
   Home,
   Library,
@@ -23,7 +25,9 @@ import {
   SquarePlus,
   Star,
   Target,
+  Trash2,
   Trophy,
+  Upload,
   User,
   X,
 } from 'lucide-react-native';
@@ -72,6 +76,15 @@ import {
   markInstallGuideSeen,
   shouldShowInstallGuide,
 } from './src/lib/installGuide';
+import {
+  applyVocabularyImportRows,
+  clearDeveloperVocabulary,
+  exportWordsToCsv,
+  loadDeveloperVocabulary,
+  parseVocabularyImport,
+  saveDeveloperVocabulary,
+  type DeveloperVocabularySnapshot,
+} from './src/lib/developerVocabulary';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
@@ -90,6 +103,10 @@ type UpdateState = {
   available: boolean;
   message: string;
   refresh: () => void;
+};
+type FilterOption = {
+  id: string;
+  label: string;
 };
 
 const today = new Date().toISOString().slice(0, 10);
@@ -142,14 +159,8 @@ const tabs: Array<{ id: Tab; label: string; icon: typeof Home }> = [
   { id: 'profile', label: '我的', icon: User },
 ];
 
-const levelFilters = [
-  { id: 'all', label: '全部分級' },
-  ...Array.from(new Set(sampleWords.map((word) => word.group))).map((group) => ({
-    id: group,
-    label: group.replace('Core ', 'L'),
-  })),
-];
-const alphabetFilters = [
+const levelFilters = buildLevelFilters(sampleWords);
+const alphabetFilters: FilterOption[] = [
   { id: 'all', label: '全部' },
   ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((letter) => ({
     id: letter,
@@ -203,27 +214,35 @@ export default function App() {
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
   const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
+  const [developerVocabulary, setDeveloperVocabulary] = useState<DeveloperVocabularySnapshot | null>(() =>
+    loadDeveloperVocabulary(getBrowserStorage()),
+  );
+  const [developerVocabularyMessage, setDeveloperVocabularyMessage] = useState(
+    '可匯出 CSV 修改例句，再匯入成這台裝置的預覽字庫。',
+  );
 
-  const stats = useMemo(() => computeStats(sampleWords, progress), [progress]);
+  const vocabularyWords = developerVocabulary?.words ?? sampleWords;
+  const levelFilterOptions = useMemo(() => buildLevelFilters(vocabularyWords), [vocabularyWords]);
+  const stats = useMemo(() => computeStats(vocabularyWords, progress), [progress, vocabularyWords]);
   const studyWords = useMemo(
     () =>
-      selectStudyWords(sampleWords, progress, studyFilter, {
+      selectStudyWords(vocabularyWords, progress, studyFilter, {
         initial: studyInitial,
         level: studyLevel,
       }),
-    [progress, studyFilter, studyInitial, studyLevel],
+    [progress, studyFilter, studyInitial, studyLevel, vocabularyWords],
   );
   const studyWord = studyWords.length > 0 ? studyWords[wordIndex % studyWords.length] : null;
   const quizWords = useMemo(
     () =>
-      selectQuizWords(sampleWords, progress, quizFilter, {
+      selectQuizWords(vocabularyWords, progress, quizFilter, {
         initial: quizInitial,
         level: quizLevel,
       }),
-    [progress, quizFilter, quizInitial, quizLevel],
+    [progress, quizFilter, quizInitial, quizLevel, vocabularyWords],
   );
   const quizWord = quizStarted && quizSession.length > 0 ? quizSession[quizIndex] ?? null : null;
-  const quizOptionSource = quizWords.length >= 3 ? quizWords : sampleWords;
+  const quizOptionSource = quizWords.length >= 3 ? quizWords : vocabularyWords;
   const quizOptions = useMemo(
     () => (quizWord ? buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`) : []),
     [quizIndex, quizOptionSource, quizSeed, quizWord],
@@ -233,11 +252,11 @@ export default function App() {
   const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
   const libraryWords = useMemo(
     () =>
-      filterWords(sampleWords, progress, searchQuery, activeFilter, {
+      filterWords(vocabularyWords, progress, searchQuery, activeFilter, {
         initial: activeInitial,
         level: activeLevel,
       }),
-    [activeFilter, activeInitial, activeLevel, progress, searchQuery],
+    [activeFilter, activeInitial, activeLevel, progress, searchQuery, vocabularyWords],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const updateState = useAppUpdateCheck();
@@ -390,6 +409,7 @@ export default function App() {
     activeLevel,
     activeTab,
     cardAnim,
+    developerVocabulary?.importedAt,
     libraryFiltersOpen,
     quizFilter,
     quizFiltersOpen,
@@ -434,6 +454,34 @@ export default function App() {
   useEffect(() => {
     setLibraryWindowStart((current) => Math.min(current, Math.max(0, libraryWords.length - LIBRARY_WINDOW_SIZE)));
   }, [libraryWords.length]);
+
+  useEffect(() => {
+    const levelIds = new Set(levelFilterOptions.map((level) => level.id));
+    if (!levelIds.has(studyLevel)) {
+      setStudyLevel('all');
+    }
+    if (!levelIds.has(quizLevel)) {
+      setQuizLevel('all');
+    }
+    if (!levelIds.has(activeLevel)) {
+      setActiveLevel('all');
+    }
+  }, [activeLevel, levelFilterOptions, quizLevel, studyLevel]);
+
+  useEffect(() => {
+    setWordIndex(0);
+    setQuizIndex(0);
+    setQuizResult(null);
+    setAnsweredQuizWord(null);
+    setLockedQuizOptions(null);
+    setQuizSession([]);
+    setQuizStarted(false);
+    setQuizFinished(false);
+    setQuizCorrectCount(0);
+    setQuizSeed('');
+    setLibraryWindowStart(0);
+    setSelectedLibraryWord(null);
+  }, [developerVocabulary?.importedAt]);
 
   useEffect(() => {
     const localProgress = loadProgressFromStorage(getBrowserStorage(), initialProgress);
@@ -558,6 +606,48 @@ export default function App() {
   function clearLibrarySearch() {
     setSearchQuery('');
     setLibraryWindowStart(0);
+  }
+
+  function handleExportVocabulary() {
+    const downloaded = downloadTextFile(`word7000-vocabulary-${today}.csv`, exportWordsToCsv(vocabularyWords), 'text/csv;charset=utf-8');
+    setDeveloperVocabularyMessage(downloaded ? `已匯出 ${vocabularyWords.length} 筆字庫 CSV。` : '目前這個裝置不支援直接下載 CSV。');
+  }
+
+  async function handleImportVocabulary() {
+    setDeveloperVocabularyMessage('正在讀取匯入檔案...');
+    const picked = await pickVocabularyTextFile();
+    if (!picked.ok) {
+      setDeveloperVocabularyMessage(picked.message);
+      return;
+    }
+
+    const parsed = parseVocabularyImport(picked.text, picked.fileName);
+    if (!parsed.ok) {
+      setDeveloperVocabularyMessage(parsed.errors.join(' '));
+      return;
+    }
+
+    const applied = applyVocabularyImportRows(vocabularyWords, parsed.rows);
+    if (applied.updated + applied.added === 0 && applied.errors.length > 0) {
+      setDeveloperVocabularyMessage(applied.errors.slice(0, 3).join(' '));
+      return;
+    }
+
+    const summary = `已套用本機預覽：更新 ${applied.updated} 筆，新增 ${applied.added} 筆，目前共 ${applied.words.length} 筆。`;
+    const snapshot = {
+      importedAt: new Date().toISOString(),
+      summary,
+      words: applied.words,
+    };
+    setDeveloperVocabulary(snapshot);
+    saveDeveloperVocabulary(getBrowserStorage(), snapshot);
+    setDeveloperVocabularyMessage(applied.errors.length > 0 ? `${summary} 另有 ${applied.errors.length} 筆未套用。` : summary);
+  }
+
+  function handleClearDeveloperVocabulary() {
+    clearDeveloperVocabulary(getBrowserStorage());
+    setDeveloperVocabulary(null);
+    setDeveloperVocabularyMessage('已清除本機預覽，現在使用內建 7000 字庫。');
   }
 
   function handleQuizAnswer(correct: boolean) {
@@ -847,6 +937,7 @@ export default function App() {
               activeInitial={studyInitial}
               activeLevel={studyLevel}
               filtersOpen={studyFiltersOpen}
+              levelOptions={levelFilterOptions}
               motionStyle={cardMotionStyle}
               wordCount={studyWords.length}
               word={studyWord}
@@ -866,6 +957,7 @@ export default function App() {
               activeInitial={quizInitial}
               activeLevel={quizLevel}
               filtersOpen={quizFiltersOpen}
+              levelOptions={levelFilterOptions}
               motionStyle={cardMotionStyle}
               options={visibleQuizOptions}
               questionCount={quizQuestionCount}
@@ -896,6 +988,7 @@ export default function App() {
               activeLevel={activeLevel}
               detailMotionStyle={detailMotionStyle}
               filtersOpen={libraryFiltersOpen}
+              levelOptions={levelFilterOptions}
               listMotionStyle={listMotionStyle}
               progress={progress}
               query={searchQuery}
@@ -932,9 +1025,15 @@ export default function App() {
             <ProfileView
               account={account}
               dailyPercent={dailyPercent}
+              developerMessage={developerVocabularyMessage}
+              developerVocabulary={developerVocabulary}
               progress={progress}
               stats={stats}
+              vocabularyCount={vocabularyWords.length}
+              onClearDeveloperVocabulary={handleClearDeveloperVocabulary}
               onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
+              onExportVocabulary={handleExportVocabulary}
+              onImportVocabulary={handleImportVocabulary}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
               onShowInstallGuide={openInstallGuide}
               onSignIn={handleSignIn}
@@ -1123,6 +1222,58 @@ function getBrowserStorage(): StorageLike | undefined {
   }
 
   return (globalThis as { localStorage?: StorageLike }).localStorage;
+}
+
+function downloadTextFile(fileName: string, text: string, type: string): boolean {
+  const browser = globalThis as {
+    Blob?: typeof Blob;
+    URL?: typeof URL;
+    document?: Document;
+  };
+
+  if (Platform.OS !== 'web' || !browser.document || !browser.Blob || !browser.URL) {
+    return false;
+  }
+
+  const url = browser.URL.createObjectURL(new browser.Blob([text], { type }));
+  const link = browser.document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  browser.document.body.appendChild(link);
+  link.click();
+  link.remove();
+  browser.URL.revokeObjectURL(url);
+  return true;
+}
+
+function pickVocabularyTextFile(): Promise<{ fileName: string; ok: true; text: string } | { message: string; ok: false }> {
+  const documentRef = (globalThis as { document?: Document }).document;
+  if (Platform.OS !== 'web' || !documentRef) {
+    return Promise.resolve({ message: '目前只有網頁版支援從檔案匯入字庫。', ok: false });
+  }
+
+  return new Promise((resolve) => {
+    const input = documentRef.createElement('input');
+    input.accept = '.csv,.json,text/csv,application/json';
+    input.type = 'file';
+    input.style.display = 'none';
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      input.remove();
+      if (!file) {
+        resolve({ message: '沒有選擇檔案。', ok: false });
+        return;
+      }
+
+      try {
+        resolve({ fileName: file.name, ok: true, text: await file.text() });
+      } catch {
+        resolve({ message: '讀取檔案失敗，請確認檔案可以正常開啟。', ok: false });
+      }
+    };
+    documentRef.body.appendChild(input);
+    input.click();
+  });
 }
 
 function isInstalledWebApp(): boolean {
@@ -1498,6 +1649,7 @@ function StudyView({
   activeInitial,
   activeLevel,
   filtersOpen,
+  levelOptions,
   motionStyle,
   wordCount,
   word,
@@ -1514,6 +1666,7 @@ function StudyView({
   activeInitial: string;
   activeLevel: string;
   filtersOpen: boolean;
+  levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
   word: WordEntry | null;
   wordCount: number;
@@ -1536,6 +1689,7 @@ function StudyView({
         activeInitial={activeInitial}
         activeLevel={activeLevel}
         count={wordCount}
+        levelOptions={levelOptions}
         open={filtersOpen}
         showStatus
         testID="study-filter-toggle"
@@ -1603,6 +1757,7 @@ function FilterControlPanel({
   activeInitial,
   activeLevel,
   count,
+  levelOptions,
   open,
   showStatus,
   testID,
@@ -1616,6 +1771,7 @@ function FilterControlPanel({
   activeInitial: string;
   activeLevel: string;
   count: number;
+  levelOptions: FilterOption[];
   open: boolean;
   showStatus: boolean;
   testID: string;
@@ -1625,7 +1781,7 @@ function FilterControlPanel({
   onLevelChange: (level: string) => void;
   onToggle: () => void;
 }) {
-  const summary = filterSummary(activeFilter, activeLevel, activeInitial, showStatus);
+  const summary = filterSummary(activeFilter, activeLevel, activeInitial, showStatus, levelOptions);
 
   return (
     <View style={styles.foldedFilterCard}>
@@ -1674,7 +1830,7 @@ function FilterControlPanel({
           <View style={styles.filterSection}>
             <Text style={styles.filterSectionTitle}>分級</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
-              {levelFilters.map((level) => {
+              {levelOptions.map((level) => {
                 const selected = activeLevel === level.id;
                 return (
                   <AnimatedPressable
@@ -1723,6 +1879,7 @@ function QuizView({
   activeLevel,
   correctCount,
   filtersOpen,
+  levelOptions,
   motionStyle,
   options,
   questionCount,
@@ -1749,6 +1906,7 @@ function QuizView({
   activeLevel: string;
   correctCount: number;
   filtersOpen: boolean;
+  levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
   options: ReturnType<typeof buildQuizOptions>;
   questionCount: (typeof quizQuestionCounts)[number];
@@ -1777,6 +1935,7 @@ function QuizView({
         activeInitial={activeInitial}
         activeLevel={activeLevel}
         count={wordCount}
+        levelOptions={levelOptions}
         open={filtersOpen}
         showStatus
         testID="quiz-filter-toggle"
@@ -1905,6 +2064,7 @@ function LibraryView({
   activeLevel,
   detailMotionStyle,
   filtersOpen,
+  levelOptions,
   listMotionStyle,
   progress,
   query,
@@ -1931,6 +2091,7 @@ function LibraryView({
   activeLevel: string;
   detailMotionStyle: StyleProp<ViewStyle>;
   filtersOpen: boolean;
+  levelOptions: FilterOption[];
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
   progress: ProgressState;
   query: string;
@@ -2075,6 +2236,7 @@ function LibraryView({
         activeInitial={activeInitial}
         activeLevel={activeLevel}
         count={words.length}
+        levelOptions={levelOptions}
         open={filtersOpen}
         showStatus={false}
         testID="library-filter-toggle"
@@ -2210,7 +2372,12 @@ function LibraryWordDetailView({
 function ProfileView({
   account,
   dailyPercent,
+  developerMessage,
+  developerVocabulary,
   onEmailChange,
+  onClearDeveloperVocabulary,
+  onExportVocabulary,
+  onImportVocabulary,
   onPasswordChange,
   onShowInstallGuide,
   onSignIn,
@@ -2218,12 +2385,19 @@ function ProfileView({
   onSignUp,
   progress,
   stats,
+  vocabularyCount,
 }: {
   account: AccountState;
   dailyPercent: number;
+  developerMessage: string;
+  developerVocabulary: DeveloperVocabularySnapshot | null;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
+  vocabularyCount: number;
+  onClearDeveloperVocabulary: () => void;
   onEmailChange: (email: string) => void;
+  onExportVocabulary: () => void;
+  onImportVocabulary: () => void;
   onPasswordChange: (password: string) => void;
   onShowInstallGuide: () => void;
   onSignIn: () => void;
@@ -2325,6 +2499,10 @@ function ProfileView({
       </View>
 
       <View style={styles.settingsCard}>
+        <View style={styles.rowBetween}>
+          <Text style={styles.sectionTitle}>設定</Text>
+          <Text style={styles.cardMeta}>我的工具</Text>
+        </View>
         <AnimatedPressable
           accessibilityRole="button"
           onPress={onShowInstallGuide}
@@ -2347,6 +2525,56 @@ function ProfileView({
           <Text style={styles.sectionTitle}>剩餘樣本</Text>
           <Text style={styles.settingValue}>{stats.remaining}</Text>
         </View>
+      </View>
+
+      <View style={styles.developerCard} testID="developer-vocabulary-panel">
+        <View style={styles.rowBetween}>
+          <View style={styles.flexOne}>
+            <Text style={styles.sectionTitle}>開發人員資料窗口</Text>
+            <Text style={styles.cardMeta}>{developerVocabulary ? '本機預覽啟用中' : '目前使用內建字庫'}</Text>
+          </View>
+          <Database size={22} color="#2563eb" strokeWidth={2.3} />
+        </View>
+
+        <Text style={styles.developerText}>
+          匯出目前字庫後，可以在外部修改例句與翻譯；匯入後會先套用在這台裝置，方便檢查正式更新前的效果。
+        </Text>
+
+        <View style={styles.developerStats}>
+          <View>
+            <Text style={styles.developerLabel}>目前字庫</Text>
+            <Text style={styles.developerValue}>{vocabularyCount} 筆</Text>
+          </View>
+          <View>
+            <Text style={styles.developerLabel}>資料狀態</Text>
+            <Text style={styles.developerValue}>{developerVocabulary ? '本機預覽' : '內建版本'}</Text>
+          </View>
+        </View>
+
+        {developerVocabulary && <Text style={styles.developerSummary}>{developerVocabulary.summary}</Text>}
+        <Text style={styles.developerMessage}>{developerMessage}</Text>
+
+        <View style={styles.buttonRow}>
+          <AnimatedPressable accessibilityRole="button" onPress={onExportVocabulary} pressTone="secondary" style={styles.developerActionButton}>
+            <Download size={16} color="#172033" strokeWidth={2.3} />
+            <Text style={styles.developerActionText}>匯出 CSV</Text>
+          </AnimatedPressable>
+          <AnimatedPressable accessibilityRole="button" onPress={onImportVocabulary} pressTone="primary" style={styles.developerPrimaryButton}>
+            <Upload size={16} color="#fff" strokeWidth={2.3} />
+            <Text style={styles.developerPrimaryText}>匯入資料</Text>
+          </AnimatedPressable>
+        </View>
+
+        <AnimatedPressable
+          accessibilityRole="button"
+          disabled={!developerVocabulary}
+          onPress={onClearDeveloperVocabulary}
+          pressTone="secondary"
+          style={[styles.developerClearButton, !developerVocabulary && styles.disabledButton]}
+        >
+          <Trash2 size={16} color="#9a3412" strokeWidth={2.3} />
+          <Text style={styles.developerClearText}>清除本機預覽</Text>
+        </AnimatedPressable>
       </View>
     </View>
   );
@@ -2371,8 +2599,18 @@ function statusLabel(status?: string) {
   return '未背';
 }
 
-function filterSummary(filter: LibraryFilter, level: string, initial: string, showStatus: boolean): string {
-  const parts = [levelLabel(level), initialLabel(initial)];
+function buildLevelFilters(words: WordEntry[]): FilterOption[] {
+  return [
+    { id: 'all', label: '全部分級' },
+    ...Array.from(new Set(words.map((word) => word.group))).map((group) => ({
+      id: group,
+      label: group.replace('Core ', 'L'),
+    })),
+  ];
+}
+
+function filterSummary(filter: LibraryFilter, level: string, initial: string, showStatus: boolean, levelOptions = levelFilters): string {
+  const parts = [levelLabel(level, levelOptions), initialLabel(initial)];
   if (showStatus) {
     parts.unshift(filterLabel(filter));
   }
@@ -2383,8 +2621,8 @@ function filterLabel(filter: LibraryFilter): string {
   return filters.find((item) => item.id === filter)?.label ?? '全部';
 }
 
-function levelLabel(level: string): string {
-  return levelFilters.find((item) => item.id === level)?.label ?? '全部分級';
+function levelLabel(level: string, levelOptions = levelFilters): string {
+  return levelOptions.find((item) => item.id === level)?.label ?? '全部分級';
 }
 
 function initialLabel(initial: string): string {
@@ -3868,6 +4106,104 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 16,
     padding: 16,
+  },
+  developerCard: {
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 13,
+    padding: 16,
+  },
+  developerText: {
+    color: '#5f6675',
+    fontSize: 13,
+    lineHeight: 20,
+  },
+  developerStats: {
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'space-between',
+    padding: 12,
+  },
+  developerLabel: {
+    color: '#64748b',
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  developerValue: {
+    color: '#172033',
+    fontSize: 15,
+    fontWeight: '900',
+    marginTop: 3,
+  },
+  developerSummary: {
+    color: '#166534',
+    fontSize: 12,
+    fontWeight: '800',
+    lineHeight: 18,
+  },
+  developerMessage: {
+    color: '#717987',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 18,
+  },
+  developerActionButton: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 7,
+    justifyContent: 'center',
+    minHeight: 46,
+    paddingHorizontal: 10,
+  },
+  developerActionText: {
+    color: '#172033',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  developerPrimaryButton: {
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 7,
+    justifyContent: 'center',
+    minHeight: 46,
+    paddingHorizontal: 10,
+  },
+  developerPrimaryText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  developerClearButton: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: '#fff7ed',
+    borderColor: '#fed7aa',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 7,
+    justifyContent: 'center',
+    minHeight: 42,
+    paddingHorizontal: 12,
+  },
+  developerClearText: {
+    color: '#9a3412',
+    fontSize: 13,
+    fontWeight: '900',
   },
   installGuideReplayButton: {
     alignItems: 'center',

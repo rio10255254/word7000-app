@@ -124,4 +124,15 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('detailMotionStyle');
     expect(appSource).toContain('libraryDetailAnim.setValue(0)');
   });
+
+  test('includes a developer vocabulary panel for import and export workflow', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('開發人員資料窗口');
+    expect(appSource).toContain('developer-vocabulary-panel');
+    expect(appSource).toContain('exportWordsToCsv');
+    expect(appSource).toContain('parseVocabularyImport');
+    expect(appSource).toContain('applyVocabularyImportRows');
+    expect(appSource).toContain('清除本機預覽');
+  });
 });

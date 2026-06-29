@@ -227,4 +227,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('installGuideIconColor');
     expect(appSource).toContain('color={installGuideIconColor}');
   });
+
+  test('reuses the refined panel transition for word detail navigation', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('libraryDetailPanelMotionStyle');
+    expect(appSource).toContain('detailMotionStyle={libraryDetailPanelMotionStyle}');
+    expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
+  });
+
+  test('keeps the current scroll position during profile settings transitions', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('onProfilePanelSwap');
+    expect(appSource).toContain('onPanelSwap={onProfilePanelSwap}');
+    expect(appSource).toContain('setSelectedLibraryWord(null);');
+    expect(appSource).toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);');
+    expect(appSource).not.toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, profilePanel, searchQuery]);');
+  });
 });

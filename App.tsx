@@ -35,7 +35,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Animated,
   Easing,
@@ -584,19 +584,19 @@ export default function App() {
       },
     ],
   });
-  const detailMotionStyle = {
+  const libraryDetailPanelMotionStyle = {
     opacity: libraryDetailAnim,
     transform: [
       {
-        translateY: libraryDetailAnim.interpolate({
+        translateX: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [14, 0],
+          outputRange: [18, 0],
         }),
       },
       {
         scale: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [0.975, 1],
+          outputRange: [0.985, 1],
         }),
       },
     ],
@@ -734,7 +734,7 @@ export default function App() {
     setScrollY(0);
     setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
-  }, [activeTab, activeFilter, activeInitial, activeLevel, profilePanel, searchQuery]);
+  }, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);
 
   useEffect(() => {
     if (activeTab !== 'profile') {
@@ -1030,6 +1030,11 @@ export default function App() {
     appScrollRef.current?.scrollTo({ y: 0, animated: true });
     setScrollY(0);
   }
+
+  const onProfilePanelSwap = useCallback(() => {
+    appScrollRef.current?.scrollTo({ y: 0, animated: false });
+    setScrollY(0);
+  }, []);
 
   function openInstallGuide() {
     setInstallGuideStep(0);
@@ -1327,7 +1332,7 @@ export default function App() {
               activeFilter={activeFilter}
               activeInitial={activeInitial}
               activeLevel={activeLevel}
-              detailMotionStyle={detailMotionStyle}
+              detailMotionStyle={libraryDetailPanelMotionStyle}
               filtersOpen={libraryFiltersOpen}
               levelOptions={levelFilterOptions}
               listMotionStyle={listMotionStyle}
@@ -1350,7 +1355,7 @@ export default function App() {
                 setSelectedLibraryWord(word);
                 appScrollRef.current?.scrollTo({ y: 0, animated: true });
                 Animated.timing(libraryDetailAnim, {
-                  duration: interactionMotion.cardMs + 90,
+                  duration: interactionMotion.settingsPanelMs,
                   easing: Easing.out(Easing.cubic),
                   toValue: 1,
                   useNativeDriver: Platform.OS !== 'web',
@@ -1381,6 +1386,7 @@ export default function App() {
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
               onOpenSettings={() => setProfilePanel('settings')}
+              onPanelSwap={onProfilePanelSwap}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
               onShowInstallGuide={openInstallGuide}
               onSignIn={handleSignIn}
@@ -3039,6 +3045,7 @@ function ProfileView({
   onExportVocabulary,
   onImportVocabulary,
   onOpenSettings,
+  onPanelSwap,
   onPasswordChange,
   onShowInstallGuide,
   onSignIn,
@@ -3067,6 +3074,7 @@ function ProfileView({
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
   onOpenSettings: () => void;
+  onPanelSwap: () => void;
   onPasswordChange: (password: string) => void;
   onShowInstallGuide: () => void;
   onSignIn: () => void;
@@ -3106,6 +3114,7 @@ function ProfileView({
     }).start(({ finished }) => {
       if (finished && !cancelled) {
         profilePanelAnim.setValue(0);
+        onPanelSwap();
         setRenderedProfilePanel(panel);
       }
     });
@@ -3113,7 +3122,7 @@ function ProfileView({
     return () => {
       cancelled = true;
     };
-  }, [panel, profilePanelAnim, renderedProfilePanel]);
+  }, [onPanelSwap, panel, profilePanelAnim, renderedProfilePanel]);
 
   const settingsPanelMotionStyle = {
     opacity: profilePanelAnim,

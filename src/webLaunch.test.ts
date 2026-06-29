@@ -207,6 +207,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('top: 0');
   });
 
+  test('uses concise Chinese meanings, supplemental details, and pinyin in Chinese word mode', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("from './src/lib/chineseDisplay'");
+    expect(appSource).toContain('conciseChineseMeaning(word.meaningZh)');
+    expect(appSource).toContain('supplementalChineseMeaning(word.meaningZh)');
+    expect(appSource).toContain('chineseMeaningPinyin');
+    expect(appSource).toContain('formatWordPinyin(word, studyMode)');
+    expect(appSource).toContain('ui.supplementalMeanings');
+    expect(appSource).toContain('styles.supplementalMeaning');
+  });
+
   test('polishes interaction motion and avoids stuttery filter collapse', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 

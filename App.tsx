@@ -91,6 +91,11 @@ import {
   saveDeveloperVocabulary,
   type DeveloperVocabularySnapshot,
 } from './src/lib/developerVocabulary';
+import {
+  chineseMeaningPinyin,
+  conciseChineseMeaning,
+  supplementalChineseMeaning,
+} from './src/lib/chineseDisplay';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
@@ -233,6 +238,7 @@ const modeInterfaceCopy = {
     unfavoriteWord: '取消收藏這個單字',
     englishCounterpart: '英文對照',
     chineseMeaning: '中文意思',
+    supplementalMeanings: '補充意思',
     reviewAgain: '再複習',
     known: '已會',
     filterStatus: '狀態',
@@ -344,6 +350,7 @@ const modeInterfaceCopy = {
     unfavoriteWord: 'Remove this word from saved',
     englishCounterpart: 'English Match',
     chineseMeaning: 'Chinese Meaning',
+    supplementalMeanings: 'Extra Meanings',
     reviewAgain: 'Review Again',
     known: 'I Know It',
     filterStatus: 'Status',
@@ -1715,15 +1722,23 @@ function useThemeStyles() {
 }
 
 function formatWordPrimary(word: WordEntry, studyMode: StudyMode): string {
-  return studyMode === 'chinese' ? word.meaningZh : word.word;
+  return studyMode === 'chinese' ? conciseChineseMeaning(word.meaningZh) : word.word;
 }
 
 function formatWordSecondary(word: WordEntry, studyMode: StudyMode): string {
   return studyMode === 'chinese' ? `${word.word} ${word.pronunciation}` : word.pronunciation;
 }
 
+function formatWordPinyin(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? chineseMeaningPinyin(conciseChineseMeaning(word.meaningZh)) : '';
+}
+
 function formatMeaningDetail(word: WordEntry, studyMode: StudyMode): string {
   return studyMode === 'chinese' ? word.word : word.meaningZh;
+}
+
+function formatMeaningSupplement(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? supplementalChineseMeaning(word.meaningZh) : '';
 }
 
 function formatExamplePrimary(word: WordEntry, studyMode: StudyMode): string {
@@ -2412,11 +2427,20 @@ function StudyView({
         <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
           {formatWordPrimary(word, studyMode)}
         </Text>
+        {studyMode === 'chinese' && (
+          <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
+        )}
         <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
         <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
           <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
           <Text style={[styles.meaning, themeStyles?.meaning]}>{formatMeaningDetail(word, studyMode)}</Text>
         </View>
+        {formatMeaningSupplement(word, studyMode) && (
+          <View style={[styles.supplementalMeaning, themeStyles?.supplementalMeaning]}>
+            <Text style={[styles.supplementalLabel, themeStyles?.supplementalLabel]}>{ui.supplementalMeanings}</Text>
+            <Text style={[styles.supplementalText, themeStyles?.supplementalText]}>{formatMeaningSupplement(word, studyMode)}</Text>
+          </View>
+        )}
         <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
           <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
           <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
@@ -2753,6 +2777,9 @@ function QuizView({
         <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
           {formatWordPrimary(word, studyMode)}
         </Text>
+        {studyMode === 'chinese' && (
+          <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
+        )}
         <View style={styles.quizOptions}>
           {options.map((option) => (
             <AnimatedPressable
@@ -2791,6 +2818,12 @@ function QuizView({
             <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
             <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.answer}</Text>
             <Text style={[styles.resultText, themeStyles?.resultText]}>{formatQuizAnswer(word, studyMode)}</Text>
+            {formatMeaningSupplement(word, studyMode) && (
+              <>
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.supplementalMeanings}</Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatMeaningSupplement(word, studyMode)}</Text>
+              </>
+            )}
           </View>
           <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="secondary" style={[styles.nextButton, themeStyles?.nextButton]}>
             <Text style={[styles.nextButtonText, themeStyles?.nextButtonText]}>{ui.nextQuestion}</Text>
@@ -3014,7 +3047,15 @@ function LibraryView({
                   <Text style={styles.libraryGroup}>{word.group}</Text>
                   <Text style={styles.libraryPos}>{word.partOfSpeech}</Text>
                 </View>
+                {studyMode === 'chinese' && (
+                  <Text style={[styles.libraryPinyin, themeStyles?.libraryPinyin]}>{formatWordPinyin(word, studyMode)}</Text>
+                )}
                 <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{formatMeaningDetail(word, studyMode)}</Text>
+                {formatMeaningSupplement(word, studyMode) && (
+                  <Text style={[styles.librarySupplemental, themeStyles?.librarySupplemental]}>
+                    {ui.supplementalMeanings}: {formatMeaningSupplement(word, studyMode)}
+                  </Text>
+                )}
                 <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
                 <Text style={styles.libraryDetailHint}>{ui.viewDetails}</Text>
               </AnimatedPressable>
@@ -3088,6 +3129,9 @@ function LibraryWordDetailView({
             <Text style={[styles.libraryDetailWord, studyMode === 'chinese' && styles.libraryDetailChineseWord, themeStyles?.libraryDetailWord]}>
               {formatWordPrimary(word, studyMode)}
             </Text>
+            {studyMode === 'chinese' && (
+              <Text style={[styles.libraryDetailPinyin, themeStyles?.libraryDetailPinyin]}>{formatWordPinyin(word, studyMode)}</Text>
+            )}
             <Text style={[styles.libraryDetailPronunciation, themeStyles?.libraryDetailPronunciation]}>
               {formatWordSecondary(word, studyMode)}
             </Text>
@@ -3121,6 +3165,15 @@ function LibraryWordDetailView({
             {formatMeaningDetail(word, studyMode)}
           </Text>
         </View>
+
+        {formatMeaningSupplement(word, studyMode) && (
+          <View style={[styles.libraryDetailSection, themeStyles?.libraryDetailSection]}>
+            <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>{ui.supplementalMeanings}</Text>
+            <Text style={[styles.libraryDetailMeaning, themeStyles?.libraryDetailMeaning]}>
+              {formatMeaningSupplement(word, studyMode)}
+            </Text>
+          </View>
+        )}
 
         <View style={[styles.libraryDetailExampleCard, themeStyles?.libraryDetailExampleCard]}>
           <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
@@ -4404,6 +4457,12 @@ const styles = StyleSheet.create({
     color: '#717987',
     fontSize: 16,
   },
+  pinyinText: {
+    color: '#2563eb',
+    fontSize: 15,
+    fontWeight: '800',
+    lineHeight: 21,
+  },
   meaningBlock: {
     borderTopColor: '#edf0f5',
     borderTopWidth: 1,
@@ -4419,6 +4478,26 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 22,
     fontWeight: '800',
+  },
+  supplementalMeaning: {
+    backgroundColor: '#f8fafc',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  supplementalLabel: {
+    color: '#2563eb',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  supplementalText: {
+    color: '#475569',
+    fontSize: 14,
+    fontWeight: '700',
+    lineHeight: 20,
   },
   exampleBox: {
     backgroundColor: '#f8fafc',
@@ -4867,11 +4946,25 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '800',
   },
+  libraryPinyin: {
+    color: '#2563eb',
+    fontSize: 12,
+    fontWeight: '800',
+    lineHeight: 18,
+    marginTop: 5,
+  },
   libraryMeaning: {
     color: '#172033',
     fontSize: 14,
     fontWeight: '700',
     marginTop: 5,
+  },
+  librarySupplemental: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 18,
+    marginTop: 4,
   },
   libraryExample: {
     color: '#717987',
@@ -4928,6 +5021,13 @@ const styles = StyleSheet.create({
   libraryDetailPronunciation: {
     color: '#717987',
     fontSize: 16,
+    marginTop: 4,
+  },
+  libraryDetailPinyin: {
+    color: '#2563eb',
+    fontSize: 15,
+    fontWeight: '800',
+    lineHeight: 21,
     marginTop: 4,
   },
   libraryDetailOverlay: {
@@ -5794,11 +5894,24 @@ const darkStyles = StyleSheet.create({
   pronunciation: {
     color: '#94a3b8',
   },
+  pinyinText: {
+    color: '#93c5fd',
+  },
   meaningBlock: {
     borderTopColor: '#334155',
   },
   meaning: {
     color: '#e2e8f0',
+  },
+  supplementalMeaning: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  supplementalLabel: {
+    color: '#93c5fd',
+  },
+  supplementalText: {
+    color: '#cbd5e1',
   },
   exampleBox: {
     backgroundColor: '#182033',
@@ -5940,8 +6053,14 @@ const darkStyles = StyleSheet.create({
   libraryWord: {
     color: '#f8fafc',
   },
+  libraryPinyin: {
+    color: '#93c5fd',
+  },
   libraryMeaning: {
     color: '#e2e8f0',
+  },
+  librarySupplemental: {
+    color: '#cbd5e1',
   },
   libraryExample: {
     color: '#94a3b8',
@@ -5965,6 +6084,9 @@ const darkStyles = StyleSheet.create({
   },
   libraryDetailPronunciation: {
     color: '#94a3b8',
+  },
+  libraryDetailPinyin: {
+    color: '#93c5fd',
   },
   libraryDetailOverlay: {
     backgroundColor: '#0f172a',

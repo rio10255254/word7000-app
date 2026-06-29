@@ -125,6 +125,20 @@ describe('library and quiz helpers', () => {
     expect(filterWords(words, state, '', 'all').map((word) => word.id)).toEqual(['mastered-word', 'review-word', 'fresh-word']);
   });
 
+  test('filterWords can sort the library alphabetically by English word when requested', () => {
+    const words = [
+      wordFixture('zebra-word', { word: 'zebra' }),
+      wordFixture('apple-word', { word: 'apple' }),
+      wordFixture('banana-word', { word: 'banana' }),
+    ];
+
+    expect(filterWords(words, emptyProgress(), '', 'all', { sort: 'alphabetical' }).map((word) => word.word)).toEqual([
+      'apple',
+      'banana',
+      'zebra',
+    ]);
+  });
+
   test('filterWords puts newly favorited words first in the favorites list', () => {
     const words = [wordFixture('old-favorite'), wordFixture('new-favorite')];
     const state = toggleFavorite(

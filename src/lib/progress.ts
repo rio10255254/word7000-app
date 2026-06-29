@@ -2,9 +2,11 @@ import type { WordEntry } from '../data/words';
 
 export type WordStatus = 'new' | 'mastered' | 'review';
 export type LibraryFilter = 'all' | 'favorites' | 'review' | 'mastered' | 'new';
+export type LibrarySort = 'default' | 'alphabetical';
 export type LibraryFilterOptions = {
   initial?: string;
   level?: string;
+  sort?: LibrarySort;
 };
 
 export type WordProgress = {
@@ -133,6 +135,7 @@ export function filterWords(
   const queryTerms = normalizedQuery.length > 0 ? normalizedQuery.split(/\s+/).filter(Boolean) : [];
   const level = options.level && options.level !== 'all' ? options.level : null;
   const initial = options.initial && options.initial !== 'all' ? options.initial.toUpperCase() : null;
+  const sort = options.sort ?? 'default';
 
   return words
     .map((word, index) => ({ index, progress: currentProgress(state, word.id), score: searchScore(word, queryTerms), word }))
@@ -167,6 +170,13 @@ export function filterWords(
       return true;
     })
     .sort((a, b) => {
+      if (sort === 'alphabetical') {
+        const wordOrder = a.word.word.localeCompare(b.word.word, 'en', { sensitivity: 'base' });
+        if (wordOrder !== 0) {
+          return wordOrder;
+        }
+      }
+
       if (queryTerms.length > 0 && b.score !== a.score) {
         return b.score - a.score;
       }

@@ -69,6 +69,7 @@ import {
   toggleFavorite,
   type QuizOption,
   type LibraryFilter,
+  type LibrarySort,
   type ProgressState,
 } from './src/lib/progress';
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
@@ -161,6 +162,7 @@ const filters: Array<{ id: LibraryFilter; label: string }> = [
   { id: 'mastered', label: '已會' },
   { id: 'new', label: '未背' },
 ];
+const librarySortOptions: Array<{ id: LibrarySort }> = [{ id: 'default' }, { id: 'alphabetical' }];
 
 const tabs: Array<{ id: Tab; label: string; icon: typeof Home }> = [
   { id: 'home', label: '首頁', icon: Home },
@@ -235,6 +237,7 @@ const modeInterfaceCopy = {
     known: '已會',
     filterStatus: '狀態',
     filterLevel: '分級',
+    filterSort: '排序',
     filterCountUnit: '個',
     filterLabels: {
       all: '全部',
@@ -243,10 +246,13 @@ const modeInterfaceCopy = {
       mastered: '已會',
       new: '未背',
     },
+    sortDefault: '原本順序',
+    sortAlphabetical: '英文字首 A-Z',
     allLevels: '全部分級',
     allInitials: '全部',
     levelAccessibility: (label: string) => `分級 ${label}`,
     initialAccessibility: (label: string) => (label === 'all' ? '字首 全部' : `字首 ${label}`),
+    sortAccessibility: (label: string) => `排序 ${label}`,
     questionCountTitle: '選擇題數',
     questionBankPrefix: '目前題庫',
     questionUnit: '題',
@@ -342,6 +348,7 @@ const modeInterfaceCopy = {
     known: 'I Know It',
     filterStatus: 'Status',
     filterLevel: 'Level',
+    filterSort: 'Sort',
     filterCountUnit: 'items',
     filterLabels: {
       all: 'All',
@@ -350,10 +357,13 @@ const modeInterfaceCopy = {
       mastered: 'Known',
       new: 'New',
     },
+    sortDefault: 'Original Order',
+    sortAlphabetical: 'English A-Z',
     allLevels: 'All Levels',
     allInitials: 'All',
     levelAccessibility: (label: string) => `Level ${label}`,
     initialAccessibility: (label: string) => (label === 'all' ? 'First letter All' : `First letter ${label}`),
+    sortAccessibility: (label: string) => `Sort ${label}`,
     questionCountTitle: 'Choose Question Count',
     questionBankPrefix: 'Question bank',
     questionUnit: 'questions',
@@ -471,6 +481,7 @@ export default function App() {
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>('all');
   const [activeLevel, setActiveLevel] = useState('all');
   const [activeInitial, setActiveInitial] = useState('all');
+  const [activeSort, setActiveSort] = useState<LibrarySort>('default');
   const [libraryFiltersOpen, setLibraryFiltersOpen] = useState(false);
   const [quizFilter, setQuizFilter] = useState<LibraryFilter>('all');
   const [quizLevel, setQuizLevel] = useState('all');
@@ -535,8 +546,9 @@ export default function App() {
       filterWords(vocabularyWords, progress, searchQuery, activeFilter, {
         initial: activeInitial,
         level: activeLevel,
+        sort: activeSort,
       }),
-    [activeFilter, activeInitial, activeLevel, progress, searchQuery, vocabularyWords],
+    [activeFilter, activeInitial, activeLevel, activeSort, progress, searchQuery, vocabularyWords],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const updateState = useAppUpdateCheck();
@@ -720,6 +732,7 @@ export default function App() {
     activeFilter,
     activeInitial,
     activeLevel,
+    activeSort,
     activeTab,
     cardAnim,
     developerVocabulary?.importedAt,
@@ -747,7 +760,7 @@ export default function App() {
     setScrollY(0);
     setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
-  }, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);
+  }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, searchQuery]);
 
   useEffect(() => {
     if (activeTab !== 'profile') {
@@ -1401,6 +1414,7 @@ export default function App() {
               activeFilter={activeFilter}
               activeInitial={activeInitial}
               activeLevel={activeLevel}
+              activeSort={activeSort}
               filtersOpen={libraryFiltersOpen}
               levelOptions={levelFilterOptions}
               listMotionStyle={listMotionStyle}
@@ -1422,6 +1436,7 @@ export default function App() {
               onReturnTop={returnLibraryToTop}
               onSearchBlur={() => setSearchFocused(false)}
               onSearchFocus={() => setSearchFocused(true)}
+              onSortChange={setActiveSort}
             />
           )}
           {activeTab === 'profile' && (
@@ -2428,6 +2443,7 @@ function FilterControlPanel({
   activeFilter,
   activeInitial,
   activeLevel,
+  activeSort,
   count,
   initialTitle = '字首',
   levelOptions,
@@ -2439,11 +2455,13 @@ function FilterControlPanel({
   onFilterChange,
   onInitialChange,
   onLevelChange,
+  onSortChange,
   onToggle,
 }: {
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  activeSort?: LibrarySort;
   count: number;
   initialTitle?: string;
   levelOptions: FilterOption[];
@@ -2455,9 +2473,10 @@ function FilterControlPanel({
   onFilterChange: (filter: LibraryFilter) => void;
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
+  onSortChange?: (sort: LibrarySort) => void;
   onToggle: () => void;
 }) {
-  const summary = filterSummary(activeFilter, activeLevel, activeInitial, showStatus, studyMode, levelOptions);
+  const summary = filterSummary(activeFilter, activeLevel, activeInitial, showStatus, studyMode, levelOptions, activeSort);
   const themeStyles = useThemeStyles();
   const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
   const ui = modeInterfaceCopy[studyMode];
@@ -2547,6 +2566,30 @@ function FilterControlPanel({
               })}
             </ScrollView>
           </View>
+
+          {activeSort && onSortChange && (
+            <View style={styles.filterSection}>
+              <Text style={[styles.filterSectionTitle, themeStyles?.filterSectionTitle]}>{ui.filterSort}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+                {librarySortOptions.map((sort) => {
+                  const selected = activeSort === sort.id;
+                  const label = sortLabel(sort.id, studyMode);
+                  return (
+                    <AnimatedPressable
+                      accessibilityLabel={ui.sortAccessibility(label)}
+                      accessibilityRole="button"
+                      key={sort.id}
+                      onPress={() => onSortChange(sort.id)}
+                      pressTone="chip"
+                      style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+                    >
+                      <Text style={[styles.filterText, selected && styles.filterTextActive]}>{label}</Text>
+                    </AnimatedPressable>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          )}
       </AnimatedFilterPanel>
     </View>
   );
@@ -2710,7 +2753,6 @@ function QuizView({
         <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
           {formatWordPrimary(word, studyMode)}
         </Text>
-        <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
         <View style={styles.quizOptions}>
           {options.map((option) => (
             <AnimatedPressable
@@ -2766,6 +2808,7 @@ function LibraryView({
   activeFilter,
   activeInitial,
   activeLevel,
+  activeSort,
   filtersOpen,
   levelOptions,
   listMotionStyle,
@@ -2787,10 +2830,12 @@ function LibraryView({
   onReturnTop,
   onSearchBlur,
   onSearchFocus,
+  onSortChange,
 }: {
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  activeSort: LibrarySort;
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
@@ -2812,6 +2857,7 @@ function LibraryView({
   onReturnTop: () => void;
   onSearchBlur: () => void;
   onSearchFocus: () => void;
+  onSortChange: (sort: LibrarySort) => void;
 }) {
   const safeStart = Math.min(visibleStart, Math.max(0, words.length - visibleWindowSize));
   const visibleEnd = Math.min(words.length, safeStart + visibleWindowSize);
@@ -2928,6 +2974,7 @@ function LibraryView({
         activeFilter={activeFilter}
         activeInitial={activeInitial}
         activeLevel={activeLevel}
+        activeSort={activeSort}
         count={words.length}
         levelOptions={levelOptions}
         open={filtersOpen}
@@ -2939,6 +2986,7 @@ function LibraryView({
         onFilterChange={onFilterChange}
         onInitialChange={onInitialChange}
         onLevelChange={onLevelChange}
+        onSortChange={onSortChange}
         onToggle={onFiltersToggle}
       />
 
@@ -3595,8 +3643,12 @@ function filterSummary(
   showStatus: boolean,
   studyMode: StudyMode,
   levelOptions = levelFilters,
+  sort?: LibrarySort,
 ): string {
   const parts = [levelLabel(level, studyMode, levelOptions), initialLabel(initial, studyMode)];
+  if (sort) {
+    parts.push(sortLabel(sort, studyMode));
+  }
   if (showStatus) {
     parts.unshift(filterLabel(filter, studyMode));
   }
@@ -3619,6 +3671,11 @@ function initialLabel(initial: string, studyMode: StudyMode = 'english'): string
     return modeInterfaceCopy[studyMode].allInitials;
   }
   return alphabetFilters.find((item) => item.id === initial)?.label ?? modeInterfaceCopy[studyMode].allInitials;
+}
+
+function sortLabel(sort: LibrarySort, studyMode: StudyMode = 'english'): string {
+  const ui = modeInterfaceCopy[studyMode];
+  return sort === 'alphabetical' ? ui.sortAlphabetical : ui.sortDefault;
 }
 
 function accountMessageForMode(message: string, studyMode: StudyMode): string {

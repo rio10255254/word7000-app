@@ -102,6 +102,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('測驗完成');
   });
 
+  test('keeps pronunciation off the quiz question card', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const quizStart = appSource.indexOf('function QuizView({');
+    const libraryStart = appSource.indexOf('function LibraryView({');
+    const quizSource = appSource.slice(quizStart, libraryStart);
+
+    expect(quizStart).toBeGreaterThan(-1);
+    expect(libraryStart).toBeGreaterThan(quizStart);
+    expect(quizSource).not.toContain('formatWordSecondary(word, studyMode)');
+    expect(quizSource).not.toContain('styles.pronunciation');
+  });
+
   test('shows full quiz feedback with English and Chinese examples after answering', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
@@ -210,6 +222,18 @@ describe('free web launch configuration', () => {
     expect(appSource).not.toContain('maxHeight: panelAnim.interpolate');
   });
 
+  test('adds an English alphabetical sort option inside the library filter panel', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('type LibrarySort,');
+    expect(appSource).toContain('activeSort={activeSort}');
+    expect(appSource).toContain("sort: activeSort");
+    expect(appSource).toContain('onSortChange={setActiveSort}');
+    expect(appSource).toContain('ui.filterSort');
+    expect(appSource).toContain('ui.sortAlphabetical');
+    expect(appSource).toContain('sortLabel(sort, studyMode)');
+  });
+
   test('animates profile settings and fully darkens the install guide', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
@@ -248,8 +272,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('onProfilePanelSwap');
     expect(appSource).toContain('onPanelSwap={onProfilePanelSwap}');
     expect(appSource).toContain('setSelectedLibraryWord(null);');
-    expect(appSource).toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, searchQuery]);');
-    expect(appSource).not.toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, profilePanel, searchQuery]);');
+    expect(appSource).toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, searchQuery]);');
+    expect(appSource).not.toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, profilePanel, searchQuery]);');
   });
 
   test('returns from word detail to the previous library position without replaying the list', () => {

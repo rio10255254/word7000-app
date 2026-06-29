@@ -228,12 +228,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('color={installGuideIconColor}');
   });
 
-  test('reuses the refined panel transition for word detail navigation', () => {
+  test('animates word detail navigation in both directions', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
     expect(appSource).toContain('detailMotionStyle={libraryDetailPanelMotionStyle}');
     expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
+    expect(appSource).toContain('function closeLibraryWordDetail()');
+    expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
+    expect(appSource).toContain('easing: Easing.out(Easing.cubic),\n      toValue: 0');
+    expect(appSource).toContain('toValue: 0');
+    expect(appSource).toContain('onCloseWord={closeLibraryWordDetail}');
+    expect(appSource).toContain('Animated.View style={[styles.screenStack, motionStyle]}');
   });
 
   test('keeps the current scroll position during profile settings transitions', () => {

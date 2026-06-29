@@ -590,13 +590,13 @@ export default function App() {
       {
         translateX: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [18, 0],
+          outputRange: [34, 0],
         }),
       },
       {
         scale: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [0.985, 1],
+          outputRange: [0.965, 1],
         }),
       },
     ],
@@ -1031,6 +1031,31 @@ export default function App() {
     setScrollY(0);
   }
 
+  function openLibraryWordDetail(word: WordEntry) {
+    libraryDetailAnim.setValue(0);
+    setSelectedLibraryWord(word);
+    appScrollRef.current?.scrollTo({ y: 0, animated: true });
+    Animated.timing(libraryDetailAnim, {
+      duration: interactionMotion.settingsPanelMs,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start();
+  }
+
+  function closeLibraryWordDetail() {
+    Animated.timing(libraryDetailAnim, {
+      duration: interactionMotion.settingsPanelExitMs,
+      easing: Easing.out(Easing.cubic),
+      toValue: 0,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start(({ finished }) => {
+      if (finished) {
+        setSelectedLibraryWord(null);
+      }
+    });
+  }
+
   const onProfilePanelSwap = useCallback(() => {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
     setScrollY(0);
@@ -1349,18 +1374,8 @@ export default function App() {
               onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
               onInitialChange={setActiveInitial}
               onLevelChange={setActiveLevel}
-              onCloseWord={() => setSelectedLibraryWord(null)}
-              onOpenWord={(word) => {
-                libraryDetailAnim.setValue(0);
-                setSelectedLibraryWord(word);
-                appScrollRef.current?.scrollTo({ y: 0, animated: true });
-                Animated.timing(libraryDetailAnim, {
-                  duration: interactionMotion.settingsPanelMs,
-                  easing: Easing.out(Easing.cubic),
-                  toValue: 1,
-                  useNativeDriver: Platform.OS !== 'web',
-                }).start();
-              }}
+              onCloseWord={closeLibraryWordDetail}
+              onOpenWord={openLibraryWordDetail}
               onQueryChange={handleLibraryQueryChange}
               onQueryClear={clearLibrarySearch}
               onReturnTop={returnLibraryToTop}
@@ -2968,13 +2983,13 @@ function LibraryWordDetailView({
   const ui = modeInterfaceCopy[studyMode];
 
   return (
-    <View style={styles.screenStack}>
+    <Animated.View style={[styles.screenStack, motionStyle]}>
       <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}>
         <ChevronLeft size={18} color={bodyIconColor} strokeWidth={2.5} />
         <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>{ui.backLibrary}</Text>
       </AnimatedPressable>
 
-      <Animated.View style={[styles.libraryDetailPage, themeStyles?.libraryDetailPage, motionStyle]} testID="library-word-detail">
+      <View style={[styles.libraryDetailPage, themeStyles?.libraryDetailPage]} testID="library-word-detail">
         <View style={styles.libraryDetailHeader}>
           <View style={styles.flexOne}>
             <Text style={styles.eyebrow}>{ui.detailTitle}</Text>
@@ -3028,8 +3043,8 @@ function LibraryWordDetailView({
             {formatExampleSecondary(word, studyMode)}
           </Text>
         </View>
-      </Animated.View>
-    </View>
+      </View>
+    </Animated.View>
   );
 }
 

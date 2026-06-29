@@ -19,29 +19,30 @@ class MemoryStorage {
 }
 
 describe('install guide storage', () => {
-  test('shows the guide on first browser launch when the app is not installed', () => {
+  test('shows the guide on every browser launch even after it was dismissed before', () => {
     const storage = new MemoryStorage();
+
+    markInstallGuideSeen(storage, false);
 
     expect(shouldShowInstallGuide(storage, false)).toBe(true);
   });
 
-  test('shows the guide on first installed launch too', () => {
+  test('skips the automatic guide when launched as an installed app', () => {
     const storage = new MemoryStorage();
 
-    expect(shouldShowInstallGuide(storage, true)).toBe(true);
+    expect(shouldShowInstallGuide(storage, true)).toBe(false);
   });
 
-  test('stores browser and installed guide state separately', () => {
+  test('dismissal still records browser guide state for compatibility', () => {
     const storage = new MemoryStorage();
 
     markInstallGuideSeen(storage, false);
 
     expect(storage.getItem(installGuideStorageKey(false))).toBe('seen');
-    expect(shouldShowInstallGuide(storage, false)).toBe(false);
-    expect(shouldShowInstallGuide(storage, true)).toBe(true);
+    expect(shouldShowInstallGuide(storage, false)).toBe(true);
   });
 
-  test('does not show after the user has seen it in the current launch mode', () => {
+  test('dismissal still records installed guide state without auto-showing it', () => {
     const storage = new MemoryStorage();
 
     markInstallGuideSeen(storage, true);

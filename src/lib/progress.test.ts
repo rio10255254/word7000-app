@@ -219,6 +219,15 @@ describe('library and quiz helpers', () => {
     expect(options.some((option) => option.meaning === sampleWords[0].meaningZh)).toBe(true);
   });
 
+  test('buildQuizOptions can switch to English answers for Chinese study mode', () => {
+    const options = buildQuizOptions(sampleWords, sampleWords[0].id, 'seed-a', 'word');
+
+    expect(options).toHaveLength(3);
+    expect(options.filter((option) => option.correct)).toHaveLength(1);
+    expect(options.some((option) => option.meaning === sampleWords[0].word)).toBe(true);
+    expect(options.every((option) => !option.meaning.includes('；'))).toBe(true);
+  });
+
   test('buildQuizOptions does not keep the correct answer in one fixed position', () => {
     const correctIndexes = new Set(
       Array.from({ length: 12 }, (_, index) =>

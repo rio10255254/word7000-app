@@ -36,6 +36,7 @@ export type QuizOption = {
   meaning: string;
   correct: boolean;
 };
+export type QuizAnswerMode = 'meaning' | 'word';
 
 function currentProgress(state: ProgressState, wordId: string): WordProgress {
   return (
@@ -263,7 +264,12 @@ export function buildQuizSession(words: WordEntry[], requestedCount: number, see
   return shuffleWithSeed(words, seed).slice(0, count);
 }
 
-export function buildQuizOptions(words: WordEntry[], wordId: string, seed = createRuntimeSeed()): QuizOption[] {
+export function buildQuizOptions(
+  words: WordEntry[],
+  wordId: string,
+  seed = createRuntimeSeed(),
+  answerMode: QuizAnswerMode = 'meaning',
+): QuizOption[] {
   const correctWord = words.find((word) => word.id === wordId) ?? words[0];
   if (!correctWord) {
     return [];
@@ -275,16 +281,20 @@ export function buildQuizOptions(words: WordEntry[], wordId: string, seed = crea
   )
     .slice(0, 2)
     .map((word) => ({
-      meaning: word.meaningZh,
+      meaning: answerTextForMode(word, answerMode),
       correct: false,
     }));
 
   const correctOption = {
-    meaning: correctWord.meaningZh,
+    meaning: answerTextForMode(correctWord, answerMode),
     correct: true,
   };
 
   return shuffleWithSeed([correctOption, ...wrongOptions], `${seed}:options:${wordId}`);
+}
+
+function answerTextForMode(word: WordEntry, answerMode: QuizAnswerMode): string {
+  return answerMode === 'word' ? word.word : word.meaningZh;
 }
 
 function shuffleWithSeed<T>(values: T[], seed: string): T[] {

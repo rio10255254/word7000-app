@@ -107,9 +107,10 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('quizExampleCard');
     expect(appSource).toContain('英文例句');
+    expect(appSource).toContain('中文例句');
     expect(appSource).toContain('中文翻譯');
-    expect(appSource).toContain('{word.example}');
-    expect(appSource).toContain('{word.exampleZh}');
+    expect(appSource).toContain('formatExamplePrimary(word, studyMode)');
+    expect(appSource).toContain('formatExampleSecondary(word, studyMode)');
   });
 
   test('lets library words open a full detail view', () => {
@@ -158,5 +159,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('launchProgressWidth');
     expect(appSource).toContain('Animated.View style={[styles.launchBarFill');
     expect(appSource).not.toContain('<View style={styles.launchBarFill} />');
+  });
+
+  test('includes a whole-app study mode switch with a visible transition', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("type StudyMode = 'english' | 'chinese'");
+    expect(appSource).toContain('word7000-study-mode-v1');
+    expect(appSource).toContain('切到中文單字');
+    expect(appSource).toContain('切回英文單字');
+    expect(appSource).toContain('ModeSwitchOverlay');
+    expect(appSource).toContain('modeTransitionAnim');
+    expect(appSource).toContain('accessibilityLabel={copy.toggleTitle}');
+    expect(appSource).toContain('{copy.toggleTitle}');
+    expect(appSource).not.toContain('targetCopy.toggleTitle');
+    expect(appSource).toContain('formatWordPrimary');
+    expect(appSource).toContain('formatQuizAnswer');
+    expect(appSource).toContain("buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`, studyMode === 'chinese' ? 'word' : 'meaning')");
   });
 });

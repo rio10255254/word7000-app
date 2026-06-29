@@ -16,6 +16,7 @@ import {
   Lock,
   LogIn,
   LogOut,
+  Languages,
   Mail,
   Moon,
   RotateCcw,
@@ -93,6 +94,7 @@ type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
+type StudyMode = 'english' | 'chinese';
 
 type AccountState = {
   configured: boolean;
@@ -117,6 +119,7 @@ type FilterOption = {
 const today = new Date().toISOString().slice(0, 10);
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
+const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_WINDOW_SIZE = 260;
 const quizQuestionCounts = [10, 20, 50] as const;
@@ -164,6 +167,46 @@ const tabs: Array<{ id: Tab; label: string; icon: typeof Home }> = [
   { id: 'library', label: '字庫', icon: Library },
   { id: 'profile', label: '我的', icon: User },
 ];
+const modeCopy = {
+  english: {
+    brand: 'Word7000',
+    subtitle: '每日輕學單字',
+    toggleTitle: '切到中文單字',
+    toggleText: '把整個 App 換成中文單字練習',
+    overlayTitle: '英文單字模式',
+    overlayText: '回到看英文、想中文意思',
+    heroEyebrow: 'ENGLISH MODE',
+    heroTitle: '今天 20 個剛剛好',
+    heroText: '保持一小段節奏，把英文單字變成每天都做得到的事。',
+    primaryAction: '開始學英文',
+    libraryTitle: '完整字庫',
+    searchPlaceholder: '搜尋英文、中文、例句或翻譯',
+    studyFilterTitle: '學習篩選',
+    quizFilterTitle: '測驗篩選',
+    libraryFilterTitle: '分級 / 字首',
+    initialTitle: '字首',
+    questionBankUnit: '個英文單字',
+  },
+  chinese: {
+    brand: '中文7000',
+    subtitle: '每日背中文單字',
+    toggleTitle: '切回英文單字',
+    toggleText: '回到原本的英文 7000 單字 App',
+    overlayTitle: '中文單字模式',
+    overlayText: '現在看中文、回想英文對照',
+    heroEyebrow: 'CHINESE MODE',
+    heroTitle: '今天 20 個中文剛剛好',
+    heroText: '先看中文詞義與中文例句，再回想對應的英文單字。',
+    primaryAction: '開始背中文',
+    libraryTitle: '中文詞庫',
+    searchPlaceholder: '搜尋中文、英文對照、例句或翻譯',
+    studyFilterTitle: '中文學習篩選',
+    quizFilterTitle: '中文測驗篩選',
+    libraryFilterTitle: '分級 / 英文首字',
+    initialTitle: '英文首字',
+    questionBankUnit: '個中文單字',
+  },
+} as const;
 
 const levelFilters = buildLevelFilters(sampleWords);
 const alphabetFilters: FilterOption[] = [
@@ -183,6 +226,7 @@ export default function App() {
   const screenAnim = useRef(new Animated.Value(1)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
   const libraryDetailAnim = useRef(new Animated.Value(1)).current;
+  const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
@@ -219,6 +263,11 @@ export default function App() {
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
   const [profilePanel, setProfilePanel] = useState<ProfilePanel>('overview');
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getBrowserStorage()));
+  const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getBrowserStorage()));
+  const [modeSwitchTarget, setModeSwitchTarget] = useState<StudyMode>(() =>
+    loadStudyMode(getBrowserStorage()) === 'english' ? 'chinese' : 'english',
+  );
+  const [showModeSwitch, setShowModeSwitch] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
@@ -253,8 +302,8 @@ export default function App() {
   const quizWord = quizStarted && quizSession.length > 0 ? quizSession[quizIndex] ?? null : null;
   const quizOptionSource = quizWords.length >= 3 ? quizWords : vocabularyWords;
   const quizOptions = useMemo(
-    () => (quizWord ? buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`) : []),
-    [quizIndex, quizOptionSource, quizSeed, quizWord],
+    () => (quizWord ? buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`, studyMode === 'chinese' ? 'word' : 'meaning') : []),
+    [quizIndex, quizOptionSource, quizSeed, quizWord, studyMode],
   );
   const visibleQuizWord = answeredQuizWord ?? quizWord;
   const visibleQuizOptions = lockedQuizOptions ?? quizOptions;
@@ -271,6 +320,7 @@ export default function App() {
   const updateState = useAppUpdateCheck();
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
   const darkMode = themeMode === 'dark';
+  const activeModeCopy = modeCopy[studyMode];
   const screenMotionStyle = {
     opacity: screenAnim,
     transform: [
@@ -333,6 +383,14 @@ export default function App() {
       },
     ],
   };
+  const modeOverlayScale = modeTransitionAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.94, 1],
+  });
+  const modeOverlayTranslateY = modeTransitionAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [18, 0],
+  });
   const launchOpacity = launchAnim.interpolate({
     inputRange: [0, 0.22, 1.62, 2],
     outputRange: [0, 1, 1, 0],
@@ -394,6 +452,10 @@ export default function App() {
   }, [themeMode]);
 
   useEffect(() => {
+    saveStudyMode(getBrowserStorage(), studyMode);
+  }, [studyMode]);
+
+  useEffect(() => {
     if (showLaunch || installGuideChecked) {
       return;
     }
@@ -441,6 +503,7 @@ export default function App() {
     quizFinished,
     searchQuery,
     selectedLibraryWord?.id,
+    studyMode,
     studyFilter,
     studyFiltersOpen,
     studyInitial,
@@ -507,7 +570,7 @@ export default function App() {
     setQuizSeed('');
     setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
-  }, [developerVocabulary?.importedAt]);
+  }, [developerVocabulary?.importedAt, studyMode]);
 
   useEffect(() => {
     const localProgress = loadProgressFromStorage(getBrowserStorage(), initialProgress);
@@ -913,6 +976,35 @@ export default function App() {
     }));
   }
 
+  function toggleStudyMode() {
+    const nextMode: StudyMode = studyMode === 'english' ? 'chinese' : 'english';
+    setModeSwitchTarget(nextMode);
+    setShowModeSwitch(true);
+    modeTransitionAnim.setValue(0);
+
+    Animated.timing(modeTransitionAnim, {
+      duration: 210,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start(() => {
+      setStudyMode(nextMode);
+      Animated.sequence([
+        Animated.delay(220),
+        Animated.timing(modeTransitionAnim, {
+          duration: 260,
+          easing: Easing.inOut(Easing.cubic),
+          toValue: 0,
+          useNativeDriver: Platform.OS !== 'web',
+        }),
+      ]).start(({ finished }) => {
+        if (finished) {
+          setShowModeSwitch(false);
+        }
+      });
+    });
+  }
+
   return (
     <ThemeContext.Provider value={themeMode}>
     <SafeAreaView style={[styles.safeArea, themeStyles?.safeArea]}>
@@ -920,8 +1012,8 @@ export default function App() {
       <View style={[styles.appShell, themeStyles?.appShell]}>
         <View style={styles.header}>
           <View>
-            <Text style={[styles.brand, themeStyles?.brand]}>Word7000</Text>
-            <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>每日輕學單字</Text>
+            <Text style={[styles.brand, themeStyles?.brand]}>{activeModeCopy.brand}</Text>
+            <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>{activeModeCopy.subtitle}</Text>
           </View>
           <View style={[styles.levelPill, themeStyles?.levelPill]}>
             <Trophy size={15} color="#2f855a" strokeWidth={2.4} />
@@ -950,12 +1042,14 @@ export default function App() {
               dailyPercent={dailyPercent}
               progress={progress}
               stats={stats}
+              studyMode={studyMode}
               onOpenAccount={() => setActiveTab('profile')}
               onStartStudy={() => setActiveTab('study')}
               onOpenReview={() => {
                 setActiveFilter('review');
                 setActiveTab('library');
               }}
+              onToggleStudyMode={toggleStudyMode}
             />
           )}
           {activeTab === 'study' && (
@@ -966,6 +1060,7 @@ export default function App() {
               filtersOpen={studyFiltersOpen}
               levelOptions={levelFilterOptions}
               motionStyle={cardMotionStyle}
+              studyMode={studyMode}
               wordCount={studyWords.length}
               word={studyWord}
               progress={progress}
@@ -994,6 +1089,7 @@ export default function App() {
               quizStarted={quizStarted}
               result={quizResult}
               sessionTotal={quizSessionTotal}
+              studyMode={studyMode}
               correctCount={quizCorrectCount}
               word={visibleQuizWord}
               wordCount={quizWords.length}
@@ -1021,6 +1117,7 @@ export default function App() {
               query={searchQuery}
               searchFocused={searchFocused}
               selectedWord={selectedLibraryWord}
+              studyMode={studyMode}
               visibleStart={libraryWindowStart}
               visibleWindowSize={LIBRARY_WINDOW_SIZE}
               words={libraryWords}
@@ -1124,12 +1221,21 @@ export default function App() {
               >
                 <Icon size={18} color={tabIconColor} strokeWidth={2.2} />
                 <Text style={[styles.tabLabel, themeStyles?.tabLabel, selected && styles.tabLabelActive, selected && themeStyles?.tabLabelActive]}>
-                  {tab.label}
+                  {tabLabelForMode(tab.id, studyMode)}
                 </Text>
               </AnimatedPressable>
             );
           })}
         </View>
+
+        {showModeSwitch && (
+          <ModeSwitchOverlay
+            mode={modeSwitchTarget}
+            opacity={modeTransitionAnim}
+            scale={modeOverlayScale}
+            translateY={modeOverlayTranslateY}
+          />
+        )}
 
         {showLaunch && (
           <Animated.View
@@ -1268,8 +1374,62 @@ function saveThemeMode(storage: StorageLike | undefined, themeMode: ThemeMode) {
   }
 }
 
+function loadStudyMode(storage?: StorageLike): StudyMode {
+  try {
+    return storage?.getItem(STUDY_MODE_STORAGE_KEY) === 'chinese' ? 'chinese' : 'english';
+  } catch {
+    return 'english';
+  }
+}
+
+function saveStudyMode(storage: StorageLike | undefined, studyMode: StudyMode) {
+  try {
+    storage?.setItem(STUDY_MODE_STORAGE_KEY, studyMode);
+  } catch {
+    // Study mode should still be usable for the current session if storage is blocked.
+  }
+}
+
 function useThemeStyles() {
   return useContext(ThemeContext) === 'dark' ? darkStyles : undefined;
+}
+
+function formatWordPrimary(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? word.meaningZh : word.word;
+}
+
+function formatWordSecondary(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? `${word.word} ${word.pronunciation}` : word.pronunciation;
+}
+
+function formatMeaningDetail(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? word.word : word.meaningZh;
+}
+
+function formatExamplePrimary(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? word.exampleZh : word.example;
+}
+
+function formatExampleSecondary(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? word.example : word.exampleZh;
+}
+
+function formatQuizAnswer(word: WordEntry, studyMode: StudyMode): string {
+  return studyMode === 'chinese' ? word.word : word.meaningZh;
+}
+
+function tabLabelForMode(tab: Tab, studyMode: StudyMode): string {
+  if (studyMode !== 'chinese') {
+    return tabs.find((item) => item.id === tab)?.label ?? '';
+  }
+
+  if (tab === 'study') {
+    return '背中文';
+  }
+  if (tab === 'library') {
+    return '詞庫';
+  }
+  return tabs.find((item) => item.id === tab)?.label ?? '';
 }
 
 function getBrowserStorage(): StorageLike | undefined {
@@ -1481,6 +1641,42 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
   );
 }
 
+function ModeSwitchOverlay({
+  mode,
+  opacity,
+  scale,
+  translateY,
+}: {
+  mode: StudyMode;
+  opacity: Animated.Value;
+  scale: Animated.AnimatedInterpolation<number>;
+  translateY: Animated.AnimatedInterpolation<number>;
+}) {
+  const copy = modeCopy[mode];
+  const chineseMode = mode === 'chinese';
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        styles.modeSwitchOverlay,
+        chineseMode && styles.modeSwitchOverlayChinese,
+        {
+          opacity,
+          transform: [{ scale }, { translateY }],
+        },
+      ]}
+      testID="mode-switch-overlay"
+    >
+      <View style={[styles.modeSwitchOverlayIcon, chineseMode && styles.modeSwitchOverlayIconChinese]}>
+        <Languages size={34} color={chineseMode ? '#0f766e' : '#2563eb'} strokeWidth={2.5} />
+      </View>
+      <Text style={styles.modeSwitchOverlayTitle}>{copy.overlayTitle}</Text>
+      <Text style={styles.modeSwitchOverlayText}>{copy.overlayText}</Text>
+    </Animated.View>
+  );
+}
+
 function InstallGuideOverlay({
   opacity,
   step,
@@ -1637,33 +1833,56 @@ function HomeView({
   dailyPercent,
   progress,
   stats,
+  studyMode,
   onOpenAccount,
   onOpenReview,
   onStartStudy,
+  onToggleStudyMode,
 }: {
   dailyPercent: number;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
+  studyMode: StudyMode;
   onOpenAccount: () => void;
   onOpenReview: () => void;
   onStartStudy: () => void;
+  onToggleStudyMode: () => void;
 }) {
   const themeStyles = useThemeStyles();
   const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const copy = modeCopy[studyMode];
 
   return (
     <View style={styles.screenStack}>
       <View style={[styles.hero, themeStyles?.hero]}>
         <View style={styles.heroCopy}>
-          <Text style={styles.eyebrow}>TODAY</Text>
-          <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>今天 20 個剛剛好</Text>
-          <Text style={[styles.heroText, themeStyles?.heroText]}>保持一小段節奏，把單字變成每天都做得到的事。</Text>
+          <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
+          <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>{copy.heroTitle}</Text>
+          <Text style={[styles.heroText, themeStyles?.heroText]}>{copy.heroText}</Text>
         </View>
         <View style={[styles.ring, themeStyles?.ring]}>
           <Text style={[styles.ringValue, themeStyles?.ringValue]}>{dailyPercent}%</Text>
           <Text style={[styles.ringLabel, themeStyles?.ringLabel]}>完成</Text>
         </View>
       </View>
+
+      <AnimatedPressable
+        accessibilityLabel={copy.toggleTitle}
+        accessibilityRole="button"
+        onPress={onToggleStudyMode}
+        pressTone="list"
+        style={[styles.modeSwitchButton, studyMode === 'chinese' && styles.modeSwitchButtonChinese, themeStyles?.modeSwitchButton]}
+        testID="study-mode-toggle"
+      >
+        <View style={[styles.modeSwitchIcon, studyMode === 'chinese' && styles.modeSwitchIconChinese]}>
+          <Languages size={20} color={studyMode === 'chinese' ? '#0f766e' : '#2563eb'} strokeWidth={2.4} />
+        </View>
+        <View style={styles.flexOne}>
+          <Text style={[styles.modeSwitchTitle, themeStyles?.modeSwitchTitle]}>{copy.toggleTitle}</Text>
+          <Text style={[styles.modeSwitchText, themeStyles?.modeSwitchText]}>{copy.toggleText}</Text>
+        </View>
+        <ChevronRight size={18} color={studyMode === 'chinese' ? '#0f766e' : '#2563eb'} strokeWidth={2.4} />
+      </AnimatedPressable>
 
       <View style={[styles.progressCard, themeStyles?.progressCard]}>
         <View style={styles.rowBetween}>
@@ -1677,7 +1896,7 @@ function HomeView({
         </View>
         <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton}>
           <BookOpen size={18} color="#fff" strokeWidth={2.3} />
-          <Text style={styles.primaryButtonText}>開始學習</Text>
+          <Text style={styles.primaryButtonText}>{copy.primaryAction}</Text>
           <ChevronRight size={18} color="#fff" strokeWidth={2.3} />
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onOpenAccount} pressTone="secondary" style={[styles.accountShortcut, themeStyles?.accountShortcut]}>
@@ -1711,6 +1930,7 @@ function StudyView({
   filtersOpen,
   levelOptions,
   motionStyle,
+  studyMode,
   wordCount,
   word,
   progress,
@@ -1728,6 +1948,7 @@ function StudyView({
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
+  studyMode: StudyMode;
   word: WordEntry | null;
   wordCount: number;
   progress: ProgressState;
@@ -1742,6 +1963,7 @@ function StudyView({
   const wordProgress = word ? progress.words[word.id] : undefined;
   const favorited = Boolean(wordProgress?.favorite);
   const themeStyles = useThemeStyles();
+  const copy = modeCopy[studyMode];
 
   return (
     <View style={styles.screenStack}>
@@ -1754,7 +1976,8 @@ function StudyView({
         open={filtersOpen}
         showStatus
         testID="study-filter-toggle"
-        title="學習篩選"
+        title={copy.studyFilterTitle}
+        initialTitle={copy.initialTitle}
         onFilterChange={onFilterChange}
         onInitialChange={onInitialChange}
         onLevelChange={onLevelChange}
@@ -1763,7 +1986,9 @@ function StudyView({
 
       {!word && (
         <View style={[styles.emptyState, themeStyles?.emptyState]}>
-          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>沒有符合的學習單字</Text>
+          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
+            {studyMode === 'chinese' ? '沒有符合的中文單字' : '沒有符合的學習單字'}
+          </Text>
           <Text style={[styles.emptyText, themeStyles?.emptyText]}>可以放寬狀態、分級或字首篩選。</Text>
         </View>
       )}
@@ -1785,15 +2010,17 @@ function StudyView({
             <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
           </AnimatedPressable>
         </View>
-        <Text style={[styles.bigWord, themeStyles?.bigWord]}>{word.word}</Text>
-        <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{word.pronunciation}</Text>
+        <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
+          {formatWordPrimary(word, studyMode)}
+        </Text>
+        <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
         <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
-          <Text style={styles.partOfSpeech}>{word.partOfSpeech}</Text>
-          <Text style={[styles.meaning, themeStyles?.meaning]}>{word.meaningZh}</Text>
+          <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? '英文對照' : word.partOfSpeech}</Text>
+          <Text style={[styles.meaning, themeStyles?.meaning]}>{formatMeaningDetail(word, studyMode)}</Text>
         </View>
         <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
-          <Text style={[styles.example, themeStyles?.example]}>{word.example}</Text>
-          <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{word.exampleZh}</Text>
+          <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
+          <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
         </View>
       </Animated.View>
 
@@ -1818,6 +2045,7 @@ function FilterControlPanel({
   activeInitial,
   activeLevel,
   count,
+  initialTitle = '字首',
   levelOptions,
   open,
   showStatus,
@@ -1832,6 +2060,7 @@ function FilterControlPanel({
   activeInitial: string;
   activeLevel: string;
   count: number;
+  initialTitle?: string;
   levelOptions: FilterOption[];
   open: boolean;
   showStatus: boolean;
@@ -1912,7 +2141,7 @@ function FilterControlPanel({
           </View>
 
           <View style={styles.filterSection}>
-            <Text style={[styles.filterSectionTitle, themeStyles?.filterSectionTitle]}>字首</Text>
+            <Text style={[styles.filterSectionTitle, themeStyles?.filterSectionTitle]}>{initialTitle}</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.letterRow}>
               {alphabetFilters.map((initial) => {
                 const selected = activeInitial === initial.id;
@@ -1952,6 +2181,7 @@ function QuizView({
   quizStarted,
   result,
   sessionTotal,
+  studyMode,
   wordCount,
   word,
   onAnswer,
@@ -1979,6 +2209,7 @@ function QuizView({
   quizStarted: boolean;
   result: 'correct' | 'wrong' | null;
   sessionTotal: number;
+  studyMode: StudyMode;
   word: WordEntry | null;
   wordCount: number;
   onAnswer: (correct: boolean) => void;
@@ -1993,6 +2224,7 @@ function QuizView({
 }) {
   const themeStyles = useThemeStyles();
   const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const copy = modeCopy[studyMode];
 
   return (
     <View style={styles.screenStack}>
@@ -2005,7 +2237,8 @@ function QuizView({
         open={filtersOpen}
         showStatus
         testID="quiz-filter-toggle"
-        title="測驗篩選"
+        title={copy.quizFilterTitle}
+        initialTitle={copy.initialTitle}
         onFilterChange={onFilterChange}
         onInitialChange={onInitialChange}
         onLevelChange={onLevelChange}
@@ -2017,7 +2250,7 @@ function QuizView({
           <View style={styles.rowBetween}>
             <View>
               <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>選擇題數</Text>
-              <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>目前題庫 {wordCount} 個單字</Text>
+              <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>目前題庫 {wordCount} {copy.questionBankUnit}</Text>
             </View>
             <Target size={22} color="#2563eb" strokeWidth={2.3} />
           </View>
@@ -2068,7 +2301,9 @@ function QuizView({
 
       {quizStarted && !word && (
         <View style={[styles.emptyState, themeStyles?.emptyState]}>
-          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>沒有符合的測驗題目</Text>
+          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
+            {studyMode === 'chinese' ? '沒有符合的中文測驗題目' : '沒有符合的測驗題目'}
+          </Text>
           <Text style={[styles.emptyText, themeStyles?.emptyText]}>可以放寬狀態、分級或字首篩選。</Text>
         </View>
       )}
@@ -2079,8 +2314,10 @@ function QuizView({
         <Text style={styles.eyebrow}>
           QUIZ {questionIndex + 1} / {sessionTotal}
         </Text>
-        <Text style={[styles.bigWord, themeStyles?.bigWord]}>{word.word}</Text>
-        <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{word.pronunciation}</Text>
+        <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
+          {formatWordPrimary(word, studyMode)}
+        </Text>
+        <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
         <View style={styles.quizOptions}>
           {options.map((option) => (
             <AnimatedPressable
@@ -2108,10 +2345,16 @@ function QuizView({
         <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, themeStyles?.resultCard, motionStyle]}>
           <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>{result === 'correct' ? '答對了' : '先放進複習'}</Text>
           <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
-            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>英文例句</Text>
-            <Text style={[styles.resultText, themeStyles?.resultText]}>{word.example}</Text>
-            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>中文翻譯</Text>
-            <Text style={[styles.resultText, themeStyles?.resultText]}>{word.exampleZh}</Text>
+            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+              {studyMode === 'chinese' ? '中文例句' : '英文例句'}
+            </Text>
+            <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExamplePrimary(word, studyMode)}</Text>
+            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+              {studyMode === 'chinese' ? '英文例句' : '中文翻譯'}
+            </Text>
+            <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
+            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>答案</Text>
+            <Text style={[styles.resultText, themeStyles?.resultText]}>{formatQuizAnswer(word, studyMode)}</Text>
           </View>
           <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="secondary" style={[styles.nextButton, themeStyles?.nextButton]}>
             <Text style={[styles.nextButtonText, themeStyles?.nextButtonText]}>下一題</Text>
@@ -2137,6 +2380,7 @@ function LibraryView({
   query,
   searchFocused,
   selectedWord,
+  studyMode,
   visibleStart,
   visibleWindowSize,
   words,
@@ -2164,6 +2408,7 @@ function LibraryView({
   query: string;
   searchFocused: boolean;
   selectedWord: WordEntry | null;
+  studyMode: StudyMode;
   visibleStart: number;
   visibleWindowSize: number;
   words: WordEntry[];
@@ -2188,6 +2433,7 @@ function LibraryView({
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
   const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const copy = modeCopy[studyMode];
 
   useEffect(() => {
     Animated.timing(searchAnim, {
@@ -2225,6 +2471,7 @@ function LibraryView({
       <LibraryWordDetailView
         motionStyle={detailMotionStyle}
         progress={progress}
+        studyMode={studyMode}
         word={selectedWord}
         onBack={onCloseWord}
         onFavorite={() => onFavorite(selectedWord.id)}
@@ -2236,8 +2483,10 @@ function LibraryView({
     <View style={styles.screenStack}>
       <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
         <View>
-          <Text style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>完整字庫</Text>
-          <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>目前篩選後 {words.length} 個單字</Text>
+          <Text style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>{copy.libraryTitle}</Text>
+          <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>
+            目前篩選後 {words.length} {copy.questionBankUnit}
+          </Text>
         </View>
         <AnimatedPressable
           accessibilityRole="button"
@@ -2258,7 +2507,7 @@ function LibraryView({
             onChangeText={onQueryChange}
             onBlur={onSearchBlur}
             onFocus={onSearchFocus}
-            placeholder="搜尋英文、中文、例句或翻譯"
+            placeholder={copy.searchPlaceholder}
             placeholderTextColor="#9ca3af"
             style={[styles.searchInput, themeStyles?.searchInput]}
             value={query}
@@ -2310,7 +2559,8 @@ function LibraryView({
         open={filtersOpen}
         showStatus={false}
         testID="library-filter-toggle"
-        title="分級 / 字首"
+        title={copy.libraryFilterTitle}
+        initialTitle={copy.initialTitle}
         onFilterChange={onFilterChange}
         onInitialChange={onInitialChange}
         onLevelChange={onLevelChange}
@@ -2327,24 +2577,26 @@ function LibraryView({
           return (
             <Animated.View key={word.id} style={[styles.libraryItem, themeStyles?.libraryItem, listMotionStyle(index)]}>
               <AnimatedPressable
-                accessibilityLabel={`查看 ${word.word} 完整資訊`}
+                accessibilityLabel={`查看 ${formatWordPrimary(word, studyMode)} 完整資訊`}
                 accessibilityRole="button"
                 onPress={() => onOpenWord(word)}
                 pressTone="list"
                 style={styles.libraryItemMain}
               >
                 <View style={styles.wordLine}>
-                  <Text style={[styles.libraryWord, themeStyles?.libraryWord]}>{word.word}</Text>
+                  <Text style={[styles.libraryWord, studyMode === 'chinese' && styles.libraryChineseWord, themeStyles?.libraryWord]}>
+                    {formatWordPrimary(word, studyMode)}
+                  </Text>
                   <Text style={styles.libraryGroup}>{word.group}</Text>
                   <Text style={styles.libraryPos}>{word.partOfSpeech}</Text>
                 </View>
-                <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{word.meaningZh}</Text>
-                <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{word.example}</Text>
+                <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{formatMeaningDetail(word, studyMode)}</Text>
+                <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
                 <Text style={styles.libraryDetailHint}>完整資訊</Text>
               </AnimatedPressable>
               <View style={styles.librarySide}>
                 <AnimatedPressable
-                  accessibilityLabel={`${wordProgress?.favorite ? '取消收藏' : '收藏'} ${word.word}`}
+                  accessibilityLabel={`${wordProgress?.favorite ? '取消收藏' : '收藏'} ${formatWordPrimary(word, studyMode)}`}
                   accessibilityRole="button"
                   onPress={() => onFavorite(word.id)}
                   pressTone="icon"
@@ -2363,7 +2615,9 @@ function LibraryView({
         })}
         {words.length === 0 && (
           <View style={[styles.emptyState, themeStyles?.emptyState]}>
-            <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>沒有符合的單字</Text>
+            <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
+              {studyMode === 'chinese' ? '沒有符合的中文單字' : '沒有符合的單字'}
+            </Text>
             <Text style={[styles.emptyText, themeStyles?.emptyText]}>
               {hasQuery ? '可以清除搜尋，或換一個分級、字首。' : '可以換一個分級、字首。'}
             </Text>
@@ -2378,12 +2632,14 @@ function LibraryView({
 function LibraryWordDetailView({
   motionStyle,
   progress,
+  studyMode,
   word,
   onBack,
   onFavorite,
 }: {
   motionStyle: StyleProp<ViewStyle>;
   progress: ProgressState;
+  studyMode: StudyMode;
   word: WordEntry;
   onBack: () => void;
   onFavorite: () => void;
@@ -2404,11 +2660,15 @@ function LibraryWordDetailView({
         <View style={styles.libraryDetailHeader}>
           <View style={styles.flexOne}>
             <Text style={styles.eyebrow}>完整資訊</Text>
-            <Text style={[styles.libraryDetailWord, themeStyles?.libraryDetailWord]}>{word.word}</Text>
-            <Text style={[styles.libraryDetailPronunciation, themeStyles?.libraryDetailPronunciation]}>{word.pronunciation}</Text>
+            <Text style={[styles.libraryDetailWord, studyMode === 'chinese' && styles.libraryDetailChineseWord, themeStyles?.libraryDetailWord]}>
+              {formatWordPrimary(word, studyMode)}
+            </Text>
+            <Text style={[styles.libraryDetailPronunciation, themeStyles?.libraryDetailPronunciation]}>
+              {formatWordSecondary(word, studyMode)}
+            </Text>
           </View>
           <AnimatedPressable
-            accessibilityLabel={`${favorite ? '取消收藏' : '收藏'} ${word.word}`}
+            accessibilityLabel={`${favorite ? '取消收藏' : '收藏'} ${formatWordPrimary(word, studyMode)}`}
             accessibilityRole="button"
             onPress={onFavorite}
             pressTone="icon"
@@ -2425,16 +2685,26 @@ function LibraryWordDetailView({
         </View>
 
         <View style={[styles.libraryDetailSection, themeStyles?.libraryDetailSection]}>
-          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>中文意思</Text>
-          <Text style={[styles.libraryDetailMeaning, themeStyles?.libraryDetailMeaning]}>{word.meaningZh}</Text>
+          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
+            {studyMode === 'chinese' ? '英文對照' : '中文意思'}
+          </Text>
+          <Text style={[styles.libraryDetailMeaning, themeStyles?.libraryDetailMeaning]}>
+            {formatMeaningDetail(word, studyMode)}
+          </Text>
         </View>
 
         <View style={[styles.libraryDetailExampleCard, themeStyles?.libraryDetailExampleCard]}>
-          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>英文例句</Text>
-          <Text style={[styles.libraryDetailExample, themeStyles?.libraryDetailExample]}>{word.example}</Text>
+          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
+            {studyMode === 'chinese' ? '中文例句' : '英文例句'}
+          </Text>
+          <Text style={[styles.libraryDetailExample, themeStyles?.libraryDetailExample]}>{formatExamplePrimary(word, studyMode)}</Text>
           <View style={[styles.libraryDetailDivider, themeStyles?.libraryDetailDivider]} />
-          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>中文翻譯</Text>
-          <Text style={[styles.libraryDetailExampleZh, themeStyles?.libraryDetailExampleZh]}>{word.exampleZh}</Text>
+          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
+            {studyMode === 'chinese' ? '英文例句' : '中文翻譯'}
+          </Text>
+          <Text style={[styles.libraryDetailExampleZh, themeStyles?.libraryDetailExampleZh]}>
+            {formatExampleSecondary(word, studyMode)}
+          </Text>
         </View>
       </Animated.View>
     </View>
@@ -3256,6 +3526,53 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '900',
   },
+  modeSwitchOverlay: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    elevation: 8,
+    gap: 8,
+    left: 24,
+    padding: 22,
+    position: 'absolute',
+    right: 24,
+    shadowColor: '#172033',
+    shadowOffset: { height: 10, width: 0 },
+    shadowOpacity: 0.16,
+    shadowRadius: 22,
+    top: '32%',
+    zIndex: 90,
+  },
+  modeSwitchOverlayChinese: {
+    backgroundColor: '#ecfdf5',
+    borderColor: '#99f6e4',
+  },
+  modeSwitchOverlayIcon: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 70,
+    justifyContent: 'center',
+    width: 70,
+  },
+  modeSwitchOverlayIconChinese: {
+    borderColor: '#99f6e4',
+  },
+  modeSwitchOverlayTitle: {
+    color: '#172033',
+    fontSize: 24,
+    fontWeight: '900',
+  },
+  modeSwitchOverlayText: {
+    color: '#475569',
+    fontSize: 14,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
   screenStack: {
     gap: 14,
   },
@@ -3310,6 +3627,46 @@ const styles = StyleSheet.create({
     color: '#717987',
     fontSize: 12,
     marginTop: 2,
+  },
+  modeSwitchButton: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    minHeight: 72,
+    padding: 14,
+  },
+  modeSwitchButtonChinese: {
+    backgroundColor: '#ecfdf5',
+    borderColor: '#99f6e4',
+  },
+  modeSwitchIcon: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
+  },
+  modeSwitchIconChinese: {
+    borderColor: '#99f6e4',
+  },
+  modeSwitchTitle: {
+    color: '#172033',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  modeSwitchText: {
+    color: '#5f6675',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 17,
+    marginTop: 3,
   },
   progressCard: {
     backgroundColor: '#fff',
@@ -3470,6 +3827,10 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 42,
     fontWeight: '900',
+  },
+  bigChineseWord: {
+    fontSize: 30,
+    lineHeight: 38,
   },
   pronunciation: {
     color: '#717987',
@@ -3903,6 +4264,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '900',
   },
+  libraryChineseWord: {
+    fontSize: 17,
+    lineHeight: 23,
+  },
   libraryGroup: {
     backgroundColor: '#eff6ff',
     borderColor: '#bfdbfe',
@@ -3973,6 +4338,10 @@ const styles = StyleSheet.create({
     fontSize: 42,
     fontWeight: '900',
     lineHeight: 48,
+  },
+  libraryDetailChineseWord: {
+    fontSize: 30,
+    lineHeight: 38,
   },
   libraryDetailPronunciation: {
     color: '#717987',
@@ -4694,6 +5063,16 @@ const darkStyles = StyleSheet.create({
   },
   ringLabel: {
     color: '#94a3b8',
+  },
+  modeSwitchButton: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  modeSwitchTitle: {
+    color: '#f8fafc',
+  },
+  modeSwitchText: {
+    color: '#cbd5e1',
   },
   progressCard: {
     backgroundColor: '#111827',

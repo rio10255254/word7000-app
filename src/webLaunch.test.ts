@@ -209,4 +209,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('styles.libraryItemPressed');
     expect(appSource).not.toContain('maxHeight: panelAnim.interpolate');
   });
+
+  test('animates profile settings and fully darkens the install guide', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('profilePanelAnim');
+    expect(appSource).toContain('renderedProfilePanel');
+    expect(appSource).toContain('settingsPanelMotionStyle');
+    expect(appSource).toContain('interactionMotion.settingsPanelMs');
+    expect(appSource).toContain('interactionMotion.settingsPanelExitMs');
+    expect(appSource).toContain('themeStyles?.installGuideOverlay');
+    expect(appSource).toContain('themeStyles?.installGuideCard');
+    expect(appSource).toContain('themeStyles?.installGuideClose');
+    expect(appSource).toContain('themeStyles?.installGuidePreview');
+    expect(appSource).toContain('themeStyles?.installGuideMiniStep');
+    expect(appSource).toContain('themeStyles?.installGuideSecondaryText');
+    expect(appSource).toContain('installGuideIconColor');
+    expect(appSource).toContain('color={installGuideIconColor}');
+  });
 });

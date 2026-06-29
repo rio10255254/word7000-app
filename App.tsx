@@ -1981,12 +1981,16 @@ function InstallGuideOverlay({
 }) {
   const current = installGuideSteps[step];
   const isLastStep = step === installGuideSteps.length - 1;
+  const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
+  const installGuideIconColor = darkMode ? '#60a5fa' : '#2563eb';
+  const installGuideCloseIconColor = darkMode ? '#e2e8f0' : '#172033';
   const installGuideStepProgress = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     installGuideStepProgress.setValue(0);
     Animated.timing(installGuideStepProgress, {
-      duration: 260,
+      duration: interactionMotion.guideStepMs,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
       useNativeDriver: Platform.OS !== 'web',
@@ -2013,11 +2017,11 @@ function InstallGuideOverlay({
 
   return (
     <Animated.View
-      style={[styles.installGuideOverlay, { opacity, transform: [{ translateY }] }]}
+      style={[styles.installGuideOverlay, themeStyles?.installGuideOverlay, { opacity, transform: [{ translateY }] }]}
       testID="install-guide-overlay"
     >
       <View style={styles.installGuideTopBar}>
-        <View style={styles.installGuideLogo}>
+        <View style={[styles.installGuideLogo, themeStyles?.installGuideLogo]}>
           <View style={styles.installGuideLogoDot} />
           <Text style={styles.installGuideLogoText}>W7</Text>
         </View>
@@ -2026,23 +2030,24 @@ function InstallGuideOverlay({
           accessibilityRole="button"
           onPress={onDismiss}
           pressTone="icon"
-          style={styles.installGuideClose}
+          style={[styles.installGuideClose, themeStyles?.installGuideClose]}
         >
-          <X size={18} color="#172033" strokeWidth={2.4} />
+          <X size={18} color={installGuideCloseIconColor} strokeWidth={2.4} />
         </AnimatedPressable>
       </View>
 
-      <View style={styles.installGuideCard}>
-        <View style={styles.installGuideStepPill}>
-          <Text style={styles.installGuideStepText}>
+      <View style={[styles.installGuideCard, themeStyles?.installGuideCard]}>
+        <View style={[styles.installGuideStepPill, themeStyles?.installGuideStepPill]}>
+          <Text style={[styles.installGuideStepText, themeStyles?.installGuideStepText]}>
             {step + 1} / {installGuideSteps.length}
           </Text>
         </View>
-        <Animated.View style={[styles.installGuideIconWrap, stepMotionStyle]}>
+        <Animated.View style={[styles.installGuideIconWrap, themeStyles?.installGuideIconWrap, stepMotionStyle]}>
           <Animated.View
             pointerEvents="none"
             style={[
               styles.installGuideIconGlow,
+              themeStyles?.installGuideIconGlow,
               {
                 opacity: installGuideStepProgress,
                 transform: [
@@ -2057,27 +2062,28 @@ function InstallGuideOverlay({
             ]}
           />
           <View style={styles.installGuideIconGraphic}>
-            <InstallGuideStepIcon icon={current.icon} />
+            <InstallGuideStepIcon icon={current.icon} color={installGuideIconColor} />
           </View>
         </Animated.View>
         <Animated.View style={[styles.installGuideCopyBlock, stepMotionStyle]}>
-          <Text style={styles.installGuideTitle}>{current.title}</Text>
-          <Text style={styles.installGuideText}>{current.text}</Text>
+          <Text style={[styles.installGuideTitle, themeStyles?.installGuideTitle]}>{current.title}</Text>
+          <Text style={[styles.installGuideText, themeStyles?.installGuideText]}>{current.text}</Text>
         </Animated.View>
 
-        <View style={styles.installGuidePreview}>
-          <View style={styles.installGuideBrowserBar} />
+        <View style={[styles.installGuidePreview, themeStyles?.installGuidePreview]}>
+          <View style={[styles.installGuideBrowserBar, themeStyles?.installGuideBrowserBar]} />
           <View style={styles.installGuidePreviewRow}>
             {installGuideSteps.map((item, index) => (
               <Animated.View
                 key={item.title}
                 style={[
                   styles.installGuideMiniStep,
+                  themeStyles?.installGuideMiniStep,
                   index <= step && styles.installGuideMiniStepActive,
                   index === step && styles.installGuideStepProgress,
                 ]}
               >
-                <Text style={[styles.installGuideMiniText, index <= step && styles.installGuideMiniTextActive]}>
+                <Text style={[styles.installGuideMiniText, themeStyles?.installGuideMiniText, index <= step && styles.installGuideMiniTextActive]}>
                   {index + 1}
                 </Text>
               </Animated.View>
@@ -2088,15 +2094,15 @@ function InstallGuideOverlay({
 
       <View style={styles.installGuideDots}>
         {installGuideSteps.map((item, index) => (
-          <View key={item.title} style={[styles.installGuideDot, index === step && styles.installGuideDotActive]} />
+          <View key={item.title} style={[styles.installGuideDot, themeStyles?.installGuideDot, index === step && styles.installGuideDotActive]} />
         ))}
       </View>
 
       <View style={styles.installGuideActions}>
-        <AnimatedPressable accessibilityRole="button" onPress={onDismiss} pressTone="secondary" style={styles.installGuideSecondary}>
-          <Text style={styles.installGuideSecondaryText}>我先自己操作</Text>
+        <AnimatedPressable accessibilityRole="button" onPress={onDismiss} pressTone="secondary" style={[styles.installGuideSecondary, themeStyles?.installGuideSecondary]}>
+          <Text style={[styles.installGuideSecondaryText, themeStyles?.installGuideSecondaryText]}>我先自己操作</Text>
         </AnimatedPressable>
-        <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={styles.installGuidePrimary}>
+        <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={[styles.installGuidePrimary, themeStyles?.installGuidePrimary]}>
           <Text style={styles.installGuidePrimaryText}>{isLastStep ? '完成' : '下一步'}</Text>
           <ChevronRight size={18} color="#fff" strokeWidth={2.5} />
         </AnimatedPressable>
@@ -2105,17 +2111,17 @@ function InstallGuideOverlay({
   );
 }
 
-function InstallGuideStepIcon({ icon }: { icon: (typeof installGuideSteps)[number]['icon'] }) {
+function InstallGuideStepIcon({ color, icon }: { color: string; icon: (typeof installGuideSteps)[number]['icon'] }) {
   if (icon === 'safari') {
-    return <Compass size={56} color="#2563eb" strokeWidth={2.1} />;
+    return <Compass size={56} color={color} strokeWidth={2.1} />;
   }
   if (icon === 'share') {
-    return <SquareArrowUp size={56} color="#2563eb" strokeWidth={2.1} />;
+    return <SquareArrowUp size={56} color={color} strokeWidth={2.1} />;
   }
   if (icon === 'add') {
-    return <SquarePlus size={56} color="#2563eb" strokeWidth={2.1} />;
+    return <SquarePlus size={56} color={color} strokeWidth={2.1} />;
   }
-  return <Smartphone size={56} color="#2563eb" strokeWidth={2.1} />;
+  return <Smartphone size={56} color={color} strokeWidth={2.1} />;
 }
 
 function HomeView({
@@ -3073,25 +3079,81 @@ function ProfileView({
   const syncError = account.status === 'error';
   const bodyIconColor = themeMode === 'dark' ? '#e2e8f0' : '#172033';
   const ui = modeInterfaceCopy[studyMode];
+  const [renderedProfilePanel, setRenderedProfilePanel] = useState<ProfilePanel>(panel);
+  const profilePanelAnim = useRef(new Animated.Value(1)).current;
 
-  if (panel === 'settings') {
+  useEffect(() => {
+    let cancelled = false;
+    const useNativeDriver = Platform.OS !== 'web';
+
+    if (panel === renderedProfilePanel) {
+      Animated.timing(profilePanelAnim, {
+        duration: interactionMotion.settingsPanelMs,
+        easing: Easing.out(Easing.cubic),
+        toValue: 1,
+        useNativeDriver,
+      }).start();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    Animated.timing(profilePanelAnim, {
+      duration: interactionMotion.settingsPanelExitMs,
+      easing: Easing.in(Easing.cubic),
+      toValue: 0,
+      useNativeDriver,
+    }).start(({ finished }) => {
+      if (finished && !cancelled) {
+        profilePanelAnim.setValue(0);
+        setRenderedProfilePanel(panel);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [panel, profilePanelAnim, renderedProfilePanel]);
+
+  const settingsPanelMotionStyle = {
+    opacity: profilePanelAnim,
+    transform: [
+      {
+        translateX: profilePanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [renderedProfilePanel === 'settings' ? 18 : -12, 0],
+        }),
+      },
+      {
+        scale: profilePanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.985, 1],
+        }),
+      },
+    ],
+  };
+
+  if (renderedProfilePanel === 'settings') {
     return (
-      <ProfileSettingsView
-        developerMessage={developerMessage}
-        developerVocabulary={developerVocabulary}
-        studyMode={studyMode}
-        themeMode={themeMode}
-        vocabularyCount={vocabularyCount}
-        onBack={onCloseSettings}
-        onClearDeveloperVocabulary={onClearDeveloperVocabulary}
-        onExportVocabulary={onExportVocabulary}
-        onImportVocabulary={onImportVocabulary}
-        onThemeModeChange={onThemeModeChange}
-      />
+      <Animated.View style={settingsPanelMotionStyle}>
+        <ProfileSettingsView
+          developerMessage={developerMessage}
+          developerVocabulary={developerVocabulary}
+          studyMode={studyMode}
+          themeMode={themeMode}
+          vocabularyCount={vocabularyCount}
+          onBack={onCloseSettings}
+          onClearDeveloperVocabulary={onClearDeveloperVocabulary}
+          onExportVocabulary={onExportVocabulary}
+          onImportVocabulary={onImportVocabulary}
+          onThemeModeChange={onThemeModeChange}
+        />
+      </Animated.View>
     );
   }
 
   return (
+    <Animated.View style={settingsPanelMotionStyle}>
     <View style={styles.screenStack}>
       <View style={[styles.profileCard, themeStyles?.profileCard]}>
         <View style={[styles.avatar, themeStyles?.avatar]}>
@@ -3203,6 +3265,7 @@ function ProfileView({
         <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
       </AnimatedPressable>
     </View>
+    </Animated.View>
   );
 }
 
@@ -5459,6 +5522,70 @@ const darkStyles = StyleSheet.create({
   },
   modeSwitchText: {
     color: '#cbd5e1',
+  },
+  installGuideOverlay: {
+    backgroundColor: '#020617',
+  },
+  installGuideLogo: {
+    backgroundColor: '#1d4ed8',
+    borderColor: '#60a5fa',
+  },
+  installGuideClose: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  installGuideCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+  },
+  installGuideStepPill: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  installGuideStepText: {
+    color: '#bfdbfe',
+  },
+  installGuideIconWrap: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  installGuideIconGlow: {
+    backgroundColor: '#1d4ed8',
+  },
+  installGuideTitle: {
+    color: '#f8fafc',
+  },
+  installGuideText: {
+    color: '#cbd5e1',
+  },
+  installGuidePreview: {
+    backgroundColor: '#0f172a',
+    borderColor: '#334155',
+  },
+  installGuideBrowserBar: {
+    backgroundColor: '#475569',
+  },
+  installGuideMiniStep: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  installGuideMiniText: {
+    color: '#94a3b8',
+  },
+  installGuideDot: {
+    backgroundColor: '#475569',
+  },
+  installGuideSecondary: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  installGuideSecondaryText: {
+    color: '#e2e8f0',
+  },
+  installGuidePrimary: {
+    backgroundColor: '#2563eb',
   },
   progressCard: {
     backgroundColor: '#111827',

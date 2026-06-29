@@ -22,6 +22,12 @@ describe('interaction motion presets', () => {
     expect(interactionMotion.panelFadeMs).toBeLessThanOrEqual(interactionMotion.panelMs);
   });
 
+  test('defines panel-level motion for settings and tutorial transitions', () => {
+    expect(interactionMotion.settingsPanelMs).toBeGreaterThan(interactionMotion.pressInMs);
+    expect(interactionMotion.settingsPanelExitMs).toBeLessThan(interactionMotion.settingsPanelMs);
+    expect(interactionMotion.guideStepMs).toBeGreaterThanOrEqual(interactionMotion.cardMs);
+  });
+
   test('staggers list entry movement without growing forever', () => {
     expect(listEnterOffset(0)).toBe(10);
     expect(listEnterOffset(3)).toBe(16);

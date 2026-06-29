@@ -28,6 +28,9 @@ export const interactionMotion = {
   pressInMs: 88,
   releaseMs: 180,
   screenMs: 280,
+  settingsPanelExitMs: 170,
+  settingsPanelMs: 310,
+  guideStepMs: 280,
 };
 
 export function pressMotionFor(tone: InteractionTone): PressMotion {

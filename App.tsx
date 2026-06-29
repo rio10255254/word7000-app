@@ -17,6 +17,7 @@ import {
   LogIn,
   LogOut,
   Mail,
+  Moon,
   RotateCcw,
   Search,
   Settings,
@@ -25,6 +26,7 @@ import {
   SquareArrowUp,
   SquarePlus,
   Star,
+  Sun,
   Target,
   Trash2,
   Trophy,
@@ -32,7 +34,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Animated,
   Easing,
@@ -90,6 +92,7 @@ import {
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
+type ThemeMode = 'light' | 'dark';
 
 type AccountState = {
   configured: boolean;
@@ -113,6 +116,7 @@ type FilterOption = {
 
 const today = new Date().toISOString().slice(0, 10);
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
+const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_WINDOW_SIZE = 260;
 const quizQuestionCounts = [10, 20, 50] as const;
@@ -169,6 +173,7 @@ const alphabetFilters: FilterOption[] = [
     label: letter,
   })),
 ];
+const ThemeContext = createContext<ThemeMode>('light');
 const MotionPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function App() {
@@ -213,6 +218,7 @@ export default function App() {
   const [installGuideStep, setInstallGuideStep] = useState(0);
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
   const [profilePanel, setProfilePanel] = useState<ProfilePanel>('overview');
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getBrowserStorage()));
   const [scrollY, setScrollY] = useState(0);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
@@ -263,6 +269,8 @@ export default function App() {
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const updateState = useAppUpdateCheck();
+  const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
+  const darkMode = themeMode === 'dark';
   const screenMotionStyle = {
     opacity: screenAnim,
     transform: [
@@ -333,6 +341,10 @@ export default function App() {
     inputRange: [0, 1, 2],
     outputRange: [0.94, 1, 1.04],
   });
+  const launchProgressWidth = launchAnim.interpolate({
+    inputRange: [0, 1, 2],
+    outputRange: ['10%', '76%', '100%'],
+  });
   const installGuideOpacity = installGuideAnim;
   const installGuideTranslateY = installGuideAnim.interpolate({
     inputRange: [0, 1],
@@ -365,17 +377,21 @@ export default function App() {
         duration: 280,
         easing: Easing.out(Easing.cubic),
         toValue: 1,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.delay(520),
       Animated.timing(launchAnim, {
         duration: 300,
         easing: Easing.inOut(Easing.cubic),
         toValue: 2,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start(() => setShowLaunch(false));
   }, [launchAnim]);
+
+  useEffect(() => {
+    saveThemeMode(getBrowserStorage(), themeMode);
+  }, [themeMode]);
 
   useEffect(() => {
     if (showLaunch || installGuideChecked) {
@@ -394,7 +410,7 @@ export default function App() {
       duration: interactionMotion.screenMs,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [activeTab, screenAnim]);
 
@@ -404,7 +420,7 @@ export default function App() {
       duration: interactionMotion.cardMs,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [
     activeFilter,
@@ -742,7 +758,7 @@ export default function App() {
       duration: 260,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }
 
@@ -752,7 +768,7 @@ export default function App() {
       duration: 220,
       easing: Easing.inOut(Easing.cubic),
       toValue: 0,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start(({ finished }) => {
       if (finished) {
         setShowInstallGuide(false);
@@ -898,22 +914,23 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="dark" />
-      <View style={styles.appShell}>
+    <ThemeContext.Provider value={themeMode}>
+    <SafeAreaView style={[styles.safeArea, themeStyles?.safeArea]}>
+      <StatusBar style={darkMode ? 'light' : 'dark'} />
+      <View style={[styles.appShell, themeStyles?.appShell]}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.brand}>Word7000</Text>
-            <Text style={styles.headerSubtext}>每日輕學單字</Text>
+            <Text style={[styles.brand, themeStyles?.brand]}>Word7000</Text>
+            <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>每日輕學單字</Text>
           </View>
-          <View style={styles.levelPill}>
+          <View style={[styles.levelPill, themeStyles?.levelPill]}>
             <Trophy size={15} color="#2f855a" strokeWidth={2.4} />
-            <Text style={styles.levelText}>Day {progress.streak}</Text>
+            <Text style={[styles.levelText, themeStyles?.levelText]}>Day {progress.streak}</Text>
           </View>
         </View>
         {updateState.available && (
-          <View style={styles.updateBanner}>
-            <Text style={styles.updateText}>{updateState.message}</Text>
+          <View style={[styles.updateBanner, themeStyles?.updateBanner]}>
+            <Text style={[styles.updateText, themeStyles?.updateText]}>{updateState.message}</Text>
             <AnimatedPressable accessibilityRole="button" onPress={updateState.refresh} pressTone="primary" style={styles.updateButton}>
               <Text style={styles.updateButtonText}>更新</Text>
             </AnimatedPressable>
@@ -1021,7 +1038,7 @@ export default function App() {
                   duration: interactionMotion.cardMs + 90,
                   easing: Easing.out(Easing.cubic),
                   toValue: 1,
-                  useNativeDriver: true,
+                  useNativeDriver: Platform.OS !== 'web',
                 }).start();
               }}
               onQueryChange={handleLibraryQueryChange}
@@ -1040,6 +1057,7 @@ export default function App() {
               panel={profilePanel}
               progress={progress}
               stats={stats}
+              themeMode={themeMode}
               vocabularyCount={vocabularyWords.length}
               onClearDeveloperVocabulary={handleClearDeveloperVocabulary}
               onCloseSettings={() => setProfilePanel('overview')}
@@ -1052,6 +1070,7 @@ export default function App() {
               onSignIn={handleSignIn}
               onSignOut={handleSignOut}
               onSignUp={handleSignUp}
+              onThemeModeChange={setThemeMode}
             />
           )}
           </Animated.View>
@@ -1090,20 +1109,23 @@ export default function App() {
           </View>
         )}
 
-        <View style={styles.tabBar}>
+        <View style={[styles.tabBar, themeStyles?.tabBar]}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const selected = activeTab === tab.id;
+            const tabIconColor = selected ? (darkMode ? '#f8fafc' : '#172033') : darkMode ? '#94a3b8' : '#717987';
             return (
               <AnimatedPressable
                 accessibilityRole="button"
                 key={tab.id}
                 onPress={() => setActiveTab(tab.id)}
                 pressTone="tab"
-                style={[styles.tabButton, selected && styles.tabButtonActive]}
+                style={[styles.tabButton, selected && styles.tabButtonActive, selected && themeStyles?.tabButtonActive]}
               >
-                <Icon size={18} color={selected ? '#172033' : '#717987'} strokeWidth={2.2} />
-                <Text style={[styles.tabLabel, selected && styles.tabLabelActive]}>{tab.label}</Text>
+                <Icon size={18} color={tabIconColor} strokeWidth={2.2} />
+                <Text style={[styles.tabLabel, themeStyles?.tabLabel, selected && styles.tabLabelActive, selected && themeStyles?.tabLabelActive]}>
+                  {tab.label}
+                </Text>
               </AnimatedPressable>
             );
           })}
@@ -1122,7 +1144,7 @@ export default function App() {
             <Text style={styles.launchTitle}>Word7000</Text>
             <Text style={styles.launchText}>每日輕學單字</Text>
             <View style={styles.launchBar}>
-              <View style={styles.launchBarFill} />
+              <Animated.View style={[styles.launchBarFill, { width: launchProgressWidth }]} />
             </View>
           </Animated.View>
         )}
@@ -1137,6 +1159,7 @@ export default function App() {
         )}
       </View>
     </SafeAreaView>
+    </ThemeContext.Provider>
   );
 }
 
@@ -1227,6 +1250,26 @@ function useAppUpdateCheck(): UpdateState {
     message: '有新版本可用',
     refresh,
   };
+}
+
+function loadThemeMode(storage?: StorageLike): ThemeMode {
+  try {
+    return storage?.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+  } catch {
+    return 'light';
+  }
+}
+
+function saveThemeMode(storage: StorageLike | undefined, themeMode: ThemeMode) {
+  try {
+    storage?.setItem(THEME_STORAGE_KEY, themeMode);
+  } catch {
+    // Theme choice is a convenience; keep the app usable if storage is blocked.
+  }
+}
+
+function useThemeStyles() {
+  return useContext(ThemeContext) === 'dark' ? darkStyles : undefined;
 }
 
 function getBrowserStorage(): StorageLike | undefined {
@@ -1358,7 +1401,7 @@ function AnimatedPressable({
       duration,
       easing: Easing.out(Easing.cubic),
       toValue,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }
 
@@ -1390,6 +1433,7 @@ function AnimatedPressable({
 }
 
 function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; open: boolean; testID: string }) {
+  const themeStyles = useThemeStyles();
   const [rendered, setRendered] = useState(open);
   const panelAnim = useRef(new Animated.Value(open ? 1 : 0)).current;
 
@@ -1431,7 +1475,7 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
   };
 
   return (
-    <Animated.View style={[styles.filterPanel, panelMotionStyle]} testID={testID}>
+    <Animated.View style={[styles.filterPanel, themeStyles?.filterPanel, panelMotionStyle]} testID={testID}>
       {children}
     </Animated.View>
   );
@@ -1460,7 +1504,7 @@ function InstallGuideOverlay({
       duration: 260,
       easing: Easing.out(Easing.cubic),
       toValue: 1,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [installGuideStepProgress, step]);
 
@@ -1604,28 +1648,31 @@ function HomeView({
   onOpenReview: () => void;
   onStartStudy: () => void;
 }) {
+  const themeStyles = useThemeStyles();
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+
   return (
     <View style={styles.screenStack}>
-      <View style={styles.hero}>
+      <View style={[styles.hero, themeStyles?.hero]}>
         <View style={styles.heroCopy}>
           <Text style={styles.eyebrow}>TODAY</Text>
-          <Text style={styles.heroTitle}>今天 20 個剛剛好</Text>
-          <Text style={styles.heroText}>保持一小段節奏，把單字變成每天都做得到的事。</Text>
+          <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>今天 20 個剛剛好</Text>
+          <Text style={[styles.heroText, themeStyles?.heroText]}>保持一小段節奏，把單字變成每天都做得到的事。</Text>
         </View>
-        <View style={styles.ring}>
-          <Text style={styles.ringValue}>{dailyPercent}%</Text>
-          <Text style={styles.ringLabel}>完成</Text>
+        <View style={[styles.ring, themeStyles?.ring]}>
+          <Text style={[styles.ringValue, themeStyles?.ringValue]}>{dailyPercent}%</Text>
+          <Text style={[styles.ringLabel, themeStyles?.ringLabel]}>完成</Text>
         </View>
       </View>
 
-      <View style={styles.progressCard}>
+      <View style={[styles.progressCard, themeStyles?.progressCard]}>
         <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>今日進度</Text>
-          <Text style={styles.cardMeta}>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>今日進度</Text>
+          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>
             {stats.studiedToday} / {progress.dailyTarget}
           </Text>
         </View>
-        <View style={styles.progressTrack}>
+        <View style={[styles.progressTrack, themeStyles?.progressTrack]}>
           <View style={[styles.progressFill, { width: `${dailyPercent}%` }]} />
         </View>
         <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton}>
@@ -1633,9 +1680,9 @@ function HomeView({
           <Text style={styles.primaryButtonText}>開始學習</Text>
           <ChevronRight size={18} color="#fff" strokeWidth={2.3} />
         </AnimatedPressable>
-        <AnimatedPressable accessibilityRole="button" onPress={onOpenAccount} pressTone="secondary" style={styles.accountShortcut}>
-          <User size={17} color="#172033" strokeWidth={2.3} />
-          <Text style={styles.accountShortcutText}>帳號登入與同步</Text>
+        <AnimatedPressable accessibilityRole="button" onPress={onOpenAccount} pressTone="secondary" style={[styles.accountShortcut, themeStyles?.accountShortcut]}>
+          <User size={17} color={bodyIconColor} strokeWidth={2.3} />
+          <Text style={[styles.accountShortcutText, themeStyles?.accountShortcutText]}>帳號登入與同步</Text>
         </AnimatedPressable>
       </View>
 
@@ -1645,11 +1692,11 @@ function HomeView({
         <StatCard label="待複習" value={stats.review.toString()} tone="orange" />
       </View>
 
-      <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={styles.reviewStrip}>
+      <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={[styles.reviewStrip, themeStyles?.reviewStrip]}>
         <RotateCcw size={20} color="#d97706" strokeWidth={2.4} />
         <View style={styles.flexOne}>
-          <Text style={styles.reviewTitle}>複習清單</Text>
-          <Text style={styles.reviewText}>{stats.review > 0 ? `${stats.review} 個單字需要再看一次` : '目前沒有卡住的單字'}</Text>
+          <Text style={[styles.reviewTitle, themeStyles?.reviewTitle]}>複習清單</Text>
+          <Text style={[styles.reviewText, themeStyles?.reviewText]}>{stats.review > 0 ? `${stats.review} 個單字需要再看一次` : '目前沒有卡住的單字'}</Text>
         </View>
         <ChevronRight size={18} color="#6b7280" strokeWidth={2.2} />
       </AnimatedPressable>
@@ -1694,6 +1741,7 @@ function StudyView({
 }) {
   const wordProgress = word ? progress.words[word.id] : undefined;
   const favorited = Boolean(wordProgress?.favorite);
+  const themeStyles = useThemeStyles();
 
   return (
     <View style={styles.screenStack}>
@@ -1714,15 +1762,15 @@ function StudyView({
       />
 
       {!word && (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyTitle}>沒有符合的學習單字</Text>
-          <Text style={styles.emptyText}>可以放寬狀態、分級或字首篩選。</Text>
+        <View style={[styles.emptyState, themeStyles?.emptyState]}>
+          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>沒有符合的學習單字</Text>
+          <Text style={[styles.emptyText, themeStyles?.emptyText]}>可以放寬狀態、分級或字首篩選。</Text>
         </View>
       )}
 
       {word && (
         <>
-      <Animated.View style={[styles.wordCard, motionStyle]}>
+      <Animated.View style={[styles.wordCard, themeStyles?.wordCard, motionStyle]}>
         <View style={styles.rowBetween}>
           <View style={styles.groupPill}>
             <Text style={styles.groupText}>{word.group}</Text>
@@ -1737,15 +1785,15 @@ function StudyView({
             <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
           </AnimatedPressable>
         </View>
-        <Text style={styles.bigWord}>{word.word}</Text>
-        <Text style={styles.pronunciation}>{word.pronunciation}</Text>
-        <View style={styles.meaningBlock}>
+        <Text style={[styles.bigWord, themeStyles?.bigWord]}>{word.word}</Text>
+        <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{word.pronunciation}</Text>
+        <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
           <Text style={styles.partOfSpeech}>{word.partOfSpeech}</Text>
-          <Text style={styles.meaning}>{word.meaningZh}</Text>
+          <Text style={[styles.meaning, themeStyles?.meaning]}>{word.meaningZh}</Text>
         </View>
-        <View style={styles.exampleBox}>
-          <Text style={styles.example}>{word.example}</Text>
-          <Text style={styles.exampleZh}>{word.exampleZh}</Text>
+        <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
+          <Text style={[styles.example, themeStyles?.example]}>{word.example}</Text>
+          <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{word.exampleZh}</Text>
         </View>
       </Animated.View>
 
@@ -1795,9 +1843,11 @@ function FilterControlPanel({
   onToggle: () => void;
 }) {
   const summary = filterSummary(activeFilter, activeLevel, activeInitial, showStatus, levelOptions);
+  const themeStyles = useThemeStyles();
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
 
   return (
-    <View style={styles.foldedFilterCard}>
+    <View style={[styles.foldedFilterCard, themeStyles?.foldedFilterCard]}>
       <AnimatedPressable
         accessibilityRole="button"
         onPress={onToggle}
@@ -1806,21 +1856,21 @@ function FilterControlPanel({
         testID={testID}
       >
         <View style={styles.flexOne}>
-          <Text style={styles.filterSummaryTitle}>{title}</Text>
-          <Text style={styles.filterSummaryText}>
+          <Text style={[styles.filterSummaryTitle, themeStyles?.filterSummaryTitle]}>{title}</Text>
+          <Text style={[styles.filterSummaryText, themeStyles?.filterSummaryText]}>
             {summary} · {count} 個
           </Text>
         </View>
         <View style={styles.filterSummaryIcon}>
-          <SlidersHorizontal size={16} color="#172033" strokeWidth={2.4} />
-          <ChevronDown size={15} color="#172033" strokeWidth={2.4} style={open ? styles.filterChevronOpen : undefined} />
+          <SlidersHorizontal size={16} color={bodyIconColor} strokeWidth={2.4} />
+          <ChevronDown size={15} color={bodyIconColor} strokeWidth={2.4} style={open ? styles.filterChevronOpen : undefined} />
         </View>
       </AnimatedPressable>
 
       <AnimatedFilterPanel open={open} testID={`${testID}-panel`}>
           {showStatus && (
             <View style={styles.filterSection}>
-              <Text style={styles.filterSectionTitle}>狀態</Text>
+              <Text style={[styles.filterSectionTitle, themeStyles?.filterSectionTitle]}>狀態</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
                 {filters.map((filter) => {
                   const selected = activeFilter === filter.id;
@@ -1830,7 +1880,7 @@ function FilterControlPanel({
                       key={filter.id}
                       onPress={() => onFilterChange(filter.id)}
                       pressTone="chip"
-                      style={[styles.filterChip, selected && styles.filterChipActive]}
+                      style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                     >
                       <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filter.label}</Text>
                     </AnimatedPressable>
@@ -1841,7 +1891,7 @@ function FilterControlPanel({
           )}
 
           <View style={styles.filterSection}>
-            <Text style={styles.filterSectionTitle}>分級</Text>
+            <Text style={[styles.filterSectionTitle, themeStyles?.filterSectionTitle]}>分級</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
               {levelOptions.map((level) => {
                 const selected = activeLevel === level.id;
@@ -1852,7 +1902,7 @@ function FilterControlPanel({
                     key={level.id}
                     onPress={() => onLevelChange(level.id)}
                     pressTone="chip"
-                    style={[styles.filterChip, selected && styles.levelChipActive]}
+                    style={[styles.filterChip, themeStyles?.filterChip, selected && styles.levelChipActive]}
                   >
                     <Text style={[styles.filterText, selected && styles.filterTextActive]}>{level.label}</Text>
                   </AnimatedPressable>
@@ -1862,7 +1912,7 @@ function FilterControlPanel({
           </View>
 
           <View style={styles.filterSection}>
-            <Text style={styles.filterSectionTitle}>字首</Text>
+            <Text style={[styles.filterSectionTitle, themeStyles?.filterSectionTitle]}>字首</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.letterRow}>
               {alphabetFilters.map((initial) => {
                 const selected = activeInitial === initial.id;
@@ -1873,7 +1923,7 @@ function FilterControlPanel({
                     key={initial.id}
                     onPress={() => onInitialChange(initial.id)}
                     pressTone="chip"
-                    style={[styles.letterChip, selected && styles.letterChipActive]}
+                    style={[styles.letterChip, themeStyles?.letterChip, selected && styles.letterChipActive]}
                   >
                     <Text style={[styles.letterText, selected && styles.letterTextActive]}>{initial.label}</Text>
                   </AnimatedPressable>
@@ -1941,6 +1991,9 @@ function QuizView({
   onRestart: () => void;
   onStart: () => void;
 }) {
+  const themeStyles = useThemeStyles();
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+
   return (
     <View style={styles.screenStack}>
       <FilterControlPanel
@@ -1960,11 +2013,11 @@ function QuizView({
       />
 
       {!quizStarted && !quizFinished && (
-        <Animated.View style={[styles.quizSetupCard, motionStyle]}>
+        <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
           <View style={styles.rowBetween}>
             <View>
-              <Text style={styles.sectionTitle}>選擇題數</Text>
-              <Text style={styles.cardMeta}>目前題庫 {wordCount} 個單字</Text>
+              <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>選擇題數</Text>
+              <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>目前題庫 {wordCount} 個單字</Text>
             </View>
             <Target size={22} color="#2563eb" strokeWidth={2.3} />
           </View>
@@ -1978,10 +2031,10 @@ function QuizView({
                   key={count}
                   onPress={() => onQuestionCountChange(count)}
                   pressTone="chip"
-                  style={[styles.quizCountChip, selected && styles.quizCountChipActive]}
+                  style={[styles.quizCountChip, themeStyles?.quizCountChip, selected && styles.quizCountChipActive]}
                 >
-                  <Text style={[styles.quizCountText, selected && styles.quizCountTextActive]}>{count} 題</Text>
-                  {cappedCount < count && <Text style={[styles.quizCountMeta, selected && styles.quizCountTextActive]}>出 {cappedCount}</Text>}
+                  <Text style={[styles.quizCountText, themeStyles?.quizCountText, selected && styles.quizCountTextActive]}>{count} 題</Text>
+                  {cappedCount < count && <Text style={[styles.quizCountMeta, themeStyles?.quizCountMeta, selected && styles.quizCountTextActive]}>出 {cappedCount}</Text>}
                 </AnimatedPressable>
               );
             })}
@@ -2000,10 +2053,10 @@ function QuizView({
       )}
 
       {quizFinished && (
-        <Animated.View style={[styles.quizSetupCard, motionStyle]}>
+        <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
           <Text style={styles.eyebrow}>RESULT</Text>
-          <Text style={styles.resultTitle}>測驗完成</Text>
-          <Text style={styles.quizScoreText}>
+          <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>測驗完成</Text>
+          <Text style={[styles.quizScoreText, themeStyles?.quizScoreText]}>
             答對 {correctCount} / {sessionTotal} 題
           </Text>
           <AnimatedPressable accessibilityRole="button" onPress={onRestart} pressTone="primary" style={styles.primaryButton}>
@@ -2014,20 +2067,20 @@ function QuizView({
       )}
 
       {quizStarted && !word && (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyTitle}>沒有符合的測驗題目</Text>
-          <Text style={styles.emptyText}>可以放寬狀態、分級或字首篩選。</Text>
+        <View style={[styles.emptyState, themeStyles?.emptyState]}>
+          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>沒有符合的測驗題目</Text>
+          <Text style={[styles.emptyText, themeStyles?.emptyText]}>可以放寬狀態、分級或字首篩選。</Text>
         </View>
       )}
 
       {quizStarted && word && (
         <>
-      <Animated.View style={[styles.quizCard, motionStyle]}>
+      <Animated.View style={[styles.quizCard, themeStyles?.quizCard, motionStyle]}>
         <Text style={styles.eyebrow}>
           QUIZ {questionIndex + 1} / {sessionTotal}
         </Text>
-        <Text style={styles.bigWord}>{word.word}</Text>
-        <Text style={styles.pronunciation}>{word.pronunciation}</Text>
+        <Text style={[styles.bigWord, themeStyles?.bigWord]}>{word.word}</Text>
+        <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{word.pronunciation}</Text>
         <View style={styles.quizOptions}>
           {options.map((option) => (
             <AnimatedPressable
@@ -2038,11 +2091,12 @@ function QuizView({
               pressTone="list"
               style={[
                 styles.quizOption,
+                themeStyles?.quizOption,
                 result !== null && option.correct && styles.quizOptionCorrect,
                 result === 'wrong' && !option.correct && styles.quizOptionMuted,
               ]}
             >
-              <Text style={[styles.quizOptionText, result !== null && option.correct && styles.quizOptionTextCorrect]}>
+              <Text style={[styles.quizOptionText, themeStyles?.quizOptionText, result !== null && option.correct && styles.quizOptionTextCorrect]}>
                 {option.meaning}
               </Text>
             </AnimatedPressable>
@@ -2051,17 +2105,17 @@ function QuizView({
       </Animated.View>
 
       {result && (
-        <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, motionStyle]}>
-          <Text style={styles.resultTitle}>{result === 'correct' ? '答對了' : '先放進複習'}</Text>
-          <View style={styles.quizExampleCard}>
-            <Text style={styles.quizExampleLabel}>英文例句</Text>
-            <Text style={styles.resultText}>{word.example}</Text>
-            <Text style={styles.quizExampleLabel}>中文翻譯</Text>
-            <Text style={styles.resultText}>{word.exampleZh}</Text>
+        <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, themeStyles?.resultCard, motionStyle]}>
+          <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>{result === 'correct' ? '答對了' : '先放進複習'}</Text>
+          <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
+            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>英文例句</Text>
+            <Text style={[styles.resultText, themeStyles?.resultText]}>{word.example}</Text>
+            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>中文翻譯</Text>
+            <Text style={[styles.resultText, themeStyles?.resultText]}>{word.exampleZh}</Text>
           </View>
-          <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="secondary" style={styles.nextButton}>
-            <Text style={styles.nextButtonText}>下一題</Text>
-            <ChevronRight size={18} color="#172033" strokeWidth={2.3} />
+          <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="secondary" style={[styles.nextButton, themeStyles?.nextButton]}>
+            <Text style={[styles.nextButtonText, themeStyles?.nextButtonText]}>下一題</Text>
+            <ChevronRight size={18} color={bodyIconColor} strokeWidth={2.3} />
           </AnimatedPressable>
         </Animated.View>
       )}
@@ -2131,13 +2185,16 @@ function LibraryView({
   const visibleWords = words.slice(safeStart, visibleEnd);
   const hasQuery = query.trim().length > 0;
   const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;
+  const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
+  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
 
   useEffect(() => {
     Animated.timing(searchAnim, {
       duration: interactionMotion.hoverMs,
       easing: Easing.out(Easing.cubic),
       toValue: searchFocused || hasQuery ? 1 : 0,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [hasQuery, searchAnim, searchFocused]);
 
@@ -2177,25 +2234,25 @@ function LibraryView({
 
   return (
     <View style={styles.screenStack}>
-      <View style={styles.libraryHeaderCard}>
+      <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
         <View>
-          <Text style={styles.libraryHeaderTitle}>完整字庫</Text>
-          <Text style={styles.libraryHeaderMeta}>目前篩選後 {words.length} 個單字</Text>
+          <Text style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>完整字庫</Text>
+          <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>目前篩選後 {words.length} 個單字</Text>
         </View>
         <AnimatedPressable
           accessibilityRole="button"
           onPress={onReturnTop}
           pressTone="secondary"
-          style={styles.libraryTopButton}
+          style={[styles.libraryTopButton, themeStyles?.libraryTopButton]}
           testID="library-top-return"
         >
-          <ArrowUp size={16} color="#172033" strokeWidth={2.5} />
-          <Text style={styles.libraryTopButtonText}>回到頂端</Text>
+          <ArrowUp size={16} color={bodyIconColor} strokeWidth={2.5} />
+          <Text style={[styles.libraryTopButtonText, themeStyles?.libraryTopButtonText]}>回到頂端</Text>
         </AnimatedPressable>
       </View>
 
       <Animated.View style={searchMotionStyle}>
-        <View style={[styles.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
+        <View style={[styles.searchBox, themeStyles?.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
           <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
           <TextInput
             onChangeText={onQueryChange}
@@ -2203,7 +2260,7 @@ function LibraryView({
             onFocus={onSearchFocus}
             placeholder="搜尋英文、中文、例句或翻譯"
             placeholderTextColor="#9ca3af"
-            style={styles.searchInput}
+            style={[styles.searchInput, themeStyles?.searchInput]}
             value={query}
           />
           {hasQuery && (
@@ -2212,7 +2269,7 @@ function LibraryView({
               accessibilityRole="button"
               onPress={onQueryClear}
               pressTone="icon"
-              style={styles.searchClearButton}
+              style={[styles.searchClearButton, themeStyles?.searchClearButton]}
               testID="library-search-clear"
             >
               <X size={16} color="#64748b" strokeWidth={2.5} />
@@ -2222,8 +2279,8 @@ function LibraryView({
       </Animated.View>
 
       {hasQuery && (
-        <Animated.View style={[styles.searchMetaBox, searchMetaMotionStyle]}>
-          <Text style={styles.searchMetaText}>搜尋「{query.trim()}」：找到 {words.length} 個結果</Text>
+        <Animated.View style={[styles.searchMetaBox, themeStyles?.searchMetaBox, searchMetaMotionStyle]}>
+          <Text style={[styles.searchMetaText, themeStyles?.searchMetaText]}>搜尋「{query.trim()}」：找到 {words.length} 個結果</Text>
         </Animated.View>
       )}
 
@@ -2236,7 +2293,7 @@ function LibraryView({
               key={filter.id}
               onPress={() => onFilterChange(filter.id)}
               pressTone="chip"
-              style={[styles.filterChip, selected && styles.filterChipActive]}
+              style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
             >
               <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filter.label}</Text>
             </AnimatedPressable>
@@ -2262,13 +2319,13 @@ function LibraryView({
 
       <View style={styles.libraryPanel}>
         <View style={styles.wordList}>
-        <Text style={styles.resultCount}>
+        <Text style={[styles.resultCount, themeStyles?.resultCount]}>
           共 {words.length} 個結果，顯示第 {words.length === 0 ? 0 : safeStart + 1}-{visibleEnd} 個
         </Text>
         {visibleWords.map((word, index) => {
           const wordProgress = progress.words[word.id];
           return (
-            <Animated.View key={word.id} style={[styles.libraryItem, listMotionStyle(index)]}>
+            <Animated.View key={word.id} style={[styles.libraryItem, themeStyles?.libraryItem, listMotionStyle(index)]}>
               <AnimatedPressable
                 accessibilityLabel={`查看 ${word.word} 完整資訊`}
                 accessibilityRole="button"
@@ -2277,12 +2334,12 @@ function LibraryView({
                 style={styles.libraryItemMain}
               >
                 <View style={styles.wordLine}>
-                  <Text style={styles.libraryWord}>{word.word}</Text>
+                  <Text style={[styles.libraryWord, themeStyles?.libraryWord]}>{word.word}</Text>
                   <Text style={styles.libraryGroup}>{word.group}</Text>
                   <Text style={styles.libraryPos}>{word.partOfSpeech}</Text>
                 </View>
-                <Text style={styles.libraryMeaning}>{word.meaningZh}</Text>
-                <Text style={styles.libraryExample}>{word.example}</Text>
+                <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{word.meaningZh}</Text>
+                <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{word.example}</Text>
                 <Text style={styles.libraryDetailHint}>完整資訊</Text>
               </AnimatedPressable>
               <View style={styles.librarySide}>
@@ -2299,15 +2356,15 @@ function LibraryView({
                     fill={wordProgress?.favorite ? '#f59e0b' : 'transparent'}
                   />
                 </AnimatedPressable>
-                <Text style={styles.statusText}>{statusLabel(wordProgress?.status)}</Text>
+                <Text style={[styles.statusText, themeStyles?.statusText]}>{statusLabel(wordProgress?.status)}</Text>
               </View>
             </Animated.View>
           );
         })}
         {words.length === 0 && (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyTitle}>沒有符合的單字</Text>
-            <Text style={styles.emptyText}>
+          <View style={[styles.emptyState, themeStyles?.emptyState]}>
+            <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>沒有符合的單字</Text>
+            <Text style={[styles.emptyText, themeStyles?.emptyText]}>
               {hasQuery ? '可以清除搜尋，或換一個分級、字首。' : '可以換一個分級、字首。'}
             </Text>
           </View>
@@ -2333,20 +2390,22 @@ function LibraryWordDetailView({
 }) {
   const wordProgress = progress.words[word.id];
   const favorite = Boolean(wordProgress?.favorite);
+  const themeStyles = useThemeStyles();
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
 
   return (
     <View style={styles.screenStack}>
-      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={styles.libraryDetailBack}>
-        <ChevronLeft size={18} color="#172033" strokeWidth={2.5} />
-        <Text style={styles.libraryDetailBackText}>返回字庫</Text>
+      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}>
+        <ChevronLeft size={18} color={bodyIconColor} strokeWidth={2.5} />
+        <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>返回字庫</Text>
       </AnimatedPressable>
 
-      <Animated.View style={[styles.libraryDetailPage, motionStyle]} testID="library-word-detail">
+      <Animated.View style={[styles.libraryDetailPage, themeStyles?.libraryDetailPage, motionStyle]} testID="library-word-detail">
         <View style={styles.libraryDetailHeader}>
           <View style={styles.flexOne}>
             <Text style={styles.eyebrow}>完整資訊</Text>
-            <Text style={styles.libraryDetailWord}>{word.word}</Text>
-            <Text style={styles.libraryDetailPronunciation}>{word.pronunciation}</Text>
+            <Text style={[styles.libraryDetailWord, themeStyles?.libraryDetailWord]}>{word.word}</Text>
+            <Text style={[styles.libraryDetailPronunciation, themeStyles?.libraryDetailPronunciation]}>{word.pronunciation}</Text>
           </View>
           <AnimatedPressable
             accessibilityLabel={`${favorite ? '取消收藏' : '收藏'} ${word.word}`}
@@ -2365,17 +2424,17 @@ function LibraryWordDetailView({
           <Text style={styles.libraryDetailBadge}>{statusLabel(wordProgress?.status)}</Text>
         </View>
 
-        <View style={styles.libraryDetailSection}>
-          <Text style={styles.libraryDetailLabel}>中文意思</Text>
-          <Text style={styles.libraryDetailMeaning}>{word.meaningZh}</Text>
+        <View style={[styles.libraryDetailSection, themeStyles?.libraryDetailSection]}>
+          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>中文意思</Text>
+          <Text style={[styles.libraryDetailMeaning, themeStyles?.libraryDetailMeaning]}>{word.meaningZh}</Text>
         </View>
 
-        <View style={styles.libraryDetailExampleCard}>
-          <Text style={styles.libraryDetailLabel}>英文例句</Text>
-          <Text style={styles.libraryDetailExample}>{word.example}</Text>
-          <View style={styles.libraryDetailDivider} />
-          <Text style={styles.libraryDetailLabel}>中文翻譯</Text>
-          <Text style={styles.libraryDetailExampleZh}>{word.exampleZh}</Text>
+        <View style={[styles.libraryDetailExampleCard, themeStyles?.libraryDetailExampleCard]}>
+          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>英文例句</Text>
+          <Text style={[styles.libraryDetailExample, themeStyles?.libraryDetailExample]}>{word.example}</Text>
+          <View style={[styles.libraryDetailDivider, themeStyles?.libraryDetailDivider]} />
+          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>中文翻譯</Text>
+          <Text style={[styles.libraryDetailExampleZh, themeStyles?.libraryDetailExampleZh]}>{word.exampleZh}</Text>
         </View>
       </Animated.View>
     </View>
@@ -2401,7 +2460,9 @@ function ProfileView({
   onSignUp,
   progress,
   stats,
+  themeMode,
   vocabularyCount,
+  onThemeModeChange,
 }: {
   account: AccountState;
   dailyPercent: number;
@@ -2410,6 +2471,7 @@ function ProfileView({
   panel: ProfilePanel;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
+  themeMode: ThemeMode;
   vocabularyCount: number;
   onClearDeveloperVocabulary: () => void;
   onCloseSettings: () => void;
@@ -2422,56 +2484,58 @@ function ProfileView({
   onSignIn: () => void;
   onSignOut: () => void;
   onSignUp: () => void;
+  onThemeModeChange: (themeMode: ThemeMode) => void;
 }) {
+  const themeStyles = useThemeStyles();
   const signedIn = Boolean(account.userId);
   const syncError = account.status === 'error';
+  const bodyIconColor = themeMode === 'dark' ? '#e2e8f0' : '#172033';
 
   if (panel === 'settings') {
     return (
       <ProfileSettingsView
         developerMessage={developerMessage}
         developerVocabulary={developerVocabulary}
-        progress={progress}
-        stats={stats}
+        themeMode={themeMode}
         vocabularyCount={vocabularyCount}
         onBack={onCloseSettings}
         onClearDeveloperVocabulary={onClearDeveloperVocabulary}
         onExportVocabulary={onExportVocabulary}
         onImportVocabulary={onImportVocabulary}
-        onShowInstallGuide={onShowInstallGuide}
+        onThemeModeChange={onThemeModeChange}
       />
     );
   }
 
   return (
     <View style={styles.screenStack}>
-      <View style={styles.profileCard}>
-        <View style={styles.avatar}>
-          <User size={32} color="#172033" strokeWidth={2.2} />
+      <View style={[styles.profileCard, themeStyles?.profileCard]}>
+        <View style={[styles.avatar, themeStyles?.avatar]}>
+          <User size={32} color={bodyIconColor} strokeWidth={2.2} />
         </View>
-        <Text style={styles.profileTitle}>{signedIn ? account.userEmail : '穩定累積中'}</Text>
-        <Text style={styles.profileText}>今天完成 {dailyPercent}%，目前掌握 {stats.mastered} 個單字。</Text>
+        <Text style={[styles.profileTitle, themeStyles?.profileTitle]}>{signedIn ? account.userEmail : '穩定累積中'}</Text>
+        <Text style={[styles.profileText, themeStyles?.profileText]}>今天完成 {dailyPercent}%，目前掌握 {stats.mastered} 個單字。</Text>
         <View style={[styles.syncPill, syncError && styles.syncPillError]}>
           <Cloud size={15} color={syncError ? '#b91c1c' : '#166534'} strokeWidth={2.3} />
           <Text style={[styles.syncText, syncError && styles.syncTextError]}>{account.message}</Text>
         </View>
       </View>
 
-      <View style={styles.accountCard}>
+      <View style={[styles.accountCard, themeStyles?.accountCard]}>
         <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>帳號</Text>
-          <Text style={styles.cardMeta}>{account.configured ? (signedIn ? '已登入' : '未登入') : '本機'}</Text>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>帳號</Text>
+          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{account.configured ? (signedIn ? '已登入' : '未登入') : '本機'}</Text>
         </View>
 
         {!signedIn && (
           <View style={styles.inputStack}>
             {!account.configured && (
-              <View style={styles.localOnlyBox}>
-                <Text style={styles.localOnlyTitle}>帳號登入尚未啟用</Text>
-                <Text style={styles.localOnlyText}>目前先用本機記憶；Cloudflare 設好 Supabase 後，這裡就能登入同步。</Text>
+              <View style={[styles.localOnlyBox, themeStyles?.localOnlyBox]}>
+                <Text style={[styles.localOnlyTitle, themeStyles?.localOnlyTitle]}>帳號登入尚未啟用</Text>
+                <Text style={[styles.localOnlyText, themeStyles?.localOnlyText]}>目前先用本機記憶；Cloudflare 設好 Supabase 後，這裡就能登入同步。</Text>
               </View>
             )}
-            <View style={styles.inputBox}>
+            <View style={[styles.inputBox, themeStyles?.inputBox]}>
               <Mail size={17} color="#717987" strokeWidth={2.2} />
               <TextInput
                 autoCapitalize="none"
@@ -2480,11 +2544,11 @@ function ProfileView({
                 onChangeText={onEmailChange}
                 placeholder="Email"
                 placeholderTextColor="#9ca3af"
-                style={styles.accountInput}
+                style={[styles.accountInput, themeStyles?.accountInput]}
                 value={account.email}
               />
             </View>
-            <View style={styles.inputBox}>
+            <View style={[styles.inputBox, themeStyles?.inputBox]}>
               <Lock size={17} color="#717987" strokeWidth={2.2} />
               <TextInput
                 editable={account.configured && !account.busy}
@@ -2492,7 +2556,7 @@ function ProfileView({
                 placeholder="密碼"
                 placeholderTextColor="#9ca3af"
                 secureTextEntry
-                style={styles.accountInput}
+                style={[styles.accountInput, themeStyles?.accountInput]}
                 value={account.password}
               />
             </View>
@@ -2512,9 +2576,9 @@ function ProfileView({
                 disabled={!account.configured || account.busy}
                 onPress={onSignUp}
                 pressTone="secondary"
-                style={[styles.outlineButton, (!account.configured || account.busy) && styles.disabledButton]}
+                style={[styles.outlineButton, themeStyles?.outlineButton, (!account.configured || account.busy) && styles.disabledButton]}
               >
-                <Text style={styles.outlineButtonText}>註冊</Text>
+                <Text style={[styles.outlineButtonText, themeStyles?.outlineButtonText]}>註冊</Text>
               </AnimatedPressable>
             </View>
           </View>
@@ -2534,23 +2598,90 @@ function ProfileView({
         )}
       </View>
 
+      <ProfileLearningExperiencePanel dailyPercent={dailyPercent} progress={progress} stats={stats} />
+
+      <ProfileTutorialPanel onShowInstallGuide={onShowInstallGuide} />
+
       <AnimatedPressable
         accessibilityLabel="開啟設定"
         accessibilityRole="button"
         onPress={onOpenSettings}
         pressTone="list"
-        style={styles.settingsEntryButton}
+        style={[styles.settingsEntryButton, themeStyles?.settingsEntryButton]}
       >
-        <View style={styles.settingsEntryIcon}>
-          <Settings size={20} color="#172033" strokeWidth={2.3} />
+        <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+          <Settings size={20} color={bodyIconColor} strokeWidth={2.3} />
         </View>
         <View style={styles.flexOne}>
-          <Text style={styles.settingsEntryTitle}>設定</Text>
-          <Text style={styles.settingsEntryText}>App 設定、加入主畫面教學與資料匯入工具</Text>
+          <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>設定</Text>
+          <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>深色模式與資料匯入工具</Text>
         </View>
         <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
       </AnimatedPressable>
     </View>
+  );
+}
+
+function ProfileLearningExperiencePanel({
+  dailyPercent,
+  progress,
+  stats,
+}: {
+  dailyPercent: number;
+  progress: ProgressState;
+  stats: ReturnType<typeof computeStats>;
+}) {
+  const themeStyles = useThemeStyles();
+
+  return (
+    <View style={[styles.profileInfoCard, themeStyles?.profileInfoCard]} testID="profile-learning-panel">
+      <View style={styles.rowBetween}>
+        <View>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>學習體驗</Text>
+          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>今天完成 {dailyPercent}%</Text>
+        </View>
+        <BookOpen size={21} color="#2563eb" strokeWidth={2.3} />
+      </View>
+      <View style={styles.learningMetricGrid}>
+        <View style={[styles.learningMetric, themeStyles?.learningMetric]}>
+          <Text style={[styles.learningMetricLabel, themeStyles?.learningMetricLabel]}>每日目標</Text>
+          <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{progress.dailyTarget} words</Text>
+        </View>
+        <View style={[styles.learningMetric, themeStyles?.learningMetric]}>
+          <Text style={[styles.learningMetricLabel, themeStyles?.learningMetricLabel]}>收藏單字</Text>
+          <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{stats.favorites}</Text>
+        </View>
+        <View style={[styles.learningMetric, themeStyles?.learningMetric]}>
+          <Text style={[styles.learningMetricLabel, themeStyles?.learningMetricLabel]}>剩餘樣本</Text>
+          <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{stats.remaining}</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function ProfileTutorialPanel({ onShowInstallGuide }: { onShowInstallGuide: () => void }) {
+  const themeStyles = useThemeStyles();
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+
+  return (
+    <AnimatedPressable
+      accessibilityLabel="重新查看加入主畫面教學"
+      accessibilityRole="button"
+      onPress={onShowInstallGuide}
+      pressTone="list"
+      style={[styles.settingsEntryButton, themeStyles?.settingsEntryButton]}
+      testID="profile-tutorial-panel"
+    >
+      <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+        <Smartphone size={20} color={bodyIconColor} strokeWidth={2.3} />
+      </View>
+      <View style={styles.flexOne}>
+        <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>教學</Text>
+        <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>重新查看加入主畫面教學</Text>
+      </View>
+      <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+    </AnimatedPressable>
   );
 }
 
@@ -2561,58 +2692,60 @@ function ProfileSettingsView({
   onClearDeveloperVocabulary,
   onExportVocabulary,
   onImportVocabulary,
-  onShowInstallGuide,
-  progress,
-  stats,
+  onThemeModeChange,
+  themeMode,
   vocabularyCount,
 }: {
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
-  progress: ProgressState;
-  stats: ReturnType<typeof computeStats>;
+  themeMode: ThemeMode;
   vocabularyCount: number;
   onBack: () => void;
   onClearDeveloperVocabulary: () => void;
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
-  onShowInstallGuide: () => void;
+  onThemeModeChange: (themeMode: ThemeMode) => void;
 }) {
+  const themeStyles = useThemeStyles();
+  const darkMode = themeMode === 'dark';
+  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+
   return (
     <View style={styles.screenStack} testID="profile-settings-panel">
-      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={styles.libraryDetailBack}>
-        <ChevronLeft size={18} color="#172033" strokeWidth={2.5} />
-        <Text style={styles.libraryDetailBackText}>返回我的</Text>
+      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}>
+        <ChevronLeft size={18} color={bodyIconColor} strokeWidth={2.5} />
+        <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>返回我的</Text>
       </AnimatedPressable>
 
-      <View style={styles.settingsCard}>
+      <View style={[styles.settingsCard, themeStyles?.settingsCard]}>
         <View style={styles.rowBetween}>
           <View>
-            <Text style={styles.sectionTitle}>App 設定</Text>
-            <Text style={styles.cardMeta}>學習體驗與本機工具</Text>
+            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>App 設定</Text>
+            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>顯示模式與本機工具</Text>
           </View>
           <Settings size={21} color="#2563eb" strokeWidth={2.3} />
         </View>
-        <AnimatedPressable
-          accessibilityRole="button"
-          onPress={onShowInstallGuide}
-          pressTone="secondary"
-          style={styles.installGuideReplayButton}
-        >
-          <Smartphone size={17} color="#172033" strokeWidth={2.3} />
-          <Text style={styles.installGuideReplayText}>重新查看加入主畫面教學</Text>
-          <ChevronRight size={17} color="#64748b" strokeWidth={2.3} />
-        </AnimatedPressable>
-        <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>每日目標</Text>
-          <Text style={styles.settingValue}>{progress.dailyTarget} words</Text>
-        </View>
-        <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>收藏單字</Text>
-          <Text style={styles.settingValue}>{stats.favorites}</Text>
-        </View>
-        <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>剩餘樣本</Text>
-          <Text style={styles.settingValue}>{stats.remaining}</Text>
+
+        <View style={[styles.settingOptionRow, themeStyles?.settingOptionRow]}>
+          <View style={[styles.settingOptionIcon, themeStyles?.settingsEntryIcon]}>
+            {darkMode ? <Sun size={19} color="#fbbf24" strokeWidth={2.3} /> : <Moon size={19} color="#2563eb" strokeWidth={2.3} />}
+          </View>
+          <View style={styles.flexOne}>
+            <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>深色模式</Text>
+            <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>
+              {darkMode ? '已切換成夜間閱讀介面' : '切換成夜間閱讀介面'}
+            </Text>
+          </View>
+          <AnimatedPressable
+            accessibilityLabel="切換深色模式"
+            accessibilityRole="button"
+            onPress={() => onThemeModeChange(darkMode ? 'light' : 'dark')}
+            pressTone="chip"
+            style={[styles.themeSwitchButton, darkMode && styles.themeSwitchButtonActive]}
+          >
+            <View style={[styles.themeSwitchDot, darkMode && styles.themeSwitchDotActive]} />
+            <Text style={[styles.themeSwitchText, darkMode && styles.themeSwitchTextActive]}>{darkMode ? '開啟' : '關閉'}</Text>
+          </AnimatedPressable>
         </View>
       </View>
 
@@ -2643,38 +2776,41 @@ function DeveloperVocabularyPanel({
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
 }) {
+  const themeStyles = useThemeStyles();
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+
   return (
-    <View style={styles.developerCard} testID="developer-vocabulary-panel">
+    <View style={[styles.developerCard, themeStyles?.developerCard]} testID="developer-vocabulary-panel">
       <View style={styles.rowBetween}>
         <View style={styles.flexOne}>
-          <Text style={styles.sectionTitle}>開發人員資料窗口</Text>
-          <Text style={styles.cardMeta}>{developerVocabulary ? '本機預覽啟用中' : '目前使用內建字庫'}</Text>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>開發人員資料窗口</Text>
+          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{developerVocabulary ? '本機預覽啟用中' : '目前使用內建字庫'}</Text>
         </View>
         <Database size={22} color="#2563eb" strokeWidth={2.3} />
       </View>
 
-      <Text style={styles.developerText}>
+      <Text style={[styles.developerText, themeStyles?.developerText]}>
         匯出目前字庫後，可以在外部修改例句與翻譯；匯入後會先套用在這台裝置，方便檢查正式更新前的效果。
       </Text>
 
-      <View style={styles.developerStats}>
+      <View style={[styles.developerStats, themeStyles?.developerStats]}>
         <View>
-          <Text style={styles.developerLabel}>目前字庫</Text>
-          <Text style={styles.developerValue}>{vocabularyCount} 筆</Text>
+          <Text style={[styles.developerLabel, themeStyles?.developerLabel]}>目前字庫</Text>
+          <Text style={[styles.developerValue, themeStyles?.developerValue]}>{vocabularyCount} 筆</Text>
         </View>
         <View>
-          <Text style={styles.developerLabel}>資料狀態</Text>
-          <Text style={styles.developerValue}>{developerVocabulary ? '本機預覽' : '內建版本'}</Text>
+          <Text style={[styles.developerLabel, themeStyles?.developerLabel]}>資料狀態</Text>
+          <Text style={[styles.developerValue, themeStyles?.developerValue]}>{developerVocabulary ? '本機預覽' : '內建版本'}</Text>
         </View>
       </View>
 
       {developerVocabulary && <Text style={styles.developerSummary}>{developerVocabulary.summary}</Text>}
-      <Text style={styles.developerMessage}>{developerMessage}</Text>
+      <Text style={[styles.developerMessage, themeStyles?.developerMessage]}>{developerMessage}</Text>
 
       <View style={styles.buttonRow}>
-        <AnimatedPressable accessibilityRole="button" onPress={onExportVocabulary} pressTone="secondary" style={styles.developerActionButton}>
-          <Download size={16} color="#172033" strokeWidth={2.3} />
-          <Text style={styles.developerActionText}>匯出 CSV</Text>
+        <AnimatedPressable accessibilityRole="button" onPress={onExportVocabulary} pressTone="secondary" style={[styles.developerActionButton, themeStyles?.developerActionButton]}>
+          <Download size={16} color={bodyIconColor} strokeWidth={2.3} />
+          <Text style={[styles.developerActionText, themeStyles?.developerActionText]}>匯出 CSV</Text>
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onImportVocabulary} pressTone="primary" style={styles.developerPrimaryButton}>
           <Upload size={16} color="#fff" strokeWidth={2.3} />
@@ -2697,10 +2833,12 @@ function DeveloperVocabularyPanel({
 }
 
 function StatCard({ label, tone, value }: { label: string; tone: 'blue' | 'green' | 'orange'; value: string }) {
+  const themeStyles = useThemeStyles();
+
   return (
-    <View style={[styles.statCard, styles[`${tone}Tint`]]}>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+    <View style={[styles.statCard, styles[`${tone}Tint`], themeStyles?.statCard]}>
+      <Text style={[styles.statValue, themeStyles?.statValue]}>{value}</Text>
+      <Text style={[styles.statLabel, themeStyles?.statLabel]}>{label}</Text>
     </View>
   );
 }
@@ -4223,6 +4361,91 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 16,
   },
+  profileInfoCard: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 14,
+    padding: 16,
+  },
+  learningMetricGrid: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  learningMetric: {
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    minHeight: 66,
+    padding: 10,
+  },
+  learningMetricLabel: {
+    color: '#64748b',
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  learningMetricValue: {
+    color: '#172033',
+    fontSize: 16,
+    fontWeight: '900',
+    marginTop: 6,
+  },
+  settingOptionRow: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    minHeight: 70,
+    padding: 12,
+  },
+  settingOptionIcon: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  themeSwitchButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    minHeight: 38,
+    paddingHorizontal: 10,
+  },
+  themeSwitchButtonActive: {
+    backgroundColor: '#172033',
+    borderColor: '#172033',
+  },
+  themeSwitchDot: {
+    backgroundColor: '#cbd5e1',
+    borderRadius: 99,
+    height: 9,
+    width: 9,
+  },
+  themeSwitchDotActive: {
+    backgroundColor: '#60a5fa',
+  },
+  themeSwitchText: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  themeSwitchTextActive: {
+    color: '#fff',
+  },
   settingsEntryButton: {
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -4409,6 +4632,417 @@ const styles = StyleSheet.create({
   },
   tabLabelActive: {
     color: '#172033',
+  },
+});
+
+const darkStyles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: '#020617',
+  },
+  appShell: {
+    backgroundColor: '#0f172a',
+  },
+  brand: {
+    color: '#f8fafc',
+  },
+  headerSubtext: {
+    color: '#94a3b8',
+  },
+  levelPill: {
+    backgroundColor: '#102a1f',
+    borderColor: '#166534',
+  },
+  levelText: {
+    color: '#86efac',
+  },
+  updateBanner: {
+    backgroundColor: '#0b1f3a',
+    borderBottomColor: '#1d4ed8',
+  },
+  updateText: {
+    color: '#bfdbfe',
+  },
+  tabBar: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  tabButtonActive: {
+    backgroundColor: '#2563eb',
+  },
+  tabLabel: {
+    color: '#94a3b8',
+  },
+  tabLabelActive: {
+    color: '#f8fafc',
+  },
+  hero: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  heroTitle: {
+    color: '#f8fafc',
+  },
+  heroText: {
+    color: '#cbd5e1',
+  },
+  ring: {
+    backgroundColor: '#0f172a',
+    borderColor: '#475569',
+  },
+  ringValue: {
+    color: '#f8fafc',
+  },
+  ringLabel: {
+    color: '#94a3b8',
+  },
+  progressCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  sectionTitle: {
+    color: '#f8fafc',
+  },
+  cardMeta: {
+    color: '#94a3b8',
+  },
+  progressTrack: {
+    backgroundColor: '#334155',
+  },
+  accountShortcut: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  accountShortcutText: {
+    color: '#e2e8f0',
+  },
+  statCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  statValue: {
+    color: '#f8fafc',
+  },
+  statLabel: {
+    color: '#94a3b8',
+  },
+  reviewStrip: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  reviewTitle: {
+    color: '#f8fafc',
+  },
+  reviewText: {
+    color: '#94a3b8',
+  },
+  emptyState: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  emptyTitle: {
+    color: '#f8fafc',
+  },
+  emptyText: {
+    color: '#94a3b8',
+  },
+  wordCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  bigWord: {
+    color: '#f8fafc',
+  },
+  pronunciation: {
+    color: '#94a3b8',
+  },
+  meaningBlock: {
+    borderTopColor: '#334155',
+  },
+  meaning: {
+    color: '#e2e8f0',
+  },
+  exampleBox: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  example: {
+    color: '#f8fafc',
+  },
+  exampleZh: {
+    color: '#cbd5e1',
+  },
+  foldedFilterCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  filterPanel: {
+    borderTopColor: '#334155',
+  },
+  filterSummaryTitle: {
+    color: '#f8fafc',
+  },
+  filterSummaryText: {
+    color: '#94a3b8',
+  },
+  filterSectionTitle: {
+    color: '#cbd5e1',
+  },
+  filterChip: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  letterChip: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  quizSetupCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  quizCountChip: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  quizCountText: {
+    color: '#e2e8f0',
+  },
+  quizCountMeta: {
+    color: '#94a3b8',
+  },
+  quizCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  quizOption: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  quizOptionText: {
+    color: '#e2e8f0',
+  },
+  resultCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  resultTitle: {
+    color: '#f8fafc',
+  },
+  quizScoreText: {
+    color: '#f8fafc',
+  },
+  quizExampleCard: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  quizExampleLabel: {
+    color: '#94a3b8',
+  },
+  resultText: {
+    color: '#cbd5e1',
+  },
+  nextButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  nextButtonText: {
+    color: '#e2e8f0',
+  },
+  libraryHeaderCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  libraryHeaderTitle: {
+    color: '#f8fafc',
+  },
+  libraryHeaderMeta: {
+    color: '#94a3b8',
+  },
+  libraryTopButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  libraryTopButtonText: {
+    color: '#e2e8f0',
+  },
+  searchBox: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  searchInput: {
+    color: '#f8fafc',
+  },
+  searchClearButton: {
+    backgroundColor: '#1f2937',
+  },
+  searchMetaBox: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  searchMetaText: {
+    color: '#bfdbfe',
+  },
+  resultCount: {
+    color: '#94a3b8',
+  },
+  libraryItem: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  libraryWord: {
+    color: '#f8fafc',
+  },
+  libraryMeaning: {
+    color: '#e2e8f0',
+  },
+  libraryExample: {
+    color: '#94a3b8',
+  },
+  statusText: {
+    color: '#94a3b8',
+  },
+  libraryDetailBack: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  libraryDetailBackText: {
+    color: '#e2e8f0',
+  },
+  libraryDetailPage: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  libraryDetailWord: {
+    color: '#f8fafc',
+  },
+  libraryDetailPronunciation: {
+    color: '#94a3b8',
+  },
+  libraryDetailSection: {
+    borderTopColor: '#334155',
+  },
+  libraryDetailLabel: {
+    color: '#94a3b8',
+  },
+  libraryDetailMeaning: {
+    color: '#f8fafc',
+  },
+  libraryDetailExampleCard: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  libraryDetailExample: {
+    color: '#f8fafc',
+  },
+  libraryDetailDivider: {
+    backgroundColor: '#334155',
+  },
+  libraryDetailExampleZh: {
+    color: '#cbd5e1',
+  },
+  profileCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  avatar: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  profileTitle: {
+    color: '#f8fafc',
+  },
+  profileText: {
+    color: '#cbd5e1',
+  },
+  accountCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  localOnlyBox: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  localOnlyTitle: {
+    color: '#f8fafc',
+  },
+  localOnlyText: {
+    color: '#94a3b8',
+  },
+  inputBox: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  accountInput: {
+    color: '#f8fafc',
+  },
+  outlineButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  outlineButtonText: {
+    color: '#e2e8f0',
+  },
+  settingsCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  profileInfoCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  learningMetric: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  learningMetricLabel: {
+    color: '#94a3b8',
+  },
+  learningMetricValue: {
+    color: '#f8fafc',
+  },
+  settingOptionRow: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  settingsEntryButton: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  settingsEntryIcon: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  settingsEntryTitle: {
+    color: '#f8fafc',
+  },
+  settingsEntryText: {
+    color: '#94a3b8',
+  },
+  developerCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  developerText: {
+    color: '#cbd5e1',
+  },
+  developerStats: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  developerLabel: {
+    color: '#94a3b8',
+  },
+  developerValue: {
+    color: '#f8fafc',
+  },
+  developerMessage: {
+    color: '#94a3b8',
+  },
+  developerActionButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  developerActionText: {
+    color: '#e2e8f0',
   },
 });
 

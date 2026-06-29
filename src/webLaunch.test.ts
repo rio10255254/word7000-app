@@ -140,10 +140,23 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain("type ProfilePanel = 'overview' | 'settings'");
+    expect(appSource).toContain('ProfileLearningExperiencePanel');
+    expect(appSource).toContain('ProfileTutorialPanel');
     expect(appSource).toContain('profile-settings-panel');
     expect(appSource).toContain('開啟設定');
     expect(appSource).toContain('返回我的');
     expect(appSource).toContain('App 設定');
+    expect(appSource).toContain('深色模式');
+    expect(appSource).toContain('word7000-theme-v1');
+    expect(appSource).toContain('onThemeModeChange');
     expect(appSource).toContain('DeveloperVocabularyPanel');
+  });
+
+  test('animates the launch progress bar instead of showing a static fill', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('launchProgressWidth');
+    expect(appSource).toContain('Animated.View style={[styles.launchBarFill');
+    expect(appSource).not.toContain('<View style={styles.launchBarFill} />');
   });
 });

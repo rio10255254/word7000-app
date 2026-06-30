@@ -197,6 +197,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("provider: 'google'");
     expect(appSource).toContain('signInWithOAuth');
     expect(appSource).toContain('authRedirectTo(getBrowserLocation())');
+    expect(appSource).toContain("prompt: 'select_account'");
     expect(appSource).toContain('使用 Google 快速登入');
     expect(appSource).toContain('Continue with Google');
     expect(appSource).toContain('Email 備用登入');

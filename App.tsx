@@ -1221,7 +1221,12 @@ export default function App() {
     const redirectTo = authRedirectTo(getBrowserLocation());
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
-      options: redirectTo ? { redirectTo } : undefined,
+      options: {
+        ...(redirectTo ? { redirectTo } : {}),
+        queryParams: {
+          prompt: 'select_account',
+        },
+      },
     });
 
     if (error) {

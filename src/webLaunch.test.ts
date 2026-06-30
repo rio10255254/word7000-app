@@ -336,13 +336,21 @@ describe('free web launch configuration', () => {
   test('animates word detail navigation in both directions', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
+    expect(appSource).toContain('libraryDetailBackdropMotionStyle');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
     expect(appSource).toContain('styles.libraryDetailOverlay');
+    expect(appSource).toContain('styles.libraryDetailBackdrop');
+    expect(appSource).toContain('styles.libraryDetailPanel');
+    expect(appSource).toContain('themeStyles?.libraryDetailBackdrop');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
     expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
     expect(appSource).toContain('function closeLibraryWordDetail()');
     expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
-    expect(appSource).toContain('easing: Easing.out(Easing.cubic),\n      toValue: 0');
+    expect(appSource).toContain('outputRange: [0.985, 1]');
+    expect(appSource).toContain('outputRange: [18, 0]');
+    expect(appSource).not.toContain('outputRange: [34, 0]');
+    expect(appSource).not.toContain('outputRange: [0.965, 1]');
+    expect(appSource).toContain('easing: Easing.in(Easing.cubic),\n      toValue: 0');
     expect(appSource).toContain('toValue: 0');
     expect(appSource).toContain('onBack={closeLibraryWordDetail}');
   });

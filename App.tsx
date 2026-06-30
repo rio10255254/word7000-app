@@ -628,19 +628,22 @@ export default function App() {
       ],
     };
   };
+  const libraryDetailBackdropMotionStyle = {
+    opacity: libraryDetailAnim,
+  };
   const libraryDetailPanelMotionStyle = {
     opacity: libraryDetailAnim,
     transform: [
       {
         translateX: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [34, 0],
+          outputRange: [18, 0],
         }),
       },
       {
         scale: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [0.965, 1],
+          outputRange: [0.985, 1],
         }),
       },
     ],
@@ -1127,7 +1130,7 @@ export default function App() {
   function closeLibraryWordDetail() {
     Animated.timing(libraryDetailAnim, {
       duration: interactionMotion.settingsPanelExitMs,
-      easing: Easing.out(Easing.cubic),
+      easing: Easing.in(Easing.cubic),
       toValue: 0,
       useNativeDriver: Platform.OS !== 'web',
     }).start(({ finished }) => {
@@ -1606,17 +1609,29 @@ export default function App() {
         {activeTab === 'library' && selectedLibraryWord && (
           <Animated.View
             pointerEvents={selectedLibraryWord ? 'auto' : 'none'}
-            style={[styles.libraryDetailOverlay, themeStyles?.libraryDetailOverlay, libraryDetailPanelMotionStyle]}
+            style={styles.libraryDetailOverlay}
           >
-            <ScrollView contentContainerStyle={styles.libraryDetailOverlayContent} showsVerticalScrollIndicator={false}>
-              <LibraryWordDetailView
-                progress={progress}
-                studyMode={studyMode}
-                word={selectedLibraryWord}
-                onBack={closeLibraryWordDetail}
-                onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
-              />
-            </ScrollView>
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.libraryDetailBackdrop,
+                themeStyles?.libraryDetailBackdrop,
+                libraryDetailBackdropMotionStyle,
+              ]}
+            />
+            <Animated.View
+              style={[styles.libraryDetailPanel, themeStyles?.libraryDetailPanel, libraryDetailPanelMotionStyle]}
+            >
+              <ScrollView contentContainerStyle={styles.libraryDetailOverlayContent} showsVerticalScrollIndicator={false}>
+                <LibraryWordDetailView
+                  progress={progress}
+                  studyMode={studyMode}
+                  word={selectedLibraryWord}
+                  onBack={closeLibraryWordDetail}
+                  onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
+                />
+              </ScrollView>
+            </Animated.View>
           </Animated.View>
         )}
 
@@ -5187,7 +5202,22 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   libraryDetailOverlay: {
-    backgroundColor: '#f8fafc',
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 50,
+  },
+  libraryDetailBackdrop: {
+    backgroundColor: 'rgba(248, 250, 252, 0.96)',
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  libraryDetailPanel: {
     bottom: 0,
     left: 0,
     paddingHorizontal: 18,
@@ -5195,7 +5225,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    zIndex: 50,
   },
   libraryDetailOverlayContent: {
     paddingBottom: 110,
@@ -6311,8 +6340,11 @@ const darkStyles = StyleSheet.create({
   libraryDetailPinyin: {
     color: '#93c5fd',
   },
-  libraryDetailOverlay: {
-    backgroundColor: '#0f172a',
+  libraryDetailBackdrop: {
+    backgroundColor: 'rgba(15, 23, 42, 0.96)',
+  },
+  libraryDetailPanel: {
+    backgroundColor: 'transparent',
   },
   libraryDetailSection: {
     borderTopColor: '#334155',

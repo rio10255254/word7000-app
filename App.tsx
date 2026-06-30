@@ -186,8 +186,8 @@ const modeCopy = {
   english: {
     brand: 'Word7000',
     subtitle: '每日輕學單字',
-    toggleTitle: '切到中文單字',
-    toggleText: '把整個 App 換成中文單字練習',
+    toggleTitle: 'Switch to Chinese words',
+    toggleText: 'Practice Chinese words with an English interface',
     overlayTitle: '英文單字模式',
     overlayText: '回到看英文、想中文意思',
     heroEyebrow: 'ENGLISH MODE',
@@ -205,8 +205,8 @@ const modeCopy = {
   chinese: {
     brand: 'Chinese7000',
     subtitle: 'Daily Chinese word practice',
-    toggleTitle: 'Switch back to English words',
-    toggleText: 'Return to the original English vocabulary app',
+    toggleTitle: '切到英文單字',
+    toggleText: '回到英文單字學習模式',
     overlayTitle: 'Chinese Word Mode',
     overlayText: 'Read Chinese first, then recall the English word',
     heroEyebrow: 'CHINESE MODE',

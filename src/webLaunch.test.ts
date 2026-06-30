@@ -201,8 +201,10 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain("type StudyMode = 'english' | 'chinese'");
     expect(appSource).toContain('word7000-study-mode-v1');
-    expect(appSource).toContain('切到中文單字');
-    expect(appSource).toContain('Switch back to English words');
+    expect(appSource).toContain('Switch to Chinese words');
+    expect(appSource).toContain('切到英文單字');
+    expect(appSource).not.toContain('切到中文單字');
+    expect(appSource).not.toContain('Switch back to English words');
     expect(appSource).toContain('ModeSwitchOverlay');
     expect(appSource).toContain('modeTransitionAnim');
     expect(appSource).toContain('accessibilityLabel={copy.toggleTitle}');
@@ -217,7 +219,8 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain("brand: 'Chinese7000'");
-    expect(appSource).toContain("toggleTitle: 'Switch back to English words'");
+    expect(appSource).toContain("toggleTitle: '切到英文單字'");
+    expect(appSource).toContain("toggleText: '回到英文單字學習模式'");
     expect(appSource).toContain("libraryTitle: 'Chinese Word Library'");
     expect(appSource).toContain("searchPlaceholder: 'Search Chinese, English words, examples, or translations'");
     expect(appSource).toContain("studyFilterTitle: 'Study Filters'");

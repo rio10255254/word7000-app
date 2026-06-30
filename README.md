@@ -28,6 +28,8 @@ EXPO_PUBLIC_SUPABASE_URL
 EXPO_PUBLIC_SUPABASE_ANON_KEY
 ```
 
+For Google sign-in setup, follow `ACCOUNT_GOOGLE_LOGIN.md`.
+
 ## Free Deployment
 
 Use Cloudflare Pages with GitHub:

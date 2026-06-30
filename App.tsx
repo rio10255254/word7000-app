@@ -101,6 +101,7 @@ import {
   loadFilterPreferences,
   saveFilterPreferences,
 } from './src/lib/filterPreferences';
+import { authRedirectTo } from './src/lib/authRedirect';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
@@ -301,6 +302,9 @@ const modeInterfaceCopy = {
     accountUnavailableTitle: '帳號登入尚未啟用',
     accountUnavailableText: '目前先用本機記憶；Cloudflare 設好 Supabase 後，這裡就能登入同步。',
     passwordPlaceholder: '密碼',
+    googleSignIn: '使用 Google 快速登入',
+    googleSignInHint: '同步收藏、複習和連續天數',
+    emailFallback: 'Email 備用登入',
     signIn: '登入',
     signUp: '註冊',
     signOut: '登出',
@@ -413,6 +417,9 @@ const modeInterfaceCopy = {
     accountUnavailableTitle: 'Account sign-in is not enabled yet',
     accountUnavailableText: 'Your progress is saved locally for now. After Supabase is connected on Cloudflare, sign-in sync will work here.',
     passwordPlaceholder: 'Password',
+    googleSignIn: 'Continue with Google',
+    googleSignInHint: 'Sync saved words, review, and streaks',
+    emailFallback: 'Email fallback',
     signIn: 'Sign In',
     signUp: 'Sign Up',
     signOut: 'Sign Out',
@@ -1191,6 +1198,47 @@ export default function App() {
     }));
   }
 
+  async function handleGoogleSignIn() {
+    if (!supabaseClient) {
+      setAccount((current) => ({
+        ...current,
+        status: 'local',
+        message: '本機記憶中',
+      }));
+      return;
+    }
+
+    setAccount((current) => ({
+      ...current,
+      busy: true,
+      status: 'loading',
+      message: '正在開啟 Google 登入',
+    }));
+
+    const redirectTo = authRedirectTo(getBrowserLocation());
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: redirectTo ? { redirectTo } : undefined,
+    });
+
+    if (error) {
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        status: 'error',
+        message: error.message,
+      }));
+      return;
+    }
+
+    setAccount((current) => ({
+      ...current,
+      busy: true,
+      status: 'loading',
+      message: '請完成 Google 登入',
+    }));
+  }
+
   async function handleSignUp() {
     if (!supabaseClient) {
       setAccount((current) => ({
@@ -1508,6 +1556,7 @@ export default function App() {
               onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
+              onGoogleSignIn={handleGoogleSignIn}
               onOpenSettings={() => setProfilePanel('settings')}
               onPanelSwap={onProfilePanelSwap}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
@@ -1819,6 +1868,14 @@ function getBrowserStorage(): StorageLike | undefined {
   }
 
   return (globalThis as { localStorage?: StorageLike }).localStorage;
+}
+
+function getBrowserLocation(): Location | undefined {
+  if (Platform.OS !== 'web') {
+    return undefined;
+  }
+
+  return (globalThis as { location?: Location }).location;
 }
 
 function downloadTextFile(fileName: string, text: string, type: string): boolean {
@@ -3259,6 +3316,7 @@ function ProfileView({
   onCloseSettings,
   onExportVocabulary,
   onImportVocabulary,
+  onGoogleSignIn,
   onOpenSettings,
   onPanelSwap,
   onPasswordChange,
@@ -3287,6 +3345,7 @@ function ProfileView({
   onCloseSettings: () => void;
   onEmailChange: (email: string) => void;
   onExportVocabulary: () => void;
+  onGoogleSignIn: () => void;
   onImportVocabulary: () => void;
   onOpenSettings: () => void;
   onPanelSwap: () => void;
@@ -3405,6 +3464,24 @@ function ProfileView({
                 <Text style={[styles.localOnlyText, themeStyles?.localOnlyText]}>{ui.accountUnavailableText}</Text>
               </View>
             )}
+            <AnimatedPressable
+              accessibilityLabel={ui.googleSignIn}
+              accessibilityRole="button"
+              disabled={!account.configured || account.busy}
+              onPress={onGoogleSignIn}
+              pressTone="primary"
+              style={[styles.googleButton, themeStyles?.googleButton, (!account.configured || account.busy) && styles.disabledButton]}
+            >
+              <View style={[styles.googleIconMark, themeStyles?.googleIconMark]}>
+                <LogIn size={18} color={bodyIconColor} strokeWidth={2.4} />
+              </View>
+              <View style={styles.flexOne}>
+                <Text style={[styles.googleButtonTitle, themeStyles?.googleButtonTitle]}>{ui.googleSignIn}</Text>
+                <Text style={[styles.googleButtonText, themeStyles?.googleButtonText]}>{ui.googleSignInHint}</Text>
+              </View>
+              <ChevronRight size={18} color={bodyIconColor} strokeWidth={2.4} />
+            </AnimatedPressable>
+            <Text style={[styles.emailFallbackLabel, themeStyles?.emailFallbackLabel]}>{ui.emailFallback}</Text>
             <View style={[styles.inputBox, themeStyles?.inputBox]}>
               <Mail size={17} color="#717987" strokeWidth={2.2} />
               <TextInput
@@ -3798,6 +3875,8 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
     同步中: 'Syncing',
     已保存到帳號: 'Saved to account',
     已登入: 'Signed in',
+    '正在開啟 Google 登入': 'Opening Google sign-in',
+    '請完成 Google 登入': 'Complete Google sign-in',
     建立帳號中: 'Creating account',
     請確認信箱後登入: 'Check your email, then sign in',
     'Email 和密碼至少 6 碼': 'Email and password need at least 6 characters',
@@ -5401,6 +5480,46 @@ const styles = StyleSheet.create({
     gap: 14,
     padding: 16,
   },
+  googleButton: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 11,
+    minHeight: 62,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  googleIconMark: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 38,
+    justifyContent: 'center',
+    width: 38,
+  },
+  googleButtonTitle: {
+    color: '#172033',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  googleButtonText: {
+    color: '#717987',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 17,
+    marginTop: 2,
+  },
+  emailFallbackLabel: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '900',
+    marginTop: 2,
+  },
   inputStack: {
     gap: 10,
   },
@@ -6234,6 +6353,23 @@ const darkStyles = StyleSheet.create({
   accountCard: {
     backgroundColor: '#111827',
     borderColor: '#334155',
+  },
+  googleButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  googleIconMark: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  googleButtonTitle: {
+    color: '#f8fafc',
+  },
+  googleButtonText: {
+    color: '#94a3b8',
+  },
+  emailFallbackLabel: {
+    color: '#94a3b8',
   },
   localOnlyBox: {
     backgroundColor: '#182033',

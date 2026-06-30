@@ -11,6 +11,7 @@ const appPath = path.join(process.cwd(), 'App.tsx');
 const prepareExportPath = path.join(process.cwd(), 'scripts', 'prepare-web-export.mjs');
 const rootAppleIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon.png');
 const rootApplePrecomposedIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon-precomposed.png');
+const accountSetupPath = path.join(process.cwd(), 'ACCOUNT_GOOGLE_LOGIN.md');
 
 describe('free web launch configuration', () => {
   test('keeps web-facing app identity ready for static hosting', () => {
@@ -186,6 +187,33 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('word7000-theme-v1');
     expect(appSource).toContain('onThemeModeChange');
     expect(appSource).toContain('DeveloperVocabularyPanel');
+  });
+
+  test('uses Google sign-in as the primary account entry for cloud sync', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("from './src/lib/authRedirect'");
+    expect(appSource).toContain('handleGoogleSignIn');
+    expect(appSource).toContain("provider: 'google'");
+    expect(appSource).toContain('signInWithOAuth');
+    expect(appSource).toContain('authRedirectTo(getBrowserLocation())');
+    expect(appSource).toContain('使用 Google 快速登入');
+    expect(appSource).toContain('Continue with Google');
+    expect(appSource).toContain('Email 備用登入');
+    expect(appSource).toContain('Email fallback');
+    expect(appSource).toContain('onGoogleSignIn={handleGoogleSignIn}');
+  });
+
+  test('documents the Google account setup needed after deployment', () => {
+    const setupGuide = fs.readFileSync(accountSetupPath, 'utf8');
+
+    expect(setupGuide).toContain('Supabase');
+    expect(setupGuide).toContain('Google');
+    expect(setupGuide).toContain('supabase/schema.sql');
+    expect(setupGuide).toContain('Redirect URLs');
+    expect(setupGuide).toContain('EXPO_PUBLIC_SUPABASE_URL');
+    expect(setupGuide).toContain('EXPO_PUBLIC_SUPABASE_ANON_KEY');
+    expect(setupGuide).toContain('Cloudflare Pages');
   });
 
   test('animates the launch progress bar instead of showing a static fill', () => {

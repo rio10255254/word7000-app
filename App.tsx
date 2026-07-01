@@ -126,7 +126,9 @@ type AccountState = {
 };
 type UpdateState = {
   available: boolean;
+  buttonText: string;
   countdownSeconds: number;
+  countdownText: string;
   detail: string;
   message: string;
   refresh: () => void;
@@ -147,28 +149,57 @@ const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_WINDOW_SIZE = 260;
 const LIBRARY_ANIMATED_ITEM_COUNT = 28;
 const quizQuestionCounts = [10, 20, 50] as const;
-const installGuideSteps = [
-  {
-    icon: 'safari',
-    title: '先用 Safari 開啟',
-    text: '在 iPhone 上用 Safari 打開 Word7000，這樣才能加入主畫面。',
-  },
-  {
-    icon: 'share',
-    title: '點下方分享',
-    text: '按 Safari 底部工具列中間的分享按鈕。',
-  },
-  {
-    icon: 'add',
-    title: '選「加入主畫面」',
-    text: '在選單往下找，點一下「加入主畫面」。',
-  },
-  {
-    icon: 'phone',
-    title: '完成後像 App 一樣使用',
-    text: '之後從手機桌面打開，就會是全螢幕 App 體驗。',
-  },
-] as const;
+type InstallGuideStep = {
+  icon: 'add' | 'phone' | 'safari' | 'share';
+  text: string;
+  title: string;
+};
+const installGuideStepsByMode: Record<StudyMode, readonly InstallGuideStep[]> = {
+  english: [
+    {
+      icon: 'safari',
+      title: '先用 Safari 開啟',
+      text: '在 iPhone 上用 Safari 打開 Word7000，這樣才能加入主畫面。',
+    },
+    {
+      icon: 'share',
+      title: '點下方分享',
+      text: '按 Safari 底部工具列中間的分享按鈕。',
+    },
+    {
+      icon: 'add',
+      title: '選「加入主畫面」',
+      text: '在選單往下找，點一下「加入主畫面」。',
+    },
+    {
+      icon: 'phone',
+      title: '完成後像 App 一樣使用',
+      text: '之後從手機桌面打開，就會是全螢幕 App 體驗。',
+    },
+  ],
+  chinese: [
+    {
+      icon: 'safari',
+      title: 'Open in Safari',
+      text: 'Open Word7000 in Safari on your iPhone before adding it to your Home Screen.',
+    },
+    {
+      icon: 'share',
+      title: 'Tap Share',
+      text: "Use the Share button in the center of Safari's bottom toolbar.",
+    },
+    {
+      icon: 'add',
+      title: 'Choose Add to Home Screen',
+      text: 'Scroll through the menu and tap Add to Home Screen.',
+    },
+    {
+      icon: 'phone',
+      title: 'Use it like an app',
+      text: 'After this, open it from your Home Screen for the full-screen app experience.',
+    },
+  ],
+};
 const initialProgress: ProgressState = {
   dailyTarget: 20,
   streak: 1,
@@ -200,7 +231,7 @@ const modeCopy = {
     toggleTitle: 'Switch to Chinese words',
     toggleText: 'Practice Chinese words with an English interface',
     overlayTitle: '英文單字模式',
-    overlayText: '回到看英文、想中文意思',
+    overlayText: '正在回到中文介面的英文單字 App',
     heroEyebrow: 'ENGLISH MODE',
     heroTitle: '今天 20 個剛剛好',
     heroText: '保持一小段節奏，把英文單字變成每天都做得到的事。',
@@ -217,7 +248,7 @@ const modeCopy = {
     brand: 'Chinese7000',
     subtitle: 'Daily Chinese word practice',
     toggleTitle: '切到英文單字',
-    toggleText: '回到英文單字學習模式',
+    toggleText: '回到中文介面的英文單字 App',
     overlayTitle: 'Chinese Word Mode',
     overlayText: 'Read Chinese first, then recall the English word',
     heroEyebrow: 'CHINESE MODE',
@@ -467,6 +498,54 @@ const modeInterfaceCopy = {
   },
 } as const;
 
+const systemCopy = {
+  english: {
+    developerInitial: '可匯出 CSV 修改例句，再匯入成這台裝置的預覽字庫。',
+    exportCsvSuccess: (count: number) => `已匯出 ${count} 筆字庫 CSV。`,
+    exportCsvUnavailable: '目前這個裝置不支援直接下載 CSV。',
+    importReading: '正在讀取匯入檔案...',
+    importUnsupported: '目前只有網頁版支援從檔案匯入字庫。',
+    importNoFile: '沒有選擇檔案。',
+    importReadFailed: '讀取檔案失敗，請確認檔案可以正常開啟。',
+    importApplied: (updated: number, added: number, total: number) => `已套用本機預覽：更新 ${updated} 筆，新增 ${added} 筆，目前共 ${total} 筆。`,
+    importAppliedWithErrors: (summary: string, count: number) => `${summary} 另有 ${count} 筆未套用。`,
+    clearPreview: '已清除本機預覽，現在使用內建 7000 字庫。',
+    updateTitle: '需要更新才能繼續使用',
+    updateDetail: '為了避免字庫、帳號同步或介面版本不同步，系統會自動更新到最新版。',
+    updateCountdown: (seconds: number) => `${seconds} 秒後自動更新`,
+    updateNow: '立即更新',
+    installGuide: {
+      closeAccessibility: '關閉加入主畫面教學',
+      dismiss: '我先自己操作',
+      done: '完成',
+      next: '下一步',
+    },
+  },
+  chinese: {
+    developerInitial: 'Export the CSV, edit examples externally, then import it as a local preview on this device.',
+    exportCsvSuccess: (count: number) => `Exported ${count} vocabulary rows as CSV.`,
+    exportCsvUnavailable: 'This device does not support direct CSV downloads yet.',
+    importReading: 'Reading the import file...',
+    importUnsupported: 'File import is currently supported only on the web version.',
+    importNoFile: 'No file was selected.',
+    importReadFailed: 'Could not read the file. Please make sure it opens correctly.',
+    importApplied: (updated: number, added: number, total: number) => `Local preview applied: ${updated} updated, ${added} added, ${total} rows total.`,
+    importAppliedWithErrors: (summary: string, count: number) => `${summary} ${count} rows were not applied.`,
+    clearPreview: 'Local preview cleared. The built-in 7000-word library is active again.',
+    updateTitle: 'Update required',
+    updateDetail: 'To keep the word library, account sync, and interface version aligned, the app will update automatically.',
+    updateCountdown: (seconds: number) => `Auto-updating in ${seconds}s`,
+    updateNow: 'Update now',
+    installGuide: {
+      closeAccessibility: 'Close home-screen tutorial',
+      dismiss: "I'll do this myself",
+      done: 'Done',
+      next: 'Next',
+    },
+  },
+} as const;
+type SystemCopy = (typeof systemCopy)[StudyMode];
+
 const levelFilters = buildLevelFilters(sampleWords);
 const alphabetFilters: FilterOption[] = [
   { id: 'all', label: '全部' },
@@ -539,8 +618,8 @@ export default function App() {
   const [developerVocabulary, setDeveloperVocabulary] = useState<DeveloperVocabularySnapshot | null>(() =>
     loadDeveloperVocabulary(getBrowserStorage()),
   );
-  const [developerVocabularyMessage, setDeveloperVocabularyMessage] = useState(
-    '可匯出 CSV 修改例句，再匯入成這台裝置的預覽字庫。',
+  const [developerVocabularyMessage, setDeveloperVocabularyMessage] = useState<string>(
+    () => systemCopy[studyMode].developerInitial,
   );
 
   const vocabularyWords = developerVocabulary?.words ?? sampleWords;
@@ -582,11 +661,13 @@ export default function App() {
     [activeFilter, activeInitial, activeLevel, activeSort, progress, searchQuery, vocabularyWords],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
-  const updateState = useAppUpdateCheck();
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
   const darkMode = themeMode === 'dark';
   const libraryDragIconColor = darkMode ? '#bfdbfe' : '#172033';
   const activeModeCopy = modeCopy[studyMode];
+  const activeSystemCopy = systemCopy[studyMode];
+  const activeInstallGuideSteps = installGuideStepsByMode[studyMode];
+  const updateState = useAppUpdateCheck(studyMode);
   const screenMotionStyle = {
     opacity: screenAnim,
     transform: [
@@ -736,6 +817,14 @@ export default function App() {
   useEffect(() => {
     saveStudyMode(getBrowserStorage(), studyMode);
   }, [studyMode]);
+
+  useEffect(() => {
+    setDeveloperVocabularyMessage((current) =>
+      current === systemCopy.english.developerInitial || current === systemCopy.chinese.developerInitial
+        ? activeSystemCopy.developerInitial
+        : current,
+    );
+  }, [activeSystemCopy.developerInitial]);
 
   useEffect(() => {
     saveFilterPreferences(getBrowserStorage(), {
@@ -1047,12 +1136,12 @@ export default function App() {
 
   function handleExportVocabulary() {
     const downloaded = downloadTextFile(`word7000-vocabulary-${today}.csv`, exportWordsToCsv(vocabularyWords), 'text/csv;charset=utf-8');
-    setDeveloperVocabularyMessage(downloaded ? `已匯出 ${vocabularyWords.length} 筆字庫 CSV。` : '目前這個裝置不支援直接下載 CSV。');
+    setDeveloperVocabularyMessage(downloaded ? activeSystemCopy.exportCsvSuccess(vocabularyWords.length) : activeSystemCopy.exportCsvUnavailable);
   }
 
   async function handleImportVocabulary() {
-    setDeveloperVocabularyMessage('正在讀取匯入檔案...');
-    const picked = await pickVocabularyTextFile();
+    setDeveloperVocabularyMessage(activeSystemCopy.importReading);
+    const picked = await pickVocabularyTextFile(activeSystemCopy);
     if (!picked.ok) {
       setDeveloperVocabularyMessage(picked.message);
       return;
@@ -1060,17 +1149,17 @@ export default function App() {
 
     const parsed = parseVocabularyImport(picked.text, picked.fileName);
     if (!parsed.ok) {
-      setDeveloperVocabularyMessage(parsed.errors.join(' '));
+      setDeveloperVocabularyMessage(parsed.errors.map((message) => developerVocabularyMessageForMode(message, studyMode)).join(' '));
       return;
     }
 
     const applied = applyVocabularyImportRows(vocabularyWords, parsed.rows);
     if (applied.updated + applied.added === 0 && applied.errors.length > 0) {
-      setDeveloperVocabularyMessage(applied.errors.slice(0, 3).join(' '));
+      setDeveloperVocabularyMessage(applied.errors.slice(0, 3).map((message) => developerVocabularyMessageForMode(message, studyMode)).join(' '));
       return;
     }
 
-    const summary = `已套用本機預覽：更新 ${applied.updated} 筆，新增 ${applied.added} 筆，目前共 ${applied.words.length} 筆。`;
+    const summary = activeSystemCopy.importApplied(applied.updated, applied.added, applied.words.length);
     const snapshot = {
       importedAt: new Date().toISOString(),
       summary,
@@ -1078,13 +1167,13 @@ export default function App() {
     };
     setDeveloperVocabulary(snapshot);
     saveDeveloperVocabulary(getBrowserStorage(), snapshot);
-    setDeveloperVocabularyMessage(applied.errors.length > 0 ? `${summary} 另有 ${applied.errors.length} 筆未套用。` : summary);
+    setDeveloperVocabularyMessage(applied.errors.length > 0 ? activeSystemCopy.importAppliedWithErrors(summary, applied.errors.length) : summary);
   }
 
   function handleClearDeveloperVocabulary() {
     clearDeveloperVocabulary(getBrowserStorage());
     setDeveloperVocabulary(null);
-    setDeveloperVocabularyMessage('已清除本機預覽，現在使用內建 7000 字庫。');
+    setDeveloperVocabularyMessage(activeSystemCopy.clearPreview);
   }
 
   function handleQuizAnswer(correct: boolean) {
@@ -1217,12 +1306,12 @@ export default function App() {
   }
 
   function nextInstallGuideStep() {
-    if (installGuideStep >= installGuideSteps.length - 1) {
+    if (installGuideStep >= activeInstallGuideSteps.length - 1) {
       dismissInstallGuide();
       return;
     }
 
-    setInstallGuideStep((current) => Math.min(current + 1, installGuideSteps.length - 1));
+    setInstallGuideStep((current) => Math.min(current + 1, activeInstallGuideSteps.length - 1));
   }
 
   async function activateSignedInUser(user: SupabaseUser) {
@@ -1732,8 +1821,8 @@ export default function App() {
               <View style={styles.launchDot} />
               <Text style={styles.launchIconText}>W7</Text>
             </View>
-            <Text style={styles.launchTitle}>Word7000</Text>
-            <Text style={styles.launchText}>每日輕學單字</Text>
+            <Text style={styles.launchTitle}>{activeModeCopy.brand}</Text>
+            <Text style={styles.launchText}>{activeModeCopy.subtitle}</Text>
             <View style={styles.launchBar}>
               <Animated.View style={[styles.launchBarFill, { width: launchProgressWidth }]} />
             </View>
@@ -1741,8 +1830,10 @@ export default function App() {
         )}
         {showInstallGuide && (
           <InstallGuideOverlay
+            copy={activeSystemCopy.installGuide}
             opacity={installGuideOpacity}
             step={installGuideStep}
+            steps={activeInstallGuideSteps}
             translateY={installGuideTranslateY}
             onDismiss={dismissInstallGuide}
             onNext={nextInstallGuideStep}
@@ -1757,7 +1848,8 @@ export default function App() {
         )}
         {updateState.available && (
           <UpdateRequiredOverlay
-            countdownSeconds={updateState.countdownSeconds}
+            buttonText={updateState.buttonText}
+            countdownText={updateState.countdownText}
             detail={updateState.detail}
             message={updateState.message}
             onRefresh={updateState.refresh}
@@ -1788,10 +1880,11 @@ function useWebServiceWorker() {
   }, []);
 }
 
-function useAppUpdateCheck(): UpdateState {
+function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   const [available, setAvailable] = useState(false);
   const [countdownSeconds, setCountdownSeconds] = useState(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
+  const copy = systemCopy[studyMode];
 
   const refresh = useCallback(() => {
     const storage = getBrowserStorage();
@@ -1873,9 +1966,11 @@ function useAppUpdateCheck(): UpdateState {
 
   return {
     available,
+    buttonText: copy.updateNow,
     countdownSeconds,
-    detail: '為了避免字庫、帳號同步或介面版本不同步，系統會自動更新到最新版。',
-    message: '需要更新才能繼續使用',
+    countdownText: copy.updateCountdown(countdownSeconds),
+    detail: copy.updateDetail,
+    message: copy.updateTitle,
     refresh,
   };
 }
@@ -2001,10 +2096,12 @@ function downloadTextFile(fileName: string, text: string, type: string): boolean
   return true;
 }
 
-function pickVocabularyTextFile(): Promise<{ fileName: string; ok: true; text: string } | { message: string; ok: false }> {
+function pickVocabularyTextFile(copy: Pick<SystemCopy, 'importNoFile' | 'importReadFailed' | 'importUnsupported'>): Promise<
+  { fileName: string; ok: true; text: string } | { message: string; ok: false }
+> {
   const documentRef = (globalThis as { document?: Document }).document;
   if (Platform.OS !== 'web' || !documentRef) {
-    return Promise.resolve({ message: '目前只有網頁版支援從檔案匯入字庫。', ok: false });
+    return Promise.resolve({ message: copy.importUnsupported, ok: false });
   }
 
   return new Promise((resolve) => {
@@ -2016,14 +2113,14 @@ function pickVocabularyTextFile(): Promise<{ fileName: string; ok: true; text: s
       const file = input.files?.[0];
       input.remove();
       if (!file) {
-        resolve({ message: '沒有選擇檔案。', ok: false });
+        resolve({ message: copy.importNoFile, ok: false });
         return;
       }
 
       try {
         resolve({ fileName: file.name, ok: true, text: await file.text() });
       } catch {
-        resolve({ message: '讀取檔案失敗，請確認檔案可以正常開啟。', ok: false });
+        resolve({ message: copy.importReadFailed, ok: false });
       }
     };
     documentRef.body.appendChild(input);
@@ -2241,12 +2338,14 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
 }
 
 function UpdateRequiredOverlay({
-  countdownSeconds,
+  buttonText,
+  countdownText,
   detail,
   message,
   onRefresh,
 }: {
-  countdownSeconds: number;
+  buttonText: string;
+  countdownText: string;
   detail: string;
   message: string;
   onRefresh: () => void;
@@ -2263,12 +2362,10 @@ function UpdateRequiredOverlay({
         </View>
         <Text style={[styles.updateRequiredTitle, themeStyles?.updateRequiredTitle]}>{message}</Text>
         <Text style={[styles.updateRequiredText, themeStyles?.updateRequiredText]}>{detail}</Text>
-        <Text style={[styles.updateRequiredCountdown, themeStyles?.updateRequiredCountdown]}>
-          {countdownSeconds} 秒後自動更新
-        </Text>
+        <Text style={[styles.updateRequiredCountdown, themeStyles?.updateRequiredCountdown]}>{countdownText}</Text>
         <AnimatedPressable accessibilityRole="button" onPress={onRefresh} pressTone="primary" style={styles.updateRequiredButton}>
           <RotateCcw size={17} color="#fff" strokeWidth={2.4} />
-          <Text style={styles.updateRequiredButtonText}>立即更新</Text>
+          <Text style={styles.updateRequiredButtonText}>{buttonText}</Text>
         </AnimatedPressable>
       </View>
     </View>
@@ -2321,20 +2418,24 @@ function ModeSwitchOverlay({
 }
 
 function InstallGuideOverlay({
+  copy,
   opacity,
   step,
+  steps,
   translateY,
   onDismiss,
   onNext,
 }: {
+  copy: SystemCopy['installGuide'];
   opacity: Animated.Value;
   step: number;
+  steps: readonly InstallGuideStep[];
   translateY: Animated.AnimatedInterpolation<number>;
   onDismiss: () => void;
   onNext: () => void;
 }) {
-  const current = installGuideSteps[step];
-  const isLastStep = step === installGuideSteps.length - 1;
+  const current = steps[step] ?? steps[0];
+  const isLastStep = step >= steps.length - 1;
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
   const installGuideIconColor = darkMode ? '#60a5fa' : '#2563eb';
@@ -2380,7 +2481,7 @@ function InstallGuideOverlay({
           <Text style={styles.installGuideLogoText}>W7</Text>
         </View>
         <AnimatedPressable
-          accessibilityLabel="關閉加入主畫面教學"
+          accessibilityLabel={copy.closeAccessibility}
           accessibilityRole="button"
           onPress={onDismiss}
           pressTone="icon"
@@ -2393,7 +2494,7 @@ function InstallGuideOverlay({
       <View style={[styles.installGuideCard, themeStyles?.installGuideCard]}>
         <View style={[styles.installGuideStepPill, themeStyles?.installGuideStepPill]}>
           <Text style={[styles.installGuideStepText, themeStyles?.installGuideStepText]}>
-            {step + 1} / {installGuideSteps.length}
+            {step + 1} / {steps.length}
           </Text>
         </View>
         <Animated.View style={[styles.installGuideIconWrap, themeStyles?.installGuideIconWrap, stepMotionStyle]}>
@@ -2427,7 +2528,7 @@ function InstallGuideOverlay({
         <View style={[styles.installGuidePreview, themeStyles?.installGuidePreview]}>
           <View style={[styles.installGuideBrowserBar, themeStyles?.installGuideBrowserBar]} />
           <View style={styles.installGuidePreviewRow}>
-            {installGuideSteps.map((item, index) => (
+            {steps.map((item, index) => (
               <Animated.View
                 key={item.title}
                 style={[
@@ -2447,17 +2548,17 @@ function InstallGuideOverlay({
       </View>
 
       <View style={styles.installGuideDots}>
-        {installGuideSteps.map((item, index) => (
+        {steps.map((item, index) => (
           <View key={item.title} style={[styles.installGuideDot, themeStyles?.installGuideDot, index === step && styles.installGuideDotActive]} />
         ))}
       </View>
 
       <View style={styles.installGuideActions}>
         <AnimatedPressable accessibilityRole="button" onPress={onDismiss} pressTone="secondary" style={[styles.installGuideSecondary, themeStyles?.installGuideSecondary]}>
-          <Text style={[styles.installGuideSecondaryText, themeStyles?.installGuideSecondaryText]}>我先自己操作</Text>
+          <Text style={[styles.installGuideSecondaryText, themeStyles?.installGuideSecondaryText]}>{copy.dismiss}</Text>
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={[styles.installGuidePrimary, themeStyles?.installGuidePrimary]}>
-          <Text style={styles.installGuidePrimaryText}>{isLastStep ? '完成' : '下一步'}</Text>
+          <Text style={styles.installGuidePrimaryText}>{isLastStep ? copy.done : copy.next}</Text>
           <ChevronRight size={18} color="#fff" strokeWidth={2.5} />
         </AnimatedPressable>
       </View>
@@ -2465,7 +2566,7 @@ function InstallGuideOverlay({
   );
 }
 
-function InstallGuideStepIcon({ color, icon }: { color: string; icon: (typeof installGuideSteps)[number]['icon'] }) {
+function InstallGuideStepIcon({ color, icon }: { color: string; icon: InstallGuideStep['icon'] }) {
   if (icon === 'safari') {
     return <Compass size={56} color={color} strokeWidth={2.1} />;
   }
@@ -3997,6 +4098,36 @@ function initialLabel(initial: string, studyMode: StudyMode = 'english'): string
 function sortLabel(sort: LibrarySort, studyMode: StudyMode = 'english'): string {
   const ui = modeInterfaceCopy[studyMode];
   return sort === 'alphabetical' ? ui.sortAlphabetical : ui.sortDefault;
+}
+
+function developerVocabularyMessageForMode(message: string, studyMode: StudyMode): string {
+  if (studyMode !== 'chinese') {
+    return message;
+  }
+
+  const staticMessages: Record<string, string> = {
+    '匯入檔案是空的。': 'The import file is empty.',
+    'JSON 需要是陣列，或包含 words 陣列。': 'JSON must be an array or include a words array.',
+    'JSON 格式無法讀取。': 'Could not read the JSON format.',
+    'CSV 至少需要標題列和一筆資料。': 'CSV needs a header row and at least one data row.',
+    'CSV 需要 word 或 id 欄位，才能對應要修改的單字。': 'CSV needs a word or id column so rows can be matched.',
+  };
+  if (staticMessages[message]) {
+    return staticMessages[message];
+  }
+
+  const displayRowName = (rowName: string) => rowName.replace(/^第 (\d+) 筆$/, 'row $1');
+  const missingFields = message.match(/^(.+) 不是既有單字，也缺少新增單字需要的完整欄位。$/);
+  if (missingFields) {
+    return `${displayRowName(missingFields[1])} is not an existing word and is missing required fields for a new word.`;
+  }
+
+  const duplicateRow = message.match(/^(.+) 的 id 或單字重複。$/);
+  if (duplicateRow) {
+    return `${displayRowName(duplicateRow[1])} has a duplicate id or word.`;
+  }
+
+  return message;
 }
 
 function accountMessageForMode(message: string, studyMode: StudyMode): string {

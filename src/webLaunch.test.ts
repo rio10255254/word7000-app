@@ -91,6 +91,12 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('需要更新才能繼續使用');
     expect(appSource).toContain('秒後自動更新');
     expect(appSource).toContain('立即更新');
+    expect(appSource).toContain('Update required');
+    expect(appSource).toContain('Auto-updating in');
+    expect(appSource).toContain('Update now');
+    expect(appSource).toContain('useAppUpdateCheck(studyMode)');
+    expect(appSource).toContain('countdownText: copy.updateCountdown(countdownSeconds)');
+    expect(appSource).toContain('countdownText={updateState.countdownText}');
     expect(appSource).toContain('setTimeout(refresh, UPDATE_AUTO_REFRESH_MS)');
   });
 
@@ -108,6 +114,14 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('install-guide-overlay');
     expect(appSource).toContain('installGuideStepProgress');
     expect(appSource).toContain('重新查看加入主畫面教學');
+    expect(appSource).toContain('Open in Safari');
+    expect(appSource).toContain('Tap Share');
+    expect(appSource).toContain('Choose Add to Home Screen');
+    expect(appSource).toContain("I'll do this myself");
+    expect(appSource).toContain('Close home-screen tutorial');
+    expect(appSource).toContain('const activeInstallGuideSteps = installGuideStepsByMode[studyMode];');
+    expect(appSource).toContain('steps={activeInstallGuideSteps}');
+    expect(appSource).toContain('copy={activeSystemCopy.installGuide}');
   });
 
   test('includes quiz session setup with selectable question counts', () => {
@@ -175,11 +189,16 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('開發人員資料窗口');
+    expect(appSource).toContain('Developer Data Window');
     expect(appSource).toContain('developer-vocabulary-panel');
     expect(appSource).toContain('exportWordsToCsv');
     expect(appSource).toContain('parseVocabularyImport');
     expect(appSource).toContain('applyVocabularyImportRows');
     expect(appSource).toContain('清除本機預覽');
+    expect(appSource).toContain('activeSystemCopy.exportCsvSuccess');
+    expect(appSource).toContain('activeSystemCopy.importReading');
+    expect(appSource).toContain('developerVocabularyMessageForMode');
+    expect(appSource).toContain('The import file is empty.');
   });
 
   test('opens app settings from the profile page before showing developer tools', () => {
@@ -279,12 +298,15 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain("brand: 'Chinese7000'");
     expect(appSource).toContain("toggleTitle: '切到英文單字'");
-    expect(appSource).toContain("toggleText: '回到英文單字學習模式'");
+    expect(appSource).toContain("toggleText: '回到中文介面的英文單字 App'");
     expect(appSource).toContain("libraryTitle: 'Chinese Word Library'");
     expect(appSource).toContain("searchPlaceholder: 'Search Chinese, English words, examples, or translations'");
     expect(appSource).toContain("studyFilterTitle: 'Study Filters'");
     expect(appSource).toContain("quizFilterTitle: 'Quiz Filters'");
     expect(appSource).toContain("questionBankUnit: 'Chinese words'");
+    expect(appSource).toContain('<Text style={styles.launchTitle}>{activeModeCopy.brand}</Text>');
+    expect(appSource).toContain('<Text style={styles.launchText}>{activeModeCopy.subtitle}</Text>');
+    expect(appSource).toContain('const activeSystemCopy = systemCopy[studyMode];');
     expect(appSource).toContain('modeInterfaceCopy');
     expect(appSource).toContain('styles.modeSwitchBackdrop');
     expect(appSource).toContain('styles.modeSwitchPanel');

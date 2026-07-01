@@ -816,6 +816,7 @@ export default function App() {
     outputRange: [24, 0],
   });
   const librarySliderVisible = activeTab === 'library' && !selectedLibraryWord && libraryWords.length > LIBRARY_WINDOW_SIZE;
+  const librarySliderActive = librarySliderDragging;
   const librarySliderWordIndex = wordIndexFromLibraryScroll(
     libraryWindowStart,
     scrollY,
@@ -831,13 +832,31 @@ export default function App() {
     sliderTrackHeight,
     LIBRARY_SLIDER_THUMB_HEIGHT,
   );
+  const libraryDragSliderMotionStyle: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          transitionDuration: `${librarySliderActive ? 150 : 210}ms`,
+          transitionProperty: 'width, right, opacity, background-color, border-color, box-shadow',
+          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          willChange: 'width, right, opacity',
+        }
+      : undefined;
+  const libraryDragTrackMotionStyle: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          transitionDuration: `${librarySliderActive ? 120 : 190}ms`,
+          transitionProperty: 'width, opacity, background-color',
+          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          willChange: 'width, opacity',
+        }
+      : undefined;
   const libraryDragThumbMotionStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
       ? {
-          transitionDuration: `${librarySliderDragging ? 70 : 140}ms`,
-          transitionProperty: 'transform',
+          transitionDuration: `${librarySliderActive ? 70 : 180}ms`,
+          transitionProperty: 'transform, width, opacity, background-color, border-color',
           transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          willChange: 'transform',
+          willChange: 'transform, width, opacity',
         }
       : undefined;
   const librarySliderResponder = useMemo(
@@ -1946,20 +1965,38 @@ export default function App() {
               <View
                 {...librarySliderResponder.panHandlers}
                 onLayout={(event) => setSliderTrackHeight(event.nativeEvent.layout.height)}
-                style={[styles.libraryDragSlider, themeStyles?.libraryDragSlider]}
+                style={[
+                  styles.libraryDragSlider,
+                  themeStyles?.libraryDragSlider,
+                  librarySliderActive ? styles.libraryDragSliderActive : styles.libraryDragSliderCollapsed,
+                  librarySliderActive ? themeStyles?.libraryDragSliderActive : themeStyles?.libraryDragSliderCollapsed,
+                  libraryDragSliderMotionStyle,
+                ]}
                 testID="library-drag-slider"
               >
-                <View style={[styles.libraryDragTrack, themeStyles?.libraryDragTrack]} />
+                <View
+                  style={[
+                    styles.libraryDragTrack,
+                    themeStyles?.libraryDragTrack,
+                    librarySliderActive ? styles.libraryDragTrackActive : styles.libraryDragTrackCollapsed,
+                    librarySliderActive ? themeStyles?.libraryDragTrackActive : themeStyles?.libraryDragTrackCollapsed,
+                    libraryDragTrackMotionStyle,
+                  ]}
+                />
                 <View
                   style={[
                     styles.libraryDragThumb,
                     themeStyles?.libraryDragThumb,
+                    librarySliderActive ? styles.libraryDragThumbActive : styles.libraryDragThumbCollapsed,
+                    librarySliderActive ? themeStyles?.libraryDragThumbActive : themeStyles?.libraryDragThumbCollapsed,
                     libraryDragThumbMotionStyle,
                     { transform: [{ translateY: libraryThumbOffset }] },
                   ]}
                   testID="library-drag-thumb"
                 >
-                  <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
+                  {librarySliderActive && (
+                    <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
+                  )}
                 </View>
               </View>
             )}
@@ -5985,22 +6022,35 @@ const styles = StyleSheet.create({
   libraryDragSlider: {
     alignItems: 'center',
     alignSelf: 'flex-end',
-    backgroundColor: '#ffffff',
-    borderColor: '#cbd5e1',
     borderRadius: 8,
     borderWidth: 1,
-    elevation: 5,
     height: 500,
     paddingHorizontal: 4,
     paddingVertical: 5,
     position: 'absolute',
-    right: 0,
     shadowColor: '#172033',
     shadowOffset: { height: 2, width: 0 },
+    top: 100,
+  },
+  libraryDragSliderActive: {
+    backgroundColor: '#ffffff',
+    borderColor: '#cbd5e1',
+    elevation: 5,
+    opacity: 1,
+    right: 0,
     shadowOpacity: 0.14,
     shadowRadius: 7,
-    top: 100,
     width: 34,
+  },
+  libraryDragSliderCollapsed: {
+    backgroundColor: 'rgba(37, 99, 235, 0.16)',
+    borderColor: 'rgba(37, 99, 235, 0.14)',
+    elevation: 1,
+    opacity: 0.76,
+    right: -2,
+    shadowOpacity: 0.04,
+    shadowRadius: 3,
+    width: 14,
   },
   libraryDragTrack: {
     backgroundColor: '#e5e7eb',
@@ -6008,7 +6058,15 @@ const styles = StyleSheet.create({
     bottom: 8,
     position: 'absolute',
     top: 8,
+  },
+  libraryDragTrackActive: {
+    opacity: 1,
     width: 4,
+  },
+  libraryDragTrackCollapsed: {
+    backgroundColor: '#2563eb',
+    opacity: 0.58,
+    width: 2,
   },
   libraryDragThumb: {
     alignItems: 'center',
@@ -6020,7 +6078,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 5,
+  },
+  libraryDragThumbActive: {
+    opacity: 1,
     width: 24,
+  },
+  libraryDragThumbCollapsed: {
+    backgroundColor: '#2563eb',
+    borderColor: '#bfdbfe',
+    borderRadius: 99,
+    opacity: 0.82,
+    width: 8,
   },
   profileCard: {
     alignItems: 'center',
@@ -6847,12 +6915,36 @@ const darkStyles = StyleSheet.create({
     borderColor: '#334155',
     shadowColor: '#000',
   },
+  libraryDragSliderActive: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+    shadowColor: '#000',
+  },
+  libraryDragSliderCollapsed: {
+    backgroundColor: 'rgba(96, 165, 250, 0.2)',
+    borderColor: 'rgba(96, 165, 250, 0.2)',
+    shadowColor: '#000',
+  },
   libraryDragTrack: {
     backgroundColor: '#334155',
+  },
+  libraryDragTrackActive: {
+    backgroundColor: '#334155',
+  },
+  libraryDragTrackCollapsed: {
+    backgroundColor: '#60a5fa',
   },
   libraryDragThumb: {
     backgroundColor: '#0b1f3a',
     borderColor: '#3b82f6',
+  },
+  libraryDragThumbActive: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#3b82f6',
+  },
+  libraryDragThumbCollapsed: {
+    backgroundColor: '#60a5fa',
+    borderColor: '#93c5fd',
   },
   libraryHeaderCard: {
     backgroundColor: '#111827',

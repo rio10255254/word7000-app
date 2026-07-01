@@ -499,4 +499,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('transitionTimingFunction:');
     expect(appSource).not.toContain('appScrollRef.current?.scrollTo({ y: 0, animated: false });\n    setScrollY(0);\n  }\n\n  function returnLibraryToTop');
   });
+
+  test('keeps the library drag slider tucked away until touch dragging', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('librarySliderActive');
+    expect(appSource).toContain('libraryDragSliderMotionStyle');
+    expect(appSource).toContain('styles.libraryDragSliderCollapsed');
+    expect(appSource).toContain('styles.libraryDragSliderActive');
+    expect(appSource).toContain('styles.libraryDragTrackCollapsed');
+    expect(appSource).toContain('styles.libraryDragTrackActive');
+    expect(appSource).toContain('styles.libraryDragThumbCollapsed');
+    expect(appSource).toContain('styles.libraryDragThumbActive');
+    expect(appSource).toContain('{librarySliderActive && (');
+  });
 });

@@ -564,14 +564,21 @@ function cleanMeaning(value = '') {
 function meaningHead(value = '') {
   const head = cleanText(value)
     .split(/[；;,，、]/)[0]
-    ?.replace(/^[的地得\s]+/g, '')
-    .replace(/[的地得\s]+$/g, '')
+    ?.trim()
     .replace(/[^\u4e00-\u9fffA-Za-z\s-]/g, '')
     .trim();
   return head || '這個概念';
 }
 
-function wordKind(pos, word) {
+function zhAttributive(value) {
+  return value.endsWith('的') ? value : `${value}的`;
+}
+
+function zhAdverbial(value) {
+  return value.endsWith('地') ? value : `${value}地`;
+}
+
+function wordKind(pos, word, meaningZh = '') {
   const value = pos.toLowerCase();
   const tokens = value.split('/').map((item) => item.trim());
   const first = tokens[0] ?? '';
@@ -593,7 +600,7 @@ function wordKind(pos, word) {
   }
   if (first.includes('n')) {
     const canBeAdjective = tokens.some((token) => token === 'a' || token.includes('adj'));
-    if (canBeAdjective && looksAdjectival(word)) {
+    if (canBeAdjective && looksAdjectival(word) && meaningLooksAdjectival(meaningZh)) {
       return 'adjective';
     }
     return 'noun';
@@ -616,7 +623,7 @@ function generatedExample(row, word, partOfSpeechValue, meaningZh, index) {
     return fixed;
   }
 
-  const kind = wordKind(partOfSpeechValue, word);
+  const kind = wordKind(partOfSpeechValue, word, meaningZh);
   const zhHead = meaningHead(meaningZh);
   const definition = cleanText(row.definition ?? '');
   const profile = semanticProfile(word, meaningZh, definition, partOfSpeechValue);
@@ -644,32 +651,43 @@ function generatedExample(row, word, partOfSpeechValue, meaningZh, index) {
   return functionExample(word, zhHead, profile, index);
 }
 
-function semanticProfile(word, meaningZh, definition, pos) {
-  const text = `${word} ${meaningZh} ${definition} ${pos}`.toLowerCase();
-  const has = (...terms) => terms.some((term) => text.includes(term.toLowerCase()));
+function semanticProfile(word, meaningZh, _definition, pos) {
+  const primaryMeaning = meaningHead(meaningZh);
+  const text = `${word} ${primaryMeaning} ${pos}`.toLowerCase();
+  const has = (...terms) => terms.some((term) => hasSemanticTerm(text, term));
 
-  if (/[人者員師]($|[；,，、\s])/.test(meaningZh) || /^(translator|teacher|worker|specialist|student|doctor|nurse)$/.test(word)) {
-    return 'person';
+  if (
+    /[人者員師商夫]$/.test(primaryMeaning) ||
+    /(少年|選民|間諜)/.test(primaryMeaning) ||
+    (primaryMeaning.endsWith('家') && !['國家', '家'].includes(primaryMeaning)) ||
+    /^(translator|teacher|worker|specialist|student|doctor|nurse)$/.test(word)
+  ) {
+    if (!/(殺人|罪惡|罪行)/.test(primaryMeaning)) {
+      return 'person';
+    }
   }
-  if (has('城市', '國家', '地區', '地方', '房間', 'place', 'country', 'city', 'area', 'room')) {
+  if (has('城市', '國家', '地區', '地方', '房間', '電影院', '教堂', '車站', '劇院', 'place', 'country', 'city', 'area', 'room', 'cinema', 'church', 'station', 'theater')) {
     return 'place';
   }
   if (has('公司', '政府', '組織', '學校', 'team', 'company', 'government', 'organization')) {
     return 'organization';
   }
-  if (has('時間', '日期', '年', '月', 'day', 'time', 'period', 'season')) {
+  if (has('時間', '日期', '星期', '月份', '年度', '下午', '午後', 'day', 'time', 'period', 'season', 'afternoon')) {
     return 'time';
+  }
+  if (has('腹', '肚', '脊椎', '背骨', '骨', '牙', '齒', '眼', '耳', '鼻', 'body', 'belly', 'spine', 'bone', 'tooth', 'eye', 'ear')) {
+    return 'body';
   }
   if (has('病', '痛', '傷', '醫', 'disease', 'pain', 'injury', 'medical')) {
     return 'health';
   }
-  if (has('食', '飯', '飲', '肉', '茶', 'food', 'drink', 'meal', 'fruit')) {
+  if (has('食物', '飯', '飲料', '肉', '茶', '水果', 'food', 'drink', 'meal', 'fruit')) {
     return 'food';
   }
   if (has('水', '河', '海', '山', '雨', '風', 'tree', 'river', 'water', 'weather', 'plant')) {
     return 'nature';
   }
-  if (has('車', '船', '飛機', 'train', 'car', 'ship', 'aircraft', 'vehicle')) {
+  if (has('汽車', '車輛', '火車', '船', '飛機', 'train', 'car', 'ship', 'aircraft', 'vehicle')) {
     return 'vehicle';
   }
   if (has('工具', '機器', '設備', 'instrument', 'machine', 'device', 'tool')) {
@@ -681,7 +699,7 @@ function semanticProfile(word, meaningZh, definition, pos) {
   if (has('情緒', '恐懼', '愛', '怒', 'sad', 'happy', 'fear', 'emotion')) {
     return 'emotion';
   }
-  if (has('說', '講', '問', '寫', '信', '話', 'speech', 'message', 'letter', 'write')) {
+  if (has('說話', '講話', '問題', '信件', '訊息', '演說', 'speech', 'message', 'letter', 'write')) {
     return 'communication';
   }
   if (has('學', '科學', '藝術', '政治', '法律', 'field', 'science', 'art', 'law')) {
@@ -714,8 +732,31 @@ function semanticProfile(word, meaningZh, definition, pos) {
   return 'general';
 }
 
+function hasSemanticTerm(text, term) {
+  const normalized = term.toLowerCase();
+  if (/^[a-z][a-z\s-]*$/.test(normalized)) {
+    const escaped = escapeRegExp(normalized).replace(/\\ /g, '\\s+');
+    return new RegExp(`(^|[^a-z])${escaped}([^a-z]|$)`, 'i').test(text);
+  }
+
+  return text.includes(normalized);
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function looksAdjectival(word) {
-  return /(able|ible|al|ant|ary|ent|ful|ic|ive|less|ory|ous|some|y)$/.test(word);
+  return /(able|ible|al|ant|ary|ent|ern|ful|ic|ive|less|ory|ous|some|y)$/.test(word);
+}
+
+function meaningLooksAdjectival(value = '') {
+  const head = meaningHead(value);
+  return (
+    /的$/.test(head) ||
+    /^(可|不|無|非|很|最)/.test(head) ||
+    /(必要|重要|嚴重|簡單|困難|清楚|明顯|相同|不同|可能|自然|私人|個人|正式|普通|特殊|主要|完整|正確|錯誤|新鮮|便宜|昂貴|危險|安全|明亮|柔軟|乾燥|頻繁|理想|實際|巨大的?)$/.test(head)
+  );
 }
 
 function nounExample(word, zhHead, profile, index) {
@@ -727,48 +768,58 @@ function nounExample(word, zhHead, profile, index) {
   const zhEvent = pick(zhEvents, word, index + 5);
   const time = pick(contextTimes, word, index + 7);
   const zhTime = pick(zhTimes, word, index + 7);
+  const manner = pick(['briefly', 'carefully', 'clearly', 'openly', 'quietly', 'together'], word, index + 9);
+  const zhManner = pick(['簡短地', '仔細地', '清楚地', '坦率地', '安靜地', '一起'], word, index + 9);
+  const quality = pick(contextQualities, word, index + 11);
+  const zhQuality = pick(zhQualities, word, index + 11);
+  const zhTopic = `關於${zhHead}這方面`;
   const article = articleFor(word);
 
   const templates = {
     person: [
-      [`The ${word} answered questions after the ${event}.`, `那位${zhHead}在${zhEvent}後回答問題。`],
-      [`${capitalize(article)}${word} helped the ${actor} finish the ${object}.`, `一位${zhHead}幫${zhActor}完成${zhObject}。`],
-      [`The ${word} arrived before ${time}.`, `那位${zhHead}在${zhTime}前抵達。`],
+      [`The ${word} spoke with the ${actor} before ${time}.`, `那位${zhHead}在${zhTime}前和${zhActor}說話。`],
+      [`${capitalize(article)}${word} joined the ${event} on time.`, `一位${zhHead}準時參加了${zhEvent}。`],
+      [`The ${word} worked carefully with the ${actor}.`, `那位${zhHead}仔細地和${zhActor}合作。`],
     ],
     place: [
-      [`The ${word} was quiet after the ${event}.`, `那個${zhHead}在${zhEvent}後很安靜。`],
+      [`The ${actor} found the ${word} without trouble.`, `${zhActor}順利找到了那個${zhHead}。`],
       [`The ${actor} visited the ${word} before ${time}.`, `${zhActor}在${zhTime}前拜訪了那個${zhHead}。`],
-      [`A map near the ${object} marked the ${word}.`, `${zhObject}旁的地圖標出了${zhHead}。`],
+      [`The road to the ${word} was quiet before ${time}.`, `通往${zhHead}的路在${zhTime}前很安靜。`],
     ],
     organization: [
-      [`The ${word} announced a new ${object}.`, `那個${zhHead}公布了新的${zhObject}。`],
+      [`The ${word} held a meeting this week.`, `那個${zhHead}這週開了一場會議。`],
       [`The ${actor} contacted the ${word} after the ${event}.`, `${zhActor}在${zhEvent}後聯絡了那個${zhHead}。`],
-      [`The ${word} changed its plan before ${time}.`, `那個${zhHead}在${zhTime}前改變了計畫。`],
+      [`The ${word} updated its plan before ${time}.`, `那個${zhHead}在${zhTime}前更新了計畫。`],
     ],
     time: [
-      [`The ${word} passed faster than expected during the ${event}.`, `那段${zhHead}在${zhEvent}中過得比預期快。`],
-      [`We saved the ${word} for the final ${event}.`, `我們把那段${zhHead}留給最後的${zhEvent}。`],
-      [`The ${actor} checked the ${word} before ${time}.`, `${zhActor}在${zhTime}前確認了${zhHead}。`],
+      [`${capitalize(word)} felt unusually busy after the ${event}.`, `${zhEvent}後的${zhHead}感覺特別忙。`],
+      [`We talked about ${word} during the ${event}.`, `我們在${zhEvent}期間談到${zhHead}。`],
+      [`The ${actor} marked ${word} on the calendar.`, `${zhActor}把${zhHead}標在行事曆上。`],
     ],
     health: [
-      [`The doctor asked about the ${word} during the ${event}.`, `醫生在${zhEvent}時詢問了${zhHead}。`],
+      [`The doctor discussed ${word} with the family.`, `醫生和家人討論了${zhHead}。`],
       [`The ${word} made the ${event} difficult after ${time}.`, `${zhHead}讓${zhTime}後的${zhEvent}變得困難。`],
-      [`Early care helped reduce the ${word} before ${time}.`, `早期照護幫助在${zhTime}前減少${zhHead}。`],
+      [`Early care can reduce the risk of ${word}.`, `早期照護可以降低${zhHead}的風險。`],
+    ],
+    body: [
+      [`The doctor checked his ${word}.`, `醫生檢查了他的${zhHead}。`],
+      [`She felt pain in her ${word} after the fall.`, `她跌倒後${zhHead}感到疼痛。`],
+      [`He protected his ${word} during the game.`, `他在比賽中保護自己的${zhHead}。`],
     ],
     food: [
-      [`The kitchen smelled of ${word} before the ${event}.`, `${zhEvent}前廚房有${zhHead}的味道。`],
-      [`She put the ${word} on a clean plate near the ${object}.`, `她把${zhHead}放在${zhObject}旁的乾淨盤子上。`],
-      [`The ${word} tasted fresh after the ${event}.`, `${zhEvent}後，${zhHead}吃起來很新鮮。`],
+      [`The ${word} was served before dinner.`, `${zhHead}在晚餐前端上來。`],
+      [`She put the ${word} on a clean plate.`, `她把${zhHead}放在乾淨的盤子上。`],
+      [`The ${word} smelled good in the kitchen.`, `${zhHead}在廚房裡聞起來很香。`],
     ],
     nature: [
-      [`The ${word} changed after the ${event}.`, `${zhHead}在${zhEvent}後改變了。`],
-      [`The ${actor} photographed the ${word} at sunrise.`, `${zhActor}在日出時拍下${zhHead}。`],
-      [`The ${word} became a sign of the season near the ${object}.`, `${zhHead}成了${zhObject}附近的季節象徵。`],
+      [`The ${word} looked beautiful before ${time}.`, `${zhHead}在${zhTime}前看起來很美。`],
+      [`We walked near the ${word} after the ${event}.`, `我們在${zhEvent}後到${zhHead}附近散步。`],
+      [`The ${word} was easy to see near the ${object}.`, `${zhHead}在${zhObject}附近很容易看見。`],
     ],
     vehicle: [
       [`The ${word} stopped near the ${object} before ${time}.`, `${zhHead}在${zhTime}前停在${zhObject}附近。`],
       [`The ${actor} repaired the ${word} before the trip.`, `${zhActor}在旅程前修好了${zhHead}。`],
-      [`Passengers waited beside the ${word} after the ${event}.`, `乘客在${zhEvent}後於${zhHead}旁等待。`],
+      [`The ${actor} boarded the ${word} before ${time}.`, `${zhActor}在${zhTime}前登上了${zhHead}。`],
     ],
     tool: [
       [`The ${actor} used the ${word} to finish the ${object}.`, `${zhActor}用${zhHead}完成${zhObject}。`],
@@ -776,9 +827,9 @@ function nounExample(word, zhHead, profile, index) {
       [`She cleaned the ${word} after the ${event}.`, `她在${zhEvent}後清理了${zhHead}。`],
     ],
     money: [
-      [`The ${word} covered the cost of the ${object}.`, `${zhHead}支付了${zhObject}的費用。`],
+      [`The ${word} was higher than expected.`, `${zhHead}比預期更高。`],
       [`The ${actor} checked the ${word} before signing.`, `${zhActor}在簽名前確認了${zhHead}。`],
-      [`A small ${word} changed the final price.`, `一小筆${zhHead}改變了最後價格。`],
+      [`A small ${object} change affected the ${word}.`, `一個小小的${zhObject}變動影響了${zhHead}。`],
     ],
     emotion: [
       [`The ${word} faded after the honest talk.`, `坦白談話後，${zhHead}慢慢消退。`],
@@ -786,17 +837,17 @@ function nounExample(word, zhHead, profile, index) {
       [`The ${actor} noticed the ${word} in his voice.`, `${zhActor}注意到他聲音裡的${zhHead}。`],
     ],
     communication: [
-      [`The ${word} reached the office before ${time}.`, `${zhHead}在${zhTime}前送到辦公室。`],
+      [`The ${word} was clear during the ${event}.`, `${zhHead}在${zhEvent}中很清楚。`],
       [`The ${actor} saved the ${word} for later.`, `${zhActor}把${zhHead}留到之後。`],
       [`A short ${word} ended the confusion during the ${event}.`, `一段簡短的${zhHead}在${zhEvent}中結束了混亂。`],
     ],
     field: [
-      [`Students studied ${word} during the ${event}.`, `學生在${zhEvent}中學習${zhHead}。`],
-      [`The ${actor} connected ${word} with daily life.`, `${zhActor}把${zhHead}和日常生活連起來。`],
-      [`A new ${object} made ${word} easier to discuss before ${time}.`, `新的${zhObject}讓${zhHead}在${zhTime}前更容易被討論。`],
+      [`Students explored ${word} during the ${event}.`, `學生在${zhEvent}中探索${zhHead}。`],
+      [`The ${actor} linked ${word} to daily life.`, `${zhActor}把${zhHead}和日常生活連起來。`],
+      [`A short ${event} discussion made ${word} easier to understand.`, `簡短的${zhEvent}討論讓${zhHead}更容易理解。`],
     ],
     material: [
-      [`The table was made of ${word}.`, `那張桌子是用${zhHead}做的。`],
+      [`The ${object} was made of ${word}.`, `${zhObject}是用${zhHead}做的。`],
       [`The ${actor} chose ${word} for the new design.`, `${zhActor}為新設計選了${zhHead}。`],
       [`The ${word} felt smooth under the light.`, `${zhHead}在燈光下摸起來很光滑。`],
     ],
@@ -808,13 +859,14 @@ function nounExample(word, zhHead, profile, index) {
     method: [
       [`The ${actor} chose this ${word} for the ${object}.`, `${zhActor}為${zhObject}選了這個${zhHead}。`],
       [`A clear ${word} kept the team organized.`, `清楚的${zhHead}讓團隊保持有條理。`],
-      [`The ${word} changed after the ${event}.`, `${zhHead}在${zhEvent}後改變了。`],
+      [`This ${word} helped guide the next step.`, `這個${zhHead}幫助引導下一步。`],
     ],
     general: [
-      [`The ${actor} gave a clear example of ${word} during the ${event}.`, `${zhActor}在${zhEvent}中舉了一個關於${zhHead}的清楚例子。`],
-      [`We discussed ${word} in the ${event} before ${time}.`, `我們在${zhTime}前的${zhEvent}中討論了${zhHead}。`],
-      [`This ${object} includes ${article}${word} for the ${event}.`, `這份${zhObject}為${zhEvent}包含了${zhHead}。`],
-      [`The ${actor} asked about ${word} before ${time}.`, `${zhActor}在${zhTime}前問到了${zhHead}。`],
+      [`The ${actor} prepared a short report on ${word} before ${time}.`, `${zhActor}在${zhTime}前準備了一份${zhTopic}的短報告。`],
+      [`The ${actor} led a class discussion about ${word} after the ${event}.`, `${zhActor}在${zhEvent}後帶領全班討論${zhHead}。`],
+      [`The ${actor} explained ${word} during class before ${time}.`, `${zhActor}在${zhTime}前的課堂上解釋了${zhHead}。`],
+      [`The ${actor} wrote a short note about ${word} after the ${event}.`, `${zhActor}在${zhEvent}後寫了一段${zhTopic}的短筆記。`],
+      [`The ${actor} gave a brief talk about ${word} before ${time}.`, `${zhActor}在${zhTime}前做了一段${zhTopic}的簡短分享。`],
     ],
   };
 
@@ -822,6 +874,26 @@ function nounExample(word, zhHead, profile, index) {
 }
 
 function verbExample(word, zhHead, profile, pos, index) {
+  const fixedVerbs = new Map([
+    ['attend', ['She will attend the meeting tomorrow.', '她明天會參加會議。']],
+    ['submit', ['Please submit the form by Friday.', '請在星期五前提交表格。']],
+    ['marry', ['They plan to marry next spring.', '他們計畫明年春天結婚。']],
+    ['prosper', ['Small businesses can prosper with support.', '小企業有了支持就能興盛。']],
+    ['forget', ['Do not forget your keys.', '不要忘記你的鑰匙。']],
+    ['listen', ['Please listen to the question carefully.', '請仔細聽這個問題。']],
+    ['protect', ['We must protect the river from pollution.', '我們必須保護河流免受污染。']],
+    ['deliver', ['The driver will deliver the package today.', '司機今天會送包裹。']],
+    ['divide', ['Please divide the cake into six pieces.', '請把蛋糕分成六塊。']],
+    ['except', ['Everyone came except Tom.', '除了湯姆以外，大家都來了。']],
+    ['pray', ['They pray before dinner.', '他們晚餐前祈禱。']],
+    ['sharpen', ['Please sharpen this pencil.', '請削尖這支鉛筆。']],
+    ['extend', ['They plan to extend the deadline.', '他們計畫延長期限。']],
+  ]);
+  const fixed = fixedVerbs.get(word);
+  if (fixed) {
+    return fixed;
+  }
+
   const actor = pick(contextActors, word, index);
   const zhActor = pick(zhActors, word, index);
   const object = pick(contextObjects, word, index + 2);
@@ -832,7 +904,7 @@ function verbExample(word, zhHead, profile, pos, index) {
   const zhEvent = pick(zhEvents, word, index + 6);
   const quality = pick(contextQualities, word, index + 8);
   const zhQuality = pick(zhQualities, word, index + 8);
-  const intransitive = /\bvi\b/i.test(pos);
+  const intransitive = /\bvi\b/i.test(pos) && !/\bvt\b/i.test(pos);
 
   const templates = {
     communication: [
@@ -842,13 +914,13 @@ function verbExample(word, zhHead, profile, pos, index) {
     ],
     motion: [
       [`The ${actor} will ${word} before ${time}.`, `${zhActor}會在${zhTime}前${zhHead}。`],
-      [`The bus may ${word} near the ${object} before ${time}.`, `公車可能會在${zhTime}前於${zhObject}附近${zhHead}。`],
-      [`We watched the crowd ${word} down the street.`, `我們看著人群沿街${zhHead}。`],
+      [`People began to ${word} near the station.`, `人們開始在車站附近${zhHead}。`],
+      [`We watched the crowd ${word} across the street.`, `我們看著人群穿過街道${zhHead}。`],
     ],
     change: [
-      [`The plan may ${word} after the review.`, `計畫可能會在檢查後${zhHead}。`],
+      [`The numbers may ${word} over time.`, `數字可能會隨時間${zhHead}。`],
       [`Small choices can ${word} the final result.`, `小選擇可能會${zhHead}最後結果。`],
-      [`The market began to ${word} before summer.`, `市場在夏天前開始${zhHead}。`],
+      [`The price began to ${word} before summer.`, `價格在夏天前開始${zhHead}。`],
     ],
     create: [
       [`The ${actor} will ${word} a new ${object}.`, `${zhActor}會${zhHead}新的${zhObject}。`],
@@ -868,14 +940,14 @@ function verbExample(word, zhHead, profile, pos, index) {
     general: intransitive
       ? [
           [`The ${actor} may ${word} before ${time}.`, `${zhActor}可能會在${zhTime}前${zhHead}。`],
-          [`The ${actor} will ${word} after the ${event}.`, `${zhActor}會在${zhEvent}後${zhHead}。`],
-          [`The ${quality} began to ${word} during the ${event}.`, `${zhQuality}在${zhEvent}期間開始${zhHead}。`],
+          [`The ${actor} will ${word} during the ${event}.`, `${zhActor}會在${zhEvent}期間${zhHead}。`],
+          [`The ${actor} began to ${word} during the ${event}.`, `${zhActor}在${zhEvent}期間開始${zhHead}。`],
         ]
       : [
-          [`They tried to ${word} it before ${time}.`, `他們試著在${zhTime}前${zhHead}它。`],
-          [`Please ${word} it when you are ready for the ${event}.`, `準備好參加${zhEvent}時，請${zhHead}它。`],
-          [`We need to ${word} it carefully before ${time}.`, `我們需要在${zhTime}前仔細${zhHead}它。`],
-          [`The ${actor} learned how to ${word} it after the ${event}.`, `${zhActor}在${zhEvent}後學會如何${zhHead}它。`],
+          [`They tried to ${word} the ${object} before ${time}.`, `他們試著在${zhTime}前${zhHead}${zhObject}。`],
+          [`Please ${word} the ${object} when you are ready.`, `準備好時，請${zhHead}${zhObject}。`],
+          [`We need to ${word} the ${object} carefully before ${time}.`, `我們需要在${zhTime}前仔細${zhHead}${zhObject}。`],
+          [`The ${event} helped us ${word} the ${object} more clearly.`, `${zhEvent}幫助我們更清楚地${zhHead}${zhObject}。`],
         ],
   };
 
@@ -883,6 +955,7 @@ function verbExample(word, zhHead, profile, pos, index) {
 }
 
 function adjectiveExample(word, zhHead, profile, index) {
+  const zhAdj = zhAttributive(zhHead);
   const quality = pick(contextQualities, word, index);
   const zhQuality = pick(zhQualities, word, index);
   const object = pick(contextObjects, word, index + 2);
@@ -897,30 +970,30 @@ function adjectiveExample(word, zhHead, profile, index) {
 
   const templates = {
     emotion: [
-      [`The ${word} child waited near the door.`, `那個${zhHead}的孩子在門邊等待。`],
-      [`Her ${word} voice made everyone pause.`, `她${zhHead}的聲音讓大家停了下來。`],
-      [`${capitalize(article)}${word} look crossed his face.`, `他臉上露出${zhHead}的表情。`],
+      [`The ${word} child waited near the door.`, `那個${zhAdj}孩子在門邊等待。`],
+      [`Her ${word} voice made everyone pause.`, `她${zhAdj}聲音讓大家停了下來。`],
+      [`${capitalize(article)}${word} look crossed his face.`, `他臉上露出${zhAdj}表情。`],
     ],
     place: [
-      [`The ${word} road led to a small village.`, `那條${zhHead}的路通往小村莊。`],
-      [`${capitalize(article)}${word} room gave us space to work.`, `${zhHead}的房間讓我們有空間工作。`],
-      [`The ${actor} chose ${article}${word} area for the event.`, `${zhActor}為活動選了${zhHead}的地區。`],
+      [`The ${word} road led to a small village.`, `那條${zhAdj}路通往小村莊。`],
+      [`${capitalize(article)}${word} room gave us space to work.`, `${zhAdj}房間讓我們有空間工作。`],
+      [`The ${actor} chose ${article}${word} area for the event.`, `${zhActor}為活動選了${zhAdj}地區。`],
     ],
     time: [
-      [`The ${word} meeting ended before lunch.`, `${zhHead}的會議在午餐前結束。`],
-      [`${capitalize(article)}${word} schedule helped the team plan ahead.`, `${zhHead}的時程幫助團隊提前安排。`],
-      [`The ${word} change surprised the office.`, `${zhHead}的變化讓辦公室很驚訝。`],
+      [`The ${word} meeting ended before lunch.`, `${zhAdj}會議在午餐前結束。`],
+      [`${capitalize(article)}${word} schedule helped the team plan ahead.`, `${zhAdj}時程幫助團隊提前安排。`],
+      [`The ${word} change surprised the office.`, `${zhAdj}變化讓辦公室很驚訝。`],
     ],
     material: [
-      [`The ${word} surface reflected the light.`, `${zhHead}的表面反射了光線。`],
-      [`${capitalize(article)}${word} frame held the picture in place.`, `${zhHead}的框架固定住照片。`],
-      [`The ${object} used ${article}${word} finish.`, `${zhObject}用了${zhHead}的表面處理。`],
+      [`The ${word} surface reflected the light.`, `${zhAdj}表面反射了光線。`],
+      [`${capitalize(article)}${word} frame held the picture in place.`, `${zhAdj}框架固定住照片。`],
+      [`The ${object} used ${article}${word} finish.`, `${zhObject}用了${zhAdj}表面處理。`],
     ],
     general: [
-      [`The ${word} ${quality} was easy to notice during the ${event}.`, `${zhEvent}中，${zhHead}的${zhQuality}很容易注意到。`],
-      [`She gave ${article}${word} ${quality} before ${time}.`, `她在${zhTime}前給了一個${zhHead}的${zhQuality}。`],
-      [`The ${word} rule helped the ${actor} during the ${event}.`, `${zhHead}的規則在${zhEvent}中幫助了${zhActor}。`],
-      [`${capitalize(article)}${word} choice changed the ${object}.`, `一個${zhHead}的選擇改變了${zhObject}。`],
+      [`The ${actor} reviewed the ${word} case after the ${event}.`, `${zhActor}在${zhEvent}後檢視了這個${zhAdj}案例。`],
+      [`${capitalize(article)}${word} situation required extra care before ${time}.`, `一個${zhAdj}情況在${zhTime}前需要額外處理。`],
+      [`The ${actor} chose ${article}${word} method before ${time}.`, `${zhActor}在${zhTime}前選了一個${zhAdj}方法。`],
+      [`The ${word} plan helped the team move forward after the ${event}.`, `${zhAdj}計畫在${zhEvent}後幫助團隊往前推進。`],
     ],
   };
 
@@ -928,6 +1001,18 @@ function adjectiveExample(word, zhHead, profile, index) {
 }
 
 function adverbExample(word, zhHead, index) {
+  const fixedAdverbs = new Map([
+    ['admittedly', ['Admittedly, the task is difficult.', '不可否認，這項任務很困難。']],
+    ['furthermore', ['Furthermore, the plan saves time.', '此外，這個計畫能節省時間。']],
+    ['particularly', ['This part is particularly important.', '這一部分特別重要。']],
+    ['extremely', ['The weather was extremely cold.', '天氣非常寒冷。']],
+    ['plainly', ['She explained the rule plainly.', '她清楚地解釋了規則。']],
+  ]);
+  const fixed = fixedAdverbs.get(word);
+  if (fixed) {
+    return fixed;
+  }
+
   const actor = pick(contextActors, word, index);
   const zhActor = pick(zhActors, word, index);
   const event = pick(contextEvents, word, index + 2);
@@ -936,12 +1021,13 @@ function adverbExample(word, zhHead, index) {
   const zhObject = pick(zhObjects, word, index + 4);
   const quality = pick(contextQualities, word, index + 6);
   const zhQuality = pick(zhQualities, word, index + 6);
+  const zhAdv = zhAdverbial(zhHead);
   const qualityArticle = articleFor(quality);
   const templates = [
-    [`The ${actor} answered ${word} after the ${event}.`, `${zhActor}在${zhEvent}後${zhHead}地回答。`],
-    [`She moved ${word} through the ${object}.`, `她${zhHead}地穿過${zhObject}。`],
-    [`The team finished the ${object} ${word}.`, `團隊${zhHead}地完成了${zhObject}。`],
-    [`He listened ${word} before making ${qualityArticle}${quality}.`, `他在做${zhQuality}前${zhHead}地聆聽。`],
+    [`The ${actor} answered ${word} during the ${event}.`, `${zhActor}在${zhEvent}中${zhAdv}回答。`],
+    [`The ${actor} worked ${word} through the ${object}.`, `${zhActor}${zhAdv}完成了${zhObject}。`],
+    [`The team finished the ${object} ${word}.`, `團隊${zhAdv}完成了${zhObject}。`],
+    [`He listened ${word} before making ${qualityArticle}${quality}.`, `他在做${zhQuality}前${zhAdv}聆聽。`],
   ];
 
   return pick(templates, word, index);
@@ -953,7 +1039,7 @@ function numberExample(word, zhHead, index) {
   const templates = [
     [`The team prepared ${word} copies of the ${object}.`, `團隊準備了${zhHead}份${zhObject}。`],
     [`She waited ${word} minutes before calling again.`, `她等了${zhHead}分鐘才再打電話。`],
-    [`The ${word} answer was the easiest to explain.`, `第${zhHead}個答案最容易說明。`],
+    [`The room had ${word} seats for guests.`, `房間裡有${zhHead}個座位給客人。`],
   ];
 
   return pick(templates, word, index);
@@ -987,6 +1073,52 @@ function functionExample(word, zhHead, profile, index) {
     'within',
   ]);
   const conjunctions = new Set(['albeit', 'unless', 'whereas', 'whilst']);
+  const fixedFunctionExamples = new Map([
+    ['neither', ['Neither answer is correct.', '兩個答案都不正確。']],
+    ['either', ['Either option is fine.', '兩個選項都可以。']],
+    ['twice', ['I called twice yesterday.', '我昨天打了兩次電話。']],
+    ['these', ['These books belong on this shelf.', '這些書應該放在這個書架上。']],
+    ['those', ['Those shoes are still wet.', '那些鞋子還是濕的。']],
+    ['sometimes', ['Sometimes the bus arrives early.', '公車有時會提早到。']],
+    ['maybe', ['Maybe we should leave early.', '也許我們應該早點離開。']],
+    ['myself', ['I made the cake myself.', '我自己做了這個蛋糕。']],
+    ['whatever', ['Choose whatever you like.', '選你喜歡的任何東西。']],
+    ['nor', ['He did not call, nor did he write.', '他沒有打電話，也沒有寫信。']],
+    ['anyway', ['I was tired, but I went anyway.', '我很累，但還是去了。']],
+    ['plus', ['Two plus three equals five.', '二加三等於五。']],
+    ['furthermore', ['Furthermore, the plan saves time.', '此外，這個計畫能節省時間。']],
+    ['so', ['It was late, so we went home.', '天晚了，所以我們回家。']],
+    ['somehow', ['Somehow, we found the right address.', '不知怎麼地，我們找到了正確地址。']],
+    ['elsewhere', ['They decided to stay elsewhere.', '他們決定住在別處。']],
+    ['anywhere', ['You can sit anywhere.', '你可以坐在任何地方。']],
+    ['apart', ['The two houses are far apart.', '那兩棟房子相距很遠。']],
+    ['everywhere', ['Flowers were everywhere.', '到處都是花。']],
+    ['whenever', ['Call me whenever you arrive.', '你什麼時候到，就什麼時候打給我。']],
+    ['nowhere', ['The keys were nowhere to be found.', '鑰匙到處都找不到。']],
+    ['till', ['Wait here till I return.', '在這裡等到我回來。']],
+    ['afterwards', ['We had dinner afterwards.', '之後我們吃了晚餐。']],
+    ['ought', ['You ought to rest.', '你應該休息。']],
+    ['forth', ['He stepped forth to speak.', '他走上前發言。']],
+    ['besides', ['Besides tea, we also served coffee.', '除了茶，我們也供應咖啡。']],
+    ['forever', ['I will remember this day forever.', '我會永遠記得這一天。']],
+    ['hence', ['The road was closed; hence, we turned back.', '道路封閉，因此我們折返。']],
+    ['hers', ['The blue bag is hers.', '那個藍色包包是她的。']],
+    ['wherever', ['Sit wherever you like.', '你喜歡坐哪裡就坐哪裡。']],
+    ['backwards', ['He walked backwards slowly.', '他慢慢倒著走。']],
+    ['thereafter', ['Thereafter, the rules changed.', '從那以後，規則改變了。']],
+    ['whatsoever', ['There was no doubt whatsoever.', '完全沒有任何疑問。']],
+    ['aboard', ['Everyone is aboard the train.', '每個人都在火車上。']],
+    ['anymore', ['I do not live there anymore.', '我不再住在那裡了。']],
+    ['pro', ['She is a pro at fixing bikes.', '她是修腳踏車的高手。']],
+    ['ibid', ['The same source is cited ibid.', '同一來源以 ibid 標示。']],
+    ['indoors', ['We stayed indoors because of the rain.', '因為下雨，我們待在室內。']],
+    ['excluding', ['The price is ten dollars, excluding tax.', '價格是十美元，不含稅。']],
+    ['hitherto', ['Hitherto, the plan has worked.', '到目前為止，這個計畫一直有效。']],
+    ['oneself', ['One should take care of oneself.', '人應該照顧自己。']],
+    ['whichever', ['Choose whichever seat you like.', '選你喜歡的任何座位。']],
+    ['beforehand', ['Please call beforehand.', '請事先打電話。']],
+    ['ashore', ['The sailors came ashore at dawn.', '水手們在黎明時上岸。']],
+  ]);
   const pronouns = new Set([
     'anybody',
     'anyone',
@@ -1002,8 +1134,35 @@ function functionExample(word, zhHead, profile, index) {
     'yourself',
   ]);
 
+  const fixed = fixedFunctionExamples.get(word);
+  if (fixed) {
+    return fixed;
+  }
+
   if (prepositions.has(word)) {
-    return [`The keys are ${word} the ${object}.`, `鑰匙在${zhObject}${zhHead}。`];
+    const zhPrepositions = new Map([
+      ['above', '在盒子上方'],
+      ['across', '在盒子對面'],
+      ['along', '沿著盒子旁邊'],
+      ['alongside', '在盒子旁邊'],
+      ['amid', '在盒子中間'],
+      ['among', '在盒子之間'],
+      ['amongst', '在盒子之間'],
+      ['around', '在盒子周圍'],
+      ['behind', '在盒子後面'],
+      ['below', '在盒子下面'],
+      ['beneath', '在盒子下面'],
+      ['beside', '在盒子旁邊'],
+      ['beyond', '在盒子另一邊'],
+      ['inside', '在盒子裡'],
+      ['onto', '到盒子上'],
+      ['outside', '在盒子外面'],
+      ['throughout', '遍布整個盒子'],
+      ['underneath', '在盒子下面'],
+      ['upon', '在盒子上'],
+      ['within', '在盒子裡'],
+    ]);
+    return [`The keys are ${word} the box.`, `鑰匙${zhPrepositions.get(word) ?? `在盒子${zhHead}`}。`];
   }
 
   if (conjunctions.has(word)) {

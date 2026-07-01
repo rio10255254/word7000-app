@@ -62,6 +62,13 @@ describe('full vocabulary dataset', () => {
     }
   });
 
+  test('has approved reviewed examples for every Core 1 word', () => {
+    const approvedWords = new Set(reviewedExamples.filter((row) => row.status === 'approved').map((row) => row.word));
+    const missingReviewedExamples = sampleWords.filter((word) => word.group === 'Core 1' && !approvedWords.has(word.word));
+
+    expect(missingReviewedExamples.map((word) => word.word)).toEqual([]);
+  });
+
   test('uses sentence examples instead of dictionary placeholder text', () => {
     const placeholderExamples = sampleWords.filter(
       (word) =>
@@ -145,6 +152,87 @@ describe('full vocabulary dataset', () => {
     expect(highRiskExamples.slice(0, 40).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
   });
 
+  test('does not keep broad generator scaffolds that read like stitched templates', () => {
+    const broadTemplatePatterns = [
+      /\bsaved the [a-z]+ for the final\b/i,
+      /\bstudied [a-z]+ during the\b/i,
+      /\bbecame a sign of the season\b/i,
+      /\bwaited beside the [a-z]+ after\b/i,
+      /\bmade [a-z]+ easier to discuss\b/i,
+      /^The [a-z]+ changed after the (meeting|lesson|interview|workshop|trip|review|practice|discussion|training|visit|trial|festival|inspection|presentation|debate|rehearsal)\b/i,
+      /\breached the office before\b/i,
+      /\banswered questions after the\b/i,
+      /\blearned how to [a-z]+ it after\b/i,
+      /\bphotographed the [a-z]+ at sunrise\b/i,
+      /\bannounced a new (room|display|budget|contract|garden|device|ticket|file|lesson|project|plan)\b/i,
+      /\bwill [a-z]+ after the\b/i,
+      /\bmay [a-z]+ after the\b/i,
+      /把那段.+留給最後/,
+      /在.+中學習/,
+      /成了.+附近的季節象徵/,
+      /在.+後於.+旁等待/,
+      /讓.+在.+前更容易被討論/,
+    ];
+    const broadTemplateExamples = sampleWords.filter((word) =>
+      broadTemplatePatterns.some((pattern) => pattern.test(`${word.example} ${word.exampleZh}`)),
+    );
+
+    expect(broadTemplateExamples.slice(0, 60).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
+  test('does not keep generic part-case-result frames from the generator', () => {
+    const genericFramePatterns = [
+      /\bnoticed an? [a-z]+ part of the\b/i,
+      /\bfound the [a-z]+ case difficult to explain\b/i,
+      /\bAn? [a-z]+ result changed the [a-z]+ before\b/i,
+      /\basked (briefly|carefully|clearly|openly|quietly|together) about [a-z]+ during the\b/i,
+      /\btalked (briefly|carefully|clearly|openly|quietly|together) about [a-z]+ during the\b/i,
+    ];
+    const genericFrameExamples = sampleWords.filter((word) =>
+      genericFramePatterns.some((pattern) => pattern.test(`${word.example} ${word.exampleZh}`)),
+    );
+
+    expect(genericFrameExamples.slice(0, 80).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
+  test('does not keep sampled semantic mismatches from generated examples', () => {
+    const semanticMismatchPatterns = [
+      /\bvisited the visit\b/i,
+      /\bThe road to the (drop|lift)\b/i,
+      /\bThe (pattern|schedule) began to (attend|submit)\b/i,
+      /\bThe answer sounded clearer neither\b/i,
+      /\bShe moved admittedly through\b/i,
+      /\bThe [a-z]+ will prosper a new\b/i,
+      /\bThe kitchen smelled of (parasite|butcher|brandy)\b/i,
+      /\bThe (brandy|butcher) tasted fresh after\b/i,
+      /\bThe (forty|thirty|twenty|fifteen|twelve|ten|nine|eight|seven|six|five|four|three|two) answer was\b/i,
+      /\bThe (size|essence|log) (felt smooth|stood out)\b/i,
+      /\bA (glowing|vibrant) (choice|question)\b/i,
+      /\b[Aa] [a-z]+ color made\b/i,
+      /\bShe chose an? [a-z]+ option before\b/i,
+      /\bThe [a-z]+ detail stood out\b/i,
+      /\bThe [a-z]+ design caught\b/i,
+      /\bThe [a-z]+ stood out in the (ticket|plan)\b/i,
+      /\bThe answer sounded clearer\b/i,
+      /\bThe message changed slightly after\b/i,
+      /\bThe sentence felt natural with\b/i,
+      /\bThe team used [a-z]+ to connect\b/i,
+      /\bHe listened particularly\b/i,
+      /\banswered extremely\b/i,
+      /\bworked plainly through\b/i,
+      /\battend the schedule\b/i,
+      /\bmarry the project\b/i,
+      /\bThe drink tasted fresh\b/i,
+      /\bStudents explored artist\b/i,
+      /鑰匙在.+在(之上|下面|裡面|外面|以內|後面)/,
+    ];
+    const semanticMismatches = sampleWords.filter((word) =>
+      semanticMismatchPatterns.some((pattern) => pattern.test(`${word.example} ${word.exampleZh}`)),
+    );
+
+    expect(semanticMismatches.slice(0, 40).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
   test('keeps Core 1 free of obvious template-generated example sentences', () => {
     const templatePatterns = [
       /\bincludes an? [a-z]+ for the\b/i,
@@ -225,6 +313,121 @@ describe('full vocabulary dataset', () => {
       ['proportion', ['A large proportion of students chose English.', '很大比例的學生選擇了英文。']],
       ['optional', ['The final question is optional.', '最後一題是選答題。']],
       ['crow', ['The child watched the crow from the fence.', '孩子從圍欄旁看著那隻烏鴉。']],
+      ['serious', ['This is a serious problem.', '這是一個嚴重的問題。']],
+      ['acid', ['The scientist handled the acid carefully.', '科學家小心處理酸液。']],
+      ['cinema', ['We met outside the cinema.', '我們在電影院外面見面。']],
+      ['belly', ['The child had a pain in his belly.', '那個孩子肚子痛。']],
+      ['variable', ['The result depends on one variable.', '結果取決於一個變數。']],
+      ['probability', ['The probability of rain is high today.', '今天下雨的機率很高。']],
+      ['credible', ['Her story sounded credible.', '她的說法聽起來可信。']],
+      ['combined', ['The combined score was higher than expected.', '合併後的分數比預期高。']],
+      ['thousand', ['About a thousand people attended the concert.', '大約一千人參加了音樂會。']],
+      ['modern', ['Modern phones can take excellent photos.', '現代手機可以拍出很棒的照片。']],
+      ['afternoon', ['I will call you this afternoon.', '我今天下午會打電話給你。']],
+      ['insurance', ['Car insurance can be expensive.', '汽車保險可能很貴。']],
+      ['complex', ['The instructions were too complex.', '這些說明太複雜了。']],
+      ['schedule', ['The schedule changed yesterday.', '時程昨天改變了。']],
+      ['fellow', ['He is a fellow student in my class.', '他是我班上的同學。']],
+      ['interested', ['She is interested in history.', '她對歷史感興趣。']],
+      ['settlement', ['The two sides reached a settlement.', '雙方達成了和解。']],
+      ['voter', ['Each voter received a paper ballot.', '每位選民都拿到一張紙本選票。']],
+      ['inflation', ['Inflation raised the price of food.', '通貨膨脹推高了食物價格。']],
+      ['tradition', ['This tradition is over one hundred years old.', '這項傳統已有一百多年歷史。']],
+      ['layer', ['Add another layer of paint.', '再加一層油漆。']],
+      ['inquiry', ['The inquiry began on Monday.', '調查在星期一開始。']],
+      ['behalf', ['I signed the form on her behalf.', '我代表她簽了表格。']],
+      ['missile', ['The missile landed in the sea.', '飛彈落入海中。']],
+      ['teenager', ['The teenager waited for the bus.', '那名青少年等著公車。']],
+      ['naked', ['The baby was naked after the bath.', '寶寶洗完澡後光著身子。']],
+      ['gasoline', ['The car ran out of gasoline.', '車子沒汽油了。']],
+      ['passing', ['A passing car splashed water on us.', '一輛經過的車把水濺到我們身上。']],
+      ['herb', ['A fresh herb grew by the kitchen window.', '一株新鮮香草長在廚房窗邊。']],
+      ['spine', ['She injured her spine in the accident.', '她在事故中傷到了脊椎。']],
+      ['crude', ['The crude oil was stored in large tanks.', '原油被儲存在大型油槽中。']],
+      ['pork', ['She cooked pork for dinner.', '她晚餐煮了豬肉。']],
+      ['spy', ['The spy sent a secret message.', '間諜送出了一則秘密訊息。']],
+      ['presume', ['I presume the meeting is still on.', '我推測會議仍會照常舉行。']],
+      ['fatigue', ['Fatigue made it hard to concentrate.', '疲勞讓人難以集中注意力。']],
+      ['picnic', ['We had a picnic by the lake.', '我們在湖邊野餐。']],
+      ['compliment', ['She smiled at the compliment.', '她聽到稱讚後笑了。']],
+      ['developing', ['Developing countries need reliable infrastructure.', '開發中國家需要可靠的基礎建設。']],
+      ['amuse', ['The story will amuse the children.', '這個故事會逗孩子們開心。']],
+      ['reasoning', ['Her reasoning was clear and careful.', '她的推理清楚又謹慎。']],
+      ['ford', ['They crossed the shallow ford on foot.', '他們步行穿過淺灘。']],
+      ['socket', ['Plug the charger into the socket.', '把充電器插進插座。']],
+      ['homicide', ['The police investigated the homicide.', '警方調查了這起殺人案。']],
+      ['canopy', ['The tree canopy blocked the sun.', '樹冠遮住了陽光。']],
+      ['flatten', ['Use a rolling pin to flatten the dough.', '用擀麵棍把麵團壓平。']],
+      ['fellowship', ['The fellowship supports young researchers.', '這項獎助金支持年輕研究者。']],
+      ['evening', ['We went for a walk in the evening.', '我們傍晚去散步。']],
+      ['sea', ['The sea was calm this morning.', '今天早上海面很平靜。']],
+      ['leg', ['He hurt his leg while running.', '他跑步時弄傷了腿。']],
+      ['heavy', ['This box is too heavy to lift.', '這個箱子太重，搬不動。']],
+      ['spray', ['Spray the plants with water.', '用水噴灑植物。']],
+      ['pump', ['The pump moves water from the well.', '這台幫浦把井水抽上來。']],
+      ['sandy', ['The beach was sandy and warm.', '海灘多沙又溫暖。']],
+      ['astronomy', ['She studies astronomy at university.', '她在大學研究天文學。']],
+      ['durable', ['This backpack is durable.', '這個背包很耐用。']],
+      ['caller', ['The caller left a message.', '來電者留下了訊息。']],
+      ['distributed', ['The teacher distributed the papers.', '老師發下考卷。']],
+      ['maggot', ['A maggot was crawling on the fruit.', '一隻蛆在水果上爬。']],
+      ['maternal', ['She has strong maternal instincts.', '她有強烈的母性本能。']],
+      ['conjure', ['The magician tried to conjure a rabbit.', '魔術師試著變出一隻兔子。']],
+      ['pianist', ['The pianist played a quiet song.', '鋼琴家演奏了一首安靜的曲子。']],
+      ['nearly', ['We nearly missed the train.', '我們差點錯過火車。']],
+      ['threaten', ['Dark clouds threaten rain.', '烏雲密布，像是要下雨。']],
+      ['thirtieth', ['Her thirtieth birthday is next week.', '她的三十歲生日在下週。']],
+      ['opposite', ['The bank is on the opposite side of the street.', '銀行在街道對面。']],
+      ['dirty', ['Your shoes are dirty.', '你的鞋子髒了。']],
+      ['primarily', ['This room is primarily used for meetings.', '這個房間主要用於開會。']],
+      ['realistic', ['The plan is realistic.', '這個計畫很實際。']],
+      ['just', ['The judge made a just decision.', '法官做出了公正的判決。']],
+      ['accessible', ['The museum is accessible by bus.', '這座博物館搭公車可到。']],
+      ['reminder', ['This note is a reminder to call Mom.', '這張便條提醒我要打電話給媽媽。']],
+      ['embark', ['They will embark on a new project.', '他們將著手一個新專案。']],
+      ['philosophical', ['She stayed calm and philosophical.', '她保持冷靜且豁達。']],
+      ['paid', ['This is a paid position.', '這是一個有薪職位。']],
+      ['awfully', ['I am awfully sorry.', '我非常抱歉。']],
+      ['secular', ['The school offers secular education.', '這所學校提供世俗教育。']],
+      ['optical', ['The optical sensor detects movement.', '光學感測器會偵測動作。']],
+      ['plank', ['A loose plank creaked under his foot.', '一塊鬆動的木板在他腳下吱嘎作響。']],
+      ['lighter', ['Do you have a lighter?', '你有打火機嗎？']],
+      ['grave', ['They visited her grave.', '他們去她的墓前探望。']],
+      ['ass', ['The farmer led the ass to water.', '農夫牽著驢去喝水。']],
+      ['ultimate', ['Winning the final was his ultimate goal.', '贏得決賽是他的最終目標。']],
+      ['cab', ['We took a cab to the airport.', '我們搭計程車去機場。']],
+      ['colon', ['Use a colon before the list.', '在清單前使用冒號。']],
+      ['cellar', ['The wine is stored in the cellar.', '酒儲存在地窖裡。']],
+      ['solidarity', ['The workers showed solidarity.', '工人展現了團結。']],
+      ['generator', ['The generator provides electricity.', '發電機提供電力。']],
+      ['raf', ['The RAF helped defend Britain.', '英國皇家空軍協助防衛英國。']],
+      ['accuse', ['They accuse him of lying.', '他們指控他說謊。']],
+      ['blink', ['Do not blink during the photo.', '拍照時不要眨眼。']],
+      ['typical', ['This is a typical mistake.', '這是典型錯誤。']],
+      ['chord', ['Play the final chord softly.', '輕柔地彈出最後一個和弦。']],
+      ['diagram', ['The diagram explains the process.', '這張圖表說明流程。']],
+      ['memoir', ['She wrote a memoir about her childhood.', '她寫了一本關於童年的回憶錄。']],
+      ['commonplace', ['Smartphones are now commonplace.', '智慧型手機如今很普遍。']],
+      ['neglect', ['Do not neglect your health.', '不要忽視健康。']],
+      ['girlfriend', ['His girlfriend called after lunch.', '他的女朋友午餐後打電話來。']],
+      ['fund', ['The fund supports local students.', '這筆基金支持當地學生。']],
+      ['city', ['Taipei is a busy city.', '台北是一座繁忙的城市。']],
+      ['task', ['This task is difficult.', '這項任務很困難。']],
+      ['advice', ['Her advice helped me.', '她的建議幫助了我。']],
+      ['armed', ['Armed guards stood at the gate.', '武裝警衛站在門口。']],
+      ['assess', ['The teacher will assess each project.', '老師會評估每個專案。']],
+      ['literature', ['She studied French literature.', '她研究法國文學。']],
+      ['recording', ['The recording was clear.', '錄音很清楚。']],
+      ['catholic', ['He went to a Catholic school.', '他讀過天主教學校。']],
+      ['foreigner', ['The foreigner asked for directions.', '那位外國人問路。']],
+      ['grandchild', ['Her first grandchild was born in May.', '她第一個孫子在五月出生。']],
+      ['momentum', ['The team gained momentum after the goal.', '球隊進球後氣勢上升。']],
+      ['starter', ['The starter motor failed.', '啟動馬達故障。']],
+      ['manifest', ["The ship's manifest listed every box.", '船上的貨物清單列出了每個箱子。']],
+      ['bankrupt', ['The company went bankrupt last year.', '那家公司去年破產。']],
+      ['publicize', ['They will publicize the event online.', '他們會在網路上宣傳活動。']],
+      ['dwell', ['Many families dwell in this valley.', '許多家庭住在這個山谷。']],
+      ['glossy', ['The magazine has a glossy cover.', '這本雜誌有亮面的封面。']],
     ]);
 
     for (const [word, [example, exampleZh]] of expectedExamples) {
@@ -253,6 +456,14 @@ describe('full vocabulary dataset', () => {
     );
 
     expect(grammarArtifacts.slice(0, 20).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
+  test('keeps generated Chinese examples free of bad dictionary sense leakage', () => {
+    const badSensePattern =
+      /白痴|不介意|辯論的|醫生的|獨立自主者的|人的部分|特效藥|對手的案例|奇數的部分|字首的部分|牙科醫生的風險|外科醫生的風險|有勢力的人的部分/;
+    const badSenseExamples = sampleWords.filter((word) => badSensePattern.test(word.exampleZh));
+
+    expect(badSenseExamples.slice(0, 30).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
   });
 
   test('keeps English example sentences in English', () => {

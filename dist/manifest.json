@@ -1,0 +1,43 @@
+{
+  "name": "Word7000",
+  "short_name": "Word7000",
+  "description": "A simple offline 7000-word English vocabulary app for daily learning and review.",
+  "id": "/word7000-pwa-v2",
+  "start_url": "/?pwa=word7000-v2",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8FAFC",
+  "theme_color": "#172033",
+  "icons": [
+    {
+      "src": "/assets/favicon-ec85bbcddc2f.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon-941dbaaafa66.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-192-dbf1701d690b.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-512-4cfe1c28ab7f.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/maskable-icon-86172bd4372b.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

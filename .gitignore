@@ -6,7 +6,6 @@ node_modules/
 # Expo
 .expo/
 .codex-run/
-dist/
 web-build/
 expo-env.d.ts
 

@@ -3,6 +3,7 @@ import {
   createDisabledCloudProgress,
   isSupabaseConfigured,
   loadCloudProgress,
+  loadCloudProgressRecord,
   saveCloudProgress,
   type CloudProgressClient,
 } from './supabaseProgress';
@@ -79,6 +80,20 @@ describe('Supabase progress sync', () => {
     );
   });
 
+  test('reports whether a signed-in user already has cloud progress', async () => {
+    await expect(loadCloudProgressRecord(fakeClient(progressState(9)), 'user-1')).resolves.toEqual({
+      errorMessage: null,
+      found: true,
+      progress: progressState(9),
+    });
+
+    await expect(loadCloudProgressRecord(fakeClient(null), 'user-1')).resolves.toEqual({
+      errorMessage: null,
+      found: false,
+      progress: null,
+    });
+  });
+
   test('keeps local progress when no cloud row exists yet', async () => {
     await expect(loadCloudProgress(fakeClient(null), 'user-1', progressState(5))).resolves.toEqual(progressState(5));
   });
@@ -90,4 +105,3 @@ describe('Supabase progress sync', () => {
     });
   });
 });
-

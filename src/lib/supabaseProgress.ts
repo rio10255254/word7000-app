@@ -6,6 +6,12 @@ export type CloudProgressResult = {
   message: string;
 };
 
+export type CloudProgressLoadResult = {
+  errorMessage: string | null;
+  found: boolean;
+  progress: ProgressState | null;
+};
+
 export type CloudProgressClient = {
   from: (tableName: 'profiles') => {
     select: (columns?: string) => {
@@ -41,13 +47,38 @@ export async function loadCloudProgress(
   userId: string,
   fallback: ProgressState,
 ): Promise<ProgressState> {
+  const result = await loadCloudProgressRecord(client, userId);
+
+  return result.progress ?? fallback;
+}
+
+export async function loadCloudProgressRecord(
+  client: CloudProgressClient,
+  userId: string,
+): Promise<CloudProgressLoadResult> {
   const { data, error } = await client.from('profiles').select('progress').eq('id', userId).maybeSingle();
 
   if (error) {
-    return fallback;
+    return {
+      errorMessage: error.message ?? 'Load failed',
+      found: false,
+      progress: null,
+    };
   }
 
-  return isProgressState(data?.progress) ? data.progress : fallback;
+  if (!isProgressState(data?.progress)) {
+    return {
+      errorMessage: null,
+      found: false,
+      progress: null,
+    };
+  }
+
+  return {
+    errorMessage: null,
+    found: true,
+    progress: data.progress,
+  };
 }
 
 export async function saveCloudProgress(
@@ -76,4 +107,3 @@ export async function saveCloudProgress(
     };
   }
 }
-

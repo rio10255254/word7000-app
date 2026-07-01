@@ -75,7 +75,7 @@ import {
 } from './src/lib/progress';
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
 import { loadProgressFromStorage, saveProgressToStorage, type StorageLike } from './src/lib/progressStorage';
-import { loadCloudProgress, saveCloudProgress, type CloudProgressClient } from './src/lib/supabaseProgress';
+import { loadCloudProgressRecord, saveCloudProgress, type CloudProgressClient } from './src/lib/supabaseProgress';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
 import {
@@ -577,34 +577,16 @@ export default function App() {
   const darkMode = themeMode === 'dark';
   const libraryDragIconColor = darkMode ? '#bfdbfe' : '#172033';
   const activeModeCopy = modeCopy[studyMode];
-  const libraryDetailOpen = activeTab === 'library' && Boolean(selectedLibraryWord);
-  const screenMotionTransforms = [
-    {
-      translateY: screenAnim.interpolate({
-        inputRange: [0, 1],
-        outputRange: [8, 0],
-      }),
-    },
-    ...(libraryDetailOpen
-      ? [
-          {
-            translateX: libraryDetailAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, -9],
-            }),
-          },
-          {
-            scale: libraryDetailAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 0.992],
-            }),
-          },
-        ]
-      : []),
-  ];
   const screenMotionStyle = {
     opacity: screenAnim,
-    transform: screenMotionTransforms,
+    transform: [
+      {
+        translateY: screenAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [8, 0],
+        }),
+      },
+    ],
   };
   const cardMotionStyle = {
     opacity: cardAnim,
@@ -649,7 +631,7 @@ export default function App() {
   const libraryDetailBackdropMotionStyle = {
     opacity: libraryDetailAnim.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, 0.94],
+      outputRange: [0, 1],
     }),
   };
   const libraryDetailPanelMotionStyle = {
@@ -658,13 +640,13 @@ export default function App() {
       {
         translateX: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [18, 0],
+          outputRange: [14, 0],
         }),
       },
       {
         scale: libraryDetailAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [0.985, 1],
+          outputRange: [0.992, 1],
         }),
       },
     ],
@@ -936,7 +918,7 @@ export default function App() {
           return;
         }
 
-        await activateSignedInUser(data.session.user, localProgress);
+        await activateSignedInUser(data.session.user);
       })
       .catch((error: unknown) => {
         if (cancelled) {
@@ -961,8 +943,8 @@ export default function App() {
       return;
     }
 
-    saveProgressToStorage(getBrowserStorage(), progress);
-  }, [progress, progressReady]);
+    saveProgressToStorage(getBrowserStorage(), progress, account.userId);
+  }, [account.userId, progress, progressReady]);
 
   useEffect(() => {
     if (!progressReady || !supabaseClient || !account.userId) {
@@ -1201,24 +1183,28 @@ export default function App() {
     setInstallGuideStep((current) => Math.min(current + 1, installGuideSteps.length - 1));
   }
 
-  async function activateSignedInUser(user: SupabaseUser, fallback: ProgressState) {
+  async function activateSignedInUser(user: SupabaseUser) {
     if (!supabaseClient) {
       return;
     }
 
+    const storage = getBrowserStorage();
+    const cloudProgress = await loadCloudProgressRecord(asCloudProgressClient(supabaseClient), user.id);
+    const userLocalProgress = normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress, user.id), today);
     const loadedProgress = normalizeProgressForDate(
-      await loadCloudProgress(asCloudProgressClient(supabaseClient), user.id, fallback),
+      cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress),
       today,
     );
+
     setProgress(loadedProgress);
-    saveProgressToStorage(getBrowserStorage(), loadedProgress);
+    saveProgressToStorage(storage, loadedProgress, user.id);
     setAccount((current) => ({
       ...current,
       userId: user.id,
       userEmail: user.email ?? current.email,
       busy: false,
       status: 'signedIn',
-      message: '已登入',
+      message: cloudProgress.found ? '已登入' : '已建立新的帳號記憶',
     }));
   }
 
@@ -1308,7 +1294,7 @@ export default function App() {
     }
 
     if (data.user && data.session) {
-      await activateSignedInUser(data.user, progress);
+      await activateSignedInUser(data.user);
       return;
     }
 
@@ -1359,14 +1345,25 @@ export default function App() {
       return;
     }
 
-    await activateSignedInUser(data.user, progress);
+    await activateSignedInUser(data.user);
   }
 
   async function handleSignOut() {
+    const signedInUserId = account.userId;
+    if (signedInUserId) {
+      saveProgressToStorage(getBrowserStorage(), progress, signedInUserId);
+    }
+
+    if (supabaseClient && signedInUserId) {
+      await saveCloudProgress(asCloudProgressClient(supabaseClient), signedInUserId, progress);
+    }
+
     if (supabaseClient) {
       await supabaseClient.auth.signOut();
     }
 
+    const guestProgress = normalizeProgressForDate(loadProgressFromStorage(getBrowserStorage(), initialProgress), today);
+    setProgress(guestProgress);
     setAccount((current) => ({
       ...current,
       userId: null,
@@ -3916,6 +3913,7 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
     同步中: 'Syncing',
     已保存到帳號: 'Saved to account',
     已登入: 'Signed in',
+    已建立新的帳號記憶: 'Created fresh account memory',
     '正在開啟 Google 登入': 'Opening Google sign-in',
     '請完成 Google 登入': 'Complete Google sign-in',
     建立帳號中: 'Creating account',
@@ -5236,7 +5234,7 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   libraryDetailBackdrop: {
-    backgroundColor: 'rgba(248, 250, 252, 0.96)',
+    backgroundColor: '#f8fafc',
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -6367,7 +6365,7 @@ const darkStyles = StyleSheet.create({
     color: '#93c5fd',
   },
   libraryDetailBackdrop: {
-    backgroundColor: 'rgba(15, 23, 42, 0.96)',
+    backgroundColor: '#0f172a',
   },
   libraryDetailPanel: {
     backgroundColor: 'transparent',

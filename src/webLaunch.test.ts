@@ -193,6 +193,12 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain("from './src/lib/authRedirect'");
+    expect(appSource).toContain('loadCloudProgressRecord');
+    expect(appSource).toContain("cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress)");
+    expect(appSource).toContain('saveProgressToStorage(getBrowserStorage(), progress, account.userId)');
+    expect(appSource).toContain('saveProgressToStorage(storage, loadedProgress, user.id)');
+    expect(appSource).toContain('await saveCloudProgress(asCloudProgressClient(supabaseClient), signedInUserId, progress)');
+    expect(appSource).toContain('loadProgressFromStorage(getBrowserStorage(), initialProgress)');
     expect(appSource).toContain('handleGoogleSignIn');
     expect(appSource).toContain("provider: 'google'");
     expect(appSource).toContain('signInWithOAuth');
@@ -339,8 +345,6 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('libraryDetailBackdropMotionStyle');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
-    expect(appSource).toContain('libraryDetailOpen');
-    expect(appSource).toContain('screenMotionTransforms');
     expect(appSource).toContain('styles.libraryDetailOverlay');
     expect(appSource).toContain('styles.libraryDetailBackdrop');
     expect(appSource).toContain('styles.libraryDetailPanel');
@@ -349,13 +353,16 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
     expect(appSource).toContain('function closeLibraryWordDetail()');
     expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
-    expect(appSource).toContain('outputRange: [0.985, 1]');
-    expect(appSource).toContain('outputRange: [18, 0]');
-    expect(appSource).toContain('outputRange: [0, -9]');
-    expect(appSource).toContain('outputRange: [1, 0.992]');
-    expect(appSource).toContain('outputRange: [0, 0.94]');
+    expect(appSource).toContain("backgroundColor: '#f8fafc'");
+    expect(appSource).toContain("backgroundColor: '#0f172a'");
+    expect(appSource).toContain('outputRange: [0.992, 1]');
+    expect(appSource).toContain('outputRange: [14, 0]');
+    expect(appSource).toContain('outputRange: [0, 1]');
     expect(appSource).not.toContain('outputRange: [34, 0]');
     expect(appSource).not.toContain('outputRange: [0.965, 1]');
+    expect(appSource).not.toContain('screenMotionTransforms');
+    expect(appSource).not.toContain('outputRange: [0, -9]');
+    expect(appSource).not.toContain('outputRange: [0, 0.94]');
     expect(appSource).not.toContain("studyMode === 'chinese' && libraryDetailOpen");
     expect(appSource).toContain('easing: Easing.in(Easing.cubic),\n      toValue: 0');
     expect(appSource).toContain('toValue: 0');

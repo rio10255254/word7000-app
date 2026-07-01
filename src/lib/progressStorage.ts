@@ -32,13 +32,21 @@ export function isProgressState(value: unknown): value is ProgressState {
   return Object.values(progress.words).every(isWordProgress);
 }
 
-export function loadProgressFromStorage(storage: StorageLike | undefined, fallback: ProgressState): ProgressState {
+export function progressStorageKey(userId?: string | null): string {
+  return userId ? `${PROGRESS_STORAGE_KEY}:user:${userId}` : PROGRESS_STORAGE_KEY;
+}
+
+export function loadProgressFromStorage(
+  storage: StorageLike | undefined,
+  fallback: ProgressState,
+  userId?: string | null,
+): ProgressState {
   if (!storage) {
     return fallback;
   }
 
   try {
-    const stored = storage.getItem(PROGRESS_STORAGE_KEY);
+    const stored = storage.getItem(progressStorageKey(userId));
     if (!stored) {
       return fallback;
     }
@@ -50,13 +58,17 @@ export function loadProgressFromStorage(storage: StorageLike | undefined, fallba
   }
 }
 
-export function saveProgressToStorage(storage: StorageLike | undefined, progress: ProgressState): void {
+export function saveProgressToStorage(
+  storage: StorageLike | undefined,
+  progress: ProgressState,
+  userId?: string | null,
+): void {
   if (!storage) {
     return;
   }
 
   try {
-    storage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+    storage.setItem(progressStorageKey(userId), JSON.stringify(progress));
   } catch {
     // Storage can fail in private mode or quota edge cases. The app still works in memory.
   }

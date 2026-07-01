@@ -31,9 +31,12 @@ export const interactionMotion = {
   screenMs: 280,
   settingsPanelExitMs: 170,
   settingsPanelMs: 310,
-  libraryDetailExitMs: 230,
-  libraryDetailMs: 360,
-  libraryDetailOvershootAt: 0.68,
+  libraryDetailExitMs: 340,
+  libraryDetailMs: 620,
+  libraryDetailWarmupAt: 0.56,
+  libraryDetailSettleAt: 0.93,
+  libraryDetailOpenEasing: [0.45, 0, 0.2, 1] as const,
+  libraryDetailCloseEasing: [0.38, 0, 0.22, 1] as const,
   guideStepMs: 280,
 };
 

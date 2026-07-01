@@ -388,6 +388,10 @@ describe('free web launch configuration', () => {
 
   test('animates word detail navigation in both directions', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const openDetailBlock = appSource.slice(
+      appSource.indexOf('function openLibraryWordDetail'),
+      appSource.indexOf('function closeLibraryWordDetail')
+    );
 
     expect(appSource).toContain('libraryDetailBackdropMotionStyle');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
@@ -397,22 +401,29 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('themeStyles?.libraryDetailBackdrop');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
     expect(appSource).toContain('duration: interactionMotion.libraryDetailMs');
+    expect(appSource).toContain('const selectedLibraryWordId = selectedLibraryWord?.id ?? null;');
+    expect(appSource).toContain('if (!selectedLibraryWordId) {');
+    expect(appSource).toContain('}, [libraryDetailAnim, selectedLibraryWordId]);');
+    expect(openDetailBlock).toContain('setSelectedLibraryWord(word);');
+    expect(openDetailBlock).not.toContain('Animated.timing');
+    expect(openDetailBlock).not.toContain('libraryDetailAnim.setValue(0)');
     expect(appSource).toContain('function closeLibraryWordDetail()');
     expect(appSource).toContain('duration: interactionMotion.libraryDetailExitMs');
     expect(appSource).toContain("backgroundColor: '#f8fafc'");
     expect(appSource).toContain("backgroundColor: '#0f172a'");
-    expect(appSource).toContain('inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1]');
-    expect(appSource).toContain('outputRange: [28, -4, 0]');
-    expect(appSource).toContain('outputRange: [0.982, 1.006, 1]');
-    expect(appSource).toContain('outputRange: [0, 0.98, 1]');
-    expect(appSource).toContain('Easing.bezier(0.22, 1, 0.36, 1)');
+    expect(appSource).toContain('inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1]');
+    expect(appSource).toContain('outputRange: [24, 13, -1.2, 0]');
+    expect(appSource).toContain('outputRange: [0.986, 0.994, 1.0015, 1]');
+    expect(appSource).toContain('outputRange: [0, 0.46, 0.96, 1]');
+    expect(appSource).toContain('Easing.bezier(...interactionMotion.libraryDetailOpenEasing)');
+    expect(appSource).not.toContain('Easing.bezier(0.22, 1, 0.36, 1)');
     expect(appSource).not.toContain('outputRange: [14, 0]');
     expect(appSource).not.toContain('outputRange: [0.965, 1]');
     expect(appSource).not.toContain('screenMotionTransforms');
     expect(appSource).not.toContain('outputRange: [0, -9]');
     expect(appSource).not.toContain('outputRange: [0, 0.94]');
     expect(appSource).not.toContain("studyMode === 'chinese' && libraryDetailOpen");
-    expect(appSource).toContain('easing: Easing.bezier(0.55, 0.06, 0.68, 0.19)');
+    expect(appSource).toContain('easing: Easing.bezier(...interactionMotion.libraryDetailCloseEasing)');
     expect(appSource).toContain('toValue: 0');
     expect(appSource).toContain('onBack={closeLibraryWordDetail}');
     expect(appSource).toContain('pressTone="libraryItem"');

@@ -615,6 +615,7 @@ export default function App() {
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
   const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
+  const selectedLibraryWordId = selectedLibraryWord?.id ?? null;
   const [developerVocabulary, setDeveloperVocabulary] = useState<DeveloperVocabularySnapshot | null>(() =>
     loadDeveloperVocabulary(getBrowserStorage()),
   );
@@ -721,26 +722,26 @@ export default function App() {
   };
   const libraryDetailBackdropMotionStyle = {
     opacity: libraryDetailAnim.interpolate({
-      inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
-      outputRange: [0, 0.98, 1],
+      inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
+      outputRange: [0, 0.46, 0.96, 1],
     }),
   };
   const libraryDetailPanelMotionStyle = {
     opacity: libraryDetailAnim.interpolate({
-      inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
-      outputRange: [0, 0.98, 1],
+      inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
+      outputRange: [0, 0.46, 0.96, 1],
     }),
     transform: [
       {
         translateX: libraryDetailAnim.interpolate({
-          inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
-          outputRange: [28, -4, 0],
+          inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
+          outputRange: [24, 13, -1.2, 0],
         }),
       },
       {
         scale: libraryDetailAnim.interpolate({
-          inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
-          outputRange: [0.982, 1.006, 1],
+          inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
+          outputRange: [0.986, 0.994, 1.0015, 1],
         }),
       },
     ],
@@ -918,6 +919,25 @@ export default function App() {
     studyLevel,
     wordIndex,
   ]);
+
+  useEffect(() => {
+    if (!selectedLibraryWordId) {
+      libraryDetailAnim.setValue(0);
+      return;
+    }
+
+    libraryDetailAnim.setValue(0);
+    Animated.timing(libraryDetailAnim, {
+      duration: interactionMotion.libraryDetailMs,
+      easing: Easing.bezier(...interactionMotion.libraryDetailOpenEasing),
+      toValue: 1,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start();
+
+    return () => {
+      libraryDetailAnim.stopAnimation();
+    };
+  }, [libraryDetailAnim, selectedLibraryWordId]);
 
   useEffect(() => {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
@@ -1254,20 +1274,13 @@ export default function App() {
   }
 
   function openLibraryWordDetail(word: WordEntry) {
-    libraryDetailAnim.setValue(0);
     setSelectedLibraryWord(word);
-    Animated.timing(libraryDetailAnim, {
-      duration: interactionMotion.libraryDetailMs,
-      easing: Easing.bezier(0.22, 1, 0.36, 1),
-      toValue: 1,
-      useNativeDriver: Platform.OS !== 'web',
-    }).start();
   }
 
   function closeLibraryWordDetail() {
     Animated.timing(libraryDetailAnim, {
       duration: interactionMotion.libraryDetailExitMs,
-      easing: Easing.bezier(0.55, 0.06, 0.68, 0.19),
+      easing: Easing.bezier(...interactionMotion.libraryDetailCloseEasing),
       toValue: 0,
       useNativeDriver: Platform.OS !== 'web',
     }).start(({ finished }) => {

@@ -180,9 +180,11 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('返回字庫');
     expect(appSource).toContain('完整資訊');
     expect(appSource).toContain('onOpenWord');
-    expect(appSource).toContain('libraryDetailAnim');
-    expect(appSource).toContain('libraryDetailOverlay');
-    expect(appSource).toContain('libraryDetailAnim.setValue(0)');
+    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail'");
+    expect(appSource).toContain('renderedLibraryPanel');
+    expect(appSource).toContain('libraryPanelMotionStyle');
+    expect(appSource).toContain("setLibraryPanel('detail')");
+    expect(appSource).toContain("setLibraryPanel('list')");
   });
 
   test('includes a developer vocabulary panel for import and export workflow', () => {
@@ -393,42 +395,33 @@ describe('free web launch configuration', () => {
       appSource.indexOf('function closeLibraryWordDetail')
     );
 
-    expect(appSource).toContain('libraryDetailBackdropMotionStyle');
-    expect(appSource).toContain('libraryDetailPanelMotionStyle');
-    expect(appSource).toContain('libraryDepthMotionStyle');
-    expect(appSource).toContain('style={[styles.screenMotion, screenMotionStyle, libraryDepthMotionStyle]}');
-    expect(appSource).toContain('styles.libraryDetailOverlay');
-    expect(appSource).toContain('styles.libraryDetailBackdrop');
-    expect(appSource).toContain('styles.libraryDetailPanel');
-    expect(appSource).toContain('themeStyles?.libraryDetailBackdrop');
-    expect(appSource).toContain('libraryDetailPanelMotionStyle');
-    expect(appSource).toContain('duration: interactionMotion.libraryDetailMs');
-    expect(appSource).toContain('const selectedLibraryWordId = selectedLibraryWord?.id ?? null;');
-    expect(appSource).toContain('if (!selectedLibraryWordId) {');
-    expect(appSource).toContain('}, [libraryDetailAnim, selectedLibraryWordId]);');
+    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail'");
+    expect(appSource).toContain("const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');");
+    expect(appSource).toContain("const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');");
+    expect(appSource).toContain('const libraryPanelAnim = useRef(new Animated.Value(1)).current;');
+    expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
+    expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
+    expect(appSource).toContain('easing: Easing.out(Easing.cubic)');
+    expect(appSource).toContain('easing: Easing.in(Easing.cubic)');
+    expect(appSource).toContain("outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0]");
+    expect(appSource).toContain('outputRange: [0.985, 1]');
+    expect(appSource).toContain('setRenderedLibraryPanel(libraryPanel);');
+    expect(appSource).toContain('libraryPanelMotionStyle');
+    expect(appSource).toContain('testID="library-panel-transition"');
+    expect(appSource).toContain('style={[styles.screenMotion, screenMotionStyle]}');
+    expect(appSource).not.toContain('libraryDepthMotionStyle');
+    expect(appSource).not.toContain('libraryDetailBackdropMotionStyle');
+    expect(appSource).not.toContain('libraryDetailPanelMotionStyle');
+    expect(appSource).not.toContain('style={[styles.screenMotion, screenMotionStyle, libraryDepthMotionStyle]}');
+    expect(appSource).not.toContain('styles.libraryDetailOverlay');
+    expect(appSource).not.toContain('styles.libraryDetailBackdrop');
+    expect(appSource).not.toContain('styles.libraryDetailPanel');
     expect(openDetailBlock).toContain('setSelectedLibraryWord(word);');
+    expect(openDetailBlock).toContain("setLibraryPanel('detail');");
     expect(openDetailBlock).not.toContain('Animated.timing');
-    expect(openDetailBlock).not.toContain('libraryDetailAnim.setValue(0)');
     expect(appSource).toContain('function closeLibraryWordDetail()');
-    expect(appSource).toContain('duration: interactionMotion.libraryDetailExitMs');
-    expect(appSource).toContain("backgroundColor: '#f8fafc'");
-    expect(appSource).toContain("backgroundColor: '#0f172a'");
-    expect(appSource).toContain('inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1]');
-    expect(appSource).toContain('outputRange: [24, 13, -1.2, 0]');
-    expect(appSource).toContain('outputRange: [0.986, 0.994, 1.0015, 1]');
-    expect(appSource).toContain('outputRange: [0, 0.36, 0.76, 0.86]');
-    expect(appSource).toContain('outputRange: [0, -9, -18, -16]');
-    expect(appSource).toContain('outputRange: [1, 0.996, 0.982, 0.984]');
-    expect(appSource).toContain('outputRange: [1, 0.96, 0.82, 0.86]');
-    expect(appSource).toContain('Easing.bezier(...interactionMotion.libraryDetailOpenEasing)');
-    expect(appSource).not.toContain('Easing.bezier(0.22, 1, 0.36, 1)');
-    expect(appSource).not.toContain('outputRange: [14, 0]');
-    expect(appSource).not.toContain('outputRange: [0.965, 1]');
-    expect(appSource).not.toContain('screenMotionTransforms');
-    expect(appSource).not.toContain('outputRange: [0, -9]');
-    expect(appSource).not.toContain('outputRange: [0, 0.94]');
+    expect(appSource).toContain("setLibraryPanel('list');");
     expect(appSource).not.toContain("studyMode === 'chinese' && libraryDetailOpen");
-    expect(appSource).toContain('easing: Easing.bezier(...interactionMotion.libraryDetailCloseEasing)');
     expect(appSource).toContain('toValue: 0');
     expect(appSource).toContain('onBack={closeLibraryWordDetail}');
     expect(appSource).toContain('pressTone="libraryItem"');
@@ -448,15 +441,16 @@ describe('free web launch configuration', () => {
   test('returns from word detail to the previous library position without replaying the list', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('styles.libraryDetailOverlay');
-    expect(appSource).toContain('pointerEvents={selectedLibraryWord ?');
-    expect(appSource).toContain('selectedLibraryWord &&');
+    expect(appSource).toContain('libraryReturnScrollYRef');
+    expect(appSource).toContain('readCurrentAppScrollY');
+    expect(appSource).toContain('libraryReturnScrollYRef.current = readCurrentAppScrollY();');
+    expect(appSource).toContain('restoreLibraryScrollPosition');
+    expect(appSource).toContain('restoreLibraryScrollPositionAfterRender');
+    expect(appSource).toContain('setSelectedLibraryWord(null);');
     expect(appSource).toContain('LIBRARY_ANIMATED_ITEM_COUNT');
     expect(appSource).toContain("activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT");
     expect(appSource).not.toContain('if (selectedWord) {');
-    expect(appSource).not.toContain('libraryReturnScrollYRef.current = scrollY;');
     expect(appSource).not.toContain('setSelectedLibraryWord(word);\n    appScrollRef.current?.scrollTo({ y: 0, animated: true });');
-    expect(appSource).not.toContain('restoreLibraryScrollPosition');
     expect(appSource).not.toContain('selectedLibraryWord?.id,');
   });
 

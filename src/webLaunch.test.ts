@@ -395,6 +395,8 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('libraryDetailBackdropMotionStyle');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
+    expect(appSource).toContain('libraryDepthMotionStyle');
+    expect(appSource).toContain('style={[styles.screenMotion, screenMotionStyle, libraryDepthMotionStyle]}');
     expect(appSource).toContain('styles.libraryDetailOverlay');
     expect(appSource).toContain('styles.libraryDetailBackdrop');
     expect(appSource).toContain('styles.libraryDetailPanel');
@@ -414,7 +416,10 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1]');
     expect(appSource).toContain('outputRange: [24, 13, -1.2, 0]');
     expect(appSource).toContain('outputRange: [0.986, 0.994, 1.0015, 1]');
-    expect(appSource).toContain('outputRange: [0, 0.46, 0.96, 1]');
+    expect(appSource).toContain('outputRange: [0, 0.36, 0.76, 0.86]');
+    expect(appSource).toContain('outputRange: [0, -9, -18, -16]');
+    expect(appSource).toContain('outputRange: [1, 0.996, 0.982, 0.984]');
+    expect(appSource).toContain('outputRange: [1, 0.96, 0.82, 0.86]');
     expect(appSource).toContain('Easing.bezier(...interactionMotion.libraryDetailOpenEasing)');
     expect(appSource).not.toContain('Easing.bezier(0.22, 1, 0.36, 1)');
     expect(appSource).not.toContain('outputRange: [14, 0]');

@@ -723,9 +723,32 @@ export default function App() {
   const libraryDetailBackdropMotionStyle = {
     opacity: libraryDetailAnim.interpolate({
       inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
-      outputRange: [0, 0.46, 0.96, 1],
+      outputRange: [0, 0.36, 0.76, 0.86],
     }),
   };
+  const libraryDepthMotionStyle =
+    activeTab === 'library'
+      ? {
+          opacity: libraryDetailAnim.interpolate({
+            inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
+            outputRange: [1, 0.96, 0.82, 0.86],
+          }),
+          transform: [
+            {
+              translateX: libraryDetailAnim.interpolate({
+                inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
+                outputRange: [0, -9, -18, -16],
+              }),
+            },
+            {
+              scale: libraryDetailAnim.interpolate({
+                inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
+                outputRange: [1, 0.996, 0.982, 0.984],
+              }),
+            },
+          ],
+        }
+      : undefined;
   const libraryDetailPanelMotionStyle = {
     opacity: libraryDetailAnim.interpolate({
       inputRange: [0, interactionMotion.libraryDetailWarmupAt, interactionMotion.libraryDetailSettleAt, 1],
@@ -1605,7 +1628,7 @@ export default function App() {
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
         >
-          <Animated.View style={[styles.screenMotion, screenMotionStyle]}>
+          <Animated.View style={[styles.screenMotion, screenMotionStyle, libraryDepthMotionStyle]}>
           {activeTab === 'home' && (
             <HomeView
               dailyPercent={dailyPercent}

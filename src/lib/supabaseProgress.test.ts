@@ -4,6 +4,7 @@ import {
   isSupabaseConfigured,
   loadCloudProgress,
   loadCloudProgressRecord,
+  localActivityDate,
   recordDailyActiveUser,
   saveCloudProgress,
   type CloudProgressClient,
@@ -133,5 +134,17 @@ describe('Supabase progress sync', () => {
       ok: true,
       message: 'Recorded',
     });
+  });
+
+  test('uses the device local date for daily activity', () => {
+    const timezoneOffset = Date.prototype.getTimezoneOffset;
+
+    try {
+      Date.prototype.getTimezoneOffset = () => -480;
+
+      expect(localActivityDate(new Date('2026-06-30T18:00:00.000Z'))).toBe('2026-07-01');
+    } finally {
+      Date.prototype.getTimezoneOffset = timezoneOffset;
+    }
   });
 });

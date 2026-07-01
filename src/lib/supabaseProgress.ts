@@ -128,7 +128,7 @@ export async function recordDailyActiveUser(
   now = new Date(),
 ): Promise<CloudProgressResult> {
   const seenAt = now.toISOString();
-  const activityDate = seenAt.slice(0, 10);
+  const activityDate = localActivityDate(now);
 
   try {
     await client
@@ -155,4 +155,9 @@ export async function recordDailyActiveUser(
       message: error instanceof Error ? error.message : 'Activity save failed',
     };
   }
+}
+
+export function localActivityDate(now = new Date()): string {
+  const localTime = now.getTime() - now.getTimezoneOffset() * 60_000;
+  return new Date(localTime).toISOString().slice(0, 10);
 }

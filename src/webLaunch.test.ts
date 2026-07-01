@@ -486,4 +486,17 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('libraryDragTrack:');
     expect(appSource).toContain('libraryDragThumb:');
   });
+
+  test('keeps library dragging synchronized with the page scroll and list body', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('wordIndexFromLibraryScroll');
+    expect(appSource).toContain('recenteredWordWindowFromScroll');
+    expect(appSource).toContain('libraryListScrollTarget');
+    expect(appSource).toContain('onListLayout={handleLibraryListLayout}');
+    expect(appSource).toContain('onFirstItemLayout={handleLibraryFirstItemLayout}');
+    expect(appSource).toContain('LIBRARY_LIST_DRAG_MIN_SCROLL_Y');
+    expect(appSource).toContain('transitionTimingFunction:');
+    expect(appSource).not.toContain('appScrollRef.current?.scrollTo({ y: 0, animated: false });\n    setScrollY(0);\n  }\n\n  function returnLibraryToTop');
+  });
 });

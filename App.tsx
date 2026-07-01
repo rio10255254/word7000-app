@@ -56,7 +56,13 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { sampleWords, type WordEntry } from './src/data/words';
-import { scrollThumbOffset, wordWindowStartFromSlider } from './src/lib/libraryNavigation';
+import {
+  libraryListScrollTarget,
+  recenteredWordWindowFromScroll,
+  scrollThumbOffset,
+  wordIndexFromLibraryScroll,
+  wordWindowStartFromSlider,
+} from './src/lib/libraryNavigation';
 import {
   buildQuizOptions,
   buildQuizSession,
@@ -147,6 +153,11 @@ const ACTIVE_USER_HEARTBEAT_MS = 60_000;
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
+const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
+const LIBRARY_LIST_DRAG_SCROLL_OFFSET = 168;
+const LIBRARY_LIST_DRAG_MIN_SCROLL_Y = 340;
+const LIBRARY_SCROLL_FORWARD_ANCHOR = 150;
+const LIBRARY_SCROLL_BACKWARD_ANCHOR = 58;
 const LIBRARY_WINDOW_SIZE = 260;
 const LIBRARY_ANIMATED_ITEM_COUNT = 28;
 const quizQuestionCounts = [10, 20, 50] as const;
@@ -560,6 +571,12 @@ const MotionPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function App() {
   const appScrollRef = useRef<ScrollView | null>(null);
+  const scrollYRef = useRef(0);
+  const libraryListTopYRef = useRef(0);
+  const libraryItemExtentRef = useRef(LIBRARY_ITEM_ESTIMATED_HEIGHT);
+  const libraryWindowStartRef = useRef(0);
+  const libraryScrollSyncLockedRef = useRef(false);
+  const librarySliderDraggingRef = useRef(false);
   const launchAnim = useRef(new Animated.Value(0)).current;
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const screenAnim = useRef(new Animated.Value(1)).current;
@@ -617,6 +634,9 @@ export default function App() {
   const [scrollY, setScrollY] = useState(0);
   const [headerHeight, setHeaderHeight] = useState(88);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
+  const [libraryListTopY, setLibraryListTopY] = useState(0);
+  const [libraryItemExtent, setLibraryItemExtent] = useState(LIBRARY_ITEM_ESTIMATED_HEIGHT);
+  const [librarySliderDragging, setLibrarySliderDragging] = useState(false);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
   const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
   const [developerVocabulary, setDeveloperVocabulary] = useState<DeveloperVocabularySnapshot | null>(() =>
@@ -796,22 +816,45 @@ export default function App() {
     outputRange: [24, 0],
   });
   const librarySliderVisible = activeTab === 'library' && !selectedLibraryWord && libraryWords.length > LIBRARY_WINDOW_SIZE;
-  const libraryThumbOffset = scrollThumbOffset(
+  const librarySliderWordIndex = wordIndexFromLibraryScroll(
     libraryWindowStart,
+    scrollY,
+    libraryListTopY,
+    libraryItemExtent,
+    libraryWords.length,
+    LIBRARY_WINDOW_SIZE,
+  );
+  const libraryThumbOffset = scrollThumbOffset(
+    librarySliderWordIndex,
     Math.max(libraryWords.length, LIBRARY_WINDOW_SIZE + 1),
     LIBRARY_WINDOW_SIZE,
     sliderTrackHeight,
     LIBRARY_SLIDER_THUMB_HEIGHT,
   );
+  const libraryDragThumbMotionStyle: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          transitionDuration: `${librarySliderDragging ? 70 : 140}ms`,
+          transitionProperty: 'transform',
+          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          willChange: 'transform',
+        }
+      : undefined;
   const librarySliderResponder = useMemo(
     () =>
       PanResponder.create({
-        onMoveShouldSetPanResponder: () => activeTab === 'library',
-        onStartShouldSetPanResponder: () => activeTab === 'library',
-        onPanResponderGrant: (event) => handleLibrarySliderDrag(event.nativeEvent.locationY),
+        onMoveShouldSetPanResponder: () => activeTab === 'library' && libraryPanel === 'list',
+        onStartShouldSetPanResponder: () => activeTab === 'library' && libraryPanel === 'list',
+        onPanResponderGrant: (event) => {
+          librarySliderDraggingRef.current = true;
+          setLibrarySliderDragging(true);
+          handleLibrarySliderDrag(event.nativeEvent.locationY);
+        },
         onPanResponderMove: (event) => handleLibrarySliderDrag(event.nativeEvent.locationY),
+        onPanResponderRelease: finishLibrarySliderDrag,
+        onPanResponderTerminate: finishLibrarySliderDrag,
       }),
-    [activeTab, libraryWords.length, sliderTrackHeight],
+    [activeTab, libraryPanel, libraryWords.length, sliderTrackHeight],
   );
 
   const onLibraryPanelSwap = useCallback(
@@ -984,8 +1027,18 @@ export default function App() {
   }, [libraryPanel, libraryPanelAnim, onLibraryPanelSwap, renderedLibraryPanel]);
 
   useEffect(() => {
+    libraryWindowStartRef.current = libraryWindowStart;
+  }, [libraryWindowStart]);
+
+  useEffect(() => {
+    libraryItemExtentRef.current = libraryItemExtent;
+  }, [libraryItemExtent]);
+
+  useEffect(() => {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
+    scrollYRef.current = 0;
     setScrollY(0);
+    libraryWindowStartRef.current = 0;
     setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
     setLibraryPanel('list');
@@ -1015,7 +1068,11 @@ export default function App() {
   }, [quizFilter, quizInitial, quizLevel]);
 
   useEffect(() => {
-    setLibraryWindowStart((current) => Math.min(current, Math.max(0, libraryWords.length - LIBRARY_WINDOW_SIZE)));
+    setLibraryWindowStart((current) => {
+      const next = Math.min(current, Math.max(0, libraryWords.length - LIBRARY_WINDOW_SIZE));
+      libraryWindowStartRef.current = next;
+      return next;
+    });
   }, [libraryWords.length]);
 
   useEffect(() => {
@@ -1296,8 +1353,61 @@ export default function App() {
 
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
     if (activeTab === 'library') {
-      setScrollY(event.nativeEvent.contentOffset.y);
+      const nextScrollY = event.nativeEvent.contentOffset.y;
+      const previousScrollY = scrollYRef.current;
+      scrollYRef.current = nextScrollY;
+      setScrollY(nextScrollY);
+      if (!libraryScrollSyncLockedRef.current && !librarySliderDraggingRef.current) {
+        syncLibraryWindowFromScroll(nextScrollY, previousScrollY);
+      }
     }
+  }
+
+  function syncLibraryWindowFromScroll(nextScrollY: number, previousScrollY: number) {
+    if (
+      activeTab !== 'library' ||
+      libraryPanel !== 'list' ||
+      selectedLibraryWord ||
+      libraryWords.length <= LIBRARY_WINDOW_SIZE ||
+      libraryListTopYRef.current <= 0 ||
+      nextScrollY < libraryListTopYRef.current
+    ) {
+      return;
+    }
+
+    const currentWindowStart = libraryWindowStartRef.current;
+    const recentered = recenteredWordWindowFromScroll(
+      currentWindowStart,
+      nextScrollY,
+      libraryListTopYRef.current,
+      libraryItemExtentRef.current,
+      libraryWords.length,
+      LIBRARY_WINDOW_SIZE,
+      {
+        forwardAnchor: LIBRARY_SCROLL_FORWARD_ANCHOR,
+        backwardAnchor: LIBRARY_SCROLL_BACKWARD_ANCHOR,
+      },
+    );
+    const movingForward = nextScrollY >= previousScrollY;
+    const movingBackward = nextScrollY < previousScrollY;
+    const shouldApplyForward = recentered.windowStart > currentWindowStart && movingForward;
+    const shouldApplyBackward = recentered.windowStart < currentWindowStart && movingBackward;
+
+    if (!shouldApplyForward && !shouldApplyBackward) {
+      return;
+    }
+
+    libraryScrollSyncLockedRef.current = true;
+    libraryWindowStartRef.current = recentered.windowStart;
+    scrollYRef.current = recentered.scrollY;
+    setLibraryWindowStart(recentered.windowStart);
+    setScrollY(recentered.scrollY);
+    requestAnimationFrame(() => {
+      appScrollRef.current?.scrollTo({ y: recentered.scrollY, animated: false });
+      requestAnimationFrame(() => {
+        libraryScrollSyncLockedRef.current = false;
+      });
+    });
   }
 
   function handleLibrarySliderDrag(locationY: number) {
@@ -1308,13 +1418,48 @@ export default function App() {
       LIBRARY_WINDOW_SIZE,
       LIBRARY_SLIDER_THUMB_HEIGHT,
     );
+    libraryWindowStartRef.current = target;
     setLibraryWindowStart(target);
-    appScrollRef.current?.scrollTo({ y: 0, animated: false });
-    setScrollY(0);
+    scrollLibraryListIntoView(false);
+  }
+
+  function finishLibrarySliderDrag() {
+    setLibrarySliderDragging(false);
+    requestAnimationFrame(() => {
+      librarySliderDraggingRef.current = false;
+    });
+  }
+
+  function scrollLibraryListIntoView(animated: boolean) {
+    const targetY = Math.max(
+      LIBRARY_LIST_DRAG_MIN_SCROLL_Y,
+      libraryListScrollTarget(libraryListTopYRef.current, LIBRARY_LIST_DRAG_SCROLL_OFFSET),
+    );
+    scrollYRef.current = targetY;
+    setScrollY(targetY);
+    appScrollRef.current?.scrollTo({ y: targetY, animated });
+  }
+
+  function handleLibraryListLayout(event: LayoutChangeEvent) {
+    const nextTop = Math.max(0, Math.round(event.nativeEvent.layout.y));
+    libraryListTopYRef.current = nextTop;
+    setLibraryListTopY(nextTop);
+  }
+
+  function handleLibraryFirstItemLayout(event: LayoutChangeEvent) {
+    const nextExtent = Math.max(96, Math.round(event.nativeEvent.layout.height + 10));
+    if (Math.abs(nextExtent - libraryItemExtentRef.current) < 3) {
+      return;
+    }
+
+    libraryItemExtentRef.current = nextExtent;
+    setLibraryItemExtent(nextExtent);
   }
 
   function returnLibraryToTop() {
+    libraryWindowStartRef.current = 0;
     setLibraryWindowStart(0);
+    scrollYRef.current = 0;
     appScrollRef.current?.scrollTo({ y: 0, animated: true });
     setScrollY(0);
   }
@@ -1739,6 +1884,8 @@ export default function App() {
                 onFiltersToggle={() => setLibraryFiltersOpen((current) => !current)}
                 onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
                 onInitialChange={setActiveInitial}
+                onFirstItemLayout={handleLibraryFirstItemLayout}
+                onListLayout={handleLibraryListLayout}
                 onLevelChange={setActiveLevel}
                 onOpenWord={openLibraryWordDetail}
                 onQueryChange={handleLibraryQueryChange}
@@ -1804,7 +1951,12 @@ export default function App() {
               >
                 <View style={[styles.libraryDragTrack, themeStyles?.libraryDragTrack]} />
                 <View
-                  style={[styles.libraryDragThumb, themeStyles?.libraryDragThumb, { transform: [{ translateY: libraryThumbOffset }] }]}
+                  style={[
+                    styles.libraryDragThumb,
+                    themeStyles?.libraryDragThumb,
+                    libraryDragThumbMotionStyle,
+                    { transform: [{ translateY: libraryThumbOffset }] },
+                  ]}
                   testID="library-drag-thumb"
                 >
                   <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
@@ -3263,7 +3415,9 @@ function LibraryView({
   onFavorite,
   onFilterChange,
   onFiltersToggle,
+  onFirstItemLayout,
   onInitialChange,
+  onListLayout,
   onLevelChange,
   onOpenWord,
   onQueryChange,
@@ -3290,7 +3444,9 @@ function LibraryView({
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
+  onFirstItemLayout: (event: LayoutChangeEvent) => void;
   onInitialChange: (initial: string) => void;
+  onListLayout: (event: LayoutChangeEvent) => void;
   onLevelChange: (level: string) => void;
   onOpenWord: (word: WordEntry) => void;
   onQueryChange: (query: string) => void;
@@ -3431,7 +3587,7 @@ function LibraryView({
         onToggle={onFiltersToggle}
       />
 
-      <View style={styles.libraryPanel}>
+      <View onLayout={onListLayout} style={styles.libraryPanel}>
         <View style={styles.wordList}>
         <Text style={[styles.resultCount, themeStyles?.resultCount]}>
           {ui.resultCount(words.length, safeStart, visibleEnd)}
@@ -3439,7 +3595,11 @@ function LibraryView({
         {visibleWords.map((word, index) => {
           const wordProgress = progress.words[word.id];
           return (
-            <Animated.View key={word.id} style={[styles.libraryItem, themeStyles?.libraryItem, listMotionStyle(index)]}>
+            <Animated.View
+              key={word.id}
+              onLayout={index === 0 ? onFirstItemLayout : undefined}
+              style={[styles.libraryItem, themeStyles?.libraryItem, listMotionStyle(index)]}
+            >
               <AnimatedPressable
                 accessibilityLabel={ui.viewWordDetails(formatWordPrimary(word, studyMode))}
                 accessibilityRole="button"

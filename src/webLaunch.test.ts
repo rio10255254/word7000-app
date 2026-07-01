@@ -8,6 +8,7 @@ const versionPath = path.join(process.cwd(), 'public', 'version.json');
 const serviceWorkerPath = path.join(process.cwd(), 'public', 'service-worker.js');
 const headersPath = path.join(process.cwd(), 'public', '_headers');
 const appPath = path.join(process.cwd(), 'App.tsx');
+const schemaPath = path.join(process.cwd(), 'supabase', 'schema.sql');
 const prepareExportPath = path.join(process.cwd(), 'scripts', 'prepare-web-export.mjs');
 const rootAppleIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon.png');
 const rootApplePrecomposedIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon-precomposed.png');
@@ -80,9 +81,17 @@ describe('free web launch configuration', () => {
 
   test('provides a version endpoint for mobile web app update checks', () => {
     const version = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
+    const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(typeof version.version).toBe('string');
     expect(version.version.length).toBeGreaterThan(0);
+    expect(appSource).toContain('UPDATE_CHECK_INTERVAL_MS = 60_000');
+    expect(appSource).toContain('UPDATE_AUTO_REFRESH_MS = 6500');
+    expect(appSource).toContain('force-update-overlay');
+    expect(appSource).toContain('需要更新才能繼續使用');
+    expect(appSource).toContain('秒後自動更新');
+    expect(appSource).toContain('立即更新');
+    expect(appSource).toContain('setTimeout(refresh, UPDATE_AUTO_REFRESH_MS)');
   });
 
   test('includes a first-launch Safari add-to-home-screen guide', () => {
@@ -209,6 +218,21 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Email 備用登入');
     expect(appSource).toContain('Email fallback');
     expect(appSource).toContain('onGoogleSignIn={handleGoogleSignIn}');
+  });
+
+  test('records signed-in daily active users for Supabase analytics', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const schema = fs.readFileSync(schemaPath, 'utf8');
+
+    expect(appSource).toContain('ACTIVE_USER_HEARTBEAT_MS = 60_000');
+    expect(appSource).toContain('recordDailyActiveUser(asCloudProgressClient(supabaseClient), account.userId)');
+    expect(appSource).toContain('setInterval(recordActivity, ACTIVE_USER_HEARTBEAT_MS)');
+    expect(schema).toContain('create table if not exists public.daily_active_users');
+    expect(schema).toContain('primary key (user_id, activity_date)');
+    expect(schema).toContain('daily_active_users_activity_date_idx');
+    expect(schema).toContain('daily_active_users_last_seen_at_idx');
+    expect(schema).toContain('Users can insert their own daily activity');
+    expect(schema).toContain('Users can update their own daily activity');
   });
 
   test('documents the Google account setup needed after deployment', () => {

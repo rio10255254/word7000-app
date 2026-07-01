@@ -4,6 +4,7 @@ import {
   isSupabaseConfigured,
   loadCloudProgress,
   loadCloudProgressRecord,
+  recordDailyActiveUser,
   saveCloudProgress,
   type CloudProgressClient,
 } from './supabaseProgress';
@@ -21,6 +22,26 @@ function progressState(studiedToday: number): ProgressState {
 function fakeClient(cloudProgress: ProgressState | null): CloudProgressClient {
   return {
     from(tableName: string) {
+      if (tableName === 'daily_active_users') {
+        return {
+          upsert(
+            payload: { activity_date: string; last_seen_at: string; user_id: string },
+            options?: { onConflict?: string },
+          ) {
+            expect(payload.user_id).toBe('user-1');
+            expect(payload.activity_date).toBe('2026-07-01');
+            expect(payload.last_seen_at).toBe('2026-07-01T01:02:03.000Z');
+            expect(options?.onConflict).toBe('user_id,activity_date');
+
+            return {
+              async throwOnError() {
+                return { data: null, error: null };
+              },
+            };
+          },
+        };
+      }
+
       expect(tableName).toBe('profiles');
 
       return {
@@ -102,6 +123,15 @@ describe('Supabase progress sync', () => {
     await expect(saveCloudProgress(fakeClient(null), 'user-1', progressState(4))).resolves.toEqual({
       ok: true,
       message: 'Saved',
+    });
+  });
+
+  test('records one daily active row per signed-in user and date', async () => {
+    await expect(
+      recordDailyActiveUser(fakeClient(null), 'user-1', new Date('2026-07-01T01:02:03.000Z')),
+    ).resolves.toEqual({
+      ok: true,
+      message: 'Recorded',
     });
   });
 });

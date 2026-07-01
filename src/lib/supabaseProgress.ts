@@ -12,19 +12,33 @@ export type CloudProgressLoadResult = {
   progress: ProgressState | null;
 };
 
+type ProfilesTableQuery = {
+  select: (columns?: string) => {
+    eq: (
+      columnName: 'id',
+      userId: string,
+    ) => {
+      maybeSingle: () => Promise<{ data: { progress?: unknown } | null; error: { message?: string } | null }>;
+    };
+  };
+  upsert: (payload: { id: string; progress: ProgressState; updated_at: string }) => {
+    throwOnError: () => Promise<unknown>;
+  };
+};
+
+type DailyActiveUsersTableQuery = {
+  upsert: (
+    payload: { activity_date: string; last_seen_at: string; user_id: string },
+    options?: { onConflict?: string },
+  ) => {
+    throwOnError: () => Promise<unknown>;
+  };
+};
+
 export type CloudProgressClient = {
-  from: (tableName: 'profiles') => {
-    select: (columns?: string) => {
-      eq: (
-        columnName: 'id',
-        userId: string,
-      ) => {
-        maybeSingle: () => Promise<{ data: { progress?: unknown } | null; error: { message?: string } | null }>;
-      };
-    };
-    upsert: (payload: { id: string; progress: ProgressState; updated_at: string }) => {
-      throwOnError: () => Promise<unknown>;
-    };
+  from: {
+    (tableName: 'profiles'): ProfilesTableQuery;
+    (tableName: 'daily_active_users'): DailyActiveUsersTableQuery;
   };
 };
 
@@ -104,6 +118,41 @@ export async function saveCloudProgress(
     return {
       ok: false,
       message: error instanceof Error ? error.message : 'Save failed',
+    };
+  }
+}
+
+export async function recordDailyActiveUser(
+  client: CloudProgressClient,
+  userId: string,
+  now = new Date(),
+): Promise<CloudProgressResult> {
+  const seenAt = now.toISOString();
+  const activityDate = seenAt.slice(0, 10);
+
+  try {
+    await client
+      .from('daily_active_users')
+      .upsert(
+        {
+          activity_date: activityDate,
+          last_seen_at: seenAt,
+          user_id: userId,
+        },
+        {
+          onConflict: 'user_id,activity_date',
+        },
+      )
+      .throwOnError();
+
+    return {
+      ok: true,
+      message: 'Recorded',
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : 'Activity save failed',
     };
   }
 }

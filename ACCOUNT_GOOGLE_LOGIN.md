@@ -84,14 +84,44 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
 5. 換另一台手機或另一個瀏覽器，用同一個 Google 帳號登入。
 6. 確認收藏、複習、連續天數會同步。
 
-## 7. 注意
+## 7. 每日活躍用戶
+
+重新執行 `supabase/schema.sql` 後，Supabase 會建立 `daily_active_users` 表。App 會在使用者登入後每 60 秒更新一次當天活動紀錄。
+
+查今天活躍登入用戶：
+
+```sql
+select count(*) as today_active_users
+from public.daily_active_users
+where activity_date = current_date;
+```
+
+查最近 5 分鐘在線登入用戶：
+
+```sql
+select count(*) as online_users
+from public.daily_active_users
+where last_seen_at > now() - interval '5 minutes';
+```
+
+查過去 30 天每日活躍用戶：
+
+```sql
+select activity_date, count(*) as active_users
+from public.daily_active_users
+where activity_date >= current_date - interval '30 days'
+group by activity_date
+order by activity_date desc;
+```
+
+## 8. 注意
 
 - 不要把 Google Client Secret 放進 GitHub。
 - 不要把 Supabase service role key 放進 App 或 GitHub。
 - App 只需要 `EXPO_PUBLIC_SUPABASE_URL` 和 `EXPO_PUBLIC_SUPABASE_ANON_KEY`。
 - 如果 Google 登入完成後沒有回到 App，優先檢查 Supabase 的 Redirect URLs 和 Google 的 Authorized redirect URIs。
 
-## 8. 官方文件
+## 9. 官方文件
 
 - Supabase Google login: https://supabase.com/docs/guides/auth/social-login/auth-google
 - Supabase JavaScript OAuth: https://supabase.com/docs/reference/javascript/auth-signinwithoauth

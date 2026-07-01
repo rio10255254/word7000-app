@@ -75,7 +75,12 @@ import {
 } from './src/lib/progress';
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
 import { loadProgressFromStorage, saveProgressToStorage, type StorageLike } from './src/lib/progressStorage';
-import { loadCloudProgressRecord, saveCloudProgress, type CloudProgressClient } from './src/lib/supabaseProgress';
+import {
+  loadCloudProgressRecord,
+  recordDailyActiveUser,
+  saveCloudProgress,
+  type CloudProgressClient,
+} from './src/lib/supabaseProgress';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
 import {
@@ -121,6 +126,8 @@ type AccountState = {
 };
 type UpdateState = {
   available: boolean;
+  countdownSeconds: number;
+  detail: string;
   message: string;
   refresh: () => void;
 };
@@ -131,6 +138,9 @@ type FilterOption = {
 
 const today = new Date().toISOString().slice(0, 10);
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
+const UPDATE_AUTO_REFRESH_MS = 6500;
+const UPDATE_CHECK_INTERVAL_MS = 60_000;
+const ACTIVE_USER_HEARTBEAT_MS = 60_000;
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
@@ -979,6 +989,38 @@ export default function App() {
     };
   }, [account.userId, progress, progressReady, supabaseClient]);
 
+  useEffect(() => {
+    if (!supabaseClient || !account.userId) {
+      return;
+    }
+
+    let cancelled = false;
+    const recordActivity = () => {
+      if (cancelled || !account.userId) {
+        return;
+      }
+
+      recordDailyActiveUser(asCloudProgressClient(supabaseClient), account.userId).catch(() => undefined);
+    };
+
+    recordActivity();
+    const heartbeat = setInterval(recordActivity, ACTIVE_USER_HEARTBEAT_MS);
+    const visibilityDocument = (globalThis as { document?: Document }).document;
+    const handleVisibility = () => {
+      if (visibilityDocument?.visibilityState === 'visible') {
+        recordActivity();
+      }
+    };
+
+    visibilityDocument?.addEventListener?.('visibilitychange', handleVisibility);
+
+    return () => {
+      cancelled = true;
+      clearInterval(heartbeat);
+      visibilityDocument?.removeEventListener?.('visibilitychange', handleVisibility);
+    };
+  }, [account.userId, supabaseClient]);
+
   function nextStudyWord() {
     setWordIndex((current) => (studyWords.length > 0 ? (current + 1) % studyWords.length : 0));
   }
@@ -1451,15 +1493,6 @@ export default function App() {
             <Text style={[styles.levelText, themeStyles?.levelText]}>Day {progress.streak}</Text>
           </View>
         </View>
-        {updateState.available && (
-          <View style={[styles.updateBanner, themeStyles?.updateBanner]}>
-            <Text style={[styles.updateText, themeStyles?.updateText]}>{updateState.message}</Text>
-            <AnimatedPressable accessibilityRole="button" onPress={updateState.refresh} pressTone="primary" style={styles.updateButton}>
-              <Text style={styles.updateButtonText}>更新</Text>
-            </AnimatedPressable>
-          </View>
-        )}
-
         <ScrollView
           contentContainerStyle={styles.content}
           onScroll={handleScroll}
@@ -1722,6 +1755,14 @@ export default function App() {
             testID="theme-transition-overlay"
           />
         )}
+        {updateState.available && (
+          <UpdateRequiredOverlay
+            countdownSeconds={updateState.countdownSeconds}
+            detail={updateState.detail}
+            message={updateState.message}
+            onRefresh={updateState.refresh}
+          />
+        )}
       </View>
     </SafeAreaView>
     </ThemeContext.Provider>
@@ -1749,7 +1790,16 @@ function useWebServiceWorker() {
 
 function useAppUpdateCheck(): UpdateState {
   const [available, setAvailable] = useState(false);
+  const [countdownSeconds, setCountdownSeconds] = useState(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
+
+  const refresh = useCallback(() => {
+    const storage = getBrowserStorage();
+    if (latestVersion) {
+      storage?.setItem(UPDATE_STORAGE_KEY, latestVersion);
+    }
+    (globalThis as { location?: { reload: () => void } }).location?.reload();
+  }, [latestVersion]);
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
@@ -1779,6 +1829,7 @@ function useAppUpdateCheck(): UpdateState {
 
         if (storedVersion !== version) {
           setLatestVersion(version);
+          setCountdownSeconds(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
           setAvailable(true);
         }
       } catch {
@@ -1787,6 +1838,7 @@ function useAppUpdateCheck(): UpdateState {
     }
 
     checkVersion();
+    const interval = setInterval(checkVersion, UPDATE_CHECK_INTERVAL_MS);
 
     const visibilityDocument = (globalThis as { document?: Document }).document;
     const handleVisibility = () => {
@@ -1798,21 +1850,32 @@ function useAppUpdateCheck(): UpdateState {
 
     return () => {
       cancelled = true;
+      clearInterval(interval);
       visibilityDocument?.removeEventListener?.('visibilitychange', handleVisibility);
     };
   }, []);
 
-  function refresh() {
-    const storage = getBrowserStorage();
-    if (latestVersion) {
-      storage?.setItem(UPDATE_STORAGE_KEY, latestVersion);
+  useEffect(() => {
+    if (!available) {
+      return;
     }
-    (globalThis as { location?: { reload: () => void } }).location?.reload();
-  }
+
+    const countdown = setInterval(() => {
+      setCountdownSeconds((current) => Math.max(1, current - 1));
+    }, 1000);
+    const autoRefresh = setTimeout(refresh, UPDATE_AUTO_REFRESH_MS);
+
+    return () => {
+      clearInterval(countdown);
+      clearTimeout(autoRefresh);
+    };
+  }, [available, refresh]);
 
   return {
     available,
-    message: '有新版本可用',
+    countdownSeconds,
+    detail: '為了避免字庫、帳號同步或介面版本不同步，系統會自動更新到最新版。',
+    message: '需要更新才能繼續使用',
     refresh,
   };
 }
@@ -2174,6 +2237,41 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
         {children}
       </Animated.View>
     </Animated.View>
+  );
+}
+
+function UpdateRequiredOverlay({
+  countdownSeconds,
+  detail,
+  message,
+  onRefresh,
+}: {
+  countdownSeconds: number;
+  detail: string;
+  message: string;
+  onRefresh: () => void;
+}) {
+  const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
+  const iconColor = darkMode ? '#bfdbfe' : '#2563eb';
+
+  return (
+    <View style={[styles.updateRequiredOverlay, themeStyles?.updateRequiredOverlay]} testID="force-update-overlay">
+      <View style={[styles.updateRequiredCard, themeStyles?.updateRequiredCard]}>
+        <View style={[styles.updateRequiredIcon, themeStyles?.updateRequiredIcon]}>
+          <Cloud size={30} color={iconColor} strokeWidth={2.4} />
+        </View>
+        <Text style={[styles.updateRequiredTitle, themeStyles?.updateRequiredTitle]}>{message}</Text>
+        <Text style={[styles.updateRequiredText, themeStyles?.updateRequiredText]}>{detail}</Text>
+        <Text style={[styles.updateRequiredCountdown, themeStyles?.updateRequiredCountdown]}>
+          {countdownSeconds} 秒後自動更新
+        </Text>
+        <AnimatedPressable accessibilityRole="button" onPress={onRefresh} pressTone="primary" style={styles.updateRequiredButton}>
+          <RotateCcw size={17} color="#fff" strokeWidth={2.4} />
+          <Text style={styles.updateRequiredButtonText}>立即更新</Text>
+        </AnimatedPressable>
+      </View>
+    </View>
   );
 }
 
@@ -3999,6 +4097,81 @@ const styles = StyleSheet.create({
   updateButtonText: {
     color: '#fff',
     fontSize: 13,
+    fontWeight: '900',
+  },
+  updateRequiredOverlay: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(15, 23, 42, 0.78)',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    padding: 22,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 95,
+  },
+  updateRequiredCard: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    maxWidth: 420,
+    paddingHorizontal: 22,
+    paddingVertical: 24,
+    shadowColor: '#172033',
+    shadowOffset: { height: 18, width: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 30,
+    width: '100%',
+  },
+  updateRequiredIcon: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 58,
+    justifyContent: 'center',
+    width: 58,
+  },
+  updateRequiredTitle: {
+    color: '#172033',
+    fontSize: 21,
+    fontWeight: '900',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  updateRequiredText: {
+    color: '#64748b',
+    fontSize: 14,
+    fontWeight: '700',
+    lineHeight: 21,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  updateRequiredCountdown: {
+    color: '#1d4ed8',
+    fontSize: 15,
+    fontWeight: '900',
+    marginTop: 16,
+  },
+  updateRequiredButton: {
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    marginTop: 16,
+    minHeight: 48,
+    paddingHorizontal: 18,
+    width: '100%',
+  },
+  updateRequiredButtonText: {
+    color: '#fff',
+    fontSize: 15,
     fontWeight: '900',
   },
   content: {
@@ -5974,6 +6147,26 @@ const darkStyles = StyleSheet.create({
     borderBottomColor: '#1d4ed8',
   },
   updateText: {
+    color: '#bfdbfe',
+  },
+  updateRequiredOverlay: {
+    backgroundColor: 'rgba(2, 6, 23, 0.84)',
+  },
+  updateRequiredCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  updateRequiredIcon: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  updateRequiredTitle: {
+    color: '#f8fafc',
+  },
+  updateRequiredText: {
+    color: '#cbd5e1',
+  },
+  updateRequiredCountdown: {
     color: '#bfdbfe',
   },
   tabBar: {

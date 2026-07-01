@@ -8,8 +8,41 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
 const sourcePath = path.join(projectRoot, '.codex-run', 'ecdict.csv');
 const outputPath = path.join(projectRoot, 'src', 'data', 'words.ts');
+const reviewedExamplesPath = path.join(projectRoot, 'src', 'data', 'reviewed-examples.json');
 const TARGET_COUNT = 7000;
 const convertToTraditional = OpenCC.Converter({ from: 'cn', to: 'tw' });
+
+function loadReviewedExamples() {
+  if (!fs.existsSync(reviewedExamplesPath)) {
+    return new Map();
+  }
+
+  const rows = JSON.parse(fs.readFileSync(reviewedExamplesPath, 'utf8'));
+  if (!Array.isArray(rows)) {
+    throw new Error(`Reviewed examples must be an array: ${reviewedExamplesPath}`);
+  }
+
+  const reviewed = new Map();
+  rows.forEach((row, index) => {
+    const word = row.word?.trim().toLowerCase();
+    const example = row.example?.trim();
+    const exampleZh = row.exampleZh?.trim();
+    const status = row.status?.trim();
+
+    if (!word || !example || !exampleZh || status !== 'approved') {
+      throw new Error(`Invalid reviewed example at row ${index + 1}`);
+    }
+    if (reviewed.has(word)) {
+      throw new Error(`Duplicate reviewed example for word: ${word}`);
+    }
+
+    reviewed.set(word, { example, exampleZh });
+  });
+
+  return reviewed;
+}
+
+const reviewedExamples = loadReviewedExamples();
 
 const seedOverrides = new Map(
   [
@@ -1059,12 +1092,15 @@ function isUsableWord(row) {
 
 function toEntry(row, index) {
   const word = row.word.trim().toLowerCase();
+  const reviewedExample = reviewedExamples.get(word);
   const override = seedOverrides.get(word);
   const meaningZh = override?.meaningZh ?? cleanMeaning(row.translation);
   const pronunciation = row.phonetic?.trim() ? `/${row.phonetic.trim()}/` : '/-/';
   const group = `Core ${Math.floor(index / 500) + 1}`;
   const partOfSpeechValue = partOfSpeech(row);
-  const [example, exampleZh] = override
+  const [example, exampleZh] = reviewedExample
+    ? [reviewedExample.example, reviewedExample.exampleZh]
+    : override
     ? [override.example, override.exampleZh]
     : generatedExample(row, word, partOfSpeechValue, meaningZh, index);
 

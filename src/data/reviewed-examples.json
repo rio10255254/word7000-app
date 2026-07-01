@@ -1,0 +1,1556 @@
+[
+  {
+    "word": "they",
+    "example": "They waited outside the classroom.",
+    "exampleZh": "他們在教室外面等。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "year",
+    "example": "This year has been unusually busy.",
+    "exampleZh": "今年特別忙。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "new",
+    "example": "She bought a new notebook for class.",
+    "exampleZh": "她為上課買了一本新筆記本。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "way",
+    "example": "This way is shorter than the main road.",
+    "exampleZh": "這條路比主要道路短。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "want",
+    "example": "I want a quiet place to study.",
+    "exampleZh": "我想要一個安靜的地方讀書。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "day",
+    "example": "The first day of school felt exciting.",
+    "exampleZh": "開學第一天讓人覺得很興奮。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "any",
+    "example": "Do you have any questions?",
+    "exampleZh": "你有任何問題嗎？",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "find",
+    "example": "I cannot find my keys.",
+    "exampleZh": "我找不到我的鑰匙。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "many",
+    "example": "Many students joined the club.",
+    "exampleZh": "許多學生加入了社團。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "child",
+    "example": "The child drew a picture of his family.",
+    "exampleZh": "那個孩子畫了一張家人的圖。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "world",
+    "example": "The world needs cleaner energy.",
+    "exampleZh": "世界需要更乾淨的能源。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "school",
+    "example": "Our school has a new library.",
+    "exampleZh": "我們學校有一座新的圖書館。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "such",
+    "example": "Such mistakes are easy to avoid.",
+    "exampleZh": "這樣的錯誤很容易避免。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "great",
+    "example": "She made great progress this month.",
+    "exampleZh": "她這個月進步很大。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "government",
+    "example": "The government announced a new policy.",
+    "exampleZh": "政府宣布了一項新政策。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "family",
+    "example": "My family eats dinner together on Sundays.",
+    "exampleZh": "我家星期天會一起吃晚餐。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "number",
+    "example": "Please write your phone number here.",
+    "exampleZh": "請把你的電話號碼寫在這裡。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "each",
+    "example": "Each student received a workbook.",
+    "exampleZh": "每位學生都收到一本練習冊。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "area",
+    "example": "This area is quiet at night.",
+    "exampleZh": "這個區域晚上很安靜。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "small",
+    "example": "A small mistake changed the answer.",
+    "exampleZh": "一個小錯誤改變了答案。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "few",
+    "example": "Few people knew the full story.",
+    "exampleZh": "很少人知道完整的故事。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "house",
+    "example": "Their house is near the river.",
+    "exampleZh": "他們的房子在河邊。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "let",
+    "example": "Please let me know your decision.",
+    "exampleZh": "請讓我知道你的決定。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "run",
+    "example": "I run in the park every morning.",
+    "exampleZh": "我每天早上在公園跑步。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "service",
+    "example": "The hotel service was friendly.",
+    "exampleZh": "那家飯店的服務很親切。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "bring",
+    "example": "Please bring your notebook tomorrow.",
+    "exampleZh": "請明天帶你的筆記本。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "play",
+    "example": "The children play soccer after school.",
+    "exampleZh": "孩子們放學後踢足球。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "side",
+    "example": "Stand on the left side of the line.",
+    "exampleZh": "站在線的左邊。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "money",
+    "example": "She saved money for a new computer.",
+    "exampleZh": "她存錢買新電腦。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "happen",
+    "example": "Accidents can happen on wet roads.",
+    "exampleZh": "濕滑道路上可能會發生事故。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "important",
+    "example": "Sleep is important for good health.",
+    "exampleZh": "睡眠對健康很重要。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "within",
+    "example": "Please finish the form within ten minutes.",
+    "exampleZh": "請在十分鐘內填完表格。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "mother",
+    "example": "His mother called after dinner.",
+    "exampleZh": "他母親晚餐後打電話來。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "meet",
+    "example": "We will meet at the station.",
+    "exampleZh": "我們會在車站見面。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "law",
+    "example": "The law protects workers' rights.",
+    "exampleZh": "這項法律保障勞工權益。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "political",
+    "example": "The political debate lasted two hours.",
+    "exampleZh": "這場政治辯論持續了兩小時。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "level",
+    "example": "The water level rose after the rain.",
+    "exampleZh": "雨後水位上升了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "body",
+    "example": "Exercise keeps the body strong.",
+    "exampleZh": "運動能讓身體保持強壯。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "lose",
+    "example": "Do not lose your ticket.",
+    "exampleZh": "不要弄丟你的票。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "second",
+    "example": "The second question was harder.",
+    "exampleZh": "第二題比較難。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "continue",
+    "example": "We will continue the lesson tomorrow.",
+    "exampleZh": "我們明天會繼續這堂課。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "result",
+    "example": "The final result surprised everyone.",
+    "exampleZh": "最後結果讓大家都很驚訝。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "policy",
+    "example": "The school changed its phone policy.",
+    "exampleZh": "學校修改了手機政策。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "office",
+    "example": "She left the office at six.",
+    "exampleZh": "她六點離開辦公室。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "public",
+    "example": "The public park closes at night.",
+    "exampleZh": "這座公共公園晚上關閉。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "reason",
+    "example": "Tell me the reason for your choice.",
+    "exampleZh": "告訴我你選擇的理由。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "several",
+    "example": "Several students stayed after class.",
+    "exampleZh": "幾位學生下課後留下來。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "possible",
+    "example": "It is possible to finish today.",
+    "exampleZh": "今天完成是可能的。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "real",
+    "example": "The story is based on a real event.",
+    "exampleZh": "這個故事是根據真實事件改編的。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "remember",
+    "example": "Remember to lock the door.",
+    "exampleZh": "記得鎖門。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "win",
+    "example": "Our team hopes to win the game.",
+    "exampleZh": "我們隊希望贏得比賽。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "remain",
+    "example": "Only three seats remain.",
+    "exampleZh": "只剩三個座位。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "send",
+    "example": "Please send the file tonight.",
+    "exampleZh": "請今晚寄出檔案。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "police",
+    "example": "The police arrived quickly.",
+    "exampleZh": "警方很快抵達。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "society",
+    "example": "Technology changes society quickly.",
+    "exampleZh": "科技快速改變社會。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "sense",
+    "example": "This answer makes sense.",
+    "exampleZh": "這個答案說得通。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "die",
+    "example": "Many plants die without water.",
+    "exampleZh": "許多植物沒有水會枯死。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "position",
+    "example": "She accepted a new position at the company.",
+    "exampleZh": "她接受了公司的新職位。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "experience",
+    "example": "Travel can be a valuable experience.",
+    "exampleZh": "旅行可能是一段寶貴的經驗。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "wait",
+    "example": "Please wait outside the room.",
+    "exampleZh": "請在房間外面等。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "receive",
+    "example": "You will receive an email tomorrow.",
+    "exampleZh": "你明天會收到一封電子郵件。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "develop",
+    "example": "Children develop skills through practice.",
+    "exampleZh": "孩子透過練習培養技能。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "available",
+    "example": "Free seats are available near the front.",
+    "exampleZh": "前排附近還有空位。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "human",
+    "example": "Every human needs clean water.",
+    "exampleZh": "每個人都需要乾淨的水。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "pass",
+    "example": "Please pass the salt.",
+    "exampleZh": "請把鹽遞過來。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "whole",
+    "example": "The whole class laughed at the joke.",
+    "exampleZh": "全班都被這個笑話逗笑了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "stay",
+    "example": "We will stay here tonight.",
+    "exampleZh": "我們今晚會待在這裡。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "street",
+    "example": "The street was quiet after midnight.",
+    "exampleZh": "午夜後街道很安靜。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "industry",
+    "example": "The tourism industry recovered slowly.",
+    "exampleZh": "觀光產業慢慢復甦。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "strong",
+    "example": "A strong wind shook the windows.",
+    "exampleZh": "強風吹動窗戶。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "describe",
+    "example": "Can you describe the picture?",
+    "exampleZh": "你能描述這張圖片嗎？",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "special",
+    "example": "This is a special day for our family.",
+    "exampleZh": "這對我們家是特別的一天。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "least",
+    "example": "Choose the route with the least traffic.",
+    "exampleZh": "選車流最少的路線。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "free",
+    "example": "The museum is free on Sundays.",
+    "exampleZh": "這座博物館星期天免費。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "hard",
+    "example": "This chair is too hard to sit on.",
+    "exampleZh": "這張椅子太硬，不好坐。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "either",
+    "example": "Either answer is acceptable.",
+    "exampleZh": "兩個答案都可以。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "event",
+    "example": "The event begins at seven.",
+    "exampleZh": "活動七點開始。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "draw",
+    "example": "Please draw a circle around your answer.",
+    "exampleZh": "請在你的答案外面畫一個圓。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "record",
+    "example": "Keep a record of your expenses.",
+    "exampleZh": "記錄你的支出。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "likely",
+    "example": "Rain is likely this afternoon.",
+    "exampleZh": "今天下午可能會下雨。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "difficult",
+    "example": "This problem is difficult but not impossible.",
+    "exampleZh": "這個問題很難，但不是不可能。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "tax",
+    "example": "The tax is included in the price.",
+    "exampleZh": "稅已經包含在價格裡。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "base",
+    "example": "The lamp has a heavy base.",
+    "exampleZh": "這盞燈有沉重的底座。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "easy",
+    "example": "The instructions are easy to follow.",
+    "exampleZh": "這些說明很容易照著做。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "better",
+    "example": "This plan is better than the old one.",
+    "exampleZh": "這個計畫比舊的更好。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "cause",
+    "example": "Heavy rain can cause delays.",
+    "exampleZh": "大雨可能造成延誤。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "cover",
+    "example": "Put the cover back on the box.",
+    "exampleZh": "把蓋子放回盒子上。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "director",
+    "example": "The director approved the final scene.",
+    "exampleZh": "導演批准了最後一幕。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "effort",
+    "example": "Her effort helped the team succeed.",
+    "exampleZh": "她的努力幫助團隊成功。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "nation",
+    "example": "The nation celebrated its independence day.",
+    "exampleZh": "這個國家慶祝獨立日。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "rule",
+    "example": "This rule applies to everyone.",
+    "exampleZh": "這條規則適用於所有人。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "thank",
+    "example": "I want to thank you for your help.",
+    "exampleZh": "我想謝謝你的幫忙。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "increase",
+    "example": "Prices may increase next month.",
+    "exampleZh": "價格下個月可能會上漲。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "recent",
+    "example": "Recent news changed the discussion.",
+    "exampleZh": "最近的新聞改變了討論方向。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "meeting",
+    "example": "The meeting starts at nine.",
+    "exampleZh": "會議九點開始。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "test",
+    "example": "The test includes ten questions.",
+    "exampleZh": "這次測驗包含十題。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "military",
+    "example": "The military base is outside the city.",
+    "exampleZh": "軍事基地在城外。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "single",
+    "example": "She wrote a single sentence on the page.",
+    "exampleZh": "她在頁面上寫了一個句子。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "chance",
+    "example": "This is your last chance to ask.",
+    "exampleZh": "這是你最後一次提問的機會。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "news",
+    "example": "The news spread quickly online.",
+    "exampleZh": "這則新聞很快在網路上傳開。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "step",
+    "example": "The first step is to read the instructions.",
+    "exampleZh": "第一步是閱讀說明。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "hit",
+    "example": "The ball hit the window.",
+    "exampleZh": "球打到了窗戶。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "example",
+    "example": "This example is easy to understand.",
+    "exampleZh": "這個例子很容易理解。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "red",
+    "example": "She wore a red coat to school.",
+    "exampleZh": "她穿著紅色外套去學校。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "star",
+    "example": "A bright star appeared in the sky.",
+    "exampleZh": "天空中出現了一顆明亮的星星。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "page",
+    "example": "Turn to page ten.",
+    "exampleZh": "翻到第十頁。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "rise",
+    "example": "Prices rise when demand is high.",
+    "exampleZh": "需求高時價格會上漲。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "department",
+    "example": "The sales department moved upstairs.",
+    "exampleZh": "業務部搬到樓上。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "brother",
+    "example": "My brother studies in Taichung.",
+    "exampleZh": "我哥哥在台中讀書。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "official",
+    "example": "The official report arrived yesterday.",
+    "exampleZh": "正式報告昨天送到了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "financial",
+    "example": "She asked for financial advice.",
+    "exampleZh": "她尋求財務建議。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "account",
+    "example": "I opened a bank account last year.",
+    "exampleZh": "我去年開了一個銀行帳戶。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "top",
+    "example": "Write your name at the top of the page.",
+    "exampleZh": "把名字寫在頁面上方。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "daughter",
+    "example": "Their daughter plays the piano.",
+    "exampleZh": "他們的女兒會彈鋼琴。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "election",
+    "example": "The election results were announced at night.",
+    "exampleZh": "選舉結果在晚上公布。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "pressure",
+    "example": "The pressure at work made him tired.",
+    "exampleZh": "工作壓力讓他很累。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "thought",
+    "example": "A sudden thought changed her plan.",
+    "exampleZh": "一個突然的想法改變了她的計畫。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "bit",
+    "example": "Add a bit of salt to the soup.",
+    "exampleZh": "在湯裡加一點鹽。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "centre",
+    "example": "The statue stands in the centre of the square.",
+    "exampleZh": "雕像立在廣場中央。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "campaign",
+    "example": "The campaign encouraged people to vote.",
+    "exampleZh": "這場活動鼓勵人們投票。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "club",
+    "example": "She joined the chess club.",
+    "exampleZh": "她加入了西洋棋社。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "wide",
+    "example": "The river is wide at this point.",
+    "exampleZh": "這條河在這裡很寬。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "fight",
+    "example": "The fight ended before anyone was hurt.",
+    "exampleZh": "衝突在有人受傷前就結束了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "concern",
+    "example": "Her main concern is safety.",
+    "exampleZh": "她主要擔心的是安全。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "think",
+    "example": "I think this plan will work.",
+    "exampleZh": "我認為這個計畫可行。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "people",
+    "example": "Many people waited for the bus.",
+    "exampleZh": "許多人在等公車。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "give",
+    "example": "Please give me a clear answer.",
+    "exampleZh": "請給我一個清楚的答案。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "very",
+    "example": "The room was very quiet.",
+    "exampleZh": "房間非常安靜。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "thing",
+    "example": "This thing belongs on the shelf.",
+    "exampleZh": "這個東西應該放在架子上。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "tell",
+    "example": "Please tell me the truth.",
+    "exampleZh": "請告訴我真相。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "staff",
+    "example": "The staff helped guests find their seats.",
+    "exampleZh": "工作人員協助客人找到座位。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "wall",
+    "example": "The picture hangs on the wall.",
+    "exampleZh": "那幅畫掛在牆上。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "drug",
+    "example": "The doctor prescribed a new drug.",
+    "exampleZh": "醫生開了一種新藥。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "hospital",
+    "example": "The hospital is open all night.",
+    "exampleZh": "這家醫院整晚都開放。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "season",
+    "example": "Spring is my favorite season.",
+    "exampleZh": "春天是我最喜歡的季節。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "soon",
+    "example": "The train will arrive soon.",
+    "exampleZh": "火車很快就會到。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "accept",
+    "example": "She decided to accept the offer.",
+    "exampleZh": "她決定接受這個提議。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "trade",
+    "example": "International trade affects local prices.",
+    "exampleZh": "國際貿易會影響當地價格。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "rather",
+    "example": "I would rather stay home tonight.",
+    "exampleZh": "我今晚寧願待在家裡。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "central",
+    "example": "The central station is very busy.",
+    "exampleZh": "中央車站非常忙碌。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "stage",
+    "example": "The actor walked onto the stage.",
+    "exampleZh": "演員走上舞臺。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "seek",
+    "example": "They seek advice from a teacher.",
+    "exampleZh": "他們向老師尋求建議。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "future",
+    "example": "The future depends on today's choices.",
+    "exampleZh": "未來取決於今天的選擇。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "security",
+    "example": "Airport security checked every bag.",
+    "exampleZh": "機場安檢檢查了每個包包。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "film",
+    "example": "We watched a short film in class.",
+    "exampleZh": "我們在課堂上看了一部短片。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "plant",
+    "example": "Please water the plant every morning.",
+    "exampleZh": "請每天早上給植物澆水。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "oil",
+    "example": "The engine needs more oil.",
+    "exampleZh": "引擎需要更多機油。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "claim",
+    "example": "The company denied the claim.",
+    "exampleZh": "公司否認了這項說法。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "herself",
+    "example": "She made the dress herself.",
+    "exampleZh": "她自己做了這件洋裝。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "economy",
+    "example": "The economy grew slowly this year.",
+    "exampleZh": "今年經濟緩慢成長。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "fail",
+    "example": "Do not give up if you fail once.",
+    "exampleZh": "如果失敗一次，不要放棄。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "west",
+    "example": "The sun sets in the west.",
+    "exampleZh": "太陽從西方落下。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "near",
+    "example": "The school is near my home.",
+    "exampleZh": "學校在我家附近。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "east",
+    "example": "The wind came from the east.",
+    "exampleZh": "風從東方吹來。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "design",
+    "example": "She helped design the new website.",
+    "exampleZh": "她協助設計新網站。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "life",
+    "example": "A healthy life requires rest and exercise.",
+    "exampleZh": "健康的生活需要休息和運動。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "try",
+    "example": "I will try again tomorrow.",
+    "exampleZh": "我明天會再試一次。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "company",
+    "example": "The company hired three new engineers.",
+    "exampleZh": "公司聘請了三位新工程師。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "question",
+    "example": "The question was difficult but fair.",
+    "exampleZh": "這個問題很難，但很合理。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "book",
+    "example": "I borrowed a book from the library.",
+    "exampleZh": "我從圖書館借了一本書。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "change",
+    "example": "Small habits can change your day.",
+    "exampleZh": "小習慣能改變你的一天。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "stand",
+    "example": "Please stand behind the yellow line.",
+    "exampleZh": "請站在黃線後面。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "stop",
+    "example": "The bus will stop at the corner.",
+    "exampleZh": "公車會在轉角停靠。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "late",
+    "example": "The train was late because of rain.",
+    "exampleZh": "火車因為下雨誤點了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "road",
+    "example": "The road was closed after the storm.",
+    "exampleZh": "暴風雨後道路封閉了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "course",
+    "example": "This course teaches basic writing.",
+    "exampleZh": "這門課教授基礎寫作。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "price",
+    "example": "The price of rice increased this week.",
+    "exampleZh": "米價這週上漲了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "major",
+    "example": "Traffic is a major problem here.",
+    "exampleZh": "交通是這裡的主要問題。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "everything",
+    "example": "Everything is ready for the trip.",
+    "exampleZh": "旅行的一切都準備好了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "building",
+    "example": "The building has twelve floors.",
+    "exampleZh": "這棟建築有十二層樓。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "ground",
+    "example": "The ground was wet after the rain.",
+    "exampleZh": "雨後地面濕了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "council",
+    "example": "The city council approved the plan.",
+    "exampleZh": "市議會批准了這項計畫。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "along",
+    "example": "We walked along the river.",
+    "exampleZh": "我們沿著河邊走。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "list",
+    "example": "I wrote a list of things to buy.",
+    "exampleZh": "我寫了一張購物清單。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "like",
+    "example": "I like quiet music.",
+    "exampleZh": "我喜歡安靜的音樂。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "man",
+    "example": "The man opened the door for us.",
+    "exampleZh": "那位男子幫我們開門。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "woman",
+    "example": "A woman asked for directions.",
+    "exampleZh": "一位女子問路。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "work",
+    "example": "Her work requires careful planning.",
+    "exampleZh": "她的工作需要仔細規劃。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "become",
+    "example": "Practice can become a daily habit.",
+    "exampleZh": "練習可以變成每天的習慣。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "ask",
+    "example": "You can ask me after class.",
+    "exampleZh": "你可以下課後問我。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "call",
+    "example": "Please call me after dinner.",
+    "exampleZh": "請晚餐後打電話給我。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "leave",
+    "example": "We will leave before sunrise.",
+    "exampleZh": "我們會在日出前離開。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "another",
+    "example": "Can I have another cup of tea?",
+    "exampleZh": "我可以再喝一杯茶嗎？",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "really",
+    "example": "I really like this song.",
+    "exampleZh": "我真的喜歡這首歌。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "state",
+    "example": "The report describes the current state of the project.",
+    "exampleZh": "報告描述了專案目前的狀態。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "problem",
+    "example": "We solved the problem together.",
+    "exampleZh": "我們一起解決了這個問題。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "country",
+    "example": "She moved to another country last year.",
+    "exampleZh": "她去年搬到另一個國家。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "turn",
+    "example": "Turn left at the next corner.",
+    "exampleZh": "在下一個轉角左轉。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "begin",
+    "example": "The movie will begin at eight.",
+    "exampleZh": "電影八點開始。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "help",
+    "example": "Can you help me carry this box?",
+    "exampleZh": "你可以幫我搬這個箱子嗎？",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "week",
+    "example": "We have a test next week.",
+    "exampleZh": "我們下週有考試。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "start",
+    "example": "Class will start in five minutes.",
+    "exampleZh": "課五分鐘後開始。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "every",
+    "example": "Every seat was taken.",
+    "exampleZh": "每個座位都有人坐了。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "point",
+    "example": "She made an important point.",
+    "exampleZh": "她提出了一個重點。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "large",
+    "example": "A large crowd filled the square.",
+    "exampleZh": "一大群人擠滿了廣場。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "talk",
+    "example": "We need to talk after lunch.",
+    "exampleZh": "我們午餐後需要談一談。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "different",
+    "example": "They chose different answers.",
+    "exampleZh": "他們選了不同的答案。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "next",
+    "example": "The next train leaves at noon.",
+    "exampleZh": "下一班火車中午出發。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "hear",
+    "example": "I can hear music from the room.",
+    "exampleZh": "我聽得到房間裡傳來音樂。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "night",
+    "example": "The city is quiet at night.",
+    "exampleZh": "城市在夜晚很安靜。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "move",
+    "example": "Please move the chair closer.",
+    "exampleZh": "請把椅子移近一點。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "write",
+    "example": "Write your answer on the line.",
+    "exampleZh": "把你的答案寫在線上。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "member",
+    "example": "Each member has one vote.",
+    "exampleZh": "每位成員都有一票。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "end",
+    "example": "The story has a happy end.",
+    "exampleZh": "這個故事有快樂的結尾。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "water",
+    "example": "Drink water after exercise.",
+    "exampleZh": "運動後喝水。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "head",
+    "example": "She nodded her head.",
+    "exampleZh": "她點了點頭。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "young",
+    "example": "The young singer won an award.",
+    "exampleZh": "那位年輕歌手得了獎。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "national",
+    "example": "The national museum opens at nine.",
+    "exampleZh": "國家博物館九點開門。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "party",
+    "example": "We are planning a birthday party.",
+    "exampleZh": "我們正在籌備生日派對。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "study",
+    "example": "I study English every night.",
+    "exampleZh": "我每天晚上讀英文。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "social",
+    "example": "Social media changed how people communicate.",
+    "exampleZh": "社群媒體改變了人們溝通的方式。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "job",
+    "example": "She found a job near her home.",
+    "exampleZh": "她在家附近找到一份工作。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "pay",
+    "example": "I will pay for lunch today.",
+    "exampleZh": "今天午餐我來付錢。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "today",
+    "example": "Today is colder than yesterday.",
+    "exampleZh": "今天比昨天冷。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "far",
+    "example": "The station is far from here.",
+    "exampleZh": "車站離這裡很遠。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "information",
+    "example": "The website has useful information.",
+    "exampleZh": "這個網站有實用資訊。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "car",
+    "example": "My car needs new tires.",
+    "exampleZh": "我的車需要換新輪胎。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "include",
+    "example": "The price does not include breakfast.",
+    "exampleZh": "這個價格不包含早餐。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "little",
+    "example": "A little patience can help.",
+    "exampleZh": "一點耐心會有幫助。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "friend",
+    "example": "My friend lives nearby.",
+    "exampleZh": "我的朋友住在附近。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "local",
+    "example": "We bought fruit from a local market.",
+    "exampleZh": "我們從當地市場買水果。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  },
+  {
+    "word": "issue",
+    "example": "The team discussed the main issue.",
+    "exampleZh": "團隊討論了主要問題。",
+    "status": "approved",
+    "batch": "core-1-template-cleanup-2026-07-01"
+  }
+]

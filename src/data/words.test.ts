@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import reviewedExamples from './reviewed-examples.json';
 import { sampleWords } from './words';
 
 describe('full vocabulary dataset', () => {
@@ -40,6 +41,25 @@ describe('full vocabulary dataset', () => {
     );
 
     expect(incomplete).toEqual([]);
+  });
+
+  test('applies approved reviewed examples to the built-in vocabulary', () => {
+    const approvedRows = reviewedExamples.filter((row) => row.status === 'approved');
+    const seenWords = new Set<string>();
+
+    for (const row of approvedRows) {
+      expect(row.word.trim()).not.toBe('');
+      expect(row.example.trim()).not.toBe('');
+      expect(row.exampleZh.trim()).not.toBe('');
+      expect(seenWords.has(row.word)).toBe(false);
+      seenWords.add(row.word);
+
+      const entry = sampleWords.find((word) => word.word === row.word);
+      expect(entry).toMatchObject({
+        example: row.example,
+        exampleZh: row.exampleZh,
+      });
+    }
   });
 
   test('uses sentence examples instead of dictionary placeholder text', () => {
@@ -123,6 +143,61 @@ describe('full vocabulary dataset', () => {
     );
 
     expect(highRiskExamples.slice(0, 40).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
+  });
+
+  test('keeps Core 1 free of obvious template-generated example sentences', () => {
+    const templatePatterns = [
+      /\bincludes an? [a-z]+ for the\b/i,
+      /\bclear example of [a-z]+ during\b/i,
+      /\bchanged its plan before\b/i,
+      /\basked about [a-z]+ before\b/i,
+      /\bcontacted the [a-z]+ after\b/i,
+      /\bvisited the [a-z]+ before\b/i,
+      /\bShe gave an? [a-z]+ (answer|question|route|pattern|method) before\b/i,
+      /\bThe [a-z]+ rule helped\b/i,
+      /\bAn? [a-z]+ choice changed\b/i,
+      /\bmay [a-z]+ before\b/i,
+      /\bThe [a-z]+ will (let|lose|remove|imagine|withdraw) before\b/i,
+      /\bWe discussed [a-z]+ in the .* before\b/i,
+      /\bconnected [a-z]+ with daily life\b/i,
+      /\bbegan to [a-z]+ during\b/i,
+      /\bThe [a-z]+ (schedule|record|signal|habit|example|design) was easy to notice\b/i,
+      /\brepaired the [a-z]+ before\b/i,
+      /\bchecked the (year|day|thought|rise) before\b/i,
+      /\bThe bus may (think|fail)\b/i,
+      /\bThe (people|staff|security) answered questions after\b/i,
+      /\bA map near .* marked the (give|wall)\b/i,
+      /\bThe very meeting\b/i,
+      /\bmade thing easier to discuss\b/i,
+      /\btell the room\b/i,
+      /\btable was made of drug\b/i,
+      /\bhospital made the discussion difficult\b/i,
+      /\bsaved the season\b/i,
+      /\bclearer (soon|rather) the final edit\b/i,
+      /\baccept the room after\b/i,
+      /\btrade changed after the rehearsal\b/i,
+      /\bA central room gave us space\b/i,
+      /\bwaited beside the stage\b/i,
+      /\bseek the message after\b/i,
+      /\bfuture passed faster\b/i,
+      /\bchose film for the new design\b/i,
+      /\bplant became a sign of the season near the schedule\b/i,
+      /\breduce the oil before\b/i,
+      /\bA small claim changed the final price\b/i,
+      /\bwith herself in the middle\b/i,
+      /\beconomy covered the cost of the room\b/i,
+      /\bwest changed after the review\b/i,
+      /\bThe near road\b/i,
+      /\bphotographed the east at sunrise\b/i,
+      /\bmade design easier to discuss\b/i,
+    ];
+    const templateExamples = sampleWords.filter(
+      (word) =>
+        word.group === 'Core 1' &&
+        templatePatterns.some((pattern) => pattern.test(`${word.example} ${word.exampleZh}`)),
+    );
+
+    expect(templateExamples.slice(0, 30).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
   });
 
   test('uses polished examples for words that exposed machine-generated phrasing', () => {

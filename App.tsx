@@ -474,7 +474,7 @@ export default function App() {
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const screenAnim = useRef(new Animated.Value(1)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
-  const libraryDetailAnim = useRef(new Animated.Value(1)).current;
+  const libraryDetailAnim = useRef(new Animated.Value(0)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
@@ -577,16 +577,34 @@ export default function App() {
   const darkMode = themeMode === 'dark';
   const libraryDragIconColor = darkMode ? '#bfdbfe' : '#172033';
   const activeModeCopy = modeCopy[studyMode];
+  const libraryDetailOpen = activeTab === 'library' && Boolean(selectedLibraryWord);
+  const screenMotionTransforms = [
+    {
+      translateY: screenAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [8, 0],
+      }),
+    },
+    ...(libraryDetailOpen
+      ? [
+          {
+            translateX: libraryDetailAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, -9],
+            }),
+          },
+          {
+            scale: libraryDetailAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 0.992],
+            }),
+          },
+        ]
+      : []),
+  ];
   const screenMotionStyle = {
     opacity: screenAnim,
-    transform: [
-      {
-        translateY: screenAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [8, 0],
-        }),
-      },
-    ],
+    transform: screenMotionTransforms,
   };
   const cardMotionStyle = {
     opacity: cardAnim,
@@ -629,7 +647,10 @@ export default function App() {
     };
   };
   const libraryDetailBackdropMotionStyle = {
-    opacity: libraryDetailAnim,
+    opacity: libraryDetailAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 0.94],
+    }),
   };
   const libraryDetailPanelMotionStyle = {
     opacity: libraryDetailAnim,

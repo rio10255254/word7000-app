@@ -339,6 +339,8 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('libraryDetailBackdropMotionStyle');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
+    expect(appSource).toContain('libraryDetailOpen');
+    expect(appSource).toContain('screenMotionTransforms');
     expect(appSource).toContain('styles.libraryDetailOverlay');
     expect(appSource).toContain('styles.libraryDetailBackdrop');
     expect(appSource).toContain('styles.libraryDetailPanel');
@@ -349,8 +351,12 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
     expect(appSource).toContain('outputRange: [0.985, 1]');
     expect(appSource).toContain('outputRange: [18, 0]');
+    expect(appSource).toContain('outputRange: [0, -9]');
+    expect(appSource).toContain('outputRange: [1, 0.992]');
+    expect(appSource).toContain('outputRange: [0, 0.94]');
     expect(appSource).not.toContain('outputRange: [34, 0]');
     expect(appSource).not.toContain('outputRange: [0.965, 1]');
+    expect(appSource).not.toContain("studyMode === 'chinese' && libraryDetailOpen");
     expect(appSource).toContain('easing: Easing.in(Easing.cubic),\n      toValue: 0');
     expect(appSource).toContain('toValue: 0');
     expect(appSource).toContain('onBack={closeLibraryWordDetail}');

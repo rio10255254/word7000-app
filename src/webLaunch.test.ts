@@ -396,23 +396,27 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('styles.libraryDetailPanel');
     expect(appSource).toContain('themeStyles?.libraryDetailBackdrop');
     expect(appSource).toContain('libraryDetailPanelMotionStyle');
-    expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
+    expect(appSource).toContain('duration: interactionMotion.libraryDetailMs');
     expect(appSource).toContain('function closeLibraryWordDetail()');
-    expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
+    expect(appSource).toContain('duration: interactionMotion.libraryDetailExitMs');
     expect(appSource).toContain("backgroundColor: '#f8fafc'");
     expect(appSource).toContain("backgroundColor: '#0f172a'");
-    expect(appSource).toContain('outputRange: [0.992, 1]');
-    expect(appSource).toContain('outputRange: [14, 0]');
-    expect(appSource).toContain('outputRange: [0, 1]');
-    expect(appSource).not.toContain('outputRange: [34, 0]');
+    expect(appSource).toContain('inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1]');
+    expect(appSource).toContain('outputRange: [28, -4, 0]');
+    expect(appSource).toContain('outputRange: [0.982, 1.006, 1]');
+    expect(appSource).toContain('outputRange: [0, 0.98, 1]');
+    expect(appSource).toContain('Easing.bezier(0.22, 1, 0.36, 1)');
+    expect(appSource).not.toContain('outputRange: [14, 0]');
     expect(appSource).not.toContain('outputRange: [0.965, 1]');
     expect(appSource).not.toContain('screenMotionTransforms');
     expect(appSource).not.toContain('outputRange: [0, -9]');
     expect(appSource).not.toContain('outputRange: [0, 0.94]');
     expect(appSource).not.toContain("studyMode === 'chinese' && libraryDetailOpen");
-    expect(appSource).toContain('easing: Easing.in(Easing.cubic),\n      toValue: 0');
+    expect(appSource).toContain('easing: Easing.bezier(0.55, 0.06, 0.68, 0.19)');
     expect(appSource).toContain('toValue: 0');
     expect(appSource).toContain('onBack={closeLibraryWordDetail}');
+    expect(appSource).toContain('pressTone="libraryItem"');
+    expect(appSource).toContain('styles.libraryItemPressedLift');
   });
 
   test('keeps the current scroll position during profile settings transitions', () => {

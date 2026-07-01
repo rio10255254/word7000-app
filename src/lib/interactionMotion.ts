@@ -1,4 +1,4 @@
-export type InteractionTone = 'primary' | 'secondary' | 'chip' | 'icon' | 'tab' | 'list';
+export type InteractionTone = 'primary' | 'secondary' | 'chip' | 'icon' | 'tab' | 'list' | 'libraryItem';
 
 type PressMotion = {
   pressedOpacity: number;
@@ -13,6 +13,7 @@ const pressMotions: Record<InteractionTone, PressMotion> = {
   icon: { pressedOpacity: 0.9, pressedScale: 0.955, pressedTranslateY: 0 },
   tab: { pressedOpacity: 0.92, pressedScale: 0.96, pressedTranslateY: 1 },
   list: { pressedOpacity: 0.96, pressedScale: 0.985, pressedTranslateY: 1 },
+  libraryItem: { pressedOpacity: 0.93, pressedScale: 0.972, pressedTranslateY: 2 },
 };
 
 export const interactionMotion = {
@@ -30,6 +31,9 @@ export const interactionMotion = {
   screenMs: 280,
   settingsPanelExitMs: 170,
   settingsPanelMs: 310,
+  libraryDetailExitMs: 230,
+  libraryDetailMs: 360,
+  libraryDetailOvershootAt: 0.68,
   guideStepMs: 280,
 };
 

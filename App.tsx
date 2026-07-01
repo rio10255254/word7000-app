@@ -721,23 +721,26 @@ export default function App() {
   };
   const libraryDetailBackdropMotionStyle = {
     opacity: libraryDetailAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
+      inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
+      outputRange: [0, 0.98, 1],
     }),
   };
   const libraryDetailPanelMotionStyle = {
-    opacity: libraryDetailAnim,
+    opacity: libraryDetailAnim.interpolate({
+      inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
+      outputRange: [0, 0.98, 1],
+    }),
     transform: [
       {
         translateX: libraryDetailAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [14, 0],
+          inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
+          outputRange: [28, -4, 0],
         }),
       },
       {
         scale: libraryDetailAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.992, 1],
+          inputRange: [0, interactionMotion.libraryDetailOvershootAt, 1],
+          outputRange: [0.982, 1.006, 1],
         }),
       },
     ],
@@ -1254,8 +1257,8 @@ export default function App() {
     libraryDetailAnim.setValue(0);
     setSelectedLibraryWord(word);
     Animated.timing(libraryDetailAnim, {
-      duration: interactionMotion.settingsPanelMs,
-      easing: Easing.out(Easing.cubic),
+      duration: interactionMotion.libraryDetailMs,
+      easing: Easing.bezier(0.22, 1, 0.36, 1),
       toValue: 1,
       useNativeDriver: Platform.OS !== 'web',
     }).start();
@@ -1263,8 +1266,8 @@ export default function App() {
 
   function closeLibraryWordDetail() {
     Animated.timing(libraryDetailAnim, {
-      duration: interactionMotion.settingsPanelExitMs,
-      easing: Easing.in(Easing.cubic),
+      duration: interactionMotion.libraryDetailExitMs,
+      easing: Easing.bezier(0.55, 0.06, 0.68, 0.19),
       toValue: 0,
       useNativeDriver: Platform.OS !== 'web',
     }).start(({ finished }) => {
@@ -3385,8 +3388,13 @@ function LibraryView({
                 accessibilityLabel={ui.viewWordDetails(formatWordPrimary(word, studyMode))}
                 accessibilityRole="button"
                 onPress={() => onOpenWord(word)}
-                pressTone="list"
-                pressedStyle={[styles.libraryItemPressed, themeStyles?.libraryItemPressed]}
+                pressTone="libraryItem"
+                pressedStyle={[
+                  styles.libraryItemPressed,
+                  styles.libraryItemPressedLift,
+                  themeStyles?.libraryItemPressed,
+                  themeStyles?.libraryItemPressedLift,
+                ]}
                 style={styles.libraryItemMain}
               >
                 <View style={styles.wordLine}>
@@ -5413,6 +5421,13 @@ const styles = StyleSheet.create({
   libraryItemPressed: {
     backgroundColor: 'rgba(37, 99, 235, 0.06)',
   },
+  libraryItemPressedLift: {
+    borderColor: '#bfdbfe',
+    shadowColor: '#2563eb',
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+  },
   wordLine: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -6649,6 +6664,11 @@ const darkStyles = StyleSheet.create({
   },
   libraryItemPressed: {
     backgroundColor: 'rgba(37, 99, 235, 0.18)',
+  },
+  libraryItemPressedLift: {
+    borderColor: '#3b82f6',
+    shadowColor: '#60a5fa',
+    shadowOpacity: 0.16,
   },
   libraryWord: {
     color: '#f8fafc',

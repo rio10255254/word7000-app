@@ -513,4 +513,13 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('styles.libraryDragThumbActive');
     expect(appSource).toContain('{librarySliderActive && (');
   });
+
+  test('keeps library search and filters inset from the edge slider', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('styles.libraryTopControlsInset');
+    expect(appSource).toContain('<View style={styles.libraryTopControlsInset}>');
+    expect(appSource).toContain('libraryTopControlsInset:');
+    expect(appSource).toContain('paddingRight: 32');
+  });
 });

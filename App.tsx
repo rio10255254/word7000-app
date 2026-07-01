@@ -3554,75 +3554,77 @@ function LibraryView({
         </AnimatedPressable>
       </View>
 
-      <Animated.View style={searchMotionStyle}>
-        <View style={[styles.searchBox, themeStyles?.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
-          <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
-          <TextInput
-            onChangeText={onQueryChange}
-            onBlur={onSearchBlur}
-            onFocus={onSearchFocus}
-            placeholder={copy.searchPlaceholder}
-            placeholderTextColor="#9ca3af"
-            style={[styles.searchInput, themeStyles?.searchInput]}
-            value={query}
-          />
-          {hasQuery && (
-            <AnimatedPressable
-              accessibilityLabel={ui.clearSearch}
-              accessibilityRole="button"
-              onPress={onQueryClear}
-              pressTone="icon"
-              style={[styles.searchClearButton, themeStyles?.searchClearButton]}
-              testID="library-search-clear"
-            >
-              <X size={16} color="#64748b" strokeWidth={2.5} />
-            </AnimatedPressable>
-          )}
-        </View>
-      </Animated.View>
-
-      {hasQuery && (
-        <Animated.View style={[styles.searchMetaBox, themeStyles?.searchMetaBox, searchMetaMotionStyle]}>
-          <Text style={[styles.searchMetaText, themeStyles?.searchMetaText]}>{ui.searchMeta(query.trim(), words.length)}</Text>
+      <View style={styles.libraryTopControlsInset}>
+        <Animated.View style={searchMotionStyle}>
+          <View style={[styles.searchBox, themeStyles?.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
+            <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
+            <TextInput
+              onChangeText={onQueryChange}
+              onBlur={onSearchBlur}
+              onFocus={onSearchFocus}
+              placeholder={copy.searchPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.searchInput, themeStyles?.searchInput]}
+              value={query}
+            />
+            {hasQuery && (
+              <AnimatedPressable
+                accessibilityLabel={ui.clearSearch}
+                accessibilityRole="button"
+                onPress={onQueryClear}
+                pressTone="icon"
+                style={[styles.searchClearButton, themeStyles?.searchClearButton]}
+                testID="library-search-clear"
+              >
+                <X size={16} color="#64748b" strokeWidth={2.5} />
+              </AnimatedPressable>
+            )}
+          </View>
         </Animated.View>
-      )}
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
-        {filters.map((filter) => {
-          const selected = activeFilter === filter.id;
-          return (
-            <AnimatedPressable
-              accessibilityRole="button"
-              key={filter.id}
-              onPress={() => onFilterChange(filter.id)}
-              pressTone="chip"
-              style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
-            >
-              <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
-            </AnimatedPressable>
-          );
-        })}
-      </ScrollView>
+        {hasQuery && (
+          <Animated.View style={[styles.searchMetaBox, themeStyles?.searchMetaBox, searchMetaMotionStyle]}>
+            <Text style={[styles.searchMetaText, themeStyles?.searchMetaText]}>{ui.searchMeta(query.trim(), words.length)}</Text>
+          </Animated.View>
+        )}
 
-      <FilterControlPanel
-        activeFilter={activeFilter}
-        activeInitial={activeInitial}
-        activeLevel={activeLevel}
-        activeSort={activeSort}
-        count={words.length}
-        levelOptions={levelOptions}
-        open={filtersOpen}
-        showStatus={false}
-        studyMode={studyMode}
-        testID="library-filter-toggle"
-        title={copy.libraryFilterTitle}
-        initialTitle={copy.initialTitle}
-        onFilterChange={onFilterChange}
-        onInitialChange={onInitialChange}
-        onLevelChange={onLevelChange}
-        onSortChange={onSortChange}
-        onToggle={onFiltersToggle}
-      />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+          {filters.map((filter) => {
+            const selected = activeFilter === filter.id;
+            return (
+              <AnimatedPressable
+                accessibilityRole="button"
+                key={filter.id}
+                onPress={() => onFilterChange(filter.id)}
+                pressTone="chip"
+                style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+              >
+                <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+              </AnimatedPressable>
+            );
+          })}
+        </ScrollView>
+
+        <FilterControlPanel
+          activeFilter={activeFilter}
+          activeInitial={activeInitial}
+          activeLevel={activeLevel}
+          activeSort={activeSort}
+          count={words.length}
+          levelOptions={levelOptions}
+          open={filtersOpen}
+          showStatus={false}
+          studyMode={studyMode}
+          testID="library-filter-toggle"
+          title={copy.libraryFilterTitle}
+          initialTitle={copy.initialTitle}
+          onFilterChange={onFilterChange}
+          onInitialChange={onInitialChange}
+          onLevelChange={onLevelChange}
+          onSortChange={onSortChange}
+          onToggle={onFiltersToggle}
+        />
+      </View>
 
       <View onLayout={onListLayout} style={styles.libraryPanel}>
         <View style={styles.wordList}>
@@ -5457,6 +5459,10 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 14,
     fontWeight: '800',
+  },
+  libraryTopControlsInset: {
+    gap: 14,
+    paddingRight: 32,
   },
   searchBox: {
     alignItems: 'center',

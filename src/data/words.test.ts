@@ -1,6 +1,16 @@
 import { describe, expect, test } from 'vitest';
 import reviewedExamples from './reviewed-examples.json';
+import reviewedExamplesCore2A from './reviewed-examples-core2-a.json';
+import reviewedExamplesCore2B from './reviewed-examples-core2-b.json';
+import reviewedExamplesCore2C from './reviewed-examples-core2-c.json';
 import { sampleWords } from './words';
+
+const allReviewedExamples = [
+  ...reviewedExamples,
+  ...reviewedExamplesCore2A,
+  ...reviewedExamplesCore2B,
+  ...reviewedExamplesCore2C,
+];
 
 describe('full vocabulary dataset', () => {
   test('contains exactly 7000 app-ready words', () => {
@@ -44,7 +54,7 @@ describe('full vocabulary dataset', () => {
   });
 
   test('applies approved reviewed examples to the built-in vocabulary', () => {
-    const approvedRows = reviewedExamples.filter((row) => row.status === 'approved');
+    const approvedRows = allReviewedExamples.filter((row) => row.status === 'approved');
     const seenWords = new Set<string>();
 
     for (const row of approvedRows) {
@@ -63,8 +73,15 @@ describe('full vocabulary dataset', () => {
   });
 
   test('has approved reviewed examples for every Core 1 word', () => {
-    const approvedWords = new Set(reviewedExamples.filter((row) => row.status === 'approved').map((row) => row.word));
+    const approvedWords = new Set(allReviewedExamples.filter((row) => row.status === 'approved').map((row) => row.word));
     const missingReviewedExamples = sampleWords.filter((word) => word.group === 'Core 1' && !approvedWords.has(word.word));
+
+    expect(missingReviewedExamples.map((word) => word.word)).toEqual([]);
+  });
+
+  test('has approved reviewed examples for every Core 2 word', () => {
+    const approvedWords = new Set(allReviewedExamples.filter((row) => row.status === 'approved').map((row) => row.word));
+    const missingReviewedExamples = sampleWords.filter((word) => word.group === 'Core 2' && !approvedWords.has(word.word));
 
     expect(missingReviewedExamples.map((word) => word.word)).toEqual([]);
   });

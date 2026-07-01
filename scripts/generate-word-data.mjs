@@ -9,18 +9,27 @@ const projectRoot = path.resolve(__dirname, '..');
 const sourcePath = path.join(projectRoot, '.codex-run', 'ecdict.csv');
 const outputPath = path.join(projectRoot, 'src', 'data', 'words.ts');
 const reviewedExamplesPath = path.join(projectRoot, 'src', 'data', 'reviewed-examples.json');
+const reviewedExamplesExtraPaths = [
+  path.join(projectRoot, 'src', 'data', 'reviewed-examples-core2-a.json'),
+  path.join(projectRoot, 'src', 'data', 'reviewed-examples-core2-b.json'),
+  path.join(projectRoot, 'src', 'data', 'reviewed-examples-core2-c.json'),
+];
 const TARGET_COUNT = 7000;
 const convertToTraditional = OpenCC.Converter({ from: 'cn', to: 'tw' });
 
 function loadReviewedExamples() {
-  if (!fs.existsSync(reviewedExamplesPath)) {
+  const paths = [reviewedExamplesPath, ...reviewedExamplesExtraPaths].filter((reviewPath) => fs.existsSync(reviewPath));
+  if (paths.length === 0) {
     return new Map();
   }
 
-  const rows = JSON.parse(fs.readFileSync(reviewedExamplesPath, 'utf8'));
-  if (!Array.isArray(rows)) {
-    throw new Error(`Reviewed examples must be an array: ${reviewedExamplesPath}`);
-  }
+  const rows = paths.flatMap((reviewPath) => {
+    const fileRows = JSON.parse(fs.readFileSync(reviewPath, 'utf8'));
+    if (!Array.isArray(fileRows)) {
+      throw new Error(`Reviewed examples must be an array: ${reviewPath}`);
+    }
+    return fileRows.map((row) => ({ ...row, sourcePath: reviewPath }));
+  });
 
   const reviewed = new Map();
   rows.forEach((row, index) => {
@@ -30,7 +39,7 @@ function loadReviewedExamples() {
     const status = row.status?.trim();
 
     if (!word || !example || !exampleZh || status !== 'approved') {
-      throw new Error(`Invalid reviewed example at row ${index + 1}`);
+      throw new Error(`Invalid reviewed example at row ${index + 1} in ${row.sourcePath}`);
     }
     if (reviewed.has(word)) {
       throw new Error(`Duplicate reviewed example for word: ${word}`);

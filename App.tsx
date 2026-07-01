@@ -567,7 +567,6 @@ export default function App() {
   const libraryPanelAnim = useRef(new Animated.Value(1)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
-  const libraryReturnScrollYRef = useRef(0);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [initialFilterPreferences] = useState(() => loadFilterPreferences(getBrowserStorage()));
   const [activeTab, setActiveTab] = useState<Tab>('home');
@@ -616,6 +615,7 @@ export default function App() {
   const [showThemeTransition, setShowThemeTransition] = useState(false);
   const [themeTransitionTarget, setThemeTransitionTarget] = useState<ThemeMode>(() => loadThemeMode(getBrowserStorage()));
   const [scrollY, setScrollY] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(88);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
   const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
@@ -740,6 +740,32 @@ export default function App() {
       },
     ],
   };
+  const libraryListPanelHorizontalMotionStyle = {
+    opacity: libraryPanelAnim,
+    transform: [
+      {
+        translateX: libraryPanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-12, 0],
+        }),
+      },
+    ],
+  };
+  const libraryTransitionPerformanceStyle: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          transformOrigin: 'top center',
+          willChange: 'opacity, transform',
+        }
+      : undefined;
+  const libraryListPanelMotionStyle = [
+    renderedLibraryPanel === 'list' ? libraryListPanelHorizontalMotionStyle : styles.libraryPanelHidden,
+    libraryTransitionPerformanceStyle,
+  ];
+  const libraryDetailStageMotionStyle = [
+    renderedLibraryPanel === 'detail' ? libraryPanelMotionStyle : styles.libraryPanelHidden,
+    libraryTransitionPerformanceStyle,
+  ];
   const modeOverlayScale = modeTransitionAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0.94, 1],
@@ -788,43 +814,13 @@ export default function App() {
     [activeTab, libraryWords.length, sliderTrackHeight],
   );
 
-  const readCurrentAppScrollY = useCallback(() => {
-    const scrollRef = appScrollRef.current as unknown as {
-      getNativeScrollRef?: () => { scrollTop?: number } | null;
-      getScrollableNode?: () => { scrollTop?: number } | null;
-      scrollTop?: number;
-    } | null;
-    const scrollNode = scrollRef?.getScrollableNode?.() ?? scrollRef?.getNativeScrollRef?.() ?? scrollRef;
-    return typeof scrollNode?.scrollTop === 'number' ? scrollNode.scrollTop : scrollY;
-  }, [scrollY]);
-
-  const restoreLibraryScrollPosition = useCallback(() => {
-    const returnY = libraryReturnScrollYRef.current;
-    appScrollRef.current?.scrollTo({ y: returnY, animated: false });
-    setScrollY(returnY);
-  }, []);
-
-  const restoreLibraryScrollPositionAfterRender = useCallback(() => {
-    const scheduleFrame = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : (callback: FrameRequestCallback) => setTimeout(callback, 0);
-    scheduleFrame(() => {
-      scheduleFrame(() => {
-        restoreLibraryScrollPosition();
-      });
-    });
-  }, [restoreLibraryScrollPosition]);
-
   const onLibraryPanelSwap = useCallback(
     (nextPanel: LibraryPanel) => {
-      if (nextPanel === 'detail') {
-        appScrollRef.current?.scrollTo({ y: 0, animated: false });
-        setScrollY(0);
-        return;
+      if (nextPanel === 'list') {
+        setSelectedLibraryWord(null);
       }
-
-      setSelectedLibraryWord(null);
-      restoreLibraryScrollPositionAfterRender();
     },
-    [restoreLibraryScrollPositionAfterRender],
+    [],
   );
 
   useWebServiceWorker();
@@ -1324,7 +1320,6 @@ export default function App() {
   }
 
   function openLibraryWordDetail(word: WordEntry) {
-    libraryReturnScrollYRef.current = readCurrentAppScrollY();
     setSelectedLibraryWord(word);
     setLibraryPanel('detail');
   }
@@ -1631,7 +1626,10 @@ export default function App() {
     <SafeAreaView style={[styles.safeArea, themeStyles?.safeArea]}>
       <StatusBar style={darkMode ? 'light' : 'dark'} />
       <View style={[styles.appShell, themeStyles?.appShell]}>
-        <View style={styles.header}>
+        <View
+          onLayout={(event) => setHeaderHeight(Math.ceil(event.nativeEvent.layout.height))}
+          style={styles.header}
+        >
           <View>
             <Text style={[styles.brand, themeStyles?.brand]}>{activeModeCopy.brand}</Text>
             <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>{activeModeCopy.subtitle}</Text>
@@ -1717,45 +1715,39 @@ export default function App() {
             />
           )}
           {activeTab === 'library' && (
-            <Animated.View style={libraryPanelMotionStyle} testID="library-panel-transition">
-              {renderedLibraryPanel === 'detail' && selectedLibraryWord ? (
-                <LibraryWordDetailView
-                  progress={progress}
-                  studyMode={studyMode}
-                  word={selectedLibraryWord}
-                  onBack={closeLibraryWordDetail}
-                  onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
-                />
-              ) : (
-                <LibraryView
-                  activeFilter={activeFilter}
-                  activeInitial={activeInitial}
-                  activeLevel={activeLevel}
-                  activeSort={activeSort}
-                  filtersOpen={libraryFiltersOpen}
-                  levelOptions={levelFilterOptions}
-                  listMotionStyle={listMotionStyle}
-                  progress={progress}
-                  query={searchQuery}
-                  searchFocused={searchFocused}
-                  studyMode={studyMode}
-                  visibleStart={libraryWindowStart}
-                  visibleWindowSize={LIBRARY_WINDOW_SIZE}
-                  words={libraryWords}
-                  onFilterChange={setActiveFilter}
-                  onFiltersToggle={() => setLibraryFiltersOpen((current) => !current)}
-                  onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
-                  onInitialChange={setActiveInitial}
-                  onLevelChange={setActiveLevel}
-                  onOpenWord={openLibraryWordDetail}
-                  onQueryChange={handleLibraryQueryChange}
-                  onQueryClear={clearLibrarySearch}
-                  onReturnTop={returnLibraryToTop}
-                  onSearchBlur={() => setSearchFocused(false)}
-                  onSearchFocus={() => setSearchFocused(true)}
-                  onSortChange={setActiveSort}
-                />
-              )}
+            <Animated.View
+              pointerEvents={libraryPanel === 'list' && renderedLibraryPanel === 'list' ? 'auto' : 'none'}
+              style={libraryListPanelMotionStyle}
+              testID="library-panel-transition"
+            >
+              <LibraryView
+                activeFilter={activeFilter}
+                activeInitial={activeInitial}
+                activeLevel={activeLevel}
+                activeSort={activeSort}
+                filtersOpen={libraryFiltersOpen}
+                levelOptions={levelFilterOptions}
+                listMotionStyle={listMotionStyle}
+                progress={progress}
+                query={searchQuery}
+                searchFocused={searchFocused}
+                studyMode={studyMode}
+                visibleStart={libraryWindowStart}
+                visibleWindowSize={LIBRARY_WINDOW_SIZE}
+                words={libraryWords}
+                onFilterChange={setActiveFilter}
+                onFiltersToggle={() => setLibraryFiltersOpen((current) => !current)}
+                onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
+                onInitialChange={setActiveInitial}
+                onLevelChange={setActiveLevel}
+                onOpenWord={openLibraryWordDetail}
+                onQueryChange={handleLibraryQueryChange}
+                onQueryClear={clearLibrarySearch}
+                onReturnTop={returnLibraryToTop}
+                onSearchBlur={() => setSearchFocused(false)}
+                onSearchFocus={() => setSearchFocused(true)}
+                onSortChange={setActiveSort}
+              />
             </Animated.View>
           )}
           {activeTab === 'profile' && (
@@ -1820,6 +1812,29 @@ export default function App() {
               </View>
             )}
           </View>
+        )}
+
+        {activeTab === 'library' && selectedLibraryWord && (
+          <Animated.View
+            pointerEvents={renderedLibraryPanel === 'detail' ? 'auto' : 'none'}
+            style={[
+              styles.libraryDetailStage,
+              themeStyles?.libraryDetailStage,
+              { top: headerHeight },
+              libraryDetailStageMotionStyle,
+            ]}
+            testID="library-detail-stage"
+          >
+            <ScrollView contentContainerStyle={styles.libraryDetailStageContent} showsVerticalScrollIndicator={false}>
+              <LibraryWordDetailView
+                progress={progress}
+                studyMode={studyMode}
+                word={selectedLibraryWord}
+                onBack={closeLibraryWordDetail}
+                onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
+              />
+            </ScrollView>
+          </Animated.View>
         )}
 
         <View style={[styles.tabBar, themeStyles?.tabBar]}>
@@ -2210,6 +2225,8 @@ type WebTransitionStyle = ViewStyle & {
   transitionDuration?: string;
   transitionProperty?: string;
   transitionTimingFunction?: string;
+  transformOrigin?: string;
+  willChange?: string;
 };
 
 function AnimatedPressable({
@@ -4359,6 +4376,10 @@ const styles = StyleSheet.create({
   screenMotion: {
     gap: 14,
   },
+  libraryPanelHidden: {
+    opacity: 0,
+    transform: [{ translateX: -12 }, { scale: 0.985 }],
+  },
   launchOverlay: {
     alignItems: 'center',
     backgroundColor: '#f8fafc',
@@ -5611,6 +5632,19 @@ const styles = StyleSheet.create({
   libraryDetailOverlayContent: {
     paddingBottom: 110,
   },
+  libraryDetailStage: {
+    backgroundColor: '#f8fafc',
+    bottom: 86,
+    left: 0,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    position: 'absolute',
+    right: 0,
+    zIndex: 30,
+  },
+  libraryDetailStageContent: {
+    paddingBottom: 24,
+  },
   libraryDetailFavorite: {
     alignItems: 'center',
     backgroundColor: '#f8fafc',
@@ -6752,6 +6786,9 @@ const darkStyles = StyleSheet.create({
   },
   libraryDetailPanel: {
     backgroundColor: 'transparent',
+  },
+  libraryDetailStage: {
+    backgroundColor: '#0f172a',
   },
   libraryDetailSection: {
     borderTopColor: '#334155',

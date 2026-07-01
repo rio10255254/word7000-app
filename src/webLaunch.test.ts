@@ -407,7 +407,13 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('outputRange: [0.985, 1]');
     expect(appSource).toContain('setRenderedLibraryPanel(libraryPanel);');
     expect(appSource).toContain('libraryPanelMotionStyle');
+    expect(appSource).toContain('libraryListPanelHorizontalMotionStyle');
+    expect(appSource).toContain('libraryListPanelMotionStyle');
+    expect(appSource).toContain('libraryDetailStageMotionStyle');
+    expect(appSource).toContain("transformOrigin: 'top center'");
     expect(appSource).toContain('testID="library-panel-transition"');
+    expect(appSource).toContain('testID="library-detail-stage"');
+    expect(appSource).toContain('styles.libraryDetailStage');
     expect(appSource).toContain('style={[styles.screenMotion, screenMotionStyle]}');
     expect(appSource).not.toContain('libraryDepthMotionStyle');
     expect(appSource).not.toContain('libraryDetailBackdropMotionStyle');
@@ -441,15 +447,17 @@ describe('free web launch configuration', () => {
   test('returns from word detail to the previous library position without replaying the list', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('libraryReturnScrollYRef');
-    expect(appSource).toContain('readCurrentAppScrollY');
-    expect(appSource).toContain('libraryReturnScrollYRef.current = readCurrentAppScrollY();');
-    expect(appSource).toContain('restoreLibraryScrollPosition');
-    expect(appSource).toContain('restoreLibraryScrollPositionAfterRender');
+    expect(appSource).toContain('libraryListPanelMotionStyle');
+    expect(appSource).toContain('libraryDetailStageMotionStyle');
+    expect(appSource).toContain('styles.libraryPanelHidden');
+    expect(appSource).toContain('pointerEvents={renderedLibraryPanel ===');
+    expect(appSource).toContain('contentContainerStyle={styles.libraryDetailStageContent}');
     expect(appSource).toContain('setSelectedLibraryWord(null);');
     expect(appSource).toContain('LIBRARY_ANIMATED_ITEM_COUNT');
     expect(appSource).toContain("activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT");
     expect(appSource).not.toContain('if (selectedWord) {');
+    expect(appSource).not.toContain('readCurrentAppScrollY');
+    expect(appSource).not.toContain('restoreLibraryScrollPositionAfterRender');
     expect(appSource).not.toContain('setSelectedLibraryWord(word);\n    appScrollRef.current?.scrollTo({ y: 0, animated: true });');
     expect(appSource).not.toContain('selectedLibraryWord?.id,');
   });

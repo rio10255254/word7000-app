@@ -32,6 +32,10 @@ https://word7000-app.rio10255254.workers.dev/privacy.html
 
 https://word7000-app.rio10255254.workers.dev/support.html
 
+## Support Email
+
+rio10255254@gmail.com
+
 ## Review Notes
 
 Most learning features work without signing in. Sign-in is optional and is used for cloud sync across devices.

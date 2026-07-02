@@ -54,6 +54,8 @@ describe('iOS App Store readiness polish', () => {
     expect(submission).toContain('Keywords');
     expect(submission).toContain('Privacy Policy URL');
     expect(submission).toContain('Support URL');
+    expect(submission).toContain('Support Email');
+    expect(submission).toContain('rio10255254@gmail.com');
     expect(submission).toContain('Review Notes');
     expect(submission).toContain('Demo Account');
     expect(submission).toContain('Screenshot Checklist');

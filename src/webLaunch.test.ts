@@ -247,9 +247,14 @@ describe('free web launch configuration', () => {
   test('includes App Store support links and account data deletion controls', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const schema = fs.readFileSync(schemaPath, 'utf8');
+    const privacyHtml = fs.readFileSync(privacyPath, 'utf8');
+    const supportHtml = fs.readFileSync(supportPath, 'utf8');
 
     expect(fs.existsSync(privacyPath)).toBe(true);
     expect(fs.existsSync(supportPath)).toBe(true);
+    expect(privacyHtml).toContain('rio10255254@gmail.com');
+    expect(supportHtml).toContain('mailto:rio10255254@gmail.com');
+    expect(supportHtml).toContain('rio10255254@gmail.com');
     expect(appSource).toContain('appInfoLinks.privacy');
     expect(appSource).toContain('appInfoLinks.support');
     expect(appSource).toContain('onConfirmDeleteAccountData={confirmDeleteAccountData}');
@@ -257,6 +262,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('deleteCloudUserData(asCloudProgressClient(supabaseClient), signedInUserId)');
     expect(schema).toContain('Users can delete their own profile');
     expect(schema).toContain('Users can delete their own daily activity');
+  });
+
+  test('keeps public privacy and support pages user-facing', () => {
+    const publicPages = [
+      fs.readFileSync(privacyPath, 'utf8'),
+      fs.readFileSync(supportPath, 'utf8'),
+    ].join('\n');
+
+    expect(publicPages).not.toContain('Supabase');
+    expect(publicPages).not.toContain('word7000://auth/callback');
+    expect(publicPages).not.toContain('GitHub project');
+    expect(publicPages).not.toContain('support channel listed');
   });
 
   test('checks native EAS updates outside the web service worker flow', () => {
@@ -299,6 +316,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Email 備用登入');
     expect(appSource).toContain('Email fallback');
     expect(appSource).toContain('onGoogleSignIn={handleGoogleSignIn}');
+  });
+
+  test('keeps account sync unavailable messages user-facing', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('目前會先把進度保存在這台裝置');
+    expect(appSource).toContain('Progress is saved on this device for now');
+    expect(appSource).not.toContain('Cloudflare 設好 Supabase');
+    expect(appSource).not.toContain('Add Supabase settings in Cloudflare');
+    expect(appSource).not.toContain('iPhone App 上架必備');
+    expect(appSource).not.toContain('App Store 上架與使用者協助入口');
+    expect(appSource).not.toContain('Required App Store and user help links');
   });
 
   test('records signed-in daily active users for Supabase analytics', () => {

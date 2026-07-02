@@ -240,6 +240,15 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('App 設定');
     expect(appSource).toContain('深色模式');
     expect(appSource).toContain('word7000-theme-v1');
+    expect(appSource).toContain('const nextThemeMode = darkMode ? \'light\' : \'dark\';');
+    expect(appSource).toContain('const toggleThemeMode = () => onThemeModeChange(nextThemeMode);');
+    expect(appSource).toContain('onPress={toggleThemeMode}');
+    expect(appSource).toContain("const dangerIconColor = darkMode ? '#fca5a5' : '#b91c1c';");
+    expect(appSource).toContain('themeStyles?.deleteAccountDataButton');
+    expect(appSource).toContain('themeStyles?.deleteAccountDataTitle');
+    expect(appSource).toContain('themeStyles?.deleteAccountDataText');
+    expect(appSource).toContain('deleteAccountDataButton:');
+    expect(appSource).toContain("backgroundColor: '#2a1714'");
     expect(appSource).toContain('onThemeModeChange');
     expect(appSource).toContain('DeveloperVocabularyPanel');
   });
@@ -394,6 +403,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('formatWordPrimary');
     expect(appSource).toContain('formatQuizAnswer');
     expect(appSource).toContain("buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`, studyMode === 'chinese' ? 'word' : 'meaning')");
+  });
+
+  test('polishes mobile first-screen spacing without changing the app structure', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("heroTitle: '今天 20 個\\n剛剛好'");
+    expect(appSource).toContain('styles.homeStack');
+    expect(appSource).toContain('homeStack:');
+    expect(appSource).toContain('gap: 12');
+    expect(appSource).toContain('styles.installGuideMain');
+    expect(appSource).toContain('installGuideMain:');
+    expect(appSource).toContain("justifyContent: 'flex-start'");
+    expect(appSource).toContain('paddingTop: 80');
+    expect(appSource).toContain('WEB_TAB_BAR_BOTTOM_OFFSET = 8');
+    expect(appSource).toContain('libraryTopControlsInset:');
+    expect(appSource).toContain('paddingRight: 36');
   });
 
   test('uses an English interface and full-page transition in Chinese word mode', () => {

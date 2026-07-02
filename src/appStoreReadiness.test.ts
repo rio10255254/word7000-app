@@ -35,6 +35,8 @@ describe('iOS App Store readiness polish', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('IOS_BOTTOM_SAFE_AREA_FALLBACK');
+    expect(appSource).toContain('WEB_TAB_BAR_BOTTOM_OFFSET');
+    expect(appSource).toContain("Platform.OS === 'web' ? WEB_TAB_BAR_BOTTOM_OFFSET : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK");
     expect(appSource).toContain('IOS_TAB_BAR_BOTTOM_OFFSET');
     expect(appSource).toContain('IOS_CONTENT_BOTTOM_PADDING');
     expect(appSource).toContain('paddingBottom: IOS_CONTENT_BOTTOM_PADDING');

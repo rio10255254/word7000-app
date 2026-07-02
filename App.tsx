@@ -199,7 +199,8 @@ const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const CUSTOM_SET_SORT_STORAGE_KEY = 'word7000-custom-set-sort-v1';
 const APP_LINKING_SCHEME = 'word7000';
 const IOS_BOTTOM_SAFE_AREA_FALLBACK = Platform.OS === 'ios' ? 28 : 0;
-const IOS_TAB_BAR_BOTTOM_OFFSET = 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
+const WEB_TAB_BAR_BOTTOM_OFFSET = 8;
+const IOS_TAB_BAR_BOTTOM_OFFSET = Platform.OS === 'web' ? WEB_TAB_BAR_BOTTOM_OFFSET : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
 const IOS_CONTENT_BOTTOM_PADDING = 102 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
@@ -294,7 +295,7 @@ const modeCopy = {
     overlayTitle: '英文單字模式',
     overlayText: '正在回到中文介面的英文單字 App',
     heroEyebrow: 'ENGLISH MODE',
-    heroTitle: '今天 20 個剛剛好',
+    heroTitle: '今天 20 個\n剛剛好',
     heroText: '保持一小段節奏，把英文單字變成每天都做得到的事。',
     primaryAction: '開始學英文',
     libraryTitle: '完整字庫',
@@ -3669,66 +3670,68 @@ function InstallGuideOverlay({
         </AnimatedPressable>
       </View>
 
-      <View style={[styles.installGuideCard, themeStyles?.installGuideCard]}>
-        <View style={[styles.installGuideStepPill, themeStyles?.installGuideStepPill]}>
-          <Text style={[styles.installGuideStepText, themeStyles?.installGuideStepText]}>
-            {step + 1} / {steps.length}
-          </Text>
-        </View>
-        <Animated.View style={[styles.installGuideIconWrap, themeStyles?.installGuideIconWrap, stepMotionStyle]}>
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              styles.installGuideIconGlow,
-              themeStyles?.installGuideIconGlow,
-              {
-                opacity: installGuideStepProgress,
-                transform: [
-                  {
-                    scale: installGuideStepProgress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0.82, 1.08],
-                    }),
-                  },
-                ],
-              },
-            ]}
-          />
-          <View style={styles.installGuideIconGraphic}>
-            <InstallGuideStepIcon icon={current.icon} color={installGuideIconColor} />
+      <View style={styles.installGuideMain}>
+        <View style={[styles.installGuideCard, themeStyles?.installGuideCard]}>
+          <View style={[styles.installGuideStepPill, themeStyles?.installGuideStepPill]}>
+            <Text style={[styles.installGuideStepText, themeStyles?.installGuideStepText]}>
+              {step + 1} / {steps.length}
+            </Text>
           </View>
-        </Animated.View>
-        <Animated.View style={[styles.installGuideCopyBlock, stepMotionStyle]}>
-          <Text style={[styles.installGuideTitle, themeStyles?.installGuideTitle]}>{current.title}</Text>
-          <Text style={[styles.installGuideText, themeStyles?.installGuideText]}>{current.text}</Text>
-        </Animated.View>
+          <Animated.View style={[styles.installGuideIconWrap, themeStyles?.installGuideIconWrap, stepMotionStyle]}>
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.installGuideIconGlow,
+                themeStyles?.installGuideIconGlow,
+                {
+                  opacity: installGuideStepProgress,
+                  transform: [
+                    {
+                      scale: installGuideStepProgress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0.82, 1.08],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            />
+            <View style={styles.installGuideIconGraphic}>
+              <InstallGuideStepIcon icon={current.icon} color={installGuideIconColor} />
+            </View>
+          </Animated.View>
+          <Animated.View style={[styles.installGuideCopyBlock, stepMotionStyle]}>
+            <Text style={[styles.installGuideTitle, themeStyles?.installGuideTitle]}>{current.title}</Text>
+            <Text style={[styles.installGuideText, themeStyles?.installGuideText]}>{current.text}</Text>
+          </Animated.View>
 
-        <View style={[styles.installGuidePreview, themeStyles?.installGuidePreview]}>
-          <View style={[styles.installGuideBrowserBar, themeStyles?.installGuideBrowserBar]} />
-          <View style={styles.installGuidePreviewRow}>
-            {steps.map((item, index) => (
-              <Animated.View
-                key={item.title}
-                style={[
-                  styles.installGuideMiniStep,
-                  themeStyles?.installGuideMiniStep,
-                  index <= step && styles.installGuideMiniStepActive,
-                  index === step && styles.installGuideStepProgress,
-                ]}
-              >
-                <Text style={[styles.installGuideMiniText, themeStyles?.installGuideMiniText, index <= step && styles.installGuideMiniTextActive]}>
-                  {index + 1}
-                </Text>
-              </Animated.View>
-            ))}
+          <View style={[styles.installGuidePreview, themeStyles?.installGuidePreview]}>
+            <View style={[styles.installGuideBrowserBar, themeStyles?.installGuideBrowserBar]} />
+            <View style={styles.installGuidePreviewRow}>
+              {steps.map((item, index) => (
+                <Animated.View
+                  key={item.title}
+                  style={[
+                    styles.installGuideMiniStep,
+                    themeStyles?.installGuideMiniStep,
+                    index <= step && styles.installGuideMiniStepActive,
+                    index === step && styles.installGuideStepProgress,
+                  ]}
+                >
+                  <Text style={[styles.installGuideMiniText, themeStyles?.installGuideMiniText, index <= step && styles.installGuideMiniTextActive]}>
+                    {index + 1}
+                  </Text>
+                </Animated.View>
+              ))}
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.installGuideDots}>
-        {steps.map((item, index) => (
-          <View key={item.title} style={[styles.installGuideDot, themeStyles?.installGuideDot, index === step && styles.installGuideDotActive]} />
-        ))}
+        <View style={styles.installGuideDots}>
+          {steps.map((item, index) => (
+            <View key={item.title} style={[styles.installGuideDot, themeStyles?.installGuideDot, index === step && styles.installGuideDotActive]} />
+          ))}
+        </View>
       </View>
 
       <View style={styles.installGuideActions}>
@@ -3782,7 +3785,7 @@ function HomeView({
   const ui = modeInterfaceCopy[studyMode];
 
   return (
-    <View style={styles.screenStack}>
+    <View style={styles.homeStack}>
       <View style={[styles.hero, themeStyles?.hero]}>
         <View style={styles.heroCopy}>
           <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
@@ -5919,6 +5922,9 @@ function ProfileSettingsView({
   const themeStyles = useThemeStyles();
   const darkMode = themeMode === 'dark';
   const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const nextThemeMode = darkMode ? 'light' : 'dark';
+  const toggleThemeMode = () => onThemeModeChange(nextThemeMode);
+  const dangerIconColor = darkMode ? '#fca5a5' : '#b91c1c';
   const ui = modeInterfaceCopy[studyMode];
 
   return (
@@ -5937,7 +5943,14 @@ function ProfileSettingsView({
           <Settings size={21} color="#2563eb" strokeWidth={2.3} />
         </View>
 
-        <View style={[styles.settingOptionRow, themeStyles?.settingOptionRow]}>
+        <AnimatedPressable
+          accessibilityLabel={ui.toggleDarkMode}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: darkMode }}
+          onPress={toggleThemeMode}
+          pressTone="list"
+          style={[styles.settingOptionRow, themeStyles?.settingOptionRow]}
+        >
           <View style={[styles.settingOptionIcon, themeStyles?.settingsEntryIcon]}>
             {darkMode ? <Sun size={19} color="#fbbf24" strokeWidth={2.3} /> : <Moon size={19} color="#2563eb" strokeWidth={2.3} />}
           </View>
@@ -5947,17 +5960,14 @@ function ProfileSettingsView({
               {darkMode ? ui.darkModeOnText : ui.darkModeOffText}
             </Text>
           </View>
-          <AnimatedPressable
-            accessibilityLabel={ui.toggleDarkMode}
-            accessibilityRole="button"
-            onPress={() => onThemeModeChange(darkMode ? 'light' : 'dark')}
-            pressTone="chip"
+          <View
+            pointerEvents="none"
             style={[styles.themeSwitchButton, darkMode && styles.themeSwitchButtonActive]}
           >
             <View style={[styles.themeSwitchDot, darkMode && styles.themeSwitchDotActive]} />
             <Text style={[styles.themeSwitchText, darkMode && styles.themeSwitchTextActive]}>{darkMode ? ui.on : ui.off}</Text>
-          </AnimatedPressable>
-        </View>
+          </View>
+        </AnimatedPressable>
       </View>
 
       <View style={[styles.settingsCard, themeStyles?.settingsCard]}>
@@ -6006,13 +6016,13 @@ function ProfileSettingsView({
           disabled={!signedIn || accountBusy}
           onPress={onConfirmDeleteAccountData}
           pressTone="secondary"
-          style={[styles.deleteAccountDataButton, (!signedIn || accountBusy) && styles.disabledButton]}
+          style={[styles.deleteAccountDataButton, themeStyles?.deleteAccountDataButton, (!signedIn || accountBusy) && styles.disabledButton]}
           testID="delete-account-data-button"
         >
-          <Trash2 size={17} color="#b91c1c" strokeWidth={2.4} />
+          <Trash2 size={17} color={dangerIconColor} strokeWidth={2.4} />
           <View style={styles.flexOne}>
-            <Text style={styles.deleteAccountDataTitle}>{ui.deleteAccountData}</Text>
-            <Text style={styles.deleteAccountDataText}>{ui.deleteAccountDataText}</Text>
+            <Text style={[styles.deleteAccountDataTitle, themeStyles?.deleteAccountDataTitle]}>{ui.deleteAccountData}</Text>
+            <Text style={[styles.deleteAccountDataText, themeStyles?.deleteAccountDataText]}>{ui.deleteAccountDataText}</Text>
           </View>
         </AnimatedPressable>
       </View>
@@ -6503,6 +6513,7 @@ const styles = StyleSheet.create({
   installGuideOverlay: {
     backgroundColor: '#f8fafc',
     bottom: 0,
+    gap: 18,
     justifyContent: 'space-between',
     left: 0,
     paddingHorizontal: 22,
@@ -6511,6 +6522,12 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 80,
+  },
+  installGuideMain: {
+    flex: 1,
+    gap: 18,
+    justifyContent: 'flex-start',
+    paddingTop: 80,
   },
   installGuideTopBar: {
     alignItems: 'center',
@@ -6787,6 +6804,9 @@ const styles = StyleSheet.create({
   screenStack: {
     gap: 14,
   },
+  homeStack: {
+    gap: 12,
+  },
   hero: {
     backgroundColor: '#fff7ed',
     borderColor: '#fed7aa',
@@ -6884,8 +6904,8 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     borderRadius: 8,
     borderWidth: 1,
-    gap: 14,
-    padding: 16,
+    gap: 12,
+    padding: 15,
   },
   rowBetween: {
     alignItems: 'center',
@@ -6937,7 +6957,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 7,
     justifyContent: 'center',
-    minHeight: 44,
+    minHeight: 42,
     paddingHorizontal: 12,
   },
   accountShortcutText: {
@@ -6952,7 +6972,7 @@ const styles = StyleSheet.create({
   statCard: {
     borderRadius: 8,
     flex: 1,
-    padding: 14,
+    padding: 13,
   },
   blueTint: {
     backgroundColor: '#eff6ff',
@@ -6987,7 +7007,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
-    padding: 16,
+    padding: 14,
   },
   reviewTitle: {
     color: '#172033',
@@ -7406,8 +7426,8 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   libraryTopControlsInset: {
-    gap: 14,
-    paddingRight: 32,
+    gap: 10,
+    paddingRight: 36,
   },
   searchBox: {
     alignItems: 'center',
@@ -9678,6 +9698,16 @@ const darkStyles = StyleSheet.create({
   },
   settingsEntryText: {
     color: '#94a3b8',
+  },
+  deleteAccountDataButton: {
+    backgroundColor: '#2a1714',
+    borderColor: '#7f1d1d',
+  },
+  deleteAccountDataTitle: {
+    color: '#fca5a5',
+  },
+  deleteAccountDataText: {
+    color: '#fecaca',
   },
   developerCard: {
     backgroundColor: '#111827',

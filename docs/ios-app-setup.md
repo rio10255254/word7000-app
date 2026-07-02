@@ -15,6 +15,7 @@ This branch turns the existing Word7000 web app into a real iOS app while keepin
 - Supabase Auth uses native session storage outside the web version.
 - Google OAuth can use a native app callback URL.
 - Apple Sign In is wired for iOS builds.
+- The first App Store submission is iPhone-only to keep screenshots and review scope focused.
 - Native EAS Update checks are wired in the app, but the EAS project still needs to be configured after logging in to Expo.
 - Public privacy and support pages are included under the web host.
 - Signed-in users can delete Word7000 cloud learning data from the app settings.

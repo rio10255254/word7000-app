@@ -252,7 +252,7 @@ describe('free web launch configuration', () => {
     expect(fs.existsSync(supportPath)).toBe(true);
     expect(appSource).toContain('appInfoLinks.privacy');
     expect(appSource).toContain('appInfoLinks.support');
-    expect(appSource).toContain('onDeleteAccountData={handleDeleteAccountData}');
+    expect(appSource).toContain('onConfirmDeleteAccountData={confirmDeleteAccountData}');
     expect(appSource).toContain('testID="delete-account-data-button"');
     expect(appSource).toContain('deleteCloudUserData(asCloudProgressClient(supabaseClient), signedInUserId)');
     expect(schema).toContain('Users can delete their own profile');

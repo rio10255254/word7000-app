@@ -16,7 +16,7 @@ describe('app store oriented metadata', () => {
     expect(app.expo.scheme).toBe('word7000');
     expect(app.expo.runtimeVersion).toEqual({ policy: 'appVersion' });
     expect(app.expo.ios?.usesAppleSignIn).toBe(true);
-    expect(app.expo.ios?.supportsTablet).toBe(true);
+    expect(app.expo.ios?.supportsTablet).toBe(false);
     expect(app.expo.web?.favicon).toBe('./assets/favicon.png');
   });
 

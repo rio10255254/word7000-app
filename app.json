@@ -15,7 +15,7 @@
       "bundleIdentifier": "com.rio.word7000",
       "buildNumber": "1",
       "usesAppleSignIn": true,
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {

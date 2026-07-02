@@ -39,6 +39,7 @@ import {
 } from 'lucide-react-native';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
+  Alert,
   Animated,
   Easing,
   type LayoutChangeEvent,
@@ -197,6 +198,9 @@ const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const CUSTOM_SET_SORT_STORAGE_KEY = 'word7000-custom-set-sort-v1';
 const APP_LINKING_SCHEME = 'word7000';
+const IOS_BOTTOM_SAFE_AREA_FALLBACK = Platform.OS === 'ios' ? 28 : 0;
+const IOS_TAB_BAR_BOTTOM_OFFSET = 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
+const IOS_CONTENT_BOTTOM_PADDING = 102 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
 const LIBRARY_LIST_DRAG_SCROLL_OFFSET = 168;
@@ -442,6 +446,10 @@ const modeInterfaceCopy = {
     supportPageText: '登入、同步、更新與帳號資料說明',
     deleteAccountData: '刪除帳號學習資料',
     deleteAccountDataText: '刪除雲端進度、單字集與每日活躍紀錄，並登出目前帳號',
+    deleteAccountDataConfirmTitle: '刪除帳號學習資料？',
+    deleteAccountDataConfirmText: '這會刪除雲端進度、單字集與每日活躍紀錄，並登出目前帳號。',
+    deleteAccountDataConfirmCancel: '取消',
+    deleteAccountDataConfirmAction: '確認刪除',
     darkMode: '深色模式',
     darkModeOnText: '已切換成夜間閱讀介面',
     darkModeOffText: '切換成夜間閱讀介面',
@@ -635,6 +643,10 @@ const modeInterfaceCopy = {
     supportPageText: 'Help with sign-in, sync, updates, and account data',
     deleteAccountData: 'Delete Account Learning Data',
     deleteAccountDataText: 'Delete cloud progress, custom sets, and daily activity, then sign out',
+    deleteAccountDataConfirmTitle: 'Delete account learning data?',
+    deleteAccountDataConfirmText: 'This deletes cloud progress, custom sets, and daily activity, then signs out of the current account.',
+    deleteAccountDataConfirmCancel: 'Cancel',
+    deleteAccountDataConfirmAction: 'Delete Data',
     darkMode: 'Dark Mode',
     darkModeOnText: 'Night reading interface is on',
     darkModeOffText: 'Switch to the night reading interface',
@@ -1254,7 +1266,9 @@ function Word7000App() {
     }
 
     setInstallGuideChecked(true);
-    if (shouldShowInstallGuide(getAppStorage(), isInstalledWebApp())) {
+    const shouldAutoShowInstallGuide =
+      Platform.OS === 'web' && shouldShowInstallGuide(getAppStorage(), isInstalledWebApp());
+    if (shouldAutoShowInstallGuide) {
       openInstallGuide();
     }
   }, [installGuideChecked, showLaunch]);
@@ -2399,6 +2413,39 @@ function Word7000App() {
     }));
   }
 
+  function confirmDeleteAccountData() {
+    if (!account.userId) {
+      void handleDeleteAccountData();
+      return;
+    }
+
+    const ui = modeInterfaceCopy[studyMode];
+    if (Platform.OS === 'web') {
+      const confirmed =
+        typeof globalThis.confirm === 'function'
+          ? globalThis.confirm(`${ui.deleteAccountDataConfirmTitle}\n\n${ui.deleteAccountDataConfirmText}`)
+          : true;
+      if (confirmed) {
+        void handleDeleteAccountData();
+      }
+      return;
+    }
+
+    Alert.alert(ui.deleteAccountDataConfirmTitle, ui.deleteAccountDataConfirmText, [
+      {
+        text: ui.deleteAccountDataConfirmCancel,
+        style: 'cancel',
+      },
+      {
+        text: ui.deleteAccountDataConfirmAction,
+        style: 'destructive',
+        onPress: () => {
+          void handleDeleteAccountData();
+        },
+      },
+    ]);
+  }
+
   async function handleDeleteAccountData() {
     const signedInUserId = account.userId;
     if (!supabaseClient || !signedInUserId) {
@@ -2682,7 +2729,7 @@ function Word7000App() {
               vocabularyCount={vocabularyWords.length}
               onClearDeveloperVocabulary={handleClearDeveloperVocabulary}
               onCloseSettings={() => setProfilePanel('overview')}
-              onDeleteAccountData={handleDeleteAccountData}
+              onConfirmDeleteAccountData={confirmDeleteAccountData}
               onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
@@ -4947,7 +4994,7 @@ function ProfileView({
   onEmailChange,
   onClearDeveloperVocabulary,
   onCloseSettings,
-  onDeleteAccountData,
+  onConfirmDeleteAccountData,
   onExportVocabulary,
   onImportVocabulary,
   onAppleSignIn,
@@ -4979,7 +5026,7 @@ function ProfileView({
   vocabularyCount: number;
   onClearDeveloperVocabulary: () => void;
   onCloseSettings: () => void;
-  onDeleteAccountData: () => void;
+  onConfirmDeleteAccountData: () => void;
   onEmailChange: (email: string) => void;
   onExportVocabulary: () => void;
   onAppleSignIn: () => void;
@@ -5000,6 +5047,7 @@ function ProfileView({
   const syncError = account.status === 'error';
   const bodyIconColor = themeMode === 'dark' ? '#e2e8f0' : '#172033';
   const ui = modeInterfaceCopy[studyMode];
+  const showWebInstallGuidePanel = Platform.OS === 'web';
   const [renderedProfilePanel, setRenderedProfilePanel] = useState<ProfilePanel>(panel);
   const profilePanelAnim = useRef(new Animated.Value(1)).current;
 
@@ -5066,7 +5114,7 @@ function ProfileView({
           vocabularyCount={vocabularyCount}
           onBack={onCloseSettings}
           onClearDeveloperVocabulary={onClearDeveloperVocabulary}
-          onDeleteAccountData={onDeleteAccountData}
+          onConfirmDeleteAccountData={onConfirmDeleteAccountData}
           onExportVocabulary={onExportVocabulary}
           onImportVocabulary={onImportVocabulary}
           onOpenAppInfoLink={onOpenAppInfoLink}
@@ -5209,7 +5257,9 @@ function ProfileView({
 
       <ProfileLearningExperiencePanel dailyPercent={dailyPercent} progress={progress} stats={stats} studyMode={studyMode} />
 
-      <ProfileTutorialPanel studyMode={studyMode} onShowInstallGuide={onShowInstallGuide} />
+      {showWebInstallGuidePanel && (
+        <ProfileTutorialPanel studyMode={studyMode} onShowInstallGuide={onShowInstallGuide} />
+      )}
 
       <AnimatedPressable
         accessibilityLabel={ui.openSettings}
@@ -5841,7 +5891,7 @@ function ProfileSettingsView({
   developerVocabulary,
   onBack,
   onClearDeveloperVocabulary,
-  onDeleteAccountData,
+  onConfirmDeleteAccountData,
   onExportVocabulary,
   onImportVocabulary,
   onOpenAppInfoLink,
@@ -5860,7 +5910,7 @@ function ProfileSettingsView({
   vocabularyCount: number;
   onBack: () => void;
   onClearDeveloperVocabulary: () => void;
-  onDeleteAccountData: () => void;
+  onConfirmDeleteAccountData: () => void;
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
   onOpenAppInfoLink: (url: string) => void;
@@ -5954,7 +6004,7 @@ function ProfileSettingsView({
         <AnimatedPressable
           accessibilityRole="button"
           disabled={!signedIn || accountBusy}
-          onPress={onDeleteAccountData}
+          onPress={onConfirmDeleteAccountData}
           pressTone="secondary"
           style={[styles.deleteAccountDataButton, (!signedIn || accountBusy) && styles.disabledButton]}
           testID="delete-account-data-button"
@@ -6366,7 +6416,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 18,
-    paddingBottom: 102,
+    paddingBottom: IOS_CONTENT_BOTTOM_PADDING,
   },
   screenMotion: {
     gap: 14,
@@ -8909,7 +8959,7 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     borderRadius: 8,
     borderWidth: 1,
-    bottom: 16,
+    bottom: IOS_TAB_BAR_BOTTOM_OFFSET,
     flexDirection: 'row',
     gap: 4,
     left: 16,

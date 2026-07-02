@@ -1,8 +1,12 @@
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   progress jsonb not null default '{}'::jsonb,
+  custom_sets jsonb not null default '{"sets":[],"customWords":[]}'::jsonb,
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles
+  add column if not exists custom_sets jsonb not null default '{"sets":[],"customWords":[]}'::jsonb;
 
 create table if not exists public.daily_active_users (
   user_id uuid not null references auth.users(id) on delete cascade,

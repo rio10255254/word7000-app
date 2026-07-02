@@ -6,10 +6,12 @@ import {
   loadCloudProgressRecord,
   localActivityDate,
   recordDailyActiveUser,
+  saveCloudCustomSets,
   saveCloudProgress,
   type CloudProgressClient,
 } from './supabaseProgress';
 import type { ProgressState } from './progress';
+import type { CustomSetState } from './customSets';
 
 function progressState(studiedToday: number): ProgressState {
   return {
@@ -20,7 +22,33 @@ function progressState(studiedToday: number): ProgressState {
   };
 }
 
-function fakeClient(cloudProgress: ProgressState | null): CloudProgressClient {
+const customSetState: CustomSetState = {
+  customWords: [
+    {
+      example: 'I felt jetlag after the long flight.',
+      exampleZh: '長途飛行後我覺得有時差疲勞。',
+      group: 'Custom',
+      id: 'custom-jetlag',
+      meaningZh: '時差疲勞',
+      partOfSpeech: 'n',
+      pronunciation: '/jetlag/',
+      word: 'jetlag',
+    },
+  ],
+  sets: [
+    {
+      color: '#2563eb',
+      createdAt: '2026-07-02T06:00:00.000Z',
+      id: 'set-travel',
+      name: '旅行英文',
+      sortOrder: 1,
+      updatedAt: '2026-07-02T06:05:00.000Z',
+      wordIds: ['custom-jetlag'],
+    },
+  ],
+};
+
+function fakeClient(cloudProgress: ProgressState | null, cloudCustomSets: CustomSetState | null = null): CloudProgressClient {
   return {
     from(tableName: string) {
       if (tableName === 'daily_active_users') {
@@ -55,7 +83,9 @@ function fakeClient(cloudProgress: ProgressState | null): CloudProgressClient {
               return {
                 async maybeSingle() {
                   return {
-                    data: cloudProgress ? { progress: cloudProgress } : null,
+                    data: cloudProgress || cloudCustomSets
+                      ? { custom_sets: cloudCustomSets, progress: cloudProgress }
+                      : null,
                     error: null,
                   };
                 },
@@ -63,9 +93,14 @@ function fakeClient(cloudProgress: ProgressState | null): CloudProgressClient {
             },
           };
         },
-        upsert(payload: { id: string; progress: ProgressState; updated_at: string }) {
+        upsert(payload: { custom_sets?: CustomSetState; id: string; progress?: ProgressState; updated_at: string }) {
           expect(payload.id).toBe('user-1');
-          expect(payload.progress.studiedToday).toBe(4);
+          if (payload.progress) {
+            expect(payload.progress.studiedToday).toBe(4);
+          }
+          if (payload.custom_sets) {
+            expect(payload.custom_sets).toEqual(customSetState);
+          }
           expect(payload.updated_at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
 
           return {
@@ -104,12 +139,14 @@ describe('Supabase progress sync', () => {
 
   test('reports whether a signed-in user already has cloud progress', async () => {
     await expect(loadCloudProgressRecord(fakeClient(progressState(9)), 'user-1')).resolves.toEqual({
+      customSets: null,
       errorMessage: null,
       found: true,
       progress: progressState(9),
     });
 
     await expect(loadCloudProgressRecord(fakeClient(null), 'user-1')).resolves.toEqual({
+      customSets: null,
       errorMessage: null,
       found: false,
       progress: null,
@@ -125,6 +162,73 @@ describe('Supabase progress sync', () => {
       ok: true,
       message: 'Saved',
     });
+  });
+
+  test('loads and saves custom vocabulary sets for the signed-in user', async () => {
+    await expect(loadCloudProgressRecord(fakeClient(progressState(9), customSetState), 'user-1')).resolves.toEqual({
+      customSets: customSetState,
+      errorMessage: null,
+      found: true,
+      progress: progressState(9),
+    });
+
+    await expect(saveCloudCustomSets(fakeClient(null), 'user-1', customSetState)).resolves.toEqual({
+      ok: true,
+      message: 'Saved',
+    });
+  });
+
+  test('keeps loading progress if the custom sets column has not been created yet', async () => {
+    const selectedColumns: string[] = [];
+    const client: CloudProgressClient = {
+      from(tableName: string) {
+        expect(tableName).toBe('profiles');
+
+        return {
+          select(columns?: string) {
+            selectedColumns.push(columns ?? '');
+
+            return {
+              eq(columnName: string, userId: string) {
+                expect(columnName).toBe('id');
+                expect(userId).toBe('user-1');
+
+                return {
+                  async maybeSingle() {
+                    if (columns?.includes('custom_sets')) {
+                      return {
+                        data: null,
+                        error: { message: 'column profiles.custom_sets does not exist' },
+                      };
+                    }
+
+                    return {
+                      data: { progress: progressState(8) },
+                      error: null,
+                    };
+                  },
+                };
+              },
+            };
+          },
+          upsert() {
+            return {
+              async throwOnError() {
+                return { data: null, error: null };
+              },
+            };
+          },
+        };
+      },
+    };
+
+    await expect(loadCloudProgressRecord(client, 'user-1')).resolves.toEqual({
+      customSets: null,
+      errorMessage: null,
+      found: true,
+      progress: progressState(8),
+    });
+    expect(selectedColumns).toEqual(['progress, custom_sets', 'progress']);
   });
 
   test('records one daily active row per signed-in user and date', async () => {

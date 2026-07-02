@@ -224,10 +224,15 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain("from './src/lib/authRedirect'");
     expect(appSource).toContain('loadCloudProgressRecord');
+    expect(appSource).toContain('saveCloudCustomSets');
+    expect(appSource).toContain('mergeCustomSetStates');
     expect(appSource).toContain("cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress)");
+    expect(appSource).toContain('mergeCustomSetStates(cloudProgress.customSets, loadCustomSetState(storage, user.id), loadCustomSetState(storage))');
     expect(appSource).toContain('saveProgressToStorage(getBrowserStorage(), progress, account.userId)');
+    expect(appSource).toContain('saveCustomSetState(getBrowserStorage(), customSetState, account.userId)');
     expect(appSource).toContain('saveProgressToStorage(storage, loadedProgress, user.id)');
     expect(appSource).toContain('await saveCloudProgress(asCloudProgressClient(supabaseClient), signedInUserId, progress)');
+    expect(appSource).toContain('await saveCloudCustomSets(asCloudProgressClient(supabaseClient), signedInUserId, customSetState)');
     expect(appSource).toContain('loadProgressFromStorage(getBrowserStorage(), initialProgress)');
     expect(appSource).toContain('handleGoogleSignIn');
     expect(appSource).toContain("provider: 'google'");
@@ -248,6 +253,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('ACTIVE_USER_HEARTBEAT_MS = 60_000');
     expect(appSource).toContain('recordDailyActiveUser(asCloudProgressClient(supabaseClient), account.userId)');
     expect(appSource).toContain('setInterval(recordActivity, ACTIVE_USER_HEARTBEAT_MS)');
+    expect(schema).toContain('custom_sets jsonb');
     expect(schema).toContain('create table if not exists public.daily_active_users');
     expect(schema).toContain('primary key (user_id, activity_date)');
     expect(schema).toContain('daily_active_users_activity_date_idx');

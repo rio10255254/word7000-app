@@ -5,6 +5,7 @@ import {
   addWordToSet,
   createCustomSet,
   customWordsFromImportRows,
+  mergeCustomSetStates,
   parseCustomWordsCsv,
   sortCustomSets,
   type CustomSetState,
@@ -23,6 +24,17 @@ const customWord: WordEntry = {
   meaningZh: '海洋',
   example: 'The ocean looked calm in the morning.',
   exampleZh: '早晨的海洋看起來很平靜。',
+  group: 'Custom',
+};
+
+const secondCustomWord: WordEntry = {
+  id: 'custom-lounge',
+  word: 'lounge',
+  pronunciation: '/lounge/',
+  partOfSpeech: 'n',
+  meaningZh: '休息室',
+  example: 'The airport lounge was quiet.',
+  exampleZh: '機場休息室很安靜。',
   group: 'Custom',
 };
 
@@ -88,5 +100,56 @@ describe('custom vocabulary sets', () => {
       meaningZh: '港口',
       group: 'Custom',
     });
+  });
+
+  test('merges cloud and local sets without dropping newer local words', () => {
+    const cloudState: CustomSetState = {
+      customWords: [customWord],
+      sets: [
+        {
+          color: '#2563eb',
+          createdAt: '2026-07-01T01:00:00.000Z',
+          id: 'set-travel',
+          name: 'Travel',
+          sortOrder: 1,
+          updatedAt: '2026-07-01T01:00:00.000Z',
+          wordIds: ['custom-ocean'],
+        },
+      ],
+    };
+    const localState: CustomSetState = {
+      customWords: [customWord, secondCustomWord],
+      sets: [
+        {
+          color: '#0f766e',
+          createdAt: '2026-07-01T01:00:00.000Z',
+          id: 'set-travel',
+          name: 'Travel 2026',
+          sortOrder: 1,
+          updatedAt: '2026-07-02T01:00:00.000Z',
+          wordIds: ['custom-lounge', 'custom-ocean'],
+        },
+        {
+          color: '#7c3aed',
+          createdAt: '2026-07-02T01:05:00.000Z',
+          id: 'set-food',
+          name: 'Food',
+          sortOrder: 2,
+          updatedAt: '2026-07-02T01:05:00.000Z',
+          wordIds: ['menu'],
+        },
+      ],
+    };
+
+    const merged = mergeCustomSetStates(cloudState, localState);
+
+    expect(merged.customWords.map((word) => word.id)).toEqual(['custom-ocean', 'custom-lounge']);
+    expect(merged.sets).toHaveLength(2);
+    expect(merged.sets.find((set) => set.id === 'set-travel')).toMatchObject({
+      name: 'Travel 2026',
+      updatedAt: '2026-07-02T01:00:00.000Z',
+      wordIds: ['custom-lounge', 'custom-ocean'],
+    });
+    expect(merged.sets.find((set) => set.id === 'set-food')?.wordIds).toEqual(['menu']);
   });
 });

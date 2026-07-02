@@ -87,6 +87,7 @@ import { loadProgressFromStorage, saveProgressToStorage, type StorageLike } from
 import {
   loadCloudProgressRecord,
   recordDailyActiveUser,
+  saveCloudCustomSets,
   saveCloudProgress,
   type CloudProgressClient,
 } from './src/lib/supabaseProgress';
@@ -122,6 +123,7 @@ import {
   createCustomSet,
   customWordsFromImportRows,
   loadCustomSetState,
+  mergeCustomSetStates,
   mergeCustomWords,
   parseCustomWordsCsv,
   saveCustomSetState,
@@ -1378,16 +1380,20 @@ export default function App() {
         message: '同步中',
       }));
 
-      saveCloudProgress(asCloudProgressClient(supabaseClient), account.userId ?? '', progress).then((result) => {
+      Promise.all([
+        saveCloudProgress(asCloudProgressClient(supabaseClient), account.userId ?? '', progress),
+        saveCloudCustomSets(asCloudProgressClient(supabaseClient), account.userId ?? '', customSetState),
+      ]).then(([progressResult, customSetResult]) => {
         if (cancelled) {
           return;
         }
 
+        const saved = progressResult.ok && customSetResult.ok;
         setAccount((current) => ({
           ...current,
           busy: false,
-          status: result.ok ? 'saved' : 'error',
-          message: result.ok ? '已保存到帳號' : result.message,
+          status: saved ? 'saved' : 'error',
+          message: saved ? '已保存到帳號' : progressResult.ok ? customSetResult.message : progressResult.message,
         }));
       });
     }, 450);
@@ -1396,7 +1402,7 @@ export default function App() {
       cancelled = true;
       clearTimeout(syncTimer);
     };
-  }, [account.userId, progress, progressReady, supabaseClient]);
+  }, [account.userId, customSetState, progress, progressReady, supabaseClient]);
 
   useEffect(() => {
     if (!supabaseClient || !account.userId) {
@@ -1858,10 +1864,12 @@ export default function App() {
       cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress),
       today,
     );
+    const loadedCustomSetState = mergeCustomSetStates(cloudProgress.customSets, loadCustomSetState(storage, user.id), loadCustomSetState(storage));
 
     setProgress(loadedProgress);
     saveProgressToStorage(storage, loadedProgress, user.id);
-    setCustomSetState(loadCustomSetState(storage, user.id));
+    setCustomSetState(loadedCustomSetState);
+    saveCustomSetState(storage, loadedCustomSetState, user.id);
     setSelectedCustomSetId(null);
     setStudySetId(null);
     setQuizSetId(null);
@@ -2025,6 +2033,7 @@ export default function App() {
 
     if (supabaseClient && signedInUserId) {
       await saveCloudProgress(asCloudProgressClient(supabaseClient), signedInUserId, progress);
+      await saveCloudCustomSets(asCloudProgressClient(supabaseClient), signedInUserId, customSetState);
     }
 
     if (supabaseClient) {

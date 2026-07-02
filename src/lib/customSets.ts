@@ -148,6 +148,52 @@ export function mergeCustomWords(baseWords: WordEntry[], customWords: WordEntry[
   return [...uniqueCustomWords, ...baseWords];
 }
 
+export function mergeCustomSetStates(...states: Array<CustomSetState | null | undefined>): CustomSetState {
+  const customWords: WordEntry[] = [];
+  const wordKeys = new Set<string>();
+  const sets: CustomVocabSet[] = [];
+  const setIndexById = new Map<string, number>();
+
+  states.forEach((state) => {
+    if (!state) {
+      return;
+    }
+
+    state.customWords.forEach((word) => {
+      const key = `${word.id}:${word.word.toLowerCase()}`;
+      if (wordKeys.has(key)) {
+        return;
+      }
+
+      wordKeys.add(key);
+      customWords.push(word);
+    });
+
+    state.sets.forEach((set) => {
+      const existingIndex = setIndexById.get(set.id);
+      if (existingIndex === undefined) {
+        setIndexById.set(set.id, sets.length);
+        sets.push(set);
+        return;
+      }
+
+      const existing = sets[existingIndex];
+      const setIsNewer = Date.parse(set.updatedAt) >= Date.parse(existing.updatedAt);
+      const base = setIsNewer ? set : existing;
+      const secondary = setIsNewer ? existing : set;
+      sets[existingIndex] = {
+        ...base,
+        wordIds: uniqueWordIds([...base.wordIds, ...secondary.wordIds]),
+      };
+    });
+  });
+
+  return {
+    customWords,
+    sets,
+  };
+}
+
 export function parseCustomWordsCsv(text: string): CustomWordsImportResult {
   const table = parseCsvTable(text.trim());
   if (table.length < 2) {
@@ -305,7 +351,7 @@ function parseCsvTable(text: string): string[][] {
   return rows.filter((item) => item.some((value) => value.trim().length > 0));
 }
 
-function isCustomSetState(value: unknown): value is CustomSetState {
+export function isCustomSetState(value: unknown): value is CustomSetState {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return false;
   }
@@ -334,6 +380,10 @@ function isCustomSet(value: unknown): value is CustomVocabSet {
 
 function normalizeHeader(value: string): string {
   return value.trim().toLowerCase().replace(/[\s_-]+/g, '');
+}
+
+function uniqueWordIds(wordIds: string[]): string[] {
+  return Array.from(new Set(wordIds));
 }
 
 function createRuntimeTimestamp(): string {

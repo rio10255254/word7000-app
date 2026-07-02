@@ -178,6 +178,40 @@ describe('Supabase progress sync', () => {
     });
   });
 
+  test('does not surface the Supabase schema-cache error while custom sets column is pending', async () => {
+    const client: CloudProgressClient = {
+      from(tableName: string) {
+        expect(tableName).toBe('profiles');
+
+        return {
+          select() {
+            return {
+              eq() {
+                return {
+                  async maybeSingle() {
+                    return { data: null, error: null };
+                  },
+                };
+              },
+            };
+          },
+          upsert() {
+            return {
+              async throwOnError() {
+                throw new Error("Could not find the 'custom_sets' column of 'profiles' in the schema cache");
+              },
+            };
+          },
+        };
+      },
+    };
+
+    await expect(saveCloudCustomSets(client, 'user-1', customSetState)).resolves.toEqual({
+      ok: true,
+      message: 'Custom sets sync pending schema update',
+    });
+  });
+
   test('keeps loading progress if the custom sets column has not been created yet', async () => {
     const selectedColumns: string[] = [];
     const client: CloudProgressClient = {

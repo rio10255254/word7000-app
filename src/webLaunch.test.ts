@@ -180,7 +180,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('返回字庫');
     expect(appSource).toContain('完整資訊');
     expect(appSource).toContain('onOpenWord');
-    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail'");
+    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail' | 'sets'");
     expect(appSource).toContain('renderedLibraryPanel');
     expect(appSource).toContain('libraryPanelMotionStyle');
     expect(appSource).toContain("setLibraryPanel('detail')");
@@ -401,7 +401,7 @@ describe('free web launch configuration', () => {
       appSource.indexOf('function closeLibraryWordDetail')
     );
 
-    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail'");
+    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail' | 'sets'");
     expect(appSource).toContain("const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');");
     expect(appSource).toContain("const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');");
     expect(appSource).toContain('const libraryPanelAnim = useRef(new Animated.Value(1)).current;');
@@ -530,5 +530,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('<View style={styles.libraryTopControlsInset}>');
     expect(appSource).toContain('libraryTopControlsInset:');
     expect(appSource).toContain('paddingRight: 32');
+  });
+
+  test('places custom sets in the library page and removes the redundant library header top button', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const libraryStart = appSource.indexOf('function LibraryView({');
+    const libraryEnd = appSource.indexOf('function LibraryWordDetailView({');
+    const profileOverviewStart = appSource.indexOf('<View style={[styles.profileCard');
+    const profileSettingsStart = appSource.indexOf('accessibilityLabel={ui.openSettings}', profileOverviewStart);
+    const librarySource = appSource.slice(libraryStart, libraryEnd);
+    const profileOverviewSource = appSource.slice(profileOverviewStart, profileSettingsStart);
+
+    expect(librarySource).toContain('customSets,');
+    expect(librarySource).toContain('onOpenCustomSets,');
+    expect(librarySource).toContain('testID="library-custom-sets"');
+    expect(librarySource).toContain('styles.libraryCustomSetsStrip');
+    expect(librarySource).not.toContain('testID="library-top-return"');
+    expect(profileOverviewSource).not.toContain('accessibilityLabel={ui.openCustomSets}');
   });
 });

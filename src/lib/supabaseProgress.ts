@@ -128,6 +128,19 @@ function isMissingCustomSetsColumn(message?: string): boolean {
   return Boolean(message && /custom_sets|column/i.test(message));
 }
 
+function errorMessageFromUnknown(error: unknown): string | undefined {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (error && typeof error === 'object' && 'message' in error) {
+    const message = (error as { message?: unknown }).message;
+    return typeof message === 'string' ? message : undefined;
+  }
+
+  return undefined;
+}
+
 export async function saveCloudProgress(
   client: CloudProgressClient,
   userId: string,
@@ -150,7 +163,7 @@ export async function saveCloudProgress(
   } catch (error) {
     return {
       ok: false,
-      message: error instanceof Error ? error.message : 'Save failed',
+      message: errorMessageFromUnknown(error) ?? 'Save failed',
     };
   }
 }
@@ -175,9 +188,16 @@ export async function saveCloudCustomSets(
       message: 'Saved',
     };
   } catch (error) {
+    if (isMissingCustomSetsColumn(errorMessageFromUnknown(error))) {
+      return {
+        ok: true,
+        message: 'Custom sets sync pending schema update',
+      };
+    }
+
     return {
       ok: false,
-      message: error instanceof Error ? error.message : 'Save failed',
+      message: errorMessageFromUnknown(error) ?? 'Save failed',
     };
   }
 }

@@ -135,8 +135,8 @@ import {
 } from './src/lib/customSets';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
-type ProfilePanel = 'overview' | 'settings' | 'sets';
-type LibraryPanel = 'list' | 'detail';
+type ProfilePanel = 'overview' | 'settings';
+type LibraryPanel = 'list' | 'detail' | 'sets';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
 type StudyMode = 'english' | 'chinese';
@@ -933,6 +933,10 @@ export default function App() {
   ];
   const libraryDetailStageMotionStyle = [
     renderedLibraryPanel === 'detail' ? libraryPanelMotionStyle : styles.libraryPanelHidden,
+    libraryTransitionPerformanceStyle,
+  ];
+  const librarySetsStageMotionStyle = [
+    renderedLibraryPanel === 'sets' ? libraryPanelMotionStyle : styles.libraryPanelHidden,
     libraryTransitionPerformanceStyle,
   ];
   const modeOverlayScale = modeTransitionAnim.interpolate({
@@ -2229,6 +2233,7 @@ export default function App() {
                 activeInitial={activeInitial}
                 activeLevel={activeLevel}
                 activeSort={activeSort}
+                customSets={sortedCustomSets}
                 filtersOpen={libraryFiltersOpen}
                 itemExtent={libraryItemExtent}
                 levelOptions={levelFilterOptions}
@@ -2249,9 +2254,9 @@ export default function App() {
                 onListLayout={handleLibraryListLayout}
                 onLevelChange={setActiveLevel}
                 onOpenWord={openLibraryWordDetail}
+                onOpenCustomSets={() => setLibraryPanel('sets')}
                 onQueryChange={handleLibraryQueryChange}
                 onQueryClear={clearLibrarySearch}
-                onReturnTop={returnLibraryToTop}
                 onSearchBlur={() => setSearchFocused(false)}
                 onSearchFocus={() => setSearchFocused(true)}
                 onSortChange={setActiveSort}
@@ -2264,14 +2269,8 @@ export default function App() {
               dailyPercent={dailyPercent}
               developerMessage={developerVocabularyMessage}
               developerVocabulary={developerVocabulary}
-              customSetMessage={customSetMessage}
-              customSetSort={customSetSort}
-              customSets={sortedCustomSets}
-              customSetState={customSetState}
-              manualCustomWord={manualCustomWord}
               panel={profilePanel}
               progress={progress}
-              selectedCustomSetId={selectedCustomSetId}
               stats={stats}
               studyMode={studyMode}
               themeMode={themeMode}
@@ -2282,12 +2281,6 @@ export default function App() {
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
               onGoogleSignIn={handleGoogleSignIn}
-              onAddManualCustomWord={handleAddManualCustomWord}
-              onCreateCustomSet={handleCreateCustomSet}
-              onCustomSetSortChange={setCustomSetSort}
-              onImportCustomWords={handleImportCustomWords}
-              onManualCustomWordChange={handleManualCustomWordChange}
-              onOpenCustomSets={() => setProfilePanel('sets')}
               onOpenSettings={() => setProfilePanel('settings')}
               onPanelSwap={onProfilePanelSwap}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
@@ -2295,11 +2288,6 @@ export default function App() {
               onSignIn={handleSignIn}
               onSignOut={handleSignOut}
               onSignUp={handleSignUp}
-              onStartQuizSet={handleStartQuizSet}
-              onStartStudySet={handleStartStudySet}
-              onCustomSetSelect={setSelectedCustomSetId}
-              onNewSetNameChange={setNewSetName}
-              newSetName={newSetName}
               onThemeModeChange={triggerThemeModeChange}
             />
           )}
@@ -2381,6 +2369,43 @@ export default function App() {
                 onAddToSet={handleOpenSetPicker}
                 onBack={closeLibraryWordDetail}
                 onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
+              />
+            </ScrollView>
+          </Animated.View>
+        )}
+
+        {activeTab === 'library' && (
+          <Animated.View
+            pointerEvents={renderedLibraryPanel === 'sets' ? 'auto' : 'none'}
+            style={[
+              styles.libraryDetailStage,
+              themeStyles?.libraryDetailStage,
+              { top: headerHeight },
+              librarySetsStageMotionStyle,
+            ]}
+            testID="library-custom-sets-stage"
+          >
+            <ScrollView contentContainerStyle={styles.libraryDetailStageContent} showsVerticalScrollIndicator={false}>
+              <ProfileCustomSetsView
+                backLabel={modeInterfaceCopy[studyMode].backLibrary}
+                customSetMessage={customSetMessage}
+                customSetSort={customSetSort}
+                customSets={sortedCustomSets}
+                customSetState={customSetState}
+                manualCustomWord={manualCustomWord}
+                newSetName={newSetName}
+                selectedCustomSetId={selectedCustomSetId}
+                studyMode={studyMode}
+                onAddManualCustomWord={handleAddManualCustomWord}
+                onBack={() => setLibraryPanel('list')}
+                onCreateCustomSet={handleCreateCustomSet}
+                onCustomSetSelect={setSelectedCustomSetId}
+                onCustomSetSortChange={setCustomSetSort}
+                onImportCustomWords={handleImportCustomWords}
+                onManualCustomWordChange={handleManualCustomWordChange}
+                onNewSetNameChange={setNewSetName}
+                onStartQuizSet={handleStartQuizSet}
+                onStartStudySet={handleStartStudySet}
               />
             </ScrollView>
           </Animated.View>
@@ -3859,6 +3884,7 @@ function LibraryView({
   activeInitial,
   activeLevel,
   activeSort,
+  customSets,
   filtersOpen,
   itemExtent,
   levelOptions,
@@ -3878,10 +3904,10 @@ function LibraryView({
   onInitialChange,
   onListLayout,
   onLevelChange,
+  onOpenCustomSets,
   onOpenWord,
   onQueryChange,
   onQueryClear,
-  onReturnTop,
   onSearchBlur,
   onSearchFocus,
   onSortChange,
@@ -3890,6 +3916,7 @@ function LibraryView({
   activeInitial: string;
   activeLevel: string;
   activeSort: LibrarySort;
+  customSets: CustomVocabSet[];
   filtersOpen: boolean;
   itemExtent: number;
   levelOptions: FilterOption[];
@@ -3909,10 +3936,10 @@ function LibraryView({
   onInitialChange: (initial: string) => void;
   onListLayout: (event: LayoutChangeEvent) => void;
   onLevelChange: (level: string) => void;
+  onOpenCustomSets: () => void;
   onOpenWord: (word: WordEntry) => void;
   onQueryChange: (query: string) => void;
   onQueryClear: () => void;
-  onReturnTop: () => void;
   onSearchBlur: () => void;
   onSearchFocus: () => void;
   onSortChange: (sort: LibrarySort) => void;
@@ -3963,92 +3990,120 @@ function LibraryView({
   return (
     <View style={styles.screenStack}>
       <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
-        <View>
-          <Text style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>{copy.libraryTitle}</Text>
-          <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.filteredCount(words.length)}</Text>
-        </View>
-        <AnimatedPressable
-          accessibilityRole="button"
-          onPress={onReturnTop}
-          pressTone="secondary"
-          style={[styles.libraryTopButton, themeStyles?.libraryTopButton]}
-          testID="library-top-return"
-        >
-          <ArrowUp size={16} color={bodyIconColor} strokeWidth={2.5} />
-          <Text style={[styles.libraryTopButtonText, themeStyles?.libraryTopButtonText]}>{ui.returnTop}</Text>
-        </AnimatedPressable>
-      </View>
-
-      <View style={styles.libraryTopControlsInset}>
-        <Animated.View style={searchMotionStyle}>
-          <View style={[styles.searchBox, themeStyles?.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
-            <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
-            <TextInput
-              onChangeText={onQueryChange}
-              onBlur={onSearchBlur}
-              onFocus={onSearchFocus}
-              placeholder={copy.searchPlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.searchInput, themeStyles?.searchInput]}
-              value={query}
-            />
-            {hasQuery && (
-              <AnimatedPressable
-                accessibilityLabel={ui.clearSearch}
-                accessibilityRole="button"
-                onPress={onQueryClear}
-                pressTone="icon"
-                style={[styles.searchClearButton, themeStyles?.searchClearButton]}
-                testID="library-search-clear"
-              >
-                <X size={16} color="#64748b" strokeWidth={2.5} />
-              </AnimatedPressable>
-            )}
+        <View style={styles.libraryHeaderRow}>
+          <View>
+            <Text style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>{copy.libraryTitle}</Text>
+            <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.filteredCount(words.length)}</Text>
           </View>
-        </Animated.View>
+        </View>
 
-        {hasQuery && (
-          <Animated.View style={[styles.searchMetaBox, themeStyles?.searchMetaBox, searchMetaMotionStyle]}>
-            <Text style={[styles.searchMetaText, themeStyles?.searchMetaText]}>{ui.searchMeta(query.trim(), words.length)}</Text>
+        <View style={styles.libraryTopControlsInset}>
+          <Animated.View style={searchMotionStyle}>
+            <View style={[styles.searchBox, themeStyles?.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
+              <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
+              <TextInput
+                onChangeText={onQueryChange}
+                onBlur={onSearchBlur}
+                onFocus={onSearchFocus}
+                placeholder={copy.searchPlaceholder}
+                placeholderTextColor="#9ca3af"
+                style={[styles.searchInput, themeStyles?.searchInput]}
+                value={query}
+              />
+              {hasQuery && (
+                <AnimatedPressable
+                  accessibilityLabel={ui.clearSearch}
+                  accessibilityRole="button"
+                  onPress={onQueryClear}
+                  pressTone="icon"
+                  style={[styles.searchClearButton, themeStyles?.searchClearButton]}
+                  testID="library-search-clear"
+                >
+                  <X size={16} color="#64748b" strokeWidth={2.5} />
+                </AnimatedPressable>
+              )}
+            </View>
           </Animated.View>
-        )}
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
-          {filters.map((filter) => {
-            const selected = activeFilter === filter.id;
-            return (
-              <AnimatedPressable
-                accessibilityRole="button"
-                key={filter.id}
-                onPress={() => onFilterChange(filter.id)}
-                pressTone="chip"
-                style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
-              >
-                <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
-              </AnimatedPressable>
-            );
-          })}
-        </ScrollView>
+          {hasQuery && (
+            <Animated.View style={[styles.searchMetaBox, themeStyles?.searchMetaBox, searchMetaMotionStyle]}>
+              <Text style={[styles.searchMetaText, themeStyles?.searchMetaText]}>{ui.searchMeta(query.trim(), words.length)}</Text>
+            </Animated.View>
+          )}
 
-        <FilterControlPanel
-          activeFilter={activeFilter}
-          activeInitial={activeInitial}
-          activeLevel={activeLevel}
-          activeSort={activeSort}
-          count={words.length}
-          levelOptions={levelOptions}
-          open={filtersOpen}
-          showStatus={false}
-          studyMode={studyMode}
-          testID="library-filter-toggle"
-          title={copy.libraryFilterTitle}
-          initialTitle={copy.initialTitle}
-          onFilterChange={onFilterChange}
-          onInitialChange={onInitialChange}
-          onLevelChange={onLevelChange}
-          onSortChange={onSortChange}
-          onToggle={onFiltersToggle}
-        />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+            {filters.map((filter) => {
+              const selected = activeFilter === filter.id;
+              return (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  key={filter.id}
+                  onPress={() => onFilterChange(filter.id)}
+                  pressTone="chip"
+                  style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+                >
+                  <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                </AnimatedPressable>
+              );
+            })}
+          </ScrollView>
+
+          <FilterControlPanel
+            activeFilter={activeFilter}
+            activeInitial={activeInitial}
+            activeLevel={activeLevel}
+            activeSort={activeSort}
+            count={words.length}
+            levelOptions={levelOptions}
+            open={filtersOpen}
+            showStatus={false}
+            studyMode={studyMode}
+            testID="library-filter-toggle"
+            title={copy.libraryFilterTitle}
+            initialTitle={copy.initialTitle}
+            onFilterChange={onFilterChange}
+            onInitialChange={onInitialChange}
+            onLevelChange={onLevelChange}
+            onSortChange={onSortChange}
+            onToggle={onFiltersToggle}
+          />
+        </View>
+
+        <View style={[styles.libraryCustomSetsStrip, themeStyles?.libraryCustomSetsStrip]} testID="library-custom-sets">
+          <View style={styles.rowBetween}>
+            <View style={styles.libraryCustomSetsTitleRow}>
+              <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+                <Library size={18} color={bodyIconColor} strokeWidth={2.3} />
+              </View>
+              <View>
+                <Text style={[styles.libraryCustomSetsTitle, themeStyles?.libraryCustomSetsTitle]}>{ui.customSets}</Text>
+                <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.customSetsSummary(customSets.length)}</Text>
+              </View>
+            </View>
+            <AnimatedPressable accessibilityRole="button" onPress={onOpenCustomSets} pressTone="secondary" style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}>
+              <Text style={[styles.libraryManageSetsText, themeStyles?.libraryTopButtonText]}>{ui.openCustomSets}</Text>
+            </AnimatedPressable>
+          </View>
+          {customSets.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+              {customSets.slice(0, 4).map((set) => (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  key={set.id}
+                  onPress={onOpenCustomSets}
+                  pressTone="chip"
+                  style={[styles.libraryCustomSetChip, themeStyles?.filterChip]}
+                >
+                  <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
+                  <Text style={[styles.filterText, themeStyles?.filterText]}>{set.name}</Text>
+                  <Text style={[styles.libraryCustomSetCount, themeStyles?.libraryHeaderMeta]}>{set.wordIds.length}</Text>
+                </AnimatedPressable>
+              ))}
+            </ScrollView>
+          ) : (
+            <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.noCustomSets}</Text>
+          )}
+        </View>
       </View>
 
       <View onLayout={onListLayout} style={styles.libraryPanel}>
@@ -4260,31 +4315,16 @@ function LibraryWordDetailView({
 
 function ProfileView({
   account,
-  customSetMessage,
-  customSetSort,
-  customSets,
-  customSetState,
   dailyPercent,
   developerMessage,
   developerVocabulary,
-  manualCustomWord,
-  newSetName,
   panel,
-  selectedCustomSetId,
-  onAddManualCustomWord,
-  onCreateCustomSet,
-  onCustomSetSelect,
-  onCustomSetSortChange,
   onEmailChange,
   onClearDeveloperVocabulary,
   onCloseSettings,
   onExportVocabulary,
-  onImportCustomWords,
   onImportVocabulary,
   onGoogleSignIn,
-  onManualCustomWordChange,
-  onNewSetNameChange,
-  onOpenCustomSets,
   onOpenSettings,
   onPanelSwap,
   onPasswordChange,
@@ -4292,8 +4332,6 @@ function ProfileView({
   onSignIn,
   onSignOut,
   onSignUp,
-  onStartQuizSet,
-  onStartStudySet,
   progress,
   stats,
   studyMode,
@@ -4302,36 +4340,21 @@ function ProfileView({
   onThemeModeChange,
 }: {
   account: AccountState;
-  customSetMessage: string;
-  customSetSort: CustomSetSort;
-  customSets: CustomVocabSet[];
-  customSetState: CustomSetState;
   dailyPercent: number;
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
-  manualCustomWord: ManualCustomWordState;
-  newSetName: string;
   panel: ProfilePanel;
   progress: ProgressState;
-  selectedCustomSetId: string | null;
   stats: ReturnType<typeof computeStats>;
   studyMode: StudyMode;
   themeMode: ThemeMode;
   vocabularyCount: number;
-  onAddManualCustomWord: () => void;
   onClearDeveloperVocabulary: () => void;
-  onCreateCustomSet: () => void;
-  onCustomSetSelect: (setId: string | null) => void;
-  onCustomSetSortChange: (sort: CustomSetSort) => void;
   onCloseSettings: () => void;
   onEmailChange: (email: string) => void;
   onExportVocabulary: () => void;
   onGoogleSignIn: () => void;
-  onImportCustomWords: () => void;
   onImportVocabulary: () => void;
-  onManualCustomWordChange: (field: keyof ManualCustomWordState, value: string) => void;
-  onNewSetNameChange: (name: string) => void;
-  onOpenCustomSets: () => void;
   onOpenSettings: () => void;
   onPanelSwap: () => void;
   onPasswordChange: (password: string) => void;
@@ -4339,8 +4362,6 @@ function ProfileView({
   onSignIn: () => void;
   onSignOut: () => void;
   onSignUp: () => void;
-  onStartQuizSet: (setId: string) => void;
-  onStartStudySet: (setId: string) => void;
   onThemeModeChange: (themeMode: ThemeMode) => void;
 }) {
   const themeStyles = useThemeStyles();
@@ -4417,33 +4438,6 @@ function ProfileView({
           onExportVocabulary={onExportVocabulary}
           onImportVocabulary={onImportVocabulary}
           onThemeModeChange={onThemeModeChange}
-        />
-      </Animated.View>
-    );
-  }
-
-  if (renderedProfilePanel === 'sets') {
-    return (
-      <Animated.View style={settingsPanelMotionStyle}>
-        <ProfileCustomSetsView
-          customSetMessage={customSetMessage}
-          customSetSort={customSetSort}
-          customSets={customSets}
-          customSetState={customSetState}
-          manualCustomWord={manualCustomWord}
-          newSetName={newSetName}
-          selectedCustomSetId={selectedCustomSetId}
-          studyMode={studyMode}
-          onAddManualCustomWord={onAddManualCustomWord}
-          onBack={onCloseSettings}
-          onCreateCustomSet={onCreateCustomSet}
-          onCustomSetSelect={onCustomSetSelect}
-          onCustomSetSortChange={onCustomSetSortChange}
-          onImportCustomWords={onImportCustomWords}
-          onManualCustomWordChange={onManualCustomWordChange}
-          onNewSetNameChange={onNewSetNameChange}
-          onStartQuizSet={onStartQuizSet}
-          onStartStudySet={onStartStudySet}
         />
       </Animated.View>
     );
@@ -4562,23 +4556,6 @@ function ProfileView({
       <ProfileLearningExperiencePanel dailyPercent={dailyPercent} progress={progress} stats={stats} studyMode={studyMode} />
 
       <ProfileTutorialPanel studyMode={studyMode} onShowInstallGuide={onShowInstallGuide} />
-
-      <AnimatedPressable
-        accessibilityLabel={ui.openCustomSets}
-        accessibilityRole="button"
-        onPress={onOpenCustomSets}
-        pressTone="list"
-        style={[styles.settingsEntryButton, themeStyles?.settingsEntryButton]}
-      >
-        <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
-          <Library size={20} color={bodyIconColor} strokeWidth={2.3} />
-        </View>
-        <View style={styles.flexOne}>
-          <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.customSets}</Text>
-          <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.customSetsSummary(customSetState.sets.length)}</Text>
-        </View>
-        <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
-      </AnimatedPressable>
 
       <AnimatedPressable
         accessibilityLabel={ui.openSettings}
@@ -4816,6 +4793,7 @@ function CustomSetPickerOverlay({
 }
 
 function ProfileCustomSetsView({
+  backLabel,
   customSetMessage,
   customSetSort,
   customSets,
@@ -4835,6 +4813,7 @@ function ProfileCustomSetsView({
   selectedCustomSetId,
   studyMode,
 }: {
+  backLabel?: string;
   customSetMessage: string;
   customSetSort: CustomSetSort;
   customSets: CustomVocabSet[];
@@ -4869,7 +4848,7 @@ function ProfileCustomSetsView({
     <View style={styles.screenStack} testID="profile-custom-sets-panel">
       <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}>
         <ChevronLeft size={18} color={bodyIconColor} strokeWidth={2.5} />
-        <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>{ui.backCustomSets}</Text>
+        <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>{backLabel ?? ui.backCustomSets}</Text>
       </AnimatedPressable>
 
       <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
@@ -6548,15 +6527,18 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   libraryHeaderCard: {
-    alignItems: 'center',
+    alignItems: 'stretch',
     backgroundColor: '#fff',
     borderColor: '#e5e7eb',
     borderRadius: 8,
     borderWidth: 1,
-    flexDirection: 'row',
     gap: 12,
-    justifyContent: 'space-between',
     padding: 14,
+  },
+  libraryHeaderRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   libraryHeaderTitle: {
     color: '#172033',
@@ -6583,6 +6565,56 @@ const styles = StyleSheet.create({
   libraryTopButtonText: {
     color: '#172033',
     fontSize: 13,
+    fontWeight: '900',
+  },
+  libraryCustomSetsStrip: {
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 10,
+    padding: 11,
+    paddingRight: 32,
+  },
+  libraryCustomSetsTitleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexShrink: 1,
+    gap: 9,
+  },
+  libraryCustomSetsTitle: {
+    color: '#172033',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  libraryManageSetsButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    justifyContent: 'center',
+    minHeight: 36,
+    paddingHorizontal: 10,
+  },
+  libraryManageSetsText: {
+    color: '#172033',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  libraryCustomSetChip: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 7,
+    minHeight: 34,
+    paddingHorizontal: 10,
+  },
+  libraryCustomSetCount: {
+    fontSize: 11,
     fontWeight: '900',
   },
   libraryPanel: {
@@ -8006,6 +8038,9 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#182033',
     borderColor: '#334155',
   },
+  filterText: {
+    color: '#cbd5e1',
+  },
   letterChip: {
     backgroundColor: '#182033',
     borderColor: '#334155',
@@ -8121,11 +8156,18 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#111827',
     borderColor: '#334155',
   },
+  libraryCustomSetsStrip: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
   libraryHeaderTitle: {
     color: '#f8fafc',
   },
   libraryHeaderMeta: {
     color: '#94a3b8',
+  },
+  libraryCustomSetsTitle: {
+    color: '#f8fafc',
   },
   libraryTopButton: {
     backgroundColor: '#182033',

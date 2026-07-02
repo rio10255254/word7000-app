@@ -122,10 +122,13 @@ import {
   addWordToSet,
   createCustomSet,
   customWordsFromImportRows,
+  deleteCustomSet,
   loadCustomSetState,
   mergeCustomSetStates,
   mergeCustomWords,
   parseCustomWordsCsv,
+  removeWordFromSet,
+  renameCustomSet,
   saveCustomSetState,
   sortCustomSets,
   wordsForCustomSet,
@@ -423,10 +426,21 @@ const modeInterfaceCopy = {
     clearPreview: '清除本機預覽',
     customSets: '我的單字集',
     customSetsSummary: (count: number) => `${count} 個自訂資料夾，可用於學習與測驗`,
+    manage: '管理',
     openCustomSets: '管理單字集',
     backCustomSets: '返回我的',
     setLibrary: '自訂單字集',
     setLibrarySummary: '把常用、考試或主題單字分開整理',
+    editSet: '編輯單字集',
+    editSetName: '資料夾名稱',
+    saveSetName: '儲存名稱',
+    deleteSet: '刪除資料夾',
+    wordsInSet: '資料夾單字',
+    emptySetWords: '這個資料夾還沒有單字。',
+    removeFromSet: '移除',
+    setRenamed: (name: string) => `已更新「${name}」`,
+    setDeleted: (name: string) => `已刪除「${name}」`,
+    removedFromSet: (word: string, setName: string) => `已從「${setName}」移除 ${word}`,
     customSetSortRecent: '最近更新',
     customSetSortName: '名稱 A-Z',
     customSetSortManual: '建立順序',
@@ -579,10 +593,21 @@ const modeInterfaceCopy = {
     clearPreview: 'Clear Local Preview',
     customSets: 'My Sets',
     customSetsSummary: (count: number) => `${count} custom folders for study and quiz`,
+    manage: 'Manage',
     openCustomSets: 'Manage sets',
     backCustomSets: 'Back to Me',
     setLibrary: 'Custom Sets',
     setLibrarySummary: 'Group words by topic, exam, or personal lists',
+    editSet: 'Edit Set',
+    editSetName: 'Folder name',
+    saveSetName: 'Save Name',
+    deleteSet: 'Delete Folder',
+    wordsInSet: 'Words in Set',
+    emptySetWords: 'This folder has no words yet.',
+    removeFromSet: 'Remove',
+    setRenamed: (name: string) => `Updated "${name}"`,
+    setDeleted: (name: string) => `Deleted "${name}"`,
+    removedFromSet: (word: string, setName: string) => `Removed ${word} from "${setName}"`,
     customSetSortRecent: 'Recently Updated',
     customSetSortName: 'Name A-Z',
     customSetSortManual: 'Created Order',
@@ -1558,6 +1583,45 @@ export default function App() {
     handleCloseSetPicker();
   }
 
+  function handleRenameCustomSet(setId: string, name: string) {
+    const cleanName = name.trim();
+    if (!cleanName) {
+      setCustomSetMessage(modeInterfaceCopy[studyMode].customSetSelectPlaceholder);
+      return;
+    }
+
+    setCustomSetState((current) => renameCustomSet(current, setId, cleanName));
+    setCustomSetMessage(modeInterfaceCopy[studyMode].setRenamed(cleanName));
+  }
+
+  function handleDeleteCustomSet(setId: string) {
+    const targetSet = customSetState.sets.find((set) => set.id === setId);
+    if (!targetSet) {
+      return;
+    }
+
+    const remainingSets = customSetState.sets.filter((set) => set.id !== setId);
+    setCustomSetState((current) => deleteCustomSet(current, setId));
+    setSelectedCustomSetId(remainingSets[0]?.id ?? null);
+    if (studySetId === setId) {
+      setStudySetId(null);
+    }
+    if (quizSetId === setId) {
+      setQuizSetId(null);
+    }
+    setCustomSetMessage(modeInterfaceCopy[studyMode].setDeleted(targetSet.name));
+  }
+
+  function handleRemoveWordFromCustomSet(setId: string, word: WordEntry) {
+    const targetSet = customSetState.sets.find((set) => set.id === setId);
+    if (!targetSet) {
+      return;
+    }
+
+    setCustomSetState((current) => removeWordFromSet(current, setId, word.id));
+    setCustomSetMessage(modeInterfaceCopy[studyMode].removedFromSet(formatWordPrimary(word, studyMode), targetSet.name));
+  }
+
   function handleManualCustomWordChange(field: keyof ManualCustomWordState, value: string) {
     setManualCustomWord((current) => ({ ...current, [field]: value }));
   }
@@ -2397,14 +2461,18 @@ export default function App() {
                 newSetName={newSetName}
                 selectedCustomSetId={selectedCustomSetId}
                 studyMode={studyMode}
+                vocabularyWords={vocabularyWords}
                 onAddManualCustomWord={handleAddManualCustomWord}
                 onBack={() => setLibraryPanel('list')}
                 onCreateCustomSet={handleCreateCustomSet}
                 onCustomSetSelect={setSelectedCustomSetId}
                 onCustomSetSortChange={setCustomSetSort}
+                onDeleteCustomSet={handleDeleteCustomSet}
                 onImportCustomWords={handleImportCustomWords}
                 onManualCustomWordChange={handleManualCustomWordChange}
                 onNewSetNameChange={setNewSetName}
+                onRemoveWordFromSet={handleRemoveWordFromCustomSet}
+                onRenameCustomSet={handleRenameCustomSet}
                 onStartQuizSet={handleStartQuizSet}
                 onStartStudySet={handleStartStudySet}
               />
@@ -4100,7 +4168,7 @@ function LibraryView({
             </View>
           </View>
           <AnimatedPressable accessibilityRole="button" onPress={onOpenCustomSets} pressTone="secondary" style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}>
-            <Text style={[styles.libraryManageSetsButtonLabel, themeStyles?.libraryTopButtonText]}>{ui.openCustomSets}</Text>
+            <Text style={[styles.libraryManageSetsButtonLabel, themeStyles?.libraryTopButtonText]}>{ui.manage}</Text>
             <ChevronRight size={15} color={bodyIconColor} strokeWidth={2.4} />
           </AnimatedPressable>
         </View>
@@ -4824,13 +4892,17 @@ function ProfileCustomSetsView({
   onCreateCustomSet,
   onCustomSetSelect,
   onCustomSetSortChange,
+  onDeleteCustomSet,
   onImportCustomWords,
   onManualCustomWordChange,
   onNewSetNameChange,
+  onRemoveWordFromSet,
+  onRenameCustomSet,
   onStartQuizSet,
   onStartStudySet,
   selectedCustomSetId,
   studyMode,
+  vocabularyWords,
 }: {
   backLabel?: string;
   customSetMessage: string;
@@ -4844,24 +4916,42 @@ function ProfileCustomSetsView({
   onCreateCustomSet: () => void;
   onCustomSetSelect: (setId: string | null) => void;
   onCustomSetSortChange: (sort: CustomSetSort) => void;
+  onDeleteCustomSet: (setId: string) => void;
   onImportCustomWords: () => void;
   onManualCustomWordChange: (field: keyof ManualCustomWordState, value: string) => void;
   onNewSetNameChange: (name: string) => void;
+  onRemoveWordFromSet: (setId: string, word: WordEntry) => void;
+  onRenameCustomSet: (setId: string, name: string) => void;
   onStartQuizSet: (setId: string) => void;
   onStartStudySet: (setId: string) => void;
   selectedCustomSetId: string | null;
   studyMode: StudyMode;
+  vocabularyWords: WordEntry[];
 }) {
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
   const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
   const ui = modeInterfaceCopy[studyMode];
   const selectedSet = customSets.find((set) => set.id === selectedCustomSetId) ?? customSets[0] ?? null;
+  const selectedSetWords = wordsForCustomSet(vocabularyWords, selectedSet);
+  const [editingSetId, setEditingSetId] = useState<string | null>(selectedSet?.id ?? null);
+  const [editingSetName, setEditingSetName] = useState(selectedSet?.name ?? '');
   const sortOptions: Array<{ id: CustomSetSort; label: string }> = [
     { id: 'recent', label: ui.customSetSortRecent },
     { id: 'name', label: ui.customSetSortName },
     { id: 'manual', label: ui.customSetSortManual },
   ];
+
+  useEffect(() => {
+    if (!selectedSet) {
+      setEditingSetId(null);
+      setEditingSetName('');
+      return;
+    }
+
+    setEditingSetId(selectedSet.id);
+    setEditingSetName(selectedSet.name);
+  }, [selectedSet?.id, selectedSet?.name]);
 
   return (
     <View style={styles.screenStack} testID="profile-custom-sets-panel">
@@ -4923,14 +5013,16 @@ function ProfileCustomSetsView({
         {customSets.map((set) => {
           const selected = selectedSet?.id === set.id;
           return (
-            <AnimatedPressable
-              accessibilityRole="button"
+            <View
               key={set.id}
-              onPress={() => onCustomSetSelect(set.id)}
-              pressTone="list"
               style={[styles.customSetCard, themeStyles?.customSetCard, selected && styles.customSetCardActive]}
             >
-              <View style={styles.rowBetween}>
+              <AnimatedPressable
+                accessibilityRole="button"
+                onPress={() => onCustomSetSelect(set.id)}
+                pressTone="list"
+                style={styles.customSetSelectHeader}
+              >
                 <View style={styles.customSetTitleRow}>
                   <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
                   <View>
@@ -4939,7 +5031,33 @@ function ProfileCustomSetsView({
                   </View>
                 </View>
                 <Check size={17} color={selected ? '#2563eb' : 'transparent'} strokeWidth={2.5} />
-              </View>
+              </AnimatedPressable>
+              {selected && (
+                <View style={styles.customSetEditBlock}>
+                  <Text style={[styles.customSetEditLabel, themeStyles?.customSetRowText]}>{ui.editSetName}</Text>
+                  <View style={styles.customSetEditRow}>
+                    <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetRenameInputBox]}>
+                      <TextInput
+                        onChangeText={setEditingSetName}
+                        placeholder={ui.editSetName}
+                        placeholderTextColor="#9ca3af"
+                        style={[styles.accountInput, themeStyles?.accountInput]}
+                        testID="custom-set-rename-input"
+                        value={editingSetId === set.id ? editingSetName : set.name}
+                      />
+                    </View>
+                    <AnimatedPressable
+                      accessibilityRole="button"
+                      disabled={!editingSetName.trim()}
+                      onPress={() => onRenameCustomSet(set.id, editingSetName)}
+                      pressTone="secondary"
+                      style={[styles.customSetActionButton, themeStyles?.customSetActionButton, !editingSetName.trim() && styles.disabledButton]}
+                    >
+                      <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.saveSetName}</Text>
+                    </AnimatedPressable>
+                  </View>
+                </View>
+              )}
               <View style={styles.customSetActionRow}>
                 <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(set.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
                   <BookOpen size={16} color={bodyIconColor} strokeWidth={2.3} />
@@ -4950,10 +5068,52 @@ function ProfileCustomSetsView({
                   <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
                 </AnimatedPressable>
               </View>
-            </AnimatedPressable>
+              {selected && (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  onPress={() => onDeleteCustomSet(set.id)}
+                  pressTone="secondary"
+                  style={[styles.customSetDeleteButton, themeStyles?.customSetActionButton]}
+                  testID="custom-set-delete-button"
+                >
+                  <Trash2 size={15} color="#b91c1c" strokeWidth={2.3} />
+                  <Text style={styles.customSetDeleteText}>{ui.deleteSet}</Text>
+                </AnimatedPressable>
+              )}
+            </View>
           );
         })}
       </View>
+
+      {selectedSet && (
+        <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.wordsInSet}</Text>
+          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.customSetCount(selectedSet.wordIds.length)}</Text>
+          <View style={styles.customSetWordList}>
+            {selectedSetWords.length === 0 && (
+              <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.emptySetWords}</Text>
+            )}
+            {selectedSetWords.map((word) => (
+              <View key={word.id} style={[styles.customSetWordRow, themeStyles?.customSetPickerRow]}>
+                <View style={styles.flexOne}>
+                  <Text style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{formatWordPrimary(word, studyMode)}</Text>
+                  <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{formatMeaningDetail(word, studyMode)}</Text>
+                </View>
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  onPress={() => onRemoveWordFromSet(selectedSet.id, word)}
+                  pressTone="secondary"
+                  style={styles.customSetRemoveWordButton}
+                  testID="custom-set-remove-word"
+                >
+                  <X size={15} color="#b91c1c" strokeWidth={2.5} />
+                  <Text style={styles.customSetRemoveWordText}>{ui.removeFromSet}</Text>
+                </AnimatedPressable>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
 
       <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
         <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.manualWordTitle}</Text>
@@ -7495,10 +7655,31 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.09,
     shadowRadius: 16,
   },
+  customSetSelectHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   customSetTitleRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 9,
+  },
+  customSetEditBlock: {
+    gap: 7,
+  },
+  customSetEditLabel: {
+    color: '#64748b',
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  customSetEditRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 9,
+  },
+  customSetRenameInputBox: {
+    flex: 1,
   },
   customSetActionRow: {
     flexDirection: 'row',
@@ -7534,6 +7715,51 @@ const styles = StyleSheet.create({
   customSetPrimaryActionText: {
     color: '#fff',
     fontSize: 13,
+    fontWeight: '900',
+  },
+  customSetDeleteButton: {
+    alignItems: 'center',
+    backgroundColor: '#fef2f2',
+    borderColor: '#fecaca',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    justifyContent: 'center',
+    minHeight: 40,
+  },
+  customSetDeleteText: {
+    color: '#b91c1c',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  customSetWordList: {
+    gap: 8,
+  },
+  customSetWordRow: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    padding: 10,
+  },
+  customSetRemoveWordButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#fecaca',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 4,
+    minHeight: 34,
+    paddingHorizontal: 9,
+  },
+  customSetRemoveWordText: {
+    color: '#b91c1c',
+    fontSize: 12,
     fontWeight: '900',
   },
   customWordFormGrid: {

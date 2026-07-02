@@ -91,6 +91,66 @@ export function addWordToSet(
   };
 }
 
+export function renameCustomSet(
+  state: CustomSetState,
+  setId: string,
+  name: string,
+  now = createRuntimeTimestamp(),
+): CustomSetState {
+  const cleanName = name.trim();
+  if (!cleanName) {
+    return state;
+  }
+
+  return {
+    ...state,
+    sets: state.sets.map((set) =>
+      set.id === setId
+        ? {
+            ...set,
+            name: cleanName,
+            updatedAt: now,
+          }
+        : set,
+    ),
+  };
+}
+
+export function removeWordFromSet(
+  state: CustomSetState,
+  setId: string,
+  wordId: string,
+  now = createRuntimeTimestamp(),
+): CustomSetState {
+  return {
+    ...state,
+    sets: state.sets.map((set) => {
+      if (set.id !== setId) {
+        return set;
+      }
+
+      const wordIds = set.wordIds.filter((id) => id !== wordId);
+      return {
+        ...set,
+        updatedAt: now,
+        wordIds,
+      };
+    }),
+  };
+}
+
+export function deleteCustomSet(state: CustomSetState, setId: string): CustomSetState {
+  return {
+    ...state,
+    sets: state.sets
+      .filter((set) => set.id !== setId)
+      .map((set, index) => ({
+        ...set,
+        sortOrder: index + 1,
+      })),
+  };
+}
+
 export function addCustomWordToSet(
   state: CustomSetState,
   setId: string,

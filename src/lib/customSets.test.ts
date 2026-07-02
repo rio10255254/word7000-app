@@ -5,8 +5,11 @@ import {
   addWordToSet,
   createCustomSet,
   customWordsFromImportRows,
+  deleteCustomSet,
   mergeCustomSetStates,
   parseCustomWordsCsv,
+  removeWordFromSet,
+  renameCustomSet,
   sortCustomSets,
   type CustomSetState,
 } from './customSets';
@@ -68,6 +71,42 @@ describe('custom vocabulary sets', () => {
 
     expect(state.customWords).toEqual([customWord]);
     expect(state.sets[0].wordIds).toEqual(['custom-ocean']);
+  });
+
+  test('renames a set after it has been created', () => {
+    const created = createCustomSet(baseState, '舊名稱', '2026-07-02T06:00:00.000Z');
+    const renamed = renameCustomSet(created, created.sets[0].id, '  旅行片語  ', '2026-07-02T06:08:00.000Z');
+
+    expect(renamed.sets[0]).toMatchObject({
+      id: created.sets[0].id,
+      name: '旅行片語',
+      updatedAt: '2026-07-02T06:08:00.000Z',
+      wordIds: [],
+    });
+  });
+
+  test('removes a word from an existing set without changing other sets', () => {
+    const created = createCustomSet(baseState, '混合單字', '2026-07-02T06:00:00.000Z');
+    const second = createCustomSet(created, '保留單字', '2026-07-02T06:01:00.000Z');
+    const firstSetId = second.sets[0].id;
+    const secondSetId = second.sets[1].id;
+    const withWords = addWordToSet(addWordToSet(addWordToSet(second, firstSetId, 'word-1'), firstSetId, 'word-2'), secondSetId, 'word-1');
+    const removed = removeWordFromSet(withWords, firstSetId, 'word-1', '2026-07-02T06:09:00.000Z');
+
+    expect(removed.sets[0]).toMatchObject({
+      updatedAt: '2026-07-02T06:09:00.000Z',
+      wordIds: ['word-2'],
+    });
+    expect(removed.sets[1].wordIds).toEqual(['word-1']);
+  });
+
+  test('deletes a set without deleting the remaining sets', () => {
+    const first = createCustomSet(baseState, '要刪除', '2026-07-02T06:00:00.000Z');
+    const second = createCustomSet(first, '保留', '2026-07-02T06:01:00.000Z');
+    const deleted = deleteCustomSet(second, second.sets[0].id);
+
+    expect(deleted.sets.map((set) => set.name)).toEqual(['保留']);
+    expect(deleted.sets[0].sortOrder).toBe(1);
   });
 
   test('sorts sets by recent update, name, or custom order', () => {

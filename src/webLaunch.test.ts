@@ -559,7 +559,26 @@ describe('free web launch configuration', () => {
     expect(librarySource).toContain('testID="library-custom-sets-card"');
     expect(librarySource).toContain('styles.libraryCustomSetsCard');
     expect(librarySource).toContain('styles.libraryManageSetsButtonLabel');
+    expect(librarySource).toContain('{ui.manage}');
+    expect(librarySource).not.toContain('{ui.openCustomSets}');
     expect(librarySource).not.toContain('styles.libraryCustomSetsStrip');
+  });
+
+  test('supports editing existing custom sets from the management page', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const profileSetsStart = appSource.indexOf('function ProfileCustomSetsView({');
+    const profileSetsEnd = appSource.indexOf('function ProfileSettingsView({');
+    const profileSetsSource = appSource.slice(profileSetsStart, profileSetsEnd);
+
+    expect(appSource).toContain('renameCustomSet');
+    expect(appSource).toContain('deleteCustomSet');
+    expect(appSource).toContain('removeWordFromSet');
+    expect(profileSetsSource).toContain('testID="custom-set-rename-input"');
+    expect(profileSetsSource).toContain('testID="custom-set-delete-button"');
+    expect(profileSetsSource).toContain('testID="custom-set-remove-word"');
+    expect(profileSetsSource).toContain('onRenameCustomSet');
+    expect(profileSetsSource).toContain('onDeleteCustomSet');
+    expect(profileSetsSource).toContain('onRemoveWordFromSet');
   });
 
   test('adds a custom-set button to the study word card', () => {

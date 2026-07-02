@@ -152,7 +152,6 @@ WebBrowser.maybeCompleteAuthSession();
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
 type LibraryPanel = 'list' | 'detail' | 'sets';
-type PanelSlideDirection = 'back' | 'forward';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
 type StudyMode = 'english' | 'chinese';
@@ -900,7 +899,6 @@ function Word7000App() {
   const [profilePanel, setProfilePanel] = useState<ProfilePanel>('overview');
   const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');
   const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');
-  const [libraryPanelDirection, setLibraryPanelDirection] = useState<PanelSlideDirection>('forward');
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
   const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getAppStorage()));
   const [modeSwitchTarget, setModeSwitchTarget] = useState<StudyMode>(() =>
@@ -1063,37 +1061,49 @@ function Word7000App() {
       ],
     };
   };
-  const libraryPanelEnteringX =
-    renderedLibraryPanel === 'list' ? -interactionMotion.panelSlideX : interactionMotion.panelSlideX;
   const libraryPanelMotionStyle = {
-    opacity: libraryPanelAnim.interpolate({
-      inputRange: [0, 0.2, 1],
-      outputRange: [0, 0.72, 1],
-    }),
+    opacity: libraryPanelAnim,
     transform: [
       {
         translateX: libraryPanelAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [libraryPanelEnteringX, 0],
+          outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0],
         }),
       },
       {
         scale: libraryPanelAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [interactionMotion.panelPushScale, 1],
+          outputRange: [0.985, 1],
         }),
       },
     ],
   };
+  const libraryListPanelHorizontalMotionStyle = {
+    opacity: libraryPanelAnim,
+    transform: [
+      {
+        translateX: libraryPanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-12, 0],
+        }),
+      },
+    ],
+  };
+  const libraryListPanelVisibleStyle = {
+    opacity: 1,
+    transform: [{ translateX: 0 }],
+  };
   const libraryTransitionPerformanceStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
       ? {
-          transformOrigin: libraryPanelDirection === 'back' ? 'left center' : 'right center',
+          transformOrigin: 'top center',
           willChange: 'opacity, transform',
         }
       : undefined;
   const libraryListPanelMotionStyle = [
-    renderedLibraryPanel === 'list' ? libraryPanelMotionStyle : styles.libraryPanelHidden,
+    renderedLibraryPanel === 'list'
+      ? libraryListPanelHorizontalMotionStyle
+      : libraryPanel === 'list' ? libraryListPanelVisibleStyle : styles.libraryPanelHidden,
     libraryTransitionPerformanceStyle,
   ];
   const libraryDetailStageMotionStyle = [
@@ -1345,23 +1355,11 @@ function Word7000App() {
   useEffect(() => {
     let cancelled = false;
     const useNativeDriver = Platform.OS !== 'web';
-    const openEasing = Easing.bezier(
-      interactionMotion.libraryDetailOpenEasing[0],
-      interactionMotion.libraryDetailOpenEasing[1],
-      interactionMotion.libraryDetailOpenEasing[2],
-      interactionMotion.libraryDetailOpenEasing[3],
-    );
-    const closeEasing = Easing.bezier(
-      interactionMotion.libraryDetailCloseEasing[0],
-      interactionMotion.libraryDetailCloseEasing[1],
-      interactionMotion.libraryDetailCloseEasing[2],
-      interactionMotion.libraryDetailCloseEasing[3],
-    );
 
     if (libraryPanel === renderedLibraryPanel) {
       Animated.timing(libraryPanelAnim, {
-        duration: renderedLibraryPanel === 'list' ? interactionMotion.settingsPanelMs : interactionMotion.libraryDetailMs,
-        easing: openEasing,
+        duration: interactionMotion.settingsPanelMs,
+        easing: Easing.out(Easing.cubic),
         toValue: 1,
         useNativeDriver,
       }).start();
@@ -1371,13 +1369,13 @@ function Word7000App() {
     }
 
     Animated.timing(libraryPanelAnim, {
-      duration: interactionMotion.libraryDetailExitMs,
-      easing: closeEasing,
+      duration: interactionMotion.settingsPanelExitMs,
+      easing: Easing.in(Easing.cubic),
       toValue: 0,
       useNativeDriver,
     }).start(({ finished }) => {
       if (finished && !cancelled) {
-        libraryPanelAnim.setValue(0);
+        libraryPanelAnim.setValue(libraryPanel === 'list' ? 1 : 0);
         onLibraryPanelSwap(libraryPanel);
         setRenderedLibraryPanel(libraryPanel);
       }
@@ -1403,7 +1401,6 @@ function Word7000App() {
     libraryWindowStartRef.current = 0;
     setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
-    setLibraryPanelDirection('back');
     setLibraryPanel('list');
     setRenderedLibraryPanel('list');
   }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, searchQuery]);
@@ -2037,12 +2034,10 @@ function Word7000App() {
 
   function openLibraryWordDetail(word: WordEntry) {
     setSelectedLibraryWord(word);
-    setLibraryPanelDirection('forward');
     setLibraryPanel('detail');
   }
 
   function closeLibraryWordDetail() {
-    setLibraryPanelDirection('back');
     setLibraryPanel('list');
   }
 
@@ -2765,7 +2760,6 @@ function Word7000App() {
                 onLevelChange={setActiveLevel}
                 onOpenWord={openLibraryWordDetail}
                 onOpenCustomSets={() => {
-                  setLibraryPanelDirection('forward');
                   setLibraryPanel('sets');
                 }}
                 onQueryChange={handleLibraryQueryChange}
@@ -2915,7 +2909,6 @@ function Word7000App() {
                 vocabularyWords={vocabularyWords}
                 onAddManualCustomWord={handleAddManualCustomWord}
                 onBack={() => {
-                  setLibraryPanelDirection('back');
                   setLibraryPanel('list');
                 }}
                 onCreateCustomSet={handleCreateCustomSet}

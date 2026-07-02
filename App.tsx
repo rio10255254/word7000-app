@@ -56,6 +56,7 @@ import {
   type StyleProp,
   View,
   type ViewStyle,
+  Linking,
 } from 'react-native';
 import { sampleWords, type WordEntry } from './src/data/words';
 import {
@@ -85,8 +86,9 @@ import {
   type ProgressState,
 } from './src/lib/progress';
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
-import { loadProgressFromStorage, saveProgressToStorage, type StorageLike } from './src/lib/progressStorage';
+import { loadProgressFromStorage, progressStorageKey, saveProgressToStorage, type StorageLike } from './src/lib/progressStorage';
 import {
+  deleteCloudUserData,
   loadCloudProgressRecord,
   recordDailyActiveUser,
   saveCloudCustomSets,
@@ -133,6 +135,7 @@ import {
   removeWordFromSet,
   renameCustomSet,
   saveCustomSetState,
+  customSetStorageKey,
   sortCustomSets,
   wordsForCustomSet,
   type CustomSetSort,
@@ -141,6 +144,7 @@ import {
 } from './src/lib/customSets';
 import { getAppStorage, hydrateAppStorage, isAppStorageHydrated } from './src/lib/appStorage';
 import { parseOAuthCallbackUrl } from './src/lib/oauthCallback';
+import { appInfoLinks } from './src/lib/appLinks';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -430,6 +434,14 @@ const modeInterfaceCopy = {
     backProfile: '返回我的',
     appSettings: 'App 設定',
     displayTools: '顯示模式與本機工具',
+    legalSupport: '隱私與支援',
+    legalSupportSummary: 'App Store 上架與使用者協助入口',
+    privacyPolicy: '隱私權政策',
+    privacyPolicyText: '查看 Word7000 如何保存與同步學習資料',
+    supportPage: '支援頁面',
+    supportPageText: '登入、同步、更新與帳號資料說明',
+    deleteAccountData: '刪除帳號學習資料',
+    deleteAccountDataText: '刪除雲端進度、單字集與每日活躍紀錄，並登出目前帳號',
     darkMode: '深色模式',
     darkModeOnText: '已切換成夜間閱讀介面',
     darkModeOffText: '切換成夜間閱讀介面',
@@ -615,6 +627,14 @@ const modeInterfaceCopy = {
     backProfile: 'Back to Me',
     appSettings: 'App Settings',
     displayTools: 'Display mode and local tools',
+    legalSupport: 'Privacy and Support',
+    legalSupportSummary: 'Required App Store and user help links',
+    privacyPolicy: 'Privacy Policy',
+    privacyPolicyText: 'See how Word7000 stores and syncs learning data',
+    supportPage: 'Support Page',
+    supportPageText: 'Help with sign-in, sync, updates, and account data',
+    deleteAccountData: 'Delete Account Learning Data',
+    deleteAccountDataText: 'Delete cloud progress, custom sets, and daily activity, then sign out',
     darkMode: 'Dark Mode',
     darkModeOnText: 'Night reading interface is on',
     darkModeOffText: 'Switch to the night reading interface',
@@ -2379,6 +2399,68 @@ function Word7000App() {
     }));
   }
 
+  async function handleDeleteAccountData() {
+    const signedInUserId = account.userId;
+    if (!supabaseClient || !signedInUserId) {
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        status: supabaseClient ? 'signedOut' : 'local',
+        message: supabaseClient ? '請先登入' : '本機記憶中',
+      }));
+      return;
+    }
+
+    setAccount((current) => ({
+      ...current,
+      busy: true,
+      status: 'loading',
+      message: '正在刪除帳號學習資料',
+    }));
+
+    const result = await deleteCloudUserData(asCloudProgressClient(supabaseClient), signedInUserId);
+    if (!result.ok) {
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        status: 'error',
+        message: result.message,
+      }));
+      return;
+    }
+
+    const storage = getAppStorage();
+    storage?.removeItem?.(progressStorageKey(signedInUserId));
+    storage?.removeItem?.(customSetStorageKey(signedInUserId));
+    await supabaseClient.auth.signOut();
+
+    setProgress(normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress), today));
+    setCustomSetState(loadCustomSetState(storage));
+    setSelectedCustomSetId(null);
+    setStudySetId(null);
+    setQuizSetId(null);
+    setSetPickerWord(null);
+    setAccount((current) => ({
+      ...current,
+      userId: null,
+      userEmail: null,
+      password: '',
+      busy: false,
+      status: 'signedOut',
+      message: '帳號學習資料已刪除',
+    }));
+  }
+
+  function handleOpenAppInfoLink(url: string) {
+    Linking.openURL(url).catch(() => {
+      setAccount((current) => ({
+        ...current,
+        status: 'error',
+        message: '無法開啟連結',
+      }));
+    });
+  }
+
   function toggleStudyMode() {
     const nextMode: StudyMode = studyMode === 'english' ? 'chinese' : 'english';
     setModeSwitchTarget(nextMode);
@@ -2600,12 +2682,14 @@ function Word7000App() {
               vocabularyCount={vocabularyWords.length}
               onClearDeveloperVocabulary={handleClearDeveloperVocabulary}
               onCloseSettings={() => setProfilePanel('overview')}
+              onDeleteAccountData={handleDeleteAccountData}
               onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
               onAppleSignIn={handleAppleSignIn}
               onGoogleSignIn={handleGoogleSignIn}
               onOpenSettings={() => setProfilePanel('settings')}
+              onOpenAppInfoLink={handleOpenAppInfoLink}
               onPanelSwap={onProfilePanelSwap}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
               onShowInstallGuide={openInstallGuide}
@@ -2874,6 +2958,13 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   const copy = systemCopy[studyMode];
 
   const refresh = useCallback(() => {
+    if (Platform.OS !== 'web') {
+      import('expo-updates')
+        .then((updates) => updates.reloadAsync())
+        .catch(() => undefined);
+      return;
+    }
+
     const storage = getAppStorage();
     if (latestVersion) {
       storage?.setItem(UPDATE_STORAGE_KEY, latestVersion);
@@ -2932,6 +3023,44 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
       cancelled = true;
       clearInterval(interval);
       visibilityDocument?.removeEventListener?.('visibilitychange', handleVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function checkNativeUpdate() {
+      try {
+        const updates = await import('expo-updates');
+        if (!updates.isEnabled) {
+          return;
+        }
+
+        const update = await updates.checkForUpdateAsync();
+        if (!update.isAvailable || cancelled) {
+          return;
+        }
+
+        await updates.fetchUpdateAsync();
+        if (cancelled) {
+          return;
+        }
+
+        setCountdownSeconds(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
+        setAvailable(true);
+      } catch {
+        // Native update checks should never block studying.
+      }
+    }
+
+    checkNativeUpdate();
+
+    return () => {
+      cancelled = true;
     };
   }, []);
 
@@ -4818,11 +4947,13 @@ function ProfileView({
   onEmailChange,
   onClearDeveloperVocabulary,
   onCloseSettings,
+  onDeleteAccountData,
   onExportVocabulary,
   onImportVocabulary,
   onAppleSignIn,
   onGoogleSignIn,
   onOpenSettings,
+  onOpenAppInfoLink,
   onPanelSwap,
   onPasswordChange,
   onShowInstallGuide,
@@ -4848,12 +4979,14 @@ function ProfileView({
   vocabularyCount: number;
   onClearDeveloperVocabulary: () => void;
   onCloseSettings: () => void;
+  onDeleteAccountData: () => void;
   onEmailChange: (email: string) => void;
   onExportVocabulary: () => void;
   onAppleSignIn: () => void;
   onGoogleSignIn: () => void;
   onImportVocabulary: () => void;
   onOpenSettings: () => void;
+  onOpenAppInfoLink: (url: string) => void;
   onPanelSwap: () => void;
   onPasswordChange: (password: string) => void;
   onShowInstallGuide: () => void;
@@ -4933,9 +5066,13 @@ function ProfileView({
           vocabularyCount={vocabularyCount}
           onBack={onCloseSettings}
           onClearDeveloperVocabulary={onClearDeveloperVocabulary}
+          onDeleteAccountData={onDeleteAccountData}
           onExportVocabulary={onExportVocabulary}
           onImportVocabulary={onImportVocabulary}
+          onOpenAppInfoLink={onOpenAppInfoLink}
           onThemeModeChange={onThemeModeChange}
+          accountBusy={account.busy}
+          signedIn={signedIn}
         />
       </Animated.View>
     );
@@ -5699,26 +5836,34 @@ function ProfileCustomSetsView({
 }
 
 function ProfileSettingsView({
+  accountBusy,
   developerMessage,
   developerVocabulary,
   onBack,
   onClearDeveloperVocabulary,
+  onDeleteAccountData,
   onExportVocabulary,
   onImportVocabulary,
+  onOpenAppInfoLink,
   onThemeModeChange,
+  signedIn,
   studyMode,
   themeMode,
   vocabularyCount,
 }: {
+  accountBusy: boolean;
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
+  signedIn: boolean;
   studyMode: StudyMode;
   themeMode: ThemeMode;
   vocabularyCount: number;
   onBack: () => void;
   onClearDeveloperVocabulary: () => void;
+  onDeleteAccountData: () => void;
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
+  onOpenAppInfoLink: (url: string) => void;
   onThemeModeChange: (themeMode: ThemeMode) => void;
 }) {
   const themeStyles = useThemeStyles();
@@ -5763,6 +5908,63 @@ function ProfileSettingsView({
             <Text style={[styles.themeSwitchText, darkMode && styles.themeSwitchTextActive]}>{darkMode ? ui.on : ui.off}</Text>
           </AnimatedPressable>
         </View>
+      </View>
+
+      <View style={[styles.settingsCard, themeStyles?.settingsCard]}>
+        <View style={styles.rowBetween}>
+          <View>
+            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.legalSupport}</Text>
+            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.legalSupportSummary}</Text>
+          </View>
+          <Cloud size={21} color="#2563eb" strokeWidth={2.3} />
+        </View>
+
+        <AnimatedPressable
+          accessibilityRole="link"
+          onPress={() => onOpenAppInfoLink(appInfoLinks.privacy)}
+          pressTone="list"
+          style={[styles.settingsEntryButton, themeStyles?.settingsEntryButton]}
+        >
+          <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+            <Lock size={19} color={bodyIconColor} strokeWidth={2.3} />
+          </View>
+          <View style={styles.flexOne}>
+            <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.privacyPolicy}</Text>
+            <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.privacyPolicyText}</Text>
+          </View>
+          <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+        </AnimatedPressable>
+
+        <AnimatedPressable
+          accessibilityRole="link"
+          onPress={() => onOpenAppInfoLink(appInfoLinks.support)}
+          pressTone="list"
+          style={[styles.settingsEntryButton, themeStyles?.settingsEntryButton]}
+        >
+          <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+            <Compass size={19} color={bodyIconColor} strokeWidth={2.3} />
+          </View>
+          <View style={styles.flexOne}>
+            <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.supportPage}</Text>
+            <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.supportPageText}</Text>
+          </View>
+          <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+        </AnimatedPressable>
+
+        <AnimatedPressable
+          accessibilityRole="button"
+          disabled={!signedIn || accountBusy}
+          onPress={onDeleteAccountData}
+          pressTone="secondary"
+          style={[styles.deleteAccountDataButton, (!signedIn || accountBusy) && styles.disabledButton]}
+          testID="delete-account-data-button"
+        >
+          <Trash2 size={17} color="#b91c1c" strokeWidth={2.4} />
+          <View style={styles.flexOne}>
+            <Text style={styles.deleteAccountDataTitle}>{ui.deleteAccountData}</Text>
+            <Text style={styles.deleteAccountDataText}>{ui.deleteAccountDataText}</Text>
+          </View>
+        </AnimatedPressable>
       </View>
 
       <DeveloperVocabularyPanel
@@ -5978,6 +6180,10 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
     'Apple 登入失敗': 'Apple sign-in failed',
     登入導回失敗: 'Sign-in redirect failed',
     登入導回沒有取得帳號資料: 'The sign-in redirect did not return account data',
+    請先登入: 'Please sign in first',
+    正在刪除帳號學習資料: 'Deleting account learning data',
+    帳號學習資料已刪除: 'Account learning data deleted',
+    無法開啟連結: 'Could not open link',
     建立帳號中: 'Creating account',
     請確認信箱後登入: 'Check your email, then sign in',
     'Email 和密碼至少 6 碼': 'Email and password need at least 6 characters',
@@ -8672,6 +8878,30 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 15,
     fontWeight: '800',
+  },
+  deleteAccountDataButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff7ed',
+    borderColor: '#fed7aa',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    minHeight: 58,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  deleteAccountDataTitle: {
+    color: '#9a3412',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  deleteAccountDataText: {
+    color: '#b45309',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 17,
+    marginTop: 2,
   },
   tabBar: {
     alignSelf: 'center',

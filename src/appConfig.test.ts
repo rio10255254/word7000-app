@@ -14,13 +14,17 @@ describe('app store oriented metadata', () => {
     expect(app.expo.icon).toBe('./assets/icon.png');
     expect(app.expo.ios?.bundleIdentifier).toMatch(/^com\.[a-z0-9-]+\.[a-z0-9-]+$/);
     expect(app.expo.scheme).toBe('word7000');
+    expect(app.expo.runtimeVersion).toEqual({ policy: 'appVersion' });
     expect(app.expo.ios?.usesAppleSignIn).toBe(true);
     expect(app.expo.ios?.supportsTablet).toBe(true);
     expect(app.expo.web?.favicon).toBe('./assets/favicon.png');
   });
 
   test('defines EAS build profiles for TestFlight and App Store preparation', () => {
+    expect(eas.build.development.channel).toBe('development');
+    expect(eas.build.preview.channel).toBe('preview');
     expect(eas.build.preview.distribution).toBe('internal');
+    expect(eas.build.production.channel).toBe('production');
     expect(eas.build.production.autoIncrement).toBe(true);
     expect(eas.submit.production).toEqual({});
   });

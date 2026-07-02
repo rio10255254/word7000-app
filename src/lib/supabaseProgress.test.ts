@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
   createDisabledCloudProgress,
+  deleteCloudUserData,
   isSupabaseConfigured,
   loadCloudProgress,
   loadCloudProgressRecord,
@@ -272,6 +273,38 @@ describe('Supabase progress sync', () => {
       ok: true,
       message: 'Recorded',
     });
+  });
+
+  test('deletes a signed-in user profile and activity rows for account data removal', async () => {
+    const deletedTables: string[] = [];
+    const client = {
+      from(tableName: string) {
+        deletedTables.push(tableName);
+
+        return {
+          delete() {
+            return {
+              eq(columnName: string, userId: string) {
+                expect(userId).toBe('user-1');
+                expect(['id', 'user_id']).toContain(columnName);
+
+                return {
+                  async throwOnError() {
+                    return { data: null, error: null };
+                  },
+                };
+              },
+            };
+          },
+        };
+      },
+    } as unknown as CloudProgressClient;
+
+    await expect(deleteCloudUserData(client, 'user-1')).resolves.toEqual({
+      ok: true,
+      message: 'Deleted',
+    });
+    expect(deletedTables).toEqual(['daily_active_users', 'profiles']);
   });
 
   test('uses the device local date for daily activity', () => {

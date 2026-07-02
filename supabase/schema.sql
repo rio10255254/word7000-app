@@ -44,6 +44,12 @@ create policy "Users can update their own profile"
   using (auth.uid() = id)
   with check (auth.uid() = id);
 
+drop policy if exists "Users can delete their own profile" on public.profiles;
+create policy "Users can delete their own profile"
+  on public.profiles
+  for delete
+  using (auth.uid() = id);
+
 drop policy if exists "Users can read their own daily activity" on public.daily_active_users;
 create policy "Users can read their own daily activity"
   on public.daily_active_users
@@ -62,3 +68,9 @@ create policy "Users can update their own daily activity"
   for update
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete their own daily activity" on public.daily_active_users;
+create policy "Users can delete their own daily activity"
+  on public.daily_active_users
+  for delete
+  using (auth.uid() = user_id);

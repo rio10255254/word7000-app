@@ -10,6 +10,8 @@ const headersPath = path.join(process.cwd(), 'public', '_headers');
 const appPath = path.join(process.cwd(), 'App.tsx');
 const schemaPath = path.join(process.cwd(), 'supabase', 'schema.sql');
 const prepareExportPath = path.join(process.cwd(), 'scripts', 'prepare-web-export.mjs');
+const privacyPath = path.join(process.cwd(), 'public', 'privacy.html');
+const supportPath = path.join(process.cwd(), 'public', 'support.html');
 const rootAppleIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon.png');
 const rootApplePrecomposedIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon-precomposed.png');
 const accountSetupPath = path.join(process.cwd(), 'ACCOUNT_GOOGLE_LOGIN.md');
@@ -46,6 +48,10 @@ describe('free web launch configuration', () => {
     expect(serviceWorker).toContain('self.skipWaiting');
     expect(serviceWorker).toContain('self.clients.claim');
     expect(serviceWorker).toContain("request.mode === 'navigate'");
+    expect(serviceWorker).toContain('PUBLIC_HTML_PATHS');
+    expect(serviceWorker).toContain("'/privacy.html'");
+    expect(serviceWorker).toContain("'/support.html'");
+    expect(serviceWorker).toContain("cache.put(event.request, copy)");
     expect(headers).toContain('/service-worker.js');
     expect(headers).toContain('/version.json');
     expect(headers).toContain('Cache-Control: no-cache');
@@ -236,6 +242,33 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('word7000-theme-v1');
     expect(appSource).toContain('onThemeModeChange');
     expect(appSource).toContain('DeveloperVocabularyPanel');
+  });
+
+  test('includes App Store support links and account data deletion controls', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const schema = fs.readFileSync(schemaPath, 'utf8');
+
+    expect(fs.existsSync(privacyPath)).toBe(true);
+    expect(fs.existsSync(supportPath)).toBe(true);
+    expect(appSource).toContain('appInfoLinks.privacy');
+    expect(appSource).toContain('appInfoLinks.support');
+    expect(appSource).toContain('onDeleteAccountData={handleDeleteAccountData}');
+    expect(appSource).toContain('testID="delete-account-data-button"');
+    expect(appSource).toContain('deleteCloudUserData(asCloudProgressClient(supabaseClient), signedInUserId)');
+    expect(schema).toContain('Users can delete their own profile');
+    expect(schema).toContain('Users can delete their own daily activity');
+  });
+
+  test('checks native EAS updates outside the web service worker flow', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const eas = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'eas.json'), 'utf8'));
+
+    expect(appSource).toContain("import('expo-updates')");
+    expect(appSource).toContain('checkForUpdateAsync');
+    expect(appSource).toContain('fetchUpdateAsync');
+    expect(appSource).toContain('reloadAsync');
+    expect(eas.build.preview.channel).toBe('preview');
+    expect(eas.build.production.channel).toBe('production');
   });
 
   test('uses Google sign-in as the primary account entry for cloud sync', () => {

@@ -15,6 +15,14 @@ export type CloudProgressLoadResult = {
 };
 
 type ProfilesTableQuery = {
+  delete?: () => {
+    eq: (
+      columnName: 'id',
+      userId: string,
+    ) => {
+      throwOnError: () => Promise<unknown>;
+    };
+  };
   select: (columns?: string) => {
     eq: (
       columnName: 'id',
@@ -34,6 +42,14 @@ type ProfileLoadResponse = {
 };
 
 type DailyActiveUsersTableQuery = {
+  delete?: () => {
+    eq: (
+      columnName: 'user_id',
+      userId: string,
+    ) => {
+      throwOnError: () => Promise<unknown>;
+    };
+  };
   upsert: (
     payload: { activity_date: string; last_seen_at: string; user_id: string },
     options?: { onConflict?: string },
@@ -240,4 +256,31 @@ export async function recordDailyActiveUser(
 export function localActivityDate(now = new Date()): string {
   const localTime = now.getTime() - now.getTimezoneOffset() * 60_000;
   return new Date(localTime).toISOString().slice(0, 10);
+}
+
+export async function deleteCloudUserData(client: CloudProgressClient, userId: string): Promise<CloudProgressResult> {
+  try {
+    const activityQuery = client.from('daily_active_users');
+    const profileQuery = client.from('profiles');
+
+    if (!activityQuery.delete || !profileQuery.delete) {
+      return {
+        ok: false,
+        message: 'Delete is not available',
+      };
+    }
+
+    await activityQuery.delete().eq('user_id', userId).throwOnError();
+    await profileQuery.delete().eq('id', userId).throwOnError();
+
+    return {
+      ok: true,
+      message: 'Deleted',
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: errorMessageFromUnknown(error) ?? 'Delete failed',
+    };
+  }
 }

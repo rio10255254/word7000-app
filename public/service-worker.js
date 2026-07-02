@@ -1,6 +1,7 @@
-const CACHE_NAME = 'word7000-static-v3';
+const CACHE_NAME = 'word7000-static-v4';
 const APP_SHELL = ['/', '/favicon.ico'];
 const NETWORK_FIRST_PATHS = ['/manifest.json', '/version.json'];
+const PUBLIC_HTML_PATHS = ['/privacy.html', '/support.html'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -38,15 +39,30 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  if (event.request.mode === 'navigate') {
+  if (shouldUsePublicHtml(event.request)) {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put('/', copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match('/') || caches.match(event.request)),
+        .catch(() => caches.match(event.request)),
+    );
+    return;
+  }
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (shouldCacheAsAppShell(event.request)) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put('/', copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request) || caches.match('/')),
     );
     return;
   }
@@ -69,4 +85,14 @@ self.addEventListener('fetch', (event) => {
 function shouldUseNetworkFirst(request) {
   const url = new URL(request.url);
   return NETWORK_FIRST_PATHS.includes(url.pathname);
+}
+
+function shouldUsePublicHtml(request) {
+  const url = new URL(request.url);
+  return PUBLIC_HTML_PATHS.includes(url.pathname);
+}
+
+function shouldCacheAsAppShell(request) {
+  const url = new URL(request.url);
+  return url.pathname === '/' || url.pathname === '/index.html';
 }

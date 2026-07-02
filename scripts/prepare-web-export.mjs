@@ -96,7 +96,10 @@ function replaceInstallTag(source, matcher, tag) {
 
 function createRuntimeConfigTag() {
   const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL?.trim();
-  const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  const supabaseAnonKey = firstNonBlank(
+    process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+  );
 
   if (!supabaseUrl || !supabaseAnonKey) {
     return '';
@@ -108,6 +111,10 @@ function createRuntimeConfigTag() {
   }).replace(/</g, '\\u003c');
 
   return `<script>globalThis.__WORD7000_CONFIG__=${payload};</script>`;
+}
+
+function firstNonBlank(...values) {
+  return values.map((value) => value?.trim() ?? '').find(Boolean) ?? '';
 }
 
 function replaceRuntimeConfigTag(source, tag) {

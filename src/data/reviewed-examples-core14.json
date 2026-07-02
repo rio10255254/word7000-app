@@ -512,8 +512,8 @@
   },
   {
     "word": "comprehension",
-    "example": "The meaning of comprehension became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把理解放進真實衝突中後，它的意思變得更清楚。",
+    "example": "Reading improves comprehension.",
+    "exampleZh": "閱讀能提升理解力。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -1401,8 +1401,8 @@
   },
   {
     "word": "intrusion",
-    "example": "The meaning of intrusion became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把闖入放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The loud noise was an intrusion into our quiet evening.",
+    "exampleZh": "那陣噪音打擾了我們安靜的夜晚。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -1737,8 +1737,8 @@
   },
   {
     "word": "outgoing",
-    "example": "The meaning of outgoing became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把外出放進真實衝突中後，它的意思變得更清楚。",
+    "example": "She has an outgoing personality.",
+    "exampleZh": "她個性外向。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -1751,8 +1751,8 @@
   },
   {
     "word": "antiquity",
-    "example": "The meaning of antiquity became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把古老放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The vase dates from antiquity.",
+    "exampleZh": "這個花瓶可追溯到古代。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -2542,8 +2542,8 @@
   },
   {
     "word": "sophistication",
-    "example": "The meaning of sophistication became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把詭辯放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The design shows great sophistication.",
+    "exampleZh": "這個設計展現出高度精緻感。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -2696,8 +2696,8 @@
   },
   {
     "word": "mythology",
-    "example": "The meaning of mythology became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把神話放進真實衝突中後，它的意思變得更清楚。",
+    "example": "Greek mythology includes many famous gods.",
+    "exampleZh": "希臘神話包含許多著名的神。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -3046,8 +3046,8 @@
   },
   {
     "word": "constellation",
-    "example": "The meaning of constellation became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把星座放進真實衝突中後，它的意思變得更清楚。",
+    "example": "Orion is a well-known constellation.",
+    "exampleZh": "獵戶座是著名的星座。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -3319,8 +3319,8 @@
   },
   {
     "word": "solitude",
-    "example": "The meaning of solitude became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把孤獨放進真實衝突中後，它的意思變得更清楚。",
+    "example": "He enjoyed the solitude of the mountains.",
+    "exampleZh": "他喜歡山中的獨處。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },
@@ -3417,8 +3417,8 @@
   },
   {
     "word": "avoidance",
-    "example": "The meaning of avoidance became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把避免放進真實衝突中後，它的意思變得更清楚。",
+    "example": "Avoidance will not solve the problem.",
+    "exampleZh": "逃避無法解決問題。",
     "status": "approved",
     "batch": "gpt-review-core14-full-2026-07-02"
   },

@@ -25,8 +25,10 @@ To enable account memory, create a Supabase project, run `supabase/schema.sql`, 
 
 ```text
 EXPO_PUBLIC_SUPABASE_URL
-EXPO_PUBLIC_SUPABASE_ANON_KEY
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ```
+
+Older Supabase projects may show this as an `anon public key`; in that case `EXPO_PUBLIC_SUPABASE_ANON_KEY` is still accepted.
 
 For Google sign-in setup, follow `ACCOUNT_GOOGLE_LOGIN.md`.
 

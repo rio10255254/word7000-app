@@ -743,8 +743,8 @@
   },
   {
     "word": "bowling",
-    "example": "The meaning of bowling became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把保齡球戲放進真實衝突中後，它的意思變得更清楚。",
+    "example": "We went bowling after dinner.",
+    "exampleZh": "我們晚餐後去打保齡球。",
     "status": "approved",
     "batch": "gpt-review-core11-full-2026-07-02"
   },

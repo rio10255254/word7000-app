@@ -26,11 +26,13 @@ Redirect URLs 至少加入：
 ```text
 https://your-word7000-domain.pages.dev/*
 https://your-custom-domain.com/*
+word7000://auth/callback
 http://localhost:8083/*
 http://localhost:19006/*
 ```
 
 如果你只用 Cloudflare Pages 網址，第二行自訂網域可以先不填。
+`word7000://auth/callback` 是 iPhone App 登入後回到 App 內用的，不要省略。
 
 ## 3. 建立 Google OAuth
 
@@ -68,10 +70,11 @@ https://YOUR_SUPABASE_PROJECT_REF.supabase.co/auth/v1/callback
 
 ```text
 EXPO_PUBLIC_SUPABASE_URL=https://YOUR_SUPABASE_PROJECT_REF.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
 ```
 
 這兩個值可以在 Supabase Project Settings > API 找到。
+如果你的 Supabase 後台顯示的是舊名稱 `anon public key`，也可以改用 `EXPO_PUBLIC_SUPABASE_ANON_KEY`。
 
 設定完後重新部署 Cloudflare Pages。
 
@@ -124,7 +127,7 @@ order by activity_date desc;
 
 - 不要把 Google Client Secret 放進 GitHub。
 - 不要把 Supabase service role key 放進 App 或 GitHub。
-- App 只需要 `EXPO_PUBLIC_SUPABASE_URL` 和 `EXPO_PUBLIC_SUPABASE_ANON_KEY`。
+- App 只需要 `EXPO_PUBLIC_SUPABASE_URL` 和 `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`。舊專案如果只有 `anon public key`，可用 `EXPO_PUBLIC_SUPABASE_ANON_KEY` 代替。
 - 如果 Google 登入完成後沒有回到 App，優先檢查 Supabase 的 Redirect URLs 和 Google 的 Authorized redirect URIs。
 
 ## 10. 官方文件

@@ -113,15 +113,15 @@
   },
   {
     "word": "flavour",
-    "example": "This soup has a rich flavour, and the cook made one final adjustment before serving it.",
-    "exampleZh": "這碗湯味道濃郁，而且廚師在上菜前做了最後一次調整。",
+    "example": "This soup has a rich flavour.",
+    "exampleZh": "這碗湯味道濃郁。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "penny",
-    "example": "After the group discussed the matter for a while, i found a penny outside.",
-    "exampleZh": "在小組討論這件事一陣子之後，我在外面撿到一枚便士。",
+    "example": "I found a penny outside.",
+    "exampleZh": "我在外面撿到一枚便士。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -141,22 +141,22 @@
   },
   {
     "word": "cd",
-    "example": "After the answer was not obvious at first, i found an old cd.",
-    "exampleZh": "在答案一開始並不明顯之後，我找到一張舊光碟，而且那之後情況感覺更真實。",
+    "example": "I found an old cd.",
+    "exampleZh": "我找到一張舊光碟，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "entirely",
-    "example": "Although the answer was not obvious at first, the decision was entirely hers, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然答案一開始並不明顯，這個決定完全是她的，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The decision was entirely hers.",
+    "exampleZh": "這個決定完全是她的。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "involvement",
-    "example": "His involvement surprised us, and people remembered the moment because it changed the plan.",
-    "exampleZh": "他的參與讓我們驚訝，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "His involvement surprised us.",
+    "exampleZh": "他的參與讓我們驚訝。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -169,8 +169,8 @@
   },
   {
     "word": "essentially",
-    "example": "Although everyone looked at the details again, the idea is essentially simple.",
-    "exampleZh": "雖然大家再次查看細節，這個想法本質上很簡單，而且那之後情況感覺更真實。",
+    "example": "The idea is essentially simple.",
+    "exampleZh": "這個想法本質上很簡單，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -183,8 +183,8 @@
   },
   {
     "word": "partnership",
-    "example": "After someone asked for a more concrete example, their partnership lasted ten years.",
-    "exampleZh": "在有人要求一個更具體的例子之後，他們的合作關係持續了十年，而且那之後情況感覺更真實。",
+    "example": "Their partnership lasted ten years.",
+    "exampleZh": "他們的合作關係持續了十年，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -211,8 +211,8 @@
   },
   {
     "word": "killing",
-    "example": "After the answer was not obvious at first, the article discussed killing in war.",
-    "exampleZh": "在答案一開始並不明顯之後，文章討論了戰爭中的殺戮。",
+    "example": "The article discussed killing in war.",
+    "exampleZh": "文章討論了戰爭中的殺戮。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -295,8 +295,8 @@
   },
   {
     "word": "shaped",
-    "example": "The cookie is heart shaped, but people remembered the moment because it changed the plan.",
-    "exampleZh": "餅乾是心形的，但是人們記得那一刻，因為它改變了計畫。",
+    "example": "The cookie is heart shaped.",
+    "exampleZh": "餅乾是心形的。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -309,8 +309,8 @@
   },
   {
     "word": "can",
-    "example": "Although the group discussed the matter for a while, you can call me later.",
-    "exampleZh": "雖然小組討論這件事一陣子，你可以晚點打給我，而且那之後情況感覺更真實。",
+    "example": "You can call me later.",
+    "exampleZh": "你可以晚點打給我，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -330,8 +330,8 @@
   },
   {
     "word": "prime",
-    "example": "Although everyone looked at the details again, this is a prime location, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然大家再次查看細節，這是一個絕佳地點，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "This is a prime location.",
+    "exampleZh": "這是一個絕佳地點。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -400,15 +400,15 @@
   },
   {
     "word": "corporate",
-    "example": "After the situation changed unexpectedly, she joined a corporate training program, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在情況意外改變之後，她參加了企業訓練課程，而且小組在有人忘記前把它寫了下來。",
+    "example": "She joined a corporate training program.",
+    "exampleZh": "她參加了企業訓練課程。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "folk",
-    "example": "These folk songs are old, so people remembered the moment because it changed the plan.",
-    "exampleZh": "這些民歌很古老，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "These folk songs are old.",
+    "exampleZh": "這些民歌很古老。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -421,8 +421,8 @@
   },
   {
     "word": "rely",
-    "example": "After someone asked for a more concrete example, you can rely on me.",
-    "exampleZh": "在有人要求一個更具體的例子之後，你可以依靠我，而且那之後情況感覺更真實。",
+    "example": "You can rely on me.",
+    "exampleZh": "你可以依靠我，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -442,8 +442,8 @@
   },
   {
     "word": "outcome",
-    "example": "The outcome was unexpected, so people remembered the moment because it changed the plan.",
-    "exampleZh": "結果出乎意料，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "The outcome was unexpected.",
+    "exampleZh": "結果出乎意料。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -456,15 +456,15 @@
   },
   {
     "word": "crew",
-    "example": "The crew prepared the plane, and people remembered the moment because it changed the plan.",
-    "exampleZh": "機組人員準備了飛機，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The crew prepared the plane.",
+    "exampleZh": "機組人員準備了飛機。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "welfare",
-    "example": "After the group discussed the matter for a while, the policy protects child welfare.",
-    "exampleZh": "在小組討論這件事一陣子之後，這項政策保障兒童福利。",
+    "example": "The policy protects child welfare.",
+    "exampleZh": "這項政策保障兒童福利。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -505,8 +505,8 @@
   },
   {
     "word": "percentage",
-    "example": "After someone asked for a more concrete example, a high percentage agreed.",
-    "exampleZh": "在有人要求一個更具體的例子之後，很高比例的人同意。",
+    "example": "A high percentage agreed.",
+    "exampleZh": "很高比例的人同意。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -526,8 +526,8 @@
   },
   {
     "word": "ethnic",
-    "example": "The city has ethnic diversity, and people remembered the moment because it changed the plan.",
-    "exampleZh": "這座城市有種族多樣性，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The city has ethnic diversity.",
+    "exampleZh": "這座城市有種族多樣性。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -554,8 +554,8 @@
   },
   {
     "word": "eliminate",
-    "example": "After the answer was not obvious at first, we must eliminate this risk.",
-    "exampleZh": "在答案一開始並不明顯之後，我們必須消除這個風險。",
+    "example": "We must eliminate this risk.",
+    "exampleZh": "我們必須消除這個風險。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -624,8 +624,8 @@
   },
   {
     "word": "childhood",
-    "example": "He remembers his childhood clearly, and the group wrote it down before anyone forgot.",
-    "exampleZh": "他清楚記得自己的童年，而且小組在有人忘記前把它寫了下來。",
+    "example": "He remembers his childhood clearly.",
+    "exampleZh": "他清楚記得自己的童年。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -673,8 +673,8 @@
   },
   {
     "word": "creative",
-    "example": "She has a creative mind, and people remembered the moment because it changed the plan.",
-    "exampleZh": "她有創意的頭腦，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "She has a creative mind.",
+    "exampleZh": "她有創意的頭腦。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -722,8 +722,8 @@
   },
   {
     "word": "agenda",
-    "example": "Although the situation changed unexpectedly, the agenda has three items, and the detail became important later in the discussion.",
-    "exampleZh": "雖然情況意外改變，議程有三個項目，而且這個細節在後續討論中變得重要。",
+    "example": "The agenda has three items.",
+    "exampleZh": "議程有三個項目。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -743,15 +743,15 @@
   },
   {
     "word": "transition",
-    "example": "After the group discussed the matter for a while, the transition was difficult, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在小組討論這件事一陣子之後，這段轉變很困難，而且小組在有人忘記前把它寫了下來。",
+    "example": "The transition was difficult.",
+    "exampleZh": "這段轉變很困難。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "personnel",
-    "example": "All personnel must wear badges, but someone asked a follow-up question a few minutes later.",
-    "exampleZh": "所有人員都必須佩戴識別證，但是幾分鐘後有人提出了追問。",
+    "example": "All personnel must wear badges.",
+    "exampleZh": "所有人員都必須佩戴識別證。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -764,8 +764,8 @@
   },
   {
     "word": "forth",
-    "example": "He stepped forth bravely, so people remembered the moment because it changed the plan.",
-    "exampleZh": "他勇敢地走上前，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "He stepped forth bravely.",
+    "exampleZh": "他勇敢地走上前。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -792,8 +792,8 @@
   },
   {
     "word": "consultant",
-    "example": "The consultant gave useful advice, and people remembered the moment because it changed the plan.",
-    "exampleZh": "顧問給了有用的建議，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The consultant gave useful advice.",
+    "exampleZh": "顧問給了有用的建議。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -862,22 +862,22 @@
   },
   {
     "word": "graduate",
-    "example": "She will graduate in June, and the detail became important later in the discussion.",
-    "exampleZh": "她將在六月畢業，而且這個細節在後續討論中變得重要。",
+    "example": "She will graduate in June.",
+    "exampleZh": "她將在六月畢業。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "literary",
-    "example": "After someone asked for a more concrete example, this is a literary magazine.",
-    "exampleZh": "在有人要求一個更具體的例子之後，這是一本文學雜誌。",
+    "example": "This is a literary magazine.",
+    "exampleZh": "這是一本文學雜誌。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "intense",
-    "example": "The heat was intense, and the detail became important later in the discussion.",
-    "exampleZh": "熱度很強烈，而且這個細節在後續討論中變得重要。",
+    "example": "The heat was intense.",
+    "exampleZh": "熱度很強烈。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -890,15 +890,15 @@
   },
   {
     "word": "subsequent",
-    "example": "All subsequent tests were normal, but people remembered the moment because it changed the plan.",
-    "exampleZh": "所有後續測試都正常，但是人們記得那一刻，因為它改變了計畫。",
+    "example": "All subsequent tests were normal.",
+    "exampleZh": "所有後續測試都正常。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "commander",
-    "example": "Although the situation changed unexpectedly, the commander gave clear orders, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然情況意外改變，指揮官下達了明確命令，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The commander gave clear orders.",
+    "exampleZh": "指揮官下達了明確命令。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -918,22 +918,22 @@
   },
   {
     "word": "burden",
-    "example": "After the situation changed unexpectedly, debt became a heavy burden, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在情況意外改變之後，債務成了沉重負擔，而且小組在有人忘記前把它寫了下來。",
+    "example": "Debt became a heavy burden.",
+    "exampleZh": "債務成了沉重負擔。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "snap",
-    "example": "Although someone asked for a more concrete example, the branch may snap, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然有人要求一個更具體的例子，樹枝可能會折斷，而且小組在有人忘記前把它寫了下來。",
+    "example": "Although someone asked for a more concrete example, the branch may snap.",
+    "exampleZh": "雖然有人要求一個更具體的例子，樹枝可能會折斷。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "strategic",
-    "example": "Although everyone looked at the details again, this is a strategic decision, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然大家再次查看細節，這是一項戰略決定，而且小組在有人忘記前把它寫了下來。",
+    "example": "This is a strategic decision.",
+    "exampleZh": "這是一項戰略決定。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -960,15 +960,15 @@
   },
   {
     "word": "profile",
-    "example": "Although everyone looked at the details again, she updated her online profile, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然大家再次查看細節，她更新了線上個人資料，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "She updated her online profile.",
+    "exampleZh": "她更新了線上個人資料。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "historic",
-    "example": "They visited a historic site, and people remembered the moment because it changed the plan.",
-    "exampleZh": "他們參觀了一處歷史遺址，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "They visited a historic site.",
+    "exampleZh": "他們參觀了一處歷史遺址。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1002,15 +1002,15 @@
   },
   {
     "word": "alliance",
-    "example": "After the answer was not obvious at first, the alliance helped both countries, and the detail became important later in the discussion.",
-    "exampleZh": "在答案一開始並不明顯之後，這個聯盟幫助了兩國，而且這個細節在後續討論中變得重要。",
+    "example": "The alliance helped both countries.",
+    "exampleZh": "這個聯盟幫助了兩國。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "headquarters",
-    "example": "After everyone looked at the details again, the headquarters moved downtown.",
-    "exampleZh": "在大家再次查看細節之後，總部搬到市中心，而且那之後情況感覺更真實。",
+    "example": "The headquarters moved downtown.",
+    "exampleZh": "總部搬到市中心，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1051,8 +1051,8 @@
   },
   {
     "word": "sustain",
-    "example": "After the group discussed the matter for a while, water can sustain life, and the detail became important later in the discussion.",
-    "exampleZh": "在小組討論這件事一陣子之後，水能維持生命，而且這個細節在後續討論中變得重要。",
+    "example": "Water can sustain life.",
+    "exampleZh": "水能維持生命。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1072,8 +1072,8 @@
   },
   {
     "word": "province",
-    "example": "She grew up in this province, and the group wrote it down before anyone forgot.",
-    "exampleZh": "她在這個省長大，而且小組在有人忘記前把它寫了下來。",
+    "example": "She grew up in this province.",
+    "exampleZh": "她在這個省長大。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1086,8 +1086,8 @@
   },
   {
     "word": "peer",
-    "example": "After everyone looked at the details again, she asked a peer for advice, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在大家再次查看細節之後，她向同儕尋求建議，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "She asked a peer for advice.",
+    "exampleZh": "她向同儕尋求建議。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1107,8 +1107,8 @@
   },
   {
     "word": "yield",
-    "example": "After the situation changed unexpectedly, the farm had a high yield, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在情況意外改變之後，這座農場產量很高，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The farm had a high yield.",
+    "exampleZh": "這座農場產量很高。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1135,8 +1135,8 @@
   },
   {
     "word": "intellectual",
-    "example": "Although everyone looked at the details again, he enjoys intellectual debates, and the detail became important later in the discussion.",
-    "exampleZh": "雖然大家再次查看細節，他喜歡知性的辯論，而且這個細節在後續討論中變得重要。",
+    "example": "He enjoys intellectual debates.",
+    "exampleZh": "他喜歡知性的辯論。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1149,8 +1149,8 @@
   },
   {
     "word": "widespread",
-    "example": "The disease became widespread, but someone asked a follow-up question a few minutes later.",
-    "exampleZh": "疾病變得廣泛傳播，但是幾分鐘後有人提出了追問。",
+    "example": "The disease became widespread.",
+    "exampleZh": "疾病變得廣泛傳播。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1177,15 +1177,15 @@
   },
   {
     "word": "conviction",
-    "example": "He spoke with conviction, and the detail became important later in the discussion.",
-    "exampleZh": "他說話很堅定，而且這個細節在後續討論中變得重要。",
+    "example": "He spoke with conviction.",
+    "exampleZh": "他說話很堅定。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "operator",
-    "example": "After the situation changed unexpectedly, the operator answered the call, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在情況意外改變之後，接線員接了電話，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The operator answered the call.",
+    "exampleZh": "接線員接了電話。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1219,15 +1219,15 @@
   },
   {
     "word": "mutual",
-    "example": "We have mutual respect, but people remembered the moment because it changed the plan.",
-    "exampleZh": "我們彼此尊重，但是人們記得那一刻，因為它改變了計畫。",
+    "example": "We have mutual respect.",
+    "exampleZh": "我們彼此尊重。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "mill",
-    "example": "The old mill closed years ago, and people remembered the moment because it changed the plan.",
-    "exampleZh": "那座老磨坊多年前關閉了，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The old mill closed years ago.",
+    "exampleZh": "那座老磨坊多年前關閉了。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1268,8 +1268,8 @@
   },
   {
     "word": "tremendous",
-    "example": "After someone asked for a more concrete example, this choice seems tremendous, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在有人要求一個更具體的例子之後，這個選擇看起來很巨大的，而且小組在有人忘記前把它寫了下來。",
+    "example": "This choice seems tremendous.",
+    "exampleZh": "這個選擇看起來很巨大的。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1303,8 +1303,8 @@
   },
   {
     "word": "controversy",
-    "example": "Although the answer was not obvious at first, the decision caused controversy, and the detail became important later in the discussion.",
-    "exampleZh": "雖然答案一開始並不明顯，這項決定引發爭議，而且這個細節在後續討論中變得重要。",
+    "example": "The decision caused controversy.",
+    "exampleZh": "這項決定引發爭議。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1324,8 +1324,8 @@
   },
   {
     "word": "consciousness",
-    "example": "He slowly regained consciousness, so people remembered the moment because it changed the plan.",
-    "exampleZh": "他慢慢恢復意識，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "He slowly regained consciousness.",
+    "exampleZh": "他慢慢恢復意識。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1345,8 +1345,8 @@
   },
   {
     "word": "tragedy",
-    "example": "The accident was a tragedy, and people remembered the moment because it changed the plan.",
-    "exampleZh": "這場事故是一場悲劇，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The accident was a tragedy.",
+    "exampleZh": "這場事故是一場悲劇。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1408,8 +1408,8 @@
   },
   {
     "word": "circuit",
-    "example": "The circuit overheated, and people remembered the moment because it changed the plan.",
-    "exampleZh": "電路過熱了，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The circuit overheated.",
+    "exampleZh": "電路過熱了。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1429,8 +1429,8 @@
   },
   {
     "word": "announcement",
-    "example": "Although the answer was not obvious at first, the announcement surprised everyone.",
-    "exampleZh": "雖然答案一開始並不明顯，這項公告讓大家驚訝，而且那之後情況感覺更真實。",
+    "example": "The announcement surprised everyone.",
+    "exampleZh": "這項公告讓大家驚訝，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1450,15 +1450,15 @@
   },
   {
     "word": "sigh",
-    "example": "He gave a tired sigh, and the detail became important later in the discussion.",
-    "exampleZh": "他疲憊地嘆了一口氣，而且這個細節在後續討論中變得重要。",
+    "example": "He gave a tired sigh.",
+    "exampleZh": "他疲憊地嘆了一口氣。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "controversial",
-    "example": "Although someone asked for a more concrete example, the policy is controversial, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然有人要求一個更具體的例子，這項政策有爭議，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "Although someone asked for a more concrete example, the policy is controversial.",
+    "exampleZh": "雖然有人要求一個更具體的例子，這項政策有爭議。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1471,8 +1471,8 @@
   },
   {
     "word": "collective",
-    "example": "Although the situation changed unexpectedly, it was a collective decision, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然情況意外改變，那是集體決定，而且小組在有人忘記前把它寫了下來。",
+    "example": "It was a collective decision.",
+    "exampleZh": "那是集體決定。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1492,8 +1492,8 @@
   },
   {
     "word": "amendment",
-    "example": "The amendment passed yesterday, and the detail became important later in the discussion.",
-    "exampleZh": "修正案昨天通過了，而且這個細節在後續討論中變得重要。",
+    "example": "The amendment passed yesterday.",
+    "exampleZh": "修正案昨天通過了。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1520,8 +1520,8 @@
   },
   {
     "word": "bare",
-    "example": "After the group discussed the matter for a while, his feet were bare.",
-    "exampleZh": "在小組討論這件事一陣子之後，他的腳是赤裸的，而且那之後情況感覺更真實。",
+    "example": "His feet were bare.",
+    "exampleZh": "他的腳是赤裸的，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1562,8 +1562,8 @@
   },
   {
     "word": "pit",
-    "example": "After everyone looked at the details again, they dug a deep pit.",
-    "exampleZh": "在大家再次查看細節之後，他們挖了一個深坑。",
+    "example": "They dug a deep pit.",
+    "exampleZh": "他們挖了一個深坑。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1590,8 +1590,8 @@
   },
   {
     "word": "merchant",
-    "example": "The merchant sold silk, but someone asked a follow-up question a few minutes later.",
-    "exampleZh": "商人販售絲綢，但是幾分鐘後有人提出了追問。",
+    "example": "The merchant sold silk.",
+    "exampleZh": "商人販售絲綢。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1646,8 +1646,8 @@
   },
   {
     "word": "carrier",
-    "example": "Although the answer was not obvious at first, the carrier delivered the package, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然答案一開始並不明顯，運送者送達了包裹，而且小組在有人忘記前把它寫了下來。",
+    "example": "The carrier delivered the package.",
+    "exampleZh": "運送者送達了包裹。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1667,8 +1667,8 @@
   },
   {
     "word": "suspend",
-    "example": "They may suspend the service, and people remembered the moment because it changed the plan.",
-    "exampleZh": "他們可能暫停服務，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "They may suspend the service.",
+    "exampleZh": "他們可能暫停服務。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1681,8 +1681,8 @@
   },
   {
     "word": "boom",
-    "example": "After the group discussed the matter for a while, the city saw a housing boom, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在小組討論這件事一陣子之後，這座城市出現住宅市場繁榮，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The city saw a housing boom.",
+    "exampleZh": "這座城市出現住宅市場繁榮。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1716,8 +1716,8 @@
   },
   {
     "word": "crystal",
-    "example": "After the situation changed unexpectedly, the crystal sparkled in sunlight, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在情況意外改變之後，水晶在陽光下閃閃發亮，而且小組在有人忘記前把它寫了下來。",
+    "example": "The crystal sparkled in sunlight.",
+    "exampleZh": "水晶在陽光下閃閃發亮。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1765,8 +1765,8 @@
   },
   {
     "word": "undermine",
-    "example": "Lies can undermine trust, so people remembered the moment because it changed the plan.",
-    "exampleZh": "謊言會破壞信任，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "Lies can undermine trust.",
+    "exampleZh": "謊言會破壞信任。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1786,15 +1786,15 @@
   },
   {
     "word": "monthly",
-    "example": "After the group discussed the matter for a while, we pay a monthly fee.",
-    "exampleZh": "在小組討論這件事一陣子之後，我們支付月費。",
+    "example": "We pay a monthly fee.",
+    "exampleZh": "我們支付月費。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "revolutionary",
-    "example": "This is a revolutionary idea, and the group wrote it down before anyone forgot.",
-    "exampleZh": "這是一個革命性的想法，而且小組在有人忘記前把它寫了下來。",
+    "example": "This is a revolutionary idea.",
+    "exampleZh": "這是一個革命性的想法。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1828,15 +1828,15 @@
   },
   {
     "word": "equity",
-    "example": "The policy promotes equity, so people remembered the moment because it changed the plan.",
-    "exampleZh": "這項政策促進公平，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "The policy promotes equity.",
+    "exampleZh": "這項政策促進公平。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "incredible",
-    "example": "The view was incredible, but someone asked a follow-up question a few minutes later.",
-    "exampleZh": "景色令人難以置信，但是幾分鐘後有人提出了追問。",
+    "example": "The view was incredible.",
+    "exampleZh": "景色令人難以置信。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1856,15 +1856,15 @@
   },
   {
     "word": "flexible",
-    "example": "After the group discussed the matter for a while, my schedule is flexible.",
-    "exampleZh": "在小組討論這件事一陣子之後，我的時間很彈性。",
+    "example": "My schedule is flexible.",
+    "exampleZh": "我的時間很彈性。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "exploit",
-    "example": "They exploit cheap labor, but people remembered the moment because it changed the plan.",
-    "exampleZh": "他們剝削廉價勞工，但是人們記得那一刻，因為它改變了計畫。",
+    "example": "They exploit cheap labor.",
+    "exampleZh": "他們剝削廉價勞工。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1961,8 +1961,8 @@
   },
   {
     "word": "shortage",
-    "example": "After someone asked for a more concrete example, there is a water shortage, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在有人要求一個更具體的例子之後，現在缺水，而且小組在有人忘記前把它寫了下來。",
+    "example": "There is a water shortage.",
+    "exampleZh": "現在缺水。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -1975,15 +1975,15 @@
   },
   {
     "word": "drain",
-    "example": "Although the situation changed unexpectedly, the sink drain is blocked, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然情況意外改變，水槽排水孔堵住了，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The sink drain is blocked.",
+    "exampleZh": "水槽排水孔堵住了。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "liberty",
-    "example": "Although everyone looked at the details again, they fought for liberty.",
-    "exampleZh": "雖然大家再次查看細節，他們為自由而戰，而且那之後情況感覺更真實。",
+    "example": "They fought for liberty.",
+    "exampleZh": "他們為自由而戰，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2017,8 +2017,8 @@
   },
   {
     "word": "monetary",
-    "example": "After the situation changed unexpectedly, they discussed monetary policy, and the detail became important later in the discussion.",
-    "exampleZh": "在情況意外改變之後，他們討論了貨幣政策，而且這個細節在後續討論中變得重要。",
+    "example": "They discussed monetary policy.",
+    "exampleZh": "他們討論了貨幣政策。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2038,8 +2038,8 @@
   },
   {
     "word": "civilian",
-    "example": "The area was open to civilian visitors, and people remembered the moment because it changed the plan.",
-    "exampleZh": "這個區域開放給平民訪客，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The area was open to civilian visitors.",
+    "exampleZh": "這個區域開放給平民訪客。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2052,8 +2052,8 @@
   },
   {
     "word": "hunter",
-    "example": "After the group discussed the matter for a while, the hunter followed the tracks, and the detail became important later in the discussion.",
-    "exampleZh": "在小組討論這件事一陣子之後，獵人跟著足跡前進，而且這個細節在後續討論中變得重要。",
+    "example": "The hunter followed the tracks.",
+    "exampleZh": "獵人跟著足跡前進。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2087,8 +2087,8 @@
   },
   {
     "word": "counterpart",
-    "example": "She met her foreign counterpart, but people remembered the moment because it changed the plan.",
-    "exampleZh": "她會見了外國對等官員，但是人們記得那一刻，因為它改變了計畫。",
+    "example": "She met her foreign counterpart.",
+    "exampleZh": "她會見了外國對等官員。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2129,8 +2129,8 @@
   },
   {
     "word": "youngster",
-    "example": "The youngster asked many questions, and the group wrote it down before anyone forgot.",
-    "exampleZh": "那個年輕人問了很多問題，而且小組在有人忘記前把它寫了下來。",
+    "example": "The youngster asked many questions.",
+    "exampleZh": "那個年輕人問了很多問題。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2164,8 +2164,8 @@
   },
   {
     "word": "concede",
-    "example": "She refused to concede defeat, and people remembered the moment because it changed the plan.",
-    "exampleZh": "她拒絕承認失敗，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "She refused to concede defeat.",
+    "exampleZh": "她拒絕承認失敗。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2185,15 +2185,15 @@
   },
   {
     "word": "motivate",
-    "example": "Good teachers motivate students, and people remembered the moment because it changed the plan.",
-    "exampleZh": "好老師能激勵學生，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "Good teachers motivate students.",
+    "exampleZh": "好老師能激勵學生。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "triumph",
-    "example": "The victory was a triumph, and the group wrote it down before anyone forgot.",
-    "exampleZh": "這場勝利是一大成功，而且小組在有人忘記前把它寫了下來。",
+    "example": "The victory was a triumph.",
+    "exampleZh": "這場勝利是一大成功。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2206,8 +2206,8 @@
   },
   {
     "word": "subsidy",
-    "example": "After someone asked for a more concrete example, farmers received a subsidy, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在有人要求一個更具體的例子之後，農民收到補助，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "Farmers received a subsidy.",
+    "exampleZh": "農民收到補助。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2227,8 +2227,8 @@
   },
   {
     "word": "fulfil",
-    "example": "She worked hard to fulfil her dream, so people remembered the moment because it changed the plan.",
-    "exampleZh": "她努力實現夢想，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "She worked hard to fulfil her dream.",
+    "exampleZh": "她努力實現夢想。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2283,8 +2283,8 @@
   },
   {
     "word": "ray",
-    "example": "A ray of sunlight entered, but someone asked a follow-up question a few minutes later.",
-    "exampleZh": "一道陽光照了進來，但是幾分鐘後有人提出了追問。",
+    "example": "A ray of sunlight entered.",
+    "exampleZh": "一道陽光照了進來。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2367,8 +2367,8 @@
   },
   {
     "word": "marine",
-    "example": "The museum studies marine life, but someone asked a follow-up question a few minutes later.",
-    "exampleZh": "博物館研究海洋生物，但是幾分鐘後有人提出了追問。",
+    "example": "The museum studies marine life.",
+    "exampleZh": "博物館研究海洋生物。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2395,8 +2395,8 @@
   },
   {
     "word": "opt",
-    "example": "Many students opt for English, but people remembered the moment because it changed the plan.",
-    "exampleZh": "許多學生選擇英文，但是人們記得那一刻，因為它改變了計畫。",
+    "example": "Many students opt for English.",
+    "exampleZh": "許多學生選擇英文。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2416,22 +2416,22 @@
   },
   {
     "word": "rage",
-    "example": "After the situation changed unexpectedly, his rage frightened everyone, and the detail became important later in the discussion.",
-    "exampleZh": "在情況意外改變之後，他的盛怒嚇到了大家，而且這個細節在後續討論中變得重要。",
+    "example": "His rage frightened everyone.",
+    "exampleZh": "他的盛怒嚇到了大家。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "riot",
-    "example": "After the group discussed the matter for a while, the riot ended before dawn, and the detail became important later in the discussion.",
-    "exampleZh": "在小組討論這件事一陣子之後，暴動在黎明前結束，而且這個細節在後續討論中變得重要。",
+    "example": "The riot ended before dawn.",
+    "exampleZh": "暴動在黎明前結束。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "miner",
-    "example": "The miner worked underground, and people remembered the moment because it changed the plan.",
-    "exampleZh": "礦工在地下工作，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The miner worked underground.",
+    "exampleZh": "礦工在地下工作。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2556,15 +2556,15 @@
   },
   {
     "word": "plunge",
-    "example": "Prices may plunge tomorrow, so people remembered the moment because it changed the plan.",
-    "exampleZh": "價格明天可能暴跌，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "Prices may plunge tomorrow.",
+    "exampleZh": "價格明天可能暴跌。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "marked",
-    "example": "Although the answer was not obvious at first, there was a marked improvement, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然答案一開始並不明顯，情況有明顯改善，而且小組在有人忘記前把它寫了下來。",
+    "example": "There was a marked improvement.",
+    "exampleZh": "情況有明顯改善。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2640,8 +2640,8 @@
   },
   {
     "word": "delegation",
-    "example": "After everyone looked at the details again, the delegation arrived yesterday, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在大家再次查看細節之後，代表團昨天抵達，而且小組在有人忘記前把它寫了下來。",
+    "example": "The delegation arrived yesterday.",
+    "exampleZh": "代表團昨天抵達。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2668,15 +2668,15 @@
   },
   {
     "word": "cheer",
-    "example": "Although everyone looked at the details again, the crowd began to cheer, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然大家再次查看細節，人群開始歡呼，而且小組在有人忘記前把它寫了下來。",
+    "example": "The crowd began to cheer.",
+    "exampleZh": "人群開始歡呼。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "colonel",
-    "example": "After everyone looked at the details again, the colonel inspected the troops.",
-    "exampleZh": "在大家再次查看細節之後，上校檢閱了部隊。",
+    "example": "The colonel inspected the troops.",
+    "exampleZh": "上校檢閱了部隊。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2696,22 +2696,22 @@
   },
   {
     "word": "overnight",
-    "example": "She stayed overnight at the hotel, so people remembered the moment because it changed the plan.",
-    "exampleZh": "她在飯店過夜，所以人們記得那一刻，因為它改變了計畫。",
+    "example": "She stayed overnight at the hotel.",
+    "exampleZh": "她在飯店過夜。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "clash",
-    "example": "Although the group discussed the matter for a while, the teams clash tonight, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然小組討論這件事一陣子，兩隊今晚交鋒，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The teams clash tonight.",
+    "exampleZh": "兩隊今晚交鋒。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "whip",
-    "example": "Although the situation changed unexpectedly, he used a whip on the horse, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然情況意外改變，他對馬使用鞭子，而且小組在有人忘記前把它寫了下來。",
+    "example": "He used a whip on the horse.",
+    "exampleZh": "他對馬使用鞭子。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2731,15 +2731,15 @@
   },
   {
     "word": "surrender",
-    "example": "They refused to surrender, and people remembered the moment because it changed the plan.",
-    "exampleZh": "他們拒絕投降，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "They refused to surrender.",
+    "exampleZh": "他們拒絕投降。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "slim",
-    "example": "Her chances are slim, and the detail became important later in the discussion.",
-    "exampleZh": "她的機會很渺茫，而且這個細節在後續討論中變得重要。",
+    "example": "Her chances are slim.",
+    "exampleZh": "她的機會很渺茫。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2752,15 +2752,15 @@
   },
   {
     "word": "blast",
-    "example": "After the situation changed unexpectedly, the blast broke the windows, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在情況意外改變之後，爆炸震碎了窗戶，而且小組在有人忘記前把它寫了下來。",
+    "example": "The blast broke the windows.",
+    "exampleZh": "爆炸震碎了窗戶。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "opposed",
-    "example": "They are opposed to the plan, and the detail became important later in the discussion.",
-    "exampleZh": "他們反對這項計畫，而且這個細節在後續討論中變得重要。",
+    "example": "They are opposed to the plan.",
+    "exampleZh": "他們反對這項計畫。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2773,8 +2773,8 @@
   },
   {
     "word": "faction",
-    "example": "Although the answer was not obvious at first, a faction opposed the leader, and people remembered the moment because it changed the plan.",
-    "exampleZh": "雖然答案一開始並不明顯，一個派系反對領導者，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "A faction opposed the leader.",
+    "exampleZh": "一個派系反對領導者。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2801,8 +2801,8 @@
   },
   {
     "word": "exile",
-    "example": "The writer lived in exile, but someone asked a follow-up question a few minutes later.",
-    "exampleZh": "作家過著流亡生活，但是幾分鐘後有人提出了追問。",
+    "example": "The writer lived in exile.",
+    "exampleZh": "作家過著流亡生活。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2836,8 +2836,8 @@
   },
   {
     "word": "interim",
-    "example": "Although everyone looked at the details again, she became interim manager, and the detail became important later in the discussion.",
-    "exampleZh": "雖然大家再次查看細節，她成為臨時經理，而且這個細節在後續討論中變得重要。",
+    "example": "She became interim manager.",
+    "exampleZh": "她成為臨時經理。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2871,8 +2871,8 @@
   },
   {
     "word": "pledge",
-    "example": "They made a public pledge, and the group wrote it down before anyone forgot.",
-    "exampleZh": "他們做出公開承諾，而且小組在有人忘記前把它寫了下來。",
+    "example": "They made a public pledge.",
+    "exampleZh": "他們做出公開承諾。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2948,8 +2948,8 @@
   },
   {
     "word": "spur",
-    "example": "The award will spur innovation, and the group wrote it down before anyone forgot.",
-    "exampleZh": "這個獎項會促進創新，而且小組在有人忘記前把它寫了下來。",
+    "example": "The award will spur innovation.",
+    "exampleZh": "這個獎項會促進創新。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -2990,15 +2990,15 @@
   },
   {
     "word": "acre",
-    "example": "After someone asked for a more concrete example, they bought one acre of land, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在有人要求一個更具體的例子之後，他們買了一英畝土地，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "They bought one acre of land.",
+    "exampleZh": "他們買了一英畝土地。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "militant",
-    "example": "After everyone looked at the details again, the militant group lost support.",
-    "exampleZh": "在大家再次查看細節之後，激進組織失去了支持，而且那之後情況感覺更真實。",
+    "example": "The militant group lost support.",
+    "exampleZh": "激進組織失去了支持，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3018,15 +3018,15 @@
   },
   {
     "word": "reel",
-    "example": "Although the answer was not obvious at first, the fisherman fixed the reel, and the detail became important later in the discussion.",
-    "exampleZh": "雖然答案一開始並不明顯，漁夫修好了捲線器，而且這個細節在後續討論中變得重要。",
+    "example": "The fisherman fixed the reel.",
+    "exampleZh": "漁夫修好了捲線器。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "vice",
-    "example": "After the group discussed the matter for a while, greed is a common vice, and the group wrote it down before anyone forgot.",
-    "exampleZh": "在小組討論這件事一陣子之後，貪婪是常見惡習，而且小組在有人忘記前把它寫了下來。",
+    "example": "Greed is a common vice.",
+    "exampleZh": "貪婪是常見惡習。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3053,15 +3053,15 @@
   },
   {
     "word": "calculated",
-    "example": "Although the answer was not obvious at first, it was a calculated risk, and the group wrote it down before anyone forgot.",
-    "exampleZh": "雖然答案一開始並不明顯，那是經過計算的風險，而且小組在有人忘記前把它寫了下來。",
+    "example": "It was a calculated risk.",
+    "exampleZh": "那是經過計算的風險。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "noted",
-    "example": "After someone asked for a more concrete example, he is a noted scholar.",
-    "exampleZh": "在有人要求一個更具體的例子之後，他是一位知名學者，而且那之後情況感覺更真實。",
+    "example": "He is a noted scholar.",
+    "exampleZh": "他是一位知名學者，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3088,8 +3088,8 @@
   },
   {
     "word": "well",
-    "example": "She sings well, and the group wrote it down before anyone forgot.",
-    "exampleZh": "她唱得很好，而且小組在有人忘記前把它寫了下來。",
+    "example": "She sings well.",
+    "exampleZh": "她唱得很好。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3116,8 +3116,8 @@
   },
   {
     "word": "adviser",
-    "example": "After someone asked for a more concrete example, my adviser reviewed my plan.",
-    "exampleZh": "在有人要求一個更具體的例子之後，我的顧問審查了我的計畫。",
+    "example": "My adviser reviewed my plan.",
+    "exampleZh": "我的顧問審查了我的計畫。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3165,8 +3165,8 @@
   },
   {
     "word": "associated",
-    "example": "Although the group discussed the matter for a while, the risks are associated with smoking.",
-    "exampleZh": "雖然小組討論這件事一陣子，這些風險與吸菸有關，而且那之後情況感覺更真實。",
+    "example": "The risks are associated with smoking.",
+    "exampleZh": "這些風險與吸菸有關，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3228,15 +3228,15 @@
   },
   {
     "word": "backing",
-    "example": "After the group discussed the matter for a while, the project needs financial backing, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在小組討論這件事一陣子之後，這個專案需要資金支持，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "The project needs financial backing.",
+    "exampleZh": "這個專案需要資金支持。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "unidentified",
-    "example": "After the group discussed the matter for a while, an unidentified caller left a message.",
-    "exampleZh": "在小組討論這件事一陣子之後，一位身分不明的來電者留言了，而且那之後情況感覺更真實。",
+    "example": "An unidentified caller left a message.",
+    "exampleZh": "一位身分不明的來電者留言了，而且那之後情況感覺更真實。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3263,8 +3263,8 @@
   },
   {
     "word": "wicket",
-    "example": "After someone asked for a more concrete example, the ball hit the wicket, and the detail became important later in the discussion.",
-    "exampleZh": "在有人要求一個更具體的例子之後，球擊中了三柱門，而且這個細節在後續討論中變得重要。",
+    "example": "The ball hit the wicket.",
+    "exampleZh": "球擊中了三柱門。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3284,8 +3284,8 @@
   },
   {
     "word": "beaten",
-    "example": "The beaten path was muddy, but people remembered the moment because it changed the plan.",
-    "exampleZh": "被踩出的路很泥濘，但是人們記得那一刻，因為它改變了計畫。",
+    "example": "The beaten path was muddy.",
+    "exampleZh": "被踩出的路很泥濘。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3319,15 +3319,15 @@
   },
   {
     "word": "rouge",
-    "example": "Although the answer was not obvious at first, she applied rouge carefully, and the detail became important later in the discussion.",
-    "exampleZh": "雖然答案一開始並不明顯，她小心地擦上胭脂，而且這個細節在後續討論中變得重要。",
+    "example": "She applied rouge carefully.",
+    "exampleZh": "她小心地擦上胭脂。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "done",
-    "example": "The work is done, and the group wrote it down before anyone forgot.",
-    "exampleZh": "工作完成了，而且小組在有人忘記前把它寫了下來。",
+    "example": "The work is done.",
+    "exampleZh": "工作完成了。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3354,15 +3354,15 @@
   },
   {
     "word": "case",
-    "example": "This case is unusual, and people remembered the moment because it changed the plan.",
-    "exampleZh": "這個案例不尋常，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "This case is unusual.",
+    "exampleZh": "這個案例不尋常。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
   {
     "word": "place",
-    "example": "This place feels quiet, and people remembered the moment because it changed the plan.",
-    "exampleZh": "這個地方感覺很安靜，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "This place feels quiet.",
+    "exampleZh": "這個地方感覺很安靜。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3403,8 +3403,8 @@
   },
   {
     "word": "foreign",
-    "example": "After the answer was not obvious at first, she studies foreign languages, and people remembered the moment because it changed the plan.",
-    "exampleZh": "在答案一開始並不明顯之後，她學習外語，而且人們記得那一刻，因為它改變了計畫。",
+    "example": "She studies foreign languages.",
+    "exampleZh": "她學習外語。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },
@@ -3424,8 +3424,8 @@
   },
   {
     "word": "present",
-    "example": "She was present at the meeting, and the detail became important later in the discussion.",
-    "exampleZh": "她出席了會議，而且這個細節在後續討論中變得重要。",
+    "example": "She was present at the meeting.",
+    "exampleZh": "她出席了會議。",
     "status": "approved",
     "batch": "gpt-review-core06-full-2026-07-02"
   },

@@ -11,12 +11,12 @@ export function getSupabaseSettings() {
   const runtimeConfig = getWord7000RuntimeConfig();
 
   return {
-    url: normalizeSupabaseUrl(runtimeConfig?.supabaseUrl ?? process.env.EXPO_PUBLIC_SUPABASE_URL ?? ''),
-    anonKey:
-      runtimeConfig?.supabaseAnonKey ??
-      process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-      process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ??
-      '',
+    url: normalizeSupabaseUrl(firstNonBlank(runtimeConfig?.supabaseUrl, process.env.EXPO_PUBLIC_SUPABASE_URL)),
+    anonKey: firstNonBlank(
+      runtimeConfig?.supabaseAnonKey,
+      process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+      process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+    ),
   };
 }
 
@@ -26,4 +26,8 @@ export function normalizeSupabaseUrl(url: string): string {
 
 function getWord7000RuntimeConfig(): Word7000RuntimeConfig | undefined {
   return globalThis.__WORD7000_CONFIG__;
+}
+
+function firstNonBlank(...values: Array<string | undefined>): string {
+  return values.map((value) => value?.trim() ?? '').find(Boolean) ?? '';
 }

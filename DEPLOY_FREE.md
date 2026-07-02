@@ -36,7 +36,7 @@ Root directory: /
 
 ```text
 EXPO_PUBLIC_SUPABASE_URL
-EXPO_PUBLIC_SUPABASE_ANON_KEY
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ```
 
 After this, pushing to GitHub triggers a new Cloudflare deployment. The automatic update only happens after Cloudflare Pages is connected to this GitHub repository with the Git integration. A GitHub push by itself does not update the public website unless Cloudflare is watching that repository.
@@ -50,10 +50,12 @@ For the mobile web app experience, the app checks `/version.json` when opened or
 3. Run the SQL in `supabase/schema.sql`.
 4. Open Project Settings > API.
 5. Copy the Project URL into `EXPO_PUBLIC_SUPABASE_URL`.
-6. Copy the anon public key into `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
+6. Copy the Publishable key into `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 7. Add those values to Cloudflare Pages environment variables.
 
 For local testing, create `.env.local` with the same two values.
+
+If your Supabase project still shows the old `anon public key` label, use `EXPO_PUBLIC_SUPABASE_ANON_KEY` instead.
 
 ## Fallback: Cloudflare Pages Direct Upload
 

@@ -109,6 +109,35 @@ const manualOverrides = new Map([
   ['unlock', ['This key can unlock the gate.', '這把鑰匙能打開大門。']],
   ['elicit', ['The question may elicit honest answers.', '這個問題可能引出誠實的回答。']],
   ['hitherto', ['Hitherto, the plan has worked.', '到目前為止，這個計畫一直有效。']],
+  ['collision', ['The collision damaged both cars.', '這次碰撞損壞了兩輛車。']],
+  ['nationality', ['Please write your nationality on the form.', '請在表格上填寫你的國籍。']],
+  ['bowling', ['We went bowling after dinner.', '我們晚餐後去打保齡球。']],
+  ['secrecy', ['The plan was kept in secrecy.', '這個計畫被保密。']],
+  ['fundamentalism', ['The book discusses religious fundamentalism.', '這本書討論宗教基要主義。']],
+  ['garbage', ['Please take out the garbage tonight.', '今晚請把垃圾拿出去。']],
+  ['spelling', ['Check the spelling before you send the email.', '寄出電子郵件前請檢查拼字。']],
+  ['wrapping', ['The gift wrapping was bright red.', '禮物包裝是鮮紅色的。']],
+  ['identification', ['You need identification to enter the building.', '你需要身分證明才能進入大樓。']],
+  ['correlation', ['The study found a correlation between sleep and memory.', '研究發現睡眠和記憶之間有相關性。']],
+  ['jurisdiction', ["This case is outside the court's jurisdiction.", '這個案件不在該法院的管轄權內。']],
+  ['consistency', ['Her consistency helped the team trust her work.', '她的穩定表現讓團隊信任她的工作。']],
+  ['repetition', ['Repetition can help you remember new words.', '重複能幫助你記住新單字。']],
+  ['documentation', ['The project needs clear documentation.', '這個專案需要清楚的文件。']],
+  ['undertaking', ['Building the bridge was a major undertaking.', '建造這座橋是一項重大工程。']],
+  ['fusion', ['Jazz fusion mixes jazz with other styles.', '爵士融合樂把爵士和其他風格混合在一起。']],
+  ['proximity', ['The house is popular because of its proximity to the station.', '這棟房子受歡迎是因為它靠近車站。']],
+  ['nuisance', ['The broken alarm became a nuisance.', '壞掉的警報器成了麻煩。']],
+  ['quotation', ['She used a quotation from the poem.', '她引用了那首詩中的一句話。']],
+  ['diversion', ['The road diversion added twenty minutes to the trip.', '道路改道讓行程多花了二十分鐘。']],
+  ['comprehension', ['Reading improves comprehension.', '閱讀能提升理解力。']],
+  ['intrusion', ['The loud noise was an intrusion into our quiet evening.', '那陣噪音打擾了我們安靜的夜晚。']],
+  ['outgoing', ['She has an outgoing personality.', '她個性外向。']],
+  ['antiquity', ['The vase dates from antiquity.', '這個花瓶可追溯到古代。']],
+  ['sophistication', ['The design shows great sophistication.', '這個設計展現出高度精緻感。']],
+  ['mythology', ['Greek mythology includes many famous gods.', '希臘神話包含許多著名的神。']],
+  ['constellation', ['Orion is a well-known constellation.', '獵戶座是著名的星座。']],
+  ['solitude', ['He enjoyed the solitude of the mountains.', '他喜歡山中的獨處。']],
+  ['avoidance', ['Avoidance will not solve the problem.', '逃避無法解決問題。']],
   ['demolish', ['Workers will demolish the old wall.', '工人會拆除那面舊牆。']],
   ['subscribe', ['I subscribe to this magazine.', '我訂閱這本雜誌。']],
   ['cram', ['Do not cram for the exam tonight.', '今晚不要臨時抱佛腳準備考試。']],
@@ -150,6 +179,16 @@ const englishTailCleanups = [
   /,\s*and everyone noticed the flavor before the meal was over\.$/i,
   /,\s*and it had a beautiful view of the river\.$/i,
   /,\s*and the situation felt more realistic after that\.$/i,
+  /,\s*and people remembered the moment because it changed the plan\.$/i,
+  /,\s*so people remembered the moment because it changed the plan\.$/i,
+  /,\s*but people remembered the moment because it changed the plan\.$/i,
+  /,\s*and the group wrote it down before anyone forgot\.$/i,
+  /,\s*and the detail became important later in the discussion\.$/i,
+  /,\s*but the detail became important later in the discussion\.$/i,
+  /,\s*and the cook made one final adjustment before serving it\.$/i,
+  /,\s*but the cook made one final adjustment before serving it\.$/i,
+  /,\s*but someone asked a follow-up question a few minutes later\.$/i,
+  /,\s*so the cook made one final adjustment before serving it\.$/i,
 ];
 
 const chineseTailCleanups = [
@@ -169,6 +208,40 @@ const chineseTailCleanups = [
   /，而且大家在用餐結束前都注意到味道。$/u,
   /，而且房間可以看到美麗河景。$/u,
   /，而且那種情境之後感覺更真實。$/u,
+  /，而且人們記得那一刻，因為它改變了計畫。$/u,
+  /，所以人們記得那一刻，因為它改變了計畫。$/u,
+  /，但是人們記得那一刻，因為它改變了計畫。$/u,
+  /，而且小組在有人忘記前把它寫了下來。$/u,
+  /，而且這個細節在後續討論中變得重要。$/u,
+  /，但是這個細節在後續討論中變得重要。$/u,
+  /，而且廚師在上菜前做了最後一次調整。$/u,
+  /，但是廚師在上菜前做了最後一次調整。$/u,
+  /，但是幾分鐘後有人提出了追問。$/u,
+  /，所以廚師在上菜前做了最後一次調整。$/u,
+];
+
+const englishPrefixCleanups = [
+  /^After the situation changed unexpectedly,\s*/i,
+  /^Although the situation changed unexpectedly,\s*/i,
+  /^After the answer was not obvious at first,\s*/i,
+  /^Although the answer was not obvious at first,\s*/i,
+  /^After everyone looked at the details again,\s*/i,
+  /^Although everyone looked at the details again,\s*/i,
+  /^After the group discussed the matter for a while,\s*/i,
+  /^Although the group discussed the matter for a while,\s*/i,
+  /^After someone asked for a more concrete example,\s*/i,
+];
+
+const chinesePrefixCleanups = [
+  /^在情況意外改變之後，/u,
+  /^雖然情況意外改變，/u,
+  /^在答案一開始並不明顯之後，/u,
+  /^雖然答案一開始並不明顯，/u,
+  /^在大家再次查看細節之後，/u,
+  /^雖然大家再次查看細節，/u,
+  /^在小組討論這件事一陣子之後，/u,
+  /^雖然小組討論這件事一陣子，/u,
+  /^在有人要求一個更具體的例子之後，/u,
 ];
 
 function escapeRegex(value) {
@@ -177,6 +250,14 @@ function escapeRegex(value) {
 
 function normalizeSentence(value) {
   return value.trim().replace(/\s+/g, ' ');
+}
+
+function polishEnglishSentence(value) {
+  const normalized = normalizeSentence(value)
+    .replace(/\bi\b/g, 'I')
+    .replace(/\bi'm\b/gi, "I'm")
+    .replace(/\bi've\b/gi, "I've");
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
 }
 
 function isLowQualityGeneratedFrame(example, exampleZh) {
@@ -207,6 +288,14 @@ function cleanGeneratedRow(row, expectedItem) {
   for (const pattern of chineseTailCleanups) {
     exampleZh = exampleZh.replace(pattern, '。');
   }
+  for (const pattern of englishPrefixCleanups) {
+    example = example.replace(pattern, '');
+  }
+  for (const pattern of chinesePrefixCleanups) {
+    exampleZh = exampleZh.replace(pattern, '');
+  }
+  example = polishEnglishSentence(example);
+  exampleZh = normalizeSentence(exampleZh);
 
   const normalizedWord = row.word?.trim().toLowerCase() ?? '';
   const override = manualOverrides.get(normalizedWord);

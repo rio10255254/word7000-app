@@ -94,6 +94,7 @@ describe('full vocabulary dataset', () => {
   test('uses contextual examples instead of meta-learning templates', () => {
     const metaPatterns = [
       /\bthe word\b/i,
+      /\bthe meaning of\b/i,
       /\bsimple (sentence|example)\b/i,
       /\blearner/i,
       /\bcan show how\b/i,
@@ -166,6 +167,17 @@ describe('full vocabulary dataset', () => {
 
   test('does not keep broad generator scaffolds that read like stitched templates', () => {
     const broadTemplatePatterns = [
+      /\bpeople remembered the moment because it changed the plan\b/i,
+      /\bsomeone asked a follow-up question a few minutes later\b/i,
+      /\bthe cook made one final adjustment before serving it\b/i,
+      /\bthe answer was not obvious at first\b/i,
+      /\bthe situation changed unexpectedly\b/i,
+      /\bthe example showed when someone might need to\b/i,
+      /人們記得那一刻，因為它改變了計畫/u,
+      /幾分鐘後有人提出了追問/u,
+      /廚師在上菜前做了最後一次調整/u,
+      /答案一開始並不明顯/u,
+      /情況意外改變/u,
       /\bsaved the [a-z]+ for the final\b/i,
       /\bstudied [a-z]+ during the\b/i,
       /\bbecame a sign of the season\b/i,

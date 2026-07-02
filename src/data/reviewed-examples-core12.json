@@ -722,8 +722,8 @@
   },
   {
     "word": "secrecy",
-    "example": "The meaning of secrecy became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把秘密放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The plan was kept in secrecy.",
+    "exampleZh": "這個計畫被保密。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },
@@ -1772,8 +1772,8 @@
   },
   {
     "word": "fundamentalism",
-    "example": "The meaning of fundamentalism became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把基要主義放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The book discusses religious fundamentalism.",
+    "exampleZh": "這本書討論宗教基要主義。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },
@@ -2416,8 +2416,8 @@
   },
   {
     "word": "garbage",
-    "example": "The meaning of garbage became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把垃圾放進真實衝突中後，它的意思變得更清楚。",
+    "example": "Please take out the garbage tonight.",
+    "exampleZh": "今晚請把垃圾拿出去。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },
@@ -2535,8 +2535,8 @@
   },
   {
     "word": "spelling",
-    "example": "The meaning of spelling became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把拼放進真實衝突中後，它的意思變得更清楚。",
+    "example": "Check the spelling before you send the email.",
+    "exampleZh": "寄出電子郵件前請檢查拼字。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },
@@ -3102,8 +3102,8 @@
   },
   {
     "word": "wrapping",
-    "example": "The meaning of wrapping became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把用於包裹的材料放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The gift wrapping was bright red.",
+    "exampleZh": "禮物包裝是鮮紅色的。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },
@@ -3221,8 +3221,8 @@
   },
   {
     "word": "identification",
-    "example": "The meaning of identification became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把識別放進真實衝突中後，它的意思變得更清楚。",
+    "example": "You need identification to enter the building.",
+    "exampleZh": "你需要身分證明才能進入大樓。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },
@@ -3277,8 +3277,8 @@
   },
   {
     "word": "correlation",
-    "example": "The meaning of correlation became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把相互關係放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The study found a correlation between sleep and memory.",
+    "exampleZh": "研究發現睡眠和記憶之間有相關性。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },
@@ -3368,8 +3368,8 @@
   },
   {
     "word": "jurisdiction",
-    "example": "The meaning of jurisdiction became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把司法權放進真實衝突中後，它的意思變得更清楚。",
+    "example": "This case is outside the court's jurisdiction.",
+    "exampleZh": "這個案件不在該法院的管轄權內。",
     "status": "approved",
     "batch": "gpt-review-core12-full-2026-07-02"
   },

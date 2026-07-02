@@ -324,7 +324,9 @@ describe('free web launch configuration', () => {
     expect(setupGuide).toContain('Google');
     expect(setupGuide).toContain('supabase/schema.sql');
     expect(setupGuide).toContain('Redirect URLs');
+    expect(setupGuide).toContain('word7000://auth/callback');
     expect(setupGuide).toContain('EXPO_PUBLIC_SUPABASE_URL');
+    expect(setupGuide).toContain('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY');
     expect(setupGuide).toContain('EXPO_PUBLIC_SUPABASE_ANON_KEY');
     expect(setupGuide).toContain('Cloudflare Pages');
   });
@@ -334,6 +336,7 @@ describe('free web launch configuration', () => {
 
     expect(prepareScript).toContain('globalThis.__WORD7000_CONFIG__');
     expect(prepareScript).toContain('EXPO_PUBLIC_SUPABASE_URL');
+    expect(prepareScript).toContain('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY');
     expect(prepareScript).toContain('EXPO_PUBLIC_SUPABASE_ANON_KEY');
   });
 

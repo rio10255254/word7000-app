@@ -967,8 +967,8 @@
   },
   {
     "word": "collision",
-    "example": "The meaning of collision became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把碰撞放進真實衝突中後，它的意思變得更清楚。",
+    "example": "The collision damaged both cars.",
+    "exampleZh": "這次碰撞損壞了兩輛車。",
     "status": "approved",
     "batch": "gpt-review-core10-full-2026-07-02"
   },
@@ -2598,8 +2598,8 @@
   },
   {
     "word": "nationality",
-    "example": "The meaning of nationality became clearer when the teacher placed it in a real conflict.",
-    "exampleZh": "老師把國籍放進真實衝突中後，它的意思變得更清楚。",
+    "example": "Please write your nationality on the form.",
+    "exampleZh": "請在表格上填寫你的國籍。",
     "status": "approved",
     "batch": "gpt-review-core10-full-2026-07-02"
   },

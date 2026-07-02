@@ -112,6 +112,7 @@ import {
   conciseChineseMeaning,
   supplementalChineseMeaning,
 } from './src/lib/chineseDisplay';
+import { buildConversationPrompt, type ConversationPromptCard } from './src/lib/conversationPrompts';
 import {
   loadFilterPreferences,
   saveFilterPreferences,
@@ -143,6 +144,7 @@ type LibraryPanel = 'list' | 'detail' | 'sets';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
 type StudyMode = 'english' | 'chinese';
+type QuizPracticeMode = 'choice' | 'speaking';
 type ManualCustomWordState = {
   example: string;
   exampleZh: string;
@@ -355,12 +357,25 @@ const modeInterfaceCopy = {
     questionBankPrefix: '目前題庫',
     questionUnit: '題',
     cappedQuestionPrefix: '出',
+    quizPracticeTitle: '練習方式',
+    choiceQuizMode: '選擇題',
+    speakingQuizMode: '口說練習',
     startQuiz: '開始測驗',
+    startSpeaking: '開始口說練習',
     quizFinished: '測驗完成',
+    speakingFinished: '口說練習完成',
     quizScore: (correct: number, total: number) => `答對 ${correct} / ${total} 題`,
+    speakingScore: (total: number) => `完成 ${total} 張口說卡`,
     restartQuiz: '重新選題',
+    restartSpeaking: '重新練習',
     correctResult: '答對了',
     wrongResult: '先放進複習',
+    speakingPromptLabel: '口說題目',
+    speakingHintLabel: '回答提示',
+    iSpoke: '我說完了',
+    showSampleAnswer: '看參考回答',
+    sampleAnswer: '參考回答',
+    sampleTranslation: '中文翻譯',
     englishExample: '英文例句',
     chineseExample: '中文例句',
     chineseTranslation: '中文翻譯',
@@ -522,12 +537,25 @@ const modeInterfaceCopy = {
     questionBankPrefix: 'Question bank',
     questionUnit: 'questions',
     cappedQuestionPrefix: 'Uses',
+    quizPracticeTitle: 'Practice Type',
+    choiceQuizMode: 'Multiple Choice',
+    speakingQuizMode: 'Speaking Cards',
     startQuiz: 'Start Quiz',
+    startSpeaking: 'Start Speaking',
     quizFinished: 'Quiz Complete',
+    speakingFinished: 'Speaking Complete',
     quizScore: (correct: number, total: number) => `${correct} / ${total} correct`,
+    speakingScore: (total: number) => `${total} speaking cards completed`,
     restartQuiz: 'Choose Again',
+    restartSpeaking: 'Practice Again',
     correctResult: 'Correct',
     wrongResult: 'Added to Review',
+    speakingPromptLabel: 'Speaking Prompt',
+    speakingHintLabel: 'Answer Hint',
+    iSpoke: 'I Finished Speaking',
+    showSampleAnswer: 'Show Sample Answer',
+    sampleAnswer: 'Sample Answer',
+    sampleTranslation: 'English Translation',
     englishExample: 'English Example',
     chineseExample: 'Chinese Example',
     chineseTranslation: 'Chinese Translation',
@@ -739,7 +767,9 @@ export default function App() {
   const [studyInitial, setStudyInitial] = useState(initialFilterPreferences.study.initial);
   const [studyFiltersOpen, setStudyFiltersOpen] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
+  const [quizPracticeMode, setQuizPracticeMode] = useState<QuizPracticeMode>('choice');
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
+  const [speakingAnswerVisible, setSpeakingAnswerVisible] = useState(false);
   const [answeredQuizWord, setAnsweredQuizWord] = useState<WordEntry | null>(null);
   const [lockedQuizOptions, setLockedQuizOptions] = useState<QuizOption[] | null>(null);
   const [quizQuestionCount, setQuizQuestionCount] = useState<(typeof quizQuestionCounts)[number]>(initialFilterPreferences.quiz.questionCount);
@@ -848,6 +878,10 @@ export default function App() {
   );
   const visibleQuizWord = answeredQuizWord ?? quizWord;
   const visibleQuizOptions = lockedQuizOptions ?? quizOptions;
+  const conversationPrompt = useMemo(
+    () => (visibleQuizWord ? buildConversationPrompt(visibleQuizWord, studyMode) : null),
+    [studyMode, visibleQuizWord],
+  );
   const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
   const libraryWords = useMemo(
     () =>
@@ -1270,6 +1304,7 @@ export default function App() {
   useEffect(() => {
     setQuizIndex(0);
     setQuizResult(null);
+    setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
     setQuizSession([]);
@@ -1715,6 +1750,15 @@ export default function App() {
     setProfilePanel('overview');
   }
 
+  function handleQuizPracticeModeChange(mode: QuizPracticeMode) {
+    setQuizPracticeMode(mode);
+    restartQuiz();
+  }
+
+  function revealSpeakingAnswer() {
+    setSpeakingAnswerVisible(true);
+  }
+
   function handleQuizAnswer(correct: boolean) {
     if (!quizWord) {
       return;
@@ -1736,6 +1780,7 @@ export default function App() {
     setQuizIndex(0);
     setQuizCorrectCount(0);
     setQuizResult(null);
+    setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
     setQuizFinished(false);
@@ -1745,6 +1790,7 @@ export default function App() {
   function restartQuiz() {
     setQuizIndex(0);
     setQuizResult(null);
+    setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
     setQuizStarted(false);
@@ -1754,6 +1800,7 @@ export default function App() {
 
   function nextQuiz() {
     setQuizResult(null);
+    setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
     if (quizIndex >= quizSession.length - 1) {
@@ -2261,7 +2308,9 @@ export default function App() {
               filtersOpen={quizFiltersOpen}
               levelOptions={levelFilterOptions}
               motionStyle={cardMotionStyle}
+              conversationPrompt={conversationPrompt}
               options={visibleQuizOptions}
+              practiceMode={quizPracticeMode}
               questionCount={quizQuestionCount}
               questionCounts={quizQuestionCounts}
               questionIndex={quizIndex}
@@ -2269,6 +2318,7 @@ export default function App() {
               quizStarted={quizStarted}
               result={quizResult}
               sessionTotal={quizSessionTotal}
+              speakingAnswerVisible={speakingAnswerVisible}
               studyMode={studyMode}
               activeSetCount={activeQuizSet ? quizSourceWords.length : 0}
               activeSetName={activeQuizSet?.name ?? null}
@@ -2281,8 +2331,10 @@ export default function App() {
               onFiltersToggle={() => setQuizFiltersOpen((current) => !current)}
               onInitialChange={setQuizInitial}
               onLevelChange={setQuizLevel}
+              onPracticeModeChange={handleQuizPracticeModeChange}
               onNext={nextQuiz}
               onQuestionCountChange={setQuizQuestionCount}
+              onRevealSpeakingAnswer={revealSpeakingAnswer}
               onRestart={restartQuiz}
               onStart={startQuiz}
             />
@@ -3729,7 +3781,9 @@ function QuizView({
   filtersOpen,
   levelOptions,
   motionStyle,
+  conversationPrompt,
   options,
+  practiceMode,
   questionCount,
   questionCounts,
   questionIndex,
@@ -3737,6 +3791,7 @@ function QuizView({
   quizStarted,
   result,
   sessionTotal,
+  speakingAnswerVisible,
   studyMode,
   wordCount,
   word,
@@ -3746,8 +3801,10 @@ function QuizView({
   onFiltersToggle,
   onInitialChange,
   onLevelChange,
+  onPracticeModeChange,
   onNext,
   onQuestionCountChange,
+  onRevealSpeakingAnswer,
   onRestart,
   onStart,
 }: {
@@ -3760,7 +3817,9 @@ function QuizView({
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
+  conversationPrompt: ConversationPromptCard | null;
   options: ReturnType<typeof buildQuizOptions>;
+  practiceMode: QuizPracticeMode;
   questionCount: (typeof quizQuestionCounts)[number];
   questionCounts: readonly (typeof quizQuestionCounts)[number][];
   questionIndex: number;
@@ -3768,6 +3827,7 @@ function QuizView({
   quizStarted: boolean;
   result: 'correct' | 'wrong' | null;
   sessionTotal: number;
+  speakingAnswerVisible: boolean;
   studyMode: StudyMode;
   word: WordEntry | null;
   wordCount: number;
@@ -3777,8 +3837,10 @@ function QuizView({
   onFiltersToggle: () => void;
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
+  onPracticeModeChange: (mode: QuizPracticeMode) => void;
   onNext: () => void;
   onQuestionCountChange: (count: (typeof quizQuestionCounts)[number]) => void;
+  onRevealSpeakingAnswer: () => void;
   onRestart: () => void;
   onStart: () => void;
 }) {
@@ -3786,6 +3848,7 @@ function QuizView({
   const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
+  const speakingMode = practiceMode === 'speaking';
 
   return (
     <View style={styles.screenStack}>
@@ -3816,6 +3879,41 @@ function QuizView({
         />
       )}
 
+      <Animated.View style={[styles.quizModeCard, themeStyles?.quizModeCard, motionStyle]}>
+        <View style={styles.rowBetween}>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.quizPracticeTitle}</Text>
+          <Languages size={20} color="#2563eb" strokeWidth={2.3} />
+        </View>
+        <View style={[styles.quizModeSwitch, themeStyles?.quizModeSwitch]}>
+          {(['choice', 'speaking'] as const).map((mode) => {
+            const selected = practiceMode === mode;
+            return (
+              <AnimatedPressable
+                accessibilityRole="button"
+                key={mode}
+                onPress={() => onPracticeModeChange(mode)}
+                pressTone="chip"
+                style={[
+                  styles.quizModeButton,
+                  themeStyles?.quizModeButton,
+                  selected && styles.quizModeButtonActive,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.quizModeButtonText,
+                    themeStyles?.quizModeButtonText,
+                    selected && styles.quizModeButtonTextActive,
+                  ]}
+                >
+                  {mode === 'choice' ? ui.choiceQuizMode : ui.speakingQuizMode}
+                </Text>
+              </AnimatedPressable>
+            );
+          })}
+        </View>
+      </Animated.View>
+
       {!quizStarted && !quizFinished && (
         <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
           <View style={styles.rowBetween}>
@@ -3823,7 +3921,11 @@ function QuizView({
               <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.questionCountTitle}</Text>
               <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.questionBankPrefix} {wordCount} {copy.questionBankUnit}</Text>
             </View>
-            <Target size={22} color="#2563eb" strokeWidth={2.3} />
+            {speakingMode ? (
+              <Languages size={22} color="#2563eb" strokeWidth={2.3} />
+            ) : (
+              <Target size={22} color="#2563eb" strokeWidth={2.3} />
+            )}
           </View>
           <View style={styles.quizCountRow}>
             {questionCounts.map((count) => {
@@ -3856,20 +3958,28 @@ function QuizView({
             pressTone="primary"
             style={[styles.primaryButton, wordCount === 0 && styles.disabledButton]}
           >
-            <Target size={18} color="#fff" strokeWidth={2.3} />
-            <Text style={styles.primaryButtonText}>{ui.startQuiz}</Text>
+            {speakingMode ? (
+              <Languages size={18} color="#fff" strokeWidth={2.3} />
+            ) : (
+              <Target size={18} color="#fff" strokeWidth={2.3} />
+            )}
+            <Text style={styles.primaryButtonText}>{speakingMode ? ui.startSpeaking : ui.startQuiz}</Text>
           </AnimatedPressable>
         </Animated.View>
       )}
 
       {quizFinished && (
         <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
-          <Text style={styles.eyebrow}>RESULT</Text>
-          <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>{ui.quizFinished}</Text>
-          <Text style={[styles.quizScoreText, themeStyles?.quizScoreText]}>{ui.quizScore(correctCount, sessionTotal)}</Text>
+          <Text style={styles.eyebrow}>{speakingMode ? 'SPEAKING' : 'RESULT'}</Text>
+          <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>
+            {speakingMode ? ui.speakingFinished : ui.quizFinished}
+          </Text>
+          <Text style={[styles.quizScoreText, themeStyles?.quizScoreText]}>
+            {speakingMode ? ui.speakingScore(sessionTotal) : ui.quizScore(correctCount, sessionTotal)}
+          </Text>
           <AnimatedPressable accessibilityRole="button" onPress={onRestart} pressTone="primary" style={styles.primaryButton}>
             <RotateCcw size={18} color="#fff" strokeWidth={2.3} />
-            <Text style={styles.primaryButtonText}>{ui.restartQuiz}</Text>
+            <Text style={styles.primaryButtonText}>{speakingMode ? ui.restartSpeaking : ui.restartQuiz}</Text>
           </AnimatedPressable>
         </Animated.View>
       )}
@@ -3883,79 +3993,160 @@ function QuizView({
         </View>
       )}
 
-      {quizStarted && word && (
+      {quizStarted && word && !speakingMode && (
         <>
-      <Animated.View style={[styles.quizCard, themeStyles?.quizCard, motionStyle]}>
-        <View style={styles.quizQuestionHeader}>
-          <Text style={styles.eyebrow}>
-            QUIZ {questionIndex + 1} / {sessionTotal}
-          </Text>
-          {result && (
-            <AnimatedPressable
-              accessibilityLabel={ui.nextQuestion}
-              accessibilityRole="button"
-              onPress={onNext}
-              pressTone="secondary"
-              style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
-            >
-              <Text style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
-              <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
-            </AnimatedPressable>
-          )}
-        </View>
-        <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
-          {formatWordPrimary(word, studyMode)}
-        </Text>
-        {studyMode === 'chinese' && (
-          <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
-        )}
-        <View style={styles.quizOptions}>
-          {options.map((option) => (
-            <AnimatedPressable
-              accessibilityRole="button"
-              disabled={result !== null}
-              key={option.meaning}
-              onPress={() => onAnswer(option.correct)}
-              pressTone="list"
-              pressedStyle={[styles.quizOptionPressed, themeStyles?.quizOptionPressed]}
-              style={[
-                styles.quizOption,
-                themeStyles?.quizOption,
-                result !== null && option.correct && styles.quizOptionCorrect,
-                result === 'wrong' && !option.correct && styles.quizOptionMuted,
-              ]}
-            >
-              <Text style={[styles.quizOptionText, themeStyles?.quizOptionText, result !== null && option.correct && styles.quizOptionTextCorrect]}>
-                {option.meaning}
+          <Animated.View style={[styles.quizCard, themeStyles?.quizCard, motionStyle]}>
+            <View style={styles.quizQuestionHeader}>
+              <Text style={styles.eyebrow}>
+                QUIZ {questionIndex + 1} / {sessionTotal}
               </Text>
-            </AnimatedPressable>
-          ))}
-        </View>
-      </Animated.View>
-
-      {result && (
-        <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, themeStyles?.resultCard, motionStyle]}>
-          <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>{result === 'correct' ? ui.correctResult : ui.wrongResult}</Text>
-          <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
-            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
-              {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
+              {result && (
+                <AnimatedPressable
+                  accessibilityLabel={ui.nextQuestion}
+                  accessibilityRole="button"
+                  onPress={onNext}
+                  pressTone="secondary"
+                  style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
+                >
+                  <Text style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
+                  <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
+                </AnimatedPressable>
+              )}
+            </View>
+            <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
+              {formatWordPrimary(word, studyMode)}
             </Text>
-            <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExamplePrimary(word, studyMode)}</Text>
-            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
-              {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
-            </Text>
-            <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
-            <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.answer}</Text>
-            <Text style={[styles.resultText, themeStyles?.resultText]}>{formatQuizAnswer(word, studyMode)}</Text>
-            {formatMeaningSupplement(word, studyMode) && (
-              <>
-                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.supplementalMeanings}</Text>
-                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatMeaningSupplement(word, studyMode)}</Text>
-              </>
+            {studyMode === 'chinese' && (
+              <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
             )}
-          </View>
-        </Animated.View>
+            <View style={styles.quizOptions}>
+              {options.map((option) => (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  disabled={result !== null}
+                  key={option.meaning}
+                  onPress={() => onAnswer(option.correct)}
+                  pressTone="list"
+                  pressedStyle={[styles.quizOptionPressed, themeStyles?.quizOptionPressed]}
+                  style={[
+                    styles.quizOption,
+                    themeStyles?.quizOption,
+                    result !== null && option.correct && styles.quizOptionCorrect,
+                    result === 'wrong' && !option.correct && styles.quizOptionMuted,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.quizOptionText,
+                      themeStyles?.quizOptionText,
+                      result !== null && option.correct && styles.quizOptionTextCorrect,
+                    ]}
+                  >
+                    {option.meaning}
+                  </Text>
+                </AnimatedPressable>
+              ))}
+            </View>
+          </Animated.View>
+
+          {result && (
+            <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, themeStyles?.resultCard, motionStyle]}>
+              <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>{result === 'correct' ? ui.correctResult : ui.wrongResult}</Text>
+              <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+                  {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
+                </Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExamplePrimary(word, studyMode)}</Text>
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+                  {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
+                </Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.answer}</Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatQuizAnswer(word, studyMode)}</Text>
+                {formatMeaningSupplement(word, studyMode) && (
+                  <>
+                    <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.supplementalMeanings}</Text>
+                    <Text style={[styles.resultText, themeStyles?.resultText]}>{formatMeaningSupplement(word, studyMode)}</Text>
+                  </>
+                )}
+              </View>
+            </Animated.View>
+          )}
+        </>
       )}
+
+      {quizStarted && word && speakingMode && conversationPrompt && (
+        <>
+          <Animated.View style={[styles.quizCard, themeStyles?.quizCard, motionStyle]}>
+            <View style={styles.quizQuestionHeader}>
+              <Text style={styles.eyebrow}>
+                SPEAKING {questionIndex + 1} / {sessionTotal}
+              </Text>
+              {speakingAnswerVisible && (
+                <AnimatedPressable
+                  accessibilityLabel={ui.nextQuestion}
+                  accessibilityRole="button"
+                  onPress={onNext}
+                  pressTone="secondary"
+                  style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
+                >
+                  <Text style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
+                  <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
+                </AnimatedPressable>
+              )}
+            </View>
+            <View style={styles.speakingKeywordHeader}>
+              <View style={[styles.speakingIconWrap, themeStyles?.speakingIconWrap]}>
+                <Languages size={24} color="#2563eb" strokeWidth={2.4} />
+              </View>
+              <View style={styles.flexOne}>
+                <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
+                  {conversationPrompt.keyword}
+                </Text>
+                {conversationPrompt.keywordPronunciation ? (
+                  <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{conversationPrompt.keywordPronunciation}</Text>
+                ) : null}
+              </View>
+            </View>
+            <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
+              <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.speakingPromptLabel}</Text>
+              <Text style={[styles.resultText, themeStyles?.resultText]}>{conversationPrompt.question}</Text>
+              <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.speakingHintLabel}</Text>
+              <Text style={[styles.resultText, themeStyles?.resultText]}>{conversationPrompt.questionSupport}</Text>
+            </View>
+            <View style={styles.speakingActionRow}>
+              <AnimatedPressable
+                accessibilityRole="button"
+                onPress={onRevealSpeakingAnswer}
+                pressTone="primary"
+                style={styles.speakingDoneButton}
+              >
+                <Check size={18} color="#fff" strokeWidth={2.4} />
+                <Text style={styles.speakingDoneButtonText}>{ui.iSpoke}</Text>
+              </AnimatedPressable>
+              <AnimatedPressable
+                accessibilityRole="button"
+                onPress={onRevealSpeakingAnswer}
+                pressTone="secondary"
+                style={[styles.speakingSecondaryButton, themeStyles?.speakingSecondaryButton]}
+              >
+                <BookOpen size={18} color={bodyIconColor} strokeWidth={2.3} />
+                <Text style={[styles.speakingSecondaryText, themeStyles?.speakingSecondaryText]}>{ui.showSampleAnswer}</Text>
+              </AnimatedPressable>
+            </View>
+          </Animated.View>
+
+          {speakingAnswerVisible && (
+            <Animated.View style={[styles.resultCard, styles.resultCorrect, themeStyles?.resultCard, motionStyle]}>
+              <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>{ui.sampleAnswer}</Text>
+              <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.sampleAnswer}</Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{conversationPrompt.referenceAnswer}</Text>
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.sampleTranslation}</Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{conversationPrompt.referenceTranslation}</Text>
+              </View>
+            </Animated.View>
+          )}
         </>
       )}
     </View>
@@ -6425,6 +6616,44 @@ const styles = StyleSheet.create({
     gap: 14,
     padding: 18,
   },
+  quizModeCard: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 12,
+    padding: 14,
+  },
+  quizModeSwitch: {
+    backgroundColor: '#eef2ff',
+    borderRadius: 8,
+    flexDirection: 'row',
+    gap: 6,
+    padding: 4,
+  },
+  quizModeButton: {
+    alignItems: 'center',
+    borderRadius: 7,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 42,
+    paddingHorizontal: 10,
+  },
+  quizModeButtonActive: {
+    backgroundColor: '#2563eb',
+    shadowColor: '#2563eb',
+    shadowOffset: { height: 5, width: 0 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+  },
+  quizModeButtonText: {
+    color: '#475569',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  quizModeButtonTextActive: {
+    color: '#fff',
+  },
   quizCountRow: {
     flexDirection: 'row',
     gap: 8,
@@ -6526,6 +6755,62 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '900',
     marginTop: 2,
+  },
+  speakingKeywordHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  speakingIconWrap: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 48,
+    justifyContent: 'center',
+    width: 48,
+  },
+  speakingActionRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  speakingDoneButton: {
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    minHeight: 48,
+    minWidth: 132,
+    paddingHorizontal: 14,
+  },
+  speakingDoneButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  speakingSecondaryButton: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    minHeight: 48,
+    minWidth: 132,
+    paddingHorizontal: 14,
+  },
+  speakingSecondaryText: {
+    color: '#172033',
+    fontSize: 14,
+    fontWeight: '900',
   },
   quizScoreText: {
     color: '#172033',
@@ -8333,6 +8618,19 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#111827',
     borderColor: '#334155',
   },
+  quizModeCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  quizModeSwitch: {
+    backgroundColor: '#0f172a',
+  },
+  quizModeButton: {
+    backgroundColor: 'transparent',
+  },
+  quizModeButtonText: {
+    color: '#cbd5e1',
+  },
   quizCountChip: {
     backgroundColor: '#182033',
     borderColor: '#334155',
@@ -8381,6 +8679,17 @@ const darkStyles = StyleSheet.create({
   },
   quizExampleLabel: {
     color: '#94a3b8',
+  },
+  speakingIconWrap: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  speakingSecondaryButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  speakingSecondaryText: {
+    color: '#e2e8f0',
   },
   resultText: {
     color: '#cbd5e1',

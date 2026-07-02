@@ -134,6 +134,25 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('測驗完成');
   });
 
+  test('integrates conversation prompt practice inside the quiz page', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const quizStart = appSource.indexOf('function QuizView({');
+    const libraryStart = appSource.indexOf('function LibraryView({');
+    const quizSource = appSource.slice(quizStart, libraryStart);
+
+    expect(appSource).toContain("type QuizPracticeMode = 'choice' | 'speaking'");
+    expect(appSource).toContain('buildConversationPrompt');
+    expect(quizSource).toContain('ui.choiceQuizMode');
+    expect(quizSource).toContain('ui.speakingQuizMode');
+    expect(quizSource).toContain('conversationPrompt');
+    expect(quizSource).toContain('ui.speakingPromptLabel');
+    expect(quizSource).toContain('ui.iSpoke');
+    expect(quizSource).toContain('ui.showSampleAnswer');
+    expect(quizSource).toContain('ui.sampleAnswer');
+    expect(quizSource).toContain('ui.sampleTranslation');
+    expect(quizSource).not.toContain('styles.pronunciation');
+  });
+
   test('keeps pronunciation off the quiz question card', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const quizStart = appSource.indexOf('function QuizView({');

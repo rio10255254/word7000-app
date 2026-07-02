@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { authRedirectTo } from './authRedirect';
+import { authRedirectTo, nativeAuthRedirectTo } from './authRedirect';
 
 describe('auth redirect URL', () => {
   test('returns the current web origin root for OAuth redirects', () => {
@@ -14,5 +14,9 @@ describe('auth redirect URL', () => {
 
   test('returns undefined outside a browser location', () => {
     expect(authRedirectTo(null)).toBeUndefined();
+  });
+
+  test('creates a native app callback URL for iOS OAuth redirects', () => {
+    expect(nativeAuthRedirectTo('word7000')).toBe('word7000://auth/callback');
   });
 });

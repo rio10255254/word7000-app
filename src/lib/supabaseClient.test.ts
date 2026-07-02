@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { getSupabaseSettings, normalizeSupabaseUrl } from './supabaseClient';
+import { getSupabaseSettings, normalizeSupabaseUrl } from './supabaseSettings';
 
 describe('Supabase client settings', () => {
   test('reads public Supabase settings injected into the web runtime', () => {

@@ -1,33 +1,12 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient, processLock, type SupabaseClient } from '@supabase/supabase-js';
+import { AppState, Platform } from 'react-native';
+import 'react-native-url-polyfill/auto';
 import { isSupabaseConfigured } from './supabaseProgress';
+import { getSupabaseSettings } from './supabaseSettings';
 
 export type AppSupabaseClient = SupabaseClient;
-
-type Word7000RuntimeConfig = {
-  supabaseAnonKey?: string;
-  supabaseUrl?: string;
-};
-
-declare global {
-  var __WORD7000_CONFIG__: Word7000RuntimeConfig | undefined;
-}
-
-export function getSupabaseSettings() {
-  const runtimeConfig = getWord7000RuntimeConfig();
-
-  return {
-    url: normalizeSupabaseUrl(runtimeConfig?.supabaseUrl ?? process.env.EXPO_PUBLIC_SUPABASE_URL ?? ''),
-    anonKey: runtimeConfig?.supabaseAnonKey ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
-  };
-}
-
-export function normalizeSupabaseUrl(url: string): string {
-  return url.trim().replace(/\/+$/, '').replace(/\/rest\/v1$/i, '');
-}
-
-function getWord7000RuntimeConfig(): Word7000RuntimeConfig | undefined {
-  return globalThis.__WORD7000_CONFIG__;
-}
+export { getSupabaseSettings, normalizeSupabaseUrl } from './supabaseSettings';
 
 export function createAppSupabaseClient(): AppSupabaseClient | null {
   const settings = getSupabaseSettings();
@@ -36,5 +15,34 @@ export function createAppSupabaseClient(): AppSupabaseClient | null {
     return null;
   }
 
-  return createClient(settings.url, settings.anonKey);
+  const client = createClient(settings.url, settings.anonKey, {
+    auth: {
+      ...(Platform.OS !== 'web' ? { storage: AsyncStorage } : {}),
+      autoRefreshToken: true,
+      detectSessionInUrl: Platform.OS === 'web',
+      lock: processLock,
+      persistSession: true,
+    },
+  });
+
+  registerNativeAuthRefresh(client);
+  return client;
+}
+
+let nativeAuthRefreshRegistered = false;
+
+function registerNativeAuthRefresh(client: AppSupabaseClient): void {
+  if (Platform.OS === 'web' || nativeAuthRefreshRegistered) {
+    return;
+  }
+
+  nativeAuthRefreshRegistered = true;
+  AppState.addEventListener('change', (state) => {
+    if (state === 'active') {
+      client.auth.startAutoRefresh();
+      return;
+    }
+
+    client.auth.stopAutoRefresh();
+  });
 }

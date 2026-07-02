@@ -2,6 +2,7 @@
   "expo": {
     "name": "Word7000",
     "slug": "word7000",
+    "scheme": "word7000",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,6 +11,7 @@
     "ios": {
       "bundleIdentifier": "com.rio.word7000",
       "buildNumber": "1",
+      "usesAppleSignIn": true,
       "supportsTablet": true
     },
     "android": {
@@ -28,6 +30,10 @@
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#F8FAFC"
-    }
+    },
+    "plugins": [
+      "expo-apple-authentication",
+      "expo-web-browser"
+    ]
   }
 }

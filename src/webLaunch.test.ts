@@ -247,19 +247,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('mergeCustomSetStates');
     expect(appSource).toContain("cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress)");
     expect(appSource).toContain('mergeCustomSetStates(cloudProgress.customSets, loadCustomSetState(storage, user.id), loadCustomSetState(storage))');
-    expect(appSource).toContain('saveProgressToStorage(getBrowserStorage(), progress, account.userId)');
-    expect(appSource).toContain('saveCustomSetState(getBrowserStorage(), customSetState, account.userId)');
+    expect(appSource).toContain('saveProgressToStorage(getAppStorage(), progress, account.userId)');
+    expect(appSource).toContain('saveCustomSetState(getAppStorage(), customSetState, account.userId)');
     expect(appSource).toContain('saveProgressToStorage(storage, loadedProgress, user.id)');
     expect(appSource).toContain('await saveCloudProgress(asCloudProgressClient(supabaseClient), signedInUserId, progress)');
     expect(appSource).toContain('await saveCloudCustomSets(asCloudProgressClient(supabaseClient), signedInUserId, customSetState)');
-    expect(appSource).toContain('loadProgressFromStorage(getBrowserStorage(), initialProgress)');
+    expect(appSource).toContain('loadProgressFromStorage(getAppStorage(), initialProgress)');
     expect(appSource).toContain('handleGoogleSignIn');
     expect(appSource).toContain("provider: 'google'");
     expect(appSource).toContain('signInWithOAuth');
-    expect(appSource).toContain('authRedirectTo(getBrowserLocation())');
+    expect(appSource).toContain('getOAuthRedirectUrl()');
     expect(appSource).toContain("prompt: 'select_account'");
+    expect(appSource).toContain('skipBrowserRedirect: Platform.OS !==');
     expect(appSource).toContain('使用 Google 快速登入');
     expect(appSource).toContain('Continue with Google');
+    expect(appSource).toContain('handleAppleSignIn');
+    expect(appSource).toContain("provider: 'apple'");
     expect(appSource).toContain('Email 備用登入');
     expect(appSource).toContain('Email fallback');
     expect(appSource).toContain('onGoogleSignIn={handleGoogleSignIn}');
@@ -393,8 +396,8 @@ describe('free web launch configuration', () => {
     const preferencesSource = fs.readFileSync(path.join(process.cwd(), 'src/lib/filterPreferences.ts'), 'utf8');
 
     expect(appSource).toContain("from './src/lib/filterPreferences'");
-    expect(appSource).toContain('loadFilterPreferences(getBrowserStorage())');
-    expect(appSource).toContain('saveFilterPreferences(getBrowserStorage()');
+    expect(appSource).toContain('loadFilterPreferences(getAppStorage())');
+    expect(appSource).toContain('saveFilterPreferences(getAppStorage()');
     expect(appSource).toContain("sort: activeSort");
     expect(appSource).toContain('study: {');
     expect(appSource).toContain('quiz: {');

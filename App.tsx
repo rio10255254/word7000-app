@@ -1,4 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as WebBrowser from 'expo-web-browser';
 import {
   ArrowUp,
   BookOpen,
@@ -117,7 +119,7 @@ import {
   loadFilterPreferences,
   saveFilterPreferences,
 } from './src/lib/filterPreferences';
-import { authRedirectTo } from './src/lib/authRedirect';
+import { authRedirectTo, nativeAuthRedirectTo } from './src/lib/authRedirect';
 import {
   addCustomWordToSet,
   addWordToSet,
@@ -137,6 +139,10 @@ import {
   type CustomSetState,
   type CustomVocabSet,
 } from './src/lib/customSets';
+import { getAppStorage, hydrateAppStorage, isAppStorageHydrated } from './src/lib/appStorage';
+import { parseOAuthCallbackUrl } from './src/lib/oauthCallback';
+
+WebBrowser.maybeCompleteAuthSession();
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
@@ -186,6 +192,7 @@ const ACTIVE_USER_HEARTBEAT_MS = 60_000;
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const CUSTOM_SET_SORT_STORAGE_KEY = 'word7000-custom-set-sort-v1';
+const APP_LINKING_SCHEME = 'word7000';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
 const LIBRARY_LIST_DRAG_SCROLL_OFFSET = 168;
@@ -404,6 +411,8 @@ const modeInterfaceCopy = {
     passwordPlaceholder: '密碼',
     googleSignIn: '使用 Google 快速登入',
     googleSignInHint: '同步收藏、複習和連續天數',
+    appleSignIn: '使用 Apple 登入',
+    appleSignInHint: 'iPhone App 上架必備的快速登入',
     emailFallback: 'Email 備用登入',
     signIn: '登入',
     signUp: '註冊',
@@ -587,6 +596,8 @@ const modeInterfaceCopy = {
     passwordPlaceholder: 'Password',
     googleSignIn: 'Continue with Google',
     googleSignInHint: 'Sync saved words, review, and streaks',
+    appleSignIn: 'Continue with Apple',
+    appleSignInHint: 'Fast sign-in for the iPhone app',
     emailFallback: 'Email fallback',
     signIn: 'Sign In',
     signUp: 'Sign Up',
@@ -748,6 +759,35 @@ const ThemeContext = createContext<ThemeMode>('light');
 const MotionPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function App() {
+  const [storageReady, setStorageReady] = useState(() => isAppStorageHydrated());
+
+  useEffect(() => {
+    if (storageReady) {
+      return;
+    }
+
+    let mounted = true;
+    hydrateAppStorage()
+      .catch(() => undefined)
+      .then(() => {
+        if (mounted) {
+          setStorageReady(true);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [storageReady]);
+
+  if (!storageReady) {
+    return <AppStorageBootScreen />;
+  }
+
+  return <Word7000App />;
+}
+
+function Word7000App() {
   const appScrollRef = useRef<ScrollView | null>(null);
   const scrollYRef = useRef(0);
   const libraryListTopYRef = useRef(0);
@@ -763,7 +803,7 @@ export default function App() {
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
-  const [initialFilterPreferences] = useState(() => loadFilterPreferences(getBrowserStorage()));
+  const [initialFilterPreferences] = useState(() => loadFilterPreferences(getAppStorage()));
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
   const [progressReady, setProgressReady] = useState(false);
@@ -803,14 +843,14 @@ export default function App() {
   const [profilePanel, setProfilePanel] = useState<ProfilePanel>('overview');
   const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');
   const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');
-  const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getBrowserStorage()));
-  const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getBrowserStorage()));
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
+  const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getAppStorage()));
   const [modeSwitchTarget, setModeSwitchTarget] = useState<StudyMode>(() =>
-    loadStudyMode(getBrowserStorage()) === 'english' ? 'chinese' : 'english',
+    loadStudyMode(getAppStorage()) === 'english' ? 'chinese' : 'english',
   );
   const [showModeSwitch, setShowModeSwitch] = useState(false);
   const [showThemeTransition, setShowThemeTransition] = useState(false);
-  const [themeTransitionTarget, setThemeTransitionTarget] = useState<ThemeMode>(() => loadThemeMode(getBrowserStorage()));
+  const [themeTransitionTarget, setThemeTransitionTarget] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
   const [scrollY, setScrollY] = useState(0);
   const [headerHeight, setHeaderHeight] = useState(88);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
@@ -819,8 +859,8 @@ export default function App() {
   const [librarySliderDragging, setLibrarySliderDragging] = useState(false);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
   const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
-  const [customSetState, setCustomSetState] = useState<CustomSetState>(() => loadCustomSetState(getBrowserStorage()));
-  const [customSetSort, setCustomSetSort] = useState<CustomSetSort>(() => loadCustomSetSort(getBrowserStorage()));
+  const [customSetState, setCustomSetState] = useState<CustomSetState>(() => loadCustomSetState(getAppStorage()));
+  const [customSetSort, setCustomSetSort] = useState<CustomSetSort>(() => loadCustomSetSort(getAppStorage()));
   const [selectedCustomSetId, setSelectedCustomSetId] = useState<string | null>(null);
   const [studySetId, setStudySetId] = useState<string | null>(null);
   const [quizSetId, setQuizSetId] = useState<string | null>(null);
@@ -829,7 +869,7 @@ export default function App() {
   const [manualCustomWord, setManualCustomWord] = useState<ManualCustomWordState>(emptyManualCustomWord);
   const [customSetMessage, setCustomSetMessage] = useState<string>(() => modeInterfaceCopy[studyMode].customSetMessageDefault);
   const [developerVocabulary, setDeveloperVocabulary] = useState<DeveloperVocabularySnapshot | null>(() =>
-    loadDeveloperVocabulary(getBrowserStorage()),
+    loadDeveloperVocabulary(getAppStorage()),
   );
   const [developerVocabularyMessage, setDeveloperVocabularyMessage] = useState<string>(
     () => systemCopy[studyMode].developerInitial,
@@ -1123,19 +1163,19 @@ export default function App() {
   }, [launchAnim]);
 
   useEffect(() => {
-    saveThemeMode(getBrowserStorage(), themeMode);
+    saveThemeMode(getAppStorage(), themeMode);
   }, [themeMode]);
 
   useEffect(() => {
-    saveStudyMode(getBrowserStorage(), studyMode);
+    saveStudyMode(getAppStorage(), studyMode);
   }, [studyMode]);
 
   useEffect(() => {
-    saveCustomSetState(getBrowserStorage(), customSetState, account.userId);
+    saveCustomSetState(getAppStorage(), customSetState, account.userId);
   }, [account.userId, customSetState]);
 
   useEffect(() => {
-    saveCustomSetSort(getBrowserStorage(), customSetSort);
+    saveCustomSetSort(getAppStorage(), customSetSort);
   }, [customSetSort]);
 
   useEffect(() => {
@@ -1155,7 +1195,7 @@ export default function App() {
   }, [studyMode]);
 
   useEffect(() => {
-    saveFilterPreferences(getBrowserStorage(), {
+    saveFilterPreferences(getAppStorage(), {
       library: {
         filter: activeFilter,
         initial: activeInitial,
@@ -1194,7 +1234,7 @@ export default function App() {
     }
 
     setInstallGuideChecked(true);
-    if (shouldShowInstallGuide(getBrowserStorage(), isInstalledWebApp())) {
+    if (shouldShowInstallGuide(getAppStorage(), isInstalledWebApp())) {
       openInstallGuide();
     }
   }, [installGuideChecked, showLaunch]);
@@ -1370,7 +1410,7 @@ export default function App() {
   }, [developerVocabulary?.importedAt, studyMode]);
 
   useEffect(() => {
-    const localProgress = normalizeProgressForDate(loadProgressFromStorage(getBrowserStorage(), initialProgress), today);
+    const localProgress = normalizeProgressForDate(loadProgressFromStorage(getAppStorage(), initialProgress), today);
     setProgress(localProgress);
     setProgressReady(true);
 
@@ -1434,7 +1474,7 @@ export default function App() {
       return;
     }
 
-    saveProgressToStorage(getBrowserStorage(), progress, account.userId);
+    saveProgressToStorage(getAppStorage(), progress, account.userId);
   }, [account.userId, progress, progressReady]);
 
   useEffect(() => {
@@ -1562,12 +1602,12 @@ export default function App() {
       words: applied.words,
     };
     setDeveloperVocabulary(snapshot);
-    saveDeveloperVocabulary(getBrowserStorage(), snapshot);
+    saveDeveloperVocabulary(getAppStorage(), snapshot);
     setDeveloperVocabularyMessage(applied.errors.length > 0 ? activeSystemCopy.importAppliedWithErrors(summary, applied.errors.length) : summary);
   }
 
   function handleClearDeveloperVocabulary() {
-    clearDeveloperVocabulary(getBrowserStorage());
+    clearDeveloperVocabulary(getAppStorage());
     setDeveloperVocabulary(null);
     setDeveloperVocabularyMessage(activeSystemCopy.clearPreview);
   }
@@ -1951,7 +1991,7 @@ export default function App() {
   }
 
   function dismissInstallGuide() {
-    markInstallGuideSeen(getBrowserStorage(), isInstalledWebApp());
+    markInstallGuideSeen(getAppStorage(), isInstalledWebApp());
     Animated.timing(installGuideAnim, {
       duration: 220,
       easing: Easing.inOut(Easing.cubic),
@@ -1978,7 +2018,7 @@ export default function App() {
       return;
     }
 
-    const storage = getBrowserStorage();
+    const storage = getAppStorage();
     const cloudProgress = await loadCloudProgressRecord(asCloudProgressClient(supabaseClient), user.id);
     const userLocalProgress = normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress, user.id), today);
     const loadedProgress = normalizeProgressForDate(
@@ -2022,11 +2062,12 @@ export default function App() {
       message: '正在開啟 Google 登入',
     }));
 
-    const redirectTo = authRedirectTo(getBrowserLocation());
-    const { error } = await supabaseClient.auth.signInWithOAuth({
+    const redirectTo = getOAuthRedirectUrl();
+    const { data, error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
         ...(redirectTo ? { redirectTo } : {}),
+        skipBrowserRedirect: Platform.OS !== 'web',
         queryParams: {
           prompt: 'select_account',
         },
@@ -2043,11 +2084,170 @@ export default function App() {
       return;
     }
 
+    if (Platform.OS !== 'web') {
+      if (!data.url || !redirectTo) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: '無法開啟手機登入流程',
+        }));
+        return;
+      }
+
+      const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+      if (result.type !== 'success') {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'signedOut',
+          message: '已取消登入',
+        }));
+        return;
+      }
+
+      await completeNativeOAuthSignIn(result.url);
+      return;
+    }
+
     setAccount((current) => ({
       ...current,
       busy: true,
       status: 'loading',
       message: '請完成 Google 登入',
+    }));
+  }
+
+  async function handleAppleSignIn() {
+    if (!supabaseClient) {
+      setAccount((current) => ({
+        ...current,
+        status: 'local',
+        message: '本機記憶中',
+      }));
+      return;
+    }
+
+    if (Platform.OS !== 'ios') {
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        status: 'error',
+        message: 'Apple 登入只能在 iPhone App 使用',
+      }));
+      return;
+    }
+
+    setAccount((current) => ({
+      ...current,
+      busy: true,
+      status: 'loading',
+      message: '正在開啟 Apple 登入',
+    }));
+
+    try {
+      const available = await AppleAuthentication.isAvailableAsync();
+      if (!available) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: '此裝置目前無法使用 Apple 登入',
+        }));
+        return;
+      }
+
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        ],
+      });
+
+      if (!credential.identityToken) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: 'Apple 登入沒有回傳帳號憑證',
+        }));
+        return;
+      }
+
+      const { data, error } = await supabaseClient.auth.signInWithIdToken({
+        provider: 'apple',
+        token: credential.identityToken,
+      });
+
+      if (error || !data.user) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: error?.message ?? 'Apple 登入失敗',
+        }));
+        return;
+      }
+
+      await activateSignedInUser(data.user);
+    } catch (error: unknown) {
+      const errorCode = typeof error === 'object' && error && 'code' in error ? String((error as { code?: unknown }).code) : '';
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        status: errorCode === 'ERR_REQUEST_CANCELED' ? 'signedOut' : 'error',
+        message: errorCode === 'ERR_REQUEST_CANCELED' ? '已取消登入' : error instanceof Error ? error.message : 'Apple 登入失敗',
+      }));
+    }
+  }
+
+  async function completeNativeOAuthSignIn(callbackUrl: string) {
+    if (!supabaseClient) {
+      return;
+    }
+
+    const callback = parseOAuthCallbackUrl(callbackUrl);
+
+    if (callback.code) {
+      const { data, error } = await supabaseClient.auth.exchangeCodeForSession(callback.code);
+      if (error || !data.user) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: error?.message ?? '登入導回失敗',
+        }));
+        return;
+      }
+
+      await activateSignedInUser(data.user);
+      return;
+    }
+
+    if (callback.accessToken && callback.refreshToken) {
+      const { data, error } = await supabaseClient.auth.setSession({
+        access_token: callback.accessToken,
+        refresh_token: callback.refreshToken,
+      });
+      if (error || !data.user) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: error?.message ?? '登入導回失敗',
+        }));
+        return;
+      }
+
+      await activateSignedInUser(data.user);
+      return;
+    }
+
+    setAccount((current) => ({
+      ...current,
+      busy: false,
+      status: 'error',
+      message: '登入導回沒有取得帳號資料',
     }));
   }
 
@@ -2148,8 +2348,8 @@ export default function App() {
   async function handleSignOut() {
     const signedInUserId = account.userId;
     if (signedInUserId) {
-      saveProgressToStorage(getBrowserStorage(), progress, signedInUserId);
-      saveCustomSetState(getBrowserStorage(), customSetState, signedInUserId);
+      saveProgressToStorage(getAppStorage(), progress, signedInUserId);
+      saveCustomSetState(getAppStorage(), customSetState, signedInUserId);
     }
 
     if (supabaseClient && signedInUserId) {
@@ -2161,9 +2361,9 @@ export default function App() {
       await supabaseClient.auth.signOut();
     }
 
-    const guestProgress = normalizeProgressForDate(loadProgressFromStorage(getBrowserStorage(), initialProgress), today);
+    const guestProgress = normalizeProgressForDate(loadProgressFromStorage(getAppStorage(), initialProgress), today);
     setProgress(guestProgress);
-    setCustomSetState(loadCustomSetState(getBrowserStorage()));
+    setCustomSetState(loadCustomSetState(getAppStorage()));
     setSelectedCustomSetId(null);
     setStudySetId(null);
     setQuizSetId(null);
@@ -2403,6 +2603,7 @@ export default function App() {
               onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
+              onAppleSignIn={handleAppleSignIn}
               onGoogleSignIn={handleGoogleSignIn}
               onOpenSettings={() => setProfilePanel('settings')}
               onPanelSwap={onProfilePanelSwap}
@@ -2651,6 +2852,21 @@ function useWebServiceWorker() {
   }, []);
 }
 
+function AppStorageBootScreen() {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.appStorageBootScreen}>
+        <View style={styles.launchIcon}>
+          <View style={styles.launchDot} />
+          <Text style={styles.launchIconText}>W7</Text>
+        </View>
+        <Text style={styles.appStorageBootTitle}>Word7000</Text>
+        <Text style={styles.appStorageBootText}>Preparing your learning memory...</Text>
+      </View>
+    </SafeAreaView>
+  );
+}
+
 function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   const [available, setAvailable] = useState(false);
   const [countdownSeconds, setCountdownSeconds] = useState(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
@@ -2658,7 +2874,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   const copy = systemCopy[studyMode];
 
   const refresh = useCallback(() => {
-    const storage = getBrowserStorage();
+    const storage = getAppStorage();
     if (latestVersion) {
       storage?.setItem(UPDATE_STORAGE_KEY, latestVersion);
     }
@@ -2679,7 +2895,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
         });
         const data: unknown = await response.json();
         const version = typeof (data as { version?: unknown }).version === 'string' ? (data as { version: string }).version : '';
-        const storage = getBrowserStorage();
+        const storage = getAppStorage();
         const storedVersion = storage?.getItem(UPDATE_STORAGE_KEY);
 
         if (!version || cancelled) {
@@ -2846,20 +3062,16 @@ function tabLabelForMode(tab: Tab, studyMode: StudyMode): string {
   return englishTabLabels[tab];
 }
 
-function getBrowserStorage(): StorageLike | undefined {
-  if (Platform.OS !== 'web') {
-    return undefined;
-  }
-
-  return (globalThis as { localStorage?: StorageLike }).localStorage;
-}
-
 function getBrowserLocation(): Location | undefined {
   if (Platform.OS !== 'web') {
     return undefined;
   }
 
   return (globalThis as { location?: Location }).location;
+}
+
+function getOAuthRedirectUrl(): string | undefined {
+  return Platform.OS === 'web' ? authRedirectTo(getBrowserLocation()) : nativeAuthRedirectTo(APP_LINKING_SCHEME);
 }
 
 function downloadTextFile(fileName: string, text: string, type: string): boolean {
@@ -4608,6 +4820,7 @@ function ProfileView({
   onCloseSettings,
   onExportVocabulary,
   onImportVocabulary,
+  onAppleSignIn,
   onGoogleSignIn,
   onOpenSettings,
   onPanelSwap,
@@ -4637,6 +4850,7 @@ function ProfileView({
   onCloseSettings: () => void;
   onEmailChange: (email: string) => void;
   onExportVocabulary: () => void;
+  onAppleSignIn: () => void;
   onGoogleSignIn: () => void;
   onImportVocabulary: () => void;
   onOpenSettings: () => void;
@@ -4773,6 +4987,25 @@ function ProfileView({
               </View>
               <ChevronRight size={18} color={bodyIconColor} strokeWidth={2.4} />
             </AnimatedPressable>
+            {Platform.OS === 'ios' && (
+              <AnimatedPressable
+                accessibilityLabel={ui.appleSignIn}
+                accessibilityRole="button"
+                disabled={!account.configured || account.busy}
+                onPress={onAppleSignIn}
+                pressTone="primary"
+                style={[styles.appleButton, (!account.configured || account.busy) && styles.disabledButton]}
+              >
+                <View style={styles.appleIconMark}>
+                  <Smartphone size={18} color="#fff" strokeWidth={2.4} />
+                </View>
+                <View style={styles.flexOne}>
+                  <Text style={styles.appleButtonTitle}>{ui.appleSignIn}</Text>
+                  <Text style={styles.appleButtonText}>{ui.appleSignInHint}</Text>
+                </View>
+                <ChevronRight size={18} color="#fff" strokeWidth={2.4} />
+              </AnimatedPressable>
+            )}
             <Text style={[styles.emailFallbackLabel, themeStyles?.emailFallbackLabel]}>{ui.emailFallback}</Text>
             <View style={[styles.inputBox, themeStyles?.inputBox]}>
               <Mail size={17} color="#717987" strokeWidth={2.2} />
@@ -5736,6 +5969,15 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
     已建立新的帳號記憶: 'Created fresh account memory',
     '正在開啟 Google 登入': 'Opening Google sign-in',
     '請完成 Google 登入': 'Complete Google sign-in',
+    '無法開啟手機登入流程': 'Could not open mobile sign-in',
+    已取消登入: 'Sign-in canceled',
+    '正在開啟 Apple 登入': 'Opening Apple sign-in',
+    'Apple 登入只能在 iPhone App 使用': 'Apple sign-in is only available in the iPhone app',
+    '此裝置目前無法使用 Apple 登入': 'Apple sign-in is not available on this device',
+    'Apple 登入沒有回傳帳號憑證': 'Apple sign-in did not return account credentials',
+    'Apple 登入失敗': 'Apple sign-in failed',
+    登入導回失敗: 'Sign-in redirect failed',
+    登入導回沒有取得帳號資料: 'The sign-in redirect did not return account data',
     建立帳號中: 'Creating account',
     請確認信箱後登入: 'Check your email, then sign in',
     'Email 和密碼至少 6 碼': 'Email and password need at least 6 characters',
@@ -5751,6 +5993,26 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#eef2f7',
+  },
+  appStorageBootScreen: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    flex: 1,
+    gap: 12,
+    justifyContent: 'center',
+    padding: 28,
+  },
+  appStorageBootTitle: {
+    color: '#172033',
+    fontSize: 27,
+    fontWeight: '900',
+    marginTop: 6,
+  },
+  appStorageBootText: {
+    color: '#64748b',
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
   },
   appShell: {
     alignSelf: 'center',
@@ -7710,6 +7972,40 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     marginTop: 2,
   },
+  appleButton: {
+    alignItems: 'center',
+    backgroundColor: '#0f172a',
+    borderColor: '#0f172a',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 11,
+    minHeight: 62,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  appleIconMark: {
+    alignItems: 'center',
+    backgroundColor: '#172033',
+    borderColor: '#334155',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 38,
+    justifyContent: 'center',
+    width: 38,
+  },
+  appleButtonTitle: {
+    color: '#ffffff',
+    fontSize: 15,
+    fontWeight: '900',
+  },
+  appleButtonText: {
+    color: '#cbd5e1',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 17,
+    marginTop: 2,
+  },
   emailFallbackLabel: {
     color: '#64748b',
     fontSize: 12,
@@ -9131,4 +9427,5 @@ const darkStyles = StyleSheet.create({
     color: '#e2e8f0',
   },
 });
+
 

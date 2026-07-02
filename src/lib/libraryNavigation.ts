@@ -66,6 +66,66 @@ export function wordIndexFromLibraryScroll(
   return clamp(boundedWindowStart + boundedLocalRows, 0, maxStart);
 }
 
+export function wordWindowStartFromFullLibraryScroll(
+  scrollY: number,
+  listTopY: number,
+  itemExtent: number,
+  totalWords: number,
+  windowSize: number,
+): number {
+  const maxStart = Math.max(0, totalWords - windowSize);
+  const safeItemExtent = Math.max(1, itemExtent);
+  const localRows = Math.floor(Math.max(0, scrollY - listTopY) / safeItemExtent);
+
+  return clamp(localRows, 0, maxStart);
+}
+
+export function virtualWindowStartFromWordIndex(
+  wordIndex: number,
+  totalWords: number,
+  windowSize: number,
+  leadingBuffer: number,
+): number {
+  const maxStart = Math.max(0, totalWords - windowSize);
+  const boundedWordIndex = clamp(Math.floor(Math.max(0, wordIndex)), 0, Math.max(0, totalWords - 1));
+
+  if (boundedWordIndex >= maxStart) {
+    return maxStart;
+  }
+
+  return clamp(boundedWordIndex - Math.max(0, Math.floor(leadingBuffer)), 0, maxStart);
+}
+
+export function virtualWindowStartFromScroll(
+  scrollY: number,
+  listTopY: number,
+  itemExtent: number,
+  totalWords: number,
+  windowSize: number,
+  leadingBuffer: number,
+): number {
+  const safeItemExtent = Math.max(1, itemExtent);
+  const localRows = Math.floor(Math.max(0, scrollY - listTopY) / safeItemExtent);
+
+  return virtualWindowStartFromWordIndex(localRows, totalWords, windowSize, leadingBuffer);
+}
+
+export function virtualListSpacerHeights(
+  windowStart: number,
+  visibleCount: number,
+  totalWords: number,
+  itemExtent: number,
+): { top: number; bottom: number } {
+  const safeItemExtent = Math.max(1, itemExtent);
+  const boundedStart = clamp(Math.floor(Math.max(0, windowStart)), 0, Math.max(0, totalWords));
+  const boundedVisibleCount = clamp(Math.floor(Math.max(0, visibleCount)), 0, Math.max(0, totalWords - boundedStart));
+
+  return {
+    top: Math.round(boundedStart * safeItemExtent),
+    bottom: Math.round(Math.max(0, totalWords - boundedStart - boundedVisibleCount) * safeItemExtent),
+  };
+}
+
 export function shouldSyncLibraryWindowFromScroll(scrollY: number, listTopY: number, windowStart: number): boolean {
   return scrollY >= listTopY || windowStart > 0;
 }

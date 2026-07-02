@@ -58,10 +58,12 @@ import {
 import { sampleWords, type WordEntry } from './src/data/words';
 import {
   libraryListScrollTarget,
-  recenteredWordWindowFromScroll,
   scrollThumbOffset,
   shouldSyncLibraryWindowFromScroll,
-  wordIndexFromLibraryScroll,
+  virtualListSpacerHeights,
+  virtualWindowStartFromScroll,
+  virtualWindowStartFromWordIndex,
+  wordWindowStartFromFullLibraryScroll,
   wordWindowStartFromSlider,
 } from './src/lib/libraryNavigation';
 import {
@@ -818,8 +820,7 @@ export default function App() {
   });
   const librarySliderVisible = activeTab === 'library' && !selectedLibraryWord && libraryWords.length > LIBRARY_WINDOW_SIZE;
   const librarySliderActive = librarySliderDragging;
-  const librarySliderWordIndex = wordIndexFromLibraryScroll(
-    libraryWindowStart,
+  const librarySliderWordIndex = wordWindowStartFromFullLibraryScroll(
     scrollY,
     libraryListTopY,
     libraryItemExtent,
@@ -1374,16 +1375,15 @@ export default function App() {
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
     if (activeTab === 'library') {
       const nextScrollY = event.nativeEvent.contentOffset.y;
-      const previousScrollY = scrollYRef.current;
       scrollYRef.current = nextScrollY;
       setScrollY(nextScrollY);
       if (!libraryScrollSyncLockedRef.current && !librarySliderDraggingRef.current) {
-        syncLibraryWindowFromScroll(nextScrollY, previousScrollY);
+        syncLibraryWindowFromScroll(nextScrollY);
       }
     }
   }
 
-  function syncLibraryWindowFromScroll(nextScrollY: number, previousScrollY: number) {
+  function syncLibraryWindowFromScroll(nextScrollY: number) {
     const currentWindowStart = libraryWindowStartRef.current;
 
     if (
@@ -1397,38 +1397,21 @@ export default function App() {
       return;
     }
 
-    const recentered = recenteredWordWindowFromScroll(
-      currentWindowStart,
+    const nextWindowStart = virtualWindowStartFromScroll(
       nextScrollY,
       libraryListTopYRef.current,
       libraryItemExtentRef.current,
       libraryWords.length,
       LIBRARY_WINDOW_SIZE,
-      {
-        forwardAnchor: LIBRARY_SCROLL_FORWARD_ANCHOR,
-        backwardAnchor: LIBRARY_SCROLL_BACKWARD_ANCHOR,
-      },
+      LIBRARY_SCROLL_BACKWARD_ANCHOR,
     );
-    const movingForward = nextScrollY >= previousScrollY;
-    const movingBackward = nextScrollY < previousScrollY;
-    const shouldApplyForward = recentered.windowStart > currentWindowStart && movingForward;
-    const shouldApplyBackward = recentered.windowStart < currentWindowStart && movingBackward;
 
-    if (!shouldApplyForward && !shouldApplyBackward) {
+    if (nextWindowStart === currentWindowStart) {
       return;
     }
 
-    libraryScrollSyncLockedRef.current = true;
-    libraryWindowStartRef.current = recentered.windowStart;
-    scrollYRef.current = recentered.scrollY;
-    setLibraryWindowStart(recentered.windowStart);
-    setScrollY(recentered.scrollY);
-    requestAnimationFrame(() => {
-      appScrollRef.current?.scrollTo({ y: recentered.scrollY, animated: false });
-      requestAnimationFrame(() => {
-        libraryScrollSyncLockedRef.current = false;
-      });
-    });
+    libraryWindowStartRef.current = nextWindowStart;
+    setLibraryWindowStart(nextWindowStart);
   }
 
   function handleLibrarySliderDrag(locationY: number) {
@@ -1439,9 +1422,15 @@ export default function App() {
       LIBRARY_WINDOW_SIZE,
       LIBRARY_SLIDER_THUMB_HEIGHT,
     );
-    libraryWindowStartRef.current = target;
-    setLibraryWindowStart(target);
-    scrollLibraryListIntoView(false);
+    const bufferedStart = virtualWindowStartFromWordIndex(
+      target,
+      libraryWords.length,
+      LIBRARY_WINDOW_SIZE,
+      LIBRARY_SCROLL_BACKWARD_ANCHOR,
+    );
+    libraryWindowStartRef.current = bufferedStart;
+    setLibraryWindowStart(bufferedStart);
+    scrollLibraryListIntoView(false, target);
   }
 
   function finishLibrarySliderDrag() {
@@ -1451,10 +1440,11 @@ export default function App() {
     });
   }
 
-  function scrollLibraryListIntoView(animated: boolean) {
+  function scrollLibraryListIntoView(animated: boolean, targetWordStart = libraryWindowStartRef.current) {
+    const wordOffset = Math.max(0, targetWordStart) * libraryItemExtentRef.current + LIBRARY_LIST_DRAG_SCROLL_OFFSET;
     const targetY = Math.max(
       LIBRARY_LIST_DRAG_MIN_SCROLL_Y,
-      libraryListScrollTarget(libraryListTopYRef.current, LIBRARY_LIST_DRAG_SCROLL_OFFSET),
+      libraryListScrollTarget(libraryListTopYRef.current, wordOffset),
     );
     scrollYRef.current = targetY;
     setScrollY(targetY);
@@ -1468,6 +1458,10 @@ export default function App() {
   }
 
   function handleLibraryFirstItemLayout(event: LayoutChangeEvent) {
+    if (libraryWindowStartRef.current > 0) {
+      return;
+    }
+
     const nextExtent = Math.max(96, Math.round(event.nativeEvent.layout.height + 10));
     if (Math.abs(nextExtent - libraryItemExtentRef.current) < 3) {
       return;
@@ -1892,6 +1886,7 @@ export default function App() {
                 activeLevel={activeLevel}
                 activeSort={activeSort}
                 filtersOpen={libraryFiltersOpen}
+                itemExtent={libraryItemExtent}
                 levelOptions={levelFilterOptions}
                 listMotionStyle={listMotionStyle}
                 progress={progress}
@@ -3442,6 +3437,7 @@ function LibraryView({
   activeLevel,
   activeSort,
   filtersOpen,
+  itemExtent,
   levelOptions,
   listMotionStyle,
   progress,
@@ -3471,6 +3467,7 @@ function LibraryView({
   activeLevel: string;
   activeSort: LibrarySort;
   filtersOpen: boolean;
+  itemExtent: number;
   levelOptions: FilterOption[];
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
   progress: ProgressState;
@@ -3495,9 +3492,10 @@ function LibraryView({
   onSearchFocus: () => void;
   onSortChange: (sort: LibrarySort) => void;
 }) {
-  const safeStart = Math.min(visibleStart, Math.max(0, words.length - visibleWindowSize));
+  const safeStart = Math.max(0, Math.min(visibleStart, Math.max(0, words.length - visibleWindowSize)));
   const visibleEnd = Math.min(words.length, safeStart + visibleWindowSize);
   const visibleWords = words.slice(safeStart, visibleEnd);
+  const spacerHeights = virtualListSpacerHeights(safeStart, visibleWords.length, words.length, itemExtent);
   const hasQuery = query.trim().length > 0;
   const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;
   const themeStyles = useThemeStyles();
@@ -3633,6 +3631,9 @@ function LibraryView({
         <Text style={[styles.resultCount, themeStyles?.resultCount]}>
           {ui.resultCount(words.length, safeStart, visibleEnd)}
         </Text>
+        {spacerHeights.top > 0 && (
+          <View pointerEvents="none" style={[styles.virtualLibrarySpacer, { height: spacerHeights.top }]} />
+        )}
         {visibleWords.map((word, index) => {
           const wordProgress = progress.words[word.id];
           return (
@@ -3696,6 +3697,9 @@ function LibraryView({
             </Animated.View>
           );
         })}
+        {spacerHeights.bottom > 0 && (
+          <View pointerEvents="none" style={[styles.virtualLibrarySpacer, { height: spacerHeights.bottom }]} />
+        )}
         {words.length === 0 && (
           <View style={[styles.emptyState, themeStyles?.emptyState]}>
             <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
@@ -5666,6 +5670,9 @@ const styles = StyleSheet.create({
   wordList: {
     gap: 10,
     paddingRight: 44,
+  },
+  virtualLibrarySpacer: {
+    width: '100%',
   },
   libraryItem: {
     backgroundColor: '#fff',

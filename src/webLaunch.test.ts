@@ -490,9 +490,12 @@ describe('free web launch configuration', () => {
   test('keeps library dragging synchronized with the page scroll and list body', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('wordIndexFromLibraryScroll');
-    expect(appSource).toContain('recenteredWordWindowFromScroll');
+    expect(appSource).toContain('wordWindowStartFromFullLibraryScroll');
+    expect(appSource).toContain('virtualListSpacerHeights');
+    expect(appSource).toContain('virtualWindowStartFromScroll');
+    expect(appSource).toContain('virtualWindowStartFromWordIndex');
     expect(appSource).toContain('libraryListScrollTarget');
+    expect(appSource).toContain('styles.virtualLibrarySpacer');
     expect(appSource).toContain('onListLayout={handleLibraryListLayout}');
     expect(appSource).toContain('onFirstItemLayout={handleLibraryFirstItemLayout}');
     expect(appSource).toContain('LIBRARY_LIST_DRAG_MIN_SCROLL_Y');

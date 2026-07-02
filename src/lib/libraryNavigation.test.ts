@@ -5,7 +5,11 @@ import {
   scrollTargetFromSlider,
   scrollThumbOffset,
   shouldSyncLibraryWindowFromScroll,
+  virtualListSpacerHeights,
+  virtualWindowStartFromScroll,
+  virtualWindowStartFromWordIndex,
   wordIndexFromLibraryScroll,
+  wordWindowStartFromFullLibraryScroll,
   wordWindowStartFromSlider,
 } from './libraryNavigation';
 
@@ -72,5 +76,29 @@ describe('library slider navigation', () => {
     expect(libraryListScrollTarget(420, -12)).toBe(408);
     expect(libraryListScrollTarget(8, -12)).toBe(0);
     expect(libraryListScrollTarget(420, 168)).toBe(588);
+  });
+
+  test('keeps the full virtual library height around the rendered word window', () => {
+    expect(virtualListSpacerHeights(3700, 260, 7000, 170)).toEqual({
+      bottom: 516800,
+      top: 629000,
+    });
+
+    expect(virtualListSpacerHeights(6740, 260, 7000, 170)).toEqual({
+      bottom: 0,
+      top: 1145800,
+    });
+  });
+
+  test('derives a buffered word window from absolute page scroll', () => {
+    expect(virtualWindowStartFromScroll(300 + 3700 * 170, 300, 170, 7000, 260, 58)).toBe(3642);
+    expect(virtualWindowStartFromScroll(300 + 30 * 170, 300, 170, 7000, 260, 58)).toBe(0);
+    expect(virtualWindowStartFromScroll(300 + 6980 * 170, 300, 170, 7000, 260, 58)).toBe(6740);
+  });
+
+  test('keeps slider jumps and thumb position in the same absolute library coordinate space', () => {
+    expect(virtualWindowStartFromWordIndex(3700, 7000, 260, 58)).toBe(3642);
+    expect(wordWindowStartFromFullLibraryScroll(300 + 3700 * 170, 300, 170, 7000, 260)).toBe(3700);
+    expect(wordWindowStartFromFullLibraryScroll(300 + 6980 * 170, 300, 170, 7000, 260)).toBe(6740);
   });
 });

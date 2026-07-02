@@ -17,6 +17,7 @@ let html = fs.readFileSync(indexPath, 'utf8');
 const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
 const buildVersion = `${packageJson.version}-${Date.now()}`;
 const installIconLinks = cacheBustInstallIcons();
+const runtimeConfigTag = createRuntimeConfigTag();
 
 const metaTags = [
   '<meta name="description" content="A simple offline 7000-word English vocabulary app for daily learning and review." />',
@@ -40,6 +41,9 @@ for (const tag of metaTags) {
 }
 
 html = ensureViewportFit(html);
+if (runtimeConfigTag) {
+  html = replaceRuntimeConfigTag(html, runtimeConfigTag);
+}
 html = replaceInstallTag(html, /<link\b(?=[^>]*rel=["']manifest["'])[^>]*\/?>/gi, installTags[0]);
 html = replaceInstallTag(html, /<link\b(?=[^>]*rel=["']apple-touch-icon(?:-precomposed)?["'])[^>]*\/?>/gi, installTags.slice(1).join('\n  '));
 
@@ -87,6 +91,30 @@ function cacheBustInstallIcons() {
 
 function replaceInstallTag(source, matcher, tag) {
   const withoutPrevious = source.replace(matcher, '');
+  return withoutPrevious.replace('</head>', `  ${tag}\n</head>`);
+}
+
+function createRuntimeConfigTag() {
+  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL?.trim();
+  const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.trim();
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return '';
+  }
+
+  const payload = JSON.stringify({
+    supabaseAnonKey,
+    supabaseUrl,
+  }).replace(/</g, '\\u003c');
+
+  return `<script>globalThis.__WORD7000_CONFIG__=${payload};</script>`;
+}
+
+function replaceRuntimeConfigTag(source, tag) {
+  const withoutPrevious = source.replace(
+    /\s*<script>globalThis\.__WORD7000_CONFIG__=.*?<\/script>/gs,
+    '',
+  );
   return withoutPrevious.replace('</head>', `  ${tag}\n</head>`);
 }
 

@@ -274,6 +274,14 @@ describe('free web launch configuration', () => {
     expect(setupGuide).toContain('Cloudflare Pages');
   });
 
+  test('injects public Supabase settings into the exported web runtime', () => {
+    const prepareScript = fs.readFileSync(path.join(process.cwd(), 'scripts', 'prepare-web-export.mjs'), 'utf8');
+
+    expect(prepareScript).toContain('globalThis.__WORD7000_CONFIG__');
+    expect(prepareScript).toContain('EXPO_PUBLIC_SUPABASE_URL');
+    expect(prepareScript).toContain('EXPO_PUBLIC_SUPABASE_ANON_KEY');
+  });
+
   test('animates the launch progress bar instead of showing a static fill', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 

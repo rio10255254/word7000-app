@@ -116,13 +116,36 @@ import {
   saveFilterPreferences,
 } from './src/lib/filterPreferences';
 import { authRedirectTo } from './src/lib/authRedirect';
+import {
+  addCustomWordToSet,
+  addWordToSet,
+  createCustomSet,
+  customWordsFromImportRows,
+  loadCustomSetState,
+  mergeCustomWords,
+  parseCustomWordsCsv,
+  saveCustomSetState,
+  sortCustomSets,
+  wordsForCustomSet,
+  type CustomSetSort,
+  type CustomSetState,
+  type CustomVocabSet,
+} from './src/lib/customSets';
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
-type ProfilePanel = 'overview' | 'settings';
+type ProfilePanel = 'overview' | 'settings' | 'sets';
 type LibraryPanel = 'list' | 'detail';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
 type StudyMode = 'english' | 'chinese';
+type ManualCustomWordState = {
+  example: string;
+  exampleZh: string;
+  meaningZh: string;
+  partOfSpeech: string;
+  pronunciation: string;
+  word: string;
+};
 
 type AccountState = {
   configured: boolean;
@@ -155,6 +178,7 @@ const UPDATE_CHECK_INTERVAL_MS = 60_000;
 const ACTIVE_USER_HEARTBEAT_MS = 60_000;
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
+const CUSTOM_SET_SORT_STORAGE_KEY = 'word7000-custom-set-sort-v1';
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
 const LIBRARY_LIST_DRAG_SCROLL_OFFSET = 168;
@@ -395,6 +419,47 @@ const modeInterfaceCopy = {
     exportCsv: '匯出 CSV',
     importData: '匯入資料',
     clearPreview: '清除本機預覽',
+    customSets: '我的單字集',
+    customSetsSummary: (count: number) => `${count} 個自訂資料夾，可用於學習與測驗`,
+    openCustomSets: '管理單字集',
+    backCustomSets: '返回我的',
+    setLibrary: '自訂單字集',
+    setLibrarySummary: '把常用、考試或主題單字分開整理',
+    customSetSortRecent: '最近更新',
+    customSetSortName: '名稱 A-Z',
+    customSetSortManual: '建立順序',
+    createSet: '新增資料夾',
+    newSetPlaceholder: '例如：旅行英文、托福片語',
+    addToSet: '加入單字集',
+    addToSetName: (word: string) => `把 ${word} 加入單字集`,
+    setPickerTitle: (word: string) => `加入「${word}」`,
+    setPickerEmpty: '還沒有單字集，先新增一個資料夾。',
+    createAndAdd: '新增並加入',
+    addExistingWord: '加入',
+    addedToSet: (word: string, setName: string) => `已把 ${word} 加入「${setName}」`,
+    noCustomSets: '尚未建立單字集',
+    customSetCount: (count: number) => `${count} 個單字`,
+    chooseCustomSet: '選擇要加入的單字集',
+    manualWordTitle: '手動新增單字',
+    manualWordIntro: '可以加入字庫沒有的單字，也可以用 CSV 一次匯入。',
+    customWordWordPlaceholder: '英文單字',
+    customWordMeaningPlaceholder: '中文意思',
+    customWordPronunciationPlaceholder: '音標，可空白',
+    customWordPartPlaceholder: '詞性，可空白',
+    customWordExamplePlaceholder: '英文例句，可空白',
+    customWordExampleZhPlaceholder: '中文例句，可空白',
+    addManualWord: '新增到單字集',
+    importCustomCsv: '匯入自訂 CSV',
+    customSetMessageDefault: '單字集會依照目前登入帳號分開記憶在這台裝置。',
+    customSetSelectPlaceholder: '先選一個單字集',
+    startSetStudy: '用這組學習',
+    startSetQuiz: '用這組測驗',
+    activeSet: (name: string) => `目前使用「${name}」`,
+    clearActiveSet: '清除',
+    activeSetCount: (count: number) => `${count} 個單字`,
+    setCreated: (name: string) => `已建立「${name}」`,
+    customWordAdded: (word: string, setName: string) => `已新增 ${word} 到「${setName}」`,
+    customImportApplied: (added: number, skipped: number) => `已匯入 ${added} 個新單字，略過 ${skipped} 筆。`,
   },
   chinese: {
     completed: 'Complete',
@@ -510,6 +575,47 @@ const modeInterfaceCopy = {
     exportCsv: 'Export CSV',
     importData: 'Import Data',
     clearPreview: 'Clear Local Preview',
+    customSets: 'My Sets',
+    customSetsSummary: (count: number) => `${count} custom folders for study and quiz`,
+    openCustomSets: 'Manage sets',
+    backCustomSets: 'Back to Me',
+    setLibrary: 'Custom Sets',
+    setLibrarySummary: 'Group words by topic, exam, or personal lists',
+    customSetSortRecent: 'Recently Updated',
+    customSetSortName: 'Name A-Z',
+    customSetSortManual: 'Created Order',
+    createSet: 'New Folder',
+    newSetPlaceholder: 'Travel Chinese, HSK verbs...',
+    addToSet: 'Add to set',
+    addToSetName: (word: string) => `Add ${word} to a set`,
+    setPickerTitle: (word: string) => `Add "${word}"`,
+    setPickerEmpty: 'No sets yet. Create a folder first.',
+    createAndAdd: 'Create and Add',
+    addExistingWord: 'Add',
+    addedToSet: (word: string, setName: string) => `Added ${word} to "${setName}"`,
+    noCustomSets: 'No custom sets yet',
+    customSetCount: (count: number) => `${count} words`,
+    chooseCustomSet: 'Choose a set',
+    manualWordTitle: 'Add a Word',
+    manualWordIntro: 'Add words missing from the library, or import a CSV file.',
+    customWordWordPlaceholder: 'Word',
+    customWordMeaningPlaceholder: 'Main meaning',
+    customWordPronunciationPlaceholder: 'Pronunciation, optional',
+    customWordPartPlaceholder: 'Part of speech, optional',
+    customWordExamplePlaceholder: 'Example, optional',
+    customWordExampleZhPlaceholder: 'Translation, optional',
+    addManualWord: 'Add to Set',
+    importCustomCsv: 'Import Custom CSV',
+    customSetMessageDefault: 'Sets are remembered separately for the current signed-in account on this device.',
+    customSetSelectPlaceholder: 'Choose a set first',
+    startSetStudy: 'Study This Set',
+    startSetQuiz: 'Quiz This Set',
+    activeSet: (name: string) => `Using "${name}"`,
+    clearActiveSet: 'Clear',
+    activeSetCount: (count: number) => `${count} words`,
+    setCreated: (name: string) => `Created "${name}"`,
+    customWordAdded: (word: string, setName: string) => `Added ${word} to "${setName}"`,
+    customImportApplied: (added: number, skipped: number) => `Imported ${added} new words, skipped ${skipped}.`,
   },
 } as const;
 
@@ -569,6 +675,14 @@ const alphabetFilters: FilterOption[] = [
     label: letter,
   })),
 ];
+const emptyManualCustomWord: ManualCustomWordState = {
+  example: '',
+  exampleZh: '',
+  meaningZh: '',
+  partOfSpeech: '',
+  pronunciation: '',
+  word: '',
+};
 const ThemeContext = createContext<ThemeMode>('light');
 const MotionPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -642,6 +756,15 @@ export default function App() {
   const [librarySliderDragging, setLibrarySliderDragging] = useState(false);
   const [libraryWindowStart, setLibraryWindowStart] = useState(0);
   const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
+  const [customSetState, setCustomSetState] = useState<CustomSetState>(() => loadCustomSetState(getBrowserStorage()));
+  const [customSetSort, setCustomSetSort] = useState<CustomSetSort>(() => loadCustomSetSort(getBrowserStorage()));
+  const [selectedCustomSetId, setSelectedCustomSetId] = useState<string | null>(null);
+  const [studySetId, setStudySetId] = useState<string | null>(null);
+  const [quizSetId, setQuizSetId] = useState<string | null>(null);
+  const [setPickerWord, setSetPickerWord] = useState<WordEntry | null>(null);
+  const [newSetName, setNewSetName] = useState('');
+  const [manualCustomWord, setManualCustomWord] = useState<ManualCustomWordState>(emptyManualCustomWord);
+  const [customSetMessage, setCustomSetMessage] = useState<string>(() => modeInterfaceCopy[studyMode].customSetMessageDefault);
   const [developerVocabulary, setDeveloperVocabulary] = useState<DeveloperVocabularySnapshot | null>(() =>
     loadDeveloperVocabulary(getBrowserStorage()),
   );
@@ -649,28 +772,49 @@ export default function App() {
     () => systemCopy[studyMode].developerInitial,
   );
 
-  const vocabularyWords = developerVocabulary?.words ?? sampleWords;
+  const baseVocabularyWords = developerVocabulary?.words ?? sampleWords;
+  const vocabularyWords = useMemo(
+    () => mergeCustomWords(baseVocabularyWords, customSetState.customWords),
+    [baseVocabularyWords, customSetState.customWords],
+  );
+  const sortedCustomSets = useMemo(() => sortCustomSets(customSetState.sets, customSetSort), [customSetSort, customSetState.sets]);
+  const activeStudySet = useMemo(
+    () => customSetState.sets.find((set) => set.id === studySetId) ?? null,
+    [customSetState.sets, studySetId],
+  );
+  const activeQuizSet = useMemo(
+    () => customSetState.sets.find((set) => set.id === quizSetId) ?? null,
+    [customSetState.sets, quizSetId],
+  );
+  const studySourceWords = useMemo(
+    () => (activeStudySet ? wordsForCustomSet(vocabularyWords, activeStudySet) : vocabularyWords),
+    [activeStudySet, vocabularyWords],
+  );
+  const quizSourceWords = useMemo(
+    () => (activeQuizSet ? wordsForCustomSet(vocabularyWords, activeQuizSet) : vocabularyWords),
+    [activeQuizSet, vocabularyWords],
+  );
   const levelFilterOptions = useMemo(() => buildLevelFilters(vocabularyWords), [vocabularyWords]);
   const stats = useMemo(() => computeStats(vocabularyWords, progress), [progress, vocabularyWords]);
   const studyWords = useMemo(
     () =>
-      selectStudyWords(vocabularyWords, progress, studyFilter, {
+      selectStudyWords(studySourceWords, progress, studyFilter, {
         initial: studyInitial,
         level: studyLevel,
       }),
-    [progress, studyFilter, studyInitial, studyLevel, vocabularyWords],
+    [progress, studyFilter, studyInitial, studyLevel, studySourceWords],
   );
   const studyWord = studyWords.length > 0 ? studyWords[wordIndex % studyWords.length] : null;
   const quizWords = useMemo(
     () =>
-      selectQuizWords(vocabularyWords, progress, quizFilter, {
+      selectQuizWords(quizSourceWords, progress, quizFilter, {
         initial: quizInitial,
         level: quizLevel,
       }),
-    [progress, quizFilter, quizInitial, quizLevel, vocabularyWords],
+    [progress, quizFilter, quizInitial, quizLevel, quizSourceWords],
   );
   const quizWord = quizStarted && quizSession.length > 0 ? quizSession[quizIndex] ?? null : null;
-  const quizOptionSource = quizWords.length >= 3 ? quizWords : vocabularyWords;
+  const quizOptionSource = quizWords.length >= 3 ? quizWords : quizSourceWords.length >= 3 ? quizSourceWords : vocabularyWords;
   const quizOptions = useMemo(
     () => (quizWord ? buildQuizOptions(quizOptionSource, quizWord.id, `${quizSeed}:${quizIndex}`, studyMode === 'chinese' ? 'word' : 'meaning') : []),
     [quizIndex, quizOptionSource, quizSeed, quizWord, studyMode],
@@ -916,12 +1060,28 @@ export default function App() {
   }, [studyMode]);
 
   useEffect(() => {
+    saveCustomSetState(getBrowserStorage(), customSetState, account.userId);
+  }, [account.userId, customSetState]);
+
+  useEffect(() => {
+    saveCustomSetSort(getBrowserStorage(), customSetSort);
+  }, [customSetSort]);
+
+  useEffect(() => {
     setDeveloperVocabularyMessage((current) =>
       current === systemCopy.english.developerInitial || current === systemCopy.chinese.developerInitial
         ? activeSystemCopy.developerInitial
         : current,
     );
   }, [activeSystemCopy.developerInitial]);
+
+  useEffect(() => {
+    setCustomSetMessage((current) =>
+      current === modeInterfaceCopy.english.customSetMessageDefault || current === modeInterfaceCopy.chinese.customSetMessageDefault
+        ? modeInterfaceCopy[studyMode].customSetMessageDefault
+        : current,
+    );
+  }, [studyMode]);
 
   useEffect(() => {
     saveFilterPreferences(getBrowserStorage(), {
@@ -1074,7 +1234,7 @@ export default function App() {
 
   useEffect(() => {
     setWordIndex(0);
-  }, [studyFilter, studyInitial, studyLevel]);
+  }, [studyFilter, studyInitial, studyLevel, studySetId]);
 
   useEffect(() => {
     setQuizIndex(0);
@@ -1086,7 +1246,20 @@ export default function App() {
     setQuizFinished(false);
     setQuizCorrectCount(0);
     setQuizSeed('');
-  }, [quizFilter, quizInitial, quizLevel]);
+  }, [quizFilter, quizInitial, quizLevel, quizSetId]);
+
+  useEffect(() => {
+    const setIds = new Set(customSetState.sets.map((set) => set.id));
+    if (selectedCustomSetId && !setIds.has(selectedCustomSetId)) {
+      setSelectedCustomSetId(customSetState.sets[0]?.id ?? null);
+    }
+    if (studySetId && !setIds.has(studySetId)) {
+      setStudySetId(null);
+    }
+    if (quizSetId && !setIds.has(quizSetId)) {
+      setQuizSetId(null);
+    }
+  }, [customSetState.sets, quizSetId, selectedCustomSetId, studySetId]);
 
   useEffect(() => {
     setLibraryWindowStart((current) => {
@@ -1323,6 +1496,151 @@ export default function App() {
     setDeveloperVocabularyMessage(activeSystemCopy.clearPreview);
   }
 
+  function handleOpenSetPicker(word: WordEntry) {
+    setSetPickerWord(word);
+    setNewSetName('');
+  }
+
+  function handleCloseSetPicker() {
+    setSetPickerWord(null);
+    setNewSetName('');
+  }
+
+  function handleCreateCustomSet() {
+    const ui = modeInterfaceCopy[studyMode];
+    const next = createCustomSet(customSetState, newSetName);
+    const createdSet = next.sets[next.sets.length - 1] ?? null;
+    setCustomSetState(next);
+    if (createdSet) {
+      setSelectedCustomSetId(createdSet.id);
+      setNewSetName('');
+      setCustomSetMessage(ui.setCreated(createdSet.name));
+    }
+  }
+
+  function handleCreateSetAndAddPickerWord() {
+    if (!setPickerWord) {
+      return;
+    }
+
+    const word = setPickerWord;
+    const ui = modeInterfaceCopy[studyMode];
+    const withSet = createCustomSet(customSetState, newSetName);
+    const createdSet = withSet.sets[withSet.sets.length - 1] ?? null;
+    setCustomSetState(createdSet ? addWordToSet(withSet, createdSet.id, word.id) : withSet);
+    if (createdSet) {
+      setSelectedCustomSetId(createdSet.id);
+      setCustomSetMessage(ui.addedToSet(formatWordPrimary(word, studyMode), createdSet.name));
+    }
+    handleCloseSetPicker();
+  }
+
+  function handleAddPickerWordToSet(setId: string) {
+    if (!setPickerWord) {
+      return;
+    }
+
+    const word = setPickerWord;
+    const setName = customSetState.sets.find((set) => set.id === setId)?.name ?? '';
+    setCustomSetState((current) => addWordToSet(current, setId, word.id));
+    setSelectedCustomSetId(setId);
+    setCustomSetMessage(modeInterfaceCopy[studyMode].addedToSet(formatWordPrimary(word, studyMode), setName));
+    handleCloseSetPicker();
+  }
+
+  function handleManualCustomWordChange(field: keyof ManualCustomWordState, value: string) {
+    setManualCustomWord((current) => ({ ...current, [field]: value }));
+  }
+
+  function handleAddManualCustomWord() {
+    const ui = modeInterfaceCopy[studyMode];
+    const targetSetId = selectedCustomSetId ?? sortedCustomSets[0]?.id;
+    const targetSet = customSetState.sets.find((set) => set.id === targetSetId);
+    const wordText = manualCustomWord.word.trim();
+    const meaningText = manualCustomWord.meaningZh.trim();
+
+    if (!targetSet) {
+      setCustomSetMessage(ui.customSetSelectPlaceholder);
+      return;
+    }
+    if (!wordText || !meaningText) {
+      setCustomSetMessage(`${ui.customWordWordPlaceholder} / ${ui.customWordMeaningPlaceholder}`);
+      return;
+    }
+
+    const existingWord = vocabularyWords.find((word) => word.word.toLowerCase() === wordText.toLowerCase());
+    if (existingWord) {
+      setCustomSetState((current) => addWordToSet(current, targetSet.id, existingWord.id));
+      setCustomSetMessage(ui.addedToSet(formatWordPrimary(existingWord, studyMode), targetSet.name));
+      setManualCustomWord(emptyManualCustomWord);
+      return;
+    }
+
+    const normalizedId = wordText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const customWord: WordEntry = {
+      example: manualCustomWord.example.trim() || `I want to remember the word ${wordText}.`,
+      exampleZh: manualCustomWord.exampleZh.trim() || `我想記住 ${wordText} 這個單字。`,
+      group: 'Custom',
+      id: `custom-${normalizedId || Date.now()}`,
+      meaningZh: meaningText,
+      partOfSpeech: manualCustomWord.partOfSpeech.trim() || 'n',
+      pronunciation: manualCustomWord.pronunciation.trim() || `/${wordText}/`,
+      word: wordText,
+    };
+
+    setCustomSetState((current) => addCustomWordToSet(current, targetSet.id, customWord));
+    setCustomSetMessage(ui.customWordAdded(customWord.word, targetSet.name));
+    setManualCustomWord(emptyManualCustomWord);
+  }
+
+  async function handleImportCustomWords() {
+    const ui = modeInterfaceCopy[studyMode];
+    const targetSetId = selectedCustomSetId ?? sortedCustomSets[0]?.id;
+    const targetSet = customSetState.sets.find((set) => set.id === targetSetId);
+    if (!targetSet) {
+      setCustomSetMessage(ui.customSetSelectPlaceholder);
+      return;
+    }
+
+    setCustomSetMessage(activeSystemCopy.importReading);
+    const picked = await pickVocabularyTextFile(activeSystemCopy);
+    if (!picked.ok) {
+      setCustomSetMessage(picked.message);
+      return;
+    }
+
+    const parsed = parseCustomWordsCsv(picked.text);
+    if (!parsed.ok) {
+      setCustomSetMessage(parsed.errors.map((message) => developerVocabularyMessageForMode(message, studyMode)).join(' '));
+      return;
+    }
+
+    const applied = customWordsFromImportRows(parsed.rows, vocabularyWords);
+    if (applied.words.length === 0) {
+      setCustomSetMessage(applied.errors.slice(0, 3).map((message) => developerVocabularyMessageForMode(message, studyMode)).join(' '));
+      return;
+    }
+
+    setCustomSetState((current) =>
+      applied.words.reduce((nextState, word) => addCustomWordToSet(nextState, targetSet.id, word), current),
+    );
+    setCustomSetMessage(ui.customImportApplied(applied.words.length, Math.max(0, parsed.rows.length - applied.words.length)));
+  }
+
+  function handleStartStudySet(setId: string) {
+    setStudySetId(setId);
+    setWordIndex(0);
+    setActiveTab('study');
+    setProfilePanel('overview');
+  }
+
+  function handleStartQuizSet(setId: string) {
+    setQuizSetId(setId);
+    restartQuiz();
+    setActiveTab('quiz');
+    setProfilePanel('overview');
+  }
+
   function handleQuizAnswer(correct: boolean) {
     if (!quizWord) {
       return;
@@ -1543,6 +1861,11 @@ export default function App() {
 
     setProgress(loadedProgress);
     saveProgressToStorage(storage, loadedProgress, user.id);
+    setCustomSetState(loadCustomSetState(storage, user.id));
+    setSelectedCustomSetId(null);
+    setStudySetId(null);
+    setQuizSetId(null);
+    setSetPickerWord(null);
     setAccount((current) => ({
       ...current,
       userId: user.id,
@@ -1697,6 +2020,7 @@ export default function App() {
     const signedInUserId = account.userId;
     if (signedInUserId) {
       saveProgressToStorage(getBrowserStorage(), progress, signedInUserId);
+      saveCustomSetState(getBrowserStorage(), customSetState, signedInUserId);
     }
 
     if (supabaseClient && signedInUserId) {
@@ -1709,6 +2033,11 @@ export default function App() {
 
     const guestProgress = normalizeProgressForDate(loadProgressFromStorage(getBrowserStorage(), initialProgress), today);
     setProgress(guestProgress);
+    setCustomSetState(loadCustomSetState(getBrowserStorage()));
+    setSelectedCustomSetId(null);
+    setStudySetId(null);
+    setQuizSetId(null);
+    setSetPickerWord(null);
     setAccount((current) => ({
       ...current,
       userId: null,
@@ -1831,9 +2160,12 @@ export default function App() {
               levelOptions={levelFilterOptions}
               motionStyle={cardMotionStyle}
               studyMode={studyMode}
+              activeSetCount={activeStudySet ? studySourceWords.length : 0}
+              activeSetName={activeStudySet?.name ?? null}
               wordCount={studyWords.length}
               word={studyWord}
               progress={progress}
+              onClearActiveSet={() => setStudySetId(null)}
               onFilterChange={setStudyFilter}
               onFiltersToggle={() => setStudyFiltersOpen((current) => !current)}
               onInitialChange={setStudyInitial}
@@ -1860,10 +2192,13 @@ export default function App() {
               result={quizResult}
               sessionTotal={quizSessionTotal}
               studyMode={studyMode}
+              activeSetCount={activeQuizSet ? quizSourceWords.length : 0}
+              activeSetName={activeQuizSet?.name ?? null}
               correctCount={quizCorrectCount}
               word={visibleQuizWord}
               wordCount={quizWords.length}
               onAnswer={handleQuizAnswer}
+              onClearActiveSet={() => setQuizSetId(null)}
               onFilterChange={setQuizFilter}
               onFiltersToggle={() => setQuizFiltersOpen((current) => !current)}
               onInitialChange={setQuizInitial}
@@ -1896,6 +2231,7 @@ export default function App() {
                 visibleStart={libraryWindowStart}
                 visibleWindowSize={LIBRARY_WINDOW_SIZE}
                 words={libraryWords}
+                onAddToSet={handleOpenSetPicker}
                 onFilterChange={setActiveFilter}
                 onFiltersToggle={() => setLibraryFiltersOpen((current) => !current)}
                 onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
@@ -1919,8 +2255,14 @@ export default function App() {
               dailyPercent={dailyPercent}
               developerMessage={developerVocabularyMessage}
               developerVocabulary={developerVocabulary}
+              customSetMessage={customSetMessage}
+              customSetSort={customSetSort}
+              customSets={sortedCustomSets}
+              customSetState={customSetState}
+              manualCustomWord={manualCustomWord}
               panel={profilePanel}
               progress={progress}
+              selectedCustomSetId={selectedCustomSetId}
               stats={stats}
               studyMode={studyMode}
               themeMode={themeMode}
@@ -1931,6 +2273,12 @@ export default function App() {
               onExportVocabulary={handleExportVocabulary}
               onImportVocabulary={handleImportVocabulary}
               onGoogleSignIn={handleGoogleSignIn}
+              onAddManualCustomWord={handleAddManualCustomWord}
+              onCreateCustomSet={handleCreateCustomSet}
+              onCustomSetSortChange={setCustomSetSort}
+              onImportCustomWords={handleImportCustomWords}
+              onManualCustomWordChange={handleManualCustomWordChange}
+              onOpenCustomSets={() => setProfilePanel('sets')}
               onOpenSettings={() => setProfilePanel('settings')}
               onPanelSwap={onProfilePanelSwap}
               onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
@@ -1938,6 +2286,11 @@ export default function App() {
               onSignIn={handleSignIn}
               onSignOut={handleSignOut}
               onSignUp={handleSignUp}
+              onStartQuizSet={handleStartQuizSet}
+              onStartStudySet={handleStartStudySet}
+              onCustomSetSelect={setSelectedCustomSetId}
+              onNewSetNameChange={setNewSetName}
+              newSetName={newSetName}
               onThemeModeChange={triggerThemeModeChange}
             />
           )}
@@ -2016,11 +2369,25 @@ export default function App() {
                 progress={progress}
                 studyMode={studyMode}
                 word={selectedLibraryWord}
+                onAddToSet={handleOpenSetPicker}
                 onBack={closeLibraryWordDetail}
                 onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
               />
             </ScrollView>
           </Animated.View>
+        )}
+
+        {setPickerWord && (
+          <CustomSetPickerOverlay
+            customSets={sortedCustomSets}
+            newSetName={newSetName}
+            studyMode={studyMode}
+            word={setPickerWord}
+            onAddToSet={handleAddPickerWordToSet}
+            onClose={handleCloseSetPicker}
+            onCreateAndAdd={handleCreateSetAndAddPickerWord}
+            onNewSetNameChange={setNewSetName}
+          />
         )}
 
         <View style={[styles.tabBar, themeStyles?.tabBar]}>
@@ -2247,6 +2614,23 @@ function saveStudyMode(storage: StorageLike | undefined, studyMode: StudyMode) {
     storage?.setItem(STUDY_MODE_STORAGE_KEY, studyMode);
   } catch {
     // Study mode should still be usable for the current session if storage is blocked.
+  }
+}
+
+function loadCustomSetSort(storage?: StorageLike): CustomSetSort {
+  try {
+    const stored = storage?.getItem(CUSTOM_SET_SORT_STORAGE_KEY);
+    return stored === 'manual' || stored === 'name' || stored === 'recent' ? stored : 'recent';
+  } catch {
+    return 'recent';
+  }
+}
+
+function saveCustomSetSort(storage: StorageLike | undefined, sort: CustomSetSort) {
+  try {
+    storage?.setItem(CUSTOM_SET_SORT_STORAGE_KEY, sort);
+  } catch {
+    // Custom set sorting is a convenience; keep studying available if storage is blocked.
   }
 }
 
@@ -2920,6 +3304,8 @@ function HomeView({
 }
 
 function StudyView({
+  activeSetCount,
+  activeSetName,
   activeFilter,
   activeInitial,
   activeLevel,
@@ -2930,6 +3316,7 @@ function StudyView({
   wordCount,
   word,
   progress,
+  onClearActiveSet,
   onFilterChange,
   onFiltersToggle,
   onFavorite,
@@ -2938,6 +3325,8 @@ function StudyView({
   onLevelChange,
   onReview,
 }: {
+  activeSetCount: number;
+  activeSetName: string | null;
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
@@ -2948,6 +3337,7 @@ function StudyView({
   word: WordEntry | null;
   wordCount: number;
   progress: ProgressState;
+  onClearActiveSet: () => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
   onFavorite: () => void;
@@ -2981,6 +3371,15 @@ function StudyView({
         onLevelChange={onLevelChange}
         onToggle={onFiltersToggle}
       />
+
+      {activeSetName && (
+        <ActiveSetBanner
+          count={activeSetCount}
+          name={activeSetName}
+          studyMode={studyMode}
+          onClear={onClearActiveSet}
+        />
+      )}
 
       {!word && (
         <View style={[styles.emptyState, themeStyles?.emptyState]}>
@@ -3204,6 +3603,8 @@ function FilterControlPanel({
 }
 
 function QuizView({
+  activeSetCount,
+  activeSetName,
   activeFilter,
   activeInitial,
   activeLevel,
@@ -3223,6 +3624,7 @@ function QuizView({
   wordCount,
   word,
   onAnswer,
+  onClearActiveSet,
   onFilterChange,
   onFiltersToggle,
   onInitialChange,
@@ -3232,6 +3634,8 @@ function QuizView({
   onRestart,
   onStart,
 }: {
+  activeSetCount: number;
+  activeSetName: string | null;
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
@@ -3251,6 +3655,7 @@ function QuizView({
   word: WordEntry | null;
   wordCount: number;
   onAnswer: (correct: boolean) => void;
+  onClearActiveSet: () => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
   onInitialChange: (initial: string) => void;
@@ -3284,6 +3689,15 @@ function QuizView({
         onLevelChange={onLevelChange}
         onToggle={onFiltersToggle}
       />
+
+      {activeSetName && (
+        <ActiveSetBanner
+          count={activeSetCount}
+          name={activeSetName}
+          studyMode={studyMode}
+          onClear={onClearActiveSet}
+        />
+      )}
 
       {!quizStarted && !quizFinished && (
         <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
@@ -3447,6 +3861,7 @@ function LibraryView({
   visibleStart,
   visibleWindowSize,
   words,
+  onAddToSet,
   onFavorite,
   onFilterChange,
   onFiltersToggle,
@@ -3477,6 +3892,7 @@ function LibraryView({
   visibleStart: number;
   visibleWindowSize: number;
   words: WordEntry[];
+  onAddToSet: (word: WordEntry) => void;
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
@@ -3676,6 +4092,15 @@ function LibraryView({
               </AnimatedPressable>
               <View style={styles.librarySide}>
                 <AnimatedPressable
+                  accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
+                  accessibilityRole="button"
+                  onPress={() => onAddToSet(word)}
+                  pressTone="icon"
+                  style={[styles.iconButton, styles.addToSetIconButton]}
+                >
+                  <SquarePlus size={18} color="#2563eb" strokeWidth={2.4} />
+                </AnimatedPressable>
+                <AnimatedPressable
                   accessibilityLabel={
                     wordProgress?.favorite
                       ? ui.unfavoriteWordName(formatWordPrimary(word, studyMode))
@@ -3718,12 +4143,14 @@ function LibraryWordDetailView({
   progress,
   studyMode,
   word,
+  onAddToSet,
   onBack,
   onFavorite,
 }: {
   progress: ProgressState;
   studyMode: StudyMode;
   word: WordEntry;
+  onAddToSet: (word: WordEntry) => void;
   onBack: () => void;
   onFavorite: () => void;
 }) {
@@ -3754,19 +4181,30 @@ function LibraryWordDetailView({
               {formatWordSecondary(word, studyMode)}
             </Text>
           </View>
-          <AnimatedPressable
-            accessibilityLabel={
-              favorite
-                ? ui.unfavoriteWordName(formatWordPrimary(word, studyMode))
-                : ui.favoriteWordName(formatWordPrimary(word, studyMode))
-            }
-            accessibilityRole="button"
-            onPress={onFavorite}
-            pressTone="icon"
-            style={styles.libraryDetailFavorite}
-          >
-            <Star size={21} color={favorite ? '#f59e0b' : '#717987'} fill={favorite ? '#f59e0b' : 'transparent'} />
-          </AnimatedPressable>
+          <View style={styles.libraryDetailActionStack}>
+            <AnimatedPressable
+              accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
+              accessibilityRole="button"
+              onPress={() => onAddToSet(word)}
+              pressTone="icon"
+              style={styles.libraryDetailFavorite}
+            >
+              <SquarePlus size={21} color="#2563eb" strokeWidth={2.4} />
+            </AnimatedPressable>
+            <AnimatedPressable
+              accessibilityLabel={
+                favorite
+                  ? ui.unfavoriteWordName(formatWordPrimary(word, studyMode))
+                  : ui.favoriteWordName(formatWordPrimary(word, studyMode))
+              }
+              accessibilityRole="button"
+              onPress={onFavorite}
+              pressTone="icon"
+              style={styles.libraryDetailFavorite}
+            >
+              <Star size={21} color={favorite ? '#f59e0b' : '#717987'} fill={favorite ? '#f59e0b' : 'transparent'} />
+            </AnimatedPressable>
+          </View>
         </View>
 
         <View style={styles.libraryDetailMetaRow}>
@@ -3813,16 +4251,31 @@ function LibraryWordDetailView({
 
 function ProfileView({
   account,
+  customSetMessage,
+  customSetSort,
+  customSets,
+  customSetState,
   dailyPercent,
   developerMessage,
   developerVocabulary,
+  manualCustomWord,
+  newSetName,
   panel,
+  selectedCustomSetId,
+  onAddManualCustomWord,
+  onCreateCustomSet,
+  onCustomSetSelect,
+  onCustomSetSortChange,
   onEmailChange,
   onClearDeveloperVocabulary,
   onCloseSettings,
   onExportVocabulary,
+  onImportCustomWords,
   onImportVocabulary,
   onGoogleSignIn,
+  onManualCustomWordChange,
+  onNewSetNameChange,
+  onOpenCustomSets,
   onOpenSettings,
   onPanelSwap,
   onPasswordChange,
@@ -3830,6 +4283,8 @@ function ProfileView({
   onSignIn,
   onSignOut,
   onSignUp,
+  onStartQuizSet,
+  onStartStudySet,
   progress,
   stats,
   studyMode,
@@ -3838,21 +4293,36 @@ function ProfileView({
   onThemeModeChange,
 }: {
   account: AccountState;
+  customSetMessage: string;
+  customSetSort: CustomSetSort;
+  customSets: CustomVocabSet[];
+  customSetState: CustomSetState;
   dailyPercent: number;
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
+  manualCustomWord: ManualCustomWordState;
+  newSetName: string;
   panel: ProfilePanel;
   progress: ProgressState;
+  selectedCustomSetId: string | null;
   stats: ReturnType<typeof computeStats>;
   studyMode: StudyMode;
   themeMode: ThemeMode;
   vocabularyCount: number;
+  onAddManualCustomWord: () => void;
   onClearDeveloperVocabulary: () => void;
+  onCreateCustomSet: () => void;
+  onCustomSetSelect: (setId: string | null) => void;
+  onCustomSetSortChange: (sort: CustomSetSort) => void;
   onCloseSettings: () => void;
   onEmailChange: (email: string) => void;
   onExportVocabulary: () => void;
   onGoogleSignIn: () => void;
+  onImportCustomWords: () => void;
   onImportVocabulary: () => void;
+  onManualCustomWordChange: (field: keyof ManualCustomWordState, value: string) => void;
+  onNewSetNameChange: (name: string) => void;
+  onOpenCustomSets: () => void;
   onOpenSettings: () => void;
   onPanelSwap: () => void;
   onPasswordChange: (password: string) => void;
@@ -3860,6 +4330,8 @@ function ProfileView({
   onSignIn: () => void;
   onSignOut: () => void;
   onSignUp: () => void;
+  onStartQuizSet: (setId: string) => void;
+  onStartStudySet: (setId: string) => void;
   onThemeModeChange: (themeMode: ThemeMode) => void;
 }) {
   const themeStyles = useThemeStyles();
@@ -3910,7 +4382,7 @@ function ProfileView({
       {
         translateX: profilePanelAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [renderedProfilePanel === 'settings' ? 18 : -12, 0],
+          outputRange: [renderedProfilePanel !== 'overview' ? 18 : -12, 0],
         }),
       },
       {
@@ -3936,6 +4408,33 @@ function ProfileView({
           onExportVocabulary={onExportVocabulary}
           onImportVocabulary={onImportVocabulary}
           onThemeModeChange={onThemeModeChange}
+        />
+      </Animated.View>
+    );
+  }
+
+  if (renderedProfilePanel === 'sets') {
+    return (
+      <Animated.View style={settingsPanelMotionStyle}>
+        <ProfileCustomSetsView
+          customSetMessage={customSetMessage}
+          customSetSort={customSetSort}
+          customSets={customSets}
+          customSetState={customSetState}
+          manualCustomWord={manualCustomWord}
+          newSetName={newSetName}
+          selectedCustomSetId={selectedCustomSetId}
+          studyMode={studyMode}
+          onAddManualCustomWord={onAddManualCustomWord}
+          onBack={onCloseSettings}
+          onCreateCustomSet={onCreateCustomSet}
+          onCustomSetSelect={onCustomSetSelect}
+          onCustomSetSortChange={onCustomSetSortChange}
+          onImportCustomWords={onImportCustomWords}
+          onManualCustomWordChange={onManualCustomWordChange}
+          onNewSetNameChange={onNewSetNameChange}
+          onStartQuizSet={onStartQuizSet}
+          onStartStudySet={onStartStudySet}
         />
       </Animated.View>
     );
@@ -4056,6 +4555,23 @@ function ProfileView({
       <ProfileTutorialPanel studyMode={studyMode} onShowInstallGuide={onShowInstallGuide} />
 
       <AnimatedPressable
+        accessibilityLabel={ui.openCustomSets}
+        accessibilityRole="button"
+        onPress={onOpenCustomSets}
+        pressTone="list"
+        style={[styles.settingsEntryButton, themeStyles?.settingsEntryButton]}
+      >
+        <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+          <Library size={20} color={bodyIconColor} strokeWidth={2.3} />
+        </View>
+        <View style={styles.flexOne}>
+          <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.customSets}</Text>
+          <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.customSetsSummary(customSetState.sets.length)}</Text>
+        </View>
+        <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+      </AnimatedPressable>
+
+      <AnimatedPressable
         accessibilityLabel={ui.openSettings}
         accessibilityRole="button"
         onPress={onOpenSettings}
@@ -4140,6 +4656,402 @@ function ProfileTutorialPanel({ onShowInstallGuide, studyMode }: { onShowInstall
       </View>
       <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
     </AnimatedPressable>
+  );
+}
+
+function ActiveSetBanner({
+  count,
+  name,
+  onClear,
+  studyMode,
+}: {
+  count: number;
+  name: string;
+  onClear: () => void;
+  studyMode: StudyMode;
+}) {
+  const themeStyles = useThemeStyles();
+  const ui = modeInterfaceCopy[studyMode];
+
+  return (
+    <View style={[styles.activeSetBanner, themeStyles?.activeSetBanner]}>
+      <View style={styles.flexOne}>
+        <Text style={[styles.activeSetTitle, themeStyles?.activeSetTitle]}>{ui.activeSet(name)}</Text>
+        <Text style={[styles.activeSetText, themeStyles?.activeSetText]}>{ui.activeSetCount(count)}</Text>
+      </View>
+      <AnimatedPressable
+        accessibilityRole="button"
+        onPress={onClear}
+        pressTone="chip"
+        style={[styles.activeSetClearButton, themeStyles?.activeSetClearButton]}
+      >
+        <Text style={[styles.activeSetClearText, themeStyles?.activeSetClearText]}>{ui.clearActiveSet}</Text>
+      </AnimatedPressable>
+    </View>
+  );
+}
+
+function CustomSetPickerOverlay({
+  customSets,
+  newSetName,
+  onAddToSet,
+  onClose,
+  onCreateAndAdd,
+  onNewSetNameChange,
+  studyMode,
+  word,
+}: {
+  customSets: CustomVocabSet[];
+  newSetName: string;
+  onAddToSet: (setId: string) => void;
+  onClose: () => void;
+  onCreateAndAdd: () => void;
+  onNewSetNameChange: (name: string) => void;
+  studyMode: StudyMode;
+  word: WordEntry;
+}) {
+  const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
+  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const ui = modeInterfaceCopy[studyMode];
+  const overlayAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(overlayAnim, {
+      duration: interactionMotion.settingsPanelMs,
+      easing: Easing.out(Easing.cubic),
+      toValue: 1,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start();
+  }, [overlayAnim]);
+
+  const overlayMotion = {
+    opacity: overlayAnim,
+  };
+  const cardMotion = {
+    transform: [
+      {
+        translateY: overlayAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [18, 0],
+        }),
+      },
+      {
+        scale: overlayAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.98, 1],
+        }),
+      },
+    ],
+  };
+
+  return (
+    <Animated.View style={[styles.customSetOverlay, overlayMotion]} testID="custom-set-picker">
+      <Animated.View style={[styles.customSetPickerCard, themeStyles?.customSetPickerCard, cardMotion]}>
+        <View style={styles.rowBetween}>
+          <View style={styles.flexOne}>
+            <Text style={[styles.customSetPickerTitle, themeStyles?.customSetPickerTitle]}>
+              {ui.setPickerTitle(formatWordPrimary(word, studyMode))}
+            </Text>
+            <Text style={[styles.customSetPickerText, themeStyles?.customSetPickerText]}>{ui.chooseCustomSet}</Text>
+          </View>
+          <AnimatedPressable accessibilityRole="button" onPress={onClose} pressTone="icon" style={styles.iconButton}>
+            <X size={18} color={bodyIconColor} strokeWidth={2.5} />
+          </AnimatedPressable>
+        </View>
+
+        <View style={styles.customSetCreateRow}>
+          <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetNameInputBox]}>
+            <TextInput
+              onChangeText={onNewSetNameChange}
+              placeholder={ui.newSetPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={newSetName}
+            />
+          </View>
+          <AnimatedPressable
+            accessibilityRole="button"
+            onPress={onCreateAndAdd}
+            pressTone="primary"
+            style={styles.customSetCreateButton}
+          >
+            <SquarePlus size={16} color="#fff" strokeWidth={2.4} />
+          </AnimatedPressable>
+        </View>
+
+        <View style={styles.customSetPickerList}>
+          {customSets.length === 0 && (
+            <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.setPickerEmpty}</Text>
+          )}
+          {customSets.map((set) => (
+            <AnimatedPressable
+              accessibilityRole="button"
+              key={set.id}
+              onPress={() => onAddToSet(set.id)}
+              pressTone="list"
+              style={[styles.customSetPickerRow, themeStyles?.customSetPickerRow]}
+            >
+              <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
+              <View style={styles.flexOne}>
+                <Text style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{set.name}</Text>
+                <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{ui.customSetCount(set.wordIds.length)}</Text>
+              </View>
+              <Text style={styles.customSetAddText}>{ui.addExistingWord}</Text>
+            </AnimatedPressable>
+          ))}
+        </View>
+      </Animated.View>
+    </Animated.View>
+  );
+}
+
+function ProfileCustomSetsView({
+  customSetMessage,
+  customSetSort,
+  customSets,
+  customSetState,
+  manualCustomWord,
+  newSetName,
+  onAddManualCustomWord,
+  onBack,
+  onCreateCustomSet,
+  onCustomSetSelect,
+  onCustomSetSortChange,
+  onImportCustomWords,
+  onManualCustomWordChange,
+  onNewSetNameChange,
+  onStartQuizSet,
+  onStartStudySet,
+  selectedCustomSetId,
+  studyMode,
+}: {
+  customSetMessage: string;
+  customSetSort: CustomSetSort;
+  customSets: CustomVocabSet[];
+  customSetState: CustomSetState;
+  manualCustomWord: ManualCustomWordState;
+  newSetName: string;
+  onAddManualCustomWord: () => void;
+  onBack: () => void;
+  onCreateCustomSet: () => void;
+  onCustomSetSelect: (setId: string | null) => void;
+  onCustomSetSortChange: (sort: CustomSetSort) => void;
+  onImportCustomWords: () => void;
+  onManualCustomWordChange: (field: keyof ManualCustomWordState, value: string) => void;
+  onNewSetNameChange: (name: string) => void;
+  onStartQuizSet: (setId: string) => void;
+  onStartStudySet: (setId: string) => void;
+  selectedCustomSetId: string | null;
+  studyMode: StudyMode;
+}) {
+  const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
+  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const ui = modeInterfaceCopy[studyMode];
+  const selectedSet = customSets.find((set) => set.id === selectedCustomSetId) ?? customSets[0] ?? null;
+  const sortOptions: Array<{ id: CustomSetSort; label: string }> = [
+    { id: 'recent', label: ui.customSetSortRecent },
+    { id: 'name', label: ui.customSetSortName },
+    { id: 'manual', label: ui.customSetSortManual },
+  ];
+
+  return (
+    <View style={styles.screenStack} testID="profile-custom-sets-panel">
+      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}>
+        <ChevronLeft size={18} color={bodyIconColor} strokeWidth={2.5} />
+        <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>{ui.backCustomSets}</Text>
+      </AnimatedPressable>
+
+      <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+        <View style={styles.rowBetween}>
+          <View style={styles.flexOne}>
+            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.setLibrary}</Text>
+            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.setLibrarySummary}</Text>
+          </View>
+          <Library size={21} color="#2563eb" strokeWidth={2.3} />
+        </View>
+        <View style={styles.customSetCreateRow}>
+          <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetNameInputBox]}>
+            <TextInput
+              onChangeText={onNewSetNameChange}
+              placeholder={ui.newSetPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={newSetName}
+            />
+          </View>
+          <AnimatedPressable accessibilityRole="button" onPress={onCreateCustomSet} pressTone="primary" style={styles.customSetWideCreateButton}>
+            <SquarePlus size={16} color="#fff" strokeWidth={2.4} />
+            <Text style={styles.customSetWideCreateText}>{ui.createSet}</Text>
+          </AnimatedPressable>
+        </View>
+        <Text style={[styles.developerMessage, themeStyles?.developerMessage]}>{customSetMessage}</Text>
+      </View>
+
+      <View style={styles.customSetSortRow}>
+        {sortOptions.map((option) => {
+          const selected = customSetSort === option.id;
+          return (
+            <AnimatedPressable
+              accessibilityRole="button"
+              key={option.id}
+              onPress={() => onCustomSetSortChange(option.id)}
+              pressTone="chip"
+              style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+            >
+              <Text style={[styles.filterText, selected && styles.filterTextActive]}>{option.label}</Text>
+            </AnimatedPressable>
+          );
+        })}
+      </View>
+
+      <View style={styles.customSetList}>
+        {customSets.length === 0 && (
+          <View style={[styles.emptyState, themeStyles?.emptyState]}>
+            <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>{ui.noCustomSets}</Text>
+            <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.customSetMessageDefault}</Text>
+          </View>
+        )}
+        {customSets.map((set) => {
+          const selected = selectedSet?.id === set.id;
+          return (
+            <AnimatedPressable
+              accessibilityRole="button"
+              key={set.id}
+              onPress={() => onCustomSetSelect(set.id)}
+              pressTone="list"
+              style={[styles.customSetCard, themeStyles?.customSetCard, selected && styles.customSetCardActive]}
+            >
+              <View style={styles.rowBetween}>
+                <View style={styles.customSetTitleRow}>
+                  <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
+                  <View>
+                    <Text style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{set.name}</Text>
+                    <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{ui.customSetCount(set.wordIds.length)}</Text>
+                  </View>
+                </View>
+                <Check size={17} color={selected ? '#2563eb' : 'transparent'} strokeWidth={2.5} />
+              </View>
+              <View style={styles.customSetActionRow}>
+                <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(set.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
+                  <BookOpen size={16} color={bodyIconColor} strokeWidth={2.3} />
+                  <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
+                </AnimatedPressable>
+                <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(set.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
+                  <Target size={16} color="#fff" strokeWidth={2.3} />
+                  <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
+                </AnimatedPressable>
+              </View>
+            </AnimatedPressable>
+          );
+        })}
+      </View>
+
+      <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+        <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.manualWordTitle}</Text>
+        <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.manualWordIntro}</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+          {customSets.map((set) => {
+            const selected = selectedSet?.id === set.id;
+            return (
+              <AnimatedPressable
+                accessibilityRole="button"
+                key={set.id}
+                onPress={() => onCustomSetSelect(set.id)}
+                pressTone="chip"
+                style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+              >
+                <Text style={[styles.filterText, selected && styles.filterTextActive]}>{set.name}</Text>
+              </AnimatedPressable>
+            );
+          })}
+        </ScrollView>
+        {customSets.length === 0 && <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.customSetSelectPlaceholder}</Text>}
+        <View style={styles.customWordFormGrid}>
+          <View style={[styles.inputBox, themeStyles?.inputBox]}>
+            <TextInput
+              autoCapitalize="none"
+              onChangeText={(value) => onManualCustomWordChange('word', value)}
+              placeholder={ui.customWordWordPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={manualCustomWord.word}
+            />
+          </View>
+          <View style={[styles.inputBox, themeStyles?.inputBox]}>
+            <TextInput
+              onChangeText={(value) => onManualCustomWordChange('meaningZh', value)}
+              placeholder={ui.customWordMeaningPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={manualCustomWord.meaningZh}
+            />
+          </View>
+          <View style={[styles.inputBox, themeStyles?.inputBox]}>
+            <TextInput
+              onChangeText={(value) => onManualCustomWordChange('pronunciation', value)}
+              placeholder={ui.customWordPronunciationPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={manualCustomWord.pronunciation}
+            />
+          </View>
+          <View style={[styles.inputBox, themeStyles?.inputBox]}>
+            <TextInput
+              onChangeText={(value) => onManualCustomWordChange('partOfSpeech', value)}
+              placeholder={ui.customWordPartPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={manualCustomWord.partOfSpeech}
+            />
+          </View>
+          <View style={[styles.inputBox, themeStyles?.inputBox, styles.customWordLongInput]}>
+            <TextInput
+              onChangeText={(value) => onManualCustomWordChange('example', value)}
+              placeholder={ui.customWordExamplePlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={manualCustomWord.example}
+            />
+          </View>
+          <View style={[styles.inputBox, themeStyles?.inputBox, styles.customWordLongInput]}>
+            <TextInput
+              onChangeText={(value) => onManualCustomWordChange('exampleZh', value)}
+              placeholder={ui.customWordExampleZhPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={[styles.accountInput, themeStyles?.accountInput]}
+              value={manualCustomWord.exampleZh}
+            />
+          </View>
+        </View>
+        <View style={styles.buttonRow}>
+          <AnimatedPressable
+            accessibilityRole="button"
+            disabled={!selectedSet}
+            onPress={onAddManualCustomWord}
+            pressTone="primary"
+            style={[styles.developerPrimaryButton, !selectedSet && styles.disabledButton]}
+          >
+            <SquarePlus size={16} color="#fff" strokeWidth={2.3} />
+            <Text style={styles.developerPrimaryText}>{ui.addManualWord}</Text>
+          </AnimatedPressable>
+          <AnimatedPressable
+            accessibilityRole="button"
+            disabled={!selectedSet}
+            onPress={onImportCustomWords}
+            pressTone="secondary"
+            style={[styles.developerActionButton, themeStyles?.developerActionButton, !selectedSet && styles.disabledButton]}
+          >
+            <Upload size={16} color={bodyIconColor} strokeWidth={2.3} />
+            <Text style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.importCustomCsv}</Text>
+          </AnimatedPressable>
+        </View>
+        <Text style={[styles.customSetTinyMeta, themeStyles?.customSetTinyMeta]}>
+          {customSetState.customWords.length} Custom
+        </Text>
+      </View>
+    </View>
   );
 }
 
@@ -6302,6 +7214,241 @@ const styles = StyleSheet.create({
   disabledButton: {
     opacity: 0.58,
   },
+  activeSetBanner: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  activeSetTitle: {
+    color: '#1d4ed8',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  activeSetText: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: 2,
+  },
+  activeSetClearButton: {
+    backgroundColor: '#fff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+  },
+  activeSetClearText: {
+    color: '#1d4ed8',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  addToSetIconButton: {
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  libraryDetailActionStack: {
+    gap: 8,
+  },
+  customSetOverlay: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(15, 23, 42, 0.54)',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    padding: 18,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 90,
+  },
+  customSetPickerCard: {
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 14,
+    maxWidth: 430,
+    padding: 16,
+    shadowColor: '#172033',
+    shadowOffset: { height: 18, width: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 30,
+    width: '100%',
+  },
+  customSetPickerTitle: {
+    color: '#172033',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  customSetPickerText: {
+    color: '#64748b',
+    fontSize: 13,
+    fontWeight: '800',
+    marginTop: 3,
+  },
+  customSetCreateRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 9,
+  },
+  customSetNameInputBox: {
+    flex: 1,
+  },
+  customSetCreateButton: {
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
+  },
+  customSetWideCreateButton: {
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    flexDirection: 'row',
+    gap: 6,
+    minHeight: 44,
+    paddingHorizontal: 12,
+  },
+  customSetWideCreateText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  customSetPickerList: {
+    gap: 8,
+  },
+  customSetPickerRow: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    padding: 12,
+  },
+  customSetPickerEmpty: {
+    color: '#64748b',
+    fontSize: 13,
+    fontWeight: '800',
+    lineHeight: 19,
+  },
+  customSetColorDot: {
+    borderRadius: 99,
+    height: 12,
+    width: 12,
+  },
+  customSetRowTitle: {
+    color: '#172033',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  customSetRowText: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: 2,
+  },
+  customSetAddText: {
+    color: '#2563eb',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  customSetsHeroCard: {
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 13,
+    padding: 14,
+  },
+  customSetSortRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  customSetList: {
+    gap: 10,
+  },
+  customSetCard: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 12,
+    padding: 13,
+  },
+  customSetCardActive: {
+    borderColor: '#2563eb',
+    shadowColor: '#2563eb',
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.09,
+    shadowRadius: 16,
+  },
+  customSetTitleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 9,
+  },
+  customSetActionRow: {
+    flexDirection: 'row',
+    gap: 9,
+  },
+  customSetActionButton: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 6,
+    justifyContent: 'center',
+    minHeight: 42,
+  },
+  customSetActionText: {
+    color: '#172033',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  customSetPrimaryActionButton: {
+    alignItems: 'center',
+    backgroundColor: '#172033',
+    borderRadius: 8,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 6,
+    justifyContent: 'center',
+    minHeight: 42,
+  },
+  customSetPrimaryActionText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  customWordFormGrid: {
+    gap: 9,
+  },
+  customWordLongInput: {
+    minHeight: 48,
+  },
+  customSetTinyMeta: {
+    color: '#94a3b8',
+    fontSize: 11,
+    fontWeight: '900',
+    textAlign: 'right',
+  },
   settingsCard: {
     backgroundColor: '#fff',
     borderColor: '#e5e7eb',
@@ -7137,6 +8284,65 @@ const darkStyles = StyleSheet.create({
   },
   outlineButtonText: {
     color: '#e2e8f0',
+  },
+  activeSetBanner: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  activeSetTitle: {
+    color: '#bfdbfe',
+  },
+  activeSetText: {
+    color: '#94a3b8',
+  },
+  activeSetClearButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  activeSetClearText: {
+    color: '#bfdbfe',
+  },
+  customSetPickerCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+    shadowColor: '#000',
+  },
+  customSetPickerTitle: {
+    color: '#f8fafc',
+  },
+  customSetPickerText: {
+    color: '#94a3b8',
+  },
+  customSetPickerRow: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  customSetPickerEmpty: {
+    color: '#94a3b8',
+  },
+  customSetRowTitle: {
+    color: '#f8fafc',
+  },
+  customSetRowText: {
+    color: '#94a3b8',
+  },
+  customSetsHeroCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  customSetCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  customSetActionButton: {
+    backgroundColor: '#182033',
+    borderColor: '#334155',
+  },
+  customSetActionText: {
+    color: '#e2e8f0',
+  },
+  customSetTinyMeta: {
+    color: '#64748b',
   },
   settingsCard: {
     backgroundColor: '#111827',

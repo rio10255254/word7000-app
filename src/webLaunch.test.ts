@@ -85,6 +85,28 @@ describe('free web launch configuration', () => {
     expect(prepareExport).toContain('black-translucent');
   });
 
+  test('lets the web build preview the current iPhone app experience', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('WEB_IOS_PREVIEW_QUERY_KEYS');
+    expect(appSource).toContain("['ios-preview', 'iosPreview', 'preview-ios']");
+    expect(appSource).toContain('function isWebIosPreviewMode()');
+    expect(appSource).toContain('const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();');
+    expect(appSource).toContain("Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && shouldShowInstallGuide");
+    expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;");
+    expect(appSource).toContain("const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;");
+    expect(appSource).toContain("const previewModeLabel = IS_WEB_IOS_PREVIEW ? 'iOS Preview' : null;");
+    expect(appSource).toContain('styles.webIosPreviewSafeArea');
+    expect(appSource).toContain('styles.webIosPreviewAppShell');
+    expect(appSource).toContain('styles.webIosPreviewScroll');
+    expect(appSource).toContain('WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET');
+    expect(appSource).toContain('marginBottom: WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET');
+    expect(appSource).toContain('styles.previewModePill');
+    expect(appSource).toContain('iOS Preview');
+    expect(appSource).toContain('Apple 登入在網頁預覽中只顯示入口');
+    expect(appSource).toContain('Apple sign-in is shown here for iPhone preview');
+  });
+
   test('provides a version endpoint for mobile web app update checks', () => {
     const version = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
     const appSource = fs.readFileSync(appPath, 'utf8');

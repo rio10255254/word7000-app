@@ -198,9 +198,32 @@ const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const CUSTOM_SET_SORT_STORAGE_KEY = 'word7000-custom-set-sort-v1';
 const APP_LINKING_SCHEME = 'word7000';
-const IOS_BOTTOM_SAFE_AREA_FALLBACK = Platform.OS === 'ios' ? 28 : 0;
+const WEB_IOS_PREVIEW_QUERY_KEYS = ['ios-preview', 'iosPreview', 'preview-ios'];
+function isWebIosPreviewMode() {
+  if (Platform.OS !== 'web') {
+    return false;
+  }
+
+  const location = (globalThis as { location?: Location }).location;
+  if (!location?.search) {
+    return false;
+  }
+
+  const params = new URLSearchParams(location.search);
+  return WEB_IOS_PREVIEW_QUERY_KEYS.some((key) => {
+    const value = params.get(key);
+    return value === '' || value === '1' || value === 'true' || value === 'yes';
+  });
+}
+const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();
+const IOS_BOTTOM_SAFE_AREA_FALLBACK = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW ? 28 : 0;
 const WEB_TAB_BAR_BOTTOM_OFFSET = 8;
-const IOS_TAB_BAR_BOTTOM_OFFSET = Platform.OS === 'web' ? WEB_TAB_BAR_BOTTOM_OFFSET : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
+const IOS_TAB_BAR_BOTTOM_OFFSET = Platform.OS === 'web'
+  ? IS_WEB_IOS_PREVIEW
+    ? 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK
+    : WEB_TAB_BAR_BOTTOM_OFFSET
+  : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
+const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = IOS_TAB_BAR_BOTTOM_OFFSET + 72;
 const IOS_CONTENT_BOTTOM_PADDING = 102 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
@@ -978,6 +1001,7 @@ function Word7000App() {
   const activeModeCopy = modeCopy[studyMode];
   const activeSystemCopy = systemCopy[studyMode];
   const activeInstallGuideSteps = installGuideStepsByMode[studyMode];
+  const previewModeLabel = IS_WEB_IOS_PREVIEW ? 'iOS Preview' : null;
   const updateState = useAppUpdateCheck(studyMode);
   const screenMotionStyle = {
     opacity: screenAnim,
@@ -1268,7 +1292,7 @@ function Word7000App() {
 
     setInstallGuideChecked(true);
     const shouldAutoShowInstallGuide =
-      Platform.OS === 'web' && shouldShowInstallGuide(getAppStorage(), isInstalledWebApp());
+      Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && shouldShowInstallGuide(getAppStorage(), isInstalledWebApp());
     if (shouldAutoShowInstallGuide) {
       openInstallGuide();
     }
@@ -2163,6 +2187,16 @@ function Word7000App() {
       return;
     }
 
+    if (IS_WEB_IOS_PREVIEW) {
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        status: 'error',
+        message: 'Apple 登入在網頁預覽中只顯示入口',
+      }));
+      return;
+    }
+
     if (Platform.OS !== 'ios') {
       setAccount((current) => ({
         ...current,
@@ -2572,9 +2606,9 @@ function Word7000App() {
 
   return (
     <ThemeContext.Provider value={themeMode}>
-    <SafeAreaView style={[styles.safeArea, themeStyles?.safeArea]}>
+    <SafeAreaView style={[styles.safeArea, themeStyles?.safeArea, IS_WEB_IOS_PREVIEW && styles.webIosPreviewSafeArea]}>
       <StatusBar style={darkMode ? 'light' : 'dark'} />
-      <View style={[styles.appShell, themeStyles?.appShell]}>
+      <View style={[styles.appShell, IS_WEB_IOS_PREVIEW && styles.webIosPreviewAppShell, themeStyles?.appShell]}>
         <View
           onLayout={(event) => setHeaderHeight(Math.ceil(event.nativeEvent.layout.height))}
           style={styles.header}
@@ -2583,9 +2617,17 @@ function Word7000App() {
             <Text style={[styles.brand, themeStyles?.brand]}>{activeModeCopy.brand}</Text>
             <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>{activeModeCopy.subtitle}</Text>
           </View>
-          <View style={[styles.levelPill, themeStyles?.levelPill]}>
-            <Trophy size={15} color="#2f855a" strokeWidth={2.4} />
-            <Text style={[styles.levelText, themeStyles?.levelText]}>Day {progress.streak}</Text>
+          <View style={styles.headerActions}>
+            {previewModeLabel && (
+              <View style={[styles.previewModePill, themeStyles?.previewModePill]}>
+                <Smartphone size={14} color={darkMode ? '#bfdbfe' : '#2563eb'} strokeWidth={2.4} />
+                <Text style={[styles.previewModeText, themeStyles?.previewModeText]}>{previewModeLabel}</Text>
+              </View>
+            )}
+            <View style={[styles.levelPill, themeStyles?.levelPill]}>
+              <Trophy size={15} color="#2f855a" strokeWidth={2.4} />
+              <Text style={[styles.levelText, themeStyles?.levelText]}>Day {progress.streak}</Text>
+            </View>
           </View>
         </View>
         <ScrollView
@@ -2594,6 +2636,7 @@ function Word7000App() {
           ref={appScrollRef}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
+          style={IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll}
         >
           <Animated.View style={[styles.screenMotion, screenMotionStyle]}>
           {activeTab === 'home' && (
@@ -5050,7 +5093,8 @@ function ProfileView({
   const syncError = account.status === 'error';
   const bodyIconColor = themeMode === 'dark' ? '#e2e8f0' : '#172033';
   const ui = modeInterfaceCopy[studyMode];
-  const showWebInstallGuidePanel = Platform.OS === 'web';
+  const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;
+  const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;
   const [renderedProfilePanel, setRenderedProfilePanel] = useState<ProfilePanel>(panel);
   const profilePanelAnim = useRef(new Animated.Value(1)).current;
 
@@ -5175,7 +5219,7 @@ function ProfileView({
               </View>
               <ChevronRight size={18} color={bodyIconColor} strokeWidth={2.4} />
             </AnimatedPressable>
-            {Platform.OS === 'ios' && (
+            {showAppleSignIn && (
               <AnimatedPressable
                 accessibilityLabel={ui.appleSignIn}
                 accessibilityRole="button"
@@ -6234,6 +6278,7 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
     '無法開啟手機登入流程': 'Could not open mobile sign-in',
     已取消登入: 'Sign-in canceled',
     '正在開啟 Apple 登入': 'Opening Apple sign-in',
+    'Apple 登入在網頁預覽中只顯示入口': 'Apple sign-in is shown here for iPhone preview',
     'Apple 登入只能在 iPhone App 使用': 'Apple sign-in is only available in the iPhone app',
     '此裝置目前無法使用 Apple 登入': 'Apple sign-in is not available on this device',
     'Apple 登入沒有回傳帳號憑證': 'Apple sign-in did not return account credentials',
@@ -6259,6 +6304,13 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#eef2f7',
+  },
+  webIosPreviewSafeArea: {
+    alignItems: 'center',
+    backgroundColor: '#0f172a',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 18,
   },
   appStorageBootScreen: {
     alignItems: 'center',
@@ -6287,6 +6339,21 @@ const styles = StyleSheet.create({
     maxWidth: 760,
     width: '100%',
   },
+  webIosPreviewAppShell: {
+    borderColor: '#1f2937',
+    borderRadius: 30,
+    borderWidth: 1,
+    maxHeight: 852,
+    maxWidth: 393,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { height: 20, width: 0 },
+    shadowOpacity: 0.26,
+    shadowRadius: 34,
+  },
+  webIosPreviewScroll: {
+    marginBottom: WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET,
+  },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -6294,6 +6361,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 22,
     paddingTop: 18,
     paddingBottom: 12,
+  },
+  headerActions: {
+    alignItems: 'flex-end',
+    gap: 6,
   },
   brand: {
     color: '#172033',
@@ -6320,6 +6391,22 @@ const styles = StyleSheet.create({
     color: '#166534',
     fontSize: 13,
     fontWeight: '700',
+  },
+  previewModePill: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  previewModeText: {
+    color: '#1d4ed8',
+    fontSize: 11,
+    fontWeight: '900',
   },
   updateBanner: {
     alignItems: 'center',
@@ -9015,6 +9102,13 @@ const darkStyles = StyleSheet.create({
   },
   appShell: {
     backgroundColor: '#0f172a',
+  },
+  previewModePill: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  previewModeText: {
+    color: '#bfdbfe',
   },
   brand: {
     color: '#f8fafc',

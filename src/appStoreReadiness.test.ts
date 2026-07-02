@@ -24,8 +24,8 @@ describe('iOS App Store readiness polish', () => {
   test('keeps the Safari add-to-home-screen guide automatic flow web-only', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain("Platform.OS === 'web' && shouldShowInstallGuide");
-    expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web';");
+    expect(appSource).toContain("Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && shouldShowInstallGuide");
+    expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain('showWebInstallGuidePanel && (');
     expect(appSource).toContain('openInstallGuide()');
     expect(appSource).toContain('markInstallGuideSeen(getAppStorage(), isInstalledWebApp())');
@@ -36,7 +36,10 @@ describe('iOS App Store readiness polish', () => {
 
     expect(appSource).toContain('IOS_BOTTOM_SAFE_AREA_FALLBACK');
     expect(appSource).toContain('WEB_TAB_BAR_BOTTOM_OFFSET');
-    expect(appSource).toContain("Platform.OS === 'web' ? WEB_TAB_BAR_BOTTOM_OFFSET : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK");
+    expect(appSource).toContain('IS_WEB_IOS_PREVIEW');
+    expect(appSource).toContain("const IOS_BOTTOM_SAFE_AREA_FALLBACK = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW ? 28 : 0;");
+    expect(appSource).toContain('IS_WEB_IOS_PREVIEW');
+    expect(appSource).toContain('16 + IOS_BOTTOM_SAFE_AREA_FALLBACK');
     expect(appSource).toContain('IOS_TAB_BAR_BOTTOM_OFFSET');
     expect(appSource).toContain('IOS_CONTENT_BOTTOM_PADDING');
     expect(appSource).toContain('paddingBottom: IOS_CONTENT_BOTTOM_PADDING');

@@ -234,6 +234,24 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("setLibraryPanel('list')");
   });
 
+  test('keeps library and custom set navigation on the polished slide motion system', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const motionSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'interactionMotion.ts'), 'utf8');
+
+    expect(motionSource).toContain('panelSlideX');
+    expect(motionSource).toContain('panelPushScale');
+    expect(motionSource).toContain('staggeredListLimit');
+    expect(appSource).toContain('libraryPanelEnteringX');
+    expect(appSource).toContain('interactionMotion.libraryDetailMs');
+    expect(appSource).toContain('interactionMotion.libraryDetailExitMs');
+    expect(appSource).toContain('libraryPanelDirection');
+    expect(appSource).toContain('setLibraryPanelDirection');
+    expect(appSource).toContain('screenMotionWebTransition');
+    expect(appSource).toContain('searchBoxWebTransition');
+    expect(appSource).toContain('customSetPanelMotionStyle');
+    expect(appSource).toContain('testID="custom-set-panel-transition"');
+  });
+
   test('includes a developer vocabulary panel for import and export workflow', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
@@ -547,22 +565,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');");
     expect(appSource).toContain("const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');");
     expect(appSource).toContain('const libraryPanelAnim = useRef(new Animated.Value(1)).current;');
-    expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
-    expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
-    expect(appSource).toContain('easing: Easing.out(Easing.cubic)');
-    expect(appSource).toContain('easing: Easing.in(Easing.cubic)');
-    expect(appSource).toContain("outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0]");
-    expect(appSource).toContain('outputRange: [0.985, 1]');
+    expect(appSource).toContain('duration: renderedLibraryPanel === \'list\' ? interactionMotion.settingsPanelMs : interactionMotion.libraryDetailMs');
+    expect(appSource).toContain('duration: interactionMotion.libraryDetailExitMs');
+    expect(appSource).toContain('const openEasing = Easing.bezier(');
+    expect(appSource).toContain('const closeEasing = Easing.bezier(');
+    expect(appSource).toContain('const libraryPanelEnteringX');
+    expect(appSource).toContain('outputRange: [libraryPanelEnteringX, 0]');
+    expect(appSource).toContain('outputRange: [interactionMotion.panelPushScale, 1]');
     expect(appSource).toContain('setRenderedLibraryPanel(libraryPanel);');
     expect(appSource).toContain('libraryPanelMotionStyle');
-    expect(appSource).toContain('libraryListPanelHorizontalMotionStyle');
     expect(appSource).toContain('libraryListPanelMotionStyle');
     expect(appSource).toContain('libraryDetailStageMotionStyle');
     expect(appSource).toContain("transformOrigin: 'top center'");
     expect(appSource).toContain('testID="library-panel-transition"');
     expect(appSource).toContain('testID="library-detail-stage"');
     expect(appSource).toContain('styles.libraryDetailStage');
-    expect(appSource).toContain('style={[styles.screenMotion, screenMotionStyle]}');
+    expect(appSource).toContain('style={[styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}');
     expect(appSource).not.toContain('libraryDepthMotionStyle');
     expect(appSource).not.toContain('libraryDetailBackdropMotionStyle');
     expect(appSource).not.toContain('libraryDetailPanelMotionStyle');
@@ -571,9 +589,11 @@ describe('free web launch configuration', () => {
     expect(appSource).not.toContain('styles.libraryDetailBackdrop');
     expect(appSource).not.toContain('styles.libraryDetailPanel');
     expect(openDetailBlock).toContain('setSelectedLibraryWord(word);');
+    expect(openDetailBlock).toContain("setLibraryPanelDirection('forward');");
     expect(openDetailBlock).toContain("setLibraryPanel('detail');");
     expect(openDetailBlock).not.toContain('Animated.timing');
     expect(appSource).toContain('function closeLibraryWordDetail()');
+    expect(appSource).toContain("setLibraryPanelDirection('back');");
     expect(appSource).toContain("setLibraryPanel('list');");
     expect(appSource).not.toContain("studyMode === 'chinese' && libraryDetailOpen");
     expect(appSource).toContain('toValue: 0');

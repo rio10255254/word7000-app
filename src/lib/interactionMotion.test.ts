@@ -35,10 +35,16 @@ describe('interaction motion presets', () => {
   });
 
   test('defines sticky word-detail motion close to the settings panel feel', () => {
-    expect(interactionMotion.libraryDetailMs).toBeGreaterThanOrEqual(600);
+    expect(interactionMotion.libraryDetailMs).toBeGreaterThanOrEqual(interactionMotion.settingsPanelMs + 40);
     expect(interactionMotion.libraryDetailMs).toBeGreaterThan(interactionMotion.settingsPanelMs);
-    expect(interactionMotion.libraryDetailExitMs).toBeGreaterThanOrEqual(320);
+    expect(interactionMotion.libraryDetailMs).toBeLessThan(460);
+    expect(interactionMotion.libraryDetailExitMs).toBeGreaterThanOrEqual(interactionMotion.settingsPanelExitMs + 20);
     expect(interactionMotion.libraryDetailExitMs).toBeGreaterThan(interactionMotion.settingsPanelExitMs);
+    expect(interactionMotion.libraryDetailExitMs).toBeLessThan(interactionMotion.libraryDetailMs);
+    expect(interactionMotion.panelSlideX).toBeGreaterThanOrEqual(18);
+    expect(interactionMotion.panelSlideX).toBeLessThanOrEqual(28);
+    expect(interactionMotion.panelPushScale).toBeGreaterThan(0.97);
+    expect(interactionMotion.panelPushScale).toBeLessThan(0.99);
     expect(interactionMotion.libraryDetailWarmupAt).toBeGreaterThan(0.5);
     expect(interactionMotion.libraryDetailWarmupAt).toBeLessThan(0.65);
     expect(interactionMotion.libraryDetailSettleAt).toBeGreaterThan(0.88);
@@ -50,6 +56,8 @@ describe('interaction motion presets', () => {
   });
 
   test('staggers list entry movement without growing forever', () => {
+    expect(interactionMotion.staggeredListLimit).toBeGreaterThanOrEqual(12);
+    expect(interactionMotion.staggeredListLimit).toBeLessThanOrEqual(24);
     expect(listEnterOffset(0)).toBe(10);
     expect(listEnterOffset(3)).toBe(16);
     expect(listEnterOffset(20)).toBe(22);

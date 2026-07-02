@@ -152,6 +152,7 @@ WebBrowser.maybeCompleteAuthSession();
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type ProfilePanel = 'overview' | 'settings';
 type LibraryPanel = 'list' | 'detail' | 'sets';
+type PanelSlideDirection = 'back' | 'forward';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
 type StudyMode = 'english' | 'chinese';
@@ -232,7 +233,7 @@ const LIBRARY_LIST_DRAG_MIN_SCROLL_Y = 340;
 const LIBRARY_SCROLL_FORWARD_ANCHOR = 150;
 const LIBRARY_SCROLL_BACKWARD_ANCHOR = 58;
 const LIBRARY_WINDOW_SIZE = 260;
-const LIBRARY_ANIMATED_ITEM_COUNT = 28;
+const LIBRARY_ANIMATED_ITEM_COUNT = interactionMotion.staggeredListLimit;
 const quizQuestionCounts = [10, 20, 50] as const;
 type InstallGuideStep = {
   icon: 'add' | 'phone' | 'safari' | 'share';
@@ -899,6 +900,7 @@ function Word7000App() {
   const [profilePanel, setProfilePanel] = useState<ProfilePanel>('overview');
   const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');
   const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');
+  const [libraryPanelDirection, setLibraryPanelDirection] = useState<PanelSlideDirection>('forward');
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
   const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getAppStorage()));
   const [modeSwitchTarget, setModeSwitchTarget] = useState<StudyMode>(() =>
@@ -1014,6 +1016,13 @@ function Word7000App() {
       },
     ],
   };
+  const screenMotionWebTransition: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          transformOrigin: 'top center',
+          willChange: 'opacity, transform',
+        }
+      : undefined;
   const cardMotionStyle = {
     opacity: cardAnim,
     transform: [
@@ -1054,30 +1063,24 @@ function Word7000App() {
       ],
     };
   };
+  const libraryPanelEnteringX =
+    renderedLibraryPanel === 'list' ? -interactionMotion.panelSlideX : interactionMotion.panelSlideX;
   const libraryPanelMotionStyle = {
-    opacity: libraryPanelAnim,
+    opacity: libraryPanelAnim.interpolate({
+      inputRange: [0, 0.2, 1],
+      outputRange: [0, 0.72, 1],
+    }),
     transform: [
       {
         translateX: libraryPanelAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0],
+          outputRange: [libraryPanelEnteringX, 0],
         }),
       },
       {
         scale: libraryPanelAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [0.985, 1],
-        }),
-      },
-    ],
-  };
-  const libraryListPanelHorizontalMotionStyle = {
-    opacity: libraryPanelAnim,
-    transform: [
-      {
-        translateX: libraryPanelAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [-12, 0],
+          outputRange: [interactionMotion.panelPushScale, 1],
         }),
       },
     ],
@@ -1085,12 +1088,12 @@ function Word7000App() {
   const libraryTransitionPerformanceStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
       ? {
-          transformOrigin: 'top center',
+          transformOrigin: libraryPanelDirection === 'back' ? 'left center' : 'right center',
           willChange: 'opacity, transform',
         }
       : undefined;
   const libraryListPanelMotionStyle = [
-    renderedLibraryPanel === 'list' ? libraryListPanelHorizontalMotionStyle : styles.libraryPanelHidden,
+    renderedLibraryPanel === 'list' ? libraryPanelMotionStyle : styles.libraryPanelHidden,
     libraryTransitionPerformanceStyle,
   ];
   const libraryDetailStageMotionStyle = [
@@ -1324,20 +1327,16 @@ function Word7000App() {
     activeTab,
     cardAnim,
     developerVocabulary?.importedAt,
-    libraryFiltersOpen,
     profilePanel,
     quizFilter,
-    quizFiltersOpen,
     quizIndex,
     quizInitial,
     quizLevel,
     quizQuestionCount,
     quizStarted,
     quizFinished,
-    searchQuery,
     studyMode,
     studyFilter,
-    studyFiltersOpen,
     studyInitial,
     studyLevel,
     wordIndex,
@@ -1346,11 +1345,23 @@ function Word7000App() {
   useEffect(() => {
     let cancelled = false;
     const useNativeDriver = Platform.OS !== 'web';
+    const openEasing = Easing.bezier(
+      interactionMotion.libraryDetailOpenEasing[0],
+      interactionMotion.libraryDetailOpenEasing[1],
+      interactionMotion.libraryDetailOpenEasing[2],
+      interactionMotion.libraryDetailOpenEasing[3],
+    );
+    const closeEasing = Easing.bezier(
+      interactionMotion.libraryDetailCloseEasing[0],
+      interactionMotion.libraryDetailCloseEasing[1],
+      interactionMotion.libraryDetailCloseEasing[2],
+      interactionMotion.libraryDetailCloseEasing[3],
+    );
 
     if (libraryPanel === renderedLibraryPanel) {
       Animated.timing(libraryPanelAnim, {
-        duration: interactionMotion.settingsPanelMs,
-        easing: Easing.out(Easing.cubic),
+        duration: renderedLibraryPanel === 'list' ? interactionMotion.settingsPanelMs : interactionMotion.libraryDetailMs,
+        easing: openEasing,
         toValue: 1,
         useNativeDriver,
       }).start();
@@ -1360,8 +1371,8 @@ function Word7000App() {
     }
 
     Animated.timing(libraryPanelAnim, {
-      duration: interactionMotion.settingsPanelExitMs,
-      easing: Easing.in(Easing.cubic),
+      duration: interactionMotion.libraryDetailExitMs,
+      easing: closeEasing,
       toValue: 0,
       useNativeDriver,
     }).start(({ finished }) => {
@@ -1392,6 +1403,7 @@ function Word7000App() {
     libraryWindowStartRef.current = 0;
     setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
+    setLibraryPanelDirection('back');
     setLibraryPanel('list');
     setRenderedLibraryPanel('list');
   }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, searchQuery]);
@@ -2025,10 +2037,12 @@ function Word7000App() {
 
   function openLibraryWordDetail(word: WordEntry) {
     setSelectedLibraryWord(word);
+    setLibraryPanelDirection('forward');
     setLibraryPanel('detail');
   }
 
   function closeLibraryWordDetail() {
+    setLibraryPanelDirection('back');
     setLibraryPanel('list');
   }
 
@@ -2638,7 +2652,7 @@ function Word7000App() {
           showsVerticalScrollIndicator={false}
           style={IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll}
         >
-          <Animated.View style={[styles.screenMotion, screenMotionStyle]}>
+          <Animated.View style={[styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}>
           {activeTab === 'home' && (
             <HomeView
               dailyPercent={dailyPercent}
@@ -2750,7 +2764,10 @@ function Word7000App() {
                 onListLayout={handleLibraryListLayout}
                 onLevelChange={setActiveLevel}
                 onOpenWord={openLibraryWordDetail}
-                onOpenCustomSets={() => setLibraryPanel('sets')}
+                onOpenCustomSets={() => {
+                  setLibraryPanelDirection('forward');
+                  setLibraryPanel('sets');
+                }}
                 onQueryChange={handleLibraryQueryChange}
                 onQueryClear={clearLibrarySearch}
                 onSearchBlur={() => setSearchFocused(false)}
@@ -2897,7 +2914,10 @@ function Word7000App() {
                 studyMode={studyMode}
                 vocabularyWords={vocabularyWords}
                 onAddManualCustomWord={handleAddManualCustomWord}
-                onBack={() => setLibraryPanel('list')}
+                onBack={() => {
+                  setLibraryPanelDirection('back');
+                  setLibraryPanel('list');
+                }}
                 onCreateCustomSet={handleCreateCustomSet}
                 onCustomSetSelect={setSelectedCustomSetId}
                 onCustomSetSortChange={setCustomSetSort}
@@ -4700,6 +4720,15 @@ function LibraryView({
       },
     ],
   };
+  const searchBoxWebTransition: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          transitionDuration: '180ms',
+          transitionProperty: 'background-color, border-color, box-shadow, transform',
+          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+          willChange: 'background-color, border-color, box-shadow, transform',
+        }
+      : undefined;
 
   return (
     <View style={styles.screenStack}>
@@ -4715,7 +4744,7 @@ function LibraryView({
 
         <View style={styles.libraryTopControlsInset}>
           <Animated.View style={searchMotionStyle}>
-            <View style={[styles.searchBox, themeStyles?.searchBox, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
+            <View style={[styles.searchBox, themeStyles?.searchBox, searchBoxWebTransition, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
               <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
               <TextInput
                 onChangeText={onQueryChange}
@@ -5599,11 +5628,35 @@ function ProfileCustomSetsView({
   const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
   const ui = modeInterfaceCopy[studyMode];
   const [customSetPanel, setCustomSetPanel] = useState<CustomSetPanel>('list');
+  const [renderedCustomSetPanel, setRenderedCustomSetPanel] = useState<CustomSetPanel>('list');
   const selectedSet = customSets.find((set) => set.id === selectedCustomSetId) ?? customSets[0] ?? null;
   const selectedSetWords = wordsForCustomSet(vocabularyWords, selectedSet);
   const [editingSetId, setEditingSetId] = useState<string | null>(selectedSet?.id ?? null);
   const [editingSetName, setEditingSetName] = useState(selectedSet?.name ?? '');
-  const isDetailPanel = customSetPanel === 'detail' && selectedSet;
+  const customSetPanelAnim = useRef(new Animated.Value(1)).current;
+  const isDetailPanel = renderedCustomSetPanel === 'detail' && selectedSet;
+  const customSetPanelEnteringX =
+    renderedCustomSetPanel === 'list' ? -interactionMotion.panelSlideX : interactionMotion.panelSlideX;
+  const customSetPanelMotionStyle = {
+    opacity: customSetPanelAnim.interpolate({
+      inputRange: [0, 0.2, 1],
+      outputRange: [0, 0.74, 1],
+    }),
+    transform: [
+      {
+        translateX: customSetPanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [customSetPanelEnteringX, 0],
+        }),
+      },
+      {
+        scale: customSetPanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [interactionMotion.panelPushScale, 1],
+        }),
+      },
+    ],
+  };
   const sortOptions: Array<{ id: CustomSetSort; label: string }> = [
     { id: 'recent', label: ui.customSetSortRecent },
     { id: 'name', label: ui.customSetSortName },
@@ -5626,6 +5679,39 @@ function ProfileCustomSetsView({
       setCustomSetPanel('list');
     }
   }, [customSetPanel, selectedSet]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const useNativeDriver = Platform.OS !== 'web';
+
+    if (customSetPanel === renderedCustomSetPanel) {
+      Animated.timing(customSetPanelAnim, {
+        duration: interactionMotion.settingsPanelMs,
+        easing: Easing.out(Easing.cubic),
+        toValue: 1,
+        useNativeDriver,
+      }).start();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    Animated.timing(customSetPanelAnim, {
+      duration: interactionMotion.settingsPanelExitMs,
+      easing: Easing.in(Easing.cubic),
+      toValue: 0,
+      useNativeDriver,
+    }).start(({ finished }) => {
+      if (finished && !cancelled) {
+        customSetPanelAnim.setValue(0);
+        setRenderedCustomSetPanel(customSetPanel);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [customSetPanel, customSetPanelAnim, renderedCustomSetPanel]);
 
   function openSetDetail(setId: string) {
     onCustomSetSelect(setId);
@@ -5650,7 +5736,8 @@ function ProfileCustomSetsView({
         </Text>
       </AnimatedPressable>
 
-      {customSetPanel === 'list' && (
+      <Animated.View style={customSetPanelMotionStyle} testID="custom-set-panel-transition">
+      {renderedCustomSetPanel === 'list' && (
         <View style={styles.screenStack} testID="custom-set-list-panel">
           <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
             <View style={styles.rowBetween}>
@@ -5753,7 +5840,7 @@ function ProfileCustomSetsView({
         </View>
       )}
 
-      {customSetPanel === 'detail' && selectedSet && (
+      {renderedCustomSetPanel === 'detail' && selectedSet && (
         <View style={styles.screenStack} testID="custom-set-detail-panel">
           <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
             <View style={styles.rowBetween}>
@@ -5928,6 +6015,7 @@ function ProfileCustomSetsView({
           </View>
         </View>
       )}
+      </Animated.View>
     </View>
   );
 }

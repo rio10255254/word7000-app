@@ -2185,6 +2185,7 @@ export default function App() {
               onKnown={() => studyWord && handleKnown(studyWord.id)}
               onLevelChange={setStudyLevel}
               onReview={() => studyWord && handleReview(studyWord.id)}
+              onAddToSet={handleOpenSetPicker}
               onFavorite={() => studyWord && setProgress((current) => toggleFavorite(current, studyWord.id))}
             />
           )}
@@ -3351,6 +3352,7 @@ function StudyView({
   word,
   progress,
   onClearActiveSet,
+  onAddToSet,
   onFilterChange,
   onFiltersToggle,
   onFavorite,
@@ -3372,6 +3374,7 @@ function StudyView({
   wordCount: number;
   progress: ProgressState;
   onClearActiveSet: () => void;
+  onAddToSet: (word: WordEntry) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
   onFavorite: () => void;
@@ -3431,15 +3434,27 @@ function StudyView({
           <View style={styles.groupPill}>
             <Text style={styles.groupText}>{word.group}</Text>
           </View>
-          <AnimatedPressable
-            accessibilityLabel={favorited ? ui.unfavoriteWord : ui.favoriteWord}
-            accessibilityRole="button"
-            onPress={onFavorite}
-            pressTone="icon"
-            style={styles.iconButton}
-          >
-            <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
-          </AnimatedPressable>
+          <View style={styles.studyCardActions}>
+            <AnimatedPressable
+              accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
+              accessibilityRole="button"
+              onPress={() => onAddToSet(word)}
+              pressTone="icon"
+              style={[styles.iconButton, styles.addToSetIconButton]}
+              testID="study-add-to-set"
+            >
+              <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
+            </AnimatedPressable>
+            <AnimatedPressable
+              accessibilityLabel={favorited ? ui.unfavoriteWord : ui.favoriteWord}
+              accessibilityRole="button"
+              onPress={onFavorite}
+              pressTone="icon"
+              style={styles.iconButton}
+            >
+              <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
+            </AnimatedPressable>
+          </View>
         </View>
         <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
           {formatWordPrimary(word, studyMode)}
@@ -3991,9 +4006,11 @@ function LibraryView({
     <View style={styles.screenStack}>
       <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
         <View style={styles.libraryHeaderRow}>
-          <View>
+          <View style={styles.libraryHeaderTitleLine}>
             <Text style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>{copy.libraryTitle}</Text>
-            <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.filteredCount(words.length)}</Text>
+            <View style={[styles.libraryHeaderMetaPill, themeStyles?.libraryHeaderMetaPill]} testID="library-filtered-count-pill">
+              <Text style={[styles.libraryHeaderMetaPillText, themeStyles?.libraryHeaderMetaPillText]}>{ui.filteredCount(words.length)}</Text>
+            </View>
           </View>
         </View>
 
@@ -4069,41 +4086,43 @@ function LibraryView({
           />
         </View>
 
-        <View style={[styles.libraryCustomSetsStrip, themeStyles?.libraryCustomSetsStrip]} testID="library-custom-sets">
-          <View style={styles.rowBetween}>
-            <View style={styles.libraryCustomSetsTitleRow}>
-              <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
-                <Library size={18} color={bodyIconColor} strokeWidth={2.3} />
-              </View>
-              <View>
-                <Text style={[styles.libraryCustomSetsTitle, themeStyles?.libraryCustomSetsTitle]}>{ui.customSets}</Text>
-                <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.customSetsSummary(customSets.length)}</Text>
-              </View>
+      </View>
+
+      <View style={[styles.libraryCustomSetsCard, themeStyles?.libraryCustomSetsCard]} testID="library-custom-sets-card">
+        <View style={styles.libraryCustomSetsHeader}>
+          <View style={styles.libraryCustomSetsTitleRow}>
+            <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+              <Library size={18} color={bodyIconColor} strokeWidth={2.3} />
             </View>
-            <AnimatedPressable accessibilityRole="button" onPress={onOpenCustomSets} pressTone="secondary" style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}>
-              <Text style={[styles.libraryManageSetsText, themeStyles?.libraryTopButtonText]}>{ui.openCustomSets}</Text>
-            </AnimatedPressable>
+            <View style={styles.flexOne}>
+              <Text style={[styles.libraryCustomSetsTitle, themeStyles?.libraryCustomSetsTitle]}>{ui.customSets}</Text>
+              <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.customSetsSummary(customSets.length)}</Text>
+            </View>
           </View>
-          {customSets.length > 0 ? (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
-              {customSets.slice(0, 4).map((set) => (
-                <AnimatedPressable
-                  accessibilityRole="button"
-                  key={set.id}
-                  onPress={onOpenCustomSets}
-                  pressTone="chip"
-                  style={[styles.libraryCustomSetChip, themeStyles?.filterChip]}
-                >
-                  <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
-                  <Text style={[styles.filterText, themeStyles?.filterText]}>{set.name}</Text>
-                  <Text style={[styles.libraryCustomSetCount, themeStyles?.libraryHeaderMeta]}>{set.wordIds.length}</Text>
-                </AnimatedPressable>
-              ))}
-            </ScrollView>
-          ) : (
-            <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.noCustomSets}</Text>
-          )}
+          <AnimatedPressable accessibilityRole="button" onPress={onOpenCustomSets} pressTone="secondary" style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}>
+            <Text style={[styles.libraryManageSetsButtonLabel, themeStyles?.libraryTopButtonText]}>{ui.openCustomSets}</Text>
+            <ChevronRight size={15} color={bodyIconColor} strokeWidth={2.4} />
+          </AnimatedPressable>
         </View>
+        {customSets.length > 0 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+            {customSets.slice(0, 4).map((set) => (
+              <AnimatedPressable
+                accessibilityRole="button"
+                key={set.id}
+                onPress={onOpenCustomSets}
+                pressTone="chip"
+                style={[styles.libraryCustomSetChip, themeStyles?.filterChip]}
+              >
+                <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
+                <Text style={[styles.filterText, themeStyles?.filterText]}>{set.name}</Text>
+                <Text style={[styles.libraryCustomSetCount, themeStyles?.libraryHeaderMeta]}>{set.wordIds.length}</Text>
+              </AnimatedPressable>
+            ))}
+          </ScrollView>
+        ) : (
+          <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.noCustomSets}</Text>
+        )}
       </View>
 
       <View onLayout={onListLayout} style={styles.libraryPanel}>
@@ -6094,6 +6113,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 38,
   },
+  studyCardActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
   bigWord: {
     color: '#172033',
     fontSize: 42,
@@ -6540,16 +6564,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  libraryHeaderTitleLine: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flex: 1,
+    gap: 9,
+    justifyContent: 'space-between',
+  },
   libraryHeaderTitle: {
     color: '#172033',
     fontSize: 17,
     fontWeight: '900',
+    flexShrink: 0,
   },
   libraryHeaderMeta: {
     color: '#717987',
     fontSize: 13,
     fontWeight: '700',
     marginTop: 3,
+  },
+  libraryHeaderMetaPill: {
+    alignItems: 'center',
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexShrink: 1,
+    justifyContent: 'center',
+    minHeight: 28,
+    paddingHorizontal: 9,
+  },
+  libraryHeaderMetaPillText: {
+    color: '#1d4ed8',
+    fontSize: 12,
+    fontWeight: '900',
   },
   libraryTopButton: {
     alignItems: 'center',
@@ -6567,7 +6615,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '900',
   },
-  libraryCustomSetsStrip: {
+  libraryCustomSetsCard: {
     backgroundColor: '#f8fafc',
     borderColor: '#e5e7eb',
     borderRadius: 8,
@@ -6576,11 +6624,18 @@ const styles = StyleSheet.create({
     padding: 11,
     paddingRight: 32,
   },
+  libraryCustomSetsHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'space-between',
+  },
   libraryCustomSetsTitleRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    flexShrink: 1,
+    flex: 1,
     gap: 9,
+    minWidth: 0,
   },
   libraryCustomSetsTitle: {
     color: '#172033',
@@ -6593,11 +6648,14 @@ const styles = StyleSheet.create({
     borderColor: '#cbd5e1',
     borderRadius: 8,
     borderWidth: 1,
+    flexDirection: 'row',
+    flexShrink: 0,
+    gap: 4,
     justifyContent: 'center',
-    minHeight: 36,
-    paddingHorizontal: 10,
+    minHeight: 34,
+    paddingHorizontal: 9,
   },
-  libraryManageSetsText: {
+  libraryManageSetsButtonLabel: {
     color: '#172033',
     fontSize: 12,
     fontWeight: '900',
@@ -8156,9 +8214,16 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#111827',
     borderColor: '#334155',
   },
-  libraryCustomSetsStrip: {
+  libraryCustomSetsCard: {
     backgroundColor: '#182033',
     borderColor: '#334155',
+  },
+  libraryHeaderMetaPill: {
+    backgroundColor: '#0b1f3a',
+    borderColor: '#1d4ed8',
+  },
+  libraryHeaderMetaPillText: {
+    color: '#bfdbfe',
   },
   libraryHeaderTitle: {
     color: '#f8fafc',

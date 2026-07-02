@@ -543,9 +543,37 @@ describe('free web launch configuration', () => {
 
     expect(librarySource).toContain('customSets,');
     expect(librarySource).toContain('onOpenCustomSets,');
-    expect(librarySource).toContain('testID="library-custom-sets"');
-    expect(librarySource).toContain('styles.libraryCustomSetsStrip');
+    expect(librarySource).toContain('testID="library-custom-sets-card"');
+    expect(librarySource).toContain('styles.libraryCustomSetsCard');
     expect(librarySource).not.toContain('testID="library-top-return"');
     expect(profileOverviewSource).not.toContain('accessibilityLabel={ui.openCustomSets}');
+  });
+
+  test('keeps custom sets as a separate library card with compact header count', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const libraryStart = appSource.indexOf('function LibraryView({');
+    const libraryEnd = appSource.indexOf('function LibraryWordDetailView({');
+    const librarySource = appSource.slice(libraryStart, libraryEnd);
+
+    expect(librarySource).toContain('testID="library-filtered-count-pill"');
+    expect(librarySource).toContain('testID="library-custom-sets-card"');
+    expect(librarySource).toContain('styles.libraryCustomSetsCard');
+    expect(librarySource).toContain('styles.libraryManageSetsButtonLabel');
+    expect(librarySource).not.toContain('styles.libraryCustomSetsStrip');
+  });
+
+  test('adds a custom-set button to the study word card', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const studyStart = appSource.indexOf('function StudyView({');
+    const studyEnd = appSource.indexOf('function FilterControlPanel({');
+    const appStudyCallStart = appSource.indexOf('<StudyView');
+    const appStudyCallEnd = appSource.indexOf('/>', appStudyCallStart);
+    const studySource = appSource.slice(studyStart, studyEnd);
+    const studyCallSource = appSource.slice(appStudyCallStart, appStudyCallEnd);
+
+    expect(studyCallSource).toContain('onAddToSet={handleOpenSetPicker}');
+    expect(studySource).toContain('onAddToSet,');
+    expect(studySource).toContain('testID="study-add-to-set"');
+    expect(studySource).toContain('ui.addToSetName(formatWordPrimary(word, studyMode))');
   });
 });

@@ -60,6 +60,7 @@ import {
   libraryListScrollTarget,
   recenteredWordWindowFromScroll,
   scrollThumbOffset,
+  shouldSyncLibraryWindowFromScroll,
   wordIndexFromLibraryScroll,
   wordWindowStartFromSlider,
 } from './src/lib/libraryNavigation';
@@ -1383,18 +1384,19 @@ export default function App() {
   }
 
   function syncLibraryWindowFromScroll(nextScrollY: number, previousScrollY: number) {
+    const currentWindowStart = libraryWindowStartRef.current;
+
     if (
       activeTab !== 'library' ||
       libraryPanel !== 'list' ||
       selectedLibraryWord ||
       libraryWords.length <= LIBRARY_WINDOW_SIZE ||
       libraryListTopYRef.current <= 0 ||
-      nextScrollY < libraryListTopYRef.current
+      !shouldSyncLibraryWindowFromScroll(nextScrollY, libraryListTopYRef.current, currentWindowStart)
     ) {
       return;
     }
 
-    const currentWindowStart = libraryWindowStartRef.current;
     const recentered = recenteredWordWindowFromScroll(
       currentWindowStart,
       nextScrollY,

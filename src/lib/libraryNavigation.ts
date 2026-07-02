@@ -66,6 +66,10 @@ export function wordIndexFromLibraryScroll(
   return clamp(boundedWindowStart + boundedLocalRows, 0, maxStart);
 }
 
+export function shouldSyncLibraryWindowFromScroll(scrollY: number, listTopY: number, windowStart: number): boolean {
+  return scrollY >= listTopY || windowStart > 0;
+}
+
 export function recenteredWordWindowFromScroll(
   windowStart: number,
   scrollY: number,
@@ -92,8 +96,9 @@ export function recenteredWordWindowFromScroll(
 
   if (localRows < backwardAnchor && boundedWindowStart > 0) {
     const shift = Math.min(backwardAnchor - localRows, boundedWindowStart);
+    const anchoredScrollY = Math.max(scrollY, listTopY);
     return {
-      scrollY: Math.round(scrollY + shift * safeItemExtent),
+      scrollY: Math.round(anchoredScrollY + shift * safeItemExtent),
       windowStart: boundedWindowStart - shift,
     };
   }

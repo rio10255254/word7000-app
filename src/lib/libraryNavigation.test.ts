@@ -4,6 +4,7 @@ import {
   recenteredWordWindowFromScroll,
   scrollTargetFromSlider,
   scrollThumbOffset,
+  shouldSyncLibraryWindowFromScroll,
   wordIndexFromLibraryScroll,
   wordWindowStartFromSlider,
 } from './libraryNavigation';
@@ -49,6 +50,18 @@ describe('library slider navigation', () => {
 
     expect(
       recenteredWordWindowFromScroll(300, 300 + 20 * 170, 300, 170, 7000, 260, {
+        forwardAnchor: 150,
+        backwardAnchor: 58,
+      }),
+    ).toEqual({ scrollY: 300 + 58 * 170, windowStart: 262 });
+  });
+
+  test('keeps fast upward flings inside the list when earlier virtual rows still exist', () => {
+    expect(shouldSyncLibraryWindowFromScroll(40, 300, 320)).toBe(true);
+    expect(shouldSyncLibraryWindowFromScroll(40, 300, 0)).toBe(false);
+
+    expect(
+      recenteredWordWindowFromScroll(320, 40, 300, 170, 7000, 260, {
         forwardAnchor: 150,
         backwardAnchor: 58,
       }),

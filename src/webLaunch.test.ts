@@ -569,9 +569,12 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('setRenderedLibraryPanel(libraryPanel);');
     expect(appSource).toContain('libraryPanelMotionStyle');
     expect(appSource).toContain('libraryListPanelHorizontalMotionStyle');
-    expect(appSource).toContain('libraryListPanelVisibleStyle');
-    expect(appSource).toContain("libraryPanel === 'list' ? libraryListPanelVisibleStyle : styles.libraryPanelHidden");
-    expect(appSource).toContain("libraryPanelAnim.setValue(libraryPanel === 'list' ? 1 : 0);");
+    expect(appSource).toContain('libraryListPanelReturnMotionStyle');
+    expect(appSource).toContain("libraryPanel === 'list' ? libraryListPanelReturnMotionStyle : styles.libraryPanelHidden");
+    expect(appSource).toContain('const libraryPanelTransitionOutMs =');
+    expect(appSource).toContain("libraryPanel === 'list' ? interactionMotion.settingsPanelMs : interactionMotion.settingsPanelExitMs");
+    expect(appSource).toContain('duration: libraryPanelTransitionOutMs');
+    expect(appSource).toContain('libraryPanelAnim.setValue(libraryPanel === \'list\' ? 1 : 0);');
     expect(appSource).toContain('libraryListPanelMotionStyle');
     expect(appSource).toContain('libraryDetailStageMotionStyle');
     expect(appSource).toContain("transformOrigin: 'top center'");

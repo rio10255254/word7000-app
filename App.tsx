@@ -1089,9 +1089,22 @@ function Word7000App() {
       },
     ],
   };
-  const libraryListPanelVisibleStyle = {
+  const libraryListPanelReturnMotionStyle = {
     opacity: 1,
-    transform: [{ translateX: 0 }],
+    transform: [
+      {
+        translateX: libraryPanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -12],
+        }),
+      },
+      {
+        scale: libraryPanelAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [1, 0.992],
+        }),
+      },
+    ],
   };
   const libraryTransitionPerformanceStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
@@ -1103,7 +1116,7 @@ function Word7000App() {
   const libraryListPanelMotionStyle = [
     renderedLibraryPanel === 'list'
       ? libraryListPanelHorizontalMotionStyle
-      : libraryPanel === 'list' ? libraryListPanelVisibleStyle : styles.libraryPanelHidden,
+      : libraryPanel === 'list' ? libraryListPanelReturnMotionStyle : styles.libraryPanelHidden,
     libraryTransitionPerformanceStyle,
   ];
   const libraryDetailStageMotionStyle = [
@@ -1368,8 +1381,10 @@ function Word7000App() {
       };
     }
 
+    const libraryPanelTransitionOutMs =
+      libraryPanel === 'list' ? interactionMotion.settingsPanelMs : interactionMotion.settingsPanelExitMs;
     Animated.timing(libraryPanelAnim, {
-      duration: interactionMotion.settingsPanelExitMs,
+      duration: libraryPanelTransitionOutMs,
       easing: Easing.in(Easing.cubic),
       toValue: 0,
       useNativeDriver,

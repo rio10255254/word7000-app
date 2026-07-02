@@ -1,0 +1,3432 @@
+[
+  {
+    "word": "banner",
+    "example": "A bright banner above the entrance welcomed visitors to the science fair.",
+    "exampleZh": "入口上方的鮮明旗幟歡迎訪客參加科學展。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "incur",
+    "example": "A rushed design can incur extra costs if the team discovers problems after production starts.",
+    "exampleZh": "如果團隊在生產開始後才發現問題，倉促的設計可能會產生額外成本。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "resentment",
+    "example": "His resentment grew quietly after he was blamed for a mistake he did not make.",
+    "exampleZh": "他因為被怪罪一個不是他犯的錯，怨恨慢慢累積。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "inject",
+    "example": "The nurse explained each step before she began to inject the medicine into his arm.",
+    "exampleZh": "護理師在開始把藥物注射進他的手臂前，先說明了每個步驟。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "loom",
+    "example": "Dark clouds began to loom over the stadium just as the final game started.",
+    "exampleZh": "決賽剛開始時，烏雲就開始在體育場上方逼近。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "automobile",
+    "example": "The museum displayed an early automobile to show how transportation changed in the last century.",
+    "exampleZh": "博物館展示了一輛早期汽車，用來說明上個世紀交通如何改變。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "exert",
+    "example": "The athlete had to exert steady pressure on the pedal during the final test.",
+    "exampleZh": "運動員在最後測試中必須對踏板施加穩定壓力。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pal",
+    "example": "He wrote a quick note to his old pal before leaving for college.",
+    "exampleZh": "他在去讀大學前，給老朋友寫了一張簡短便條。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "viewpoint",
+    "example": "Her viewpoint changed after she heard how the decision affected younger students.",
+    "exampleZh": "聽到這項決定如何影響低年級學生後，她的觀點改變了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fond",
+    "example": "He became fond of the quiet library because it gave him space to think.",
+    "exampleZh": "他漸漸喜歡那間安靜的圖書館，因為那裡給他思考的空間。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "reactor",
+    "example": "Engineers shut down the reactor after the sensors reported an unusual rise in temperature.",
+    "exampleZh": "感測器回報溫度異常上升後，工程師關閉了反應爐。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hispanic",
+    "example": "The school invited a hispanic writer to speak about language, family, and identity.",
+    "exampleZh": "學校邀請一位西語裔作家談語言、家庭與身分認同。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "microphone",
+    "example": "The microphone stopped working just as the speaker began the final announcement.",
+    "exampleZh": "講者正要開始最後公告時，麥克風突然壞了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "balcony",
+    "example": "They watched the parade from a small balcony above the crowded street.",
+    "exampleZh": "他們從擁擠街道上方的小陽台觀看遊行。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "crossing",
+    "example": "The crossing was closed after the flood damaged the traffic lights.",
+    "exampleZh": "洪水損壞紅綠燈後，那個路口被封閉。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "maid",
+    "example": "A young maid asked a thoughtful question that changed the direction of the discussion.",
+    "exampleZh": "一位年輕少女提出一個深思熟慮的問題，改變了討論方向。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "corps",
+    "example": "The medical corps arrived after midnight and began treating patients in the temporary shelter.",
+    "exampleZh": "醫療隊在午夜後抵達，開始在臨時收容所治療病患。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lone",
+    "example": "A lone bicycle stood outside the station long after the last train had left.",
+    "exampleZh": "最後一班火車離開很久後，一台孤零零的腳踏車仍停在車站外。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "destiny",
+    "example": "She did not believe destiny alone would decide her future, so she worked harder than anyone.",
+    "exampleZh": "她不相信命運會單獨決定自己的未來，因此比任何人都更努力。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "discard",
+    "example": "Please discard the broken samples before they are mixed with the usable ones.",
+    "exampleZh": "請把破損樣品丟掉，以免和可用樣品混在一起。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "census",
+    "example": "The new census showed that the town had grown much faster than officials expected.",
+    "exampleZh": "新的普查顯示，這座城鎮成長得比官員預期快得多。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "mathematical",
+    "example": "The mathematical model worked well only after the team corrected the boundary conditions.",
+    "exampleZh": "團隊修正邊界條件後，數學模型才運作良好。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "brochure",
+    "example": "The brochure explained the museum route clearly, so visitors did not need a guide.",
+    "exampleZh": "小冊子清楚說明博物館路線，所以訪客不需要導覽。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stab",
+    "example": "He felt a sudden stab of pain when he tried to lift the heavy box.",
+    "exampleZh": "他試著搬起重箱子時，突然感到一陣刺痛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "consecutive",
+    "example": "The team won five consecutive games before losing in the final round.",
+    "exampleZh": "那支隊伍在決賽失利前連續贏了五場比賽。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "witch",
+    "example": "In the old story, the lonely witch lived beyond the forest and helped lost children.",
+    "exampleZh": "在那個古老故事裡，孤獨的女巫住在森林外，並幫助迷路的孩子。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stride",
+    "example": "He walked with a confident stride after hearing that his proposal had been accepted.",
+    "exampleZh": "聽到自己的提案被接受後，他以自信的步伐走了出去。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "misleading",
+    "example": "The headline was misleading because it ignored the most important part of the study.",
+    "exampleZh": "標題具有誤導性，因為它忽略了研究中最重要的部分。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "archive",
+    "example": "The librarian helped us archive the old photographs before their colors faded further.",
+    "exampleZh": "圖書館員幫我們把舊照片存檔，以免顏色繼續褪去。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "decisive",
+    "example": "Her decisive reply ended the argument before it could become personal.",
+    "exampleZh": "她果斷的回覆在爭論變成人身攻擊前就結束了它。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "daylight",
+    "example": "In daylight, the trail looked much safer than it had during the storm.",
+    "exampleZh": "在白天，這條小徑看起來比暴風雨中安全多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "circular",
+    "example": "The children sat in a circular arrangement so everyone could see the speaker.",
+    "exampleZh": "孩子們坐成圓形排列，讓每個人都能看到講者。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "portable",
+    "example": "The doctor carried a portable device that could check blood pressure anywhere.",
+    "exampleZh": "醫生帶著一台可攜式裝置，可以在任何地方量血壓。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sniff",
+    "example": "The class practiced sniff through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習以鼻吸氣，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "epidemic",
+    "example": "The city opened extra clinics when the epidemic began spreading through several districts.",
+    "exampleZh": "當流行病開始在幾個區域擴散時，市府加開了診所。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "warrant",
+    "example": "The police needed a warrant before they could search the apartment.",
+    "exampleZh": "警方需要搜索令才能搜查那間公寓。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "reservoir",
+    "example": "The reservoir was nearly full after three days of heavy rain.",
+    "exampleZh": "連續三天大雨後，水庫幾乎滿了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "coincidence",
+    "example": "It was a strange coincidence that both letters arrived on the same morning.",
+    "exampleZh": "兩封信在同一個早上抵達，真是奇怪的巧合。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tutor",
+    "example": "The tutor stayed after the meeting to explain the decision to several worried families.",
+    "exampleZh": "那位家庭教師在會後留下來，向幾個擔心的家庭說明這項決定。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sprinkle",
+    "example": "She wrote a new sentence with sprinkle because the original one sounded too mechanical.",
+    "exampleZh": "她用灑重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "scrape",
+    "example": "He had to scrape old paint from the door before applying a new coat.",
+    "exampleZh": "他必須先把門上的舊漆刮掉，才能重新上漆。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cocktail",
+    "example": "The cocktail tasted fresh because it had been bought at the morning market.",
+    "exampleZh": "雞尾酒吃起來很新鮮，因為是在早市買的。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dairy",
+    "example": "The store moved the dairy products to a colder section near the back.",
+    "exampleZh": "商店把乳製品移到後方較冷的區域。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "flush",
+    "example": "She wrote a new sentence with flush because the original one sounded too mechanical.",
+    "exampleZh": "她用流溢重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dessert",
+    "example": "She added a little dessert to the dish, and the flavor became much richer.",
+    "exampleZh": "她在菜裡加了一點餐後甜點，味道變得更豐富。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bleed",
+    "example": "The example showed when someone might need to bleed during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要流血。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tumble",
+    "example": "The box began to tumble down the stairs before anyone could catch it.",
+    "exampleZh": "那個箱子開始從樓梯上滾下來，沒有人來得及接住。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rental",
+    "example": "The rental agreement included insurance, but it did not cover damage to the tires.",
+    "exampleZh": "租賃合約包含保險，但不涵蓋輪胎損壞。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "forge",
+    "example": "She wrote a new sentence with forge because the original one sounded too mechanical.",
+    "exampleZh": "她用熔爐重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nun",
+    "example": "The nun opened the small library so children could read after school.",
+    "exampleZh": "那位修女開放了小圖書館，讓孩子放學後能閱讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "utilize",
+    "example": "The instructor used utilize in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把利用放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tease",
+    "example": "The teacher asked the group to tease only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才揶揄。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "beloved",
+    "example": "The beloved teacher retired after thirty years, and hundreds of students wrote thank-you cards.",
+    "exampleZh": "那位深受愛戴的老師三十年後退休，數百名學生寫了感謝卡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lace",
+    "example": "The dress had a narrow strip of lace around the collar and sleeves.",
+    "exampleZh": "那件洋裝的領口和袖口有一圈細緻蕾絲。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nutrient",
+    "example": "The teacher used nutrient to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用營養的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pea",
+    "example": "The smell of pea filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿豌豆的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "arouse",
+    "example": "In the exercise, arouse appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，喚醒和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "obscure",
+    "example": "The speaker used too much jargon, which made the main point obscure to new students.",
+    "exampleZh": "講者用了太多術語，使新生難以理解主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "adverse",
+    "example": "The trial was stopped after several patients reported an adverse reaction to the medicine.",
+    "exampleZh": "幾名病患回報藥物不良反應後，試驗被中止。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "shiver",
+    "example": "The teacher asked the group to shiver only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才顫抖。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "trauma",
+    "example": "The counselor helped him talk about trauma without forcing him to relive every detail.",
+    "exampleZh": "諮商師幫助他談論創傷，而不是強迫他重述每個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nominee",
+    "example": "Everyone listened when the nominee described what had happened in clear, simple language.",
+    "exampleZh": "當那位被提名者用清楚簡單的語言描述發生的事時，大家都仔細聽。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "erupt",
+    "example": "She wrote a new sentence with erupt because the original one sounded too mechanical.",
+    "exampleZh": "她用爆發重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "scar",
+    "example": "His scar hurt after practice, so the coach told him to rest for a while.",
+    "exampleZh": "練習後他的疤痕很痛，所以教練叫他休息一下。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "legendary",
+    "example": "Students compared legendary with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把傳說的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "defy",
+    "example": "In the exercise, defy appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，藐視和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "glorious",
+    "example": "The description became clearer once the teacher replaced a vague phrase with glorious.",
+    "exampleZh": "老師用光榮的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "goose",
+    "example": "A goose appeared near the river just as the children were packing their bags.",
+    "exampleZh": "孩子們正在收拾包包時，一隻鵝出現在河邊。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sneak",
+    "example": "In the exercise, sneak appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，鬼鬼祟祟做事和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hopeful",
+    "example": "A simple note about hopeful changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於有希望之人的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fax",
+    "example": "She cleaned the fax carefully before putting it back in the drawer.",
+    "exampleZh": "她仔細清潔傳真後，才把它放回抽屜。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "differentiate",
+    "example": "The instructor used differentiate in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把區別放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "magical",
+    "example": "The writer chose magical because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用魔術的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sip",
+    "example": "The instructor used sip in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把啜飲放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "feast",
+    "example": "The class returned to feast several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到宴會這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "jerk",
+    "example": "In the final paragraph, jerk explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，性情古怪的人說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "eternal",
+    "example": "The writer chose eternal because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用永恆的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cleaner",
+    "example": "Everyone listened when the cleaner described what had happened in clear, simple language.",
+    "exampleZh": "當那位清潔工人用清楚簡單的語言描述發生的事時，大家都仔細聽。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "recreation",
+    "example": "The students understood recreation better after comparing two very different examples.",
+    "exampleZh": "學生比較兩個很不同的例子後，更理解了娛樂。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dolphin",
+    "example": "We saw a dolphin by the fence and stayed quiet so we would not scare it away.",
+    "exampleZh": "我們在圍欄旁看到一隻海豚，於是保持安靜，免得嚇跑牠。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "absurd",
+    "example": "The teacher used absurd to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用荒謬的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "copyright",
+    "example": "The publisher checked the copyright before printing the photographs in the textbook.",
+    "exampleZh": "出版社在教科書中印刷照片前，先確認了版權。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "insure",
+    "example": "The example showed when someone might need to insure during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要保險。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "conform",
+    "example": "The class practiced conform through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習使一致，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pesticide",
+    "example": "Farmers reduced pesticide use after learning new ways to control insects naturally.",
+    "exampleZh": "農民學會自然控制害蟲的新方法後，減少了殺蟲劑使用。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "formidable",
+    "example": "The sentence felt more natural when formidable described a real person instead of an abstract label.",
+    "exampleZh": "當巨大的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "continental",
+    "example": "A continental detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個大陸的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "authorize",
+    "example": "The class practiced authorize through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習授權，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bundle",
+    "example": "A simple note about bundle changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於捆的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "intermediate",
+    "example": "The instructor used intermediate in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把中間物放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "amend",
+    "example": "The instructor used amend in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把修改放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sometime",
+    "example": "In the sentence, sometime helped connect the second idea to the first one.",
+    "exampleZh": "在這個句子裡，以前的幫助把第二個想法連接到第一個想法。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "optimism",
+    "example": "A careful discussion of optimism helped the team avoid a shallow conclusion.",
+    "exampleZh": "對樂觀主義的仔細討論，幫助團隊避免得出膚淺結論。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "predictable",
+    "example": "The sentence felt more natural when predictable described a real person instead of an abstract label.",
+    "exampleZh": "當可預言的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "whatsoever",
+    "example": "The word whatsoever sounded informal, so the student used it only in dialogue.",
+    "exampleZh": "無論什麼這個字聽起來較口語，所以學生只在對話中使用。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "throne",
+    "example": "During the discussion, throne became the detail that connected several separate points.",
+    "exampleZh": "討論中，王座成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "coordinate",
+    "example": "The teacher asked the group to coordinate only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才同等的人或物。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fury",
+    "example": "A simple note about fury changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於憤怒的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "antibiotic",
+    "example": "The class returned to antibiotic several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到抗生素這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "linen",
+    "example": "The class returned to linen several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到亞麻布這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "heroin",
+    "example": "The documentary described heroin addiction through interviews with doctors and former users.",
+    "exampleZh": "這部紀錄片透過醫師和戒癮者的訪談描述海洛因成癮。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "insufficient",
+    "example": "The teacher used insufficient to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用不夠的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rebellion",
+    "example": "The article mentioned rebellion only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到謀反，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rattle",
+    "example": "The instructor used rattle in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把使嘎嘎響放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "anchor",
+    "example": "In the final paragraph, anchor explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，錨說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cylinder",
+    "example": "During the discussion, cylinder became the detail that connected several separate points.",
+    "exampleZh": "討論中，圓筒成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "aboard",
+    "example": "Everyone was already aboard the ferry when the captain announced a weather delay.",
+    "exampleZh": "船長宣布因天氣延誤時，所有人都已經在渡輪上。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lieutenant",
+    "example": "A young lieutenant asked a thoughtful question that changed the direction of the discussion.",
+    "exampleZh": "一位年輕中尉提出一個深思熟慮的問題，改變了討論方向。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "challenging",
+    "example": "A challenging detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個挑戰的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "obsession",
+    "example": "The debate over obsession became more serious once people connected it to real consequences.",
+    "exampleZh": "當大家把困擾和真實後果連結起來後，關於困擾的辯論變得更嚴肅。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "snack",
+    "example": "She packed a small snack because the meeting was expected to last until evening.",
+    "exampleZh": "她準備了一份小點心，因為會議預計會持續到傍晚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "deficiency",
+    "example": "A careful discussion of deficiency helped the team avoid a shallow conclusion.",
+    "exampleZh": "對缺乏的仔細討論，幫助團隊避免得出膚淺結論。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "deploy",
+    "example": "The instructor used deploy in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把展開放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "implicit",
+    "example": "The sentence felt more natural when implicit described a real person instead of an abstract label.",
+    "exampleZh": "當暗示的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cafe",
+    "example": "We chose a quiet cafe near the station so we could revise the report together.",
+    "exampleZh": "我們選了車站附近一間安靜的咖啡館，好一起修改報告。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "flourish",
+    "example": "The instructor used flourish in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把繁榮放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bump",
+    "example": "The class practiced bump through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習撞擊，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "mistress",
+    "example": "In the novel, the mistress of the house controls nearly every conversation at dinner.",
+    "exampleZh": "在小說中，女主人幾乎掌控了晚餐時的每一段談話。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "compassion",
+    "example": "Her compassion showed when she stayed late to help a stranger fill out the form.",
+    "exampleZh": "她留下來幫陌生人填表時，展現了同情心。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "inflict",
+    "example": "The teacher asked the group to inflict only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才施以。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nationwide",
+    "example": "The writer chose nationwide because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用全國性的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cultivate",
+    "example": "The instructor used cultivate in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把培養放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pipeline",
+    "example": "The old pipeline leaked near the river, so the company stopped pumping water.",
+    "exampleZh": "舊管線在河邊漏水，因此公司停止抽水。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "territorial",
+    "example": "Students compared territorial with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把領土的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stereotype",
+    "example": "The film tried to challenge the stereotype that scientists are cold and socially awkward.",
+    "exampleZh": "這部電影試圖挑戰科學家冷漠又不擅社交的刻板印象。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "vigorous",
+    "example": "Students compared vigorous with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把精力充沛的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "countless",
+    "example": "The description became clearer once the teacher replaced a vague phrase with countless.",
+    "exampleZh": "老師用數不盡的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "postpone",
+    "example": "The class practiced postpone through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習延遲，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "peach",
+    "example": "The peach was so ripe that juice ran down her hand after one bite.",
+    "exampleZh": "那顆桃子熟到她咬一口後，果汁就沿著手流下來。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "mug",
+    "example": "The smell of mug filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿有柄大杯的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "explosive",
+    "example": "During the discussion, explosive became the detail that connected several separate points.",
+    "exampleZh": "討論中，炸藥成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sausage",
+    "example": "The smell of sausage filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿香腸的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "enclose",
+    "example": "The example showed when someone might need to enclose during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要圍繞。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "offset",
+    "example": "The report treated offset as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把抵消視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "graphic",
+    "example": "The teacher used graphic to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用生動的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "migrant",
+    "example": "Everyone listened when the migrant described what had happened in clear, simple language.",
+    "exampleZh": "當那位候鳥用清楚簡單的語言描述發生的事時，大家都仔細聽。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "glare",
+    "example": "The class returned to glare several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到閃耀光這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "correction",
+    "example": "The report linked correction to broader social changes rather than treating it as a private issue.",
+    "exampleZh": "報告將訂正連結到更廣泛的社會變化，而不是把它視為私人問題。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "collision",
+    "example": "The meaning of collision became clearer when the teacher placed it in a real conflict.",
+    "exampleZh": "老師把碰撞放進真實衝突中後，它的意思變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "flock",
+    "example": "The article mentioned flock only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到獸群，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ironic",
+    "example": "The sentence felt more natural when ironic described a real person instead of an abstract label.",
+    "exampleZh": "當冷嘲的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "antibody",
+    "example": "The article mentioned antibody only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到抗體，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "chap",
+    "example": "The experienced chap noticed a small problem that everyone else had missed.",
+    "exampleZh": "那位經驗豐富的小夥子注意到其他人都漏看的小問題。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dash",
+    "example": "The report treated dash as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把衝撞視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "posture",
+    "example": "Several examples of posture appeared in the article, but only one was easy to understand.",
+    "exampleZh": "文章中出現幾個姿勢的例子，但只有一個容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "mob",
+    "example": "The report treated mob as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把暴民視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "junk",
+    "example": "The class returned to junk several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到垃圾這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "conductor",
+    "example": "The report treated conductor as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把領導者視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fairy",
+    "example": "The class returned to fairy several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到仙女這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "drought",
+    "example": "A simple note about drought changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於乾旱的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "memorable",
+    "example": "A memorable detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個值得紀念的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "militia",
+    "example": "The teacher used militia in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把義勇軍放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "denounce",
+    "example": "The example showed when someone might need to denounce during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要告發。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "upgrade",
+    "example": "In the final paragraph, upgrade explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，上坡說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dinosaur",
+    "example": "The injured dinosaur was taken to a shelter where volunteers could care for it.",
+    "exampleZh": "那隻受傷的恐龍被送到收容所，讓志工照顧。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "destructive",
+    "example": "The writer chose destructive because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用毀滅性的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "compatible",
+    "example": "The description became clearer once the teacher replaced a vague phrase with compatible.",
+    "exampleZh": "老師用能共處的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lodge",
+    "example": "We waited near the lodge until the guide returned with the tickets.",
+    "exampleZh": "我們在小屋附近等待，直到導遊拿票回來。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "moisture",
+    "example": "The report linked moisture to broader social changes rather than treating it as a private issue.",
+    "exampleZh": "報告將溼氣連結到更廣泛的社會變化，而不是把它視為私人問題。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "vine",
+    "example": "The class returned to vine several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到藤本植物這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sunshine",
+    "example": "The article mentioned sunshine only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到陽光，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "respectable",
+    "example": "A respectable detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個值得尊重的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "handicap",
+    "example": "The report treated handicap as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把障礙視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pillar",
+    "example": "The report treated pillar as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把柱子視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hull",
+    "example": "The teacher used hull in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把殼放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "quantum",
+    "example": "In the final paragraph, quantum explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，量說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cereal",
+    "example": "The smell of cereal filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿穀類食品的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "uneasy",
+    "example": "The teacher used uneasy to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用心神不安的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "salesman",
+    "example": "Everyone listened when the salesman described what had happened in clear, simple language.",
+    "exampleZh": "當那位售貨員用清楚簡單的語言描述發生的事時，大家都仔細聽。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "competing",
+    "example": "A competing detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個相互矛盾的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sickness",
+    "example": "The students understood sickness better after comparing two very different examples.",
+    "exampleZh": "學生比較兩個很不同的例子後，更理解了疾病。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "prop",
+    "example": "The class returned to prop several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到支柱這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "reconcile",
+    "example": "The instructor used reconcile in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把使和解放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "notorious",
+    "example": "The sentence felt more natural when notorious described a real person instead of an abstract label.",
+    "exampleZh": "當聲名狼藉的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fishery",
+    "example": "We waited near the fishery until the guide returned with the tickets.",
+    "exampleZh": "我們在漁業附近等待，直到導遊拿票回來。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "leaflet",
+    "example": "A volunteer handed me a leaflet explaining where to find medical help.",
+    "exampleZh": "一名志工遞給我一張傳單，說明去哪裡尋求醫療協助。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "vicious",
+    "example": "Students compared vicious with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把邪惡的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "spontaneous",
+    "example": "Students compared spontaneous with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把自然的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bulletin",
+    "example": "The school posted a bulletin about the schedule change near the main gate.",
+    "exampleZh": "學校在大門附近貼出一則關於時程變更的公告。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "confidential",
+    "example": "The sentence felt more natural when confidential described a real person instead of an abstract label.",
+    "exampleZh": "當機密的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "villager",
+    "example": "The villager arrived early, reviewed the documents, and waited quietly near the entrance.",
+    "exampleZh": "那位村民提早抵達，查看文件後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "batch",
+    "example": "The class returned to batch several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到一次所烘的麵包這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "feminine",
+    "example": "The description became clearer once the teacher replaced a vague phrase with feminine.",
+    "exampleZh": "老師用女性的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "torch",
+    "example": "The torch looked ordinary, but it later became important evidence in the case.",
+    "exampleZh": "火把看起來很普通，但後來成了案件中的重要證據。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "isle",
+    "example": "They reached the isle before sunset and found the entrance almost empty.",
+    "exampleZh": "他們在日落前抵達小島，發現入口幾乎沒有人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tense",
+    "example": "The description became clearer once the teacher replaced a vague phrase with tense.",
+    "exampleZh": "老師用緊張的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "curse",
+    "example": "During the discussion, curse became the detail that connected several separate points.",
+    "exampleZh": "討論中，咒罵成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "juvenile",
+    "example": "A young juvenile asked a thoughtful question that changed the direction of the discussion.",
+    "exampleZh": "一位年輕少年提出一個深思熟慮的問題，改變了討論方向。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "acquaintance",
+    "example": "The acquaintance stayed after the meeting to explain the decision to several worried families.",
+    "exampleZh": "那位認識在會後留下來，向幾個擔心的家庭說明這項決定。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "flick",
+    "example": "The teacher used flick in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把快速的輕打放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "humble",
+    "example": "The sentence felt more natural when humble described a real person instead of an abstract label.",
+    "exampleZh": "當低下的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cane",
+    "example": "They packed the cane in a separate box so it would not be damaged.",
+    "exampleZh": "他們把手杖另外裝在一個盒子裡，以免受損。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "wary",
+    "example": "The writer chose wary because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用謹慎的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bark",
+    "example": "Her explanation of bark was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對樹皮的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "intensify",
+    "example": "The instructor used intensify in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把加強放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cherry",
+    "example": "They served cherry after the meeting because everyone had skipped lunch.",
+    "exampleZh": "他們在會後端上櫻桃，因為大家都沒吃午餐。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "aftermath",
+    "example": "Her essay used aftermath to show how one small decision can affect many people.",
+    "exampleZh": "她的文章用結果說明一個小決定如何影響許多人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "velvet",
+    "example": "They packed the velvet in a separate box so it would not be damaged.",
+    "exampleZh": "他們把天鵝絨另外裝在一個盒子裡，以免受損。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "haven",
+    "example": "They reached the haven before sunset and found the entrance almost empty.",
+    "exampleZh": "他們在日落前抵達港，發現入口幾乎沒有人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ham",
+    "example": "She added ham to the sandwich because there was no chicken left in the fridge.",
+    "exampleZh": "因為冰箱裡沒有雞肉了，她把火腿加進三明治裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "strap",
+    "example": "She cleaned the strap carefully before putting it back in the drawer.",
+    "exampleZh": "她仔細清潔帶後，才把它放回抽屜。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "photographic",
+    "example": "Students compared photographic with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把照相的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "outrage",
+    "example": "Her essay used outrage to show how one small decision can affect many people.",
+    "exampleZh": "她的文章用暴行說明一個小決定如何影響許多人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sanctuary",
+    "example": "The road to the sanctuary was closed after heavy rain damaged the bridge.",
+    "exampleZh": "大雨損壞橋梁後，通往聖所指教堂的道路被封閉。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "virgin",
+    "example": "Her explanation of virgin was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對處女的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "span",
+    "example": "The teacher used span in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把指距放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "circus",
+    "example": "The map showed a small circus behind the station, but it was hard to find.",
+    "exampleZh": "地圖顯示車站後方有一個小馬戲團，但很難找到。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "parcel",
+    "example": "The old parcel broke during the trip, so they had to borrow another one.",
+    "exampleZh": "舊包裹在旅途中壞了，所以他們只好再借一個。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cowboy",
+    "example": "Her explanation of cowboy was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對牛仔的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "prestige",
+    "example": "The teacher used prestige in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把聲望放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "handy",
+    "example": "A handy detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個便利的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "compelling",
+    "example": "A compelling detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個強制的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "melody",
+    "example": "A simple note about melody changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於曲子的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "indulge",
+    "example": "In the exercise, indulge appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，縱情於和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "paradise",
+    "example": "A simple note about paradise changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於天堂的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "resent",
+    "example": "The class practiced resent through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習憤恨，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "miniature",
+    "example": "Several examples of miniature appeared in the article, but only one was easy to understand.",
+    "exampleZh": "文章中出現幾個縮圖的例子，但只有一個容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "restrain",
+    "example": "In the exercise, restrain appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，抑制和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "zoo",
+    "example": "The article mentioned zoo only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到動物園，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "terminate",
+    "example": "The description became clearer once the teacher replaced a vague phrase with terminate.",
+    "exampleZh": "老師用有結尾的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "attendant",
+    "example": "The teacher used attendant in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把隨從放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "gauge",
+    "example": "Her explanation of gauge was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對標準度量的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "slogan",
+    "example": "During the discussion, slogan became the detail that connected several separate points.",
+    "exampleZh": "討論中，吶喊聲成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "jewel",
+    "example": "The teacher used jewel in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把珠寶放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tariff",
+    "example": "During the discussion, tariff became the detail that connected several separate points.",
+    "exampleZh": "討論中，關稅成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "disastrous",
+    "example": "Students compared disastrous with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把損失慘重的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "naive",
+    "example": "Students compared naive with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把天真的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "seasonal",
+    "example": "The writer chose seasonal because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用季節的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stitch",
+    "example": "During the discussion, stitch became the detail that connected several separate points.",
+    "exampleZh": "討論中，一針成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "linger",
+    "example": "The class practiced linger through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習逗留，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "referee",
+    "example": "During the discussion, referee became the detail that connected several separate points.",
+    "exampleZh": "討論中，仲裁人成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "specialized",
+    "example": "The teacher used specialized to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用專門的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "skeleton",
+    "example": "The class returned to skeleton several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到骨骼這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lime",
+    "example": "The smell of lime filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿石灰的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "overhead",
+    "example": "A simple note about overhead changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於經常開支的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "complement",
+    "example": "Several examples of complement appeared in the article, but only one was easy to understand.",
+    "exampleZh": "文章中出現幾個補足物的例子，但只有一個容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dim",
+    "example": "Students compared dim with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把暗淡的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "vow",
+    "example": "In the final paragraph, vow explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，誓約說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hail",
+    "example": "The teacher used hail in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把冰雹放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "eve",
+    "example": "During the discussion, eve became the detail that connected several separate points.",
+    "exampleZh": "討論中，前夕成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stain",
+    "example": "The class returned to stain several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到汙染這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bacon",
+    "example": "The smell of bacon filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿燻豬肉的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "astonishing",
+    "example": "An astonishing detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個令人驚訝的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fabulous",
+    "example": "The teacher used fabulous to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用傳說的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "prone",
+    "example": "The writer chose prone because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用俯伏的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "strawberry",
+    "example": "The strawberry tasted fresh because it had been bought at the morning market.",
+    "exampleZh": "草莓吃起來很新鮮，因為是在早市買的。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lasting",
+    "example": "A lasting detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個永久的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "novelist",
+    "example": "During the discussion, novelist became the detail that connected several separate points.",
+    "exampleZh": "討論中，小說家成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "plantation",
+    "example": "The debate over plantation became more serious once people connected it to real consequences.",
+    "exampleZh": "當大家把種植園和真實後果連結起來後，關於種植園的辯論變得更嚴肅。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fibre",
+    "example": "The smell of fibre filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿纖維的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "transplant",
+    "example": "The teacher asked the group to transplant only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才使移居。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bowel",
+    "example": "His bowel hurt after practice, so the coach told him to rest for a while.",
+    "exampleZh": "練習後他的腸很痛，所以教練叫他休息一下。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "distort",
+    "example": "The teacher asked the group to distort only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才扭曲。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "startle",
+    "example": "The article mentioned startle only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到驚愕，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ample",
+    "example": "The sentence felt more natural when ample described a real person instead of an abstract label.",
+    "exampleZh": "當大量的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "swift",
+    "example": "Her explanation of swift was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對褐雨燕的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "gorgeous",
+    "example": "The teacher used gorgeous to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用華麗的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "deter",
+    "example": "The teacher asked the group to deter only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才制止。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "potent",
+    "example": "The writer chose potent because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用有力的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "heap",
+    "example": "The teacher used heap in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把堆放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rag",
+    "example": "During the discussion, rag became the detail that connected several separate points.",
+    "exampleZh": "討論中，碎布成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lure",
+    "example": "The students understood lure better after comparing two very different examples.",
+    "exampleZh": "學生比較兩個很不同的例子後，更理解了餌。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "settler",
+    "example": "The experienced settler noticed a small problem that everyone else had missed.",
+    "exampleZh": "那位經驗豐富的移民者注意到其他人都漏看的小問題。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "applause",
+    "example": "The class returned to applause several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到鼓掌這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ponder",
+    "example": "The class practiced ponder through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習沉思，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "saddle",
+    "example": "The article mentioned saddle only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到鞍，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "injustice",
+    "example": "During the discussion, injustice became the detail that connected several separate points.",
+    "exampleZh": "討論中，不公平成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "minus",
+    "example": "The class returned to minus several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到負號這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "recycle",
+    "example": "The instructor used recycle in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把使再循環放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "prototype",
+    "example": "In the final paragraph, prototype explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，原型說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "microwave",
+    "example": "The article mentioned microwave only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到微波，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dreadful",
+    "example": "A dreadful detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個可怕的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "thoughtful",
+    "example": "The sentence felt more natural when thoughtful described a real person instead of an abstract label.",
+    "exampleZh": "當深思的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "inhabit",
+    "example": "The class practiced inhabit through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習居住於，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "visa",
+    "example": "The report treated visa as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把簽證視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "doubtful",
+    "example": "The teacher used doubtful to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用可疑的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "grace",
+    "example": "Her explanation of grace was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對優雅的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "promoter",
+    "example": "A simple note about promoter changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於促進者的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "applaud",
+    "example": "She wrote a new sentence with applaud because the original one sounded too mechanical.",
+    "exampleZh": "她用拍手喝彩重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "slash",
+    "example": "The example showed when someone might need to slash during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要猛砍。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "underestimate",
+    "example": "The instructor used underestimate in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把低估放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hike",
+    "example": "In the final paragraph, hike explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，徒步旅行說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "eventual",
+    "example": "The teacher used eventual to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用最後的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "petty",
+    "example": "The sentence felt more natural when petty described a real person instead of an abstract label.",
+    "exampleZh": "當瑣碎的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tug",
+    "example": "The report treated tug as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把用力拉視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fake",
+    "example": "Her explanation of fake was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對假貨的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hop",
+    "example": "The teacher used hop in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把單腳跳放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "uphold",
+    "example": "The instructor used uphold in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把支撐放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "disguise",
+    "example": "The example showed when someone might need to disguise during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要假面目。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "humanitarian",
+    "example": "The class returned to humanitarian several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到人道主義者這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cube",
+    "example": "In the final paragraph, cube explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，立方體說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "wicked",
+    "example": "The teacher used wicked to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用壞的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "diplomacy",
+    "example": "The debate over diplomacy became more serious once people connected it to real consequences.",
+    "exampleZh": "當大家把外交和真實後果連結起來後，關於外交的辯論變得更嚴肅。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "adhere",
+    "example": "The teacher asked the group to adhere only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才依附。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "clan",
+    "example": "A simple note about clan changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於氏族的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "siege",
+    "example": "During the discussion, siege became the detail that connected several separate points.",
+    "exampleZh": "討論中，包圍成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "honesty",
+    "example": "The teacher used honesty in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把誠實放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "autonomous",
+    "example": "The writer chose autonomous because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用自治的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "postcard",
+    "example": "The postcard looked ordinary, but it later became important evidence in the case.",
+    "exampleZh": "明信片看起來很普通，但後來成了案件中的重要證據。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sunset",
+    "example": "The teacher used sunset in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把日落放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "unveil",
+    "example": "The teacher asked the group to unveil only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才揭開。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "infinite",
+    "example": "In the final paragraph, infinite explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，無限說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "lethal",
+    "example": "A lethal detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個致命的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "gossip",
+    "example": "Her explanation of gossip was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對閒聊的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fearful",
+    "example": "The writer chose fearful because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用可怕的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "appliance",
+    "example": "The students understood appliance better after comparing two very different examples.",
+    "exampleZh": "學生比較兩個很不同的例子後，更理解了器械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "regiment",
+    "example": "A careful discussion of regiment helped the team avoid a shallow conclusion.",
+    "exampleZh": "對軍隊團的仔細討論，幫助團隊避免得出膚淺結論。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "drip",
+    "example": "In the final paragraph, drip explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，水滴說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "embryo",
+    "example": "A simple note about embryo changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於胚胎的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "physicist",
+    "example": "The teacher used physicist in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把物理學家放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "corrupt",
+    "example": "The writer chose corrupt because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用腐敗的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "royalty",
+    "example": "The teacher used royalty in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把皇室放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "roller",
+    "example": "The teacher used roller in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把滾筒放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "affirm",
+    "example": "The instructor used affirm in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把斷言放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "perch",
+    "example": "During the discussion, perch became the detail that connected several separate points.",
+    "exampleZh": "討論中，棲木成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "slump",
+    "example": "The class returned to slump several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到暴跌這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "expel",
+    "example": "In the exercise, expel appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，驅逐和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "compulsory",
+    "example": "The description became clearer once the teacher replaced a vague phrase with compulsory.",
+    "exampleZh": "老師用被強制的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "crouch",
+    "example": "The teacher used crouch in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把蹲伏放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "repay",
+    "example": "The example showed when someone might need to repay during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要償還。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cushion",
+    "example": "The teacher used cushion in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把墊子放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "spotlight",
+    "example": "The report treated spotlight as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把照明燈視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "utter",
+    "example": "The writer chose utter because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用全然的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "trio",
+    "example": "In the final paragraph, trio explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，三重唱說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "helpless",
+    "example": "A helpless detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個無助的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "oblige",
+    "example": "She wrote a new sentence with oblige because the original one sounded too mechanical.",
+    "exampleZh": "她用強制重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bout",
+    "example": "The class returned to bout several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到一回這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "intriguing",
+    "example": "The sentence felt more natural when intriguing described a real person instead of an abstract label.",
+    "exampleZh": "當吸引人的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "precaution",
+    "example": "The debate over precaution became more serious once people connected it to real consequences.",
+    "exampleZh": "當大家把預防和真實後果連結起來後，關於預防的辯論變得更嚴肅。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "vinegar",
+    "example": "Her explanation of vinegar was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對醋的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nurture",
+    "example": "The speaker described nurture as a hidden force behind several public decisions.",
+    "exampleZh": "講者把養育描述為幾項公共決策背後的隱藏力量。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bald",
+    "example": "The writer chose bald because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用禿頭的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "agony",
+    "example": "During the discussion, agony became the detail that connected several separate points.",
+    "exampleZh": "討論中，極大的痛苦成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "overturn",
+    "example": "The report treated overturn as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把傾覆視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "morale",
+    "example": "In the final paragraph, morale explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，士氣說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dedicated",
+    "example": "The sentence felt more natural when dedicated described a real person instead of an abstract label.",
+    "exampleZh": "當專注的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rainbow",
+    "example": "The class returned to rainbow several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到彩虹這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dwarf",
+    "example": "During the discussion, dwarf became the detail that connected several separate points.",
+    "exampleZh": "討論中，矮子成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "thrill",
+    "example": "A simple note about thrill changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於震顫的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "olive",
+    "example": "The class returned to olive several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到橄欖這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "commonwealth",
+    "example": "The report linked commonwealth to broader social changes rather than treating it as a private issue.",
+    "exampleZh": "報告將共和國連結到更廣泛的社會變化，而不是把它視為私人問題。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "voyage",
+    "example": "Her essay used voyage to show how one small decision can affect many people.",
+    "exampleZh": "她的文章用航行說明一個小決定如何影響許多人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "grill",
+    "example": "Her explanation of grill was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對烤架的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "imminent",
+    "example": "Students compared imminent with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把即將來臨的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "escort",
+    "example": "The class returned to escort several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到護送者這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ivory",
+    "example": "The article mentioned ivory only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到象牙，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cassette",
+    "example": "In the final paragraph, cassette explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，盒式磁帶說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "wardrobe",
+    "example": "A simple note about wardrobe changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於衣櫥的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "underline",
+    "example": "In the exercise, underline appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，在下面劃線和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cement",
+    "example": "Her essay used cement to show how one small decision can affect many people.",
+    "exampleZh": "她的文章用水泥說明一個小決定如何影響許多人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "robust",
+    "example": "The sentence felt more natural when robust described a real person instead of an abstract label.",
+    "exampleZh": "當健康的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "preside",
+    "example": "She wrote a new sentence with preside because the original one sounded too mechanical.",
+    "exampleZh": "她用統轄重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hurdle",
+    "example": "The class returned to hurdle several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到障礙這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "comet",
+    "example": "The class returned to comet several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到彗星這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "communal",
+    "example": "The description became clearer once the teacher replaced a vague phrase with communal.",
+    "exampleZh": "老師用公有的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "loosen",
+    "example": "The class practiced loosen through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習放鬆，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "sway",
+    "example": "In the final paragraph, sway explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，搖擺說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "default",
+    "example": "The article mentioned default only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到違約，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "outrageous",
+    "example": "The description became clearer once the teacher replaced a vague phrase with outrageous.",
+    "exampleZh": "老師用暴虐的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ripe",
+    "example": "The writer chose ripe because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用成熟的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fixture",
+    "example": "Her essay used fixture to show how one small decision can affect many people.",
+    "exampleZh": "她的文章用固定狀態說明一個小決定如何影響許多人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bleak",
+    "example": "The teacher used bleak to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用蕭瑟的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "whisky",
+    "example": "The article mentioned whisky only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到威士忌酒，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "align",
+    "example": "The teacher asked the group to align only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才排列。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "premature",
+    "example": "The teacher used premature to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用早產的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "discomfort",
+    "example": "A simple note about discomfort changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於困苦的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "splash",
+    "example": "Her explanation of splash was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對飛濺的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nutrition",
+    "example": "A careful discussion of nutrition helped the team avoid a shallow conclusion.",
+    "exampleZh": "對營養的仔細討論，幫助團隊避免得出膚淺結論。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "shrub",
+    "example": "The report treated shrub as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把矮樹視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "consolidate",
+    "example": "The example showed when someone might need to consolidate during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要鞏固。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hardship",
+    "example": "The report linked hardship to broader social changes rather than treating it as a private issue.",
+    "exampleZh": "報告將艱難連結到更廣泛的社會變化，而不是把它視為私人問題。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nationality",
+    "example": "The meaning of nationality became clearer when the teacher placed it in a real conflict.",
+    "exampleZh": "老師把國籍放進真實衝突中後，它的意思變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tick",
+    "example": "During the discussion, tick became the detail that connected several separate points.",
+    "exampleZh": "討論中，滴答聲成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "gum",
+    "example": "The teacher used gum in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把樹膠放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "accessory",
+    "example": "During the discussion, accessory became the detail that connected several separate points.",
+    "exampleZh": "討論中，附件成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dub",
+    "example": "She wrote a new sentence with dub because the original one sounded too mechanical.",
+    "exampleZh": "她用配音重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ditch",
+    "example": "Her explanation of ditch was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對溝渠的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "artery",
+    "example": "The class returned to artery several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到動脈這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "disperse",
+    "example": "The teacher asked the group to disperse only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才分散。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "groan",
+    "example": "The class returned to groan several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到呻吟這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "verge",
+    "example": "The class returned to verge several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到邊緣這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "contention",
+    "example": "A careful discussion of contention helped the team avoid a shallow conclusion.",
+    "exampleZh": "對爭論的仔細討論，幫助團隊避免得出膚淺結論。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "voucher",
+    "example": "The report treated voucher as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把證人視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "cynical",
+    "example": "The teacher used cynical to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用憤世嫉俗的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "symphony",
+    "example": "A simple note about symphony changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於交響樂的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fitting",
+    "example": "Students compared fitting with a similar word to understand the small difference in tone.",
+    "exampleZh": "學生把適宜的和一個相近詞比較，以理解語氣上的細微差別。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bud",
+    "example": "In the final paragraph, bud explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，芽說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "massacre",
+    "example": "The report treated massacre as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把大屠殺視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "unpredictable",
+    "example": "The teacher used unpredictable to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用不可預知的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "imaginative",
+    "example": "The writer chose imaginative because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用想像的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pony",
+    "example": "A simple note about pony changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於矮種馬的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "facial",
+    "example": "The report treated facial as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把美顏視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "heroic",
+    "example": "A heroic detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個英勇的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "inferior",
+    "example": "The description became clearer once the teacher replaced a vague phrase with inferior.",
+    "exampleZh": "老師用次等的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pest",
+    "example": "The teacher used pest in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把令人討厭之物放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "asylum",
+    "example": "The article mentioned asylum only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到庇護，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "submarine",
+    "example": "Her explanation of submarine was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對潛水艇的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "envisage",
+    "example": "The example showed when someone might need to envisage during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要面對。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "incidentally",
+    "example": "The word incidentally sounded informal, so the student used it only in dialogue.",
+    "exampleZh": "伴隨地這個字聽起來較口語，所以學生只在對話中使用。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "audio",
+    "example": "The writer chose audio because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用音頻的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "prestigious",
+    "example": "The sentence felt more natural when prestigious described a real person instead of an abstract label.",
+    "exampleZh": "當享有聲望的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "subscription",
+    "example": "The speaker described subscription as a hidden force behind several public decisions.",
+    "exampleZh": "講者把捐獻描述為幾項公共決策背後的隱藏力量。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "outset",
+    "example": "The article mentioned outset only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到著手，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rite",
+    "example": "In the final paragraph, rite explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，儀式說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "marathon",
+    "example": "The article mentioned marathon only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到馬拉松，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rap",
+    "example": "During the discussion, rap became the detail that connected several separate points.",
+    "exampleZh": "討論中，輕敲成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "perfume",
+    "example": "The class returned to perfume several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到香水這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ambiguous",
+    "example": "The teacher used ambiguous to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用不明確的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "terrify",
+    "example": "In the exercise, terrify appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，使恐懼和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pudding",
+    "example": "The speaker described pudding as a hidden force behind several public decisions.",
+    "exampleZh": "講者把布丁描述為幾項公共決策背後的隱藏力量。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stun",
+    "example": "In the exercise, stun appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，使昏迷和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "deepen",
+    "example": "She wrote a new sentence with deepen because the original one sounded too mechanical.",
+    "exampleZh": "她用深化重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "tread",
+    "example": "The article mentioned tread only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到踏，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rivalry",
+    "example": "During the discussion, rivalry became the detail that connected several separate points.",
+    "exampleZh": "討論中，競爭成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "rigorous",
+    "example": "The teacher used rigorous to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用嚴厲的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "expire",
+    "example": "She wrote a new sentence with expire because the original one sounded too mechanical.",
+    "exampleZh": "她用期滿重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "prose",
+    "example": "During the discussion, prose became the detail that connected several separate points.",
+    "exampleZh": "討論中，散文成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "withhold",
+    "example": "The class practiced withhold through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習使停止，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "scarce",
+    "example": "The description became clearer once the teacher replaced a vague phrase with scarce.",
+    "exampleZh": "老師用難得的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "decree",
+    "example": "The report treated decree as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把法令視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "detain",
+    "example": "The teacher asked the group to detain only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才扣留。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "artillery",
+    "example": "In the final paragraph, artillery explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，火炮說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "fracture",
+    "example": "Her essay used fracture to show how one small decision can affect many people.",
+    "exampleZh": "她的文章用破碎說明一個小決定如何影響許多人。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "redundancy",
+    "example": "The report linked redundancy to broader social changes rather than treating it as a private issue.",
+    "exampleZh": "報告將過多連結到更廣泛的社會變化，而不是把它視為私人問題。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "charitable",
+    "example": "The description became clearer once the teacher replaced a vague phrase with charitable.",
+    "exampleZh": "老師用大慈大悲的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bilateral",
+    "example": "The teacher used bilateral to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用有兩邊的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "procession",
+    "example": "The debate over procession became more serious once people connected it to real consequences.",
+    "exampleZh": "當大家把隊伍和真實後果連結起來後，關於隊伍的辯論變得更嚴肅。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "grove",
+    "example": "During the discussion, grove became the detail that connected several separate points.",
+    "exampleZh": "討論中，小樹林成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "violin",
+    "example": "The teacher used violin in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把小提琴放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "displace",
+    "example": "The instructor used displace in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把移置放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stereo",
+    "example": "During the discussion, stereo became the detail that connected several separate points.",
+    "exampleZh": "討論中，鉛版成了連結幾個分散重點的細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "asthma",
+    "example": "In the final paragraph, asthma explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，哮喘說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "insistence",
+    "example": "The speaker described insistence as a hidden force behind several public decisions.",
+    "exampleZh": "講者把堅持描述為幾項公共決策背後的隱藏力量。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "blur",
+    "example": "The class practiced blur through a short situation rather than memorizing only the translation.",
+    "exampleZh": "全班透過一個簡短情境練習使模糊，而不是只背中文翻譯。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "weary",
+    "example": "The writer chose weary because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用疲倦的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "aviation",
+    "example": "Several examples of aviation appeared in the article, but only one was easy to understand.",
+    "exampleZh": "文章中出現幾個航空的例子，但只有一個容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "electorate",
+    "example": "The article mentioned electorate only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到選民，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "steward",
+    "example": "She answered steward because the question required more than a simple yes or no.",
+    "exampleZh": "她管理人地回答，因為這個問題不是簡單的是或否就能解決。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "compost",
+    "example": "The report treated compost as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把混合物視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "goddess",
+    "example": "The teacher used goddess in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把女神放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "resistant",
+    "example": "Her explanation of resistant was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對抵抗者的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "unbelievable",
+    "example": "The teacher used unbelievable to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用難以置信的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "demise",
+    "example": "The instructor used demise in a longer sentence so students could see the action in context.",
+    "exampleZh": "老師把崩放進較長的句子裡，讓學生能在脈絡中理解這個動作。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "nickname",
+    "example": "In the final paragraph, nickname explained why the earlier evidence mattered.",
+    "exampleZh": "在最後一段中，綽號說明了前面的證據為何重要。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "enlarge",
+    "example": "In the exercise, enlarge appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，擴大和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "turmoil",
+    "example": "The teacher used turmoil in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把騷動放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "indictment",
+    "example": "The debate over indictment became more serious once people connected it to real consequences.",
+    "exampleZh": "當大家把起訴和真實後果連結起來後，關於起訴的辯論變得更嚴肅。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "deteriorate",
+    "example": "The teacher asked the group to deteriorate only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才使惡化。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dial",
+    "example": "The teacher used dial in a practical example instead of giving only a definition.",
+    "exampleZh": "老師把刻度盤放進實用例子中，而不是只給定義。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "pastry",
+    "example": "The smell of pastry filled the kitchen while the family prepared dinner together.",
+    "exampleZh": "一家人一起準備晚餐時，廚房充滿油酥點心的味道。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "dismantle",
+    "example": "In the exercise, dismantle appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，拆除的設備和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "chess",
+    "example": "The class returned to chess several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到國際象棋這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "swap",
+    "example": "The article mentioned swap only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到以貨易貨，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hen",
+    "example": "They served hen after the meeting because everyone had skipped lunch.",
+    "exampleZh": "他們在會後端上母雞，因為大家都沒吃午餐。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "intercourse",
+    "example": "The article mentioned intercourse only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到交往，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "foresee",
+    "example": "In the exercise, foresee appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，預見和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bait",
+    "example": "A simple note about bait changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於餌的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stark",
+    "example": "The writer chose stark because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用僵硬的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "energetic",
+    "example": "An energetic detail in the story made the character’s decision easier to understand.",
+    "exampleZh": "故事中一個精力充沛的細節，讓角色的決定更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "postwar",
+    "example": "The teacher used postwar to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用戰後的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "upright",
+    "example": "The sentence felt more natural when upright described a real person instead of an abstract label.",
+    "exampleZh": "當正直的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "plague",
+    "example": "Her explanation of plague was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對瘟疫的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "freight",
+    "example": "The class returned to freight several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到船貨這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "migrate",
+    "example": "The example showed when someone might need to migrate during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要移動。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "outing",
+    "example": "The debate over outing became more serious once people connected it to real consequences.",
+    "exampleZh": "當大家把郊遊和真實後果連結起來後，關於郊遊的辯論變得更嚴肅。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "giggle",
+    "example": "In the exercise, giggle appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，吃吃地笑和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "postal",
+    "example": "The sentence felt more natural when postal described a real person instead of an abstract label.",
+    "exampleZh": "當郵政的用來描述真實人物，而不是抽象標籤時，句子自然多了。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "wedge",
+    "example": "The report treated wedge as part of a larger problem rather than an isolated detail.",
+    "exampleZh": "報告把楔子視為更大問題的一部分，而不是孤立細節。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "wreck",
+    "example": "Her explanation of wreck was clearer after she added one real-life situation.",
+    "exampleZh": "她加入一個真實生活情境後，對失事的解釋變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "monarch",
+    "example": "The article mentioned monarch only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到帝王，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "mediate",
+    "example": "The description became clearer once the teacher replaced a vague phrase with mediate.",
+    "exampleZh": "老師用居間的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "conquer",
+    "example": "The example showed when someone might need to conquer during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要克服。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "definitive",
+    "example": "The article mentioned definitive only briefly, but the example helped the class understand the idea.",
+    "exampleZh": "文章只簡短提到限定詞，但那個例子幫助全班理解這個概念。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "wholesale",
+    "example": "The class returned to wholesale several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到批發這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "moan",
+    "example": "The teacher asked the group to moan only after they understood the whole situation.",
+    "exampleZh": "老師要求小組在理解整個情境後才呻吟。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "bloom",
+    "example": "The example showed when someone might need to bloom during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要花。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "erode",
+    "example": "The example showed when someone might need to erode during a real conversation.",
+    "exampleZh": "這個例句展示人在真實對話中什麼時候可能需要腐蝕。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "query",
+    "example": "In the exercise, query appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，疑問和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "congratulate",
+    "example": "She wrote a new sentence with congratulate because the original one sounded too mechanical.",
+    "exampleZh": "她用祝賀重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "millionaire",
+    "example": "The class returned to millionaire several times because it kept appearing in different examples.",
+    "exampleZh": "全班好幾次回到百萬富翁這個概念，因為它不斷出現在不同例子裡。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "marxist",
+    "example": "The teacher used marxist to describe the situation after giving students a concrete example.",
+    "exampleZh": "老師先給學生一個具體例子，再用馬克思主義的描述這個情況。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "consortium",
+    "example": "A simple note about consortium changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於協會的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ignorant",
+    "example": "The writer chose ignorant because it captured the mood of the whole scene.",
+    "exampleZh": "作者選用無知識的，因為它抓住了整個場景的氣氛。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "ammunition",
+    "example": "The soldiers checked their ammunition before leaving the training area.",
+    "exampleZh": "士兵離開訓練區前檢查了彈藥。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hopeless",
+    "example": "The description became clearer once the teacher replaced a vague phrase with hopeless.",
+    "exampleZh": "老師用無希望的取代模糊短語後，描述變得更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "plight",
+    "example": "A simple note about plight changed how the group interpreted the whole situation.",
+    "exampleZh": "一段關於困境的簡單註記，改變了小組對整個情況的解讀。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "transcript",
+    "example": "The university sent his transcript directly to the scholarship committee.",
+    "exampleZh": "大學把他的成績單直接寄給獎學金委員會。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "hurl",
+    "example": "She wrote a new sentence with hurl because the original one sounded too mechanical.",
+    "exampleZh": "她用用力的投擲重寫了一個新句子，因為原本那句聽起來太機械。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "stroll",
+    "example": "In the exercise, stroll appeared with a clear subject, reason, and result.",
+    "exampleZh": "在練習中，閒逛和清楚的主詞、原因與結果一起出現。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  },
+  {
+    "word": "contender",
+    "example": "The contender arrived early, reviewed the documents, and waited quietly near the entrance.",
+    "exampleZh": "那位參賽者提早抵達，查看文件後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core10-full-2026-07-02"
+  }
+]

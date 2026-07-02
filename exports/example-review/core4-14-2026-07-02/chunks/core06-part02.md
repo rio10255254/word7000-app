@@ -1,0 +1,2193 @@
+# Word7000 Core 6 Part 2
+
+Use the rules in ../PROMPT.md.
+
+Return JSON only. Do not explain.
+
+Batch id: `gpt-review-core06-part02-2026-07-02`
+
+```json
+{
+  "batch": "gpt-review-core06-part02-2026-07-02",
+  "items": [
+    {
+      "id": "w2756",
+      "group": "Core 6",
+      "word": "grip",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "緊握, 柄, 握力, 握手方式, 手提包, 掌握, 支配, 控制；抓緊, 抱住, 吸住, 掌握；握牢, 有吸引力",
+      "currentExample": "The nurse wrote a short note about grip after the training.",
+      "currentExampleZh": "護理師在訓練後寫了一段關於緊握這方面的短筆記。"
+    },
+    {
+      "id": "w2757",
+      "group": "Core 6",
+      "word": "drift",
+      "partOfSpeech": "n / v",
+      "meaningZh": "漂流物, 漂流, 動向；(使)漂流",
+      "currentExample": "The coach wrote a short note about drift after the debate.",
+      "currentExampleZh": "教練在辯論後寫了一段關於漂流物這方面的短筆記。"
+    },
+    {
+      "id": "w2758",
+      "group": "Core 6",
+      "word": "undermine",
+      "partOfSpeech": "vt",
+      "meaningZh": "在...下面挖, 漸漸破壞, 暗地裡破壞",
+      "currentExample": "They tried to undermine the room before Friday.",
+      "currentExampleZh": "他們試著在星期五前在下面挖房間。"
+    },
+    {
+      "id": "w2759",
+      "group": "Core 6",
+      "word": "parliamentary",
+      "partOfSpeech": "a",
+      "meaningZh": "國會的, 議會的, 議會制度的",
+      "currentExample": "A parliamentary situation required extra care before the meeting.",
+      "currentExampleZh": "一個國會的情況在會議前需要額外處理。"
+    },
+    {
+      "id": "w2760",
+      "group": "Core 6",
+      "word": "barrel",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "桶；裝入桶內",
+      "currentExample": "The nurse prepared a short report on barrel before the interview.",
+      "currentExampleZh": "護理師在面試前準備了一份關於桶這方面的短報告。"
+    },
+    {
+      "id": "w2761",
+      "group": "Core 6",
+      "word": "monthly",
+      "partOfSpeech": "n / a",
+      "meaningZh": "月刊；每月的, 每月一次的",
+      "currentExample": "The designer prepared a short report on monthly before the rehearsal.",
+      "currentExampleZh": "設計師在排練前準備了一份關於月刊這方面的短報告。"
+    },
+    {
+      "id": "w2762",
+      "group": "Core 6",
+      "word": "revolutionary",
+      "partOfSpeech": "n / a",
+      "meaningZh": "革命者, 革命黨人；革命的, 革命性的",
+      "currentExample": "A revolutionary joined the lesson on time.",
+      "currentExampleZh": "一位革命者準時參加了課程。"
+    },
+    {
+      "id": "w2763",
+      "group": "Core 6",
+      "word": "squad",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "班, 小隊, 小集團；編成班",
+      "currentExample": "The nurse wrote a short note about squad after the visit.",
+      "currentExampleZh": "護理師在拜訪後寫了一段關於班這方面的短筆記。"
+    },
+    {
+      "id": "w2764",
+      "group": "Core 6",
+      "word": "fraud",
+      "partOfSpeech": "n",
+      "meaningZh": "欺騙, 欺詐, 詭計, 騙子",
+      "currentExample": "The editor prepared a short report on fraud before the review.",
+      "currentExampleZh": "編輯在檢查前準備了一份關於欺騙這方面的短報告。"
+    },
+    {
+      "id": "w2765",
+      "group": "Core 6",
+      "word": "eager",
+      "partOfSpeech": "a",
+      "meaningZh": "熱心的, 渴望的, 熱望的",
+      "currentExample": "An eager situation required extra care before the weekend.",
+      "currentExampleZh": "一個熱心的情況在週末前需要額外處理。"
+    },
+    {
+      "id": "w2766",
+      "group": "Core 6",
+      "word": "script",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "手跡, 手稿, 正本, 手寫體；改編為演出本",
+      "currentExample": "The engineer prepared a short report on script before Friday.",
+      "currentExampleZh": "工程師在星期五前準備了一份關於手跡這方面的短報告。"
+    },
+    {
+      "id": "w2767",
+      "group": "Core 6",
+      "word": "equity",
+      "partOfSpeech": "n",
+      "meaningZh": "公平, 公正",
+      "currentExample": "The driver led a class discussion about equity after the review.",
+      "currentExampleZh": "司機在檢查後帶領全班討論公平。"
+    },
+    {
+      "id": "w2768",
+      "group": "Core 6",
+      "word": "incredible",
+      "partOfSpeech": "a",
+      "meaningZh": "難以置信的",
+      "currentExample": "The incredible plan helped the team move forward after the discussion.",
+      "currentExampleZh": "難以置信的計畫在討論後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2769",
+      "group": "Core 6",
+      "word": "tide",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "潮, 潮汐, 趨勢, 潮流, 漲潮, 高潮；使隨潮漂流；順潮行駛",
+      "currentExample": "The researcher wrote a short note about tide after the practice.",
+      "currentExampleZh": "研究員在練習後寫了一段關於潮這方面的短筆記。"
+    },
+    {
+      "id": "w2770",
+      "group": "Core 6",
+      "word": "lap",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "膝蓋, 舔, 一圈, 下襬, 衣兜, 山坳；重疊, 圍住, 輕拍, 舔；包圍, 抱...在膝上, 使重疊, 舔, 拍打, 潑濺",
+      "currentExample": "The coach explained lap during class before the rehearsal.",
+      "currentExampleZh": "教練在排練前的課堂上解釋了膝蓋。"
+    },
+    {
+      "id": "w2771",
+      "group": "Core 6",
+      "word": "flexible",
+      "partOfSpeech": "a",
+      "meaningZh": "易曲的, 靈活的, 柔順的, 能變形的, 可通融的",
+      "currentExample": "The flexible plan helped the team move forward after the trip.",
+      "currentExampleZh": "易曲的計畫在旅程後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2772",
+      "group": "Core 6",
+      "word": "exploit",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "功績, 勳績；開發, 利用, 開拓, 剝削",
+      "currentExample": "The manager led a class discussion about exploit after the inspection.",
+      "currentExampleZh": "經理在檢查後帶領全班討論功績。"
+    },
+    {
+      "id": "w2773",
+      "group": "Core 6",
+      "word": "execute",
+      "partOfSpeech": "vt",
+      "meaningZh": "執行, 實行, 完成, 處死, 製成",
+      "currentExample": "Please execute the budget when you are ready.",
+      "currentExampleZh": "準備好時，請執行預算。"
+    },
+    {
+      "id": "w2774",
+      "group": "Core 6",
+      "word": "withdrawal",
+      "partOfSpeech": "n",
+      "meaningZh": "提款, 撤退, 退回, 撤消, 退隱, 戒毒過程",
+      "currentExample": "The editor prepared a short report on withdrawal before the storm.",
+      "currentExampleZh": "編輯在暴風雨前準備了一份關於提款這方面的短報告。"
+    },
+    {
+      "id": "w2775",
+      "group": "Core 6",
+      "word": "nightmare",
+      "partOfSpeech": "n",
+      "meaningZh": "夢魘, 惡夢, 可怕的事物(或情景、人物)",
+      "currentExample": "The doctor led a class discussion about nightmare after the presentation.",
+      "currentExampleZh": "醫生在簡報後帶領全班討論夢魘。"
+    },
+    {
+      "id": "w2776",
+      "group": "Core 6",
+      "word": "condemn",
+      "partOfSpeech": "vt",
+      "meaningZh": "判刑, 責備, 譴責",
+      "currentExample": "Please condemn the device when you are ready.",
+      "currentExampleZh": "準備好時，請判刑裝置。"
+    },
+    {
+      "id": "w2777",
+      "group": "Core 6",
+      "word": "charter",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "特許狀, 執照, 憲章；特許, 發給特許執照",
+      "currentExample": "The researcher explained charter during class before Friday.",
+      "currentExampleZh": "研究員在星期五前的課堂上解釋了特許狀。"
+    },
+    {
+      "id": "w2778",
+      "group": "Core 6",
+      "word": "socialist",
+      "partOfSpeech": "n",
+      "meaningZh": "社會主義者, 社會黨黨員",
+      "currentExample": "The socialist spoke with the assistant before noon.",
+      "currentExampleZh": "那位社會主義者在中午前和助理說話。"
+    },
+    {
+      "id": "w2779",
+      "group": "Core 6",
+      "word": "commissioner",
+      "partOfSpeech": "n",
+      "meaningZh": "委員, 理事, 行政長官",
+      "currentExample": "A commissioner joined the workshop on time.",
+      "currentExampleZh": "一位委員準時參加了工作坊。"
+    },
+    {
+      "id": "w2780",
+      "group": "Core 6",
+      "word": "banking",
+      "partOfSpeech": "n",
+      "meaningZh": "銀行業務",
+      "currentExample": "The researcher led a class discussion about banking after the practice.",
+      "currentExampleZh": "研究員在練習後帶領全班討論銀行業務。"
+    },
+    {
+      "id": "w2781",
+      "group": "Core 6",
+      "word": "hint",
+      "partOfSpeech": "n / v",
+      "meaningZh": "暗示, 提示；暗示, 示意",
+      "currentExample": "The manager wrote a short note about hint after the practice.",
+      "currentExampleZh": "經理在練習後寫了一段關於暗示這方面的短筆記。"
+    },
+    {
+      "id": "w2782",
+      "group": "Core 6",
+      "word": "reluctant",
+      "partOfSpeech": "a",
+      "meaningZh": "不情願的, 勉強的",
+      "currentExample": "The designer reviewed the reluctant case after the review.",
+      "currentExampleZh": "設計師在檢查後檢視了這個不情願的案例。"
+    },
+    {
+      "id": "w2783",
+      "group": "Core 6",
+      "word": "compromise",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "妥協, 折中, 折中方案, 和解；妥協處理；危害",
+      "currentExample": "The teacher gave a brief talk about compromise before breakfast.",
+      "currentExampleZh": "老師在早餐前做了一段關於妥協這方面的簡短分享。"
+    },
+    {
+      "id": "w2784",
+      "group": "Core 6",
+      "word": "sponsor",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "保證人, 贊助者, 發起者, 倡議者, 教父；發起, 贊助, 倡議",
+      "currentExample": "The sponsor spoke with the manager before the storm.",
+      "currentExampleZh": "那位保證人在暴風雨前和經理說話。"
+    },
+    {
+      "id": "w2785",
+      "group": "Core 6",
+      "word": "headline",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "大標題, 新聞摘要；為...做標題, 寫標題",
+      "currentExample": "The coach gave a brief talk about headline before class.",
+      "currentExampleZh": "教練在上課前做了一段關於大標題這方面的簡短分享。"
+    },
+    {
+      "id": "w2786",
+      "group": "Core 6",
+      "word": "shortage",
+      "partOfSpeech": "n",
+      "meaningZh": "不足, 缺乏",
+      "currentExample": "The artist explained shortage during class before the trip.",
+      "currentExampleZh": "藝術家在旅程前的課堂上解釋了不足。"
+    },
+    {
+      "id": "w2787",
+      "group": "Core 6",
+      "word": "moderate",
+      "partOfSpeech": "a / vt / vi",
+      "meaningZh": "適度的, 穩健的, 中等的, 節制的；節制, 減輕, 使緩和；變緩和, 主持會議",
+      "currentExample": "The engineer reviewed the moderate case after the practice.",
+      "currentExampleZh": "工程師在練習後檢視了這個適度的案例。"
+    },
+    {
+      "id": "w2788",
+      "group": "Core 6",
+      "word": "drain",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "排水溝, 消耗, 排水；排出, 喝光, 耗盡；排水, 流乾",
+      "currentExample": "We walked near the drain after the rehearsal.",
+      "currentExampleZh": "我們在排練後到排水溝附近散步。"
+    },
+    {
+      "id": "w2789",
+      "group": "Core 6",
+      "word": "liberty",
+      "partOfSpeech": "n",
+      "meaningZh": "自由, 特權, 許可, 冒失",
+      "currentExample": "The guide wrote a short note about liberty after the presentation.",
+      "currentExampleZh": "嚮導在簡報後寫了一段關於自由這方面的短筆記。"
+    },
+    {
+      "id": "w2790",
+      "group": "Core 6",
+      "word": "medal",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "獎牌, 勳章；授勳予",
+      "currentExample": "The neighbor gave a brief talk about medal before the interview.",
+      "currentExampleZh": "鄰居在面試前做了一段關於獎牌這方面的簡短分享。"
+    },
+    {
+      "id": "w2791",
+      "group": "Core 6",
+      "word": "diplomatic",
+      "partOfSpeech": "a",
+      "meaningZh": "外交的, 老練的",
+      "currentExample": "The manager reviewed the diplomatic case after the rehearsal.",
+      "currentExampleZh": "經理在排練後檢視了這個外交的案例。"
+    },
+    {
+      "id": "w2793",
+      "group": "Core 6",
+      "word": "actress",
+      "partOfSpeech": "n",
+      "meaningZh": "女演員",
+      "currentExample": "The actress worked carefully with the researcher.",
+      "currentExampleZh": "那位女演員仔細地和研究員合作。"
+    },
+    {
+      "id": "w2794",
+      "group": "Core 6",
+      "word": "gross",
+      "partOfSpeech": "n / a / vt",
+      "meaningZh": "總數, 總量；總共的, 未打折扣的, 惡劣的, 粗野的；總共收入",
+      "currentExample": "The neighbor wrote a short note about gross after the festival.",
+      "currentExampleZh": "鄰居在節慶後寫了一段關於總數這方面的短筆記。"
+    },
+    {
+      "id": "w2795",
+      "group": "Core 6",
+      "word": "monetary",
+      "partOfSpeech": "a",
+      "meaningZh": "貨幣的, 金錢的",
+      "currentExample": "The monetary plan helped the team move forward after the inspection.",
+      "currentExampleZh": "貨幣的計畫在檢查後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2796",
+      "group": "Core 6",
+      "word": "cave",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "洞, 穴；凹陷, 塌落；挖洞, 使凹陷, 損壞...的基礎",
+      "currentExample": "The visitor gave a brief talk about cave before the trip.",
+      "currentExampleZh": "訪客在旅程前做了一段關於洞這方面的簡短分享。"
+    },
+    {
+      "id": "w2797",
+      "group": "Core 6",
+      "word": "stem",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "莖, 幹, 柄, 船首, 血統, 堵塞物；摘掉莖, 裝柄於, 阻止, 堵住, 逆行；堵住, 逆行",
+      "currentExample": "The engineer gave a brief talk about stem before the holiday.",
+      "currentExampleZh": "工程師在假期前做了一段關於莖這方面的簡短分享。"
+    },
+    {
+      "id": "w2798",
+      "group": "Core 6",
+      "word": "civilian",
+      "partOfSpeech": "n / a",
+      "meaningZh": "平民, 民法專家；平民的, 百姓的, 民用的",
+      "currentExample": "The driver led a class discussion about civilian after the meeting.",
+      "currentExampleZh": "司機在會議後帶領全班討論平民。"
+    },
+    {
+      "id": "w2799",
+      "group": "Core 6",
+      "word": "boost",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "推進, 吹捧；推進, 提高, 宣揚, 促進",
+      "currentExample": "The engineer wrote a short note about boost after the rehearsal.",
+      "currentExampleZh": "工程師在排練後寫了一段關於推進這方面的短筆記。"
+    },
+    {
+      "id": "w2800",
+      "group": "Core 6",
+      "word": "hunter",
+      "partOfSpeech": "n",
+      "meaningZh": "獵人, 獵犬, 追求者",
+      "currentExample": "The hunter spoke with the teacher before breakfast.",
+      "currentExampleZh": "那位獵人在早餐前和老師說話。"
+    },
+    {
+      "id": "w2801",
+      "group": "Core 6",
+      "word": "overseas",
+      "partOfSpeech": "a / adv",
+      "meaningZh": "海外的, 國外的；在海外, 在國外",
+      "currentExample": "The designer chose an overseas method before the call.",
+      "currentExampleZh": "設計師在通話前選了一個海外的方法。"
+    },
+    {
+      "id": "w2802",
+      "group": "Core 6",
+      "word": "fool",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "愚人, 受騙者, 奶油拌水果；愚弄, 欺騙, 浪費；幹傻事, 開玩笑, 遊蕩；傻的",
+      "currentExample": "The fool spoke with the engineer before the storm.",
+      "currentExampleZh": "那位愚人在暴風雨前和工程師說話。"
+    },
+    {
+      "id": "w2803",
+      "group": "Core 6",
+      "word": "chaos",
+      "partOfSpeech": "n",
+      "meaningZh": "大混亂, 混沌",
+      "currentExample": "The designer wrote a short note about chaos after the training.",
+      "currentExampleZh": "設計師在訓練後寫了一段關於大混亂這方面的短筆記。"
+    },
+    {
+      "id": "w2804",
+      "group": "Core 6",
+      "word": "soccer",
+      "partOfSpeech": "n",
+      "meaningZh": "英式足球",
+      "currentExample": "The student explained soccer during class before breakfast.",
+      "currentExampleZh": "學生在早餐前的課堂上解釋了英式足球。"
+    },
+    {
+      "id": "w2805",
+      "group": "Core 6",
+      "word": "counterpart",
+      "partOfSpeech": "n",
+      "meaningZh": "副本, 複本, 配對物, 相應物",
+      "currentExample": "The neighbor prepared a short report on counterpart before the deadline.",
+      "currentExampleZh": "鄰居在期限前準備了一份關於副本這方面的短報告。"
+    },
+    {
+      "id": "w2806",
+      "group": "Core 6",
+      "word": "violate",
+      "partOfSpeech": "vt",
+      "meaningZh": "違犯, 褻瀆, 違反, 侵犯, 妨礙",
+      "currentExample": "Please violate the file when you are ready.",
+      "currentExampleZh": "準備好時，請違犯檔案。"
+    },
+    {
+      "id": "w2807",
+      "group": "Core 6",
+      "word": "ski",
+      "partOfSpeech": "n / vi",
+      "meaningZh": "滑雪橇；滑雪",
+      "currentExample": "The artist gave a brief talk about ski before the exam.",
+      "currentExampleZh": "藝術家在考試前做了一段關於滑雪橇這方面的簡短分享。"
+    },
+    {
+      "id": "w2808",
+      "group": "Core 6",
+      "word": "fleet",
+      "partOfSpeech": "n / a / adv",
+      "meaningZh": "艦隊, 港灣, 小河；快速的, 敏捷的, 淺的, 短暫的；淺；疾馳, 飛逝, 掠過；消磨, 變換船(或船員)的位置",
+      "currentExample": "The artist led a class discussion about fleet after the trip.",
+      "currentExampleZh": "藝術家在旅程後帶領全班討論艦隊。"
+    },
+    {
+      "id": "w2809",
+      "group": "Core 6",
+      "word": "overwhelming",
+      "partOfSpeech": "a",
+      "meaningZh": "壓倒性的, 無法抵抗的",
+      "currentExample": "An overwhelming situation required extra care before the holiday.",
+      "currentExampleZh": "一個壓倒性的情況在假期前需要額外處理。"
+    },
+    {
+      "id": "w2810",
+      "group": "Core 6",
+      "word": "spectacular",
+      "partOfSpeech": "a / n",
+      "meaningZh": "公開展示的, 驚人的, 壯觀的；奇觀, 驚人之舉, 展覽物",
+      "currentExample": "The teacher reviewed the spectacular case after the debate.",
+      "currentExampleZh": "老師在辯論後檢視了這個公開展示的案例。"
+    },
+    {
+      "id": "w2811",
+      "group": "Core 6",
+      "word": "youngster",
+      "partOfSpeech": "n",
+      "meaningZh": "小孩, 年輕人, 少年",
+      "currentExample": "The artist gave a brief talk about youngster before noon.",
+      "currentExampleZh": "藝術家在中午前做了一段關於小孩這方面的簡短分享。"
+    },
+    {
+      "id": "w2812",
+      "group": "Core 6",
+      "word": "molecule",
+      "partOfSpeech": "n",
+      "meaningZh": "分子, 些微",
+      "currentExample": "The student prepared a short report on molecule before the exam.",
+      "currentExampleZh": "學生在考試前準備了一份關於分子這方面的短報告。"
+    },
+    {
+      "id": "w2813",
+      "group": "Core 6",
+      "word": "corruption",
+      "partOfSpeech": "n",
+      "meaningZh": "腐敗, 墮落, 貪汙",
+      "currentExample": "The editor gave a brief talk about corruption before the deadline.",
+      "currentExampleZh": "編輯在期限前做了一段關於腐敗這方面的簡短分享。"
+    },
+    {
+      "id": "w2814",
+      "group": "Core 6",
+      "word": "stimulate",
+      "partOfSpeech": "vt / vi",
+      "meaningZh": "刺激, 激勵, 鼓舞；起刺激作用",
+      "currentExample": "We need to stimulate the display carefully before noon.",
+      "currentExampleZh": "我們需要在中午前仔細刺激展示。"
+    },
+    {
+      "id": "w2815",
+      "group": "Core 6",
+      "word": "presidency",
+      "partOfSpeech": "n",
+      "meaningZh": "總統職權, 總裁職位",
+      "currentExample": "The artist explained presidency during class before the trip.",
+      "currentExampleZh": "藝術家在旅程前的課堂上解釋了總統職權。"
+    },
+    {
+      "id": "w2816",
+      "group": "Core 6",
+      "word": "concede",
+      "partOfSpeech": "vt / vi",
+      "meaningZh": "承認, 退讓；讓步",
+      "currentExample": "Please concede the contract when you are ready.",
+      "currentExampleZh": "準備好時，請承認合約。"
+    },
+    {
+      "id": "w2817",
+      "group": "Core 6",
+      "word": "instruct",
+      "partOfSpeech": "vt",
+      "meaningZh": "教, 教育, 命令, 通知",
+      "currentExample": "Please instruct the schedule when you are ready.",
+      "currentExampleZh": "準備好時，請教時程。"
+    },
+    {
+      "id": "w2818",
+      "group": "Core 6",
+      "word": "panic",
+      "partOfSpeech": "n / a / vt",
+      "meaningZh": "恐慌, 驚慌；驚慌的, 沒有理由的, 恐慌的；使驚慌, 使狂熱；驚慌",
+      "currentExample": "The teacher wrote a short note about panic after the practice.",
+      "currentExampleZh": "老師在練習後寫了一段關於恐慌這方面的短筆記。"
+    },
+    {
+      "id": "w2819",
+      "group": "Core 6",
+      "word": "motivate",
+      "partOfSpeech": "vt",
+      "meaningZh": "給與動機, 刺激, 提高...的學習慾望, 促動",
+      "currentExample": "We need to motivate the device carefully before the exam.",
+      "currentExampleZh": "我們需要在考試前仔細給與動機裝置。"
+    },
+    {
+      "id": "w2820",
+      "group": "Core 6",
+      "word": "triumph",
+      "partOfSpeech": "n / vi",
+      "meaningZh": "凱旋, 勝利, 歡欣；得勝, 成功",
+      "currentExample": "The doctor gave a brief talk about triumph before the trip.",
+      "currentExampleZh": "醫生在旅程前做了一段關於凱旋這方面的簡短分享。"
+    },
+    {
+      "id": "w2821",
+      "group": "Core 6",
+      "word": "bat",
+      "partOfSpeech": "n / v",
+      "meaningZh": "蝙蝠, 球棒；用球棒打, 眨眼",
+      "currentExample": "The artist wrote a short note about bat after the rehearsal.",
+      "currentExampleZh": "藝術家在排練後寫了一段關於蝙蝠這方面的短筆記。"
+    },
+    {
+      "id": "w2822",
+      "group": "Core 6",
+      "word": "subsidy",
+      "partOfSpeech": "n",
+      "meaningZh": "補助金, 津貼",
+      "currentExample": "The driver led a class discussion about subsidy after the practice.",
+      "currentExampleZh": "司機在練習後帶領全班討論補助金。"
+    },
+    {
+      "id": "w2823",
+      "group": "Core 6",
+      "word": "fiscal",
+      "partOfSpeech": "a",
+      "meaningZh": "財政的, 國庫的",
+      "currentExample": "The editor reviewed the fiscal case after the discussion.",
+      "currentExampleZh": "編輯在討論後檢視了這個財政的案例。"
+    },
+    {
+      "id": "w2824",
+      "group": "Core 6",
+      "word": "casualty",
+      "partOfSpeech": "n",
+      "meaningZh": "意外事故, 傷亡, 受害者",
+      "currentExample": "The doctor wrote a short note about casualty after the discussion.",
+      "currentExampleZh": "醫生在討論後寫了一段關於意外事故這方面的短筆記。"
+    },
+    {
+      "id": "w2825",
+      "group": "Core 6",
+      "word": "fulfil",
+      "partOfSpeech": "vt",
+      "meaningZh": "實踐, 履行, 實行, 完成, 結束, 滿足",
+      "currentExample": "They tried to fulfil the map before the holiday.",
+      "currentExampleZh": "他們試著在假期前實踐地圖。"
+    },
+    {
+      "id": "w2826",
+      "group": "Core 6",
+      "word": "convict",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "囚犯, 罪犯；宣告有罪, 使知罪",
+      "currentExample": "The nurse led a class discussion about convict after the training.",
+      "currentExampleZh": "護理師在訓練後帶領全班討論囚犯。"
+    },
+    {
+      "id": "w2827",
+      "group": "Core 6",
+      "word": "edit",
+      "partOfSpeech": "vt",
+      "meaningZh": "編輯, 編校, 修訂, 剪輯",
+      "currentExample": "They tried to edit the garden before class.",
+      "currentExampleZh": "他們試著在上課前編輯花園。"
+    },
+    {
+      "id": "w2828",
+      "group": "Core 6",
+      "word": "combat",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "爭鬥, 戰鬥；戰鬥, 爭鬥；與...戰鬥, 與...鬥爭",
+      "currentExample": "The nurse gave a brief talk about combat before the deadline.",
+      "currentExampleZh": "護理師在期限前做了一段關於爭鬥這方面的簡短分享。"
+    },
+    {
+      "id": "w2829",
+      "group": "Core 6",
+      "word": "cricket",
+      "partOfSpeech": "n",
+      "meaningZh": "蟋蟀, 板球",
+      "currentExample": "The artist prepared a short report on cricket before the exam.",
+      "currentExampleZh": "藝術家在考試前準備了一份關於蟋蟀這方面的短報告。"
+    },
+    {
+      "id": "w2830",
+      "group": "Core 6",
+      "word": "trigger",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "觸發器, 扳機；觸發, 發射, 引起；鬆開扳柄",
+      "currentExample": "The teacher led a class discussion about trigger after the trial.",
+      "currentExampleZh": "老師在試驗後帶領全班討論觸發器。"
+    },
+    {
+      "id": "w2831",
+      "group": "Core 6",
+      "word": "vitamin",
+      "partOfSpeech": "n",
+      "meaningZh": "維生素",
+      "currentExample": "The researcher prepared a short report on vitamin before the weekend.",
+      "currentExampleZh": "研究員在週末前準備了一份關於維生素這方面的短報告。"
+    },
+    {
+      "id": "w2832",
+      "group": "Core 6",
+      "word": "islam",
+      "partOfSpeech": "n",
+      "meaningZh": "伊斯蘭教",
+      "currentExample": "The visitor explained islam during class before sunset.",
+      "currentExampleZh": "訪客在日落前的課堂上解釋了伊斯蘭教。"
+    },
+    {
+      "id": "w2833",
+      "group": "Core 6",
+      "word": "ray",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "光線, 射線, 閃爍, 光輝；射出光線, 浮現, 放射光線；放射, 顯出",
+      "currentExample": "The artist prepared a short report on ray before the weekend.",
+      "currentExampleZh": "藝術家在週末前準備了一份關於光線這方面的短報告。"
+    },
+    {
+      "id": "w2834",
+      "group": "Core 6",
+      "word": "disclose",
+      "partOfSpeech": "vt",
+      "meaningZh": "揭露, 透露",
+      "currentExample": "They tried to disclose the map before the holiday.",
+      "currentExampleZh": "他們試著在假期前揭露地圖。"
+    },
+    {
+      "id": "w2835",
+      "group": "Core 6",
+      "word": "dividend",
+      "partOfSpeech": "n",
+      "meaningZh": "被除數, 股利",
+      "currentExample": "The designer led a class discussion about dividend after the training.",
+      "currentExampleZh": "設計師在訓練後帶領全班討論被除數。"
+    },
+    {
+      "id": "w2836",
+      "group": "Core 6",
+      "word": "provoke",
+      "partOfSpeech": "vt",
+      "meaningZh": "激怒, 惹起, 誘導",
+      "currentExample": "They tried to provoke the ticket before breakfast.",
+      "currentExampleZh": "他們試著在早餐前激怒票券。"
+    },
+    {
+      "id": "w2837",
+      "group": "Core 6",
+      "word": "lad",
+      "partOfSpeech": "n",
+      "meaningZh": "青年, 傢伙, 少年, 情人",
+      "currentExample": "The student explained lad during class before noon.",
+      "currentExampleZh": "學生在中午前的課堂上解釋了青年。"
+    },
+    {
+      "id": "w2838",
+      "group": "Core 6",
+      "word": "merger",
+      "partOfSpeech": "n",
+      "meaningZh": "合併, 歸併",
+      "currentExample": "The student gave a brief talk about merger before breakfast.",
+      "currentExampleZh": "學生在早餐前做了一段關於合併這方面的簡短分享。"
+    },
+    {
+      "id": "w2839",
+      "group": "Core 6",
+      "word": "raid",
+      "partOfSpeech": "n / v",
+      "meaningZh": "襲擊, 突襲, 搜捕；奇襲, 搜捕",
+      "currentExample": "The engineer led a class discussion about raid after the trial.",
+      "currentExampleZh": "工程師在試驗後帶領全班討論襲擊。"
+    },
+    {
+      "id": "w2840",
+      "group": "Core 6",
+      "word": "verdict",
+      "partOfSpeech": "n",
+      "meaningZh": "裁決, 判決, 判斷性意見, 定論, 結論",
+      "currentExample": "The nurse gave a brief talk about verdict before the interview.",
+      "currentExampleZh": "護理師在面試前做了一段關於裁決這方面的簡短分享。"
+    },
+    {
+      "id": "w2841",
+      "group": "Core 6",
+      "word": "coup",
+      "partOfSpeech": "n",
+      "meaningZh": "砰然的一擊, 妙計, 出乎意料的行動, 政變",
+      "currentExample": "The artist led a class discussion about coup after the review.",
+      "currentExampleZh": "藝術家在檢查後帶領全班討論砰然的一擊。"
+    },
+    {
+      "id": "w2842",
+      "group": "Core 6",
+      "word": "resignation",
+      "partOfSpeech": "n",
+      "meaningZh": "辭職, 辭呈, 聽從",
+      "currentExample": "The editor explained resignation during class before Friday.",
+      "currentExampleZh": "編輯在星期五前的課堂上解釋了辭職。"
+    },
+    {
+      "id": "w2843",
+      "group": "Core 6",
+      "word": "fierce",
+      "partOfSpeech": "a",
+      "meaningZh": "兇猛的, 猛烈的, 熱烈的, 暴躁的",
+      "currentExample": "The visitor chose a fierce method before the trip.",
+      "currentExampleZh": "訪客在旅程前選了一個兇猛的方法。"
+    },
+    {
+      "id": "w2844",
+      "group": "Core 6",
+      "word": "lease",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "租約, 租期, 租；出租, 租出, 租得",
+      "currentExample": "The neighbor prepared a short report on lease before the deadline.",
+      "currentExampleZh": "鄰居在期限前準備了一份關於租約這方面的短報告。"
+    },
+    {
+      "id": "w2845",
+      "group": "Core 6",
+      "word": "marine",
+      "partOfSpeech": "n / a",
+      "meaningZh": "艦隊, 水兵, 海景畫；海的, 海產的, 海底的, 船舶的, 海運的",
+      "currentExample": "The visitor explained marine during class before the holiday.",
+      "currentExampleZh": "訪客在假期前的課堂上解釋了艦隊。"
+    },
+    {
+      "id": "w2846",
+      "group": "Core 6",
+      "word": "counsel",
+      "partOfSpeech": "n / v",
+      "meaningZh": "商議, 忠告, 法律顧問；商議, 勸告",
+      "currentExample": "The designer gave a brief talk about counsel before the meeting.",
+      "currentExampleZh": "設計師在會議前做了一段關於商議這方面的簡短分享。"
+    },
+    {
+      "id": "w2847",
+      "group": "Core 6",
+      "word": "declaration",
+      "partOfSpeech": "n",
+      "meaningZh": "宣告, 說明, 宣佈",
+      "currentExample": "The editor prepared a short report on declaration before the review.",
+      "currentExampleZh": "編輯在檢查前準備了一份關於宣告這方面的短報告。"
+    },
+    {
+      "id": "w2848",
+      "group": "Core 6",
+      "word": "premium",
+      "partOfSpeech": "n",
+      "meaningZh": "額外補貼, 獎金, 獎賞, 保險費",
+      "currentExample": "The designer wrote a short note about premium after the visit.",
+      "currentExampleZh": "設計師在拜訪後寫了一段關於額外補貼這方面的短筆記。"
+    },
+    {
+      "id": "w2849",
+      "group": "Core 6",
+      "word": "opt",
+      "partOfSpeech": "vi",
+      "meaningZh": "選擇",
+      "currentExample": "The doctor will opt during the presentation.",
+      "currentExampleZh": "醫生會在簡報期間選擇。"
+    },
+    {
+      "id": "w2850",
+      "group": "Core 6",
+      "word": "lobby",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "大廳, 休息室, 遊說議員者；遊說議員, 遊說；遊說",
+      "currentExample": "The teacher prepared a short report on lobby before the rehearsal.",
+      "currentExampleZh": "老師在排練前準備了一份關於大廳這方面的短報告。"
+    },
+    {
+      "id": "w2851",
+      "group": "Core 6",
+      "word": "ballot",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "投票, 投票用紙, 抽籤；投票, 抽籤；投票選出, 拉選票",
+      "currentExample": "The coach led a class discussion about ballot after the workshop.",
+      "currentExampleZh": "教練在工作坊後帶領全班討論投票。"
+    },
+    {
+      "id": "w2852",
+      "group": "Core 6",
+      "word": "rage",
+      "partOfSpeech": "n / vi",
+      "meaningZh": "憤怒, 情緒激動, 狂暴；大怒, 狂吹, 流行",
+      "currentExample": "The rage faded after the honest talk.",
+      "currentExampleZh": "坦白談話後，憤怒慢慢消退。"
+    },
+    {
+      "id": "w2853",
+      "group": "Core 6",
+      "word": "riot",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "暴動, 喧鬧, 放縱；發動, 暴動, 縱情, 放蕩；浪費, 揮霍",
+      "currentExample": "The doctor gave a brief talk about riot before breakfast.",
+      "currentExampleZh": "醫生在早餐前做了一段關於暴動這方面的簡短分享。"
+    },
+    {
+      "id": "w2854",
+      "group": "Core 6",
+      "word": "miner",
+      "partOfSpeech": "n",
+      "meaningZh": "礦工, 開礦機, 坑道工兵",
+      "currentExample": "The teacher explained miner during class before class.",
+      "currentExampleZh": "老師在上課前的課堂上解釋了礦工。"
+    },
+    {
+      "id": "w2855",
+      "group": "Core 6",
+      "word": "debut",
+      "partOfSpeech": "n / v",
+      "meaningZh": "初次登臺, 開張；初次登臺",
+      "currentExample": "The teacher gave a brief talk about debut before class.",
+      "currentExampleZh": "老師在上課前做了一段關於初次登臺這方面的簡短分享。"
+    },
+    {
+      "id": "w2856",
+      "group": "Core 6",
+      "word": "amid",
+      "partOfSpeech": "prep",
+      "meaningZh": "在其間, 在其中",
+      "currentExample": "The keys are amid the box.",
+      "currentExampleZh": "鑰匙在盒子中間。"
+    },
+    {
+      "id": "w2857",
+      "group": "Core 6",
+      "word": "banker",
+      "partOfSpeech": "n",
+      "meaningZh": "銀行家, 莊家",
+      "currentExample": "The banker spoke with the guide before the holiday.",
+      "currentExampleZh": "那位銀行家在假期前和嚮導說話。"
+    },
+    {
+      "id": "w2858",
+      "group": "Core 6",
+      "word": "shed",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "車棚, 小屋, 脫落之物, 分水嶺；使流出, 放射, 脫落, 散發, 擺脫；流出, 散佈, 脫落",
+      "currentExample": "The manager wrote a short note about shed after the discussion.",
+      "currentExampleZh": "經理在討論後寫了一段關於車棚這方面的短筆記。"
+    },
+    {
+      "id": "w2859",
+      "group": "Core 6",
+      "word": "concession",
+      "partOfSpeech": "n",
+      "meaningZh": "特許, 讓步, 認可",
+      "currentExample": "The teacher gave a brief talk about concession before class.",
+      "currentExampleZh": "老師在上課前做了一段關於特許這方面的簡短分享。"
+    },
+    {
+      "id": "w2860",
+      "group": "Core 6",
+      "word": "trader",
+      "partOfSpeech": "n",
+      "meaningZh": "商人, 商船",
+      "currentExample": "A trader joined the rehearsal on time.",
+      "currentExampleZh": "一位商人準時參加了排練。"
+    },
+    {
+      "id": "w2861",
+      "group": "Core 6",
+      "word": "commerce",
+      "partOfSpeech": "n",
+      "meaningZh": "商業, 商務, 貿易",
+      "currentExample": "The teacher explained commerce during class before breakfast.",
+      "currentExampleZh": "老師在早餐前的課堂上解釋了商業。"
+    },
+    {
+      "id": "w2862",
+      "group": "Core 6",
+      "word": "rally",
+      "partOfSpeech": "n / v",
+      "meaningZh": "重振旗鼓, 集合, 群眾集會, 跌停回升；重整旗鼓, 集合, 恢復精神, 團結, 挖苦, 嘲笑",
+      "currentExample": "The nurse explained rally during class before the meeting.",
+      "currentExampleZh": "護理師在會議前的課堂上解釋了重振旗鼓。"
+    },
+    {
+      "id": "w2863",
+      "group": "Core 6",
+      "word": "delegate",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "代表；委派...為代表",
+      "currentExample": "The coach gave a brief talk about delegate before the call.",
+      "currentExampleZh": "教練在通話前做了一段關於代表這方面的簡短分享。"
+    },
+    {
+      "id": "w2864",
+      "group": "Core 6",
+      "word": "weaken",
+      "partOfSpeech": "vt / vi",
+      "meaningZh": "削弱, 減弱, 使虛弱；變弱, 變軟弱",
+      "currentExample": "We need to weaken the display carefully before noon.",
+      "currentExampleZh": "我們需要在中午前仔細削弱展示。"
+    },
+    {
+      "id": "w2865",
+      "group": "Core 6",
+      "word": "jazz",
+      "partOfSpeech": "n / a / vi",
+      "meaningZh": "爵士樂, 喧鬧；爵士樂的, 喧吵的；演奏爵士樂, 跳爵士舞, 遊蕩；奏爵士樂, 使活潑",
+      "currentExample": "The coach led a class discussion about jazz after the presentation.",
+      "currentExampleZh": "教練在簡報後帶領全班討論爵士樂。"
+    },
+    {
+      "id": "w2866",
+      "group": "Core 6",
+      "word": "deadline",
+      "partOfSpeech": "n",
+      "meaningZh": "最後期限, 截止期限",
+      "currentExample": "The coach led a class discussion about deadline after the debate.",
+      "currentExampleZh": "教練在辯論後帶領全班討論最後期限。"
+    },
+    {
+      "id": "w2867",
+      "group": "Core 6",
+      "word": "auction",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "拍賣",
+      "currentExample": "The nurse wrote a short note about auction after the training.",
+      "currentExampleZh": "護理師在訓練後寫了一段關於拍賣這方面的短筆記。"
+    },
+    {
+      "id": "w2868",
+      "group": "Core 6",
+      "word": "sacrifice",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "犧牲, 供奉, 祭品；犧牲, 祭祀, 賤賣；獻祭",
+      "currentExample": "The visitor led a class discussion about sacrifice after the review.",
+      "currentExampleZh": "訪客在檢查後帶領全班討論犧牲。"
+    },
+    {
+      "id": "w2869",
+      "group": "Core 6",
+      "word": "lens",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "透鏡, 鏡頭, 鏡片, 晶狀體；給...攝影",
+      "currentExample": "The student prepared a short report on lens before noon.",
+      "currentExampleZh": "學生在中午前準備了一份關於透鏡這方面的短報告。"
+    },
+    {
+      "id": "w2870",
+      "group": "Core 6",
+      "word": "broker",
+      "partOfSpeech": "n",
+      "meaningZh": "掮客, 經紀人",
+      "currentExample": "The driver wrote a short note about broker after the review.",
+      "currentExampleZh": "司機在檢查後寫了一段關於掮客這方面的短筆記。"
+    },
+    {
+      "id": "w2871",
+      "group": "Core 6",
+      "word": "ambassador",
+      "partOfSpeech": "n",
+      "meaningZh": "大使",
+      "currentExample": "The guide wrote a short note about ambassador after the interview.",
+      "currentExampleZh": "嚮導在面試後寫了一段關於大使這方面的短筆記。"
+    },
+    {
+      "id": "w2872",
+      "group": "Core 6",
+      "word": "plunge",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "鑽進, 跳進, 跳水, 跳水池, 猛跌, 落下, 投入, 開始從事, 盲目投資；投入, 投身於, 跳進, 陷入, 下降；使投入, 使插入, 使陷入, 使遭受",
+      "currentExample": "The coach explained plunge during class before the call.",
+      "currentExampleZh": "教練在通話前的課堂上解釋了鑽進。"
+    },
+    {
+      "id": "w2873",
+      "group": "Core 6",
+      "word": "marked",
+      "partOfSpeech": "a",
+      "meaningZh": "有記號的, 顯著的, 醒目的",
+      "currentExample": "A marked situation required extra care before the storm.",
+      "currentExampleZh": "一個有記號的情況在暴風雨前需要額外處理。"
+    },
+    {
+      "id": "w2874",
+      "group": "Core 6",
+      "word": "auto",
+      "partOfSpeech": "n / pref",
+      "meaningZh": "汽車；表示\"自己\"、\"本身\", 表示\"自己的\", 表示\"自動的\"",
+      "currentExample": "The doctor boarded the auto before the trip.",
+      "currentExampleZh": "醫生在旅程前登上了汽車。"
+    },
+    {
+      "id": "w2875",
+      "group": "Core 6",
+      "word": "fare",
+      "partOfSpeech": "n / vi",
+      "meaningZh": "費用, 旅客, 食物；進展, 進步, 經營, 過活",
+      "currentExample": "A small garden change affected the fare.",
+      "currentExampleZh": "一個小小的花園變動影響了費用。"
+    },
+    {
+      "id": "w2876",
+      "group": "Core 6",
+      "word": "instant",
+      "partOfSpeech": "n / a",
+      "meaningZh": "立即, 瞬間；緊急的, 立即的, 即時的",
+      "currentExample": "The doctor prepared a short report on instant before the trip.",
+      "currentExampleZh": "醫生在旅程前準備了一份關於立即這方面的短報告。"
+    },
+    {
+      "id": "w2877",
+      "group": "Core 6",
+      "word": "inspect",
+      "partOfSpeech": "vt / vi",
+      "meaningZh": "檢查, 檢閱, 檢驗；檢查",
+      "currentExample": "The visit helped us inspect the schedule more clearly.",
+      "currentExampleZh": "拜訪幫助我們更清楚地檢查時程。"
+    },
+    {
+      "id": "w2878",
+      "group": "Core 6",
+      "word": "naval",
+      "partOfSpeech": "a",
+      "meaningZh": "海軍的, 軍艦的, 有艦隊的",
+      "currentExample": "The engineer reviewed the naval case after the interview.",
+      "currentExampleZh": "工程師在面試後檢視了這個海軍的案例。"
+    },
+    {
+      "id": "w2879",
+      "group": "Core 6",
+      "word": "confrontation",
+      "partOfSpeech": "n",
+      "meaningZh": "對抗；對質；面對",
+      "currentExample": "The researcher led a class discussion about confrontation after the interview.",
+      "currentExampleZh": "研究員在面試後帶領全班討論對抗。"
+    },
+    {
+      "id": "w2880",
+      "group": "Core 6",
+      "word": "venue",
+      "partOfSpeech": "n",
+      "meaningZh": "犯罪地點, 審判地, 發生地點",
+      "currentExample": "The researcher gave a brief talk about venue before Friday.",
+      "currentExampleZh": "研究員在星期五前做了一段關於犯罪地點這方面的簡短分享。"
+    },
+    {
+      "id": "w2881",
+      "group": "Core 6",
+      "word": "stadium",
+      "partOfSpeech": "n",
+      "meaningZh": "露天大型運動場",
+      "currentExample": "The engineer explained stadium during class before the storm.",
+      "currentExampleZh": "工程師在暴風雨前的課堂上解釋了露天大型運動場。"
+    },
+    {
+      "id": "w2882",
+      "group": "Core 6",
+      "word": "worldwide",
+      "partOfSpeech": "a",
+      "meaningZh": "全世界的",
+      "currentExample": "The editor chose a worldwide method before the storm.",
+      "currentExampleZh": "編輯在暴風雨前選了一個全世界的方法。"
+    },
+    {
+      "id": "w2883",
+      "group": "Core 6",
+      "word": "immune",
+      "partOfSpeech": "a / n",
+      "meaningZh": "免疫的, 免除的, 不受影響的；免疫者",
+      "currentExample": "An immune situation required extra care before the holiday.",
+      "currentExampleZh": "一個免疫的情況在假期前需要額外處理。"
+    },
+    {
+      "id": "w2884",
+      "group": "Core 6",
+      "word": "delegation",
+      "partOfSpeech": "n",
+      "meaningZh": "代表團, 派遣代表團, 代表的地位(或權力)",
+      "currentExample": "The engineer gave a brief talk about delegation before Friday.",
+      "currentExampleZh": "工程師在星期五前做了一段關於代表團這方面的簡短分享。"
+    },
+    {
+      "id": "w2885",
+      "group": "Core 6",
+      "word": "superb",
+      "partOfSpeech": "a",
+      "meaningZh": "極度的, 華麗的, 極好的",
+      "currentExample": "The superb plan helped the team move forward after the rehearsal.",
+      "currentExampleZh": "極度的計畫在排練後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2886",
+      "group": "Core 6",
+      "word": "cutting",
+      "partOfSpeech": "n",
+      "meaningZh": "切斷, 切下, 路塹",
+      "currentExample": "The doctor explained cutting during class before the trip.",
+      "currentExampleZh": "醫生在旅程前的課堂上解釋了切斷。"
+    },
+    {
+      "id": "w2887",
+      "group": "Core 6",
+      "word": "rocket",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "火箭, 煙火；急升, 猛漲, 飛馳；用火箭運載",
+      "currentExample": "The student led a class discussion about rocket after the festival.",
+      "currentExampleZh": "學生在節慶後帶領全班討論火箭。"
+    },
+    {
+      "id": "w2888",
+      "group": "Core 6",
+      "word": "cheer",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "愉快, 振奮, 歡呼；歡呼, 喝彩, 快活起來；使振奮, 歡呼",
+      "currentExample": "The designer wrote a short note about cheer after the presentation.",
+      "currentExampleZh": "設計師在簡報後寫了一段關於愉快這方面的短筆記。"
+    },
+    {
+      "id": "w2889",
+      "group": "Core 6",
+      "word": "colonel",
+      "partOfSpeech": "n",
+      "meaningZh": "陸軍上校, 長官",
+      "currentExample": "The driver gave a brief talk about colonel before the meeting.",
+      "currentExampleZh": "司機在會議前做了一段關於陸軍上校這方面的簡短分享。"
+    },
+    {
+      "id": "w2890",
+      "group": "Core 6",
+      "word": "exhaust",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "排氣, 排氣裝置, 廢氣；抽完, 用盡, 耗盡, 使精疲力盡；排氣",
+      "currentExample": "The coach wrote a short note about exhaust after the debate.",
+      "currentExampleZh": "教練在辯論後寫了一段關於排氣這方面的短筆記。"
+    },
+    {
+      "id": "w2891",
+      "group": "Core 6",
+      "word": "halt",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "停止, 立定, 休息；使停止, 使立定；立定, 停止, 蹣跚, 躊躇, 有缺點",
+      "currentExample": "The editor gave a brief talk about halt before the deadline.",
+      "currentExampleZh": "編輯在期限前做了一段關於停止這方面的簡短分享。"
+    },
+    {
+      "id": "w2892",
+      "group": "Core 6",
+      "word": "overnight",
+      "partOfSpeech": "n / a / adv",
+      "meaningZh": "前一天晚上, 一夜的逗留；通宵的, 晚上的, 前夜的；在前一夜, 整夜, 昨晚一晚上",
+      "currentExample": "The driver wrote a short note about overnight after the practice.",
+      "currentExampleZh": "司機在練習後寫了一段關於前一天晚上這方面的短筆記。"
+    },
+    {
+      "id": "w2893",
+      "group": "Core 6",
+      "word": "clash",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "衝突, 撞擊聲, 牴觸；衝突, 牴觸；使發出撞擊聲",
+      "currentExample": "The designer explained clash during class before the rehearsal.",
+      "currentExampleZh": "設計師在排練前的課堂上解釋了衝突。"
+    },
+    {
+      "id": "w2894",
+      "group": "Core 6",
+      "word": "whip",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "鞭子, 抽打, 車伕, 攪拌器；鞭打, 攪拌, 煽動, 召集, 倉促製成；拍擊, 急走, 抽打",
+      "currentExample": "The assistant wrote a short note about whip after the training.",
+      "currentExampleZh": "助理在訓練後寫了一段關於鞭子這方面的短筆記。"
+    },
+    {
+      "id": "w2896",
+      "group": "Core 6",
+      "word": "commentator",
+      "partOfSpeech": "n",
+      "meaningZh": "評論員, 實況廣播員, 註釋者, 時事評論員",
+      "currentExample": "The commentator spoke with the coach before noon.",
+      "currentExampleZh": "那位評論員在中午前和教練說話。"
+    },
+    {
+      "id": "w2897",
+      "group": "Core 6",
+      "word": "retreat",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "休息寓所, 撤退, 隱居, 退避；撤退, 隱退, 向後傾；退(棋)",
+      "currentExample": "The editor explained retreat during class before the deadline.",
+      "currentExampleZh": "編輯在期限前的課堂上解釋了休息寓所。"
+    },
+    {
+      "id": "w2898",
+      "group": "Core 6",
+      "word": "surrender",
+      "partOfSpeech": "vt / vi / n",
+      "meaningZh": "交出, 放棄, 使投降, 讓與；投降, 自首；交出, 放棄, 投降",
+      "currentExample": "We need to surrender the lesson carefully before the weekend.",
+      "currentExampleZh": "我們需要在週末前仔細交出課程。"
+    },
+    {
+      "id": "w2899",
+      "group": "Core 6",
+      "word": "slim",
+      "partOfSpeech": "a / vi / vt",
+      "meaningZh": "瘦的, 苗條的, 微小的, 稀少的, 微薄的；變苗條；使苗條",
+      "currentExample": "The guide reviewed the slim case after the visit.",
+      "currentExampleZh": "嚮導在拜訪後檢視了這個瘦的案例。"
+    },
+    {
+      "id": "w2900",
+      "group": "Core 6",
+      "word": "embassy",
+      "partOfSpeech": "n",
+      "meaningZh": "大使館, 大使館全體人員",
+      "currentExample": "The visitor led a class discussion about embassy after the trip.",
+      "currentExampleZh": "訪客在旅程後帶領全班討論大使館。"
+    },
+    {
+      "id": "w2901",
+      "group": "Core 6",
+      "word": "blast",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "一陣風, 爆炸, 枯萎病；炸, 使枯萎；炸, 猛攻, 猛烈抨擊, 枯萎",
+      "currentExample": "We walked near the blast after the lesson.",
+      "currentExampleZh": "我們在課程後到一陣風附近散步。"
+    },
+    {
+      "id": "w2902",
+      "group": "Core 6",
+      "word": "opposed",
+      "partOfSpeech": "a",
+      "meaningZh": "反對的, 敵對的, 對抗的, 相對的",
+      "currentExample": "The student chose an opposed method before breakfast.",
+      "currentExampleZh": "學生在早餐前選了一個反對的方法。"
+    },
+    {
+      "id": "w2903",
+      "group": "Core 6",
+      "word": "federation",
+      "partOfSpeech": "n",
+      "meaningZh": "聯邦, 聯合, 聯盟",
+      "currentExample": "The visitor gave a brief talk about federation before sunset.",
+      "currentExampleZh": "訪客在日落前做了一段關於聯邦這方面的簡短分享。"
+    },
+    {
+      "id": "w2904",
+      "group": "Core 6",
+      "word": "faction",
+      "partOfSpeech": "n",
+      "meaningZh": "小派系, 內訌",
+      "currentExample": "The guide gave a brief talk about faction before the holiday.",
+      "currentExampleZh": "嚮導在假期前做了一段關於小派系這方面的簡短分享。"
+    },
+    {
+      "id": "w2905",
+      "group": "Core 6",
+      "word": "excess",
+      "partOfSpeech": "n / a",
+      "meaningZh": "過度, 剩於, 超過, 超額；過量的, 額外的",
+      "currentExample": "The visitor explained excess during class before the weekend.",
+      "currentExampleZh": "訪客在週末前的課堂上解釋了過度。"
+    },
+    {
+      "id": "w2906",
+      "group": "Core 6",
+      "word": "alert",
+      "partOfSpeech": "a / n / vt",
+      "meaningZh": "警覺的, 靈敏的, 留心的；警報；使警覺, 通知, 使意識到",
+      "currentExample": "The visitor reviewed the alert case after the practice.",
+      "currentExampleZh": "訪客在練習後檢視了這個警覺的案例。"
+    },
+    {
+      "id": "w2907",
+      "group": "Core 6",
+      "word": "rugby",
+      "partOfSpeech": "n",
+      "meaningZh": "橄欖球, 橄欖球賽",
+      "currentExample": "The designer wrote a short note about rugby after the visit.",
+      "currentExampleZh": "設計師在拜訪後寫了一段關於橄欖球這方面的短筆記。"
+    },
+    {
+      "id": "w2908",
+      "group": "Core 6",
+      "word": "exile",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "放逐, 流放, 被放逐者；放逐, 流放, 使背井離鄉",
+      "currentExample": "The artist explained exile during class before the trip.",
+      "currentExampleZh": "藝術家在旅程前的課堂上解釋了放逐。"
+    },
+    {
+      "id": "w2909",
+      "group": "Core 6",
+      "word": "cruise",
+      "partOfSpeech": "n / v",
+      "meaningZh": "巡航, 巡弋, 漫遊",
+      "currentExample": "The student wrote a short note about cruise after the rehearsal.",
+      "currentExampleZh": "學生在排練後寫了一段關於巡航這方面的短筆記。"
+    },
+    {
+      "id": "w2910",
+      "group": "Core 6",
+      "word": "prosecute",
+      "partOfSpeech": "vt / vi",
+      "meaningZh": "告發, 起訴, 徹底進行, 執行, 從事；告發, 起訴, 作檢察官",
+      "currentExample": "We need to prosecute the plan carefully before the deadline.",
+      "currentExampleZh": "我們需要在期限前仔細告發計畫。"
+    },
+    {
+      "id": "w2911",
+      "group": "Core 6",
+      "word": "cautious",
+      "partOfSpeech": "a",
+      "meaningZh": "謹慎的, 小心的",
+      "currentExample": "The cautious plan helped the team move forward after the practice.",
+      "currentExampleZh": "謹慎的計畫在練習後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2912",
+      "group": "Core 6",
+      "word": "renew",
+      "partOfSpeech": "vt / vi",
+      "meaningZh": "使更新, 使恢復, 復興, 修補, 補充, 繼續, 重訂, 重申, 續借；更新, 重新開始",
+      "currentExample": "We need to renew the room carefully before breakfast.",
+      "currentExampleZh": "我們需要在早餐前仔細使更新房間。"
+    },
+    {
+      "id": "w2913",
+      "group": "Core 6",
+      "word": "interim",
+      "partOfSpeech": "a / n",
+      "meaningZh": "暫時的, 臨時的, 間歇的；過渡時期",
+      "currentExample": "The guide reviewed the interim case after the visit.",
+      "currentExampleZh": "嚮導在拜訪後檢視了這個暫時的案例。"
+    },
+    {
+      "id": "w2914",
+      "group": "Core 6",
+      "word": "specialize",
+      "partOfSpeech": "vt / vi",
+      "meaningZh": "使特殊化, 列舉, 特別指明, 限定...的範圍；成為專家, 專攻",
+      "currentExample": "We need to specialize the ticket carefully before the storm.",
+      "currentExampleZh": "我們需要在暴風雨前仔細使特殊化票券。"
+    },
+    {
+      "id": "w2915",
+      "group": "Core 6",
+      "word": "spark",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "火花, 火星, 閃光, 無線電報務員, 瞬間放電, 活力, 朝氣, 花花公子, 情郎；閃光, 發火花, 求婚；發動, 鼓舞, 使有朝氣, 求婚",
+      "currentExample": "The coach wrote a short note about spark after the presentation.",
+      "currentExampleZh": "教練在簡報後寫了一段關於火花這方面的短筆記。"
+    },
+    {
+      "id": "w2916",
+      "group": "Core 6",
+      "word": "diplomat",
+      "partOfSpeech": "n",
+      "meaningZh": "外交官, 有外交手腕的人",
+      "currentExample": "The researcher led a class discussion about diplomat after the interview.",
+      "currentExampleZh": "研究員在面試後帶領全班討論外交官。"
+    },
+    {
+      "id": "w2917",
+      "group": "Core 6",
+      "word": "speculate",
+      "partOfSpeech": "vi",
+      "meaningZh": "深思, 推測, 投機",
+      "currentExample": "The guide began to speculate during the interview.",
+      "currentExampleZh": "嚮導在面試期間開始深思。"
+    },
+    {
+      "id": "w2918",
+      "group": "Core 6",
+      "word": "pledge",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "諾言, 保證, 誓言, 抵押, 信物, 保人, 祝願；許諾, 保證, 使發誓, 抵押, 典當, 舉杯祝...健康",
+      "currentExample": "The visitor gave a brief talk about pledge before the holiday.",
+      "currentExampleZh": "訪客在假期前做了一段關於諾言這方面的簡短分享。"
+    },
+    {
+      "id": "w2919",
+      "group": "Core 6",
+      "word": "luxury",
+      "partOfSpeech": "n / a",
+      "meaningZh": "奢侈, 豪華；奢侈的, 豪華的",
+      "currentExample": "The engineer explained luxury during class before sunset.",
+      "currentExampleZh": "工程師在日落前的課堂上解釋了奢侈。"
+    },
+    {
+      "id": "w2920",
+      "group": "Core 6",
+      "word": "amateur",
+      "partOfSpeech": "n",
+      "meaningZh": "業餘愛好者, 外行, 愛好者",
+      "currentExample": "The amateur worked carefully with the guide.",
+      "currentExampleZh": "那位業餘愛好者仔細地和嚮導合作。"
+    },
+    {
+      "id": "w2921",
+      "group": "Core 6",
+      "word": "cue",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "提示, 線索；給...暗示(或提示)",
+      "currentExample": "The assistant explained cue during class before class.",
+      "currentExampleZh": "助理在上課前的課堂上解釋了提示。"
+    },
+    {
+      "id": "w2922",
+      "group": "Core 6",
+      "word": "leak",
+      "partOfSpeech": "n / vi / vt",
+      "meaningZh": "漏洞, 漏處, 漏出, 洩漏；漏, 洩漏；使滲漏",
+      "currentExample": "The nurse explained leak during class before the review.",
+      "currentExampleZh": "護理師在檢查前的課堂上解釋了漏洞。"
+    },
+    {
+      "id": "w2923",
+      "group": "Core 6",
+      "word": "referendum",
+      "partOfSpeech": "n",
+      "meaningZh": "（就重大政治或社會問題進行的）全民公決，全民投票",
+      "currentExample": "A short referendum ended the confusion during the trip.",
+      "currentExampleZh": "一段簡短的就重大政治或社會問題進行的全民公決在旅程中結束了混亂。"
+    },
+    {
+      "id": "w2924",
+      "group": "Core 6",
+      "word": "premier",
+      "partOfSpeech": "n / a",
+      "meaningZh": "總理, 首相；首位的, 最初的",
+      "currentExample": "The editor gave a brief talk about premier before the storm.",
+      "currentExampleZh": "編輯在暴風雨前做了一段關於總理這方面的簡短分享。"
+    },
+    {
+      "id": "w2925",
+      "group": "Core 6",
+      "word": "surplus",
+      "partOfSpeech": "n / a",
+      "meaningZh": "剩餘, 過剩, 盈餘；過剩的, 剩餘的",
+      "currentExample": "The neighbor gave a brief talk about surplus before the interview.",
+      "currentExampleZh": "鄰居在面試前做了一段關於剩餘這方面的簡短分享。"
+    },
+    {
+      "id": "w2926",
+      "group": "Core 6",
+      "word": "saint",
+      "partOfSpeech": "n / a",
+      "meaningZh": "聖徒, 聖人；神聖的",
+      "currentExample": "The engineer prepared a short report on saint before Friday.",
+      "currentExampleZh": "工程師在星期五前準備了一份關於聖徒這方面的短報告。"
+    },
+    {
+      "id": "w2927",
+      "group": "Core 6",
+      "word": "editorial",
+      "partOfSpeech": "n / a",
+      "meaningZh": "社論, 評論；編輯的, 主筆的, 社論的",
+      "currentExample": "The manager led a class discussion about editorial after the discussion.",
+      "currentExampleZh": "經理在討論後帶領全班討論社論。"
+    },
+    {
+      "id": "w2928",
+      "group": "Core 6",
+      "word": "frustrate",
+      "partOfSpeech": "vt / a",
+      "meaningZh": "挫敗, 擊敗, 破壞；無益的, 挫敗的, 挫折的",
+      "currentExample": "We need to frustrate the report carefully before the interview.",
+      "currentExampleZh": "我們需要在面試前仔細挫敗報告。"
+    },
+    {
+      "id": "w2929",
+      "group": "Core 6",
+      "word": "spur",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "馬刺, 刺激物, 鼓舞；刺激, 激勵, 用馬刺策(馬)前進；用馬刺驅馬, 疾馳",
+      "currentExample": "The nurse prepared a short report on spur before the interview.",
+      "currentExampleZh": "護理師在面試前準備了一份關於馬刺這方面的短報告。"
+    },
+    {
+      "id": "w2930",
+      "group": "Core 6",
+      "word": "yacht",
+      "partOfSpeech": "n / vi",
+      "meaningZh": "快艇, 遊艇；駕遊艇, 乘遊艇",
+      "currentExample": "The doctor wrote a short note about yacht after the inspection.",
+      "currentExampleZh": "醫生在檢查後寫了一段關於快艇這方面的短筆記。"
+    },
+    {
+      "id": "w2931",
+      "group": "Core 6",
+      "word": "pact",
+      "partOfSpeech": "n",
+      "meaningZh": "契約, 協定, 條約",
+      "currentExample": "The assistant gave a brief talk about pact before class.",
+      "currentExampleZh": "助理在上課前做了一段關於契約這方面的簡短分享。"
+    },
+    {
+      "id": "w2932",
+      "group": "Core 6",
+      "word": "torture",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "拷問, 苦悶；拷問, 曲解, 折磨, 使彎曲",
+      "currentExample": "The student prepared a short report on torture before the rehearsal.",
+      "currentExampleZh": "學生在排練前準備了一份關於拷問這方面的短報告。"
+    },
+    {
+      "id": "w2933",
+      "group": "Core 6",
+      "word": "antique",
+      "partOfSpeech": "n / a",
+      "meaningZh": "古董, 古物；古老的, 古風的, 舊式的, 過時的",
+      "currentExample": "The nurse prepared a short report on antique before the meeting.",
+      "currentExampleZh": "護理師在會議前準備了一份關於古董這方面的短報告。"
+    },
+    {
+      "id": "w2934",
+      "group": "Core 6",
+      "word": "harbour",
+      "partOfSpeech": "n / v",
+      "meaningZh": "港, 避難所；庇護, 藏匿, (使)入港停泊",
+      "currentExample": "The visitor led a class discussion about harbour after the trip.",
+      "currentExampleZh": "訪客在旅程後帶領全班討論港。"
+    },
+    {
+      "id": "w2935",
+      "group": "Core 6",
+      "word": "acre",
+      "partOfSpeech": "n",
+      "meaningZh": "英畝",
+      "currentExample": "The doctor gave a brief talk about acre before the trip.",
+      "currentExampleZh": "醫生在旅程前做了一段關於英畝這方面的簡短分享。"
+    },
+    {
+      "id": "w2936",
+      "group": "Core 6",
+      "word": "militant",
+      "partOfSpeech": "a",
+      "meaningZh": "好戰的",
+      "currentExample": "The militant plan helped the team move forward after the presentation.",
+      "currentExampleZh": "好戰的計畫在簡報後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2937",
+      "group": "Core 6",
+      "word": "liberate",
+      "partOfSpeech": "vt",
+      "meaningZh": "解放, 釋放, 使自由",
+      "currentExample": "We need to liberate the room carefully before the exam.",
+      "currentExampleZh": "我們需要在考試前仔細解放房間。"
+    },
+    {
+      "id": "w2938",
+      "group": "Core 6",
+      "word": "harass",
+      "partOfSpeech": "vt",
+      "meaningZh": "使困擾, 使煩惱, 折磨",
+      "currentExample": "The visit helped us harass the plan more clearly.",
+      "currentExampleZh": "拜訪幫助我們更清楚地使困擾計畫。"
+    },
+    {
+      "id": "w2939",
+      "group": "Core 6",
+      "word": "reel",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "卷軸, 一卷, 紡車, 旋轉, 蹣跚；卷...於軸上, 繞, 使旋轉；蹣跚地走, 旋轉, 眩暈, 搖晃, 退縮",
+      "currentExample": "The designer wrote a short note about reel after the visit.",
+      "currentExampleZh": "設計師在拜訪後寫了一段關於卷軸這方面的短筆記。"
+    },
+    {
+      "id": "w2940",
+      "group": "Core 6",
+      "word": "vice",
+      "partOfSpeech": "n / vt / prep",
+      "meaningZh": "惡習, 惡行, 罪惡, 墮落, 缺陷, 惡癖, 老虎鉗；鉗住；代替",
+      "currentExample": "The designer wrote a short note about vice after the presentation.",
+      "currentExampleZh": "設計師在簡報後寫了一段關於惡習這方面的短筆記。"
+    },
+    {
+      "id": "w2941",
+      "group": "Core 6",
+      "word": "excerpt",
+      "partOfSpeech": "n / v",
+      "meaningZh": "摘錄；引用, 摘錄",
+      "currentExample": "The designer led a class discussion about excerpt after the debate.",
+      "currentExampleZh": "設計師在辯論後帶領全班討論摘錄。"
+    },
+    {
+      "id": "w2942",
+      "group": "Core 6",
+      "word": "yen",
+      "partOfSpeech": "n / vi",
+      "meaningZh": "日元(日本貨幣單位), 渴望, 嗜好；渴望",
+      "currentExample": "The assistant prepared a short report on yen before class.",
+      "currentExampleZh": "助理在上課前準備了一份關於日元日本貨幣單位這方面的短報告。"
+    },
+    {
+      "id": "w2943",
+      "group": "Core 6",
+      "word": "assured",
+      "partOfSpeech": "a",
+      "meaningZh": "確定的, 自信的",
+      "currentExample": "The editor reviewed the assured case after the discussion.",
+      "currentExampleZh": "編輯在討論後檢視了這個確定的案例。"
+    },
+    {
+      "id": "w2944",
+      "group": "Core 6",
+      "word": "calculated",
+      "partOfSpeech": "a",
+      "meaningZh": "有計劃的, 適當的, 適合的, 計算出的",
+      "currentExample": "The editor reviewed the calculated case after the discussion.",
+      "currentExampleZh": "編輯在討論後檢視了這個有計劃的案例。"
+    },
+    {
+      "id": "w2945",
+      "group": "Core 6",
+      "word": "noted",
+      "partOfSpeech": "a",
+      "meaningZh": "著名的, 顯著的, 揚名的",
+      "currentExample": "The noted plan helped the team move forward after the festival.",
+      "currentExampleZh": "著名的計畫在節慶後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2946",
+      "group": "Core 6",
+      "word": "appal",
+      "partOfSpeech": "vt",
+      "meaningZh": "使驚駭, 使嚇壞",
+      "currentExample": "They tried to appal the room before the review.",
+      "currentExampleZh": "他們試著在檢查前使驚駭房間。"
+    },
+    {
+      "id": "w2947",
+      "group": "Core 6",
+      "word": "victimize",
+      "partOfSpeech": "vt",
+      "meaningZh": "使犧牲, 使受害",
+      "currentExample": "The presentation helped us victimize the file more clearly.",
+      "currentExampleZh": "簡報幫助我們更清楚地使犧牲檔案。"
+    },
+    {
+      "id": "w2948",
+      "group": "Core 6",
+      "word": "savings",
+      "partOfSpeech": "n",
+      "meaningZh": "儲蓄, 存款",
+      "currentExample": "The engineer explained savings during class before sunset.",
+      "currentExampleZh": "工程師在日落前的課堂上解釋了儲蓄。"
+    },
+    {
+      "id": "w2949",
+      "group": "Core 6",
+      "word": "well",
+      "partOfSpeech": "n / v / a",
+      "meaningZh": "井, 泉水, 源泉, 好；湧出；健康的, 良好的, 適宜的, 恰當的；很好地, 適當地, 好意地, 很, 完全；好啦",
+      "currentExample": "The coach wrote a short note about well after the debate.",
+      "currentExampleZh": "教練在辯論後寫了一段關於井這方面的短筆記。"
+    },
+    {
+      "id": "w2950",
+      "group": "Core 6",
+      "word": "etc",
+      "partOfSpeech": "word",
+      "meaningZh": "及其他, 等等",
+      "currentExample": "The assistant wrote a short note about etc after the workshop.",
+      "currentExampleZh": "助理在工作坊後寫了一段關於及其他這方面的短筆記。"
+    },
+    {
+      "id": "w2951",
+      "group": "Core 6",
+      "word": "judgment",
+      "partOfSpeech": "n",
+      "meaningZh": "裁判, 宣告, 判決書",
+      "currentExample": "The visitor led a class discussion about judgment after the trial.",
+      "currentExampleZh": "訪客在試驗後帶領全班討論裁判。"
+    },
+    {
+      "id": "w2952",
+      "group": "Core 6",
+      "word": "jew",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "猶太人, 守財奴, 猶太教信徒；欺騙, 殺價",
+      "currentExample": "The jew spoke with the nurse before the meeting.",
+      "currentExampleZh": "那位猶太人在會議前和護理師說話。"
+    },
+    {
+      "id": "w2953",
+      "group": "Core 6",
+      "word": "adviser",
+      "partOfSpeech": "n",
+      "meaningZh": "顧問, 勸告者, 指導教師",
+      "currentExample": "The student led a class discussion about adviser after the trial.",
+      "currentExampleZh": "學生在試驗後帶領全班討論顧問。"
+    },
+    {
+      "id": "w2954",
+      "group": "Core 6",
+      "word": "given",
+      "partOfSpeech": "a",
+      "meaningZh": "贈予的, 沉溺的, 約定的；give的過去分詞",
+      "currentExample": "The editor reviewed the given case after the discussion.",
+      "currentExampleZh": "編輯在討論後檢視了這個贈予的案例。"
+    },
+    {
+      "id": "w2955",
+      "group": "Core 6",
+      "word": "testing",
+      "partOfSpeech": "n / a",
+      "meaningZh": "測試；吃力的, 試驗的",
+      "currentExample": "The visitor wrote a short note about testing after the trial.",
+      "currentExampleZh": "訪客在試驗後寫了一段關於測試這方面的短筆記。"
+    },
+    {
+      "id": "w2956",
+      "group": "Core 6",
+      "word": "publisher",
+      "partOfSpeech": "n",
+      "meaningZh": "出版者, 發行人",
+      "currentExample": "The publisher spoke with the neighbor before the deadline.",
+      "currentExampleZh": "那位出版者在期限前和鄰居說話。"
+    },
+    {
+      "id": "w2957",
+      "group": "Core 6",
+      "word": "shareholder",
+      "partOfSpeech": "n",
+      "meaningZh": "股東",
+      "currentExample": "Each shareholder received a copy of the report.",
+      "currentExampleZh": "每位股東都收到一份報告。"
+    },
+    {
+      "id": "w2958",
+      "group": "Core 6",
+      "word": "islamic",
+      "partOfSpeech": "a",
+      "meaningZh": "伊斯蘭教的, 穆斯林的",
+      "currentExample": "The islamic plan helped the team move forward after the visit.",
+      "currentExampleZh": "伊斯蘭教的計畫在拜訪後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2959",
+      "group": "Core 6",
+      "word": "ruling",
+      "partOfSpeech": "n / a",
+      "meaningZh": "判決, 裁定, 統治；統治的, 支配的, 普遍的",
+      "currentExample": "The researcher led a class discussion about ruling after the practice.",
+      "currentExampleZh": "研究員在練習後帶領全班討論判決。"
+    },
+    {
+      "id": "w2960",
+      "group": "Core 6",
+      "word": "associated",
+      "partOfSpeech": "a",
+      "meaningZh": "聯合的",
+      "currentExample": "An associated situation required extra care before the weekend.",
+      "currentExampleZh": "一個聯合的情況在週末前需要額外處理。"
+    },
+    {
+      "id": "w2961",
+      "group": "Core 6",
+      "word": "homeless",
+      "partOfSpeech": "a",
+      "meaningZh": "無家的, 無養主的",
+      "currentExample": "The city opened a shelter for homeless families.",
+      "currentExampleZh": "市政府為無家可歸的家庭開設了收容中心。"
+    },
+    {
+      "id": "w2963",
+      "group": "Core 6",
+      "word": "offering",
+      "partOfSpeech": "n",
+      "meaningZh": "提供, 奉獻物, 牲禮, 上市的股票(或證券等)",
+      "currentExample": "The coach prepared a short report on offering before noon.",
+      "currentExampleZh": "教練在中午前準備了一份關於提供這方面的短報告。"
+    },
+    {
+      "id": "w2964",
+      "group": "Core 6",
+      "word": "treasury",
+      "partOfSpeech": "n",
+      "meaningZh": "國庫, 寶庫, 財政部, 國庫券",
+      "currentExample": "The engineer led a class discussion about treasury after the rehearsal.",
+      "currentExampleZh": "工程師在排練後帶領全班討論國庫。"
+    },
+    {
+      "id": "w2965",
+      "group": "Core 6",
+      "word": "guerrilla",
+      "partOfSpeech": "n",
+      "meaningZh": "游擊隊",
+      "currentExample": "The visitor explained guerrilla during class before the weekend.",
+      "currentExampleZh": "訪客在週末前的課堂上解釋了遊擊隊。"
+    },
+    {
+      "id": "w2966",
+      "group": "Core 6",
+      "word": "considering",
+      "partOfSpeech": "prep / conj",
+      "meaningZh": "就...而論；考慮到",
+      "currentExample": "Considering the weather, we should leave early.",
+      "currentExampleZh": "考慮到天氣，我們應該早點出發。"
+    },
+    {
+      "id": "w2967",
+      "group": "Core 6",
+      "word": "takeover",
+      "partOfSpeech": "n",
+      "meaningZh": "接管, 接收",
+      "currentExample": "The editor explained takeover during class before the storm.",
+      "currentExampleZh": "編輯在暴風雨前的課堂上解釋了接管。"
+    },
+    {
+      "id": "w2968",
+      "group": "Core 6",
+      "word": "regulator",
+      "partOfSpeech": "n",
+      "meaningZh": "調整者, 校準者, 校準器, 調整器, 標準鍾",
+      "currentExample": "A regulator joined the inspection on time.",
+      "currentExampleZh": "一位調整者準時參加了檢查。"
+    },
+    {
+      "id": "w2969",
+      "group": "Core 6",
+      "word": "broadcasting",
+      "partOfSpeech": "n",
+      "meaningZh": "廣播",
+      "currentExample": "The assistant gave a brief talk about broadcasting before noon.",
+      "currentExampleZh": "助理在中午前做了一段關於廣播這方面的簡短分享。"
+    },
+    {
+      "id": "w2970",
+      "group": "Core 6",
+      "word": "backing",
+      "partOfSpeech": "n",
+      "meaningZh": "後退, 襯背, 後援, 支持者",
+      "currentExample": "The neighbor wrote a short note about backing after the inspection.",
+      "currentExampleZh": "鄰居在檢查後寫了一段關於後退這方面的短筆記。"
+    },
+    {
+      "id": "w2971",
+      "group": "Core 6",
+      "word": "unidentified",
+      "partOfSpeech": "a",
+      "meaningZh": "未被認出的, 未經確認的",
+      "currentExample": "The driver reviewed the unidentified case after the presentation.",
+      "currentExampleZh": "司機在簡報後檢視了這個未被認出的案例。"
+    },
+    {
+      "id": "w2972",
+      "group": "Core 6",
+      "word": "homosexual",
+      "partOfSpeech": "a / n",
+      "meaningZh": "同性戀的；同性戀者",
+      "currentExample": "The designer chose a homosexual method before the call.",
+      "currentExampleZh": "設計師在通話前選了一個同性戀的方法。"
+    },
+    {
+      "id": "w2973",
+      "group": "Core 6",
+      "word": "jersey",
+      "partOfSpeech": "n",
+      "meaningZh": "運動衫",
+      "currentExample": "The assistant wrote a short note about jersey after the interview.",
+      "currentExampleZh": "助理在面試後寫了一段關於運動衫這方面的短筆記。"
+    },
+    {
+      "id": "w2974",
+      "group": "Core 6",
+      "word": "caring",
+      "partOfSpeech": "a",
+      "meaningZh": "有同情心的；表示或感到關懷或關心的",
+      "currentExample": "A caring situation required extra care before the weekend.",
+      "currentExampleZh": "一個有同情心的情況在週末前需要額外處理。"
+    },
+    {
+      "id": "w2975",
+      "group": "Core 6",
+      "word": "wicket",
+      "partOfSpeech": "n",
+      "meaningZh": "小門, 腰門, 售票窗",
+      "currentExample": "The neighbor prepared a short report on wicket before the deadline.",
+      "currentExampleZh": "鄰居在期限前準備了一份關於小門這方面的短報告。"
+    },
+    {
+      "id": "w2976",
+      "group": "Core 6",
+      "word": "peg",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "釘, 樁, 栓, 藉口, 銷子, 藉口；釘木釘, 固定, 限制, 使受約束；堅持不懈地奮力於, 疾行",
+      "currentExample": "The doctor prepared a short report on peg before the trip.",
+      "currentExampleZh": "醫生在旅程前準備了一份關於釘這方面的短報告。"
+    },
+    {
+      "id": "w2977",
+      "group": "Core 6",
+      "word": "activism",
+      "partOfSpeech": "n",
+      "meaningZh": "激進主義, 行動主義, 能動論",
+      "currentExample": "The designer wrote a short note about activism after the visit.",
+      "currentExampleZh": "設計師在拜訪後寫了一段關於激進主義這方面的短筆記。"
+    },
+    {
+      "id": "w2978",
+      "group": "Core 6",
+      "word": "beaten",
+      "partOfSpeech": "a",
+      "meaningZh": "被打敗了的, 筋疲力竭的, 敲平的, 踏平的；beat的過去分詞",
+      "currentExample": "The engineer reviewed the beaten case after the interview.",
+      "currentExampleZh": "工程師在面試後檢視了這個被打敗了的案例。"
+    },
+    {
+      "id": "w2979",
+      "group": "Core 6",
+      "word": "statistic",
+      "partOfSpeech": "n / a",
+      "meaningZh": "統計量；統計的, 統計學的",
+      "currentExample": "The assistant explained statistic during class before noon.",
+      "currentExampleZh": "助理在中午前的課堂上解釋了統計量。"
+    },
+    {
+      "id": "w2980",
+      "group": "Core 6",
+      "word": "privatize",
+      "partOfSpeech": "vt",
+      "meaningZh": "vi. 私有化",
+      "currentExample": "Please privatize the map when you are ready.",
+      "currentExampleZh": "準備好時，請vi 私有化地圖。"
+    },
+    {
+      "id": "w2981",
+      "group": "Core 6",
+      "word": "roach",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "斜齒鯿；使成凹狀",
+      "currentExample": "He protected his roach during the game.",
+      "currentExampleZh": "他在比賽中保護自己的斜齒鯿。"
+    },
+    {
+      "id": "w2982",
+      "group": "Core 6",
+      "word": "ceasefire",
+      "partOfSpeech": "n",
+      "meaningZh": "（通常指永久性的）停火, 停戰; 停火命令",
+      "currentExample": "The researcher led a class discussion about ceasefire after the discussion.",
+      "currentExampleZh": "研究員在討論後帶領全班討論通常指永久性的停火。"
+    },
+    {
+      "id": "w2983",
+      "group": "Core 6",
+      "word": "rouge",
+      "partOfSpeech": "n / v",
+      "meaningZh": "口紅, 胭脂；擦口紅",
+      "currentExample": "The neighbor explained rouge during class before the storm.",
+      "currentExampleZh": "鄰居在暴風雨前的課堂上解釋了口紅。"
+    },
+    {
+      "id": "w2984",
+      "group": "Core 6",
+      "word": "done",
+      "partOfSpeech": "a",
+      "meaningZh": "完成了的, 好了的；do的過去分詞",
+      "currentExample": "The manager reviewed the done case after the rehearsal.",
+      "currentExampleZh": "經理在排練後檢視了這個完成了的案例。"
+    },
+    {
+      "id": "w2985",
+      "group": "Core 6",
+      "word": "down",
+      "partOfSpeech": "a / adv / prep",
+      "meaningZh": "向下的；下, 下去, 降下；往下, 沿著；丘陵, 軟毛, 開闊的高地",
+      "currentExample": "The down plan helped the team move forward after the visit.",
+      "currentExampleZh": "向下的計畫在拜訪後幫助團隊往前推進。"
+    },
+    {
+      "id": "w2986",
+      "group": "Core 6",
+      "word": "last",
+      "partOfSpeech": "a / vi / vt",
+      "meaningZh": "最後的, 末尾的, 最近的；持續, 支持, 維持；使維持, 夠...用；最後, 後來；最後, 末尾, 鞋楦頭",
+      "currentExample": "The assistant chose a last method before the trip.",
+      "currentExampleZh": "助理在旅程前選了一個最後的方法。"
+    },
+    {
+      "id": "w2987",
+      "group": "Core 6",
+      "word": "mean",
+      "partOfSpeech": "a / vt / vi",
+      "meaningZh": "低劣的, 卑賤的, 簡陋的, 吝嗇的, 慚愧的, 平均的, 中間的, 普通的；意謂, 想要, 意欲, 預定；用意, 有意義；平均數, 中間, 中庸",
+      "currentExample": "The engineer reviewed the mean case after the practice.",
+      "currentExampleZh": "工程師在練習後檢視了這個低劣的案例。"
+    },
+    {
+      "id": "w2988",
+      "group": "Core 6",
+      "word": "case",
+      "partOfSpeech": "n / vt",
+      "meaningZh": "情形, 情況, 箱, 容器, 事實, 病例, 案例, 框子；裝箱, 包蓋",
+      "currentExample": "The manager explained case during class before the storm.",
+      "currentExampleZh": "經理在暴風雨前的課堂上解釋了情形。"
+    },
+    {
+      "id": "w2989",
+      "group": "Core 6",
+      "word": "place",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "地方, 地點, 位置, 住所, 座位, 地位, 處境, 特權, 空間, 餘地, 職務, 位；放置, 寄予, 認出, 評定, 任命；名次列前",
+      "currentExample": "The student visited the place before breakfast.",
+      "currentExampleZh": "學生在早餐前拜訪了那個地方。"
+    },
+    {
+      "id": "w2990",
+      "group": "Core 6",
+      "word": "long",
+      "partOfSpeech": "a / vi / adv",
+      "meaningZh": "長的, 長久的, 冗長的, 做多頭的；渴望, 熱望, 極想；長久, 始終；長時間, 長信號, 長整型",
+      "currentExample": "The teacher reviewed the long case after the interview.",
+      "currentExampleZh": "老師在面試後檢視了這個長的案例。"
+    },
+    {
+      "id": "w2991",
+      "group": "Core 6",
+      "word": "kind",
+      "partOfSpeech": "n / a",
+      "meaningZh": "種類, 性質, 方式；親切的, 仁慈的, 和藹的",
+      "currentExample": "The driver led a class discussion about kind after the practice.",
+      "currentExampleZh": "司機在練習後帶領全班討論種類。"
+    },
+    {
+      "id": "w2992",
+      "group": "Core 6",
+      "word": "lead",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "鉛, 鉛條, 領導, 超前量, 領引, 榜樣, 主角, 導線；引導, 帶領, 領導, 指揮, 致使, 加鉛於, 用鉛包；領導, 帶頭, 導致, 用測深錘測深, 被鉛覆蓋；帶頭的, 最重要的",
+      "currentExample": "The nurse explained lead during class before the review.",
+      "currentExampleZh": "護理師在檢查前的課堂上解釋了鉛。"
+    },
+    {
+      "id": "w2993",
+      "group": "Core 6",
+      "word": "court",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "法院, 庭院, 奉承；獻殷勤, 追求, 招致；求愛",
+      "currentExample": "The teacher prepared a short report on court before the meeting.",
+      "currentExampleZh": "老師在會議前準備了一份關於法院這方面的短報告。"
+    },
+    {
+      "id": "w2994",
+      "group": "Core 6",
+      "word": "short",
+      "partOfSpeech": "a / adv / n",
+      "meaningZh": "短的, 近的, 矮的, 短期的, 簡短的, 少量的；簡短地, 突然；扼要, 短片, 缺乏；故意少給, 使短路",
+      "currentExample": "A short situation required extra care before the weekend.",
+      "currentExampleZh": "一個短的情況在週末前需要額外處理。"
+    },
+    {
+      "id": "w2995",
+      "group": "Core 6",
+      "word": "foreign",
+      "partOfSpeech": "a",
+      "meaningZh": "外國的, 外交的, 外省的, 外來的, 不相關的",
+      "currentExample": "The designer chose a foreign method before the interview.",
+      "currentExampleZh": "設計師在面試前選了一個外國的方法。"
+    },
+    {
+      "id": "w2996",
+      "group": "Core 6",
+      "word": "fire",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "火, 爐火, 電爐, 火災, 閃光體, 炮火, 熱情；點燃, 燒製, 使發光, 激動, 放槍, 解僱；著火, 燒火, 開槍, 射擊, 激動",
+      "currentExample": "The coach explained fire during class before class.",
+      "currentExampleZh": "教練在上課前的課堂上解釋了火。"
+    },
+    {
+      "id": "w2997",
+      "group": "Core 6",
+      "word": "sound",
+      "partOfSpeech": "n / a / adv",
+      "meaningZh": "聲音, 語音, 吵鬧, 聲調, 聽力範圍, 探條, 海峽；健全的, 可靠的, 合理的, 健康的, 徹底的, 資金充實的；徹底地, 充分地；發出聲音, 迴響, 測深, 試探, 聽起來；使發聲, 宣告, 聽診, 測...深, 試探",
+      "currentExample": "The teacher prepared a short report on sound before the rehearsal.",
+      "currentExampleZh": "老師在排練前準備了一份關於聲音這方面的短報告。"
+    },
+    {
+      "id": "w2998",
+      "group": "Core 6",
+      "word": "present",
+      "partOfSpeech": "n / a / vt",
+      "meaningZh": "現在, 禮品, 瞄準；現在的, 出席的；介紹, 引見, 贈送, 提出, 呈現, 上演；舉槍瞄準",
+      "currentExample": "The student explained present during class before noon.",
+      "currentExampleZh": "學生在中午前的課堂上解釋了現在。"
+    },
+    {
+      "id": "w2999",
+      "group": "Core 6",
+      "word": "congress",
+      "partOfSpeech": "n",
+      "meaningZh": "國會, 會議, 討論會",
+      "currentExample": "The editor prepared a short report on congress before the holiday.",
+      "currentExampleZh": "編輯在假期前準備了一份關於國會這方面的短報告。"
+    },
+    {
+      "id": "w3000",
+      "group": "Core 6",
+      "word": "sun",
+      "partOfSpeech": "n / vt / vi",
+      "meaningZh": "太陽, 日, 日光, 陽光；曬；曬太陽",
+      "currentExample": "The neighbor explained sun during class before the deadline.",
+      "currentExampleZh": "鄰居在期限前的課堂上解釋了太陽。"
+    }
+  ]
+}
+```

@@ -1,0 +1,3467 @@
+[
+  {
+    "word": "perception",
+    "example": "We discussed perception after class.",
+    "exampleZh": "我們下課後討論了知覺。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bind",
+    "example": "Please bind this detail.",
+    "exampleZh": "請綁這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sequence",
+    "example": "They may sequence tomorrow.",
+    "exampleZh": "他們明天可能會序列。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "visual",
+    "example": "The design looked visual.",
+    "exampleZh": "這個設計看起來很視覺的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "representation",
+    "example": "His question about representation surprised me.",
+    "exampleZh": "他關於表示法的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "external",
+    "example": "They studied external in school.",
+    "exampleZh": "他們在學校學了外部。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gender",
+    "example": "Please gender this detail.",
+    "exampleZh": "請性這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distinction",
+    "example": "The topic of distinction came up.",
+    "exampleZh": "區別這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "incorporate",
+    "example": "Try to incorporate calmly.",
+    "exampleZh": "試著冷靜地合併的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "multiple",
+    "example": "The report covered multiple today.",
+    "exampleZh": "今天的報告涵蓋了倍數。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "significance",
+    "example": "She wrote notes on significance.",
+    "exampleZh": "她寫了關於重要性的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "perceive",
+    "example": "People perceive colors differently.",
+    "exampleZh": "人們對顏色的感知不同。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "boundary",
+    "example": "We discussed boundary after class.",
+    "exampleZh": "我們下課後討論了邊界。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "undertake",
+    "example": "We will undertake this project.",
+    "exampleZh": "我們會承擔這個專案。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "phenomenon",
+    "example": "She learned about phenomenon yesterday.",
+    "exampleZh": "她昨天學到了現象。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "defendant",
+    "example": "The defendant arrived early.",
+    "exampleZh": "那位被告提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "mode",
+    "example": "His question about mode surprised me.",
+    "exampleZh": "他關於模態的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "formation",
+    "example": "They studied formation in school.",
+    "exampleZh": "他們在學校學了形成。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dimension",
+    "example": "Try to dimension calmly.",
+    "exampleZh": "試著冷靜地尺寸。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "faculty",
+    "example": "The topic of faculty came up.",
+    "exampleZh": "才能這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "framework",
+    "example": "We need more information about framework.",
+    "exampleZh": "我們需要更多關於結構的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "obligation",
+    "example": "The report covered obligation today.",
+    "exampleZh": "今天的報告涵蓋了義務。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "constitute",
+    "example": "These facts constitute evidence.",
+    "exampleZh": "這些事實構成證據。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "maintenance",
+    "example": "The teacher introduced maintenance today.",
+    "exampleZh": "老師今天介紹了維護。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "historian",
+    "example": "The historian arrived early.",
+    "exampleZh": "那位歷史學家提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scholar",
+    "example": "The scholar arrived early.",
+    "exampleZh": "那位學者提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "disorder",
+    "example": "Please disorder this detail.",
+    "exampleZh": "請雜亂這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evaluate",
+    "example": "We need to evaluate the results.",
+    "exampleZh": "我們需要評估結果。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "detect",
+    "example": "The test can detect errors.",
+    "exampleZh": "這項測試可以偵測錯誤。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pray",
+    "example": "They pray before dinner.",
+    "exampleZh": "他們晚餐前祈禱。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clinical",
+    "example": "The result was clinical.",
+    "exampleZh": "結果是臨床的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "efficiency",
+    "example": "The topic of efficiency came up.",
+    "exampleZh": "效率這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distant",
+    "example": "That choice seemed distant.",
+    "exampleZh": "那個選擇看起來很遠的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "expenditure",
+    "example": "The report covered expenditure today.",
+    "exampleZh": "今天的報告涵蓋了開支。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "submit",
+    "example": "Please submit the form by Friday.",
+    "exampleZh": "請在星期五前提交表格。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "frequency",
+    "example": "The teacher introduced frequency today.",
+    "exampleZh": "老師今天介紹了頻率。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ratio",
+    "example": "We discussed ratio after class.",
+    "exampleZh": "我們下課後討論了比。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "liability",
+    "example": "The article mentioned liability briefly.",
+    "exampleZh": "文章簡短提到了責任。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "portion",
+    "example": "Try to portion calmly.",
+    "exampleZh": "試著冷靜地部分。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "digital",
+    "example": "The book explains digital clearly.",
+    "exampleZh": "這本書清楚解釋了數字顯示的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "universal",
+    "example": "His question about universal surprised me.",
+    "exampleZh": "他關於全世界的的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "differ",
+    "example": "Our opinions differ on this point.",
+    "exampleZh": "我們在這一點上的意見不同。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lab",
+    "example": "We visited the lab yesterday.",
+    "exampleZh": "我們昨天去了實驗室。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scope",
+    "example": "The topic of scope came up.",
+    "exampleZh": "範圍這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "storage",
+    "example": "We need more information about storage.",
+    "exampleZh": "我們需要更多關於存儲器的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "literally",
+    "example": "She literally jumped with joy.",
+    "exampleZh": "她真的高興得跳了起來。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "disability",
+    "example": "She wrote notes on disability.",
+    "exampleZh": "她寫了關於無力的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bench",
+    "example": "The teacher introduced bench today.",
+    "exampleZh": "老師今天介紹了長椅子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consumption",
+    "example": "We discussed consumption after class.",
+    "exampleZh": "我們下課後討論了消費。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "reflection",
+    "example": "The article mentioned reflection briefly.",
+    "exampleZh": "文章簡短提到了反映。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "workshop",
+    "example": "She learned about workshop yesterday.",
+    "exampleZh": "她昨天學到了工場。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "physician",
+    "example": "The physician arrived early.",
+    "exampleZh": "那位醫師提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "recipe",
+    "example": "His question about recipe surprised me.",
+    "exampleZh": "他關於食譜的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "admission",
+    "example": "They studied admission in school.",
+    "exampleZh": "他們在學校學了准許進入。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "parking",
+    "example": "A lesson on parking helped everyone.",
+    "exampleZh": "一堂關於停車的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conservation",
+    "example": "The topic of conservation came up.",
+    "exampleZh": "保護這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "biological",
+    "example": "That choice seemed biological.",
+    "exampleZh": "那個選擇看起來很生物學的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "incentive",
+    "example": "The report covered incentive today.",
+    "exampleZh": "今天的報告涵蓋了動機。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distinct",
+    "example": "His tone felt distinct.",
+    "exampleZh": "他的語氣感覺很清楚的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "basketball",
+    "example": "The teacher introduced basketball today.",
+    "exampleZh": "老師今天介紹了籃球。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "administrative",
+    "example": "The result was administrative.",
+    "exampleZh": "結果是管理的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "embrace",
+    "example": "Please embrace this detail.",
+    "exampleZh": "請擁抱這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "limitation",
+    "example": "She learned about limitation yesterday.",
+    "exampleZh": "她昨天學到了限制。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "kingdom",
+    "example": "The book explains kingdom clearly.",
+    "exampleZh": "這本書清楚解釋了王國。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "infant",
+    "example": "His question about infant surprised me.",
+    "exampleZh": "他關於嬰兒的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evolution",
+    "example": "They studied evolution in school.",
+    "exampleZh": "他們在學校學了進化。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bible",
+    "example": "A lesson on bible helped everyone.",
+    "exampleZh": "一堂關於聖經的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "exceed",
+    "example": "Costs may exceed our budget.",
+    "exampleZh": "成本可能會超過我們的預算。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "furthermore",
+    "example": "We discussed furthermore today.",
+    "exampleZh": "我們今天討論了此外。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fiction",
+    "example": "The report covered fiction today.",
+    "exampleZh": "今天的報告涵蓋了小說。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "insight",
+    "example": "She wrote notes on insight.",
+    "exampleZh": "她寫了關於察看的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guideline",
+    "example": "The teacher introduced guideline today.",
+    "exampleZh": "老師今天介紹了指導路線。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "shrug",
+    "example": "They may shrug tomorrow.",
+    "exampleZh": "他們明天可能會聳肩。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "input",
+    "example": "Try to input calmly.",
+    "exampleZh": "試著冷靜地輸入。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assign",
+    "example": "The team will assign soon.",
+    "exampleZh": "團隊很快會分配。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "premise",
+    "example": "We should premise the problem.",
+    "exampleZh": "我們應該前提這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "campus",
+    "example": "We visited the campus yesterday.",
+    "exampleZh": "我們昨天去了校園。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "administrator",
+    "example": "The administrator arrived early.",
+    "exampleZh": "那位管理人提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "episode",
+    "example": "A lesson on episode helped everyone.",
+    "exampleZh": "一堂關於插曲的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evolve",
+    "example": "Languages evolve over time.",
+    "exampleZh": "語言會隨時間演變。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "toss",
+    "example": "We should toss the problem.",
+    "exampleZh": "我們應該投擲這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lifetime",
+    "example": "The report covered lifetime today.",
+    "exampleZh": "今天的報告涵蓋了一生。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "reinforce",
+    "example": "Examples reinforce the lesson.",
+    "exampleZh": "例子能加強這堂課的效果。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "utility",
+    "example": "The teacher introduced utility today.",
+    "exampleZh": "老師今天介紹了功用。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "undergo",
+    "example": "The patient will undergo surgery.",
+    "exampleZh": "病人將接受手術。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "architecture",
+    "example": "The article mentioned architecture briefly.",
+    "exampleZh": "文章簡短提到了建築學。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clause",
+    "example": "She learned about clause yesterday.",
+    "exampleZh": "她昨天學到了子句。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cop",
+    "example": "They may cop tomorrow.",
+    "exampleZh": "他們明天可能會警官。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "equation",
+    "example": "His question about equation surprised me.",
+    "exampleZh": "他關於相等的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accomplish",
+    "example": "We can accomplish this today.",
+    "exampleZh": "我們今天可以完成這件事。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "emission",
+    "example": "A lesson on emission helped everyone.",
+    "exampleZh": "一堂關於發射的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "architect",
+    "example": "The architect arrived early.",
+    "exampleZh": "那位建築師提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "corn",
+    "example": "The corn tasted fresh.",
+    "exampleZh": "玉蜀黍吃起來很新鮮。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "respectively",
+    "example": "Tom and Ann scored 80 and 90, respectively.",
+    "exampleZh": "湯姆和安分別得了80分和90分。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "prosecutor",
+    "example": "The prosecutor arrived early.",
+    "exampleZh": "那位實行者提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "viewer",
+    "example": "The viewer arrived early.",
+    "exampleZh": "那位觀察者提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tenant",
+    "example": "The tenant arrived early.",
+    "exampleZh": "那位承租人提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "slave",
+    "example": "The slave arrived early.",
+    "exampleZh": "那位奴隸提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "corridor",
+    "example": "We visited the corridor yesterday.",
+    "exampleZh": "我們昨天去了走廊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diversity",
+    "example": "The book explains diversity clearly.",
+    "exampleZh": "這本書清楚解釋了差異。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "virtue",
+    "example": "His question about virtue surprised me.",
+    "exampleZh": "他關於德行的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "acceptance",
+    "example": "They studied acceptance in school.",
+    "exampleZh": "他們在學校學了接受。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "patch",
+    "example": "They may patch tomorrow.",
+    "exampleZh": "他們明天可能會片。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guidance",
+    "example": "The topic of guidance came up.",
+    "exampleZh": "指導這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "jack",
+    "example": "The team will jack soon.",
+    "exampleZh": "團隊很快會插座。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "terror",
+    "example": "The report covered terror today.",
+    "exampleZh": "今天的報告涵蓋了恐怖。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "specify",
+    "example": "Please specify your arrival time.",
+    "exampleZh": "請指定你的抵達時間。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "organic",
+    "example": "This problem is organic.",
+    "exampleZh": "這個問題是器官的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "elite",
+    "example": "We discussed elite after class.",
+    "exampleZh": "我們下課後討論了精華。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evident",
+    "example": "She gave a evident answer.",
+    "exampleZh": "她給了一個顯然的的回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "theoretical",
+    "example": "That choice seemed theoretical.",
+    "exampleZh": "那個選擇看起來很理論的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "overlook",
+    "example": "Do not overlook small details.",
+    "exampleZh": "不要忽略小細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consume",
+    "example": "Cars consume fuel quickly.",
+    "exampleZh": "汽車會快速消耗燃料。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "palm",
+    "example": "She touched her palm gently.",
+    "exampleZh": "她輕輕碰了自己的手掌。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assert",
+    "example": "She can assert her rights.",
+    "exampleZh": "她可以主張自己的權利。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "capability",
+    "example": "The topic of capability came up.",
+    "exampleZh": "能力這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "residential",
+    "example": "That choice seemed residential.",
+    "exampleZh": "那個選擇看起來很住宅的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gaze",
+    "example": "They may gaze tomorrow.",
+    "exampleZh": "他們明天可能會注視。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "companion",
+    "example": "Try to companion calmly.",
+    "exampleZh": "試著冷靜地朋友。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consent",
+    "example": "The team will consent soon.",
+    "exampleZh": "團隊很快會同意。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "attribute",
+    "example": "We should attribute the problem.",
+    "exampleZh": "我們應該屬性這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "comprise",
+    "example": "The team will comprise five members.",
+    "exampleZh": "這個團隊將包含五名成員。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cattle",
+    "example": "A cattle moved quietly nearby.",
+    "exampleZh": "一隻牛在附近安靜地移動。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "experimental",
+    "example": "The design looked experimental.",
+    "exampleZh": "這個設計看起來很實驗的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "privilege",
+    "example": "The team will privilege soon.",
+    "exampleZh": "團隊很快會特權。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "everyday",
+    "example": "This problem is everyday.",
+    "exampleZh": "這個問題是每天的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "heritage",
+    "example": "A lesson on heritage helped everyone.",
+    "exampleZh": "一堂關於遺產的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "discrimination",
+    "example": "The topic of discrimination came up.",
+    "exampleZh": "差別這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "yell",
+    "example": "Please do not yell indoors.",
+    "exampleZh": "請不要在室內大喊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "resemble",
+    "example": "The twins resemble each other.",
+    "exampleZh": "這對雙胞胎彼此很像。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rat",
+    "example": "A rat moved quietly nearby.",
+    "exampleZh": "一隻鼠在附近安靜地移動。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "structural",
+    "example": "This problem is structural.",
+    "exampleZh": "這個問題是結構的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "solar",
+    "example": "The result was solar.",
+    "exampleZh": "結果是太陽的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ideology",
+    "example": "The article mentioned ideology briefly.",
+    "exampleZh": "文章簡短提到了思想體系。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "regardless",
+    "example": "We continued regardless of rain.",
+    "exampleZh": "不管下雨，我們繼續前進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "practitioner",
+    "example": "The practitioner arrived early.",
+    "exampleZh": "那位從業者提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ghost",
+    "example": "Please ghost this detail.",
+    "exampleZh": "請鬼這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "thereby",
+    "example": "The rule saved time, thereby reducing stress.",
+    "exampleZh": "這項規則節省了時間，因此減少了壓力。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "horizon",
+    "example": "A lesson on horizon helped everyone.",
+    "exampleZh": "一堂關於地平線的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assignment",
+    "example": "The topic of assignment came up.",
+    "exampleZh": "分配這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "greet",
+    "example": "Please greet the guests warmly.",
+    "exampleZh": "請熱情地問候客人。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clue",
+    "example": "Please clue this detail.",
+    "exampleZh": "請線索這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dose",
+    "example": "They may dose tomorrow.",
+    "exampleZh": "他們明天可能會劑量。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "readily",
+    "example": "She readily accepted the offer.",
+    "exampleZh": "她欣然接受了這個提議。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "motivation",
+    "example": "We discussed motivation after class.",
+    "exampleZh": "我們下課後討論了動機。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "wealthy",
+    "example": "She gave a wealthy answer.",
+    "exampleZh": "她給了一個富有的的回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "format",
+    "example": "Please format this detail.",
+    "exampleZh": "請開本這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "transportation",
+    "example": "The book explains transportation clearly.",
+    "exampleZh": "這本書清楚解釋了運輸。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "innovation",
+    "example": "His question about innovation surprised me.",
+    "exampleZh": "他關於改革的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "wisdom",
+    "example": "They studied wisdom in school.",
+    "exampleZh": "他們在學校學了智慧。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "china",
+    "example": "A lesson on china helped everyone.",
+    "exampleZh": "一堂關於中國的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "particle",
+    "example": "The topic of particle came up.",
+    "exampleZh": "顆粒這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sin",
+    "example": "They may sin tomorrow.",
+    "exampleZh": "他們明天可能會罪。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "expertise",
+    "example": "The report covered expertise today.",
+    "exampleZh": "今天的報告涵蓋了專家意見。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "render",
+    "example": "Stress can render sleep difficult.",
+    "exampleZh": "壓力可能使睡眠變得困難。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "amongst",
+    "example": "The keys are amongst the papers.",
+    "exampleZh": "鑰匙在文件之間。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diverse",
+    "example": "The result was diverse.",
+    "exampleZh": "結果是不同的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "peasant",
+    "example": "The peasant arrived early.",
+    "exampleZh": "那位農夫提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tobacco",
+    "example": "The tobacco tasted fresh.",
+    "exampleZh": "菸草吃起來很新鮮。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "receiver",
+    "example": "The receiver arrived early.",
+    "exampleZh": "那位接收器提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "defensive",
+    "example": "His question about defensive surprised me.",
+    "exampleZh": "他關於防衛的的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "modify",
+    "example": "Please modify this detail.",
+    "exampleZh": "請修正這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "initiate",
+    "example": "They may initiate tomorrow.",
+    "exampleZh": "他們明天可能會入會。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "basket",
+    "example": "The basket was on the table.",
+    "exampleZh": "籃在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "beg",
+    "example": "Please do not beg for money.",
+    "exampleZh": "請不要乞討金錢。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sue",
+    "example": "They may sue the company.",
+    "exampleZh": "他們可能會起訴那家公司。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "characterize",
+    "example": "These details characterize her style.",
+    "exampleZh": "這些細節刻畫了她的風格。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accounting",
+    "example": "The teacher introduced accounting today.",
+    "exampleZh": "老師今天介紹了會計學。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pond",
+    "example": "Try to pond calmly.",
+    "exampleZh": "試著冷靜地池塘。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lawn",
+    "example": "The article mentioned lawn briefly.",
+    "exampleZh": "文章簡短提到了草地。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "essence",
+    "example": "She learned about essence yesterday.",
+    "exampleZh": "她昨天學到了實質。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tribe",
+    "example": "The book explains tribe clearly.",
+    "exampleZh": "這本書清楚解釋了宗族。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "compound",
+    "example": "They may compound tomorrow.",
+    "exampleZh": "他們明天可能會混合物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "motive",
+    "example": "They studied motive in school.",
+    "exampleZh": "他們在學校學了動機。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "judicial",
+    "example": "The result was judicial.",
+    "exampleZh": "結果是法庭的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "norm",
+    "example": "The topic of norm came up.",
+    "exampleZh": "基準這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "handful",
+    "example": "We need more information about handful.",
+    "exampleZh": "我們需要更多關於少數的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "buck",
+    "example": "They may buck tomorrow.",
+    "exampleZh": "他們明天可能會元。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scenario",
+    "example": "She wrote notes on scenario.",
+    "exampleZh": "她寫了關於劇本提綱的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consensus",
+    "example": "The teacher introduced consensus today.",
+    "exampleZh": "老師今天介紹了合意。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sculpture",
+    "example": "We should sculpture the problem.",
+    "exampleZh": "我們應該雕刻這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "blanket",
+    "example": "The blanket was on the table.",
+    "exampleZh": "毛毯在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "enforce",
+    "example": "Police enforce traffic laws.",
+    "exampleZh": "警方執行交通法規。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "complexity",
+    "example": "The book explains complexity clearly.",
+    "exampleZh": "這本書清楚解釋了複雜。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "identical",
+    "example": "His tone felt identical.",
+    "exampleZh": "他的語氣感覺很同一的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "colony",
+    "example": "They studied colony in school.",
+    "exampleZh": "他們在學校學了殖民地。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accommodate",
+    "example": "This room can accommodate ten people.",
+    "exampleZh": "這個房間可以容納十個人。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "testimony",
+    "example": "The topic of testimony came up.",
+    "exampleZh": "證言這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "exclusive",
+    "example": "That choice seemed exclusive.",
+    "exampleZh": "那個選擇看起來很排外的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "subtle",
+    "example": "The design looked subtle.",
+    "exampleZh": "這個設計看起來很敏銳的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lifestyle",
+    "example": "She wrote notes on lifestyle.",
+    "exampleZh": "她寫了關於生活方式的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "regulate",
+    "example": "The law will regulate advertising.",
+    "exampleZh": "法律將規範廣告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sandwich",
+    "example": "The sandwich tasted fresh.",
+    "exampleZh": "三明治吃起來很新鮮。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "miracle",
+    "example": "The article mentioned miracle briefly.",
+    "exampleZh": "文章簡短提到了奇蹟。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "duck",
+    "example": "A duck moved quietly nearby.",
+    "exampleZh": "一隻鴨子在附近安靜地移動。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "legitimate",
+    "example": "We should legitimate the problem.",
+    "exampleZh": "我們應該合法的這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "odds",
+    "example": "His question about odds surprised me.",
+    "exampleZh": "他關於可能性的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "landing",
+    "example": "They studied landing in school.",
+    "exampleZh": "他們在學校學了登陸。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cluster",
+    "example": "Try to cluster calmly.",
+    "exampleZh": "試著冷靜地串。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "depict",
+    "example": "The team will depict soon.",
+    "exampleZh": "團隊很快會描述。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "plead",
+    "example": "He will plead guilty tomorrow.",
+    "exampleZh": "他明天會認罪。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "legend",
+    "example": "The report covered legend today.",
+    "exampleZh": "今天的報告涵蓋了傳說。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "mechanical",
+    "example": "His tone felt mechanical.",
+    "exampleZh": "他的語氣感覺很機械的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "angel",
+    "example": "The teacher introduced angel today.",
+    "exampleZh": "老師今天介紹了天使。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "honey",
+    "example": "The honey tasted fresh.",
+    "exampleZh": "蜂蜜吃起來很新鮮。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consequently",
+    "example": "Sales fell; consequently, profits dropped.",
+    "exampleZh": "銷售下降，因此利潤也下滑。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diagnosis",
+    "example": "She learned about diagnosis yesterday.",
+    "exampleZh": "她昨天學到了診斷。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "grin",
+    "example": "They may grin tomorrow.",
+    "exampleZh": "他們明天可能會露齒笑。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "kit",
+    "example": "His question about kit surprised me.",
+    "exampleZh": "他關於裝備的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "harsh",
+    "example": "This problem is harsh.",
+    "exampleZh": "這個問題是粗糙的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rabbit",
+    "example": "A rabbit moved quietly nearby.",
+    "exampleZh": "一隻兔子在附近安靜地移動。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "necessity",
+    "example": "The topic of necessity came up.",
+    "exampleZh": "需要這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "administer",
+    "example": "Nurses administer medicine carefully.",
+    "exampleZh": "護理師會謹慎給藥。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "doctrine",
+    "example": "The report covered doctrine today.",
+    "exampleZh": "今天的報告涵蓋了教條。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "oral",
+    "example": "She wrote notes on oral.",
+    "exampleZh": "她寫了關於口試的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "paragraph",
+    "example": "We should paragraph the problem.",
+    "exampleZh": "我們應該段落這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "random",
+    "example": "She answered random today.",
+    "exampleZh": "她今天隨意回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "habitat",
+    "example": "The article mentioned habitat briefly.",
+    "exampleZh": "文章簡短提到了棲息地。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assemble",
+    "example": "Workers assemble the parts here.",
+    "exampleZh": "工人在這裡組裝零件。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guilt",
+    "example": "The book explains guilt clearly.",
+    "exampleZh": "這本書清楚解釋了罪行。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bureau",
+    "example": "His question about bureau surprised me.",
+    "exampleZh": "他關於局的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cabin",
+    "example": "Please cabin this detail.",
+    "exampleZh": "請小屋這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "residence",
+    "example": "A lesson on residence helped everyone.",
+    "exampleZh": "一堂關於住宅的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "convey",
+    "example": "Her smile can convey warmth.",
+    "exampleZh": "她的微笑能傳達溫暖。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "colonial",
+    "example": "That choice seemed colonial.",
+    "exampleZh": "那個選擇看起來很殖民的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "objection",
+    "example": "The report covered objection today.",
+    "exampleZh": "今天的報告涵蓋了異議。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fluid",
+    "example": "She wrote notes on fluid.",
+    "exampleZh": "她寫了關於液體的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "monster",
+    "example": "The teacher introduced monster today.",
+    "exampleZh": "老師今天介紹了怪物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "constraint",
+    "example": "We discussed constraint after class.",
+    "exampleZh": "我們下課後討論了強制。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "wildlife",
+    "example": "The article mentioned wildlife briefly.",
+    "exampleZh": "文章簡短提到了野生動植物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "hardware",
+    "example": "She learned about hardware yesterday.",
+    "exampleZh": "她昨天學到了硬件。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "privacy",
+    "example": "The book explains privacy clearly.",
+    "exampleZh": "這本書清楚解釋了隱私。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "indicator",
+    "example": "His question about indicator surprised me.",
+    "exampleZh": "他關於指示器的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "spectrum",
+    "example": "They studied spectrum in school.",
+    "exampleZh": "他們在學校學了光譜。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "radiation",
+    "example": "A lesson on radiation helped everyone.",
+    "exampleZh": "一堂關於輻射的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scholarship",
+    "example": "The topic of scholarship came up.",
+    "exampleZh": "學問這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "narrative",
+    "example": "We need more information about narrative.",
+    "exampleZh": "我們需要更多關於敘述的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "log",
+    "example": "They may log tomorrow.",
+    "exampleZh": "他們明天可能會記錄。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "portfolio",
+    "example": "She wrote notes on portfolio.",
+    "exampleZh": "她寫了關於皮包的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "limb",
+    "example": "She touched her limb gently.",
+    "exampleZh": "她輕輕碰了自己的四肢。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pine",
+    "example": "We should pine the problem.",
+    "exampleZh": "我們應該松樹這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "decent",
+    "example": "She gave a decent answer.",
+    "exampleZh": "她給了一個有分寸的的回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sheer",
+    "example": "They may sheer tomorrow.",
+    "exampleZh": "他們明天可能會絕對的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rifle",
+    "example": "The rifle was on the table.",
+    "exampleZh": "來復槍在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "underlying",
+    "example": "His tone felt underlying.",
+    "exampleZh": "他的語氣感覺很在下面的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "doorway",
+    "example": "They studied doorway in school.",
+    "exampleZh": "他們在學校學了門口。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "chronic",
+    "example": "A lesson on chronic helped everyone.",
+    "exampleZh": "一堂關於慢性的的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "legacy",
+    "example": "The topic of legacy came up.",
+    "exampleZh": "祖先傳下來之物這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "integrity",
+    "example": "We need more information about integrity.",
+    "exampleZh": "我們需要更多關於正直的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "landlord",
+    "example": "The report covered landlord today.",
+    "exampleZh": "今天的報告涵蓋了房東。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ritual",
+    "example": "She wrote notes on ritual.",
+    "exampleZh": "她寫了關於儀式的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "timber",
+    "example": "Please timber this detail.",
+    "exampleZh": "請木材這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sacred",
+    "example": "The result was sacred.",
+    "exampleZh": "結果是神聖的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "nonetheless",
+    "example": "He spoke nonetheless in the meeting.",
+    "exampleZh": "他在會議中然而發言。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "beam",
+    "example": "The team will beam soon.",
+    "exampleZh": "團隊很快會橫樑。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "galaxy",
+    "example": "The book explains galaxy clearly.",
+    "exampleZh": "這本書清楚解釋了銀河。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "loyalty",
+    "example": "His question about loyalty surprised me.",
+    "exampleZh": "他關於忠貞的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "prediction",
+    "example": "They studied prediction in school.",
+    "exampleZh": "他們在學校學了預言。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rational",
+    "example": "A lesson on rational helped everyone.",
+    "exampleZh": "一堂關於理性的的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conversion",
+    "example": "The topic of conversion came up.",
+    "exampleZh": "轉變這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lion",
+    "example": "A lion moved quietly nearby.",
+    "exampleZh": "一隻獅子在附近安靜地移動。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ward",
+    "example": "Please ward this detail.",
+    "exampleZh": "請病房這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "testify",
+    "example": "The witness will testify tomorrow.",
+    "exampleZh": "證人明天會作證。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "stimulus",
+    "example": "The teacher introduced stimulus today.",
+    "exampleZh": "老師今天介紹了刺激。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "horrible",
+    "example": "The result was horrible.",
+    "exampleZh": "結果是可怕的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "engagement",
+    "example": "The article mentioned engagement briefly.",
+    "exampleZh": "文章簡短提到了諾言。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "poster",
+    "example": "She learned about poster yesterday.",
+    "exampleZh": "她昨天學到了海報。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "frank",
+    "example": "They may frank tomorrow.",
+    "exampleZh": "他們明天可能會坦白的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "endless",
+    "example": "His tone felt endless.",
+    "exampleZh": "他的語氣感覺很不停的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "casual",
+    "example": "They studied casual in school.",
+    "exampleZh": "他們在學校學了偶然的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "abstract",
+    "example": "We should abstract the problem.",
+    "exampleZh": "我們應該抽象的這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "transmission",
+    "example": "The topic of transmission came up.",
+    "exampleZh": "傳輸這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sole",
+    "example": "They may sole tomorrow.",
+    "exampleZh": "他們明天可能會腳掌。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "slam",
+    "example": "Try to slam calmly.",
+    "exampleZh": "試著冷靜地砰然聲。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "salmon",
+    "example": "The salmon tasted fresh.",
+    "exampleZh": "鮭魚吃起來很新鮮。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "telescope",
+    "example": "The telescope was on the table.",
+    "exampleZh": "望遠鏡在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "statistical",
+    "example": "The result was statistical.",
+    "exampleZh": "結果是統計的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "productivity",
+    "example": "The article mentioned productivity briefly.",
+    "exampleZh": "文章簡短提到了生產力。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conception",
+    "example": "She learned about conception yesterday.",
+    "exampleZh": "她昨天學到了觀念。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scatter",
+    "example": "The team will scatter soon.",
+    "exampleZh": "團隊很快會消散。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sword",
+    "example": "The sword was on the table.",
+    "exampleZh": "刀在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "entity",
+    "example": "They studied entity in school.",
+    "exampleZh": "他們在學校學了實體。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "equip",
+    "example": "The school will equip each room.",
+    "exampleZh": "學校會裝備每間教室。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "contractor",
+    "example": "The topic of contractor came up.",
+    "exampleZh": "立契約的人這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "garlic",
+    "example": "The garlic tasted fresh.",
+    "exampleZh": "大蒜吃起來很新鮮。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "handsome",
+    "example": "The design looked handsome.",
+    "exampleZh": "這個設計看起來很英俊的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "versus",
+    "example": "She wrote notes on versus.",
+    "exampleZh": "她寫了關於對的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "medieval",
+    "example": "This problem is medieval.",
+    "exampleZh": "這個問題是中古的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "obstacle",
+    "example": "We discussed obstacle after class.",
+    "exampleZh": "我們下課後討論了障礙。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cliff",
+    "example": "The article mentioned cliff briefly.",
+    "exampleZh": "文章簡短提到了懸崖。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "seller",
+    "example": "She learned about seller yesterday.",
+    "exampleZh": "她昨天學到了銷售者。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "celebrity",
+    "example": "The book explains celebrity clearly.",
+    "exampleZh": "這本書清楚解釋了名聲。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pursuit",
+    "example": "His question about pursuit surprised me.",
+    "exampleZh": "他關於追蹤的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distinctive",
+    "example": "This problem is distinctive.",
+    "exampleZh": "這個問題是有特色的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "relieve",
+    "example": "This medicine can relieve pain.",
+    "exampleZh": "這種藥可以緩解疼痛。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "glory",
+    "example": "We should glory the problem.",
+    "exampleZh": "我們應該光榮這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "canal",
+    "example": "Please canal this detail.",
+    "exampleZh": "請運河這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "attendance",
+    "example": "The report covered attendance today.",
+    "exampleZh": "今天的報告涵蓋了出席。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "imperial",
+    "example": "She wrote notes on imperial.",
+    "exampleZh": "她寫了關於帝王的的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "filter",
+    "example": "The team will filter soon.",
+    "exampleZh": "團隊很快會濾波器。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "isolation",
+    "example": "We discussed isolation after class.",
+    "exampleZh": "我們下課後討論了隔絕。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "spill",
+    "example": "Please spill this detail.",
+    "exampleZh": "請溢出這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "profound",
+    "example": "That choice seemed profound.",
+    "exampleZh": "那個選擇看起來很極深的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ongoing",
+    "example": "The book explains ongoing clearly.",
+    "exampleZh": "這本書清楚解釋了前進的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "descend",
+    "example": "The plane began to descend.",
+    "exampleZh": "飛機開始下降。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bulk",
+    "example": "We should bulk the problem.",
+    "exampleZh": "我們應該大小這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bonus",
+    "example": "A lesson on bonus helped everyone.",
+    "exampleZh": "一堂關於獎金的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "array",
+    "example": "They may array tomorrow.",
+    "exampleZh": "他們明天可能會排列。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "breach",
+    "example": "Try to breach calmly.",
+    "exampleZh": "試著冷靜地裂口。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conceive",
+    "example": "It is hard to conceive the scale.",
+    "exampleZh": "很難想像這個規模。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fist",
+    "example": "We should fist the problem.",
+    "exampleZh": "我們應該拳頭這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "allowance",
+    "example": "Please allowance this detail.",
+    "exampleZh": "請津貼這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "devise",
+    "example": "They may devise tomorrow.",
+    "exampleZh": "他們明天可能會設計。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fragment",
+    "example": "The article mentioned fragment briefly.",
+    "exampleZh": "文章簡短提到了碎片。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "confess",
+    "example": "He decided to confess everything.",
+    "exampleZh": "他決定坦白一切。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "endorse",
+    "example": "The teacher will endorse the plan.",
+    "exampleZh": "老師會支持這個計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "chef",
+    "example": "His question about chef surprised me.",
+    "exampleZh": "他關於廚師的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "leisure",
+    "example": "They studied leisure in school.",
+    "exampleZh": "他們在學校學了空閒。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "remedy",
+    "example": "Try to remedy calmly.",
+    "exampleZh": "試著冷靜地藥物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "comply",
+    "example": "All visitors must comply.",
+    "exampleZh": "所有訪客都必須遵守。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "vanish",
+    "example": "The sound seemed to vanish.",
+    "exampleZh": "聲音似乎消失了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "inadequate",
+    "example": "The design looked inadequate.",
+    "exampleZh": "這個設計看起來很不充分的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "turnover",
+    "example": "She wrote notes on turnover.",
+    "exampleZh": "她寫了關於翻倒的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "humanity",
+    "example": "The teacher introduced humanity today.",
+    "exampleZh": "老師今天介紹了人性。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "prescription",
+    "example": "We discussed prescription after class.",
+    "exampleZh": "我們下課後討論了處方。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "candle",
+    "example": "We should candle the problem.",
+    "exampleZh": "我們應該蠟燭這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "precious",
+    "example": "That choice seemed precious.",
+    "exampleZh": "那個選擇看起來很寶貴的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guardian",
+    "example": "The guardian arrived early.",
+    "exampleZh": "那位看守者提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "instructor",
+    "example": "The instructor arrived early.",
+    "exampleZh": "那位教員提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "oak",
+    "example": "They studied oak in school.",
+    "exampleZh": "他們在學校學了橡樹。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "canvas",
+    "example": "The canvas was on the table.",
+    "exampleZh": "帆布在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "jaw",
+    "example": "She touched her jaw gently.",
+    "exampleZh": "她輕輕碰了自己的顎。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "trunk",
+    "example": "They may trunk tomorrow.",
+    "exampleZh": "他們明天可能會樹幹。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "instinct",
+    "example": "The report covered instinct today.",
+    "exampleZh": "今天的報告涵蓋了本能。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "destination",
+    "example": "She wrote notes on destination.",
+    "exampleZh": "她寫了關於目的地的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "nasty",
+    "example": "This problem is nasty.",
+    "exampleZh": "這個問題是汙穢的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sensation",
+    "example": "We discussed sensation after class.",
+    "exampleZh": "我們下課後討論了感覺。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "notably",
+    "example": "He spoke notably in the meeting.",
+    "exampleZh": "他在會議中顯著地發言。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "merit",
+    "example": "Try to merit calmly.",
+    "exampleZh": "試著冷靜地優點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dynamic",
+    "example": "The book explains dynamic clearly.",
+    "exampleZh": "這本書清楚解釋了動態的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rip",
+    "example": "We should rip the problem.",
+    "exampleZh": "我們應該裂痕這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "widow",
+    "example": "Please widow this detail.",
+    "exampleZh": "請寡婦這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "persist",
+    "example": "The pain may persist for days.",
+    "exampleZh": "疼痛可能會持續好幾天。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "grasp",
+    "example": "Try to grasp calmly.",
+    "exampleZh": "試著冷靜地把握。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "stance",
+    "example": "We need more information about stance.",
+    "exampleZh": "我們需要更多關於準備擊球姿勢的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "catalogue",
+    "example": "We should catalogue the problem.",
+    "exampleZh": "我們應該目錄這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "influential",
+    "example": "His tone felt influential.",
+    "exampleZh": "他的語氣感覺很有影響的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "registration",
+    "example": "The teacher introduced registration today.",
+    "exampleZh": "老師今天介紹了登記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fraction",
+    "example": "We discussed fraction after class.",
+    "exampleZh": "我們下課後討論了小部分。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "installation",
+    "example": "The article mentioned installation briefly.",
+    "exampleZh": "文章簡短提到了安裝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "statutory",
+    "example": "That choice seemed statutory.",
+    "exampleZh": "那個選擇看起來很法令的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "interfere",
+    "example": "Please interfere this detail.",
+    "exampleZh": "請妨礙這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "forehead",
+    "example": "She touched her forehead gently.",
+    "exampleZh": "她輕輕碰了自己的額。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ethical",
+    "example": "This problem is ethical.",
+    "exampleZh": "這個問題是倫理的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "progressive",
+    "example": "A lesson on progressive helped everyone.",
+    "exampleZh": "一堂關於改革論者的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bold",
+    "example": "The topic of bold came up.",
+    "exampleZh": "大膽的這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rod",
+    "example": "We need more information about rod.",
+    "exampleZh": "我們需要更多關於竿的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "mutter",
+    "example": "They may mutter tomorrow.",
+    "exampleZh": "他們明天可能會喃喃低語。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "suburb",
+    "example": "She wrote notes on suburb.",
+    "exampleZh": "她寫了關於市郊住宅區的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dedicate",
+    "example": "The team will dedicate soon.",
+    "exampleZh": "團隊很快會獻出。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "acute",
+    "example": "The result was acute.",
+    "exampleZh": "結果是尖銳的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "metropolitan",
+    "example": "The article mentioned metropolitan briefly.",
+    "exampleZh": "文章簡短提到了大都市居民。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "inherit",
+    "example": "She will inherit the house.",
+    "exampleZh": "她將繼承這棟房子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "preliminary",
+    "example": "The book explains preliminary clearly.",
+    "exampleZh": "這本書清楚解釋了初步做法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rebuild",
+    "example": "The team will rebuild soon.",
+    "exampleZh": "團隊很快會改建。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ideological",
+    "example": "This problem is ideological.",
+    "exampleZh": "這個問題是意識形態的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "barn",
+    "example": "A lesson on barn helped everyone.",
+    "exampleZh": "一堂關於穀倉的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "verbal",
+    "example": "She gave a verbal answer.",
+    "exampleZh": "她給了一個用言辭的的回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "applicant",
+    "example": "The applicant arrived early.",
+    "exampleZh": "那位申請者提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dawn",
+    "example": "The team will dawn soon.",
+    "exampleZh": "團隊很快會破曉。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "organism",
+    "example": "She wrote notes on organism.",
+    "exampleZh": "她寫了關於生物的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "audit",
+    "example": "Please audit this detail.",
+    "exampleZh": "請審計這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lawsuit",
+    "example": "We discussed lawsuit after class.",
+    "exampleZh": "我們下課後討論了訴訟。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "promising",
+    "example": "She gave a promising answer.",
+    "exampleZh": "她給了一個有希望的的回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bounce",
+    "example": "The team will bounce soon.",
+    "exampleZh": "團隊很快會跳。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "invisible",
+    "example": "The design looked invisible.",
+    "exampleZh": "這個設計看起來很看不見的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "closure",
+    "example": "Please closure this detail.",
+    "exampleZh": "請關閉這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "neutral",
+    "example": "They studied neutral in school.",
+    "exampleZh": "他們在學校學了中立者。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "correspond",
+    "example": "These numbers correspond closely.",
+    "exampleZh": "這些數字非常相符。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diminish",
+    "example": "The noise began to diminish.",
+    "exampleZh": "噪音開始減弱。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "partial",
+    "example": "We need more information about partial.",
+    "exampleZh": "我們需要更多關於部分的的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "secondly",
+    "example": "She answered secondly today.",
+    "exampleZh": "她今天第二回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "induce",
+    "example": "Stress can induce headaches.",
+    "exampleZh": "壓力可能引發頭痛。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "athletic",
+    "example": "This problem is athletic.",
+    "exampleZh": "這個問題是運動的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "specimen",
+    "example": "We discussed specimen after class.",
+    "exampleZh": "我們下課後討論了樣品。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tray",
+    "example": "The article mentioned tray briefly.",
+    "exampleZh": "文章簡短提到了托盤。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "grief",
+    "example": "She learned about grief yesterday.",
+    "exampleZh": "她昨天學到了傷心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dock",
+    "example": "They may dock tomorrow.",
+    "exampleZh": "他們明天可能會碼頭。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assurance",
+    "example": "His question about assurance surprised me.",
+    "exampleZh": "他關於保證的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "comparable",
+    "example": "This problem is comparable.",
+    "exampleZh": "這個問題是可比較的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bias",
+    "example": "She answered bias today.",
+    "exampleZh": "她今天偏見回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "supervisor",
+    "example": "The supervisor arrived early.",
+    "exampleZh": "那位管理者提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "devil",
+    "example": "They may devil tomorrow.",
+    "exampleZh": "他們明天可能會魔鬼。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "productive",
+    "example": "The design looked productive.",
+    "exampleZh": "這個設計看起來很能生產的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tuck",
+    "example": "Please tuck in your shirt.",
+    "exampleZh": "請把襯衫紮進去。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fortunately",
+    "example": "The plan changed fortunately.",
+    "exampleZh": "計畫幸運地改變了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accordingly",
+    "example": "She answered accordingly today.",
+    "exampleZh": "她今天相應地回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sphere",
+    "example": "They may sphere tomorrow.",
+    "exampleZh": "他們明天可能會球。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "warrior",
+    "example": "The warrior arrived early.",
+    "exampleZh": "那位戰士提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "disposal",
+    "example": "The book explains disposal clearly.",
+    "exampleZh": "這本書清楚解釋了丟掉。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "endure",
+    "example": "She had to endure the pain.",
+    "exampleZh": "她必須忍受疼痛。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pat",
+    "example": "The plan changed pat.",
+    "exampleZh": "計畫輕拍改變了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "carve",
+    "example": "He can carve wood beautifully.",
+    "exampleZh": "他能漂亮地雕刻木頭。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pad",
+    "example": "Try to pad calmly.",
+    "exampleZh": "試著冷靜地填補。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "forum",
+    "example": "We need more information about forum.",
+    "exampleZh": "我們需要更多關於論壇的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "weird",
+    "example": "The report covered weird today.",
+    "exampleZh": "今天的報告涵蓋了怪異的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sunlight",
+    "example": "She wrote notes on sunlight.",
+    "exampleZh": "她寫了關於日光的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "realm",
+    "example": "The teacher introduced realm today.",
+    "exampleZh": "老師今天介紹了王國。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "feedback",
+    "example": "We discussed feedback after class.",
+    "exampleZh": "我們下課後討論了反饋。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "intent",
+    "example": "The article mentioned intent briefly.",
+    "exampleZh": "文章簡短提到了意圖。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "exclusively",
+    "example": "The plan changed exclusively.",
+    "exampleZh": "計畫排他地改變了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "laser",
+    "example": "The book explains laser clearly.",
+    "exampleZh": "這本書清楚解釋了激光。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "portray",
+    "example": "They may portray tomorrow.",
+    "exampleZh": "他們明天可能會描繪。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "restoration",
+    "example": "They studied restoration in school.",
+    "exampleZh": "他們在學校學了恢復。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "arena",
+    "example": "A lesson on arena helped everyone.",
+    "exampleZh": "一堂關於角鬥場的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "treasure",
+    "example": "We should treasure the problem.",
+    "exampleZh": "我們應該寶物這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "desirable",
+    "example": "That choice seemed desirable.",
+    "exampleZh": "那個選擇看起來很令人想望的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "explicit",
+    "example": "The design looked explicit.",
+    "exampleZh": "這個設計看起來很詳述的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "crawl",
+    "example": "The baby can crawl now.",
+    "exampleZh": "寶寶現在會爬了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "frown",
+    "example": "The team will frown soon.",
+    "exampleZh": "團隊很快會皺眉。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "excessive",
+    "example": "The result was excessive.",
+    "exampleZh": "結果是過度的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "seminar",
+    "example": "The article mentioned seminar briefly.",
+    "exampleZh": "文章簡短提到了研究班。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "memorial",
+    "example": "She learned about memorial yesterday.",
+    "exampleZh": "她昨天學到了紀念物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ambitious",
+    "example": "The design looked ambitious.",
+    "exampleZh": "這個設計看起來很有野心的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "doll",
+    "example": "His question about doll surprised me.",
+    "exampleZh": "他關於洋娃娃的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dilemma",
+    "example": "They studied dilemma in school.",
+    "exampleZh": "他們在學校學了困境。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "deadly",
+    "example": "She answered deadly today.",
+    "exampleZh": "她今天致命的回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "namely",
+    "example": "He spoke namely in the meeting.",
+    "exampleZh": "他在會議中即發言。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "burning",
+    "example": "We need more information about burning.",
+    "exampleZh": "我們需要更多關於燃燒的的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "thigh",
+    "example": "The report covered thigh today.",
+    "exampleZh": "今天的報告涵蓋了大腿。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cling",
+    "example": "The child tried to cling to her.",
+    "exampleZh": "孩子試著緊緊抱住她。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "parade",
+    "example": "Please parade this detail.",
+    "exampleZh": "請遊行這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "divine",
+    "example": "We discussed divine after class.",
+    "exampleZh": "我們下課後討論了神的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "copper",
+    "example": "The article mentioned copper briefly.",
+    "exampleZh": "文章簡短提到了銅。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "monument",
+    "example": "She learned about monument yesterday.",
+    "exampleZh": "她昨天學到了紀念碑。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ladder",
+    "example": "We should ladder the problem.",
+    "exampleZh": "我們應該梯這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "breeze",
+    "example": "Please breeze this detail.",
+    "exampleZh": "請微風這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "revelation",
+    "example": "They studied revelation in school.",
+    "exampleZh": "他們在學校學了揭露。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "infrastructure",
+    "example": "A lesson on infrastructure helped everyone.",
+    "exampleZh": "一堂關於基礎結構的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gravity",
+    "example": "The topic of gravity came up.",
+    "exampleZh": "地心引力這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "protective",
+    "example": "That choice seemed protective.",
+    "exampleZh": "那個選擇看起來很給予保護的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "contend",
+    "example": "They contend that prices are unfair.",
+    "exampleZh": "他們主張價格不公平。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "similarity",
+    "example": "She wrote notes on similarity.",
+    "exampleZh": "她寫了關於類似的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "hierarchy",
+    "example": "The teacher introduced hierarchy today.",
+    "exampleZh": "老師今天介紹了等級制度。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pulse",
+    "example": "The team will pulse soon.",
+    "exampleZh": "團隊很快會脈衝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "update",
+    "example": "Please update the file today.",
+    "exampleZh": "請今天更新檔案。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "liver",
+    "example": "She touched her liver gently.",
+    "exampleZh": "她輕輕碰了自己的肝臟。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "classify",
+    "example": "Scientists classify these plants.",
+    "exampleZh": "科學家會分類這些植物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "collaboration",
+    "example": "His question about collaboration surprised me.",
+    "exampleZh": "他關於合作的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "basement",
+    "example": "We visited the basement yesterday.",
+    "exampleZh": "我們昨天去了地下室。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dignity",
+    "example": "A lesson on dignity helped everyone.",
+    "exampleZh": "一堂關於尊嚴的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "skull",
+    "example": "She touched her skull gently.",
+    "exampleZh": "她輕輕碰了自己的頭蓋骨。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gathering",
+    "example": "We need more information about gathering.",
+    "exampleZh": "我們需要更多關於聚集的資訊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "nursery",
+    "example": "The report covered nursery today.",
+    "exampleZh": "今天的報告涵蓋了託兒所。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "isolated",
+    "example": "His tone felt isolated.",
+    "exampleZh": "他的語氣感覺很孤立的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "extract",
+    "example": "They extract oil from seeds.",
+    "exampleZh": "他們從種子中提取油。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "deem",
+    "example": "We deem this plan safe.",
+    "exampleZh": "我們認為這個計畫安全。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "metaphor",
+    "example": "The article mentioned metaphor briefly.",
+    "exampleZh": "文章簡短提到了隱喻。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "civilization",
+    "example": "She learned about civilization yesterday.",
+    "exampleZh": "她昨天學到了文明。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clay",
+    "example": "The book explains clay clearly.",
+    "exampleZh": "這本書清楚解釋了泥土。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "theft",
+    "example": "His question about theft surprised me.",
+    "exampleZh": "他關於盜竊的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rhetoric",
+    "example": "They studied rhetoric in school.",
+    "exampleZh": "他們在學校學了修辭。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accountant",
+    "example": "The accountant arrived early.",
+    "exampleZh": "那位會計人員提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "contemplate",
+    "example": "Try to contemplate calmly.",
+    "exampleZh": "試著冷靜地注視。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "collar",
+    "example": "The team will collar soon.",
+    "exampleZh": "團隊很快會衣領。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "intensive",
+    "example": "The report covered intensive today.",
+    "exampleZh": "今天的報告涵蓋了加強的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cage",
+    "example": "The cage was on the table.",
+    "exampleZh": "籠在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cathedral",
+    "example": "We visited the cathedral yesterday.",
+    "exampleZh": "我們昨天去了大教堂。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "allocate",
+    "example": "Please allocate more time.",
+    "exampleZh": "請分配更多時間。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ancestor",
+    "example": "The article mentioned ancestor briefly.",
+    "exampleZh": "文章簡短提到了祖先。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "champagne",
+    "example": "She learned about champagne yesterday.",
+    "exampleZh": "她昨天學到了香檳酒。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "proposition",
+    "example": "Please proposition this detail.",
+    "exampleZh": "請建議這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "carriage",
+    "example": "The carriage was on the table.",
+    "exampleZh": "馬車在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scan",
+    "example": "Try to scan calmly.",
+    "exampleZh": "試著冷靜地審視。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "terrace",
+    "example": "We visited the terrace yesterday.",
+    "exampleZh": "我們昨天去了階地。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "meaningful",
+    "example": "She gave a meaningful answer.",
+    "exampleZh": "她給了一個意味深長的的回答。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "verse",
+    "example": "Please verse this detail.",
+    "exampleZh": "請詩這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tender",
+    "example": "They may tender tomorrow.",
+    "exampleZh": "他們明天可能會嫩的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "custody",
+    "example": "She wrote notes on custody.",
+    "exampleZh": "她寫了關於監護的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "minimal",
+    "example": "This problem is minimal.",
+    "exampleZh": "這個問題是最小的的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "capitalism",
+    "example": "We discussed capitalism after class.",
+    "exampleZh": "我們下課後討論了資本主義。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "donor",
+    "example": "The donor arrived early.",
+    "exampleZh": "那位捐贈人提早到了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "magnificent",
+    "example": "That choice seemed magnificent.",
+    "exampleZh": "那個選擇看起來很華麗的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "avenue",
+    "example": "We visited the avenue yesterday.",
+    "exampleZh": "我們昨天去了大街。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "successor",
+    "example": "His question about successor surprised me.",
+    "exampleZh": "他關於繼承者的問題讓我驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tighten",
+    "example": "Please tighten the screw.",
+    "exampleZh": "請把螺絲鎖緊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "monopoly",
+    "example": "A lesson on monopoly helped everyone.",
+    "exampleZh": "一堂關於壟斷的課幫助了大家。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "genius",
+    "example": "The topic of genius came up.",
+    "exampleZh": "天才這個話題被提起。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "manipulate",
+    "example": "Do not manipulate the data.",
+    "exampleZh": "不要操弄資料。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pope",
+    "example": "The report covered pope today.",
+    "exampleZh": "今天的報告涵蓋了羅馬教皇。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ridge",
+    "example": "She wrote notes on ridge.",
+    "exampleZh": "她寫了關於脊的筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "recipient",
+    "example": "The teacher introduced recipient today.",
+    "exampleZh": "老師今天介紹了領受的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cart",
+    "example": "The cart was on the table.",
+    "exampleZh": "二輪運貨馬車在桌上。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "christ",
+    "example": "The article mentioned christ briefly.",
+    "exampleZh": "文章簡短提到了基督。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "virtual",
+    "example": "That choice seemed virtual.",
+    "exampleZh": "那個選擇看起來很實際上起作用的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  }
+]

@@ -1,0 +1,231 @@
+{
+  "generatedAt": "2026-07-02",
+  "levels": [
+    "Core 4",
+    "Core 5",
+    "Core 6",
+    "Core 7",
+    "Core 8",
+    "Core 9",
+    "Core 10",
+    "Core 11",
+    "Core 12",
+    "Core 13",
+    "Core 14"
+  ],
+  "totalMissing": 5380,
+  "chunkSize": 250,
+  "byCore": {
+    "Core 4": {
+      "total": 488,
+      "json": "by-core/core04-full.json",
+      "markdown": "by-core/core04-full.md"
+    },
+    "Core 5": {
+      "total": 485,
+      "json": "by-core/core05-full.json",
+      "markdown": "by-core/core05-full.md"
+    },
+    "Core 6": {
+      "total": 492,
+      "json": "by-core/core06-full.json",
+      "markdown": "by-core/core06-full.md"
+    },
+    "Core 7": {
+      "total": 488,
+      "json": "by-core/core07-full.json",
+      "markdown": "by-core/core07-full.md"
+    },
+    "Core 8": {
+      "total": 495,
+      "json": "by-core/core08-full.json",
+      "markdown": "by-core/core08-full.md"
+    },
+    "Core 9": {
+      "total": 486,
+      "json": "by-core/core09-full.json",
+      "markdown": "by-core/core09-full.md"
+    },
+    "Core 10": {
+      "total": 490,
+      "json": "by-core/core10-full.json",
+      "markdown": "by-core/core10-full.md"
+    },
+    "Core 11": {
+      "total": 492,
+      "json": "by-core/core11-full.json",
+      "markdown": "by-core/core11-full.md"
+    },
+    "Core 12": {
+      "total": 490,
+      "json": "by-core/core12-full.json",
+      "markdown": "by-core/core12-full.md"
+    },
+    "Core 13": {
+      "total": 484,
+      "json": "by-core/core13-full.json",
+      "markdown": "by-core/core13-full.md"
+    },
+    "Core 14": {
+      "total": 490,
+      "json": "by-core/core14-full.json",
+      "markdown": "by-core/core14-full.md"
+    }
+  },
+  "chunks": [
+    {
+      "group": "Core 4",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core04-part01.json",
+      "markdown": "chunks/core04-part01.md"
+    },
+    {
+      "group": "Core 4",
+      "part": 2,
+      "total": 238,
+      "json": "chunks/core04-part02.json",
+      "markdown": "chunks/core04-part02.md"
+    },
+    {
+      "group": "Core 5",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core05-part01.json",
+      "markdown": "chunks/core05-part01.md"
+    },
+    {
+      "group": "Core 5",
+      "part": 2,
+      "total": 235,
+      "json": "chunks/core05-part02.json",
+      "markdown": "chunks/core05-part02.md"
+    },
+    {
+      "group": "Core 6",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core06-part01.json",
+      "markdown": "chunks/core06-part01.md"
+    },
+    {
+      "group": "Core 6",
+      "part": 2,
+      "total": 242,
+      "json": "chunks/core06-part02.json",
+      "markdown": "chunks/core06-part02.md"
+    },
+    {
+      "group": "Core 7",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core07-part01.json",
+      "markdown": "chunks/core07-part01.md"
+    },
+    {
+      "group": "Core 7",
+      "part": 2,
+      "total": 238,
+      "json": "chunks/core07-part02.json",
+      "markdown": "chunks/core07-part02.md"
+    },
+    {
+      "group": "Core 8",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core08-part01.json",
+      "markdown": "chunks/core08-part01.md"
+    },
+    {
+      "group": "Core 8",
+      "part": 2,
+      "total": 245,
+      "json": "chunks/core08-part02.json",
+      "markdown": "chunks/core08-part02.md"
+    },
+    {
+      "group": "Core 9",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core09-part01.json",
+      "markdown": "chunks/core09-part01.md"
+    },
+    {
+      "group": "Core 9",
+      "part": 2,
+      "total": 236,
+      "json": "chunks/core09-part02.json",
+      "markdown": "chunks/core09-part02.md"
+    },
+    {
+      "group": "Core 10",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core10-part01.json",
+      "markdown": "chunks/core10-part01.md"
+    },
+    {
+      "group": "Core 10",
+      "part": 2,
+      "total": 240,
+      "json": "chunks/core10-part02.json",
+      "markdown": "chunks/core10-part02.md"
+    },
+    {
+      "group": "Core 11",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core11-part01.json",
+      "markdown": "chunks/core11-part01.md"
+    },
+    {
+      "group": "Core 11",
+      "part": 2,
+      "total": 242,
+      "json": "chunks/core11-part02.json",
+      "markdown": "chunks/core11-part02.md"
+    },
+    {
+      "group": "Core 12",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core12-part01.json",
+      "markdown": "chunks/core12-part01.md"
+    },
+    {
+      "group": "Core 12",
+      "part": 2,
+      "total": 240,
+      "json": "chunks/core12-part02.json",
+      "markdown": "chunks/core12-part02.md"
+    },
+    {
+      "group": "Core 13",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core13-part01.json",
+      "markdown": "chunks/core13-part01.md"
+    },
+    {
+      "group": "Core 13",
+      "part": 2,
+      "total": 234,
+      "json": "chunks/core13-part02.json",
+      "markdown": "chunks/core13-part02.md"
+    },
+    {
+      "group": "Core 14",
+      "part": 1,
+      "total": 250,
+      "json": "chunks/core14-part01.json",
+      "markdown": "chunks/core14-part01.md"
+    },
+    {
+      "group": "Core 14",
+      "part": 2,
+      "total": 240,
+      "json": "chunks/core14-part02.json",
+      "markdown": "chunks/core14-part02.md"
+    }
+  ]
+}

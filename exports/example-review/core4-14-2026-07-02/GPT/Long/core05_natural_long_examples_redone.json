@@ -1,0 +1,3397 @@
+[
+  {
+    "word": "inner",
+    "example": "Even when her friends pushed her toward the safer choice, she trusted her inner voice and applied for art school.",
+    "exampleZh": "即使朋友都勸她選擇比較安全的道路，她仍相信自己內心的聲音，申請了藝術學校。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "fishing",
+    "example": "My uncle enjoys fishing on weekends, especially when the lake is quiet and the morning air is still cool.",
+    "exampleZh": "我叔叔週末喜歡釣魚，尤其是在湖面安靜、早晨空氣仍然涼爽的時候。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "vegetable",
+    "example": "Please eat one more vegetable before you leave the table, because you barely touched dinner tonight.",
+    "exampleZh": "離開餐桌前請再吃一樣蔬菜，因為你今晚幾乎沒碰晚餐。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "preserve",
+    "example": "We must preserve this old building because it tells the story of the town better than any museum display.",
+    "exampleZh": "我們必須保存這棟老建築，因為它比任何博物館展示都更能訴說這座城鎮的故事。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "perfectly",
+    "example": "After weeks of small adjustments, the plan worked perfectly during the final test and surprised even the doubtful engineers.",
+    "exampleZh": "經過好幾週的小幅調整後，這個計畫在最後測試中運作得很完美，甚至讓原本懷疑的工程師都感到驚訝。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "attractive",
+    "example": "The shop has an attractive window display that makes people slow down before they even notice the sale sign.",
+    "exampleZh": "這家店有吸引人的櫥窗展示，讓人們甚至還沒注意到折扣標誌前就先放慢腳步。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "valley",
+    "example": "A river runs through the valley, but the children stopped talking and simply looked around.",
+    "exampleZh": "一條河流穿過山谷，但是孩子們停止說話，只是四處看著。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "minor",
+    "example": "After the answer was not obvious at first, this is only a minor problem, and the detail became important later in the discussion.",
+    "exampleZh": "在答案一開始並不明顯之後，這只是一個小問題，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "emotion",
+    "example": "He showed little emotion, so the conversation felt more honest than before.",
+    "exampleZh": "他幾乎沒有表現出情緒，所以這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "chip",
+    "example": "A chip fell from the cup while she was washing it, so she put it aside before anyone cut a finger.",
+    "exampleZh": "她洗杯子時掉了一小片碎片，所以在有人割到手前先把杯子放到一旁。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pension",
+    "example": "Her pension covers basic expenses, but everyone checked the numbers again before signing anything.",
+    "exampleZh": "她的退休金足以支付基本開銷，但是大家在簽署任何文件前再次確認數字。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "resistance",
+    "example": "The plan met strong resistance from residents who worried that the new road would bring more traffic.",
+    "exampleZh": "這項計畫遭到居民強烈反對，因為他們擔心新道路會帶來更多交通。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "compete",
+    "example": "Although the answer was not obvious at first, small shops compete with large stores, and the situation felt more realistic after that.",
+    "exampleZh": "雖然答案一開始並不明顯，小店和大型商店競爭，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "stir",
+    "example": "During the final check, please stir the soup slowly, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請慢慢攪拌湯，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "wedding",
+    "example": "Their wedding was simple and warm, and the moment changed how they treated one another.",
+    "exampleZh": "他們的婚禮簡單又溫馨，而且那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "lock",
+    "example": "If the situation starts to feel rushed, remember to lock the door, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，記得鎖門，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "boot",
+    "example": "After everyone looked at the details again, mud covered his left boot, and the situation felt more realistic after that.",
+    "exampleZh": "在大家再次查看細節之後，泥巴蓋住了他的左靴子，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "switch",
+    "example": "If the situation starts to feel rushed, turn off the light switch, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，把電燈開關關掉，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "hello",
+    "example": "She said hello with a smile, but the moment changed how they treated one another.",
+    "exampleZh": "她微笑著說哈囉，但是那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "revolution",
+    "example": "The revolution changed the country, but the situation felt more realistic after that.",
+    "exampleZh": "這場革命改變了這個國家，但是那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "construct",
+    "example": "Although the answer was not obvious at first, workers construct houses nearby, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然答案一開始並不明顯，工人在附近建造房屋，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "habit",
+    "example": "After the group discussed the matter for a while, reading is a good habit, and people remembered the moment because it changed the plan.",
+    "exampleZh": "在小組討論這件事一陣子之後，閱讀是一個好習慣，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "command",
+    "example": "The dog obeyed his command, so the children stopped talking and simply looked around.",
+    "exampleZh": "那隻狗服從了他的命令，所以孩子們停止說話，只是四處看著。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tower",
+    "example": "Although someone asked for a more concrete example, the tower is easy to see, and the detail became important later in the discussion.",
+    "exampleZh": "雖然有人要求一個更具體的例子，那座塔很容易看見，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "drag",
+    "example": "When you are ready to continue, do not drag the chair, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，不要拖椅子，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "via",
+    "example": "We sent the file via email, so the team recorded the result so they could compare it later.",
+    "exampleZh": "我們透過電子郵件寄出檔案，所以團隊記錄結果以便日後比較。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "philosophy",
+    "example": "Although everyone looked at the details again, her philosophy is simple, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然大家再次查看細節，她的人生觀很簡單，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "vital",
+    "example": "Sleep is vital for health, and the doctor asked the family to watch the symptoms closely.",
+    "exampleZh": "睡眠對健康很重要，而且醫生請家人密切觀察症狀。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bend",
+    "example": "When you are ready to continue, please bend your knees slightly, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，請稍微彎曲膝蓋，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "illness",
+    "example": "The illness kept him home, and the family felt calmer after hearing a clear explanation.",
+    "exampleZh": "疾病讓他待在家裡，而且家人在聽到清楚說明後比較安心。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "preparation",
+    "example": "Good preparation saves time, and the group wrote it down before anyone forgot.",
+    "exampleZh": "充分準備能節省時間，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "climate",
+    "example": "The climate is getting warmer, but the scene stayed in our memory for a long time.",
+    "exampleZh": "氣候正在變暖，但是那個畫面在我們記憶中停留了很久。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sand",
+    "example": "The beach sand felt warm, so the moment changed how they treated one another.",
+    "exampleZh": "海灘上的沙子摸起來很溫暖，所以那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "elderly",
+    "example": "An elderly man needed help, so the situation felt more realistic after that.",
+    "exampleZh": "一位年長男子需要幫忙，所以那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "discovery",
+    "example": "The discovery surprised the scientists, but people remembered the moment because it changed the plan.",
+    "exampleZh": "這項發現讓科學家感到驚訝，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "jacket",
+    "example": "When you are ready to continue, bring a jacket tonight, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，今晚帶件外套，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "assist",
+    "example": "During the discussion, someone finally asked, \"Can you assist this customer?\", and the room became quiet for a moment.",
+    "exampleZh": "討論時，有人終於問：『你可以協助這位顧客嗎』，房間一度安靜下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "stream",
+    "example": "The stream flowed behind the house, so the small detail made the room feel more organized.",
+    "exampleZh": "小溪流過房子後方，所以這個小細節讓房間感覺更有條理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "membership",
+    "example": "After the group discussed the matter for a while, her membership expires tomorrow, and the group wrote it down before anyone forgot.",
+    "exampleZh": "在小組討論這件事一陣子之後，她的會員資格明天到期，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "reputation",
+    "example": "The restaurant has a good reputation, but the decision affected more people than expected.",
+    "exampleZh": "這家餐廳名聲很好，但是這項決定影響的人比預期更多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "competitive",
+    "example": "After the store prepared for a busy weekend, the market is very competitive, and customers noticed the change almost immediately.",
+    "exampleZh": "在店家為忙碌的週末做準備之後，這個市場競爭很激烈，而且顧客幾乎立刻注意到這項變化。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "retire",
+    "example": "After the group discussed the matter for a while, he plans to retire next year, and the detail became important later in the discussion.",
+    "exampleZh": "在小組討論這件事一陣子之後，他計畫明年退休，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cheese",
+    "example": "This cheese tastes salty, so the family laughed while setting the plates on the table.",
+    "exampleZh": "這個起司吃起來很鹹，所以家人一邊把盤子放上桌一邊笑著聊天。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mood",
+    "example": "Music changed her mood, but everyone understood the feeling behind the words.",
+    "exampleZh": "音樂改變了她的心情，但是大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "breathe",
+    "example": "Before you move on to the next step, please breathe slowly and stay calm, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，請慢慢呼吸並保持冷靜，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "knife",
+    "example": "During the final check, use a sharp knife carefully, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，小心使用鋒利的小刀，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "phrase",
+    "example": "This phrase sounds natural, but the group wrote it down before anyone forgot.",
+    "exampleZh": "這個片語聽起來很自然，但是小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "unlike",
+    "example": "She is quiet, unlike her brother, but the situation felt more realistic after that.",
+    "exampleZh": "她很安靜，不像她哥哥，但是那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "peak",
+    "example": "Snow covered the mountain peak, so the guide asked us to stay on the path.",
+    "exampleZh": "雪覆蓋了山峰，所以嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "substance",
+    "example": "Although the answer was not obvious at first, the bottle contains a clear substance, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "雖然答案一開始並不明顯，瓶子裡裝著透明物質，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "poem",
+    "example": "She wrote a short poem, and the scene gave the whole work a clearer direction.",
+    "exampleZh": "她寫了一首短詩，而且這個場景讓整部作品的方向更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "musical",
+    "example": "We watched a musical last night, and the scene gave the whole work a clearer direction.",
+    "exampleZh": "我們昨晚看了一齣音樂劇，而且這個場景讓整部作品的方向更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "kiss",
+    "example": "Although everyone looked at the details again, she gave the baby a kiss, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然大家再次查看細節，她親了寶寶一下，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "crazy",
+    "example": "That idea sounds crazy, but the detail became important later in the discussion.",
+    "exampleZh": "那個想法聽起來很瘋狂，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "relative",
+    "example": "A relative visited us yesterday, but the moment changed how they treated one another.",
+    "exampleZh": "一位親戚昨天來看我們，但是那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "silver",
+    "example": "She wore a silver necklace, and the family cleaned the area before guests arrived.",
+    "exampleZh": "她戴了一條銀項鍊，而且家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cable",
+    "example": "The cable is too short, and everyone knew where to find it the next morning.",
+    "exampleZh": "這條電纜太短，而且隔天早上大家都知道去哪裡找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "joke",
+    "example": "His joke made everyone laugh, so everyone understood the feeling behind the words.",
+    "exampleZh": "他的笑話讓大家都笑了，所以大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "scream",
+    "example": "We heard a scream outside, so the group wrote it down before anyone forgot.",
+    "exampleZh": "我們聽到外面有尖叫聲，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "depth",
+    "example": "The pool has great depth, so the situation felt more realistic after that.",
+    "exampleZh": "這個泳池很深，所以那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cope",
+    "example": "She learned to cope with stress, so the detail became important later in the discussion.",
+    "exampleZh": "她學會應付壓力，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "justify",
+    "example": "During the discussion, someone finally asked, \"Can you justify this cost?\", and the room became quiet for a moment.",
+    "exampleZh": "討論時，有人終於問：『你能證明這筆費用合理嗎』，房間一度安靜下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "output",
+    "example": "The machine output is stable, so the final report included the detail in a separate note.",
+    "exampleZh": "機器的輸出很穩定，所以最後報告把這個細節另外註記。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "alcohol",
+    "example": "This cleaner contains alcohol, and the detail became important later in the discussion.",
+    "exampleZh": "這款清潔劑含有酒精，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "slide",
+    "example": "Although the group discussed the matter for a while, the children used the slide, and the situation felt more realistic after that.",
+    "exampleZh": "雖然小組討論這件事一陣子，孩子們玩了溜滑梯，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "transform",
+    "example": "The news will transform our plans, but the group wrote it down before anyone forgot.",
+    "exampleZh": "這個消息會改變我們的計畫，但是小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "disaster",
+    "example": "The flood became a disaster, but everyone slowed down and paid attention to the surroundings.",
+    "exampleZh": "洪水變成了一場災難，但是大家放慢腳步並注意周圍環境。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "deserve",
+    "example": "You deserve a break, but someone asked a follow-up question a few minutes later.",
+    "exampleZh": "你值得休息一下，但是幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "monitor",
+    "example": "Before you move on to the next step, please monitor the temperature, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，請監測溫度，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "persuade",
+    "example": "I tried to persuade him, and the situation felt more realistic after that.",
+    "exampleZh": "我試著說服他，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "restore",
+    "example": "They will restore the old house, so the family cleaned the area before guests arrived.",
+    "exampleZh": "他們會修復那棟老房子，所以家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "priest",
+    "example": "The priest spoke quietly, but the family kept the tradition alive for another year.",
+    "exampleZh": "神父低聲說話，但是家人讓這項傳統又延續了一年。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "proceed",
+    "example": "We can proceed with the plan, and people remembered the moment because it changed the plan.",
+    "exampleZh": "我們可以繼續進行這項計畫，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "approval",
+    "example": "We need your approval first, so the group wrote it down before anyone forgot.",
+    "exampleZh": "我們需要先取得你的批准，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "coal",
+    "example": "Although the situation changed unexpectedly, the factory used less coal, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然情況意外改變，工廠使用了較少煤炭，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "violent",
+    "example": "The movie has violent scenes, and the editor decided to keep the line in the final draft.",
+    "exampleZh": "這部電影有暴力場景，而且編輯決定在最後草稿中保留這句話。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "originally",
+    "example": "Although the answer was not obvious at first, i originally wanted to leave, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然答案一開始並不明顯，我原本想離開，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pure",
+    "example": "The water looked pure, and everyone understood the feeling behind the words.",
+    "exampleZh": "水看起來很純淨，而且大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "universe",
+    "example": "The universe is full of mysteries, so someone asked a follow-up question a few minutes later.",
+    "exampleZh": "宇宙充滿奧秘，所以幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tourist",
+    "example": "A tourist asked for directions, but the situation felt more realistic after that.",
+    "exampleZh": "一位觀光客問路，但是那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "conventional",
+    "example": "He chose a conventional method, so the mistake became easier to find after the second check.",
+    "exampleZh": "他選擇了傳統方法，所以第二次檢查後錯誤變得更容易找出來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "wet",
+    "example": "My socks are wet, but someone asked a follow-up question a few minutes later.",
+    "exampleZh": "我的襪子濕了，但是幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "anger",
+    "example": "His anger faded quickly, but the silence said more than a long explanation could.",
+    "exampleZh": "他的憤怒很快消退，但是沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mixture",
+    "example": "The mixture changed the plan, so people remembered the moment because it changed the plan.",
+    "exampleZh": "這個混合改變了計畫，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "whenever",
+    "example": "Before you move on to the next step, call me whenever you arrive, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，你什麼時候到，就什麼時候打給我，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "illegal",
+    "example": "Parking here is illegal, so the group wrote it down before anyone forgot.",
+    "exampleZh": "在這裡停車是違法的，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "convince",
+    "example": "She failed to convince me, and the detail became important later in the discussion.",
+    "exampleZh": "她沒能說服我，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "string",
+    "example": "During the final check, tie the box with string, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，用繩子把盒子綁起來，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pose",
+    "example": "When you are ready to continue, hold this pose for ten seconds, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，保持這個姿勢十秒，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "valuable",
+    "example": "Time is a valuable resource, so the group wrote it down before anyone forgot.",
+    "exampleZh": "時間是寶貴的資源，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cake",
+    "example": "The cake smells delicious, so the family laughed while setting the plates on the table.",
+    "exampleZh": "蛋糕聞起來很好吃，所以家人一邊把盤子放上桌一邊笑著聊天。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "naturally",
+    "example": "Although everyone looked at the details again, children learn naturally through play, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然大家再次查看細節，孩子會透過遊戲自然學習，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "retirement",
+    "example": "He saved money for retirement, and customers noticed the change almost immediately.",
+    "exampleZh": "他為退休存錢，而且顧客幾乎立刻注意到這項變化。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "smart",
+    "example": "That was a smart choice, so the detail became important later in the discussion.",
+    "exampleZh": "那是聰明的選擇，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "wrap",
+    "example": "When you are ready to continue, please wrap the gift, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，請把禮物包起來，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "wealth",
+    "example": "Although the examination took longer than expected, health is greater than wealth, and the family felt calmer after hearing a clear explanation.",
+    "exampleZh": "雖然檢查比預期更久，健康比財富更重要，而且家人在聽到清楚說明後比較安心。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "electronic",
+    "example": "She bought an electronic dictionary, so people remembered the moment because it changed the plan.",
+    "exampleZh": "她買了一本電子字典，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "port",
+    "example": "The ship reached the port, but everyone adjusted the plan before moving on.",
+    "exampleZh": "船抵達港口，但是大家在繼續前調整了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pot",
+    "example": "The soup is in the pot, but everyone noticed the flavor before the meal was over.",
+    "exampleZh": "湯在鍋子裡，但是大家在用餐結束前就注意到味道。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sensitive",
+    "example": "After the answer was not obvious at first, this is a sensitive topic, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "在答案一開始並不明顯之後，這是一個敏感話題，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "resist",
+    "example": "During the final check, try to resist the temptation, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，試著抵抗誘惑，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sum",
+    "example": "The sum is correct, but people remembered the moment because it changed the plan.",
+    "exampleZh": "總和是正確的，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "fault",
+    "example": "Although someone asked for a more concrete example, it was not your fault, and the detail became important later in the discussion.",
+    "exampleZh": "雖然有人要求一個更具體的例子，那不是你的錯，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "false",
+    "example": "Although someone asked for a more concrete example, the report gave false information, and the situation felt more realistic after that.",
+    "exampleZh": "雖然有人要求一個更具體的例子，報告提供了錯誤資訊，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "throat",
+    "example": "Although the doctor compared the new result with the old one, my throat feels dry, and the family felt calmer after hearing a clear explanation.",
+    "exampleZh": "雖然醫生把新結果和舊結果做了比較，我的喉嚨覺得乾，而且家人在聽到清楚說明後比較安心。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "birthday",
+    "example": "Her birthday is tomorrow, and the moment changed how they treated one another.",
+    "exampleZh": "她的生日是明天，而且那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "symbol",
+    "example": "A dove is a symbol of peace, but the detail became important later in the discussion.",
+    "exampleZh": "鴿子是和平的象徵，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "emphasize",
+    "example": "I want to emphasize this point, so people remembered the moment because it changed the plan.",
+    "exampleZh": "我想強調這一點，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "swing",
+    "example": "After the answer was not obvious at first, the child played on the swing, and the detail became important later in the discussion.",
+    "exampleZh": "在答案一開始並不明顯之後，孩子在盪鞦韆，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "luck",
+    "example": "We had good luck today, but the detail became important later in the discussion.",
+    "exampleZh": "我們今天運氣很好，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "spiritual",
+    "example": "She needed spiritual support, so people listened quietly instead of arguing.",
+    "exampleZh": "她需要精神上的支持，所以人們安靜聆聽而不是爭辯。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "drama",
+    "example": "The drama begins at eight, so the editor decided to keep the line in the final draft.",
+    "exampleZh": "這齣戲八點開始，所以編輯決定在最後草稿中保留這句話。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "visible",
+    "example": "The sign is clearly visible, but the situation felt more realistic after that.",
+    "exampleZh": "這個標誌清楚可見，但是那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "wooden",
+    "example": "They bought a wooden table, but everyone knew where to find it the next morning.",
+    "exampleZh": "他們買了一張木桌，但是隔天早上大家都知道去哪裡找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "delivery",
+    "example": "Although someone asked for a more concrete example, the delivery arrived early, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然有人要求一個更具體的例子，這件配送品提早到了，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "suitable",
+    "example": "This room is suitable for meetings, so the family cleaned the area before guests arrived.",
+    "exampleZh": "這個房間適合開會，所以家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "nervous",
+    "example": "She felt nervous before the test, but the moment changed how they treated one another.",
+    "exampleZh": "她考試前覺得緊張，但是那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "alter",
+    "example": "After the answer was not obvious at first, small changes can alter the result, and the group wrote it down before anyone forgot.",
+    "exampleZh": "在答案一開始並不明顯之後，小改變可能會改變結果，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "smell",
+    "example": "The smell of coffee filled the room, but everyone noticed the flavor before the meal was over.",
+    "exampleZh": "咖啡香充滿了房間，但是大家在用餐結束前就注意到味道。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mail",
+    "example": "After several unclear answers, Maria raised her hand and asked, \"Did you receive my mail?\", hoping for a simple explanation.",
+    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『你收到我的郵件了嗎』，希望得到簡單說明。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "adjust",
+    "example": "If the situation starts to feel rushed, please adjust your seat, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，請調整你的座位，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pace",
+    "example": "Although everyone looked at the details again, walk at your own pace, and the detail became important later in the discussion.",
+    "exampleZh": "雖然大家再次查看細節，照自己的步調走，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bury",
+    "example": "They bury the seeds in soil, but the guide asked us to stay on the path.",
+    "exampleZh": "他們把種子埋進土裡，但是嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "friendly",
+    "example": "The staff were friendly, and the moment changed how they treated one another.",
+    "exampleZh": "員工都很親切，而且那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "holy",
+    "example": "This is a holy place, and the family kept the tradition alive for another year.",
+    "exampleZh": "這是神聖的地方，而且家人讓這項傳統又延續了一年。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "initially",
+    "example": "After the group discussed the matter for a while, i initially refused the offer, and the detail became important later in the discussion.",
+    "exampleZh": "在小組討論這件事一陣子之後，我一開始拒絕了這個提議，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "routine",
+    "example": "Although the group discussed the matter for a while, exercise is part of my routine, and the detail became important later in the discussion.",
+    "exampleZh": "雖然小組討論這件事一陣子，運動是我日常作息的一部分，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "extensive",
+    "example": "The damage was extensive, and the situation felt more realistic after that.",
+    "exampleZh": "損害範圍很廣，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "dust",
+    "example": "The shelf was covered with dust, but everyone knew where to find it the next morning.",
+    "exampleZh": "架子上滿是灰塵，但是隔天早上大家都知道去哪裡找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "electricity",
+    "example": "The storm cut off electricity, but the guide asked us to stay on the path.",
+    "exampleZh": "暴風雨造成停電，但是嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pollution",
+    "example": "Although the patient described the discomfort clearly, air pollution affects health, and the result was written down in the medical record.",
+    "exampleZh": "雖然病人清楚描述不舒服的地方，空氣汙染會影響健康，而且結果被寫進病歷中。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "whisper",
+    "example": "She spoke in a whisper, so people remembered the moment because it changed the plan.",
+    "exampleZh": "她低聲說話，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mystery",
+    "example": "Although everyone looked at the details again, the mystery remains unsolved, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "雖然大家再次查看細節，這個謎團仍未解開，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "wire",
+    "example": "The wire is broken, but the problem was fixed before anyone complained.",
+    "exampleZh": "這條電線斷了，但是問題在有人抱怨前就被修好。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "extreme",
+    "example": "We faced extreme weather, and the air felt cooler than it had in the city.",
+    "exampleZh": "我們遇到極端天氣，而且空氣感覺比城市裡涼爽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "anxiety",
+    "example": "Although the examination took longer than expected, exercise helps reduce anxiety, and the nurse explained what to do if the problem returned.",
+    "exampleZh": "雖然檢查比預期更久，運動有助於減少焦慮，而且護士說明如果問題再出現該怎麼做。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "smooth",
+    "example": "The road was smooth, but the schedule changed twice before we reached the station.",
+    "exampleZh": "道路很平順，但是我們到車站前時程已經改了兩次。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "moon",
+    "example": "The moon looked bright tonight, but the people around her finally listened carefully.",
+    "exampleZh": "今晚月亮看起來很亮，但是她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "net",
+    "example": "The fisherman repaired the net, and the group wrote it down before anyone forgot.",
+    "exampleZh": "漁夫修補了網子，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "potato",
+    "example": "She baked a potato, and everyone noticed the flavor before the meal was over.",
+    "exampleZh": "她烤了一顆馬鈴薯，而且大家在用餐結束前就注意到味道。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rough",
+    "example": "Although the situation changed unexpectedly, the surface feels rough, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然情況意外改變，表面摸起來很粗糙，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "chamber",
+    "example": "After the answer was not obvious at first, the chamber was cold and quiet, and the detail became important later in the discussion.",
+    "exampleZh": "在答案一開始並不明顯之後，房間又冷又安靜，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "crop",
+    "example": "Rice is an important crop, but the cook made one final adjustment before serving it.",
+    "exampleZh": "稻米是重要的農作物，但是廚師在上菜前做了最後一次調整。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "profession",
+    "example": "Teaching is a respected profession, so the class finally understood why the detail mattered.",
+    "exampleZh": "教學是受尊重的職業，所以全班終於理解這個細節為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "install",
+    "example": "During the final check, please install the app, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請安裝這個應用程式，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cap",
+    "example": "He wore a black cap, so the problem was fixed before anyone complained.",
+    "exampleZh": "他戴了一頂黑帽子，所以問題在有人抱怨前就被修好。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "load",
+    "example": "This truck can carry a heavy load, so the delay made the day feel much longer.",
+    "exampleZh": "這輛卡車能載很重的貨物，所以延誤讓那一天感覺更漫長。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pleased",
+    "example": "Although the answer was not obvious at first, i am pleased with the result, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然答案一開始並不明顯，我對結果很滿意，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "badly",
+    "example": "His leg was badly hurt, but someone asked a follow-up question a few minutes later.",
+    "exampleZh": "他的腿傷得很嚴重，但是幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "furniture",
+    "example": "The furniture looks old, but the family cleaned the area before guests arrived.",
+    "exampleZh": "這些家具看起來很舊，但是家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sudden",
+    "example": "A sudden noise woke me, but the detail became important later in the discussion.",
+    "exampleZh": "突然的聲音吵醒了我，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rank",
+    "example": "She reached a high rank, and people remembered the moment because it changed the plan.",
+    "exampleZh": "她達到了很高的職級，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rail",
+    "example": "Before you move on to the next step, hold the rail on the stairs, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，在樓梯上扶著欄杆，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "shortly",
+    "example": "Although everyone looked at the details again, the meeting will begin shortly, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然大家再次查看細節，會議很快就會開始，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "convert",
+    "example": "You can convert dollars to yen, and the team recorded the result so they could compare it later.",
+    "exampleZh": "你可以把美元兌換成日圓，而且團隊記錄結果以便日後比較。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "stomach",
+    "example": "My stomach hurts, so the result was written down in the medical record.",
+    "exampleZh": "我的胃痛，所以結果被寫進病歷中。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bathroom",
+    "example": "The bathroom is downstairs, and nobody had to waste time looking for it later.",
+    "exampleZh": "浴室在樓下，而且之後沒有人需要浪費時間找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "charity",
+    "example": "After the manager compared several options, she donated money to charity, and the team had to balance cost with long-term value.",
+    "exampleZh": "在經理比較了幾個選項之後，她捐錢給慈善機構，而且團隊必須在成本與長期價值之間取得平衡。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "twin",
+    "example": "Although the clinic asked for another follow-up visit, her twin is a doctor, and the nurse explained what to do if the problem returned.",
+    "exampleZh": "雖然診所要求再安排一次回診，她的雙胞胎手足是醫生，而且護士說明如果問題再出現該怎麼做。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "remarkable",
+    "example": "Although the group discussed the matter for a while, her progress was remarkable, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "雖然小組討論這件事一陣子，她的進步很顯著，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pink",
+    "example": "After the group discussed the matter for a while, the walls are pink, and the situation felt more realistic after that.",
+    "exampleZh": "在小組討論這件事一陣子之後，牆壁是粉紅色的，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "salary",
+    "example": "Although the market changed faster than expected, his salary increased this year, and the manager explained the change during the afternoon meeting.",
+    "exampleZh": "雖然市場變化比預期更快，他的薪水今年增加了，而且經理在下午會議中說明這項變動。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "apple",
+    "example": "She ate an apple, but the cook made one final adjustment before serving it.",
+    "exampleZh": "她吃了一顆蘋果，但是廚師在上菜前做了最後一次調整。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mad",
+    "example": "He was mad about the delay, so the moment changed how they treated one another.",
+    "exampleZh": "他因為延誤而生氣，所以那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "efficient",
+    "example": "Although the data looked strange at first, the new system is efficient, and the final report included the detail in a separate note.",
+    "exampleZh": "雖然資料一開始看起來很奇怪，新系統很有效率，而且最後報告把這個細節另外註記。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tube",
+    "example": "The paint comes in a tube, so people remembered the moment because it changed the plan.",
+    "exampleZh": "這種顏料裝在管子裡，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "honest",
+    "example": "Before you move on to the next step, please give me an honest answer, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，請給我誠實的回答，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "clock",
+    "example": "The clock stopped at noon, and the family cleaned the area before guests arrived.",
+    "exampleZh": "時鐘在中午停了，而且家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "overcome",
+    "example": "We can overcome this problem, so the situation felt more realistic after that.",
+    "exampleZh": "我們可以克服這個問題，所以那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "lane",
+    "example": "Before you move on to the next step, stay in your lane, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，請保持在你的車道內，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "junior",
+    "example": "After the team checked the setup twice, he is a junior engineer, and the mistake became easier to find after the second check.",
+    "exampleZh": "在團隊把設定檢查了兩次之後，他是一名資淺工程師，而且第二次檢查後錯誤變得更容易找出來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "dig",
+    "example": "They dig holes for trees, and the group wrote it down before anyone forgot.",
+    "exampleZh": "他們為樹挖洞，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "slight",
+    "example": "There was a slight delay, so people remembered the moment because it changed the plan.",
+    "exampleZh": "有一點點延誤，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "belt",
+    "example": "He tightened his belt, and the small detail made the room feel more organized.",
+    "exampleZh": "他把皮帶繫緊，而且這個小細節讓房間感覺更有條理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "desert",
+    "example": "The desert gets cold at night, and the children stopped talking and simply looked around.",
+    "exampleZh": "沙漠晚上會變冷，而且孩子們停止說話，只是四處看著。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "yours",
+    "example": "This seat is yours, so the detail became important later in the discussion.",
+    "exampleZh": "這個座位是你的，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "infection",
+    "example": "The infection spread quickly, but the result was written down in the medical record.",
+    "exampleZh": "感染迅速擴散，但是結果被寫進病歷中。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "shell",
+    "example": "She found a shell on the beach, but the scene stayed in our memory for a long time.",
+    "exampleZh": "她在海灘上找到一個貝殼，但是那個畫面在我們記憶中停留了很久。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "barrier",
+    "example": "Language can be a barrier, but people remembered the moment because it changed the plan.",
+    "exampleZh": "語言可能成為障礙，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pale",
+    "example": "Her face looked pale, but the conversation felt more honest than before.",
+    "exampleZh": "她的臉色看起來蒼白，但是這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "heaven",
+    "example": "The view felt like heaven, so the moment meant different things to different people.",
+    "exampleZh": "這景色像天堂一樣美，所以那一刻對不同人有不同意義。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sweep",
+    "example": "During the final check, please sweep the floor, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請掃地，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "stupid",
+    "example": "That was a stupid mistake, so the group wrote it down before anyone forgot.",
+    "exampleZh": "那是一個愚蠢的錯誤，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "owe",
+    "example": "I owe you an apology, and people remembered the moment because it changed the plan.",
+    "exampleZh": "我欠你一個道歉，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "entertainment",
+    "example": "The hotel offers evening entertainment, and the audience kept talking about it after leaving.",
+    "exampleZh": "飯店提供晚間娛樂，而且觀眾離開後仍一直討論它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "platform",
+    "example": "The train leaves from platform two, so everyone adjusted the plan before moving on.",
+    "exampleZh": "火車從二號月台出發，所以大家在繼續前調整了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "servant",
+    "example": "The servant carried the tray, but people remembered the moment because it changed the plan.",
+    "exampleZh": "僕人端著托盤，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "fortune",
+    "example": "He made a fortune in business, and the team had to balance cost with long-term value.",
+    "exampleZh": "他做生意賺了一大筆財富，而且團隊必須在成本與長期價值之間取得平衡。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "angle",
+    "example": "Although the test had to be repeated carefully, change the camera angle, and the result helped the team decide what to measure next.",
+    "exampleZh": "雖然測試必須仔細重做，改變相機角度，而且這個結果幫助團隊決定接下來要量測什麼。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "confront",
+    "example": "She had to confront the truth, but someone asked a follow-up question a few minutes later.",
+    "exampleZh": "她必須面對真相，但是幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "label",
+    "example": "Before you move on to the next step, read the label first, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，先閱讀標籤，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pause",
+    "example": "Before you move on to the next step, take a short pause, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，稍微停頓一下，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pepper",
+    "example": "When you are ready to continue, add pepper to the soup, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，在湯裡加胡椒，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "extraordinary",
+    "example": "Although someone asked for a more concrete example, she has extraordinary talent, and the situation felt more realistic after that.",
+    "exampleZh": "雖然有人要求一個更具體的例子，她有非凡的才能，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "concert",
+    "example": "The concert starts at seven, but people noticed the detail immediately.",
+    "exampleZh": "音樂會七點開始，但是人們立刻注意到這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "advanced",
+    "example": "This is an advanced course, but the class finally understood why the detail mattered.",
+    "exampleZh": "這是一門進階課程，但是全班終於理解這個細節為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mere",
+    "example": "It was a mere mistake, so the detail became important later in the discussion.",
+    "exampleZh": "那只不過是一個錯誤，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "dear",
+    "example": "My dear friend called me, and the silence said more than a long explanation could.",
+    "exampleZh": "我親愛的朋友打電話給我，而且沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sink",
+    "example": "The boat began to sink, and the schedule changed twice before we reached the station.",
+    "exampleZh": "船開始下沉，而且我們到車站前時程已經改了兩次。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "relax",
+    "example": "Before you move on to the next step, try to relax before sleep, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，睡前試著放鬆，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tendency",
+    "example": "He has a tendency to worry, and the conversation felt more honest than before.",
+    "exampleZh": "他有容易擔心的傾向，而且這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "draft",
+    "example": "Before you move on to the next step, please read the first draft, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，請讀第一版草稿，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "temporary",
+    "example": "This is a temporary solution, so the situation felt more realistic after that.",
+    "exampleZh": "這是暫時的解決方法，所以那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "laboratory",
+    "example": "The samples stayed in the laboratory, but the result helped the team decide what to measure next.",
+    "exampleZh": "樣本留在實驗室裡，但是這個結果幫助團隊決定接下來要量測什麼。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pipe",
+    "example": "Water flows through this pipe, and the problem was fixed before anyone complained.",
+    "exampleZh": "水流過這根管子，而且問題在有人抱怨前就被修好。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "arrival",
+    "example": "Her arrival surprised us, and everyone adjusted the plan before moving on.",
+    "exampleZh": "她的到來讓我們驚訝，而且大家在繼續前調整了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bell",
+    "example": "After the situation changed unexpectedly, the bell rang loudly, and people remembered the moment because it changed the plan.",
+    "exampleZh": "在情況意外改變之後，鈴聲大聲響起，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "weigh",
+    "example": "When you are ready to continue, please weigh the package, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，請秤一下包裹重量，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "personally",
+    "example": "I personally disagree, and people remembered the moment because it changed the plan.",
+    "exampleZh": "我個人不同意，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "accurate",
+    "example": "The map is accurate, so people remembered the moment because it changed the plan.",
+    "exampleZh": "這張地圖很準確，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "confident",
+    "example": "She sounded confident, and everyone understood the feeling behind the words.",
+    "exampleZh": "她聽起來很有信心，而且大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "shopping",
+    "example": "We went shopping after lunch, and everyone noticed the flavor before the meal was over.",
+    "exampleZh": "我們午餐後去購物，而且大家在用餐結束前就注意到味道。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "remote",
+    "example": "After everyone looked at the details again, they live in a remote village, and the situation felt more realistic after that.",
+    "exampleZh": "在大家再次查看細節之後，他們住在偏遠村莊，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "amazing",
+    "example": "The view was amazing, but the detail became important later in the discussion.",
+    "exampleZh": "景色很驚人，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "exciting",
+    "example": "The game was exciting, so the players remembered the lesson during the next match.",
+    "exampleZh": "這場比賽很刺激，所以球員在下一場比賽中記住了這個教訓。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "complicated",
+    "example": "The rules are complicated, and the case showed why clear evidence matters.",
+    "exampleZh": "規則很複雜，而且這個案件說明了清楚證據的重要性。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "worried",
+    "example": "She looked worried, and the moment changed how they treated one another.",
+    "exampleZh": "她看起來很擔心，而且那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "nearby",
+    "example": "After the answer was not obvious at first, a cafe is nearby, and the group wrote it down before anyone forgot.",
+    "exampleZh": "在答案一開始並不明顯之後，附近有一家咖啡館，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "butter",
+    "example": "If the situation starts to feel rushed, spread butter on the bread, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，把奶油抹在麵包上，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mayor",
+    "example": "The mayor visited our school, and the class finally understood why the detail mattered.",
+    "exampleZh": "市長參觀了我們學校，而且全班終於理解這個細節為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "abroad",
+    "example": "She studied abroad last year, so the group decided to leave earlier next time.",
+    "exampleZh": "她去年到國外讀書，所以小組決定下次更早出發。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tight",
+    "example": "After the group discussed the matter for a while, these shoes feel tight, and the detail became important later in the discussion.",
+    "exampleZh": "在小組討論這件事一陣子之後，這雙鞋感覺很緊，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "juice",
+    "example": "Orange juice is in the fridge, and everyone noticed the flavor before the meal was over.",
+    "exampleZh": "柳橙汁在冰箱裡，而且大家在用餐結束前就注意到味道。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "toy",
+    "example": "Although everyone looked at the details again, the child dropped a toy, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然大家再次查看細節，孩子掉了一個玩具，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "react",
+    "example": "After several unclear answers, Maria raised her hand and asked, \"How did she react?\", hoping for a simple explanation.",
+    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『她有什麼反應』，希望得到簡單說明。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "lover",
+    "example": "He is a music lover, but the people around her finally listened carefully.",
+    "exampleZh": "他是音樂愛好者，但是她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "assistant",
+    "example": "My assistant booked the room, so the family cleaned the area before guests arrived.",
+    "exampleZh": "我的助理訂了房間，所以家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "button",
+    "example": "If the situation starts to feel rushed, press the red button, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，按下紅色按鈕，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "crown",
+    "example": "The king wore a crown, so the detail became important later in the discussion.",
+    "exampleZh": "國王戴著王冠，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "encounter",
+    "example": "After everyone looked at the details again, i had a strange encounter, and people remembered the moment because it changed the plan.",
+    "exampleZh": "在大家再次查看細節之後，我有一次奇怪的遭遇，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "absolute",
+    "example": "Although the situation changed unexpectedly, we need absolute silence, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "雖然情況意外改變，我們需要絕對安靜，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "uncle",
+    "example": "My uncle lives nearby, so the people around her finally listened carefully.",
+    "exampleZh": "我叔叔住在附近，所以她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "brilliant",
+    "example": "She had a brilliant idea, and the detail became important later in the discussion.",
+    "exampleZh": "她有一個很棒的點子，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "register",
+    "example": "Before you move on to the next step, please register before Friday, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，請在星期五前註冊，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mount",
+    "example": "They mount the TV on the wall, but the family cleaned the area before guests arrived.",
+    "exampleZh": "他們把電視裝到牆上，但是家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "blind",
+    "example": "He became blind as a child, but the detail became important later in the discussion.",
+    "exampleZh": "他小時候失明了，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pop",
+    "example": "I like pop music, and the editor decided to keep the line in the final draft.",
+    "exampleZh": "我喜歡流行音樂，而且編輯決定在最後草稿中保留這句話。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tail",
+    "example": "The dog wagged its tail, but the air felt cooler than it had in the city.",
+    "exampleZh": "狗搖著尾巴，但是空氣感覺比城市裡涼爽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "communicate",
+    "example": "We communicate by email, and the group wrote it down before anyone forgot.",
+    "exampleZh": "我們用電子郵件溝通，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "proof",
+    "example": "We need proof of payment, and the decision affected more people than expected.",
+    "exampleZh": "我們需要付款證明，而且這項決定影響的人比預期更多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "flag",
+    "example": "The flag flew above the school, but several students asked for a clearer example afterward.",
+    "exampleZh": "旗子在學校上方飄揚，但是幾位學生事後要求更清楚的例子。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "newly",
+    "example": "They are newly married, so people remembered the moment because it changed the plan.",
+    "exampleZh": "他們剛結婚，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "adequate",
+    "example": "The food was adequate, but everyone noticed the flavor before the meal was over.",
+    "exampleZh": "食物足夠了，但是大家在用餐結束前就注意到味道。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pride",
+    "example": "She takes pride in her work, and the moment changed how they treated one another.",
+    "exampleZh": "她以自己的工作為榮，而且那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "chart",
+    "example": "The chart shows sales growth, but people remembered the moment because it changed the plan.",
+    "exampleZh": "圖表顯示銷售成長，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "chocolate",
+    "example": "She loves dark chocolate, but the group wrote it down before anyone forgot.",
+    "exampleZh": "她喜歡黑巧克力，但是小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "joy",
+    "example": "Her face showed real joy, and the silence said more than a long explanation could.",
+    "exampleZh": "她臉上露出真正的喜悅，而且沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "permission",
+    "example": "During the final check, ask permission before entering, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，進入前要先徵求許可，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pole",
+    "example": "The flag hung from a pole, but the detail became important later in the discussion.",
+    "exampleZh": "旗子掛在桿子上，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sauce",
+    "example": "This sauce tastes sweet, but the kitchen smelled warm for the rest of the evening.",
+    "exampleZh": "這個醬汁吃起來很甜，但是香味在整個晚上都留在廚房裡。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "imagination",
+    "example": "Children have strong imagination, so the group wrote it down before anyone forgot.",
+    "exampleZh": "孩子有豐富的想像力，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "quantity",
+    "example": "We need a larger quantity, so people remembered the moment because it changed the plan.",
+    "exampleZh": "我們需要更多數量，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "brand",
+    "example": "This brand is popular, and customers noticed the change almost immediately.",
+    "exampleZh": "這個品牌很受歡迎，而且顧客幾乎立刻注意到這項變化。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "raw",
+    "example": "During the final check, do not eat raw chicken, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，不要吃生雞肉，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "poetry",
+    "example": "She reads poetry at night, so people noticed the detail immediately.",
+    "exampleZh": "她晚上讀詩，所以人們立刻注意到這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "acceptable",
+    "example": "This answer is acceptable, and the group wrote it down before anyone forgot.",
+    "exampleZh": "這個答案可以接受，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pregnant",
+    "example": "She is five months pregnant, so the detail became important later in the discussion.",
+    "exampleZh": "她懷孕五個月了，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "qualify",
+    "example": "You qualify for a discount, so the team had to balance cost with long-term value.",
+    "exampleZh": "你符合折扣資格，所以團隊必須在成本與長期價值之間取得平衡。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rent",
+    "example": "After the market changed faster than expected, the rent is due tomorrow, and customers noticed the change almost immediately.",
+    "exampleZh": "在市場變化比預期更快之後，房租明天到期，而且顧客幾乎立刻注意到這項變化。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "loose",
+    "example": "This screw is loose, but the situation felt more realistic after that.",
+    "exampleZh": "這顆螺絲鬆了，但是那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "comfort",
+    "example": "Her words gave me comfort, and the people around her finally listened carefully.",
+    "exampleZh": "她的話給了我安慰，而且她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "palace",
+    "example": "The palace attracts many tourists, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "這座宮殿吸引許多遊客，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "resort",
+    "example": "They stayed at a beach resort, and the air felt cooler than it had in the city.",
+    "exampleZh": "他們住在海灘度假村，而且空氣感覺比城市裡涼爽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "strip",
+    "example": "Before you move on to the next step, cut the paper into a strip, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，把紙剪成長條，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "gear",
+    "example": "If the situation starts to feel rushed, bring your camping gear, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，帶上你的露營裝備，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "fence",
+    "example": "Although everyone looked at the details again, the fence needs repair, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然大家再次查看細節，圍欄需要修理，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "castle",
+    "example": "The castle stands on a hill, so the guide asked us to stay on the path.",
+    "exampleZh": "城堡矗立在山丘上，所以嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bet",
+    "example": "I lost a small bet, so the group wrote it down before anyone forgot.",
+    "exampleZh": "我輸了一個小賭注，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pitch",
+    "example": "The soccer pitch was wet, but the result meant a lot to the whole team.",
+    "exampleZh": "足球場很濕，但是這個結果對整支隊伍意義重大。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "craft",
+    "example": "Although the group discussed the matter for a while, this craft takes patience, and the situation felt more realistic after that.",
+    "exampleZh": "雖然小組討論這件事一陣子，這門手藝需要耐心，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "steady",
+    "example": "During the final check, keep a steady pace, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，保持穩定的步調，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "ceremony",
+    "example": "The ceremony began at noon, but people remembered the moment because it changed the plan.",
+    "exampleZh": "典禮在中午開始，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "clothing",
+    "example": "After everyone looked at the details again, warm clothing is necessary, and the group wrote it down before anyone forgot.",
+    "exampleZh": "在大家再次查看細節之後，保暖衣物是必要的，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "swim",
+    "example": "Although the situation changed unexpectedly, we swim every Sunday, and the situation felt more realistic after that.",
+    "exampleZh": "雖然情況意外改變，我們每週日游泳，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "borrow",
+    "example": "After several unclear answers, Maria raised her hand and asked, \"May I borrow your pen?\", hoping for a simple explanation.",
+    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『我可以借你的筆嗎』，希望得到簡單說明。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "trace",
+    "example": "Police found no trace, but the report avoided guessing beyond the available facts.",
+    "exampleZh": "警方沒有找到任何痕跡，但是報告避免做出超出現有事實的猜測。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "leather",
+    "example": "This bag is made of leather, but nobody had to waste time looking for it later.",
+    "exampleZh": "這個包包是皮革製的，但是之後沒有人需要浪費時間找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rid",
+    "example": "We must rid the room of dust, and the small detail made the room feel more organized.",
+    "exampleZh": "我們必須清除房間裡的灰塵，而且這個小細節讓房間感覺更有條理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "formula",
+    "example": "Although the report needed a more precise explanation, the formula is easy to remember, and the final report included the detail in a separate note.",
+    "exampleZh": "雖然報告需要更精確的說明，這個公式很容易記，而且最後報告把這個細節另外註記。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "maximum",
+    "example": "After the situation changed unexpectedly, the maximum speed is low, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "在情況意外改變之後，最高速度很低，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "awful",
+    "example": "The weather was awful, but the guide asked us to stay on the path.",
+    "exampleZh": "天氣很糟，但是嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "impressive",
+    "example": "Her speech was impressive, but someone asked a follow-up question a few minutes later.",
+    "exampleZh": "她的演講令人印象深刻，但是幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "remark",
+    "example": "His remark surprised everyone, but people remembered the moment because it changed the plan.",
+    "exampleZh": "他的評論讓大家驚訝，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "hip",
+    "example": "She injured her hip, so the result was written down in the medical record.",
+    "exampleZh": "她傷到髖部，所以結果被寫進病歷中。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "nowhere",
+    "example": "Although the answer was not obvious at first, there was nowhere to sit, and the detail became important later in the discussion.",
+    "exampleZh": "雖然答案一開始並不明顯，沒有地方可以坐，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cow",
+    "example": "The cow ate grass, so everyone slowed down and paid attention to the surroundings.",
+    "exampleZh": "牛吃草，所以大家放慢腳步並注意周圍環境。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "behave",
+    "example": "During the final check, please behave in class, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請在課堂上守規矩，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "desperate",
+    "example": "He made a desperate call, but the moment changed how they treated one another.",
+    "exampleZh": "他打了一通絕望的電話，但是那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "ingredient",
+    "example": "Sugar is the main ingredient, but the guests asked for the recipe before leaving.",
+    "exampleZh": "糖是主要成分，但是客人離開前詢問了食譜。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "plot",
+    "example": "The plot is hard to follow, so someone asked a follow-up question a few minutes later.",
+    "exampleZh": "劇情很難理解，所以幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "curtain",
+    "example": "During the final check, close the curtain, please, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請拉上窗簾，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "innocent",
+    "example": "The child looked innocent, but everyone understood the feeling behind the words.",
+    "exampleZh": "孩子看起來很無辜，但是大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tap",
+    "example": "During the final check, turn off the tap, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，關掉水龍頭，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "virus",
+    "example": "The virus spread quickly, and the doctor asked the family to watch the symptoms closely.",
+    "exampleZh": "病毒迅速傳播，而且醫生請家人密切觀察症狀。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "criticize",
+    "example": "When you are ready to continue, do not criticize her work unfairly, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，不要不公平地批評她的作品，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "lecture",
+    "example": "The lecture lasted one hour, so several students asked for a clearer example afterward.",
+    "exampleZh": "演講持續了一小時，所以幾位學生事後要求更清楚的例子。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pan",
+    "example": "During the final check, heat the pan first, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，先把平底鍋加熱，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "nerve",
+    "example": "The surgery damaged a nerve, but the nurse explained what to do if the problem returned.",
+    "exampleZh": "手術傷到一條神經，但是護士說明如果問題再出現該怎麼做。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "empire",
+    "example": "The empire lasted centuries, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "這個帝國延續了數百年，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "friendship",
+    "example": "Their friendship grew stronger, and everyone understood the feeling behind the words.",
+    "exampleZh": "他們的友誼變得更深厚，而且大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "spin",
+    "example": "The wheels spin quickly, so people remembered the moment because it changed the plan.",
+    "exampleZh": "輪子快速旋轉，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "related",
+    "example": "These problems are related, but people remembered the moment because it changed the plan.",
+    "exampleZh": "這些問題彼此相關，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tunnel",
+    "example": "Although someone asked for a more concrete example, the tunnel is very long, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然有人要求一個更具體的例子，這條隧道很長，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "van",
+    "example": "The van carried boxes, but the group decided to leave earlier next time.",
+    "exampleZh": "廂型車載著箱子，但是小組決定下次更早出發。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "shade",
+    "example": "We rested in the shade, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "我們在陰涼處休息，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "freeze",
+    "example": "Water will freeze tonight, and people remembered the moment because it changed the plan.",
+    "exampleZh": "今晚水會結冰，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "counter",
+    "example": "During the final check, pay at the counter, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請在櫃台付款，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "squeeze",
+    "example": "During the final check, please squeeze the lemon gently, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請輕輕擠檸檬，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "genuine",
+    "example": "Her smile was genuine, so the silence said more than a long explanation could.",
+    "exampleZh": "她的微笑很真誠，所以沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "gentle",
+    "example": "If the situation starts to feel rushed, use a gentle touch, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，動作要輕柔，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pile",
+    "example": "After everyone looked at the details again, a pile of books fell, and the detail became important later in the discussion.",
+    "exampleZh": "在大家再次查看細節之後，一堆書倒了，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "singer",
+    "example": "The singer lost her voice, and people noticed the detail immediately.",
+    "exampleZh": "歌手失聲了，而且人們立刻注意到這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "venture",
+    "example": "The company began a new venture, and customers noticed the change almost immediately.",
+    "exampleZh": "公司開始了一項新事業，而且顧客幾乎立刻注意到這項變化。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "reward",
+    "example": "Hard work brings reward, but the detail became important later in the discussion.",
+    "exampleZh": "努力工作會帶來回報，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "trick",
+    "example": "The trick worked perfectly, so people remembered the moment because it changed the plan.",
+    "exampleZh": "這個把戲非常成功，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "highlight",
+    "example": "The concert was the highlight, and the final version felt much stronger than before.",
+    "exampleZh": "音樂會是最精彩的部分，而且最終版本感覺比以前有力許多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "explosion",
+    "example": "Although someone asked for a more concrete example, the explosion broke nearby windows, and the situation felt more realistic after that.",
+    "exampleZh": "雖然有人要求一個更具體的例子，爆炸震碎了附近窗戶，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "horror",
+    "example": "She watched a horror film, but the audience kept talking about it after leaving.",
+    "exampleZh": "她看了一部恐怖片，但是觀眾離開後仍一直討論它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "loud",
+    "example": "The music was too loud, but people noticed the detail immediately.",
+    "exampleZh": "音樂太大聲，但是人們立刻注意到這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "lend",
+    "example": "After several unclear answers, Maria raised her hand and asked, \"Can you lend me ten dollars?\", hoping for a simple explanation.",
+    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『你可以借我十元嗎』，希望得到簡單說明。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "altogether",
+    "example": "There were ten people altogether, so someone asked a follow-up question a few minutes later.",
+    "exampleZh": "總共有十個人，所以幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "celebration",
+    "example": "Although everyone looked at the details again, the celebration lasted all night, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然大家再次查看細節，慶祝活動持續了一整晚，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "plain",
+    "example": "She wore a plain shirt, but the small detail made the room feel more organized.",
+    "exampleZh": "她穿了一件素色襯衫，但是這個小細節讓房間感覺更有條理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "prompt",
+    "example": "Although the answer was not obvious at first, his reply was prompt, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然答案一開始並不明顯，他的回覆很迅速，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pub",
+    "example": "Although someone asked for a more concrete example, we met at a quiet pub, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然有人要求一個更具體的例子，我們在一間安靜的酒吧見面，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bath",
+    "example": "She took a warm bath, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "她洗了一個熱水澡，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "minimum",
+    "example": "The minimum age is eighteen, but the detail became important later in the discussion.",
+    "exampleZh": "最低年齡是十八歲，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "wise",
+    "example": "That was a wise decision, and people remembered the moment because it changed the plan.",
+    "exampleZh": "那是明智的決定，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "ease",
+    "example": "Although the patient described the discomfort clearly, the medicine helped ease her pain, and the result was written down in the medical record.",
+    "exampleZh": "雖然病人清楚描述不舒服的地方，藥物幫助減輕她的疼痛，而且結果被寫進病歷中。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cotton",
+    "example": "This shirt is made of cotton, but the small detail made the room feel more organized.",
+    "exampleZh": "這件襯衫是棉製的，但是這個小細節讓房間感覺更有條理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cottage",
+    "example": "They rented a small cottage, so someone asked a follow-up question a few minutes later.",
+    "exampleZh": "他們租了一間小屋，所以幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "enthusiasm",
+    "example": "Her enthusiasm encouraged the team, but the conversation felt more honest than before.",
+    "exampleZh": "她的熱情鼓舞了團隊，但是這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "entitle",
+    "example": "After the situation changed unexpectedly, this ticket will entitle you to entry, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "在情況意外改變之後，這張票會讓你有入場資格，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "fixed",
+    "example": "After the store prepared for a busy weekend, the price is fixed, and the decision affected more people than expected.",
+    "exampleZh": "在店家為忙碌的週末做準備之後，價格是固定的，而且這項決定影響的人比預期更多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "anxious",
+    "example": "He felt anxious before the interview, so the conversation felt more honest than before.",
+    "exampleZh": "他面試前感到焦慮，所以這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "curious",
+    "example": "The child was curious about everything, and the conversation felt more honest than before.",
+    "exampleZh": "孩子對一切都很好奇，而且這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "strain",
+    "example": "The work caused eye strain, so people remembered the moment because it changed the plan.",
+    "exampleZh": "這份工作造成眼睛疲勞，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "conscious",
+    "example": "She remained conscious after the fall, but the detail became important later in the discussion.",
+    "exampleZh": "她跌倒後仍保持清醒，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "inevitable",
+    "example": "Change is inevitable, but someone asked a follow-up question a few minutes later.",
+    "exampleZh": "改變是不可避免的，但是幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "weekly",
+    "example": "Although the situation changed unexpectedly, we have a weekly meeting, and the detail became important later in the discussion.",
+    "exampleZh": "雖然情況意外改變，我們每週開一次會，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "consult",
+    "example": "You should consult a doctor, and the nurse explained what to do if the problem returned.",
+    "exampleZh": "你應該諮詢醫生，而且護士說明如果問題再出現該怎麼做。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rice",
+    "example": "We eat rice every day, and the cook made one final adjustment before serving it.",
+    "exampleZh": "我們每天吃米飯，而且廚師在上菜前做了最後一次調整。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "grain",
+    "example": "After the answer was not obvious at first, each grain of sand was tiny, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "在答案一開始並不明顯之後，每一粒沙都很小，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "musician",
+    "example": "The musician played softly, so the final version felt much stronger than before.",
+    "exampleZh": "音樂家輕柔地演奏，所以最終版本感覺比以前有力許多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "uniform",
+    "example": "Students wear a uniform here, so someone asked a follow-up question a few minutes later.",
+    "exampleZh": "這裡的學生穿制服，所以幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bunch",
+    "example": "She bought a bunch of flowers, but people remembered the moment because it changed the plan.",
+    "exampleZh": "她買了一束花，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "offence",
+    "example": "After the first report left several questions unanswered, speeding is a serious offence, and the judge asked both sides to focus on the facts.",
+    "exampleZh": "在第一份報告留下了幾個未解問題之後，超速是嚴重違規，而且法官要求雙方專注於事實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "romantic",
+    "example": "They planned a romantic dinner, and the guests asked for the recipe before leaving.",
+    "exampleZh": "他們安排了一頓浪漫晚餐，而且客人離開前詢問了食譜。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "autumn",
+    "example": "Although the situation changed unexpectedly, leaves turn red in autumn, and the situation felt more realistic after that.",
+    "exampleZh": "雖然情況意外改變，秋天葉子會變紅，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "painful",
+    "example": "Although the answer was not obvious at first, the memory was painful, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然答案一開始並不明顯，那段記憶很痛苦，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "admire",
+    "example": "I admire her courage, and the people around her finally listened carefully.",
+    "exampleZh": "我佩服她的勇氣，而且她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "presumably",
+    "example": "He is presumably at home, and the group wrote it down before anyone forgot.",
+    "exampleZh": "他大概在家，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "dare",
+    "example": "Although the situation changed unexpectedly, i dare not ask, and the situation felt more realistic after that.",
+    "exampleZh": "雖然情況意外改變，我不敢問，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "float",
+    "example": "After everyone looked at the details again, the leaves float on water, and people remembered the moment because it changed the plan.",
+    "exampleZh": "在大家再次查看細節之後，葉子浮在水面上，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tackle",
+    "example": "We must tackle this problem, so the group wrote it down before anyone forgot.",
+    "exampleZh": "我們必須處理這個問題，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "deposit",
+    "example": "I paid a small deposit, but the decision affected more people than expected.",
+    "exampleZh": "我付了一小筆押金，但是這項決定影響的人比預期更多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "burst",
+    "example": "The balloon will burst, and people remembered the moment because it changed the plan.",
+    "exampleZh": "氣球會爆掉，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "shelter",
+    "example": "They found shelter from the rain, so the children stopped talking and simply looked around.",
+    "exampleZh": "他們找到避雨處，所以孩子們停止說話，只是四處看著。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "brush",
+    "example": "When you are ready to continue, please brush your teeth twice daily, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，請每天刷牙兩次，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "divorce",
+    "example": "Their divorce was final, so the silence said more than a long explanation could.",
+    "exampleZh": "他們的離婚已經確定，所以沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "stroke",
+    "example": "A stroke can be serious, and the result was written down in the medical record.",
+    "exampleZh": "中風可能很嚴重，而且結果被寫進病歷中。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pen",
+    "example": "I need a black pen, but the family cleaned the area before guests arrived.",
+    "exampleZh": "我需要一支黑筆，但是家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "outstanding",
+    "example": "Although the situation changed unexpectedly, her work is outstanding, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然情況意外改變，她的作品很出色，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "whilst",
+    "example": "She read whilst waiting, but the situation felt more realistic after that.",
+    "exampleZh": "她一邊等待一邊閱讀，但是那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pleasant",
+    "example": "We had a pleasant evening, but the conversation felt more honest than before.",
+    "exampleZh": "我們度過了一個愉快的夜晚，但是這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "countryside",
+    "example": "They moved to the countryside, but the children stopped talking and simply looked around.",
+    "exampleZh": "他們搬到鄉下，但是孩子們停止說話，只是四處看著。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "strict",
+    "example": "My teacher is strict, and everyone copied the example before leaving the room.",
+    "exampleZh": "我的老師很嚴格，而且大家離開教室前把例子抄了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rhythm",
+    "example": "The song has a strong rhythm, but people noticed the detail immediately.",
+    "exampleZh": "這首歌節奏很強，但是人們立刻注意到這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "chase",
+    "example": "The dog began to chase us, and the children stopped talking and simply looked around.",
+    "exampleZh": "那隻狗開始追我們，而且孩子們停止說話，只是四處看著。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "excuse",
+    "example": "After the answer was not obvious at first, that is a poor excuse, and the situation felt more realistic after that.",
+    "exampleZh": "在答案一開始並不明顯之後，那是很差的藉口，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "reverse",
+    "example": "If the situation starts to feel rushed, please reverse the car slowly, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，請慢慢倒車，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bitter",
+    "example": "The coffee tastes bitter, and the family laughed while setting the plates on the table.",
+    "exampleZh": "咖啡喝起來很苦，而且家人一邊把盤子放上桌一邊笑著聊天。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "alarm",
+    "example": "The alarm rang at six, so the group wrote it down before anyone forgot.",
+    "exampleZh": "鬧鐘六點響了，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "contest",
+    "example": "She entered a singing contest, and the final minutes felt much longer than they really were.",
+    "exampleZh": "她參加了歌唱比賽，而且最後幾分鐘感覺比實際上漫長許多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "govern",
+    "example": "Laws govern our behavior, and the situation felt more realistic after that.",
+    "exampleZh": "法律規範我們的行為，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "steam",
+    "example": "Hot steam rose from the cup, so the small detail made the room feel more organized.",
+    "exampleZh": "熱蒸氣從杯子冒出來，所以這個小細節讓房間感覺更有條理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "interior",
+    "example": "The car interior looks clean, and the schedule changed twice before we reached the station.",
+    "exampleZh": "車內看起來很乾淨，而且我們到車站前時程已經改了兩次。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "repair",
+    "example": "They will repair the road, but the delay made the day feel much longer.",
+    "exampleZh": "他們會修路，但是延誤讓那一天感覺更漫長。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "anniversary",
+    "example": "Today is our anniversary, but the silence said more than a long explanation could.",
+    "exampleZh": "今天是我們的週年紀念日，但是沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "alongside",
+    "example": "She walked alongside her mother, so the moment changed how they treated one another.",
+    "exampleZh": "她走在媽媽旁邊，所以那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mess",
+    "example": "The kitchen is a mess, but everyone knew where to find it the next morning.",
+    "exampleZh": "廚房一團亂，但是隔天早上大家都知道去哪裡找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "explode",
+    "example": "The bottle may explode, but people remembered the moment because it changed the plan.",
+    "exampleZh": "瓶子可能會爆炸，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "impress",
+    "example": "Her speech will impress them, and the group wrote it down before anyone forgot.",
+    "exampleZh": "她的演講會讓他們印象深刻，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "harm",
+    "example": "Smoking can harm your health, but the family felt calmer after hearing a clear explanation.",
+    "exampleZh": "抽菸會傷害健康，但是家人在聽到清楚說明後比較安心。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pet",
+    "example": "Their pet sleeps on the sofa, but nobody had to waste time looking for it later.",
+    "exampleZh": "他們的寵物睡在沙發上，但是之後沒有人需要浪費時間找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "superior",
+    "example": "This material is superior, so the detail became important later in the discussion.",
+    "exampleZh": "這種材料比較優良，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "courage",
+    "example": "It took courage to speak, but the conversation felt more honest than before.",
+    "exampleZh": "發言需要勇氣，但是這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "orange",
+    "example": "I ate an orange, but the guests asked for the recipe before leaving.",
+    "exampleZh": "我吃了一顆柳橙，但是客人離開前詢問了食譜。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cease",
+    "example": "Although the situation changed unexpectedly, the noise will cease soon, and the group wrote it down before anyone forgot.",
+    "exampleZh": "雖然情況意外改變，噪音很快就會停止，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "trap",
+    "example": "The mouse escaped the trap, so someone asked a follow-up question a few minutes later.",
+    "exampleZh": "老鼠逃出了陷阱，所以幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sail",
+    "example": "They sail every summer, and people remembered the moment because it changed the plan.",
+    "exampleZh": "他們每年夏天都航行，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "unexpected",
+    "example": "After everyone looked at the details again, we had an unexpected visitor, and people remembered the moment because it changed the plan.",
+    "exampleZh": "在大家再次查看細節之後，我們有一位意外訪客，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "suspicion",
+    "example": "His silence raised suspicion, and the group wrote it down before anyone forgot.",
+    "exampleZh": "他的沉默引起懷疑，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "concrete",
+    "example": "The wall is made of concrete, and everyone knew where to find it the next morning.",
+    "exampleZh": "牆是混凝土做的，而且隔天早上大家都知道去哪裡找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "prior",
+    "example": "After everyone looked at the details again, we need prior approval, and the detail became important later in the discussion.",
+    "exampleZh": "在大家再次查看細節之後，我們需要事先批准，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "midnight",
+    "example": "Although the group discussed the matter for a while, i went home before midnight, and the situation felt more realistic after that.",
+    "exampleZh": "雖然小組討論這件事一陣子，我在午夜前回家，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "generous",
+    "example": "After everyone looked at the details again, she made a generous donation, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "在大家再次查看細節之後，她做了一筆慷慨的捐款，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "upset",
+    "example": "He looked upset after the call, so the conversation felt more honest than before.",
+    "exampleZh": "他通話後看起來很難過，所以這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mate",
+    "example": "After the group discussed the matter for a while, he called his old mate, and the detail became important later in the discussion.",
+    "exampleZh": "在小組討論這件事一陣子之後，他打給老朋友，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "outline",
+    "example": "During the final check, please outline your plan, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請概述你的計畫，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cancel",
+    "example": "They may cancel the flight, and the schedule changed twice before we reached the station.",
+    "exampleZh": "他們可能取消航班，而且我們到車站前時程已經改了兩次。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "comedy",
+    "example": "We watched a comedy together, and the audience kept talking about it after leaving.",
+    "exampleZh": "我們一起看了一部喜劇，而且觀眾離開後仍一直討論它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "diary",
+    "example": "She writes in her diary, and the situation felt more realistic after that.",
+    "exampleZh": "她寫日記，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "keen",
+    "example": "He is keen to learn, so someone asked a follow-up question a few minutes later.",
+    "exampleZh": "他很渴望學習，所以幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cooking",
+    "example": "I enjoy cooking at home, so the guests asked for the recipe before leaving.",
+    "exampleZh": "我喜歡在家煮飯，所以客人離開前詢問了食譜。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "automatic",
+    "example": "The door is automatic, so the family cleaned the area before guests arrived.",
+    "exampleZh": "這扇門是自動的，所以家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "invitation",
+    "example": "She accepted the invitation, and people remembered the moment because it changed the plan.",
+    "exampleZh": "她接受了邀請，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "magic",
+    "example": "The show felt like magic, so the silence said more than a long explanation could.",
+    "exampleZh": "這場表演像魔法一樣，所以沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sympathy",
+    "example": "I have sympathy for him, and the conversation felt more honest than before.",
+    "exampleZh": "我同情他，而且這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "senator",
+    "example": "The senator answered questions, and local reporters compared the result with earlier public promises.",
+    "exampleZh": "參議員回答了問題，而且地方記者把這個結果和先前的公開承諾拿來比較。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "equivalent",
+    "example": "This amount is equivalent to ten dollars, so the group wrote it down before anyone forgot.",
+    "exampleZh": "這個金額相當於十美元，所以小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "intelligent",
+    "example": "She is an intelligent student, so the teacher wrote the key point on the board again.",
+    "exampleZh": "她是一位聰明的學生，所以老師又把重點寫在黑板上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bake",
+    "example": "I will bake bread tomorrow, but the family laughed while setting the plates on the table.",
+    "exampleZh": "我明天會烤麵包，但是家人一邊把盤子放上桌一邊笑著聊天。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "inch",
+    "example": "During the final check, move it one inch left, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，把它往左移一英寸，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "fold",
+    "example": "Before you move on to the next step, please fold the paper in half, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，請把紙對折，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "tune",
+    "example": "He played a simple tune, and the editor decided to keep the line in the final draft.",
+    "exampleZh": "他演奏了一段簡單旋律，而且編輯決定在最後草稿中保留這句話。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "flash",
+    "example": "A flash lit the room, so nobody had to waste time looking for it later.",
+    "exampleZh": "一道閃光照亮了房間，所以之後沒有人需要浪費時間找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "businessman",
+    "example": "After someone asked for a more concrete example, the businessman checked his schedule, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "在有人要求一個更具體的例子之後，那位商人查看了行程，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "evil",
+    "example": "The story has an evil king, but people noticed the detail immediately.",
+    "exampleZh": "故事裡有一位邪惡國王，但是人們立刻注意到這個細節。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "publicity",
+    "example": "The event got wide publicity, but the final version felt much stronger than before.",
+    "exampleZh": "這場活動獲得廣泛宣傳，但是最終版本感覺比以前有力許多。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "slice",
+    "example": "She ate a slice of bread, so everyone noticed the flavor before the meal was over.",
+    "exampleZh": "她吃了一片麵包，所以大家在用餐結束前就注意到味道。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "till",
+    "example": "During the final check, wait till I come back, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，等到我回來，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "twist",
+    "example": "When you are ready to continue, please twist the cap to open it, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，請轉開瓶蓋，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "ambition",
+    "example": "Her ambition is clear, and the group wrote it down before anyone forgot.",
+    "exampleZh": "她的抱負很明確，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "shame",
+    "example": "It was a shame to leave early, so the people around her finally listened carefully.",
+    "exampleZh": "提早離開真可惜，所以她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "hunt",
+    "example": "They hunt for old books, so people remembered the moment because it changed the plan.",
+    "exampleZh": "他們尋找舊書，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "peaceful",
+    "example": "The park felt peaceful, so everyone understood the feeling behind the words.",
+    "exampleZh": "公園感覺很寧靜，所以大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "reckon",
+    "example": "After the answer was not obvious at first, i reckon he is right, and the group wrote it down before anyone forgot.",
+    "exampleZh": "在答案一開始並不明顯之後，我認為他是對的，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "discount",
+    "example": "The store offers a discount, so everyone checked the numbers again before signing anything.",
+    "exampleZh": "這家店提供折扣，所以大家在簽署任何文件前再次確認數字。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "flood",
+    "example": "The flood damaged many homes, so the guide asked us to stay on the path.",
+    "exampleZh": "洪水損壞了許多房屋，所以嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "missing",
+    "example": "One page is missing, and the group wrote it down before anyone forgot.",
+    "exampleZh": "有一頁不見了，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mild",
+    "example": "She has a mild fever, and the family felt calmer after hearing a clear explanation.",
+    "exampleZh": "她有輕微發燒，而且家人在聽到清楚說明後比較安心。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "continent",
+    "example": "Asia is a large continent, but the group wrote it down before anyone forgot.",
+    "exampleZh": "亞洲是一個大洲，但是小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "dump",
+    "example": "Before you move on to the next step, do not dump trash here, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，不要在這裡傾倒垃圾，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "spell",
+    "example": "If the situation starts to feel rushed, please spell your name, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，請拼出你的名字，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rescue",
+    "example": "They rescue animals after storms, and people remembered the moment because it changed the plan.",
+    "exampleZh": "他們在暴風雨後救援動物，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "clever",
+    "example": "After everyone looked at the details again, that is a clever answer, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "在大家再次查看細節之後，那是聰明的回答，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "elegant",
+    "example": "She wore an elegant dress, so people remembered the moment because it changed the plan.",
+    "exampleZh": "她穿了一件優雅洋裝，所以人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rider",
+    "example": "The rider wore a helmet, so the detail became important later in the discussion.",
+    "exampleZh": "騎士戴著安全帽，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "lonely",
+    "example": "He felt lonely in the city, and the silence said more than a long explanation could.",
+    "exampleZh": "他在城市裡感到孤單，而且沉默比冗長解釋更能說明一切。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "praise",
+    "example": "The teacher gave her praise, and the discussion continued even after the bell rang.",
+    "exampleZh": "老師稱讚了她，而且鐘響後討論仍繼續進行。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pill",
+    "example": "When you are ready to continue, take one pill after breakfast, instead of waiting until someone else notices the issue.",
+    "exampleZh": "當你準備好繼續時，早餐後吃一顆藥丸，不要等到別人注意到問題才處理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "offensive",
+    "example": "His joke was offensive, so people waited quietly until the final decision was read.",
+    "exampleZh": "他的笑話很冒犯人，所以人們安靜等到最後決定被宣讀。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "hook",
+    "example": "During the final check, hang your coat on the hook, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，把外套掛在掛鉤上，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sensible",
+    "example": "Although everyone looked at the details again, that is a sensible plan, and someone asked a follow-up question a few minutes later.",
+    "exampleZh": "雖然大家再次查看細節，那是合理的計畫，而且幾分鐘後有人提出了追問。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "unfair",
+    "example": "The rule seems unfair, and the detail became important later in the discussion.",
+    "exampleZh": "這條規則看起來不公平，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "delight",
+    "example": "The news brought great delight, so everyone understood the feeling behind the words.",
+    "exampleZh": "這個消息帶來很大的喜悅，所以大家理解了話語背後的感受。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "spare",
+    "example": "After several unclear answers, Maria raised her hand and asked, \"Do you have a spare key?\", hoping for a simple explanation.",
+    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『你有備用鑰匙嗎』，希望得到簡單說明。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "drum",
+    "example": "He played the drum loudly, and the situation felt more realistic after that.",
+    "exampleZh": "他大聲打鼓，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "broadcast",
+    "example": "The station will broadcast the game, and everyone adjusted the plan before moving on.",
+    "exampleZh": "電視台會轉播比賽，而且大家在繼續前調整了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "decorate",
+    "example": "We decorate the tree together, so the guide asked us to stay on the path.",
+    "exampleZh": "我們一起裝飾樹，所以嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "unhappy",
+    "example": "She looked unhappy today, so the people around her finally listened carefully.",
+    "exampleZh": "她今天看起來不開心，所以她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "urgent",
+    "example": "This is an urgent matter, and the group wrote it down before anyone forgot.",
+    "exampleZh": "這是緊急事項，而且小組在有人忘記前把它寫了下來。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "regret",
+    "example": "I regret my decision, and the moment changed how they treated one another.",
+    "exampleZh": "我後悔自己的決定，而且那一刻改變了他們彼此對待的方式。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "neighbour",
+    "example": "Our neighbour is very kind, so the conversation felt more honest than before.",
+    "exampleZh": "我們的鄰居很親切，所以這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "rear",
+    "example": "The rear door is locked, so the small detail made the room feel more organized.",
+    "exampleZh": "後門鎖住了，所以這個小細節讓房間感覺更有條理。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "neat",
+    "example": "Her desk is neat, so the family cleaned the area before guests arrived.",
+    "exampleZh": "她的書桌很整齊，所以家人在客人抵達前把那個區域整理乾淨。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "delighted",
+    "example": "I was delighted by the news, but the people around her finally listened carefully.",
+    "exampleZh": "我對這個消息感到高興，但是她身邊的人終於認真聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "striking",
+    "example": "Her painting is striking, but the scene gave the whole work a clearer direction.",
+    "exampleZh": "她的畫很引人注目，但是這個場景讓整部作品的方向更清楚。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "runner",
+    "example": "The runner crossed the line, so the players remembered the lesson during the next match.",
+    "exampleZh": "跑者越過終點線，所以球員在下一場比賽中記住了這個教訓。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "calm",
+    "example": "Before you move on to the next step, stay calm during the test, and make sure everyone understands why it matters.",
+    "exampleZh": "在進行下一步之前，考試時保持冷靜，並確認大家都理解它為什麼重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "licence",
+    "example": "Although the first report left several questions unanswered, he lost his driving licence, and the report avoided guessing beyond the available facts.",
+    "exampleZh": "雖然第一份報告留下了幾個未解問題，他弄丟了駕照，而且報告避免做出超出現有事實的猜測。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "brave",
+    "example": "The brave child spoke first, so the conversation felt more honest than before.",
+    "exampleZh": "勇敢的孩子先發言，所以這段對話感覺比以前更坦誠。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "pin",
+    "example": "She used a pin to hold it, and the problem was fixed before anyone complained.",
+    "exampleZh": "她用別針把它固定住，而且問題在有人抱怨前就被修好。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "navy",
+    "example": "He joined the navy, but the detail became important later in the discussion.",
+    "exampleZh": "他加入了海軍，但是這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "stamp",
+    "example": "During the final check, put a stamp on the letter, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，在信上貼郵票，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "boil",
+    "example": "During the final check, please boil the water first, because one overlooked detail can affect the whole result.",
+    "exampleZh": "在最後檢查時，請先把水煮沸，因為一個被忽略的細節可能影響整個結果。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "sack",
+    "example": "The potatoes are in a sack, so the detail became important later in the discussion.",
+    "exampleZh": "馬鈴薯在袋子裡，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "chop",
+    "example": "If the situation starts to feel rushed, please chop the onions finely, so a small mistake does not become a larger problem.",
+    "exampleZh": "如果情況開始變得倉促，請把洋蔥切碎，這樣小錯誤才不會變成更大的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "mobile",
+    "example": "Her mobile is on the desk, but the problem was fixed before anyone complained.",
+    "exampleZh": "她的手機在桌上，但是問題在有人抱怨前就被修好。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "advertise",
+    "example": "Although the group discussed the matter for a while, they advertise online, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然小組討論這件事一陣子，他們在網路上打廣告，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "breed",
+    "example": "Although the situation changed unexpectedly, some dogs breed easily, and the detail became important later in the discussion.",
+    "exampleZh": "雖然情況意外改變，有些狗容易繁殖，而且這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "ruin",
+    "example": "Rain may ruin the picnic, so the guide asked us to stay on the path.",
+    "exampleZh": "下雨可能會毀了野餐，所以嚮導請我們留在小路上。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bay",
+    "example": "The boat crossed the bay, and the delay made the day feel much longer.",
+    "exampleZh": "船穿過海灣，而且延誤讓那一天感覺更漫長。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "punch",
+    "example": "He threw a punch, but people remembered the moment because it changed the plan.",
+    "exampleZh": "他揮出一拳，但是人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "entertain",
+    "example": "After the situation changed unexpectedly, the band will entertain the guests, and the situation felt more realistic after that.",
+    "exampleZh": "在情況意外改變之後，樂團會娛樂賓客，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "smash",
+    "example": "The glass may smash, and the situation felt more realistic after that.",
+    "exampleZh": "玻璃可能會碎裂，而且那之後情況感覺更真實。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "metre",
+    "example": "The wall is one metre high, but nobody had to waste time looking for it later.",
+    "exampleZh": "這面牆高一公尺，但是之後沒有人需要浪費時間找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bound",
+    "example": "The dog is bound to bark, but the scene stayed in our memory for a long time.",
+    "exampleZh": "那隻狗一定會叫，但是那個畫面在我們記憶中停留了很久。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "manufacture",
+    "example": "The company will manufacture cars, so customers noticed the change almost immediately.",
+    "exampleZh": "公司會製造汽車，所以顧客幾乎立刻注意到這項變化。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "cure",
+    "example": "This medicine may cure the infection, so the result was written down in the medical record.",
+    "exampleZh": "這個藥可能治癒感染，所以結果被寫進病歷中。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "forecast",
+    "example": "The forecast says it will rain, so the air felt cooler than it had in the city.",
+    "exampleZh": "天氣預報說會下雨，所以空氣感覺比城市裡涼爽。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "chat",
+    "example": "Although the situation changed unexpectedly, we had a quick chat, and people remembered the moment because it changed the plan.",
+    "exampleZh": "雖然情況意外改變，我們簡短聊了一下，而且人們記得那一刻，因為它改變了計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "bargain",
+    "example": "This jacket was a bargain, so nobody had to waste time looking for it later.",
+    "exampleZh": "這件外套很划算，所以之後沒有人需要浪費時間找它。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  },
+  {
+    "word": "honour",
+    "example": "It is an honour to meet you, so the detail became important later in the discussion.",
+    "exampleZh": "很榮幸見到你，所以這個細節在後續討論中變得重要。",
+    "status": "approved",
+    "batch": "gpt-review-core05-full-2026-07-02"
+  }
+]

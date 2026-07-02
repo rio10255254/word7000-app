@@ -1,0 +1,3467 @@
+[
+  {
+    "word": "perception",
+    "example": "Her perception of the city changed after she lived there through an entire winter.",
+    "exampleZh": "她在那座城市住過整個冬天後，對它的感受改變了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bind",
+    "example": "They had to bind quickly because the deadline was closer than anyone expected.",
+    "exampleZh": "他們必須很快綁，因為期限比任何人預期都近。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sequence",
+    "example": "The nurse explained sequence during class before the review.",
+    "exampleZh": "護理師在檢查前的課堂上解釋了序列。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "visual",
+    "example": "The situation became visual after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很視覺的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "representation",
+    "example": "The chart offered a clear representation of how the population changed over thirty years.",
+    "exampleZh": "這張圖清楚呈現了三十年間人口如何變化。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "external",
+    "example": "The external design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個這個詞設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gender",
+    "example": "The discussion about gender became more useful once the teacher connected it to daily life.",
+    "exampleZh": "老師把性和日常生活連結後，相關討論變得更有用。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distinction",
+    "example": "The report treated distinction as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把區別當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "incorporate",
+    "example": "The team decided to incorporate the plan after finding several problems in the first test.",
+    "exampleZh": "團隊在第一次測試中發現幾個問題後，決定合併的這項計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "multiple",
+    "example": "The report sounded multiple, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很倍數，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "significance",
+    "example": "The report treated significance as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把重要性當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "perceive",
+    "example": "People perceive colors differently.",
+    "exampleZh": "人們對顏色的感知不同。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "boundary",
+    "example": "The engineer led a class discussion about boundary after the visit.",
+    "exampleZh": "工程師在拜訪後帶領全班討論邊界。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "undertake",
+    "example": "We will undertake this project, so the situation felt less like a dictionary example.",
+    "exampleZh": "我們會承擔這個專案，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "phenomenon",
+    "example": "Students understood phenomenon better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了現象。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "defendant",
+    "example": "The young defendant arrived early, reviewed the notes, and waited quietly near the entrance.",
+    "exampleZh": "那位年輕的被告提早抵達，查看筆記後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "mode",
+    "example": "The discussion about mode became more useful once the teacher connected it to daily life.",
+    "exampleZh": "老師把模態和日常生活連結後，相關討論變得更有用。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "formation",
+    "example": "The nurse led a class discussion about formation after the trip.",
+    "exampleZh": "護理師在旅程後帶領全班討論形成。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dimension",
+    "example": "The doctor wrote a short note about dimension after the training.",
+    "exampleZh": "醫生在訓練後寫了一段關於尺寸這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "faculty",
+    "example": "The visitor explained faculty during class before the weekend.",
+    "exampleZh": "訪客在週末前的課堂上解釋了才能。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "framework",
+    "example": "The designer gave a brief talk about framework before the rehearsal.",
+    "exampleZh": "設計師在排練前做了一段關於結構這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "obligation",
+    "example": "The doctor explained obligation during class before the holiday.",
+    "exampleZh": "醫生在假期前的課堂上解釋了義務。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "constitute",
+    "example": "These facts constitute evidence.",
+    "exampleZh": "這些事實構成證據。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "maintenance",
+    "example": "The driver gave a brief talk about maintenance before the meeting.",
+    "exampleZh": "司機在會議前做了一段關於維護這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "historian",
+    "example": "During the meeting, the historian explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位歷史學家用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scholar",
+    "example": "The young scholar arrived early, reviewed the notes, and waited quietly near the entrance.",
+    "exampleZh": "那位年輕的學者提早抵達，查看筆記後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "disorder",
+    "example": "The report treated disorder as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把雜亂當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evaluate",
+    "example": "We need to evaluate the results.",
+    "exampleZh": "我們需要評估結果。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "detect",
+    "example": "The test can detect errors.",
+    "exampleZh": "這項測試可以偵測錯誤。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pray",
+    "example": "They pray before dinner.",
+    "exampleZh": "他們晚餐前祈禱。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clinical",
+    "example": "The clinical design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個臨床的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "efficiency",
+    "example": "The doctor wrote a short note about efficiency after the discussion.",
+    "exampleZh": "醫生在討論後寫了一段關於效率這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distant",
+    "example": "The distant design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個遠的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "expenditure",
+    "example": "The doctor prepared a short report on expenditure before the trip.",
+    "exampleZh": "醫生在旅程前準備了一份關於開支這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "submit",
+    "example": "Please submit the form by Friday, so the situation felt less like a dictionary example.",
+    "exampleZh": "請在星期五前提交表格，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "frequency",
+    "example": "The report treated frequency as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把頻率當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ratio",
+    "example": "The student prepared a short report on ratio before noon.",
+    "exampleZh": "學生在中午前準備了一份關於比這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "liability",
+    "example": "The report treated liability as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把責任當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "portion",
+    "example": "The student wrote a short note about portion after the festival.",
+    "exampleZh": "學生在節慶後寫了一段關於部分這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "digital",
+    "example": "The report treated digital as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把數字顯示的當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "universal",
+    "example": "Students understood universal better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了全世界。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "differ",
+    "example": "Our opinions differ on this point.",
+    "exampleZh": "我們在這一點上的意見不同。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lab",
+    "example": "They waited near the lab because the rain made it difficult to continue.",
+    "exampleZh": "他們在這個詞附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scope",
+    "example": "Students understood scope better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了範圍。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "storage",
+    "example": "Students understood storage better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了存儲器。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "literally",
+    "example": "She literally jumped with joy.",
+    "exampleZh": "她真的高興得跳了起來。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "disability",
+    "example": "The new entrance was designed so people with a disability could enter safely and easily.",
+    "exampleZh": "新的入口設計讓身心障礙者能安全且方便地進入。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bench",
+    "example": "The teacher wrote a short note about bench after the practice.",
+    "exampleZh": "老師在練習後寫了一段關於長椅子這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consumption",
+    "example": "The neighbor led a class discussion about consumption after the meeting.",
+    "exampleZh": "鄰居在會議後帶領全班討論消費。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "reflection",
+    "example": "The editor wrote a short note about reflection after the rehearsal.",
+    "exampleZh": "編輯在排練後寫了一段關於反映這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "workshop",
+    "example": "The map showed a small workshop behind the station, but it was hard to find.",
+    "exampleZh": "地圖顯示車站後方有一個小工場，但它很難找。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "physician",
+    "example": "During the meeting, the physician explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位醫師用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "recipe",
+    "example": "The report treated recipe as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把食譜當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "admission",
+    "example": "The nurse led a class discussion about admission after the visit.",
+    "exampleZh": "護理師在拜訪後帶領全班討論準許進入。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "parking",
+    "example": "Students understood parking better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了停車。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conservation",
+    "example": "The report treated conservation as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把保護當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "biological",
+    "example": "The biological design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個生物學的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "incentive",
+    "example": "The researcher prepared a short report on incentive before Friday.",
+    "exampleZh": "研究員在星期五前準備了一份關於動機這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distinct",
+    "example": "Her answer was distinct, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很清楚的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "basketball",
+    "example": "Students understood basketball better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了籃球。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "administrative",
+    "example": "Her answer was administrative, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很管理的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "embrace",
+    "example": "The designer gave a brief talk about embrace before the rehearsal.",
+    "exampleZh": "設計師在排練前做了一段關於擁抱這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "limitation",
+    "example": "The manager gave a brief talk about limitation before the interview.",
+    "exampleZh": "經理在面試前做了一段關於限制這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "kingdom",
+    "example": "The manager wrote a short note about kingdom after the inspection.",
+    "exampleZh": "經理在檢查後寫了一段關於王國這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "infant",
+    "example": "The driver gave a brief talk about infant before the call.",
+    "exampleZh": "司機在通話前做了一段關於嬰兒這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evolution",
+    "example": "The manager led a class discussion about evolution after the festival.",
+    "exampleZh": "經理在節慶後帶領全班討論進化。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bible",
+    "example": "The report treated bible as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把聖經當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "exceed",
+    "example": "Costs may exceed our budget.",
+    "exampleZh": "成本可能會超過我們的預算。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "furthermore",
+    "example": "The plan is cheaper than expected; furthermore, it can be finished before the deadline.",
+    "exampleZh": "這個計畫比預期便宜，此外還能在期限前完成。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fiction",
+    "example": "The engineer wrote a short note about fiction after the trial.",
+    "exampleZh": "工程師在試驗後寫了一段關於小說這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "insight",
+    "example": "The nurse explained insight during class before the review.",
+    "exampleZh": "護理師在檢查前的課堂上解釋了察看。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guideline",
+    "example": "The guide gave a brief talk about guideline before the exam.",
+    "exampleZh": "嚮導在考試前做了一段關於指導路線這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "shrug",
+    "example": "They had to shrug quickly because the deadline was closer than anyone expected.",
+    "exampleZh": "他們必須很快聳肩，因為期限比任何人預期都近。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "input",
+    "example": "Before the meeting ended, she tried to input the main point in one clear sentence.",
+    "exampleZh": "會議結束前，她試著用一句清楚的話輸入主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assign",
+    "example": "It was difficult to assign the issue without first checking the original data.",
+    "exampleZh": "如果不先檢查原始資料，就很難分配這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "premise",
+    "example": "The neighbor led a class discussion about premise after the inspection.",
+    "exampleZh": "鄰居在檢查後帶領全班討論前提。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "campus",
+    "example": "They waited near the campus because the rain made it difficult to continue.",
+    "exampleZh": "他們在這個詞附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "administrator",
+    "example": "During the meeting, the administrator explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位管理人用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "episode",
+    "example": "The assistant explained episode during class before noon.",
+    "exampleZh": "助理在中午前的課堂上解釋了插曲。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evolve",
+    "example": "Languages evolve over time.",
+    "exampleZh": "語言會隨時間演變。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "toss",
+    "example": "The team decided to toss the plan after finding several problems in the first test.",
+    "exampleZh": "團隊在第一次測試中發現幾個問題後，決定投擲這項計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lifetime",
+    "example": "The assistant explained lifetime during class before class.",
+    "exampleZh": "助理在上課前的課堂上解釋了一生。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "reinforce",
+    "example": "Examples reinforce the lesson.",
+    "exampleZh": "例子能加強這堂課的效果。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "utility",
+    "example": "The report treated utility as a small detail, although it was central to the final decision.",
+    "exampleZh": "報告把功用當成小細節處理，但它其實是最後決定的核心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "undergo",
+    "example": "The patient will undergo surgery.",
+    "exampleZh": "病人將接受手術。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "architecture",
+    "example": "A short lesson discussion made architecture easier to understand.",
+    "exampleZh": "簡短的課程討論讓建築學更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clause",
+    "example": "Students understood clause better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了子句。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cop",
+    "example": "The coach led a class discussion about cop after the interview.",
+    "exampleZh": "教練在面試後帶領全班討論警官。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "equation",
+    "example": "The manager wrote a short note about equation after the festival.",
+    "exampleZh": "經理在節慶後寫了一段關於相等這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accomplish",
+    "example": "We can accomplish this today.",
+    "exampleZh": "我們今天可以完成這件事。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "emission",
+    "example": "The assistant wrote a short note about emission after the interview.",
+    "exampleZh": "助理在面試後寫了一段關於發射這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "architect",
+    "example": "The young architect arrived early, reviewed the notes, and waited quietly near the entrance.",
+    "exampleZh": "那位年輕的建築師提早抵達，查看筆記後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "corn",
+    "example": "The smell of corn filled the kitchen while everyone waited for dinner.",
+    "exampleZh": "大家等晚餐時，玉蜀黍的味道充滿了廚房。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "respectively",
+    "example": "Tom and Ann scored 80 and 90, respectively, after preparing together for two weeks.",
+    "exampleZh": "湯姆和安一起準備兩週後，分別考了八十分和九十分。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "prosecutor",
+    "example": "During the meeting, the prosecutor explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位實行者用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "viewer",
+    "example": "During the meeting, the viewer explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位觀察者用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tenant",
+    "example": "During the meeting, the tenant explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位承租人用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "slave",
+    "example": "The young slave arrived early, reviewed the notes, and waited quietly near the entrance.",
+    "exampleZh": "那位年輕的奴隸提早抵達，查看筆記後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "corridor",
+    "example": "We reached the corridor before sunset and found the entrance almost empty.",
+    "exampleZh": "我們在日落前抵達這個詞，發現入口幾乎沒有人。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diversity",
+    "example": "The engineer led a class discussion about diversity after the visit.",
+    "exampleZh": "工程師在拜訪後帶領全班討論差異。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "virtue",
+    "example": "The guide led a class discussion about virtue after the interview.",
+    "exampleZh": "嚮導在面試後帶領全班討論德行。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "acceptance",
+    "example": "The coach led a class discussion about acceptance after the presentation.",
+    "exampleZh": "教練在簡報後帶領全班討論接受。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "patch",
+    "example": "They had to patch quickly because the deadline was closer than anyone expected.",
+    "exampleZh": "他們必須很快片，因為期限比任何人預期都近。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guidance",
+    "example": "The editor led a class discussion about guidance after the debate.",
+    "exampleZh": "編輯在辯論後帶領全班討論指導。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "jack",
+    "example": "The assistant wrote a short note about jack after the training.",
+    "exampleZh": "助理在訓練後寫了一段關於插座這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "terror",
+    "example": "The visitor gave a brief talk about terror before the holiday.",
+    "exampleZh": "訪客在假期前做了一段關於恐怖這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "specify",
+    "example": "Please specify your arrival time, so the situation felt less like a dictionary example.",
+    "exampleZh": "請指定你的抵達時間，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "organic",
+    "example": "An organic situation required extra care before breakfast.",
+    "exampleZh": "一個器官的情況在早餐前需要額外處理。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "elite",
+    "example": "The assistant led a class discussion about elite after the workshop.",
+    "exampleZh": "助理在工作坊後帶領全班討論精華。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "evident",
+    "example": "Her answer was evident, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很顯然的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "theoretical",
+    "example": "Her answer was theoretical, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很理論的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "overlook",
+    "example": "Do not overlook small details.",
+    "exampleZh": "不要忽略小細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consume",
+    "example": "Cars consume fuel quickly.",
+    "exampleZh": "汽車會快速消耗燃料。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "palm",
+    "example": "She touched her palm gently.",
+    "exampleZh": "她輕輕碰了自己的手掌。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assert",
+    "example": "She can assert her rights.",
+    "exampleZh": "她可以主張自己的權利。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "capability",
+    "example": "Students understood capability better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了能力。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "residential",
+    "example": "The situation became residential after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很住宅的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gaze",
+    "example": "The visitor led a class discussion about gaze after the visit.",
+    "exampleZh": "訪客在拜訪後帶領全班討論注視。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "companion",
+    "example": "Students understood companion better after comparing two examples from very different situations.",
+    "exampleZh": "學生比較兩個很不同的情境後，更理解了朋友。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consent",
+    "example": "Before the meeting ended, she tried to consent the main point in one clear sentence.",
+    "exampleZh": "會議結束前，她試著用一句清楚的話同意主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "attribute",
+    "example": "The teacher prepared a short report on attribute before the meeting.",
+    "exampleZh": "老師在會議前準備了一份關於屬性這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "comprise",
+    "example": "The team will comprise five members, so the situation felt less like a dictionary example.",
+    "exampleZh": "這個團隊將包含五名成員，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cattle",
+    "example": "A cattle moved through the grass, and everyone became quiet for a moment.",
+    "exampleZh": "一隻牛穿過草地，所有人一時都安靜下來。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "experimental",
+    "example": "Her answer was experimental, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很實驗的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "privilege",
+    "example": "The visitor gave a brief talk about privilege before the holiday.",
+    "exampleZh": "訪客在假期前做了一段關於特權這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "everyday",
+    "example": "The everyday plan helped the team move forward after the festival.",
+    "exampleZh": "每天的計畫在節慶後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "heritage",
+    "example": "The designer gave a brief talk about heritage before the call.",
+    "exampleZh": "設計師在通話前做了一段關於遺產這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "discrimination",
+    "example": "The engineer gave a brief talk about discrimination before Friday.",
+    "exampleZh": "工程師在星期五前做了一段關於差別這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "yell",
+    "example": "Please do not yell indoors.",
+    "exampleZh": "請不要在室內大喊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "resemble",
+    "example": "The twins resemble each other.",
+    "exampleZh": "這對雙胞胎彼此很像。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rat",
+    "example": "A rat crossed the path slowly while the children watched from a safe distance.",
+    "exampleZh": "一隻鼠慢慢穿過小路，孩子們在安全距離外看著。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "structural",
+    "example": "The assistant reviewed the structural case after the festival.",
+    "exampleZh": "助理在節慶後檢視了這個結構的案例。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "solar",
+    "example": "The solar plan helped the team move forward after the debate.",
+    "exampleZh": "太陽的計畫在辯論後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ideology",
+    "example": "The engineer wrote a short note about ideology after the visit.",
+    "exampleZh": "工程師在拜訪後寫了一段關於思想體系這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "regardless",
+    "example": "We continued regardless of rain.",
+    "exampleZh": "不管下雨，我們繼續前進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "practitioner",
+    "example": "Everyone trusted the practitioner because she checked the details before making any decision.",
+    "exampleZh": "大家信任那位從業者，因為她在做任何決定前都會檢查細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ghost",
+    "example": "The nurse led a class discussion about ghost after the trip.",
+    "exampleZh": "護理師在旅程後帶領全班討論鬼。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "thereby",
+    "example": "The new rule saved time, thereby reducing stress.",
+    "exampleZh": "新規則節省了時間，因此減少了壓力。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "horizon",
+    "example": "The coach wrote a short note about horizon after the interview.",
+    "exampleZh": "教練在面試後寫了一段關於地平線這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assignment",
+    "example": "The guide prepared a short report on assignment before the weekend.",
+    "exampleZh": "嚮導在週末前準備了一份關於分配這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "greet",
+    "example": "Please greet the guests warmly.",
+    "exampleZh": "請熱情地問候客人。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clue",
+    "example": "The nurse prepared a short report on clue before the meeting.",
+    "exampleZh": "護理師在會議前準備了一份關於線索這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dose",
+    "example": "The manager wrote a short note about dose after the inspection.",
+    "exampleZh": "經理在檢查後寫了一段關於劑量這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "readily",
+    "example": "She readily accepted the offer.",
+    "exampleZh": "她欣然接受了這個提議。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "motivation",
+    "example": "The coach explained motivation during class before class.",
+    "exampleZh": "教練在上課前的課堂上解釋了動機。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "wealthy",
+    "example": "The wealthy design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個富有的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "format",
+    "example": "The guide led a class discussion about format after the presentation.",
+    "exampleZh": "嚮導在簡報後帶領全班討論開本。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "transportation",
+    "example": "The driver prepared a short report on transportation before the call.",
+    "exampleZh": "司機在通話前準備了一份關於運輸這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "innovation",
+    "example": "True innovation often begins when someone questions a process everyone else accepts.",
+    "exampleZh": "真正的創新常始於有人質疑其他人都接受的流程。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "wisdom",
+    "example": "The doctor prepared a short report on wisdom before the exam.",
+    "exampleZh": "醫生在考試前準備了一份關於智慧這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "china",
+    "example": "The cabinet held fine china that had belonged to her grandmother.",
+    "exampleZh": "櫃子裡放著祖母留下的精緻瓷器。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "particle",
+    "example": "The researcher wrote a short note about particle after the discussion.",
+    "exampleZh": "研究員在討論後寫了一段關於顆粒這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sin",
+    "example": "The assistant led a class discussion about sin after the training.",
+    "exampleZh": "助理在訓練後帶領全班討論罪。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "expertise",
+    "example": "The student led a class discussion about expertise after the meeting.",
+    "exampleZh": "學生在會議後帶領全班討論專家意見。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "render",
+    "example": "Stress can render sleep difficult.",
+    "exampleZh": "壓力可能使睡眠變得困難。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "amongst",
+    "example": "The keys are amongst the papers, so the situation felt less like a dictionary example.",
+    "exampleZh": "鑰匙在文件之間，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diverse",
+    "example": "The report sounded diverse, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很不同的，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "peasant",
+    "example": "The peasant spoke with the teacher before class.",
+    "exampleZh": "那位農夫在上課前和老師說話。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tobacco",
+    "example": "The tobacco tasted better after she added a little salt and fresh herbs.",
+    "exampleZh": "她加了一點鹽和新鮮香草後，菸草吃起來更好。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "receiver",
+    "example": "The designer explained receiver during class before the call.",
+    "exampleZh": "設計師在通話前的課堂上解釋了接收器。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "defensive",
+    "example": "The report sounded defensive, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很防衛，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "modify",
+    "example": "Before the meeting ended, she tried to modify the main point in one clear sentence.",
+    "exampleZh": "會議結束前，她試著用一句清楚的話修正主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "initiate",
+    "example": "It was difficult to initiate the issue without first checking the original data.",
+    "exampleZh": "如果不先檢查原始資料，就很難入會這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "basket",
+    "example": "He found the basket under a pile of papers after searching for ten minutes.",
+    "exampleZh": "找了十分鐘後，他在一堆文件底下找到籃。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "beg",
+    "example": "Please do not beg for money.",
+    "exampleZh": "請不要乞討金錢。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sue",
+    "example": "They may sue the company.",
+    "exampleZh": "他們可能會起訴那家公司。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "characterize",
+    "example": "These details characterize her style.",
+    "exampleZh": "這些細節刻畫了她的風格。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accounting",
+    "example": "The neighbor linked accounting to daily life.",
+    "exampleZh": "鄰居把會計學和日常生活連起來。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pond",
+    "example": "The student gave a brief talk about pond before breakfast.",
+    "exampleZh": "學生在早餐前做了一段關於池塘這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lawn",
+    "example": "The driver gave a brief talk about lawn before the call.",
+    "exampleZh": "司機在通話前做了一段關於草地這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "essence",
+    "example": "The editor wrote a short note about essence after the trip.",
+    "exampleZh": "編輯在旅程後寫了一段關於實質這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tribe",
+    "example": "The neighbor gave a brief talk about tribe before the call.",
+    "exampleZh": "鄰居在通話前做了一段關於宗族這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "compound",
+    "example": "Water is not a compound of oxygen alone.",
+    "exampleZh": "水不是只由氧組成的化合物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "motive",
+    "example": "The engineer explained motive during class before Friday.",
+    "exampleZh": "工程師在星期五前的課堂上解釋了動機。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "judicial",
+    "example": "A judicial situation required extra care before breakfast.",
+    "exampleZh": "一個法庭的情況在早餐前需要額外處理。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "norm",
+    "example": "The teacher wrote a short note about norm after the practice.",
+    "exampleZh": "老師在練習後寫了一段關於基準這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "handful",
+    "example": "The visitor explained handful during class before the holiday.",
+    "exampleZh": "訪客在假期前的課堂上解釋了少數。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "buck",
+    "example": "The designer wrote a short note about buck after the presentation.",
+    "exampleZh": "設計師在簡報後寫了一段關於元這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scenario",
+    "example": "The visitor wrote a short note about scenario after the visit.",
+    "exampleZh": "訪客在拜訪後寫了一段關於劇本提綱這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consensus",
+    "example": "The guide wrote a short note about consensus after the presentation.",
+    "exampleZh": "嚮導在簡報後寫了一段關於合意這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sculpture",
+    "example": "The guide prepared a short report on sculpture before Friday.",
+    "exampleZh": "嚮導在星期五前準備了一份關於雕刻這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "blanket",
+    "example": "The blanket looked ordinary, but it turned out to be important evidence.",
+    "exampleZh": "毛毯看起來很普通，但後來證明是重要證據。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "enforce",
+    "example": "Police enforce traffic laws, so the situation felt less like a dictionary example.",
+    "exampleZh": "警方執行交通法規，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "complexity",
+    "example": "The driver explained complexity during class before the meeting.",
+    "exampleZh": "司機在會議前的課堂上解釋了複雜。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "identical",
+    "example": "Her answer was identical, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很同一的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "colony",
+    "example": "The visitor led a class discussion about colony after the review.",
+    "exampleZh": "訪客在檢查後帶領全班討論殖民地。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accommodate",
+    "example": "This room can accommodate ten people.",
+    "exampleZh": "這個房間可以容納十個人。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "testimony",
+    "example": "The guide gave a brief talk about testimony before the holiday.",
+    "exampleZh": "嚮導在假期前做了一段關於證言這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "exclusive",
+    "example": "The exclusive design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個排外的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "subtle",
+    "example": "The report sounded subtle, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很敏銳的，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lifestyle",
+    "example": "The teacher led a class discussion about lifestyle after the festival.",
+    "exampleZh": "老師在節慶後帶領全班討論生活方式。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "regulate",
+    "example": "The law will regulate advertising, so the situation felt less like a dictionary example.",
+    "exampleZh": "法律將規範廣告，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sandwich",
+    "example": "They bought fresh sandwich from the market before cooking dinner together.",
+    "exampleZh": "他們一起做晚餐前，先從市場買了新鮮三明治。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "miracle",
+    "example": "The guide prepared a short report on miracle before the exam.",
+    "exampleZh": "嚮導在考試前準備了一份關於奇蹟這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "duck",
+    "example": "A duck moved through the grass, and everyone became quiet for a moment.",
+    "exampleZh": "一隻鴨子穿過草地，所有人一時都安靜下來。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "legitimate",
+    "example": "Her answer was legitimate, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很合法的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "odds",
+    "example": "The guide prepared a short report on odds before the exam.",
+    "exampleZh": "嚮導在考試前準備了一份關於可能性這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "landing",
+    "example": "The driver explained landing during class before class.",
+    "exampleZh": "司機在上課前的課堂上解釋了登陸。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cluster",
+    "example": "It was difficult to cluster the issue without first checking the original data.",
+    "exampleZh": "如果不先檢查原始資料，就很難串這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "depict",
+    "example": "Before the meeting ended, she tried to depict the main point in one clear sentence.",
+    "exampleZh": "會議結束前，她試著用一句清楚的話描述主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "plead",
+    "example": "He will plead guilty tomorrow.",
+    "exampleZh": "他明天會認罪。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "legend",
+    "example": "The engineer led a class discussion about legend after the visit.",
+    "exampleZh": "工程師在拜訪後帶領全班討論傳說。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "mechanical",
+    "example": "The situation became mechanical after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很機械的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "angel",
+    "example": "The doctor led a class discussion about angel after the discussion.",
+    "exampleZh": "醫生在討論後帶領全班討論天使。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "honey",
+    "example": "The honey tasted better after she added a little salt and fresh herbs.",
+    "exampleZh": "她加了一點鹽和新鮮香草後，蜂蜜吃起來更好。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "consequently",
+    "example": "Sales fell; consequently, the store had to rethink its pricing strategy.",
+    "exampleZh": "銷售下降，因此這家店必須重新思考定價策略。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diagnosis",
+    "example": "The student prepared a short report on diagnosis before noon.",
+    "exampleZh": "學生在中午前準備了一份關於診斷這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "grin",
+    "example": "The doctor checked his grin.",
+    "exampleZh": "醫生檢查了他的露齒笑。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "kit",
+    "example": "The nurse prepared a short report on kit before the deadline.",
+    "exampleZh": "護理師在期限前準備了一份關於裝備這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "harsh",
+    "example": "A harsh situation required extra care before sunset.",
+    "exampleZh": "一個粗糙的情況在日落前需要額外處理。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rabbit",
+    "example": "A rabbit moved through the grass, and everyone became quiet for a moment.",
+    "exampleZh": "一隻兔子穿過草地，所有人一時都安靜下來。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "necessity",
+    "example": "The student gave a brief talk about necessity before the exam.",
+    "exampleZh": "學生在考試前做了一段關於需要這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "administer",
+    "example": "Nurses administer medicine carefully.",
+    "exampleZh": "護理師會謹慎給藥。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "doctrine",
+    "example": "The coach wrote a short note about doctrine after the presentation.",
+    "exampleZh": "教練在簡報後寫了一段關於教條這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "oral",
+    "example": "The driver explained oral during class before the call.",
+    "exampleZh": "司機在通話前的課堂上解釋了口試。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "paragraph",
+    "example": "The neighbor gave a brief talk about paragraph before the deadline.",
+    "exampleZh": "鄰居在期限前做了一段關於段落這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "random",
+    "example": "The doctor explained random during class before the exam.",
+    "exampleZh": "醫生在考試前的課堂上解釋了隨意。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "habitat",
+    "example": "The manager gave a brief talk about habitat before the review.",
+    "exampleZh": "經理在檢查前做了一段關於棲息地這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assemble",
+    "example": "Workers assemble the parts here.",
+    "exampleZh": "工人在這裡組裝零件。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guilt",
+    "example": "The neighbor prepared a short report on guilt before the call.",
+    "exampleZh": "鄰居在通話前準備了一份關於罪行這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bureau",
+    "example": "The researcher led a class discussion about bureau after the discussion.",
+    "exampleZh": "研究員在討論後帶領全班討論局。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cabin",
+    "example": "The neighbor wrote a short note about cabin after the festival.",
+    "exampleZh": "鄰居在節慶後寫了一段關於小屋這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "residence",
+    "example": "They waited near the residence because the rain made it difficult to continue.",
+    "exampleZh": "他們在住宅附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "convey",
+    "example": "Her smile can convey warmth.",
+    "exampleZh": "她的微笑能傳達溫暖。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "colonial",
+    "example": "The manager chose a colonial method before the interview.",
+    "exampleZh": "經理在面試前選了一個殖民的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "objection",
+    "example": "The artist led a class discussion about objection after the trip.",
+    "exampleZh": "藝術家在旅程後帶領全班討論異議。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fluid",
+    "example": "The artist prepared a short report on fluid before the trip.",
+    "exampleZh": "藝術家在旅程前準備了一份關於液體這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "monster",
+    "example": "The student prepared a short report on monster before breakfast.",
+    "exampleZh": "學生在早餐前準備了一份關於怪物這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "constraint",
+    "example": "The guide wrote a short note about constraint after the presentation.",
+    "exampleZh": "嚮導在簡報後寫了一段關於強制這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "wildlife",
+    "example": "The neighbor led a class discussion about wildlife after the festival.",
+    "exampleZh": "鄰居在節慶後帶領全班討論野生動植物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "hardware",
+    "example": "The driver gave a brief talk about hardware before class.",
+    "exampleZh": "司機在上課前做了一段關於硬件這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "privacy",
+    "example": "The neighbor led a class discussion about privacy after the festival.",
+    "exampleZh": "鄰居在節慶後帶領全班討論隱私。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "indicator",
+    "example": "The teacher led a class discussion about indicator after the review.",
+    "exampleZh": "老師在檢查後帶領全班討論指示器。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "spectrum",
+    "example": "The manager prepared a short report on spectrum before the review.",
+    "exampleZh": "經理在檢查前準備了一份關於光譜這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "radiation",
+    "example": "The teacher gave a brief talk about radiation before class.",
+    "exampleZh": "老師在上課前做了一段關於輻射這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scholarship",
+    "example": "A short practice discussion made scholarship easier to understand.",
+    "exampleZh": "簡短的練習討論讓學問更容易理解。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "narrative",
+    "example": "The visitor wrote a short note about narrative after the review.",
+    "exampleZh": "訪客在檢查後寫了一段關於敘述這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "log",
+    "example": "They had to log quickly because the deadline was closer than anyone expected.",
+    "exampleZh": "他們必須很快記錄，因為期限比任何人預期都近。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "portfolio",
+    "example": "The assistant led a class discussion about portfolio after the discussion.",
+    "exampleZh": "助理在討論後帶領全班討論皮包。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "limb",
+    "example": "She touched her limb gently.",
+    "exampleZh": "她輕輕碰了自己的四肢。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pine",
+    "example": "The engineer wrote a short note about pine after the rehearsal.",
+    "exampleZh": "工程師在排練後寫了一段關於松樹這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "decent",
+    "example": "The situation became decent after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很有分寸的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sheer",
+    "example": "The student chose a sheer method before the exam.",
+    "exampleZh": "學生在考試前選了一個絕對的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rifle",
+    "example": "The old rifle in the museum display was locked behind thick glass.",
+    "exampleZh": "博物館展示的舊步槍被鎖在厚玻璃後方。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "underlying",
+    "example": "The underlying design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個在下面的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "doorway",
+    "example": "The teacher prepared a short report on doorway before class.",
+    "exampleZh": "老師在上課前準備了一份關於門口這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "chronic",
+    "example": "The chronic design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個慢性設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "legacy",
+    "example": "The artist led a class discussion about legacy after the trip.",
+    "exampleZh": "藝術家在旅程後帶領全班討論祖先傳下來之物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "integrity",
+    "example": "The guide gave a brief talk about integrity before the weekend.",
+    "exampleZh": "嚮導在週末前做了一段關於正直這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "landlord",
+    "example": "The neighbor wrote a short note about landlord after the lesson.",
+    "exampleZh": "鄰居在課程後寫了一段關於房東這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ritual",
+    "example": "The coach wrote a short note about ritual after the presentation.",
+    "exampleZh": "教練在簡報後寫了一段關於儀式這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "timber",
+    "example": "The budget was made of timber.",
+    "exampleZh": "預算是用木材做的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sacred",
+    "example": "The sacred design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個神聖的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "nonetheless",
+    "example": "The first test failed, but the team nonetheless kept working until midnight.",
+    "exampleZh": "第一次測試失敗了，但團隊仍然持續工作到午夜。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "beam",
+    "example": "The teacher wrote a short note about beam after the trial.",
+    "exampleZh": "老師在試驗後寫了一段關於橫樑這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "galaxy",
+    "example": "We walked near the galaxy after the trial.",
+    "exampleZh": "我們在試驗後到銀河附近散步。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "loyalty",
+    "example": "The driver gave a brief talk about loyalty before the meeting.",
+    "exampleZh": "司機在會議前做了一段關於忠貞這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "prediction",
+    "example": "The designer prepared a short report on prediction before the call.",
+    "exampleZh": "設計師在通話前準備了一份關於預言這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rational",
+    "example": "The report sounded rational, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很理性，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conversion",
+    "example": "The assistant wrote a short note about conversion after the training.",
+    "exampleZh": "助理在訓練後寫了一段關於轉變這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lion",
+    "example": "We saw a lion near the river just before the rain began to fall.",
+    "exampleZh": "下雨前不久，我們在河邊看到一隻獅子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ward",
+    "example": "The doctor discussed ward with the family.",
+    "exampleZh": "醫生和家人討論了病房。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "testify",
+    "example": "The witness will testify tomorrow.",
+    "exampleZh": "證人明天會作證。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "stimulus",
+    "example": "The assistant led a class discussion about stimulus after the training.",
+    "exampleZh": "助理在訓練後帶領全班討論刺激。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "horrible",
+    "example": "The situation became horrible after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很可怕的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "engagement",
+    "example": "The teacher explained engagement during class before the rehearsal.",
+    "exampleZh": "老師在排練前的課堂上解釋了諾言。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "poster",
+    "example": "We walked near the poster after the workshop.",
+    "exampleZh": "我們在工作坊後到海報附近散步。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "frank",
+    "example": "The situation became frank after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很坦白的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "endless",
+    "example": "The report sounded endless, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很不停的，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "casual",
+    "example": "The casual design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個這個詞設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "abstract",
+    "example": "The situation became abstract after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很抽象的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "transmission",
+    "example": "The neighbor gave a brief talk about transmission before the storm.",
+    "exampleZh": "鄰居在暴風雨前做了一段關於傳輸這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sole",
+    "example": "The report sounded sole, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很腳掌，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "slam",
+    "example": "The editor explained slam during class before the storm.",
+    "exampleZh": "編輯在暴風雨前的課堂上解釋了砰然聲。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "salmon",
+    "example": "A salmon crossed the path slowly while the children watched from a safe distance.",
+    "exampleZh": "一隻鮭魚慢慢穿過小路，孩子們在安全距離外看著。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "telescope",
+    "example": "The telescope looked ordinary, but it turned out to be important evidence.",
+    "exampleZh": "望遠鏡看起來很普通，但後來證明是重要證據。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "statistical",
+    "example": "The situation became statistical after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很統計的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "productivity",
+    "example": "The nurse wrote a short note about productivity after the training.",
+    "exampleZh": "護理師在訓練後寫了一段關於生產力這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conception",
+    "example": "The manager gave a brief talk about conception before the storm.",
+    "exampleZh": "經理在暴風雨前做了一段關於觀念這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scatter",
+    "example": "It was difficult to scatter the issue without first checking the original data.",
+    "exampleZh": "如果不先檢查原始資料，就很難消散這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sword",
+    "example": "The ancient sword was displayed beside a note explaining its history.",
+    "exampleZh": "那把古劍陳列在一張說明其歷史的標籤旁。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "entity",
+    "example": "The artist gave a brief talk about entity before the weekend.",
+    "exampleZh": "藝術家在週末前做了一段關於實體這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "equip",
+    "example": "The school will equip each room.",
+    "exampleZh": "學校會裝備每間教室。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "contractor",
+    "example": "The young contractor arrived early, reviewed the notes, and waited quietly near the entrance.",
+    "exampleZh": "那位年輕的立契約的人提早抵達，查看筆記後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "garlic",
+    "example": "They bought fresh garlic from the market before cooking dinner together.",
+    "exampleZh": "他們一起做晚餐前，先從市場買了新鮮大蒜。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "handsome",
+    "example": "A handsome situation required extra care before the meeting.",
+    "exampleZh": "一個英俊的情況在會議前需要額外處理。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "versus",
+    "example": "The chart compares cost versus quality.",
+    "exampleZh": "這張圖比較成本與品質。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "medieval",
+    "example": "The medieval plan helped the team move forward after the lesson.",
+    "exampleZh": "中古的計畫在課程後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "obstacle",
+    "example": "The visitor explained obstacle during class before the weekend.",
+    "exampleZh": "訪客在週末前的課堂上解釋了障礙。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cliff",
+    "example": "The artist led a class discussion about cliff after the review.",
+    "exampleZh": "藝術家在檢查後帶領全班討論懸崖。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "seller",
+    "example": "The seller spoke with the coach before noon.",
+    "exampleZh": "那位銷售者在中午前和教練說話。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "celebrity",
+    "example": "The driver explained celebrity during class before class.",
+    "exampleZh": "司機在上課前的課堂上解釋了名聲。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pursuit",
+    "example": "The manager led a class discussion about pursuit after the inspection.",
+    "exampleZh": "經理在檢查後帶領全班討論追蹤。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "distinctive",
+    "example": "The distinctive plan helped the team move forward after the trip.",
+    "exampleZh": "有特色的計畫在旅程後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "relieve",
+    "example": "This medicine can relieve pain.",
+    "exampleZh": "這種藥可以緩解疼痛。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "glory",
+    "example": "The student wrote a short note about glory after the meeting.",
+    "exampleZh": "學生在會議後寫了一段關於光榮這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "canal",
+    "example": "They waited near the canal because the rain made it difficult to continue.",
+    "exampleZh": "他們在運河附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "attendance",
+    "example": "The driver explained attendance during class before class.",
+    "exampleZh": "司機在上課前的課堂上解釋了出席。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "imperial",
+    "example": "The imperial design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個帝王設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "filter",
+    "example": "They had to filter quickly because the deadline was closer than anyone expected.",
+    "exampleZh": "他們必須很快濾波器，因為期限比任何人預期都近。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "isolation",
+    "example": "The designer led a class discussion about isolation after the training.",
+    "exampleZh": "設計師在訓練後帶領全班討論隔絕。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "spill",
+    "example": "The neighbor led a class discussion about spill after the festival.",
+    "exampleZh": "鄰居在節慶後帶領全班討論溢出。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "profound",
+    "example": "The profound design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個極深的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ongoing",
+    "example": "The report sounded ongoing, but the data behind it needed closer review.",
+    "exampleZh": "這份報告聽起來很前進的，但背後資料需要更仔細檢查。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "descend",
+    "example": "The plane began to descend.",
+    "exampleZh": "飛機開始下降。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bulk",
+    "example": "The researcher explained bulk during class before Friday.",
+    "exampleZh": "研究員在星期五前的課堂上解釋了大小。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bonus",
+    "example": "The coach prepared a short report on bonus before the rehearsal.",
+    "exampleZh": "教練在排練前準備了一份關於獎金這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "array",
+    "example": "The manager prepared a short report on array before the review.",
+    "exampleZh": "經理在檢查前準備了一份關於排列這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "breach",
+    "example": "The coach wrote a short note about breach after the debate.",
+    "exampleZh": "教練在辯論後寫了一段關於裂口這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "conceive",
+    "example": "It is hard to conceive the scale.",
+    "exampleZh": "很難想像這個規模。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fist",
+    "example": "The researcher wrote a short note about fist after the lesson.",
+    "exampleZh": "研究員在課程後寫了一段關於拳頭這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "allowance",
+    "example": "The editor gave a brief talk about allowance before Friday.",
+    "exampleZh": "編輯在星期五前做了一段關於津貼這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "devise",
+    "example": "The team decided to devise the plan after finding several problems in the first test.",
+    "exampleZh": "團隊在第一次測試中發現幾個問題後，決定設計這項計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fragment",
+    "example": "The assistant prepared a short report on fragment before noon.",
+    "exampleZh": "助理在中午前準備了一份關於碎片這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "confess",
+    "example": "He decided to confess everything.",
+    "exampleZh": "他決定坦白一切。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "endorse",
+    "example": "The teacher will endorse the plan.",
+    "exampleZh": "老師會支持這個計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "chef",
+    "example": "A chef joined the practice on time.",
+    "exampleZh": "一位廚師準時參加了練習。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "leisure",
+    "example": "The nurse explained leisure during class before the deadline.",
+    "exampleZh": "護理師在期限前的課堂上解釋了空閒。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "remedy",
+    "example": "The coach wrote a short note about remedy after the interview.",
+    "exampleZh": "教練在面試後寫了一段關於藥物這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "comply",
+    "example": "All visitors must comply.",
+    "exampleZh": "所有訪客都必須遵守。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "vanish",
+    "example": "The sound seemed to vanish.",
+    "exampleZh": "聲音似乎消失了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "inadequate",
+    "example": "The designer reviewed the inadequate case after the review.",
+    "exampleZh": "設計師在檢查後檢視了這個不充分的案例。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "turnover",
+    "example": "The teacher led a class discussion about turnover after the festival.",
+    "exampleZh": "老師在節慶後帶領全班討論翻倒。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "humanity",
+    "example": "The manager gave a brief talk about humanity before the storm.",
+    "exampleZh": "經理在暴風雨前做了一段關於人性這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "prescription",
+    "example": "The editor prepared a short report on prescription before the review.",
+    "exampleZh": "編輯在檢查前準備了一份關於處方這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "candle",
+    "example": "The old candle broke during the trip, so they had to replace it later.",
+    "exampleZh": "舊蠟燭在旅途中壞了，所以他們後來必須更換。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "precious",
+    "example": "The neighbor chose a precious method before the deadline.",
+    "exampleZh": "鄰居在期限前選了一個寶貴的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "guardian",
+    "example": "The young guardian arrived early, reviewed the notes, and waited quietly near the entrance.",
+    "exampleZh": "那位年輕的看守者提早抵達，查看筆記後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "instructor",
+    "example": "During the meeting, the instructor explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位教員用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "oak",
+    "example": "The engineer led a class discussion about oak after the visit.",
+    "exampleZh": "工程師在拜訪後帶領全班討論橡樹。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "canvas",
+    "example": "The canvas looked ordinary, but it turned out to be important evidence.",
+    "exampleZh": "帆布看起來很普通，但後來證明是重要證據。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "jaw",
+    "example": "She touched her jaw gently.",
+    "exampleZh": "她輕輕碰了自己的顎。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "trunk",
+    "example": "The researcher gave a brief talk about trunk before sunset.",
+    "exampleZh": "研究員在日落前做了一段關於樹幹這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "instinct",
+    "example": "The student wrote a short note about instinct after the trial.",
+    "exampleZh": "學生在試驗後寫了一段關於本能這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "destination",
+    "example": "The researcher gave a brief talk about destination before Friday.",
+    "exampleZh": "研究員在星期五前做了一段關於目的地這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "nasty",
+    "example": "The nasty plan helped the team move forward after the visit.",
+    "exampleZh": "汙穢的計畫在拜訪後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sensation",
+    "example": "The artist gave a brief talk about sensation before the exam.",
+    "exampleZh": "藝術家在考試前做了一段關於感覺這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "notably",
+    "example": "He listened notably before making a design.",
+    "exampleZh": "他在做設計前顯著地聆聽。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "merit",
+    "example": "The manager prepared a short report on merit before the storm.",
+    "exampleZh": "經理在暴風雨前準備了一份關於優點這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dynamic",
+    "example": "The manager chose a dynamic method before the review.",
+    "exampleZh": "經理在檢查前選了一個動態的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rip",
+    "example": "Before the meeting ended, she tried to rip the main point in one clear sentence.",
+    "exampleZh": "會議結束前，她試著用一句清楚的話裂痕主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "widow",
+    "example": "The researcher wrote a short note about widow after the discussion.",
+    "exampleZh": "研究員在討論後寫了一段關於寡婦這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "persist",
+    "example": "The pain may persist for days, so the situation felt less like a dictionary example.",
+    "exampleZh": "疼痛可能會持續好幾天，所以情境比較不像字典裡的單一句子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "grasp",
+    "example": "It was difficult to grasp the issue without first checking the original data.",
+    "exampleZh": "如果不先檢查原始資料，就很難把握這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "stance",
+    "example": "The manager explained stance during class before the storm.",
+    "exampleZh": "經理在暴風雨前的課堂上解釋了準備擊球姿勢。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "catalogue",
+    "example": "It was difficult to catalogue the issue without first checking the original data.",
+    "exampleZh": "如果不先檢查原始資料，就很難目錄這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "influential",
+    "example": "The influential plan helped the team move forward after the festival.",
+    "exampleZh": "有影響的計畫在節慶後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "registration",
+    "example": "The student explained registration during class before breakfast.",
+    "exampleZh": "學生在早餐前的課堂上解釋了登記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fraction",
+    "example": "The assistant wrote a short note about fraction after the workshop.",
+    "exampleZh": "助理在工作坊後寫了一段關於小部分這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "installation",
+    "example": "The manager wrote a short note about installation after the practice.",
+    "exampleZh": "經理在練習後寫了一段關於安裝這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "statutory",
+    "example": "The designer chose a statutory method before the call.",
+    "exampleZh": "設計師在通話前選了一個法令的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "interfere",
+    "example": "The visitor will interfere during the review.",
+    "exampleZh": "訪客會在檢查期間妨礙。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "forehead",
+    "example": "She touched her forehead gently.",
+    "exampleZh": "她輕輕碰了自己的額。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ethical",
+    "example": "The ethical plan helped the team move forward after the presentation.",
+    "exampleZh": "倫理的計畫在簡報後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "progressive",
+    "example": "A progressive joined the lesson on time.",
+    "exampleZh": "一位改革論者準時參加了課程。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bold",
+    "example": "The bold plan helped the team move forward after the visit.",
+    "exampleZh": "大膽的計畫在拜訪後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rod",
+    "example": "The assistant wrote a short note about rod after the discussion.",
+    "exampleZh": "助理在討論後寫了一段關於竿這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "mutter",
+    "example": "The student wrote a short note about mutter after the trial.",
+    "exampleZh": "學生在試驗後寫了一段關於喃喃低語這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "suburb",
+    "example": "The map showed a small suburb behind the station, but it was hard to find.",
+    "exampleZh": "地圖顯示車站後方有一個小市郊住宅區，但它很難找。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dedicate",
+    "example": "The team decided to dedicate the plan after finding several problems in the first test.",
+    "exampleZh": "團隊在第一次測試中發現幾個問題後，決定獻出這項計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "acute",
+    "example": "The designer chose an acute method before the interview.",
+    "exampleZh": "設計師在面試前選了一個尖銳的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "metropolitan",
+    "example": "The doctor led a class discussion about metropolitan after the discussion.",
+    "exampleZh": "醫生在討論後帶領全班討論大都市居民。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "inherit",
+    "example": "She will inherit the house.",
+    "exampleZh": "她將繼承這棟房子。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "preliminary",
+    "example": "The neighbor gave a brief talk about preliminary before the interview.",
+    "exampleZh": "鄰居在面試前做了一段關於初步做法這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rebuild",
+    "example": "They had to rebuild quickly because the deadline was closer than anyone expected.",
+    "exampleZh": "他們必須很快改建，因為期限比任何人預期都近。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ideological",
+    "example": "The debate became ideological.",
+    "exampleZh": "這場辯論變得帶有意識形態色彩。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "barn",
+    "example": "They waited near the barn because the rain made it difficult to continue.",
+    "exampleZh": "他們在穀倉附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "verbal",
+    "example": "The assistant reviewed the verbal case after the festival.",
+    "exampleZh": "助理在節慶後檢視了這個用言辭的案例。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "applicant",
+    "example": "During the meeting, the applicant explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位申請者用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dawn",
+    "example": "The coach led a class discussion about dawn after the workshop.",
+    "exampleZh": "教練在工作坊後帶領全班討論破曉。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "organism",
+    "example": "The driver prepared a short report on organism before the meeting.",
+    "exampleZh": "司機在會議前準備了一份關於生物這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "audit",
+    "example": "Before the meeting ended, she tried to audit the main point in one clear sentence.",
+    "exampleZh": "會議結束前，她試著用一句清楚的話審計主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "lawsuit",
+    "example": "The teacher gave a brief talk about lawsuit before the rehearsal.",
+    "exampleZh": "老師在排練前做了一段關於訴訟這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "promising",
+    "example": "The situation became promising after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很有希望的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bounce",
+    "example": "It was difficult to bounce the issue without first checking the original data.",
+    "exampleZh": "如果不先檢查原始資料，就很難跳這個問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "invisible",
+    "example": "The situation became invisible after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很看不見的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "closure",
+    "example": "The assistant prepared a short report on closure before class.",
+    "exampleZh": "助理在上課前準備了一份關於關閉這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "neutral",
+    "example": "Her answer was neutral, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很這個詞，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "correspond",
+    "example": "These numbers correspond closely.",
+    "exampleZh": "這些數字非常相符。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "diminish",
+    "example": "The noise began to diminish.",
+    "exampleZh": "噪音開始減弱。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "partial",
+    "example": "The situation became partial after the schedule changed for the third time.",
+    "exampleZh": "時程第三次改變後，情況變得很部分。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "secondly",
+    "example": "First, we need better data; secondly, we must explain the results more clearly.",
+    "exampleZh": "首先，我們需要更好的資料；第二，我們必須更清楚地解釋結果。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "induce",
+    "example": "Stress can induce headaches.",
+    "exampleZh": "壓力可能引發頭痛。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "athletic",
+    "example": "The coach reviewed the athletic case after the practice.",
+    "exampleZh": "教練在練習後檢視了這個運動的案例。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "specimen",
+    "example": "The coach prepared a short report on specimen before the rehearsal.",
+    "exampleZh": "教練在排練前準備了一份關於樣品這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tray",
+    "example": "The tray looked ordinary, but it turned out to be important evidence.",
+    "exampleZh": "托盤看起來很普通，但後來證明是重要證據。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "grief",
+    "example": "The doctor discussed grief with the family.",
+    "exampleZh": "醫生和家人討論了傷心。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dock",
+    "example": "The driver wrote a short note about dock after the practice.",
+    "exampleZh": "司機在練習後寫了一段關於碼頭這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "assurance",
+    "example": "The engineer led a class discussion about assurance after the rehearsal.",
+    "exampleZh": "工程師在排練後帶領全班討論保證。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "comparable",
+    "example": "The comparable plan helped the team move forward after the trial.",
+    "exampleZh": "可比較的計畫在試驗後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "bias",
+    "example": "The doctor prepared a short report on bias before breakfast.",
+    "exampleZh": "醫生在早餐前準備了一份關於偏見這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "supervisor",
+    "example": "During the meeting, the supervisor explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位管理者用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "devil",
+    "example": "The driver led a class discussion about devil after the practice.",
+    "exampleZh": "司機在練習後帶領全班討論魔鬼。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "productive",
+    "example": "The productive design looked simple at first, but it solved a problem no one had noticed.",
+    "exampleZh": "這個能生產的設計一開始看起來簡單，卻解決了一個沒有人注意到的問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tuck",
+    "example": "Please tuck in your shirt.",
+    "exampleZh": "請把襯衫紮進去。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "fortunately",
+    "example": "The teacher used fortunately in a realistic sentence so students could understand it in context.",
+    "exampleZh": "老師把這個詞放進真實句子中，讓學生理解它在脈絡中的用法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accordingly",
+    "example": "The schedule changed after the storm, and we adjusted our travel plans accordingly.",
+    "exampleZh": "暴風雨後時程改變了，我們也相應調整了旅行計畫。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sphere",
+    "example": "The driver gave a brief talk about sphere before class.",
+    "exampleZh": "司機在上課前做了一段關於球這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "warrior",
+    "example": "The visitor led a class discussion about warrior after the trial.",
+    "exampleZh": "訪客在試驗後帶領全班討論戰士。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "disposal",
+    "example": "The designer wrote a short note about disposal after the training.",
+    "exampleZh": "設計師在訓練後寫了一段關於丟掉這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "endure",
+    "example": "She had to endure the pain.",
+    "exampleZh": "她必須忍受疼痛。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pat",
+    "example": "The assistant gave a brief talk about pat before noon.",
+    "exampleZh": "助理在中午前做了一段關於輕拍這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "carve",
+    "example": "He can carve wood beautifully.",
+    "exampleZh": "他能漂亮地雕刻木頭。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pad",
+    "example": "The driver wrote a short note about pad after the lesson.",
+    "exampleZh": "司機在課程後寫了一段關於填補這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "forum",
+    "example": "The coach prepared a short report on forum before class.",
+    "exampleZh": "教練在上課前準備了一份關於論壇這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "weird",
+    "example": "The artist chose a weird method before the trip.",
+    "exampleZh": "藝術家在旅程前選了一個怪異的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "sunlight",
+    "example": "The artist prepared a short report on sunlight before the weekend.",
+    "exampleZh": "藝術家在週末前準備了一份關於日光這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "realm",
+    "example": "The nurse prepared a short report on realm before the meeting.",
+    "exampleZh": "護理師在會議前準備了一份關於王國這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "feedback",
+    "example": "The assistant led a class discussion about feedback after the interview.",
+    "exampleZh": "助理在面試後帶領全班討論反饋。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "intent",
+    "example": "The guide explained intent during class before the weekend.",
+    "exampleZh": "嚮導在週末前的課堂上解釋了意圖。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "exclusively",
+    "example": "The room is used exclusively for quiet study, so phone calls are not allowed inside.",
+    "exampleZh": "這個房間只用於安靜讀書，所以裡面不允許講電話。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "laser",
+    "example": "The neighbor explained laser during class before the interview.",
+    "exampleZh": "鄰居在面試前的課堂上解釋了激光。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "portray",
+    "example": "We need to portray the report carefully before the interview.",
+    "exampleZh": "我們需要在面試前仔細描繪報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "restoration",
+    "example": "The guide explained restoration during class before the holiday.",
+    "exampleZh": "嚮導在假期前的課堂上解釋了恢復。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "arena",
+    "example": "They waited near the arena because the rain made it difficult to continue.",
+    "exampleZh": "他們在角鬥場附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "treasure",
+    "example": "The artist led a class discussion about treasure after the trip.",
+    "exampleZh": "藝術家在旅程後帶領全班討論寶物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "desirable",
+    "example": "The desirable plan helped the team move forward after the meeting.",
+    "exampleZh": "令人想望的計畫在會議後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "explicit",
+    "example": "The explicit plan helped the team move forward after the debate.",
+    "exampleZh": "詳述的計畫在辯論後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "crawl",
+    "example": "The baby can crawl now.",
+    "exampleZh": "寶寶現在會爬了。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "frown",
+    "example": "The coach led a class discussion about frown after the presentation.",
+    "exampleZh": "教練在簡報後帶領全班討論皺眉。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "excessive",
+    "example": "The excessive plan helped the team move forward after the festival.",
+    "exampleZh": "過度的計畫在節慶後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "seminar",
+    "example": "The researcher wrote a short note about seminar after the interview.",
+    "exampleZh": "研究員在面試後寫了一段關於研究班這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "memorial",
+    "example": "The neighbor explained memorial during class before the interview.",
+    "exampleZh": "鄰居在面試前的課堂上解釋了紀念物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ambitious",
+    "example": "The ambitious plan helped the team move forward after the workshop.",
+    "exampleZh": "有野心的計畫在工作坊後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "doll",
+    "example": "The assistant gave a brief talk about doll before breakfast.",
+    "exampleZh": "助理在早餐前做了一段關於洋娃娃這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dilemma",
+    "example": "The student led a class discussion about dilemma after the meeting.",
+    "exampleZh": "學生在會議後帶領全班討論困境。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "deadly",
+    "example": "The deadly plan helped the team move forward after the inspection.",
+    "exampleZh": "致命的計畫在檢查後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "namely",
+    "example": "Only one person understood the old system, namely the engineer who had built it years earlier.",
+    "exampleZh": "只有一個人了解舊系統，也就是多年前建立它的那位工程師。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "burning",
+    "example": "A burning situation required extra care before the review.",
+    "exampleZh": "一個燃燒的情況在檢查前需要額外處理。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "thigh",
+    "example": "The doctor checked his thigh and asked when the pain had started.",
+    "exampleZh": "醫生檢查了他的大腿，並詢問疼痛是什麼時候開始的。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cling",
+    "example": "The child tried to cling to her.",
+    "exampleZh": "孩子試著緊緊抱住她。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "parade",
+    "example": "The assistant led a class discussion about parade after the workshop.",
+    "exampleZh": "助理在工作坊後帶領全班討論遊行。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "divine",
+    "example": "The divine plan helped the team move forward after the lesson.",
+    "exampleZh": "神的計畫在課程後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "copper",
+    "example": "The designer explained copper during class before the meeting.",
+    "exampleZh": "設計師在會議前的課堂上解釋了銅。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "monument",
+    "example": "The teacher gave a brief talk about monument before the rehearsal.",
+    "exampleZh": "老師在排練前做了一段關於紀念碑這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ladder",
+    "example": "He found the ladder under a pile of papers after searching for ten minutes.",
+    "exampleZh": "找了十分鐘後，他在一堆文件底下找到梯。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "breeze",
+    "example": "The breeze was easy to see near the file.",
+    "exampleZh": "微風在檔案附近很容易看見。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "revelation",
+    "example": "The researcher gave a brief talk about revelation before the review.",
+    "exampleZh": "研究員在檢查前做了一段關於揭露這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "infrastructure",
+    "example": "The designer gave a brief talk about infrastructure before the meeting.",
+    "exampleZh": "設計師在會議前做了一段關於基礎結構這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gravity",
+    "example": "The designer prepared a short report on gravity before the call.",
+    "exampleZh": "設計師在通話前準備了一份關於地心引力這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "protective",
+    "example": "Her answer was protective, although she still needed more evidence to support it.",
+    "exampleZh": "她的回答很給予保護的，不過仍需要更多證據支持。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "contend",
+    "example": "They contend that prices are unfair.",
+    "exampleZh": "他們主張價格不公平。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "similarity",
+    "example": "The manager wrote a short note about similarity after the festival.",
+    "exampleZh": "經理在節慶後寫了一段關於類似這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "hierarchy",
+    "example": "This hierarchy helped guide the next step.",
+    "exampleZh": "這個等級制度幫助引導下一步。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pulse",
+    "example": "The designer explained pulse during class before the meeting.",
+    "exampleZh": "設計師在會議前的課堂上解釋了脈衝。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "update",
+    "example": "Please update the file today.",
+    "exampleZh": "請今天更新檔案。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "liver",
+    "example": "She touched her liver gently.",
+    "exampleZh": "她輕輕碰了自己的肝臟。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "classify",
+    "example": "Scientists classify these plants.",
+    "exampleZh": "科學家會分類這些植物。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "collaboration",
+    "example": "The neighbor explained collaboration during class before the interview.",
+    "exampleZh": "鄰居在面試前的課堂上解釋了合作。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "basement",
+    "example": "They waited near the basement because the rain made it difficult to continue.",
+    "exampleZh": "他們在這個詞附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "dignity",
+    "example": "The manager gave a brief talk about dignity before the review.",
+    "exampleZh": "經理在檢查前做了一段關於尊嚴這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "skull",
+    "example": "She touched her skull gently.",
+    "exampleZh": "她輕輕碰了自己的頭蓋骨。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "gathering",
+    "example": "The engineer wrote a short note about gathering after the trial.",
+    "exampleZh": "工程師在試驗後寫了一段關於聚集這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "nursery",
+    "example": "The map showed a small nursery behind the station, but it was hard to find.",
+    "exampleZh": "地圖顯示車站後方有一個小託兒所，但它很難找。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "isolated",
+    "example": "The isolated plan helped the team move forward after the discussion.",
+    "exampleZh": "孤立的計畫在討論後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "extract",
+    "example": "They extract oil from seeds.",
+    "exampleZh": "他們從種子中提取油。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "deem",
+    "example": "We deem this plan safe.",
+    "exampleZh": "我們認為這個計畫安全。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "metaphor",
+    "example": "The designer prepared a short report on metaphor before the rehearsal.",
+    "exampleZh": "設計師在排練前準備了一份關於隱喻這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "civilization",
+    "example": "The designer prepared a short report on civilization before the meeting.",
+    "exampleZh": "設計師在會議前準備了一份關於文明這方面的短報告。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "clay",
+    "example": "The nurse explained clay during class before the interview.",
+    "exampleZh": "護理師在面試前的課堂上解釋了泥土。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "theft",
+    "example": "The manager led a class discussion about theft after the festival.",
+    "exampleZh": "經理在節慶後帶領全班討論盜竊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "rhetoric",
+    "example": "The visitor wrote a short note about rhetoric after the visit.",
+    "exampleZh": "訪客在拜訪後寫了一段關於修辭這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "accountant",
+    "example": "During the meeting, the accountant explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位會計人員用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "contemplate",
+    "example": "They had to contemplate quickly because the deadline was closer than anyone expected.",
+    "exampleZh": "他們必須很快注視，因為期限比任何人預期都近。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "collar",
+    "example": "He found the collar under a pile of papers after searching for ten minutes.",
+    "exampleZh": "找了十分鐘後，他在一堆文件底下找到衣領。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "intensive",
+    "example": "The visitor chose an intensive method before the holiday.",
+    "exampleZh": "訪客在假期前選了一個加強的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cage",
+    "example": "The old cage broke during the trip, so they had to replace it later.",
+    "exampleZh": "舊籠在旅途中壞了，所以他們後來必須更換。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cathedral",
+    "example": "The map showed a small cathedral behind the station, but it was hard to find.",
+    "exampleZh": "地圖顯示車站後方有一個小這個詞，但它很難找。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "allocate",
+    "example": "Please allocate more time.",
+    "exampleZh": "請分配更多時間。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ancestor",
+    "example": "The driver led a class discussion about ancestor after the meeting.",
+    "exampleZh": "司機在會議後帶領全班討論祖先。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "champagne",
+    "example": "The champagne tasted better after she added a little salt and fresh herbs.",
+    "exampleZh": "她加了一點鹽和新鮮香草後，香檳酒吃起來更好。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "proposition",
+    "example": "The neighbor explained proposition during class before the interview.",
+    "exampleZh": "鄰居在面試前的課堂上解釋了建議。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "carriage",
+    "example": "The assistant gave a brief talk about carriage before breakfast.",
+    "exampleZh": "助理在早餐前做了一段關於馬車這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "scan",
+    "example": "Before the meeting ended, she tried to scan the main point in one clear sentence.",
+    "exampleZh": "會議結束前，她試著用一句清楚的話審視主要重點。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "terrace",
+    "example": "We reached the terrace before sunset and found the entrance almost empty.",
+    "exampleZh": "我們在日落前抵達這個詞，發現入口幾乎沒有人。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "meaningful",
+    "example": "The assistant chose a meaningful method before noon.",
+    "exampleZh": "助理在中午前選了一個意味深長的方法。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "verse",
+    "example": "The student led a class discussion about verse after the trial.",
+    "exampleZh": "學生在試驗後帶領全班討論詩。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tender",
+    "example": "The driver reviewed the tender case after the presentation.",
+    "exampleZh": "司機在簡報後檢視了這個嫩的案例。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "custody",
+    "example": "The student gave a brief talk about custody before breakfast.",
+    "exampleZh": "學生在早餐前做了一段關於監護這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "minimal",
+    "example": "The minimal plan helped the team move forward after the discussion.",
+    "exampleZh": "最小的計畫在討論後幫助團隊往前推進。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "capitalism",
+    "example": "The assistant wrote a short note about capitalism after the workshop.",
+    "exampleZh": "助理在工作坊後寫了一段關於資本主義這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "donor",
+    "example": "During the meeting, the donor explained the problem in a way everyone could understand.",
+    "exampleZh": "會議中，那位捐贈人用大家都能理解的方式說明問題。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "magnificent",
+    "example": "The teacher reviewed the magnificent case after the debate.",
+    "exampleZh": "老師在辯論後檢視了這個華麗的案例。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "avenue",
+    "example": "They waited near the avenue because the rain made it difficult to continue.",
+    "exampleZh": "他們在這個詞附近等待，因為下雨讓行程難以繼續。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "successor",
+    "example": "The young successor arrived early, reviewed the notes, and waited quietly near the entrance.",
+    "exampleZh": "那位年輕的繼承者提早抵達，查看筆記後安靜地在入口旁等待。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "tighten",
+    "example": "Please tighten the screw.",
+    "exampleZh": "請把螺絲鎖緊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "monopoly",
+    "example": "The neighbor led a class discussion about monopoly after the lesson.",
+    "exampleZh": "鄰居在課程後帶領全班討論壟斷。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "genius",
+    "example": "The assistant gave a brief talk about genius before the trip.",
+    "exampleZh": "助理在旅程前做了一段關於天才這方面的簡短分享。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "manipulate",
+    "example": "Do not manipulate the data.",
+    "exampleZh": "不要操弄資料。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "pope",
+    "example": "Everyone trusted the pope because she checked the details before making any decision.",
+    "exampleZh": "大家信任那位羅馬教皇，因為她在做任何決定前都會檢查細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "ridge",
+    "example": "The doctor led a class discussion about ridge after the inspection.",
+    "exampleZh": "醫生在檢查後帶領全班討論脊。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "recipient",
+    "example": "Everyone trusted the recipient because she checked the details before making any decision.",
+    "exampleZh": "大家信任那位領受的，因為她在做任何決定前都會檢查細節。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "cart",
+    "example": "The old cart broke during the trip, so they had to replace it later.",
+    "exampleZh": "舊二輪運貨馬車在旅途中壞了，所以他們後來必須更換。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "christ",
+    "example": "The assistant wrote a short note about christ after the workshop.",
+    "exampleZh": "助理在工作坊後寫了一段關於基督這方面的短筆記。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  },
+  {
+    "word": "virtual",
+    "example": "The virtual meeting saved travel time, but it made informal discussion much harder.",
+    "exampleZh": "線上會議節省了交通時間，但也讓非正式討論變得困難。",
+    "status": "approved",
+    "batch": "gpt-review-core08-full-2026-07-02"
+  }
+]

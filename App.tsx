@@ -444,9 +444,12 @@ const modeInterfaceCopy = {
     manage: '管理',
     openCustomSets: '管理單字集',
     backCustomSets: '返回我的',
+    backToSets: '返回單字集',
     setLibrary: '自訂單字集',
     setLibrarySummary: '把常用、考試或主題單字分開整理',
     editSet: '編輯單字集',
+    openSetSettings: '開啟單字集設定',
+    setDetailActions: '操作',
     editSetName: '資料夾名稱',
     saveSetName: '儲存名稱',
     deleteSet: '刪除資料夾',
@@ -624,9 +627,12 @@ const modeInterfaceCopy = {
     manage: 'Manage',
     openCustomSets: 'Manage sets',
     backCustomSets: 'Back to Me',
+    backToSets: 'Back to Sets',
     setLibrary: 'Custom Sets',
     setLibrarySummary: 'Group words by topic, exam, or personal lists',
     editSet: 'Edit Set',
+    openSetSettings: 'Open set settings',
+    setDetailActions: 'Actions',
     editSetName: 'Folder name',
     saveSetName: 'Save Name',
     deleteSet: 'Delete Folder',
@@ -5119,14 +5125,18 @@ function ProfileCustomSetsView({
   studyMode: StudyMode;
   vocabularyWords: WordEntry[];
 }) {
+  type CustomSetPanel = 'list' | 'detail';
+
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
   const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
   const ui = modeInterfaceCopy[studyMode];
+  const [customSetPanel, setCustomSetPanel] = useState<CustomSetPanel>('list');
   const selectedSet = customSets.find((set) => set.id === selectedCustomSetId) ?? customSets[0] ?? null;
   const selectedSetWords = wordsForCustomSet(vocabularyWords, selectedSet);
   const [editingSetId, setEditingSetId] = useState<string | null>(selectedSet?.id ?? null);
   const [editingSetName, setEditingSetName] = useState(selectedSet?.name ?? '');
+  const isDetailPanel = customSetPanel === 'detail' && selectedSet;
   const sortOptions: Array<{ id: CustomSetSort; label: string }> = [
     { id: 'recent', label: ui.customSetSortRecent },
     { id: 'name', label: ui.customSetSortName },
@@ -5144,271 +5154,313 @@ function ProfileCustomSetsView({
     setEditingSetName(selectedSet.name);
   }, [selectedSet?.id, selectedSet?.name]);
 
+  useEffect(() => {
+    if (customSetPanel === 'detail' && !selectedSet) {
+      setCustomSetPanel('list');
+    }
+  }, [customSetPanel, selectedSet]);
+
+  function openSetDetail(setId: string) {
+    onCustomSetSelect(setId);
+    setCustomSetPanel('detail');
+  }
+
+  function closeSetDetail() {
+    setCustomSetPanel('list');
+  }
+
   return (
     <View style={styles.screenStack} testID="profile-custom-sets-panel">
-      <AnimatedPressable accessibilityRole="button" onPress={onBack} pressTone="secondary" style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}>
+      <AnimatedPressable
+        accessibilityRole="button"
+        onPress={isDetailPanel ? closeSetDetail : onBack}
+        pressTone="secondary"
+        style={[styles.libraryDetailBack, themeStyles?.libraryDetailBack]}
+      >
         <ChevronLeft size={18} color={bodyIconColor} strokeWidth={2.5} />
-        <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>{backLabel ?? ui.backCustomSets}</Text>
+        <Text style={[styles.libraryDetailBackText, themeStyles?.libraryDetailBackText]}>
+          {isDetailPanel ? ui.backToSets : backLabel ?? ui.backCustomSets}
+        </Text>
       </AnimatedPressable>
 
-      <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
-        <View style={styles.rowBetween}>
-          <View style={styles.flexOne}>
-            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.setLibrary}</Text>
-            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.setLibrarySummary}</Text>
-          </View>
-          <Library size={21} color="#2563eb" strokeWidth={2.3} />
-        </View>
-        <View style={styles.customSetCreateRow}>
-          <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetNameInputBox]}>
-            <TextInput
-              onChangeText={onNewSetNameChange}
-              placeholder={ui.newSetPlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.accountInput, themeStyles?.accountInput]}
-              value={newSetName}
-            />
-          </View>
-          <AnimatedPressable accessibilityRole="button" onPress={onCreateCustomSet} pressTone="primary" style={styles.customSetWideCreateButton}>
-            <SquarePlus size={16} color="#fff" strokeWidth={2.4} />
-            <Text style={styles.customSetWideCreateText}>{ui.createSet}</Text>
-          </AnimatedPressable>
-        </View>
-        <Text style={[styles.developerMessage, themeStyles?.developerMessage]}>{customSetMessage}</Text>
-      </View>
-
-      <View style={styles.customSetSortRow}>
-        {sortOptions.map((option) => {
-          const selected = customSetSort === option.id;
-          return (
-            <AnimatedPressable
-              accessibilityRole="button"
-              key={option.id}
-              onPress={() => onCustomSetSortChange(option.id)}
-              pressTone="chip"
-              style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
-            >
-              <Text style={[styles.filterText, selected && styles.filterTextActive]}>{option.label}</Text>
-            </AnimatedPressable>
-          );
-        })}
-      </View>
-
-      <View style={styles.customSetList}>
-        {customSets.length === 0 && (
-          <View style={[styles.emptyState, themeStyles?.emptyState]}>
-            <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>{ui.noCustomSets}</Text>
-            <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.customSetMessageDefault}</Text>
-          </View>
-        )}
-        {customSets.map((set) => {
-          const selected = selectedSet?.id === set.id;
-          return (
-            <View
-              key={set.id}
-              style={[styles.customSetCard, themeStyles?.customSetCard, selected && styles.customSetCardActive]}
-            >
-              <AnimatedPressable
-                accessibilityRole="button"
-                onPress={() => onCustomSetSelect(set.id)}
-                pressTone="list"
-                style={styles.customSetSelectHeader}
-              >
-                <View style={styles.customSetTitleRow}>
-                  <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
-                  <View>
-                    <Text style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{set.name}</Text>
-                    <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{ui.customSetCount(set.wordIds.length)}</Text>
-                  </View>
-                </View>
-                <Check size={17} color={selected ? '#2563eb' : 'transparent'} strokeWidth={2.5} />
+      {customSetPanel === 'list' && (
+        <View style={styles.screenStack} testID="custom-set-list-panel">
+          <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+            <View style={styles.rowBetween}>
+              <View style={styles.flexOne}>
+                <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.setLibrary}</Text>
+                <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.setLibrarySummary}</Text>
+              </View>
+              <Library size={21} color="#2563eb" strokeWidth={2.3} />
+            </View>
+            <View style={styles.customSetCreateRow}>
+              <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetNameInputBox]}>
+                <TextInput
+                  onChangeText={onNewSetNameChange}
+                  placeholder={ui.newSetPlaceholder}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={newSetName}
+                />
+              </View>
+              <AnimatedPressable accessibilityRole="button" onPress={onCreateCustomSet} pressTone="primary" style={styles.customSetWideCreateButton}>
+                <SquarePlus size={16} color="#fff" strokeWidth={2.4} />
+                <Text style={styles.customSetWideCreateText}>{ui.createSet}</Text>
               </AnimatedPressable>
-              {selected && (
-                <View style={styles.customSetEditBlock}>
-                  <Text style={[styles.customSetEditLabel, themeStyles?.customSetRowText]}>{ui.editSetName}</Text>
-                  <View style={styles.customSetEditRow}>
-                    <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetRenameInputBox]}>
-                      <TextInput
-                        onChangeText={setEditingSetName}
-                        placeholder={ui.editSetName}
-                        placeholderTextColor="#9ca3af"
-                        style={[styles.accountInput, themeStyles?.accountInput]}
-                        testID="custom-set-rename-input"
-                        value={editingSetId === set.id ? editingSetName : set.name}
-                      />
-                    </View>
+            </View>
+            <Text style={[styles.developerMessage, themeStyles?.developerMessage]}>{customSetMessage}</Text>
+          </View>
+
+          <View style={styles.customSetSortRow}>
+            {sortOptions.map((option) => {
+              const selected = customSetSort === option.id;
+              return (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  key={option.id}
+                  onPress={() => onCustomSetSortChange(option.id)}
+                  pressTone="chip"
+                  style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+                >
+                  <Text style={[styles.filterText, selected && styles.filterTextActive]}>{option.label}</Text>
+                </AnimatedPressable>
+              );
+            })}
+          </View>
+
+          <View style={styles.customSetList}>
+            {customSets.length === 0 && (
+              <View style={[styles.emptyState, themeStyles?.emptyState]}>
+                <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>{ui.noCustomSets}</Text>
+                <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.customSetMessageDefault}</Text>
+              </View>
+            )}
+            {customSets.map((set) => {
+              const selected = selectedSet?.id === set.id;
+              return (
+                <View
+                  key={set.id}
+                  style={[styles.customSetCard, themeStyles?.customSetCard, selected && styles.customSetCardActive]}
+                >
+                  <View style={styles.customSetSelectHeader}>
                     <AnimatedPressable
                       accessibilityRole="button"
-                      disabled={!editingSetName.trim()}
-                      onPress={() => onRenameCustomSet(set.id, editingSetName)}
-                      pressTone="secondary"
-                      style={[styles.customSetActionButton, themeStyles?.customSetActionButton, !editingSetName.trim() && styles.disabledButton]}
+                      onPress={() => onCustomSetSelect(set.id)}
+                      pressTone="list"
+                      style={styles.customSetListMainButton}
                     >
-                      <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.saveSetName}</Text>
+                      <View style={styles.customSetTitleRow}>
+                        <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
+                        <View>
+                          <Text style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{set.name}</Text>
+                          <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{ui.customSetCount(set.wordIds.length)}</Text>
+                        </View>
+                      </View>
+                      <Check size={17} color={selected ? '#2563eb' : 'transparent'} strokeWidth={2.5} />
+                    </AnimatedPressable>
+                    <AnimatedPressable
+                      accessibilityLabel={`${ui.openSetSettings} ${set.name}`}
+                      accessibilityRole="button"
+                      onPress={() => openSetDetail(set.id)}
+                      pressTone="secondary"
+                      style={[styles.customSetSettingsButton, themeStyles?.customSetActionButton]}
+                      testID="custom-set-settings-button"
+                    >
+                      <Settings size={17} color={bodyIconColor} strokeWidth={2.3} />
+                    </AnimatedPressable>
+                  </View>
+                  <View style={styles.customSetActionRow}>
+                    <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(set.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
+                      <BookOpen size={16} color={bodyIconColor} strokeWidth={2.3} />
+                      <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
+                    </AnimatedPressable>
+                    <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(set.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
+                      <Target size={16} color="#fff" strokeWidth={2.3} />
+                      <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
                     </AnimatedPressable>
                   </View>
                 </View>
-              )}
-              <View style={styles.customSetActionRow}>
-                <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(set.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
-                  <BookOpen size={16} color={bodyIconColor} strokeWidth={2.3} />
-                  <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
-                </AnimatedPressable>
-                <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(set.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
-                  <Target size={16} color="#fff" strokeWidth={2.3} />
-                  <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
-                </AnimatedPressable>
-              </View>
-              {selected && (
-                <AnimatedPressable
-                  accessibilityRole="button"
-                  onPress={() => onDeleteCustomSet(set.id)}
-                  pressTone="secondary"
-                  style={[styles.customSetDeleteButton, themeStyles?.customSetActionButton]}
-                  testID="custom-set-delete-button"
-                >
-                  <Trash2 size={15} color="#b91c1c" strokeWidth={2.3} />
-                  <Text style={styles.customSetDeleteText}>{ui.deleteSet}</Text>
-                </AnimatedPressable>
-              )}
-            </View>
-          );
-        })}
-      </View>
-
-      {selectedSet && (
-        <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
-          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.wordsInSet}</Text>
-          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.customSetCount(selectedSet.wordIds.length)}</Text>
-          <View style={styles.customSetWordList}>
-            {selectedSetWords.length === 0 && (
-              <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.emptySetWords}</Text>
-            )}
-            {selectedSetWords.map((word) => (
-              <View key={word.id} style={[styles.customSetWordRow, themeStyles?.customSetPickerRow]}>
-                <View style={styles.flexOne}>
-                  <Text style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{formatWordPrimary(word, studyMode)}</Text>
-                  <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{formatMeaningDetail(word, studyMode)}</Text>
-                </View>
-                <AnimatedPressable
-                  accessibilityRole="button"
-                  onPress={() => onRemoveWordFromSet(selectedSet.id, word)}
-                  pressTone="secondary"
-                  style={styles.customSetRemoveWordButton}
-                  testID="custom-set-remove-word"
-                >
-                  <X size={15} color="#b91c1c" strokeWidth={2.5} />
-                  <Text style={styles.customSetRemoveWordText}>{ui.removeFromSet}</Text>
-                </AnimatedPressable>
-              </View>
-            ))}
+              );
+            })}
           </View>
         </View>
       )}
 
-      <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
-        <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.manualWordTitle}</Text>
-        <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.manualWordIntro}</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
-          {customSets.map((set) => {
-            const selected = selectedSet?.id === set.id;
-            return (
+      {customSetPanel === 'detail' && selectedSet && (
+        <View style={styles.screenStack} testID="custom-set-detail-panel">
+          <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+            <View style={styles.rowBetween}>
+              <View style={styles.flexOne}>
+                <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{selectedSet.name}</Text>
+                <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.customSetCount(selectedSet.wordIds.length)}</Text>
+              </View>
+              <Settings size={21} color="#2563eb" strokeWidth={2.3} />
+            </View>
+            <View style={styles.customSetDetailActions} testID="custom-set-detail-actions">
+              <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(selectedSet.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
+                <BookOpen size={16} color={bodyIconColor} strokeWidth={2.3} />
+                <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
+              </AnimatedPressable>
+              <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(selectedSet.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
+                <Target size={16} color="#fff" strokeWidth={2.3} />
+                <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
+              </AnimatedPressable>
               <AnimatedPressable
                 accessibilityRole="button"
-                key={set.id}
-                onPress={() => onCustomSetSelect(set.id)}
-                pressTone="chip"
-                style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+                onPress={() => {
+                  closeSetDetail();
+                  onDeleteCustomSet(selectedSet.id);
+                }}
+                pressTone="secondary"
+                style={[styles.customSetDeleteButton, themeStyles?.customSetActionButton]}
+                testID="custom-set-delete-button"
               >
-                <Text style={[styles.filterText, selected && styles.filterTextActive]}>{set.name}</Text>
+                <Trash2 size={15} color="#b91c1c" strokeWidth={2.3} />
+                <Text style={styles.customSetDeleteText}>{ui.deleteSet}</Text>
               </AnimatedPressable>
-            );
-          })}
-        </ScrollView>
-        {customSets.length === 0 && <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.customSetSelectPlaceholder}</Text>}
-        <View style={styles.customWordFormGrid}>
-          <View style={[styles.inputBox, themeStyles?.inputBox]}>
-            <TextInput
-              autoCapitalize="none"
-              onChangeText={(value) => onManualCustomWordChange('word', value)}
-              placeholder={ui.customWordWordPlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.accountInput, themeStyles?.accountInput]}
-              value={manualCustomWord.word}
-            />
+            </View>
           </View>
-          <View style={[styles.inputBox, themeStyles?.inputBox]}>
-            <TextInput
-              onChangeText={(value) => onManualCustomWordChange('meaningZh', value)}
-              placeholder={ui.customWordMeaningPlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.accountInput, themeStyles?.accountInput]}
-              value={manualCustomWord.meaningZh}
-            />
+
+          <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.editSetName}</Text>
+            <View style={styles.customSetEditRow}>
+              <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetRenameInputBox]}>
+                <TextInput
+                  onChangeText={setEditingSetName}
+                  placeholder={ui.editSetName}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  testID="custom-set-rename-input"
+                  value={editingSetId === selectedSet.id ? editingSetName : selectedSet.name}
+                />
+              </View>
+              <AnimatedPressable
+                accessibilityRole="button"
+                disabled={!editingSetName.trim()}
+                onPress={() => onRenameCustomSet(selectedSet.id, editingSetName)}
+                pressTone="secondary"
+                style={[styles.customSetActionButton, themeStyles?.customSetActionButton, !editingSetName.trim() && styles.disabledButton]}
+              >
+                <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.saveSetName}</Text>
+              </AnimatedPressable>
+            </View>
+            <Text style={[styles.developerMessage, themeStyles?.developerMessage]}>{customSetMessage}</Text>
           </View>
-          <View style={[styles.inputBox, themeStyles?.inputBox]}>
-            <TextInput
-              onChangeText={(value) => onManualCustomWordChange('pronunciation', value)}
-              placeholder={ui.customWordPronunciationPlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.accountInput, themeStyles?.accountInput]}
-              value={manualCustomWord.pronunciation}
-            />
+
+          <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.wordsInSet}</Text>
+            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.customSetCount(selectedSet.wordIds.length)}</Text>
+            <View style={styles.customSetWordList}>
+              {selectedSetWords.length === 0 && (
+                <Text style={[styles.customSetPickerEmpty, themeStyles?.customSetPickerEmpty]}>{ui.emptySetWords}</Text>
+              )}
+              {selectedSetWords.map((word) => (
+                <View key={word.id} style={[styles.customSetWordRow, themeStyles?.customSetPickerRow]}>
+                  <View style={styles.flexOne}>
+                    <Text style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{formatWordPrimary(word, studyMode)}</Text>
+                    <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{formatMeaningDetail(word, studyMode)}</Text>
+                  </View>
+                  <AnimatedPressable
+                    accessibilityRole="button"
+                    onPress={() => onRemoveWordFromSet(selectedSet.id, word)}
+                    pressTone="secondary"
+                    style={styles.customSetRemoveWordButton}
+                    testID="custom-set-remove-word"
+                  >
+                    <X size={15} color="#b91c1c" strokeWidth={2.5} />
+                    <Text style={styles.customSetRemoveWordText}>{ui.removeFromSet}</Text>
+                  </AnimatedPressable>
+                </View>
+              ))}
+            </View>
           </View>
-          <View style={[styles.inputBox, themeStyles?.inputBox]}>
-            <TextInput
-              onChangeText={(value) => onManualCustomWordChange('partOfSpeech', value)}
-              placeholder={ui.customWordPartPlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.accountInput, themeStyles?.accountInput]}
-              value={manualCustomWord.partOfSpeech}
-            />
-          </View>
-          <View style={[styles.inputBox, themeStyles?.inputBox, styles.customWordLongInput]}>
-            <TextInput
-              onChangeText={(value) => onManualCustomWordChange('example', value)}
-              placeholder={ui.customWordExamplePlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.accountInput, themeStyles?.accountInput]}
-              value={manualCustomWord.example}
-            />
-          </View>
-          <View style={[styles.inputBox, themeStyles?.inputBox, styles.customWordLongInput]}>
-            <TextInput
-              onChangeText={(value) => onManualCustomWordChange('exampleZh', value)}
-              placeholder={ui.customWordExampleZhPlaceholder}
-              placeholderTextColor="#9ca3af"
-              style={[styles.accountInput, themeStyles?.accountInput]}
-              value={manualCustomWord.exampleZh}
-            />
+
+          <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>
+            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.manualWordTitle}</Text>
+            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.manualWordIntro}</Text>
+            <View style={styles.customWordFormGrid}>
+              <View style={[styles.inputBox, themeStyles?.inputBox]}>
+                <TextInput
+                  autoCapitalize="none"
+                  onChangeText={(value) => onManualCustomWordChange('word', value)}
+                  placeholder={ui.customWordWordPlaceholder}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={manualCustomWord.word}
+                />
+              </View>
+              <View style={[styles.inputBox, themeStyles?.inputBox]}>
+                <TextInput
+                  onChangeText={(value) => onManualCustomWordChange('meaningZh', value)}
+                  placeholder={ui.customWordMeaningPlaceholder}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={manualCustomWord.meaningZh}
+                />
+              </View>
+              <View style={[styles.inputBox, themeStyles?.inputBox]}>
+                <TextInput
+                  onChangeText={(value) => onManualCustomWordChange('pronunciation', value)}
+                  placeholder={ui.customWordPronunciationPlaceholder}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={manualCustomWord.pronunciation}
+                />
+              </View>
+              <View style={[styles.inputBox, themeStyles?.inputBox]}>
+                <TextInput
+                  onChangeText={(value) => onManualCustomWordChange('partOfSpeech', value)}
+                  placeholder={ui.customWordPartPlaceholder}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={manualCustomWord.partOfSpeech}
+                />
+              </View>
+              <View style={[styles.inputBox, themeStyles?.inputBox, styles.customWordLongInput]}>
+                <TextInput
+                  onChangeText={(value) => onManualCustomWordChange('example', value)}
+                  placeholder={ui.customWordExamplePlaceholder}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={manualCustomWord.example}
+                />
+              </View>
+              <View style={[styles.inputBox, themeStyles?.inputBox, styles.customWordLongInput]}>
+                <TextInput
+                  onChangeText={(value) => onManualCustomWordChange('exampleZh', value)}
+                  placeholder={ui.customWordExampleZhPlaceholder}
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={manualCustomWord.exampleZh}
+                />
+              </View>
+            </View>
+            <View style={styles.buttonRow}>
+              <AnimatedPressable
+                accessibilityRole="button"
+                onPress={onAddManualCustomWord}
+                pressTone="primary"
+                style={styles.developerPrimaryButton}
+              >
+                <SquarePlus size={16} color="#fff" strokeWidth={2.3} />
+                <Text style={styles.developerPrimaryText}>{ui.addManualWord}</Text>
+              </AnimatedPressable>
+              <AnimatedPressable
+                accessibilityRole="button"
+                onPress={onImportCustomWords}
+                pressTone="secondary"
+                style={[styles.developerActionButton, themeStyles?.developerActionButton]}
+              >
+                <Upload size={16} color={bodyIconColor} strokeWidth={2.3} />
+                <Text style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.importCustomCsv}</Text>
+              </AnimatedPressable>
+            </View>
+            <Text style={[styles.customSetTinyMeta, themeStyles?.customSetTinyMeta]}>
+              {customSetState.customWords.length} Custom
+            </Text>
           </View>
         </View>
-        <View style={styles.buttonRow}>
-          <AnimatedPressable
-            accessibilityRole="button"
-            disabled={!selectedSet}
-            onPress={onAddManualCustomWord}
-            pressTone="primary"
-            style={[styles.developerPrimaryButton, !selectedSet && styles.disabledButton]}
-          >
-            <SquarePlus size={16} color="#fff" strokeWidth={2.3} />
-            <Text style={styles.developerPrimaryText}>{ui.addManualWord}</Text>
-          </AnimatedPressable>
-          <AnimatedPressable
-            accessibilityRole="button"
-            disabled={!selectedSet}
-            onPress={onImportCustomWords}
-            pressTone="secondary"
-            style={[styles.developerActionButton, themeStyles?.developerActionButton, !selectedSet && styles.disabledButton]}
-          >
-            <Upload size={16} color={bodyIconColor} strokeWidth={2.3} />
-            <Text style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.importCustomCsv}</Text>
-          </AnimatedPressable>
-        </View>
-        <Text style={[styles.customSetTinyMeta, themeStyles?.customSetTinyMeta]}>
-          {customSetState.customWords.length} Custom
-        </Text>
-      </View>
+      )}
     </View>
   );
 }
@@ -7943,7 +7995,22 @@ const styles = StyleSheet.create({
   customSetSelectHeader: {
     alignItems: 'center',
     flexDirection: 'row',
+    gap: 10,
     justifyContent: 'space-between',
+  },
+  customSetListMainButton: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 42,
+  },
+  customSetSettingsButton: {
+    alignItems: 'center',
+    borderRadius: 8,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
   },
   customSetTitleRow: {
     alignItems: 'center',
@@ -7968,6 +8035,11 @@ const styles = StyleSheet.create({
   },
   customSetActionRow: {
     flexDirection: 'row',
+    gap: 9,
+  },
+  customSetDetailActions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 9,
   },
   customSetActionButton: {

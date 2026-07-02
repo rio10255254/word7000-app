@@ -608,6 +608,29 @@ describe('free web launch configuration', () => {
     expect(profileSetsSource).toContain('onRemoveWordFromSet');
   });
 
+  test('keeps advanced custom set editing inside a dedicated set settings page', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const profileSetsStart = appSource.indexOf('function ProfileCustomSetsView({');
+    const profileSetsEnd = appSource.indexOf('function ProfileSettingsView({');
+    const profileSetsSource = appSource.slice(profileSetsStart, profileSetsEnd);
+
+    const listStart = profileSetsSource.indexOf('testID="custom-set-list-panel"');
+    const detailStart = profileSetsSource.indexOf('testID="custom-set-detail-panel"');
+    const listSource = profileSetsSource.slice(listStart, detailStart);
+    const detailSource = profileSetsSource.slice(detailStart);
+
+    expect(profileSetsSource).toContain("type CustomSetPanel = 'list' | 'detail'");
+    expect(profileSetsSource).toContain('setCustomSetPanel');
+    expect(profileSetsSource).toContain('testID="custom-set-settings-button"');
+    expect(profileSetsSource).toContain('testID="custom-set-detail-actions"');
+    expect(listSource).not.toContain('testID="custom-set-rename-input"');
+    expect(listSource).not.toContain('testID="custom-set-delete-button"');
+    expect(listSource).not.toContain('testID="custom-set-remove-word"');
+    expect(detailSource).toContain('testID="custom-set-rename-input"');
+    expect(detailSource).toContain('testID="custom-set-delete-button"');
+    expect(detailSource).toContain('testID="custom-set-remove-word"');
+  });
+
   test('adds a custom-set button to the study word card', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const studyStart = appSource.indexOf('function StudyView({');

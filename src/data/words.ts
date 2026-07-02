@@ -10026,8 +10026,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/ri:tʃ/",
     "meaningZh": "富裕的, 富饒的, 濃厚的, 貴重的",
-    "example": "The assistant reviewed the rich case after the festival.",
-    "exampleZh": "助理在節慶後檢視了這個富裕的案例。",
+    "example": "The cake has a rich chocolate flavor.",
+    "exampleZh": "這個蛋糕有濃郁的巧克力味。",
     "group": "Core 3"
   },
   {
@@ -10036,8 +10036,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ә'fєә/",
     "meaningZh": "事件, 事務, 戀愛事件",
-    "example": "The assistant gave a brief talk about affair before the trip.",
-    "exampleZh": "助理在旅程前做了一段關於事件這方面的簡短分享。",
+    "example": "The mayor refused to discuss the affair.",
+    "exampleZh": "市長拒絕討論那件事。",
     "group": "Core 3"
   },
   {
@@ -10046,8 +10046,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'sekʃuәl/",
     "meaningZh": "性的, 性別的",
-    "example": "The editor reviewed the sexual case after the discussion.",
-    "exampleZh": "編輯在討論後檢視了這個性的案例。",
+    "example": "The report discussed sexual health.",
+    "exampleZh": "這份報告討論了性健康。",
     "group": "Core 3"
   },
   {
@@ -10056,8 +10056,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/sә'lu:ʃәn/",
     "meaningZh": "解決, 解答, 溶液",
-    "example": "The student led a class discussion about solution after the trial.",
-    "exampleZh": "學生在試驗後帶領全班討論解決。",
+    "example": "We found a simple solution.",
+    "exampleZh": "我們找到了一個簡單的解決方法。",
     "group": "Core 3"
   },
   {
@@ -10066,8 +10066,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.dʒenә'reiʃәn/",
     "meaningZh": "一代, 一世, 產生",
-    "example": "The editor prepared a short report on generation before the storm.",
-    "exampleZh": "編輯在暴風雨前準備了一份關於一代這方面的短報告。",
+    "example": "Each generation faces new problems.",
+    "exampleZh": "每一代都會面對新的問題。",
     "group": "Core 3"
   },
   {
@@ -10076,8 +10076,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'seifti/",
     "meaningZh": "安全, 保險, 平安, 保安設備；保護, 防護",
-    "example": "The doctor prepared a short report on safety before the trip.",
-    "exampleZh": "醫生在旅程前準備了一份關於安全這方面的短報告。",
+    "example": "Safety comes first in this factory.",
+    "exampleZh": "在這間工廠裡，安全最重要。",
     "group": "Core 3"
   },
   {
@@ -10086,8 +10086,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ri'fɒ:m/",
     "meaningZh": "改革, 改正, 改造；改革, 改過, 革新, 重整；革新, 改過",
-    "example": "The neighbor gave a brief talk about reform before the interview.",
-    "exampleZh": "鄰居在面試前做了一段關於改革這方面的簡短分享。",
+    "example": "The school needs serious reform.",
+    "exampleZh": "這所學校需要認真的改革。",
     "group": "Core 3"
   },
   {
@@ -10106,8 +10106,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/fә'siliti/",
     "meaningZh": "容易, 靈巧, 設備",
-    "example": "The teacher wrote a short note about facility after the practice.",
-    "exampleZh": "老師在練習後寫了一段關於容易這方面的短筆記。",
+    "example": "The sports facility opens at six.",
+    "exampleZh": "這座運動設施六點開門。",
     "group": "Core 3"
   },
   {
@@ -10116,8 +10116,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'wʌri/",
     "meaningZh": "擔心, 煩惱, 憂慮, 苦惱, 撕咬；使煩惱, 使焦慮, 使苦惱, 困擾, 折磨, 撕咬；煩惱, 擔心, 撕咬",
-    "example": "The coach wrote a short note about worry after the workshop.",
-    "exampleZh": "教練在工作坊後寫了一段關於擔心這方面的短筆記。",
+    "example": "Try not to worry about the test.",
+    "exampleZh": "盡量不要擔心考試。",
     "group": "Core 3"
   },
   {
@@ -10126,8 +10126,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/wә:θ/",
     "meaningZh": "價值, 財產；值...的, 值得的",
-    "example": "The engineer prepared a short report on worth before the storm.",
-    "exampleZh": "工程師在暴風雨前準備了一份關於價值這方面的短報告。",
+    "example": "This old watch is worth a lot.",
+    "exampleZh": "這只老手錶很值錢。",
     "group": "Core 3"
   },
   {
@@ -10146,8 +10146,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/jɑ:d/",
     "meaningZh": "碼, 庭院, 工場",
-    "example": "The doctor prepared a short report on yard before the exam.",
-    "exampleZh": "醫生在考試前準備了一份關於碼這方面的短報告。",
+    "example": "The children played in the yard.",
+    "exampleZh": "孩子們在院子裡玩。",
     "group": "Core 3"
   },
   {
@@ -10156,8 +10156,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'tʃælindʒ/",
     "meaningZh": "挑戰, 盤問；向...挑戰, 要求, 懷疑；挑戰, 對(證據等)表示異議",
-    "example": "The artist gave a brief talk about challenge before the trip.",
-    "exampleZh": "藝術家在旅程前做了一段關於挑戰這方面的簡短分享。",
+    "example": "Learning a new language is a challenge.",
+    "exampleZh": "學一門新語言是一項挑戰。",
     "group": "Core 3"
   },
   {
@@ -10166,8 +10166,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ki:/",
     "meaningZh": "鑰匙, 鍵, 解答, 關鍵, 要害, 基調, 線索, 答案, 暗礁；調音, 鎖上, 提供線索；使用鑰匙",
-    "example": "The visitor led a class discussion about key after the visit.",
-    "exampleZh": "訪客在拜訪後帶領全班討論鑰匙。",
+    "example": "The key is under the mat.",
+    "exampleZh": "鑰匙在門墊下面。",
     "group": "Core 3"
   },
   {
@@ -10176,8 +10176,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.kɒmpi'tiʃәn/",
     "meaningZh": "競爭, 競賽",
-    "example": "The teacher gave a brief talk about competition before the rehearsal.",
-    "exampleZh": "老師在排練前做了一段關於競爭這方面的簡短分享。",
+    "example": "The competition starts on Friday.",
+    "exampleZh": "比賽星期五開始。",
     "group": "Core 3"
   },
   {
@@ -10186,8 +10186,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.mægә'zi:n/",
     "meaningZh": "雜誌, 倉庫, 彈盒, 膠捲盒",
-    "example": "The researcher gave a brief talk about magazine before sunset.",
-    "exampleZh": "研究員在日落前做了一段關於雜誌這方面的簡短分享。",
+    "example": "She bought a fashion magazine.",
+    "exampleZh": "她買了一本時尚雜誌。",
     "group": "Core 3"
   },
   {
@@ -10196,8 +10196,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/dri:m/",
     "meaningZh": "夢, 空想, 願望；做夢, 想象, 夢想",
-    "example": "The doctor wrote a short note about dream after the training.",
-    "exampleZh": "醫生在訓練後寫了一段關於夢這方面的短筆記。",
+    "example": "His dream is to become a doctor.",
+    "exampleZh": "他的夢想是成為醫生。",
     "group": "Core 3"
   },
   {
@@ -10206,8 +10206,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'peintiŋ/",
     "meaningZh": "畫, 繪畫, 油漆",
-    "example": "The doctor wrote a short note about painting after the training.",
-    "exampleZh": "醫生在訓練後寫了一段關於畫這方面的短筆記。",
+    "example": "The painting hangs above the sofa.",
+    "exampleZh": "那幅畫掛在沙發上方。",
     "group": "Core 3"
   },
   {
@@ -10216,8 +10216,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/læk/",
     "meaningZh": "缺乏, 無, 不足；缺乏, 短少, 不足, 需要；缺乏",
-    "example": "The student led a class discussion about lack after the meeting.",
-    "exampleZh": "學生在會議後帶領全班討論缺乏。",
+    "example": "The project failed because of a lack of money.",
+    "exampleZh": "這個專案因為缺錢而失敗。",
     "group": "Core 3"
   },
   {
@@ -10226,8 +10226,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'distrikt/",
     "meaningZh": "區域, 地方",
-    "example": "The driver wrote a short note about district after the meeting.",
-    "exampleZh": "司機在會議後寫了一段關於區域這方面的短筆記。",
+    "example": "This district has many old houses.",
+    "exampleZh": "這個地區有許多老房子。",
     "group": "Core 3"
   },
   {
@@ -10236,8 +10236,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/skeil/",
     "meaningZh": "刻度, 衡量, 比例, 比例尺, 數值範圍, 等級, 規模, 天平, 秤, 鱗, 積垢；依比例決定, 攀登, 測量, 繪製, 刮鱗, 使生垢, 過秤；剝落, 生水垢, 重量為, 攀登, 衡量",
-    "example": "The teacher led a class discussion about scale after the festival.",
-    "exampleZh": "老師在節慶後帶領全班討論刻度。",
+    "example": "The map uses a small scale.",
+    "exampleZh": "這張地圖使用小比例尺。",
     "group": "Core 3"
   },
   {
@@ -10246,8 +10246,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'vidiәu/",
     "meaningZh": "影像, 電視；圖像的, 電視的",
-    "example": "The teacher gave a brief talk about video before the rehearsal.",
-    "exampleZh": "老師在排練前做了一段關於影像這方面的簡短分享。",
+    "example": "The video explains the process clearly.",
+    "exampleZh": "這段影片清楚說明了流程。",
     "group": "Core 3"
   },
   {
@@ -10256,8 +10256,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/ә'lәun/",
     "meaningZh": "孤獨的, 單獨的, 獨自的；獨自地",
-    "example": "The student chose an alone method before the exam.",
-    "exampleZh": "學生在考試前選了一個孤獨的方法。",
+    "example": "He walked home alone.",
+    "exampleZh": "他獨自走路回家。",
     "group": "Core 3"
   },
   {
@@ -10266,8 +10266,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/ges/",
     "meaningZh": "猜測, 臆測",
-    "example": "The neighbor wrote a short note about guess after the meeting.",
-    "exampleZh": "鄰居在會議後寫了一段關於猜測這方面的短筆記。",
+    "example": "Can you guess the answer?",
+    "exampleZh": "你能猜出答案嗎？",
     "group": "Core 3"
   },
   {
@@ -10276,8 +10276,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/θret/",
     "meaningZh": "恐嚇, 惡兆, 威脅",
-    "example": "The researcher led a class discussion about threat after the interview.",
-    "exampleZh": "研究員在面試後帶領全班討論恐嚇。",
+    "example": "Heavy rain is a threat to the village.",
+    "exampleZh": "大雨對這個村莊是一項威脅。",
     "group": "Core 3"
   },
   {
@@ -10286,8 +10286,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'viktim/",
     "meaningZh": "受害人, 犧牲者, 犧牲品",
-    "example": "A victim joined the lesson on time.",
-    "exampleZh": "一位受害人準時參加了課程。",
+    "example": "The victim called the police.",
+    "exampleZh": "受害者打電話報警。",
     "group": "Core 3"
   },
   {
@@ -10296,8 +10296,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'steitәs/",
     "meaningZh": "狀態, 情形, 地位, 要人身份",
-    "example": "The doctor wrote a short note about status after the training.",
-    "exampleZh": "醫生在訓練後寫了一段關於狀態這方面的短筆記。",
+    "example": "You can check your order status online.",
+    "exampleZh": "你可以在線上查詢訂單狀態。",
     "group": "Core 3"
   },
   {
@@ -10306,8 +10306,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/trip/",
     "meaningZh": "旅行, 絆倒, 摔倒, 失足, 差錯, 旅程；使跌倒, 使犯錯, 使失敗；輕快地走, 絆倒, 失誤, 犯錯, 結巴, 旅行, 遠足",
-    "example": "The researcher led a class discussion about trip after the practice.",
-    "exampleZh": "研究員在練習後帶領全班討論旅行。",
+    "example": "Our trip to Tainan was wonderful.",
+    "exampleZh": "我們去台南的旅行很棒。",
     "group": "Core 3"
   },
   {
@@ -10316,8 +10316,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'kredit/",
     "meaningZh": "信用, 信任, 榮譽, 貸款, 學分；歸功於, 讚頌, 信任, 相信",
-    "example": "The doctor gave a brief talk about credit before the holiday.",
-    "exampleZh": "醫生在假期前做了一段關於信用這方面的簡短分享。",
+    "example": "She paid for the meal by credit card.",
+    "exampleZh": "她用信用卡付了餐費。",
     "group": "Core 3"
   },
   {
@@ -10326,8 +10326,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi / vt / n",
     "pronunciation": "/siŋ/",
     "meaningZh": "唱, 唱歌, 演唱, 鳴, 啼；唱, 歌頌；嗖嗖聲",
-    "example": "We need to sing the lesson carefully before the weekend.",
-    "exampleZh": "我們需要在週末前仔細唱課程。",
+    "example": "The children sing every morning.",
+    "exampleZh": "孩子們每天早上唱歌。",
     "group": "Core 3"
   },
   {
@@ -10336,8 +10336,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'spirit/",
     "meaningZh": "精神, 心靈, 靈魂, 態度, 志氣, 人格, 情緒, 心情, 烈酒；誘拐, 鼓勵, 鼓舞",
-    "example": "The coach explained spirit during class before the call.",
-    "exampleZh": "教練在通話前的課堂上解釋了精神。",
+    "example": "The team showed strong spirit.",
+    "exampleZh": "這支隊伍展現了強烈的精神。",
     "group": "Core 3"
   },
   {
@@ -10346,8 +10346,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/in'tend/",
     "meaningZh": "計劃, 打算, 意思是",
-    "example": "Please intend the plan when you are ready.",
-    "exampleZh": "準備好時，請計劃計畫。",
+    "example": "I intend to finish this tonight.",
+    "exampleZh": "我打算今晚完成這件事。",
     "group": "Core 3"
   },
   {
@@ -10356,8 +10356,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/gein/",
     "meaningZh": "增益, 獲得, 利潤, 收穫, 增加；得到, 增進, 賺到；獲利, 增加",
-    "example": "The engineer explained gain during class before sunset.",
-    "exampleZh": "工程師在日落前的課堂上解釋了增益。",
+    "example": "You can gain confidence through practice.",
+    "exampleZh": "你可以透過練習獲得自信。",
     "group": "Core 3"
   },
   {
@@ -10366,8 +10366,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/kәn'sju:mә/",
     "meaningZh": "消費者",
-    "example": "The consumer spoke with the neighbor before the deadline.",
-    "exampleZh": "那位消費者在期限前和鄰居說話。",
+    "example": "The new law protects the consumer.",
+    "exampleZh": "新法律保護消費者。",
     "group": "Core 3"
   },
   {
@@ -10376,8 +10376,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/ә'hed/",
     "meaningZh": "領先的, 預先的, 向前的；領先, 預先, 向前, 勝於, 在前面, 在將來",
-    "example": "The ahead plan helped the team move forward after the discussion.",
-    "exampleZh": "領先的計畫在討論後幫助團隊往前推進。",
+    "example": "The road ahead is clear.",
+    "exampleZh": "前方的道路很清楚。",
     "group": "Core 3"
   },
   {
@@ -10386,8 +10386,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'tɑ:git/",
     "meaningZh": "目標, 靶子, 指標；對準, 訂指標",
-    "example": "The assistant prepared a short report on target before breakfast.",
-    "exampleZh": "助理在早餐前準備了一份關於目標這方面的短報告。",
+    "example": "Sales reached the target this month.",
+    "exampleZh": "本月銷售達到了目標。",
     "group": "Core 3"
   },
   {
@@ -10396,8 +10396,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'dju:ti/",
     "meaningZh": "責任, 關稅, 職務, 尊敬",
-    "example": "The editor prepared a short report on duty before the review.",
-    "exampleZh": "編輯在檢查前準備了一份關於責任這方面的短報告。",
+    "example": "It is my duty to tell the truth.",
+    "exampleZh": "說出真相是我的責任。",
     "group": "Core 3"
   },
   {
@@ -10406,8 +10406,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/træk/",
     "meaningZh": "軌跡, 足跡, 徑跡, 小道, 軌道, 磁軌, 途徑；循路而行, 追蹤, 通過, 用纖拉；追蹤, 留下足跡, 沿軌道運行",
-    "example": "The driver prepared a short report on track before the call.",
-    "exampleZh": "司機在通話前準備了一份關於軌跡這方面的短報告。",
+    "example": "The runners waited on the track.",
+    "exampleZh": "跑者們在跑道上等待。",
     "group": "Core 3"
   },
   {
@@ -10416,8 +10416,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'nju:kliә/",
     "meaningZh": "核子的, 原子能的, 核的, 中心的",
-    "example": "The nuclear plan helped the team move forward after the practice.",
-    "exampleZh": "核子的計畫在練習後幫助團隊往前推進。",
+    "example": "The country shut down a nuclear plant.",
+    "exampleZh": "那個國家關閉了一座核電廠。",
     "group": "Core 3"
   },
   {
@@ -10426,8 +10426,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ә'dres/",
     "meaningZh": "住址, 演說, 舉止, 靈巧, 求愛；發表(演說或講話), 對付, 寫地址",
-    "example": "The designer wrote a short note about address after the training.",
-    "exampleZh": "設計師在訓練後寫了一段關於住址這方面的短筆記。",
+    "example": "Please write your address here.",
+    "exampleZh": "請在這裡寫下你的地址。",
     "group": "Core 3"
   },
   {
@@ -10436,8 +10436,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/prә'pәuzl/",
     "meaningZh": "提議, 計劃, 求婚",
-    "example": "The artist explained proposal during class before the weekend.",
-    "exampleZh": "藝術家在週末前的課堂上解釋了提議。",
+    "example": "The board accepted her proposal.",
+    "exampleZh": "董事會接受了她的提案。",
     "group": "Core 3"
   },
   {
@@ -10446,8 +10446,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'dinә/",
     "meaningZh": "晚餐, 正餐, 宴會",
-    "example": "The guide prepared a short report on dinner before the weekend.",
-    "exampleZh": "嚮導在週末前準備了一份關於晚餐這方面的短報告。",
+    "example": "Dinner will be ready at seven.",
+    "exampleZh": "晚餐七點會準備好。",
     "group": "Core 3"
   },
   {
@@ -10456,8 +10456,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/straik/",
     "meaningZh": "罷工, 打擊, 毆打；打, 撞擊, 衝擊, 侵襲, 取消, 結算, 打掉, 罷工, 刺透, 使生根, 遇見；打, 打擊, 抓, 罷工, 搏動, 觸礁, 敲, 響, 穿透, 打動",
-    "example": "The coach led a class discussion about strike after the presentation.",
-    "exampleZh": "教練在簡報後帶領全班討論罷工。",
+    "example": "Workers began a strike yesterday.",
+    "exampleZh": "工人昨天開始罷工。",
     "group": "Core 3"
   },
   {
@@ -10466,8 +10466,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / adv",
     "pronunciation": "/tә'mɒ:rәu/",
     "meaningZh": "明天, 未來；明天, 未來地",
-    "example": "The artist wrote a short note about tomorrow after the meeting.",
-    "exampleZh": "藝術家在會議後寫了一段關於明天這方面的短筆記。",
+    "example": "We will meet tomorrow morning.",
+    "exampleZh": "我們明天早上見面。",
     "group": "Core 3"
   },
   {
@@ -10476,8 +10476,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/freʃ/",
     "meaningZh": "新鮮的, 新奇的, 另外的, 淡的, 精神飽滿的, 冒失的；最新地, 剛剛；開始, 氾濫",
-    "example": "A fresh situation required extra care before the review.",
-    "exampleZh": "一個新鮮的情況在檢查前需要額外處理。",
+    "example": "The bakery sells fresh bread.",
+    "exampleZh": "這家麵包店賣新鮮麵包。",
     "group": "Core 3"
   },
   {
@@ -10486,8 +10486,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/ri'spɒnsәbl/",
     "meaningZh": "有責任的, 負責的, 責任重大的",
-    "example": "The teacher reviewed the responsible case after the interview.",
-    "exampleZh": "老師在面試後檢視了這個有責任的案例。",
+    "example": "She is responsible for the schedule.",
+    "exampleZh": "她負責這份時程表。",
     "group": "Core 3"
   },
   {
@@ -10496,8 +10496,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'haili/",
     "meaningZh": "非常, 非常讚許地",
-    "example": "The manager answered highly during the trial.",
-    "exampleZh": "經理在試驗中非常地回答。",
+    "example": "This book is highly recommended.",
+    "exampleZh": "這本書非常值得推薦。",
     "group": "Core 3"
   },
   {
@@ -10506,8 +10506,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/dʒʌdʒ/",
     "meaningZh": "法官, 裁判員, 審判官, 鑑定人；審理, 鑑定, 判斷, 判決, 裁定；下判斷, 作評價",
-    "example": "The coach wrote a short note about judge after the debate.",
-    "exampleZh": "教練在辯論後寫了一段關於法官這方面的短筆記。",
+    "example": "The judge listened carefully.",
+    "exampleZh": "法官仔細聆聽。",
     "group": "Core 3"
   },
   {
@@ -10516,8 +10516,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'prɒfit/",
     "meaningZh": "利潤, 贏利, 利益；有益, 獲利, 賺錢；有益於",
-    "example": "The visitor prepared a short report on profit before sunset.",
-    "exampleZh": "訪客在日落前準備了一份關於利潤這方面的短報告。",
+    "example": "The shop made a small profit.",
+    "exampleZh": "這家店賺了一點利潤。",
     "group": "Core 3"
   },
   {
@@ -10526,8 +10526,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'ri:dә/",
     "meaningZh": "讀者, 讀物, 文選, 校對人, 講師",
-    "example": "A reader joined the training on time.",
-    "exampleZh": "一位讀者準時參加了訓練。",
+    "example": "A good reader asks questions.",
+    "exampleZh": "好的讀者會提出問題。",
     "group": "Core 3"
   },
   {
@@ -10536,8 +10536,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi",
     "pronunciation": "/di'pend/",
     "meaningZh": "靠, 視...而定, 信賴",
-    "example": "The student may depend before noon.",
-    "exampleZh": "學生可能會在中午前靠。",
+    "example": "Children depend on adults for care.",
+    "exampleZh": "孩子依靠大人照顧。",
     "group": "Core 3"
   },
   {
@@ -10546,8 +10546,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'ɒ:diәns/",
     "meaningZh": "聽眾, 觀眾, 讀者",
-    "example": "The engineer gave a brief talk about audience before Friday.",
-    "exampleZh": "工程師在星期五前做了一段關於聽眾這方面的簡短分享。",
+    "example": "The audience clapped loudly.",
+    "exampleZh": "觀眾大聲鼓掌。",
     "group": "Core 3"
   },
   {
@@ -10556,8 +10556,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/bænd/",
     "meaningZh": "帶子, 隊, 樂隊；聯合, 結合",
-    "example": "The researcher wrote a short note about band after the discussion.",
-    "exampleZh": "研究員在討論後寫了一段關於帶子這方面的短筆記。",
+    "example": "The band played three songs.",
+    "exampleZh": "這個樂團演奏了三首歌。",
     "group": "Core 3"
   },
   {
@@ -10566,8 +10566,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/fɑ:m/",
     "meaningZh": "農場, 農田；耕種；種田",
-    "example": "The researcher led a class discussion about farm after the interview.",
-    "exampleZh": "研究員在面試後帶領全班討論農場。",
+    "example": "They live on a small farm.",
+    "exampleZh": "他們住在一座小農場。",
     "group": "Core 3"
   },
   {
@@ -10576,8 +10576,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'dɒkjumәnt/",
     "meaningZh": "文件, 公文, 文檔；證明, 為...引證",
-    "example": "The teacher prepared a short report on document before the rehearsal.",
-    "exampleZh": "老師在排練前準備了一份關於文件這方面的短報告。",
+    "example": "Please sign this document.",
+    "exampleZh": "請簽署這份文件。",
     "group": "Core 3"
   },
   {
@@ -10586,8 +10586,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'ailәnd/",
     "meaningZh": "島, 島嶼, 孤立地區, 安全島；使成島狀, 孤立",
-    "example": "The editor gave a brief talk about island before the storm.",
-    "exampleZh": "編輯在暴風雨前做了一段關於島這方面的簡短分享。",
+    "example": "The island is famous for its beaches.",
+    "exampleZh": "這座島以海灘聞名。",
     "group": "Core 3"
   },
   {
@@ -10606,8 +10606,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'influәns/",
     "meaningZh": "影響力, 權力, 勢力；影響, 改變",
-    "example": "The guide wrote a short note about influence after the presentation.",
-    "exampleZh": "嚮導在簡報後寫了一段關於影響力這方面的短筆記。",
+    "example": "Her teacher had a strong influence on her.",
+    "exampleZh": "她的老師對她有很大的影響。",
     "group": "Core 3"
   },
   {
@@ -10616,8 +10616,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'pauәful/",
     "meaningZh": "有力的, 有權力的, 強大的",
-    "example": "The powerful plan helped the team move forward after the interview.",
-    "exampleZh": "有力的計畫在面試後幫助團隊往前推進。",
+    "example": "The speech was short but powerful.",
+    "exampleZh": "那場演講很短，但很有力。",
     "group": "Core 3"
   },
   {
@@ -10626,8 +10626,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/hi:t/",
     "meaningZh": "熱, 熱度, 體溫, 高潮；加熱, 激昂, 加劇；把...加熱, 使激動",
-    "example": "The student explained heat during class before the rehearsal.",
-    "exampleZh": "學生在排練前的課堂上解釋了熱。",
+    "example": "The heat made everyone tired.",
+    "exampleZh": "炎熱讓每個人都很累。",
     "group": "Core 3"
   },
   {
@@ -10636,8 +10636,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'sәuldʒә/",
     "meaningZh": "軍人, 士兵, 兵蟻；從軍, 盡職, 偷懶, 磨洋工",
-    "example": "A soldier joined the discussion on time.",
-    "exampleZh": "一位軍人準時參加了討論。",
+    "example": "The soldier returned home safely.",
+    "exampleZh": "那名士兵平安回家。",
     "group": "Core 3"
   },
   {
@@ -10646,8 +10646,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ʃeip/",
     "meaningZh": "形狀, 形態, 外形, 形式, 身材；定形, 使成形, 塑造, 計劃, 使符合；成形, 形成, 成長",
-    "example": "The artist wrote a short note about shape after the review.",
-    "exampleZh": "藝術家在檢查後寫了一段關於形狀這方面的短筆記。",
+    "example": "The table has a round shape.",
+    "exampleZh": "這張桌子是圓形的。",
     "group": "Core 3"
   },
   {
@@ -10656,8 +10656,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/i'kwipmәnt/",
     "meaningZh": "裝備, 設備, 才能",
-    "example": "The artist gave a brief talk about equipment before the trip.",
-    "exampleZh": "藝術家在旅程前做了一段關於裝備這方面的簡短分享。",
+    "example": "The gym bought new equipment.",
+    "exampleZh": "健身房買了新設備。",
     "group": "Core 3"
   },
   {
@@ -10666,8 +10666,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/streŋθ/",
     "meaningZh": "力量, 實力, 強度, 濃度, 人數, 抵抗力",
-    "example": "The coach led a class discussion about strength after the interview.",
-    "exampleZh": "教練在面試後帶領全班討論力量。",
+    "example": "Swimming builds arm strength.",
+    "exampleZh": "游泳能增強手臂力量。",
     "group": "Core 3"
   },
   {
@@ -10676,8 +10676,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'kwɒ:tә/",
     "meaningZh": "四分之一, 一刻鐘, 季度, 地區；四等分, 肢解；駐紮, 住宿",
-    "example": "The nurse led a class discussion about quarter after the training.",
-    "exampleZh": "護理師在訓練後帶領全班討論四分之一。",
+    "example": "A quarter of the class was absent.",
+    "exampleZh": "班上四分之一的人缺席。",
     "group": "Core 3"
   },
   {
@@ -10686,8 +10686,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'prezns/",
     "meaningZh": "出席, 面前, 存在, 儀態, 風度",
-    "example": "The teacher explained presence during class before the rehearsal.",
-    "exampleZh": "老師在排練前的課堂上解釋了出席。",
+    "example": "Her presence made the room calmer.",
+    "exampleZh": "她的在場讓房間裡的人更平靜。",
     "group": "Core 3"
   },
   {
@@ -10696,8 +10696,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'wi:kend/",
     "meaningZh": "週末, 週末休假",
-    "example": "The student led a class discussion about weekend after the rehearsal.",
-    "exampleZh": "學生在排練後帶領全班討論週末。",
+    "example": "We went hiking last weekend.",
+    "exampleZh": "我們上週末去健行。",
     "group": "Core 3"
   },
   {
@@ -10706,8 +10706,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'vaiәlәns/",
     "meaningZh": "猛烈, 暴力, 暴虐, 暴行",
-    "example": "The nurse gave a brief talk about violence before the deadline.",
-    "exampleZh": "護理師在期限前做了一段關於猛烈這方面的簡短分享。",
+    "example": "The movie contains violence.",
+    "exampleZh": "這部電影含有暴力內容。",
     "group": "Core 3"
   },
   {
@@ -10716,8 +10716,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/tʌtʃ/",
     "meaningZh": "觸覺, 碰, 觸, 機靈, 輕觸, 格調, 少許, 缺點, 彈力；接觸, 觸摸, 觸及, 使接觸, 達到, 涉及, 影響到, 使輕度受害, 感動；觸摸, 接近, 涉及, 提到",
-    "example": "The researcher wrote a short note about touch after the discussion.",
-    "exampleZh": "研究員在討論後寫了一段關於觸覺這方面的短筆記。",
+    "example": "Do not touch the wet paint.",
+    "exampleZh": "不要碰未乾的油漆。",
     "group": "Core 3"
   },
   {
@@ -10726,8 +10726,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/in'dʌstriәl/",
     "meaningZh": "工業的, 供工業用的, 工業高度發展的, 產業的；工業工人, 工業股票",
-    "example": "The visitor reviewed the industrial case after the lesson.",
-    "exampleZh": "訪客在課程後檢視了這個工業的案例。",
+    "example": "This is an industrial area.",
+    "exampleZh": "這是一個工業區。",
     "group": "Core 3"
   },
   {
@@ -10736,8 +10736,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'distәns/",
     "meaningZh": "距離, 遠方, 遙遠",
-    "example": "The teacher led a class discussion about distance after the festival.",
-    "exampleZh": "老師在節慶後帶領全班討論距離。",
+    "example": "The distance between the towns is short.",
+    "exampleZh": "這兩個城鎮之間的距離很短。",
     "group": "Core 3"
   },
   {
@@ -10746,8 +10746,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'bætl/",
     "meaningZh": "戰役；戰鬥",
-    "example": "The doctor led a class discussion about battle after the presentation.",
-    "exampleZh": "醫生在簡報後帶領全班討論戰役。",
+    "example": "The battle lasted three days.",
+    "exampleZh": "那場戰役持續了三天。",
     "group": "Core 3"
   },
   {
@@ -10756,8 +10756,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'kɒnflikt/",
     "meaningZh": "戰鬥, 衝突, 矛盾, 爭執；爭執, 戰鬥, 衝突, 牴觸",
-    "example": "The driver explained conflict during class before the call.",
-    "exampleZh": "司機在通話前的課堂上解釋了戰鬥。",
+    "example": "The conflict ended after talks.",
+    "exampleZh": "衝突在談判後結束。",
     "group": "Core 3"
   },
   {
@@ -10776,8 +10776,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/driŋk/",
     "meaningZh": "飲料, 酒；喝, 喝酒",
-    "example": "The drink smelled good in the kitchen.",
-    "exampleZh": "飲料在廚房裡聞起來很香。",
+    "example": "I ordered a cold drink.",
+    "exampleZh": "我點了一杯冷飲。",
     "group": "Core 3"
   },
   {
@@ -10786,8 +10786,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/di'viʒәn/",
     "meaningZh": "分, 分開, 除法, 部門(如部、處、系等), 師",
-    "example": "The designer explained division during class before the meeting.",
-    "exampleZh": "設計師在會議前的課堂上解釋了分。",
+    "example": "The company created a new division.",
+    "exampleZh": "公司成立了一個新部門。",
     "group": "Core 3"
   },
   {
@@ -10796,8 +10796,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'feiljә/",
     "meaningZh": "失敗, 失敗者, 不足, 缺乏, 破產",
-    "example": "The manager prepared a short report on failure before the storm.",
-    "exampleZh": "經理在暴風雨前準備了一份關於失敗這方面的短報告。",
+    "example": "Failure taught him an important lesson.",
+    "exampleZh": "失敗教會了他重要的一課。",
     "group": "Core 3"
   },
   {
@@ -10816,8 +10816,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ri'vju:/",
     "meaningZh": "檢討, 複習, 回顧, 檢閱, 評論；溫習, 檢討, 評論, 再檢察, 複審；複習功課, 寫評論",
-    "example": "The artist explained review during class before noon.",
-    "exampleZh": "藝術家在中午前的課堂上解釋了檢討。",
+    "example": "Please review the notes before class.",
+    "exampleZh": "請在上課前複習筆記。",
     "group": "Core 3"
   },
   {
@@ -10826,8 +10826,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/sә'plai/",
     "meaningZh": "補給, 供給, 供應品；補給, 供給, 提供, 補充；替代",
-    "example": "The researcher wrote a short note about supply after the discussion.",
-    "exampleZh": "研究員在討論後寫了一段關於補給這方面的短筆記。",
+    "example": "The storm cut off the water supply.",
+    "exampleZh": "暴風雨切斷了供水。",
     "group": "Core 3"
   },
   {
@@ -10836,8 +10836,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'slaitli/",
     "meaningZh": "些微地, 苗條地",
-    "example": "He listened slightly before making a question.",
-    "exampleZh": "他在做問題前些微地聆聽。",
+    "example": "The door was slightly open.",
+    "exampleZh": "門微微開著。",
     "group": "Core 3"
   },
   {
@@ -10846,8 +10846,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/hәul/",
     "meaningZh": "孔, 洞, 穴, 漏洞；挖洞, 掘坑；進洞, 鑿洞",
-    "example": "The driver gave a brief talk about hole before the call.",
-    "exampleZh": "司機在通話前做了一段關於孔這方面的簡短分享。",
+    "example": "There is a hole in my sock.",
+    "exampleZh": "我的襪子破了一個洞。",
     "group": "Core 3"
   },
   {
@@ -10856,8 +10856,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/bәut/",
     "meaningZh": "船；乘船；以船運",
-    "example": "The artist repaired the boat before the trip.",
-    "exampleZh": "藝術家在旅程前修好了船。",
+    "example": "The boat crossed the river.",
+    "exampleZh": "那艘船渡過了河。",
     "group": "Core 3"
   },
   {
@@ -10866,8 +10866,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'saiәntist/",
     "meaningZh": "科學家",
-    "example": "The scientist spoke with the manager before the review.",
-    "exampleZh": "那位科學家在檢查前和經理說話。",
+    "example": "The scientist tested the water.",
+    "exampleZh": "科學家檢測了水。",
     "group": "Core 3"
   },
   {
@@ -10876,8 +10876,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/sli:p/",
     "meaningZh": "睡眠, 靜止, 昏迷, 麻木, 長眠, 冬眠；睡覺, 睡眠, 靜止；睡",
-    "example": "The visitor wrote a short note about sleep after the review.",
-    "exampleZh": "訪客在檢查後寫了一段關於睡眠這方面的短筆記。",
+    "example": "I need more sleep.",
+    "exampleZh": "我需要更多睡眠。",
     "group": "Core 3"
   },
   {
@@ -10886,8 +10886,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/gәuld/",
     "meaningZh": "黃金, 錢財, 金塊, 金色, 寶貴；金的, 似金的, 金色的, 金制的",
-    "example": "The editor explained gold during class before the review.",
-    "exampleZh": "編輯在檢查前的課堂上解釋了黃金。",
+    "example": "She wore a gold ring.",
+    "exampleZh": "她戴了一枚金戒指。",
     "group": "Core 3"
   },
   {
@@ -10896,8 +10896,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ә:θ/",
     "meaningZh": "地球, 泥土, 世界, 塵世；埋入土中, 趕入洞內；躲入洞內",
-    "example": "The teacher explained earth during class before class.",
-    "exampleZh": "老師在上課前的課堂上解釋了地球。",
+    "example": "The earth shook during the earthquake.",
+    "exampleZh": "地震時大地搖晃。",
     "group": "Core 3"
   },
   {
@@ -10906,8 +10906,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kæmәrә/",
     "meaningZh": "照相機, 攝影機, 密談室, 暗箱",
-    "example": "The neighbor gave a brief talk about camera before the deadline.",
-    "exampleZh": "鄰居在期限前做了一段關於照相機這方面的簡短分享。",
+    "example": "My camera needs a new battery.",
+    "exampleZh": "我的相機需要新電池。",
     "group": "Core 3"
   },
   {
@@ -10916,8 +10916,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/prә'tekʃәn/",
     "meaningZh": "保護, 防衛, 貿易保護制度",
-    "example": "The coach wrote a short note about protection after the presentation.",
-    "exampleZh": "教練在簡報後寫了一段關於保護這方面的短筆記。",
+    "example": "A helmet gives head protection.",
+    "exampleZh": "安全帽能保護頭部。",
     "group": "Core 3"
   },
   {
@@ -10926,8 +10926,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'fri:dәm/",
     "meaningZh": "自由, 坦率, 特權",
-    "example": "The researcher prepared a short report on freedom before the weekend.",
-    "exampleZh": "研究員在週末前準備了一份關於自由這方面的短報告。",
+    "example": "Freedom of speech matters.",
+    "exampleZh": "言論自由很重要。",
     "group": "Core 3"
   },
   {
@@ -10936,8 +10936,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v / a / adv",
     "pronunciation": "/kә'lekt/",
     "meaningZh": "收集, 聚集, 集中, 蒐集；由收到者付款的；由收到者付款地",
-    "example": "We need to collect the ticket carefully before the storm.",
-    "exampleZh": "我們需要在暴風雨前仔細收集票券。",
+    "example": "I collect old postcards.",
+    "exampleZh": "我收集舊明信片。",
     "group": "Core 3"
   },
   {
@@ -10946,8 +10946,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ʃip/",
     "meaningZh": "船, 艦；以船運送, 裝船, 運送；上船, 乘船",
-    "example": "The coach repaired the ship before the trip.",
-    "exampleZh": "教練在旅程前修好了船。",
+    "example": "The ship left the harbor at noon.",
+    "exampleZh": "那艘船中午離開港口。",
     "group": "Core 3"
   },
   {
@@ -10956,8 +10956,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi",
     "pronunciation": "/i'mә:dʒ/",
     "meaningZh": "浮現, 形成, 出現, (事實)顯露",
-    "example": "The doctor began to emerge during the training.",
-    "exampleZh": "醫生在訓練期間開始浮現。",
+    "example": "New details began to emerge.",
+    "exampleZh": "新的細節開始浮現。",
     "group": "Core 3"
   },
   {
@@ -10976,8 +10976,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/sә'pәuz/",
     "meaningZh": "推想, 假設, 以為, 想像, 假定；料想",
-    "example": "The interview helped us suppose the file more clearly.",
-    "exampleZh": "面試幫助我們更清楚地推想檔案。",
+    "example": "I suppose you are right.",
+    "exampleZh": "我想你是對的。",
     "group": "Core 3"
   },
   {
@@ -10986,8 +10986,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'dæmidʒ/",
     "meaningZh": "損害, 傷害；損害",
-    "example": "The guide prepared a short report on damage before Friday.",
-    "exampleZh": "嚮導在星期五前準備了一份關於損害這方面的短報告。",
+    "example": "The storm caused serious damage.",
+    "exampleZh": "暴風雨造成了嚴重損害。",
     "group": "Core 3"
   },
   {
@@ -10996,8 +10996,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/iks'tʃeindʒ/",
     "meaningZh": "交換, (電話)交換局, 交換機, 匯兌, 交易所；交換, 交易, 兌換",
-    "example": "The artist explained exchange during class before the weekend.",
-    "exampleZh": "藝術家在週末前的課堂上解釋了交換。",
+    "example": "Can I exchange this shirt?",
+    "exampleZh": "我可以換這件襯衫嗎？",
     "group": "Core 3"
   },
   {
@@ -11006,8 +11006,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / pron",
     "pronunciation": "/'nәubɒdi/",
     "meaningZh": "小人物, 無名小卒；無人, 沒有人",
-    "example": "The editor wrote a short note about nobody after the trip.",
-    "exampleZh": "編輯在旅程後寫了一段關於小人物這方面的短筆記。",
+    "example": "Nobody answered the phone.",
+    "exampleZh": "沒有人接電話。",
     "group": "Core 3"
   },
   {
@@ -11016,8 +11016,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'prizn/",
     "meaningZh": "監獄, 監禁, 拘留所；監禁",
-    "example": "The teacher prepared a short report on prison before the meeting.",
-    "exampleZh": "老師在會議前準備了一份關於監獄這方面的短報告。",
+    "example": "He spent ten years in prison.",
+    "exampleZh": "他在監獄裡待了十年。",
     "group": "Core 3"
   },
   {
@@ -11036,8 +11036,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "prep / adv",
     "pronunciation": "/bi'lәu/",
     "meaningZh": "在下面",
-    "example": "The keys are below the box.",
-    "exampleZh": "鑰匙在盒子下面。",
+    "example": "The temperature fell below zero.",
+    "exampleZh": "氣溫降到零度以下。",
     "group": "Core 3"
   },
   {
@@ -11046,8 +11046,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/ʃɒt/",
     "meaningZh": "發射, 炮彈, 射擊, 射手, 投籃, 射門, 子彈, 射程, 拍攝, 注射；裝彈, 使成顆粒狀；雜色的, 交織著的, 滲透的, 點焊的, 破舊的；shoot的過去式和過去分詞",
-    "example": "The researcher explained shot during class before Friday.",
-    "exampleZh": "研究員在星期五前的課堂上解釋了發射。",
+    "example": "The doctor gave him a flu shot.",
+    "exampleZh": "醫生替他打了流感疫苗。",
     "group": "Core 3"
   },
   {
@@ -11056,8 +11056,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'rɒiәl/",
     "meaningZh": "王室, 皇族；王室的, 皇家的, 盛大的, 莊嚴的",
-    "example": "The coach gave a brief talk about royal before the rehearsal.",
-    "exampleZh": "教練在排練前做了一段關於王室這方面的簡短分享。",
+    "example": "The royal family attended the event.",
+    "exampleZh": "王室成員參加了那場活動。",
     "group": "Core 3"
   },
   {
@@ -11066,8 +11066,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kænsә/",
     "meaningZh": "癌, 惡性腫瘤",
-    "example": "The teacher explained cancer during class before class.",
-    "exampleZh": "老師在上課前的課堂上解釋了癌。",
+    "example": "Early cancer treatment can save lives.",
+    "exampleZh": "早期癌症治療可以挽救生命。",
     "group": "Core 3"
   },
   {
@@ -11076,8 +11076,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'kritikәl/",
     "meaningZh": "批評的, 決定性的, 危險的, 臨界的",
-    "example": "A critical situation required extra care before the call.",
-    "exampleZh": "一個批評的情況在通話前需要額外處理。",
+    "example": "This is a critical decision.",
+    "exampleZh": "這是一個關鍵決定。",
     "group": "Core 3"
   },
   {
@@ -11086,8 +11086,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'ekstrә/",
     "meaningZh": "額外的事物, 另外的收費；額外的, 特別的；額外地, 特別地, 非常地",
-    "example": "The nurse led a class discussion about extra after the trip.",
-    "exampleZh": "護理師在旅程後帶領全班討論額外的事物。",
+    "example": "We need extra chairs.",
+    "exampleZh": "我們需要額外的椅子。",
     "group": "Core 3"
   },
   {
@@ -11096,8 +11096,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/ә'pi:l/",
     "meaningZh": "懇求, 訴請, 上訴, 吸引力；呼籲, 訴請, 要求, 上訴, 有吸引力；將...上訴",
-    "example": "The researcher prepared a short report on appeal before Friday.",
-    "exampleZh": "研究員在星期五前準備了一份關於懇求這方面的短報告。",
+    "example": "The charity made an appeal for help.",
+    "exampleZh": "慈善團體呼籲大家伸出援手。",
     "group": "Core 3"
   },
   {
@@ -11106,8 +11106,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'vi:ikl/",
     "meaningZh": "交通工具, 車輛, 傳播媒介",
-    "example": "The vehicle stopped near the plan before class.",
-    "exampleZh": "交通工具在上課前停在計畫附近。",
+    "example": "The vehicle stopped suddenly.",
+    "exampleZh": "那輛車突然停了下來。",
     "group": "Core 3"
   },
   {
@@ -11116,8 +11116,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/skɒ:/",
     "meaningZh": "得分, 抓痕, 二十個, 刻痕, 帳目, 樂譜, 起跑線, 終點線, 大量；刻劃, 劃線, 獲得, 評價, 把...記下；刻痕, 記分, 得分",
-    "example": "The coach gave a brief talk about score before the call.",
-    "exampleZh": "教練在通話前做了一段關於得分這方面的簡短分享。",
+    "example": "The final score was two to one.",
+    "exampleZh": "最後比分是二比一。",
     "group": "Core 3"
   },
   {
@@ -11126,8 +11126,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'sektә/",
     "meaningZh": "扇形, 部門, 部分, 函數尺, 象限儀, 段, 區段；把...分成扇形",
-    "example": "The student prepared a short report on sector before the rehearsal.",
-    "exampleZh": "學生在排練前準備了一份關於扇形這方面的短報告。",
+    "example": "The technology sector is growing.",
+    "exampleZh": "科技產業正在成長。",
     "group": "Core 3"
   },
   {
@@ -11136,8 +11136,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'sʌðәn/",
     "meaningZh": "南方人, 男風；向南方的, 來自南方的",
-    "example": "The southern spoke with the coach before the call.",
-    "exampleZh": "那位南方人在通話前和教練說話。",
+    "example": "The southern coast is warm.",
+    "exampleZh": "南部海岸氣候溫暖。",
     "group": "Core 3"
   },
   {
@@ -11146,8 +11146,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'mauntin/",
     "meaningZh": "山, 山脈, 大堆",
-    "example": "We walked near the mountain after the review.",
-    "exampleZh": "我們在檢查後到山附近散步。",
+    "example": "The mountain was covered with snow.",
+    "exampleZh": "那座山被雪覆蓋。",
     "group": "Core 3"
   },
   {
@@ -11156,8 +11156,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ri'kɒ:l/",
     "meaningZh": "回憶, 召回, 撤消；回想, 回憶, 召回, 撤消, 使恢復",
-    "example": "The assistant gave a brief talk about recall before breakfast.",
-    "exampleZh": "助理在早餐前做了一段關於回憶這方面的簡短分享。",
+    "example": "I cannot recall his name.",
+    "exampleZh": "我想不起他的名字。",
     "group": "Core 3"
   },
   {
@@ -11166,8 +11166,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'setl/",
     "meaningZh": "有背長椅；決定, 整理, 安放, 使定居, 使平靜, 支付, 安排, 解決, 結算；停留, 下陷, 沉澱, 澄清, 安下心來, 結清, 定居, 安家",
-    "example": "The researcher led a class discussion about settle after the interview.",
-    "exampleZh": "研究員在面試後帶領全班討論有背長椅。",
+    "example": "They decided to settle the dispute.",
+    "exampleZh": "他們決定解決這場爭端。",
     "group": "Core 3"
   },
   {
@@ -11176,8 +11176,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kraisis/",
     "meaningZh": "危機, 危險期, 緊要關頭",
-    "example": "The designer led a class discussion about crisis after the visit.",
-    "exampleZh": "設計師在拜訪後帶領全班討論危機。",
+    "example": "The crisis forced the company to change.",
+    "exampleZh": "危機迫使公司做出改變。",
     "group": "Core 3"
   },
   {
@@ -11186,8 +11186,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/wud/",
     "meaningZh": "木材, 木製品；植林於, 給...添加木柴；收集木材",
-    "example": "The device was made of wood.",
-    "exampleZh": "裝置是用木材做的。",
+    "example": "The chair is made of wood.",
+    "exampleZh": "這張椅子是木頭做的。",
     "group": "Core 3"
   },
   {
@@ -11196,8 +11196,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'æbsәlu:tli/",
     "meaningZh": "完全地, 絕對地, 確確實實地",
-    "example": "He listened absolutely before making a rule.",
-    "exampleZh": "他在做規則前完全地聆聽。",
+    "example": "You are absolutely right.",
+    "exampleZh": "你完全正確。",
     "group": "Core 3"
   },
   {
@@ -11206,8 +11206,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/fєә/",
     "meaningZh": "展覽會, 市集, 美好的事物；公平的, 按規則進行的, 不好不壞的, 晴朗的, 美麗的；公平地, 正面地, 有教養地, 清楚地；轉晴",
-    "example": "The visitor wrote a short note about fair after the visit.",
-    "exampleZh": "訪客在拜訪後寫了一段關於展覽會這方面的短筆記。",
+    "example": "The price seems fair.",
+    "exampleZh": "這個價格看起來合理。",
     "group": "Core 3"
   },
   {
@@ -11216,8 +11216,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/tʌf/",
     "meaningZh": "惡棍；強硬的, 艱苦的, 堅固的, 堅韌的, 粗暴的, 咬不動的",
-    "example": "The nurse explained tough during class before the review.",
-    "exampleZh": "護理師在檢查前的課堂上解釋了惡棍。",
+    "example": "The exam was tough.",
+    "exampleZh": "那場考試很難。",
     "group": "Core 3"
   },
   {
@@ -11226,8 +11226,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/meil/",
     "meaningZh": "男人, 雄性動物；男性的, 雄性的, 有力的",
-    "example": "The male spoke with the designer before the rehearsal.",
-    "exampleZh": "那位男人在排練前和設計師說話。",
+    "example": "The male bird has bright feathers.",
+    "exampleZh": "雄鳥有鮮豔的羽毛。",
     "group": "Core 3"
   },
   {
@@ -11236,8 +11236,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/spi:d/",
     "meaningZh": "速率, 速度, 迅速；加速, 超速, 快進；快速傳送, 促進, 使加速",
-    "example": "The engineer gave a brief talk about speed before the holiday.",
-    "exampleZh": "工程師在假期前做了一段關於速率這方面的簡短分享。",
+    "example": "The car picked up speed on the highway.",
+    "exampleZh": "車子在高速公路上加快了速度。",
     "group": "Core 3"
   },
   {
@@ -11246,8 +11246,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'kɒment/",
     "meaningZh": "註解, 批評, 評論, 備註；評論, 註解",
-    "example": "The designer led a class discussion about comment after the debate.",
-    "exampleZh": "設計師在辯論後帶領全班討論註解。",
+    "example": "She made a helpful comment.",
+    "exampleZh": "她提出了一個有幫助的評論。",
     "group": "Core 3"
   },
   {
@@ -11266,8 +11266,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n / adv",
     "pronunciation": "/'regjulә/",
     "meaningZh": "規則的, 常例的, 有秩序的, 整齊的, 等邊的, 定期的, 經常的, 合格的, 常備軍的；正規軍, 正式隊員；經常地；正常體",
-    "example": "A regular situation required extra care before noon.",
-    "exampleZh": "一個規則的情況在中午前需要額外處理。",
+    "example": "Regular exercise improves health.",
+    "exampleZh": "規律運動能改善健康。",
     "group": "Core 3"
   },
   {
@@ -11276,8 +11276,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/fɑ:st/",
     "meaningZh": "快速的, 緊的；很快地, 緊緊地, 徹底地；絕食, 齋戒",
-    "example": "The engineer reviewed the fast case after the interview.",
-    "exampleZh": "工程師在面試後檢視了這個快速的案例。",
+    "example": "This train is fast.",
+    "exampleZh": "這班火車很快。",
     "group": "Core 3"
   },
   {
@@ -11286,8 +11286,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/pә'tenʃәl/",
     "meaningZh": "潛在性, 可能性, 潛力, 潛能, 勢, 位；有潛力的, 可能的, 潛在的",
-    "example": "The nurse prepared a short report on potential before the deadline.",
-    "exampleZh": "護理師在期限前準備了一份關於潛在性這方面的短報告。",
+    "example": "This idea has great potential.",
+    "exampleZh": "這個想法很有潛力。",
     "group": "Core 3"
   },
   {
@@ -11296,8 +11296,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/sә'vaiv/",
     "meaningZh": "比...活得長, 生存, 生還, 倖免於；活下來, 倖存",
-    "example": "They tried to survive the file before sunset.",
-    "exampleZh": "他們試著在日落前比活得長檔案。",
+    "example": "Only a few plants survive the winter.",
+    "exampleZh": "只有少數植物能熬過冬天。",
     "group": "Core 3"
   },
   {
@@ -11306,8 +11306,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'hɒlәdi/",
     "meaningZh": "假日, 假期, 節日；度假",
-    "example": "The neighbor wrote a short note about holiday after the inspection.",
-    "exampleZh": "鄰居在檢查後寫了一段關於假日這方面的短筆記。",
+    "example": "We booked a holiday by the sea.",
+    "exampleZh": "我們預訂了一個海邊假期。",
     "group": "Core 3"
   },
   {
@@ -11316,8 +11316,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/di'nai/",
     "meaningZh": "否認, 拒絕",
-    "example": "The interview helped us deny the contract more clearly.",
-    "exampleZh": "面試幫助我們更清楚地否認合約。",
+    "example": "He did not deny the mistake.",
+    "exampleZh": "他沒有否認那個錯誤。",
     "group": "Core 3"
   },
   {
@@ -11326,8 +11326,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/ig'nɒ:/",
     "meaningZh": "不理睬, 忽視, 駁回, 忽略",
-    "example": "They tried to ignore the map before the holiday.",
-    "exampleZh": "他們試著在假期前不理睬地圖。",
+    "example": "Do not ignore the warning.",
+    "exampleZh": "不要忽視警告。",
     "group": "Core 3"
   },
   {
@@ -11336,8 +11336,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'sitizn/",
     "meaningZh": "市民, 公民",
-    "example": "The doctor led a class discussion about citizen after the discussion.",
-    "exampleZh": "醫生在討論後帶領全班討論市民。",
+    "example": "Every citizen can vote.",
+    "exampleZh": "每位公民都可以投票。",
     "group": "Core 3"
   },
   {
@@ -11346,8 +11346,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'kɒntækt/",
     "meaningZh": "聯繫, 交際, 熟人, 接觸；接觸, 聯繫；使接觸",
-    "example": "The driver wrote a short note about contact after the meeting.",
-    "exampleZh": "司機在會議後寫了一段關於聯繫這方面的短筆記。",
+    "example": "Please contact me tomorrow.",
+    "exampleZh": "請明天聯絡我。",
     "group": "Core 3"
   },
   {
@@ -11356,8 +11356,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'restәrɒŋ/",
     "meaningZh": "餐館, 飯店",
-    "example": "The visitor led a class discussion about restaurant after the trip.",
-    "exampleZh": "訪客在旅程後帶領全班討論餐館。",
+    "example": "The restaurant is full tonight.",
+    "exampleZh": "這家餐廳今晚客滿。",
     "group": "Core 3"
   },
   {
@@ -11366,8 +11366,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'pә:fikt/",
     "meaningZh": "完成時；完美的, 完好的, 理想的, 熟練的, 精確的, 完成式的；使完美, 修改, 使精通, 改善, 使熟練",
-    "example": "The teacher gave a brief talk about perfect before class.",
-    "exampleZh": "老師在上課前做了一段關於完成時這方面的簡短分享。",
+    "example": "The weather is perfect today.",
+    "exampleZh": "今天的天氣很完美。",
     "group": "Core 3"
   },
   {
@@ -11376,8 +11376,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/lift/",
     "meaningZh": "舉起, 幫助, 昂揚, 電梯；升高, 提高, 鼓舞, 清償, 空運, 舉起, 剽竊；升起, 消散, 聳立",
-    "example": "The designer wrote a short note about lift after the presentation.",
-    "exampleZh": "設計師在簡報後寫了一段關於舉起這方面的短筆記。",
+    "example": "Can you lift this box?",
+    "exampleZh": "你能搬起這個箱子嗎？",
     "group": "Core 3"
   },
   {
@@ -11386,8 +11386,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ri'ækʃәn/",
     "meaningZh": "反應, 反作用, 反動",
-    "example": "The neighbor wrote a short note about reaction after the meeting.",
-    "exampleZh": "鄰居在會議後寫了一段關於反應這方面的短筆記。",
+    "example": "Her reaction surprised everyone.",
+    "exampleZh": "她的反應讓大家都很驚訝。",
     "group": "Core 3"
   },
   {
@@ -11396,8 +11396,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'mi:diә/",
     "meaningZh": "媒體",
-    "example": "The engineer wrote a short note about media after the trial.",
-    "exampleZh": "工程師在試驗後寫了一段關於媒體這方面的短筆記。",
+    "example": "The media covered the story.",
+    "exampleZh": "媒體報導了這件事。",
     "group": "Core 3"
   },
   {
@@ -11406,8 +11406,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/trein/",
     "meaningZh": "火車, 列車, 行列, 長隊, 一連串的後果, 順序；訓練, 教育, 對準；受訓練, 鍛鍊",
-    "example": "The editor repaired the train before the trip.",
-    "exampleZh": "編輯在旅程前修好了火車。",
+    "example": "The train arrived late.",
+    "exampleZh": "火車晚到了。",
     "group": "Core 3"
   },
   {
@@ -11416,8 +11416,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/pєә/",
     "meaningZh": "一雙, 一對, 一副；(使)成對",
-    "example": "The designer led a class discussion about pair after the debate.",
-    "exampleZh": "設計師在辯論後帶領全班討論一雙。",
+    "example": "I bought a pair of shoes.",
+    "exampleZh": "我買了一雙鞋。",
     "group": "Core 3"
   },
   {
@@ -11426,8 +11426,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/brein/",
     "meaningZh": "腦；打碎腦部",
-    "example": "The nurse prepared a short report on brain before the meeting.",
-    "exampleZh": "護理師在會議前準備了一份關於腦這方面的短報告。",
+    "example": "Sleep helps the brain rest.",
+    "exampleZh": "睡眠幫助大腦休息。",
     "group": "Core 3"
   },
   {
@@ -11436,8 +11436,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'stju:diәu/",
     "meaningZh": "工作室, 畫室, 演播室, 電影製片廠",
-    "example": "The designer prepared a short report on studio before the interview.",
-    "exampleZh": "設計師在面試前準備了一份關於工作室這方面的短報告。",
+    "example": "The artist works in a small studio.",
+    "exampleZh": "那位藝術家在一間小工作室工作。",
     "group": "Core 3"
   },
   {
@@ -11446,8 +11446,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/wɒ:m/",
     "meaningZh": "暖和的, 暖的, 溫暖的, 熱烈的, 興奮的, 激烈的, 多情的, 色情的；使溫暖, 弄熱, 使興奮, 使充滿仇恨；變暖和, 變溫暖, 取暖, 激動, 同情, 愛好；暖, 保暖物",
-    "example": "The editor chose a warm method before the deadline.",
-    "exampleZh": "編輯在期限前選了一個暖和的方法。",
+    "example": "The soup is still warm.",
+    "exampleZh": "湯還是溫的。",
     "group": "Core 3"
   },
   {
@@ -11456,8 +11456,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/fi:d/",
     "meaningZh": "飼料, 一餐, 飼養；喂, 飼養, 放牧, 靠...為生；吃東西, 用餐, 流入",
-    "example": "The designer explained feed during class before the meeting.",
-    "exampleZh": "設計師在會議前的課堂上解釋了飼料。",
+    "example": "Please feed the dog.",
+    "exampleZh": "請餵狗。",
     "group": "Core 3"
   },
   {
@@ -11466,8 +11466,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/di'livә/",
     "meaningZh": "遞送, 陳述, 釋放, 發表, 引渡, 投遞, 交付",
-    "example": "The driver will deliver the package today.",
-    "exampleZh": "司機今天會送包裹。",
+    "example": "The courier will deliver the package today.",
+    "exampleZh": "快遞今天會送包裹。",
     "group": "Core 3"
   },
   {
@@ -11476,8 +11476,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'eksәsaiz/",
     "meaningZh": "行使, 執行, 運動, 練習, 作業；運用, 練習, 運動；練習, 鍛鍊",
-    "example": "The student explained exercise during class before noon.",
-    "exampleZh": "學生在中午前的課堂上解釋了行使。",
+    "example": "Daily exercise keeps her healthy.",
+    "exampleZh": "每天運動讓她保持健康。",
     "group": "Core 3"
   },
   {
@@ -11486,8 +11486,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ri'gɑ:d/",
     "meaningZh": "關心, 注意, 尊敬, 關係, 問候；視為, 注意, 考慮, 和...有關, 看待；注視, 注意",
-    "example": "The visitor explained regard during class before the holiday.",
-    "exampleZh": "訪客在假期前的課堂上解釋了關心。",
+    "example": "Many people regard him as a hero.",
+    "exampleZh": "許多人把他視為英雄。",
     "group": "Core 3"
   },
   {
@@ -11496,8 +11496,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/hændl/",
     "meaningZh": "柄, 把手, 把柄, 柄狀物, 手感；觸摸, 運用, 買賣, 處理, 操作；搬運, 易於操縱；句柄",
-    "example": "The editor wrote a short note about handle after the rehearsal.",
-    "exampleZh": "編輯在排練後寫了一段關於柄這方面的短筆記。",
+    "example": "She can handle the problem.",
+    "exampleZh": "她能處理這個問題。",
     "group": "Core 3"
   },
   {
@@ -11506,8 +11506,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/kәutʃ/",
     "meaningZh": "四輪大馬車, 教練；訓練, 指導；坐馬車旅行, 作指導",
-    "example": "The neighbor gave a brief talk about coach before the deadline.",
-    "exampleZh": "鄰居在期限前做了一段關於四輪大馬車這方面的簡短分享。",
+    "example": "The coach gave clear instructions.",
+    "exampleZh": "教練給了清楚的指示。",
     "group": "Core 3"
   },
   {
@@ -11516,8 +11516,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/prәu'mәut/",
     "meaningZh": "促進, 晉升, 創辦, 推銷",
-    "example": "The trip helped us promote the budget more clearly.",
-    "exampleZh": "旅程幫助我們更清楚地促進預算。",
+    "example": "The company will promote the new service.",
+    "exampleZh": "公司會推廣這項新服務。",
     "group": "Core 3"
   },
   {
@@ -11526,8 +11526,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/flait/",
     "meaningZh": "飛行, 射程, 逃走, 飛躍, 飛機航程, 班機, 遷徙, 飛逝；遷徙；射擊(飛禽), 為(箭)裝上羽毛, 使驚飛",
-    "example": "The editor explained flight during class before the deadline.",
-    "exampleZh": "編輯在期限前的課堂上解釋了飛行。",
+    "example": "Our flight leaves at noon.",
+    "exampleZh": "我們的班機中午起飛。",
     "group": "Core 3"
   },
   {
@@ -11536,8 +11536,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'kɔndʌkt, -dәkt/",
     "meaningZh": "行為, 舉動, 指導；為人, 指揮, 管理, 實施；領導, 傳導, 指揮",
-    "example": "The engineer gave a brief talk about conduct before the holiday.",
-    "exampleZh": "工程師在假期前做了一段關於行為這方面的簡短分享。",
+    "example": "The police will conduct an investigation.",
+    "exampleZh": "警方會進行調查。",
     "group": "Core 3"
   },
   {
@@ -11546,8 +11546,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/klәuðz/",
     "meaningZh": "衣服",
-    "example": "The visitor prepared a short report on clothes before the weekend.",
-    "exampleZh": "訪客在週末前準備了一份關於衣服這方面的短報告。",
+    "example": "Her clothes were wet from the rain.",
+    "exampleZh": "她的衣服被雨淋濕了。",
     "group": "Core 3"
   },
   {
@@ -11556,8 +11556,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/in'sist/",
     "meaningZh": "堅持, 堅決主張, 強調",
-    "example": "The visit helped us insist the plan more clearly.",
-    "exampleZh": "拜訪幫助我們更清楚地堅持計畫。",
+    "example": "They insist on paying for dinner.",
+    "exampleZh": "他們堅持要付晚餐錢。",
     "group": "Core 3"
   },
   {
@@ -11566,8 +11566,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/wain/",
     "meaningZh": "葡萄酒, 果酒, 暗紅色；(請)喝酒",
-    "example": "The nurse prepared a short report on wine before the deadline.",
-    "exampleZh": "護理師在期限前準備了一份關於葡萄酒這方面的短報告。",
+    "example": "This wine tastes sweet.",
+    "exampleZh": "這款酒喝起來很甜。",
     "group": "Core 3"
   },
   {
@@ -11576,8 +11576,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/kә'miʃәn/",
     "meaningZh": "委任狀, 任官令, 所委職責, 佣金, 犯, 委託, 所託之事；委任, 委託製作, 使服役",
-    "example": "The visitor led a class discussion about commission after the review.",
-    "exampleZh": "訪客在檢查後帶領全班討論委任狀。",
+    "example": "The artist received a commission.",
+    "exampleZh": "那位藝術家接到了一項委託。",
     "group": "Core 3"
   },
   {
@@ -11586,8 +11586,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/ә'dɒpt/",
     "meaningZh": "採用, 正式通過, 收養, 接受",
-    "example": "We need to adopt the display carefully before the trip.",
-    "exampleZh": "我們需要在旅程前仔細採用展示。",
+    "example": "They decided to adopt a child.",
+    "exampleZh": "他們決定收養一個孩子。",
     "group": "Core 3"
   },
   {
@@ -11596,8 +11596,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'flauә/",
     "meaningZh": "花, 開花植物, 精華, 盛時；開花, 發育, 旺盛, 成熟；用花裝飾, 使開花",
-    "example": "The designer explained flower during class before the call.",
-    "exampleZh": "設計師在通話前的課堂上解釋了花。",
+    "example": "A red flower grew by the wall.",
+    "exampleZh": "牆邊長了一朵紅花。",
     "group": "Core 3"
   },
   {
@@ -11606,8 +11606,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'æktiv/",
     "meaningZh": "活躍的, 起作用的, 積極的, 有效的, 主動的, 活性的, 現行的, 現役的；主動語態, 積極分子",
-    "example": "The nurse chose an active method before the interview.",
-    "exampleZh": "護理師在面試前選了一個活躍的方法。",
+    "example": "She stays active by walking every day.",
+    "exampleZh": "她每天散步來保持活躍。",
     "group": "Core 3"
   },
   {
@@ -11616,8 +11616,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'ju:sful/",
     "meaningZh": "有用的, 有益的",
-    "example": "The designer reviewed the useful case after the review.",
-    "exampleZh": "設計師在檢查後檢視了這個有用的案例。",
+    "example": "This tool is useful for beginners.",
+    "exampleZh": "這個工具對初學者很有用。",
     "group": "Core 3"
   },
   {
@@ -11626,8 +11626,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'limit/",
     "meaningZh": "界限, 邊界, 限度, 極限, 限制；限制, 限定",
-    "example": "The driver wrote a short note about limit after the meeting.",
-    "exampleZh": "司機在會議後寫了一段關於界限這方面的短筆記。",
+    "example": "There is a speed limit here.",
+    "exampleZh": "這裡有速限。",
     "group": "Core 3"
   },
   {
@@ -11636,8 +11636,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/lɒ:d/",
     "meaningZh": "統治者, 閣下, 上帝；稱王, 作威作福；使成貴族",
-    "example": "The lord worked carefully with the doctor.",
-    "exampleZh": "那位統治者仔細地和醫生合作。",
+    "example": "The lord owned a large estate.",
+    "exampleZh": "那位貴族擁有大片莊園。",
     "group": "Core 3"
   },
   {
@@ -11646,8 +11646,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/hә:t/",
     "meaningZh": "傷害, 創傷, 損害；傷害, (使)傷心, 危害, 刺痛",
-    "example": "The hurt made the interview difficult after the holiday.",
-    "exampleZh": "傷害讓假期後的面試變得困難。",
+    "example": "My knee still hurt after the game.",
+    "exampleZh": "比賽後我的膝蓋仍然疼。",
     "group": "Core 3"
   },
   {
@@ -11656,8 +11656,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'dʒʌstis/",
     "meaningZh": "正義, 公平, 公正, 正確, 司法, 審判",
-    "example": "The neighbor explained justice during class before the interview.",
-    "exampleZh": "鄰居在面試前的課堂上解釋了正義。",
+    "example": "The family demanded justice.",
+    "exampleZh": "那個家庭要求正義。",
     "group": "Core 3"
   },
   {
@@ -11666,8 +11666,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'ævәridʒ/",
     "meaningZh": "平均, 平均數, 一般水平, 海損；平均的, 中等的, 平常的；算出...平均數, 平均做, 均分, 使平衡；平均為, 呈中間色",
-    "example": "The assistant led a class discussion about average after the discussion.",
-    "exampleZh": "助理在討論後帶領全班討論平均。",
+    "example": "The average score was high.",
+    "exampleZh": "平均分數很高。",
     "group": "Core 3"
   },
   {
@@ -11676,8 +11676,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'prәugres/",
     "meaningZh": "進步, 發展, 前進；進步, 進行",
-    "example": "The doctor wrote a short note about progress after the training.",
-    "exampleZh": "醫生在訓練後寫了一段關於進步這方面的短筆記。",
+    "example": "We made progress this week.",
+    "exampleZh": "我們這週取得了進展。",
     "group": "Core 3"
   },
   {
@@ -11696,8 +11696,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/kә'mit/",
     "meaningZh": "委託(託付), 犯罪, 指派...作戰, 使承擔義務",
-    "example": "The lesson helped us commit the garden more clearly.",
-    "exampleZh": "課程幫助我們更清楚地委託託付花園。",
+    "example": "Do not commit a crime.",
+    "exampleZh": "不要犯罪。",
     "group": "Core 3"
   },
   {
@@ -11706,8 +11706,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'bælәns/",
     "meaningZh": "平衡, 差額；平衡, 相等；稱, 權衡, 比較, 使平衡, 結算, 抵消",
-    "example": "The nurse prepared a short report on balance before the deadline.",
-    "exampleZh": "護理師在期限前準備了一份關於平衡這方面的短報告。",
+    "example": "Good sleep helps restore balance.",
+    "exampleZh": "良好的睡眠有助於恢復平衡。",
     "group": "Core 3"
   },
   {
@@ -11716,8 +11716,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/brait/",
     "meaningZh": "明亮的, 聰明的, 鮮明的, 歡快的；明亮地, 歡快地",
-    "example": "A bright situation required extra care before the exam.",
-    "exampleZh": "一個明亮的情況在考試前需要額外處理。",
+    "example": "The room is bright in the morning.",
+    "exampleZh": "這個房間早上很明亮。",
     "group": "Core 3"
   },
   {
@@ -11726,8 +11726,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/skri:n/",
     "meaningZh": "幕, 銀幕, 屏風, 掩蔽物, 屏蔽, 篩子；掩蔽, 放映, 拍攝, 掩護, 篩, 甄別；拍電影",
-    "example": "The editor led a class discussion about screen after the debate.",
-    "exampleZh": "編輯在辯論後帶領全班討論幕。",
+    "example": "The screen is too bright.",
+    "exampleZh": "螢幕太亮了。",
     "group": "Core 3"
   },
   {
@@ -11736,8 +11736,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n / adv",
     "pronunciation": "/sɒft/",
     "meaningZh": "軟的, 溫和的, 柔和的, 柔滑的, 溫柔的, 軟弱的, 坡度小的, 笨的, 紙幣的；柔軟的東西, 笨人, 紙幣；柔軟地, 溫和地",
-    "example": "A soft situation required extra care before breakfast.",
-    "exampleZh": "一個軟的情況在早餐前需要額外處理。",
+    "example": "The blanket is soft and warm.",
+    "exampleZh": "這條毯子柔軟又溫暖。",
     "group": "Core 3"
   },
   {
@@ -11746,8 +11746,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/spɒt/",
     "meaningZh": "汙點, 地點, 斑點, 點, 娛樂場所, 處境, 少量；當場的, 現場的, 現貨買賣的, 現金交易的, 抽樣的；點綴, 玷汙, 認出, 準確定...的位, 用燈光照射；玷汙, (從空中)偵察敵方目標",
-    "example": "The student led a class discussion about spot after the trial.",
-    "exampleZh": "學生在試驗後帶領全班討論汙點。",
+    "example": "I found a quiet spot to read.",
+    "exampleZh": "我找到一個安靜的地方讀書。",
     "group": "Core 3"
   },
   {
@@ -11756,8 +11756,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'deindʒә/",
     "meaningZh": "危險, 威脅",
-    "example": "The driver wrote a short note about danger after the practice.",
-    "exampleZh": "司機在練習後寫了一段關於危險這方面的短筆記。",
+    "example": "The sign warned of danger.",
+    "exampleZh": "那個標誌警告有危險。",
     "group": "Core 3"
   },
   {
@@ -11766,8 +11766,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'hɑ:dli/",
     "meaningZh": "剛剛, 幾乎不, 勉強是",
-    "example": "The team finished the lesson hardly.",
-    "exampleZh": "團隊剛剛地完成了課程。",
+    "example": "I can hardly hear you.",
+    "exampleZh": "我幾乎聽不到你說話。",
     "group": "Core 3"
   },
   {
@@ -11776,8 +11776,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/plein/",
     "meaningZh": "平面, 扁平物, 機翼, 飛機, 水準, 地位；平的, 平面的；將...刨平, 刨平, 掠過水麵；翱翔, 乘飛機旅行, 刨掉",
-    "example": "The doctor gave a brief talk about plane before the trip.",
-    "exampleZh": "醫生在旅程前做了一段關於平面這方面的簡短分享。",
+    "example": "The plane landed safely.",
+    "exampleZh": "飛機安全降落。",
     "group": "Core 3"
   },
   {
@@ -11786,8 +11786,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'ɒbviәs/",
     "meaningZh": "明顯的, 明白的, 顯然的, 平淡無奇的",
-    "example": "The obvious plan helped the team move forward after the lesson.",
-    "exampleZh": "明顯的計畫在課程後幫助團隊往前推進。",
+    "example": "The answer was obvious.",
+    "exampleZh": "答案很明顯。",
     "group": "Core 3"
   },
   {
@@ -11796,8 +11796,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/krai/",
     "meaningZh": "叫聲, 哭聲, 大叫；哭, 叫, 喊；叫喊, 大聲說, 哭出",
-    "example": "The nurse wrote a short note about cry after the trip.",
-    "exampleZh": "護理師在旅程後寫了一段關於叫聲這方面的短筆記。",
+    "example": "The baby began to cry.",
+    "exampleZh": "嬰兒開始哭。",
     "group": "Core 3"
   },
   {
@@ -11806,8 +11806,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/kraud/",
     "meaningZh": "群眾, 一夥人；擁擠, 擠滿, 擠進",
-    "example": "The teacher gave a brief talk about crowd before the rehearsal.",
-    "exampleZh": "老師在排練前做了一段關於群眾這方面的簡短分享。",
+    "example": "A large crowd waited outside.",
+    "exampleZh": "一大群人在外面等待。",
     "group": "Core 3"
   },
   {
@@ -11816,8 +11816,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.ɒpә'ziʃәn/",
     "meaningZh": "反對, 敵對, 相反, 在野黨",
-    "example": "The editor prepared a short report on opposition before Friday.",
-    "exampleZh": "編輯在星期五前準備了一份關於反對這方面的短報告。",
+    "example": "The plan faced strong opposition.",
+    "exampleZh": "這項計畫遭到強烈反對。",
     "group": "Core 3"
   },
   {
@@ -11826,8 +11826,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'peimәnt/",
     "meaningZh": "付款, 支付的款項(或實物), 償還, 報應, 懲罰",
-    "example": "The payment was higher than expected.",
-    "exampleZh": "付款比預期更高。",
+    "example": "Payment is due by Friday.",
+    "exampleZh": "付款期限到星期五。",
     "group": "Core 3"
   },
   {
@@ -11836,8 +11836,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/brɒ:d/",
     "meaningZh": "寬廣的, 遼闊的, 廣大的, 顯著的；寬闊地；寬闊部分",
-    "example": "The guide reviewed the broad case after the visit.",
-    "exampleZh": "嚮導在拜訪後檢視了這個寬廣的案例。",
+    "example": "The road became broad near the river.",
+    "exampleZh": "道路到了河邊變得寬闊。",
     "group": "Core 3"
   },
   {
@@ -11846,8 +11846,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kɒli:g/",
     "meaningZh": "同事, 同僚",
-    "example": "The editor prepared a short report on colleague before the storm.",
-    "exampleZh": "編輯在暴風雨前準備了一份關於同事這方面的短報告。",
+    "example": "My colleague helped me finish the report.",
+    "exampleZh": "我的同事幫我完成報告。",
     "group": "Core 3"
   },
   {
@@ -11856,8 +11856,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'kwaiәt/",
     "meaningZh": "安靜, 閒適, 平靜；安靜的, 靜止的, 寂靜的, 樸素的, 從容的, 暗中的；平靜下來；使平靜, 使平息, 使安心, 安慰",
-    "example": "The assistant led a class discussion about quiet after the training.",
-    "exampleZh": "助理在訓練後帶領全班討論安靜。",
+    "example": "The library is quiet today.",
+    "exampleZh": "圖書館今天很安靜。",
     "group": "Core 3"
   },
   {
@@ -11866,8 +11866,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/fail/",
     "meaningZh": "檔案, 公文箱, 文件夾, 文件, 卷宗, 銼刀；列隊行進, 用銼刀做；歸檔, 申請, 銼, 琢磨",
-    "example": "The researcher gave a brief talk about file before sunset.",
-    "exampleZh": "研究員在日落前做了一段關於檔案這方面的簡短分享。",
+    "example": "Please send me the file.",
+    "exampleZh": "請把檔案寄給我。",
     "group": "Core 3"
   },
   {
@@ -11876,8 +11876,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/fæn/",
     "meaningZh": "風扇, 迷, 狂熱者, 愛好者；煽動, 刺激, 吹拂；飄動, 成扇形散開",
-    "example": "The fan looked beautiful before the deadline.",
-    "exampleZh": "風扇在期限前看起來很美。",
+    "example": "The fan cooled the room.",
+    "exampleZh": "電風扇讓房間涼了下來。",
     "group": "Core 3"
   },
   {
@@ -11886,8 +11886,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/gest/",
     "meaningZh": "客人, 來賓, 旅客",
-    "example": "A guest joined the trip on time.",
-    "exampleZh": "一位客人準時參加了旅程。",
+    "example": "Each guest received a gift.",
+    "exampleZh": "每位客人都收到一份禮物。",
     "group": "Core 3"
   },
   {
@@ -11896,8 +11896,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/blɒk/",
     "meaningZh": "街區, 木塊, 石塊, 塊；阻塞, 封鎖, 使成塊狀",
-    "example": "The nurse prepared a short report on block before the interview.",
-    "exampleZh": "護理師在面試前準備了一份關於街區這方面的短報告。",
+    "example": "They live on the next block.",
+    "exampleZh": "他們住在下一個街區。",
     "group": "Core 3"
   },
   {
@@ -11906,8 +11906,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/eg/",
     "meaningZh": "蛋, 卵；挑唆, 煽動, 調蛋黃",
-    "example": "The guide prepared a short report on egg before the weekend.",
-    "exampleZh": "嚮導在週末前準備了一份關於蛋這方面的短報告。",
+    "example": "She boiled an egg for breakfast.",
+    "exampleZh": "她早餐煮了一顆蛋。",
     "group": "Core 3"
   },
   {
@@ -11916,8 +11916,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/waild/",
     "meaningZh": "荒野, 荒地；野性的, 野蠻的, 野生的, 失控的, 任性的, 雜亂的, 輕率的, 狂熱的, 瘋狂的；狂暴地, 失控地",
-    "example": "The coach led a class discussion about wild after the presentation.",
-    "exampleZh": "教練在簡報後帶領全班討論荒野。",
+    "example": "Wild animals live in the forest.",
+    "exampleZh": "野生動物住在森林裡。",
     "group": "Core 3"
   },
   {
@@ -11926,8 +11926,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ju:θ/",
     "meaningZh": "年輕, 青年時代, 青年們, 青春",
-    "example": "The teacher wrote a short note about youth after the festival.",
-    "exampleZh": "老師在節慶後寫了一段關於年輕這方面的短筆記。",
+    "example": "Youth programs help local students.",
+    "exampleZh": "青年計畫幫助當地學生。",
     "group": "Core 3"
   },
   {
@@ -11936,8 +11936,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'ri:dʒәnәl/",
     "meaningZh": "地方的, 地域性的",
-    "example": "The regional road led to a small village.",
-    "exampleZh": "那條地方的路通往小村莊。",
+    "example": "The company opened a regional office.",
+    "exampleZh": "公司開設了一間區域辦公室。",
     "group": "Core 3"
   },
   {
@@ -11946,8 +11946,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'indʒәri/",
     "meaningZh": "傷害, 侮辱",
-    "example": "The injury made the presentation difficult after the holiday.",
-    "exampleZh": "傷害讓假期後的簡報變得困難。",
+    "example": "The player recovered from his injury.",
+    "exampleZh": "那名球員從傷勢中恢復。",
     "group": "Core 3"
   },
   {
@@ -11956,8 +11956,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/kæʃ/",
     "meaningZh": "現金；兌現",
-    "example": "The assistant prepared a short report on cash before the trip.",
-    "exampleZh": "助理在旅程前準備了一份關於現金這方面的短報告。",
+    "example": "Do you have enough cash?",
+    "exampleZh": "你有足夠的現金嗎？",
     "group": "Core 3"
   },
   {
@@ -11966,8 +11966,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/tuә/",
     "meaningZh": "旅遊, 觀光旅行, 任期；旅行, 周遊, 巡迴；周遊, 觀光, 遊歷, 使巡迴演出",
-    "example": "The visitor gave a brief talk about tour before the trip.",
-    "exampleZh": "訪客在旅程前做了一段關於旅遊這方面的簡短分享。",
+    "example": "We joined a city tour.",
+    "exampleZh": "我們參加了市區導覽。",
     "group": "Core 3"
   },
   {
@@ -11976,8 +11976,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/mju:'ziәm/",
     "meaningZh": "博物館",
-    "example": "The artist gave a brief talk about museum before the weekend.",
-    "exampleZh": "藝術家在週末前做了一段關於博物館這方面的簡短分享。",
+    "example": "The museum opens at ten.",
+    "exampleZh": "博物館十點開門。",
     "group": "Core 3"
   },
   {
@@ -11986,8 +11986,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/spred/",
     "meaningZh": "傳播, 散佈, 伸展；雙唇展開的, 伸展的；展開, 鋪開, 傳播, 推廣, 伸出, 塗, 敷, 延伸；展開, 擴大, 傳開, 延伸",
-    "example": "The artist prepared a short report on spread before the weekend.",
-    "exampleZh": "藝術家在週末前準備了一份關於傳播這方面的短報告。",
+    "example": "The fire began to spread.",
+    "exampleZh": "火勢開始蔓延。",
     "group": "Core 3"
   },
   {
@@ -11996,8 +11996,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'mә:dә/",
     "meaningZh": "謀殺；謀殺, 損毀, 破壞；犯殺人罪",
-    "example": "The assistant gave a brief talk about murder before the trip.",
-    "exampleZh": "助理在旅程前做了一段關於謀殺這方面的簡短分享。",
+    "example": "The novel begins with a murder.",
+    "exampleZh": "這本小說以一起謀殺案開場。",
     "group": "Core 3"
   },
   {
@@ -12006,8 +12006,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'prɒmis/",
     "meaningZh": "諾言, 約定的事情, 有指望；允諾, 約定, 預示；允諾, 有前途, 有指望",
-    "example": "The teacher led a class discussion about promise after the review.",
-    "exampleZh": "老師在檢查後帶領全班討論諾言。",
+    "example": "She made a promise to return.",
+    "exampleZh": "她承諾會回來。",
     "group": "Core 3"
   },
   {
@@ -12016,8 +12016,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/rәul/",
     "meaningZh": "卷, 滾動, 名單, 案卷, 壓路機；滾, 滾動, 飄流, 起伏, 卷, 繞；使滾動, 卷, 繞",
-    "example": "The visitor gave a brief talk about roll before the trip.",
-    "exampleZh": "訪客在旅程前做了一段關於卷這方面的簡短分享。",
+    "example": "Roll the ball gently.",
+    "exampleZh": "輕輕把球滾出去。",
     "group": "Core 3"
   },
   {
@@ -12026,8 +12026,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/ә:n/",
     "meaningZh": "賺得, 獲得, 博得",
-    "example": "We need to earn the room carefully before breakfast.",
-    "exampleZh": "我們需要在早餐前仔細賺得房間。",
+    "example": "He works hard to earn money.",
+    "exampleZh": "他努力工作賺錢。",
     "group": "Core 3"
   },
   {
@@ -12036,8 +12036,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/di'strɒi/",
     "meaningZh": "破壞, 毀壞, 消滅",
-    "example": "The rule can destroy unnecessary steps.",
-    "exampleZh": "這條規則可以破壞不必要的步驟。",
+    "example": "The storm may destroy the old bridge.",
+    "exampleZh": "暴風雨可能摧毀那座老橋。",
     "group": "Core 3"
   },
   {
@@ -12046,8 +12046,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/kæmp/",
     "meaningZh": "露營, 帳篷；露營, 紮營；使紮營",
-    "example": "The doctor wrote a short note about camp after the presentation.",
-    "exampleZh": "醫生在簡報後寫了一段關於露營這方面的短筆記。",
+    "example": "We stayed at a summer camp.",
+    "exampleZh": "我們住在夏令營。",
     "group": "Core 3"
   },
   {
@@ -12056,8 +12056,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'fi:meil/",
     "meaningZh": "女性, 女人, 雌性動物；女性的, 女子的",
-    "example": "The researcher led a class discussion about female after the discussion.",
-    "exampleZh": "研究員在討論後帶領全班討論女性。",
+    "example": "The female doctor led the team.",
+    "exampleZh": "那位女醫師帶領了團隊。",
     "group": "Core 3"
   },
   {
@@ -12066,8 +12066,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/mɑ:k/",
     "meaningZh": "標誌, 分數, 馬克, 痕跡, 斑點, 靶子, 刻度, 記號, 符號, 戳記, 標準, 起跑線；做標記於, 留意, 打分數, 表明, 標誌, 記錄；作記號, 記得分",
-    "example": "The researcher explained mark during class before Friday.",
-    "exampleZh": "研究員在星期五前的課堂上解釋了標誌。",
+    "example": "Please mark the correct answer.",
+    "exampleZh": "請標出正確答案。",
     "group": "Core 3"
   },
   {
@@ -12076,8 +12076,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/trʌst/",
     "meaningZh": "信任, 信賴, 相信, 受託, 職責, 信心, 托拉斯；信託的, 托拉斯的；信賴, 信任, 相信, 盼望, 賒賣給；相信, 信賴, 依靠",
-    "example": "The neighbor explained trust during class before the interview.",
-    "exampleZh": "鄰居在面試前的課堂上解釋了信任。",
+    "example": "Trust takes time to build.",
+    "exampleZh": "信任需要時間建立。",
     "group": "Core 3"
   },
   {
@@ -12086,8 +12086,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/sait/",
     "meaningZh": "景觀, 視力, 眼界, 閱讀, 見解, 意見；看見, 瞄準；瞄準, 觀看；即席的, 見票即付的",
-    "example": "The neighbor gave a brief talk about sight before the deadline.",
-    "exampleZh": "鄰居在期限前做了一段關於景觀這方面的簡短分享。",
+    "example": "The sea came into sight.",
+    "exampleZh": "海出現在眼前。",
     "group": "Core 3"
   },
   {
@@ -12096,8 +12096,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/kәn'fә:m/",
     "meaningZh": "證實, 確定, 批准, 使鞏固",
-    "example": "Please confirm the lesson when you are ready.",
-    "exampleZh": "準備好時，請證實課程。",
+    "example": "Please confirm your address.",
+    "exampleZh": "請確認你的地址。",
     "group": "Core 3"
   },
   {
@@ -12106,8 +12106,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'fɑ:mә/",
     "meaningZh": "農夫, 農場主",
-    "example": "The farmer worked carefully with the doctor.",
-    "exampleZh": "那位農夫仔細地和醫生合作。",
+    "example": "The farmer grows rice.",
+    "exampleZh": "那位農夫種稻米。",
     "group": "Core 3"
   },
   {
@@ -12116,8 +12116,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/raid/",
     "meaningZh": "騎馬, 乘坐, 乘車, 搭便車；騎, 乘坐, 壓迫, 控制；騎馬, 乘車, 漂游",
-    "example": "The assistant prepared a short report on ride before the trip.",
-    "exampleZh": "助理在旅程前準備了一份關於騎馬這方面的短報告。",
+    "example": "Can you ride a bicycle?",
+    "exampleZh": "你會騎腳踏車嗎？",
     "group": "Core 3"
   },
   {
@@ -12126,8 +12126,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/dәu'mestik/",
     "meaningZh": "家庭的, 國內的, 馴養的",
-    "example": "A domestic situation required extra care before the trip.",
-    "exampleZh": "一個家庭的情況在旅程前需要額外處理。",
+    "example": "Domestic flights leave from this terminal.",
+    "exampleZh": "國內航班從這個航廈出發。",
     "group": "Core 3"
   },
   {
@@ -12146,8 +12146,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/weiv/",
     "meaningZh": "波, 波浪, 波動, 起伏, 高潮, 潮湧, 揮手致意, (氣壓)突變；波動, 飄動, 揮手示意, 起伏；使波動, 使飄揚, 揮舞, 使成波浪形",
-    "example": "The driver gave a brief talk about wave before the call.",
-    "exampleZh": "司機在通話前做了一段關於波這方面的簡短分享。",
+    "example": "She gave me a friendly wave.",
+    "exampleZh": "她友善地向我揮手。",
     "group": "Core 3"
   },
   {
@@ -12156,8 +12156,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'feimәs/",
     "meaningZh": "出名的, 極好的",
-    "example": "A famous situation required extra care before the call.",
-    "exampleZh": "一個出名的情況在通話前需要額外處理。",
+    "example": "The city is famous for its night market.",
+    "exampleZh": "這座城市以夜市聞名。",
     "group": "Core 3"
   },
   {
@@ -12166,8 +12166,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'endʒin/",
     "meaningZh": "引擎, 發動機, 機車；安裝發動機於",
-    "example": "The doctor prepared a short report on engine before the trip.",
-    "exampleZh": "醫生在旅程前準備了一份關於引擎這方面的短報告。",
+    "example": "The engine started quietly.",
+    "exampleZh": "引擎安靜地啟動了。",
     "group": "Core 3"
   },
   {
@@ -12176,8 +12176,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/im'pɒsәbl/",
     "meaningZh": "不可能的, 難以置信的, 令人無法忍受的",
-    "example": "An impossible situation required extra care before breakfast.",
-    "exampleZh": "一個不可能的情況在早餐前需要額外處理。",
+    "example": "This task is not impossible.",
+    "exampleZh": "這項任務並非不可能。",
     "group": "Core 3"
   },
   {
@@ -12186,8 +12186,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/leŋθ/",
     "meaningZh": "長度, 長, 期間, 一段",
-    "example": "The researcher gave a brief talk about length before sunset.",
-    "exampleZh": "研究員在日落前做了一段關於長度這方面的簡短分享。",
+    "example": "Measure the length of the table.",
+    "exampleZh": "量一下桌子的長度。",
     "group": "Core 3"
   },
   {
@@ -12196,8 +12196,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/pɑ:k/",
     "meaningZh": "公園, 停車處；停車, 置於；停車",
-    "example": "The editor explained park during class before the review.",
-    "exampleZh": "編輯在檢查前的課堂上解釋了公園。",
+    "example": "We walked through the park.",
+    "exampleZh": "我們穿過公園。",
     "group": "Core 3"
   },
   {
@@ -12206,8 +12206,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'futbɒ:l/",
     "meaningZh": "足球, 橄欖球",
-    "example": "The guide led a class discussion about football after the lesson.",
-    "exampleZh": "嚮導在課程後帶領全班討論足球。",
+    "example": "He plays football after school.",
+    "exampleZh": "他放學後踢足球。",
     "group": "Core 3"
   },
   {
@@ -12216,8 +12216,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'viktәri/",
     "meaningZh": "勝利, 戰勝, 克服",
-    "example": "The coach led a class discussion about victory after the workshop.",
-    "exampleZh": "教練在工作坊後帶領全班討論勝利。",
+    "example": "The team celebrated its victory.",
+    "exampleZh": "球隊慶祝勝利。",
     "group": "Core 3"
   },
   {
@@ -12226,8 +12226,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/streindʒ/",
     "meaningZh": "奇怪的, 陌生的, 生疏的, 不熟悉的, 不可思議的, 外行的, 外地的, 異鄉的",
-    "example": "The designer reviewed the strange case after the review.",
-    "exampleZh": "設計師在檢查後檢視了這個奇怪的案例。",
+    "example": "I heard a strange sound outside.",
+    "exampleZh": "我聽到外面有奇怪的聲音。",
     "group": "Core 3"
   },
   {
@@ -12236,8 +12236,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/liŋk/",
     "meaningZh": "環, 連結物, 鏈接, 火把；連結, 聯合, 挽住；連接起來",
-    "example": "The nurse explained link during class before the meeting.",
-    "exampleZh": "護理師在會議前的課堂上解釋了環。",
+    "example": "Click the link to open the page.",
+    "exampleZh": "點擊連結打開頁面。",
     "group": "Core 3"
   },
   {
@@ -12246,8 +12246,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'seʃәn/",
     "meaningZh": "期間, 開庭期, 會議, 學期",
-    "example": "The guide gave a brief talk about session before the weekend.",
-    "exampleZh": "嚮導在週末前做了一段關於期間這方面的簡短分享。",
+    "example": "The training session starts soon.",
+    "exampleZh": "訓練課程很快就開始。",
     "group": "Core 3"
   },
   {
@@ -12256,8 +12256,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/i'senʃәl/",
     "meaningZh": "要素, 要點, 本質；必要的, 重要的, 本質的",
-    "example": "The teacher wrote a short note about essential after the review.",
-    "exampleZh": "老師在檢查後寫了一段關於要素這方面的短筆記。",
+    "example": "Clean water is essential for life.",
+    "exampleZh": "乾淨的水對生命至關重要。",
     "group": "Core 3"
   },
   {
@@ -12266,8 +12266,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/prә'pәuz/",
     "meaningZh": "計劃, 打算, 建議, 提議, 求(婚)；打算, 求婚",
-    "example": "We need to propose the garden carefully before the holiday.",
-    "exampleZh": "我們需要在假期前仔細計劃花園。",
+    "example": "I propose a short break.",
+    "exampleZh": "我提議短暫休息。",
     "group": "Core 3"
   },
   {
@@ -12276,8 +12276,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'lɑ:dʒli/",
     "meaningZh": "大量地, 很多地, 大半地",
-    "example": "The coach worked largely through the report.",
-    "exampleZh": "教練大量地完成了報告。",
+    "example": "The plan was largely successful.",
+    "exampleZh": "這個計畫大致上成功了。",
     "group": "Core 3"
   },
   {
@@ -12286,8 +12286,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'pɒsәbli/",
     "meaningZh": "可能, 也許",
-    "example": "The researcher worked possibly through the lesson.",
-    "exampleZh": "研究員可能地完成了課程。",
+    "example": "This could possibly work.",
+    "exampleZh": "這也許行得通。",
     "group": "Core 3"
   },
   {
@@ -12296,8 +12296,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/daut/",
     "meaningZh": "懷疑, 疑惑；懷疑, 不信",
-    "example": "The artist explained doubt during class before the exam.",
-    "exampleZh": "藝術家在考試前的課堂上解釋了懷疑。",
+    "example": "I have no doubt about her ability.",
+    "exampleZh": "我毫不懷疑她的能力。",
     "group": "Core 3"
   },
   {
@@ -12306,8 +12306,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'kɒpi/",
     "meaningZh": "副本, 摹仿, 一冊；複印, 抄襲, 複製；將幾個文件合併成一個文件, 以及將文件傳至外設或在設備之間傳送",
-    "example": "The doctor prepared a short report on copy before the trip.",
-    "exampleZh": "醫生在旅程前準備了一份關於副本這方面的短報告。",
+    "example": "I made a copy of the file.",
+    "exampleZh": "我複製了一份檔案。",
     "group": "Core 3"
   },
   {
@@ -12316,8 +12316,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ri'pi:t/",
     "meaningZh": "重複, 反覆；重做, 重複, 複述, 使再現, 複製；重複",
-    "example": "The nurse explained repeat during class before the review.",
-    "exampleZh": "護理師在檢查前的課堂上解釋了重複。",
+    "example": "Please repeat the question.",
+    "exampleZh": "請重複一次問題。",
     "group": "Core 3"
   },
   {
@@ -12326,8 +12326,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'gæðә/",
     "meaningZh": "集合, 聚集；聚集, 集合, 漸增；使聚集, 蒐集, 積聚",
-    "example": "The visitor led a class discussion about gather after the trip.",
-    "exampleZh": "訪客在旅程後帶領全班討論集合。",
+    "example": "Students gather in the hall.",
+    "exampleZh": "學生們在大廳集合。",
     "group": "Core 3"
   },
   {
@@ -12336,8 +12336,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/dʒʌmp/",
     "meaningZh": "跳躍, 跳動, 暴漲, 驚跳；跳躍, 躍過, 突升, 使跳躍；跳躍, 跳, 跳動, 暴漲",
-    "example": "The designer led a class discussion about jump after the debate.",
-    "exampleZh": "設計師在辯論後帶領全班討論跳躍。",
+    "example": "The child can jump very high.",
+    "exampleZh": "那個孩子可以跳得很高。",
     "group": "Core 3"
   },
   {
@@ -12346,8 +12346,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'bɒ:dә/",
     "meaningZh": "邊緣, 邊境, 邊界, 花壇；在...上鑲邊, 接近；接界, 近似",
-    "example": "The teacher gave a brief talk about border before the rehearsal.",
-    "exampleZh": "老師在排練前做了一段關於邊緣這方面的簡短分享。",
+    "example": "The river forms the border.",
+    "exampleZh": "這條河形成了邊界。",
     "group": "Core 3"
   },
   {
@@ -12356,8 +12356,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'raitiŋ/",
     "meaningZh": "書寫, 著作, 筆跡, 作品",
-    "example": "The visitor explained writing during class before the weekend.",
-    "exampleZh": "訪客在週末前的課堂上解釋了書寫。",
+    "example": "Her writing is clear.",
+    "exampleZh": "她的文字很清楚。",
     "group": "Core 3"
   },
   {
@@ -12366,8 +12366,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'rezidәnt/",
     "meaningZh": "居民, 常駐程序, 居住者, 留鳥；居留的, 定居的",
-    "example": "The doctor wrote a short note about resident after the training.",
-    "exampleZh": "醫生在訓練後寫了一段關於居民這方面的短筆記。",
+    "example": "Each resident received a notice.",
+    "exampleZh": "每位居民都收到通知。",
     "group": "Core 3"
   },
   {
@@ -12376,8 +12376,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/'pækidʒ/",
     "meaningZh": "包裹, 套裝軟件, 包, 包裝用物, 程序包；包裝, 打包；一攬子的",
-    "example": "The editor led a class discussion about package after the workshop.",
-    "exampleZh": "編輯在工作坊後帶領全班討論包裹。",
+    "example": "The package arrived this morning.",
+    "exampleZh": "包裹今天早上到了。",
     "group": "Core 3"
   },
   {
@@ -12386,8 +12386,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ais/",
     "meaningZh": "冰, 冰淇淋, 糖衣, 冷若冰霜, 矜持, 賄賂；使結冰, 冰鎮, 覆以糖衣；結冰",
-    "example": "The driver prepared a short report on ice before the call.",
-    "exampleZh": "司機在通話前準備了一份關於冰這方面的短報告。",
+    "example": "The ice melted in the sun.",
+    "exampleZh": "冰在陽光下融化了。",
     "group": "Core 3"
   },
   {
@@ -12396,8 +12396,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/li:g/",
     "meaningZh": "同盟, 聯盟, 盟約；組聯盟, (使)加盟",
-    "example": "The nurse prepared a short report on league before the deadline.",
-    "exampleZh": "護理師在期限前準備了一份關於同盟這方面的短報告。",
+    "example": "Their team joined a new league.",
+    "exampleZh": "他們的隊伍加入了新的聯盟。",
     "group": "Core 3"
   },
   {
@@ -12406,8 +12406,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ri'spekt/",
     "meaningZh": "尊敬, 尊重, 問候；尊敬, 注意, 遵守",
-    "example": "The engineer prepared a short report on respect before sunset.",
-    "exampleZh": "工程師在日落前準備了一份關於尊敬這方面的短報告。",
+    "example": "Children should learn respect.",
+    "exampleZh": "孩子應該學會尊重。",
     "group": "Core 3"
   },
   {
@@ -12416,8 +12416,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'deindʒәrәs/",
     "meaningZh": "危險的",
-    "example": "The dangerous plan helped the team move forward after the trip.",
-    "exampleZh": "危險的計畫在旅程後幫助團隊往前推進。",
+    "example": "That road is dangerous at night.",
+    "exampleZh": "那條路晚上很危險。",
     "group": "Core 3"
   },
   {
@@ -12426,8 +12426,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/teip/",
     "meaningZh": "帶子, 錄音帶, 磁帶, 窄帶, 捲尺；以帶子綁起, 測量, 錄音",
-    "example": "The editor led a class discussion about tape after the trip.",
-    "exampleZh": "編輯在旅程後帶領全班討論帶子。",
+    "example": "Use tape to seal the box.",
+    "exampleZh": "用膠帶封住箱子。",
     "group": "Core 3"
   },
   {
@@ -12436,8 +12436,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/rein/",
     "meaningZh": "雨, 下雨, 雨天；下雨；使大量落下",
-    "example": "We walked near the rain after the festival.",
-    "exampleZh": "我們在節慶後到雨附近散步。",
+    "example": "Heavy rain flooded the street.",
+    "exampleZh": "大雨淹沒了街道。",
     "group": "Core 3"
   },
   {
@@ -12446,8 +12446,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'mɑ:stә. 'mæstә/",
     "meaningZh": "主人, 碩士, 大師, 母機；主人的, 主要的；征服, 控制, 精通",
-    "example": "The master spoke with the editor before the review.",
-    "exampleZh": "那位主人在檢查前和編輯說話。",
+    "example": "She wants to master English.",
+    "exampleZh": "她想精通英文。",
     "group": "Core 3"
   },
   {
@@ -12456,8 +12456,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/in'kri:siŋli/",
     "meaningZh": "逐漸地, 漸增地",
-    "example": "The teacher worked increasingly through the device.",
-    "exampleZh": "老師逐漸地完成了裝置。",
+    "example": "The problem is becoming increasingly serious.",
+    "exampleZh": "這個問題正變得越來越嚴重。",
     "group": "Core 3"
   },
   {
@@ -12466,8 +12466,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'dʌzn/",
     "meaningZh": "打, 十二個；一打的",
-    "example": "The student led a class discussion about dozen after the rehearsal.",
-    "exampleZh": "學生在排練後帶領全班討論打。",
+    "example": "She bought a dozen eggs.",
+    "exampleZh": "她買了一打雞蛋。",
     "group": "Core 3"
   },
   {
@@ -12476,8 +12476,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/dju:/",
     "meaningZh": "應得的東西, 應付款；到期的, 應得的, 應付的, 約定的",
-    "example": "The neighbor gave a brief talk about due before the interview.",
-    "exampleZh": "鄰居在面試前做了一段關於應得的東西這方面的簡短分享。",
+    "example": "The report is due tomorrow.",
+    "exampleZh": "報告明天到期。",
     "group": "Core 3"
   },
   {
@@ -12486,8 +12486,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'bɒtәm/",
     "meaningZh": "底部；底部的；給...裝底, 查明真相；到達底部, 建立基礎",
-    "example": "The engineer explained bottom during class before Friday.",
-    "exampleZh": "工程師在星期五前的課堂上解釋了底部。",
+    "example": "The keys are at the bottom of the bag.",
+    "exampleZh": "鑰匙在包包底部。",
     "group": "Core 3"
   },
   {
@@ -12496,8 +12496,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/dres/",
     "meaningZh": "服裝, 覆蓋物；穿著；給...穿衣, 整理",
-    "example": "The editor gave a brief talk about dress before the review.",
-    "exampleZh": "編輯在檢查前做了一段關於服裝這方面的簡短分享。",
+    "example": "She wore a red dress.",
+    "exampleZh": "她穿了一件紅色洋裝。",
     "group": "Core 3"
   },
   {
@@ -12506,8 +12506,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'fәutәgrɑ:f/",
     "meaningZh": "相片, 照片, 逼真的描繪；照相, 攝影",
-    "example": "The driver led a class discussion about photograph after the lesson.",
-    "exampleZh": "司機在課程後帶領全班討論相片。",
+    "example": "This photograph is very old.",
+    "exampleZh": "這張照片很舊。",
     "group": "Core 3"
   },
   {
@@ -12516,8 +12516,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'sentәns/",
     "meaningZh": "句子, 命題, 宣判；宣判, 判決",
-    "example": "The engineer explained sentence during class before the holiday.",
-    "exampleZh": "工程師在假期前的課堂上解釋了句子。",
+    "example": "This sentence is easy to understand.",
+    "exampleZh": "這個句子很容易理解。",
     "group": "Core 3"
   },
   {
@@ -12526,8 +12526,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ә'keiʒәn/",
     "meaningZh": "場合, 時機, 機會, 誘因, 理由；惹起, 引起",
-    "example": "The visitor prepared a short report on occasion before sunset.",
-    "exampleZh": "訪客在日落前準備了一份關於場合這方面的短報告。",
+    "example": "This is a special occasion.",
+    "exampleZh": "這是一個特別的場合。",
     "group": "Core 3"
   },
   {
@@ -12536,8 +12536,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'i:stәn/",
     "meaningZh": "東方人, 東正教徒；東方的, 向東的, 自東的",
-    "example": "The eastern coast is famous for its sunrise.",
-    "exampleZh": "東部海岸以日出聞名。",
+    "example": "The eastern sky turned pink.",
+    "exampleZh": "東方的天空變成粉紅色。",
     "group": "Core 3"
   },
   {
@@ -12546,8 +12546,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'sepәreit/",
     "meaningZh": "獨立件, 抽印本；分開的, 各別的, 單獨的, 分隔的；分開, 隔開, 分居；使分離, 使分開, 區分, 使分居",
-    "example": "The editor led a class discussion about separate after the trip.",
-    "exampleZh": "編輯在旅程後帶領全班討論獨立件。",
+    "example": "Please keep the files separate.",
+    "exampleZh": "請把檔案分開放。",
     "group": "Core 3"
   },
   {
@@ -12556,8 +12556,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/bә:n/",
     "meaningZh": "燒, 燒燬, 燒傷；燃燒, 發熱, 燒燬；燒傷, 烙印",
-    "example": "The visit helped us burn the schedule more clearly.",
-    "exampleZh": "拜訪幫助我們更清楚地燒時程。",
+    "example": "Do not burn the paper.",
+    "exampleZh": "不要燒掉這張紙。",
     "group": "Core 3"
   },
   {
@@ -12566,8 +12566,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ti:/",
     "meaningZh": "茶, 茶葉",
-    "example": "She put the tea on a clean plate.",
-    "exampleZh": "她把茶放在乾淨的盤子上。",
+    "example": "I drink tea every morning.",
+    "exampleZh": "我每天早上喝茶。",
     "group": "Core 3"
   },
   {
@@ -12576,8 +12576,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/pri'fә:/",
     "meaningZh": "寧可, 較喜歡, 提出",
-    "example": "We need to prefer the display carefully before the trip.",
-    "exampleZh": "我們需要在旅程前仔細寧可展示。",
+    "example": "I prefer tea to coffee.",
+    "exampleZh": "比起咖啡，我更喜歡茶。",
     "group": "Core 3"
   },
   {
@@ -12586,8 +12586,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/mis'teik/",
     "meaningZh": "錯誤, 誤會；犯錯, 誤認；誤解, 弄錯",
-    "example": "The teacher wrote a short note about mistake after the trial.",
-    "exampleZh": "老師在試驗後寫了一段關於錯誤這方面的短筆記。",
+    "example": "Everyone can make a mistake.",
+    "exampleZh": "每個人都可能犯錯。",
     "group": "Core 3"
   },
   {
@@ -12596,8 +12596,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / n",
     "pronunciation": "/in'vait/",
     "meaningZh": "邀請, 請求, 引起, 招致；邀請",
-    "example": "The lesson helped us invite the garden more clearly.",
-    "exampleZh": "課程幫助我們更清楚地邀請花園。",
+    "example": "We will invite her to dinner.",
+    "exampleZh": "我們會邀請她來吃晚餐。",
     "group": "Core 3"
   },
   {
@@ -12606,8 +12606,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ru:t/",
     "meaningZh": "路徑, 途徑, 路線；確定路線, 按規定路線發送",
-    "example": "The guide led a class discussion about route after the lesson.",
-    "exampleZh": "嚮導在課程後帶領全班討論路徑。",
+    "example": "This route is faster.",
+    "exampleZh": "這條路線比較快。",
     "group": "Core 3"
   },
   {
@@ -12616,8 +12616,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'eiprәl/",
     "meaningZh": "四月",
-    "example": "The teacher wrote a short note about april after the review.",
-    "exampleZh": "老師在檢查後寫了一段關於四月這方面的短筆記。",
+    "example": "April is usually warm here.",
+    "exampleZh": "這裡四月通常很溫暖。",
     "group": "Core 3"
   },
   {
@@ -12626,8 +12626,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ә'piәrәns/",
     "meaningZh": "出現, 露面, 外觀, 外表, 出版",
-    "example": "Her appearance on stage surprised the crowd.",
-    "exampleZh": "她在舞台上露面讓觀眾很驚訝。",
+    "example": "His appearance changed after the haircut.",
+    "exampleZh": "剪髮後他的外表變了。",
     "group": "Core 3"
   },
   {
@@ -12636,8 +12636,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/bridʒ/",
     "meaningZh": "橋, 艦橋, 橋樑, 橋牌；架橋於, 跨越",
-    "example": "The visitor prepared a short report on bridge before the trip.",
-    "exampleZh": "訪客在旅程前準備了一份關於橋這方面的短報告。",
+    "example": "The bridge crosses the river.",
+    "exampleZh": "這座橋橫跨河流。",
     "group": "Core 3"
   },
   {
@@ -12646,8 +12646,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/eim/",
     "meaningZh": "目標, 瞄準, 擊中目標的能力；對準目標, 致力, 打算；瞄準；應用接口模塊, 醫學人工智能, 相聯索引法, 異步接口模塊；自動化信息管理, 自動化綜合製造, 自動化庫存管理",
-    "example": "The engineer prepared a short report on aim before Friday.",
-    "exampleZh": "工程師在星期五前準備了一份關於目標這方面的短報告。",
+    "example": "Our aim is to save money.",
+    "exampleZh": "我們的目標是省錢。",
     "group": "Core 3"
   },
   {
@@ -12656,8 +12656,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'wiliŋ/",
     "meaningZh": "樂意的, 自願的, 甘願的",
-    "example": "A willing situation required extra care before the meeting.",
-    "exampleZh": "一個樂意的情況在會議前需要額外處理。",
+    "example": "I am willing to help.",
+    "exampleZh": "我願意幫忙。",
     "group": "Core 3"
   },
   {
@@ -12666,8 +12666,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/'deili/",
     "meaningZh": "每日的, 日常的；每日地, 日常地；日報",
-    "example": "A daily situation required extra care before noon.",
-    "exampleZh": "一個每日的情況在中午前需要額外處理。",
+    "example": "I read the news daily.",
+    "exampleZh": "我每天看新聞。",
     "group": "Core 3"
   },
   {
@@ -12686,8 +12686,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'wʌndәful/",
     "meaningZh": "令人驚奇的, 奇妙的, 極好的",
-    "example": "The researcher reviewed the wonderful case after the trial.",
-    "exampleZh": "研究員在試驗後檢視了這個令人驚奇的案例。",
+    "example": "We had a wonderful dinner.",
+    "exampleZh": "我們吃了一頓很棒的晚餐。",
     "group": "Core 3"
   },
   {
@@ -12696,8 +12696,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/sә:tʃ/",
     "meaningZh": "搜尋, 查究；搜尋, 搜查, 探求, 調查, 搜索",
-    "example": "The artist prepared a short report on search before the exam.",
-    "exampleZh": "藝術家在考試前準備了一份關於搜尋這方面的短報告。",
+    "example": "The search continued all night.",
+    "exampleZh": "搜尋持續了一整晚。",
     "group": "Core 3"
   },
   {
@@ -12706,8 +12706,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/dʒu:n/",
     "meaningZh": "六月",
-    "example": "The assistant wrote a short note about june after the discussion.",
-    "exampleZh": "助理在討論後寫了一段關於六月這方面的短筆記。",
+    "example": "June is the start of summer.",
+    "exampleZh": "六月是夏天的開始。",
     "group": "Core 3"
   },
   {
@@ -12716,8 +12716,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/gɑ:d/",
     "meaningZh": "守衛者, 警戒, 護衛隊, 防護裝置；保衛, 看守, 當心；防止, 警惕, 警衛, 看守",
-    "example": "A guard joined the review on time.",
-    "exampleZh": "一位守衛者準時參加了檢查。",
+    "example": "The guard checked my bag.",
+    "exampleZh": "警衛檢查了我的包包。",
     "group": "Core 3"
   },
   {
@@ -12726,8 +12726,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/det/",
     "meaningZh": "債務, 罪過",
-    "example": "The assistant gave a brief talk about debt before the trip.",
-    "exampleZh": "助理在旅程前做了一段關於債務這方面的簡短分享。",
+    "example": "He paid off his debt.",
+    "exampleZh": "他還清了債務。",
     "group": "Core 3"
   },
   {
@@ -12736,8 +12736,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'telifәun/",
     "meaningZh": "電話, 電話機；打電話",
-    "example": "The assistant gave a brief talk about telephone before the trip.",
-    "exampleZh": "助理在旅程前做了一段關於電話這方面的簡短分享。",
+    "example": "The telephone rang twice.",
+    "exampleZh": "電話響了兩次。",
     "group": "Core 3"
   },
   {
@@ -12746,8 +12746,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/di'zaiә/",
     "meaningZh": "慾望, 要求；想要, 請求；渴望",
-    "example": "The doctor wrote a short note about desire after the presentation.",
-    "exampleZh": "醫生在簡報後寫了一段關於慾望這方面的短筆記。",
+    "example": "She has a strong desire to learn.",
+    "exampleZh": "她有強烈的學習欲望。",
     "group": "Core 3"
   },
   {
@@ -12756,8 +12756,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'editә/",
     "meaningZh": "編者, 編輯, 主筆, 編輯器, 編輯裝置",
-    "example": "The editor spoke with the researcher before sunset.",
-    "exampleZh": "那位編者在日落前和研究員說話。",
+    "example": "The editor corrected the article.",
+    "exampleZh": "編輯修改了那篇文章。",
     "group": "Core 3"
   },
   {
@@ -12766,8 +12766,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'welkәm/",
     "meaningZh": "歡迎, 歡迎詞；受歡迎的, 可隨意的, 可喜的；歡迎, 接待；歡迎",
-    "example": "The coach prepared a short report on welcome before class.",
-    "exampleZh": "教練在上課前準備了一份關於歡迎這方面的短報告。",
+    "example": "You are welcome to join us.",
+    "exampleZh": "歡迎你加入我們。",
     "group": "Core 3"
   },
   {
@@ -12776,8 +12776,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/lɒ:ntʃ/",
     "meaningZh": "下水, 汽艇, 發射；使下水, 發射, 發動；起飛, 下水, 投入, 開始",
-    "example": "The company will launch a new app next month.",
-    "exampleZh": "公司下個月會推出新的應用程式。",
+    "example": "They will launch the app next week.",
+    "exampleZh": "他們下週會推出這個 App。",
     "group": "Core 3"
   },
   {
@@ -12786,8 +12786,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/lәun/",
     "meaningZh": "貸款, 借出；借, 供應貨款, 借給",
-    "example": "The engineer led a class discussion about loan after the trial.",
-    "exampleZh": "工程師在試驗後帶領全班討論貸款。",
+    "example": "The bank approved the loan.",
+    "exampleZh": "銀行核准了貸款。",
     "group": "Core 3"
   },
   {
@@ -12796,8 +12796,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kɒnfidәns/",
     "meaningZh": "信心",
-    "example": "The designer led a class discussion about confidence after the presentation.",
-    "exampleZh": "設計師在簡報後帶領全班討論信心。",
+    "example": "Practice builds confidence.",
+    "exampleZh": "練習能建立信心。",
     "group": "Core 3"
   },
   {
@@ -12806,8 +12806,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/lʌntʃ/",
     "meaningZh": "午餐",
-    "example": "The engineer prepared a short report on lunch before Friday.",
-    "exampleZh": "工程師在星期五前準備了一份關於午餐這方面的短報告。",
+    "example": "Lunch is ready.",
+    "exampleZh": "午餐準備好了。",
     "group": "Core 3"
   },
   {
@@ -12816,8 +12816,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ri'li:f/",
     "meaningZh": "減輕, 解除, 救濟, 安慰, 調劑, 浮雕, 換班, (地勢的)起伏",
-    "example": "The assistant explained relief during class before the trip.",
-    "exampleZh": "助理在旅程前的課堂上解釋了減輕。",
+    "example": "The rain brought relief from the heat.",
+    "exampleZh": "下雨讓人從炎熱中得到緩解。",
     "group": "Core 3"
   },
   {
@@ -12826,8 +12826,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/drai/",
     "meaningZh": "乾的, 無酒的, 枯燥無味的, 乾燥的；把...弄乾；變幹；幹, 乾涸",
-    "example": "A dry situation required extra care before the exam.",
-    "exampleZh": "一個乾的情況在考試前需要額外處理。",
+    "example": "The towel is dry.",
+    "exampleZh": "毛巾是乾的。",
     "group": "Core 3"
   },
   {
@@ -12836,8 +12836,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'weðә/",
     "meaningZh": "天氣, 氣象, 處境；迎風的；使受風吹雨打, 侵蝕, 使風化, 經受住；風化, 受侵蝕, 經受風雨",
-    "example": "The weather was easy to see near the lesson.",
-    "exampleZh": "天氣在課程附近很容易看見。",
+    "example": "The weather changed quickly.",
+    "exampleZh": "天氣變化很快。",
     "group": "Core 3"
   },
   {
@@ -12846,8 +12846,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/streit/",
     "meaningZh": "直線, 直；直的, 筆直的, 正直的, 直接的, 連續的, 整齊的；直接地, 立即, 不斷地",
-    "example": "The designer led a class discussion about straight after the debate.",
-    "exampleZh": "設計師在辯論後帶領全班討論直線。",
+    "example": "Go straight ahead.",
+    "exampleZh": "一直往前走。",
     "group": "Core 3"
   },
   {
@@ -12856,8 +12856,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / vt",
     "pronunciation": "/kli:n/",
     "meaningZh": "乾淨的, 清白的, 簡潔的；清潔地, 完全地；清理, 使乾淨, 出空；被搞乾淨；打掃",
-    "example": "The designer reviewed the clean case after the trial.",
-    "exampleZh": "設計師在試驗後檢視了這個乾淨的案例。",
+    "example": "Please clean the table.",
+    "exampleZh": "請把桌子擦乾淨。",
     "group": "Core 3"
   },
   {
@@ -12866,8 +12866,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/kәn'sidәrәbl/",
     "meaningZh": "相當的, 可觀的, 重要的",
-    "example": "The considerable plan helped the team move forward after the lesson.",
-    "exampleZh": "相當的計畫在課程後幫助團隊往前推進。",
+    "example": "The repair cost a considerable amount.",
+    "exampleZh": "這次維修花了相當多錢。",
     "group": "Core 3"
   },
   {
@@ -12876,8 +12876,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'vɒljum/",
     "meaningZh": "冊, 卷, 體積, 容量, 大量, 許多, 份量, 音量；成團捲起；把...收集成卷；大量的",
-    "example": "The teacher prepared a short report on volume before class.",
-    "exampleZh": "老師在上課前準備了一份關於冊這方面的短報告。",
+    "example": "The volume is too loud.",
+    "exampleZh": "音量太大了。",
     "group": "Core 3"
   },
   {
@@ -12886,8 +12886,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/ik'spensiv/",
     "meaningZh": "貴的, 奢華的, 費用浩大的, 亂化錢的",
-    "example": "An expensive situation required extra care before the weekend.",
-    "exampleZh": "一個貴的情況在週末前需要額外處理。",
+    "example": "This jacket is too expensive.",
+    "exampleZh": "這件外套太貴了。",
     "group": "Core 3"
   },
   {
@@ -12896,8 +12896,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'sә:kl/",
     "meaningZh": "圓周, 社交圈, 循環, 範圍；圍著, 環繞；盤旋, 循環",
-    "example": "The researcher prepared a short report on circle before sunset.",
-    "exampleZh": "研究員在日落前準備了一份關於圓周這方面的短報告。",
+    "example": "Draw a circle around the answer.",
+    "exampleZh": "把答案圈起來。",
     "group": "Core 3"
   },
   {
@@ -12906,8 +12906,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/.rekә'mend/",
     "meaningZh": "推薦, 介紹, 勸告, 使受歡迎, 託付",
-    "example": "We need to recommend the budget carefully before the trip.",
-    "exampleZh": "我們需要在旅程前仔細推薦預算。",
+    "example": "I recommend this restaurant.",
+    "exampleZh": "我推薦這家餐廳。",
     "group": "Core 3"
   },
   {
@@ -12916,8 +12916,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/bi'heivjә/",
     "meaningZh": "行為, 舉止",
-    "example": "The artist led a class discussion about behaviour after the review.",
-    "exampleZh": "藝術家在檢查後帶領全班討論行為。",
+    "example": "His behaviour worried the teacher.",
+    "exampleZh": "他的行為讓老師擔心。",
     "group": "Core 3"
   },
   {
@@ -12926,8 +12926,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/di'klєә/",
     "meaningZh": "宣佈, 聲明, 申報, 斷言",
-    "example": "The meeting helped us declare the message more clearly.",
-    "exampleZh": "會議幫助我們更清楚地宣佈訊息。",
+    "example": "The company will declare its results tomorrow.",
+    "exampleZh": "公司明天會公布結果。",
     "group": "Core 3"
   },
   {
@@ -12936,8 +12936,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/grænt/",
     "meaningZh": "授予, 授予物, 允許；允許, 承認, 授與",
-    "example": "The editor explained grant during class before Friday.",
-    "exampleZh": "編輯在星期五前的課堂上解釋了授予。",
+    "example": "The school received a research grant.",
+    "exampleZh": "學校獲得了一筆研究補助。",
     "group": "Core 3"
   },
   {
@@ -12946,8 +12946,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/wɒ:n/",
     "meaningZh": "警告, 提醒, 通知；發出警告",
-    "example": "The trial helped us warn the contract more clearly.",
-    "exampleZh": "試驗幫助我們更清楚地警告合約。",
+    "example": "I tried to warn him.",
+    "exampleZh": "我試著警告他。",
     "group": "Core 3"
   },
   {
@@ -12956,8 +12956,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/tʃi:p/",
     "meaningZh": "便宜的, 不值錢的, 可鄙的；便宜地",
-    "example": "The cheap plan helped the team move forward after the debate.",
-    "exampleZh": "便宜的計畫在辯論後幫助團隊往前推進。",
+    "example": "This bag was cheap but strong.",
+    "exampleZh": "這個包包便宜但耐用。",
     "group": "Core 3"
   },
   {
@@ -12976,8 +12976,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'bɒtl/",
     "meaningZh": "瓶子, 酒瓶；裝瓶, 抑制, 圍困",
-    "example": "The assistant explained bottle during class before the trip.",
-    "exampleZh": "助理在旅程前的課堂上解釋了瓶子。",
+    "example": "She opened a bottle of water.",
+    "exampleZh": "她打開了一瓶水。",
     "group": "Core 3"
   },
   {
@@ -12986,8 +12986,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/kәn'sә:vәtiv/",
     "meaningZh": "保守的, 守舊的, 有保存力的",
-    "example": "The manager chose a conservative method before the review.",
-    "exampleZh": "經理在檢查前選了一個保守的方法。",
+    "example": "He has conservative views.",
+    "exampleZh": "他的觀點偏保守。",
     "group": "Core 3"
   },
   {
@@ -12996,8 +12996,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/ә'trækt/",
     "meaningZh": "吸引, 誘惑；有吸引力",
-    "example": "Please attract the device when you are ready.",
-    "exampleZh": "準備好時，請吸引裝置。",
+    "example": "Bright colors attract children.",
+    "exampleZh": "鮮豔的顏色會吸引孩子。",
     "group": "Core 3"
   },
   {
@@ -13006,8 +13006,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "prep / a / n",
     "pronunciation": "/plʌs/",
     "meaningZh": "加上, 加, 外加；正的, 附加的；正號, 加號, 附加額, 正數, 增益",
-    "example": "Two plus three equals five.",
-    "exampleZh": "二加三等於五。",
+    "example": "Two plus two equals four.",
+    "exampleZh": "二加二等於四。",
     "group": "Core 3"
   },
   {
@@ -13016,8 +13016,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/ri'plai/",
     "meaningZh": "答覆, 回答, 答辯；答覆, 回答, 回擊, 反響, 答辯；回答",
-    "example": "The designer led a class discussion about reply after the training.",
-    "exampleZh": "設計師在訓練後帶領全班討論答覆。",
+    "example": "Please reply before Friday.",
+    "exampleZh": "請在星期五前回覆。",
     "group": "Core 3"
   },
   {
@@ -13026,8 +13026,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/bil/",
     "meaningZh": "帳單, 清單, 鈔票, 鳥嘴, 廣告, 法案, 票據；開帳單, (用招貼)宣佈",
-    "example": "The guide prepared a short report on bill before the exam.",
-    "exampleZh": "嚮導在考試前準備了一份關於帳單這方面的短報告。",
+    "example": "The bill is due today.",
+    "exampleZh": "帳單今天到期。",
     "group": "Core 3"
   },
   {
@@ -13036,8 +13036,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt",
     "pronunciation": "/kә'rekt/",
     "meaningZh": "正確的, 合適的；改正, 訂正",
-    "example": "The editor chose a correct method before the deadline.",
-    "exampleZh": "編輯在期限前選了一個正確的方法。",
+    "example": "Your answer is correct.",
+    "exampleZh": "你的答案是正確的。",
     "group": "Core 3"
   },
   {
@@ -13056,8 +13056,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'tikit/",
     "meaningZh": "票, 券, 車票, 標籤, 入場券, 證明書；加標籤於, 為...購票",
-    "example": "The student wrote a short note about ticket after the trial.",
-    "exampleZh": "學生在試驗後寫了一段關於票這方面的短筆記。",
+    "example": "I bought a train ticket.",
+    "exampleZh": "我買了一張火車票。",
     "group": "Core 3"
   },
   {
@@ -13066,8 +13066,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'fjuәl/",
     "meaningZh": "燃料, 木炭；加燃料, 供燃料；得到燃料",
-    "example": "The engineer explained fuel during class before sunset.",
-    "exampleZh": "工程師在日落前的課堂上解釋了燃料。",
+    "example": "The car needs fuel.",
+    "exampleZh": "這輛車需要燃料。",
     "group": "Core 3"
   },
   {
@@ -13076,8 +13076,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/ә'reindʒ/",
     "meaningZh": "安排, 排列, 達成協議",
-    "example": "They tried to arrange the map before Friday.",
-    "exampleZh": "他們試著在星期五前安排地圖。",
+    "example": "Please arrange the chairs in a circle.",
+    "exampleZh": "請把椅子排成一圈。",
     "group": "Core 3"
   },
   {
@@ -13086,8 +13086,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/kuk/",
     "meaningZh": "廚子, 廚師；烹調, 煮飯, 加熱；在煮著",
-    "example": "The engineer prepared a short report on cook before sunset.",
-    "exampleZh": "工程師在日落前準備了一份關於廚子這方面的短報告。",
+    "example": "I cook dinner every evening.",
+    "exampleZh": "我每天晚上做晚餐。",
     "group": "Core 3"
   },
   {
@@ -13096,8 +13096,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / v",
     "pronunciation": "/slәu/",
     "meaningZh": "慢的, 緩慢的, 遲緩的, 遲鈍的, 冷漠的, 落後的；慢地, 遲緩地；(使)慢下來",
-    "example": "The slow plan helped the team move forward after the lesson.",
-    "exampleZh": "慢的計畫在課程後幫助團隊往前推進。",
+    "example": "The bus was slow today.",
+    "exampleZh": "今天公車很慢。",
     "group": "Core 3"
   },
   {
@@ -13106,8 +13106,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/.repri'zentәtiv/",
     "meaningZh": "代表, 眾議員, 典型；描寫的, 表現的, 代理的, 代表的, 代議制的, 典型的",
-    "example": "The editor wrote a short note about representative after the workshop.",
-    "exampleZh": "編輯在工作坊後寫了一段關於代表這方面的短筆記。",
+    "example": "A representative answered our questions.",
+    "exampleZh": "一位代表回答了我們的問題。",
     "group": "Core 3"
   },
   {
@@ -13116,8 +13116,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/gaid/",
     "meaningZh": "引導者, 導遊, 指南, 路標；指導, 支配, 管理, 帶領, 操縱；任嚮導",
-    "example": "The guide spoke with the teacher before breakfast.",
-    "exampleZh": "那位引導者在早餐前和老師說話。",
+    "example": "The guide showed us the old city.",
+    "exampleZh": "導遊帶我們看了老城區。",
     "group": "Core 3"
   },
   {
@@ -13126,8 +13126,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/tai/",
     "meaningZh": "帶子, 線, 鞋帶, 領帶, 領結, 關係, 束縛, 平局, 不分勝負；系, 打結, 扎, 約束, 與...成平局；結合, 打結, 不分勝負",
-    "example": "The designer explained tie during class before the rehearsal.",
-    "exampleZh": "設計師在排練前的課堂上解釋了帶子。",
+    "example": "He wore a blue tie.",
+    "exampleZh": "他戴了一條藍色領帶。",
     "group": "Core 3"
   },
   {
@@ -13136,8 +13136,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/di'fens/",
     "meaningZh": "防衛, 防衛設備",
-    "example": "The doctor led a class discussion about defence after the presentation.",
-    "exampleZh": "醫生在簡報後帶領全班討論防衛。",
+    "example": "The team improved its defence.",
+    "exampleZh": "球隊改善了防守。",
     "group": "Core 3"
   },
   {
@@ -13146,8 +13146,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/fru:t/",
     "meaningZh": "水果, 果類, 結果",
-    "example": "The fruit smelled good in the kitchen.",
-    "exampleZh": "水果在廚房裡聞起來很香。",
+    "example": "Fresh fruit is on the table.",
+    "exampleZh": "新鮮水果在桌上。",
     "group": "Core 3"
   },
   {
@@ -13156,8 +13156,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/fi:/",
     "meaningZh": "費用, 小費, 封地, 所有權；付費給",
-    "example": "The neighbor checked the fee before signing.",
-    "exampleZh": "鄰居在簽名前確認了費用。",
+    "example": "The fee includes lunch.",
+    "exampleZh": "費用包含午餐。",
     "group": "Core 3"
   },
   {
@@ -13166,8 +13166,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/peint/",
     "meaningZh": "油漆, 顏料, 繪畫作品, 塗漆；油漆, 繪, 畫, 描繪, 裝飾, 點綴；繪畫, 塗漆",
-    "example": "The assistant prepared a short report on paint before noon.",
-    "exampleZh": "助理在中午前準備了一份關於油漆這方面的短報告。",
+    "example": "The paint is still wet.",
+    "exampleZh": "油漆還沒乾。",
     "group": "Core 3"
   },
   {
@@ -13176,8 +13176,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/desk/",
     "meaningZh": "書桌, 辦公桌, 工作臺",
-    "example": "The guide gave a brief talk about desk before the holiday.",
-    "exampleZh": "嚮導在假期前做了一段關於書桌這方面的簡短分享。",
+    "example": "The book is on my desk.",
+    "exampleZh": "書在我的書桌上。",
     "group": "Core 3"
   },
   {
@@ -13186,8 +13186,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'ekslәnt/",
     "meaningZh": "優良的, 傑出的, 出色的",
-    "example": "The artist chose an excellent method before the trip.",
-    "exampleZh": "藝術家在旅程前選了一個優良的方法。",
+    "example": "She did an excellent job.",
+    "exampleZh": "她做得非常好。",
     "group": "Core 3"
   },
   {
@@ -13196,8 +13196,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/'prɒpә/",
     "meaningZh": "適當的, 固有的, 高尚的, 專屬的；完全地, 徹底地",
-    "example": "A proper situation required extra care before noon.",
-    "exampleZh": "一個適當的情況在中午前需要額外處理。",
+    "example": "Use the proper tools.",
+    "exampleZh": "使用合適的工具。",
     "group": "Core 3"
   },
   {
@@ -13216,8 +13216,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / n",
     "pronunciation": "/sә'raund/",
     "meaningZh": "包圍, 環繞, 圍繞；圍繞物",
-    "example": "We need to surround the report carefully before the call.",
-    "exampleZh": "我們需要在通話前仔細包圍報告。",
+    "example": "Trees surround the house.",
+    "exampleZh": "樹木環繞著那棟房子。",
     "group": "Core 3"
   },
   {
@@ -13226,8 +13226,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ri'dʒekt/",
     "meaningZh": "被拒之人, 被棄之物, 不合格品, 次品；拒絕, 抵制, 否決, 駁回, 丟棄, 嘔出",
-    "example": "The reject spoke with the designer before the rehearsal.",
-    "exampleZh": "那位被拒之人在排練前和設計師說話。",
+    "example": "The company may reject the offer.",
+    "exampleZh": "公司可能會拒絕這個提議。",
     "group": "Core 3"
   },
   {
@@ -13236,8 +13236,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/'әuvәrɒ:l/",
     "meaningZh": "全部的, 全體的, 從頭至尾的, 一切在內的；從頭到尾, 總的說來；罩衫, 工作服",
-    "example": "An overall situation required extra care before the storm.",
-    "exampleZh": "一個全部的情況在暴風雨前需要額外處理。",
+    "example": "Overall, the plan worked well.",
+    "exampleZh": "整體來說，這個計畫運作得很好。",
     "group": "Core 3"
   },
   {
@@ -13256,8 +13256,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/in'vestigeit/",
     "meaningZh": "調查, 審查",
-    "example": "Please investigate the contract when you are ready.",
-    "exampleZh": "準備好時，請調查合約。",
+    "example": "Police will investigate the accident.",
+    "exampleZh": "警方會調查這起事故。",
     "group": "Core 3"
   },
   {
@@ -13266,8 +13266,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/mail/",
     "meaningZh": "英里, 很大距離",
-    "example": "The driver prepared a short report on mile before the meeting.",
-    "exampleZh": "司機在會議前準備了一份關於英里這方面的短報告。",
+    "example": "The station is one mile away.",
+    "exampleZh": "車站在一英里外。",
     "group": "Core 3"
   },
   {
@@ -13276,8 +13276,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'hausiŋ/",
     "meaningZh": "遮蓋, 住房供給, 居留(處), 房屋, 裝飾",
-    "example": "The engineer prepared a short report on housing before Friday.",
-    "exampleZh": "工程師在星期五前準備了一份關於遮蓋這方面的短報告。",
+    "example": "The city needs more affordable housing.",
+    "exampleZh": "這座城市需要更多可負擔住宅。",
     "group": "Core 3"
   },
   {
@@ -13286,8 +13286,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/ku:l/",
     "meaningZh": "涼爽, 涼爽的空氣；涼爽的, 冷淡的, 冷靜的；冷卻, 平息；使冷卻, 使平靜",
-    "example": "The guide wrote a short note about cool after the presentation.",
-    "exampleZh": "嚮導在簡報後寫了一段關於涼爽這方面的短筆記。",
+    "example": "The evening air felt cool.",
+    "exampleZh": "晚上的空氣感覺很涼。",
     "group": "Core 3"
   },
   {
@@ -13296,8 +13296,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'entri/",
     "meaningZh": "登錄, 條目, 進入, 入口, 報關",
-    "example": "The manager explained entry during class before the storm.",
-    "exampleZh": "經理在暴風雨前的課堂上解釋了登錄。",
+    "example": "Entry is free on Sundays.",
+    "exampleZh": "星期日免費入場。",
     "group": "Core 3"
   },
   {
@@ -13306,8 +13306,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/slip/",
     "meaningZh": "滑, 滑行, 事故, 溜, 差錯, 滑臺, 下降, 插條, 後裔, 板條, 瘦長的年輕人；滑動, 滑倒, 失足, 溜走, 滑落, 犯錯, 變壞；使滑動, 滑過, 擺脫, 閃開, 塞入, 從...取接枝；滑動的, 滑移的, 活絡的, 有活結的",
-    "example": "The researcher prepared a short report on slip before Friday.",
-    "exampleZh": "研究員在星期五前準備了一份關於滑這方面的短報告。",
+    "example": "Be careful not to slip.",
+    "exampleZh": "小心不要滑倒。",
     "group": "Core 3"
   },
   {
@@ -13316,8 +13316,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'fæktәri/",
     "meaningZh": "工廠, 產生地, 代理店",
-    "example": "The teacher prepared a short report on factory before the meeting.",
-    "exampleZh": "老師在會議前準備了一份關於工廠這方面的短報告。",
+    "example": "The factory makes shoes.",
+    "exampleZh": "這間工廠製造鞋子。",
     "group": "Core 3"
   },
   {
@@ -13326,8 +13326,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/weist/",
     "meaningZh": "浪費, 廢物, 損耗, 消耗, 荒地, 垃圾, 地面風化物；廢棄的, 荒蕪的, 多餘的；浪費, 消耗, 使荒蕪；浪費, 消耗, 變消瘦",
-    "example": "The manager explained waste during class before sunset.",
-    "exampleZh": "經理在日落前的課堂上解釋了浪費。",
+    "example": "Do not waste water.",
+    "exampleZh": "不要浪費水。",
     "group": "Core 3"
   },
   {
@@ -13336,8 +13336,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'estimeit/",
     "meaningZh": "估計, 判斷；估計, 評價, 判斷；估計",
-    "example": "The researcher gave a brief talk about estimate before the review.",
-    "exampleZh": "研究員在檢查前做了一段關於估計這方面的簡短分享。",
+    "example": "The estimate was too high.",
+    "exampleZh": "估價太高了。",
     "group": "Core 3"
   },
   {
@@ -13346,8 +13346,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/mai'nɒriti/",
     "meaningZh": "少數, 未成年, 少數民族；少數的, 屬於少數派的",
-    "example": "The engineer prepared a short report on minority before Friday.",
-    "exampleZh": "工程師在星期五前準備了一份關於少數這方面的短報告。",
+    "example": "Only a minority supported the plan.",
+    "exampleZh": "只有少數人支持這個計畫。",
     "group": "Core 3"
   },
   {
@@ -13356,8 +13356,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ә'bju:s.ә'bju:z/",
     "meaningZh": "濫用, 虐待, 惡習, 辱罵；濫用, 辱罵, 虐待",
-    "example": "The coach explained abuse during class before class.",
-    "exampleZh": "教練在上課前的課堂上解釋了濫用。",
+    "example": "The report described abuse of power.",
+    "exampleZh": "報告描述了濫用權力的情況。",
     "group": "Core 3"
   },
   {
@@ -13366,8 +13366,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'strʌgl/",
     "meaningZh": "鬥爭, 努力, 奮鬥；努力, 奮鬥, 掙扎",
-    "example": "The nurse prepared a short report on struggle before the deadline.",
-    "exampleZh": "護理師在期限前準備了一份關於鬥爭這方面的短報告。",
+    "example": "Many families struggle to pay rent.",
+    "exampleZh": "許多家庭努力承擔房租。",
     "group": "Core 3"
   },
   {
@@ -13376,8 +13376,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'fɒ:mәl/",
     "meaningZh": "正式的, 形式的, 禮儀的, 拘於禮節的, 拘謹的；正式的社交活動",
-    "example": "The neighbor chose a formal method before the deadline.",
-    "exampleZh": "鄰居在期限前選了一個正式的方法。",
+    "example": "Please wear formal clothes.",
+    "exampleZh": "請穿正式服裝。",
     "group": "Core 3"
   },
   {
@@ -13386,8 +13386,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'nɒvl/",
     "meaningZh": "小說, 長篇故事；新奇的, 異常的",
-    "example": "The driver wrote a short note about novel after the lesson.",
-    "exampleZh": "司機在課程後寫了一段關於小說這方面的短筆記。",
+    "example": "She wrote a novel about her hometown.",
+    "exampleZh": "她寫了一本關於故鄉的小說。",
     "group": "Core 3"
   },
   {
@@ -13396,8 +13396,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'pɑ:lәmәnt/",
     "meaningZh": "國會, 議會",
-    "example": "The visitor led a class discussion about parliament after the review.",
-    "exampleZh": "訪客在檢查後帶領全班討論國會。",
+    "example": "Parliament passed a new law.",
+    "exampleZh": "國會通過了一項新法律。",
     "group": "Core 3"
   },
   {
@@ -13406,8 +13406,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/dʒɒint/",
     "meaningZh": "連接處, 接合, 關節；共同的, 聯合的, 連接的, 合辦的；連接, 接合, 使有接頭；貼合, 長節",
-    "example": "The guide explained joint during class before the holiday.",
-    "exampleZh": "嚮導在假期前的課堂上解釋了連接處。",
+    "example": "This was a joint decision.",
+    "exampleZh": "這是一項共同決定。",
     "group": "Core 3"
   },
   {
@@ -13416,8 +13416,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/wiŋ/",
     "meaningZh": "翅膀, 翼, 機翼, 派別；給...裝上翼, 飛過, 使飛, 空運, 增加...速度；飛行",
-    "example": "The doctor prepared a short report on wing before the holiday.",
-    "exampleZh": "醫生在假期前準備了一份關於翅膀這方面的短報告。",
+    "example": "The bird hurt its wing.",
+    "exampleZh": "那隻鳥傷到了翅膀。",
     "group": "Core 3"
   },
   {
@@ -13426,8 +13426,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kritisizm/",
     "meaningZh": "批評, 評論, 非難",
-    "example": "The driver explained criticism during class before the deadline.",
-    "exampleZh": "司機在期限前的課堂上解釋了批評。",
+    "example": "The plan received harsh criticism.",
+    "exampleZh": "這項計畫受到嚴厲批評。",
     "group": "Core 3"
   },
   {
@@ -13436,8 +13436,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'θiŋkiŋ/",
     "meaningZh": "思考, 思想；思考的, 有理性的",
-    "example": "The driver led a class discussion about thinking after the meeting.",
-    "exampleZh": "司機在會議後帶領全班討論思考。",
+    "example": "Clear thinking takes time.",
+    "exampleZh": "清楚思考需要時間。",
     "group": "Core 3"
   },
   {
@@ -13446,8 +13446,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/i'mi:diәt/",
     "meaningZh": "立即的, 直接的, 接近的",
-    "example": "The immediate problem is a lack of time.",
-    "exampleZh": "眼前的問題是時間不足。",
+    "example": "The patient needs immediate help.",
+    "exampleZh": "病人需要立即幫助。",
     "group": "Core 3"
   },
   {
@@ -13456,8 +13456,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'li:diŋ/",
     "meaningZh": "領導, 指揮, 神示, 鉛板；領導的, 主要的, 在前的",
-    "example": "The editor prepared a short report on leading before the storm.",
-    "exampleZh": "編輯在暴風雨前準備了一份關於領導這方面的短報告。",
+    "example": "She is a leading expert in biology.",
+    "exampleZh": "她是生物學領域的頂尖專家。",
     "group": "Core 3"
   },
   {
@@ -13466,8 +13466,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'winә/",
     "meaningZh": "勝利者, 優勝者",
-    "example": "The winner worked carefully with the visitor.",
-    "exampleZh": "那位勝利者仔細地和訪客合作。",
+    "example": "The winner received a small prize.",
+    "exampleZh": "得主收到了一份小獎品。",
     "group": "Core 3"
   },
   {
@@ -13486,8 +13486,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/i'mә:dʒәnsi/",
     "meaningZh": "緊急狀況, 緊急事件, 緊急需要",
-    "example": "The manager led a class discussion about emergency after the discussion.",
-    "exampleZh": "經理在討論後帶領全班討論緊急狀況。",
+    "example": "Call this number in an emergency.",
+    "exampleZh": "遇到緊急情況時請打這個號碼。",
     "group": "Core 3"
   },
   {
@@ -13496,8 +13496,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'ju:ʒuәl/",
     "meaningZh": "平常的, 通常的",
-    "example": "The coach reviewed the usual case after the trial.",
-    "exampleZh": "教練在試驗後檢視了這個平常的案例。",
+    "example": "She arrived at the usual time.",
+    "exampleZh": "她照平常時間抵達。",
     "group": "Core 3"
   },
   {
@@ -13506,8 +13506,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'kєәful/",
     "meaningZh": "小心的, 謹慎的",
-    "example": "The careful plan helped the team move forward after the rehearsal.",
-    "exampleZh": "小心的計畫在排練後幫助團隊往前推進。",
+    "example": "Be careful on the stairs.",
+    "exampleZh": "走樓梯時要小心。",
     "group": "Core 3"
   },
   {
@@ -13516,8 +13516,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/i'skeip/",
     "meaningZh": "逃亡, 避難設備, 逃跑；逃脫, 避開, 溜走；逃避, 避免, 被...忘掉",
-    "example": "The editor led a class discussion about escape after the trip.",
-    "exampleZh": "編輯在旅程後帶領全班討論逃亡。",
+    "example": "The prisoner tried to escape.",
+    "exampleZh": "囚犯試圖逃走。",
     "group": "Core 3"
   },
   {
@@ -13526,8 +13526,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/stres/",
     "meaningZh": "壓力, 緊迫, 強調, 重音, 重點, 應力；加壓力於, 著重, 重讀",
-    "example": "The driver prepared a short report on stress before class.",
-    "exampleZh": "司機在上課前準備了一份關於壓力這方面的短報告。",
+    "example": "Too much stress can affect sleep.",
+    "exampleZh": "壓力太大會影響睡眠。",
     "group": "Core 3"
   },
   {
@@ -13536,8 +13536,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'nærәu/",
     "meaningZh": "狹窄部分, 隘路；狹窄的, 仔細的, 有限的, 勉強的, 狹隘的, 手緊的；變窄；使變狹窄",
-    "example": "The manager prepared a short report on narrow before the interview.",
-    "exampleZh": "經理在面試前準備了一份關於狹窄部分這方面的短報告。",
+    "example": "The path is narrow here.",
+    "exampleZh": "這裡的小路很窄。",
     "group": "Core 3"
   },
   {
@@ -13546,8 +13546,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/flәu/",
     "meaningZh": "流程, 流動, 流量, 洋溢, 氾濫, 漲潮；流動, 流洩, 暢流, 川流不息, 飄揚, 湧出；使流動, 淹沒, 流出",
-    "example": "The assistant led a class discussion about flow after the interview.",
-    "exampleZh": "助理在面試後帶領全班討論流程。",
+    "example": "The river began to flow faster.",
+    "exampleZh": "河水開始流得更快。",
     "group": "Core 3"
   },
   {
@@ -13556,8 +13556,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi / vt",
     "pronunciation": "/sәk'si:d/",
     "meaningZh": "成功, 繼承, 繼續；繼承, 接替",
-    "example": "Please succeed the device when you are ready.",
-    "exampleZh": "準備好時，請成功裝置。",
+    "example": "You can succeed with steady practice.",
+    "exampleZh": "你可以透過穩定練習成功。",
     "group": "Core 3"
   },
   {
@@ -13566,8 +13566,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/im'pәuz/",
     "meaningZh": "徵(稅), 把...強加於, 以...欺騙；利用, 欺騙, 施加影響",
-    "example": "Please impose the file when you are ready.",
-    "exampleZh": "準備好時，請徵稅檔案。",
+    "example": "The city may impose a fine.",
+    "exampleZh": "市政府可能會處以罰款。",
     "group": "Core 3"
   },
   {
@@ -13576,8 +13576,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'insidәnt/",
     "meaningZh": "事件, 事變, 小事；附帶的, 易於發生的, 外來的, 入射的",
-    "example": "The engineer gave a brief talk about incident before sunset.",
-    "exampleZh": "工程師在日落前做了一段關於事件這方面的簡短分享。",
+    "example": "The incident happened after midnight.",
+    "exampleZh": "事件發生在午夜後。",
     "group": "Core 3"
   },
   {
@@ -13586,8 +13586,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.pɒli'tiʃәn/",
     "meaningZh": "政客, 政治家, 從事黨派政治的人",
-    "example": "The student led a class discussion about politician after the festival.",
-    "exampleZh": "學生在節慶後帶領全班討論政客。",
+    "example": "The politician answered the question.",
+    "exampleZh": "那位政治人物回答了問題。",
     "group": "Core 3"
   },
   {
@@ -13596,8 +13596,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'fæʃәn/",
     "meaningZh": "流行, 風尚, 時樣；形成, 造, 作",
-    "example": "The coach explained fashion during class before the rehearsal.",
-    "exampleZh": "教練在排練前的課堂上解釋了流行。",
+    "example": "Fashion changes quickly.",
+    "exampleZh": "時尚變化很快。",
     "group": "Core 3"
   },
   {
@@ -13606,8 +13606,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/dis'plei/",
     "meaningZh": "顯示, 陳列, 炫耀, 顯示器；陳列, 顯示, 表現, 誇示",
-    "example": "The visitor explained display during class before the holiday.",
-    "exampleZh": "訪客在假期前的課堂上解釋了顯示。",
+    "example": "The store has a new display.",
+    "exampleZh": "這家店有新的展示。",
     "group": "Core 3"
   },
   {
@@ -13616,8 +13616,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/bleim/",
     "meaningZh": "過失, 責備；責備, 歸咎於",
-    "example": "The coach explained blame during class before noon.",
-    "exampleZh": "教練在中午前的課堂上解釋了過失。",
+    "example": "Do not blame yourself.",
+    "exampleZh": "不要責怪自己。",
     "group": "Core 3"
   },
   {
@@ -13626,8 +13626,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/di'fend/",
     "meaningZh": "防護, 辯護, 防衛",
-    "example": "Please defend the device when you are ready.",
-    "exampleZh": "準備好時，請防護裝置。",
+    "example": "She tried to defend her decision.",
+    "exampleZh": "她試著為自己的決定辯護。",
     "group": "Core 3"
   },
   {
@@ -13636,8 +13636,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'kæbinit/",
     "meaningZh": "櫥櫃, 內閣；內閣的, 細木工做的",
-    "example": "The visitor prepared a short report on cabinet before sunset.",
-    "exampleZh": "訪客在日落前準備了一份關於櫥櫃這方面的短報告。",
+    "example": "The dishes are in the cabinet.",
+    "exampleZh": "盤子在櫃子裡。",
     "group": "Core 3"
   },
   {
@@ -13646,8 +13646,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'meinli/",
     "meaningZh": "主要地, 大抵",
-    "example": "The engineer worked mainly through the budget.",
-    "exampleZh": "工程師主要地完成了預算。",
+    "example": "The store sells mainly books.",
+    "exampleZh": "這家店主要賣書。",
     "group": "Core 3"
   },
   {
@@ -13656,8 +13656,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/dæns. dɑ:ns/",
     "meaningZh": "跳舞, 舞蹈, 舞會；跳舞",
-    "example": "The coach led a class discussion about dance after the workshop.",
-    "exampleZh": "教練在工作坊後帶領全班討論跳舞。",
+    "example": "They dance every Friday night.",
+    "exampleZh": "他們每週五晚上跳舞。",
     "group": "Core 3"
   },
   {
@@ -13666,8 +13666,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/miks/",
     "meaningZh": "混合物, 混亂, 糊塗；使混合, 弄混, 使結合, 混淆；相混合, 交往, 參與",
-    "example": "The teacher led a class discussion about mix after the practice.",
-    "exampleZh": "老師在練習後帶領全班討論混合物。",
+    "example": "Mix the flour with water.",
+    "exampleZh": "把麵粉和水混合。",
     "group": "Core 3"
   },
   {
@@ -13676,8 +13676,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/ә'pru:v/",
     "meaningZh": "贊同, 核准, 為...提供證據；讚許",
-    "example": "Please approve the contract when you are ready.",
-    "exampleZh": "準備好時，請贊同合約。",
+    "example": "The manager will approve the request.",
+    "exampleZh": "經理會核准這項請求。",
     "group": "Core 3"
   },
   {
@@ -13686,8 +13686,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'dʌbl/",
     "meaningZh": "兩倍；兩倍的, 雙重的；使加倍；加倍, 代替, 快步走",
-    "example": "The assistant led a class discussion about double after the discussion.",
-    "exampleZh": "助理在討論後帶領全班討論兩倍。",
+    "example": "Double the recipe if guests come.",
+    "exampleZh": "如果有客人來，就把食譜份量加倍。",
     "group": "Core 3"
   },
   {
@@ -13696,8 +13696,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/flæt/",
     "meaningZh": "平坦的, 單調的, 無力的, 淺的, 蕭條的, 乾脆的, 無聊的；平直地, 斷然地；扁平物, 平面, 平地, 平原, 平板車；(使)變平",
-    "example": "A flat situation required extra care before the weekend.",
-    "exampleZh": "一個平坦的情況在週末前需要額外處理。",
+    "example": "The tire is flat.",
+    "exampleZh": "輪胎沒氣了。",
     "group": "Core 3"
   },
   {
@@ -13706,8 +13706,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/ɒ:l'tә:nәtiv/",
     "meaningZh": "兩者擇一, 供替代的選擇；兩者擇一的, 供選擇的",
-    "example": "The designer explained alternative during class before the call.",
-    "exampleZh": "設計師在通話前的課堂上解釋了兩者擇一。",
+    "example": "We need an alternative plan.",
+    "exampleZh": "我們需要一個替代方案。",
     "group": "Core 3"
   },
   {
@@ -13716,8 +13716,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/mæs/",
     "meaningZh": "塊, 大多數, 質量, 大量, 群眾, 彌撒；群眾的, 大規模的, 整個的；使集合, 集中；聚集",
-    "example": "The nurse prepared a short report on mass before the meeting.",
-    "exampleZh": "護理師在會議前準備了一份關於塊這方面的短報告。",
+    "example": "A mass of clouds covered the sky.",
+    "exampleZh": "大片雲層遮住了天空。",
     "group": "Core 3"
   },
   {
@@ -13726,8 +13726,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/kәm'plein/",
     "meaningZh": "抱怨, 抗議, 控訴",
-    "example": "Please complain the plan when you are ready.",
-    "exampleZh": "準備好時，請抱怨計畫。",
+    "example": "Customers complain about the noise.",
+    "exampleZh": "顧客抱怨噪音。",
     "group": "Core 3"
   },
   {
@@ -13736,8 +13736,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/træns'fә:/",
     "meaningZh": "遷移, 移動, 傳遞, 轉讓, 轉移, 過戶, 匯兌, 換車；使轉移, 調轉, 調任, 改變, 傳遞, 轉讓；轉移, 轉學, 轉職, 換車",
-    "example": "The designer gave a brief talk about transfer before the rehearsal.",
-    "exampleZh": "設計師在排練前做了一段關於遷移這方面的簡短分享。",
+    "example": "I need to transfer money today.",
+    "exampleZh": "我今天需要轉帳。",
     "group": "Core 3"
   },
   {
@@ -13746,8 +13746,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'ɒ:gәnaiz/",
     "meaningZh": "組織, 有機化, 給予生機；組織起來",
-    "example": "Please organize the budget when you are ready.",
-    "exampleZh": "準備好時，請組織預算。",
+    "example": "Please organize your desk.",
+    "exampleZh": "請整理你的書桌。",
     "group": "Core 3"
   },
   {
@@ -13756,8 +13756,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/dʒu:'lai/",
     "meaningZh": "七月",
-    "example": "The nurse explained july during class before the deadline.",
-    "exampleZh": "護理師在期限前的課堂上解釋了七月。",
+    "example": "July is usually hot here.",
+    "exampleZh": "這裡七月通常很熱。",
     "group": "Core 3"
   },
   {
@@ -13766,8 +13766,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'terәbl/",
     "meaningZh": "可怕的, 令人恐懼的, 極壞的",
-    "example": "The terrible plan helped the team move forward after the presentation.",
-    "exampleZh": "可怕的計畫在簡報後幫助團隊往前推進。",
+    "example": "The traffic was terrible this morning.",
+    "exampleZh": "今天早上的交通很糟。",
     "group": "Core 3"
   },
   {
@@ -13776,8 +13776,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/fæt/",
     "meaningZh": "脂肪, 脂油, 肥肉；肥的, 胖的, 油膩的；文件分配表",
-    "example": "The assistant explained fat during class before noon.",
-    "exampleZh": "助理在中午前的課堂上解釋了脂肪。",
+    "example": "This cheese is high in fat.",
+    "exampleZh": "這種起司脂肪含量高。",
     "group": "Core 3"
   },
   {
@@ -13796,8 +13796,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'gʌvәnә/",
     "meaningZh": "(美)州長, (英)總督, 統治者, 管理者, 理事",
-    "example": "The coach gave a brief talk about governor before the rehearsal.",
-    "exampleZh": "教練在排練前做了一段關於美州長這方面的簡短分享。",
+    "example": "The governor signed the bill.",
+    "exampleZh": "州長簽署了法案。",
     "group": "Core 3"
   },
   {
@@ -13816,8 +13816,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ri'kwest/",
     "meaningZh": "請求, 需要, 申請書；請求, 要求, 邀請",
-    "example": "The neighbor led a class discussion about request after the festival.",
-    "exampleZh": "鄰居在節慶後帶領全班討論請求。",
+    "example": "I sent a request for help.",
+    "exampleZh": "我發出了一項求助請求。",
     "group": "Core 3"
   },
   {
@@ -13826,8 +13826,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'kriminәl/",
     "meaningZh": "罪犯, 犯人, 刑事；犯了罪的, 刑事的, 有罪的",
-    "example": "The designer gave a brief talk about criminal before the interview.",
-    "exampleZh": "設計師在面試前做了一段關於罪犯這方面的簡短分享。",
+    "example": "The police arrested the criminal.",
+    "exampleZh": "警方逮捕了那名罪犯。",
     "group": "Core 3"
   },
   {
@@ -13836,8 +13836,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'prɒspekt/",
     "meaningZh": "景色, 展望；勘探, 勘察；勘探, 有前途",
-    "example": "The driver wrote a short note about prospect after the meeting.",
-    "exampleZh": "司機在會議後寫了一段關於景色這方面的短筆記。",
+    "example": "The prospect of rain worried us.",
+    "exampleZh": "可能下雨這件事讓我們擔心。",
     "group": "Core 3"
   },
   {
@@ -13846,8 +13846,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'tʃænәl/",
     "meaningZh": "海峽, 航道, 頻道；引導, 在...上挖溝, 形成河道",
-    "example": "We walked near the channel after the practice.",
-    "exampleZh": "我們在練習後到海峽附近散步。",
+    "example": "Change the channel, please.",
+    "exampleZh": "請換個頻道。",
     "group": "Core 3"
   },
   {
@@ -13856,8 +13856,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/i'lekt/",
     "meaningZh": "當選人, 被選的人；被選的, 選出的；選舉, 選擇；作選擇",
-    "example": "The elect spoke with the artist before the trip.",
-    "exampleZh": "那位當選人在旅程前和藝術家說話。",
+    "example": "Voters will elect a new mayor.",
+    "exampleZh": "選民將選出新市長。",
     "group": "Core 3"
   },
   {
@@ -13866,8 +13866,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/kik/",
     "meaningZh": "踢, 反衝, 後座力, 凹底；踢, 反抗, 反衝；踢, 反衝",
-    "example": "The engineer explained kick during class before Friday.",
-    "exampleZh": "工程師在星期五前的課堂上解釋了踢。",
+    "example": "Kick the ball toward the goal.",
+    "exampleZh": "把球踢向球門。",
     "group": "Core 3"
   },
   {
@@ -13876,8 +13876,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/wi:k/",
     "meaningZh": "不牢固的, 弱的, 虛弱的, 軟弱的, 無力的, 無權力的, (論據等)不充分的",
-    "example": "The researcher reviewed the weak case after the debate.",
-    "exampleZh": "研究員在辯論後檢視了這個不牢固的案例。",
+    "example": "He felt weak after the fever.",
+    "exampleZh": "發燒後他覺得很虛弱。",
     "group": "Core 3"
   },
   {
@@ -13886,8 +13886,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'єәpɒ:t/",
     "meaningZh": "飛機場",
-    "example": "The manager repaired the airport before the trip.",
-    "exampleZh": "經理在旅程前修好了飛機場。",
+    "example": "The airport was crowded.",
+    "exampleZh": "機場很擁擠。",
     "group": "Core 3"
   },
   {
@@ -13896,8 +13896,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/si'kjuә/",
     "meaningZh": "無慮的, 安心的, 安全的, 可靠的, 保險的；固定, 獲得, 保證, 使安全, 掩護, 招致；停止操作, 船拋錨",
-    "example": "A secure situation required extra care before the weekend.",
-    "exampleZh": "一個無慮的情況在週末前需要額外處理。",
+    "example": "Please secure the door before leaving.",
+    "exampleZh": "離開前請把門鎖好。",
     "group": "Core 3"
   },
   {
@@ -13906,8 +13906,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/ʃɑ:p/",
     "meaningZh": "半升音調, 利刃, 騙子；鋒利的, 明顯的, 敏銳的, 急劇的, 尖刻的, 嚴厲的, 刺耳的, 精明的；銳利地, 急速地",
-    "example": "The researcher gave a brief talk about sharp before Friday.",
-    "exampleZh": "研究員在星期五前做了一段關於半升音調這方面的簡短分享。",
+    "example": "The knife is sharp.",
+    "exampleZh": "這把刀很鋒利。",
     "group": "Core 3"
   },
   {
@@ -13916,8 +13916,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/fai'næns/",
     "meaningZh": "財政, 財務；供給...經費, 負擔經費；籌措資金",
-    "example": "The artist gave a brief talk about finance before noon.",
-    "exampleZh": "藝術家在中午前做了一段關於財政這方面的簡短分享。",
+    "example": "She studied finance at university.",
+    "exampleZh": "她在大學讀財務。",
     "group": "Core 3"
   },
   {
@@ -13926,8 +13926,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/grænd/",
     "meaningZh": "莊重的, 壯觀的, 顯赫的, 重大的, 最高的, 雄偉的, 宏大的, 豪華的, 傲慢的",
-    "example": "The assistant chose a grand method before noon.",
-    "exampleZh": "助理在中午前選了一個莊重的方法。",
+    "example": "The hotel has a grand entrance.",
+    "exampleZh": "這間飯店有氣派的入口。",
     "group": "Core 3"
   },
   {
@@ -13936,8 +13936,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/teist/",
     "meaningZh": "味道, 品味, 味覺, 感受, 體驗, 愛好, 審美, 少量；嘗, 察覺...的味道, 體會；品嚐, 察覺味道, 有某種味道",
-    "example": "The manager explained taste during class before the interview.",
-    "exampleZh": "經理在面試前的課堂上解釋了味道。",
+    "example": "The soup has a salty taste.",
+    "exampleZh": "這碗湯有鹹味。",
     "group": "Core 3"
   },
   {
@@ -13946,8 +13946,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'daiәt/",
     "meaningZh": "日常飲食, 議會；照規定飲食；忌食",
-    "example": "The designer gave a brief talk about diet before the interview.",
-    "exampleZh": "設計師在面試前做了一段關於日常飲食這方面的簡短分享。",
+    "example": "A balanced diet is important.",
+    "exampleZh": "均衡飲食很重要。",
     "group": "Core 3"
   },
   {
@@ -13956,8 +13956,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'si:krit/",
     "meaningZh": "秘密, 機密, 秘訣, 秘方；秘密的, 極機密的, 隱蔽的, 暗中的, 神秘的, 偏僻的",
-    "example": "The coach wrote a short note about secret after the workshop.",
-    "exampleZh": "教練在工作坊後寫了一段關於秘密這方面的短筆記。",
+    "example": "She kept the secret for years.",
+    "exampleZh": "她保守這個秘密多年。",
     "group": "Core 3"
   },
   {
@@ -13966,8 +13966,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/træns'pɒ:t/",
     "meaningZh": "運輸, 運輸工具, 激動, 狂喜, 流放犯；傳送, 運輸, 流放",
-    "example": "The teacher wrote a short note about transport after the festival.",
-    "exampleZh": "老師在節慶後寫了一段關於運輸這方面的短筆記。",
+    "example": "Public transport is convenient here.",
+    "exampleZh": "這裡的大眾運輸很方便。",
     "group": "Core 3"
   },
   {
@@ -13976,8 +13976,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'єәkræft/",
     "meaningZh": "航空器, 飛機",
-    "example": "The aircraft stopped near the room before the holiday.",
-    "exampleZh": "航空器在假期前停在房間附近。",
+    "example": "The aircraft landed safely.",
+    "exampleZh": "那架飛機安全降落。",
     "group": "Core 3"
   },
   {
@@ -13986,8 +13986,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/di'klain/",
     "meaningZh": "衰退, 跌落, 下降；使降低, 婉謝；下降, 衰落, 偏斜",
-    "example": "The driver explained decline during class before class.",
-    "exampleZh": "司機在上課前的課堂上解釋了衰退。",
+    "example": "Sales began to decline.",
+    "exampleZh": "銷售開始下滑。",
     "group": "Core 3"
   },
   {
@@ -13996,8 +13996,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/әd'vɑ:ns/",
     "meaningZh": "前進, 進展, 行過的路程；前進, 進展, 提高, 上漲；使前進, 促進, 提出, 提高, 使提前, 預付；前面的, 預先的",
-    "example": "The neighbor wrote a short note about advance after the lesson.",
-    "exampleZh": "鄰居在課程後寫了一段關於前進這方面的短筆記。",
+    "example": "Technology continues to advance.",
+    "exampleZh": "科技持續進步。",
     "group": "Core 3"
   },
   {
@@ -14006,8 +14006,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/.ʌn'laikli/",
     "meaningZh": "不太可能的",
-    "example": "An unlikely situation required extra care before sunset.",
-    "exampleZh": "一個不太可能的情況在日落前需要額外處理。",
+    "example": "It is unlikely to snow today.",
+    "exampleZh": "今天不太可能下雪。",
     "group": "Core 3"
   },
   {
@@ -14016,8 +14016,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/bɒm/",
     "meaningZh": "炸彈；轟炸, 投彈於；失敗",
-    "example": "The engineer explained bomb during class before the storm.",
-    "exampleZh": "工程師在暴風雨前的課堂上解釋了炸彈。",
+    "example": "The bomb was safely removed.",
+    "exampleZh": "炸彈已被安全移除。",
     "group": "Core 3"
   },
   {
@@ -14026,8 +14026,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / a",
     "pronunciation": "/fʌn/",
     "meaningZh": "樂趣, 玩笑, 娛樂；開玩笑；供娛樂用的",
-    "example": "The teacher wrote a short note about fun after the review.",
-    "exampleZh": "老師在檢查後寫了一段關於樂趣這方面的短筆記。",
+    "example": "The game was fun.",
+    "exampleZh": "這個遊戲很好玩。",
     "group": "Core 3"
   },
   {
@@ -14036,8 +14036,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / v",
     "pronunciation": "/sә'spekt/",
     "meaningZh": "被懷疑者, 嫌疑犯；令人懷疑的, 不可信的, 可疑的；懷疑, 猜想",
-    "example": "The suspect worked carefully with the editor.",
-    "exampleZh": "那位被懷疑者仔細地和編輯合作。",
+    "example": "The suspect denied the charge.",
+    "exampleZh": "嫌疑人否認指控。",
     "group": "Core 3"
   },
   {
@@ -14046,8 +14046,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/si'viә/",
     "meaningZh": "嚴格的, 尖銳的, 嚴肅的, 嚴重的, 嚴厲的, 樸素的",
-    "example": "The visitor chose a severe method before the trip.",
-    "exampleZh": "訪客在旅程前選了一個嚴格的方法。",
+    "example": "The storm caused severe damage.",
+    "exampleZh": "暴風雨造成嚴重損害。",
     "group": "Core 3"
   },
   {
@@ -14056,8 +14056,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ә'rest/",
     "meaningZh": "逮捕, 監禁；拘捕, 抑制, 吸引, 阻止",
-    "example": "The assistant led a class discussion about arrest after the interview.",
-    "exampleZh": "助理在面試後帶領全班討論逮捕。",
+    "example": "Police made an arrest at the station.",
+    "exampleZh": "警方在車站逮捕了一人。",
     "group": "Core 3"
   },
   {
@@ -14066,8 +14066,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/kәust/",
     "meaningZh": "海岸, 滑坡；沿海岸而行",
-    "example": "We walked near the coast after the discussion.",
-    "exampleZh": "我們在討論後到海岸附近散步。",
+    "example": "We drove along the coast.",
+    "exampleZh": "我們沿著海岸開車。",
     "group": "Core 3"
   },
   {
@@ -14076,8 +14076,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ɒk'tәubә/",
     "meaningZh": "十月",
-    "example": "The researcher wrote a short note about october after the interview.",
-    "exampleZh": "研究員在面試後寫了一段關於十月這方面的短筆記。",
+    "example": "October is a cool month here.",
+    "exampleZh": "這裡十月天氣涼爽。",
     "group": "Core 3"
   },
   {
@@ -14086,8 +14086,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/kɑ:st. kæst/",
     "meaningZh": "演員陣容, 投擲, 鑄件, 預測, 特性；投, 擲, 拋, 脫落, 鑄, 使彎曲, 計算；投, 計算, 澆鑄成型",
-    "example": "The artist explained cast during class before the exam.",
-    "exampleZh": "藝術家在考試前的課堂上解釋了演員陣容。",
+    "example": "The cast bowed after the play.",
+    "exampleZh": "演員陣容在演出後鞠躬。",
     "group": "Core 3"
   },
   {
@@ -14096,8 +14096,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'kɒnstәnt/",
     "meaningZh": "常數, 恆量；不變的, 一定的, 時常的",
-    "example": "The nurse explained constant during class before the deadline.",
-    "exampleZh": "護理師在期限前的課堂上解釋了常數。",
+    "example": "The machine makes a constant noise.",
+    "exampleZh": "這台機器發出持續的噪音。",
     "group": "Core 3"
   },
   {
@@ -14106,8 +14106,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/kwәut/",
     "meaningZh": "引用；引述, 舉證, 報(價)",
-    "example": "The driver wrote a short note about quote after the review.",
-    "exampleZh": "司機在檢查後寫了一段關於引用這方面的短筆記。",
+    "example": "Please quote the source.",
+    "exampleZh": "請引用來源。",
     "group": "Core 3"
   },
   {
@@ -14116,8 +14116,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ʃɒk/",
     "meaningZh": "震動, 衝突, 震驚, 衝擊, 突擊, 禾束堆, 休克, 長毛狗；使震動, 使休克, 使受電擊, 震驚得；震動, 嚇人；蓬亂濃密的",
-    "example": "The student prepared a short report on shock before the exam.",
-    "exampleZh": "學生在考試前準備了一份關於震動這方面的短報告。",
+    "example": "The news was a shock.",
+    "exampleZh": "這則消息令人震驚。",
     "group": "Core 3"
   },
   {
@@ -14126,8 +14126,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/si:d/",
     "meaningZh": "種子, 籽, 萌芽, 子孫, 精液；在...播種, 催...發育, 脫...籽；結實, 播種",
-    "example": "The assistant wrote a short note about seed after the interview.",
-    "exampleZh": "助理在面試後寫了一段關於種子這方面的短筆記。",
+    "example": "Plant the seed in spring.",
+    "exampleZh": "春天把種子種下。",
     "group": "Core 3"
   },
   {
@@ -14136,8 +14136,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/drә'mætik/",
     "meaningZh": "戲劇性的, 生動的",
-    "example": "The dramatic plan helped the team move forward after the interview.",
-    "exampleZh": "戲劇性的計畫在面試後幫助團隊往前推進。",
+    "example": "The ending was dramatic.",
+    "exampleZh": "結局很戲劇化。",
     "group": "Core 3"
   },
   {
@@ -14146,8 +14146,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'priznә/",
     "meaningZh": "囚犯, 犯人, 戰俘",
-    "example": "The coach led a class discussion about prisoner after the workshop.",
-    "exampleZh": "教練在工作坊後帶領全班討論囚犯。",
+    "example": "The prisoner asked for a lawyer.",
+    "exampleZh": "那名囚犯要求律師協助。",
     "group": "Core 3"
   },
   {
@@ -14156,8 +14156,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/'dɒmineit/",
     "meaningZh": "支配, 佔優勢",
-    "example": "Please dominate the budget when you are ready.",
-    "exampleZh": "準備好時，請支配預算。",
+    "example": "One team began to dominate the game.",
+    "exampleZh": "其中一隊開始主導比賽。",
     "group": "Core 3"
   },
   {
@@ -14166,8 +14166,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'pә:tʃәs/",
     "meaningZh": "購買, 購買品, 緊握, 絞轆；購買, 贏得, 努力取得, 用滑輪起(錨等)",
-    "example": "The visitor led a class discussion about purchase after the review.",
-    "exampleZh": "訪客在檢查後帶領全班討論購買。",
+    "example": "Keep the receipt after each purchase.",
+    "exampleZh": "每次購買後都要保留收據。",
     "group": "Core 3"
   },
   {
@@ -14176,8 +14176,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/sep'tembә/",
     "meaningZh": "九月",
-    "example": "The doctor prepared a short report on september before the exam.",
-    "exampleZh": "醫生在考試前準備了一份關於九月這方面的短報告。",
+    "example": "School starts in September.",
+    "exampleZh": "學校九月開學。",
     "group": "Core 3"
   },
   {
@@ -14186,8 +14186,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/skwєә/",
     "meaningZh": "正方形, 街區, 廣場, 平方, 直角尺；正方形的, 正直的, 公正的, 平方的, 方正的, 結清的；成直角地, 對準地；一致, 符合, 結清；使成方形, 使平方自乘, 調正, 結清, 使一致",
-    "example": "The guide gave a brief talk about square before the weekend.",
-    "exampleZh": "嚮導在週末前做了一段關於正方形這方面的簡短分享。",
+    "example": "The children played in the square.",
+    "exampleZh": "孩子們在廣場上玩。",
     "group": "Core 3"
   },
   {
@@ -14196,8 +14196,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/sæd/",
     "meaningZh": "憂愁的, 悲哀的",
-    "example": "Her sad voice made everyone pause.",
-    "exampleZh": "她憂愁的聲音讓大家停了下來。",
+    "example": "She felt sad after hearing the news.",
+    "exampleZh": "她聽到消息後感到難過。",
     "group": "Core 3"
   },
   {
@@ -14206,8 +14206,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'dʒænjuәri/",
     "meaningZh": "一月",
-    "example": "The engineer wrote a short note about january after the trial.",
-    "exampleZh": "工程師在試驗後寫了一段關於一月這方面的短筆記。",
+    "example": "January is the first month of the year.",
+    "exampleZh": "一月是一年的第一個月。",
     "group": "Core 3"
   },
   {
@@ -14216,8 +14216,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'sʌndi/",
     "meaningZh": "星期日；星期日的, 業餘的；度星期日",
-    "example": "Sunday felt unusually busy after the lesson.",
-    "exampleZh": "課程後的星期日感覺特別忙。",
+    "example": "Sunday is my day off.",
+    "exampleZh": "星期日是我的休假日。",
     "group": "Core 3"
   },
   {
@@ -14226,8 +14226,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ә:dʒ/",
     "meaningZh": "衝動, 推動力, 迫切的要求；驅策, 力勸, 竭力主張, 推動；強烈要求",
-    "example": "The doctor gave a brief talk about urge before breakfast.",
-    "exampleZh": "醫生在早餐前做了一段關於衝動這方面的簡短分享。",
+    "example": "I urge you to rest.",
+    "exampleZh": "我勸你休息。",
     "group": "Core 3"
   },
   {
@@ -14236,8 +14236,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/guds/",
     "meaningZh": "貨物",
-    "example": "The coach prepared a short report on goods before the call.",
-    "exampleZh": "教練在通話前準備了一份關於貨物這方面的短報告。",
+    "example": "The goods arrived late.",
+    "exampleZh": "貨物晚到了。",
     "group": "Core 3"
   },
   {
@@ -14246,8 +14246,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/bɒs/",
     "meaningZh": "老闆, 上司, 巖瘤, 浮雕, 母牛；指揮, 控制, 浮雕",
-    "example": "The doctor led a class discussion about boss after the discussion.",
-    "exampleZh": "醫生在討論後帶領全班討論老闆。",
+    "example": "My boss approved the schedule.",
+    "exampleZh": "我的老闆核准了時程。",
     "group": "Core 3"
   },
   {
@@ -14256,8 +14256,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'dʒә:nәlist/",
     "meaningZh": "新聞記者, 從事新聞雜誌業的人",
-    "example": "A journalist joined the debate on time.",
-    "exampleZh": "一位新聞記者準時參加了辯論。",
+    "example": "The journalist asked a direct question.",
+    "exampleZh": "那位記者問了一個直接的問題。",
     "group": "Core 3"
   },
   {
@@ -14266,8 +14266,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/print/",
     "meaningZh": "打印, 版, 印刷物, 痕跡, 印刷業, 印刷字體, 圖片, 印花布, 印章；打印, 印刷, 銘記, 留印記於, 用印刷體寫",
-    "example": "The researcher gave a brief talk about print before Friday.",
-    "exampleZh": "研究員在星期五前做了一段關於打印這方面的簡短分享。",
+    "example": "Please print the document.",
+    "exampleZh": "請列印這份文件。",
     "group": "Core 3"
   },
   {
@@ -14276,8 +14276,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/wið'drɒ:/",
     "meaningZh": "撤回, 取回, 撤消, 使撤退, 拉開, 移開；撤退, 離開",
-    "example": "Please withdraw the letter when you are ready.",
-    "exampleZh": "準備好時，請撤回信件。",
+    "example": "Please withdraw your application by Friday.",
+    "exampleZh": "請在星期五前撤回申請。",
     "group": "Core 3"
   },
   {
@@ -14286,8 +14286,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ә'diʃәn/",
     "meaningZh": "加法, 增加的人(或物)",
-    "example": "The guide prepared a short report on addition before the weekend.",
-    "exampleZh": "嚮導在週末前準備了一份關於加法這方面的短報告。",
+    "example": "The new room is a helpful addition.",
+    "exampleZh": "新房間是一項有幫助的新增設施。",
     "group": "Core 3"
   },
   {
@@ -14296,8 +14296,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'kæptin/",
     "meaningZh": "船長, 指揮官, 海軍上校, 首領；率領, 指揮",
-    "example": "The captain stopped near the budget before the rehearsal.",
-    "exampleZh": "船長在排練前停在預算附近。",
+    "example": "The captain gave the order.",
+    "exampleZh": "隊長下達了命令。",
     "group": "Core 3"
   },
   {
@@ -14306,8 +14306,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/ai'diәl/",
     "meaningZh": "理想, 典範, 觀念, 思想, 最後目標；理想的, 完美的, 空想的, 觀念的, 唯心論的",
-    "example": "An ideal situation required extra care before the storm.",
-    "exampleZh": "一個理想的情況在暴風雨前需要額外處理。",
+    "example": "This is an ideal place to study.",
+    "exampleZh": "這是一個理想的讀書地點。",
     "group": "Core 3"
   },
   {
@@ -14316,8 +14316,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/'ɒkjupai/",
     "meaningZh": "佔領, 佔(時間、空間等), 住進, 擔任, 使從事, 使全神貫注",
-    "example": "The debate helped us occupy the schedule more clearly.",
-    "exampleZh": "辯論幫助我們更清楚地佔領時程。",
+    "example": "The meeting will occupy the whole morning.",
+    "exampleZh": "會議會占用整個早上。",
     "group": "Core 3"
   },
   {
@@ -14346,8 +14346,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/mi:nz/",
     "meaningZh": "方法, 手段, 工具, 財產, 收入",
-    "example": "This means helped guide the next step.",
-    "exampleZh": "這個方法幫助引導下一步。",
+    "example": "The bus is our only means of transport.",
+    "exampleZh": "公車是我們唯一的交通方式。",
     "group": "Core 3"
   },
   {
@@ -14356,8 +14356,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/pæk/",
     "meaningZh": "包裹, 一夥, 一副, 背包, 包裝；包裝, 捆紮, 塞滿, 壓緊, 挑選；包裝貨物, 擠, 群集, 被包裝",
-    "example": "The artist prepared a short report on pack before the exam.",
-    "exampleZh": "藝術家在考試前準備了一份關於包裹這方面的短報告。",
+    "example": "Please pack your bag tonight.",
+    "exampleZh": "請今晚把包包整理好。",
     "group": "Core 3"
   },
   {
@@ -14366,8 +14366,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/prins/",
     "meaningZh": "王子, 親王, 國君, 貴族, 諸侯, 有權勢的大人物",
-    "example": "The editor led a class discussion about prince after the rehearsal.",
-    "exampleZh": "編輯在排練後帶領全班討論王子。",
+    "example": "The prince greeted the crowd.",
+    "exampleZh": "王子向群眾致意。",
     "group": "Core 3"
   },
   {
@@ -14386,8 +14386,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/nәu'vembә/",
     "meaningZh": "十一月",
-    "example": "The teacher explained november during class before the rehearsal.",
-    "exampleZh": "老師在排練前的課堂上解釋了十一月。",
+    "example": "November is often rainy here.",
+    "exampleZh": "這裡十一月常下雨。",
     "group": "Core 3"
   },
   {
@@ -14396,8 +14396,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/di'sembә/",
     "meaningZh": "十二月",
-    "example": "The nurse gave a brief talk about december before the interview.",
-    "exampleZh": "護理師在面試前做了一段關於十二月這方面的簡短分享。",
+    "example": "December feels busy every year.",
+    "exampleZh": "每年十二月都讓人覺得忙碌。",
     "group": "Core 3"
   },
   {
@@ -14406,8 +14406,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'mәutә/",
     "meaningZh": "馬達, 發動機, 原動力, 汽車；馬達的, 發動機的, 汽車的, 發動的；推動, 以汽車載運；乘汽車, 駕車",
-    "example": "The manager gave a brief talk about motor before the review.",
-    "exampleZh": "經理在檢查前做了一段關於馬達這方面的簡短分享。",
+    "example": "The motor stopped suddenly.",
+    "exampleZh": "馬達突然停止。",
     "group": "Core 3"
   },
   {
@@ -14416,8 +14416,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/dis'mis/",
     "meaningZh": "解散, 開除, 解職；解散",
-    "example": "The practice helped us dismiss the schedule more clearly.",
-    "exampleZh": "練習幫助我們更清楚地解散時程。",
+    "example": "The teacher will dismiss the class early.",
+    "exampleZh": "老師會提早下課。",
     "group": "Core 3"
   },
   {
@@ -14426,8 +14426,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/prә'test/",
     "meaningZh": "抗議, 反對, 抗議書, 斷言；反對, 抗議, 斷言",
-    "example": "The engineer wrote a short note about protest after the rehearsal.",
-    "exampleZh": "工程師在排練後寫了一段關於抗議這方面的短筆記。",
+    "example": "Students held a peaceful protest.",
+    "exampleZh": "學生舉行了一場和平抗議。",
     "group": "Core 3"
   },
   {
@@ -14436,8 +14436,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/smәuk/",
     "meaningZh": "煙, 霧氣, 煙燻劑, 抽菸, 煙色；吸菸, 冒煙, 瀰漫；以煙燻, 抽菸而導致...",
-    "example": "The assistant gave a brief talk about smoke before class.",
-    "exampleZh": "助理在上課前做了一段關於煙這方面的簡短分享。",
+    "example": "Smoke filled the kitchen.",
+    "exampleZh": "煙充滿了廚房。",
     "group": "Core 3"
   },
   {
@@ -14446,8 +14446,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'ministri/",
     "meaningZh": "部, 內閣, 服務",
-    "example": "The nurse prepared a short report on ministry before the interview.",
-    "exampleZh": "護理師在面試前準備了一份關於部這方面的短報告。",
+    "example": "The ministry announced new rules.",
+    "exampleZh": "部會宣布了新規定。",
     "group": "Core 3"
   },
   {
@@ -14456,8 +14456,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'kemikl/",
     "meaningZh": "化學藥品；化學的, 化學上用的",
-    "example": "The engineer linked chemical to daily life.",
-    "exampleZh": "工程師把化學藥品和日常生活連起來。",
+    "example": "Store this chemical safely.",
+    "exampleZh": "請安全存放這種化學品。",
     "group": "Core 3"
   },
   {
@@ -14476,8 +14476,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/faund/",
     "meaningZh": "建立, 創立, 鑄造；find的過去式和過去分詞",
-    "example": "The doctor will found a new plan.",
-    "exampleZh": "醫生會建立新的計畫。",
+    "example": "They plan to found a new school.",
+    "exampleZh": "他們計畫創辦一所新學校。",
     "group": "Core 3"
   },
   {
@@ -14486,8 +14486,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/ɒ:'gʌst. 'ɒ:gәst/",
     "meaningZh": "八月；威嚴的, 令人敬畏的",
-    "example": "The nurse prepared a short report on august before the interview.",
-    "exampleZh": "護理師在面試前準備了一份關於八月這方面的短報告。",
+    "example": "August is a hot month in Taiwan.",
+    "exampleZh": "台灣的八月很熱。",
     "group": "Core 3"
   },
   {
@@ -14496,8 +14496,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'sætәdi/",
     "meaningZh": "星期六",
-    "example": "We talked about saturday during the workshop.",
-    "exampleZh": "我們在工作坊期間談到星期六。",
+    "example": "Saturday is usually busy.",
+    "exampleZh": "星期六通常很忙。",
     "group": "Core 3"
   },
   {
@@ -14506,8 +14506,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/.gærәn'ti:/",
     "meaningZh": "擔保, 抵押品, 保證書；保證, 擔保",
-    "example": "The student led a class discussion about guarantee after the festival.",
-    "exampleZh": "學生在節慶後帶領全班討論擔保。",
+    "example": "This receipt is your guarantee.",
+    "exampleZh": "這張收據就是你的保固憑證。",
     "group": "Core 3"
   },
   {
@@ -14516,8 +14516,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'ælai. ә'lai/",
     "meaningZh": "同盟者, 同盟國, 助手；使聯盟, 使聯合, 使有關係；結盟",
-    "example": "The ally spoke with the manager before sunset.",
-    "exampleZh": "那位同盟者在日落前和經理說話。",
+    "example": "Canada is an important ally.",
+    "exampleZh": "加拿大是一個重要盟友。",
     "group": "Core 3"
   },
   {
@@ -14526,8 +14526,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'kwi:n/",
     "meaningZh": "王后, 女王；立為女王；做女王",
-    "example": "The teacher gave a brief talk about queen before the meeting.",
-    "exampleZh": "老師在會議前做了一段關於王后這方面的簡短分享。",
+    "example": "The queen waved to the crowd.",
+    "exampleZh": "女王向群眾揮手。",
     "group": "Core 3"
   },
   {
@@ -14536,8 +14536,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'instәns/",
     "meaningZh": "建議, 情況, 例子, 場合；引以為例, 舉例說明",
-    "example": "The neighbor gave a brief talk about instance before the storm.",
-    "exampleZh": "鄰居在暴風雨前做了一段關於建議這方面的簡短分享。",
+    "example": "This is one instance of the problem.",
+    "exampleZh": "這是這個問題的一個例子。",
     "group": "Core 3"
   },
   {
@@ -14546,8 +14546,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'februәri/",
     "meaningZh": "二月",
-    "example": "The artist gave a brief talk about february before the trip.",
-    "exampleZh": "藝術家在旅程前做了一段關於二月這方面的簡短分享。",
+    "example": "February has fewer days than March.",
+    "exampleZh": "二月的天數比三月少。",
     "group": "Core 3"
   },
   {
@@ -14556,8 +14556,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'ræpid/",
     "meaningZh": "迅速的, 飛快的, 急促的, 陡的；急流",
-    "example": "The driver chose a rapid method before the deadline.",
-    "exampleZh": "司機在期限前選了一個迅速的方法。",
+    "example": "The patient made a rapid recovery.",
+    "exampleZh": "病人迅速康復。",
     "group": "Core 3"
   },
   {
@@ -14566,8 +14566,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/split/",
     "meaningZh": "劈開, 裂片, 裂縫, 分裂, 派系, 派別, 柳條；劈開的；分離, 分開, 裂開, 被劈開；劈開, 切開, 使分裂, 使分離",
-    "example": "The engineer gave a brief talk about split before Friday.",
-    "exampleZh": "工程師在星期五前做了一段關於劈開這方面的簡短分享。",
+    "example": "Split the bill equally.",
+    "exampleZh": "平均分攤帳單。",
     "group": "Core 3"
   },
   {
@@ -14576,8 +14576,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'klæsik/",
     "meaningZh": "古典作品, 傑作, 大藝術家；第一流的, 最優秀的, 古典的",
-    "example": "The designer prepared a short report on classic before the meeting.",
-    "exampleZh": "設計師在會議前準備了一份關於古典作品這方面的短報告。",
+    "example": "That film is a classic.",
+    "exampleZh": "那部電影是經典之作。",
     "group": "Core 3"
   },
   {
@@ -14586,8 +14586,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'steibl/",
     "meaningZh": "馬房, 牛棚；穩定的, 安定的, 堅固的, 堅定的；趕入馬房；被關在馬廄",
-    "example": "The driver explained stable during class before the call.",
-    "exampleZh": "司機在通話前的課堂上解釋了馬房。",
+    "example": "The ladder is stable.",
+    "exampleZh": "梯子很穩。",
     "group": "Core 3"
   },
   {
@@ -14596,8 +14596,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ik'spɒ:t/",
     "meaningZh": "輸出品, 輸出；輸出, 出口；輸出物資",
-    "example": "The assistant led a class discussion about export after the discussion.",
-    "exampleZh": "助理在討論後帶領全班討論輸出品。",
+    "example": "The company will export tea.",
+    "exampleZh": "公司會出口茶葉。",
     "group": "Core 3"
   },
   {
@@ -14606,8 +14606,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/praiz/",
     "meaningZh": "獎賞, 獎金, 獎品, 戰利品, 捕獲；得獎的；珍視, 估價, 捕獲, 撬, 撬動",
-    "example": "The teacher explained prize during class before the rehearsal.",
-    "exampleZh": "老師在排練前的課堂上解釋了獎賞。",
+    "example": "She won first prize.",
+    "exampleZh": "她贏得第一名獎品。",
     "group": "Core 3"
   },
   {
@@ -14616,8 +14616,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/di'lei/",
     "meaningZh": "耽擱, 遲滯；耽擱, 延遲",
-    "example": "The student led a class discussion about delay after the trial.",
-    "exampleZh": "學生在試驗後帶領全班討論耽擱。",
+    "example": "The flight had a long delay.",
+    "exampleZh": "班機延誤很久。",
     "group": "Core 3"
   },
   {
@@ -14626,8 +14626,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kʌzәn/",
     "meaningZh": "堂兄弟姊妹, 表兄弟姊妹",
-    "example": "The neighbor led a class discussion about cousin after the lesson.",
-    "exampleZh": "鄰居在課程後帶領全班討論堂兄弟姊妹。",
+    "example": "My cousin lives in Kaohsiung.",
+    "exampleZh": "我的表哥住在高雄。",
     "group": "Core 3"
   },
   {
@@ -14636,8 +14636,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/i'diʃәn/",
     "meaningZh": "版本, 版, 翻版",
-    "example": "The researcher led a class discussion about edition after the lesson.",
-    "exampleZh": "研究員在課程後帶領全班討論版本。",
+    "example": "This edition has new pictures.",
+    "exampleZh": "這個版本有新的圖片。",
     "group": "Core 3"
   },
   {
@@ -14646,8 +14646,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/di'fi:t/",
     "meaningZh": "敗北, 失敗；擊敗, 使落空",
-    "example": "The coach wrote a short note about defeat after the presentation.",
-    "exampleZh": "教練在簡報後寫了一段關於敗北這方面的短筆記。",
+    "example": "The team accepted defeat calmly.",
+    "exampleZh": "球隊平靜接受失敗。",
     "group": "Core 3"
   },
   {
@@ -14656,8 +14656,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'institju:t/",
     "meaningZh": "學會, 學院, 協會；創立, 開始, 制定, 任命",
-    "example": "A short trip discussion made institute easier to understand.",
-    "exampleZh": "簡短的旅程討論讓學會更容易理解。",
+    "example": "The institute published a report.",
+    "exampleZh": "該研究機構發布了一份報告。",
     "group": "Core 3"
   },
   {
@@ -14666,8 +14666,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v / a",
     "pronunciation": "/kræʃ/",
     "meaningZh": "嘩啦聲, 猛撞, 崩潰, 粗布；撞碎, 破碎, (使)...墜毀；速成的",
-    "example": "The artist prepared a short report on crash before the exam.",
-    "exampleZh": "藝術家在考試前準備了一份關於嘩啦聲這方面的短報告。",
+    "example": "The crash blocked the road.",
+    "exampleZh": "車禍堵住了道路。",
     "group": "Core 3"
   },
   {
@@ -14676,8 +14676,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'festәvәl/",
     "meaningZh": "節日的, 喜慶的, 快樂的；節日, 慶祝, 歡宴",
-    "example": "A festival situation required extra care before the weekend.",
-    "exampleZh": "一個節日的情況在週末前需要額外處理。",
+    "example": "The festival begins tomorrow.",
+    "exampleZh": "節慶明天開始。",
     "group": "Core 3"
   },
   {
@@ -14686,8 +14686,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/ri'zә:v/",
     "meaningZh": "儲備品, 貯量, 後備軍, 自然保護區, 保留, 拘謹, 節制, 儲備金；保留, 保存, 預訂, 延期, 推遲",
-    "example": "The designer prepared a short report on reserve before the call.",
-    "exampleZh": "設計師在通話前準備了一份關於儲備品這方面的短報告。",
+    "example": "Please reserve a table for four.",
+    "exampleZh": "請預訂一張四人桌。",
     "group": "Core 3"
   },
   {
@@ -14696,8 +14696,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/bæn/",
     "meaningZh": "禁令；禁止, 取締",
-    "example": "The visitor wrote a short note about ban after the review.",
-    "exampleZh": "訪客在檢查後寫了一段關於禁令這方面的短筆記。",
+    "example": "The city will ban plastic bags.",
+    "exampleZh": "市政府將禁止塑膠袋。",
     "group": "Core 3"
   },
   {
@@ -14706,8 +14706,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/bid/",
     "meaningZh": "出價；命令, 吩咐, 請求, 表示, 宣佈, 投標",
-    "example": "The researcher explained bid during class before Friday.",
-    "exampleZh": "研究員在星期五前的課堂上解釋了出價。",
+    "example": "The company made a higher bid.",
+    "exampleZh": "公司提出了更高的出價。",
     "group": "Core 3"
   },
   {
@@ -14716,8 +14716,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/kә'læps/",
     "meaningZh": "崩潰, 倒塌, 虛脫；倒塌, 崩潰, 瓦解；使倒塌, 摺疊",
-    "example": "The neighbor prepared a short report on collapse before the call.",
-    "exampleZh": "鄰居在通話前準備了一份關於崩潰這方面的短報告。",
+    "example": "The old bridge may collapse.",
+    "exampleZh": "那座老橋可能倒塌。",
     "group": "Core 3"
   },
   {
@@ -14726,8 +14726,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt",
     "pronunciation": "/'fri:kwәnt/",
     "meaningZh": "時常發生的, 頻繁的, 快速的；時常來訪, 常常聚集, 常與...交往",
-    "example": "The frequent plan helped the team move forward after the meeting.",
-    "exampleZh": "時常發生的計畫在會議後幫助團隊往前推進。",
+    "example": "Frequent rain delayed the work.",
+    "exampleZh": "頻繁下雨延誤了工作。",
     "group": "Core 3"
   },
   {
@@ -14736,8 +14736,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'rʌniŋ/",
     "meaningZh": "賽跑, 流出, 運轉；流動的, 跑著的, 連續的",
-    "example": "The artist wrote a short note about running after the rehearsal.",
-    "exampleZh": "藝術家在排練後寫了一段關於賽跑這方面的短筆記。",
+    "example": "Running keeps him healthy.",
+    "exampleZh": "跑步讓他保持健康。",
     "group": "Core 3"
   },
   {
@@ -14746,8 +14746,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ɑ:nt/",
     "meaningZh": "阿姨, 姨媽, 舅媽, 姑媽, 伯母",
-    "example": "The teacher led a class discussion about aunt after the festival.",
-    "exampleZh": "老師在節慶後帶領全班討論阿姨。",
+    "example": "My aunt lives nearby.",
+    "exampleZh": "我的阿姨住在附近。",
     "group": "Core 3"
   },
   {
@@ -14756,8 +14756,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/wu:nd/",
     "meaningZh": "創傷, 傷口, 傷疤, 傷害, 痛苦；傷害, 損害, 使受傷；打傷, 傷害；wind的過去式和過去分詞",
-    "example": "The wound made the workshop difficult after the rehearsal.",
-    "exampleZh": "創傷讓排練後的工作坊變得困難。",
+    "example": "Clean the wound carefully.",
+    "exampleZh": "小心清潔傷口。",
     "group": "Core 3"
   },
   {
@@ -14766,8 +14766,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt",
     "pronunciation": "/ig'zækt/",
     "meaningZh": "精確的, 準確的, 精密的；強求, 急需",
-    "example": "The manager chose an exact method before the interview.",
-    "exampleZh": "經理在面試前選了一個精確的方法。",
+    "example": "Tell me the exact time.",
+    "exampleZh": "告訴我確切時間。",
     "group": "Core 3"
   },
   {
@@ -14776,8 +14776,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/-/",
     "meaningZh": "戲院, 電影院, 劇場, 全體觀眾, 戲劇, 戲劇效果, 階梯式講堂, 場所",
-    "example": "The artist explained theatre during class before the exam.",
-    "exampleZh": "藝術家在考試前的課堂上解釋了戲院。",
+    "example": "We met outside the theatre.",
+    "exampleZh": "我們在劇院外見面。",
     "group": "Core 3"
   },
   {
@@ -14786,8 +14786,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/im'pɒ:t/",
     "meaningZh": "進口貨, 進口, 輸入, 含義, 重要性；輸入, 引入, 進口, 含...的意思, 重要；有關係",
-    "example": "The guide prepared a short report on import before the holiday.",
-    "exampleZh": "嚮導在假期前準備了一份關於進口貨這方面的短報告。",
+    "example": "The store will import coffee.",
+    "exampleZh": "這家店會進口咖啡。",
     "group": "Core 3"
   },
   {
@@ -14806,8 +14806,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'fraidi/",
     "meaningZh": "星期五",
-    "example": "We talked about friday during the review.",
-    "exampleZh": "我們在檢查期間談到星期五。",
+    "example": "Friday is the last workday.",
+    "exampleZh": "星期五是最後一個工作日。",
     "group": "Core 3"
   },
   {
@@ -14816,8 +14816,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'mʌndi/",
     "meaningZh": "星期一",
-    "example": "Monday felt unusually busy after the festival.",
-    "exampleZh": "節慶後的星期一感覺特別忙。",
+    "example": "Monday came too quickly.",
+    "exampleZh": "星期一來得太快了。",
     "group": "Core 3"
   },
   {
@@ -14826,8 +14826,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'prinsis/",
     "meaningZh": "公主, 王妃, 女巨頭",
-    "example": "The nurse prepared a short report on princess before the review.",
-    "exampleZh": "護理師在檢查前準備了一份關於公主這方面的短報告。",
+    "example": "The princess smiled at the child.",
+    "exampleZh": "公主對那個孩子微笑。",
     "group": "Core 3"
   },
   {
@@ -14836,8 +14836,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'wenzdi/",
     "meaningZh": "星期三",
-    "example": "Wednesday felt unusually busy after the visit.",
-    "exampleZh": "拜訪後的星期三感覺特別忙。",
+    "example": "Wednesday is our meeting day.",
+    "exampleZh": "星期三是我們的開會日。",
     "group": "Core 3"
   },
   {
@@ -14846,8 +14846,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'feivәrit/",
     "meaningZh": "喜歡的事物；喜愛的, 寵愛的",
-    "example": "The teacher wrote a short note about favourite after the review.",
-    "exampleZh": "老師在檢查後寫了一段關於喜歡的事物這方面的短筆記。",
+    "example": "This is my favourite song.",
+    "exampleZh": "這是我最喜歡的歌。",
     "group": "Core 3"
   },
   {
@@ -14856,8 +14856,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'θә:zdi/",
     "meaningZh": "星期四",
-    "example": "The teacher marked thursday on the calendar.",
-    "exampleZh": "老師把星期四標在行事曆上。",
+    "example": "Thursday is usually quiet.",
+    "exampleZh": "星期四通常很安靜。",
     "group": "Core 3"
   },
   {
@@ -14866,8 +14866,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'tju:zdi/",
     "meaningZh": "星期二",
-    "example": "The doctor marked tuesday on the calendar.",
-    "exampleZh": "醫生把星期二標在行事曆上。",
+    "example": "Tuesday works better for me.",
+    "exampleZh": "星期二對我來說比較方便。",
     "group": "Core 3"
   },
   {
@@ -14876,8 +14876,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'feivә/",
     "meaningZh": "好感, 偏愛, 喜愛, 相信, 庇護, 贊同, 支持, 信賴, 善行, 恩惠, 徽章, 禮物；贊成, 幫助, 支持, 喜愛, 偏袒, 關切, 賜與, 給與, 有利於, 有助於, 像, 體恤",
-    "example": "The student prepared a short report on favour before breakfast.",
-    "exampleZh": "學生在早餐前準備了一份關於好感這方面的短報告。",
+    "example": "Can you do me a favour?",
+    "exampleZh": "你能幫我一個忙嗎？",
     "group": "Core 3"
   },
   {
@@ -14886,8 +14886,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'leitist/",
     "meaningZh": "最近的",
-    "example": "The latest plan helped the team move forward after the lesson.",
-    "exampleZh": "最近的計畫在課程後幫助團隊往前推進。",
+    "example": "Read the latest news.",
+    "exampleZh": "閱讀最新消息。",
     "group": "Core 3"
   },
   {
@@ -14906,8 +14906,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'fuli/",
     "meaningZh": "十分地, 完全地, 充分地",
-    "example": "The team finished the contract fully.",
-    "exampleZh": "團隊十分地完成了合約。",
+    "example": "The room is fully booked.",
+    "exampleZh": "這個房間已經完全訂滿。",
     "group": "Core 3"
   },
   {
@@ -14916,8 +14916,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/ә'pærәntli/",
     "meaningZh": "表面上, 清楚地, 顯然地",
-    "example": "The manager answered apparently during the rehearsal.",
-    "exampleZh": "經理在排練中表面上地回答。",
+    "example": "Apparently, the train is late.",
+    "exampleZh": "顯然火車晚點了。",
     "group": "Core 3"
   },
   {
@@ -14936,8 +14936,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/pri'pєәd/",
     "meaningZh": "準備好的, 特製的",
-    "example": "A prepared situation required extra care before the deadline.",
-    "exampleZh": "一個準備好的情況在期限前需要額外處理。",
+    "example": "She was prepared for the test.",
+    "exampleZh": "她已經為考試做好準備。",
     "group": "Core 3"
   },
   {
@@ -14946,8 +14946,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/meik/",
     "meaningZh": "製造, 安排, 創造, 構成, 使得, 產生, 造成, 整理, 佈置, 引起, 到達, 進行；開始, 前進, 增大, 被製造, 被處理；製造, 構造, 性情",
-    "example": "The neighbor will make a new message.",
-    "exampleZh": "鄰居會製造新的訊息。",
+    "example": "Please make a list.",
+    "exampleZh": "請列一份清單。",
     "group": "Core 3"
   },
   {
@@ -14956,8 +14956,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/nәu/",
     "meaningZh": "知道, 瞭解, 認識, 確信",
-    "example": "The inspection helped us know the plan more clearly.",
-    "exampleZh": "檢查幫助我們更清楚地知道計畫。",
+    "example": "I know the answer.",
+    "exampleZh": "我知道答案。",
     "group": "Core 3"
   },
   {
@@ -14986,8 +14986,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "num",
     "pronunciation": "/θә:d/",
     "meaningZh": "第三, 三分之一",
-    "example": "The room had third seats for guests.",
-    "exampleZh": "房間裡有第三個座位給客人。",
+    "example": "This is my third attempt.",
+    "exampleZh": "這是我的第三次嘗試。",
     "group": "Core 3"
   },
   {
@@ -14996,8 +14996,8 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/әd.mini'streiʃәn/",
     "meaningZh": "行政, 管理, 政府機關",
-    "example": "The visitor wrote a short note about administration after the trip.",
-    "exampleZh": "訪客在旅程後寫了一段關於行政這方面的短筆記。",
+    "example": "The administration changed the policy.",
+    "exampleZh": "行政部門改變了政策。",
     "group": "Core 3"
   },
   {

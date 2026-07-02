@@ -3,6 +3,10 @@ import reviewedExamples from './reviewed-examples.json';
 import reviewedExamplesCore2A from './reviewed-examples-core2-a.json';
 import reviewedExamplesCore2B from './reviewed-examples-core2-b.json';
 import reviewedExamplesCore2C from './reviewed-examples-core2-c.json';
+import reviewedExamplesCore3A from './reviewed-examples-core3-a.json';
+import reviewedExamplesCore3B from './reviewed-examples-core3-b.json';
+import reviewedExamplesCore3C from './reviewed-examples-core3-c.json';
+import reviewedExamplesCore3D from './reviewed-examples-core3-d.json';
 import { sampleWords } from './words';
 
 const allReviewedExamples = [
@@ -10,6 +14,10 @@ const allReviewedExamples = [
   ...reviewedExamplesCore2A,
   ...reviewedExamplesCore2B,
   ...reviewedExamplesCore2C,
+  ...reviewedExamplesCore3A,
+  ...reviewedExamplesCore3B,
+  ...reviewedExamplesCore3C,
+  ...reviewedExamplesCore3D,
 ];
 
 describe('full vocabulary dataset', () => {
@@ -82,6 +90,13 @@ describe('full vocabulary dataset', () => {
   test('has approved reviewed examples for every Core 2 word', () => {
     const approvedWords = new Set(allReviewedExamples.filter((row) => row.status === 'approved').map((row) => row.word));
     const missingReviewedExamples = sampleWords.filter((word) => word.group === 'Core 2' && !approvedWords.has(word.word));
+
+    expect(missingReviewedExamples.map((word) => word.word)).toEqual([]);
+  });
+
+  test('has approved reviewed examples for every Core 3 word', () => {
+    const approvedWords = new Set(allReviewedExamples.filter((row) => row.status === 'approved').map((row) => row.word));
+    const missingReviewedExamples = sampleWords.filter((word) => word.group === 'Core 3' && !approvedWords.has(word.word));
 
     expect(missingReviewedExamples.map((word) => word.word)).toEqual([]);
   });

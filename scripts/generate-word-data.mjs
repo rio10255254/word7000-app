@@ -13,6 +13,10 @@ const reviewedExamplesExtraPaths = [
   path.join(projectRoot, 'src', 'data', 'reviewed-examples-core2-a.json'),
   path.join(projectRoot, 'src', 'data', 'reviewed-examples-core2-b.json'),
   path.join(projectRoot, 'src', 'data', 'reviewed-examples-core2-c.json'),
+  path.join(projectRoot, 'src', 'data', 'reviewed-examples-core3-a.json'),
+  path.join(projectRoot, 'src', 'data', 'reviewed-examples-core3-b.json'),
+  path.join(projectRoot, 'src', 'data', 'reviewed-examples-core3-c.json'),
+  path.join(projectRoot, 'src', 'data', 'reviewed-examples-core3-d.json'),
 ];
 const TARGET_COUNT = 7000;
 const convertToTraditional = OpenCC.Converter({ from: 'cn', to: 'tw' });

@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# local Expo state
+.expo/
+.codex-run/
+expo-env.d.ts
+
+# generated web and review exports
+dist/
+web-build/
+exports/
+
+# generated native folders
+ios/
+android/
+
+# local credentials and build outputs
+*.zip
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# caches and logs
+.metro-health-check*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.tsbuildinfo
+
+# system files
+.DS_Store

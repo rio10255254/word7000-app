@@ -2,6 +2,7 @@
   "expo": {
     "name": "Word7000",
     "slug": "word7000",
+    "owner": "rio10255254",
     "scheme": "word7000",
     "version": "1.0.0",
     "runtimeVersion": {
@@ -29,14 +30,14 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#F8FAFC"
-    },
     "plugins": [
       "expo-apple-authentication",
       "expo-web-browser"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d973eb82-7066-453c-a361-afe987ba0ca1"
+      }
+    }
   }
 }

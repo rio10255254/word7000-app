@@ -4575,7 +4575,9 @@ function QuizView({
             </View>
             <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
               <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.speakingPromptLabel}</Text>
-              <Text style={[styles.resultText, themeStyles?.resultText]}>{conversationPrompt.question}</Text>
+              <Text style={[styles.speakingPromptQuestion, themeStyles?.speakingPromptQuestion]} testID="speaking-prompt-question">
+                {conversationPrompt.question}
+              </Text>
               <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.speakingHintLabel}</Text>
               <Text style={[styles.resultText, themeStyles?.resultText]}>{conversationPrompt.questionSupport}</Text>
             </View>
@@ -7512,6 +7514,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
   },
+  speakingPromptQuestion: {
+    color: '#172033',
+    fontSize: 22,
+    fontWeight: '900',
+    lineHeight: 30,
+  },
   quizExampleCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     borderColor: 'rgba(203, 213, 225, 0.72)',
@@ -9548,6 +9556,9 @@ const darkStyles = StyleSheet.create({
   },
   resultText: {
     color: '#cbd5e1',
+  },
+  speakingPromptQuestion: {
+    color: '#f8fafc',
   },
   nextButton: {
     backgroundColor: '#182033',

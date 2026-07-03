@@ -27,6 +27,9 @@ yarn-debug.*
 yarn-error.*
 *.zip
 
+# generated GPT work packets
+exports/speaking-prompt-gpt/
+
 # macOS
 .DS_Store
 *.pem

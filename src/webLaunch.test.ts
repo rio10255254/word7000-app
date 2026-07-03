@@ -174,11 +174,16 @@ describe('free web launch configuration', () => {
     expect(quizSource).toContain('ui.speakingQuizMode');
     expect(quizSource).toContain('conversationPrompt');
     expect(quizSource).toContain('ui.speakingPromptLabel');
+    expect(quizSource).toContain('styles.speakingPromptQuestion');
+    expect(quizSource).toContain('testID="speaking-prompt-question"');
+    expect(quizSource).toContain('conversationPrompt.question');
     expect(quizSource).toContain('ui.iSpoke');
     expect(quizSource).toContain('ui.showSampleAnswer');
     expect(quizSource).toContain('ui.sampleAnswer');
     expect(quizSource).toContain('ui.sampleTranslation');
     expect(quizSource).not.toContain('styles.pronunciation');
+    expect(appSource).toContain('speakingPromptQuestion:');
+    expect(appSource).toContain('fontSize: 22');
   });
 
   test('keeps pronunciation off the quiz question card', () => {

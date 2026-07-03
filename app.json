@@ -14,7 +14,9 @@
     "description": "A simple offline 7000-word English vocabulary app for daily learning and review.",
     "ios": {
       "bundleIdentifier": "com.rio.word7000",
-      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
       "usesAppleSignIn": true,
       "supportsTablet": false
     },

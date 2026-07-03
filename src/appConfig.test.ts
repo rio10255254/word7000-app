@@ -26,6 +26,6 @@ describe('app store oriented metadata', () => {
     expect(eas.build.preview.distribution).toBe('internal');
     expect(eas.build.production.channel).toBe('production');
     expect(eas.build.production.autoIncrement).toBe(true);
-    expect(eas.submit.production).toEqual({});
+    expect(eas.submit.production.ios.ascAppId).toBe('6786934889');
   });
 });

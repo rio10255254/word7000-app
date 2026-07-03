@@ -8,7 +8,14 @@ const versionPath = path.join(process.cwd(), 'public', 'version.json');
 const serviceWorkerPath = path.join(process.cwd(), 'public', 'service-worker.js');
 const headersPath = path.join(process.cwd(), 'public', '_headers');
 const appPath = path.join(process.cwd(), 'App.tsx');
+const easPath = path.join(process.cwd(), 'eas.json');
 const schemaPath = path.join(process.cwd(), 'supabase', 'schema.sql');
+const appStoragePath = path.join(process.cwd(), 'src', 'lib', 'appStorage.ts');
+const nativeAppStoragePath = path.join(process.cwd(), 'src', 'lib', 'nativeAppStorage.native.ts');
+const webAppStoragePath = path.join(process.cwd(), 'src', 'lib', 'nativeAppStorage.web.ts');
+const supabaseClientPath = path.join(process.cwd(), 'src', 'lib', 'supabaseClient.ts');
+const nativeSupabaseRuntimePath = path.join(process.cwd(), 'src', 'lib', 'nativeSupabaseRuntime.native.ts');
+const webSupabaseRuntimePath = path.join(process.cwd(), 'src', 'lib', 'nativeSupabaseRuntime.web.ts');
 const prepareExportPath = path.join(process.cwd(), 'scripts', 'prepare-web-export.mjs');
 const privacyPath = path.join(process.cwd(), 'public', 'privacy.html');
 const supportPath = path.join(process.cwd(), 'public', 'support.html');
@@ -85,6 +92,25 @@ describe('free web launch configuration', () => {
     expect(prepareExport).toContain('black-translucent');
   });
 
+  test('keeps native-only storage imports out of the web bundle path', () => {
+    const appStorageSource = fs.readFileSync(appStoragePath, 'utf8');
+    const supabaseClientSource = fs.readFileSync(supabaseClientPath, 'utf8');
+    const nativeAppStorageSource = fs.readFileSync(nativeAppStoragePath, 'utf8');
+    const webAppStorageSource = fs.readFileSync(webAppStoragePath, 'utf8');
+    const nativeSupabaseRuntimeSource = fs.readFileSync(nativeSupabaseRuntimePath, 'utf8');
+    const webSupabaseRuntimeSource = fs.readFileSync(webSupabaseRuntimePath, 'utf8');
+
+    expect(appStorageSource).not.toContain("from '@react-native-async-storage/async-storage'");
+    expect(supabaseClientSource).not.toContain("from '@react-native-async-storage/async-storage'");
+    expect(supabaseClientSource).not.toContain("react-native-url-polyfill/auto");
+    expect(nativeAppStorageSource).toContain("from '@react-native-async-storage/async-storage'");
+    expect(webAppStorageSource).not.toContain("from '@react-native-async-storage/async-storage'");
+    expect(nativeSupabaseRuntimeSource).toContain("from '@react-native-async-storage/async-storage'");
+    expect(nativeSupabaseRuntimeSource).toContain("react-native-url-polyfill/auto");
+    expect(webSupabaseRuntimeSource).not.toContain("from '@react-native-async-storage/async-storage'");
+    expect(webSupabaseRuntimeSource).not.toContain("react-native-url-polyfill/auto");
+  });
+
   test('lets the web build preview the current iPhone app experience', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
@@ -107,6 +133,31 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Apple sign-in is shown here for iPhone preview');
   });
 
+  test('keeps iPhone bottom navigation anchored without double-counting safe area', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const tabBarStart = appSource.indexOf('tabBar: {');
+    const tabButtonStart = appSource.indexOf('tabButton:', tabBarStart);
+    const tabBarSource = appSource.slice(tabBarStart, tabButtonStart);
+
+    expect(appSource).toContain('const NATIVE_TAB_BAR_BOTTOM_OFFSET = 8;');
+    expect(appSource).toContain("Platform.OS === 'ios' ? NATIVE_TAB_BAR_BOTTOM_OFFSET");
+    expect(appSource).toContain('const TAB_BAR_RESERVED_HEIGHT = TAB_BAR_HEIGHT + IOS_TAB_BAR_BOTTOM_OFFSET + 24;');
+    expect(appSource).toContain('style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}');
+    expect(appSource).toContain('appScroll:');
+    expect(appSource).toContain('flex: 1');
+    expect(appSource).toContain("overflow: 'hidden'");
+    expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING');
+    expect(tabBarSource).toContain("alignSelf: 'stretch'");
+    expect(tabBarSource).toContain('borderTopWidth: 1');
+    expect(tabBarSource).toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(tabBarSource).toContain('paddingHorizontal: 16');
+    expect(tabBarSource).not.toContain("position: 'absolute'");
+    expect(tabBarSource).not.toContain('bottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(tabBarSource).not.toContain('borderRadius: 8');
+    expect(tabBarSource).not.toContain('marginHorizontal: 16');
+    expect(appSource).not.toContain(" : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;");
+  });
+
   test('provides a version endpoint for mobile web app update checks', () => {
     const version = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
     const appSource = fs.readFileSync(appPath, 'utf8');
@@ -126,6 +177,15 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('countdownText: copy.updateCountdown(countdownSeconds)');
     expect(appSource).toContain('countdownText={updateState.countdownText}');
     expect(appSource).toContain('setTimeout(refresh, UPDATE_AUTO_REFRESH_MS)');
+  });
+
+  test('configures native builds for fast TestFlight updates', () => {
+    const eas = JSON.parse(fs.readFileSync(easPath, 'utf8'));
+
+    expect(app.expo.updates?.url).toBe('https://u.expo.dev/d973eb82-7066-453c-a361-afe987ba0ca1');
+    expect(app.expo.runtimeVersion).toEqual({ policy: 'appVersion' });
+    expect(app.expo.extra?.eas?.projectId).toBe('d973eb82-7066-453c-a361-afe987ba0ca1');
+    expect(eas.submit.production.ios.ascAppId).toBe('6786934889');
   });
 
   test('includes a first-launch Safari add-to-home-screen guide', () => {
@@ -714,6 +774,35 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('styles.libraryDragThumbCollapsed');
     expect(appSource).toContain('styles.libraryDragThumbActive');
     expect(appSource).toContain('{librarySliderActive && (');
+  });
+
+  test('keeps the library drag slider adaptive and clear of the tab bar', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const controlsStart = appSource.indexOf('libraryFixedControls:');
+    const controlsEnd = appSource.indexOf('libraryFloatingTopButton:', controlsStart);
+    const sliderStart = appSource.indexOf('libraryDragSlider:', controlsEnd);
+    const sliderEnd = appSource.indexOf('libraryDragSliderActive:', sliderStart);
+    const controlsSource = appSource.slice(controlsStart, controlsEnd);
+    const sliderSource = appSource.slice(sliderStart, sliderEnd);
+
+    expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_TOP = 94;');
+    expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;');
+    expect(controlsSource).toContain('bottom: LIBRARY_FIXED_CONTROLS_BOTTOM');
+    expect(controlsSource).toContain('top: LIBRARY_FIXED_CONTROLS_TOP');
+    expect(controlsSource).not.toContain('height: 600');
+    expect(sliderSource).toContain('bottom: 0');
+    expect(sliderSource).toContain('top: 92');
+    expect(sliderSource).not.toContain('height: 500');
+  });
+
+  test('keeps the first library render lightweight on phones', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('const LIBRARY_WINDOW_SIZE = 72;');
+    expect(appSource).toContain('const LIBRARY_SCROLL_FORWARD_ANCHOR = 44;');
+    expect(appSource).toContain('const LIBRARY_SCROLL_BACKWARD_ANCHOR = 18;');
+    expect(appSource).toContain('const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(8, interactionMotion.staggeredListLimit);');
+    expect(appSource).not.toContain('const LIBRARY_WINDOW_SIZE = 260;');
   });
 
   test('keeps library search and filters inset from the edge slider', () => {

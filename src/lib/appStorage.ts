@@ -1,17 +1,14 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import type { StorageLike } from './progressStorage';
 export { createCachedAppStorage, shouldHydrateStorageKey, type AsyncStorageLike } from './appStorageCore';
-import { createCachedAppStorage } from './appStorageCore';
-
-const nativeStorage = createCachedAppStorage(AsyncStorage);
+import { getNativeAppStorage } from './nativeAppStorage';
 
 export function getAppStorage(): StorageLike | undefined {
   if (Platform.OS === 'web') {
     return (globalThis as { localStorage?: StorageLike }).localStorage;
   }
 
-  return nativeStorage.storage;
+  return getNativeAppStorage()?.storage;
 }
 
 export async function hydrateAppStorage(): Promise<void> {
@@ -19,9 +16,9 @@ export async function hydrateAppStorage(): Promise<void> {
     return;
   }
 
-  await nativeStorage.hydrate();
+  await getNativeAppStorage()?.hydrate();
 }
 
 export function isAppStorageHydrated(): boolean {
-  return Platform.OS === 'web' || nativeStorage.isHydrated();
+  return Platform.OS === 'web' || Boolean(getNativeAppStorage()?.isHydrated());
 }

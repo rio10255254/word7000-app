@@ -33,17 +33,27 @@ describe('iOS App Store readiness polish', () => {
 
   test('reserves extra bottom room for iPhone home indicator and fixed tab bar', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const tabBarStart = appSource.indexOf('tabBar: {');
+    const tabButtonStart = appSource.indexOf('tabButton:', tabBarStart);
+    const tabBarSource = appSource.slice(tabBarStart, tabButtonStart);
 
-    expect(appSource).toContain('IOS_BOTTOM_SAFE_AREA_FALLBACK');
     expect(appSource).toContain('WEB_TAB_BAR_BOTTOM_OFFSET');
+    expect(appSource).toContain('NATIVE_TAB_BAR_BOTTOM_OFFSET');
+    expect(appSource).toContain('WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA');
     expect(appSource).toContain('IS_WEB_IOS_PREVIEW');
-    expect(appSource).toContain("const IOS_BOTTOM_SAFE_AREA_FALLBACK = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW ? 28 : 0;");
-    expect(appSource).toContain('IS_WEB_IOS_PREVIEW');
-    expect(appSource).toContain('16 + IOS_BOTTOM_SAFE_AREA_FALLBACK');
     expect(appSource).toContain('IOS_TAB_BAR_BOTTOM_OFFSET');
-    expect(appSource).toContain('IOS_CONTENT_BOTTOM_PADDING');
-    expect(appSource).toContain('paddingBottom: IOS_CONTENT_BOTTOM_PADDING');
-    expect(appSource).toContain('bottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(appSource).toContain('TAB_BAR_RESERVED_HEIGHT');
+    expect(appSource).toContain('CONTENT_BOTTOM_PADDING');
+    expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING');
+    expect(appSource).toContain('style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}');
+    expect(tabBarSource).toContain("alignSelf: 'stretch'");
+    expect(tabBarSource).toContain('borderTopWidth: 1');
+    expect(tabBarSource).toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(tabBarSource).toContain('paddingHorizontal: 16');
+    expect(tabBarSource).not.toContain("position: 'absolute'");
+    expect(tabBarSource).not.toContain('bottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(tabBarSource).not.toContain('borderRadius: 8');
+    expect(tabBarSource).not.toContain('marginHorizontal: 16');
   });
 
   test('keeps the first iOS submission focused on iPhone instead of universal iPad support', () => {

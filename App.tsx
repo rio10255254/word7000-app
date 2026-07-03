@@ -216,23 +216,29 @@ function isWebIosPreviewMode() {
   });
 }
 const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();
-const IOS_BOTTOM_SAFE_AREA_FALLBACK = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW ? 28 : 0;
+const WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA = IS_WEB_IOS_PREVIEW ? 28 : 0;
 const WEB_TAB_BAR_BOTTOM_OFFSET = 8;
+const NATIVE_TAB_BAR_BOTTOM_OFFSET = 8;
+const PREVIEW_TAB_BAR_BOTTOM_OFFSET = 16 + WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA;
 const IOS_TAB_BAR_BOTTOM_OFFSET = Platform.OS === 'web'
   ? IS_WEB_IOS_PREVIEW
-    ? 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK
+    ? PREVIEW_TAB_BAR_BOTTOM_OFFSET
     : WEB_TAB_BAR_BOTTOM_OFFSET
-  : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
-const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = IOS_TAB_BAR_BOTTOM_OFFSET + 72;
-const IOS_CONTENT_BOTTOM_PADDING = 102 + IOS_BOTTOM_SAFE_AREA_FALLBACK;
+  : Platform.OS === 'ios' ? NATIVE_TAB_BAR_BOTTOM_OFFSET : WEB_TAB_BAR_BOTTOM_OFFSET;
+const TAB_BAR_HEIGHT = 66;
+const TAB_BAR_RESERVED_HEIGHT = TAB_BAR_HEIGHT + IOS_TAB_BAR_BOTTOM_OFFSET + 24;
+const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
+const CONTENT_BOTTOM_PADDING = 30;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
 const LIBRARY_LIST_DRAG_SCROLL_OFFSET = 168;
 const LIBRARY_LIST_DRAG_MIN_SCROLL_Y = 340;
-const LIBRARY_SCROLL_FORWARD_ANCHOR = 150;
-const LIBRARY_SCROLL_BACKWARD_ANCHOR = 58;
-const LIBRARY_WINDOW_SIZE = 260;
-const LIBRARY_ANIMATED_ITEM_COUNT = interactionMotion.staggeredListLimit;
+const LIBRARY_SCROLL_FORWARD_ANCHOR = 44;
+const LIBRARY_SCROLL_BACKWARD_ANCHOR = 18;
+const LIBRARY_WINDOW_SIZE = 72;
+const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(8, interactionMotion.staggeredListLimit);
+const LIBRARY_FIXED_CONTROLS_TOP = 94;
+const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;
 const quizQuestionCounts = [10, 20, 50] as const;
 type InstallGuideStep = {
   icon: 'add' | 'phone' | 'safari' | 'share';
@@ -2659,7 +2665,7 @@ function Word7000App() {
           ref={appScrollRef}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
-          style={IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll}
+          style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}
         >
           <Animated.View style={[styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}>
           {activeTab === 'home' && (
@@ -6446,6 +6452,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.26,
     shadowRadius: 34,
   },
+  appScroll: {
+    flex: 1,
+    overflow: 'hidden',
+  },
   webIosPreviewScroll: {
     marginBottom: WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET,
   },
@@ -6608,7 +6618,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 18,
-    paddingBottom: IOS_CONTENT_BOTTOM_PADDING,
+    paddingBottom: CONTENT_BOTTOM_PADDING,
   },
   screenMotion: {
     gap: 14,
@@ -8080,7 +8090,7 @@ const styles = StyleSheet.create({
   },
   libraryDetailStage: {
     backgroundColor: '#f8fafc',
-    bottom: 86,
+    bottom: TAB_BAR_RESERVED_HEIGHT,
     left: 0,
     paddingHorizontal: 18,
     paddingTop: 18,
@@ -8235,11 +8245,11 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   libraryFixedControls: {
-    height: 600,
+    bottom: LIBRARY_FIXED_CONTROLS_BOTTOM,
     position: 'absolute',
-    right: 10,
-    top: 94,
-    width: 86,
+    right: 8,
+    top: LIBRARY_FIXED_CONTROLS_TOP,
+    width: 80,
     zIndex: 20,
   },
   libraryFloatingTopButton: {
@@ -8273,13 +8283,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     borderRadius: 8,
     borderWidth: 1,
-    height: 500,
+    bottom: 0,
     paddingHorizontal: 4,
     paddingVertical: 5,
     position: 'absolute',
     shadowColor: '#172033',
     shadowOffset: { height: 2, width: 0 },
-    top: 100,
+    top: 92,
   },
   libraryDragSliderActive: {
     backgroundColor: '#ffffff',
@@ -9162,26 +9172,28 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   tabBar: {
-    alignSelf: 'center',
+    alignSelf: 'stretch',
     backgroundColor: '#fff',
     borderColor: '#e5e7eb',
-    borderRadius: 8,
-    borderWidth: 1,
-    bottom: IOS_TAB_BAR_BOTTOM_OFFSET,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
     flexDirection: 'row',
     gap: 4,
-    left: 16,
+    marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET,
     maxWidth: 720,
-    padding: 6,
-    position: 'absolute',
-    right: 16,
+    minHeight: TAB_BAR_HEIGHT,
+    paddingBottom: 6,
+    paddingHorizontal: 16,
+    paddingTop: 6,
   },
   tabButton: {
     alignItems: 'center',
     borderRadius: 8,
     flex: 1,
     gap: 4,
-    minHeight: 52,
+    minHeight: 50,
     justifyContent: 'center',
   },
   tabButtonActive: {

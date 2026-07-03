@@ -945,4 +945,26 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('testID="study-add-to-set"');
     expect(studySource).toContain('ui.addToSetName(formatWordPrimary(word, studyMode))');
   });
+
+  test('turns the study card into a randomized swipe deck with navigation buttons', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const progressSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'progress.ts'), 'utf8');
+    const studyStart = appSource.indexOf('function StudyView({');
+    const studyEnd = appSource.indexOf('function FilterControlPanel({');
+    const studySource = appSource.slice(studyStart, studyEnd);
+
+    expect(appSource).toContain('buildStudySession');
+    expect(appSource).toContain('const [studySeed, setStudySeed]');
+    expect(appSource).toContain('onPrevious={previousStudyWord}');
+    expect(appSource).toContain('onNext={nextStudyWord}');
+    expect(progressSource).toContain('export function buildStudySession');
+    expect(studySource).toContain('PanResponder.create');
+    expect(studySource).toContain('STUDY_SWIPE_THRESHOLD');
+    expect(studySource).toContain('onSwipeReview');
+    expect(studySource).toContain('onSwipeKnown');
+    expect(studySource).toContain('ui.previousWord');
+    expect(studySource).toContain('ui.nextWord');
+    expect(studySource).not.toContain('<Text style={styles.secondaryButtonText}>{ui.reviewAgain}</Text>');
+    expect(studySource).not.toContain('<Text style={styles.confirmButtonText}>{ui.known}</Text>');
+  });
 });

@@ -272,6 +272,10 @@ export function selectStudyWords(
   return filterWords(words, state, '', filter, options);
 }
 
+export function buildStudySession(words: WordEntry[], seed = createRuntimeSeed()): WordEntry[] {
+  return shuffleWithSeed(words, seed);
+}
+
 export function normalizeProgressForDate(state: ProgressState, today: string): ProgressState {
   const nextState =
     state.dailyProgressDate === today

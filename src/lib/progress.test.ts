@@ -3,6 +3,7 @@ import { sampleWords } from '../data/words';
 import {
   buildQuizOptions,
   buildQuizSession,
+  buildStudySession,
   computeStats,
   filterWords,
   markKnown,
@@ -353,5 +354,17 @@ describe('library and quiz helpers', () => {
         level: 'Core 1',
       }).every((word) => word.group === 'Core 1' && word.word.toUpperCase().startsWith('C')),
     ).toBe(true);
+  });
+
+  test('buildStudySession gives learning cards a stable randomized order', () => {
+    const words = sampleWords.slice(0, 12);
+    const firstSession = buildStudySession(words, 'study-seed-one');
+    const sameSession = buildStudySession(words, 'study-seed-one');
+    const otherSession = buildStudySession(words, 'study-seed-two');
+
+    expect(firstSession.map((word) => word.id)).toEqual(sameSession.map((word) => word.id));
+    expect(firstSession.map((word) => word.id).sort()).toEqual(words.map((word) => word.id).sort());
+    expect(firstSession.map((word) => word.id)).not.toEqual(words.map((word) => word.id));
+    expect(firstSession.map((word) => word.id)).not.toEqual(otherSession.map((word) => word.id));
   });
 });

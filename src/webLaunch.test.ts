@@ -959,7 +959,14 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('onNext={nextStudyWord}');
     expect(progressSource).toContain('export function buildStudySession');
     expect(studySource).toContain('PanResponder.create');
-    expect(studySource).toContain('STUDY_SWIPE_THRESHOLD');
+    expect(studySource).toContain('shouldClaimStudySwipe(gesture.dx, gesture.dy)');
+    expect(studySource).toContain('resolveStudySwipeDirection(gesture.dx, gesture.vx)');
+    expect(studySource).toContain('onMoveShouldSetPanResponderCapture');
+    expect(studySource).toContain('styles.studySwipeCardTop');
+    expect(studySource).toContain('styles.studySwipeCardLower');
+    expect(studySource).toContain('styles.studySwipeSideZone');
+    expect(studySource).toContain('styles.studySwipeSideZoneReview');
+    expect(studySource).toContain('styles.studySwipeSideZoneKnown');
     expect(studySource).toContain('onSwipeReview');
     expect(studySource).toContain('onSwipeKnown');
     expect(studySource).toContain('ui.previousWord');

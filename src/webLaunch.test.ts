@@ -482,6 +482,7 @@ describe('free web launch configuration', () => {
     expect(nativeHapticsSource).toContain("from 'expo-haptics'");
     expect(nativeHapticsSource).toContain('selectionAsync');
     expect(nativeHapticsSource).toContain('impactAsync');
+    expect(nativeHapticsSource).toContain("Older test builds may not include the native haptics module yet.");
     expect(webHapticsSource).not.toContain('expo-haptics');
   });
 

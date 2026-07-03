@@ -12,10 +12,14 @@ const impactByTone: Record<InteractionTone, Haptics.ImpactFeedbackStyle> = {
 };
 
 export function triggerPressHaptic(tone: InteractionTone): void {
-  const feedback =
-    tone === 'chip' || tone === 'tab'
-      ? Haptics.selectionAsync()
-      : Haptics.impactAsync(impactByTone[tone] ?? Haptics.ImpactFeedbackStyle.Light);
+  try {
+    const feedback =
+      tone === 'chip' || tone === 'tab'
+        ? Haptics.selectionAsync()
+        : Haptics.impactAsync(impactByTone[tone] ?? Haptics.ImpactFeedbackStyle.Light);
 
-  feedback.catch(() => undefined);
+    feedback.catch(() => undefined);
+  } catch {
+    // Older test builds may not include the native haptics module yet.
+  }
 }

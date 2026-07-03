@@ -426,8 +426,9 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Continue with Google');
     expect(appSource).toContain('handleAppleSignIn');
     expect(appSource).toContain("provider: 'apple'");
-    expect(appSource).toContain('createAppleNonce()');
-    expect(appSource).toContain('nonce: appleNonce');
+    expect(appSource).toContain('createAppleNoncePair()');
+    expect(appSource).toContain('nonce: appleNonce.sha256');
+    expect(appSource).toContain('nonce: appleNonce.raw');
     expect(appSource).toContain('access_token: credential.authorizationCode');
     expect(appSource).toContain('appleCredentialMetadata');
     expect(appSource).toContain('supabaseClient.auth.updateUser');
@@ -489,7 +490,8 @@ describe('free web launch configuration', () => {
   test('keeps Apple sign-in metadata reusable and first-login name aware', () => {
     const appleAuthSource = fs.readFileSync(appleAuthPath, 'utf8');
 
-    expect(appleAuthSource).toContain('createAppleNonce');
+    expect(appleAuthSource).toContain('createAppleNoncePair');
+    expect(appleAuthSource).toContain('sha256Hex');
     expect(appleAuthSource).toContain('appleCredentialMetadata');
     expect(appleAuthSource).toContain('full_name');
     expect(appleAuthSource).toContain('given_name');

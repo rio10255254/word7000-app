@@ -97,7 +97,7 @@ import {
 } from './src/lib/supabaseProgress';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
-import { appleCredentialMetadata, createAppleNonce } from './src/lib/appleAuth';
+import { appleCredentialMetadata, createAppleNoncePair } from './src/lib/appleAuth';
 import { triggerPressHaptic } from './src/lib/haptics';
 import {
   INSTALL_GUIDE_STORAGE_KEY,
@@ -2254,10 +2254,10 @@ function Word7000App() {
         return;
       }
 
-      const appleNonce = createAppleNonce();
+      const appleNonce = await createAppleNoncePair();
       const credential = await AppleAuthentication.signInAsync({
-        nonce: appleNonce,
-        state: appleNonce,
+        nonce: appleNonce.sha256,
+        state: appleNonce.raw,
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -2300,7 +2300,7 @@ function Word7000App() {
 
       const { data, error } = await supabaseClient.auth.signInWithIdToken({
         access_token: credential.authorizationCode,
-        nonce: appleNonce,
+        nonce: appleNonce.raw,
         provider: 'apple',
         token: credential.identityToken,
       });

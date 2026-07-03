@@ -552,8 +552,8 @@ describe('free web launch configuration', () => {
   test('animates word detail navigation in both directions', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const openDetailBlock = appSource.slice(
-      appSource.indexOf('function openLibraryWordDetail'),
-      appSource.indexOf('function closeLibraryWordDetail')
+      appSource.indexOf('const openLibraryWordDetail = useCallback'),
+      appSource.indexOf('const closeLibraryWordDetail = useCallback')
     );
 
     expect(appSource).toContain("type LibraryPanel = 'list' | 'detail' | 'sets'");
@@ -593,7 +593,7 @@ describe('free web launch configuration', () => {
     expect(openDetailBlock).toContain('setSelectedLibraryWord(word);');
     expect(openDetailBlock).toContain("setLibraryPanel('detail');");
     expect(openDetailBlock).not.toContain('Animated.timing');
-    expect(appSource).toContain('function closeLibraryWordDetail()');
+    expect(appSource).toContain('const closeLibraryWordDetail = useCallback');
     expect(appSource).toContain("setLibraryPanel('list');");
     expect(appSource).not.toContain('libraryPanelDirection');
     expect(appSource).not.toContain('setLibraryPanelDirection');
@@ -602,6 +602,30 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('onBack={closeLibraryWordDetail}');
     expect(appSource).toContain('pressTone="libraryItem"');
     expect(appSource).toContain('styles.libraryItemPressedLift');
+  });
+
+  test('keeps the library detail transition smooth without changing its form', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const libraryViewStart = appSource.indexOf('const LibraryView = memo(function LibraryView');
+    const detailViewStart = appSource.indexOf('function LibraryWordDetailView');
+    const libraryViewSource = appSource.slice(libraryViewStart, detailViewStart);
+
+    expect(appSource).toContain('memo,');
+    expect(libraryViewStart).toBeGreaterThan(-1);
+    expect(libraryViewSource).toContain('listMotionStyle(index)');
+    expect(appSource).toContain('const listMotionStyle = useCallback(');
+    expect(appSource).toContain('const handleLibraryFiltersToggle = useCallback(');
+    expect(appSource).toContain('const handleLibraryFavorite = useCallback(');
+    expect(appSource).toContain('const handleLibrarySearchBlur = useCallback(');
+    expect(appSource).toContain('const handleLibrarySearchFocus = useCallback(');
+    expect(appSource).toContain('const openLibraryCustomSets = useCallback(');
+    expect(appSource).toContain('onFiltersToggle={handleLibraryFiltersToggle}');
+    expect(appSource).toContain('onFavorite={handleLibraryFavorite}');
+    expect(appSource).toContain('onSearchBlur={handleLibrarySearchBlur}');
+    expect(appSource).toContain('onSearchFocus={handleLibrarySearchFocus}');
+    expect(appSource).toContain('onOpenCustomSets={openLibraryCustomSets}');
+    expect(appSource).toContain("outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0]");
+    expect(appSource).not.toContain('libraryListPanelReturnMotionStyle');
   });
 
   test('keeps the current scroll position during profile settings transitions', () => {

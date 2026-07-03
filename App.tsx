@@ -37,7 +37,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Alert,
   Animated,
@@ -1038,7 +1038,7 @@ function Word7000App() {
       },
     ],
   };
-  const listMotionStyle = (index: number) => {
+  const listMotionStyle = useCallback((index: number) => {
     if (activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT) {
       return undefined;
     }
@@ -1060,7 +1060,7 @@ function Word7000App() {
         },
       ],
     };
-  };
+  }, [activeTab, cardAnim]);
   const libraryPanelMotionStyle = {
     opacity: libraryPanelAnim,
     transform: [
@@ -1622,15 +1622,15 @@ function Word7000App() {
     nextStudyWord();
   }
 
-  function handleLibraryQueryChange(query: string) {
+  const handleLibraryQueryChange = useCallback((query: string) => {
     setSearchQuery(query);
     setLibraryWindowStart(0);
-  }
+  }, []);
 
-  function clearLibrarySearch() {
+  const clearLibrarySearch = useCallback(() => {
     setSearchQuery('');
     setLibraryWindowStart(0);
-  }
+  }, []);
 
   function handleExportVocabulary() {
     const downloaded = downloadTextFile(`word7000-vocabulary-${today}.csv`, exportWordsToCsv(vocabularyWords), 'text/csv;charset=utf-8');
@@ -1674,10 +1674,10 @@ function Word7000App() {
     setDeveloperVocabularyMessage(activeSystemCopy.clearPreview);
   }
 
-  function handleOpenSetPicker(word: WordEntry) {
+  const handleOpenSetPicker = useCallback((word: WordEntry) => {
     setSetPickerWord(word);
     setNewSetName('');
-  }
+  }, []);
 
   function handleCloseSetPicker() {
     setSetPickerWord(null);
@@ -1998,13 +1998,13 @@ function Word7000App() {
     appScrollRef.current?.scrollTo({ y: targetY, animated });
   }
 
-  function handleLibraryListLayout(event: LayoutChangeEvent) {
+  const handleLibraryListLayout = useCallback((event: LayoutChangeEvent) => {
     const nextTop = Math.max(0, Math.round(event.nativeEvent.layout.y));
     libraryListTopYRef.current = nextTop;
     setLibraryListTopY(nextTop);
-  }
+  }, []);
 
-  function handleLibraryFirstItemLayout(event: LayoutChangeEvent) {
+  const handleLibraryFirstItemLayout = useCallback((event: LayoutChangeEvent) => {
     if (libraryWindowStartRef.current > 0) {
       return;
     }
@@ -2016,7 +2016,7 @@ function Word7000App() {
 
     libraryItemExtentRef.current = nextExtent;
     setLibraryItemExtent(nextExtent);
-  }
+  }, []);
 
   function returnLibraryToTop() {
     libraryWindowStartRef.current = 0;
@@ -2026,14 +2026,34 @@ function Word7000App() {
     setScrollY(0);
   }
 
-  function openLibraryWordDetail(word: WordEntry) {
+  const openLibraryWordDetail = useCallback((word: WordEntry) => {
     setSelectedLibraryWord(word);
     setLibraryPanel('detail');
-  }
+  }, []);
 
-  function closeLibraryWordDetail() {
+  const closeLibraryWordDetail = useCallback(() => {
     setLibraryPanel('list');
-  }
+  }, []);
+
+  const handleLibraryFiltersToggle = useCallback(() => {
+    setLibraryFiltersOpen((current) => !current);
+  }, []);
+
+  const handleLibraryFavorite = useCallback((wordId: string) => {
+    setProgress((current) => toggleFavorite(current, wordId));
+  }, []);
+
+  const handleLibrarySearchBlur = useCallback(() => {
+    setSearchFocused(false);
+  }, []);
+
+  const handleLibrarySearchFocus = useCallback(() => {
+    setSearchFocused(true);
+  }, []);
+
+  const openLibraryCustomSets = useCallback(() => {
+    setLibraryPanel('sets');
+  }, []);
 
   const onProfilePanelSwap = useCallback(() => {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
@@ -2746,20 +2766,18 @@ function Word7000App() {
                 words={libraryWords}
                 onAddToSet={handleOpenSetPicker}
                 onFilterChange={setActiveFilter}
-                onFiltersToggle={() => setLibraryFiltersOpen((current) => !current)}
-                onFavorite={(wordId) => setProgress((current) => toggleFavorite(current, wordId))}
+                onFiltersToggle={handleLibraryFiltersToggle}
+                onFavorite={handleLibraryFavorite}
                 onInitialChange={setActiveInitial}
                 onFirstItemLayout={handleLibraryFirstItemLayout}
                 onListLayout={handleLibraryListLayout}
                 onLevelChange={setActiveLevel}
                 onOpenWord={openLibraryWordDetail}
-                onOpenCustomSets={() => {
-                  setLibraryPanel('sets');
-                }}
+                onOpenCustomSets={openLibraryCustomSets}
                 onQueryChange={handleLibraryQueryChange}
                 onQueryClear={clearLibrarySearch}
-                onSearchBlur={() => setSearchFocused(false)}
-                onSearchFocus={() => setSearchFocused(true)}
+                onSearchBlur={handleLibrarySearchBlur}
+                onSearchFocus={handleLibrarySearchFocus}
                 onSortChange={setActiveSort}
               />
             </Animated.View>
@@ -4600,7 +4618,7 @@ function QuizView({
   );
 }
 
-function LibraryView({
+const LibraryView = memo(function LibraryView({
   activeFilter,
   activeInitial,
   activeLevel,
@@ -4935,7 +4953,7 @@ function LibraryView({
       </View>
     </View>
   );
-}
+});
 
 function LibraryWordDetailView({
   progress,

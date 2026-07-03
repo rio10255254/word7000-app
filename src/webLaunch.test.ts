@@ -22,6 +22,11 @@ const supportPath = path.join(process.cwd(), 'public', 'support.html');
 const rootAppleIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon.png');
 const rootApplePrecomposedIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon-precomposed.png');
 const accountSetupPath = path.join(process.cwd(), 'ACCOUNT_GOOGLE_LOGIN.md');
+const packagePath = path.join(process.cwd(), 'package.json');
+const hapticsNativePath = path.join(process.cwd(), 'src', 'lib', 'haptics.native.ts');
+const hapticsWebPath = path.join(process.cwd(), 'src', 'lib', 'haptics.web.ts');
+const appleAuthPath = path.join(process.cwd(), 'src', 'lib', 'appleAuth.ts');
+const supabaseProgressPath = path.join(process.cwd(), 'src', 'lib', 'supabaseProgress.ts');
 
 describe('free web launch configuration', () => {
   test('keeps web-facing app identity ready for static hosting', () => {
@@ -402,15 +407,14 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain("from './src/lib/authRedirect'");
     expect(appSource).toContain('loadCloudProgressRecord');
-    expect(appSource).toContain('saveCloudCustomSets');
+    expect(appSource).toContain('saveCloudUserMemory');
     expect(appSource).toContain('mergeCustomSetStates');
     expect(appSource).toContain("cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress)");
     expect(appSource).toContain('mergeCustomSetStates(cloudProgress.customSets, loadCustomSetState(storage, user.id), loadCustomSetState(storage))');
     expect(appSource).toContain('saveProgressToStorage(getAppStorage(), progress, account.userId)');
     expect(appSource).toContain('saveCustomSetState(getAppStorage(), customSetState, account.userId)');
     expect(appSource).toContain('saveProgressToStorage(storage, loadedProgress, user.id)');
-    expect(appSource).toContain('await saveCloudProgress(asCloudProgressClient(supabaseClient), signedInUserId, progress)');
-    expect(appSource).toContain('await saveCloudCustomSets(asCloudProgressClient(supabaseClient), signedInUserId, customSetState)');
+    expect(appSource).toContain('await saveCloudUserMemory(asCloudProgressClient(supabaseClient), signedInUserId, progress, customSetState)');
     expect(appSource).toContain('loadProgressFromStorage(getAppStorage(), initialProgress)');
     expect(appSource).toContain('handleGoogleSignIn');
     expect(appSource).toContain("provider: 'google'");
@@ -422,6 +426,11 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Continue with Google');
     expect(appSource).toContain('handleAppleSignIn');
     expect(appSource).toContain("provider: 'apple'");
+    expect(appSource).toContain('createAppleNonce()');
+    expect(appSource).toContain('nonce: appleNonce');
+    expect(appSource).toContain('access_token: credential.authorizationCode');
+    expect(appSource).toContain('appleCredentialMetadata');
+    expect(appSource).toContain('supabaseClient.auth.updateUser');
     expect(appSource).toContain('Email 備用登入');
     expect(appSource).toContain('Email fallback');
     expect(appSource).toContain('onGoogleSignIn={handleGoogleSignIn}');
@@ -442,6 +451,7 @@ describe('free web launch configuration', () => {
   test('records signed-in daily active users for Supabase analytics', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const schema = fs.readFileSync(schemaPath, 'utf8');
+    const supabaseProgressSource = fs.readFileSync(supabaseProgressPath, 'utf8');
 
     expect(appSource).toContain('ACTIVE_USER_HEARTBEAT_MS = 60_000');
     expect(appSource).toContain('recordDailyActiveUser(asCloudProgressClient(supabaseClient), account.userId)');
@@ -451,8 +461,39 @@ describe('free web launch configuration', () => {
     expect(schema).toContain('primary key (user_id, activity_date)');
     expect(schema).toContain('daily_active_users_activity_date_idx');
     expect(schema).toContain('daily_active_users_last_seen_at_idx');
+    expect(schema).toContain('add column if not exists progress jsonb');
+    expect(schema).toContain('add column if not exists updated_at timestamptz');
+    expect(schema).toContain('profiles_updated_at_idx');
+    expect(supabaseProgressSource).toContain('saveCloudUserMemory');
+    expect(supabaseProgressSource).toContain('progress, custom_sets');
     expect(schema).toContain('Users can insert their own daily activity');
     expect(schema).toContain('Users can update their own daily activity');
+  });
+
+  test('adds native haptic feedback to shared app presses only on device builds', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+    const nativeHapticsSource = fs.readFileSync(hapticsNativePath, 'utf8');
+    const webHapticsSource = fs.readFileSync(hapticsWebPath, 'utf8');
+
+    expect(packageJson.dependencies['expo-haptics']).toBeTruthy();
+    expect(appSource).toContain("from './src/lib/haptics'");
+    expect(appSource).toContain('triggerPressHaptic(pressTone)');
+    expect(nativeHapticsSource).toContain("from 'expo-haptics'");
+    expect(nativeHapticsSource).toContain('selectionAsync');
+    expect(nativeHapticsSource).toContain('impactAsync');
+    expect(webHapticsSource).not.toContain('expo-haptics');
+  });
+
+  test('keeps Apple sign-in metadata reusable and first-login name aware', () => {
+    const appleAuthSource = fs.readFileSync(appleAuthPath, 'utf8');
+
+    expect(appleAuthSource).toContain('createAppleNonce');
+    expect(appleAuthSource).toContain('appleCredentialMetadata');
+    expect(appleAuthSource).toContain('full_name');
+    expect(appleAuthSource).toContain('given_name');
+    expect(appleAuthSource).toContain('family_name');
+    expect(appleAuthSource).toContain('apple_user');
   });
 
   test('documents the Google account setup needed after deployment', () => {
@@ -798,10 +839,11 @@ describe('free web launch configuration', () => {
   test('keeps the first library render lightweight on phones', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('const LIBRARY_WINDOW_SIZE = 72;');
-    expect(appSource).toContain('const LIBRARY_SCROLL_FORWARD_ANCHOR = 44;');
-    expect(appSource).toContain('const LIBRARY_SCROLL_BACKWARD_ANCHOR = 18;');
-    expect(appSource).toContain('const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(8, interactionMotion.staggeredListLimit);');
+    expect(appSource).toContain('const LIBRARY_WINDOW_SIZE = 42;');
+    expect(appSource).toContain('const LIBRARY_SCROLL_FORWARD_ANCHOR = 28;');
+    expect(appSource).toContain('const LIBRARY_SCROLL_BACKWARD_ANCHOR = 12;');
+    expect(appSource).toContain('const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);');
+    expect(appSource).not.toContain('const LIBRARY_WINDOW_SIZE = 72;');
     expect(appSource).not.toContain('const LIBRARY_WINDOW_SIZE = 260;');
   });
 

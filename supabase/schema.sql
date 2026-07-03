@@ -6,7 +6,14 @@ create table if not exists public.profiles (
 );
 
 alter table public.profiles
+  add column if not exists progress jsonb not null default '{}'::jsonb,
   add column if not exists custom_sets jsonb not null default '{"sets":[],"customWords":[]}'::jsonb;
+
+alter table public.profiles
+  add column if not exists updated_at timestamptz not null default now();
+
+create index if not exists profiles_updated_at_idx
+  on public.profiles (updated_at desc);
 
 create table if not exists public.daily_active_users (
   user_id uuid not null references auth.users(id) on delete cascade,

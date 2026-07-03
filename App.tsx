@@ -92,12 +92,13 @@ import {
   deleteCloudUserData,
   loadCloudProgressRecord,
   recordDailyActiveUser,
-  saveCloudCustomSets,
-  saveCloudProgress,
+  saveCloudUserMemory,
   type CloudProgressClient,
 } from './src/lib/supabaseProgress';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
+import { appleCredentialMetadata, createAppleNonce } from './src/lib/appleAuth';
+import { triggerPressHaptic } from './src/lib/haptics';
 import {
   INSTALL_GUIDE_STORAGE_KEY,
   markInstallGuideSeen,
@@ -233,10 +234,10 @@ const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
 const LIBRARY_LIST_DRAG_SCROLL_OFFSET = 168;
 const LIBRARY_LIST_DRAG_MIN_SCROLL_Y = 340;
-const LIBRARY_SCROLL_FORWARD_ANCHOR = 44;
-const LIBRARY_SCROLL_BACKWARD_ANCHOR = 18;
-const LIBRARY_WINDOW_SIZE = 72;
-const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(8, interactionMotion.staggeredListLimit);
+const LIBRARY_SCROLL_FORWARD_ANCHOR = 28;
+const LIBRARY_SCROLL_BACKWARD_ANCHOR = 12;
+const LIBRARY_WINDOW_SIZE = 42;
+const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
 const LIBRARY_FIXED_CONTROLS_TOP = 94;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;
 const quizQuestionCounts = [10, 20, 50] as const;
@@ -1558,20 +1559,16 @@ function Word7000App() {
         message: '同步中',
       }));
 
-      Promise.all([
-        saveCloudProgress(asCloudProgressClient(supabaseClient), account.userId ?? '', progress),
-        saveCloudCustomSets(asCloudProgressClient(supabaseClient), account.userId ?? '', customSetState),
-      ]).then(([progressResult, customSetResult]) => {
+      saveCloudUserMemory(asCloudProgressClient(supabaseClient), account.userId ?? '', progress, customSetState).then((memoryResult) => {
         if (cancelled) {
           return;
         }
 
-        const saved = progressResult.ok && customSetResult.ok;
         setAccount((current) => ({
           ...current,
           busy: false,
-          status: saved ? 'saved' : 'error',
-          message: saved ? '已保存到帳號' : progressResult.ok ? customSetResult.message : progressResult.message,
+          status: memoryResult.ok ? 'saved' : 'error',
+          message: memoryResult.ok ? '已保存到帳號' : memoryResult.message,
         }));
       });
     }, 450);
@@ -2101,7 +2098,7 @@ function Word7000App() {
     setInstallGuideStep((current) => Math.min(current + 1, activeInstallGuideSteps.length - 1));
   }
 
-  async function activateSignedInUser(user: SupabaseUser) {
+  async function activateSignedInUser(user: SupabaseUser, fallbackEmail?: string | null) {
     if (!supabaseClient) {
       return;
     }
@@ -2123,13 +2120,15 @@ function Word7000App() {
     setStudySetId(null);
     setQuizSetId(null);
     setSetPickerWord(null);
+    const saveResult = await saveCloudUserMemory(asCloudProgressClient(supabaseClient), user.id, loadedProgress, loadedCustomSetState);
+    await recordDailyActiveUser(asCloudProgressClient(supabaseClient), user.id).catch(() => undefined);
     setAccount((current) => ({
       ...current,
       userId: user.id,
-      userEmail: user.email ?? current.email,
+      userEmail: user.email ?? fallbackEmail ?? current.email,
       busy: false,
-      status: 'signedIn',
-      message: cloudProgress.found ? '已登入' : '已建立新的帳號記憶',
+      status: saveResult.ok ? 'signedIn' : 'error',
+      message: saveResult.ok ? (cloudProgress.found ? '已登入' : '已建立新的帳號記憶') : saveResult.message,
     }));
   }
 
@@ -2255,7 +2254,10 @@ function Word7000App() {
         return;
       }
 
+      const appleNonce = createAppleNonce();
       const credential = await AppleAuthentication.signInAsync({
+        nonce: appleNonce,
+        state: appleNonce,
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -2272,7 +2274,33 @@ function Word7000App() {
         return;
       }
 
+      if (!credential.authorizationCode) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: 'Apple 登入沒有回傳授權碼',
+        }));
+        return;
+      }
+
+      const credentialState = await AppleAuthentication.getCredentialStateAsync(credential.user).catch(() => null);
+      if (
+        credentialState !== null &&
+        credentialState !== AppleAuthentication.AppleAuthenticationCredentialState.AUTHORIZED
+      ) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          status: 'error',
+          message: 'Apple 帳號授權狀態無效，請重新登入',
+        }));
+        return;
+      }
+
       const { data, error } = await supabaseClient.auth.signInWithIdToken({
+        access_token: credential.authorizationCode,
+        nonce: appleNonce,
         provider: 'apple',
         token: credential.identityToken,
       });
@@ -2287,7 +2315,12 @@ function Word7000App() {
         return;
       }
 
-      await activateSignedInUser(data.user);
+      const metadata = appleCredentialMetadata(credential.fullName, credential.email, credential.user);
+      if (Object.keys(metadata).length > 0) {
+        await supabaseClient.auth.updateUser({ data: metadata }).catch(() => undefined);
+      }
+
+      await activateSignedInUser(data.user, credential.email);
     } catch (error: unknown) {
       const errorCode = typeof error === 'object' && error && 'code' in error ? String((error as { code?: unknown }).code) : '';
       setAccount((current) => ({
@@ -2451,8 +2484,7 @@ function Word7000App() {
     }
 
     if (supabaseClient && signedInUserId) {
-      await saveCloudProgress(asCloudProgressClient(supabaseClient), signedInUserId, progress);
-      await saveCloudCustomSets(asCloudProgressClient(supabaseClient), signedInUserId, customSetState);
+      await saveCloudUserMemory(asCloudProgressClient(supabaseClient), signedInUserId, progress, customSetState);
     }
 
     if (supabaseClient) {
@@ -3468,6 +3500,7 @@ function AnimatedPressable({
 
   function handlePressIn(event: Parameters<NonNullable<PressableProps['onPressIn']>>[0]) {
     if (!disabled) {
+      triggerPressHaptic(pressTone);
       setPressed(true);
       animatePress(1, interactionMotion.pressInMs);
     }
@@ -4789,7 +4822,7 @@ const LibraryView = memo(function LibraryView({
             </Animated.View>
           )}
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+          <View style={styles.libraryStatusFilterRow}>
             {filters.map((filter) => {
               const selected = activeFilter === filter.id;
               return (
@@ -4804,7 +4837,7 @@ const LibraryView = memo(function LibraryView({
                 </AnimatedPressable>
               );
             })}
-          </ScrollView>
+          </View>
 
           <FilterControlPanel
             activeFilter={activeFilter}
@@ -7731,6 +7764,11 @@ const styles = StyleSheet.create({
   filterRow: {
     gap: 8,
     paddingRight: 10,
+  },
+  libraryStatusFilterRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
   filterChip: {
     backgroundColor: '#fff',

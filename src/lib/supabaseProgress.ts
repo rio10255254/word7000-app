@@ -218,6 +218,45 @@ export async function saveCloudCustomSets(
   }
 }
 
+export async function saveCloudUserMemory(
+  client: CloudProgressClient,
+  userId: string,
+  progress: ProgressState,
+  customSets: CustomSetState,
+): Promise<CloudProgressResult> {
+  try {
+    await client
+      .from('profiles')
+      .upsert({
+        custom_sets: customSets,
+        id: userId,
+        progress,
+        updated_at: new Date().toISOString(),
+      })
+      .throwOnError();
+
+    return {
+      ok: true,
+      message: 'Saved',
+    };
+  } catch (error) {
+    if (isMissingCustomSetsColumn(errorMessageFromUnknown(error))) {
+      const progressResult = await saveCloudProgress(client, userId, progress);
+      return progressResult.ok
+        ? {
+            ok: true,
+            message: 'Custom sets sync pending schema update',
+          }
+        : progressResult;
+    }
+
+    return {
+      ok: false,
+      message: errorMessageFromUnknown(error) ?? 'Save failed',
+    };
+  }
+}
+
 export async function recordDailyActiveUser(
   client: CloudProgressClient,
   userId: string,

@@ -9,6 +9,7 @@ import {
   recordDailyActiveUser,
   saveCloudCustomSets,
   saveCloudProgress,
+  saveCloudUserMemory,
   type CloudProgressClient,
 } from './supabaseProgress';
 import type { ProgressState } from './progress';
@@ -174,6 +175,13 @@ describe('Supabase progress sync', () => {
     });
 
     await expect(saveCloudCustomSets(fakeClient(null), 'user-1', customSetState)).resolves.toEqual({
+      ok: true,
+      message: 'Saved',
+    });
+  });
+
+  test('saves progress and custom vocabulary sets together after sign-in', async () => {
+    await expect(saveCloudUserMemory(fakeClient(null), 'user-1', progressState(4), customSetState)).resolves.toEqual({
       ok: true,
       message: 'Saved',
     });

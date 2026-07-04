@@ -90,6 +90,7 @@ import {
 import {
   STUDY_SWIPE_THRESHOLD,
   previewStudySwipeDirection,
+  resolveStudyGestureIntent,
   resolveStudySwipeDirection,
   shouldClaimStudySwipe,
   type StudySwipeDirection,
@@ -249,8 +250,10 @@ const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListL
 const LIBRARY_FIXED_CONTROLS_TOP = 94;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;
 const STUDY_SWIPE_EXIT_X = 460;
+const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
+const STUDY_SWIPE_COMMIT_FADE_X = STUDY_SWIPE_THRESHOLD + 18;
 const quizQuestionCounts = [10, 20, 50] as const;
 type InstallGuideStep = {
   icon: 'add' | 'phone' | 'safari' | 'share';
@@ -4049,6 +4052,7 @@ function StudyView({
   const completingSwipeRef = useRef(false);
   const latestSwipeGestureRef = useRef({ dx: 0, vx: 0 });
   const readyHapticDirectionRef = useRef<StudySwipeDirection | null>(null);
+  const swipeGestureLockedRef = useRef(false);
   const [swipeDirection, setSwipeDirection] = useState<StudySwipeDirection | null>(null);
   const cardEntryStyle = {
     opacity: cardEntryProgress,
@@ -4077,8 +4081,15 @@ function StudyView({
   };
   const reviewFeedbackStyle = {
     opacity: swipeX.interpolate({
-      inputRange: [-STUDY_SWIPE_THRESHOLD, -STUDY_SWIPE_READY_FADE_X, -STUDY_SWIPE_PREVIEW_FADE_X, 0],
-      outputRange: [1, 0.28, 0.14, 0],
+      inputRange: [
+        -STUDY_SWIPE_COMMIT_FADE_X,
+        -STUDY_SWIPE_THRESHOLD,
+        -STUDY_SWIPE_READY_FADE_X,
+        -STUDY_SWIPE_PREVIEW_FADE_X,
+        -STUDY_SWIPE_GLOW_WAKE_X,
+        0,
+      ],
+      outputRange: [1, 0.78, 0.34, 0.1, 0.03, 0],
       extrapolate: 'clamp',
     }),
     transform: [
@@ -4093,8 +4104,15 @@ function StudyView({
   };
   const knownFeedbackStyle = {
     opacity: swipeX.interpolate({
-      inputRange: [0, STUDY_SWIPE_PREVIEW_FADE_X, STUDY_SWIPE_READY_FADE_X, STUDY_SWIPE_THRESHOLD],
-      outputRange: [0, 0.14, 0.28, 1],
+      inputRange: [
+        0,
+        STUDY_SWIPE_GLOW_WAKE_X,
+        STUDY_SWIPE_PREVIEW_FADE_X,
+        STUDY_SWIPE_READY_FADE_X,
+        STUDY_SWIPE_THRESHOLD,
+        STUDY_SWIPE_COMMIT_FADE_X,
+      ],
+      outputRange: [0, 0.03, 0.1, 0.34, 0.78, 1],
       extrapolate: 'clamp',
     }),
     transform: [
@@ -4106,6 +4124,20 @@ function StudyView({
         }),
       },
     ],
+  };
+  const reviewCueStyle = {
+    opacity: swipeX.interpolate({
+      inputRange: [-STUDY_SWIPE_THRESHOLD, -STUDY_SWIPE_READY_FADE_X, 0],
+      outputRange: [1, 0, 0],
+      extrapolate: 'clamp',
+    }),
+  };
+  const knownCueStyle = {
+    opacity: swipeX.interpolate({
+      inputRange: [0, STUDY_SWIPE_READY_FADE_X, STUDY_SWIPE_THRESHOLD],
+      outputRange: [0, 0, 1],
+      extrapolate: 'clamp',
+    }),
   };
 
   const runStudyCardEntry = useCallback(() => {
@@ -4123,6 +4155,7 @@ function StudyView({
     swipeX.setValue(0);
     setSwipeDirection(null);
     readyHapticDirectionRef.current = null;
+    swipeGestureLockedRef.current = false;
     runStudyCardEntry();
   }, [runStudyCardEntry, swipeX, word?.id]);
 
@@ -4133,6 +4166,7 @@ function StudyView({
 
     setSwipeDirection(null);
     readyHapticDirectionRef.current = null;
+    swipeGestureLockedRef.current = false;
     Animated.spring(swipeX, {
       friction: 8,
       tension: 120,
@@ -4168,6 +4202,7 @@ function StudyView({
         cardEntryProgress.setValue(0);
         setSwipeDirection(null);
         readyHapticDirectionRef.current = null;
+        swipeGestureLockedRef.current = false;
         completingSwipeRef.current = false;
         requestAnimationFrame(runStudyCardEntry);
       };
@@ -4185,14 +4220,43 @@ function StudyView({
     },
     [onSwipeKnown, onSwipeReview, swipeX],
   );
+  const shouldStartCardSwipe = useCallback((gesture: { dx: number; dy: number }) => {
+    if (swipeGestureLockedRef.current) {
+      return true;
+    }
+
+    const intent = resolveStudyGestureIntent(gesture.dx, gesture.dy);
+    if (intent === 'card') {
+      swipeGestureLockedRef.current = true;
+      return true;
+    }
+
+    return false;
+  }, []);
+  const finishOrResetSwipe = useCallback(
+    (gesture = latestSwipeGestureRef.current) => {
+      const direction =
+        resolveStudySwipeDirection(gesture.dx, gesture.vx) ??
+        resolveStudySwipeDirection(latestSwipeGestureRef.current.dx, latestSwipeGestureRef.current.vx);
+      if (direction) {
+        completeSwipe(direction);
+        return;
+      }
+
+      resetSwipe();
+    },
+    [completeSwipe, resetSwipe],
+  );
   const studySwipeResponder = useMemo(
     () =>
       PanResponder.create({
-        onMoveShouldSetPanResponder: (_, gesture) => shouldClaimStudySwipe(gesture.dx, gesture.dy),
-        onMoveShouldSetPanResponderCapture: (_, gesture) => shouldClaimStudySwipe(gesture.dx, gesture.dy),
+        onMoveShouldSetPanResponder: (_, gesture) => shouldClaimStudySwipe(gesture.dx, gesture.dy) && shouldStartCardSwipe(gesture),
+        onMoveShouldSetPanResponderCapture: (_, gesture) =>
+          resolveStudyGestureIntent(gesture.dx, gesture.dy) === 'card' && shouldStartCardSwipe(gesture),
         onPanResponderGrant: () => {
           latestSwipeGestureRef.current = { dx: 0, vx: 0 };
           readyHapticDirectionRef.current = null;
+          swipeGestureLockedRef.current = true;
           swipeX.stopAnimation();
         },
         onPanResponderMove: (_, gesture) => {
@@ -4212,22 +4276,13 @@ function StudyView({
           setSwipeDirection((current) => (current === nextDirection ? current : nextDirection));
         },
         onPanResponderRelease: (_, gesture) => {
-          const latestGesture = latestSwipeGestureRef.current;
-          const direction =
-            resolveStudySwipeDirection(gesture.dx, gesture.vx) ??
-            resolveStudySwipeDirection(latestGesture.dx, latestGesture.vx);
-          if (direction) {
-            completeSwipe(direction);
-            return;
-          }
-
-          resetSwipe();
+          finishOrResetSwipe(gesture);
         },
-        onPanResponderTerminate: resetSwipe,
+        onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture),
         onPanResponderTerminationRequest: () => false,
         onStartShouldSetPanResponder: () => false,
       }),
-    [completeSwipe, resetSwipe, swipeX],
+    [finishOrResetSwipe, shouldStartCardSwipe, swipeX],
   );
 
   return (
@@ -4275,21 +4330,29 @@ function StudyView({
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
         >
-          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealReviewGlow]} />
-          <View style={styles.studySwipeRevealContent}>
+          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealReviewGlow]}>
+            <View style={[styles.studySwipeRevealMist, styles.studySwipeRevealReviewMist]} />
+            <View style={[styles.studySwipeRevealBloom, styles.studySwipeRevealReviewBloom]} />
+            <View style={[styles.studySwipeRevealEdgeLight, styles.studySwipeRevealReviewEdgeLight]} />
+          </View>
+          <Animated.View style={[styles.studySwipeRevealCue, reviewCueStyle]}>
             <X size={42} color="#b91c1c" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackReviewText}>{ui.swipeReviewHint}</Text>
-          </View>
+          </Animated.View>
         </Animated.View>
         <Animated.View
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealKnown, knownFeedbackStyle]}
         >
-          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealKnownGlow]} />
-          <View style={styles.studySwipeRevealContent}>
+          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealKnownGlow]}>
+            <View style={[styles.studySwipeRevealMist, styles.studySwipeRevealKnownMist]} />
+            <View style={[styles.studySwipeRevealBloom, styles.studySwipeRevealKnownBloom]} />
+            <View style={[styles.studySwipeRevealEdgeLight, styles.studySwipeRevealKnownEdgeLight]} />
+          </View>
+          <Animated.View style={[styles.studySwipeRevealCue, knownCueStyle]}>
             <Check size={42} color="#166534" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackKnownText}>{ui.swipeKnownHint}</Text>
-          </View>
+          </Animated.View>
         </Animated.View>
         <Animated.View
           {...studySwipeResponder.panHandlers}
@@ -7526,30 +7589,79 @@ const styles = StyleSheet.create({
     left: 0,
   },
   studySwipeRevealGlow: {
-    borderRadius: 999,
-    bottom: -8,
+    bottom: 0,
     position: 'absolute',
-    top: -8,
-    width: 280,
+    top: 0,
+    width: '100%',
     zIndex: 1,
   },
   studySwipeRevealReviewGlow: {
-    backgroundColor: 'rgba(248, 113, 113, 0.22)',
-    right: -128,
-    shadowColor: '#ef4444',
-    shadowOffset: { width: -16, height: 0 },
-    shadowOpacity: 0.24,
-    shadowRadius: 34,
+    right: 0,
   },
   studySwipeRevealKnownGlow: {
-    backgroundColor: 'rgba(34, 197, 94, 0.2)',
-    left: -128,
-    shadowColor: '#22c55e',
-    shadowOffset: { width: 16, height: 0 },
-    shadowOpacity: 0.24,
-    shadowRadius: 34,
+    left: 0,
   },
-  studySwipeRevealContent: {
+  studySwipeRevealMist: {
+    bottom: 0,
+    position: 'absolute',
+    top: 0,
+    width: 190,
+  },
+  studySwipeRevealBloom: {
+    borderRadius: 999,
+    bottom: 12,
+    position: 'absolute',
+    top: 12,
+    width: 82,
+  },
+  studySwipeRevealEdgeLight: {
+    borderRadius: 999,
+    bottom: 28,
+    position: 'absolute',
+    top: 28,
+    width: 28,
+  },
+  studySwipeRevealReviewMist: {
+    backgroundColor: 'rgba(248, 113, 113, 0.045)',
+    right: 0,
+  },
+  studySwipeRevealReviewBloom: {
+    backgroundColor: 'rgba(248, 113, 113, 0.105)',
+    left: -12,
+    shadowColor: '#ef4444',
+    shadowOffset: { width: -10, height: 0 },
+    shadowOpacity: 0.18,
+    shadowRadius: 30,
+  },
+  studySwipeRevealReviewEdgeLight: {
+    backgroundColor: 'rgba(248, 113, 113, 0.2)',
+    left: -4,
+    shadowColor: '#ef4444',
+    shadowOffset: { width: -8, height: 0 },
+    shadowOpacity: 0.24,
+    shadowRadius: 24,
+  },
+  studySwipeRevealKnownMist: {
+    backgroundColor: 'rgba(34, 197, 94, 0.042)',
+    left: 0,
+  },
+  studySwipeRevealKnownBloom: {
+    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+    right: -12,
+    shadowColor: '#22c55e',
+    shadowOffset: { width: 10, height: 0 },
+    shadowOpacity: 0.18,
+    shadowRadius: 30,
+  },
+  studySwipeRevealKnownEdgeLight: {
+    backgroundColor: 'rgba(34, 197, 94, 0.19)',
+    right: -4,
+    shadowColor: '#22c55e',
+    shadowOffset: { width: 8, height: 0 },
+    shadowOpacity: 0.24,
+    shadowRadius: 24,
+  },
+  studySwipeRevealCue: {
     alignItems: 'center',
     gap: 6,
     justifyContent: 'center',

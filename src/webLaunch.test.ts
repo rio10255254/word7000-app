@@ -966,6 +966,8 @@ describe('free web launch configuration', () => {
     expect(progressSource).toContain('export function buildStudySession');
     expect(studySource).toContain('PanResponder.create');
     expect(studySource).toContain('shouldClaimStudySwipe(gesture.dx, gesture.dy)');
+    expect(studySource).toContain('resolveStudyGestureIntent(gesture.dx, gesture.dy)');
+    expect(studySource).toContain('swipeGestureLockedRef');
     expect(studySource).toContain('resolveStudySwipeDirection(gesture.dx, gesture.vx)');
     expect(studySource).toContain('onMoveShouldSetPanResponderCapture');
     expect(studySource).toContain('styles.studySwipeSlidingCard');
@@ -983,8 +985,13 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('styles.studySwipeRevealReview');
     expect(studySource).toContain('styles.studySwipeRevealKnown');
     expect(studySource).toContain('styles.studySwipeRevealGlow');
+    expect(studySource).toContain('styles.studySwipeRevealMist');
+    expect(studySource).toContain('styles.studySwipeRevealBloom');
+    expect(studySource).toContain('styles.studySwipeRevealEdgeLight');
+    expect(studySource).toContain('styles.studySwipeRevealCue');
     expect(revealStyleSource).toContain('top: 0');
     expect(revealStyleSource).toContain('bottom: 0');
+    expect(revealStyleSource).not.toContain('width: 280');
     expect(revealStyleSource).not.toContain('borderColor');
     expect(revealStyleSource).not.toContain('borderWidth');
     expect(revealStyleSource).not.toContain('borderTopLeftRadius');
@@ -996,6 +1003,7 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('runStudyCardEntry');
     expect(studySource).toContain('swipeX.stopAnimation();');
     expect(studySource).toContain('requestAnimationFrame(finishSwipe)');
+    expect(studySource).toContain('onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture)');
     expect(studySource).not.toContain('styles.studySwipeCardPinnedTop');
     expect(studySource).not.toContain('styles.studySwipePendulumPanel');
     expect(studySource).toContain('onSwipeReview');

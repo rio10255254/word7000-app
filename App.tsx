@@ -4089,13 +4089,6 @@ function StudyView({
           extrapolate: 'clamp',
         }),
       },
-      {
-        scale: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_THRESHOLD, -STUDY_SWIPE_READY_FADE_X, 0],
-          outputRange: [1, 0.94, 0.9],
-          extrapolate: 'clamp',
-        }),
-      },
     ],
   };
   const knownFeedbackStyle = {
@@ -4109,13 +4102,6 @@ function StudyView({
         translateX: swipeX.interpolate({
           inputRange: [0, STUDY_SWIPE_EXIT_X],
           outputRange: [-24, 0],
-          extrapolate: 'clamp',
-        }),
-      },
-      {
-        scale: swipeX.interpolate({
-          inputRange: [0, STUDY_SWIPE_READY_FADE_X, STUDY_SWIPE_THRESHOLD],
-          outputRange: [0.9, 0.94, 1],
           extrapolate: 'clamp',
         }),
       },
@@ -4289,6 +4275,7 @@ function StudyView({
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
         >
+          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealReviewGlow]} />
           <View style={styles.studySwipeRevealContent}>
             <X size={42} color="#b91c1c" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackReviewText}>{ui.swipeReviewHint}</Text>
@@ -4298,6 +4285,7 @@ function StudyView({
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealKnown, knownFeedbackStyle]}
         >
+          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealKnownGlow]} />
           <View style={styles.studySwipeRevealContent}>
             <Check size={42} color="#166534" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackKnownText}>{ui.swipeKnownHint}</Text>
@@ -7522,50 +7510,52 @@ const styles = StyleSheet.create({
   },
   studySwipeRevealFill: {
     alignItems: 'center',
-    bottom: 12,
+    bottom: 0,
     justifyContent: 'center',
     opacity: 0,
     overflow: 'hidden',
     position: 'absolute',
-    top: 62,
-    width: 148,
+    top: 0,
+    width: 190,
     zIndex: 1,
   },
   studySwipeRevealReview: {
-    backgroundColor: 'rgba(254, 226, 226, 0.92)',
-    borderColor: 'rgba(248, 113, 113, 0.28)',
-    borderLeftWidth: 0,
-    borderWidth: 1,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
     right: 0,
-    shadowColor: '#ef4444',
-    shadowOffset: { width: -10, height: 0 },
-    shadowOpacity: 0.16,
-    shadowRadius: 18,
   },
   studySwipeRevealKnown: {
-    backgroundColor: 'rgba(220, 252, 231, 0.92)',
-    borderColor: 'rgba(34, 197, 94, 0.28)',
-    borderRightWidth: 0,
-    borderWidth: 1,
-    borderTopLeftRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
     left: 0,
+  },
+  studySwipeRevealGlow: {
+    borderRadius: 999,
+    bottom: -8,
+    position: 'absolute',
+    top: -8,
+    width: 280,
+    zIndex: 1,
+  },
+  studySwipeRevealReviewGlow: {
+    backgroundColor: 'rgba(248, 113, 113, 0.22)',
+    right: -128,
+    shadowColor: '#ef4444',
+    shadowOffset: { width: -16, height: 0 },
+    shadowOpacity: 0.24,
+    shadowRadius: 34,
+  },
+  studySwipeRevealKnownGlow: {
+    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+    left: -128,
     shadowColor: '#22c55e',
-    shadowOffset: { width: 10, height: 0 },
-    shadowOpacity: 0.16,
-    shadowRadius: 18,
+    shadowOffset: { width: 16, height: 0 },
+    shadowOpacity: 0.24,
+    shadowRadius: 34,
   },
   studySwipeRevealContent: {
     alignItems: 'center',
     gap: 6,
     justifyContent: 'center',
     minHeight: 130,
+    position: 'relative',
+    zIndex: 2,
   },
   studySwipeFeedbackReviewText: {
     color: '#b91c1c',

@@ -952,6 +952,12 @@ describe('free web launch configuration', () => {
     const studyStart = appSource.indexOf('function StudyView({');
     const studyEnd = appSource.indexOf('function FilterControlPanel({');
     const studySource = appSource.slice(studyStart, studyEnd);
+    const feedbackStyleStart = studySource.indexOf('const reviewFeedbackStyle');
+    const feedbackStyleEnd = studySource.indexOf('const runStudyCardEntry', feedbackStyleStart);
+    const feedbackStyleSource = studySource.slice(feedbackStyleStart, feedbackStyleEnd);
+    const revealStyleStart = appSource.indexOf('studySwipeRevealFill:');
+    const revealStyleEnd = appSource.indexOf('studySwipeFeedbackReviewText:', revealStyleStart);
+    const revealStyleSource = appSource.slice(revealStyleStart, revealStyleEnd);
 
     expect(appSource).toContain('buildStudySession');
     expect(appSource).toContain('const [studySeed, setStudySeed]');
@@ -972,9 +978,16 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('STUDY_SWIPE_PREVIEW_FADE_X');
     expect(studySource).toContain('readyHapticDirectionRef');
     expect(studySource).toContain("triggerPressHaptic('chip')");
+    expect(feedbackStyleSource).not.toContain('scale: swipeX.interpolate');
     expect(studySource).toContain('styles.studySwipeRevealFill');
     expect(studySource).toContain('styles.studySwipeRevealReview');
     expect(studySource).toContain('styles.studySwipeRevealKnown');
+    expect(studySource).toContain('styles.studySwipeRevealGlow');
+    expect(revealStyleSource).toContain('top: 0');
+    expect(revealStyleSource).toContain('bottom: 0');
+    expect(revealStyleSource).not.toContain('borderColor');
+    expect(revealStyleSource).not.toContain('borderWidth');
+    expect(revealStyleSource).not.toContain('borderTopLeftRadius');
     expect(studySource).not.toContain('styles.studySwipeAttachedFeedback');
     expect(studySource).not.toContain('styles.studySwipeColorWash');
     expect(studySource).toContain('<X size={42}');

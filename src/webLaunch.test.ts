@@ -964,7 +964,8 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('onMoveShouldSetPanResponderCapture');
     expect(studySource).toContain('styles.studySwipeRotatingCard');
     expect(studySource).toContain("transformOrigin: '50% 0%'");
-    expect(studySource).toContain('{ translateX: swipeX }');
+    expect(studySource).toContain('studySwipeAnchorTranslateX');
+    expect(studySource).not.toContain('{ translateX: swipeX }');
     expect(studySource).toContain('styles.studySwipeColorWash');
     expect(studySource).toContain('styles.studySwipeColorWashReview');
     expect(studySource).toContain('styles.studySwipeColorWashKnown');

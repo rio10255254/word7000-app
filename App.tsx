@@ -4064,6 +4064,16 @@ function StudyView({
       },
     ],
   };
+  const studySwipeAnchorTranslateX = swipeX.interpolate({
+    inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
+    outputRange: [-38, 0, 38],
+    extrapolate: 'clamp',
+  });
+  const studySwipePendulumRotate = swipeX.interpolate({
+    inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
+    outputRange: ['-40deg', '0deg', '40deg'],
+    extrapolate: 'clamp',
+  });
   const rotatingCardStyle = {
     opacity: swipeX.interpolate({
       inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
@@ -4072,14 +4082,8 @@ function StudyView({
     }),
     transformOrigin: '50% 0%',
     transform: [
-      { translateX: swipeX },
-      {
-        rotate: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
-          outputRange: ['-34deg', '0deg', '34deg'],
-          extrapolate: 'clamp',
-        }),
-      },
+      { translateX: studySwipeAnchorTranslateX },
+      { rotate: studySwipePendulumRotate },
     ],
   };
   const reviewFeedbackStyle = {

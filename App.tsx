@@ -4043,52 +4043,34 @@ function StudyView({
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const swipeX = useRef(new Animated.Value(0)).current;
+  const cardEntryProgress = useRef(new Animated.Value(1)).current;
   const completingSwipeRef = useRef(false);
+  const latestSwipeGestureRef = useRef({ dx: 0, vx: 0 });
   const [swipeDirection, setSwipeDirection] = useState<StudySwipeDirection | null>(null);
-  const swipeCardStyle = {
-    opacity: swipeX.interpolate({
-      inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
-      outputRange: [0.78, 1, 0.78],
-      extrapolate: 'clamp',
-    }),
+  const cardEntryStyle = {
+    opacity: cardEntryProgress,
     transform: [
-      { translateX: swipeX },
       {
-        rotate: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
-          outputRange: ['-7deg', '0deg', '7deg'],
-          extrapolate: 'clamp',
+        translateY: cardEntryProgress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [18, 0],
         }),
       },
       {
-        scale: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_THRESHOLD, 0, STUDY_SWIPE_THRESHOLD],
-          outputRange: [0.985, 1, 0.985],
-          extrapolate: 'clamp',
+        scale: cardEntryProgress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.975, 1],
         }),
       },
     ],
   };
-  const swipeLowerCardStyle = {
+  const pendulumPanelStyle = {
+    transformOrigin: '50% 0%',
     transform: [
-      {
-        translateX: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
-          outputRange: [-20, 0, 20],
-          extrapolate: 'clamp',
-        }),
-      },
-      {
-        translateY: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
-          outputRange: [3, 0, 3],
-          extrapolate: 'clamp',
-        }),
-      },
       {
         rotate: swipeX.interpolate({
           inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
-          outputRange: ['-3.5deg', '0deg', '3.5deg'],
+          outputRange: ['-32deg', '0deg', '32deg'],
           extrapolate: 'clamp',
         }),
       },
@@ -4100,15 +4082,6 @@ function StudyView({
       outputRange: [1, 0.35, 0],
       extrapolate: 'clamp',
     }),
-    transform: [
-      {
-        scaleX: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_THRESHOLD, 0],
-          outputRange: [1, 0.58],
-          extrapolate: 'clamp',
-        }),
-      },
-    ],
   };
   const knownFeedbackStyle = {
     opacity: swipeX.interpolate({
@@ -4116,22 +4089,24 @@ function StudyView({
       outputRange: [0, 0.35, 1],
       extrapolate: 'clamp',
     }),
-    transform: [
-      {
-        scaleX: swipeX.interpolate({
-          inputRange: [0, STUDY_SWIPE_THRESHOLD],
-          outputRange: [0.58, 1],
-          extrapolate: 'clamp',
-        }),
-      },
-    ],
   };
+
+  const runStudyCardEntry = useCallback(() => {
+    cardEntryProgress.setValue(0);
+    Animated.spring(cardEntryProgress, {
+      friction: 8,
+      tension: 90,
+      toValue: 1,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start();
+  }, [cardEntryProgress]);
 
   useEffect(() => {
     completingSwipeRef.current = false;
     swipeX.setValue(0);
     setSwipeDirection(null);
-  }, [swipeX, word?.id]);
+    runStudyCardEntry();
+  }, [runStudyCardEntry, swipeX, word?.id]);
 
   const resetSwipe = useCallback(() => {
     if (completingSwipeRef.current) {
@@ -4164,25 +4139,28 @@ function StudyView({
         }
 
         completed = true;
+        swipeX.stopAnimation();
         if (direction === 'known') {
           onSwipeKnown();
         } else {
           onSwipeReview();
         }
         swipeX.setValue(0);
+        cardEntryProgress.setValue(0);
         setSwipeDirection(null);
         completingSwipeRef.current = false;
+        requestAnimationFrame(runStudyCardEntry);
       };
-      const fallbackTimer = setTimeout(finishSwipe, 260);
+      const fallbackTimer = setTimeout(finishSwipe, 210);
 
       Animated.timing(swipeX, {
-        duration: 180,
+        duration: 160,
         easing: Easing.out(Easing.cubic),
         toValue,
         useNativeDriver: Platform.OS !== 'web',
       }).start(() => {
         clearTimeout(fallbackTimer);
-        finishSwipe();
+        requestAnimationFrame(finishSwipe);
       });
     },
     [onSwipeKnown, onSwipeReview, swipeX],
@@ -4193,15 +4171,20 @@ function StudyView({
         onMoveShouldSetPanResponder: (_, gesture) => shouldClaimStudySwipe(gesture.dx, gesture.dy),
         onMoveShouldSetPanResponderCapture: (_, gesture) => shouldClaimStudySwipe(gesture.dx, gesture.dy),
         onPanResponderGrant: () => {
+          latestSwipeGestureRef.current = { dx: 0, vx: 0 };
           swipeX.stopAnimation();
         },
         onPanResponderMove: (_, gesture) => {
+          latestSwipeGestureRef.current = { dx: gesture.dx, vx: gesture.vx };
           swipeX.setValue(gesture.dx);
           const nextDirection = resolveStudySwipeDirection(gesture.dx, gesture.vx) ?? previewStudySwipeDirection(gesture.dx);
           setSwipeDirection((current) => (current === nextDirection ? current : nextDirection));
         },
         onPanResponderRelease: (_, gesture) => {
-          const direction = resolveStudySwipeDirection(gesture.dx, gesture.vx);
+          const latestGesture = latestSwipeGestureRef.current;
+          const direction =
+            resolveStudySwipeDirection(gesture.dx, gesture.vx) ??
+            resolveStudySwipeDirection(latestGesture.dx, latestGesture.vx);
           if (direction) {
             completeSwipe(direction);
             return;
@@ -4256,79 +4239,88 @@ function StudyView({
 
       {word && (
         <>
-      <Animated.View style={[styles.studySwipeDeck, motionStyle]} testID="study-swipe-deck">
+      <Animated.View style={[styles.studySwipeDeck, motionStyle, cardEntryStyle]} testID="study-swipe-deck">
         <Animated.View
-          pointerEvents="none"
-          style={[styles.studySwipeSideZone, styles.studySwipeSideZoneReview, reviewFeedbackStyle]}
+          accessibilityHint={swipeDirection === 'known' ? ui.swipeKnownHint : swipeDirection === 'review' ? ui.swipeReviewHint : undefined}
+          style={styles.studySwipeCardShell}
+          testID="study-swipe-card"
         >
-          <X size={34} color="#b91c1c" strokeWidth={2.7} />
-          <Text style={styles.studySwipeFeedbackReviewText}>{ui.swipeReviewHint}</Text>
-        </Animated.View>
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.studySwipeSideZone, styles.studySwipeSideZoneKnown, knownFeedbackStyle]}
-        >
-          <Check size={34} color="#166534" strokeWidth={2.7} />
-          <Text style={styles.studySwipeFeedbackKnownText}>{ui.swipeKnownHint}</Text>
-        </Animated.View>
-      <Animated.View
-        {...studySwipeResponder.panHandlers}
-        accessibilityHint={swipeDirection === 'known' ? ui.swipeKnownHint : swipeDirection === 'review' ? ui.swipeReviewHint : undefined}
-        style={[styles.wordCard, styles.studySwipeCardSurface, themeStyles?.wordCard, swipeCardStyle]}
-        testID="study-swipe-card"
-      >
-        <View style={styles.studySwipeCardTop}>
-          <View style={styles.rowBetween}>
-            <View style={styles.groupPill}>
-              <Text style={styles.groupText}>{word.group}</Text>
+          <View style={[styles.studySwipeCardPinnedTop, themeStyles?.wordCard]}>
+            <View style={styles.rowBetween}>
+              <View style={styles.groupPill}>
+                <Text style={styles.groupText}>{word.group}</Text>
+              </View>
+              <View style={styles.studyCardActions}>
+                <AnimatedPressable
+                  accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
+                  accessibilityRole="button"
+                  onPress={() => onAddToSet(word)}
+                  pressTone="icon"
+                  style={[styles.iconButton, styles.addToSetIconButton]}
+                  testID="study-add-to-set"
+                >
+                  <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
+                </AnimatedPressable>
+                <AnimatedPressable
+                  accessibilityLabel={favorited ? ui.unfavoriteWord : ui.favoriteWord}
+                  accessibilityRole="button"
+                  onPress={onFavorite}
+                  pressTone="icon"
+                  style={styles.iconButton}
+                >
+                  <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
+                </AnimatedPressable>
+              </View>
             </View>
-            <View style={styles.studyCardActions}>
-              <AnimatedPressable
-                accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
-                accessibilityRole="button"
-                onPress={() => onAddToSet(word)}
-                pressTone="icon"
-                style={[styles.iconButton, styles.addToSetIconButton]}
-                testID="study-add-to-set"
-              >
-                <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
-              </AnimatedPressable>
-              <AnimatedPressable
-                accessibilityLabel={favorited ? ui.unfavoriteWord : ui.favoriteWord}
-                accessibilityRole="button"
-                onPress={onFavorite}
-                pressTone="icon"
-                style={styles.iconButton}
-              >
-                <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
-              </AnimatedPressable>
-            </View>
+            <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
+              {formatWordPrimary(word, studyMode)}
+            </Text>
+            {studyMode === 'chinese' && (
+              <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
+            )}
+            <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
           </View>
-          <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
-            {formatWordPrimary(word, studyMode)}
-          </Text>
-          {studyMode === 'chinese' && (
-            <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
-          )}
-          <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
-        </View>
-        <Animated.View style={[styles.studySwipeCardLower, swipeLowerCardStyle]}>
-          <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
-            <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
-            <Text style={[styles.meaning, themeStyles?.meaning]}>{formatMeaningDetail(word, studyMode)}</Text>
-          </View>
-          {formatMeaningSupplement(word, studyMode) && (
-            <View style={[styles.supplementalMeaning, themeStyles?.supplementalMeaning]}>
-              <Text style={[styles.supplementalLabel, themeStyles?.supplementalLabel]}>{ui.supplementalMeanings}</Text>
-              <Text style={[styles.supplementalText, themeStyles?.supplementalText]}>{formatMeaningSupplement(word, studyMode)}</Text>
-            </View>
-          )}
-          <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
-            <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
-            <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
+
+          <View
+            {...studySwipeResponder.panHandlers}
+            style={styles.studySwipePendulumStage}
+          >
+            <Animated.View
+              pointerEvents="none"
+              style={[styles.studySwipeColorWash, styles.studySwipeColorWashReview, reviewFeedbackStyle]}
+            >
+              <View style={styles.studySwipeColorWashContent}>
+                <X size={38} color="#b91c1c" strokeWidth={2.8} />
+                <Text style={styles.studySwipeFeedbackReviewText}>{ui.swipeReviewHint}</Text>
+              </View>
+            </Animated.View>
+            <Animated.View
+              pointerEvents="none"
+              style={[styles.studySwipeColorWash, styles.studySwipeColorWashKnown, knownFeedbackStyle]}
+            >
+              <View style={styles.studySwipeColorWashContent}>
+                <Check size={38} color="#166534" strokeWidth={2.8} />
+                <Text style={styles.studySwipeFeedbackKnownText}>{ui.swipeKnownHint}</Text>
+              </View>
+            </Animated.View>
+            <Animated.View style={[styles.studySwipePendulumPanel, themeStyles?.wordCard, pendulumPanelStyle]}>
+              <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
+                <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
+                <Text style={[styles.meaning, themeStyles?.meaning]}>{formatMeaningDetail(word, studyMode)}</Text>
+              </View>
+              {formatMeaningSupplement(word, studyMode) && (
+                <View style={[styles.supplementalMeaning, themeStyles?.supplementalMeaning]}>
+                  <Text style={[styles.supplementalLabel, themeStyles?.supplementalLabel]}>{ui.supplementalMeanings}</Text>
+                  <Text style={[styles.supplementalText, themeStyles?.supplementalText]}>{formatMeaningSupplement(word, studyMode)}</Text>
+                </View>
+              )}
+              <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
+                <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
+                <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
+              </View>
+            </Animated.View>
           </View>
         </Animated.View>
-      </Animated.View>
       </Animated.View>
 
       <View style={styles.actionGrid}>
@@ -7485,40 +7477,64 @@ const styles = StyleSheet.create({
   },
   studySwipeDeck: {
     borderRadius: 10,
+    position: 'relative',
+  },
+  studySwipeCardShell: {
+    borderRadius: 8,
+    overflow: 'visible',
+    position: 'relative',
+  },
+  studySwipeCardPinnedTop: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    gap: 14,
+    padding: 18,
+    zIndex: 4,
+  },
+  studySwipePendulumStage: {
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    minHeight: 238,
     overflow: 'hidden',
     position: 'relative',
   },
-  studySwipeCardSurface: {
+  studySwipePendulumPanel: {
+    backgroundColor: '#fff',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    borderColor: '#e5e7eb',
+    borderWidth: 1,
+    borderTopWidth: 0,
+    gap: 14,
+    minHeight: 238,
+    padding: 18,
+    zIndex: 2,
+  },
+  studySwipeColorWash: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    left: 0,
+    opacity: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
     zIndex: 1,
   },
-  studySwipeCardTop: {
-    gap: 14,
-  },
-  studySwipeCardLower: {
-    gap: 14,
-  },
-  studySwipeSideZone: {
-    alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
-    bottom: 0,
-    elevation: 2,
-    gap: 7,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 96,
-    zIndex: 3,
-  },
-  studySwipeSideZoneReview: {
+  studySwipeColorWashReview: {
     backgroundColor: '#fee2e2',
-    borderColor: '#fecaca',
-    left: 0,
   },
-  studySwipeSideZoneKnown: {
+  studySwipeColorWashKnown: {
     backgroundColor: '#dcfce7',
-    borderColor: '#bbf7d0',
-    right: 0,
+  },
+  studySwipeColorWashContent: {
+    alignItems: 'center',
+    gap: 6,
+    justifyContent: 'center',
   },
   studySwipeFeedbackReviewText: {
     color: '#b91c1c',

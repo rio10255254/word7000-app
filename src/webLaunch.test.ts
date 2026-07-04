@@ -952,6 +952,15 @@ describe('free web launch configuration', () => {
     const studyStart = appSource.indexOf('function StudyView({');
     const studyEnd = appSource.indexOf('function FilterControlPanel({');
     const studySource = appSource.slice(studyStart, studyEnd);
+    const appStateStart = appSource.indexOf('function Word7000App()');
+    const appRenderStart = appSource.indexOf('return (', appStateStart);
+    const appStateSource = appSource.slice(appStateStart, appRenderStart);
+    const mainScrollStart = appSource.indexOf('<ScrollView', appRenderStart);
+    const mainScrollEnd = appSource.indexOf('>', mainScrollStart);
+    const mainScrollSource = appSource.slice(mainScrollStart, mainScrollEnd);
+    const appStudyCallStart = appSource.indexOf('<StudyView');
+    const appStudyCallEnd = appSource.indexOf('/>', appStudyCallStart);
+    const studyCallSource = appSource.slice(appStudyCallStart, appStudyCallEnd);
     const feedbackStyleStart = studySource.indexOf('const reviewFeedbackStyle');
     const feedbackStyleEnd = studySource.indexOf('const runStudyCardEntry', feedbackStyleStart);
     const feedbackStyleSource = studySource.slice(feedbackStyleStart, feedbackStyleEnd);
@@ -961,6 +970,9 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('buildStudySession');
     expect(appSource).toContain('const [studySeed, setStudySeed]');
+    expect(appStateSource).toContain('const [studySwipeScrollLocked, setStudySwipeScrollLocked]');
+    expect(mainScrollSource).toContain('scrollEnabled={!studySwipeScrollLocked}');
+    expect(studyCallSource).toContain('onSwipeLockChange={setStudySwipeScrollLocked}');
     expect(appSource).toContain('onPrevious={previousStudyWord}');
     expect(appSource).toContain('onNext={nextStudyWord}');
     expect(progressSource).toContain('export function buildStudySession');
@@ -984,11 +996,17 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('styles.studySwipeRevealFill');
     expect(studySource).toContain('styles.studySwipeRevealReview');
     expect(studySource).toContain('styles.studySwipeRevealKnown');
-    expect(studySource).toContain('styles.studySwipeRevealGlow');
-    expect(studySource).toContain('styles.studySwipeRevealMist');
-    expect(studySource).toContain('styles.studySwipeRevealBloom');
-    expect(studySource).toContain('styles.studySwipeRevealEdgeLight');
+    expect(studySource).toContain('<StudySwipeRevealGradient tone="review" />');
+    expect(studySource).toContain('<StudySwipeRevealGradient tone="known" />');
     expect(studySource).toContain('styles.studySwipeRevealCue');
+    expect(studySource).toContain('styles.studySwipeRevealCueReview');
+    expect(studySource).toContain('styles.studySwipeRevealCueKnown');
+    expect(appSource).toContain('function StudySwipeRevealGradient');
+    expect(appSource).toContain('SvgRadialGradient');
+    expect(appSource).toContain('SvgLinearGradient');
+    expect(appSource).not.toContain('styles.studySwipeRevealMist');
+    expect(appSource).not.toContain('styles.studySwipeRevealBloom');
+    expect(appSource).not.toContain('styles.studySwipeRevealEdgeLight');
     expect(revealStyleSource).toContain('top: 0');
     expect(revealStyleSource).toContain('bottom: 0');
     expect(revealStyleSource).not.toContain('width: 280');

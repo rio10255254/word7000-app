@@ -153,6 +153,13 @@ import {
   type CustomSetState,
   type CustomVocabSet,
 } from './src/lib/customSets';
+import Svg, {
+  Defs as SvgDefs,
+  LinearGradient as SvgLinearGradient,
+  RadialGradient as SvgRadialGradient,
+  Rect as SvgRect,
+  Stop as SvgStop,
+} from 'react-native-svg';
 import { getAppStorage, hydrateAppStorage, isAppStorageHydrated } from './src/lib/appStorage';
 import { parseOAuthCallbackUrl } from './src/lib/oauthCallback';
 import { appInfoLinks } from './src/lib/appLinks';
@@ -898,6 +905,7 @@ function Word7000App() {
   const [studyLevel, setStudyLevel] = useState(initialFilterPreferences.study.level);
   const [studyInitial, setStudyInitial] = useState(initialFilterPreferences.study.initial);
   const [studyFiltersOpen, setStudyFiltersOpen] = useState(false);
+  const [studySwipeScrollLocked, setStudySwipeScrollLocked] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizPracticeMode, setQuizPracticeMode] = useState<QuizPracticeMode>('choice');
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
@@ -2724,6 +2732,7 @@ function Word7000App() {
           contentContainerStyle={styles.content}
           onScroll={handleScroll}
           ref={appScrollRef}
+          scrollEnabled={!studySwipeScrollLocked}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
           style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}
@@ -2766,6 +2775,7 @@ function Word7000App() {
               onNext={nextStudyWord}
               onPrevious={previousStudyWord}
               onSwipeKnown={() => studyWord && handleKnown(studyWord.id)}
+              onSwipeLockChange={setStudySwipeScrollLocked}
               onSwipeReview={() => studyWord && handleReview(studyWord.id)}
               onAddToSet={handleOpenSetPicker}
               onFavorite={() => studyWord && setProgress((current) => toggleFavorite(current, studyWord.id))}
@@ -3993,6 +4003,37 @@ function HomeView({
   );
 }
 
+function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
+  const review = tone === 'review';
+  const radialId = `study-swipe-${tone}-radial`;
+  const washId = `study-swipe-${tone}-wash`;
+  const mainColor = review ? '#ef4444' : '#22c55e';
+  const softColor = review ? '#fca5a5' : '#86efac';
+  const deepColor = review ? '#991b1b' : '#047857';
+  const hotEdge = review ? '0%' : '100%';
+  const fadeEdge = review ? '100%' : '0%';
+
+  return (
+    <Svg height="100%" preserveAspectRatio="none" style={styles.studySwipeRevealGradient} width="100%">
+      <SvgDefs>
+        <SvgLinearGradient id={washId} x1={hotEdge} x2={fadeEdge} y1="0%" y2="0%">
+          <SvgStop offset="0%" stopColor={mainColor} stopOpacity="0.12" />
+          <SvgStop offset="44%" stopColor={softColor} stopOpacity="0.045" />
+          <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
+        </SvgLinearGradient>
+        <SvgRadialGradient cx={hotEdge} cy="50%" fx={hotEdge} fy="50%" id={radialId} r="112%">
+          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.30" />
+          <SvgStop offset="30%" stopColor={mainColor} stopOpacity="0.18" />
+          <SvgStop offset="66%" stopColor={softColor} stopOpacity="0.07" />
+          <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
+        </SvgRadialGradient>
+      </SvgDefs>
+      <SvgRect fill={`url(#${washId})`} height="100%" width="100%" x="0" y="0" />
+      <SvgRect fill={`url(#${radialId})`} height="100%" width="100%" x="0" y="0" />
+    </Svg>
+  );
+}
+
 function StudyView({
   activeSetCount,
   activeSetName,
@@ -4016,6 +4057,7 @@ function StudyView({
   onNext,
   onPrevious,
   onSwipeKnown,
+  onSwipeLockChange,
   onSwipeReview,
 }: {
   activeSetCount: number;
@@ -4040,6 +4082,7 @@ function StudyView({
   onNext: () => void;
   onPrevious: () => void;
   onSwipeKnown: () => void;
+  onSwipeLockChange: (locked: boolean) => void;
   onSwipeReview: () => void;
 }) {
   const wordProgress = word ? progress.words[word.id] : undefined;
@@ -4150,14 +4193,28 @@ function StudyView({
     }).start();
   }, [cardEntryProgress]);
 
+  const setCardSwipeLocked = useCallback(
+    (locked: boolean) => {
+      if (swipeGestureLockedRef.current === locked) {
+        return;
+      }
+
+      swipeGestureLockedRef.current = locked;
+      onSwipeLockChange(locked);
+    },
+    [onSwipeLockChange],
+  );
+
+  useEffect(() => () => onSwipeLockChange(false), [onSwipeLockChange]);
+
   useEffect(() => {
     completingSwipeRef.current = false;
     swipeX.setValue(0);
     setSwipeDirection(null);
     readyHapticDirectionRef.current = null;
-    swipeGestureLockedRef.current = false;
+    setCardSwipeLocked(false);
     runStudyCardEntry();
-  }, [runStudyCardEntry, swipeX, word?.id]);
+  }, [runStudyCardEntry, setCardSwipeLocked, swipeX, word?.id]);
 
   const resetSwipe = useCallback(() => {
     if (completingSwipeRef.current) {
@@ -4166,14 +4223,14 @@ function StudyView({
 
     setSwipeDirection(null);
     readyHapticDirectionRef.current = null;
-    swipeGestureLockedRef.current = false;
+    setCardSwipeLocked(false);
     Animated.spring(swipeX, {
       friction: 8,
       tension: 120,
       toValue: 0,
       useNativeDriver: Platform.OS !== 'web',
     }).start();
-  }, [swipeX]);
+  }, [setCardSwipeLocked, swipeX]);
 
   const completeSwipe = useCallback(
     (direction: StudySwipeDirection) => {
@@ -4202,7 +4259,7 @@ function StudyView({
         cardEntryProgress.setValue(0);
         setSwipeDirection(null);
         readyHapticDirectionRef.current = null;
-        swipeGestureLockedRef.current = false;
+        setCardSwipeLocked(false);
         completingSwipeRef.current = false;
         requestAnimationFrame(runStudyCardEntry);
       };
@@ -4218,7 +4275,7 @@ function StudyView({
         requestAnimationFrame(finishSwipe);
       });
     },
-    [onSwipeKnown, onSwipeReview, swipeX],
+    [cardEntryProgress, onSwipeKnown, onSwipeReview, runStudyCardEntry, setCardSwipeLocked, swipeX],
   );
   const shouldStartCardSwipe = useCallback((gesture: { dx: number; dy: number }) => {
     if (swipeGestureLockedRef.current) {
@@ -4227,12 +4284,12 @@ function StudyView({
 
     const intent = resolveStudyGestureIntent(gesture.dx, gesture.dy);
     if (intent === 'card') {
-      swipeGestureLockedRef.current = true;
+      setCardSwipeLocked(true);
       return true;
     }
 
     return false;
-  }, []);
+  }, [setCardSwipeLocked]);
   const finishOrResetSwipe = useCallback(
     (gesture = latestSwipeGestureRef.current) => {
       const direction =
@@ -4256,7 +4313,7 @@ function StudyView({
         onPanResponderGrant: () => {
           latestSwipeGestureRef.current = { dx: 0, vx: 0 };
           readyHapticDirectionRef.current = null;
-          swipeGestureLockedRef.current = true;
+          setCardSwipeLocked(true);
           swipeX.stopAnimation();
         },
         onPanResponderMove: (_, gesture) => {
@@ -4282,7 +4339,7 @@ function StudyView({
         onPanResponderTerminationRequest: () => false,
         onStartShouldSetPanResponder: () => false,
       }),
-    [finishOrResetSwipe, shouldStartCardSwipe, swipeX],
+    [finishOrResetSwipe, setCardSwipeLocked, shouldStartCardSwipe, swipeX],
   );
 
   return (
@@ -4330,12 +4387,8 @@ function StudyView({
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
         >
-          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealReviewGlow]}>
-            <View style={[styles.studySwipeRevealMist, styles.studySwipeRevealReviewMist]} />
-            <View style={[styles.studySwipeRevealBloom, styles.studySwipeRevealReviewBloom]} />
-            <View style={[styles.studySwipeRevealEdgeLight, styles.studySwipeRevealReviewEdgeLight]} />
-          </View>
-          <Animated.View style={[styles.studySwipeRevealCue, reviewCueStyle]}>
+          <StudySwipeRevealGradient tone="review" />
+          <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueReview, reviewCueStyle]}>
             <X size={42} color="#b91c1c" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackReviewText}>{ui.swipeReviewHint}</Text>
           </Animated.View>
@@ -4344,12 +4397,8 @@ function StudyView({
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealKnown, knownFeedbackStyle]}
         >
-          <View style={[styles.studySwipeRevealGlow, styles.studySwipeRevealKnownGlow]}>
-            <View style={[styles.studySwipeRevealMist, styles.studySwipeRevealKnownMist]} />
-            <View style={[styles.studySwipeRevealBloom, styles.studySwipeRevealKnownBloom]} />
-            <View style={[styles.studySwipeRevealEdgeLight, styles.studySwipeRevealKnownEdgeLight]} />
-          </View>
-          <Animated.View style={[styles.studySwipeRevealCue, knownCueStyle]}>
+          <StudySwipeRevealGradient tone="known" />
+          <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueKnown, knownCueStyle]}>
             <Check size={42} color="#166534" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackKnownText}>{ui.swipeKnownHint}</Text>
           </Animated.View>
@@ -7588,86 +7637,30 @@ const styles = StyleSheet.create({
   studySwipeRevealKnown: {
     left: 0,
   },
-  studySwipeRevealGlow: {
+  studySwipeRevealGradient: {
     bottom: 0,
+    left: 0,
     position: 'absolute',
+    right: 0,
     top: 0,
-    width: '100%',
     zIndex: 1,
-  },
-  studySwipeRevealReviewGlow: {
-    right: 0,
-  },
-  studySwipeRevealKnownGlow: {
-    left: 0,
-  },
-  studySwipeRevealMist: {
-    bottom: 0,
-    position: 'absolute',
-    top: 0,
-    width: 190,
-  },
-  studySwipeRevealBloom: {
-    borderRadius: 999,
-    bottom: 12,
-    position: 'absolute',
-    top: 12,
-    width: 82,
-  },
-  studySwipeRevealEdgeLight: {
-    borderRadius: 999,
-    bottom: 28,
-    position: 'absolute',
-    top: 28,
-    width: 28,
-  },
-  studySwipeRevealReviewMist: {
-    backgroundColor: 'rgba(248, 113, 113, 0.045)',
-    right: 0,
-  },
-  studySwipeRevealReviewBloom: {
-    backgroundColor: 'rgba(248, 113, 113, 0.105)',
-    left: -12,
-    shadowColor: '#ef4444',
-    shadowOffset: { width: -10, height: 0 },
-    shadowOpacity: 0.18,
-    shadowRadius: 30,
-  },
-  studySwipeRevealReviewEdgeLight: {
-    backgroundColor: 'rgba(248, 113, 113, 0.2)',
-    left: -4,
-    shadowColor: '#ef4444',
-    shadowOffset: { width: -8, height: 0 },
-    shadowOpacity: 0.24,
-    shadowRadius: 24,
-  },
-  studySwipeRevealKnownMist: {
-    backgroundColor: 'rgba(34, 197, 94, 0.042)',
-    left: 0,
-  },
-  studySwipeRevealKnownBloom: {
-    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-    right: -12,
-    shadowColor: '#22c55e',
-    shadowOffset: { width: 10, height: 0 },
-    shadowOpacity: 0.18,
-    shadowRadius: 30,
-  },
-  studySwipeRevealKnownEdgeLight: {
-    backgroundColor: 'rgba(34, 197, 94, 0.19)',
-    right: -4,
-    shadowColor: '#22c55e',
-    shadowOffset: { width: 8, height: 0 },
-    shadowOpacity: 0.24,
-    shadowRadius: 24,
   },
   studySwipeRevealCue: {
     alignItems: 'center',
+    bottom: 0,
     gap: 6,
     justifyContent: 'center',
     minHeight: 130,
-    position: 'relative',
+    position: 'absolute',
+    top: 0,
+    width: 116,
     zIndex: 2,
+  },
+  studySwipeRevealCueReview: {
+    right: 2,
+  },
+  studySwipeRevealCueKnown: {
+    left: 2,
   },
   studySwipeFeedbackReviewText: {
     color: '#b91c1c',

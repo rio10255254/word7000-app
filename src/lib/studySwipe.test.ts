@@ -12,6 +12,8 @@ describe('study swipe gestures', () => {
     expect(resolveStudyGestureIntent(7, 4)).toBe('card');
     expect(resolveStudyGestureIntent(28, 24)).toBe('card');
     expect(resolveStudyGestureIntent(-34, 25)).toBe('card');
+    expect(resolveStudyGestureIntent(30, 35)).toBe('scroll');
+    expect(resolveStudyGestureIntent(-22, 26)).toBe('scroll');
     expect(resolveStudyGestureIntent(10, 24)).toBe('scroll');
     expect(resolveStudyGestureIntent(-12, 30)).toBe('scroll');
     expect(resolveStudyGestureIntent(4, 4)).toBe(null);

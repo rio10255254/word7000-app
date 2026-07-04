@@ -5,9 +5,9 @@ export const STUDY_SWIPE_THRESHOLD = 58;
 export const STUDY_SWIPE_FLING_DISTANCE = 36;
 export const STUDY_SWIPE_FLING_VELOCITY = 0.58;
 const STUDY_SWIPE_INTENT_X = 7;
-const STUDY_SWIPE_INTENT_SLOPE = 0.52;
+const STUDY_SWIPE_INTENT_SLOPE = 0.92;
 const STUDY_SCROLL_INTENT_Y = 14;
-const STUDY_SCROLL_INTENT_SLOPE = 1.18;
+const STUDY_SCROLL_INTENT_SLOPE = 1.08;
 const STUDY_SWIPE_PREVIEW_X = 20;
 
 export function resolveStudyGestureIntent(dx: number, dy: number): StudyGestureIntent | null {

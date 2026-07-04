@@ -155,7 +155,9 @@ import {
 } from './src/lib/customSets';
 import Svg, {
   Defs as SvgDefs,
+  G as SvgG,
   LinearGradient as SvgLinearGradient,
+  Mask as SvgMask,
   RadialGradient as SvgRadialGradient,
   Rect as SvgRect,
   Stop as SvgStop,
@@ -257,6 +259,7 @@ const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListL
 const LIBRARY_FIXED_CONTROLS_TOP = 94;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;
 const STUDY_SWIPE_EXIT_X = 460;
+const STUDY_SWIPE_REVEAL_WIDTH = 270;
 const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
@@ -4005,6 +4008,8 @@ function HomeView({
 
 function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
   const review = tone === 'review';
+  const featherId = `study-swipe-${tone}-feather`;
+  const maskId = `study-swipe-${tone}-mask`;
   const radialId = `study-swipe-${tone}-radial`;
   const washId = `study-swipe-${tone}-wash`;
   const mainColor = review ? '#ef4444' : '#22c55e';
@@ -4016,20 +4021,35 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
   return (
     <Svg height="100%" preserveAspectRatio="none" style={styles.studySwipeRevealGradient} width="100%">
       <SvgDefs>
+        <SvgLinearGradient id={featherId} x1="0%" x2="0%" y1="0%" y2="100%">
+          <SvgStop offset="0%" stopColor="#fff" stopOpacity="0" />
+          <SvgStop offset="11%" stopColor="#fff" stopOpacity="0.82" />
+          <SvgStop offset="22%" stopColor="#fff" stopOpacity="1" />
+          <SvgStop offset="78%" stopColor="#fff" stopOpacity="1" />
+          <SvgStop offset="89%" stopColor="#fff" stopOpacity="0.82" />
+          <SvgStop offset="100%" stopColor="#fff" stopOpacity="0" />
+        </SvgLinearGradient>
+        <SvgMask height="100%" id={maskId} width="100%" x="0" y="0">
+          <SvgRect fill={`url(#${featherId})`} height="100%" width="100%" x="0" y="0" />
+        </SvgMask>
         <SvgLinearGradient id={washId} x1={hotEdge} x2={fadeEdge} y1="0%" y2="0%">
-          <SvgStop offset="0%" stopColor={mainColor} stopOpacity="0.12" />
-          <SvgStop offset="44%" stopColor={softColor} stopOpacity="0.045" />
+          <SvgStop offset="0%" stopColor={mainColor} stopOpacity="0.10" />
+          <SvgStop offset="38%" stopColor={softColor} stopOpacity="0.035" />
+          <SvgStop offset="76%" stopColor={mainColor} stopOpacity="0" />
           <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
         </SvgLinearGradient>
         <SvgRadialGradient cx={hotEdge} cy="50%" fx={hotEdge} fy="50%" id={radialId} r="112%">
-          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.30" />
-          <SvgStop offset="30%" stopColor={mainColor} stopOpacity="0.18" />
-          <SvgStop offset="66%" stopColor={softColor} stopOpacity="0.07" />
+          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.28" />
+          <SvgStop offset="28%" stopColor={mainColor} stopOpacity="0.16" />
+          <SvgStop offset="56%" stopColor={softColor} stopOpacity="0.055" />
+          <SvgStop offset="78%" stopColor={mainColor} stopOpacity="0" />
           <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
         </SvgRadialGradient>
       </SvgDefs>
-      <SvgRect fill={`url(#${washId})`} height="100%" width="100%" x="0" y="0" />
-      <SvgRect fill={`url(#${radialId})`} height="100%" width="100%" x="0" y="0" />
+      <SvgG mask={`url(#${maskId})`}>
+        <SvgRect fill={`url(#${washId})`} height="100%" width="100%" x="0" y="0" />
+        <SvgRect fill={`url(#${radialId})`} height="100%" width="100%" x="0" y="0" />
+      </SvgG>
     </Svg>
   );
 }
@@ -4135,15 +4155,6 @@ function StudyView({
       outputRange: [1, 0.78, 0.34, 0.1, 0.03, 0],
       extrapolate: 'clamp',
     }),
-    transform: [
-      {
-        translateX: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_EXIT_X, 0],
-          outputRange: [0, 24],
-          extrapolate: 'clamp',
-        }),
-      },
-    ],
   };
   const knownFeedbackStyle = {
     opacity: swipeX.interpolate({
@@ -4158,11 +4169,24 @@ function StudyView({
       outputRange: [0, 0.03, 0.1, 0.34, 0.78, 1],
       extrapolate: 'clamp',
     }),
+  };
+  const reviewRevealGlowStyle = {
+    transform: [
+      {
+        translateX: swipeX.interpolate({
+          inputRange: [-STUDY_SWIPE_EXIT_X, 0],
+          outputRange: [STUDY_SWIPE_REVEAL_WIDTH - STUDY_SWIPE_EXIT_X, STUDY_SWIPE_REVEAL_WIDTH],
+          extrapolate: 'clamp',
+        }),
+      },
+    ],
+  };
+  const knownRevealGlowStyle = {
     transform: [
       {
         translateX: swipeX.interpolate({
           inputRange: [0, STUDY_SWIPE_EXIT_X],
-          outputRange: [-24, 0],
+          outputRange: [-STUDY_SWIPE_REVEAL_WIDTH, STUDY_SWIPE_EXIT_X - STUDY_SWIPE_REVEAL_WIDTH],
           extrapolate: 'clamp',
         }),
       },
@@ -4387,7 +4411,15 @@ function StudyView({
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
         >
-          <StudySwipeRevealGradient tone="review" />
+          <Animated.View
+            style={[
+              styles.studySwipeRevealGradientWrap,
+              styles.studySwipeRevealReviewGradientWrap,
+              reviewRevealGlowStyle,
+            ]}
+          >
+            <StudySwipeRevealGradient tone="review" />
+          </Animated.View>
           <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueReview, reviewCueStyle]}>
             <X size={42} color="#b91c1c" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackReviewText}>{ui.swipeReviewHint}</Text>
@@ -4397,7 +4429,15 @@ function StudyView({
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealKnown, knownFeedbackStyle]}
         >
-          <StudySwipeRevealGradient tone="known" />
+          <Animated.View
+            style={[
+              styles.studySwipeRevealGradientWrap,
+              styles.studySwipeRevealKnownGradientWrap,
+              knownRevealGlowStyle,
+            ]}
+          >
+            <StudySwipeRevealGradient tone="known" />
+          </Animated.View>
           <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueKnown, knownCueStyle]}>
             <Check size={42} color="#166534" strokeWidth={2.8} />
             <Text style={styles.studySwipeFeedbackKnownText}>{ui.swipeKnownHint}</Text>
@@ -7624,17 +7664,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     bottom: 0,
     justifyContent: 'center',
+    left: 0,
     opacity: 0,
     overflow: 'hidden',
     position: 'absolute',
+    right: 0,
     top: 0,
-    width: 190,
     zIndex: 1,
   },
   studySwipeRevealReview: {
     right: 0,
   },
   studySwipeRevealKnown: {
+    left: 0,
+  },
+  studySwipeRevealGradientWrap: {
+    bottom: 0,
+    position: 'absolute',
+    top: 0,
+    width: STUDY_SWIPE_REVEAL_WIDTH,
+    zIndex: 1,
+  },
+  studySwipeRevealReviewGradientWrap: {
+    right: 0,
+  },
+  studySwipeRevealKnownGradientWrap: {
     left: 0,
   },
   studySwipeRevealGradient: {

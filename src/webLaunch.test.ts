@@ -1058,6 +1058,12 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('<X size={42}');
     expect(studySource).toContain('<Check size={42}');
     expect(studySource).toContain('cardEntryProgress');
+    expect(studySource).toContain('cardSwapOpacity');
+    expect(studySource).toContain('const cardSwapStyle');
+    expect(studySource).toContain('cardSwapOpacity.setValue(0);');
+    expect(studySource).toContain('cardSwapOpacity.setValue(1);');
+    expect(studySource).toContain('cardSwapOpacity.setValue(0);\n        swipeX.stopAnimation();');
+    expect(studySource).toContain('cardSwapOpacity.setValue(1);\n          runStudyCardEntry();');
     expect(studySource).toContain('runStudyCardEntry');
     expect(studySource).toContain('swipeX.stopAnimation();');
     expect(studySource).toContain('requestAnimationFrame(finishSwipe)');

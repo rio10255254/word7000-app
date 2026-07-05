@@ -4149,6 +4149,7 @@ function StudyView({
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
   const swipeX = useRef(new Animated.Value(0)).current;
   const cardEntryProgress = useRef(new Animated.Value(1)).current;
+  const cardSwapOpacity = useRef(new Animated.Value(1)).current;
   const completingSwipeRef = useRef(false);
   const latestSwipeGestureRef = useRef({ dx: 0, vx: 0 });
   const pendingReadyHapticDirectionRef = useRef<StudySwipeDirection | null>(null);
@@ -4181,6 +4182,9 @@ function StudyView({
       extrapolate: 'clamp',
     }),
     transform: [{ translateX: swipeX }],
+  };
+  const cardSwapStyle = {
+    opacity: cardSwapOpacity,
   };
   const studySwipeTouchGuardStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
@@ -4343,6 +4347,7 @@ function StudyView({
     clearStudySwipeReadyHaptic();
     readyHapticDirectionRef.current = null;
     readyHapticFiredDirectionRef.current = null;
+    cardSwapOpacity.setValue(1);
     setCardSwipeLocked(false);
     runStudyCardEntry();
   }, [clearStudySwipeReadyHaptic, runStudyCardEntry, setCardSwipeLocked, swipeX, word?.id]);
@@ -4383,6 +4388,7 @@ function StudyView({
         }
 
         completed = true;
+        cardSwapOpacity.setValue(0);
         swipeX.stopAnimation();
         if (direction === 'known') {
           onSwipeKnown();
@@ -4397,7 +4403,10 @@ function StudyView({
         readyHapticFiredDirectionRef.current = null;
         setCardSwipeLocked(false);
         completingSwipeRef.current = false;
-        requestAnimationFrame(runStudyCardEntry);
+        requestAnimationFrame(() => {
+          cardSwapOpacity.setValue(1);
+          runStudyCardEntry();
+        });
       };
       const fallbackTimer = setTimeout(finishSwipe, 210);
 
@@ -4411,7 +4420,7 @@ function StudyView({
         requestAnimationFrame(finishSwipe);
       });
     },
-    [cardEntryProgress, clearStudySwipeReadyHaptic, onSwipeKnown, onSwipeReview, runStudyCardEntry, setCardSwipeLocked, swipeX, triggerStudySwipeCommitHaptic],
+    [cardEntryProgress, cardSwapOpacity, clearStudySwipeReadyHaptic, onSwipeKnown, onSwipeReview, runStudyCardEntry, setCardSwipeLocked, swipeX, triggerStudySwipeCommitHaptic],
   );
   const shouldStartCardSwipe = useCallback((gesture: { dx: number; dy: number }) => {
     if (swipeGestureLockedRef.current) {
@@ -4452,6 +4461,7 @@ function StudyView({
           clearStudySwipeReadyHaptic();
           readyHapticDirectionRef.current = null;
           readyHapticFiredDirectionRef.current = null;
+          cardSwapOpacity.setValue(1);
           setCardSwipeLocked(true);
           clearStudySwipeTextSelection();
           swipeX.stopAnimation();
@@ -4477,7 +4487,7 @@ function StudyView({
         onStartShouldSetPanResponder: (event) => !isStudySwipeActionZone(event.nativeEvent),
         onStartShouldSetPanResponderCapture: (event) => !isStudySwipeActionZone(event.nativeEvent),
       }),
-    [clearStudySwipeReadyHaptic, finishOrResetSwipe, scheduleStudySwipeReadyHaptic, setCardSwipeLocked, shouldStartCardSwipe, swipeX],
+    [cardSwapOpacity, clearStudySwipeReadyHaptic, finishOrResetSwipe, scheduleStudySwipeReadyHaptic, setCardSwipeLocked, shouldStartCardSwipe, swipeX],
   );
 
   return (
@@ -4520,10 +4530,11 @@ function StudyView({
 
       {word && (
         <>
-      <Animated.View style={[styles.studySwipeDeck, motionStyle, cardEntryStyle]} testID="study-swipe-deck">
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
+       <Animated.View style={[styles.studySwipeDeck, motionStyle, cardEntryStyle]} testID="study-swipe-deck">
+        <Animated.View style={[styles.studySwipeSwapStage, cardSwapStyle]}>
+         <Animated.View
+           pointerEvents="none"
+           style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
         >
           <Animated.View
             style={[
@@ -4581,8 +4592,8 @@ function StudyView({
             ))}
           </Animated.View>
         </Animated.View>
-        <Animated.View
-          {...studySwipeResponder.panHandlers}
+         <Animated.View
+           {...studySwipeResponder.panHandlers}
           accessibilityHint={swipeDirection === 'known' ? ui.swipeKnownHint : swipeDirection === 'review' ? ui.swipeReviewHint : undefined}
           style={[styles.wordCard, styles.studySwipeSlidingCard, themeStyles?.wordCard, slidingCardStyle, studySwipeTouchGuardStyle]}
           testID="study-swipe-card"
@@ -4633,9 +4644,10 @@ function StudyView({
           <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
             <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
             <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
-          </View>
+           </View>
+         </Animated.View>
         </Animated.View>
-      </Animated.View>
+       </Animated.View>
 
       <View style={styles.actionGrid}>
         <AnimatedPressable accessibilityRole="button" onPress={onPrevious} pressTone="secondary" style={styles.secondaryButton}>
@@ -7792,6 +7804,9 @@ const styles = StyleSheet.create({
   studySwipeDeck: {
     borderRadius: 10,
     overflow: 'visible',
+    position: 'relative',
+  },
+  studySwipeSwapStage: {
     position: 'relative',
   },
   studySwipeSlidingCard: {

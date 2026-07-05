@@ -2732,7 +2732,9 @@ function Word7000App() {
           </View>
         </View>
         <ScrollView
+          canCancelContentTouches={activeTab !== 'study'}
           contentContainerStyle={styles.content}
+          directionalLockEnabled
           onScroll={handleScroll}
           ref={appScrollRef}
           scrollEnabled={!studySwipeScrollLocked}
@@ -3492,6 +3494,7 @@ type AnimatedPressableProps = Omit<PressableProps, 'children' | 'style'> & {
   style?: StyleProp<ViewStyle>;
 };
 type WebTransitionStyle = ViewStyle & {
+  WebkitTouchCallout?: string;
   WebkitUserSelect?: string;
   touchAction?: string;
   transitionDuration?: string;
@@ -4057,6 +4060,34 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
   );
 }
 
+function splitSwipeHintLines(hint: string): string[] {
+  const colonIndex = hint.indexOf(':');
+  if (colonIndex > -1) {
+    const lead = hint.slice(0, colonIndex).trim();
+    const action = hint.slice(colonIndex + 1).trim();
+    return action ? [lead, action] : [lead];
+  }
+
+  if (!hint.includes(' ') && hint.length >= 4) {
+    return [hint.slice(0, 2), hint.slice(2)];
+  }
+
+  return [hint];
+}
+
+function isStudySwipeActionZone(event: { locationX: number; locationY: number }) {
+  return event.locationY <= 82 && event.locationX >= 220;
+}
+
+function clearStudySwipeTextSelection() {
+  if (Platform.OS !== 'web') {
+    return;
+  }
+
+  const selection = (globalThis as { getSelection?: () => { removeAllRanges: () => void } | null }).getSelection?.();
+  selection?.removeAllRanges();
+}
+
 function StudyView({
   activeSetCount,
   activeSetName,
@@ -4113,6 +4144,8 @@ function StudyView({
   const themeStyles = useThemeStyles();
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
+  const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
+  const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
   const swipeX = useRef(new Animated.Value(0)).current;
   const cardEntryProgress = useRef(new Animated.Value(1)).current;
   const completingSwipeRef = useRef(false);
@@ -4148,8 +4181,9 @@ function StudyView({
   const studySwipeTouchGuardStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
       ? {
-          touchAction: 'pan-y',
+          touchAction: 'none',
           userSelect: 'none',
+          WebkitTouchCallout: 'none',
           WebkitUserSelect: 'none',
         }
       : undefined;
@@ -4349,10 +4383,12 @@ function StudyView({
           latestSwipeGestureRef.current = { dx: 0, vx: 0 };
           readyHapticDirectionRef.current = null;
           setCardSwipeLocked(true);
+          clearStudySwipeTextSelection();
           swipeX.stopAnimation();
         },
         onPanResponderMove: (_, gesture) => {
           latestSwipeGestureRef.current = { dx: gesture.dx, vx: gesture.vx };
+          clearStudySwipeTextSelection();
           swipeX.setValue(gesture.dx);
           const readyDirection = resolveStudySwipeDirection(gesture.dx, gesture.vx);
           if (readyDirection) {
@@ -4373,7 +4409,8 @@ function StudyView({
         onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture),
         onPanResponderTerminationRequest: () => false,
         onShouldBlockNativeResponder: () => true,
-        onStartShouldSetPanResponder: () => false,
+        onStartShouldSetPanResponder: (event) => !isStudySwipeActionZone(event.nativeEvent),
+        onStartShouldSetPanResponderCapture: (event) => !isStudySwipeActionZone(event.nativeEvent),
       }),
     [finishOrResetSwipe, setCardSwipeLocked, shouldStartCardSwipe, swipeX],
   );
@@ -4434,7 +4471,19 @@ function StudyView({
           </Animated.View>
           <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueReview, reviewCueStyle]}>
             <X size={42} color="#b91c1c" strokeWidth={2.8} />
-            <Text style={styles.studySwipeFeedbackReviewText}>{ui.swipeReviewHint}</Text>
+            {reviewHintLines.map((line, index) => (
+              <Text
+                key={`${line}-${index}`}
+                numberOfLines={1}
+                style={[
+                  styles.studySwipeFeedbackLine,
+                  styles.studySwipeFeedbackReviewText,
+                  index === 0 ? styles.studySwipeFeedbackLead : styles.studySwipeFeedbackAction,
+                ]}
+              >
+                {line}
+              </Text>
+            ))}
           </Animated.View>
         </Animated.View>
         <Animated.View
@@ -4452,7 +4501,19 @@ function StudyView({
           </Animated.View>
           <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueKnown, knownCueStyle]}>
             <Check size={42} color="#166534" strokeWidth={2.8} />
-            <Text style={styles.studySwipeFeedbackKnownText}>{ui.swipeKnownHint}</Text>
+            {knownHintLines.map((line, index) => (
+              <Text
+                key={`${line}-${index}`}
+                numberOfLines={1}
+                style={[
+                  styles.studySwipeFeedbackLine,
+                  styles.studySwipeFeedbackKnownText,
+                  index === 0 ? styles.studySwipeFeedbackLead : styles.studySwipeFeedbackAction,
+                ]}
+              >
+                {line}
+              </Text>
+            ))}
           </Animated.View>
         </Animated.View>
         <Animated.View
@@ -7714,31 +7775,40 @@ const styles = StyleSheet.create({
   studySwipeRevealCue: {
     alignItems: 'center',
     bottom: 0,
-    gap: 6,
+    gap: 5,
     justifyContent: 'center',
     minHeight: 130,
     position: 'absolute',
     top: 0,
-    width: 116,
+    width: 132,
     zIndex: 2,
   },
   studySwipeRevealCueReview: {
-    right: 2,
+    right: 8,
   },
   studySwipeRevealCueKnown: {
-    left: 2,
+    left: 8,
   },
   studySwipeFeedbackReviewText: {
     color: '#b91c1c',
-    fontSize: 12,
-    fontWeight: '900',
-    textAlign: 'center',
   },
   studySwipeFeedbackKnownText: {
     color: '#166534',
-    fontSize: 12,
+  },
+  studySwipeFeedbackLine: {
     fontWeight: '900',
+    includeFontPadding: false,
+    letterSpacing: 0,
+    maxWidth: 118,
     textAlign: 'center',
+  },
+  studySwipeFeedbackLead: {
+    fontSize: 12,
+    lineHeight: 15,
+  },
+  studySwipeFeedbackAction: {
+    fontSize: 14,
+    lineHeight: 17,
   },
   groupPill: {
     alignSelf: 'flex-start',

@@ -4089,6 +4089,16 @@ function clearStudySwipeTextSelection() {
   selection?.removeAllRanges();
 }
 
+function readAnimatedNumberValue(value: Animated.Value) {
+  const animatedValue = value as unknown as { __getValue?: () => unknown; _value?: unknown };
+  const currentValue = typeof animatedValue.__getValue === 'function' ? animatedValue.__getValue() : animatedValue._value;
+  return typeof currentValue === 'number' && Number.isFinite(currentValue) ? currentValue : 0;
+}
+
+function readStudySwipePageX(event: { pageX?: unknown }) {
+  return typeof event.pageX === 'number' && Number.isFinite(event.pageX) ? event.pageX : null;
+}
+
 function StudyView({
   activeSetCount,
   activeSetName,
@@ -4152,6 +4162,12 @@ function StudyView({
   const cardSwapOpacity = useRef(new Animated.Value(1)).current;
   const completingSwipeRef = useRef(false);
   const latestSwipeGestureRef = useRef({ dx: 0, vx: 0 });
+  const swipeStartXRef = useRef(0);
+  const swipePointerStartXRef = useRef<number | null>(null);
+  const swipeResetAnimationRef = useRef<ReturnType<typeof Animated.spring> | null>(null);
+  const swipeFrameSyncRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+  const swipeGrantTokenRef = useRef(0);
+  const swipeMovedSinceGrantRef = useRef(false);
   const pendingReadyHapticDirectionRef = useRef<StudySwipeDirection | null>(null);
   const pendingReadyHapticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const readyHapticDirectionRef = useRef<StudySwipeDirection | null>(null);
@@ -4332,19 +4348,49 @@ function StudyView({
     [clearStudySwipeReadyHaptic],
   );
 
+  const stopStudySwipeFrameSync = useCallback(() => {
+    if (swipeFrameSyncRef.current !== null) {
+      cancelAnimationFrame(swipeFrameSyncRef.current);
+      swipeFrameSyncRef.current = null;
+    }
+  }, []);
+
+  const startStudySwipeFrameSync = useCallback(() => {
+    if (swipeFrameSyncRef.current !== null) {
+      return;
+    }
+
+    const syncSwipeFrame = () => {
+      if (!swipeGestureLockedRef.current || completingSwipeRef.current) {
+        swipeFrameSyncRef.current = null;
+        return;
+      }
+
+      swipeX.setValue(latestSwipeGestureRef.current.dx);
+      swipeFrameSyncRef.current = requestAnimationFrame(syncSwipeFrame);
+    };
+
+    swipeFrameSyncRef.current = requestAnimationFrame(syncSwipeFrame);
+  }, [swipeX]);
+
   useEffect(
     () => () => {
+      stopStudySwipeFrameSync();
       clearStudySwipeReadyHaptic();
       onSwipeLockChange(false);
     },
-    [clearStudySwipeReadyHaptic, onSwipeLockChange],
+    [clearStudySwipeReadyHaptic, onSwipeLockChange, stopStudySwipeFrameSync],
   );
 
   useEffect(() => {
     completingSwipeRef.current = false;
+    stopStudySwipeFrameSync();
+    swipeResetAnimationRef.current?.stop();
+    swipeResetAnimationRef.current = null;
     swipeX.setValue(0);
     setSwipeDirection(null);
     clearStudySwipeReadyHaptic();
+    swipeStartXRef.current = 0;
     readyHapticDirectionRef.current = null;
     readyHapticFiredDirectionRef.current = null;
     cardSwapOpacity.setValue(1);
@@ -4359,15 +4405,20 @@ function StudyView({
 
     setSwipeDirection(null);
     clearStudySwipeReadyHaptic();
+    swipeStartXRef.current = 0;
     readyHapticDirectionRef.current = null;
     readyHapticFiredDirectionRef.current = null;
+    stopStudySwipeFrameSync();
     setCardSwipeLocked(false);
-    Animated.spring(swipeX, {
+    swipeResetAnimationRef.current?.stop();
+    const resetAnimation = Animated.spring(swipeX, {
       friction: 8,
       tension: 120,
       toValue: 0,
       useNativeDriver: Platform.OS !== 'web',
-    }).start();
+    });
+    swipeResetAnimationRef.current = resetAnimation;
+    resetAnimation.start();
   }, [clearStudySwipeReadyHaptic, setCardSwipeLocked, swipeX]);
 
   const completeSwipe = useCallback(
@@ -4377,6 +4428,7 @@ function StudyView({
       }
 
       completingSwipeRef.current = true;
+      stopStudySwipeFrameSync();
       const toValue = direction === 'known' ? STUDY_SWIPE_EXIT_X : -STUDY_SWIPE_EXIT_X;
       setSwipeDirection(direction);
       triggerStudySwipeCommitHaptic(direction);
@@ -4389,12 +4441,16 @@ function StudyView({
 
         completed = true;
         cardSwapOpacity.setValue(0);
+        stopStudySwipeFrameSync();
+        swipeResetAnimationRef.current?.stop();
+        swipeResetAnimationRef.current = null;
         swipeX.stopAnimation();
         if (direction === 'known') {
           onSwipeKnown();
         } else {
           onSwipeReview();
         }
+        swipeStartXRef.current = 0;
         swipeX.setValue(0);
         cardEntryProgress.setValue(0);
         setSwipeDirection(null);
@@ -4420,7 +4476,7 @@ function StudyView({
         requestAnimationFrame(finishSwipe);
       });
     },
-    [cardEntryProgress, cardSwapOpacity, clearStudySwipeReadyHaptic, onSwipeKnown, onSwipeReview, runStudyCardEntry, setCardSwipeLocked, swipeX, triggerStudySwipeCommitHaptic],
+    [cardEntryProgress, cardSwapOpacity, clearStudySwipeReadyHaptic, onSwipeKnown, onSwipeReview, runStudyCardEntry, setCardSwipeLocked, stopStudySwipeFrameSync, swipeX, triggerStudySwipeCommitHaptic],
   );
   const shouldStartCardSwipe = useCallback((gesture: { dx: number; dy: number }) => {
     if (swipeGestureLockedRef.current) {
@@ -4437,8 +4493,13 @@ function StudyView({
   }, [setCardSwipeLocked]);
   const finishOrResetSwipe = useCallback(
     (gesture = latestSwipeGestureRef.current, options: { useReadyDirectionFallback?: boolean } = {}) => {
+      const gestureDx = swipeMovedSinceGrantRef.current
+        ? latestSwipeGestureRef.current.dx
+        : gesture === latestSwipeGestureRef.current
+          ? gesture.dx
+          : swipeStartXRef.current + gesture.dx;
       const direction =
-        resolveStudySwipeReleaseDirection(gesture.dx, gesture.vx) ??
+        resolveStudySwipeReleaseDirection(gestureDx, gesture.vx) ??
         resolveStudySwipeReleaseDirection(latestSwipeGestureRef.current.dx, latestSwipeGestureRef.current.vx) ??
         (options.useReadyDirectionFallback ? readyHapticDirectionRef.current : null);
       if (direction) {
@@ -4456,26 +4517,48 @@ function StudyView({
         onMoveShouldSetPanResponder: (_, gesture) => shouldClaimStudySwipe(gesture.dx, gesture.dy) && shouldStartCardSwipe(gesture),
         onMoveShouldSetPanResponderCapture: (_, gesture) =>
           resolveStudyGestureIntent(gesture.dx, gesture.dy) === 'card' && shouldStartCardSwipe(gesture),
-        onPanResponderGrant: () => {
+        onPanResponderGrant: (event) => {
+          swipeGrantTokenRef.current += 1;
+          const grantToken = swipeGrantTokenRef.current;
+          swipeMovedSinceGrantRef.current = false;
+          swipePointerStartXRef.current = readStudySwipePageX(event.nativeEvent);
           latestSwipeGestureRef.current = { dx: 0, vx: 0 };
           clearStudySwipeReadyHaptic();
+          cardEntryProgress.stopAnimation();
+          cardEntryProgress.setValue(1);
           readyHapticDirectionRef.current = null;
           readyHapticFiredDirectionRef.current = null;
           cardSwapOpacity.setValue(1);
           setCardSwipeLocked(true);
           clearStudySwipeTextSelection();
-          swipeX.stopAnimation();
+          swipeResetAnimationRef.current?.stop();
+          swipeResetAnimationRef.current = null;
+          swipeStartXRef.current = readAnimatedNumberValue(swipeX);
+          latestSwipeGestureRef.current = { dx: swipeStartXRef.current, vx: 0 };
+          swipeX.setValue(swipeStartXRef.current);
+          startStudySwipeFrameSync();
+          swipeX.stopAnimation((value) => {
+            if (swipeGrantTokenRef.current !== grantToken || swipeMovedSinceGrantRef.current) {
+              return;
+            }
+            swipeStartXRef.current = typeof value === 'number' && Number.isFinite(value) ? value : 0;
+            swipeX.setValue(swipeStartXRef.current);
+          });
         },
-        onPanResponderMove: (_, gesture) => {
-          latestSwipeGestureRef.current = { dx: gesture.dx, vx: gesture.vx };
+        onPanResponderMove: (event, gesture) => {
+          swipeMovedSinceGrantRef.current = true;
+          const pointerX = readStudySwipePageX(event.nativeEvent);
+          const pointerDx = pointerX !== null && swipePointerStartXRef.current !== null ? pointerX - swipePointerStartXRef.current : gesture.dx;
+          const nextSwipeX = swipeStartXRef.current + pointerDx;
+          latestSwipeGestureRef.current = { dx: nextSwipeX, vx: gesture.vx };
           clearStudySwipeTextSelection();
-          swipeX.setValue(gesture.dx);
-          const readyDirection = resolveStudySwipeDirection(gesture.dx, gesture.vx);
+          swipeX.setValue(nextSwipeX);
+          const readyDirection = resolveStudySwipeDirection(nextSwipeX, gesture.vx);
           if (readyDirection) {
             scheduleStudySwipeReadyHaptic(readyDirection);
           }
 
-          const nextDirection = readyDirection ?? previewStudySwipeDirection(gesture.dx);
+          const nextDirection = readyDirection ?? previewStudySwipeDirection(nextSwipeX);
           setSwipeDirection((current) => (current === nextDirection ? current : nextDirection));
         },
         onPanResponderRelease: (_, gesture) => {
@@ -4487,7 +4570,7 @@ function StudyView({
         onStartShouldSetPanResponder: (event) => !isStudySwipeActionZone(event.nativeEvent),
         onStartShouldSetPanResponderCapture: (event) => !isStudySwipeActionZone(event.nativeEvent),
       }),
-    [cardSwapOpacity, clearStudySwipeReadyHaptic, finishOrResetSwipe, scheduleStudySwipeReadyHaptic, setCardSwipeLocked, shouldStartCardSwipe, swipeX],
+    [cardEntryProgress, cardSwapOpacity, clearStudySwipeReadyHaptic, finishOrResetSwipe, scheduleStudySwipeReadyHaptic, setCardSwipeLocked, shouldStartCardSwipe, startStudySwipeFrameSync, swipeX],
   );
 
   return (

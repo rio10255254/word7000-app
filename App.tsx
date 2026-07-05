@@ -259,7 +259,7 @@ const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListL
 const LIBRARY_FIXED_CONTROLS_TOP = 94;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;
 const STUDY_SWIPE_EXIT_X = 460;
-const STUDY_SWIPE_REVEAL_WIDTH = 270;
+const STUDY_SWIPE_REVEAL_WIDTH = 300;
 const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
@@ -3492,10 +3492,13 @@ type AnimatedPressableProps = Omit<PressableProps, 'children' | 'style'> & {
   style?: StyleProp<ViewStyle>;
 };
 type WebTransitionStyle = ViewStyle & {
+  WebkitUserSelect?: string;
+  touchAction?: string;
   transitionDuration?: string;
   transitionProperty?: string;
   transitionTimingFunction?: string;
   transformOrigin?: string;
+  userSelect?: string;
   willChange?: string;
 };
 
@@ -4033,16 +4036,16 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
           <SvgRect fill={`url(#${featherId})`} height="100%" width="100%" x="0" y="0" />
         </SvgMask>
         <SvgLinearGradient id={washId} x1={hotEdge} x2={fadeEdge} y1="0%" y2="0%">
-          <SvgStop offset="0%" stopColor={mainColor} stopOpacity="0.10" />
-          <SvgStop offset="38%" stopColor={softColor} stopOpacity="0.035" />
-          <SvgStop offset="76%" stopColor={mainColor} stopOpacity="0" />
+          <SvgStop offset="0%" stopColor={mainColor} stopOpacity="0.11" />
+          <SvgStop offset="42%" stopColor={softColor} stopOpacity="0.044" />
+          <SvgStop offset="82%" stopColor={mainColor} stopOpacity="0" />
           <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
         </SvgLinearGradient>
         <SvgRadialGradient cx={hotEdge} cy="50%" fx={hotEdge} fy="50%" id={radialId} r="112%">
-          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.28" />
-          <SvgStop offset="28%" stopColor={mainColor} stopOpacity="0.16" />
-          <SvgStop offset="56%" stopColor={softColor} stopOpacity="0.055" />
-          <SvgStop offset="78%" stopColor={mainColor} stopOpacity="0" />
+          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.29" />
+          <SvgStop offset="30%" stopColor={mainColor} stopOpacity="0.18" />
+          <SvgStop offset="62%" stopColor={softColor} stopOpacity="0.07" />
+          <SvgStop offset="86%" stopColor={mainColor} stopOpacity="0" />
           <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
         </SvgRadialGradient>
       </SvgDefs>
@@ -4142,6 +4145,14 @@ function StudyView({
     }),
     transform: [{ translateX: swipeX }],
   };
+  const studySwipeTouchGuardStyle: WebTransitionStyle | undefined =
+    Platform.OS === 'web'
+      ? {
+          touchAction: 'pan-y',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+        }
+      : undefined;
   const reviewFeedbackStyle = {
     opacity: swipeX.interpolate({
       inputRange: [
@@ -4361,6 +4372,7 @@ function StudyView({
         },
         onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture),
         onPanResponderTerminationRequest: () => false,
+        onShouldBlockNativeResponder: () => true,
         onStartShouldSetPanResponder: () => false,
       }),
     [finishOrResetSwipe, setCardSwipeLocked, shouldStartCardSwipe, swipeX],
@@ -4446,7 +4458,7 @@ function StudyView({
         <Animated.View
           {...studySwipeResponder.panHandlers}
           accessibilityHint={swipeDirection === 'known' ? ui.swipeKnownHint : swipeDirection === 'review' ? ui.swipeReviewHint : undefined}
-          style={[styles.wordCard, styles.studySwipeSlidingCard, themeStyles?.wordCard, slidingCardStyle]}
+          style={[styles.wordCard, styles.studySwipeSlidingCard, themeStyles?.wordCard, slidingCardStyle, studySwipeTouchGuardStyle]}
           testID="study-swipe-card"
         >
           <View style={styles.rowBetween}>

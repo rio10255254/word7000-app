@@ -9,6 +9,9 @@ describe('study swipe gestures', () => {
   });
 
   test('separates horizontal card swipes from vertical page scrolling', () => {
+    expect(resolveStudyGestureIntent(5, 3)).toBe('card');
+    expect(resolveStudyGestureIntent(-5, 3)).toBe('card');
+    expect(resolveStudyGestureIntent(5, 6)).toBe(null);
     expect(resolveStudyGestureIntent(7, 4)).toBe('card');
     expect(resolveStudyGestureIntent(28, 24)).toBe('card');
     expect(resolveStudyGestureIntent(-34, 25)).toBe('card');

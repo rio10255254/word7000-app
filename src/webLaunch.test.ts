@@ -1002,6 +1002,10 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('const knownRevealGlowStyle');
     expect(studySource).toContain('STUDY_SWIPE_REVEAL_WIDTH - STUDY_SWIPE_EXIT_X');
     expect(studySource).toContain('STUDY_SWIPE_EXIT_X - STUDY_SWIPE_REVEAL_WIDTH');
+    expect(appSource).toContain('const STUDY_SWIPE_REVEAL_WIDTH = 300');
+    expect(studySource).toContain('const studySwipeTouchGuardStyle');
+    expect(studySource).toContain("touchAction: 'pan-y'");
+    expect(studySource).toContain("userSelect: 'none'");
     expect(studySource).toContain('styles.studySwipeRevealGradientWrap');
     expect(studySource).toContain('styles.studySwipeRevealReviewGradientWrap');
     expect(studySource).toContain('styles.studySwipeRevealKnownGradientWrap');

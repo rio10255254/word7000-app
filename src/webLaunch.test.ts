@@ -996,11 +996,17 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('STUDY_SWIPE_READY_FADE_X');
     expect(studySource).toContain('STUDY_SWIPE_PREVIEW_FADE_X');
     expect(studySource).toContain('readyHapticDirectionRef');
+    expect(studySource).toContain('readyHapticFiredDirectionRef');
     expect(studySource).toContain('pendingReadyHapticTimerRef');
+    expect(studySource).toContain('triggerStudySwipeCommitHaptic(direction)');
     expect(studySource).toContain('scheduleStudySwipeReadyHaptic(readyDirection)');
+    expect(studySource).toContain('resolveStudySwipeReleaseDirection(gesture.dx, gesture.vx)');
     expect(studySource).toContain('clearStudySwipeReadyHaptic();');
     expect(studySource).toContain("triggerPressHaptic('chip')");
     expect(studySource).not.toContain("readyHapticDirectionRef.current = readyDirection;\n              triggerPressHaptic('chip')");
+    expect(studySource).toContain('useReadyDirectionFallback?: boolean');
+    expect(studySource).toContain('options.useReadyDirectionFallback ? readyHapticDirectionRef.current : null');
+    expect(studySource).toContain('onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture, { useReadyDirectionFallback: true })');
     expect(feedbackStyleSource).not.toContain('scale: swipeX.interpolate');
     expect(studySource).toContain('styles.studySwipeRevealFill');
     expect(studySource).toContain('styles.studySwipeRevealReview');
@@ -1055,7 +1061,7 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('runStudyCardEntry');
     expect(studySource).toContain('swipeX.stopAnimation();');
     expect(studySource).toContain('requestAnimationFrame(finishSwipe)');
-    expect(studySource).toContain('onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture)');
+    expect(studySource).toContain('onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture, { useReadyDirectionFallback: true })');
     expect(studySource).not.toContain('styles.studySwipeCardPinnedTop');
     expect(studySource).not.toContain('styles.studySwipePendulumPanel');
     expect(studySource).toContain('onSwipeReview');

@@ -1,5 +1,10 @@
 import { describe, expect, test } from 'vitest';
-import { resolveStudyGestureIntent, resolveStudySwipeDirection, shouldClaimStudySwipe } from './studySwipe';
+import {
+  resolveStudyGestureIntent,
+  resolveStudySwipeDirection,
+  resolveStudySwipeReleaseDirection,
+  shouldClaimStudySwipe,
+} from './studySwipe';
 
 describe('study swipe gestures', () => {
   test('claims diagonal horizontal card drags without stealing vertical scrolls', () => {
@@ -27,6 +32,15 @@ describe('study swipe gestures', () => {
     expect(resolveStudySwipeDirection(-58, 0)).toBe('review');
     expect(resolveStudySwipeDirection(38, 0.72)).toBe('known');
     expect(resolveStudySwipeDirection(-38, -0.72)).toBe('review');
+    expect(resolveStudySwipeDirection(30, 0.4)).toBe('known');
+    expect(resolveStudySwipeDirection(-30, -0.4)).toBe('review');
     expect(resolveStudySwipeDirection(34, 0.12)).toBe(null);
+  });
+
+  test('commits a meaningful short release even when native velocity is missing', () => {
+    expect(resolveStudySwipeReleaseDirection(44, 0)).toBe('known');
+    expect(resolveStudySwipeReleaseDirection(-44, 0)).toBe('review');
+    expect(resolveStudySwipeReleaseDirection(34, 0)).toBe(null);
+    expect(resolveStudySwipeReleaseDirection(-34, 0)).toBe(null);
   });
 });

@@ -996,7 +996,11 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('STUDY_SWIPE_READY_FADE_X');
     expect(studySource).toContain('STUDY_SWIPE_PREVIEW_FADE_X');
     expect(studySource).toContain('readyHapticDirectionRef');
+    expect(studySource).toContain('pendingReadyHapticTimerRef');
+    expect(studySource).toContain('scheduleStudySwipeReadyHaptic(readyDirection)');
+    expect(studySource).toContain('clearStudySwipeReadyHaptic();');
     expect(studySource).toContain("triggerPressHaptic('chip')");
+    expect(studySource).not.toContain("readyHapticDirectionRef.current = readyDirection;\n              triggerPressHaptic('chip')");
     expect(feedbackStyleSource).not.toContain('scale: swipeX.interpolate');
     expect(studySource).toContain('styles.studySwipeRevealFill');
     expect(studySource).toContain('styles.studySwipeRevealReview');

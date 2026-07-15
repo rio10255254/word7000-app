@@ -5,12 +5,14 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Reanimated, {
+  cancelAnimation,
   Easing as ReanimatedEasing,
   Extrapolation,
   interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -170,7 +172,7 @@ import Svg, {
 } from 'react-native-svg';
 import { getAppStorage, hydrateAppStorage, isAppStorageHydrated } from './src/lib/appStorage';
 import { parseOAuthCallbackUrl } from './src/lib/oauthCallback';
-import { appInfoLinks } from './src/lib/appLinks';
+import { appInfoLinks, buildHostedAppUrl } from './src/lib/appLinks';
 import {
   clearUserMemoryOutbox,
   loadUserMemoryOutbox,
@@ -267,6 +269,9 @@ const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
 const STUDY_SWIPE_COMMIT_FADE_X = STUDY_SWIPE_THRESHOLD + 18;
+const STUDY_SWIPE_HINT_INITIAL_DELAY_MS = 1450;
+const STUDY_SWIPE_HINT_IDLE_DELAY_MS = 10_000;
+const STUDY_SWIPE_HINT_REPEAT_MS = 15_000;
 const SHOULD_CLEAR_STUDY_SELECTION = Platform.OS === 'web';
 const quizQuestionCounts = [10, 20, 50] as const;
 const EMPTY_WORD_LIST: WordEntry[] = [];
@@ -397,6 +402,8 @@ const modeInterfaceCopy = {
     reviewList: '複習清單',
     reviewListEmpty: '目前沒有卡住的單字',
     reviewListCount: (count: number) => `${count} 個單字需要再看一次`,
+    dictionaryLookup: '快速查字',
+    dictionarySearch: '查詢字庫',
     noStudyWords: '沒有符合的學習單字',
     noChineseWords: '沒有符合的中文單字',
     noQuizWords: '沒有符合的測驗題目',
@@ -598,6 +605,8 @@ const modeInterfaceCopy = {
     reviewList: 'Review List',
     reviewListEmpty: 'No words need review right now',
     reviewListCount: (count: number) => `${count} words need another look`,
+    dictionaryLookup: 'Quick Dictionary',
+    dictionarySearch: 'Search the library',
     noStudyWords: 'No matching study words',
     noChineseWords: 'No matching Chinese words',
     noQuizWords: 'No matching quiz questions',
@@ -1001,6 +1010,7 @@ function Word7000App() {
   const [searchQuery, setSearchQuery] = useState('');
   const deferredSearchQuery = useDeferredValue(searchQuery);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [librarySearchFocusRequest, setLibrarySearchFocusRequest] = useState(0);
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>(initialFilterPreferences.library.filter);
   const [activeLevel, setActiveLevel] = useState(initialFilterPreferences.library.level);
   const [activeInitial, setActiveInitial] = useState(initialFilterPreferences.library.initial);
@@ -1525,7 +1535,7 @@ function Word7000App() {
     libraryThumbOffsetAnim.setValue(0);
     libraryScrolledPastTopRef.current = false;
     setLibraryScrolledPastTop(false);
-  }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, scrollLibraryToRawOffset, searchQuery]);
+  }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, scrollLibraryToRawOffset]);
 
   useEffect(() => {
     setWordIndex(0);
@@ -2193,6 +2203,7 @@ function Word7000App() {
     }));
 
     const redirectTo = getOAuthRedirectUrl();
+    const nativeReturnTo = Platform.OS === 'web' ? undefined : nativeAuthRedirectTo(APP_LINKING_SCHEME);
     const { data, error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -2215,7 +2226,7 @@ function Word7000App() {
     }
 
     if (Platform.OS !== 'web') {
-      if (!data.url || !redirectTo) {
+      if (!data.url || !nativeReturnTo) {
         setAccount((current) => ({
           ...current,
           busy: false,
@@ -2225,7 +2236,7 @@ function Word7000App() {
         return;
       }
 
-      const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+      const result = await WebBrowser.openAuthSessionAsync(data.url, nativeReturnTo);
       if (result.type !== 'success') {
         setAccount((current) => ({
           ...current,
@@ -2726,10 +2737,15 @@ function Word7000App() {
     });
   }
 
-  const homeOpenAccount = useStableEvent(() => setActiveTab('profile'));
   const homeStartStudy = useStableEvent(() => setActiveTab('study'));
   const homeOpenReview = useStableEvent(() => {
     setActiveFilter('review');
+    setActiveTab('library');
+  });
+  const homeDictionarySearch = useStableEvent((query: string) => {
+    setSearchQuery(query.trim());
+    setSearchFocused(true);
+    setLibrarySearchFocusRequest((current) => current + 1);
     setActiveTab('library');
   });
   const homeToggleStudyMode = useStableEvent(toggleStudyMode);
@@ -2959,6 +2975,7 @@ function Word7000App() {
                 progress={progress}
                 query={searchQuery}
                 searchFocused={searchFocused}
+                searchFocusRequest={librarySearchFocusRequest}
                 studyMode={studyMode}
                 words={libraryWords}
                 onAddToSet={handleOpenSetPicker}
@@ -3053,7 +3070,7 @@ function Word7000App() {
               progress={progress}
               stats={stats}
               studyMode={studyMode}
-              onOpenAccount={homeOpenAccount}
+              onDictionarySearch={homeDictionarySearch}
               onStartStudy={homeStartStudy}
               onOpenReview={homeOpenReview}
               onToggleStudyMode={homeToggleStudyMode}
@@ -3529,7 +3546,7 @@ function getBrowserLocation(): Location | undefined {
 }
 
 function getOAuthRedirectUrl(): string | undefined {
-  return Platform.OS === 'web' ? authRedirectTo(getBrowserLocation()) : nativeAuthRedirectTo(APP_LINKING_SCHEME);
+  return Platform.OS === 'web' ? authRedirectTo(getBrowserLocation()) : buildHostedAppUrl('/auth-native.html');
 }
 
 function downloadTextFile(fileName: string, text: string, type: string): boolean {
@@ -4058,7 +4075,7 @@ const HomeView = memo(function HomeView({
   progress,
   stats,
   studyMode,
-  onOpenAccount,
+  onDictionarySearch,
   onOpenReview,
   onStartStudy,
   onToggleStudyMode,
@@ -4067,7 +4084,7 @@ const HomeView = memo(function HomeView({
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
   studyMode: StudyMode;
-  onOpenAccount: () => void;
+  onDictionarySearch: (query: string) => void;
   onOpenReview: () => void;
   onStartStudy: () => void;
   onToggleStudyMode: () => void;
@@ -4076,19 +4093,39 @@ const HomeView = memo(function HomeView({
   const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
+  const [dictionaryQuery, setDictionaryQuery] = useState('');
+  const submitDictionarySearch = useCallback(() => {
+    onDictionarySearch(dictionaryQuery);
+  }, [dictionaryQuery, onDictionarySearch]);
 
   return (
     <View style={styles.homeStack}>
       <View style={[styles.hero, themeStyles?.hero]}>
-        <View style={styles.heroCopy}>
-          <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
-          <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>{copy.heroTitle}</Text>
-          <Text style={[styles.heroText, themeStyles?.heroText]}>{copy.heroText}</Text>
+        <View style={styles.homeHeroTop}>
+          <View style={styles.heroCopy}>
+            <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
+            <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>{copy.heroTitle}</Text>
+          </View>
+          <View style={[styles.ring, themeStyles?.ring]}>
+            <Text style={[styles.ringValue, themeStyles?.ringValue]}>{dailyPercent}%</Text>
+            <Text style={[styles.ringLabel, themeStyles?.ringLabel]}>{ui.completed}</Text>
+          </View>
         </View>
-        <View style={[styles.ring, themeStyles?.ring]}>
-          <Text style={[styles.ringValue, themeStyles?.ringValue]}>{dailyPercent}%</Text>
-          <Text style={[styles.ringLabel, themeStyles?.ringLabel]}>{ui.completed}</Text>
+        <Text style={[styles.heroText, themeStyles?.heroText]}>{copy.heroText}</Text>
+        <View style={styles.homeProgressHeader}>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.dailyProgress}</Text>
+          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>
+            {stats.studiedToday} / {progress.dailyTarget}
+          </Text>
         </View>
+        <View style={[styles.progressTrack, themeStyles?.progressTrack]}>
+          <View style={[styles.progressFill, { width: `${dailyPercent}%` }]} />
+        </View>
+        <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton}>
+          <BookOpen size={18} color="#fff" strokeWidth={2.3} />
+          <Text style={styles.primaryButtonText}>{copy.primaryAction}</Text>
+          <ChevronRight size={18} color="#fff" strokeWidth={2.3} />
+        </AnimatedPressable>
       </View>
 
       <AnimatedPressable
@@ -4109,27 +4146,6 @@ const HomeView = memo(function HomeView({
         <ChevronRight size={18} color={studyMode === 'chinese' ? '#0f766e' : '#2563eb'} strokeWidth={2.4} />
       </AnimatedPressable>
 
-      <View style={[styles.progressCard, themeStyles?.progressCard]}>
-        <View style={styles.rowBetween}>
-          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.dailyProgress}</Text>
-          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>
-            {stats.studiedToday} / {progress.dailyTarget}
-          </Text>
-        </View>
-        <View style={[styles.progressTrack, themeStyles?.progressTrack]}>
-          <View style={[styles.progressFill, { width: `${dailyPercent}%` }]} />
-        </View>
-        <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton}>
-          <BookOpen size={18} color="#fff" strokeWidth={2.3} />
-          <Text style={styles.primaryButtonText}>{copy.primaryAction}</Text>
-          <ChevronRight size={18} color="#fff" strokeWidth={2.3} />
-        </AnimatedPressable>
-        <AnimatedPressable accessibilityRole="button" onPress={onOpenAccount} pressTone="secondary" style={[styles.accountShortcut, themeStyles?.accountShortcut]}>
-          <User size={17} color={bodyIconColor} strokeWidth={2.3} />
-          <Text style={[styles.accountShortcutText, themeStyles?.accountShortcutText]}>{ui.accountSync}</Text>
-        </AnimatedPressable>
-      </View>
-
       <View style={styles.statsGrid}>
         <StatCard label={ui.streak} value={progress.streak.toString()} tone="green" />
         <StatCard label={ui.mastered} value={stats.mastered.toString()} tone="blue" />
@@ -4144,6 +4160,39 @@ const HomeView = memo(function HomeView({
         </View>
         <ChevronRight size={18} color="#6b7280" strokeWidth={2.2} />
       </AnimatedPressable>
+
+      <View style={[styles.homeDictionaryCard, themeStyles?.homeDictionaryCard]} testID="home-dictionary-search">
+        <View style={styles.homeDictionaryHeader}>
+          <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+            <Library size={19} color={bodyIconColor} strokeWidth={2.3} />
+          </View>
+          <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.dictionaryLookup}</Text>
+        </View>
+        <View style={[styles.homeDictionarySearch, themeStyles?.homeDictionarySearch]}>
+          <Search size={20} color="#64748b" strokeWidth={2.2} />
+          <TextInput
+            accessibilityLabel={ui.dictionaryLookup}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={setDictionaryQuery}
+            onSubmitEditing={submitDictionarySearch}
+            placeholder={copy.searchPlaceholder}
+            placeholderTextColor="#94a3b8"
+            returnKeyType="search"
+            style={[styles.homeDictionaryInput, themeStyles?.homeDictionaryInput]}
+            value={dictionaryQuery}
+          />
+          <AnimatedPressable
+            accessibilityLabel={ui.dictionarySearch}
+            accessibilityRole="button"
+            onPress={submitDictionarySearch}
+            pressTone="primary"
+            style={styles.homeDictionarySubmit}
+          >
+            <Search size={19} color="#fff" strokeWidth={2.5} />
+          </AnimatedPressable>
+        </View>
+      </View>
     </View>
   );
 });
@@ -4279,11 +4328,14 @@ const StudyView = memo(function StudyView({
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
   const swipeX = useSharedValue(0);
+  const swipeHintX = useSharedValue(0);
   const swipeStartX = useSharedValue(0);
   const swipePhase = useSharedValue(0);
   const hapticDirectionCode = useSharedValue(0);
   const cardEntryProgress = useRef(new Animated.Value(1)).current;
   const cardSwapOpacity = useRef(new Animated.Value(1)).current;
+  const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const studyInitialHintScheduledRef = useRef(false);
   const cardEntryStyle = {
     opacity: cardEntryProgress,
     transform: [
@@ -4308,7 +4360,17 @@ const StudyView = memo(function StudyView({
       [0.92, 1, 0.92],
       Extrapolation.CLAMP,
     ),
-    transform: [{ translateX: swipeX.value }],
+    transform: [
+      { translateX: swipeX.value + swipeHintX.value },
+      {
+        scale: interpolate(
+          Math.abs(swipeX.value),
+          [0, STUDY_SWIPE_THRESHOLD, STUDY_SWIPE_EXIT_X],
+          [1, 0.994, 0.982],
+          Extrapolation.CLAMP,
+        ),
+      },
+    ],
   }));
   const cardSwapStyle = {
     opacity: cardSwapOpacity,
@@ -4407,6 +4469,40 @@ const StudyView = memo(function StudyView({
     triggerPressHaptic('chip');
   }, []);
 
+  const clearStudyHintTimer = useCallback(() => {
+    if (studyHintTimerRef.current) {
+      clearTimeout(studyHintTimerRef.current);
+      studyHintTimerRef.current = null;
+    }
+  }, []);
+
+  const runStudySwipeHint = useCallback(() => {
+    cancelAnimation(swipeHintX);
+    swipeHintX.value = 0;
+    swipeHintX.value = withSequence(
+      withTiming(-9, { duration: 135, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) }),
+      withTiming(11, { duration: 210, easing: ReanimatedEasing.inOut(ReanimatedEasing.cubic) }),
+      withTiming(-6, { duration: 170, easing: ReanimatedEasing.inOut(ReanimatedEasing.cubic) }),
+      withSpring(0, { damping: 15, mass: 0.55, stiffness: 220 }),
+    );
+  }, [swipeHintX]);
+
+  const scheduleStudySwipeHint = useCallback(
+    (delayMs: number) => {
+      clearStudyHintTimer();
+      const pulse = () => {
+        runStudySwipeHint();
+        studyHintTimerRef.current = setTimeout(pulse, STUDY_SWIPE_HINT_REPEAT_MS);
+      };
+      studyHintTimerRef.current = setTimeout(pulse, delayMs);
+    },
+    [clearStudyHintTimer, runStudySwipeHint],
+  );
+
+  const markStudyCardInteraction = useCallback(() => {
+    scheduleStudySwipeHint(STUDY_SWIPE_HINT_IDLE_DELAY_MS);
+  }, [scheduleStudySwipeHint]);
+
   const finishNativeSwipe = useCallback(
     (directionCode: number) => {
       cardSwapOpacity.setValue(0);
@@ -4432,13 +4528,29 @@ const StudyView = memo(function StudyView({
   );
 
   useLayoutEffect(() => {
+    cancelAnimation(swipeHintX);
     swipeX.value = 0;
+    swipeHintX.value = 0;
     swipeStartX.value = 0;
     swipePhase.value = 0;
     hapticDirectionCode.value = 0;
     cardSwapOpacity.setValue(1);
     runStudyCardEntry();
-  }, [cardSequence, cardSwapOpacity, hapticDirectionCode, runStudyCardEntry, swipePhase, swipeStartX, swipeX, word?.id]);
+  }, [cardSequence, cardSwapOpacity, hapticDirectionCode, runStudyCardEntry, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
+
+  useEffect(() => {
+    if (!word) {
+      clearStudyHintTimer();
+      return;
+    }
+
+    const delay = studyInitialHintScheduledRef.current
+      ? STUDY_SWIPE_HINT_IDLE_DELAY_MS
+      : STUDY_SWIPE_HINT_INITIAL_DELAY_MS;
+    studyInitialHintScheduledRef.current = true;
+    scheduleStudySwipeHint(delay);
+    return clearStudyHintTimer;
+  }, [cardSequence, clearStudyHintTimer, scheduleStudySwipeHint, word?.id]);
 
   const studySwipeGesture = useMemo(
     () =>
@@ -4449,9 +4561,12 @@ const StudyView = memo(function StudyView({
         .minDistance(4)
         .shouldCancelWhenOutside(false)
         .onBegin(() => {
+          cancelAnimation(swipeHintX);
+          swipeHintX.value = 0;
           swipeStartX.value = swipeX.value;
           swipePhase.value = 0;
           hapticDirectionCode.value = 0;
+          runOnJS(markStudyCardInteraction)();
         })
         .onStart(() => {
           swipePhase.value = 1;
@@ -4495,9 +4610,12 @@ const StudyView = memo(function StudyView({
               hapticDirectionCode.value = directionCode;
               runOnJS(fireSwipeHaptic)();
             }
+            const remainingDistance = Math.max(1, STUDY_SWIPE_EXIT_X - Math.abs(nextX));
+            const releaseSpeed = Math.max(900, Math.abs(event.velocityX));
+            const exitDuration = Math.max(105, Math.min(185, (remainingDistance / releaseSpeed) * 1000));
             swipeX.value = withTiming(
               directionCode > 0 ? STUDY_SWIPE_EXIT_X : -STUDY_SWIPE_EXIT_X,
-              { duration: 180, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) },
+              { duration: exitDuration, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) },
               (finished) => {
                 if (finished) {
                   runOnJS(finishNativeSwipe)(directionCode);
@@ -4509,7 +4627,7 @@ const StudyView = memo(function StudyView({
 
           swipeX.value = withSpring(
             0,
-            { damping: 20, mass: 0.72, stiffness: 260 },
+            { damping: 18, mass: 0.68, stiffness: 245, velocity: event.velocityX },
           );
         })
         .onFinalize(() => {
@@ -4526,6 +4644,8 @@ const StudyView = memo(function StudyView({
       finishNativeSwipe,
       fireSwipeHaptic,
       hapticDirectionCode,
+      markStudyCardInteraction,
+      swipeHintX,
       swipePhase,
       swipeStartX,
       swipeX,
@@ -5261,6 +5381,7 @@ const LibraryView = memo(function LibraryView({
   listRef,
   progress,
   query,
+  searchFocusRequest,
   searchFocused,
   studyMode,
   words,
@@ -5292,6 +5413,7 @@ const LibraryView = memo(function LibraryView({
   listRef: RefObject<FlashListRef<WordEntry> | null>;
   progress: ProgressState;
   query: string;
+  searchFocusRequest: number;
   searchFocused: boolean;
   studyMode: StudyMode;
   words: WordEntry[];
@@ -5314,6 +5436,7 @@ const LibraryView = memo(function LibraryView({
 }) {
   const hasQuery = query.trim().length > 0;
   const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;
+  const searchInputRef = useRef<TextInput | null>(null);
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
   const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
@@ -5328,6 +5451,15 @@ const LibraryView = memo(function LibraryView({
       useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [hasQuery, searchAnim, searchFocused]);
+
+  useEffect(() => {
+    if (searchFocusRequest <= 0) {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => searchInputRef.current?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [searchFocusRequest]);
 
   const searchMotionStyle = {
     transform: [
@@ -5377,6 +5509,7 @@ const LibraryView = memo(function LibraryView({
             <View style={[styles.searchBox, themeStyles?.searchBox, searchBoxWebTransition, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
               <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
               <TextInput
+                ref={searchInputRef}
                 onChangeText={onQueryChange}
                 onBlur={onSearchBlur}
                 onFocus={onSearchFocus}
@@ -5508,7 +5641,7 @@ const LibraryView = memo(function LibraryView({
       drawDistance={720}
       extraData={progress.words}
       ItemSeparatorComponent={LibraryItemSeparator}
-      keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+      keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       keyExtractor={libraryWordKeyExtractor}
       ListEmptyComponent={(
@@ -6669,10 +6802,9 @@ export function ProfileSettingsView({
           </View>
           <View
             pointerEvents="none"
-            style={[styles.themeSwitchButton, darkMode && styles.themeSwitchButtonActive]}
+            style={[styles.themeStatusLight, darkMode && styles.themeStatusLightActive]}
           >
-            <View style={[styles.themeSwitchDot, darkMode && styles.themeSwitchDotActive]} />
-            <Text style={[styles.themeSwitchText, darkMode && styles.themeSwitchTextActive]}>{darkMode ? ui.on : ui.off}</Text>
+            <View style={[styles.themeStatusLightCore, darkMode && styles.themeStatusLightCoreActive]} />
           </View>
         </AnimatedPressable>
       </View>
@@ -7556,10 +7688,14 @@ const styles = StyleSheet.create({
     borderColor: '#fed7aa',
     borderRadius: 8,
     borderWidth: 1,
+    gap: 12,
+    padding: 18,
+  },
+  homeHeroTop: {
+    alignItems: 'center',
     flexDirection: 'row',
     gap: 14,
     justifyContent: 'space-between',
-    padding: 18,
   },
   heroCopy: {
     flex: 1,
@@ -7572,9 +7708,9 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     color: '#172033',
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: '900',
-    lineHeight: 36,
+    lineHeight: 33,
   },
   heroText: {
     color: '#5f6675',
@@ -7589,13 +7725,13 @@ const styles = StyleSheet.create({
     borderColor: '#fdba74',
     borderRadius: 8,
     borderWidth: 1,
-    height: 92,
+    height: 78,
     justifyContent: 'center',
-    width: 92,
+    width: 78,
   },
   ringValue: {
     color: '#172033',
-    fontSize: 24,
+    fontSize: 21,
     fontWeight: '900',
   },
   ringLabel: {
@@ -7650,6 +7786,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 12,
     padding: 15,
+  },
+  homeProgressHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 2,
   },
   rowBetween: {
     alignItems: 'center',
@@ -7708,6 +7850,46 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 14,
     fontWeight: '800',
+  },
+  homeDictionaryCard: {
+    backgroundColor: '#fff',
+    borderColor: '#dbeafe',
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 12,
+    padding: 14,
+  },
+  homeDictionaryHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+  },
+  homeDictionarySearch: {
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    minHeight: 58,
+    paddingLeft: 14,
+    paddingRight: 7,
+  },
+  homeDictionaryInput: {
+    color: '#172033',
+    flex: 1,
+    fontSize: 15,
+    minHeight: 48,
+    paddingVertical: 0,
+  },
+  homeDictionarySubmit: {
+    alignItems: 'center',
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -9484,37 +9666,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 42,
   },
-  themeSwitchButton: {
+  themeStatusLight: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#cbd5e1',
-    borderRadius: 8,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 6,
-    minHeight: 38,
-    paddingHorizontal: 10,
-  },
-  themeSwitchButtonActive: {
-    backgroundColor: '#172033',
-    borderColor: '#172033',
-  },
-  themeSwitchDot: {
-    backgroundColor: '#cbd5e1',
+    backgroundColor: '#e2e8f0',
     borderRadius: 99,
-    height: 9,
-    width: 9,
+    height: 14,
+    justifyContent: 'center',
+    width: 14,
   },
-  themeSwitchDotActive: {
-    backgroundColor: '#60a5fa',
+  themeStatusLightActive: {
+    backgroundColor: '#dbeafe',
+    elevation: 4,
+    shadowColor: '#2563eb',
+    shadowOffset: { height: 0, width: 0 },
+    shadowOpacity: 0.42,
+    shadowRadius: 7,
   },
-  themeSwitchText: {
-    color: '#64748b',
-    fontSize: 12,
-    fontWeight: '900',
+  themeStatusLightCore: {
+    backgroundColor: '#94a3b8',
+    borderRadius: 99,
+    height: 8,
+    width: 8,
   },
-  themeSwitchTextActive: {
-    color: '#fff',
+  themeStatusLightCoreActive: {
+    backgroundColor: '#2563eb',
   },
   settingsEntryButton: {
     alignItems: 'center',
@@ -9881,6 +10056,17 @@ const darkStyles = StyleSheet.create({
   },
   accountShortcutText: {
     color: '#e2e8f0',
+  },
+  homeDictionaryCard: {
+    backgroundColor: '#111827',
+    borderColor: '#334155',
+  },
+  homeDictionarySearch: {
+    backgroundColor: '#182033',
+    borderColor: '#475569',
+  },
+  homeDictionaryInput: {
+    color: '#f8fafc',
   },
   statCard: {
     backgroundColor: '#111827',

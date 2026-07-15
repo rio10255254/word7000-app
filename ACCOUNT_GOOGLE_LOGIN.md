@@ -32,7 +32,7 @@ http://localhost:19006/*
 ```
 
 如果你只用 Cloudflare Pages 網址，第二行自訂網域可以先不填。
-`word7000://auth/callback` 是 iPhone App 登入後回到 App 內用的，不要省略。
+正式網站會提供 `/auth-native.html` 作為 iPhone 登入中繼頁，收到登入結果後立刻開啟 `word7000://auth/callback` 回到 App。正式網址的萬用路徑必須保留；自訂 callback 則建議保留作為備援。
 
 ## 3. 建立 Google OAuth
 

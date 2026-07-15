@@ -422,6 +422,8 @@ describe('free web launch configuration', () => {
 
   test('uses Google sign-in as the primary account entry for cloud sync', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const authCallbackRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'auth', 'callback.tsx'), 'utf8');
+    const nativeAuthBridge = fs.readFileSync(path.join(process.cwd(), 'public', 'auth-native.html'), 'utf8');
 
     expect(appSource).toContain("from './src/lib/authRedirect'");
     expect(appSource).toContain('loadCloudProgressRecord');
@@ -443,6 +445,9 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("provider: 'google'");
     expect(appSource).toContain('signInWithOAuth');
     expect(appSource).toContain('getOAuthRedirectUrl()');
+    expect(appSource).toContain("buildHostedAppUrl('/auth-native.html')");
+    expect(appSource).toContain('nativeAuthRedirectTo(APP_LINKING_SCHEME)');
+    expect(appSource).toContain('WebBrowser.openAuthSessionAsync(data.url, nativeReturnTo)');
     expect(appSource).toContain("prompt: 'select_account'");
     expect(appSource).toContain('skipBrowserRedirect: Platform.OS !==');
     expect(appSource).toContain('使用 Google 快速登入');
@@ -459,6 +464,9 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Email fallback');
     expect(appSource).toContain('profileGoogleSignIn = useStableEvent(handleGoogleSignIn)');
     expect(appSource).toContain('onGoogleSignIn={profileGoogleSignIn}');
+    expect(authCallbackRoute).toContain('<Redirect href="/" />');
+    expect(nativeAuthBridge).toContain("'word7000://auth/callback'");
+    expect(nativeAuthBridge).toContain('window.location.replace(callbackUrl)');
   });
 
   test('keeps account sync unavailable messages user-facing', () => {
@@ -771,8 +779,23 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('themeTransitionTarget');
     expect(appSource).toContain('function triggerThemeModeChange(nextMode: ThemeMode)');
     const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
-    expect(settingsRoute).toContain('onThemeModeChange={bridge.actions.setThemeMode}');
+    expect(settingsRoute).toContain('onThemeModeChange={changeThemeMode}');
+    expect(settingsRoute).toContain('settings-theme-transition-overlay');
+    expect(settingsRoute).toContain('Animated.sequence([');
     expect(appSource).toContain('styles.themeTransitionOverlay');
+  });
+
+  test('keeps settings scrolling finite and uses only a dark-mode status light', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
+
+    expect(settingsRoute).toContain('alwaysBounceVertical={false}');
+    expect(settingsRoute).toContain('bounces={false}');
+    expect(settingsRoute).toContain('overScrollMode="never"');
+    expect(appSource).toContain('styles.themeStatusLight');
+    expect(appSource).toContain('styles.themeStatusLightCore');
+    expect(appSource).not.toContain('styles.themeSwitchButton');
+    expect(appSource).not.toContain('styles.themeSwitchText');
   });
 
   test('keeps the fixed library drag slider themed in dark mode', () => {
@@ -989,6 +1012,31 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('ui.addToSetName(formatWordPrimary(word, studyMode))');
   });
 
+  test('keeps the library keyboard open while search results update', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const scrollResetStart = appSource.indexOf("if (activeTab === 'library') {");
+    const scrollResetEnd = appSource.indexOf('useEffect(() => {', scrollResetStart + 1);
+    const scrollResetSource = appSource.slice(scrollResetStart, scrollResetEnd);
+
+    expect(scrollResetSource).not.toContain('searchQuery');
+    expect(appSource).toContain('keyboardDismissMode="on-drag"');
+    expect(appSource).toContain('ref={searchInputRef}');
+    expect(appSource).toContain('searchInputRef.current?.focus()');
+  });
+
+  test('provides a compact home dashboard with a direct dictionary search', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const homeStart = appSource.indexOf('const HomeView = memo(function HomeView');
+    const homeEnd = appSource.indexOf('function StudySwipeRevealGradient', homeStart);
+    const homeSource = appSource.slice(homeStart, homeEnd);
+
+    expect(homeSource).toContain('testID="home-dictionary-search"');
+    expect(homeSource).toContain('onSubmitEditing={submitDictionarySearch}');
+    expect(appSource).toContain('const homeDictionarySearch = useStableEvent');
+    expect(appSource).toContain('setLibrarySearchFocusRequest((current) => current + 1)');
+    expect(homeSource).not.toContain('onOpenAccount');
+  });
+
   test('turns the study card into a randomized native swipe deck with navigation buttons', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const progressSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'progress.ts'), 'utf8');
@@ -1019,6 +1067,11 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('swipeX.value = withSpring(');
     expect(studySource).toContain('runOnJS(fireSwipeHaptic)()');
     expect(studySource).toContain("triggerPressHaptic('chip')");
+    expect(studySource).toContain('const swipeHintX = useSharedValue(0)');
+    expect(studySource).toContain('withSequence(');
+    expect(studySource).toContain('scheduleStudySwipeHint(STUDY_SWIPE_HINT_IDLE_DELAY_MS)');
+    expect(studySource).toContain('cancelAnimation(swipeHintX)');
+    expect(studySource).toContain('velocity: event.velocityX');
     expect(appSource).not.toContain('PanResponder');
     expect(appSource).not.toContain('studySwipeScrollLocked');
     expect(studySource).toContain('styles.studySwipeRevealFill');

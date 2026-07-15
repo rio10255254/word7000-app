@@ -24,8 +24,8 @@ This branch turns the existing Word7000 web app into a real iOS app while keepin
 
 Add these in Supabase Auth settings before testing native social login:
 
-- `word7000://auth/callback`
-- your current web production URL
+- `https://word7000-app.rio10255254.workers.dev/**`
+- `word7000://auth/callback` as a direct-callback fallback
 - your local web test URL when needed
 
 ## Supabase schema to apply
@@ -34,11 +34,11 @@ Run the SQL in `supabase/schema.sql` after pulling this branch. It now includes 
 
 ## Google OAuth notes
 
-The iOS app still uses Supabase as the auth broker. Google should redirect back through:
+The iOS app still uses Supabase as the auth broker. Google first returns to the hosted native bridge, which immediately opens the installed app through:
 
 - `word7000://auth/callback`
 
-If Google sign-in opens but does not return to the app, check Supabase redirect allow-list first.
+The bridge is hosted at `/auth-native.html`. Keep the production web origin allow-listed in Supabase so this page receives the OAuth result instead of falling back to the normal web app.
 
 ## Apple Sign In notes
 

@@ -1,3 +1,5 @@
-import Word7000App from '../../../App';
+import { Redirect } from 'expo-router';
 
-export default Word7000App;
+export default function AuthCallbackRoute() {
+  return <Redirect href="/" />;
+}

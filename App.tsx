@@ -251,6 +251,7 @@ function isWebIosPreviewMode() {
   });
 }
 const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();
+const IS_NATIVE_IOS = Platform.OS === 'ios';
 const WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA = IS_WEB_IOS_PREVIEW ? 28 : 0;
 const WEB_TAB_BAR_BOTTOM_OFFSET = 8;
 const PREVIEW_TAB_BAR_BOTTOM_OFFSET = WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA;
@@ -272,10 +273,10 @@ const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
 const STUDY_SWIPE_COMMIT_FADE_X = STUDY_SWIPE_THRESHOLD + 18;
-const STUDY_SWIPE_CONFIRM_NUDGE_X = 8;
-const STUDY_SWIPE_CONFIRM_MS = 72;
-const STUDY_SWIPE_EXIT_MIN_MS = 240;
-const STUDY_SWIPE_EXIT_MAX_MS = 300;
+const STUDY_SWIPE_EXIT_DAMPING = 24;
+const STUDY_SWIPE_EXIT_MASS = 0.9;
+const STUDY_SWIPE_EXIT_STIFFNESS = 170;
+const STUDY_CARD_ENTRY_MS = 280;
 const STUDY_SWIPE_HINT_INITIAL_DELAY_MS = 1450;
 const STUDY_SWIPE_HINT_IDLE_DELAY_MS = 10_000;
 const STUDY_SWIPE_HINT_REPEAT_MS = 15_000;
@@ -4096,7 +4097,9 @@ const HomeView = memo(function HomeView({
 }) {
   const themeStyles = useThemeStyles();
   const safeAreaInsets = useSafeAreaInsets();
-  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const themeMode = useContext(ThemeContext);
+  const darkMode = themeMode === 'dark';
+  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const [dictionaryQuery, setDictionaryQuery] = useState('');
@@ -4105,6 +4108,8 @@ const HomeView = memo(function HomeView({
   const dictionaryModalProgress = useRef(new Animated.Value(0)).current;
   const dictionaryInputRef = useRef<TextInput | null>(null);
   const dictionaryClosingRef = useRef(false);
+  const dictionaryPendingActionRef = useRef<(() => void) | null>(null);
+  const dictionaryFocusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const normalizedDictionaryQuery = deferredDictionaryQuery.trim();
   const dictionaryResults = useMemo(
     () =>
@@ -4115,7 +4120,7 @@ const HomeView = memo(function HomeView({
   );
 
   useEffect(() => {
-    if (!dictionaryOpen) {
+    if (!dictionaryOpen || IS_NATIVE_IOS) {
       return;
     }
 
@@ -4130,12 +4135,29 @@ const HomeView = memo(function HomeView({
         useNativeDriver: Platform.OS !== 'web',
       }).start();
     });
-    const focusTimer = setTimeout(() => dictionaryInputRef.current?.focus(), 90);
     return () => {
       cancelAnimationFrame(frame);
-      clearTimeout(focusTimer);
     };
   }, [dictionaryModalProgress, dictionaryOpen]);
+
+  const focusDictionaryInput = useCallback(() => {
+    if (dictionaryFocusTimerRef.current) {
+      clearTimeout(dictionaryFocusTimerRef.current);
+    }
+    dictionaryFocusTimerRef.current = setTimeout(
+      () => dictionaryInputRef.current?.focus(),
+      IS_NATIVE_IOS ? 110 : 60,
+    );
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (dictionaryFocusTimerRef.current) {
+        clearTimeout(dictionaryFocusTimerRef.current);
+      }
+    },
+    [],
+  );
 
   const openDictionary = useCallback(() => {
     if (!dictionaryOpen) {
@@ -4150,7 +4172,17 @@ const HomeView = memo(function HomeView({
       }
 
       dictionaryClosingRef.current = true;
+      if (dictionaryFocusTimerRef.current) {
+        clearTimeout(dictionaryFocusTimerRef.current);
+        dictionaryFocusTimerRef.current = null;
+      }
       Keyboard.dismiss();
+      if (IS_NATIVE_IOS) {
+        dictionaryPendingActionRef.current = afterClose ?? null;
+        setDictionaryOpen(false);
+        return;
+      }
+
       dictionaryModalProgress.stopAnimation();
       Animated.timing(dictionaryModalProgress, {
         duration: 210,
@@ -4165,6 +4197,13 @@ const HomeView = memo(function HomeView({
     },
     [dictionaryModalProgress],
   );
+
+  const finishDictionaryDismiss = useCallback(() => {
+    dictionaryClosingRef.current = false;
+    const pendingAction = dictionaryPendingActionRef.current;
+    dictionaryPendingActionRef.current = null;
+    pendingAction?.();
+  }, []);
 
   const openDictionaryWord = useCallback(
     (word: WordEntry) => {
@@ -4238,23 +4277,10 @@ const HomeView = memo(function HomeView({
           style={[styles.homeDictionaryStandalone, themeStyles?.homeDictionarySearch]}
           testID="home-dictionary-search"
         >
-          <View style={styles.homeDictionaryStandaloneIcon}>
-            <Search size={21} color="#2563eb" strokeWidth={2.4} />
-          </View>
-          <View style={styles.flexOne}>
-            <Text style={[styles.homeDictionaryLauncherTitle, themeStyles?.sectionTitle]}>{ui.dictionaryLookup}</Text>
-            <Text
-              numberOfLines={1}
-              style={[
-                styles.homeDictionaryLauncherText,
-                dictionaryQuery && styles.homeDictionaryLauncherTextActive,
-                themeStyles?.homeDictionaryInput,
-              ]}
-            >
-              {dictionaryQuery || copy.searchPlaceholder}
-            </Text>
-          </View>
-          <ChevronRight size={20} color="#2563eb" strokeWidth={2.5} />
+          <Search size={20} color={darkMode ? '#94a3b8' : '#64748b'} strokeWidth={2.35} />
+          <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
+            {copy.searchPlaceholder}
+          </Text>
         </AnimatedPressable>
 
         <AnimatedPressable
@@ -4293,31 +4319,45 @@ const HomeView = memo(function HomeView({
       </View>
 
       <Modal
-        animationType="none"
+        allowSwipeDismissal={IS_NATIVE_IOS}
+        animationType={IS_NATIVE_IOS ? 'slide' : 'none'}
+        onDismiss={finishDictionaryDismiss}
         onRequestClose={() => closeDictionary()}
-        presentationStyle="overFullScreen"
-        statusBarTranslucent
-        transparent
+        onShow={focusDictionaryInput}
+        presentationStyle={IS_NATIVE_IOS ? 'pageSheet' : 'overFullScreen'}
+        statusBarTranslucent={!IS_NATIVE_IOS}
+        transparent={!IS_NATIVE_IOS}
         visible={dictionaryOpen}
       >
-        <View accessibilityViewIsModal style={styles.homeDictionaryModalRoot} testID="home-dictionary-modal">
-          <Pressable accessible={false} onPress={() => closeDictionary()} style={StyleSheet.absoluteFill}>
-            <Animated.View pointerEvents="none" style={[styles.homeDictionaryBackdrop, dictionaryBackdropStyle]} />
-          </Pressable>
+        <View
+          accessibilityViewIsModal
+          style={[
+            styles.homeDictionaryModalRoot,
+            IS_NATIVE_IOS && styles.homeDictionaryModalRootNative,
+            IS_NATIVE_IOS && themeStyles?.homeDictionaryModalRootNative,
+          ]}
+          testID="home-dictionary-modal"
+        >
+          {!IS_NATIVE_IOS ? (
+            <Pressable accessible={false} onPress={() => closeDictionary()} style={StyleSheet.absoluteFill}>
+              <Animated.View pointerEvents="none" style={[styles.homeDictionaryBackdrop, dictionaryBackdropStyle]} />
+            </Pressable>
+          ) : null}
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'height' : undefined}
+            behavior={IS_NATIVE_IOS ? 'padding' : undefined}
             pointerEvents="box-none"
             style={styles.homeDictionaryKeyboardLayer}
           >
             <Animated.View
               style={[
                 styles.homeDictionaryModalSheet,
+                IS_NATIVE_IOS && styles.homeDictionaryModalSheetNative,
                 themeStyles?.homeDictionaryModalSheet,
                 { paddingBottom: Math.max(14, safeAreaInsets.bottom + 8) },
-                dictionarySheetStyle,
+                !IS_NATIVE_IOS && dictionarySheetStyle,
               ]}
             >
-              <View style={styles.homeDictionaryModalHandle} />
+              {!IS_NATIVE_IOS ? <View style={styles.homeDictionaryModalHandle} /> : null}
               <View style={styles.homeDictionaryModalHeader}>
                 <View style={styles.flexOne}>
                   <Text style={[styles.homeDictionaryModalTitle, themeStyles?.sectionTitle]}>{ui.dictionaryLookup}</Text>
@@ -4344,15 +4384,18 @@ const HomeView = memo(function HomeView({
                   accessibilityLabel={ui.dictionaryLookup}
                   autoCapitalize="none"
                   autoCorrect={false}
+                  clearButtonMode={IS_NATIVE_IOS ? 'while-editing' : 'never'}
+                  keyboardAppearance={darkMode ? 'dark' : 'light'}
                   onChangeText={setDictionaryQuery}
                   placeholder={copy.searchPlaceholder}
                   placeholderTextColor="#94a3b8"
                   ref={dictionaryInputRef}
                   returnKeyType="search"
+                  selectionColor="#2563eb"
                   style={[styles.homeDictionaryModalInput, themeStyles?.homeDictionaryInput]}
                   value={dictionaryQuery}
                 />
-                {dictionaryQuery ? (
+                {dictionaryQuery && !IS_NATIVE_IOS ? (
                   <AnimatedPressable
                     accessibilityLabel={ui.clearSearch}
                     accessibilityRole="button"
@@ -4586,27 +4629,20 @@ const StudyView = memo(function StudyView({
   const swipePhase = useSharedValue(0);
   const hapticDirectionCode = useSharedValue(0);
   const swipeCommitPulse = useSharedValue(0);
-  const cardEntryProgress = useRef(new Animated.Value(1)).current;
-  const cardSwapOpacity = useRef(new Animated.Value(1)).current;
+  const cardEntryProgress = useSharedValue(1);
   const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const studyInitialHintScheduledRef = useRef(false);
-  const cardEntryStyle = {
-    opacity: cardEntryProgress,
+  const cardEntryStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(cardEntryProgress.value, [0, 0.42, 1], [0, 1, 1], Extrapolation.CLAMP),
     transform: [
       {
-        translateY: cardEntryProgress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [14, 0],
-        }),
+        translateY: interpolate(cardEntryProgress.value, [0, 1], [10, 0], Extrapolation.CLAMP),
       },
       {
-        scale: cardEntryProgress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.982, 1],
-        }),
+        scale: interpolate(cardEntryProgress.value, [0, 1], [0.992, 1], Extrapolation.CLAMP),
       },
     ],
-  };
+  }));
   const slidingCardStyle = useAnimatedStyle(() => {
     const distanceScale = interpolate(
       Math.abs(swipeX.value),
@@ -4628,9 +4664,6 @@ const StudyView = memo(function StudyView({
       ],
     };
   });
-  const cardSwapStyle = {
-    opacity: cardSwapOpacity,
-  };
   const studySwipeTouchGuardStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
       ? {
@@ -4732,13 +4765,12 @@ const StudyView = memo(function StudyView({
   }));
 
   const runStudyCardEntry = useCallback(() => {
-    cardEntryProgress.setValue(0);
-    Animated.spring(cardEntryProgress, {
-      friction: 10,
-      tension: 65,
-      toValue: 1,
-      useNativeDriver: Platform.OS !== 'web',
-    }).start();
+    cancelAnimation(cardEntryProgress);
+    cardEntryProgress.value = 0;
+    cardEntryProgress.value = withTiming(1, {
+      duration: STUDY_CARD_ENTRY_MS,
+      easing: ReanimatedEasing.bezier(0.2, 0.76, 0.24, 1),
+    });
   }, [cardEntryProgress]);
 
   const fireSwipeHaptic = useCallback(() => {
@@ -4785,41 +4817,28 @@ const StudyView = memo(function StudyView({
 
   const finishNativeSwipe = useCallback(
     (directionCode: number) => {
-      cardSwapOpacity.setValue(0);
       if (directionCode > 0) {
         onSwipeKnown();
       } else {
         onSwipeReview();
       }
-      swipeX.value = 0;
-      swipeStartX.value = 0;
-      swipePhase.value = 0;
-      hapticDirectionCode.value = 0;
-      swipeCommitPulse.value = 0;
     },
-    [
-      cardSwapOpacity,
-      hapticDirectionCode,
-      onSwipeKnown,
-      onSwipeReview,
-      swipePhase,
-      swipeStartX,
-      swipeX,
-      swipeCommitPulse,
-    ],
+    [onSwipeKnown, onSwipeReview],
   );
 
   useLayoutEffect(() => {
+    cancelAnimation(cardEntryProgress);
+    cancelAnimation(swipeX);
     cancelAnimation(swipeHintX);
+    cancelAnimation(swipeCommitPulse);
     swipeX.value = 0;
     swipeHintX.value = 0;
     swipeStartX.value = 0;
     swipePhase.value = 0;
     hapticDirectionCode.value = 0;
     swipeCommitPulse.value = 0;
-    cardSwapOpacity.setValue(1);
     runStudyCardEntry();
-  }, [cardSequence, cardSwapOpacity, hapticDirectionCode, runStudyCardEntry, swipeCommitPulse, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
+  }, [cardEntryProgress, cardSequence, hapticDirectionCode, runStudyCardEntry, swipeCommitPulse, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
 
   useEffect(() => {
     if (!word) {
@@ -4844,7 +4863,12 @@ const StudyView = memo(function StudyView({
         .minDistance(4)
         .shouldCancelWhenOutside(false)
         .onBegin(() => {
+          if (swipePhase.value === 3) {
+            return;
+          }
+          cancelAnimation(swipeX);
           cancelAnimation(swipeHintX);
+          cancelAnimation(swipeCommitPulse);
           swipeHintX.value = 0;
           swipeStartX.value = swipeX.value;
           swipePhase.value = 0;
@@ -4853,12 +4877,18 @@ const StudyView = memo(function StudyView({
           runOnJS(markStudyCardInteraction)();
         })
         .onStart(() => {
+          if (swipePhase.value === 3) {
+            return;
+          }
           swipePhase.value = 1;
           if (SHOULD_CLEAR_STUDY_SELECTION) {
             runOnJS(clearStudySwipeTextSelection)();
           }
         })
         .onUpdate((event) => {
+          if (swipePhase.value !== 1) {
+            return;
+          }
           const nextX = swipeStartX.value + event.translationX;
           swipeX.value = nextX;
 
@@ -4884,6 +4914,9 @@ const StudyView = memo(function StudyView({
           }
         })
         .onEnd((event) => {
+          if (swipePhase.value !== 1) {
+            return;
+          }
           const nextX = swipeX.value;
           const flingVelocity = STUDY_SWIPE_FLING_VELOCITY * 1000;
           const directionCode =
@@ -4897,32 +4930,36 @@ const StudyView = memo(function StudyView({
           swipePhase.value = 2;
 
           if (directionCode !== 0) {
+            swipePhase.value = 3;
             if (hapticDirectionCode.value !== directionCode) {
               hapticDirectionCode.value = directionCode;
             }
             runOnJS(fireSwipeCommitHaptic)();
-            const velocityRatio = Math.min(1, Math.abs(event.velocityX) / 2200);
-            const exitDuration = STUDY_SWIPE_EXIT_MAX_MS -
-              velocityRatio * (STUDY_SWIPE_EXIT_MAX_MS - STUDY_SWIPE_EXIT_MIN_MS);
-            const confirmX = nextX + directionCode * STUDY_SWIPE_CONFIRM_NUDGE_X;
             swipeCommitPulse.value = withSequence(
-              withTiming(1, { duration: STUDY_SWIPE_CONFIRM_MS }),
-              withTiming(0, { duration: 150, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) }),
+              withTiming(1, { duration: 72, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) }),
+              withSpring(0, { damping: 18, mass: 0.5, stiffness: 230 }),
             );
-            swipeX.value = withSequence(
-              withTiming(confirmX, {
-                duration: STUDY_SWIPE_CONFIRM_MS,
-                easing: ReanimatedEasing.out(ReanimatedEasing.cubic),
-              }),
-              withTiming(
-                directionCode > 0 ? STUDY_SWIPE_EXIT_X : -STUDY_SWIPE_EXIT_X,
-                { duration: exitDuration, easing: ReanimatedEasing.bezier(0.2, 0.72, 0.25, 1) },
-                (finished) => {
-                  if (finished) {
-                    runOnJS(finishNativeSwipe)(directionCode);
-                  }
-                },
-              ),
+            swipeX.value = withSpring(
+              directionCode > 0 ? STUDY_SWIPE_EXIT_X : -STUDY_SWIPE_EXIT_X,
+              {
+                damping: STUDY_SWIPE_EXIT_DAMPING,
+                mass: STUDY_SWIPE_EXIT_MASS,
+                overshootClamping: true,
+                stiffness: STUDY_SWIPE_EXIT_STIFFNESS,
+                velocity: event.velocityX,
+              },
+              (finished) => {
+                if (!finished) {
+                  return;
+                }
+                cardEntryProgress.value = 0;
+                swipeX.value = 0;
+                swipeStartX.value = 0;
+                swipePhase.value = 0;
+                hapticDirectionCode.value = 0;
+                swipeCommitPulse.value = 0;
+                runOnJS(finishNativeSwipe)(directionCode);
+              },
             );
             return;
           }
@@ -4930,7 +4967,14 @@ const StudyView = memo(function StudyView({
           swipeCommitPulse.value = withTiming(0, { duration: 120 });
           swipeX.value = withSpring(
             0,
-            { damping: 18, mass: 0.68, stiffness: 245, velocity: event.velocityX },
+            { damping: 24, mass: 0.82, stiffness: 210, velocity: event.velocityX },
+            (finished) => {
+              if (finished) {
+                swipePhase.value = 0;
+                swipeStartX.value = 0;
+                hapticDirectionCode.value = 0;
+              }
+            },
           );
         })
         .onFinalize(() => {
@@ -4941,10 +4985,18 @@ const StudyView = memo(function StudyView({
           swipeCommitPulse.value = withTiming(0, { duration: 120 });
           swipeX.value = withSpring(
             0,
-            { damping: 20, mass: 0.72, stiffness: 260 },
+            { damping: 25, mass: 0.84, stiffness: 215 },
+            (finished) => {
+              if (finished) {
+                swipePhase.value = 0;
+                swipeStartX.value = 0;
+                hapticDirectionCode.value = 0;
+              }
+            },
           );
         }),
     [
+      cardEntryProgress,
       finishNativeSwipe,
       fireSwipeCommitHaptic,
       fireSwipeHaptic,
@@ -4999,8 +5051,8 @@ const StudyView = memo(function StudyView({
 
       {word && (
         <>
-       <Animated.View style={[styles.studySwipeDeck, motionStyle, cardEntryStyle]} testID="study-swipe-deck">
-        <Animated.View style={[styles.studySwipeSwapStage, cardSwapStyle]}>
+       <Animated.View style={[styles.studySwipeDeck, motionStyle]} testID="study-swipe-deck">
+        <Reanimated.View style={[styles.studySwipeSwapStage, cardEntryStyle]}>
          <Reanimated.View
            pointerEvents="none"
            style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
@@ -5116,7 +5168,7 @@ const StudyView = memo(function StudyView({
            </View>
          </Reanimated.View>
         </GestureDetector>
-        </Animated.View>
+        </Reanimated.View>
        </Animated.View>
 
       <View style={styles.actionGrid}>
@@ -8146,28 +8198,18 @@ const styles = StyleSheet.create({
   },
   homeDictionaryStandalone: {
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderColor: '#93c5fd',
+    backgroundColor: '#f1f3f6',
+    borderColor: '#e2e8f0',
     borderRadius: 8,
     borderWidth: 1,
     flexDirection: 'row',
-    gap: 12,
-    minHeight: 68,
+    gap: 10,
+    minHeight: 52,
     paddingHorizontal: 14,
-    shadowColor: '#2563eb',
-    shadowOffset: { height: 5, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-  },
-  homeDictionaryStandaloneIcon: {
-    alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
-    borderRadius: 8,
-    borderWidth: 1,
-    height: 42,
-    justifyContent: 'center',
-    width: 42,
+    shadowColor: '#0f172a',
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.035,
+    shadowRadius: 3,
   },
   homeDictionarySearch: {
     alignItems: 'center',
@@ -8188,24 +8230,17 @@ const styles = StyleSheet.create({
     minHeight: 48,
     paddingVertical: 0,
   },
-  homeDictionaryLauncherTitle: {
-    color: '#172033',
-    fontSize: 15,
-    fontWeight: '900',
-    marginBottom: 3,
-  },
   homeDictionaryLauncherText: {
-    color: '#94a3b8',
+    color: '#64748b',
     flex: 1,
     fontSize: 15,
-    fontWeight: '600',
-  },
-  homeDictionaryLauncherTextActive: {
-    color: '#172033',
-    fontWeight: '700',
+    fontWeight: '500',
   },
   homeDictionaryModalRoot: {
     flex: 1,
+  },
+  homeDictionaryModalRootNative: {
+    backgroundColor: '#ffffff',
   },
   homeDictionaryBackdrop: {
     backgroundColor: 'rgba(15, 23, 42, 0.52)',
@@ -8235,6 +8270,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 26,
     width: '100%',
+  },
+  homeDictionaryModalSheetNative: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderWidth: 0,
+    elevation: 0,
+    flex: 1,
+    height: '100%',
+    maxWidth: '100%',
+    shadowOpacity: 0,
   },
   homeDictionaryModalHandle: {
     alignSelf: 'center',
@@ -10526,6 +10571,9 @@ const darkStyles = StyleSheet.create({
   },
   homeDictionaryInput: {
     color: '#f8fafc',
+  },
+  homeDictionaryModalRootNative: {
+    backgroundColor: '#111827',
   },
   homeDictionaryModalSheet: {
     backgroundColor: '#111827',

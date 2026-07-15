@@ -38,8 +38,10 @@ describe('study swipe gestures', () => {
   });
 
   test('commits a meaningful short release even when native velocity is missing', () => {
-    expect(resolveStudySwipeReleaseDirection(44, 0)).toBe('known');
-    expect(resolveStudySwipeReleaseDirection(-44, 0)).toBe('review');
+    expect(resolveStudySwipeReleaseDirection(54, 0)).toBe('known');
+    expect(resolveStudySwipeReleaseDirection(-54, 0)).toBe('review');
+    expect(resolveStudySwipeReleaseDirection(44, 0)).toBe(null);
+    expect(resolveStudySwipeReleaseDirection(-44, 0)).toBe(null);
     expect(resolveStudySwipeReleaseDirection(34, 0)).toBe(null);
     expect(resolveStudySwipeReleaseDirection(-34, 0)).toBe(null);
   });

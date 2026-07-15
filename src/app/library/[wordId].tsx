@@ -10,7 +10,7 @@ import { useAppRouteBridge } from '../../lib/appRouteBridge';
 
 export default function LibraryWordRoute() {
   const router = useRouter();
-  const { wordId } = useLocalSearchParams<{ wordId: string }>();
+  const { source, wordId } = useLocalSearchParams<{ source?: string; wordId: string }>();
   const bridge = useAppRouteBridge();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [newSetName, setNewSetName] = useState('');
@@ -25,7 +25,9 @@ export default function LibraryWordRoute() {
   }
 
   const closeRoute = () => {
-    bridge.actions.restoreLibraryScroll();
+    if (source !== 'home') {
+      bridge.actions.restoreLibraryScroll();
+    }
     if (router.canGoBack()) {
       router.back();
     } else {
@@ -48,6 +50,7 @@ export default function LibraryWordRoute() {
         style={{ flex: 1 }}
       >
         <LibraryWordDetailView
+          backDestination={source === 'home' ? 'home' : 'library'}
           progress={bridge.progress}
           studyMode={bridge.studyMode}
           word={word}

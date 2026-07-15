@@ -1021,19 +1021,25 @@ describe('free web launch configuration', () => {
     expect(scrollResetSource).not.toContain('searchQuery');
     expect(appSource).toContain('keyboardDismissMode="on-drag"');
     expect(appSource).toContain('ref={searchInputRef}');
-    expect(appSource).toContain('searchInputRef.current?.focus()');
+    expect(appSource).toContain('onChangeText={onQueryChange}');
+    expect(appSource).not.toContain('key={query}');
   });
 
-  test('provides a compact home dashboard with a direct dictionary search', () => {
+  test('provides a compact home dashboard with an independent animated dictionary', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const homeStart = appSource.indexOf('const HomeView = memo(function HomeView');
     const homeEnd = appSource.indexOf('function StudySwipeRevealGradient', homeStart);
     const homeSource = appSource.slice(homeStart, homeEnd);
 
     expect(homeSource).toContain('testID="home-dictionary-search"');
-    expect(homeSource).toContain('onSubmitEditing={submitDictionarySearch}');
-    expect(appSource).toContain('const homeDictionarySearch = useStableEvent');
-    expect(appSource).toContain('setLibrarySearchFocusRequest((current) => current + 1)');
+    expect(homeSource).toContain('testID="home-dictionary-modal"');
+    expect(homeSource).toContain('<Modal');
+    expect(homeSource).toContain('filterWords(vocabularyWords, progress, normalizedDictionaryQuery');
+    expect(homeSource).toContain('onOpenDictionaryWord');
+    expect(homeSource).toContain('useNativeDriver: Platform.OS !== \'web\'');
+    expect(homeSource).not.toContain('copy.heroText');
+    expect(appSource).not.toContain('const homeDictionarySearch = useStableEvent');
+    expect(appSource).not.toContain('setLibrarySearchFocusRequest');
     expect(homeSource).not.toContain('onOpenAccount');
   });
 
@@ -1063,10 +1069,13 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('const swipeX = useSharedValue(0)');
     expect(studySource).toContain('const slidingCardStyle = useAnimatedStyle');
     expect(studySource).toContain('swipeX.value = nextX');
-    expect(studySource).toContain('swipeX.value = withTiming(');
+    expect(studySource).toContain('swipeX.value = withSequence(');
     expect(studySource).toContain('swipeX.value = withSpring(');
     expect(studySource).toContain('runOnJS(fireSwipeHaptic)()');
     expect(studySource).toContain("triggerPressHaptic('chip')");
+    expect(studySource).toContain("triggerPressHaptic('primary')");
+    expect(studySource).toContain('STUDY_SWIPE_EXIT_MAX_MS');
+    expect(studySource).toContain('swipeCommitPulse');
     expect(studySource).toContain('const swipeHintX = useSharedValue(0)');
     expect(studySource).toContain('withSequence(');
     expect(studySource).toContain('scheduleStudySwipeHint(STUDY_SWIPE_HINT_IDLE_DELAY_MS)');

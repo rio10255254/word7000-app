@@ -86,6 +86,7 @@ function isWordProgress(value: unknown): value is WordProgress {
     typeof progress.reviewCount === 'number' &&
     typeof progress.status === 'string' &&
     wordStatuses.has(progress.status as WordStatus) &&
+    (progress.favoriteUpdatedAt === undefined || typeof progress.favoriteUpdatedAt === 'string') &&
     (progress.lastStudied === undefined || typeof progress.lastStudied === 'string')
   );
 }

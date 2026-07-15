@@ -4,7 +4,7 @@
     "slug": "word7000",
     "owner": "rio10255254",
     "scheme": "word7000",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -30,11 +30,25 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
+    },
+    "experiments": {
+      "typedRoutes": true
     },
     "plugins": [
       "expo-apple-authentication",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#2d64e7",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain"
+        }
+      ]
     ],
     "extra": {
       "eas": {

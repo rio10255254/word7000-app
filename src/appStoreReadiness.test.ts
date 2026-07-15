@@ -9,6 +9,7 @@ const submissionPath = path.join(process.cwd(), 'docs', 'app-store-submission.md
 describe('iOS App Store readiness polish', () => {
   test('asks for confirmation before deleting signed-in account learning data', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
 
     expect(appSource).toContain('Alert,');
     expect(appSource).toContain('function confirmDeleteAccountData()');
@@ -17,7 +18,7 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).toContain('deleteAccountDataConfirmCancel');
     expect(appSource).toContain('deleteAccountDataConfirmAction');
     expect(appSource).toContain('Alert.alert(');
-    expect(appSource).toContain('onConfirmDeleteAccountData={confirmDeleteAccountData}');
+    expect(settingsRoute).toContain('onConfirmDeleteAccountData={bridge.actions.confirmDeleteAccountData}');
     expect(appSource).toContain('onPress={onConfirmDeleteAccountData}');
   });
 
@@ -31,24 +32,26 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).toContain('markInstallGuideSeen(getAppStorage(), isInstalledWebApp())');
   });
 
-  test('reserves extra bottom room for iPhone home indicator and fixed tab bar', () => {
+  test('uses the real iPhone safe area for the bottom tab bar', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
     const tabBarStart = appSource.indexOf('tabBar: {');
     const tabButtonStart = appSource.indexOf('tabButton:', tabBarStart);
     const tabBarSource = appSource.slice(tabBarStart, tabButtonStart);
 
     expect(appSource).toContain('WEB_TAB_BAR_BOTTOM_OFFSET');
-    expect(appSource).toContain('NATIVE_TAB_BAR_BOTTOM_OFFSET');
     expect(appSource).toContain('WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA');
     expect(appSource).toContain('IS_WEB_IOS_PREVIEW');
     expect(appSource).toContain('IOS_TAB_BAR_BOTTOM_OFFSET');
-    expect(appSource).toContain('TAB_BAR_RESERVED_HEIGHT');
+    expect(appSource).toContain('useSafeAreaInsets');
+    expect(appSource).toContain('safeAreaInsets.bottom');
+    expect(rootLayout).toContain('<SafeAreaProvider>');
     expect(appSource).toContain('CONTENT_BOTTOM_PADDING');
     expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING');
     expect(appSource).toContain('style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}');
     expect(tabBarSource).toContain("alignSelf: 'stretch'");
     expect(tabBarSource).toContain('borderTopWidth: 1');
-    expect(tabBarSource).toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(tabBarSource).not.toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
     expect(tabBarSource).toContain('paddingHorizontal: 16');
     expect(tabBarSource).not.toContain("position: 'absolute'");
     expect(tabBarSource).not.toContain('bottom: IOS_TAB_BAR_BOTTOM_OFFSET');
@@ -58,6 +61,22 @@ describe('iOS App Store readiness polish', () => {
 
   test('keeps the first iOS submission focused on iPhone instead of universal iPad support', () => {
     expect(app.expo.ios?.supportsTablet).toBe(false);
+  });
+
+  test('keeps the native launch screen visible until local app data is ready', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const layoutSource = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
+    const nativeSplashSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'nativeSplash.native.ts'), 'utf8');
+
+    expect(app.expo.plugins).toContainEqual([
+      'expo-splash-screen',
+      expect.objectContaining({ backgroundColor: '#2d64e7', image: './assets/splash-icon.png' }),
+    ]);
+    expect(layoutSource).toContain('prepareNativeSplash();');
+    expect(nativeSplashSource).toContain('preventAutoHideAsync');
+    expect(nativeSplashSource).toContain('fade: true');
+    expect(appSource).toContain('hideNativeSplash();');
+    expect(appSource).toContain('storageReady && (bundledVocabulary || vocabularyLoadFailed)');
   });
 
   test('includes a launch-ready App Store submission checklist', () => {

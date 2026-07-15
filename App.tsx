@@ -1,7 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Reanimated, {
+  Easing as ReanimatedEasing,
+  Extrapolation,
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {
   ArrowUp,
   BookOpen,
@@ -38,19 +50,18 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { createContext, memo, useCallback, useContext, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { createContext, memo, startTransition, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
 import {
   Alert,
   Animated,
+  AppState,
   Easing,
   type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
-  PanResponder,
   Pressable,
   type PressableProps,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -60,6 +71,7 @@ import {
   type ViewStyle,
   Linking,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { WordEntry } from './src/data/words';
 import { scrollTargetFromSlider, scrollThumbOffset } from './src/lib/libraryNavigation';
 import {
@@ -70,6 +82,7 @@ import {
   filterWords,
   markKnown,
   markReview,
+  mergeProgressStates,
   normalizeProgressForDate,
   selectQuizWords,
   selectStudyWords,
@@ -80,12 +93,10 @@ import {
   type ProgressState,
 } from './src/lib/progress';
 import {
+  STUDY_SWIPE_FLING_DISTANCE,
+  STUDY_SWIPE_FLING_VELOCITY,
+  STUDY_SWIPE_RELEASE_DISTANCE,
   STUDY_SWIPE_THRESHOLD,
-  previewStudySwipeDirection,
-  resolveStudyGestureIntent,
-  resolveStudySwipeDirection,
-  resolveStudySwipeReleaseDirection,
-  shouldClaimStudySwipe,
   type StudySwipeDirection,
 } from './src/lib/studySwipe';
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
@@ -94,6 +105,8 @@ import {
   deleteCloudUserData,
   loadCloudProgressRecord,
   recordDailyActiveUser,
+  saveCloudCustomSets,
+  saveCloudProgress,
   saveCloudUserMemory,
   type CloudProgressClient,
 } from './src/lib/supabaseProgress';
@@ -103,7 +116,6 @@ import { appleCredentialMetadata, createAppleNoncePair } from './src/lib/appleAu
 import { triggerPressHaptic } from './src/lib/haptics';
 import { loadBundledVocabulary } from './src/lib/vocabularyLoader';
 import {
-  INSTALL_GUIDE_STORAGE_KEY,
   markInstallGuideSeen,
   shouldShowInstallGuide,
 } from './src/lib/installGuide';
@@ -159,12 +171,17 @@ import Svg, {
 import { getAppStorage, hydrateAppStorage, isAppStorageHydrated } from './src/lib/appStorage';
 import { parseOAuthCallbackUrl } from './src/lib/oauthCallback';
 import { appInfoLinks } from './src/lib/appLinks';
+import {
+  clearUserMemoryOutbox,
+  loadUserMemoryOutbox,
+  UserMemorySyncQueue,
+} from './src/lib/userMemorySync';
+import { setAppRouteBridgeSnapshot } from './src/lib/appRouteBridge';
+import { hideNativeSplash } from './src/lib/nativeSplash';
 
 WebBrowser.maybeCompleteAuthSession();
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
-type ProfilePanel = 'overview' | 'settings';
-type LibraryPanel = 'list' | 'detail' | 'sets';
 type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
 type StudyMode = 'english' | 'chinese';
@@ -231,28 +248,28 @@ function isWebIosPreviewMode() {
 const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();
 const WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA = IS_WEB_IOS_PREVIEW ? 28 : 0;
 const WEB_TAB_BAR_BOTTOM_OFFSET = 8;
-const NATIVE_TAB_BAR_BOTTOM_OFFSET = 8;
-const PREVIEW_TAB_BAR_BOTTOM_OFFSET = 16 + WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA;
+const PREVIEW_TAB_BAR_BOTTOM_OFFSET = WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA;
 const IOS_TAB_BAR_BOTTOM_OFFSET = Platform.OS === 'web'
   ? IS_WEB_IOS_PREVIEW
     ? PREVIEW_TAB_BAR_BOTTOM_OFFSET
     : WEB_TAB_BAR_BOTTOM_OFFSET
-  : Platform.OS === 'ios' ? NATIVE_TAB_BAR_BOTTOM_OFFSET : WEB_TAB_BAR_BOTTOM_OFFSET;
-const TAB_BAR_HEIGHT = 66;
-const TAB_BAR_RESERVED_HEIGHT = TAB_BAR_HEIGHT + IOS_TAB_BAR_BOTTOM_OFFSET + 24;
+  : 0;
+const TAB_BAR_CONTENT_HEIGHT = 52;
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
-const LIBRARY_FIXED_CONTROLS_TOP = 94;
-const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;
+const LIBRARY_FIXED_CONTROLS_TOP = 8;
+const LIBRARY_FIXED_CONTROLS_BOTTOM = 8;
 const STUDY_SWIPE_EXIT_X = 460;
 const STUDY_SWIPE_REVEAL_WIDTH = 300;
 const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
 const STUDY_SWIPE_COMMIT_FADE_X = STUDY_SWIPE_THRESHOLD + 18;
+const SHOULD_CLEAR_STUDY_SELECTION = Platform.OS === 'web';
 const quizQuestionCounts = [10, 20, 50] as const;
+const EMPTY_WORD_LIST: WordEntry[] = [];
 type InstallGuideStep = {
   icon: 'add' | 'phone' | 'safari' | 'share';
   text: string;
@@ -891,6 +908,12 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (storageReady && (bundledVocabulary || vocabularyLoadFailed)) {
+      hideNativeSplash();
+    }
+  }, [bundledVocabulary, storageReady, vocabularyLoadFailed]);
+
   if (!storageReady || !bundledVocabulary) {
     return <AppStorageBootScreen failed={vocabularyLoadFailed} />;
   }
@@ -902,8 +925,40 @@ export default function App() {
   );
 }
 
+export function Word7000RouteScreen({
+  children,
+  studyMode: _studyMode,
+  themeMode,
+  vocabularyWords,
+}: {
+  children: ReactNode;
+  studyMode: StudyMode;
+  themeMode: ThemeMode;
+  vocabularyWords: WordEntry[];
+}) {
+  const routeThemeStyles = themeMode === 'dark' ? darkStyles : undefined;
+  return (
+    <VocabularyContext.Provider value={vocabularyWords}>
+      <ThemeContext.Provider value={themeMode}>
+        <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={[styles.safeArea, routeThemeStyles?.safeArea]}>
+          <StatusBar style={themeMode === 'dark' ? 'light' : 'dark'} />
+          <View style={[styles.appShell, routeThemeStyles?.appShell]}>{children}</View>
+        </SafeAreaView>
+      </ThemeContext.Provider>
+    </VocabularyContext.Provider>
+  );
+}
+
+function useStableEvent<T extends (...args: any[]) => any>(handler: T): T {
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
+  return useCallback(((...args: Parameters<T>) => handlerRef.current(...args)) as T, []);
+}
+
 function Word7000App() {
   const bundledVocabulary = useContext(VocabularyContext);
+  const router = useRouter();
+  const safeAreaInsets = useSafeAreaInsets();
   const appScrollRef = useRef<ScrollView | null>(null);
   const libraryListRef = useRef<FlashListRef<WordEntry> | null>(null);
   const libraryScrollYRef = useRef(0);
@@ -911,11 +966,12 @@ function Word7000App() {
   const libraryViewportHeightRef = useRef(1);
   const librarySliderDraggingRef = useRef(false);
   const libraryScrolledPastTopRef = useRef(false);
+  const libraryRouteScrollRestoreRef = useRef<number | null>(null);
+  const memorySyncQueueRef = useRef<UserMemorySyncQueue | null>(null);
   const launchAnim = useRef(new Animated.Value(0)).current;
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const screenAnim = useRef(new Animated.Value(1)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
-  const libraryPanelAnim = useRef(new Animated.Value(1)).current;
   const libraryThumbOffsetAnim = useRef(new Animated.Value(0)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
@@ -930,7 +986,6 @@ function Word7000App() {
   const [studyLevel, setStudyLevel] = useState(initialFilterPreferences.study.level);
   const [studyInitial, setStudyInitial] = useState(initialFilterPreferences.study.initial);
   const [studyFiltersOpen, setStudyFiltersOpen] = useState(false);
-  const [studySwipeScrollLocked, setStudySwipeScrollLocked] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizPracticeMode, setQuizPracticeMode] = useState<QuizPracticeMode>('choice');
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
@@ -960,9 +1015,6 @@ function Word7000App() {
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [installGuideStep, setInstallGuideStep] = useState(0);
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
-  const [profilePanel, setProfilePanel] = useState<ProfilePanel>('overview');
-  const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');
-  const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
   const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getAppStorage()));
   const [modeSwitchTarget, setModeSwitchTarget] = useState<StudyMode>(() =>
@@ -971,11 +1023,9 @@ function Word7000App() {
   const [showModeSwitch, setShowModeSwitch] = useState(false);
   const [showThemeTransition, setShowThemeTransition] = useState(false);
   const [themeTransitionTarget, setThemeTransitionTarget] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
-  const [headerHeight, setHeaderHeight] = useState(88);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [librarySliderDragging, setLibrarySliderDragging] = useState(false);
   const [libraryScrolledPastTop, setLibraryScrolledPastTop] = useState(false);
-  const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
   const [customSetState, setCustomSetState] = useState<CustomSetState>(() => loadCustomSetState(getAppStorage()));
   const [customSetSort, setCustomSetSort] = useState<CustomSetSort>(() => loadCustomSetSort(getAppStorage()));
   const [selectedCustomSetId, setSelectedCustomSetId] = useState<string | null>(null);
@@ -1016,23 +1066,29 @@ function Word7000App() {
   );
   const levelFilterOptions = useMemo(() => buildLevelFilters(vocabularyWords), [vocabularyWords]);
   const stats = useMemo(() => computeStats(vocabularyWords, progress), [progress, vocabularyWords]);
+  const studyProgressDependency = activeTab === 'study' && studyFilter !== 'all' ? progress : null;
   const studyWords = useMemo(
-    () =>
-      selectStudyWords(studySourceWords, progress, studyFilter, {
-        initial: studyInitial,
-        level: studyLevel,
-      }),
-    [progress, studyFilter, studyInitial, studyLevel, studySourceWords],
+    () => activeTab === 'study'
+      ? selectStudyWords(studySourceWords, progress, studyFilter, {
+          initial: studyInitial,
+          level: studyLevel,
+        })
+      : EMPTY_WORD_LIST,
+    [activeTab, studyFilter, studyInitial, studyLevel, studyProgressDependency, studySourceWords],
   );
   const studySessionWords = useMemo(() => buildStudySession(studyWords, studySeed), [studySeed, studyWords]);
-  const studyWord = studySessionWords.length > 0 ? studySessionWords[wordIndex % studySessionWords.length] : null;
+  const studyWord = studySessionWords.length > 0
+    ? studySessionWords[((wordIndex % studySessionWords.length) + studySessionWords.length) % studySessionWords.length]
+    : null;
+  const quizProgressDependency = activeTab === 'quiz' && quizFilter !== 'all' ? progress : null;
   const quizWords = useMemo(
-    () =>
-      selectQuizWords(quizSourceWords, progress, quizFilter, {
-        initial: quizInitial,
-        level: quizLevel,
-      }),
-    [progress, quizFilter, quizInitial, quizLevel, quizSourceWords],
+    () => activeTab === 'quiz'
+      ? selectQuizWords(quizSourceWords, progress, quizFilter, {
+          initial: quizInitial,
+          level: quizLevel,
+        })
+      : EMPTY_WORD_LIST,
+    [activeTab, quizFilter, quizInitial, quizLevel, quizProgressDependency, quizSourceWords],
   );
   const quizWord = quizStarted && quizSession.length > 0 ? quizSession[quizIndex] ?? null : null;
   const quizOptionSource = quizWords.length >= 3 ? quizWords : quizSourceWords.length >= 3 ? quizSourceWords : vocabularyWords;
@@ -1047,14 +1103,16 @@ function Word7000App() {
     [studyMode, visibleQuizWord],
   );
   const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
+  const libraryProgressDependency = activeTab === 'library' && activeFilter !== 'all' ? progress : null;
   const libraryWords = useMemo(
-    () =>
-      filterWords(vocabularyWords, progress, deferredSearchQuery, activeFilter, {
-        initial: activeInitial,
-        level: activeLevel,
-        sort: activeSort,
-      }),
-    [activeFilter, activeInitial, activeLevel, activeSort, deferredSearchQuery, progress, vocabularyWords],
+    () => activeTab === 'library'
+      ? filterWords(vocabularyWords, progress, deferredSearchQuery, activeFilter, {
+          initial: activeInitial,
+          level: activeLevel,
+          sort: activeSort,
+        })
+      : EMPTY_WORD_LIST,
+    [activeFilter, activeInitial, activeLevel, activeSort, activeTab, deferredSearchQuery, libraryProgressDependency, vocabularyWords],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
@@ -1064,6 +1122,14 @@ function Word7000App() {
   const activeSystemCopy = systemCopy[studyMode];
   const activeInstallGuideSteps = installGuideStepsByMode[studyMode];
   const previewModeLabel = IS_WEB_IOS_PREVIEW ? 'iOS Preview' : null;
+  const tabBarBottomInset = Platform.OS === 'web' ? IOS_TAB_BAR_BOTTOM_OFFSET : safeAreaInsets.bottom;
+  const tabBarInsetStyle = useMemo(
+    () => ({
+      minHeight: TAB_BAR_CONTENT_HEIGHT + tabBarBottomInset,
+      paddingBottom: Math.max(4, tabBarBottomInset),
+    }),
+    [tabBarBottomInset],
+  );
   const updateState = useAppUpdateCheck(studyMode);
   const screenMotionStyle = {
     opacity: screenAnim,
@@ -1083,23 +1149,26 @@ function Word7000App() {
           willChange: 'opacity, transform',
         }
       : undefined;
-  const cardMotionStyle = {
-    opacity: cardAnim,
-    transform: [
-      {
-        translateY: cardAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [12, 0],
-        }),
-      },
-      {
-        scale: cardAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.985, 1],
-        }),
-      },
-    ],
-  };
+  const cardMotionStyle = useMemo(
+    () => ({
+      opacity: cardAnim,
+      transform: [
+        {
+          translateY: cardAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [12, 0],
+          }),
+        },
+        {
+          scale: cardAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0.985, 1],
+          }),
+        },
+      ],
+    }),
+    [cardAnim],
+  );
   const listMotionStyle = useCallback((index: number) => {
     if (activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT) {
       return undefined;
@@ -1123,53 +1192,6 @@ function Word7000App() {
       ],
     };
   }, [activeTab, cardAnim]);
-  const libraryPanelMotionStyle = {
-    opacity: libraryPanelAnim,
-    transform: [
-      {
-        translateX: libraryPanelAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0],
-        }),
-      },
-      {
-        scale: libraryPanelAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.985, 1],
-        }),
-      },
-    ],
-  };
-  const libraryListPanelHorizontalMotionStyle = {
-    opacity: libraryPanelAnim,
-    transform: [
-      {
-        translateX: libraryPanelAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [-12, 0],
-        }),
-      },
-    ],
-  };
-  const libraryTransitionPerformanceStyle: WebTransitionStyle | undefined =
-    Platform.OS === 'web'
-      ? {
-          transformOrigin: 'top center',
-          willChange: 'opacity, transform',
-        }
-      : undefined;
-  const libraryListPanelMotionStyle = [
-    renderedLibraryPanel === 'list' ? libraryListPanelHorizontalMotionStyle : styles.libraryPanelHidden,
-    libraryTransitionPerformanceStyle,
-  ];
-  const libraryDetailStageMotionStyle = [
-    renderedLibraryPanel === 'detail' ? libraryPanelMotionStyle : styles.libraryPanelHidden,
-    libraryTransitionPerformanceStyle,
-  ];
-  const librarySetsStageMotionStyle = [
-    renderedLibraryPanel === 'sets' ? libraryPanelMotionStyle : styles.libraryPanelHidden,
-    libraryTransitionPerformanceStyle,
-  ];
   const modeOverlayScale = modeTransitionAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0.94, 1],
@@ -1199,7 +1221,7 @@ function Word7000App() {
     inputRange: [0, 1],
     outputRange: [24, 0],
   });
-  const librarySliderVisible = activeTab === 'library' && !selectedLibraryWord && libraryWords.length > 24;
+  const librarySliderVisible = activeTab === 'library' && libraryWords.length > 24;
   const librarySliderActive = librarySliderDragging;
   const libraryDragSliderMotionStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
@@ -1228,30 +1250,82 @@ function Word7000App() {
           willChange: 'transform, width, opacity',
         }
       : undefined;
-  const librarySliderResponder = useMemo(
+  const beginLibrarySliderDrag = useStableEvent((locationY: number) => {
+    librarySliderDraggingRef.current = true;
+    setLibrarySliderDragging(true);
+    handleLibrarySliderDrag(locationY);
+  });
+  const moveLibrarySliderDrag = useStableEvent((locationY: number) => {
+    handleLibrarySliderDrag(locationY);
+  });
+  const endLibrarySliderDrag = useStableEvent(() => {
+    finishLibrarySliderDrag();
+  });
+  const librarySliderGesture = useMemo(
     () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponder: () => activeTab === 'library' && libraryPanel === 'list',
-        onStartShouldSetPanResponder: () => activeTab === 'library' && libraryPanel === 'list',
-        onPanResponderGrant: (event) => {
-          librarySliderDraggingRef.current = true;
-          setLibrarySliderDragging(true);
-          handleLibrarySliderDrag(event.nativeEvent.locationY);
-        },
-        onPanResponderMove: (event) => handleLibrarySliderDrag(event.nativeEvent.locationY),
-        onPanResponderRelease: finishLibrarySliderDrag,
-        onPanResponderTerminate: finishLibrarySliderDrag,
-      }),
-    [activeTab, libraryPanel, libraryWords.length, sliderTrackHeight],
+      Gesture.Pan()
+        .enabled(activeTab === 'library')
+        .minDistance(0)
+        .onBegin((event) => runOnJS(beginLibrarySliderDrag)(event.y))
+        .onUpdate((event) => runOnJS(moveLibrarySliderDrag)(event.y))
+        .onFinalize(() => runOnJS(endLibrarySliderDrag)()),
+    [activeTab, beginLibrarySliderDrag, endLibrarySliderDrag, moveLibrarySliderDrag],
   );
 
-  const onLibraryPanelSwap = useCallback(
-    (nextPanel: LibraryPanel) => {
-      if (nextPanel === 'list') {
-        setSelectedLibraryWord(null);
+  const scrollLibraryToRawOffset = useStableEvent((offset: number, animated = false) => {
+    if (Platform.OS === 'web') {
+      const webScrollNode = libraryListRef.current?.getScrollableNode() as
+        | { scrollTo?: (options: { behavior?: 'auto' | 'smooth'; top: number }) => void; scrollTop?: number }
+        | null
+        | undefined;
+      if (typeof webScrollNode?.scrollTo === 'function') {
+        webScrollNode.scrollTo({ top: offset, behavior: animated ? 'smooth' : 'auto' });
+        return;
       }
-    },
-    [],
+      if (webScrollNode && typeof webScrollNode.scrollTop === 'number') {
+        webScrollNode.scrollTop = offset;
+        return;
+      }
+    }
+
+    const nativeScrollRef = libraryListRef.current?.getNativeScrollRef();
+    if (nativeScrollRef) {
+      nativeScrollRef.scrollTo({ y: offset, animated });
+      return;
+    }
+    libraryListRef.current?.scrollToOffset({ offset, animated, skipFirstItemOffset: true });
+  });
+
+  const restoreLibraryRouteScroll = useStableEvent((offset: number) => {
+    scrollLibraryToRawOffset(offset);
+    libraryScrollYRef.current = offset;
+    updateLibraryThumbFromScroll(offset);
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS !== 'web') {
+        return undefined;
+      }
+      const restoreOffset = libraryRouteScrollRestoreRef.current;
+      if (restoreOffset === null || activeTab !== 'library') {
+        return undefined;
+      }
+
+      libraryRouteScrollRestoreRef.current = null;
+      let secondFrame: number | null = null;
+      const firstFrame = requestAnimationFrame(() => {
+        restoreLibraryRouteScroll(restoreOffset);
+        secondFrame = requestAnimationFrame(() => restoreLibraryRouteScroll(restoreOffset));
+      });
+
+      return () => {
+        cancelAnimationFrame(firstFrame);
+        if (secondFrame !== null) {
+          cancelAnimationFrame(secondFrame);
+        }
+      };
+    }, [activeTab, restoreLibraryRouteScroll]),
   );
 
   useWebServiceWorker();
@@ -1275,6 +1349,48 @@ function Word7000App() {
   }, [launchAnim]);
 
   useEffect(() => {
+    memorySyncQueueRef.current?.dispose();
+    memorySyncQueueRef.current = null;
+    if (!supabaseClient || !account.userId) {
+      return;
+    }
+
+    const userId = account.userId;
+    const cloudClient = asCloudProgressClient(supabaseClient);
+    const queue = new UserMemorySyncQueue({
+      saveAll: ({ customSets, progress: queuedProgress }) =>
+        saveCloudUserMemory(cloudClient, userId, queuedProgress, customSets),
+      saveCustomSets: (queuedCustomSets) => saveCloudCustomSets(cloudClient, userId, queuedCustomSets),
+      saveProgress: (queuedProgress) => saveCloudProgress(cloudClient, userId, queuedProgress),
+      storage: getAppStorage(),
+      userId,
+    });
+    memorySyncQueueRef.current = queue;
+    queue.restore();
+
+    const appStateSubscription = AppState.addEventListener('change', () => {
+      void queue.flush();
+    });
+    const browserWindow = Platform.OS === 'web'
+      ? (globalThis as typeof globalThis & {
+          addEventListener?: (type: string, listener: () => void) => void;
+          removeEventListener?: (type: string, listener: () => void) => void;
+        })
+      : null;
+    const flushWhenOnline = () => void queue.flush();
+    browserWindow?.addEventListener?.('online', flushWhenOnline);
+
+    return () => {
+      appStateSubscription.remove();
+      browserWindow?.removeEventListener?.('online', flushWhenOnline);
+      if (memorySyncQueueRef.current === queue) {
+        memorySyncQueueRef.current = null;
+      }
+      queue.dispose();
+    };
+  }, [account.userId, supabaseClient]);
+
+  useEffect(() => {
     saveThemeMode(getAppStorage(), themeMode);
   }, [themeMode]);
 
@@ -1284,7 +1400,10 @@ function Word7000App() {
 
   useEffect(() => {
     saveCustomSetState(getAppStorage(), customSetState, account.userId);
-  }, [account.userId, customSetState]);
+    if (progressReady && account.userId) {
+      memorySyncQueueRef.current?.enqueue({ customSets: customSetState, progress }, { customSets: true });
+    }
+  }, [account.userId, customSetState, progressReady]);
 
   useEffect(() => {
     saveCustomSetSort(getAppStorage(), customSetSort);
@@ -1379,7 +1498,6 @@ function Word7000App() {
     activeTab,
     cardAnim,
     developerVocabulary?.importedAt,
-    profilePanel,
     quizFilter,
     quizIndex,
     quizInitial,
@@ -1391,42 +1509,7 @@ function Word7000App() {
     studyFilter,
     studyInitial,
     studyLevel,
-    wordIndex,
   ]);
-
-  useEffect(() => {
-    let cancelled = false;
-    const useNativeDriver = Platform.OS !== 'web';
-
-    if (libraryPanel === renderedLibraryPanel) {
-      Animated.timing(libraryPanelAnim, {
-        duration: interactionMotion.settingsPanelMs,
-        easing: Easing.out(Easing.cubic),
-        toValue: 1,
-        useNativeDriver,
-      }).start();
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    Animated.timing(libraryPanelAnim, {
-      duration: interactionMotion.settingsPanelExitMs,
-      easing: Easing.in(Easing.cubic),
-      toValue: 0,
-      useNativeDriver,
-    }).start(({ finished }) => {
-      if (finished && !cancelled) {
-        libraryPanelAnim.setValue(0);
-        onLibraryPanelSwap(libraryPanel);
-        setRenderedLibraryPanel(libraryPanel);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [libraryPanel, libraryPanelAnim, onLibraryPanelSwap, renderedLibraryPanel]);
 
   useEffect(() => {
     updateLibraryThumbFromScroll(libraryScrollYRef.current);
@@ -1434,7 +1517,7 @@ function Word7000App() {
 
   useEffect(() => {
     if (activeTab === 'library') {
-      requestAnimationFrame(() => libraryListRef.current?.scrollToOffset({ offset: 0, animated: false }));
+      requestAnimationFrame(() => scrollLibraryToRawOffset(0));
     } else {
       appScrollRef.current?.scrollTo({ y: 0, animated: false });
     }
@@ -1442,16 +1525,7 @@ function Word7000App() {
     libraryThumbOffsetAnim.setValue(0);
     libraryScrolledPastTopRef.current = false;
     setLibraryScrolledPastTop(false);
-    setSelectedLibraryWord(null);
-    setLibraryPanel('list');
-    setRenderedLibraryPanel('list');
-  }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, searchQuery]);
-
-  useEffect(() => {
-    if (activeTab !== 'profile') {
-      setProfilePanel('overview');
-    }
-  }, [activeTab]);
+  }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, scrollLibraryToRawOffset, searchQuery]);
 
   useEffect(() => {
     setWordIndex(0);
@@ -1508,7 +1582,6 @@ function Word7000App() {
     setQuizFinished(false);
     setQuizCorrectCount(0);
     setQuizSeed('');
-    setSelectedLibraryWord(null);
   }, [developerVocabulary?.importedAt, studyMode]);
 
   useEffect(() => {
@@ -1577,40 +1650,10 @@ function Word7000App() {
     }
 
     saveProgressToStorage(getAppStorage(), progress, account.userId);
-  }, [account.userId, progress, progressReady]);
-
-  useEffect(() => {
-    if (!progressReady || !supabaseClient || !account.userId) {
-      return;
+    if (account.userId) {
+      memorySyncQueueRef.current?.enqueue({ customSets: customSetState, progress }, { progress: true });
     }
-
-    let cancelled = false;
-    const syncTimer = setTimeout(() => {
-      setAccount((current) => ({
-        ...current,
-        status: 'syncing',
-        message: '同步中',
-      }));
-
-      saveCloudUserMemory(asCloudProgressClient(supabaseClient), account.userId ?? '', progress, customSetState).then((memoryResult) => {
-        if (cancelled) {
-          return;
-        }
-
-        setAccount((current) => ({
-          ...current,
-          busy: false,
-          status: memoryResult.ok ? 'saved' : 'error',
-          message: memoryResult.ok ? '已保存到帳號' : memoryResult.message,
-        }));
-      });
-    }, 450);
-
-    return () => {
-      cancelled = true;
-      clearTimeout(syncTimer);
-    };
-  }, [account.userId, customSetState, progress, progressReady, supabaseClient]);
+  }, [account.userId, progress, progressReady]);
 
   useEffect(() => {
     if (!supabaseClient || !account.userId) {
@@ -1645,21 +1688,29 @@ function Word7000App() {
   }, [account.userId, supabaseClient]);
 
   function nextStudyWord() {
-    setWordIndex((current) => (studySessionWords.length > 0 ? (current + 1) % studySessionWords.length : 0));
+    setWordIndex((current) => (studySessionWords.length > 0 ? current + 1 : 0));
   }
 
   function previousStudyWord() {
-    setWordIndex((current) => (studySessionWords.length > 0 ? (current - 1 + studySessionWords.length) % studySessionWords.length : 0));
+    setWordIndex((current) => (studySessionWords.length > 0 ? current - 1 : 0));
   }
 
   function handleKnown(wordId: string) {
-    setProgress((current) => markKnown(current, wordId, today));
     nextStudyWord();
+    if (studyFilter === 'all') {
+      startTransition(() => setProgress((current) => markKnown(current, wordId, today)));
+      return;
+    }
+    setProgress((current) => markKnown(current, wordId, today));
   }
 
   function handleReview(wordId: string) {
-    setProgress((current) => markReview(current, wordId, today));
     nextStudyWord();
+    if (studyFilter === 'all') {
+      startTransition(() => setProgress((current) => markReview(current, wordId, today)));
+      return;
+    }
+    setProgress((current) => markReview(current, wordId, today));
   }
 
   const handleLibraryQueryChange = useCallback((query: string) => {
@@ -1886,14 +1937,12 @@ function Word7000App() {
     setStudySetId(setId);
     setWordIndex(0);
     setActiveTab('study');
-    setProfilePanel('overview');
   }
 
   function handleStartQuizSet(setId: string) {
     setQuizSetId(setId);
     restartQuiz();
     setActiveTab('quiz');
-    setProfilePanel('overview');
   }
 
   function handleQuizPracticeModeChange(mode: QuizPracticeMode) {
@@ -1994,7 +2043,7 @@ function Word7000App() {
       libraryScrolledPastTopRef.current = scrolledPastTop;
       setLibraryScrolledPastTop(scrolledPastTop);
     }
-    libraryListRef.current?.scrollToOffset({ offset: targetY, animated: false });
+    scrollLibraryToRawOffset(targetY);
   }
 
   function finishLibrarySliderDrag() {
@@ -2023,13 +2072,9 @@ function Word7000App() {
   }
 
   const openLibraryWordDetail = useCallback((word: WordEntry) => {
-    setSelectedLibraryWord(word);
-    setLibraryPanel('detail');
-  }, []);
-
-  const closeLibraryWordDetail = useCallback(() => {
-    setLibraryPanel('list');
-  }, []);
+    libraryRouteScrollRestoreRef.current = libraryScrollYRef.current;
+    router.push({ pathname: '/library/[wordId]', params: { wordId: word.id } });
+  }, [router]);
 
   const handleLibraryFiltersToggle = useCallback(() => {
     setLibraryFiltersOpen((current) => !current);
@@ -2048,12 +2093,9 @@ function Word7000App() {
   }, []);
 
   const openLibraryCustomSets = useCallback(() => {
-    setLibraryPanel('sets');
-  }, []);
-
-  const onProfilePanelSwap = useCallback(() => {
-    appScrollRef.current?.scrollTo({ y: 0, animated: false });
-  }, []);
+    libraryRouteScrollRestoreRef.current = libraryScrollYRef.current;
+    router.push('/sets');
+  }, [router]);
 
   function openInstallGuide() {
     setInstallGuideStep(0);
@@ -2098,11 +2140,17 @@ function Word7000App() {
     const storage = getAppStorage();
     const cloudProgress = await loadCloudProgressRecord(asCloudProgressClient(supabaseClient), user.id);
     const userLocalProgress = normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress, user.id), today);
+    const pendingMemory = loadUserMemoryOutbox(storage, user.id);
     const loadedProgress = normalizeProgressForDate(
-      cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress),
+      mergeProgressStates(cloudProgress.progress, userLocalProgress, pendingMemory?.progress),
       today,
     );
-    const loadedCustomSetState = mergeCustomSetStates(cloudProgress.customSets, loadCustomSetState(storage, user.id), loadCustomSetState(storage));
+    const loadedCustomSetState = mergeCustomSetStates(
+      cloudProgress.customSets,
+      loadCustomSetState(storage, user.id),
+      loadCustomSetState(storage),
+      pendingMemory?.customSets,
+    );
 
     setProgress(loadedProgress);
     saveProgressToStorage(storage, loadedProgress, user.id);
@@ -2113,6 +2161,9 @@ function Word7000App() {
     setQuizSetId(null);
     setSetPickerWord(null);
     const saveResult = await saveCloudUserMemory(asCloudProgressClient(supabaseClient), user.id, loadedProgress, loadedCustomSetState);
+    if (saveResult.ok) {
+      clearUserMemoryOutbox(storage, user.id);
+    }
     await recordDailyActiveUser(asCloudProgressClient(supabaseClient), user.id).catch(() => undefined);
     setAccount((current) => ({
       ...current,
@@ -2476,7 +2527,24 @@ function Word7000App() {
     }
 
     if (supabaseClient && signedInUserId) {
-      await saveCloudUserMemory(asCloudProgressClient(supabaseClient), signedInUserId, progress, customSetState);
+      const syncQueue = memorySyncQueueRef.current;
+      if (syncQueue) {
+        syncQueue.enqueue(
+          { customSets: customSetState, progress },
+          { customSets: true, progress: true },
+        );
+        await syncQueue.flush();
+      } else {
+        const saveResult = await saveCloudUserMemory(
+          asCloudProgressClient(supabaseClient),
+          signedInUserId,
+          progress,
+          customSetState,
+        );
+        if (saveResult.ok) {
+          clearUserMemoryOutbox(getAppStorage(), signedInUserId);
+        }
+      }
     }
 
     if (supabaseClient) {
@@ -2567,6 +2635,7 @@ function Word7000App() {
     const storage = getAppStorage();
     storage?.removeItem?.(progressStorageKey(signedInUserId));
     storage?.removeItem?.(customSetStorageKey(signedInUserId));
+    clearUserMemoryOutbox(storage, signedInUserId);
     await supabaseClient.auth.signOut();
 
     setProgress(normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress), today));
@@ -2657,15 +2726,201 @@ function Word7000App() {
     });
   }
 
+  const homeOpenAccount = useStableEvent(() => setActiveTab('profile'));
+  const homeStartStudy = useStableEvent(() => setActiveTab('study'));
+  const homeOpenReview = useStableEvent(() => {
+    setActiveFilter('review');
+    setActiveTab('library');
+  });
+  const homeToggleStudyMode = useStableEvent(toggleStudyMode);
+  const studyClearActiveSet = useStableEvent(() => setStudySetId(null));
+  const studyToggleFilters = useStableEvent(() => setStudyFiltersOpen((current) => !current));
+  const studyNextWord = useStableEvent(nextStudyWord);
+  const studyPreviousWord = useStableEvent(previousStudyWord);
+  const studySwipeKnown = useStableEvent(() => {
+    if (studyWord) {
+      handleKnown(studyWord.id);
+    }
+  });
+  const studySwipeReview = useStableEvent(() => {
+    if (studyWord) {
+      handleReview(studyWord.id);
+    }
+  });
+  const studyFavoriteWord = useStableEvent(() => {
+    if (studyWord) {
+      setProgress((current) => toggleFavorite(current, studyWord.id));
+    }
+  });
+  const quizClearActiveSet = useStableEvent(() => setQuizSetId(null));
+  const quizToggleFilters = useStableEvent(() => setQuizFiltersOpen((current) => !current));
+  const quizAnswer = useStableEvent(handleQuizAnswer);
+  const quizPracticeModeChange = useStableEvent(handleQuizPracticeModeChange);
+  const quizNextQuestion = useStableEvent(nextQuiz);
+  const quizRevealAnswer = useStableEvent(revealSpeakingAnswer);
+  const quizRestart = useStableEvent(restartQuiz);
+  const quizStart = useStableEvent(startQuiz);
+  const libraryContentSizeChange = useStableEvent(handleLibraryContentSizeChange);
+  const libraryScroll = useStableEvent(handleLibraryScroll);
+  const libraryViewportLayout = useStableEvent(handleLibraryViewportLayout);
+  const libraryQueryChange = useStableEvent(handleLibraryQueryChange);
+  const libraryQueryClear = useStableEvent(clearLibrarySearch);
+  const librarySearchBlur = useStableEvent(handleLibrarySearchBlur);
+  const librarySearchFocus = useStableEvent(handleLibrarySearchFocus);
+  const profileEmailChange = useStableEvent((email: string) => setAccount((current) => ({ ...current, email })));
+  const profilePasswordChange = useStableEvent((password: string) => setAccount((current) => ({ ...current, password })));
+  const profileOpenSettings = useStableEvent(() => router.push('/settings'));
+  const profileAppleSignIn = useStableEvent(handleAppleSignIn);
+  const profileGoogleSignIn = useStableEvent(handleGoogleSignIn);
+  const profileShowInstallGuide = useStableEvent(openInstallGuide);
+  const profileSignIn = useStableEvent(handleSignIn);
+  const profileSignOut = useStableEvent(handleSignOut);
+  const profileSignUp = useStableEvent(handleSignUp);
+
+  const routeAddWordToSet = useStableEvent((word: WordEntry, setId: string) => {
+    const setName = customSetState.sets.find((set) => set.id === setId)?.name ?? '';
+    setCustomSetState((current) => addWordToSet(current, setId, word.id));
+    setSelectedCustomSetId(setId);
+    setCustomSetMessage(modeInterfaceCopy[studyMode].addedToSet(formatWordPrimary(word, studyMode), setName));
+  });
+  const routeCreateSetAndAddWord = useStableEvent((word: WordEntry, name: string) => {
+    const withSet = createCustomSet(customSetState, name);
+    const createdSet = withSet.sets[withSet.sets.length - 1] ?? null;
+    setCustomSetState(createdSet ? addWordToSet(withSet, createdSet.id, word.id) : withSet);
+    if (createdSet) {
+      setSelectedCustomSetId(createdSet.id);
+      setCustomSetMessage(modeInterfaceCopy[studyMode].addedToSet(formatWordPrimary(word, studyMode), createdSet.name));
+    }
+  });
+  const routeFavoriteWord = useStableEvent((wordId: string) => {
+    setProgress((current) => toggleFavorite(current, wordId));
+  });
+  const routeAddManualCustomWord = useStableEvent(handleAddManualCustomWord);
+  const routeClearDeveloperVocabulary = useStableEvent(handleClearDeveloperVocabulary);
+  const routeConfirmDeleteAccountData = useStableEvent(confirmDeleteAccountData);
+  const routeCreateCustomSet = useStableEvent(handleCreateCustomSet);
+  const routeDeleteCustomSet = useStableEvent(handleDeleteCustomSet);
+  const routeExportVocabulary = useStableEvent(handleExportVocabulary);
+  const routeImportCustomWords = useStableEvent(handleImportCustomWords);
+  const routeImportVocabulary = useStableEvent(handleImportVocabulary);
+  const routeManualCustomWordChange = useStableEvent(handleManualCustomWordChange);
+  const routeOpenAppInfoLink = useStableEvent(handleOpenAppInfoLink);
+  const routeRemoveWordFromSet = useStableEvent(handleRemoveWordFromCustomSet);
+  const routeRenameCustomSet = useStableEvent(handleRenameCustomSet);
+  const routeRestoreLibraryScroll = useStableEvent(() => {
+    if (Platform.OS !== 'web') {
+      return;
+    }
+    const restoreOffset = libraryRouteScrollRestoreRef.current;
+    if (restoreOffset === null) {
+      return;
+    }
+
+    libraryRouteScrollRestoreRef.current = null;
+    restoreLibraryRouteScroll(restoreOffset);
+    requestAnimationFrame(() => {
+      restoreLibraryRouteScroll(restoreOffset);
+      requestAnimationFrame(() => restoreLibraryRouteScroll(restoreOffset));
+    });
+    setTimeout(() => restoreLibraryRouteScroll(restoreOffset), 420);
+  });
+  const routeSetThemeMode = useStableEvent(triggerThemeModeChange);
+  const routeStartQuizSet = useStableEvent(handleStartQuizSet);
+  const routeStartStudySet = useStableEvent(handleStartStudySet);
+  const routeActions = useMemo(
+    () => ({
+      addManualCustomWord: routeAddManualCustomWord,
+      addWordToSet: routeAddWordToSet,
+      clearDeveloperVocabulary: routeClearDeveloperVocabulary,
+      confirmDeleteAccountData: routeConfirmDeleteAccountData,
+      createCustomSet: routeCreateCustomSet,
+      createSetAndAddWord: routeCreateSetAndAddWord,
+      deleteCustomSet: routeDeleteCustomSet,
+      exportVocabulary: routeExportVocabulary,
+      favoriteWord: routeFavoriteWord,
+      importCustomWords: routeImportCustomWords,
+      importVocabulary: routeImportVocabulary,
+      manualCustomWordChange: routeManualCustomWordChange,
+      newSetNameChange: setNewSetName,
+      openAppInfoLink: routeOpenAppInfoLink,
+      removeWordFromSet: routeRemoveWordFromSet,
+      renameCustomSet: routeRenameCustomSet,
+      restoreLibraryScroll: routeRestoreLibraryScroll,
+      selectCustomSet: setSelectedCustomSetId,
+      setCustomSetSort,
+      setThemeMode: routeSetThemeMode,
+      startQuizSet: routeStartQuizSet,
+      startStudySet: routeStartStudySet,
+    }),
+    [
+      routeAddManualCustomWord,
+      routeAddWordToSet,
+      routeClearDeveloperVocabulary,
+      routeConfirmDeleteAccountData,
+      routeCreateCustomSet,
+      routeCreateSetAndAddWord,
+      routeDeleteCustomSet,
+      routeExportVocabulary,
+      routeFavoriteWord,
+      routeImportCustomWords,
+      routeImportVocabulary,
+      routeManualCustomWordChange,
+      routeOpenAppInfoLink,
+      routeRemoveWordFromSet,
+      routeRenameCustomSet,
+      routeRestoreLibraryScroll,
+      routeSetThemeMode,
+      routeStartQuizSet,
+      routeStartStudySet,
+    ],
+  );
+
+  useEffect(() => {
+    setAppRouteBridgeSnapshot({
+      accountBusy: account.busy,
+      actions: routeActions,
+      customSetMessage,
+      customSetSort,
+      customSetState,
+      customSets: sortedCustomSets,
+      developerMessage: developerVocabularyMessage,
+      developerVocabulary,
+      manualCustomWord,
+      newSetName,
+      progress,
+      selectedCustomSetId,
+      signedIn: Boolean(account.userId),
+      studyMode,
+      themeMode,
+      vocabularyWords,
+    });
+  }, [
+    account.busy,
+    account.userId,
+    customSetMessage,
+    customSetSort,
+    customSetState,
+    developerVocabulary,
+    developerVocabularyMessage,
+    manualCustomWord,
+    newSetName,
+    progress,
+    routeActions,
+    selectedCustomSetId,
+    sortedCustomSets,
+    studyMode,
+    themeMode,
+    vocabularyWords,
+  ]);
+
+  useEffect(() => () => setAppRouteBridgeSnapshot(null), []);
+
   return (
     <ThemeContext.Provider value={themeMode}>
-    <SafeAreaView style={[styles.safeArea, themeStyles?.safeArea, IS_WEB_IOS_PREVIEW && styles.webIosPreviewSafeArea]}>
+    <SafeAreaView edges={['top', 'left', 'right']} style={[styles.safeArea, themeStyles?.safeArea, IS_WEB_IOS_PREVIEW && styles.webIosPreviewSafeArea]}>
       <StatusBar style={darkMode ? 'light' : 'dark'} />
       <View style={[styles.appShell, IS_WEB_IOS_PREVIEW && styles.webIosPreviewAppShell, themeStyles?.appShell]}>
-        <View
-          onLayout={(event) => setHeaderHeight(Math.ceil(event.nativeEvent.layout.height))}
-          style={styles.header}
-        >
+        <View style={styles.header}>
           <View>
             <Text style={[styles.brand, themeStyles?.brand]}>{activeModeCopy.brand}</Text>
             <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>{activeModeCopy.subtitle}</Text>
@@ -2688,8 +2943,7 @@ function Word7000App() {
             style={[styles.libraryScreenHost, styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}
           >
             <Animated.View
-              pointerEvents={libraryPanel === 'list' && renderedLibraryPanel === 'list' ? 'auto' : 'none'}
-              style={[styles.libraryListStage, libraryListPanelMotionStyle]}
+              style={styles.libraryListStage}
               testID="library-panel-transition"
             >
               <LibraryView
@@ -2708,7 +2962,7 @@ function Word7000App() {
                 studyMode={studyMode}
                 words={libraryWords}
                 onAddToSet={handleOpenSetPicker}
-                onContentSizeChange={handleLibraryContentSizeChange}
+                onContentSizeChange={libraryContentSizeChange}
                 onFilterChange={setActiveFilter}
                 onFiltersToggle={handleLibraryFiltersToggle}
                 onFavorite={handleLibraryFavorite}
@@ -2716,23 +2970,79 @@ function Word7000App() {
                 onLevelChange={setActiveLevel}
                 onOpenWord={openLibraryWordDetail}
                 onOpenCustomSets={openLibraryCustomSets}
-                onQueryChange={handleLibraryQueryChange}
-                onQueryClear={clearLibrarySearch}
-                onScroll={handleLibraryScroll}
-                onSearchBlur={handleLibrarySearchBlur}
-                onSearchFocus={handleLibrarySearchFocus}
+                onQueryChange={libraryQueryChange}
+                onQueryClear={libraryQueryClear}
+                onScroll={libraryScroll}
+                onSearchBlur={librarySearchBlur}
+                onSearchFocus={librarySearchFocus}
                 onSortChange={setActiveSort}
-                onViewportLayout={handleLibraryViewportLayout}
+                onViewportLayout={libraryViewportLayout}
               />
             </Animated.View>
+            <View pointerEvents="box-none" style={styles.libraryFixedControls}>
+              {libraryScrolledPastTop && (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  onPress={returnLibraryToTop}
+                  pressTone="secondary"
+                  style={[styles.libraryFloatingTopButton, themeStyles?.libraryFloatingTopButton]}
+                  testID="library-floating-top"
+                >
+                  <ArrowUp size={15} color={libraryDragIconColor} strokeWidth={2.5} />
+                  <Text style={[styles.libraryFloatingTopText, themeStyles?.libraryFloatingTopText]}>{modeInterfaceCopy[studyMode].floatingTop}</Text>
+                </AnimatedPressable>
+              )}
+              {librarySliderVisible && (
+                <GestureDetector gesture={librarySliderGesture}>
+                  <View
+                    onLayout={(event) => setSliderTrackHeight(event.nativeEvent.layout.height)}
+                    style={[
+                      styles.libraryDragSlider,
+                      themeStyles?.libraryDragSlider,
+                      librarySliderActive ? styles.libraryDragSliderActive : styles.libraryDragSliderCollapsed,
+                      librarySliderActive ? themeStyles?.libraryDragSliderActive : themeStyles?.libraryDragSliderCollapsed,
+                      libraryDragSliderMotionStyle,
+                    ]}
+                    testID="library-drag-slider"
+                  >
+                    <Animated.View
+                      style={[
+                        styles.libraryDragTrack,
+                        themeStyles?.libraryDragTrack,
+                        librarySliderActive ? styles.libraryDragTrackActive : styles.libraryDragTrackCollapsed,
+                        librarySliderActive ? themeStyles?.libraryDragTrackActive : themeStyles?.libraryDragTrackCollapsed,
+                        libraryDragTrackMotionStyle,
+                      ]}
+                    />
+                    <Animated.View
+                      style={[
+                        styles.libraryDragThumb,
+                        themeStyles?.libraryDragThumb,
+                        librarySliderActive ? styles.libraryDragThumbActive : styles.libraryDragThumbCollapsed,
+                        librarySliderActive ? themeStyles?.libraryDragThumbActive : themeStyles?.libraryDragThumbCollapsed,
+                        libraryDragThumbMotionStyle,
+                        { transform: [{ translateY: libraryThumbOffsetAnim }] },
+                      ]}
+                      testID="library-drag-thumb"
+                    >
+                      {librarySliderActive && (
+                        <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
+                      )}
+                    </Animated.View>
+                  </View>
+                </GestureDetector>
+              )}
+            </View>
           </Animated.View>
         ) : (
           <ScrollView
+            automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
             canCancelContentTouches={activeTab !== 'study'}
             contentContainerStyle={styles.content}
             directionalLockEnabled
+            keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+            keyboardShouldPersistTaps="handled"
             ref={appScrollRef}
-            scrollEnabled={!studySwipeScrollLocked}
             showsVerticalScrollIndicator={false}
             style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}
           >
@@ -2743,13 +3053,10 @@ function Word7000App() {
               progress={progress}
               stats={stats}
               studyMode={studyMode}
-              onOpenAccount={() => setActiveTab('profile')}
-              onStartStudy={() => setActiveTab('study')}
-              onOpenReview={() => {
-                setActiveFilter('review');
-                setActiveTab('library');
-              }}
-              onToggleStudyMode={toggleStudyMode}
+              onOpenAccount={homeOpenAccount}
+              onStartStudy={homeStartStudy}
+              onOpenReview={homeOpenReview}
+              onToggleStudyMode={homeToggleStudyMode}
             />
           )}
           {activeTab === 'study' && (
@@ -2757,6 +3064,7 @@ function Word7000App() {
               activeFilter={studyFilter}
               activeInitial={studyInitial}
               activeLevel={studyLevel}
+              cardSequence={wordIndex}
               filtersOpen={studyFiltersOpen}
               levelOptions={levelFilterOptions}
               motionStyle={cardMotionStyle}
@@ -2766,18 +3074,17 @@ function Word7000App() {
               wordCount={studyWords.length}
               word={studyWord}
               progress={progress}
-              onClearActiveSet={() => setStudySetId(null)}
+              onClearActiveSet={studyClearActiveSet}
               onFilterChange={setStudyFilter}
-              onFiltersToggle={() => setStudyFiltersOpen((current) => !current)}
+              onFiltersToggle={studyToggleFilters}
               onInitialChange={setStudyInitial}
               onLevelChange={setStudyLevel}
-              onNext={nextStudyWord}
-              onPrevious={previousStudyWord}
-              onSwipeKnown={() => studyWord && handleKnown(studyWord.id)}
-              onSwipeLockChange={setStudySwipeScrollLocked}
-              onSwipeReview={() => studyWord && handleReview(studyWord.id)}
+              onNext={studyNextWord}
+              onPrevious={studyPreviousWord}
+              onSwipeKnown={studySwipeKnown}
+              onSwipeReview={studySwipeReview}
               onAddToSet={handleOpenSetPicker}
-              onFavorite={() => studyWord && setProgress((current) => toggleFavorite(current, studyWord.id))}
+              onFavorite={studyFavoriteWord}
             />
           )}
           {activeTab === 'quiz' && (
@@ -2805,176 +3112,41 @@ function Word7000App() {
               correctCount={quizCorrectCount}
               word={visibleQuizWord}
               wordCount={quizWords.length}
-              onAnswer={handleQuizAnswer}
-              onClearActiveSet={() => setQuizSetId(null)}
+              onAnswer={quizAnswer}
+              onClearActiveSet={quizClearActiveSet}
               onFilterChange={setQuizFilter}
-              onFiltersToggle={() => setQuizFiltersOpen((current) => !current)}
+              onFiltersToggle={quizToggleFilters}
               onInitialChange={setQuizInitial}
               onLevelChange={setQuizLevel}
-              onPracticeModeChange={handleQuizPracticeModeChange}
-              onNext={nextQuiz}
+              onPracticeModeChange={quizPracticeModeChange}
+              onNext={quizNextQuestion}
               onQuestionCountChange={setQuizQuestionCount}
-              onRevealSpeakingAnswer={revealSpeakingAnswer}
-              onRestart={restartQuiz}
-              onStart={startQuiz}
+              onRevealSpeakingAnswer={quizRevealAnswer}
+              onRestart={quizRestart}
+              onStart={quizStart}
             />
           )}
           {activeTab === 'profile' && (
             <ProfileView
               account={account}
               dailyPercent={dailyPercent}
-              developerMessage={developerVocabularyMessage}
-              developerVocabulary={developerVocabulary}
-              panel={profilePanel}
               progress={progress}
               stats={stats}
               studyMode={studyMode}
               themeMode={themeMode}
-              vocabularyCount={vocabularyWords.length}
-              onClearDeveloperVocabulary={handleClearDeveloperVocabulary}
-              onCloseSettings={() => setProfilePanel('overview')}
-              onConfirmDeleteAccountData={confirmDeleteAccountData}
-              onEmailChange={(email) => setAccount((current) => ({ ...current, email }))}
-              onExportVocabulary={handleExportVocabulary}
-              onImportVocabulary={handleImportVocabulary}
-              onAppleSignIn={handleAppleSignIn}
-              onGoogleSignIn={handleGoogleSignIn}
-              onOpenSettings={() => setProfilePanel('settings')}
-              onOpenAppInfoLink={handleOpenAppInfoLink}
-              onPanelSwap={onProfilePanelSwap}
-              onPasswordChange={(password) => setAccount((current) => ({ ...current, password }))}
-              onShowInstallGuide={openInstallGuide}
-              onSignIn={handleSignIn}
-              onSignOut={handleSignOut}
-              onSignUp={handleSignUp}
-              onThemeModeChange={triggerThemeModeChange}
+              onEmailChange={profileEmailChange}
+              onAppleSignIn={profileAppleSignIn}
+              onGoogleSignIn={profileGoogleSignIn}
+              onOpenSettings={profileOpenSettings}
+              onPasswordChange={profilePasswordChange}
+              onShowInstallGuide={profileShowInstallGuide}
+              onSignIn={profileSignIn}
+              onSignOut={profileSignOut}
+              onSignUp={profileSignUp}
             />
           )}
             </Animated.View>
           </ScrollView>
-        )}
-
-        {activeTab === 'library' && libraryPanel === 'list' && renderedLibraryPanel === 'list' && !selectedLibraryWord && (
-          <View pointerEvents="box-none" style={styles.libraryFixedControls}>
-            {libraryScrolledPastTop && (
-              <AnimatedPressable
-                accessibilityRole="button"
-                onPress={returnLibraryToTop}
-                pressTone="secondary"
-                style={[styles.libraryFloatingTopButton, themeStyles?.libraryFloatingTopButton]}
-                testID="library-floating-top"
-              >
-                <ArrowUp size={15} color={libraryDragIconColor} strokeWidth={2.5} />
-                <Text style={[styles.libraryFloatingTopText, themeStyles?.libraryFloatingTopText]}>{modeInterfaceCopy[studyMode].floatingTop}</Text>
-              </AnimatedPressable>
-            )}
-            {librarySliderVisible && (
-              <View
-                {...librarySliderResponder.panHandlers}
-                onLayout={(event) => setSliderTrackHeight(event.nativeEvent.layout.height)}
-                style={[
-                  styles.libraryDragSlider,
-                  themeStyles?.libraryDragSlider,
-                  librarySliderActive ? styles.libraryDragSliderActive : styles.libraryDragSliderCollapsed,
-                  librarySliderActive ? themeStyles?.libraryDragSliderActive : themeStyles?.libraryDragSliderCollapsed,
-                  libraryDragSliderMotionStyle,
-                ]}
-                testID="library-drag-slider"
-              >
-                <Animated.View
-                  style={[
-                    styles.libraryDragTrack,
-                    themeStyles?.libraryDragTrack,
-                    librarySliderActive ? styles.libraryDragTrackActive : styles.libraryDragTrackCollapsed,
-                    librarySliderActive ? themeStyles?.libraryDragTrackActive : themeStyles?.libraryDragTrackCollapsed,
-                    libraryDragTrackMotionStyle,
-                  ]}
-                />
-                <Animated.View
-                  style={[
-                    styles.libraryDragThumb,
-                    themeStyles?.libraryDragThumb,
-                    librarySliderActive ? styles.libraryDragThumbActive : styles.libraryDragThumbCollapsed,
-                    librarySliderActive ? themeStyles?.libraryDragThumbActive : themeStyles?.libraryDragThumbCollapsed,
-                    libraryDragThumbMotionStyle,
-                    { transform: [{ translateY: libraryThumbOffsetAnim }] },
-                  ]}
-                  testID="library-drag-thumb"
-                >
-                  {librarySliderActive && (
-                    <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
-                  )}
-                </Animated.View>
-              </View>
-            )}
-          </View>
-        )}
-
-        {activeTab === 'library' && selectedLibraryWord && (
-          <Animated.View
-            pointerEvents={renderedLibraryPanel === 'detail' ? 'auto' : 'none'}
-            style={[
-              styles.libraryDetailStage,
-              themeStyles?.libraryDetailStage,
-              { top: headerHeight },
-              libraryDetailStageMotionStyle,
-            ]}
-            testID="library-detail-stage"
-          >
-            <ScrollView contentContainerStyle={styles.libraryDetailStageContent} showsVerticalScrollIndicator={false}>
-              <LibraryWordDetailView
-                progress={progress}
-                studyMode={studyMode}
-                word={selectedLibraryWord}
-                onAddToSet={handleOpenSetPicker}
-                onBack={closeLibraryWordDetail}
-                onFavorite={() => setProgress((current) => toggleFavorite(current, selectedLibraryWord.id))}
-              />
-            </ScrollView>
-          </Animated.View>
-        )}
-
-        {activeTab === 'library' && (libraryPanel === 'sets' || renderedLibraryPanel === 'sets') && (
-          <Animated.View
-            pointerEvents={renderedLibraryPanel === 'sets' ? 'auto' : 'none'}
-            style={[
-              styles.libraryDetailStage,
-              themeStyles?.libraryDetailStage,
-              { top: headerHeight },
-              librarySetsStageMotionStyle,
-            ]}
-            testID="library-custom-sets-stage"
-          >
-            <ScrollView contentContainerStyle={styles.libraryDetailStageContent} showsVerticalScrollIndicator={false}>
-              <ProfileCustomSetsView
-                backLabel={modeInterfaceCopy[studyMode].backLibrary}
-                customSetMessage={customSetMessage}
-                customSetSort={customSetSort}
-                customSets={sortedCustomSets}
-                customSetState={customSetState}
-                manualCustomWord={manualCustomWord}
-                newSetName={newSetName}
-                selectedCustomSetId={selectedCustomSetId}
-                studyMode={studyMode}
-                vocabularyWords={vocabularyWords}
-                onAddManualCustomWord={handleAddManualCustomWord}
-                onBack={() => {
-                  setLibraryPanel('list');
-                }}
-                onCreateCustomSet={handleCreateCustomSet}
-                onCustomSetSelect={setSelectedCustomSetId}
-                onCustomSetSortChange={setCustomSetSort}
-                onDeleteCustomSet={handleDeleteCustomSet}
-                onImportCustomWords={handleImportCustomWords}
-                onManualCustomWordChange={handleManualCustomWordChange}
-                onNewSetNameChange={setNewSetName}
-                onRemoveWordFromSet={handleRemoveWordFromCustomSet}
-                onRenameCustomSet={handleRenameCustomSet}
-                onStartQuizSet={handleStartQuizSet}
-                onStartStudySet={handleStartStudySet}
-              />
-            </ScrollView>
-          </Animated.View>
         )}
 
         {setPickerWord && (
@@ -2990,14 +3162,15 @@ function Word7000App() {
           />
         )}
 
-        <View style={[styles.tabBar, themeStyles?.tabBar]}>
+        <View style={[styles.tabBar, themeStyles?.tabBar, tabBarInsetStyle]}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const selected = activeTab === tab.id;
             const tabIconColor = selected ? (darkMode ? '#f8fafc' : '#172033') : darkMode ? '#94a3b8' : '#717987';
             return (
               <AnimatedPressable
-                accessibilityRole="button"
+                accessibilityRole="tab"
+                accessibilityState={{ selected }}
                 key={tab.id}
                 onPress={() => setActiveTab(tab.id)}
                 pressTone="tab"
@@ -3880,7 +4053,7 @@ function InstallGuideStepIcon({ color, icon }: { color: string; icon: InstallGui
   return <Smartphone size={56} color={color} strokeWidth={2.1} />;
 }
 
-function HomeView({
+const HomeView = memo(function HomeView({
   dailyPercent,
   progress,
   stats,
@@ -3973,7 +4146,7 @@ function HomeView({
       </AnimatedPressable>
     </View>
   );
-}
+});
 
 function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
   const review = tone === 'review';
@@ -4038,10 +4211,6 @@ function splitSwipeHintLines(hint: string): string[] {
   return [hint];
 }
 
-function isStudySwipeActionZone(event: { locationX: number; locationY: number }) {
-  return event.locationY <= 82 && event.locationX >= 220;
-}
-
 function clearStudySwipeTextSelection() {
   if (Platform.OS !== 'web') {
     return;
@@ -4051,22 +4220,13 @@ function clearStudySwipeTextSelection() {
   selection?.removeAllRanges();
 }
 
-function readAnimatedNumberValue(value: Animated.Value) {
-  const animatedValue = value as unknown as { __getValue?: () => unknown; _value?: unknown };
-  const currentValue = typeof animatedValue.__getValue === 'function' ? animatedValue.__getValue() : animatedValue._value;
-  return typeof currentValue === 'number' && Number.isFinite(currentValue) ? currentValue : 0;
-}
-
-function readStudySwipePageX(event: { pageX?: unknown }) {
-  return typeof event.pageX === 'number' && Number.isFinite(event.pageX) ? event.pageX : null;
-}
-
-function StudyView({
+const StudyView = memo(function StudyView({
   activeSetCount,
   activeSetName,
   activeFilter,
   activeInitial,
   activeLevel,
+  cardSequence,
   filtersOpen,
   levelOptions,
   motionStyle,
@@ -4084,7 +4244,6 @@ function StudyView({
   onNext,
   onPrevious,
   onSwipeKnown,
-  onSwipeLockChange,
   onSwipeReview,
 }: {
   activeSetCount: number;
@@ -4092,6 +4251,7 @@ function StudyView({
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  cardSequence: number;
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
@@ -4109,7 +4269,6 @@ function StudyView({
   onNext: () => void;
   onPrevious: () => void;
   onSwipeKnown: () => void;
-  onSwipeLockChange: (locked: boolean) => void;
   onSwipeReview: () => void;
 }) {
   const wordProgress = word ? progress.words[word.id] : undefined;
@@ -4119,23 +4278,12 @@ function StudyView({
   const ui = modeInterfaceCopy[studyMode];
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
-  const swipeX = useRef(new Animated.Value(0)).current;
+  const swipeX = useSharedValue(0);
+  const swipeStartX = useSharedValue(0);
+  const swipePhase = useSharedValue(0);
+  const hapticDirectionCode = useSharedValue(0);
   const cardEntryProgress = useRef(new Animated.Value(1)).current;
   const cardSwapOpacity = useRef(new Animated.Value(1)).current;
-  const completingSwipeRef = useRef(false);
-  const latestSwipeGestureRef = useRef({ dx: 0, vx: 0 });
-  const swipeStartXRef = useRef(0);
-  const swipePointerStartXRef = useRef<number | null>(null);
-  const swipeResetAnimationRef = useRef<ReturnType<typeof Animated.spring> | null>(null);
-  const swipeFrameSyncRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
-  const swipeGrantTokenRef = useRef(0);
-  const swipeMovedSinceGrantRef = useRef(false);
-  const pendingReadyHapticDirectionRef = useRef<StudySwipeDirection | null>(null);
-  const pendingReadyHapticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const readyHapticDirectionRef = useRef<StudySwipeDirection | null>(null);
-  const readyHapticFiredDirectionRef = useRef<StudySwipeDirection | null>(null);
-  const swipeGestureLockedRef = useRef(false);
-  const [swipeDirection, setSwipeDirection] = useState<StudySwipeDirection | null>(null);
   const cardEntryStyle = {
     opacity: cardEntryProgress,
     transform: [
@@ -4153,14 +4301,15 @@ function StudyView({
       },
     ],
   };
-  const slidingCardStyle = {
-    opacity: swipeX.interpolate({
-      inputRange: [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
-      outputRange: [0.94, 1, 0.94],
-      extrapolate: 'clamp',
-    }),
-    transform: [{ translateX: swipeX }],
-  };
+  const slidingCardStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      swipeX.value,
+      [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
+      [0.92, 1, 0.92],
+      Extrapolation.CLAMP,
+    ),
+    transform: [{ translateX: swipeX.value }],
+  }));
   const cardSwapStyle = {
     opacity: cardSwapOpacity,
   };
@@ -4173,9 +4322,10 @@ function StudyView({
           WebkitUserSelect: 'none',
         }
       : undefined;
-  const reviewFeedbackStyle = {
-    opacity: swipeX.interpolate({
-      inputRange: [
+  const reviewFeedbackStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      swipeX.value,
+      [
         -STUDY_SWIPE_COMMIT_FADE_X,
         -STUDY_SWIPE_THRESHOLD,
         -STUDY_SWIPE_READY_FADE_X,
@@ -4183,13 +4333,14 @@ function StudyView({
         -STUDY_SWIPE_GLOW_WAKE_X,
         0,
       ],
-      outputRange: [1, 0.78, 0.34, 0.1, 0.03, 0],
-      extrapolate: 'clamp',
-    }),
-  };
-  const knownFeedbackStyle = {
-    opacity: swipeX.interpolate({
-      inputRange: [
+      [1, 0.78, 0.34, 0.1, 0.03, 0],
+      Extrapolation.CLAMP,
+    ),
+  }));
+  const knownFeedbackStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      swipeX.value,
+      [
         0,
         STUDY_SWIPE_GLOW_WAKE_X,
         STUDY_SWIPE_PREVIEW_FADE_X,
@@ -4197,46 +4348,50 @@ function StudyView({
         STUDY_SWIPE_THRESHOLD,
         STUDY_SWIPE_COMMIT_FADE_X,
       ],
-      outputRange: [0, 0.03, 0.1, 0.34, 0.78, 1],
-      extrapolate: 'clamp',
-    }),
-  };
-  const reviewRevealGlowStyle = {
+      [0, 0.03, 0.1, 0.34, 0.78, 1],
+      Extrapolation.CLAMP,
+    ),
+  }));
+  const reviewRevealGlowStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: swipeX.interpolate({
-          inputRange: [-STUDY_SWIPE_EXIT_X, 0],
-          outputRange: [STUDY_SWIPE_REVEAL_WIDTH - STUDY_SWIPE_EXIT_X, STUDY_SWIPE_REVEAL_WIDTH],
-          extrapolate: 'clamp',
-        }),
+        translateX: interpolate(
+          swipeX.value,
+          [-STUDY_SWIPE_EXIT_X, 0],
+          [STUDY_SWIPE_REVEAL_WIDTH - STUDY_SWIPE_EXIT_X, STUDY_SWIPE_REVEAL_WIDTH],
+          Extrapolation.CLAMP,
+        ),
       },
     ],
-  };
-  const knownRevealGlowStyle = {
+  }));
+  const knownRevealGlowStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: swipeX.interpolate({
-          inputRange: [0, STUDY_SWIPE_EXIT_X],
-          outputRange: [-STUDY_SWIPE_REVEAL_WIDTH, STUDY_SWIPE_EXIT_X - STUDY_SWIPE_REVEAL_WIDTH],
-          extrapolate: 'clamp',
-        }),
+        translateX: interpolate(
+          swipeX.value,
+          [0, STUDY_SWIPE_EXIT_X],
+          [-STUDY_SWIPE_REVEAL_WIDTH, STUDY_SWIPE_EXIT_X - STUDY_SWIPE_REVEAL_WIDTH],
+          Extrapolation.CLAMP,
+        ),
       },
     ],
-  };
-  const reviewCueStyle = {
-    opacity: swipeX.interpolate({
-      inputRange: [-STUDY_SWIPE_THRESHOLD, -STUDY_SWIPE_READY_FADE_X, 0],
-      outputRange: [1, 0, 0],
-      extrapolate: 'clamp',
-    }),
-  };
-  const knownCueStyle = {
-    opacity: swipeX.interpolate({
-      inputRange: [0, STUDY_SWIPE_READY_FADE_X, STUDY_SWIPE_THRESHOLD],
-      outputRange: [0, 0, 1],
-      extrapolate: 'clamp',
-    }),
-  };
+  }));
+  const reviewCueStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      swipeX.value,
+      [-STUDY_SWIPE_THRESHOLD, -STUDY_SWIPE_READY_FADE_X, 0],
+      [1, 0, 0],
+      Extrapolation.CLAMP,
+    ),
+  }));
+  const knownCueStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      swipeX.value,
+      [0, STUDY_SWIPE_READY_FADE_X, STUDY_SWIPE_THRESHOLD],
+      [0, 0, 1],
+      Extrapolation.CLAMP,
+    ),
+  }));
 
   const runStudyCardEntry = useCallback(() => {
     cardEntryProgress.setValue(0);
@@ -4248,291 +4403,134 @@ function StudyView({
     }).start();
   }, [cardEntryProgress]);
 
-  const setCardSwipeLocked = useCallback(
-    (locked: boolean) => {
-      if (swipeGestureLockedRef.current === locked) {
-        return;
-      }
-
-      swipeGestureLockedRef.current = locked;
-      onSwipeLockChange(locked);
-    },
-    [onSwipeLockChange],
-  );
-
-  const clearStudySwipeReadyHaptic = useCallback(() => {
-    if (pendingReadyHapticTimerRef.current) {
-      clearTimeout(pendingReadyHapticTimerRef.current);
-      pendingReadyHapticTimerRef.current = null;
-    }
-
-    pendingReadyHapticDirectionRef.current = null;
+  const fireSwipeHaptic = useCallback(() => {
+    triggerPressHaptic('chip');
   }, []);
 
-  const scheduleStudySwipeReadyHaptic = useCallback(
-    (direction: StudySwipeDirection) => {
-      if (readyHapticDirectionRef.current === direction || pendingReadyHapticDirectionRef.current === direction) {
-        return;
+  const finishNativeSwipe = useCallback(
+    (directionCode: number) => {
+      cardSwapOpacity.setValue(0);
+      if (directionCode > 0) {
+        onSwipeKnown();
+      } else {
+        onSwipeReview();
       }
-
-      clearStudySwipeReadyHaptic();
-      readyHapticDirectionRef.current = direction;
-      pendingReadyHapticDirectionRef.current = direction;
-      pendingReadyHapticTimerRef.current = setTimeout(() => {
-        pendingReadyHapticTimerRef.current = null;
-        pendingReadyHapticDirectionRef.current = null;
-
-        if (readyHapticDirectionRef.current !== direction || !swipeGestureLockedRef.current || completingSwipeRef.current) {
-          return;
-        }
-
-        requestAnimationFrame(() => {
-          if (readyHapticDirectionRef.current === direction && swipeGestureLockedRef.current && !completingSwipeRef.current) {
-            readyHapticFiredDirectionRef.current = direction;
-            triggerPressHaptic('chip');
-          }
-        });
-      }, 70);
+      swipeX.value = 0;
+      swipeStartX.value = 0;
+      swipePhase.value = 0;
+      hapticDirectionCode.value = 0;
     },
-    [clearStudySwipeReadyHaptic],
+    [
+      cardSwapOpacity,
+      hapticDirectionCode,
+      onSwipeKnown,
+      onSwipeReview,
+      swipePhase,
+      swipeStartX,
+      swipeX,
+    ],
   );
 
-  const triggerStudySwipeCommitHaptic = useCallback(
-    (direction: StudySwipeDirection) => {
-      clearStudySwipeReadyHaptic();
-      if (readyHapticFiredDirectionRef.current === direction) {
-        return;
-      }
-
-      readyHapticFiredDirectionRef.current = direction;
-      requestAnimationFrame(() => triggerPressHaptic('chip'));
-    },
-    [clearStudySwipeReadyHaptic],
-  );
-
-  const stopStudySwipeFrameSync = useCallback(() => {
-    if (swipeFrameSyncRef.current !== null) {
-      cancelAnimationFrame(swipeFrameSyncRef.current);
-      swipeFrameSyncRef.current = null;
-    }
-  }, []);
-
-  const startStudySwipeFrameSync = useCallback(() => {
-    if (swipeFrameSyncRef.current !== null) {
-      return;
-    }
-
-    const syncSwipeFrame = () => {
-      if (!swipeGestureLockedRef.current || completingSwipeRef.current) {
-        swipeFrameSyncRef.current = null;
-        return;
-      }
-
-      swipeX.setValue(latestSwipeGestureRef.current.dx);
-      swipeFrameSyncRef.current = requestAnimationFrame(syncSwipeFrame);
-    };
-
-    swipeFrameSyncRef.current = requestAnimationFrame(syncSwipeFrame);
-  }, [swipeX]);
-
-  useEffect(
-    () => () => {
-      stopStudySwipeFrameSync();
-      clearStudySwipeReadyHaptic();
-      onSwipeLockChange(false);
-    },
-    [clearStudySwipeReadyHaptic, onSwipeLockChange, stopStudySwipeFrameSync],
-  );
-
-  useEffect(() => {
-    completingSwipeRef.current = false;
-    stopStudySwipeFrameSync();
-    swipeResetAnimationRef.current?.stop();
-    swipeResetAnimationRef.current = null;
-    swipeX.setValue(0);
-    setSwipeDirection(null);
-    clearStudySwipeReadyHaptic();
-    swipeStartXRef.current = 0;
-    readyHapticDirectionRef.current = null;
-    readyHapticFiredDirectionRef.current = null;
+  useLayoutEffect(() => {
+    swipeX.value = 0;
+    swipeStartX.value = 0;
+    swipePhase.value = 0;
+    hapticDirectionCode.value = 0;
     cardSwapOpacity.setValue(1);
-    setCardSwipeLocked(false);
     runStudyCardEntry();
-  }, [clearStudySwipeReadyHaptic, runStudyCardEntry, setCardSwipeLocked, swipeX, word?.id]);
+  }, [cardSequence, cardSwapOpacity, hapticDirectionCode, runStudyCardEntry, swipePhase, swipeStartX, swipeX, word?.id]);
 
-  const resetSwipe = useCallback(() => {
-    if (completingSwipeRef.current) {
-      return;
-    }
-
-    setSwipeDirection(null);
-    clearStudySwipeReadyHaptic();
-    swipeStartXRef.current = 0;
-    readyHapticDirectionRef.current = null;
-    readyHapticFiredDirectionRef.current = null;
-    stopStudySwipeFrameSync();
-    setCardSwipeLocked(false);
-    swipeResetAnimationRef.current?.stop();
-    const resetAnimation = Animated.spring(swipeX, {
-      friction: 8,
-      tension: 120,
-      toValue: 0,
-      useNativeDriver: Platform.OS !== 'web',
-    });
-    swipeResetAnimationRef.current = resetAnimation;
-    resetAnimation.start();
-  }, [clearStudySwipeReadyHaptic, setCardSwipeLocked, swipeX]);
-
-  const completeSwipe = useCallback(
-    (direction: StudySwipeDirection) => {
-      if (completingSwipeRef.current) {
-        return;
-      }
-
-      completingSwipeRef.current = true;
-      stopStudySwipeFrameSync();
-      const toValue = direction === 'known' ? STUDY_SWIPE_EXIT_X : -STUDY_SWIPE_EXIT_X;
-      setSwipeDirection(direction);
-      triggerStudySwipeCommitHaptic(direction);
-
-      let completed = false;
-      const finishSwipe = () => {
-        if (completed) {
-          return;
-        }
-
-        completed = true;
-        cardSwapOpacity.setValue(0);
-        stopStudySwipeFrameSync();
-        swipeResetAnimationRef.current?.stop();
-        swipeResetAnimationRef.current = null;
-        swipeX.stopAnimation();
-        if (direction === 'known') {
-          onSwipeKnown();
-        } else {
-          onSwipeReview();
-        }
-        swipeStartXRef.current = 0;
-        swipeX.setValue(0);
-        cardEntryProgress.setValue(0);
-        setSwipeDirection(null);
-        clearStudySwipeReadyHaptic();
-        readyHapticDirectionRef.current = null;
-        readyHapticFiredDirectionRef.current = null;
-        setCardSwipeLocked(false);
-        completingSwipeRef.current = false;
-        requestAnimationFrame(() => {
-          cardSwapOpacity.setValue(1);
-          runStudyCardEntry();
-        });
-      };
-      const fallbackTimer = setTimeout(finishSwipe, 210);
-
-      Animated.timing(swipeX, {
-        duration: 180,
-        easing: Easing.out(Easing.cubic),
-        toValue,
-        useNativeDriver: Platform.OS !== 'web',
-      }).start(() => {
-        clearTimeout(fallbackTimer);
-        requestAnimationFrame(finishSwipe);
-      });
-    },
-    [cardEntryProgress, cardSwapOpacity, clearStudySwipeReadyHaptic, onSwipeKnown, onSwipeReview, runStudyCardEntry, setCardSwipeLocked, stopStudySwipeFrameSync, swipeX, triggerStudySwipeCommitHaptic],
-  );
-  const shouldStartCardSwipe = useCallback((gesture: { dx: number; dy: number }) => {
-    if (swipeGestureLockedRef.current) {
-      return true;
-    }
-
-    const intent = resolveStudyGestureIntent(gesture.dx, gesture.dy);
-    if (intent === 'card') {
-      setCardSwipeLocked(true);
-      return true;
-    }
-
-    return false;
-  }, [setCardSwipeLocked]);
-  const finishOrResetSwipe = useCallback(
-    (gesture = latestSwipeGestureRef.current, options: { useReadyDirectionFallback?: boolean } = {}) => {
-      const gestureDx = swipeMovedSinceGrantRef.current
-        ? latestSwipeGestureRef.current.dx
-        : gesture === latestSwipeGestureRef.current
-          ? gesture.dx
-          : swipeStartXRef.current + gesture.dx;
-      const direction =
-        resolveStudySwipeReleaseDirection(gestureDx, gesture.vx) ??
-        resolveStudySwipeReleaseDirection(latestSwipeGestureRef.current.dx, latestSwipeGestureRef.current.vx) ??
-        (options.useReadyDirectionFallback ? readyHapticDirectionRef.current : null);
-      if (direction) {
-        completeSwipe(direction);
-        return;
-      }
-
-      resetSwipe();
-    },
-    [completeSwipe, resetSwipe],
-  );
-  const studySwipeResponder = useMemo(
+  const studySwipeGesture = useMemo(
     () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponder: (_, gesture) => shouldClaimStudySwipe(gesture.dx, gesture.dy) && shouldStartCardSwipe(gesture),
-        onMoveShouldSetPanResponderCapture: (_, gesture) =>
-          resolveStudyGestureIntent(gesture.dx, gesture.dy) === 'card' && shouldStartCardSwipe(gesture),
-        onPanResponderGrant: (event) => {
-          swipeGrantTokenRef.current += 1;
-          const grantToken = swipeGrantTokenRef.current;
-          swipeMovedSinceGrantRef.current = false;
-          swipePointerStartXRef.current = readStudySwipePageX(event.nativeEvent);
-          latestSwipeGestureRef.current = { dx: 0, vx: 0 };
-          clearStudySwipeReadyHaptic();
-          cardEntryProgress.stopAnimation();
-          cardEntryProgress.setValue(1);
-          readyHapticDirectionRef.current = null;
-          readyHapticFiredDirectionRef.current = null;
-          cardSwapOpacity.setValue(1);
-          setCardSwipeLocked(true);
-          clearStudySwipeTextSelection();
-          swipeResetAnimationRef.current?.stop();
-          swipeResetAnimationRef.current = null;
-          swipeStartXRef.current = readAnimatedNumberValue(swipeX);
-          latestSwipeGestureRef.current = { dx: swipeStartXRef.current, vx: 0 };
-          swipeX.setValue(swipeStartXRef.current);
-          startStudySwipeFrameSync();
-          swipeX.stopAnimation((value) => {
-            if (swipeGrantTokenRef.current !== grantToken || swipeMovedSinceGrantRef.current) {
-              return;
+      Gesture.Pan()
+        .enabled(Boolean(word))
+        .activeOffsetX([-10, 10])
+        .failOffsetY([-12, 12])
+        .minDistance(4)
+        .shouldCancelWhenOutside(false)
+        .onBegin(() => {
+          swipeStartX.value = swipeX.value;
+          swipePhase.value = 0;
+          hapticDirectionCode.value = 0;
+        })
+        .onStart(() => {
+          swipePhase.value = 1;
+          if (SHOULD_CLEAR_STUDY_SELECTION) {
+            runOnJS(clearStudySwipeTextSelection)();
+          }
+        })
+        .onUpdate((event) => {
+          const nextX = swipeStartX.value + event.translationX;
+          swipeX.value = nextX;
+
+          const flingVelocity = STUDY_SWIPE_FLING_VELOCITY * 1000;
+          const readyCode =
+            nextX >= STUDY_SWIPE_THRESHOLD ||
+            (nextX >= STUDY_SWIPE_FLING_DISTANCE && event.velocityX >= flingVelocity)
+              ? 1
+              : nextX <= -STUDY_SWIPE_THRESHOLD ||
+                  (nextX <= -STUDY_SWIPE_FLING_DISTANCE && event.velocityX <= -flingVelocity)
+                ? -1
+                : 0;
+          if (readyCode !== 0 && hapticDirectionCode.value !== readyCode) {
+            hapticDirectionCode.value = readyCode;
+            runOnJS(fireSwipeHaptic)();
+          }
+        })
+        .onEnd((event) => {
+          const nextX = swipeX.value;
+          const flingVelocity = STUDY_SWIPE_FLING_VELOCITY * 1000;
+          const directionCode =
+            nextX >= STUDY_SWIPE_RELEASE_DISTANCE ||
+            (nextX >= STUDY_SWIPE_FLING_DISTANCE && event.velocityX >= flingVelocity)
+              ? 1
+              : nextX <= -STUDY_SWIPE_RELEASE_DISTANCE ||
+                  (nextX <= -STUDY_SWIPE_FLING_DISTANCE && event.velocityX <= -flingVelocity)
+                ? -1
+                : 0;
+          swipePhase.value = 2;
+
+          if (directionCode !== 0) {
+            if (hapticDirectionCode.value !== directionCode) {
+              hapticDirectionCode.value = directionCode;
+              runOnJS(fireSwipeHaptic)();
             }
-            swipeStartXRef.current = typeof value === 'number' && Number.isFinite(value) ? value : 0;
-            swipeX.setValue(swipeStartXRef.current);
-          });
-        },
-        onPanResponderMove: (event, gesture) => {
-          swipeMovedSinceGrantRef.current = true;
-          const pointerX = readStudySwipePageX(event.nativeEvent);
-          const pointerDx = pointerX !== null && swipePointerStartXRef.current !== null ? pointerX - swipePointerStartXRef.current : gesture.dx;
-          const nextSwipeX = swipeStartXRef.current + pointerDx;
-          latestSwipeGestureRef.current = { dx: nextSwipeX, vx: gesture.vx };
-          clearStudySwipeTextSelection();
-          swipeX.setValue(nextSwipeX);
-          const readyDirection = resolveStudySwipeDirection(nextSwipeX, gesture.vx);
-          if (readyDirection) {
-            scheduleStudySwipeReadyHaptic(readyDirection);
+            swipeX.value = withTiming(
+              directionCode > 0 ? STUDY_SWIPE_EXIT_X : -STUDY_SWIPE_EXIT_X,
+              { duration: 180, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) },
+              (finished) => {
+                if (finished) {
+                  runOnJS(finishNativeSwipe)(directionCode);
+                }
+              },
+            );
+            return;
           }
 
-          const nextDirection = readyDirection ?? previewStudySwipeDirection(nextSwipeX);
-          setSwipeDirection((current) => (current === nextDirection ? current : nextDirection));
-        },
-        onPanResponderRelease: (_, gesture) => {
-          finishOrResetSwipe(gesture);
-        },
-        onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture, { useReadyDirectionFallback: true }),
-        onPanResponderTerminationRequest: () => false,
-        onShouldBlockNativeResponder: () => true,
-        onStartShouldSetPanResponder: (event) => !isStudySwipeActionZone(event.nativeEvent),
-        onStartShouldSetPanResponderCapture: (event) => !isStudySwipeActionZone(event.nativeEvent),
-      }),
-    [cardEntryProgress, cardSwapOpacity, clearStudySwipeReadyHaptic, finishOrResetSwipe, scheduleStudySwipeReadyHaptic, setCardSwipeLocked, shouldStartCardSwipe, startStudySwipeFrameSync, swipeX],
+          swipeX.value = withSpring(
+            0,
+            { damping: 20, mass: 0.72, stiffness: 260 },
+          );
+        })
+        .onFinalize(() => {
+          if (swipePhase.value !== 1) {
+            return;
+          }
+          swipePhase.value = 2;
+          swipeX.value = withSpring(
+            0,
+            { damping: 20, mass: 0.72, stiffness: 260 },
+          );
+        }),
+    [
+      finishNativeSwipe,
+      fireSwipeHaptic,
+      hapticDirectionCode,
+      swipePhase,
+      swipeStartX,
+      swipeX,
+      word,
+    ],
   );
 
   return (
@@ -4577,11 +4575,11 @@ function StudyView({
         <>
        <Animated.View style={[styles.studySwipeDeck, motionStyle, cardEntryStyle]} testID="study-swipe-deck">
         <Animated.View style={[styles.studySwipeSwapStage, cardSwapStyle]}>
-         <Animated.View
+         <Reanimated.View
            pointerEvents="none"
            style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
         >
-          <Animated.View
+          <Reanimated.View
             style={[
               styles.studySwipeRevealGradientWrap,
               styles.studySwipeRevealReviewGradientWrap,
@@ -4589,8 +4587,8 @@ function StudyView({
             ]}
           >
             <StudySwipeRevealGradient tone="review" />
-          </Animated.View>
-          <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueReview, reviewCueStyle]}>
+          </Reanimated.View>
+          <Reanimated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueReview, reviewCueStyle]}>
             <X size={42} color="#b91c1c" strokeWidth={2.8} />
             {reviewHintLines.map((line, index) => (
               <Text
@@ -4605,13 +4603,13 @@ function StudyView({
                 {line}
               </Text>
             ))}
-          </Animated.View>
-        </Animated.View>
-        <Animated.View
+          </Reanimated.View>
+        </Reanimated.View>
+        <Reanimated.View
           pointerEvents="none"
           style={[styles.studySwipeRevealFill, styles.studySwipeRevealKnown, knownFeedbackStyle]}
         >
-          <Animated.View
+          <Reanimated.View
             style={[
               styles.studySwipeRevealGradientWrap,
               styles.studySwipeRevealKnownGradientWrap,
@@ -4619,8 +4617,8 @@ function StudyView({
             ]}
           >
             <StudySwipeRevealGradient tone="known" />
-          </Animated.View>
-          <Animated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueKnown, knownCueStyle]}>
+          </Reanimated.View>
+          <Reanimated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueKnown, knownCueStyle]}>
             <Check size={42} color="#166534" strokeWidth={2.8} />
             {knownHintLines.map((line, index) => (
               <Text
@@ -4635,11 +4633,11 @@ function StudyView({
                 {line}
               </Text>
             ))}
-          </Animated.View>
-        </Animated.View>
-         <Animated.View
-           {...studySwipeResponder.panHandlers}
-          accessibilityHint={swipeDirection === 'known' ? ui.swipeKnownHint : swipeDirection === 'review' ? ui.swipeReviewHint : undefined}
+          </Reanimated.View>
+        </Reanimated.View>
+        <GestureDetector gesture={studySwipeGesture}>
+         <Reanimated.View
+          accessibilityHint={`${ui.swipeReviewHint}; ${ui.swipeKnownHint}`}
           style={[styles.wordCard, styles.studySwipeSlidingCard, themeStyles?.wordCard, slidingCardStyle, studySwipeTouchGuardStyle]}
           testID="study-swipe-card"
         >
@@ -4690,7 +4688,8 @@ function StudyView({
             <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
             <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
            </View>
-         </Animated.View>
+         </Reanimated.View>
+        </GestureDetector>
         </Animated.View>
        </Animated.View>
 
@@ -4708,7 +4707,7 @@ function StudyView({
       )}
     </View>
   );
-}
+});
 
 function FilterControlPanel({
   activeFilter,
@@ -4866,7 +4865,7 @@ function FilterControlPanel({
   );
 }
 
-function QuizView({
+const QuizView = memo(function QuizView({
   activeSetCount,
   activeSetName,
   activeFilter,
@@ -5248,7 +5247,7 @@ function QuizView({
       )}
     </View>
   );
-}
+});
 
 const LibraryView = memo(function LibraryView({
   activeFilter,
@@ -5509,6 +5508,7 @@ const LibraryView = memo(function LibraryView({
       drawDistance={720}
       extraData={progress.words}
       ItemSeparatorComponent={LibraryItemSeparator}
+      keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
       keyboardShouldPersistTaps="handled"
       keyExtractor={libraryWordKeyExtractor}
       ListEmptyComponent={(
@@ -5628,7 +5628,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
   );
 });
 
-function LibraryWordDetailView({
+export function LibraryWordDetailView({
   progress,
   studyMode,
   word,
@@ -5738,23 +5738,13 @@ function LibraryWordDetailView({
   );
 }
 
-function ProfileView({
+const ProfileView = memo(function ProfileView({
   account,
   dailyPercent,
-  developerMessage,
-  developerVocabulary,
-  panel,
   onEmailChange,
-  onClearDeveloperVocabulary,
-  onCloseSettings,
-  onConfirmDeleteAccountData,
-  onExportVocabulary,
-  onImportVocabulary,
   onAppleSignIn,
   onGoogleSignIn,
   onOpenSettings,
-  onOpenAppInfoLink,
-  onPanelSwap,
   onPasswordChange,
   onShowInstallGuide,
   onSignIn,
@@ -5764,36 +5754,22 @@ function ProfileView({
   stats,
   studyMode,
   themeMode,
-  vocabularyCount,
-  onThemeModeChange,
 }: {
   account: AccountState;
   dailyPercent: number;
-  developerMessage: string;
-  developerVocabulary: DeveloperVocabularySnapshot | null;
-  panel: ProfilePanel;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
   studyMode: StudyMode;
   themeMode: ThemeMode;
-  vocabularyCount: number;
-  onClearDeveloperVocabulary: () => void;
-  onCloseSettings: () => void;
-  onConfirmDeleteAccountData: () => void;
   onEmailChange: (email: string) => void;
-  onExportVocabulary: () => void;
   onAppleSignIn: () => void;
   onGoogleSignIn: () => void;
-  onImportVocabulary: () => void;
   onOpenSettings: () => void;
-  onOpenAppInfoLink: (url: string) => void;
-  onPanelSwap: () => void;
   onPasswordChange: (password: string) => void;
   onShowInstallGuide: () => void;
   onSignIn: () => void;
   onSignOut: () => void;
   onSignUp: () => void;
-  onThemeModeChange: (themeMode: ThemeMode) => void;
 }) {
   const themeStyles = useThemeStyles();
   const signedIn = Boolean(account.userId);
@@ -5802,86 +5778,8 @@ function ProfileView({
   const ui = modeInterfaceCopy[studyMode];
   const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;
   const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;
-  const [renderedProfilePanel, setRenderedProfilePanel] = useState<ProfilePanel>(panel);
-  const profilePanelAnim = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    let cancelled = false;
-    const useNativeDriver = Platform.OS !== 'web';
-
-    if (panel === renderedProfilePanel) {
-      Animated.timing(profilePanelAnim, {
-        duration: interactionMotion.settingsPanelMs,
-        easing: Easing.out(Easing.cubic),
-        toValue: 1,
-        useNativeDriver,
-      }).start();
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    Animated.timing(profilePanelAnim, {
-      duration: interactionMotion.settingsPanelExitMs,
-      easing: Easing.in(Easing.cubic),
-      toValue: 0,
-      useNativeDriver,
-    }).start(({ finished }) => {
-      if (finished && !cancelled) {
-        profilePanelAnim.setValue(0);
-        onPanelSwap();
-        setRenderedProfilePanel(panel);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [onPanelSwap, panel, profilePanelAnim, renderedProfilePanel]);
-
-  const settingsPanelMotionStyle = {
-    opacity: profilePanelAnim,
-    transform: [
-      {
-        translateX: profilePanelAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [renderedProfilePanel !== 'overview' ? 18 : -12, 0],
-        }),
-      },
-      {
-        scale: profilePanelAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0.985, 1],
-        }),
-      },
-    ],
-  };
-
-  if (renderedProfilePanel === 'settings') {
-    return (
-      <Animated.View style={settingsPanelMotionStyle}>
-        <ProfileSettingsView
-          developerMessage={developerMessage}
-          developerVocabulary={developerVocabulary}
-          studyMode={studyMode}
-          themeMode={themeMode}
-          vocabularyCount={vocabularyCount}
-          onBack={onCloseSettings}
-          onClearDeveloperVocabulary={onClearDeveloperVocabulary}
-          onConfirmDeleteAccountData={onConfirmDeleteAccountData}
-          onExportVocabulary={onExportVocabulary}
-          onImportVocabulary={onImportVocabulary}
-          onOpenAppInfoLink={onOpenAppInfoLink}
-          onThemeModeChange={onThemeModeChange}
-          accountBusy={account.busy}
-          signedIn={signedIn}
-        />
-      </Animated.View>
-    );
-  }
 
   return (
-    <Animated.View style={settingsPanelMotionStyle}>
     <View style={styles.screenStack}>
       <View style={[styles.profileCard, themeStyles?.profileCard]}>
         <View style={[styles.avatar, themeStyles?.avatar]}>
@@ -6032,9 +5930,8 @@ function ProfileView({
         <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
       </AnimatedPressable>
     </View>
-    </Animated.View>
   );
-}
+});
 
 function ProfileLearningExperiencePanel({
   dailyPercent,
@@ -6135,7 +6032,7 @@ function ActiveSetBanner({
   );
 }
 
-function CustomSetPickerOverlay({
+export function CustomSetPickerOverlay({
   customSets,
   newSetName,
   onAddToSet,
@@ -6250,7 +6147,7 @@ function CustomSetPickerOverlay({
   );
 }
 
-function ProfileCustomSetsView({
+export function ProfileCustomSetsView({
   backLabel,
   customSetMessage,
   customSetSort,
@@ -6698,7 +6595,7 @@ function ProfileCustomSetsView({
   );
 }
 
-function ProfileSettingsView({
+export function ProfileSettingsView({
   accountBusy,
   developerMessage,
   developerVocabulary,
@@ -7178,34 +7075,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '900',
   },
-  updateBanner: {
-    alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderBottomColor: '#bfdbfe',
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    gap: 10,
-    justifyContent: 'space-between',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-  },
-  updateText: {
-    color: '#1d4ed8',
-    flex: 1,
-    fontSize: 13,
-    fontWeight: '800',
-  },
-  updateButton: {
-    backgroundColor: '#172033',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  updateButtonText: {
-    color: '#fff',
-    fontSize: 13,
-    fontWeight: '900',
-  },
   updateRequiredOverlay: {
     alignItems: 'center',
     backgroundColor: 'rgba(15, 23, 42, 0.78)',
@@ -7309,10 +7178,6 @@ const styles = StyleSheet.create({
   },
   libraryItemSeparator: {
     height: 10,
-  },
-  libraryPanelHidden: {
-    opacity: 0,
-    transform: [{ translateX: -12 }, { scale: 0.985 }],
   },
   launchOverlay: {
     alignItems: 'center',
@@ -8381,24 +8246,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '900',
   },
-  nextButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 8,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 6,
-    marginTop: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-  },
-  nextButtonText: {
-    color: '#172033',
-    fontSize: 14,
-    fontWeight: '800',
-  },
   libraryTopControlsInset: {
     gap: 10,
     paddingRight: 36,
@@ -8834,47 +8681,6 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     marginTop: 4,
   },
-  libraryDetailOverlay: {
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 50,
-  },
-  libraryDetailBackdrop: {
-    backgroundColor: '#f8fafc',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  libraryDetailPanel: {
-    bottom: 0,
-    left: 0,
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  libraryDetailOverlayContent: {
-    paddingBottom: 110,
-  },
-  libraryDetailStage: {
-    backgroundColor: '#f8fafc',
-    bottom: TAB_BAR_RESERVED_HEIGHT,
-    left: 0,
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    position: 'absolute',
-    right: 0,
-    zIndex: 30,
-  },
-  libraryDetailStageContent: {
-    paddingBottom: 24,
-  },
   libraryDetailFavorite: {
     alignItems: 'center',
     backgroundColor: '#f8fafc',
@@ -8942,12 +8748,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 23,
   },
-  resultCount: {
-    color: '#717987',
-    fontSize: 13,
-    fontWeight: '700',
-    paddingHorizontal: 2,
-  },
   librarySide: {
     alignItems: 'center',
     gap: 8,
@@ -8956,19 +8756,6 @@ const styles = StyleSheet.create({
     color: '#717987',
     fontSize: 12,
     fontWeight: '700',
-  },
-  loadMoreButton: {
-    alignItems: 'center',
-    backgroundColor: '#172033',
-    borderRadius: 8,
-    justifyContent: 'center',
-    minHeight: 46,
-    paddingHorizontal: 14,
-  },
-  loadMoreText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '900',
   },
   emptyState: {
     backgroundColor: '#fff',
@@ -8986,37 +8773,6 @@ const styles = StyleSheet.create({
     color: '#717987',
     fontSize: 13,
     marginTop: 5,
-  },
-  alphabetRail: {
-    backgroundColor: '#ffffff',
-    borderColor: '#e5e7eb',
-    borderRadius: 8,
-    borderWidth: 1,
-    gap: 1,
-    paddingHorizontal: 2,
-    paddingVertical: 4,
-    position: 'absolute',
-    right: 2,
-    top: 28,
-  },
-  railLetterButton: {
-    alignItems: 'center',
-    borderRadius: 6,
-    height: 18,
-    justifyContent: 'center',
-    width: 20,
-  },
-  railLetterButtonActive: {
-    backgroundColor: '#172033',
-  },
-  railLetterText: {
-    color: '#717987',
-    fontSize: 9,
-    fontWeight: '900',
-    lineHeight: 11,
-  },
-  railLetterTextActive: {
-    color: '#fff',
   },
   libraryFixedControls: {
     bottom: LIBRARY_FIXED_CONTROLS_BOTTOM,
@@ -9561,14 +9317,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 9,
   },
-  customSetEditBlock: {
-    gap: 7,
-  },
-  customSetEditLabel: {
-    color: '#64748b',
-    fontSize: 11,
-    fontWeight: '900',
-  },
   customSetEditRow: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -9899,28 +9647,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '900',
   },
-  installGuideReplayButton: {
-    alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
-    borderRadius: 8,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 8,
-    minHeight: 46,
-    paddingHorizontal: 12,
-  },
-  installGuideReplayText: {
-    color: '#172033',
-    flex: 1,
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  settingValue: {
-    color: '#172033',
-    fontSize: 15,
-    fontWeight: '800',
-  },
   deleteAccountDataButton: {
     alignItems: 'center',
     backgroundColor: '#fff7ed',
@@ -9955,19 +9681,18 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: 'row',
     gap: 4,
-    marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET,
     maxWidth: 720,
-    minHeight: TAB_BAR_HEIGHT,
-    paddingBottom: 6,
+    minHeight: TAB_BAR_CONTENT_HEIGHT,
+    paddingBottom: 4,
     paddingHorizontal: 16,
-    paddingTop: 6,
+    paddingTop: 4,
   },
   tabButton: {
     alignItems: 'center',
     borderRadius: 8,
     flex: 1,
     gap: 4,
-    minHeight: 50,
+    minHeight: 44,
     justifyContent: 'center',
   },
   tabButtonActive: {
@@ -10009,13 +9734,6 @@ const darkStyles = StyleSheet.create({
   },
   levelText: {
     color: '#86efac',
-  },
-  updateBanner: {
-    backgroundColor: '#0b1f3a',
-    borderBottomColor: '#1d4ed8',
-  },
-  updateText: {
-    color: '#bfdbfe',
   },
   updateRequiredOverlay: {
     backgroundColor: 'rgba(2, 6, 23, 0.84)',
@@ -10346,13 +10064,6 @@ const darkStyles = StyleSheet.create({
   speakingPromptQuestion: {
     color: '#f8fafc',
   },
-  nextButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
-  },
-  nextButtonText: {
-    color: '#e2e8f0',
-  },
   libraryFloatingTopButton: {
     backgroundColor: '#111827',
     borderColor: '#334155',
@@ -10445,9 +10156,6 @@ const darkStyles = StyleSheet.create({
   searchMetaText: {
     color: '#bfdbfe',
   },
-  resultCount: {
-    color: '#94a3b8',
-  },
   libraryItem: {
     backgroundColor: '#111827',
     borderColor: '#334155',
@@ -10497,15 +10205,6 @@ const darkStyles = StyleSheet.create({
   },
   libraryDetailPinyin: {
     color: '#93c5fd',
-  },
-  libraryDetailBackdrop: {
-    backgroundColor: '#0f172a',
-  },
-  libraryDetailPanel: {
-    backgroundColor: 'transparent',
-  },
-  libraryDetailStage: {
-    backgroundColor: '#0f172a',
   },
   libraryDetailSection: {
     borderTopColor: '#334155',

@@ -8,6 +8,7 @@ import {
   filterWords,
   markKnown,
   markReview,
+  mergeProgressStates,
   normalizeProgressForDate,
   selectStudyWords,
   selectQuizWords,
@@ -125,6 +126,35 @@ describe('progress state', () => {
 
     expect(favorited.words[sampleWords[2].id].favorite).toBe(true);
     expect(unfavorited.words[sampleWords[2].id].favorite).toBe(false);
+    expect(unfavorited.words[sampleWords[2].id].favoriteUpdatedAt).toBeTruthy();
+  });
+
+  test('merges independent word changes without replacing the whole account history', () => {
+    const cloud = markKnown(emptyProgress(), 'cloud-word', today, '2026-07-10T08:00:00.000Z');
+    const local = toggleFavorite(emptyProgress(), 'local-word', '2026-07-10T09:00:00.000Z');
+
+    const merged = mergeProgressStates(cloud, local);
+
+    expect(merged.words['cloud-word'].status).toBe('mastered');
+    expect(merged.words['local-word'].favorite).toBe(true);
+  });
+
+  test('keeps the newest status and favorite decisions for the same word', () => {
+    const older = toggleFavorite(
+      markKnown(emptyProgress(), 'shared-word', today, '2026-07-10T08:00:00.000Z'),
+      'shared-word',
+      '2026-07-10T08:10:00.000Z',
+    );
+    const newerStatus = markReview(older, 'shared-word', today, '2026-07-10T09:00:00.000Z');
+    const newerFavorite = toggleFavorite(newerStatus, 'shared-word', '2026-07-10T09:10:00.000Z');
+
+    const merged = mergeProgressStates(older, newerFavorite);
+
+    expect(merged.words['shared-word']).toMatchObject({
+      favorite: false,
+      status: 'review',
+      statusUpdatedAt: '2026-07-10T09:00:00.000Z',
+    });
   });
 
   test('computeStats summarizes mastered, review, favorite, and remaining words', () => {

@@ -16,6 +16,7 @@ export type CustomVocabSet = {
 
 export type CustomSetState = {
   customWords: WordEntry[];
+  deletedSetIds?: Record<string, string>;
   sets: CustomVocabSet[];
 };
 
@@ -53,6 +54,9 @@ export function createCustomSet(
 
   return {
     ...state,
+    deletedSetIds: state.deletedSetIds
+      ? Object.fromEntries(Object.entries(state.deletedSetIds).filter(([deletedId]) => deletedId !== id))
+      : undefined,
     sets: [
       ...state.sets,
       {
@@ -139,9 +143,13 @@ export function removeWordFromSet(
   };
 }
 
-export function deleteCustomSet(state: CustomSetState, setId: string): CustomSetState {
+export function deleteCustomSet(state: CustomSetState, setId: string, now = createRuntimeTimestamp()): CustomSetState {
   return {
     ...state,
+    deletedSetIds: {
+      ...state.deletedSetIds,
+      [setId]: now,
+    },
     sets: state.sets
       .filter((set) => set.id !== setId)
       .map((set, index) => ({
@@ -213,6 +221,15 @@ export function mergeCustomSetStates(...states: Array<CustomSetState | null | un
   const wordKeys = new Set<string>();
   const sets: CustomVocabSet[] = [];
   const setIndexById = new Map<string, number>();
+  const deletedSetIds: Record<string, string> = {};
+
+  states.forEach((state) => {
+    Object.entries(state?.deletedSetIds ?? {}).forEach(([setId, deletedAt]) => {
+      if (!deletedSetIds[setId] || deletedAt > deletedSetIds[setId]) {
+        deletedSetIds[setId] = deletedAt;
+      }
+    });
+  });
 
   states.forEach((state) => {
     if (!state) {
@@ -230,6 +247,10 @@ export function mergeCustomSetStates(...states: Array<CustomSetState | null | un
     });
 
     state.sets.forEach((set) => {
+      if (deletedSetIds[set.id] && deletedSetIds[set.id] >= set.updatedAt) {
+        return;
+      }
+
       const existingIndex = setIndexById.get(set.id);
       if (existingIndex === undefined) {
         setIndexById.set(set.id, sets.length);
@@ -239,17 +260,13 @@ export function mergeCustomSetStates(...states: Array<CustomSetState | null | un
 
       const existing = sets[existingIndex];
       const setIsNewer = Date.parse(set.updatedAt) >= Date.parse(existing.updatedAt);
-      const base = setIsNewer ? set : existing;
-      const secondary = setIsNewer ? existing : set;
-      sets[existingIndex] = {
-        ...base,
-        wordIds: uniqueWordIds([...base.wordIds, ...secondary.wordIds]),
-      };
+      sets[existingIndex] = setIsNewer ? set : existing;
     });
   });
 
   return {
     customWords,
+    deletedSetIds,
     sets,
   };
 }
@@ -417,7 +434,21 @@ export function isCustomSetState(value: unknown): value is CustomSetState {
   }
 
   const state = value as Partial<CustomSetState>;
-  return Array.isArray(state.sets) && state.sets.every(isCustomSet) && Array.isArray(state.customWords);
+  return (
+    Array.isArray(state.sets) &&
+    state.sets.every(isCustomSet) &&
+    Array.isArray(state.customWords) &&
+    (state.deletedSetIds === undefined || isDeletedSetMap(state.deletedSetIds))
+  );
+}
+
+function isDeletedSetMap(value: unknown): value is Record<string, string> {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      Object.values(value).every((deletedAt) => typeof deletedAt === 'string'),
+  );
 }
 
 function isCustomSet(value: unknown): value is CustomVocabSet {
@@ -440,10 +471,6 @@ function isCustomSet(value: unknown): value is CustomVocabSet {
 
 function normalizeHeader(value: string): string {
   return value.trim().toLowerCase().replace(/[\s_-]+/g, '');
-}
-
-function uniqueWordIds(wordIds: string[]): string[] {
-  return Array.from(new Set(wordIds));
 }
 
 function createRuntimeTimestamp(): string {

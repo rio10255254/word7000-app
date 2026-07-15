@@ -103,10 +103,11 @@ describe('custom vocabulary sets', () => {
   test('deletes a set without deleting the remaining sets', () => {
     const first = createCustomSet(baseState, '要刪除', '2026-07-02T06:00:00.000Z');
     const second = createCustomSet(first, '保留', '2026-07-02T06:01:00.000Z');
-    const deleted = deleteCustomSet(second, second.sets[0].id);
+    const deleted = deleteCustomSet(second, second.sets[0].id, '2026-07-02T07:00:00.000Z');
 
     expect(deleted.sets.map((set) => set.name)).toEqual(['保留']);
     expect(deleted.sets[0].sortOrder).toBe(1);
+    expect(deleted.deletedSetIds?.[second.sets[0].id]).toBe('2026-07-02T07:00:00.000Z');
   });
 
   test('sorts sets by recent update, name, or custom order', () => {
@@ -190,5 +191,27 @@ describe('custom vocabulary sets', () => {
       wordIds: ['custom-lounge', 'custom-ocean'],
     });
     expect(merged.sets.find((set) => set.id === 'set-food')?.wordIds).toEqual(['menu']);
+  });
+
+  test('does not resurrect a set deleted on another device', () => {
+    const cloud = createCustomSet(baseState, 'Old set', '2026-07-01T01:00:00.000Z');
+    const setId = cloud.sets[0].id;
+    const local = deleteCustomSet(cloud, setId, '2026-07-02T01:00:00.000Z');
+
+    const merged = mergeCustomSetStates(cloud, local);
+
+    expect(merged.sets).toEqual([]);
+    expect(merged.deletedSetIds?.[setId]).toBe('2026-07-02T01:00:00.000Z');
+  });
+
+  test('keeps the newest complete set so removed words stay removed', () => {
+    const created = createCustomSet(baseState, 'Travel', '2026-07-01T01:00:00.000Z');
+    const setId = created.sets[0].id;
+    const cloud = addWordToSet(addWordToSet(created, setId, 'ocean', '2026-07-01T02:00:00.000Z'), setId, 'train', '2026-07-01T03:00:00.000Z');
+    const local = removeWordFromSet(cloud, setId, 'ocean', '2026-07-02T01:00:00.000Z');
+
+    const merged = mergeCustomSetStates(cloud, local);
+
+    expect(merged.sets[0].wordIds).toEqual(['train']);
   });
 });

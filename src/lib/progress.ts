@@ -15,6 +15,7 @@ export type WordProgress = {
   difficult: boolean;
   reviewCount: number;
   favoritedAt?: string;
+  favoriteUpdatedAt?: string;
   lastStudied?: string;
   statusUpdatedAt?: string;
 };
@@ -126,9 +127,71 @@ export function toggleFavorite(state: ProgressState, wordId: string, changedAt =
     return {
       ...progress,
       favorite,
+      favoriteUpdatedAt: changedAt,
       favoritedAt: favorite ? changedAt : undefined,
     };
   });
+}
+
+export function mergeProgressStates(...states: Array<ProgressState | null | undefined>): ProgressState {
+  const available = states.filter((state): state is ProgressState => Boolean(state));
+  if (available.length === 0) {
+    return {
+      dailyTarget: 20,
+      streak: 0,
+      studiedToday: 0,
+      words: {},
+    };
+  }
+
+  const dailySource = available.reduce((latest, candidate) => {
+    const latestDate = latest.dailyProgressDate ?? latest.lastStudyDate ?? '';
+    const candidateDate = candidate.dailyProgressDate ?? candidate.lastStudyDate ?? '';
+    if (candidateDate > latestDate) {
+      return candidate;
+    }
+    if (candidateDate === latestDate && candidate.studiedToday > latest.studiedToday) {
+      return candidate;
+    }
+    return latest;
+  });
+
+  const words: Record<string, WordProgress> = {};
+  available.forEach((state) => {
+    Object.entries(state.words).forEach(([wordId, wordProgress]) => {
+      words[wordId] = words[wordId] ? mergeWordProgress(words[wordId], wordProgress) : wordProgress;
+    });
+  });
+
+  return {
+    dailyProgressDate: dailySource.dailyProgressDate,
+    dailyTarget: dailySource.dailyTarget,
+    lastStudyDate: dailySource.lastStudyDate,
+    streak: dailySource.streak,
+    studiedToday: dailySource.studiedToday,
+    words,
+  };
+}
+
+function mergeWordProgress(first: WordProgress, second: WordProgress): WordProgress {
+  const firstStatusTime = first.statusUpdatedAt ?? first.lastStudied ?? '';
+  const secondStatusTime = second.statusUpdatedAt ?? second.lastStudied ?? '';
+  const statusSource = secondStatusTime > firstStatusTime ? second : first;
+  const firstFavoriteTime = first.favoriteUpdatedAt ?? first.favoritedAt ?? '';
+  const secondFavoriteTime = second.favoriteUpdatedAt ?? second.favoritedAt ?? '';
+  const favoriteSource = secondFavoriteTime > firstFavoriteTime ? second : first;
+  const lastStudied = [first.lastStudied, second.lastStudied].filter((value): value is string => Boolean(value)).sort().at(-1);
+
+  return {
+    difficult: statusSource.difficult,
+    favorite: favoriteSource.favorite,
+    favoriteUpdatedAt: favoriteSource.favoriteUpdatedAt,
+    favoritedAt: favoriteSource.favorite ? favoriteSource.favoritedAt : undefined,
+    lastStudied,
+    reviewCount: Math.max(first.reviewCount, second.reviewCount),
+    status: statusSource.status,
+    statusUpdatedAt: statusSource.statusUpdatedAt,
+  };
 }
 
 export function computeStats(words: WordEntry[], state: ProgressState): ProgressStats {

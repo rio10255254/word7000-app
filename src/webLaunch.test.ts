@@ -25,6 +25,7 @@ const accountSetupPath = path.join(process.cwd(), 'ACCOUNT_GOOGLE_LOGIN.md');
 const packagePath = path.join(process.cwd(), 'package.json');
 const hapticsNativePath = path.join(process.cwd(), 'src', 'lib', 'haptics.native.ts');
 const hapticsWebPath = path.join(process.cwd(), 'src', 'lib', 'haptics.web.ts');
+const installGuidePath = path.join(process.cwd(), 'src', 'lib', 'installGuide.ts');
 const appleAuthPath = path.join(process.cwd(), 'src', 'lib', 'appleAuth.ts');
 const supabaseProgressPath = path.join(process.cwd(), 'src', 'lib', 'supabaseProgress.ts');
 const metroPath = path.join(process.cwd(), 'metro.config.js');
@@ -144,13 +145,17 @@ describe('free web launch configuration', () => {
 
   test('keeps iPhone bottom navigation anchored without double-counting safe area', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
     const tabBarStart = appSource.indexOf('tabBar: {');
     const tabButtonStart = appSource.indexOf('tabButton:', tabBarStart);
     const tabBarSource = appSource.slice(tabBarStart, tabButtonStart);
 
-    expect(appSource).toContain('const NATIVE_TAB_BAR_BOTTOM_OFFSET = 8;');
-    expect(appSource).toContain("Platform.OS === 'ios' ? NATIVE_TAB_BAR_BOTTOM_OFFSET");
-    expect(appSource).toContain('const TAB_BAR_RESERVED_HEIGHT = TAB_BAR_HEIGHT + IOS_TAB_BAR_BOTTOM_OFFSET + 24;');
+    expect(rootLayout).toContain('<SafeAreaProvider>');
+    expect(appSource).toContain("import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';");
+    expect(appSource).toContain('const safeAreaInsets = useSafeAreaInsets();');
+    expect(appSource).toContain("const tabBarBottomInset = Platform.OS === 'web' ? IOS_TAB_BAR_BOTTOM_OFFSET : safeAreaInsets.bottom;");
+    expect(appSource).toContain("<SafeAreaView edges={['top', 'left', 'right']}");
+    expect(appSource).toContain('style={[styles.tabBar, themeStyles?.tabBar, tabBarInsetStyle]}');
     expect(appSource).toContain('style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}');
     expect(appSource).toContain('appScroll:');
     expect(appSource).toContain('flex: 1');
@@ -158,7 +163,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING');
     expect(tabBarSource).toContain("alignSelf: 'stretch'");
     expect(tabBarSource).toContain('borderTopWidth: 1');
-    expect(tabBarSource).toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(tabBarSource).toContain('minHeight: TAB_BAR_CONTENT_HEIGHT');
+    expect(tabBarSource).not.toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
     expect(tabBarSource).toContain('paddingHorizontal: 16');
     expect(tabBarSource).not.toContain("position: 'absolute'");
     expect(tabBarSource).not.toContain('bottom: IOS_TAB_BAR_BOTTOM_OFFSET');
@@ -199,8 +205,9 @@ describe('free web launch configuration', () => {
 
   test('includes a first-launch Safari add-to-home-screen guide', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const installGuideSource = fs.readFileSync(installGuidePath, 'utf8');
 
-    expect(appSource).toContain('INSTALL_GUIDE_STORAGE_KEY');
+    expect(installGuideSource).toContain('INSTALL_GUIDE_STORAGE_KEY');
     expect(appSource).toContain('Safari');
     expect(appSource).toContain('SquareArrowUp');
     expect(appSource).toContain('installGuideIconGraphic');
@@ -295,17 +302,19 @@ describe('free web launch configuration', () => {
 
   test('lets library words open a full detail view', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const detailRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'library', '[wordId].tsx'), 'utf8');
+    const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
 
-    expect(appSource).toContain('selectedLibraryWord');
+    expect(appSource).not.toContain('selectedLibraryWord');
     expect(appSource).toContain('library-word-detail');
     expect(appSource).toContain('返回字庫');
     expect(appSource).toContain('完整資訊');
     expect(appSource).toContain('onOpenWord');
-    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail' | 'sets'");
-    expect(appSource).toContain('renderedLibraryPanel');
-    expect(appSource).toContain('libraryPanelMotionStyle');
-    expect(appSource).toContain("setLibraryPanel('detail')");
-    expect(appSource).toContain("setLibraryPanel('list')");
+    expect(appSource).toContain("router.push({ pathname: '/library/[wordId]'");
+    expect(detailRoute).toContain('<LibraryWordDetailView');
+    expect(detailRoute).toContain('router.back()');
+    expect(detailRoute).toContain('bridge.actions.restoreLibraryScroll()');
+    expect(rootLayout).toContain('<Stack.Screen name="library/[wordId]" />');
   });
 
   test('keeps custom set navigation and search polish on the shared slide motion system', () => {
@@ -339,11 +348,15 @@ describe('free web launch configuration', () => {
 
   test('opens app settings from the profile page before showing developer tools', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
 
-    expect(appSource).toContain("type ProfilePanel = 'overview' | 'settings'");
     expect(appSource).toContain('ProfileLearningExperiencePanel');
     expect(appSource).toContain('ProfileTutorialPanel');
     expect(appSource).toContain('profile-settings-panel');
+    expect(appSource).toContain("profileOpenSettings = useStableEvent(() => router.push('/settings'))");
+    expect(settingsRoute).toContain('<ProfileSettingsView');
+    expect(settingsRoute).toContain('router.back()');
+    expect(appSource).not.toContain('renderedProfilePanel');
     expect(appSource).toContain('開啟設定');
     expect(appSource).toContain('返回我的');
     expect(appSource).toContain('App 設定');
@@ -375,7 +388,8 @@ describe('free web launch configuration', () => {
     expect(supportHtml).toContain('rio10255254@gmail.com');
     expect(appSource).toContain('appInfoLinks.privacy');
     expect(appSource).toContain('appInfoLinks.support');
-    expect(appSource).toContain('onConfirmDeleteAccountData={confirmDeleteAccountData}');
+    const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
+    expect(settingsRoute).toContain('onConfirmDeleteAccountData={bridge.actions.confirmDeleteAccountData}');
     expect(appSource).toContain('testID="delete-account-data-button"');
     expect(appSource).toContain('deleteCloudUserData(asCloudProgressClient(supabaseClient), signedInUserId)');
     expect(schema).toContain('Users can delete their own profile');
@@ -412,13 +426,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("from './src/lib/authRedirect'");
     expect(appSource).toContain('loadCloudProgressRecord');
     expect(appSource).toContain('saveCloudUserMemory');
+    expect(appSource).toContain('UserMemorySyncQueue');
+    expect(appSource).toContain('mergeProgressStates');
     expect(appSource).toContain('mergeCustomSetStates');
-    expect(appSource).toContain("cloudProgress.progress ?? (cloudProgress.errorMessage ? userLocalProgress : initialProgress)");
-    expect(appSource).toContain('mergeCustomSetStates(cloudProgress.customSets, loadCustomSetState(storage, user.id), loadCustomSetState(storage))');
+    expect(appSource).toContain('mergeProgressStates(cloudProgress.progress, userLocalProgress, pendingMemory?.progress)');
+    expect(appSource).toContain('pendingMemory?.customSets');
     expect(appSource).toContain('saveProgressToStorage(getAppStorage(), progress, account.userId)');
     expect(appSource).toContain('saveCustomSetState(getAppStorage(), customSetState, account.userId)');
     expect(appSource).toContain('saveProgressToStorage(storage, loadedProgress, user.id)');
-    expect(appSource).toContain('await saveCloudUserMemory(asCloudProgressClient(supabaseClient), signedInUserId, progress, customSetState)');
+    expect(appSource).toContain('syncQueue.enqueue(');
+    expect(appSource).toContain('{ customSets: true, progress: true }');
+    expect(appSource).toContain('await syncQueue.flush()');
+    expect(appSource).toContain('if (saveResult.ok)');
     expect(appSource).toContain('loadProgressFromStorage(getAppStorage(), initialProgress)');
     expect(appSource).toContain('handleGoogleSignIn');
     expect(appSource).toContain("provider: 'google'");
@@ -438,7 +457,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('supabaseClient.auth.updateUser');
     expect(appSource).toContain('Email 備用登入');
     expect(appSource).toContain('Email fallback');
-    expect(appSource).toContain('onGoogleSignIn={handleGoogleSignIn}');
+    expect(appSource).toContain('profileGoogleSignIn = useStableEvent(handleGoogleSignIn)');
+    expect(appSource).toContain('onGoogleSignIn={profileGoogleSignIn}');
   });
 
   test('keeps account sync unavailable messages user-facing', () => {
@@ -621,9 +641,12 @@ describe('free web launch configuration', () => {
 
   test('does not mount hidden library management screens during first library paint', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const setsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'sets.tsx'), 'utf8');
 
-    expect(appSource).toContain("activeTab === 'library' && (libraryPanel === 'sets' || renderedLibraryPanel === 'sets')");
-    expect(appSource).not.toContain("{activeTab === 'library' && (\n          <Animated.View\n            pointerEvents={renderedLibraryPanel === 'sets'");
+    expect(appSource).toContain("router.push('/sets')");
+    expect(setsRoute).toContain('<ProfileCustomSetsView');
+    expect(appSource).not.toContain('library-custom-sets-stage');
+    expect(appSource).not.toContain('renderedLibraryPanel');
   });
 
   test('adds an English alphabetical sort option inside the library filter panel', () => {
@@ -653,14 +676,14 @@ describe('free web launch configuration', () => {
     expect(preferencesSource).toContain("sort: 'alphabetical'");
   });
 
-  test('animates profile settings and fully darkens the install guide', () => {
+  test('uses native settings navigation and fully darkens the install guide', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
 
-    expect(appSource).toContain('profilePanelAnim');
-    expect(appSource).toContain('renderedProfilePanel');
-    expect(appSource).toContain('settingsPanelMotionStyle');
-    expect(appSource).toContain('interactionMotion.settingsPanelMs');
-    expect(appSource).toContain('interactionMotion.settingsPanelExitMs');
+    expect(rootLayout).toContain("<Stack.Screen name=\"settings\" />");
+    expect(rootLayout).toContain('animation: pushAnimation');
+    expect(appSource).not.toContain('profilePanelAnim');
+    expect(appSource).not.toContain('renderedProfilePanel');
     expect(appSource).toContain('themeStyles?.installGuideOverlay');
     expect(appSource).toContain('themeStyles?.installGuideCard');
     expect(appSource).toContain('themeStyles?.installGuideClose');
@@ -673,61 +696,25 @@ describe('free web launch configuration', () => {
 
   test('animates word detail navigation in both directions', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
-    const openDetailBlock = appSource.slice(
-      appSource.indexOf('const openLibraryWordDetail = useCallback'),
-      appSource.indexOf('const closeLibraryWordDetail = useCallback')
-    );
+    const detailRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'library', '[wordId].tsx'), 'utf8');
+    const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
 
-    expect(appSource).toContain("type LibraryPanel = 'list' | 'detail' | 'sets'");
-    expect(appSource).toContain("const [libraryPanel, setLibraryPanel] = useState<LibraryPanel>('list');");
-    expect(appSource).toContain("const [renderedLibraryPanel, setRenderedLibraryPanel] = useState<LibraryPanel>('list');");
-    expect(appSource).toContain('const libraryPanelAnim = useRef(new Animated.Value(1)).current;');
-    expect(appSource).toContain('duration: interactionMotion.settingsPanelMs');
-    expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
-    expect(appSource).toContain('easing: Easing.out(Easing.cubic)');
-    expect(appSource).toContain('easing: Easing.in(Easing.cubic)');
-    expect(appSource).toContain("outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0]");
-    expect(appSource).toContain('outputRange: [0.985, 1]');
-    expect(appSource).toContain('setRenderedLibraryPanel(libraryPanel);');
-    expect(appSource).toContain('libraryPanelMotionStyle');
-    expect(appSource).toContain('libraryListPanelHorizontalMotionStyle');
-    expect(appSource).not.toContain('libraryListPanelReturnMotionStyle');
-    expect(appSource).toContain("renderedLibraryPanel === 'list' ? libraryListPanelHorizontalMotionStyle : styles.libraryPanelHidden");
-    expect(appSource).not.toContain('const libraryPanelTransitionOutMs =');
-    expect(appSource).not.toContain("libraryPanel === 'list' ? interactionMotion.settingsPanelMs : interactionMotion.settingsPanelExitMs");
-    expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
-    expect(appSource).toContain('libraryPanelAnim.setValue(0);');
-    expect(appSource).not.toContain("libraryPanelAnim.setValue(libraryPanel === 'list' ? 1 : 0);");
-    expect(appSource).toContain('libraryListPanelMotionStyle');
-    expect(appSource).toContain('libraryDetailStageMotionStyle');
-    expect(appSource).toContain("transformOrigin: 'top center'");
-    expect(appSource).toContain('testID="library-panel-transition"');
-    expect(appSource).toContain('testID="library-detail-stage"');
-    expect(appSource).toContain('styles.libraryDetailStage');
-    expect(appSource).toContain('style={[styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}');
-    expect(appSource).not.toContain('libraryDepthMotionStyle');
-    expect(appSource).not.toContain('libraryDetailBackdropMotionStyle');
-    expect(appSource).not.toContain('libraryDetailPanelMotionStyle');
-    expect(appSource).not.toContain('style={[styles.screenMotion, screenMotionStyle, libraryDepthMotionStyle]}');
-    expect(appSource).not.toContain('styles.libraryDetailOverlay');
-    expect(appSource).not.toContain('styles.libraryDetailBackdrop');
-    expect(appSource).not.toContain('styles.libraryDetailPanel');
-    expect(openDetailBlock).toContain('setSelectedLibraryWord(word);');
-    expect(openDetailBlock).toContain("setLibraryPanel('detail');");
-    expect(openDetailBlock).not.toContain('Animated.timing');
-    expect(appSource).toContain('const closeLibraryWordDetail = useCallback');
-    expect(appSource).toContain("setLibraryPanel('list');");
-    expect(appSource).not.toContain('libraryPanelDirection');
-    expect(appSource).not.toContain('setLibraryPanelDirection');
-    expect(appSource).not.toContain("studyMode === 'chinese' && libraryDetailOpen");
-    expect(appSource).toContain('toValue: 0');
-    expect(appSource).toContain('onBack={closeLibraryWordDetail}');
-    expect(appSource).toContain('pressTone="libraryItem"');
-    expect(appSource).toContain('styles.libraryItemPressedLift');
+    expect(rootLayout).toContain("const pushAnimation = Platform.OS === 'ios' ? 'simple_push' : 'slide_from_right';");
+    expect(rootLayout).toContain('animation: pushAnimation');
+    expect(rootLayout).toContain('animationDuration: 360');
+    expect(rootLayout).toContain('fullScreenGestureEnabled: true');
+    expect(rootLayout).toContain('gestureEnabled: true');
+    expect(appSource).toContain("router.push({ pathname: '/library/[wordId]'");
+    expect(detailRoute).toContain('router.back()');
+    expect(detailRoute).toContain('router.replace(\'/\')');
+    expect(appSource).not.toContain('libraryPanelAnim');
+    expect(appSource).not.toContain('renderedLibraryPanel');
+    expect(appSource).not.toContain('selectedLibraryWord');
   });
 
   test('keeps the library detail transition smooth without changing its form', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const routeBridge = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'appRouteBridge.ts'), 'utf8');
     const libraryViewStart = appSource.indexOf('const LibraryView = memo(function LibraryView');
     const detailViewStart = appSource.indexOf('function LibraryWordDetailView');
     const libraryViewSource = appSource.slice(libraryViewStart, detailViewStart);
@@ -743,39 +730,37 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('const openLibraryCustomSets = useCallback(');
     expect(appSource).toContain('onFiltersToggle={handleLibraryFiltersToggle}');
     expect(appSource).toContain('onFavorite={handleLibraryFavorite}');
-    expect(appSource).toContain('onSearchBlur={handleLibrarySearchBlur}');
-    expect(appSource).toContain('onSearchFocus={handleLibrarySearchFocus}');
+    expect(appSource).toContain('onSearchBlur={librarySearchBlur}');
+    expect(appSource).toContain('onSearchFocus={librarySearchFocus}');
     expect(appSource).toContain('onOpenCustomSets={openLibraryCustomSets}');
-    expect(appSource).toContain("outputRange: [renderedLibraryPanel === 'detail' ? 18 : -12, 0]");
+    expect(routeBridge).toContain('useSyncExternalStore');
+    expect(appSource).not.toContain('libraryListPanelMotionStyle');
     expect(appSource).not.toContain('libraryListPanelReturnMotionStyle');
   });
 
   test('keeps the current scroll position during profile settings transitions', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
 
-    expect(appSource).toContain('onProfilePanelSwap');
-    expect(appSource).toContain('onPanelSwap={onProfilePanelSwap}');
-    expect(appSource).toContain('setSelectedLibraryWord(null);');
-    expect(appSource).toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, searchQuery]);');
-    expect(appSource).not.toContain('}, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, profilePanel, searchQuery]);');
+    expect(appSource).toContain("profileOpenSettings = useStableEvent(() => router.push('/settings'))");
+    expect(appSource).toContain('onOpenSettings={profileOpenSettings}');
+    expect(settingsRoute).toContain('router.back()');
+    expect(appSource).not.toContain('setSelectedLibraryWord');
   });
 
   test('returns from word detail to the previous library position without replaying the list', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const detailRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'library', '[wordId].tsx'), 'utf8');
 
-    expect(appSource).toContain('libraryListPanelMotionStyle');
-    expect(appSource).toContain('libraryDetailStageMotionStyle');
-    expect(appSource).toContain('styles.libraryPanelHidden');
-    expect(appSource).toContain('pointerEvents={renderedLibraryPanel ===');
-    expect(appSource).toContain('contentContainerStyle={styles.libraryDetailStageContent}');
-    expect(appSource).toContain('setSelectedLibraryWord(null);');
+    expect(appSource).toContain("router.push({ pathname: '/library/[wordId]'");
+    expect(detailRoute).toContain('router.back()');
+    expect(appSource).toContain('libraryRouteScrollRestoreRef.current = libraryScrollYRef.current');
+    expect(appSource).toContain('restoreLibraryRouteScroll(restoreOffset)');
+    expect(appSource).toContain('setTimeout(() => restoreLibraryRouteScroll(restoreOffset), 420)');
     expect(appSource).toContain('LIBRARY_ANIMATED_ITEM_COUNT');
     expect(appSource).toContain("activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT");
-    expect(appSource).not.toContain('if (selectedWord) {');
-    expect(appSource).not.toContain('readCurrentAppScrollY');
-    expect(appSource).not.toContain('restoreLibraryScrollPositionAfterRender');
-    expect(appSource).not.toContain('setSelectedLibraryWord(word);\n    appScrollRef.current?.scrollTo({ y: 0, animated: true });');
-    expect(appSource).not.toContain('selectedLibraryWord?.id,');
+    expect(appSource).not.toContain('setSelectedLibraryWord');
+    expect(appSource).not.toContain('setLibraryPanel');
   });
 
   test('uses a full-page fade when toggling dark mode colors', () => {
@@ -785,7 +770,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('showThemeTransition');
     expect(appSource).toContain('themeTransitionTarget');
     expect(appSource).toContain('function triggerThemeModeChange(nextMode: ThemeMode)');
-    expect(appSource).toContain('onThemeModeChange={triggerThemeModeChange}');
+    const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
+    expect(settingsRoute).toContain('onThemeModeChange={bridge.actions.setThemeMode}');
     expect(appSource).toContain('styles.themeTransitionOverlay');
   });
 
@@ -810,9 +796,15 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('scrollTargetFromSlider');
     expect(appSource).toContain('libraryContentHeightRef.current');
     expect(appSource).toContain('libraryViewportHeightRef.current');
-    expect(appSource).toContain('onContentSizeChange={handleLibraryContentSizeChange}');
-    expect(appSource).toContain('onViewportLayout={handleLibraryViewportLayout}');
-    expect(appSource).toContain('libraryListRef.current?.scrollToOffset({ offset: targetY, animated: false });');
+    expect(appSource).toContain('onContentSizeChange={libraryContentSizeChange}');
+    expect(appSource).toContain('onViewportLayout={libraryViewportLayout}');
+    expect(appSource).toContain('nativeScrollRef.scrollTo({ y: offset, animated })');
+    expect(appSource).toContain("webScrollNode.scrollTo({ top: offset, behavior: animated ? 'smooth' : 'auto' })");
+    expect(appSource).toContain('scrollLibraryToRawOffset(targetY)');
+    expect(appSource).toContain('scrollLibraryToRawOffset(offset)');
+    expect(appSource).toContain('Gesture.Pan()');
+    expect(appSource).toContain('<GestureDetector gesture={librarySliderGesture}>');
+    expect(appSource).toContain('runOnJS(moveLibrarySliderDrag)');
     expect(appSource).toContain('transitionTimingFunction:');
     expect(appSource).not.toContain('virtualListSpacerHeights');
     expect(appSource).not.toContain('setLibraryWindowStart');
@@ -841,8 +833,10 @@ describe('free web launch configuration', () => {
     const controlsSource = appSource.slice(controlsStart, controlsEnd);
     const sliderSource = appSource.slice(sliderStart, sliderEnd);
 
-    expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_TOP = 94;');
-    expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;');
+    expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_TOP = 8;');
+    expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_BOTTOM = 8;');
+    expect(appSource).toContain('style={[styles.libraryScreenHost, styles.screenMotion');
+    expect(appSource).toContain('<View pointerEvents="box-none" style={styles.libraryFixedControls}>');
     expect(controlsSource).toContain('bottom: LIBRARY_FIXED_CONTROLS_BOTTOM');
     expect(controlsSource).toContain('top: LIBRARY_FIXED_CONTROLS_TOP');
     expect(controlsSource).not.toContain('height: 600');
@@ -995,165 +989,52 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('ui.addToSetName(formatWordPrimary(word, studyMode))');
   });
 
-  test('turns the study card into a randomized swipe deck with navigation buttons', () => {
+  test('turns the study card into a randomized native swipe deck with navigation buttons', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const progressSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'progress.ts'), 'utf8');
-    const studyStart = appSource.indexOf('function StudyView({');
+    const studyStart = appSource.indexOf('const StudyView = memo(function StudyView');
     const studyEnd = appSource.indexOf('function FilterControlPanel({');
     const studySource = appSource.slice(studyStart, studyEnd);
-    const appStateStart = appSource.indexOf('function Word7000App()');
-    const appRenderStart = appSource.indexOf('return (', appStateStart);
-    const appStateSource = appSource.slice(appStateStart, appRenderStart);
-    const mainScrollStart = appSource.indexOf('<ScrollView', appRenderStart);
-    const mainScrollEnd = appSource.indexOf('>', mainScrollStart);
-    const mainScrollSource = appSource.slice(mainScrollStart, mainScrollEnd);
     const appStudyCallStart = appSource.indexOf('<StudyView');
     const appStudyCallEnd = appSource.indexOf('/>', appStudyCallStart);
     const studyCallSource = appSource.slice(appStudyCallStart, appStudyCallEnd);
-    const feedbackStyleStart = studySource.indexOf('const reviewFeedbackStyle');
-    const feedbackStyleEnd = studySource.indexOf('const runStudyCardEntry', feedbackStyleStart);
-    const feedbackStyleSource = studySource.slice(feedbackStyleStart, feedbackStyleEnd);
-    const revealStyleStart = appSource.indexOf('studySwipeRevealFill:');
-    const revealStyleEnd = appSource.indexOf('studySwipeFeedbackReviewText:', revealStyleStart);
-    const revealStyleSource = appSource.slice(revealStyleStart, revealStyleEnd);
 
     expect(appSource).toContain('buildStudySession');
     expect(appSource).toContain('const [studySeed, setStudySeed]');
-    expect(appStateSource).toContain('const [studySwipeScrollLocked, setStudySwipeScrollLocked]');
-    expect(mainScrollSource).toContain('scrollEnabled={!studySwipeScrollLocked}');
-    expect(mainScrollSource).toContain('directionalLockEnabled');
-    expect(mainScrollSource).toContain("canCancelContentTouches={activeTab !== 'study'}");
-    expect(studyCallSource).toContain('onSwipeLockChange={setStudySwipeScrollLocked}');
-    expect(appSource).toContain('onPrevious={previousStudyWord}');
-    expect(appSource).toContain('onNext={nextStudyWord}');
     expect(progressSource).toContain('export function buildStudySession');
-    expect(studySource).toContain('PanResponder.create');
-    expect(studySource).toContain('shouldClaimStudySwipe(gesture.dx, gesture.dy)');
-    expect(studySource).toContain('resolveStudyGestureIntent(gesture.dx, gesture.dy)');
-    expect(studySource).toContain('swipeGestureLockedRef');
-    expect(studySource).toContain('resolveStudySwipeDirection(nextSwipeX, gesture.vx)');
-    expect(studySource).toContain('onMoveShouldSetPanResponderCapture');
-    expect(appSource).toContain('function isStudySwipeActionZone');
-    expect(studySource).toContain('onStartShouldSetPanResponder: (event) => !isStudySwipeActionZone(event.nativeEvent)');
-    expect(studySource).toContain('onStartShouldSetPanResponderCapture: (event) => !isStudySwipeActionZone(event.nativeEvent)');
-    expect(studySource).toContain('styles.studySwipeSlidingCard');
-    expect(studySource).not.toContain("transformOrigin: '50% 0%'");
-    expect(studySource).toContain('{ translateX: swipeX }');
-    expect(studySource).not.toContain('studySwipePendulumRotate');
-    expect(studySource).not.toContain('rotate:');
-    expect(studySource).not.toContain('studySwipeAnchorTranslateX');
-    expect(studySource).toContain('STUDY_SWIPE_READY_FADE_X');
-    expect(studySource).toContain('STUDY_SWIPE_PREVIEW_FADE_X');
-    expect(studySource).toContain('readyHapticDirectionRef');
-    expect(studySource).toContain('readyHapticFiredDirectionRef');
-    expect(studySource).toContain('pendingReadyHapticTimerRef');
-    expect(studySource).toContain('triggerStudySwipeCommitHaptic(direction)');
-    expect(studySource).toContain('scheduleStudySwipeReadyHaptic(readyDirection)');
-    expect(studySource).toContain('resolveStudySwipeReleaseDirection(gestureDx, gesture.vx)');
-    expect(studySource).toContain('clearStudySwipeReadyHaptic();');
+    expect(appSource).toContain('const StudyView = memo(function StudyView');
+    expect(appSource).toContain('const cardMotionStyle = useMemo(');
+    expect(studyCallSource).toContain('onPrevious={studyPreviousWord}');
+    expect(studyCallSource).toContain('onNext={studyNextWord}');
+    expect(studyCallSource).toContain('onSwipeKnown={studySwipeKnown}');
+    expect(studyCallSource).toContain('onSwipeReview={studySwipeReview}');
+    expect(studySource).toContain('Gesture.Pan()');
+    expect(studySource).toContain('.activeOffsetX([-10, 10])');
+    expect(studySource).toContain('.failOffsetY([-12, 12])');
+    expect(studySource).toContain('<GestureDetector gesture={studySwipeGesture}>');
+    expect(studySource).toContain('const swipeX = useSharedValue(0)');
+    expect(studySource).toContain('const slidingCardStyle = useAnimatedStyle');
+    expect(studySource).toContain('swipeX.value = nextX');
+    expect(studySource).toContain('swipeX.value = withTiming(');
+    expect(studySource).toContain('swipeX.value = withSpring(');
+    expect(studySource).toContain('runOnJS(fireSwipeHaptic)()');
     expect(studySource).toContain("triggerPressHaptic('chip')");
-    expect(studySource).not.toContain("readyHapticDirectionRef.current = readyDirection;\n              triggerPressHaptic('chip')");
-    expect(studySource).toContain('useReadyDirectionFallback?: boolean');
-    expect(studySource).toContain('options.useReadyDirectionFallback ? readyHapticDirectionRef.current : null');
-    expect(studySource).toContain('onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture, { useReadyDirectionFallback: true })');
-    expect(feedbackStyleSource).not.toContain('scale: swipeX.interpolate');
+    expect(appSource).not.toContain('PanResponder');
+    expect(appSource).not.toContain('studySwipeScrollLocked');
     expect(studySource).toContain('styles.studySwipeRevealFill');
-    expect(studySource).toContain('styles.studySwipeRevealReview');
-    expect(studySource).toContain('styles.studySwipeRevealKnown');
     expect(studySource).toContain('<StudySwipeRevealGradient tone="review" />');
     expect(studySource).toContain('<StudySwipeRevealGradient tone="known" />');
     expect(studySource).toContain('const reviewRevealGlowStyle');
     expect(studySource).toContain('const knownRevealGlowStyle');
-    expect(studySource).toContain('STUDY_SWIPE_REVEAL_WIDTH - STUDY_SWIPE_EXIT_X');
-    expect(studySource).toContain('STUDY_SWIPE_EXIT_X - STUDY_SWIPE_REVEAL_WIDTH');
-    expect(appSource).toContain('const STUDY_SWIPE_REVEAL_WIDTH = 300');
-    expect(studySource).toContain('const studySwipeTouchGuardStyle');
-    expect(studySource).toContain("touchAction: 'none'");
-    expect(studySource).toContain("userSelect: 'none'");
-    expect(studySource).toContain("WebkitTouchCallout: 'none'");
-    expect(appSource).toContain('function clearStudySwipeTextSelection');
-    expect(studySource).toContain('clearStudySwipeTextSelection();');
-    expect(studySource).toContain('styles.studySwipeRevealGradientWrap');
-    expect(studySource).toContain('styles.studySwipeRevealReviewGradientWrap');
-    expect(studySource).toContain('styles.studySwipeRevealKnownGradientWrap');
-    expect(studySource).toContain('styles.studySwipeRevealCue');
-    expect(studySource).toContain('styles.studySwipeRevealCueReview');
-    expect(studySource).toContain('styles.studySwipeRevealCueKnown');
-    expect(studySource).toContain('splitSwipeHintLines(ui.swipeReviewHint)');
-    expect(studySource).toContain('splitSwipeHintLines(ui.swipeKnownHint)');
-    expect(studySource).toContain('styles.studySwipeFeedbackLine');
-    expect(studySource).toContain('styles.studySwipeFeedbackLead');
-    expect(studySource).toContain('styles.studySwipeFeedbackAction');
-    expect(studySource).toContain('numberOfLines={1}');
     expect(appSource).toContain('function StudySwipeRevealGradient');
     expect(appSource).toContain('SvgRadialGradient');
     expect(appSource).toContain('SvgLinearGradient');
     expect(appSource).toContain('SvgMask');
-    expect(appSource).toContain('study-swipe-${tone}-feather');
-    expect(appSource).not.toContain('styles.studySwipeRevealMist');
-    expect(appSource).not.toContain('styles.studySwipeRevealBloom');
-    expect(appSource).not.toContain('styles.studySwipeRevealEdgeLight');
-    expect(revealStyleSource).toContain('top: 0');
-    expect(revealStyleSource).toContain('bottom: 0');
-    expect(revealStyleSource).toContain('right: 0');
-    expect(revealStyleSource).toContain('left: 0');
-    expect(revealStyleSource).not.toContain('width: 190');
-    expect(revealStyleSource).not.toContain('width: 280');
-    expect(revealStyleSource).not.toContain('borderColor');
-    expect(revealStyleSource).not.toContain('borderWidth');
-    expect(revealStyleSource).not.toContain('borderTopLeftRadius');
-    expect(studySource).not.toContain('styles.studySwipeAttachedFeedback');
-    expect(studySource).not.toContain('styles.studySwipeColorWash');
-    expect(studySource).toContain('<X size={42}');
-    expect(studySource).toContain('<Check size={42}');
     expect(studySource).toContain('cardEntryProgress');
     expect(studySource).toContain('cardSwapOpacity');
-    expect(studySource).toContain('swipeStartXRef');
-    expect(studySource).toContain('cardEntryProgress.stopAnimation();');
-    expect(studySource).toContain('cardEntryProgress.setValue(1);');
-    expect(appSource).toContain('function readAnimatedNumberValue');
-    expect(studySource).toContain('swipeGrantTokenRef');
-    expect(studySource).toContain('swipeMovedSinceGrantRef');
-    expect(appSource).toContain('function readStudySwipePageX');
-    expect(studySource).toContain('swipePointerStartXRef');
-    expect(studySource).toContain('swipeResetAnimationRef');
-    expect(studySource).toContain('swipeFrameSyncRef');
-    expect(studySource).toContain('const stopStudySwipeFrameSync');
-    expect(studySource).toContain('const startStudySwipeFrameSync');
-    expect(studySource).toContain('swipeX.setValue(latestSwipeGestureRef.current.dx);');
-    expect(studySource).toContain('swipeGrantTokenRef.current += 1;');
-    expect(studySource).toContain('const grantToken = swipeGrantTokenRef.current;');
-    expect(studySource).toContain('swipePointerStartXRef.current = readStudySwipePageX(event.nativeEvent);');
-    expect(studySource).toContain('swipeStartXRef.current = readAnimatedNumberValue(swipeX);');
-    expect(studySource).toContain('swipeResetAnimationRef.current?.stop();');
-    expect(studySource).toContain('swipeResetAnimationRef.current = null;');
-    expect(studySource).toContain('startStudySwipeFrameSync();');
-    expect(studySource).toContain('swipeX.stopAnimation((value) =>');
-    expect(studySource).toContain('if (swipeGrantTokenRef.current !== grantToken || swipeMovedSinceGrantRef.current)');
-    expect(studySource).toContain('swipeMovedSinceGrantRef.current = true;');
-    expect(studySource).toContain('const pointerX = readStudySwipePageX(event.nativeEvent);');
-    expect(studySource).toContain('const pointerDx = pointerX !== null && swipePointerStartXRef.current !== null ? pointerX - swipePointerStartXRef.current : gesture.dx;');
-    expect(studySource).toContain('const nextSwipeX = swipeStartXRef.current + pointerDx;');
-    expect(studySource).toContain('latestSwipeGestureRef.current = { dx: nextSwipeX, vx: gesture.vx };');
-    expect(studySource).toContain('resolveStudySwipeDirection(nextSwipeX, gesture.vx)');
-    expect(studySource).toContain('previewStudySwipeDirection(nextSwipeX)');
-    expect(studySource).toContain('const cardSwapStyle');
-    expect(studySource).toContain('cardSwapOpacity.setValue(0);');
-    expect(studySource).toContain('cardSwapOpacity.setValue(1);');
-    expect(studySource).toContain('cardSwapOpacity.setValue(0);');
-    expect(studySource).toContain('swipeResetAnimationRef.current?.stop();');
-    expect(studySource).toContain('cardSwapOpacity.setValue(1);\n          runStudyCardEntry();');
-    expect(studySource).toContain('runStudyCardEntry');
-    expect(studySource).toContain('swipeX.stopAnimation();');
-    expect(studySource).toContain('requestAnimationFrame(finishSwipe)');
-    expect(studySource).toContain('onPanResponderTerminate: (_, gesture) => finishOrResetSwipe(gesture, { useReadyDirectionFallback: true })');
-    expect(studySource).not.toContain('styles.studySwipeCardPinnedTop');
-    expect(studySource).not.toContain('styles.studySwipePendulumPanel');
     expect(studySource).toContain('onSwipeReview');
     expect(studySource).toContain('onSwipeKnown');
     expect(studySource).toContain('ui.previousWord');
     expect(studySource).toContain('ui.nextWord');
-    expect(studySource).not.toContain('<Text style={styles.secondaryButtonText}>{ui.reviewAgain}</Text>');
-    expect(studySource).not.toContain('<Text style={styles.confirmButtonText}>{ui.known}</Text>');
   });
 });

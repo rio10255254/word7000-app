@@ -7,4 +7,11 @@ config.resolver.sourceExts = sourceExts.includes('')
   ? sourceExts
   : ['', ...sourceExts];
 
+config.transformer.getTransformOptions = async () => ({
+  transform: {
+    experimentalImportSupport: false,
+    inlineRequires: true,
+  },
+});
+
 module.exports = config;

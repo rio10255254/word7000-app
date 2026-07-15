@@ -141,6 +141,17 @@ describe('progress state', () => {
       studiedToday: 2,
     });
   });
+
+  test('computeStats ignores progress left behind by words outside the active vocabulary', () => {
+    const state = markKnown(emptyProgress(), 'removed-word', today);
+
+    expect(computeStats(sampleWords.slice(0, 3), state)).toMatchObject({
+      mastered: 0,
+      review: 0,
+      favorites: 0,
+      remaining: 3,
+    });
+  });
 });
 
 describe('library and quiz helpers', () => {
@@ -179,7 +190,10 @@ describe('library and quiz helpers', () => {
     ];
     const state = markReview(markKnown(emptyProgress(), 'mastered-word', today), 'review-word', today);
 
-    expect(filterWords(words, state, '', 'all').map((word) => word.id)).toEqual(['mastered-word', 'review-word', 'fresh-word']);
+    const filtered = filterWords(words, state, '', 'all');
+
+    expect(filtered.map((word) => word.id)).toEqual(['mastered-word', 'review-word', 'fresh-word']);
+    expect(filtered).toBe(words);
   });
 
   test('filterWords can sort the library alphabetically by English word when requested', () => {
@@ -189,11 +203,15 @@ describe('library and quiz helpers', () => {
       wordFixture('banana-word', { word: 'banana' }),
     ];
 
-    expect(filterWords(words, emptyProgress(), '', 'all', { sort: 'alphabetical' }).map((word) => word.word)).toEqual([
+    const firstResult = filterWords(words, emptyProgress(), '', 'all', { sort: 'alphabetical' });
+    const secondResult = filterWords(words, emptyProgress(), '', 'all', { sort: 'alphabetical' });
+
+    expect(firstResult.map((word) => word.word)).toEqual([
       'apple',
       'banana',
       'zebra',
     ]);
+    expect(secondResult).toBe(firstResult);
   });
 
   test('filterWords puts newly favorited words first in the favorites list', () => {

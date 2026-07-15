@@ -27,6 +27,10 @@ const hapticsNativePath = path.join(process.cwd(), 'src', 'lib', 'haptics.native
 const hapticsWebPath = path.join(process.cwd(), 'src', 'lib', 'haptics.web.ts');
 const appleAuthPath = path.join(process.cwd(), 'src', 'lib', 'appleAuth.ts');
 const supabaseProgressPath = path.join(process.cwd(), 'src', 'lib', 'supabaseProgress.ts');
+const metroPath = path.join(process.cwd(), 'metro.config.js');
+const vocabularyLoaderPath = path.join(process.cwd(), 'src', 'lib', 'vocabularyLoader.ts');
+const nativeVocabularyLoaderPath = path.join(process.cwd(), 'src', 'lib', 'vocabularyLoader.native.ts');
+const webVocabularyLoaderPath = path.join(process.cwd(), 'src', 'lib', 'vocabularyLoader.web.ts');
 
 describe('free web launch configuration', () => {
   test('keeps web-facing app identity ready for static hosting', () => {
@@ -603,6 +607,8 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('pressedOpacity');
     expect(appSource).toContain('filterPanelMeasuredHeight');
+    expect(appSource).toContain('const [hasOpened, setHasOpened] = useState(open);');
+    expect(appSource).toContain('{(open || hasOpened) && children}');
     expect(appSource).toContain('onLayout={handlePanelContentLayout}');
     expect(appSource).toContain('pointerEvents={open ?');
     expect(appSource).toContain('styles.filterPanelContent');
@@ -611,6 +617,13 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('styles.filterSummaryButtonOpen');
     expect(appSource).toContain('styles.libraryItemPressed');
     expect(appSource).not.toContain('maxHeight: panelAnim.interpolate');
+  });
+
+  test('does not mount hidden library management screens during first library paint', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("activeTab === 'library' && (libraryPanel === 'sets' || renderedLibraryPanel === 'sets')");
+    expect(appSource).not.toContain("{activeTab === 'library' && (\n          <Animated.View\n            pointerEvents={renderedLibraryPanel === 'sets'");
   });
 
   test('adds an English alphabetical sort option inside the library filter panel', () => {
@@ -793,17 +806,16 @@ describe('free web launch configuration', () => {
   test('keeps library dragging synchronized with the page scroll and list body', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('wordWindowStartFromFullLibraryScroll');
-    expect(appSource).toContain('virtualListSpacerHeights');
-    expect(appSource).toContain('virtualWindowStartFromScroll');
-    expect(appSource).toContain('virtualWindowStartFromWordIndex');
-    expect(appSource).toContain('libraryListScrollTarget');
-    expect(appSource).toContain('styles.virtualLibrarySpacer');
-    expect(appSource).toContain('onListLayout={handleLibraryListLayout}');
-    expect(appSource).toContain('onFirstItemLayout={handleLibraryFirstItemLayout}');
-    expect(appSource).toContain('LIBRARY_LIST_DRAG_MIN_SCROLL_Y');
+    expect(appSource).toContain("import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';");
+    expect(appSource).toContain('scrollTargetFromSlider');
+    expect(appSource).toContain('libraryContentHeightRef.current');
+    expect(appSource).toContain('libraryViewportHeightRef.current');
+    expect(appSource).toContain('onContentSizeChange={handleLibraryContentSizeChange}');
+    expect(appSource).toContain('onViewportLayout={handleLibraryViewportLayout}');
+    expect(appSource).toContain('libraryListRef.current?.scrollToOffset({ offset: targetY, animated: false });');
     expect(appSource).toContain('transitionTimingFunction:');
-    expect(appSource).not.toContain('appScrollRef.current?.scrollTo({ y: 0, animated: false });\n    setScrollY(0);\n  }\n\n  function returnLibraryToTop');
+    expect(appSource).not.toContain('virtualListSpacerHeights');
+    expect(appSource).not.toContain('setLibraryWindowStart');
   });
 
   test('keeps the library drag slider tucked away until touch dragging', () => {
@@ -842,12 +854,49 @@ describe('free web launch configuration', () => {
   test('keeps the first library render lightweight on phones', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('const LIBRARY_WINDOW_SIZE = 42;');
-    expect(appSource).toContain('const LIBRARY_SCROLL_FORWARD_ANCHOR = 28;');
-    expect(appSource).toContain('const LIBRARY_SCROLL_BACKWARD_ANCHOR = 12;');
+    expect(appSource).toContain('<FlashList');
+    expect(appSource).toContain('drawDistance={720}');
+    expect(appSource).toContain('const LibraryWordRow = memo(function LibraryWordRow');
+    expect(appSource).toContain('keyExtractor={libraryWordKeyExtractor}');
     expect(appSource).toContain('const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);');
-    expect(appSource).not.toContain('const LIBRARY_WINDOW_SIZE = 72;');
-    expect(appSource).not.toContain('const LIBRARY_WINDOW_SIZE = 260;');
+    expect(appSource).not.toContain('visibleWords.map(');
+    expect(appSource).not.toContain('const LIBRARY_WINDOW_SIZE');
+  });
+
+  test('loads the full vocabulary after the app shell can render', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const loaderSource = fs.readFileSync(vocabularyLoaderPath, 'utf8');
+    const nativeLoaderSource = fs.readFileSync(nativeVocabularyLoaderPath, 'utf8');
+    const webLoaderSource = fs.readFileSync(webVocabularyLoaderPath, 'utf8');
+
+    expect(appSource).not.toContain("import { sampleWords, type WordEntry } from './src/data/words';");
+    expect(appSource).toContain('loadBundledVocabulary()');
+    expect(loaderSource).toContain("require('../data/words')");
+    expect(nativeLoaderSource).toContain("require('../data/words')");
+    expect(webLoaderSource).toContain("import('../data/words')");
+  });
+
+  test('defers nonessential modules in native production bundles', () => {
+    const metroSource = fs.readFileSync(metroPath, 'utf8');
+
+    expect(metroSource).toContain('inlineRequires: true');
+  });
+
+  test('keeps high-frequency library scrolling out of root render state', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const handlerStart = appSource.indexOf('function handleLibraryScroll(');
+    const handlerEnd = appSource.indexOf('function updateLibraryThumbFromScroll(', handlerStart);
+    const handlerSource = appSource.slice(handlerStart, handlerEnd);
+    const thumbStart = handlerEnd;
+    const thumbEnd = appSource.indexOf('function handleLibrarySliderDrag(', thumbStart);
+    const thumbSource = appSource.slice(thumbStart, thumbEnd);
+
+    expect(handlerSource).toContain('updateLibraryThumbFromScroll(nextScrollY)');
+    expect(handlerSource).not.toContain('setScrollY(');
+    expect(handlerSource).not.toContain('setLibraryWindowStart(');
+    expect(thumbSource).toContain('libraryThumbOffsetAnim.setValue(offset)');
+    expect(appSource).toContain('<Animated.View');
+    expect(appSource).toContain('transform: [{ translateY: libraryThumbOffsetAnim }]');
   });
 
   test('keeps library search and filters inset from the edge slider', () => {

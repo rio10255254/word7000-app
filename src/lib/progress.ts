@@ -42,6 +42,25 @@ export type QuizOption = {
 };
 export type QuizAnswerMode = 'meaning' | 'word';
 
+type PreparedWord = {
+  example: string;
+  exampleZh: string;
+  index: number;
+  meaning: string;
+  normalizedWord: string;
+  word: WordEntry;
+};
+
+type PreparedVocabulary = {
+  alphabeticalRecords: PreparedWord[];
+  alphabeticalWords: WordEntry[];
+  idSet: Set<string>;
+  indexById: Map<string, number>;
+  records: PreparedWord[];
+};
+
+const preparedVocabularyCache = new WeakMap<WordEntry[], PreparedVocabulary>();
+
 function currentProgress(state: ProgressState, wordId: string): WordProgress {
   return (
     state.words[wordId] ?? {
@@ -113,10 +132,24 @@ export function toggleFavorite(state: ProgressState, wordId: string, changedAt =
 }
 
 export function computeStats(words: WordEntry[], state: ProgressState): ProgressStats {
-  const values = words.map((word) => currentProgress(state, word.id));
-  const mastered = values.filter((progress) => progress.status === 'mastered').length;
-  const review = values.filter((progress) => progress.status === 'review').length;
-  const favorites = values.filter((progress) => progress.favorite).length;
+  const { idSet } = prepareVocabulary(words);
+  let mastered = 0;
+  let review = 0;
+  let favorites = 0;
+
+  for (const [wordId, wordProgress] of Object.entries(state.words)) {
+    if (!idSet.has(wordId)) {
+      continue;
+    }
+    if (wordProgress.status === 'mastered') {
+      mastered += 1;
+    } else if (wordProgress.status === 'review') {
+      review += 1;
+    }
+    if (wordProgress.favorite) {
+      favorites += 1;
+    }
+  }
 
   return {
     mastered,
@@ -140,46 +173,47 @@ export function filterWords(
   const initial = options.initial && options.initial !== 'all' ? options.initial.toUpperCase() : null;
   const sort = options.sort ?? 'default';
 
-  return words
-    .map((word, index) => ({ index, progress: currentProgress(state, word.id), score: searchScore(word, queryTerms), word }))
-    .filter(({ progress, score, word }) => {
-      const matchesQuery = queryTerms.length === 0 || score > 0;
+  const prepared = prepareVocabulary(words);
+  if (queryTerms.length === 0 && filter === 'all' && !level && !initial) {
+    return sort === 'alphabetical' ? prepared.alphabeticalWords : words;
+  }
 
-      if (!matchesQuery) {
-        return false;
-      }
+  const sourceRecords = sort === 'alphabetical' ? prepared.alphabeticalRecords : prepared.records;
+  const matches: Array<{ preparedWord: PreparedWord; progress: WordProgress; score: number }> = [];
 
-      if (level && word.group !== level) {
-        return false;
-      }
+  for (const preparedWord of sourceRecords) {
+    const { word } = preparedWord;
+    if (level && word.group !== level) {
+      continue;
+    }
+    if (initial && !preparedWord.normalizedWord.toUpperCase().startsWith(initial)) {
+      continue;
+    }
 
-      if (initial && !word.word.toUpperCase().startsWith(initial)) {
-        return false;
-      }
+    const score = searchScore(preparedWord, queryTerms);
+    if (queryTerms.length > 0 && score === 0) {
+      continue;
+    }
 
-      if (filter === 'favorites') {
-        return progress.favorite;
-      }
-      if (filter === 'review') {
-        return progress.status === 'review';
-      }
-      if (filter === 'mastered') {
-        return progress.status === 'mastered';
-      }
-      if (filter === 'new') {
-        return progress.status === 'new';
-      }
+    const progress = currentProgress(state, word.id);
+    if (filter === 'favorites' && !progress.favorite) {
+      continue;
+    }
+    if (filter === 'review' && progress.status !== 'review') {
+      continue;
+    }
+    if (filter === 'mastered' && progress.status !== 'mastered') {
+      continue;
+    }
+    if (filter === 'new' && progress.status !== 'new') {
+      continue;
+    }
 
-      return true;
-    })
-    .sort((a, b) => {
-      if (sort === 'alphabetical') {
-        const wordOrder = a.word.word.localeCompare(b.word.word, 'en', { sensitivity: 'base' });
-        if (wordOrder !== 0) {
-          return wordOrder;
-        }
-      }
+    matches.push({ preparedWord, progress, score });
+  }
 
+  if (sort !== 'alphabetical' && (queryTerms.length > 0 || filter === 'favorites' || filter === 'review' || filter === 'mastered')) {
+    matches.sort((a, b) => {
       if (queryTerms.length > 0 && b.score !== a.score) {
         return b.score - a.score;
       }
@@ -190,12 +224,44 @@ export function filterWords(
         return bTime - aTime;
       }
 
-      return a.index - b.index;
-    })
-    .map(({ word }) => word);
+      return a.preparedWord.index - b.preparedWord.index;
+    });
+  }
+
+  return matches.map(({ preparedWord }) => preparedWord.word);
 }
 
-function searchScore(word: WordEntry, terms: string[]): number {
+function prepareVocabulary(words: WordEntry[]): PreparedVocabulary {
+  const cached = preparedVocabularyCache.get(words);
+  if (cached) {
+    return cached;
+  }
+
+  const records = words.map((word, index) => ({
+    example: word.example.toLowerCase(),
+    exampleZh: word.exampleZh.toLowerCase(),
+    index,
+    meaning: word.meaningZh.toLowerCase(),
+    normalizedWord: word.word.toLowerCase(),
+    word,
+  }));
+  const alphabeticalRecords = [...records].sort((a, b) => {
+    const wordOrder = a.word.word.localeCompare(b.word.word, 'en', { sensitivity: 'base' });
+    return wordOrder !== 0 ? wordOrder : a.index - b.index;
+  });
+  const prepared = {
+    alphabeticalRecords,
+    alphabeticalWords: alphabeticalRecords.map(({ word }) => word),
+    idSet: new Set(words.map(({ id }) => id)),
+    indexById: new Map(words.map(({ id }, index) => [id, index])),
+    records,
+  };
+
+  preparedVocabularyCache.set(words, prepared);
+  return prepared;
+}
+
+function searchScore(word: PreparedWord, terms: string[]): number {
   if (terms.length === 0) {
     return 0;
   }
@@ -211,11 +277,11 @@ function searchScore(word: WordEntry, terms: string[]): number {
   return total;
 }
 
-function searchTermScore(word: WordEntry, term: string): number {
-  const english = word.word.toLowerCase();
-  const meaning = word.meaningZh.toLowerCase();
-  const example = word.example.toLowerCase();
-  const exampleZh = word.exampleZh.toLowerCase();
+function searchTermScore(word: PreparedWord, term: string): number {
+  const english = word.normalizedWord;
+  const meaning = word.meaning;
+  const example = word.example;
+  const exampleZh = word.exampleZh;
 
   if (english === term) {
     return 1000;
@@ -298,7 +364,15 @@ export function normalizeProgressForDate(state: ProgressState, today: string): P
 
 export function buildQuizSession(words: WordEntry[], requestedCount: number, seed = createRuntimeSeed()): WordEntry[] {
   const count = Math.max(0, Math.min(requestedCount, words.length));
-  return shuffleWithSeed(words, seed).slice(0, count);
+  if (count === 0) {
+    return [];
+  }
+  if (count === words.length || count > words.length / 3) {
+    return shuffleWithSeed(words, seed).slice(0, count);
+  }
+
+  const selectedIndexes = sampleDistinctIndexes(words.length, count, `${seed}:session`);
+  return selectedIndexes.map((index) => words[index]);
 }
 
 export function buildQuizOptions(
@@ -307,16 +381,15 @@ export function buildQuizOptions(
   seed = createRuntimeSeed(),
   answerMode: QuizAnswerMode = 'meaning',
 ): QuizOption[] {
-  const correctWord = words.find((word) => word.id === wordId) ?? words[0];
+  const prepared = prepareVocabulary(words);
+  const correctIndex = prepared.indexById.get(wordId) ?? 0;
+  const correctWord = words[correctIndex];
   if (!correctWord) {
     return [];
   }
 
-  const wrongOptions = shuffleWithSeed(
-    words.filter((word) => word.id !== correctWord.id),
-    `${seed}:wrong:${wordId}`,
-  )
-    .slice(0, 2)
+  const wrongOptions = sampleDistinctIndexes(words.length, Math.min(2, Math.max(0, words.length - 1)), `${seed}:wrong:${wordId}`, correctIndex)
+    .map((index) => words[index])
     .map((word) => ({
       meaning: answerTextForMode(word, answerMode),
       correct: false,
@@ -388,6 +461,26 @@ function shuffleWithSeed<T>(values: T[], seed: string): T[] {
   }
 
   return shuffled;
+}
+
+function sampleDistinctIndexes(length: number, count: number, seed: string, excludedIndex = -1): number[] {
+  if (length <= 0 || count <= 0) {
+    return [];
+  }
+
+  const selected = new Set<number>();
+  let randomState = hashText(seed || 'word7000');
+  const targetCount = Math.min(count, length - (excludedIndex >= 0 ? 1 : 0));
+
+  while (selected.size < targetCount) {
+    randomState = nextRandomState(randomState);
+    const index = randomState % length;
+    if (index !== excludedIndex) {
+      selected.add(index);
+    }
+  }
+
+  return [...selected];
 }
 
 function nextRandomState(value: number): number {

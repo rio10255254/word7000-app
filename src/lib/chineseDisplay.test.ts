@@ -29,4 +29,11 @@ describe('Chinese word display helpers', () => {
   test('normalizes tone marks so pinyin is easy to scan in compact cards', () => {
     expect(chineseMeaningPinyin('適應；調整')).toBe('shi ying；tiao zheng');
   });
+
+  test('reuses the prepared display for meanings already shown on screen', () => {
+    const first = chineseMeaningDisplay('適應；調整；改編');
+    const second = chineseMeaningDisplay('適應；調整；改編');
+
+    expect(second).toBe(first);
+  });
 });

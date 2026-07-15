@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
+import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';
 import {
   ArrowUp,
   BookOpen,
@@ -37,7 +38,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, memo, useCallback, useContext, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
 import {
   Alert,
   Animated,
@@ -59,17 +60,8 @@ import {
   type ViewStyle,
   Linking,
 } from 'react-native';
-import { sampleWords, type WordEntry } from './src/data/words';
-import {
-  libraryListScrollTarget,
-  scrollThumbOffset,
-  shouldSyncLibraryWindowFromScroll,
-  virtualListSpacerHeights,
-  virtualWindowStartFromScroll,
-  virtualWindowStartFromWordIndex,
-  wordWindowStartFromFullLibraryScroll,
-  wordWindowStartFromSlider,
-} from './src/lib/libraryNavigation';
+import type { WordEntry } from './src/data/words';
+import { scrollTargetFromSlider, scrollThumbOffset } from './src/lib/libraryNavigation';
 import {
   buildQuizOptions,
   buildQuizSession,
@@ -109,6 +101,7 @@ import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
 import { appleCredentialMetadata, createAppleNoncePair } from './src/lib/appleAuth';
 import { triggerPressHaptic } from './src/lib/haptics';
+import { loadBundledVocabulary } from './src/lib/vocabularyLoader';
 import {
   INSTALL_GUIDE_STORAGE_KEY,
   markInstallGuideSeen,
@@ -250,12 +243,6 @@ const TAB_BAR_RESERVED_HEIGHT = TAB_BAR_HEIGHT + IOS_TAB_BAR_BOTTOM_OFFSET + 24;
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
-const LIBRARY_ITEM_ESTIMATED_HEIGHT = 170;
-const LIBRARY_LIST_DRAG_SCROLL_OFFSET = 168;
-const LIBRARY_LIST_DRAG_MIN_SCROLL_Y = 340;
-const LIBRARY_SCROLL_FORWARD_ANCHOR = 28;
-const LIBRARY_SCROLL_BACKWARD_ANCHOR = 12;
-const LIBRARY_WINDOW_SIZE = 42;
 const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
 const LIBRARY_FIXED_CONTROLS_TOP = 94;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = TAB_BAR_RESERVED_HEIGHT + 12;
@@ -835,7 +822,13 @@ const systemCopy = {
 } as const;
 type SystemCopy = (typeof systemCopy)[StudyMode];
 
-const levelFilters = buildLevelFilters(sampleWords);
+const levelFilters: FilterOption[] = [
+  { id: 'all', label: '全部' },
+  ...Array.from({ length: 14 }, (_, index) => ({
+    id: `Core ${index + 1}`,
+    label: `Core ${index + 1}`,
+  })),
+];
 const alphabetFilters: FilterOption[] = [
   { id: 'all', label: '全部' },
   ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((letter) => ({
@@ -852,10 +845,13 @@ const emptyManualCustomWord: ManualCustomWordState = {
   word: '',
 };
 const ThemeContext = createContext<ThemeMode>('light');
+const VocabularyContext = createContext<WordEntry[]>([]);
 const MotionPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function App() {
   const [storageReady, setStorageReady] = useState(() => isAppStorageHydrated());
+  const [bundledVocabulary, setBundledVocabulary] = useState<WordEntry[] | null>(null);
+  const [vocabularyLoadFailed, setVocabularyLoadFailed] = useState(false);
 
   useEffect(() => {
     if (storageReady) {
@@ -876,26 +872,51 @@ export default function App() {
     };
   }, [storageReady]);
 
-  if (!storageReady) {
-    return <AppStorageBootScreen />;
+  useEffect(() => {
+    let mounted = true;
+    loadBundledVocabulary()
+      .then((words) => {
+        if (mounted) {
+          setBundledVocabulary(words);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setVocabularyLoadFailed(true);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (!storageReady || !bundledVocabulary) {
+    return <AppStorageBootScreen failed={vocabularyLoadFailed} />;
   }
 
-  return <Word7000App />;
+  return (
+    <VocabularyContext.Provider value={bundledVocabulary}>
+      <Word7000App />
+    </VocabularyContext.Provider>
+  );
 }
 
 function Word7000App() {
+  const bundledVocabulary = useContext(VocabularyContext);
   const appScrollRef = useRef<ScrollView | null>(null);
-  const scrollYRef = useRef(0);
-  const libraryListTopYRef = useRef(0);
-  const libraryItemExtentRef = useRef(LIBRARY_ITEM_ESTIMATED_HEIGHT);
-  const libraryWindowStartRef = useRef(0);
-  const libraryScrollSyncLockedRef = useRef(false);
+  const libraryListRef = useRef<FlashListRef<WordEntry> | null>(null);
+  const libraryScrollYRef = useRef(0);
+  const libraryContentHeightRef = useRef(1);
+  const libraryViewportHeightRef = useRef(1);
   const librarySliderDraggingRef = useRef(false);
+  const libraryScrolledPastTopRef = useRef(false);
   const launchAnim = useRef(new Animated.Value(0)).current;
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const screenAnim = useRef(new Animated.Value(1)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
   const libraryPanelAnim = useRef(new Animated.Value(1)).current;
+  const libraryThumbOffsetAnim = useRef(new Animated.Value(0)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
@@ -923,6 +944,7 @@ function Word7000App() {
   const [quizCorrectCount, setQuizCorrectCount] = useState(0);
   const [quizSeed, setQuizSeed] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const deferredSearchQuery = useDeferredValue(searchQuery);
   const [searchFocused, setSearchFocused] = useState(false);
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>(initialFilterPreferences.library.filter);
   const [activeLevel, setActiveLevel] = useState(initialFilterPreferences.library.level);
@@ -949,13 +971,10 @@ function Word7000App() {
   const [showModeSwitch, setShowModeSwitch] = useState(false);
   const [showThemeTransition, setShowThemeTransition] = useState(false);
   const [themeTransitionTarget, setThemeTransitionTarget] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
-  const [scrollY, setScrollY] = useState(0);
   const [headerHeight, setHeaderHeight] = useState(88);
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
-  const [libraryListTopY, setLibraryListTopY] = useState(0);
-  const [libraryItemExtent, setLibraryItemExtent] = useState(LIBRARY_ITEM_ESTIMATED_HEIGHT);
   const [librarySliderDragging, setLibrarySliderDragging] = useState(false);
-  const [libraryWindowStart, setLibraryWindowStart] = useState(0);
+  const [libraryScrolledPastTop, setLibraryScrolledPastTop] = useState(false);
   const [selectedLibraryWord, setSelectedLibraryWord] = useState<WordEntry | null>(null);
   const [customSetState, setCustomSetState] = useState<CustomSetState>(() => loadCustomSetState(getAppStorage()));
   const [customSetSort, setCustomSetSort] = useState<CustomSetSort>(() => loadCustomSetSort(getAppStorage()));
@@ -973,7 +992,7 @@ function Word7000App() {
     () => systemCopy[studyMode].developerInitial,
   );
 
-  const baseVocabularyWords = developerVocabulary?.words ?? sampleWords;
+  const baseVocabularyWords = developerVocabulary?.words ?? bundledVocabulary;
   const vocabularyWords = useMemo(
     () => mergeCustomWords(baseVocabularyWords, customSetState.customWords),
     [baseVocabularyWords, customSetState.customWords],
@@ -1030,12 +1049,12 @@ function Word7000App() {
   const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
   const libraryWords = useMemo(
     () =>
-      filterWords(vocabularyWords, progress, searchQuery, activeFilter, {
+      filterWords(vocabularyWords, progress, deferredSearchQuery, activeFilter, {
         initial: activeInitial,
         level: activeLevel,
         sort: activeSort,
       }),
-    [activeFilter, activeInitial, activeLevel, activeSort, progress, searchQuery, vocabularyWords],
+    [activeFilter, activeInitial, activeLevel, activeSort, deferredSearchQuery, progress, vocabularyWords],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
@@ -1180,22 +1199,8 @@ function Word7000App() {
     inputRange: [0, 1],
     outputRange: [24, 0],
   });
-  const librarySliderVisible = activeTab === 'library' && !selectedLibraryWord && libraryWords.length > LIBRARY_WINDOW_SIZE;
+  const librarySliderVisible = activeTab === 'library' && !selectedLibraryWord && libraryWords.length > 24;
   const librarySliderActive = librarySliderDragging;
-  const librarySliderWordIndex = wordWindowStartFromFullLibraryScroll(
-    scrollY,
-    libraryListTopY,
-    libraryItemExtent,
-    libraryWords.length,
-    LIBRARY_WINDOW_SIZE,
-  );
-  const libraryThumbOffset = scrollThumbOffset(
-    librarySliderWordIndex,
-    Math.max(libraryWords.length, LIBRARY_WINDOW_SIZE + 1),
-    LIBRARY_WINDOW_SIZE,
-    sliderTrackHeight,
-    LIBRARY_SLIDER_THUMB_HEIGHT,
-  );
   const libraryDragSliderMotionStyle: WebTransitionStyle | undefined =
     Platform.OS === 'web'
       ? {
@@ -1424,19 +1429,19 @@ function Word7000App() {
   }, [libraryPanel, libraryPanelAnim, onLibraryPanelSwap, renderedLibraryPanel]);
 
   useEffect(() => {
-    libraryWindowStartRef.current = libraryWindowStart;
-  }, [libraryWindowStart]);
+    updateLibraryThumbFromScroll(libraryScrollYRef.current);
+  }, [libraryThumbOffsetAnim, libraryWords.length, sliderTrackHeight]);
 
   useEffect(() => {
-    libraryItemExtentRef.current = libraryItemExtent;
-  }, [libraryItemExtent]);
-
-  useEffect(() => {
-    appScrollRef.current?.scrollTo({ y: 0, animated: false });
-    scrollYRef.current = 0;
-    setScrollY(0);
-    libraryWindowStartRef.current = 0;
-    setLibraryWindowStart(0);
+    if (activeTab === 'library') {
+      requestAnimationFrame(() => libraryListRef.current?.scrollToOffset({ offset: 0, animated: false }));
+    } else {
+      appScrollRef.current?.scrollTo({ y: 0, animated: false });
+    }
+    libraryScrollYRef.current = 0;
+    libraryThumbOffsetAnim.setValue(0);
+    libraryScrolledPastTopRef.current = false;
+    setLibraryScrolledPastTop(false);
     setSelectedLibraryWord(null);
     setLibraryPanel('list');
     setRenderedLibraryPanel('list');
@@ -1480,14 +1485,6 @@ function Word7000App() {
   }, [customSetState.sets, quizSetId, selectedCustomSetId, studySetId]);
 
   useEffect(() => {
-    setLibraryWindowStart((current) => {
-      const next = Math.min(current, Math.max(0, libraryWords.length - LIBRARY_WINDOW_SIZE));
-      libraryWindowStartRef.current = next;
-      return next;
-    });
-  }, [libraryWords.length]);
-
-  useEffect(() => {
     const levelIds = new Set(levelFilterOptions.map((level) => level.id));
     if (!levelIds.has(studyLevel)) {
       setStudyLevel('all');
@@ -1511,7 +1508,6 @@ function Word7000App() {
     setQuizFinished(false);
     setQuizCorrectCount(0);
     setQuizSeed('');
-    setLibraryWindowStart(0);
     setSelectedLibraryWord(null);
   }, [developerVocabulary?.importedAt, studyMode]);
 
@@ -1668,12 +1664,10 @@ function Word7000App() {
 
   const handleLibraryQueryChange = useCallback((query: string) => {
     setSearchQuery(query);
-    setLibraryWindowStart(0);
   }, []);
 
   const clearLibrarySearch = useCallback(() => {
     setSearchQuery('');
-    setLibraryWindowStart(0);
   }, []);
 
   function handleExportVocabulary() {
@@ -1963,65 +1957,44 @@ function Word7000App() {
     setQuizIndex((current) => current + 1);
   }
 
-  function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-    if (activeTab === 'library') {
-      const nextScrollY = event.nativeEvent.contentOffset.y;
-      scrollYRef.current = nextScrollY;
-      setScrollY(nextScrollY);
-      if (!libraryScrollSyncLockedRef.current && !librarySliderDraggingRef.current) {
-        syncLibraryWindowFromScroll(nextScrollY);
-      }
+  function handleLibraryScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    const nextScrollY = event.nativeEvent.contentOffset.y;
+    libraryScrollYRef.current = nextScrollY;
+    updateLibraryThumbFromScroll(nextScrollY);
+    const scrolledPastTop = nextScrollY > 180;
+    if (scrolledPastTop !== libraryScrolledPastTopRef.current) {
+      libraryScrolledPastTopRef.current = scrolledPastTop;
+      setLibraryScrolledPastTop(scrolledPastTop);
     }
   }
 
-  function syncLibraryWindowFromScroll(nextScrollY: number) {
-    const currentWindowStart = libraryWindowStartRef.current;
-
-    if (
-      activeTab !== 'library' ||
-      libraryPanel !== 'list' ||
-      selectedLibraryWord ||
-      libraryWords.length <= LIBRARY_WINDOW_SIZE ||
-      libraryListTopYRef.current <= 0 ||
-      !shouldSyncLibraryWindowFromScroll(nextScrollY, libraryListTopYRef.current, currentWindowStart)
-    ) {
-      return;
-    }
-
-    const nextWindowStart = virtualWindowStartFromScroll(
+  function updateLibraryThumbFromScroll(nextScrollY: number) {
+    const offset = scrollThumbOffset(
       nextScrollY,
-      libraryListTopYRef.current,
-      libraryItemExtentRef.current,
-      libraryWords.length,
-      LIBRARY_WINDOW_SIZE,
-      LIBRARY_SCROLL_BACKWARD_ANCHOR,
+      libraryContentHeightRef.current,
+      libraryViewportHeightRef.current,
+      Math.max(0, sliderTrackHeight - 10),
+      LIBRARY_SLIDER_THUMB_HEIGHT,
     );
-
-    if (nextWindowStart === currentWindowStart) {
-      return;
-    }
-
-    libraryWindowStartRef.current = nextWindowStart;
-    setLibraryWindowStart(nextWindowStart);
+    libraryThumbOffsetAnim.setValue(offset);
   }
 
   function handleLibrarySliderDrag(locationY: number) {
-    const target = wordWindowStartFromSlider(
-      locationY,
-      sliderTrackHeight,
-      libraryWords.length,
-      LIBRARY_WINDOW_SIZE,
-      LIBRARY_SLIDER_THUMB_HEIGHT,
+    const trackTravel = Math.max(1, sliderTrackHeight - LIBRARY_SLIDER_THUMB_HEIGHT - 10);
+    const targetY = scrollTargetFromSlider(
+      locationY - LIBRARY_SLIDER_THUMB_HEIGHT / 2 - 5,
+      trackTravel,
+      libraryContentHeightRef.current,
+      libraryViewportHeightRef.current,
     );
-    const bufferedStart = virtualWindowStartFromWordIndex(
-      target,
-      libraryWords.length,
-      LIBRARY_WINDOW_SIZE,
-      LIBRARY_SCROLL_BACKWARD_ANCHOR,
-    );
-    libraryWindowStartRef.current = bufferedStart;
-    setLibraryWindowStart(bufferedStart);
-    scrollLibraryListIntoView(false, target);
+    libraryScrollYRef.current = targetY;
+    updateLibraryThumbFromScroll(targetY);
+    const scrolledPastTop = targetY > 180;
+    if (scrolledPastTop !== libraryScrolledPastTopRef.current) {
+      libraryScrolledPastTopRef.current = scrolledPastTop;
+      setLibraryScrolledPastTop(scrolledPastTop);
+    }
+    libraryListRef.current?.scrollToOffset({ offset: targetY, animated: false });
   }
 
   function finishLibrarySliderDrag() {
@@ -2031,43 +2004,22 @@ function Word7000App() {
     });
   }
 
-  function scrollLibraryListIntoView(animated: boolean, targetWordStart = libraryWindowStartRef.current) {
-    const wordOffset = Math.max(0, targetWordStart) * libraryItemExtentRef.current + LIBRARY_LIST_DRAG_SCROLL_OFFSET;
-    const targetY = Math.max(
-      LIBRARY_LIST_DRAG_MIN_SCROLL_Y,
-      libraryListScrollTarget(libraryListTopYRef.current, wordOffset),
-    );
-    scrollYRef.current = targetY;
-    setScrollY(targetY);
-    appScrollRef.current?.scrollTo({ y: targetY, animated });
-  }
+  const handleLibraryContentSizeChange = useCallback((_width: number, height: number) => {
+    libraryContentHeightRef.current = Math.max(1, height);
+    updateLibraryThumbFromScroll(libraryScrollYRef.current);
+  }, [sliderTrackHeight]);
 
-  const handleLibraryListLayout = useCallback((event: LayoutChangeEvent) => {
-    const nextTop = Math.max(0, Math.round(event.nativeEvent.layout.y));
-    libraryListTopYRef.current = nextTop;
-    setLibraryListTopY(nextTop);
-  }, []);
-
-  const handleLibraryFirstItemLayout = useCallback((event: LayoutChangeEvent) => {
-    if (libraryWindowStartRef.current > 0) {
-      return;
-    }
-
-    const nextExtent = Math.max(96, Math.round(event.nativeEvent.layout.height + 10));
-    if (Math.abs(nextExtent - libraryItemExtentRef.current) < 3) {
-      return;
-    }
-
-    libraryItemExtentRef.current = nextExtent;
-    setLibraryItemExtent(nextExtent);
-  }, []);
+  const handleLibraryViewportLayout = useCallback((event: LayoutChangeEvent) => {
+    libraryViewportHeightRef.current = Math.max(1, event.nativeEvent.layout.height);
+    updateLibraryThumbFromScroll(libraryScrollYRef.current);
+  }, [sliderTrackHeight]);
 
   function returnLibraryToTop() {
-    libraryWindowStartRef.current = 0;
-    setLibraryWindowStart(0);
-    scrollYRef.current = 0;
-    appScrollRef.current?.scrollTo({ y: 0, animated: true });
-    setScrollY(0);
+    libraryScrollYRef.current = 0;
+    libraryThumbOffsetAnim.setValue(0);
+    libraryScrolledPastTopRef.current = false;
+    setLibraryScrolledPastTop(false);
+    libraryListRef.current?.scrollToTop({ animated: true });
   }
 
   const openLibraryWordDetail = useCallback((word: WordEntry) => {
@@ -2101,7 +2053,6 @@ function Word7000App() {
 
   const onProfilePanelSwap = useCallback(() => {
     appScrollRef.current?.scrollTo({ y: 0, animated: false });
-    setScrollY(0);
   }, []);
 
   function openInstallGuide() {
@@ -2732,18 +2683,60 @@ function Word7000App() {
             </View>
           </View>
         </View>
-        <ScrollView
-          canCancelContentTouches={activeTab !== 'study'}
-          contentContainerStyle={styles.content}
-          directionalLockEnabled
-          onScroll={handleScroll}
-          ref={appScrollRef}
-          scrollEnabled={!studySwipeScrollLocked}
-          scrollEventThrottle={16}
-          showsVerticalScrollIndicator={false}
-          style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}
-        >
-          <Animated.View style={[styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}>
+        {activeTab === 'library' ? (
+          <Animated.View
+            style={[styles.libraryScreenHost, styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}
+          >
+            <Animated.View
+              pointerEvents={libraryPanel === 'list' && renderedLibraryPanel === 'list' ? 'auto' : 'none'}
+              style={[styles.libraryListStage, libraryListPanelMotionStyle]}
+              testID="library-panel-transition"
+            >
+              <LibraryView
+                activeFilter={activeFilter}
+                activeInitial={activeInitial}
+                activeLevel={activeLevel}
+                activeSort={activeSort}
+                customSets={sortedCustomSets}
+                filtersOpen={libraryFiltersOpen}
+                levelOptions={levelFilterOptions}
+                listMotionStyle={listMotionStyle}
+                listRef={libraryListRef}
+                progress={progress}
+                query={searchQuery}
+                searchFocused={searchFocused}
+                studyMode={studyMode}
+                words={libraryWords}
+                onAddToSet={handleOpenSetPicker}
+                onContentSizeChange={handleLibraryContentSizeChange}
+                onFilterChange={setActiveFilter}
+                onFiltersToggle={handleLibraryFiltersToggle}
+                onFavorite={handleLibraryFavorite}
+                onInitialChange={setActiveInitial}
+                onLevelChange={setActiveLevel}
+                onOpenWord={openLibraryWordDetail}
+                onOpenCustomSets={openLibraryCustomSets}
+                onQueryChange={handleLibraryQueryChange}
+                onQueryClear={clearLibrarySearch}
+                onScroll={handleLibraryScroll}
+                onSearchBlur={handleLibrarySearchBlur}
+                onSearchFocus={handleLibrarySearchFocus}
+                onSortChange={setActiveSort}
+                onViewportLayout={handleLibraryViewportLayout}
+              />
+            </Animated.View>
+          </Animated.View>
+        ) : (
+          <ScrollView
+            canCancelContentTouches={activeTab !== 'study'}
+            contentContainerStyle={styles.content}
+            directionalLockEnabled
+            ref={appScrollRef}
+            scrollEnabled={!studySwipeScrollLocked}
+            showsVerticalScrollIndicator={false}
+            style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}
+          >
+            <Animated.View style={[styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}>
           {activeTab === 'home' && (
             <HomeView
               dailyPercent={dailyPercent}
@@ -2826,47 +2819,6 @@ function Word7000App() {
               onStart={startQuiz}
             />
           )}
-          {activeTab === 'library' && (
-            <Animated.View
-              pointerEvents={libraryPanel === 'list' && renderedLibraryPanel === 'list' ? 'auto' : 'none'}
-              style={libraryListPanelMotionStyle}
-              testID="library-panel-transition"
-            >
-              <LibraryView
-                activeFilter={activeFilter}
-                activeInitial={activeInitial}
-                activeLevel={activeLevel}
-                activeSort={activeSort}
-                customSets={sortedCustomSets}
-                filtersOpen={libraryFiltersOpen}
-                itemExtent={libraryItemExtent}
-                levelOptions={levelFilterOptions}
-                listMotionStyle={listMotionStyle}
-                progress={progress}
-                query={searchQuery}
-                searchFocused={searchFocused}
-                studyMode={studyMode}
-                visibleStart={libraryWindowStart}
-                visibleWindowSize={LIBRARY_WINDOW_SIZE}
-                words={libraryWords}
-                onAddToSet={handleOpenSetPicker}
-                onFilterChange={setActiveFilter}
-                onFiltersToggle={handleLibraryFiltersToggle}
-                onFavorite={handleLibraryFavorite}
-                onInitialChange={setActiveInitial}
-                onFirstItemLayout={handleLibraryFirstItemLayout}
-                onListLayout={handleLibraryListLayout}
-                onLevelChange={setActiveLevel}
-                onOpenWord={openLibraryWordDetail}
-                onOpenCustomSets={openLibraryCustomSets}
-                onQueryChange={handleLibraryQueryChange}
-                onQueryClear={clearLibrarySearch}
-                onSearchBlur={handleLibrarySearchBlur}
-                onSearchFocus={handleLibrarySearchFocus}
-                onSortChange={setActiveSort}
-              />
-            </Animated.View>
-          )}
           {activeTab === 'profile' && (
             <ProfileView
               account={account}
@@ -2898,12 +2850,13 @@ function Word7000App() {
               onThemeModeChange={triggerThemeModeChange}
             />
           )}
-          </Animated.View>
-        </ScrollView>
+            </Animated.View>
+          </ScrollView>
+        )}
 
         {activeTab === 'library' && libraryPanel === 'list' && renderedLibraryPanel === 'list' && !selectedLibraryWord && (
           <View pointerEvents="box-none" style={styles.libraryFixedControls}>
-            {scrollY > 180 && (
+            {libraryScrolledPastTop && (
               <AnimatedPressable
                 accessibilityRole="button"
                 onPress={returnLibraryToTop}
@@ -2928,7 +2881,7 @@ function Word7000App() {
                 ]}
                 testID="library-drag-slider"
               >
-                <View
+                <Animated.View
                   style={[
                     styles.libraryDragTrack,
                     themeStyles?.libraryDragTrack,
@@ -2937,21 +2890,21 @@ function Word7000App() {
                     libraryDragTrackMotionStyle,
                   ]}
                 />
-                <View
+                <Animated.View
                   style={[
                     styles.libraryDragThumb,
                     themeStyles?.libraryDragThumb,
                     librarySliderActive ? styles.libraryDragThumbActive : styles.libraryDragThumbCollapsed,
                     librarySliderActive ? themeStyles?.libraryDragThumbActive : themeStyles?.libraryDragThumbCollapsed,
                     libraryDragThumbMotionStyle,
-                    { transform: [{ translateY: libraryThumbOffset }] },
+                    { transform: [{ translateY: libraryThumbOffsetAnim }] },
                   ]}
                   testID="library-drag-thumb"
                 >
                   {librarySliderActive && (
                     <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
                   )}
-                </View>
+                </Animated.View>
               </View>
             )}
           </View>
@@ -2981,7 +2934,7 @@ function Word7000App() {
           </Animated.View>
         )}
 
-        {activeTab === 'library' && (
+        {activeTab === 'library' && (libraryPanel === 'sets' || renderedLibraryPanel === 'sets') && (
           <Animated.View
             pointerEvents={renderedLibraryPanel === 'sets' ? 'auto' : 'none'}
             style={[
@@ -3137,7 +3090,7 @@ function useWebServiceWorker() {
   }, []);
 }
 
-function AppStorageBootScreen() {
+function AppStorageBootScreen({ failed = false }: { failed?: boolean }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.appStorageBootScreen}>
@@ -3146,7 +3099,9 @@ function AppStorageBootScreen() {
           <Text style={styles.launchIconText}>W7</Text>
         </View>
         <Text style={styles.appStorageBootTitle}>Word7000</Text>
-        <Text style={styles.appStorageBootText}>Preparing your learning memory...</Text>
+        <Text style={styles.appStorageBootText}>
+          {failed ? 'Unable to prepare the word library. Please reopen Word7000.' : 'Preparing your learning memory...'}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -3582,7 +3537,14 @@ function AnimatedPressable({
 function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; open: boolean; testID: string }) {
   const themeStyles = useThemeStyles();
   const [filterPanelMeasuredHeight, setFilterPanelMeasuredHeight] = useState(0);
+  const [hasOpened, setHasOpened] = useState(open);
   const panelAnim = useRef(new Animated.Value(open ? 1 : 0)).current;
+
+  useEffect(() => {
+    if (open) {
+      setHasOpened(true);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -3668,7 +3630,7 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
       testID={testID}
     >
       <Animated.View onLayout={handlePanelContentLayout} style={[styles.filterPanelContent, filterPanelWebTransition, contentMotionStyle]}>
-        {children}
+        {(open || hasOpened) && children}
       </Animated.View>
     </Animated.View>
   );
@@ -5295,31 +5257,30 @@ const LibraryView = memo(function LibraryView({
   activeSort,
   customSets,
   filtersOpen,
-  itemExtent,
   levelOptions,
   listMotionStyle,
+  listRef,
   progress,
   query,
   searchFocused,
   studyMode,
-  visibleStart,
-  visibleWindowSize,
   words,
   onAddToSet,
+  onContentSizeChange,
   onFavorite,
   onFilterChange,
   onFiltersToggle,
-  onFirstItemLayout,
   onInitialChange,
-  onListLayout,
   onLevelChange,
   onOpenCustomSets,
   onOpenWord,
   onQueryChange,
   onQueryClear,
+  onScroll,
   onSearchBlur,
   onSearchFocus,
   onSortChange,
+  onViewportLayout,
 }: {
   activeFilter: LibraryFilter;
   activeInitial: string;
@@ -5327,36 +5288,31 @@ const LibraryView = memo(function LibraryView({
   activeSort: LibrarySort;
   customSets: CustomVocabSet[];
   filtersOpen: boolean;
-  itemExtent: number;
   levelOptions: FilterOption[];
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
+  listRef: RefObject<FlashListRef<WordEntry> | null>;
   progress: ProgressState;
   query: string;
   searchFocused: boolean;
   studyMode: StudyMode;
-  visibleStart: number;
-  visibleWindowSize: number;
   words: WordEntry[];
   onAddToSet: (word: WordEntry) => void;
+  onContentSizeChange: (width: number, height: number) => void;
   onFavorite: (wordId: string) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
-  onFirstItemLayout: (event: LayoutChangeEvent) => void;
   onInitialChange: (initial: string) => void;
-  onListLayout: (event: LayoutChangeEvent) => void;
   onLevelChange: (level: string) => void;
   onOpenCustomSets: () => void;
   onOpenWord: (word: WordEntry) => void;
   onQueryChange: (query: string) => void;
   onQueryClear: () => void;
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onSearchBlur: () => void;
   onSearchFocus: () => void;
   onSortChange: (sort: LibrarySort) => void;
+  onViewportLayout: (event: LayoutChangeEvent) => void;
 }) {
-  const safeStart = Math.max(0, Math.min(visibleStart, Math.max(0, words.length - visibleWindowSize)));
-  const visibleEnd = Math.min(words.length, safeStart + visibleWindowSize);
-  const visibleWords = words.slice(safeStart, visibleEnd);
-  const spacerHeights = virtualListSpacerHeights(safeStart, visibleWords.length, words.length, itemExtent);
   const hasQuery = query.trim().length > 0;
   const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;
   const themeStyles = useThemeStyles();
@@ -5405,7 +5361,7 @@ const LibraryView = memo(function LibraryView({
         }
       : undefined;
 
-  return (
+  const listHeader = (
     <View style={styles.screenStack}>
       <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
         <View style={styles.libraryHeaderRow}>
@@ -5528,100 +5484,147 @@ const LibraryView = memo(function LibraryView({
         )}
       </View>
 
-      <View onLayout={onListLayout} style={styles.libraryPanel}>
-        <View style={styles.wordList}>
-        <Text style={[styles.resultCount, themeStyles?.resultCount]}>
-          {ui.resultCount(words.length, safeStart, visibleEnd)}
-        </Text>
-        {spacerHeights.top > 0 && (
-          <View pointerEvents="none" style={[styles.virtualLibrarySpacer, { height: spacerHeights.top }]} />
-        )}
-        {visibleWords.map((word, index) => {
-          const wordProgress = progress.words[word.id];
-          return (
-            <Animated.View
-              key={word.id}
-              onLayout={index === 0 ? onFirstItemLayout : undefined}
-              style={[styles.libraryItem, themeStyles?.libraryItem, listMotionStyle(index)]}
-            >
-              <AnimatedPressable
-                accessibilityLabel={ui.viewWordDetails(formatWordPrimary(word, studyMode))}
-                accessibilityRole="button"
-                onPress={() => onOpenWord(word)}
-                pressTone="libraryItem"
-                pressedStyle={[
-                  styles.libraryItemPressed,
-                  styles.libraryItemPressedLift,
-                  themeStyles?.libraryItemPressed,
-                  themeStyles?.libraryItemPressedLift,
-                ]}
-                style={styles.libraryItemMain}
-              >
-                <View style={styles.wordLine}>
-                  <Text style={[styles.libraryWord, studyMode === 'chinese' && styles.libraryChineseWord, themeStyles?.libraryWord]}>
-                    {formatWordPrimary(word, studyMode)}
-                  </Text>
-                  <Text style={styles.libraryGroup}>{word.group}</Text>
-                  <Text style={styles.libraryPos}>{word.partOfSpeech}</Text>
-                </View>
-                {studyMode === 'chinese' && (
-                  <Text style={[styles.libraryPinyin, themeStyles?.libraryPinyin]}>{formatWordPinyin(word, studyMode)}</Text>
-                )}
-                <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{formatMeaningDetail(word, studyMode)}</Text>
-                {formatMeaningSupplement(word, studyMode) && (
-                  <Text style={[styles.librarySupplemental, themeStyles?.librarySupplemental]}>
-                    {ui.supplementalMeanings}: {formatMeaningSupplement(word, studyMode)}
-                  </Text>
-                )}
-                <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
-                <Text style={styles.libraryDetailHint}>{ui.viewDetails}</Text>
-              </AnimatedPressable>
-              <View style={styles.librarySide}>
-                <AnimatedPressable
-                  accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
-                  accessibilityRole="button"
-                  onPress={() => onAddToSet(word)}
-                  pressTone="icon"
-                  style={[styles.iconButton, styles.addToSetIconButton]}
-                >
-                  <SquarePlus size={18} color="#2563eb" strokeWidth={2.4} />
-                </AnimatedPressable>
-                <AnimatedPressable
-                  accessibilityLabel={
-                    wordProgress?.favorite
-                      ? ui.unfavoriteWordName(formatWordPrimary(word, studyMode))
-                      : ui.favoriteWordName(formatWordPrimary(word, studyMode))
-                  }
-                  accessibilityRole="button"
-                  onPress={() => onFavorite(word.id)}
-                  pressTone="icon"
-                  style={styles.iconButton}
-                >
-                  <Star
-                    size={18}
-                    color={wordProgress?.favorite ? '#f59e0b' : '#717987'}
-                    fill={wordProgress?.favorite ? '#f59e0b' : 'transparent'}
-                  />
-                </AnimatedPressable>
-                <Text style={[styles.statusText, themeStyles?.statusText]}>{statusLabel(wordProgress?.status, studyMode)}</Text>
-              </View>
-            </Animated.View>
-          );
-        })}
-        {spacerHeights.bottom > 0 && (
-          <View pointerEvents="none" style={[styles.virtualLibrarySpacer, { height: spacerHeights.bottom }]} />
-        )}
-        {words.length === 0 && (
-          <View style={[styles.emptyState, themeStyles?.emptyState]}>
-            <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
-              {studyMode === 'chinese' ? ui.noChineseWords : ui.noLibraryWords}
-            </Text>
-            <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.relaxLibraryFilters(hasQuery)}</Text>
-          </View>
-        )}
-        </View>
-      </View>
     </View>
+  );
+
+  const renderItem = useCallback(
+    ({ item, index }: ListRenderItemInfo<WordEntry>) => (
+      <LibraryWordRow
+        motionStyle={listMotionStyle(index)}
+        studyMode={studyMode}
+        word={item}
+        wordProgress={progress.words[item.id]}
+        onAddToSet={onAddToSet}
+        onFavorite={onFavorite}
+        onOpenWord={onOpenWord}
+      />
+    ),
+    [listMotionStyle, onAddToSet, onFavorite, onOpenWord, progress.words, studyMode],
+  );
+
+  return (
+    <FlashList
+      contentContainerStyle={styles.libraryListContent}
+      data={words}
+      drawDistance={720}
+      extraData={progress.words}
+      ItemSeparatorComponent={LibraryItemSeparator}
+      keyboardShouldPersistTaps="handled"
+      keyExtractor={libraryWordKeyExtractor}
+      ListEmptyComponent={(
+        <View style={[styles.emptyState, themeStyles?.emptyState]}>
+          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
+            {studyMode === 'chinese' ? ui.noChineseWords : ui.noLibraryWords}
+          </Text>
+          <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.relaxLibraryFilters(hasQuery)}</Text>
+        </View>
+      )}
+      ListHeaderComponent={listHeader}
+      ListHeaderComponentStyle={styles.libraryListHeader}
+      maintainVisibleContentPosition={{ disabled: true }}
+      onContentSizeChange={onContentSizeChange}
+      onLayout={onViewportLayout}
+      onScroll={onScroll}
+      ref={listRef}
+      renderItem={renderItem}
+      scrollEventThrottle={16}
+      showsVerticalScrollIndicator={false}
+      style={styles.libraryFlashList}
+      testID="library-flash-list"
+    />
+  );
+});
+
+function libraryWordKeyExtractor(word: WordEntry): string {
+  return word.id;
+}
+
+function LibraryItemSeparator() {
+  return <View style={styles.libraryItemSeparator} />;
+}
+
+const LibraryWordRow = memo(function LibraryWordRow({
+  motionStyle,
+  studyMode,
+  word,
+  wordProgress,
+  onAddToSet,
+  onFavorite,
+  onOpenWord,
+}: {
+  motionStyle: StyleProp<ViewStyle>;
+  studyMode: StudyMode;
+  word: WordEntry;
+  wordProgress: ProgressState['words'][string] | undefined;
+  onAddToSet: (word: WordEntry) => void;
+  onFavorite: (wordId: string) => void;
+  onOpenWord: (word: WordEntry) => void;
+}) {
+  const themeStyles = useThemeStyles();
+  const ui = modeInterfaceCopy[studyMode];
+  const primaryWord = formatWordPrimary(word, studyMode);
+  const supplementalMeaning = formatMeaningSupplement(word, studyMode);
+
+  return (
+    <Animated.View style={[styles.libraryItem, styles.libraryWordRow, themeStyles?.libraryItem, motionStyle]}>
+      <AnimatedPressable
+        accessibilityLabel={ui.viewWordDetails(primaryWord)}
+        accessibilityRole="button"
+        onPress={() => onOpenWord(word)}
+        pressTone="libraryItem"
+        pressedStyle={[
+          styles.libraryItemPressed,
+          styles.libraryItemPressedLift,
+          themeStyles?.libraryItemPressed,
+          themeStyles?.libraryItemPressedLift,
+        ]}
+        style={styles.libraryItemMain}
+      >
+        <View style={styles.wordLine}>
+          <Text style={[styles.libraryWord, studyMode === 'chinese' && styles.libraryChineseWord, themeStyles?.libraryWord]}>
+            {primaryWord}
+          </Text>
+          <Text style={styles.libraryGroup}>{word.group}</Text>
+          <Text style={styles.libraryPos}>{word.partOfSpeech}</Text>
+        </View>
+        {studyMode === 'chinese' && (
+          <Text style={[styles.libraryPinyin, themeStyles?.libraryPinyin]}>{formatWordPinyin(word, studyMode)}</Text>
+        )}
+        <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{formatMeaningDetail(word, studyMode)}</Text>
+        {supplementalMeaning && (
+          <Text style={[styles.librarySupplemental, themeStyles?.librarySupplemental]}>
+            {ui.supplementalMeanings}: {supplementalMeaning}
+          </Text>
+        )}
+        <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
+        <Text style={styles.libraryDetailHint}>{ui.viewDetails}</Text>
+      </AnimatedPressable>
+      <View style={styles.librarySide}>
+        <AnimatedPressable
+          accessibilityLabel={ui.addToSetName(primaryWord)}
+          accessibilityRole="button"
+          onPress={() => onAddToSet(word)}
+          pressTone="icon"
+          style={[styles.iconButton, styles.addToSetIconButton]}
+        >
+          <SquarePlus size={18} color="#2563eb" strokeWidth={2.4} />
+        </AnimatedPressable>
+        <AnimatedPressable
+          accessibilityLabel={wordProgress?.favorite ? ui.unfavoriteWordName(primaryWord) : ui.favoriteWordName(primaryWord)}
+          accessibilityRole="button"
+          onPress={() => onFavorite(word.id)}
+          pressTone="icon"
+          style={styles.iconButton}
+        >
+          <Star
+            size={18}
+            color={wordProgress?.favorite ? '#f59e0b' : '#717987'}
+            fill={wordProgress?.favorite ? '#f59e0b' : 'transparent'}
+          />
+        </AnimatedPressable>
+        <Text style={[styles.statusText, themeStyles?.statusText]}>{statusLabel(wordProgress?.status, studyMode)}</Text>
+      </View>
+    </Animated.View>
   );
 });
 
@@ -7285,6 +7288,28 @@ const styles = StyleSheet.create({
   screenMotion: {
     gap: 14,
   },
+  libraryScreenHost: {
+    flex: 1,
+    minHeight: 0,
+  },
+  libraryListStage: {
+    flex: 1,
+    minHeight: 0,
+  },
+  libraryFlashList: {
+    flex: 1,
+  },
+  libraryListContent: {
+    paddingBottom: CONTENT_BOTTOM_PADDING,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+  },
+  libraryListHeader: {
+    paddingBottom: 10,
+  },
+  libraryItemSeparator: {
+    height: 10,
+  },
   libraryPanelHidden: {
     opacity: 0,
     transform: [{ translateX: -12 }, { scale: 0.985 }],
@@ -8664,16 +8689,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '900',
   },
-  libraryPanel: {
-    position: 'relative',
-  },
-  wordList: {
-    gap: 10,
-    paddingRight: 44,
-  },
-  virtualLibrarySpacer: {
-    width: '100%',
-  },
   libraryItem: {
     backgroundColor: '#fff',
     borderColor: '#e5e7eb',
@@ -8682,6 +8697,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     padding: 14,
+  },
+  libraryWordRow: {
+    marginRight: 44,
   },
   libraryItemMain: {
     borderRadius: 8,

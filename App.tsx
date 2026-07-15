@@ -72,6 +72,7 @@ import {
   Text,
   TextInput,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
   Linking,
@@ -267,16 +268,14 @@ const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
 const LIBRARY_FIXED_CONTROLS_TOP = 8;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = 8;
-const STUDY_SWIPE_EXIT_X = 460;
 const STUDY_SWIPE_REVEAL_WIDTH = 300;
 const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
 const STUDY_SWIPE_COMMIT_FADE_X = STUDY_SWIPE_THRESHOLD + 18;
-const STUDY_SWIPE_EXIT_DAMPING = 24;
-const STUDY_SWIPE_EXIT_MASS = 0.9;
-const STUDY_SWIPE_EXIT_STIFFNESS = 170;
-const STUDY_CARD_ENTRY_MS = 280;
+const STUDY_SWIPE_EXIT_MIN_MS = 230;
+const STUDY_SWIPE_EXIT_MAX_MS = 330;
+const STUDY_CARD_ENTRY_MS = 240;
 const STUDY_SWIPE_HINT_INITIAL_DELAY_MS = 1450;
 const STUDY_SWIPE_HINT_IDLE_DELAY_MS = 10_000;
 const STUDY_SWIPE_HINT_REPEAT_MS = 15_000;
@@ -4270,20 +4269,6 @@ const HomeView = memo(function HomeView({
         </View>
 
         <AnimatedPressable
-          accessibilityLabel={ui.dictionaryLookup}
-          accessibilityRole="button"
-          onPress={openDictionary}
-          pressTone="list"
-          style={[styles.homeDictionaryStandalone, themeStyles?.homeDictionarySearch]}
-          testID="home-dictionary-search"
-        >
-          <Search size={20} color={darkMode ? '#94a3b8' : '#64748b'} strokeWidth={2.35} />
-          <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
-            {copy.searchPlaceholder}
-          </Text>
-        </AnimatedPressable>
-
-        <AnimatedPressable
           accessibilityLabel={copy.toggleTitle}
           accessibilityRole="button"
           onPress={onToggleStudyMode}
@@ -4314,6 +4299,20 @@ const HomeView = memo(function HomeView({
             <Text style={[styles.reviewText, themeStyles?.reviewText]}>{stats.review > 0 ? ui.reviewListCount(stats.review) : ui.reviewListEmpty}</Text>
           </View>
           <ChevronRight size={18} color="#6b7280" strokeWidth={2.2} />
+        </AnimatedPressable>
+
+        <AnimatedPressable
+          accessibilityLabel={ui.dictionaryLookup}
+          accessibilityRole="button"
+          onPress={openDictionary}
+          pressTone="list"
+          style={[styles.homeDictionaryStandalone, themeStyles?.homeDictionarySearch]}
+          testID="home-dictionary-search"
+        >
+          <Search size={20} color={darkMode ? '#bfdbfe' : '#1d4ed8'} strokeWidth={2.5} />
+          <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
+            {copy.searchPlaceholder}
+          </Text>
         </AnimatedPressable>
 
       </View>
@@ -4621,6 +4620,8 @@ const StudyView = memo(function StudyView({
   const themeStyles = useThemeStyles();
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
+  const { width: viewportWidth } = useWindowDimensions();
+  const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16));
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
   const swipeX = useSharedValue(0);
@@ -4630,10 +4631,11 @@ const StudyView = memo(function StudyView({
   const hapticDirectionCode = useSharedValue(0);
   const swipeCommitPulse = useSharedValue(0);
   const cardEntryProgress = useSharedValue(1);
+  const cardVisibility = useSharedValue(1);
   const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const studyInitialHintScheduledRef = useRef(false);
   const cardEntryStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(cardEntryProgress.value, [0, 0.42, 1], [0, 1, 1], Extrapolation.CLAMP),
+    opacity: cardVisibility.value,
     transform: [
       {
         translateY: interpolate(cardEntryProgress.value, [0, 1], [10, 0], Extrapolation.CLAMP),
@@ -4646,7 +4648,7 @@ const StudyView = memo(function StudyView({
   const slidingCardStyle = useAnimatedStyle(() => {
     const distanceScale = interpolate(
       Math.abs(swipeX.value),
-      [0, STUDY_SWIPE_THRESHOLD, STUDY_SWIPE_EXIT_X],
+      [0, STUDY_SWIPE_THRESHOLD, swipeExitX],
       [1, 0.994, 0.982],
       Extrapolation.CLAMP,
     );
@@ -4654,7 +4656,7 @@ const StudyView = memo(function StudyView({
     return {
       opacity: interpolate(
         swipeX.value,
-        [-STUDY_SWIPE_EXIT_X, 0, STUDY_SWIPE_EXIT_X],
+        [-swipeExitX, 0, swipeExitX],
         [0.92, 1, 0.92],
         Extrapolation.CLAMP,
       ),
@@ -4708,8 +4710,8 @@ const StudyView = memo(function StudyView({
       {
         translateX: interpolate(
           swipeX.value,
-          [-STUDY_SWIPE_EXIT_X, 0],
-          [STUDY_SWIPE_REVEAL_WIDTH - STUDY_SWIPE_EXIT_X, STUDY_SWIPE_REVEAL_WIDTH],
+          [-swipeExitX, 0],
+          [STUDY_SWIPE_REVEAL_WIDTH - swipeExitX, STUDY_SWIPE_REVEAL_WIDTH],
           Extrapolation.CLAMP,
         ),
       },
@@ -4720,8 +4722,8 @@ const StudyView = memo(function StudyView({
       {
         translateX: interpolate(
           swipeX.value,
-          [0, STUDY_SWIPE_EXIT_X],
-          [-STUDY_SWIPE_REVEAL_WIDTH, STUDY_SWIPE_EXIT_X - STUDY_SWIPE_REVEAL_WIDTH],
+          [0, swipeExitX],
+          [-STUDY_SWIPE_REVEAL_WIDTH, swipeExitX - STUDY_SWIPE_REVEAL_WIDTH],
           Extrapolation.CLAMP,
         ),
       },
@@ -4837,8 +4839,9 @@ const StudyView = memo(function StudyView({
     swipePhase.value = 0;
     hapticDirectionCode.value = 0;
     swipeCommitPulse.value = 0;
+    cardVisibility.value = 1;
     runStudyCardEntry();
-  }, [cardEntryProgress, cardSequence, hapticDirectionCode, runStudyCardEntry, swipeCommitPulse, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
+  }, [cardEntryProgress, cardSequence, cardVisibility, hapticDirectionCode, runStudyCardEntry, swipeCommitPulse, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
 
   useEffect(() => {
     if (!word) {
@@ -4939,19 +4942,35 @@ const StudyView = memo(function StudyView({
               withTiming(1, { duration: 72, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) }),
               withSpring(0, { damping: 18, mass: 0.5, stiffness: 230 }),
             );
-            swipeX.value = withSpring(
-              directionCode > 0 ? STUDY_SWIPE_EXIT_X : -STUDY_SWIPE_EXIT_X,
+            const remainingRatio = Math.max(
+              0,
+              Math.min(
+                1,
+                (swipeExitX - Math.min(Math.abs(nextX), swipeExitX)) /
+                  Math.max(1, swipeExitX - STUDY_SWIPE_RELEASE_DISTANCE),
+              ),
+            );
+            const velocityRatio = Math.min(1, Math.abs(event.velocityX) / 1800);
+            const exitDuration = Math.max(
+              STUDY_SWIPE_EXIT_MIN_MS,
+              Math.min(
+                STUDY_SWIPE_EXIT_MAX_MS,
+                STUDY_SWIPE_EXIT_MIN_MS +
+                  (STUDY_SWIPE_EXIT_MAX_MS - STUDY_SWIPE_EXIT_MIN_MS) *
+                    (remainingRatio - velocityRatio),
+              ),
+            );
+            swipeX.value = withTiming(
+              directionCode > 0 ? swipeExitX : -swipeExitX,
               {
-                damping: STUDY_SWIPE_EXIT_DAMPING,
-                mass: STUDY_SWIPE_EXIT_MASS,
-                overshootClamping: true,
-                stiffness: STUDY_SWIPE_EXIT_STIFFNESS,
-                velocity: event.velocityX,
+                duration: exitDuration,
+                easing: ReanimatedEasing.bezier(0.16, 0.78, 0.22, 1),
               },
               (finished) => {
                 if (!finished) {
                   return;
                 }
+                cardVisibility.value = 0;
                 cardEntryProgress.value = 0;
                 swipeX.value = 0;
                 swipeStartX.value = 0;
@@ -4997,6 +5016,7 @@ const StudyView = memo(function StudyView({
         }),
     [
       cardEntryProgress,
+      cardVisibility,
       finishNativeSwipe,
       fireSwipeCommitHaptic,
       fireSwipeHaptic,
@@ -5006,6 +5026,7 @@ const StudyView = memo(function StudyView({
       swipeCommitPulse,
       swipePhase,
       swipeStartX,
+      swipeExitX,
       swipeX,
       word,
     ],
@@ -8198,18 +8219,18 @@ const styles = StyleSheet.create({
   },
   homeDictionaryStandalone: {
     alignItems: 'center',
-    backgroundColor: '#f1f3f6',
-    borderColor: '#e2e8f0',
+    backgroundColor: '#eaf2ff',
+    borderColor: '#60a5fa',
     borderRadius: 8,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
     minHeight: 52,
     paddingHorizontal: 14,
-    shadowColor: '#0f172a',
-    shadowOffset: { height: 1, width: 0 },
-    shadowOpacity: 0.035,
-    shadowRadius: 3,
+    shadowColor: '#2563eb',
+    shadowOffset: { height: 3, width: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 9,
   },
   homeDictionarySearch: {
     alignItems: 'center',
@@ -8231,10 +8252,10 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   homeDictionaryLauncherText: {
-    color: '#64748b',
+    color: '#1e3a8a',
     flex: 1,
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: '700',
   },
   homeDictionaryModalRoot: {
     flex: 1,
@@ -10566,8 +10587,8 @@ const darkStyles = StyleSheet.create({
     borderColor: '#334155',
   },
   homeDictionarySearch: {
-    backgroundColor: '#182033',
-    borderColor: '#475569',
+    backgroundColor: '#102a56',
+    borderColor: '#3b82f6',
   },
   homeDictionaryInput: {
     color: '#f8fafc',

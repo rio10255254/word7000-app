@@ -1042,6 +1042,9 @@ describe('free web launch configuration', () => {
     expect(homeSource).toContain("clearButtonMode={IS_NATIVE_IOS ? 'while-editing' : 'never'}");
     expect(homeSource).not.toContain('copy.heroText');
     expect(homeSource).not.toContain('homeDictionaryStandaloneIcon');
+    expect(homeSource.indexOf('testID="home-dictionary-search"')).toBeGreaterThan(
+      homeSource.indexOf('onPress={onOpenReview}'),
+    );
     expect(appSource).not.toContain('const homeDictionarySearch = useStableEvent');
     expect(appSource).not.toContain('setLibrarySearchFocusRequest');
     expect(homeSource).not.toContain('onOpenAccount');
@@ -1077,7 +1080,9 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('runOnJS(fireSwipeHaptic)()');
     expect(studySource).toContain("triggerPressHaptic('chip')");
     expect(studySource).toContain("triggerPressHaptic('primary')");
-    expect(studySource).toContain('STUDY_SWIPE_EXIT_DAMPING');
+    expect(studySource).toContain('STUDY_SWIPE_EXIT_MAX_MS');
+    expect(studySource).toContain('const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16))');
+    expect(studySource).toContain('directionCode > 0 ? swipeExitX : -swipeExitX');
     expect(studySource).toContain('swipeCommitPulse');
     expect(studySource).toContain('const swipeHintX = useSharedValue(0)');
     expect(studySource).toContain('withSequence(');
@@ -1100,6 +1105,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('SvgMask');
     expect(studySource).toContain('cardEntryProgress');
     expect(studySource).toContain('const cardEntryProgress = useSharedValue(1)');
+    expect(studySource).toContain('const cardVisibility = useSharedValue(1)');
+    expect(studySource).toContain('cardVisibility.value = 0');
     expect(studySource).not.toContain('cardSwapOpacity');
     expect(studySource).toContain('onSwipeReview');
     expect(studySource).toContain('onSwipeKnown');

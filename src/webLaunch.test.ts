@@ -1080,7 +1080,9 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('runOnJS(fireSwipeHaptic)()');
     expect(studySource).toContain("triggerPressHaptic('chip')");
     expect(studySource).toContain("triggerPressHaptic('primary')");
-    expect(studySource).toContain('STUDY_SWIPE_EXIT_MAX_MS');
+    expect(studySource).toContain('STUDY_SWIPE_MIN_EXIT_VELOCITY');
+    expect(studySource).toContain('velocity: releaseVelocity');
+    expect(studySource).toContain('rotateZ');
     expect(studySource).toContain('const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16))');
     expect(studySource).toContain('directionCode > 0 ? swipeExitX : -swipeExitX');
     expect(studySource).toContain('swipeCommitPulse');

@@ -272,8 +272,10 @@ const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
 const STUDY_SWIPE_COMMIT_FADE_X = STUDY_SWIPE_THRESHOLD + 18;
-const STUDY_SWIPE_EXIT_MIN_MS = 230;
-const STUDY_SWIPE_EXIT_MAX_MS = 330;
+const STUDY_SWIPE_MAX_TILT_DEG = 7;
+// A card dragged slowly past the threshold is released at almost zero velocity;
+// give it a floor so it still leaves decisively instead of drifting out.
+const STUDY_SWIPE_MIN_EXIT_VELOCITY = 950;
 const STUDY_CARD_ENTRY_MS = 240;
 const STUDY_SWIPE_HINT_INITIAL_DELAY_MS = 1450;
 const STUDY_SWIPE_HINT_IDLE_DELAY_MS = 10_000;
@@ -4654,10 +4656,19 @@ const StudyView = memo(function StudyView({
     ],
   }));
   const slidingCardStyle = useAnimatedStyle(() => {
+    const offsetX = swipeX.value + swipeHintX.value;
     const distanceScale = interpolate(
       Math.abs(swipeX.value),
       [0, STUDY_SWIPE_THRESHOLD, swipeExitX],
-      [1, 0.994, 0.982],
+      [1, 0.988, 0.958],
+      Extrapolation.CLAMP,
+    );
+    // The card pivots below its own base, so pushing one edge tips it like a
+    // real card instead of sliding it along a rail.
+    const tilt = interpolate(
+      offsetX,
+      [-swipeExitX, 0, swipeExitX],
+      [-STUDY_SWIPE_MAX_TILT_DEG, 0, STUDY_SWIPE_MAX_TILT_DEG],
       Extrapolation.CLAMP,
     );
 
@@ -4669,7 +4680,8 @@ const StudyView = memo(function StudyView({
         Extrapolation.CLAMP,
       ),
       transform: [
-        { translateX: swipeX.value + swipeHintX.value },
+        { translateX: offsetX },
+        { rotateZ: `${tilt}deg` },
         { scale: distanceScale + swipeCommitPulse.value * 0.01 },
       ],
     };
@@ -4950,29 +4962,21 @@ const StudyView = memo(function StudyView({
               withTiming(1, { duration: 72, easing: ReanimatedEasing.out(ReanimatedEasing.cubic) }),
               withSpring(0, { damping: 18, mass: 0.5, stiffness: 230 }),
             );
-            const remainingRatio = Math.max(
-              0,
-              Math.min(
-                1,
-                (swipeExitX - Math.min(Math.abs(nextX), swipeExitX)) /
-                  Math.max(1, swipeExitX - STUDY_SWIPE_RELEASE_DISTANCE),
-              ),
-            );
-            const velocityRatio = Math.min(1, Math.abs(event.velocityX) / 1800);
-            const exitDuration = Math.max(
-              STUDY_SWIPE_EXIT_MIN_MS,
-              Math.min(
-                STUDY_SWIPE_EXIT_MAX_MS,
-                STUDY_SWIPE_EXIT_MIN_MS +
-                  (STUDY_SWIPE_EXIT_MAX_MS - STUDY_SWIPE_EXIT_MIN_MS) *
-                    (remainingRatio - velocityRatio),
-              ),
-            );
-            swipeX.value = withTiming(
+            // Carry the finger's velocity straight into the exit so the card
+            // keeps moving at the speed it was released at. A timing curve
+            // always restarts from zero, which is what made a fast flick stall
+            // for a moment before the card left the screen.
+            const releaseVelocity = Math.abs(event.velocityX) < STUDY_SWIPE_MIN_EXIT_VELOCITY
+              ? directionCode * STUDY_SWIPE_MIN_EXIT_VELOCITY
+              : event.velocityX;
+            swipeX.value = withSpring(
               directionCode > 0 ? swipeExitX : -swipeExitX,
               {
-                duration: exitDuration,
-                easing: ReanimatedEasing.bezier(0.16, 0.78, 0.22, 1),
+                damping: 22,
+                mass: 0.42,
+                overshootClamping: true,
+                stiffness: 168,
+                velocity: releaseVelocity,
               },
               (finished) => {
                 if (!finished) {
@@ -5480,7 +5484,7 @@ const QuizView = memo(function QuizView({
         />
       )}
 
-      <Animated.View style={[styles.quizModeCard, themeStyles?.quizModeCard, motionStyle]}>
+      <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
         <View style={styles.rowBetween}>
           <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.quizPracticeTitle}</Text>
           <Languages size={20} color="#2563eb" strokeWidth={2.3} />
@@ -5513,22 +5517,22 @@ const QuizView = memo(function QuizView({
             );
           })}
         </View>
-      </Animated.View>
 
-      {!quizStarted && !quizFinished && (
-        <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
-          <View style={styles.rowBetween}>
-            <View>
-              <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.questionCountTitle}</Text>
-              <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.questionBankPrefix} {wordCount} {copy.questionBankUnit}</Text>
+        {!quizStarted && !quizFinished && (
+          <>
+            <View style={[styles.quizSectionDivider, themeStyles?.quizSectionDivider]} />
+            <View style={styles.rowBetween}>
+              <View>
+                <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.questionCountTitle}</Text>
+                <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.questionBankPrefix} {wordCount} {copy.questionBankUnit}</Text>
+              </View>
+              {speakingMode ? (
+                <Languages size={22} color="#2563eb" strokeWidth={2.3} />
+              ) : (
+                <Target size={22} color="#2563eb" strokeWidth={2.3} />
+              )}
             </View>
-            {speakingMode ? (
-              <Languages size={22} color="#2563eb" strokeWidth={2.3} />
-            ) : (
-              <Target size={22} color="#2563eb" strokeWidth={2.3} />
-            )}
-          </View>
-          <View style={styles.quizCountRow}>
+            <View style={styles.quizCountRow}>
             {questionCounts.map((count) => {
               const selected = questionCount === count;
               const cappedCount = Math.min(count, wordCount);
@@ -5551,22 +5555,26 @@ const QuizView = memo(function QuizView({
                 </AnimatedPressable>
               );
             })}
-          </View>
-          <AnimatedPressable
-            accessibilityRole="button"
-            disabled={wordCount === 0}
-            onPress={onStart}
-            pressTone="primary"
-            style={[styles.primaryButton, wordCount === 0 && styles.disabledButton]}
-          >
-            {speakingMode ? (
-              <Languages size={18} color="#fff" strokeWidth={2.3} />
-            ) : (
-              <Target size={18} color="#fff" strokeWidth={2.3} />
-            )}
-            <Text style={styles.primaryButtonText}>{speakingMode ? ui.startSpeaking : ui.startQuiz}</Text>
-          </AnimatedPressable>
-        </Animated.View>
+            </View>
+          </>
+        )}
+      </Animated.View>
+
+      {!quizStarted && !quizFinished && (
+        <AnimatedPressable
+          accessibilityRole="button"
+          disabled={wordCount === 0}
+          onPress={onStart}
+          pressTone="primary"
+          style={[styles.primaryButton, wordCount === 0 && styles.disabledButton]}
+        >
+          {speakingMode ? (
+            <Languages size={18} color="#fff" strokeWidth={2.3} />
+          ) : (
+            <Target size={18} color="#fff" strokeWidth={2.3} />
+          )}
+          <Text style={styles.primaryButtonText}>{speakingMode ? ui.startSpeaking : ui.startQuiz}</Text>
+        </AnimatedPressable>
       )}
 
       {quizFinished && (
@@ -8802,6 +8810,11 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
   },
+  quizSectionDivider: {
+    backgroundColor: 'rgba(60, 60, 67, 0.18)',
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: -18,
+  },
   quizModeSwitch: {
     backgroundColor: '#eef2ff',
     borderRadius: 14,
@@ -10815,6 +10828,9 @@ const darkStyles = StyleSheet.create({
   quizModeCard: {
     backgroundColor: '#111827',
     borderColor: '#334155',
+  },
+  quizSectionDivider: {
+    backgroundColor: 'rgba(84, 84, 88, 0.55)',
   },
   quizModeSwitch: {
     backgroundColor: '#0f172a',

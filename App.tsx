@@ -47,7 +47,6 @@ import {
   Sun,
   Target,
   Trash2,
-  Trophy,
   Upload,
   User,
   X,
@@ -2940,22 +2939,25 @@ function Word7000App() {
       <StatusBar style={darkMode ? 'light' : 'dark'} />
       <View style={[styles.appShell, IS_WEB_IOS_PREVIEW && styles.webIosPreviewAppShell, themeStyles?.appShell]}>
         <View style={styles.header}>
-          <View>
-            <Text style={[styles.brand, themeStyles?.brand]}>{activeModeCopy.brand}</Text>
-            <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>{activeModeCopy.subtitle}</Text>
+          <View style={styles.flexOne}>
+            <Text
+              numberOfLines={1}
+              style={[styles.brand, themeStyles?.brand]}
+            >
+              {activeTab === 'home' ? activeModeCopy.brand : tabLabelForMode(activeTab, studyMode)}
+            </Text>
+            {activeTab === 'home' && (
+              <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>{activeModeCopy.subtitle}</Text>
+            )}
           </View>
-          <View style={styles.headerActions}>
-            {previewModeLabel && (
+          {previewModeLabel && (
+            <View style={styles.headerActions}>
               <View style={[styles.previewModePill, themeStyles?.previewModePill]}>
                 <Smartphone size={14} color={darkMode ? '#bfdbfe' : '#2563eb'} strokeWidth={2.4} />
                 <Text style={[styles.previewModeText, themeStyles?.previewModeText]}>{previewModeLabel}</Text>
               </View>
-            )}
-            <View style={[styles.levelPill, themeStyles?.levelPill]}>
-              <Trophy size={15} color="#2f855a" strokeWidth={2.4} />
-              <Text style={[styles.levelText, themeStyles?.levelText]}>Day {progress.streak}</Text>
             </View>
-          </View>
+          )}
         </View>
         {activeTab === 'library' ? (
           <Animated.View
@@ -5871,7 +5873,6 @@ const LibraryView = memo(function LibraryView({
       <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
         <View style={styles.libraryHeaderRow}>
           <View style={styles.libraryHeaderTitleLine}>
-            <Text style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>{copy.libraryTitle}</Text>
             <View style={[styles.libraryHeaderMetaPill, themeStyles?.libraryHeaderMetaPill]} testID="library-filtered-count-pill">
               <Text style={[styles.libraryHeaderMetaPillText, themeStyles?.libraryHeaderMetaPillText]}>{ui.filteredCount(words.length)}</Text>
             </View>
@@ -7536,9 +7537,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 22,
-    paddingTop: 18,
-    paddingBottom: 12,
+    paddingHorizontal: 18,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   headerActions: {
     alignItems: 'flex-end',
@@ -7546,8 +7547,9 @@ const styles = StyleSheet.create({
   },
   brand: {
     color: '#172033',
-    fontSize: 28,
+    fontSize: 34,
     fontWeight: '700',
+    lineHeight: 41,
   },
   headerSubtext: {
     color: '#717987',
@@ -9197,7 +9199,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     gap: 9,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   libraryHeaderTitle: {
     color: '#172033',

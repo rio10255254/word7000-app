@@ -4538,18 +4538,18 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
           <SvgRect fill={`url(#${featherId})`} height="100%" width="100%" x="0" y="0" />
         </SvgMask>
         <SvgLinearGradient id={washId} x1={hotEdge} x2={fadeEdge} y1="0%" y2="0%">
-          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.42" />
-          <SvgStop offset="18%" stopColor={mainColor} stopOpacity="0.32" />
-          <SvgStop offset="46%" stopColor={mainColor} stopOpacity="0.2" />
-          <SvgStop offset="72%" stopColor={softColor} stopOpacity="0.12" />
-          <SvgStop offset="100%" stopColor={softColor} stopOpacity="0.06" />
+          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.24" />
+          <SvgStop offset="18%" stopColor={mainColor} stopOpacity="0.18" />
+          <SvgStop offset="46%" stopColor={mainColor} stopOpacity="0.11" />
+          <SvgStop offset="72%" stopColor={softColor} stopOpacity="0.06" />
+          <SvgStop offset="100%" stopColor={softColor} stopOpacity="0.03" />
         </SvgLinearGradient>
         <SvgRadialGradient cx={hotEdge} cy="50%" fx={hotEdge} fy="50%" id={radialId} r="128%">
-          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.56" />
-          <SvgStop offset="26%" stopColor={mainColor} stopOpacity="0.38" />
-          <SvgStop offset="54%" stopColor={mainColor} stopOpacity="0.2" />
-          <SvgStop offset="78%" stopColor={softColor} stopOpacity="0.09" />
-          <SvgStop offset="100%" stopColor={softColor} stopOpacity="0.03" />
+          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.32" />
+          <SvgStop offset="26%" stopColor={mainColor} stopOpacity="0.21" />
+          <SvgStop offset="54%" stopColor={mainColor} stopOpacity="0.11" />
+          <SvgStop offset="78%" stopColor={softColor} stopOpacity="0.05" />
+          <SvgStop offset="100%" stopColor={softColor} stopOpacity="0.015" />
         </SvgRadialGradient>
       </SvgDefs>
       <SvgG mask={`url(#${maskId})`}>
@@ -4557,6 +4557,41 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
         <SvgRect fill={`url(#${radialId})`} height="100%" width="100%" x="0" y="0" />
       </SvgG>
     </Svg>
+  );
+}
+
+// Shared by the live card and the deck underlay. They have to render the exact
+// same body, otherwise the underlay grows extra content the instant it becomes
+// the live card and the swap reads as a flash.
+function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEntry }) {
+  const themeStyles = useThemeStyles();
+  const ui = modeInterfaceCopy[studyMode];
+  const supplement = formatMeaningSupplement(word, studyMode);
+
+  return (
+    <>
+      <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
+        {formatWordPrimary(word, studyMode)}
+      </Text>
+      {studyMode === 'chinese' && (
+        <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
+      )}
+      <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
+      <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
+        <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
+        <Text style={[styles.meaning, themeStyles?.meaning]}>{formatMeaningDetail(word, studyMode)}</Text>
+      </View>
+      {supplement && (
+        <View style={[styles.supplementalMeaning, themeStyles?.supplementalMeaning]}>
+          <Text style={[styles.supplementalLabel, themeStyles?.supplementalLabel]}>{ui.supplementalMeanings}</Text>
+          <Text style={[styles.supplementalText, themeStyles?.supplementalText]}>{supplement}</Text>
+        </View>
+      )}
+      <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
+        <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
+        <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
+      </View>
+    </>
   );
 }
 
@@ -4715,7 +4750,7 @@ const StudyView = memo(function StudyView({
     );
 
     return {
-      opacity: interpolate(reveal, [0, 1], [0.5, 0.72], Extrapolation.CLAMP),
+      opacity: interpolate(reveal, [0, 1], [0.34, 0.5], Extrapolation.CLAMP),
       transform: [
         { translateY: interpolate(reveal, [0, 1], [14, 9], Extrapolation.CLAMP) },
         { scale: interpolate(reveal, [0, 1], [0.955, 0.973], Extrapolation.CLAMP) },
@@ -5154,15 +5189,12 @@ const StudyView = memo(function StudyView({
             style={[styles.wordCard, styles.studySwipeDeckUnderlay, themeStyles?.wordCard, deckUnderlayStyle]}
             testID="study-swipe-deck-underlay"
           >
-            <View style={styles.groupPill}>
-              <Text style={styles.groupText}>{nextWord.group}</Text>
+            <View style={styles.rowBetween}>
+              <View style={styles.groupPill}>
+                <Text style={styles.groupText}>{nextWord.group}</Text>
+              </View>
             </View>
-            <Text
-              numberOfLines={1}
-              style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}
-            >
-              {formatWordPrimary(nextWord, studyMode)}
-            </Text>
+            <StudyCardBody studyMode={studyMode} word={nextWord} />
           </Reanimated.View>
         )}
          <Reanimated.View
@@ -5257,27 +5289,7 @@ const StudyView = memo(function StudyView({
               </AnimatedPressable>
             </View>
           </View>
-          <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
-            {formatWordPrimary(word, studyMode)}
-          </Text>
-          {studyMode === 'chinese' && (
-            <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
-          )}
-          <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
-          <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
-            <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
-            <Text style={[styles.meaning, themeStyles?.meaning]}>{formatMeaningDetail(word, studyMode)}</Text>
-          </View>
-          {formatMeaningSupplement(word, studyMode) && (
-            <View style={[styles.supplementalMeaning, themeStyles?.supplementalMeaning]}>
-              <Text style={[styles.supplementalLabel, themeStyles?.supplementalLabel]}>{ui.supplementalMeanings}</Text>
-              <Text style={[styles.supplementalText, themeStyles?.supplementalText]}>{formatMeaningSupplement(word, studyMode)}</Text>
-            </View>
-          )}
-          <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
-            <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
-            <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
-           </View>
+          <StudyCardBody studyMode={studyMode} word={word} />
          </Reanimated.View>
         </GestureDetector>
         </Reanimated.View>
@@ -8631,6 +8643,8 @@ const styles = StyleSheet.create({
   },
   studySwipeRevealFill: {
     alignItems: 'center',
+    borderCurve: 'continuous',
+    borderRadius: 18,
     bottom: 0,
     justifyContent: 'center',
     left: 0,
@@ -8642,11 +8656,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   studySwipeRevealReview: {
-    backgroundColor: 'rgba(239, 68, 68, 0.13)',
+    backgroundColor: 'rgba(239, 68, 68, 0.05)',
     right: 0,
   },
   studySwipeRevealKnown: {
-    backgroundColor: 'rgba(34, 197, 94, 0.14)',
+    backgroundColor: 'rgba(34, 197, 94, 0.055)',
     left: 0,
   },
   studySwipeRevealGradientWrap: {
@@ -8672,19 +8686,25 @@ const styles = StyleSheet.create({
   },
   studySwipeRevealCue: {
     alignItems: 'center',
-    bottom: 0,
+    borderCurve: 'continuous',
+    borderRadius: 20,
+    bottom: 26,
     gap: 5,
     justifyContent: 'center',
     minHeight: 130,
     position: 'absolute',
-    top: 0,
+    top: 26,
     width: 132,
     zIndex: 2,
   },
+  // The deck underlay now sits behind the cue, so it needs a wash of its own to
+  // stay legible against a full card instead of empty space.
   studySwipeRevealCueReview: {
+    backgroundColor: 'rgba(254, 242, 242, 0.86)',
     right: 8,
   },
   studySwipeRevealCueKnown: {
+    backgroundColor: 'rgba(240, 253, 244, 0.86)',
     left: 8,
   },
   studySwipeFeedbackReviewText: {

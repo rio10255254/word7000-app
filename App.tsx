@@ -268,7 +268,7 @@ const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
 const LIBRARY_FIXED_CONTROLS_TOP = 8;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = 8;
-const STUDY_SWIPE_REVEAL_WIDTH = 300;
+const STUDY_SWIPE_REVEAL_WIDTH = 460;
 const STUDY_SWIPE_GLOW_WAKE_X = 14;
 const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
@@ -4538,17 +4538,18 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
           <SvgRect fill={`url(#${featherId})`} height="100%" width="100%" x="0" y="0" />
         </SvgMask>
         <SvgLinearGradient id={washId} x1={hotEdge} x2={fadeEdge} y1="0%" y2="0%">
-          <SvgStop offset="0%" stopColor={mainColor} stopOpacity="0.11" />
-          <SvgStop offset="42%" stopColor={softColor} stopOpacity="0.044" />
-          <SvgStop offset="82%" stopColor={mainColor} stopOpacity="0" />
-          <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
+          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.42" />
+          <SvgStop offset="18%" stopColor={mainColor} stopOpacity="0.32" />
+          <SvgStop offset="46%" stopColor={mainColor} stopOpacity="0.2" />
+          <SvgStop offset="72%" stopColor={softColor} stopOpacity="0.12" />
+          <SvgStop offset="100%" stopColor={softColor} stopOpacity="0.06" />
         </SvgLinearGradient>
-        <SvgRadialGradient cx={hotEdge} cy="50%" fx={hotEdge} fy="50%" id={radialId} r="112%">
-          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.29" />
-          <SvgStop offset="30%" stopColor={mainColor} stopOpacity="0.18" />
-          <SvgStop offset="62%" stopColor={softColor} stopOpacity="0.07" />
-          <SvgStop offset="86%" stopColor={mainColor} stopOpacity="0" />
-          <SvgStop offset="100%" stopColor={mainColor} stopOpacity="0" />
+        <SvgRadialGradient cx={hotEdge} cy="50%" fx={hotEdge} fy="50%" id={radialId} r="128%">
+          <SvgStop offset="0%" stopColor={deepColor} stopOpacity="0.56" />
+          <SvgStop offset="26%" stopColor={mainColor} stopOpacity="0.38" />
+          <SvgStop offset="54%" stopColor={mainColor} stopOpacity="0.2" />
+          <SvgStop offset="78%" stopColor={softColor} stopOpacity="0.09" />
+          <SvgStop offset="100%" stopColor={softColor} stopOpacity="0.03" />
         </SvgRadialGradient>
       </SvgDefs>
       <SvgG mask={`url(#${maskId})`}>
@@ -4700,19 +4701,24 @@ const StudyView = memo(function StudyView({
   // The next card sits under the current one and rises as the top card is
   // dragged away, so a swipe reads as dealing off a deck instead of one card
   // vanishing and an unrelated one fading in.
+  // Deliberately understated. When the underlay rose close to full size it
+  // read as "this is the next card", and the swap then looked like a glitch —
+  // with any filter but "all", marking a word rebuilds and reshuffles the
+  // session, so the card that actually arrives often is not this one. Staying
+  // low keeps it an honest hint of depth rather than a broken promise.
   const deckUnderlayStyle = useAnimatedStyle(() => {
     const reveal = interpolate(
       Math.abs(swipeX.value),
-      [0, STUDY_SWIPE_THRESHOLD],
+      [0, STUDY_SWIPE_THRESHOLD * 2.6],
       [0, 1],
       Extrapolation.CLAMP,
     );
 
     return {
-      opacity: interpolate(reveal, [0, 1], [0.55, 0.95], Extrapolation.CLAMP),
+      opacity: interpolate(reveal, [0, 1], [0.5, 0.72], Extrapolation.CLAMP),
       transform: [
-        { translateY: interpolate(reveal, [0, 1], [16, 2], Extrapolation.CLAMP) },
-        { scale: interpolate(reveal, [0, 1], [0.96, 0.995], Extrapolation.CLAMP) },
+        { translateY: interpolate(reveal, [0, 1], [14, 9], Extrapolation.CLAMP) },
+        { scale: interpolate(reveal, [0, 1], [0.955, 0.973], Extrapolation.CLAMP) },
       ],
     };
   });
@@ -8636,9 +8642,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   studySwipeRevealReview: {
+    backgroundColor: 'rgba(239, 68, 68, 0.13)',
     right: 0,
   },
   studySwipeRevealKnown: {
+    backgroundColor: 'rgba(34, 197, 94, 0.14)',
     left: 0,
   },
   studySwipeRevealGradientWrap: {

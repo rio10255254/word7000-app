@@ -4749,7 +4749,7 @@ const StudyView = memo(function StudyView({
   // which is where the flash was coming from.
   const deckUnderlayStyle = useAnimatedStyle(() => {
     const distance = Math.abs(swipeX.value);
-    const settle = [0, STUDY_SWIPE_THRESHOLD, swipeExitX * 0.72];
+    const settle = [0, STUDY_SWIPE_THRESHOLD, swipeExitX * 0.58];
 
     return {
       opacity: interpolate(distance, settle, [0.32, 0.58, 1], Extrapolation.CLAMP),
@@ -4772,7 +4772,7 @@ const StudyView = memo(function StudyView({
     opacity: interpolate(
       swipeX.value,
       [
-        -swipeExitX * 0.72,
+        -swipeExitX * 0.62,
         -STUDY_SWIPE_COMMIT_FADE_X,
         -STUDY_SWIPE_THRESHOLD,
         -STUDY_SWIPE_READY_FADE_X,
@@ -4794,7 +4794,7 @@ const StudyView = memo(function StudyView({
         STUDY_SWIPE_READY_FADE_X,
         STUDY_SWIPE_THRESHOLD,
         STUDY_SWIPE_COMMIT_FADE_X,
-        swipeExitX * 0.72,
+        swipeExitX * 0.62,
       ],
       [0, 0.1, 0.28, 0.62, 0.94, 1, 0],
       Extrapolation.CLAMP,
@@ -5085,13 +5085,14 @@ const StudyView = memo(function StudyView({
                 if (!finished) {
                   return;
                 }
+                // Hide the thrown card, but leave swipeX where it is. The
+                // underlay reads from it, so zeroing it here would drop the
+                // settled page back to its resting state during the very
+                // frames it is meant to be covering. The layout effect that
+                // runs with the new word resets everything at the same moment
+                // the incoming card is painted over it.
                 cardVisibility.value = 0;
                 cardEntryProgress.value = 0;
-                swipeX.value = 0;
-                swipeStartX.value = 0;
-                swipePhase.value = 0;
-                hapticDirectionCode.value = 0;
-                swipeCommitPulse.value = 0;
                 runOnJS(finishNativeSwipe)(directionCode);
               },
             );

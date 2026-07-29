@@ -4691,17 +4691,11 @@ const StudyView = memo(function StudyView({
   const cardVisibility = useSharedValue(1);
   const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const studyInitialHintScheduledRef = useRef(false);
-  const cardEntryStyle = useAnimatedStyle(() => ({
-    opacity: cardVisibility.value,
-    transform: [
-      {
-        translateY: interpolate(cardEntryProgress.value, [0, 1], [4, 0], Extrapolation.CLAMP),
-      },
-      {
-        scale: interpolate(cardEntryProgress.value, [0, 1], [0.997, 1], Extrapolation.CLAMP),
-      },
-    ],
-  }));
+  // Everything that belongs to the live card — travel, tilt, entry, visibility
+  // — has to live on the card itself. These used to be split across the card
+  // and its parent stage, which meant hiding the thrown card also blanked the
+  // underlay and the glow sitting in that same stage. That was the whole-card
+  // flash: the page underneath was never on screen to cover the handoff.
   const slidingCardStyle = useAnimatedStyle(() => {
     const offsetX = swipeX.value + swipeHintX.value;
     const distanceScale = interpolate(
@@ -4718,18 +4712,17 @@ const StudyView = memo(function StudyView({
       [-STUDY_SWIPE_MAX_TILT_DEG, 0, STUDY_SWIPE_MAX_TILT_DEG],
       Extrapolation.CLAMP,
     );
+    const entryScale = interpolate(cardEntryProgress.value, [0, 1], [0.997, 1], Extrapolation.CLAMP);
 
     return {
-      opacity: interpolate(
-        swipeX.value,
-        [-swipeExitX, 0, swipeExitX],
-        [0.92, 1, 0.92],
-        Extrapolation.CLAMP,
-      ),
+      opacity:
+        cardVisibility.value *
+        interpolate(swipeX.value, [-swipeExitX, 0, swipeExitX], [0.92, 1, 0.92], Extrapolation.CLAMP),
       transform: [
         { translateX: offsetX },
+        { translateY: interpolate(cardEntryProgress.value, [0, 1], [4, 0], Extrapolation.CLAMP) },
         { rotateZ: `${tilt}deg` },
-        { scale: distanceScale + swipeCommitPulse.value * 0.01 },
+        { scale: distanceScale * entryScale + swipeCommitPulse.value * 0.01 },
       ],
     };
   });
@@ -5189,7 +5182,7 @@ const StudyView = memo(function StudyView({
       {word && (
         <>
        <Animated.View style={[styles.studySwipeDeck, motionStyle]} testID="study-swipe-deck">
-        <Reanimated.View style={[styles.studySwipeSwapStage, cardEntryStyle]}>
+        <Reanimated.View style={styles.studySwipeSwapStage}>
         {nextWord && (
           <Reanimated.View
             pointerEvents="none"

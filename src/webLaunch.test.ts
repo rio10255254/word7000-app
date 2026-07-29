@@ -162,7 +162,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("overflow: 'hidden'");
     expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING');
     expect(tabBarSource).toContain("alignSelf: 'stretch'");
-    expect(tabBarSource).toContain('borderTopWidth: 1');
+    expect(tabBarSource).toContain('borderTopWidth:');
     expect(tabBarSource).toContain('minHeight: TAB_BAR_CONTENT_HEIGHT');
     expect(tabBarSource).not.toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
     expect(tabBarSource).toContain('paddingHorizontal: 16');

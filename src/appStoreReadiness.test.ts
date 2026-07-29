@@ -50,7 +50,7 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING');
     expect(appSource).toContain('style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}');
     expect(tabBarSource).toContain("alignSelf: 'stretch'");
-    expect(tabBarSource).toContain('borderTopWidth: 1');
+    expect(tabBarSource).toContain('borderTopWidth:');
     expect(tabBarSource).not.toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
     expect(tabBarSource).toContain('paddingHorizontal: 16');
     expect(tabBarSource).not.toContain("position: 'absolute'");

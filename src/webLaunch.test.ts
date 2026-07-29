@@ -1084,7 +1084,9 @@ describe('free web launch configuration', () => {
     expect(studySource).toContain('velocity: releaseVelocity');
     expect(studySource).toContain('rotateZ');
     expect(studySource).toContain('const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16))');
-    expect(studySource).toContain('directionCode > 0 ? swipeExitX : -swipeExitX');
+    expect(studySource).toContain('swipeX.value = withDecay(');
+    expect(studySource).toContain('clamp: directionCode > 0 ? [0, swipeExitX] : [-swipeExitX, 0]');
+    expect(studySource).toContain('deckUnderlayStyle');
     expect(studySource).toContain('swipeCommitPulse');
     expect(studySource).toContain('const swipeHintX = useSharedValue(0)');
     expect(studySource).toContain('withSequence(');

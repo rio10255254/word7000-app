@@ -12,6 +12,7 @@ import Reanimated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withDecay,
   withSequence,
   withSpring,
   withTiming,
@@ -273,6 +274,10 @@ const STUDY_SWIPE_PREVIEW_FADE_X = 28;
 const STUDY_SWIPE_READY_FADE_X = STUDY_SWIPE_THRESHOLD - 8;
 const STUDY_SWIPE_COMMIT_FADE_X = STUDY_SWIPE_THRESHOLD + 18;
 const STUDY_SWIPE_MAX_TILT_DEG = 7;
+// Tilt has to reach full angle within the distance a swipe actually travels
+// before release, not across the whole exit path — otherwise the card is
+// barely a degree off while the finger is still on it.
+const STUDY_SWIPE_TILT_REFERENCE = STUDY_SWIPE_THRESHOLD * 2.2;
 // A card dragged slowly past the threshold is released at almost zero velocity;
 // give it a floor so it still leaves decisively instead of drifting out.
 const STUDY_SWIPE_MIN_EXIT_VELOCITY = 950;
@@ -1096,6 +1101,9 @@ function Word7000App() {
   const studySessionWords = useMemo(() => buildStudySession(studyWords, studySeed), [studySeed, studyWords]);
   const studyWord = studySessionWords.length > 0
     ? studySessionWords[((wordIndex % studySessionWords.length) + studySessionWords.length) % studySessionWords.length]
+    : null;
+  const studyDeckNextWord = studySessionWords.length > 1
+    ? studySessionWords[(((wordIndex + 1) % studySessionWords.length) + studySessionWords.length) % studySessionWords.length]
     : null;
   const quizProgressDependency = activeTab === 'quiz' && quizFilter !== 'all' ? progress : null;
   const quizWords = useMemo(
@@ -3092,6 +3100,7 @@ function Word7000App() {
               filtersOpen={studyFiltersOpen}
               levelOptions={levelFilterOptions}
               motionStyle={cardMotionStyle}
+              nextWord={studyDeckNextWord}
               studyMode={studyMode}
               activeSetCount={activeStudySet ? studySourceWords.length : 0}
               activeSetName={activeStudySet?.name ?? null}
@@ -4584,6 +4593,7 @@ const StudyView = memo(function StudyView({
   filtersOpen,
   levelOptions,
   motionStyle,
+  nextWord,
   studyMode,
   wordCount,
   word,
@@ -4609,6 +4619,7 @@ const StudyView = memo(function StudyView({
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
+  nextWord: WordEntry | null;
   studyMode: StudyMode;
   word: WordEntry | null;
   wordCount: number;
@@ -4667,7 +4678,7 @@ const StudyView = memo(function StudyView({
     // real card instead of sliding it along a rail.
     const tilt = interpolate(
       offsetX,
-      [-swipeExitX, 0, swipeExitX],
+      [-STUDY_SWIPE_TILT_REFERENCE, 0, STUDY_SWIPE_TILT_REFERENCE],
       [-STUDY_SWIPE_MAX_TILT_DEG, 0, STUDY_SWIPE_MAX_TILT_DEG],
       Extrapolation.CLAMP,
     );
@@ -4683,6 +4694,25 @@ const StudyView = memo(function StudyView({
         { translateX: offsetX },
         { rotateZ: `${tilt}deg` },
         { scale: distanceScale + swipeCommitPulse.value * 0.01 },
+      ],
+    };
+  });
+  // The next card sits under the current one and rises as the top card is
+  // dragged away, so a swipe reads as dealing off a deck instead of one card
+  // vanishing and an unrelated one fading in.
+  const deckUnderlayStyle = useAnimatedStyle(() => {
+    const reveal = interpolate(
+      Math.abs(swipeX.value),
+      [0, STUDY_SWIPE_THRESHOLD],
+      [0, 1],
+      Extrapolation.CLAMP,
+    );
+
+    return {
+      opacity: interpolate(reveal, [0, 1], [0.55, 0.95], Extrapolation.CLAMP),
+      transform: [
+        { translateY: interpolate(reveal, [0, 1], [16, 2], Extrapolation.CLAMP) },
+        { scale: interpolate(reveal, [0, 1], [0.96, 0.995], Extrapolation.CLAMP) },
       ],
     };
   });
@@ -4706,7 +4736,7 @@ const StudyView = memo(function StudyView({
         -STUDY_SWIPE_GLOW_WAKE_X,
         0,
       ],
-      [1, 0.78, 0.34, 0.1, 0.03, 0],
+      [1, 0.94, 0.62, 0.28, 0.1, 0],
       Extrapolation.CLAMP,
     ),
   }));
@@ -4721,34 +4751,59 @@ const StudyView = memo(function StudyView({
         STUDY_SWIPE_THRESHOLD,
         STUDY_SWIPE_COMMIT_FADE_X,
       ],
-      [0, 0.03, 0.1, 0.34, 0.78, 1],
+      [0, 0.1, 0.28, 0.62, 0.94, 1],
       Extrapolation.CLAMP,
     ),
   }));
-  const reviewRevealGlowStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: interpolate(
-          swipeX.value,
-          [-swipeExitX, 0],
-          [STUDY_SWIPE_REVEAL_WIDTH - swipeExitX, STUDY_SWIPE_REVEAL_WIDTH],
-          Extrapolation.CLAMP,
-        ),
-      },
-    ],
-  }));
-  const knownRevealGlowStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: interpolate(
-          swipeX.value,
-          [0, swipeExitX],
-          [-STUDY_SWIPE_REVEAL_WIDTH, swipeExitX - STUDY_SWIPE_REVEAL_WIDTH],
-          Extrapolation.CLAMP,
-        ),
-      },
-    ],
-  }));
+  // The glow has to ride the exact same transform as the card, including the
+  // hint nudge and the tilt. Tracking swipeX alone left it flat and lagging
+  // behind the card edge it is supposed to be attached to.
+  const reviewRevealGlowStyle = useAnimatedStyle(() => {
+    const offsetX = swipeX.value + swipeHintX.value;
+    return {
+      transform: [
+        {
+          translateX: interpolate(
+            offsetX,
+            [-swipeExitX, 0],
+            [STUDY_SWIPE_REVEAL_WIDTH - swipeExitX, STUDY_SWIPE_REVEAL_WIDTH],
+            Extrapolation.CLAMP,
+          ),
+        },
+        {
+          rotateZ: `${interpolate(
+            offsetX,
+            [-STUDY_SWIPE_TILT_REFERENCE, 0, STUDY_SWIPE_TILT_REFERENCE],
+            [-STUDY_SWIPE_MAX_TILT_DEG, 0, STUDY_SWIPE_MAX_TILT_DEG],
+            Extrapolation.CLAMP,
+          )}deg`,
+        },
+      ],
+    };
+  });
+  const knownRevealGlowStyle = useAnimatedStyle(() => {
+    const offsetX = swipeX.value + swipeHintX.value;
+    return {
+      transform: [
+        {
+          translateX: interpolate(
+            offsetX,
+            [0, swipeExitX],
+            [-STUDY_SWIPE_REVEAL_WIDTH, swipeExitX - STUDY_SWIPE_REVEAL_WIDTH],
+            Extrapolation.CLAMP,
+          ),
+        },
+        {
+          rotateZ: `${interpolate(
+            offsetX,
+            [-STUDY_SWIPE_TILT_REFERENCE, 0, STUDY_SWIPE_TILT_REFERENCE],
+            [-STUDY_SWIPE_MAX_TILT_DEG, 0, STUDY_SWIPE_MAX_TILT_DEG],
+            Extrapolation.CLAMP,
+          )}deg`,
+        },
+      ],
+    };
+  });
   const reviewCueStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       swipeX.value,
@@ -4969,13 +5024,14 @@ const StudyView = memo(function StudyView({
             const releaseVelocity = Math.abs(event.velocityX) < STUDY_SWIPE_MIN_EXIT_VELOCITY
               ? directionCode * STUDY_SWIPE_MIN_EXIT_VELOCITY
               : event.velocityX;
-            swipeX.value = withSpring(
-              directionCode > 0 ? swipeExitX : -swipeExitX,
+            // Decay, not spring: a spring settles *at* its target, so the card
+            // was braking over the last stretch — right as it should have been
+            // leaving the screen. Decay holds the release speed and the clamp
+            // ends the animation the moment the card is fully out of frame.
+            swipeX.value = withDecay(
               {
-                damping: 22,
-                mass: 0.42,
-                overshootClamping: true,
-                stiffness: 168,
+                clamp: directionCode > 0 ? [0, swipeExitX] : [-swipeExitX, 0],
+                deceleration: 0.998,
                 velocity: releaseVelocity,
               },
               (finished) => {
@@ -5086,6 +5142,23 @@ const StudyView = memo(function StudyView({
         <>
        <Animated.View style={[styles.studySwipeDeck, motionStyle]} testID="study-swipe-deck">
         <Reanimated.View style={[styles.studySwipeSwapStage, cardEntryStyle]}>
+        {nextWord && (
+          <Reanimated.View
+            pointerEvents="none"
+            style={[styles.wordCard, styles.studySwipeDeckUnderlay, themeStyles?.wordCard, deckUnderlayStyle]}
+            testID="study-swipe-deck-underlay"
+          >
+            <View style={styles.groupPill}>
+              <Text style={styles.groupText}>{nextWord.group}</Text>
+            </View>
+            <Text
+              numberOfLines={1}
+              style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}
+            >
+              {formatWordPrimary(nextWord, studyMode)}
+            </Text>
+          </Reanimated.View>
+        )}
          <Reanimated.View
            pointerEvents="none"
            style={[styles.studySwipeRevealFill, styles.studySwipeRevealReview, reviewFeedbackStyle]}
@@ -8540,6 +8613,15 @@ const styles = StyleSheet.create({
   studySwipeSlidingCard: {
     position: 'relative',
     zIndex: 2,
+  },
+  studySwipeDeckUnderlay: {
+    bottom: 0,
+    left: 0,
+    overflow: 'hidden',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 0,
   },
   studySwipeRevealFill: {
     alignItems: 'center',

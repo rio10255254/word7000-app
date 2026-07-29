@@ -4695,10 +4695,10 @@ const StudyView = memo(function StudyView({
     opacity: cardVisibility.value,
     transform: [
       {
-        translateY: interpolate(cardEntryProgress.value, [0, 1], [10, 0], Extrapolation.CLAMP),
+        translateY: interpolate(cardEntryProgress.value, [0, 1], [4, 0], Extrapolation.CLAMP),
       },
       {
-        scale: interpolate(cardEntryProgress.value, [0, 1], [0.992, 1], Extrapolation.CLAMP),
+        scale: interpolate(cardEntryProgress.value, [0, 1], [0.997, 1], Extrapolation.CLAMP),
       },
     ],
   }));
@@ -4741,19 +4741,21 @@ const StudyView = memo(function StudyView({
   // with any filter but "all", marking a word rebuilds and reshuffles the
   // session, so the card that actually arrives often is not this one. Staying
   // low keeps it an honest hint of depth rather than a broken promise.
+  // Two stages, like turning a page. While the finger is still on the card the
+  // page underneath only firms up a little. Once the card is thrown it settles
+  // all the way into the live card's position, so by the time the top card is
+  // gone the next one is already exactly where the incoming card will be —
+  // that overlap is what covers the frames lost to runOnJS and the re-render,
+  // which is where the flash was coming from.
   const deckUnderlayStyle = useAnimatedStyle(() => {
-    const reveal = interpolate(
-      Math.abs(swipeX.value),
-      [0, STUDY_SWIPE_THRESHOLD * 2.6],
-      [0, 1],
-      Extrapolation.CLAMP,
-    );
+    const distance = Math.abs(swipeX.value);
+    const settle = [0, STUDY_SWIPE_THRESHOLD, swipeExitX * 0.72];
 
     return {
-      opacity: interpolate(reveal, [0, 1], [0.34, 0.5], Extrapolation.CLAMP),
+      opacity: interpolate(distance, settle, [0.32, 0.58, 1], Extrapolation.CLAMP),
       transform: [
-        { translateY: interpolate(reveal, [0, 1], [14, 9], Extrapolation.CLAMP) },
-        { scale: interpolate(reveal, [0, 1], [0.955, 0.973], Extrapolation.CLAMP) },
+        { translateY: interpolate(distance, settle, [14, 9, 0], Extrapolation.CLAMP) },
+        { scale: interpolate(distance, settle, [0.955, 0.974, 1], Extrapolation.CLAMP) },
       ],
     };
   });
@@ -4770,6 +4772,7 @@ const StudyView = memo(function StudyView({
     opacity: interpolate(
       swipeX.value,
       [
+        -swipeExitX * 0.72,
         -STUDY_SWIPE_COMMIT_FADE_X,
         -STUDY_SWIPE_THRESHOLD,
         -STUDY_SWIPE_READY_FADE_X,
@@ -4777,7 +4780,7 @@ const StudyView = memo(function StudyView({
         -STUDY_SWIPE_GLOW_WAKE_X,
         0,
       ],
-      [1, 0.94, 0.62, 0.28, 0.1, 0],
+      [0, 1, 0.94, 0.62, 0.28, 0.1, 0],
       Extrapolation.CLAMP,
     ),
   }));
@@ -4791,8 +4794,9 @@ const StudyView = memo(function StudyView({
         STUDY_SWIPE_READY_FADE_X,
         STUDY_SWIPE_THRESHOLD,
         STUDY_SWIPE_COMMIT_FADE_X,
+        swipeExitX * 0.72,
       ],
-      [0, 0.1, 0.28, 0.62, 0.94, 1],
+      [0, 0.1, 0.28, 0.62, 0.94, 1, 0],
       Extrapolation.CLAMP,
     ),
   }));
@@ -4845,11 +4849,13 @@ const StudyView = memo(function StudyView({
       ],
     };
   });
+  // Fades back out as the card is thrown: past this point the decision is made
+  // and the cue would only sit on top of the page settling into place.
   const reviewCueStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       swipeX.value,
-      [-STUDY_SWIPE_THRESHOLD, -STUDY_SWIPE_READY_FADE_X, 0],
-      [1, 0, 0],
+      [-swipeExitX * 0.52, -STUDY_SWIPE_THRESHOLD, -STUDY_SWIPE_READY_FADE_X, 0],
+      [0, 1, 0, 0],
       Extrapolation.CLAMP,
     ),
     transform: [
@@ -4866,8 +4872,8 @@ const StudyView = memo(function StudyView({
   const knownCueStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       swipeX.value,
-      [0, STUDY_SWIPE_READY_FADE_X, STUDY_SWIPE_THRESHOLD],
-      [0, 0, 1],
+      [0, STUDY_SWIPE_READY_FADE_X, STUDY_SWIPE_THRESHOLD, swipeExitX * 0.52],
+      [0, 0, 1, 0],
       Extrapolation.CLAMP,
     ),
     transform: [
@@ -8700,11 +8706,9 @@ const styles = StyleSheet.create({
   // The deck underlay now sits behind the cue, so it needs a wash of its own to
   // stay legible against a full card instead of empty space.
   studySwipeRevealCueReview: {
-    backgroundColor: 'rgba(254, 242, 242, 0.86)',
     right: 8,
   },
   studySwipeRevealCueKnown: {
-    backgroundColor: 'rgba(240, 253, 244, 0.86)',
     left: 8,
   },
   studySwipeFeedbackReviewText: {

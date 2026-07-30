@@ -9,6 +9,7 @@ import Reanimated, {
   Easing as ReanimatedEasing,
   Extrapolation,
   interpolate,
+  LinearTransition,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -4577,9 +4578,8 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
         <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
       )}
       <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
-      {/* Line limits keep a long entry from overflowing the fixed height, and
-          the example is pinned to the bottom so it lands in the same place on
-          every card no matter how much meaning sits above it. */}
+      {/* Line limits keep the tallest entries close to the shortest ones, so
+          the height the card settles at barely moves between words. */}
       <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
         <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
         <Text numberOfLines={4} style={[styles.meaning, themeStyles?.meaning]}>
@@ -4594,7 +4594,7 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
           </Text>
         </View>
       )}
-      <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
+      <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
         <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
           {formatExamplePrimary(word, studyMode)}
         </Text>
@@ -4689,12 +4689,12 @@ const StudyView = memo(function StudyView({
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
-  // A fixed card height is what stops the jolt at handoff. The underlay is an
-  // absolute fill, so its size comes from the stage, and the stage used to be
-  // sized by the live card's content — meaning the whole deck resized the
-  // moment a longer or shorter word took over. Deriving the height from the
-  // viewport instead keeps every card identical, so nothing moves on swap.
-  const studyCardHeight = Math.round(Math.max(340, Math.min(470, viewportHeight * 0.54)));
+  // A floor rather than a fixed height: pinning every card to one size left
+  // short entries looking hollow, but letting content drive the height outright
+  // is what made the deck jolt on handoff. The floor covers most entries, the
+  // few taller ones grow past it, and the layout transition below animates that
+  // difference instead of snapping to it.
+  const studyCardMinHeight = Math.round(Math.max(300, Math.min(430, viewportHeight * 0.47)));
   const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16));
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
@@ -5286,10 +5286,11 @@ const StudyView = memo(function StudyView({
         <GestureDetector gesture={studySwipeGesture}>
          <Reanimated.View
           accessibilityHint={`${ui.swipeReviewHint}; ${ui.swipeKnownHint}`}
+          layout={LinearTransition.duration(190)}
           style={[
             styles.wordCard,
             styles.studySwipeSlidingCard,
-            { height: studyCardHeight },
+            { minHeight: studyCardMinHeight },
             themeStyles?.wordCard,
             slidingCardStyle,
             studySwipeTouchGuardStyle,
@@ -8652,9 +8653,6 @@ const styles = StyleSheet.create({
     gap: 14,
     overflow: 'hidden',
     padding: 18,
-  },
-  studyCardExampleBox: {
-    marginTop: 'auto',
   },
   studySwipeDeck: {
     borderRadius: 18,

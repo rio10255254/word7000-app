@@ -4689,6 +4689,14 @@ const StudyView = memo(function StudyView({
   const swipeCommitPulse = useSharedValue(0);
   const cardEntryProgress = useSharedValue(1);
   const cardVisibility = useSharedValue(1);
+  // The underlay's content comes from React state while its brightness comes
+  // from swipeX on the UI thread. On device those two land on different
+  // frames: React swaps in the card *after* next while swipeX is still parked
+  // at the exit position, so for a frame the underlay is fully lit, in the
+  // live card's place, showing a word that is not the one taking over. That
+  // wrong word appearing is the flash. Holding the content back until the
+  // layout effect — the same moment swipeX is reset — keeps both in step.
+  const [deckWord, setDeckWord] = useState(nextWord);
   const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const studyInitialHintScheduledRef = useRef(false);
   // Everything that belongs to the live card — travel, tilt, entry, visibility
@@ -4955,8 +4963,9 @@ const StudyView = memo(function StudyView({
     hapticDirectionCode.value = 0;
     swipeCommitPulse.value = 0;
     cardVisibility.value = 1;
+    setDeckWord(nextWord);
     runStudyCardEntry();
-  }, [cardEntryProgress, cardSequence, cardVisibility, hapticDirectionCode, runStudyCardEntry, swipeCommitPulse, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
+  }, [cardEntryProgress, cardSequence, cardVisibility, hapticDirectionCode, nextWord, runStudyCardEntry, swipeCommitPulse, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
 
   useEffect(() => {
     if (!word) {
@@ -5183,7 +5192,7 @@ const StudyView = memo(function StudyView({
         <>
        <Animated.View style={[styles.studySwipeDeck, motionStyle]} testID="study-swipe-deck">
         <Reanimated.View style={styles.studySwipeSwapStage}>
-        {nextWord && (
+        {deckWord && (
           <Reanimated.View
             pointerEvents="none"
             style={[styles.wordCard, styles.studySwipeDeckUnderlay, themeStyles?.wordCard, deckUnderlayStyle]}
@@ -5191,10 +5200,10 @@ const StudyView = memo(function StudyView({
           >
             <View style={styles.rowBetween}>
               <View style={styles.groupPill}>
-                <Text style={styles.groupText}>{nextWord.group}</Text>
+                <Text style={styles.groupText}>{deckWord.group}</Text>
               </View>
             </View>
-            <StudyCardBody studyMode={studyMode} word={nextWord} />
+            <StudyCardBody studyMode={studyMode} word={deckWord} />
           </Reanimated.View>
         )}
          <Reanimated.View

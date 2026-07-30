@@ -4577,19 +4577,30 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
         <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
       )}
       <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
+      {/* Line limits keep a long entry from overflowing the fixed height, and
+          the example is pinned to the bottom so it lands in the same place on
+          every card no matter how much meaning sits above it. */}
       <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
         <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
-        <Text style={[styles.meaning, themeStyles?.meaning]}>{formatMeaningDetail(word, studyMode)}</Text>
+        <Text numberOfLines={4} style={[styles.meaning, themeStyles?.meaning]}>
+          {formatMeaningDetail(word, studyMode)}
+        </Text>
       </View>
       {supplement && (
         <View style={[styles.supplementalMeaning, themeStyles?.supplementalMeaning]}>
           <Text style={[styles.supplementalLabel, themeStyles?.supplementalLabel]}>{ui.supplementalMeanings}</Text>
-          <Text style={[styles.supplementalText, themeStyles?.supplementalText]}>{supplement}</Text>
+          <Text numberOfLines={2} style={[styles.supplementalText, themeStyles?.supplementalText]}>
+            {supplement}
+          </Text>
         </View>
       )}
-      <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
-        <Text style={[styles.example, themeStyles?.example]}>{formatExamplePrimary(word, studyMode)}</Text>
-        <Text style={[styles.exampleZh, themeStyles?.exampleZh]}>{formatExampleSecondary(word, studyMode)}</Text>
+      <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
+        <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
+          {formatExamplePrimary(word, studyMode)}
+        </Text>
+        <Text numberOfLines={2} style={[styles.exampleZh, themeStyles?.exampleZh]}>
+          {formatExampleSecondary(word, studyMode)}
+        </Text>
       </View>
     </>
   );
@@ -4677,7 +4688,13 @@ const StudyView = memo(function StudyView({
   const themeStyles = useThemeStyles();
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
-  const { width: viewportWidth } = useWindowDimensions();
+  const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
+  // A fixed card height is what stops the jolt at handoff. The underlay is an
+  // absolute fill, so its size comes from the stage, and the stage used to be
+  // sized by the live card's content — meaning the whole deck resized the
+  // moment a longer or shorter word took over. Deriving the height from the
+  // viewport instead keeps every card identical, so nothing moves on swap.
+  const studyCardHeight = Math.round(Math.max(340, Math.min(470, viewportHeight * 0.54)));
   const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16));
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
@@ -5269,7 +5286,14 @@ const StudyView = memo(function StudyView({
         <GestureDetector gesture={studySwipeGesture}>
          <Reanimated.View
           accessibilityHint={`${ui.swipeReviewHint}; ${ui.swipeKnownHint}`}
-          style={[styles.wordCard, styles.studySwipeSlidingCard, themeStyles?.wordCard, slidingCardStyle, studySwipeTouchGuardStyle]}
+          style={[
+            styles.wordCard,
+            styles.studySwipeSlidingCard,
+            { height: studyCardHeight },
+            themeStyles?.wordCard,
+            slidingCardStyle,
+            studySwipeTouchGuardStyle,
+          ]}
           testID="study-swipe-card"
         >
           <View style={styles.rowBetween}>
@@ -8626,7 +8650,11 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     borderWidth: 1,
     gap: 14,
+    overflow: 'hidden',
     padding: 18,
+  },
+  studyCardExampleBox: {
+    marginTop: 'auto',
   },
   studySwipeDeck: {
     borderRadius: 18,

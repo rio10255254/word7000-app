@@ -4705,6 +4705,11 @@ const StudyView = memo(function StudyView({
   const swipeCommitPulse = useSharedValue(0);
   const cardEntryProgress = useSharedValue(1);
   const cardVisibility = useSharedValue(1);
+  // Marks a handoff that came from a throw. The card taking over has already
+  // been floated into place by the underlay animation, so replaying the entry
+  // would drop it 4px and scale it back up — a small jolt exactly at the swap.
+  // A handoff from the next/prev buttons has no such lead-in and still wants it.
+  const swipeHandoff = useSharedValue(0);
   // The underlay's content comes from React state while its brightness comes
   // from swipeX on the UI thread. On device those two land on different
   // frames: React swaps in the card *after* next while swipeX is still parked
@@ -4793,7 +4798,7 @@ const StudyView = memo(function StudyView({
     opacity: interpolate(
       swipeX.value,
       [
-        -swipeExitX * 0.62,
+        -swipeExitX * 0.94,
         -STUDY_SWIPE_COMMIT_FADE_X,
         -STUDY_SWIPE_THRESHOLD,
         -STUDY_SWIPE_READY_FADE_X,
@@ -4815,7 +4820,7 @@ const StudyView = memo(function StudyView({
         STUDY_SWIPE_READY_FADE_X,
         STUDY_SWIPE_THRESHOLD,
         STUDY_SWIPE_COMMIT_FADE_X,
-        swipeExitX * 0.62,
+        swipeExitX * 0.94,
       ],
       [0, 0.1, 0.28, 0.62, 0.94, 1, 0],
       Extrapolation.CLAMP,
@@ -4984,8 +4989,13 @@ const StudyView = memo(function StudyView({
     swipeCommitPulse.value = 0;
     cardVisibility.value = 1;
     setDeckWord(nextWord);
-    runStudyCardEntry();
-  }, [cardEntryProgress, cardSequence, cardVisibility, hapticDirectionCode, nextWord, runStudyCardEntry, swipeCommitPulse, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
+    if (swipeHandoff.value === 1) {
+      swipeHandoff.value = 0;
+      cardEntryProgress.value = 1;
+    } else {
+      runStudyCardEntry();
+    }
+  }, [cardEntryProgress, cardSequence, cardVisibility, hapticDirectionCode, nextWord, runStudyCardEntry, swipeCommitPulse, swipeHandoff, swipeHintX, swipePhase, swipeStartX, swipeX, word?.id]);
 
   useEffect(() => {
     if (!word) {
@@ -5114,7 +5124,7 @@ const StudyView = memo(function StudyView({
                 // runs with the new word resets everything at the same moment
                 // the incoming card is painted over it.
                 cardVisibility.value = 0;
-                cardEntryProgress.value = 0;
+                swipeHandoff.value = 1;
                 runOnJS(finishNativeSwipe)(directionCode);
               },
             );
@@ -5162,6 +5172,7 @@ const StudyView = memo(function StudyView({
       markStudyCardInteraction,
       swipeHintX,
       swipeCommitPulse,
+      swipeHandoff,
       swipePhase,
       swipeStartX,
       swipeExitX,

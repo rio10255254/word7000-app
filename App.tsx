@@ -9,7 +9,6 @@ import Reanimated, {
   Easing as ReanimatedEasing,
   Extrapolation,
   interpolate,
-  LinearTransition,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -4578,11 +4577,11 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
         <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
       )}
       <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
-      {/* Line limits keep the tallest entries close to the shortest ones, so
-          the height the card settles at barely moves between words. */}
+      {/* Line limits exist to keep every entry inside the card's fixed height;
+          without them a long definition would be clipped instead of trimmed. */}
       <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
         <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
-        <Text numberOfLines={4} style={[styles.meaning, themeStyles?.meaning]}>
+        <Text numberOfLines={3} style={[styles.meaning, themeStyles?.meaning]}>
           {formatMeaningDetail(word, studyMode)}
         </Text>
       </View>
@@ -4594,7 +4593,7 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
           </Text>
         </View>
       )}
-      <View style={[styles.exampleBox, themeStyles?.exampleBox]}>
+      <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
         <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
           {formatExamplePrimary(word, studyMode)}
         </Text>
@@ -4689,12 +4688,12 @@ const StudyView = memo(function StudyView({
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
-  // A floor rather than a fixed height: pinning every card to one size left
-  // short entries looking hollow, but letting content drive the height outright
-  // is what made the deck jolt on handoff. The floor covers most entries, the
-  // few taller ones grow past it, and the layout transition below animates that
-  // difference instead of snapping to it.
-  const studyCardMinHeight = Math.round(Math.max(300, Math.min(430, viewportHeight * 0.47)));
+  // One height for both cards, and it has to be fixed. What floats up can only
+  // be "the same card that takes over" if the two are the same shape, and any
+  // height driven by content breaks that the moment a longer word arrives. The
+  // line limits below keep content under this height, so the leftover space at
+  // the bottom stays small rather than the hollow gap a taller ceiling left.
+  const studyCardHeight = Math.round(Math.max(340, Math.min(470, viewportHeight * 0.54)));
   const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16));
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
@@ -4714,6 +4713,10 @@ const StudyView = memo(function StudyView({
   // wrong word appearing is the flash. Holding the content back until the
   // layout effect — the same moment swipeX is reset — keeps both in step.
   const [deckWord, setDeckWord] = useState(nextWord);
+  // The underlay has to draw the same action row as the live card. Without it
+  // the top row is a bare pill, which is shorter than a row containing icon
+  // buttons — so the card grew by that difference at the moment it took over.
+  const deckFavorited = Boolean(deckWord ? progress.words[deckWord.id]?.favorite : false);
   const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const studyInitialHintScheduledRef = useRef(false);
   // Everything that belongs to the live card — travel, tilt, entry, visibility
@@ -5212,12 +5215,30 @@ const StudyView = memo(function StudyView({
         {deckWord && (
           <Reanimated.View
             pointerEvents="none"
-            style={[styles.wordCard, styles.studySwipeDeckUnderlay, themeStyles?.wordCard, deckUnderlayStyle]}
+            style={[
+              styles.wordCard,
+              styles.studySwipeDeckUnderlay,
+              { height: studyCardHeight },
+              themeStyles?.wordCard,
+              deckUnderlayStyle,
+            ]}
             testID="study-swipe-deck-underlay"
           >
             <View style={styles.rowBetween}>
               <View style={styles.groupPill}>
                 <Text style={styles.groupText}>{deckWord.group}</Text>
+              </View>
+              <View style={styles.studyCardActions}>
+                <View style={[styles.iconButton, styles.addToSetIconButton]}>
+                  <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
+                </View>
+                <View style={styles.iconButton}>
+                  <Star
+                    size={20}
+                    color={deckFavorited ? '#f59e0b' : '#717987'}
+                    fill={deckFavorited ? '#f59e0b' : 'transparent'}
+                  />
+                </View>
               </View>
             </View>
             <StudyCardBody studyMode={studyMode} word={deckWord} />
@@ -5286,11 +5307,10 @@ const StudyView = memo(function StudyView({
         <GestureDetector gesture={studySwipeGesture}>
          <Reanimated.View
           accessibilityHint={`${ui.swipeReviewHint}; ${ui.swipeKnownHint}`}
-          layout={LinearTransition.duration(190)}
           style={[
             styles.wordCard,
             styles.studySwipeSlidingCard,
-            { minHeight: studyCardMinHeight },
+            { height: studyCardHeight },
             themeStyles?.wordCard,
             slidingCardStyle,
             studySwipeTouchGuardStyle,
@@ -8668,9 +8688,12 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   studySwipeDeckUnderlay: {
-    bottom: 0,
+    // Deliberately no `bottom`: anchoring both edges made the underlay adopt
+    // the stage's height, which the *live* card sets. A taller word would ride
+    // up compressed and then unfold once it took over. Anchoring only the top
+    // lets it size to its own content, so what floats up is the same shape it
+    // will be when it becomes the live card.
     left: 0,
-    overflow: 'hidden',
     position: 'absolute',
     right: 0,
     top: 0,
@@ -8825,6 +8848,11 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 22,
     fontWeight: '600',
+    // Reserving two lines moves a one-line entry's leftover space up here,
+    // next to the text it belongs to, instead of leaving it pooled at the
+    // bottom of the fixed-height card where it reads as an empty card.
+    lineHeight: 30,
+    minHeight: 60,
   },
   supplementalMeaning: {
     backgroundColor: '#f8fafc',
@@ -8846,6 +8874,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 21,
+  },
+  studyCardExampleBox: {
+    // Absorbs whatever the fixed height leaves over. A short entry then ends
+    // in a filled panel rather than a blank stretch of card.
+    flex: 1,
+    justifyContent: 'center',
   },
   exampleBox: {
     backgroundColor: '#f8fafc',

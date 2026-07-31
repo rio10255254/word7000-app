@@ -6238,7 +6238,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
   const supplementalMeaning = formatMeaningSupplement(word, studyMode);
 
   return (
-    <Animated.View style={[styles.libraryItem, styles.libraryWordRow, themeStyles?.libraryItem, motionStyle]}>
+    <Animated.View style={[styles.libraryItem, themeStyles?.libraryItem, motionStyle]}>
       <AnimatedPressable
         accessibilityLabel={ui.viewWordDetails(primaryWord)}
         accessibilityRole="button"
@@ -9334,7 +9334,9 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     borderRadius: 999,
     borderWidth: 1,
-    paddingHorizontal: 12,
+    // 10 rather than 12: the five status chips summed to 326 against a 324
+    // container, so the last one wrapped to a row of its own over 2px.
+    paddingHorizontal: 10,
     paddingVertical: 8,
   },
   filterChipActive: {
@@ -9516,9 +9518,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     padding: 14,
-  },
-  libraryWordRow: {
-    marginRight: 44,
   },
   libraryItemMain: {
     borderRadius: 14,

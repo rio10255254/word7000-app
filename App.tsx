@@ -4306,9 +4306,9 @@ const HomeView = memo(function HomeView({
         </AnimatedPressable>
 
         <View style={styles.statsGrid}>
-          <StatCard label={ui.streak} value={progress.streak.toString()} tone="green" />
-          <StatCard label={ui.mastered} value={stats.mastered.toString()} tone="blue" />
-          <StatCard label={ui.reviewDue} value={stats.review.toString()} tone="orange" />
+          <StatCard label={ui.streak} value={progress.streak.toString()} />
+          <StatCard label={ui.mastered} value={stats.mastered.toString()} />
+          <StatCard emphasis={stats.review > 0} label={ui.reviewDue} value={stats.review.toString()} />
         </View>
 
         <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={[styles.reviewStrip, themeStyles?.reviewStrip]}>
@@ -4328,7 +4328,7 @@ const HomeView = memo(function HomeView({
           style={[styles.homeDictionaryStandalone, themeStyles?.homeDictionarySearch]}
           testID="home-dictionary-search"
         >
-          <Search size={20} color={darkMode ? '#bfdbfe' : '#1d4ed8'} strokeWidth={2.5} />
+          <Search size={20} color={darkMode ? '#94a3b8' : '#717987'} strokeWidth={2.4} />
           <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
             {copy.searchPlaceholder}
           </Text>
@@ -7494,12 +7494,16 @@ function DeveloperVocabularyPanel({
   );
 }
 
-function StatCard({ label, tone, value }: { label: string; tone: 'blue' | 'green' | 'orange'; value: string }) {
+function StatCard({ emphasis, label, value }: { emphasis?: boolean; label: string; value: string }) {
   const themeStyles = useThemeStyles();
 
+  // These are read-outs, not actions. Giving each one its own tint spread the
+  // eye across three equal blocks and left nothing for the day's actual task
+  // to stand out against, so colour is held back for the one number that
+  // means there is something waiting to be done.
   return (
-    <View style={[styles.statCard, styles[`${tone}Tint`], themeStyles?.statCard]}>
-      <Text style={[styles.statValue, themeStyles?.statValue]}>{value}</Text>
+    <View style={[styles.statCard, themeStyles?.statCard]}>
+      <Text style={[styles.statValue, emphasis && styles.statValueEmphasis, themeStyles?.statValue]}>{value}</Text>
       <Text style={[styles.statLabel, themeStyles?.statLabel]}>{label}</Text>
     </View>
   );
@@ -8413,16 +8417,19 @@ const styles = StyleSheet.create({
   },
   homeDictionaryStandalone: {
     alignItems: 'center',
-    backgroundColor: '#eaf2ff',
-    borderColor: '#60a5fa',
-    borderRadius: 14,
+    // Looking a word up is a utility, not the day's task. It used to carry a
+    // saturated border and a blue shadow, which made it louder than the mode
+    // switch above it — a genuine action — so it now reads as a plain card.
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
+    borderRadius: 18,
     borderCurve: 'continuous',
     borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
     minHeight: 52,
     paddingHorizontal: 14,
-    shadowColor: '#2563eb',
+    shadowColor: '#0f172a',
     shadowOffset: { height: 3, width: 0 },
     shadowOpacity: 0.12,
     shadowRadius: 9,
@@ -8448,7 +8455,8 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   homeDictionaryLauncherText: {
-    color: '#1e3a8a',
+    // Placeholder-style prompt, so it reads as muted rather than as a link.
+    color: '#717987',
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
@@ -8621,8 +8629,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   statCard: {
+    backgroundColor: '#fff',
+    borderColor: '#e5e7eb',
     borderRadius: 18,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flex: 1,
     padding: 13,
   },
@@ -8645,6 +8656,9 @@ const styles = StyleSheet.create({
     color: '#172033',
     fontSize: 22,
     fontWeight: '700',
+  },
+  statValueEmphasis: {
+    color: '#d97706',
   },
   statLabel: {
     color: '#717987',

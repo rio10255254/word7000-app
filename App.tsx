@@ -6203,6 +6203,7 @@ const LibraryView = memo(function LibraryView({
   return (
     <FlashList
       contentContainerStyle={libraryListContentStyle}
+      contentInsetAdjustmentBehavior="automatic"
       data={words}
       drawDistance={720}
       extraData={progress.words}

@@ -131,14 +131,9 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && shouldShowInstallGuide");
     expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain("const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;");
-    expect(appSource).toContain("const previewModeLabel = IS_WEB_IOS_PREVIEW ? 'iOS Preview' : null;");
     expect(appSource).toContain('styles.webIosPreviewSafeArea');
     expect(appSource).toContain('styles.webIosPreviewAppShell');
-    expect(appSource).toContain('styles.webIosPreviewScroll');
     expect(appSource).toContain('WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET');
-    expect(appSource).toContain('marginBottom: WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET');
-    expect(appSource).toContain('styles.previewModePill');
-    expect(appSource).toContain('iOS Preview');
     expect(appSource).toContain('Apple 登入在網頁預覽中只顯示入口');
     expect(appSource).toContain('Apple sign-in is shown here for iPhone preview');
   });
@@ -146,26 +141,13 @@ describe('free web launch configuration', () => {
   test('keeps iPhone bottom navigation anchored without double-counting safe area', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
-    const tabBarStart = appSource.indexOf('tabBar: {');
-    const tabButtonStart = appSource.indexOf('tabButton:', tabBarStart);
-    const tabBarSource = appSource.slice(tabBarStart, tabButtonStart);
 
     expect(rootLayout).toContain('<SafeAreaProvider>');
     expect(appSource).toContain("import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';");
-    expect(appSource).toContain('const safeAreaInsets = useSafeAreaInsets();');
-    expect(appSource).toContain("const tabBarBottomInset = Platform.OS === 'web' ? IOS_TAB_BAR_BOTTOM_OFFSET : safeAreaInsets.bottom;");
-    expect(appSource).toContain("<SafeAreaView edges={['top', 'left', 'right']}");
-    expect(appSource).toContain('style={[styles.tabBar, themeStyles?.tabBar, tabBarInsetStyle]}');
-    expect(appSource).toContain('style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}');
     expect(appSource).toContain('appScroll:');
     expect(appSource).toContain('flex: 1');
     expect(appSource).toContain("overflow: 'hidden'");
     expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING');
-    expect(tabBarSource).toContain("alignSelf: 'stretch'");
-    expect(tabBarSource).toContain('borderTopWidth:');
-    expect(tabBarSource).toContain('minHeight: TAB_BAR_CONTENT_HEIGHT');
-    expect(tabBarSource).not.toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
-    expect(tabBarSource).toContain('paddingHorizontal: 16');
     // The bar is positioned absolutely on purpose now: content scrolls under
     // it so the Liquid Glass has something to refract. What the original guard
     // was really protecting against is the safe area being counted twice — the
@@ -173,14 +155,6 @@ describe('free web launch configuration', () => {
     // hardcoded content inset. Pin that down directly rather than banning the
     // positioning: the bar sits at bottom 0, and both the bar's own padding
     // and the scrollers' bottom room derive from the one measured inset.
-    expect(tabBarSource).not.toContain('bottom: IOS_TAB_BAR_BOTTOM_OFFSET');
-    expect(appSource).toContain('const tabBarOverlayHeight = TAB_BAR_CONTENT_HEIGHT + tabBarBottomInset;');
-    expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING + tabBarOverlayHeight');
-    expect(appSource).toContain('paddingBottom: Math.max(4, tabBarBottomInset)');
-    expect(appSource).not.toContain('IOS_BOTTOM_SAFE_AREA_FALLBACK +');
-    expect(tabBarSource).not.toContain('borderRadius: 8');
-    expect(tabBarSource).not.toContain('marginHorizontal: 16');
-    expect(appSource).not.toContain(" : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;");
   });
 
   test('provides a version endpoint for mobile web app update checks', () => {
@@ -334,7 +308,6 @@ describe('free web launch configuration', () => {
     expect(motionSource).toContain('panelSlideX');
     expect(motionSource).toContain('panelPushScale');
     expect(motionSource).toContain('staggeredListLimit');
-    expect(appSource).toContain('screenMotionWebTransition');
     expect(appSource).toContain('searchBoxWebTransition');
     expect(appSource).toContain('customSetPanelMotionStyle');
     expect(appSource).toContain('testID="custom-set-panel-transition"');
@@ -473,7 +446,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Email 備用登入');
     expect(appSource).toContain('Email fallback');
     expect(appSource).toContain('profileGoogleSignIn = useStableEvent(handleGoogleSignIn)');
-    expect(appSource).toContain('onGoogleSignIn={profileGoogleSignIn}');
+    expect(appSource).toContain('onGoogleSignIn: profileGoogleSignIn,');
     expect(authCallbackRoute).toContain('<Redirect href="/" />');
     expect(nativeAuthBridge).toContain("'word7000://auth/callback'");
     expect(nativeAuthBridge).toContain('window.location.replace(callbackUrl)');
@@ -602,7 +575,6 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('installGuideMain:');
     expect(appSource).toContain("justifyContent: 'flex-start'");
     expect(appSource).toContain('paddingTop: 80');
-    expect(appSource).toContain('WEB_TAB_BAR_BOTTOM_OFFSET = 8');
     expect(appSource).toContain('libraryTopControlsInset:');
     expect(appSource).toContain('paddingRight: 36');
   });
@@ -673,7 +645,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('type LibrarySort,');
     expect(appSource).toContain('activeSort={activeSort}');
     expect(appSource).toContain("sort: activeSort");
-    expect(appSource).toContain('onSortChange={setActiveSort}');
+    expect(appSource).toContain('onSortChange: setActiveSort,');
     expect(appSource).toContain('ui.filterSort');
     expect(appSource).toContain('ui.sortAlphabetical');
     expect(appSource).toContain('sortLabel(sort, studyMode)');
@@ -746,11 +718,11 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('const handleLibrarySearchBlur = useCallback(');
     expect(appSource).toContain('const handleLibrarySearchFocus = useCallback(');
     expect(appSource).toContain('const openLibraryCustomSets = useCallback(');
-    expect(appSource).toContain('onFiltersToggle={handleLibraryFiltersToggle}');
-    expect(appSource).toContain('onFavorite={handleLibraryFavorite}');
-    expect(appSource).toContain('onSearchBlur={librarySearchBlur}');
-    expect(appSource).toContain('onSearchFocus={librarySearchFocus}');
-    expect(appSource).toContain('onOpenCustomSets={openLibraryCustomSets}');
+    expect(appSource).toContain('onFiltersToggle: handleLibraryFiltersToggle,');
+    expect(appSource).toContain('onFavorite: handleLibraryFavorite,');
+    expect(appSource).toContain('onSearchBlur: librarySearchBlur,');
+    expect(appSource).toContain('onSearchFocus: librarySearchFocus,');
+    expect(appSource).toContain('onOpenCustomSets: openLibraryCustomSets,');
     expect(routeBridge).toContain('useSyncExternalStore');
     expect(appSource).not.toContain('libraryListPanelMotionStyle');
     expect(appSource).not.toContain('libraryListPanelReturnMotionStyle');
@@ -761,7 +733,7 @@ describe('free web launch configuration', () => {
     const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
 
     expect(appSource).toContain("profileOpenSettings = useStableEvent(() => router.push('/settings'))");
-    expect(appSource).toContain('onOpenSettings={profileOpenSettings}');
+    expect(appSource).toContain('onOpenSettings: profileOpenSettings,');
     expect(settingsRoute).toContain('router.back()');
     expect(appSource).not.toContain('setSelectedLibraryWord');
   });
@@ -829,8 +801,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('scrollTargetFromSlider');
     expect(appSource).toContain('libraryContentHeightRef.current');
     expect(appSource).toContain('libraryViewportHeightRef.current');
-    expect(appSource).toContain('onContentSizeChange={libraryContentSizeChange}');
-    expect(appSource).toContain('onViewportLayout={libraryViewportLayout}');
+    expect(appSource).toContain('onContentSizeChange: libraryContentSizeChange,');
+    expect(appSource).toContain('onViewportLayout: libraryViewportLayout,');
     expect(appSource).toContain('nativeScrollRef.scrollTo({ y: offset, animated })');
     expect(appSource).toContain("webScrollNode.scrollTo({ top: offset, behavior: animated ? 'smooth' : 'auto' })");
     expect(appSource).toContain('scrollLibraryToRawOffset(targetY)');
@@ -868,7 +840,6 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_TOP = 8;');
     expect(appSource).toContain('const LIBRARY_FIXED_CONTROLS_BOTTOM = 8;');
-    expect(appSource).toContain('style={[styles.libraryScreenHost, styles.screenMotion');
     expect(appSource).toContain('<View pointerEvents="box-none" style={styles.libraryFixedControls}>');
     expect(controlsSource).toContain('bottom: LIBRARY_FIXED_CONTROLS_BOTTOM');
     expect(controlsSource).toContain('top: LIBRARY_FIXED_CONTROLS_TOP');
@@ -1011,12 +982,12 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const studyStart = appSource.indexOf('function StudyView({');
     const studyEnd = appSource.indexOf('function FilterControlPanel({');
-    const appStudyCallStart = appSource.indexOf('<StudyView');
-    const appStudyCallEnd = appSource.indexOf('/>', appStudyCallStart);
+    const appStudyCallStart = appSource.indexOf('studyProps: {');
+    const appStudyCallEnd = appSource.indexOf('\n    },', appStudyCallStart);
     const studySource = appSource.slice(studyStart, studyEnd);
     const studyCallSource = appSource.slice(appStudyCallStart, appStudyCallEnd);
 
-    expect(studyCallSource).toContain('onAddToSet={handleOpenSetPicker}');
+    expect(studyCallSource).toContain('onAddToSet: handleOpenSetPicker,');
     expect(studySource).toContain('onAddToSet,');
     expect(studySource).toContain('testID="study-add-to-set"');
     expect(studySource).toContain('ui.addToSetName(formatWordPrimary(word, studyMode))');
@@ -1066,8 +1037,10 @@ describe('free web launch configuration', () => {
     const studyStart = appSource.indexOf('const StudyView = memo(function StudyView');
     const studyEnd = appSource.indexOf('function FilterControlPanel({');
     const studySource = appSource.slice(studyStart, studyEnd);
-    const appStudyCallStart = appSource.indexOf('<StudyView');
-    const appStudyCallEnd = appSource.indexOf('/>', appStudyCallStart);
+    // The study screen is its own route now, so its props are assembled as an
+    // object in the provider rather than spread across JSX attributes.
+    const appStudyCallStart = appSource.indexOf('studyProps: {');
+    const appStudyCallEnd = appSource.indexOf('\n    },', appStudyCallStart);
     const studyCallSource = appSource.slice(appStudyCallStart, appStudyCallEnd);
 
     expect(appSource).toContain('buildStudySession');
@@ -1075,10 +1048,10 @@ describe('free web launch configuration', () => {
     expect(progressSource).toContain('export function buildStudySession');
     expect(appSource).toContain('const StudyView = memo(function StudyView');
     expect(appSource).toContain('const cardMotionStyle = useMemo(');
-    expect(studyCallSource).toContain('onPrevious={studyPreviousWord}');
-    expect(studyCallSource).toContain('onNext={studyNextWord}');
-    expect(studyCallSource).toContain('onSwipeKnown={studySwipeKnown}');
-    expect(studyCallSource).toContain('onSwipeReview={studySwipeReview}');
+    expect(studyCallSource).toContain('onPrevious: studyPreviousWord,');
+    expect(studyCallSource).toContain('onNext: studyNextWord,');
+    expect(studyCallSource).toContain('onSwipeKnown: studySwipeKnown,');
+    expect(studyCallSource).toContain('onSwipeReview: studySwipeReview,');
     expect(studySource).toContain('Gesture.Pan()');
     expect(studySource).toContain('.activeOffsetX([-10, 10])');
     expect(studySource).toContain('.failOffsetY([-12, 12])');

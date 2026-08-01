@@ -3,7 +3,6 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';
-import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Reanimated, {
   cancelAnimation,
@@ -53,7 +52,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { createContext, memo, startTransition, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { createContext, memo, startTransition, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from 'react';
 import {
   Alert,
   Animated,
@@ -254,20 +253,6 @@ function isWebIosPreviewMode() {
 }
 const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();
 const IS_NATIVE_IOS = Platform.OS === 'ios';
-const WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA = IS_WEB_IOS_PREVIEW ? 28 : 0;
-const WEB_TAB_BAR_BOTTOM_OFFSET = 8;
-const PREVIEW_TAB_BAR_BOTTOM_OFFSET = WEB_IOS_PREVIEW_BOTTOM_SAFE_AREA;
-const IOS_TAB_BAR_BOTTOM_OFFSET = Platform.OS === 'web'
-  ? IS_WEB_IOS_PREVIEW
-    ? PREVIEW_TAB_BAR_BOTTOM_OFFSET
-    : WEB_TAB_BAR_BOTTOM_OFFSET
-  : 0;
-const TAB_BAR_CONTENT_HEIGHT = 49;
-// Liquid Glass exists from iOS 26. Everywhere else GlassView renders as a
-// plain View with no background of its own, and since the tab bar now floats
-// over the content, a background-less bar would let the list show through it.
-// So the fallback keeps the opaque bar it has always had.
-const TAB_BAR_USES_GLASS = isLiquidGlassAvailable();
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
@@ -890,10 +875,35 @@ const emptyManualCustomWord: ManualCustomWordState = {
   word: '',
 };
 const ThemeContext = createContext<ThemeMode>('light');
+// Each tab is its own route under (tabs), so the props a screen needs can no
+// longer be handed down as JSX attributes. They travel as one object per
+// screen instead, which keeps the route files to a single line of rendering
+// and keeps the assembly of those props where the state actually lives.
+type AppScreenProps = {
+  homeProps: ComponentProps<typeof HomeView>;
+  studyProps: ComponentProps<typeof StudyView>;
+  quizProps: ComponentProps<typeof QuizView>;
+  libraryProps: Omit<ComponentProps<typeof LibraryView>, 'bottomInset'>;
+  profileProps: ComponentProps<typeof ProfileView>;
+  libraryChrome: { floatingControls: ReactNode };
+};
+const AppScreenPropsContext = createContext<AppScreenProps | null>(null);
+
+export function useAppStudyMode(): StudyMode {
+  return useAppScreenProps().homeProps.studyMode;
+}
+
+export function useAppScreenProps(): AppScreenProps {
+  const value = useContext(AppScreenPropsContext);
+  if (!value) {
+    throw new Error('useAppScreenProps must be used inside the tabs layout');
+  }
+  return value;
+}
 const VocabularyContext = createContext<WordEntry[]>([]);
 const MotionPressable = Animated.createAnimatedComponent(Pressable);
 
-export default function App() {
+export function AppBootstrap({ children }: { children: ReactNode }) {
   const [storageReady, setStorageReady] = useState(() => isAppStorageHydrated());
   const [bundledVocabulary, setBundledVocabulary] = useState<WordEntry[] | null>(null);
   const [vocabularyLoadFailed, setVocabularyLoadFailed] = useState(false);
@@ -946,10 +956,76 @@ export default function App() {
     return <AppStorageBootScreen failed={vocabularyLoadFailed} />;
   }
 
+  return <VocabularyContext.Provider value={bundledVocabulary}>{children}</VocabularyContext.Provider>;
+}
+
+// One component per tab route. The scroll hosts hand inset handling to the
+// system via contentInsetAdjustmentBehavior, so the native large-title header
+// and the native tab bar decide the safe area instead of us computing it.
+function TabScrollHost({ children }: { children: ReactNode }) {
+  const themeStyles = useThemeStyles();
+
   return (
-    <VocabularyContext.Provider value={bundledVocabulary}>
-      <Word7000App />
-    </VocabularyContext.Provider>
+    <ScrollView
+      automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+      contentContainerStyle={styles.content}
+      contentInsetAdjustmentBehavior="automatic"
+      keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+      keyboardShouldPersistTaps="handled"
+      style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll, themeStyles?.appShell]}
+    >
+      <View style={styles.screenMotion}>{children}</View>
+    </ScrollView>
+  );
+}
+
+export function HomeTabScreen() {
+  const { homeProps } = useAppScreenProps();
+  return (
+    <TabScrollHost>
+      <HomeView {...homeProps} />
+    </TabScrollHost>
+  );
+}
+
+export function StudyTabScreen() {
+  const { studyProps } = useAppScreenProps();
+  return (
+    <TabScrollHost>
+      <StudyView {...studyProps} />
+    </TabScrollHost>
+  );
+}
+
+export function QuizTabScreen() {
+  const { quizProps } = useAppScreenProps();
+  return (
+    <TabScrollHost>
+      <QuizView {...quizProps} />
+    </TabScrollHost>
+  );
+}
+
+export function ProfileTabScreen() {
+  const { profileProps } = useAppScreenProps();
+  return (
+    <TabScrollHost>
+      <ProfileView {...profileProps} />
+    </TabScrollHost>
+  );
+}
+
+export function LibraryTabScreen() {
+  const { libraryChrome, libraryProps } = useAppScreenProps();
+  const themeStyles = useThemeStyles();
+
+  return (
+    <View style={[styles.libraryScreenHost, themeStyles?.appShell]}>
+      <View style={styles.libraryListStage} testID="library-panel-transition">
+        <LibraryView {...libraryProps} bottomInset={0} />
+      </View>
+      {libraryChrome.floatingControls}
+    </View>
   );
 }
 
@@ -983,10 +1059,9 @@ function useStableEvent<T extends (...args: any[]) => any>(handler: T): T {
   return useCallback(((...args: Parameters<T>) => handlerRef.current(...args)) as T, []);
 }
 
-function Word7000App() {
+export function AppDataProvider({ children }: { children: ReactNode }) {
   const bundledVocabulary = useContext(VocabularyContext);
   const router = useRouter();
-  const safeAreaInsets = useSafeAreaInsets();
   const appScrollRef = useRef<ScrollView | null>(null);
   const libraryListRef = useRef<FlashListRef<WordEntry> | null>(null);
   const libraryScrollYRef = useRef(0);
@@ -1152,41 +1227,7 @@ function Word7000App() {
   const activeModeCopy = modeCopy[studyMode];
   const activeSystemCopy = systemCopy[studyMode];
   const activeInstallGuideSteps = installGuideStepsByMode[studyMode];
-  const previewModeLabel = IS_WEB_IOS_PREVIEW ? 'iOS Preview' : null;
-  const tabBarBottomInset = Platform.OS === 'web' ? IOS_TAB_BAR_BOTTOM_OFFSET : safeAreaInsets.bottom;
-  const tabBarInsetStyle = useMemo(
-    () => ({
-      minHeight: TAB_BAR_CONTENT_HEIGHT + tabBarBottomInset,
-      paddingBottom: Math.max(4, tabBarBottomInset),
-    }),
-    [tabBarBottomInset],
-  );
-  // The bar no longer occupies layout space, so every scrollable has to end
-  // with room equal to its height or the last item sits underneath it.
-  const tabBarOverlayHeight = TAB_BAR_CONTENT_HEIGHT + tabBarBottomInset;
-  const scrollContentStyle = useMemo(
-    () => [styles.content, { paddingBottom: CONTENT_BOTTOM_PADDING + tabBarOverlayHeight }],
-    [tabBarOverlayHeight],
-  );
   const updateState = useAppUpdateCheck(studyMode);
-  const screenMotionStyle = {
-    opacity: screenAnim,
-    transform: [
-      {
-        translateY: screenAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [8, 0],
-        }),
-      },
-    ],
-  };
-  const screenMotionWebTransition: WebTransitionStyle | undefined =
-    Platform.OS === 'web'
-      ? {
-          transformOrigin: 'top center',
-          willChange: 'opacity, transform',
-        }
-      : undefined;
   const cardMotionStyle = useMemo(
     () => ({
       opacity: cardAnim,
@@ -2956,245 +2997,205 @@ function Word7000App() {
 
   useEffect(() => () => setAppRouteBridgeSnapshot(null), []);
 
-  return (
-    <ThemeContext.Provider value={themeMode}>
-    <SafeAreaView edges={['top', 'left', 'right']} style={[styles.safeArea, themeStyles?.safeArea, IS_WEB_IOS_PREVIEW && styles.webIosPreviewSafeArea]}>
-      <StatusBar style={darkMode ? 'light' : 'dark'} />
-      <View style={[styles.appShell, IS_WEB_IOS_PREVIEW && styles.webIosPreviewAppShell, themeStyles?.appShell]}>
-        <View style={styles.header}>
-          <View style={styles.flexOne}>
-            <Text
-              numberOfLines={1}
-              style={[styles.brand, themeStyles?.brand]}
-            >
-              {activeTab === 'home' ? activeModeCopy.brand : tabLabelForMode(activeTab, studyMode)}
-            </Text>
-            {activeTab === 'home' && (
-              <Text style={[styles.headerSubtext, themeStyles?.headerSubtext]}>{activeModeCopy.subtitle}</Text>
-            )}
-          </View>
-          {previewModeLabel && (
-            <View style={styles.headerActions}>
-              <View style={[styles.previewModePill, themeStyles?.previewModePill]}>
-                <Smartphone size={14} color={darkMode ? '#bfdbfe' : '#2563eb'} strokeWidth={2.4} />
-                <Text style={[styles.previewModeText, themeStyles?.previewModeText]}>{previewModeLabel}</Text>
-              </View>
-            </View>
-          )}
-        </View>
-        {activeTab === 'library' ? (
-          <Animated.View
-            style={[styles.libraryScreenHost, styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}
+  // Assembled here rather than passed as a dozen animated values: these
+  // controls read from state that belongs to this provider, so the library
+  // route just drops the finished node into place.
+  const libraryFloatingControls = (
+    <View pointerEvents="box-none" style={styles.libraryFixedControls}>
+      {libraryScrolledPastTop && (
+        <AnimatedPressable
+          accessibilityRole="button"
+          onPress={returnLibraryToTop}
+          pressTone="secondary"
+          style={[styles.libraryFloatingTopButton, themeStyles?.libraryFloatingTopButton]}
+          testID="library-floating-top"
+        >
+          <ArrowUp size={15} color={libraryDragIconColor} strokeWidth={2.5} />
+          <Text style={[styles.libraryFloatingTopText, themeStyles?.libraryFloatingTopText]}>{modeInterfaceCopy[studyMode].floatingTop}</Text>
+        </AnimatedPressable>
+      )}
+      {librarySliderVisible && (
+        <GestureDetector gesture={librarySliderGesture}>
+          <View
+            onLayout={(event) => setSliderTrackHeight(event.nativeEvent.layout.height)}
+            style={[
+              styles.libraryDragSlider,
+              themeStyles?.libraryDragSlider,
+              librarySliderActive ? styles.libraryDragSliderActive : styles.libraryDragSliderCollapsed,
+              librarySliderActive ? themeStyles?.libraryDragSliderActive : themeStyles?.libraryDragSliderCollapsed,
+              libraryDragSliderMotionStyle,
+            ]}
+            testID="library-drag-slider"
           >
             <Animated.View
-              style={styles.libraryListStage}
-              testID="library-panel-transition"
+              style={[
+                styles.libraryDragTrack,
+                themeStyles?.libraryDragTrack,
+                librarySliderActive ? styles.libraryDragTrackActive : styles.libraryDragTrackCollapsed,
+                librarySliderActive ? themeStyles?.libraryDragTrackActive : themeStyles?.libraryDragTrackCollapsed,
+                libraryDragTrackMotionStyle,
+              ]}
+            />
+            <Animated.View
+              style={[
+                styles.libraryDragThumb,
+                themeStyles?.libraryDragThumb,
+                librarySliderActive ? styles.libraryDragThumbActive : styles.libraryDragThumbCollapsed,
+                librarySliderActive ? themeStyles?.libraryDragThumbActive : themeStyles?.libraryDragThumbCollapsed,
+                libraryDragThumbMotionStyle,
+                { transform: [{ translateY: libraryThumbOffsetAnim }] },
+              ]}
+              testID="library-drag-thumb"
             >
-              <LibraryView
-                    bottomInset={tabBarOverlayHeight}
-                activeFilter={activeFilter}
-                activeInitial={activeInitial}
-                activeLevel={activeLevel}
-                activeSort={activeSort}
-                customSets={sortedCustomSets}
-                filtersOpen={libraryFiltersOpen}
-                levelOptions={levelFilterOptions}
-                listMotionStyle={listMotionStyle}
-                listRef={libraryListRef}
-                progress={progress}
-                query={searchQuery}
-                searchFocused={searchFocused}
-                studyMode={studyMode}
-                words={libraryWords}
-                onAddToSet={handleOpenSetPicker}
-                onContentSizeChange={libraryContentSizeChange}
-                onFilterChange={setActiveFilter}
-                onFiltersToggle={handleLibraryFiltersToggle}
-                onFavorite={handleLibraryFavorite}
-                onInitialChange={setActiveInitial}
-                onLevelChange={setActiveLevel}
-                onOpenWord={openLibraryWordDetail}
-                onOpenCustomSets={openLibraryCustomSets}
-                onQueryChange={libraryQueryChange}
-                onQueryClear={libraryQueryClear}
-                onScroll={libraryScroll}
-                onSearchBlur={librarySearchBlur}
-                onSearchFocus={librarySearchFocus}
-                onSortChange={setActiveSort}
-                onViewportLayout={libraryViewportLayout}
-              />
-            </Animated.View>
-            <View pointerEvents="box-none" style={styles.libraryFixedControls}>
-              {libraryScrolledPastTop && (
-                <AnimatedPressable
-                  accessibilityRole="button"
-                  onPress={returnLibraryToTop}
-                  pressTone="secondary"
-                  style={[styles.libraryFloatingTopButton, themeStyles?.libraryFloatingTopButton]}
-                  testID="library-floating-top"
-                >
-                  <ArrowUp size={15} color={libraryDragIconColor} strokeWidth={2.5} />
-                  <Text style={[styles.libraryFloatingTopText, themeStyles?.libraryFloatingTopText]}>{modeInterfaceCopy[studyMode].floatingTop}</Text>
-                </AnimatedPressable>
+              {librarySliderActive && (
+                <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
               )}
-              {librarySliderVisible && (
-                <GestureDetector gesture={librarySliderGesture}>
-                  <View
-                    onLayout={(event) => setSliderTrackHeight(event.nativeEvent.layout.height)}
-                    style={[
-                      styles.libraryDragSlider,
-                      themeStyles?.libraryDragSlider,
-                      librarySliderActive ? styles.libraryDragSliderActive : styles.libraryDragSliderCollapsed,
-                      librarySliderActive ? themeStyles?.libraryDragSliderActive : themeStyles?.libraryDragSliderCollapsed,
-                      libraryDragSliderMotionStyle,
-                    ]}
-                    testID="library-drag-slider"
-                  >
-                    <Animated.View
-                      style={[
-                        styles.libraryDragTrack,
-                        themeStyles?.libraryDragTrack,
-                        librarySliderActive ? styles.libraryDragTrackActive : styles.libraryDragTrackCollapsed,
-                        librarySliderActive ? themeStyles?.libraryDragTrackActive : themeStyles?.libraryDragTrackCollapsed,
-                        libraryDragTrackMotionStyle,
-                      ]}
-                    />
-                    <Animated.View
-                      style={[
-                        styles.libraryDragThumb,
-                        themeStyles?.libraryDragThumb,
-                        librarySliderActive ? styles.libraryDragThumbActive : styles.libraryDragThumbCollapsed,
-                        librarySliderActive ? themeStyles?.libraryDragThumbActive : themeStyles?.libraryDragThumbCollapsed,
-                        libraryDragThumbMotionStyle,
-                        { transform: [{ translateY: libraryThumbOffsetAnim }] },
-                      ]}
-                      testID="library-drag-thumb"
-                    >
-                      {librarySliderActive && (
-                        <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
-                      )}
-                    </Animated.View>
-                  </View>
-                </GestureDetector>
-              )}
-            </View>
-          </Animated.View>
-        ) : (
-          <ScrollView
-            automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-            canCancelContentTouches={activeTab !== 'study'}
-            contentContainerStyle={scrollContentStyle}
-            directionalLockEnabled
-            keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
-            keyboardShouldPersistTaps="handled"
-            ref={appScrollRef}
-            showsVerticalScrollIndicator={false}
-            style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll]}
-          >
-            <Animated.View style={[styles.screenMotion, screenMotionWebTransition, screenMotionStyle]}>
-          {activeTab === 'home' && (
-            <HomeView
-              dailyPercent={dailyPercent}
-              progress={progress}
-              stats={stats}
-              studyMode={studyMode}
-              vocabularyWords={vocabularyWords}
-              onOpenDictionaryWord={homeOpenDictionaryWord}
-              onStartStudy={homeStartStudy}
-              onOpenReview={homeOpenReview}
-              onToggleStudyMode={homeToggleStudyMode}
-            />
-          )}
-          {activeTab === 'study' && (
-            <StudyView
-              activeFilter={studyFilter}
-              activeInitial={studyInitial}
-              activeLevel={studyLevel}
-              cardSequence={wordIndex}
-              filtersOpen={studyFiltersOpen}
-              levelOptions={levelFilterOptions}
-              motionStyle={cardMotionStyle}
-              nextWord={studyDeckNextWord}
-              studyMode={studyMode}
-              activeSetCount={activeStudySet ? studySourceWords.length : 0}
-              activeSetName={activeStudySet?.name ?? null}
-              wordCount={studyWords.length}
-              word={studyWord}
-              progress={progress}
-              onClearActiveSet={studyClearActiveSet}
-              onFilterChange={setStudyFilter}
-              onFiltersToggle={studyToggleFilters}
-              onInitialChange={setStudyInitial}
-              onLevelChange={setStudyLevel}
-              onNext={studyNextWord}
-              onPrevious={studyPreviousWord}
-              onSwipeKnown={studySwipeKnown}
-              onSwipeReview={studySwipeReview}
-              onAddToSet={handleOpenSetPicker}
-              onFavorite={studyFavoriteWord}
-            />
-          )}
-          {activeTab === 'quiz' && (
-            <QuizView
-              activeFilter={quizFilter}
-              activeInitial={quizInitial}
-              activeLevel={quizLevel}
-              filtersOpen={quizFiltersOpen}
-              levelOptions={levelFilterOptions}
-              motionStyle={cardMotionStyle}
-              conversationPrompt={conversationPrompt}
-              options={visibleQuizOptions}
-              practiceMode={quizPracticeMode}
-              questionCount={quizQuestionCount}
-              questionCounts={quizQuestionCounts}
-              questionIndex={quizIndex}
-              quizFinished={quizFinished}
-              quizStarted={quizStarted}
-              result={quizResult}
-              sessionTotal={quizSessionTotal}
-              speakingAnswerVisible={speakingAnswerVisible}
-              studyMode={studyMode}
-              activeSetCount={activeQuizSet ? quizSourceWords.length : 0}
-              activeSetName={activeQuizSet?.name ?? null}
-              correctCount={quizCorrectCount}
-              word={visibleQuizWord}
-              wordCount={quizWords.length}
-              onAnswer={quizAnswer}
-              onClearActiveSet={quizClearActiveSet}
-              onFilterChange={setQuizFilter}
-              onFiltersToggle={quizToggleFilters}
-              onInitialChange={setQuizInitial}
-              onLevelChange={setQuizLevel}
-              onPracticeModeChange={quizPracticeModeChange}
-              onNext={quizNextQuestion}
-              onQuestionCountChange={setQuizQuestionCount}
-              onRevealSpeakingAnswer={quizRevealAnswer}
-              onRestart={quizRestart}
-              onStart={quizStart}
-            />
-          )}
-          {activeTab === 'profile' && (
-            <ProfileView
-              account={account}
-              dailyPercent={dailyPercent}
-              progress={progress}
-              stats={stats}
-              studyMode={studyMode}
-              themeMode={themeMode}
-              onEmailChange={profileEmailChange}
-              onAppleSignIn={profileAppleSignIn}
-              onGoogleSignIn={profileGoogleSignIn}
-              onOpenSettings={profileOpenSettings}
-              onPasswordChange={profilePasswordChange}
-              onShowInstallGuide={profileShowInstallGuide}
-              onSignIn={profileSignIn}
-              onSignOut={profileSignOut}
-              onSignUp={profileSignUp}
-            />
-          )}
             </Animated.View>
-          </ScrollView>
-        )}
+          </View>
+        </GestureDetector>
+      )}
+    </View>
+  );
+
+  const screenProps: AppScreenProps = {
+    homeProps: {
+      dailyPercent,
+      progress,
+      stats,
+      studyMode,
+      vocabularyWords,
+      onOpenDictionaryWord: homeOpenDictionaryWord,
+      onStartStudy: homeStartStudy,
+      onOpenReview: homeOpenReview,
+      onToggleStudyMode: homeToggleStudyMode,
+    },
+    studyProps: {
+      activeFilter: studyFilter,
+      activeInitial: studyInitial,
+      activeLevel: studyLevel,
+      cardSequence: wordIndex,
+      filtersOpen: studyFiltersOpen,
+      levelOptions: levelFilterOptions,
+      motionStyle: cardMotionStyle,
+      nextWord: studyDeckNextWord,
+      studyMode,
+      activeSetCount: activeStudySet ? studySourceWords.length : 0,
+      activeSetName: activeStudySet?.name ?? null,
+      wordCount: studyWords.length,
+      word: studyWord,
+      progress,
+      onClearActiveSet: studyClearActiveSet,
+      onFilterChange: setStudyFilter,
+      onFiltersToggle: studyToggleFilters,
+      onInitialChange: setStudyInitial,
+      onLevelChange: setStudyLevel,
+      onNext: studyNextWord,
+      onPrevious: studyPreviousWord,
+      onSwipeKnown: studySwipeKnown,
+      onSwipeReview: studySwipeReview,
+      onAddToSet: handleOpenSetPicker,
+      onFavorite: studyFavoriteWord,
+    },
+    quizProps: {
+      activeFilter: quizFilter,
+      activeInitial: quizInitial,
+      activeLevel: quizLevel,
+      filtersOpen: quizFiltersOpen,
+      levelOptions: levelFilterOptions,
+      motionStyle: cardMotionStyle,
+      conversationPrompt,
+      options: visibleQuizOptions,
+      practiceMode: quizPracticeMode,
+      questionCount: quizQuestionCount,
+      questionCounts: quizQuestionCounts,
+      questionIndex: quizIndex,
+      quizFinished,
+      quizStarted,
+      result: quizResult,
+      sessionTotal: quizSessionTotal,
+      speakingAnswerVisible,
+      studyMode,
+      activeSetCount: activeQuizSet ? quizSourceWords.length : 0,
+      activeSetName: activeQuizSet?.name ?? null,
+      correctCount: quizCorrectCount,
+      word: visibleQuizWord,
+      wordCount: quizWords.length,
+      onAnswer: quizAnswer,
+      onClearActiveSet: quizClearActiveSet,
+      onFilterChange: setQuizFilter,
+      onFiltersToggle: quizToggleFilters,
+      onInitialChange: setQuizInitial,
+      onLevelChange: setQuizLevel,
+      onPracticeModeChange: quizPracticeModeChange,
+      onNext: quizNextQuestion,
+      onQuestionCountChange: setQuizQuestionCount,
+      onRevealSpeakingAnswer: quizRevealAnswer,
+      onRestart: quizRestart,
+      onStart: quizStart,
+    },
+    libraryProps: {
+      activeFilter,
+      activeInitial,
+      activeLevel,
+      activeSort,
+      customSets: sortedCustomSets,
+      filtersOpen: libraryFiltersOpen,
+      levelOptions: levelFilterOptions,
+      listMotionStyle,
+      listRef: libraryListRef,
+      progress,
+      query: searchQuery,
+      searchFocused,
+      studyMode,
+      words: libraryWords,
+      onAddToSet: handleOpenSetPicker,
+      onContentSizeChange: libraryContentSizeChange,
+      onFilterChange: setActiveFilter,
+      onFiltersToggle: handleLibraryFiltersToggle,
+      onFavorite: handleLibraryFavorite,
+      onInitialChange: setActiveInitial,
+      onLevelChange: setActiveLevel,
+      onOpenWord: openLibraryWordDetail,
+      onOpenCustomSets: openLibraryCustomSets,
+      onQueryChange: libraryQueryChange,
+      onQueryClear: libraryQueryClear,
+      onScroll: libraryScroll,
+      onSearchBlur: librarySearchBlur,
+      onSearchFocus: librarySearchFocus,
+      onSortChange: setActiveSort,
+      onViewportLayout: libraryViewportLayout,
+    },
+    profileProps: {
+      account,
+      dailyPercent,
+      progress,
+      stats,
+      studyMode,
+      themeMode,
+      onEmailChange: profileEmailChange,
+      onAppleSignIn: profileAppleSignIn,
+      onGoogleSignIn: profileGoogleSignIn,
+      onOpenSettings: profileOpenSettings,
+      onPasswordChange: profilePasswordChange,
+      onShowInstallGuide: profileShowInstallGuide,
+      onSignIn: profileSignIn,
+      onSignOut: profileSignOut,
+      onSignUp: profileSignUp,
+    },
+    libraryChrome: { floatingControls: libraryFloatingControls },
+  };
+
+  return (
+    <AppScreenPropsContext.Provider value={screenProps}>
+    <ThemeContext.Provider value={themeMode}>
+      {/* A plain View, not SafeAreaView: on iOS the native header and native
+          tab bar own the safe area now, and wrapping them would have the app
+          subtract insets the system has already accounted for. This layer only
+          survives for the web iPhone preview frame. */}
+      <View style={[styles.safeArea, themeStyles?.safeArea, IS_WEB_IOS_PREVIEW && styles.webIosPreviewSafeArea]}>
+      <StatusBar style={darkMode ? 'light' : 'dark'} />
+      <View style={[styles.appShell, IS_WEB_IOS_PREVIEW && styles.webIosPreviewAppShell, themeStyles?.appShell]}>
+        {children}
 
         {setPickerWord && (
           <CustomSetPickerOverlay
@@ -3209,34 +3210,6 @@ function Word7000App() {
           />
         )}
 
-        <TabBarSurface style={[styles.tabBar, themeStyles?.tabBar, tabBarInsetStyle]}>
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const selected = activeTab === tab.id;
-            const tabIconColor = selected
-              ? darkMode
-                ? '#60a5fa'
-                : '#2563eb'
-              : darkMode
-                ? '#98989f'
-                : '#8e8e93';
-            return (
-              <AnimatedPressable
-                accessibilityRole="tab"
-                accessibilityState={{ selected }}
-                key={tab.id}
-                onPress={() => setActiveTab(tab.id)}
-                pressTone="tab"
-                style={styles.tabButton}
-              >
-                <Icon size={25} color={tabIconColor} strokeWidth={selected ? 2.3 : 1.9} />
-                <Text style={[styles.tabLabel, themeStyles?.tabLabel, selected && styles.tabLabelActive, selected && themeStyles?.tabLabelActive]}>
-                  {tabLabelForMode(tab.id, studyMode)}
-                </Text>
-              </AnimatedPressable>
-            );
-          })}
-        </TabBarSurface>
 
         {showModeSwitch && (
           <ModeSwitchOverlay
@@ -3292,8 +3265,9 @@ function Word7000App() {
           />
         )}
       </View>
-    </SafeAreaView>
+      </View>
     </ThemeContext.Provider>
+    </AppScreenPropsContext.Provider>
   );
 }
 
@@ -3558,7 +3532,7 @@ function formatQuizAnswer(word: WordEntry, studyMode: StudyMode): string {
   return studyMode === 'chinese' ? word.word : word.meaningZh;
 }
 
-function tabLabelForMode(tab: Tab, studyMode: StudyMode): string {
+export function tabLabelForMode(tab: Tab, studyMode: StudyMode): string {
   if (studyMode !== 'chinese') {
     return tabs.find((item) => item.id === tab)?.label ?? '';
   }
@@ -7510,22 +7484,6 @@ function DeveloperVocabularyPanel({
   );
 }
 
-// The tab bar floats over the content so the list can scroll underneath it,
-// which is the whole point of the glass: it has something to refract. Without
-// Liquid Glass it stays an opaque bar, otherwise the content would show
-// straight through.
-function TabBarSurface({ children, style }: { children: ReactNode; style: StyleProp<ViewStyle> }) {
-  if (TAB_BAR_USES_GLASS) {
-    return (
-      <GlassView glassEffectStyle="regular" style={[styles.tabBarFloating, style]}>
-        {children}
-      </GlassView>
-    );
-  }
-
-  return <View style={[styles.tabBarFloating, styles.tabBarOpaque, style]}>{children}</View>;
-}
-
 function StatCard({ emphasis, label, value }: { emphasis?: boolean; label: string; value: string }) {
   const themeStyles = useThemeStyles();
 
@@ -10693,48 +10651,6 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     marginTop: 2,
   },
-  tabBar: {
-    alignSelf: 'stretch',
-    borderColor: 'rgba(60, 60, 67, 0.29)',
-    borderBottomWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    flexDirection: 'row',
-    gap: 4,
-    maxWidth: 720,
-    minHeight: TAB_BAR_CONTENT_HEIGHT,
-    paddingBottom: 4,
-    paddingHorizontal: 16,
-    paddingTop: 4,
-  },
-  tabBarFloating: {
-    bottom: 0,
-    left: 0,
-    marginHorizontal: 'auto',
-    position: 'absolute',
-    right: 0,
-  },
-  tabBarOpaque: {
-    backgroundColor: '#fff',
-  },
-  tabButton: {
-    alignItems: 'center',
-    flex: 1,
-    gap: 3,
-    minHeight: 41,
-    justifyContent: 'center',
-  },
-  tabLabel: {
-    color: '#8e8e93',
-    fontSize: 10,
-    fontWeight: '500',
-    letterSpacing: 0.06,
-  },
-  tabLabelActive: {
-    color: '#2563eb',
-    fontWeight: '600',
-  },
 });
 
 const darkStyles = StyleSheet.create({
@@ -10783,16 +10699,6 @@ const darkStyles = StyleSheet.create({
   },
   updateRequiredCountdown: {
     color: '#bfdbfe',
-  },
-  tabBar: {
-    backgroundColor: '#1c1c1e',
-    borderColor: 'rgba(84, 84, 88, 0.6)',
-  },
-  tabLabel: {
-    color: '#98989f',
-  },
-  tabLabelActive: {
-    color: '#60a5fa',
   },
   hero: {
     backgroundColor: '#182033',

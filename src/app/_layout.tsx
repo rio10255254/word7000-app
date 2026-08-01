@@ -24,7 +24,7 @@ export default function RootLayout() {
               headerShown: false,
             }}
           >
-            <Stack.Screen name="index" options={{ animation: 'none' }} />
+            <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
             <Stack.Screen name="library/[wordId]" />
             <Stack.Screen name="sets" />
             <Stack.Screen name="settings" />

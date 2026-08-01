@@ -166,8 +166,18 @@ describe('free web launch configuration', () => {
     expect(tabBarSource).toContain('minHeight: TAB_BAR_CONTENT_HEIGHT');
     expect(tabBarSource).not.toContain('marginBottom: IOS_TAB_BAR_BOTTOM_OFFSET');
     expect(tabBarSource).toContain('paddingHorizontal: 16');
-    expect(tabBarSource).not.toContain("position: 'absolute'");
+    // The bar is positioned absolutely on purpose now: content scrolls under
+    // it so the Liquid Glass has something to refract. What the original guard
+    // was really protecting against is the safe area being counted twice — the
+    // old bug paired absolute positioning with a hardcoded bottom offset and a
+    // hardcoded content inset. Pin that down directly rather than banning the
+    // positioning: the bar sits at bottom 0, and both the bar's own padding
+    // and the scrollers' bottom room derive from the one measured inset.
     expect(tabBarSource).not.toContain('bottom: IOS_TAB_BAR_BOTTOM_OFFSET');
+    expect(appSource).toContain('const tabBarOverlayHeight = TAB_BAR_CONTENT_HEIGHT + tabBarBottomInset;');
+    expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING + tabBarOverlayHeight');
+    expect(appSource).toContain('paddingBottom: Math.max(4, tabBarBottomInset)');
+    expect(appSource).not.toContain('IOS_BOTTOM_SAFE_AREA_FALLBACK +');
     expect(tabBarSource).not.toContain('borderRadius: 8');
     expect(tabBarSource).not.toContain('marginHorizontal: 16');
     expect(appSource).not.toContain(" : 16 + IOS_BOTTOM_SAFE_AREA_FALLBACK;");

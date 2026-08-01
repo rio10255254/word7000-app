@@ -3,6 +3,7 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';
+import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Reanimated, {
   cancelAnimation,
@@ -262,6 +263,11 @@ const IOS_TAB_BAR_BOTTOM_OFFSET = Platform.OS === 'web'
     : WEB_TAB_BAR_BOTTOM_OFFSET
   : 0;
 const TAB_BAR_CONTENT_HEIGHT = 49;
+// Liquid Glass exists from iOS 26. Everywhere else GlassView renders as a
+// plain View with no background of its own, and since the tab bar now floats
+// over the content, a background-less bar would let the list show through it.
+// So the fallback keeps the opaque bar it has always had.
+const TAB_BAR_USES_GLASS = isLiquidGlassAvailable();
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
@@ -1154,6 +1160,13 @@ function Word7000App() {
       paddingBottom: Math.max(4, tabBarBottomInset),
     }),
     [tabBarBottomInset],
+  );
+  // The bar no longer occupies layout space, so every scrollable has to end
+  // with room equal to its height or the last item sits underneath it.
+  const tabBarOverlayHeight = TAB_BAR_CONTENT_HEIGHT + tabBarBottomInset;
+  const scrollContentStyle = useMemo(
+    () => [styles.content, { paddingBottom: CONTENT_BOTTOM_PADDING + tabBarOverlayHeight }],
+    [tabBarOverlayHeight],
   );
   const updateState = useAppUpdateCheck(studyMode);
   const screenMotionStyle = {
@@ -2978,6 +2991,7 @@ function Word7000App() {
               testID="library-panel-transition"
             >
               <LibraryView
+                    bottomInset={tabBarOverlayHeight}
                 activeFilter={activeFilter}
                 activeInitial={activeInitial}
                 activeLevel={activeLevel}
@@ -3069,7 +3083,7 @@ function Word7000App() {
           <ScrollView
             automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
             canCancelContentTouches={activeTab !== 'study'}
-            contentContainerStyle={styles.content}
+            contentContainerStyle={scrollContentStyle}
             directionalLockEnabled
             keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
             keyboardShouldPersistTaps="handled"
@@ -3195,7 +3209,7 @@ function Word7000App() {
           />
         )}
 
-        <View style={[styles.tabBar, themeStyles?.tabBar, tabBarInsetStyle]}>
+        <TabBarSurface style={[styles.tabBar, themeStyles?.tabBar, tabBarInsetStyle]}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const selected = activeTab === tab.id;
@@ -3222,7 +3236,7 @@ function Word7000App() {
               </AnimatedPressable>
             );
           })}
-        </View>
+        </TabBarSurface>
 
         {showModeSwitch && (
           <ModeSwitchOverlay
@@ -5922,6 +5936,7 @@ const LibraryView = memo(function LibraryView({
   activeInitial,
   activeLevel,
   activeSort,
+  bottomInset,
   customSets,
   filtersOpen,
   levelOptions,
@@ -5953,6 +5968,7 @@ const LibraryView = memo(function LibraryView({
   activeInitial: string;
   activeLevel: string;
   activeSort: LibrarySort;
+  bottomInset: number;
   customSets: CustomVocabSet[];
   filtersOpen: boolean;
   levelOptions: FilterOption[];
@@ -5981,6 +5997,10 @@ const LibraryView = memo(function LibraryView({
   onViewportLayout: (event: LayoutChangeEvent) => void;
 }) {
   const hasQuery = query.trim().length > 0;
+  const libraryListContentStyle = useMemo(
+    () => StyleSheet.flatten([styles.libraryListContent, { paddingBottom: CONTENT_BOTTOM_PADDING + bottomInset }]),
+    [bottomInset],
+  );
   const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;
   const searchInputRef = useRef<TextInput | null>(null);
   const themeStyles = useThemeStyles();
@@ -6172,7 +6192,7 @@ const LibraryView = memo(function LibraryView({
 
   return (
     <FlashList
-      contentContainerStyle={styles.libraryListContent}
+      contentContainerStyle={libraryListContentStyle}
       data={words}
       drawDistance={720}
       extraData={progress.words}
@@ -7488,6 +7508,22 @@ function DeveloperVocabularyPanel({
       </AnimatedPressable>
     </View>
   );
+}
+
+// The tab bar floats over the content so the list can scroll underneath it,
+// which is the whole point of the glass: it has something to refract. Without
+// Liquid Glass it stays an opaque bar, otherwise the content would show
+// straight through.
+function TabBarSurface({ children, style }: { children: ReactNode; style: StyleProp<ViewStyle> }) {
+  if (TAB_BAR_USES_GLASS) {
+    return (
+      <GlassView glassEffectStyle="regular" style={[styles.tabBarFloating, style]}>
+        {children}
+      </GlassView>
+    );
+  }
+
+  return <View style={[styles.tabBarFloating, styles.tabBarOpaque, style]}>{children}</View>;
 }
 
 function StatCard({ emphasis, label, value }: { emphasis?: boolean; label: string; value: string }) {
@@ -10659,7 +10695,6 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     alignSelf: 'stretch',
-    backgroundColor: '#fff',
     borderColor: 'rgba(60, 60, 67, 0.29)',
     borderBottomWidth: 0,
     borderLeftWidth: 0,
@@ -10672,6 +10707,16 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingHorizontal: 16,
     paddingTop: 4,
+  },
+  tabBarFloating: {
+    bottom: 0,
+    left: 0,
+    marginHorizontal: 'auto',
+    position: 'absolute',
+    right: 0,
+  },
+  tabBarOpaque: {
+    backgroundColor: '#fff',
   },
   tabButton: {
     alignItems: 'center',

@@ -4261,15 +4261,12 @@ const HomeView = memo(function HomeView({
     <>
       <View style={styles.homeStack}>
         <View style={[styles.hero, themeStyles?.hero]}>
-          <View style={styles.homeHeroTop}>
-            <View style={styles.heroCopy}>
-              <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
-              <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>{copy.heroTitle}</Text>
-            </View>
-            <View style={[styles.ring, themeStyles?.ring]}>
-              <Text style={[styles.ringValue, themeStyles?.ringValue]}>{dailyPercent}%</Text>
-              <Text style={[styles.ringLabel, themeStyles?.ringLabel]}>{ui.completed}</Text>
-            </View>
+          {/* The percentage tile that used to sit here repeated what the
+              progress row and bar below already say, and squeezed the title
+              into two lines to do it. */}
+          <View style={styles.heroCopy}>
+            <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
+            <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>{copy.heroTitle}</Text>
           </View>
           <View style={styles.homeProgressHeader}>
             <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.dailyProgress}</Text>
@@ -6269,7 +6266,6 @@ const LibraryWordRow = memo(function LibraryWordRow({
           </Text>
         )}
         <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
-        <Text style={styles.libraryDetailHint}>{ui.viewDetails}</Text>
       </AnimatedPressable>
       <View style={styles.librarySide}>
         <AnimatedPressable
@@ -8255,12 +8251,6 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 18,
   },
-  homeHeroTop: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 14,
-    justifyContent: 'space-between',
-  },
   heroCopy: {
     flex: 1,
   },
@@ -8275,28 +8265,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
     lineHeight: 33,
-  },
-  ring: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: '#ffffff',
-    borderColor: '#fdba74',
-    borderRadius: 20,
-    borderCurve: 'continuous',
-    borderWidth: 1,
-    height: 78,
-    justifyContent: 'center',
-    width: 78,
-  },
-  ringValue: {
-    color: '#172033',
-    fontSize: 22,
-    fontWeight: '700',
-  },
-  ringLabel: {
-    color: '#717987',
-    fontSize: 12,
-    marginTop: 2,
   },
   modeSwitchButton: {
     alignItems: 'center',
@@ -9609,12 +9577,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     marginTop: 5,
   },
-  libraryDetailHint: {
-    color: '#2563eb',
-    fontSize: 12,
-    fontWeight: '600',
-    marginTop: 8,
-  },
   libraryDetailBack: {
     alignItems: 'center',
     alignSelf: 'flex-start',
@@ -10793,16 +10755,6 @@ const darkStyles = StyleSheet.create({
   },
   heroTitle: {
     color: '#f8fafc',
-  },
-  ring: {
-    backgroundColor: '#0f172a',
-    borderColor: '#475569',
-  },
-  ringValue: {
-    color: '#f8fafc',
-  },
-  ringLabel: {
-    color: '#94a3b8',
   },
   modeSwitchButton: {
     backgroundColor: '#0b1f3a',

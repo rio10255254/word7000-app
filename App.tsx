@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useFocusEffect, usePathname, useRouter } from 'expo-router';
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Reanimated, {
@@ -255,6 +255,10 @@ const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();
 const IS_NATIVE_IOS = Platform.OS === 'ios';
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
+// On iOS the native tab bar sits at the bottom and the system hands us the
+// inset. The web fallback for native tabs is a fixed pill at top: 24px with a
+// height of 40, which floats over the content, so web alone owes it headroom.
+const WEB_TABS_TOP_INSET = Platform.OS === 'web' ? 76 : 0;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
 const LIBRARY_FIXED_CONTROLS_TOP = 8;
@@ -968,7 +972,7 @@ function TabScrollHost({ children }: { children: ReactNode }) {
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: 18 + WEB_TABS_TOP_INSET }]}
       contentInsetAdjustmentBehavior="automatic"
       keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
       keyboardShouldPersistTaps="handled"
@@ -1053,6 +1057,25 @@ export function Word7000RouteScreen({
   );
 }
 
+function useActiveTabFromRoute(): Tab {
+  const pathname = usePathname();
+  return useMemo(() => {
+    if (pathname.startsWith('/study')) {
+      return 'study';
+    }
+    if (pathname.startsWith('/quiz')) {
+      return 'quiz';
+    }
+    if (pathname.startsWith('/library')) {
+      return 'library';
+    }
+    if (pathname.startsWith('/profile')) {
+      return 'profile';
+    }
+    return 'home';
+  }, [pathname]);
+}
+
 function useStableEvent<T extends (...args: any[]) => any>(handler: T): T {
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
@@ -1080,7 +1103,17 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [initialFilterPreferences] = useState(() => loadFilterPreferences(getAppStorage()));
-  const [activeTab, setActiveTab] = useState<Tab>('home');
+  // Derived from the route rather than held in state. The memos below use it
+  // to skip work for screens you are not looking at, and with native tabs the
+  // router is the only thing that knows which screen that is. Keeping the same
+  // name means every existing guard keeps working unchanged.
+  const activeTab = useActiveTabFromRoute();
+  const setActiveTab = useCallback(
+    (tab: Tab) => {
+      router.navigate(tab === 'home' ? '/' : `/${tab}`);
+    },
+    [router],
+  );
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
   const [progressReady, setProgressReady] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
@@ -5972,7 +6005,10 @@ const LibraryView = memo(function LibraryView({
 }) {
   const hasQuery = query.trim().length > 0;
   const libraryListContentStyle = useMemo(
-    () => StyleSheet.flatten([styles.libraryListContent, { paddingBottom: CONTENT_BOTTOM_PADDING + bottomInset }]),
+    () => StyleSheet.flatten([
+      styles.libraryListContent,
+      { paddingBottom: CONTENT_BOTTOM_PADDING + bottomInset, paddingTop: 18 + WEB_TABS_TOP_INSET },
+    ]),
     [bottomInset],
   );
   const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;

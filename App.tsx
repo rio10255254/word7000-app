@@ -4282,9 +4282,6 @@ const HomeView = memo(function HomeView({
     <>
       <View style={styles.homeStack}>
         <View style={[styles.hero, themeStyles?.hero]}>
-          {/* The percentage tile that used to sit here repeated what the
-              progress row and bar below already say, and squeezed the title
-              into two lines to do it. */}
           <View style={styles.heroCopy}>
             <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
             <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>{copy.heroTitle}</Text>
@@ -4305,38 +4302,44 @@ const HomeView = memo(function HomeView({
           </AnimatedPressable>
         </View>
 
-        <AnimatedPressable
-          accessibilityLabel={copy.toggleTitle}
-          accessibilityRole="button"
-          onPress={onToggleStudyMode}
-          pressTone="list"
-          style={[styles.modeSwitchButton, studyMode === 'chinese' && styles.modeSwitchButtonChinese, themeStyles?.modeSwitchButton]}
-          testID="study-mode-toggle"
-        >
-          <View style={[styles.modeSwitchIcon, studyMode === 'chinese' && styles.modeSwitchIconChinese]}>
-            <Languages size={20} color={studyMode === 'chinese' ? '#0f766e' : '#2563eb'} strokeWidth={2.4} />
-          </View>
-          <View style={styles.flexOne}>
-            <Text style={[styles.modeSwitchTitle, themeStyles?.modeSwitchTitle]}>{copy.toggleTitle}</Text>
-            <Text style={[styles.modeSwitchText, themeStyles?.modeSwitchText]}>{copy.toggleText}</Text>
-          </View>
-          <ChevronRight size={18} color={studyMode === 'chinese' ? '#0f766e' : '#2563eb'} strokeWidth={2.4} />
-        </AnimatedPressable>
-
-        <View style={styles.statsGrid}>
+        <View style={[styles.statsGrid, themeStyles?.homeGroupedSurface]} testID="home-metrics-group">
           <StatCard label={ui.streak} value={progress.streak.toString()} />
-          <StatCard label={ui.mastered} value={stats.mastered.toString()} />
-          <StatCard emphasis={stats.review > 0} label={ui.reviewDue} value={stats.review.toString()} />
+          <StatCard divider label={ui.mastered} value={stats.mastered.toString()} />
+          <StatCard divider emphasis={stats.review > 0} label={ui.reviewDue} value={stats.review.toString()} />
         </View>
 
-        <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={[styles.reviewStrip, themeStyles?.reviewStrip]}>
-          <RotateCcw size={20} color="#d97706" strokeWidth={2.4} />
-          <View style={styles.flexOne}>
-            <Text style={[styles.reviewTitle, themeStyles?.reviewTitle]}>{ui.reviewList}</Text>
-            <Text style={[styles.reviewText, themeStyles?.reviewText]}>{stats.review > 0 ? ui.reviewListCount(stats.review) : ui.reviewListEmpty}</Text>
-          </View>
-          <ChevronRight size={18} color="#6b7280" strokeWidth={2.2} />
-        </AnimatedPressable>
+        <View style={[styles.homeActionGroup, themeStyles?.homeGroupedSurface]} testID="home-action-group">
+          <AnimatedPressable
+            accessibilityLabel={copy.toggleTitle}
+            accessibilityRole="button"
+            onPress={onToggleStudyMode}
+            pressTone="list"
+            style={styles.modeSwitchButton}
+            testID="study-mode-toggle"
+          >
+            <View style={[styles.modeSwitchIcon, studyMode === 'chinese' && styles.modeSwitchIconChinese, themeStyles?.modeSwitchIcon]}>
+              <Languages size={20} color={studyMode === 'chinese' ? '#0f766e' : '#2563eb'} strokeWidth={2.4} />
+            </View>
+            <View style={styles.flexOne}>
+              <Text style={[styles.modeSwitchTitle, themeStyles?.modeSwitchTitle]}>{copy.toggleTitle}</Text>
+              <Text style={[styles.modeSwitchText, themeStyles?.modeSwitchText]}>{copy.toggleText}</Text>
+            </View>
+            <ChevronRight size={18} color={darkMode ? '#94a3b8' : '#8e8e93'} strokeWidth={2.4} />
+          </AnimatedPressable>
+
+          <View style={[styles.homeActionDivider, themeStyles?.homeDivider]} />
+
+          <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={styles.reviewStrip}>
+            <View style={[styles.reviewIcon, themeStyles?.reviewIcon]}>
+              <RotateCcw size={20} color="#d97706" strokeWidth={2.4} />
+            </View>
+            <View style={styles.flexOne}>
+              <Text style={[styles.reviewTitle, themeStyles?.reviewTitle]}>{ui.reviewList}</Text>
+              <Text style={[styles.reviewText, themeStyles?.reviewText]}>{stats.review > 0 ? ui.reviewListCount(stats.review) : ui.reviewListEmpty}</Text>
+            </View>
+            <ChevronRight size={18} color={darkMode ? '#94a3b8' : '#8e8e93'} strokeWidth={2.2} />
+          </AnimatedPressable>
+        </View>
 
         <AnimatedPressable
           accessibilityLabel={ui.dictionaryLookup}
@@ -4346,10 +4349,13 @@ const HomeView = memo(function HomeView({
           style={[styles.homeDictionaryStandalone, themeStyles?.homeDictionarySearch]}
           testID="home-dictionary-search"
         >
-          <Search size={20} color={darkMode ? '#94a3b8' : '#717987'} strokeWidth={2.4} />
+          <View style={[styles.homeDictionaryLauncherIcon, themeStyles?.homeDictionaryLauncherIcon]}>
+            <Search size={20} color={darkMode ? '#bfdbfe' : '#2563eb'} strokeWidth={2.4} />
+          </View>
           <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
             {copy.searchPlaceholder}
           </Text>
+          <ChevronRight size={18} color={darkMode ? '#93c5fd' : '#2563eb'} strokeWidth={2.3} />
         </AnimatedPressable>
 
       </View>
@@ -4588,13 +4594,24 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
 
   return (
     <>
-      <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
-        {formatWordPrimary(word, studyMode)}
-      </Text>
-      {studyMode === 'chinese' && (
-        <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
-      )}
-      <Text style={[styles.pronunciation, themeStyles?.pronunciation]}>{formatWordSecondary(word, studyMode)}</Text>
+      <View style={styles.studyWordIdentity}>
+        <Text
+          adjustsFontSizeToFit={Platform.OS === 'ios'}
+          minimumFontScale={0.72}
+          numberOfLines={2}
+          style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}
+        >
+          {formatWordPrimary(word, studyMode)}
+        </Text>
+        {studyMode === 'chinese' && (
+          <Text numberOfLines={2} style={[styles.pinyinText, themeStyles?.pinyinText]}>
+            {formatWordPinyin(word, studyMode)}
+          </Text>
+        )}
+        <Text numberOfLines={2} style={[styles.pronunciation, themeStyles?.pronunciation]}>
+          {formatWordSecondary(word, studyMode)}
+        </Text>
+      </View>
       {/* Line limits exist to keep every entry inside the card's fixed height;
           without them a long definition would be clipped instead of trimmed. */}
       <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
@@ -4703,6 +4720,7 @@ const StudyView = memo(function StudyView({
   const wordProgress = word ? progress.words[word.id] : undefined;
   const favorited = Boolean(wordProgress?.favorite);
   const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
@@ -5254,14 +5272,14 @@ const StudyView = memo(function StudyView({
             testID="study-swipe-deck-underlay"
           >
             <View style={styles.rowBetween}>
-              <View style={styles.groupPill}>
-                <Text style={styles.groupText}>{deckWord.group}</Text>
+              <View style={[styles.groupPill, themeStyles?.groupPill]}>
+                <Text style={[styles.groupText, themeStyles?.groupText]}>{deckWord.group}</Text>
               </View>
               <View style={styles.studyCardActions}>
-                <View style={[styles.iconButton, styles.addToSetIconButton]}>
+                <View style={[styles.iconButton, styles.addToSetIconButton, themeStyles?.iconButton]}>
                   <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
                 </View>
-                <View style={styles.iconButton}>
+                <View style={[styles.iconButton, themeStyles?.iconButton]}>
                   <Star
                     size={20}
                     color={deckFavorited ? '#f59e0b' : '#717987'}
@@ -5347,8 +5365,8 @@ const StudyView = memo(function StudyView({
           testID="study-swipe-card"
         >
           <View style={styles.rowBetween}>
-            <View style={styles.groupPill}>
-              <Text style={styles.groupText}>{word.group}</Text>
+            <View style={[styles.groupPill, themeStyles?.groupPill]}>
+              <Text style={[styles.groupText, themeStyles?.groupText]}>{word.group}</Text>
             </View>
             <View style={styles.studyCardActions}>
               <AnimatedPressable
@@ -5356,7 +5374,7 @@ const StudyView = memo(function StudyView({
                 accessibilityRole="button"
                 onPress={() => onAddToSet(word)}
                 pressTone="icon"
-                style={[styles.iconButton, styles.addToSetIconButton]}
+                style={[styles.iconButton, styles.addToSetIconButton, themeStyles?.iconButton]}
                 testID="study-add-to-set"
               >
                 <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
@@ -5366,7 +5384,7 @@ const StudyView = memo(function StudyView({
                 accessibilityRole="button"
                 onPress={onFavorite}
                 pressTone="icon"
-                style={styles.iconButton}
+                style={[styles.iconButton, themeStyles?.iconButton]}
               >
                 <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
               </AnimatedPressable>
@@ -5378,10 +5396,10 @@ const StudyView = memo(function StudyView({
         </Reanimated.View>
        </Animated.View>
 
-      <View style={styles.actionGrid}>
-        <AnimatedPressable accessibilityRole="button" onPress={onPrevious} pressTone="secondary" style={styles.secondaryButton}>
-          <ChevronLeft size={18} color="#172033" strokeWidth={2.3} />
-          <Text style={styles.secondaryButtonText}>{ui.previousWord}</Text>
+      <View style={styles.actionGrid} testID="study-navigation-controls">
+        <AnimatedPressable accessibilityRole="button" onPress={onPrevious} pressTone="secondary" style={[styles.secondaryButton, themeStyles?.secondaryButton]}>
+          <ChevronLeft size={18} color={darkMode ? '#e2e8f0' : '#172033'} strokeWidth={2.3} />
+          <Text style={[styles.secondaryButtonText, themeStyles?.secondaryButtonText]}>{ui.previousWord}</Text>
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={styles.confirmButton}>
           <Text style={styles.confirmButtonText}>{ui.nextWord}</Text>
@@ -7521,15 +7539,21 @@ function DeveloperVocabularyPanel({
   );
 }
 
-function StatCard({ emphasis, label, value }: { emphasis?: boolean; label: string; value: string }) {
+function StatCard({
+  divider,
+  emphasis,
+  label,
+  value,
+}: {
+  divider?: boolean;
+  emphasis?: boolean;
+  label: string;
+  value: string;
+}) {
   const themeStyles = useThemeStyles();
 
-  // These are read-outs, not actions. Giving each one its own tint spread the
-  // eye across three equal blocks and left nothing for the day's actual task
-  // to stand out against, so colour is held back for the one number that
-  // means there is something waiting to be done.
   return (
-    <View style={[styles.statCard, themeStyles?.statCard]}>
+    <View style={[styles.statCard, divider && styles.statCardDivider, themeStyles?.statCard]}>
       <Text style={[styles.statValue, emphasis && styles.statValueEmphasis, themeStyles?.statValue]}>{value}</Text>
       <Text style={[styles.statLabel, themeStyles?.statLabel]}>{label}</Text>
     </View>
@@ -8271,16 +8295,18 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   homeStack: {
-    gap: 12,
+    gap: 14,
   },
   hero: {
-    backgroundColor: '#fff7ed',
-    borderColor: '#fed7aa',
-    borderRadius: 18,
+    backgroundColor: '#fff',
+    borderRadius: 16,
     borderCurve: 'continuous',
-    borderWidth: 1,
-    gap: 12,
+    gap: 14,
     padding: 18,
+    shadowColor: '#0f172a',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
   },
   heroCopy: {
     flex: 1,
@@ -8299,14 +8325,9 @@ const styles = StyleSheet.create({
   },
   modeSwitchButton: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
-    borderRadius: 18,
-    borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
-    minHeight: 72,
+    minHeight: 70,
     padding: 14,
   },
   modeSwitchButtonChinese: {
@@ -8315,17 +8336,15 @@ const styles = StyleSheet.create({
   },
   modeSwitchIcon: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#eff6ff',
     borderRadius: 11,
     borderCurve: 'continuous',
-    borderWidth: 1,
     height: 44,
     justifyContent: 'center',
     width: 44,
   },
   modeSwitchIconChinese: {
-    borderColor: '#99f6e4',
+    backgroundColor: '#ecfdf5',
   },
   modeSwitchTitle: {
     color: '#172033',
@@ -8382,7 +8401,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#172033',
+    backgroundColor: '#2563eb',
     borderRadius: 12,
     borderCurve: 'continuous',
     flexDirection: 'row',
@@ -8416,22 +8435,24 @@ const styles = StyleSheet.create({
   },
   homeDictionaryStandalone: {
     alignItems: 'center',
-    // Looking a word up is a utility, not the day's task. It used to carry a
-    // saturated border and a blue shadow, which made it louder than the mode
-    // switch above it — a genuine action — so it now reads as a plain card.
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#eff6ff',
+    borderColor: '#bfdbfe',
+    borderRadius: 16,
     borderCurve: 'continuous',
     borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
-    minHeight: 52,
-    paddingHorizontal: 14,
-    shadowColor: '#0f172a',
-    shadowOffset: { height: 3, width: 0 },
-    shadowOpacity: 0.12,
-    shadowRadius: 9,
+    minHeight: 60,
+    paddingHorizontal: 10,
+  },
+  homeDictionaryLauncherIcon: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 11,
+    borderCurve: 'continuous',
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
   },
   homeDictionarySearch: {
     alignItems: 'center',
@@ -8454,11 +8475,10 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   homeDictionaryLauncherText: {
-    // Placeholder-style prompt, so it reads as muted rather than as a link.
-    color: '#717987',
+    color: '#1d4ed8',
     flex: 1,
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   homeDictionaryModalRoot: {
     flex: 1,
@@ -8624,17 +8644,23 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   statsGrid: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    borderCurve: 'continuous',
     flexDirection: 'row',
-    gap: 10,
+    minHeight: 82,
+    overflow: 'hidden',
   },
   statCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
-    borderCurve: 'continuous',
-    borderWidth: 1,
+    alignItems: 'center',
     flex: 1,
-    padding: 13,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 13,
+  },
+  statCardDivider: {
+    borderLeftColor: '#e5e7eb',
+    borderLeftWidth: StyleSheet.hairlineWidth,
   },
   blueTint: {
     backgroundColor: '#eff6ff',
@@ -8663,17 +8689,34 @@ const styles = StyleSheet.create({
     color: '#717987',
     fontSize: 12,
     marginTop: 4,
+    textAlign: 'center',
+  },
+  homeActionGroup: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+  },
+  homeActionDivider: {
+    backgroundColor: '#e5e7eb',
+    height: StyleSheet.hairlineWidth,
+    marginLeft: 70,
   },
   reviewStrip: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
-    borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
+    minHeight: 70,
     padding: 14,
+  },
+  reviewIcon: {
+    alignItems: 'center',
+    backgroundColor: '#fff7ed',
+    borderRadius: 11,
+    borderCurve: 'continuous',
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
   },
   reviewTitle: {
     color: '#172033',
@@ -8690,10 +8733,8 @@ const styles = StyleSheet.create({
   },
   wordCard: {
     backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
     borderRadius: 18,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 14,
     overflow: 'hidden',
     padding: 18,
@@ -8811,9 +8852,7 @@ const styles = StyleSheet.create({
   groupPill: {
     alignSelf: 'flex-start',
     backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
     borderRadius: 999,
-    borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
@@ -8825,10 +8864,8 @@ const styles = StyleSheet.create({
   iconButton: {
     alignItems: 'center',
     backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
-    borderRadius: 11,
+    borderRadius: 19,
     borderCurve: 'continuous',
-    borderWidth: 1,
     height: 38,
     justifyContent: 'center',
     width: 38,
@@ -8840,8 +8877,9 @@ const styles = StyleSheet.create({
   },
   bigWord: {
     color: '#172033',
-    fontSize: 42,
+    fontSize: 40,
     fontWeight: '700',
+    lineHeight: 48,
   },
   bigChineseWord: {
     fontSize: 30,
@@ -8856,6 +8894,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 21,
+  },
+  studyWordIdentity: {
+    gap: 3,
   },
   meaningBlock: {
     borderTopColor: '#edf0f5',
@@ -8880,10 +8921,8 @@ const styles = StyleSheet.create({
   },
   supplementalMeaning: {
     backgroundColor: '#f8fafc',
-    borderColor: '#dbeafe',
-    borderRadius: 14,
+    borderRadius: 10,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 5,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -8900,10 +8939,18 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   studyCardExampleBox: {
-    // Absorbs whatever the fixed height leaves over. A short entry then ends
-    // in a filled panel rather than a blank stretch of card.
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderTopWidth: StyleSheet.hairlineWidth,
     flex: 1,
     justifyContent: 'center',
+    marginBottom: -18,
+    marginHorizontal: -18,
+    paddingHorizontal: 18,
   },
   exampleBox: {
     backgroundColor: '#f8fafc',
@@ -8930,8 +8977,8 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     alignItems: 'center',
-    backgroundColor: '#fff7ed',
-    borderColor: '#fed7aa',
+    backgroundColor: '#fff',
+    borderColor: '#d1d5db',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8942,13 +8989,13 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
   secondaryButtonText: {
-    color: '#9a3412',
+    color: '#172033',
     fontSize: 15,
     fontWeight: '600',
   },
   confirmButton: {
     alignItems: 'center',
-    backgroundColor: '#2f855a',
+    backgroundColor: '#2563eb',
     borderRadius: 12,
     borderCurve: 'continuous',
     flex: 1,
@@ -10738,8 +10785,7 @@ const darkStyles = StyleSheet.create({
     color: '#bfdbfe',
   },
   hero: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#111827',
   },
   heroTitle: {
     color: '#f8fafc',
@@ -10747,6 +10793,9 @@ const darkStyles = StyleSheet.create({
   modeSwitchButton: {
     backgroundColor: '#0b1f3a',
     borderColor: '#1d4ed8',
+  },
+  modeSwitchIcon: {
+    backgroundColor: '#172554',
   },
   modeSwitchTitle: {
     color: '#f8fafc',
@@ -10846,6 +10895,9 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#102a56',
     borderColor: '#3b82f6',
   },
+  homeDictionaryLauncherIcon: {
+    backgroundColor: '#17366b',
+  },
   homeDictionaryInput: {
     color: '#f8fafc',
   },
@@ -10861,10 +10913,15 @@ const darkStyles = StyleSheet.create({
   },
   iconButton: {
     backgroundColor: '#182033',
-    borderColor: '#475569',
+  },
+  homeGroupedSurface: {
+    backgroundColor: '#111827',
+  },
+  homeDivider: {
+    backgroundColor: '#334155',
   },
   statCard: {
-    backgroundColor: '#111827',
+    backgroundColor: 'transparent',
     borderColor: '#334155',
   },
   statValue: {
@@ -10883,6 +10940,9 @@ const darkStyles = StyleSheet.create({
   reviewText: {
     color: '#94a3b8',
   },
+  reviewIcon: {
+    backgroundColor: '#422006',
+  },
   emptyState: {
     backgroundColor: '#111827',
     borderColor: '#334155',
@@ -10895,7 +10955,12 @@ const darkStyles = StyleSheet.create({
   },
   wordCard: {
     backgroundColor: '#111827',
-    borderColor: '#334155',
+  },
+  groupPill: {
+    backgroundColor: '#172554',
+  },
+  groupText: {
+    color: '#bfdbfe',
   },
   bigWord: {
     color: '#f8fafc',
@@ -10931,6 +10996,13 @@ const darkStyles = StyleSheet.create({
   },
   exampleZh: {
     color: '#cbd5e1',
+  },
+  secondaryButton: {
+    backgroundColor: '#182033',
+    borderColor: '#475569',
+  },
+  secondaryButtonText: {
+    color: '#e2e8f0',
   },
   foldedFilterCard: {
     backgroundColor: '#111827',
@@ -11404,5 +11476,3 @@ const darkStyles = StyleSheet.create({
     color: '#e2e8f0',
   },
 });
-
-

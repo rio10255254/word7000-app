@@ -1006,7 +1006,7 @@ describe('free web launch configuration', () => {
     expect(appSource).not.toContain('key={query}');
   });
 
-  test('provides a compact home dashboard with an independent animated dictionary', () => {
+  test('provides a grouped native-style home dashboard with an independent dictionary', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const homeStart = appSource.indexOf('const HomeView = memo(function HomeView');
     const homeEnd = appSource.indexOf('function StudySwipeRevealGradient', homeStart);
@@ -1014,6 +1014,9 @@ describe('free web launch configuration', () => {
 
     expect(homeSource).toContain('testID="home-dictionary-search"');
     expect(homeSource).toContain('testID="home-dictionary-modal"');
+    expect(homeSource).toContain('testID="home-metrics-group"');
+    expect(homeSource).toContain('testID="home-action-group"');
+    expect(homeSource).toContain('styles.homeActionDivider');
     expect(homeSource).toContain('<Modal');
     expect(homeSource).toContain('filterWords(vocabularyWords, progress, normalizedDictionaryQuery');
     expect(homeSource).toContain('onOpenDictionaryWord');
@@ -1022,7 +1025,7 @@ describe('free web launch configuration', () => {
     expect(homeSource).toContain("presentationStyle={IS_NATIVE_IOS ? 'pageSheet' : 'overFullScreen'}");
     expect(homeSource).toContain("clearButtonMode={IS_NATIVE_IOS ? 'while-editing' : 'never'}");
     expect(homeSource).not.toContain('copy.heroText');
-    expect(homeSource).not.toContain('homeDictionaryStandaloneIcon');
+    expect(homeSource).toContain('styles.homeDictionaryLauncherIcon');
     expect(homeSource.indexOf('testID="home-dictionary-search"')).toBeGreaterThan(
       homeSource.indexOf('onPress={onOpenReview}'),
     );
@@ -1097,6 +1100,10 @@ describe('free web launch configuration', () => {
     expect(studySource).not.toContain('cardSwapOpacity');
     expect(studySource).toContain('onSwipeReview');
     expect(studySource).toContain('onSwipeKnown');
+    expect(studySource).toContain('testID="study-navigation-controls"');
+    expect(appSource).toContain('adjustsFontSizeToFit={Platform.OS === \'ios\'}');
+    expect(appSource).toContain('minimumFontScale={0.72}');
+    expect(appSource).toContain('styles.studyWordIdentity');
     expect(studySource).toContain('ui.previousWord');
     expect(studySource).toContain('ui.nextWord');
   });

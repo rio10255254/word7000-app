@@ -797,13 +797,13 @@ describe('free web launch configuration', () => {
   test('keeps library dragging synchronized with the page scroll and list body', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain("import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';");
+    expect(appSource).toContain("import { FlashList, type FlashListRef } from '@shopify/flash-list';");
     expect(appSource).toContain('scrollTargetFromSlider');
     expect(appSource).toContain('libraryContentHeightRef.current');
     expect(appSource).toContain('libraryViewportHeightRef.current');
     expect(appSource).toContain('onContentSizeChange: libraryContentSizeChange,');
     expect(appSource).toContain('onViewportLayout: libraryViewportLayout,');
-    expect(appSource).toContain('nativeScrollRef.scrollTo({ y: offset, animated })');
+    expect(appSource).toContain('libraryListRef.current?.scrollToOffset({ offset, animated })');
     expect(appSource).toContain("webScrollNode.scrollTo({ top: offset, behavior: animated ? 'smooth' : 'auto' })");
     expect(appSource).toContain('scrollLibraryToRawOffset(targetY)');
     expect(appSource).toContain('scrollLibraryToRawOffset(offset)');
@@ -854,6 +854,8 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('<FlashList');
     expect(appSource).toContain('drawDistance={720}');
+    expect(appSource).toContain('<FlatList');
+    expect(appSource).toContain('initialNumToRender={8}');
     expect(appSource).toContain('const LibraryWordRow = memo(function LibraryWordRow');
     expect(appSource).toContain('keyExtractor={libraryWordKeyExtractor}');
     expect(appSource).toContain('const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);');

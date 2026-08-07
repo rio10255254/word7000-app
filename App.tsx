@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
+import { GlassView, isGlassEffectAPIAvailable } from 'expo-glass-effect';
 import { useFocusEffect, usePathname, useRouter } from 'expo-router';
-import { FlashList, type FlashListRef, type ListRenderItemInfo } from '@shopify/flash-list';
+import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Reanimated, {
   cancelAnimation,
@@ -58,6 +59,7 @@ import {
   Animated,
   AppState,
   Easing,
+  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   type LayoutChangeEvent,
@@ -253,6 +255,7 @@ function isWebIosPreviewMode() {
 }
 const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();
 const IS_NATIVE_IOS = Platform.OS === 'ios';
+const NATIVE_GLASS_AVAILABLE = IS_NATIVE_IOS && isGlassEffectAPIAvailable();
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
 // On iOS the native tab bar sits at the bottom and the system hands us the
@@ -907,6 +910,7 @@ export function useAppScreenProps(): AppScreenProps {
 }
 const VocabularyContext = createContext<WordEntry[]>([]);
 const MotionPressable = Animated.createAnimatedComponent(Pressable);
+type LibraryListHandle = FlashListRef<WordEntry> | FlatList<WordEntry>;
 
 export function AppBootstrap({ children }: { children: ReactNode }) {
   const [storageReady, setStorageReady] = useState(() => isAppStorageHydrated());
@@ -1086,7 +1090,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const bundledVocabulary = useContext(VocabularyContext);
   const router = useRouter();
   const appScrollRef = useRef<ScrollView | null>(null);
-  const libraryListRef = useRef<FlashListRef<WordEntry> | null>(null);
+  const libraryListRef = useRef<LibraryListHandle | null>(null);
   const libraryScrollYRef = useRef(0);
   const libraryContentHeightRef = useRef(1);
   const libraryViewportHeightRef = useRef(1);
@@ -1400,12 +1404,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    const nativeScrollRef = libraryListRef.current?.getNativeScrollRef();
-    if (nativeScrollRef) {
-      nativeScrollRef.scrollTo({ y: offset, animated });
-      return;
-    }
-    libraryListRef.current?.scrollToOffset({ offset, animated, skipFirstItemOffset: true });
+    libraryListRef.current?.scrollToOffset({ offset, animated });
   });
 
   const restoreLibraryRouteScroll = useStableEvent((offset: number) => {
@@ -2180,7 +2179,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     libraryThumbOffsetAnim.setValue(0);
     libraryScrolledPastTopRef.current = false;
     setLibraryScrolledPastTop(false);
-    libraryListRef.current?.scrollToTop({ animated: true });
+    scrollLibraryToRawOffset(0, true);
   }
 
   const openLibraryWordDetail = useCallback((word: WordEntry) => {
@@ -3682,6 +3681,7 @@ type AnimatedPressableProps = Omit<PressableProps, 'children' | 'style'> & {
   pressedStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
 };
+type NativeGlassTone = 'primary' | 'secondary' | 'icon';
 type WebTransitionStyle = ViewStyle & {
   WebkitTouchCallout?: string;
   WebkitUserSelect?: string;
@@ -3693,6 +3693,33 @@ type WebTransitionStyle = ViewStyle & {
   userSelect?: string;
   willChange?: string;
 };
+
+function nativeGlassToneForPressTone(pressTone: InteractionTone): NativeGlassTone | null {
+  if (pressTone === 'primary' || pressTone === 'secondary' || pressTone === 'icon') {
+    return pressTone;
+  }
+  return null;
+}
+
+function NativeButtonGlass({ tone }: { tone: NativeGlassTone }) {
+  const themeMode = useContext(ThemeContext);
+  const darkMode = themeMode === 'dark';
+  const tintColor = tone === 'primary'
+    ? '#2563eb'
+    : darkMode
+      ? 'rgba(30, 41, 59, 0.62)'
+      : 'rgba(255, 255, 255, 0.54)';
+
+  return (
+    <GlassView
+      colorScheme={darkMode ? 'dark' : 'light'}
+      glassEffectStyle={tone === 'primary' ? 'regular' : 'clear'}
+      isInteractive
+      style={StyleSheet.absoluteFill}
+      tintColor={tintColor}
+    />
+  );
+}
 
 function AnimatedPressable({
   children,
@@ -3707,6 +3734,9 @@ function AnimatedPressable({
   const [pressed, setPressed] = useState(false);
   const pressAnim = useRef(new Animated.Value(0)).current;
   const pressMotion = pressMotionFor(pressTone);
+  const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE
+    ? nativeGlassToneForPressTone(pressTone)
+    : null;
   const pressStyle = {
     opacity: pressAnim.interpolate({
       inputRange: [0, 1],
@@ -3760,8 +3790,14 @@ function AnimatedPressable({
       disabled={disabled}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      style={[style, pressed && !disabled && pressedStyle, !disabled && pressStyle]}
+      style={[
+        style,
+        nativeGlassTone && styles.nativeGlassButton,
+        pressed && !disabled && pressedStyle,
+        !disabled && pressStyle,
+      ]}
     >
+      {nativeGlassTone ? <NativeButtonGlass tone={nativeGlassTone} /> : null}
       {children}
     </MotionPressable>
   );
@@ -5998,7 +6034,7 @@ const LibraryView = memo(function LibraryView({
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
-  listRef: RefObject<FlashListRef<WordEntry> | null>;
+  listRef: RefObject<LibraryListHandle | null>;
   progress: ProgressState;
   query: string;
   searchFocused: boolean;
@@ -6204,7 +6240,7 @@ const LibraryView = memo(function LibraryView({
   );
 
   const renderItem = useCallback(
-    ({ item, index }: ListRenderItemInfo<WordEntry>) => (
+    ({ item, index }: { item: WordEntry; index: number }) => (
       <LibraryWordRow
         motionStyle={listMotionStyle(index)}
         studyMode={studyMode}
@@ -6218,6 +6254,53 @@ const LibraryView = memo(function LibraryView({
     [listMotionStyle, onAddToSet, onFavorite, onOpenWord, progress.words, studyMode],
   );
 
+  const assignNativeListRef = useCallback((instance: FlatList<WordEntry> | null) => {
+    listRef.current = instance;
+  }, [listRef]);
+  const assignFlashListRef = useCallback((instance: FlashListRef<WordEntry> | null) => {
+    listRef.current = instance;
+  }, [listRef]);
+
+  const listEmptyComponent = (
+    <View style={[styles.emptyState, themeStyles?.emptyState]}>
+      <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
+        {studyMode === 'chinese' ? ui.noChineseWords : ui.noLibraryWords}
+      </Text>
+      <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.relaxLibraryFilters(hasQuery)}</Text>
+    </View>
+  );
+
+  if (IS_NATIVE_IOS) {
+    return (
+      <FlatList
+        contentContainerStyle={libraryListContentStyle}
+        contentInsetAdjustmentBehavior="automatic"
+        data={words}
+        extraData={progress.words}
+        initialNumToRender={8}
+        ItemSeparatorComponent={LibraryItemSeparator}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        keyExtractor={libraryWordKeyExtractor}
+        ListEmptyComponent={listEmptyComponent}
+        ListHeaderComponent={listHeader}
+        ListHeaderComponentStyle={styles.libraryListHeader}
+        maxToRenderPerBatch={10}
+        onContentSizeChange={onContentSizeChange}
+        onLayout={onViewportLayout}
+        onScroll={onScroll}
+        ref={assignNativeListRef}
+        renderItem={renderItem}
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
+        style={styles.libraryFlashList}
+        testID="library-native-list"
+        updateCellsBatchingPeriod={16}
+        windowSize={9}
+      />
+    );
+  }
+
   return (
     <FlashList
       contentContainerStyle={libraryListContentStyle}
@@ -6229,21 +6312,14 @@ const LibraryView = memo(function LibraryView({
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       keyExtractor={libraryWordKeyExtractor}
-      ListEmptyComponent={(
-        <View style={[styles.emptyState, themeStyles?.emptyState]}>
-          <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
-            {studyMode === 'chinese' ? ui.noChineseWords : ui.noLibraryWords}
-          </Text>
-          <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.relaxLibraryFilters(hasQuery)}</Text>
-        </View>
-      )}
+      ListEmptyComponent={listEmptyComponent}
       ListHeaderComponent={listHeader}
       ListHeaderComponentStyle={styles.libraryListHeader}
       maintainVisibleContentPosition={{ disabled: true }}
       onContentSizeChange={onContentSizeChange}
       onLayout={onViewportLayout}
       onScroll={onScroll}
-      ref={listRef}
+      ref={assignFlashListRef}
       renderItem={renderItem}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
@@ -8409,6 +8485,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 48,
     paddingHorizontal: 16,
+  },
+  nativeGlassButton: {
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
   },
   primaryButtonText: {
     color: '#fff',

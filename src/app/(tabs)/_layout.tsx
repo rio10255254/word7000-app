@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 import { Stack, usePathname } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { AppBootstrap, AppDataProvider, tabLabelForMode, useAppStudyMode } from '../../../App';
+import { triggerPressHaptic } from '../../lib/haptics';
 
 function useActiveTab() {
   const pathname = usePathname();
@@ -41,11 +42,15 @@ function Tabs() {
           // screen you are on, so web goes without one.
           headerShown: Platform.OS !== 'web',
           headerShadowVisible: false,
+          headerTitleStyle: { fontSize: 21, fontWeight: '700' },
           headerTransparent: false,
           title: tabLabelForMode(activeTab, studyMode),
         }}
       />
-      <NativeTabs minimizeBehavior="onScrollDown">
+      <NativeTabs
+        minimizeBehavior="onScrollDown"
+        screenListeners={{ tabPress: () => triggerPressHaptic('tab') }}
+      >
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Icon sf={{ default: 'house', selected: 'house.fill' }} />
         <NativeTabs.Trigger.Label>{tabLabelForMode('home', studyMode)}</NativeTabs.Trigger.Label>

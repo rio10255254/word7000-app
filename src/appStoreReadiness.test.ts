@@ -51,6 +51,19 @@ describe('iOS App Store readiness polish', () => {
     // and the scrollers' bottom room derive from the one measured inset.
   });
 
+  test('keeps every native tab below one compact non-overlapping header', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const tabsLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '(tabs)', '_layout.tsx'), 'utf8');
+
+    expect(tabsLayout).toContain('headerLargeTitle: false');
+    expect(tabsLayout).toContain('headerTransparent: false');
+    expect(tabsLayout).toContain('headerShadowVisible: false');
+    expect(appSource).toContain("const TAB_CONTENT_TOP_PADDING = Platform.OS === 'web' ? 18 + WEB_TABS_TOP_INSET : 10;");
+    expect(appSource).toContain('contentContainerStyle={[styles.content, { paddingTop: TAB_CONTENT_TOP_PADDING }]}');
+    expect(appSource).toContain('paddingTop: TAB_CONTENT_TOP_PADDING');
+    expect(appSource).not.toContain('paddingTop: 18 + WEB_TABS_TOP_INSET');
+  });
+
   test('keeps the first iOS submission focused on iPhone instead of universal iPad support', () => {
     expect(app.expo.ios?.supportsTablet).toBe(false);
   });

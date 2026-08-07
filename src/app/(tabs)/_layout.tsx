@@ -29,19 +29,19 @@ function Tabs() {
 
   return (
     <>
-      {/* The real navigation bar, driven by the parent Stack: large title that
-          shrinks as you scroll and a background that turns to glass at the
-          same moment. It also completes the chain the tab bar needs — the
-          system links its minimise behaviour to a native bar reacting to the
-          same scroll view, which a hand-drawn header could never provide. */}
+      {/* Keep the native header in normal document flow. A transparent large
+          title is absolutely positioned by iOS and can overlap a tab's first
+          frame while its scroll inset is settling. The compact bar gives all
+          five tabs one stable top edge. */}
       <Stack.Screen
         options={{
-          headerLargeTitle: true,
+          headerLargeTitle: false,
           // Web's fallback for native tabs is a pill pinned to the top, so a
           // header there would sit on top of it. That pill already says which
           // screen you are on, so web goes without one.
           headerShown: Platform.OS !== 'web',
-          headerTransparent: true,
+          headerShadowVisible: false,
+          headerTransparent: false,
           title: tabLabelForMode(activeTab, studyMode),
         }}
       />

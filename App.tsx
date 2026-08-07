@@ -259,6 +259,7 @@ const CONTENT_BOTTOM_PADDING = 30;
 // inset. The web fallback for native tabs is a fixed pill at top: 24px with a
 // height of 40, which floats over the content, so web alone owes it headroom.
 const WEB_TABS_TOP_INSET = Platform.OS === 'web' ? 76 : 0;
+const TAB_CONTENT_TOP_PADDING = Platform.OS === 'web' ? 18 + WEB_TABS_TOP_INSET : 10;
 const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
 const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
 const LIBRARY_FIXED_CONTROLS_TOP = 8;
@@ -963,16 +964,15 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
   return <VocabularyContext.Provider value={bundledVocabulary}>{children}</VocabularyContext.Provider>;
 }
 
-// One component per tab route. The scroll hosts hand inset handling to the
-// system via contentInsetAdjustmentBehavior, so the native large-title header
-// and the native tab bar decide the safe area instead of us computing it.
+// One component per tab route. The native header owns the top safe area and
+// NativeTabs owns the bottom inset; this is only the visual gap after them.
 function TabScrollHost({ children }: { children: ReactNode }) {
   const themeStyles = useThemeStyles();
 
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-      contentContainerStyle={[styles.content, { paddingTop: 18 + WEB_TABS_TOP_INSET }]}
+      contentContainerStyle={[styles.content, { paddingTop: TAB_CONTENT_TOP_PADDING }]}
       contentInsetAdjustmentBehavior="automatic"
       keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
       keyboardShouldPersistTaps="handled"
@@ -6025,7 +6025,7 @@ const LibraryView = memo(function LibraryView({
   const libraryListContentStyle = useMemo(
     () => StyleSheet.flatten([
       styles.libraryListContent,
-      { paddingBottom: CONTENT_BOTTOM_PADDING + bottomInset, paddingTop: 18 + WEB_TABS_TOP_INSET },
+      { paddingBottom: CONTENT_BOTTOM_PADDING + bottomInset, paddingTop: TAB_CONTENT_TOP_PADDING },
     ]),
     [bottomInset],
   );

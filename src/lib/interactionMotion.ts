@@ -17,8 +17,8 @@ const pressMotions: Record<InteractionTone, PressMotion> = {
 };
 
 export const interactionMotion = {
-  cardMs: 260,
-  hoverMs: 150,
+  cardMs: 210,
+  hoverMs: 130,
   listMs: 280,
   panelCloseMs: 380,
   panelCollapsedHeight: 0,
@@ -28,9 +28,8 @@ export const interactionMotion = {
   panelPushScale: 0.982,
   panelSlideX: 22,
   press: pressMotions,
-  pressInMs: 88,
-  releaseMs: 180,
-  screenMs: 280,
+  pressInMs: 64,
+  releaseMs: 120,
   settingsPanelExitMs: 170,
   settingsPanelMs: 310,
   libraryDetailExitMs: 340,

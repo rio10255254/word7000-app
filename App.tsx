@@ -59,7 +59,6 @@ import {
   Animated,
   AppState,
   Easing,
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   type LayoutChangeEvent,
@@ -287,7 +286,6 @@ const STUDY_SWIPE_HINT_IDLE_DELAY_MS = 10_000;
 const STUDY_SWIPE_HINT_REPEAT_MS = 15_000;
 const SHOULD_CLEAR_STUDY_SELECTION = Platform.OS === 'web';
 const quizQuestionCounts = [10, 20, 50] as const;
-const EMPTY_WORD_LIST: WordEntry[] = [];
 type InstallGuideStep = {
   icon: 'add' | 'phone' | 'safari' | 'share';
   text: string;
@@ -911,7 +909,7 @@ export function useAppScreenProps(): AppScreenProps {
 }
 const VocabularyContext = createContext<WordEntry[]>([]);
 const MotionPressable = Animated.createAnimatedComponent(Pressable);
-type LibraryListHandle = FlashListRef<WordEntry> | FlatList<WordEntry>;
+type LibraryListHandle = FlashListRef<WordEntry>;
 
 export function AppBootstrap({ children }: { children: ReactNode }) {
   const [storageReady, setStorageReady] = useState(() => isAppStorageHydrated());
@@ -1029,8 +1027,8 @@ export function LibraryTabScreen() {
   const themeStyles = useThemeStyles();
 
   return (
-    <View style={[styles.libraryScreenHost, themeStyles?.appShell]}>
-      <View style={styles.libraryListStage} testID="library-panel-transition">
+    <View collapsable={false} style={[styles.libraryScreenHost, themeStyles?.appShell]}>
+      <View collapsable={false} style={styles.libraryListStage} testID="library-panel-transition">
         <LibraryView {...libraryProps} bottomInset={0} />
       </View>
       {libraryChrome.floatingControls}
@@ -1087,6 +1085,16 @@ function useStableEvent<T extends (...args: any[]) => any>(handler: T): T {
   return useCallback(((...args: Parameters<T>) => handlerRef.current(...args)) as T, []);
 }
 
+function useFocusedSnapshot<T>(value: T, focused: boolean): T {
+  const snapshotRef = useRef(value);
+  useLayoutEffect(() => {
+    if (focused) {
+      snapshotRef.current = value;
+    }
+  }, [focused, value]);
+  return focused ? value : snapshotRef.current;
+}
+
 export function AppDataProvider({ children }: { children: ReactNode }) {
   const bundledVocabulary = useContext(VocabularyContext);
   const router = useRouter();
@@ -1101,7 +1109,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const memorySyncQueueRef = useRef<UserMemorySyncQueue | null>(null);
   const launchAnim = useRef(new Animated.Value(0)).current;
   const installGuideAnim = useRef(new Animated.Value(0)).current;
-  const screenAnim = useRef(new Animated.Value(1)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
   const libraryThumbOffsetAnim = useRef(new Animated.Value(0)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
@@ -1209,12 +1216,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const stats = useMemo(() => computeStats(vocabularyWords, progress), [progress, vocabularyWords]);
   const studyProgressDependency = activeTab === 'study' && studyFilter !== 'all' ? progress : null;
   const studyWords = useMemo(
-    () => activeTab === 'study'
-      ? selectStudyWords(studySourceWords, progress, studyFilter, {
-          initial: studyInitial,
-          level: studyLevel,
-        })
-      : EMPTY_WORD_LIST,
+    () => selectStudyWords(studySourceWords, progress, studyFilter, {
+      initial: studyInitial,
+      level: studyLevel,
+    }),
     [activeTab, studyFilter, studyInitial, studyLevel, studyProgressDependency, studySourceWords],
   );
   const studySessionWords = useMemo(() => buildStudySession(studyWords, studySeed), [studySeed, studyWords]);
@@ -1226,12 +1231,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     : null;
   const quizProgressDependency = activeTab === 'quiz' && quizFilter !== 'all' ? progress : null;
   const quizWords = useMemo(
-    () => activeTab === 'quiz'
-      ? selectQuizWords(quizSourceWords, progress, quizFilter, {
-          initial: quizInitial,
-          level: quizLevel,
-        })
-      : EMPTY_WORD_LIST,
+    () => selectQuizWords(quizSourceWords, progress, quizFilter, {
+      initial: quizInitial,
+      level: quizLevel,
+    }),
     [activeTab, quizFilter, quizInitial, quizLevel, quizProgressDependency, quizSourceWords],
   );
   const quizWord = quizStarted && quizSession.length > 0 ? quizSession[quizIndex] ?? null : null;
@@ -1249,16 +1252,22 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
   const libraryProgressDependency = activeTab === 'library' && activeFilter !== 'all' ? progress : null;
   const libraryWords = useMemo(
-    () => activeTab === 'library'
-      ? filterWords(vocabularyWords, progress, deferredSearchQuery, activeFilter, {
-          initial: activeInitial,
-          level: activeLevel,
-          sort: activeSort,
-        })
-      : EMPTY_WORD_LIST,
+    () => filterWords(vocabularyWords, progress, deferredSearchQuery, activeFilter, {
+      initial: activeInitial,
+      level: activeLevel,
+      sort: activeSort,
+    }),
     [activeFilter, activeInitial, activeLevel, activeSort, activeTab, deferredSearchQuery, libraryProgressDependency, vocabularyWords],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
+  const progressPresentation = useMemo(
+    () => ({ dailyPercent, progress, stats }),
+    [dailyPercent, progress, stats],
+  );
+  const homePresentation = useFocusedSnapshot(progressPresentation, activeTab === 'home');
+  const studyProgress = useFocusedSnapshot(progress, activeTab === 'study');
+  const libraryProgress = useFocusedSnapshot(progress, activeTab === 'library');
+  const profilePresentation = useFocusedSnapshot(progressPresentation, activeTab === 'profile');
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
   const darkMode = themeMode === 'dark';
   const libraryDragIconColor = darkMode ? '#0A84FF' : '#1C1C1E';
@@ -1287,7 +1296,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     [cardAnim],
   );
   const listMotionStyle = useCallback((index: number) => {
-    if (activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT) {
+    if (index >= LIBRARY_ANIMATED_ITEM_COUNT) {
       return undefined;
     }
 
@@ -1308,7 +1317,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         },
       ],
     };
-  }, [activeTab, cardAnim]);
+  }, [cardAnim]);
   const modeOverlayScale = modeTransitionAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0.94, 1],
@@ -1585,16 +1594,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [installGuideChecked, showLaunch]);
 
   useEffect(() => {
-    screenAnim.setValue(0);
-    Animated.timing(screenAnim, {
-      duration: interactionMotion.screenMs,
-      easing: Easing.out(Easing.cubic),
-      toValue: 1,
-      useNativeDriver: Platform.OS !== 'web',
-    }).start();
-  }, [activeTab, screenAnim]);
-
-  useEffect(() => {
     cardAnim.setValue(0);
     Animated.timing(cardAnim, {
       duration: interactionMotion.cardMs,
@@ -1607,7 +1606,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     activeInitial,
     activeLevel,
     activeSort,
-    activeTab,
     cardAnim,
     developerVocabulary?.importedAt,
     quizFilter,
@@ -3093,9 +3091,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   const screenProps: AppScreenProps = {
     homeProps: {
-      dailyPercent,
-      progress,
-      stats,
+      dailyPercent: homePresentation.dailyPercent,
+      progress: homePresentation.progress,
+      stats: homePresentation.stats,
       studyMode,
       vocabularyWords,
       onOpenDictionaryWord: homeOpenDictionaryWord,
@@ -3117,7 +3115,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       activeSetName: activeStudySet?.name ?? null,
       wordCount: studyWords.length,
       word: studyWord,
-      progress,
+      progress: studyProgress,
       onClearActiveSet: studyClearActiveSet,
       onFilterChange: setStudyFilter,
       onFiltersToggle: studyToggleFilters,
@@ -3177,7 +3175,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       levelOptions: levelFilterOptions,
       listMotionStyle,
       listRef: libraryListRef,
-      progress,
+      progress: libraryProgress,
       query: searchQuery,
       searchFocused,
       studyMode,
@@ -3201,9 +3199,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     },
     profileProps: {
       account,
-      dailyPercent,
-      progress,
-      stats,
+      dailyPercent: profilePresentation.dailyPercent,
+      progress: profilePresentation.progress,
+      stats: profilePresentation.stats,
       studyMode,
       themeMode,
       onEmailChange: profileEmailChange,
@@ -6252,9 +6250,6 @@ const LibraryView = memo(function LibraryView({
     [listMotionStyle, onAddToSet, onFavorite, onOpenWord, progress.words, studyMode],
   );
 
-  const assignNativeListRef = useCallback((instance: FlatList<WordEntry> | null) => {
-    listRef.current = instance;
-  }, [listRef]);
   const assignFlashListRef = useCallback((instance: FlashListRef<WordEntry> | null) => {
     listRef.current = instance;
   }, [listRef]);
@@ -6267,37 +6262,6 @@ const LibraryView = memo(function LibraryView({
       <Text style={[styles.emptyText, themeStyles?.emptyText]}>{ui.relaxLibraryFilters(hasQuery)}</Text>
     </View>
   );
-
-  if (IS_NATIVE_IOS) {
-    return (
-      <FlatList
-        contentContainerStyle={libraryListContentStyle}
-        contentInsetAdjustmentBehavior="automatic"
-        data={words}
-        extraData={progress.words}
-        initialNumToRender={8}
-        ItemSeparatorComponent={LibraryItemSeparator}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
-        keyExtractor={libraryWordKeyExtractor}
-        ListEmptyComponent={listEmptyComponent}
-        ListHeaderComponent={listHeader}
-        ListHeaderComponentStyle={styles.libraryListHeader}
-        maxToRenderPerBatch={10}
-        onContentSizeChange={onContentSizeChange}
-        onLayout={onViewportLayout}
-        onScroll={onScroll}
-        ref={assignNativeListRef}
-        renderItem={renderItem}
-        scrollEventThrottle={16}
-        showsVerticalScrollIndicator={false}
-        style={styles.libraryFlashList}
-        testID="library-native-list"
-        updateCellsBatchingPeriod={16}
-        windowSize={9}
-      />
-    );
-  }
 
   return (
     <FlashList
@@ -6322,7 +6286,7 @@ const LibraryView = memo(function LibraryView({
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
       style={styles.libraryFlashList}
-      testID="library-flash-list"
+      testID={IS_NATIVE_IOS ? 'library-native-list' : 'library-flash-list'}
     />
   );
 });
@@ -8375,8 +8339,10 @@ const styles = StyleSheet.create({
   },
   hero: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 14,
     padding: 16,
   },
@@ -8512,8 +8478,10 @@ const styles = StyleSheet.create({
   homeDictionaryStandalone: {
     alignItems: 'center',
     backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 10,
     minHeight: 60,
@@ -8717,8 +8685,10 @@ const styles = StyleSheet.create({
   },
   statsGrid: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     minHeight: 82,
     overflow: 'hidden',
@@ -8765,8 +8735,10 @@ const styles = StyleSheet.create({
   },
   homeActionGroup: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
   },
   homeActionDivider: {
@@ -8805,8 +8777,10 @@ const styles = StyleSheet.create({
   },
   wordCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 16,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 14,
     overflow: 'hidden',
     padding: 18,
@@ -9079,8 +9053,10 @@ const styles = StyleSheet.create({
   },
   quizCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 16,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 12,
     padding: 18,
   },
@@ -9108,15 +9084,19 @@ const styles = StyleSheet.create({
   },
   quizSetupCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 16,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 14,
     padding: 18,
   },
   quizModeCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 12,
     padding: 14,
   },
@@ -9191,7 +9171,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   quizOption: {
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: '#E5E5EA',
     borderRadius: 14,
     borderCurve: 'continuous',
     padding: 15,
@@ -9331,8 +9311,10 @@ const styles = StyleSheet.create({
   searchBox: {
     alignItems: 'center',
     backgroundColor: '#E5E5EA',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 8,
     paddingHorizontal: 13,
@@ -9376,8 +9358,10 @@ const styles = StyleSheet.create({
   },
   foldedFilterCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     overflow: 'hidden',
   },
   filterSummaryButton: {
@@ -9437,7 +9421,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   filterChip: {
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: '#E5E5EA',
     borderRadius: 999,
     // 10 rather than 12: the five status chips summed to 326 against a 324
     // container, so the last one wrapped to a row of its own over 2px.
@@ -9466,7 +9450,7 @@ const styles = StyleSheet.create({
   },
   letterChip: {
     alignItems: 'center',
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: '#E5E5EA',
     borderRadius: 999,
     height: 34,
     justifyContent: 'center',
@@ -9488,8 +9472,10 @@ const styles = StyleSheet.create({
   libraryHeaderCard: {
     alignItems: 'stretch',
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 12,
     padding: 14,
   },
@@ -9546,9 +9532,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   libraryCustomSetsCard: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 12,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 10,
     padding: 11,
     paddingRight: 32,
@@ -9573,7 +9561,7 @@ const styles = StyleSheet.create({
   },
   libraryManageSetsButton: {
     alignItems: 'center',
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: '#E5E5EA',
     borderRadius: 999,
     flexDirection: 'row',
     flexShrink: 0,
@@ -9589,7 +9577,7 @@ const styles = StyleSheet.create({
   },
   libraryCustomSetChip: {
     alignItems: 'center',
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: '#E5E5EA',
     borderRadius: 999,
     flexDirection: 'row',
     gap: 7,
@@ -9602,8 +9590,10 @@ const styles = StyleSheet.create({
   },
   libraryItem: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 12,
     padding: 14,
@@ -9809,8 +9799,10 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     padding: 16,
   },
   emptyTitle: {
@@ -9932,8 +9924,10 @@ const styles = StyleSheet.create({
   profileCard: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     padding: 22,
   },
   avatar: {
@@ -9984,8 +9978,10 @@ const styles = StyleSheet.create({
   },
   accountCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 14,
     padding: 16,
   },
@@ -10072,7 +10068,7 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#E5E5EA',
     borderRadius: 14,
     borderCurve: 'continuous',
     flexDirection: 'row',
@@ -10319,8 +10315,10 @@ const styles = StyleSheet.create({
   },
   customSetsHeroCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 13,
     padding: 14,
   },
@@ -10334,8 +10332,10 @@ const styles = StyleSheet.create({
   },
   customSetCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 12,
     padding: 13,
   },
@@ -10480,15 +10480,19 @@ const styles = StyleSheet.create({
   },
   settingsCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 16,
     padding: 16,
   },
   profileInfoCard: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 14,
     padding: 16,
   },
@@ -10497,7 +10501,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   learningMetric: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#E5E5EA',
     borderRadius: 14,
     borderCurve: 'continuous',
     flex: 1,
@@ -10517,7 +10521,7 @@ const styles = StyleSheet.create({
   },
   settingOptionRow: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#E5E5EA',
     borderRadius: 14,
     borderCurve: 'continuous',
     flexDirection: 'row',
@@ -10812,6 +10816,7 @@ const darkStyles = StyleSheet.create({
   },
   hero: {
     backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   heroTitle: {
     color: '#FFFFFF',
@@ -10942,6 +10947,7 @@ const darkStyles = StyleSheet.create({
   },
   homeGroupedSurface: {
     backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   homeDivider: {
     backgroundColor: '#3A3A3C',
@@ -10981,6 +10987,7 @@ const darkStyles = StyleSheet.create({
   },
   wordCard: {
     backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   groupPill: {
     backgroundColor: 'rgba(10, 132, 255, 0.18)',

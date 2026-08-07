@@ -748,7 +748,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('restoreLibraryRouteScroll(restoreOffset)');
     expect(appSource).toContain('setTimeout(() => restoreLibraryRouteScroll(restoreOffset), 420)');
     expect(appSource).toContain('LIBRARY_ANIMATED_ITEM_COUNT');
-    expect(appSource).toContain("activeTab === 'library' && index >= LIBRARY_ANIMATED_ITEM_COUNT");
+    expect(appSource).toContain('index >= LIBRARY_ANIMATED_ITEM_COUNT');
     expect(appSource).not.toContain('setSelectedLibraryWord');
     expect(appSource).not.toContain('setLibraryPanel');
   });
@@ -854,8 +854,7 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('<FlashList');
     expect(appSource).toContain('drawDistance={720}');
-    expect(appSource).toContain('<FlatList');
-    expect(appSource).toContain('initialNumToRender={8}');
+    expect(appSource).not.toContain('<FlatList');
     expect(appSource).toContain('const LibraryWordRow = memo(function LibraryWordRow');
     expect(appSource).toContain('keyExtractor={libraryWordKeyExtractor}');
     expect(appSource).toContain('const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);');

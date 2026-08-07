@@ -71,11 +71,23 @@ describe('iOS App Store readiness polish', () => {
 
     expect(tabsLayout).toContain('minimizeBehavior="onScrollDown"');
     expect(tabsLayout).toContain("screenListeners={{ tabPress: () => triggerPressHaptic('tab') }}");
-    expect(appSource).toContain('if (IS_NATIVE_IOS)');
-    expect(appSource).toContain('<FlatList');
-    expect(appSource).toContain('testID="library-native-list"');
-    expect(appSource).toContain('initialNumToRender={8}');
-    expect(appSource).toContain('windowSize={9}');
+    expect(appSource).toContain('<View collapsable={false} style={[styles.libraryScreenHost');
+    expect(appSource).toContain('<View collapsable={false} style={styles.libraryListStage');
+    expect(appSource).toContain('<FlashList');
+    expect(appSource).toContain("testID={IS_NATIVE_IOS ? 'library-native-list' : 'library-flash-list'}");
+    expect(appSource).not.toContain('<FlatList');
+  });
+
+  test('prepares tab data without flashing empty states during native tab selection', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('() => selectStudyWords(studySourceWords, progress, studyFilter');
+    expect(appSource).toContain('() => selectQuizWords(quizSourceWords, progress, quizFilter');
+    expect(appSource).toContain('() => filterWords(vocabularyWords, progress, deferredSearchQuery');
+    expect(appSource).not.toContain("() => activeTab === 'study'");
+    expect(appSource).not.toContain("() => activeTab === 'library'");
+    expect(appSource).toContain('useFocusedSnapshot(progress, activeTab === \'study\')');
+    expect(appSource).toContain('useFocusedSnapshot(progress, activeTab === \'library\')');
   });
 
   test('uses availability-gated native glass for command button depth', () => {

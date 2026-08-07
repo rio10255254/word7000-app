@@ -911,12 +911,17 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('minimumFontScale={0.76}');
   });
 
-  test('reserves enough bottom reach for the profile tab above the native tab bar', () => {
+  test('keeps the profile scroll boundary stable as account and keyboard content changes', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('reserveTabBarClearance = false');
-    expect(appSource).toContain('CONTENT_BOTTOM_PADDING + Math.max(50, safeAreaInsets.bottom + 16)');
-    expect(appSource).toContain('<TabScrollHost reserveTabBarClearance>');
+    expect(appSource).toContain('stabilizeScrollBounds = false');
+    expect(appSource).toContain('alwaysBounceVertical={!stabilizeScrollBounds}');
+    expect(appSource).toContain('automaticallyAdjustContentInsets={!stabilizeScrollBounds}');
+    expect(appSource).toContain("contentInsetAdjustmentBehavior={stabilizeScrollBounds ? 'never' : 'automatic'}");
+    expect(appSource).toContain("keyboardDismissMode={Platform.OS === 'ios' && !stabilizeScrollBounds ? 'interactive' : 'on-drag'}");
+    expect(appSource).toContain("overScrollMode={stabilizeScrollBounds ? 'never' : 'auto'}");
+    expect(appSource).toContain('<TabScrollHost stabilizeScrollBounds>');
+    expect(appSource).not.toContain('reserveTabBarClearance');
   });
 
   test('places custom sets in the library page and removes the redundant library header top button', () => {

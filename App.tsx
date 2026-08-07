@@ -968,20 +968,20 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 
 // One component per tab route. The native header owns the top safe area and
 // NativeTabs owns the bottom inset; this is only the visual gap after them.
-function TabScrollHost({ children, reserveTabBarClearance = false }: { children: ReactNode; reserveTabBarClearance?: boolean }) {
+function TabScrollHost({ children, stabilizeScrollBounds = false }: { children: ReactNode; stabilizeScrollBounds?: boolean }) {
   const themeStyles = useThemeStyles();
-  const safeAreaInsets = useSafeAreaInsets();
-  const bottomPadding = reserveTabBarClearance
-    ? CONTENT_BOTTOM_PADDING + Math.max(50, safeAreaInsets.bottom + 16)
-    : CONTENT_BOTTOM_PADDING;
 
   return (
     <ScrollView
+      alwaysBounceVertical={!stabilizeScrollBounds}
+      automaticallyAdjustContentInsets={!stabilizeScrollBounds}
       automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-      contentContainerStyle={[styles.content, { paddingBottom: bottomPadding, paddingTop: TAB_CONTENT_TOP_PADDING }]}
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
+      bounces={!stabilizeScrollBounds}
+      contentContainerStyle={[styles.content, { paddingTop: TAB_CONTENT_TOP_PADDING }]}
+      contentInsetAdjustmentBehavior={stabilizeScrollBounds ? 'never' : 'automatic'}
+      keyboardDismissMode={Platform.OS === 'ios' && !stabilizeScrollBounds ? 'interactive' : 'on-drag'}
       keyboardShouldPersistTaps="handled"
+      overScrollMode={stabilizeScrollBounds ? 'never' : 'auto'}
       style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll, themeStyles?.appShell]}
     >
       <View style={styles.screenMotion}>{children}</View>
@@ -1019,7 +1019,7 @@ export function QuizTabScreen() {
 export function ProfileTabScreen() {
   const { profileProps } = useAppScreenProps();
   return (
-    <TabScrollHost reserveTabBarClearance>
+    <TabScrollHost stabilizeScrollBounds>
       <ProfileView {...profileProps} />
     </TabScrollHost>
   );

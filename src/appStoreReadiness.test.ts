@@ -60,7 +60,7 @@ describe('iOS App Store readiness polish', () => {
     expect(tabsLayout).toContain('headerShadowVisible: false');
     expect(tabsLayout).toContain("headerTitleStyle: { fontSize: 21, fontWeight: '700' }");
     expect(appSource).toContain("const TAB_CONTENT_TOP_PADDING = Platform.OS === 'web' ? 18 + WEB_TABS_TOP_INSET : 10;");
-    expect(appSource).toContain('contentContainerStyle={[styles.content, { paddingBottom: bottomPadding, paddingTop: TAB_CONTENT_TOP_PADDING }]}');
+    expect(appSource).toContain('contentContainerStyle={[styles.content, { paddingTop: TAB_CONTENT_TOP_PADDING }]}');
     expect(appSource).toContain('paddingTop: TAB_CONTENT_TOP_PADDING');
     expect(appSource).not.toContain('paddingTop: 18 + WEB_TABS_TOP_INSET');
   });

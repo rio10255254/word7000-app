@@ -576,7 +576,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("justifyContent: 'flex-start'");
     expect(appSource).toContain('paddingTop: 80');
     expect(appSource).toContain('libraryTopControlsInset:');
-    expect(appSource).toContain('paddingRight: 36');
+    expect(appSource).toContain('styles.libraryStatusFilterChip');
   });
 
   test('uses an English interface and full-page transition in Chinese word mode', () => {
@@ -819,14 +819,10 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('librarySliderActive');
-    expect(appSource).toContain('libraryDragSliderMotionStyle');
-    expect(appSource).toContain('styles.libraryDragSliderCollapsed');
-    expect(appSource).toContain('styles.libraryDragSliderActive');
-    expect(appSource).toContain('styles.libraryDragTrackCollapsed');
-    expect(appSource).toContain('styles.libraryDragTrackActive');
-    expect(appSource).toContain('styles.libraryDragThumbCollapsed');
-    expect(appSource).toContain('styles.libraryDragThumbActive');
-    expect(appSource).toContain('{librarySliderActive && (');
+    expect(appSource).toContain('librarySliderInteractionAnim');
+    expect(appSource).toContain('Animated.spring(librarySliderInteractionAnim');
+    expect(appSource).toContain('outputRange: [0.5, 0.92]');
+    expect(appSource).not.toContain('GripVertical');
   });
 
   test('keeps the library drag slider adaptive and clear of the tab bar', () => {
@@ -834,7 +830,7 @@ describe('free web launch configuration', () => {
     const controlsStart = appSource.indexOf('libraryFixedControls:');
     const controlsEnd = appSource.indexOf('libraryFloatingTopButton:', controlsStart);
     const sliderStart = appSource.indexOf('libraryDragSlider:', controlsEnd);
-    const sliderEnd = appSource.indexOf('libraryDragSliderActive:', sliderStart);
+    const sliderEnd = appSource.indexOf('libraryDragTrack:', sliderStart);
     const controlsSource = appSource.slice(controlsStart, controlsEnd);
     const sliderSource = appSource.slice(sliderStart, sliderEnd);
 
@@ -846,6 +842,8 @@ describe('free web launch configuration', () => {
     expect(controlsSource).not.toContain('height: 600');
     expect(sliderSource).toContain('bottom: 0');
     expect(sliderSource).toContain('top: 92');
+    expect(sliderSource).toContain('width: 24');
+    expect(sliderSource).toContain("backgroundColor: 'transparent'");
     expect(sliderSource).not.toContain('height: 500');
   });
 
@@ -895,16 +893,30 @@ describe('free web launch configuration', () => {
     expect(handlerSource).not.toContain('setLibraryWindowStart(');
     expect(thumbSource).toContain('libraryThumbOffsetAnim.setValue(offset)');
     expect(appSource).toContain('<Animated.View');
-    expect(appSource).toContain('transform: [{ translateY: libraryThumbOffsetAnim }]');
+    expect(appSource).toContain('{ translateY: libraryThumbOffsetAnim }');
   });
 
-  test('keeps library search and filters inset from the edge slider', () => {
+  test('keeps library controls full width while the edge slider stays outside their visible bounds', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
+    const insetStart = appSource.indexOf('libraryTopControlsInset:');
+    const insetEnd = appSource.indexOf('searchBox:', insetStart);
+    const insetSource = appSource.slice(insetStart, insetEnd);
 
     expect(appSource).toContain('styles.libraryTopControlsInset');
     expect(appSource).toContain('<View style={styles.libraryTopControlsInset}>');
     expect(appSource).toContain('libraryTopControlsInset:');
-    expect(appSource).toContain('paddingRight: 32');
+    expect(insetSource).not.toContain('paddingRight');
+    expect(appSource).toContain('libraryStatusFilterChip:');
+    expect(appSource).toContain("flex: 1");
+    expect(appSource).toContain('minimumFontScale={0.76}');
+  });
+
+  test('reserves enough bottom reach for the profile tab above the native tab bar', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('reserveTabBarClearance = false');
+    expect(appSource).toContain('CONTENT_BOTTOM_PADDING + Math.max(50, safeAreaInsets.bottom + 16)');
+    expect(appSource).toContain('<TabScrollHost reserveTabBarClearance>');
   });
 
   test('places custom sets in the library page and removes the redundant library header top button', () => {

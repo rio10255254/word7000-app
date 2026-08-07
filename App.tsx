@@ -29,7 +29,6 @@ import {
   Compass,
   Database,
   Download,
-  GripVertical,
   Home,
   Library,
   Lock,
@@ -263,7 +262,7 @@ const CONTENT_BOTTOM_PADDING = 30;
 // height of 40, which floats over the content, so web alone owes it headroom.
 const WEB_TABS_TOP_INSET = Platform.OS === 'web' ? 76 : 0;
 const TAB_CONTENT_TOP_PADDING = Platform.OS === 'web' ? 18 + WEB_TABS_TOP_INSET : 10;
-const LIBRARY_SLIDER_THUMB_HEIGHT = 42;
+const LIBRARY_SLIDER_THUMB_HEIGHT = 36;
 const LIBRARY_ANIMATED_ITEM_COUNT = Math.min(5, interactionMotion.staggeredListLimit);
 const LIBRARY_FIXED_CONTROLS_TOP = 8;
 const LIBRARY_FIXED_CONTROLS_BOTTOM = 8;
@@ -969,13 +968,17 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 
 // One component per tab route. The native header owns the top safe area and
 // NativeTabs owns the bottom inset; this is only the visual gap after them.
-function TabScrollHost({ children }: { children: ReactNode }) {
+function TabScrollHost({ children, reserveTabBarClearance = false }: { children: ReactNode; reserveTabBarClearance?: boolean }) {
   const themeStyles = useThemeStyles();
+  const safeAreaInsets = useSafeAreaInsets();
+  const bottomPadding = reserveTabBarClearance
+    ? CONTENT_BOTTOM_PADDING + Math.max(50, safeAreaInsets.bottom + 16)
+    : CONTENT_BOTTOM_PADDING;
 
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-      contentContainerStyle={[styles.content, { paddingTop: TAB_CONTENT_TOP_PADDING }]}
+      contentContainerStyle={[styles.content, { paddingBottom: bottomPadding, paddingTop: TAB_CONTENT_TOP_PADDING }]}
       contentInsetAdjustmentBehavior="automatic"
       keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
       keyboardShouldPersistTaps="handled"
@@ -1016,7 +1019,7 @@ export function QuizTabScreen() {
 export function ProfileTabScreen() {
   const { profileProps } = useAppScreenProps();
   return (
-    <TabScrollHost>
+    <TabScrollHost reserveTabBarClearance>
       <ProfileView {...profileProps} />
     </TabScrollHost>
   );
@@ -1111,6 +1114,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
   const libraryThumbOffsetAnim = useRef(new Animated.Value(0)).current;
+  const librarySliderInteractionAnim = useRef(new Animated.Value(0)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
@@ -1349,36 +1353,49 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   });
   const librarySliderVisible = activeTab === 'library' && libraryWords.length > 24;
   const librarySliderActive = librarySliderDragging;
-  const libraryDragSliderMotionStyle: WebTransitionStyle | undefined =
-    Platform.OS === 'web'
-      ? {
-          transitionDuration: `${librarySliderActive ? 150 : 210}ms`,
-          transitionProperty: 'width, right, opacity, background-color, border-color, box-shadow',
-          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          willChange: 'width, right, opacity',
-        }
-      : undefined;
-  const libraryDragTrackMotionStyle: WebTransitionStyle | undefined =
-    Platform.OS === 'web'
-      ? {
-          transitionDuration: `${librarySliderActive ? 120 : 190}ms`,
-          transitionProperty: 'width, opacity, background-color',
-          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          willChange: 'width, opacity',
-        }
-      : undefined;
-  const libraryDragThumbMotionStyle: WebTransitionStyle | undefined =
-    Platform.OS === 'web'
-      ? {
-          transitionDuration: `${librarySliderActive ? 70 : 180}ms`,
-          transitionProperty: 'transform, width, opacity, background-color, border-color',
-          transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          willChange: 'transform, width, opacity',
-        }
-      : undefined;
+  useEffect(() => {
+    const interactionAnimation = Animated.spring(librarySliderInteractionAnim, {
+      bounciness: 0,
+      speed: librarySliderActive ? 28 : 22,
+      toValue: librarySliderActive ? 1 : 0,
+      useNativeDriver: Platform.OS !== 'web',
+    });
+    interactionAnimation.start();
+    return () => interactionAnimation.stop();
+  }, [librarySliderActive, librarySliderInteractionAnim]);
+  const libraryDragTrackMotionStyle = {
+    opacity: librarySliderInteractionAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 0.28],
+    }),
+    transform: [
+      {
+        scaleX: librarySliderInteractionAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.5, 1],
+        }),
+      },
+    ],
+  };
+  const libraryDragThumbMotionStyle = {
+    opacity: librarySliderInteractionAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0.5, 0.92],
+    }),
+    transform: [
+      { translateY: libraryThumbOffsetAnim },
+      {
+        scaleX: librarySliderInteractionAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.72, 1.65],
+        }),
+      },
+    ],
+  };
   const beginLibrarySliderDrag = useStableEvent((locationY: number) => {
     librarySliderDraggingRef.current = true;
     setLibrarySliderDragging(true);
+    triggerPressHaptic('secondary');
     handleLibrarySliderDrag(locationY);
   });
   const moveLibrarySliderDrag = useStableEvent((locationY: number) => {
@@ -3053,9 +3070,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
             style={[
               styles.libraryDragSlider,
               themeStyles?.libraryDragSlider,
-              librarySliderActive ? styles.libraryDragSliderActive : styles.libraryDragSliderCollapsed,
-              librarySliderActive ? themeStyles?.libraryDragSliderActive : themeStyles?.libraryDragSliderCollapsed,
-              libraryDragSliderMotionStyle,
             ]}
             testID="library-drag-slider"
           >
@@ -3063,8 +3077,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
               style={[
                 styles.libraryDragTrack,
                 themeStyles?.libraryDragTrack,
-                librarySliderActive ? styles.libraryDragTrackActive : styles.libraryDragTrackCollapsed,
-                librarySliderActive ? themeStyles?.libraryDragTrackActive : themeStyles?.libraryDragTrackCollapsed,
                 libraryDragTrackMotionStyle,
               ]}
             />
@@ -3072,17 +3084,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
               style={[
                 styles.libraryDragThumb,
                 themeStyles?.libraryDragThumb,
-                librarySliderActive ? styles.libraryDragThumbActive : styles.libraryDragThumbCollapsed,
-                librarySliderActive ? themeStyles?.libraryDragThumbActive : themeStyles?.libraryDragThumbCollapsed,
                 libraryDragThumbMotionStyle,
-                { transform: [{ translateY: libraryThumbOffsetAnim }] },
               ]}
               testID="library-drag-thumb"
-            >
-              {librarySliderActive && (
-                <GripVertical size={17} color={libraryDragIconColor} strokeWidth={2.4} />
-              )}
-            </Animated.View>
+            />
           </View>
         </GestureDetector>
       )}
@@ -6164,9 +6169,9 @@ const LibraryView = memo(function LibraryView({
                   key={filter.id}
                   onPress={() => onFilterChange(filter.id)}
                   pressTone="chip"
-                  style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
+                  style={[styles.filterChip, styles.libraryStatusFilterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                 >
-                  <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                  <Text adjustsFontSizeToFit minimumFontScale={0.76} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
                 </AnimatedPressable>
               );
             })}
@@ -9325,7 +9330,6 @@ const styles = StyleSheet.create({
   },
   libraryTopControlsInset: {
     gap: 10,
-    paddingRight: 36,
   },
   searchBox: {
     alignItems: 'center',
@@ -9436,8 +9440,12 @@ const styles = StyleSheet.create({
   },
   libraryStatusFilterRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    gap: 6,
+  },
+  libraryStatusFilterChip: {
+    flex: 1,
+    minWidth: 0,
+    paddingHorizontal: 4,
   },
   filterChip: {
     backgroundColor: '#F7FAFF',
@@ -9569,7 +9577,6 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     gap: 10,
     padding: 11,
-    paddingRight: 32,
   },
   libraryCustomSetsHeader: {
     alignItems: 'center',
@@ -9863,9 +9870,9 @@ const styles = StyleSheet.create({
   libraryFixedControls: {
     bottom: LIBRARY_FIXED_CONTROLS_BOTTOM,
     position: 'absolute',
-    right: 8,
+    right: 0,
     top: LIBRARY_FIXED_CONTROLS_TOP,
-    width: 80,
+    width: 24,
     zIndex: 20,
   },
   libraryFloatingTopButton: {
@@ -9883,7 +9890,7 @@ const styles = StyleSheet.create({
     minHeight: 38,
     paddingHorizontal: 9,
     position: 'absolute',
-    right: 0,
+    right: 4,
     shadowColor: '#1C1C1E',
     shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.12,
@@ -9898,74 +9905,34 @@ const styles = StyleSheet.create({
   libraryDragSlider: {
     alignItems: 'center',
     alignSelf: 'flex-end',
-    borderRadius: 999,
-    borderWidth: 1,
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderWidth: 0,
     bottom: 0,
-    paddingHorizontal: 4,
-    paddingVertical: 5,
     position: 'absolute',
-    shadowColor: '#1C1C1E',
-    shadowOffset: { height: 2, width: 0 },
-    top: 92,
-  },
-  libraryDragSliderActive: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#D1D1D6',
-    elevation: 5,
-    opacity: 1,
     right: 0,
-    shadowOpacity: 0.14,
-    shadowRadius: 7,
-    width: 34,
-  },
-  libraryDragSliderCollapsed: {
-    backgroundColor: 'rgba(0, 122, 255, 0.16)',
-    borderColor: 'rgba(0, 122, 255, 0.14)',
-    elevation: 1,
-    opacity: 0.76,
-    right: -2,
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
-    width: 14,
+    top: 92,
+    width: 24,
   },
   libraryDragTrack: {
-    backgroundColor: '#D6E9FF',
+    backgroundColor: '#1C1C1E',
     borderRadius: 999,
     bottom: 8,
+    left: 11,
     position: 'absolute',
     top: 8,
-  },
-  libraryDragTrackActive: {
-    opacity: 1,
-    width: 4,
-  },
-  libraryDragTrackCollapsed: {
-    backgroundColor: '#007AFF',
-    opacity: 0.58,
     width: 2,
   },
   libraryDragThumb: {
-    alignItems: 'center',
-    backgroundColor: '#EAF4FF',
-    borderColor: '#0A84FF',
+    backgroundColor: '#007AFF',
+    borderColor: 'transparent',
     borderRadius: 999,
-    borderWidth: 1,
+    borderWidth: 0,
     height: LIBRARY_SLIDER_THUMB_HEIGHT,
-    justifyContent: 'center',
+    left: 10,
     position: 'absolute',
     top: 5,
-  },
-  libraryDragThumbActive: {
-    opacity: 1,
-    width: 24,
-  },
-  libraryDragThumbCollapsed: {
-    backgroundColor: '#007AFF',
-    borderColor: '#B9DCFF',
-    borderRadius: 99,
-    borderCurve: 'continuous',
-    opacity: 0.82,
-    width: 8,
+    width: 4,
   },
   profileCard: {
     alignItems: 'center',
@@ -11247,40 +11214,15 @@ const darkStyles = StyleSheet.create({
     color: '#F2F2F7',
   },
   libraryDragSlider: {
-    backgroundColor: '#1C1C1E',
-    borderColor: '#3A3A3C',
-    shadowColor: '#000000',
-  },
-  libraryDragSliderActive: {
-    backgroundColor: '#1C1C1E',
-    borderColor: '#3A3A3C',
-    shadowColor: '#000000',
-  },
-  libraryDragSliderCollapsed: {
-    backgroundColor: 'rgba(10, 132, 255, 0.2)',
-    borderColor: 'rgba(10, 132, 255, 0.2)',
-    shadowColor: '#000000',
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
   },
   libraryDragTrack: {
-    backgroundColor: '#29466A',
-  },
-  libraryDragTrackActive: {
-    backgroundColor: '#29466A',
-  },
-  libraryDragTrackCollapsed: {
-    backgroundColor: '#0A84FF',
+    backgroundColor: '#F2F2F7',
   },
   libraryDragThumb: {
-    backgroundColor: 'rgba(10, 132, 255, 0.18)',
-    borderColor: '#0A84FF',
-  },
-  libraryDragThumbActive: {
-    backgroundColor: 'rgba(10, 132, 255, 0.18)',
-    borderColor: '#0A84FF',
-  },
-  libraryDragThumbCollapsed: {
     backgroundColor: '#0A84FF',
-    borderColor: '#0A84FF',
+    borderColor: 'transparent',
   },
   libraryHeaderCard: {
     backgroundColor: '#1C1C1E',

@@ -560,9 +560,9 @@ const modeInterfaceCopy = {
     editSet: '編輯單字集',
     openSetSettings: '開啟單字集設定',
     setDetailActions: '操作',
-    editSetName: '資料夾名稱',
+    editSetName: '單字集名稱',
     saveSetName: '儲存名稱',
-    deleteSet: '刪除資料夾',
+    deleteSet: '刪除單字集',
     wordsInSet: '資料夾單字',
     emptySetWords: '這個資料夾還沒有單字。',
     removeFromSet: '移除',
@@ -764,9 +764,9 @@ const modeInterfaceCopy = {
     editSet: 'Edit Set',
     openSetSettings: 'Open set settings',
     setDetailActions: 'Actions',
-    editSetName: 'Folder name',
+    editSetName: 'Set name',
     saveSetName: 'Save Name',
-    deleteSet: 'Delete Folder',
+    deleteSet: 'Delete Set',
     wordsInSet: 'Words in Set',
     emptySetWords: 'This folder has no words yet.',
     removeFromSet: 'Remove',
@@ -5520,7 +5520,7 @@ function FilterControlPanel({
                       pressTone="chip"
                       style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                     >
-                      <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                      <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
                     </AnimatedPressable>
                   );
                 })}
@@ -5542,7 +5542,7 @@ function FilterControlPanel({
                     pressTone="chip"
                     style={[styles.filterChip, themeStyles?.filterChip, selected && styles.levelChipActive]}
                   >
-                    <Text style={[styles.filterText, selected && styles.filterTextActive]}>{levelLabel(level.id, studyMode, levelOptions)}</Text>
+                    <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{levelLabel(level.id, studyMode, levelOptions)}</Text>
                   </AnimatedPressable>
                 );
               })}
@@ -5563,7 +5563,7 @@ function FilterControlPanel({
                     pressTone="chip"
                     style={[styles.letterChip, themeStyles?.letterChip, selected && styles.letterChipActive]}
                   >
-                    <Text style={[styles.letterText, selected && styles.letterTextActive]}>{initialLabel(initial.id, studyMode)}</Text>
+                    <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.letterText, selected && styles.letterTextActive]}>{initialLabel(initial.id, studyMode)}</Text>
                   </AnimatedPressable>
                 );
               })}
@@ -5586,7 +5586,7 @@ function FilterControlPanel({
                       pressTone="chip"
                       style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                     >
-                      <Text style={[styles.filterText, selected && styles.filterTextActive]}>{label}</Text>
+                      <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{label}</Text>
                     </AnimatedPressable>
                   );
                 })}
@@ -5840,7 +5840,7 @@ const QuizView = memo(function QuizView({
                   pressTone="secondary"
                   style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
                 >
-                  <Text style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
+                  <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
                   <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
                 </AnimatedPressable>
               )}
@@ -5923,7 +5923,7 @@ const QuizView = memo(function QuizView({
                   pressTone="secondary"
                   style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
                 >
-                  <Text style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
+                  <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
                   <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
                 </AnimatedPressable>
               )}
@@ -6166,7 +6166,7 @@ const LibraryView = memo(function LibraryView({
                   pressTone="chip"
                   style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                 >
-                  <Text style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                  <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
                 </AnimatedPressable>
               );
             })}
@@ -6207,7 +6207,7 @@ const LibraryView = memo(function LibraryView({
             </View>
           </View>
           <AnimatedPressable accessibilityRole="button" onPress={onOpenCustomSets} pressTone="secondary" style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}>
-            <Text style={[styles.libraryManageSetsButtonLabel, themeStyles?.libraryTopButtonText]}>{ui.manage}</Text>
+            <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.libraryManageSetsButtonLabel, themeStyles?.libraryTopButtonText]}>{ui.manage}</Text>
             <ChevronRight size={15} color={bodyIconColor} strokeWidth={2.4} />
           </AnimatedPressable>
         </View>
@@ -6222,7 +6222,7 @@ const LibraryView = memo(function LibraryView({
                 style={[styles.libraryCustomSetChip, themeStyles?.filterChip]}
               >
                 <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
-                <Text style={[styles.filterText, themeStyles?.filterText]}>{set.name}</Text>
+                <Text numberOfLines={1} style={[styles.filterText, themeStyles?.filterText]}>{set.name}</Text>
                 <Text style={[styles.libraryCustomSetCount, themeStyles?.libraryHeaderMeta]}>{set.wordIds.length}</Text>
               </AnimatedPressable>
             ))}
@@ -6787,7 +6787,7 @@ function ActiveSetBanner({
         pressTone="chip"
         style={[styles.activeSetClearButton, themeStyles?.activeSetClearButton]}
       >
-        <Text style={[styles.activeSetClearText, themeStyles?.activeSetClearText]}>{ui.clearActiveSet}</Text>
+        <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.activeSetClearText, themeStyles?.activeSetClearText]}>{ui.clearActiveSet}</Text>
       </AnimatedPressable>
     </View>
   );
@@ -7112,7 +7112,7 @@ export function ProfileCustomSetsView({
                   pressTone="chip"
                   style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                 >
-                  <Text style={[styles.filterText, selected && styles.filterTextActive]}>{option.label}</Text>
+                  <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{option.label}</Text>
                 </AnimatedPressable>
               );
             })}
@@ -7162,11 +7162,11 @@ export function ProfileCustomSetsView({
                   <View style={styles.customSetActionRow}>
                     <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(set.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
                       <BookOpen size={16} color={bodyIconColor} strokeWidth={2.3} />
-                      <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
+                      <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
                     </AnimatedPressable>
                     <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(set.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
                       <Target size={16} color="#FFFFFF" strokeWidth={2.3} />
-                      <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
+                      <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
                     </AnimatedPressable>
                   </View>
                 </View>
@@ -7189,11 +7189,11 @@ export function ProfileCustomSetsView({
             <View style={styles.customSetDetailActions} testID="custom-set-detail-actions">
               <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(selectedSet.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
                 <BookOpen size={16} color={bodyIconColor} strokeWidth={2.3} />
-                <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
+                <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
               </AnimatedPressable>
               <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(selectedSet.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
                 <Target size={16} color="#FFFFFF" strokeWidth={2.3} />
-                <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
+                <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
               </AnimatedPressable>
               <AnimatedPressable
                 accessibilityRole="button"
@@ -7202,11 +7202,11 @@ export function ProfileCustomSetsView({
                   onDeleteCustomSet(selectedSet.id);
                 }}
                 pressTone="secondary"
-                style={[styles.customSetDeleteButton, themeStyles?.customSetActionButton]}
+                style={[styles.customSetDeleteButton, themeStyles?.customSetDeleteButton]}
                 testID="custom-set-delete-button"
               >
                 <Trash2 size={15} color="#D70015" strokeWidth={2.3} />
-                <Text style={styles.customSetDeleteText}>{ui.deleteSet}</Text>
+                <Text adjustsFontSizeToFit minimumFontScale={0.84} numberOfLines={1} style={styles.customSetDeleteText}>{ui.deleteSet}</Text>
               </AnimatedPressable>
             </View>
           </View>
@@ -7231,7 +7231,7 @@ export function ProfileCustomSetsView({
                 pressTone="secondary"
                 style={[styles.customSetActionButton, themeStyles?.customSetActionButton, !editingSetName.trim() && styles.disabledButton]}
               >
-                <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.saveSetName}</Text>
+                <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.saveSetName}</Text>
               </AnimatedPressable>
             </View>
             <Text style={[styles.developerMessage, themeStyles?.developerMessage]}>{customSetMessage}</Text>
@@ -7258,7 +7258,7 @@ export function ProfileCustomSetsView({
                     testID="custom-set-remove-word"
                   >
                     <X size={15} color="#D70015" strokeWidth={2.5} />
-                    <Text style={styles.customSetRemoveWordText}>{ui.removeFromSet}</Text>
+                    <Text adjustsFontSizeToFit minimumFontScale={0.84} numberOfLines={1} style={styles.customSetRemoveWordText}>{ui.removeFromSet}</Text>
                   </AnimatedPressable>
                 </View>
               ))}
@@ -7333,7 +7333,7 @@ export function ProfileCustomSetsView({
                 style={styles.developerPrimaryButton}
               >
                 <SquarePlus size={16} color="#FFFFFF" strokeWidth={2.3} />
-                <Text style={styles.developerPrimaryText}>{ui.addManualWord}</Text>
+                <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={styles.developerPrimaryText}>{ui.addManualWord}</Text>
               </AnimatedPressable>
               <AnimatedPressable
                 accessibilityRole="button"
@@ -7342,7 +7342,7 @@ export function ProfileCustomSetsView({
                 style={[styles.developerActionButton, themeStyles?.developerActionButton]}
               >
                 <Upload size={16} color={bodyIconColor} strokeWidth={2.3} />
-                <Text style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.importCustomCsv}</Text>
+                <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.importCustomCsv}</Text>
               </AnimatedPressable>
             </View>
             <Text style={[styles.customSetTinyMeta, themeStyles?.customSetTinyMeta]}>
@@ -7557,11 +7557,11 @@ function DeveloperVocabularyPanel({
       <View style={styles.buttonRow}>
         <AnimatedPressable accessibilityRole="button" onPress={onExportVocabulary} pressTone="secondary" style={[styles.developerActionButton, themeStyles?.developerActionButton]}>
           <Download size={16} color={bodyIconColor} strokeWidth={2.3} />
-          <Text style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.exportCsv}</Text>
+          <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.exportCsv}</Text>
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onImportVocabulary} pressTone="primary" style={styles.developerPrimaryButton}>
           <Upload size={16} color="#FFFFFF" strokeWidth={2.3} />
-          <Text style={styles.developerPrimaryText}>{ui.importData}</Text>
+          <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={styles.developerPrimaryText}>{ui.importData}</Text>
         </AnimatedPressable>
       </View>
 
@@ -8164,8 +8164,8 @@ const styles = StyleSheet.create({
   },
   installGuidePreview: {
     alignSelf: 'stretch',
-    backgroundColor: '#F2F2F7',
-    borderColor: '#E5E5EA',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8427,7 +8427,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   progressTrack: {
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#DCEEFF',
     borderRadius: 999,
     height: 6,
     overflow: 'hidden',
@@ -8459,8 +8459,8 @@ const styles = StyleSheet.create({
   },
   accountShortcut: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
-    borderColor: '#E5E5EA',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8498,9 +8498,11 @@ const styles = StyleSheet.create({
   },
   homeDictionarySearch: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#B9DCFF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
     minHeight: 58,
@@ -8594,7 +8596,7 @@ const styles = StyleSheet.create({
   },
   homeDictionaryModalSearch: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
     borderColor: '#0A84FF',
     borderRadius: 14,
     borderCurve: 'continuous',
@@ -8909,9 +8911,11 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     alignItems: 'center',
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: 'rgba(0, 122, 255, 0.09)',
+    borderColor: 'rgba(0, 122, 255, 0.18)',
     borderRadius: 19,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     height: 38,
     justifyContent: 'center',
     width: 38,
@@ -8966,9 +8970,11 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   supplementalMeaning: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 10,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 5,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -8999,9 +9005,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   exampleBox: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 6,
     padding: 14,
   },
@@ -9021,9 +9029,11 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#B9DCFF',
     borderRadius: 12,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     gap: 8,
@@ -9070,7 +9080,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderColor: '#D6E9FF',
-    borderRadius: 999,
+    borderRadius: 10,
+    borderCurve: 'continuous',
     borderWidth: 1,
     flexDirection: 'row',
     gap: 4,
@@ -9079,8 +9090,10 @@ const styles = StyleSheet.create({
   },
   quizNextTopText: {
     color: '#1C1C1E',
+    flexShrink: 1,
     fontSize: 12,
     fontWeight: '600',
+    textAlign: 'center',
   },
   quizSetupCard: {
     backgroundColor: '#FFFFFF',
@@ -9106,9 +9119,11 @@ const styles = StyleSheet.create({
     marginHorizontal: -18,
   },
   quizModeSwitch: {
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: '#EDF5FF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 6,
     padding: 4,
@@ -9139,9 +9154,11 @@ const styles = StyleSheet.create({
   },
   quizCountChip: {
     alignItems: 'center',
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     minHeight: 54,
@@ -9171,9 +9188,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   quizOption: {
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: 1,
     padding: 15,
   },
   quizOptionPressed: {
@@ -9310,8 +9329,8 @@ const styles = StyleSheet.create({
   },
   searchBox: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
-    borderColor: '#D1D1D6',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#B9DCFF',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: StyleSheet.hairlineWidth,
@@ -9335,7 +9354,7 @@ const styles = StyleSheet.create({
   },
   searchClearButton: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#EAF4FF',
     borderRadius: 11,
     borderCurve: 'continuous',
     height: 30,
@@ -9373,7 +9392,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   filterSummaryButtonOpen: {
-    backgroundColor: 'rgba(120, 120, 128, 0.08)',
+    backgroundColor: 'rgba(0, 122, 255, 0.07)',
   },
   filterSummaryTitle: {
     color: '#1C1C1E',
@@ -9421,8 +9440,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   filterChip: {
-    backgroundColor: '#E5E5EA',
-    borderRadius: 999,
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
+    borderRadius: 10,
+    borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     // 10 rather than 12: the five status chips summed to 326 against a 324
     // container, so the last one wrapped to a row of its own over 2px.
     paddingHorizontal: 10,
@@ -9438,8 +9460,10 @@ const styles = StyleSheet.create({
   },
   filterText: {
     color: '#6C6C70',
+    flexShrink: 1,
     fontSize: 13,
     fontWeight: '500',
+    textAlign: 'center',
   },
   filterTextActive: {
     color: '#FFFFFF',
@@ -9450,8 +9474,11 @@ const styles = StyleSheet.create({
   },
   letterChip: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
-    borderRadius: 999,
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
+    borderRadius: 10,
+    borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     height: 34,
     justifyContent: 'center',
     minWidth: 34,
@@ -9519,8 +9546,11 @@ const styles = StyleSheet.create({
   },
   libraryTopButton: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
-    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
+    borderRadius: 11,
+    borderCurve: 'continuous',
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
     minHeight: 40,
@@ -9561,8 +9591,11 @@ const styles = StyleSheet.create({
   },
   libraryManageSetsButton: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
-    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
+    borderRadius: 10,
+    borderCurve: 'continuous',
+    borderWidth: 1,
     flexDirection: 'row',
     flexShrink: 0,
     gap: 4,
@@ -9572,13 +9605,18 @@ const styles = StyleSheet.create({
   },
   libraryManageSetsButtonLabel: {
     color: '#1C1C1E',
+    flexShrink: 1,
     fontSize: 12,
     fontWeight: '600',
+    textAlign: 'center',
   },
   libraryCustomSetChip: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
-    borderRadius: 999,
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
+    borderRadius: 10,
+    borderCurve: 'continuous',
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 7,
     minHeight: 34,
@@ -9677,8 +9715,11 @@ const styles = StyleSheet.create({
   libraryDetailBack: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: 'rgba(120, 120, 128, 0.12)',
-    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
+    borderRadius: 11,
+    borderCurve: 'continuous',
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
     minHeight: 42,
@@ -9725,9 +9766,11 @@ const styles = StyleSheet.create({
   },
   libraryDetailFavorite: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 11,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     height: 44,
     justifyContent: 'center',
     width: 44,
@@ -9767,9 +9810,11 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   libraryDetailExampleCard: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     gap: 8,
     padding: 15,
   },
@@ -9828,7 +9873,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     backgroundColor: '#FFFFFF',
     borderColor: '#D1D1D6',
-    borderRadius: 999,
+    borderRadius: 11,
+    borderCurve: 'continuous',
     borderWidth: 1,
     elevation: 4,
     flexDirection: 'row',
@@ -9883,7 +9929,7 @@ const styles = StyleSheet.create({
     width: 14,
   },
   libraryDragTrack: {
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#D6E9FF',
     borderRadius: 999,
     bottom: 8,
     position: 'absolute',
@@ -10000,8 +10046,8 @@ const styles = StyleSheet.create({
   },
   googleIconMark: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
-    borderColor: '#E5E5EA',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10068,9 +10114,11 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flexDirection: 'row',
     gap: 8,
     minHeight: 46,
@@ -10105,9 +10153,11 @@ const styles = StyleSheet.create({
   },
   outlineButton: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#B9DCFF',
     borderRadius: 12,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     minHeight: 46,
@@ -10138,9 +10188,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   localOnlyBox: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     padding: 13,
   },
   localOnlyTitle: {
@@ -10182,15 +10234,18 @@ const styles = StyleSheet.create({
   activeSetClearButton: {
     backgroundColor: '#FFFFFF',
     borderColor: '#B9DCFF',
-    borderRadius: 999,
+    borderRadius: 10,
+    borderCurve: 'continuous',
     borderWidth: 1,
     paddingHorizontal: 11,
     paddingVertical: 8,
   },
   activeSetClearText: {
     color: '#0066CC',
+    flexShrink: 1,
     fontSize: 12,
     fontWeight: '600',
+    textAlign: 'center',
   },
   addToSetIconButton: {
     backgroundColor: '#EAF4FF',
@@ -10277,8 +10332,8 @@ const styles = StyleSheet.create({
   },
   customSetPickerRow: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
-    borderColor: '#E5E5EA',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10391,9 +10446,11 @@ const styles = StyleSheet.create({
   },
   customSetActionButton: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 12,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     gap: 6,
@@ -10402,8 +10459,10 @@ const styles = StyleSheet.create({
   },
   customSetActionText: {
     color: '#1C1C1E',
+    flexShrink: 1,
     fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   customSetPrimaryActionButton: {
     alignItems: 'center',
@@ -10418,8 +10477,10 @@ const styles = StyleSheet.create({
   },
   customSetPrimaryActionText: {
     color: '#FFFFFF',
+    flexShrink: 1,
     fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   customSetDeleteButton: {
     alignItems: 'center',
@@ -10428,24 +10489,31 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
+    flexBasis: '100%',
     flexDirection: 'row',
     gap: 6,
     justifyContent: 'center',
-    minHeight: 40,
+    minHeight: 44,
+    paddingHorizontal: 14,
+    width: '100%',
   },
   customSetDeleteText: {
     color: '#D70015',
-    fontSize: 12,
+    flexShrink: 1,
+    fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   customSetWordList: {
     gap: 8,
   },
   customSetWordRow: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 10,
     padding: 10,
@@ -10454,7 +10522,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderColor: '#FFC9C5',
-    borderRadius: 999,
+    borderRadius: 10,
+    borderCurve: 'continuous',
     borderWidth: 1,
     flexDirection: 'row',
     gap: 4,
@@ -10463,8 +10532,10 @@ const styles = StyleSheet.create({
   },
   customSetRemoveWordText: {
     color: '#D70015',
+    flexShrink: 1,
     fontSize: 12,
     fontWeight: '600',
+    textAlign: 'center',
   },
   customWordFormGrid: {
     gap: 9,
@@ -10501,9 +10572,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   learningMetric: {
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flex: 1,
     minHeight: 66,
     padding: 10,
@@ -10521,9 +10594,11 @@ const styles = StyleSheet.create({
   },
   settingOptionRow: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 12,
     minHeight: 70,
@@ -10540,7 +10615,7 @@ const styles = StyleSheet.create({
   },
   themeStatusLight: {
     alignItems: 'center',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#D6E9FF',
     borderRadius: 99,
     borderCurve: 'continuous',
     height: 14,
@@ -10609,9 +10684,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   developerStats: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 12,
     justifyContent: 'space-between',
@@ -10642,9 +10719,11 @@ const styles = StyleSheet.create({
   },
   developerActionButton: {
     alignItems: 'center',
-    backgroundColor: '#F2F2F7',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 12,
     borderCurve: 'continuous',
+    borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     gap: 7,
@@ -10654,8 +10733,10 @@ const styles = StyleSheet.create({
   },
   developerActionText: {
     color: '#1C1C1E',
+    flexShrink: 1,
     fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   developerPrimaryButton: {
     alignItems: 'center',
@@ -10671,8 +10752,10 @@ const styles = StyleSheet.create({
   },
   developerPrimaryText: {
     color: '#FFFFFF',
+    flexShrink: 1,
     fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   developerClearButton: {
     alignItems: 'center',
@@ -10822,8 +10905,8 @@ const darkStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   modeSwitchButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   modeSwitchIcon: {
     backgroundColor: 'rgba(10, 132, 255, 0.18)',
@@ -10909,11 +10992,11 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   progressTrack: {
-    backgroundColor: '#3A3A3C',
+    backgroundColor: '#18314F',
   },
   accountShortcut: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   accountShortcutText: {
     color: '#F2F2F7',
@@ -10923,8 +11006,8 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   homeDictionarySearch: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   homeDictionaryLauncherIcon: {
     backgroundColor: 'rgba(10, 132, 255, 0.24)',
@@ -10943,7 +11026,8 @@ const darkStyles = StyleSheet.create({
     borderBottomColor: '#3A3A3C',
   },
   iconButton: {
-    backgroundColor: '#2C2C2E',
+    backgroundColor: 'rgba(10, 132, 255, 0.16)',
+    borderColor: 'rgba(10, 132, 255, 0.32)',
   },
   homeGroupedSurface: {
     backgroundColor: '#1C1C1E',
@@ -11011,8 +11095,8 @@ const darkStyles = StyleSheet.create({
     color: '#F2F2F7',
   },
   supplementalMeaning: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   supplementalLabel: {
     color: '#0A84FF',
@@ -11021,8 +11105,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   exampleBox: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   example: {
     color: '#FFFFFF',
@@ -11031,8 +11115,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   secondaryButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#636366',
+    backgroundColor: '#111A26',
+    borderColor: '#376694',
   },
   secondaryButtonText: {
     color: '#F2F2F7',
@@ -11042,7 +11126,7 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   filterSummaryButtonOpen: {
-    backgroundColor: '#2C2C2E',
+    backgroundColor: 'rgba(10, 132, 255, 0.12)',
   },
   filterPanel: {
     borderTopColor: '#3A3A3C',
@@ -11057,15 +11141,15 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   filterChip: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   filterText: {
     color: '#AEAEB2',
   },
   letterChip: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   quizSetupCard: {
     backgroundColor: '#1C1C1E',
@@ -11079,7 +11163,8 @@ const darkStyles = StyleSheet.create({
     backgroundColor: 'rgba(84, 84, 88, 0.55)',
   },
   quizModeSwitch: {
-    backgroundColor: '#000000',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   quizModeButton: {
     backgroundColor: 'transparent',
@@ -11088,8 +11173,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   quizCountChip: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   quizCountText: {
     color: '#F2F2F7',
@@ -11102,15 +11187,15 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   quizNextTopButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   quizNextTopText: {
     color: '#F2F2F7',
   },
   quizOption: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   quizOptionPressed: {
     backgroundColor: 'rgba(10, 132, 255, 0.18)',
@@ -11130,8 +11215,8 @@ const darkStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   quizExampleCard: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   quizExampleLabel: {
     color: '#AEAEB2',
@@ -11141,8 +11226,8 @@ const darkStyles = StyleSheet.create({
     borderColor: '#0A84FF',
   },
   speakingSecondaryButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   speakingSecondaryText: {
     color: '#F2F2F7',
@@ -11177,10 +11262,10 @@ const darkStyles = StyleSheet.create({
     shadowColor: '#000000',
   },
   libraryDragTrack: {
-    backgroundColor: '#3A3A3C',
+    backgroundColor: '#29466A',
   },
   libraryDragTrackActive: {
-    backgroundColor: '#3A3A3C',
+    backgroundColor: '#29466A',
   },
   libraryDragTrackCollapsed: {
     backgroundColor: '#0A84FF',
@@ -11202,8 +11287,8 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   libraryCustomSetsCard: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#29466A',
   },
   libraryHeaderMetaPill: {
     backgroundColor: 'rgba(10, 132, 255, 0.18)',
@@ -11222,18 +11307,18 @@ const darkStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   libraryTopButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   libraryTopButtonText: {
     color: '#F2F2F7',
   },
   searchBox: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   searchBoxActive: {
-    backgroundColor: '#3A3A3C',
+    backgroundColor: '#182538',
     borderColor: '#0A84FF',
   },
   resultCorrect: {
@@ -11269,7 +11354,7 @@ const darkStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   searchClearButton: {
-    backgroundColor: '#3A3A3C',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
   },
   searchMetaBox: {
     backgroundColor: 'rgba(10, 132, 255, 0.18)',
@@ -11309,8 +11394,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   libraryDetailBack: {
-    backgroundColor: '#1C1C1E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   libraryDetailBackText: {
     color: '#F2F2F7',
@@ -11338,8 +11423,8 @@ const darkStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   libraryDetailExampleCard: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   libraryDetailExample: {
     color: '#FFFFFF',
@@ -11355,8 +11440,8 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   avatar: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   profileTitle: {
     color: '#FFFFFF',
@@ -11369,12 +11454,12 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   googleButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   googleIconMark: {
-    backgroundColor: '#1C1C1E',
-    borderColor: '#3A3A3C',
+    backgroundColor: 'rgba(10, 132, 255, 0.14)',
+    borderColor: '#29466A',
   },
   googleButtonTitle: {
     color: '#FFFFFF',
@@ -11386,8 +11471,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   localOnlyBox: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   localOnlyTitle: {
     color: '#FFFFFF',
@@ -11396,15 +11481,15 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   inputBox: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   accountInput: {
     color: '#FFFFFF',
   },
   outlineButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#376694',
   },
   outlineButtonText: {
     color: '#F2F2F7',
@@ -11420,8 +11505,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   activeSetClearButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   activeSetClearText: {
     color: '#0A84FF',
@@ -11438,8 +11523,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   customSetPickerRow: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   customSetPickerEmpty: {
     color: '#AEAEB2',
@@ -11459,8 +11544,12 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   customSetActionButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
+  },
+  customSetDeleteButton: {
+    backgroundColor: '#3A1714',
+    borderColor: '#FF453A',
   },
   customSetActionText: {
     color: '#F2F2F7',
@@ -11477,8 +11566,8 @@ const darkStyles = StyleSheet.create({
     borderColor: '#3A3A3C',
   },
   learningMetric: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   learningMetricLabel: {
     color: '#AEAEB2',
@@ -11487,16 +11576,16 @@ const darkStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   settingOptionRow: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   settingsEntryButton: {
     backgroundColor: '#1C1C1E',
     borderColor: '#3A3A3C',
   },
   settingsEntryIcon: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   settingsEntryTitle: {
     color: '#FFFFFF',
@@ -11522,8 +11611,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   developerStats: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   developerLabel: {
     color: '#AEAEB2',
@@ -11535,8 +11624,8 @@ const darkStyles = StyleSheet.create({
     color: '#AEAEB2',
   },
   developerActionButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
   },
   developerActionText: {
     color: '#F2F2F7',

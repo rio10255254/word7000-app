@@ -102,6 +102,25 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).not.toContain('nativeGlassToneForPressTone');
   });
 
+  test('gives native navigation and primary actions stronger haptic feedback', () => {
+    const hapticsSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'haptics.native.ts'), 'utf8');
+
+    expect(hapticsSource).toContain('primary: Haptics.ImpactFeedbackStyle.Heavy');
+    expect(hapticsSource).toContain('secondary: Haptics.ImpactFeedbackStyle.Medium');
+    expect(hapticsSource).toContain('tab: Haptics.ImpactFeedbackStyle.Medium');
+    expect(hapticsSource).toContain("tone === 'icon'");
+  });
+
+  test('keeps compact command labels readable and the destructive set action full width', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain("deleteSet: '刪除單字集'");
+    expect(appSource).toContain("deleteSet: 'Delete Set'");
+    expect(appSource).toContain("flexBasis: '100%'");
+    expect(appSource).toContain('minimumFontScale={0.82} numberOfLines={1} style={[styles.customSetActionText');
+    expect(appSource).toContain('minimumFontScale={0.84} numberOfLines={1} style={styles.customSetDeleteText}');
+  });
+
   test('uses one semantic iOS color system across navigation and content', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');

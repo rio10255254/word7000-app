@@ -25,10 +25,12 @@ describe('iOS visual system', () => {
     ['light secondary on page', iosVisual.light.labelSecondary, iosVisual.light.background, 4.5],
     ['light primary on surface', iosVisual.light.label, iosVisual.light.surface, 7],
     ['light secondary on surface', iosVisual.light.labelSecondary, iosVisual.light.surface, 4.5],
+    ['light secondary on tinted control', iosVisual.light.labelSecondary, iosVisual.light.surfaceSecondary, 4.5],
     ['dark primary on page', iosVisual.dark.label, iosVisual.dark.background, 7],
     ['dark secondary on page', iosVisual.dark.labelSecondary, iosVisual.dark.background, 4.5],
     ['dark primary on surface', iosVisual.dark.label, iosVisual.dark.surface, 7],
     ['dark secondary on surface', iosVisual.dark.labelSecondary, iosVisual.dark.surface, 4.5],
+    ['dark secondary on tinted control', iosVisual.dark.labelSecondary, iosVisual.dark.surfaceSecondary, 4.5],
   ])('%s stays readable', (_name, foreground, background, minimum) => {
     expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(minimum);
   });
@@ -38,5 +40,12 @@ describe('iOS visual system', () => {
     ['dark accent', iosVisual.dark.accent, iosVisual.dark.surface],
   ])('%s remains visible as an interactive control', (_name, foreground, background) => {
     expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(3);
+  });
+
+  test('uses lightly tinted controls instead of neutral gray blocks', () => {
+    expect(iosVisual.light.surfaceSecondary).toBe('#F7FAFF');
+    expect(iosVisual.light.surfaceTertiary).toBe('#EDF5FF');
+    expect(iosVisual.dark.surfaceSecondary).toBe('#111A26');
+    expect(iosVisual.dark.surfaceTertiary).toBe('#182538');
   });
 });

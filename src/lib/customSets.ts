@@ -1,4 +1,5 @@
 import type { WordEntry } from '../data/words';
+import { customSetSystemColors } from '../design/iosVisualSystem';
 
 export const CUSTOM_SETS_STORAGE_KEY = 'word7000-custom-sets-v1';
 
@@ -37,7 +38,7 @@ type StorageLike = {
   setItem: (key: string, value: string) => void;
 };
 
-const setColors = ['#2563eb', '#0f766e', '#7c3aed', '#db2777', '#ea580c', '#16a34a'];
+const setColors = [...customSetSystemColors];
 
 export const emptyCustomSetState: CustomSetState = {
   customWords: [],

@@ -81,6 +81,7 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { WordEntry } from './src/data/words';
+import { iosVisual } from './src/design/iosVisualSystem';
 import { scrollTargetFromSlider, scrollThumbOffset } from './src/lib/libraryNavigation';
 import {
   buildQuizOptions,
@@ -1260,7 +1261,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
   const darkMode = themeMode === 'dark';
-  const libraryDragIconColor = darkMode ? '#bfdbfe' : '#172033';
+  const libraryDragIconColor = darkMode ? '#0A84FF' : '#1C1C1E';
   const activeModeCopy = modeCopy[studyMode];
   const activeSystemCopy = systemCopy[studyMode];
   const activeInstallGuideSteps = installGuideStepsByMode[studyMode];
@@ -1317,7 +1318,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     outputRange: [18, 0],
   });
   const themeTransitionMotionStyle = {
-    backgroundColor: themeTransitionTarget === 'dark' ? '#020617' : '#f8fafc',
+    backgroundColor: themeTransitionTarget === 'dark' ? '#000000' : '#F2F2F7',
     opacity: themeTransitionAnim,
   };
   const launchOpacity = launchAnim.interpolate({
@@ -3037,6 +3038,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       {libraryScrolledPastTop && (
         <AnimatedPressable
           accessibilityRole="button"
+          glassTone="secondary"
           onPress={returnLibraryToTop}
           pressTone="secondary"
           style={[styles.libraryFloatingTopButton, themeStyles?.libraryFloatingTopButton]}
@@ -3677,6 +3679,7 @@ function createInitialAccountState(configured: boolean): AccountState {
 
 type AnimatedPressableProps = Omit<PressableProps, 'children' | 'style'> & {
   children: ReactNode;
+  glassTone?: NativeGlassTone;
   pressTone?: InteractionTone;
   pressedStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
@@ -3694,26 +3697,19 @@ type WebTransitionStyle = ViewStyle & {
   willChange?: string;
 };
 
-function nativeGlassToneForPressTone(pressTone: InteractionTone): NativeGlassTone | null {
-  if (pressTone === 'primary' || pressTone === 'secondary' || pressTone === 'icon') {
-    return pressTone;
-  }
-  return null;
-}
-
 function NativeButtonGlass({ tone }: { tone: NativeGlassTone }) {
   const themeMode = useContext(ThemeContext);
   const darkMode = themeMode === 'dark';
   const tintColor = tone === 'primary'
-    ? '#2563eb'
+    ? (darkMode ? iosVisual.dark.accent : iosVisual.light.accent)
     : darkMode
-      ? 'rgba(30, 41, 59, 0.62)'
-      : 'rgba(255, 255, 255, 0.54)';
+      ? 'rgba(44, 44, 46, 0.72)'
+      : 'rgba(255, 255, 255, 0.68)';
 
   return (
     <GlassView
       colorScheme={darkMode ? 'dark' : 'light'}
-      glassEffectStyle={tone === 'primary' ? 'regular' : 'clear'}
+      glassEffectStyle="regular"
       isInteractive
       style={StyleSheet.absoluteFill}
       tintColor={tintColor}
@@ -3724,6 +3720,7 @@ function NativeButtonGlass({ tone }: { tone: NativeGlassTone }) {
 function AnimatedPressable({
   children,
   disabled,
+  glassTone,
   onPressIn,
   onPressOut,
   pressTone = 'secondary',
@@ -3734,9 +3731,7 @@ function AnimatedPressable({
   const [pressed, setPressed] = useState(false);
   const pressAnim = useRef(new Animated.Value(0)).current;
   const pressMotion = pressMotionFor(pressTone);
-  const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE
-    ? nativeGlassToneForPressTone(pressTone)
-    : null;
+  const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE ? glassTone ?? null : null;
   const pressStyle = {
     opacity: pressAnim.interpolate({
       inputRange: [0, 1],
@@ -3920,7 +3915,7 @@ function UpdateRequiredOverlay({
 }) {
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
-  const iconColor = darkMode ? '#bfdbfe' : '#2563eb';
+  const iconColor = darkMode ? '#0A84FF' : '#007AFF';
 
   return (
     <View style={[styles.updateRequiredOverlay, themeStyles?.updateRequiredOverlay]} testID="force-update-overlay">
@@ -3932,7 +3927,7 @@ function UpdateRequiredOverlay({
         <Text style={[styles.updateRequiredText, themeStyles?.updateRequiredText]}>{detail}</Text>
         <Text style={[styles.updateRequiredCountdown, themeStyles?.updateRequiredCountdown]}>{countdownText}</Text>
         <AnimatedPressable accessibilityRole="button" onPress={onRefresh} pressTone="primary" style={styles.updateRequiredButton}>
-          <RotateCcw size={17} color="#fff" strokeWidth={2.4} />
+          <RotateCcw size={17} color="#FFFFFF" strokeWidth={2.4} />
           <Text style={styles.updateRequiredButtonText}>{buttonText}</Text>
         </AnimatedPressable>
       </View>
@@ -3976,7 +3971,7 @@ function ModeSwitchOverlay({
         ]}
       >
         <View style={[styles.modeSwitchOverlayIcon, chineseMode && styles.modeSwitchOverlayIconChinese]}>
-          <Languages size={34} color={chineseMode ? '#0f766e' : '#2563eb'} strokeWidth={2.5} />
+          <Languages size={34} color={chineseMode ? '#5856D6' : '#007AFF'} strokeWidth={2.5} />
         </View>
         <Text style={styles.modeSwitchOverlayTitle}>{copy.overlayTitle}</Text>
         <Text style={styles.modeSwitchOverlayText}>{copy.overlayText}</Text>
@@ -4006,8 +4001,8 @@ function InstallGuideOverlay({
   const isLastStep = step >= steps.length - 1;
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
-  const installGuideIconColor = darkMode ? '#60a5fa' : '#2563eb';
-  const installGuideCloseIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const installGuideIconColor = darkMode ? '#0A84FF' : '#007AFF';
+  const installGuideCloseIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const installGuideStepProgress = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -4129,7 +4124,7 @@ function InstallGuideOverlay({
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={[styles.installGuidePrimary, themeStyles?.installGuidePrimary]}>
           <Text style={styles.installGuidePrimaryText}>{isLastStep ? copy.done : copy.next}</Text>
-          <ChevronRight size={18} color="#fff" strokeWidth={2.5} />
+          <ChevronRight size={18} color="#FFFFFF" strokeWidth={2.5} />
         </AnimatedPressable>
       </View>
     </Animated.View>
@@ -4174,7 +4169,7 @@ const HomeView = memo(function HomeView({
   const safeAreaInsets = useSafeAreaInsets();
   const themeMode = useContext(ThemeContext);
   const darkMode = themeMode === 'dark';
-  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const [dictionaryQuery, setDictionaryQuery] = useState('');
@@ -4332,9 +4327,9 @@ const HomeView = memo(function HomeView({
             <View style={[styles.progressFill, { width: `${dailyPercent}%` }]} />
           </View>
           <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton}>
-            <BookOpen size={18} color="#fff" strokeWidth={2.3} />
+            <BookOpen size={18} color="#FFFFFF" strokeWidth={2.3} />
             <Text style={styles.primaryButtonText}>{copy.primaryAction}</Text>
-            <ChevronRight size={18} color="#fff" strokeWidth={2.3} />
+            <ChevronRight size={18} color="#FFFFFF" strokeWidth={2.3} />
           </AnimatedPressable>
         </View>
 
@@ -4354,26 +4349,26 @@ const HomeView = memo(function HomeView({
             testID="study-mode-toggle"
           >
             <View style={[styles.modeSwitchIcon, studyMode === 'chinese' && styles.modeSwitchIconChinese, themeStyles?.modeSwitchIcon]}>
-              <Languages size={20} color={studyMode === 'chinese' ? '#0f766e' : '#2563eb'} strokeWidth={2.4} />
+              <Languages size={20} color={studyMode === 'chinese' ? '#5856D6' : '#007AFF'} strokeWidth={2.4} />
             </View>
             <View style={styles.flexOne}>
               <Text style={[styles.modeSwitchTitle, themeStyles?.modeSwitchTitle]}>{copy.toggleTitle}</Text>
               <Text style={[styles.modeSwitchText, themeStyles?.modeSwitchText]}>{copy.toggleText}</Text>
             </View>
-            <ChevronRight size={18} color={darkMode ? '#94a3b8' : '#8e8e93'} strokeWidth={2.4} />
+            <ChevronRight size={18} color={darkMode ? '#8E8E93' : '#8e8e93'} strokeWidth={2.4} />
           </AnimatedPressable>
 
           <View style={[styles.homeActionDivider, themeStyles?.homeDivider]} />
 
           <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={styles.reviewStrip}>
             <View style={[styles.reviewIcon, themeStyles?.reviewIcon]}>
-              <RotateCcw size={20} color="#d97706" strokeWidth={2.4} />
+              <RotateCcw size={20} color="#FF9500" strokeWidth={2.4} />
             </View>
             <View style={styles.flexOne}>
               <Text style={[styles.reviewTitle, themeStyles?.reviewTitle]}>{ui.reviewList}</Text>
               <Text style={[styles.reviewText, themeStyles?.reviewText]}>{stats.review > 0 ? ui.reviewListCount(stats.review) : ui.reviewListEmpty}</Text>
             </View>
-            <ChevronRight size={18} color={darkMode ? '#94a3b8' : '#8e8e93'} strokeWidth={2.2} />
+            <ChevronRight size={18} color={darkMode ? '#8E8E93' : '#8e8e93'} strokeWidth={2.2} />
           </AnimatedPressable>
         </View>
 
@@ -4386,12 +4381,12 @@ const HomeView = memo(function HomeView({
           testID="home-dictionary-search"
         >
           <View style={[styles.homeDictionaryLauncherIcon, themeStyles?.homeDictionaryLauncherIcon]}>
-            <Search size={20} color={darkMode ? '#bfdbfe' : '#2563eb'} strokeWidth={2.4} />
+            <Search size={20} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.4} />
           </View>
           <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
             {copy.searchPlaceholder}
           </Text>
-          <ChevronRight size={18} color={darkMode ? '#93c5fd' : '#2563eb'} strokeWidth={2.3} />
+          <ChevronRight size={18} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.3} />
         </AnimatedPressable>
 
       </View>
@@ -4448,6 +4443,7 @@ const HomeView = memo(function HomeView({
                 <AnimatedPressable
                   accessibilityLabel={studyMode === 'chinese' ? 'Close dictionary' : '關閉查字'}
                   accessibilityRole="button"
+                  glassTone="icon"
                   onPress={() => closeDictionary()}
                   pressTone="icon"
                   style={[styles.iconButton, themeStyles?.iconButton]}
@@ -4457,7 +4453,7 @@ const HomeView = memo(function HomeView({
               </View>
 
               <View style={[styles.homeDictionaryModalSearch, themeStyles?.homeDictionarySearch]}>
-                <Search size={20} color="#64748b" strokeWidth={2.2} />
+                <Search size={20} color="#6C6C70" strokeWidth={2.2} />
                 <TextInput
                   accessibilityLabel={ui.dictionaryLookup}
                   autoCapitalize="none"
@@ -4466,10 +4462,10 @@ const HomeView = memo(function HomeView({
                   keyboardAppearance={darkMode ? 'dark' : 'light'}
                   onChangeText={setDictionaryQuery}
                   placeholder={copy.searchPlaceholder}
-                  placeholderTextColor="#94a3b8"
+                  placeholderTextColor="#8E8E93"
                   ref={dictionaryInputRef}
                   returnKeyType="search"
-                  selectionColor="#2563eb"
+                  selectionColor="#007AFF"
                   style={[styles.homeDictionaryModalInput, themeStyles?.homeDictionaryInput]}
                   value={dictionaryQuery}
                 />
@@ -4484,7 +4480,7 @@ const HomeView = memo(function HomeView({
                     pressTone="icon"
                     style={styles.homeDictionaryClearButton}
                   >
-                    <X size={17} color="#64748b" strokeWidth={2.5} />
+                    <X size={17} color="#6C6C70" strokeWidth={2.5} />
                   </AnimatedPressable>
                 ) : null}
               </View>
@@ -4498,12 +4494,12 @@ const HomeView = memo(function HomeView({
               >
                 {!normalizedDictionaryQuery ? (
                   <View style={styles.homeDictionaryEmptyState}>
-                    <Search size={28} color="#94a3b8" strokeWidth={2} />
+                    <Search size={28} color="#8E8E93" strokeWidth={2} />
                     <Text style={[styles.homeDictionaryEmptyText, themeStyles?.cardMeta]}>{copy.searchPlaceholder}</Text>
                   </View>
                 ) : dictionaryResults.length === 0 ? (
                   <View style={styles.homeDictionaryEmptyState}>
-                    <Search size={28} color="#94a3b8" strokeWidth={2} />
+                    <Search size={28} color="#8E8E93" strokeWidth={2} />
                     <Text style={[styles.homeDictionaryEmptyText, themeStyles?.cardMeta]}>{ui.noLibraryWords}</Text>
                   </View>
                 ) : (
@@ -4566,7 +4562,7 @@ const HomeDictionaryResultRow = memo(function HomeDictionaryResultRow({
           {formatExamplePrimary(word, studyMode)}
         </Text>
       </View>
-      <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+      <ChevronRight size={18} color="#6C6C70" strokeWidth={2.3} />
     </AnimatedPressable>
   );
 });
@@ -4577,9 +4573,9 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
   const maskId = `study-swipe-${tone}-mask`;
   const radialId = `study-swipe-${tone}-radial`;
   const washId = `study-swipe-${tone}-wash`;
-  const mainColor = review ? '#ef4444' : '#22c55e';
-  const softColor = review ? '#fca5a5' : '#86efac';
-  const deepColor = review ? '#991b1b' : '#047857';
+  const mainColor = review ? '#FF3B30' : '#34C759';
+  const softColor = review ? '#FF6961' : '#6CD97E';
+  const deepColor = review ? '#D70015' : '#248A3D';
   const hotEdge = review ? '0%' : '100%';
   const fadeEdge = review ? '100%' : '0%';
 
@@ -4587,12 +4583,12 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
     <Svg height="100%" preserveAspectRatio="none" style={styles.studySwipeRevealGradient} width="100%">
       <SvgDefs>
         <SvgLinearGradient id={featherId} x1="0%" x2="0%" y1="0%" y2="100%">
-          <SvgStop offset="0%" stopColor="#fff" stopOpacity="0" />
-          <SvgStop offset="11%" stopColor="#fff" stopOpacity="0.82" />
-          <SvgStop offset="22%" stopColor="#fff" stopOpacity="1" />
-          <SvgStop offset="78%" stopColor="#fff" stopOpacity="1" />
-          <SvgStop offset="89%" stopColor="#fff" stopOpacity="0.82" />
-          <SvgStop offset="100%" stopColor="#fff" stopOpacity="0" />
+          <SvgStop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+          <SvgStop offset="11%" stopColor="#FFFFFF" stopOpacity="0.82" />
+          <SvgStop offset="22%" stopColor="#FFFFFF" stopOpacity="1" />
+          <SvgStop offset="78%" stopColor="#FFFFFF" stopOpacity="1" />
+          <SvgStop offset="89%" stopColor="#FFFFFF" stopOpacity="0.82" />
+          <SvgStop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </SvgLinearGradient>
         <SvgMask height="100%" id={maskId} width="100%" x="0" y="0">
           <SvgRect fill={`url(#${featherId})`} height="100%" width="100%" x="0" y="0" />
@@ -5313,13 +5309,13 @@ const StudyView = memo(function StudyView({
               </View>
               <View style={styles.studyCardActions}>
                 <View style={[styles.iconButton, styles.addToSetIconButton, themeStyles?.iconButton]}>
-                  <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
+                  <SquarePlus size={19} color="#007AFF" strokeWidth={2.4} />
                 </View>
                 <View style={[styles.iconButton, themeStyles?.iconButton]}>
                   <Star
                     size={20}
-                    color={deckFavorited ? '#f59e0b' : '#717987'}
-                    fill={deckFavorited ? '#f59e0b' : 'transparent'}
+                    color={deckFavorited ? '#FF9500' : '#6C6C70'}
+                    fill={deckFavorited ? '#FF9500' : 'transparent'}
                   />
                 </View>
               </View>
@@ -5341,7 +5337,7 @@ const StudyView = memo(function StudyView({
             <StudySwipeRevealGradient tone="review" />
           </Reanimated.View>
           <Reanimated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueReview, reviewCueStyle]}>
-            <X size={42} color="#b91c1c" strokeWidth={2.8} />
+            <X size={42} color="#D70015" strokeWidth={2.8} />
             {reviewHintLines.map((line, index) => (
               <Text
                 key={`${line}-${index}`}
@@ -5371,7 +5367,7 @@ const StudyView = memo(function StudyView({
             <StudySwipeRevealGradient tone="known" />
           </Reanimated.View>
           <Reanimated.View style={[styles.studySwipeRevealCue, styles.studySwipeRevealCueKnown, knownCueStyle]}>
-            <Check size={42} color="#166534" strokeWidth={2.8} />
+            <Check size={42} color="#248A3D" strokeWidth={2.8} />
             {knownHintLines.map((line, index) => (
               <Text
                 key={`${line}-${index}`}
@@ -5413,7 +5409,7 @@ const StudyView = memo(function StudyView({
                 style={[styles.iconButton, styles.addToSetIconButton, themeStyles?.iconButton]}
                 testID="study-add-to-set"
               >
-                <SquarePlus size={19} color="#2563eb" strokeWidth={2.4} />
+                <SquarePlus size={19} color="#007AFF" strokeWidth={2.4} />
               </AnimatedPressable>
               <AnimatedPressable
                 accessibilityLabel={favorited ? ui.unfavoriteWord : ui.favoriteWord}
@@ -5422,7 +5418,7 @@ const StudyView = memo(function StudyView({
                 pressTone="icon"
                 style={[styles.iconButton, themeStyles?.iconButton]}
               >
-                <Star size={20} color={favorited ? '#f59e0b' : '#717987'} fill={favorited ? '#f59e0b' : 'transparent'} />
+                <Star size={20} color={favorited ? '#FF9500' : '#6C6C70'} fill={favorited ? '#FF9500' : 'transparent'} />
               </AnimatedPressable>
             </View>
           </View>
@@ -5434,12 +5430,12 @@ const StudyView = memo(function StudyView({
 
       <View style={styles.actionGrid} testID="study-navigation-controls">
         <AnimatedPressable accessibilityRole="button" onPress={onPrevious} pressTone="secondary" style={[styles.secondaryButton, themeStyles?.secondaryButton]}>
-          <ChevronLeft size={18} color={darkMode ? '#e2e8f0' : '#172033'} strokeWidth={2.3} />
+          <ChevronLeft size={18} color={darkMode ? '#F2F2F7' : '#1C1C1E'} strokeWidth={2.3} />
           <Text style={[styles.secondaryButtonText, themeStyles?.secondaryButtonText]}>{ui.previousWord}</Text>
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={styles.confirmButton}>
           <Text style={styles.confirmButtonText}>{ui.nextWord}</Text>
-          <ChevronRight size={18} color="#fff" strokeWidth={2.4} />
+          <ChevronRight size={18} color="#FFFFFF" strokeWidth={2.4} />
         </AnimatedPressable>
       </View>
         </>
@@ -5487,7 +5483,7 @@ function FilterControlPanel({
 }) {
   const summary = filterSummary(activeFilter, activeLevel, activeInitial, showStatus, studyMode, levelOptions, activeSort);
   const themeStyles = useThemeStyles();
-  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#F2F2F7' : '#1C1C1E';
   const ui = modeInterfaceCopy[studyMode];
 
   return (
@@ -5678,7 +5674,7 @@ const QuizView = memo(function QuizView({
   onStart: () => void;
 }) {
   const themeStyles = useThemeStyles();
-  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#F2F2F7' : '#1C1C1E';
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const speakingMode = practiceMode === 'speaking';
@@ -5715,7 +5711,7 @@ const QuizView = memo(function QuizView({
       <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
         <View style={styles.rowBetween}>
           <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.quizPracticeTitle}</Text>
-          <Languages size={20} color="#2563eb" strokeWidth={2.3} />
+          <Languages size={20} color="#007AFF" strokeWidth={2.3} />
         </View>
         <View style={[styles.quizModeSwitch, themeStyles?.quizModeSwitch]}>
           {(['choice', 'speaking'] as const).map((mode) => {
@@ -5755,9 +5751,9 @@ const QuizView = memo(function QuizView({
                 <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.questionBankPrefix} {wordCount} {copy.questionBankUnit}</Text>
               </View>
               {speakingMode ? (
-                <Languages size={22} color="#2563eb" strokeWidth={2.3} />
+                <Languages size={22} color="#007AFF" strokeWidth={2.3} />
               ) : (
-                <Target size={22} color="#2563eb" strokeWidth={2.3} />
+                <Target size={22} color="#007AFF" strokeWidth={2.3} />
               )}
             </View>
             <View style={styles.quizCountRow}>
@@ -5797,9 +5793,9 @@ const QuizView = memo(function QuizView({
           style={[styles.primaryButton, wordCount === 0 && styles.disabledButton]}
         >
           {speakingMode ? (
-            <Languages size={18} color="#fff" strokeWidth={2.3} />
+            <Languages size={18} color="#FFFFFF" strokeWidth={2.3} />
           ) : (
-            <Target size={18} color="#fff" strokeWidth={2.3} />
+            <Target size={18} color="#FFFFFF" strokeWidth={2.3} />
           )}
           <Text style={styles.primaryButtonText}>{speakingMode ? ui.startSpeaking : ui.startQuiz}</Text>
         </AnimatedPressable>
@@ -5815,7 +5811,7 @@ const QuizView = memo(function QuizView({
             {speakingMode ? ui.speakingScore(sessionTotal) : ui.quizScore(correctCount, sessionTotal)}
           </Text>
           <AnimatedPressable accessibilityRole="button" onPress={onRestart} pressTone="primary" style={styles.primaryButton}>
-            <RotateCcw size={18} color="#fff" strokeWidth={2.3} />
+            <RotateCcw size={18} color="#FFFFFF" strokeWidth={2.3} />
             <Text style={styles.primaryButtonText}>{speakingMode ? ui.restartSpeaking : ui.restartQuiz}</Text>
           </AnimatedPressable>
         </Animated.View>
@@ -5841,6 +5837,7 @@ const QuizView = memo(function QuizView({
                 <AnimatedPressable
                   accessibilityLabel={ui.nextQuestion}
                   accessibilityRole="button"
+                  glassTone="secondary"
                   onPress={onNext}
                   pressTone="secondary"
                   style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
@@ -5923,6 +5920,7 @@ const QuizView = memo(function QuizView({
                 <AnimatedPressable
                   accessibilityLabel={ui.nextQuestion}
                   accessibilityRole="button"
+                  glassTone="secondary"
                   onPress={onNext}
                   pressTone="secondary"
                   style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
@@ -5934,7 +5932,7 @@ const QuizView = memo(function QuizView({
             </View>
             <View style={styles.speakingKeywordHeader}>
               <View style={[styles.speakingIconWrap, themeStyles?.speakingIconWrap]}>
-                <Languages size={24} color="#2563eb" strokeWidth={2.4} />
+                <Languages size={24} color="#007AFF" strokeWidth={2.4} />
               </View>
               <View style={styles.flexOne}>
                 <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
@@ -5960,7 +5958,7 @@ const QuizView = memo(function QuizView({
                 pressTone="primary"
                 style={styles.speakingDoneButton}
               >
-                <Check size={18} color="#fff" strokeWidth={2.4} />
+                <Check size={18} color="#FFFFFF" strokeWidth={2.4} />
                 <Text style={styles.speakingDoneButtonText}>{ui.iSpoke}</Text>
               </AnimatedPressable>
               <AnimatedPressable
@@ -6069,7 +6067,7 @@ const LibraryView = memo(function LibraryView({
   const searchInputRef = useRef<TextInput | null>(null);
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
-  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
 
@@ -6127,14 +6125,14 @@ const LibraryView = memo(function LibraryView({
         <View style={styles.libraryTopControlsInset}>
           <Animated.View style={searchMotionStyle}>
             <View style={[styles.searchBox, themeStyles?.searchBox, searchBoxWebTransition, searchFocused && styles.searchBoxFocused, hasQuery && styles.searchBoxActive]}>
-              <Search size={18} color={searchFocused ? '#2563eb' : '#717987'} strokeWidth={2.2} />
+              <Search size={18} color={searchFocused ? '#007AFF' : '#6C6C70'} strokeWidth={2.2} />
               <TextInput
                 ref={searchInputRef}
                 onChangeText={onQueryChange}
                 onBlur={onSearchBlur}
                 onFocus={onSearchFocus}
                 placeholder={copy.searchPlaceholder}
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#8E8E93"
                 style={[styles.searchInput, themeStyles?.searchInput]}
                 value={query}
               />
@@ -6147,7 +6145,7 @@ const LibraryView = memo(function LibraryView({
                   style={[styles.searchClearButton, themeStyles?.searchClearButton]}
                   testID="library-search-clear"
                 >
-                  <X size={16} color="#64748b" strokeWidth={2.5} />
+                  <X size={16} color="#6C6C70" strokeWidth={2.5} />
                 </AnimatedPressable>
               )}
             </View>
@@ -6400,7 +6398,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
           pressTone="icon"
           style={[styles.iconButton, styles.addToSetIconButton]}
         >
-          <SquarePlus size={18} color="#2563eb" strokeWidth={2.4} />
+          <SquarePlus size={18} color="#007AFF" strokeWidth={2.4} />
         </AnimatedPressable>
         <AnimatedPressable
           accessibilityLabel={wordProgress?.favorite ? ui.unfavoriteWordName(primaryWord) : ui.favoriteWordName(primaryWord)}
@@ -6411,8 +6409,8 @@ const LibraryWordRow = memo(function LibraryWordRow({
         >
           <Star
             size={18}
-            color={wordProgress?.favorite ? '#f59e0b' : '#717987'}
-            fill={wordProgress?.favorite ? '#f59e0b' : 'transparent'}
+            color={wordProgress?.favorite ? '#FF9500' : '#6C6C70'}
+            fill={wordProgress?.favorite ? '#FF9500' : 'transparent'}
           />
         </AnimatedPressable>
         <Text style={[styles.statusText, themeStyles?.statusText]}>{statusLabel(wordProgress?.status, studyMode)}</Text>
@@ -6441,7 +6439,7 @@ export function LibraryWordDetailView({
   const wordProgress = progress.words[word.id];
   const favorite = Boolean(wordProgress?.favorite);
   const themeStyles = useThemeStyles();
-  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#F2F2F7' : '#1C1C1E';
   const ui = modeInterfaceCopy[studyMode];
 
   return (
@@ -6475,7 +6473,7 @@ export function LibraryWordDetailView({
               pressTone="icon"
               style={styles.libraryDetailFavorite}
             >
-              <SquarePlus size={21} color="#2563eb" strokeWidth={2.4} />
+              <SquarePlus size={21} color="#007AFF" strokeWidth={2.4} />
             </AnimatedPressable>
             <AnimatedPressable
               accessibilityLabel={
@@ -6488,7 +6486,7 @@ export function LibraryWordDetailView({
               pressTone="icon"
               style={styles.libraryDetailFavorite}
             >
-              <Star size={21} color={favorite ? '#f59e0b' : '#717987'} fill={favorite ? '#f59e0b' : 'transparent'} />
+              <Star size={21} color={favorite ? '#FF9500' : '#6C6C70'} fill={favorite ? '#FF9500' : 'transparent'} />
             </AnimatedPressable>
           </View>
         </View>
@@ -6571,7 +6569,9 @@ const ProfileView = memo(function ProfileView({
   const themeStyles = useThemeStyles();
   const signedIn = Boolean(account.userId);
   const syncError = account.status === 'error';
-  const bodyIconColor = themeMode === 'dark' ? '#e2e8f0' : '#172033';
+  const palette = themeMode === 'dark' ? iosVisual.dark : iosVisual.light;
+  const bodyIconColor = palette.label;
+  const appleButtonForeground = themeMode === 'dark' ? '#000000' : '#FFFFFF';
   const ui = modeInterfaceCopy[studyMode];
   const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;
   const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;
@@ -6585,7 +6585,7 @@ const ProfileView = memo(function ProfileView({
         <Text style={[styles.profileTitle, themeStyles?.profileTitle]}>{signedIn ? account.userEmail : ui.profileIdle}</Text>
         <Text style={[styles.profileText, themeStyles?.profileText]}>{ui.profileProgress(dailyPercent, stats.mastered)}</Text>
         <View style={[styles.syncPill, syncError && styles.syncPillError]}>
-          <Cloud size={15} color={syncError ? '#b91c1c' : '#166534'} strokeWidth={2.3} />
+          <Cloud size={15} color={syncError ? palette.red : palette.green} strokeWidth={2.3} />
           <Text style={[styles.syncText, syncError && styles.syncTextError]}>{accountMessageForMode(account.message, studyMode)}</Text>
         </View>
       </View>
@@ -6628,39 +6628,39 @@ const ProfileView = memo(function ProfileView({
                 disabled={!account.configured || account.busy}
                 onPress={onAppleSignIn}
                 pressTone="primary"
-                style={[styles.appleButton, (!account.configured || account.busy) && styles.disabledButton]}
+                style={[styles.appleButton, themeStyles?.appleButton, (!account.configured || account.busy) && styles.disabledButton]}
               >
-                <View style={styles.appleIconMark}>
-                  <Smartphone size={18} color="#fff" strokeWidth={2.4} />
+                <View style={[styles.appleIconMark, themeStyles?.appleIconMark]}>
+                  <Smartphone size={18} color={appleButtonForeground} strokeWidth={2.4} />
                 </View>
                 <View style={styles.flexOne}>
-                  <Text style={styles.appleButtonTitle}>{ui.appleSignIn}</Text>
-                  <Text style={styles.appleButtonText}>{ui.appleSignInHint}</Text>
+                  <Text style={[styles.appleButtonTitle, themeStyles?.appleButtonTitle]}>{ui.appleSignIn}</Text>
+                  <Text style={[styles.appleButtonText, themeStyles?.appleButtonText]}>{ui.appleSignInHint}</Text>
                 </View>
-                <ChevronRight size={18} color="#fff" strokeWidth={2.4} />
+                <ChevronRight size={18} color={appleButtonForeground} strokeWidth={2.4} />
               </AnimatedPressable>
             )}
             <Text style={[styles.emailFallbackLabel, themeStyles?.emailFallbackLabel]}>{ui.emailFallback}</Text>
             <View style={[styles.inputBox, themeStyles?.inputBox]}>
-              <Mail size={17} color="#717987" strokeWidth={2.2} />
+              <Mail size={17} color="#6C6C70" strokeWidth={2.2} />
               <TextInput
                 autoCapitalize="none"
                 editable={account.configured && !account.busy}
                 keyboardType="email-address"
                 onChangeText={onEmailChange}
                 placeholder="Email"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#8E8E93"
                 style={[styles.accountInput, themeStyles?.accountInput]}
                 value={account.email}
               />
             </View>
             <View style={[styles.inputBox, themeStyles?.inputBox]}>
-              <Lock size={17} color="#717987" strokeWidth={2.2} />
+              <Lock size={17} color="#6C6C70" strokeWidth={2.2} />
               <TextInput
                 editable={account.configured && !account.busy}
                 onChangeText={onPasswordChange}
                 placeholder={ui.passwordPlaceholder}
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#8E8E93"
                 secureTextEntry
                 style={[styles.accountInput, themeStyles?.accountInput]}
                 value={account.password}
@@ -6674,7 +6674,7 @@ const ProfileView = memo(function ProfileView({
                 pressTone="primary"
                 style={[styles.accountButton, (!account.configured || account.busy) && styles.disabledButton]}
               >
-                <LogIn size={17} color="#fff" strokeWidth={2.4} />
+                <LogIn size={17} color="#FFFFFF" strokeWidth={2.4} />
                 <Text style={styles.accountButtonText}>{ui.signIn}</Text>
               </AnimatedPressable>
               <AnimatedPressable
@@ -6698,7 +6698,7 @@ const ProfileView = memo(function ProfileView({
             pressTone="secondary"
             style={[styles.signOutButton, account.busy && styles.disabledButton]}
           >
-            <LogOut size={17} color="#9a3412" strokeWidth={2.4} />
+            <LogOut size={17} color={palette.red} strokeWidth={2.4} />
             <Text style={styles.signOutButtonText}>{ui.signOut}</Text>
           </AnimatedPressable>
         )}
@@ -6724,7 +6724,7 @@ const ProfileView = memo(function ProfileView({
           <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.settings}</Text>
           <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.settingsSummary}</Text>
         </View>
-        <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+        <ChevronRight size={18} color="#6C6C70" strokeWidth={2.3} />
       </AnimatedPressable>
     </View>
   );
@@ -6751,7 +6751,7 @@ function ProfileLearningExperiencePanel({
           <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.learningExperience}</Text>
           <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.todayComplete(dailyPercent)}</Text>
         </View>
-        <BookOpen size={21} color="#2563eb" strokeWidth={2.3} />
+        <BookOpen size={21} color="#007AFF" strokeWidth={2.3} />
       </View>
       <View style={styles.learningMetricGrid}>
         <View style={[styles.learningMetric, themeStyles?.learningMetric]}>
@@ -6773,7 +6773,7 @@ function ProfileLearningExperiencePanel({
 
 function ProfileTutorialPanel({ onShowInstallGuide, studyMode }: { onShowInstallGuide: () => void; studyMode: StudyMode }) {
   const themeStyles = useThemeStyles();
-  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#F2F2F7' : '#1C1C1E';
   const ui = modeInterfaceCopy[studyMode];
 
   return (
@@ -6792,7 +6792,7 @@ function ProfileTutorialPanel({ onShowInstallGuide, studyMode }: { onShowInstall
         <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.tutorial}</Text>
         <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.replayTutorial}</Text>
       </View>
-      <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+      <ChevronRight size={18} color="#6C6C70" strokeWidth={2.3} />
     </AnimatedPressable>
   );
 }
@@ -6850,7 +6850,7 @@ export function CustomSetPickerOverlay({
 }) {
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
-  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const ui = modeInterfaceCopy[studyMode];
   const overlayAnim = useRef(new Animated.Value(0)).current;
 
@@ -6893,7 +6893,7 @@ export function CustomSetPickerOverlay({
             </Text>
             <Text style={[styles.customSetPickerText, themeStyles?.customSetPickerText]}>{ui.chooseCustomSet}</Text>
           </View>
-          <AnimatedPressable accessibilityRole="button" onPress={onClose} pressTone="icon" style={styles.iconButton}>
+          <AnimatedPressable accessibilityRole="button" glassTone="icon" onPress={onClose} pressTone="icon" style={styles.iconButton}>
             <X size={18} color={bodyIconColor} strokeWidth={2.5} />
           </AnimatedPressable>
         </View>
@@ -6903,7 +6903,7 @@ export function CustomSetPickerOverlay({
             <TextInput
               onChangeText={onNewSetNameChange}
               placeholder={ui.newSetPlaceholder}
-              placeholderTextColor="#9ca3af"
+              placeholderTextColor="#8E8E93"
               style={[styles.accountInput, themeStyles?.accountInput]}
               value={newSetName}
             />
@@ -6914,7 +6914,7 @@ export function CustomSetPickerOverlay({
             pressTone="primary"
             style={styles.customSetCreateButton}
           >
-            <SquarePlus size={16} color="#fff" strokeWidth={2.4} />
+            <SquarePlus size={16} color="#FFFFFF" strokeWidth={2.4} />
           </AnimatedPressable>
         </View>
 
@@ -6997,7 +6997,7 @@ export function ProfileCustomSetsView({
 
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
-  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const ui = modeInterfaceCopy[studyMode];
   const [customSetPanel, setCustomSetPanel] = useState<CustomSetPanel>('list');
   const [renderedCustomSetPanel, setRenderedCustomSetPanel] = useState<CustomSetPanel>('list');
@@ -7117,20 +7117,20 @@ export function ProfileCustomSetsView({
                 <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.setLibrary}</Text>
                 <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.setLibrarySummary}</Text>
               </View>
-              <Library size={21} color="#2563eb" strokeWidth={2.3} />
+              <Library size={21} color="#007AFF" strokeWidth={2.3} />
             </View>
             <View style={styles.customSetCreateRow}>
               <View style={[styles.inputBox, themeStyles?.inputBox, styles.customSetNameInputBox]}>
                 <TextInput
                   onChangeText={onNewSetNameChange}
                   placeholder={ui.newSetPlaceholder}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={newSetName}
                 />
               </View>
               <AnimatedPressable accessibilityRole="button" onPress={onCreateCustomSet} pressTone="primary" style={styles.customSetWideCreateButton}>
-                <SquarePlus size={16} color="#fff" strokeWidth={2.4} />
+                <SquarePlus size={16} color="#FFFFFF" strokeWidth={2.4} />
                 <Text style={styles.customSetWideCreateText}>{ui.createSet}</Text>
               </AnimatedPressable>
             </View>
@@ -7182,7 +7182,7 @@ export function ProfileCustomSetsView({
                           <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>{ui.customSetCount(set.wordIds.length)}</Text>
                         </View>
                       </View>
-                      <Check size={17} color={selected ? '#2563eb' : 'transparent'} strokeWidth={2.5} />
+                      <Check size={17} color={selected ? '#007AFF' : 'transparent'} strokeWidth={2.5} />
                     </AnimatedPressable>
                     <AnimatedPressable
                       accessibilityLabel={`${ui.openSetSettings} ${set.name}`}
@@ -7201,7 +7201,7 @@ export function ProfileCustomSetsView({
                       <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
                     </AnimatedPressable>
                     <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(set.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
-                      <Target size={16} color="#fff" strokeWidth={2.3} />
+                      <Target size={16} color="#FFFFFF" strokeWidth={2.3} />
                       <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
                     </AnimatedPressable>
                   </View>
@@ -7220,7 +7220,7 @@ export function ProfileCustomSetsView({
                 <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{selectedSet.name}</Text>
                 <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.customSetCount(selectedSet.wordIds.length)}</Text>
               </View>
-              <Settings size={21} color="#2563eb" strokeWidth={2.3} />
+              <Settings size={21} color="#007AFF" strokeWidth={2.3} />
             </View>
             <View style={styles.customSetDetailActions} testID="custom-set-detail-actions">
               <AnimatedPressable accessibilityRole="button" onPress={() => onStartStudySet(selectedSet.id)} pressTone="secondary" style={[styles.customSetActionButton, themeStyles?.customSetActionButton]}>
@@ -7228,7 +7228,7 @@ export function ProfileCustomSetsView({
                 <Text style={[styles.customSetActionText, themeStyles?.customSetActionText]}>{ui.startSetStudy}</Text>
               </AnimatedPressable>
               <AnimatedPressable accessibilityRole="button" onPress={() => onStartQuizSet(selectedSet.id)} pressTone="primary" style={styles.customSetPrimaryActionButton}>
-                <Target size={16} color="#fff" strokeWidth={2.3} />
+                <Target size={16} color="#FFFFFF" strokeWidth={2.3} />
                 <Text style={styles.customSetPrimaryActionText}>{ui.startSetQuiz}</Text>
               </AnimatedPressable>
               <AnimatedPressable
@@ -7241,7 +7241,7 @@ export function ProfileCustomSetsView({
                 style={[styles.customSetDeleteButton, themeStyles?.customSetActionButton]}
                 testID="custom-set-delete-button"
               >
-                <Trash2 size={15} color="#b91c1c" strokeWidth={2.3} />
+                <Trash2 size={15} color="#D70015" strokeWidth={2.3} />
                 <Text style={styles.customSetDeleteText}>{ui.deleteSet}</Text>
               </AnimatedPressable>
             </View>
@@ -7254,7 +7254,7 @@ export function ProfileCustomSetsView({
                 <TextInput
                   onChangeText={setEditingSetName}
                   placeholder={ui.editSetName}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   testID="custom-set-rename-input"
                   value={editingSetId === selectedSet.id ? editingSetName : selectedSet.name}
@@ -7293,7 +7293,7 @@ export function ProfileCustomSetsView({
                     style={styles.customSetRemoveWordButton}
                     testID="custom-set-remove-word"
                   >
-                    <X size={15} color="#b91c1c" strokeWidth={2.5} />
+                    <X size={15} color="#D70015" strokeWidth={2.5} />
                     <Text style={styles.customSetRemoveWordText}>{ui.removeFromSet}</Text>
                   </AnimatedPressable>
                 </View>
@@ -7310,7 +7310,7 @@ export function ProfileCustomSetsView({
                   autoCapitalize="none"
                   onChangeText={(value) => onManualCustomWordChange('word', value)}
                   placeholder={ui.customWordWordPlaceholder}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={manualCustomWord.word}
                 />
@@ -7319,7 +7319,7 @@ export function ProfileCustomSetsView({
                 <TextInput
                   onChangeText={(value) => onManualCustomWordChange('meaningZh', value)}
                   placeholder={ui.customWordMeaningPlaceholder}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={manualCustomWord.meaningZh}
                 />
@@ -7328,7 +7328,7 @@ export function ProfileCustomSetsView({
                 <TextInput
                   onChangeText={(value) => onManualCustomWordChange('pronunciation', value)}
                   placeholder={ui.customWordPronunciationPlaceholder}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={manualCustomWord.pronunciation}
                 />
@@ -7337,7 +7337,7 @@ export function ProfileCustomSetsView({
                 <TextInput
                   onChangeText={(value) => onManualCustomWordChange('partOfSpeech', value)}
                   placeholder={ui.customWordPartPlaceholder}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={manualCustomWord.partOfSpeech}
                 />
@@ -7346,7 +7346,7 @@ export function ProfileCustomSetsView({
                 <TextInput
                   onChangeText={(value) => onManualCustomWordChange('example', value)}
                   placeholder={ui.customWordExamplePlaceholder}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={manualCustomWord.example}
                 />
@@ -7355,7 +7355,7 @@ export function ProfileCustomSetsView({
                 <TextInput
                   onChangeText={(value) => onManualCustomWordChange('exampleZh', value)}
                   placeholder={ui.customWordExampleZhPlaceholder}
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={manualCustomWord.exampleZh}
                 />
@@ -7368,7 +7368,7 @@ export function ProfileCustomSetsView({
                 pressTone="primary"
                 style={styles.developerPrimaryButton}
               >
-                <SquarePlus size={16} color="#fff" strokeWidth={2.3} />
+                <SquarePlus size={16} color="#FFFFFF" strokeWidth={2.3} />
                 <Text style={styles.developerPrimaryText}>{ui.addManualWord}</Text>
               </AnimatedPressable>
               <AnimatedPressable
@@ -7425,10 +7425,10 @@ export function ProfileSettingsView({
 }) {
   const themeStyles = useThemeStyles();
   const darkMode = themeMode === 'dark';
-  const bodyIconColor = darkMode ? '#e2e8f0' : '#172033';
+  const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const nextThemeMode = darkMode ? 'light' : 'dark';
   const toggleThemeMode = () => onThemeModeChange(nextThemeMode);
-  const dangerIconColor = darkMode ? '#fca5a5' : '#b91c1c';
+  const dangerIconColor = darkMode ? '#FF6961' : '#D70015';
   const ui = modeInterfaceCopy[studyMode];
 
   return (
@@ -7444,7 +7444,7 @@ export function ProfileSettingsView({
             <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.appSettings}</Text>
             <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.displayTools}</Text>
           </View>
-          <Settings size={21} color="#2563eb" strokeWidth={2.3} />
+          <Settings size={21} color="#007AFF" strokeWidth={2.3} />
         </View>
 
         <AnimatedPressable
@@ -7456,7 +7456,7 @@ export function ProfileSettingsView({
           style={[styles.settingOptionRow, themeStyles?.settingOptionRow]}
         >
           <View style={[styles.settingOptionIcon, themeStyles?.settingsEntryIcon]}>
-            {darkMode ? <Sun size={19} color="#fbbf24" strokeWidth={2.3} /> : <Moon size={19} color="#2563eb" strokeWidth={2.3} />}
+            {darkMode ? <Sun size={19} color="#FFD60A" strokeWidth={2.3} /> : <Moon size={19} color="#007AFF" strokeWidth={2.3} />}
           </View>
           <View style={styles.flexOne}>
             <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.darkMode}</Text>
@@ -7479,7 +7479,7 @@ export function ProfileSettingsView({
             <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.legalSupport}</Text>
             <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.legalSupportSummary}</Text>
           </View>
-          <Cloud size={21} color="#2563eb" strokeWidth={2.3} />
+          <Cloud size={21} color="#007AFF" strokeWidth={2.3} />
         </View>
 
         <AnimatedPressable
@@ -7495,7 +7495,7 @@ export function ProfileSettingsView({
             <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.privacyPolicy}</Text>
             <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.privacyPolicyText}</Text>
           </View>
-          <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+          <ChevronRight size={18} color="#6C6C70" strokeWidth={2.3} />
         </AnimatedPressable>
 
         <AnimatedPressable
@@ -7511,7 +7511,7 @@ export function ProfileSettingsView({
             <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.supportPage}</Text>
             <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.supportPageText}</Text>
           </View>
-          <ChevronRight size={18} color="#64748b" strokeWidth={2.3} />
+          <ChevronRight size={18} color="#6C6C70" strokeWidth={2.3} />
         </AnimatedPressable>
 
         <AnimatedPressable
@@ -7561,7 +7561,7 @@ function DeveloperVocabularyPanel({
   onImportVocabulary: () => void;
 }) {
   const themeStyles = useThemeStyles();
-  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#e2e8f0' : '#172033';
+  const bodyIconColor = useContext(ThemeContext) === 'dark' ? '#F2F2F7' : '#1C1C1E';
   const ui = modeInterfaceCopy[studyMode];
 
   return (
@@ -7571,7 +7571,7 @@ function DeveloperVocabularyPanel({
           <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.developerPanel}</Text>
           <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{developerVocabulary ? ui.developerEnabled : ui.developerBuiltin}</Text>
         </View>
-        <Database size={22} color="#2563eb" strokeWidth={2.3} />
+        <Database size={22} color="#007AFF" strokeWidth={2.3} />
       </View>
 
       <Text style={[styles.developerText, themeStyles?.developerText]}>{ui.developerIntro}</Text>
@@ -7596,7 +7596,7 @@ function DeveloperVocabularyPanel({
           <Text style={[styles.developerActionText, themeStyles?.developerActionText]}>{ui.exportCsv}</Text>
         </AnimatedPressable>
         <AnimatedPressable accessibilityRole="button" onPress={onImportVocabulary} pressTone="primary" style={styles.developerPrimaryButton}>
-          <Upload size={16} color="#fff" strokeWidth={2.3} />
+          <Upload size={16} color="#FFFFFF" strokeWidth={2.3} />
           <Text style={styles.developerPrimaryText}>{ui.importData}</Text>
         </AnimatedPressable>
       </View>
@@ -7608,7 +7608,7 @@ function DeveloperVocabularyPanel({
         pressTone="secondary"
         style={[styles.developerClearButton, !developerVocabulary && styles.disabledButton]}
       >
-        <Trash2 size={16} color="#9a3412" strokeWidth={2.3} />
+        <Trash2 size={16} color="#A94400" strokeWidth={2.3} />
         <Text style={styles.developerClearText}>{ui.clearPreview}</Text>
       </AnimatedPressable>
     </View>
@@ -7776,7 +7776,7 @@ const styles = StyleSheet.create({
   },
   webIosPreviewSafeArea: {
     alignItems: 'center',
-    backgroundColor: '#0f172a',
+    backgroundColor: '#000000',
     justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 18,
@@ -7790,13 +7790,13 @@ const styles = StyleSheet.create({
     padding: 28,
   },
   appStorageBootTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 28,
     fontWeight: '700',
     marginTop: 6,
   },
   appStorageBootText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 15,
     fontWeight: '500',
     textAlign: 'center',
@@ -7809,14 +7809,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   webIosPreviewAppShell: {
-    borderColor: '#1f2937',
+    borderColor: '#3A3A3C',
     borderRadius: 30,
     borderCurve: 'continuous',
     borderWidth: 1,
     maxHeight: 852,
     maxWidth: 393,
     overflow: 'hidden',
-    shadowColor: '#000',
+    shadowColor: '#000000',
     shadowOffset: { height: 20, width: 0 },
     shadowOpacity: 0.26,
     shadowRadius: 34,
@@ -7841,20 +7841,20 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   brand: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 34,
     fontWeight: '700',
     lineHeight: 41,
   },
   headerSubtext: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     marginTop: 3,
   },
   levelPill: {
     alignItems: 'center',
-    backgroundColor: '#ecfdf3',
-    borderColor: '#bbf7d0',
+    backgroundColor: '#EAF9EE',
+    borderColor: '#B7E9C2',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -7863,14 +7863,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   levelText: {
-    color: '#166534',
+    color: '#248A3D',
     fontSize: 13,
     fontWeight: '500',
   },
   previewModePill: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -7879,13 +7879,13 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   previewModeText: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '600',
   },
   updateRequiredOverlay: {
     alignItems: 'center',
-    backgroundColor: 'rgba(15, 23, 42, 0.78)',
+    backgroundColor: 'rgba(28, 28, 30, 0.78)',
     bottom: 0,
     justifyContent: 'center',
     left: 0,
@@ -7897,15 +7897,15 @@ const styles = StyleSheet.create({
   },
   updateRequiredCard: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#B9DCFF',
     borderRadius: 18,
     borderCurve: 'continuous',
     borderWidth: 1,
     maxWidth: 420,
     paddingHorizontal: 22,
     paddingVertical: 24,
-    shadowColor: '#172033',
+    shadowColor: '#1C1C1E',
     shadowOffset: { height: 18, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 30,
@@ -7913,8 +7913,8 @@ const styles = StyleSheet.create({
   },
   updateRequiredIcon: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -7923,14 +7923,14 @@ const styles = StyleSheet.create({
     width: 58,
   },
   updateRequiredTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
     marginTop: 16,
     textAlign: 'center',
   },
   updateRequiredText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 23,
@@ -7938,14 +7938,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   updateRequiredCountdown: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 15,
     fontWeight: '700',
     marginTop: 16,
   },
   updateRequiredButton: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flexDirection: 'row',
@@ -7957,7 +7957,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   updateRequiredButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
   },
@@ -8012,22 +8012,22 @@ const styles = StyleSheet.create({
   },
   launchIcon: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#007AFF',
+    borderColor: '#B9DCFF',
     borderRadius: 20,
     borderCurve: 'continuous',
     borderWidth: 1,
     height: 82,
     justifyContent: 'center',
     overflow: 'hidden',
-    shadowColor: '#172033',
+    shadowColor: '#1C1C1E',
     shadowOffset: { height: 14, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 24,
     width: 82,
   },
   launchDot: {
-    backgroundColor: '#f97316',
+    backgroundColor: '#FF9500',
     borderRadius: 99,
     height: 18,
     position: 'absolute',
@@ -8036,24 +8036,24 @@ const styles = StyleSheet.create({
     width: 18,
   },
   launchIconText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 30,
     fontWeight: '700',
   },
   launchTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
     marginTop: 14,
   },
   launchText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 15,
     fontWeight: '500',
     marginTop: 4,
   },
   launchBar: {
-    backgroundColor: '#dbeafe',
+    backgroundColor: '#D6E9FF',
     borderRadius: 99,
     height: 5,
     marginTop: 18,
@@ -8061,7 +8061,7 @@ const styles = StyleSheet.create({
     width: 112,
   },
   launchBarFill: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 99,
     height: 5,
     width: '68%',
@@ -8092,8 +8092,8 @@ const styles = StyleSheet.create({
   },
   installGuideLogo: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#007AFF',
+    borderColor: '#B9DCFF',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8103,7 +8103,7 @@ const styles = StyleSheet.create({
     width: 48,
   },
   installGuideLogoDot: {
-    backgroundColor: '#f97316',
+    backgroundColor: '#FF9500',
     borderRadius: 99,
     height: 11,
     position: 'absolute',
@@ -8112,14 +8112,14 @@ const styles = StyleSheet.create({
     width: 11,
   },
   installGuideLogoText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 20,
     fontWeight: '700',
   },
   installGuideClose: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E5EA',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8129,35 +8129,35 @@ const styles = StyleSheet.create({
   },
   installGuideCard: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 18,
     borderCurve: 'continuous',
     borderWidth: 1,
     gap: 12,
     padding: 20,
-    shadowColor: '#172033',
+    shadowColor: '#1C1C1E',
     shadowOffset: { height: 12, width: 0 },
     shadowOpacity: 0.08,
     shadowRadius: 22,
   },
   installGuideStepPill: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   installGuideStepText: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '600',
   },
   installGuideIconWrap: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 20,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8168,7 +8168,7 @@ const styles = StyleSheet.create({
     width: 108,
   },
   installGuideIconGlow: {
-    backgroundColor: '#dbeafe',
+    backgroundColor: '#D6E9FF',
     borderRadius: 99,
     height: 84,
     position: 'absolute',
@@ -8185,7 +8185,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   installGuideTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 28,
     fontWeight: '700',
     lineHeight: 35,
@@ -8193,15 +8193,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   installGuideText: {
-    color: '#5f6675',
+    color: '#6C6C70',
     fontSize: 15,
     lineHeight: 23,
     textAlign: 'center',
   },
   installGuidePreview: {
     alignSelf: 'stretch',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
+    borderColor: '#E5E5EA',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8210,7 +8210,7 @@ const styles = StyleSheet.create({
   },
   installGuideBrowserBar: {
     alignSelf: 'center',
-    backgroundColor: '#cbd5e1',
+    backgroundColor: '#D1D1D6',
     borderRadius: 99,
     height: 5,
     marginBottom: 12,
@@ -8223,8 +8223,8 @@ const styles = StyleSheet.create({
   },
   installGuideMiniStep: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E5EA',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8233,23 +8233,23 @@ const styles = StyleSheet.create({
     width: 34,
   },
   installGuideMiniStepActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
   },
   installGuideStepProgress: {
-    shadowColor: '#2563eb',
+    shadowColor: '#007AFF',
     shadowOffset: { height: 3, width: 0 },
     shadowOpacity: 0.16,
     shadowRadius: 7,
     transform: [{ scale: 1.08 }],
   },
   installGuideMiniText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 13,
     fontWeight: '600',
   },
   installGuideMiniTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
   installGuideDots: {
     alignItems: 'center',
@@ -8258,13 +8258,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   installGuideDot: {
-    backgroundColor: '#cbd5e1',
+    backgroundColor: '#D1D1D6',
     borderRadius: 99,
     height: 7,
     width: 7,
   },
   installGuideDotActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     width: 22,
   },
   installGuideActions: {
@@ -8273,8 +8273,8 @@ const styles = StyleSheet.create({
   },
   installGuideSecondary: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8284,14 +8284,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   installGuideSecondaryText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
     textAlign: 'center',
   },
   installGuidePrimary: {
     alignItems: 'center',
-    backgroundColor: '#172033',
+    backgroundColor: '#1C1C1E',
     borderRadius: 12,
     borderCurve: 'continuous',
     flex: 1,
@@ -8302,13 +8302,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   installGuidePrimaryText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
   },
   modeSwitchBackdrop: {
     alignItems: 'center',
-    backgroundColor: '#dbeafe',
+    backgroundColor: '#D6E9FF',
     bottom: 0,
     justifyContent: 'center',
     left: 0,
@@ -8320,8 +8320,8 @@ const styles = StyleSheet.create({
   },
   modeSwitchPanel: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 18,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8329,23 +8329,23 @@ const styles = StyleSheet.create({
     gap: 8,
     maxWidth: 420,
     padding: 24,
-    shadowColor: '#172033',
+    shadowColor: '#1C1C1E',
     shadowOffset: { height: 10, width: 0 },
     shadowOpacity: 0.16,
     shadowRadius: 22,
     width: '100%',
   },
   modeSwitchPanelChinese: {
-    backgroundColor: '#ecfdf5',
-    borderColor: '#99f6e4',
+    backgroundColor: '#F0EFFF',
+    borderColor: '#C9C7FF',
   },
   modeSwitchOverlayChinese: {
-    backgroundColor: '#ecfdf5',
+    backgroundColor: '#F0EFFF',
   },
   modeSwitchOverlayIcon: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#B9DCFF',
     borderRadius: 20,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8354,15 +8354,15 @@ const styles = StyleSheet.create({
     width: 70,
   },
   modeSwitchOverlayIconChinese: {
-    borderColor: '#99f6e4',
+    borderColor: '#C9C7FF',
   },
   modeSwitchOverlayTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
   },
   modeSwitchOverlayText: {
-    color: '#475569',
+    color: '#6C6C70',
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
@@ -8374,30 +8374,26 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   hero: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
     gap: 14,
-    padding: 18,
-    shadowColor: '#0f172a',
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    padding: 16,
   },
   heroCopy: {
     flex: 1,
   },
   eyebrow: {
-    color: '#d97706',
+    color: '#6C6C70',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: 8,
   },
   heroTitle: {
-    color: '#172033',
-    fontSize: 28,
+    color: '#1C1C1E',
+    fontSize: 30,
     fontWeight: '700',
-    lineHeight: 33,
+    lineHeight: 36,
   },
   modeSwitchButton: {
     alignItems: 'center',
@@ -8407,12 +8403,12 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   modeSwitchButtonChinese: {
-    backgroundColor: '#ecfdf5',
-    borderColor: '#99f6e4',
+    backgroundColor: '#F0EFFF',
+    borderColor: '#C9C7FF',
   },
   modeSwitchIcon: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#EAF4FF',
     borderRadius: 11,
     borderCurve: 'continuous',
     height: 44,
@@ -8420,23 +8416,23 @@ const styles = StyleSheet.create({
     width: 44,
   },
   modeSwitchIconChinese: {
-    backgroundColor: '#ecfdf5',
+    backgroundColor: '#F0EFFF',
   },
   modeSwitchTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 17,
     fontWeight: '700',
   },
   modeSwitchText: {
-    color: '#5f6675',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 17,
     marginTop: 3,
   },
   progressCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E5EA',
     borderRadius: 18,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8455,29 +8451,29 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   sectionTitle: {
-    color: '#172033',
-    fontSize: 15,
-    fontWeight: '500',
+    color: '#1C1C1E',
+    fontSize: 17,
+    fontWeight: '600',
   },
   cardMeta: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     fontWeight: '500',
   },
   progressTrack: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#E5E5EA',
     borderRadius: 999,
-    height: 9,
+    height: 6,
     overflow: 'hidden',
   },
   progressFill: {
-    backgroundColor: '#f97316',
+    backgroundColor: '#007AFF',
     borderRadius: 999,
     height: '100%',
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flexDirection: 'row',
@@ -8491,14 +8487,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   primaryButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '600',
   },
   accountShortcut: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
+    borderColor: '#E5E5EA',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8509,17 +8505,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   accountShortcutText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '600',
   },
   homeDictionaryStandalone: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
-    borderRadius: 16,
+    backgroundColor: '#EAF4FF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
     minHeight: 60,
@@ -8527,7 +8521,7 @@ const styles = StyleSheet.create({
   },
   homeDictionaryLauncherIcon: {
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 11,
     borderCurve: 'continuous',
     height: 42,
@@ -8536,11 +8530,9 @@ const styles = StyleSheet.create({
   },
   homeDictionarySearch: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
     minHeight: 58,
@@ -8548,14 +8540,14 @@ const styles = StyleSheet.create({
     paddingRight: 7,
   },
   homeDictionaryInput: {
-    color: '#172033',
+    color: '#1C1C1E',
     flex: 1,
     fontSize: 15,
     minHeight: 48,
     paddingVertical: 0,
   },
   homeDictionaryLauncherText: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     flex: 1,
     fontSize: 15,
     fontWeight: '600',
@@ -8564,10 +8556,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   homeDictionaryModalRootNative: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
   },
   homeDictionaryBackdrop: {
-    backgroundColor: 'rgba(15, 23, 42, 0.52)',
+    backgroundColor: 'rgba(28, 28, 30, 0.52)',
     bottom: 0,
     left: 0,
     position: 'absolute',
@@ -8580,8 +8572,8 @@ const styles = StyleSheet.create({
   },
   homeDictionaryModalSheet: {
     alignSelf: 'center',
-    backgroundColor: '#ffffff',
-    borderColor: '#dbe3ee',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     borderWidth: 1,
@@ -8589,7 +8581,7 @@ const styles = StyleSheet.create({
     height: '82%',
     maxWidth: 640,
     overflow: 'hidden',
-    shadowColor: '#0f172a',
+    shadowColor: '#000000',
     shadowOffset: { height: -10, width: 0 },
     shadowOpacity: 0.18,
     shadowRadius: 26,
@@ -8607,7 +8599,7 @@ const styles = StyleSheet.create({
   },
   homeDictionaryModalHandle: {
     alignSelf: 'center',
-    backgroundColor: '#cbd5e1',
+    backgroundColor: '#D1D1D6',
     borderRadius: 999,
     height: 4,
     marginBottom: 8,
@@ -8622,20 +8614,20 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   homeDictionaryModalTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 20,
     fontWeight: '700',
   },
   homeDictionaryModalMeta: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
     marginTop: 3,
   },
   homeDictionaryModalSearch: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#93c5fd',
+    backgroundColor: '#F2F2F7',
+    borderColor: '#0A84FF',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -8647,7 +8639,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   homeDictionaryModalInput: {
-    color: '#172033',
+    color: '#1C1C1E',
     flex: 1,
     fontSize: 17,
     minHeight: 50,
@@ -8677,7 +8669,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   homeDictionaryEmptyText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 21,
@@ -8685,7 +8677,7 @@ const styles = StyleSheet.create({
   },
   homeDictionaryResultRow: {
     alignItems: 'center',
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#E5E5EA',
     borderBottomWidth: 1,
     flexDirection: 'row',
     gap: 12,
@@ -8699,33 +8691,33 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   homeDictionaryResultTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     flexShrink: 1,
     fontSize: 20,
     fontWeight: '700',
   },
   homeDictionaryResultPinyin: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 13,
     fontWeight: '500',
     marginTop: 3,
   },
   homeDictionaryResultMeaning: {
-    color: '#334155',
+    color: '#3A3A3C',
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 21,
     marginTop: 5,
   },
   homeDictionaryResultExample: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 13,
     lineHeight: 19,
     marginTop: 4,
   },
   statsGrid: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
     flexDirection: 'row',
     minHeight: 82,
@@ -8739,46 +8731,46 @@ const styles = StyleSheet.create({
     paddingVertical: 13,
   },
   statCardDivider: {
-    borderLeftColor: '#e5e7eb',
+    borderLeftColor: '#E5E5EA',
     borderLeftWidth: StyleSheet.hairlineWidth,
   },
   blueTint: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderWidth: 1,
   },
   greenTint: {
-    backgroundColor: '#ecfdf3',
-    borderColor: '#bbf7d0',
+    backgroundColor: '#EAF9EE',
+    borderColor: '#B7E9C2',
     borderWidth: 1,
   },
   orangeTint: {
-    backgroundColor: '#fff7ed',
-    borderColor: '#fed7aa',
+    backgroundColor: '#FFF4E5',
+    borderColor: '#FFD7A8',
     borderWidth: 1,
   },
   statValue: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
   },
   statValueEmphasis: {
-    color: '#d97706',
+    color: '#FF9500',
   },
   statLabel: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     marginTop: 4,
     textAlign: 'center',
   },
   homeActionGroup: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
     overflow: 'hidden',
   },
   homeActionDivider: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#E5E5EA',
     height: StyleSheet.hairlineWidth,
     marginLeft: 70,
   },
@@ -8791,7 +8783,7 @@ const styles = StyleSheet.create({
   },
   reviewIcon: {
     alignItems: 'center',
-    backgroundColor: '#fff7ed',
+    backgroundColor: '#FFF4E5',
     borderRadius: 11,
     borderCurve: 'continuous',
     height: 44,
@@ -8799,12 +8791,12 @@ const styles = StyleSheet.create({
     width: 44,
   },
   reviewTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '600',
   },
   reviewText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     marginTop: 3,
   },
@@ -8812,8 +8804,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   wordCard: {
-    backgroundColor: '#fff',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     borderCurve: 'continuous',
     gap: 14,
     overflow: 'hidden',
@@ -8859,11 +8851,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   studySwipeRevealReview: {
-    backgroundColor: 'rgba(239, 68, 68, 0.05)',
+    backgroundColor: 'rgba(255, 59, 48, 0.05)',
     right: 0,
   },
   studySwipeRevealKnown: {
-    backgroundColor: 'rgba(34, 197, 94, 0.055)',
+    backgroundColor: 'rgba(52, 199, 89, 0.055)',
     left: 0,
   },
   studySwipeRevealGradientWrap: {
@@ -8909,10 +8901,10 @@ const styles = StyleSheet.create({
     left: 8,
   },
   studySwipeFeedbackReviewText: {
-    color: '#b91c1c',
+    color: '#D70015',
   },
   studySwipeFeedbackKnownText: {
-    color: '#166534',
+    color: '#248A3D',
   },
   studySwipeFeedbackLine: {
     fontWeight: '700',
@@ -8931,19 +8923,19 @@ const styles = StyleSheet.create({
   },
   groupPill: {
     alignSelf: 'flex-start',
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#EAF4FF',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   groupText: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '500',
   },
   iconButton: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 19,
     borderCurve: 'continuous',
     height: 38,
@@ -8956,7 +8948,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   bigWord: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 40,
     fontWeight: '700',
     lineHeight: 48,
@@ -8966,11 +8958,11 @@ const styles = StyleSheet.create({
     lineHeight: 38,
   },
   pronunciation: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 17,
   },
   pinyinText: {
-    color: '#2563eb',
+    color: '#007AFF',
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 21,
@@ -8979,18 +8971,18 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   meaningBlock: {
-    borderTopColor: '#edf0f5',
+    borderTopColor: '#E5E5EA',
     borderTopWidth: 1,
     gap: 6,
     paddingTop: 14,
   },
   partOfSpeech: {
-    color: '#2563eb',
+    color: '#007AFF',
     fontSize: 13,
     fontWeight: '600',
   },
   meaning: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '600',
     // Reserving two lines moves a one-line entry's leftover space up here,
@@ -9000,7 +8992,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   supplementalMeaning: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F2F7',
     borderRadius: 10,
     borderCurve: 'continuous',
     gap: 5,
@@ -9008,12 +9000,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   supplementalLabel: {
-    color: '#2563eb',
+    color: '#007AFF',
     fontSize: 12,
     fontWeight: '600',
   },
   supplementalText: {
-    color: '#475569',
+    color: '#6C6C70',
     fontSize: 15,
     fontWeight: '500',
     lineHeight: 21,
@@ -9033,21 +9025,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   exampleBox: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 6,
     padding: 14,
   },
   example: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     lineHeight: 22,
   },
   exampleZh: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 15,
     lineHeight: 23,
   },
@@ -9057,11 +9047,9 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#d1d5db',
+    backgroundColor: '#E5E5EA',
     borderRadius: 12,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     gap: 8,
@@ -9069,13 +9057,13 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
   secondaryButtonText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '600',
   },
   confirmButton: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flex: 1,
@@ -9085,16 +9073,14 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
   confirmButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
   },
   quizCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 12,
     padding: 18,
   },
@@ -9106,8 +9092,8 @@ const styles = StyleSheet.create({
   },
   quizNextTopButton: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -9116,25 +9102,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   quizNextTopText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 12,
     fontWeight: '600',
   },
   quizSetupCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 14,
     padding: 18,
   },
   quizModeCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 12,
     padding: 14,
   },
@@ -9144,7 +9126,7 @@ const styles = StyleSheet.create({
     marginHorizontal: -18,
   },
   quizModeSwitch: {
-    backgroundColor: '#eef2ff',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 14,
     borderCurve: 'continuous',
     flexDirection: 'row',
@@ -9161,19 +9143,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   quizModeButtonActive: {
-    backgroundColor: '#2563eb',
-    shadowColor: '#2563eb',
-    shadowOffset: { height: 5, width: 0 },
-    shadowOpacity: 0.18,
-    shadowRadius: 10,
+    backgroundColor: '#007AFF',
   },
   quizModeButtonText: {
-    color: '#475569',
+    color: '#6C6C70',
     fontSize: 15,
     fontWeight: '700',
   },
   quizModeButtonTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
   quizCountRow: {
     flexDirection: 'row',
@@ -9181,11 +9159,9 @@ const styles = StyleSheet.create({
   },
   quizCountChip: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     minHeight: 54,
@@ -9193,19 +9169,19 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   quizCountChipActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
   },
   quizCountText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   quizCountTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
   quizCountMeta: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
     marginTop: 3,
@@ -9215,31 +9191,28 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   quizOption: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     padding: 15,
   },
   quizOptionPressed: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: 'rgba(0, 122, 255, 0.10)',
   },
   quizOptionCorrect: {
-    backgroundColor: '#ecfdf3',
-    borderColor: '#86efac',
+    backgroundColor: '#EAF9EE',
+    borderColor: '#6CD97E',
   },
   quizOptionMuted: {
     opacity: 0.55,
   },
   quizOptionText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 17,
     fontWeight: '500',
   },
   quizOptionTextCorrect: {
-    color: '#166534',
+    color: '#248A3D',
   },
   resultCard: {
     borderRadius: 18,
@@ -9249,32 +9222,32 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   resultCorrect: {
-    backgroundColor: '#ecfdf3',
-    borderColor: '#86efac',
+    backgroundColor: '#EAF9EE',
+    borderColor: '#6CD97E',
   },
   resultWrong: {
-    backgroundColor: '#fff7ed',
-    borderColor: '#fed7aa',
+    backgroundColor: '#FFF0EF',
+    borderColor: '#FFC9C5',
   },
   resultTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 20,
     fontWeight: '700',
   },
   resultText: {
-    color: '#5f6675',
+    color: '#6C6C70',
     fontSize: 15,
     lineHeight: 23,
   },
   speakingPromptQuestion: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
     lineHeight: 30,
   },
   quizExampleCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderColor: 'rgba(203, 213, 225, 0.72)',
+    borderColor: 'rgba(209, 209, 214, 0.72)',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -9282,7 +9255,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   quizExampleLabel: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
     marginTop: 2,
@@ -9294,8 +9267,8 @@ const styles = StyleSheet.create({
   },
   speakingIconWrap: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -9310,7 +9283,7 @@ const styles = StyleSheet.create({
   },
   speakingDoneButton: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flex: 1,
@@ -9322,14 +9295,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   speakingDoneButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
   },
   speakingSecondaryButton: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E5EA',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -9342,12 +9315,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   speakingSecondaryText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   quizScoreText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
   },
@@ -9357,34 +9330,30 @@ const styles = StyleSheet.create({
   },
   searchBox: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#E5E5EA',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 8,
     paddingHorizontal: 13,
     paddingVertical: 10,
   },
   searchBoxActive: {
-    borderColor: '#bfdbfe',
-    shadowColor: '#2563eb',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#007AFF',
+    borderWidth: 1.5,
   },
   searchBoxFocused: {
-    borderColor: '#2563eb',
+    borderColor: '#007AFF',
   },
   searchInput: {
-    color: '#172033',
+    color: '#1C1C1E',
     flex: 1,
     fontSize: 15,
   },
   searchClearButton: {
     alignItems: 'center',
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E5E5EA',
     borderRadius: 11,
     borderCurve: 'continuous',
     height: 30,
@@ -9392,8 +9361,8 @@ const styles = StyleSheet.create({
     width: 30,
   },
   searchMetaBox: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -9401,16 +9370,14 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
   },
   searchMetaText: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '600',
   },
   foldedFilterCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     overflow: 'hidden',
   },
   filterSummaryButton: {
@@ -9422,15 +9389,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   filterSummaryButtonOpen: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: 'rgba(120, 120, 128, 0.08)',
   },
   filterSummaryTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   filterSummaryText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
     marginTop: 2,
@@ -9444,7 +9411,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '180deg' }],
   },
   filterPanel: {
-    borderTopColor: '#edf0f5',
+    borderTopColor: '#E5E5EA',
     overflow: 'hidden',
   },
   filterPanelContent: {
@@ -9456,7 +9423,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   filterSectionTitle: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -9470,30 +9437,28 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   filterChip: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 999,
-    borderWidth: 1,
     // 10 rather than 12: the five status chips summed to 326 against a 324
     // container, so the last one wrapped to a row of its own over 2px.
     paddingHorizontal: 10,
     paddingVertical: 8,
   },
   filterChipActive: {
-    backgroundColor: '#172033',
-    borderColor: '#172033',
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
   },
   levelChipActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
   },
   filterText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     fontWeight: '500',
   },
   filterTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
   letterRow: {
     gap: 6,
@@ -9501,34 +9466,30 @@ const styles = StyleSheet.create({
   },
   letterChip: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 999,
-    borderWidth: 1,
     height: 34,
     justifyContent: 'center',
     minWidth: 34,
     paddingHorizontal: 9,
   },
   letterChipActive: {
-    backgroundColor: '#172033',
-    borderColor: '#172033',
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
   },
   letterText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
   },
   letterTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
   libraryHeaderCard: {
     alignItems: 'stretch',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 12,
     padding: 14,
   },
@@ -9545,55 +9506,49 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   libraryHeaderTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 17,
     fontWeight: '700',
     flexShrink: 0,
   },
   libraryHeaderMeta: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     fontWeight: '500',
     marginTop: 3,
   },
   libraryHeaderMetaPill: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
     borderRadius: 999,
-    borderWidth: 1,
     flexShrink: 1,
     justifyContent: 'center',
     minHeight: 28,
     paddingHorizontal: 9,
   },
   libraryHeaderMetaPillText: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '600',
   },
   libraryTopButton: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#F2F2F7',
     borderRadius: 999,
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
     minHeight: 40,
     paddingHorizontal: 11,
   },
   libraryTopButtonText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 13,
     fontWeight: '600',
   },
   libraryCustomSetsCard: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 12,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 10,
     padding: 11,
     paddingRight: 32,
@@ -9612,16 +9567,14 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   libraryCustomSetsTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   libraryManageSetsButton: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#cbd5e1',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 999,
-    borderWidth: 1,
     flexDirection: 'row',
     flexShrink: 0,
     gap: 4,
@@ -9630,16 +9583,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
   },
   libraryManageSetsButtonLabel: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 12,
     fontWeight: '600',
   },
   libraryCustomSetChip: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 999,
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 7,
     minHeight: 34,
@@ -9650,11 +9601,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   libraryItem: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
     padding: 14,
@@ -9668,11 +9617,11 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   libraryItemPressed: {
-    backgroundColor: 'rgba(37, 99, 235, 0.06)',
+    backgroundColor: 'rgba(0, 122, 255, 0.10)',
   },
   libraryItemPressedLift: {
-    borderColor: '#bfdbfe',
-    shadowColor: '#2563eb',
+    borderColor: '#B9DCFF',
+    shadowColor: '#007AFF',
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.12,
     shadowRadius: 16,
@@ -9684,7 +9633,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   libraryWord: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 20,
     fontWeight: '700',
   },
@@ -9693,11 +9642,11 @@ const styles = StyleSheet.create({
     lineHeight: 23,
   },
   libraryGroup: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 999,
     borderWidth: 1,
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '600',
     overflow: 'hidden',
@@ -9705,32 +9654,32 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   libraryPos: {
-    color: '#2563eb',
+    color: '#007AFF',
     fontSize: 12,
     fontWeight: '600',
   },
   libraryPinyin: {
-    color: '#2563eb',
+    color: '#007AFF',
     fontSize: 12,
     fontWeight: '600',
     lineHeight: 18,
     marginTop: 5,
   },
   libraryMeaning: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '500',
     marginTop: 5,
   },
   librarySupplemental: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,
     marginTop: 4,
   },
   libraryExample: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     lineHeight: 19,
     marginTop: 5,
@@ -9738,26 +9687,22 @@ const styles = StyleSheet.create({
   libraryDetailBack: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: '#fff',
-    borderColor: '#cbd5e1',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 999,
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
     minHeight: 42,
     paddingHorizontal: 12,
   },
   libraryDetailBackText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   libraryDetailPage: {
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 16,
     padding: 18,
   },
@@ -9767,7 +9712,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   libraryDetailWord: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 42,
     fontWeight: '700',
     lineHeight: 48,
@@ -9777,12 +9722,12 @@ const styles = StyleSheet.create({
     lineHeight: 38,
   },
   libraryDetailPronunciation: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 17,
     marginTop: 4,
   },
   libraryDetailPinyin: {
-    color: '#2563eb',
+    color: '#007AFF',
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 21,
@@ -9790,11 +9735,9 @@ const styles = StyleSheet.create({
   },
   libraryDetailFavorite: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 11,
     borderCurve: 'continuous',
-    borderWidth: 1,
     height: 44,
     justifyContent: 'center',
     width: 44,
@@ -9805,11 +9748,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   libraryDetailBadge: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 999,
     borderWidth: 1,
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '600',
     overflow: 'hidden',
@@ -9817,43 +9760,41 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   libraryDetailSection: {
-    borderTopColor: '#edf0f5',
+    borderTopColor: '#E5E5EA',
     borderTopWidth: 1,
     gap: 7,
     paddingTop: 15,
   },
   libraryDetailLabel: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
   },
   libraryDetailMeaning: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
     lineHeight: 28,
   },
   libraryDetailExampleCard: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 8,
     padding: 15,
   },
   libraryDetailExample: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 17,
     lineHeight: 26,
   },
   libraryDetailDivider: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#E5E5EA',
     height: 1,
     marginVertical: 2,
   },
   libraryDetailExampleZh: {
-    color: '#5f6675',
+    color: '#6C6C70',
     fontSize: 15,
     lineHeight: 23,
   },
@@ -9862,25 +9803,23 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   statusText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
   },
   emptyState: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     padding: 16,
   },
   emptyTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   emptyText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     marginTop: 5,
   },
@@ -9895,8 +9834,8 @@ const styles = StyleSheet.create({
   libraryFloatingTopButton: {
     alignItems: 'center',
     alignSelf: 'flex-end',
-    backgroundColor: '#ffffff',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 999,
     borderWidth: 1,
     elevation: 4,
@@ -9907,14 +9846,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
     position: 'absolute',
     right: 0,
-    shadowColor: '#172033',
+    shadowColor: '#1C1C1E',
     shadowOffset: { height: 2, width: 0 },
     shadowOpacity: 0.12,
     shadowRadius: 6,
     top: 0,
   },
   libraryFloatingTopText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -9927,13 +9866,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingVertical: 5,
     position: 'absolute',
-    shadowColor: '#172033',
+    shadowColor: '#1C1C1E',
     shadowOffset: { height: 2, width: 0 },
     top: 92,
   },
   libraryDragSliderActive: {
-    backgroundColor: '#ffffff',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     elevation: 5,
     opacity: 1,
     right: 0,
@@ -9942,8 +9881,8 @@ const styles = StyleSheet.create({
     width: 34,
   },
   libraryDragSliderCollapsed: {
-    backgroundColor: 'rgba(37, 99, 235, 0.16)',
-    borderColor: 'rgba(37, 99, 235, 0.14)',
+    backgroundColor: 'rgba(0, 122, 255, 0.16)',
+    borderColor: 'rgba(0, 122, 255, 0.14)',
     elevation: 1,
     opacity: 0.76,
     right: -2,
@@ -9952,7 +9891,7 @@ const styles = StyleSheet.create({
     width: 14,
   },
   libraryDragTrack: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#E5E5EA',
     borderRadius: 999,
     bottom: 8,
     position: 'absolute',
@@ -9963,14 +9902,14 @@ const styles = StyleSheet.create({
     width: 4,
   },
   libraryDragTrackCollapsed: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     opacity: 0.58,
     width: 2,
   },
   libraryDragThumb: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#93c5fd',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#0A84FF',
     borderRadius: 999,
     borderWidth: 1,
     height: LIBRARY_SLIDER_THUMB_HEIGHT,
@@ -9983,8 +9922,8 @@ const styles = StyleSheet.create({
     width: 24,
   },
   libraryDragThumbCollapsed: {
-    backgroundColor: '#2563eb',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#007AFF',
+    borderColor: '#B9DCFF',
     borderRadius: 99,
     borderCurve: 'continuous',
     opacity: 0.82,
@@ -9992,32 +9931,28 @@ const styles = StyleSheet.create({
   },
   profileCard: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     padding: 22,
   },
   avatar: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
     borderRadius: 20,
     borderCurve: 'continuous',
-    borderWidth: 1,
     height: 72,
     justifyContent: 'center',
     marginBottom: 14,
     width: 72,
   },
   profileTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
   },
   profileText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 15,
     lineHeight: 23,
     marginTop: 8,
@@ -10025,8 +9960,8 @@ const styles = StyleSheet.create({
   },
   syncPill: {
     alignItems: 'center',
-    backgroundColor: '#ecfdf3',
-    borderColor: '#bbf7d0',
+    backgroundColor: '#EAF9EE',
+    borderColor: '#B7E9C2',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -10036,30 +9971,28 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   syncPillError: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fecaca',
+    backgroundColor: '#FFF0EF',
+    borderColor: '#FFC9C5',
   },
   syncText: {
-    color: '#166534',
+    color: '#248A3D',
     fontSize: 12,
     fontWeight: '600',
   },
   syncTextError: {
-    color: '#b91c1c',
+    color: '#D70015',
   },
   accountCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 14,
     padding: 16,
   },
   googleButton: {
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10071,8 +10004,8 @@ const styles = StyleSheet.create({
   },
   googleIconMark: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
+    borderColor: '#E5E5EA',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10081,12 +10014,12 @@ const styles = StyleSheet.create({
     width: 38,
   },
   googleButtonTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   googleButtonText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 17,
@@ -10094,8 +10027,8 @@ const styles = StyleSheet.create({
   },
   appleButton: {
     alignItems: 'center',
-    backgroundColor: '#0f172a',
-    borderColor: '#0f172a',
+    backgroundColor: '#000000',
+    borderColor: '#000000',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10107,8 +10040,8 @@ const styles = StyleSheet.create({
   },
   appleIconMark: {
     alignItems: 'center',
-    backgroundColor: '#172033',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10117,19 +10050,19 @@ const styles = StyleSheet.create({
     width: 38,
   },
   appleButtonTitle: {
-    color: '#ffffff',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
   },
   appleButtonText: {
-    color: '#cbd5e1',
+    color: '#D1D1D6',
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 17,
     marginTop: 2,
   },
   emailFallbackLabel: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
     marginTop: 2,
@@ -10139,18 +10072,16 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 8,
     minHeight: 46,
     paddingHorizontal: 12,
   },
   accountInput: {
-    color: '#172033',
+    color: '#1C1C1E',
     flex: 1,
     fontSize: 15,
     minWidth: 0,
@@ -10161,7 +10092,7 @@ const styles = StyleSheet.create({
   },
   accountButton: {
     alignItems: 'center',
-    backgroundColor: '#172033',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flex: 1,
@@ -10172,32 +10103,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   accountButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '700',
   },
   outlineButton: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#E5E5EA',
     borderRadius: 12,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     minHeight: 46,
     paddingHorizontal: 12,
   },
   outlineButtonText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   signOutButton: {
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor: '#fff7ed',
-    borderColor: '#fed7aa',
+    backgroundColor: '#FFF0EF',
+    borderColor: '#FFC9C5',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10208,25 +10137,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   signOutButtonText: {
-    color: '#9a3412',
+    color: '#D70015',
     fontSize: 15,
     fontWeight: '700',
   },
   localOnlyBox: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     padding: 13,
   },
   localOnlyTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   localOnlyText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 13,
     marginTop: 4,
   },
@@ -10235,8 +10162,8 @@ const styles = StyleSheet.create({
   },
   activeSetBanner: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10246,32 +10173,32 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   activeSetTitle: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 15,
     fontWeight: '700',
   },
   activeSetText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
     marginTop: 2,
   },
   activeSetClearButton: {
-    backgroundColor: '#fff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#B9DCFF',
     borderRadius: 999,
     borderWidth: 1,
     paddingHorizontal: 11,
     paddingVertical: 8,
   },
   activeSetClearText: {
-    color: '#1d4ed8',
+    color: '#0066CC',
     fontSize: 12,
     fontWeight: '600',
   },
   addToSetIconButton: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10281,7 +10208,7 @@ const styles = StyleSheet.create({
   },
   customSetOverlay: {
     alignItems: 'center',
-    backgroundColor: 'rgba(15, 23, 42, 0.54)',
+    backgroundColor: 'rgba(28, 28, 30, 0.54)',
     bottom: 0,
     justifyContent: 'center',
     left: 0,
@@ -10292,27 +10219,27 @@ const styles = StyleSheet.create({
     zIndex: 90,
   },
   customSetPickerCard: {
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D6E9FF',
     borderRadius: 18,
     borderCurve: 'continuous',
     borderWidth: 1,
     gap: 14,
     maxWidth: 430,
     padding: 16,
-    shadowColor: '#172033',
+    shadowColor: '#1C1C1E',
     shadowOffset: { height: 18, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 30,
     width: '100%',
   },
   customSetPickerTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 20,
     fontWeight: '700',
   },
   customSetPickerText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 13,
     fontWeight: '600',
     marginTop: 3,
@@ -10327,7 +10254,7 @@ const styles = StyleSheet.create({
   },
   customSetCreateButton: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 11,
     borderCurve: 'continuous',
     height: 44,
@@ -10336,7 +10263,7 @@ const styles = StyleSheet.create({
   },
   customSetWideCreateButton: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flexDirection: 'row',
@@ -10345,7 +10272,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   customSetWideCreateText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -10354,8 +10281,8 @@ const styles = StyleSheet.create({
   },
   customSetPickerRow: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
+    borderColor: '#E5E5EA',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10364,7 +10291,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   customSetPickerEmpty: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 13,
     fontWeight: '600',
     lineHeight: 19,
@@ -10375,27 +10302,25 @@ const styles = StyleSheet.create({
     width: 12,
   },
   customSetRowTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
   },
   customSetRowText: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
     marginTop: 2,
   },
   customSetAddText: {
-    color: '#2563eb',
+    color: '#007AFF',
     fontSize: 13,
     fontWeight: '600',
   },
   customSetsHeroCard: {
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 13,
     padding: 14,
   },
@@ -10408,17 +10333,15 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   customSetCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 12,
     padding: 13,
   },
   customSetCardActive: {
-    borderColor: '#2563eb',
-    shadowColor: '#2563eb',
+    borderColor: '#007AFF',
+    shadowColor: '#007AFF',
     shadowOffset: { height: 8, width: 0 },
     shadowOpacity: 0.09,
     shadowRadius: 16,
@@ -10468,11 +10391,9 @@ const styles = StyleSheet.create({
   },
   customSetActionButton: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#F2F2F7',
     borderRadius: 12,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     gap: 6,
@@ -10480,13 +10401,13 @@ const styles = StyleSheet.create({
     minHeight: 42,
   },
   customSetActionText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 13,
     fontWeight: '600',
   },
   customSetPrimaryActionButton: {
     alignItems: 'center',
-    backgroundColor: '#172033',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flex: 1,
@@ -10496,14 +10417,14 @@ const styles = StyleSheet.create({
     minHeight: 42,
   },
   customSetPrimaryActionText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '600',
   },
   customSetDeleteButton: {
     alignItems: 'center',
-    backgroundColor: '#fef2f2',
-    borderColor: '#fecaca',
+    backgroundColor: '#FFF0EF',
+    borderColor: '#FFC9C5',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10513,7 +10434,7 @@ const styles = StyleSheet.create({
     minHeight: 40,
   },
   customSetDeleteText: {
-    color: '#b91c1c',
+    color: '#D70015',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -10522,19 +10443,17 @@ const styles = StyleSheet.create({
   },
   customSetWordRow: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 10,
     padding: 10,
   },
   customSetRemoveWordButton: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#fecaca',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFC9C5',
     borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
@@ -10543,7 +10462,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
   },
   customSetRemoveWordText: {
-    color: '#b91c1c',
+    color: '#D70015',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -10554,26 +10473,22 @@ const styles = StyleSheet.create({
     minHeight: 48,
   },
   customSetTinyMeta: {
-    color: '#94a3b8',
+    color: '#8E8E93',
     fontSize: 12,
     fontWeight: '600',
     textAlign: 'right',
   },
   settingsCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 16,
     padding: 16,
   },
   profileInfoCard: {
-    backgroundColor: '#fff',
-    borderColor: '#e5e7eb',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 14,
     padding: 16,
   },
@@ -10582,33 +10497,29 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   learningMetric: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flex: 1,
     minHeight: 66,
     padding: 10,
   },
   learningMetricLabel: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
   },
   learningMetricValue: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 17,
     fontWeight: '700',
     marginTop: 6,
   },
   settingOptionRow: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
     minHeight: 70,
@@ -10616,18 +10527,16 @@ const styles = StyleSheet.create({
   },
   settingOptionIcon: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
     borderRadius: 11,
     borderCurve: 'continuous',
-    borderWidth: 1,
     height: 42,
     justifyContent: 'center',
     width: 42,
   },
   themeStatusLight: {
     alignItems: 'center',
-    backgroundColor: '#e2e8f0',
+    backgroundColor: '#E5E5EA',
     borderRadius: 99,
     borderCurve: 'continuous',
     height: 14,
@@ -10635,30 +10544,28 @@ const styles = StyleSheet.create({
     width: 14,
   },
   themeStatusLightActive: {
-    backgroundColor: '#dbeafe',
+    backgroundColor: '#D6E9FF',
     elevation: 4,
-    shadowColor: '#2563eb',
+    shadowColor: '#007AFF',
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.42,
     shadowRadius: 7,
   },
   themeStatusLightCore: {
-    backgroundColor: '#94a3b8',
+    backgroundColor: '#8E8E93',
     borderRadius: 99,
     borderCurve: 'continuous',
     height: 8,
     width: 8,
   },
   themeStatusLightCoreActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
   },
   settingsEntryButton: {
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
     minHeight: 68,
@@ -10666,82 +10573,74 @@ const styles = StyleSheet.create({
   },
   settingsEntryIcon: {
     alignItems: 'center',
-    backgroundColor: '#eff6ff',
-    borderColor: '#bfdbfe',
+    backgroundColor: '#EAF4FF',
     borderRadius: 11,
     borderCurve: 'continuous',
-    borderWidth: 1,
     height: 42,
     justifyContent: 'center',
     width: 42,
   },
   settingsEntryTitle: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 17,
     fontWeight: '700',
   },
   settingsEntryText: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 17,
     marginTop: 3,
   },
   developerCard: {
-    backgroundColor: '#fff',
-    borderColor: '#dbeafe',
-    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     gap: 13,
     padding: 16,
   },
   developerText: {
-    color: '#5f6675',
+    color: '#6C6C70',
     fontSize: 13,
     lineHeight: 20,
   },
   developerStats: {
-    backgroundColor: '#f8fafc',
-    borderColor: '#e5e7eb',
+    backgroundColor: '#F2F2F7',
     borderRadius: 14,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flexDirection: 'row',
     gap: 12,
     justifyContent: 'space-between',
     padding: 12,
   },
   developerLabel: {
-    color: '#64748b',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '600',
   },
   developerValue: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 15,
     fontWeight: '700',
     marginTop: 3,
   },
   developerSummary: {
-    color: '#166534',
+    color: '#248A3D',
     fontSize: 12,
     fontWeight: '600',
     lineHeight: 18,
   },
   developerMessage: {
-    color: '#717987',
+    color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,
   },
   developerActionButton: {
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
-    borderColor: '#cbd5e1',
+    backgroundColor: '#F2F2F7',
     borderRadius: 12,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     gap: 7,
@@ -10750,13 +10649,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   developerActionText: {
-    color: '#172033',
+    color: '#1C1C1E',
     fontSize: 13,
     fontWeight: '600',
   },
   developerPrimaryButton: {
     alignItems: 'center',
-    backgroundColor: '#2563eb',
+    backgroundColor: '#007AFF',
     borderRadius: 12,
     borderCurve: 'continuous',
     flex: 1,
@@ -10767,15 +10666,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   developerPrimaryText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '600',
   },
   developerClearButton: {
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor: '#fff7ed',
-    borderColor: '#fed7aa',
+    backgroundColor: '#FFF4E5',
+    borderColor: '#FFD7A8',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10786,14 +10685,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   developerClearText: {
-    color: '#9a3412',
+    color: '#A94400',
     fontSize: 13,
     fontWeight: '600',
   },
   deleteAccountDataButton: {
     alignItems: 'center',
-    backgroundColor: '#fff7ed',
-    borderColor: '#fed7aa',
+    backgroundColor: '#FFF0EF',
+    borderColor: '#FFC9C5',
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -10804,12 +10703,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   deleteAccountDataTitle: {
-    color: '#9a3412',
+    color: '#D70015',
     fontSize: 15,
     fontWeight: '700',
   },
   deleteAccountDataText: {
-    color: '#b45309',
+    color: '#D70015',
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 17,
@@ -10819,740 +10718,820 @@ const styles = StyleSheet.create({
 
 const darkStyles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#020617',
+    backgroundColor: '#000000',
   },
   appShell: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#000000',
+  },
+  primaryButton: {
+    backgroundColor: '#0A84FF',
+  },
+  confirmButton: {
+    backgroundColor: '#0A84FF',
+  },
+  progressFill: {
+    backgroundColor: '#0A84FF',
+  },
+  accountButton: {
+    backgroundColor: '#0A84FF',
+  },
+  customSetPrimaryActionButton: {
+    backgroundColor: '#0A84FF',
+  },
+  developerPrimaryButton: {
+    backgroundColor: '#0A84FF',
+  },
+  filterChipActive: {
+    backgroundColor: '#0A84FF',
+    borderColor: '#0A84FF',
+  },
+  letterChipActive: {
+    backgroundColor: '#0A84FF',
+    borderColor: '#0A84FF',
+  },
+  quizModeButtonActive: {
+    backgroundColor: '#0A84FF',
+  },
+  quizCountChipActive: {
+    backgroundColor: '#0A84FF',
+    borderColor: '#0A84FF',
+  },
+  appleButton: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+  },
+  appleIconMark: {
+    backgroundColor: '#F2F2F7',
+    borderColor: '#D1D1D6',
+  },
+  appleButtonTitle: {
+    color: '#000000',
+  },
+  appleButtonText: {
+    color: '#3A3A3C',
   },
   previewModePill: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   previewModeText: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   brand: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   headerSubtext: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   levelPill: {
-    backgroundColor: '#102a1f',
-    borderColor: '#166534',
+    backgroundColor: '#12351E',
+    borderColor: '#30D158',
   },
   levelText: {
-    color: '#86efac',
+    color: '#30D158',
   },
   updateRequiredOverlay: {
-    backgroundColor: 'rgba(2, 6, 23, 0.84)',
+    backgroundColor: 'rgba(0, 0, 0, 0.84)',
   },
   updateRequiredCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   updateRequiredIcon: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   updateRequiredTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   updateRequiredText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   updateRequiredCountdown: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   hero: {
-    backgroundColor: '#111827',
+    backgroundColor: '#1C1C1E',
   },
   heroTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   modeSwitchButton: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   modeSwitchIcon: {
-    backgroundColor: '#172554',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
   },
   modeSwitchTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   modeSwitchText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   installGuideOverlay: {
-    backgroundColor: '#020617',
+    backgroundColor: '#000000',
   },
   installGuideLogo: {
-    backgroundColor: '#1d4ed8',
-    borderColor: '#60a5fa',
+    backgroundColor: '#0A84FF',
+    borderColor: '#0A84FF',
   },
   installGuideClose: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   installGuideCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
-    shadowColor: '#000',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
+    shadowColor: '#000000',
     shadowOpacity: 0.2,
   },
   installGuideStepPill: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   installGuideStepText: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   installGuideIconWrap: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   installGuideIconGlow: {
-    backgroundColor: '#1d4ed8',
+    backgroundColor: '#0A84FF',
   },
   installGuideTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   installGuideText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   installGuidePreview: {
-    backgroundColor: '#0f172a',
-    borderColor: '#334155',
+    backgroundColor: '#000000',
+    borderColor: '#3A3A3C',
   },
   installGuideBrowserBar: {
-    backgroundColor: '#475569',
+    backgroundColor: '#636366',
   },
   installGuideMiniStep: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   installGuideMiniText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   installGuideDot: {
-    backgroundColor: '#475569',
+    backgroundColor: '#636366',
   },
   installGuideSecondary: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   installGuideSecondaryText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   installGuidePrimary: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#0A84FF',
   },
   progressCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   sectionTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   cardMeta: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   progressTrack: {
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
   },
   accountShortcut: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   accountShortcutText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   homeDictionaryCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   homeDictionarySearch: {
-    backgroundColor: '#102a56',
-    borderColor: '#3b82f6',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   homeDictionaryLauncherIcon: {
-    backgroundColor: '#17366b',
+    backgroundColor: 'rgba(10, 132, 255, 0.24)',
   },
   homeDictionaryInput: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   homeDictionaryModalRootNative: {
-    backgroundColor: '#111827',
+    backgroundColor: '#1C1C1E',
   },
   homeDictionaryModalSheet: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   homeDictionaryResultRow: {
-    borderBottomColor: '#334155',
+    borderBottomColor: '#3A3A3C',
   },
   iconButton: {
-    backgroundColor: '#182033',
+    backgroundColor: '#2C2C2E',
   },
   homeGroupedSurface: {
-    backgroundColor: '#111827',
+    backgroundColor: '#1C1C1E',
   },
   homeDivider: {
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
   },
   statCard: {
     backgroundColor: 'transparent',
-    borderColor: '#334155',
+    borderColor: '#3A3A3C',
   },
   statValue: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   statLabel: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   reviewStrip: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   reviewTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   reviewText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   reviewIcon: {
-    backgroundColor: '#422006',
+    backgroundColor: '#3A2608',
   },
   emptyState: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   emptyTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   emptyText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   wordCard: {
-    backgroundColor: '#111827',
+    backgroundColor: '#1C1C1E',
   },
   groupPill: {
-    backgroundColor: '#172554',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
   },
   groupText: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   bigWord: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   pronunciation: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   pinyinText: {
-    color: '#93c5fd',
+    color: '#0A84FF',
   },
   meaningBlock: {
-    borderTopColor: '#334155',
+    borderTopColor: '#3A3A3C',
   },
   meaning: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   supplementalMeaning: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   supplementalLabel: {
-    color: '#93c5fd',
+    color: '#0A84FF',
   },
   supplementalText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   exampleBox: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   example: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   exampleZh: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   secondaryButton: {
-    backgroundColor: '#182033',
-    borderColor: '#475569',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#636366',
   },
   secondaryButtonText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   foldedFilterCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   filterSummaryButtonOpen: {
-    backgroundColor: '#182033',
+    backgroundColor: '#2C2C2E',
   },
   filterPanel: {
-    borderTopColor: '#334155',
+    borderTopColor: '#3A3A3C',
   },
   filterSummaryTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   filterSummaryText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   filterSectionTitle: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   filterChip: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   filterText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   letterChip: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   quizSetupCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   quizModeCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   quizSectionDivider: {
     backgroundColor: 'rgba(84, 84, 88, 0.55)',
   },
   quizModeSwitch: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#000000',
   },
   quizModeButton: {
     backgroundColor: 'transparent',
   },
   quizModeButtonText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   quizCountChip: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   quizCountText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   quizCountMeta: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   quizCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   quizNextTopButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   quizNextTopText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   quizOption: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   quizOptionPressed: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   quizOptionText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   resultCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   resultTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   quizScoreText: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   quizExampleCard: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   quizExampleLabel: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   speakingIconWrap: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   speakingSecondaryButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   speakingSecondaryText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   resultText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   speakingPromptQuestion: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   libraryFloatingTopButton: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
-    shadowColor: '#000',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
+    shadowColor: '#000000',
   },
   libraryFloatingTopText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   libraryDragSlider: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
-    shadowColor: '#000',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
+    shadowColor: '#000000',
   },
   libraryDragSliderActive: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
-    shadowColor: '#000',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
+    shadowColor: '#000000',
   },
   libraryDragSliderCollapsed: {
-    backgroundColor: 'rgba(96, 165, 250, 0.2)',
-    borderColor: 'rgba(96, 165, 250, 0.2)',
-    shadowColor: '#000',
+    backgroundColor: 'rgba(10, 132, 255, 0.2)',
+    borderColor: 'rgba(10, 132, 255, 0.2)',
+    shadowColor: '#000000',
   },
   libraryDragTrack: {
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
   },
   libraryDragTrackActive: {
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
   },
   libraryDragTrackCollapsed: {
-    backgroundColor: '#60a5fa',
+    backgroundColor: '#0A84FF',
   },
   libraryDragThumb: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#3b82f6',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   libraryDragThumbActive: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#3b82f6',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   libraryDragThumbCollapsed: {
-    backgroundColor: '#60a5fa',
-    borderColor: '#93c5fd',
+    backgroundColor: '#0A84FF',
+    borderColor: '#0A84FF',
   },
   libraryHeaderCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   libraryCustomSetsCard: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   libraryHeaderMetaPill: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   libraryHeaderMetaPillText: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   libraryHeaderTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   libraryHeaderMeta: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   libraryCustomSetsTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   libraryTopButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   libraryTopButtonText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   searchBox: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
+  },
+  searchBoxActive: {
+    backgroundColor: '#3A3A3C',
+    borderColor: '#0A84FF',
+  },
+  resultCorrect: {
+    backgroundColor: '#12351E',
+    borderColor: '#30D158',
+  },
+  resultWrong: {
+    backgroundColor: '#3A1714',
+    borderColor: '#FF453A',
+  },
+  syncPill: {
+    backgroundColor: '#12351E',
+    borderColor: '#30D158',
+  },
+  syncPillError: {
+    backgroundColor: '#3A1714',
+    borderColor: '#FF453A',
+  },
+  syncText: {
+    color: '#30D158',
+  },
+  syncTextError: {
+    color: '#FF453A',
+  },
+  signOutButton: {
+    backgroundColor: '#3A1714',
+    borderColor: '#FF453A',
+  },
+  signOutButtonText: {
+    color: '#FF453A',
   },
   searchInput: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   searchClearButton: {
-    backgroundColor: '#1f2937',
+    backgroundColor: '#3A3A3C',
   },
   searchMetaBox: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   searchMetaText: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   libraryItem: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   libraryItemPressed: {
-    backgroundColor: 'rgba(37, 99, 235, 0.18)',
+    backgroundColor: 'rgba(0, 122, 255, 0.18)',
   },
   libraryItemPressedLift: {
-    borderColor: '#3b82f6',
-    shadowColor: '#60a5fa',
+    borderColor: '#0A84FF',
+    shadowColor: '#0A84FF',
     shadowOpacity: 0.16,
   },
   libraryWord: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   libraryPinyin: {
-    color: '#93c5fd',
+    color: '#0A84FF',
   },
   libraryMeaning: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   librarySupplemental: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   libraryExample: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   statusText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   libraryDetailBack: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   libraryDetailBackText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   libraryDetailPage: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   libraryDetailWord: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   libraryDetailPronunciation: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   libraryDetailPinyin: {
-    color: '#93c5fd',
+    color: '#0A84FF',
   },
   libraryDetailSection: {
-    borderTopColor: '#334155',
+    borderTopColor: '#3A3A3C',
   },
   libraryDetailLabel: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   libraryDetailMeaning: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   libraryDetailExampleCard: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   libraryDetailExample: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   libraryDetailDivider: {
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
   },
   libraryDetailExampleZh: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   profileCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   avatar: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   profileTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   profileText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   accountCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   googleButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   googleIconMark: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   googleButtonTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   googleButtonText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   emailFallbackLabel: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   localOnlyBox: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   localOnlyTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   localOnlyText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   inputBox: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   accountInput: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   outlineButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   outlineButtonText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   activeSetBanner: {
-    backgroundColor: '#0b1f3a',
-    borderColor: '#1d4ed8',
+    backgroundColor: 'rgba(10, 132, 255, 0.18)',
+    borderColor: '#0A84FF',
   },
   activeSetTitle: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   activeSetText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   activeSetClearButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   activeSetClearText: {
-    color: '#bfdbfe',
+    color: '#0A84FF',
   },
   customSetPickerCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
-    shadowColor: '#000',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
+    shadowColor: '#000000',
   },
   customSetPickerTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   customSetPickerText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   customSetPickerRow: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   customSetPickerEmpty: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   customSetRowTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   customSetRowText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   customSetsHeroCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   customSetCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   customSetActionButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   customSetActionText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
   customSetTinyMeta: {
-    color: '#64748b',
+    color: '#8E8E93',
   },
   settingsCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   profileInfoCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   learningMetric: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   learningMetricLabel: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   learningMetricValue: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   settingOptionRow: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   settingsEntryButton: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   settingsEntryIcon: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   settingsEntryTitle: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   settingsEntryText: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   deleteAccountDataButton: {
-    backgroundColor: '#2a1714',
-    borderColor: '#7f1d1d',
+    backgroundColor: '#3A1714',
+    borderColor: '#FF453A',
   },
   deleteAccountDataTitle: {
-    color: '#fca5a5',
+    color: '#FF6961',
   },
   deleteAccountDataText: {
-    color: '#fecaca',
+    color: '#FF6961',
   },
   developerCard: {
-    backgroundColor: '#111827',
-    borderColor: '#334155',
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
   },
   developerText: {
-    color: '#cbd5e1',
+    color: '#AEAEB2',
   },
   developerStats: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   developerLabel: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   developerValue: {
-    color: '#f8fafc',
+    color: '#FFFFFF',
   },
   developerMessage: {
-    color: '#94a3b8',
+    color: '#AEAEB2',
   },
   developerActionButton: {
-    backgroundColor: '#182033',
-    borderColor: '#334155',
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
   },
   developerActionText: {
-    color: '#e2e8f0',
+    color: '#F2F2F7',
   },
 });

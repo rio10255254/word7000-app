@@ -4,8 +4,35 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppRouteThemeMode } from '../lib/appRouteBridge';
 import { prepareNativeSplash } from '../lib/nativeSplash';
+import { iosVisual } from '../design/iosVisualSystem';
 
 prepareNativeSplash();
+
+const lightNavigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: iosVisual.light.accent,
+    background: iosVisual.light.background,
+    card: iosVisual.light.background,
+    text: iosVisual.light.label,
+    border: iosVisual.light.separator,
+    notification: iosVisual.light.red,
+  },
+};
+
+const darkNavigationTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: iosVisual.dark.accent,
+    background: iosVisual.dark.background,
+    card: iosVisual.dark.background,
+    text: iosVisual.dark.label,
+    border: iosVisual.dark.separator,
+    notification: iosVisual.dark.red,
+  },
+};
 
 export default function RootLayout() {
   const themeMode = useAppRouteThemeMode();
@@ -14,7 +41,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <ThemeProvider value={themeMode === 'dark' ? DarkTheme : DefaultTheme}>
+        <ThemeProvider value={themeMode === 'dark' ? darkNavigationTheme : lightNavigationTheme}>
           <Stack
             screenOptions={{
               animation: pushAnimation,

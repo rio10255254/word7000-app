@@ -10,7 +10,7 @@ export default function SettingsRoute() {
   const themeTransitionOpacity = useRef(new Animated.Value(0)).current;
   const themeTransitionRunning = useRef(false);
   const themeTransitionAnimation = useRef<Animated.CompositeAnimation | null>(null);
-  const [themeTransitionColor, setThemeTransitionColor] = useState('#f8fafc');
+  const [themeTransitionColor, setThemeTransitionColor] = useState('#F2F2F7');
   const [showThemeTransition, setShowThemeTransition] = useState(false);
 
   useEffect(
@@ -38,7 +38,7 @@ export default function SettingsRoute() {
     }
 
     themeTransitionRunning.current = true;
-    setThemeTransitionColor(nextMode === 'dark' ? '#020617' : '#f8fafc');
+    setThemeTransitionColor(nextMode === 'dark' ? '#000000' : '#F2F2F7');
     setShowThemeTransition(true);
     themeTransitionOpacity.setValue(0);
     bridge.actions.setThemeMode(nextMode);

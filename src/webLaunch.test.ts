@@ -348,12 +348,12 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('const nextThemeMode = darkMode ? \'light\' : \'dark\';');
     expect(appSource).toContain('const toggleThemeMode = () => onThemeModeChange(nextThemeMode);');
     expect(appSource).toContain('onPress={toggleThemeMode}');
-    expect(appSource).toContain("const dangerIconColor = darkMode ? '#fca5a5' : '#b91c1c';");
+    expect(appSource).toContain("const dangerIconColor = darkMode ? '#FF6961' : '#D70015';");
     expect(appSource).toContain('themeStyles?.deleteAccountDataButton');
     expect(appSource).toContain('themeStyles?.deleteAccountDataTitle');
     expect(appSource).toContain('themeStyles?.deleteAccountDataText');
     expect(appSource).toContain('deleteAccountDataButton:');
-    expect(appSource).toContain("backgroundColor: '#2a1714'");
+    expect(appSource).toContain("backgroundColor: '#3A1714'");
     expect(appSource).toContain('onThemeModeChange');
     expect(appSource).toContain('DeveloperVocabularyPanel');
   });

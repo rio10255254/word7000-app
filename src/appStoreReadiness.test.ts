@@ -84,8 +84,32 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).toContain("import { GlassView, isGlassEffectAPIAvailable } from 'expo-glass-effect';");
     expect(appSource).toContain("const NATIVE_GLASS_AVAILABLE = IS_NATIVE_IOS && isGlassEffectAPIAvailable();");
     expect(appSource).toContain("type NativeGlassTone = 'primary' | 'secondary' | 'icon';");
-    expect(appSource).toContain("glassEffectStyle={tone === 'primary' ? 'regular' : 'clear'}");
+    expect(appSource).toContain('glassEffectStyle="regular"');
     expect(appSource).toContain('nativeGlassTone && styles.nativeGlassButton');
+    expect(appSource).toContain('glassTone="secondary"');
+    expect(appSource).not.toContain('nativeGlassToneForPressTone');
+  });
+
+  test('uses one semantic iOS color system across navigation and content', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
+    const visualSystem = fs.readFileSync(path.join(process.cwd(), 'src', 'design', 'iosVisualSystem.ts'), 'utf8');
+
+    expect(visualSystem).toContain("background: '#F2F2F7'");
+    expect(visualSystem).toContain("surface: '#FFFFFF'");
+    expect(visualSystem).toContain("label: '#1C1C1E'");
+    expect(visualSystem).toContain("accent: '#007AFF'");
+    expect(visualSystem).toContain("background: '#000000'");
+    expect(visualSystem).toContain("surface: '#1C1C1E'");
+    expect(visualSystem).toContain("accent: '#0A84FF'");
+    expect(rootLayout).toContain('lightNavigationTheme');
+    expect(rootLayout).toContain('darkNavigationTheme');
+    expect(rootLayout).toContain('iosVisual.light.background');
+    expect(rootLayout).toContain('iosVisual.dark.background');
+    expect(appSource).not.toContain('#172033');
+    expect(appSource).not.toContain('#2563eb');
+    expect(appSource).not.toContain('#111827');
+    expect(appSource).not.toContain('#334155');
   });
 
   test('keeps the first iOS submission focused on iPhone instead of universal iPad support', () => {
@@ -99,7 +123,7 @@ describe('iOS App Store readiness polish', () => {
 
     expect(app.expo.plugins).toContainEqual([
       'expo-splash-screen',
-      expect.objectContaining({ backgroundColor: '#2d64e7', image: './assets/splash-icon.png' }),
+      expect.objectContaining({ backgroundColor: '#007AFF', image: './assets/splash-icon.png' }),
     ]);
     expect(layoutSource).toContain('prepareNativeSplash();');
     expect(nativeSplashSource).toContain('preventAutoHideAsync');

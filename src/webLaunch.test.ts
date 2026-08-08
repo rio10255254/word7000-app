@@ -1032,6 +1032,11 @@ describe('free web launch configuration', () => {
 
     expect(homeSource).toContain('testID="home-dictionary-search"');
     expect(homeSource).toContain('testID="home-dictionary-modal"');
+    expect(homeSource).toContain('IS_NATIVE_IOS && styles.homeDictionaryModalHeaderNative');
+    expect(homeSource).toContain('IS_NATIVE_IOS && styles.homeDictionaryModalSearchNative');
+    expect(appSource).toContain('homeDictionaryModalHeaderNative:');
+    expect(appSource).toContain('paddingHorizontal: 22');
+    expect(appSource).toContain('paddingTop: 18');
     expect(homeSource).toContain('testID="home-metrics-group"');
     expect(homeSource).toContain('testID="home-action-group"');
     expect(homeSource).toContain('styles.homeActionDivider');

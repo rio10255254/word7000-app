@@ -4434,7 +4434,12 @@ const HomeView = memo(function HomeView({
               ]}
             >
               {!IS_NATIVE_IOS ? <View style={styles.homeDictionaryModalHandle} /> : null}
-              <View style={styles.homeDictionaryModalHeader}>
+              <View
+                style={[
+                  styles.homeDictionaryModalHeader,
+                  IS_NATIVE_IOS && styles.homeDictionaryModalHeaderNative,
+                ]}
+              >
                 <View style={styles.flexOne}>
                   <Text style={[styles.homeDictionaryModalTitle, themeStyles?.sectionTitle]}>{ui.dictionaryLookup}</Text>
                   {normalizedDictionaryQuery ? (
@@ -4455,7 +4460,13 @@ const HomeView = memo(function HomeView({
                 </AnimatedPressable>
               </View>
 
-              <View style={[styles.homeDictionaryModalSearch, themeStyles?.homeDictionarySearch]}>
+              <View
+                style={[
+                  styles.homeDictionaryModalSearch,
+                  IS_NATIVE_IOS && styles.homeDictionaryModalSearchNative,
+                  themeStyles?.homeDictionarySearch,
+                ]}
+              >
                 <Search size={20} color="#6C6C70" strokeWidth={2.2} />
                 <TextInput
                   accessibilityLabel={ui.dictionaryLookup}
@@ -8588,15 +8599,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 8,
   },
+  homeDictionaryModalHeaderNative: {
+    paddingBottom: 10,
+    paddingHorizontal: 22,
+    paddingTop: 18,
+  },
   homeDictionaryModalTitle: {
     color: '#1C1C1E',
     fontSize: 20,
     fontWeight: '700',
+    lineHeight: 26,
   },
   homeDictionaryModalMeta: {
     color: '#6C6C70',
     fontSize: 12,
     fontWeight: '500',
+    lineHeight: 18,
     marginTop: 3,
   },
   homeDictionaryModalSearch: {
@@ -8612,6 +8630,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
     minHeight: 54,
     paddingHorizontal: 14,
+  },
+  homeDictionaryModalSearchNative: {
+    marginHorizontal: 22,
+    marginTop: 2,
   },
   homeDictionaryModalInput: {
     color: '#1C1C1E',

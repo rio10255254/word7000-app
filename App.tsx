@@ -10,6 +10,7 @@ import Reanimated, {
   Easing as ReanimatedEasing,
   Extrapolation,
   interpolate,
+  ReduceMotion,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -907,7 +908,7 @@ export function useAppScreenProps(): AppScreenProps {
   return value;
 }
 const VocabularyContext = createContext<WordEntry[]>([]);
-const MotionPressable = Animated.createAnimatedComponent(Pressable);
+const MotionPressable = Reanimated.createAnimatedComponent(Pressable);
 type LibraryListHandle = FlashListRef<WordEntry>;
 
 export function AppBootstrap({ children }: { children: ReactNode }) {
@@ -3732,52 +3733,71 @@ function AnimatedPressable({
   ...props
 }: AnimatedPressableProps) {
   const [pressed, setPressed] = useState(false);
-  const pressAnim = useRef(new Animated.Value(0)).current;
+  const pressProgress = useSharedValue(0);
   const pressMotion = pressMotionFor(pressTone);
   const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE ? glassTone ?? null : null;
-  const pressStyle = {
-    opacity: pressAnim.interpolate({
-      inputRange: [0, 1],
-      outputRange: [1, pressMotion.pressedOpacity],
-    }),
+  const pressStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      pressProgress.value,
+      [0, 1],
+      [1, pressMotion.pressedOpacity],
+      Extrapolation.CLAMP,
+    ),
     transform: [
       {
-        scale: pressAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [1, pressMotion.pressedScale],
-        }),
+        scale: interpolate(
+          pressProgress.value,
+          [0, 1],
+          [1, pressMotion.pressedScale],
+          Extrapolation.CLAMP,
+        ),
       },
       {
-        translateY: pressAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, pressMotion.pressedTranslateY],
-        }),
+        translateY: interpolate(
+          pressProgress.value,
+          [0, 1],
+          [0, pressMotion.pressedTranslateY],
+          Extrapolation.CLAMP,
+        ),
       },
     ],
-  };
+  }));
 
-  function animatePress(toValue: number, duration: number) {
-    Animated.timing(pressAnim, {
-      duration,
-      easing: Easing.out(Easing.cubic),
-      toValue,
-      useNativeDriver: Platform.OS !== 'web',
-    }).start();
-  }
+  useEffect(() => {
+    if (disabled) {
+      cancelAnimation(pressProgress);
+      pressProgress.value = 0;
+      setPressed(false);
+    }
+  }, [disabled, pressProgress]);
 
   function handlePressIn(event: Parameters<NonNullable<PressableProps['onPressIn']>>[0]) {
     if (!disabled) {
+      cancelAnimation(pressProgress);
+      pressProgress.value = withTiming(1, {
+        duration: interactionMotion.pressInMs,
+        easing: ReanimatedEasing.out(ReanimatedEasing.cubic),
+        reduceMotion: ReduceMotion.System,
+      });
       triggerPressHaptic(pressTone);
-      setPressed(true);
-      animatePress(1, interactionMotion.pressInMs);
+      if (pressedStyle) {
+        setPressed(true);
+      }
     }
     onPressIn?.(event);
   }
 
   function handlePressOut(event: Parameters<NonNullable<PressableProps['onPressOut']>>[0]) {
     if (!disabled) {
-      setPressed(false);
-      animatePress(0, interactionMotion.releaseMs);
+      cancelAnimation(pressProgress);
+      pressProgress.value = withSpring(0, {
+        dampingRatio: interactionMotion.pressReleaseDampingRatio,
+        duration: interactionMotion.releaseMs,
+        reduceMotion: ReduceMotion.System,
+      });
+      if (pressedStyle) {
+        setPressed(false);
+      }
     }
     onPressOut?.(event);
   }
@@ -3804,27 +3824,22 @@ function AnimatedPressable({
 function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; open: boolean; testID: string }) {
   const themeStyles = useThemeStyles();
   const [filterPanelMeasuredHeight, setFilterPanelMeasuredHeight] = useState(0);
-  const [hasOpened, setHasOpened] = useState(open);
-  const panelAnim = useRef(new Animated.Value(open ? 1 : 0)).current;
-
-  useEffect(() => {
-    if (open) {
-      setHasOpened(true);
-    }
-  }, [open]);
+  const panelProgress = useSharedValue(open ? 1 : 0);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
       return;
     }
 
-    Animated.timing(panelAnim, {
+    cancelAnimation(panelProgress);
+    panelProgress.value = withTiming(open ? 1 : 0, {
       duration: open ? interactionMotion.panelMs : interactionMotion.panelCloseMs,
-      easing: open ? Easing.out(Easing.cubic) : Easing.out(Easing.cubic),
-      toValue: open ? 1 : 0,
-      useNativeDriver: false,
-    }).start();
-  }, [open, panelAnim]);
+      easing: open
+        ? ReanimatedEasing.out(ReanimatedEasing.cubic)
+        : ReanimatedEasing.inOut(ReanimatedEasing.cubic),
+      reduceMotion: ReduceMotion.System,
+    });
+  }, [open, panelProgress]);
 
   function handlePanelContentLayout(event: LayoutChangeEvent) {
     const nextHeight = Math.ceil(event.nativeEvent.layout.height);
@@ -3842,64 +3857,51 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
           transitionTimingFunction: open ? 'cubic-bezier(0.22, 1, 0.36, 1)' : 'cubic-bezier(0.4, 0, 0.2, 1)',
         }
       : undefined;
-  const panelMotionStyle =
-    Platform.OS === 'web'
-      ? {
-          borderTopWidth: open && measuredHeight > 0 ? 1 : 0,
-          height: open ? measuredHeight : interactionMotion.panelCollapsedHeight,
-          opacity: open ? 1 : 0,
-        }
-      : {
-          borderTopWidth: panelAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 1],
-          }),
-          height: panelAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [interactionMotion.panelCollapsedHeight, measuredHeight],
-          }),
-          opacity: panelAnim.interpolate({
-            inputRange: [0, 0.24, 1],
-            outputRange: [0, 0.72, 1],
-          }),
-        };
-  const contentMotionStyle =
-    Platform.OS === 'web'
-      ? {
-          opacity: open ? 1 : 0,
-          transform: [{ translateY: open ? 0 : -6 }, { scale: open ? 1 : 0.985 }],
-        }
-      : {
-          opacity: panelAnim.interpolate({
-            inputRange: [0, 0.18, 1],
-            outputRange: [0, 0.65, 1],
-          }),
-          transform: [
-            {
-              translateY: panelAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [-6, 0],
-              }),
-            },
-            {
-              scale: panelAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.985, 1],
-              }),
-            },
-          ],
-        };
+  const nativePanelMotionStyle = useAnimatedStyle(() => ({
+    borderTopWidth: interpolate(panelProgress.value, [0, 1], [0, 1], Extrapolation.CLAMP),
+    height: interpolate(
+      panelProgress.value,
+      [0, 1],
+      [interactionMotion.panelCollapsedHeight, measuredHeight],
+      Extrapolation.CLAMP,
+    ),
+    opacity: interpolate(panelProgress.value, [0, 0.24, 1], [0, 0.72, 1], Extrapolation.CLAMP),
+  }), [measuredHeight]);
+  const nativeContentMotionStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(panelProgress.value, [0, 0.18, 1], [0, 0.65, 1], Extrapolation.CLAMP),
+    transform: [
+      {
+        translateY: interpolate(panelProgress.value, [0, 1], [-6, 0], Extrapolation.CLAMP),
+      },
+      {
+        scale: interpolate(panelProgress.value, [0, 1], [0.985, 1], Extrapolation.CLAMP),
+      },
+    ],
+  }));
+  const panelMotionStyle = Platform.OS === 'web'
+    ? {
+        borderTopWidth: open && measuredHeight > 0 ? 1 : 0,
+        height: open ? measuredHeight : interactionMotion.panelCollapsedHeight,
+        opacity: open ? 1 : 0,
+      }
+    : nativePanelMotionStyle;
+  const contentMotionStyle = Platform.OS === 'web'
+    ? {
+        opacity: open ? 1 : 0,
+        transform: [{ translateY: open ? 0 : -6 }, { scale: open ? 1 : 0.985 }],
+      }
+    : nativeContentMotionStyle;
 
   return (
-    <Animated.View
+    <Reanimated.View
       pointerEvents={open ? 'auto' : 'none'}
       style={[styles.filterPanel, themeStyles?.filterPanel, filterPanelWebTransition, panelMotionStyle]}
       testID={testID}
     >
-      <Animated.View onLayout={handlePanelContentLayout} style={[styles.filterPanelContent, filterPanelWebTransition, contentMotionStyle]}>
-        {(open || hasOpened) && children}
-      </Animated.View>
-    </Animated.View>
+      <Reanimated.View onLayout={handlePanelContentLayout} style={[styles.filterPanelContent, filterPanelWebTransition, contentMotionStyle]}>
+        {children}
+      </Reanimated.View>
+    </Reanimated.View>
   );
 }
 
@@ -6833,14 +6835,41 @@ export function CustomSetPickerOverlay({
   const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const ui = modeInterfaceCopy[studyMode];
   const overlayAnim = useRef(new Animated.Value(0)).current;
+  const overlayClosingRef = useRef(false);
 
   useEffect(() => {
-    Animated.timing(overlayAnim, {
-      duration: interactionMotion.settingsPanelMs,
-      easing: Easing.out(Easing.cubic),
+    overlayClosingRef.current = false;
+    overlayAnim.setValue(0);
+    Animated.spring(overlayAnim, {
+      damping: 24,
+      mass: 0.72,
+      overshootClamping: true,
+      stiffness: 240,
       toValue: 1,
       useNativeDriver: Platform.OS !== 'web',
     }).start();
+  }, [overlayAnim]);
+
+  const dismissOverlay = useCallback((afterClose: () => void) => {
+    if (overlayClosingRef.current) {
+      return;
+    }
+
+    overlayClosingRef.current = true;
+    Keyboard.dismiss();
+    overlayAnim.stopAnimation();
+    Animated.timing(overlayAnim, {
+      duration: interactionMotion.settingsPanelExitMs,
+      easing: Easing.inOut(Easing.cubic),
+      toValue: 0,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start(({ finished }) => {
+      if (finished) {
+        afterClose();
+      } else {
+        overlayClosingRef.current = false;
+      }
+    });
   }, [overlayAnim]);
 
   const overlayMotion = {
@@ -6873,7 +6902,14 @@ export function CustomSetPickerOverlay({
             </Text>
             <Text style={[styles.customSetPickerText, themeStyles?.customSetPickerText]}>{ui.chooseCustomSet}</Text>
           </View>
-          <AnimatedPressable accessibilityRole="button" glassTone="icon" onPress={onClose} pressTone="icon" style={styles.iconButton}>
+          <AnimatedPressable
+            accessibilityLabel={studyMode === 'chinese' ? 'Close' : '關閉'}
+            accessibilityRole="button"
+            glassTone="icon"
+            onPress={() => dismissOverlay(onClose)}
+            pressTone="icon"
+            style={styles.iconButton}
+          >
             <X size={18} color={bodyIconColor} strokeWidth={2.5} />
           </AnimatedPressable>
         </View>
@@ -6890,7 +6926,7 @@ export function CustomSetPickerOverlay({
           </View>
           <AnimatedPressable
             accessibilityRole="button"
-            onPress={onCreateAndAdd}
+            onPress={() => dismissOverlay(onCreateAndAdd)}
             pressTone="primary"
             style={styles.customSetCreateButton}
           >
@@ -6906,7 +6942,7 @@ export function CustomSetPickerOverlay({
             <AnimatedPressable
               accessibilityRole="button"
               key={set.id}
-              onPress={() => onAddToSet(set.id)}
+              onPress={() => dismissOverlay(() => onAddToSet(set.id))}
               pressTone="list"
               style={[styles.customSetPickerRow, themeStyles?.customSetPickerRow]}
             >
@@ -7037,9 +7073,11 @@ export function ProfileCustomSetsView({
     const useNativeDriver = Platform.OS !== 'web';
 
     if (customSetPanel === renderedCustomSetPanel) {
-      Animated.timing(customSetPanelAnim, {
-        duration: interactionMotion.settingsPanelMs,
-        easing: Easing.out(Easing.cubic),
+      Animated.spring(customSetPanelAnim, {
+        damping: 24,
+        mass: 0.72,
+        overshootClamping: true,
+        stiffness: 240,
         toValue: 1,
         useNativeDriver,
       }).start();
@@ -7088,7 +7126,11 @@ export function ProfileCustomSetsView({
         </Text>
       </AnimatedPressable>
 
-      <Animated.View style={customSetPanelMotionStyle} testID="custom-set-panel-transition">
+      <Animated.View
+        pointerEvents={customSetPanel === renderedCustomSetPanel ? 'auto' : 'none'}
+        style={customSetPanelMotionStyle}
+        testID="custom-set-panel-transition"
+      >
       {renderedCustomSetPanel === 'list' && (
         <View style={styles.screenStack} testID="custom-set-list-panel">
           <View style={[styles.customSetsHeroCard, themeStyles?.customSetsHeroCard]}>

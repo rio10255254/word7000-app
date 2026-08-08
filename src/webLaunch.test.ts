@@ -616,9 +616,17 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('pressedOpacity');
+    expect(appSource).toContain('Reanimated.createAnimatedComponent(Pressable)');
+    expect(appSource).toContain('const pressProgress = useSharedValue(0);');
+    expect(appSource).toContain('pressProgress.value = withTiming(1');
+    expect(appSource).toContain('pressProgress.value = withSpring(0');
+    expect(appSource).toContain('reduceMotion: ReduceMotion.System');
     expect(appSource).toContain('filterPanelMeasuredHeight');
-    expect(appSource).toContain('const [hasOpened, setHasOpened] = useState(open);');
-    expect(appSource).toContain('{(open || hasOpened) && children}');
+    expect(appSource).toContain('const panelProgress = useSharedValue(open ? 1 : 0);');
+    expect(appSource).toContain('panelProgress.value = withTiming(open ? 1 : 0');
+    expect(appSource).toContain('nativePanelMotionStyle');
+    expect(appSource).toContain('nativeContentMotionStyle');
+    expect(appSource).toContain('<Reanimated.View');
     expect(appSource).toContain('onLayout={handlePanelContentLayout}');
     expect(appSource).toContain('pointerEvents={open ?');
     expect(appSource).toContain('styles.filterPanelContent');
@@ -637,6 +645,18 @@ describe('free web launch configuration', () => {
     expect(setsRoute).toContain('<ProfileCustomSetsView');
     expect(appSource).not.toContain('library-custom-sets-stage');
     expect(appSource).not.toContain('renderedLibraryPanel');
+  });
+
+  test('pairs custom-set menu entry with a complete exit before changing state', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+
+    expect(appSource).toContain('const dismissOverlay = useCallback((afterClose: () => void) => {');
+    expect(appSource).toContain('duration: interactionMotion.settingsPanelExitMs');
+    expect(appSource).toContain('onPress={() => dismissOverlay(onClose)}');
+    expect(appSource).toContain('onPress={() => dismissOverlay(onCreateAndAdd)}');
+    expect(appSource).toContain('onPress={() => dismissOverlay(() => onAddToSet(set.id))}');
+    expect(appSource).toContain('Animated.spring(customSetPanelAnim');
+    expect(appSource).toContain("pointerEvents={customSetPanel === renderedCustomSetPanel ? 'auto' : 'none'}");
   });
 
   test('adds an English alphabetical sort option inside the library filter panel', () => {
@@ -691,8 +711,10 @@ describe('free web launch configuration', () => {
 
     expect(rootLayout).toContain("const pushAnimation = Platform.OS === 'ios' ? 'simple_push' : 'slide_from_right';");
     expect(rootLayout).toContain('animation: pushAnimation');
-    expect(rootLayout).toContain('animationDuration: 360');
-    expect(rootLayout).toContain('fullScreenGestureEnabled: true');
+    expect(rootLayout).toContain("animationDuration: Platform.OS === 'ios' ? 350 : undefined");
+    expect(rootLayout).toContain("animationMatchesGesture: Platform.OS === 'ios'");
+    expect(rootLayout).toContain("fullScreenGestureEnabled: Platform.OS === 'ios'");
+    expect(rootLayout).not.toContain('freezeOnBlur:');
     expect(rootLayout).toContain('gestureEnabled: true');
     expect(appSource).toContain("router.push({ pathname: '/library/[wordId]'");
     expect(detailRoute).toContain('router.back()');

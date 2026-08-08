@@ -45,8 +45,9 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               animation: pushAnimation,
-              animationDuration: 360,
-              fullScreenGestureEnabled: true,
+              animationDuration: Platform.OS === 'ios' ? 350 : undefined,
+              animationMatchesGesture: Platform.OS === 'ios',
+              fullScreenGestureEnabled: Platform.OS === 'ios',
               gestureEnabled: true,
               headerShown: false,
             }}

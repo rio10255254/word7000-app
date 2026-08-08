@@ -23,7 +23,7 @@ describe('interaction motion presets', () => {
 
   test('uses measured filter panel motion instead of large max-height collapsing', () => {
     expect(interactionMotion.panelCollapsedHeight).toBe(0);
-    expect(interactionMotion.panelCloseMs).toBeGreaterThan(interactionMotion.panelMs);
+    expect(interactionMotion.panelCloseMs).toBeLessThan(interactionMotion.panelMs);
     expect(interactionMotion.panelMeasureMs).toBeLessThan(interactionMotion.panelMs);
     expect(interactionMotion.panelFadeMs).toBeLessThanOrEqual(interactionMotion.panelMs);
   });

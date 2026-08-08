@@ -258,6 +258,7 @@ const IS_NATIVE_IOS = Platform.OS === 'ios';
 const NATIVE_GLASS_AVAILABLE = IS_NATIVE_IOS && isGlassEffectAPIAvailable();
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
+const ZERO_SCROLL_INSETS = { bottom: 0, left: 0, right: 0, top: 0 } as const;
 // On iOS the native tab bar sits at the bottom and the system hands us the
 // inset. The web fallback for native tabs is a fixed pill at top: 24px with a
 // height of 40, which floats over the content, so web alone owes it headroom.
@@ -976,13 +977,16 @@ function TabScrollHost({ children, stabilizeScrollBounds = false }: { children: 
     <ScrollView
       alwaysBounceVertical={!stabilizeScrollBounds}
       automaticallyAdjustContentInsets={!stabilizeScrollBounds}
-      automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+      automaticallyAdjustKeyboardInsets={Platform.OS === 'ios' && !stabilizeScrollBounds}
+      automaticallyAdjustsScrollIndicatorInsets={!stabilizeScrollBounds}
       bounces={!stabilizeScrollBounds}
+      contentInset={stabilizeScrollBounds ? ZERO_SCROLL_INSETS : undefined}
       contentContainerStyle={[styles.content, { paddingTop: TAB_CONTENT_TOP_PADDING }]}
       contentInsetAdjustmentBehavior={stabilizeScrollBounds ? 'never' : 'automatic'}
       keyboardDismissMode={Platform.OS === 'ios' && !stabilizeScrollBounds ? 'interactive' : 'on-drag'}
       keyboardShouldPersistTaps="handled"
       overScrollMode={stabilizeScrollBounds ? 'never' : 'auto'}
+      scrollIndicatorInsets={stabilizeScrollBounds ? ZERO_SCROLL_INSETS : undefined}
       style={[styles.appScroll, IS_WEB_IOS_PREVIEW && styles.webIosPreviewScroll, themeStyles?.appShell]}
     >
       <View style={styles.screenMotion}>{children}</View>

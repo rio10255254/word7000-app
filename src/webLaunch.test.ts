@@ -939,9 +939,14 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('stabilizeScrollBounds = false');
     expect(appSource).toContain('alwaysBounceVertical={!stabilizeScrollBounds}');
     expect(appSource).toContain('automaticallyAdjustContentInsets={!stabilizeScrollBounds}');
+    expect(appSource).toContain("automaticallyAdjustKeyboardInsets={Platform.OS === 'ios' && !stabilizeScrollBounds}");
+    expect(appSource).toContain('automaticallyAdjustsScrollIndicatorInsets={!stabilizeScrollBounds}');
+    expect(appSource).toContain('const ZERO_SCROLL_INSETS = { bottom: 0, left: 0, right: 0, top: 0 } as const;');
+    expect(appSource).toContain('contentInset={stabilizeScrollBounds ? ZERO_SCROLL_INSETS : undefined}');
     expect(appSource).toContain("contentInsetAdjustmentBehavior={stabilizeScrollBounds ? 'never' : 'automatic'}");
     expect(appSource).toContain("keyboardDismissMode={Platform.OS === 'ios' && !stabilizeScrollBounds ? 'interactive' : 'on-drag'}");
     expect(appSource).toContain("overScrollMode={stabilizeScrollBounds ? 'never' : 'auto'}");
+    expect(appSource).toContain('scrollIndicatorInsets={stabilizeScrollBounds ? ZERO_SCROLL_INSETS : undefined}');
     expect(appSource).toContain('<TabScrollHost stabilizeScrollBounds>');
     expect(appSource).not.toContain('reserveTabBarClearance');
   });

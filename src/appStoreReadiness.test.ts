@@ -96,10 +96,15 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).toContain("import { GlassView, isGlassEffectAPIAvailable } from 'expo-glass-effect';");
     expect(appSource).toContain("const NATIVE_GLASS_AVAILABLE = IS_NATIVE_IOS && isGlassEffectAPIAvailable();");
     expect(appSource).toContain("type NativeGlassTone = 'primary' | 'secondary' | 'icon';");
-    expect(appSource).toContain('glassEffectStyle="regular"');
+    expect(appSource).toContain("style: 'regular'");
+    expect(appSource).toContain('animationDuration: interactionMotion.glassMorphMs / 1000');
     expect(appSource).toContain('nativeGlassTone && styles.nativeGlassButton');
     expect(appSource).toContain('glassTone="secondary"');
-    expect(appSource).not.toContain('nativeGlassToneForPressTone');
+    expect(appSource).toContain('nativeGlassToneForPressTone(pressTone)');
+    expect(appSource).toContain("return tone === 'icon' ? 'icon' : null;");
+    expect(appSource).toContain('styles.nativeGlassFeedback');
+    expect(appSource).toContain("'rgba(235, 245, 255, 0.62)'");
+    expect(appSource).toContain('opacity: nativeGlassTone');
   });
 
   test('gives native navigation and primary actions stronger haptic feedback', () => {
@@ -126,11 +131,11 @@ describe('iOS App Store readiness polish', () => {
     const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
     const visualSystem = fs.readFileSync(path.join(process.cwd(), 'src', 'design', 'iosVisualSystem.ts'), 'utf8');
 
-    expect(visualSystem).toContain("background: '#F2F2F7'");
+    expect(visualSystem).toContain("background: '#EDF3F8'");
     expect(visualSystem).toContain("surface: '#FFFFFF'");
     expect(visualSystem).toContain("label: '#1C1C1E'");
     expect(visualSystem).toContain("accent: '#007AFF'");
-    expect(visualSystem).toContain("background: '#000000'");
+    expect(visualSystem).toContain("background: '#070A0F'");
     expect(visualSystem).toContain("surface: '#1C1C1E'");
     expect(visualSystem).toContain("accent: '#0A84FF'");
     expect(rootLayout).toContain('lightNavigationTheme');

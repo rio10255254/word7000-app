@@ -4,6 +4,11 @@ import { interactionMotion, listEnterOffset, pressMotionFor } from './interactio
 describe('interaction motion presets', () => {
   test('defines refined press motion for every interactive surface', () => {
     expect(interactionMotion.pressInMs).toBeLessThan(interactionMotion.releaseMs);
+    expect(interactionMotion.pressInMs).toBeGreaterThanOrEqual(85);
+    expect(interactionMotion.releaseMs).toBeGreaterThanOrEqual(280);
+    expect(interactionMotion.glassMorphMs).toBeGreaterThan(interactionMotion.pressInMs);
+    expect(interactionMotion.glassFeedbackMaxOpacity).toBeGreaterThanOrEqual(0.14);
+    expect(interactionMotion.glassFeedbackMaxOpacity).toBeLessThanOrEqual(0.22);
 
     for (const tone of ['primary', 'secondary', 'chip', 'icon', 'tab', 'list', 'libraryItem'] as const) {
       const motion = pressMotionFor(tone);

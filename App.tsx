@@ -3701,11 +3701,19 @@ type WebTransitionStyle = ViewStyle & {
   willChange?: string;
 };
 
+function nativeGlassToneForPressTone(tone: InteractionTone): NativeGlassTone | null {
+  return tone === 'icon' ? 'icon' : null;
+}
+
 function NativeButtonGlass({ tone }: { tone: NativeGlassTone }) {
   const themeMode = useContext(ThemeContext);
   const darkMode = themeMode === 'dark';
   const tintColor = tone === 'primary'
     ? (darkMode ? iosVisual.dark.accent : iosVisual.light.accent)
+    : tone === 'icon'
+      ? darkMode
+        ? 'rgba(18, 29, 43, 0.58)'
+        : 'rgba(235, 245, 255, 0.62)'
     : darkMode
       ? 'rgba(44, 44, 46, 0.72)'
       : 'rgba(255, 255, 255, 0.68)';
@@ -3713,7 +3721,11 @@ function NativeButtonGlass({ tone }: { tone: NativeGlassTone }) {
   return (
     <GlassView
       colorScheme={darkMode ? 'dark' : 'light'}
-      glassEffectStyle="regular"
+      glassEffectStyle={{
+        animate: true,
+        animationDuration: interactionMotion.glassMorphMs / 1000,
+        style: 'regular',
+      }}
       isInteractive
       style={StyleSheet.absoluteFill}
       tintColor={tintColor}
@@ -3733,16 +3745,21 @@ function AnimatedPressable({
   ...props
 }: AnimatedPressableProps) {
   const [pressed, setPressed] = useState(false);
+  const themeMode = useContext(ThemeContext);
   const pressProgress = useSharedValue(0);
   const pressMotion = pressMotionFor(pressTone);
-  const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE ? glassTone ?? null : null;
+  const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE
+    ? glassTone ?? nativeGlassToneForPressTone(pressTone)
+    : null;
   const pressStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      pressProgress.value,
-      [0, 1],
-      [1, pressMotion.pressedOpacity],
-      Extrapolation.CLAMP,
-    ),
+    opacity: nativeGlassTone
+      ? 1
+      : interpolate(
+          pressProgress.value,
+          [0, 1],
+          [1, pressMotion.pressedOpacity],
+          Extrapolation.CLAMP,
+        ),
     transform: [
       {
         scale: interpolate(
@@ -3759,6 +3776,19 @@ function AnimatedPressable({
           [0, pressMotion.pressedTranslateY],
           Extrapolation.CLAMP,
         ),
+      },
+    ],
+  }));
+  const glassFeedbackStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      pressProgress.value,
+      [0, 1],
+      [0, interactionMotion.glassFeedbackMaxOpacity],
+      Extrapolation.CLAMP,
+    ),
+    transform: [
+      {
+        scale: interpolate(pressProgress.value, [0, 1], [1.08, 1], Extrapolation.CLAMP),
       },
     ],
   }));
@@ -3816,6 +3846,18 @@ function AnimatedPressable({
       ]}
     >
       {nativeGlassTone ? <NativeButtonGlass tone={nativeGlassTone} /> : null}
+      {nativeGlassTone ? (
+        <>
+          <Reanimated.View
+            pointerEvents="none"
+            style={[
+              styles.nativeGlassFeedback,
+              themeMode === 'dark' ? styles.nativeGlassFeedbackDark : styles.nativeGlassFeedbackLight,
+              glassFeedbackStyle,
+            ]}
+          />
+        </>
+      ) : null}
       {children}
     </MotionPressable>
   );
@@ -7794,7 +7836,7 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f2f2f7',
+    backgroundColor: '#edf3f8',
   },
   webIosPreviewSafeArea: {
     alignItems: 'center',
@@ -7805,7 +7847,7 @@ const styles = StyleSheet.create({
   },
   appStorageBootScreen: {
     alignItems: 'center',
-    backgroundColor: '#f2f2f7',
+    backgroundColor: '#edf3f8',
     flex: 1,
     gap: 12,
     justifyContent: 'center',
@@ -7825,7 +7867,7 @@ const styles = StyleSheet.create({
   },
   appShell: {
     alignSelf: 'center',
-    backgroundColor: '#f2f2f7',
+    backgroundColor: '#edf3f8',
     flex: 1,
     maxWidth: 760,
     width: '100%',
@@ -8510,6 +8552,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     overflow: 'hidden',
   },
+  nativeGlassFeedback: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
+  nativeGlassFeedbackLight: {
+    backgroundColor: '#007AFF',
+  },
+  nativeGlassFeedbackDark: {
+    backgroundColor: '#FFFFFF',
+  },
   primaryButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
@@ -8584,7 +8639,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   homeDictionaryModalRootNative: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#EDF3F8',
   },
   homeDictionaryBackdrop: {
     backgroundColor: 'rgba(28, 28, 30, 0.52)',
@@ -8616,6 +8671,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   homeDictionaryModalSheetNative: {
+    backgroundColor: '#F6F9FC',
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     borderWidth: 0,
@@ -8686,6 +8742,8 @@ const styles = StyleSheet.create({
   },
   homeDictionaryClearButton: {
     alignItems: 'center',
+    borderRadius: 19,
+    borderCurve: 'continuous',
     height: 38,
     justifyContent: 'center',
     width: 38,
@@ -10836,10 +10894,10 @@ const styles = StyleSheet.create({
 
 const darkStyles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#000000',
+    backgroundColor: '#070A0F',
   },
   appShell: {
-    backgroundColor: '#000000',
+    backgroundColor: '#070A0F',
   },
   primaryButton: {
     backgroundColor: '#0A84FF',
@@ -11047,10 +11105,10 @@ const darkStyles = StyleSheet.create({
     color: '#FFFFFF',
   },
   homeDictionaryModalRootNative: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#070A0F',
   },
   homeDictionaryModalSheet: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#10151C',
     borderColor: '#3A3A3C',
   },
   homeDictionaryResultRow: {

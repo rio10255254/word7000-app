@@ -126,8 +126,8 @@ describe('custom vocabulary sets', () => {
   test('parses custom words from CSV upload rows', () => {
     const parsed = parseCustomWordsCsv(
       [
-        'word,meaning,pronunciation,partOfSpeech,example,exampleZh,group',
-        'harbor,港口,/harbor/,n,"The harbor was full of boats.","港口停滿了船。",Custom',
+        'word,meaning,supplementalMeaningZh,pronunciation,partOfSpeech,example,exampleZh,group',
+        'harbor,港口,避風港,/harbor/,n,"The harbor was full of boats.","港口停滿了船。",Custom',
       ].join('\n'),
     );
     const words = customWordsFromImportRows(parsed.rows, []);
@@ -138,6 +138,7 @@ describe('custom vocabulary sets', () => {
       id: 'custom-harbor',
       word: 'harbor',
       meaningZh: '港口',
+      supplementalMeaningZh: '避風港',
       group: 'Custom',
     });
   });

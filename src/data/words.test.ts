@@ -10,6 +10,13 @@ const allReviewedExamples = fs
   .filter((filename) => /^reviewed-examples.*\.json$/.test(filename))
   .sort()
   .flatMap((filename) => JSON.parse(fs.readFileSync(path.join(dataDir, filename), 'utf8')));
+const reviewedMeaningFiles = fs
+  .readdirSync(dataDir)
+  .filter((filename) => /^reviewed-meanings-core(?:[1-9]|1[0-4])\.json$/.test(filename))
+  .sort((a, b) => Number(a.match(/\d+/)?.[0]) - Number(b.match(/\d+/)?.[0]));
+const allReviewedMeanings = reviewedMeaningFiles.flatMap((filename) =>
+  JSON.parse(fs.readFileSync(path.join(dataDir, filename), 'utf8')),
+);
 
 describe('full vocabulary dataset', () => {
   test('contains exactly 7000 app-ready words', () => {
@@ -458,6 +465,22 @@ describe('full vocabulary dataset', () => {
     }
   });
 
+  test('applies 14 complete levels of approved reviewed meanings', () => {
+    const vocabularyByWord = new Map(sampleWords.map((word) => [word.word, word]));
+
+    expect(reviewedMeaningFiles).toHaveLength(14);
+    expect(allReviewedMeanings).toHaveLength(7000);
+    expect(new Set(allReviewedMeanings.map((row) => row.word)).size).toBe(7000);
+
+    for (const row of allReviewedMeanings) {
+      expect(row.status).toBe('approved');
+      expect(vocabularyByWord.get(row.word)).toMatchObject({
+        meaningZh: row.primaryMeaningZh,
+        supplementalMeaningZh: row.supplementalMeaningZh,
+      });
+    }
+  });
+
   test('uses each word directly inside its English example', () => {
     const missingWordExamples = sampleWords.filter((word) => {
       const pattern = new RegExp(`(^|[^a-z])${word.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`, 'i');
@@ -506,19 +529,23 @@ describe('full vocabulary dataset', () => {
     );
   });
 
-  test('keeps reviewed metadata corrections in the generated vocabulary', () => {
+  test('keeps reviewed meanings and metadata corrections in the generated vocabulary', () => {
     expect(sampleWords.find((word) => word.word === 'capt')).toMatchObject({
-      meaningZh: '船長（captain 的縮寫）；佳能先進列印技術',
+      meaningZh: '船長',
+      supplementalMeaningZh: '上尉；隊長',
     });
     expect(sampleWords.find((word) => word.word === 'unfriendly')).toMatchObject({
       partOfSpeech: 'a',
-      meaningZh: '不友善的；冷漠的',
+      meaningZh: '不友善的',
+      supplementalMeaningZh: '冷淡的',
     });
     expect(sampleWords.find((word) => word.word === 'fairness')).toMatchObject({
-      meaningZh: '公平；公正',
+      meaningZh: '公平',
+      supplementalMeaningZh: '',
     });
     expect(sampleWords.find((word) => word.word === 'stressful')).toMatchObject({
-      meaningZh: '壓力大的；令人緊張的',
+      meaningZh: '壓力大的',
+      supplementalMeaningZh: '',
     });
   });
 

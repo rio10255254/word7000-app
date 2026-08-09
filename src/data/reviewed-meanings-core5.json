@@ -1,0 +1,3502 @@
+[
+  {
+    "word": "acid",
+    "primaryMeaningZh": "酸液",
+    "supplementalMeaningZh": "酸性的；尖酸的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "inner",
+    "primaryMeaningZh": "內心的",
+    "supplementalMeaningZh": "內部的；內在的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "fishing",
+    "primaryMeaningZh": "釣魚",
+    "supplementalMeaningZh": "漁業",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "vegetable",
+    "primaryMeaningZh": "蔬菜",
+    "supplementalMeaningZh": "植物人；植物的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "preserve",
+    "primaryMeaningZh": "保存",
+    "supplementalMeaningZh": "保護；維持；醃製",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "perfectly",
+    "primaryMeaningZh": "很順利地",
+    "supplementalMeaningZh": "完全地；完美地",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "attractive",
+    "primaryMeaningZh": "吸引人的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "valley",
+    "primaryMeaningZh": "山谷",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "minor",
+    "primaryMeaningZh": "輕微的",
+    "supplementalMeaningZh": "未成年的；次要的；副修",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "emotion",
+    "primaryMeaningZh": "情感",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "chip",
+    "primaryMeaningZh": "缺口",
+    "supplementalMeaningZh": "碎片；洋芋片；晶片",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pension",
+    "primaryMeaningZh": "退休金",
+    "supplementalMeaningZh": "撫卹金",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "resistance",
+    "primaryMeaningZh": "阻力",
+    "supplementalMeaningZh": "抵抗；抵抗力；電阻",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "compete",
+    "primaryMeaningZh": "競爭",
+    "supplementalMeaningZh": "比賽；抗衡",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "stir",
+    "primaryMeaningZh": "攪拌",
+    "supplementalMeaningZh": "激起；騷動；稍微移動",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "wedding",
+    "primaryMeaningZh": "婚禮",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "lock",
+    "primaryMeaningZh": "鎖上",
+    "supplementalMeaningZh": "鎖具；水閘",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "boot",
+    "primaryMeaningZh": "靴子",
+    "supplementalMeaningZh": "踢；開機；解雇",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "switch",
+    "primaryMeaningZh": "開關",
+    "supplementalMeaningZh": "切換",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "hello",
+    "primaryMeaningZh": "哈囉",
+    "supplementalMeaningZh": "喂",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "revolution",
+    "primaryMeaningZh": "旋轉一圈",
+    "supplementalMeaningZh": "革命；重大變革；循環",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "construct",
+    "primaryMeaningZh": "建造",
+    "supplementalMeaningZh": "構成；構想",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "habit",
+    "primaryMeaningZh": "習慣",
+    "supplementalMeaningZh": "習性；嗜好",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "command",
+    "primaryMeaningZh": "命令",
+    "supplementalMeaningZh": "指揮；掌控；指令",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tower",
+    "primaryMeaningZh": "塔樓",
+    "supplementalMeaningZh": "高塔；高聳",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "drag",
+    "primaryMeaningZh": "拖",
+    "supplementalMeaningZh": "拖累；拖慢；吃力前進",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "via",
+    "primaryMeaningZh": "經由",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "philosophy",
+    "primaryMeaningZh": "人生觀",
+    "supplementalMeaningZh": "哲學；基本理念",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "vital",
+    "primaryMeaningZh": "重要的",
+    "supplementalMeaningZh": "生死攸關的；有活力的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bend",
+    "primaryMeaningZh": "折彎",
+    "supplementalMeaningZh": "彎曲；轉彎處；屈服",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "illness",
+    "primaryMeaningZh": "疾病",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "preparation",
+    "primaryMeaningZh": "準備",
+    "supplementalMeaningZh": "預習",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "climate",
+    "primaryMeaningZh": "氣候",
+    "supplementalMeaningZh": "社會氣氛；趨勢",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sand",
+    "primaryMeaningZh": "沙",
+    "supplementalMeaningZh": "沙灘；撒沙",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "elderly",
+    "primaryMeaningZh": "年長的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "discovery",
+    "primaryMeaningZh": "發現",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "jacket",
+    "primaryMeaningZh": "外套",
+    "supplementalMeaningZh": "護套",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "assist",
+    "primaryMeaningZh": "協助",
+    "supplementalMeaningZh": "助攻",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "stream",
+    "primaryMeaningZh": "溪流",
+    "supplementalMeaningZh": "串流；湧出；人潮",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "membership",
+    "primaryMeaningZh": "會員資格",
+    "supplementalMeaningZh": "全體會員",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "reputation",
+    "primaryMeaningZh": "名聲",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "competitive",
+    "primaryMeaningZh": "競爭激烈的",
+    "supplementalMeaningZh": "好勝的；有競爭力的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "retire",
+    "primaryMeaningZh": "退休",
+    "supplementalMeaningZh": "退役；退下；撤退",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cheese",
+    "primaryMeaningZh": "起司",
+    "supplementalMeaningZh": "乳酪",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mood",
+    "primaryMeaningZh": "心情",
+    "supplementalMeaningZh": "氣氛",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "breathe",
+    "primaryMeaningZh": "呼吸",
+    "supplementalMeaningZh": "低聲說；散發",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "knife",
+    "primaryMeaningZh": "刀",
+    "supplementalMeaningZh": "小刀；用刀切",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "phrase",
+    "primaryMeaningZh": "說法",
+    "supplementalMeaningZh": "片語；短句",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "unlike",
+    "primaryMeaningZh": "不像",
+    "supplementalMeaningZh": "不同的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "peak",
+    "primaryMeaningZh": "山頂",
+    "supplementalMeaningZh": "高峰；達到最高點",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "substance",
+    "primaryMeaningZh": "物質",
+    "supplementalMeaningZh": "實質；內容；本質",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "poem",
+    "primaryMeaningZh": "詩",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "musical",
+    "primaryMeaningZh": "音樂劇",
+    "supplementalMeaningZh": "音樂的；悅耳的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "kiss",
+    "primaryMeaningZh": "親一下",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "crazy",
+    "primaryMeaningZh": "瘋狂的",
+    "supplementalMeaningZh": "著迷的；荒唐的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "relative",
+    "primaryMeaningZh": "親戚",
+    "supplementalMeaningZh": "相對的；有關的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "silver",
+    "primaryMeaningZh": "銀的",
+    "supplementalMeaningZh": "銀色；銀器",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cable",
+    "primaryMeaningZh": "電纜",
+    "supplementalMeaningZh": "纜線；鋼索；有線電視",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "joke",
+    "primaryMeaningZh": "笑話",
+    "supplementalMeaningZh": "開玩笑；取笑",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "opposite",
+    "primaryMeaningZh": "對面",
+    "supplementalMeaningZh": "相反的；對立面",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "scream",
+    "primaryMeaningZh": "尖叫聲",
+    "supplementalMeaningZh": "尖叫；呼嘯",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "depth",
+    "primaryMeaningZh": "深度",
+    "supplementalMeaningZh": "深處；深奧程度",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "opponent",
+    "primaryMeaningZh": "對手",
+    "supplementalMeaningZh": "反對者；敵方的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cope",
+    "primaryMeaningZh": "應付",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "justify",
+    "primaryMeaningZh": "使合理",
+    "supplementalMeaningZh": "證明有理；替……辯護",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "output",
+    "primaryMeaningZh": "產量",
+    "supplementalMeaningZh": "輸出；作品量",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "alcohol",
+    "primaryMeaningZh": "酒精",
+    "supplementalMeaningZh": "酒",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "slide",
+    "primaryMeaningZh": "溜滑梯",
+    "supplementalMeaningZh": "滑動；投影片；滑落",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "transform",
+    "primaryMeaningZh": "改造",
+    "supplementalMeaningZh": "轉化；改變",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "disaster",
+    "primaryMeaningZh": "災難",
+    "supplementalMeaningZh": "慘敗",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "deserve",
+    "primaryMeaningZh": "應得",
+    "supplementalMeaningZh": "值得",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "monitor",
+    "primaryMeaningZh": "監測",
+    "supplementalMeaningZh": "螢幕；班長",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "persuade",
+    "primaryMeaningZh": "說服",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "restore",
+    "primaryMeaningZh": "修復",
+    "supplementalMeaningZh": "恢復；歸還",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "priest",
+    "primaryMeaningZh": "神父",
+    "supplementalMeaningZh": "祭司；神職人員；僧侶",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "proceed",
+    "primaryMeaningZh": "前往",
+    "supplementalMeaningZh": "繼續進行；開始進行",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "approval",
+    "primaryMeaningZh": "同意",
+    "supplementalMeaningZh": "核准",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "coal",
+    "primaryMeaningZh": "煤",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "violent",
+    "primaryMeaningZh": "猛烈的",
+    "supplementalMeaningZh": "暴力的；激烈的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "originally",
+    "primaryMeaningZh": "原本",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pure",
+    "primaryMeaningZh": "純淨的",
+    "supplementalMeaningZh": "純粹的；清白的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "universe",
+    "primaryMeaningZh": "宇宙",
+    "supplementalMeaningZh": "世界；範圍",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tourist",
+    "primaryMeaningZh": "旅客",
+    "supplementalMeaningZh": "旅遊的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "conventional",
+    "primaryMeaningZh": "正規的",
+    "supplementalMeaningZh": "傳統的；一般的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "wet",
+    "primaryMeaningZh": "濕的",
+    "supplementalMeaningZh": "弄濕；雨天",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "anger",
+    "primaryMeaningZh": "怒氣",
+    "supplementalMeaningZh": "激怒",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mixture",
+    "primaryMeaningZh": "混合物",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "whenever",
+    "primaryMeaningZh": "每當",
+    "supplementalMeaningZh": "無論何時",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "illegal",
+    "primaryMeaningZh": "違法的",
+    "supplementalMeaningZh": "不合規定的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "convince",
+    "primaryMeaningZh": "使相信",
+    "supplementalMeaningZh": "說服",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "string",
+    "primaryMeaningZh": "繩子",
+    "supplementalMeaningZh": "一串；字串；串起",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pose",
+    "primaryMeaningZh": "姿勢",
+    "supplementalMeaningZh": "提出；造成",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "valuable",
+    "primaryMeaningZh": "寶貴的",
+    "supplementalMeaningZh": "貴重的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cake",
+    "primaryMeaningZh": "蛋糕",
+    "supplementalMeaningZh": "餅狀物；結塊",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "naturally",
+    "primaryMeaningZh": "自然地",
+    "supplementalMeaningZh": "天生地；當然",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "retirement",
+    "primaryMeaningZh": "退休",
+    "supplementalMeaningZh": "退隱；撤離",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "smart",
+    "primaryMeaningZh": "聰明的",
+    "supplementalMeaningZh": "時髦的；俐落的；刺痛",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "wrap",
+    "primaryMeaningZh": "包好",
+    "supplementalMeaningZh": "包裹；圍巾；結束拍攝",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "wealth",
+    "primaryMeaningZh": "財富",
+    "supplementalMeaningZh": "豐富",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "electronic",
+    "primaryMeaningZh": "電子的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "port",
+    "primaryMeaningZh": "港口",
+    "supplementalMeaningZh": "連接埠；左舷",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pot",
+    "primaryMeaningZh": "鍋",
+    "supplementalMeaningZh": "罐；盆；壺",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sensitive",
+    "primaryMeaningZh": "敏感的",
+    "supplementalMeaningZh": "靈敏的；體貼細膩的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "resist",
+    "primaryMeaningZh": "抵擋",
+    "supplementalMeaningZh": "忍住；抵制",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "unknown",
+    "primaryMeaningZh": "陌生的",
+    "supplementalMeaningZh": "未知的；未知數",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sum",
+    "primaryMeaningZh": "總金額",
+    "supplementalMeaningZh": "總和；概要",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "fault",
+    "primaryMeaningZh": "錯",
+    "supplementalMeaningZh": "過失；故障；缺點",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "false",
+    "primaryMeaningZh": "錯誤的",
+    "supplementalMeaningZh": "假的；虛偽的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "throat",
+    "primaryMeaningZh": "喉嚨",
+    "supplementalMeaningZh": "嗓音",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "birthday",
+    "primaryMeaningZh": "生日",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "symbol",
+    "primaryMeaningZh": "象徵",
+    "supplementalMeaningZh": "符號；標誌",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "emphasize",
+    "primaryMeaningZh": "強調",
+    "supplementalMeaningZh": "著重；加強語氣",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "swing",
+    "primaryMeaningZh": "鞦韆",
+    "supplementalMeaningZh": "搖擺；揮動；轉變",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "luck",
+    "primaryMeaningZh": "好運",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "spiritual",
+    "primaryMeaningZh": "心靈的",
+    "supplementalMeaningZh": "宗教的；神聖的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "drama",
+    "primaryMeaningZh": "戲",
+    "supplementalMeaningZh": "戲劇；戲劇性事件",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "visible",
+    "primaryMeaningZh": "看得見的",
+    "supplementalMeaningZh": "明顯的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "wooden",
+    "primaryMeaningZh": "木製的",
+    "supplementalMeaningZh": "呆板的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "delivery",
+    "primaryMeaningZh": "遞送",
+    "supplementalMeaningZh": "送貨；交付；分娩",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "suitable",
+    "primaryMeaningZh": "適合的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "nervous",
+    "primaryMeaningZh": "緊張的",
+    "supplementalMeaningZh": "不安的；神經的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "alter",
+    "primaryMeaningZh": "修改",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "smell",
+    "primaryMeaningZh": "氣味",
+    "supplementalMeaningZh": "聞；嗅覺；發臭",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mail",
+    "primaryMeaningZh": "郵件",
+    "supplementalMeaningZh": "郵寄；郵政",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "adjust",
+    "primaryMeaningZh": "調整",
+    "supplementalMeaningZh": "適應；校準",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pace",
+    "primaryMeaningZh": "步調",
+    "supplementalMeaningZh": "速度；踱步",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bury",
+    "primaryMeaningZh": "埋",
+    "supplementalMeaningZh": "埋葬；掩藏",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "friendly",
+    "primaryMeaningZh": "友善的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "holy",
+    "primaryMeaningZh": "神聖的",
+    "supplementalMeaningZh": "聖潔的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "initially",
+    "primaryMeaningZh": "起初",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "routine",
+    "primaryMeaningZh": "例行活動",
+    "supplementalMeaningZh": "慣例；日常的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "extensive",
+    "primaryMeaningZh": "廣泛的",
+    "supplementalMeaningZh": "大量的；全面的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "dust",
+    "primaryMeaningZh": "灰塵",
+    "supplementalMeaningZh": "粉末；撢灰",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "electricity",
+    "primaryMeaningZh": "電力",
+    "supplementalMeaningZh": "電；電流",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pollution",
+    "primaryMeaningZh": "污染",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "whisper",
+    "primaryMeaningZh": "低聲說",
+    "supplementalMeaningZh": "耳語；傳聞；沙沙聲",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mystery",
+    "primaryMeaningZh": "謎團",
+    "supplementalMeaningZh": "神秘；秘密",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "wire",
+    "primaryMeaningZh": "電線",
+    "supplementalMeaningZh": "金屬絲；鐵絲網；電報",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "extreme",
+    "primaryMeaningZh": "極端的",
+    "supplementalMeaningZh": "極度的；極限；偏激的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "anxiety",
+    "primaryMeaningZh": "焦慮",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "smooth",
+    "primaryMeaningZh": "滑順的",
+    "supplementalMeaningZh": "平穩的；流暢的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "moon",
+    "primaryMeaningZh": "月亮",
+    "supplementalMeaningZh": "月球；月光",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "net",
+    "primaryMeaningZh": "網",
+    "supplementalMeaningZh": "淨利；用網捕；最終的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "potato",
+    "primaryMeaningZh": "馬鈴薯",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rough",
+    "primaryMeaningZh": "粗糙的",
+    "supplementalMeaningZh": "粗暴的；大概的；艱難的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "chamber",
+    "primaryMeaningZh": "室",
+    "supplementalMeaningZh": "房間；議院；腔室",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "crop",
+    "primaryMeaningZh": "作物",
+    "supplementalMeaningZh": "收成；裁切",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "profession",
+    "primaryMeaningZh": "職業",
+    "supplementalMeaningZh": "專業；公開聲明",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "install",
+    "primaryMeaningZh": "安裝",
+    "supplementalMeaningZh": "設置；使就任",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cap",
+    "primaryMeaningZh": "帽子",
+    "supplementalMeaningZh": "蓋子；上限；加蓋",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "load",
+    "primaryMeaningZh": "負荷",
+    "supplementalMeaningZh": "裝載量；負擔；載入",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pleased",
+    "primaryMeaningZh": "高興的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "badly",
+    "primaryMeaningZh": "很厲害地",
+    "supplementalMeaningZh": "嚴重地；差勁地；非常想",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "furniture",
+    "primaryMeaningZh": "家具",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sudden",
+    "primaryMeaningZh": "突來的",
+    "supplementalMeaningZh": "意外的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rank",
+    "primaryMeaningZh": "級別",
+    "supplementalMeaningZh": "等級；排列；軍階",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rail",
+    "primaryMeaningZh": "欄杆",
+    "supplementalMeaningZh": "鐵軌；抱怨",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "shortly",
+    "primaryMeaningZh": "不久",
+    "supplementalMeaningZh": "簡短地",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "convert",
+    "primaryMeaningZh": "改成",
+    "supplementalMeaningZh": "轉換；皈依；兌換",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "stomach",
+    "primaryMeaningZh": "胃",
+    "supplementalMeaningZh": "肚子；忍受；食慾",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bathroom",
+    "primaryMeaningZh": "浴室",
+    "supplementalMeaningZh": "廁所",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "charity",
+    "primaryMeaningZh": "慈善團體",
+    "supplementalMeaningZh": "慈善；施捨；仁慈",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "twin",
+    "primaryMeaningZh": "雙胞胎的",
+    "supplementalMeaningZh": "雙胞胎之一；成對的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "remarkable",
+    "primaryMeaningZh": "驚人的",
+    "supplementalMeaningZh": "顯著的；值得注意的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pink",
+    "primaryMeaningZh": "粉紅色的",
+    "supplementalMeaningZh": "粉紅色",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "salary",
+    "primaryMeaningZh": "薪水",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "apple",
+    "primaryMeaningZh": "蘋果",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mad",
+    "primaryMeaningZh": "生氣的",
+    "supplementalMeaningZh": "瘋狂的；著迷的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "efficient",
+    "primaryMeaningZh": "高效的",
+    "supplementalMeaningZh": "有效率的；能幹的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tube",
+    "primaryMeaningZh": "管子",
+    "supplementalMeaningZh": "軟管；隧道；試管",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "electric",
+    "primaryMeaningZh": "電動的",
+    "supplementalMeaningZh": "電的；導電的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "honest",
+    "primaryMeaningZh": "誠實的",
+    "supplementalMeaningZh": "坦白的；可靠的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "clock",
+    "primaryMeaningZh": "時鐘",
+    "supplementalMeaningZh": "計時器；記錄時間",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "overcome",
+    "primaryMeaningZh": "克服",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "lane",
+    "primaryMeaningZh": "巷子",
+    "supplementalMeaningZh": "車道；小路",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "junior",
+    "primaryMeaningZh": "資淺的",
+    "supplementalMeaningZh": "下級的；年少者；大三學生",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "dig",
+    "primaryMeaningZh": "挖",
+    "supplementalMeaningZh": "發掘；喜歡；調侃",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "slight",
+    "primaryMeaningZh": "輕微的",
+    "supplementalMeaningZh": "輕視",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "belt",
+    "primaryMeaningZh": "皮帶",
+    "supplementalMeaningZh": "地帶",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "desert",
+    "primaryMeaningZh": "沙漠",
+    "supplementalMeaningZh": "遺棄；荒涼的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "yours",
+    "primaryMeaningZh": "你的",
+    "supplementalMeaningZh": "你們的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "infection",
+    "primaryMeaningZh": "感染",
+    "supplementalMeaningZh": "傳染病；傳染",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "shell",
+    "primaryMeaningZh": "貝殼",
+    "supplementalMeaningZh": "外殼；炮彈；去殼",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "barrier",
+    "primaryMeaningZh": "路障",
+    "supplementalMeaningZh": "障礙；柵欄",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pale",
+    "primaryMeaningZh": "蒼白的",
+    "supplementalMeaningZh": "淡色的；變蒼白",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "heaven",
+    "primaryMeaningZh": "天堂",
+    "supplementalMeaningZh": "天空",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sweep",
+    "primaryMeaningZh": "掃",
+    "supplementalMeaningZh": "打掃；席捲；掃視",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "stupid",
+    "primaryMeaningZh": "愚蠢的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "inquiry",
+    "primaryMeaningZh": "詢問",
+    "supplementalMeaningZh": "調查；查詢",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "owe",
+    "primaryMeaningZh": "欠",
+    "supplementalMeaningZh": "歸功於；應給予",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "entertainment",
+    "primaryMeaningZh": "娛樂",
+    "supplementalMeaningZh": "表演；招待",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "platform",
+    "primaryMeaningZh": "月台",
+    "supplementalMeaningZh": "平台；講台；政見綱領",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "servant",
+    "primaryMeaningZh": "僕人",
+    "supplementalMeaningZh": "公僕",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "fortune",
+    "primaryMeaningZh": "好運",
+    "supplementalMeaningZh": "財富；命運；大筆財產",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "angle",
+    "primaryMeaningZh": "角度",
+    "supplementalMeaningZh": "角落；觀點",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "confront",
+    "primaryMeaningZh": "找……談",
+    "supplementalMeaningZh": "面對；對質；對抗",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "label",
+    "primaryMeaningZh": "標籤",
+    "supplementalMeaningZh": "標示；稱號；貼標籤",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pause",
+    "primaryMeaningZh": "暫停",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pepper",
+    "primaryMeaningZh": "胡椒",
+    "supplementalMeaningZh": "辣椒",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "extraordinary",
+    "primaryMeaningZh": "非凡的",
+    "supplementalMeaningZh": "特別的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "concert",
+    "primaryMeaningZh": "音樂會",
+    "supplementalMeaningZh": "演唱會",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "advanced",
+    "primaryMeaningZh": "高階的",
+    "supplementalMeaningZh": "先進的；進階的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mere",
+    "primaryMeaningZh": "光是",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "dear",
+    "primaryMeaningZh": "親愛的",
+    "supplementalMeaningZh": "昂貴的；可愛的人",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sink",
+    "primaryMeaningZh": "沉入",
+    "supplementalMeaningZh": "水槽；下陷；降低",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "relax",
+    "primaryMeaningZh": "放鬆",
+    "supplementalMeaningZh": "休息；緩和",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tendency",
+    "primaryMeaningZh": "傾向",
+    "supplementalMeaningZh": "趨勢",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "draft",
+    "primaryMeaningZh": "初稿",
+    "supplementalMeaningZh": "草案；起草；徵兵",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "temporary",
+    "primaryMeaningZh": "臨時的",
+    "supplementalMeaningZh": "臨時工",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "laboratory",
+    "primaryMeaningZh": "實驗室",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pipe",
+    "primaryMeaningZh": "管子",
+    "supplementalMeaningZh": "管線；菸斗；笛子",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "arrival",
+    "primaryMeaningZh": "到來",
+    "supplementalMeaningZh": "抵達；到達者",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bell",
+    "primaryMeaningZh": "鐘",
+    "supplementalMeaningZh": "鈴",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "weigh",
+    "primaryMeaningZh": "秤重",
+    "supplementalMeaningZh": "衡量；重達；考慮",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "personally",
+    "primaryMeaningZh": "個人而言",
+    "supplementalMeaningZh": "親自；針對個人地",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "accurate",
+    "primaryMeaningZh": "準確的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "confident",
+    "primaryMeaningZh": "有信心的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "shopping",
+    "primaryMeaningZh": "購物",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "remote",
+    "primaryMeaningZh": "偏遠的",
+    "supplementalMeaningZh": "遙遠的；疏遠的；微小的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "amazing",
+    "primaryMeaningZh": "令人驚豔的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "exciting",
+    "primaryMeaningZh": "刺激的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "complicated",
+    "primaryMeaningZh": "複雜的",
+    "supplementalMeaningZh": "難懂的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "worried",
+    "primaryMeaningZh": "擔心的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "nearby",
+    "primaryMeaningZh": "附近的",
+    "supplementalMeaningZh": "在附近；在旁邊",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "butter",
+    "primaryMeaningZh": "奶油",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mayor",
+    "primaryMeaningZh": "市長",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "abroad",
+    "primaryMeaningZh": "在國外",
+    "supplementalMeaningZh": "到國外；四處傳開",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "ultimate",
+    "primaryMeaningZh": "最終的",
+    "supplementalMeaningZh": "終極的；根本的；最大限度",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tight",
+    "primaryMeaningZh": "很緊",
+    "supplementalMeaningZh": "緊的；嚴密的；拮据的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "juice",
+    "primaryMeaningZh": "果汁",
+    "supplementalMeaningZh": "汁液；活力",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "toy",
+    "primaryMeaningZh": "玩具",
+    "supplementalMeaningZh": "玩物；玩弄",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "react",
+    "primaryMeaningZh": "反應",
+    "supplementalMeaningZh": "起作用；反攻",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "lover",
+    "primaryMeaningZh": "愛好者",
+    "supplementalMeaningZh": "情人",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "assistant",
+    "primaryMeaningZh": "助理",
+    "supplementalMeaningZh": "助手；輔助的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "button",
+    "primaryMeaningZh": "按鈕",
+    "supplementalMeaningZh": "鈕扣；扣緊",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "crown",
+    "primaryMeaningZh": "王冠",
+    "supplementalMeaningZh": "冠冕；加冕；頂部",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "encounter",
+    "primaryMeaningZh": "相遇",
+    "supplementalMeaningZh": "遭遇；遇見",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "absolute",
+    "primaryMeaningZh": "完全的",
+    "supplementalMeaningZh": "絕對的；明確的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "uncle",
+    "primaryMeaningZh": "叔叔",
+    "supplementalMeaningZh": "舅舅；伯父；姑丈",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "brilliant",
+    "primaryMeaningZh": "絕妙的",
+    "supplementalMeaningZh": "聰明的；燦爛的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "register",
+    "primaryMeaningZh": "登記",
+    "supplementalMeaningZh": "註冊；掛號；記錄",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mount",
+    "primaryMeaningZh": "掛上",
+    "supplementalMeaningZh": "安裝；爬上；增加",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "blind",
+    "primaryMeaningZh": "失明的",
+    "supplementalMeaningZh": "盲目的；遮簾；使看不見",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pop",
+    "primaryMeaningZh": "砰的一聲",
+    "supplementalMeaningZh": "突然出現；流行音樂；汽水",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tail",
+    "primaryMeaningZh": "尾巴",
+    "supplementalMeaningZh": "尾端；跟蹤；後部",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "communicate",
+    "primaryMeaningZh": "溝通",
+    "supplementalMeaningZh": "傳達；通訊",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "proof",
+    "primaryMeaningZh": "證明",
+    "supplementalMeaningZh": "證據；防護的；校樣",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "flag",
+    "primaryMeaningZh": "旗幟",
+    "supplementalMeaningZh": "標示；標記；警示",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "newly",
+    "primaryMeaningZh": "新近",
+    "supplementalMeaningZh": "剛剛；重新",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "adequate",
+    "primaryMeaningZh": "足夠的",
+    "supplementalMeaningZh": "適當的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pride",
+    "primaryMeaningZh": "自豪",
+    "supplementalMeaningZh": "驕傲；自尊心",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "chart",
+    "primaryMeaningZh": "圖表",
+    "supplementalMeaningZh": "海圖",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "chocolate",
+    "primaryMeaningZh": "巧克力",
+    "supplementalMeaningZh": "巧克力色",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "joy",
+    "primaryMeaningZh": "喜悅",
+    "supplementalMeaningZh": "快樂；樂事",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "permission",
+    "primaryMeaningZh": "許可",
+    "supplementalMeaningZh": "允許",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pole",
+    "primaryMeaningZh": "竿",
+    "supplementalMeaningZh": "桿子；極點；磁極",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sauce",
+    "primaryMeaningZh": "醬",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "imagination",
+    "primaryMeaningZh": "想像力",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "recording",
+    "primaryMeaningZh": "錄音",
+    "supplementalMeaningZh": "錄影；記錄",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "quantity",
+    "primaryMeaningZh": "數量",
+    "supplementalMeaningZh": "總量",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "dirty",
+    "primaryMeaningZh": "髒的",
+    "supplementalMeaningZh": "弄髒；卑鄙的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "brand",
+    "primaryMeaningZh": "品牌",
+    "supplementalMeaningZh": "烙印",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "raw",
+    "primaryMeaningZh": "生的",
+    "supplementalMeaningZh": "未加工的；刺痛的；原始的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "poetry",
+    "primaryMeaningZh": "詩",
+    "supplementalMeaningZh": "詩歌；詩意",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "acceptable",
+    "primaryMeaningZh": "可接受的",
+    "supplementalMeaningZh": "合格的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pregnant",
+    "primaryMeaningZh": "懷孕的",
+    "supplementalMeaningZh": "充滿的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "qualify",
+    "primaryMeaningZh": "使有資格",
+    "supplementalMeaningZh": "取得資格；限定",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rent",
+    "primaryMeaningZh": "房租",
+    "supplementalMeaningZh": "租金；租用；出租",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "loose",
+    "primaryMeaningZh": "鬆的",
+    "supplementalMeaningZh": "不牢的；寬鬆的；釋放",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "comfort",
+    "primaryMeaningZh": "安慰",
+    "supplementalMeaningZh": "舒適；安撫",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "palace",
+    "primaryMeaningZh": "宮殿",
+    "supplementalMeaningZh": "豪華建築",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "resort",
+    "primaryMeaningZh": "度假村",
+    "supplementalMeaningZh": "度假勝地；訴諸；手段",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "strip",
+    "primaryMeaningZh": "長條",
+    "supplementalMeaningZh": "剝去；脫衣",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "gear",
+    "primaryMeaningZh": "裝備",
+    "supplementalMeaningZh": "齒輪；排檔；安排",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "fence",
+    "primaryMeaningZh": "籬笆",
+    "supplementalMeaningZh": "圍欄；擊劍；圍住",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "castle",
+    "primaryMeaningZh": "城堡",
+    "supplementalMeaningZh": "堡壘；西洋棋的車",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "aggressive",
+    "primaryMeaningZh": "好鬥的",
+    "supplementalMeaningZh": "積極的；侵略性的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bet",
+    "primaryMeaningZh": "打賭",
+    "supplementalMeaningZh": "賭注",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pitch",
+    "primaryMeaningZh": "攤位",
+    "supplementalMeaningZh": "音高；投擲；推銷",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "craft",
+    "primaryMeaningZh": "製作",
+    "supplementalMeaningZh": "手藝；船隻；技巧",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "steady",
+    "primaryMeaningZh": "穩的",
+    "supplementalMeaningZh": "穩定的；固定的；沉著的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "ceremony",
+    "primaryMeaningZh": "典禮",
+    "supplementalMeaningZh": "儀式；禮節",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "clothing",
+    "primaryMeaningZh": "衣服",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "swim",
+    "primaryMeaningZh": "游泳",
+    "supplementalMeaningZh": "漂浮",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "borrow",
+    "primaryMeaningZh": "借用",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "trace",
+    "primaryMeaningZh": "痕跡",
+    "supplementalMeaningZh": "追蹤；微量；描摹",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "leather",
+    "primaryMeaningZh": "皮製的",
+    "supplementalMeaningZh": "皮革；皮製品",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rid",
+    "primaryMeaningZh": "去掉",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "giant",
+    "primaryMeaningZh": "巨大的",
+    "supplementalMeaningZh": "巨人；巨型物",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "formula",
+    "primaryMeaningZh": "公式",
+    "supplementalMeaningZh": "配方；方法；準則",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "maximum",
+    "primaryMeaningZh": "上限",
+    "supplementalMeaningZh": "最大量；最高的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "awful",
+    "primaryMeaningZh": "可怕的",
+    "supplementalMeaningZh": "糟糕的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "impressive",
+    "primaryMeaningZh": "出色的",
+    "supplementalMeaningZh": "令人印象深刻",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "remark",
+    "primaryMeaningZh": "評論",
+    "supplementalMeaningZh": "話語；談論",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "hip",
+    "primaryMeaningZh": "臀部",
+    "supplementalMeaningZh": "髖部；時髦的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "nowhere",
+    "primaryMeaningZh": "無處",
+    "supplementalMeaningZh": "任何地方都不",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cow",
+    "primaryMeaningZh": "母牛",
+    "supplementalMeaningZh": "乳牛；威嚇",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "behave",
+    "primaryMeaningZh": "表現",
+    "supplementalMeaningZh": "舉止；守規矩",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "desperate",
+    "primaryMeaningZh": "絕望的",
+    "supplementalMeaningZh": "急切的；鋌而走險的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "ingredient",
+    "primaryMeaningZh": "成分",
+    "supplementalMeaningZh": "食材；要素",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "plot",
+    "primaryMeaningZh": "情節",
+    "supplementalMeaningZh": "陰謀；小塊土地；標出",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "curtain",
+    "primaryMeaningZh": "窗簾",
+    "supplementalMeaningZh": "幕；遮住",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "innocent",
+    "primaryMeaningZh": "無辜的",
+    "supplementalMeaningZh": "天真的；無罪的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tap",
+    "primaryMeaningZh": "水龍頭",
+    "supplementalMeaningZh": "輕敲；利用；裝龍頭",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "virus",
+    "primaryMeaningZh": "病毒",
+    "supplementalMeaningZh": "電腦病毒；有害影響",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "criticize",
+    "primaryMeaningZh": "批評",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "lecture",
+    "primaryMeaningZh": "演講",
+    "supplementalMeaningZh": "講課；訓話",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pan",
+    "primaryMeaningZh": "平底鍋",
+    "supplementalMeaningZh": "鍋；搖鏡頭；嚴厲批評",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "nerve",
+    "primaryMeaningZh": "勇氣",
+    "supplementalMeaningZh": "神經",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "empire",
+    "primaryMeaningZh": "帝國",
+    "supplementalMeaningZh": "龐大企業",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "friendship",
+    "primaryMeaningZh": "友誼",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "spin",
+    "primaryMeaningZh": "旋轉",
+    "supplementalMeaningZh": "轉動；編造；兜風",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "related",
+    "primaryMeaningZh": "有關的",
+    "supplementalMeaningZh": "有親戚關係的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tunnel",
+    "primaryMeaningZh": "隧道",
+    "supplementalMeaningZh": "地下道",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "van",
+    "primaryMeaningZh": "貨車",
+    "supplementalMeaningZh": "廂型車",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "shade",
+    "primaryMeaningZh": "陰涼處",
+    "supplementalMeaningZh": "陰影；遮蔽物；色調",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "freeze",
+    "primaryMeaningZh": "結冰",
+    "supplementalMeaningZh": "凍住；僵住；冷凍",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "counter",
+    "primaryMeaningZh": "櫃檯",
+    "supplementalMeaningZh": "計數器；相反的；反駁",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "squeeze",
+    "primaryMeaningZh": "擠",
+    "supplementalMeaningZh": "榨；勉強塞進",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "genuine",
+    "primaryMeaningZh": "真誠的",
+    "supplementalMeaningZh": "真正的；正品的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "gentle",
+    "primaryMeaningZh": "輕柔的",
+    "supplementalMeaningZh": "溫和的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pile",
+    "primaryMeaningZh": "一堆",
+    "supplementalMeaningZh": "堆積；大量",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "singer",
+    "primaryMeaningZh": "歌手",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "venture",
+    "primaryMeaningZh": "冒險",
+    "supplementalMeaningZh": "風險事業；敢於嘗試",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "reward",
+    "primaryMeaningZh": "獎賞",
+    "supplementalMeaningZh": "回報；賞金；酬謝",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "trick",
+    "primaryMeaningZh": "訣竅",
+    "supplementalMeaningZh": "把戲；惡作劇；欺騙",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "highlight",
+    "primaryMeaningZh": "亮點",
+    "supplementalMeaningZh": "強調；精彩片段",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "explosion",
+    "primaryMeaningZh": "爆炸",
+    "supplementalMeaningZh": "爆發；激增",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "horror",
+    "primaryMeaningZh": "驚恐",
+    "supplementalMeaningZh": "恐怖；慘狀",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "loud",
+    "primaryMeaningZh": "響亮的",
+    "supplementalMeaningZh": "吵鬧的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "lend",
+    "primaryMeaningZh": "借給",
+    "supplementalMeaningZh": "提供；增添",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "altogether",
+    "primaryMeaningZh": "總共",
+    "supplementalMeaningZh": "完全地；總而言之",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "celebration",
+    "primaryMeaningZh": "慶祝活動",
+    "supplementalMeaningZh": "慶典",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "plain",
+    "primaryMeaningZh": "無調味的",
+    "supplementalMeaningZh": "簡單的；清楚的；平原",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "prompt",
+    "primaryMeaningZh": "迅速的",
+    "supplementalMeaningZh": "提示；促使；準時的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pub",
+    "primaryMeaningZh": "酒館",
+    "supplementalMeaningZh": "小酒吧",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bath",
+    "primaryMeaningZh": "洗澡",
+    "supplementalMeaningZh": "浴缸",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "minimum",
+    "primaryMeaningZh": "最低",
+    "supplementalMeaningZh": "最小值",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "wise",
+    "primaryMeaningZh": "明智的",
+    "supplementalMeaningZh": "聰明的；有智慧的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "ease",
+    "primaryMeaningZh": "減輕",
+    "supplementalMeaningZh": "緩解；輕鬆；舒適",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cotton",
+    "primaryMeaningZh": "棉",
+    "supplementalMeaningZh": "棉花；棉布",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cottage",
+    "primaryMeaningZh": "小屋",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "enthusiasm",
+    "primaryMeaningZh": "熱情",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "entitle",
+    "primaryMeaningZh": "使有權利",
+    "supplementalMeaningZh": "給命名",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "fixed",
+    "primaryMeaningZh": "固定的",
+    "supplementalMeaningZh": "不變的；修好的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "anxious",
+    "primaryMeaningZh": "焦慮的",
+    "supplementalMeaningZh": "渴望的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "curious",
+    "primaryMeaningZh": "好奇的",
+    "supplementalMeaningZh": "古怪的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "strain",
+    "primaryMeaningZh": "負擔",
+    "supplementalMeaningZh": "拉傷；壓力；品種",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "conscious",
+    "primaryMeaningZh": "清醒的",
+    "supplementalMeaningZh": "有意識的；察覺的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "inevitable",
+    "primaryMeaningZh": "難以避免的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "weekly",
+    "primaryMeaningZh": "每週的",
+    "supplementalMeaningZh": "週刊；每週一次地",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "consult",
+    "primaryMeaningZh": "諮詢",
+    "supplementalMeaningZh": "請教；查閱；商量",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rice",
+    "primaryMeaningZh": "米飯",
+    "supplementalMeaningZh": "米；稻米",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "grain",
+    "primaryMeaningZh": "穀粒",
+    "supplementalMeaningZh": "穀物；紋理",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "musician",
+    "primaryMeaningZh": "音樂家",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "uniform",
+    "primaryMeaningZh": "制服",
+    "supplementalMeaningZh": "一致的；統一的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bunch",
+    "primaryMeaningZh": "一串",
+    "supplementalMeaningZh": "一束；一群",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "offence",
+    "primaryMeaningZh": "違規",
+    "supplementalMeaningZh": "冒犯；犯罪；攻擊",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "romantic",
+    "primaryMeaningZh": "浪漫的",
+    "supplementalMeaningZh": "愛情的；不切實際的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "autumn",
+    "primaryMeaningZh": "秋天",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "painful",
+    "primaryMeaningZh": "痛的",
+    "supplementalMeaningZh": "痛苦的；困難的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "admire",
+    "primaryMeaningZh": "佩服",
+    "supplementalMeaningZh": "欣賞；羨慕",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "presumably",
+    "primaryMeaningZh": "大概",
+    "supplementalMeaningZh": "推測起來",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "dare",
+    "primaryMeaningZh": "敢",
+    "supplementalMeaningZh": "膽敢；挑戰",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "float",
+    "primaryMeaningZh": "漂",
+    "supplementalMeaningZh": "浮動；彩車",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tackle",
+    "primaryMeaningZh": "處理",
+    "supplementalMeaningZh": "對付；裝備；擒抱",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "deposit",
+    "primaryMeaningZh": "押金",
+    "supplementalMeaningZh": "存款；定金；存放",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "burst",
+    "primaryMeaningZh": "爆裂",
+    "supplementalMeaningZh": "突然爆發；充滿",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "shelter",
+    "primaryMeaningZh": "庇護",
+    "supplementalMeaningZh": "避難所；遮蔽；保護",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "brush",
+    "primaryMeaningZh": "刷子",
+    "supplementalMeaningZh": "刷；毛筆；擦過",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "divorce",
+    "primaryMeaningZh": "離婚",
+    "supplementalMeaningZh": "分離",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "stroke",
+    "primaryMeaningZh": "輕撫",
+    "supplementalMeaningZh": "中風；一筆；擊球",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pen",
+    "primaryMeaningZh": "筆",
+    "supplementalMeaningZh": "鋼筆；寫；圍欄",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "outstanding",
+    "primaryMeaningZh": "未繳的",
+    "supplementalMeaningZh": "傑出的；突出的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "whilst",
+    "primaryMeaningZh": "……時",
+    "supplementalMeaningZh": "同時；雖然",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pleasant",
+    "primaryMeaningZh": "舒服的",
+    "supplementalMeaningZh": "愉快的；親切的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "countryside",
+    "primaryMeaningZh": "鄉間",
+    "supplementalMeaningZh": "鄉下",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "strict",
+    "primaryMeaningZh": "嚴格的",
+    "supplementalMeaningZh": "嚴厲的；精確的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rhythm",
+    "primaryMeaningZh": "節奏",
+    "supplementalMeaningZh": "韻律；律動",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "chase",
+    "primaryMeaningZh": "追",
+    "supplementalMeaningZh": "追求；追捕",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "excuse",
+    "primaryMeaningZh": "藉口",
+    "supplementalMeaningZh": "理由；原諒；免除",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "reverse",
+    "primaryMeaningZh": "倒車",
+    "supplementalMeaningZh": "反轉；相反；背面",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bitter",
+    "primaryMeaningZh": "苦的",
+    "supplementalMeaningZh": "痛苦的；尖刻的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "alarm",
+    "primaryMeaningZh": "警報",
+    "supplementalMeaningZh": "驚慌；使驚恐",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "contest",
+    "primaryMeaningZh": "競賽",
+    "supplementalMeaningZh": "比賽；爭論；爭取",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "govern",
+    "primaryMeaningZh": "規範",
+    "supplementalMeaningZh": "管理；統治",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "steam",
+    "primaryMeaningZh": "蒸氣",
+    "supplementalMeaningZh": "蒸；蒸汽動力",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "interior",
+    "primaryMeaningZh": "內部",
+    "supplementalMeaningZh": "室內；內地的；內政",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "repair",
+    "primaryMeaningZh": "修理",
+    "supplementalMeaningZh": "補救",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "anniversary",
+    "primaryMeaningZh": "週年紀念",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "alongside",
+    "primaryMeaningZh": "在旁邊",
+    "supplementalMeaningZh": "與……一起；並排",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mess",
+    "primaryMeaningZh": "一團亂",
+    "supplementalMeaningZh": "混亂；困境；弄亂",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "explode",
+    "primaryMeaningZh": "爆響",
+    "supplementalMeaningZh": "爆炸；爆發；激增",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "impress",
+    "primaryMeaningZh": "使印象深刻",
+    "supplementalMeaningZh": "留下印象；壓印",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "harm",
+    "primaryMeaningZh": "傷害",
+    "supplementalMeaningZh": "損害；害處",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pet",
+    "primaryMeaningZh": "寵物",
+    "supplementalMeaningZh": "撫摸；溺愛",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "superior",
+    "primaryMeaningZh": "出眾的",
+    "supplementalMeaningZh": "優越的；上級；高傲的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "courage",
+    "primaryMeaningZh": "勇氣",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "orange",
+    "primaryMeaningZh": "橘色的",
+    "supplementalMeaningZh": "橘子；橘色",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cease",
+    "primaryMeaningZh": "停止",
+    "supplementalMeaningZh": "終止",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "trap",
+    "primaryMeaningZh": "陷阱",
+    "supplementalMeaningZh": "誘捕；圈套；困住",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sail",
+    "primaryMeaningZh": "航行",
+    "supplementalMeaningZh": "啟航；帆；帆船",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "grave",
+    "primaryMeaningZh": "嚴重的",
+    "supplementalMeaningZh": "墳墓；莊重的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "unexpected",
+    "primaryMeaningZh": "意外的",
+    "supplementalMeaningZh": "想不到的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "suspicion",
+    "primaryMeaningZh": "懷疑",
+    "supplementalMeaningZh": "疑心；嫌疑",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "concrete",
+    "primaryMeaningZh": "混凝土",
+    "supplementalMeaningZh": "具體的；實在的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "prior",
+    "primaryMeaningZh": "事先的",
+    "supplementalMeaningZh": "較早的；優先的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "midnight",
+    "primaryMeaningZh": "午夜",
+    "supplementalMeaningZh": "半夜",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "generous",
+    "primaryMeaningZh": "慷慨的",
+    "supplementalMeaningZh": "大量的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "upset",
+    "primaryMeaningZh": "心煩的",
+    "supplementalMeaningZh": "難過的；打翻；打亂",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mate",
+    "primaryMeaningZh": "助手",
+    "supplementalMeaningZh": "夥伴；配偶；配對",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "outline",
+    "primaryMeaningZh": "輪廓",
+    "supplementalMeaningZh": "大綱；概述",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cancel",
+    "primaryMeaningZh": "取消",
+    "supplementalMeaningZh": "撤銷；抵銷",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "comedy",
+    "primaryMeaningZh": "喜劇",
+    "supplementalMeaningZh": "滑稽事",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "diary",
+    "primaryMeaningZh": "日記",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "keen",
+    "primaryMeaningZh": "敏銳的",
+    "supplementalMeaningZh": "熱衷的；強烈的；鋒利的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cooking",
+    "primaryMeaningZh": "飯菜",
+    "supplementalMeaningZh": "烹飪；料理",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "automatic",
+    "primaryMeaningZh": "自動的",
+    "supplementalMeaningZh": "無意識的；自動裝置",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "invitation",
+    "primaryMeaningZh": "請帖",
+    "supplementalMeaningZh": "邀請；邀請函",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "magic",
+    "primaryMeaningZh": "魔術",
+    "supplementalMeaningZh": "魔法；神奇的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sympathy",
+    "primaryMeaningZh": "同情",
+    "supplementalMeaningZh": "慰問；贊同",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "senator",
+    "primaryMeaningZh": "參議員",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "equivalent",
+    "primaryMeaningZh": "相等的",
+    "supplementalMeaningZh": "相當的；對等物",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "intelligent",
+    "primaryMeaningZh": "聰明的",
+    "supplementalMeaningZh": "有智慧的；智慧型的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bake",
+    "primaryMeaningZh": "烤",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "inch",
+    "primaryMeaningZh": "英寸",
+    "supplementalMeaningZh": "一點點；慢慢移動",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "fold",
+    "primaryMeaningZh": "摺",
+    "supplementalMeaningZh": "摺疊；摺痕；倒閉",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "tune",
+    "primaryMeaningZh": "旋律",
+    "supplementalMeaningZh": "曲調；調音；調整",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "flash",
+    "primaryMeaningZh": "閃光",
+    "supplementalMeaningZh": "閃現；一瞬間",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "businessman",
+    "primaryMeaningZh": "商人",
+    "supplementalMeaningZh": "企業家",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "evil",
+    "primaryMeaningZh": "邪惡的",
+    "supplementalMeaningZh": "邪惡；有害的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "publicity",
+    "primaryMeaningZh": "宣傳",
+    "supplementalMeaningZh": "知名度；公開曝光",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "slice",
+    "primaryMeaningZh": "一片",
+    "supplementalMeaningZh": "切片；一部分",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "till",
+    "primaryMeaningZh": "等到",
+    "supplementalMeaningZh": "直到；收銀抽屜；耕種",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "twist",
+    "primaryMeaningZh": "轉",
+    "supplementalMeaningZh": "扭轉；轉折；扭曲",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "ambition",
+    "primaryMeaningZh": "志向",
+    "supplementalMeaningZh": "野心；抱負",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "shame",
+    "primaryMeaningZh": "羞愧",
+    "supplementalMeaningZh": "恥辱；使羞愧",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "hunt",
+    "primaryMeaningZh": "尋找",
+    "supplementalMeaningZh": "打獵；追捕",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "peaceful",
+    "primaryMeaningZh": "寧靜的",
+    "supplementalMeaningZh": "和平的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "reckon",
+    "primaryMeaningZh": "想",
+    "supplementalMeaningZh": "認為；估算；料想",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "discount",
+    "primaryMeaningZh": "折扣",
+    "supplementalMeaningZh": "打折；不重視",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "flood",
+    "primaryMeaningZh": "洪水",
+    "supplementalMeaningZh": "淹沒；大量湧入",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "missing",
+    "primaryMeaningZh": "少了的",
+    "supplementalMeaningZh": "不見的；失蹤的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mild",
+    "primaryMeaningZh": "味道溫和的",
+    "supplementalMeaningZh": "輕微的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "continent",
+    "primaryMeaningZh": "大洲",
+    "supplementalMeaningZh": "大陸",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "dump",
+    "primaryMeaningZh": "倒",
+    "supplementalMeaningZh": "傾倒；垃圾場；甩掉",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "spell",
+    "primaryMeaningZh": "拼出",
+    "supplementalMeaningZh": "拼字；咒語；一段時間",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rescue",
+    "primaryMeaningZh": "救援",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "clever",
+    "primaryMeaningZh": "聰明的",
+    "supplementalMeaningZh": "機靈的；巧妙的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "elegant",
+    "primaryMeaningZh": "雅致的",
+    "supplementalMeaningZh": "優雅的；高雅的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rider",
+    "primaryMeaningZh": "騎士",
+    "supplementalMeaningZh": "騎乘者；附加條款",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "lonely",
+    "primaryMeaningZh": "孤寂的",
+    "supplementalMeaningZh": "孤單的；荒涼的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "praise",
+    "primaryMeaningZh": "稱讚",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pill",
+    "primaryMeaningZh": "藥丸",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "offensive",
+    "primaryMeaningZh": "冒犯人的",
+    "supplementalMeaningZh": "攻擊性的；令人不快的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "hook",
+    "primaryMeaningZh": "掛鉤",
+    "supplementalMeaningZh": "鉤子；鉤住；吸引點",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sensible",
+    "primaryMeaningZh": "明智的",
+    "supplementalMeaningZh": "合理的；有感覺的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "unfair",
+    "primaryMeaningZh": "不公平的",
+    "supplementalMeaningZh": "不公正的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "delight",
+    "primaryMeaningZh": "歡喜",
+    "supplementalMeaningZh": "使高興",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "spare",
+    "primaryMeaningZh": "備用的",
+    "supplementalMeaningZh": "多餘的；空閒的；饒恕",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "drum",
+    "primaryMeaningZh": "鼓",
+    "supplementalMeaningZh": "鼓聲；打鼓",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "broadcast",
+    "primaryMeaningZh": "廣播",
+    "supplementalMeaningZh": "播送；傳播",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "decorate",
+    "primaryMeaningZh": "裝飾",
+    "supplementalMeaningZh": "布置",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "unhappy",
+    "primaryMeaningZh": "不高興的",
+    "supplementalMeaningZh": "不幸的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "urgent",
+    "primaryMeaningZh": "緊急的",
+    "supplementalMeaningZh": "急迫的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "regret",
+    "primaryMeaningZh": "後悔",
+    "supplementalMeaningZh": "遺憾；抱歉",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "neighbour",
+    "primaryMeaningZh": "鄰居",
+    "supplementalMeaningZh": "鄰近的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "rear",
+    "primaryMeaningZh": "後方的",
+    "supplementalMeaningZh": "後面；養育；舉起",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "neat",
+    "primaryMeaningZh": "整齊的",
+    "supplementalMeaningZh": "工整的；俐落的；巧妙的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "delighted",
+    "primaryMeaningZh": "開心的",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "striking",
+    "primaryMeaningZh": "醒目的",
+    "supplementalMeaningZh": "驚人的；罷工的",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "runner",
+    "primaryMeaningZh": "跑者",
+    "supplementalMeaningZh": "跑腿者",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "calm",
+    "primaryMeaningZh": "冷靜的",
+    "supplementalMeaningZh": "平靜的；使平靜",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "licence",
+    "primaryMeaningZh": "執照",
+    "supplementalMeaningZh": "許可證；許可",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "brave",
+    "primaryMeaningZh": "勇敢的",
+    "supplementalMeaningZh": "勇敢面對",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "pin",
+    "primaryMeaningZh": "別針",
+    "supplementalMeaningZh": "大頭針；釘住；插銷",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "navy",
+    "primaryMeaningZh": "海軍",
+    "supplementalMeaningZh": "深藍色",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "stamp",
+    "primaryMeaningZh": "郵票",
+    "supplementalMeaningZh": "蓋章；印章；跺腳",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "boil",
+    "primaryMeaningZh": "煮",
+    "supplementalMeaningZh": "沸騰",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "behalf",
+    "primaryMeaningZh": "代表",
+    "supplementalMeaningZh": "利益；方面",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "sack",
+    "primaryMeaningZh": "一袋",
+    "supplementalMeaningZh": "麻布袋；解雇；洗劫",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "chop",
+    "primaryMeaningZh": "剁",
+    "supplementalMeaningZh": "切；砍；排骨",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "mobile",
+    "primaryMeaningZh": "行動的",
+    "supplementalMeaningZh": "可移動的；手機",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "advertise",
+    "primaryMeaningZh": "宣傳",
+    "supplementalMeaningZh": "打廣告；公告",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "breed",
+    "primaryMeaningZh": "品種",
+    "supplementalMeaningZh": "繁殖；飼養；造成",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "ruin",
+    "primaryMeaningZh": "毀掉",
+    "supplementalMeaningZh": "破壞；廢墟；毀滅",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bay",
+    "primaryMeaningZh": "海灣",
+    "supplementalMeaningZh": "灣；吠叫",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "punch",
+    "primaryMeaningZh": "一拳",
+    "supplementalMeaningZh": "用拳打；打孔；潘趣酒",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "entertain",
+    "primaryMeaningZh": "逗開心",
+    "supplementalMeaningZh": "娛樂；招待；懷有想法",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "smash",
+    "primaryMeaningZh": "砸壞",
+    "supplementalMeaningZh": "打碎；猛撞；轟動成功",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "metre",
+    "primaryMeaningZh": "公尺",
+    "supplementalMeaningZh": "韻律",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bound",
+    "primaryMeaningZh": "開往",
+    "supplementalMeaningZh": "一定會；受約束的；邊界",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "manufacture",
+    "primaryMeaningZh": "製造",
+    "supplementalMeaningZh": "生產；產品；捏造",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cure",
+    "primaryMeaningZh": "治好",
+    "supplementalMeaningZh": "治療；治療法；醃製",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "forecast",
+    "primaryMeaningZh": "預報",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "spray",
+    "primaryMeaningZh": "噴",
+    "supplementalMeaningZh": "噴霧；水花；噴霧器",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "chat",
+    "primaryMeaningZh": "聊天",
+    "supplementalMeaningZh": "",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "bargain",
+    "primaryMeaningZh": "划算的東西",
+    "supplementalMeaningZh": "特價品；講價；交易",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "honour",
+    "primaryMeaningZh": "榮幸",
+    "supplementalMeaningZh": "榮譽；尊敬；實踐承諾",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  },
+  {
+    "word": "cinema",
+    "primaryMeaningZh": "電影院",
+    "supplementalMeaningZh": "電影",
+    "status": "approved",
+    "batch": "meaning-review-2026-08-09-core05"
+  }
+]

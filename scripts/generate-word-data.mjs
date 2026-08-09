@@ -20,6 +20,14 @@ function reviewedExamplePaths() {
     .map((filename) => path.join(reviewedExamplesDir, filename));
 }
 
+function reviewedMeaningPaths() {
+  return fs
+    .readdirSync(reviewedExamplesDir)
+    .filter((filename) => /^reviewed-meanings-core(?:[1-9]|1[0-4])\.json$/.test(filename))
+    .sort((a, b) => Number(a.match(/\d+/)?.[0]) - Number(b.match(/\d+/)?.[0]))
+    .map((filename) => path.join(reviewedExamplesDir, filename));
+}
+
 function loadReviewedExamples() {
   const paths = reviewedExamplePaths();
   if (paths.length === 0) {
@@ -55,6 +63,41 @@ function loadReviewedExamples() {
 }
 
 const reviewedExamples = loadReviewedExamples();
+
+function loadReviewedMeanings() {
+  const paths = reviewedMeaningPaths();
+  if (paths.length === 0) {
+    return new Map();
+  }
+  if (paths.length !== 14) {
+    throw new Error(`Expected 14 reviewed meaning files, found ${paths.length}.`);
+  }
+
+  const reviewed = new Map();
+  for (const reviewPath of paths) {
+    const rows = JSON.parse(fs.readFileSync(reviewPath, 'utf8'));
+    if (!Array.isArray(rows) || rows.length !== 500) {
+      throw new Error(`Reviewed meanings must contain 500 rows: ${reviewPath}`);
+    }
+
+    for (const row of rows) {
+      const word = row.word?.trim().toLowerCase();
+      const primaryMeaningZh = row.primaryMeaningZh?.trim();
+      const supplementalMeaningZh = row.supplementalMeaningZh?.trim() ?? '';
+      if (!word || !primaryMeaningZh || row.status !== 'approved' || !row.batch?.trim()) {
+        throw new Error(`Invalid reviewed meaning in ${reviewPath}: ${JSON.stringify(row)}`);
+      }
+      if (reviewed.has(word)) {
+        throw new Error(`Duplicate reviewed meaning for word: ${word}`);
+      }
+      reviewed.set(word, { primaryMeaningZh, supplementalMeaningZh });
+    }
+  }
+
+  return reviewed;
+}
+
+const reviewedMeanings = loadReviewedMeanings();
 
 const seedOverrides = new Map(
   [
@@ -1292,9 +1335,12 @@ function isUsableWord(row) {
 function toEntry(row, index) {
   const word = row.word.trim().toLowerCase();
   const reviewedExample = reviewedExamples.get(word);
+  const reviewedMeaning = reviewedMeanings.get(word);
   const override = seedOverrides.get(word);
   const metadataOverride = metadataOverrides.get(word);
-  const meaningZh = override?.meaningZh ?? metadataOverride?.meaningZh ?? cleanMeaning(row.translation);
+  const fallbackMeaningZh = override?.meaningZh ?? metadataOverride?.meaningZh ?? cleanMeaning(row.translation);
+  const meaningZh = reviewedMeaning?.primaryMeaningZh ?? fallbackMeaningZh;
+  const supplementalMeaningZh = reviewedMeaning?.supplementalMeaningZh ?? '';
   const pronunciation = row.phonetic?.trim() ? `/${row.phonetic.trim()}/` : '/-/';
   const group = `Core ${Math.floor(index / 500) + 1}`;
   const partOfSpeechValue = metadataOverride?.partOfSpeech ?? partOfSpeech(row);
@@ -1310,6 +1356,7 @@ function toEntry(row, index) {
     partOfSpeech: partOfSpeechValue,
     pronunciation,
     meaningZh,
+    supplementalMeaningZh,
     example,
     exampleZh,
     group,
@@ -1360,6 +1407,17 @@ if (selectedRows.length !== TARGET_COUNT) {
   throw new Error(`Expected ${TARGET_COUNT} words, got ${selectedRows.length}`);
 }
 
+if (reviewedMeanings.size > 0) {
+  const selectedWords = new Set(selectedRows.map((row) => row.word.trim().toLowerCase()));
+  const missing = [...selectedWords].filter((word) => !reviewedMeanings.has(word));
+  const unexpected = [...reviewedMeanings.keys()].filter((word) => !selectedWords.has(word));
+  if (reviewedMeanings.size !== TARGET_COUNT || missing.length > 0 || unexpected.length > 0) {
+    throw new Error(
+      `Reviewed meanings must cover all ${TARGET_COUNT} words. Missing: ${missing.slice(0, 10).join(', ')}. Unexpected: ${unexpected.slice(0, 10).join(', ')}.`,
+    );
+  }
+}
+
 const entries = selectedRows.map(toEntry);
 const output = `export type WordEntry = {
   id: string;
@@ -1367,6 +1425,7 @@ const output = `export type WordEntry = {
   partOfSpeech: string;
   pronunciation: string;
   meaningZh: string;
+  supplementalMeaningZh?: string;
   example: string;
   exampleZh: string;
   group: string;

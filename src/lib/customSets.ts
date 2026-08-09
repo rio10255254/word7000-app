@@ -309,6 +309,7 @@ export function customWordsFromImportRows(
   rows.forEach((row, index) => {
     const word = row.word?.trim();
     const meaningZh = (row.meaningzh ?? row.meaning ?? '').trim();
+    const supplementalMeaningZh = (row.supplementalmeaningzh ?? row.supplementalmeaning ?? '').trim();
     if (!word || !meaningZh) {
       errors.push(`第 ${index + 1} 筆缺少 word 或 meaning。`);
       return;
@@ -327,6 +328,7 @@ export function customWordsFromImportRows(
       group: row.group?.trim() || 'Custom',
       id: row.id?.trim() || `custom-${word.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
       meaningZh,
+      supplementalMeaningZh,
       partOfSpeech: row.partofspeech?.trim() || row.pos?.trim() || 'n',
       pronunciation: row.pronunciation?.trim() || `/${word}/`,
       word,

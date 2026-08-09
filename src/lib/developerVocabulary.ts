@@ -33,6 +33,7 @@ const csvColumns: Array<keyof WordEntry> = [
   'pronunciation',
   'partOfSpeech',
   'meaningZh',
+  'supplementalMeaningZh',
   'example',
   'exampleZh',
   'group',
@@ -41,6 +42,7 @@ const editableFields: Array<keyof WordEntry> = [
   'pronunciation',
   'partOfSpeech',
   'meaningZh',
+  'supplementalMeaningZh',
   'example',
   'exampleZh',
   'group',
@@ -54,6 +56,9 @@ const headerAliases: Record<string, keyof WordEntry> = {
   meaning: 'meaningZh',
   meaningzh: 'meaningZh',
   meaning_zh: 'meaningZh',
+  supplementalmeaning: 'supplementalMeaningZh',
+  supplementalmeaningzh: 'supplementalMeaningZh',
+  supplemental_meaning_zh: 'supplementalMeaningZh',
   partofspeech: 'partOfSpeech',
   part_of_speech: 'partOfSpeech',
   pos: 'partOfSpeech',
@@ -290,6 +295,7 @@ function normalizeCompleteWord(row: VocabularyImportRow): WordEntry | null {
   const pronunciation = row.pronunciation?.trim();
   const partOfSpeech = row.partOfSpeech?.trim();
   const meaningZh = row.meaningZh?.trim();
+  const supplementalMeaningZh = row.supplementalMeaningZh?.trim() ?? '';
   const example = row.example?.trim();
   const exampleZh = row.exampleZh?.trim();
   const group = row.group?.trim();
@@ -304,6 +310,7 @@ function normalizeCompleteWord(row: VocabularyImportRow): WordEntry | null {
     pronunciation,
     partOfSpeech,
     meaningZh,
+    supplementalMeaningZh,
     example,
     exampleZh,
     group,
@@ -330,14 +337,21 @@ function isWordEntry(value: unknown): value is WordEntry {
   }
 
   const word = value as Partial<WordEntry>;
-  return csvColumns.every((column) => typeof word[column] === 'string' && word[column]?.trim());
+  const requiredColumns = csvColumns.filter((column) => column !== 'supplementalMeaningZh');
+  return (
+    requiredColumns.every((column) => typeof word[column] === 'string' && word[column]?.trim()) &&
+    (word.supplementalMeaningZh === undefined || typeof word.supplementalMeaningZh === 'string')
+  );
 }
 
 function normalizeHeader(value: string): string {
   return value.trim().toLowerCase().replace(/[\s-]+/g, '_');
 }
 
-function csvCell(value: string): string {
+function csvCell(value: string | undefined): string {
+  if (!value) {
+    return '';
+  }
   if (/[",\n\r]/.test(value)) {
     return `"${value.replaceAll('"', '""')}"`;
   }

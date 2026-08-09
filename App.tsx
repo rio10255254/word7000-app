@@ -198,6 +198,7 @@ type ManualCustomWordState = {
   example: string;
   exampleZh: string;
   meaningZh: string;
+  supplementalMeaningZh: string;
   partOfSpeech: string;
   pronunciation: string;
   word: string;
@@ -589,6 +590,7 @@ const modeInterfaceCopy = {
     manualWordIntro: '可以加入字庫沒有的單字，也可以用 CSV 一次匯入。',
     customWordWordPlaceholder: '英文單字',
     customWordMeaningPlaceholder: '中文意思',
+    customWordSupplementalMeaningPlaceholder: '補充意思，可空白',
     customWordPronunciationPlaceholder: '音標，可空白',
     customWordPartPlaceholder: '詞性，可空白',
     customWordExamplePlaceholder: '英文例句，可空白',
@@ -793,6 +795,7 @@ const modeInterfaceCopy = {
     manualWordIntro: 'Add words missing from the library, or import a CSV file.',
     customWordWordPlaceholder: 'Word',
     customWordMeaningPlaceholder: 'Main meaning',
+    customWordSupplementalMeaningPlaceholder: 'Extra meanings, optional',
     customWordPronunciationPlaceholder: 'Pronunciation, optional',
     customWordPartPlaceholder: 'Part of speech, optional',
     customWordExamplePlaceholder: 'Example, optional',
@@ -878,6 +881,7 @@ const emptyManualCustomWord: ManualCustomWordState = {
   example: '',
   exampleZh: '',
   meaningZh: '',
+  supplementalMeaningZh: '',
   partOfSpeech: '',
   pronunciation: '',
   word: '',
@@ -2021,6 +2025,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       group: 'Custom',
       id: `custom-${normalizedId || Date.now()}`,
       meaningZh: meaningText,
+      supplementalMeaningZh: manualCustomWord.supplementalMeaningZh.trim(),
       partOfSpeech: manualCustomWord.partOfSpeech.trim() || 'n',
       pronunciation: manualCustomWord.pronunciation.trim() || `/${wordText}/`,
       word: wordText,
@@ -3542,8 +3547,16 @@ function useThemeStyles() {
   return useContext(ThemeContext) === 'dark' ? darkStyles : undefined;
 }
 
+function primaryChineseMeaning(word: WordEntry): string {
+  return conciseChineseMeaning(word.meaningZh);
+}
+
+function wordSupplementalChineseMeaning(word: WordEntry): string {
+  return word.supplementalMeaningZh?.trim() || supplementalChineseMeaning(word.meaningZh);
+}
+
 function formatWordPrimary(word: WordEntry, studyMode: StudyMode): string {
-  return studyMode === 'chinese' ? conciseChineseMeaning(word.meaningZh) : word.word;
+  return studyMode === 'chinese' ? primaryChineseMeaning(word) : word.word;
 }
 
 function formatWordSecondary(word: WordEntry, studyMode: StudyMode): string {
@@ -3551,15 +3564,15 @@ function formatWordSecondary(word: WordEntry, studyMode: StudyMode): string {
 }
 
 function formatWordPinyin(word: WordEntry, studyMode: StudyMode): string {
-  return studyMode === 'chinese' ? chineseMeaningPinyin(conciseChineseMeaning(word.meaningZh)) : '';
+  return studyMode === 'chinese' ? chineseMeaningPinyin(primaryChineseMeaning(word)) : '';
 }
 
 function formatMeaningDetail(word: WordEntry, studyMode: StudyMode): string {
-  return studyMode === 'chinese' ? word.word : word.meaningZh;
+  return studyMode === 'chinese' ? word.word : primaryChineseMeaning(word);
 }
 
-function formatMeaningSupplement(word: WordEntry, studyMode: StudyMode): string {
-  return studyMode === 'chinese' ? supplementalChineseMeaning(word.meaningZh) : '';
+function formatMeaningSupplement(word: WordEntry): string {
+  return wordSupplementalChineseMeaning(word);
 }
 
 function formatExamplePrimary(word: WordEntry, studyMode: StudyMode): string {
@@ -3571,7 +3584,7 @@ function formatExampleSecondary(word: WordEntry, studyMode: StudyMode): string {
 }
 
 function formatQuizAnswer(word: WordEntry, studyMode: StudyMode): string {
-  return studyMode === 'chinese' ? word.word : word.meaningZh;
+  return studyMode === 'chinese' ? word.word : primaryChineseMeaning(word);
 }
 
 export function tabLabelForMode(tab: Tab, studyMode: StudyMode): string {
@@ -4684,7 +4697,6 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
 function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEntry }) {
   const themeStyles = useThemeStyles();
   const ui = modeInterfaceCopy[studyMode];
-  const supplement = formatMeaningSupplement(word, studyMode);
 
   return (
     <>
@@ -4714,14 +4726,6 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
           {formatMeaningDetail(word, studyMode)}
         </Text>
       </View>
-      {supplement && (
-        <View style={[styles.supplementalMeaning, themeStyles?.supplementalMeaning]}>
-          <Text style={[styles.supplementalLabel, themeStyles?.supplementalLabel]}>{ui.supplementalMeanings}</Text>
-          <Text numberOfLines={2} style={[styles.supplementalText, themeStyles?.supplementalText]}>
-            {supplement}
-          </Text>
-        </View>
-      )}
       <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
         <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
           {formatExamplePrimary(word, studyMode)}
@@ -5959,10 +5963,10 @@ const QuizView = memo(function QuizView({
                 <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
                 <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.answer}</Text>
                 <Text style={[styles.resultText, themeStyles?.resultText]}>{formatQuizAnswer(word, studyMode)}</Text>
-                {formatMeaningSupplement(word, studyMode) && (
+                {formatMeaningSupplement(word) && (
                   <>
                     <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.supplementalMeanings}</Text>
-                    <Text style={[styles.resultText, themeStyles?.resultText]}>{formatMeaningSupplement(word, studyMode)}</Text>
+                    <Text style={[styles.resultText, themeStyles?.resultText]}>{formatMeaningSupplement(word)}</Text>
                   </>
                 )}
               </View>
@@ -6383,7 +6387,6 @@ const LibraryWordRow = memo(function LibraryWordRow({
   const themeStyles = useThemeStyles();
   const ui = modeInterfaceCopy[studyMode];
   const primaryWord = formatWordPrimary(word, studyMode);
-  const supplementalMeaning = formatMeaningSupplement(word, studyMode);
 
   return (
     <Animated.View style={[styles.libraryItem, themeStyles?.libraryItem, motionStyle]}>
@@ -6411,11 +6414,6 @@ const LibraryWordRow = memo(function LibraryWordRow({
           <Text style={[styles.libraryPinyin, themeStyles?.libraryPinyin]}>{formatWordPinyin(word, studyMode)}</Text>
         )}
         <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{formatMeaningDetail(word, studyMode)}</Text>
-        {supplementalMeaning && (
-          <Text style={[styles.librarySupplemental, themeStyles?.librarySupplemental]}>
-            {ui.supplementalMeanings}: {supplementalMeaning}
-          </Text>
-        )}
         <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
       </AnimatedPressable>
       <View style={styles.librarySide}>
@@ -6534,11 +6532,11 @@ export function LibraryWordDetailView({
           </Text>
         </View>
 
-        {formatMeaningSupplement(word, studyMode) && (
+        {formatMeaningSupplement(word) && (
           <View style={[styles.libraryDetailSection, themeStyles?.libraryDetailSection]}>
             <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>{ui.supplementalMeanings}</Text>
             <Text style={[styles.libraryDetailMeaning, themeStyles?.libraryDetailMeaning]}>
-              {formatMeaningSupplement(word, studyMode)}
+              {formatMeaningSupplement(word)}
             </Text>
           </View>
         )}
@@ -7390,6 +7388,15 @@ export function ProfileCustomSetsView({
                   placeholderTextColor="#8E8E93"
                   style={[styles.accountInput, themeStyles?.accountInput]}
                   value={manualCustomWord.meaningZh}
+                />
+              </View>
+              <View style={[styles.inputBox, themeStyles?.inputBox]}>
+                <TextInput
+                  onChangeText={(value) => onManualCustomWordChange('supplementalMeaningZh', value)}
+                  placeholder={ui.customWordSupplementalMeaningPlaceholder}
+                  placeholderTextColor="#8E8E93"
+                  style={[styles.accountInput, themeStyles?.accountInput]}
+                  value={manualCustomWord.supplementalMeaningZh}
                 />
               </View>
               <View style={[styles.inputBox, themeStyles?.inputBox]}>
@@ -9099,27 +9106,6 @@ const styles = StyleSheet.create({
     // bottom of the fixed-height card where it reads as an empty card.
     lineHeight: 30,
     minHeight: 60,
-  },
-  supplementalMeaning: {
-    backgroundColor: '#F7FAFF',
-    borderColor: '#D6E9FF',
-    borderRadius: 10,
-    borderCurve: 'continuous',
-    borderWidth: StyleSheet.hairlineWidth,
-    gap: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  supplementalLabel: {
-    color: '#007AFF',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  supplementalText: {
-    color: '#6C6C70',
-    fontSize: 15,
-    fontWeight: '500',
-    lineHeight: 21,
   },
   studyCardExampleBox: {
     borderBottomLeftRadius: 0,
@@ -11186,16 +11172,6 @@ const darkStyles = StyleSheet.create({
   },
   meaning: {
     color: '#F2F2F7',
-  },
-  supplementalMeaning: {
-    backgroundColor: '#111A26',
-    borderColor: '#29466A',
-  },
-  supplementalLabel: {
-    color: '#0A84FF',
-  },
-  supplementalText: {
-    color: '#AEAEB2',
   },
   exampleBox: {
     backgroundColor: '#111A26',

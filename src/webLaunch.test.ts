@@ -606,10 +606,22 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("from './src/lib/chineseDisplay'");
     expect(appSource).toContain('conciseChineseMeaning(word.meaningZh)');
     expect(appSource).toContain('supplementalChineseMeaning(word.meaningZh)');
+    expect(appSource).toContain('word.supplementalMeaningZh');
     expect(appSource).toContain('chineseMeaningPinyin');
     expect(appSource).toContain('formatWordPinyin(word, studyMode)');
     expect(appSource).toContain('ui.supplementalMeanings');
-    expect(appSource).toContain('styles.supplementalMeaning');
+    expect(appSource).toContain('formatMeaningSupplement(word)');
+
+    const studyCardSource = appSource.slice(
+      appSource.indexOf('function StudyCardBody'),
+      appSource.indexOf('function splitSwipeHintLines'),
+    );
+    const libraryRowSource = appSource.slice(
+      appSource.indexOf('const LibraryWordRow'),
+      appSource.indexOf('export function LibraryWordDetailView'),
+    );
+    expect(studyCardSource).not.toContain('supplementalMeanings');
+    expect(libraryRowSource).not.toContain('supplementalMeanings');
   });
 
   test('polishes interaction motion and avoids stuttery filter collapse', () => {

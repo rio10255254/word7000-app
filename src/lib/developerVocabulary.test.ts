@@ -48,7 +48,9 @@ describe('developer vocabulary import and export', () => {
       }),
     ]);
 
-    expect(csv.split('\n')[0]).toBe('id,word,pronunciation,partOfSpeech,meaningZh,example,exampleZh,group');
+    expect(csv.split('\n')[0]).toBe(
+      'id,word,pronunciation,partOfSpeech,meaningZh,supplementalMeaningZh,example,exampleZh,group',
+    );
     expect(csv).toContain('adapt');
     expect(csv).toContain('Students adapt quickly.');
     expect(csv).toContain('學生很快適應。');
@@ -68,6 +70,22 @@ describe('developer vocabulary import and export', () => {
         exampleZh: '學生很快適應新的作息。',
       },
     ]);
+  });
+
+  test('preserves supplemental meanings during import and export', () => {
+    const csv = exportWordsToCsv([
+      wordFixture('bank', {
+        meaningZh: '銀行',
+        supplementalMeaningZh: '河岸',
+      }),
+    ]);
+    const parsed = parseVocabularyImport(csv, 'vocabulary.csv');
+
+    expect(parsed.ok).toBe(true);
+    expect(parsed.rows[0]).toMatchObject({
+      meaningZh: '銀行',
+      supplementalMeaningZh: '河岸',
+    });
   });
 
   test('ignores extra CSV columns without shifting known fields', () => {

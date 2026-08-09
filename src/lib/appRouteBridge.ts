@@ -11,6 +11,7 @@ export type RouteManualCustomWordState = {
   example: string;
   exampleZh: string;
   meaningZh: string;
+  supplementalMeaningZh: string;
   partOfSpeech: string;
   pronunciation: string;
   word: string;

@@ -304,7 +304,7 @@ function prepareVocabulary(words: WordEntry[]): PreparedVocabulary {
     example: word.example.toLowerCase(),
     exampleZh: word.exampleZh.toLowerCase(),
     index,
-    meaning: word.meaningZh.toLowerCase(),
+    meaning: `${word.meaningZh} ${word.supplementalMeaningZh ?? ''}`.trim().toLowerCase(),
     normalizedWord: word.word.toLowerCase(),
     word,
   }));

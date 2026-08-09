@@ -212,6 +212,17 @@ describe('library and quiz helpers', () => {
     expect(coreTwoBWords.every((word) => word.word.toUpperCase().startsWith('B'))).toBe(true);
   });
 
+  test('filterWords searches supplemental meanings without showing them as the main answer', () => {
+    const words = [
+      wordFixture('bank', {
+        meaningZh: '銀行',
+        supplementalMeaningZh: '河岸',
+      }),
+    ];
+
+    expect(filterWords(words, emptyProgress(), '河岸', 'all').map((word) => word.word)).toEqual(['bank']);
+  });
+
   test('filterWords keeps the full library in its stable vocabulary order when not searching or filtering', () => {
     const words = [
       wordFixture('mastered-word'),

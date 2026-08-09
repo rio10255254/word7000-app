@@ -101,6 +101,34 @@ const seedOverrides = new Map(
   ],
 );
 
+const metadataOverrides = new Map([
+  [
+    'capt',
+    {
+      meaningZh: '船長（captain 的縮寫）；佳能先進列印技術',
+    },
+  ],
+  [
+    'unfriendly',
+    {
+      partOfSpeech: 'a',
+      meaningZh: '不友善的；冷漠的',
+    },
+  ],
+  [
+    'fairness',
+    {
+      meaningZh: '公平；公正',
+    },
+  ],
+  [
+    'stressful',
+    {
+      meaningZh: '壓力大的；令人緊張的',
+    },
+  ],
+]);
+
 const fixedExamples = new Map(
   [
     ['be', ['I want to be ready before noon.', '我想在中午前準備好。']],
@@ -1265,10 +1293,11 @@ function toEntry(row, index) {
   const word = row.word.trim().toLowerCase();
   const reviewedExample = reviewedExamples.get(word);
   const override = seedOverrides.get(word);
-  const meaningZh = override?.meaningZh ?? cleanMeaning(row.translation);
+  const metadataOverride = metadataOverrides.get(word);
+  const meaningZh = override?.meaningZh ?? metadataOverride?.meaningZh ?? cleanMeaning(row.translation);
   const pronunciation = row.phonetic?.trim() ? `/${row.phonetic.trim()}/` : '/-/';
   const group = `Core ${Math.floor(index / 500) + 1}`;
-  const partOfSpeechValue = partOfSpeech(row);
+  const partOfSpeechValue = metadataOverride?.partOfSpeech ?? partOfSpeech(row);
   const [example, exampleZh] = reviewedExample
     ? [reviewedExample.example, reviewedExample.exampleZh]
     : override

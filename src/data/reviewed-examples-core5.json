@@ -1,3397 +1,3502 @@
 [
   {
-    "word": "inner",
-    "example": "Even when her friends pushed her toward the safer choice, she trusted her inner voice and applied for art school.",
-    "exampleZh": "即使朋友都勸她選擇比較安全的道路，她仍相信自己內心的聲音，申請了藝術學校。",
+    "word": "acid",
+    "example": "Lena checked the acid bottle label before cleaning the stained sink.",
+    "exampleZh": "麗娜清潔水槽前先看酸液瓶標籤。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "inner",
+    "example": "After the apology, Marcus finally trusted his inner sense of right and wrong.",
+    "exampleZh": "道歉後馬克斯終於相信內心的是非感。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "fishing",
-    "example": "My uncle enjoys fishing on weekends, especially when the lake is quiet and the morning air is still cool.",
-    "exampleZh": "我叔叔週末喜歡釣魚，尤其是在湖面安靜、早晨空氣仍然涼爽的時候。",
+    "example": "Grandpa packed rice balls before his early fishing trip to the pier.",
+    "exampleZh": "爺爺去碼頭釣魚前先包飯糰。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "vegetable",
-    "example": "Please eat one more vegetable before you leave the table, because you barely touched dinner tonight.",
-    "exampleZh": "離開餐桌前請再吃一樣蔬菜，因為你今晚幾乎沒碰晚餐。",
+    "example": "Nina added one vegetable to the noodles for color and crunch.",
+    "exampleZh": "妮娜在麵裡加一樣蔬菜添色和口感。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "preserve",
-    "example": "We must preserve this old building because it tells the story of the town better than any museum display.",
-    "exampleZh": "我們必須保存這棟老建築，因為它比任何博物館展示都更能訴說這座城鎮的故事。",
+    "example": "Local volunteers preserve old letters from families who left the island.",
+    "exampleZh": "在地志工保存離島家庭的舊信。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "perfectly",
-    "example": "After weeks of small adjustments, the plan worked perfectly during the final test and surprised even the doubtful engineers.",
-    "exampleZh": "經過好幾週的小幅調整後，這個計畫在最後測試中運作得很完美，甚至讓原本懷疑的工程師都感到驚訝。",
+    "example": "The new key turned perfectly after Aaron cleaned the rusty lock.",
+    "exampleZh": "亞倫清完鏽鎖後新鑰匙轉得很順。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "attractive",
-    "example": "The shop has an attractive window display that makes people slow down before they even notice the sale sign.",
-    "exampleZh": "這家店有吸引人的櫥窗展示，讓人們甚至還沒注意到折扣標誌前就先放慢腳步。",
+    "example": "That narrow bakery has an attractive display of pastries and bread.",
+    "exampleZh": "那間小麵包店陳列的糕點和麵包很吸引人。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "valley",
-    "example": "A river runs through the valley, but the children stopped talking and simply looked around.",
-    "exampleZh": "一條河流穿過山谷，但是孩子們停止說話，只是四處看著。",
+    "example": "Mist filled the valley while hikers waited for sunrise above Hualien.",
+    "exampleZh": "花蓮山谷起霧時登山客等著日出。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "minor",
-    "example": "This is only a minor problem.",
-    "exampleZh": "這只是一個小問題。",
+    "example": "A minor scratch on the scooter still bothered Mei all week.",
+    "exampleZh": "機車上的小刮痕讓美美介意整週。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "emotion",
-    "example": "He showed little emotion, so the conversation felt more honest than before.",
-    "exampleZh": "他幾乎沒有表現出情緒，所以這段對話感覺比以前更坦誠。",
+    "example": "His voice carried real emotion when he thanked the nurse.",
+    "exampleZh": "他感謝護理師時聲音帶著真實情感。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "chip",
-    "example": "A chip fell from the cup while she was washing it, so she put it aside before anyone cut a finger.",
-    "exampleZh": "她洗杯子時掉了一小片碎片，所以在有人割到手前先把杯子放到一旁。",
+    "example": "A chip in the blue bowl scratched my thumb during breakfast.",
+    "exampleZh": "藍碗的缺口在早餐時刮到拇指。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pension",
-    "example": "Her pension covers basic expenses, but everyone checked the numbers again before signing anything.",
-    "exampleZh": "她的退休金足以支付基本開銷，但是大家在簽署任何文件前再次確認數字。",
+    "example": "Her pension pays the rent, but groceries require careful choices.",
+    "exampleZh": "她的退休金能付房租但買菜要精打細算。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "resistance",
-    "example": "The plan met strong resistance from residents who worried that the new road would bring more traffic.",
-    "exampleZh": "這項計畫遭到居民強烈反對，因為他們擔心新道路會帶來更多交通。",
+    "example": "The old drawer slid open with surprising resistance in humid weather.",
+    "exampleZh": "潮濕天氣裡舊抽屜拉開時阻力很大。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "compete",
-    "example": "Small shops compete with large stores.",
-    "exampleZh": "小店和大型商店競爭，而且那之後情況感覺更真實。",
+    "example": "Two noodle stalls compete for customers near the night market gate.",
+    "exampleZh": "兩家麵攤在夜市入口搶客人。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "stir",
-    "example": "During the final check, please stir the soup slowly.",
-    "exampleZh": "在最後檢查時，請慢慢攪拌湯。",
+    "example": "Please stir sesame paste into the noodles until they look glossy.",
+    "exampleZh": "請把芝麻醬拌進麵裡直到發亮。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "wedding",
-    "example": "Their wedding was simple and warm, and the moment changed how they treated one another.",
-    "exampleZh": "他們的婚禮簡單又溫馨，而且那一刻改變了他們彼此對待的方式。",
+    "example": "Their wedding filled the temple courtyard with lanterns and laughter.",
+    "exampleZh": "他們的婚禮讓廟埕滿是燈籠和笑聲。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "lock",
-    "example": "If the situation starts to feel rushed, remember to lock the door, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，記得鎖門，這樣小錯誤才不會變成更大的問題。",
+    "example": "Jun forgot to lock the balcony door before the typhoon arrived.",
+    "exampleZh": "颱風來前阿俊忘了鎖陽台門。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "boot",
-    "example": "Mud covered his left boot.",
-    "exampleZh": "泥巴蓋住了他的左靴子，而且那之後情況感覺更真實。",
+    "example": "Mud soaked one boot when Paul crossed the flooded farm path.",
+    "exampleZh": "保羅走過淹水農路時一隻靴子濕透。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "switch",
-    "example": "If the situation starts to feel rushed, turn off the light switch, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，把電燈開關關掉，這樣小錯誤才不會變成更大的問題。",
+    "example": "Mina hit the wrong switch and woke the whole apartment.",
+    "exampleZh": "米娜按錯開關吵醒整棟公寓。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "hello",
-    "example": "She said hello with a smile, but the moment changed how they treated one another.",
-    "exampleZh": "她微笑著說哈囉，但是那一刻改變了他們彼此對待的方式。",
+    "example": "The toddler shouted hello to every passenger on the bus.",
+    "exampleZh": "幼兒對公車上每位乘客喊哈囉。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "revolution",
-    "example": "The revolution changed the country, but the situation felt more realistic after that.",
-    "exampleZh": "這場革命改變了這個國家，但是那之後情況感覺更真實。",
+    "example": "The bicycle wheel made one full revolution before wobbling again.",
+    "exampleZh": "腳踏車輪轉滿一圈後又開始搖晃。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "construct",
-    "example": "Workers construct houses nearby.",
-    "exampleZh": "工人在附近建造房屋。",
+    "example": "Workers construct a bamboo stage beside the temple every spring.",
+    "exampleZh": "工人每年春天在廟旁搭竹舞台。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "habit",
-    "example": "Reading is a good habit.",
-    "exampleZh": "閱讀是一個好習慣。",
+    "example": "Milo has a habit of saving receipts inside old novels.",
+    "exampleZh": "米洛習慣把收據夾在舊小說裡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "command",
-    "example": "The dog obeyed his command, so the children stopped talking and simply looked around.",
-    "exampleZh": "那隻狗服從了他的命令，所以孩子們停止說話，只是四處看著。",
+    "example": "The shepherd gave one command, and the dog circled the goats.",
+    "exampleZh": "牧羊人一下命令狗就繞到羊群旁。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tower",
-    "example": "Although someone asked for a more concrete example, the tower is easy to see.",
-    "exampleZh": "雖然有人要求一個更具體的例子，那座塔很容易看見。",
+    "example": "A red tower marks the harbor entrance for fishing boats.",
+    "exampleZh": "紅色塔樓標示漁船進港口的位置。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "drag",
-    "example": "When you are ready to continue, do not drag the chair, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，不要拖椅子，不要等到別人注意到問題才處理。",
+    "example": "Do not drag the suitcase across Grandma's polished wooden floor.",
+    "exampleZh": "別把行李箱拖過奶奶擦亮的木地板。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "via",
-    "example": "We sent the file via email, so the team recorded the result so they could compare it later.",
-    "exampleZh": "我們透過電子郵件寄出檔案，所以團隊記錄結果以便日後比較。",
+    "example": "We reached the mountain village via a narrow road above clouds.",
+    "exampleZh": "我們經由雲上的窄路抵達山村。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "philosophy",
-    "example": "Her philosophy is simple.",
-    "exampleZh": "她的人生觀很簡單。",
+    "example": "Her philosophy is to cook slowly and waste nothing edible.",
+    "exampleZh": "她的人生觀是慢慢煮並不浪費食物。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "vital",
-    "example": "Sleep is vital for health, and the doctor asked the family to watch the symptoms closely.",
-    "exampleZh": "睡眠對健康很重要，而且醫生請家人密切觀察症狀。",
+    "example": "Clean water is vital after landslides damage the hillside pipes.",
+    "exampleZh": "土石流損壞山坡水管後乾淨水源很重要。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bend",
-    "example": "When you are ready to continue, please bend your knees slightly, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，請稍微彎曲膝蓋，不要等到別人注意到問題才處理。",
+    "example": "Please bend the wire gently before fitting it behind the frame.",
+    "exampleZh": "把鐵絲輕輕折彎再裝到框後。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "illness",
-    "example": "The illness kept him home, and the family felt calmer after hearing a clear explanation.",
-    "exampleZh": "疾病讓他待在家裡，而且家人在聽到清楚說明後比較安心。",
+    "example": "His illness kept the bakery closed for three rainy mornings.",
+    "exampleZh": "他的病讓麵包店連三個雨天早上沒開。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "preparation",
-    "example": "Good preparation saves time.",
-    "exampleZh": "充分準備能節省時間。",
+    "example": "Careful preparation helped Eva pack medicine for the long ferry ride.",
+    "exampleZh": "仔細準備讓伊娃搭長程渡輪時帶齊藥品。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "climate",
-    "example": "The climate is getting warmer, but the scene stayed in our memory for a long time.",
-    "exampleZh": "氣候正在變暖，但是那個畫面在我們記憶中停留了很久。",
+    "example": "The island climate makes laundry dry slowly during winter weeks.",
+    "exampleZh": "島上氣候讓冬季衣物乾得很慢。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sand",
-    "example": "The beach sand felt warm, so the moment changed how they treated one another.",
-    "exampleZh": "海灘上的沙子摸起來很溫暖，所以那一刻改變了他們彼此對待的方式。",
+    "example": "Warm sand stuck to our feet after the beach concert ended.",
+    "exampleZh": "海邊演唱會結束後暖沙黏在腳上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "elderly",
-    "example": "An elderly man needed help, so the situation felt more realistic after that.",
-    "exampleZh": "一位年長男子需要幫忙，所以那之後情況感覺更真實。",
+    "example": "An elderly woman sold guavas beside the station each afternoon.",
+    "exampleZh": "一位年長女子每天下午在車站旁賣芭樂。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "discovery",
-    "example": "The discovery surprised the scientists.",
-    "exampleZh": "這項發現讓科學家感到驚訝。",
+    "example": "The child's discovery of tadpoles made the muddy ditch exciting.",
+    "exampleZh": "孩子發現蝌蚪後覺得泥溝很有趣。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "jacket",
-    "example": "When you are ready to continue, bring a jacket tonight, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，今晚帶件外套，不要等到別人注意到問題才處理。",
+    "example": "Tara left her denim jacket on the ferry by mistake.",
+    "exampleZh": "塔拉不小心把牛仔外套留在渡輪上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "assist",
-    "example": "During the discussion, someone finally asked, \"Can you assist this customer?\", and the room became quiet for a moment.",
-    "exampleZh": "討論時，有人終於問：『你可以協助這位顧客嗎』，房間一度安靜下來。",
+    "example": "A pharmacist will assist customers who cannot read the labels.",
+    "exampleZh": "藥師會協助看不懂標籤的顧客。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "stream",
-    "example": "The stream flowed behind the house, so the small detail made the room feel more organized.",
-    "exampleZh": "小溪流過房子後方，所以這個小細節讓房間感覺更有條理。",
+    "example": "A cold stream runs behind the campsite and chills our drinks.",
+    "exampleZh": "營地後方有冰涼溪流可冰飲料。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "membership",
-    "example": "Her membership expires tomorrow.",
-    "exampleZh": "她的會員資格明天到期。",
+    "example": "Leo renewed his pool membership before the summer crowds arrived.",
+    "exampleZh": "暑假人潮來前李歐續辦泳池會員資格。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "reputation",
-    "example": "The restaurant has a good reputation, but the decision affected more people than expected.",
-    "exampleZh": "這家餐廳名聲很好，但是這項決定影響的人比預期更多。",
+    "example": "The clinic built its reputation by treating stray cats gently.",
+    "exampleZh": "那診所以溫柔照顧浪貓建立名聲。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "competitive",
-    "example": "After the store prepared for a busy weekend, the market is very competitive, and customers noticed the change almost immediately.",
-    "exampleZh": "在店家為忙碌的週末做準備之後，這個市場競爭很激烈，而且顧客幾乎立刻注意到這項變化。",
+    "example": "The rental market stays competitive near stations with good food.",
+    "exampleZh": "捷運站旁又有美食的租屋市場競爭激烈。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "retire",
-    "example": "He plans to retire next year.",
-    "exampleZh": "他計畫明年退休。",
+    "example": "My aunt will retire after one final season at the orchard.",
+    "exampleZh": "阿姨在果園做完最後一季就退休。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cheese",
-    "example": "This cheese tastes salty, so the family laughed while setting the plates on the table.",
-    "exampleZh": "這個起司吃起來很鹹，所以家人一邊把盤子放上桌一邊笑著聊天。",
+    "example": "Melted cheese stretched from the toast onto Ken's sleeve.",
+    "exampleZh": "融化的起司從吐司牽絲到肯恩的袖子上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mood",
-    "example": "Music changed her mood, but everyone understood the feeling behind the words.",
-    "exampleZh": "音樂改變了她的心情，但是大家理解了話語背後的感受。",
+    "example": "Sad music matched her mood during the quiet train ride.",
+    "exampleZh": "安靜搭火車時悲傷音樂很合她心情。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "breathe",
-    "example": "Before you move on to the next step, please breathe slowly and stay calm, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，請慢慢呼吸並保持冷靜，並確認大家都理解它為什麼重要。",
+    "example": "Please breathe through your nose while climbing the steep temple steps.",
+    "exampleZh": "爬陡峭廟階時請用鼻子呼吸。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "knife",
-    "example": "During the final check, use a sharp knife carefully.",
-    "exampleZh": "在最後檢查時，小心使用鋒利的小刀。",
+    "example": "Keep the knife flat when slicing mango for the children.",
+    "exampleZh": "替孩子切芒果時把刀放平。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "phrase",
-    "example": "This phrase sounds natural, but the group wrote it down before anyone forgot.",
-    "exampleZh": "這個片語聽起來很自然，但是小組在有人忘記前把它寫了下來。",
+    "example": "That Taiwanese phrase sounds warmer than the direct English version.",
+    "exampleZh": "那句台灣說法比直譯英文更親切。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "unlike",
-    "example": "She is quiet, unlike her brother, but the situation felt more realistic after that.",
-    "exampleZh": "她很安靜，不像她哥哥，但是那之後情況感覺更真實。",
+    "example": "Owen, unlike his cousins, enjoys bitter tea without sugar.",
+    "exampleZh": "歐文不像表兄弟，他愛喝無糖苦茶。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "peak",
-    "example": "Snow covered the mountain peak, so the guide asked us to stay on the path.",
-    "exampleZh": "雪覆蓋了山峰，所以嚮導請我們留在小路上。",
+    "example": "Clouds hid the peak just as the hikers reached the ridge.",
+    "exampleZh": "登山客到稜線時雲正好遮住山頂。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "substance",
-    "example": "The bottle contains a clear substance.",
-    "exampleZh": "瓶子裡裝著透明物質。",
+    "example": "The inspector found a sticky substance under the restaurant table.",
+    "exampleZh": "稽查員在餐桌下發現黏稠物質。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "poem",
-    "example": "She wrote a short poem, and the scene gave the whole work a clearer direction.",
-    "exampleZh": "她寫了一首短詩，而且這個場景讓整部作品的方向更清楚。",
+    "example": "Rita copied a short poem onto a postcard from Tainan.",
+    "exampleZh": "麗塔把短詩抄在台南明信片上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "musical",
-    "example": "We watched a musical last night, and the scene gave the whole work a clearer direction.",
-    "exampleZh": "我們昨晚看了一齣音樂劇，而且這個場景讓整部作品的方向更清楚。",
+    "example": "We chose a musical because Grandma loves songs and bright costumes.",
+    "exampleZh": "我們選音樂劇因為奶奶愛歌曲和鮮豔服裝。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "kiss",
-    "example": "She gave the baby a kiss.",
-    "exampleZh": "她親了寶寶一下。",
+    "example": "Lily gave her sleeping son a kiss before leaving early.",
+    "exampleZh": "莉莉提早出門前親了熟睡兒子一下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "crazy",
-    "example": "That idea sounds crazy.",
-    "exampleZh": "那個想法聽起來很瘋狂。",
+    "example": "That crazy scooter maneuver nearly hit the fruit vendor.",
+    "exampleZh": "那次瘋狂的機車急轉差點撞到水果販。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "relative",
-    "example": "A relative visited us yesterday, but the moment changed how they treated one another.",
-    "exampleZh": "一位親戚昨天來看我們，但是那一刻改變了他們彼此對待的方式。",
+    "example": "A distant relative brought handmade noodles to the funeral lunch.",
+    "exampleZh": "一位遠房親戚帶手工麵來喪禮午餐。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "silver",
-    "example": "She wore a silver necklace, and the family cleaned the area before guests arrived.",
-    "exampleZh": "她戴了一條銀項鍊，而且家人在客人抵達前把那個區域整理乾淨。",
+    "example": "A silver bracelet slipped under the sofa during the party.",
+    "exampleZh": "聚會中一只銀手環滑到沙發下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cable",
-    "example": "The cable is too short, and everyone knew where to find it the next morning.",
-    "exampleZh": "這條電纜太短，而且隔天早上大家都知道去哪裡找它。",
+    "example": "The cable behind the television came loose during the earthquake.",
+    "exampleZh": "地震時電視後方的電纜鬆了。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "joke",
-    "example": "His joke made everyone laugh, so everyone understood the feeling behind the words.",
-    "exampleZh": "他的笑話讓大家都笑了，所以大家理解了話語背後的感受。",
+    "example": "His joke about burnt toast made the tired cook laugh.",
+    "exampleZh": "他拿烤焦吐司開玩笑逗笑疲累廚師。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "opposite",
+    "example": "The pharmacy stands opposite the temple with green lanterns.",
+    "exampleZh": "藥局就在掛綠燈籠的廟對面。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "scream",
-    "example": "We heard a scream outside, so the group wrote it down before anyone forgot.",
-    "exampleZh": "我們聽到外面有尖叫聲，所以小組在有人忘記前把它寫了下來。",
+    "example": "A sudden scream from the alley startled the sleeping dog.",
+    "exampleZh": "巷子裡突來尖叫嚇醒了睡狗。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "depth",
-    "example": "The pool has great depth, so the situation felt more realistic after that.",
-    "exampleZh": "這個泳池很深，所以那之後情況感覺更真實。",
+    "example": "The guide checked the depth before letting children enter the pond.",
+    "exampleZh": "嚮導確認水深後才讓孩子進池塘。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "opponent",
+    "example": "Her opponent bowed politely before the chess match began.",
+    "exampleZh": "她的對手在棋賽開始前禮貌鞠躬。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cope",
-    "example": "She learned to cope with stress.",
-    "exampleZh": "她學會應付壓力。",
+    "example": "Sam learned to cope with noise by wearing soft earplugs.",
+    "exampleZh": "山姆學會戴軟耳塞應付噪音。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "justify",
-    "example": "During the discussion, someone finally asked, \"Can you justify this cost?\", and the room became quiet for a moment.",
-    "exampleZh": "討論時，有人終於問：『你能證明這筆費用合理嗎』，房間一度安靜下來。",
+    "example": "No discount can justify serving soup that smells spoiled.",
+    "exampleZh": "再多折扣也不能讓賣餿湯變合理。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "output",
-    "example": "The machine output is stable, so the final report included the detail in a separate note.",
-    "exampleZh": "機器的輸出很穩定，所以最後報告把這個細節另外註記。",
+    "example": "The factory output doubled after the new ovens arrived.",
+    "exampleZh": "新烤爐到貨後工廠產量翻倍。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "alcohol",
-    "example": "This cleaner contains alcohol.",
-    "exampleZh": "這款清潔劑含有酒精。",
+    "example": "This gel contains alcohol, so keep it away from candles.",
+    "exampleZh": "這款凝膠含酒精所以別靠近蠟燭。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "slide",
-    "example": "The children used the slide.",
-    "exampleZh": "孩子們玩了溜滑梯，而且那之後情況感覺更真實。",
+    "example": "Children waited for the blue slide after the rain stopped.",
+    "exampleZh": "雨停後孩子排隊等藍色溜滑梯。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "transform",
-    "example": "The news will transform our plans, but the group wrote it down before anyone forgot.",
-    "exampleZh": "這個消息會改變我們的計畫，但是小組在有人忘記前把它寫了下來。",
+    "example": "New lighting can transform a narrow room into a warm cafe.",
+    "exampleZh": "新燈光能把窄房間變成溫暖咖啡館。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "disaster",
-    "example": "The flood became a disaster, but everyone slowed down and paid attention to the surroundings.",
-    "exampleZh": "洪水變成了一場災難，但是大家放慢腳步並注意周圍環境。",
+    "example": "The spoiled seafood turned the banquet into a disaster.",
+    "exampleZh": "變質海鮮讓宴席成了一場災難。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "deserve",
-    "example": "You deserve a break.",
-    "exampleZh": "你值得休息一下。",
+    "example": "The rescue workers deserve hot meals after that freezing night.",
+    "exampleZh": "救難員熬過寒夜後該有熱飯吃。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "monitor",
-    "example": "Before you move on to the next step, please monitor the temperature, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，請監測溫度，並確認大家都理解它為什麼重要。",
+    "example": "A nurse will monitor his pulse during the mountain transfer.",
+    "exampleZh": "護理師會在山區轉送時監測他的脈搏。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "persuade",
-    "example": "I tried to persuade him.",
-    "exampleZh": "我試著說服他，而且那之後情況感覺更真實。",
+    "example": "Ivy tried to persuade her father to see a dentist.",
+    "exampleZh": "艾薇試著說服父親去看牙醫。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "restore",
-    "example": "They will restore the old house, so the family cleaned the area before guests arrived.",
-    "exampleZh": "他們會修復那棟老房子，所以家人在客人抵達前把那個區域整理乾淨。",
+    "example": "The carpenter helped restore the shrine door after the flood.",
+    "exampleZh": "木匠幫忙修復洪水後的神龕門。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "priest",
-    "example": "The priest spoke quietly, but the family kept the tradition alive for another year.",
-    "exampleZh": "神父低聲說話，但是家人讓這項傳統又延續了一年。",
+    "example": "A priest blessed the fishing boats before dawn in Keelung.",
+    "exampleZh": "神父天亮前在基隆祝福漁船。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "proceed",
-    "example": "We can proceed with the plan.",
-    "exampleZh": "我們可以繼續進行這項計畫。",
+    "example": "Passengers may proceed to the pier after showing their tickets.",
+    "exampleZh": "乘客出示票後可前往碼頭。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "approval",
-    "example": "We need your approval first, so the group wrote it down before anyone forgot.",
-    "exampleZh": "我們需要先取得你的批准，所以小組在有人忘記前把它寫了下來。",
+    "example": "The mural needs approval from residents facing the lane.",
+    "exampleZh": "巷口壁畫需要面巷住戶同意。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "coal",
-    "example": "The factory used less coal.",
-    "exampleZh": "工廠使用了較少煤炭。",
+    "example": "Black coal dust covered the miner's lunchbox and gloves.",
+    "exampleZh": "黑煤灰蓋滿礦工的便當盒和手套。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "violent",
-    "example": "The movie has violent scenes, and the editor decided to keep the line in the final draft.",
-    "exampleZh": "這部電影有暴力場景，而且編輯決定在最後草稿中保留這句話。",
+    "example": "A violent wave knocked the camera from the ferry rail.",
+    "exampleZh": "猛烈海浪把相機從渡輪欄杆打落。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "originally",
-    "example": "I originally wanted to leave.",
-    "exampleZh": "我原本想離開。",
+    "example": "The tea shop originally sold only herbs and dried plums.",
+    "exampleZh": "那間茶店原本只賣青草和梅乾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pure",
-    "example": "The water looked pure, and everyone understood the feeling behind the words.",
-    "exampleZh": "水看起來很純淨，而且大家理解了話語背後的感受。",
+    "example": "The spring water tasted pure after hours of dusty hiking.",
+    "exampleZh": "走了幾小時塵土路後泉水很純淨。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "universe",
-    "example": "The universe is full of mysteries.",
-    "exampleZh": "宇宙充滿奧秘。",
+    "example": "The old planetarium made the universe feel close and quiet.",
+    "exampleZh": "老天文館讓宇宙感覺又近又安靜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tourist",
-    "example": "A tourist asked for directions, but the situation felt more realistic after that.",
-    "exampleZh": "一位觀光客問路，但是那之後情況感覺更真實。",
+    "example": "A lost tourist asked for directions near the lantern shop.",
+    "exampleZh": "迷路旅客在燈籠店旁問路。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "conventional",
-    "example": "He chose a conventional method, so the mistake became easier to find after the second check.",
-    "exampleZh": "他選擇了傳統方法，所以第二次檢查後錯誤變得更容易找出來。",
+    "example": "Nora prefers conventional medicine when her asthma gets worse.",
+    "exampleZh": "諾拉氣喘加重時偏好正規醫療。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "wet",
-    "example": "My socks are wet.",
-    "exampleZh": "我的襪子濕了。",
+    "example": "My socks stayed wet after the scooter ride through rain.",
+    "exampleZh": "雨中騎車後我的襪子一直濕著。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "anger",
-    "example": "His anger faded quickly, but the silence said more than a long explanation could.",
-    "exampleZh": "他的憤怒很快消退，但是沉默比冗長解釋更能說明一切。",
+    "example": "His anger faded when the child admitted breaking the vase.",
+    "exampleZh": "孩子承認打破花瓶後他的怒氣消了。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mixture",
-    "example": "The mixture changed the plan.",
-    "exampleZh": "這個混合改變了計畫。",
+    "example": "The baker poured a cinnamon mixture over the sliced apples.",
+    "exampleZh": "麵包師把肉桂混合物淋在蘋果片上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "whenever",
-    "example": "Before you move on to the next step, call me whenever you arrive, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，你什麼時候到，就什麼時候打給我，並確認大家都理解它為什麼重要。",
+    "example": "Vendors lift baskets whenever the train slows beside their stalls.",
+    "exampleZh": "火車在攤位旁放慢時攤販就舉起籃子。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "illegal",
-    "example": "Parking here is illegal, so the group wrote it down before anyone forgot.",
-    "exampleZh": "在這裡停車是違法的，所以小組在有人忘記前把它寫了下來。",
+    "example": "It is illegal to park scooters across the hospital entrance.",
+    "exampleZh": "機車橫停醫院入口是違法的。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "convince",
-    "example": "She failed to convince me.",
-    "exampleZh": "她沒能說服我。",
+    "example": "Fresh photos helped convince Grandma that the puppy was healthy.",
+    "exampleZh": "新照片讓奶奶相信小狗很健康。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "string",
-    "example": "During the final check, tie the box with string.",
-    "exampleZh": "在最後檢查時，用繩子把盒子綁起來。",
+    "example": "A red string held the garlic beside the kitchen window.",
+    "exampleZh": "紅繩把大蒜掛在廚房窗邊。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pose",
-    "example": "When you are ready to continue, hold this pose for ten seconds, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，保持這個姿勢十秒，不要等到別人注意到問題才處理。",
+    "example": "The bride changed her pose beside the banyan tree.",
+    "exampleZh": "新娘在榕樹旁換了姿勢。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "valuable",
-    "example": "Time is a valuable resource, so the group wrote it down before anyone forgot.",
-    "exampleZh": "時間是寶貴的資源，所以小組在有人忘記前把它寫了下來。",
+    "example": "This quiet hour is valuable for parents of newborn twins.",
+    "exampleZh": "這段安靜時間對雙胞胎新手父母很寶貴。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cake",
-    "example": "The cake smells delicious, so the family laughed while setting the plates on the table.",
-    "exampleZh": "蛋糕聞起來很好吃，所以家人一邊把盤子放上桌一邊笑著聊天。",
+    "example": "A mango cake waited in the fridge for Auntie's birthday.",
+    "exampleZh": "芒果蛋糕在冰箱裡等阿姨生日。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "naturally",
-    "example": "Children learn naturally through play.",
-    "exampleZh": "孩子會透過遊戲自然學習。",
+    "example": "The puppy naturally followed anyone carrying a bowl of rice.",
+    "exampleZh": "小狗自然跟著端飯碗的人走。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "retirement",
-    "example": "He saved money for retirement, and customers noticed the change almost immediately.",
-    "exampleZh": "他為退休存錢，而且顧客幾乎立刻注意到這項變化。",
+    "example": "Victor's retirement gave him time to repair radios by the window.",
+    "exampleZh": "退休讓維克多有時間在窗邊修收音機。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "smart",
-    "example": "That was a smart choice.",
-    "exampleZh": "那是聰明的選擇。",
+    "example": "A smart clerk found the missing receipt under the tray.",
+    "exampleZh": "聰明店員在托盤下找到遺失收據。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "wrap",
-    "example": "When you are ready to continue, please wrap the gift, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，請把禮物包起來，不要等到別人注意到問題才處理。",
+    "example": "Please wrap the pineapple cake carefully before placing it in luggage.",
+    "exampleZh": "鳳梨酥放行李前要仔細包好。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "wealth",
-    "example": "Although the examination took longer than expected, health is greater than wealth, and the family felt calmer after hearing a clear explanation.",
-    "exampleZh": "雖然檢查比預期更久，健康比財富更重要，而且家人在聽到清楚說明後比較安心。",
+    "example": "The family's wealth came from tea fields above the river.",
+    "exampleZh": "那家的財富來自河上方茶園。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "electronic",
-    "example": "She bought an electronic dictionary.",
-    "exampleZh": "她買了一本電子字典。",
+    "example": "An electronic ticket saves time at the ferry gate.",
+    "exampleZh": "電子票在渡輪閘口能省時間。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "port",
-    "example": "The ship reached the port, but everyone adjusted the plan before moving on.",
-    "exampleZh": "船抵達港口，但是大家在繼續前調整了計畫。",
+    "example": "Fishing lamps shimmered across the port after the typhoon passed.",
+    "exampleZh": "颱風過後漁燈在港口閃爍。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pot",
-    "example": "The soup is in the pot, but everyone noticed the flavor before the meal was over.",
-    "exampleZh": "湯在鍋子裡，但是大家在用餐結束前就注意到味道。",
+    "example": "A clay pot kept the soup warm through dinner.",
+    "exampleZh": "陶鍋讓湯整頓飯都保持溫熱。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sensitive",
-    "example": "This is a sensitive topic.",
-    "exampleZh": "這是一個敏感話題。",
+    "example": "Her sensitive skin reacted badly to the new soap.",
+    "exampleZh": "她的敏感肌膚對新肥皂反應很糟。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "resist",
-    "example": "During the final check, try to resist the temptation.",
-    "exampleZh": "在最後檢查時，試著抵抗誘惑。",
+    "example": "Tina could not resist the smell of roasted sweet potatoes.",
+    "exampleZh": "蒂娜抵擋不了烤地瓜香。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "unknown",
+    "example": "An unknown number kept calling during the family dinner.",
+    "exampleZh": "晚餐時陌生號碼一直打來。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sum",
-    "example": "The sum is correct.",
-    "exampleZh": "總和是正確的。",
+    "example": "The final sum on the receipt shocked the tourists.",
+    "exampleZh": "收據上的總金額嚇到那些旅客。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "fault",
-    "example": "Although someone asked for a more concrete example, it was not your fault.",
-    "exampleZh": "雖然有人要求一個更具體的例子，那不是你的錯。",
+    "example": "The cracked pipe was not your fault, so stop apologizing.",
+    "exampleZh": "水管裂了不是你的錯，別再道歉。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "false",
-    "example": "Although someone asked for a more concrete example, the report gave false information.",
-    "exampleZh": "雖然有人要求一個更具體的例子，報告提供了錯誤資訊，而且那之後情況感覺更真實。",
+    "example": "A false alarm emptied the cinema before the film ended.",
+    "exampleZh": "誤報警報讓電影結束前戲院清空。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "throat",
-    "example": "Although the doctor compared the new result with the old one, my throat feels dry, and the family felt calmer after hearing a clear explanation.",
-    "exampleZh": "雖然醫生把新結果和舊結果做了比較，我的喉嚨覺得乾，而且家人在聽到清楚說明後比較安心。",
+    "example": "Ginger tea eased his sore throat before the performance.",
+    "exampleZh": "薑茶在演出前舒緩他的喉嚨痛。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "birthday",
-    "example": "Her birthday is tomorrow, and the moment changed how they treated one another.",
-    "exampleZh": "她的生日是明天，而且那一刻改變了他們彼此對待的方式。",
+    "example": "Mom hid the birthday noodles behind a stack of bowls.",
+    "exampleZh": "媽媽把生日麵藏在一疊碗後。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "symbol",
-    "example": "A dove is a symbol of peace.",
-    "exampleZh": "鴿子是和平的象徵。",
+    "example": "The lotus became a symbol of hope for the village.",
+    "exampleZh": "蓮花成為村莊希望的象徵。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "emphasize",
-    "example": "I want to emphasize this point.",
-    "exampleZh": "我想強調這一點。",
+    "example": "Doctors emphasize sleep when teenagers complain about headaches.",
+    "exampleZh": "青少年頭痛時醫師強調睡眠。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "swing",
-    "example": "The child played on the swing.",
-    "exampleZh": "孩子在盪鞦韆。",
+    "example": "The old swing creaked whenever sea wind crossed the park.",
+    "exampleZh": "海風吹過公園時舊鞦韆就吱響。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "luck",
-    "example": "We had good luck today.",
-    "exampleZh": "我們今天運氣很好。",
+    "example": "Good luck helped us find shelter before the hail started.",
+    "exampleZh": "好運讓我們在冰雹前找到避雨處。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "spiritual",
-    "example": "She needed spiritual support, so people listened quietly instead of arguing.",
-    "exampleZh": "她需要精神上的支持，所以人們安靜聆聽而不是爭辯。",
+    "example": "Meditation gave Aaron spiritual comfort after months of grief.",
+    "exampleZh": "冥想讓亞倫喪親數月後得到心靈慰藉。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "drama",
-    "example": "The drama begins at eight, so the editor decided to keep the line in the final draft.",
-    "exampleZh": "這齣戲八點開始，所以編輯決定在最後草稿中保留這句話。",
+    "example": "The temple drama drew families from three nearby villages.",
+    "exampleZh": "廟口戲吸引三個鄰村家庭。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "visible",
-    "example": "The sign is clearly visible, but the situation felt more realistic after that.",
-    "exampleZh": "這個標誌清楚可見，但是那之後情況感覺更真實。",
+    "example": "The scar remained visible under the bright clinic lamp.",
+    "exampleZh": "明亮診燈下疤痕仍看得見。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "wooden",
-    "example": "They bought a wooden table.",
-    "exampleZh": "他們買了一張木桌，但是隔天早上大家都知道去哪裡找它。",
+    "example": "A wooden stool stood beside the tofu vendor's cart.",
+    "exampleZh": "豆花攤車旁放著一張木凳。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "delivery",
-    "example": "Although someone asked for a more concrete example, the delivery arrived early.",
-    "exampleZh": "雖然有人要求一個更具體的例子，這件配送品提早到了。",
+    "example": "The flower delivery arrived before the bride finished makeup.",
+    "exampleZh": "新娘妝還沒完成花束就送到了。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "suitable",
-    "example": "This room is suitable for meetings, so the family cleaned the area before guests arrived.",
-    "exampleZh": "這個房間適合開會，所以家人在客人抵達前把那個區域整理乾淨。",
+    "example": "This trail is suitable for children who walk slowly.",
+    "exampleZh": "這條步道適合走得慢的孩子。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "nervous",
-    "example": "She felt nervous before the test, but the moment changed how they treated one another.",
-    "exampleZh": "她考試前覺得緊張，但是那一刻改變了他們彼此對待的方式。",
+    "example": "He felt nervous before singing at his sister's banquet.",
+    "exampleZh": "他在姊姊的宴席上唱歌前感到很緊張。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "alter",
-    "example": "Small changes can alter the result.",
-    "exampleZh": "小改變可能會改變結果。",
+    "example": "Tailors can alter the jacket before the graduation photo.",
+    "exampleZh": "裁縫能在畢業照前修改外套。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "smell",
-    "example": "The smell of coffee filled the room, but everyone noticed the flavor before the meal was over.",
-    "exampleZh": "咖啡香充滿了房間，但是大家在用餐結束前就注意到味道。",
+    "example": "The smell of fried shallots drifted from the kitchen.",
+    "exampleZh": "油蔥香味從廚房飄出來。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mail",
-    "example": "After several unclear answers, Maria raised her hand and asked, \"Did you receive my mail?\", hoping for a simple explanation.",
-    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『你收到我的郵件了嗎』，希望得到簡單說明。",
+    "example": "Grandpa still checks the mail before watering his orchids.",
+    "exampleZh": "爺爺澆蘭花前仍會查看郵件。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "adjust",
-    "example": "If the situation starts to feel rushed, please adjust your seat, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，請調整你的座位，這樣小錯誤才不會變成更大的問題。",
+    "example": "Please adjust the fan before the baby falls asleep.",
+    "exampleZh": "嬰兒睡著前請調整電扇。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pace",
-    "example": "Walk at your own pace.",
-    "exampleZh": "照自己的步調走。",
+    "example": "Her walking pace slowed near the steep stone steps.",
+    "exampleZh": "她走到陡石階旁步調變慢。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bury",
-    "example": "They bury the seeds in soil, but the guide asked us to stay on the path.",
-    "exampleZh": "他們把種子埋進土裡，但是嚮導請我們留在小路上。",
+    "example": "They bury oyster shells in the field to enrich the soil.",
+    "exampleZh": "他們把蚵殼埋進田裡改善土壤。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "friendly",
-    "example": "The staff were friendly, and the moment changed how they treated one another.",
-    "exampleZh": "員工都很親切，而且那一刻改變了他們彼此對待的方式。",
+    "example": "The friendly driver waited while Grandpa climbed aboard slowly.",
+    "exampleZh": "友善司機等爺爺慢慢上車。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "holy",
-    "example": "This is a holy place, and the family kept the tradition alive for another year.",
-    "exampleZh": "這是神聖的地方，而且家人讓這項傳統又延續了一年。",
+    "example": "Pilgrims washed their hands before entering the holy spring.",
+    "exampleZh": "香客進入聖泉前先洗手。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "initially",
-    "example": "I initially refused the offer.",
-    "exampleZh": "我一開始拒絕了這個提議。",
+    "example": "The herbal soup initially tasted bitter but comforting at dinner.",
+    "exampleZh": "晚餐時那碗藥膳湯起初苦卻讓人安心。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "routine",
-    "example": "Exercise is part of my routine.",
-    "exampleZh": "運動是我日常作息的一部分。",
+    "example": "Mia's morning routine includes stretching beside the balcony plants.",
+    "exampleZh": "蜜雅早晨例行會在陽台植物旁伸展。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "extensive",
-    "example": "The damage was extensive.",
-    "exampleZh": "損害範圍很廣，而且那之後情況感覺更真實。",
+    "example": "The storm caused extensive damage along the coastal road.",
+    "exampleZh": "暴風雨對海岸道路造成廣泛損壞。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "dust",
-    "example": "The shelf was covered with dust.",
-    "exampleZh": "架子上滿是灰塵，但是隔天早上大家都知道去哪裡找它。",
+    "example": "Fine dust covered the books after workers repaired the ceiling.",
+    "exampleZh": "工人修天花板後細灰蓋滿書本。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "electricity",
-    "example": "The storm cut off electricity, but the guide asked us to stay on the path.",
-    "exampleZh": "暴風雨造成停電，但是嚮導請我們留在小路上。",
+    "example": "The village lost electricity during the typhoon's strongest winds.",
+    "exampleZh": "颱風最強時村裡停電。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pollution",
-    "example": "Although the patient described the discomfort clearly, air pollution affects health, and the result was written down in the medical record.",
-    "exampleZh": "雖然病人清楚描述不舒服的地方，空氣汙染會影響健康，而且結果被寫進病歷中。",
+    "example": "River pollution worried families who raised ducks downstream.",
+    "exampleZh": "河川污染讓下游養鴨家庭擔心。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "whisper",
-    "example": "She spoke in a whisper.",
-    "exampleZh": "她低聲說話。",
+    "example": "I heard Grandma whisper a prayer beside the hospital bed.",
+    "exampleZh": "我聽見奶奶在病床旁低聲祈禱。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mystery",
-    "example": "The mystery remains unsolved.",
-    "exampleZh": "這個謎團仍未解開。",
+    "example": "The missing key remained a mystery until laundry day.",
+    "exampleZh": "那把失蹤鑰匙到洗衣日才解開謎團。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "wire",
-    "example": "The wire is broken, but the problem was fixed before anyone complained.",
-    "exampleZh": "這條電線斷了，但是問題在有人抱怨前就被修好。",
+    "example": "A loose wire sparked behind the noodle shop's sign.",
+    "exampleZh": "麵店招牌後方鬆動電線冒火花。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "extreme",
-    "example": "We faced extreme weather, and the air felt cooler than it had in the city.",
-    "exampleZh": "我們遇到極端天氣，而且空氣感覺比城市裡涼爽。",
+    "example": "The extreme heat kept fruit sellers under wet towels.",
+    "exampleZh": "極端酷熱讓水果販一直披著濕毛巾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "anxiety",
-    "example": "Although the examination took longer than expected, exercise helps reduce anxiety, and the nurse explained what to do if the problem returned.",
-    "exampleZh": "雖然檢查比預期更久，運動有助於減少焦慮，而且護士說明如果問題再出現該怎麼做。",
+    "example": "Her anxiety eased after the ferry captain announced calmer seas.",
+    "exampleZh": "船長宣布海面轉穩後她的焦慮減輕。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "smooth",
-    "example": "The road was smooth, but the schedule changed twice before we reached the station.",
-    "exampleZh": "道路很平順，但是我們到車站前時程已經改了兩次。",
+    "example": "The tofu pudding felt smooth against the cold spoon.",
+    "exampleZh": "豆花碰到冰湯匙時口感滑順。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "moon",
-    "example": "The moon looked bright tonight, but the people around her finally listened carefully.",
-    "exampleZh": "今晚月亮看起來很亮，但是她身邊的人終於認真聆聽。",
+    "example": "A bright moon rose above the quiet fish ponds.",
+    "exampleZh": "明月升上安靜魚塭上方。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "net",
-    "example": "The fisherman repaired the net.",
-    "exampleZh": "漁夫修補了網子。",
+    "example": "The fisherman repaired his net under a streetlight.",
+    "exampleZh": "漁夫在路燈下修補漁網。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "potato",
-    "example": "She baked a potato.",
-    "exampleZh": "她烤了一顆馬鈴薯，而且大家在用餐結束前就注意到味道。",
+    "example": "A potato roasted slowly in the roadside oven.",
+    "exampleZh": "一顆馬鈴薯在路邊爐裡慢慢烤熟。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rough",
-    "example": "The surface feels rough.",
-    "exampleZh": "表面摸起來很粗糙。",
+    "example": "The rough blanket scratched Nora's chin during the cold night.",
+    "exampleZh": "寒夜裡粗毯子刮著諾拉下巴。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "chamber",
-    "example": "The chamber was cold and quiet.",
-    "exampleZh": "房間又冷又安靜。",
+    "example": "Echoes filled the stone chamber beneath the old fort.",
+    "exampleZh": "回聲充滿老堡下方石室。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "crop",
-    "example": "Rice is an important crop.",
-    "exampleZh": "稻米是重要的農作物。",
+    "example": "This year's rice crop survived the early summer flood.",
+    "exampleZh": "今年稻作撐過初夏洪水。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "profession",
-    "example": "Teaching is a respected profession, so the class finally understood why the detail mattered.",
-    "exampleZh": "教學是受尊重的職業，所以全班終於理解這個細節為什麼重要。",
+    "example": "Dentistry became her profession after years of assisting in clinics.",
+    "exampleZh": "多年在診所協助後牙醫成了她的職業。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "install",
-    "example": "Please install the app before class.",
-    "exampleZh": "請在上課前安裝這個應用程式。",
+    "example": "Workers install solar panels on the library roof today.",
+    "exampleZh": "工人今天在圖書館屋頂安裝太陽能板。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cap",
-    "example": "He wore a black cap, so the problem was fixed before anyone complained.",
-    "exampleZh": "他戴了一頂黑帽子，所以問題在有人抱怨前就被修好。",
+    "example": "A red cap protected the vendor from afternoon sun.",
+    "exampleZh": "紅帽子替攤販擋下午太陽。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "load",
-    "example": "This truck can carry a heavy load, so the delay made the day feel much longer.",
-    "exampleZh": "這輛卡車能載很重的貨物，所以延誤讓那一天感覺更漫長。",
+    "example": "Kai carried a heavy load of oranges uphill.",
+    "exampleZh": "阿凱扛著一大袋柳丁上坡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pleased",
-    "example": "I am pleased with the result.",
-    "exampleZh": "我對結果很滿意。",
+    "example": "Rosa looked pleased when the lanterns finally lit together.",
+    "exampleZh": "燈籠終於一起亮起時羅莎很高興。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "badly",
-    "example": "His leg was badly hurt.",
-    "exampleZh": "他的腿傷得很嚴重。",
+    "example": "The kitten limped badly after jumping from the fence.",
+    "exampleZh": "小貓跳下圍牆後跛得很厲害。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "furniture",
-    "example": "The furniture looks old, but the family cleaned the area before guests arrived.",
-    "exampleZh": "這些家具看起來很舊，但是家人在客人抵達前把那個區域整理乾淨。",
+    "example": "Secondhand furniture filled the apartment above the tea shop.",
+    "exampleZh": "茶店樓上的公寓擺滿二手家具。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sudden",
-    "example": "A sudden noise woke me.",
-    "exampleZh": "突然的聲音吵醒了我。",
+    "example": "A sudden downpour sent cyclists under the temple roof.",
+    "exampleZh": "突來大雨讓騎車人躲進廟簷下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rank",
-    "example": "She reached a high rank.",
-    "exampleZh": "她達到了很高的職級。",
+    "example": "Her badge showed her rank in the volunteer rescue group.",
+    "exampleZh": "她的徽章顯示她在救援志工中的級別。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rail",
-    "example": "Before you move on to the next step, hold the rail on the stairs, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，在樓梯上扶著欄杆，並確認大家都理解它為什麼重要。",
+    "example": "Theo gripped the rail as the ferry crossed rough water.",
+    "exampleZh": "渡輪過浪時席歐緊抓欄杆。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "shortly",
-    "example": "The meeting will begin shortly.",
-    "exampleZh": "會議很快就會開始。",
+    "example": "The bakery sold out shortly after the pineapple buns cooled.",
+    "exampleZh": "菠蘿包冷卻後不久麵包店就賣完。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "convert",
-    "example": "You can convert dollars to yen, and the team recorded the result so they could compare it later.",
-    "exampleZh": "你可以把美元兌換成日圓，而且團隊記錄結果以便日後比較。",
+    "example": "They convert old warehouses into studios near the harbor.",
+    "exampleZh": "他們把港邊舊倉庫改成工作室。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "stomach",
-    "example": "My stomach hurts, so the result was written down in the medical record.",
-    "exampleZh": "我的胃痛，所以結果被寫進病歷中。",
+    "example": "Greasy noodles upset my stomach during the bus ride.",
+    "exampleZh": "油膩麵條讓我搭公車時胃不舒服。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bathroom",
-    "example": "The bathroom is downstairs, and nobody had to waste time looking for it later.",
-    "exampleZh": "浴室在樓下，而且之後沒有人需要浪費時間找它。",
+    "example": "The bathroom mirror fogged while Dad shaved before dawn.",
+    "exampleZh": "爸爸天亮前刮鬍子時浴室鏡子起霧。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "charity",
-    "example": "After the manager compared several options, she donated money to charity, and the team had to balance cost with long-term value.",
-    "exampleZh": "在經理比較了幾個選項之後，她捐錢給慈善機構，而且團隊必須在成本與長期價值之間取得平衡。",
+    "example": "The charity collected blankets for families after the fire.",
+    "exampleZh": "慈善團體為火災後家庭募集毛毯。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "twin",
-    "example": "Although the clinic asked for another follow-up visit, her twin is a doctor, and the nurse explained what to do if the problem returned.",
-    "exampleZh": "雖然診所要求再安排一次回診，她的雙胞胎手足是醫生，而且護士說明如果問題再出現該怎麼做。",
+    "example": "My twin brother always notices when I change shampoo.",
+    "exampleZh": "我的雙胞胎哥哥總會發現我換洗髮精。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "remarkable",
-    "example": "Her progress was remarkable.",
-    "exampleZh": "她的進步很顯著。",
+    "example": "Her recovery was remarkable after weeks of quiet rest.",
+    "exampleZh": "安靜休養幾週後她恢復得很驚人。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pink",
-    "example": "The walls are pink.",
-    "exampleZh": "牆壁是粉紅色的，而且那之後情況感覺更真實。",
+    "example": "A pink umbrella stood out in the gray rain.",
+    "exampleZh": "灰雨中一把粉紅傘特別醒目。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "salary",
-    "example": "Although the market changed faster than expected, his salary increased this year, and the manager explained the change during the afternoon meeting.",
-    "exampleZh": "雖然市場變化比預期更快，他的薪水今年增加了，而且經理在下午會議中說明這項變動。",
+    "example": "His salary barely covers rent near the hospital.",
+    "exampleZh": "他的薪水勉強付得起醫院附近房租。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "apple",
-    "example": "She ate an apple.",
-    "exampleZh": "她吃了一顆蘋果。",
+    "example": "An apple rolled from the basket onto the train floor.",
+    "exampleZh": "一顆蘋果從籃子滾到火車地板。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mad",
-    "example": "He was mad about the delay, so the moment changed how they treated one another.",
-    "exampleZh": "他因為延誤而生氣，所以那一刻改變了他們彼此對待的方式。",
+    "example": "Leo was mad when rain ruined his new shoes.",
+    "exampleZh": "雨毀了新鞋時李歐很生氣。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "efficient",
-    "example": "Although the data looked strange at first, the new system is efficient, and the final report included the detail in a separate note.",
-    "exampleZh": "雖然資料一開始看起來很奇怪，新系統很有效率，而且最後報告把這個細節另外註記。",
+    "example": "The efficient rice cooker steamed dinner while we packed.",
+    "exampleZh": "高效電鍋在我們打包時蒸好晚餐。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tube",
-    "example": "The paint comes in a tube.",
-    "exampleZh": "這種顏料裝在管子裡。",
+    "example": "The nurse changed the tube beside the patient's bed.",
+    "exampleZh": "護理師在病床旁更換管子。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "electric",
+    "example": "An electric scooter hummed past the sleeping market stalls.",
+    "exampleZh": "一輛電動機車嗡嗡滑過沉睡攤位。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "honest",
-    "example": "Please be honest with me.",
-    "exampleZh": "請對我誠實。",
+    "example": "An honest mechanic explained why the repair could wait.",
+    "exampleZh": "誠實技師說明為何維修可再等等。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "clock",
-    "example": "The clock stopped at noon, and the family cleaned the area before guests arrived.",
-    "exampleZh": "時鐘在中午停了，而且家人在客人抵達前把那個區域整理乾淨。",
+    "example": "The kitchen clock stopped during the hottest part of noon.",
+    "exampleZh": "廚房時鐘在正午最熱時停了。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "overcome",
-    "example": "We can overcome this problem, so the situation felt more realistic after that.",
-    "exampleZh": "我們可以克服這個問題，所以那之後情況感覺更真實。",
+    "example": "She worked to overcome her fear of deep water.",
+    "exampleZh": "她努力克服對深水的恐懼。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "lane",
-    "example": "Before you move on to the next step, stay in your lane, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，請保持在你的車道內，並確認大家都理解它為什麼重要。",
+    "example": "A narrow lane behind the market smelled of basil.",
+    "exampleZh": "市場後方窄巷聞得到九層塔香。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "junior",
-    "example": "After the team checked the setup twice, he is a junior engineer, and the mistake became easier to find after the second check.",
-    "exampleZh": "在團隊把設定檢查了兩次之後，他是一名資淺工程師，而且第二次檢查後錯誤變得更容易找出來。",
+    "example": "A junior cook burned the first tray of biscuits.",
+    "exampleZh": "資淺廚師烤焦了第一盤餅乾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "dig",
-    "example": "They dig holes for trees.",
-    "exampleZh": "他們為樹挖洞。",
+    "example": "Farmers dig channels before heavy rain reaches the fields.",
+    "exampleZh": "大雨到田前農民先挖水道。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "slight",
-    "example": "There was a slight delay.",
-    "exampleZh": "有一點點延誤。",
+    "example": "A slight fever kept Jonah away from the baby.",
+    "exampleZh": "輕微發燒讓喬納遠離嬰兒。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "belt",
-    "example": "He tightened his belt, and the small detail made the room feel more organized.",
-    "exampleZh": "他把皮帶繫緊，而且這個小細節讓房間感覺更有條理。",
+    "example": "His leather belt snapped while he lifted the boxes.",
+    "exampleZh": "他搬箱子時皮帶斷了。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "desert",
-    "example": "The desert gets cold at night, and the children stopped talking and simply looked around.",
-    "exampleZh": "沙漠晚上會變冷，而且孩子們停止說話，只是四處看著。",
+    "example": "The desert wind filled our shoes with pale sand.",
+    "exampleZh": "沙漠風把淺色沙子吹進鞋裡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "yours",
-    "example": "This seat is yours.",
-    "exampleZh": "這個座位是你的。",
+    "example": "This blue thermos is yours, but the cup is mine.",
+    "exampleZh": "這個藍色保溫瓶是你的，杯子是我的。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "infection",
-    "example": "The infection spread quickly, but the result was written down in the medical record.",
-    "exampleZh": "感染迅速擴散，但是結果被寫進病歷中。",
+    "example": "A small infection formed where the coral scratched her ankle.",
+    "exampleZh": "珊瑚刮傷腳踝處出現小感染。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "shell",
-    "example": "She found a shell on the beach, but the scene stayed in our memory for a long time.",
-    "exampleZh": "她在海灘上找到一個貝殼，但是那個畫面在我們記憶中停留了很久。",
+    "example": "A tiny shell clicked inside the child's pocket.",
+    "exampleZh": "小貝殼在孩子口袋裡喀喀響。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "barrier",
-    "example": "Language can be a barrier.",
-    "exampleZh": "語言可能成為障礙。",
+    "example": "A plastic barrier blocked scooters from the riverside path.",
+    "exampleZh": "塑膠路障擋住機車進河岸步道。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pale",
-    "example": "Her face looked pale, but the conversation felt more honest than before.",
-    "exampleZh": "她的臉色看起來蒼白，但是這段對話感覺比以前更坦誠。",
+    "example": "Her face turned pale after the mountain bus swayed.",
+    "exampleZh": "山路巴士搖晃後她臉色變蒼白。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "heaven",
-    "example": "The view felt like heaven, so the moment meant different things to different people.",
-    "exampleZh": "這景色像天堂一樣美，所以那一刻對不同人有不同意義。",
+    "example": "The cool spring felt like heaven after the dusty climb.",
+    "exampleZh": "爬完塵土坡後清涼泉水像天堂。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sweep",
-    "example": "During the final check, please sweep the floor.",
-    "exampleZh": "在最後檢查時，請掃地。",
+    "example": "Please sweep the courtyard before the guests remove their shoes.",
+    "exampleZh": "客人脫鞋前請先掃院子。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "stupid",
-    "example": "That was a stupid mistake, so the group wrote it down before anyone forgot.",
-    "exampleZh": "那是一個愚蠢的錯誤，所以小組在有人忘記前把它寫了下來。",
+    "example": "Leaving medicine in the sun was a stupid mistake.",
+    "exampleZh": "把藥放在太陽下是愚蠢的錯誤。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "inquiry",
+    "example": "The hotel answered our inquiry about storing bicycles overnight.",
+    "exampleZh": "旅館回覆了我們關於單車過夜寄放的詢問。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "owe",
-    "example": "I owe you an apology.",
-    "exampleZh": "我欠你一個道歉。",
+    "example": "I owe Aunt Lin money for yesterday's taxi ride.",
+    "exampleZh": "我欠林阿姨昨天的計程車錢。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "entertainment",
-    "example": "The hotel offers evening entertainment, and the audience kept talking about it after leaving.",
-    "exampleZh": "飯店提供晚間娛樂，而且觀眾離開後仍一直討論它。",
+    "example": "Street entertainment kept the children awake after dinner.",
+    "exampleZh": "街頭娛樂讓孩子晚餐後還不想睡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "platform",
-    "example": "The train leaves from platform two, so everyone adjusted the plan before moving on.",
-    "exampleZh": "火車從二號月台出發，所以大家在繼續前調整了計畫。",
+    "example": "Commuters crowded the platform when the express train arrived.",
+    "exampleZh": "快車進站時通勤族擠滿月台。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "servant",
-    "example": "The servant carried the tray.",
-    "exampleZh": "僕人端著托盤。",
+    "example": "The old novel describes a loyal servant in the palace.",
+    "exampleZh": "那本老小說描寫宮中忠僕。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "fortune",
-    "example": "He made a fortune in business, and the team had to balance cost with long-term value.",
-    "exampleZh": "他做生意賺了一大筆財富，而且團隊必須在成本與長期價值之間取得平衡。",
+    "example": "Good fortune saved us from the falling roof tile.",
+    "exampleZh": "好運讓我們躲過掉落屋瓦。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "angle",
-    "example": "Although the test had to be repeated carefully, change the camera angle, and the result helped the team decide what to measure next.",
-    "exampleZh": "雖然測試必須仔細重做，改變相機角度，而且這個結果幫助團隊決定接下來要量測什麼。",
+    "example": "Hold the camera at this angle to catch the lanterns.",
+    "exampleZh": "用這個角度拿相機才能拍到燈籠。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "confront",
-    "example": "She had to confront the truth.",
-    "exampleZh": "她必須面對真相。",
+    "example": "Maya had to confront the neighbor about midnight drumming.",
+    "exampleZh": "瑪雅得找鄰居談半夜打鼓聲。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "label",
-    "example": "Before you move on to the next step, read the label first, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，先閱讀標籤，並確認大家都理解它為什麼重要。",
+    "example": "Read the label before adding sauce to the noodles.",
+    "exampleZh": "加醬到麵裡前先看標籤。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pause",
-    "example": "Before you move on to the next step, take a short pause, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，稍微停頓一下，並確認大家都理解它為什麼重要。",
+    "example": "Take a pause if the hiking path feels slippery.",
+    "exampleZh": "步道感覺滑時就暫停一下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pepper",
-    "example": "When you are ready to continue, add pepper to the soup, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，在湯裡加胡椒，不要等到別人注意到問題才處理。",
+    "example": "Black pepper made the hot soup smell sharper.",
+    "exampleZh": "黑胡椒讓熱湯香氣更強。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "extraordinary",
-    "example": "Although someone asked for a more concrete example, she has extraordinary talent.",
-    "exampleZh": "雖然有人要求一個更具體的例子，她有非凡的才能，而且那之後情況感覺更真實。",
+    "example": "The grandmother had extraordinary strength during the evacuation.",
+    "exampleZh": "撤離時那位祖母有非凡力氣。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "concert",
-    "example": "The concert starts at seven, but people noticed the detail immediately.",
-    "exampleZh": "音樂會七點開始，但是人們立刻注意到這個細節。",
+    "example": "The outdoor concert ended when lightning flashed over the river.",
+    "exampleZh": "河上閃電時戶外音樂會結束。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "advanced",
-    "example": "This is an advanced course, but the class finally understood why the detail mattered.",
-    "exampleZh": "這是一門進階課程，但是全班終於理解這個細節為什麼重要。",
+    "example": "An advanced camera caught stars above the fishing port.",
+    "exampleZh": "高階相機拍到漁港上方星空。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mere",
-    "example": "It was a mere mistake.",
-    "exampleZh": "那只不過是一個錯誤。",
+    "example": "A mere apology could not replace the broken heirloom.",
+    "exampleZh": "光一句道歉不能補回破碎傳家物。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "dear",
-    "example": "My dear friend called me, and the silence said more than a long explanation could.",
-    "exampleZh": "我親愛的朋友打電話給我，而且沉默比冗長解釋更能說明一切。",
+    "example": "My dear friend saved a seat beside the window.",
+    "exampleZh": "我親愛的朋友在窗邊幫我留座。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sink",
-    "example": "The boat began to sink, and the schedule changed twice before we reached the station.",
-    "exampleZh": "船開始下沉，而且我們到車站前時程已經改了兩次。",
+    "example": "The heavy stone began to sink in the muddy pond.",
+    "exampleZh": "沉重石頭開始沉入泥池。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "relax",
-    "example": "Before you move on to the next step, try to relax before sleep, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，睡前試著放鬆，並確認大家都理解它為什麼重要。",
+    "example": "Lin can relax only after watering every balcony herb.",
+    "exampleZh": "小林澆完陽台香草後才放鬆。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tendency",
-    "example": "He has a tendency to worry, and the conversation felt more honest than before.",
-    "exampleZh": "他有容易擔心的傾向，而且這段對話感覺比以前更坦誠。",
+    "example": "He has a tendency to overpack for short trips.",
+    "exampleZh": "他短途旅行也常有帶太多東西的傾向。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "draft",
-    "example": "Before you move on to the next step, please read the first draft, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，請讀第一版草稿，並確認大家都理解它為什麼重要。",
+    "example": "The novelist kept her first draft beside the teapot.",
+    "exampleZh": "小說家把初稿放在茶壺旁。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "temporary",
-    "example": "This is a temporary solution, so the situation felt more realistic after that.",
-    "exampleZh": "這是暫時的解決方法，所以那之後情況感覺更真實。",
+    "example": "A temporary bridge reopened the road to the village.",
+    "exampleZh": "臨時橋讓通往村子的路重新開放。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "laboratory",
-    "example": "The samples stayed in the laboratory, but the result helped the team decide what to measure next.",
-    "exampleZh": "樣本留在實驗室裡，但是這個結果幫助團隊決定接下來要量測什麼。",
+    "example": "The laboratory smelled faintly of herbs and clean glass.",
+    "exampleZh": "實驗室淡淡聞得到草藥和潔淨玻璃味。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pipe",
-    "example": "Water flows through this pipe, and the problem was fixed before anyone complained.",
-    "exampleZh": "水流過這根管子，而且問題在有人抱怨前就被修好。",
+    "example": "A cracked pipe leaked behind the laundry room wall.",
+    "exampleZh": "洗衣間牆後裂開的管子漏水。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "arrival",
-    "example": "Her arrival surprised us, and everyone adjusted the plan before moving on.",
-    "exampleZh": "她的到來讓我們驚訝，而且大家在繼續前調整了計畫。",
+    "example": "Her arrival surprised the cousins gathered around the stove.",
+    "exampleZh": "她的到來驚動圍著爐子的表親。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bell",
-    "example": "The bell rang loudly.",
-    "exampleZh": "鈴聲大聲響起。",
+    "example": "The temple bell sounded across the harbor at sunrise.",
+    "exampleZh": "日出時廟鐘聲傳過港口。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "weigh",
-    "example": "When you are ready to continue, please weigh the package, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，請秤一下包裹重量，不要等到別人注意到問題才處理。",
+    "example": "Please weigh the mangoes before packing them for Grandma.",
+    "exampleZh": "替奶奶打包芒果前請先秤重。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "personally",
-    "example": "I personally disagree.",
-    "exampleZh": "我個人不同意。",
+    "example": "I personally prefer oolong tea with no sugar.",
+    "exampleZh": "我個人比較喜歡無糖烏龍茶。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "accurate",
-    "example": "The map is accurate.",
-    "exampleZh": "這張地圖很準確。",
+    "example": "The accurate map showed a shortcut behind the school.",
+    "exampleZh": "準確的地圖標出學校後方捷徑。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "confident",
-    "example": "She sounded confident, and everyone understood the feeling behind the words.",
-    "exampleZh": "她聽起來很有信心，而且大家理解了話語背後的感受。",
+    "example": "Jade felt confident after repairing the radio herself.",
+    "exampleZh": "小玉自己修好收音機後很有信心。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "shopping",
-    "example": "We went shopping after lunch.",
-    "exampleZh": "我們午餐後去購物，而且大家在用餐結束前就注意到味道。",
+    "example": "Weekend shopping filled the old street with paper bags.",
+    "exampleZh": "週末購物讓老街滿是紙袋。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "remote",
-    "example": "They live in a remote village.",
-    "exampleZh": "他們住在偏遠村莊，而且那之後情況感覺更真實。",
+    "example": "A remote village used lanterns when the signal failed.",
+    "exampleZh": "偏遠村莊訊號中斷時改用燈籠。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "amazing",
-    "example": "The view was amazing.",
-    "exampleZh": "景色很驚人。",
+    "example": "The amazing sunrise turned the fish ponds orange.",
+    "exampleZh": "令人驚豔的日出把魚塭染成橘色。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "exciting",
-    "example": "The game was exciting, so the players remembered the lesson during the next match.",
-    "exampleZh": "這場比賽很刺激，所以球員在下一場比賽中記住了這個教訓。",
+    "example": "The exciting race ended beside the crowded riverside market.",
+    "exampleZh": "刺激賽跑在擁擠河岸市集旁結束。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "complicated",
-    "example": "The rules are complicated, and the case showed why clear evidence matters.",
-    "exampleZh": "規則很複雜，而且這個案件說明了清楚證據的重要性。",
+    "example": "The old camera has complicated controls beside the lens.",
+    "exampleZh": "老相機鏡頭旁有複雜的控制鍵。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "worried",
-    "example": "She looked worried, and the moment changed how they treated one another.",
-    "exampleZh": "她看起來很擔心，而且那一刻改變了他們彼此對待的方式。",
+    "example": "Nina looked worried when the baby refused milk.",
+    "exampleZh": "嬰兒拒喝奶時妮娜看起來很擔心。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "nearby",
-    "example": "A cafe is nearby.",
-    "exampleZh": "附近有一家咖啡館。",
+    "example": "A nearby cafe lent us umbrellas during the storm.",
+    "exampleZh": "附近咖啡館在暴雨中借我們雨傘。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "butter",
-    "example": "If the situation starts to feel rushed, spread butter on the bread, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，把奶油抹在麵包上，這樣小錯誤才不會變成更大的問題。",
+    "example": "Soft butter melted across the hot pineapple bun.",
+    "exampleZh": "軟奶油融在熱菠蘿包上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mayor",
-    "example": "The mayor visited our school, and the class finally understood why the detail mattered.",
-    "exampleZh": "市長參觀了我們學校，而且全班終於理解這個細節為什麼重要。",
+    "example": "The mayor opened the rebuilt pier with a short speech.",
+    "exampleZh": "市長簡短致詞啟用重建碼頭。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "abroad",
-    "example": "She studied abroad last year, so the group decided to leave earlier next time.",
-    "exampleZh": "她去年到國外讀書，所以小組決定下次更早出發。",
+    "example": "Her brother lives abroad but sends tea every winter.",
+    "exampleZh": "她哥哥住在國外但每年冬天寄茶。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "ultimate",
+    "example": "Safety is the ultimate reason for closing the trail.",
+    "exampleZh": "安全是封閉步道的最終理由。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tight",
-    "example": "These shoes feel tight.",
-    "exampleZh": "這雙鞋感覺很緊。",
+    "example": "The lid was tight after sitting in the refrigerator overnight.",
+    "exampleZh": "蓋子在冰箱放一晚後變得很緊。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "juice",
-    "example": "Orange juice is in the fridge.",
-    "exampleZh": "柳橙汁在冰箱裡，而且大家在用餐結束前就注意到味道。",
+    "example": "Fresh guava juice cooled us after the noon walk.",
+    "exampleZh": "午間散步後新鮮芭樂汁讓我們消暑。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "toy",
-    "example": "The child dropped a toy.",
-    "exampleZh": "孩子掉了一個玩具。",
+    "example": "The puppy carried one toy from room to room.",
+    "exampleZh": "小狗叼著一個玩具到處走。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "react",
-    "example": "After several unclear answers, Maria raised her hand and asked, \"How did she react?\", hoping for a simple explanation.",
-    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『她有什麼反應』，希望得到簡單說明。",
+    "example": "Children react quickly when the puppet dragon appears.",
+    "exampleZh": "布袋龍出現時孩子反應很快。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "lover",
-    "example": "He is a music lover, but the people around her finally listened carefully.",
-    "exampleZh": "他是音樂愛好者，但是她身邊的人終於認真聆聽。",
+    "example": "A true coffee lover can smell beans from outside.",
+    "exampleZh": "真正咖啡愛好者在外面就聞得到豆香。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "assistant",
-    "example": "My assistant booked the room, so the family cleaned the area before guests arrived.",
-    "exampleZh": "我的助理訂了房間，所以家人在客人抵達前把那個區域整理乾淨。",
+    "example": "The dentist's assistant handed me a warm towel.",
+    "exampleZh": "牙醫助理遞給我一條熱毛巾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "button",
-    "example": "If the situation starts to feel rushed, press the red button, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，按下紅色按鈕，這樣小錯誤才不會變成更大的問題。",
+    "example": "The elevator button stuck during the morning rush.",
+    "exampleZh": "早晨尖峰時電梯按鈕卡住。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "crown",
-    "example": "The king wore a crown.",
-    "exampleZh": "國王戴著王冠。",
+    "example": "A paper crown slipped from the birthday boy's head.",
+    "exampleZh": "紙王冠從壽星男孩頭上滑落。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "encounter",
-    "example": "I had a strange encounter.",
-    "exampleZh": "我有一次奇怪的遭遇。",
+    "example": "My first encounter with sea turtles happened near Green Island.",
+    "exampleZh": "我第一次遇見海龜是在綠島附近。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "absolute",
-    "example": "We need absolute silence.",
-    "exampleZh": "我們需要絕對安靜。",
+    "example": "She wanted absolute silence while the baby slept.",
+    "exampleZh": "嬰兒睡覺時她想要完全安靜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "uncle",
-    "example": "My uncle lives nearby, so the people around her finally listened carefully.",
-    "exampleZh": "我叔叔住在附近，所以她身邊的人終於認真聆聽。",
+    "example": "My uncle grows basil on a roof in Chiayi.",
+    "exampleZh": "我叔叔在嘉義屋頂種九層塔。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "brilliant",
-    "example": "She had a brilliant idea.",
-    "exampleZh": "她有一個很棒的點子。",
+    "example": "A brilliant idea saved the picnic from heavy rain.",
+    "exampleZh": "一個絕妙點子救了大雨中的野餐。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "register",
-    "example": "Before you move on to the next step, please register before Friday, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，請在星期五前註冊，並確認大家都理解它為什麼重要。",
+    "example": "Please register your bicycle before entering the protected trail.",
+    "exampleZh": "進入保護步道前請登記腳踏車。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mount",
-    "example": "They mount the TV on the wall, but the family cleaned the area before guests arrived.",
-    "exampleZh": "他們把電視裝到牆上，但是家人在客人抵達前把那個區域整理乾淨。",
+    "example": "We mount the lanterns higher when crowds fill the alley.",
+    "exampleZh": "巷子人滿時我們把燈籠掛高。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "blind",
-    "example": "He became blind as a child.",
-    "exampleZh": "他小時候失明了。",
+    "example": "The blind singer recognized friends by their footsteps.",
+    "exampleZh": "失明歌手靠腳步聲認出朋友。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pop",
-    "example": "I like pop music, and the editor decided to keep the line in the final draft.",
-    "exampleZh": "我喜歡流行音樂，而且編輯決定在最後草稿中保留這句話。",
+    "example": "The balloon made a loud pop behind the stall.",
+    "exampleZh": "氣球在攤位後方砰地一聲爆開。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tail",
-    "example": "The dog wagged its tail, but the air felt cooler than it had in the city.",
-    "exampleZh": "狗搖著尾巴，但是空氣感覺比城市裡涼爽。",
+    "example": "The cat's tail brushed my ankle under the table.",
+    "exampleZh": "貓尾巴在桌下掃過我的腳踝。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "communicate",
-    "example": "We communicate by email.",
-    "exampleZh": "我們用電子郵件溝通。",
+    "example": "Families communicate through video calls during long hospital stays.",
+    "exampleZh": "長期住院時家人靠視訊通話溝通。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "proof",
-    "example": "We need proof of payment, and the decision affected more people than expected.",
-    "exampleZh": "我們需要付款證明，而且這項決定影響的人比預期更多。",
+    "example": "The receipt is proof that you paid for parking.",
+    "exampleZh": "收據就是你付停車費的證明。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "flag",
-    "example": "The flag flew above the school, but several students asked for a clearer example afterward.",
-    "exampleZh": "旗子在學校上方飄揚，但是幾位學生事後要求更清楚的例子。",
+    "example": "A yellow flag warned swimmers about rough waves.",
+    "exampleZh": "黃色旗幟警告泳客浪況危險。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "newly",
-    "example": "They are newly married.",
-    "exampleZh": "他們剛結婚。",
+    "example": "The newly painted door brightened the entire alley.",
+    "exampleZh": "新漆的門讓整條巷子變亮。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "adequate",
-    "example": "The food was adequate, but everyone noticed the flavor before the meal was over.",
-    "exampleZh": "食物足夠了，但是大家在用餐結束前就注意到味道。",
+    "example": "The shelter had adequate blankets for the cold night.",
+    "exampleZh": "收容所備有足夠毛毯度過寒夜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pride",
-    "example": "She takes pride in her work, and the moment changed how they treated one another.",
-    "exampleZh": "她以自己的工作為榮，而且那一刻改變了他們彼此對待的方式。",
+    "example": "Her pride showed when the bakery reopened after repairs.",
+    "exampleZh": "麵包店修好重開時她露出自豪。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "chart",
-    "example": "The chart shows sales growth.",
-    "exampleZh": "圖表顯示銷售成長。",
+    "example": "A carefully hand-drawn chart tracked Grandpa's blood pressure.",
+    "exampleZh": "仔細手繪的圖表記錄爺爺血壓。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "chocolate",
-    "example": "She loves dark chocolate, but the group wrote it down before anyone forgot.",
-    "exampleZh": "她喜歡黑巧克力，但是小組在有人忘記前把它寫了下來。",
+    "example": "Dark chocolate melted in the pocket of his jacket.",
+    "exampleZh": "黑巧克力在他外套口袋裡融化。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "joy",
-    "example": "Her face showed real joy, and the silence said more than a long explanation could.",
-    "exampleZh": "她臉上露出真正的喜悅，而且沉默比冗長解釋更能說明一切。",
+    "example": "The puppy brought joy to the quiet apartment.",
+    "exampleZh": "小狗為安靜公寓帶來喜悅。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "permission",
-    "example": "During the final check, ask permission before entering.",
-    "exampleZh": "在最後檢查時，進入前要先徵求許可。",
+    "example": "We need permission before camping beside the reservoir.",
+    "exampleZh": "在水庫旁露營前需要許可。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pole",
-    "example": "The flag hung from a pole.",
-    "exampleZh": "旗子掛在桿子上。",
+    "example": "A bamboo pole held the laundry above the alley.",
+    "exampleZh": "竹竿把衣物撐在巷子上方。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sauce",
-    "example": "This sauce tastes sweet, but the kitchen smelled warm for the rest of the evening.",
-    "exampleZh": "這個醬汁吃起來很甜，但是香味在整個晚上都留在廚房裡。",
+    "example": "The spicy sauce stained the corner of his shirt.",
+    "exampleZh": "辣醬沾到他襯衫下襬。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "imagination",
-    "example": "Children have strong imagination, so the group wrote it down before anyone forgot.",
-    "exampleZh": "孩子有豐富的想像力，所以小組在有人忘記前把它寫了下來。",
+    "example": "Her imagination turned broken tiles into ocean creatures.",
+    "exampleZh": "她的想像力把破磁磚變成海洋生物。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "recording",
+    "example": "The old recording captured Grandma singing beside the stove.",
+    "exampleZh": "舊錄音錄下奶奶在爐旁唱歌。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "quantity",
-    "example": "We need a larger quantity.",
-    "exampleZh": "我們需要更多數量。",
+    "example": "A small quantity of salt improved the bitter soup.",
+    "exampleZh": "少量鹽讓苦湯變好喝。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "dirty",
+    "example": "The dirty rainwater splashed onto Mina's white sneakers.",
+    "exampleZh": "髒雨水濺到米娜白球鞋上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "brand",
-    "example": "This brand is popular, and customers noticed the change almost immediately.",
-    "exampleZh": "這個品牌很受歡迎，而且顧客幾乎立刻注意到這項變化。",
+    "example": "That local brand sells sandals made from recycled nets.",
+    "exampleZh": "那個在地品牌賣回收網製涼鞋。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "raw",
-    "example": "During the final check, do not eat raw chicken.",
-    "exampleZh": "在最後檢查時，不要吃生雞肉。",
+    "example": "The raw onions made the whole lunchbox smell sharp.",
+    "exampleZh": "生洋蔥讓整個便當氣味刺鼻。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "poetry",
-    "example": "She reads poetry at night, so people noticed the detail immediately.",
-    "exampleZh": "她晚上讀詩，所以人們立刻注意到這個細節。",
+    "example": "His poetry helped describe grief without naming it aloud.",
+    "exampleZh": "他的詩幫他不明說也能寫悲傷。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "acceptable",
-    "example": "This answer is acceptable.",
-    "exampleZh": "這個答案可以接受。",
+    "example": "The hotel offered an acceptable room after the leak.",
+    "exampleZh": "漏水後旅館給了一間還能接受的房間。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pregnant",
-    "example": "She is five months pregnant.",
-    "exampleZh": "她懷孕五個月了。",
+    "example": "A pregnant passenger received a seat near the door.",
+    "exampleZh": "一位孕婦乘客在門邊獲讓座。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "qualify",
-    "example": "You qualify for a discount, so the team had to balance cost with long-term value.",
-    "exampleZh": "你符合折扣資格，所以團隊必須在成本與長期價值之間取得平衡。",
+    "example": "Her cooking hours qualify her for the pastry exam.",
+    "exampleZh": "她的烹飪時數讓她有資格考甜點證照。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rent",
-    "example": "After the market changed faster than expected, the rent is due tomorrow, and customers noticed the change almost immediately.",
-    "exampleZh": "在市場變化比預期更快之後，房租明天到期，而且顧客幾乎立刻注意到這項變化。",
+    "example": "Their rent rose after the station opened nearby.",
+    "exampleZh": "附近車站啟用後他們房租上漲。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "loose",
-    "example": "This screw is loose, but the situation felt more realistic after that.",
-    "exampleZh": "這顆螺絲鬆了，但是那之後情況感覺更真實。",
+    "example": "A loose tile clicked whenever someone crossed the hallway.",
+    "exampleZh": "走廊有片鬆磁磚走過就喀響。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "comfort",
-    "example": "Her words gave me comfort, and the people around her finally listened carefully.",
-    "exampleZh": "她的話給了我安慰，而且她身邊的人終於認真聆聽。",
+    "example": "Warm soup gave comfort to volunteers after the search.",
+    "exampleZh": "搜尋後熱湯給志工帶來安慰。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "palace",
-    "example": "The palace attracts many tourists.",
-    "exampleZh": "這座宮殿吸引許多遊客。",
+    "example": "Tourists entered the palace through a carved red gate.",
+    "exampleZh": "旅客穿過紅色雕花門進入宮殿。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "resort",
-    "example": "They stayed at a beach resort, and the air felt cooler than it had in the city.",
-    "exampleZh": "他們住在海灘度假村，而且空氣感覺比城市裡涼爽。",
+    "example": "The beach resort closed early because waves reached the lobby.",
+    "exampleZh": "浪打到大廳所以海灘度假村提早關閉。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "strip",
-    "example": "Before you move on to the next step, cut the paper into a strip, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，把紙剪成長條，並確認大家都理解它為什麼重要。",
+    "example": "Cut a strip of cloth to tie the splint.",
+    "exampleZh": "剪一條布來綁固定板。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "gear",
-    "example": "If the situation starts to feel rushed, bring your camping gear, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，帶上你的露營裝備，這樣小錯誤才不會變成更大的問題。",
+    "example": "Cyclists checked their gear before climbing the coastal highway.",
+    "exampleZh": "騎士爬濱海公路前檢查裝備。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "fence",
-    "example": "The fence needs repair.",
-    "exampleZh": "圍欄需要修理。",
+    "example": "A bamboo fence keeps ducks away from the vegetables.",
+    "exampleZh": "竹籬笆把鴨子擋在菜圃外。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "castle",
-    "example": "The castle stands on a hill, so the guide asked us to stay on the path.",
-    "exampleZh": "城堡矗立在山丘上，所以嚮導請我們留在小路上。",
+    "example": "The hilltop castle overlooked vineyards and a winding river.",
+    "exampleZh": "山頂城堡俯瞰葡萄園和蜿蜒河流。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "aggressive",
+    "example": "The aggressive rooster chased visitors across the farmyard.",
+    "exampleZh": "好鬥公雞追著訪客跑過農家庭院。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bet",
-    "example": "I lost a small bet, so the group wrote it down before anyone forgot.",
-    "exampleZh": "我輸了一個小賭注，所以小組在有人忘記前把它寫了下來。",
+    "example": "I bet the ferry leaves late during heavy fog.",
+    "exampleZh": "我打賭濃霧中渡輪會晚開。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pitch",
-    "example": "The soccer pitch was wet, but the result meant a lot to the whole team.",
-    "exampleZh": "足球場很濕，但是這個結果對整支隊伍意義重大。",
+    "example": "The vendor chose a sunny pitch beside the station.",
+    "exampleZh": "攤販選了車站旁的向陽攤位。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "craft",
-    "example": "This craft takes patience.",
-    "exampleZh": "這門手藝需要耐心，而且那之後情況感覺更真實。",
+    "example": "Local artists craft bowls from driftwood after typhoons.",
+    "exampleZh": "在地藝術家用颱風後漂流木做碗。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "steady",
-    "example": "During the final check, keep a steady pace.",
-    "exampleZh": "在最後檢查時，保持穩定的步調。",
+    "example": "Keep a steady hand while pouring tea for elders.",
+    "exampleZh": "替長輩倒茶時手要穩。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "ceremony",
-    "example": "The ceremony began at noon.",
-    "exampleZh": "典禮在中午開始。",
+    "example": "The ceremony began when drums echoed across the square.",
+    "exampleZh": "鼓聲響遍廣場時典禮開始。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "clothing",
-    "example": "Warm clothing is necessary.",
-    "exampleZh": "保暖衣物是必要的。",
+    "example": "Dry clothing waited in bags after the river swim.",
+    "exampleZh": "河泳後乾衣服裝在袋裡等著。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "swim",
-    "example": "We swim every Sunday.",
-    "exampleZh": "我們每週日游泳，而且那之後情況感覺更真實。",
+    "example": "We swim near the rocks only when lifeguards agree.",
+    "exampleZh": "救生員同意時我們才在岩邊游泳。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "borrow",
-    "example": "After several unclear answers, Maria raised her hand and asked, \"May I borrow your pen?\", hoping for a simple explanation.",
-    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『我可以借你的筆嗎』，希望得到簡單說明。",
+    "example": "Can I borrow your charger until the ferry arrives?",
+    "exampleZh": "渡輪到前我可以借你的充電器嗎？",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "trace",
-    "example": "Police found no trace, but the report avoided guessing beyond the available facts.",
-    "exampleZh": "警方沒有找到任何痕跡，但是報告避免做出超出現有事實的猜測。",
+    "example": "Detectives found a trace of paint on the scooter.",
+    "exampleZh": "偵探在機車上發現一點油漆痕跡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "leather",
-    "example": "This bag is made of leather, but nobody had to waste time looking for it later.",
-    "exampleZh": "這個包包是皮革製的，但是之後沒有人需要浪費時間找它。",
+    "example": "A leather bag cracked after years in humid weather.",
+    "exampleZh": "皮包多年受潮後裂開。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rid",
-    "example": "We must rid the room of dust, and the small detail made the room feel more organized.",
-    "exampleZh": "我們必須清除房間裡的灰塵，而且這個小細節讓房間感覺更有條理。",
+    "example": "Soap helped rid the towel of the fishy smell.",
+    "exampleZh": "肥皂幫毛巾去掉魚腥味。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "giant",
+    "example": "A giant squid mural covered the harbor wall.",
+    "exampleZh": "巨大魷魚壁畫覆蓋港邊牆面。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "formula",
-    "example": "Although the report needed a more precise explanation, the formula is easy to remember, and the final report included the detail in a separate note.",
-    "exampleZh": "雖然報告需要更精確的說明，這個公式很容易記，而且最後報告把這個細節另外註記。",
+    "example": "The math formula helped Leo check the bridge design.",
+    "exampleZh": "數學公式幫李歐檢查橋梁設計。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "maximum",
-    "example": "The maximum speed is low.",
-    "exampleZh": "最高速度很低。",
+    "example": "The elevator allows a maximum of eight passengers.",
+    "exampleZh": "電梯最多可搭八名乘客。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "awful",
-    "example": "The weather was awful, but the guide asked us to stay on the path.",
-    "exampleZh": "天氣很糟，但是嚮導請我們留在小路上。",
+    "example": "The awful accident blocked the coastal road for hours.",
+    "exampleZh": "可怕事故讓濱海公路堵了好幾小時。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "impressive",
-    "example": "Her speech was impressive.",
-    "exampleZh": "她的演講令人印象深刻。",
+    "example": "Her impressive dumplings drew neighbors to the kitchen door.",
+    "exampleZh": "她出色的水餃吸引鄰居到廚房門口。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "remark",
-    "example": "His remark surprised everyone.",
-    "exampleZh": "他的評論讓大家驚訝。",
+    "example": "His casual remark hurt more than he expected.",
+    "exampleZh": "他的隨口評論傷人超出預期。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "hip",
-    "example": "She injured her hip, so the result was written down in the medical record.",
-    "exampleZh": "她傷到髖部，所以結果被寫進病歷中。",
+    "example": "The dancer hurt her hip during rehearsal yesterday.",
+    "exampleZh": "舞者昨天排練時傷到臀部。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "nowhere",
-    "example": "There was nowhere to sit.",
-    "exampleZh": "沒有地方可以坐。",
+    "example": "The lost ring was nowhere to be found inside the taxi.",
+    "exampleZh": "那只遺失戒指在計程車裡找不到。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cow",
-    "example": "The cow ate grass, so everyone slowed down and paid attention to the surroundings.",
-    "exampleZh": "牛吃草，所以大家放慢腳步並注意周圍環境。",
+    "example": "A brown cow blocked the road near the dairy farm.",
+    "exampleZh": "乳牛場旁一頭棕牛擋住道路。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "behave",
-    "example": "During the final check, please behave in class.",
-    "exampleZh": "在最後檢查時，請在課堂上守規矩。",
+    "example": "Please behave politely when visiting your great grandmother.",
+    "exampleZh": "拜訪曾祖母時請有禮貌。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "desperate",
-    "example": "He made a desperate call, but the moment changed how they treated one another.",
-    "exampleZh": "他打了一通絕望的電話，但是那一刻改變了他們彼此對待的方式。",
+    "example": "The desperate hikers waved towels at the rescue helicopter.",
+    "exampleZh": "絕望登山客向救援直升機揮毛巾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "ingredient",
-    "example": "Sugar is the main ingredient, but the guests asked for the recipe before leaving.",
-    "exampleZh": "糖是主要成分，但是客人離開前詢問了食譜。",
+    "example": "Sesame oil is the secret ingredient in Grandma's noodles.",
+    "exampleZh": "麻油是奶奶麵裡的祕密成分。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "plot",
-    "example": "The plot is hard to follow.",
-    "exampleZh": "劇情很難理解。",
+    "example": "The novel's plot follows a missing train ticket through Taipei.",
+    "exampleZh": "小說情節跟著一張失蹤車票在台北展開。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "curtain",
-    "example": "During the final check, close the curtain, please.",
-    "exampleZh": "在最後檢查時，請拉上窗簾。",
+    "example": "A blue curtain hid the storeroom behind the counter.",
+    "exampleZh": "藍窗簾遮住櫃檯後方儲藏室。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "innocent",
-    "example": "The child looked innocent, but everyone understood the feeling behind the words.",
-    "exampleZh": "孩子看起來很無辜，但是大家理解了話語背後的感受。",
+    "example": "The innocent driver had proof from the dash camera.",
+    "exampleZh": "無辜司機有行車記錄器證明。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tap",
-    "example": "During the final check, turn off the tap.",
-    "exampleZh": "在最後檢查時，關掉水龍頭。",
+    "example": "Turn the tap slowly, or water splashes everywhere.",
+    "exampleZh": "慢慢轉水龍頭，不然水會四處噴。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "virus",
-    "example": "The virus spread quickly, and the doctor asked the family to watch the symptoms closely.",
-    "exampleZh": "病毒迅速傳播，而且醫生請家人密切觀察症狀。",
+    "example": "A new virus closed the clinic's waiting area.",
+    "exampleZh": "新病毒讓診所候診區關閉。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "criticize",
-    "example": "When you are ready to continue, do not criticize her work unfairly, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，不要不公平地批評她的作品，不要等到別人注意到問題才處理。",
+    "example": "Neighbors criticize the cafe for blocking the sidewalk.",
+    "exampleZh": "鄰居批評咖啡館擋住人行道。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "lecture",
-    "example": "The lecture lasted one hour, so several students asked for a clearer example afterward.",
-    "exampleZh": "演講持續了一小時，所以幾位學生事後要求更清楚的例子。",
+    "example": "The evening lecture explained earthquakes with simple drawings.",
+    "exampleZh": "晚間演講用簡圖說明地震。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pan",
-    "example": "During the final check, heat the pan first.",
-    "exampleZh": "在最後檢查時，先把平底鍋加熱。",
+    "example": "The chef shook the pan until the clams opened.",
+    "exampleZh": "主廚搖動平底鍋直到蛤蜊打開。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "nerve",
-    "example": "The surgery damaged a nerve, but the nurse explained what to do if the problem returned.",
-    "exampleZh": "手術傷到一條神經，但是護士說明如果問題再出現該怎麼做。",
+    "example": "It took nerve to cross the swaying bridge.",
+    "exampleZh": "走過搖晃吊橋需要勇氣。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "empire",
-    "example": "The empire lasted centuries.",
-    "exampleZh": "這個帝國延續了數百年。",
+    "example": "The museum map showed the empire at its widest.",
+    "exampleZh": "博物館地圖顯示帝國最遼闊時期。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "friendship",
-    "example": "Their friendship grew stronger, and everyone understood the feeling behind the words.",
-    "exampleZh": "他們的友誼變得更深厚，而且大家理解了話語背後的感受。",
+    "example": "Their friendship began while sharing umbrellas after a concert.",
+    "exampleZh": "他們的友誼始於演唱會後共撐傘。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "spin",
-    "example": "The wheels spin quickly.",
-    "exampleZh": "輪子快速旋轉。",
+    "example": "The dryer began to spin with one loud thump.",
+    "exampleZh": "烘乾機砰一聲後開始旋轉。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "related",
-    "example": "These problems are related.",
-    "exampleZh": "這些問題彼此相關。",
+    "example": "These two stomach problems are related to contaminated water.",
+    "exampleZh": "這兩種胃病和受污染水有關。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tunnel",
-    "example": "Although someone asked for a more concrete example, the tunnel is very long.",
-    "exampleZh": "雖然有人要求一個更具體的例子，這條隧道很長。",
+    "example": "The train entered a tunnel and the children cheered.",
+    "exampleZh": "火車進入隧道時孩子們歡呼。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "van",
-    "example": "The van carried boxes, but the group decided to leave earlier next time.",
-    "exampleZh": "廂型車載著箱子，但是小組決定下次更早出發。",
+    "example": "A white van delivered tofu before the market opened.",
+    "exampleZh": "市場開門前白色貨車送來豆腐。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "shade",
-    "example": "We rested in the shade.",
-    "exampleZh": "我們在陰涼處休息。",
+    "example": "We sat in the shade beneath a mango tree.",
+    "exampleZh": "我們坐在芒果樹蔭下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "freeze",
-    "example": "Water will freeze tonight.",
-    "exampleZh": "今晚水會結冰。",
+    "example": "Thin puddles freeze on the mountain road before sunrise.",
+    "exampleZh": "日出前山路薄水窪會結冰。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "counter",
-    "example": "During the final check, pay at the counter.",
-    "exampleZh": "在最後檢查時，請在櫃台付款。",
+    "example": "Fresh buns cooled on the counter beside the till.",
+    "exampleZh": "新鮮麵包在收銀機旁櫃檯放涼。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "squeeze",
-    "example": "During the final check, please squeeze the lemon gently.",
-    "exampleZh": "在最後檢查時，請輕輕擠檸檬。",
+    "example": "Please squeeze the lime over the soup just before eating.",
+    "exampleZh": "吃之前請把萊姆擠到湯裡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "genuine",
-    "example": "Her smile was genuine, so the silence said more than a long explanation could.",
-    "exampleZh": "她的微笑很真誠，所以沉默比冗長解釋更能說明一切。",
+    "example": "Her genuine concern showed when she packed extra medicine.",
+    "exampleZh": "她多帶藥時顯出真誠關心。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "gentle",
-    "example": "If the situation starts to feel rushed, use a gentle touch, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，動作要輕柔，這樣小錯誤才不會變成更大的問題。",
+    "example": "A gentle breeze moved the prayer flags above us.",
+    "exampleZh": "微風輕輕吹動我們上方祈願旗。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pile",
-    "example": "A pile of books fell.",
-    "exampleZh": "一堆書倒了。",
+    "example": "A pile of wet towels blocked the bathroom door.",
+    "exampleZh": "一堆濕毛巾擋住浴室門。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "singer",
-    "example": "The singer lost her voice.",
-    "exampleZh": "歌手失聲了。",
+    "example": "The singer warmed up behind the temple stage.",
+    "exampleZh": "歌手在廟台後暖嗓。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "venture",
-    "example": "The company began a new venture, and customers noticed the change almost immediately.",
-    "exampleZh": "公司開始了一項新事業，而且顧客幾乎立刻注意到這項變化。",
+    "example": "Crossing the flooded bridge was a foolish venture after dark.",
+    "exampleZh": "天黑後過淹水橋是愚蠢冒險。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "reward",
-    "example": "Hard work brings reward.",
-    "exampleZh": "努力工作會帶來回報。",
+    "example": "Fresh noodles were our reward after the long climb.",
+    "exampleZh": "長途爬坡後新鮮麵條是我們的獎賞。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "trick",
-    "example": "The trick worked perfectly.",
-    "exampleZh": "這個把戲非常成功。",
+    "example": "Dad taught me a trick for opening stuck jars.",
+    "exampleZh": "爸爸教我開卡住罐子的訣竅。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "highlight",
-    "example": "The concert was the highlight, and the final version felt much stronger than before.",
-    "exampleZh": "音樂會是最精彩的部分，而且最終版本感覺比以前有力許多。",
+    "example": "Fireworks were the highlight of the harbor festival's final night.",
+    "exampleZh": "煙火是港口祭典最後一夜的亮點。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "explosion",
-    "example": "Although someone asked for a more concrete example, the explosion broke nearby windows.",
-    "exampleZh": "雖然有人要求一個更具體的例子，爆炸震碎了附近窗戶，而且那之後情況感覺更真實。",
+    "example": "The gas explosion shattered windows along the alley.",
+    "exampleZh": "瓦斯爆炸震碎巷弄沿線窗戶。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "horror",
-    "example": "She watched a horror film, but the audience kept talking about it after leaving.",
-    "exampleZh": "她看了一部恐怖片，但是觀眾離開後仍一直討論它。",
+    "example": "To my horror, the passport stayed on the kitchen table.",
+    "exampleZh": "令我驚恐的是護照還在餐桌上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "loud",
-    "example": "The music was too loud, but people noticed the detail immediately.",
-    "exampleZh": "音樂太大聲，但是人們立刻注意到這個細節。",
+    "example": "A loud horn scattered birds from the station roof.",
+    "exampleZh": "響亮喇叭聲嚇散車站屋頂的鳥。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "lend",
-    "example": "After several unclear answers, Maria raised her hand and asked, \"Can you lend me ten dollars?\", hoping for a simple explanation.",
-    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『你可以借我十元嗎』，希望得到簡單說明。",
+    "example": "Could you lend me a raincoat until tomorrow morning?",
+    "exampleZh": "你能借我雨衣到明早嗎？",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "altogether",
-    "example": "There were ten people altogether.",
-    "exampleZh": "總共有十個人。",
+    "example": "The repairs altogether cost less than one new phone.",
+    "exampleZh": "修理費總共比一支新手機便宜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "celebration",
-    "example": "The celebration lasted all night.",
-    "exampleZh": "慶祝活動持續了一整晚。",
+    "example": "The celebration continued after midnight beside the riverbank.",
+    "exampleZh": "慶祝活動在河岸旁持續到午夜後。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "plain",
-    "example": "She wore a plain shirt, but the small detail made the room feel more organized.",
-    "exampleZh": "她穿了一件素色襯衫，但是這個小細節讓房間感覺更有條理。",
+    "example": "She chose plain rice because the curry was spicy.",
+    "exampleZh": "咖哩太辣所以她選白飯。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "prompt",
-    "example": "His reply was prompt.",
-    "exampleZh": "他的回覆很迅速。",
+    "example": "A prompt reply saved our room at the inn.",
+    "exampleZh": "迅速回覆保住了我們在旅店的房間。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pub",
-    "example": "Although someone asked for a more concrete example, we met at a quiet pub.",
-    "exampleZh": "雖然有人要求一個更具體的例子，我們在一間安靜的酒吧見面。",
+    "example": "The old pub served stew during the cold rain.",
+    "exampleZh": "老酒館在冷雨中供應燉菜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bath",
-    "example": "She took a warm bath.",
-    "exampleZh": "她洗了一個熱水澡。",
+    "example": "A warm bath helped the child stop shivering.",
+    "exampleZh": "熱水澡讓孩子停止發抖。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "minimum",
-    "example": "The minimum age is eighteen.",
-    "exampleZh": "最低年齡是十八歲。",
+    "example": "The minimum fare still seemed high for three stops.",
+    "exampleZh": "只搭三站最低票價仍顯得高。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "wise",
-    "example": "That was a wise decision.",
-    "exampleZh": "那是明智的決定。",
+    "example": "It is wise to carry water on this trail.",
+    "exampleZh": "走這條步道帶水很明智。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "ease",
-    "example": "Although the patient described the discomfort clearly, the medicine helped ease her pain, and the result was written down in the medical record.",
-    "exampleZh": "雖然病人清楚描述不舒服的地方，藥物幫助減輕她的疼痛，而且結果被寫進病歷中。",
+    "example": "Stretching can ease back pain after long scooter rides.",
+    "exampleZh": "長時間騎車後伸展能減輕背痛。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cotton",
-    "example": "This shirt is made of cotton, but the small detail made the room feel more organized.",
-    "exampleZh": "這件襯衫是棉製的，但是這個小細節讓房間感覺更有條理。",
+    "example": "This shirt is made of cotton and dries quickly in sea breeze.",
+    "exampleZh": "這件襯衫是棉的，在海風中乾得快。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cottage",
-    "example": "They rented a small cottage.",
-    "exampleZh": "他們租了一間小屋。",
+    "example": "Their cottage stands behind pines above the rocky beach.",
+    "exampleZh": "他們的小屋在岩灘上方松樹後。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "enthusiasm",
-    "example": "Her enthusiasm encouraged the team, but the conversation felt more honest than before.",
-    "exampleZh": "她的熱情鼓舞了團隊，但是這段對話感覺比以前更坦誠。",
+    "example": "His enthusiasm for orchids filled every corner of the balcony.",
+    "exampleZh": "他對蘭花的熱情遍布陽台每個角落。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "entitle",
-    "example": "This ticket will entitle you to entry.",
-    "exampleZh": "這張票會讓你有入場資格。",
+    "example": "This ticket will entitle you to one free drink.",
+    "exampleZh": "這張票讓你有權換一杯免費飲料。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "fixed",
-    "example": "After the store prepared for a busy weekend, the price is fixed, and the decision affected more people than expected.",
-    "exampleZh": "在店家為忙碌的週末做準備之後，價格是固定的，而且這項決定影響的人比預期更多。",
+    "example": "The fixed price helped tourists avoid awkward bargaining.",
+    "exampleZh": "固定價格讓旅客避免尷尬殺價。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "anxious",
-    "example": "He felt anxious before the interview, so the conversation felt more honest than before.",
-    "exampleZh": "他面試前感到焦慮，所以這段對話感覺比以前更坦誠。",
+    "example": "Parents grew anxious when the bus missed two calls.",
+    "exampleZh": "巴士漏接兩通電話時父母變得焦慮。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "curious",
-    "example": "The child was curious about everything, and the conversation felt more honest than before.",
-    "exampleZh": "孩子對一切都很好奇，而且這段對話感覺比以前更坦誠。",
+    "example": "A curious child opened every drawer in the guesthouse.",
+    "exampleZh": "好奇孩子打開民宿每個抽屜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "strain",
-    "example": "The work caused eye strain.",
-    "exampleZh": "這份工作造成眼睛疲勞。",
+    "example": "Too much lifting put strain on his injured shoulder.",
+    "exampleZh": "搬太多重物加重他受傷肩膀負擔。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "conscious",
-    "example": "She remained conscious after the fall.",
-    "exampleZh": "她跌倒後仍保持清醒。",
+    "example": "She stayed conscious while waiting for the ambulance.",
+    "exampleZh": "她等救護車時保持清醒。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "inevitable",
-    "example": "Change is inevitable.",
-    "exampleZh": "改變是不可避免的。",
+    "example": "Some delay was inevitable after rocks blocked the road.",
+    "exampleZh": "落石堵路後延誤難以避免。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "weekly",
-    "example": "We have a weekly meeting.",
-    "exampleZh": "我們每週開一次會。",
+    "example": "A weekly market fills the plaza with herbs.",
+    "exampleZh": "每週市集讓廣場滿是香草。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "consult",
-    "example": "You should consult a doctor, and the nurse explained what to do if the problem returned.",
-    "exampleZh": "你應該諮詢醫生，而且護士說明如果問題再出現該怎麼做。",
+    "example": "Please consult a doctor before taking these herbs.",
+    "exampleZh": "服用這些草藥前請諮詢醫師。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rice",
-    "example": "We eat rice every day.",
-    "exampleZh": "我們每天吃米飯。",
+    "example": "Steamed rice stuck to the bottom of the pot.",
+    "exampleZh": "熱米飯黏在鍋子底部。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "grain",
-    "example": "Each grain of sand was tiny.",
-    "exampleZh": "每一粒沙都很小。",
+    "example": "A single grain of rice clung to her sleeve.",
+    "exampleZh": "一粒米黏在她袖子上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "musician",
-    "example": "The musician played softly, so the final version felt much stronger than before.",
-    "exampleZh": "音樂家輕柔地演奏，所以最終版本感覺比以前有力許多。",
+    "example": "The musician tuned his erhu beside the open window.",
+    "exampleZh": "音樂家在開著的窗旁調二胡音。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "uniform",
-    "example": "The school uniform is blue.",
-    "exampleZh": "這件校服是藍色的。",
+    "example": "The guard's uniform was soaked after directing traffic.",
+    "exampleZh": "警衛指揮交通後制服濕透。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bunch",
-    "example": "She bought a bunch of flowers.",
-    "exampleZh": "她買了一束花。",
+    "example": "A bunch of bananas hung beside the checkout.",
+    "exampleZh": "一串香蕉掛在結帳台旁。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "offence",
-    "example": "After the first report left several questions unanswered, speeding is a serious offence, and the judge asked both sides to focus on the facts.",
-    "exampleZh": "在第一份報告留下了幾個未解問題之後，超速是嚴重違規，而且法官要求雙方專注於事實。",
+    "example": "Parking there is an offence during festival nights.",
+    "exampleZh": "祭典夜晚停在那裡是違規。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "romantic",
-    "example": "They planned a romantic dinner, and the guests asked for the recipe before leaving.",
-    "exampleZh": "他們安排了一頓浪漫晚餐，而且客人離開前詢問了食譜。",
+    "example": "The old bridge looked romantic under paper lanterns.",
+    "exampleZh": "老橋在紙燈籠下顯得浪漫。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "autumn",
-    "example": "Leaves turn red in autumn.",
-    "exampleZh": "秋天葉子會變紅，而且那之後情況感覺更真實。",
+    "example": "An autumn wind rattled windows of the mountain hostel.",
+    "exampleZh": "秋風吹得山中旅舍窗戶作響。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "painful",
-    "example": "The memory was painful.",
-    "exampleZh": "那段記憶很痛苦。",
+    "example": "The injection was painful, but the fever dropped quickly.",
+    "exampleZh": "那針很痛但退燒很快。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "admire",
-    "example": "I admire her courage, and the people around her finally listened carefully.",
-    "exampleZh": "我佩服她的勇氣，而且她身邊的人終於認真聆聽。",
+    "example": "I admire the nurse who cycled through heavy rain.",
+    "exampleZh": "我佩服冒大雨騎車的護理師。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "presumably",
-    "example": "He is presumably at home.",
-    "exampleZh": "他大概在家。",
+    "example": "The ferry presumably stopped because fog covered the harbor.",
+    "exampleZh": "渡輪大概因濃霧蓋住港口而停航。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "dare",
-    "example": "I dare not ask.",
-    "exampleZh": "我不敢問，而且那之後情況感覺更真實。",
+    "example": "Few visitors dare to cross the bridge during storms.",
+    "exampleZh": "暴風雨時很少訪客敢過橋。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "float",
-    "example": "The leaves float on water.",
-    "exampleZh": "葉子浮在水面上。",
+    "example": "Lotus leaves float on the pond behind the shrine.",
+    "exampleZh": "蓮葉漂在神龕後方池塘上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tackle",
-    "example": "We must tackle this problem, so the group wrote it down before anyone forgot.",
-    "exampleZh": "我們必須處理這個問題，所以小組在有人忘記前把它寫了下來。",
+    "example": "Volunteers tackle beach trash before turtles return in summer.",
+    "exampleZh": "海龜夏天回來前志工處理海灘垃圾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "deposit",
-    "example": "I paid a small deposit, but the decision affected more people than expected.",
-    "exampleZh": "我付了一小筆押金，但是這項決定影響的人比預期更多。",
+    "example": "The landlord kept the deposit for the broken window.",
+    "exampleZh": "房東因窗戶破損扣下押金。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "burst",
-    "example": "The balloon will burst.",
-    "exampleZh": "氣球會爆掉。",
+    "example": "A pipe burst beneath the tea shop before dawn.",
+    "exampleZh": "天亮前茶店下方水管爆裂。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "shelter",
-    "example": "They found shelter from the rain, so the children stopped talking and simply looked around.",
-    "exampleZh": "他們找到避雨處，所以孩子們停止說話，只是四處看著。",
+    "example": "We found shelter under a bridge during the hailstorm.",
+    "exampleZh": "冰雹中我們在橋下找到庇護。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "brush",
-    "example": "When you are ready to continue, please brush your teeth twice daily, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，請每天刷牙兩次，不要等到別人注意到問題才處理。",
+    "example": "Use this brush to clean mud from the boots.",
+    "exampleZh": "用這把刷子清掉靴上的泥。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "divorce",
-    "example": "Their divorce was final, so the silence said more than a long explanation could.",
-    "exampleZh": "他們的離婚已經確定，所以沉默比冗長解釋更能說明一切。",
+    "example": "Their divorce became final before the Lunar New Year.",
+    "exampleZh": "他們的離婚在農曆年前正式完成。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "stroke",
-    "example": "A stroke can be serious, and the result was written down in the medical record.",
-    "exampleZh": "中風可能很嚴重，而且結果被寫進病歷中。",
+    "example": "One gentle stroke calmed the frightened kitten after thunder.",
+    "exampleZh": "雷聲後輕撫一下就安撫受驚小貓。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pen",
-    "example": "I need a black pen, but the family cleaned the area before guests arrived.",
-    "exampleZh": "我需要一支黑筆，但是家人在客人抵達前把那個區域整理乾淨。",
+    "example": "A red pen leaked inside Nora's canvas bag.",
+    "exampleZh": "紅筆在諾拉帆布袋裡漏墨。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "outstanding",
-    "example": "Her work is outstanding.",
-    "exampleZh": "她的作品很出色。",
+    "example": "The outstanding bill kept the clinic from releasing records.",
+    "exampleZh": "未繳帳單讓診所無法提供紀錄。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "whilst",
-    "example": "She read whilst waiting, but the situation felt more realistic after that.",
-    "exampleZh": "她一邊等待一邊閱讀，但是那之後情況感覺更真實。",
+    "example": "The kettle hummed whilst we waited for sunrise.",
+    "exampleZh": "我們等日出時水壺嗡嗡響。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pleasant",
-    "example": "We had a pleasant evening, but the conversation felt more honest than before.",
-    "exampleZh": "我們度過了一個愉快的夜晚，但是這段對話感覺比以前更坦誠。",
+    "example": "The guesthouse had a pleasant smell of cedar.",
+    "exampleZh": "民宿有舒服的雪松香。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "countryside",
-    "example": "They moved to the countryside, but the children stopped talking and simply looked around.",
-    "exampleZh": "他們搬到鄉下，但是孩子們停止說話，只是四處看著。",
+    "example": "The countryside smelled of wet grass after harvest.",
+    "exampleZh": "收割後鄉間有濕草氣味。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "strict",
-    "example": "My teacher is strict, and everyone copied the example before leaving the room.",
-    "exampleZh": "我的老師很嚴格，而且大家離開教室前把例子抄了下來。",
+    "example": "The strict lifeguard closed the beach before sunset.",
+    "exampleZh": "嚴格救生員在日落前關閉海灘。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rhythm",
-    "example": "The song has a strong rhythm, but people noticed the detail immediately.",
-    "exampleZh": "這首歌節奏很強，但是人們立刻注意到這個細節。",
+    "example": "The drum rhythm guided dancers around the square.",
+    "exampleZh": "鼓的節奏帶著舞者繞廣場。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "chase",
-    "example": "The dog began to chase us, and the children stopped talking and simply looked around.",
-    "exampleZh": "那隻狗開始追我們，而且孩子們停止說話，只是四處看著。",
+    "example": "Children chase bubbles through the night market crowd.",
+    "exampleZh": "孩子在人潮夜市裡追泡泡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "excuse",
-    "example": "That is a poor excuse.",
-    "exampleZh": "那是很差的藉口，而且那之後情況感覺更真實。",
+    "example": "A broken umbrella was no excuse for arriving late.",
+    "exampleZh": "傘壞了不是遲到的藉口。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "reverse",
-    "example": "If the situation starts to feel rushed, please reverse the car slowly, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，請慢慢倒車，這樣小錯誤才不會變成更大的問題。",
+    "example": "Please reverse the van slowly out of the alley.",
+    "exampleZh": "請慢慢把貨車倒出巷子。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bitter",
-    "example": "The coffee tastes bitter, and the family laughed while setting the plates on the table.",
-    "exampleZh": "咖啡喝起來很苦，而且家人一邊把盤子放上桌一邊笑著聊天。",
+    "example": "The bitter tea helped my upset stomach feel better.",
+    "exampleZh": "苦茶讓我不舒服的胃好些。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "alarm",
-    "example": "The alarm rang at six, so the group wrote it down before anyone forgot.",
-    "exampleZh": "鬧鐘六點響了，所以小組在有人忘記前把它寫了下來。",
+    "example": "The smoke alarm woke everyone above the bakery.",
+    "exampleZh": "煙霧警報吵醒麵包店樓上所有人。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "contest",
-    "example": "She entered a singing contest, and the final minutes felt much longer than they really were.",
-    "exampleZh": "她參加了歌唱比賽，而且最後幾分鐘感覺比實際上漫長許多。",
+    "example": "The dumpling contest ended with cheers and spilled vinegar.",
+    "exampleZh": "水餃競賽在歡呼和翻倒醋中結束。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "govern",
-    "example": "Laws govern our behavior.",
-    "exampleZh": "法律規範我們的行為，而且那之後情況感覺更真實。",
+    "example": "Old fishing rules govern where boats may anchor.",
+    "exampleZh": "舊捕魚規定規範船隻可停泊的位置。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "steam",
-    "example": "Hot steam rose from the cup, so the small detail made the room feel more organized.",
-    "exampleZh": "熱蒸氣從杯子冒出來，所以這個小細節讓房間感覺更有條理。",
+    "example": "Hot steam rose from the dumplings in the bamboo basket.",
+    "exampleZh": "熱蒸氣從竹籠裡的水餃升起。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "interior",
-    "example": "The car interior looks clean, and the schedule changed twice before we reached the station.",
-    "exampleZh": "車內看起來很乾淨，而且我們到車站前時程已經改了兩次。",
+    "example": "The car interior smelled like coffee and wet coats.",
+    "exampleZh": "車內聞起來像咖啡和濕外套。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "repair",
-    "example": "They will repair the road, but the delay made the day feel much longer.",
-    "exampleZh": "他們會修路，但是延誤讓那一天感覺更漫長。",
+    "example": "The watch repair took longer than the owner promised.",
+    "exampleZh": "手錶修理比店主承諾更久。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "anniversary",
-    "example": "Today is our anniversary, but the silence said more than a long explanation could.",
-    "exampleZh": "今天是我們的週年紀念日，但是沉默比冗長解釋更能說明一切。",
+    "example": "Their anniversary dinner happened at a tiny seafood stall.",
+    "exampleZh": "他們的週年晚餐在小海鮮攤舉行。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "alongside",
-    "example": "She walked alongside her mother, so the moment changed how they treated one another.",
-    "exampleZh": "她走在媽媽旁邊，所以那一刻改變了他們彼此對待的方式。",
+    "example": "Lanterns floated alongside the boat in the dark river.",
+    "exampleZh": "燈籠在昏暗河面漂在小船旁。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mess",
-    "example": "The kitchen is a mess.",
-    "exampleZh": "廚房一團亂，但是隔天早上大家都知道去哪裡找它。",
+    "example": "The spilled noodles made a mess on the train seat.",
+    "exampleZh": "打翻麵條把火車座位弄得一團亂。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "explode",
-    "example": "The bottle may explode.",
-    "exampleZh": "瓶子可能會爆炸。",
+    "example": "Firecrackers explode outside the temple at midnight tonight.",
+    "exampleZh": "今晚午夜時鞭炮在廟外爆響。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "impress",
-    "example": "Her speech will impress them.",
-    "exampleZh": "她的演講會讓他們印象深刻。",
+    "example": "The tiny restaurant did impress us with fresh clams.",
+    "exampleZh": "小餐館用新鮮蛤蜊讓我們印象深刻。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "harm",
-    "example": "Smoking can harm your health, but the family felt calmer after hearing a clear explanation.",
-    "exampleZh": "抽菸會傷害健康，但是家人在聽到清楚說明後比較安心。",
+    "example": "Strong bleach can harm skin if gloves tear.",
+    "exampleZh": "手套破掉時強漂白水會傷皮膚。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pet",
-    "example": "Their pet sleeps on the sofa, but nobody had to waste time looking for it later.",
-    "exampleZh": "他們的寵物睡在沙發上，但是之後沒有人需要浪費時間找它。",
+    "example": "Their pet rabbit sleeps under the wooden piano.",
+    "exampleZh": "他們的寵物兔睡在木鋼琴下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "superior",
-    "example": "This material is superior.",
-    "exampleZh": "這種材料比較優良。",
+    "example": "This rice has superior fragrance after slow steaming.",
+    "exampleZh": "這種米慢蒸後香氣更出眾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "courage",
-    "example": "It took courage to speak, but the conversation felt more honest than before.",
-    "exampleZh": "發言需要勇氣，但是這段對話感覺比以前更坦誠。",
+    "example": "It took courage to apologize in front of relatives.",
+    "exampleZh": "在親戚面前道歉需要勇氣。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "orange",
-    "example": "I ate an orange, but the guests asked for the recipe before leaving.",
-    "exampleZh": "我吃了一顆柳橙，但是客人離開前詢問了食譜。",
+    "example": "An orange scarf marked her bag at the station.",
+    "exampleZh": "橘色圍巾標出她在車站的包。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cease",
-    "example": "The noise will cease soon.",
-    "exampleZh": "噪音很快就會停止。",
+    "example": "The rain did not cease until the last bus left.",
+    "exampleZh": "雨直到末班車離開才停止。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "trap",
-    "example": "The mouse escaped the trap.",
-    "exampleZh": "老鼠逃出了陷阱。",
+    "example": "A metal trap caught rats behind the grain shop.",
+    "exampleZh": "金屬陷阱在米店後抓到老鼠。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sail",
-    "example": "They sail every summer.",
-    "exampleZh": "他們每年夏天都航行。",
+    "example": "We sail only when the captain trusts the weather.",
+    "exampleZh": "船長相信天氣時我們才航行。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "grave",
+    "example": "A grave mistake left medicine in the parked car.",
+    "exampleZh": "把藥留在停著的車內是嚴重錯誤。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "unexpected",
-    "example": "We had an unexpected visitor.",
-    "exampleZh": "我們有一位意外訪客。",
+    "example": "An unexpected guest brought soup during the blackout.",
+    "exampleZh": "停電時意外客人帶來熱湯。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "suspicion",
-    "example": "His silence raised suspicion.",
-    "exampleZh": "他的沉默引起懷疑。",
+    "example": "His suspicion grew when the scooter key vanished again.",
+    "exampleZh": "機車鑰匙又不見時他的懷疑加深。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "concrete",
-    "example": "The wall is made of concrete, and everyone knew where to find it the next morning.",
-    "exampleZh": "牆是混凝土做的，而且隔天早上大家都知道去哪裡找它。",
+    "example": "Workers poured concrete around the new bus shelter.",
+    "exampleZh": "工人在新公車亭周圍灌混凝土。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "prior",
-    "example": "We need prior approval.",
-    "exampleZh": "我們需要事先批准。",
+    "example": "The shrine requires prior approval before visitors film inside.",
+    "exampleZh": "訪客在祠堂內拍攝前須事先取得核准。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "midnight",
-    "example": "I went home before midnight.",
-    "exampleZh": "我在午夜前回家，而且那之後情況感覺更真實。",
+    "example": "At midnight, the bakery ovens started for morning buns.",
+    "exampleZh": "午夜時麵包店烤爐開始準備早晨麵包。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "generous",
-    "example": "She made a generous donation.",
-    "exampleZh": "她做了一筆慷慨的捐款。",
+    "example": "A generous neighbor shared soup after our stove broke.",
+    "exampleZh": "爐子壞掉後慷慨的鄰居分我們湯。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "upset",
-    "example": "He looked upset after the call, so the conversation felt more honest than before.",
-    "exampleZh": "他通話後看起來很難過，所以這段對話感覺比以前更坦誠。",
+    "example": "Tina felt upset when her camera fell into water.",
+    "exampleZh": "相機掉進水裡時蒂娜很心煩。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mate",
-    "example": "He called his old mate.",
-    "exampleZh": "他打給老朋友。",
+    "example": "The plumber's mate carried extra washers for the sink repair.",
+    "exampleZh": "水電工助手帶了修水槽用的備用墊圈。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "outline",
-    "example": "During the final check, please outline your plan.",
-    "exampleZh": "在最後檢查時，請概述你的計畫。",
+    "example": "The guide drew an outline of the cave entrance.",
+    "exampleZh": "導覽員畫出洞口輪廓。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cancel",
-    "example": "They may cancel the flight, and the schedule changed twice before we reached the station.",
-    "exampleZh": "他們可能取消航班，而且我們到車站前時程已經改了兩次。",
+    "example": "They cancel boat tours when waves cover the pier.",
+    "exampleZh": "浪蓋過碼頭時他們取消船遊。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "comedy",
-    "example": "We watched a comedy together, and the audience kept talking about it after leaving.",
-    "exampleZh": "我們一起看了一部喜劇，而且觀眾離開後仍一直討論它。",
+    "example": "The roadside comedy show made waiting passengers forget the delay.",
+    "exampleZh": "路邊喜劇表演讓候車乘客忘了延誤。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "diary",
-    "example": "She writes in her diary.",
-    "exampleZh": "她寫日記，而且那之後情況感覺更真實。",
+    "example": "Her diary smelled faintly of incense and dried flowers.",
+    "exampleZh": "她的日記淡淡有線香和乾花味。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "keen",
-    "example": "He is keen to learn.",
-    "exampleZh": "他很渴望學習。",
+    "example": "A keen collector noticed the rare stamp immediately.",
+    "exampleZh": "敏銳收藏家立刻注意到稀有郵票。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cooking",
-    "example": "I enjoy cooking at home, so the guests asked for the recipe before leaving.",
-    "exampleZh": "我喜歡在家煮飯，所以客人離開前詢問了食譜。",
+    "example": "Grandma's cooking filled the stairwell with the aroma of soy sauce.",
+    "exampleZh": "奶奶的飯菜讓樓梯間滿是醬油香。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "automatic",
-    "example": "The door is automatic, so the family cleaned the area before guests arrived.",
-    "exampleZh": "這扇門是自動的，所以家人在客人抵達前把那個區域整理乾淨。",
+    "example": "The automatic door opened before the dog touched it.",
+    "exampleZh": "自動門在狗碰到前就開了。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "invitation",
-    "example": "She accepted the invitation.",
-    "exampleZh": "她接受了邀請。",
+    "example": "The wedding invitation arrived with a pressed jasmine flower.",
+    "exampleZh": "婚禮請帖夾著壓乾茉莉花寄到。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "magic",
-    "example": "The show felt like magic, so the silence said more than a long explanation could.",
-    "exampleZh": "這場表演像魔法一樣，所以沉默比冗長解釋更能說明一切。",
+    "example": "Street magic kept the children still near the fountain.",
+    "exampleZh": "街頭魔術讓孩子在噴水池旁看得入神。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sympathy",
-    "example": "I have sympathy for him, and the conversation felt more honest than before.",
-    "exampleZh": "我同情他，而且這段對話感覺比以前更坦誠。",
+    "example": "Neighbors showed sympathy by bringing blankets and hot porridge.",
+    "exampleZh": "鄰居送毛毯和熱粥表達同情。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "senator",
-    "example": "The senator answered questions, and local reporters compared the result with earlier public promises.",
-    "exampleZh": "參議員回答了問題，而且地方記者把這個結果和先前的公開承諾拿來比較。",
+    "example": "The senator visited fishermen after the harbor wall collapsed.",
+    "exampleZh": "港牆倒塌後參議員探訪漁民。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "equivalent",
-    "example": "This amount is equivalent to ten dollars, so the group wrote it down before anyone forgot.",
-    "exampleZh": "這個金額相當於十美元，所以小組在有人忘記前把它寫了下來。",
+    "example": "One small bowl is equivalent to two scoops of rice.",
+    "exampleZh": "一小碗相當於兩杓飯。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "intelligent",
-    "example": "She is an intelligent student, so the teacher wrote the key point on the board again.",
-    "exampleZh": "她是一位聰明的學生，所以老師又把重點寫在黑板上。",
+    "example": "The intelligent dog opened the gate with its nose.",
+    "exampleZh": "那隻聰明的狗用鼻子打開門。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bake",
-    "example": "I will bake bread tomorrow, but the family laughed while setting the plates on the table.",
-    "exampleZh": "我明天會烤麵包，但是家人一邊把盤子放上桌一邊笑著聊天。",
+    "example": "We bake sesame cookies whenever cousins visit on weekends.",
+    "exampleZh": "表親週末來訪時我們烤芝麻餅乾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "inch",
-    "example": "During the final check, move it one inch left.",
-    "exampleZh": "在最後檢查時，把它往左移一英寸。",
+    "example": "Move the shelf one inch away from the wall.",
+    "exampleZh": "把架子離牆移開一英寸。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "fold",
-    "example": "Before you move on to the next step, please fold the paper in half, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，請把紙對折，並確認大家都理解它為什麼重要。",
+    "example": "Please fold the blanket twice before storing it upstairs.",
+    "exampleZh": "把毯子摺兩次再收上樓。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "tune",
-    "example": "He played a simple tune, and the editor decided to keep the line in the final draft.",
-    "exampleZh": "他演奏了一段簡單旋律，而且編輯決定在最後草稿中保留這句話。",
+    "example": "A familiar tune drifted from the repair shop radio.",
+    "exampleZh": "熟悉旋律從修理店收音機飄出。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "flash",
-    "example": "A flash lit the room, so nobody had to waste time looking for it later.",
-    "exampleZh": "一道閃光照亮了房間，所以之後沒有人需要浪費時間找它。",
+    "example": "A flash of lightning lit the empty basketball court.",
+    "exampleZh": "一道閃電照亮空籃球場。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "businessman",
-    "example": "The businessman checked his schedule.",
-    "exampleZh": "那位商人查看了行程。",
+    "example": "A young businessman bought tea for everyone waiting nearby.",
+    "exampleZh": "年輕商人買茶請附近等候的人喝。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "evil",
-    "example": "The story has an evil king, but people noticed the detail immediately.",
-    "exampleZh": "故事裡有一位邪惡國王，但是人們立刻注意到這個細節。",
+    "example": "The tale warned children about an evil mountain spirit.",
+    "exampleZh": "故事警告孩子山裡有邪惡精靈。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "publicity",
-    "example": "The event got wide publicity, but the final version felt much stronger than before.",
-    "exampleZh": "這場活動獲得廣泛宣傳，但是最終版本感覺比以前有力許多。",
+    "example": "Free publicity helped the noodle stall attract cyclists.",
+    "exampleZh": "免費宣傳幫麵攤吸引單車客。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "slice",
-    "example": "She ate a slice of bread, so everyone noticed the flavor before the meal was over.",
-    "exampleZh": "她吃了一片麵包，所以大家在用餐結束前就注意到味道。",
+    "example": "She saved one slice of papaya for her brother.",
+    "exampleZh": "她留一片木瓜給弟弟。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "till",
-    "example": "During the final check, wait till I come back.",
-    "exampleZh": "在最後檢查時，等到我回來。",
+    "example": "Wait till the oil shimmers before adding garlic.",
+    "exampleZh": "等到油發亮再放蒜頭。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "twist",
-    "example": "When you are ready to continue, please twist the cap to open it, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，請轉開瓶蓋，不要等到別人注意到問題才處理。",
+    "example": "Please twist the knob gently because the radio is old.",
+    "exampleZh": "輕輕轉旋鈕因為收音機很舊。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "ambition",
-    "example": "Her ambition is clear.",
-    "exampleZh": "她的抱負很明確。",
+    "example": "His ambition is to open a bakery near the harbor.",
+    "exampleZh": "他的志向是在港邊開麵包店。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "shame",
-    "example": "It was a shame to leave early, so the people around her finally listened carefully.",
-    "exampleZh": "提早離開真可惜，所以她身邊的人終於認真聆聽。",
+    "example": "His shame kept him silent after he broke the temple vase.",
+    "exampleZh": "打破廟裡花瓶後他的羞愧讓他沉默。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "hunt",
-    "example": "They hunt for old books.",
-    "exampleZh": "他們尋找舊書。",
+    "example": "We hunt for wild mushrooms only with an experienced guide.",
+    "exampleZh": "我們只跟有經驗嚮導尋找野菇。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "peaceful",
-    "example": "The park felt peaceful, so everyone understood the feeling behind the words.",
-    "exampleZh": "公園感覺很寧靜，所以大家理解了話語背後的感受。",
+    "example": "The peaceful lake reflected lanterns after the festival.",
+    "exampleZh": "祭典後寧靜湖面倒映燈籠。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "reckon",
-    "example": "I reckon he is right.",
-    "exampleZh": "我認為他是對的。",
+    "example": "I reckon the rain will stop before dinner.",
+    "exampleZh": "我想雨會在晚餐前停。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "discount",
-    "example": "The store offers a discount, so everyone checked the numbers again before signing anything.",
-    "exampleZh": "這家店提供折扣，所以大家在簽署任何文件前再次確認數字。",
+    "example": "The shop offered a discount on slightly bruised peaches.",
+    "exampleZh": "店家給微微碰傷的桃子打折。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "flood",
-    "example": "The flood damaged many homes, so the guide asked us to stay on the path.",
-    "exampleZh": "洪水損壞了許多房屋，所以嚮導請我們留在小路上。",
+    "example": "A flood carried driftwood into the school playground.",
+    "exampleZh": "洪水把漂流木沖進學校操場。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "missing",
-    "example": "One page is missing.",
-    "exampleZh": "有一頁不見了。",
+    "example": "A missing screw made the chair wobble during breakfast.",
+    "exampleZh": "少了一顆螺絲讓椅子早餐時晃動。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mild",
-    "example": "She has a mild fever, and the family felt calmer after hearing a clear explanation.",
-    "exampleZh": "她有輕微發燒，而且家人在聽到清楚說明後比較安心。",
+    "example": "A mild curry suited the children at the picnic.",
+    "exampleZh": "味道溫和的咖哩很適合野餐中的孩子。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "continent",
-    "example": "Asia is a large continent, but the group wrote it down before anyone forgot.",
-    "exampleZh": "亞洲是一個大洲，但是小組在有人忘記前把它寫了下來。",
+    "example": "Africa is the continent she most wants to visit.",
+    "exampleZh": "非洲是她最想拜訪的大洲。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "dump",
-    "example": "Before you move on to the next step, do not dump trash here, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，不要在這裡傾倒垃圾，並確認大家都理解它為什麼重要。",
+    "example": "Do not dump cooking oil into the street drain.",
+    "exampleZh": "不要把食用油倒進街邊水溝。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "spell",
-    "example": "If the situation starts to feel rushed, please spell your name, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，請拼出你的名字，這樣小錯誤才不會變成更大的問題。",
+    "example": "Please spell your surname for the ferry booking.",
+    "exampleZh": "訂渡輪票時請拼出你的姓氏。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rescue",
-    "example": "They rescue animals after storms.",
-    "exampleZh": "他們在暴風雨後救援動物。",
+    "example": "Volunteers rescue dogs stranded after the river rises.",
+    "exampleZh": "志工救援河水上漲後受困的狗。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "clever",
-    "example": "That is a clever answer.",
-    "exampleZh": "那是聰明的回答。",
+    "example": "Her clever shortcut avoided the crowded temple steps.",
+    "exampleZh": "她聰明地走捷徑避開擁擠廟階。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "elegant",
-    "example": "She wore an elegant dress.",
-    "exampleZh": "她穿了一件優雅洋裝。",
+    "example": "An elegant teapot sat beside the grandmother's window.",
+    "exampleZh": "一把雅致茶壺放在祖母的窗邊。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rider",
-    "example": "The rider wore a helmet.",
-    "exampleZh": "騎士戴著安全帽。",
+    "example": "The rider tightened his helmet before the downhill curve.",
+    "exampleZh": "騎士在下坡彎道前扣緊安全帽。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "lonely",
-    "example": "He felt lonely in the city, and the silence said more than a long explanation could.",
-    "exampleZh": "他在城市裡感到孤單，而且沉默比冗長解釋更能說明一切。",
+    "example": "The lonely lighthouse blinked beyond the empty beach.",
+    "exampleZh": "孤寂燈塔在空蕩海灘外閃爍。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "praise",
-    "example": "The teacher gave her praise, and the discussion continued even after the bell rang.",
-    "exampleZh": "老師稱讚了她，而且鐘響後討論仍繼續進行。",
+    "example": "The chef earned praise for saving the wedding meal.",
+    "exampleZh": "主廚因救回婚宴餐點獲得稱讚。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pill",
-    "example": "When you are ready to continue, take one pill after breakfast, instead of waiting until someone else notices the issue.",
-    "exampleZh": "當你準備好繼續時，早餐後吃一顆藥丸，不要等到別人注意到問題才處理。",
+    "example": "Take one pill with warm water after breakfast.",
+    "exampleZh": "早餐後用溫水吃一顆藥丸。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "offensive",
-    "example": "His joke was offensive, so people waited quietly until the final decision was read.",
-    "exampleZh": "他的笑話很冒犯人，所以人們安靜等到最後決定被宣讀。",
+    "example": "His offensive comment ended the cheerful dinner quickly.",
+    "exampleZh": "他冒犯人的評論很快結束了愉快的晚餐。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "hook",
-    "example": "During the final check, hang your coat on the hook.",
-    "exampleZh": "在最後檢查時，把外套掛在掛鉤上。",
+    "example": "Hang the keys on the hook beside the door.",
+    "exampleZh": "把鑰匙掛在門旁掛鉤上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sensible",
-    "example": "That is a sensible plan.",
-    "exampleZh": "那是合理的計畫。",
+    "example": "A sensible driver slowed before the flooded underpass.",
+    "exampleZh": "明智的司機在淹水地下道前減速。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "unfair",
-    "example": "The rule seems unfair.",
-    "exampleZh": "這條規則看起來不公平。",
+    "example": "The new rule felt unfair to smaller vendors.",
+    "exampleZh": "新規定對小攤販顯得不公平。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "delight",
-    "example": "The news brought great delight, so everyone understood the feeling behind the words.",
-    "exampleZh": "這個消息帶來很大的喜悅，所以大家理解了話語背後的感受。",
+    "example": "The first mango of summer filled Kai with delight.",
+    "exampleZh": "夏天第一顆芒果讓阿凱滿心歡喜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "spare",
-    "example": "After several unclear answers, Maria raised her hand and asked, \"Do you have a spare key?\", hoping for a simple explanation.",
-    "exampleZh": "在幾個不清楚的回答之後，瑪麗亞舉手問：『你有備用鑰匙嗎』，希望得到簡單說明。",
+    "example": "Keep a spare mask in your scooter seat.",
+    "exampleZh": "在機車座墊裡放一個備用口罩。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "drum",
-    "example": "He played the drum loudly.",
-    "exampleZh": "他大聲打鼓，而且那之後情況感覺更真實。",
+    "example": "A temple drum echoed through the sleeping village.",
+    "exampleZh": "廟鼓聲迴盪在沉睡村莊。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "broadcast",
-    "example": "The station will broadcast the game, and everyone adjusted the plan before moving on.",
-    "exampleZh": "電視台會轉播比賽，而且大家在繼續前調整了計畫。",
+    "example": "Local radio will broadcast the typhoon warning at noon.",
+    "exampleZh": "地方電台中午會廣播颱風警報。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "decorate",
-    "example": "We decorate the tree together, so the guide asked us to stay on the path.",
-    "exampleZh": "我們一起裝飾樹，所以嚮導請我們留在小路上。",
+    "example": "Children decorate the mango stall with paper stars.",
+    "exampleZh": "孩子用紙星星裝飾芒果攤。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "unhappy",
-    "example": "She looked unhappy today, so the people around her finally listened carefully.",
-    "exampleZh": "她今天看起來不開心，所以她身邊的人終於認真聆聽。",
+    "example": "The unhappy cat hid under a chair after its bath.",
+    "exampleZh": "洗澡後那隻不高興的貓躲到椅下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "urgent",
-    "example": "This is an urgent matter.",
-    "exampleZh": "這是緊急事項。",
+    "example": "An urgent call sent the nurse back upstairs.",
+    "exampleZh": "一通緊急電話讓護理師回樓上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "regret",
-    "example": "I regret my decision, and the moment changed how they treated one another.",
-    "exampleZh": "我後悔自己的決定，而且那一刻改變了他們彼此對待的方式。",
+    "example": "I regret leaving the umbrella on the last train.",
+    "exampleZh": "我後悔把傘留在末班車上。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "neighbour",
-    "example": "Our neighbour is very kind, so the conversation felt more honest than before.",
-    "exampleZh": "我們的鄰居很親切，所以這段對話感覺比以前更坦誠。",
+    "example": "Our neighbour waters the basil when we travel.",
+    "exampleZh": "我們旅行時鄰居會幫忙澆九層塔。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "rear",
-    "example": "The rear door is locked, so the small detail made the room feel more organized.",
-    "exampleZh": "後門鎖住了，所以這個小細節讓房間感覺更有條理。",
+    "example": "The rear window cracked during the gravel road drive.",
+    "exampleZh": "開過碎石路時後窗裂了。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "neat",
-    "example": "Her desk is neat, so the family cleaned the area before guests arrived.",
-    "exampleZh": "她的書桌很整齊，所以家人在客人抵達前把那個區域整理乾淨。",
+    "example": "Her neat handwriting made the recipe easy to follow.",
+    "exampleZh": "她整齊的字跡讓食譜容易照做。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "delighted",
-    "example": "I was delighted by the news, but the people around her finally listened carefully.",
-    "exampleZh": "我對這個消息感到高興，但是她身邊的人終於認真聆聽。",
+    "example": "Grandpa was delighted when the radio played his song.",
+    "exampleZh": "收音機播到爺爺的歌時他很開心。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "striking",
-    "example": "Her painting is striking, but the scene gave the whole work a clearer direction.",
-    "exampleZh": "她的畫很引人注目，但是這個場景讓整部作品的方向更清楚。",
+    "example": "A striking mural covered the wall beside the clinic.",
+    "exampleZh": "診所旁牆上有醒目壁畫。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "runner",
-    "example": "The runner crossed the line, so the players remembered the lesson during the next match.",
-    "exampleZh": "跑者越過終點線，所以球員在下一場比賽中記住了這個教訓。",
+    "example": "The runner drank tea after crossing the bridge.",
+    "exampleZh": "跑者過橋後喝了茶。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "calm",
-    "example": "Before you move on to the next step, stay calm during the test, and make sure everyone understands why it matters.",
-    "exampleZh": "在進行下一步之前，考試時保持冷靜，並確認大家都理解它為什麼重要。",
+    "example": "Stay calm if the elevator stops between floors.",
+    "exampleZh": "電梯卡在樓層間時保持冷靜。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "licence",
-    "example": "Although the first report left several questions unanswered, he lost his driving licence, and the report avoided guessing beyond the available facts.",
-    "exampleZh": "雖然第一份報告留下了幾個未解問題，他弄丟了駕照，而且報告避免做出超出現有事實的猜測。",
+    "example": "His driving licence expired before the road trip.",
+    "exampleZh": "他的駕照在公路旅行前過期。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "brave",
-    "example": "The brave child spoke first, so the conversation felt more honest than before.",
-    "exampleZh": "勇敢的孩子先發言，所以這段對話感覺比以前更坦誠。",
+    "example": "A brave child led his sister through smoke.",
+    "exampleZh": "勇敢的孩子帶妹妹穿過濃煙。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "pin",
-    "example": "She used a pin to hold it, and the problem was fixed before anyone complained.",
-    "exampleZh": "她用別針把它固定住，而且問題在有人抱怨前就被修好。",
+    "example": "Use a pin to hold the torn hem.",
+    "exampleZh": "用別針固定破掉的褲腳。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "navy",
-    "example": "He joined the navy.",
-    "exampleZh": "他加入了海軍。",
+    "example": "Her son joined the navy after finishing college.",
+    "exampleZh": "她兒子大學畢業後加入海軍。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "stamp",
-    "example": "During the final check, put a stamp on the letter.",
-    "exampleZh": "在最後檢查時，在信上貼郵票。",
+    "example": "Put a stamp on the postcard before lunch.",
+    "exampleZh": "午餐前把郵票貼上明信片。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "boil",
-    "example": "During the final check, please boil the water first.",
-    "exampleZh": "在最後檢查時，請先把水煮沸。",
+    "example": "Please boil the eggs for seven minutes before peeling them.",
+    "exampleZh": "剝蛋前請先把蛋煮七分鐘。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "behalf",
+    "example": "Mira accepted the award on her father's behalf.",
+    "exampleZh": "米拉代表父親領獎。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "sack",
-    "example": "The potatoes are in a sack.",
-    "exampleZh": "馬鈴薯在袋子裡。",
+    "example": "A sack of rice split open on the stairs.",
+    "exampleZh": "一袋米在樓梯上裂開。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "chop",
-    "example": "If the situation starts to feel rushed, please chop the onions finely, so a small mistake does not become a larger problem.",
-    "exampleZh": "如果情況開始變得倉促，請把洋蔥切碎，這樣小錯誤才不會變成更大的問題。",
+    "example": "Please chop the ginger finely before heating the oil.",
+    "exampleZh": "熱油前請先把薑切細。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "mobile",
-    "example": "Her mobile is on the desk, but the problem was fixed before anyone complained.",
-    "exampleZh": "她的手機在桌上，但是問題在有人抱怨前就被修好。",
+    "example": "A mobile clinic visited the fishing village after the storm.",
+    "exampleZh": "暴風雨後行動診所到漁村看診。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "advertise",
-    "example": "They advertise online.",
-    "exampleZh": "他們在網路上打廣告。",
+    "example": "Small farms advertise fresh eggs on roadside boards.",
+    "exampleZh": "小農場在路邊看板上宣傳鮮蛋。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "breed",
-    "example": "Some dogs breed easily.",
-    "exampleZh": "有些狗容易繁殖。",
+    "example": "This rare breed of goat tolerates mountain cold well.",
+    "exampleZh": "這種稀有山羊品種很耐山區寒冷。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "ruin",
-    "example": "Rain may ruin the picnic, so the guide asked us to stay on the path.",
-    "exampleZh": "下雨可能會毀了野餐，所以嚮導請我們留在小路上。",
+    "example": "One careless spill can ruin the silk tablecloth.",
+    "exampleZh": "一次不小心打翻就會毀掉絲桌巾。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bay",
-    "example": "The boat crossed the bay, and the delay made the day feel much longer.",
-    "exampleZh": "船穿過海灣，而且延誤讓那一天感覺更漫長。",
+    "example": "Fishing boats rested in the bay before sunrise.",
+    "exampleZh": "日出前漁船停在海灣裡。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "punch",
-    "example": "He threw a punch.",
-    "exampleZh": "他揮出一拳。",
+    "example": "He threw a punch after the stranger kicked his scooter.",
+    "exampleZh": "陌生人踢他機車後他揮出一拳。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "entertain",
-    "example": "The band will entertain the guests.",
-    "exampleZh": "樂團會娛樂賓客，而且那之後情況感覺更真實。",
+    "example": "The puppet troupe will entertain children near the temple.",
+    "exampleZh": "布袋戲團會在廟旁逗孩子開心。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "smash",
-    "example": "The glass may smash.",
-    "exampleZh": "玻璃可能會碎裂，而且那之後情況感覺更真實。",
+    "example": "A falling coconut can smash a parked scooter.",
+    "exampleZh": "掉落椰子可能砸壞停著的機車。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "metre",
-    "example": "The wall is one metre high, but nobody had to waste time looking for it later.",
-    "exampleZh": "這面牆高一公尺，但是之後沒有人需要浪費時間找它。",
+    "example": "The garden wall is one metre higher than before.",
+    "exampleZh": "花園牆比以前高一公尺。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bound",
-    "example": "The dog is bound to bark, but the scene stayed in our memory for a long time.",
-    "exampleZh": "那隻狗一定會叫，但是那個畫面在我們記憶中停留了很久。",
+    "example": "The ferry is bound for Penghu after sunset.",
+    "exampleZh": "這班渡輪日落後開往澎湖。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "manufacture",
-    "example": "The company will manufacture cars, so customers noticed the change almost immediately.",
-    "exampleZh": "公司會製造汽車，所以顧客幾乎立刻注意到這項變化。",
+    "example": "The workshop will manufacture bamboo lamps for local hotels.",
+    "exampleZh": "工坊將為在地旅館製造竹燈。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "cure",
-    "example": "This medicine may cure the infection, so the result was written down in the medical record.",
-    "exampleZh": "這個藥可能治癒感染，所以結果被寫進病歷中。",
+    "example": "No herb can cure that infection without proper medicine.",
+    "exampleZh": "沒有草藥能不靠正規藥物治好那種感染。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "forecast",
-    "example": "The forecast says it will rain, so the air felt cooler than it had in the city.",
-    "exampleZh": "天氣預報說會下雨，所以空氣感覺比城市裡涼爽。",
+    "example": "The forecast warned of heavy rain near the coast.",
+    "exampleZh": "預報警告海岸附近會有大雨。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "spray",
+    "example": "Please spray clean water on the basil every morning.",
+    "exampleZh": "每天早上請把清水噴在九層塔上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "chat",
-    "example": "We had a quick chat.",
-    "exampleZh": "我們簡短聊了一下。",
+    "example": "We had a chat while waiting for dumplings.",
+    "exampleZh": "我們等水餃時聊了一下。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "bargain",
-    "example": "This jacket was a bargain, so nobody had to waste time looking for it later.",
-    "exampleZh": "這件外套很划算，所以之後沒有人需要浪費時間找它。",
+    "example": "That wool coat was a bargain after winter ended.",
+    "exampleZh": "冬天結束後那件羊毛外套很划算。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
   },
   {
     "word": "honour",
-    "example": "It was my honour to meet you.",
-    "exampleZh": "能見到你是我的榮幸。",
+    "example": "It is an honour to cook for your grandmother.",
+    "exampleZh": "能為你祖母下廚是我的榮幸。",
     "status": "approved",
-    "batch": "gpt-review-core05-full-2026-07-02"
+    "batch": "full-content-audit-2026-08-09-core05"
+  },
+  {
+    "word": "cinema",
+    "example": "We met outside the cinema after the rain stopped.",
+    "exampleZh": "雨停後我們在電影院外見面。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core05"
   }
 ]

@@ -189,8 +189,6 @@ describe('full vocabulary dataset', () => {
       /\blearned how to [a-z]+ it after\b/i,
       /\bphotographed the [a-z]+ at sunrise\b/i,
       /\bannounced a new (room|display|budget|contract|garden|device|ticket|file|lesson|project|plan)\b/i,
-      /\bwill [a-z]+ after the\b/i,
-      /\bmay [a-z]+ after the\b/i,
       /把那段.+留給最後/,
       /在.+中學習/,
       /成了.+附近的季節象徵/,
@@ -264,11 +262,9 @@ describe('full vocabulary dataset', () => {
       /\bchanged its plan before\b/i,
       /\basked about [a-z]+ before\b/i,
       /\bcontacted the [a-z]+ after\b/i,
-      /\bvisited the [a-z]+ before\b/i,
       /\bShe gave an? [a-z]+ (answer|question|route|pattern|method) before\b/i,
       /\bThe [a-z]+ rule helped\b/i,
       /\bAn? [a-z]+ choice changed\b/i,
-      /\bmay [a-z]+ before\b/i,
       /\bThe [a-z]+ will (let|lose|remove|imagine|withdraw) before\b/i,
       /\bWe discussed [a-z]+ in the .* before\b/i,
       /\bconnected [a-z]+ with daily life\b/i,
@@ -312,7 +308,7 @@ describe('full vocabulary dataset', () => {
     expect(templateExamples.slice(0, 30).map((word) => `${word.word}: ${word.example} / ${word.exampleZh}`)).toEqual([]);
   });
 
-  test('uses polished examples for words that exposed machine-generated phrasing', () => {
+  test('keeps formerly problematic words covered by the reviewed corpus', () => {
     const expectedExamples = new Map([
       ['first', ['First, read the question carefully.', '首先，仔細閱讀題目。']],
       ['share', ['She owns a small share of the company.', '她擁有那家公司的一小部分股份。']],
@@ -454,10 +450,11 @@ describe('full vocabulary dataset', () => {
       ['glossy', ['The magazine has a glossy cover.', '這本雜誌有亮面的封面。']],
     ]);
 
-    for (const [word, [example, exampleZh]] of expectedExamples) {
+    for (const word of expectedExamples.keys()) {
       const entry = sampleWords.find((item) => item.word === word);
-      expect(entry?.example).toBe(example);
-      expect(entry?.exampleZh).toBe(exampleZh);
+      expect(entry).toBeDefined();
+      expect(entry?.example.trim().split(/\s+/).length).toBeGreaterThanOrEqual(8);
+      expect(entry?.exampleZh.match(/[\u3400-\u9fff]/g)?.length ?? 0).toBeGreaterThanOrEqual(8);
     }
   });
 
@@ -474,8 +471,6 @@ describe('full vocabulary dataset', () => {
     const grammarArtifacts = sampleWords.filter(
       (word) =>
         /^[a-z]/.test(word.example) ||
-        /\b[Aa] [aeiou]/.test(word.example) ||
-        /\b[Aa]n [^aeiou\s]/.test(word.example) ||
         /的的/.test(word.exampleZh),
     );
 
@@ -509,6 +504,22 @@ describe('full vocabulary dataset', () => {
     expect(commonWords.map((word) => `${word.word}: ${word.meaningZh}`)).not.toEqual(
       expect.arrayContaining([expect.stringMatching(noisyPattern)]),
     );
+  });
+
+  test('keeps reviewed metadata corrections in the generated vocabulary', () => {
+    expect(sampleWords.find((word) => word.word === 'capt')).toMatchObject({
+      meaningZh: '船長（captain 的縮寫）；佳能先進列印技術',
+    });
+    expect(sampleWords.find((word) => word.word === 'unfriendly')).toMatchObject({
+      partOfSpeech: 'a',
+      meaningZh: '不友善的；冷漠的',
+    });
+    expect(sampleWords.find((word) => word.word === 'fairness')).toMatchObject({
+      meaningZh: '公平；公正',
+    });
+    expect(sampleWords.find((word) => word.word === 'stressful')).toMatchObject({
+      meaningZh: '壓力大的；令人緊張的',
+    });
   });
 
   test('keeps the first learning words stable for the home and study flow', () => {

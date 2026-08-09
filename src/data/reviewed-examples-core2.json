@@ -1,0 +1,3502 @@
+[
+  {
+    "word": "serious",
+    "example": "The nurse looked serious while reviewing each temperature chart.",
+    "exampleZh": "護理師查看每份體溫紀錄時神情嚴肅。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "save",
+    "example": "Leo used a jar to save coins for his scooter repair.",
+    "exampleZh": "里歐用玻璃罐存硬幣修他的機車。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "union",
+    "example": "The dockworkers' union demanded safer gloves after two hand injuries.",
+    "exampleZh": "碼頭工會在兩起手傷後要求更安全的手套。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "answer",
+    "example": "Mina whispered the answer before the teacher collected the quiz.",
+    "exampleZh": "米娜在老師收考卷前小聲說出答案。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fund",
+    "example": "A neighborhood fund paid for ramps outside the old library.",
+    "exampleZh": "社區基金支付舊圖書館外坡道的費用。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "charge",
+    "example": "The bakery will charge less if you bring your own box.",
+    "exampleZh": "你自備盒子麵包店就會少收錢。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "pound",
+    "example": "One pound of cherries barely filled the picnic bowl.",
+    "exampleZh": "一磅櫻桃幾乎裝不滿野餐碗。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "yesterday",
+    "example": "Yesterday, Aunt Mei found her lost ring inside a rice bag.",
+    "exampleZh": "昨天梅阿姨在米袋裡找到遺失戒指。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "past",
+    "example": "That song from the past still makes Grandpa hum softly.",
+    "exampleZh": "那首舊歌仍會讓爺爺輕聲哼唱。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "programme",
+    "example": "The evening programme included folk dances from three coastal villages.",
+    "exampleZh": "晚間節目有三個海邊村莊的民俗舞。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sign",
+    "example": "A yellow sign warned cyclists about loose stones on the bridge.",
+    "exampleZh": "黃色標誌提醒自行車騎士橋上有碎石。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "outside",
+    "example": "No one waited outside after the temple bell stopped ringing.",
+    "exampleZh": "廟鐘停響後外面沒有人等著。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "final",
+    "example": "The final ferry leaves Kinmen before the winter wind rises.",
+    "exampleZh": "最後一班渡輪會在冬風起前離開金門。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "attack",
+    "example": "Mosquitoes attack bare ankles near the pond after sunset.",
+    "exampleZh": "日落後蚊子會在池塘邊叮裸露腳踝。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "race",
+    "example": "Maya entered a race along the river before breakfast.",
+    "exampleZh": "瑪雅早餐前參加河邊賽跑。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "stock",
+    "example": "The grocer keeps extra stock of ginger during flu season.",
+    "exampleZh": "雜貨店在流感季會多準備一些薑。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "capital",
+    "example": "Ottawa became the capital after years of political argument.",
+    "exampleZh": "多年政治爭論後渥太華成為首都。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "visit",
+    "example": "We plan to visit the lantern market before it gets crowded.",
+    "exampleZh": "我們打算趁人潮前去逛燈籠市集。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sister",
+    "example": "My sister fixes bicycles behind the family tea shop.",
+    "exampleZh": "我姐姐在家裡茶行後面修腳踏車。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sir",
+    "example": "Sir, your umbrella is dripping onto the train seat.",
+    "exampleZh": "先生，你的傘正滴水到火車座位上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "laugh",
+    "example": "The baby began to laugh when the dog sneezed twice.",
+    "exampleZh": "狗打兩次噴嚏時寶寶開始笑。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "green",
+    "example": "A green mango tastes sharper than a ripe yellow one.",
+    "exampleZh": "青芒果比熟黃芒果吃起來更酸。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "conference",
+    "example": "The medical conference filled every hotel near the harbor.",
+    "exampleZh": "醫學會議讓港邊旅館全都客滿。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "blue",
+    "example": "Her blue scarf stood out against the grey station wall.",
+    "exampleZh": "她的藍圍巾在灰色車站牆前很顯眼。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "total",
+    "example": "The total cost reached nine hundred dollars after delivery.",
+    "exampleZh": "加上運費後總費用達九百美元。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "attempt",
+    "example": "Ravi made one attempt to bake bread without a recipe.",
+    "exampleZh": "拉維沒看食譜嘗試烤了一次麵包。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "demand",
+    "example": "Demand for repair parts rose after the typhoon damaged scooters.",
+    "exampleZh": "颱風弄壞機車後維修零件需求上升。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "announce",
+    "example": "The mayor will announce new bus routes at noon.",
+    "exampleZh": "市長中午會宣布新的公車路線。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "radio",
+    "example": "Grandma keeps a radio near the window during typhoon season.",
+    "exampleZh": "颱風季奶奶把收音機放在窗邊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "peace",
+    "example": "After the quarrel, the kitchen finally returned to peace.",
+    "exampleZh": "爭吵過後廚房終於恢復安寧。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fly",
+    "example": "Swallows fly low over the fields before heavy rain.",
+    "exampleZh": "大雨前燕子會低飛過田地。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fear",
+    "example": "His fear of elevators eased after the short hospital visit.",
+    "exampleZh": "短暫就醫後他對電梯的恐懼減輕了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "press",
+    "example": "Press the green button when the rice cooker finishes steaming.",
+    "exampleZh": "電鍋蒸好後按下綠色按鈕。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "beat",
+    "example": "Our drummer can beat the metal lid like a festival gong.",
+    "exampleZh": "我們鼓手能把金屬蓋敲得像廟會鑼。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "complete",
+    "example": "Tara stayed late to complete the mural before sunrise.",
+    "exampleZh": "塔拉熬到很晚才在日出前完成壁畫。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "army",
+    "example": "The army sent trucks carrying blankets after the mountain quake.",
+    "exampleZh": "山區地震後軍隊派卡車送毛毯。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "middle",
+    "example": "A plum tree grows in the middle of the courtyard.",
+    "exampleZh": "院子中央長著一棵李樹。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "front",
+    "example": "The cat slept by the front window all afternoon.",
+    "exampleZh": "那隻貓整個下午睡在前窗旁。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "operate",
+    "example": "Only licensed guides operate the lift on the cliff trail.",
+    "exampleZh": "只有持照嚮導能操作崖邊步道升降機。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "vote",
+    "example": "Residents will vote on the park lights next Saturday.",
+    "exampleZh": "居民下週六要投票決定公園燈具。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "independent",
+    "example": "Nina became independent after learning to repair her wheelchair.",
+    "exampleZh": "妮娜學會修輪椅後變得獨立。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "release",
+    "example": "The zoo will release the injured owl after recovery.",
+    "exampleZh": "動物園會在受傷貓頭鷹康復後放牠回野外。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "direct",
+    "example": "Take the direct bus if the hillside road is open.",
+    "exampleZh": "山路開通的話搭直達公車。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "aid",
+    "example": "Volunteers carried water and medical aid into the flooded village.",
+    "exampleZh": "志工把水和醫療援助送進淹水村莊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "quick",
+    "example": "A quick shower cooled the market street before dusk.",
+    "exampleZh": "一場短雨在黃昏前讓市場街涼下來。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "chief",
+    "example": "The chief cook tasted every pot before the banquet.",
+    "exampleZh": "主廚在宴席前試吃每一鍋。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "twice",
+    "example": "I checked the lock twice before leaving the studio.",
+    "exampleZh": "我離開工作室前檢查了兩次門鎖。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "match",
+    "example": "Your socks do not match the borrowed hiking boots.",
+    "exampleZh": "你的襪子和借來的登山靴不搭。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "colour",
+    "example": "What colour did the wall look under morning light?",
+    "exampleZh": "牆在晨光下看起來是什麼顏色？",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "further",
+    "example": "Further rain could close the trail above the falls.",
+    "exampleZh": "更多降雨可能封閉瀑布上方步道。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "labour",
+    "example": "Years of quiet labour turned the abandoned lot into gardens.",
+    "exampleZh": "多年的辛勤勞動把荒地變成花園。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sale",
+    "example": "The pharmacy put winter masks on sale near the entrance.",
+    "exampleZh": "藥局把冬季口罩放在入口附近特賣。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "surprise",
+    "example": "Kai hid the surprise behind the rice cooker lid.",
+    "exampleZh": "凱把驚喜藏在電鍋蓋後面。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "brown",
+    "example": "Brown leaves collected in the gutter after the storm.",
+    "exampleZh": "暴風後褐色葉子堆在排水溝裡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "working",
+    "example": "The working lighthouse still guides boats through the fog.",
+    "exampleZh": "仍在運轉的燈塔引導船隻穿過濃霧。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "host",
+    "example": "Uncle Joe will host three backpackers during the festival.",
+    "exampleZh": "喬叔叔會在節慶期間招待三名背包客。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "bite",
+    "example": "Do not bite the thermometer while the nurse waits.",
+    "exampleZh": "護理師等待時別咬體溫計。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "grey",
+    "example": "Grey clouds covered Alishan before the afternoon train arrived.",
+    "exampleZh": "下午火車抵達前灰雲籠罩阿里山。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "dollar",
+    "example": "A single dollar bought a postcard at the hostel desk.",
+    "exampleZh": "一美元在旅舍櫃台買到一張明信片。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "including",
+    "example": "The basket held six snacks, including two pineapple cakes.",
+    "exampleZh": "籃子裡有六份點心，其中包括兩塊鳳梨酥。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "mrs",
+    "example": "Mrs. Wang saved the stray cat during last night's rain.",
+    "exampleZh": "王太太在昨晚雨中救了流浪貓。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "ms",
+    "example": "The office still uses MS software for old accounting files.",
+    "exampleZh": "辦公室仍用微軟軟體處理舊帳務檔案。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "in",
+    "example": "Mushrooms dried in the sun beside the farmhouse.",
+    "exampleZh": "香菇在農舍旁曬太陽風乾。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "two",
+    "example": "Two nurses lifted the patient gently onto the stretcher.",
+    "exampleZh": "兩名護理師輕輕把病人扶上擔架。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "will",
+    "example": "Her will kept the family shop open through hard winters.",
+    "exampleZh": "她的意志讓家裡店鋪撐過艱難冬季。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "these",
+    "example": "These peaches came from a farm above the valley.",
+    "exampleZh": "這些桃子來自山谷上方的農場。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "those",
+    "example": "Those lanterns swing harder when the harbor wind rises.",
+    "exampleZh": "港風吹起時那些燈籠搖得更厲害。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "three",
+    "example": "Three children shared one umbrella outside the clinic.",
+    "exampleZh": "三個孩子在診所外共撐一把傘。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "four",
+    "example": "Four goats followed the farmer down the muddy lane.",
+    "exampleZh": "四隻山羊跟著農夫走下泥濘小路。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "five",
+    "example": "Five messages arrived before I finished brushing my teeth.",
+    "exampleZh": "我還沒刷完牙就收到五則訊息。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "million",
+    "example": "Nearly a million commuters use this station every weekday.",
+    "exampleZh": "每個平日近百萬通勤族使用這座車站。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "lot",
+    "example": "A lot of steam rose from the bamboo baskets.",
+    "exampleZh": "許多蒸氣從竹籠裡冒出來。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "six",
+    "example": "Six towels hung beside the public pool entrance.",
+    "exampleZh": "六條毛巾掛在公共泳池入口旁。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "hundred",
+    "example": "Grandma packed a hundred dumplings for the temple fair.",
+    "exampleZh": "奶奶為廟會包了一百顆水餃。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "ten",
+    "example": "Ten scooters waited under the awning during the rain.",
+    "exampleZh": "雨中十輛機車停在遮棚下。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "thousand",
+    "example": "The town planted a thousand cedars along the highway.",
+    "exampleZh": "小鎮沿公路種下一千棵雪松。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "seven",
+    "example": "Seven lanterns floated past the bridge before midnight.",
+    "exampleZh": "午夜前七盞燈籠漂過橋邊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "eight",
+    "example": "Eight hikers reached the ridge before the fog thickened.",
+    "exampleZh": "八名登山客在霧變濃前抵達山脊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "billion",
+    "example": "The app served a billion searches during the holiday rush.",
+    "exampleZh": "這款應用程式在假期高峰處理十億次搜尋。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "nine",
+    "example": "Nine bowls of soup warmed the volunteers after cleanup.",
+    "exampleZh": "清理後九碗湯讓志工暖了身。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "twenty",
+    "example": "Twenty bees circled the fallen mango behind the shed.",
+    "exampleZh": "二十隻蜜蜂繞著棚子後方落地的芒果飛舞。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "thirty",
+    "example": "Thirty families moved inland after the seawall cracked.",
+    "exampleZh": "海堤裂開後三十戶人家搬往內陸。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fifty",
+    "example": "Fifty candles lined the path to the shrine.",
+    "exampleZh": "五十支蠟燭排列在通往神龕的小路上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "photo",
+    "example": "Rina framed a photo of her parents dancing by the sea.",
+    "exampleZh": "莉娜裱起父母在海邊跳舞的照片。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "twelve",
+    "example": "Twelve red envelopes waited beside the tea tray.",
+    "exampleZh": "十二個紅包放在茶盤旁等著。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "forty",
+    "example": "Forty swimmers crossed the bay during the charity race.",
+    "exampleZh": "四十名泳者在慈善賽中游過海灣。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fifteen",
+    "example": "Fifteen sparrows landed on the bakery roof at dawn.",
+    "exampleZh": "十五隻麻雀在清晨停在麵包店屋頂上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sixty",
+    "example": "Sixty chairs filled the courtyard for the opera night.",
+    "exampleZh": "六十張椅子擺滿院子準備歌仔戲夜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "eleven",
+    "example": "Eleven fishing boats returned before the weather warning.",
+    "exampleZh": "十一艘漁船在天氣警報前返港。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "nineteen",
+    "example": "Nineteen bicycles leaned against the school wall after practice.",
+    "exampleZh": "練習後十九輛腳踏車靠在校牆邊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "eighty",
+    "example": "Eighty elders joined the free clinic beside the temple.",
+    "exampleZh": "八十位長者參加廟旁義診。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "ninety",
+    "example": "Ninety oranges filled the crate behind the fruit stall.",
+    "exampleZh": "九十顆橘子裝滿水果攤後的木箱。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "eighteen",
+    "example": "Eighteen candles melted quickly in the hot shrine room.",
+    "exampleZh": "十八支蠟燭在悶熱神明廳裡很快融化。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "seventy",
+    "example": "Seventy passengers boarded the ferry before sunrise in Keelung.",
+    "exampleZh": "七十名乘客在日出前登上基隆渡輪。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sixteen",
+    "example": "Sixteen drums echoed across the square during the parade.",
+    "exampleZh": "十六面鼓在遊行時響徹廣場。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fourteen",
+    "example": "Fourteen volunteers cleaned oil from the rocky beach.",
+    "exampleZh": "十四名志工清除岩岸上的油污。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "thirteen",
+    "example": "Thirteen jars of honey sat cooling near the stove.",
+    "exampleZh": "十三罐蜂蜜放在爐邊冷卻。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "seventeen",
+    "example": "Seventeen postcards arrived from cousins traveling around Europe.",
+    "exampleZh": "十七張明信片來自遊歐的表親。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "accord",
+    "example": "The fishermen signed an accord about sharing the small pier.",
+    "exampleZh": "漁民簽署協議共同使用小碼頭。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "percent",
+    "example": "Only three percent of the rice crop was damaged.",
+    "exampleZh": "只有百分之三的稻作受損。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "going",
+    "example": "The going got rough after rain softened the mountain path.",
+    "exampleZh": "雨後山路變軟行進變得艱難。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "use",
+    "example": "Mika learned to use chopsticks during her first Taiwan visit.",
+    "exampleZh": "米卡首次來台時學會使用筷子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "may",
+    "example": "May brings fireflies to the quiet valley behind town.",
+    "exampleZh": "五月鎮後幽谷會出現螢火蟲。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "coming",
+    "example": "The coming storm pushed fishing boats back to port.",
+    "exampleZh": "即將到來的暴風把漁船逼回港口。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "got",
+    "example": "Auntie got fresh tofu from the morning market.",
+    "exampleZh": "阿姨從早市買到新鮮豆腐。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "based",
+    "example": "The soup was based on my grandmother's Hakka recipe.",
+    "exampleZh": "這道湯以外婆的客家食譜為基礎。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "while",
+    "example": "Lena sang softly while her brother washed the dishes.",
+    "exampleZh": "弟弟洗碗時莉娜輕聲唱歌。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "hand",
+    "example": "A warm hand guided the child across the road.",
+    "exampleZh": "一隻溫暖的手牽孩子過馬路。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "hold",
+    "example": "Please hold the ladder while I pick the guavas.",
+    "exampleZh": "我摘芭樂時請扶住梯子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "city",
+    "example": "Kaohsiung is a port city with generous winter sunshine.",
+    "exampleZh": "高雄是冬日陽光充足的港口城市。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "program",
+    "example": "This radio program teaches elders how to spot scams.",
+    "exampleZh": "這個廣播節目教長者辨識詐騙。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "require",
+    "example": "The recipe will require ginger, sesame oil, and patience.",
+    "exampleZh": "這道食譜需要薑、麻油和耐心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "death",
+    "example": "His death left the whole fishing village unusually quiet.",
+    "exampleZh": "他的去世讓整個漁村異常安靜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "period",
+    "example": "That period of drought emptied many hillside ponds.",
+    "exampleZh": "那段乾旱期讓許多山坡池塘見底。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "type",
+    "example": "Which type of tea goes best with this cake?",
+    "exampleZh": "哪種類型的茶最適合配這蛋糕？",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sometimes",
+    "example": "Sometimes the old elevator stops between the third and fourth floors.",
+    "exampleZh": "老電梯有時停在三樓和四樓之間。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "field",
+    "example": "Rice seedlings covered the field after the first spring rain.",
+    "exampleZh": "春天第一場雨後秧苗覆滿田地。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "patient",
+    "example": "The patient man waited quietly for his dumplings.",
+    "exampleZh": "那個有耐心的男人安靜等水餃。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "table",
+    "example": "A teak table stood beside the open kitchen window.",
+    "exampleZh": "柚木桌放在開著的廚房窗旁。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "activity",
+    "example": "Cycling along the coast became her favorite weekend activity.",
+    "exampleZh": "沿海騎車成了她最愛的週末活動。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "voice",
+    "example": "His voice cracked when he thanked the rescue workers.",
+    "exampleZh": "他感謝救難人員時聲音哽咽。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "serve",
+    "example": "The diner will serve hot porridge until dawn.",
+    "exampleZh": "這間小吃店會供應熱粥到天亮。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "kid",
+    "example": "That kid can fold paper cranes faster than anyone.",
+    "exampleZh": "那個孩子摺紙鶴比誰都快。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "subject",
+    "example": "Climate was the subject of their breakfast argument.",
+    "exampleZh": "氣候是他們早餐爭論的主題。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "explain",
+    "example": "Please explain why the alley floods after light rain.",
+    "exampleZh": "請說明小雨後巷子為何淹水。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "order",
+    "example": "The vendor wrote each order on a banana leaf.",
+    "exampleZh": "攤販把每份點單寫在香蕉葉上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "church",
+    "example": "The old church bell rings every Sunday morning.",
+    "exampleZh": "舊教堂的鐘每週日早晨響起。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "relationship",
+    "example": "Their relationship survived two years of long-distance calls.",
+    "exampleZh": "他們的關係撐過兩年遠距通話。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "practice",
+    "example": "Daily practice made her violin tone warmer and steadier.",
+    "exampleZh": "每天練習讓她的小提琴聲更溫暖穩定。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "difference",
+    "example": "Taste the difference between mountain honey and cane syrup.",
+    "exampleZh": "嚐嚐山蜜和蔗糖漿的差別。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "true",
+    "example": "The true owner returned for the umbrella before closing time.",
+    "exampleZh": "真正主人在打烊前回來拿傘。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "maybe",
+    "example": "Maybe the cat hid behind the washing machine again.",
+    "exampleZh": "也許那隻貓又躲到洗衣機後面。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "project",
+    "example": "The bridge project will connect two isolated villages.",
+    "exampleZh": "這座橋梁計畫會連接兩個孤立村莊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "model",
+    "example": "This rice cooker model uses less electricity than ours.",
+    "exampleZh": "這款電鍋型號比我們家的省電。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "involve",
+    "example": "The ceremony will involve lanterns, drums, and a river blessing.",
+    "exampleZh": "儀式會包括燈籠鼓聲和河祭祝福。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "college",
+    "example": "Her college overlooks the sea on Taiwan's east coast.",
+    "exampleZh": "她的大學位於台灣東海岸，可以俯瞰大海。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "upon",
+    "example": "Lanterns hung upon the gate during the harvest festival.",
+    "exampleZh": "豐收節時燈籠掛在大門上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "heart",
+    "example": "Too much salt is hard on the heart.",
+    "exampleZh": "鹽分太多對心臟負擔很大。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "evidence",
+    "example": "Fresh footprints gave detectives evidence near the broken window.",
+    "exampleZh": "破窗旁的新腳印成了偵探的證據。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "especially",
+    "example": "I avoid sugary drinks, especially during long rehearsals.",
+    "exampleZh": "我避免含糖飲料，長時間排練時尤其如此。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "pull",
+    "example": "Pull the red cord if the train doors jam.",
+    "exampleZh": "火車門卡住時拉紅色繩子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "data",
+    "example": "The data showed fewer fevers after the clinic moved.",
+    "exampleZh": "資料顯示診所搬遷後發燒病例較少。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "language",
+    "example": "Their language changes when relatives gather for New Year.",
+    "exampleZh": "親戚過年團聚時他們的用語會改變。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "window",
+    "example": "A cracked window let cold air into the nursery.",
+    "exampleZh": "破裂的窗戶讓冷空氣吹進嬰兒房。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "finally",
+    "example": "The missing wallet finally turned up inside a rain boot.",
+    "exampleZh": "遺失的皮夾終於在雨靴裡找到了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "section",
+    "example": "This section of the trail closes during nesting season.",
+    "exampleZh": "步道這一段在築巢季會封閉。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "material",
+    "example": "The tailor chose soft material for the baby's jacket.",
+    "exampleZh": "裁縫替寶寶外套挑了柔軟布料。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "wear",
+    "example": "Wear sandals if you plan to cross the stream.",
+    "exampleZh": "如果要過溪就穿涼鞋。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "simply",
+    "example": "He simply nodded and kept trimming the bonsai.",
+    "exampleZh": "他只是點頭繼續修剪盆栽。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "site",
+    "example": "The rescue site smelled of wet wood and diesel.",
+    "exampleZh": "救援地點聞起來有濕木和柴油味。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "personal",
+    "example": "Please keep personal medicine in your own locker.",
+    "exampleZh": "請把私人藥品放在自己的置物櫃。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "guy",
+    "example": "That guy sells roasted chestnuts outside the cinema.",
+    "exampleZh": "那個人在電影院外賣烤栗子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "particularly",
+    "example": "The soup tastes particularly sweet after a cold swim.",
+    "exampleZh": "冷水游泳後這碗湯格外甜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "computer",
+    "example": "My computer crashed while uploading the wedding photos.",
+    "exampleZh": "我的電腦在上傳婚禮照片時當機。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "picture",
+    "example": "A picture of sunflowers brightened the hospital hallway.",
+    "exampleZh": "一幅向日葵圖畫讓醫院走廊變亮。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "space",
+    "example": "Leave enough space for wheelchairs beside the counter.",
+    "exampleZh": "櫃台旁要留足輪椅通行空間。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "choose",
+    "example": "Choose a ripe papaya with a gentle fragrance.",
+    "exampleZh": "挑一顆帶淡淡香氣的熟木瓜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "thus",
+    "example": "Thus the shortcut becomes unsafe after heavy rain.",
+    "exampleZh": "因此大雨後這條捷徑變得不安全。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "couple",
+    "example": "A couple from Tainan rented the upstairs room.",
+    "exampleZh": "一對台南夫妻租下樓上房間。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "eat",
+    "example": "We eat rice porridge when someone has a fever.",
+    "exampleZh": "有人發燒時我們吃白粥。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "certainly",
+    "example": "She will certainly remember the kindness of strangers.",
+    "exampleZh": "她一定會記得陌生人的善意。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "doctor",
+    "example": "The doctor wrapped my ankle before the boat ride.",
+    "exampleZh": "醫生在搭船前包紮我的腳踝。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "everyone",
+    "example": "Everyone smelled smoke before the alarm began ringing.",
+    "exampleZh": "警報響起前每個人都聞到煙味。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "piece",
+    "example": "One piece of coral washed onto the beach.",
+    "exampleZh": "一塊珊瑚被浪沖上海灘。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "source",
+    "example": "A spring is the source of water for the temple.",
+    "exampleZh": "一處泉水是廟裡用水的來源。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "south",
+    "example": "Wild geese flew south over the rice fields.",
+    "exampleZh": "雁群向南飛過稻田。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "usually",
+    "example": "I usually buy flowers from the corner stall.",
+    "exampleZh": "我通常向轉角攤位買花。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "particular",
+    "example": "Dad wants that particular wrench for the bicycle repair.",
+    "exampleZh": "爸爸要那支特定扳手修腳踏車。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "opportunity",
+    "example": "The apprenticeship gave Huan an opportunity to learn carpentry.",
+    "exampleZh": "這份學徒工作給阿桓學木工的機會。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "catch",
+    "example": "Catch the falling jar before it hits the floor.",
+    "exampleZh": "在罐子落地前接住它。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "management",
+    "example": "Better management kept the fish market cleaner this summer.",
+    "exampleZh": "更好的管理讓魚市場今年夏天更乾淨。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "bed",
+    "example": "The toddler hid under the bed during thunder.",
+    "exampleZh": "幼兒打雷時躲到床下。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "nature",
+    "example": "Spending time in nature helps Mom sleep better.",
+    "exampleZh": "親近大自然讓媽媽睡得更好。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "private",
+    "example": "The clinic keeps private records in locked cabinets.",
+    "exampleZh": "診所把個人紀錄鎖在櫃中。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "hair",
+    "example": "Her hair smelled of smoke after the barbecue.",
+    "exampleZh": "烤肉後她的頭髮有煙味。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "tree",
+    "example": "A fallen tree blocked the road to the springs.",
+    "exampleZh": "倒下的樹擋住通往溫泉的路。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "similar",
+    "example": "The twins have similar voices on the phone.",
+    "exampleZh": "雙胞胎在電話裡聲音很相似。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "reduce",
+    "example": "Use a lid to reduce oil splashes while frying fish.",
+    "exampleZh": "煎魚時用鍋蓋減少油噴濺。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "movement",
+    "example": "Sudden movement in the bushes startled the hikers.",
+    "exampleZh": "樹叢裡突然有動靜嚇到登山客。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "attention",
+    "example": "The carved doorway held my attention for several minutes.",
+    "exampleZh": "雕花門口吸引我注意好幾分鐘。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "board",
+    "example": "Passengers board the night ferry after the horn sounds.",
+    "exampleZh": "汽笛響後乘客登上夜間渡輪。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "therefore",
+    "example": "The bridge flooded; therefore, drivers used the hill road.",
+    "exampleZh": "橋淹水所以駕駛改走山路。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "quality",
+    "example": "This tea shop is known for quality oolong.",
+    "exampleZh": "這家茶行以優質烏龍聞名。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "technology",
+    "example": "Solar technology powers the lamps along the riverside path.",
+    "exampleZh": "太陽能技術供電給河畔路燈。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "poor",
+    "example": "Poor drainage made the alley smell after rain.",
+    "exampleZh": "排水不良讓巷子雨後發臭。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "population",
+    "example": "The deer population increased after hunting was banned.",
+    "exampleZh": "禁獵後鹿群數量增加。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "anyone",
+    "example": "Anyone with a ticket can enter through this gate.",
+    "exampleZh": "有票的任何人都能從這門進入。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "wrong",
+    "example": "The wrong address sent our package across town.",
+    "exampleZh": "錯誤地址讓包裹送到城市另一頭。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "manager",
+    "example": "The hotel manager found my passport in the lobby.",
+    "exampleZh": "旅館經理在大廳找到我的護照。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "approach",
+    "example": "Her gentle approach calmed the frightened rescued dog.",
+    "exampleZh": "她溫和的方法安撫了受驚的獲救犬。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "image",
+    "example": "The satellite image revealed new cracks near the dam.",
+    "exampleZh": "衛星影像顯示水壩旁有新裂縫。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "represent",
+    "example": "Red paper flowers represent good fortune at weddings.",
+    "exampleZh": "紅紙花在婚禮中代表好運。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "choice",
+    "example": "Leaving early was the safest choice before the typhoon.",
+    "exampleZh": "颱風前提早離開是最安全的選擇。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "teach",
+    "example": "Grandma will teach me how to wrap zongzi.",
+    "exampleZh": "奶奶會教我包粽子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "energy",
+    "example": "The dancers saved energy by resting between rehearsals.",
+    "exampleZh": "舞者在排練間休息來保存體力。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "range",
+    "example": "The camera's range covers the entire front gate.",
+    "exampleZh": "攝影機拍攝範圍涵蓋整個前門。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "indeed",
+    "example": "The temple was indeed quieter before the tour buses arrived.",
+    "exampleZh": "遊覽車到來前寺廟確實安靜多了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "performance",
+    "example": "Her street performance drew coins from passing commuters.",
+    "exampleZh": "她的街頭表演吸引路過通勤族投幣。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "amount",
+    "example": "A small amount of vinegar brightens the soup.",
+    "exampleZh": "少量醋能讓湯更提味。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "baby",
+    "example": "The baby grabbed my glasses with surprising strength.",
+    "exampleZh": "寶寶用驚人力氣抓住我的眼鏡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "rest",
+    "example": "Take a rest before carrying the boxes upstairs.",
+    "exampleZh": "搬箱子上樓前先休息一下。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "nearly",
+    "example": "The train was nearly empty after the last stop.",
+    "exampleZh": "最後一站後火車幾乎空了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "animal",
+    "example": "A rescued animal slept under the volunteer's desk.",
+    "exampleZh": "獲救動物睡在志工桌下。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "listen",
+    "example": "Listen for temple drums when you reach the river.",
+    "exampleZh": "到河邊時注意聽廟鼓聲。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "simple",
+    "example": "A simple bowl of noodles warmed the travelers.",
+    "exampleZh": "一碗簡單的麵溫暖了旅人。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "apply",
+    "example": "Farmers apply neem oil to keep beetles away.",
+    "exampleZh": "農民塗印楝油驅趕甲蟲。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "occur",
+    "example": "Power cuts often occur during mountain storms in remote villages.",
+    "exampleZh": "山區偏村暴風時常發生停電。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "floor",
+    "example": "The puppy slid across the polished floor after its bath.",
+    "exampleZh": "洗澡後小狗滑過打蠟地板。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "factor",
+    "example": "Price was the biggest factor in our decision.",
+    "exampleZh": "價格是我們決定中的最大因素。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "risk",
+    "example": "The guide would not risk crossing the swollen stream.",
+    "exampleZh": "嚮導不願冒險穿越暴漲溪流。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "summer",
+    "example": "Summer evenings smell of mangoes near the market.",
+    "exampleZh": "夏夜市場旁聞得到芒果香。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "enter",
+    "example": "Enter your phone number before collecting the rental bike.",
+    "exampleZh": "領租借腳踏車前輸入電話號碼。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "husband",
+    "example": "Her husband grows orchids on the apartment balcony.",
+    "exampleZh": "她丈夫在公寓陽台種蘭花。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "series",
+    "example": "The series follows a nurse in a mountain clinic.",
+    "exampleZh": "這部影集描述山區診所的護理師。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "natural",
+    "example": "A natural spring keeps the garden pond clear.",
+    "exampleZh": "天然泉水讓花園池塘保持清澈。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "despite",
+    "example": "Despite the heat, Grandpa walked to the shrine.",
+    "exampleZh": "儘管天熱爺爺仍走到神龕。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "myself",
+    "example": "I repaired the torn kite myself after dinner.",
+    "exampleZh": "晚餐後我自己修好破風箏。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "loss",
+    "example": "The loss of old photos saddened the family.",
+    "exampleZh": "老照片遺失讓全家難過。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "establish",
+    "example": "They will establish a shelter near the river mouth.",
+    "exampleZh": "他們會在河口附近建立收容所。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "contain",
+    "example": "This clay jar can contain five liters of water.",
+    "exampleZh": "這個陶罐可容納五公升水。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "structure",
+    "example": "The bamboo structure survived three typhoons without damage.",
+    "exampleZh": "這座竹造棚架挺過三次颱風沒受損。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "size",
+    "example": "The size of the mooncake surprised the children.",
+    "exampleZh": "月餅的大小讓孩子們很驚訝。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "argue",
+    "example": "Neighbors argue about parking spaces every market day.",
+    "exampleZh": "市場日時鄰居常為停車位爭論。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "standard",
+    "example": "A standard ticket includes one free museum map.",
+    "exampleZh": "標準票包含一份免費博物館地圖。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "culture",
+    "example": "Local culture shapes the colors of the festival masks.",
+    "exampleZh": "地方文化塑造節慶面具的色彩。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "unit",
+    "example": "The rescue unit arrived before the river rose.",
+    "exampleZh": "救援單位在河水上漲前抵達。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "necessary",
+    "example": "Clean water is necessary for making safe tofu.",
+    "exampleZh": "乾淨水是製作安全豆腐的必要條件。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "benefit",
+    "example": "Regular walking can benefit people with sore knees.",
+    "exampleZh": "規律走路能使膝蓋痠痛的人受益。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "organization",
+    "example": "The charity organization delivers meals to isolated elders.",
+    "exampleZh": "慈善組織把餐點送給偏遠長者。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "note",
+    "example": "Leave a note on the fridge if you go out.",
+    "exampleZh": "出門就留張便條在冰箱上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "theory",
+    "example": "His theory about the missing boat sounded possible.",
+    "exampleZh": "他對失蹤船隻的推測聽起來有可能。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "success",
+    "example": "The bakery's success depended on fresh butter and patience.",
+    "exampleZh": "麵包店的成功靠新鮮奶油和耐心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "method",
+    "example": "This method keeps basil fresh for several days.",
+    "exampleZh": "這個方法能讓九層塔保鮮數日。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "detail",
+    "example": "Every detail on the carved door showed careful work.",
+    "exampleZh": "雕門上的每個細節都展現細緻工藝。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "recently",
+    "example": "Recently, more families ride bikes along the canal.",
+    "exampleZh": "最近更多家庭沿運河騎腳踏車。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "various",
+    "example": "Various shells covered the beach after the tide fell.",
+    "exampleZh": "退潮後各種貝殼鋪滿海灘。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "phone",
+    "example": "Please phone the hostel before the last bus leaves.",
+    "exampleZh": "末班車離開前請打電話給旅舍。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "throw",
+    "example": "Throw the rope toward the boat, not the rocks.",
+    "exampleZh": "把繩子丟向船，別丟向岩石。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "individual",
+    "example": "Each individual lantern carried a handwritten wish toward the river.",
+    "exampleZh": "每一盞燈籠都載著手寫願望漂向河邊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "federal",
+    "example": "Federal rules protect migratory birds across state borders.",
+    "exampleZh": "聯邦規則保護跨州遷徙鳥類。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "treatment",
+    "example": "Early treatment kept the infection from spreading beyond her ankle.",
+    "exampleZh": "早期治療阻止感染擴散到她的腳踝以外。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "discuss",
+    "example": "Let's discuss the repair cost after lunch today.",
+    "exampleZh": "今天午餐後我們討論維修費。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "response",
+    "example": "Her response to the apology was quiet but kind.",
+    "exampleZh": "她對道歉的回應安靜卻友善。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "region",
+    "example": "This mountain region grows excellent pears in autumn.",
+    "exampleZh": "這個山區秋天種出很好的梨。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "happy",
+    "example": "Lina felt happy watching rain fill the empty tank.",
+    "exampleZh": "莉娜看雨水注滿空水槽很開心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "arrive",
+    "example": "Tourists arrive early to photograph the blue fishing boats.",
+    "exampleZh": "遊客早到拍攝藍色漁船。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "identify",
+    "example": "Can you identify the mushroom from this field guide?",
+    "exampleZh": "你能用這本野外指南辨認菇類嗎？",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fill",
+    "example": "Fill the kettle before the power goes out.",
+    "exampleZh": "停電前把水壺裝滿。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "knowledge",
+    "example": "Local knowledge helped rescuers find the hidden path.",
+    "exampleZh": "在地知識幫救難員找到隱藏小路。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "production",
+    "example": "Tea production slows when cold rain lasts for weeks.",
+    "exampleZh": "冷雨連續數週時茶葉生產變慢。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "significant",
+    "example": "A significant crack appeared in the old sea wall.",
+    "exampleZh": "舊海堤出現一道明顯裂縫。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "prove",
+    "example": "Receipts prove that the repairs were paid yesterday.",
+    "exampleZh": "收據證明維修費昨天已付款。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "whatever",
+    "example": "Take whatever fruit is ripe from the basket.",
+    "exampleZh": "籃中熟了的水果你都可以拿。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "property",
+    "example": "The family sold property near the train station.",
+    "exampleZh": "那家人賣掉車站旁的房產。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "goal",
+    "example": "Her goal was to swim across the bay.",
+    "exampleZh": "她的目標是游過海灣。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "drop",
+    "example": "Drop the shells into this bucket after rinsing them.",
+    "exampleZh": "沖洗後把貝殼放進這個桶子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "resource",
+    "example": "Rainwater became a precious resource during the drought.",
+    "exampleZh": "乾旱時雨水成了珍貴資源。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "degree",
+    "example": "The fever dropped one degree after she took medicine.",
+    "exampleZh": "她吃藥後體溫降了一度。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "forward",
+    "example": "Move forward slowly when the fog hides the trail.",
+    "exampleZh": "霧遮住步道時慢慢往前走。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "growth",
+    "example": "Steady growth made the small bakery hire two cousins.",
+    "exampleZh": "穩定成長讓小麵包店雇了兩位表親。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "push",
+    "example": "Push the cart uphill before the fruit boxes slide.",
+    "exampleZh": "水果箱滑動前把推車推上坡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "dog",
+    "example": "The dog waited outside the noodle shop patiently.",
+    "exampleZh": "那隻狗耐心等在麵店外。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "environment",
+    "example": "A clean environment helps oysters grow without disease.",
+    "exampleZh": "乾淨環境有助牡蠣健康生長。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "medical",
+    "example": "The medical tent opened beside the marathon route.",
+    "exampleZh": "醫療帳篷設在馬拉松路線旁。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "wish",
+    "example": "Make a wish before releasing the river lantern.",
+    "exampleZh": "放水燈前先許一個願。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "enjoy",
+    "example": "Children enjoy feeding ducks at the park pond.",
+    "exampleZh": "孩子們喜歡在公園池塘餵鴨。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "dead",
+    "example": "A dead plant stood by the window after weeks without water.",
+    "exampleZh": "缺水數週後窗邊那株植物枯死了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "station",
+    "example": "Meet me at the station after the last lesson.",
+    "exampleZh": "最後一堂課後在車站見我。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "blood",
+    "example": "The nurse checked his blood pressure before breakfast.",
+    "exampleZh": "護理師在早餐前量他的血壓。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "character",
+    "example": "Her calm character helped during the emergency landing.",
+    "exampleZh": "她沉穩的性格在緊急降落時有幫助。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "evening",
+    "example": "Evening light turned the old brick wall orange.",
+    "exampleZh": "傍晚光線把舊磚牆染成橘色。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "indicate",
+    "example": "Dark smoke may indicate a problem with the engine.",
+    "exampleZh": "黑煙可能顯示引擎有問題。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "wonder",
+    "example": "I wonder why the crab crossed the road.",
+    "exampleZh": "我想知道螃蟹為何過馬路。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "feeling",
+    "example": "That uneasy feeling faded after the doctor called.",
+    "exampleZh": "醫生來電後那股不安感消退。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "determine",
+    "example": "Weather will determine whether the ferry sails tomorrow.",
+    "exampleZh": "天氣會決定渡輪明天是否出航。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "date",
+    "example": "Our first date ended at a crowded dumpling stall.",
+    "exampleZh": "我們第一次約會在擁擠水餃攤結束。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sport",
+    "example": "Kayaking is a popular sport on the lake.",
+    "exampleZh": "划獨木舟是湖上熱門運動。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "agreement",
+    "example": "The rental agreement forbids smoking on the balcony.",
+    "exampleZh": "租約禁止在陽台抽菸。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "agency",
+    "example": "A travel agency arranged homestays near the hot springs.",
+    "exampleZh": "旅行社安排了溫泉旁民宿。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "skill",
+    "example": "Skill with a knife matters when cutting fish for sashimi.",
+    "exampleZh": "切生魚片時，熟練的刀法非常重要。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "achieve",
+    "example": "She worked hard to achieve her dream of becoming a nurse.",
+    "exampleZh": "她努力實現成為護理師的夢想。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "above",
+    "example": "The moon rose above the dark sugarcane fields.",
+    "exampleZh": "月亮升到深色甘蔗田上方。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "north",
+    "example": "Cold winds from the north rattled the windows.",
+    "exampleZh": "北方冷風吹得窗戶作響。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "purpose",
+    "example": "The purpose of the visit was family reconciliation.",
+    "exampleZh": "這次拜訪的目的是家人和解。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "statement",
+    "example": "His statement matched what neighbors heard that night.",
+    "exampleZh": "他的陳述符合鄰居那晚聽到的情況。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "beyond",
+    "example": "A footbridge lies beyond the second bamboo grove.",
+    "exampleZh": "第二片竹林外有座人行橋。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "prepare",
+    "example": "Prepare ginger tea before the guests arrive from Taitung.",
+    "exampleZh": "客人從台東抵達前準備薑茶。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "nice",
+    "example": "A nice breeze cooled the rooftop after sunset.",
+    "exampleZh": "日落後舒服的微風讓屋頂變涼。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "legal",
+    "example": "Legal advice helped the tenant recover her deposit.",
+    "exampleZh": "法律建議幫房客拿回押金。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "box",
+    "example": "The wooden box held letters from three generations.",
+    "exampleZh": "木盒裡裝著三代人的信。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "glass",
+    "example": "A glass of barley tea cooled beside the stove.",
+    "exampleZh": "一杯麥茶在爐邊放涼。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "pattern",
+    "example": "The quilt pattern came from her grandmother's village.",
+    "exampleZh": "棉被圖案來自她外婆的村莊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "cell",
+    "example": "Each cell in the sample reacted to the medicine.",
+    "exampleZh": "樣本中的每個細胞都對藥物有反應。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "disease",
+    "example": "The disease weakened banana trees across the valley.",
+    "exampleZh": "疾病讓整個山谷的香蕉樹變弱。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "article",
+    "example": "An article about night markets appeared in the paper.",
+    "exampleZh": "報紙刊出一篇關於夜市的文章。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "hot",
+    "example": "The hot sand burned our feet near the pier.",
+    "exampleZh": "碼頭旁熱沙燙到我們的腳。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "ready",
+    "example": "The soup is ready when the clams open.",
+    "exampleZh": "蛤蜊打開時湯就好了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "realize",
+    "example": "At dawn, I realize how quiet the harbor feels.",
+    "exampleZh": "清晨我才明白港口有多安靜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "science",
+    "example": "Science explains why the tide retreats before noon.",
+    "exampleZh": "科學解釋潮水為何中午前退去。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "forget",
+    "example": "Do not forget the medicine in the fridge.",
+    "exampleZh": "別忘了冰箱裡的藥。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "ability",
+    "example": "Her ability to read currents saved the swimmers.",
+    "exampleZh": "她判讀水流的能力救了泳客。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "manage",
+    "example": "Ken can manage the shop while his aunt rests.",
+    "exampleZh": "阿姨休息時阿肯能幫忙看店。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sea",
+    "example": "The sea turned silver under the full moon.",
+    "exampleZh": "滿月下海面變成銀色。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "career",
+    "example": "A long career in nursing taught her patience.",
+    "exampleZh": "長年護理生涯教會她耐心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "leg",
+    "example": "His left leg cramped during the river crossing.",
+    "exampleZh": "過河時他的左腿抽筋。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "affect",
+    "example": "Loud traffic can affect sleep in small apartments.",
+    "exampleZh": "車聲吵雜會影響小公寓住戶睡眠。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "garden",
+    "example": "The garden smells of basil after summer rain.",
+    "exampleZh": "夏雨後花園聞得到九層塔香。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "hotel",
+    "example": "Our hotel faced the river and the morning market.",
+    "exampleZh": "我們的旅館面向河流和早市。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "lay",
+    "example": "Lay the fish on ice before the drive home.",
+    "exampleZh": "開車回家前把魚放在冰上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "television",
+    "example": "Public television showed the typhoon path all night.",
+    "exampleZh": "公共電視整夜顯示颱風路徑。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "scene",
+    "example": "The harbor scene looked peaceful after the storm.",
+    "exampleZh": "暴風後港口景色看來平靜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "miss",
+    "example": "I miss the breakfast stall near our old house.",
+    "exampleZh": "我想念老家旁的早餐攤。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "remove",
+    "example": "Remove the wet shoes before stepping onto the mat.",
+    "exampleZh": "踏上墊子前先脫掉濕鞋。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "avoid",
+    "example": "Avoid the alley when temple crowds fill the street.",
+    "exampleZh": "廟會人潮塞滿街時避開小巷。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "maintain",
+    "example": "Good sandals help maintain balance on slippery rocks.",
+    "exampleZh": "好涼鞋有助在濕滑岩石上保持平衡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "contract",
+    "example": "The contract allowed pets but banned loud renovations.",
+    "exampleZh": "合約允許養寵物但禁止吵鬧裝修。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "author",
+    "example": "The author visited the village before writing the novel.",
+    "exampleZh": "作者寫小說前拜訪了那座村莊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "style",
+    "example": "Her style mixes old embroidery with modern jackets.",
+    "exampleZh": "她的風格把老刺繡和現代外套混搭。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "finish",
+    "example": "Finish the soup before it turns cold at the table.",
+    "exampleZh": "趁桌上的湯變冷前喝完。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "protect",
+    "example": "Sunglasses protect your eyes from bright glare on hikes.",
+    "exampleZh": "健行時太陽眼鏡能保護眼睛不受強光刺激。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "movie",
+    "example": "This movie kept my father laughing throughout the entire dinner.",
+    "exampleZh": "這部電影讓爸爸吃整頓晚餐時都笑個不停。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "machine",
+    "example": "The machine stamps dates onto each bottle cap.",
+    "exampleZh": "機器把日期壓印在每個瓶蓋上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "artist",
+    "example": "The artist sketched fishermen repairing nets at sunrise.",
+    "exampleZh": "藝術家畫下日出時補網的漁民。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "physical",
+    "example": "Physical therapy helped Grandma climb stairs again after surgery.",
+    "exampleZh": "手術後物理治療讓奶奶又能爬樓梯。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "shoot",
+    "example": "Do not shoot fireworks near dry grass behind the house.",
+    "exampleZh": "別在屋後乾草旁發射煙火。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "modern",
+    "example": "Modern apartments often have tiny but bright kitchens.",
+    "exampleZh": "現代公寓常有小而明亮的廚房。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "relation",
+    "example": "My relation to the bride is through my mother.",
+    "exampleZh": "我和新娘是母親那邊的親戚。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "dark",
+    "example": "Dark clouds gathered behind the mountain temple before evening prayers.",
+    "exampleZh": "晚禱前烏雲聚集在山寺後方。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "seat",
+    "example": "This seat gives elders more room for their knees.",
+    "exampleZh": "這個座位讓長者膝蓋有更多空間。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "suddenly",
+    "example": "Suddenly the kettle whistled from the outdoor stove.",
+    "exampleZh": "戶外爐上的水壺突然響了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "task",
+    "example": "Her task was to count blankets at the shelter.",
+    "exampleZh": "她的任務是在收容所清點毛毯。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "check",
+    "example": "Check the crab traps before the tide rises.",
+    "exampleZh": "漲潮前檢查捕蟹籠。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "treat",
+    "example": "The dentist will treat the sore gum tomorrow.",
+    "exampleZh": "牙醫明天會治療疼痛的牙齦。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "shop",
+    "example": "We shop for vegetables before the noon heat.",
+    "exampleZh": "我們趁中午變熱前買菜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "measure",
+    "example": "Measure the doorway before buying the new fridge.",
+    "exampleZh": "買新冰箱前先量門口。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "god",
+    "example": "They thanked God after the miners reached daylight.",
+    "exampleZh": "礦工重見天日後他們感謝上帝。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "message",
+    "example": "A message from Dad arrived during the concert.",
+    "exampleZh": "演唱會中收到爸爸一則訊息。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sex",
+    "example": "The clinic form asks for sex, age, and usual transport.",
+    "exampleZh": "診所表格詢問性別年齡和常用交通方式。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "direction",
+    "example": "Which direction leads to the old sugar factory?",
+    "exampleZh": "哪個方向通往舊糖廠？",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "introduce",
+    "example": "Introduce yourself to the neighbors after moving in.",
+    "exampleZh": "搬進來後向鄰居自我介紹。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "cold",
+    "example": "Cold noodles taste best with cucumber and sesame sauce.",
+    "exampleZh": "冷麵配小黃瓜和芝麻醬最好吃。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "yourself",
+    "example": "You should forgive yourself for one small mistake.",
+    "exampleZh": "你該原諒自己犯的一個小錯。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "income",
+    "example": "His income depends on the oyster harvest each winter.",
+    "exampleZh": "他每年冬天的收入取決於牡蠣收成。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "throughout",
+    "example": "Bamboo lamps glowed throughout the village during the festival.",
+    "exampleZh": "節慶期間竹燈照亮整個村莊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "store",
+    "example": "Store dried mushrooms in a sealed glass jar.",
+    "exampleZh": "把乾香菇存放在密封玻璃罐裡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "memory",
+    "example": "That melody brought back a childhood memory during dinner.",
+    "exampleZh": "晚餐時那段旋律喚回童年記憶。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "investment",
+    "example": "Her investment in good boots saved her ankles.",
+    "exampleZh": "她投資一雙好靴子保護了腳踝。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "popular",
+    "example": "This dumpling stall is popular with taxi drivers.",
+    "exampleZh": "這家水餃攤很受計程車司機歡迎。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "tv",
+    "example": "The TV in the clinic showed weather alerts.",
+    "exampleZh": "診所裡的電視播放天氣警報。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "specific",
+    "example": "Give me a specific time for the delivery.",
+    "exampleZh": "請給我明確的送達時間。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "nor",
+    "example": "The ferry did not dock, nor did the buses wait.",
+    "exampleZh": "渡輪沒有靠岸，巴士也沒有等候。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "crime",
+    "example": "The crime frightened shopkeepers along the old arcade.",
+    "exampleZh": "這起罪行嚇壞舊商店街店家。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "institution",
+    "example": "The temple became an institution for local charity.",
+    "exampleZh": "那座廟成了地方慈善中心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "mention",
+    "example": "She did not mention the broken vase at dinner.",
+    "exampleZh": "她晚餐時沒提到破花瓶。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "feature",
+    "example": "The camera's night feature helps drivers park safely.",
+    "exampleZh": "倒車鏡頭的夜間功能幫駕駛安全停車。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "discover",
+    "example": "Divers discover warmer currents near the coral reef.",
+    "exampleZh": "潛水員發現珊瑚礁旁較暖海流。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "basis",
+    "example": "Respect is the basis of any lasting friendship.",
+    "exampleZh": "尊重是任何長久友誼的基礎。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "please",
+    "example": "Please wash the peaches before packing them for Grandma.",
+    "exampleZh": "請先洗桃子再替奶奶包裝。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "reveal",
+    "example": "The curtains reveal a narrow view of the harbor.",
+    "exampleZh": "窗簾間露出狹窄港景。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "hang",
+    "example": "Hang the lantern higher so children can pass.",
+    "exampleZh": "把燈籠掛高一點讓孩子能通過。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "tend",
+    "example": "Cats tend to sleep near sunny windows in winter.",
+    "exampleZh": "冬天貓往往睡在有陽光的窗邊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "rock",
+    "example": "The cradle began to rock in the breeze.",
+    "exampleZh": "搖籃在微風中開始搖動。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "decade",
+    "example": "A decade of letters filled the wooden chest.",
+    "exampleZh": "十年的信件裝滿木箱。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "strategy",
+    "example": "Their strategy was to open before the morning rush.",
+    "exampleZh": "他們的策略是在早上人潮湧現前開門。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "reflect",
+    "example": "Still water can reflect the red temple roof.",
+    "exampleZh": "靜水能映出紅色廟頂。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "responsibility",
+    "example": "Feeding the rabbits became Kai's morning responsibility before school.",
+    "exampleZh": "上學前餵兔子成了凱早上的責任。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "exist",
+    "example": "Several old wells still exist behind houses near the shrine.",
+    "exampleZh": "廟附近幾戶人家屋後仍有古井。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "environmental",
+    "example": "The new dam raised environmental concerns downstream among fishermen.",
+    "exampleZh": "新水壩引起下游漁民的環境疑慮。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "card",
+    "example": "Write your address clearly on the festival card.",
+    "exampleZh": "請把地址清楚寫在節慶卡片上。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "fish",
+    "example": "Fresh fish dries on racks beside the harbor.",
+    "exampleZh": "剛捕的魚在港邊架上風乾。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "executive",
+    "example": "The executive committee approved repairs for the old market.",
+    "exampleZh": "執行委員會核准舊市場修繕。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "improve",
+    "example": "Better lighting can improve safety at the crossing.",
+    "exampleZh": "更好的照明能改善路口安全。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "discussion",
+    "example": "Their discussion ended when the baby woke up.",
+    "exampleZh": "寶寶醒來時他們的討論結束了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "village",
+    "example": "The village bakery opens before the first bus.",
+    "exampleZh": "村裡麵包店在首班公車前開門。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "focus",
+    "example": "Focus the camera on the bride's hands during the vows.",
+    "exampleZh": "誓詞時把相機焦點對準新娘的手。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "suffer",
+    "example": "Many elders suffer knee pain during cold weather.",
+    "exampleZh": "許多長者冷天會膝蓋痛。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "traditional",
+    "example": "Traditional drums welcomed boats back from the race.",
+    "exampleZh": "傳統鼓聲迎接賽船回港。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "truth",
+    "example": "The truth about the missing necklace came out slowly.",
+    "exampleZh": "遺失項鍊的真相慢慢浮現。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "publish",
+    "example": "They publish a small poetry magazine every spring.",
+    "exampleZh": "他們每年春天出版一本小詩刊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "principle",
+    "example": "The first principle is to keep drinking water clean.",
+    "exampleZh": "首要原則是保持飲水乾淨。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "heavy",
+    "example": "A heavy backpack made the hill feel endless.",
+    "exampleZh": "沉重背包讓山路像走不完。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "chair",
+    "example": "Grandpa carved this chair from camphor wood last winter.",
+    "exampleZh": "爺爺去年冬天用樟木做出這張椅子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "smile",
+    "example": "Her smile relaxed the frightened child at the clinic.",
+    "exampleZh": "她的微笑讓診所裡受驚孩子放鬆。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "customer",
+    "example": "The customer returned because the soup tasted sour.",
+    "exampleZh": "顧客因湯有酸味而回來。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "admit",
+    "example": "He would not admit taking the last pineapple cake.",
+    "exampleZh": "他不肯承認拿了最後一塊鳳梨酥。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "assume",
+    "example": "Never assume the mountain road stays open after rain.",
+    "exampleZh": "別以為雨後山路仍會開放。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "trouble",
+    "example": "Engine trouble delayed the fishing boat until sunrise.",
+    "exampleZh": "引擎故障讓漁船延誤到日出。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "bar",
+    "example": "We met at a quiet bar near the station.",
+    "exampleZh": "我們在車站旁安靜的酒吧碰面。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "ball",
+    "example": "The ball bounced into the neighbor's herb garden.",
+    "exampleZh": "球彈進鄰居的香草園。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "item",
+    "example": "Each item in the box smelled of cedar.",
+    "exampleZh": "盒中每件物品都有雪松味。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "surface",
+    "example": "The pot's surface cracked after years of heat.",
+    "exampleZh": "鍋子表面多年受熱後裂開。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "deep",
+    "example": "This well is deep enough to stay cool.",
+    "exampleZh": "這口井夠深所以保持涼爽。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "weight",
+    "example": "The weight of the suitcase surprised him at the airport.",
+    "exampleZh": "行李箱重量讓他在機場嚇了一跳。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "shake",
+    "example": "Shake the umbrella outside before entering the clinic.",
+    "exampleZh": "進診所前在外面抖一抖傘。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "normal",
+    "example": "A normal pulse helped the nurse relax during rounds.",
+    "exampleZh": "巡房時正常脈搏讓護理師放心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "trial",
+    "example": "The trial for the ferry accident starts Monday.",
+    "exampleZh": "渡輪事故審判週一開始。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "recognize",
+    "example": "I recognize that smell from Grandma's kitchen every winter.",
+    "exampleZh": "每年冬天我都認得那是奶奶廚房的味道。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "argument",
+    "example": "Their argument spilled into the hallway after midnight.",
+    "exampleZh": "他們的爭論午夜後蔓延到走廊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "employee",
+    "example": "Every employee learned how to use the defibrillator.",
+    "exampleZh": "每位員工都學會使用自動體外電擊器。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "successful",
+    "example": "The rescue was successful despite rough waves last night.",
+    "exampleZh": "昨晚雖然浪大救援仍然成功。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "prevent",
+    "example": "A railing can prevent children from falling into the canal.",
+    "exampleZh": "欄杆能防止孩子掉進運河。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "king",
+    "example": "The king ordered new wells after the drought.",
+    "exampleZh": "國王在乾旱後下令挖新井。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "horse",
+    "example": "A horse pulled the carriage through the old quarter.",
+    "exampleZh": "一匹馬拉車穿過老城區。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "imagine",
+    "example": "Imagine the village without lights on a typhoon night.",
+    "exampleZh": "想像颱風夜村莊沒有燈光。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "element",
+    "example": "Trust is one element of a strong marriage.",
+    "exampleZh": "信任是穩固婚姻的一個要素。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "edge",
+    "example": "The cliff edge crumbled after days of rain.",
+    "exampleZh": "連日下雨後崖邊碎裂。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "professional",
+    "example": "A professional baker showed us how dough should feel.",
+    "exampleZh": "專業麵包師示範麵團手感。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "generally",
+    "example": "Taipei mornings are generally cooler after heavy rain.",
+    "exampleZh": "大雨後台北早晨通常較涼。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "perform",
+    "example": "Street musicians perform outside the station on weekends.",
+    "exampleZh": "街頭樂手週末在車站外演出。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "huge",
+    "example": "A huge wave soaked everyone on the pier.",
+    "exampleZh": "巨浪淋濕碼頭上所有人。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "song",
+    "example": "That song played at their wedding banquet under red lanterns.",
+    "exampleZh": "那首歌在紅燈籠下的婚宴上播放。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "original",
+    "example": "The original receipt was hidden inside the camera case.",
+    "exampleZh": "原始收據藏在相機盒裡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "basic",
+    "example": "Basic first aid can save a choking child.",
+    "exampleZh": "基本急救能救噎住的孩子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "previous",
+    "example": "The previous owner planted jasmine beside the doorway.",
+    "exampleZh": "前任屋主在門旁種了茉莉。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "encourage",
+    "example": "Parents should encourage children to taste new vegetables.",
+    "exampleZh": "父母應鼓勵孩子嘗試新蔬菜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "pain",
+    "example": "Sharp pain shot through his shoulder while swimming.",
+    "exampleZh": "游泳時劇痛竄過他的肩膀。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "sorry",
+    "example": "I am sorry about spilling tea on your map.",
+    "exampleZh": "把茶灑到你的地圖上我很抱歉。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "following",
+    "example": "The following train stops at every seaside village.",
+    "exampleZh": "下一班火車每個海邊村莊都停。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "replace",
+    "example": "Replace the cracked helmet before your next ride.",
+    "exampleZh": "下次騎車前更換裂掉的安全帽。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "express",
+    "example": "Poets express grief differently during vigils after public tragedies.",
+    "exampleZh": "公共悲劇後詩人在守夜中以不同方式表達哀傷。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "mouth",
+    "example": "A dry mouth made the speech difficult under bright lights.",
+    "exampleZh": "強光下口乾讓演講變得困難。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "attitude",
+    "example": "Her attitude toward chores changed after living alone.",
+    "exampleZh": "獨居後她對家務的態度改變了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "notice",
+    "example": "Did you notice the heron standing by the canal?",
+    "exampleZh": "你注意到運河旁站著鷺鷥嗎？",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "majority",
+    "example": "The majority of neighbors supported quieter hours for the festival.",
+    "exampleZh": "多數鄰居支持節慶時段降低音量。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "award",
+    "example": "The award recognized her years of hospice volunteering.",
+    "exampleZh": "這個獎表揚她多年安寧志工服務。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "collection",
+    "example": "His shell collection filled three glass cabinets at home.",
+    "exampleZh": "他的貝殼收藏裝滿家中三個玻璃櫃。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "impact",
+    "example": "The highway closure had an impact on fruit deliveries.",
+    "exampleZh": "公路封閉影響水果配送。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "version",
+    "example": "This version of the map marks public toilets.",
+    "exampleZh": "這版地圖標出公共廁所。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "stone",
+    "example": "A flat stone kept the picnic blanket down.",
+    "exampleZh": "一塊扁石壓住野餐毯。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "expert",
+    "example": "Ask a mushroom expert before cooking anything wild.",
+    "exampleZh": "煮野菇前先問菇類專家。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "pretty",
+    "example": "The courtyard looked pretty after the lanterns were lit.",
+    "exampleZh": "燈籠點亮後院子看起來很漂亮。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "shoulder",
+    "example": "My shoulder ached after carrying rice upstairs alone.",
+    "exampleZh": "我獨自搬米上樓後肩膀痠痛。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "function",
+    "example": "The phone's alarm function wakes him for early market shifts.",
+    "exampleZh": "手機鬧鐘功能會叫醒他去早市工作。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "budget",
+    "example": "Our travel budget disappeared after one taxi ride.",
+    "exampleZh": "搭一次計程車後我們的旅費預算就沒了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "respond",
+    "example": "Please respond before the ferry office closes today.",
+    "exampleZh": "渡輪辦公室今天關門前請回覆。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "candidate",
+    "example": "Each candidate visited the market before election day.",
+    "exampleZh": "每位候選人在投票日前拜訪市場。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "beautiful",
+    "example": "The beautiful valley smelled of pine after rain.",
+    "exampleZh": "美麗山谷雨後散發松香。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "immediately",
+    "example": "Leave the building immediately if you smell gas.",
+    "exampleZh": "聞到瓦斯味就立刻離開大樓。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "religious",
+    "example": "A religious procession blocked the street at dusk.",
+    "exampleZh": "宗教遊行在黃昏時堵住街道。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "professor",
+    "example": "The professor studies frogs in mountain streams each summer.",
+    "exampleZh": "那位教授每年夏天研究山溪青蛙。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "title",
+    "example": "Her official title changed after the hospital merger.",
+    "exampleZh": "醫院合併後她的正式職稱改了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "lady",
+    "example": "An elderly lady fed sparrows beside the bakery.",
+    "exampleZh": "一位老太太在麵包店旁餵麻雀。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "marriage",
+    "example": "Their marriage began with a bicycle trip around Taiwan.",
+    "exampleZh": "他們的婚姻從環台單車旅行開始。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "ensure",
+    "example": "Check the brakes to ensure the scooter is safe.",
+    "exampleZh": "檢查煞車以確保機車安全。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "adult",
+    "example": "An adult must sign before the child joins.",
+    "exampleZh": "孩子參加前必須有成人簽名。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "finger",
+    "example": "My finger smelled like garlic after chopping dinner.",
+    "exampleZh": "切晚餐食材後我的手指有蒜味。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "tonight",
+    "example": "Tonight we will watch fireflies near the tea fields.",
+    "exampleZh": "今晚我們要去茶田旁看螢火蟲。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "scheme",
+    "example": "The housing scheme offers rent help to young families.",
+    "exampleZh": "這項住房方案提供年輕家庭租金補助。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "politics",
+    "example": "Local politics turned bitter after the bridge vote.",
+    "exampleZh": "橋梁投票後地方政治變得尖銳。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "effective",
+    "example": "The cough syrup was effective within an hour.",
+    "exampleZh": "咳嗽糖漿一小時內就有效。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "owner",
+    "example": "The owner of the lost wallet called this morning.",
+    "exampleZh": "遺失皮夾的主人今早來電。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "county",
+    "example": "The county opened a new clinic near the harbor.",
+    "exampleZh": "縣府在港邊開設新診所。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "anyway",
+    "example": "It was raining hard, but we went anyway.",
+    "exampleZh": "雨下得很大但我們還是去了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "variety",
+    "example": "The stall offers a variety of pickled vegetables.",
+    "exampleZh": "攤位提供各種醃菜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "chapter",
+    "example": "Read the final chapter before returning the library book.",
+    "exampleZh": "還書前讀完最後一章。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "kitchen",
+    "example": "The kitchen filled with steam from boiling dumplings.",
+    "exampleZh": "煮水餃的蒸氣充滿廚房。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "river",
+    "example": "The river carried leaves past the sleeping village.",
+    "exampleZh": "河水帶著落葉流過沉睡村莊。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "aspect",
+    "example": "One aspect of the plan worried the farmers.",
+    "exampleZh": "計畫中有一方面讓農民擔心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "obviously",
+    "example": "Obviously the roof leaked during last night's storm.",
+    "exampleZh": "屋頂昨晚暴風雨中顯然漏水了。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "inside",
+    "example": "The cat waited inside until the rain stopped.",
+    "exampleZh": "貓在裡面等到雨停。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "partner",
+    "example": "Her business partner handles deliveries during festival season.",
+    "exampleZh": "她的生意夥伴在節慶季負責配送。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "refuse",
+    "example": "The driver may refuse passengers carrying open food.",
+    "exampleZh": "司機可能拒載拿著開封食物的乘客。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "chairman",
+    "example": "The chairman greeted volunteers outside the blood center.",
+    "exampleZh": "主席在捐血中心外迎接志工。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "spring",
+    "example": "Spring brings purple flowers to the old railway path.",
+    "exampleZh": "春天讓舊鐵道路徑開滿紫花。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "civil",
+    "example": "Civil behavior matters when strangers share crowded trains.",
+    "exampleZh": "陌生人共擠火車時保持禮貌很重要。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "object",
+    "example": "A shiny object flashed under the shallow water.",
+    "exampleZh": "一個發亮物體在淺水裡閃光。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "option",
+    "example": "The vegetarian option sold out before noon again today.",
+    "exampleZh": "素食選項今天又在中午前賣完。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "gas",
+    "example": "Turn off the gas before changing the cylinder.",
+    "exampleZh": "換瓦斯桶前先關掉瓦斯。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "lawyer",
+    "example": "Her lawyer reviewed the lease before she signed.",
+    "exampleZh": "她的律師在她簽名前審閱租約。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "agent",
+    "example": "The insurance agent photographed the damaged fishing boat.",
+    "exampleZh": "保險代理人拍下受損漁船。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "opinion",
+    "example": "My opinion changed after hearing the nurse's story.",
+    "exampleZh": "聽完護理師的故事後我改變看法。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "eventually",
+    "example": "The missing dog eventually returned with muddy paws.",
+    "exampleZh": "失蹤的狗最後帶著泥腳回來。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "bird",
+    "example": "A bird nested inside the traffic light frame.",
+    "exampleZh": "一隻鳥在紅綠燈架裡築巢。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "instead",
+    "example": "We took the slow road instead of the tunnel.",
+    "exampleZh": "我們改走慢路而不是隧道。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "difficulty",
+    "example": "She had difficulty sleeping after the earthquake alerts.",
+    "exampleZh": "地震警報後她難以入睡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "unless",
+    "example": "Unless the river falls, the bridge stays closed.",
+    "exampleZh": "除非河水下降，否則橋會關閉。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "travel",
+    "example": "Travel teaches patience when buses run late on mountain roads.",
+    "exampleZh": "山路公車誤點時旅行會教人耐心。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "newspaper",
+    "example": "The newspaper printed photos of the flooded market.",
+    "exampleZh": "報紙刊登淹水市場的照片。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "interview",
+    "example": "Her interview at the bakery lasted twenty minutes.",
+    "exampleZh": "她在麵包店的面試持續二十分鐘。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "speech",
+    "example": "His speech thanked neighbors who saved the library.",
+    "exampleZh": "他的演講感謝保住圖書館的鄰居。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "commercial",
+    "example": "Commercial fishing stops here during spawning season each spring.",
+    "exampleZh": "每年春天產卵季這裡停止商業捕魚。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "positive",
+    "example": "Her positive attitude helped the team finish the repair.",
+    "exampleZh": "她積極的態度幫團隊完成修理。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "examine",
+    "example": "The vet will examine the rescued turtle tomorrow.",
+    "exampleZh": "獸醫明天會檢查獲救海龜。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "bag",
+    "example": "She packed a raincoat in her canvas bag.",
+    "exampleZh": "她把雨衣放進帆布袋。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "possibility",
+    "example": "There is a possibility of landslides after midnight.",
+    "exampleZh": "午夜後有發生土石流的可能性。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "corner",
+    "example": "A noodle stall sits on the corner near our apartment.",
+    "exampleZh": "我們公寓附近的轉角有個麵攤。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "somebody",
+    "example": "Somebody left fresh guavas on the doorstep before dawn.",
+    "exampleZh": "有人黎明前把新鮮芭樂留在門口。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "association",
+    "example": "The pottery association rents kilns to young artists.",
+    "exampleZh": "陶藝協會把窯租給年輕藝術家。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "skin",
+    "example": "Sea salt dried white on his skin after surfing.",
+    "exampleZh": "衝浪後海鹽在他皮膚上乾成白色。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "none",
+    "example": "None of the temple doors were locked after closing.",
+    "exampleZh": "打烊後廟門沒有一扇上鎖。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "wind",
+    "example": "The wind pushed incense smoke across the courtyard.",
+    "exampleZh": "風吹著香的煙霧穿過院子。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "weapon",
+    "example": "A kitchen knife can become a weapon in panic.",
+    "exampleZh": "慌亂中菜刀可能變成武器。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "survey",
+    "example": "The survey measured how often residents use buses.",
+    "exampleZh": "調查統計居民搭公車的頻率。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "advantage",
+    "example": "Early access gives hikers an advantage on crowded trails.",
+    "exampleZh": "提早入場讓登山客在擁擠步道上有優勢。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "safe",
+    "example": "Keep the passport safe inside your money belt.",
+    "exampleZh": "把護照妥善收在貼身腰包裡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "stuff",
+    "example": "Grandpa kept fishing stuff in a blue bucket.",
+    "exampleZh": "爺爺把釣魚用具放在藍桶裡。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "technique",
+    "example": "Her kneading technique made the scallion pancakes flaky.",
+    "exampleZh": "她的揉麵技巧讓蔥油餅酥鬆。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "reality",
+    "example": "The harsh reality was that the bridge could not reopen.",
+    "exampleZh": "殘酷事實是那座橋無法重開。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "debate",
+    "example": "The debate over night flights lasted all summer.",
+    "exampleZh": "關於夜間航班的辯論持續整個夏天。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  },
+  {
+    "word": "entire",
+    "example": "The entire family searched the beach for her ring.",
+    "exampleZh": "全家人在海灘找她的戒指。",
+    "status": "approved",
+    "batch": "full-content-audit-2026-08-09-core02"
+  }
+]

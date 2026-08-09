@@ -47,11 +47,12 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build:web": "expo export --platform web && node scripts/prepare-web-export.mjs",
+    "audit:examples": "node scripts/audit-example-quality.mjs",
     "check:performance": "node scripts/check-performance-budget.mjs",
     "generate:words": "node scripts/generate-word-data.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "verify": "npm test && npm run typecheck && npm run build:web && npm run check:performance"
+    "verify": "npm test && npm run audit:examples && npm run typecheck && npm run build:web && npm run check:performance"
   },
   "private": true
 }

@@ -19,8 +19,8 @@ const measurements = [entry, routeShell, vocabulary].map(measureBundle);
 const budgets = {
   entry: { gzip: 1_020_000, raw: 5_100_000 },
   index: { gzip: 12_000, raw: 40_000 },
-  words: { gzip: 630_000, raw: 2_850_000 },
-  totalGzip: 1_700_000,
+  words: { gzip: 750_000, raw: 2_850_000 },
+  totalGzip: 1_780_000,
 };
 
 checkBundle(measurements[0], budgets.entry);

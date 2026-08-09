@@ -26,11 +26,10 @@ const seen = new Set();
 for (const correction of corrections) {
   const core = Number(correction.core);
   const word = correction.word?.trim().toLowerCase();
-  const example = correction.example?.trim();
   const exampleZh = correction.exampleZh?.trim();
   const key = `${core}:${word}`;
 
-  if (!Number.isInteger(core) || core < 1 || core > 14 || !word || !example || !exampleZh) {
+  if (!Number.isInteger(core) || core < 1 || core > 14 || !word || !exampleZh) {
     throw new Error(`Invalid correction: ${JSON.stringify(correction)}`);
   }
   if (seen.has(key)) {
@@ -38,6 +37,14 @@ for (const correction of corrections) {
   }
   seen.add(key);
 
+  const filePath = path.join(projectRoot, 'src', 'data', `reviewed-examples-core${core}.json`);
+  const rows = files.get(filePath) ?? JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const row = rows.find((item) => item.word.trim().toLowerCase() === word);
+  if (!row) {
+    throw new Error(`Unknown reviewed word: ${key}`);
+  }
+
+  const example = correction.example?.trim() || row.example.trim();
   const englishLength = englishTokenCount(example);
   const chineseLength = chineseCharacterCount(exampleZh);
   const targetPattern = new RegExp(`(^|[^a-z])${escapeRegex(word)}([^a-z]|$)`, 'i');
@@ -52,13 +59,6 @@ for (const correction of corrections) {
   }
   if (!/[.!?]$/.test(example) || !/[。！？]$/.test(exampleZh)) {
     throw new Error(`${key} is missing terminal punctuation.`);
-  }
-
-  const filePath = path.join(projectRoot, 'src', 'data', `reviewed-examples-core${core}.json`);
-  const rows = files.get(filePath) ?? JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  const row = rows.find((item) => item.word.trim().toLowerCase() === word);
-  if (!row) {
-    throw new Error(`Unknown reviewed word: ${key}`);
   }
 
   row.example = example;

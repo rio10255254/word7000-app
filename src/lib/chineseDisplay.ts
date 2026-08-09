@@ -15,6 +15,7 @@ function getPinyinTools(): typeof import('pinyin-pro') {
   if (!pinyinReady) {
     tools.customPinyin({
       調整: 'tiao zheng',
+      敢於: 'gan yu',
     });
     pinyinReady = true;
   }

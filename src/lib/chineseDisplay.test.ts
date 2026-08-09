@@ -28,6 +28,7 @@ describe('Chinese word display helpers', () => {
 
   test('normalizes tone marks so pinyin is easy to scan in compact cards', () => {
     expect(chineseMeaningPinyin('適應；調整')).toBe('shi ying；tiao zheng');
+    expect(chineseMeaningPinyin('敢於嘗試')).toBe('gan yu chang shi');
   });
 
   test('reuses the prepared display for meanings already shown on screen', () => {

@@ -37,7 +37,7 @@
   {
     "word": "generation",
     "example": "My grandfather says each generation remembers typhoons differently here.",
-    "exampleZh": "阿公說這裡每一代對颱風記憶不同。",
+    "exampleZh": "阿公說，這裡每一代人對颱風都有不同的記憶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -51,7 +51,7 @@
   {
     "word": "reform",
     "example": "Prison reform became urgent after families described crowded cells.",
-    "exampleZh": "家屬描述擁擠牢房後監獄改革變得急迫。",
+    "exampleZh": "家屬揭露牢房擁擠的情況後，監獄改革變得刻不容緩。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -100,7 +100,7 @@
   {
     "word": "challenge",
     "example": "Crossing that icy stream was a real challenge for us.",
-    "exampleZh": "穿過那條冰溪對我們是一大挑戰。",
+    "exampleZh": "對我們來說，涉過那條冰冷的溪流是一大挑戰。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -135,14 +135,14 @@
   {
     "word": "painting",
     "example": "That seaside painting reminds my mother of Hualien mornings.",
-    "exampleZh": "那幅海邊畫讓媽媽想起花蓮早晨。",
+    "exampleZh": "那幅海邊的畫，讓媽媽想起花蓮的清晨。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
   {
     "word": "lack",
     "example": "A lack of shade made the riverside path exhausting.",
-    "exampleZh": "缺少樹蔭讓河岸步道走來很累。",
+    "exampleZh": "河岸步道缺少遮蔭，走起來十分疲累。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -184,7 +184,7 @@
   {
     "word": "threat",
     "example": "Loose rocks are a threat on this mountain trail.",
-    "exampleZh": "鬆動石塊對這條山徑是威脅。",
+    "exampleZh": "鬆動的石塊會威脅山徑上的行人安全。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -212,7 +212,7 @@
   {
     "word": "credit",
     "example": "The cashier gave Mei credit for spotting the wrong price.",
-    "exampleZh": "收銀員把發現錯價的功勞歸給小美。",
+    "exampleZh": "收銀員把發現價格有誤的功勞算在小美身上。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -303,7 +303,7 @@
   {
     "word": "dinner",
     "example": "Dinner smelled of ginger chicken and fresh scallions tonight.",
-    "exampleZh": "今晚晚餐聞起來有薑味雞肉和新鮮蔥香。",
+    "exampleZh": "今晚的晚餐飄著薑汁雞和新鮮蔥花的香氣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -352,7 +352,7 @@
   {
     "word": "profit",
     "example": "The night market stall made a small profit in winter.",
-    "exampleZh": "夜市攤冬天賺了一點利潤。",
+    "exampleZh": "那個夜市攤位在冬天只賺到一點利潤。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -443,7 +443,7 @@
   {
     "word": "shape",
     "example": "Clouds changed shape above the harbor before dusk today.",
-    "exampleZh": "今天黃昏前港口上方雲朵變換形狀。",
+    "exampleZh": "今天傍晚前，港口上空的雲不斷變換形狀。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -457,7 +457,7 @@
   {
     "word": "strength",
     "example": "Climbing stairs slowly rebuilt her leg strength after surgery.",
-    "exampleZh": "術後慢慢爬樓梯恢復她的腿力。",
+    "exampleZh": "手術後，她靠著慢慢爬樓梯恢復腿力。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -471,7 +471,7 @@
   {
     "word": "presence",
     "example": "His calm presence helped the upset child stop crying.",
-    "exampleZh": "他沉穩的陪伴讓難過的孩子停止哭泣。",
+    "exampleZh": "他沉穩地陪在身旁，難過的孩子才漸漸停止哭泣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -513,28 +513,28 @@
   {
     "word": "battle",
     "example": "The battle left broken walls around the old fort.",
-    "exampleZh": "那場戰役讓舊堡四周留下殘牆。",
+    "exampleZh": "那場戰役過後，舊堡四周只剩斷垣殘壁。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
   {
     "word": "conflict",
     "example": "A parking conflict upset the neighbors for months afterward.",
-    "exampleZh": "停車爭執讓鄰居不滿了好幾個月。",
+    "exampleZh": "那場停車糾紛，讓鄰居們往後幾個月都耿耿於懷。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
   {
     "word": "advice",
     "example": "Her advice saved me from buying the cracked vase.",
-    "exampleZh": "她的建議讓我沒買裂掉的花瓶。",
+    "exampleZh": "多虧她的建議，我才沒有買下那只裂掉的花瓶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
   {
     "word": "drink",
     "example": "Cold barley tea is my favorite summer drink here.",
-    "exampleZh": "冰麥茶是我在這裡夏天最愛的飲料。",
+    "exampleZh": "夏天在這裡，我最愛喝冰麥茶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -548,7 +548,7 @@
   {
     "word": "failure",
     "example": "Brake failure caused the truck to stop in a field.",
-    "exampleZh": "煞車失靈讓卡車停在田裡。",
+    "exampleZh": "卡車因煞車失靈，最後停在田裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -625,7 +625,7 @@
   {
     "word": "camera",
     "example": "My camera caught an owl above the temple tonight.",
-    "exampleZh": "今晚我的相機拍到廟上方的貓頭鷹。",
+    "exampleZh": "今晚，我的相機拍到一隻飛過廟宇上空的貓頭鷹。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -716,7 +716,7 @@
   {
     "word": "below",
     "example": "The spare key hangs below the kitchen shelf downstairs.",
-    "exampleZh": "備用鑰匙掛在樓下廚房架子下方。",
+    "exampleZh": "備用鑰匙掛在樓下廚房的架子底下。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -737,14 +737,14 @@
   {
     "word": "cancer",
     "example": "Early screening for cancer helped her start treatment quickly.",
-    "exampleZh": "癌症早篩讓她很快開始治療。",
+    "exampleZh": "癌症早期篩檢讓她能及早開始治療。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
   {
     "word": "critical",
     "example": "Clean water became critical after the hillside road collapsed.",
-    "exampleZh": "山路坍方後乾淨水源變得關鍵。",
+    "exampleZh": "山路坍方後，乾淨的飲用水成了最迫切的需求。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -842,7 +842,7 @@
   {
     "word": "tough",
     "example": "The dried squid was too tough for Grandpa today.",
-    "exampleZh": "那片魷魚乾今天對爺爺來說太硬。",
+    "exampleZh": "那片魷魚乾太硬了，爺爺今天咬不動。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -863,7 +863,7 @@
   {
     "word": "comment",
     "example": "Her comment about the soup made everyone laugh loudly.",
-    "exampleZh": "她對湯的評論讓大家大聲笑了。",
+    "exampleZh": "她對那碗湯的評論，逗得大家哈哈大笑。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -877,7 +877,7 @@
   {
     "word": "regular",
     "example": "A regular bus route stops outside the market every morning.",
-    "exampleZh": "固定公車路線每天早上停靠市場外。",
+    "exampleZh": "固定班次的公車每天早上都會停靠市場外。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1087,7 +1087,7 @@
   {
     "word": "wine",
     "example": "They opened peach wine after the harvest dinner together.",
-    "exampleZh": "豐收晚餐後他們一起開了水蜜桃酒。",
+    "exampleZh": "豐收晚餐結束後，他們一起開了水蜜桃酒。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1122,7 +1122,7 @@
   {
     "word": "useful",
     "example": "This folding stool is useful during long temple parades.",
-    "exampleZh": "廟會長時間遶境時這張折疊椅很有用。",
+    "exampleZh": "參加長時間的廟會遶境時，這張折疊椅很實用。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1157,14 +1157,14 @@
   {
     "word": "average",
     "example": "The average rent here rose after the bridge opened.",
-    "exampleZh": "橋開通後這裡平均租金上漲。",
+    "exampleZh": "大橋開通後，這裡的平均租金上漲了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
   {
     "word": "progress",
     "example": "Her walking progress surprised the therapist this month.",
-    "exampleZh": "她本月走路的進步讓治療師驚訝。",
+    "exampleZh": "這個月，她走路能力的進步讓治療師十分驚訝。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1192,7 +1192,7 @@
   {
     "word": "bright",
     "example": "Bright paper lanterns lined the riverside path at night.",
-    "exampleZh": "夜裡明亮的紙燈籠排列在河岸步道旁。",
+    "exampleZh": "夜裡，明亮的紙燈籠沿著河岸步道一字排開。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1213,7 +1213,7 @@
   {
     "word": "spot",
     "example": "This quiet spot overlooks the whole fishing port below.",
-    "exampleZh": "這個安靜的地點俯瞰下方整座漁港。",
+    "exampleZh": "從這個安靜的地方，可以俯瞰整座漁港。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1241,7 +1241,7 @@
   {
     "word": "obvious",
     "example": "The cracked wall made the damage obvious to everyone.",
-    "exampleZh": "裂牆讓大家一眼看出損害。",
+    "exampleZh": "牆上的裂痕，讓所有人一眼就看出受損程度。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1262,7 +1262,7 @@
   {
     "word": "opposition",
     "example": "Strong opposition delayed the new highway near the wetlands.",
-    "exampleZh": "強烈反對讓濕地旁新公路延宕。",
+    "exampleZh": "強烈的反對聲浪，使濕地旁的新公路工程延宕。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1304,7 +1304,7 @@
   {
     "word": "fan",
     "example": "A ceiling fan turned slowly above the noodle stall.",
-    "exampleZh": "吊扇在麵攤上方慢慢轉動。",
+    "exampleZh": "一台吊扇在麵攤上方緩緩轉動。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1339,7 +1339,7 @@
   {
     "word": "youth",
     "example": "Youth gave him courage to cross the ocean alone.",
-    "exampleZh": "年輕讓他有勇氣獨自渡海。",
+    "exampleZh": "年輕氣盛，讓他有勇氣獨自橫渡大海。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1451,7 +1451,7 @@
   {
     "word": "sight",
     "example": "The first sight of snow made Grandpa silent today.",
-    "exampleZh": "今天第一次看見雪讓爺爺沉默。",
+    "exampleZh": "爺爺今天第一次看見雪，感動得一時說不出話。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1472,7 +1472,7 @@
   {
     "word": "ride",
     "example": "The ferry ride across the bay felt peaceful today.",
-    "exampleZh": "今天橫越海灣的渡輪旅程很平靜。",
+    "exampleZh": "今天搭渡輪橫越海灣，感覺十分平靜。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1486,7 +1486,7 @@
   {
     "word": "complex",
     "example": "The old inheritance case became complex after new letters surfaced.",
-    "exampleZh": "新信件曝光後，舊繼承案變得更加複雜。",
+    "exampleZh": "新信件曝光後，這樁陳年繼承案變得更加複雜。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1507,7 +1507,7 @@
   {
     "word": "engine",
     "example": "The truck engine shook twice before starting again outside.",
-    "exampleZh": "卡車引擎在外面重新啟動前抖了兩下。",
+    "exampleZh": "外面的卡車引擎抖了兩下，才重新啟動。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1542,7 +1542,7 @@
   {
     "word": "victory",
     "example": "Her victory in the marathon surprised the town yesterday.",
-    "exampleZh": "她昨天在馬拉松獲勝讓小鎮驚訝。",
+    "exampleZh": "她昨天贏得馬拉松冠軍，讓全鎮居民都很驚訝。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1577,7 +1577,7 @@
   {
     "word": "propose",
     "example": "He will propose beside the lake after sunset tonight.",
-    "exampleZh": "他今晚會在日落後於湖邊求婚。",
+    "exampleZh": "他打算今晚日落後在湖邊求婚。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1612,7 +1612,7 @@
   {
     "word": "repeat",
     "example": "Do not repeat that rumor outside the family.",
-    "exampleZh": "不要再在家人以外重複那個謠言。",
+    "exampleZh": "不要在家人以外的人面前重複那個謠言。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1675,7 +1675,7 @@
   {
     "word": "respect",
     "example": "Show respect by keeping quiet inside the temple today.",
-    "exampleZh": "今天在廟裡保持安靜是表示尊重。",
+    "exampleZh": "今天在廟裡保持安靜，就是一種尊重。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1752,7 +1752,7 @@
   {
     "word": "sentence",
     "example": "The judge will sentence the burglar after lunch today.",
-    "exampleZh": "法官今天午餐後將宣判竊賊刑期。",
+    "exampleZh": "法官將在今天午餐後對竊賊宣判。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1801,7 +1801,7 @@
   {
     "word": "mistake",
     "example": "One small mistake sent the cyclist onto the wrong road.",
-    "exampleZh": "一個小錯誤讓騎士走錯路。",
+    "exampleZh": "騎士因為一個小失誤而走錯了路。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1829,7 +1829,7 @@
   {
     "word": "appearance",
     "example": "His sudden appearance at breakfast surprised the children today.",
-    "exampleZh": "他今天突然出現在早餐桌旁讓孩子驚訝。",
+    "exampleZh": "他今天早餐時突然現身，把孩子們嚇了一跳。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1857,7 +1857,7 @@
   {
     "word": "daily",
     "example": "A daily walk keeps his blood pressure steady now.",
-    "exampleZh": "如今每日散步讓他的血壓保持穩定。",
+    "exampleZh": "如今，他每天散步，血壓也因此維持穩定。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1892,7 +1892,7 @@
   {
     "word": "guard",
     "example": "A night guard checked the museum doors hourly during patrol.",
-    "exampleZh": "夜間警衛巡邏時每小時檢查博物館門。",
+    "exampleZh": "夜間警衛巡邏時，每小時都會檢查一次博物館的門。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2172,7 +2172,7 @@
   {
     "word": "guide",
     "example": "A local guide led us through the caves safely.",
-    "exampleZh": "當地導遊平安帶我們穿過洞穴。",
+    "exampleZh": "當地導遊帶著我們安全穿過洞穴。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2242,7 +2242,7 @@
   {
     "word": "surround",
     "example": "Tall reeds surround the pond behind the temple.",
-    "exampleZh": "高高的蘆葦圍繞廟後方池塘。",
+    "exampleZh": "高高的蘆葦圍繞著廟後的池塘。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2277,7 +2277,7 @@
   {
     "word": "mile",
     "example": "The nearest clinic is one mile from here.",
-    "exampleZh": "最近診所離這裡一英里。",
+    "exampleZh": "離這裡最近的診所約一英里遠。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2312,7 +2312,7 @@
   {
     "word": "factory",
     "example": "The tofu factory opens before the first train.",
-    "exampleZh": "豆腐廠在首班火車前開工。",
+    "exampleZh": "豆腐工廠在首班火車抵達前就開工。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2382,7 +2382,7 @@
   {
     "word": "wing",
     "example": "A broken wing kept the bird on the ground.",
-    "exampleZh": "斷翅讓那隻鳥留在地上。",
+    "exampleZh": "翅膀受傷後，那隻鳥只能留在地面。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2522,7 +2522,7 @@
   {
     "word": "blame",
     "example": "Do not blame the child for the broken bowl.",
-    "exampleZh": "不要責怪孩子打破碗。",
+    "exampleZh": "不要因為碗打破了就責怪孩子。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2571,7 +2571,7 @@
   {
     "word": "double",
     "example": "A double rainbow appeared above the fishing port.",
-    "exampleZh": "一道雙彩虹出現在漁港上方。",
+    "exampleZh": "一道雙彩虹出現在漁港上空。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2585,7 +2585,7 @@
   {
     "word": "alternative",
     "example": "Cycling offers an alternative to crowded buses downtown.",
-    "exampleZh": "在市區騎腳踏車是擁擠公車外的替代選擇。",
+    "exampleZh": "在市區，除了擠公車，也可以選擇騎腳踏車。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2620,7 +2620,7 @@
   {
     "word": "july",
     "example": "July heat keeps children indoors after lunch in Taipei.",
-    "exampleZh": "台北七月高溫讓孩子午餐後待在室內。",
+    "exampleZh": "台北七月的高溫，讓孩子們吃過午餐後都待在室內。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2634,7 +2634,7 @@
   {
     "word": "fat",
     "example": "Duck fat made the fried rice smell wonderful.",
-    "exampleZh": "鴨油讓炒飯聞起來很香。",
+    "exampleZh": "鴨油讓炒飯香氣十足。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2662,7 +2662,7 @@
   {
     "word": "request",
     "example": "Her request for a quieter room was accepted.",
-    "exampleZh": "她想換較安靜房間的要求被接受。",
+    "exampleZh": "她要求換到較安靜的房間，對方答應了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2774,7 +2774,7 @@
   {
     "word": "aircraft",
     "example": "The aircraft disappeared behind clouds above the bay.",
-    "exampleZh": "飛機消失在海灣上方雲層後方。",
+    "exampleZh": "飛機消失在海灣上空的雲層後。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2802,7 +2802,7 @@
   {
     "word": "bomb",
     "example": "The old bomb was found beneath the pier.",
-    "exampleZh": "舊炸彈在碼頭下方被發現。",
+    "exampleZh": "人們在碼頭底下發現一枚舊炸彈。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2872,7 +2872,7 @@
   {
     "word": "shock",
     "example": "The sudden shock knocked cups from the shelf.",
-    "exampleZh": "突然震動把杯子震下架子。",
+    "exampleZh": "一陣突如其來的震動，把杯子從架上震落。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2907,7 +2907,7 @@
   {
     "word": "purchase",
     "example": "Keep the receipt at home after each appliance purchase.",
-    "exampleZh": "每次購買家電後都在家保留收據。",
+    "exampleZh": "每次買完家電，他都會把收據留在家裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2942,7 +2942,7 @@
   {
     "word": "sunday",
     "example": "Sunday breakfast lasts longer in our house during winter.",
-    "exampleZh": "冬天我們家星期日早餐吃得較久。",
+    "exampleZh": "冬天時，我們家的星期日早餐總會吃得比較久。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2991,7 +2991,7 @@
   {
     "word": "addition",
     "example": "The balcony was a bright addition to the apartment.",
-    "exampleZh": "陽台讓公寓多了明亮的新空間。",
+    "exampleZh": "加蓋的陽台為公寓增添了一處明亮空間。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3131,7 +3131,7 @@
   {
     "word": "august",
     "example": "August afternoons drive cats under cars for shade.",
-    "exampleZh": "八月午後讓貓躲到車底下乘涼。",
+    "exampleZh": "八月午後酷熱難耐，貓都躲到車底下乘涼。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3145,7 +3145,7 @@
   {
     "word": "guarantee",
     "example": "This stamp is the guarantee for your repaired watch.",
-    "exampleZh": "這枚保固章是手錶維修憑證。",
+    "exampleZh": "這枚保固章，是手錶維修保固的憑證。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3180,7 +3180,7 @@
   {
     "word": "rapid",
     "example": "Rapid growth filled the pond with lotus leaves.",
-    "exampleZh": "快速生長讓池塘長滿蓮葉。",
+    "exampleZh": "蓮葉生長迅速，很快就鋪滿整座池塘。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3221,8 +3221,8 @@
   },
   {
     "word": "delay",
-    "example": "A signal delay kept the train outside Hsinchu Station.",
-    "exampleZh": "號誌延誤讓火車停在新竹站外。",
+    "example": "A signal delay kept the train waiting outside Hsinchu Station.",
+    "exampleZh": "號誌延誤，讓火車停在新竹站外等候。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3264,7 +3264,7 @@
   {
     "word": "festival",
     "example": "The lantern festival filled the river with light.",
-    "exampleZh": "燈會讓河面布滿光影。",
+    "exampleZh": "燈會期間，河面映滿了璀璨燈光。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3299,14 +3299,14 @@
   {
     "word": "frequent",
     "example": "Frequent headaches sent him back to the doctor.",
-    "exampleZh": "經常頭痛讓他又去看醫生。",
+    "exampleZh": "他因為經常頭痛，只好再去看醫生。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
   {
     "word": "running",
     "example": "Running along the canal clears her mind before work.",
-    "exampleZh": "上班前沿運河跑步讓她頭腦清醒。",
+    "exampleZh": "上班前沿著運河跑步，能讓她保持頭腦清醒。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3327,7 +3327,7 @@
   {
     "word": "exact",
     "example": "Write the exact address on the delivery label.",
-    "exampleZh": "請在配送標籤寫確切地址。",
+    "exampleZh": "請在配送標籤上寫下確切地址。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3362,7 +3362,7 @@
   {
     "word": "monday",
     "example": "Monday rain delayed garbage collection in our lane.",
-    "exampleZh": "星期一下雨延誤我們巷子的垃圾清運。",
+    "exampleZh": "星期一的雨，耽誤了我們巷子的垃圾清運。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3411,7 +3411,7 @@
   {
     "word": "latest",
     "example": "The latest phone update improved battery life overnight.",
-    "exampleZh": "最近的手機更新一夜間改善電池續航。",
+    "exampleZh": "手機安裝最新更新後，電池續航力隔天就改善了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },

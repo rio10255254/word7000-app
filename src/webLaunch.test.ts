@@ -620,7 +620,8 @@ describe('free web launch configuration', () => {
       appSource.indexOf('const LibraryWordRow'),
       appSource.indexOf('export function LibraryWordDetailView'),
     );
-    expect(studyCardSource).not.toContain('supplementalMeanings');
+    expect(studyCardSource).toContain('supplementalMeanings');
+    expect(studyCardSource).toContain('formatStudyMeaningSupplement');
     expect(libraryRowSource).not.toContain('supplementalMeanings');
   });
 

@@ -349,6 +349,19 @@ describe('library and quiz helpers', () => {
     expect(options.some((option) => option.meaning === sampleWords[0].meaningZh)).toBe(true);
   });
 
+  test('buildQuizOptions uses only the primary meaning and never exposes supplemental meanings', () => {
+    const words = [
+      wordFixture('bank', { meaningZh: '銀行', supplementalMeaningZh: '河岸' }),
+      wordFixture('cut', { meaningZh: '傷口', supplementalMeaningZh: '切；削減；剪' }),
+      wordFixture('run', { meaningZh: '跑步', supplementalMeaningZh: '經營；運轉；流動' }),
+    ];
+
+    const options = buildQuizOptions(words, 'bank', 'primary-only');
+
+    expect(options.map((option) => option.meaning)).toEqual(expect.arrayContaining(['銀行', '傷口', '跑步']));
+    expect(options.some((option) => /河岸|切|削減|剪|經營|運轉|流動/.test(option.meaning))).toBe(false);
+  });
+
   test('buildQuizOptions can switch to English answers for Chinese study mode', () => {
     const options = buildQuizOptions(sampleWords, sampleWords[0].id, 'seed-a', 'word');
 

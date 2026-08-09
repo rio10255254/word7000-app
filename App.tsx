@@ -3575,6 +3575,22 @@ function formatMeaningSupplement(word: WordEntry): string {
   return wordSupplementalChineseMeaning(word);
 }
 
+function formatStudyMeaningSupplement(word: WordEntry, studyMode: StudyMode): string {
+  const supplemental = formatMeaningSupplement(word);
+  if (!supplemental) {
+    return '';
+  }
+
+  const meanings = supplemental.split('；').map((meaning) => meaning.trim()).filter(Boolean);
+  if (studyMode === 'chinese') {
+    return meanings
+      .map((meaning) => `${meaning} ${chineseMeaningPinyin(meaning)}`.trim())
+      .join(' · ');
+  }
+
+  return meanings.join(' · ');
+}
+
 function formatExamplePrimary(word: WordEntry, studyMode: StudyMode): string {
   return studyMode === 'chinese' ? word.exampleZh : word.example;
 }
@@ -4697,6 +4713,7 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
 function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEntry }) {
   const themeStyles = useThemeStyles();
   const ui = modeInterfaceCopy[studyMode];
+  const supplementalMeaning = formatStudyMeaningSupplement(word, studyMode);
 
   return (
     <>
@@ -4725,6 +4742,16 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
         <Text numberOfLines={3} style={[styles.meaning, themeStyles?.meaning]}>
           {formatMeaningDetail(word, studyMode)}
         </Text>
+        {Boolean(supplementalMeaning) && (
+          <View style={[styles.studySupplement, themeStyles?.studySupplement]}>
+            <Text style={[styles.studySupplementLabel, themeStyles?.studySupplementLabel]}>
+              {ui.supplementalMeanings}
+            </Text>
+            <Text numberOfLines={2} style={[styles.studySupplementText, themeStyles?.studySupplementText]}>
+              {supplementalMeaning}
+            </Text>
+          </View>
+        )}
       </View>
       <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
         <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
@@ -4827,7 +4854,7 @@ const StudyView = memo(function StudyView({
   // height driven by content breaks that the moment a longer word arrives. The
   // line limits below keep content under this height, so the leftover space at
   // the bottom stays small rather than the hollow gap a taller ceiling left.
-  const studyCardHeight = Math.round(Math.max(340, Math.min(470, viewportHeight * 0.54)));
+  const studyCardHeight = Math.round(Math.max(430, Math.min(470, viewportHeight * 0.54)));
   const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16));
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
@@ -9107,6 +9134,23 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     minHeight: 60,
   },
+  studySupplement: {
+    borderTopColor: '#E5E5EA',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    gap: 3,
+    paddingTop: 9,
+  },
+  studySupplementLabel: {
+    color: '#6C6C70',
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  studySupplementText: {
+    color: '#3A3A3C',
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 19,
+  },
   studyCardExampleBox: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
@@ -11172,6 +11216,15 @@ const darkStyles = StyleSheet.create({
   },
   meaning: {
     color: '#F2F2F7',
+  },
+  studySupplement: {
+    borderTopColor: '#3A3A3C',
+  },
+  studySupplementLabel: {
+    color: '#8E8E93',
+  },
+  studySupplementText: {
+    color: '#D1D1D6',
   },
   exampleBox: {
     backgroundColor: '#111A26',

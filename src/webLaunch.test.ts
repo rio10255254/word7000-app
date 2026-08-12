@@ -374,7 +374,8 @@ describe('free web launch configuration', () => {
     const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
     expect(settingsRoute).toContain('onConfirmDeleteAccountData={bridge.actions.confirmDeleteAccountData}');
     expect(appSource).toContain('testID="delete-account-data-button"');
-    expect(appSource).toContain('deleteCloudUserData(asCloudProgressClient(supabaseClient), signedInUserId)');
+    expect(appSource).toContain('deleteAuthenticatedAccount(supabaseClient)');
+    expect(appSource).toContain('accountReady: Boolean(account.userId)');
     expect(schema).toContain('Users can delete their own profile');
     expect(schema).toContain('Users can delete their own daily activity');
   });
@@ -414,7 +415,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('UserMemorySyncQueue');
     expect(appSource).toContain('mergeProgressStates');
     expect(appSource).toContain('mergeCustomSetStates');
-    expect(appSource).toContain('mergeProgressStates(cloudProgress.progress, userLocalProgress, pendingMemory?.progress)');
+    expect(appSource).toContain('pendingUpgrade?.progress');
+    expect(appSource).toContain('legacyGuestProgress');
     expect(appSource).toContain('pendingMemory?.customSets');
     expect(appSource).toContain('saveProgressToStorage(getAppStorage(), progress, account.userId)');
     expect(appSource).toContain('saveCustomSetState(getAppStorage(), customSetState, account.userId)');
@@ -464,19 +466,22 @@ describe('free web launch configuration', () => {
     expect(appSource).not.toContain('Required App Store and user help links');
   });
 
-  test('records signed-in daily active users for Supabase analytics', () => {
+  test('records guest and signed-in daily active users for Supabase analytics', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const schema = fs.readFileSync(schemaPath, 'utf8');
     const supabaseProgressSource = fs.readFileSync(supabaseProgressPath, 'utf8');
 
     expect(appSource).toContain('ACTIVE_USER_HEARTBEAT_MS = 60_000');
-    expect(appSource).toContain('recordDailyActiveUser(asCloudProgressClient(supabaseClient), account.userId)');
+    expect(appSource).toContain('recordDailyActiveUser(');
+    expect(appSource).toContain('account.userId,');
     expect(appSource).toContain('setInterval(recordActivity, ACTIVE_USER_HEARTBEAT_MS)');
     expect(schema).toContain('custom_sets jsonb');
     expect(schema).toContain('create table if not exists public.daily_active_users');
     expect(schema).toContain('primary key (user_id, activity_date)');
     expect(schema).toContain('daily_active_users_activity_date_idx');
     expect(schema).toContain('daily_active_users_last_seen_at_idx');
+    expect(schema).toContain('daily_active_users_account_type_trigger');
+    expect(schema).toContain('word7000_private.daily_metrics');
     expect(schema).toContain('add column if not exists progress jsonb');
     expect(schema).toContain('add column if not exists updated_at timestamptz');
     expect(schema).toContain('profiles_updated_at_idx');

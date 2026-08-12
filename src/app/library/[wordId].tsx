@@ -55,8 +55,10 @@ export default function LibraryWordRoute() {
           studyMode={bridge.studyMode}
           word={word}
           onAddToSet={() => {
-            setNewSetName('');
-            setPickerOpen(true);
+            bridge.actions.requestAccountUpgrade('customSets', () => {
+              setNewSetName('');
+              setPickerOpen(true);
+            });
           }}
           onBack={closeRoute}
           onFavorite={() => bridge.actions.favoriteWord(word.id)}

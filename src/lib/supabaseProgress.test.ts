@@ -274,7 +274,7 @@ describe('Supabase progress sync', () => {
     expect(selectedColumns).toEqual(['progress, custom_sets', 'progress']);
   });
 
-  test('records one daily active row per signed-in user and date', async () => {
+  test('records one daily active row per user and date', async () => {
     await expect(
       recordDailyActiveUser(fakeClient(null), 'user-1', new Date('2026-07-01T01:02:03.000Z')),
     ).resolves.toEqual({

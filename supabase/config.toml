@@ -1,2 +1,33 @@
+# Keep hosted Auth values mirrored here. Review any remote diff before changing
+# production settings; the local CLI defaults are not valid hosted values.
+[auth]
+site_url = "https://word7000-app.rio10255254.workers.dev"
+additional_redirect_urls = ["https://word7000-app.rio10255254.workers.dev/*", "http://localhost:8083/*", "http://localhost:19006/*"]
+enable_anonymous_sign_ins = true
+enable_manual_linking = true
+
+[auth.rate_limit]
+anonymous_users = 10
+
+[auth.email]
+enable_confirmations = true
+max_frequency = "1m0s"
+otp_length = 8
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[auth.external.apple]
+enabled = true
+client_id = "com.rio.word7000"
+secret = ""
+
+[storage.vector]
+enabled = false
+
+[functions.delete-account]
+verify_jwt = true
+
 [functions.send-streak-live-activities]
 verify_jwt = false

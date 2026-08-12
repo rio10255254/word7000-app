@@ -42,6 +42,7 @@ import {
   RotateCcw,
   Search,
   Settings,
+  ShieldCheck,
   SlidersHorizontal,
   Smartphone,
   SquareArrowUp,
@@ -109,9 +110,21 @@ import {
   type StudySwipeDirection,
 } from './src/lib/studySwipe';
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
+import { deleteAuthenticatedAccount } from './src/lib/accountDeletion';
+import {
+  clearPendingAccountUpgrade,
+  hasUsedPermanentAccount,
+  isAnonymousUser,
+  isIdentityAlreadyLinkedError,
+  loadPendingAccountUpgrade,
+  markPermanentAccountUsed,
+  markProgressProtectionPromptSeen,
+  savePendingAccountUpgrade,
+  shouldPromptToProtectProgress,
+  type AccountUpgradeReason,
+} from './src/lib/accountIdentity';
 import { loadProgressFromStorage, progressStorageKey, saveProgressToStorage, type StorageLike } from './src/lib/progressStorage';
 import {
-  deleteCloudUserData,
   loadCloudProgressRecord,
   recordDailyActiveUser,
   saveCloudCustomSets,
@@ -200,7 +213,6 @@ import {
   type StreakLiveActivitySyncResult,
 } from './src/lib/streakLiveActivityController';
 import {
-  deleteStreakReminderRegistrations,
   disableStreakReminderRegistration,
   getOrCreateStreakDeviceId,
   saveStreakReminderRegistration,
@@ -209,7 +221,7 @@ import {
 WebBrowser.maybeCompleteAuthSession();
 
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
-type AccountStatus = 'local' | 'loading' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
+type AccountStatus = 'local' | 'loading' | 'guest' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
 type StudyMode = 'english' | 'chinese';
 type QuizPracticeMode = 'choice' | 'speaking';
@@ -227,6 +239,7 @@ type AccountState = {
   configured: boolean;
   email: string;
   password: string;
+  isAnonymous: boolean;
   userId: string | null;
   userEmail: string | null;
   busy: boolean;
@@ -513,6 +526,7 @@ const modeInterfaceCopy = {
     profileIdle: '穩定累積中',
     profileProgress: (percent: number, mastered: number) => `今天完成 ${percent}%，目前掌握 ${mastered} 個單字。`,
     account: '帳號',
+    guest: '訪客',
     signedIn: '已登入',
     signedOut: '未登入',
     local: '本機',
@@ -546,10 +560,10 @@ const modeInterfaceCopy = {
     privacyPolicyText: '查看 Word7000 如何保存與同步學習資料',
     supportPage: '支援頁面',
     supportPageText: '登入、同步、更新與帳號資料說明',
-    deleteAccountData: '刪除帳號學習資料',
-    deleteAccountDataText: '刪除雲端進度、單字集、活躍紀錄與鎖定畫面提醒資料',
-    deleteAccountDataConfirmTitle: '刪除帳號學習資料？',
-    deleteAccountDataConfirmText: '這會刪除雲端進度、單字集、每日活躍紀錄與鎖定畫面提醒資料，並登出目前帳號。',
+    deleteAccountData: '刪除帳號與資料',
+    deleteAccountDataText: '永久刪除這個 Word7000 身分、學習進度、活躍紀錄與提醒資料',
+    deleteAccountDataConfirmTitle: '刪除帳號與所有資料？',
+    deleteAccountDataConfirmText: '這會永久刪除目前的 Word7000 身分、學習進度、單字集、每日活躍紀錄與鎖定畫面提醒，且無法復原。',
     deleteAccountDataConfirmCancel: '取消',
     deleteAccountDataConfirmAction: '確認刪除',
     darkMode: '深色模式',
@@ -559,7 +573,6 @@ const modeInterfaceCopy = {
     streakReminder: '鎖定畫面連勝提醒',
     streakReminderOnText: '最後一小時顯示鎖定畫面倒數',
     streakReminderOffText: '不在鎖定畫面顯示倒數',
-    streakReminderSignInText: '登入後，App 關閉時也能自動顯示',
     toggleStreakReminder: '切換鎖定畫面連勝提醒',
     on: '開啟',
     off: '關閉',
@@ -723,6 +736,7 @@ const modeInterfaceCopy = {
     profileIdle: 'Building momentum',
     profileProgress: (percent: number, mastered: number) => `${percent}% complete today, ${mastered} words mastered.`,
     account: 'Account',
+    guest: 'Guest',
     signedIn: 'Signed in',
     signedOut: 'Signed out',
     local: 'Local',
@@ -756,10 +770,10 @@ const modeInterfaceCopy = {
     privacyPolicyText: 'See how Word7000 stores and syncs learning data',
     supportPage: 'Support Page',
     supportPageText: 'Help with sign-in, sync, updates, and account data',
-    deleteAccountData: 'Delete Account Learning Data',
-    deleteAccountDataText: 'Delete cloud progress, sets, activity, and Lock Screen reminder data',
-    deleteAccountDataConfirmTitle: 'Delete account learning data?',
-    deleteAccountDataConfirmText: 'This deletes cloud progress, custom sets, daily activity, and Lock Screen reminder data, then signs out.',
+    deleteAccountData: 'Delete Account and Data',
+    deleteAccountDataText: 'Permanently delete this Word7000 identity, progress, activity, and reminder data',
+    deleteAccountDataConfirmTitle: 'Delete account and all data?',
+    deleteAccountDataConfirmText: 'This permanently deletes the current Word7000 identity, learning progress, custom sets, daily activity, and Lock Screen reminders. This cannot be undone.',
     deleteAccountDataConfirmCancel: 'Cancel',
     deleteAccountDataConfirmAction: 'Delete Data',
     darkMode: 'Dark Mode',
@@ -769,7 +783,6 @@ const modeInterfaceCopy = {
     streakReminder: 'Lock Screen Streak Alert',
     streakReminderOnText: 'Show a live countdown in the final hour',
     streakReminderOffText: 'Do not show the Lock Screen countdown',
-    streakReminderSignInText: 'Sign in to start it even while the app is closed',
     toggleStreakReminder: 'Toggle Lock Screen streak alert',
     on: 'On',
     off: 'Off',
@@ -841,6 +854,39 @@ const modeInterfaceCopy = {
     setCreated: (name: string) => `Created "${name}"`,
     customWordAdded: (word: string, setName: string) => `Added ${word} to "${setName}"`,
     customImportApplied: (added: number, skipped: number) => `Imported ${added} new words, skipped ${skipped}.`,
+  },
+} as const;
+
+const accountUpgradeCopy = {
+  english: {
+    badge: '目前進度已保留',
+    body: {
+      customSets: '登入後即可建立與管理單字集，並在換機後完整取回。',
+      dataTools: '登入後才會開放匯入、匯出與帳號資料工具。',
+      protectProgress: '登入後可跨裝置保留連續天數、收藏、複習狀態與學習紀錄。',
+    },
+    later: '稍後再說',
+    privacy: '不登入也能繼續查字、學習與測驗。',
+    title: {
+      customSets: '登入以使用單字集',
+      dataTools: '登入以使用資料工具',
+      protectProgress: '保護你的學習進度',
+    },
+  },
+  chinese: {
+    badge: 'Your current progress is safe',
+    body: {
+      customSets: 'Sign in to create and manage custom sets and restore them on another device.',
+      dataTools: 'Sign in to use imports, exports, and account data tools.',
+      protectProgress: 'Sign in to keep your streak, saved words, review status, and learning history across devices.',
+    },
+    later: 'Not Now',
+    privacy: 'You can keep using dictionary, study, and quiz without signing in.',
+    title: {
+      customSets: 'Sign In for Custom Sets',
+      dataTools: 'Sign In for Data Tools',
+      protectProgress: 'Protect Your Progress',
+    },
   },
 } as const;
 
@@ -1148,6 +1194,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const libraryScrolledPastTopRef = useRef(false);
   const libraryRouteScrollRestoreRef = useRef<number | null>(null);
   const memorySyncQueueRef = useRef<UserMemorySyncQueue | null>(null);
+  const pendingAdvancedActionRef = useRef<(() => void) | null>(null);
+  const progressProtectionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const launchAnim = useRef(new Animated.Value(0)).current;
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
@@ -1155,6 +1203,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const librarySliderInteractionAnim = useRef(new Animated.Value(0)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
+  const accountUpgradeAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [initialFilterPreferences] = useState(() => loadFilterPreferences(getAppStorage()));
   const [streakDeviceId] = useState(() => getOrCreateStreakDeviceId(getAppStorage()));
@@ -1208,6 +1257,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [installGuideStep, setInstallGuideStep] = useState(0);
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
+  const [accountUpgradeReason, setAccountUpgradeReason] = useState<AccountUpgradeReason | null>(null);
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
   const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getAppStorage()));
   const [streakReminderEnabled, setStreakReminderEnabled] = useState(() =>
@@ -1322,6 +1372,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const studyProgress = useFocusedSnapshot(progress, activeTab === 'study');
   const libraryProgress = useFocusedSnapshot(progress, activeTab === 'library');
   const profilePresentation = useFocusedSnapshot(progressPresentation, activeTab === 'profile');
+  const isPermanentAccount = Boolean(account.userId && !account.isAnonymous);
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
   const darkMode = themeMode === 'dark';
   const libraryDragIconColor = darkMode ? '#0A84FF' : '#1C1C1E';
@@ -1621,6 +1672,15 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     ]).start(() => setShowLaunch(false));
   }, [launchAnim]);
 
+  useEffect(
+    () => () => {
+      if (progressProtectionTimerRef.current) {
+        clearTimeout(progressProtectionTimerRef.current);
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
     memorySyncQueueRef.current?.dispose();
     memorySyncQueueRef.current = null;
@@ -1880,17 +1940,30 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        if (error || !data.session?.user) {
+        if (!error && data.session?.user) {
+          const refreshed = await supabaseClient.auth.getUser().catch(() => ({ data: { user: null }, error: null }));
+          if (!cancelled) {
+            await activateAuthenticatedUser(refreshed.data.user ?? data.session.user);
+          }
+          return;
+        }
+
+        const anonymous = await supabaseClient.auth.signInAnonymously();
+        if (cancelled) {
+          return;
+        }
+        if (anonymous.error || !anonymous.data.user) {
           setAccount((current) => ({
             ...current,
             busy: false,
-            status: 'signedOut',
-            message: '未登入',
+            isAnonymous: true,
+            status: 'local',
+            message: '訪客進度保存在這台裝置',
           }));
           return;
         }
 
-        await activateSignedInUser(data.session.user);
+        await activateAuthenticatedUser(anonymous.data.user);
       })
       .catch((error: unknown) => {
         if (cancelled) {
@@ -1900,6 +1973,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         setAccount((current) => ({
           ...current,
           busy: false,
+          isAnonymous: true,
           status: 'error',
           message: error instanceof Error ? error.message : '登入狀態檢查失敗',
         }));
@@ -1932,7 +2006,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      recordDailyActiveUser(asCloudProgressClient(supabaseClient), account.userId).catch(() => undefined);
+      recordDailyActiveUser(
+        asCloudProgressClient(supabaseClient),
+        account.userId,
+        new Date(),
+      ).catch(() => undefined);
     };
 
     recordActivity();
@@ -1951,7 +2029,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       clearInterval(heartbeat);
       visibilityDocument?.removeEventListener?.('visibilitychange', handleVisibility);
     };
-  }, [account.userId, supabaseClient]);
+  }, [account.isAnonymous, account.userId, supabaseClient]);
 
   function nextStudyWord() {
     setWordIndex((current) => (studySessionWords.length > 0 ? current + 1 : 0));
@@ -1961,8 +2039,69 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setWordIndex((current) => (studySessionWords.length > 0 ? current - 1 : 0));
   }
 
+  function requestAccountUpgrade(reason: AccountUpgradeReason, afterUpgrade?: () => void) {
+    if (isPermanentAccount) {
+      afterUpgrade?.();
+      return;
+    }
+    if (!account.configured) {
+      setAccount((current) => ({ ...current, status: 'local', message: '帳號服務目前無法使用' }));
+      return;
+    }
+
+    pendingAdvancedActionRef.current = afterUpgrade ?? null;
+    setAccountUpgradeReason(reason);
+    accountUpgradeAnim.stopAnimation();
+    accountUpgradeAnim.setValue(0);
+    requestAnimationFrame(() => {
+      Animated.spring(accountUpgradeAnim, {
+        damping: 24,
+        mass: 0.78,
+        overshootClamping: true,
+        stiffness: 230,
+        toValue: 1,
+        useNativeDriver: Platform.OS !== 'web',
+      }).start();
+    });
+    triggerPressHaptic(reason === 'protectProgress' ? 'secondary' : 'primary');
+  }
+
+  function dismissAccountUpgrade() {
+    if (account.busy) {
+      return;
+    }
+    pendingAdvancedActionRef.current = null;
+    Animated.timing(accountUpgradeAnim, {
+      duration: interactionMotion.settingsPanelExitMs,
+      easing: Easing.inOut(Easing.cubic),
+      toValue: 0,
+      useNativeDriver: Platform.OS !== 'web',
+    }).start(({ finished }) => {
+      if (finished) {
+        setAccountUpgradeReason(null);
+      }
+    });
+  }
+
+  function maybePromptToProtectProgress() {
+    const storage = getAppStorage();
+    if (!account.isAnonymous || !account.userId || !shouldPromptToProtectProgress(storage)) {
+      return;
+    }
+
+    markProgressProtectionPromptSeen(storage);
+    if (progressProtectionTimerRef.current) {
+      clearTimeout(progressProtectionTimerRef.current);
+    }
+    progressProtectionTimerRef.current = setTimeout(() => {
+      progressProtectionTimerRef.current = null;
+      requestAccountUpgrade('protectProgress');
+    }, 650);
+  }
+
   function handleKnown(wordId: string) {
     nextStudyWord();
+    maybePromptToProtectProgress();
     if (studyFilter === 'all') {
       startTransition(() => setProgress((current) => markKnown(current, wordId, currentDate)));
       return;
@@ -1972,6 +2111,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   function handleReview(wordId: string) {
     nextStudyWord();
+    maybePromptToProtectProgress();
     if (studyFilter === 'all') {
       startTransition(() => setProgress((current) => markReview(current, wordId, currentDate)));
       return;
@@ -2030,9 +2170,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }
 
   const handleOpenSetPicker = useCallback((word: WordEntry) => {
-    setSetPickerWord(word);
-    setNewSetName('');
-  }, []);
+    requestAccountUpgrade('customSets', () => {
+      setSetPickerWord(word);
+      setNewSetName('');
+    });
+  }, [isPermanentAccount, account.configured, account.isAnonymous, account.userId]);
 
   function handleCloseSetPicker() {
     setSetPickerWord(null);
@@ -2232,6 +2374,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       setQuizCorrectCount((current) => current + 1);
     }
     setProgress((current) => (correct ? markKnown(current, quizWord.id, currentDate) : markReview(current, quizWord.id, currentDate)));
+    maybePromptToProtectProgress();
   }
 
   function startQuiz() {
@@ -2360,9 +2503,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openLibraryCustomSets = useCallback(() => {
-    libraryRouteScrollRestoreRef.current = libraryScrollYRef.current;
-    router.push('/sets');
-  }, [router]);
+    requestAccountUpgrade('customSets', () => {
+      libraryRouteScrollRestoreRef.current = libraryScrollYRef.current;
+      router.push('/sets');
+    });
+  }, [account.configured, account.isAnonymous, account.userId, isPermanentAccount, router]);
 
   function openInstallGuide() {
     setInstallGuideStep(0);
@@ -2399,24 +2544,37 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setInstallGuideStep((current) => Math.min(current + 1, activeInstallGuideSteps.length - 1));
   }
 
-  async function activateSignedInUser(user: SupabaseUser, fallbackEmail?: string | null) {
+  async function activateAuthenticatedUser(user: SupabaseUser, fallbackEmail?: string | null) {
     if (!supabaseClient) {
       return;
     }
 
     const storage = getAppStorage();
+    const anonymous = isAnonymousUser(user);
+    if (!anonymous) {
+      markPermanentAccountUsed(storage);
+    }
     const cloudProgress = await loadCloudProgressRecord(asCloudProgressClient(supabaseClient), user.id);
     const userLocalProgress = normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress, user.id), currentDate);
     const pendingMemory = loadUserMemoryOutbox(storage, user.id);
+    const pendingUpgrade = anonymous ? null : loadPendingAccountUpgrade(storage);
+    const legacyGuestProgress = anonymous ? loadProgressFromStorage(storage, initialProgress) : null;
     const loadedProgress = normalizeProgressForDate(
-      mergeProgressStates(cloudProgress.progress, userLocalProgress, pendingMemory?.progress),
+      mergeProgressStates(
+        cloudProgress.progress,
+        userLocalProgress,
+        pendingMemory?.progress,
+        legacyGuestProgress,
+        pendingUpgrade?.progress,
+      ),
       currentDate,
     );
     const loadedCustomSetState = mergeCustomSetStates(
       cloudProgress.customSets,
       loadCustomSetState(storage, user.id),
-      loadCustomSetState(storage),
+      anonymous ? loadCustomSetState(storage) : null,
       pendingMemory?.customSets,
+      pendingUpgrade?.customSets,
     );
 
     setProgress(loadedProgress);
@@ -2430,19 +2588,87 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     const saveResult = await saveCloudUserMemory(asCloudProgressClient(supabaseClient), user.id, loadedProgress, loadedCustomSetState);
     if (saveResult.ok) {
       clearUserMemoryOutbox(storage, user.id);
+      if (anonymous) {
+        storage?.removeItem?.(progressStorageKey());
+        storage?.removeItem?.(customSetStorageKey());
+      } else {
+        clearPendingAccountUpgrade(storage);
+        if (pendingUpgrade?.sourceUserId && pendingUpgrade.sourceUserId !== user.id) {
+          storage?.removeItem?.(progressStorageKey(pendingUpgrade.sourceUserId));
+          storage?.removeItem?.(customSetStorageKey(pendingUpgrade.sourceUserId));
+          clearUserMemoryOutbox(storage, pendingUpgrade.sourceUserId);
+        }
+      }
     }
-    await recordDailyActiveUser(asCloudProgressClient(supabaseClient), user.id).catch(() => undefined);
+    await recordDailyActiveUser(
+      asCloudProgressClient(supabaseClient),
+      user.id,
+      new Date(),
+    ).catch(() => undefined);
     setAccount((current) => ({
       ...current,
+      isAnonymous: anonymous,
       userId: user.id,
-      userEmail: user.email ?? fallbackEmail ?? current.email,
+      userEmail: anonymous ? null : user.email ?? fallbackEmail ?? current.email,
       busy: false,
-      status: saveResult.ok ? 'signedIn' : 'error',
-      message: saveResult.ok ? (cloudProgress.found ? '已登入' : '已建立新的帳號記憶') : saveResult.message,
+      status: saveResult.ok ? (anonymous ? 'guest' : 'signedIn') : 'error',
+      message: saveResult.ok
+        ? anonymous
+          ? '訪客進度已自動保存'
+          : cloudProgress.found
+            ? '已登入並同步'
+            : '已建立新的帳號記憶'
+        : saveResult.message,
     }));
+
+    if (!anonymous) {
+      const pendingAction = pendingAdvancedActionRef.current;
+      pendingAdvancedActionRef.current = null;
+      const finishUpgrade = () => {
+        setAccountUpgradeReason(null);
+        accountUpgradeAnim.setValue(0);
+        if (pendingAction) {
+          requestAnimationFrame(pendingAction);
+        }
+      };
+
+      if (accountUpgradeReason) {
+        Animated.timing(accountUpgradeAnim, {
+          duration: 220,
+          easing: Easing.inOut(Easing.cubic),
+          toValue: 0,
+          useNativeDriver: Platform.OS !== 'web',
+        }).start(({ finished }) => {
+          if (finished) {
+            finishUpgrade();
+          }
+        });
+      } else {
+        finishUpgrade();
+      }
+    }
+  }
+
+  function stageAccountUpgrade() {
+    savePendingAccountUpgrade(getAppStorage(), {
+      customSets: customSetState,
+      progress,
+      sourceUserId: account.userId,
+    });
   }
 
   async function handleGoogleSignIn() {
+    stageAccountUpgrade();
+    const storage = getAppStorage();
+    const shouldLinkGuestIdentity =
+      Platform.OS !== 'web' &&
+      account.isAnonymous &&
+      Boolean(account.userId) &&
+      !hasUsedPermanentAccount(storage);
+    await startGoogleSignIn(shouldLinkGuestIdentity);
+  }
+
+  async function startGoogleSignIn(linkGuestIdentity: boolean) {
     if (!supabaseClient) {
       setAccount((current) => ({
         ...current,
@@ -2461,8 +2687,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
     const redirectTo = getOAuthRedirectUrl();
     const nativeReturnTo = Platform.OS === 'web' ? undefined : nativeAuthRedirectTo(APP_LINKING_SCHEME);
-    const { data, error } = await supabaseClient.auth.signInWithOAuth({
-      provider: 'google',
+    const credentials = {
+      provider: 'google' as const,
       options: {
         ...(redirectTo ? { redirectTo } : {}),
         skipBrowserRedirect: Platform.OS !== 'web',
@@ -2470,9 +2696,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
           prompt: 'select_account',
         },
       },
-    });
+    };
+    const { data, error } = linkGuestIdentity
+      ? await supabaseClient.auth.linkIdentity(credentials)
+      : await supabaseClient.auth.signInWithOAuth(credentials);
 
     if (error) {
+      if (linkGuestIdentity && isIdentityAlreadyLinkedError(error)) {
+        await startGoogleSignIn(false);
+        return;
+      }
       setAccount((current) => ({
         ...current,
         busy: false,
@@ -2498,13 +2731,45 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         setAccount((current) => ({
           ...current,
           busy: false,
-          status: 'signedOut',
+          status: current.isAnonymous ? 'guest' : 'signedOut',
           message: '已取消登入',
         }));
         return;
       }
 
-      await completeNativeOAuthSignIn(result.url);
+      if (linkGuestIdentity) {
+        const callback = parseOAuthCallbackUrl(result.url);
+        if (callback.error) {
+          if (callback.errorCode === 'identity_already_exists' || /already.*(?:linked|registered)/i.test(callback.error)) {
+            await startGoogleSignIn(false);
+            return;
+          }
+          setAccount((current) => ({
+            ...current,
+            busy: false,
+            status: 'error',
+            message: callback.error ?? 'Google 帳號連結失敗',
+          }));
+          return;
+        }
+
+        const refreshedSession = await supabaseClient.auth.refreshSession();
+        const linkedUser = refreshedSession.data.user
+          ? refreshedSession
+          : await supabaseClient.auth.getUser();
+        if (linkedUser.error || !linkedUser.data.user || isAnonymousUser(linkedUser.data.user)) {
+          setAccount((current) => ({
+            ...current,
+            busy: false,
+            status: 'error',
+            message: linkedUser.error?.message ?? 'Google 帳號連結未完成',
+          }));
+          return;
+        }
+        await activateAuthenticatedUser(linkedUser.data.user);
+      } else {
+        await completeNativeOAuthSignIn(result.url);
+      }
       return;
     }
 
@@ -2546,6 +2811,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    stageAccountUpgrade();
     setAccount((current) => ({
       ...current,
       busy: true,
@@ -2609,19 +2875,39 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const { data, error } = await supabaseClient.auth.signInWithIdToken({
+      const credentials = {
         access_token: credential.authorizationCode,
         nonce: appleNonce.raw,
-        provider: 'apple',
+        provider: 'apple' as const,
         token: credential.identityToken,
-      });
+      };
+      let authenticatedUser: SupabaseUser | null = null;
+      let authenticationError = '';
+      if (account.isAnonymous && account.userId) {
+        const linkResult = await supabaseClient.auth.linkIdentity(credentials);
+        if (linkResult.error && isIdentityAlreadyLinkedError(linkResult.error)) {
+          const signInResult = await supabaseClient.auth.signInWithIdToken(credentials);
+          authenticatedUser = signInResult.data.user;
+          authenticationError = signInResult.error?.message ?? '';
+        } else if (linkResult.error) {
+          authenticationError = linkResult.error.message;
+        } else {
+          const userResult = await supabaseClient.auth.getUser();
+          authenticatedUser = userResult.data.user;
+          authenticationError = userResult.error?.message ?? '';
+        }
+      } else {
+        const signInResult = await supabaseClient.auth.signInWithIdToken(credentials);
+        authenticatedUser = signInResult.data.user;
+        authenticationError = signInResult.error?.message ?? '';
+      }
 
-      if (error || !data.user) {
+      if (!authenticatedUser) {
         setAccount((current) => ({
           ...current,
           busy: false,
           status: 'error',
-          message: error?.message ?? 'Apple 登入失敗',
+          message: authenticationError || 'Apple 登入失敗',
         }));
         return;
       }
@@ -2631,13 +2917,13 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         await supabaseClient.auth.updateUser({ data: metadata }).catch(() => undefined);
       }
 
-      await activateSignedInUser(data.user, credential.email);
+      await activateAuthenticatedUser(authenticatedUser, credential.email);
     } catch (error: unknown) {
       const errorCode = typeof error === 'object' && error && 'code' in error ? String((error as { code?: unknown }).code) : '';
       setAccount((current) => ({
         ...current,
         busy: false,
-        status: errorCode === 'ERR_REQUEST_CANCELED' ? 'signedOut' : 'error',
+        status: errorCode === 'ERR_REQUEST_CANCELED' ? (current.isAnonymous ? 'guest' : 'signedOut') : 'error',
         message: errorCode === 'ERR_REQUEST_CANCELED' ? '已取消登入' : error instanceof Error ? error.message : 'Apple 登入失敗',
       }));
     }
@@ -2649,6 +2935,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
 
     const callback = parseOAuthCallbackUrl(callbackUrl);
+
+    if (callback.error) {
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        status: current.isAnonymous ? 'guest' : 'error',
+        message: callback.error ?? '登入導回失敗',
+      }));
+      return;
+    }
 
     if (callback.code) {
       const { data, error } = await supabaseClient.auth.exchangeCodeForSession(callback.code);
@@ -2662,7 +2958,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      await activateSignedInUser(data.user);
+      await activateAuthenticatedUser(data.user);
       return;
     }
 
@@ -2681,7 +2977,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      await activateSignedInUser(data.user);
+      await activateAuthenticatedUser(data.user);
       return;
     }
 
@@ -2721,6 +3017,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       message: '建立帳號中',
     }));
 
+    stageAccountUpgrade();
     const { data, error } = await supabaseClient.auth.signUp({ email, password });
     if (error) {
       setAccount((current) => ({
@@ -2733,14 +3030,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
 
     if (data.user && data.session) {
-      await activateSignedInUser(data.user);
+      await activateAuthenticatedUser(data.user);
       return;
     }
 
     setAccount((current) => ({
       ...current,
       busy: false,
-      status: 'signedOut',
+      status: current.isAnonymous ? 'guest' : 'signedOut',
       message: '請確認信箱後登入',
     }));
   }
@@ -2773,6 +3070,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       message: '登入中',
     }));
 
+    stageAccountUpgrade();
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error || !data.user) {
       setAccount((current) => ({
@@ -2784,7 +3082,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    await activateSignedInUser(data.user);
+    await activateAuthenticatedUser(data.user);
   }
 
   async function handleSignOut() {
@@ -2831,13 +3129,29 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setSetPickerWord(null);
     setAccount((current) => ({
       ...current,
+      isAnonymous: true,
       userId: null,
       userEmail: null,
       password: '',
       busy: false,
-      status: supabaseClient ? 'signedOut' : 'local',
-      message: supabaseClient ? '已登出' : '本機記憶中',
+      status: supabaseClient ? 'loading' : 'local',
+      message: supabaseClient ? '正在切換為訪客模式' : '本機記憶中',
     }));
+
+    if (supabaseClient) {
+      const anonymous = await supabaseClient.auth.signInAnonymously();
+      if (anonymous.error || !anonymous.data.user) {
+        setAccount((current) => ({
+          ...current,
+          busy: false,
+          isAnonymous: true,
+          status: 'local',
+          message: '已登出，訪客進度保存在這台裝置',
+        }));
+        return;
+      }
+      await activateAuthenticatedUser(anonymous.data.user);
+    }
   }
 
   function confirmDeleteAccountData() {
@@ -2879,7 +3193,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       setAccount((current) => ({
         ...current,
         busy: false,
-        status: supabaseClient ? 'signedOut' : 'local',
+        status: supabaseClient ? 'guest' : 'local',
         message: supabaseClient ? '請先登入' : '本機記憶中',
       }));
       return;
@@ -2889,10 +3203,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       ...current,
       busy: true,
       status: 'loading',
-      message: '正在刪除帳號學習資料',
+      message: '正在刪除帳號與資料',
     }));
 
-    const result = await deleteCloudUserData(asCloudProgressClient(supabaseClient), signedInUserId);
+    const result = await deleteAuthenticatedAccount(supabaseClient);
     if (!result.ok) {
       setAccount((current) => ({
         ...current,
@@ -2903,13 +3217,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    await deleteStreakReminderRegistrations(supabaseClient, signedInUserId);
-
     const storage = getAppStorage();
     storage?.removeItem?.(progressStorageKey(signedInUserId));
     storage?.removeItem?.(customSetStorageKey(signedInUserId));
     clearUserMemoryOutbox(storage, signedInUserId);
-    await supabaseClient.auth.signOut();
+    await supabaseClient.auth.signOut({ scope: 'local' }).catch(() => undefined);
 
     setProgress(normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress), currentDate));
     setCustomSetState(loadCustomSetState(storage));
@@ -2919,13 +3231,27 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setSetPickerWord(null);
     setAccount((current) => ({
       ...current,
+      isAnonymous: true,
       userId: null,
       userEmail: null,
       password: '',
       busy: false,
-      status: 'signedOut',
-      message: '帳號學習資料已刪除',
+      status: 'loading',
+      message: '帳號已刪除，正在建立訪客進度',
     }));
+
+    const anonymous = await supabaseClient.auth.signInAnonymously();
+    if (anonymous.error || !anonymous.data.user) {
+      setAccount((current) => ({
+        ...current,
+        busy: false,
+        isAnonymous: true,
+        status: 'local',
+        message: '帳號已刪除，訪客進度保存在這台裝置',
+      }));
+      return;
+    }
+    await activateAuthenticatedUser(anonymous.data.user);
   }
 
   function handleOpenAppInfoLink(url: string) {
@@ -3075,13 +3401,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const routeConfirmDeleteAccountData = useStableEvent(confirmDeleteAccountData);
   const routeCreateCustomSet = useStableEvent(handleCreateCustomSet);
   const routeDeleteCustomSet = useStableEvent(handleDeleteCustomSet);
-  const routeExportVocabulary = useStableEvent(handleExportVocabulary);
-  const routeImportCustomWords = useStableEvent(handleImportCustomWords);
-  const routeImportVocabulary = useStableEvent(handleImportVocabulary);
+  const routeExportVocabulary = useStableEvent(() => requestAccountUpgrade('dataTools', handleExportVocabulary));
+  const routeImportCustomWords = useStableEvent(() => requestAccountUpgrade('customSets', handleImportCustomWords));
+  const routeImportVocabulary = useStableEvent(() => requestAccountUpgrade('dataTools', () => void handleImportVocabulary()));
   const routeManualCustomWordChange = useStableEvent(handleManualCustomWordChange);
   const routeOpenAppInfoLink = useStableEvent(handleOpenAppInfoLink);
   const routeRemoveWordFromSet = useStableEvent(handleRemoveWordFromCustomSet);
   const routeRenameCustomSet = useStableEvent(handleRenameCustomSet);
+  const routeRequestAccountUpgrade = useStableEvent(requestAccountUpgrade);
   const routeRestoreLibraryScroll = useStableEvent(() => {
     if (Platform.OS !== 'web') {
       return;
@@ -3121,6 +3448,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       openAppInfoLink: routeOpenAppInfoLink,
       removeWordFromSet: routeRemoveWordFromSet,
       renameCustomSet: routeRenameCustomSet,
+      requestAccountUpgrade: routeRequestAccountUpgrade,
       restoreLibraryScroll: routeRestoreLibraryScroll,
       selectCustomSet: setSelectedCustomSetId,
       setCustomSetSort,
@@ -3145,6 +3473,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       routeOpenAppInfoLink,
       routeRemoveWordFromSet,
       routeRenameCustomSet,
+      routeRequestAccountUpgrade,
       routeRestoreLibraryScroll,
       routeSetStreakReminderEnabled,
       routeSetThemeMode,
@@ -3156,6 +3485,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setAppRouteBridgeSnapshot({
       accountBusy: account.busy,
+      accountReady: Boolean(account.userId),
       actions: routeActions,
       customSetMessage,
       customSetSort,
@@ -3167,7 +3497,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       newSetName,
       progress,
       selectedCustomSetId,
-      signedIn: Boolean(account.userId),
+      signedIn: isPermanentAccount,
       streakReminderEnabled,
       studyMode,
       themeMode,
@@ -3175,6 +3505,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     });
   }, [
     account.busy,
+    account.isAnonymous,
     account.userId,
     customSetMessage,
     customSetSort,
@@ -3394,6 +3725,19 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
             onClose={handleCloseSetPicker}
             onCreateAndAdd={handleCreateSetAndAddPickerWord}
             onNewSetNameChange={setNewSetName}
+          />
+        )}
+
+        {accountUpgradeReason && (
+          <AccountUpgradeOverlay
+            accountBusy={account.busy}
+            animation={accountUpgradeAnim}
+            reason={accountUpgradeReason}
+            studyMode={studyMode}
+            themeMode={themeMode}
+            onAppleSignIn={handleAppleSignIn}
+            onDismiss={dismissAccountUpgrade}
+            onGoogleSignIn={handleGoogleSignIn}
           />
         )}
 
@@ -3845,12 +4189,13 @@ function createInitialAccountState(configured: boolean): AccountState {
   return {
     configured,
     email: '',
+    isAnonymous: configured,
     password: '',
     userId: null,
     userEmail: null,
     busy: false,
-    status: configured ? 'signedOut' : 'local',
-    message: configured ? '未登入' : '本機記憶中',
+    status: configured ? 'loading' : 'local',
+    message: configured ? '正在準備訪客進度' : '本機記憶中',
   };
 }
 
@@ -6760,7 +7105,7 @@ const ProfileView = memo(function ProfileView({
   onSignUp: () => void;
 }) {
   const themeStyles = useThemeStyles();
-  const signedIn = Boolean(account.userId);
+  const signedIn = Boolean(account.userId && !account.isAnonymous);
   const syncError = account.status === 'error';
   const palette = themeMode === 'dark' ? iosVisual.dark : iosVisual.light;
   const bodyIconColor = palette.label;
@@ -6786,7 +7131,9 @@ const ProfileView = memo(function ProfileView({
       <View style={[styles.accountCard, themeStyles?.accountCard]}>
         <View style={styles.rowBetween}>
           <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.account}</Text>
-          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{account.configured ? (signedIn ? ui.signedIn : ui.signedOut) : ui.local}</Text>
+          <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>
+            {account.configured ? (signedIn ? ui.signedIn : account.isAnonymous ? ui.guest : ui.signedOut) : ui.local}
+          </Text>
         </View>
 
         {!signedIn && (
@@ -7019,6 +7366,133 @@ function ActiveSetBanner({
         <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.activeSetClearText, themeStyles?.activeSetClearText]}>{ui.clearActiveSet}</Text>
       </AnimatedPressable>
     </View>
+  );
+}
+
+function AccountUpgradeOverlay({
+  accountBusy,
+  animation,
+  onAppleSignIn,
+  onDismiss,
+  onGoogleSignIn,
+  reason,
+  studyMode,
+  themeMode,
+}: {
+  accountBusy: boolean;
+  animation: Animated.Value;
+  onAppleSignIn: () => void;
+  onDismiss: () => void;
+  onGoogleSignIn: () => void;
+  reason: AccountUpgradeReason;
+  studyMode: StudyMode;
+  themeMode: ThemeMode;
+}) {
+  const copy = accountUpgradeCopy[studyMode];
+  const ui = modeInterfaceCopy[studyMode];
+  const themeStyles = useThemeStyles();
+  const darkMode = themeMode === 'dark';
+  const foreground = darkMode ? iosVisual.dark.label : iosVisual.light.label;
+  const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;
+  const backdropMotion = {
+    opacity: animation.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
+  };
+  const panelMotion = {
+    opacity: animation.interpolate({ inputRange: [0, 0.2, 1], outputRange: [0, 0.72, 1] }),
+    transform: [
+      {
+        translateY: animation.interpolate({ inputRange: [0, 1], outputRange: [38, 0] }),
+      },
+      {
+        scale: animation.interpolate({ inputRange: [0, 1], outputRange: [0.965, 1] }),
+      },
+    ],
+  };
+
+  return (
+    <Modal
+      animationType="none"
+      onRequestClose={onDismiss}
+      presentationStyle="overFullScreen"
+      statusBarTranslucent
+      transparent
+      visible
+    >
+      <Animated.View style={[styles.accountUpgradeOverlay, themeStyles?.accountUpgradeOverlay, backdropMotion]}>
+        <Pressable
+          accessibilityLabel={copy.later}
+          disabled={accountBusy}
+          onPress={onDismiss}
+          style={StyleSheet.absoluteFill}
+        />
+        <SafeAreaView pointerEvents="box-none" style={styles.accountUpgradeSafeArea}>
+          <Animated.View style={[styles.accountUpgradePanel, themeStyles?.accountUpgradePanel, panelMotion]}>
+            <View style={styles.accountUpgradeHeader}>
+              <View style={[styles.accountUpgradeIcon, themeStyles?.accountUpgradeIcon]}>
+                <ShieldCheck size={23} color={darkMode ? iosVisual.dark.accent : iosVisual.light.accent} strokeWidth={2.35} />
+              </View>
+              <AnimatedPressable
+                accessibilityLabel={copy.later}
+                accessibilityRole="button"
+                disabled={accountBusy}
+                onPress={onDismiss}
+                pressTone="icon"
+                style={[styles.accountUpgradeClose, themeStyles?.accountUpgradeClose]}
+              >
+                <X size={19} color={foreground} strokeWidth={2.4} />
+              </AnimatedPressable>
+            </View>
+
+            <Text style={[styles.accountUpgradeTitle, themeStyles?.accountUpgradeTitle]}>{copy.title[reason]}</Text>
+            <Text style={[styles.accountUpgradeBody, themeStyles?.accountUpgradeBody]}>{copy.body[reason]}</Text>
+
+            <View style={[styles.accountUpgradeMemoryPill, themeStyles?.accountUpgradeMemoryPill]}>
+              <Cloud size={15} color={darkMode ? iosVisual.dark.green : iosVisual.light.green} strokeWidth={2.35} />
+              <Text style={[styles.accountUpgradeMemoryText, themeStyles?.accountUpgradeMemoryText]}>{copy.badge}</Text>
+            </View>
+
+            <View style={styles.accountUpgradeActions}>
+              {showAppleSignIn && (
+                <AnimatedPressable
+                  accessibilityLabel={ui.appleSignIn}
+                  accessibilityRole="button"
+                  disabled={accountBusy}
+                  onPress={onAppleSignIn}
+                  pressTone="primary"
+                  style={[styles.accountUpgradeAppleButton, accountBusy && styles.disabledButton]}
+                >
+                  <Smartphone size={19} color="#FFFFFF" strokeWidth={2.4} />
+                  <Text style={styles.accountUpgradeAppleText}>{ui.appleSignIn}</Text>
+                </AnimatedPressable>
+              )}
+              <AnimatedPressable
+                accessibilityLabel={ui.googleSignIn}
+                accessibilityRole="button"
+                disabled={accountBusy}
+                glassTone="secondary"
+                onPress={onGoogleSignIn}
+                pressTone="secondary"
+                style={[styles.accountUpgradeGoogleButton, themeStyles?.accountUpgradeGoogleButton, accountBusy && styles.disabledButton]}
+              >
+                <LogIn size={19} color={foreground} strokeWidth={2.4} />
+                <Text style={[styles.accountUpgradeGoogleText, themeStyles?.accountUpgradeGoogleText]}>{ui.googleSignIn}</Text>
+              </AnimatedPressable>
+            </View>
+
+            <Text style={[styles.accountUpgradePrivacy, themeStyles?.accountUpgradePrivacy]}>{copy.privacy}</Text>
+            <AnimatedPressable
+              accessibilityRole="button"
+              disabled={accountBusy}
+              onPress={onDismiss}
+              pressTone="secondary"
+              style={styles.accountUpgradeLaterButton}
+            >
+              <Text style={[styles.accountUpgradeLaterText, themeStyles?.accountUpgradeLaterText]}>{copy.later}</Text>
+            </AnimatedPressable>
+          </Animated.View>
+        </SafeAreaView>
+      </Animated.View>
+    </Modal>
   );
 }
 
@@ -7636,6 +8110,7 @@ export function ProfileCustomSetsView({
 
 export function ProfileSettingsView({
   accountBusy,
+  accountReady,
   developerMessage,
   developerVocabulary,
   onBack,
@@ -7646,16 +8121,15 @@ export function ProfileSettingsView({
   onOpenAppInfoLink,
   onStreakReminderEnabledChange,
   onThemeModeChange,
-  signedIn,
   streakReminderEnabled,
   studyMode,
   themeMode,
   vocabularyCount,
 }: {
   accountBusy: boolean;
+  accountReady: boolean;
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
-  signedIn: boolean;
   streakReminderEnabled: boolean;
   studyMode: StudyMode;
   themeMode: ThemeMode;
@@ -7734,11 +8208,7 @@ export function ProfileSettingsView({
           <View style={styles.flexOne}>
             <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.streakReminder}</Text>
             <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>
-              {!signedIn && streakReminderEnabled
-                ? ui.streakReminderSignInText
-                : streakReminderEnabled
-                  ? ui.streakReminderOnText
-                  : ui.streakReminderOffText}
+              {streakReminderEnabled ? ui.streakReminderOnText : ui.streakReminderOffText}
             </Text>
           </View>
           <View
@@ -7801,10 +8271,10 @@ export function ProfileSettingsView({
 
         <AnimatedPressable
           accessibilityRole="button"
-          disabled={!signedIn || accountBusy}
+          disabled={!accountReady || accountBusy}
           onPress={onConfirmDeleteAccountData}
           pressTone="secondary"
-          style={[styles.deleteAccountDataButton, themeStyles?.deleteAccountDataButton, (!signedIn || accountBusy) && styles.disabledButton]}
+          style={[styles.deleteAccountDataButton, themeStyles?.deleteAccountDataButton, (!accountReady || accountBusy) && styles.disabledButton]}
           testID="delete-account-data-button"
         >
           <Trash2 size={17} color={dangerIconColor} strokeWidth={2.4} />
@@ -8021,6 +8491,10 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
 
   const messages: Record<string, string> = {
     本機記憶中: 'Saved locally',
+    正在準備訪客進度: 'Preparing guest progress',
+    訪客進度已自動保存: 'Guest progress saved automatically',
+    訪客進度保存在這台裝置: 'Guest progress is saved on this device',
+    已登入並同步: 'Signed in and synced',
     檢查登入狀態: 'Checking sign-in',
     未登入: 'Signed out',
     同步中: 'Syncing',
@@ -8040,7 +8514,7 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
     登入導回失敗: 'Sign-in redirect failed',
     登入導回沒有取得帳號資料: 'The sign-in redirect did not return account data',
     請先登入: 'Please sign in first',
-    正在刪除帳號學習資料: 'Deleting account learning data',
+    正在刪除帳號與資料: 'Deleting account and data',
     帳號學習資料已刪除: 'Account learning data deleted',
     無法開啟連結: 'Could not open link',
     建立帳號中: 'Creating account',
@@ -8050,6 +8524,10 @@ function accountMessageForMode(message: string, studyMode: StudyMode): string {
     登入中: 'Signing in',
     登入失敗: 'Sign-in failed',
     已登出: 'Signed out',
+    正在切換為訪客模式: 'Switching to guest mode',
+    '已登出，訪客進度保存在這台裝置': 'Signed out. Guest progress is saved on this device',
+    '帳號已刪除，正在建立訪客進度': 'Account deleted. Preparing guest progress',
+    '帳號已刪除，訪客進度保存在這台裝置': 'Account deleted. Guest progress is saved on this device',
   };
   return messages[message] ?? message;
 }
@@ -10563,6 +11041,154 @@ const styles = StyleSheet.create({
   libraryDetailActionStack: {
     gap: 8,
   },
+  accountUpgradeOverlay: {
+    backgroundColor: 'rgba(15, 23, 34, 0.48)',
+    flex: 1,
+  },
+  accountUpgradeSafeArea: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 10,
+    paddingBottom: 8,
+  },
+  accountUpgradePanel: {
+    alignSelf: 'center',
+    backgroundColor: 'rgba(250, 252, 255, 0.98)',
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderCurve: 'continuous',
+    borderRadius: 24,
+    borderWidth: 1,
+    maxWidth: 520,
+    padding: 20,
+    shadowColor: '#000000',
+    shadowOffset: { height: 18, width: 0 },
+    shadowOpacity: 0.22,
+    shadowRadius: 34,
+    width: '100%',
+  },
+  accountUpgradeHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  accountUpgradeIcon: {
+    alignItems: 'center',
+    backgroundColor: '#EAF4FF',
+    borderColor: '#B9DCFF',
+    borderCurve: 'continuous',
+    borderRadius: 14,
+    borderWidth: 1,
+    height: 48,
+    justifyContent: 'center',
+    width: 48,
+  },
+  accountUpgradeClose: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(229, 229, 234, 0.72)',
+    borderColor: 'rgba(199, 199, 204, 0.72)',
+    borderCurve: 'continuous',
+    borderRadius: 19,
+    borderWidth: StyleSheet.hairlineWidth,
+    height: 38,
+    justifyContent: 'center',
+    width: 38,
+  },
+  accountUpgradeTitle: {
+    color: '#1C1C1E',
+    fontSize: 26,
+    fontWeight: '700',
+    letterSpacing: 0,
+    lineHeight: 32,
+    marginTop: 18,
+  },
+  accountUpgradeBody: {
+    color: '#54545A',
+    fontSize: 15,
+    fontWeight: '500',
+    letterSpacing: 0,
+    lineHeight: 22,
+    marginTop: 8,
+  },
+  accountUpgradeMemoryPill: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: '#EAF9EE',
+    borderColor: '#B7E9C2',
+    borderCurve: 'continuous',
+    borderRadius: 11,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 7,
+    marginTop: 16,
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+  },
+  accountUpgradeMemoryText: {
+    color: '#1F7A3B',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  accountUpgradeActions: {
+    gap: 10,
+    marginTop: 20,
+  },
+  accountUpgradeAppleButton: {
+    alignItems: 'center',
+    backgroundColor: '#101722',
+    borderCurve: 'continuous',
+    borderRadius: 14,
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+    minHeight: 54,
+    paddingHorizontal: 16,
+  },
+  accountUpgradeAppleText: {
+    color: '#FFFFFF',
+    flexShrink: 1,
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  accountUpgradeGoogleButton: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderColor: '#C7C7CC',
+    borderCurve: 'continuous',
+    borderRadius: 14,
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+    minHeight: 54,
+    overflow: 'hidden',
+    paddingHorizontal: 16,
+  },
+  accountUpgradeGoogleText: {
+    color: '#1C1C1E',
+    flexShrink: 1,
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  accountUpgradePrivacy: {
+    color: '#6C6C70',
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 14,
+    textAlign: 'center',
+  },
+  accountUpgradeLaterButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 42,
+    marginTop: 2,
+  },
+  accountUpgradeLaterText: {
+    color: '#007AFF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
   customSetOverlay: {
     alignItems: 'center',
     backgroundColor: 'rgba(28, 28, 30, 0.54)',
@@ -11743,6 +12369,47 @@ const darkStyles = StyleSheet.create({
   accountCard: {
     backgroundColor: '#1C1C1E',
     borderColor: '#3A3A3C',
+  },
+  accountUpgradeOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.64)',
+  },
+  accountUpgradePanel: {
+    backgroundColor: 'rgba(28, 28, 30, 0.98)',
+    borderColor: '#3A3A3C',
+  },
+  accountUpgradeIcon: {
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
+  },
+  accountUpgradeClose: {
+    backgroundColor: 'rgba(58, 58, 60, 0.78)',
+    borderColor: '#636366',
+  },
+  accountUpgradeTitle: {
+    color: '#FFFFFF',
+  },
+  accountUpgradeBody: {
+    color: '#C7C7CC',
+  },
+  accountUpgradeMemoryPill: {
+    backgroundColor: 'rgba(48, 209, 88, 0.14)',
+    borderColor: 'rgba(48, 209, 88, 0.36)',
+  },
+  accountUpgradeMemoryText: {
+    color: '#30D158',
+  },
+  accountUpgradeGoogleButton: {
+    backgroundColor: 'rgba(44, 44, 46, 0.76)',
+    borderColor: '#636366',
+  },
+  accountUpgradeGoogleText: {
+    color: '#FFFFFF',
+  },
+  accountUpgradePrivacy: {
+    color: '#AEAEB2',
+  },
+  accountUpgradeLaterText: {
+    color: '#0A84FF',
   },
   googleButton: {
     backgroundColor: '#111A26',

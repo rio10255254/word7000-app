@@ -3,6 +3,7 @@ import type { WordEntry } from '../data/words';
 import type { CustomSetSort, CustomSetState, CustomVocabSet } from './customSets';
 import type { DeveloperVocabularySnapshot } from './developerVocabulary';
 import type { ProgressState } from './progress';
+import type { AccountUpgradeReason } from './accountIdentity';
 
 export type AppStudyMode = 'english' | 'chinese';
 export type AppThemeMode = 'light' | 'dark';
@@ -19,6 +20,7 @@ export type RouteManualCustomWordState = {
 
 export type AppRouteBridgeSnapshot = {
   accountBusy: boolean;
+  accountReady: boolean;
   customSetMessage: string;
   customSetSort: CustomSetSort;
   customSetState: CustomSetState;
@@ -49,6 +51,7 @@ export type AppRouteBridgeSnapshot = {
     newSetNameChange: (name: string) => void;
     openAppInfoLink: (url: string) => void;
     removeWordFromSet: (setId: string, word: WordEntry) => void;
+    requestAccountUpgrade: (reason: AccountUpgradeReason, afterUpgrade?: () => void) => void;
     renameCustomSet: (setId: string, name: string) => void;
     restoreLibraryScroll: () => void;
     selectCustomSet: (setId: string | null) => void;

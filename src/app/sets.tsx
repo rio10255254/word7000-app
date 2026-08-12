@@ -1,13 +1,22 @@
 import { Redirect, useRouter } from 'expo-router';
 import { Platform, ScrollView } from 'react-native';
+import { useEffect } from 'react';
 import { ProfileCustomSetsView, Word7000RouteScreen } from '../../App';
 import { useAppRouteBridge } from '../lib/appRouteBridge';
 
 export default function CustomSetsRoute() {
   const router = useRouter();
   const bridge = useAppRouteBridge();
+  useEffect(() => {
+    if (bridge && !bridge.signedIn) {
+      bridge.actions.requestAccountUpgrade('customSets');
+    }
+  }, [bridge?.signedIn]);
   if (!bridge) {
     return <Redirect href="/" />;
+  }
+  if (!bridge.signedIn) {
+    return <Redirect href="/library" />;
   }
 
   const closeRoute = () => {

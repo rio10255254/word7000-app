@@ -6,6 +6,7 @@ node_modules/
 # Expo
 .expo/
 .codex-run/
+supabase/.temp/
 web-build/
 expo-env.d.ts
 

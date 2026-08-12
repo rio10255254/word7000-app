@@ -88,9 +88,9 @@ export default function SettingsRoute() {
         >
           <ProfileSettingsView
             accountBusy={bridge.accountBusy}
+            accountReady={bridge.accountReady}
             developerMessage={bridge.developerMessage}
             developerVocabulary={bridge.developerVocabulary}
-            signedIn={bridge.signedIn}
             streakReminderEnabled={bridge.streakReminderEnabled}
             studyMode={bridge.studyMode}
             themeMode={bridge.themeMode}

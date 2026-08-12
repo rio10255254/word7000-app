@@ -8,6 +8,9 @@ describe('OAuth callback parsing', () => {
     ).toEqual({
       accessToken: 'access123',
       code: null,
+      error: null,
+      errorCode: null,
+      identityId: null,
       refreshToken: 'refresh456',
     });
   });
@@ -16,14 +19,31 @@ describe('OAuth callback parsing', () => {
     expect(parseOAuthCallbackUrl('word7000://auth/callback?code=pkce-code-123')).toEqual({
       accessToken: null,
       code: 'pkce-code-123',
+      error: null,
+      errorCode: null,
+      identityId: null,
       refreshToken: null,
     });
   });
 
   test('returns empty values when the callback has no session information', () => {
-    expect(parseOAuthCallbackUrl('word7000://auth/callback?error=access_denied')).toEqual({
+    expect(parseOAuthCallbackUrl('word7000://auth/callback?error=access_denied&error_code=identity_already_exists')).toEqual({
       accessToken: null,
       code: null,
+      error: 'access_denied',
+      errorCode: 'identity_already_exists',
+      identityId: null,
+      refreshToken: null,
+    });
+  });
+
+  test('extracts the linked identity returned by a native account upgrade', () => {
+    expect(parseOAuthCallbackUrl('word7000://auth/callback?identity_id=identity-123')).toEqual({
+      accessToken: null,
+      code: null,
+      error: null,
+      errorCode: null,
+      identityId: 'identity-123',
       refreshToken: null,
     });
   });

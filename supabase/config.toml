@@ -1,0 +1,2 @@
+[functions.send-streak-live-activities]
+verify_jwt = false

@@ -91,6 +91,7 @@ export default function SettingsRoute() {
             developerMessage={bridge.developerMessage}
             developerVocabulary={bridge.developerVocabulary}
             signedIn={bridge.signedIn}
+            streakReminderEnabled={bridge.streakReminderEnabled}
             studyMode={bridge.studyMode}
             themeMode={bridge.themeMode}
             vocabularyCount={bridge.vocabularyWords.length}
@@ -100,6 +101,7 @@ export default function SettingsRoute() {
             onExportVocabulary={bridge.actions.exportVocabulary}
             onImportVocabulary={bridge.actions.importVocabulary}
             onOpenAppInfoLink={bridge.actions.openAppInfoLink}
+            onStreakReminderEnabledChange={bridge.actions.setStreakReminderEnabled}
             onThemeModeChange={changeThemeMode}
           />
         </ScrollView>

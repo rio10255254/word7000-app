@@ -30,6 +30,7 @@ export type AppRouteBridgeSnapshot = {
   progress: ProgressState;
   selectedCustomSetId: string | null;
   signedIn: boolean;
+  streakReminderEnabled: boolean;
   studyMode: AppStudyMode;
   themeMode: AppThemeMode;
   vocabularyWords: WordEntry[];
@@ -52,6 +53,7 @@ export type AppRouteBridgeSnapshot = {
     restoreLibraryScroll: () => void;
     selectCustomSet: (setId: string | null) => void;
     setCustomSetSort: (sort: CustomSetSort) => void;
+    setStreakReminderEnabled: (enabled: boolean) => void;
     setThemeMode: (themeMode: AppThemeMode) => void;
     startQuizSet: (setId: string) => void;
     startStudySet: (setId: string) => void;

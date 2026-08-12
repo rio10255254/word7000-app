@@ -30,6 +30,7 @@ import {
   Compass,
   Database,
   Download,
+  Flame,
   Home,
   Library,
   Lock,
@@ -186,6 +187,24 @@ import {
 } from './src/lib/userMemorySync';
 import { setAppRouteBridgeSnapshot } from './src/lib/appRouteBridge';
 import { hideNativeSplash } from './src/lib/nativeSplash';
+import {
+  buildStreakLiveActivityProps,
+  buildStreakReminderPlan,
+  loadStreakReminderEnabled,
+  localDateKey,
+  saveStreakReminderEnabled,
+} from './src/lib/streakReminder';
+import {
+  subscribeToStreakPushToStartToken,
+  syncStreakLiveActivity,
+  type StreakLiveActivitySyncResult,
+} from './src/lib/streakLiveActivityController';
+import {
+  deleteStreakReminderRegistrations,
+  disableStreakReminderRegistration,
+  getOrCreateStreakDeviceId,
+  saveStreakReminderRegistration,
+} from './src/lib/streakReminderRegistration';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -228,7 +247,7 @@ type FilterOption = {
   label: string;
 };
 
-const today = new Date().toISOString().slice(0, 10);
+const today = localDateKey();
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
 const UPDATE_AUTO_REFRESH_MS = 6500;
 const UPDATE_CHECK_INTERVAL_MS = 60_000;
@@ -516,11 +535,11 @@ const modeInterfaceCopy = {
     tutorial: '教學',
     replayTutorial: '重新查看加入主畫面教學',
     settings: '設定',
-    settingsSummary: '深色模式與資料匯入工具',
+    settingsSummary: '深色模式、連勝提醒與資料工具',
     openSettings: '開啟設定',
     backProfile: '返回我的',
     appSettings: 'App 設定',
-    displayTools: '顯示模式與本機工具',
+    displayTools: '顯示模式、連勝提醒與本機工具',
     legalSupport: '隱私與支援',
     legalSupportSummary: '隱私、支援與帳號資料管理',
     privacyPolicy: '隱私權政策',
@@ -528,15 +547,20 @@ const modeInterfaceCopy = {
     supportPage: '支援頁面',
     supportPageText: '登入、同步、更新與帳號資料說明',
     deleteAccountData: '刪除帳號學習資料',
-    deleteAccountDataText: '刪除雲端進度、單字集與每日活躍紀錄，並登出目前帳號',
+    deleteAccountDataText: '刪除雲端進度、單字集、活躍紀錄與鎖定畫面提醒資料',
     deleteAccountDataConfirmTitle: '刪除帳號學習資料？',
-    deleteAccountDataConfirmText: '這會刪除雲端進度、單字集與每日活躍紀錄，並登出目前帳號。',
+    deleteAccountDataConfirmText: '這會刪除雲端進度、單字集、每日活躍紀錄與鎖定畫面提醒資料，並登出目前帳號。',
     deleteAccountDataConfirmCancel: '取消',
     deleteAccountDataConfirmAction: '確認刪除',
     darkMode: '深色模式',
     darkModeOnText: '已切換成夜間閱讀介面',
     darkModeOffText: '切換成夜間閱讀介面',
     toggleDarkMode: '切換深色模式',
+    streakReminder: '鎖定畫面連勝提醒',
+    streakReminderOnText: '最後一小時顯示鎖定畫面倒數',
+    streakReminderOffText: '不在鎖定畫面顯示倒數',
+    streakReminderSignInText: '登入後，App 關閉時也能自動顯示',
+    toggleStreakReminder: '切換鎖定畫面連勝提醒',
     on: '開啟',
     off: '關閉',
     developerPanel: '開發人員資料窗口',
@@ -721,11 +745,11 @@ const modeInterfaceCopy = {
     tutorial: 'Tutorial',
     replayTutorial: 'Review home-screen tutorial',
     settings: 'Settings',
-    settingsSummary: 'Dark mode and import tools',
+    settingsSummary: 'Dark mode, streak alerts, and data tools',
     openSettings: 'Open settings',
     backProfile: 'Back to Me',
     appSettings: 'App Settings',
-    displayTools: 'Display mode and local tools',
+    displayTools: 'Display, streak alerts, and local tools',
     legalSupport: 'Privacy and Support',
     legalSupportSummary: 'Privacy, support, and account data controls',
     privacyPolicy: 'Privacy Policy',
@@ -733,15 +757,20 @@ const modeInterfaceCopy = {
     supportPage: 'Support Page',
     supportPageText: 'Help with sign-in, sync, updates, and account data',
     deleteAccountData: 'Delete Account Learning Data',
-    deleteAccountDataText: 'Delete cloud progress, custom sets, and daily activity, then sign out',
+    deleteAccountDataText: 'Delete cloud progress, sets, activity, and Lock Screen reminder data',
     deleteAccountDataConfirmTitle: 'Delete account learning data?',
-    deleteAccountDataConfirmText: 'This deletes cloud progress, custom sets, and daily activity, then signs out of the current account.',
+    deleteAccountDataConfirmText: 'This deletes cloud progress, custom sets, daily activity, and Lock Screen reminder data, then signs out.',
     deleteAccountDataConfirmCancel: 'Cancel',
     deleteAccountDataConfirmAction: 'Delete Data',
     darkMode: 'Dark Mode',
     darkModeOnText: 'Night reading interface is on',
     darkModeOffText: 'Switch to the night reading interface',
     toggleDarkMode: 'Toggle dark mode',
+    streakReminder: 'Lock Screen Streak Alert',
+    streakReminderOnText: 'Show a live countdown in the final hour',
+    streakReminderOffText: 'Do not show the Lock Screen countdown',
+    streakReminderSignInText: 'Sign in to start it even while the app is closed',
+    toggleStreakReminder: 'Toggle Lock Screen streak alert',
     on: 'On',
     off: 'Off',
     developerPanel: 'Developer Data Window',
@@ -1128,6 +1157,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [initialFilterPreferences] = useState(() => loadFilterPreferences(getAppStorage()));
+  const [streakDeviceId] = useState(() => getOrCreateStreakDeviceId(getAppStorage()));
   // Derived from the route rather than held in state. The memos below use it
   // to skip work for screens you are not looking at, and with native tabs the
   // router is the only thing that knows which screen that is. Keeping the same
@@ -1139,6 +1169,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     },
     [router],
   );
+  const [currentDate, setCurrentDate] = useState(today);
+  const [streakReminderNow, setStreakReminderNow] = useState(() => Date.now());
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
   const [progressReady, setProgressReady] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
@@ -1178,6 +1210,15 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
   const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getAppStorage()));
+  const [streakReminderEnabled, setStreakReminderEnabled] = useState(() =>
+    loadStreakReminderEnabled(getAppStorage()),
+  );
+  const [streakPushToStartToken, setStreakPushToStartToken] = useState<string | null>(null);
+  const [streakActivitySync, setStreakActivitySync] = useState<StreakLiveActivitySyncResult>({
+    active: false,
+    activityPushToken: null,
+    startedForExpiresAt: null,
+  });
   const [modeSwitchTarget, setModeSwitchTarget] = useState<StudyMode>(() =>
     loadStudyMode(getAppStorage()) === 'english' ? 'chinese' : 'english',
   );
@@ -1287,6 +1328,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const activeModeCopy = modeCopy[studyMode];
   const activeSystemCopy = systemCopy[studyMode];
   const activeInstallGuideSteps = installGuideStepsByMode[studyMode];
+  const streakReminderPlan = useMemo(
+    () => buildStreakReminderPlan(progress, new Date(streakReminderNow), streakReminderEnabled),
+    [progress.lastStudyDate, progress.streak, streakReminderEnabled, streakReminderNow],
+  );
+  const streakLiveActivityProps = useMemo(
+    () => buildStreakLiveActivityProps(streakReminderPlan, studyMode),
+    [streakReminderPlan.expiresAt?.getTime(), streakReminderPlan.startsAt?.getTime(), streakReminderPlan.streak, studyMode],
+  );
   const updateState = useAppUpdateCheck(studyMode);
   const cardMotionStyle = useMemo(
     () => ({
@@ -1478,6 +1527,83 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   useWebServiceWorker();
 
   useEffect(() => {
+    const refreshClock = () => {
+      const now = new Date();
+      setStreakReminderNow(now.getTime());
+      setCurrentDate(localDateKey(now));
+    };
+    const interval = setInterval(refreshClock, 30_000);
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        refreshClock();
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+      appStateSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (progressReady) {
+      setProgress((current) => normalizeProgressForDate(current, currentDate));
+    }
+  }, [currentDate, progressReady]);
+
+  useEffect(() => {
+    const subscription = subscribeToStreakPushToStartToken(setStreakPushToStartToken);
+    return () => subscription?.remove();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    syncStreakLiveActivity(streakLiveActivityProps, streakReminderPlan.activeNow)
+      .then((result) => {
+        if (!cancelled) {
+          setStreakActivitySync(result);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [streakLiveActivityProps, streakReminderPlan.activeNow]);
+
+  useEffect(() => {
+    if (!supabaseClient || !account.userId || !streakPushToStartToken) {
+      return;
+    }
+
+    const expiresAt = streakReminderPlan.expiresAt?.toISOString() ?? null;
+    const activityMatchesExpiration = expiresAt === streakActivitySync.startedForExpiresAt;
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    void saveStreakReminderRegistration(supabaseClient, account.userId, {
+      activityPushToken: activityMatchesExpiration ? streakActivitySync.activityPushToken : null,
+      deviceId: streakDeviceId,
+      enabled: streakReminderEnabled && Boolean(expiresAt),
+      expiresAt,
+      locale: studyMode === 'chinese' ? 'en' : 'zh-TW',
+      pushToStartToken: streakPushToStartToken,
+      startedForExpiresAt: activityMatchesExpiration ? streakActivitySync.startedForExpiresAt : null,
+      streak: streakReminderPlan.streak,
+      timeZone,
+    });
+  }, [
+    account.userId,
+    streakActivitySync.activityPushToken,
+    streakActivitySync.startedForExpiresAt,
+    streakDeviceId,
+    streakPushToStartToken,
+    streakReminderEnabled,
+    streakReminderPlan.expiresAt?.getTime(),
+    streakReminderPlan.streak,
+    studyMode,
+    supabaseClient,
+  ]);
+
+  useEffect(() => {
     Animated.sequence([
       Animated.timing(launchAnim, {
         duration: 280,
@@ -1540,6 +1666,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     saveThemeMode(getAppStorage(), themeMode);
   }, [themeMode]);
+
+  useEffect(() => {
+    saveStreakReminderEnabled(getAppStorage(), streakReminderEnabled);
+  }, [streakReminderEnabled]);
 
   useEffect(() => {
     saveStudyMode(getAppStorage(), studyMode);
@@ -1721,7 +1851,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [developerVocabulary?.importedAt, studyMode]);
 
   useEffect(() => {
-    const localProgress = normalizeProgressForDate(loadProgressFromStorage(getAppStorage(), initialProgress), today);
+    const localProgress = normalizeProgressForDate(loadProgressFromStorage(getAppStorage(), initialProgress), currentDate);
     setProgress(localProgress);
     setProgressReady(true);
 
@@ -1778,7 +1908,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [supabaseClient]);
+  }, [currentDate, supabaseClient]);
 
   useEffect(() => {
     if (!progressReady) {
@@ -1834,19 +1964,19 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   function handleKnown(wordId: string) {
     nextStudyWord();
     if (studyFilter === 'all') {
-      startTransition(() => setProgress((current) => markKnown(current, wordId, today)));
+      startTransition(() => setProgress((current) => markKnown(current, wordId, currentDate)));
       return;
     }
-    setProgress((current) => markKnown(current, wordId, today));
+    setProgress((current) => markKnown(current, wordId, currentDate));
   }
 
   function handleReview(wordId: string) {
     nextStudyWord();
     if (studyFilter === 'all') {
-      startTransition(() => setProgress((current) => markReview(current, wordId, today)));
+      startTransition(() => setProgress((current) => markReview(current, wordId, currentDate)));
       return;
     }
-    setProgress((current) => markReview(current, wordId, today));
+    setProgress((current) => markReview(current, wordId, currentDate));
   }
 
   const handleLibraryQueryChange = useCallback((query: string) => {
@@ -1858,7 +1988,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   function handleExportVocabulary() {
-    const downloaded = downloadTextFile(`word7000-vocabulary-${today}.csv`, exportWordsToCsv(vocabularyWords), 'text/csv;charset=utf-8');
+    const downloaded = downloadTextFile(`word7000-vocabulary-${currentDate}.csv`, exportWordsToCsv(vocabularyWords), 'text/csv;charset=utf-8');
     setDeveloperVocabularyMessage(downloaded ? activeSystemCopy.exportCsvSuccess(vocabularyWords.length) : activeSystemCopy.exportCsvUnavailable);
   }
 
@@ -2101,7 +2231,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     if (correct) {
       setQuizCorrectCount((current) => current + 1);
     }
-    setProgress((current) => (correct ? markKnown(current, quizWord.id, today) : markReview(current, quizWord.id, today)));
+    setProgress((current) => (correct ? markKnown(current, quizWord.id, currentDate) : markReview(current, quizWord.id, currentDate)));
   }
 
   function startQuiz() {
@@ -2276,11 +2406,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
     const storage = getAppStorage();
     const cloudProgress = await loadCloudProgressRecord(asCloudProgressClient(supabaseClient), user.id);
-    const userLocalProgress = normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress, user.id), today);
+    const userLocalProgress = normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress, user.id), currentDate);
     const pendingMemory = loadUserMemoryOutbox(storage, user.id);
     const loadedProgress = normalizeProgressForDate(
       mergeProgressStates(cloudProgress.progress, userLocalProgress, pendingMemory?.progress),
-      today,
+      currentDate,
     );
     const loadedCustomSetState = mergeCustomSetStates(
       cloudProgress.customSets,
@@ -2686,10 +2816,13 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
 
     if (supabaseClient) {
+      if (signedInUserId) {
+        await disableStreakReminderRegistration(supabaseClient, signedInUserId, streakDeviceId);
+      }
       await supabaseClient.auth.signOut();
     }
 
-    const guestProgress = normalizeProgressForDate(loadProgressFromStorage(getAppStorage(), initialProgress), today);
+    const guestProgress = normalizeProgressForDate(loadProgressFromStorage(getAppStorage(), initialProgress), currentDate);
     setProgress(guestProgress);
     setCustomSetState(loadCustomSetState(getAppStorage()));
     setSelectedCustomSetId(null);
@@ -2770,13 +2903,15 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    await deleteStreakReminderRegistrations(supabaseClient, signedInUserId);
+
     const storage = getAppStorage();
     storage?.removeItem?.(progressStorageKey(signedInUserId));
     storage?.removeItem?.(customSetStorageKey(signedInUserId));
     clearUserMemoryOutbox(storage, signedInUserId);
     await supabaseClient.auth.signOut();
 
-    setProgress(normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress), today));
+    setProgress(normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress), currentDate));
     setCustomSetState(loadCustomSetState(storage));
     setSelectedCustomSetId(null);
     setStudySetId(null);
@@ -2964,6 +3099,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     });
     setTimeout(() => restoreLibraryRouteScroll(restoreOffset), 420);
   });
+  const routeSetStreakReminderEnabled = useStableEvent(setStreakReminderEnabled);
   const routeSetThemeMode = useStableEvent(triggerThemeModeChange);
   const routeStartQuizSet = useStableEvent(handleStartQuizSet);
   const routeStartStudySet = useStableEvent(handleStartStudySet);
@@ -2988,6 +3124,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       restoreLibraryScroll: routeRestoreLibraryScroll,
       selectCustomSet: setSelectedCustomSetId,
       setCustomSetSort,
+      setStreakReminderEnabled: routeSetStreakReminderEnabled,
       setThemeMode: routeSetThemeMode,
       startQuizSet: routeStartQuizSet,
       startStudySet: routeStartStudySet,
@@ -3009,6 +3146,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       routeRemoveWordFromSet,
       routeRenameCustomSet,
       routeRestoreLibraryScroll,
+      routeSetStreakReminderEnabled,
       routeSetThemeMode,
       routeStartQuizSet,
       routeStartStudySet,
@@ -3030,6 +3168,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       progress,
       selectedCustomSetId,
       signedIn: Boolean(account.userId),
+      streakReminderEnabled,
       studyMode,
       themeMode,
       vocabularyWords,
@@ -3048,6 +3187,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     routeActions,
     selectedCustomSetId,
     sortedCustomSets,
+    streakReminderEnabled,
     studyMode,
     themeMode,
     vocabularyWords,
@@ -7504,8 +7644,10 @@ export function ProfileSettingsView({
   onExportVocabulary,
   onImportVocabulary,
   onOpenAppInfoLink,
+  onStreakReminderEnabledChange,
   onThemeModeChange,
   signedIn,
+  streakReminderEnabled,
   studyMode,
   themeMode,
   vocabularyCount,
@@ -7514,6 +7656,7 @@ export function ProfileSettingsView({
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
   signedIn: boolean;
+  streakReminderEnabled: boolean;
   studyMode: StudyMode;
   themeMode: ThemeMode;
   vocabularyCount: number;
@@ -7523,6 +7666,7 @@ export function ProfileSettingsView({
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
   onOpenAppInfoLink: (url: string) => void;
+  onStreakReminderEnabledChange: (enabled: boolean) => void;
   onThemeModeChange: (themeMode: ThemeMode) => void;
 }) {
   const themeStyles = useThemeStyles();
@@ -7530,6 +7674,7 @@ export function ProfileSettingsView({
   const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const nextThemeMode = darkMode ? 'light' : 'dark';
   const toggleThemeMode = () => onThemeModeChange(nextThemeMode);
+  const toggleStreakReminder = () => onStreakReminderEnabledChange(!streakReminderEnabled);
   const dangerIconColor = darkMode ? '#FF6961' : '#D70015';
   const ui = modeInterfaceCopy[studyMode];
 
@@ -7571,6 +7716,44 @@ export function ProfileSettingsView({
             style={[styles.themeStatusLight, darkMode && styles.themeStatusLightActive]}
           >
             <View style={[styles.themeStatusLightCore, darkMode && styles.themeStatusLightCoreActive]} />
+          </View>
+        </AnimatedPressable>
+
+        <AnimatedPressable
+          accessibilityLabel={ui.toggleStreakReminder}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: streakReminderEnabled }}
+          onPress={toggleStreakReminder}
+          pressTone="list"
+          style={[styles.settingOptionRow, themeStyles?.settingOptionRow]}
+          testID="streak-reminder-toggle"
+        >
+          <View style={[styles.settingOptionIcon, themeStyles?.settingsEntryIcon]}>
+            <Flame size={20} color={streakReminderEnabled ? '#FF9F0A' : '#8E8E93'} strokeWidth={2.3} />
+          </View>
+          <View style={styles.flexOne}>
+            <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.streakReminder}</Text>
+            <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>
+              {!signedIn && streakReminderEnabled
+                ? ui.streakReminderSignInText
+                : streakReminderEnabled
+                  ? ui.streakReminderOnText
+                  : ui.streakReminderOffText}
+            </Text>
+          </View>
+          <View
+            pointerEvents="none"
+            style={[
+              styles.themeStatusLight,
+              streakReminderEnabled && styles.streakStatusLightActive,
+            ]}
+          >
+            <View
+              style={[
+                styles.themeStatusLightCore,
+                streakReminderEnabled && styles.streakStatusLightCoreActive,
+              ]}
+            />
           </View>
         </AnimatedPressable>
       </View>
@@ -10762,6 +10945,17 @@ const styles = StyleSheet.create({
   },
   themeStatusLightCoreActive: {
     backgroundColor: '#007AFF',
+  },
+  streakStatusLightActive: {
+    backgroundColor: '#FFE8BF',
+    elevation: 4,
+    shadowColor: '#FF9F0A',
+    shadowOffset: { height: 0, width: 0 },
+    shadowOpacity: 0.42,
+    shadowRadius: 7,
+  },
+  streakStatusLightCoreActive: {
+    backgroundColor: '#FF9F0A',
   },
   settingsEntryButton: {
     alignItems: 'center',

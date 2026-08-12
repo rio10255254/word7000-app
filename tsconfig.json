@@ -6,5 +6,5 @@
     "resolveJsonModule": true,
     "strict": true
   },
-  "exclude": ["**/*.test.ts", "dist", "public", "scripts"]
+  "exclude": ["**/*.test.ts", "dist", "public", "scripts", "supabase/functions"]
 }

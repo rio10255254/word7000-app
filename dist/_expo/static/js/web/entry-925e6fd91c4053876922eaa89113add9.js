@@ -13637,30 +13637,26 @@ __d(function(g,r,i,a,m,e,d){"use strict";Object.defineProperty(e,"__esModule",{v
 __d(function(g,r,i,a,m,e,d){"use strict";var t=this&&this.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(e,"__esModule",{value:!0}),e.NativeTabsView=function(t){const{tabs:c,focusedIndex:b}=t,f=c[b],x=(0,n.useMemo)(()=>f,[]),y=f.routeKey,S=c.map(t=>(0,o.jsx)(s,{routeKey:t.routeKey,title:t.options.title??t.name,badgeValue:t.options.badgeValue},t.routeKey)),p=c.map(t=>(0,o.jsx)(r(d[3]).TabsContent,{value:t.routeKey,className:l.default.tabContent,forceMount:!0,children:t.contentRenderer()},t.routeKey));return(0,o.jsxs)(r(d[3]).Tabs,{className:l.default.nativeTabsContainer,defaultValue:x.routeKey,value:y,onValueChange:o=>{t.onTabChange({selectedKey:o,provenance:0,isNativeAction:!0})},style:u(t,f.options),children:[(0,o.jsx)(r(d[3]).TabsList,{"aria-label":"Main",className:l.default.navigationMenuRoot,children:S}),p]})};const o=r(d[0]),n=r(d[1]),l=t(r(d[2]));function s(t){const{title:n,badgeValue:s,routeKey:u}=t,c=' '===s;return(0,o.jsxs)(r(d[3]).TabsTrigger,{value:u,className:l.default.navigationMenuTrigger,children:[(0,o.jsx)("span",{className:l.default.tabText,children:n}),s&&(0,o.jsx)("div",{className:`${l.default.tabBadge} ${c?l.default.emptyTabBadge:''}`,children:s})]})}function u(t,o){const n={};if(!t)return n;const l=o?.labelStyle;return l?.fontFamily&&(n['--expo-router-tabs-font-family']=String(l.fontFamily)),l?.fontSize&&(n['--expo-router-tabs-font-size']=String(l.fontSize)),l?.fontWeight&&(n['--expo-router-tabs-font-weight']=String(l.fontWeight)),l?.fontStyle&&(n['--expo-router-tabs-font-style']=String(l.fontStyle)),l?.color&&(n['--expo-router-tabs-text-color']=String(l.color)),o?.selectedLabelStyle?.color?n['--expo-router-tabs-active-text-color']=String(o?.selectedLabelStyle?.color):t.tintColor&&(n['--expo-router-tabs-active-text-color']=String(t.tintColor)),o?.selectedLabelStyle?.fontSize&&(n['--expo-router-tabs-active-font-size']=String(o?.selectedLabelStyle?.fontSize)),o?.indicatorColor&&(n['--expo-router-tabs-active-background-color']=String(o.indicatorColor)),o?.backgroundColor&&(n['--expo-router-tabs-background-color']=String(o.backgroundColor)),o?.badgeBackgroundColor&&(n['--expo-router-tabs-badge-background-color']=String(o.badgeBackgroundColor)),o?.badgeTextColor&&(n['--expo-router-tabs-badge-text-color']=String(o.badgeTextColor)),n}},3086,[6,8,3087,3088]);
 __d(function (global, require, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, dependencyMap) {
   module.exports = Object.assign({
-    "tabContent": "EFtDwW_tabContent",
     "nativeTabsContainer": "EFtDwW_nativeTabsContainer",
-    "tabText": "EFtDwW_tabText",
     "navigationMenuTrigger": "EFtDwW_navigationMenuTrigger",
+    "tabContent": "EFtDwW_tabContent",
     "tabBadge": "EFtDwW_tabBadge",
     "emptyTabBadge": "EFtDwW_emptyTabBadge",
+    "tabText": "EFtDwW_tabText",
     "navigationMenuRoot": "EFtDwW_navigationMenuRoot"
   }, {
     unstable_styles: {
-      "tabContent": {
-        "$$css": true,
-        "_": "EFtDwW_tabContent"
-      },
       "nativeTabsContainer": {
         "$$css": true,
         "_": "EFtDwW_nativeTabsContainer"
       },
-      "tabText": {
-        "$$css": true,
-        "_": "EFtDwW_tabText"
-      },
       "navigationMenuTrigger": {
         "$$css": true,
         "_": "EFtDwW_navigationMenuTrigger"
+      },
+      "tabContent": {
+        "$$css": true,
+        "_": "EFtDwW_tabContent"
       },
       "tabBadge": {
         "$$css": true,
@@ -13669,6 +13665,10 @@ __d(function (global, require, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, expor
       "emptyTabBadge": {
         "$$css": true,
         "_": "EFtDwW_emptyTabBadge"
+      },
+      "tabText": {
+        "$$css": true,
+        "_": "EFtDwW_tabText"
       },
       "navigationMenuRoot": {
         "$$css": true,

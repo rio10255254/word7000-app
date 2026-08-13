@@ -1001,6 +1001,42 @@ describe('free web launch configuration', () => {
     expect(librarySource).not.toContain('styles.libraryCustomSetsStrip');
   });
 
+  test('marks every guest custom-set entry point as locked', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const studyStart = appSource.indexOf('function StudyView({');
+    const studyEnd = appSource.indexOf('function FilterControlPanel({');
+    const libraryStart = appSource.indexOf('function LibraryView({');
+    const detailStart = appSource.indexOf('function LibraryWordDetailView({');
+    const detailEnd = appSource.indexOf('function ProfileView({');
+    const studySource = appSource.slice(studyStart, studyEnd);
+    const librarySource = appSource.slice(libraryStart, detailStart);
+    const detailSource = appSource.slice(detailStart, detailEnd);
+
+    expect(appSource).toContain('function AddToSetGlyph({ locked, size = 20 }');
+    expect(studySource).toContain('<AddToSetGlyph locked={customSetsLocked} size={19} />');
+    expect(librarySource).toContain('<AddToSetGlyph locked={customSetsLocked} size={18} />');
+    expect(librarySource).toContain('{customSetsLocked && <Lock size={11}');
+    expect(detailSource).toContain('<AddToSetGlyph locked={customSetsLocked} size={21} />');
+  });
+
+  test('starts the account prompt only after its modal is visible', () => {
+    const appSource = fs.readFileSync(appPath, 'utf8');
+    const requestStart = appSource.indexOf('function requestAccountUpgrade(');
+    const shownStart = appSource.indexOf('function handleAccountUpgradeShown()', requestStart);
+    const dismissStart = appSource.indexOf('function dismissAccountUpgrade()', shownStart);
+    const requestSource = appSource.slice(requestStart, shownStart);
+    const shownSource = appSource.slice(shownStart, dismissStart);
+    const overlayStart = appSource.indexOf('function AccountUpgradeOverlay({');
+    const overlayEnd = appSource.indexOf('export function CustomSetPickerOverlay({', overlayStart);
+    const overlaySource = appSource.slice(overlayStart, overlayEnd);
+
+    expect(requestSource).not.toContain('Animated.spring(accountUpgradeAnim');
+    expect(shownSource).toContain("triggerPressHaptic('secondary')");
+    expect(shownSource).toContain('Animated.spring(accountUpgradeAnim');
+    expect(overlaySource).toContain('onShow={handleShown}');
+    expect(overlaySource).toContain('presentationStartedRef.current');
+  });
+
   test('supports editing existing custom sets from the management page', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const profileSetsStart = appSource.indexOf('function ProfileCustomSetsView({');

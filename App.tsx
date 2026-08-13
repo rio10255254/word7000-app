@@ -1221,6 +1221,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const accountUpgradeAnim = useRef(new Animated.Value(0)).current;
+  const accountUpgradeFrameRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [initialFilterPreferences] = useState(() => loadFilterPreferences(getAppStorage()));
   const [streakDeviceId] = useState(() => getOrCreateStreakDeviceId(getAppStorage()));
@@ -2084,25 +2085,37 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
 
     pendingAdvancedActionRef.current = afterUpgrade ?? null;
-    setAccountUpgradeReason(reason);
+    if (accountUpgradeFrameRef.current !== null) {
+      cancelAnimationFrame(accountUpgradeFrameRef.current);
+      accountUpgradeFrameRef.current = null;
+    }
     accountUpgradeAnim.stopAnimation();
     accountUpgradeAnim.setValue(0);
-    requestAnimationFrame(() => {
+    setAccountUpgradeReason(reason);
+  }
+
+  function handleAccountUpgradeShown() {
+    accountUpgradeFrameRef.current = requestAnimationFrame(() => {
+      accountUpgradeFrameRef.current = null;
+      triggerPressHaptic('secondary');
       Animated.spring(accountUpgradeAnim, {
-        damping: 24,
-        mass: 0.78,
+        damping: interactionMotion.accountPromptDamping,
+        mass: interactionMotion.accountPromptMass,
         overshootClamping: true,
-        stiffness: 230,
+        stiffness: interactionMotion.accountPromptStiffness,
         toValue: 1,
         useNativeDriver: Platform.OS !== 'web',
       }).start();
     });
-    triggerPressHaptic(reason === 'protectProgress' ? 'secondary' : 'primary');
   }
 
   function dismissAccountUpgrade() {
     if (account.busy) {
       return;
+    }
+    if (accountUpgradeFrameRef.current !== null) {
+      cancelAnimationFrame(accountUpgradeFrameRef.current);
+      accountUpgradeFrameRef.current = null;
     }
     pendingAdvancedActionRef.current = null;
     Animated.timing(accountUpgradeAnim, {
@@ -2124,9 +2137,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
 
     markProgressProtectionPromptSeen(storage);
-    if (progressProtectionTimerRef.current) {
-      clearTimeout(progressProtectionTimerRef.current);
-    }
+      if (progressProtectionTimerRef.current) {
+        clearTimeout(progressProtectionTimerRef.current);
+      }
+      if (accountUpgradeFrameRef.current !== null) {
+        cancelAnimationFrame(accountUpgradeFrameRef.current);
+      }
     progressProtectionTimerRef.current = setTimeout(() => {
       progressProtectionTimerRef.current = null;
       requestAccountUpgrade('protectProgress');
@@ -3670,6 +3686,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       studyMode,
       activeSetCount: activeStudySet ? studySourceWords.length : 0,
       activeSetName: activeStudySet?.name ?? null,
+      customSetsLocked: !isPermanentAccount,
       favoriteLocked: !isPermanentAccount,
       wordCount: studyWords.length,
       word: studyWord,
@@ -3738,6 +3755,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       query: searchQuery,
       searchFocused,
       studyMode,
+      customSetsLocked: !isPermanentAccount,
       favoriteLocked: !isPermanentAccount,
       words: libraryWords,
       onAddToSet: handleOpenSetPicker,
@@ -3813,6 +3831,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
             onAppleSignIn={handleAppleSignIn}
             onDismiss={dismissAccountUpgrade}
             onGoogleSignIn={handleGoogleSignIn}
+            onShown={handleAccountUpgradeShown}
           />
         )}
 
@@ -3888,7 +3907,7 @@ function useWebServiceWorker() {
         };
     const serviceWorker = webNavigator?.serviceWorker;
 
-    if (Platform.OS !== 'web' || IS_WEB_IOS_PREVIEW || !serviceWorker) {
+    if (Platform.OS !== 'web' || IS_WEB_IOS_PREVIEW || __DEV__ || !serviceWorker) {
       return;
     }
 
@@ -3935,7 +3954,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   }, [latestVersion]);
 
   useEffect(() => {
-    if (Platform.OS !== 'web' || IS_WEB_IOS_PREVIEW) {
+    if (Platform.OS !== 'web' || IS_WEB_IOS_PREVIEW || __DEV__) {
       return;
     }
 
@@ -5349,18 +5368,33 @@ function clearStudySwipeTextSelection() {
   selection?.removeAllRanges();
 }
 
+function FeatureLockBadge() {
+  const darkMode = useContext(ThemeContext) === 'dark';
+
+  return (
+    <View style={[styles.featureLockBadge, darkMode && styles.featureLockBadgeDark]}>
+      <Lock size={8} color={darkMode ? '#F2F2F7' : '#1C1C1E'} strokeWidth={2.6} />
+    </View>
+  );
+}
+
 function FavoriteGlyph({ favorited, locked, size = 20 }: { favorited: boolean; locked: boolean; size?: number }) {
   const darkMode = useContext(ThemeContext) === 'dark';
   const starColor = favorited ? '#FF9500' : darkMode ? '#AEAEB2' : '#6C6C70';
 
   return (
-    <View pointerEvents="none" style={[styles.favoriteGlyph, { height: size + 5, width: size + 5 }]}>
+    <View pointerEvents="none" style={[styles.lockedFeatureGlyph, { height: size + 5, width: size + 5 }]}>
       <Star size={size} color={starColor} fill={favorited ? '#FF9500' : 'transparent'} />
-      {locked && (
-        <View style={[styles.favoriteLockBadge, darkMode && styles.favoriteLockBadgeDark]}>
-          <Lock size={8} color={darkMode ? '#F2F2F7' : '#1C1C1E'} strokeWidth={2.6} />
-        </View>
-      )}
+      {locked && <FeatureLockBadge />}
+    </View>
+  );
+}
+
+function AddToSetGlyph({ locked, size = 20 }: { locked: boolean; size?: number }) {
+  return (
+    <View pointerEvents="none" style={[styles.lockedFeatureGlyph, { height: size + 5, width: size + 5 }]}>
+      <SquarePlus size={size} color="#007AFF" strokeWidth={2.4} />
+      {locked && <FeatureLockBadge />}
     </View>
   );
 }
@@ -5372,6 +5406,7 @@ const StudyView = memo(function StudyView({
   activeInitial,
   activeLevel,
   cardSequence,
+  customSetsLocked,
   filtersOpen,
   favoriteLocked,
   levelOptions,
@@ -5399,6 +5434,7 @@ const StudyView = memo(function StudyView({
   activeInitial: string;
   activeLevel: string;
   cardSequence: number;
+  customSetsLocked: boolean;
   filtersOpen: boolean;
   favoriteLocked: boolean;
   levelOptions: FilterOption[];
@@ -5981,7 +6017,7 @@ const StudyView = memo(function StudyView({
               </View>
               <View style={styles.studyCardActions}>
                 <View style={[styles.iconButton, styles.addToSetIconButton, themeStyles?.iconButton]}>
-                  <SquarePlus size={19} color="#007AFF" strokeWidth={2.4} />
+                  <AddToSetGlyph locked={customSetsLocked} size={19} />
                 </View>
                 <View style={[styles.iconButton, themeStyles?.iconButton]}>
                   <FavoriteGlyph favorited={deckFavorited} locked={favoriteLocked} />
@@ -6071,13 +6107,14 @@ const StudyView = memo(function StudyView({
             <View style={styles.studyCardActions}>
               <AnimatedPressable
                 accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
+                accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
                 accessibilityRole="button"
                 onPress={() => onAddToSet(word)}
                 pressTone="icon"
                 style={[styles.iconButton, styles.addToSetIconButton, themeStyles?.iconButton]}
                 testID="study-add-to-set"
               >
-                <SquarePlus size={19} color="#007AFF" strokeWidth={2.4} />
+                <AddToSetGlyph locked={customSetsLocked} size={19} />
               </AnimatedPressable>
               <AnimatedPressable
                 accessibilityLabel={favorited ? ui.unfavoriteWord : ui.favoriteWord}
@@ -6676,6 +6713,7 @@ const LibraryView = memo(function LibraryView({
   activeSort,
   bottomInset,
   customSets,
+  customSetsLocked,
   favoriteLocked,
   filtersOpen,
   levelOptions,
@@ -6709,6 +6747,7 @@ const LibraryView = memo(function LibraryView({
   activeSort: LibrarySort;
   bottomInset: number;
   customSets: CustomVocabSet[];
+  customSetsLocked: boolean;
   favoriteLocked: boolean;
   filtersOpen: boolean;
   levelOptions: FilterOption[];
@@ -6896,7 +6935,14 @@ const LibraryView = memo(function LibraryView({
               <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.customSetsSummary(customSets.length)}</Text>
             </View>
           </View>
-          <AnimatedPressable accessibilityRole="button" onPress={onOpenCustomSets} pressTone="secondary" style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}>
+          <AnimatedPressable
+            accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
+            accessibilityRole="button"
+            onPress={onOpenCustomSets}
+            pressTone="secondary"
+            style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}
+          >
+            {customSetsLocked && <Lock size={11} color={bodyIconColor} strokeWidth={2.5} />}
             <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.libraryManageSetsButtonLabel, themeStyles?.libraryTopButtonText]}>{ui.manage}</Text>
             <ChevronRight size={15} color={bodyIconColor} strokeWidth={2.4} />
           </AnimatedPressable>
@@ -6905,6 +6951,7 @@ const LibraryView = memo(function LibraryView({
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
             {customSets.slice(0, 4).map((set) => (
               <AnimatedPressable
+                accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
                 accessibilityRole="button"
                 key={set.id}
                 onPress={onOpenCustomSets}
@@ -6914,6 +6961,7 @@ const LibraryView = memo(function LibraryView({
                 <View style={[styles.customSetColorDot, { backgroundColor: set.color }]} />
                 <Text numberOfLines={1} style={[styles.filterText, themeStyles?.filterText]}>{set.name}</Text>
                 <Text style={[styles.libraryCustomSetCount, themeStyles?.libraryHeaderMeta]}>{set.wordIds.length}</Text>
+                {customSetsLocked && <Lock size={10} color={bodyIconColor} strokeWidth={2.4} />}
               </AnimatedPressable>
             ))}
           </ScrollView>
@@ -6928,6 +6976,7 @@ const LibraryView = memo(function LibraryView({
   const renderItem = useCallback(
     ({ item, index }: { item: WordEntry; index: number }) => (
       <LibraryWordRow
+        customSetsLocked={customSetsLocked}
         motionStyle={listMotionStyle(index)}
         favoriteLocked={favoriteLocked}
         studyMode={studyMode}
@@ -6938,7 +6987,7 @@ const LibraryView = memo(function LibraryView({
         onOpenWord={onOpenWord}
       />
     ),
-    [favoriteLocked, listMotionStyle, onAddToSet, onFavorite, onOpenWord, progress.words, studyMode],
+    [customSetsLocked, favoriteLocked, listMotionStyle, onAddToSet, onFavorite, onOpenWord, progress.words, studyMode],
   );
 
   const assignFlashListRef = useCallback((instance: FlashListRef<WordEntry> | null) => {
@@ -6991,6 +7040,7 @@ function LibraryItemSeparator() {
 }
 
 const LibraryWordRow = memo(function LibraryWordRow({
+  customSetsLocked,
   favoriteLocked,
   motionStyle,
   studyMode,
@@ -7000,6 +7050,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
   onFavorite,
   onOpenWord,
 }: {
+  customSetsLocked: boolean;
   favoriteLocked: boolean;
   motionStyle: StyleProp<ViewStyle>;
   studyMode: StudyMode;
@@ -7044,13 +7095,14 @@ const LibraryWordRow = memo(function LibraryWordRow({
       <View style={styles.librarySide}>
         <AnimatedPressable
           accessibilityLabel={ui.addToSetName(primaryWord)}
+          accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
           accessibilityRole="button"
           onPress={() => onAddToSet(word)}
           pressTone="icon"
           style={[styles.iconButton, styles.addToSetIconButton]}
           hitSlop={8}
         >
-          <SquarePlus size={18} color="#007AFF" strokeWidth={2.4} />
+          <AddToSetGlyph locked={customSetsLocked} size={18} />
         </AnimatedPressable>
         <AnimatedPressable
           accessibilityLabel={wordProgress?.favorite ? ui.unfavoriteWordName(primaryWord) : ui.favoriteWordName(primaryWord)}
@@ -7070,6 +7122,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
 
 export function LibraryWordDetailView({
   backDestination = 'library',
+  customSetsLocked,
   favoriteLocked,
   progress,
   studyMode,
@@ -7079,6 +7132,7 @@ export function LibraryWordDetailView({
   onFavorite,
 }: {
   backDestination?: 'home' | 'library';
+  customSetsLocked: boolean;
   favoriteLocked: boolean;
   progress: ProgressState;
   studyMode: StudyMode;
@@ -7119,13 +7173,14 @@ export function LibraryWordDetailView({
           <View style={styles.libraryDetailActionStack}>
             <AnimatedPressable
               accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
+              accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
               accessibilityRole="button"
               onPress={() => onAddToSet(word)}
               pressTone="icon"
               style={styles.libraryDetailFavorite}
               hitSlop={8}
             >
-              <SquarePlus size={21} color="#007AFF" strokeWidth={2.4} />
+              <AddToSetGlyph locked={customSetsLocked} size={21} />
             </AnimatedPressable>
             <AnimatedPressable
               accessibilityLabel={
@@ -7516,6 +7571,7 @@ function AccountUpgradeOverlay({
   onAppleSignIn,
   onDismiss,
   onGoogleSignIn,
+  onShown,
   reason,
   studyMode,
   themeMode,
@@ -7525,12 +7581,14 @@ function AccountUpgradeOverlay({
   onAppleSignIn: () => void;
   onDismiss: () => void;
   onGoogleSignIn: () => void;
+  onShown: () => void;
   reason: AccountUpgradeReason;
   studyMode: StudyMode;
   themeMode: ThemeMode;
 }) {
   const copy = accountUpgradeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
+  const presentationStartedRef = useRef(false);
   const themeStyles = useThemeStyles();
   const darkMode = themeMode === 'dark';
   const foreground = darkMode ? iosVisual.dark.label : iosVisual.light.label;
@@ -7550,18 +7608,35 @@ function AccountUpgradeOverlay({
     opacity: animation.interpolate({ inputRange: [0, 0.2, 1], outputRange: [0, 0.72, 1] }),
     transform: [
       {
-        translateY: animation.interpolate({ inputRange: [0, 1], outputRange: [38, 0] }),
+        translateY: animation.interpolate({ inputRange: [0, 1], outputRange: [interactionMotion.accountPromptTranslateY, 0] }),
       },
       {
-        scale: animation.interpolate({ inputRange: [0, 1], outputRange: [0.965, 1] }),
+        scale: animation.interpolate({ inputRange: [0, 1], outputRange: [interactionMotion.accountPromptInitialScale, 1] }),
       },
     ],
   };
+
+  const handleShown = useCallback(() => {
+    if (presentationStartedRef.current) {
+      return;
+    }
+    presentationStartedRef.current = true;
+    onShown();
+  }, [onShown]);
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      return undefined;
+    }
+    const frame = requestAnimationFrame(handleShown);
+    return () => cancelAnimationFrame(frame);
+  }, [handleShown]);
 
   return (
     <Modal
       animationType="none"
       onRequestClose={onDismiss}
+      onShow={handleShown}
       presentationStyle="overFullScreen"
       statusBarTranslucent
       transparent
@@ -9901,11 +9976,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 38,
   },
-  favoriteGlyph: {
+  lockedFeatureGlyph: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  favoriteLockBadge: {
+  featureLockBadge: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderColor: '#D1D1D6',
@@ -9919,7 +9994,7 @@ const styles = StyleSheet.create({
     right: -1,
     width: 12,
   },
-  favoriteLockBadgeDark: {
+  featureLockBadgeDark: {
     backgroundColor: '#2C2C2E',
     borderColor: '#636366',
   },

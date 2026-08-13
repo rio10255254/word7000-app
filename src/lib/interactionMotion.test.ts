@@ -39,6 +39,14 @@ describe('interaction motion presets', () => {
     expect(interactionMotion.guideStepMs).toBeGreaterThanOrEqual(interactionMotion.cardMs);
   });
 
+  test('uses a composed spring for account prompts', () => {
+    expect(interactionMotion.accountPromptDamping).toBeGreaterThanOrEqual(22);
+    expect(interactionMotion.accountPromptMass).toBeGreaterThanOrEqual(0.75);
+    expect(interactionMotion.accountPromptStiffness).toBeGreaterThanOrEqual(200);
+    expect(interactionMotion.accountPromptInitialScale).toBeGreaterThan(0.96);
+    expect(interactionMotion.accountPromptTranslateY).toBeLessThanOrEqual(34);
+  });
+
   test('defines sticky word-detail motion close to the settings panel feel', () => {
     expect(interactionMotion.libraryDetailMs).toBeGreaterThanOrEqual(600);
     expect(interactionMotion.libraryDetailMs).toBeGreaterThan(interactionMotion.settingsPanelMs);

@@ -1,13 +1,13 @@
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { isCustomSetState, type CustomSetState } from './customSets';
-import type { ProgressState } from './progress';
+import type { LibraryFilter, ProgressState } from './progress';
 import { isProgressState, type StorageLike } from './progressStorage';
 
 export const ACCOUNT_PROTECTION_PROMPT_STORAGE_KEY = 'word7000-account-protection-prompt-v1';
 export const PERMANENT_ACCOUNT_USED_STORAGE_KEY = 'word7000-permanent-account-used-v1';
 export const PENDING_ACCOUNT_UPGRADE_STORAGE_KEY = 'word7000-pending-account-upgrade-v1';
 
-export type AccountUpgradeReason = 'customSets' | 'dataTools' | 'protectProgress';
+export type AccountUpgradeReason = 'customSets' | 'dataTools' | 'favorites' | 'protectProgress';
 
 export type PendingAccountUpgrade = {
   createdAt: string;
@@ -29,6 +29,10 @@ export function isIdentityAlreadyLinkedError(error: unknown): boolean {
   const code = typeof candidate.code === 'string' ? candidate.code : '';
   const message = typeof candidate.message === 'string' ? candidate.message : '';
   return code === 'identity_already_exists' || /already (?:linked|registered)|identity.*another user/i.test(message);
+}
+
+export function accountUpgradeReasonForFilter(filter: LibraryFilter): AccountUpgradeReason | null {
+  return filter === 'favorites' ? 'favorites' : null;
 }
 
 export function shouldPromptToProtectProgress(storage: StorageLike | undefined): boolean {

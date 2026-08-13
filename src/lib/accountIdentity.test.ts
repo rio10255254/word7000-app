@@ -4,6 +4,7 @@ import type { ProgressState } from './progress';
 import {
   ACCOUNT_PROTECTION_PROMPT_STORAGE_KEY,
   PERMANENT_ACCOUNT_USED_STORAGE_KEY,
+  accountUpgradeReasonForFilter,
   clearPendingAccountUpgrade,
   hasUsedPermanentAccount,
   isAnonymousUser,
@@ -25,6 +26,14 @@ function memoryStorage() {
 }
 
 describe('account identity helpers', () => {
+  test('requires an account only for the saved-words filter', () => {
+    expect(accountUpgradeReasonForFilter('favorites')).toBe('favorites');
+    expect(accountUpgradeReasonForFilter('all')).toBeNull();
+    expect(accountUpgradeReasonForFilter('review')).toBeNull();
+    expect(accountUpgradeReasonForFilter('mastered')).toBeNull();
+    expect(accountUpgradeReasonForFilter('new')).toBeNull();
+  });
+
   test('distinguishes temporary visitors from permanent accounts', () => {
     expect(isAnonymousUser({ is_anonymous: true })).toBe(true);
     expect(isAnonymousUser({ is_anonymous: false })).toBe(false);

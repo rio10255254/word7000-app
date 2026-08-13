@@ -51,6 +51,7 @@ export default function LibraryWordRoute() {
       >
         <LibraryWordDetailView
           backDestination={source === 'home' ? 'home' : 'library'}
+          favoriteLocked={!bridge.signedIn}
           progress={bridge.progress}
           studyMode={bridge.studyMode}
           word={word}

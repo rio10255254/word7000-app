@@ -112,6 +112,7 @@ import {
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
 import { deleteAuthenticatedAccount } from './src/lib/accountDeletion';
 import {
+  accountUpgradeReasonForFilter,
   clearPendingAccountUpgrade,
   hasUsedPermanentAccount,
   isAnonymousUser,
@@ -514,7 +515,7 @@ const modeInterfaceCopy = {
     floatingTop: '回頂端',
     clearSearch: '清除搜尋',
     searchMeta: (query: string, count: number) => `搜尋「${query}」：找到 ${count} 個結果`,
-    filteredCount: (count: number) => `目前篩選後 ${count} 個單字`,
+    filteredCount: (count: number) => `篩選後 ${count} 個`,
     resultCount: (count: number, start: number, end: number) => `共 ${count} 個結果，顯示第 ${count === 0 ? 0 : start + 1}-${end} 個`,
     viewDetails: '完整資訊',
     viewWordDetails: (word: string) => `查看 ${word} 完整資訊`,
@@ -545,6 +546,7 @@ const modeInterfaceCopy = {
     todayComplete: (percent: number) => `今天完成 ${percent}%`,
     dailyTarget: '每日目標',
     favoriteWords: '收藏單字',
+    favoritesRequireSignIn: '需登入',
     remainingSamples: '剩餘樣本',
     tutorial: '教學',
     replayTutorial: '重新查看加入主畫面教學',
@@ -724,7 +726,7 @@ const modeInterfaceCopy = {
     floatingTop: 'Top',
     clearSearch: 'Clear search',
     searchMeta: (query: string, count: number) => `Search "${query}": ${count} results`,
-    filteredCount: (count: number) => `${count} ${modeCopy.chinese.questionBankUnit} after filters`,
+    filteredCount: (count: number) => `${count} words`,
     resultCount: (count: number, start: number, end: number) => `${count} results, showing ${count === 0 ? 0 : start + 1}-${end}`,
     viewDetails: 'Details',
     viewWordDetails: (word: string) => `View details for ${word}`,
@@ -755,6 +757,7 @@ const modeInterfaceCopy = {
     todayComplete: (percent: number) => `${percent}% complete today`,
     dailyTarget: 'Daily Target',
     favoriteWords: 'Saved Words',
+    favoritesRequireSignIn: 'Sign in',
     remainingSamples: 'Remaining',
     tutorial: 'Tutorial',
     replayTutorial: 'Review home-screen tutorial',
@@ -859,10 +862,16 @@ const modeInterfaceCopy = {
 
 const accountUpgradeCopy = {
   english: {
-    badge: '目前進度已保留',
+    badge: {
+      customSets: '單字集會同步到你的帳號',
+      dataTools: '資料工具只會連結你的帳號',
+      favorites: '收藏會同步到你的帳號',
+      protectProgress: '目前進度已保留',
+    },
     body: {
       customSets: '登入後即可建立與管理單字集，並在換機後完整取回。',
       dataTools: '登入後才會開放匯入、匯出與帳號資料工具。',
+      favorites: '收藏會安全同步到你的帳號，換機或重新安裝後仍能找回。',
       protectProgress: '登入後可跨裝置保留連續天數、收藏、複習狀態與學習紀錄。',
     },
     later: '稍後再說',
@@ -870,14 +879,21 @@ const accountUpgradeCopy = {
     title: {
       customSets: '登入以使用單字集',
       dataTools: '登入以使用資料工具',
+      favorites: '登入後才能收藏',
       protectProgress: '保護你的學習進度',
     },
   },
   chinese: {
-    badge: 'Your current progress is safe',
+    badge: {
+      customSets: 'Sets sync with your account',
+      dataTools: 'Data tools stay linked to your account',
+      favorites: 'Saved words sync with your account',
+      protectProgress: 'Your current progress is safe',
+    },
     body: {
       customSets: 'Sign in to create and manage custom sets and restore them on another device.',
       dataTools: 'Sign in to use imports, exports, and account data tools.',
+      favorites: 'Saved words stay with your account, even after changing devices or reinstalling the app.',
       protectProgress: 'Sign in to keep your streak, saved words, review status, and learning history across devices.',
     },
     later: 'Not Now',
@@ -885,6 +901,7 @@ const accountUpgradeCopy = {
     title: {
       customSets: 'Sign In for Custom Sets',
       dataTools: 'Sign In for Data Tools',
+      favorites: 'Sign In to Save Words',
       protectProgress: 'Protect Your Progress',
     },
   },
@@ -1763,6 +1780,23 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [studyMode]);
 
   useEffect(() => {
+    const visitorIdentityReady = account.isAnonymous || (!account.configured && account.status === 'local');
+    if (!visitorIdentityReady || account.status === 'loading') {
+      return;
+    }
+
+    if (activeFilter === 'favorites') {
+      setActiveFilter('all');
+    }
+    if (studyFilter === 'favorites') {
+      setStudyFilter('all');
+    }
+    if (quizFilter === 'favorites') {
+      setQuizFilter('all');
+    }
+  }, [account.configured, account.isAnonymous, account.status, activeFilter, quizFilter, studyFilter]);
+
+  useEffect(() => {
     saveFilterPreferences(getAppStorage(), {
       library: {
         filter: activeFilter,
@@ -2491,8 +2525,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const handleLibraryFavorite = useCallback((wordId: string) => {
-    setProgress((current) => toggleFavorite(current, wordId));
-  }, []);
+    requestAccountUpgrade('favorites', () => {
+      setProgress((current) => toggleFavorite(current, wordId));
+    });
+  }, [account.configured, account.isAnonymous, account.userId, isPermanentAccount]);
 
   const handleLibrarySearchBlur = useCallback(() => {
     setSearchFocused(false);
@@ -3350,8 +3386,19 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   });
   const studyFavoriteWord = useStableEvent(() => {
     if (studyWord) {
-      setProgress((current) => toggleFavorite(current, studyWord.id));
+      const wordId = studyWord.id;
+      requestAccountUpgrade('favorites', () => {
+        setProgress((current) => toggleFavorite(current, wordId));
+      });
     }
+  });
+  const studyFilterChange = useStableEvent((filter: LibraryFilter) => {
+    const reason = accountUpgradeReasonForFilter(filter);
+    if (reason) {
+      requestAccountUpgrade(reason, () => setStudyFilter(filter));
+      return;
+    }
+    setStudyFilter(filter);
   });
   const quizClearActiveSet = useStableEvent(() => setQuizSetId(null));
   const quizToggleFilters = useStableEvent(() => setQuizFiltersOpen((current) => !current));
@@ -3361,6 +3408,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const quizRevealAnswer = useStableEvent(revealSpeakingAnswer);
   const quizRestart = useStableEvent(restartQuiz);
   const quizStart = useStableEvent(startQuiz);
+  const quizFilterChange = useStableEvent((filter: LibraryFilter) => {
+    const reason = accountUpgradeReasonForFilter(filter);
+    if (reason) {
+      requestAccountUpgrade(reason, () => setQuizFilter(filter));
+      return;
+    }
+    setQuizFilter(filter);
+  });
   const libraryContentSizeChange = useStableEvent(handleLibraryContentSizeChange);
   const libraryScroll = useStableEvent(handleLibraryScroll);
   const libraryViewportLayout = useStableEvent(handleLibraryViewportLayout);
@@ -3368,6 +3423,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const libraryQueryClear = useStableEvent(clearLibrarySearch);
   const librarySearchBlur = useStableEvent(handleLibrarySearchBlur);
   const librarySearchFocus = useStableEvent(handleLibrarySearchFocus);
+  const libraryFilterChange = useStableEvent((filter: LibraryFilter) => {
+    const reason = accountUpgradeReasonForFilter(filter);
+    if (reason) {
+      requestAccountUpgrade(reason, () => setActiveFilter(filter));
+      return;
+    }
+    setActiveFilter(filter);
+  });
   const profileEmailChange = useStableEvent((email: string) => setAccount((current) => ({ ...current, email })));
   const profilePasswordChange = useStableEvent((password: string) => setAccount((current) => ({ ...current, password })));
   const profileOpenSettings = useStableEvent(() => router.push('/settings'));
@@ -3377,6 +3440,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const profileSignIn = useStableEvent(handleSignIn);
   const profileSignOut = useStableEvent(handleSignOut);
   const profileSignUp = useStableEvent(handleSignUp);
+  const profileOpenFavorites = useStableEvent(() => {
+    requestAccountUpgrade('favorites', () => {
+      setActiveFilter('favorites');
+      setActiveTab('library');
+    });
+  });
 
   const routeAddWordToSet = useStableEvent((word: WordEntry, setId: string) => {
     const setName = customSetState.sets.find((set) => set.id === setId)?.name ?? '';
@@ -3394,7 +3463,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
   });
   const routeFavoriteWord = useStableEvent((wordId: string) => {
-    setProgress((current) => toggleFavorite(current, wordId));
+    requestAccountUpgrade('favorites', () => {
+      setProgress((current) => toggleFavorite(current, wordId));
+    });
   });
   const routeAddManualCustomWord = useStableEvent(handleAddManualCustomWord);
   const routeClearDeveloperVocabulary = useStableEvent(handleClearDeveloperVocabulary);
@@ -3599,11 +3670,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       studyMode,
       activeSetCount: activeStudySet ? studySourceWords.length : 0,
       activeSetName: activeStudySet?.name ?? null,
+      favoriteLocked: !isPermanentAccount,
       wordCount: studyWords.length,
       word: studyWord,
       progress: studyProgress,
       onClearActiveSet: studyClearActiveSet,
-      onFilterChange: setStudyFilter,
+      onFilterChange: studyFilterChange,
       onFiltersToggle: studyToggleFilters,
       onInitialChange: setStudyInitial,
       onLevelChange: setStudyLevel,
@@ -3633,6 +3705,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       sessionTotal: quizSessionTotal,
       speakingAnswerVisible,
       studyMode,
+      favoriteLocked: !isPermanentAccount,
       activeSetCount: activeQuizSet ? quizSourceWords.length : 0,
       activeSetName: activeQuizSet?.name ?? null,
       correctCount: quizCorrectCount,
@@ -3640,7 +3713,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       wordCount: quizWords.length,
       onAnswer: quizAnswer,
       onClearActiveSet: quizClearActiveSet,
-      onFilterChange: setQuizFilter,
+      onFilterChange: quizFilterChange,
       onFiltersToggle: quizToggleFilters,
       onInitialChange: setQuizInitial,
       onLevelChange: setQuizLevel,
@@ -3665,10 +3738,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       query: searchQuery,
       searchFocused,
       studyMode,
+      favoriteLocked: !isPermanentAccount,
       words: libraryWords,
       onAddToSet: handleOpenSetPicker,
       onContentSizeChange: libraryContentSizeChange,
-      onFilterChange: setActiveFilter,
+      onFilterChange: libraryFilterChange,
       onFiltersToggle: handleLibraryFiltersToggle,
       onFavorite: handleLibraryFavorite,
       onInitialChange: setActiveInitial,
@@ -3694,6 +3768,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       onAppleSignIn: profileAppleSignIn,
       onGoogleSignIn: profileGoogleSignIn,
       onOpenSettings: profileOpenSettings,
+      onOpenFavorites: profileOpenFavorites,
       onPasswordChange: profilePasswordChange,
       onShowInstallGuide: profileShowInstallGuide,
       onSignIn: profileSignIn,
@@ -3813,7 +3888,7 @@ function useWebServiceWorker() {
         };
     const serviceWorker = webNavigator?.serviceWorker;
 
-    if (Platform.OS !== 'web' || !serviceWorker) {
+    if (Platform.OS !== 'web' || IS_WEB_IOS_PREVIEW || !serviceWorker) {
       return;
     }
 
@@ -3860,7 +3935,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   }, [latestVersion]);
 
   useEffect(() => {
-    if (Platform.OS !== 'web') {
+    if (Platform.OS !== 'web' || IS_WEB_IOS_PREVIEW) {
       return;
     }
 
@@ -5274,6 +5349,22 @@ function clearStudySwipeTextSelection() {
   selection?.removeAllRanges();
 }
 
+function FavoriteGlyph({ favorited, locked, size = 20 }: { favorited: boolean; locked: boolean; size?: number }) {
+  const darkMode = useContext(ThemeContext) === 'dark';
+  const starColor = favorited ? '#FF9500' : darkMode ? '#AEAEB2' : '#6C6C70';
+
+  return (
+    <View pointerEvents="none" style={[styles.favoriteGlyph, { height: size + 5, width: size + 5 }]}>
+      <Star size={size} color={starColor} fill={favorited ? '#FF9500' : 'transparent'} />
+      {locked && (
+        <View style={[styles.favoriteLockBadge, darkMode && styles.favoriteLockBadgeDark]}>
+          <Lock size={8} color={darkMode ? '#F2F2F7' : '#1C1C1E'} strokeWidth={2.6} />
+        </View>
+      )}
+    </View>
+  );
+}
+
 const StudyView = memo(function StudyView({
   activeSetCount,
   activeSetName,
@@ -5282,6 +5373,7 @@ const StudyView = memo(function StudyView({
   activeLevel,
   cardSequence,
   filtersOpen,
+  favoriteLocked,
   levelOptions,
   motionStyle,
   nextWord,
@@ -5308,6 +5400,7 @@ const StudyView = memo(function StudyView({
   activeLevel: string;
   cardSequence: number;
   filtersOpen: boolean;
+  favoriteLocked: boolean;
   levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
   nextWord: WordEntry | null;
@@ -5836,6 +5929,7 @@ const StudyView = memo(function StudyView({
         count={wordCount}
         levelOptions={levelOptions}
         open={filtersOpen}
+        favoritesLocked={favoriteLocked}
         showStatus
         studyMode={studyMode}
         testID="study-filter-toggle"
@@ -5890,11 +5984,7 @@ const StudyView = memo(function StudyView({
                   <SquarePlus size={19} color="#007AFF" strokeWidth={2.4} />
                 </View>
                 <View style={[styles.iconButton, themeStyles?.iconButton]}>
-                  <Star
-                    size={20}
-                    color={deckFavorited ? '#FF9500' : '#6C6C70'}
-                    fill={deckFavorited ? '#FF9500' : 'transparent'}
-                  />
+                  <FavoriteGlyph favorited={deckFavorited} locked={favoriteLocked} />
                 </View>
               </View>
             </View>
@@ -5995,8 +6085,9 @@ const StudyView = memo(function StudyView({
                 onPress={onFavorite}
                 pressTone="icon"
                 style={[styles.iconButton, themeStyles?.iconButton]}
+                hitSlop={8}
               >
-                <Star size={20} color={favorited ? '#FF9500' : '#6C6C70'} fill={favorited ? '#FF9500' : 'transparent'} />
+                <FavoriteGlyph favorited={favorited} locked={favoriteLocked} />
               </AnimatedPressable>
             </View>
           </View>
@@ -6028,6 +6119,7 @@ function FilterControlPanel({
   activeLevel,
   activeSort,
   count,
+  favoritesLocked,
   initialTitle = '字首',
   levelOptions,
   open,
@@ -6046,6 +6138,7 @@ function FilterControlPanel({
   activeLevel: string;
   activeSort?: LibrarySort;
   count: number;
+  favoritesLocked: boolean;
   initialTitle?: string;
   levelOptions: FilterOption[];
   open: boolean;
@@ -6100,7 +6193,12 @@ function FilterControlPanel({
                       pressTone="chip"
                       style={[styles.filterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                     >
-                      <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                      <View style={styles.filterChipLabelRow}>
+                        <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                        {filter.id === 'favorites' && favoritesLocked && (
+                          <Lock size={11} color={selected ? '#FFFFFF' : '#6C6C70'} strokeWidth={2.5} />
+                        )}
+                      </View>
                     </AnimatedPressable>
                   );
                 })}
@@ -6186,6 +6284,7 @@ const QuizView = memo(function QuizView({
   activeLevel,
   correctCount,
   filtersOpen,
+  favoriteLocked,
   levelOptions,
   motionStyle,
   conversationPrompt,
@@ -6221,6 +6320,7 @@ const QuizView = memo(function QuizView({
   activeInitial: string;
   activeLevel: string;
   correctCount: number;
+  favoriteLocked: boolean;
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
@@ -6264,6 +6364,7 @@ const QuizView = memo(function QuizView({
         activeInitial={activeInitial}
         activeLevel={activeLevel}
         count={wordCount}
+        favoritesLocked={favoriteLocked}
         levelOptions={levelOptions}
         open={filtersOpen}
         showStatus
@@ -6575,6 +6676,7 @@ const LibraryView = memo(function LibraryView({
   activeSort,
   bottomInset,
   customSets,
+  favoriteLocked,
   filtersOpen,
   levelOptions,
   listMotionStyle,
@@ -6607,6 +6709,7 @@ const LibraryView = memo(function LibraryView({
   activeSort: LibrarySort;
   bottomInset: number;
   customSets: CustomVocabSet[];
+  favoriteLocked: boolean;
   filtersOpen: boolean;
   levelOptions: FilterOption[];
   listMotionStyle: (index: number) => StyleProp<ViewStyle>;
@@ -6694,8 +6797,9 @@ const LibraryView = memo(function LibraryView({
       <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
         <View style={styles.libraryHeaderRow}>
           <View style={styles.libraryHeaderTitleLine}>
+            <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={[styles.libraryHeaderTitle, themeStyles?.libraryHeaderTitle]}>{copy.libraryTitle}</Text>
             <View style={[styles.libraryHeaderMetaPill, themeStyles?.libraryHeaderMetaPill]} testID="library-filtered-count-pill">
-              <Text style={[styles.libraryHeaderMetaPillText, themeStyles?.libraryHeaderMetaPillText]}>{ui.filteredCount(words.length)}</Text>
+              <Text adjustsFontSizeToFit minimumFontScale={0.74} numberOfLines={1} style={[styles.libraryHeaderMetaPillText, themeStyles?.libraryHeaderMetaPillText]}>{ui.filteredCount(words.length)}</Text>
             </View>
           </View>
         </View>
@@ -6746,7 +6850,12 @@ const LibraryView = memo(function LibraryView({
                   pressTone="chip"
                   style={[styles.filterChip, styles.libraryStatusFilterChip, themeStyles?.filterChip, selected && styles.filterChipActive]}
                 >
-                  <Text adjustsFontSizeToFit minimumFontScale={0.76} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                  <View style={styles.filterChipLabelRow}>
+                    <Text adjustsFontSizeToFit minimumFontScale={0.76} numberOfLines={1} style={[styles.filterText, selected && styles.filterTextActive]}>{filterLabel(filter.id, studyMode)}</Text>
+                    {filter.id === 'favorites' && favoriteLocked && (
+                      <Lock size={10} color={selected ? '#FFFFFF' : '#6C6C70'} strokeWidth={2.5} />
+                    )}
+                  </View>
                 </AnimatedPressable>
               );
             })}
@@ -6758,6 +6867,7 @@ const LibraryView = memo(function LibraryView({
             activeLevel={activeLevel}
             activeSort={activeSort}
             count={words.length}
+            favoritesLocked={favoriteLocked}
             levelOptions={levelOptions}
             open={filtersOpen}
             showStatus={false}
@@ -6819,6 +6929,7 @@ const LibraryView = memo(function LibraryView({
     ({ item, index }: { item: WordEntry; index: number }) => (
       <LibraryWordRow
         motionStyle={listMotionStyle(index)}
+        favoriteLocked={favoriteLocked}
         studyMode={studyMode}
         word={item}
         wordProgress={progress.words[item.id]}
@@ -6827,7 +6938,7 @@ const LibraryView = memo(function LibraryView({
         onOpenWord={onOpenWord}
       />
     ),
-    [listMotionStyle, onAddToSet, onFavorite, onOpenWord, progress.words, studyMode],
+    [favoriteLocked, listMotionStyle, onAddToSet, onFavorite, onOpenWord, progress.words, studyMode],
   );
 
   const assignFlashListRef = useCallback((instance: FlashListRef<WordEntry> | null) => {
@@ -6880,6 +6991,7 @@ function LibraryItemSeparator() {
 }
 
 const LibraryWordRow = memo(function LibraryWordRow({
+  favoriteLocked,
   motionStyle,
   studyMode,
   word,
@@ -6888,6 +7000,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
   onFavorite,
   onOpenWord,
 }: {
+  favoriteLocked: boolean;
   motionStyle: StyleProp<ViewStyle>;
   studyMode: StudyMode;
   word: WordEntry;
@@ -6935,6 +7048,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
           onPress={() => onAddToSet(word)}
           pressTone="icon"
           style={[styles.iconButton, styles.addToSetIconButton]}
+          hitSlop={8}
         >
           <SquarePlus size={18} color="#007AFF" strokeWidth={2.4} />
         </AnimatedPressable>
@@ -6944,12 +7058,9 @@ const LibraryWordRow = memo(function LibraryWordRow({
           onPress={() => onFavorite(word.id)}
           pressTone="icon"
           style={styles.iconButton}
+          hitSlop={8}
         >
-          <Star
-            size={18}
-            color={wordProgress?.favorite ? '#FF9500' : '#6C6C70'}
-            fill={wordProgress?.favorite ? '#FF9500' : 'transparent'}
-          />
+          <FavoriteGlyph favorited={Boolean(wordProgress?.favorite)} locked={favoriteLocked} size={18} />
         </AnimatedPressable>
         <Text style={[styles.statusText, themeStyles?.statusText]}>{statusLabel(wordProgress?.status, studyMode)}</Text>
       </View>
@@ -6959,6 +7070,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
 
 export function LibraryWordDetailView({
   backDestination = 'library',
+  favoriteLocked,
   progress,
   studyMode,
   word,
@@ -6967,6 +7079,7 @@ export function LibraryWordDetailView({
   onFavorite,
 }: {
   backDestination?: 'home' | 'library';
+  favoriteLocked: boolean;
   progress: ProgressState;
   studyMode: StudyMode;
   word: WordEntry;
@@ -7010,6 +7123,7 @@ export function LibraryWordDetailView({
               onPress={() => onAddToSet(word)}
               pressTone="icon"
               style={styles.libraryDetailFavorite}
+              hitSlop={8}
             >
               <SquarePlus size={21} color="#007AFF" strokeWidth={2.4} />
             </AnimatedPressable>
@@ -7023,8 +7137,9 @@ export function LibraryWordDetailView({
               onPress={onFavorite}
               pressTone="icon"
               style={styles.libraryDetailFavorite}
+              hitSlop={8}
             >
-              <Star size={21} color={favorite ? '#FF9500' : '#6C6C70'} fill={favorite ? '#FF9500' : 'transparent'} />
+              <FavoriteGlyph favorited={favorite} locked={favoriteLocked} size={21} />
             </AnimatedPressable>
           </View>
         </View>
@@ -7077,6 +7192,7 @@ const ProfileView = memo(function ProfileView({
   onEmailChange,
   onAppleSignIn,
   onGoogleSignIn,
+  onOpenFavorites,
   onOpenSettings,
   onPasswordChange,
   onShowInstallGuide,
@@ -7097,6 +7213,7 @@ const ProfileView = memo(function ProfileView({
   onEmailChange: (email: string) => void;
   onAppleSignIn: () => void;
   onGoogleSignIn: () => void;
+  onOpenFavorites: () => void;
   onOpenSettings: () => void;
   onPasswordChange: (password: string) => void;
   onShowInstallGuide: () => void;
@@ -7244,7 +7361,14 @@ const ProfileView = memo(function ProfileView({
         )}
       </View>
 
-      <ProfileLearningExperiencePanel dailyPercent={dailyPercent} progress={progress} stats={stats} studyMode={studyMode} />
+      <ProfileLearningExperiencePanel
+        dailyPercent={dailyPercent}
+        progress={progress}
+        signedIn={signedIn}
+        stats={stats}
+        studyMode={studyMode}
+        onOpenFavorites={onOpenFavorites}
+      />
 
       {showWebInstallGuidePanel && (
         <ProfileTutorialPanel studyMode={studyMode} onShowInstallGuide={onShowInstallGuide} />
@@ -7272,12 +7396,16 @@ const ProfileView = memo(function ProfileView({
 
 function ProfileLearningExperiencePanel({
   dailyPercent,
+  onOpenFavorites,
   progress,
+  signedIn,
   studyMode,
   stats,
 }: {
   dailyPercent: number;
+  onOpenFavorites: () => void;
   progress: ProgressState;
+  signedIn: boolean;
   studyMode: StudyMode;
   stats: ReturnType<typeof computeStats>;
 }) {
@@ -7298,10 +7426,23 @@ function ProfileLearningExperiencePanel({
           <Text style={[styles.learningMetricLabel, themeStyles?.learningMetricLabel]}>{ui.dailyTarget}</Text>
           <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{progress.dailyTarget} words</Text>
         </View>
-        <View style={[styles.learningMetric, themeStyles?.learningMetric]}>
+        <AnimatedPressable
+          accessibilityLabel={signedIn ? ui.favoriteWords : `${ui.favoriteWords}，${ui.favoritesRequireSignIn}`}
+          accessibilityRole="button"
+          onPress={onOpenFavorites}
+          pressTone="chip"
+          style={[styles.learningMetric, themeStyles?.learningMetric]}
+        >
           <Text style={[styles.learningMetricLabel, themeStyles?.learningMetricLabel]}>{ui.favoriteWords}</Text>
-          <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{stats.favorites}</Text>
-        </View>
+          {signedIn ? (
+            <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{stats.favorites}</Text>
+          ) : (
+            <View style={styles.learningMetricLockedRow}>
+              <Lock size={13} color="#6C6C70" strokeWidth={2.5} />
+              <Text style={[styles.learningMetricLockedText, themeStyles?.learningMetricLabel]}>{ui.favoritesRequireSignIn}</Text>
+            </View>
+          )}
+        </AnimatedPressable>
         <View style={[styles.learningMetric, themeStyles?.learningMetric]}>
           <Text style={[styles.learningMetricLabel, themeStyles?.learningMetricLabel]}>{ui.remainingSamples}</Text>
           <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{stats.remaining}</Text>
@@ -7394,6 +7535,14 @@ function AccountUpgradeOverlay({
   const darkMode = themeMode === 'dark';
   const foreground = darkMode ? iosVisual.dark.label : iosVisual.light.label;
   const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;
+  const upgradeIconColor = reason === 'favorites' ? '#FF9500' : darkMode ? iosVisual.dark.accent : iosVisual.light.accent;
+  const upgradeIcon = reason === 'favorites'
+    ? <Star size={23} color={upgradeIconColor} fill="#FF9500" />
+    : reason === 'customSets'
+      ? <Library size={23} color={upgradeIconColor} strokeWidth={2.35} />
+      : reason === 'dataTools'
+        ? <Database size={23} color={upgradeIconColor} strokeWidth={2.35} />
+        : <ShieldCheck size={23} color={upgradeIconColor} strokeWidth={2.35} />;
   const backdropMotion = {
     opacity: animation.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
   };
@@ -7427,9 +7576,15 @@ function AccountUpgradeOverlay({
         />
         <SafeAreaView pointerEvents="box-none" style={styles.accountUpgradeSafeArea}>
           <Animated.View style={[styles.accountUpgradePanel, themeStyles?.accountUpgradePanel, panelMotion]}>
+            <View style={[styles.accountUpgradeHandle, themeStyles?.accountUpgradeHandle]} />
             <View style={styles.accountUpgradeHeader}>
-              <View style={[styles.accountUpgradeIcon, themeStyles?.accountUpgradeIcon]}>
-                <ShieldCheck size={23} color={darkMode ? iosVisual.dark.accent : iosVisual.light.accent} strokeWidth={2.35} />
+              <View style={[
+                styles.accountUpgradeIcon,
+                themeStyles?.accountUpgradeIcon,
+                reason === 'favorites' && styles.accountUpgradeFavoriteIcon,
+                reason === 'favorites' && darkMode && styles.accountUpgradeFavoriteIconDark,
+              ]}>
+                {upgradeIcon}
               </View>
               <AnimatedPressable
                 accessibilityLabel={copy.later}
@@ -7448,7 +7603,7 @@ function AccountUpgradeOverlay({
 
             <View style={[styles.accountUpgradeMemoryPill, themeStyles?.accountUpgradeMemoryPill]}>
               <Cloud size={15} color={darkMode ? iosVisual.dark.green : iosVisual.light.green} strokeWidth={2.35} />
-              <Text style={[styles.accountUpgradeMemoryText, themeStyles?.accountUpgradeMemoryText]}>{copy.badge}</Text>
+              <Text style={[styles.accountUpgradeMemoryText, themeStyles?.accountUpgradeMemoryText]}>{copy.badge[reason]}</Text>
             </View>
 
             <View style={styles.accountUpgradeActions}>
@@ -9746,6 +9901,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 38,
   },
+  favoriteGlyph: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  favoriteLockBadge: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
+    borderCurve: 'continuous',
+    borderRadius: 6,
+    borderWidth: StyleSheet.hairlineWidth,
+    bottom: -1,
+    height: 12,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: -1,
+    width: 12,
+  },
+  favoriteLockBadgeDark: {
+    backgroundColor: '#2C2C2E',
+    borderColor: '#636366',
+  },
   studyCardActions: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -10293,6 +10470,12 @@ const styles = StyleSheet.create({
   filterTextActive: {
     color: '#FFFFFF',
   },
+  filterChipLabelRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+    justifyContent: 'center',
+  },
   letterRow: {
     gap: 6,
     paddingRight: 10,
@@ -10347,7 +10530,7 @@ const styles = StyleSheet.create({
     color: '#1C1C1E',
     fontSize: 17,
     fontWeight: '700',
-    flexShrink: 0,
+    flexShrink: 1,
   },
   libraryHeaderMeta: {
     color: '#6C6C70',
@@ -10361,6 +10544,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     flexShrink: 1,
     justifyContent: 'center',
+    maxWidth: '45%',
     minHeight: 28,
     paddingHorizontal: 9,
   },
@@ -10758,17 +10942,17 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: StyleSheet.hairlineWidth,
-    padding: 22,
+    padding: 18,
   },
   avatar: {
     alignItems: 'center',
     backgroundColor: '#EAF4FF',
-    borderRadius: 20,
+    borderRadius: 18,
     borderCurve: 'continuous',
-    height: 72,
+    height: 64,
     justifyContent: 'center',
-    marginBottom: 14,
-    width: 72,
+    marginBottom: 12,
+    width: 64,
   },
   profileTitle: {
     color: '#1C1C1E',
@@ -11066,6 +11250,14 @@ const styles = StyleSheet.create({
     shadowRadius: 34,
     width: '100%',
   },
+  accountUpgradeHandle: {
+    alignSelf: 'center',
+    backgroundColor: 'rgba(60, 60, 67, 0.24)',
+    borderRadius: 999,
+    height: 5,
+    marginBottom: 13,
+    width: 38,
+  },
   accountUpgradeHeader: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -11081,6 +11273,14 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     width: 48,
+  },
+  accountUpgradeFavoriteIcon: {
+    backgroundColor: '#FFF4DF',
+    borderColor: '#FFD598',
+  },
+  accountUpgradeFavoriteIconDark: {
+    backgroundColor: '#3A2A10',
+    borderColor: '#78571E',
   },
   accountUpgradeClose: {
     alignItems: 'center',
@@ -11523,6 +11723,16 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '700',
     marginTop: 6,
+  },
+  learningMetricLockedRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 5,
+    marginTop: 7,
+  },
+  learningMetricLockedText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   settingOptionRow: {
     alignItems: 'center',
@@ -12376,6 +12586,9 @@ const darkStyles = StyleSheet.create({
   accountUpgradePanel: {
     backgroundColor: 'rgba(28, 28, 30, 0.98)',
     borderColor: '#3A3A3C',
+  },
+  accountUpgradeHandle: {
+    backgroundColor: 'rgba(235, 235, 245, 0.3)',
   },
   accountUpgradeIcon: {
     backgroundColor: '#111A26',

@@ -7,13 +7,13 @@ type PressMotion = {
 };
 
 const pressMotions: Record<InteractionTone, PressMotion> = {
-  primary: { pressedOpacity: 0.92, pressedScale: 0.984, pressedTranslateY: 0.5 },
-  secondary: { pressedOpacity: 0.93, pressedScale: 0.988, pressedTranslateY: 0.5 },
-  chip: { pressedOpacity: 0.91, pressedScale: 0.976, pressedTranslateY: 0 },
-  icon: { pressedOpacity: 0.9, pressedScale: 0.966, pressedTranslateY: 0 },
-  tab: { pressedOpacity: 0.93, pressedScale: 0.978, pressedTranslateY: 0 },
-  list: { pressedOpacity: 0.96, pressedScale: 0.994, pressedTranslateY: 0 },
-  libraryItem: { pressedOpacity: 0.95, pressedScale: 0.99, pressedTranslateY: 0.5 },
+  primary: { pressedOpacity: 0.95, pressedScale: 0.977, pressedTranslateY: 1 },
+  secondary: { pressedOpacity: 0.95, pressedScale: 0.983, pressedTranslateY: 0.75 },
+  chip: { pressedOpacity: 0.94, pressedScale: 0.972, pressedTranslateY: 0 },
+  icon: { pressedOpacity: 0.92, pressedScale: 0.958, pressedTranslateY: 0 },
+  tab: { pressedOpacity: 0.95, pressedScale: 0.975, pressedTranslateY: 0 },
+  list: { pressedOpacity: 0.97, pressedScale: 0.992, pressedTranslateY: 0 },
+  libraryItem: { pressedOpacity: 0.965, pressedScale: 0.987, pressedTranslateY: 0.75 },
 };
 
 export const interactionMotion = {
@@ -30,9 +30,9 @@ export const interactionMotion = {
   panelPushScale: 0.982,
   panelSlideX: 22,
   press: pressMotions,
-  pressInMs: 92,
-  pressReleaseDampingRatio: 0.88,
-  releaseMs: 310,
+  pressInMs: 110,
+  pressReleaseDampingRatio: 0.84,
+  releaseMs: 350,
   settingsPanelExitMs: 270,
   settingsPanelMs: 380,
   libraryDetailExitMs: 340,

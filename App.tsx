@@ -57,6 +57,7 @@ import {
 } from 'lucide-react-native';
 import { createContext, memo, startTransition, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Animated,
   AppState,
@@ -247,12 +248,15 @@ type AccountState = {
   status: AccountStatus;
   message: string;
 };
+type ManualUpdateStatus = 'idle' | 'checking' | 'current' | 'error';
 type UpdateState = {
   available: boolean;
   buttonText: string;
+  checkNow: () => void;
   countdownSeconds: number;
   countdownText: string;
   detail: string;
+  manualStatus: ManualUpdateStatus;
   message: string;
   refresh: () => void;
 };
@@ -923,6 +927,13 @@ const systemCopy = {
     updateDetail: '為了避免字庫、帳號同步或介面版本不同步，系統會自動更新到最新版。',
     updateCountdown: (seconds: number) => `${seconds} 秒後自動更新`,
     updateNow: '立即更新',
+    updateCheckTitle: '檢查 App 更新',
+    updateCheckDetail: '自動更新已開啟，也可以隨時手動檢查。',
+    updateChecking: '正在檢查',
+    updateCurrent: '已是最新版本',
+    updateCurrentDetail: '目前版本已同步，自動更新仍會持續運作。',
+    updateRetry: '重新檢查',
+    updateCheckFailed: '暫時無法連線，請稍後再試。',
     installGuide: {
       closeAccessibility: '關閉加入主畫面教學',
       dismiss: '我先自己操作',
@@ -945,6 +956,13 @@ const systemCopy = {
     updateDetail: 'To keep the word library, account sync, and interface version aligned, the app will update automatically.',
     updateCountdown: (seconds: number) => `Auto-updating in ${seconds}s`,
     updateNow: 'Update now',
+    updateCheckTitle: 'Check for App Updates',
+    updateCheckDetail: 'Automatic updates are on, and you can check at any time.',
+    updateChecking: 'Checking',
+    updateCurrent: 'Up to date',
+    updateCurrentDetail: 'This version is current and automatic updates remain active.',
+    updateRetry: 'Check again',
+    updateCheckFailed: 'Unable to connect right now. Please try again shortly.',
     installGuide: {
       closeAccessibility: 'Close home-screen tutorial',
       dismiss: "I'll do this myself",
@@ -3668,7 +3686,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       progress: homePresentation.progress,
       stats: homePresentation.stats,
       studyMode,
+      updateStatus: updateState.manualStatus,
       vocabularyWords,
+      onCheckForUpdate: updateState.checkNow,
       onOpenDictionaryWord: homeOpenDictionaryWord,
       onStartStudy: homeStartStudy,
       onOpenReview: homeOpenReview,
@@ -3936,6 +3956,8 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   const [available, setAvailable] = useState(false);
   const [countdownSeconds, setCountdownSeconds] = useState(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
+  const [manualStatus, setManualStatus] = useState<ManualUpdateStatus>('idle');
+  const nativeCheckPromiseRef = useRef<Promise<boolean> | null>(null);
   const copy = systemCopy[studyMode];
 
   const refresh = useCallback(() => {
@@ -3952,6 +3974,36 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
     }
     (globalThis as { location?: { reload: () => void } }).location?.reload();
   }, [latestVersion]);
+
+  const downloadNativeUpdate = useCallback(async (): Promise<boolean> => {
+    if (nativeCheckPromiseRef.current) {
+      return nativeCheckPromiseRef.current;
+    }
+
+    const checkPromise = (async () => {
+      const updates = await import('expo-updates');
+      if (!updates.isEnabled) {
+        throw new Error('updates-disabled');
+      }
+
+      const update = await updates.checkForUpdateAsync();
+      if (!update.isAvailable) {
+        return false;
+      }
+
+      await updates.fetchUpdateAsync();
+      return true;
+    })();
+    nativeCheckPromiseRef.current = checkPromise;
+
+    try {
+      return await checkPromise;
+    } finally {
+      if (nativeCheckPromiseRef.current === checkPromise) {
+        nativeCheckPromiseRef.current = null;
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (Platform.OS !== 'web' || IS_WEB_IOS_PREVIEW || __DEV__) {
@@ -4016,18 +4068,8 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
 
     async function checkNativeUpdate() {
       try {
-        const updates = await import('expo-updates');
-        if (!updates.isEnabled) {
-          return;
-        }
-
-        const update = await updates.checkForUpdateAsync();
-        if (!update.isAvailable || cancelled) {
-          return;
-        }
-
-        await updates.fetchUpdateAsync();
-        if (cancelled) {
+        const updateDownloaded = await downloadNativeUpdate();
+        if (!updateDownloaded || cancelled) {
           return;
         }
 
@@ -4039,11 +4081,78 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
     }
 
     checkNativeUpdate();
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        void checkNativeUpdate();
+      }
+    });
 
     return () => {
       cancelled = true;
+      appStateSubscription.remove();
     };
-  }, []);
+  }, [downloadNativeUpdate]);
+
+  const checkNow = useCallback(() => {
+    if (manualStatus === 'checking') {
+      return;
+    }
+
+    setManualStatus('checking');
+    void (async () => {
+      try {
+        if (__DEV__ || IS_WEB_IOS_PREVIEW) {
+          setManualStatus('current');
+          return;
+        }
+
+        if (Platform.OS === 'web') {
+          const response = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' });
+          if (!response.ok) {
+            throw new Error('version-check-failed');
+          }
+          const data: unknown = await response.json();
+          const version = typeof (data as { version?: unknown }).version === 'string'
+            ? (data as { version: string }).version
+            : '';
+          if (!version) {
+            throw new Error('version-missing');
+          }
+
+          const storage = getAppStorage();
+          const storedVersion = storage?.getItem(UPDATE_STORAGE_KEY);
+          if (storedVersion && storedVersion !== version) {
+            storage?.setItem(UPDATE_STORAGE_KEY, version);
+            setLatestVersion(version);
+            (globalThis as { location?: { reload: () => void } }).location?.reload();
+            return;
+          }
+          if (!storedVersion) {
+            storage?.setItem(UPDATE_STORAGE_KEY, version);
+          }
+          setManualStatus('current');
+          return;
+        }
+
+        if (available) {
+          refresh();
+          return;
+        }
+
+        const updateDownloaded = await downloadNativeUpdate();
+        if (!updateDownloaded) {
+          setManualStatus('current');
+          return;
+        }
+
+        setAvailable(true);
+        const updates = await import('expo-updates');
+        await updates.reloadAsync();
+      } catch {
+        setManualStatus('error');
+      }
+    })();
+  }, [available, downloadNativeUpdate, manualStatus, refresh]);
 
   useEffect(() => {
     if (!available) {
@@ -4064,9 +4173,11 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   return {
     available,
     buttonText: copy.updateNow,
+    checkNow,
     countdownSeconds,
     countdownText: copy.updateCountdown(countdownSeconds),
     detail: copy.updateDetail,
+    manualStatus,
     message: copy.updateTitle,
     refresh,
   };
@@ -4808,7 +4919,9 @@ const HomeView = memo(function HomeView({
   progress,
   stats,
   studyMode,
+  updateStatus,
   vocabularyWords,
+  onCheckForUpdate,
   onOpenDictionaryWord,
   onOpenReview,
   onStartStudy,
@@ -4818,7 +4931,9 @@ const HomeView = memo(function HomeView({
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
   studyMode: StudyMode;
+  updateStatus: ManualUpdateStatus;
   vocabularyWords: WordEntry[];
+  onCheckForUpdate: () => void;
   onOpenDictionaryWord: (word: WordEntry) => void;
   onOpenReview: () => void;
   onStartStudy: () => void;
@@ -4830,7 +4945,21 @@ const HomeView = memo(function HomeView({
   const darkMode = themeMode === 'dark';
   const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const copy = modeCopy[studyMode];
+  const updateCopy = systemCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
+  const updateChecking = updateStatus === 'checking';
+  const updateActionText = updateStatus === 'current'
+    ? updateCopy.updateCurrent
+    : updateStatus === 'error'
+      ? updateCopy.updateRetry
+      : updateStatus === 'checking'
+        ? updateCopy.updateChecking
+        : updateCopy.updateNow;
+  const updateDetail = updateStatus === 'current'
+    ? updateCopy.updateCurrentDetail
+    : updateStatus === 'error'
+      ? updateCopy.updateCheckFailed
+      : updateCopy.updateCheckDetail;
   const [dictionaryQuery, setDictionaryQuery] = useState('');
   const [dictionaryOpen, setDictionaryOpen] = useState(false);
   const deferredDictionaryQuery = useDeferredValue(dictionaryQuery);
@@ -4991,6 +5120,43 @@ const HomeView = memo(function HomeView({
             <ChevronRight size={18} color="#FFFFFF" strokeWidth={2.3} />
           </AnimatedPressable>
         </View>
+
+        <AnimatedPressable
+          accessibilityLabel={updateCopy.updateCheckTitle}
+          accessibilityRole="button"
+          disabled={updateChecking}
+          glassTone="secondary"
+          onPress={onCheckForUpdate}
+          pressTone="secondary"
+          style={[styles.homeUpdateButton, themeStyles?.homeUpdateButton]}
+          testID="home-manual-update"
+        >
+          <View style={[styles.homeUpdateIcon, themeStyles?.homeUpdateIcon]}>
+            <Cloud size={20} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.4} />
+          </View>
+          <View style={styles.flexOne}>
+            <Text style={[styles.homeUpdateTitle, themeStyles?.homeUpdateTitle]}>{updateCopy.updateCheckTitle}</Text>
+            <Text numberOfLines={2} style={[styles.homeUpdateText, themeStyles?.homeUpdateText]}>{updateDetail}</Text>
+          </View>
+          <View
+            style={[
+              styles.homeUpdateAction,
+              updateStatus === 'current' && styles.homeUpdateActionCurrent,
+              updateStatus === 'error' && styles.homeUpdateActionError,
+            ]}
+          >
+            {updateChecking ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : updateStatus === 'current' ? (
+              <Check size={14} color="#FFFFFF" strokeWidth={2.7} />
+            ) : (
+              <RotateCcw size={14} color="#FFFFFF" strokeWidth={2.5} />
+            )}
+            <Text adjustsFontSizeToFit minimumFontScale={0.78} numberOfLines={1} style={styles.homeUpdateActionText}>
+              {updateActionText}
+            </Text>
+          </View>
+        </AnimatedPressable>
 
         <View style={[styles.statsGrid, themeStyles?.homeGroupedSurface]} testID="home-metrics-group">
           <StatCard label={ui.streak} value={progress.streak.toString()} />
@@ -9517,6 +9683,66 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  homeUpdateButton: {
+    alignItems: 'center',
+    backgroundColor: '#F7FAFF',
+    borderColor: '#B9DCFF',
+    borderCurve: 'continuous',
+    borderRadius: 14,
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    gap: 11,
+    minHeight: 66,
+    overflow: 'hidden',
+    paddingHorizontal: 11,
+    paddingVertical: 10,
+  },
+  homeUpdateIcon: {
+    alignItems: 'center',
+    backgroundColor: '#EAF4FF',
+    borderCurve: 'continuous',
+    borderRadius: 11,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  homeUpdateTitle: {
+    color: '#1C1C1E',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  homeUpdateText: {
+    color: '#6C6C70',
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 2,
+  },
+  homeUpdateAction: {
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    borderCurve: 'continuous',
+    borderRadius: 10,
+    flexDirection: 'row',
+    gap: 5,
+    justifyContent: 'center',
+    maxWidth: 112,
+    minHeight: 34,
+    minWidth: 86,
+    paddingHorizontal: 9,
+  },
+  homeUpdateActionCurrent: {
+    backgroundColor: '#248A3D',
+  },
+  homeUpdateActionError: {
+    backgroundColor: '#D70015',
+  },
+  homeUpdateActionText: {
+    color: '#FFFFFF',
+    flexShrink: 1,
+    fontSize: 11,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
   homeDictionaryStandalone: {
     alignItems: 'center',
     backgroundColor: '#EAF4FF',
@@ -12228,6 +12454,19 @@ const darkStyles = StyleSheet.create({
   },
   accountShortcutText: {
     color: '#F2F2F7',
+  },
+  homeUpdateButton: {
+    backgroundColor: '#111A26',
+    borderColor: '#29466A',
+  },
+  homeUpdateIcon: {
+    backgroundColor: 'rgba(10, 132, 255, 0.2)',
+  },
+  homeUpdateTitle: {
+    color: '#FFFFFF',
+  },
+  homeUpdateText: {
+    color: '#AEAEB2',
   },
   homeDictionaryCard: {
     backgroundColor: '#1C1C1E',

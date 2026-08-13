@@ -176,6 +176,18 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('countdownText: copy.updateCountdown(countdownSeconds)');
     expect(appSource).toContain('countdownText={updateState.countdownText}');
     expect(appSource).toContain('setTimeout(refresh, UPDATE_AUTO_REFRESH_MS)');
+    expect(appSource).toContain('testID="home-manual-update"');
+    expect(appSource).toContain('updateStatus: updateState.manualStatus');
+    expect(appSource).toContain('onCheckForUpdate: updateState.checkNow');
+    expect(appSource).toContain("AppState.addEventListener('change', (state) =>");
+    expect(appSource).toContain("if (state === 'active')");
+    expect(appSource).toContain('await updates.checkForUpdateAsync()');
+    expect(appSource).toContain('await updates.fetchUpdateAsync()');
+    expect(appSource).toContain('await updates.reloadAsync()');
+    expect(appSource).toContain('檢查 App 更新');
+    expect(appSource).toContain('Check for App Updates');
+    expect(appSource).toContain('已是最新版本');
+    expect(appSource).toContain('Up to date');
   });
 
   test('configures native builds for fast TestFlight updates', () => {
@@ -1120,6 +1132,9 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('paddingTop: 18');
     expect(homeSource).toContain('testID="home-metrics-group"');
     expect(homeSource).toContain('testID="home-action-group"');
+    expect(homeSource).toContain('testID="home-manual-update"');
+    expect(homeSource).toContain('disabled={updateChecking}');
+    expect(homeSource).toContain('<ActivityIndicator color="#FFFFFF" size="small" />');
     expect(homeSource).toContain('styles.homeActionDivider');
     expect(homeSource).toContain('<Modal');
     expect(homeSource).toContain('filterWords(vocabularyWords, progress, normalizedDictionaryQuery');

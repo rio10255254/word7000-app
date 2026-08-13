@@ -178,6 +178,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('setTimeout(refresh, UPDATE_AUTO_REFRESH_MS)');
     expect(appSource).toContain('testID="home-manual-update"');
     expect(appSource).toContain('updateStatus: updateState.manualStatus');
+    expect(appSource).toContain("setManualStatus('available')");
+    expect(appSource).toContain("setManualStatus('current')");
     expect(appSource).toContain('onCheckForUpdate: updateState.checkNow');
     expect(appSource).toContain("AppState.addEventListener('change', (state) =>");
     expect(appSource).toContain("if (state === 'active')");
@@ -188,6 +190,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Check for App Updates');
     expect(appSource).toContain('已是最新版本');
     expect(appSource).toContain('Up to date');
+    expect(appSource).toContain('新版已就緒');
+    expect(appSource).toContain('Update ready');
   });
 
   test('configures native builds for fast TestFlight updates', () => {
@@ -1026,7 +1030,9 @@ describe('free web launch configuration', () => {
 
     expect(appSource).toContain('function AddToSetGlyph({ locked, size = 20 }');
     expect(studySource).toContain('<AddToSetGlyph locked={customSetsLocked} size={19} />');
+    expect(studySource).toContain('hapticEnabled={!customSetsLocked}');
     expect(librarySource).toContain('<AddToSetGlyph locked={customSetsLocked} size={18} />');
+    expect(librarySource).toContain('hapticEnabled={!favoriteLocked}');
     expect(librarySource).toContain('{customSetsLocked && <Lock size={11}');
     expect(detailSource).toContain('<AddToSetGlyph locked={customSetsLocked} size={21} />');
   });
@@ -1045,8 +1051,11 @@ describe('free web launch configuration', () => {
     expect(requestSource).not.toContain('Animated.spring(accountUpgradeAnim');
     expect(shownSource).toContain("triggerPressHaptic('secondary')");
     expect(shownSource).toContain('Animated.spring(accountUpgradeAnim');
+    expect(appSource).toContain('visible={Boolean(accountUpgradeReason)}');
     expect(overlaySource).toContain('onShow={handleShown}');
+    expect(overlaySource).toContain('visible={visible}');
     expect(overlaySource).toContain('presentationStartedRef.current');
+    expect(overlaySource).not.toContain('glassTone="secondary"');
   });
 
   test('supports editing existing custom sets from the management page', () => {

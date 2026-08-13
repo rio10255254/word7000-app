@@ -3,12 +3,19 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
 type LiveActivityDevice = {
   activity_started_for_expires_at: string | null;
   app_locale: 'en' | 'zh-TW';
+  daily_target: number;
   device_id: string;
+  noon_activity_expires_at: string | null;
+  noon_activity_started_for_local_date: string | null;
+  progress_date: string | null;
   push_to_start_token: string;
   streak: number;
-  streak_expires_at: string;
+  streak_expires_at: string | null;
+  studied_today: number;
   user_id: string;
 };
+
+type ReminderKind = 'noon' | 'streak';
 
 const requiredEnvironment = [
   'SUPABASE_URL',
@@ -35,55 +42,116 @@ Deno.serve(async (request) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     { auth: { persistSession: false } },
   );
-  const { data, error } = await supabase.rpc('claim_due_streak_live_activities');
-  if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+  const [streakClaim, noonClaim] = await Promise.all([
+    supabase.rpc('claim_due_streak_live_activities'),
+    supabase.rpc('claim_due_noon_live_activities'),
+  ]);
+  if (streakClaim.error || noonClaim.error) {
+    return Response.json(
+      { error: streakClaim.error?.message ?? noonClaim.error?.message ?? 'Unable to claim reminders' },
+      { status: 500 },
+    );
   }
 
-  const devices = (data ?? []) as LiveActivityDevice[];
-  if (devices.length === 0) {
-    return Response.json({ claimed: 0, failed: 0, sent: 0 });
+  const reminders = [
+    ...((streakClaim.data ?? []) as LiveActivityDevice[]).map((device) => ({ device, kind: 'streak' as const })),
+    ...((noonClaim.data ?? []) as LiveActivityDevice[]).map((device) => ({ device, kind: 'noon' as const })),
+  ];
+  if (reminders.length === 0) {
+    return Response.json({ claimed: 0, failed: 0, sent: 0, noon: 0, streak: 0 });
   }
 
   const authorization = `bearer ${await createApnsJwt()}`;
   const results = await Promise.all(
-    devices.map(async (device) => {
-      const response = await sendStartRequest(device, authorization);
+    reminders.map(async ({ device, kind }) => {
+      const response = await sendStartRequest(device, authorization, kind);
       if (response.ok) {
-        return true;
+        return { kind, sent: true };
       }
 
       const errorText = (await response.text()).slice(0, 500);
-      await supabase
+      const reset = kind === 'streak'
+        ? {
+            activity_started_for_expires_at: null,
+            last_push_error: `${response.status} ${errorText}`.trim(),
+            updated_at: new Date().toISOString(),
+          }
+        : {
+            last_push_error: `${response.status} ${errorText}`.trim(),
+            noon_activity_expires_at: null,
+            noon_activity_started_for_local_date: null,
+            updated_at: new Date().toISOString(),
+          };
+      let resetQuery = supabase
         .from('live_activity_devices')
-        .update({
-          activity_started_for_expires_at: null,
-          last_push_error: `${response.status} ${errorText}`.trim(),
-          updated_at: new Date().toISOString(),
-        })
+        .update(reset)
         .eq('user_id', device.user_id)
-        .eq('device_id', device.device_id)
-        .eq('activity_started_for_expires_at', device.streak_expires_at);
-      return false;
+        .eq('device_id', device.device_id);
+      resetQuery = kind === 'streak'
+        ? resetQuery.eq('activity_started_for_expires_at', device.streak_expires_at!)
+        : resetQuery.eq('noon_activity_started_for_local_date', device.noon_activity_started_for_local_date!);
+      await resetQuery;
+      return { kind, sent: false };
     }),
   );
-  const sent = results.filter(Boolean).length;
-  return Response.json({ claimed: devices.length, failed: devices.length - sent, sent });
+  const sent = results.filter((result) => result.sent).length;
+  return Response.json({
+    claimed: reminders.length,
+    failed: reminders.length - sent,
+    noon: results.filter((result) => result.kind === 'noon' && result.sent).length,
+    sent,
+    streak: results.filter((result) => result.kind === 'streak' && result.sent).length,
+  });
 });
 
-async function sendStartRequest(device: LiveActivityDevice, authorization: string): Promise<Response> {
-  const expiresAt = new Date(device.streak_expires_at).getTime();
-  const startedAt = expiresAt - 60 * 60 * 1000;
+async function sendStartRequest(
+  device: LiveActivityDevice,
+  authorization: string,
+  kind: ReminderKind,
+): Promise<Response> {
+  const expiration = kind === 'streak' ? device.streak_expires_at : device.noon_activity_expires_at;
+  if (!expiration) {
+    return new Response(`Missing ${kind} reminder expiration`, { status: 500 });
+  }
+
+  const expiresAt = new Date(expiration).getTime();
+  const startedAt = kind === 'streak' ? expiresAt - 60 * 60 * 1000 : Date.now();
   const chinese = device.app_locale === 'zh-TW';
-  const props = {
-    countdownLabel: chinese ? '剩餘時間' : 'Time left',
-    expiresAt,
-    keepStreakLabel: chinese ? '完成 1 個單字即可保住連勝' : 'Study 1 word to keep it',
-    startedAt,
-    streak: device.streak,
-    streakLabel: chinese ? `連勝 ${device.streak} 天` : `${device.streak}-day streak`,
-    title: chinese ? '你的連勝快中斷了' : 'Your streak needs you',
-  };
+  const studiedToday = device.progress_date === device.noon_activity_started_for_local_date
+    ? Math.max(0, device.studied_today)
+    : 0;
+  const remaining = Math.max(0, Math.max(1, device.daily_target) - studiedToday);
+  const props = kind === 'streak'
+    ? {
+        countdownLabel: chinese ? '剩餘時間' : 'Time left',
+        expiresAt,
+        keepStreakLabel: chinese ? '完成 1 個單字即可保住連勝' : 'Study 1 word to keep it',
+        startedAt,
+        streak: device.streak,
+        streakLabel: chinese ? `連勝 ${device.streak} 天` : `${device.streak}-day streak`,
+        title: chinese ? '你的連勝快中斷了' : 'Your streak needs you',
+      }
+    : {
+        countdownLabel: chinese ? '今日剩餘' : 'Left today',
+        expiresAt,
+        keepStreakLabel: remaining > 0
+          ? chinese
+            ? `再學 ${remaining} 個單字，完成今天目標`
+            : `Study ${remaining} more words to reach today's goal`
+          : chinese
+            ? '今日目標已完成，複習 1 個單字保持手感'
+            : 'Goal complete. Review 1 word to stay sharp',
+        startedAt,
+        streak: device.streak,
+        streakLabel: device.streak > 0
+          ? chinese
+            ? `連勝 ${device.streak} 天`
+            : `${device.streak}-day streak`
+          : chinese
+            ? '今天開始連勝'
+            : 'Start your streak today',
+        title: chinese ? '中午學習時間' : 'Your noon study break',
+      };
   const payload = {
     aps: {
       alert: {
@@ -113,6 +181,7 @@ async function sendStartRequest(device: LiveActivityDevice, authorization: strin
       'apns-priority': '10',
       'apns-push-type': 'liveactivity',
       'apns-topic': `${bundleId}.push-type.liveactivity`,
+      'apns-expiration': String(Math.floor(expiresAt / 1000)),
       'content-type': 'application/json',
     },
     method: 'POST',

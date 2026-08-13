@@ -248,7 +248,7 @@ type AccountState = {
   status: AccountStatus;
   message: string;
 };
-type ManualUpdateStatus = 'idle' | 'checking' | 'current' | 'error';
+type ManualUpdateStatus = 'idle' | 'checking' | 'available' | 'current' | 'error';
 type UpdateState = {
   available: boolean;
   buttonText: string;
@@ -576,10 +576,10 @@ const modeInterfaceCopy = {
     darkModeOnText: '已切換成夜間閱讀介面',
     darkModeOffText: '切換成夜間閱讀介面',
     toggleDarkMode: '切換深色模式',
-    streakReminder: '鎖定畫面連勝提醒',
-    streakReminderOnText: '最後一小時顯示鎖定畫面倒數',
-    streakReminderOffText: '不在鎖定畫面顯示倒數',
-    toggleStreakReminder: '切換鎖定畫面連勝提醒',
+    streakReminder: '鎖定畫面學習提醒',
+    streakReminderOnText: '每天中午提醒，連勝最後一小時倒數',
+    streakReminderOffText: '不顯示鎖定畫面與靈動島提醒',
+    toggleStreakReminder: '切換鎖定畫面學習提醒',
     on: '開啟',
     off: '關閉',
     developerPanel: '開發人員資料窗口',
@@ -787,10 +787,10 @@ const modeInterfaceCopy = {
     darkModeOnText: 'Night reading interface is on',
     darkModeOffText: 'Switch to the night reading interface',
     toggleDarkMode: 'Toggle dark mode',
-    streakReminder: 'Lock Screen Streak Alert',
-    streakReminderOnText: 'Show a live countdown in the final hour',
-    streakReminderOffText: 'Do not show the Lock Screen countdown',
-    toggleStreakReminder: 'Toggle Lock Screen streak alert',
+    streakReminder: 'Lock Screen Study Reminder',
+    streakReminderOnText: 'Remind me at noon and during the final streak hour',
+    streakReminderOffText: 'Hide Lock Screen and Dynamic Island reminders',
+    toggleStreakReminder: 'Toggle Lock Screen study reminders',
     on: 'On',
     off: 'Off',
     developerPanel: 'Developer Data Window',
@@ -930,6 +930,8 @@ const systemCopy = {
     updateCheckTitle: '檢查 App 更新',
     updateCheckDetail: '自動更新已開啟，也可以隨時手動檢查。',
     updateChecking: '正在檢查',
+    updateAvailable: '新版已就緒',
+    updateAvailableDetail: '新版已下載完成，點一下立即套用。',
     updateCurrent: '已是最新版本',
     updateCurrentDetail: '目前版本已同步，自動更新仍會持續運作。',
     updateRetry: '重新檢查',
@@ -959,6 +961,8 @@ const systemCopy = {
     updateCheckTitle: 'Check for App Updates',
     updateCheckDetail: 'Automatic updates are on, and you can check at any time.',
     updateChecking: 'Checking',
+    updateAvailable: 'Update ready',
+    updateAvailableDetail: 'The latest update is downloaded and ready to apply.',
     updateCurrent: 'Up to date',
     updateCurrentDetail: 'This version is current and automatic updates remain active.',
     updateRetry: 'Check again',
@@ -1240,6 +1244,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const accountUpgradeAnim = useRef(new Animated.Value(0)).current;
   const accountUpgradeFrameRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+  const accountUpgradeHapticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [initialFilterPreferences] = useState(() => loadFilterPreferences(getAppStorage()));
   const [streakDeviceId] = useState(() => getOrCreateStreakDeviceId(getAppStorage()));
@@ -1668,17 +1673,23 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
     void saveStreakReminderRegistration(supabaseClient, account.userId, {
       activityPushToken: activityMatchesExpiration ? streakActivitySync.activityPushToken : null,
+      dailyTarget: progress.dailyTarget,
       deviceId: streakDeviceId,
-      enabled: streakReminderEnabled && Boolean(expiresAt),
+      enabled: streakReminderEnabled,
       expiresAt,
       locale: studyMode === 'chinese' ? 'en' : 'zh-TW',
+      progressDate: currentDate,
       pushToStartToken: streakPushToStartToken,
       startedForExpiresAt: activityMatchesExpiration ? streakActivitySync.startedForExpiresAt : null,
       streak: streakReminderPlan.streak,
+      studiedToday: progress.studiedToday,
       timeZone,
     });
   }, [
     account.userId,
+    currentDate,
+    progress.dailyTarget,
+    progress.studiedToday,
     streakActivitySync.activityPushToken,
     streakActivitySync.startedForExpiresAt,
     streakDeviceId,
@@ -1712,6 +1723,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     () => () => {
       if (progressProtectionTimerRef.current) {
         clearTimeout(progressProtectionTimerRef.current);
+      }
+      if (accountUpgradeHapticTimerRef.current) {
+        clearTimeout(accountUpgradeHapticTimerRef.current);
       }
     },
     [],
@@ -2115,7 +2129,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   function handleAccountUpgradeShown() {
     accountUpgradeFrameRef.current = requestAnimationFrame(() => {
       accountUpgradeFrameRef.current = null;
-      triggerPressHaptic('secondary');
       Animated.spring(accountUpgradeAnim, {
         damping: interactionMotion.accountPromptDamping,
         mass: interactionMotion.accountPromptMass,
@@ -2124,6 +2137,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         toValue: 1,
         useNativeDriver: Platform.OS !== 'web',
       }).start();
+      accountUpgradeHapticTimerRef.current = setTimeout(() => {
+        accountUpgradeHapticTimerRef.current = null;
+        triggerPressHaptic('secondary');
+      }, 45);
     });
   }
 
@@ -2134,6 +2151,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     if (accountUpgradeFrameRef.current !== null) {
       cancelAnimationFrame(accountUpgradeFrameRef.current);
       accountUpgradeFrameRef.current = null;
+    }
+    if (accountUpgradeHapticTimerRef.current) {
+      clearTimeout(accountUpgradeHapticTimerRef.current);
+      accountUpgradeHapticTimerRef.current = null;
     }
     pendingAdvancedActionRef.current = null;
     Animated.timing(accountUpgradeAnim, {
@@ -3841,19 +3862,18 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
           />
         )}
 
-        {accountUpgradeReason && (
-          <AccountUpgradeOverlay
-            accountBusy={account.busy}
-            animation={accountUpgradeAnim}
-            reason={accountUpgradeReason}
-            studyMode={studyMode}
-            themeMode={themeMode}
-            onAppleSignIn={handleAppleSignIn}
-            onDismiss={dismissAccountUpgrade}
-            onGoogleSignIn={handleGoogleSignIn}
-            onShown={handleAccountUpgradeShown}
-          />
-        )}
+        <AccountUpgradeOverlay
+          accountBusy={account.busy}
+          animation={accountUpgradeAnim}
+          reason={accountUpgradeReason ?? 'protectProgress'}
+          studyMode={studyMode}
+          themeMode={themeMode}
+          visible={Boolean(accountUpgradeReason)}
+          onAppleSignIn={handleAppleSignIn}
+          onDismiss={dismissAccountUpgrade}
+          onGoogleSignIn={handleGoogleSignIn}
+          onShown={handleAccountUpgradeShown}
+        />
 
 
         {showModeSwitch && (
@@ -3868,18 +3888,20 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         {showLaunch && (
           <Animated.View
             pointerEvents="none"
-            style={[styles.launchOverlay, { opacity: launchOpacity, transform: [{ scale: launchScale }] }]}
+            style={[styles.launchOverlay, { opacity: launchOpacity }]}
             testID="launch-overlay"
           >
-            <View style={styles.launchIcon}>
-              <View style={styles.launchDot} />
-              <Text style={styles.launchIconText}>W7</Text>
-            </View>
-            <Text style={styles.launchTitle}>{activeModeCopy.brand}</Text>
-            <Text style={styles.launchText}>{activeModeCopy.subtitle}</Text>
-            <View style={styles.launchBar}>
-              <Animated.View style={[styles.launchBarFill, { width: launchProgressWidth }]} />
-            </View>
+            <Animated.View style={[styles.launchContent, { transform: [{ scale: launchScale }] }]}>
+              <View style={styles.launchIcon}>
+                <View style={styles.launchDot} />
+                <Text style={styles.launchIconText}>W7</Text>
+              </View>
+              <Text style={styles.launchTitle}>{activeModeCopy.brand}</Text>
+              <Text style={styles.launchText}>{activeModeCopy.subtitle}</Text>
+              <View style={styles.launchBar}>
+                <Animated.View style={[styles.launchBarFill, { width: launchProgressWidth }]} />
+              </View>
+            </Animated.View>
           </Animated.View>
         )}
         {showInstallGuide && (
@@ -4013,6 +4035,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
     let cancelled = false;
 
     async function checkVersion() {
+      setManualStatus('checking');
       try {
         const response = await fetch(`/version.json?t=${Date.now()}`, {
           cache: 'no-store',
@@ -4028,16 +4051,22 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
 
         if (!storedVersion) {
           storage?.setItem(UPDATE_STORAGE_KEY, version);
+          setManualStatus('current');
           return;
         }
 
         if (storedVersion !== version) {
           setLatestVersion(version);
           setCountdownSeconds(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
+          setManualStatus('available');
           setAvailable(true);
+          return;
         }
+        setManualStatus('current');
       } catch {
-        // Version checks should never block studying.
+        if (!cancelled) {
+          setManualStatus('error');
+        }
       }
     }
 
@@ -4067,16 +4096,24 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
     let cancelled = false;
 
     async function checkNativeUpdate() {
+      setManualStatus('checking');
       try {
         const updateDownloaded = await downloadNativeUpdate();
-        if (!updateDownloaded || cancelled) {
+        if (cancelled) {
+          return;
+        }
+        if (!updateDownloaded) {
+          setManualStatus('current');
           return;
         }
 
         setCountdownSeconds(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
+        setManualStatus('available');
         setAvailable(true);
       } catch {
-        // Native update checks should never block studying.
+        if (!cancelled) {
+          setManualStatus('error');
+        }
       }
     }
 
@@ -4134,7 +4171,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
           return;
         }
 
-        if (available) {
+        if (available || manualStatus === 'available') {
           refresh();
           return;
         }
@@ -4407,6 +4444,7 @@ function createInitialAccountState(configured: boolean): AccountState {
 type AnimatedPressableProps = Omit<PressableProps, 'children' | 'style'> & {
   children: ReactNode;
   glassTone?: NativeGlassTone;
+  hapticEnabled?: boolean;
   pressTone?: InteractionTone;
   pressedStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
@@ -4460,6 +4498,7 @@ function AnimatedPressable({
   children,
   disabled,
   glassTone,
+  hapticEnabled = true,
   onPressIn,
   onPressOut,
   pressTone = 'secondary',
@@ -4532,7 +4571,9 @@ function AnimatedPressable({
         easing: ReanimatedEasing.out(ReanimatedEasing.cubic),
         reduceMotion: ReduceMotion.System,
       });
-      triggerPressHaptic(pressTone);
+      if (hapticEnabled) {
+        triggerPressHaptic(pressTone);
+      }
       if (pressedStyle) {
         setPressed(true);
       }
@@ -4948,14 +4989,18 @@ const HomeView = memo(function HomeView({
   const updateCopy = systemCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const updateChecking = updateStatus === 'checking';
-  const updateActionText = updateStatus === 'current'
+  const updateActionText = updateStatus === 'available'
+    ? updateCopy.updateAvailable
+    : updateStatus === 'current'
     ? updateCopy.updateCurrent
     : updateStatus === 'error'
       ? updateCopy.updateRetry
       : updateStatus === 'checking'
         ? updateCopy.updateChecking
         : updateCopy.updateNow;
-  const updateDetail = updateStatus === 'current'
+  const updateDetail = updateStatus === 'available'
+    ? updateCopy.updateAvailableDetail
+    : updateStatus === 'current'
     ? updateCopy.updateCurrentDetail
     : updateStatus === 'error'
       ? updateCopy.updateCheckFailed
@@ -5141,6 +5186,7 @@ const HomeView = memo(function HomeView({
           <View
             style={[
               styles.homeUpdateAction,
+              updateStatus === 'available' && styles.homeUpdateActionAvailable,
               updateStatus === 'current' && styles.homeUpdateActionCurrent,
               updateStatus === 'error' && styles.homeUpdateActionError,
             ]}
@@ -5149,6 +5195,8 @@ const HomeView = memo(function HomeView({
               <ActivityIndicator color="#FFFFFF" size="small" />
             ) : updateStatus === 'current' ? (
               <Check size={14} color="#FFFFFF" strokeWidth={2.7} />
+            ) : updateStatus === 'available' ? (
+              <Download size={14} color="#FFFFFF" strokeWidth={2.5} />
             ) : (
               <RotateCcw size={14} color="#FFFFFF" strokeWidth={2.5} />
             )}
@@ -6275,6 +6323,7 @@ const StudyView = memo(function StudyView({
                 accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
                 accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
                 accessibilityRole="button"
+                hapticEnabled={!customSetsLocked}
                 onPress={() => onAddToSet(word)}
                 pressTone="icon"
                 style={[styles.iconButton, styles.addToSetIconButton, themeStyles?.iconButton]}
@@ -6285,6 +6334,7 @@ const StudyView = memo(function StudyView({
               <AnimatedPressable
                 accessibilityLabel={favorited ? ui.unfavoriteWord : ui.favoriteWord}
                 accessibilityRole="button"
+                hapticEnabled={!favoriteLocked}
                 onPress={onFavorite}
                 pressTone="icon"
                 style={[styles.iconButton, themeStyles?.iconButton]}
@@ -6391,6 +6441,7 @@ function FilterControlPanel({
                   return (
                     <AnimatedPressable
                       accessibilityRole="button"
+                      hapticEnabled={filter.id !== 'favorites' || !favoritesLocked}
                       key={filter.id}
                       onPress={() => onFilterChange(filter.id)}
                       pressTone="chip"
@@ -7050,6 +7101,7 @@ const LibraryView = memo(function LibraryView({
               return (
                 <AnimatedPressable
                   accessibilityRole="button"
+                  hapticEnabled={filter.id !== 'favorites' || !favoriteLocked}
                   key={filter.id}
                   onPress={() => onFilterChange(filter.id)}
                   pressTone="chip"
@@ -7104,6 +7156,7 @@ const LibraryView = memo(function LibraryView({
           <AnimatedPressable
             accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
             accessibilityRole="button"
+            hapticEnabled={!customSetsLocked}
             onPress={onOpenCustomSets}
             pressTone="secondary"
             style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}
@@ -7119,6 +7172,7 @@ const LibraryView = memo(function LibraryView({
               <AnimatedPressable
                 accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
                 accessibilityRole="button"
+                hapticEnabled={!customSetsLocked}
                 key={set.id}
                 onPress={onOpenCustomSets}
                 pressTone="chip"
@@ -7263,6 +7317,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
           accessibilityLabel={ui.addToSetName(primaryWord)}
           accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
           accessibilityRole="button"
+          hapticEnabled={!customSetsLocked}
           onPress={() => onAddToSet(word)}
           pressTone="icon"
           style={[styles.iconButton, styles.addToSetIconButton]}
@@ -7273,6 +7328,7 @@ const LibraryWordRow = memo(function LibraryWordRow({
         <AnimatedPressable
           accessibilityLabel={wordProgress?.favorite ? ui.unfavoriteWordName(primaryWord) : ui.favoriteWordName(primaryWord)}
           accessibilityRole="button"
+          hapticEnabled={!favoriteLocked}
           onPress={() => onFavorite(word.id)}
           pressTone="icon"
           style={styles.iconButton}
@@ -7341,6 +7397,7 @@ export function LibraryWordDetailView({
               accessibilityLabel={ui.addToSetName(formatWordPrimary(word, studyMode))}
               accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
               accessibilityRole="button"
+              hapticEnabled={!customSetsLocked}
               onPress={() => onAddToSet(word)}
               pressTone="icon"
               style={styles.libraryDetailFavorite}
@@ -7355,6 +7412,7 @@ export function LibraryWordDetailView({
                   : ui.favoriteWordName(formatWordPrimary(word, studyMode))
               }
               accessibilityRole="button"
+              hapticEnabled={!favoriteLocked}
               onPress={onFavorite}
               pressTone="icon"
               style={styles.libraryDetailFavorite}
@@ -7650,6 +7708,7 @@ function ProfileLearningExperiencePanel({
         <AnimatedPressable
           accessibilityLabel={signedIn ? ui.favoriteWords : `${ui.favoriteWords}，${ui.favoritesRequireSignIn}`}
           accessibilityRole="button"
+          hapticEnabled={signedIn}
           onPress={onOpenFavorites}
           pressTone="chip"
           style={[styles.learningMetric, themeStyles?.learningMetric]}
@@ -7741,6 +7800,7 @@ function AccountUpgradeOverlay({
   reason,
   studyMode,
   themeMode,
+  visible,
 }: {
   accountBusy: boolean;
   animation: Animated.Value;
@@ -7751,6 +7811,7 @@ function AccountUpgradeOverlay({
   reason: AccountUpgradeReason;
   studyMode: StudyMode;
   themeMode: ThemeMode;
+  visible: boolean;
 }) {
   const copy = accountUpgradeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
@@ -7791,12 +7852,16 @@ function AccountUpgradeOverlay({
   }, [onShown]);
 
   useEffect(() => {
+    if (!visible) {
+      presentationStartedRef.current = false;
+      return undefined;
+    }
     if (Platform.OS !== 'web') {
       return undefined;
     }
     const frame = requestAnimationFrame(handleShown);
     return () => cancelAnimationFrame(frame);
-  }, [handleShown]);
+  }, [handleShown, visible]);
 
   return (
     <Modal
@@ -7806,7 +7871,7 @@ function AccountUpgradeOverlay({
       presentationStyle="overFullScreen"
       statusBarTranslucent
       transparent
-      visible
+      visible={visible}
     >
       <Animated.View style={[styles.accountUpgradeOverlay, themeStyles?.accountUpgradeOverlay, backdropMotion]}>
         <Pressable
@@ -7865,7 +7930,6 @@ function AccountUpgradeOverlay({
                 accessibilityLabel={ui.googleSignIn}
                 accessibilityRole="button"
                 disabled={accountBusy}
-                glassTone="secondary"
                 onPress={onGoogleSignIn}
                 pressTone="secondary"
                 style={[styles.accountUpgradeGoogleButton, themeStyles?.accountUpgradeGoogleButton, accountBusy && styles.disabledButton]}
@@ -9161,6 +9225,9 @@ const styles = StyleSheet.create({
     top: 0,
     zIndex: 60,
   },
+  launchContent: {
+    alignItems: 'center',
+  },
   themeTransitionOverlay: {
     bottom: 0,
     left: 0,
@@ -9171,7 +9238,7 @@ const styles = StyleSheet.create({
   },
   launchIcon: {
     alignItems: 'center',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2563EB',
     borderColor: '#B9DCFF',
     borderRadius: 20,
     borderCurve: 'continuous',
@@ -9732,6 +9799,9 @@ const styles = StyleSheet.create({
   },
   homeUpdateActionCurrent: {
     backgroundColor: '#248A3D',
+  },
+  homeUpdateActionAvailable: {
+    backgroundColor: '#FF9500',
   },
   homeUpdateActionError: {
     backgroundColor: '#D70015',

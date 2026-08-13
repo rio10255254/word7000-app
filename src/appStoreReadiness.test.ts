@@ -159,13 +159,15 @@ describe('iOS App Store readiness polish', () => {
 
     expect(app.expo.plugins).toContainEqual([
       'expo-splash-screen',
-      expect.objectContaining({ backgroundColor: '#007AFF', image: './assets/splash-icon.png' }),
+      expect.objectContaining({ backgroundColor: '#2563EB', image: './assets/splash-icon.png' }),
     ]);
     expect(layoutSource).toContain('prepareNativeSplash();');
     expect(nativeSplashSource).toContain('preventAutoHideAsync');
     expect(nativeSplashSource).toContain('fade: true');
     expect(appSource).toContain('hideNativeSplash();');
     expect(appSource).toContain('storageReady && (bundledVocabulary || vocabularyLoadFailed)');
+    expect(appSource).toContain('style={[styles.launchOverlay, { opacity: launchOpacity }]}');
+    expect(appSource).toContain('style={[styles.launchContent, { transform: [{ scale: launchScale }] }]}');
   });
 
   test('includes a launch-ready App Store submission checklist', () => {

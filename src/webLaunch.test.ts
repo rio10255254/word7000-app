@@ -5,6 +5,7 @@ import app from '../app.json';
 
 const manifestPath = path.join(process.cwd(), 'public', 'manifest.json');
 const versionPath = path.join(process.cwd(), 'public', 'version.json');
+const iosUpdatePolicyPath = path.join(process.cwd(), 'public', 'ios-update.json');
 const serviceWorkerPath = path.join(process.cwd(), 'public', 'service-worker.js');
 const headersPath = path.join(process.cwd(), 'public', '_headers');
 const appPath = path.join(process.cwd(), 'App.tsx');
@@ -159,6 +160,7 @@ describe('free web launch configuration', () => {
 
   test('provides a version endpoint for mobile web app update checks', () => {
     const version = JSON.parse(fs.readFileSync(versionPath, 'utf8'));
+    const iosUpdatePolicy = JSON.parse(fs.readFileSync(iosUpdatePolicyPath, 'utf8'));
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(typeof version.version).toBe('string');
@@ -173,7 +175,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Auto-updating in');
     expect(appSource).toContain('Update now');
     expect(appSource).toContain('useAppUpdateCheck(studyMode)');
-    expect(appSource).toContain('countdownText: copy.updateCountdown(countdownSeconds)');
+    expect(appSource).toContain('copy.updateCountdown(countdownSeconds)');
     expect(appSource).toContain('countdownText={updateState.countdownText}');
     expect(appSource).toContain('setTimeout(refresh, UPDATE_AUTO_REFRESH_MS)');
     expect(appSource).toContain('testID="home-manual-update"');
@@ -192,6 +194,10 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Up to date');
     expect(appSource).toContain('新版已就緒');
     expect(appSource).toContain('Update ready');
+    expect(iosUpdatePolicy).toMatchObject({ latestBuild: 21, minimumBuild: 21 });
+    expect(appSource).toContain('iosUpdateDecision(currentBuild, policy)');
+    expect(appSource).toContain('testFlightUpdateButton');
+    expect(appSource).toContain('Linking.openURL(nativeStoreUpdate.testFlightUrl)');
   });
 
   test('configures native builds for fast TestFlight updates', () => {

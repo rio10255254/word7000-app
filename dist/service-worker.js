@@ -1,6 +1,6 @@
-const CACHE_NAME = 'word7000-static-1-3-0-1786592335273';
+const CACHE_NAME = 'word7000-static-1-3-0-1786593376134';
 const APP_SHELL = ['/', '/favicon.ico'];
-const NETWORK_FIRST_PATHS = ['/manifest.json', '/version.json'];
+const NETWORK_FIRST_PATHS = ['/manifest.json', '/version.json', '/ios-update.json'];
 const PUBLIC_HTML_PATHS = ['/privacy.html', '/support.html'];
 
 self.addEventListener('install', (event) => {

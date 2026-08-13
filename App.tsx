@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
+import Constants from 'expo-constants';
 import { GlassView, isGlassEffectAPIAvailable } from 'expo-glass-effect';
 import { useFocusEffect, usePathname, useRouter } from 'expo-router';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
@@ -138,6 +139,7 @@ import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { interactionMotion, listEnterOffset, pressMotionFor, type InteractionTone } from './src/lib/interactionMotion';
 import { appleCredentialMetadata, createAppleNoncePair } from './src/lib/appleAuth';
 import { triggerPressHaptic } from './src/lib/haptics';
+import { iosUpdateDecision, parseIosUpdatePolicy, type IosUpdateDecision } from './src/lib/nativeUpdatePolicy';
 import { loadBundledVocabulary } from './src/lib/vocabularyLoader';
 import {
   markInstallGuideSeen,
@@ -269,6 +271,7 @@ const today = localDateKey();
 const UPDATE_STORAGE_KEY = 'word7000-version-v1';
 const UPDATE_AUTO_REFRESH_MS = 6500;
 const UPDATE_CHECK_INTERVAL_MS = 60_000;
+const IOS_UPDATE_POLICY_URL = 'https://word7000-app.rio10255254.workers.dev/ios-update.json';
 const ACTIVE_USER_HEARTBEAT_MS = 60_000;
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
@@ -936,6 +939,9 @@ const systemCopy = {
     updateCurrentDetail: '目前版本已同步，自動更新仍會持續運作。',
     updateRetry: '重新檢查',
     updateCheckFailed: '暫時無法連線，請稍後再試。',
+    testFlightUpdateButton: '開啟 TestFlight',
+    testFlightUpdateDetail: '這個版本已停止使用，請到 TestFlight 安裝最新版後再繼續。',
+    testFlightUpdateHint: '安裝完成後重新開啟 Word7000',
     installGuide: {
       closeAccessibility: '關閉加入主畫面教學',
       dismiss: '我先自己操作',
@@ -967,6 +973,9 @@ const systemCopy = {
     updateCurrentDetail: 'This version is current and automatic updates remain active.',
     updateRetry: 'Check again',
     updateCheckFailed: 'Unable to connect right now. Please try again shortly.',
+    testFlightUpdateButton: 'Open TestFlight',
+    testFlightUpdateDetail: 'This build is no longer supported. Install the latest version from TestFlight to continue.',
+    testFlightUpdateHint: 'Reopen Word7000 after installing the update',
     installGuide: {
       closeAccessibility: 'Close home-screen tutorial',
       dismiss: "I'll do this myself",
@@ -3979,11 +3988,16 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   const [countdownSeconds, setCountdownSeconds] = useState(Math.ceil(UPDATE_AUTO_REFRESH_MS / 1000));
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
   const [manualStatus, setManualStatus] = useState<ManualUpdateStatus>('idle');
+  const [nativeStoreUpdate, setNativeStoreUpdate] = useState<IosUpdateDecision | null>(null);
   const nativeCheckPromiseRef = useRef<Promise<boolean> | null>(null);
   const copy = systemCopy[studyMode];
 
   const refresh = useCallback(() => {
     if (Platform.OS !== 'web') {
+      if (nativeStoreUpdate?.required) {
+        Linking.openURL(nativeStoreUpdate.testFlightUrl).catch(() => undefined);
+        return;
+      }
       import('expo-updates')
         .then((updates) => updates.reloadAsync())
         .catch(() => undefined);
@@ -3995,7 +4009,42 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
       storage?.setItem(UPDATE_STORAGE_KEY, latestVersion);
     }
     (globalThis as { location?: { reload: () => void } }).location?.reload();
-  }, [latestVersion]);
+  }, [latestVersion, nativeStoreUpdate]);
+
+  const checkNativeStoreUpdate = useCallback(async (): Promise<IosUpdateDecision | null> => {
+    if (Platform.OS !== 'ios' || __DEV__ || IS_WEB_IOS_PREVIEW) {
+      return null;
+    }
+
+    try {
+      const currentBuild = Constants.platform?.ios?.buildNumber;
+      if (!currentBuild) {
+        return null;
+      }
+      const response = await fetch(`${IOS_UPDATE_POLICY_URL}?t=${Date.now()}`, {
+        headers: {
+          Accept: 'application/json',
+          'Cache-Control': 'no-cache',
+        },
+      });
+      if (!response.ok) {
+        return null;
+      }
+      const policy = parseIosUpdatePolicy(await response.json());
+      if (!policy) {
+        return null;
+      }
+
+      const decision = iosUpdateDecision(currentBuild, policy);
+      setNativeStoreUpdate(decision.available ? decision : null);
+      if (decision.required) {
+        setAvailable(true);
+      }
+      return decision;
+    } catch {
+      return null;
+    }
+  }, []);
 
   const downloadNativeUpdate = useCallback(async (): Promise<boolean> => {
     if (nativeCheckPromiseRef.current) {
@@ -4098,12 +4147,21 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
     async function checkNativeUpdate() {
       setManualStatus('checking');
       try {
+        const storeDecision = await checkNativeStoreUpdate();
+        if (cancelled) {
+          return;
+        }
+        if (storeDecision?.required) {
+          setManualStatus('available');
+          return;
+        }
+
         const updateDownloaded = await downloadNativeUpdate();
         if (cancelled) {
           return;
         }
         if (!updateDownloaded) {
-          setManualStatus('current');
+          setManualStatus(storeDecision?.available ? 'available' : 'current');
           return;
         }
 
@@ -4118,6 +4176,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
     }
 
     checkNativeUpdate();
+    const interval = setInterval(checkNativeUpdate, UPDATE_CHECK_INTERVAL_MS);
     const appStateSubscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
         void checkNativeUpdate();
@@ -4126,9 +4185,10 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
 
     return () => {
       cancelled = true;
+      clearInterval(interval);
       appStateSubscription.remove();
     };
-  }, [downloadNativeUpdate]);
+  }, [checkNativeStoreUpdate, downloadNativeUpdate]);
 
   const checkNow = useCallback(() => {
     if (manualStatus === 'checking') {
@@ -4171,6 +4231,19 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
           return;
         }
 
+        if (nativeStoreUpdate?.available) {
+          await Linking.openURL(nativeStoreUpdate.testFlightUrl);
+          setManualStatus('available');
+          return;
+        }
+
+        const storeDecision = await checkNativeStoreUpdate();
+        if (storeDecision?.available) {
+          setManualStatus('available');
+          await Linking.openURL(storeDecision.testFlightUrl);
+          return;
+        }
+
         if (available || manualStatus === 'available') {
           refresh();
           return;
@@ -4189,10 +4262,10 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
         setManualStatus('error');
       }
     })();
-  }, [available, downloadNativeUpdate, manualStatus, refresh]);
+  }, [available, checkNativeStoreUpdate, downloadNativeUpdate, manualStatus, nativeStoreUpdate, refresh]);
 
   useEffect(() => {
-    if (!available) {
+    if (!available || nativeStoreUpdate?.required) {
       return;
     }
 
@@ -4205,15 +4278,15 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
       clearInterval(countdown);
       clearTimeout(autoRefresh);
     };
-  }, [available, refresh]);
+  }, [available, nativeStoreUpdate, refresh]);
 
   return {
     available,
-    buttonText: copy.updateNow,
+    buttonText: nativeStoreUpdate?.required ? copy.testFlightUpdateButton : copy.updateNow,
     checkNow,
     countdownSeconds,
-    countdownText: copy.updateCountdown(countdownSeconds),
-    detail: copy.updateDetail,
+    countdownText: nativeStoreUpdate?.required ? copy.testFlightUpdateHint : copy.updateCountdown(countdownSeconds),
+    detail: nativeStoreUpdate?.required ? copy.testFlightUpdateDetail : copy.updateDetail,
     manualStatus,
     message: copy.updateTitle,
     refresh,

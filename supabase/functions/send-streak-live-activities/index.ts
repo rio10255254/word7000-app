@@ -123,16 +123,20 @@ async function sendStartRequest(
   const remaining = Math.max(0, Math.max(1, device.daily_target) - studiedToday);
   const props = kind === 'streak'
     ? {
+        activityKind: 'streak',
         countdownLabel: chinese ? '剩餘時間' : 'Time left',
         expiresAt,
         keepStreakLabel: chinese ? '完成 1 個單字即可保住連勝' : 'Study 1 word to keep it',
+        progressCurrent: 0,
+        progressTarget: 1,
         startedAt,
         streak: device.streak,
         streakLabel: chinese ? `連勝 ${device.streak} 天` : `${device.streak}-day streak`,
         title: chinese ? '你的連勝快中斷了' : 'Your streak needs you',
       }
     : {
-        countdownLabel: chinese ? '今日剩餘' : 'Left today',
+        activityKind: 'noon',
+        countdownLabel: chinese ? '今日進度' : 'Today',
         expiresAt,
         keepStreakLabel: remaining > 0
           ? chinese
@@ -141,6 +145,8 @@ async function sendStartRequest(
           : chinese
             ? '今日目標已完成，複習 1 個單字保持手感'
             : 'Goal complete. Review 1 word to stay sharp',
+        progressCurrent: studiedToday,
+        progressTarget: Math.max(1, device.daily_target),
         startedAt,
         streak: device.streak,
         streakLabel: device.streak > 0

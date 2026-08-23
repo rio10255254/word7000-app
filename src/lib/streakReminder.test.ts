@@ -49,10 +49,16 @@ describe('streak reminder planning', () => {
     const plan = buildStreakReminderPlan(baseProgress, new Date(2026, 7, 13, 23, 15));
 
     expect(buildStreakLiveActivityProps(plan, 'english')).toMatchObject({
+      activityKind: 'streak',
+      progressCurrent: 0,
+      progressTarget: 1,
       streakLabel: '連勝 8 天',
       title: '你的連勝快中斷了',
     });
     expect(buildStreakLiveActivityProps(plan, 'chinese')).toMatchObject({
+      activityKind: 'streak',
+      progressCurrent: 0,
+      progressTarget: 1,
       streakLabel: '8-day streak',
       title: 'Your streak needs you',
     });

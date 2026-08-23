@@ -12,9 +12,12 @@ export type StreakReminderPlan = {
 };
 
 export type StreakLiveActivityProps = {
+  activityKind?: 'noon' | 'streak';
   countdownLabel: string;
   expiresAt: number;
   keepStreakLabel: string;
+  progressCurrent?: number;
+  progressTarget?: number;
   startedAt: number;
   streak: number;
   streakLabel: string;
@@ -97,9 +100,12 @@ export function buildStreakLiveActivityProps(
 
   if (studyMode === 'chinese') {
     return {
+      activityKind: 'streak',
       countdownLabel: 'Time left',
       expiresAt: plan.expiresAt.getTime(),
       keepStreakLabel: 'Study 1 word to keep it',
+      progressCurrent: 0,
+      progressTarget: 1,
       startedAt: plan.startsAt.getTime(),
       streak: plan.streak,
       streakLabel: `${plan.streak}-day streak`,
@@ -108,9 +114,12 @@ export function buildStreakLiveActivityProps(
   }
 
   return {
+    activityKind: 'streak',
     countdownLabel: '剩餘時間',
     expiresAt: plan.expiresAt.getTime(),
     keepStreakLabel: '完成 1 個單字即可保住連勝',
+    progressCurrent: 0,
+    progressTarget: 1,
     startedAt: plan.startsAt.getTime(),
     streak: plan.streak,
     streakLabel: `連勝 ${plan.streak} 天`,

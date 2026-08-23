@@ -16,6 +16,10 @@ describe('Lock Screen learning reminder backend', () => {
     path.join(process.cwd(), 'src', 'lib', 'streakReminderRegistration.ts'),
     'utf8',
   );
+  const liveActivityLayout = fs.readFileSync(
+    path.join(process.cwd(), 'src', 'liveActivity', 'StreakLiveActivity.tsx'),
+    'utf8',
+  );
 
   test('claims one noon reminder per local day and preserves final-hour streak reminders', () => {
     expect(migration).toContain('claim_due_noon_live_activities');
@@ -35,5 +39,20 @@ describe('Lock Screen learning reminder backend', () => {
     expect(appSource).toContain('studiedToday: progress.studiedToday');
     expect(edgeFunction).toContain("title: chinese ? '中午學習時間' : 'Your noon study break'");
     expect(edgeFunction).toContain('noon_activity_expires_at');
+    expect(edgeFunction).toContain("activityKind: 'noon'");
+    expect(edgeFunction).toContain('progressCurrent: studiedToday');
+    expect(edgeFunction).toContain('progressTarget: Math.max(1, device.daily_target)');
+  });
+
+  test('provides distinct glanceable layouts for every Dynamic Island presentation', () => {
+    expect(liveActivityLayout).toContain("props.activityKind === 'noon'");
+    expect(liveActivityLayout).toContain('bannerSmall:');
+    expect(liveActivityLayout).toContain('compactLeading:');
+    expect(liveActivityLayout).toContain('compactTrailing,');
+    expect(liveActivityLayout).toContain('minimal: isNoon');
+    expect(liveActivityLayout).toContain('expandedCenter:');
+    expect(liveActivityLayout).toContain('expandedBottom:');
+    expect(liveActivityLayout).toContain("contentTransition('numericText')");
+    expect(liveActivityLayout).toContain('activityBackgroundTint(activityBackground)');
   });
 });

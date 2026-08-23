@@ -7,6 +7,12 @@ import { useRuntimePerformance } from '../../lib/runtimePerformance';
 
 function useActiveTab() {
   const pathname = usePathname();
+  if (pathname.startsWith('/settings') || pathname.startsWith('/stats')) {
+    return 'profile' as const;
+  }
+  if (pathname.startsWith('/sets')) {
+    return 'library' as const;
+  }
   if (pathname.startsWith('/study')) {
     return 'study' as const;
   }

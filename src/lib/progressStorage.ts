@@ -1,4 +1,5 @@
 import type { ProgressState, WordProgress, WordStatus } from './progress';
+import { isLearningAnalyticsState } from './learningAnalyticsCore';
 
 export const PROGRESS_STORAGE_KEY = 'word7000-progress-v1';
 
@@ -22,6 +23,7 @@ export function isProgressState(value: unknown): value is ProgressState {
     typeof progress.studiedToday !== 'number' ||
     (progress.dailyProgressDate !== undefined && typeof progress.dailyProgressDate !== 'string') ||
     (progress.lastStudyDate !== undefined && typeof progress.lastStudyDate !== 'string') ||
+    (progress.analytics !== undefined && !isLearningAnalyticsState(progress.analytics)) ||
     !progress.words ||
     typeof progress.words !== 'object' ||
     Array.isArray(progress.words)

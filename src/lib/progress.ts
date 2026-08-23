@@ -1,4 +1,5 @@
 import type { WordEntry } from '../data/words';
+import { mergeLearningAnalyticsStates, type LearningAnalyticsState } from './learningAnalyticsCore';
 
 export type WordStatus = 'new' | 'mastered' | 'review';
 export type LibraryFilter = 'all' | 'favorites' | 'review' | 'mastered' | 'new';
@@ -21,6 +22,7 @@ export type WordProgress = {
 };
 
 export type ProgressState = {
+  analytics?: LearningAnalyticsState;
   dailyTarget: number;
   streak: number;
   studiedToday: number;
@@ -163,7 +165,9 @@ export function mergeProgressStates(...states: Array<ProgressState | null | unde
     });
   });
 
+  const analytics = mergeLearningAnalyticsStates(...available.map((state) => state.analytics));
   return {
+    ...(analytics ? { analytics } : {}),
     dailyProgressDate: dailySource.dailyProgressDate,
     dailyTarget: dailySource.dailyTarget,
     lastStudyDate: dailySource.lastStudyDate,

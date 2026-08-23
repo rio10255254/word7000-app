@@ -60,6 +60,7 @@ function RootNavigator() {
         <Stack.Screen name="library/[wordId]" />
         <Stack.Screen name="sets" />
         <Stack.Screen name="settings" />
+        <Stack.Screen name="stats" />
         <Stack.Screen name="auth/callback" options={{ animation: 'none' }} />
       </Stack>
     </ThemeProvider>

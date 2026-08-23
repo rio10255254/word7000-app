@@ -24,6 +24,7 @@ import {
   ArrowUp,
   BookOpen,
   Check,
+  ChartColumn,
   ChevronLeft,
   ChevronDown,
   ChevronRight,
@@ -226,6 +227,13 @@ import {
 import { DeferredStorageWriter } from './src/lib/deferredStorageWriter';
 import { useRuntimePerformance } from './src/lib/runtimePerformance';
 import { withTimeout } from './src/lib/asyncTimeout';
+import {
+  buildPersonalLearningAnalytics,
+  recordLearningDuration,
+  recordLearningEvent,
+  type LearningEventType,
+  type PersonalLearningAnalytics,
+} from './src/lib/learningAnalytics';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -541,6 +549,9 @@ const modeInterfaceCopy = {
     profileIdle: '穩定累積中',
     profileProgress: (percent: number, mastered: number) => `今天完成 ${percent}%，目前掌握 ${mastered} 個單字。`,
     account: '帳號',
+    learningAnalytics: '學習分析',
+    analyticsPreview: (activeDays: number, accuracy: number | null) =>
+      `近 7 天活躍 ${activeDays} 天 · 測驗正確率 ${accuracy === null ? '尚無資料' : `${accuracy}%`}`,
     guest: '訪客',
     signedIn: '已登入',
     signedOut: '未登入',
@@ -752,6 +763,9 @@ const modeInterfaceCopy = {
     profileIdle: 'Building momentum',
     profileProgress: (percent: number, mastered: number) => `${percent}% complete today, ${mastered} words mastered.`,
     account: 'Account',
+    learningAnalytics: 'Learning Analytics',
+    analyticsPreview: (activeDays: number, accuracy: number | null) =>
+      `${activeDays} active days this week · Quiz accuracy ${accuracy === null ? 'No data yet' : `${accuracy}%`}`,
     guest: 'Guest',
     signedIn: 'Signed in',
     signedOut: 'Signed out',
@@ -1227,6 +1241,12 @@ export function Word7000RouteScreen({
 function useActiveTabFromRoute(): Tab {
   const pathname = usePathname();
   return useMemo(() => {
+    if (pathname.startsWith('/settings') || pathname.startsWith('/stats')) {
+      return 'profile';
+    }
+    if (pathname.startsWith('/sets')) {
+      return 'library';
+    }
     if (pathname.startsWith('/study')) {
       return 'study';
     }
@@ -1294,8 +1314,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const accountUpgradeAnim = useRef(new Animated.Value(0)).current;
   const librarySliderLastY = useSharedValue(-1000);
+  const learningSessionRef = useRef<{
+    date: string;
+    mode: StudyMode;
+    sourceId: string;
+    startedAt: number;
+  } | null>(null);
   const accountUpgradeFrameRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
   const accountUpgradeHapticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const answeredQuizKeyRef = useRef<string | null>(null);
+  const speakingRecordedKeyRef = useRef<string | null>(null);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
   const [initialFilterPreferences] = useState(() => loadFilterPreferences(getAppStorage()));
   const [streakDeviceId] = useState(() => getOrCreateStreakDeviceId(getAppStorage()));
@@ -1420,6 +1448,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const stats = useMemo(
     () => computeStats(vocabularyWords, summaryProgress),
     [summaryProgress, vocabularyWords],
+  );
+  const personalAnalytics = useMemo(
+    () => buildPersonalLearningAnalytics(summaryProgress, stats, vocabularyWords.length, currentDate),
+    [currentDate, stats, summaryProgress, vocabularyWords.length],
   );
   const studyProgressDependency = activeTab === 'study' && studyFilter !== 'all' ? progress : null;
   const studyWords = useMemo(
@@ -1732,6 +1764,43 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       setProgress((current) => normalizeProgressForDate(current, currentDate));
     }
   }, [currentDate, progressReady]);
+
+  useEffect(() => {
+    const learningTabActive = activeTab === 'study' || activeTab === 'quiz';
+    const startSession = () => {
+      if (!learningTabActive || AppState.currentState !== 'active' || learningSessionRef.current) {
+        return;
+      }
+      learningSessionRef.current = {
+        date: currentDate,
+        mode: studyMode,
+        sourceId: streakDeviceId,
+        startedAt: Date.now(),
+      };
+    };
+    const flushSession = () => {
+      const session = learningSessionRef.current;
+      learningSessionRef.current = null;
+      if (!session) {
+        return;
+      }
+      const seconds = Math.round((Date.now() - session.startedAt) / 1000);
+      setProgress((current) => recordLearningDuration(current, { ...session, seconds }));
+    };
+
+    startSession();
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        startSession();
+      } else {
+        flushSession();
+      }
+    });
+    return () => {
+      appStateSubscription.remove();
+      flushSession();
+    };
+  }, [activeTab, currentDate, streakDeviceId, studyMode]);
 
   useEffect(() => {
     const subscription = subscribeToStreakPushToStartToken(setStreakPushToStartToken);
@@ -2361,21 +2430,44 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   function handleKnown(wordId: string) {
     nextStudyWord();
     maybePromptToProtectProgress();
+    const update = (current: ProgressState) => recordTrackedLearningEvent(
+      current,
+      markKnown(current, wordId, currentDate),
+      'studyKnown',
+    );
     if (studyFilter === 'all') {
-      startTransition(() => setProgress((current) => markKnown(current, wordId, currentDate)));
+      startTransition(() => setProgress(update));
       return;
     }
-    setProgress((current) => markKnown(current, wordId, currentDate));
+    setProgress(update);
   }
 
   function handleReview(wordId: string) {
     nextStudyWord();
     maybePromptToProtectProgress();
+    const update = (current: ProgressState) => recordTrackedLearningEvent(
+      current,
+      markReview(current, wordId, currentDate),
+      'studyReview',
+    );
     if (studyFilter === 'all') {
-      startTransition(() => setProgress((current) => markReview(current, wordId, currentDate)));
+      startTransition(() => setProgress(update));
       return;
     }
-    setProgress((current) => markReview(current, wordId, currentDate));
+    setProgress(update);
+  }
+
+  function recordTrackedLearningEvent(
+    before: ProgressState,
+    after: ProgressState,
+    type: LearningEventType,
+  ): ProgressState {
+    return recordLearningEvent(before, after, {
+      date: currentDate,
+      mode: studyMode,
+      sourceId: streakDeviceId,
+      type,
+    });
   }
 
   const handleLibraryQueryChange = useCallback((query: string) => {
@@ -2618,7 +2710,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     restartQuiz();
   }
 
-  function revealSpeakingAnswer() {
+  function revealSpeakingAnswer(completed: boolean) {
+    const eventKey = quizWord ? `${quizSeed}:${quizIndex}:${quizWord.id}` : null;
+    if (!speakingAnswerVisible && quizWord && eventKey && speakingRecordedKeyRef.current !== eventKey) {
+      speakingRecordedKeyRef.current = eventKey;
+      setProgress((current) => recordTrackedLearningEvent(
+        current,
+        current,
+        completed ? 'speakingCompleted' : 'speakingSkipped',
+      ));
+    }
     setSpeakingAnswerVisible(true);
   }
 
@@ -2626,13 +2727,22 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     if (!quizWord) {
       return;
     }
+    const eventKey = `${quizSeed}:${quizIndex}:${quizWord.id}`;
+    if (answeredQuizKeyRef.current === eventKey) {
+      return;
+    }
+    answeredQuizKeyRef.current = eventKey;
     setAnsweredQuizWord(quizWord);
     setLockedQuizOptions(quizOptions);
     setQuizResult(correct ? 'correct' : 'wrong');
     if (correct) {
       setQuizCorrectCount((current) => current + 1);
     }
-    setProgress((current) => (correct ? markKnown(current, quizWord.id, currentDate) : markReview(current, quizWord.id, currentDate)));
+    setProgress((current) => recordTrackedLearningEvent(
+      current,
+      correct ? markKnown(current, quizWord.id, currentDate) : markReview(current, quizWord.id, currentDate),
+      correct ? 'quizCorrect' : 'quizWrong',
+    ));
     maybePromptToProtectProgress();
   }
 
@@ -3692,6 +3802,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const profileEmailChange = useStableEvent((email: string) => setAccount((current) => ({ ...current, email })));
   const profilePasswordChange = useStableEvent((password: string) => setAccount((current) => ({ ...current, password })));
   const profileOpenSettings = useStableEvent(() => router.push('/settings'));
+  const profileOpenStats = useStableEvent(() => router.push('/stats'));
   const profileAppleSignIn = useStableEvent(handleAppleSignIn);
   const profileGoogleSignIn = useStableEvent(handleGoogleSignIn);
   const profileShowInstallGuide = useStableEvent(openInstallGuide);
@@ -4021,6 +4132,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     },
     profileProps: {
       account,
+      analytics: personalAnalytics,
       dailyPercent: profilePresentation.dailyPercent,
       progress: profilePresentation.progress,
       stats: profilePresentation.stats,
@@ -4030,6 +4142,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       onAppleSignIn: profileAppleSignIn,
       onGoogleSignIn: profileGoogleSignIn,
       onOpenSettings: profileOpenSettings,
+      onOpenStats: profileOpenStats,
       onOpenFavorites: profileOpenFavorites,
       onPasswordChange: profilePasswordChange,
       onShowInstallGuide: profileShowInstallGuide,
@@ -6940,7 +7053,7 @@ const QuizView = memo(function QuizView({
   onPracticeModeChange: (mode: QuizPracticeMode) => void;
   onNext: () => void;
   onQuestionCountChange: (count: (typeof quizQuestionCounts)[number]) => void;
-  onRevealSpeakingAnswer: () => void;
+  onRevealSpeakingAnswer: (completed: boolean) => void;
   onRestart: () => void;
   onStart: () => void;
 }) {
@@ -7226,7 +7339,7 @@ const QuizView = memo(function QuizView({
             <View style={styles.speakingActionRow}>
               <AnimatedPressable
                 accessibilityRole="button"
-                onPress={onRevealSpeakingAnswer}
+                onPress={() => onRevealSpeakingAnswer(true)}
                 pressTone="primary"
                 style={styles.speakingDoneButton}
               >
@@ -7235,7 +7348,7 @@ const QuizView = memo(function QuizView({
               </AnimatedPressable>
               <AnimatedPressable
                 accessibilityRole="button"
-                onPress={onRevealSpeakingAnswer}
+                onPress={() => onRevealSpeakingAnswer(false)}
                 pressTone="secondary"
                 style={[styles.speakingSecondaryButton, themeStyles?.speakingSecondaryButton]}
               >
@@ -7807,12 +7920,14 @@ export function LibraryWordDetailView({
 
 const ProfileView = memo(function ProfileView({
   account,
+  analytics,
   dailyPercent,
   onEmailChange,
   onAppleSignIn,
   onGoogleSignIn,
   onOpenFavorites,
   onOpenSettings,
+  onOpenStats,
   onPasswordChange,
   onShowInstallGuide,
   onSignIn,
@@ -7824,6 +7939,7 @@ const ProfileView = memo(function ProfileView({
   themeMode,
 }: {
   account: AccountState;
+  analytics: PersonalLearningAnalytics;
   dailyPercent: number;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
@@ -7834,6 +7950,7 @@ const ProfileView = memo(function ProfileView({
   onGoogleSignIn: () => void;
   onOpenFavorites: () => void;
   onOpenSettings: () => void;
+  onOpenStats: () => void;
   onPasswordChange: (password: string) => void;
   onShowInstallGuide: () => void;
   onSignIn: () => void;
@@ -7863,6 +7980,25 @@ const ProfileView = memo(function ProfileView({
           <Text style={[styles.syncText, syncError && styles.syncTextError]}>{accountMessageForMode(account.message, studyMode)}</Text>
         </View>
       </View>
+
+      <AnimatedPressable
+        accessibilityRole="button"
+        onPress={onOpenStats}
+        pressTone="list"
+        style={[styles.settingsEntryButton, themeStyles?.settingsEntryButton]}
+        testID="profile-learning-analytics"
+      >
+        <View style={[styles.settingsEntryIcon, themeStyles?.settingsEntryIcon]}>
+          <ChartColumn size={21} color={palette.accent} strokeWidth={2.3} />
+        </View>
+        <View style={styles.flexOne}>
+          <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.learningAnalytics}</Text>
+          <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>
+            {ui.analyticsPreview(analytics.activeDays7, analytics.quizAccuracy)}
+          </Text>
+        </View>
+        <ChevronRight size={19} color={bodyIconColor} strokeWidth={2.4} />
+      </AnimatedPressable>
 
       <View style={[styles.accountCard, themeStyles?.accountCard]}>
         <View style={styles.rowBetween}>

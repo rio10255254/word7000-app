@@ -69,6 +69,37 @@ describe('local progress storage', () => {
     expect(loadProgressFromStorage(storage, fallbackProgress(), 'google-user-b').studiedToday).toBe(12);
   });
 
+  test('persists validated personal analytics with account progress', () => {
+    const storage = new MemoryStorage();
+    const progress: ProgressState = {
+      ...fallbackProgress(),
+      analytics: {
+        bestStreak: 4,
+        days: {
+          '2026-08-24': {
+            'iphone-a': {
+              activeSeconds: 60,
+              chineseActions: 0,
+              englishActions: 1,
+              otherActions: 0,
+              quizCorrect: 1,
+              quizWrong: 0,
+              speakingCompleted: 0,
+              speakingSkipped: 0,
+              sessions: 1,
+              studyKnown: 0,
+              studyReview: 0,
+            },
+          },
+        },
+        version: 1,
+      },
+    };
+
+    saveProgressToStorage(storage, progress);
+    expect(loadProgressFromStorage(storage, fallbackProgress())).toEqual(progress);
+  });
+
   test('falls back when stored progress is broken', () => {
     const storage = new MemoryStorage();
     storage.setItem('word7000-progress-v1', '{broken');
@@ -89,6 +120,16 @@ describe('local progress storage', () => {
         words: {},
       }),
     );
+
+    expect(loadProgressFromStorage(storage, fallbackProgress())).toEqual(fallbackProgress());
+  });
+
+  test('rejects malformed analytics instead of poisoning account memory', () => {
+    const storage = new MemoryStorage();
+    storage.setItem('word7000-progress-v1', JSON.stringify({
+      ...fallbackProgress(),
+      analytics: { bestStreak: -1, days: [], version: 1 },
+    }));
 
     expect(loadProgressFromStorage(storage, fallbackProgress())).toEqual(fallbackProgress());
   });

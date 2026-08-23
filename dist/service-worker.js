@@ -1,4 +1,4 @@
-const CACHE_NAME = 'word7000-static-1-4-0-1787521036759';
+const CACHE_NAME = 'word7000-static-1-4-0-1787521251300';
 const APP_SHELL = ['/', '/favicon.ico'];
 const NETWORK_FIRST_PATHS = ['/manifest.json', '/version.json', '/ios-update.json'];
 const PUBLIC_HTML_PATHS = ['/privacy.html', '/support.html'];

@@ -317,6 +317,7 @@ const IS_NATIVE_IOS = Platform.OS === 'ios';
 const NATIVE_GLASS_AVAILABLE = IS_NATIVE_IOS && isGlassEffectAPIAvailable();
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
+const PROFILE_TAB_BAR_CLEARANCE = 28;
 // On iOS the native tab bar sits at the bottom and the system hands us the
 // inset. The web fallback for native tabs is a fixed pill at top: 24px with a
 // height of 40, which floats over the content, so web alone owes it headroom.
@@ -1144,7 +1145,15 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 
 // One component per tab route. The native header owns the top safe area and
 // NativeTabs owns the bottom inset; this is only the visual gap after them.
-function TabScrollHost({ children, containOverscroll = false }: { children: ReactNode; containOverscroll?: boolean }) {
+function TabScrollHost({
+  bottomClearance = 0,
+  children,
+  containOverscroll = false,
+}: {
+  bottomClearance?: number;
+  children: ReactNode;
+  containOverscroll?: boolean;
+}) {
   const themeStyles = useThemeStyles();
 
   return (
@@ -1154,7 +1163,10 @@ function TabScrollHost({ children, containOverscroll = false }: { children: Reac
       automaticallyAdjustKeyboardInsets={Platform.OS === 'ios' && !containOverscroll}
       automaticallyAdjustsScrollIndicatorInsets
       bounces={!containOverscroll}
-      contentContainerStyle={[styles.content, { paddingTop: TAB_CONTENT_TOP_PADDING }]}
+      contentContainerStyle={[
+        styles.content,
+        { paddingBottom: CONTENT_BOTTOM_PADDING + bottomClearance, paddingTop: TAB_CONTENT_TOP_PADDING },
+      ]}
       contentInsetAdjustmentBehavior="automatic"
       keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
       keyboardShouldPersistTaps="handled"
@@ -1197,7 +1209,7 @@ export function QuizTabScreen() {
 export function ProfileTabScreen() {
   const profileProps = useRequiredScreenProps(ProfileScreenPropsContext);
   return (
-    <TabScrollHost containOverscroll>
+    <TabScrollHost bottomClearance={PROFILE_TAB_BAR_CLEARANCE} containOverscroll>
       <ProfileView {...profileProps} />
     </TabScrollHost>
   );

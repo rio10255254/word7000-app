@@ -978,6 +978,8 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('containOverscroll = false');
+    expect(appSource).toContain('bottomClearance = 0');
+    expect(appSource).toContain('paddingBottom: CONTENT_BOTTOM_PADDING + bottomClearance');
     expect(appSource).toContain('alwaysBounceVertical={!containOverscroll}');
     expect(appSource).toContain('automaticallyAdjustContentInsets');
     expect(appSource).toContain("automaticallyAdjustKeyboardInsets={Platform.OS === 'ios' && !containOverscroll}");
@@ -987,7 +989,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}");
     expect(appSource).toContain("overScrollMode={containOverscroll ? 'never' : 'auto'}");
     expect(appSource).toContain('scrollEnabled');
-    expect(appSource).toContain('<TabScrollHost containOverscroll>');
+    expect(appSource).toContain('const PROFILE_TAB_BAR_CLEARANCE = 28;');
+    expect(appSource).toContain('<TabScrollHost bottomClearance={PROFILE_TAB_BAR_CLEARANCE} containOverscroll>');
     expect(appSource).not.toContain('ZERO_SCROLL_INSETS');
     expect(appSource).not.toContain('reserveTabBarClearance');
   });

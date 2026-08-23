@@ -24,11 +24,21 @@ describe('personal learning analytics experience', () => {
     expect(progressSource).toContain('mergeLearningAnalyticsStates');
   });
 
-  test('adds a dedicated analytics route from the profile page', () => {
+  test('adds a dedicated analytics route from the profile page and home metrics', () => {
     expect(appSource).toContain('testID="profile-learning-analytics"');
+    expect(appSource).toContain('testID="home-learning-analytics"');
+    expect(appSource).toContain('onOpenStats: profileOpenStats');
     expect(appSource).toContain("router.push('/stats')");
     expect(rootLayout).toContain('<Stack.Screen name="stats" />');
     expect(routeSource).toContain('<PersonalAnalyticsView');
+  });
+
+  test('uses account names or a short Apple label without wrapping the profile title', () => {
+    expect(appSource).toContain('accountDisplayName(account.userName, account.userEmail, ui.appleAccountName)');
+    expect(appSource).toContain("appleAccountName: 'Apple 使用者'");
+    expect(appSource).toContain("appleAccountName: 'Apple user'");
+    expect(appSource).toContain('minimumFontScale={0.7}');
+    expect(appSource).toContain('numberOfLines={1}');
   });
 
   test('places learning analytics after the complete account section', () => {

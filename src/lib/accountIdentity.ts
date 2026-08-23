@@ -20,6 +20,45 @@ export function isAnonymousUser(user: Pick<SupabaseUser, 'is_anonymous'> | null 
   return user?.is_anonymous === true;
 }
 
+export function accountNameFromUser(
+  user: Pick<SupabaseUser, 'user_metadata'> | null | undefined,
+): string | null {
+  const metadata = user?.user_metadata;
+  if (!metadata || typeof metadata !== 'object') {
+    return null;
+  }
+
+  for (const key of ['full_name', 'name', 'given_name'] as const) {
+    const value = metadata[key];
+    if (typeof value === 'string') {
+      const normalized = value.trim().replace(/\s+/g, ' ');
+      if (normalized) {
+        return normalized;
+      }
+    }
+  }
+
+  return null;
+}
+
+export function accountDisplayName(
+  userName: string | null | undefined,
+  userEmail: string | null | undefined,
+  appleAccountLabel: string,
+): string | null {
+  const normalizedName = userName?.trim().replace(/\s+/g, ' ');
+  if (normalizedName) {
+    return normalizedName;
+  }
+
+  const normalizedEmail = userEmail?.trim();
+  if (!normalizedEmail) {
+    return null;
+  }
+
+  return /@privaterelay\.appleid\.com$/i.test(normalizedEmail) ? appleAccountLabel : normalizedEmail;
+}
+
 export function isIdentityAlreadyLinkedError(error: unknown): boolean {
   if (!error || typeof error !== 'object') {
     return false;

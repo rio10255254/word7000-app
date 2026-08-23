@@ -4,6 +4,8 @@ import type { ProgressState } from './progress';
 import {
   ACCOUNT_PROTECTION_PROMPT_STORAGE_KEY,
   PERMANENT_ACCOUNT_USED_STORAGE_KEY,
+  accountDisplayName,
+  accountNameFromUser,
   accountUpgradeReasonForFilter,
   clearPendingAccountUpgrade,
   hasUsedPermanentAccount,
@@ -38,6 +40,16 @@ describe('account identity helpers', () => {
     expect(isAnonymousUser({ is_anonymous: true })).toBe(true);
     expect(isAnonymousUser({ is_anonymous: false })).toBe(false);
     expect(isAnonymousUser(undefined)).toBe(false);
+  });
+
+  test('uses a real account name and hides Apple relay addresses from the profile title', () => {
+    expect(accountNameFromUser({ user_metadata: { full_name: '  Rio   Chiang  ' } })).toBe('Rio Chiang');
+    expect(accountNameFromUser({ user_metadata: { given_name: 'Rio' } })).toBe('Rio');
+    expect(accountNameFromUser({ user_metadata: { full_name: { invalid: true } } })).toBeNull();
+    expect(accountDisplayName('Rio Chiang', 'relay@privaterelay.appleid.com', 'Apple 使用者')).toBe('Rio Chiang');
+    expect(accountDisplayName(null, 'relay@privaterelay.appleid.com', 'Apple 使用者')).toBe('Apple 使用者');
+    expect(accountDisplayName(null, 'RIO@PRIVATERELAY.APPLEID.COM', 'Apple user')).toBe('Apple user');
+    expect(accountDisplayName(null, 'rio@example.com', 'Apple 使用者')).toBe('rio@example.com');
   });
 
   test('recognizes an identity that already belongs to a permanent account', () => {

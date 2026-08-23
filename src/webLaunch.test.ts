@@ -1146,7 +1146,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('homeDictionaryModalHeaderNative:');
     expect(appSource).toContain('paddingHorizontal: 22');
     expect(appSource).toContain('paddingTop: 18');
-    expect(homeSource).toContain('testID="home-metrics-group"');
+    expect(homeSource).toContain('testID="home-learning-analytics"');
+    expect(homeSource).toContain('onPress={onOpenStats}');
     expect(homeSource).toContain('testID="home-action-group"');
     expect(homeSource).toContain('testID="home-manual-update"');
     expect(homeSource).toContain('disabled={updateChecking}');

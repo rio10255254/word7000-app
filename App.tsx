@@ -115,6 +115,8 @@ import {
 import { createAppSupabaseClient, type AppSupabaseClient } from './src/lib/supabaseClient';
 import { deleteAuthenticatedAccount } from './src/lib/accountDeletion';
 import {
+  accountDisplayName,
+  accountNameFromUser,
   accountUpgradeReasonForFilter,
   clearPendingAccountUpgrade,
   hasUsedPermanentAccount,
@@ -259,6 +261,7 @@ type AccountState = {
   isAnonymous: boolean;
   userId: string | null;
   userEmail: string | null;
+  userName: string | null;
   busy: boolean;
   status: AccountStatus;
   message: string;
@@ -548,6 +551,7 @@ const modeInterfaceCopy = {
     profileIdle: '穩定累積中',
     profileProgress: (percent: number, mastered: number) => `今天完成 ${percent}%，目前掌握 ${mastered} 個單字。`,
     account: '帳號',
+    appleAccountName: 'Apple 使用者',
     learningAnalytics: '學習分析',
     analyticsPreview: (activeDays: number, accuracy: number | null) =>
       `近 7 天活躍 ${activeDays} 天 · 測驗正確率 ${accuracy === null ? '尚無資料' : `${accuracy}%`}`,
@@ -762,6 +766,7 @@ const modeInterfaceCopy = {
     profileIdle: 'Building momentum',
     profileProgress: (percent: number, mastered: number) => `${percent}% complete today, ${mastered} words mastered.`,
     account: 'Account',
+    appleAccountName: 'Apple user',
     learningAnalytics: 'Learning Analytics',
     analyticsPreview: (activeDays: number, accuracy: number | null) =>
       `${activeDays} active days this week · Quiz accuracy ${accuracy === null ? 'No data yet' : `${accuracy}%`}`,
@@ -2968,6 +2973,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       isAnonymous: anonymous,
       userId: user.id,
       userEmail: anonymous ? null : user.email ?? fallbackEmail ?? current.email,
+      userName: anonymous ? null : accountNameFromUser(user),
       busy: false,
       status: anonymous ? 'guest' : 'syncing',
       message: anonymous ? '訪客進度已自動保存' : '已登入，正在背景同步',
@@ -3308,7 +3314,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
       const metadata = appleCredentialMetadata(credential.fullName, credential.email, credential.user);
       if (Object.keys(metadata).length > 0) {
-        await supabaseClient.auth.updateUser({ data: metadata }).catch(() => undefined);
+        const metadataResult = await supabaseClient.auth.updateUser({ data: metadata }).catch(() => null);
+        authenticatedUser = metadataResult?.data.user ?? authenticatedUser;
       }
 
       await activateAuthenticatedUser(authenticatedUser, credential.email);
@@ -3526,6 +3533,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       isAnonymous: true,
       userId: null,
       userEmail: null,
+      userName: null,
       password: '',
       busy: false,
       status: supabaseClient ? 'loading' : 'local',
@@ -3628,6 +3636,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       isAnonymous: true,
       userId: null,
       userEmail: null,
+      userName: null,
       password: '',
       busy: false,
       status: 'loading',
@@ -4023,6 +4032,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       vocabularyWords,
       onCheckForUpdate: updateState.checkNow,
       onOpenDictionaryWord: homeOpenDictionaryWord,
+      onOpenStats: profileOpenStats,
       onStartStudy: homeStartStudy,
       onOpenReview: homeOpenReview,
       onToggleStudyMode: homeToggleStudyMode,
@@ -4860,6 +4870,7 @@ function createInitialAccountState(configured: boolean): AccountState {
     password: '',
     userId: null,
     userEmail: null,
+    userName: null,
     busy: false,
     status: configured ? 'loading' : 'local',
     message: configured ? '正在準備訪客進度' : '本機記憶中',
@@ -5393,6 +5404,7 @@ const HomeView = memo(function HomeView({
   vocabularyWords,
   onCheckForUpdate,
   onOpenDictionaryWord,
+  onOpenStats,
   onOpenReview,
   onStartStudy,
   onToggleStudyMode,
@@ -5405,6 +5417,7 @@ const HomeView = memo(function HomeView({
   vocabularyWords: WordEntry[];
   onCheckForUpdate: () => void;
   onOpenDictionaryWord: (word: WordEntry) => void;
+  onOpenStats: () => void;
   onOpenReview: () => void;
   onStartStudy: () => void;
   onToggleStudyMode: () => void;
@@ -5640,11 +5653,18 @@ const HomeView = memo(function HomeView({
           </View>
         </AnimatedPressable>
 
-        <View style={[styles.statsGrid, themeStyles?.homeGroupedSurface]} testID="home-metrics-group">
+        <AnimatedPressable
+          accessibilityLabel={ui.learningAnalytics}
+          accessibilityRole="button"
+          onPress={onOpenStats}
+          pressTone="list"
+          style={[styles.statsGrid, themeStyles?.homeGroupedSurface]}
+          testID="home-learning-analytics"
+        >
           <StatCard label={ui.streak} value={progress.streak.toString()} />
           <StatCard divider label={ui.mastered} value={stats.mastered.toString()} />
           <StatCard divider emphasis={stats.review > 0} label={ui.reviewDue} value={stats.review.toString()} />
-        </View>
+        </AnimatedPressable>
 
         <View style={[styles.homeActionGroup, themeStyles?.homeGroupedSurface]} testID="home-action-group">
           <AnimatedPressable
@@ -7964,6 +7984,7 @@ const ProfileView = memo(function ProfileView({
   const ui = modeInterfaceCopy[studyMode];
   const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;
   const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;
+  const signedInDisplayName = accountDisplayName(account.userName, account.userEmail, ui.appleAccountName);
 
   return (
     <View style={styles.screenStack}>
@@ -7971,7 +7992,14 @@ const ProfileView = memo(function ProfileView({
         <View style={[styles.avatar, themeStyles?.avatar]}>
           <User size={32} color={bodyIconColor} strokeWidth={2.2} />
         </View>
-        <Text style={[styles.profileTitle, themeStyles?.profileTitle]}>{signedIn ? account.userEmail : ui.profileIdle}</Text>
+        <Text
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+          numberOfLines={1}
+          style={[styles.profileTitle, themeStyles?.profileTitle]}
+        >
+          {signedIn ? signedInDisplayName : ui.profileIdle}
+        </Text>
         <Text style={[styles.profileText, themeStyles?.profileText]}>{ui.profileProgress(dailyPercent, stats.mastered)}</Text>
         <View style={[styles.syncPill, syncError && styles.syncPillError]}>
           <Cloud size={15} color={syncError ? palette.red : palette.green} strokeWidth={2.3} />
@@ -11814,9 +11842,11 @@ const styles = StyleSheet.create({
     width: 64,
   },
   profileTitle: {
+    alignSelf: 'stretch',
     color: '#1C1C1E',
     fontSize: 22,
     fontWeight: '700',
+    textAlign: 'center',
   },
   profileText: {
     color: '#6C6C70',

@@ -31,6 +31,19 @@ describe('personal learning analytics experience', () => {
     expect(routeSource).toContain('<PersonalAnalyticsView');
   });
 
+  test('places learning analytics after the complete account section', () => {
+    const profileStart = appSource.indexOf('const ProfileView = memo(function ProfileView({');
+    const profileEnd = appSource.indexOf('function ProfileTutorialPanel(', profileStart);
+    const profileSource = appSource.slice(profileStart, profileEnd);
+    const accountStart = profileSource.indexOf('<View style={[styles.accountCard');
+    const analyticsEntry = profileSource.indexOf('testID="profile-learning-analytics"');
+    const learningExperience = profileSource.indexOf('<ProfileLearningExperiencePanel');
+
+    expect(accountStart).toBeGreaterThan(-1);
+    expect(analyticsEntry).toBeGreaterThan(accountStart);
+    expect(learningExperience).toBeGreaterThan(analyticsEntry);
+  });
+
   test('provides an interactive seven and thirty day chart with scrub details', () => {
     expect(analyticsSource).toContain('<GestureDetector gesture={scrubGesture}>');
     expect(analyticsSource).toContain('Gesture.Pan()');

@@ -31,6 +31,7 @@ describe('local-first user memory queue', () => {
     const saveProgress = vi.fn(async () => ({ message: 'Saved', ok: true }));
     const queue = new UserMemorySyncQueue({
       flushDelayMs: 100,
+      persistDelayMs: 0,
       saveAll: vi.fn(async () => ({ message: 'Saved', ok: true })),
       saveCustomSets: vi.fn(async () => ({ message: 'Saved', ok: true })),
       saveProgress,
@@ -55,6 +56,7 @@ describe('local-first user memory queue', () => {
     const saveAll = vi.fn(async () => ({ message: 'Saved', ok: true }));
     const queue = new UserMemorySyncQueue({
       flushDelayMs: 50,
+      persistDelayMs: 0,
       saveAll,
       saveCustomSets: vi.fn(async () => ({ message: 'Saved', ok: true })),
       saveProgress: vi.fn(async () => ({ message: 'Saved', ok: true })),
@@ -84,6 +86,7 @@ describe('local-first user memory queue', () => {
       .mockResolvedValue({ message: 'Saved', ok: true });
     const queue = new UserMemorySyncQueue({
       flushDelayMs: 50,
+      persistDelayMs: 0,
       saveAll: vi.fn(async () => ({ message: 'Saved', ok: true })),
       saveCustomSets: vi.fn(async () => ({ message: 'Saved', ok: true })),
       saveProgress,
@@ -113,6 +116,7 @@ describe('local-first user memory queue', () => {
       .mockResolvedValueOnce({ message: 'Saved', ok: true });
     const queue = new UserMemorySyncQueue({
       flushDelayMs: 20,
+      persistDelayMs: 0,
       retryDelayMs: 80,
       saveAll: vi.fn(async () => ({ message: 'Saved', ok: true })),
       saveCustomSets: vi.fn(async () => ({ message: 'Saved', ok: true })),
@@ -131,5 +135,37 @@ describe('local-first user memory queue', () => {
     expect(saveProgress).toHaveBeenCalledTimes(2);
     expect(queue.getStatus()).toBe('saved');
     expect(loadUserMemoryOutbox(storage, 'user-1')).toBeNull();
+  });
+
+  test('backs off repeated offline retries instead of waking the radio every few seconds forever', async () => {
+    vi.useFakeTimers();
+    const saveProgress = vi
+      .fn()
+      .mockResolvedValueOnce({ message: 'Offline', ok: false })
+      .mockResolvedValueOnce({ message: 'Offline', ok: false })
+      .mockResolvedValueOnce({ message: 'Saved', ok: true });
+    const queue = new UserMemorySyncQueue({
+      flushDelayMs: 10,
+      maxRetryDelayMs: 1000,
+      persistDelayMs: 0,
+      retryDelayMs: 100,
+      saveAll: vi.fn(async () => ({ message: 'Saved', ok: true })),
+      saveCustomSets: vi.fn(async () => ({ message: 'Saved', ok: true })),
+      saveProgress,
+      storage: memoryStorage(),
+      userId: 'user-1',
+    });
+
+    queue.enqueue({ customSets, progress: progress(5) }, { progress: true });
+    await vi.advanceTimersByTimeAsync(10);
+    expect(saveProgress).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(100);
+    expect(saveProgress).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(199);
+    expect(saveProgress).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(saveProgress).toHaveBeenCalledTimes(3);
+    expect(queue.getStatus()).toBe('saved');
   });
 });

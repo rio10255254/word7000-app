@@ -69,8 +69,8 @@ describe('iOS App Store readiness polish', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const tabsLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '(tabs)', '_layout.tsx'), 'utf8');
 
-    expect(tabsLayout).toContain('minimizeBehavior="onScrollDown"');
-    expect(tabsLayout).toContain("screenListeners={{ tabPress: () => triggerPressHaptic('tab') }}");
+    expect(tabsLayout).toContain("performance.supportsLiquidGlass ? 'onScrollDown' : undefined");
+    expect(tabsLayout).toContain("if (!performance.lowPowerMode)");
     expect(appSource).toContain('<View collapsable={false} style={[styles.libraryScreenHost');
     expect(appSource).toContain('<View collapsable={false} style={styles.libraryListStage');
     expect(appSource).toContain('<FlashList');
@@ -105,6 +105,24 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).toContain('styles.nativeGlassFeedback');
     expect(appSource).toContain("'rgba(235, 245, 255, 0.62)'");
     expect(appSource).toContain('opacity: nativeGlassTone');
+    expect(appSource).toContain('runtimePerformance.supportsLiquidGlass');
+  });
+
+  test('provides stable fallbacks for iOS 16 through iOS 18 and low power mode', () => {
+    const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
+    const tabsLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '(tabs)', '_layout.tsx'), 'utf8');
+    const runtimePerformance = fs.readFileSync(
+      path.join(process.cwd(), 'src', 'lib', 'runtimePerformance.tsx'),
+      'utf8',
+    );
+
+    expect(rootLayout).toContain("modernIosNavigation ? 'simple_push' : 'default'");
+    expect(rootLayout).toContain('<AppErrorBoundary>');
+    expect(rootLayout).toContain('<RuntimePerformanceProvider>');
+    expect(tabsLayout).toContain("performance.supportsLiquidGlass ? 'onScrollDown' : undefined");
+    expect(runtimePerformance).toContain('Battery.addLowPowerModeListener');
+    expect(runtimePerformance).toContain("AccessibilityInfo.addEventListener('reduceMotionChanged'");
+    expect(runtimePerformance).toContain("'reduceTransparencyChanged'");
   });
 
   test('gives native navigation and primary actions stronger haptic feedback', () => {
@@ -165,7 +183,8 @@ describe('iOS App Store readiness polish', () => {
     expect(nativeSplashSource).toContain('preventAutoHideAsync');
     expect(nativeSplashSource).toContain('fade: true');
     expect(appSource).toContain('hideNativeSplash();');
-    expect(appSource).toContain('storageReady && (bundledVocabulary || vocabularyLoadFailed)');
+    expect(appSource).toContain('(storageReady || storageLoadFailed) && (bundledVocabulary || vocabularyLoadFailed)');
+    expect(appSource).toContain('setStorageLoadFailed(true)');
     expect(appSource).toContain('style={[styles.launchOverlay, { opacity: launchOpacity }]}');
     expect(appSource).toContain('style={[styles.launchContent, { transform: [{ scale: launchScale }] }]}');
   });

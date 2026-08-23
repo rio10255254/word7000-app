@@ -4,6 +4,7 @@ import {
   buildStreakLiveActivityProps,
   buildStreakReminderPlan,
   loadStreakReminderEnabled,
+  nextStreakReminderRefreshAt,
   saveStreakReminderEnabled,
 } from './streakReminder';
 
@@ -62,6 +63,16 @@ describe('streak reminder planning', () => {
       streakLabel: '8-day streak',
       title: 'Your streak needs you',
     });
+  });
+
+  it('sleeps until a meaningful reminder boundary instead of polling every few seconds', () => {
+    const now = new Date(2026, 7, 13, 20, 0);
+    const plan = buildStreakReminderPlan(baseProgress, now);
+    expect(nextStreakReminderRefreshAt(plan, now)).toEqual(new Date(2026, 7, 13, 23, 0));
+
+    const activeNow = new Date(2026, 7, 13, 23, 15);
+    const activePlan = buildStreakReminderPlan(baseProgress, activeNow);
+    expect(nextStreakReminderRefreshAt(activePlan, activeNow)).toEqual(new Date(2026, 7, 14, 0, 0));
   });
 });
 

@@ -24,12 +24,30 @@ describe('cached app storage', () => {
     cached.storage.setItem('word7000-theme-v1', 'dark');
 
     expect(cached.storage.getItem('word7000-theme-v1')).toBe('dark');
-    expect(backing.setItem).toHaveBeenCalledWith('word7000-theme-v1', 'dark');
+    await vi.waitFor(() => expect(backing.setItem).toHaveBeenCalledWith('word7000-theme-v1', 'dark'));
 
     cached.storage.removeItem?.('word7000-theme-v1');
 
     expect(cached.storage.getItem('word7000-theme-v1')).toBeNull();
-    expect(backing.removeItem).toHaveBeenCalledWith('word7000-theme-v1');
+    await vi.waitFor(() => expect(backing.removeItem).toHaveBeenCalledWith('word7000-theme-v1'));
+  });
+
+  test('serializes writes per key so a slower old value cannot overwrite the newest value', async () => {
+    const writes: string[] = [];
+    const backing = createAsyncBacking({});
+    backing.setItem.mockImplementation(async (_key: string, value: string) => {
+      if (value === 'old') {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      }
+      writes.push(value);
+    });
+    const cached = createCachedAppStorage(backing);
+
+    cached.storage.setItem('word7000-progress-v1', 'old');
+    cached.storage.setItem('word7000-progress-v1', 'new');
+
+    await vi.waitFor(() => expect(writes).toEqual(['old', 'new']));
+    expect(cached.storage.getItem('word7000-progress-v1')).toBe('new');
   });
 
   test('recognizes user-scoped Word7000 keys for signed-in account memory', () => {

@@ -4,7 +4,7 @@
     "slug": "word7000",
     "owner": "rio10255254",
     "scheme": "word7000",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -54,7 +54,8 @@
         {
           "enablePushNotifications": true
         }
-      ]
+      ],
+      "expo-status-bar"
     ],
     "extra": {
       "eas": {

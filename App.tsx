@@ -56,7 +56,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { createContext, memo, startTransition, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from 'react';
+import { createContext, memo, startTransition, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type Context, type ReactNode, type RefObject } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -209,6 +209,7 @@ import {
   buildStreakReminderPlan,
   loadStreakReminderEnabled,
   localDateKey,
+  nextStreakReminderRefreshAt,
   saveStreakReminderEnabled,
 } from './src/lib/streakReminder';
 import {
@@ -220,7 +221,11 @@ import {
   disableStreakReminderRegistration,
   getOrCreateStreakDeviceId,
   saveStreakReminderRegistration,
+  StreakReminderRegistrationQueue,
 } from './src/lib/streakReminderRegistration';
+import { DeferredStorageWriter } from './src/lib/deferredStorageWriter';
+import { useRuntimePerformance } from './src/lib/runtimePerformance';
+import { withTimeout } from './src/lib/asyncTimeout';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -272,7 +277,9 @@ const UPDATE_STORAGE_KEY = 'word7000-version-v1';
 const UPDATE_AUTO_REFRESH_MS = 6500;
 const UPDATE_CHECK_INTERVAL_MS = 60_000;
 const IOS_UPDATE_POLICY_URL = 'https://word7000-app.rio10255254.workers.dev/ios-update.json';
-const ACTIVE_USER_HEARTBEAT_MS = 60_000;
+const ACTIVE_USER_HEARTBEAT_MS = 5 * 60_000;
+const ACTIVE_USER_HEARTBEAT_MIN_GAP_MS = 60_000;
+const NATIVE_UPDATE_CHECK_COOLDOWN_MS = 15 * 60_000;
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
 const CUSTOM_SET_SORT_STORAGE_KEY = 'word7000-custom-set-sort-v1';
@@ -1022,16 +1029,24 @@ type AppScreenProps = {
   profileProps: ComponentProps<typeof ProfileView>;
   libraryChrome: { floatingControls: ReactNode };
 };
-const AppScreenPropsContext = createContext<AppScreenProps | null>(null);
+const StudyModeContext = createContext<StudyMode>('english');
+const HomeScreenPropsContext = createContext<AppScreenProps['homeProps'] | null>(null);
+const StudyScreenPropsContext = createContext<AppScreenProps['studyProps'] | null>(null);
+const QuizScreenPropsContext = createContext<AppScreenProps['quizProps'] | null>(null);
+const ProfileScreenPropsContext = createContext<AppScreenProps['profileProps'] | null>(null);
+const LibraryScreenPropsContext = createContext<{
+  libraryChrome: AppScreenProps['libraryChrome'];
+  libraryProps: AppScreenProps['libraryProps'];
+} | null>(null);
 
 export function useAppStudyMode(): StudyMode {
-  return useAppScreenProps().homeProps.studyMode;
+  return useContext(StudyModeContext);
 }
 
-export function useAppScreenProps(): AppScreenProps {
-  const value = useContext(AppScreenPropsContext);
+function useRequiredScreenProps<T>(context: Context<T | null>): T {
+  const value = useContext(context);
   if (!value) {
-    throw new Error('useAppScreenProps must be used inside the tabs layout');
+    throw new Error('Screen props must be used inside the tabs layout');
   }
   return value;
 }
@@ -1041,6 +1056,7 @@ type LibraryListHandle = FlashListRef<WordEntry>;
 
 export function AppBootstrap({ children }: { children: ReactNode }) {
   const [storageReady, setStorageReady] = useState(() => isAppStorageHydrated());
+  const [storageLoadFailed, setStorageLoadFailed] = useState(false);
   const [bundledVocabulary, setBundledVocabulary] = useState<WordEntry[] | null>(null);
   const [vocabularyLoadFailed, setVocabularyLoadFailed] = useState(false);
 
@@ -1050,16 +1066,29 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
     }
 
     let mounted = true;
+    const timeout = setTimeout(() => {
+      if (mounted) {
+        setStorageLoadFailed(true);
+      }
+    }, 10_000);
     hydrateAppStorage()
-      .catch(() => undefined)
       .then(() => {
         if (mounted) {
+          clearTimeout(timeout);
+          setStorageLoadFailed(false);
           setStorageReady(true);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          clearTimeout(timeout);
+          setStorageLoadFailed(true);
         }
       });
 
     return () => {
       mounted = false;
+      clearTimeout(timeout);
     };
   }, [storageReady]);
 
@@ -1083,13 +1112,13 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (storageReady && (bundledVocabulary || vocabularyLoadFailed)) {
+    if ((storageReady || storageLoadFailed) && (bundledVocabulary || vocabularyLoadFailed)) {
       hideNativeSplash();
     }
-  }, [bundledVocabulary, storageReady, vocabularyLoadFailed]);
+  }, [bundledVocabulary, storageLoadFailed, storageReady, vocabularyLoadFailed]);
 
   if (!storageReady || !bundledVocabulary) {
-    return <AppStorageBootScreen failed={vocabularyLoadFailed} />;
+    return <AppStorageBootScreen failed={storageLoadFailed || vocabularyLoadFailed} />;
   }
 
   return <VocabularyContext.Provider value={bundledVocabulary}>{children}</VocabularyContext.Provider>;
@@ -1122,7 +1151,7 @@ function TabScrollHost({ children, stabilizeScrollBounds = false }: { children: 
 }
 
 export function HomeTabScreen() {
-  const { homeProps } = useAppScreenProps();
+  const homeProps = useRequiredScreenProps(HomeScreenPropsContext);
   return (
     <TabScrollHost>
       <HomeView {...homeProps} />
@@ -1131,7 +1160,7 @@ export function HomeTabScreen() {
 }
 
 export function StudyTabScreen() {
-  const { studyProps } = useAppScreenProps();
+  const studyProps = useRequiredScreenProps(StudyScreenPropsContext);
   return (
     <TabScrollHost>
       <StudyView {...studyProps} />
@@ -1140,7 +1169,7 @@ export function StudyTabScreen() {
 }
 
 export function QuizTabScreen() {
-  const { quizProps } = useAppScreenProps();
+  const quizProps = useRequiredScreenProps(QuizScreenPropsContext);
   return (
     <TabScrollHost>
       <QuizView {...quizProps} />
@@ -1149,7 +1178,7 @@ export function QuizTabScreen() {
 }
 
 export function ProfileTabScreen() {
-  const { profileProps } = useAppScreenProps();
+  const profileProps = useRequiredScreenProps(ProfileScreenPropsContext);
   return (
     <TabScrollHost stabilizeScrollBounds>
       <ProfileView {...profileProps} />
@@ -1158,7 +1187,7 @@ export function ProfileTabScreen() {
 }
 
 export function LibraryTabScreen() {
-  const { libraryChrome, libraryProps } = useAppScreenProps();
+  const { libraryChrome, libraryProps } = useRequiredScreenProps(LibraryScreenPropsContext);
   const themeStyles = useThemeStyles();
 
   return (
@@ -1220,6 +1249,15 @@ function useStableEvent<T extends (...args: any[]) => any>(handler: T): T {
   return useCallback(((...args: Parameters<T>) => handlerRef.current(...args)) as T, []);
 }
 
+function useDebouncedValue<T>(value: T, delayMs: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delayMs);
+    return () => clearTimeout(timer);
+  }, [delayMs, value]);
+  return debounced;
+}
+
 function useFocusedSnapshot<T>(value: T, focused: boolean): T {
   const snapshotRef = useRef(value);
   useLayoutEffect(() => {
@@ -1233,6 +1271,7 @@ function useFocusedSnapshot<T>(value: T, focused: boolean): T {
 export function AppDataProvider({ children }: { children: ReactNode }) {
   const bundledVocabulary = useContext(VocabularyContext);
   const router = useRouter();
+  const runtimePerformance = useRuntimePerformance();
   const appScrollRef = useRef<ScrollView | null>(null);
   const libraryListRef = useRef<LibraryListHandle | null>(null);
   const libraryScrollYRef = useRef(0);
@@ -1242,6 +1281,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const libraryScrolledPastTopRef = useRef(false);
   const libraryRouteScrollRestoreRef = useRef<number | null>(null);
   const memorySyncQueueRef = useRef<UserMemorySyncQueue | null>(null);
+  const progressStorageWriterRef = useRef<DeferredStorageWriter<ProgressState> | null>(null);
+  const streakRegistrationQueueRef = useRef<StreakReminderRegistrationQueue | null>(null);
   const pendingAdvancedActionRef = useRef<(() => void) | null>(null);
   const progressProtectionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const launchAnim = useRef(new Animated.Value(0)).current;
@@ -1252,6 +1293,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
   const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const accountUpgradeAnim = useRef(new Animated.Value(0)).current;
+  const librarySliderLastY = useSharedValue(-1000);
   const accountUpgradeFrameRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
   const accountUpgradeHapticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [supabaseClient] = useState<AppSupabaseClient | null>(() => createAppSupabaseClient());
@@ -1291,7 +1333,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [quizCorrectCount, setQuizCorrectCount] = useState(0);
   const [quizSeed, setQuizSeed] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const debouncedSearchQuery = useDebouncedValue(
+    searchQuery,
+    runtimePerformance.conserveResources || runtimePerformance.isLegacyIos ? 160 : 80,
+  );
+  const deferredSearchQuery = useDeferredValue(debouncedSearchQuery);
   const [searchFocused, setSearchFocused] = useState(false);
   const [activeFilter, setActiveFilter] = useState<LibraryFilter>(initialFilterPreferences.library.filter);
   const [activeLevel, setActiveLevel] = useState(initialFilterPreferences.library.level);
@@ -1367,7 +1413,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     [activeQuizSet, vocabularyWords],
   );
   const levelFilterOptions = useMemo(() => buildLevelFilters(vocabularyWords), [vocabularyWords]);
-  const stats = useMemo(() => computeStats(vocabularyWords, progress), [progress, vocabularyWords]);
+  const summaryProgress = useFocusedSnapshot(
+    progress,
+    activeTab === 'home' || activeTab === 'profile',
+  );
+  const stats = useMemo(
+    () => computeStats(vocabularyWords, summaryProgress),
+    [summaryProgress, vocabularyWords],
+  );
   const studyProgressDependency = activeTab === 'study' && studyFilter !== 'all' ? progress : null;
   const studyWords = useMemo(
     () => selectStudyWords(studySourceWords, progress, studyFilter, {
@@ -1413,10 +1466,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }),
     [activeFilter, activeInitial, activeLevel, activeSort, activeTab, deferredSearchQuery, libraryProgressDependency, vocabularyWords],
   );
-  const dailyPercent = Math.min(100, Math.round((stats.studiedToday / progress.dailyTarget) * 100));
+  const dailyPercent = Math.min(100, Math.round((stats.studiedToday / summaryProgress.dailyTarget) * 100));
   const progressPresentation = useMemo(
-    () => ({ dailyPercent, progress, stats }),
-    [dailyPercent, progress, stats],
+    () => ({ dailyPercent, progress: summaryProgress, stats }),
+    [dailyPercent, stats, summaryProgress],
   );
   const homePresentation = useFocusedSnapshot(progressPresentation, activeTab === 'home');
   const studyProgress = useFocusedSnapshot(progress, activeTab === 'study');
@@ -1459,7 +1512,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     [cardAnim],
   );
   const listMotionStyle = useCallback((index: number) => {
-    if (index >= LIBRARY_ANIMATED_ITEM_COUNT) {
+    const animationLimit = runtimePerformance.isLegacyIos ? 6 : LIBRARY_ANIMATED_ITEM_COUNT;
+    if (runtimePerformance.conserveResources || index >= animationLimit) {
       return undefined;
     }
 
@@ -1480,7 +1534,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         },
       ],
     };
-  }, [cardAnim]);
+  }, [cardAnim, runtimePerformance.conserveResources, runtimePerformance.isLegacyIos]);
   const modeOverlayScale = modeTransitionAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0.94, 1],
@@ -1568,10 +1622,27 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       Gesture.Pan()
         .enabled(activeTab === 'library')
         .minDistance(0)
-        .onBegin((event) => runOnJS(beginLibrarySliderDrag)(event.y))
-        .onUpdate((event) => runOnJS(moveLibrarySliderDrag)(event.y))
+        .onBegin((event) => {
+          librarySliderLastY.value = event.y;
+          runOnJS(beginLibrarySliderDrag)(event.y);
+        })
+        .onUpdate((event) => {
+          const minimumTravel = runtimePerformance.conserveResources || runtimePerformance.isLegacyIos ? 6 : 3;
+          if (Math.abs(event.y - librarySliderLastY.value) >= minimumTravel) {
+            librarySliderLastY.value = event.y;
+            runOnJS(moveLibrarySliderDrag)(event.y);
+          }
+        })
         .onFinalize(() => runOnJS(endLibrarySliderDrag)()),
-    [activeTab, beginLibrarySliderDrag, endLibrarySliderDrag, moveLibrarySliderDrag],
+    [
+      activeTab,
+      beginLibrarySliderDrag,
+      endLibrarySliderDrag,
+      librarySliderLastY,
+      moveLibrarySliderDrag,
+      runtimePerformance.conserveResources,
+      runtimePerformance.isLegacyIos,
+    ],
   );
 
   const scrollLibraryToRawOffset = useStableEvent((offset: number, animated = false) => {
@@ -1628,12 +1699,20 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   useWebServiceWorker();
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
     const refreshClock = () => {
       const now = new Date();
       setStreakReminderNow(now.getTime());
-      setCurrentDate(localDateKey(now));
+      const nextDate = localDateKey(now);
+      setCurrentDate((current) => current === nextDate ? current : nextDate);
+      const currentPlan = buildStreakReminderPlan(progress, now, streakReminderEnabled);
+      const nextRefresh = nextStreakReminderRefreshAt(currentPlan, now);
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(refreshClock, Math.max(1000, nextRefresh.getTime() - now.getTime() + 250));
     };
-    const interval = setInterval(refreshClock, 30_000);
+    refreshClock();
     const appStateSubscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
         refreshClock();
@@ -1641,10 +1720,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     });
 
     return () => {
-      clearInterval(interval);
+      if (timer) {
+        clearTimeout(timer);
+      }
       appStateSubscription.remove();
     };
-  }, []);
+  }, [progress.lastStudyDate, progress.streak, streakReminderEnabled]);
 
   useEffect(() => {
     if (progressReady) {
@@ -1656,6 +1737,32 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     const subscription = subscribeToStreakPushToStartToken(setStreakPushToStartToken);
     return () => subscription?.remove();
   }, []);
+
+  useEffect(() => {
+    streakRegistrationQueueRef.current?.dispose();
+    streakRegistrationQueueRef.current = null;
+    if (!supabaseClient || !account.userId) {
+      return;
+    }
+
+    const queue = new StreakReminderRegistrationQueue({
+      save: (registration) => saveStreakReminderRegistration(supabaseClient, account.userId!, registration),
+    });
+    streakRegistrationQueueRef.current = queue;
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state !== 'active') {
+        void queue.flush();
+      }
+    });
+
+    return () => {
+      appStateSubscription.remove();
+      if (streakRegistrationQueueRef.current === queue) {
+        streakRegistrationQueueRef.current = null;
+      }
+      queue.dispose();
+    };
+  }, [account.userId, supabaseClient]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1680,7 +1787,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     const expiresAt = streakReminderPlan.expiresAt?.toISOString() ?? null;
     const activityMatchesExpiration = expiresAt === streakActivitySync.startedForExpiresAt;
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-    void saveStreakReminderRegistration(supabaseClient, account.userId, {
+    streakRegistrationQueueRef.current?.enqueue({
       activityPushToken: activityMatchesExpiration ? streakActivitySync.activityPushToken : null,
       dailyTarget: progress.dailyTarget,
       deviceId: streakDeviceId,
@@ -1711,6 +1818,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   ]);
 
   useEffect(() => {
+    if (runtimePerformance.conserveResources) {
+      launchAnim.setValue(2);
+      setShowLaunch(false);
+      return;
+    }
     Animated.sequence([
       Animated.timing(launchAnim, {
         duration: 280,
@@ -1726,7 +1838,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         useNativeDriver: false,
       }),
     ]).start(() => setShowLaunch(false));
-  }, [launchAnim]);
+  }, [launchAnim, runtimePerformance.conserveResources]);
 
   useEffect(
     () => () => {
@@ -1781,6 +1893,29 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       queue.dispose();
     };
   }, [account.userId, supabaseClient]);
+
+  useEffect(() => {
+    progressStorageWriterRef.current?.dispose();
+    const userId = account.userId;
+    const writer = new DeferredStorageWriter<ProgressState>(
+      (queuedProgress) => saveProgressToStorage(getAppStorage(), queuedProgress, userId),
+      runtimePerformance.conserveResources ? 650 : 300,
+    );
+    progressStorageWriterRef.current = writer;
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state !== 'active') {
+        writer.flush();
+      }
+    });
+
+    return () => {
+      appStateSubscription.remove();
+      if (progressStorageWriterRef.current === writer) {
+        progressStorageWriterRef.current = null;
+      }
+      writer.dispose();
+    };
+  }, [account.userId, runtimePerformance.conserveResources]);
 
   useEffect(() => {
     saveThemeMode(getAppStorage(), themeMode);
@@ -1886,6 +2021,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [installGuideChecked, showLaunch]);
 
   useEffect(() => {
+    if (runtimePerformance.conserveResources) {
+      cardAnim.setValue(1);
+      return;
+    }
     cardAnim.setValue(0);
     Animated.timing(cardAnim, {
       duration: interactionMotion.cardMs,
@@ -1911,6 +2050,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     studyFilter,
     studyInitial,
     studyLevel,
+    runtimePerformance.conserveResources,
   ]);
 
   useEffect(() => {
@@ -2009,22 +2149,29 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       message: '檢查登入狀態',
     }));
 
-    supabaseClient.auth
-      .getSession()
+    withTimeout(supabaseClient.auth.getSession(), 10_000, 'account session')
       .then(async ({ data, error }) => {
         if (cancelled) {
           return;
         }
 
         if (!error && data.session?.user) {
-          const refreshed = await supabaseClient.auth.getUser().catch(() => ({ data: { user: null }, error: null }));
+          const refreshed = await withTimeout(
+            supabaseClient.auth.getUser(),
+            10_000,
+            'account refresh',
+          ).catch(() => ({ data: { user: null }, error: null }));
           if (!cancelled) {
             await activateAuthenticatedUser(refreshed.data.user ?? data.session.user);
           }
           return;
         }
 
-        const anonymous = await supabaseClient.auth.signInAnonymously();
+        const anonymous = await withTimeout(
+          supabaseClient.auth.signInAnonymously(),
+          10_000,
+          'guest session',
+        );
         if (cancelled) {
           return;
         }
@@ -2058,14 +2205,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [currentDate, supabaseClient]);
+  }, [supabaseClient]);
 
   useEffect(() => {
     if (!progressReady) {
       return;
     }
 
-    saveProgressToStorage(getAppStorage(), progress, account.userId);
+    progressStorageWriterRef.current?.enqueue(progress);
     if (account.userId) {
       memorySyncQueueRef.current?.enqueue({ customSets: customSetState, progress }, { progress: true });
     }
@@ -2077,10 +2224,18 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
 
     let cancelled = false;
+    let lastRecordedAt = 0;
     const recordActivity = () => {
-      if (cancelled || !account.userId) {
+      const now = Date.now();
+      if (
+        cancelled ||
+        !account.userId ||
+        AppState.currentState !== 'active' ||
+        now - lastRecordedAt < ACTIVE_USER_HEARTBEAT_MIN_GAP_MS
+      ) {
         return;
       }
+      lastRecordedAt = now;
 
       recordDailyActiveUser(
         asCloudProgressClient(supabaseClient),
@@ -2091,6 +2246,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
     recordActivity();
     const heartbeat = setInterval(recordActivity, ACTIVE_USER_HEARTBEAT_MS);
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        recordActivity();
+      }
+    });
     const visibilityDocument = (globalThis as { document?: Document }).document;
     const handleVisibility = () => {
       if (visibilityDocument?.visibilityState === 'visible') {
@@ -2103,6 +2263,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
       clearInterval(heartbeat);
+      appStateSubscription.remove();
       visibilityDocument?.removeEventListener?.('visibilitychange', handleVisibility);
     };
   }, [account.isAnonymous, account.userId, supabaseClient]);
@@ -2654,7 +2815,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     if (!anonymous) {
       markPermanentAccountUsed(storage);
     }
-    const cloudProgress = await loadCloudProgressRecord(asCloudProgressClient(supabaseClient), user.id);
+    const cloudProgress = await withTimeout(
+      loadCloudProgressRecord(asCloudProgressClient(supabaseClient), user.id),
+      12_000,
+      'cloud memory load',
+    ).catch(() => ({
+      customSets: null,
+      errorMessage: 'Cloud load timed out',
+      found: false,
+      progress: null,
+    }));
     const userLocalProgress = normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress, user.id), currentDate);
     const pendingMemory = loadUserMemoryOutbox(storage, user.id);
     const pendingUpgrade = anonymous ? null : loadPendingAccountUpgrade(storage);
@@ -2685,41 +2855,57 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setStudySetId(null);
     setQuizSetId(null);
     setSetPickerWord(null);
-    const saveResult = await saveCloudUserMemory(asCloudProgressClient(supabaseClient), user.id, loadedProgress, loadedCustomSetState);
-    if (saveResult.ok) {
-      clearUserMemoryOutbox(storage, user.id);
-      if (anonymous) {
-        storage?.removeItem?.(progressStorageKey());
-        storage?.removeItem?.(customSetStorageKey());
-      } else {
-        clearPendingAccountUpgrade(storage);
-        if (pendingUpgrade?.sourceUserId && pendingUpgrade.sourceUserId !== user.id) {
-          storage?.removeItem?.(progressStorageKey(pendingUpgrade.sourceUserId));
-          storage?.removeItem?.(customSetStorageKey(pendingUpgrade.sourceUserId));
-          clearUserMemoryOutbox(storage, pendingUpgrade.sourceUserId);
-        }
-      }
-    }
-    await recordDailyActiveUser(
-      asCloudProgressClient(supabaseClient),
-      user.id,
-      new Date(),
-    ).catch(() => undefined);
     setAccount((current) => ({
       ...current,
       isAnonymous: anonymous,
       userId: user.id,
       userEmail: anonymous ? null : user.email ?? fallbackEmail ?? current.email,
       busy: false,
-      status: saveResult.ok ? (anonymous ? 'guest' : 'signedIn') : 'error',
-      message: saveResult.ok
-        ? anonymous
-          ? '訪客進度已自動保存'
-          : cloudProgress.found
-            ? '已登入並同步'
-            : '已建立新的帳號記憶'
-        : saveResult.message,
+      status: anonymous ? 'guest' : 'syncing',
+      message: anonymous ? '訪客進度已自動保存' : '已登入，正在背景同步',
     }));
+
+    void withTimeout(
+      saveCloudUserMemory(asCloudProgressClient(supabaseClient), user.id, loadedProgress, loadedCustomSetState),
+      15_000,
+      'cloud memory save',
+    )
+      .then((saveResult) => {
+        if (saveResult.ok) {
+          clearUserMemoryOutbox(storage, user.id);
+          if (anonymous) {
+            storage?.removeItem?.(progressStorageKey());
+            storage?.removeItem?.(customSetStorageKey());
+          } else {
+            clearPendingAccountUpgrade(storage);
+            if (pendingUpgrade?.sourceUserId && pendingUpgrade.sourceUserId !== user.id) {
+              storage?.removeItem?.(progressStorageKey(pendingUpgrade.sourceUserId));
+              storage?.removeItem?.(customSetStorageKey(pendingUpgrade.sourceUserId));
+              clearUserMemoryOutbox(storage, pendingUpgrade.sourceUserId);
+            }
+          }
+        }
+        setAccount((current) => current.userId === user.id
+          ? {
+              ...current,
+              status: saveResult.ok ? (anonymous ? 'guest' : 'signedIn') : 'error',
+              message: saveResult.ok
+                ? anonymous
+                  ? '訪客進度已自動保存'
+                  : cloudProgress.found ? '已登入並同步' : '已建立新的帳號記憶'
+                : '進度已保存在本機，稍後會自動重試同步',
+            }
+          : current);
+      })
+      .catch(() => {
+        setAccount((current) => current.userId === user.id
+          ? {
+              ...current,
+              status: 'error',
+              message: '進度已保存在本機，稍後會自動重試同步',
+            }
+          : current);
+      });
 
     if (!anonymous) {
       const pendingAction = pendingAdvancedActionRef.current;
@@ -3366,6 +3552,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   function toggleStudyMode() {
     const nextMode: StudyMode = studyMode === 'english' ? 'chinese' : 'english';
+    if (runtimePerformance.conserveResources) {
+      setStudyMode(nextMode);
+      return;
+    }
     setModeSwitchTarget(nextMode);
     setShowModeSwitch(true);
     modeTransitionAnim.setValue(0);
@@ -3395,6 +3585,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   function triggerThemeModeChange(nextMode: ThemeMode) {
     if (nextMode === themeMode || showThemeTransition) {
+      return;
+    }
+    if (runtimePerformance.conserveResources) {
+      setThemeMode(nextMode);
       return;
     }
 
@@ -3710,7 +3904,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     </View>
   );
 
-  const screenProps: AppScreenProps = {
+  const currentScreenProps: AppScreenProps = {
     homeProps: {
       dailyPercent: homePresentation.dailyPercent,
       progress: homePresentation.progress,
@@ -3845,9 +4039,25 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     },
     libraryChrome: { floatingControls: libraryFloatingControls },
   };
+  const homeScreenProps = useFocusedSnapshot(currentScreenProps.homeProps, activeTab === 'home');
+  const studyScreenProps = useFocusedSnapshot(currentScreenProps.studyProps, activeTab === 'study');
+  const quizScreenProps = useFocusedSnapshot(currentScreenProps.quizProps, activeTab === 'quiz');
+  const profileScreenProps = useFocusedSnapshot(currentScreenProps.profileProps, activeTab === 'profile');
+  const libraryScreenProps = useFocusedSnapshot(
+    {
+      libraryChrome: currentScreenProps.libraryChrome,
+      libraryProps: currentScreenProps.libraryProps,
+    },
+    activeTab === 'library',
+  );
 
   return (
-    <AppScreenPropsContext.Provider value={screenProps}>
+    <StudyModeContext.Provider value={studyMode}>
+    <HomeScreenPropsContext.Provider value={homeScreenProps}>
+    <StudyScreenPropsContext.Provider value={studyScreenProps}>
+    <QuizScreenPropsContext.Provider value={quizScreenProps}>
+    <ProfileScreenPropsContext.Provider value={profileScreenProps}>
+    <LibraryScreenPropsContext.Provider value={libraryScreenProps}>
     <ThemeContext.Provider value={themeMode}>
       {/* A plain View, not SafeAreaView: on iOS the native header and native
           tab bar own the safe area now, and wrapping them would have the app
@@ -3943,7 +4153,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       </View>
       </View>
     </ThemeContext.Provider>
-    </AppScreenPropsContext.Provider>
+    </LibraryScreenPropsContext.Provider>
+    </ProfileScreenPropsContext.Provider>
+    </QuizScreenPropsContext.Provider>
+    </StudyScreenPropsContext.Provider>
+    </HomeScreenPropsContext.Provider>
+    </StudyModeContext.Provider>
   );
 }
 
@@ -3967,6 +4182,17 @@ function useWebServiceWorker() {
 }
 
 function AppStorageBootScreen({ failed = false }: { failed?: boolean }) {
+  const reopen = () => {
+    import('expo-updates')
+      .then((updates) => {
+        if (updates.isEnabled) {
+          return updates.reloadAsync();
+        }
+        return undefined;
+      })
+      .catch(() => undefined);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.appStorageBootScreen}>
@@ -3976,8 +4202,15 @@ function AppStorageBootScreen({ failed = false }: { failed?: boolean }) {
         </View>
         <Text style={styles.appStorageBootTitle}>Word7000</Text>
         <Text style={styles.appStorageBootText}>
-          {failed ? 'Unable to prepare the word library. Please reopen Word7000.' : 'Preparing your learning memory...'}
+          {failed
+            ? '無法完成啟動，但你的學習紀錄仍安全保存在裝置中。'
+            : '正在準備你的學習紀錄...'}
         </Text>
+        {failed && (
+          <Pressable accessibilityRole="button" onPress={reopen} style={styles.appStorageBootButton}>
+            <Text style={styles.appStorageBootButtonText}>重新開啟 Word7000</Text>
+          </Pressable>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -4021,12 +4254,16 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
       if (!currentBuild) {
         return null;
       }
-      const response = await fetch(`${IOS_UPDATE_POLICY_URL}?t=${Date.now()}`, {
-        headers: {
-          Accept: 'application/json',
-          'Cache-Control': 'no-cache',
-        },
-      });
+      const response = await withTimeout(
+        fetch(`${IOS_UPDATE_POLICY_URL}?t=${Date.now()}`, {
+          headers: {
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache',
+          },
+        }),
+        8000,
+        'version policy',
+      );
       if (!response.ok) {
         return null;
       }
@@ -4051,7 +4288,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
       return nativeCheckPromiseRef.current;
     }
 
-    const checkPromise = (async () => {
+    const checkPromise = withTimeout((async () => {
       const updates = await import('expo-updates');
       if (!updates.isEnabled) {
         throw new Error('updates-disabled');
@@ -4064,7 +4301,7 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
 
       await updates.fetchUpdateAsync();
       return true;
-    })();
+    })(), 25_000, 'app update');
     nativeCheckPromiseRef.current = checkPromise;
 
     try {
@@ -4143,8 +4380,14 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
     }
 
     let cancelled = false;
+    let lastCheckedAt = 0;
 
-    async function checkNativeUpdate() {
+    async function checkNativeUpdate(force = false) {
+      const now = Date.now();
+      if (!force && now - lastCheckedAt < NATIVE_UPDATE_CHECK_COOLDOWN_MS) {
+        return;
+      }
+      lastCheckedAt = now;
       setManualStatus('checking');
       try {
         const storeDecision = await checkNativeStoreUpdate();
@@ -4175,17 +4418,15 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
       }
     }
 
-    checkNativeUpdate();
-    const interval = setInterval(checkNativeUpdate, UPDATE_CHECK_INTERVAL_MS);
+    void checkNativeUpdate(true);
     const appStateSubscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
-        void checkNativeUpdate();
+        void checkNativeUpdate(false);
       }
     });
 
     return () => {
       cancelled = true;
-      clearInterval(interval);
       appStateSubscription.remove();
     };
   }, [checkNativeStoreUpdate, downloadNativeUpdate]);
@@ -4581,9 +4822,10 @@ function AnimatedPressable({
 }: AnimatedPressableProps) {
   const [pressed, setPressed] = useState(false);
   const themeMode = useContext(ThemeContext);
+  const runtimePerformance = useRuntimePerformance();
   const pressProgress = useSharedValue(0);
   const pressMotion = pressMotionFor(pressTone);
-  const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE
+  const nativeGlassTone = !disabled && NATIVE_GLASS_AVAILABLE && runtimePerformance.supportsLiquidGlass
     ? glassTone ?? nativeGlassToneForPressTone(pressTone)
     : null;
   const pressStyle = useAnimatedStyle(() => ({
@@ -4644,7 +4886,7 @@ function AnimatedPressable({
         easing: ReanimatedEasing.out(ReanimatedEasing.cubic),
         reduceMotion: ReduceMotion.System,
       });
-      if (hapticEnabled) {
+      if (hapticEnabled && !runtimePerformance.lowPowerMode) {
         triggerPressHaptic(pressTone);
       }
       if (pressedStyle) {
@@ -4702,6 +4944,7 @@ function AnimatedPressable({
 
 function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; open: boolean; testID: string }) {
   const themeStyles = useThemeStyles();
+  const runtimePerformance = useRuntimePerformance();
   const [filterPanelMeasuredHeight, setFilterPanelMeasuredHeight] = useState(0);
   const panelProgress = useSharedValue(open ? 1 : 0);
 
@@ -4712,13 +4955,15 @@ function AnimatedFilterPanel({ children, open, testID }: { children: ReactNode; 
 
     cancelAnimation(panelProgress);
     panelProgress.value = withTiming(open ? 1 : 0, {
-      duration: open ? interactionMotion.panelMs : interactionMotion.panelCloseMs,
+      duration: runtimePerformance.conserveResources
+        ? 120
+        : open ? interactionMotion.panelMs : interactionMotion.panelCloseMs,
       easing: open
         ? ReanimatedEasing.out(ReanimatedEasing.cubic)
         : ReanimatedEasing.inOut(ReanimatedEasing.cubic),
       reduceMotion: ReduceMotion.System,
     });
-  }, [open, panelProgress]);
+  }, [open, panelProgress, runtimePerformance.conserveResources]);
 
   function handlePanelContentLayout(event: LayoutChangeEvent) {
     const nextHeight = Math.ceil(event.nativeEvent.layout.height);
@@ -5056,6 +5301,7 @@ const HomeView = memo(function HomeView({
   const themeStyles = useThemeStyles();
   const safeAreaInsets = useSafeAreaInsets();
   const themeMode = useContext(ThemeContext);
+  const runtimePerformance = useRuntimePerformance();
   const darkMode = themeMode === 'dark';
   const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const copy = modeCopy[studyMode];
@@ -5080,7 +5326,11 @@ const HomeView = memo(function HomeView({
       : updateCopy.updateCheckDetail;
   const [dictionaryQuery, setDictionaryQuery] = useState('');
   const [dictionaryOpen, setDictionaryOpen] = useState(false);
-  const deferredDictionaryQuery = useDeferredValue(dictionaryQuery);
+  const debouncedDictionaryQuery = useDebouncedValue(
+    dictionaryQuery,
+    runtimePerformance.conserveResources || runtimePerformance.isLegacyIos ? 160 : 80,
+  );
+  const deferredDictionaryQuery = useDeferredValue(debouncedDictionaryQuery);
   const dictionaryModalProgress = useRef(new Animated.Value(0)).current;
   const dictionaryInputRef = useRef<TextInput | null>(null);
   const dictionaryClosingRef = useRef(false);
@@ -5092,7 +5342,7 @@ const HomeView = memo(function HomeView({
       normalizedDictionaryQuery
         ? filterWords(vocabularyWords, progress, normalizedDictionaryQuery, 'all').slice(0, 36)
         : [],
-    [normalizedDictionaryQuery, progress, vocabularyWords],
+    [normalizedDictionaryQuery, vocabularyWords],
   );
 
   useEffect(() => {
@@ -5747,6 +5997,7 @@ const StudyView = memo(function StudyView({
   const favorited = Boolean(wordProgress?.favorite);
   const themeStyles = useThemeStyles();
   const darkMode = useContext(ThemeContext) === 'dark';
+  const runtimePerformance = useRuntimePerformance();
   const copy = modeCopy[studyMode];
   const ui = modeInterfaceCopy[studyMode];
   const { height: viewportHeight, width: viewportWidth } = useWindowDimensions();
@@ -5755,7 +6006,10 @@ const StudyView = memo(function StudyView({
   // height driven by content breaks that the moment a longer word arrives. The
   // line limits below keep content under this height, so the leftover space at
   // the bottom stays small rather than the hollow gap a taller ceiling left.
-  const studyCardHeight = Math.round(Math.max(430, Math.min(470, viewportHeight * 0.54)));
+  const compactPhone = viewportHeight < 740 || viewportWidth < 360;
+  const studyCardHeight = compactPhone
+    ? Math.round(Math.max(404, Math.min(432, viewportHeight * 0.6)))
+    : Math.round(Math.max(430, Math.min(470, viewportHeight * 0.54)));
   const swipeExitX = Math.max(320, Math.min(440, viewportWidth - 16));
   const reviewHintLines = splitSwipeHintLines(ui.swipeReviewHint);
   const knownHintLines = splitSwipeHintLines(ui.swipeKnownHint);
@@ -5978,20 +6232,28 @@ const StudyView = memo(function StudyView({
 
   const runStudyCardEntry = useCallback(() => {
     cancelAnimation(cardEntryProgress);
+    if (runtimePerformance.conserveResources) {
+      cardEntryProgress.value = 1;
+      return;
+    }
     cardEntryProgress.value = 0;
     cardEntryProgress.value = withTiming(1, {
       duration: STUDY_CARD_ENTRY_MS,
       easing: ReanimatedEasing.bezier(0.2, 0.76, 0.24, 1),
     });
-  }, [cardEntryProgress]);
+  }, [cardEntryProgress, runtimePerformance.conserveResources]);
 
   const fireSwipeHaptic = useCallback(() => {
-    triggerPressHaptic('chip');
-  }, []);
+    if (!runtimePerformance.lowPowerMode) {
+      triggerPressHaptic('chip');
+    }
+  }, [runtimePerformance.lowPowerMode]);
 
   const fireSwipeCommitHaptic = useCallback(() => {
-    triggerPressHaptic('primary');
-  }, []);
+    if (!runtimePerformance.lowPowerMode) {
+      triggerPressHaptic('primary');
+    }
+  }, [runtimePerformance.lowPowerMode]);
 
   const clearStudyHintTimer = useCallback(() => {
     if (studyHintTimerRef.current) {
@@ -6001,6 +6263,10 @@ const StudyView = memo(function StudyView({
   }, []);
 
   const runStudySwipeHint = useCallback(() => {
+    if (runtimePerformance.conserveResources) {
+      swipeHintX.value = 0;
+      return;
+    }
     cancelAnimation(swipeHintX);
     swipeHintX.value = 0;
     swipeHintX.value = withSequence(
@@ -6009,7 +6275,7 @@ const StudyView = memo(function StudyView({
       withTiming(-6, { duration: 170, easing: ReanimatedEasing.inOut(ReanimatedEasing.cubic) }),
       withSpring(0, { damping: 15, mass: 0.55, stiffness: 220 }),
     );
-  }, [swipeHintX]);
+  }, [runtimePerformance.conserveResources, swipeHintX]);
 
   const scheduleStudySwipeHint = useCallback(
     (delayMs: number) => {
@@ -7076,6 +7342,7 @@ const LibraryView = memo(function LibraryView({
   const searchAnim = useRef(new Animated.Value(searchFocused || hasQuery ? 1 : 0)).current;
   const searchInputRef = useRef<TextInput | null>(null);
   const themeStyles = useThemeStyles();
+  const runtimePerformance = useRuntimePerformance();
   const darkMode = useContext(ThemeContext) === 'dark';
   const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
   const copy = modeCopy[studyMode];
@@ -7301,7 +7568,7 @@ const LibraryView = memo(function LibraryView({
       contentContainerStyle={libraryListContentStyle}
       contentInsetAdjustmentBehavior="automatic"
       data={words}
-      drawDistance={720}
+      drawDistance={runtimePerformance.conserveResources || runtimePerformance.isLegacyIos ? 360 : 520}
       extraData={progress.words}
       ItemSeparatorComponent={LibraryItemSeparator}
       keyboardDismissMode="on-drag"
@@ -7316,7 +7583,7 @@ const LibraryView = memo(function LibraryView({
       onScroll={onScroll}
       ref={assignFlashListRef}
       renderItem={renderItem}
-      scrollEventThrottle={16}
+      scrollEventThrottle={runtimePerformance.conserveResources || runtimePerformance.isLegacyIos ? 32 : 16}
       showsVerticalScrollIndicator={false}
       style={styles.libraryFlashList}
       testID={IS_NATIVE_IOS ? 'library-native-list' : 'library-flash-list'}
@@ -9297,6 +9564,20 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 60,
+  },
+  appStorageBootButton: {
+    alignItems: 'center',
+    backgroundColor: '#007AFF',
+    borderRadius: 10,
+    justifyContent: 'center',
+    marginTop: 8,
+    minHeight: 48,
+    paddingHorizontal: 20,
+  },
+  appStorageBootButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
   },
   launchContent: {
     alignItems: 'center',

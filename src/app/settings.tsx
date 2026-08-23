@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { ProfileSettingsView, Word7000RouteScreen } from '../../App';
 import { useAppRouteBridge } from '../lib/appRouteBridge';
+import { useRuntimePerformance } from '../lib/runtimePerformance';
 
 export default function SettingsRoute() {
   const router = useRouter();
   const bridge = useAppRouteBridge();
+  const runtimePerformance = useRuntimePerformance();
   const themeTransitionOpacity = useRef(new Animated.Value(0)).current;
   const themeTransitionRunning = useRef(false);
   const themeTransitionAnimation = useRef<Animated.CompositeAnimation | null>(null);
@@ -34,6 +36,10 @@ export default function SettingsRoute() {
 
   const changeThemeMode = (nextMode: 'light' | 'dark') => {
     if (nextMode === bridge.themeMode || themeTransitionRunning.current) {
+      return;
+    }
+    if (runtimePerformance.conserveResources) {
+      bridge.actions.setThemeMode(nextMode);
       return;
     }
 

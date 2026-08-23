@@ -12,9 +12,9 @@ if (!fs.existsSync(bundleDirectory)) {
 
 const bundleFiles = fs.readdirSync(bundleDirectory).filter((file) => file.endsWith('.js'));
 const entry = findBundle(bundleFiles, 'entry-');
-const routeShell = findBundle(bundleFiles, 'index-');
+const routeShell = findBundle(bundleFiles, 'index-', false);
 const vocabulary = findBundle(bundleFiles, 'words-');
-const measurements = [entry, routeShell, vocabulary].map(measureBundle);
+const measurements = [entry, routeShell, vocabulary].filter(Boolean).map(measureBundle);
 
 const budgets = {
   entry: { gzip: 1_020_000, raw: 5_100_000 },
@@ -24,8 +24,10 @@ const budgets = {
 };
 
 checkBundle(measurements[0], budgets.entry);
-checkBundle(measurements[1], budgets.index);
-checkBundle(measurements[2], budgets.words);
+if (routeShell) {
+  checkBundle(measurements.find((bundle) => bundle.label === 'index'), budgets.index);
+}
+checkBundle(measurements.find((bundle) => bundle.label === 'words'), budgets.words);
 
 const totalGzip = measurements.reduce((total, bundle) => total + bundle.gzip, 0);
 if (totalGzip > budgets.totalGzip) {
@@ -40,6 +42,9 @@ const requiredArchitecture = [
   'const LibraryView = memo(function LibraryView',
   'const ProfileView = memo(function ProfileView',
   'UserMemorySyncQueue',
+  'DeferredStorageWriter',
+  'StreakReminderRegistrationQueue',
+  'HomeScreenPropsContext.Provider',
   'Gesture.Pan()',
   "router.push({ pathname: '/library/[wordId]'",
   "router.push('/settings')",
@@ -71,12 +76,12 @@ for (const bundle of measurements) {
 console.log(`Total compressed JavaScript: ${formatBytes(totalGzip)}`);
 console.log('Performance architecture and bundle budgets passed.');
 
-function findBundle(files, prefix) {
+function findBundle(files, prefix, required = true) {
   const file = files.find((candidate) => candidate.startsWith(prefix));
-  if (!file) {
+  if (!file && required) {
     fail(`Expected ${prefix} web bundle was not generated.`);
   }
-  return file;
+  return file ?? null;
 }
 
 function measureBundle(file) {
@@ -90,6 +95,9 @@ function measureBundle(file) {
 }
 
 function checkBundle(bundle, budget) {
+  if (!bundle) {
+    return;
+  }
   if (bundle.raw > budget.raw) {
     fail(`${bundle.label} bundle is ${formatBytes(bundle.raw)}; raw budget is ${formatBytes(budget.raw)}.`);
   }

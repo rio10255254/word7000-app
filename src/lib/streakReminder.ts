@@ -90,6 +90,16 @@ export function buildStreakReminderPlan(
   };
 }
 
+export function nextStreakReminderRefreshAt(plan: StreakReminderPlan, now = new Date()): Date {
+  const nextMidnight = startOfLocalDay(now);
+  nextMidnight.setDate(nextMidnight.getDate() + 1);
+  const nowMs = now.getTime();
+  const candidates = [plan.startsAt, plan.expiresAt, nextMidnight]
+    .filter((candidate): candidate is Date => Boolean(candidate && candidate.getTime() > nowMs + 250))
+    .sort((left, right) => left.getTime() - right.getTime());
+  return candidates[0] ?? nextMidnight;
+}
+
 export function buildStreakLiveActivityProps(
   plan: StreakReminderPlan,
   studyMode: 'english' | 'chinese',

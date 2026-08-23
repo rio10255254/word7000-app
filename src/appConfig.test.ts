@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import app from '../app.json';
 import eas from '../eas.json';
+import packageJson from '../package.json';
 
 describe('app store oriented metadata', () => {
   test('uses public-facing Word7000 identity', () => {
@@ -27,5 +28,13 @@ describe('app store oriented metadata', () => {
     expect(eas.build.production.channel).toBe('production');
     expect(eas.build.production.autoIncrement).toBe(true);
     expect(eas.submit.production.ios.ascAppId).toBe('6786934889');
+  });
+
+  test('uses the Hermes memory-fix runtime without dropping older supported iPhones', () => {
+    expect(packageJson.dependencies.expo).toMatch(/^~57\./);
+    expect(packageJson.dependencies['react-native']).toBe('0.86.2');
+    expect(packageJson.dependencies['react-native-reanimated']).toBe('4.5.1');
+    expect(packageJson.dependencies['expo-battery']).toMatch(/^~57\./);
+    expect(app.expo.version).toBe('1.4.0');
   });
 });

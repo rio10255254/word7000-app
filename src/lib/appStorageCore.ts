@@ -21,25 +21,47 @@ export function shouldHydrateStorageKey(key: string): boolean {
 
 export function createCachedAppStorage(backing: AsyncStorageLike): CachedAppStorage {
   const cache = new Map<string, string>();
+  const writeQueues = new Map<string, Promise<void>>();
   let hydrated = false;
+  let hydrationPromise: Promise<void> | null = null;
+
+  function enqueueWrite(key: string, operation: () => Promise<unknown>): void {
+    const previous = writeQueues.get(key) ?? Promise.resolve();
+    const next = previous
+      .catch(() => undefined)
+      .then(operation)
+      .then(() => undefined)
+      .catch(() => undefined)
+      .finally(() => {
+        if (writeQueues.get(key) === next) {
+          writeQueues.delete(key);
+        }
+      });
+    writeQueues.set(key, next);
+  }
 
   return {
     async hydrate() {
       if (hydrated) {
         return;
       }
-
-      const keys = (await backing.getAllKeys()).filter(shouldHydrateStorageKey);
-      if (keys.length > 0) {
-        const pairs = await backing.multiGet(keys);
-        pairs.forEach(([key, value]) => {
-          if (value !== null) {
-            cache.set(key, value);
+      if (!hydrationPromise) {
+        hydrationPromise = (async () => {
+          const keys = (await backing.getAllKeys()).filter(shouldHydrateStorageKey);
+          if (keys.length > 0) {
+            const pairs = await backing.multiGet(keys);
+            pairs.forEach(([key, value]) => {
+              if (value !== null) {
+                cache.set(key, value);
+              }
+            });
           }
+          hydrated = true;
+        })().finally(() => {
+          hydrationPromise = null;
         });
       }
-
-      hydrated = true;
+      await hydrationPromise;
     },
     isHydrated() {
       return hydrated;
@@ -50,11 +72,11 @@ export function createCachedAppStorage(backing: AsyncStorageLike): CachedAppStor
       },
       removeItem(key: string) {
         cache.delete(key);
-        backing.removeItem(key).catch(() => undefined);
+        enqueueWrite(key, () => backing.removeItem(key));
       },
       setItem(key: string, value: string) {
         cache.set(key, value);
-        backing.setItem(key, value).catch(() => undefined);
+        enqueueWrite(key, () => backing.setItem(key, value));
       },
     },
   };

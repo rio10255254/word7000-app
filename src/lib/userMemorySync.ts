@@ -30,6 +30,8 @@ type StoredOutbox = UserMemorySnapshot & {
 
 type UserMemorySyncQueueOptions = {
   flushDelayMs?: number;
+  maxRetryDelayMs?: number;
+  persistDelayMs?: number;
   retryDelayMs?: number;
   saveAll: (snapshot: UserMemorySnapshot) => Promise<UserMemorySyncResult>;
   saveCustomSets: (customSets: CustomSetState) => Promise<UserMemorySyncResult>;
@@ -69,18 +71,24 @@ export function clearUserMemoryOutbox(storage: StorageLike | undefined, userId: 
 
 export class UserMemorySyncQueue {
   private readonly flushDelayMs: number;
+  private readonly maxRetryDelayMs: number;
+  private readonly persistDelayMs: number;
   private readonly retryDelayMs: number;
   private readonly listeners = new Set<() => void>();
   private readonly options: UserMemorySyncQueueOptions;
   private disposed = false;
   private flushPromise: Promise<UserMemorySyncResult> | null = null;
   private pending: StoredOutbox | null = null;
+  private persistTimer: ReturnType<typeof setTimeout> | null = null;
+  private retryAttempt = 0;
   private status: UserMemorySyncStatus = 'idle';
   private timer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(options: UserMemorySyncQueueOptions) {
     this.options = options;
     this.flushDelayMs = options.flushDelayMs ?? 900;
+    this.maxRetryDelayMs = options.maxRetryDelayMs ?? 5 * 60_000;
+    this.persistDelayMs = options.persistDelayMs ?? 250;
     this.retryDelayMs = options.retryDelayMs ?? 3000;
   }
 
@@ -118,7 +126,7 @@ export class UserMemorySyncQueue {
       queuedAt: new Date().toISOString(),
       version: 1,
     };
-    this.persistPending();
+    this.schedulePersist();
     this.setStatus('pending');
     this.schedule(this.flushDelayMs);
   }
@@ -132,14 +140,16 @@ export class UserMemorySyncQueue {
     }
 
     this.clearTimer();
+    this.persistPendingNow();
     const batch = this.pending;
     this.pending = null;
     this.setStatus('syncing');
     this.flushPromise = this.saveBatch(batch)
       .then((result) => {
         if (result.ok) {
+          this.retryAttempt = 0;
           if (this.pending) {
-            this.persistPending();
+            this.schedulePersist();
             this.setStatus('pending');
             this.schedule(this.flushDelayMs);
           } else {
@@ -169,6 +179,8 @@ export class UserMemorySyncQueue {
   dispose(): void {
     this.disposed = true;
     this.clearTimer();
+    this.persistPendingNow();
+    this.clearPersistTimer();
     this.listeners.clear();
   }
 
@@ -191,12 +203,27 @@ export class UserMemorySyncQueue {
         progress: Boolean(batch.dirty.progress || this.pending?.dirty.progress),
       },
     };
-    this.persistPending();
+    this.persistPendingNow();
     this.setStatus('error');
-    this.schedule(this.retryDelayMs);
+    const retryDelay = Math.min(this.retryDelayMs * 2 ** this.retryAttempt, this.maxRetryDelayMs);
+    this.retryAttempt += 1;
+    this.schedule(retryDelay);
   }
 
-  private persistPending(): void {
+  private schedulePersist(): void {
+    this.clearPersistTimer();
+    if (this.persistDelayMs <= 0) {
+      this.persistPendingNow();
+      return;
+    }
+    this.persistTimer = setTimeout(() => {
+      this.persistTimer = null;
+      this.persistPendingNow();
+    }, this.persistDelayMs);
+  }
+
+  private persistPendingNow(): void {
+    this.clearPersistTimer();
     if (!this.pending) {
       return;
     }
@@ -222,6 +249,13 @@ export class UserMemorySyncQueue {
     if (this.timer) {
       clearTimeout(this.timer);
       this.timer = null;
+    }
+  }
+
+  private clearPersistTimer(): void {
+    if (this.persistTimer) {
+      clearTimeout(this.persistTimer);
+      this.persistTimer = null;
     }
   }
 

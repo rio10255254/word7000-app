@@ -53,11 +53,11 @@ type PreparedWord = {
 };
 
 type PreparedVocabulary = {
-  alphabeticalRecords: PreparedWord[];
+  alphabeticalRecords: PreparedWord[] | null;
   alphabeticalWords: WordEntry[];
   idSet: Set<string>;
   indexById: Map<string, number>;
-  records: PreparedWord[];
+  records: PreparedWord[] | null;
 };
 
 const preparedVocabularyCache = new WeakMap<WordEntry[], PreparedVocabulary>();
@@ -241,7 +241,8 @@ export function filterWords(
     return sort === 'alphabetical' ? prepared.alphabeticalWords : words;
   }
 
-  const sourceRecords = sort === 'alphabetical' ? prepared.alphabeticalRecords : prepared.records;
+  const searchable = prepareSearchRecords(prepared, words);
+  const sourceRecords = sort === 'alphabetical' ? searchable.alphabeticalRecords : searchable.records;
   const matches: Array<{ preparedWord: PreparedWord; progress: WordProgress; score: number }> = [];
 
   for (const preparedWord of sourceRecords) {
@@ -300,6 +301,34 @@ function prepareVocabulary(words: WordEntry[]): PreparedVocabulary {
     return cached;
   }
 
+  const indexById = new Map(words.map(({ id }, index) => [id, index]));
+  const alphabeticalWords = [...words].sort((a, b) => {
+    const wordOrder = a.word.localeCompare(b.word, 'en', { sensitivity: 'base' });
+    return wordOrder !== 0 ? wordOrder : (indexById.get(a.id) ?? 0) - (indexById.get(b.id) ?? 0);
+  });
+  const prepared = {
+    alphabeticalRecords: null,
+    alphabeticalWords,
+    idSet: new Set(words.map(({ id }) => id)),
+    indexById,
+    records: null,
+  };
+
+  preparedVocabularyCache.set(words, prepared);
+  return prepared;
+}
+
+function prepareSearchRecords(
+  prepared: PreparedVocabulary,
+  words: WordEntry[],
+): { alphabeticalRecords: PreparedWord[]; records: PreparedWord[] } {
+  if (prepared.records && prepared.alphabeticalRecords) {
+    return {
+      alphabeticalRecords: prepared.alphabeticalRecords,
+      records: prepared.records,
+    };
+  }
+
   const records = words.map((word, index) => ({
     example: word.example.toLowerCase(),
     exampleZh: word.exampleZh.toLowerCase(),
@@ -308,20 +337,12 @@ function prepareVocabulary(words: WordEntry[]): PreparedVocabulary {
     normalizedWord: word.word.toLowerCase(),
     word,
   }));
-  const alphabeticalRecords = [...records].sort((a, b) => {
-    const wordOrder = a.word.word.localeCompare(b.word.word, 'en', { sensitivity: 'base' });
-    return wordOrder !== 0 ? wordOrder : a.index - b.index;
-  });
-  const prepared = {
-    alphabeticalRecords,
-    alphabeticalWords: alphabeticalRecords.map(({ word }) => word),
-    idSet: new Set(words.map(({ id }) => id)),
-    indexById: new Map(words.map(({ id }, index) => [id, index])),
-    records,
-  };
-
-  preparedVocabularyCache.set(words, prepared);
-  return prepared;
+  const alphabeticalRecords = prepared.alphabeticalWords
+    .map((word) => records[prepared.indexById.get(word.id) ?? -1])
+    .filter((record): record is PreparedWord => Boolean(record));
+  prepared.records = records;
+  prepared.alphabeticalRecords = alphabeticalRecords;
+  return { alphabeticalRecords, records };
 }
 
 function searchScore(word: PreparedWord, terms: string[]): number {

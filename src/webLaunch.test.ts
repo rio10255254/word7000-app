@@ -440,7 +440,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('pendingUpgrade?.progress');
     expect(appSource).toContain('legacyGuestProgress');
     expect(appSource).toContain('pendingMemory?.customSets');
-    expect(appSource).toContain('saveProgressToStorage(getAppStorage(), progress, account.userId)');
+    expect(appSource).toContain('progressStorageWriterRef.current?.enqueue(progress)');
     expect(appSource).toContain('saveCustomSetState(getAppStorage(), customSetState, account.userId)');
     expect(appSource).toContain('saveProgressToStorage(storage, loadedProgress, user.id)');
     expect(appSource).toContain('syncQueue.enqueue(');
@@ -493,10 +493,11 @@ describe('free web launch configuration', () => {
     const schema = fs.readFileSync(schemaPath, 'utf8');
     const supabaseProgressSource = fs.readFileSync(supabaseProgressPath, 'utf8');
 
-    expect(appSource).toContain('ACTIVE_USER_HEARTBEAT_MS = 60_000');
+    expect(appSource).toContain('ACTIVE_USER_HEARTBEAT_MS = 5 * 60_000');
     expect(appSource).toContain('recordDailyActiveUser(');
     expect(appSource).toContain('account.userId,');
     expect(appSource).toContain('setInterval(recordActivity, ACTIVE_USER_HEARTBEAT_MS)');
+    expect(appSource).toContain("AppState.currentState !== 'active'");
     expect(schema).toContain('custom_sets jsonb');
     expect(schema).toContain('create table if not exists public.daily_active_users');
     expect(schema).toContain('primary key (user_id, activity_date)');
@@ -731,7 +732,7 @@ describe('free web launch configuration', () => {
     const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
 
     expect(rootLayout).toContain("<Stack.Screen name=\"settings\" />");
-    expect(rootLayout).toContain('animation: pushAnimation');
+    expect(rootLayout).toContain("animation: performance.reduceMotion ? 'fade' : pushAnimation");
     expect(appSource).not.toContain('profilePanelAnim');
     expect(appSource).not.toContain('renderedProfilePanel');
     expect(appSource).toContain('themeStyles?.installGuideOverlay');
@@ -749,11 +750,11 @@ describe('free web launch configuration', () => {
     const detailRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'library', '[wordId].tsx'), 'utf8');
     const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
 
-    expect(rootLayout).toContain("const pushAnimation = Platform.OS === 'ios' ? 'simple_push' : 'slide_from_right';");
-    expect(rootLayout).toContain('animation: pushAnimation');
-    expect(rootLayout).toContain("animationDuration: Platform.OS === 'ios' ? 350 : undefined");
-    expect(rootLayout).toContain("animationMatchesGesture: Platform.OS === 'ios'");
-    expect(rootLayout).toContain("fullScreenGestureEnabled: Platform.OS === 'ios'");
+    expect(rootLayout).toContain("? modernIosNavigation ? 'simple_push' : 'default'");
+    expect(rootLayout).toContain("animation: performance.reduceMotion ? 'fade' : pushAnimation");
+    expect(rootLayout).toContain('animationDuration: performance.reduceMotion ? 120 : modernIosNavigation ? 350 : undefined');
+    expect(rootLayout).toContain('animationMatchesGesture: modernIosNavigation && !performance.reduceMotion');
+    expect(rootLayout).toContain('fullScreenGestureEnabled: modernIosNavigation && !performance.reduceMotion');
     expect(rootLayout).not.toContain('freezeOnBlur:');
     expect(rootLayout).toContain('gestureEnabled: true');
     expect(appSource).toContain("router.push({ pathname: '/library/[wordId]'");
@@ -810,7 +811,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('restoreLibraryRouteScroll(restoreOffset)');
     expect(appSource).toContain('setTimeout(() => restoreLibraryRouteScroll(restoreOffset), 420)');
     expect(appSource).toContain('LIBRARY_ANIMATED_ITEM_COUNT');
-    expect(appSource).toContain('index >= LIBRARY_ANIMATED_ITEM_COUNT');
+    expect(appSource).toContain('index >= animationLimit');
     expect(appSource).not.toContain('setSelectedLibraryWord');
     expect(appSource).not.toContain('setLibraryPanel');
   });
@@ -913,7 +914,7 @@ describe('free web launch configuration', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
     expect(appSource).toContain('<FlashList');
-    expect(appSource).toContain('drawDistance={720}');
+    expect(appSource).toContain('runtimePerformance.isLegacyIos ? 360 : 520');
     expect(appSource).not.toContain('<FlatList');
     expect(appSource).toContain('const LibraryWordRow = memo(function LibraryWordRow');
     expect(appSource).toContain('keyExtractor={libraryWordKeyExtractor}');

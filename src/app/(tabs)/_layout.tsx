@@ -3,6 +3,7 @@ import { Stack, usePathname } from 'expo-router';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { AppBootstrap, AppDataProvider, tabLabelForMode, useAppStudyMode } from '../../../App';
 import { triggerPressHaptic } from '../../lib/haptics';
+import { useRuntimePerformance } from '../../lib/runtimePerformance';
 
 function useActiveTab() {
   const pathname = usePathname();
@@ -27,6 +28,7 @@ function useActiveTab() {
 function Tabs() {
   const studyMode = useAppStudyMode();
   const activeTab = useActiveTab();
+  const performance = useRuntimePerformance();
 
   return (
     <>
@@ -48,8 +50,14 @@ function Tabs() {
         }}
       />
       <NativeTabs
-        minimizeBehavior="onScrollDown"
-        screenListeners={{ tabPress: () => triggerPressHaptic('tab') }}
+        minimizeBehavior={performance.supportsLiquidGlass ? 'onScrollDown' : undefined}
+        screenListeners={{
+          tabPress: () => {
+            if (!performance.lowPowerMode) {
+              triggerPressHaptic('tab');
+            }
+          },
+        }}
       >
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Icon sf={{ default: 'house', selected: 'house.fill' }} />

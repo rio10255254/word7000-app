@@ -989,8 +989,9 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}");
     expect(appSource).toContain("overScrollMode={containOverscroll ? 'never' : 'auto'}");
     expect(appSource).toContain('scrollEnabled');
-    expect(appSource).toContain('const PROFILE_TAB_BAR_CLEARANCE = 28;');
-    expect(appSource).toContain('<TabScrollHost bottomClearance={PROFILE_TAB_BAR_CLEARANCE} containOverscroll>');
+    expect(appSource).toContain('const PROFILE_TAB_BAR_MIN_CLEARANCE = 28;');
+    expect(appSource).toContain('Math.max(PROFILE_TAB_BAR_MIN_CLEARANCE, safeAreaInsets.bottom + 34)');
+    expect(appSource).toContain('<TabScrollHost bottomClearance={bottomClearance} containOverscroll>');
     expect(appSource).not.toContain('ZERO_SCROLL_INSETS');
     expect(appSource).not.toContain('reserveTabBarClearance');
   });

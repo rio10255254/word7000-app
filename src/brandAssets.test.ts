@@ -4,20 +4,39 @@ import { PNG } from 'pngjs';
 import { describe, expect, test } from 'vitest';
 
 const desktopIconPath = path.join(process.cwd(), 'public', 'apple-touch-icon.png');
+const brandMarkPath = path.join(process.cwd(), 'src', 'components', 'BrandMark.tsx');
+const appSourcePath = path.join(process.cwd(), 'App.tsx');
+const errorBoundaryPath = path.join(process.cwd(), 'src', 'components', 'AppErrorBoundary.tsx');
 
 describe('brand icon assets', () => {
-  test('matches the launch animation icon style for home-screen installs', () => {
+  test('matches the Dynamic Island closed-book style for home-screen installs', () => {
     const png = PNG.sync.read(fs.readFileSync(desktopIconPath));
-    const center = rgbaAt(png, 12, 12);
-    const dot = rgbaAt(png, 146, 34);
-    const topBar = whitePixelsInRow(png, 82, 80);
-    const lowerDiagonal = whitePixelsInRow(png, 104, 100);
+    const background = rgbaAt(png, 12, 12);
+    const cover = rgbaAt(png, 45, 45);
+    const spine = rgbaAt(png, 64, 90);
+    const coverLine = rgbaAt(png, 85, 70);
+    const coverBody = rgbaAt(png, 110, 100);
 
-    expect(center).toEqual([37, 99, 235, 255]);
-    expect(dot).toEqual([249, 115, 22, 255]);
-    expect(topBar.length).toBeGreaterThanOrEqual(24);
-    expect(lowerDiagonal.length).toBeGreaterThanOrEqual(8);
-    expect(Math.min(...lowerDiagonal)).toBeLessThan(Math.max(...topBar) - 12);
+    expect(background).toEqual([37, 99, 235, 255]);
+    expect(cover).toEqual([255, 255, 255, 255]);
+    expect(spine).toEqual([37, 99, 235, 255]);
+    expect(coverLine).toEqual([37, 99, 235, 255]);
+    expect(coverBody).toEqual([255, 255, 255, 255]);
+    expect(minimumAlpha(png)).toBe(255);
+  });
+
+  test('uses the same book mark in launch, onboarding, and recovery screens', () => {
+    const brandMark = fs.readFileSync(brandMarkPath, 'utf8');
+    const appSource = fs.readFileSync(appSourcePath, 'utf8');
+    const errorBoundary = fs.readFileSync(errorBoundaryPath, 'utf8');
+
+    expect(brandMark).toContain("backgroundColor: '#2563EB'");
+    expect(brandMark).toContain("backgroundColor: '#FFFFFF'");
+    expect(appSource).toContain('<BrandMark size={82} style={styles.launchIcon} />');
+    expect(appSource).toContain('<BrandMark size={48} style={[styles.installGuideLogo, themeStyles?.installGuideLogo]} />');
+    expect(errorBoundary).toContain('<BrandMark size={64} style={styles.mark} />');
+    expect(appSource).not.toContain('launchIconText');
+    expect(appSource).not.toContain('installGuideLogoText');
   });
 });
 
@@ -26,17 +45,10 @@ function rgbaAt(png: PNG, x: number, y: number): number[] {
   return Array.from(png.data.slice(index, index + 4));
 }
 
-function whitePixelsInRow(png: PNG, y: number, minX: number): number[] {
-  const pixels: number[] = [];
-  for (let x = minX; x < png.width; x += 1) {
-    const index = (png.width * y + x) * 4;
-    const alpha = png.data[index + 3];
-    const red = png.data[index];
-    const green = png.data[index + 1];
-    const blue = png.data[index + 2];
-    if (alpha > 200 && red > 230 && green > 230 && blue > 230) {
-      pixels.push(x);
-    }
+function minimumAlpha(png: PNG): number {
+  let minimum = 255;
+  for (let index = 3; index < png.data.length; index += 4) {
+    minimum = Math.min(minimum, png.data[index]);
   }
-  return pixels;
+  return minimum;
 }

@@ -6,7 +6,6 @@ import { PNG } from 'pngjs';
 const colors = {
   blue: '#2563eb',
   navy: '#1e2f55',
-  orange: '#f97316',
   white: '#ffffff',
 };
 
@@ -66,12 +65,12 @@ async function renderBrandIcon(target, size, kind) {
 
 function iconHtml(size, kind) {
   const transparent = kind === 'foreground' || kind === 'mono';
-  const textColor = kind === 'mono' ? colors.navy : colors.white;
-  const dotColor = kind === 'mono' ? colors.navy : colors.orange;
-  const fontSize = Math.round(size * 0.366);
-  const dotSize = Math.round(size * 0.22);
-  const dotOffset = Math.round(size * 0.122);
-  const textLift = Math.round(size * 0.006);
+  const bookColor = kind === 'mono' ? colors.navy : colors.white;
+  const cutoutColor = transparent ? 'transparent' : colors.blue;
+  const bookWidth = Math.round(size * 0.54);
+  const bookHeight = Math.round(size * 0.58);
+  const bookRadius = Math.round(size * 0.055);
+  const lineHeight = Math.max(2, Math.round(size * 0.032));
 
   return `<!doctype html>
 <html>
@@ -98,31 +97,43 @@ function iconHtml(size, kind) {
         width: ${size}px;
       }
 
-      .mark {
-        color: ${textColor};
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-        font-size: ${fontSize}px;
-        font-weight: 900;
-        letter-spacing: 0;
-        line-height: 1;
-        transform: translateY(${textLift}px);
+      .book {
+        background: ${bookColor};
+        border-radius: ${bookRadius}px;
+        height: ${bookHeight}px;
+        overflow: hidden;
+        position: relative;
+        width: ${bookWidth}px;
       }
 
-      .dot {
-        background: ${dotColor};
-        border-radius: 999px;
-        height: ${dotSize}px;
+      .spine,
+      .line {
+        background: ${cutoutColor};
         position: absolute;
-        right: ${dotOffset}px;
-        top: ${dotOffset}px;
-        width: ${dotSize}px;
+      }
+
+      .spine {
+        bottom: 0;
+        left: ${Math.round(bookWidth * 0.18)}px;
+        top: 0;
+        width: ${Math.max(2, Math.round(bookWidth * 0.065))}px;
+      }
+
+      .line {
+        border-radius: 999px;
+        height: ${lineHeight}px;
+        left: ${Math.round(bookWidth * 0.36)}px;
       }
     </style>
   </head>
   <body>
     <div id="capture">
-      <div class="dot"></div>
-      <div class="mark">W7</div>
+      <div class="book">
+        <div class="spine"></div>
+        <div class="line" style="top: ${Math.round(bookHeight * 0.29)}px; width: ${Math.round(bookWidth * 0.36)}px;"></div>
+        <div class="line" style="top: ${Math.round(bookHeight * 0.45)}px; width: ${Math.round(bookWidth * 0.27)}px;"></div>
+        <div class="line" style="top: ${Math.round(bookHeight * 0.61)}px; width: ${Math.round(bookWidth * 0.33)}px;"></div>
+      </div>
     </div>
   </body>
 </html>`;

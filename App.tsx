@@ -236,6 +236,7 @@ import {
   type LearningEventType,
   type PersonalLearningAnalytics,
 } from './src/lib/learningAnalytics';
+import { BrandMark } from './src/components/BrandMark';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -317,7 +318,7 @@ const IS_NATIVE_IOS = Platform.OS === 'ios';
 const NATIVE_GLASS_AVAILABLE = IS_NATIVE_IOS && isGlassEffectAPIAvailable();
 const WEB_IOS_PREVIEW_SCROLL_BOTTOM_INSET = 0;
 const CONTENT_BOTTOM_PADDING = 30;
-const PROFILE_TAB_BAR_CLEARANCE = 28;
+const PROFILE_TAB_BAR_MIN_CLEARANCE = 28;
 // On iOS the native tab bar sits at the bottom and the system hands us the
 // inset. The web fallback for native tabs is a fixed pill at top: 24px with a
 // height of 40, which floats over the content, so web alone owes it headroom.
@@ -1208,8 +1209,10 @@ export function QuizTabScreen() {
 
 export function ProfileTabScreen() {
   const profileProps = useRequiredScreenProps(ProfileScreenPropsContext);
+  const safeAreaInsets = useSafeAreaInsets();
+  const bottomClearance = Math.max(PROFILE_TAB_BAR_MIN_CLEARANCE, safeAreaInsets.bottom + 34);
   return (
-    <TabScrollHost bottomClearance={PROFILE_TAB_BAR_CLEARANCE} containOverscroll>
+    <TabScrollHost bottomClearance={bottomClearance} containOverscroll>
       <ProfileView {...profileProps} />
     </TabScrollHost>
   );
@@ -4244,10 +4247,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
             testID="launch-overlay"
           >
             <Animated.View style={[styles.launchContent, { transform: [{ scale: launchScale }] }]}>
-              <View style={styles.launchIcon}>
-                <View style={styles.launchDot} />
-                <Text style={styles.launchIconText}>W7</Text>
-              </View>
+              <BrandMark size={82} style={styles.launchIcon} />
               <Text style={styles.launchTitle}>{activeModeCopy.brand}</Text>
               <Text style={styles.launchText}>{activeModeCopy.subtitle}</Text>
               <View style={styles.launchBar}>
@@ -4329,10 +4329,7 @@ function AppStorageBootScreen({ failed = false }: { failed?: boolean }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.appStorageBootScreen}>
-        <View style={styles.launchIcon}>
-          <View style={styles.launchDot} />
-          <Text style={styles.launchIconText}>W7</Text>
-        </View>
+        <BrandMark size={82} style={styles.launchIcon} />
         <Text style={styles.appStorageBootTitle}>Word7000</Text>
         <Text style={styles.appStorageBootText}>
           {failed
@@ -5302,10 +5299,7 @@ function InstallGuideOverlay({
       testID="install-guide-overlay"
     >
       <View style={styles.installGuideTopBar}>
-        <View style={[styles.installGuideLogo, themeStyles?.installGuideLogo]}>
-          <View style={styles.installGuideLogoDot} />
-          <Text style={styles.installGuideLogoText}>W7</Text>
-        </View>
+        <BrandMark size={48} style={[styles.installGuideLogo, themeStyles?.installGuideLogo]} />
         <AnimatedPressable
           accessibilityLabel={copy.closeAccessibility}
           accessibilityRole="button"
@@ -9765,34 +9759,14 @@ const styles = StyleSheet.create({
     zIndex: 70,
   },
   launchIcon: {
-    alignItems: 'center',
-    backgroundColor: '#2563EB',
     borderColor: '#B9DCFF',
     borderRadius: 20,
     borderCurve: 'continuous',
     borderWidth: 1,
-    height: 82,
-    justifyContent: 'center',
-    overflow: 'hidden',
     shadowColor: '#1C1C1E',
     shadowOffset: { height: 14, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 24,
-    width: 82,
-  },
-  launchDot: {
-    backgroundColor: '#FF9500',
-    borderRadius: 99,
-    height: 18,
-    position: 'absolute',
-    right: 10,
-    top: 10,
-    width: 18,
-  },
-  launchIconText: {
-    color: '#FFFFFF',
-    fontSize: 30,
-    fontWeight: '700',
   },
   launchTitle: {
     color: '#1C1C1E',
@@ -9845,30 +9819,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   installGuideLogo: {
-    alignItems: 'center',
-    backgroundColor: '#007AFF',
     borderColor: '#B9DCFF',
     borderRadius: 11,
     borderCurve: 'continuous',
     borderWidth: 1,
-    height: 48,
-    justifyContent: 'center',
-    overflow: 'hidden',
-    width: 48,
-  },
-  installGuideLogoDot: {
-    backgroundColor: '#FF9500',
-    borderRadius: 99,
-    height: 11,
-    position: 'absolute',
-    right: 6,
-    top: 6,
-    width: 11,
-  },
-  installGuideLogoText: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '700',
   },
   installGuideClose: {
     alignItems: 'center',
@@ -12975,7 +12929,7 @@ const darkStyles = StyleSheet.create({
     backgroundColor: '#000000',
   },
   installGuideLogo: {
-    backgroundColor: '#0A84FF',
+    backgroundColor: '#2563EB',
     borderColor: '#0A84FF',
   },
   installGuideClose: {

@@ -2,6 +2,7 @@ import * as Updates from 'expo-updates';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { BrandMark } from './BrandMark';
 
 type Props = { children: ReactNode };
 type State = { failed: boolean };
@@ -33,7 +34,7 @@ export class AppErrorBoundary extends Component<Props, State> {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.card}>
-          <Text style={styles.mark}>W7</Text>
+          <BrandMark size={64} style={styles.mark} />
           <Text style={styles.title}>Word7000 暫時無法顯示</Text>
           <Text style={styles.body}>你的學習紀錄仍保存在裝置中。重新開啟即可繼續。</Text>
           <Text style={styles.english}>Your progress is safe. Reopen the app to continue.</Text>
@@ -61,14 +62,7 @@ const styles = StyleSheet.create({
   card: { alignItems: 'center', gap: 10, maxWidth: 360, paddingHorizontal: 28 },
   english: { color: '#6B7280', fontSize: 13, lineHeight: 19, textAlign: 'center' },
   mark: {
-    backgroundColor: '#2563EB',
     borderRadius: 16,
-    color: '#FFFFFF',
-    fontSize: 24,
-    fontWeight: '800',
-    overflow: 'hidden',
-    paddingHorizontal: 15,
-    paddingVertical: 13,
   },
   safeArea: { alignItems: 'center', backgroundColor: '#EDF3F8', flex: 1, justifyContent: 'center' },
   title: { color: '#111827', fontSize: 21, fontWeight: '800', textAlign: 'center' },

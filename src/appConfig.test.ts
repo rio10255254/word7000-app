@@ -32,9 +32,9 @@ describe('app store oriented metadata', () => {
 
   test('uses the Hermes memory-fix runtime without dropping older supported iPhones', () => {
     expect(packageJson.dependencies.expo).toMatch(/^~57\./);
-    expect(packageJson.dependencies['react-native']).toBe('0.86.2');
+    expect(packageJson.dependencies['react-native']).toBe('0.86.3');
     expect(packageJson.dependencies['react-native-reanimated']).toBe('4.5.1');
     expect(packageJson.dependencies['expo-battery']).toMatch(/^~57\./);
-    expect(app.expo.version).toBe('1.4.0');
+    expect(app.expo.version).toBe('1.4.1');
   });
 });

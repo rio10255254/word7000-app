@@ -4,7 +4,7 @@
     "slug": "word7000",
     "owner": "rio10255254",
     "scheme": "word7000",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#2563EB",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"

@@ -1,0 +1,35 @@
+# Builds the iOS app on Expo's servers and uploads it to TestFlight.
+# Runs on every push to master, or by hand with:
+#   eas workflow:run .eas/workflows/testflight.yml
+# Needs the GitHub repository connected to the Expo project once
+# (expo.dev > project > Settings > GitHub) and iOS production credentials
+# (eas credentials:configure-build -p ios -e production).
+name: TestFlight
+
+on:
+  push:
+    branches: ['master']
+    paths:
+      - '**'
+      - '!dist/**'
+      - '!docs/**'
+      - '!**/*.md'
+      - '!public/**'
+      - '!exports/**'
+  workflow_dispatch: {}
+
+jobs:
+  build_ios:
+    name: Build iOS (production)
+    type: build
+    params:
+      platform: ios
+      profile: production
+
+  submit_ios:
+    name: Upload to TestFlight
+    needs: [build_ios]
+    type: submit
+    params:
+      build_id: ${{ needs.build_ios.outputs.build_id }}
+      profile: production

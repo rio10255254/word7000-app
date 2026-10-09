@@ -7,6 +7,7 @@ import type { AccountUpgradeReason } from './accountIdentity';
 
 export type AppStudyMode = 'english' | 'chinese';
 export type AppThemeMode = 'light' | 'dark';
+export type AppThemePreference = AppThemeMode | 'system';
 
 export type RouteManualCustomWordState = {
   example: string;
@@ -35,6 +36,7 @@ export type AppRouteBridgeSnapshot = {
   streakReminderEnabled: boolean;
   studyMode: AppStudyMode;
   themeMode: AppThemeMode;
+  themePreference: AppThemePreference;
   vocabularyWords: WordEntry[];
   actions: {
     addManualCustomWord: () => void;
@@ -57,7 +59,8 @@ export type AppRouteBridgeSnapshot = {
     selectCustomSet: (setId: string | null) => void;
     setCustomSetSort: (sort: CustomSetSort) => void;
     setStreakReminderEnabled: (enabled: boolean) => void;
-    setThemeMode: (themeMode: AppThemeMode) => void;
+    setDailyTarget: (target: number) => void;
+    setThemePreference: (preference: AppThemePreference) => void;
     startQuizSet: (setId: string) => void;
     startStudySet: (setId: string) => void;
     deleteCustomSet: (setId: string) => void;

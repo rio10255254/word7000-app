@@ -25,7 +25,7 @@ describe('iOS App Store readiness polish', () => {
   test('keeps the Safari add-to-home-screen guide automatic flow web-only', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain("Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && shouldShowInstallGuide");
+    expect(appSource).toContain("Platform.OS === 'web' &&\n      !IS_WEB_IOS_PREVIEW &&\n      shouldShowInstallGuide(");
     expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain('showWebInstallGuidePanel && (');
     expect(appSource).toContain('openInstallGuide()');
@@ -187,8 +187,8 @@ describe('iOS App Store readiness polish', () => {
     expect(appSource).toContain('hideNativeSplash();');
     expect(appSource).toContain('(storageReady || storageLoadFailed) && (bundledVocabulary || vocabularyLoadFailed)');
     expect(appSource).toContain('setStorageLoadFailed(true)');
-    expect(appSource).toContain('style={[styles.launchOverlay, { opacity: launchOpacity }]}');
-    expect(appSource).toContain('style={[styles.launchContent, { transform: [{ scale: launchScale }] }]}');
+    // The splash hands straight over to the app; no second timed overlay.
+    expect(appSource).not.toContain('styles.launchOverlay');
   });
 
   test('includes a launch-ready App Store submission checklist', () => {

@@ -28,27 +28,35 @@ export function RuntimePerformanceProvider({ children }: { children: ReactNode }
     void AccessibilityInfo.isReduceMotionEnabled()
       .then((enabled) => mounted && setReduceMotion(enabled))
       .catch(() => undefined);
-    void AccessibilityInfo.isReduceTransparencyEnabled()
-      .then((enabled) => mounted && setReduceTransparency(enabled))
-      .catch(() => undefined);
-    void Battery.isLowPowerModeEnabledAsync()
-      .then((enabled) => mounted && setLowPowerMode(enabled))
-      .catch(() => undefined);
+    // react-native-web only implements part of AccessibilityInfo. Calling a
+    // missing method throws synchronously inside this effect, which took the
+    // whole web app down to the error boundary on first paint.
+    if (typeof AccessibilityInfo.isReduceTransparencyEnabled === 'function') {
+      void AccessibilityInfo.isReduceTransparencyEnabled()
+        .then((enabled) => mounted && setReduceTransparency(enabled))
+        .catch(() => undefined);
+    }
+    if (Platform.OS !== 'web') {
+      void Battery.isLowPowerModeEnabledAsync()
+        .then((enabled) => mounted && setLowPowerMode(enabled))
+        .catch(() => undefined);
+    }
 
     const motionSubscription = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduceMotion);
-    const transparencySubscription = AccessibilityInfo.addEventListener(
-      'reduceTransparencyChanged',
-      setReduceTransparency,
-    );
-    const powerSubscription = Battery.addLowPowerModeListener(({ lowPowerMode: enabled }) => {
-      setLowPowerMode(enabled);
-    });
+    const transparencySubscription = Platform.OS === 'web'
+      ? undefined
+      : AccessibilityInfo.addEventListener('reduceTransparencyChanged', setReduceTransparency);
+    const powerSubscription = Platform.OS === 'web'
+      ? undefined
+      : Battery.addLowPowerModeListener(({ lowPowerMode: enabled }) => {
+          setLowPowerMode(enabled);
+        });
 
     return () => {
       mounted = false;
-      motionSubscription.remove();
-      transparencySubscription.remove();
-      powerSubscription.remove();
+      motionSubscription?.remove();
+      transparencySubscription?.remove();
+      powerSubscription?.remove();
     };
   }, []);
 

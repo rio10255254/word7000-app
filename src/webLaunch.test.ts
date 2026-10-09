@@ -129,7 +129,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("['ios-preview', 'iosPreview', 'preview-ios']");
     expect(appSource).toContain('function isWebIosPreviewMode()');
     expect(appSource).toContain('const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();');
-    expect(appSource).toContain("Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && shouldShowInstallGuide");
+    expect(appSource).toContain("!IS_WEB_IOS_PREVIEW &&\n      shouldShowInstallGuide(getAppStorage(), isInstalledWebApp(), browserUserAgent(), browserMaxTouchPoints())");
     expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain("const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain('styles.webIosPreviewSafeArea');
@@ -280,19 +280,20 @@ describe('free web launch configuration', () => {
     expect(quizSource).not.toContain('styles.pronunciation');
   });
 
-  test('keeps the quiz next button at the top-right of the question card after answering', () => {
+  test('puts the quiz next button right under the answers, not in the card corner', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const quizStart = appSource.indexOf('function QuizView({');
     const libraryStart = appSource.indexOf('function LibraryView({');
     const quizSource = appSource.slice(quizStart, libraryStart);
-    const resultCardStart = quizSource.indexOf('styles.resultCard');
-    const resultCardSource = quizSource.slice(resultCardStart);
 
-    expect(quizSource).toContain('styles.quizQuestionHeader');
-    expect(quizSource).toContain('styles.quizNextTopButton');
-    expect(quizSource).toContain('{result && (');
-    expect(quizSource).toContain('accessibilityLabel={ui.nextQuestion}');
-    expect(resultCardSource).not.toContain('styles.nextButton');
+    expect(quizSource).toContain('testID="quiz-next"');
+    expect(quizSource).toContain('ui.seeResults');
+    expect(quizSource.indexOf('{nextButton}')).toBeLessThan(quizSource.indexOf('styles.resultCard,'));
+    expect(quizSource).not.toContain('styles.quizNextTopButton');
+    // While a quiz runs, setup is replaced by an explicit way out.
+    expect(quizSource).toContain('{!quizStarted && (');
+    expect(quizSource).toContain('testID="quiz-quit"');
+    expect(quizSource).toContain('testID="quiz-practice-missed"');
   });
 
   test('shows full quiz feedback with English and Chinese examples after answering', () => {
@@ -365,18 +366,19 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('開啟設定');
     expect(appSource).toContain('返回我的');
     expect(appSource).toContain('App 設定');
-    expect(appSource).toContain('深色模式');
+    expect(appSource).toContain('跟隨系統');
     expect(appSource).toContain('word7000-theme-v1');
-    expect(appSource).toContain('const nextThemeMode = darkMode ? \'light\' : \'dark\';');
-    expect(appSource).toContain('const toggleThemeMode = () => onThemeModeChange(nextThemeMode);');
-    expect(appSource).toContain('onPress={toggleThemeMode}');
+    expect(appSource).toContain("{ id: 'system', label: modeInterfaceCopy[studyMode].themeSystem }");
+    expect(appSource).toContain('onPress={() => onThemePreferenceChange(option.id)}');
+    expect(appSource).toContain('testID="daily-target-setting"');
+    expect(appSource).toContain('onPress={() => onDailyTargetChange(target)}');
     expect(appSource).toContain("const dangerIconColor = darkMode ? '#FF6961' : '#D70015';");
     expect(appSource).toContain('themeStyles?.deleteAccountDataButton');
     expect(appSource).toContain('themeStyles?.deleteAccountDataTitle');
     expect(appSource).toContain('themeStyles?.deleteAccountDataText');
     expect(appSource).toContain('deleteAccountDataButton:');
     expect(appSource).toContain("backgroundColor: '#3A1714'");
-    expect(appSource).toContain('onThemeModeChange');
+    expect(appSource).toContain('onThemePreferenceChange');
     expect(appSource).toContain('DeveloperVocabularyPanel');
   });
 
@@ -565,12 +567,14 @@ describe('free web launch configuration', () => {
     expect(prepareScript).toContain('EXPO_PUBLIC_SUPABASE_ANON_KEY');
   });
 
-  test('animates the launch progress bar instead of showing a static fill', () => {
+  test('goes straight from the boot screen to the app without an extra launch animation', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain('launchProgressWidth');
-    expect(appSource).toContain('Animated.View style={[styles.launchBarFill');
-    expect(appSource).not.toContain('<View style={styles.launchBarFill} />');
+    // The native splash and AppStorageBootScreen already cover loading. A
+    // second, timed brand animation on top only delayed the first tap.
+    expect(appSource).not.toContain('launchProgressWidth');
+    expect(appSource).not.toContain('showLaunch');
+    expect(appSource).toContain('function AppStorageBootScreen');
   });
 
   test('includes a whole-app study mode switch with a visible transition', () => {
@@ -595,7 +599,7 @@ describe('free web launch configuration', () => {
   test('polishes mobile first-screen spacing without changing the app structure', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain("heroTitle: '今天 20 個\\n剛剛好'");
+    expect(appSource).toContain("heroTitle: (target: number) => `今天 ${target} 個\\n剛剛好`");
     expect(appSource).toContain('styles.homeStack');
     expect(appSource).toContain('homeStack:');
     expect(appSource).toContain('gap: 12');
@@ -618,8 +622,6 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("studyFilterTitle: 'Study Filters'");
     expect(appSource).toContain("quizFilterTitle: 'Quiz Filters'");
     expect(appSource).toContain("questionBankUnit: 'Chinese words'");
-    expect(appSource).toContain('<Text style={styles.launchTitle}>{activeModeCopy.brand}</Text>');
-    expect(appSource).toContain('<Text style={styles.launchText}>{activeModeCopy.subtitle}</Text>');
     expect(appSource).toContain('const activeSystemCopy = systemCopy[studyMode];');
     expect(appSource).toContain('modeInterfaceCopy');
     expect(appSource).toContain('styles.modeSwitchBackdrop');
@@ -816,18 +818,18 @@ describe('free web launch configuration', () => {
     expect(appSource).not.toContain('setLibraryPanel');
   });
 
-  test('uses a full-page fade when toggling dark mode colors', () => {
+  test('fades between light and dark only when the colours actually change', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
-
-    expect(appSource).toContain('themeTransitionAnim');
-    expect(appSource).toContain('showThemeTransition');
-    expect(appSource).toContain('themeTransitionTarget');
-    expect(appSource).toContain('function triggerThemeModeChange(nextMode: ThemeMode)');
     const settingsRoute = fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'settings.tsx'), 'utf8');
-    expect(settingsRoute).toContain('onThemeModeChange={changeThemeMode}');
+
+    expect(appSource).toContain('useColorScheme()');
+    expect(appSource).toContain("themePreference === 'system'");
+    expect(settingsRoute).toContain('onThemePreferenceChange={changeThemePreference}');
     expect(settingsRoute).toContain('settings-theme-transition-overlay');
     expect(settingsRoute).toContain('Animated.sequence([');
-    expect(appSource).toContain('styles.themeTransitionOverlay');
+    expect(settingsRoute).toContain('nextMode === bridge.themeMode');
+    // One fade, owned by the screen the switch lives on.
+    expect(appSource).not.toContain('styles.themeTransitionOverlay');
   });
 
   test('keeps settings scrolling finite and uses only a dark-mode status light', () => {
@@ -1166,15 +1168,17 @@ describe('free web launch configuration', () => {
     expect(homeSource).toContain("clearButtonMode={IS_NATIVE_IOS ? 'while-editing' : 'never'}");
     expect(homeSource).not.toContain('copy.heroText');
     expect(homeSource).toContain('styles.homeDictionaryLauncherIcon');
-    expect(homeSource.indexOf('testID="home-dictionary-search"')).toBeGreaterThan(
-      homeSource.indexOf('onPress={onOpenReview}'),
-    );
+    // Today's plan leads, then stats and lookup; the update check is last.
+    expect(homeSource.indexOf('testID="home-today-plan"')).toBeLessThan(homeSource.indexOf('testID="home-dictionary-search"'));
+    expect(homeSource.indexOf('testID="home-dictionary-search"')).toBeLessThan(homeSource.indexOf('onPress={onOpenReview}'));
+    expect(homeSource.indexOf('testID="home-manual-update"')).toBeGreaterThan(homeSource.indexOf('testID="home-action-group"'));
+    expect(homeSource).toContain('ui.todayPlan(stats.due, newLeft)');
     expect(appSource).not.toContain('const homeDictionarySearch = useStableEvent');
     expect(appSource).not.toContain('setLibrarySearchFocusRequest');
     expect(homeSource).not.toContain('onOpenAccount');
   });
 
-  test('turns the study card into a randomized native swipe deck with navigation buttons', () => {
+  test('runs study as scheduled sessions on a native swipe deck with grade buttons', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const progressSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'progress.ts'), 'utf8');
     const studyStart = appSource.indexOf('const StudyView = memo(function StudyView');
@@ -1186,15 +1190,15 @@ describe('free web launch configuration', () => {
     const appStudyCallEnd = appSource.indexOf('\n    },', appStudyCallStart);
     const studyCallSource = appSource.slice(appStudyCallStart, appStudyCallEnd);
 
-    expect(appSource).toContain('buildStudySession');
-    expect(appSource).toContain('const [studySeed, setStudySeed]');
-    expect(progressSource).toContain('export function buildStudySession');
+    expect(progressSource).toContain('export function buildStudyQueue');
+    expect(appSource).toContain('buildStudyQueue(pool, progress, currentDate');
+    expect(appSource).toContain('createStudySession(ids, studySourceKey)');
     expect(appSource).toContain('const StudyView = memo(function StudyView');
     expect(appSource).toContain('const cardMotionStyle = useMemo(');
-    expect(studyCallSource).toContain('onPrevious: studyPreviousWord,');
-    expect(studyCallSource).toContain('onNext: studyNextWord,');
     expect(studyCallSource).toContain('onSwipeKnown: studySwipeKnown,');
     expect(studyCallSource).toContain('onSwipeReview: studySwipeReview,');
+    expect(studyCallSource).toContain('onUndo: studyUndoGrade,');
+    expect(studyCallSource).toContain('onNextSession: studyNextSession,');
     expect(studySource).toContain('Gesture.Pan()');
     expect(studySource).toContain('.activeOffsetX([-10, 10])');
     expect(studySource).toContain('.failOffsetY([-12, 12])');
@@ -1233,18 +1237,21 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('SvgRadialGradient');
     expect(appSource).toContain('SvgLinearGradient');
     expect(appSource).toContain('SvgMask');
-    expect(studySource).toContain('cardEntryProgress');
     expect(studySource).toContain('const cardEntryProgress = useSharedValue(1)');
     expect(studySource).toContain('const cardVisibility = useSharedValue(1)');
     expect(studySource).toContain('cardVisibility.value = 0');
     expect(studySource).not.toContain('cardSwapOpacity');
-    expect(studySource).toContain('onSwipeReview');
-    expect(studySource).toContain('onSwipeKnown');
     expect(studySource).toContain('testID="study-navigation-controls"');
     expect(appSource).toContain('adjustsFontSizeToFit={Platform.OS === \'ios\'}');
     expect(appSource).toContain('minimumFontScale={0.72}');
     expect(appSource).toContain('styles.studyWordIdentity');
-    expect(studySource).toContain('ui.previousWord');
-    expect(studySource).toContain('ui.nextWord');
+    // Recall before reveal: the answer face only renders once revealed, the
+    // incoming card always shows its front, and every card ends in a grade.
+    expect(studySource).toContain('<StudyCardBody revealed={false} studyMode={studyMode} word={deckWord} />');
+    expect(studySource).toContain('testID="study-show-answer"');
+    expect(studySource).toContain('testID="study-grade-review"');
+    expect(studySource).toContain('testID="study-grade-known"');
+    expect(studySource).toContain('testID="study-session-summary"');
+    expect(studySource).not.toContain('ui.previousWord');
   });
 });

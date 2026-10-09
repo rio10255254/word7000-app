@@ -2772,6 +2772,22 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    // A word typed into a scanned bank belongs to that bank, with the meaning
+    // the learner typed, just like the words scanned into it. Otherwise it
+    // would also appear in the core 7000-word bank.
+    if (targetSet.wordIds.some(isScannedWordId)) {
+      const [scannedWord] = buildScannedWords(
+        [{ meaningZh: meaningText, partOfSpeech: manualCustomWord.partOfSpeech, word: wordText }],
+        vocabularyWords,
+      );
+      if (scannedWord) {
+        setCustomSetState((current) => addCustomWordToSet(current, targetSet.id, scannedWord));
+        setCustomSetMessage(ui.customWordAdded(scannedWord.word, targetSet.name));
+        setManualCustomWord(emptyManualCustomWord);
+      }
+      return;
+    }
+
     const existingWord = vocabularyWords.find((word) => word.word.toLowerCase() === wordText.toLowerCase());
     if (existingWord) {
       setCustomSetState((current) => addWordToSet(current, targetSet.id, existingWord.id));

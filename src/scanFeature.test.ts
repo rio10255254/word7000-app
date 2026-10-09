@@ -52,5 +52,7 @@ describe('scanned word banks', () => {
     expect(appSource).toContain("requestAccountUpgrade('customSets', () => router.push('/scan'))");
     // Scanned words never leak into the core 7000-word bank.
     expect(appSource).toContain('customSetState.customWords.filter((word) => !isScannedWordId(word.id))');
+    // Words typed by hand into a scanned bank stay in that bank too.
+    expect(appSource).toContain('if (targetSet.wordIds.some(isScannedWordId)) {');
   });
 });

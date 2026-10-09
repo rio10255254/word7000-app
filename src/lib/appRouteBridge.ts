@@ -4,6 +4,7 @@ import type { CustomSetSort, CustomSetState, CustomVocabSet } from './customSets
 import type { DeveloperVocabularySnapshot } from './developerVocabulary';
 import type { ProgressState } from './progress';
 import type { AccountUpgradeReason } from './accountIdentity';
+import type { ReviewedScanWord } from './wordBanks';
 
 export type AppStudyMode = 'english' | 'chinese';
 export type AppThemeMode = 'light' | 'dark';
@@ -56,6 +57,10 @@ export type AppRouteBridgeSnapshot = {
     requestAccountUpgrade: (reason: AccountUpgradeReason, afterUpgrade?: () => void) => void;
     renameCustomSet: (setId: string, name: string) => void;
     restoreLibraryScroll: () => void;
+    saveScannedWords: (
+      rows: ReviewedScanWord[],
+      target: { kind: 'existing'; setId: string } | { kind: 'new'; name: string },
+    ) => string | null;
     selectCustomSet: (setId: string | null) => void;
     setCustomSetSort: (sort: CustomSetSort) => void;
     setStreakReminderEnabled: (enabled: boolean) => void;

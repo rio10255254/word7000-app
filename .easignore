@@ -11,9 +11,9 @@ dist/
 web-build/
 exports/
 
-# generated native folders
-ios/
-android/
+# generated native folders (root only: local modules keep their own ios/ sources)
+/ios/
+/android/
 
 # local credentials and build outputs
 *.zip

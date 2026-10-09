@@ -1,6 +1,6 @@
 import { Redirect, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Animated, Appearance, Easing, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { ProfileSettingsView, Word7000RouteScreen } from '../../App';
 import { useAppRouteBridge } from '../lib/appRouteBridge';
 import { useRuntimePerformance } from '../lib/runtimePerformance';
@@ -34,12 +34,17 @@ export default function SettingsRoute() {
     }
   };
 
-  const changeThemeMode = (nextMode: 'light' | 'dark') => {
-    if (nextMode === bridge.themeMode || themeTransitionRunning.current) {
+  const changeThemePreference = (preference: 'system' | 'light' | 'dark') => {
+    if (preference === bridge.themePreference || themeTransitionRunning.current) {
       return;
     }
-    if (runtimePerformance.conserveResources) {
-      bridge.actions.setThemeMode(nextMode);
+    const nextMode = preference === 'system'
+      ? Appearance.getColorScheme() === 'dark' ? 'dark' : 'light'
+      : preference;
+    // Only an actual change of colours deserves the crossfade; switching to
+    // "system" while the system already matches just updates the choice.
+    if (nextMode === bridge.themeMode || runtimePerformance.conserveResources) {
+      bridge.actions.setThemePreference(preference);
       return;
     }
 
@@ -47,7 +52,7 @@ export default function SettingsRoute() {
     setThemeTransitionColor(nextMode === 'dark' ? '#000000' : '#F2F2F7');
     setShowThemeTransition(true);
     themeTransitionOpacity.setValue(0);
-    bridge.actions.setThemeMode(nextMode);
+    bridge.actions.setThemePreference(preference);
 
     const animation = Animated.sequence([
       Animated.timing(themeTransitionOpacity, {
@@ -95,11 +100,13 @@ export default function SettingsRoute() {
           <ProfileSettingsView
             accountBusy={bridge.accountBusy}
             accountReady={bridge.accountReady}
+            dailyTarget={bridge.progress.dailyTarget}
             developerMessage={bridge.developerMessage}
             developerVocabulary={bridge.developerVocabulary}
             streakReminderEnabled={bridge.streakReminderEnabled}
             studyMode={bridge.studyMode}
             themeMode={bridge.themeMode}
+            themePreference={bridge.themePreference}
             vocabularyCount={bridge.vocabularyWords.length}
             onBack={closeRoute}
             onClearDeveloperVocabulary={bridge.actions.clearDeveloperVocabulary}
@@ -107,8 +114,9 @@ export default function SettingsRoute() {
             onExportVocabulary={bridge.actions.exportVocabulary}
             onImportVocabulary={bridge.actions.importVocabulary}
             onOpenAppInfoLink={bridge.actions.openAppInfoLink}
+            onDailyTargetChange={bridge.actions.setDailyTarget}
             onStreakReminderEnabledChange={bridge.actions.setStreakReminderEnabled}
-            onThemeModeChange={changeThemeMode}
+            onThemePreferenceChange={changeThemePreference}
           />
         </ScrollView>
         {showThemeTransition && (

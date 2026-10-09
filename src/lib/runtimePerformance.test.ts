@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { buildRuntimePerformanceProfile, parseIosMajorVersion } from './runtimePerformanceCore';
 
@@ -30,5 +32,20 @@ describe('runtime performance profile', () => {
       reduceMotion: false,
       reduceTransparency: true,
     })).toMatchObject({ supportsLiquidGlass: false });
+  });
+});
+
+describe('runtime performance provider on web', () => {
+  test('does not call AccessibilityInfo methods react-native-web leaves out', () => {
+    const webAccessibilityInfo = fs.readFileSync(
+      path.join(process.cwd(), 'node_modules', 'react-native-web', 'dist', 'exports', 'AccessibilityInfo', 'index.js'),
+      'utf8',
+    );
+    const providerSource = fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'runtimePerformance.tsx'), 'utf8');
+
+    // Calling the missing method threw on first paint and the whole web app
+    // fell through to the error boundary.
+    expect(webAccessibilityInfo).not.toContain('isReduceTransparencyEnabled');
+    expect(providerSource).toContain("typeof AccessibilityInfo.isReduceTransparencyEnabled === 'function'");
   });
 });

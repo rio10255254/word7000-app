@@ -1,7 +1,12 @@
 import { describe, expect, test } from 'vitest';
 import { sampleWords } from '../data/words';
 import {
+  addDays,
   buildQuizOptions,
+  buildStudyQueue,
+  isWordDue,
+  markQuizCorrect,
+  reviewDueDate,
   buildQuizSession,
   buildStudySession,
   computeStats,
@@ -341,10 +346,11 @@ describe('library and quiz helpers', () => {
     expect(filterWords(words, emptyProgress(), '清楚 規律', 'all').map((word) => word.id)).toEqual(['clear']);
   });
 
-  test('buildQuizOptions returns three choices with the correct meaning included once', () => {
+  test('buildQuizOptions returns four choices with the correct meaning included once', () => {
     const options = buildQuizOptions(sampleWords, sampleWords[0].id, 'seed-a');
 
-    expect(options).toHaveLength(3);
+    expect(options).toHaveLength(4);
+    expect(new Set(options.map((option) => option.meaning)).size).toBe(4);
     expect(options.filter((option) => option.correct)).toHaveLength(1);
     expect(options.some((option) => option.meaning === sampleWords[0].meaningZh)).toBe(true);
   });
@@ -365,7 +371,7 @@ describe('library and quiz helpers', () => {
   test('buildQuizOptions can switch to English answers for Chinese study mode', () => {
     const options = buildQuizOptions(sampleWords, sampleWords[0].id, 'seed-a', 'word');
 
-    expect(options).toHaveLength(3);
+    expect(options).toHaveLength(4);
     expect(options.filter((option) => option.correct)).toHaveLength(1);
     expect(options.some((option) => option.meaning === sampleWords[0].word)).toBe(true);
     expect(options.every((option) => !option.meaning.includes('；'))).toBe(true);
@@ -438,5 +444,130 @@ describe('library and quiz helpers', () => {
     expect(firstSession.map((word) => word.id).sort()).toEqual(words.map((word) => word.id).sort());
     expect(firstSession.map((word) => word.id)).not.toEqual(words.map((word) => word.id));
     expect(firstSession.map((word) => word.id)).not.toEqual(otherSession.map((word) => word.id));
+  });
+});
+
+describe('spaced repetition schedule', () => {
+  const word = sampleWords[0].id;
+
+  test('a new word known on first sight waits a week before coming back', () => {
+    const state = markKnown(emptyProgress(), word, today);
+
+    expect(state.words[word]).toMatchObject({ stage: 3, dueDate: addDays(today, 7) });
+    expect(isWordDue(state.words[word], today)).toBe(false);
+    expect(isWordDue(state.words[word], addDays(today, 7)!)).toBe(true);
+  });
+
+  test('a correct quiz answer on a new word only earns a one-day wait', () => {
+    const state = markQuizCorrect(emptyProgress(), word, today);
+
+    expect(state.words[word]).toMatchObject({ status: 'mastered', stage: 1, dueDate: addDays(today, 1) });
+  });
+
+  test('each later correct recall pushes the word one stage further out', () => {
+    const dayOne = markQuizCorrect(emptyProgress(), word, today);
+    const dayTwo = markKnown(dayOne, word, addDays(today, 1)!);
+
+    expect(dayTwo.words[word]).toMatchObject({ stage: 2, dueDate: addDays(today, 4) });
+  });
+
+  test('marking the same word known twice in one day does not skip stages', () => {
+    const once = markQuizCorrect(emptyProgress(), word, today);
+    const twice = markKnown(once, word, today);
+
+    expect(twice.words[word].stage).toBe(1);
+  });
+
+  test('forgetting a known word drops it back to today and counts a lapse', () => {
+    const known = markKnown(emptyProgress(), word, today);
+    const forgotten = markReview(known, word, addDays(today, 7)!);
+
+    expect(forgotten.words[word]).toMatchObject({ status: 'review', stage: 0, lapses: 1, dueDate: addDays(today, 7) });
+  });
+
+  test('legacy progress without a schedule still gets a sensible due date', () => {
+    expect(reviewDueDate({ status: 'mastered', favorite: false, difficult: false, reviewCount: 0, lastStudied: today })).toBe(addDays(today, 7));
+    expect(reviewDueDate({ status: 'review', favorite: false, difficult: true, reviewCount: 1, lastStudied: today })).toBe(today);
+    expect(reviewDueDate(undefined)).toBeNull();
+  });
+
+  test('the daily count only counts each word once per day', () => {
+    const state = markKnown(markReview(markReview(emptyProgress(), word, today), word, today), word, today);
+
+    expect(state.studiedToday).toBe(1);
+  });
+
+  test('merging devices keeps the schedule of the newest decision', () => {
+    const older = markKnown(emptyProgress(), word, today, '2026-06-28T01:00:00.000Z');
+    const newer = markReview(emptyProgress(), word, today, '2026-06-28T02:00:00.000Z');
+
+    expect(mergeProgressStates(older, newer).words[word]).toMatchObject({ status: 'review', stage: 0, dueDate: today });
+  });
+
+  test('computeStats counts words due today', () => {
+    const state = markReview(markKnown(emptyProgress(), sampleWords[1].id, today), word, today);
+
+    expect(computeStats(sampleWords, state, today).due).toBe(1);
+    expect(computeStats(sampleWords, state, addDays(today, 7)!).due).toBe(2);
+  });
+});
+
+describe('study queue', () => {
+  const words = Array.from({ length: 30 }, (_, index) => wordFixture(`w${String(index).padStart(2, '0')}`));
+
+  test('puts due reviews ahead of new words and new words ahead of known ones', () => {
+    let state = emptyProgress();
+    state = markKnown(state, 'w00', '2026-06-01');
+    state = markReview(state, 'w01', '2026-06-20');
+    state = markKnown(state, 'w02', today);
+
+    const queue = buildStudyQueue(words, state, today, { limit: 4, seed: 'queue' }).map((entry) => entry.id);
+
+    expect(queue).toHaveLength(4);
+    expect(queue).toEqual(expect.arrayContaining(['w00', 'w01', 'w03', 'w04']));
+    expect(queue).not.toContain('w02');
+  });
+
+  test('falls back to known words early when nothing else is left', () => {
+    let state = emptyProgress();
+    for (const entry of words.slice(0, 3)) {
+      state = markKnown(state, entry.id, today);
+    }
+
+    expect(buildStudyQueue(words.slice(0, 3), state, today, { limit: 10 })).toHaveLength(3);
+  });
+
+  test('honours the session size', () => {
+    expect(buildStudyQueue(words, emptyProgress(), today, { limit: 5 })).toHaveLength(5);
+    expect(buildStudyQueue(words, emptyProgress(), today, { limit: 0 })).toHaveLength(0);
+  });
+});
+
+describe('quiz distractors', () => {
+  test('prefer words with the same part of speech', () => {
+    const words = [
+      wordFixture('run', { partOfSpeech: 'v', meaningZh: '跑' }),
+      ...Array.from({ length: 20 }, (_, index) => wordFixture(`noun${index}`, { partOfSpeech: 'n', meaningZh: `名詞${index}` })),
+      ...Array.from({ length: 3 }, (_, index) => wordFixture(`verb${index}`, { partOfSpeech: 'vt / vi', meaningZh: `動詞${index}` })),
+    ];
+
+    const options = buildQuizOptions(words, 'run', 'pos');
+
+    expect(options.filter((option) => !option.correct).every((option) => option.meaning.startsWith('動詞'))).toBe(true);
+  });
+
+  test('never shows the correct text twice when words share a meaning', () => {
+    const words = [
+      wordFixture('big', { meaningZh: '大的' }),
+      wordFixture('large', { meaningZh: '大的' }),
+      wordFixture('huge', { meaningZh: '巨大的' }),
+      wordFixture('tiny', { meaningZh: '微小的' }),
+      wordFixture('small', { meaningZh: '小的' }),
+    ];
+
+    const options = buildQuizOptions(words, 'big', 'dupe');
+
+    expect(options.filter((option) => option.meaning === '大的')).toHaveLength(1);
+    expect(options.find((option) => option.meaning === '大的')?.correct).toBe(true);
   });
 });

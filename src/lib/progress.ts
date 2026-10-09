@@ -15,9 +15,15 @@ export type WordProgress = {
   favorite: boolean;
   difficult: boolean;
   reviewCount: number;
+  /** Next date (YYYY-MM-DD) the word should come back for review. */
+  dueDate?: string;
   favoritedAt?: string;
   favoriteUpdatedAt?: string;
+  /** How many times a word that was already known slipped back to review. */
+  lapses?: number;
   lastStudied?: string;
+  /** Spaced-repetition box: 0 means "still learning", higher waits longer. */
+  stage?: number;
   statusUpdatedAt?: string;
 };
 
@@ -32,6 +38,7 @@ export type ProgressState = {
 };
 
 export type ProgressStats = {
+  due: number;
   mastered: number;
   review: number;
   favorites: number;
@@ -81,7 +88,11 @@ function updateWord(
   update: (progress: WordProgress) => WordProgress,
   studiedDate?: string,
 ): ProgressState {
-  const baseState = studiedDate ? advanceDailyProgress(state, studiedDate) : state;
+  const previous = currentProgress(state, wordId);
+  // The daily goal counts distinct words. Marking the same card again (a
+  // re-queued miss, an undo and redo) must not fill the goal by itself.
+  const countsTowardToday = Boolean(studiedDate) && previous.lastStudied !== studiedDate;
+  const baseState = studiedDate ? advanceDailyProgress(state, studiedDate, countsTowardToday ? 1 : 0) : state;
 
   return {
     ...baseState,
@@ -92,17 +103,86 @@ function updateWord(
   };
 }
 
+// Days to wait before a word comes back, indexed by stage. A word marked
+// "still learning" drops to stage 0 and is due again the same day; every
+// correct recall pushes it one stage further out.
+export const REVIEW_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30, 60, 120] as const;
+export const MAX_REVIEW_STAGE = REVIEW_INTERVAL_DAYS.length - 1;
+// A new word the learner already recognises on first sight skips the short
+// intervals: re-showing it tomorrow would only be noise.
+const KNOWN_ON_FIRST_SIGHT_STAGE = 3;
+// Picking the right meaning out of four is recognition, not recall, so a
+// first-time correct quiz answer earns a much shorter wait.
+const RECOGNISED_IN_QUIZ_STAGE = 1;
+
+export function reviewStage(progress: WordProgress | undefined): number {
+  if (!progress || progress.status === 'new') {
+    return 0;
+  }
+  if (typeof progress.stage === 'number' && Number.isFinite(progress.stage)) {
+    return Math.max(0, Math.min(MAX_REVIEW_STAGE, Math.round(progress.stage)));
+  }
+  // Progress saved before scheduling existed: treat mastered words as a week
+  // old and struggling words as due now.
+  return progress.status === 'mastered' ? KNOWN_ON_FIRST_SIGHT_STAGE : 0;
+}
+
+export function reviewDueDate(progress: WordProgress | undefined): string | null {
+  if (!progress || progress.status === 'new') {
+    return null;
+  }
+  if (progress.dueDate) {
+    return progress.dueDate;
+  }
+  const anchor = progress.lastStudied ?? progress.statusUpdatedAt?.slice(0, 10);
+  if (!anchor) {
+    return '0000-00-00';
+  }
+  return addDays(anchor, REVIEW_INTERVAL_DAYS[reviewStage(progress)]) ?? anchor;
+}
+
+export function isWordDue(progress: WordProgress | undefined, today: string): boolean {
+  const due = reviewDueDate(progress);
+  return due !== null && due <= today;
+}
+
 export function markKnown(state: ProgressState, wordId: string, today: string, changedAt = createRuntimeTimestamp()): ProgressState {
+  return gradeWord(state, wordId, today, changedAt, KNOWN_ON_FIRST_SIGHT_STAGE);
+}
+
+export function markQuizCorrect(state: ProgressState, wordId: string, today: string, changedAt = createRuntimeTimestamp()): ProgressState {
+  return gradeWord(state, wordId, today, changedAt, RECOGNISED_IN_QUIZ_STAGE);
+}
+
+function gradeWord(
+  state: ProgressState,
+  wordId: string,
+  today: string,
+  changedAt: string,
+  firstSightStage: number,
+): ProgressState {
   return updateWord(
     state,
     wordId,
-    (progress) => ({
-      ...progress,
-      status: 'mastered',
-      difficult: false,
-      lastStudied: today,
-      statusUpdatedAt: changedAt,
-    }),
+    (progress) => {
+      // Seeing a word twice in one day is not spaced practice: keep the stage
+      // it earned earlier today instead of climbing several boxes in a row.
+      const alreadyGradedToday = progress.lastStudied === today && progress.status === 'mastered';
+      const stage = progress.status === 'new'
+        ? firstSightStage
+        : alreadyGradedToday
+          ? reviewStage(progress)
+          : Math.min(MAX_REVIEW_STAGE, Math.max(1, reviewStage(progress) + 1));
+      return {
+        ...progress,
+        status: 'mastered',
+        difficult: false,
+        dueDate: addDays(today, REVIEW_INTERVAL_DAYS[stage]) ?? today,
+        lastStudied: today,
+        stage,
+        statusUpdatedAt: changedAt,
+      };
+    },
     today,
   );
 }
@@ -115,8 +195,11 @@ export function markReview(state: ProgressState, wordId: string, today: string, 
       ...progress,
       status: 'review',
       difficult: true,
+      dueDate: today,
+      lapses: (progress.lapses ?? 0) + (progress.status === 'mastered' ? 1 : 0),
       reviewCount: progress.reviewCount + 1,
       lastStudied: today,
+      stage: 0,
       statusUpdatedAt: changedAt,
     }),
     today,
@@ -187,6 +270,9 @@ function mergeWordProgress(first: WordProgress, second: WordProgress): WordProgr
   const lastStudied = [first.lastStudied, second.lastStudied].filter((value): value is string => Boolean(value)).sort().at(-1);
 
   return {
+    ...(statusSource.dueDate ? { dueDate: statusSource.dueDate } : {}),
+    ...(typeof statusSource.stage === 'number' ? { stage: statusSource.stage } : {}),
+    ...(first.lapses || second.lapses ? { lapses: Math.max(first.lapses ?? 0, second.lapses ?? 0) } : {}),
     difficult: statusSource.difficult,
     favorite: favoriteSource.favorite,
     favoriteUpdatedAt: favoriteSource.favoriteUpdatedAt,
@@ -198,8 +284,9 @@ function mergeWordProgress(first: WordProgress, second: WordProgress): WordProgr
   };
 }
 
-export function computeStats(words: WordEntry[], state: ProgressState): ProgressStats {
+export function computeStats(words: WordEntry[], state: ProgressState, today?: string): ProgressStats {
   const { idSet } = prepareVocabulary(words);
+  let due = 0;
   let mastered = 0;
   let review = 0;
   let favorites = 0;
@@ -216,9 +303,13 @@ export function computeStats(words: WordEntry[], state: ProgressState): Progress
     if (wordProgress.favorite) {
       favorites += 1;
     }
+    if (today && isWordDue(wordProgress, today)) {
+      due += 1;
+    }
   }
 
   return {
+    due,
     mastered,
     review,
     favorites,
@@ -463,6 +554,9 @@ export function buildQuizSession(words: WordEntry[], requestedCount: number, see
   return selectedIndexes.map((index) => words[index]);
 }
 
+const QUIZ_OPTION_COUNT = 4;
+const QUIZ_DISTRACTOR_SAMPLE = 48;
+
 export function buildQuizOptions(
   words: WordEntry[],
   wordId: string,
@@ -476,26 +570,105 @@ export function buildQuizOptions(
     return [];
   }
 
-  const wrongOptions = sampleDistinctIndexes(words.length, Math.min(2, Math.max(0, words.length - 1)), `${seed}:wrong:${wordId}`, correctIndex)
-    .map((index) => words[index])
-    .map((word) => ({
-      meaning: answerTextForMode(word, answerMode),
-      correct: false,
-    }));
+  const correctText = answerTextForMode(correctWord, answerMode);
+  // Distractors are drawn from a random sample and then ranked by how
+  // plausible they are next to the answer: same part of speech first, then the
+  // same level. Random unrelated words made most questions guessable from the
+  // grammar alone. Duplicate answer texts are dropped so two words that share
+  // a meaning can never both look correct.
+  const correctPos = primaryPartOfSpeech(correctWord.partOfSpeech);
+  const candidates = sampleDistinctIndexes(
+    words.length,
+    Math.min(QUIZ_DISTRACTOR_SAMPLE, Math.max(0, words.length - 1)),
+    `${seed}:wrong:${wordId}`,
+    correctIndex,
+  ).map((index, order) => {
+    const word = words[index];
+    const score = (primaryPartOfSpeech(word.partOfSpeech) === correctPos ? 2 : 0) + (word.group === correctWord.group ? 1 : 0);
+    return { order, score, word };
+  });
+  candidates.sort((left, right) => right.score - left.score || left.order - right.order);
 
-  const correctOption = {
-    meaning: answerTextForMode(correctWord, answerMode),
-    correct: true,
-  };
+  const usedTexts = new Set([correctText]);
+  const wrongOptions: QuizOption[] = [];
+  for (const candidate of candidates) {
+    if (wrongOptions.length >= QUIZ_OPTION_COUNT - 1) {
+      break;
+    }
+    const text = answerTextForMode(candidate.word, answerMode);
+    if (!text || usedTexts.has(text)) {
+      continue;
+    }
+    usedTexts.add(text);
+    wrongOptions.push({ correct: false, meaning: text });
+  }
 
-  return shuffleWithSeed([correctOption, ...wrongOptions], `${seed}:options:${wordId}`);
+  return shuffleWithSeed([{ correct: true, meaning: correctText }, ...wrongOptions], `${seed}:options:${wordId}`);
+}
+
+function primaryPartOfSpeech(partOfSpeech: string): string {
+  const first = partOfSpeech.split(/[\s/,.]+/).find(Boolean)?.toLowerCase() ?? '';
+  // vt, vi and v are all verbs as far as a plausible wrong answer goes.
+  return first.startsWith('v') ? 'v' : first;
+}
+
+export type StudyQueueOptions = {
+  limit: number;
+  seed?: string;
+};
+
+/**
+ * Picks the cards for one study session. Words that are due for review come
+ * first (oldest due date first), then words never seen before in library
+ * order, and only when both run out does it pull known words ahead of their
+ * schedule. The chosen cards are then shuffled so reviews and new words mix.
+ */
+export function buildStudyQueue(
+  words: WordEntry[],
+  state: ProgressState,
+  today: string,
+  { limit, seed = createRuntimeSeed() }: StudyQueueOptions,
+): WordEntry[] {
+  const size = Math.max(0, Math.floor(limit));
+  if (size === 0 || words.length === 0) {
+    return [];
+  }
+
+  const due: Array<{ date: string; word: WordEntry; struggling: boolean }> = [];
+  const fresh: WordEntry[] = [];
+  const ahead: Array<{ date: string; word: WordEntry }> = [];
+  for (const word of words) {
+    const progress = state.words[word.id];
+    const dueDate = reviewDueDate(progress);
+    if (dueDate === null) {
+      fresh.push(word);
+    } else if (dueDate <= today) {
+      due.push({ date: dueDate, struggling: progress?.status === 'review', word });
+    } else {
+      ahead.push({ date: dueDate, word });
+    }
+  }
+
+  due.sort((left, right) => left.date.localeCompare(right.date) || Number(right.struggling) - Number(left.struggling));
+  ahead.sort((left, right) => left.date.localeCompare(right.date));
+  const chosen = [
+    ...due.map((entry) => entry.word),
+    ...fresh,
+    ...ahead.map((entry) => entry.word),
+  ].slice(0, size);
+
+  return shuffleWithSeed(chosen, `${seed}:queue`);
+}
+
+export function countDueWords(words: WordEntry[], state: ProgressState, today: string): number {
+  return computeStats(words, state, today).due;
 }
 
 function answerTextForMode(word: WordEntry, answerMode: QuizAnswerMode): string {
   return answerMode === 'word' ? word.word : word.meaningZh;
 }
 
-function advanceDailyProgress(state: ProgressState, today: string): ProgressState {
+function advanceDailyProgress(state: ProgressState, today: string, increment = 1): ProgressState {
   const normalized = normalizeProgressForDate(state, today);
   const alreadyStudiedToday = normalized.lastStudyDate === today;
   const nextStreak = alreadyStudiedToday
@@ -509,8 +682,16 @@ function advanceDailyProgress(state: ProgressState, today: string): ProgressStat
     dailyProgressDate: today,
     lastStudyDate: today,
     streak: nextStreak,
-    studiedToday: normalized.studiedToday + 1,
+    studiedToday: normalized.studiedToday + increment,
   };
+}
+
+export function addDays(date: string, days: number): string | null {
+  const dayNumber = dateOnlyToDayNumber(date);
+  if (dayNumber === null) {
+    return null;
+  }
+  return new Date((dayNumber + days) * 86_400_000).toISOString().slice(0, 10);
 }
 
 function isPreviousDate(previousDate: string, today: string): boolean {

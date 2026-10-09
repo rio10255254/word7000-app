@@ -23,6 +23,9 @@ import Reanimated, {
 import {
   ArrowUp,
   BookOpen,
+  Eye,
+  PartyPopper,
+  Undo2,
   Check,
   ChartColumn,
   ChevronLeft,
@@ -57,7 +60,7 @@ import {
   User,
   X,
 } from 'lucide-react-native';
-import { createContext, memo, startTransition, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type Context, type ReactNode, type RefObject } from 'react';
+import { createContext, memo, useCallback, useContext, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type Context, type ReactNode, type RefObject } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -78,6 +81,7 @@ import {
   Text,
   TextInput,
   type StyleProp,
+  useColorScheme,
   useWindowDimensions,
   View,
   type ViewStyle,
@@ -90,10 +94,11 @@ import { scrollTargetFromSlider, scrollThumbOffset } from './src/lib/libraryNavi
 import {
   buildQuizOptions,
   buildQuizSession,
-  buildStudySession,
+  buildStudyQueue,
   computeStats,
   filterWords,
   markKnown,
+  markQuizCorrect,
   markReview,
   mergeProgressStates,
   normalizeProgressForDate,
@@ -227,6 +232,16 @@ import {
   StreakReminderRegistrationQueue,
 } from './src/lib/streakReminderRegistration';
 import { DeferredStorageWriter } from './src/lib/deferredStorageWriter';
+import {
+  createStudySession,
+  currentStudyCardId,
+  gradeStudyCard,
+  isStudySessionComplete,
+  studySessionProgress,
+  upcomingStudyCardId,
+  type StudyGrade,
+  type StudySession,
+} from './src/lib/studySession';
 import { useRuntimePerformance } from './src/lib/runtimePerformance';
 import { withTimeout } from './src/lib/asyncTimeout';
 import {
@@ -243,6 +258,7 @@ WebBrowser.maybeCompleteAuthSession();
 type Tab = 'home' | 'study' | 'quiz' | 'library' | 'profile';
 type AccountStatus = 'local' | 'loading' | 'guest' | 'signedOut' | 'signedIn' | 'syncing' | 'saved' | 'error';
 type ThemeMode = 'light' | 'dark';
+type ThemePreference = ThemeMode | 'system';
 type StudyMode = 'english' | 'chinese';
 type QuizPracticeMode = 'choice' | 'speaking';
 type ManualCustomWordState = {
@@ -347,6 +363,7 @@ const STUDY_SWIPE_HINT_IDLE_DELAY_MS = 10_000;
 const STUDY_SWIPE_HINT_REPEAT_MS = 15_000;
 const SHOULD_CLEAR_STUDY_SELECTION = Platform.OS === 'web';
 const quizQuestionCounts = [10, 20, 50] as const;
+const dailyTargetOptions = [10, 20, 30, 50] as const;
 type InstallGuideStep = {
   icon: 'add' | 'phone' | 'safari' | 'share';
   text: string;
@@ -400,7 +417,7 @@ const installGuideStepsByMode: Record<StudyMode, readonly InstallGuideStep[]> = 
 };
 const initialProgress: ProgressState = {
   dailyTarget: 20,
-  streak: 1,
+  streak: 0,
   studiedToday: 0,
   dailyProgressDate: today,
   words: {},
@@ -431,8 +448,11 @@ const modeCopy = {
     overlayTitle: '英文單字模式',
     overlayText: '正在回到中文介面的英文單字 App',
     heroEyebrow: 'ENGLISH MODE',
-    heroTitle: '今天 20 個\n剛剛好',
-    primaryAction: '開始學英文',
+    heroTitle: (target: number) => `今天 ${target} 個\n剛剛好`,
+    heroDoneTitle: '今天的目標\n完成了',
+    primaryAction: '開始今日學習',
+    continueAction: '繼續學習',
+    extraAction: '再學一組',
     libraryTitle: '完整字庫',
     searchPlaceholder: '搜尋英文、中文、例句或翻譯',
     studyFilterTitle: '學習篩選',
@@ -449,8 +469,11 @@ const modeCopy = {
     overlayTitle: 'Chinese Word Mode',
     overlayText: 'Read Chinese first, then recall the English word',
     heroEyebrow: 'CHINESE MODE',
-    heroTitle: '20 Chinese words for today',
-    primaryAction: 'Start Chinese practice',
+    heroTitle: (target: number) => `${target} Chinese words\nfor today`,
+    heroDoneTitle: "Today's goal\nis done",
+    primaryAction: "Start today's practice",
+    continueAction: 'Keep going',
+    extraAction: 'Practice one more set',
     libraryTitle: 'Chinese Word Library',
     searchPlaceholder: 'Search Chinese, English words, examples, or translations',
     studyFilterTitle: 'Study Filters',
@@ -473,6 +496,11 @@ const modeInterfaceCopy = {
     reviewListEmpty: '目前沒有卡住的單字',
     reviewListCount: (count: number) => `${count} 個單字需要再看一次`,
     dictionaryLookup: '快速查字',
+    todayPlan: (due: number, fresh: number) => `${due} 個待複習 · ${fresh} 個新字`,
+    reviewDueToday: '今日待複習',
+    quickQuiz: '小測驗',
+    quickQuizText: '10 題選擇題，檢查最近學的字',
+    streakDays: (days: number) => `${days} 天`,
     dictionarySearch: '查詢字庫',
     noStudyWords: '沒有符合的學習單字',
     noChineseWords: '沒有符合的中文單字',
@@ -491,6 +519,21 @@ const modeInterfaceCopy = {
     nextWord: '下一個',
     swipeReviewHint: '左滑不會',
     swipeKnownHint: '右滑已會',
+    tapToReveal: '先在心裡想一下意思，再點卡片看答案',
+    showAnswer: '顯示答案',
+    dontKnow: '不熟',
+    knowIt: '認識',
+    undo: '復原上一張',
+    sessionLabel: (done: number, total: number) => `第 ${Math.min(done + 1, total)} / ${total} 張`,
+    todayGoalLine: (studied: number, target: number) => `今日 ${studied} / ${target}`,
+    sessionCompleteTitle: '這一組完成了',
+    sessionCompleteText: (known: number, review: number) => `認識 ${known} 個 · 還不熟 ${review} 個`,
+    sessionGoalDone: '今天的目標已達成，繼續加油！',
+    sessionGoalLeft: (left: number) => `距離今天的目標還差 ${left} 個字`,
+    nextSession: '再來一組',
+    reviewMissed: (count: number) => `再練不熟的 ${count} 個`,
+    goQuiz: '用測驗檢查記憶',
+    keyboardHint: '鍵盤：空白鍵看答案，← 不熟，→ 認識',
     filterStatus: '狀態',
     filterLevel: '分級',
     filterSort: '排序',
@@ -537,6 +580,11 @@ const modeInterfaceCopy = {
     chineseTranslation: '中文翻譯',
     answer: '答案',
     nextQuestion: '下一題',
+    seeResults: '看結果',
+    endQuiz: '結束',
+    quizPrompt: '選出正確的中文意思',
+    quizMissedTitle: (count: number) => `答錯的 ${count} 個字`,
+    practiceMissed: (count: number) => `用學習卡複習這 ${count} 個字`,
     returnTop: '回到頂端',
     floatingTop: '回頂端',
     clearSearch: '清除搜尋',
@@ -577,7 +625,7 @@ const modeInterfaceCopy = {
     dailyTarget: '每日目標',
     favoriteWords: '收藏單字',
     favoritesRequireSignIn: '需登入',
-    remainingSamples: '剩餘樣本',
+    remainingSamples: '尚未學過',
     tutorial: '教學',
     replayTutorial: '重新查看加入主畫面教學',
     settings: '設定',
@@ -599,6 +647,15 @@ const modeInterfaceCopy = {
     deleteAccountDataConfirmCancel: '取消',
     deleteAccountDataConfirmAction: '確認刪除',
     darkMode: '深色模式',
+    appearance: '外觀',
+    appearanceText: '跟隨系統，或固定使用淺色、深色',
+    themeSystem: '跟隨系統',
+    themeLight: '淺色',
+    themeDark: '深色',
+    dailyTargetTitle: '每日目標',
+    dailyTargetText: '每天想學幾個單字，也決定每組學習卡的張數',
+    dailyTargetOption: (count: number) => `每日 ${count} 個單字`,
+    wordsUnit: (count: number) => `${count} 個`,
     darkModeOnText: '已切換成夜間閱讀介面',
     darkModeOffText: '切換成夜間閱讀介面',
     toggleDarkMode: '切換深色模式',
@@ -688,6 +745,11 @@ const modeInterfaceCopy = {
     reviewListEmpty: 'No words need review right now',
     reviewListCount: (count: number) => `${count} words need another look`,
     dictionaryLookup: 'Quick Dictionary',
+    todayPlan: (due: number, fresh: number) => `${due} to review · ${fresh} new`,
+    reviewDueToday: 'Due Today',
+    quickQuiz: 'Quick Quiz',
+    quickQuizText: 'A short multiple-choice check on recent words',
+    streakDays: (days: number) => `${days} ${days === 1 ? 'day' : 'days'}`,
     dictionarySearch: 'Search the library',
     noStudyWords: 'No matching study words',
     noChineseWords: 'No matching Chinese words',
@@ -706,6 +768,21 @@ const modeInterfaceCopy = {
     nextWord: 'Next',
     swipeReviewHint: 'Swipe left: still learning',
     swipeKnownHint: 'Swipe right: I know it',
+    tapToReveal: 'Recall the meaning first, then tap the card to check',
+    showAnswer: 'Show Answer',
+    dontKnow: 'Not Yet',
+    knowIt: 'I Know It',
+    undo: 'Undo last card',
+    sessionLabel: (done: number, total: number) => `Card ${Math.min(done + 1, total)} of ${total}`,
+    todayGoalLine: (studied: number, target: number) => `Today ${studied} / ${target}`,
+    sessionCompleteTitle: 'Set complete',
+    sessionCompleteText: (known: number, review: number) => `${known} known · ${review} still learning`,
+    sessionGoalDone: "Today's goal is done. Nice work!",
+    sessionGoalLeft: (left: number) => `${left} more words to reach today's goal`,
+    nextSession: 'Next Set',
+    reviewMissed: (count: number) => `Practice ${count} missed words`,
+    goQuiz: 'Check with a quiz',
+    keyboardHint: 'Keyboard: Space to reveal, ← still learning, → know it',
     filterStatus: 'Status',
     filterLevel: 'Level',
     filterSort: 'Sort',
@@ -752,6 +829,11 @@ const modeInterfaceCopy = {
     chineseTranslation: 'Chinese Translation',
     answer: 'Answer',
     nextQuestion: 'Next',
+    seeResults: 'See Results',
+    endQuiz: 'End',
+    quizPrompt: 'Pick the matching English word',
+    quizMissedTitle: (count: number) => `${count} missed words`,
+    practiceMissed: (count: number) => `Practice these ${count} words`,
     returnTop: 'Back to Top',
     floatingTop: 'Top',
     clearSearch: 'Clear search',
@@ -792,7 +874,7 @@ const modeInterfaceCopy = {
     dailyTarget: 'Daily Target',
     favoriteWords: 'Saved Words',
     favoritesRequireSignIn: 'Sign in',
-    remainingSamples: 'Remaining',
+    remainingSamples: 'Not Started',
     tutorial: 'Tutorial',
     replayTutorial: 'Review home-screen tutorial',
     settings: 'Settings',
@@ -814,6 +896,15 @@ const modeInterfaceCopy = {
     deleteAccountDataConfirmCancel: 'Cancel',
     deleteAccountDataConfirmAction: 'Delete Data',
     darkMode: 'Dark Mode',
+    appearance: 'Appearance',
+    appearanceText: 'Follow the system, or always use light or dark',
+    themeSystem: 'System',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    dailyTargetTitle: 'Daily Goal',
+    dailyTargetText: 'How many words a day, and how many cards per study set',
+    dailyTargetOption: (count: number) => `${count} words a day`,
+    wordsUnit: (count: number) => `${count} words`,
     darkModeOnText: 'Night reading interface is on',
     darkModeOffText: 'Switch to the night reading interface',
     toggleDarkMode: 'Toggle dark mode',
@@ -1323,13 +1414,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const streakRegistrationQueueRef = useRef<StreakReminderRegistrationQueue | null>(null);
   const pendingAdvancedActionRef = useRef<(() => void) | null>(null);
   const progressProtectionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const launchAnim = useRef(new Animated.Value(0)).current;
   const installGuideAnim = useRef(new Animated.Value(0)).current;
   const cardAnim = useRef(new Animated.Value(1)).current;
   const libraryThumbOffsetAnim = useRef(new Animated.Value(0)).current;
   const librarySliderInteractionAnim = useRef(new Animated.Value(0)).current;
   const modeTransitionAnim = useRef(new Animated.Value(0)).current;
-  const themeTransitionAnim = useRef(new Animated.Value(0)).current;
   const accountUpgradeAnim = useRef(new Animated.Value(0)).current;
   const librarySliderLastY = useSharedValue(-1000);
   const learningSessionRef = useRef<{
@@ -1360,8 +1449,13 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [streakReminderNow, setStreakReminderNow] = useState(() => Date.now());
   const [progress, setProgress] = useState<ProgressState>(initialProgress);
   const [progressReady, setProgressReady] = useState(false);
-  const [wordIndex, setWordIndex] = useState(0);
-  const [studySeed, setStudySeed] = useState(() => `${Date.now()}:${Math.random()}`);
+  const [studySession, setStudySession] = useState<StudySession | null>(null);
+  const [studySessionSerial, setStudySessionSerial] = useState(0);
+  const [studyUndo, setStudyUndo] = useState<{
+    after: ProgressState;
+    before: ProgressState;
+    session: StudySession;
+  } | null>(null);
   const [studyFilter, setStudyFilter] = useState<LibraryFilter>(initialFilterPreferences.study.filter);
   const [studyLevel, setStudyLevel] = useState(initialFilterPreferences.study.level);
   const [studyInitial, setStudyInitial] = useState(initialFilterPreferences.study.initial);
@@ -1377,6 +1471,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
   const [quizCorrectCount, setQuizCorrectCount] = useState(0);
+  const [quizMissedIds, setQuizMissedIds] = useState<string[]>([]);
+  const [quizChosenText, setQuizChosenText] = useState<string | null>(null);
   const [quizSeed, setQuizSeed] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebouncedValue(
@@ -1394,13 +1490,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [quizLevel, setQuizLevel] = useState(initialFilterPreferences.quiz.level);
   const [quizInitial, setQuizInitial] = useState(initialFilterPreferences.quiz.initial);
   const [quizFiltersOpen, setQuizFiltersOpen] = useState(false);
-  const [showLaunch, setShowLaunch] = useState(true);
   const [installGuideChecked, setInstallGuideChecked] = useState(false);
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [installGuideStep, setInstallGuideStep] = useState(0);
   const [account, setAccount] = useState<AccountState>(() => createInitialAccountState(Boolean(supabaseClient)));
   const [accountUpgradeReason, setAccountUpgradeReason] = useState<AccountUpgradeReason | null>(null);
-  const [themeMode, setThemeMode] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
+  const systemColorScheme = useColorScheme();
+  const [themePreference, setThemePreference] = useState<ThemePreference>(() => loadThemePreference(getAppStorage()));
+  const themeMode: ThemeMode = themePreference === 'system'
+    ? systemColorScheme === 'dark' ? 'dark' : 'light'
+    : themePreference;
   const [studyMode, setStudyMode] = useState<StudyMode>(() => loadStudyMode(getAppStorage()));
   const [streakReminderEnabled, setStreakReminderEnabled] = useState(() =>
     loadStreakReminderEnabled(getAppStorage()),
@@ -1415,8 +1514,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     loadStudyMode(getAppStorage()) === 'english' ? 'chinese' : 'english',
   );
   const [showModeSwitch, setShowModeSwitch] = useState(false);
-  const [showThemeTransition, setShowThemeTransition] = useState(false);
-  const [themeTransitionTarget, setThemeTransitionTarget] = useState<ThemeMode>(() => loadThemeMode(getAppStorage()));
   const [sliderTrackHeight, setSliderTrackHeight] = useState(1);
   const [librarySliderDragging, setLibrarySliderDragging] = useState(false);
   const [libraryScrolledPastTop, setLibraryScrolledPastTop] = useState(false);
@@ -1464,8 +1561,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     activeTab === 'home' || activeTab === 'profile',
   );
   const stats = useMemo(
-    () => computeStats(vocabularyWords, summaryProgress),
-    [summaryProgress, vocabularyWords],
+    () => computeStats(vocabularyWords, summaryProgress, currentDate),
+    [currentDate, summaryProgress, vocabularyWords],
   );
   const personalAnalytics = useMemo(
     () => buildPersonalLearningAnalytics(summaryProgress, stats, vocabularyWords.length, currentDate),
@@ -1479,13 +1576,27 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }),
     [activeTab, studyFilter, studyInitial, studyLevel, studyProgressDependency, studySourceWords],
   );
-  const studySessionWords = useMemo(() => buildStudySession(studyWords, studySeed), [studySeed, studyWords]);
-  const studyWord = studySessionWords.length > 0
-    ? studySessionWords[((wordIndex % studySessionWords.length) + studySessionWords.length) % studySessionWords.length]
-    : null;
-  const studyDeckNextWord = studySessionWords.length > 1
-    ? studySessionWords[(((wordIndex + 1) % studySessionWords.length) + studySessionWords.length) % studySessionWords.length]
-    : null;
+  const vocabularyById = useMemo(
+    () => new Map(vocabularyWords.map((word) => [word.id, word])),
+    [vocabularyWords],
+  );
+  // Everything a session is built from. When any of it changes the session in
+  // progress no longer matches what the learner asked for, so it is rebuilt;
+  // progress changes are deliberately not part of it, otherwise grading a card
+  // would reshuffle the deck under the learner's finger.
+  const studySourceKey = [
+    studyMode,
+    studyFilter,
+    studyLevel,
+    studyInitial,
+    studySetId ?? '',
+    developerVocabulary?.importedAt ?? '',
+    vocabularyWords.length,
+  ].join('|');
+  const studyWord = vocabularyById.get(currentStudyCardId(studySession) ?? '') ?? null;
+  const studyDeckNextWord = vocabularyById.get(upcomingStudyCardId(studySession) ?? '') ?? null;
+  const studySessionDone = isStudySessionComplete(studySession);
+  const studyCanUndo = Boolean(studyUndo && studyUndo.after === progress);
   const quizProgressDependency = activeTab === 'quiz' && quizFilter !== 'all' ? progress : null;
   const quizWords = useMemo(
     () => selectQuizWords(quizSourceWords, progress, quizFilter, {
@@ -1529,7 +1640,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const themeStyles = themeMode === 'dark' ? darkStyles : undefined;
   const darkMode = themeMode === 'dark';
   const libraryDragIconColor = darkMode ? '#0A84FF' : '#1C1C1E';
-  const activeModeCopy = modeCopy[studyMode];
   const activeSystemCopy = systemCopy[studyMode];
   const activeInstallGuideSteps = installGuideStepsByMode[studyMode];
   const streakReminderPlan = useMemo(
@@ -1592,22 +1702,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const modeOverlayTranslateY = modeTransitionAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [18, 0],
-  });
-  const themeTransitionMotionStyle = {
-    backgroundColor: themeTransitionTarget === 'dark' ? '#000000' : '#F2F2F7',
-    opacity: themeTransitionAnim,
-  };
-  const launchOpacity = launchAnim.interpolate({
-    inputRange: [0, 0.22, 1.62, 2],
-    outputRange: [0, 1, 1, 0],
-  });
-  const launchScale = launchAnim.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: [0.94, 1, 1.04],
-  });
-  const launchProgressWidth = launchAnim.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: ['10%', '76%', '100%'],
   });
   const installGuideOpacity = installGuideAnim;
   const installGuideTranslateY = installGuideAnim.interpolate({
@@ -1904,29 +1998,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     supabaseClient,
   ]);
 
-  useEffect(() => {
-    if (runtimePerformance.conserveResources) {
-      launchAnim.setValue(2);
-      setShowLaunch(false);
-      return;
-    }
-    Animated.sequence([
-      Animated.timing(launchAnim, {
-        duration: 280,
-        easing: Easing.out(Easing.cubic),
-        toValue: 1,
-        useNativeDriver: false,
-      }),
-      Animated.delay(520),
-      Animated.timing(launchAnim, {
-        duration: 300,
-        easing: Easing.inOut(Easing.cubic),
-        toValue: 2,
-        useNativeDriver: false,
-      }),
-    ]).start(() => setShowLaunch(false));
-  }, [launchAnim, runtimePerformance.conserveResources]);
-
   useEffect(
     () => () => {
       if (progressProtectionTimerRef.current) {
@@ -2005,8 +2076,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [account.userId, runtimePerformance.conserveResources]);
 
   useEffect(() => {
-    saveThemeMode(getAppStorage(), themeMode);
-  }, [themeMode]);
+    saveThemePreference(getAppStorage(), themePreference);
+  }, [themePreference]);
 
   useEffect(() => {
     saveStreakReminderEnabled(getAppStorage(), streakReminderEnabled);
@@ -2095,17 +2166,19 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   ]);
 
   useEffect(() => {
-    if (showLaunch || installGuideChecked) {
+    if (installGuideChecked) {
       return;
     }
 
     setInstallGuideChecked(true);
     const shouldAutoShowInstallGuide =
-      Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && shouldShowInstallGuide(getAppStorage(), isInstalledWebApp());
+      Platform.OS === 'web' &&
+      !IS_WEB_IOS_PREVIEW &&
+      shouldShowInstallGuide(getAppStorage(), isInstalledWebApp(), browserUserAgent(), browserMaxTouchPoints());
     if (shouldAutoShowInstallGuide) {
       openInstallGuide();
     }
-  }, [installGuideChecked, showLaunch]);
+  }, [installGuideChecked]);
 
   useEffect(() => {
     if (runtimePerformance.conserveResources) {
@@ -2157,13 +2230,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [activeTab, activeFilter, activeInitial, activeLevel, activeSort, scrollLibraryToRawOffset]);
 
   useEffect(() => {
-    setWordIndex(0);
-    setStudySeed(`${Date.now()}:${Math.random()}`);
-  }, [studyFilter, studyInitial, studyLevel, studySetId]);
+    if (!progressReady || (studySession && studySession.sourceKey === studySourceKey)) {
+      return;
+    }
+    startStudySession();
+  }, [progressReady, studySession, studySourceKey]);
 
   useEffect(() => {
     setQuizIndex(0);
     setQuizResult(null);
+    setQuizChosenText(null);
     setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
@@ -2171,6 +2247,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setQuizStarted(false);
     setQuizFinished(false);
     setQuizCorrectCount(0);
+    setQuizMissedIds([]);
     setQuizSeed('');
   }, [quizFilter, quizInitial, quizLevel, quizSetId]);
 
@@ -2201,15 +2278,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   }, [activeLevel, levelFilterOptions, quizLevel, studyLevel]);
 
   useEffect(() => {
-    setWordIndex(0);
     setQuizIndex(0);
     setQuizResult(null);
+    setQuizChosenText(null);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
     setQuizSession([]);
     setQuizStarted(false);
     setQuizFinished(false);
     setQuizCorrectCount(0);
+    setQuizMissedIds([]);
     setQuizSeed('');
   }, [developerVocabulary?.importedAt, studyMode]);
 
@@ -2355,12 +2433,44 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     };
   }, [account.isAnonymous, account.userId, supabaseClient]);
 
-  function nextStudyWord() {
-    setWordIndex((current) => (studySessionWords.length > 0 ? current + 1 : 0));
+  function startStudySession(cardIds?: string[]) {
+    const pool = selectStudyWords(studySourceWords, progress, studyFilter, {
+      initial: studyInitial,
+      level: studyLevel,
+    });
+    const ids = cardIds ?? buildStudyQueue(pool, progress, currentDate, {
+      limit: Math.max(5, progress.dailyTarget),
+    }).map((word) => word.id);
+    setStudySession(createStudySession(ids, studySourceKey));
+    setStudySessionSerial((current) => current + 1);
+    setStudyUndo(null);
   }
 
-  function previousStudyWord() {
-    setWordIndex((current) => (studySessionWords.length > 0 ? current - 1 : 0));
+  function gradeCurrentStudyCard(grade: StudyGrade) {
+    const session = studySession;
+    const wordId = currentStudyCardId(session);
+    if (!session || !wordId) {
+      return;
+    }
+    const before = progress;
+    const after = recordTrackedLearningEvent(
+      before,
+      grade === 'known' ? markKnown(before, wordId, currentDate) : markReview(before, wordId, currentDate),
+      grade === 'known' ? 'studyKnown' : 'studyReview',
+    );
+    setStudySession(gradeStudyCard(session, wordId, grade));
+    setStudyUndo({ after, before, session });
+    setProgress(after);
+    maybePromptToProtectProgress();
+  }
+
+  function undoStudyGrade() {
+    if (!studyUndo || studyUndo.after !== progress) {
+      return;
+    }
+    setProgress(studyUndo.before);
+    setStudySession(studyUndo.session);
+    setStudyUndo(null);
   }
 
   function requestAccountUpgrade(reason: AccountUpgradeReason, afterUpgrade?: () => void) {
@@ -2443,36 +2553,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       progressProtectionTimerRef.current = null;
       requestAccountUpgrade('protectProgress');
     }, 650);
-  }
-
-  function handleKnown(wordId: string) {
-    nextStudyWord();
-    maybePromptToProtectProgress();
-    const update = (current: ProgressState) => recordTrackedLearningEvent(
-      current,
-      markKnown(current, wordId, currentDate),
-      'studyKnown',
-    );
-    if (studyFilter === 'all') {
-      startTransition(() => setProgress(update));
-      return;
-    }
-    setProgress(update);
-  }
-
-  function handleReview(wordId: string) {
-    nextStudyWord();
-    maybePromptToProtectProgress();
-    const update = (current: ProgressState) => recordTrackedLearningEvent(
-      current,
-      markReview(current, wordId, currentDate),
-      'studyReview',
-    );
-    if (studyFilter === 'all') {
-      startTransition(() => setProgress(update));
-      return;
-    }
-    setProgress(update);
   }
 
   function recordTrackedLearningEvent(
@@ -2713,7 +2793,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   function handleStartStudySet(setId: string) {
     setStudySetId(setId);
-    setWordIndex(0);
     setActiveTab('study');
   }
 
@@ -2741,7 +2820,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setSpeakingAnswerVisible(true);
   }
 
-  function handleQuizAnswer(correct: boolean) {
+  function handleQuizAnswer(option: QuizOption) {
+    const correct = option.correct;
     if (!quizWord) {
       return;
     }
@@ -2753,12 +2833,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setAnsweredQuizWord(quizWord);
     setLockedQuizOptions(quizOptions);
     setQuizResult(correct ? 'correct' : 'wrong');
+    setQuizChosenText(option.meaning);
     if (correct) {
       setQuizCorrectCount((current) => current + 1);
+    } else {
+      const missedId = quizWord.id;
+      setQuizMissedIds((current) => (current.includes(missedId) ? current : [...current, missedId]));
     }
     setProgress((current) => recordTrackedLearningEvent(
       current,
-      correct ? markKnown(current, quizWord.id, currentDate) : markReview(current, quizWord.id, currentDate),
+      correct ? markQuizCorrect(current, quizWord.id, currentDate) : markReview(current, quizWord.id, currentDate),
       correct ? 'quizCorrect' : 'quizWrong',
     ));
     maybePromptToProtectProgress();
@@ -2771,7 +2855,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setQuizSeed(seed);
     setQuizIndex(0);
     setQuizCorrectCount(0);
+    setQuizMissedIds([]);
     setQuizResult(null);
+    setQuizChosenText(null);
     setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
@@ -2782,16 +2868,19 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   function restartQuiz() {
     setQuizIndex(0);
     setQuizResult(null);
+    setQuizChosenText(null);
     setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
     setQuizStarted(false);
     setQuizFinished(false);
     setQuizCorrectCount(0);
+    setQuizMissedIds([]);
   }
 
   function nextQuiz() {
     setQuizResult(null);
+    setQuizChosenText(null);
     setSpeakingAnswerVisible(false);
     setAnsweredQuizWord(null);
     setLockedQuizOptions(null);
@@ -2981,6 +3070,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     saveCustomSetState(storage, loadedCustomSetState, user.id);
     setSelectedCustomSetId(null);
     setStudySetId(null);
+    setStudySession(null);
     setQuizSetId(null);
     setSetPickerWord(null);
     setAccount((current) => ({
@@ -3541,6 +3631,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setCustomSetState(loadCustomSetState(getAppStorage()));
     setSelectedCustomSetId(null);
     setStudySetId(null);
+    setStudySession(null);
     setQuizSetId(null);
     setSetPickerWord(null);
     setAccount((current) => ({
@@ -3644,6 +3735,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setCustomSetState(loadCustomSetState(storage));
     setSelectedCustomSetId(null);
     setStudySetId(null);
+    setStudySession(null);
     setQuizSetId(null);
     setSetPickerWord(null);
     setAccount((current) => ({
@@ -3715,43 +3807,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  function triggerThemeModeChange(nextMode: ThemeMode) {
-    if (nextMode === themeMode || showThemeTransition) {
-      return;
+  const homeStartStudy = useStableEvent(() => {
+    // A finished set would greet the learner with its summary; from the home
+    // screen they asked to study, so deal a fresh set instead.
+    if (studySessionDone) {
+      startStudySession();
     }
-    if (runtimePerformance.conserveResources) {
-      setThemeMode(nextMode);
-      return;
-    }
-
-    setThemeTransitionTarget(nextMode);
-    setShowThemeTransition(true);
-    themeTransitionAnim.setValue(0);
-    Animated.timing(themeTransitionAnim, {
-      duration: 180,
-      easing: Easing.out(Easing.cubic),
-      toValue: 1,
-      useNativeDriver: Platform.OS !== 'web',
-    }).start(({ finished }) => {
-      if (!finished) {
-        return;
-      }
-
-      setThemeMode(nextMode);
-      Animated.timing(themeTransitionAnim, {
-        duration: 260,
-        easing: Easing.inOut(Easing.cubic),
-        toValue: 0,
-        useNativeDriver: Platform.OS !== 'web',
-      }).start(({ finished: fadeFinished }) => {
-        if (fadeFinished) {
-          setShowThemeTransition(false);
-        }
-      });
-    });
-  }
-
-  const homeStartStudy = useStableEvent(() => setActiveTab('study'));
+    setActiveTab('study');
+  });
   const homeOpenReview = useStableEvent(() => {
     setActiveFilter('review');
     setActiveTab('library');
@@ -3762,18 +3825,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const homeToggleStudyMode = useStableEvent(toggleStudyMode);
   const studyClearActiveSet = useStableEvent(() => setStudySetId(null));
   const studyToggleFilters = useStableEvent(() => setStudyFiltersOpen((current) => !current));
-  const studyNextWord = useStableEvent(nextStudyWord);
-  const studyPreviousWord = useStableEvent(previousStudyWord);
-  const studySwipeKnown = useStableEvent(() => {
-    if (studyWord) {
-      handleKnown(studyWord.id);
+  const studySwipeKnown = useStableEvent(() => gradeCurrentStudyCard('known'));
+  const studySwipeReview = useStableEvent(() => gradeCurrentStudyCard('review'));
+  const studyUndoGrade = useStableEvent(undoStudyGrade);
+  const studyNextSession = useStableEvent(() => startStudySession());
+  const studyReviewMissed = useStableEvent(() => {
+    if (studySession && studySession.reviewIds.length > 0) {
+      startStudySession(studySession.reviewIds);
     }
   });
-  const studySwipeReview = useStableEvent(() => {
-    if (studyWord) {
-      handleReview(studyWord.id);
-    }
-  });
+  const studyOpenQuiz = useStableEvent(() => setActiveTab('quiz'));
   const studyFavoriteWord = useStableEvent(() => {
     if (studyWord) {
       const wordId = studyWord.id;
@@ -3797,6 +3858,13 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const quizNextQuestion = useStableEvent(nextQuiz);
   const quizRevealAnswer = useStableEvent(revealSpeakingAnswer);
   const quizRestart = useStableEvent(restartQuiz);
+  const quizPracticeMissed = useStableEvent(() => {
+    if (quizMissedIds.length === 0) {
+      return;
+    }
+    startStudySession(quizMissedIds);
+    setActiveTab('study');
+  });
   const quizStart = useStableEvent(startQuiz);
   const quizFilterChange = useStableEvent((filter: LibraryFilter) => {
     const reason = accountUpgradeReasonForFilter(filter);
@@ -3889,7 +3957,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setTimeout(() => restoreLibraryRouteScroll(restoreOffset), 420);
   });
   const routeSetStreakReminderEnabled = useStableEvent(setStreakReminderEnabled);
-  const routeSetThemeMode = useStableEvent(triggerThemeModeChange);
+  const routeSetThemePreference = useStableEvent((preference: ThemePreference) => setThemePreference(preference));
+  const routeSetDailyTarget = useStableEvent((target: number) => {
+    const nextTarget = Math.max(5, Math.min(100, Math.round(target)));
+    setProgress((current) => (current.dailyTarget === nextTarget ? current : { ...current, dailyTarget: nextTarget }));
+  });
   const routeStartQuizSet = useStableEvent(handleStartQuizSet);
   const routeStartStudySet = useStableEvent(handleStartStudySet);
   const routeActions = useMemo(
@@ -3915,7 +3987,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       selectCustomSet: setSelectedCustomSetId,
       setCustomSetSort,
       setStreakReminderEnabled: routeSetStreakReminderEnabled,
-      setThemeMode: routeSetThemeMode,
+      setDailyTarget: routeSetDailyTarget,
+      setThemePreference: routeSetThemePreference,
       startQuizSet: routeStartQuizSet,
       startStudySet: routeStartStudySet,
     }),
@@ -3938,7 +4011,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       routeRequestAccountUpgrade,
       routeRestoreLibraryScroll,
       routeSetStreakReminderEnabled,
-      routeSetThemeMode,
+      routeSetDailyTarget,
+      routeSetThemePreference,
       routeStartQuizSet,
       routeStartStudySet,
     ],
@@ -3963,6 +4037,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       streakReminderEnabled,
       studyMode,
       themeMode,
+      themePreference,
       vocabularyWords,
     });
   }, [
@@ -3983,6 +4058,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     streakReminderEnabled,
     studyMode,
     themeMode,
+    themePreference,
     vocabularyWords,
   ]);
 
@@ -4047,6 +4123,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       vocabularyWords,
       onCheckForUpdate: updateState.checkNow,
       onOpenDictionaryWord: homeOpenDictionaryWord,
+      onOpenQuiz: studyOpenQuiz,
       onOpenStats: profileOpenStats,
       onStartStudy: homeStartStudy,
       onOpenReview: homeOpenReview,
@@ -4056,11 +4133,19 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       activeFilter: studyFilter,
       activeInitial: studyInitial,
       activeLevel: studyLevel,
-      cardSequence: wordIndex,
+      canUndo: studyCanUndo,
+      cardSequence: studySessionSerial * 10_000 + (studySession?.index ?? 0),
       filtersOpen: studyFiltersOpen,
       levelOptions: levelFilterOptions,
       motionStyle: cardMotionStyle,
       nextWord: studyDeckNextWord,
+      sessionComplete: studySessionDone,
+      sessionKnownCount: studySession?.knownIds.length ?? 0,
+      sessionProgress: studySessionProgress(studySession),
+      sessionReviewCount: studySession?.reviewIds.length ?? 0,
+      studiedToday: studyProgress.studiedToday,
+      dailyTarget: studyProgress.dailyTarget,
+      streak: studyProgress.streak,
       studyMode,
       activeSetCount: activeStudySet ? studySourceWords.length : 0,
       activeSetName: activeStudySet?.name ?? null,
@@ -4074,10 +4159,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       onFiltersToggle: studyToggleFilters,
       onInitialChange: setStudyInitial,
       onLevelChange: setStudyLevel,
-      onNext: studyNextWord,
-      onPrevious: studyPreviousWord,
+      onNextSession: studyNextSession,
+      onOpenQuiz: studyOpenQuiz,
+      onReviewMissed: studyReviewMissed,
       onSwipeKnown: studySwipeKnown,
       onSwipeReview: studySwipeReview,
+      onUndo: studyUndoGrade,
       onAddToSet: handleOpenSetPicker,
       onFavorite: studyFavoriteWord,
     },
@@ -4103,7 +4190,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       favoriteLocked: !isPermanentAccount,
       activeSetCount: activeQuizSet ? quizSourceWords.length : 0,
       activeSetName: activeQuizSet?.name ?? null,
+      chosenText: quizChosenText,
       correctCount: quizCorrectCount,
+      missedWords: quizMissedIds
+        .map((wordId) => vocabularyById.get(wordId))
+        .filter((entry): entry is WordEntry => Boolean(entry)),
+      onPracticeMissed: quizPracticeMissed,
       word: visibleQuizWord,
       wordCount: quizWords.length,
       onAnswer: quizAnswer,
@@ -4240,22 +4332,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
           />
         )}
 
-        {showLaunch && (
-          <Animated.View
-            pointerEvents="none"
-            style={[styles.launchOverlay, { opacity: launchOpacity }]}
-            testID="launch-overlay"
-          >
-            <Animated.View style={[styles.launchContent, { transform: [{ scale: launchScale }] }]}>
-              <BrandMark size={82} style={styles.launchIcon} />
-              <Text style={styles.launchTitle}>{activeModeCopy.brand}</Text>
-              <Text style={styles.launchText}>{activeModeCopy.subtitle}</Text>
-              <View style={styles.launchBar}>
-                <Animated.View style={[styles.launchBarFill, { width: launchProgressWidth }]} />
-              </View>
-            </Animated.View>
-          </Animated.View>
-        )}
         {showInstallGuide && (
           <InstallGuideOverlay
             copy={activeSystemCopy.installGuide}
@@ -4265,13 +4341,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
             translateY={installGuideTranslateY}
             onDismiss={dismissInstallGuide}
             onNext={nextInstallGuideStep}
-          />
-        )}
-        {showThemeTransition && (
-          <Animated.View
-            pointerEvents="none"
-            style={[styles.themeTransitionOverlay, themeTransitionMotionStyle]}
-            testID="theme-transition-overlay"
           />
         )}
         {updateState.available && (
@@ -4664,17 +4733,19 @@ function useAppUpdateCheck(studyMode: StudyMode): UpdateState {
   };
 }
 
-function loadThemeMode(storage?: StorageLike): ThemeMode {
+function loadThemePreference(storage?: StorageLike): ThemePreference {
   try {
-    return storage?.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+    const stored = storage?.getItem(THEME_STORAGE_KEY);
+    // Nothing stored means a first launch: follow the system appearance.
+    return stored === 'dark' || stored === 'light' ? stored : 'system';
   } catch {
-    return 'light';
+    return 'system';
   }
 }
 
-function saveThemeMode(storage: StorageLike | undefined, themeMode: ThemeMode) {
+function saveThemePreference(storage: StorageLike | undefined, preference: ThemePreference) {
   try {
-    storage?.setItem(THEME_STORAGE_KEY, themeMode);
+    storage?.setItem(THEME_STORAGE_KEY, preference);
   } catch {
     // Theme choice is a convenience; keep the app usable if storage is blocked.
   }
@@ -4852,6 +4923,14 @@ function pickVocabularyTextFile(copy: Pick<SystemCopy, 'importNoFile' | 'importR
     documentRef.body.appendChild(input);
     input.click();
   });
+}
+
+function browserUserAgent(): string {
+  return (globalThis as { navigator?: { userAgent?: string } }).navigator?.userAgent ?? '';
+}
+
+function browserMaxTouchPoints(): number {
+  return (globalThis as { navigator?: { maxTouchPoints?: number } }).navigator?.maxTouchPoints ?? 0;
 }
 
 function isInstalledWebApp(): boolean {
@@ -5410,6 +5489,7 @@ const HomeView = memo(function HomeView({
   vocabularyWords,
   onCheckForUpdate,
   onOpenDictionaryWord,
+  onOpenQuiz,
   onOpenStats,
   onOpenReview,
   onStartStudy,
@@ -5423,6 +5503,7 @@ const HomeView = memo(function HomeView({
   vocabularyWords: WordEntry[];
   onCheckForUpdate: () => void;
   onOpenDictionaryWord: (word: WordEntry) => void;
+  onOpenQuiz: () => void;
   onOpenStats: () => void;
   onOpenReview: () => void;
   onStartStudy: () => void;
@@ -5454,6 +5535,13 @@ const HomeView = memo(function HomeView({
     : updateStatus === 'error'
       ? updateCopy.updateCheckFailed
       : updateCopy.updateCheckDetail;
+  const goalDone = stats.studiedToday >= progress.dailyTarget;
+  const newLeft = Math.max(0, progress.dailyTarget - stats.studiedToday);
+  const primaryActionText = goalDone
+    ? copy.extraAction
+    : stats.studiedToday > 0
+      ? copy.continueAction
+      : copy.primaryAction;
   const [dictionaryQuery, setDictionaryQuery] = useState('');
   const [dictionaryOpen, setDictionaryOpen] = useState(false);
   const debouncedDictionaryQuery = useDebouncedValue(
@@ -5598,24 +5686,111 @@ const HomeView = memo(function HomeView({
   return (
     <>
       <View style={styles.homeStack}>
-        <View style={[styles.hero, themeStyles?.hero]}>
+        <View style={[styles.hero, themeStyles?.hero]} testID="home-today-plan">
+          <View style={styles.rowBetween}>
+            <Text style={[styles.eyebrow, styles.homeHeroEyebrow]}>{copy.heroEyebrow}</Text>
+            {progress.streak > 0 && (
+              <View style={[styles.homeStreakPill, themeStyles?.homeStreakPill]}>
+                <Flame size={14} color="#FF9500" strokeWidth={2.5} />
+                <Text style={styles.homeStreakText}>{ui.streakDays(progress.streak)}</Text>
+              </View>
+            )}
+          </View>
           <View style={styles.heroCopy}>
-            <Text style={styles.eyebrow}>{copy.heroEyebrow}</Text>
-            <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>{copy.heroTitle}</Text>
+            <Text style={[styles.heroTitle, themeStyles?.heroTitle]}>
+              {goalDone ? copy.heroDoneTitle : copy.heroTitle(progress.dailyTarget)}
+            </Text>
+            <Text style={[styles.homePlanText, themeStyles?.cardMeta]}>{ui.todayPlan(stats.due, newLeft)}</Text>
           </View>
           <View style={styles.homeProgressHeader}>
             <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.dailyProgress}</Text>
-            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>
+            <Text style={[styles.cardMeta, styles.homeProgressCount, themeStyles?.cardMeta]}>
               {stats.studiedToday} / {progress.dailyTarget}
             </Text>
           </View>
           <View style={[styles.progressTrack, themeStyles?.progressTrack]}>
-            <View style={[styles.progressFill, { width: `${dailyPercent}%` }]} />
+            <View style={[styles.progressFill, goalDone && styles.progressFillDone, { width: `${dailyPercent}%` }]} />
           </View>
-          <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton}>
+          <AnimatedPressable accessibilityRole="button" onPress={onStartStudy} pressTone="primary" style={styles.primaryButton} testID="home-start-study">
             <BookOpen size={18} color="#FFFFFF" strokeWidth={2.3} />
-            <Text style={styles.primaryButtonText}>{copy.primaryAction}</Text>
+            <Text style={styles.primaryButtonText}>{primaryActionText}</Text>
             <ChevronRight size={18} color="#FFFFFF" strokeWidth={2.3} />
+          </AnimatedPressable>
+        </View>
+
+        <AnimatedPressable
+          accessibilityLabel={ui.learningAnalytics}
+          accessibilityRole="button"
+          onPress={onOpenStats}
+          pressTone="list"
+          style={[styles.statsGrid, themeStyles?.homeGroupedSurface]}
+          testID="home-learning-analytics"
+        >
+          <StatCard label={ui.streak} value={progress.streak.toString()} />
+          <StatCard divider label={ui.mastered} value={stats.mastered.toString()} />
+          <StatCard divider emphasis={stats.due > 0} label={ui.reviewDueToday} value={stats.due.toString()} />
+        </AnimatedPressable>
+
+        <AnimatedPressable
+          accessibilityLabel={ui.dictionaryLookup}
+          accessibilityRole="button"
+          onPress={openDictionary}
+          pressTone="list"
+          style={[styles.homeDictionaryStandalone, themeStyles?.homeDictionarySearch]}
+          testID="home-dictionary-search"
+        >
+          <View style={[styles.homeDictionaryLauncherIcon, themeStyles?.homeDictionaryLauncherIcon]}>
+            <Search size={20} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.4} />
+          </View>
+          <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
+            {copy.searchPlaceholder}
+          </Text>
+          <ChevronRight size={18} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.3} />
+        </AnimatedPressable>
+
+        <View style={[styles.homeActionGroup, themeStyles?.homeGroupedSurface]} testID="home-action-group">
+          <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={styles.reviewStrip}>
+            <View style={[styles.reviewIcon, themeStyles?.reviewIcon]}>
+              <RotateCcw size={20} color="#FF9500" strokeWidth={2.4} />
+            </View>
+            <View style={styles.flexOne}>
+              <Text style={[styles.reviewTitle, themeStyles?.reviewTitle]}>{ui.reviewList}</Text>
+              <Text style={[styles.reviewText, themeStyles?.reviewText]}>{stats.review > 0 ? ui.reviewListCount(stats.review) : ui.reviewListEmpty}</Text>
+            </View>
+            <ChevronRight size={18} color="#8E8E93" strokeWidth={2.2} />
+          </AnimatedPressable>
+
+          <View style={[styles.homeActionDivider, themeStyles?.homeDivider]} />
+
+          <AnimatedPressable accessibilityRole="button" onPress={onOpenQuiz} pressTone="list" style={styles.reviewStrip} testID="home-quick-quiz">
+            <View style={[styles.reviewIcon, styles.homeQuizIcon, themeStyles?.homeQuizIcon]}>
+              <Target size={20} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.4} />
+            </View>
+            <View style={styles.flexOne}>
+              <Text style={[styles.reviewTitle, themeStyles?.reviewTitle]}>{ui.quickQuiz}</Text>
+              <Text style={[styles.reviewText, themeStyles?.reviewText]}>{ui.quickQuizText}</Text>
+            </View>
+            <ChevronRight size={18} color="#8E8E93" strokeWidth={2.2} />
+          </AnimatedPressable>
+
+          <View style={[styles.homeActionDivider, themeStyles?.homeDivider]} />
+
+          <AnimatedPressable
+            accessibilityLabel={copy.toggleTitle}
+            accessibilityRole="button"
+            onPress={onToggleStudyMode}
+            pressTone="list"
+            style={styles.modeSwitchButton}
+            testID="study-mode-toggle"
+          >
+            <View style={[styles.modeSwitchIcon, studyMode === 'chinese' && styles.modeSwitchIconChinese, themeStyles?.modeSwitchIcon]}>
+              <Languages size={20} color={studyMode === 'chinese' ? '#5856D6' : '#007AFF'} strokeWidth={2.4} />
+            </View>
+            <View style={styles.flexOne}>
+              <Text style={[styles.modeSwitchTitle, themeStyles?.modeSwitchTitle]}>{copy.toggleTitle}</Text>
+              <Text style={[styles.modeSwitchText, themeStyles?.modeSwitchText]}>{copy.toggleText}</Text>
+            </View>
+            <ChevronRight size={18} color="#8E8E93" strokeWidth={2.4} />
           </AnimatedPressable>
         </View>
 
@@ -5658,70 +5833,6 @@ const HomeView = memo(function HomeView({
             </Text>
           </View>
         </AnimatedPressable>
-
-        <AnimatedPressable
-          accessibilityLabel={ui.learningAnalytics}
-          accessibilityRole="button"
-          onPress={onOpenStats}
-          pressTone="list"
-          style={[styles.statsGrid, themeStyles?.homeGroupedSurface]}
-          testID="home-learning-analytics"
-        >
-          <StatCard label={ui.streak} value={progress.streak.toString()} />
-          <StatCard divider label={ui.mastered} value={stats.mastered.toString()} />
-          <StatCard divider emphasis={stats.review > 0} label={ui.reviewDue} value={stats.review.toString()} />
-        </AnimatedPressable>
-
-        <View style={[styles.homeActionGroup, themeStyles?.homeGroupedSurface]} testID="home-action-group">
-          <AnimatedPressable
-            accessibilityLabel={copy.toggleTitle}
-            accessibilityRole="button"
-            onPress={onToggleStudyMode}
-            pressTone="list"
-            style={styles.modeSwitchButton}
-            testID="study-mode-toggle"
-          >
-            <View style={[styles.modeSwitchIcon, studyMode === 'chinese' && styles.modeSwitchIconChinese, themeStyles?.modeSwitchIcon]}>
-              <Languages size={20} color={studyMode === 'chinese' ? '#5856D6' : '#007AFF'} strokeWidth={2.4} />
-            </View>
-            <View style={styles.flexOne}>
-              <Text style={[styles.modeSwitchTitle, themeStyles?.modeSwitchTitle]}>{copy.toggleTitle}</Text>
-              <Text style={[styles.modeSwitchText, themeStyles?.modeSwitchText]}>{copy.toggleText}</Text>
-            </View>
-            <ChevronRight size={18} color={darkMode ? '#8E8E93' : '#8e8e93'} strokeWidth={2.4} />
-          </AnimatedPressable>
-
-          <View style={[styles.homeActionDivider, themeStyles?.homeDivider]} />
-
-          <AnimatedPressable accessibilityRole="button" onPress={onOpenReview} pressTone="list" style={styles.reviewStrip}>
-            <View style={[styles.reviewIcon, themeStyles?.reviewIcon]}>
-              <RotateCcw size={20} color="#FF9500" strokeWidth={2.4} />
-            </View>
-            <View style={styles.flexOne}>
-              <Text style={[styles.reviewTitle, themeStyles?.reviewTitle]}>{ui.reviewList}</Text>
-              <Text style={[styles.reviewText, themeStyles?.reviewText]}>{stats.review > 0 ? ui.reviewListCount(stats.review) : ui.reviewListEmpty}</Text>
-            </View>
-            <ChevronRight size={18} color={darkMode ? '#8E8E93' : '#8e8e93'} strokeWidth={2.2} />
-          </AnimatedPressable>
-        </View>
-
-        <AnimatedPressable
-          accessibilityLabel={ui.dictionaryLookup}
-          accessibilityRole="button"
-          onPress={openDictionary}
-          pressTone="list"
-          style={[styles.homeDictionaryStandalone, themeStyles?.homeDictionarySearch]}
-          testID="home-dictionary-search"
-        >
-          <View style={[styles.homeDictionaryLauncherIcon, themeStyles?.homeDictionaryLauncherIcon]}>
-            <Search size={20} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.4} />
-          </View>
-          <Text numberOfLines={1} style={[styles.homeDictionaryLauncherText, themeStyles?.homeDictionaryInput]}>
-            {copy.searchPlaceholder}
-          </Text>
-          <ChevronRight size={18} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.3} />
-        </AnimatedPressable>
-
       </View>
 
       <Modal
@@ -5962,14 +6073,36 @@ function StudySwipeRevealGradient({ tone }: { tone: StudySwipeDirection }) {
 
 // Shared by the live card and the deck underlay. They have to render the exact
 // same body, otherwise the underlay grows extra content the instant it becomes
-// the live card and the swap reads as a flash.
-function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEntry }) {
+// the live card and the swap reads as a flash. The underlay always shows the
+// unrevealed face, because that is what the incoming card looks like.
+function StudyCardBody({
+  onReveal,
+  revealed,
+  studyMode,
+  word,
+}: {
+  onReveal?: () => void;
+  revealed: boolean;
+  studyMode: StudyMode;
+  word: WordEntry;
+}) {
   const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
   const ui = modeInterfaceCopy[studyMode];
   const supplementalMeaning = formatStudyMeaningSupplement(word, studyMode);
+  // In Chinese mode the secondary line is the English word itself, which is
+  // the answer; it only belongs on the revealed face.
+  const showSecondary = studyMode !== 'chinese' || revealed;
 
   return (
-    <>
+    <Pressable
+      accessibilityHint={revealed ? undefined : ui.tapToReveal}
+      accessibilityRole={revealed ? undefined : 'button'}
+      disabled={revealed || !onReveal}
+      onPress={onReveal}
+      style={styles.studyCardFace}
+      testID={revealed ? 'study-card-answer' : 'study-card-front'}
+    >
       <View style={styles.studyWordIdentity}>
         <Text
           adjustsFontSizeToFit={Platform.OS === 'ios'}
@@ -5984,37 +6117,48 @@ function StudyCardBody({ studyMode, word }: { studyMode: StudyMode; word: WordEn
             {formatWordPinyin(word, studyMode)}
           </Text>
         )}
-        <Text numberOfLines={2} style={[styles.pronunciation, themeStyles?.pronunciation]}>
-          {formatWordSecondary(word, studyMode)}
-        </Text>
-      </View>
-      {/* Line limits exist to keep every entry inside the card's fixed height;
-          without them a long definition would be clipped instead of trimmed. */}
-      <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
-        <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
-        <Text numberOfLines={3} style={[styles.meaning, themeStyles?.meaning]}>
-          {formatMeaningDetail(word, studyMode)}
-        </Text>
-        {Boolean(supplementalMeaning) && (
-          <View style={[styles.studySupplement, themeStyles?.studySupplement]}>
-            <Text style={[styles.studySupplementLabel, themeStyles?.studySupplementLabel]}>
-              {ui.supplementalMeanings}
-            </Text>
-            <Text numberOfLines={2} style={[styles.studySupplementText, themeStyles?.studySupplementText]}>
-              {supplementalMeaning}
-            </Text>
-          </View>
+        {showSecondary && (
+          <Text numberOfLines={2} style={[styles.pronunciation, themeStyles?.pronunciation]}>
+            {formatWordSecondary(word, studyMode)}
+          </Text>
         )}
       </View>
-      <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
-        <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
-          {formatExamplePrimary(word, studyMode)}
-        </Text>
-        <Text numberOfLines={2} style={[styles.exampleZh, themeStyles?.exampleZh]}>
-          {formatExampleSecondary(word, studyMode)}
-        </Text>
-      </View>
-    </>
+      {revealed ? (
+        <>
+          {/* Line limits exist to keep every entry inside the card's fixed
+              height; without them a long definition would be clipped. */}
+          <View style={[styles.meaningBlock, themeStyles?.meaningBlock]}>
+            <Text style={styles.partOfSpeech}>{studyMode === 'chinese' ? ui.englishCounterpart : word.partOfSpeech}</Text>
+            <Text numberOfLines={3} style={[styles.meaning, themeStyles?.meaning]}>
+              {formatMeaningDetail(word, studyMode)}
+            </Text>
+            {Boolean(supplementalMeaning) && (
+              <View style={[styles.studySupplement, themeStyles?.studySupplement]}>
+                <Text style={[styles.studySupplementLabel, themeStyles?.studySupplementLabel]}>
+                  {ui.supplementalMeanings}
+                </Text>
+                <Text numberOfLines={2} style={[styles.studySupplementText, themeStyles?.studySupplementText]}>
+                  {supplementalMeaning}
+                </Text>
+              </View>
+            )}
+          </View>
+          <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
+            <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
+              {formatExamplePrimary(word, studyMode)}
+            </Text>
+            <Text numberOfLines={2} style={[styles.exampleZh, themeStyles?.exampleZh]}>
+              {formatExampleSecondary(word, studyMode)}
+            </Text>
+          </View>
+        </>
+      ) : (
+        <View style={[styles.studyRevealPrompt, themeStyles?.studyRevealPrompt]}>
+          <Eye size={24} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.2} />
+          <Text style={[styles.studyRevealPromptText, themeStyles?.studyRevealPromptText]}>{ui.tapToReveal}</Text>
+        </View>
+      )}
+    </Pressable>
   );
 }
 
@@ -6079,13 +6223,21 @@ const StudyView = memo(function StudyView({
   activeFilter,
   activeInitial,
   activeLevel,
+  canUndo,
   cardSequence,
   customSetsLocked,
+  dailyTarget,
   filtersOpen,
   favoriteLocked,
   levelOptions,
   motionStyle,
   nextWord,
+  sessionComplete,
+  sessionKnownCount,
+  sessionProgress,
+  sessionReviewCount,
+  streak,
+  studiedToday,
   studyMode,
   wordCount,
   word,
@@ -6097,23 +6249,33 @@ const StudyView = memo(function StudyView({
   onFavorite,
   onInitialChange,
   onLevelChange,
-  onNext,
-  onPrevious,
+  onNextSession,
+  onOpenQuiz,
+  onReviewMissed,
   onSwipeKnown,
   onSwipeReview,
+  onUndo,
 }: {
   activeSetCount: number;
   activeSetName: string | null;
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  canUndo: boolean;
   cardSequence: number;
   customSetsLocked: boolean;
+  dailyTarget: number;
   filtersOpen: boolean;
   favoriteLocked: boolean;
   levelOptions: FilterOption[];
   motionStyle: StyleProp<ViewStyle>;
   nextWord: WordEntry | null;
+  sessionComplete: boolean;
+  sessionKnownCount: number;
+  sessionProgress: { done: number; total: number };
+  sessionReviewCount: number;
+  streak: number;
+  studiedToday: number;
   studyMode: StudyMode;
   word: WordEntry | null;
   wordCount: number;
@@ -6125,10 +6287,12 @@ const StudyView = memo(function StudyView({
   onFavorite: () => void;
   onInitialChange: (initial: string) => void;
   onLevelChange: (level: string) => void;
-  onNext: () => void;
-  onPrevious: () => void;
+  onNextSession: () => void;
+  onOpenQuiz: () => void;
+  onReviewMissed: () => void;
   onSwipeKnown: () => void;
   onSwipeReview: () => void;
+  onUndo: () => void;
 }) {
   const wordProgress = word ? progress.words[word.id] : undefined;
   const favorited = Boolean(wordProgress?.favorite);
@@ -6175,6 +6339,7 @@ const StudyView = memo(function StudyView({
   // the top row is a bare pill, which is shorter than a row containing icon
   // buttons — so the card grew by that difference at the moment it took over.
   const deckFavorited = Boolean(deckWord ? progress.words[deckWord.id]?.favorite : false);
+  const [revealed, setRevealed] = useState(false);
   const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const studyInitialHintScheduledRef = useRef(false);
   // Everything that belongs to the live card — travel, tilt, entry, visibility
@@ -6454,6 +6619,7 @@ const StudyView = memo(function StudyView({
     swipeCommitPulse.value = 0;
     cardVisibility.value = 1;
     setDeckWord(nextWord);
+    setRevealed(false);
     if (swipeHandoff.value === 1) {
       swipeHandoff.value = 0;
       cardEntryProgress.value = 1;
@@ -6475,6 +6641,54 @@ const StudyView = memo(function StudyView({
     scheduleStudySwipeHint(delay);
     return clearStudyHintTimer;
   }, [cardSequence, clearStudyHintTimer, scheduleStudySwipeHint, word?.id]);
+
+  const revealCard = useCallback(() => {
+    setRevealed(true);
+    markStudyCardInteraction();
+  }, [markStudyCardInteraction]);
+
+  // Desktop browsers get the same three decisions on the keyboard, graded
+  // through the same handlers a swipe uses. Tab screens stay mounted, so the
+  // listener only lives while this screen is focused; otherwise arrow keys on
+  // the library would quietly grade study cards.
+  useFocusEffect(
+    useCallback(() => {
+      const browserWindow = Platform.OS === 'web'
+        ? (globalThis as typeof globalThis & {
+            addEventListener?: (type: string, listener: (event: KeyboardEvent) => void) => void;
+            removeEventListener?: (type: string, listener: (event: KeyboardEvent) => void) => void;
+          })
+        : null;
+      if (!browserWindow?.addEventListener || !word) {
+        return undefined;
+      }
+      const handleKey = (event: KeyboardEvent) => {
+        const target = event.target as { isContentEditable?: boolean; tagName?: string } | null;
+        if (
+          target?.tagName === 'INPUT' ||
+          target?.tagName === 'TEXTAREA' ||
+          target?.isContentEditable ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.altKey
+        ) {
+          return;
+        }
+        if (event.key === ' ' || event.key === 'Enter') {
+          event.preventDefault();
+          setRevealed(true);
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          onSwipeReview();
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          onSwipeKnown();
+        }
+      };
+      browserWindow.addEventListener('keydown', handleKey);
+      return () => browserWindow.removeEventListener?.('keydown', handleKey);
+    }, [onSwipeKnown, onSwipeReview, word]),
+  );
 
   const studySwipeGesture = useMemo(
     () =>
@@ -6646,6 +6860,11 @@ const StudyView = memo(function StudyView({
     ],
   );
 
+  const sessionEmpty = sessionProgress.total === 0;
+  const progressRatio = sessionProgress.total > 0 ? sessionProgress.done / sessionProgress.total : 0;
+  const goalLeft = Math.max(0, dailyTarget - studiedToday);
+  const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
+
   return (
     <View style={styles.screenStack}>
       <FilterControlPanel
@@ -6676,7 +6895,7 @@ const StudyView = memo(function StudyView({
         />
       )}
 
-      {!word && (
+      {sessionEmpty && (
         <View style={[styles.emptyState, themeStyles?.emptyState]}>
           <Text style={[styles.emptyTitle, themeStyles?.emptyTitle]}>
             {studyMode === 'chinese' ? ui.noChineseWords : ui.noStudyWords}
@@ -6685,8 +6904,52 @@ const StudyView = memo(function StudyView({
         </View>
       )}
 
-      {word && (
+      {!sessionEmpty && sessionComplete && (
+        <Animated.View style={[styles.sessionSummaryCard, themeStyles?.quizSetupCard, motionStyle]} testID="study-session-summary">
+          <View style={[styles.sessionSummaryIcon, themeStyles?.sessionSummaryIcon]}>
+            <PartyPopper size={30} color="#FF9500" strokeWidth={2.2} />
+          </View>
+          <Text style={[styles.resultTitle, styles.quizResultTitle, themeStyles?.resultTitle]}>{ui.sessionCompleteTitle}</Text>
+          <Text style={[styles.sessionSummaryText, themeStyles?.cardMeta]}>
+            {ui.sessionCompleteText(sessionKnownCount, sessionReviewCount)}
+          </Text>
+          <View style={styles.sessionSummaryStats}>
+            <StatCard label={ui.dailyProgress} value={`${studiedToday}/${dailyTarget}`} />
+            <StatCard divider label={ui.streak} value={streak.toString()} />
+          </View>
+          <Text style={[styles.sessionSummaryGoal, themeStyles?.cardMeta]}>
+            {goalLeft === 0 ? ui.sessionGoalDone : ui.sessionGoalLeft(goalLeft)}
+          </Text>
+          <AnimatedPressable accessibilityRole="button" onPress={onNextSession} pressTone="primary" style={styles.primaryButton} testID="study-next-session">
+            <BookOpen size={18} color="#FFFFFF" strokeWidth={2.3} />
+            <Text style={styles.primaryButtonText}>{ui.nextSession}</Text>
+          </AnimatedPressable>
+          {sessionReviewCount > 0 && (
+            <AnimatedPressable accessibilityRole="button" onPress={onReviewMissed} pressTone="secondary" style={[styles.secondaryButton, styles.sessionSummaryWideButton, themeStyles?.secondaryButton]}>
+              <RotateCcw size={17} color={bodyIconColor} strokeWidth={2.3} />
+              <Text style={[styles.secondaryButtonText, themeStyles?.secondaryButtonText]}>{ui.reviewMissed(sessionReviewCount)}</Text>
+            </AnimatedPressable>
+          )}
+          <AnimatedPressable accessibilityRole="button" onPress={onOpenQuiz} pressTone="secondary" style={[styles.secondaryButton, styles.sessionSummaryWideButton, themeStyles?.secondaryButton]}>
+            <Target size={17} color={bodyIconColor} strokeWidth={2.3} />
+            <Text style={[styles.secondaryButtonText, themeStyles?.secondaryButtonText]}>{ui.goQuiz}</Text>
+          </AnimatedPressable>
+        </Animated.View>
+      )}
+
+      {word && !sessionComplete && (
         <>
+      <View style={styles.studySessionHeader} testID="study-session-header">
+        <View style={styles.rowBetween}>
+          <Text style={[styles.studySessionLabel, themeStyles?.studySessionLabel]}>
+            {ui.sessionLabel(sessionProgress.done, sessionProgress.total)}
+          </Text>
+          <Text style={[styles.studySessionGoal, themeStyles?.cardMeta]}>{ui.todayGoalLine(studiedToday, dailyTarget)}</Text>
+        </View>
+        <View style={[styles.progressTrack, styles.studySessionTrack, themeStyles?.progressTrack]}>
+          <View style={[styles.progressFill, { width: `${Math.round(progressRatio * 100)}%` }]} />
+        </View>
+      </View>
        <Animated.View style={[styles.studySwipeDeck, motionStyle]} testID="study-swipe-deck">
         <Reanimated.View style={styles.studySwipeSwapStage}>
         {deckWord && (
@@ -6714,7 +6977,7 @@ const StudyView = memo(function StudyView({
                 </View>
               </View>
             </View>
-            <StudyCardBody studyMode={studyMode} word={deckWord} />
+            <StudyCardBody revealed={false} studyMode={studyMode} word={deckWord} />
           </Reanimated.View>
         )}
          <Reanimated.View
@@ -6820,22 +7083,66 @@ const StudyView = memo(function StudyView({
               </AnimatedPressable>
             </View>
           </View>
-          <StudyCardBody studyMode={studyMode} word={word} />
+          <StudyCardBody onReveal={revealCard} revealed={revealed} studyMode={studyMode} word={word} />
          </Reanimated.View>
         </GestureDetector>
         </Reanimated.View>
        </Animated.View>
 
-      <View style={styles.actionGrid} testID="study-navigation-controls">
-        <AnimatedPressable accessibilityRole="button" onPress={onPrevious} pressTone="secondary" style={[styles.secondaryButton, themeStyles?.secondaryButton]}>
-          <ChevronLeft size={18} color={darkMode ? '#F2F2F7' : '#1C1C1E'} strokeWidth={2.3} />
-          <Text style={[styles.secondaryButtonText, themeStyles?.secondaryButtonText]}>{ui.previousWord}</Text>
+      {/* Two explicit grade buttons, not "previous / next": every card has to
+          end with a decision, or the schedule never learns anything. They also
+          give VoiceOver users the same choice the swipe gives everyone else. */}
+      <View style={styles.studyGradeRow} testID="study-navigation-controls">
+        <AnimatedPressable
+          accessibilityLabel={ui.undo}
+          accessibilityRole="button"
+          disabled={!canUndo}
+          onPress={onUndo}
+          pressTone="icon"
+          style={[styles.studyUndoButton, themeStyles?.secondaryButton, !canUndo && styles.disabledButton]}
+          testID="study-undo"
+        >
+          <Undo2 size={19} color={bodyIconColor} strokeWidth={2.3} />
         </AnimatedPressable>
-        <AnimatedPressable accessibilityRole="button" onPress={onNext} pressTone="primary" style={styles.confirmButton}>
-          <Text style={styles.confirmButtonText}>{ui.nextWord}</Text>
-          <ChevronRight size={18} color="#FFFFFF" strokeWidth={2.4} />
-        </AnimatedPressable>
+        {revealed ? (
+          <>
+            <AnimatedPressable
+              accessibilityRole="button"
+              onPress={onSwipeReview}
+              pressTone="secondary"
+              style={[styles.studyGradeButton, styles.studyGradeReview, themeStyles?.studyGradeReview]}
+              testID="study-grade-review"
+            >
+              <X size={18} color={darkMode ? '#FF6961' : '#D70015'} strokeWidth={2.6} />
+              <Text style={[styles.studyGradeText, styles.studyGradeReviewText, themeStyles?.studyGradeReviewText]}>{ui.dontKnow}</Text>
+            </AnimatedPressable>
+            <AnimatedPressable
+              accessibilityRole="button"
+              onPress={onSwipeKnown}
+              pressTone="primary"
+              style={[styles.studyGradeButton, styles.studyGradeKnown]}
+              testID="study-grade-known"
+            >
+              <Check size={18} color="#FFFFFF" strokeWidth={2.6} />
+              <Text style={[styles.studyGradeText, styles.studyGradeKnownText]}>{ui.knowIt}</Text>
+            </AnimatedPressable>
+          </>
+        ) : (
+          <AnimatedPressable
+            accessibilityRole="button"
+            onPress={revealCard}
+            pressTone="primary"
+            style={[styles.studyGradeButton, styles.studyRevealButton]}
+            testID="study-show-answer"
+          >
+            <Eye size={18} color="#FFFFFF" strokeWidth={2.4} />
+            <Text style={[styles.studyGradeText, styles.studyGradeKnownText]}>{ui.showAnswer}</Text>
+          </AnimatedPressable>
+        )}
       </View>
+      {Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW && (
+        <Text style={[styles.studyKeyboardHint, themeStyles?.cardMeta]}>{ui.keyboardHint}</Text>
+      )}
         </>
       )}
     </View>
@@ -7012,10 +7319,12 @@ const QuizView = memo(function QuizView({
   activeFilter,
   activeInitial,
   activeLevel,
+  chosenText,
   correctCount,
   filtersOpen,
   favoriteLocked,
   levelOptions,
+  missedWords,
   motionStyle,
   conversationPrompt,
   options,
@@ -7039,6 +7348,7 @@ const QuizView = memo(function QuizView({
   onLevelChange,
   onPracticeModeChange,
   onNext,
+  onPracticeMissed,
   onQuestionCountChange,
   onRevealSpeakingAnswer,
   onRestart,
@@ -7049,10 +7359,12 @@ const QuizView = memo(function QuizView({
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
+  chosenText: string | null;
   correctCount: number;
   favoriteLocked: boolean;
   filtersOpen: boolean;
   levelOptions: FilterOption[];
+  missedWords: WordEntry[];
   motionStyle: StyleProp<ViewStyle>;
   conversationPrompt: ConversationPromptCard | null;
   options: ReturnType<typeof buildQuizOptions>;
@@ -7068,7 +7380,7 @@ const QuizView = memo(function QuizView({
   studyMode: StudyMode;
   word: WordEntry | null;
   wordCount: number;
-  onAnswer: (correct: boolean) => void;
+  onAnswer: (option: QuizOption) => void;
   onClearActiveSet: () => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
@@ -7076,6 +7388,7 @@ const QuizView = memo(function QuizView({
   onLevelChange: (level: string) => void;
   onPracticeModeChange: (mode: QuizPracticeMode) => void;
   onNext: () => void;
+  onPracticeMissed: () => void;
   onQuestionCountChange: (count: (typeof quizQuestionCounts)[number]) => void;
   onRevealSpeakingAnswer: (completed: boolean) => void;
   onRestart: () => void;
@@ -7087,91 +7400,111 @@ const QuizView = memo(function QuizView({
   const ui = modeInterfaceCopy[studyMode];
   const speakingMode = practiceMode === 'speaking';
 
+  const inSession = quizStarted && Boolean(word);
+  const answered = speakingMode ? speakingAnswerVisible : result !== null;
+  const progressRatio = sessionTotal > 0 ? (questionIndex + (answered ? 1 : 0)) / sessionTotal : 0;
+  const accuracy = sessionTotal > 0 ? Math.round((correctCount / sessionTotal) * 100) : 0;
+  const optionLetters = ['A', 'B', 'C', 'D'];
+  const isLastQuestion = questionIndex >= sessionTotal - 1;
+
+  // The way forward sits right under the answers, where the eye and thumb
+  // already are; the explanation follows below for anyone who wants it.
+  const nextButton = inSession && answered ? (
+    <AnimatedPressable
+      accessibilityRole="button"
+      onPress={onNext}
+      pressTone="primary"
+      style={[styles.primaryButton, styles.quizNextButton]}
+      testID="quiz-next"
+    >
+      <Text style={styles.primaryButtonText}>{isLastQuestion ? ui.seeResults : ui.nextQuestion}</Text>
+      <ChevronRight size={18} color="#FFFFFF" strokeWidth={2.4} />
+    </AnimatedPressable>
+  ) : null;
+
   return (
     <View style={styles.screenStack}>
-      <FilterControlPanel
-        activeFilter={activeFilter}
-        activeInitial={activeInitial}
-        activeLevel={activeLevel}
-        count={wordCount}
-        favoritesLocked={favoriteLocked}
-        levelOptions={levelOptions}
-        open={filtersOpen}
-        showStatus
-        studyMode={studyMode}
-        testID="quiz-filter-toggle"
-        title={copy.quizFilterTitle}
-        initialTitle={copy.initialTitle}
-        onFilterChange={onFilterChange}
-        onInitialChange={onInitialChange}
-        onLevelChange={onLevelChange}
-        onToggle={onFiltersToggle}
-      />
+      {/* Setup only belongs before a quiz. Changing a filter mid-quiz throws
+          the session away, so while one runs these controls are hidden and a
+          single "end quiz" control takes their place. */}
+      {!quizStarted && (
+        <>
+          <FilterControlPanel
+            activeFilter={activeFilter}
+            activeInitial={activeInitial}
+            activeLevel={activeLevel}
+            count={wordCount}
+            favoritesLocked={favoriteLocked}
+            levelOptions={levelOptions}
+            open={filtersOpen}
+            showStatus
+            studyMode={studyMode}
+            testID="quiz-filter-toggle"
+            title={copy.quizFilterTitle}
+            initialTitle={copy.initialTitle}
+            onFilterChange={onFilterChange}
+            onInitialChange={onInitialChange}
+            onLevelChange={onLevelChange}
+            onToggle={onFiltersToggle}
+          />
 
-      {activeSetName && (
-        <ActiveSetBanner
-          count={activeSetCount}
-          name={activeSetName}
-          studyMode={studyMode}
-          onClear={onClearActiveSet}
-        />
+          {activeSetName && (
+            <ActiveSetBanner
+              count={activeSetCount}
+              name={activeSetName}
+              studyMode={studyMode}
+              onClear={onClearActiveSet}
+            />
+          )}
+        </>
       )}
 
-      <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
-        <View style={styles.rowBetween}>
+      {!quizStarted && !quizFinished && (
+        <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
           <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.quizPracticeTitle}</Text>
-          <Languages size={20} color="#007AFF" strokeWidth={2.3} />
-        </View>
-        <View style={[styles.quizModeSwitch, themeStyles?.quizModeSwitch]}>
-          {(['choice', 'speaking'] as const).map((mode) => {
-            const selected = practiceMode === mode;
-            return (
-              <AnimatedPressable
-                accessibilityRole="button"
-                key={mode}
-                onPress={() => onPracticeModeChange(mode)}
-                pressTone="chip"
-                style={[
-                  styles.quizModeButton,
-                  themeStyles?.quizModeButton,
-                  selected && styles.quizModeButtonActive,
-                ]}
-              >
-                <Text
+          <View style={[styles.quizModeSwitch, themeStyles?.quizModeSwitch]}>
+            {(['choice', 'speaking'] as const).map((mode) => {
+              const selected = practiceMode === mode;
+              return (
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  accessibilityState={{ selected }}
+                  key={mode}
+                  onPress={() => onPracticeModeChange(mode)}
+                  pressTone="chip"
                   style={[
-                    styles.quizModeButtonText,
-                    themeStyles?.quizModeButtonText,
-                    selected && styles.quizModeButtonTextActive,
+                    styles.quizModeButton,
+                    themeStyles?.quizModeButton,
+                    selected && styles.quizModeButtonActive,
                   ]}
                 >
-                  {mode === 'choice' ? ui.choiceQuizMode : ui.speakingQuizMode}
-                </Text>
-              </AnimatedPressable>
-            );
-          })}
-        </View>
+                  <Text
+                    style={[
+                      styles.quizModeButtonText,
+                      themeStyles?.quizModeButtonText,
+                      selected && styles.quizModeButtonTextActive,
+                    ]}
+                  >
+                    {mode === 'choice' ? ui.choiceQuizMode : ui.speakingQuizMode}
+                  </Text>
+                </AnimatedPressable>
+              );
+            })}
+          </View>
 
-        {!quizStarted && !quizFinished && (
-          <>
-            <View style={[styles.quizSectionDivider, themeStyles?.quizSectionDivider]} />
-            <View style={styles.rowBetween}>
-              <View>
-                <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.questionCountTitle}</Text>
-                <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.questionBankPrefix} {wordCount} {copy.questionBankUnit}</Text>
-              </View>
-              {speakingMode ? (
-                <Languages size={22} color="#007AFF" strokeWidth={2.3} />
-              ) : (
-                <Target size={22} color="#007AFF" strokeWidth={2.3} />
-              )}
-            </View>
-            <View style={styles.quizCountRow}>
+          <View style={[styles.quizSectionDivider, themeStyles?.quizSectionDivider]} />
+          <View>
+            <Text style={[styles.sectionTitle, themeStyles?.sectionTitle]}>{ui.questionCountTitle}</Text>
+            <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>{ui.questionBankPrefix} {wordCount} {copy.questionBankUnit}</Text>
+          </View>
+          <View style={styles.quizCountRow}>
             {questionCounts.map((count) => {
               const selected = questionCount === count;
               const cappedCount = Math.min(count, wordCount);
               return (
                 <AnimatedPressable
                   accessibilityRole="button"
+                  accessibilityState={{ selected }}
                   key={count}
                   onPress={() => onQuestionCountChange(count)}
                   pressTone="chip"
@@ -7188,40 +7521,71 @@ const QuizView = memo(function QuizView({
                 </AnimatedPressable>
               );
             })}
-            </View>
-          </>
-        )}
-      </Animated.View>
-
-      {!quizStarted && !quizFinished && (
-        <AnimatedPressable
-          accessibilityRole="button"
-          disabled={wordCount === 0}
-          onPress={onStart}
-          pressTone="primary"
-          style={[styles.primaryButton, wordCount === 0 && styles.disabledButton]}
-        >
-          {speakingMode ? (
-            <Languages size={18} color="#FFFFFF" strokeWidth={2.3} />
-          ) : (
-            <Target size={18} color="#FFFFFF" strokeWidth={2.3} />
-          )}
-          <Text style={styles.primaryButtonText}>{speakingMode ? ui.startSpeaking : ui.startQuiz}</Text>
-        </AnimatedPressable>
+          </View>
+          <AnimatedPressable
+            accessibilityRole="button"
+            disabled={wordCount === 0}
+            onPress={onStart}
+            pressTone="primary"
+            style={[styles.primaryButton, wordCount === 0 && styles.disabledButton]}
+            testID="quiz-start"
+          >
+            {speakingMode ? (
+              <Languages size={18} color="#FFFFFF" strokeWidth={2.3} />
+            ) : (
+              <Target size={18} color="#FFFFFF" strokeWidth={2.3} />
+            )}
+            <Text style={styles.primaryButtonText}>{speakingMode ? ui.startSpeaking : ui.startQuiz}</Text>
+          </AnimatedPressable>
+        </Animated.View>
       )}
 
       {quizFinished && (
-        <Animated.View style={[styles.quizSetupCard, themeStyles?.quizSetupCard, motionStyle]}>
-          <Text style={styles.eyebrow}>{speakingMode ? 'SPEAKING' : 'RESULT'}</Text>
-          <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>
+        <Animated.View style={[styles.sessionSummaryCard, themeStyles?.quizSetupCard, motionStyle]} testID="quiz-results">
+          <Text style={[styles.eyebrow, styles.quizResultEyebrow]}>{speakingMode ? 'SPEAKING' : 'RESULT'}</Text>
+          {!speakingMode && (
+            <View style={[styles.quizScoreRing, accuracy >= 80 ? styles.quizScoreRingGood : accuracy >= 50 ? styles.quizScoreRingOkay : styles.quizScoreRingLow]}>
+              <Text style={[styles.quizScoreRingValue, themeStyles?.resultTitle]}>{accuracy}%</Text>
+            </View>
+          )}
+          <Text style={[styles.resultTitle, styles.quizResultTitle, themeStyles?.resultTitle]}>
             {speakingMode ? ui.speakingFinished : ui.quizFinished}
           </Text>
-          <Text style={[styles.quizScoreText, themeStyles?.quizScoreText]}>
+          <Text style={[styles.quizScoreText, styles.quizResultTitle, themeStyles?.quizScoreText]}>
             {speakingMode ? ui.speakingScore(sessionTotal) : ui.quizScore(correctCount, sessionTotal)}
           </Text>
-          <AnimatedPressable accessibilityRole="button" onPress={onRestart} pressTone="primary" style={styles.primaryButton}>
-            <RotateCcw size={18} color="#FFFFFF" strokeWidth={2.3} />
-            <Text style={styles.primaryButtonText}>{speakingMode ? ui.restartSpeaking : ui.restartQuiz}</Text>
+          {!speakingMode && missedWords.length > 0 && (
+            <View style={[styles.quizMissedList, themeStyles?.quizExampleCard]} testID="quiz-missed-words">
+              <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.quizMissedTitle(missedWords.length)}</Text>
+              {missedWords.slice(0, 8).map((missed) => (
+                <View key={missed.id} style={styles.quizMissedRow}>
+                  <Text numberOfLines={1} style={[styles.quizMissedWord, themeStyles?.resultTitle]}>{formatWordPrimary(missed, studyMode)}</Text>
+                  <Text numberOfLines={1} style={[styles.quizMissedMeaning, themeStyles?.cardMeta]}>{formatQuizAnswer(missed, studyMode)}</Text>
+                </View>
+              ))}
+              {missedWords.length > 8 && (
+                <Text style={[styles.cardMeta, themeStyles?.cardMeta]}>+{missedWords.length - 8}</Text>
+              )}
+            </View>
+          )}
+          {!speakingMode && missedWords.length > 0 && (
+            <AnimatedPressable accessibilityRole="button" onPress={onPracticeMissed} pressTone="primary" style={styles.primaryButton} testID="quiz-practice-missed">
+              <BookOpen size={18} color="#FFFFFF" strokeWidth={2.3} />
+              <Text style={styles.primaryButtonText}>{ui.practiceMissed(missedWords.length)}</Text>
+            </AnimatedPressable>
+          )}
+          <AnimatedPressable
+            accessibilityRole="button"
+            onPress={onRestart}
+            pressTone={missedWords.length > 0 && !speakingMode ? 'secondary' : 'primary'}
+            style={missedWords.length > 0 && !speakingMode
+              ? [styles.secondaryButton, styles.sessionSummaryWideButton, themeStyles?.secondaryButton]
+              : styles.primaryButton}
+          >
+            <RotateCcw size={18} color={missedWords.length > 0 && !speakingMode ? bodyIconColor : '#FFFFFF'} strokeWidth={2.3} />
+            <Text style={missedWords.length > 0 && !speakingMode ? [styles.secondaryButtonText, themeStyles?.secondaryButtonText] : styles.primaryButtonText}>
+              {speakingMode ? ui.restartSpeaking : ui.restartQuiz}
+            </Text>
           </AnimatedPressable>
         </Animated.View>
       )}
@@ -7235,27 +7599,33 @@ const QuizView = memo(function QuizView({
         </View>
       )}
 
+      {inSession && (
+        <View style={styles.studySessionHeader} testID="quiz-session-header">
+          <View style={styles.rowBetween}>
+            <Text style={[styles.studySessionLabel, themeStyles?.studySessionLabel]}>
+              {speakingMode ? 'SPEAKING' : 'QUIZ'} {questionIndex + 1} / {sessionTotal}
+            </Text>
+            <AnimatedPressable
+              accessibilityRole="button"
+              onPress={onRestart}
+              pressTone="chip"
+              style={[styles.quizQuitButton, themeStyles?.quizQuitButton]}
+              testID="quiz-quit"
+            >
+              <X size={14} color={bodyIconColor} strokeWidth={2.5} />
+              <Text style={[styles.quizQuitText, themeStyles?.quizQuitText]}>{ui.endQuiz}</Text>
+            </AnimatedPressable>
+          </View>
+          <View style={[styles.progressTrack, styles.studySessionTrack, themeStyles?.progressTrack]}>
+            <View style={[styles.progressFill, { width: `${Math.round(progressRatio * 100)}%` }]} />
+          </View>
+        </View>
+      )}
+
       {quizStarted && word && !speakingMode && (
         <>
           <Animated.View style={[styles.quizCard, themeStyles?.quizCard, motionStyle]}>
-            <View style={styles.quizQuestionHeader}>
-              <Text style={styles.eyebrow}>
-                QUIZ {questionIndex + 1} / {sessionTotal}
-              </Text>
-              {result && (
-                <AnimatedPressable
-                  accessibilityLabel={ui.nextQuestion}
-                  accessibilityRole="button"
-                  glassTone="secondary"
-                  onPress={onNext}
-                  pressTone="secondary"
-                  style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
-                >
-                  <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
-                  <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
-                </AnimatedPressable>
-              )}
-            </View>
+            <Text style={[styles.quizPromptLabel, themeStyles?.cardMeta]}>{ui.quizPrompt}</Text>
             <Text style={[styles.bigWord, studyMode === 'chinese' && styles.bigChineseWord, themeStyles?.bigWord]}>
               {formatWordPrimary(word, studyMode)}
             </Text>
@@ -7263,47 +7633,74 @@ const QuizView = memo(function QuizView({
               <Text style={[styles.pinyinText, themeStyles?.pinyinText]}>{formatWordPinyin(word, studyMode)}</Text>
             )}
             <View style={styles.quizOptions}>
-              {options.map((option) => (
-                <AnimatedPressable
-                  accessibilityRole="button"
-                  disabled={result !== null}
-                  key={option.meaning}
-                  onPress={() => onAnswer(option.correct)}
-                  pressTone="list"
-                  pressedStyle={[styles.quizOptionPressed, themeStyles?.quizOptionPressed]}
-                  style={[
-                    styles.quizOption,
-                    themeStyles?.quizOption,
-                    result !== null && option.correct && styles.quizOptionCorrect,
-                    result === 'wrong' && !option.correct && styles.quizOptionMuted,
-                  ]}
-                >
-                  <Text
+              {options.map((option, index) => {
+                const chosen = result !== null && option.meaning === chosenText;
+                const showCorrect = result !== null && option.correct;
+                const showWrong = chosen && !option.correct;
+                return (
+                  <AnimatedPressable
+                    accessibilityLabel={`${optionLetters[index] ?? ''} ${option.meaning}`}
+                    accessibilityRole="button"
+                    accessibilityState={{ disabled: result !== null, selected: chosen }}
+                    disabled={result !== null}
+                    key={`${index}-${option.meaning}`}
+                    onPress={() => onAnswer(option)}
+                    pressTone="list"
+                    pressedStyle={[styles.quizOptionPressed, themeStyles?.quizOptionPressed]}
                     style={[
-                      styles.quizOptionText,
-                      themeStyles?.quizOptionText,
-                      result !== null && option.correct && styles.quizOptionTextCorrect,
+                      styles.quizOption,
+                      themeStyles?.quizOption,
+                      showCorrect && [styles.quizOptionCorrect, themeStyles?.quizOptionCorrect],
+                      showWrong && [styles.quizOptionWrong, themeStyles?.quizOptionWrong],
+                      result !== null && !showCorrect && !showWrong && styles.quizOptionMuted,
                     ]}
+                    testID={`quiz-option-${index}`}
                   >
-                    {option.meaning}
-                  </Text>
-                </AnimatedPressable>
-              ))}
+                    <View
+                      style={[
+                        styles.quizOptionLetter,
+                        themeStyles?.quizOptionLetter,
+                        showCorrect && styles.quizOptionLetterCorrect,
+                        showWrong && styles.quizOptionLetterWrong,
+                      ]}
+                    >
+                      {showCorrect ? (
+                        <Check size={14} color="#FFFFFF" strokeWidth={3} />
+                      ) : showWrong ? (
+                        <X size={14} color="#FFFFFF" strokeWidth={3} />
+                      ) : (
+                        <Text style={[styles.quizOptionLetterText, themeStyles?.quizOptionLetterText]}>{optionLetters[index]}</Text>
+                      )}
+                    </View>
+                    <Text
+                      style={[
+                        styles.quizOptionText,
+                        themeStyles?.quizOptionText,
+                        showCorrect && [styles.quizOptionTextCorrect, themeStyles?.quizOptionTextCorrect],
+                        showWrong && [styles.quizOptionTextWrong, themeStyles?.quizOptionTextWrong],
+                      ]}
+                    >
+                      {option.meaning}
+                    </Text>
+                  </AnimatedPressable>
+                );
+              })}
             </View>
           </Animated.View>
 
+          {nextButton}
+
           {result && (
-            <Animated.View style={[styles.resultCard, result === 'correct' ? styles.resultCorrect : styles.resultWrong, themeStyles?.resultCard, motionStyle]}>
+            <Animated.View
+              style={[
+                styles.resultCard,
+                themeStyles?.resultCard,
+                result === 'correct' ? [styles.resultCorrect, themeStyles?.resultCorrect] : [styles.resultWrong, themeStyles?.resultWrong],
+                motionStyle,
+              ]}
+            >
               <Text style={[styles.resultTitle, themeStyles?.resultTitle]}>{result === 'correct' ? ui.correctResult : ui.wrongResult}</Text>
               <View style={[styles.quizExampleCard, themeStyles?.quizExampleCard]}>
-                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
-                  {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
-                </Text>
-                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExamplePrimary(word, studyMode)}</Text>
-                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
-                  {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
-                </Text>
-                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
                 <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.answer}</Text>
                 <Text style={[styles.resultText, themeStyles?.resultText]}>{formatQuizAnswer(word, studyMode)}</Text>
                 {formatMeaningSupplement(word) && (
@@ -7312,6 +7709,14 @@ const QuizView = memo(function QuizView({
                     <Text style={[styles.resultText, themeStyles?.resultText]}>{formatMeaningSupplement(word)}</Text>
                   </>
                 )}
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+                  {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
+                </Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExamplePrimary(word, studyMode)}</Text>
+                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+                  {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
+                </Text>
+                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
               </View>
             </Animated.View>
           )}
@@ -7321,24 +7726,6 @@ const QuizView = memo(function QuizView({
       {quizStarted && word && speakingMode && conversationPrompt && (
         <>
           <Animated.View style={[styles.quizCard, themeStyles?.quizCard, motionStyle]}>
-            <View style={styles.quizQuestionHeader}>
-              <Text style={styles.eyebrow}>
-                SPEAKING {questionIndex + 1} / {sessionTotal}
-              </Text>
-              {speakingAnswerVisible && (
-                <AnimatedPressable
-                  accessibilityLabel={ui.nextQuestion}
-                  accessibilityRole="button"
-                  glassTone="secondary"
-                  onPress={onNext}
-                  pressTone="secondary"
-                  style={[styles.quizNextTopButton, themeStyles?.quizNextTopButton]}
-                >
-                  <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.quizNextTopText, themeStyles?.quizNextTopText]}>{ui.nextQuestion}</Text>
-                  <ChevronRight size={16} color={bodyIconColor} strokeWidth={2.3} />
-                </AnimatedPressable>
-              )}
-            </View>
             <View style={styles.speakingKeywordHeader}>
               <View style={[styles.speakingIconWrap, themeStyles?.speakingIconWrap]}>
                 <Languages size={24} color="#007AFF" strokeWidth={2.4} />
@@ -7360,27 +7747,31 @@ const QuizView = memo(function QuizView({
               <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>{ui.speakingHintLabel}</Text>
               <Text style={[styles.resultText, themeStyles?.resultText]}>{conversationPrompt.questionSupport}</Text>
             </View>
-            <View style={styles.speakingActionRow}>
-              <AnimatedPressable
-                accessibilityRole="button"
-                onPress={() => onRevealSpeakingAnswer(true)}
-                pressTone="primary"
-                style={styles.speakingDoneButton}
-              >
-                <Check size={18} color="#FFFFFF" strokeWidth={2.4} />
-                <Text style={styles.speakingDoneButtonText}>{ui.iSpoke}</Text>
-              </AnimatedPressable>
-              <AnimatedPressable
-                accessibilityRole="button"
-                onPress={() => onRevealSpeakingAnswer(false)}
-                pressTone="secondary"
-                style={[styles.speakingSecondaryButton, themeStyles?.speakingSecondaryButton]}
-              >
-                <BookOpen size={18} color={bodyIconColor} strokeWidth={2.3} />
-                <Text style={[styles.speakingSecondaryText, themeStyles?.speakingSecondaryText]}>{ui.showSampleAnswer}</Text>
-              </AnimatedPressable>
-            </View>
+            {!speakingAnswerVisible && (
+              <View style={styles.speakingActionRow}>
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  onPress={() => onRevealSpeakingAnswer(true)}
+                  pressTone="primary"
+                  style={styles.speakingDoneButton}
+                >
+                  <Check size={18} color="#FFFFFF" strokeWidth={2.4} />
+                  <Text style={styles.speakingDoneButtonText}>{ui.iSpoke}</Text>
+                </AnimatedPressable>
+                <AnimatedPressable
+                  accessibilityRole="button"
+                  onPress={() => onRevealSpeakingAnswer(false)}
+                  pressTone="secondary"
+                  style={[styles.speakingSecondaryButton, themeStyles?.speakingSecondaryButton]}
+                >
+                  <BookOpen size={18} color={bodyIconColor} strokeWidth={2.3} />
+                  <Text style={[styles.speakingSecondaryText, themeStyles?.speakingSecondaryText]}>{ui.showSampleAnswer}</Text>
+                </AnimatedPressable>
+              </View>
+            )}
           </Animated.View>
+
+          {nextButton}
 
           {speakingAnswerVisible && (
             <Animated.View style={[styles.resultCard, styles.resultCorrect, themeStyles?.resultCard, motionStyle]}>
@@ -7395,6 +7786,7 @@ const QuizView = memo(function QuizView({
           )}
         </>
       )}
+
     </View>
   );
 });
@@ -8211,7 +8603,7 @@ function ProfileLearningExperiencePanel({
       <View style={styles.learningMetricGrid}>
         <View style={[styles.learningMetric, themeStyles?.learningMetric]}>
           <Text style={[styles.learningMetricLabel, themeStyles?.learningMetricLabel]}>{ui.dailyTarget}</Text>
-          <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{progress.dailyTarget} words</Text>
+          <Text style={[styles.learningMetricValue, themeStyles?.learningMetricValue]}>{ui.wordsUnit(progress.dailyTarget)}</Text>
         </View>
         <AnimatedPressable
           accessibilityLabel={signedIn ? ui.favoriteWords : `${ui.favoriteWords}，${ui.favoritesRequireSignIn}`}
@@ -9079,6 +9471,7 @@ export function ProfileCustomSetsView({
 export function ProfileSettingsView({
   accountBusy,
   accountReady,
+  dailyTarget,
   developerMessage,
   developerVocabulary,
   onBack,
@@ -9086,36 +9479,44 @@ export function ProfileSettingsView({
   onConfirmDeleteAccountData,
   onExportVocabulary,
   onImportVocabulary,
+  onDailyTargetChange,
   onOpenAppInfoLink,
   onStreakReminderEnabledChange,
-  onThemeModeChange,
+  onThemePreferenceChange,
   streakReminderEnabled,
   studyMode,
   themeMode,
+  themePreference,
   vocabularyCount,
 }: {
   accountBusy: boolean;
   accountReady: boolean;
+  dailyTarget: number;
   developerMessage: string;
   developerVocabulary: DeveloperVocabularySnapshot | null;
   streakReminderEnabled: boolean;
   studyMode: StudyMode;
   themeMode: ThemeMode;
+  themePreference: ThemePreference;
   vocabularyCount: number;
   onBack: () => void;
   onClearDeveloperVocabulary: () => void;
   onConfirmDeleteAccountData: () => void;
   onExportVocabulary: () => void;
   onImportVocabulary: () => void;
+  onDailyTargetChange: (target: number) => void;
   onOpenAppInfoLink: (url: string) => void;
   onStreakReminderEnabledChange: (enabled: boolean) => void;
-  onThemeModeChange: (themeMode: ThemeMode) => void;
+  onThemePreferenceChange: (preference: ThemePreference) => void;
 }) {
   const themeStyles = useThemeStyles();
   const darkMode = themeMode === 'dark';
   const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
-  const nextThemeMode = darkMode ? 'light' : 'dark';
-  const toggleThemeMode = () => onThemeModeChange(nextThemeMode);
+  const themeOptions: Array<{ id: ThemePreference; label: string }> = [
+    { id: 'system', label: modeInterfaceCopy[studyMode].themeSystem },
+    { id: 'light', label: modeInterfaceCopy[studyMode].themeLight },
+    { id: 'dark', label: modeInterfaceCopy[studyMode].themeDark },
+  ];
   const toggleStreakReminder = () => onStreakReminderEnabledChange(!streakReminderEnabled);
   const dangerIconColor = darkMode ? '#FF6961' : '#D70015';
   const ui = modeInterfaceCopy[studyMode];
@@ -9136,30 +9537,69 @@ export function ProfileSettingsView({
           <Settings size={21} color="#007AFF" strokeWidth={2.3} />
         </View>
 
-        <AnimatedPressable
-          accessibilityLabel={ui.toggleDarkMode}
-          accessibilityRole="switch"
-          accessibilityState={{ checked: darkMode }}
-          onPress={toggleThemeMode}
-          pressTone="list"
-          style={[styles.settingOptionRow, themeStyles?.settingOptionRow]}
-        >
-          <View style={[styles.settingOptionIcon, themeStyles?.settingsEntryIcon]}>
-            {darkMode ? <Sun size={19} color="#FFD60A" strokeWidth={2.3} /> : <Moon size={19} color="#007AFF" strokeWidth={2.3} />}
+        <View style={[styles.settingOptionRow, styles.settingStackedRow, themeStyles?.settingOptionRow]} testID="daily-target-setting">
+          <View style={styles.settingStackedHeader}>
+            <View style={[styles.settingOptionIcon, themeStyles?.settingsEntryIcon]}>
+              <Target size={19} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.3} />
+            </View>
+            <View style={styles.flexOne}>
+              <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.dailyTargetTitle}</Text>
+              <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.dailyTargetText}</Text>
+            </View>
           </View>
-          <View style={styles.flexOne}>
-            <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.darkMode}</Text>
-            <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>
-              {darkMode ? ui.darkModeOnText : ui.darkModeOffText}
-            </Text>
+          <View accessibilityRole="radiogroup" style={[styles.quizModeSwitch, themeStyles?.quizModeSwitch]}>
+            {dailyTargetOptions.map((target) => {
+              const selected = dailyTarget === target;
+              return (
+                <AnimatedPressable
+                  accessibilityLabel={ui.dailyTargetOption(target)}
+                  accessibilityRole="radio"
+                  accessibilityState={{ checked: selected }}
+                  key={target}
+                  onPress={() => onDailyTargetChange(target)}
+                  pressTone="chip"
+                  style={[styles.quizModeButton, themeStyles?.quizModeButton, selected && styles.quizModeButtonActive]}
+                >
+                  <Text style={[styles.quizModeButtonText, themeStyles?.quizModeButtonText, selected && styles.quizModeButtonTextActive]}>
+                    {target}
+                  </Text>
+                </AnimatedPressable>
+              );
+            })}
           </View>
-          <View
-            pointerEvents="none"
-            style={[styles.themeStatusLight, darkMode && styles.themeStatusLightActive]}
-          >
-            <View style={[styles.themeStatusLightCore, darkMode && styles.themeStatusLightCoreActive]} />
+        </View>
+
+        <View style={[styles.settingOptionRow, styles.settingStackedRow, themeStyles?.settingOptionRow]} testID="appearance-setting">
+          <View style={styles.settingStackedHeader}>
+            <View style={[styles.settingOptionIcon, themeStyles?.settingsEntryIcon]}>
+              {darkMode ? <Moon size={19} color="#FFD60A" strokeWidth={2.3} /> : <Sun size={19} color="#FF9500" strokeWidth={2.3} />}
+            </View>
+            <View style={styles.flexOne}>
+              <Text style={[styles.settingsEntryTitle, themeStyles?.settingsEntryTitle]}>{ui.appearance}</Text>
+              <Text style={[styles.settingsEntryText, themeStyles?.settingsEntryText]}>{ui.appearanceText}</Text>
+            </View>
           </View>
-        </AnimatedPressable>
+          <View accessibilityRole="radiogroup" style={[styles.quizModeSwitch, themeStyles?.quizModeSwitch]}>
+            {themeOptions.map((option) => {
+              const selected = themePreference === option.id;
+              return (
+                <AnimatedPressable
+                  accessibilityRole="radio"
+                  accessibilityState={{ checked: selected }}
+                  key={option.id}
+                  onPress={() => onThemePreferenceChange(option.id)}
+                  pressTone="chip"
+                  style={[styles.quizModeButton, themeStyles?.quizModeButton, selected && styles.quizModeButtonActive]}
+                  testID={`theme-option-${option.id}`}
+                >
+                  <Text style={[styles.quizModeButtonText, themeStyles?.quizModeButtonText, selected && styles.quizModeButtonTextActive]}>
+                    {option.label}
+                  </Text>
+                </AnimatedPressable>
+              );
+            })}
+          </View>
+        </View>
 
         <AnimatedPressable
           accessibilityLabel={ui.toggleStreakReminder}
@@ -9721,18 +10161,6 @@ const styles = StyleSheet.create({
   libraryItemSeparator: {
     height: 10,
   },
-  launchOverlay: {
-    alignItems: 'center',
-    backgroundColor: '#f2f2f7',
-    bottom: 0,
-    justifyContent: 'center',
-    left: 0,
-    paddingHorizontal: 24,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 60,
-  },
   appStorageBootButton: {
     alignItems: 'center',
     backgroundColor: '#007AFF',
@@ -9747,17 +10175,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
   },
-  launchContent: {
-    alignItems: 'center',
-  },
-  themeTransitionOverlay: {
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 70,
-  },
   launchIcon: {
     borderColor: '#B9DCFF',
     borderRadius: 20,
@@ -9767,32 +10184,6 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 14, width: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 24,
-  },
-  launchTitle: {
-    color: '#1C1C1E',
-    fontSize: 22,
-    fontWeight: '700',
-    marginTop: 14,
-  },
-  launchText: {
-    color: '#6C6C70',
-    fontSize: 15,
-    fontWeight: '500',
-    marginTop: 4,
-  },
-  launchBar: {
-    backgroundColor: '#D6E9FF',
-    borderRadius: 99,
-    height: 5,
-    marginTop: 18,
-    overflow: 'hidden',
-    width: 112,
-  },
-  launchBarFill: {
-    backgroundColor: '#007AFF',
-    borderRadius: 99,
-    height: 5,
-    width: '68%',
   },
   installGuideOverlay: {
     backgroundColor: '#f2f2f7',
@@ -11040,12 +11431,17 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   quizOption: {
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderColor: '#D6E9FF',
     borderRadius: 14,
     borderCurve: 'continuous',
     borderWidth: 1,
-    padding: 15,
+    flexDirection: 'row',
+    gap: 12,
+    minHeight: 56,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
   },
   quizOptionPressed: {
     backgroundColor: 'rgba(0, 122, 255, 0.10)',
@@ -12809,6 +13205,283 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     marginTop: 2,
   },
+  studyCardFace: {
+    flex: 1,
+    gap: 14,
+  },
+  studyRevealPrompt: {
+    alignItems: 'center',
+    backgroundColor: '#F4F8FD',
+    borderColor: '#C7DDF5',
+    borderRadius: 14,
+    borderCurve: 'continuous',
+    borderStyle: 'dashed',
+    borderWidth: 1.5,
+    flex: 1,
+    gap: 10,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  studyRevealPromptText: {
+    color: '#3A6EA5',
+    fontSize: 15,
+    fontWeight: '600',
+    lineHeight: 21,
+    textAlign: 'center',
+  },
+  studySessionHeader: {
+    gap: 8,
+    paddingHorizontal: 2,
+  },
+  studySessionLabel: {
+    color: '#1C1C1E',
+    fontSize: 15,
+    fontVariant: ['tabular-nums'],
+    fontWeight: '700',
+  },
+  studySessionGoal: {
+    color: '#6C6C70',
+    fontSize: 13,
+    fontVariant: ['tabular-nums'],
+    fontWeight: '600',
+  },
+  studySessionTrack: {
+    height: 5,
+  },
+  studyGradeRow: {
+    alignItems: 'stretch',
+    flexDirection: 'row',
+    gap: 10,
+  },
+  studyUndoButton: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
+    borderRadius: 14,
+    borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
+    justifyContent: 'center',
+    minHeight: 54,
+    width: 54,
+  },
+  studyGradeButton: {
+    alignItems: 'center',
+    borderRadius: 14,
+    borderCurve: 'continuous',
+    flex: 1,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    minHeight: 54,
+    paddingHorizontal: 12,
+  },
+  studyGradeReview: {
+    backgroundColor: '#FFF0EF',
+    borderColor: '#FFC9C5',
+    borderWidth: 1,
+  },
+  studyGradeKnown: {
+    backgroundColor: '#34C759',
+  },
+  studyRevealButton: {
+    backgroundColor: '#007AFF',
+  },
+  studyGradeText: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  studyGradeReviewText: {
+    color: '#D70015',
+  },
+  studyGradeKnownText: {
+    color: '#FFFFFF',
+  },
+  studyKeyboardHint: {
+    color: '#8E8E93',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  sessionSummaryCard: {
+    alignItems: 'stretch',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
+    borderRadius: 18,
+    borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
+    gap: 12,
+    padding: 20,
+  },
+  sessionSummaryIcon: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#FFF4E5',
+    borderRadius: 30,
+    height: 60,
+    justifyContent: 'center',
+    width: 60,
+  },
+  sessionSummaryText: {
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  sessionSummaryStats: {
+    backgroundColor: '#F7FAFF',
+    borderRadius: 14,
+    flexDirection: 'row',
+    overflow: 'hidden',
+  },
+  sessionSummaryGoal: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  sessionSummaryWideButton: {
+    flex: 0,
+    minHeight: 48,
+  },
+  quizPromptLabel: {
+    color: '#6C6C70',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  quizOptionWrong: {
+    backgroundColor: '#FFF0EF',
+    borderColor: '#FF8A80',
+  },
+  quizOptionTextWrong: {
+    color: '#D70015',
+  },
+  quizOptionLetter: {
+    alignItems: 'center',
+    backgroundColor: '#EDF5FF',
+    borderRadius: 14,
+    height: 28,
+    justifyContent: 'center',
+    width: 28,
+  },
+  quizOptionLetterCorrect: {
+    backgroundColor: '#34C759',
+  },
+  quizOptionLetterWrong: {
+    backgroundColor: '#FF3B30',
+  },
+  quizOptionLetterText: {
+    color: '#007AFF',
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  quizNextButton: {
+    minHeight: 54,
+  },
+  quizQuitButton: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  quizQuitText: {
+    color: '#1C1C1E',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  quizResultEyebrow: {
+    marginBottom: 0,
+    textAlign: 'center',
+  },
+  quizResultTitle: {
+    textAlign: 'center',
+  },
+  quizScoreRing: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 56,
+    borderWidth: 8,
+    height: 112,
+    justifyContent: 'center',
+    width: 112,
+  },
+  quizScoreRingGood: {
+    borderColor: '#34C759',
+  },
+  quizScoreRingOkay: {
+    borderColor: '#FF9500',
+  },
+  quizScoreRingLow: {
+    borderColor: '#FF3B30',
+  },
+  quizScoreRingValue: {
+    color: '#1C1C1E',
+    fontSize: 28,
+    fontVariant: ['tabular-nums'],
+    fontWeight: '800',
+  },
+  quizMissedList: {
+    gap: 8,
+  },
+  quizMissedRow: {
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'space-between',
+  },
+  quizMissedWord: {
+    color: '#1C1C1E',
+    flexShrink: 0,
+    fontSize: 16,
+    fontWeight: '700',
+    maxWidth: '50%',
+  },
+  quizMissedMeaning: {
+    flexShrink: 1,
+    fontSize: 14,
+    textAlign: 'right',
+  },
+  settingStackedRow: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    gap: 12,
+  },
+  settingStackedHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
+  homeHeroEyebrow: {
+    marginBottom: 0,
+  },
+  homeStreakPill: {
+    alignItems: 'center',
+    backgroundColor: '#FFF4E5',
+    borderRadius: 999,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  homeStreakText: {
+    color: '#C25E00',
+    fontSize: 13,
+    fontVariant: ['tabular-nums'],
+    fontWeight: '700',
+  },
+  homePlanText: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 6,
+  },
+  homeProgressCount: {
+    fontVariant: ['tabular-nums'],
+  },
+  progressFillDone: {
+    backgroundColor: '#34C759',
+  },
+  homeQuizIcon: {
+    backgroundColor: '#EDF5FF',
+  },
 });
 
 const darkStyles = StyleSheet.create({
@@ -13668,5 +14341,61 @@ const darkStyles = StyleSheet.create({
   },
   developerActionText: {
     color: '#F2F2F7',
+  },
+  studyRevealPrompt: {
+    backgroundColor: '#111A26',
+    borderColor: '#2A4A70',
+  },
+  studyRevealPromptText: {
+    color: '#8CC4FF',
+  },
+  studySessionLabel: {
+    color: '#FFFFFF',
+  },
+  studyGradeReview: {
+    backgroundColor: '#3A1714',
+    borderColor: '#6B2A24',
+  },
+  studyGradeReviewText: {
+    color: '#FF6961',
+  },
+  sessionSummaryIcon: {
+    backgroundColor: '#3A2608',
+  },
+  quizOptionLetter: {
+    backgroundColor: '#182538',
+  },
+  quizOptionLetterText: {
+    color: '#0A84FF',
+  },
+  quizQuitButton: {
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
+  },
+  quizQuitText: {
+    color: '#F2F2F7',
+  },
+  sessionSummaryStats: {
+    backgroundColor: '#111A26',
+  },
+  quizOptionCorrect: {
+    backgroundColor: '#12351E',
+    borderColor: '#30D158',
+  },
+  quizOptionTextCorrect: {
+    color: '#30D158',
+  },
+  quizOptionWrong: {
+    backgroundColor: '#3A1714',
+    borderColor: '#FF453A',
+  },
+  quizOptionTextWrong: {
+    color: '#FF6961',
+  },
+  homeStreakPill: {
+    backgroundColor: '#3A2608',
+  },
+  homeQuizIcon: {
+    backgroundColor: '#182538',
   },
 });

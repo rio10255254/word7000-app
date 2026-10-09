@@ -1,7 +1,7 @@
 import type { ImagePickerOptions } from 'expo-image-picker';
 import { Camera, Check, ChevronLeft, ClipboardPaste, Images, Plus, ScanText, Trash2 } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, View, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 import { iosVisual } from '../design/iosVisualSystem';
 import type { CustomVocabSet } from '../lib/customSets';
 import { triggerPressHaptic } from '../lib/haptics';
@@ -448,23 +448,24 @@ function buildThemedStyles(palette: (typeof iosVisual)['light'] | (typeof iosVis
   return StyleSheet.create({
     accentSoft: { backgroundColor: palette.accentSoft },
     checkboxOff: { borderColor: palette.separatorStrong },
-    input: { backgroundColor: palette.surfaceSecondary, borderColor: palette.separator, color: palette.label },
+    input: { backgroundColor: 'rgba(120, 120, 128, 0.12)', color: palette.label },
     label: { color: palette.label },
     notice: { backgroundColor: palette.orangeSoft, color: palette.label },
     rowBorder: { borderBottomColor: palette.separator },
     secondary: { color: palette.labelSecondary },
-    secondaryButton: { backgroundColor: palette.surface, borderColor: palette.accentBorder },
+    secondaryButton: { backgroundColor: palette.accentSoft },
     segment: { backgroundColor: palette.surfaceTertiary },
-    surface: { backgroundColor: palette.surface, borderColor: palette.separator },
+    surface: { backgroundColor: palette.surface },
   });
 }
+
+const ROUNDED_FONT = Platform.select({ ios: 'ui-rounded', web: 'ui-rounded, system-ui, sans-serif', default: undefined });
 
 const styles = StyleSheet.create({
   backButton: {
     alignItems: 'center',
     alignSelf: 'flex-start',
     borderRadius: 999,
-    borderWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 12,
@@ -475,8 +476,7 @@ const styles = StyleSheet.create({
   caption: { fontSize: 13, lineHeight: 19 },
   card: {
     borderCurve: 'continuous',
-    borderRadius: 16,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 20,
     gap: 12,
     padding: 18,
   },
@@ -493,7 +493,6 @@ const styles = StyleSheet.create({
   },
   chip: {
     borderRadius: 999,
-    borderWidth: 1,
     maxWidth: '100%',
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -516,7 +515,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     borderRadius: 10,
     width: '100%',
-    borderWidth: StyleSheet.hairlineWidth,
     fontSize: 16,
     minHeight: 42,
     paddingHorizontal: 12,
@@ -531,7 +529,6 @@ const styles = StyleSheet.create({
   },
   pasteInput: {
     borderRadius: 12,
-    borderWidth: StyleSheet.hairlineWidth,
     fontSize: 16,
     minHeight: 120,
     padding: 12,
@@ -539,7 +536,6 @@ const styles = StyleSheet.create({
   posInput: {
     borderRadius: 10,
     flexShrink: 0,
-    borderWidth: StyleSheet.hairlineWidth,
     fontSize: 15,
     minHeight: 42,
     paddingHorizontal: 10,
@@ -572,7 +568,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 12,
     borderCurve: 'continuous',
-    borderWidth: 1,
     flex: 1,
     flexDirection: 'row',
     gap: 8,
@@ -581,7 +576,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   secondaryText: { fontSize: 16, fontWeight: '700' },
-  sectionTitle: { fontSize: 17, fontWeight: '700' },
+  sectionTitle: { fontFamily: ROUNDED_FONT, fontSize: 17, fontWeight: '700' },
   segment: { borderRadius: 12, flexDirection: 'row', gap: 4, padding: 4 },
   segmentButton: { alignItems: 'center', borderRadius: 9, flex: 1, minHeight: 40, justifyContent: 'center' },
   segmentText: { fontSize: 15, fontWeight: '600' },
@@ -590,10 +585,9 @@ const styles = StyleSheet.create({
   tipRow: { alignItems: 'flex-start', flexDirection: 'row', gap: 8 },
   tipText: { flex: 1, fontSize: 14, lineHeight: 20 },
   tips: { gap: 6 },
-  title: { fontSize: 22, fontWeight: '800' },
+  title: { fontFamily: ROUNDED_FONT, fontSize: 24, fontWeight: '800' },
   wordInput: {
     borderRadius: 10,
-    borderWidth: StyleSheet.hairlineWidth,
     flex: 1,
     minWidth: 0,
     fontSize: 17,

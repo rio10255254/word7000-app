@@ -64,6 +64,6 @@ const styles = StyleSheet.create({
   mark: {
     borderRadius: 16,
   },
-  safeArea: { alignItems: 'center', backgroundColor: '#EDF3F8', flex: 1, justifyContent: 'center' },
+  safeArea: { alignItems: 'center', backgroundColor: '#F2F2F7', flex: 1, justifyContent: 'center' },
   title: { color: '#111827', fontSize: 21, fontWeight: '800', textAlign: 'center' },
 });

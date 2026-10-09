@@ -151,11 +151,11 @@ describe('iOS App Store readiness polish', () => {
     const rootLayout = fs.readFileSync(path.join(process.cwd(), 'src', 'app', '_layout.tsx'), 'utf8');
     const visualSystem = fs.readFileSync(path.join(process.cwd(), 'src', 'design', 'iosVisualSystem.ts'), 'utf8');
 
-    expect(visualSystem).toContain("background: '#EDF3F8'");
+    expect(visualSystem).toContain("background: '#F2F2F7'");
     expect(visualSystem).toContain("surface: '#FFFFFF'");
     expect(visualSystem).toContain("label: '#1C1C1E'");
     expect(visualSystem).toContain("accent: '#007AFF'");
-    expect(visualSystem).toContain("background: '#070A0F'");
+    expect(visualSystem).toContain("background: '#000000'");
     expect(visualSystem).toContain("surface: '#1C1C1E'");
     expect(visualSystem).toContain("accent: '#0A84FF'");
     expect(rootLayout).toContain('lightNavigationTheme');

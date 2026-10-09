@@ -59,6 +59,7 @@ function RootNavigator() {
         <Stack.Screen name="(tabs)" options={{ animation: 'none' }} />
         <Stack.Screen name="library/[wordId]" />
         <Stack.Screen name="sets" />
+        <Stack.Screen name="scan" />
         <Stack.Screen name="settings" />
         <Stack.Screen name="stats" />
         <Stack.Screen name="auth/callback" options={{ animation: 'none' }} />

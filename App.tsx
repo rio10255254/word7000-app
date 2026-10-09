@@ -23,6 +23,8 @@ import Reanimated, {
 import {
   ArrowUp,
   BookOpen,
+  Layers,
+  ScanText,
   Eye,
   PartyPopper,
   Undo2,
@@ -232,6 +234,15 @@ import {
   StreakReminderRegistrationQueue,
 } from './src/lib/streakReminderRegistration';
 import { DeferredStorageWriter } from './src/lib/deferredStorageWriter';
+import {
+  buildScannedWords,
+  CORE_BANK_ID,
+  isScannedWordId,
+  loadActiveBankId,
+  defaultScanBankName,
+  saveActiveBankId,
+  type ReviewedScanWord,
+} from './src/lib/wordBanks';
 import {
   createStudySession,
   currentStudyCardId,
@@ -520,6 +531,16 @@ const modeInterfaceCopy = {
     swipeReviewHint: '左滑不會',
     swipeKnownHint: '右滑已會',
     tapToReveal: '先在心裡想一下意思，再點卡片看答案',
+    coreBankName: '7000 單字',
+    builtInBank: '內建',
+    scanBankTag: '掃描',
+    bankLabel: '字庫',
+    bankWordCount: (count: number) => `${count} 個`,
+    bankPickerTitle: '選擇字庫',
+    bankPickerHint: '學習、測驗和字庫都會改用這個字庫',
+    scanNewSheet: '掃描單字表',
+    scanShort: '掃描',
+    closeSheet: '關閉',
     showAnswer: '顯示答案',
     dontKnow: '不熟',
     knowIt: '認識',
@@ -733,6 +754,7 @@ const modeInterfaceCopy = {
     setCreated: (name: string) => `已建立「${name}」`,
     customWordAdded: (word: string, setName: string) => `已新增 ${word} 到「${setName}」`,
     customImportApplied: (added: number, skipped: number) => `已匯入 ${added} 個新單字，略過 ${skipped} 筆。`,
+    scanSaved: (count: number, name: string) => `已把 ${count} 個掃描單字存進「${name}」`,
   },
   chinese: {
     completed: 'Complete',
@@ -769,6 +791,16 @@ const modeInterfaceCopy = {
     swipeReviewHint: 'Swipe left: still learning',
     swipeKnownHint: 'Swipe right: I know it',
     tapToReveal: 'Recall the meaning first, then tap the card to check',
+    coreBankName: '7000 Words',
+    builtInBank: 'Built-in',
+    scanBankTag: 'Scanned',
+    bankLabel: 'Bank',
+    bankWordCount: (count: number) => `${count} words`,
+    bankPickerTitle: 'Choose a Word Bank',
+    bankPickerHint: 'Study, quiz, and library all switch to this bank',
+    scanNewSheet: 'Scan a Word Sheet',
+    scanShort: 'Scan',
+    closeSheet: 'Close',
     showAnswer: 'Show Answer',
     dontKnow: 'Not Yet',
     knowIt: 'I Know It',
@@ -982,6 +1014,7 @@ const modeInterfaceCopy = {
     setCreated: (name: string) => `Created "${name}"`,
     customWordAdded: (word: string, setName: string) => `Added ${word} to "${setName}"`,
     customImportApplied: (added: number, skipped: number) => `Imported ${added} new words, skipped ${skipped}.`,
+    scanSaved: (count: number, name: string) => `Saved ${count} scanned words to "${name}"`,
   },
 } as const;
 
@@ -1520,8 +1553,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [customSetState, setCustomSetState] = useState<CustomSetState>(() => loadCustomSetState(getAppStorage()));
   const [customSetSort, setCustomSetSort] = useState<CustomSetSort>(() => loadCustomSetSort(getAppStorage()));
   const [selectedCustomSetId, setSelectedCustomSetId] = useState<string | null>(null);
-  const [studySetId, setStudySetId] = useState<string | null>(null);
-  const [quizSetId, setQuizSetId] = useState<string | null>(null);
+  const [activeBankId, setActiveBankId] = useState<string>(() => loadActiveBankId(getAppStorage()));
+  const [bankPickerOpen, setBankPickerOpen] = useState(false);
   const [setPickerWord, setSetPickerWord] = useState<WordEntry | null>(null);
   const [newSetName, setNewSetName] = useState('');
   const [manualCustomWord, setManualCustomWord] = useState<ManualCustomWordState>(emptyManualCustomWord);
@@ -1534,39 +1567,47 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   );
 
   const baseVocabularyWords = developerVocabulary?.words ?? bundledVocabulary;
+  // The core bank: the built-in list plus words added by hand. Scanned words
+  // keep the meaning printed on their sheet, so they stay in their own banks.
   const vocabularyWords = useMemo(
-    () => mergeCustomWords(baseVocabularyWords, customSetState.customWords),
+    () => mergeCustomWords(
+      baseVocabularyWords,
+      customSetState.customWords.filter((word) => !isScannedWordId(word.id)),
+    ),
     [baseVocabularyWords, customSetState.customWords],
   );
+  // Every word any bank can refer to, for lookups by id.
+  const allWords = useMemo(() => {
+    const scanned = customSetState.customWords.filter((word) => isScannedWordId(word.id));
+    return scanned.length > 0 ? [...scanned, ...vocabularyWords] : vocabularyWords;
+  }, [customSetState.customWords, vocabularyWords]);
   const sortedCustomSets = useMemo(() => sortCustomSets(customSetState.sets, customSetSort), [customSetSort, customSetState.sets]);
-  const activeStudySet = useMemo(
-    () => customSetState.sets.find((set) => set.id === studySetId) ?? null,
-    [customSetState.sets, studySetId],
+  const activeBank = useMemo(
+    () => customSetState.sets.find((set) => set.id === activeBankId) ?? null,
+    [activeBankId, customSetState.sets],
   );
-  const activeQuizSet = useMemo(
-    () => customSetState.sets.find((set) => set.id === quizSetId) ?? null,
-    [customSetState.sets, quizSetId],
+  // One bank drives study, quiz, the library and the home summary, so what
+  // the learner picked is what every tab is about.
+  const bankWords = useMemo(
+    () => (activeBank ? wordsForCustomSet(allWords, activeBank) : vocabularyWords),
+    [activeBank, allWords, vocabularyWords],
   );
-  const studySourceWords = useMemo(
-    () => (activeStudySet ? wordsForCustomSet(vocabularyWords, activeStudySet) : vocabularyWords),
-    [activeStudySet, vocabularyWords],
-  );
-  const quizSourceWords = useMemo(
-    () => (activeQuizSet ? wordsForCustomSet(vocabularyWords, activeQuizSet) : vocabularyWords),
-    [activeQuizSet, vocabularyWords],
-  );
-  const levelFilterOptions = useMemo(() => buildLevelFilters(vocabularyWords), [vocabularyWords]);
+  const studySourceWords = bankWords;
+  const quizSourceWords = bankWords;
+  const bankName = activeBank?.name ?? modeInterfaceCopy[studyMode].coreBankName;
+  const bankIsScan = Boolean(activeBank?.wordIds.some(isScannedWordId));
+  const levelFilterOptions = useMemo(() => buildLevelFilters(bankWords), [bankWords]);
   const summaryProgress = useFocusedSnapshot(
     progress,
     activeTab === 'home' || activeTab === 'profile',
   );
   const stats = useMemo(
-    () => computeStats(vocabularyWords, summaryProgress, currentDate),
-    [currentDate, summaryProgress, vocabularyWords],
+    () => computeStats(bankWords, summaryProgress, currentDate),
+    [bankWords, currentDate, summaryProgress],
   );
   const personalAnalytics = useMemo(
-    () => buildPersonalLearningAnalytics(summaryProgress, stats, vocabularyWords.length, currentDate),
-    [currentDate, stats, summaryProgress, vocabularyWords.length],
+    () => buildPersonalLearningAnalytics(summaryProgress, stats, bankWords.length, currentDate),
+    [bankWords.length, currentDate, stats, summaryProgress],
   );
   const studyProgressDependency = activeTab === 'study' && studyFilter !== 'all' ? progress : null;
   const studyWords = useMemo(
@@ -1577,8 +1618,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     [activeTab, studyFilter, studyInitial, studyLevel, studyProgressDependency, studySourceWords],
   );
   const vocabularyById = useMemo(
-    () => new Map(vocabularyWords.map((word) => [word.id, word])),
-    [vocabularyWords],
+    () => new Map(allWords.map((word) => [word.id, word])),
+    [allWords],
   );
   // Everything a session is built from. When any of it changes the session in
   // progress no longer matches what the learner asked for, so it is rebuilt;
@@ -1589,9 +1630,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     studyFilter,
     studyLevel,
     studyInitial,
-    studySetId ?? '',
+    activeBankId,
     developerVocabulary?.importedAt ?? '',
-    vocabularyWords.length,
+    bankWords.length,
   ].join('|');
   const studyWord = vocabularyById.get(currentStudyCardId(studySession) ?? '') ?? null;
   const studyDeckNextWord = vocabularyById.get(upcomingStudyCardId(studySession) ?? '') ?? null;
@@ -1620,12 +1661,12 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
   const libraryProgressDependency = activeTab === 'library' && activeFilter !== 'all' ? progress : null;
   const libraryWords = useMemo(
-    () => filterWords(vocabularyWords, progress, deferredSearchQuery, activeFilter, {
+    () => filterWords(bankWords, progress, deferredSearchQuery, activeFilter, {
       initial: activeInitial,
       level: activeLevel,
       sort: activeSort,
     }),
-    [activeFilter, activeInitial, activeLevel, activeSort, activeTab, deferredSearchQuery, libraryProgressDependency, vocabularyWords],
+    [activeFilter, activeInitial, activeLevel, activeSort, activeTab, bankWords, deferredSearchQuery, libraryProgressDependency],
   );
   const dailyPercent = Math.min(100, Math.round((stats.studiedToday / summaryProgress.dailyTarget) * 100));
   const progressPresentation = useMemo(
@@ -2249,20 +2290,23 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setQuizCorrectCount(0);
     setQuizMissedIds([]);
     setQuizSeed('');
-  }, [quizFilter, quizInitial, quizLevel, quizSetId]);
+  }, [activeBankId, quizFilter, quizInitial, quizLevel]);
 
   useEffect(() => {
     const setIds = new Set(customSetState.sets.map((set) => set.id));
     if (selectedCustomSetId && !setIds.has(selectedCustomSetId)) {
       setSelectedCustomSetId(customSetState.sets[0]?.id ?? null);
     }
-    if (studySetId && !setIds.has(studySetId)) {
-      setStudySetId(null);
+    // A bank that was deleted, or that belongs to an account that just signed
+    // out, falls back to the built-in list.
+    if (activeBankId !== CORE_BANK_ID && progressReady && !setIds.has(activeBankId)) {
+      setActiveBankId(CORE_BANK_ID);
     }
-    if (quizSetId && !setIds.has(quizSetId)) {
-      setQuizSetId(null);
-    }
-  }, [customSetState.sets, quizSetId, selectedCustomSetId, studySetId]);
+  }, [activeBankId, customSetState.sets, progressReady, selectedCustomSetId]);
+
+  useEffect(() => {
+    saveActiveBankId(getAppStorage(), activeBankId);
+  }, [activeBankId]);
 
   useEffect(() => {
     const levelIds = new Set(levelFilterOptions.map((level) => level.id));
@@ -2692,11 +2736,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     const remainingSets = customSetState.sets.filter((set) => set.id !== setId);
     setCustomSetState((current) => deleteCustomSet(current, setId));
     setSelectedCustomSetId(remainingSets[0]?.id ?? null);
-    if (studySetId === setId) {
-      setStudySetId(null);
-    }
-    if (quizSetId === setId) {
-      setQuizSetId(null);
+    if (activeBankId === setId) {
+      setActiveBankId(CORE_BANK_ID);
     }
     setCustomSetMessage(modeInterfaceCopy[studyMode].setDeleted(targetSet.name));
   }
@@ -2791,13 +2832,47 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setCustomSetMessage(ui.customImportApplied(applied.words.length, Math.max(0, parsed.rows.length - applied.words.length)));
   }
 
+  function handleSaveScannedWords(
+    rows: ReviewedScanWord[],
+    target: { kind: 'existing'; setId: string } | { kind: 'new'; name: string },
+  ): string | null {
+    let state = customSetState;
+    let setId: string;
+    if (target.kind === 'new') {
+      state = createCustomSet(state, target.name.trim() || defaultScanBankName(new Date(), studyMode));
+      setId = state.sets[state.sets.length - 1]?.id ?? '';
+    } else {
+      setId = target.setId;
+    }
+    const targetSet = state.sets.find((set) => set.id === setId);
+    if (!targetSet) {
+      return null;
+    }
+    // Scanning the same sheet twice should not fill the bank with copies.
+    const alreadyInBank = new Set(
+      wordsForCustomSet(allWords, targetSet).map((word) => word.word.toLowerCase()),
+    );
+    const words = buildScannedWords(
+      rows.filter((row) => !alreadyInBank.has(row.word.trim().toLowerCase())),
+      vocabularyWords,
+    );
+    // addCustomWordToSet puts each new word first, so add them in reverse to
+    // keep the order they were printed in.
+    const nextState = [...words].reverse().reduce((current, word) => addCustomWordToSet(current, setId, word), state);
+    setCustomSetState(nextState);
+    setSelectedCustomSetId(setId);
+    setActiveBankId(setId);
+    setCustomSetMessage(modeInterfaceCopy[studyMode].scanSaved(words.length, targetSet.name));
+    return setId;
+  }
+
   function handleStartStudySet(setId: string) {
-    setStudySetId(setId);
+    setActiveBankId(setId);
     setActiveTab('study');
   }
 
   function handleStartQuizSet(setId: string) {
-    setQuizSetId(setId);
+    setActiveBankId(setId);
     restartQuiz();
     setActiveTab('quiz');
   }
@@ -3069,9 +3144,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setCustomSetState(loadedCustomSetState);
     saveCustomSetState(storage, loadedCustomSetState, user.id);
     setSelectedCustomSetId(null);
-    setStudySetId(null);
     setStudySession(null);
-    setQuizSetId(null);
     setSetPickerWord(null);
     setAccount((current) => ({
       ...current,
@@ -3630,9 +3703,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setProgress(guestProgress);
     setCustomSetState(loadCustomSetState(getAppStorage()));
     setSelectedCustomSetId(null);
-    setStudySetId(null);
     setStudySession(null);
-    setQuizSetId(null);
     setSetPickerWord(null);
     setAccount((current) => ({
       ...current,
@@ -3734,9 +3805,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setProgress(normalizeProgressForDate(loadProgressFromStorage(storage, initialProgress), currentDate));
     setCustomSetState(loadCustomSetState(storage));
     setSelectedCustomSetId(null);
-    setStudySetId(null);
     setStudySession(null);
-    setQuizSetId(null);
     setSetPickerWord(null);
     setAccount((current) => ({
       ...current,
@@ -3823,7 +3892,24 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     router.push({ pathname: '/library/[wordId]', params: { source: 'home', wordId: word.id } });
   });
   const homeToggleStudyMode = useStableEvent(toggleStudyMode);
-  const studyClearActiveSet = useStableEvent(() => setStudySetId(null));
+  const openBankPicker = useStableEvent(() => setBankPickerOpen(true));
+  const closeBankPicker = useStableEvent(() => setBankPickerOpen(false));
+  const selectBank = useStableEvent((bankId: string) => {
+    setBankPickerOpen(false);
+    if (bankId === CORE_BANK_ID) {
+      setActiveBankId(CORE_BANK_ID);
+      return;
+    }
+    requestAccountUpgrade('customSets', () => setActiveBankId(bankId));
+  });
+  const openScanner = useStableEvent(() => {
+    setBankPickerOpen(false);
+    requestAccountUpgrade('customSets', () => router.push('/scan'));
+  });
+  const manageBanks = useStableEvent(() => {
+    setBankPickerOpen(false);
+    openLibraryCustomSets();
+  });
   const studyToggleFilters = useStableEvent(() => setStudyFiltersOpen((current) => !current));
   const studySwipeKnown = useStableEvent(() => gradeCurrentStudyCard('known'));
   const studySwipeReview = useStableEvent(() => gradeCurrentStudyCard('review'));
@@ -3851,7 +3937,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
     setStudyFilter(filter);
   });
-  const quizClearActiveSet = useStableEvent(() => setQuizSetId(null));
   const quizToggleFilters = useStableEvent(() => setQuizFiltersOpen((current) => !current));
   const quizAnswer = useStableEvent(handleQuizAnswer);
   const quizPracticeModeChange = useStableEvent(handleQuizPracticeModeChange);
@@ -3963,6 +4048,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setProgress((current) => (current.dailyTarget === nextTarget ? current : { ...current, dailyTarget: nextTarget }));
   });
   const routeStartQuizSet = useStableEvent(handleStartQuizSet);
+  const routeSaveScannedWords = useStableEvent(handleSaveScannedWords);
   const routeStartStudySet = useStableEvent(handleStartStudySet);
   const routeActions = useMemo(
     () => ({
@@ -3984,6 +4070,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       renameCustomSet: routeRenameCustomSet,
       requestAccountUpgrade: routeRequestAccountUpgrade,
       restoreLibraryScroll: routeRestoreLibraryScroll,
+      saveScannedWords: routeSaveScannedWords,
       selectCustomSet: setSelectedCustomSetId,
       setCustomSetSort,
       setStreakReminderEnabled: routeSetStreakReminderEnabled,
@@ -4010,6 +4097,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       routeRenameCustomSet,
       routeRequestAccountUpgrade,
       routeRestoreLibraryScroll,
+      routeSaveScannedWords,
       routeSetStreakReminderEnabled,
       routeSetDailyTarget,
       routeSetThemePreference,
@@ -4038,7 +4126,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       studyMode,
       themeMode,
       themePreference,
-      vocabularyWords,
+      vocabularyWords: allWords,
     });
   }, [
     account.busy,
@@ -4059,7 +4147,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     studyMode,
     themeMode,
     themePreference,
-    vocabularyWords,
+    allWords,
   ]);
 
   useEffect(() => () => setAppRouteBridgeSnapshot(null), []);
@@ -4115,12 +4203,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   const currentScreenProps: AppScreenProps = {
     homeProps: {
+      bankCount: bankWords.length,
+      bankIsScan,
+      bankName,
+      onOpenBankPicker: openBankPicker,
       dailyPercent: homePresentation.dailyPercent,
       progress: homePresentation.progress,
       stats: homePresentation.stats,
       studyMode,
       updateStatus: updateState.manualStatus,
-      vocabularyWords,
+      vocabularyWords: allWords,
       onCheckForUpdate: updateState.checkNow,
       onOpenDictionaryWord: homeOpenDictionaryWord,
       onOpenQuiz: studyOpenQuiz,
@@ -4147,14 +4239,15 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       dailyTarget: studyProgress.dailyTarget,
       streak: studyProgress.streak,
       studyMode,
-      activeSetCount: activeStudySet ? studySourceWords.length : 0,
-      activeSetName: activeStudySet?.name ?? null,
+      bankCount: bankWords.length,
+      bankIsScan,
+      bankName,
       customSetsLocked: !isPermanentAccount,
       favoriteLocked: !isPermanentAccount,
       wordCount: studyWords.length,
       word: studyWord,
       progress: studyProgress,
-      onClearActiveSet: studyClearActiveSet,
+      onOpenBankPicker: openBankPicker,
       onFilterChange: studyFilterChange,
       onFiltersToggle: studyToggleFilters,
       onInitialChange: setStudyInitial,
@@ -4188,8 +4281,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       speakingAnswerVisible,
       studyMode,
       favoriteLocked: !isPermanentAccount,
-      activeSetCount: activeQuizSet ? quizSourceWords.length : 0,
-      activeSetName: activeQuizSet?.name ?? null,
+      bankCount: bankWords.length,
+      bankIsScan,
+      bankName,
       chosenText: quizChosenText,
       correctCount: quizCorrectCount,
       missedWords: quizMissedIds
@@ -4199,7 +4293,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
       word: visibleQuizWord,
       wordCount: quizWords.length,
       onAnswer: quizAnswer,
-      onClearActiveSet: quizClearActiveSet,
+      onOpenBankPicker: openBankPicker,
       onFilterChange: quizFilterChange,
       onFiltersToggle: quizToggleFilters,
       onInitialChange: setQuizInitial,
@@ -4213,6 +4307,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     },
     libraryProps: {
       activeFilter,
+      bankCount: bankWords.length,
+      bankIsScan,
+      bankName,
+      onOpenBankPicker: openBankPicker,
+      onOpenScanner: openScanner,
       activeInitial,
       activeLevel,
       activeSort,
@@ -4308,6 +4407,19 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
             onNewSetNameChange={setNewSetName}
           />
         )}
+
+        <WordBankPickerSheet
+          activeBankId={activeBank ? activeBankId : CORE_BANK_ID}
+          canScan={isPermanentAccount}
+          coreCount={vocabularyWords.length}
+          sets={sortedCustomSets}
+          studyMode={studyMode}
+          visible={bankPickerOpen}
+          onClose={closeBankPicker}
+          onManage={manageBanks}
+          onScan={openScanner}
+          onSelect={selectBank}
+        />
 
         <AccountUpgradeOverlay
           accountBusy={account.busy}
@@ -5488,6 +5600,10 @@ const HomeView = memo(function HomeView({
   updateStatus,
   vocabularyWords,
   onCheckForUpdate,
+  bankCount,
+  bankIsScan,
+  bankName,
+  onOpenBankPicker,
   onOpenDictionaryWord,
   onOpenQuiz,
   onOpenStats,
@@ -5495,6 +5611,10 @@ const HomeView = memo(function HomeView({
   onStartStudy,
   onToggleStudyMode,
 }: {
+  bankCount: number;
+  bankIsScan: boolean;
+  bankName: string;
+  onOpenBankPicker: () => void;
   dailyPercent: number;
   progress: ProgressState;
   stats: ReturnType<typeof computeStats>;
@@ -5686,6 +5806,7 @@ const HomeView = memo(function HomeView({
   return (
     <>
       <View style={styles.homeStack}>
+        <WordBankBar count={bankCount} isScan={bankIsScan} name={bankName} studyMode={studyMode} testID="home-bank-bar" onPress={onOpenBankPicker} />
         <View style={[styles.hero, themeStyles?.hero]} testID="home-today-plan">
           <View style={styles.rowBetween}>
             <Text style={[styles.eyebrow, styles.homeHeroEyebrow]}>{copy.heroEyebrow}</Text>
@@ -6013,9 +6134,11 @@ const HomeDictionaryResultRow = memo(function HomeDictionaryResultRow({
         <Text numberOfLines={2} style={[styles.homeDictionaryResultMeaning, themeStyles?.libraryMeaning]}>
           {formatMeaningDetail(word, studyMode)}
         </Text>
-        <Text numberOfLines={1} style={[styles.homeDictionaryResultExample, themeStyles?.libraryExample]}>
-          {formatExamplePrimary(word, studyMode)}
-        </Text>
+        {Boolean(formatExamplePrimary(word, studyMode)) && (
+          <Text numberOfLines={1} style={[styles.homeDictionaryResultExample, themeStyles?.libraryExample]}>
+            {formatExamplePrimary(word, studyMode)}
+          </Text>
+        )}
       </View>
       <ChevronRight size={18} color="#6C6C70" strokeWidth={2.3} />
     </AnimatedPressable>
@@ -6117,7 +6240,7 @@ function StudyCardBody({
             {formatWordPinyin(word, studyMode)}
           </Text>
         )}
-        {showSecondary && (
+        {showSecondary && Boolean(formatWordSecondary(word, studyMode).trim()) && (
           <Text numberOfLines={2} style={[styles.pronunciation, themeStyles?.pronunciation]}>
             {formatWordSecondary(word, studyMode)}
           </Text>
@@ -6143,14 +6266,17 @@ function StudyCardBody({
               </View>
             )}
           </View>
-          <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
-            <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
-              {formatExamplePrimary(word, studyMode)}
-            </Text>
-            <Text numberOfLines={2} style={[styles.exampleZh, themeStyles?.exampleZh]}>
-              {formatExampleSecondary(word, studyMode)}
-            </Text>
-          </View>
+          {/* Words saved from a scanned sheet may have no example sentence. */}
+          {Boolean(formatExamplePrimary(word, studyMode)) && (
+            <View style={[styles.exampleBox, styles.studyCardExampleBox, themeStyles?.exampleBox]}>
+              <Text numberOfLines={2} style={[styles.example, themeStyles?.example]}>
+                {formatExamplePrimary(word, studyMode)}
+              </Text>
+              <Text numberOfLines={2} style={[styles.exampleZh, themeStyles?.exampleZh]}>
+                {formatExampleSecondary(word, studyMode)}
+              </Text>
+            </View>
+          )}
         </>
       ) : (
         <View style={[styles.studyRevealPrompt, themeStyles?.studyRevealPrompt]}>
@@ -6218,8 +6344,9 @@ function AddToSetGlyph({ locked, size = 20 }: { locked: boolean; size?: number }
 }
 
 const StudyView = memo(function StudyView({
-  activeSetCount,
-  activeSetName,
+  bankCount,
+  bankIsScan,
+  bankName,
   activeFilter,
   activeInitial,
   activeLevel,
@@ -6242,7 +6369,7 @@ const StudyView = memo(function StudyView({
   wordCount,
   word,
   progress,
-  onClearActiveSet,
+  onOpenBankPicker,
   onAddToSet,
   onFilterChange,
   onFiltersToggle,
@@ -6256,8 +6383,9 @@ const StudyView = memo(function StudyView({
   onSwipeReview,
   onUndo,
 }: {
-  activeSetCount: number;
-  activeSetName: string | null;
+  bankCount: number;
+  bankIsScan: boolean;
+  bankName: string;
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
@@ -6280,7 +6408,7 @@ const StudyView = memo(function StudyView({
   word: WordEntry | null;
   wordCount: number;
   progress: ProgressState;
-  onClearActiveSet: () => void;
+  onOpenBankPicker: () => void;
   onAddToSet: (word: WordEntry) => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
@@ -6867,6 +6995,7 @@ const StudyView = memo(function StudyView({
 
   return (
     <View style={styles.screenStack}>
+      <WordBankBar count={bankCount} isScan={bankIsScan} name={bankName} studyMode={studyMode} testID="study-bank-bar" onPress={onOpenBankPicker} />
       <FilterControlPanel
         activeFilter={activeFilter}
         activeInitial={activeInitial}
@@ -6886,14 +7015,6 @@ const StudyView = memo(function StudyView({
         onToggle={onFiltersToggle}
       />
 
-      {activeSetName && (
-        <ActiveSetBanner
-          count={activeSetCount}
-          name={activeSetName}
-          studyMode={studyMode}
-          onClear={onClearActiveSet}
-        />
-      )}
 
       {sessionEmpty && (
         <View style={[styles.emptyState, themeStyles?.emptyState]}>
@@ -7314,8 +7435,9 @@ function FilterControlPanel({
 }
 
 const QuizView = memo(function QuizView({
-  activeSetCount,
-  activeSetName,
+  bankCount,
+  bankIsScan,
+  bankName,
   activeFilter,
   activeInitial,
   activeLevel,
@@ -7341,7 +7463,7 @@ const QuizView = memo(function QuizView({
   wordCount,
   word,
   onAnswer,
-  onClearActiveSet,
+  onOpenBankPicker,
   onFilterChange,
   onFiltersToggle,
   onInitialChange,
@@ -7354,8 +7476,9 @@ const QuizView = memo(function QuizView({
   onRestart,
   onStart,
 }: {
-  activeSetCount: number;
-  activeSetName: string | null;
+  bankCount: number;
+  bankIsScan: boolean;
+  bankName: string;
   activeFilter: LibraryFilter;
   activeInitial: string;
   activeLevel: string;
@@ -7381,7 +7504,7 @@ const QuizView = memo(function QuizView({
   word: WordEntry | null;
   wordCount: number;
   onAnswer: (option: QuizOption) => void;
-  onClearActiveSet: () => void;
+  onOpenBankPicker: () => void;
   onFilterChange: (filter: LibraryFilter) => void;
   onFiltersToggle: () => void;
   onInitialChange: (initial: string) => void;
@@ -7429,6 +7552,7 @@ const QuizView = memo(function QuizView({
           single "end quiz" control takes their place. */}
       {!quizStarted && (
         <>
+          <WordBankBar count={bankCount} isScan={bankIsScan} name={bankName} studyMode={studyMode} testID="quiz-bank-bar" onPress={onOpenBankPicker} />
           <FilterControlPanel
             activeFilter={activeFilter}
             activeInitial={activeInitial}
@@ -7448,14 +7572,6 @@ const QuizView = memo(function QuizView({
             onToggle={onFiltersToggle}
           />
 
-          {activeSetName && (
-            <ActiveSetBanner
-              count={activeSetCount}
-              name={activeSetName}
-              studyMode={studyMode}
-              onClear={onClearActiveSet}
-            />
-          )}
         </>
       )}
 
@@ -7709,14 +7825,18 @@ const QuizView = memo(function QuizView({
                     <Text style={[styles.resultText, themeStyles?.resultText]}>{formatMeaningSupplement(word)}</Text>
                   </>
                 )}
-                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
-                  {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
-                </Text>
-                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExamplePrimary(word, studyMode)}</Text>
-                <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
-                  {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
-                </Text>
-                <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
+                {Boolean(formatExamplePrimary(word, studyMode)) && (
+                  <>
+                    <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+                      {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
+                    </Text>
+                    <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExamplePrimary(word, studyMode)}</Text>
+                    <Text style={[styles.quizExampleLabel, themeStyles?.quizExampleLabel]}>
+                      {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
+                    </Text>
+                    <Text style={[styles.resultText, themeStyles?.resultText]}>{formatExampleSecondary(word, studyMode)}</Text>
+                  </>
+                )}
               </View>
             </Animated.View>
           )}
@@ -7793,6 +7913,11 @@ const QuizView = memo(function QuizView({
 
 const LibraryView = memo(function LibraryView({
   activeFilter,
+  bankCount,
+  bankIsScan,
+  bankName,
+  onOpenBankPicker,
+  onOpenScanner,
   activeInitial,
   activeLevel,
   activeSort,
@@ -7830,6 +7955,11 @@ const LibraryView = memo(function LibraryView({
   activeInitial: string;
   activeLevel: string;
   activeSort: LibrarySort;
+  bankCount: number;
+  bankIsScan: boolean;
+  bankName: string;
+  onOpenBankPicker: () => void;
+  onOpenScanner: () => void;
   bottomInset: number;
   customSets: CustomVocabSet[];
   customSetsLocked: boolean;
@@ -7919,6 +8049,7 @@ const LibraryView = memo(function LibraryView({
 
   const listHeader = (
     <View style={styles.screenStack}>
+      <WordBankBar count={bankCount} isScan={bankIsScan} name={bankName} studyMode={studyMode} testID="library-bank-bar" onPress={onOpenBankPicker} />
       <View style={[styles.libraryHeaderCard, themeStyles?.libraryHeaderCard]}>
         <View style={styles.libraryHeaderRow}>
           <View style={styles.libraryHeaderTitleLine}>
@@ -8022,6 +8153,19 @@ const LibraryView = memo(function LibraryView({
               <Text style={[styles.libraryHeaderMeta, themeStyles?.libraryHeaderMeta]}>{ui.customSetsSummary(customSets.length)}</Text>
             </View>
           </View>
+          <AnimatedPressable
+            accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
+            accessibilityLabel={ui.scanNewSheet}
+            accessibilityRole="button"
+            hapticEnabled={!customSetsLocked}
+            onPress={onOpenScanner}
+            pressTone="secondary"
+            style={[styles.libraryManageSetsButton, themeStyles?.libraryTopButton]}
+            testID="library-scan-button"
+          >
+            {customSetsLocked ? <Lock size={11} color={bodyIconColor} strokeWidth={2.5} /> : <ScanText size={14} color={bodyIconColor} strokeWidth={2.4} />}
+            <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.libraryManageSetsButtonLabel, themeStyles?.libraryTopButtonText]}>{ui.scanShort}</Text>
+          </AnimatedPressable>
           <AnimatedPressable
             accessibilityHint={customSetsLocked ? ui.favoritesRequireSignIn : undefined}
             accessibilityRole="button"
@@ -8179,7 +8323,9 @@ const LibraryWordRow = memo(function LibraryWordRow({
           <Text style={[styles.libraryPinyin, themeStyles?.libraryPinyin]}>{formatWordPinyin(word, studyMode)}</Text>
         )}
         <Text style={[styles.libraryMeaning, themeStyles?.libraryMeaning]}>{formatMeaningDetail(word, studyMode)}</Text>
-        <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
+        {Boolean(formatExamplePrimary(word, studyMode)) && (
+          <Text style={[styles.libraryExample, themeStyles?.libraryExample]}>{formatExamplePrimary(word, studyMode)}</Text>
+        )}
       </AnimatedPressable>
       <View style={styles.librarySide}>
         <AnimatedPressable
@@ -8316,19 +8462,21 @@ export function LibraryWordDetailView({
           </View>
         )}
 
-        <View style={[styles.libraryDetailExampleCard, themeStyles?.libraryDetailExampleCard]}>
-          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
-            {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
-          </Text>
-          <Text style={[styles.libraryDetailExample, themeStyles?.libraryDetailExample]}>{formatExamplePrimary(word, studyMode)}</Text>
-          <View style={[styles.libraryDetailDivider, themeStyles?.libraryDetailDivider]} />
-          <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
-            {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
-          </Text>
-          <Text style={[styles.libraryDetailExampleZh, themeStyles?.libraryDetailExampleZh]}>
-            {formatExampleSecondary(word, studyMode)}
-          </Text>
-        </View>
+        {Boolean(formatExamplePrimary(word, studyMode)) && (
+          <View style={[styles.libraryDetailExampleCard, themeStyles?.libraryDetailExampleCard]}>
+            <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
+              {studyMode === 'chinese' ? ui.chineseExample : ui.englishExample}
+            </Text>
+            <Text style={[styles.libraryDetailExample, themeStyles?.libraryDetailExample]}>{formatExamplePrimary(word, studyMode)}</Text>
+            <View style={[styles.libraryDetailDivider, themeStyles?.libraryDetailDivider]} />
+            <Text style={[styles.libraryDetailLabel, themeStyles?.libraryDetailLabel]}>
+              {studyMode === 'chinese' ? ui.englishExample : ui.chineseTranslation}
+            </Text>
+            <Text style={[styles.libraryDetailExampleZh, themeStyles?.libraryDetailExampleZh]}>
+              {formatExampleSecondary(word, studyMode)}
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -8658,35 +8806,144 @@ function ProfileTutorialPanel({ onShowInstallGuide, studyMode }: { onShowInstall
   );
 }
 
-function ActiveSetBanner({
+function WordBankBar({
   count,
+  isScan,
   name,
-  onClear,
+  onPress,
   studyMode,
+  testID,
 }: {
   count: number;
+  isScan: boolean;
   name: string;
-  onClear: () => void;
+  onPress: () => void;
   studyMode: StudyMode;
+  testID: string;
 }) {
   const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
   const ui = modeInterfaceCopy[studyMode];
+  const accent = darkMode ? '#0A84FF' : '#007AFF';
 
   return (
-    <View style={[styles.activeSetBanner, themeStyles?.activeSetBanner]}>
-      <View style={styles.flexOne}>
-        <Text style={[styles.activeSetTitle, themeStyles?.activeSetTitle]}>{ui.activeSet(name)}</Text>
-        <Text style={[styles.activeSetText, themeStyles?.activeSetText]}>{ui.activeSetCount(count)}</Text>
+    <AnimatedPressable
+      accessibilityHint={ui.bankPickerHint}
+      accessibilityLabel={`${ui.bankLabel} ${name}`}
+      accessibilityRole="button"
+      onPress={onPress}
+      pressTone="list"
+      style={[styles.wordBankBar, themeStyles?.wordBankBar]}
+      testID={testID}
+    >
+      <View style={[styles.wordBankIcon, themeStyles?.wordBankIcon]}>
+        {isScan ? <ScanText size={17} color={accent} strokeWidth={2.3} /> : <Layers size={17} color={accent} strokeWidth={2.3} />}
       </View>
-      <AnimatedPressable
-        accessibilityRole="button"
-        onPress={onClear}
-        pressTone="chip"
-        style={[styles.activeSetClearButton, themeStyles?.activeSetClearButton]}
-      >
-        <Text adjustsFontSizeToFit minimumFontScale={0.86} numberOfLines={1} style={[styles.activeSetClearText, themeStyles?.activeSetClearText]}>{ui.clearActiveSet}</Text>
-      </AnimatedPressable>
-    </View>
+      <Text style={[styles.wordBankLabel, themeStyles?.cardMeta]}>{ui.bankLabel}</Text>
+      <Text numberOfLines={1} style={[styles.wordBankName, themeStyles?.sectionTitle]}>{name}</Text>
+      <Text style={[styles.wordBankCount, themeStyles?.cardMeta]}>{ui.bankWordCount(count)}</Text>
+      <ChevronDown size={16} color={darkMode ? '#AEAEB2' : '#6C6C70'} strokeWidth={2.4} />
+    </AnimatedPressable>
+  );
+}
+
+function WordBankPickerSheet({
+  activeBankId,
+  canScan,
+  coreCount,
+  sets,
+  studyMode,
+  visible,
+  onClose,
+  onManage,
+  onScan,
+  onSelect,
+}: {
+  activeBankId: string;
+  canScan: boolean;
+  coreCount: number;
+  sets: CustomVocabSet[];
+  studyMode: StudyMode;
+  visible: boolean;
+  onClose: () => void;
+  onManage: () => void;
+  onScan: () => void;
+  onSelect: (bankId: string) => void;
+}) {
+  const themeStyles = useThemeStyles();
+  const darkMode = useContext(ThemeContext) === 'dark';
+  const safeAreaInsets = useSafeAreaInsets();
+  const ui = modeInterfaceCopy[studyMode];
+  const accent = darkMode ? '#0A84FF' : '#007AFF';
+  const bodyIconColor = darkMode ? '#F2F2F7' : '#1C1C1E';
+  const banks = [
+    { count: coreCount, id: CORE_BANK_ID, isScan: false, name: ui.coreBankName, tag: ui.builtInBank },
+    ...sets.map((set) => {
+      const isScan = set.wordIds.some(isScannedWordId);
+      return { count: set.wordIds.length, id: set.id, isScan, name: set.name, tag: isScan ? ui.scanBankTag : '' };
+    }),
+  ];
+
+  return (
+    <Modal animationType="fade" onRequestClose={onClose} statusBarTranslucent transparent visible={visible}>
+      <View style={styles.wordBankSheetRoot} testID="word-bank-picker">
+        <Pressable accessibilityLabel={ui.closeSheet} onPress={onClose} style={[StyleSheet.absoluteFill, styles.wordBankSheetBackdrop]} />
+        <View style={[styles.wordBankSheet, themeStyles?.wordBankSheet, { paddingBottom: Math.max(18, safeAreaInsets.bottom + 10) }]}>
+          <View style={styles.homeDictionaryModalHandle} />
+          <View style={styles.rowBetween}>
+            <View style={styles.flexOne}>
+              <Text style={[styles.customSetPickerTitle, themeStyles?.customSetPickerTitle]}>{ui.bankPickerTitle}</Text>
+              <Text style={[styles.customSetPickerText, themeStyles?.customSetPickerText]}>{ui.bankPickerHint}</Text>
+            </View>
+            <AnimatedPressable accessibilityLabel={ui.closeSheet} accessibilityRole="button" onPress={onClose} pressTone="icon" style={[styles.iconButton, themeStyles?.iconButton]}>
+              <X size={18} color={bodyIconColor} strokeWidth={2.5} />
+            </AnimatedPressable>
+          </View>
+          <ScrollView style={styles.wordBankList} contentContainerStyle={styles.customSetPickerList}>
+            {banks.map((bank) => {
+              const selected = bank.id === activeBankId;
+              return (
+                <AnimatedPressable
+                  accessibilityRole="radio"
+                  accessibilityState={{ checked: selected }}
+                  key={bank.id}
+                  onPress={() => onSelect(bank.id)}
+                  pressTone="list"
+                  style={[styles.customSetPickerRow, themeStyles?.customSetPickerRow, selected && styles.wordBankRowActive]}
+                  testID={`word-bank-option-${bank.id}`}
+                >
+                  <View style={[styles.wordBankIcon, themeStyles?.wordBankIcon]}>
+                    {bank.id === CORE_BANK_ID ? (
+                      <BookOpen size={17} color={accent} strokeWidth={2.3} />
+                    ) : bank.isScan ? (
+                      <ScanText size={17} color={accent} strokeWidth={2.3} />
+                    ) : (
+                      <Library size={17} color={accent} strokeWidth={2.3} />
+                    )}
+                  </View>
+                  <View style={styles.flexOne}>
+                    <Text numberOfLines={1} style={[styles.customSetRowTitle, themeStyles?.customSetRowTitle]}>{bank.name}</Text>
+                    <Text style={[styles.customSetRowText, themeStyles?.customSetRowText]}>
+                      {bank.tag ? `${bank.tag} · ` : ''}{ui.bankWordCount(bank.count)}
+                    </Text>
+                  </View>
+                  <Check size={18} color={selected ? accent : 'transparent'} strokeWidth={2.6} />
+                </AnimatedPressable>
+              );
+            })}
+          </ScrollView>
+          <View style={styles.wordBankActions}>
+            <AnimatedPressable accessibilityRole="button" onPress={onScan} pressTone="primary" style={[styles.primaryButton, styles.flexOne]} testID="word-bank-scan">
+              {canScan ? <ScanText size={18} color="#FFFFFF" strokeWidth={2.3} /> : <Lock size={16} color="#FFFFFF" strokeWidth={2.4} />}
+              <Text style={styles.primaryButtonText}>{ui.scanNewSheet}</Text>
+            </AnimatedPressable>
+            <AnimatedPressable accessibilityRole="button" onPress={onManage} pressTone="secondary" style={[styles.secondaryButton, styles.wordBankManageButton, themeStyles?.secondaryButton]}>
+              <Text numberOfLines={1} style={[styles.secondaryButtonText, themeStyles?.secondaryButtonText]}>{ui.manage}</Text>
+            </AnimatedPressable>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 }
 
@@ -13482,6 +13739,76 @@ const styles = StyleSheet.create({
   homeQuizIcon: {
     backgroundColor: '#EDF5FF',
   },
+  wordBankBar: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#D1D1D6',
+    borderRadius: 14,
+    borderCurve: 'continuous',
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    gap: 8,
+    minHeight: 48,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  wordBankIcon: {
+    alignItems: 'center',
+    backgroundColor: '#EDF5FF',
+    borderRadius: 9,
+    height: 30,
+    justifyContent: 'center',
+    width: 30,
+  },
+  wordBankLabel: {
+    color: '#6C6C70',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  wordBankName: {
+    color: '#1C1C1E',
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  wordBankCount: {
+    color: '#6C6C70',
+    fontSize: 13,
+    fontVariant: ['tabular-nums'],
+  },
+  wordBankSheetRoot: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  wordBankSheetBackdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.32)',
+  },
+  wordBankSheet: {
+    backgroundColor: '#F2F2F7',
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
+    gap: 14,
+    maxHeight: '82%',
+    paddingHorizontal: 18,
+    paddingTop: 8,
+  },
+  wordBankList: {
+    flexGrow: 0,
+  },
+  wordBankRowActive: {
+    borderColor: '#007AFF',
+    borderWidth: 1.5,
+  },
+  wordBankActions: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  wordBankManageButton: {
+    flex: 0,
+    flexShrink: 0,
+    minWidth: 84,
+    paddingHorizontal: 18,
+  },
 });
 
 const darkStyles = StyleSheet.create({
@@ -14397,5 +14724,15 @@ const darkStyles = StyleSheet.create({
   },
   homeQuizIcon: {
     backgroundColor: '#182538',
+  },
+  wordBankBar: {
+    backgroundColor: '#1C1C1E',
+    borderColor: '#3A3A3C',
+  },
+  wordBankIcon: {
+    backgroundColor: '#182538',
+  },
+  wordBankSheet: {
+    backgroundColor: '#111111',
   },
 });

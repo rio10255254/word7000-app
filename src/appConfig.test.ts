@@ -35,6 +35,6 @@ describe('app store oriented metadata', () => {
     expect(packageJson.dependencies['react-native']).toBe('0.86.3');
     expect(packageJson.dependencies['react-native-reanimated']).toBe('4.5.1');
     expect(packageJson.dependencies['expo-battery']).toMatch(/^~57\./);
-    expect(app.expo.version).toBe('1.4.1');
+    expect(app.expo.version).toBe('1.5.0');
   });
 });

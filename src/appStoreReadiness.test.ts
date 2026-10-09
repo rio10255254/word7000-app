@@ -85,7 +85,7 @@ describe('iOS App Store readiness polish', () => {
 
     expect(appSource).toContain('() => selectStudyWords(studySourceWords, progress, studyFilter');
     expect(appSource).toContain('() => selectQuizWords(quizSourceWords, progress, quizFilter');
-    expect(appSource).toContain('() => filterWords(vocabularyWords, progress, deferredSearchQuery');
+    expect(appSource).toContain('() => filterWords(bankWords, progress, deferredSearchQuery');
     expect(appSource).not.toContain("() => activeTab === 'study'");
     expect(appSource).not.toContain("() => activeTab === 'library'");
     expect(appSource).toContain('useFocusedSnapshot(progress, activeTab === \'study\')');

@@ -185,8 +185,8 @@ export function buildConversationPrompt(word: WordEntry, mode: ConversationPromp
       keywordPronunciation: chineseMeaningPinyin(primaryChineseKeyword),
       question: buildChineseModeQuestion(context),
       questionSupport: `Try to answer in Chinese and include "${primaryChineseKeyword}" once. English hint: "${word.word}".`,
-      referenceAnswer: `${word.exampleZh} 我會再補上一個自己的原因或例子，讓回答更像真實對話。`,
-      referenceTranslation: `${word.example} I would add one personal reason or example to make the answer sound natural.`,
+      referenceAnswer: `${word.exampleZh} 我會再補上一個自己的原因或例子，讓回答更像真實對話。`.trim(),
+      referenceTranslation: `${word.example} I would add one personal reason or example to make the answer sound natural.`.trim(),
     };
   }
 
@@ -195,7 +195,7 @@ export function buildConversationPrompt(word: WordEntry, mode: ConversationPromp
     keywordPronunciation: '',
     question: buildEnglishQuestion(context),
     questionSupport: `Try to answer in 2-3 sentences and include "${word.word}" naturally.`,
-    referenceAnswer: `${word.example} I would add one personal reason or example to make the answer sound natural.`,
-    referenceTranslation: `${word.exampleZh} 我會再補上一個自己的原因或例子，讓回答聽起來更自然。`,
+    referenceAnswer: `${word.example} I would add one personal reason or example to make the answer sound natural.`.trim(),
+    referenceTranslation: `${word.exampleZh} 我會再補上一個自己的原因或例子，讓回答聽起來更自然。`.trim(),
   };
 }

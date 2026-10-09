@@ -4,7 +4,7 @@
     "slug": "word7000",
     "owner": "rio10255254",
     "scheme": "word7000",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -55,7 +55,15 @@
           "enablePushNotifications": true
         }
       ],
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Word7000 需要讀取你選的照片，在手機上辨識單字表裡的英文與中文意思。照片不會上傳。",
+          "cameraPermission": "Word7000 需要使用相機拍下單字表，在手機上辨識英文與中文意思。照片不會上傳。",
+          "microphonePermission": false
+        }
+      ]
     ],
     "extra": {
       "eas": {

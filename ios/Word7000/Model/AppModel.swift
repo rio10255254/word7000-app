@@ -146,6 +146,45 @@ final class AppModel {
         return (setId, words.count, set.name)
     }
 
+    func renameSet(_ id: String, to name: String) {
+        customSets = customSets.renamingSet(id, to: name)
+        scheduleSave()
+    }
+
+    func deleteSet(_ id: String) {
+        customSets = customSets.deletingSet(id)
+        if settings.activeBankId == id { selectBank(WordBanks.coreBankId) }
+        scheduleSave()
+    }
+
+    // MARK: Insights
+
+    /// Learning actions per day for the last seven days, oldest first.
+    var lastSevenDays: [(label: String, count: Int, isToday: Bool)] {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: "zh-Hant")
+        let symbols = calendar.veryShortWeekdaySymbols
+        let analytics = progress.analytics ?? LearningAnalyticsState()
+        return (0..<7).reversed().map { back -> (label: String, count: Int, isToday: Bool) in
+            let date = DayMath.addDays(today, -back) ?? today
+            let weekday = DayMath.dayNumber(date).map { (($0 % 7) + 11) % 7 } ?? 0 // 1970-01-01 was a Thursday
+            return (symbols[weekday], analytics.day(date).goalActions, back == 0)
+        }
+    }
+
+    /// Share of correct quiz answers in the last seven days, if any.
+    var quizAccuracy: Int? {
+        let analytics = progress.analytics ?? LearningAnalyticsState()
+        var correct = 0, wrong = 0
+        for back in 0..<7 {
+            let day = analytics.day(DayMath.addDays(today, -back) ?? today)
+            correct += day.quizCorrect
+            wrong += day.quizWrong
+        }
+        guard correct + wrong > 0 else { return nil }
+        return Int((Double(correct) / Double(correct + wrong) * 100).rounded())
+    }
+
     // MARK: Today
 
     var stats: ProgressStats { LearningEngine.stats(words: bank.words, state: progress, today: today) }
@@ -182,21 +221,15 @@ final class AppModel {
 
     // MARK: Study
 
-    func studyWords(filter: FilterSelection) -> [WordEntry] {
-        bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
-    }
-
     /// The current session, or a fresh one when there is none or the bank or
     /// filters changed since it was built.
     func ensureStudySession() {
-        let key = studySourceKey
-        if let session = studySession, session.sourceKey == key { return }
+        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete { return }
         startStudySession()
     }
 
-    var studySourceKey: String {
-        "\(settings.activeBankId)|\(settings.studyFilter.status.rawValue)|\(settings.studyFilter.level)|\(settings.studyFilter.initial)"
-    }
+    /// The schedule decides what to study, so a session depends only on the bank.
+    var studySourceKey: String { settings.activeBankId }
 
     func startStudySession(onlyIds: [String]? = nil) {
         let candidates: [WordEntry]
@@ -204,7 +237,7 @@ final class AppModel {
             let wanted = Set(onlyIds)
             candidates = bank.words.filter { wanted.contains($0.id) }
         } else {
-            candidates = studyWords(filter: settings.studyFilter)
+            candidates = bank.words
         }
         let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today, limit: max(1, progress.dailyTarget))
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
@@ -239,6 +272,18 @@ final class AppModel {
     }
 
     // MARK: Quiz
+
+    /// Questions favour words the learner has met: due and struggling words
+    /// first, then known ones, topped up with new words if there are too few.
+    func quizQuestions(count: Int, seed: String) -> [WordEntry] {
+        let seen = bank.words.filter { progress.words[$0.id].map { $0.status != .new } ?? false }
+        let pool = seen.count >= count ? seen : bank.words
+        return QuizBuilder.session(words: pool, count: count, seed: seed)
+    }
+
+    var reviewWordIds: [String] {
+        bank.words.filter { progress.words[$0.id]?.status == .review }.map(\.id)
+    }
 
     func recordQuizAnswer(wordId: String, correct: Bool) {
         let changed = correct

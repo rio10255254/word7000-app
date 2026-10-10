@@ -2,83 +2,69 @@ import SwiftUI
 import Word7000Core
 
 enum AppTab: Hashable {
-    case home, study, quiz, library, profile
+    case today, words, me
 }
 
+/// What runs full screen on top of the tabs.
+enum Activity: Identifiable, Hashable {
+    case study
+    case quiz
+    case scan
+
+    var id: Self { self }
+}
+
+/// Three tabs, like Apple's own apps: today's practice, the words, and you.
+/// Studying and quizzes take the whole screen so nothing competes with the card.
 struct RootView: View {
     @Environment(AppModel.self) private var model
-    @State private var tab: AppTab = .home
-    @State private var bankPickerOpen = false
-    @State private var scanOpen = false
+    @State private var tab: AppTab = .today
+    @State private var activity: Activity?
 
     var body: some View {
         TabView(selection: $tab) {
             NavigationStack {
-                HomeView(selectTab: { tab = $0 }, openBankPicker: { bankPickerOpen = true })
+                TodayView(start: { activity = $0 })
             }
-            .tabItem { Label(L.tabHome, systemImage: "house.fill") }
-            .tag(AppTab.home)
+            .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
+            .tag(AppTab.today)
 
             NavigationStack {
-                StudyView(selectTab: { tab = $0 }, openBankPicker: { bankPickerOpen = true })
+                WordsView(scan: { activity = .scan }, study: { activity = .study })
             }
-            .tabItem { Label(L.tabStudy, systemImage: "rectangle.on.rectangle.angled") }
-            .tag(AppTab.study)
+            .tabItem { Label(L.tabWords, systemImage: "books.vertical.fill") }
+            .tag(AppTab.words)
 
             NavigationStack {
-                QuizView(selectTab: { tab = $0 }, openBankPicker: { bankPickerOpen = true })
+                MeView()
             }
-            .tabItem { Label(L.tabQuiz, systemImage: "checklist") }
-            .tag(AppTab.quiz)
-
-            NavigationStack {
-                LibraryView(openBankPicker: { bankPickerOpen = true })
-            }
-            .tabItem { Label(L.tabLibrary, systemImage: "books.vertical.fill") }
-            .tag(AppTab.library)
-
-            NavigationStack {
-                ProfileView()
-            }
-            .tabItem { Label(L.tabProfile, systemImage: "person.crop.circle.fill") }
-            .tag(AppTab.profile)
+            .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }
+            .tag(AppTab.me)
         }
-        .sheet(isPresented: $bankPickerOpen) {
-            BankPickerSheet(onScan: {
-                Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(350))
-                    scanOpen = true
-                }
-            })
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
-        }
-        .sheet(isPresented: $scanOpen) {
-            ScanView(onStudy: { tab = .study })
+        .fullScreenCover(item: $activity) { activity in
+            switch activity {
+            case .study:
+                StudySessionView(startQuiz: { switchTo(.quiz) })
+            case .quiz:
+                QuizSessionView(studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
+            case .scan:
+                ScanView(onStudy: { switchTo(.study) })
+            }
         }
     }
-}
 
-/// The word bank this screen works on, with a way to switch it.
-struct BankButton: View {
-    @Environment(AppModel.self) private var model
-    var action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Image(systemName: model.bankIsScan ? "doc.text.viewfinder" : "square.stack.3d.up.fill")
-                    .font(.subheadline.weight(.semibold))
-                Text(model.bankName)
-                    .font(.rounded(.subheadline, weight: .semibold))
-                    .lineLimit(1)
-                Image(systemName: "chevron.down")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.secondary)
+    /// Closes the current full-screen activity and opens another.
+    private func switchTo(_ next: Activity) {
+        activity = nil
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            if next == .study, model.studySession == nil || model.studySession?.isComplete == true {
+                model.startStudySession()
             }
+            activity = next
         }
-        .accessibilityLabel("\(L.bankLabel) \(model.bankName)")
-        .accessibilityHint(L.bankPickerHint)
-        .accessibilityIdentifier("bank-button")
     }
 }

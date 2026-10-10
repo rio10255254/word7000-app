@@ -64,6 +64,7 @@ struct StudySessionView: View {
 
     private func card(word: WordEntry) -> some View {
         let progress = model.progress(for: word.id)
+        let face = model.face(word)
         return VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 4) {
                 Spacer()
@@ -75,18 +76,18 @@ struct StudySessionView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
-                SpeakButton(text: word.word)
+                SpeakButton(text: face.speakText, language: face.speakLanguage)
             }
 
             Spacer(minLength: 0)
             VStack(spacing: 6) {
-                Text(word.word)
+                Text(face.prompt)
                     .font(.roundedSize(46, weight: .bold))
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(2)
+                    .minimumScaleFactor(0.4)
+                    .lineLimit(3)
                     .multilineTextAlignment(.center)
-                if !word.pronunciation.isEmpty {
-                    Text(word.pronunciation)
+                if !face.promptDetail.isEmpty {
+                    Text(face.promptDetail)
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 }
@@ -187,30 +188,37 @@ struct StudySessionView: View {
 
 /// Meaning, part of speech, other meanings and the example sentence.
 struct WordAnswer: View {
+    @Environment(AppModel.self) private var model
     var word: WordEntry
 
     var body: some View {
+        let face = model.face(word)
         VStack(alignment: .leading, spacing: 12) {
             Divider()
             VStack(alignment: .leading, spacing: 4) {
-                if !word.partOfSpeech.isEmpty {
-                    Text(word.partOfSpeech)
+                if !face.answerLabel.isEmpty {
+                    Text(face.answerLabel)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Palette.accent)
                 }
-                Text(word.meaningZh)
+                Text(face.answer)
                     .font(.rounded(.title2, weight: .bold))
-                if let more = word.supplementalMeaningZh, !more.isEmpty {
-                    Text(more)
+                if !face.answerDetail.isEmpty {
+                    Text(face.answerDetail)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                if !face.supplemental.isEmpty {
+                    Text(face.supplemental)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
             }
-            if !word.example.isEmpty {
+            if !face.examplePrimary.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(word.example)
-                    if !word.exampleZh.isEmpty {
-                        Text(word.exampleZh)
+                    Text(face.examplePrimary)
+                    if !face.exampleSecondary.isEmpty {
+                        Text(face.exampleSecondary)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }

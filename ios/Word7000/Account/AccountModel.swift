@@ -408,24 +408,24 @@ struct SyncDirty: Equatable {
 
 /// Account copy (Chinese interface).
 enum A {
-    static let localOnly = "進度保存在這支 iPhone"
-    static let preparing = "正在準備…"
-    static let guestSaved = "進度已自動備份"
-    static let signedIn = "已登入並同步"
-    static let synced = "已同步"
-    static let savedLocally = "進度已存在手機，稍後自動同步"
-    static let offline = "目前離線，進度先存在手機"
-    static let signingIn = "登入中…"
-    static let creatingAccount = "建立帳號中…"
-    static let confirmEmail = "請到信箱確認後再登入"
-    static let enterEmailPassword = "請輸入 Email 和密碼"
-    static let passwordTooShort = "密碼至少 6 個字元"
-    static let signInFailed = "登入失敗，請再試一次"
-    static let appleFailed = "Apple 登入失敗，請再試一次"
-    static let googleFailed = "Google 登入沒有完成"
-    static let cancelled = "已取消登入"
-    static let signedOut = "已登出"
-    static let deleting = "正在刪除帳號與資料…"
-    static let deleted = "帳號已刪除"
-    static let deleteFailed = "刪除失敗，請稍後再試"
+    static var localOnly: String { L.t("進度保存在這支 iPhone", "Progress is saved on this iPhone") }
+    static var preparing: String { L.t("正在準備…", "Getting ready…") }
+    static var guestSaved: String { L.t("進度已自動備份", "Progress backed up automatically") }
+    static var signedIn: String { L.t("已登入並同步", "Signed in and synced") }
+    static var synced: String { L.t("已同步", "Synced") }
+    static var savedLocally: String { L.t("進度已存在手機，稍後自動同步", "Saved on this iPhone; will sync shortly") }
+    static var offline: String { L.t("目前離線，進度先存在手機", "Offline; progress is saved on this iPhone") }
+    static var signingIn: String { L.t("登入中…", "Signing in…") }
+    static var creatingAccount: String { L.t("建立帳號中…", "Creating account…") }
+    static var confirmEmail: String { L.t("請到信箱確認後再登入", "Check your email to confirm, then sign in") }
+    static var enterEmailPassword: String { L.t("請輸入 Email 和密碼", "Enter your email and password") }
+    static var passwordTooShort: String { L.t("密碼至少 6 個字元", "Password must be at least 6 characters") }
+    static var signInFailed: String { L.t("登入失敗，請再試一次", "Sign-in failed. Please try again.") }
+    static var appleFailed: String { L.t("Apple 登入失敗，請再試一次", "Sign in with Apple failed. Please try again.") }
+    static var googleFailed: String { L.t("Google 登入沒有完成", "Google sign-in did not finish") }
+    static var cancelled: String { L.t("已取消登入", "Sign-in cancelled") }
+    static var signedOut: String { L.t("已登出", "Signed out") }
+    static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
+    static var deleted: String { L.t("帳號已刪除", "Account deleted") }
+    static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }
 }

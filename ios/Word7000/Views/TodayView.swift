@@ -59,6 +59,11 @@ struct TodayView: View {
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("today-quiz")
+                Button { start(.speaking) } label: {
+                    ActionRow(icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking)
+                }
+                .tint(.primary)
+                .accessibilityIdentifier("today-speaking")
                 if stats.review > 0 {
                     Button {
                         model.startStudySession(onlyIds: model.reviewWordIds)

@@ -69,29 +69,30 @@ struct QuizSessionView: View {
     private func loadOptions() {
         chosen = nil
         guard questions.indices.contains(index) else { return }
-        options = QuizBuilder.options(vocabulary: model.bank, wordId: questions[index].id, seed: seed)
+        options = QuizBuilder.options(vocabulary: model.bank, wordId: questions[index].id, seed: seed, mode: model.quizMode)
     }
 
     // MARK: Question
 
     private func question(_ word: WordEntry) -> some View {
-        VStack(spacing: 16) {
+        let face = model.face(word)
+        return VStack(spacing: 16) {
             SessionBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)))
                 .padding(.top, 4)
 
             VStack(spacing: 6) {
-                Text(word.word)
+                Text(face.prompt)
                     .font(.roundedSize(42, weight: .bold))
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(2)
-                if !word.pronunciation.isEmpty {
-                    Text(word.pronunciation).foregroundStyle(.secondary)
+                    .minimumScaleFactor(0.4)
+                    .lineLimit(3)
+                if !face.promptDetail.isEmpty {
+                    Text(face.promptDetail).foregroundStyle(.secondary)
                 }
             }
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 28)
-            .overlay(alignment: .topTrailing) { SpeakButton(text: word.word) }
+            .overlay(alignment: .topTrailing) { SpeakButton(text: face.speakText, language: face.speakLanguage) }
 
             VStack(spacing: 10) {
                 ForEach(Array(options.enumerated()), id: \.element) { offset, option in
@@ -103,10 +104,10 @@ struct QuizSessionView: View {
             Spacer(minLength: 0)
 
             if let chosen {
-                if !chosen.correct, !word.example.isEmpty {
+                if !chosen.correct, !face.examplePrimary.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(word.example)
-                        Text(word.exampleZh).font(.subheadline).foregroundStyle(.secondary)
+                        Text(face.examplePrimary)
+                        Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
                     }
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)

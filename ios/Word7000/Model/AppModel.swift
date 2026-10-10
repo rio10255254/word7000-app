@@ -20,7 +20,10 @@ final class AppModel {
     @ObservationIgnored var onDataChange: ((SyncDirty) -> Void)?
     @ObservationIgnored private var replacing = false
     var settings: AppSettings {
-        didSet { scheduleSave() }
+        didSet {
+            L.mode = settings.studyMode ?? .english
+            scheduleSave()
+        }
     }
     private(set) var today: String
 
@@ -38,6 +41,7 @@ final class AppModel {
         self.progress = LearningEngine.normalizeForDate(progress, today: today)
         self.customSets = customSets
         self.settings = settings
+        L.mode = settings.studyMode ?? .english
         self.persistence = persistence
         self.today = today
     }
@@ -77,6 +81,7 @@ final class AppModel {
             progress = SampleData.progress(words: words, today: DayMath.today())
         }
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
+        if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
 
         let model = AppModel(coreWords: words, progress: progress, customSets: sets, settings: settings, persistence: persistence)
@@ -106,6 +111,21 @@ final class AppModel {
         studyUndoStack = []
         scheduleSave()
     }
+
+    // MARK: Study mode
+
+    var studyMode: StudyMode { settings.studyMode ?? .english }
+
+    /// Switching what is learned rebuilds the study session (the cards face
+    /// the other way) but keeps all progress.
+    func setStudyMode(_ mode: StudyMode) {
+        guard mode != studyMode else { return }
+        settings.studyMode = mode
+        studySession = nil
+        studyUndoStack = []
+    }
+
+    func face(_ word: WordEntry) -> WordFace { WordFace(word, mode: studyMode) }
 
     // MARK: Word lists and banks
 
@@ -251,7 +271,7 @@ final class AppModel {
     }
 
     /// The schedule decides what to study, so a session depends only on the bank.
-    var studySourceKey: String { settings.activeBankId }
+    var studySourceKey: String { "\(settings.activeBankId)|\(studyMode.rawValue)" }
 
     func startStudySession(onlyIds: [String]? = nil) {
         let candidates: [WordEntry]
@@ -280,7 +300,7 @@ final class AppModel {
             : LearningEngine.markReview(progress, wordId: cardId, today: today)
         progress = recordActivity(in: changed) { counters in
             if grade == .known { counters.studyKnown += 1 } else { counters.studyReview += 1 }
-            counters.englishActions += 1
+            if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
         }
         studySession = session.grading(cardId, as: grade)
         scheduleSave()
@@ -313,8 +333,58 @@ final class AppModel {
             : LearningEngine.markReview(progress, wordId: wordId, today: today)
         progress = recordActivity(in: changed) { counters in
             if correct { counters.quizCorrect += 1 } else { counters.quizWrong += 1 }
-            counters.englishActions += 1
+            if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
         }
+        scheduleSave()
+    }
+
+    /// Speaking practice counts as activity but does not change word progress.
+    func recordSpeaking(completed: Bool) {
+        progress = recordActivity(in: progress) { counters in
+            if completed { counters.speakingCompleted += 1 } else { counters.speakingSkipped += 1 }
+        }
+        scheduleSave()
+    }
+
+    var quizMode: QuizAnswerMode { studyMode == .english ? .meaning : .word }
+
+    // MARK: Word sets
+
+    @discardableResult
+    func createSet(named name: String) -> String {
+        let created = customSets.creatingSet(named: name.trimmed.isEmpty ? L.newBankDefault : name)
+        customSets = created.state
+        scheduleSave()
+        return created.id
+    }
+
+    func addWord(_ wordId: String, toSet setId: String) {
+        customSets = customSets.addingWord(wordId, toSet: setId)
+        scheduleSave()
+    }
+
+    func removeWord(_ wordId: String, fromSet setId: String) {
+        customSets = customSets.removingWord(wordId, fromSet: setId)
+        scheduleSave()
+    }
+
+    /// A word typed in by hand, saved into a set.
+    func addCustomWord(word: String, partOfSpeech: String, meaning: String, toSet setId: String) {
+        let stamp = String(Int(Date().timeIntervalSince1970 * 1000), radix: 36)
+        let slug = WordBanks.slug(word.lowercased())
+        let core = vocabularyWords.first { $0.word.lowercased() == word.trimmed.lowercased() }
+        let entry = WordEntry(
+            id: "custom-\(slug)-\(stamp)",
+            word: word.trimmed,
+            partOfSpeech: partOfSpeech.trimmed.isEmpty ? (core?.partOfSpeech ?? "") : partOfSpeech.trimmed,
+            pronunciation: core?.pronunciation ?? "",
+            meaningZh: meaning.trimmed,
+            supplementalMeaningZh: "",
+            example: core?.example ?? "",
+            exampleZh: core?.exampleZh ?? "",
+            group: "Custom"
+        )
+        customSets = customSets.addingCustomWords([entry], toSet: setId)
         scheduleSave()
     }
 

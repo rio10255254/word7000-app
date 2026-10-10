@@ -10,6 +10,26 @@ final class ScreenshotTests: XCTestCase {
     func testLightScreens() { walkThrough(theme: "Light") }
     func testDarkScreens() { walkThrough(theme: "Dark") }
 
+    /// The English interface for learning Chinese.
+    func testChineseModeScreens() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingChineseMode"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        snap(app, "zh-1-today")
+        app.buttons["today-start"].tap()
+        XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
+        snap(app, "zh-2-study")
+        app.buttons["study-show-answer"].tap()
+        XCTAssertTrue(app.buttons["study-grade-known"].waitForExistence(timeout: 5))
+        snap(app, "zh-3-study-answer")
+        app.buttons["study-close"].tap()
+        XCTAssertTrue(app.buttons["today-speaking"].waitForExistence(timeout: 5))
+        app.buttons["today-speaking"].tap()
+        sleep(1)
+        snap(app, "zh-4-speaking")
+    }
+
     private func walkThrough(theme: String) {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTesting\(theme)"]
@@ -54,6 +74,12 @@ final class ScreenshotTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 2).tap()
         sleep(1)
         snap(app, "\(prefix)-9-me")
+
+        app.tabBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["today-speaking"].waitForExistence(timeout: 5))
+        app.buttons["today-speaking"].tap()
+        sleep(1)
+        snap(app, "\(prefix)-10-speaking")
     }
 
     private func snap(_ app: XCUIApplication, _ name: String) {

@@ -21,6 +21,8 @@ struct AppSettings: Codable, Equatable {
     /// Once a permanent account was used here, Google sign-in no longer tries
     /// to link the guest identity.
     var permanentAccountUsed: Bool?
+    /// nil means `.english`, the default.
+    var studyMode: StudyMode?
 }
 
 struct FilterSelection: Codable, Equatable, Hashable {

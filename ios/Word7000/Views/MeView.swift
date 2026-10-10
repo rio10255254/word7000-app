@@ -35,6 +35,14 @@ struct MeView: View {
             }
 
             Section {
+                Picker(L.studyModeTitle, selection: Binding(
+                    get: { model.studyMode },
+                    set: { model.setStudyMode($0) }
+                )) {
+                    ForEach(StudyMode.allCases) { mode in
+                        Text(L.studyModeLabel(mode)).tag(mode)
+                    }
+                }
                 Picker(L.dailyTargetTitle, selection: Binding(
                     get: { model.progress.dailyTarget },
                     set: { model.setDailyTarget($0) }

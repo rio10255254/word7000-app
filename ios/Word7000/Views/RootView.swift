@@ -9,6 +9,7 @@ enum AppTab: Hashable {
 enum Activity: Identifiable, Hashable {
     case study
     case quiz
+    case speaking
     case scan
 
     var id: Self { self }
@@ -43,6 +44,8 @@ struct RootView: View {
             .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }
             .tag(AppTab.me)
         }
+        // The interface language follows the study mode; rebuild on change.
+        .id(model.studyMode)
         .sheet(isPresented: $signInForScan) {
             SignInSheet(reason: .scan, onSignedIn: {
                 Task { @MainActor in
@@ -60,6 +63,8 @@ struct RootView: View {
                     model.startStudySession(onlyIds: ids)
                     switchTo(.study)
                 })
+            case .speaking:
+                SpeakingSessionView()
             case .scan:
                 ScanView(onStudy: { switchTo(.study) })
             }

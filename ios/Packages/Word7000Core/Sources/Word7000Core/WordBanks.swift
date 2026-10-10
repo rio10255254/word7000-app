@@ -94,6 +94,8 @@ public enum WordBanks {
         }
     }
 
+    public static func slug(_ key: String) -> String { slugify(key) }
+
     static func slugify(_ key: String) -> String {
         var slug = ""
         var lastWasDash = false

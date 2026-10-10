@@ -40,7 +40,7 @@ struct ScanView: View {
     @State private var suggester: WordSuggester?
     @State private var message: String?
     @State private var target: Target = .new
-    @State private var newBankName = WordBanks.defaultScanBankName()
+    @State private var newBankName = WordBanks.defaultScanBankName(chineseMode: L.mode == .chinese)
 
     private var scanBanks: [CustomVocabSet] {
         model.customSets.sets.filter { set in set.wordIds.contains(where: WordBanks.isScannedWordId) }
@@ -325,36 +325,36 @@ struct ScanView: View {
 
 /// Scan screen copy (English-word mode).
 private enum S {
-    static let title = "掃描單字表"
-    static let intro = "掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。"
-    static let takePhoto = "拍照"
-    static let scanDocument = "掃描單字表（可多頁、手寫也行）"
-    static let organizedByAI = "由 Apple Intelligence 從頁面整理，請確認"
-    static func corrected(_ original: String) -> String { "原本讀成「\(original)」，已對照字典修正。點這裡還原" }
-    static let choosePhoto = "從相簿選擇"
-    static let pasteTitle = "或貼上文字"
-    static let pasteHint = "在「照片」App 長按文字即可拷貝（原況文字），再貼到這裡"
-    static let pastePlaceholder = "abandon v. 放棄\nbenefit n. 好處"
-    static let readPasted = "讀取貼上的文字"
-    static let reading = "正在手機上辨識…"
-    static let readingSmart = "正在手機上辨識並整理…"
-    static let readFailed = "辨識失敗，請換一張更清楚的照片再試一次。"
-    static func found(_ count: Int) -> String { "找到 \(count) 個單字" }
-    static let reviewHint = "儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。"
-    static let noneFound = "沒有找到成對的英文和中文意思。可以換一張更清楚的照片，或用「新增一列」手動加入。"
-    static let word = "英文"
-    static let meaning = "中文意思"
-    static let pos = "詞性"
-    static let addRow = "新增一列"
-    static let saveTo = "存到"
-    static let newBank = "新字庫"
-    static let bankName = "字庫名稱"
-    static func save(_ count: Int) -> String { "存入字庫（\(count) 個）" }
-    static let rescan = "重新掃描"
-    static let savedTitle = "已存入字庫"
-    static func savedText(_ count: Int, _ name: String) -> String { "\(count) 個單字已加入「\(name)」，學習、測驗和字庫都已切換到這個字庫。" }
-    static let startStudy = "開始學習"
-    static let scanAnother = "再掃一張"
+    static var title: String { L.t("掃描單字表", "Scan a word list") }
+    static var intro: String { L.t("掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。", "Scan or pick a photo of a word list. The app reads each English word and the Chinese meaning written on the page, printed or handwritten. Photos never leave your iPhone.") }
+    static var takePhoto: String { L.t("拍照", "Take Photo") }
+    static var scanDocument: String { L.t("掃描單字表（可多頁、手寫也行）", "Scan a word list (several pages, handwriting OK)") }
+    static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organised from the page by Apple Intelligence; please check") }
+    static func corrected(_ original: String) -> String { L.t("原本讀成「\(original)」，已對照字典修正。點這裡還原", "Read as \u{201C}\(original)\u{201D}; matched to the dictionary. Tap to undo") }
+    static var choosePhoto: String { L.t("從相簿選擇", "Choose Photo") }
+    static var pasteTitle: String { L.t("或貼上文字", "Or paste text") }
+    static var pasteHint: String { L.t("在「照片」App 長按文字即可拷貝（原況文字），再貼到這裡", "In Photos, touch and hold text to copy it (Live Text), then paste it here") }
+    static var pastePlaceholder: String { L.t("abandon v. 放棄\nbenefit n. 好處", "abandon v. 放棄\nbenefit n. 好處") }
+    static var readPasted: String { L.t("讀取貼上的文字", "Read pasted text") }
+    static var reading: String { L.t("正在手機上辨識…", "Reading on your iPhone…") }
+    static var readingSmart: String { L.t("正在手機上辨識並整理…", "Reading and organising on your iPhone…") }
+    static var readFailed: String { L.t("辨識失敗，請換一張更清楚的照片再試一次。", "Could not read that photo. Try a clearer one.") }
+    static func found(_ count: Int) -> String { L.t("找到 \(count) 個單字", "\(count) words found") }
+    static var reviewHint: String { L.t("儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。", "Fix any word or meaning before saving. Unchecked rows are skipped; swipe left to delete.") }
+    static var noneFound: String { L.t("沒有找到成對的英文和中文意思。可以換一張更清楚的照片，或用「新增一列」手動加入。", "No word and meaning pairs were found. Try a clearer photo, or add rows by hand.") }
+    static var word: String { L.t("英文", "English") }
+    static var meaning: String { L.t("中文意思", "Chinese meaning") }
+    static var pos: String { L.t("詞性", "Part") }
+    static var addRow: String { L.t("新增一列", "Add row") }
+    static var saveTo: String { L.t("存到", "Save to") }
+    static var newBank: String { L.t("新字庫", "New bank") }
+    static var bankName: String { L.t("字庫名稱", "Bank name") }
+    static func save(_ count: Int) -> String { L.t("存入字庫（\(count) 個）", "Save \(count) words") }
+    static var rescan: String { L.t("重新掃描", "Scan again") }
+    static var savedTitle: String { L.t("已存入字庫", "Saved") }
+    static func savedText(_ count: Int, _ name: String) -> String { L.t("\(count) 個單字已加入「\(name)」，學習、測驗和字庫都已切換到這個字庫。", "\(count) words added to \u{201C}\(name)\u{201D}. Study, quizzes and Words now use this bank.") }
+    static var startStudy: String { L.t("開始學習", "Start studying") }
+    static var scanAnother: String { L.t("再掃一張", "Scan another") }
 }
 
 extension String {

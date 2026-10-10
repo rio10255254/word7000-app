@@ -10,6 +10,8 @@ struct WordsView: View {
     @State private var query = ""
     @State private var renaming: CustomVocabSet?
     @State private var newName = ""
+    @State private var creatingBank = false
+    @State private var addingWord = false
 
     var body: some View {
         let filter = model.settings.libraryFilter
@@ -66,6 +68,32 @@ struct WordsView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 filterMenu
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(action: scan) { Label(L.scanSheet, systemImage: "doc.text.viewfinder") }
+                    Button {
+                        newName = ""
+                        creatingBank = true
+                    } label: { Label(L.newBank, systemImage: "folder.badge.plus") }
+                    if model.activeSet != nil {
+                        Button { addingWord = true } label: { Label(L.addWord, systemImage: "plus") }
+                    }
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .accessibilityIdentifier("words-add")
+            }
+        }
+        .alert(L.newBank, isPresented: $creatingBank) {
+            TextField(L.bankName, text: $newName)
+            Button(L.cancel, role: .cancel) {}
+            Button(L.save) {
+                let id = model.createSet(named: newName)
+                model.selectBank(id)
+            }
+        }
+        .sheet(isPresented: $addingWord) {
+            AddWordSheet()
         }
         .alert(L.renameBank, isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
             TextField(L.bankName, text: $newName)
@@ -188,6 +216,7 @@ struct BankShelf: View {
 }
 
 struct WordRow: View {
+    @Environment(AppModel.self) private var model
     var word: WordEntry
     var progress: WordProgress
 
@@ -198,8 +227,9 @@ struct WordRow: View {
                 .frame(width: 8, height: 8)
                 .accessibilityLabel(L.statusLabel(progress.status))
             VStack(alignment: .leading, spacing: 2) {
-                Text(word.word).font(.rounded(.body, weight: .semibold))
-                Text(word.meaningZh)
+                let face = model.face(word)
+                Text(face.prompt).font(.rounded(.body, weight: .semibold))
+                Text(face.answer)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -226,40 +256,45 @@ struct WordDetailView: View {
 
     var body: some View {
         let progress = model.progress(for: word.id)
+        let face = model.face(word)
         List {
             Section {
                 VStack(spacing: 6) {
-                    Text(word.word)
+                    Text(face.prompt)
                         .font(.roundedSize(42, weight: .bold))
+                        .multilineTextAlignment(.center)
                         .textSelection(.enabled)
-                    if !word.pronunciation.isEmpty {
-                        Text(word.pronunciation).font(.title3).foregroundStyle(.secondary)
+                    if !face.promptDetail.isEmpty {
+                        Text(face.promptDetail).font(.title3).foregroundStyle(.secondary)
                     }
-                    SpeakButton(text: word.word)
+                    SpeakButton(text: face.speakText, language: face.speakLanguage)
                 }
                 .frame(maxWidth: .infinity)
                 .listRowBackground(Color.clear)
             }
             Section {
                 VStack(alignment: .leading, spacing: 4) {
-                    if !word.partOfSpeech.isEmpty {
-                        Text(word.partOfSpeech).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
+                    if !face.answerLabel.isEmpty {
+                        Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
                     }
-                    Text(word.meaningZh).font(.rounded(.title3, weight: .bold))
-                    if let more = word.supplementalMeaningZh, !more.isEmpty {
-                        Text(more).foregroundStyle(.secondary)
+                    Text(face.answer).font(.rounded(.title3, weight: .bold))
+                    if !face.answerDetail.isEmpty {
+                        Text(face.answerDetail).foregroundStyle(.secondary)
+                    }
+                    if !face.supplemental.isEmpty {
+                        Text(face.supplemental).foregroundStyle(.secondary)
                     }
                 }
                 .padding(.vertical, 4)
             } header: {
                 Text(L.meaning)
             }
-            if !word.example.isEmpty {
+            if !face.examplePrimary.isEmpty {
                 Section(L.example) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(word.example)
-                        if !word.exampleZh.isEmpty {
-                            Text(word.exampleZh).font(.subheadline).foregroundStyle(.secondary)
+                        Text(face.examplePrimary)
+                        if !face.exampleSecondary.isEmpty {
+                            Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
@@ -273,9 +308,38 @@ struct WordDetailView: View {
                 LabeledContent(L.level, value: word.group)
             }
         }
-        .navigationTitle(word.word)
+        .navigationTitle(face.prompt)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    ForEach(model.customSets.sets) { set in
+                        Button {
+                            model.addWord(word.id, toSet: set.id)
+                        } label: {
+                            Label(set.name, systemImage: set.wordIds.contains(word.id) ? "checkmark" : "folder")
+                        }
+                        .disabled(set.wordIds.contains(word.id))
+                    }
+                    Button {
+                        let id = model.createSet(named: L.newBankDefault)
+                        model.addWord(word.id, toSet: id)
+                    } label: {
+                        Label(L.newBank, systemImage: "folder.badge.plus")
+                    }
+                    if let active = model.activeSet, active.wordIds.contains(word.id) {
+                        Divider()
+                        Button(role: .destructive) {
+                            model.removeWord(word.id, fromSet: active.id)
+                        } label: {
+                            Label(L.removeFromBank, systemImage: "minus.circle")
+                        }
+                    }
+                } label: {
+                    Image(systemName: "folder.badge.plus")
+                }
+                .accessibilityLabel(L.addToBank)
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button { model.toggleFavorite(word.id) } label: {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
@@ -284,5 +348,46 @@ struct WordDetailView: View {
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
             }
         }
+    }
+}
+
+/// Type a word and its meaning into the current bank.
+struct AddWordSheet: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
+    @State private var word = ""
+    @State private var partOfSpeech = ""
+    @State private var meaning = ""
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("English", text: $word)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                    TextField(L.t("詞性（可留空）", "Part of speech (optional)"), text: $partOfSpeech)
+                        .textInputAutocapitalization(.never)
+                    TextField(L.t("中文意思", "Chinese meaning"), text: $meaning)
+                } footer: {
+                    Text(L.t("會加入「\(model.bankName)」。", "Added to \u{201C}\(model.bankName)\u{201D}."))
+                }
+            }
+            .navigationTitle(L.addWord)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button(L.cancel) { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L.save) {
+                        if let set = model.activeSet {
+                            model.addCustomWord(word: word, partOfSpeech: partOfSpeech, meaning: meaning, toSet: set.id)
+                        }
+                        dismiss()
+                    }
+                    .disabled(word.trimmed.isEmpty || meaning.trimmed.isEmpty)
+                }
+            }
+        }
+        .presentationDetents([.medium])
     }
 }

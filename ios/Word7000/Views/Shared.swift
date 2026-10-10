@@ -7,11 +7,11 @@ final class Speaker {
     static let shared = Speaker()
     private let synthesizer = AVSpeechSynthesizer()
 
-    func speak(_ text: String) {
+    func speak(_ text: String, language: String = "en-US") {
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
         synthesizer.stopSpeaking(at: .immediate)
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        utterance.voice = AVSpeechSynthesisVoice(language: language)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
         synthesizer.speak(utterance)
     }
@@ -19,9 +19,10 @@ final class Speaker {
 
 struct SpeakButton: View {
     var text: String
+    var language: String = "en-US"
 
     var body: some View {
-        Button { Speaker.shared.speak(text) } label: {
+        Button { Speaker.shared.speak(text, language: language) } label: {
             Image(systemName: "speaker.wave.2.fill")
                 .font(.title3)
                 .foregroundStyle(Palette.accent)

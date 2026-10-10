@@ -53,7 +53,7 @@ final class AccountModel {
     }
 
     /// Filled in at build time from the EAS "production" environment.
-    static func bundledConfig() -> SupabaseConfig? {
+    nonisolated static func bundledConfig() -> SupabaseConfig? {
         let info = Bundle.main.infoDictionary ?? [:]
         let url = info["Word7000SupabaseURL"] as? String
         let publishable = info["Word7000SupabasePublishableKey"] as? String

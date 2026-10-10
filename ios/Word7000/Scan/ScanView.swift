@@ -56,7 +56,7 @@ struct ScanView: View {
                 switch phase {
                 case .choose: chooser
                 case .reading:
-                    ProgressView(S.reading)
+                    ProgressView(SmartScan.canOrganize ? S.readingSmart : S.reading)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 case .review: review
                 case let .saved(count, name): saved(count: count, name: name)
@@ -216,6 +216,11 @@ struct ScanView: View {
                             }
                             TextField(S.meaning, text: $row.meaning)
                                 .font(.subheadline)
+                            if row.id.contains("-ai-") {
+                                Label(S.organizedByAI, systemImage: "sparkles")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                             if let original = row.originalWord {
                                 Button {
                                     row.word = original
@@ -324,6 +329,7 @@ private enum S {
     static let intro = "掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。"
     static let takePhoto = "拍照"
     static let scanDocument = "掃描單字表（可多頁、手寫也行）"
+    static let organizedByAI = "由 Apple Intelligence 從頁面整理，請確認"
     static func corrected(_ original: String) -> String { "原本讀成「\(original)」，已對照字典修正。點這裡還原" }
     static let choosePhoto = "從相簿選擇"
     static let pasteTitle = "或貼上文字"
@@ -331,6 +337,7 @@ private enum S {
     static let pastePlaceholder = "abandon v. 放棄\nbenefit n. 好處"
     static let readPasted = "讀取貼上的文字"
     static let reading = "正在手機上辨識…"
+    static let readingSmart = "正在手機上辨識並整理…"
     static let readFailed = "辨識失敗，請換一張更清楚的照片再試一次。"
     static func found(_ count: Int) -> String { "找到 \(count) 個單字" }
     static let reviewHint = "儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。"

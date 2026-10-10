@@ -25,6 +25,13 @@ public struct ScannedWordCandidate: Equatable, Identifiable, Sendable {
     public var partOfSpeech: String
     public var word: String
     public var id: String { key }
+
+    public init(key: String, meaningZh: String, partOfSpeech: String, word: String) {
+        self.key = key
+        self.meaningZh = meaningZh
+        self.partOfSpeech = partOfSpeech
+        self.word = word
+    }
 }
 
 /// Turns text recognised on a photo of a vocabulary sheet into word / meaning

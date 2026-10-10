@@ -21,7 +21,14 @@ enum TextRecognizer {
         var result: [ScannedWordCandidate] = []
         for (page, image) in images.enumerated() {
             let lines = try await lines(in: image, suggester: suggester)
-            for candidate in ScanParser.parse(lines) where seen.insert(candidate.word.lowercased()).inserted {
+            // Tables first (their rows are unambiguous), then the line parser,
+            // then whatever the on-device model can still find on the page.
+            var found = await SmartScan.tableCandidates(in: image)
+            found += ScanParser.parse(lines)
+            if SmartScan.canOrganize {
+                found += await SmartScan.organize(text: lines.map(\.text).joined(separator: "\n"))
+            }
+            for candidate in found where seen.insert(candidate.word.lowercased()).inserted {
                 var copy = candidate
                 copy.key = "p\(page)-\(candidate.key)"
                 result.append(copy)

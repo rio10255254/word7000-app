@@ -10,8 +10,15 @@ import Word7000Core
 @Observable
 final class AppModel {
     let coreWords: [WordEntry]
-    private(set) var progress: ProgressState
-    private(set) var customSets: CustomSetState
+    private(set) var progress: ProgressState {
+        didSet { if !replacing { onDataChange?(SyncDirty(progress: true)) } }
+    }
+    private(set) var customSets: CustomSetState {
+        didSet { if !replacing { onDataChange?(SyncDirty(customSets: true)) } }
+    }
+    /// Told about every local change so it can be synced.
+    @ObservationIgnored var onDataChange: ((SyncDirty) -> Void)?
+    @ObservationIgnored private var replacing = false
     var settings: AppSettings {
         didSet { scheduleSave() }
     }
@@ -83,6 +90,21 @@ final class AppModel {
               let words = try? WordData.decode(data)
         else { return [] }
         return words
+    }
+
+    /// Swaps in merged data (after sign-in or sign-out) without echoing it
+    /// back to the sync queue, and drops a session built from the old data.
+    func replaceData(progress newProgress: ProgressState, customSets newSets: CustomSetState) {
+        replacing = true
+        progress = LearningEngine.normalizeForDate(newProgress, today: today)
+        customSets = newSets
+        replacing = false
+        if settings.activeBankId != WordBanks.coreBankId, !newSets.sets.contains(where: { $0.id == settings.activeBankId }) {
+            settings.activeBankId = WordBanks.coreBankId
+        }
+        studySession = nil
+        studyUndoStack = []
+        scheduleSave()
     }
 
     // MARK: Word lists and banks

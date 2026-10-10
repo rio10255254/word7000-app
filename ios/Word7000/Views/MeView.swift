@@ -57,13 +57,7 @@ struct MeView: View {
                 Text(L.dailyTargetText)
             }
 
-            Section {
-                Label(L.accountComing, systemImage: "icloud")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            } header: {
-                Text(L.account)
-            }
+            AccountSection()
 
             Section {
                 Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {

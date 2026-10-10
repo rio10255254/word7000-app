@@ -45,6 +45,16 @@ jobs:
           echo "Using $XCODE"
           echo "DEVELOPER_DIR=$XCODE/Contents/Developer" >> "$GITHUB_ENV"
 
+      - name: Save SDK interfaces used for new APIs
+        run: |
+          mkdir -p "$RUNNER_TEMP/screenshots"
+          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          for fw in Vision FoundationModels; do
+            f=$(find "$SDK/System/Library/Frameworks/$fw.framework" -name "arm64e-apple-ios.swiftinterface" 2>/dev/null | head -1)
+            if [ -n "$f" ]; then cp "$f" "$RUNNER_TEMP/screenshots/api-$fw.swiftinterface.txt"; fi
+          done
+          ls -la "$RUNNER_TEMP/screenshots"
+
       - name: Word list matches the app data
         run: node scripts/export-native-words.mjs --check
 

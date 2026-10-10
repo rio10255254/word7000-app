@@ -18,8 +18,10 @@ enum Activity: Identifiable, Hashable {
 /// Studying and quizzes take the whole screen so nothing competes with the card.
 struct RootView: View {
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
     @State private var tab: AppTab = .today
     @State private var activity: Activity?
+    @State private var signInForScan = false
 
     var body: some View {
         TabView(selection: $tab) {
@@ -30,7 +32,7 @@ struct RootView: View {
             .tag(AppTab.today)
 
             NavigationStack {
-                WordsView(scan: { activity = .scan }, study: { activity = .study })
+                WordsView(scan: openScan, study: { activity = .study })
             }
             .tabItem { Label(L.tabWords, systemImage: "books.vertical.fill") }
             .tag(AppTab.words)
@@ -40,6 +42,14 @@ struct RootView: View {
             }
             .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }
             .tag(AppTab.me)
+        }
+        .sheet(isPresented: $signInForScan) {
+            SignInSheet(reason: .scan, onSignedIn: {
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(450))
+                    activity = .scan
+                }
+            })
         }
         .fullScreenCover(item: $activity) { activity in
             switch activity {
@@ -53,6 +63,16 @@ struct RootView: View {
             case .scan:
                 ScanView(onStudy: { switchTo(.study) })
             }
+        }
+    }
+
+    /// Scanned banks live in the learner's account, so scanning asks a guest
+    /// to sign in first (when accounts are available at all).
+    private func openScan() {
+        if account.configured, !account.isPermanent {
+            signInForScan = true
+        } else {
+            activity = .scan
         }
     }
 

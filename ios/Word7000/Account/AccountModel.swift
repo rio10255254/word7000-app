@@ -1,0 +1,431 @@
+import Foundation
+import Observation
+import UIKit
+import Word7000Core
+
+/// Who the learner is and keeping their progress in the cloud.
+///
+/// Everyone gets an account: a guest (anonymous) one is created silently on
+/// first launch, so progress is backed up from day one. Signing in with
+/// Apple, Google or email turns it into a permanent account that works on
+/// every device. Local data is always written first; the cloud copy follows
+/// in the background and catches up after being offline.
+@MainActor
+@Observable
+final class AccountModel {
+    enum Status: Equatable {
+        /// No backend configured: everything stays on this iPhone.
+        case local
+        case loading
+        case ready
+        case syncing
+        case error(String)
+    }
+
+    private(set) var status: Status
+    private(set) var session: AuthSession?
+    private(set) var busy = false
+    /// A short line for the account section.
+    private(set) var message: String
+
+    var configured: Bool { client != nil }
+    var isPermanent: Bool { session.map { !$0.user.anonymous } ?? false }
+    var email: String? { isPermanent ? session?.user.email : nil }
+    var displayName: String? { isPermanent ? (session?.user.displayName ?? session?.user.email) : nil }
+
+    private let client: SupabaseClient?
+    private unowned let app: AppModel
+    @ObservationIgnored private var dirty = SyncDirty()
+    @ObservationIgnored private var flushTask: Task<Void, Never>?
+    @ObservationIgnored private var flushing = false
+    @ObservationIgnored private var retryAttempt = 0
+    @ObservationIgnored private var lastHeartbeat: Date?
+
+    static let redirectURL = "https://word7000-app.rio10255254.workers.dev/auth-native.html"
+    private static let sessionKey = "session"
+
+    init(app: AppModel, config: SupabaseConfig? = AccountModel.bundledConfig()) {
+        self.app = app
+        self.client = config.map { SupabaseClient(config: $0) }
+        self.status = config == nil ? .local : .loading
+        self.message = config == nil ? A.localOnly : A.preparing
+        app.onDataChange = { [weak self] change in self?.enqueue(change) }
+    }
+
+    /// Filled in at build time from the EAS "production" environment.
+    static func bundledConfig() -> SupabaseConfig? {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let url = info["Word7000SupabaseURL"] as? String
+        let publishable = info["Word7000SupabasePublishableKey"] as? String
+        let anon = info["Word7000SupabaseAnonKey"] as? String
+        return SupabaseConfig(url: url, key: publishable) ?? SupabaseConfig(url: url, key: anon)
+    }
+
+    // MARK: Launch
+
+    func bootstrap() async {
+        guard let client else { return }
+        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") {
+            Keychain.delete(Self.sessionKey)
+        }
+        status = .loading
+        do {
+            var restored = storedSession() ?? legacySession()
+            if let current = restored, current.needsRefresh() {
+                do {
+                    restored = try await client.refresh(refreshToken: current.refreshToken)
+                } catch let error as SupabaseError where (400..<500).contains(error.status) {
+                    restored = nil // revoked or expired: start over as a guest
+                } catch {
+                    // Offline: keep the old session; requests retry later.
+                }
+            }
+            let session: AuthSession
+            if let restored {
+                session = restored
+            } else {
+                session = try await client.signInAnonymously()
+            }
+            await activate(session)
+        } catch {
+            status = .error(A.offline)
+            message = A.offline
+        }
+    }
+
+    private func storedSession() -> AuthSession? {
+        Keychain.read(Self.sessionKey).flatMap { try? JSONDecoder().decode(AuthSession.self, from: $0) }
+    }
+
+    /// The previous React Native app kept its session in AsyncStorage; using
+    /// its refresh token keeps guests attached to their cloud data.
+    private func legacySession() -> AuthSession? {
+        guard let client, app.settings.localOwnerId == nil else { return nil }
+        let values = LegacyImport.readAsyncStorage()
+        let raw = values[client.config.legacySessionStorageKey]
+            ?? values.first(where: { $0.key.hasPrefix("sb-") && $0.key.hasSuffix("-auth-token") })?.value
+        guard let raw, var session = try? JSONDecoder().decode(AuthSession.self, from: Data(raw.utf8)) else { return nil }
+        session.expiresAt = 0 // always refresh before use
+        return session
+    }
+
+    private func store(_ session: AuthSession?) {
+        self.session = session
+        if let session, let data = try? JSONEncoder().encode(session) {
+            Keychain.write(data, for: Self.sessionKey)
+        } else {
+            Keychain.delete(Self.sessionKey)
+        }
+    }
+
+    // MARK: Activation
+
+    /// Brings local and cloud data together for this user and saves the result
+    /// on both sides. Local data from a guest is always carried over; data
+    /// left behind by a different permanent account never is.
+    private func activate(_ newSession: AuthSession, fallbackEmail: String? = nil) async {
+        guard let client else { return }
+        var activeSession = newSession
+        if activeSession.user.email == nil, let fallbackEmail { activeSession.user.email = fallbackEmail }
+        store(activeSession)
+
+        let ownerId = app.settings.localOwnerId
+        let carryLocal = ownerId == nil || ownerId == activeSession.user.id || (app.settings.localOwnerIsAnonymous ?? true)
+        let outbox = Outbox.load(userId: activeSession.user.id)
+        let cloud = try? await client.loadProfile(session: activeSession)
+
+        let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.progress : nil, outbox?.progress])
+        let sets = CustomSetState.merge([cloud?.customSets, carryLocal ? app.customSets : nil, outbox?.customSets])
+        app.replaceData(progress: progress, customSets: sets)
+        app.settings.localOwnerId = activeSession.user.id
+        app.settings.localOwnerIsAnonymous = activeSession.user.anonymous
+        if !activeSession.user.anonymous { app.settings.permanentAccountUsed = true }
+
+        status = .ready
+        message = activeSession.user.anonymous ? A.guestSaved : A.signedIn
+        dirty = SyncDirty(progress: true, customSets: true)
+        await flush()
+        heartbeat()
+    }
+
+    // MARK: Background sync
+
+    private func enqueue(_ change: SyncDirty) {
+        guard client != nil else { return }
+        dirty.formUnion(change)
+        flushTask?.cancel()
+        flushTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(900))
+            guard !Task.isCancelled else { return }
+            await self?.flush()
+        }
+    }
+
+    /// Uploads whatever changed. On failure the snapshot waits in an outbox
+    /// file and is retried with growing delays (3 s … 5 min).
+    func flush() async {
+        guard let client, let current = session, !flushing, dirty.any else { return }
+        flushing = true
+        defer { flushing = false }
+        let sending = dirty
+        dirty = SyncDirty()
+        let progress = app.progress, sets = app.customSets
+        Outbox(progress: sending.progress ? progress : nil, customSets: sending.customSets ? sets : nil).save(userId: current.user.id)
+        status = .syncing
+        do {
+            let valid = try await validSession(client: client, current)
+            try await client.saveProfile(progress: sending.progress ? progress : nil, customSets: sending.customSets ? sets : nil, session: valid)
+            retryAttempt = 0
+            if !dirty.any { Outbox.clear(userId: current.user.id) }
+            status = .ready
+            message = valid.user.anonymous ? A.guestSaved : A.synced
+        } catch {
+            dirty.formUnion(sending)
+            status = .error(A.savedLocally)
+            message = A.savedLocally
+            let delay = min(3.0 * pow(2.0, Double(retryAttempt)), 300)
+            retryAttempt += 1
+            flushTask = Task { [weak self] in
+                try? await Task.sleep(for: .seconds(delay))
+                guard !Task.isCancelled else { return }
+                await self?.flush()
+            }
+        }
+    }
+
+    private func validSession(client: SupabaseClient, _ current: AuthSession) async throws -> AuthSession {
+        guard current.needsRefresh() else { return current }
+        let refreshed = try await client.refresh(refreshToken: current.refreshToken)
+        store(refreshed)
+        return refreshed
+    }
+
+    /// Called when the app goes to the background: finish the upload even if
+    /// iOS suspends us right after.
+    func flushBeforeBackground() {
+        guard dirty.any || flushing else { return }
+        let identifier = UIApplication.shared.beginBackgroundTask(withName: "word7000-sync")
+        Task {
+            await flush()
+            UIApplication.shared.endBackgroundTask(identifier)
+        }
+    }
+
+    /// Counts the learner as active today (guest or signed in).
+    func heartbeat() {
+        guard let client, let current = session else { return }
+        if let last = lastHeartbeat, Date().timeIntervalSince(last) < 60 { return }
+        lastHeartbeat = Date()
+        let today = DayMath.today()
+        Task {
+            guard let valid = try? await validSession(client: client, current) else { return }
+            try? await client.recordDailyActivity(date: today, session: valid)
+        }
+    }
+
+    // MARK: Sign in
+
+    /// Sign in with Apple. A guest is linked, so their account (and data)
+    /// simply becomes permanent; if that Apple ID already has an account, we
+    /// sign into it and carry the guest's progress over.
+    func signInWithApple(idToken: String, rawNonce: String, authorizationCode: String?, fullName: PersonNameComponents?, email: String?) async {
+        guard let client else { return }
+        busy = true
+        defer { busy = false }
+        message = A.signingIn
+        do {
+            var newSession: AuthSession
+            if let current = session, current.user.anonymous {
+                do {
+                    newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode, linkTo: try await validSession(client: client, current))
+                } catch let error as SupabaseError where error.isIdentityAlreadyLinked {
+                    newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode)
+                }
+            } else {
+                newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode)
+            }
+            if let user = try? await client.user(session: newSession) { newSession.user = user }
+            var metadata: [String: JSONValue] = [:]
+            if let given = fullName?.givenName, !given.isEmpty { metadata["given_name"] = .string(given) }
+            if let family = fullName?.familyName, !family.isEmpty { metadata["family_name"] = .string(family) }
+            let full = [fullName?.givenName, fullName?.familyName].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
+            if !full.isEmpty { metadata["full_name"] = .string(full) }
+            if let email, !email.isEmpty { metadata["email"] = .string(email) }
+            if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
+            await activate(newSession, fallbackEmail: email)
+        } catch {
+            fail(error, fallback: A.appleFailed)
+        }
+    }
+
+    /// Google sign-in through the web. `authenticate` opens the page and
+    /// returns the redirect back into the app.
+    func signInWithGoogle(authenticate: (URL) async throws -> URL) async {
+        guard let client else { return }
+        busy = true
+        defer { busy = false }
+        message = A.signingIn
+        do {
+            var linking = false
+            var url = client.oauthURL(provider: "google", redirectTo: Self.redirectURL)
+            if let current = session, current.user.anonymous, !(app.settings.permanentAccountUsed ?? false) {
+                if let linkURL = try? await client.linkIdentityURL(provider: "google", redirectTo: Self.redirectURL, session: try await validSession(client: client, current)) {
+                    url = linkURL
+                    linking = true
+                }
+            }
+            var callback = AuthCallback(url: try await authenticate(url))
+            if linking, callback.isIdentityAlreadyLinked {
+                linking = false
+                callback = AuthCallback(url: try await authenticate(client.oauthURL(provider: "google", redirectTo: Self.redirectURL)))
+            }
+            if let error = callback.error { throw SupabaseError(status: 0, code: callback.errorCode, message: error) }
+            var newSession: AuthSession
+            if let access = callback.accessToken, let refresh = callback.refreshToken {
+                let user = try await client.user(session: AuthSession(accessToken: access, refreshToken: refresh, expiresAt: nil, user: AuthUser(id: "")))
+                newSession = AuthSession(accessToken: access, refreshToken: refresh, expiresAt: Date().timeIntervalSince1970 + 3000, user: user)
+            } else if linking, let current = session {
+                newSession = try await client.refresh(refreshToken: current.refreshToken)
+            } else {
+                throw SupabaseError(status: 0, code: nil, message: A.googleFailed)
+            }
+            if newSession.user.anonymous { throw SupabaseError(status: 0, code: nil, message: A.googleFailed) }
+            await activate(newSession)
+        } catch {
+            fail(error, fallback: A.googleFailed)
+        }
+    }
+
+    func signIn(email: String, password: String) async {
+        guard let client else { return }
+        guard !email.isEmpty, !password.isEmpty else { message = A.enterEmailPassword; return }
+        busy = true
+        defer { busy = false }
+        message = A.signingIn
+        do {
+            await activate(try await client.signIn(email: email, password: password))
+        } catch {
+            fail(error, fallback: A.signInFailed)
+        }
+    }
+
+    func signUp(email: String, password: String) async {
+        guard let client else { return }
+        guard !email.isEmpty, password.count >= 6 else { message = A.passwordTooShort; return }
+        busy = true
+        defer { busy = false }
+        message = A.creatingAccount
+        do {
+            if let newSession = try await client.signUp(email: email, password: password) {
+                await activate(newSession)
+            } else {
+                message = A.confirmEmail
+            }
+        } catch {
+            fail(error, fallback: A.signInFailed)
+        }
+    }
+
+    private func fail(_ error: Error, fallback: String) {
+        let text = (error as? SupabaseError)?.message ?? fallback
+        status = .error(text)
+        message = text
+    }
+
+    func noteCancelled() {
+        message = A.cancelled
+    }
+
+    // MARK: Sign out and delete
+
+    func signOut() async {
+        guard let client, let current = session else { return }
+        busy = true
+        defer { busy = false }
+        dirty = SyncDirty(progress: true, customSets: true)
+        await flush()
+        try? await client.signOut(session: current)
+        store(nil)
+        // This iPhone goes back to a fresh guest; the account's data stays in the cloud.
+        app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
+        app.settings.localOwnerId = nil
+        app.settings.localOwnerIsAnonymous = true
+        message = A.signedOut
+        await bootstrap()
+    }
+
+    func deleteAccount() async {
+        guard let client, let current = session else { return }
+        busy = true
+        defer { busy = false }
+        message = A.deleting
+        do {
+            try await client.deleteAccount(session: try await validSession(client: client, current))
+            Outbox.clear(userId: current.user.id)
+            store(nil)
+            app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
+            app.settings.localOwnerId = nil
+            app.settings.localOwnerIsAnonymous = true
+            message = A.deleted
+            await bootstrap()
+        } catch {
+            fail(error, fallback: A.deleteFailed)
+        }
+    }
+}
+
+/// Changes that have not reached the cloud yet, kept per user on disk.
+struct Outbox: Codable {
+    var progress: ProgressState?
+    var customSets: CustomSetState?
+
+    private static func name(_ userId: String) -> String { "outbox-\(userId).json" }
+
+    static func load(userId: String) -> Outbox? {
+        Persistence.live.load(Outbox.self, from: name(userId))
+    }
+
+    func save(userId: String) {
+        Persistence.live.save(self, to: Self.name(userId))
+    }
+
+    static func clear(userId: String) {
+        try? FileManager.default.removeItem(at: Persistence.live.directory.appendingPathComponent(name(userId)))
+    }
+}
+
+struct SyncDirty: Equatable {
+    var progress = false
+    var customSets = false
+
+    var any: Bool { progress || customSets }
+
+    mutating func formUnion(_ other: SyncDirty) {
+        progress = progress || other.progress
+        customSets = customSets || other.customSets
+    }
+}
+
+/// Account copy (Chinese interface).
+enum A {
+    static let localOnly = "進度保存在這支 iPhone"
+    static let preparing = "正在準備…"
+    static let guestSaved = "進度已自動備份"
+    static let signedIn = "已登入並同步"
+    static let synced = "已同步"
+    static let savedLocally = "進度已存在手機，稍後自動同步"
+    static let offline = "目前離線，進度先存在手機"
+    static let signingIn = "登入中…"
+    static let creatingAccount = "建立帳號中…"
+    static let confirmEmail = "請到信箱確認後再登入"
+    static let enterEmailPassword = "請輸入 Email 和密碼"
+    static let passwordTooShort = "密碼至少 6 個字元"
+    static let signInFailed = "登入失敗，請再試一次"
+    static let appleFailed = "Apple 登入失敗，請再試一次"
+    static let googleFailed = "Google 登入沒有完成"
+    static let cancelled = "已取消登入"
+    static let signedOut = "已登出"
+    static let deleting = "正在刪除帳號與資料…"
+    static let deleted = "帳號已刪除"
+    static let deleteFailed = "刪除失敗，請稍後再試"
+}

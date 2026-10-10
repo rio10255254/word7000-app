@@ -22,6 +22,8 @@ struct ScanView: View {
         var word: String
         var partOfSpeech: String
         var meaning: String
+        /// What was read before it was matched to a dictionary word.
+        var originalWord: String?
     }
 
     enum Target: Hashable {
@@ -34,6 +36,8 @@ struct ScanView: View {
     @State private var pasted = ""
     @State private var photoItem: PhotosPickerItem?
     @State private var cameraOpen = false
+    @State private var documentScannerOpen = false
+    @State private var suggester: WordSuggester?
     @State private var message: String?
     @State private var target: Target = .new
     @State private var newBankName = WordBanks.defaultScanBankName()
@@ -73,14 +77,18 @@ struct ScanView: View {
             }
         }
         .fullScreenCover(isPresented: $cameraOpen) {
-            CameraPicker { image in Task { await read(image) } }
+            CameraPicker { image in Task { await read([image]) } }
+                .ignoresSafeArea()
+        }
+        .fullScreenCover(isPresented: $documentScannerOpen) {
+            DocumentScanner { pages in Task { await read(pages) } }
                 .ignoresSafeArea()
         }
         .onChange(of: photoItem) { _, item in
             guard let item else { return }
             Task {
                 if let data = try? await item.loadTransferable(type: Data.self), let image = UIImage(data: data) {
-                    await read(image)
+                    await read([image])
                 } else {
                     message = S.readFailed
                 }
@@ -108,7 +116,12 @@ struct ScanView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)
 
-                if CameraPicker.isAvailable {
+                if DocumentScanner.isAvailable {
+                    Button { documentScannerOpen = true } label: {
+                        Label(S.scanDocument, systemImage: "doc.viewfinder.fill")
+                    }
+                    .accessibilityIdentifier("scan-document")
+                } else if CameraPicker.isAvailable {
                     Button { cameraOpen = true } label: {
                         Label(S.takePhoto, systemImage: "camera.fill")
                     }
@@ -140,20 +153,33 @@ struct ScanView: View {
         }
     }
 
-    private func read(_ image: UIImage) async {
+    private func read(_ images: [UIImage]) async {
+        guard !images.isEmpty else { return }
         message = nil
         phase = .reading
         do {
-            let lines = try await TextRecognizer.lines(in: image)
-            showReview(ScanParser.parse(lines))
+            showReview(try await TextRecognizer.candidates(in: images, suggester: dictionary()))
         } catch {
             message = S.readFailed
             phase = .choose
         }
     }
 
+    private func dictionary() -> WordSuggester {
+        if let suggester { return suggester }
+        let built = WordSuggester(words: model.vocabularyWords.map(\.word))
+        suggester = built
+        return built
+    }
+
     private func showReview(_ candidates: [ScannedWordCandidate]) {
-        rows = candidates.map { Row(id: $0.key, word: $0.word, partOfSpeech: $0.partOfSpeech, meaning: $0.meaningZh) }
+        let suggester = dictionary()
+        rows = candidates.map { candidate in
+            if let corrected = suggester.correction(for: candidate.word) {
+                return Row(id: candidate.key, word: corrected, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh, originalWord: candidate.word)
+            }
+            return Row(id: candidate.key, word: candidate.word, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh)
+        }
         if let latest = scanBanks.last { target = .existing(latest.id) } else { target = .new }
         phase = .review
     }
@@ -190,6 +216,17 @@ struct ScanView: View {
                             }
                             TextField(S.meaning, text: $row.meaning)
                                 .font(.subheadline)
+                            if let original = row.originalWord {
+                                Button {
+                                    row.word = original
+                                    row.originalWord = nil
+                                } label: {
+                                    Label(S.corrected(original), systemImage: "wand.and.stars")
+                                        .font(.caption)
+                                        .foregroundStyle(Palette.review)
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
                     .opacity(row.include ? 1 : 0.5)
@@ -284,8 +321,10 @@ struct ScanView: View {
 /// Scan screen copy (English-word mode).
 private enum S {
     static let title = "掃描單字表"
-    static let intro = "拍下或選一張單字表照片，App 會在手機上讀出英文單字和紙上印的中文意思。照片不會上傳。"
+    static let intro = "掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。"
     static let takePhoto = "拍照"
+    static let scanDocument = "掃描單字表（可多頁、手寫也行）"
+    static func corrected(_ original: String) -> String { "原本讀成「\(original)」，已對照字典修正。點這裡還原" }
     static let choosePhoto = "從相簿選擇"
     static let pasteTitle = "或貼上文字"
     static let pasteHint = "在「照片」App 長按文字即可拷貝（原況文字），再貼到這裡"

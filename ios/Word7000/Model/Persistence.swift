@@ -13,6 +13,14 @@ struct AppSettings: Codable, Equatable {
     var deviceSourceId = "ios-\(UUID().uuidString.prefix(8).lowercased())"
     /// Set once data from the previous (React Native) app has been imported.
     var migratedLegacyData = false
+    // Added after 2.0.0 (27). New fields must be optional so settings saved
+    // by an older build still decode.
+    /// Whose data the local files hold (nil: not yet tied to an account).
+    var localOwnerId: String?
+    var localOwnerIsAnonymous: Bool?
+    /// Once a permanent account was used here, Google sign-in no longer tries
+    /// to link the guest identity.
+    var permanentAccountUsed: Bool?
 }
 
 struct FilterSelection: Codable, Equatable, Hashable {

@@ -13,7 +13,24 @@ enum TextRecognizer {
         case unreadableImage
     }
 
-    static func lines(in image: UIImage) async throws -> [ScannedLine] {
+    /// Reads every page and pairs words with meanings page by page.
+    /// Handwriting is often read slightly wrong, so each line keeps Vision's
+    /// top three readings and the one that is a dictionary word wins.
+    static func candidates(in images: [UIImage], suggester: WordSuggester?) async throws -> [ScannedWordCandidate] {
+        var seen = Set<String>()
+        var result: [ScannedWordCandidate] = []
+        for (page, image) in images.enumerated() {
+            let lines = try await lines(in: image, suggester: suggester)
+            for candidate in ScanParser.parse(lines) where seen.insert(candidate.word.lowercased()).inserted {
+                var copy = candidate
+                copy.key = "p\(page)-\(candidate.key)"
+                result.append(copy)
+            }
+        }
+        return result
+    }
+
+    static func lines(in image: UIImage, suggester: WordSuggester? = nil) async throws -> [ScannedLine] {
         guard let cgImage = image.cgImage else { throw Failure.unreadableImage }
         let orientation = CGImagePropertyOrientation(image.imageOrientation)
         return try await Task.detached(priority: .userInitiated) {
@@ -29,10 +46,11 @@ enum TextRecognizer {
             let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
             try handler.perform([request])
             return (request.results ?? []).compactMap { observation -> ScannedLine? in
-                guard let candidate = observation.topCandidates(1).first else { return nil }
+                let readings = observation.topCandidates(3).map(\.string)
+                guard let text = suggester?.best(of: readings) ?? readings.first else { return nil }
                 let box = observation.boundingBox
                 return ScannedLine(
-                    text: candidate.string,
+                    text: text,
                     x: Double(box.minX),
                     y: Double(1 - box.maxY),
                     width: Double(box.width),

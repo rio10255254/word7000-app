@@ -41,6 +41,12 @@ exports/speaking-prompt-gpt/
 # typescript
 *.tsbuildinfo
 
-# generated native folders
-/ios
+# Native SwiftUI app lives in ios/ (committed); ignore only Xcode and SwiftPM output
+ios/**/xcuserdata/
+ios/build/
+ios/DerivedData/
+ios/Packages/*/.build/
+ios/Packages/*/.swiftpm/
+
+# generated Android folder
 /android

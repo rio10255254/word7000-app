@@ -1,0 +1,124 @@
+# Builds and checks the native SwiftUI app (ios/) on a Mac:
+#   1. the learning engine's tests, including the golden results shared with
+#      the React Native app (parity.json),
+#   2. a simulator build plus a UI walk-through that screenshots every main
+#      screen in light and dark mode.
+# Screenshots are uploaded as an artifact and pushed to the
+# `native-screenshots` branch so they can be viewed from a phone.
+name: Native iOS
+
+on:
+  push:
+    branches: ['master', 'native/**']
+    paths:
+      - 'ios/**'
+      - 'src/data/words.ts'
+      - 'src/lib/progress.ts'
+      - 'src/lib/studySession.ts'
+      - 'src/lib/scanParser.ts'
+      - 'src/nativeParity.test.ts'
+      - 'scripts/export-native-words.mjs'
+      - '.github/workflows/ios-native.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-native-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    runs-on: macos-15
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select the newest Xcode
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1 || true)
+          if [ -z "$XCODE" ]; then XCODE=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1); fi
+          echo "Using $XCODE"
+          echo "DEVELOPER_DIR=$XCODE/Contents/Developer" >> "$GITHUB_ENV"
+
+      - name: Word list matches the app data
+        run: node scripts/export-native-words.mjs --check
+
+      - name: Learning engine tests
+        run: |
+          xcodebuild -version
+          swift test --package-path ios/Packages/Word7000Core
+
+      - name: Pick an iPhone simulator
+        run: |
+          set -euo pipefail
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, re, sys
+          devices = json.load(sys.stdin)["devices"]
+          def version(runtime):
+              match = re.search(r"iOS-(\d+)-(\d+)", runtime)
+              return tuple(int(x) for x in match.groups()) if match else (0, 0)
+          best = None
+          for runtime, items in devices.items():
+              if "iOS" not in runtime:
+                  continue
+              for item in items:
+                  name = item["name"]
+                  if not name.startswith("iPhone"):
+                      continue
+                  score = (version(runtime), "Pro" in name and "Max" not in name, name)
+                  if best is None or score > best[0]:
+                      best = (score, item["udid"], name, runtime)
+          print(best[1])
+          print(best[2], best[3], file=sys.stderr)
+          ')
+          echo "SIMULATOR_UDID=$UDID" >> "$GITHUB_ENV"
+
+      - name: Build and run the UI walk-through
+        run: |
+          xcrun simctl boot "$SIMULATOR_UDID" || true
+          xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
+          set +e
+          xcodebuild test \
+            -project ios/Word7000.xcodeproj \
+            -scheme Word7000 \
+            -destination "id=$SIMULATOR_UDID" \
+            -resultBundlePath "$RUNNER_TEMP/Word7000.xcresult" \
+            CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
+          status=$?
+          grep -E "error:|Test Case|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -200
+          exit $status
+
+      - name: Collect screenshots
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/screenshots"
+          cp "$HOME"/word7000-screenshots/*.png "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
+          ls -la "$RUNNER_TEMP/screenshots"
+          tail -n 80 "$RUNNER_TEMP/xcodebuild.log" > "$RUNNER_TEMP/screenshots/xcodebuild-tail.txt" 2>/dev/null || true
+          grep -E "error:" "$RUNNER_TEMP/xcodebuild.log" | head -100 > "$RUNNER_TEMP/screenshots/errors.txt" 2>/dev/null || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-screenshots-${{ github.run_number }}
+          path: ${{ runner.temp }}/screenshots
+          retention-days: 14
+
+      - name: Publish screenshots to the native-screenshots branch
+        if: always() && github.event_name != 'pull_request'
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/screenshots"
+          echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
+          git init -q
+          git checkout -q -b native-screenshots
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Screenshots for ${{ github.sha }}"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" native-screenshots

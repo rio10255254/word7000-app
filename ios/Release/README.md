@@ -12,5 +12,13 @@ App Store Connect key.
 - `Podfile`: EAS always runs `pod install`; the app has no pods, so this only
   creates the workspace EAS builds from.
 
+The app and widget targets both declare the existing App Group
+`group.com.rio.word7000` in their signing entitlements. Keep it when reusing
+`com.rio.word7000.ExpoWidgetsTarget`: omitting it makes EAS try to disable the
+group on Apple's registered identifier and blocks the release.
+
+The Native iOS workflow checks iOS 18, 26, and 27 separately. Its screenshots
+are saved in version-specific folders on the `native-screenshots` branch.
+
 The React Native app is unaffected: the repository root `.easignore` keeps
 `/ios/` out of its uploads.

@@ -129,7 +129,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain("['ios-preview', 'iosPreview', 'preview-ios']");
     expect(appSource).toContain('function isWebIosPreviewMode()');
     expect(appSource).toContain('const IS_WEB_IOS_PREVIEW = isWebIosPreviewMode();');
-    expect(appSource).toContain("!IS_WEB_IOS_PREVIEW &&\n      shouldShowInstallGuide(getAppStorage(), isInstalledWebApp(), browserUserAgent(), browserMaxTouchPoints())");
+    expect(appSource.replace(/\r\n/g, '\n')).toContain("!IS_WEB_IOS_PREVIEW &&\n      shouldShowInstallGuide(getAppStorage(), isInstalledWebApp(), browserUserAgent(), browserMaxTouchPoints())");
     expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain("const showAppleSignIn = Platform.OS === 'ios' || IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain('styles.webIosPreviewSafeArea');

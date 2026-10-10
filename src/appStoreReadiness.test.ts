@@ -25,7 +25,7 @@ describe('iOS App Store readiness polish', () => {
   test('keeps the Safari add-to-home-screen guide automatic flow web-only', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
 
-    expect(appSource).toContain("Platform.OS === 'web' &&\n      !IS_WEB_IOS_PREVIEW &&\n      shouldShowInstallGuide(");
+    expect(appSource.replace(/\r\n/g, '\n')).toContain("Platform.OS === 'web' &&\n      !IS_WEB_IOS_PREVIEW &&\n      shouldShowInstallGuide(");
     expect(appSource).toContain("const showWebInstallGuidePanel = Platform.OS === 'web' && !IS_WEB_IOS_PREVIEW;");
     expect(appSource).toContain('showWebInstallGuidePanel && (');
     expect(appSource).toContain('openInstallGuide()');

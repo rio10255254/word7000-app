@@ -151,6 +151,6 @@ describe('native parity fixtures', () => {
       fs.mkdirSync(path.dirname(fixturePath), { recursive: true });
       fs.writeFileSync(fixturePath, fixtures);
     }
-    expect(fs.readFileSync(fixturePath, 'utf8')).toBe(fixtures);
+    expect(JSON.parse(fs.readFileSync(fixturePath, 'utf8'))).toEqual(JSON.parse(fixtures));
   });
 });

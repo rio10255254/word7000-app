@@ -4,8 +4,9 @@
 //   node scripts/export-native-words.mjs --check  fail if it is out of date
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = fs.readFileSync(path.join(root, 'src/data/words.ts'), 'utf8');
 const start = source.indexOf('= [', source.indexOf('export const sampleWords')) + 2;
 const end = source.lastIndexOf(']');
@@ -17,7 +18,7 @@ const target = path.join(root, 'ios/Word7000/Resources/words.json');
 
 if (process.argv.includes('--check')) {
   const current = fs.existsSync(target) ? fs.readFileSync(target, 'utf8') : '';
-  if (current !== output) {
+  if (current.replace(/\r\n/g, '\n') !== output) {
     console.error('ios/Word7000/Resources/words.json is out of date. Run: node scripts/export-native-words.mjs');
     process.exit(1);
   }

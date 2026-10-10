@@ -7,6 +7,13 @@ already stores for `com.rio.word7000`, continues the remote build numbers
 (the React Native app ended at 25) and uploads to TestFlight with the stored
 App Store Connect key.
 
+The workflow stages the next remote build number into the Xcode settings of
+both shipping targets. The targets generate their Info.plist, so updating
+only the plist through EAS leaves `CURRENT_PROJECT_VERSION` unchanged.
+Before submitting, the workflow downloads the actual IPA and verifies the
+app/widget versions, account configuration, signing groups, and all 7000
+words against the source. A mismatched archive is never submitted.
+
 - `app.json`, `eas.json`, `package.json`: the minimum EAS needs for a project
   that has its own `ios/` folder and no React Native.
 - `Podfile`: EAS always runs `pod install`; the app has no pods, so this only

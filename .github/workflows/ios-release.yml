@@ -88,4 +88,16 @@ jobs:
           cp ios/Release/app.json ios/Release/eas.json ios/Release/package.json ios/Release/package-lock.json "$STAGE/"
           cp ios/Release/Podfile "$STAGE/ios/Podfile"
           cd "$STAGE"
-          EAS_NO_VCS=1 eas build --platform ios --profile production --non-interactive --auto-submit --wait
+          EAS_NO_VCS=1 eas build:version:get --platform ios --profile production --json > "$RUNNER_TEMP/native-version.json"
+          NEXT_BUILD=$(node -e 'const fs = require("fs"); const version = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); const current = Number(version.buildNumber); if (!Number.isSafeInteger(current) || current < 1) throw new Error("Invalid remote build number"); process.stdout.write(String(current + 1));' "$RUNNER_TEMP/native-version.json")
+          node "$GITHUB_WORKSPACE/scripts/prepare-native-release.mjs" "$STAGE" "$NEXT_BUILD"
+          EAS_NO_VCS=1 eas build --platform ios --profile production --non-interactive --wait --json \
+            --message "Native SwiftUI $GITHUB_SHA" > "$RUNNER_TEMP/native-build.json"
+          BUILD_ID=$(node -e 'const fs = require("fs"); const builds = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); process.stdout.write(builds[0].id);' "$RUNNER_TEMP/native-build.json")
+          BUILD_URL=$(node -e 'const fs = require("fs"); const builds = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); process.stdout.write(builds[0].artifacts.buildUrl);' "$RUNNER_TEMP/native-build.json")
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/native.ipa" "$BUILD_URL"
+          python3 "$GITHUB_WORKSPACE/scripts/verify-native-release.py" \
+            --archive "$RUNNER_TEMP/native.ipa" --metadata "$RUNNER_TEMP/native-build.json" \
+            --words "$GITHUB_WORKSPACE/ios/Word7000/Resources/words.json" \
+            --expected-build "$NEXT_BUILD" --expected-version "$(node -p 'require("./app.json").expo.version')"
+          EAS_NO_VCS=1 eas submit --platform ios --profile production --id "$BUILD_ID" --non-interactive --wait

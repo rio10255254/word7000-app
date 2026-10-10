@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A10000000000000000000032 /* Word7000Core in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000031 /* Word7000Core */; };
+		A10000000000000000000034 /* Word7000Core in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000033 /* Word7000Core */; };
+		A10000000000000000000057 /* Word7000Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000008 /* Word7000Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -18,11 +20,33 @@
 			remoteGlobalIDString = A10000000000000000000010;
 			remoteInfo = Word7000;
 		};
+		A10000000000000000000054 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000000050;
+			remoteInfo = Word7000Widgets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A10000000000000000000056 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A10000000000000000000057 /* Word7000Widgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A10000000000000000000006 /* Word7000.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Word7000.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000007 /* Word7000UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Word7000UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000008 /* Word7000Widgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Word7000Widgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -34,6 +58,11 @@
 		A10000000000000000000005 /* Word7000UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Word7000UITests;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000009 /* Word7000Widgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Word7000Widgets;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -54,6 +83,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000000000000000000052 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000034 /* Word7000Core in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -62,6 +99,7 @@
 			children = (
 				A10000000000000000000004 /* Word7000 */,
 				A10000000000000000000005 /* Word7000UITests */,
+				A10000000000000000000009 /* Word7000Widgets */,
 				A10000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +109,7 @@
 			children = (
 				A10000000000000000000006 /* Word7000.app */,
 				A10000000000000000000007 /* Word7000UITests.xctest */,
+				A10000000000000000000008 /* Word7000Widgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -85,10 +124,12 @@
 				A10000000000000000000011 /* Sources */,
 				A10000000000000000000012 /* Frameworks */,
 				A10000000000000000000013 /* Resources */,
+				A10000000000000000000056 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A10000000000000000000055 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A10000000000000000000004 /* Word7000 */,
@@ -124,6 +165,29 @@
 			productReference = A10000000000000000000007 /* Word7000UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A10000000000000000000050 /* Word7000Widgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000000058 /* Build configuration list for PBXNativeTarget "Word7000Widgets" */;
+			buildPhases = (
+				A10000000000000000000051 /* Sources */,
+				A10000000000000000000052 /* Frameworks */,
+				A10000000000000000000053 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A10000000000000000000009 /* Word7000Widgets */,
+			);
+			name = Word7000Widgets;
+			packageProductDependencies = (
+				A10000000000000000000033 /* Word7000Core */,
+			);
+			productName = Word7000Widgets;
+			productReference = A10000000000000000000008 /* Word7000Widgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -140,6 +204,9 @@
 					A10000000000000000000020 = {
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = A10000000000000000000010;
+					};
+					A10000000000000000000050 = {
+						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
@@ -163,6 +230,7 @@
 			targets = (
 				A10000000000000000000010 /* Word7000 */,
 				A10000000000000000000020 /* Word7000UITests */,
+				A10000000000000000000050 /* Word7000Widgets */,
 			);
 		};
 /* End PBXProject section */
@@ -176,6 +244,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A10000000000000000000023 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000053 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -199,6 +274,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000000000000000000051 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -206,6 +288,11 @@
 			isa = PBXTargetDependency;
 			target = A10000000000000000000010 /* Word7000 */;
 			targetProxy = A10000000000000000000024 /* PBXContainerItemProxy */;
+		};
+		A10000000000000000000055 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000050 /* Word7000Widgets */;
+			targetProxy = A10000000000000000000054 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -359,6 +446,54 @@
 			};
 			name = Release;
 		};
+		A10000000000000000000059 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 26;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Word7000Widgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Word7000;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rio.word7000.ExpoWidgetsTarget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A1000000000000000000005A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 26;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Word7000Widgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Word7000;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rio.word7000.ExpoWidgetsTarget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -389,6 +524,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A10000000000000000000058 /* Build configuration list for PBXNativeTarget "Word7000Widgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000059 /* Debug */,
+				A1000000000000000000005A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -400,6 +544,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		A10000000000000000000031 /* Word7000Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Word7000Core;
+		};
+		A10000000000000000000033 /* Word7000Core */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Word7000Core;
 		};

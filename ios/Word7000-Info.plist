@@ -17,6 +17,10 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>NSSupportsLiveActivitiesFrequentUpdates</key>
+	<false/>
 	<key>Word7000SupabaseURL</key>
 	<string>$(EXPO_PUBLIC_SUPABASE_URL)</string>
 	<key>Word7000SupabasePublishableKey</key>

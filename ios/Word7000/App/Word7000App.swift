@@ -4,6 +4,7 @@ import SwiftUI
 struct Word7000App: App {
     @State private var model: AppModel
     @State private var account: AccountModel
+    @State private var liveActivities = LiveActivityManager()
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -19,7 +20,18 @@ struct Word7000App: App {
                 .environment(account)
                 .preferredColorScheme(model.settings.theme.colorScheme)
                 .tint(Palette.accent)
-                .task { await account.bootstrap() }
+                .task {
+                    await account.bootstrap()
+                    await refreshReminders()
+                }
+                .task {
+                    await liveActivities.observePushToStartTokens { _ in
+                        Task { await refreshReminders() }
+                    }
+                }
+                .onChange(of: model.progress.lastStudyDate) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: model.progress.studiedToday) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: model.reminderEnabled) { _, _ in Task { await refreshReminders() } }
                 .task {
                     // Counts the learner as active while the app is open.
                     while !Task.isCancelled {
@@ -33,6 +45,7 @@ struct Word7000App: App {
             case .active:
                 model.refreshToday()
                 account.heartbeat()
+                Task { await refreshReminders() }
             case .background:
                 model.saveNow()
                 account.flushBeforeBackground()
@@ -41,6 +54,21 @@ struct Word7000App: App {
             @unknown default:
                 break
             }
+        }
+    }
+
+    /// Keeps the local streak card and the server's view of this iPhone in
+    /// step with today's progress.
+    private func refreshReminders() async {
+        let plan = model.streakPlan
+        if model.reminderEnabled {
+            await liveActivities.sync(plan: plan, chineseInterface: model.studyMode == .english)
+        } else {
+            await liveActivities.endAll()
+        }
+        if let row = liveActivities.registration(deviceId: model.settings.deviceSourceId, plan: plan, enabled: model.reminderEnabled,
+                                                 progress: model.progress, chineseInterface: model.studyMode == .english, today: model.today) {
+            account.saveLiveActivityDevice(row)
         }
     }
 }

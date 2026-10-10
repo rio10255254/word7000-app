@@ -363,3 +363,14 @@ public struct AuthCallback: Equatable, Sendable {
             || (error?.lowercased().range(of: #"already.*(linked|registered)"#, options: .regularExpression) != nil)
     }
 }
+
+extension SupabaseClient {
+    /// Registers (or updates) this device for server-started lock screen
+    /// cards; one row per user and device.
+    public func saveLiveActivityDevice(_ row: [String: JSONValue], session: AuthSession) async throws {
+        var row = row
+        row["user_id"] = .string(session.user.id)
+        _ = try await request("POST", "rest/v1/live_activity_devices", query: ["on_conflict": "user_id,device_id"], body: .array([.object(row)]), session: session,
+                              headers: ["Prefer": "resolution=merge-duplicates,return=minimal"])
+    }
+}

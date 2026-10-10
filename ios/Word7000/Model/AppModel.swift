@@ -66,6 +66,8 @@ final class AppModel {
                 // Keep the old device id: it is the per-device key in the
                 // activity counters and for lock screen reminders.
                 if let deviceId = legacy.deviceId { settings.deviceSourceId = deviceId }
+                settings.streakReminder = legacy.streakReminder
+                settings.studyMode = legacy.studyMode
                 if let filters = legacy.filters {
                     settings.studyFilter = filters.study
                     settings.quizFilter = filters.quiz
@@ -110,6 +112,18 @@ final class AppModel {
         studySession = nil
         studyUndoStack = []
         scheduleSave()
+    }
+
+    // MARK: Reminders
+
+    var reminderEnabled: Bool { settings.streakReminder ?? true }
+
+    func setReminderEnabled(_ enabled: Bool) {
+        settings.streakReminder = enabled
+    }
+
+    var streakPlan: StreakReminderPlan {
+        StreakReminderPlan.make(progress: progress, enabled: reminderEnabled)
     }
 
     // MARK: Study mode

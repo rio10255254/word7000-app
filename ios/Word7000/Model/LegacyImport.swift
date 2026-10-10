@@ -17,6 +17,8 @@ enum LegacyImport {
         var activeBankId: String?
         var theme: AppearancePreference?
         var deviceId: String?
+        var streakReminder: Bool?
+        var studyMode: StudyMode?
         var filters: (study: FilterSelection, quiz: FilterSelection, library: FilterSelection, questionCount: Int?)?
     }
 
@@ -56,6 +58,8 @@ enum LegacyImport {
         snapshot.activeBankId = values["word7000-active-bank-v1"].flatMap { $0.isEmpty ? nil : $0 }
         snapshot.theme = values["word7000-theme-v1"].flatMap(AppearancePreference.init(rawValue:))
         snapshot.deviceId = values["word7000-streak-device-id-v1"].flatMap { $0.isEmpty ? nil : $0 }
+        snapshot.streakReminder = values["word7000-streak-reminder-v1"].map { $0 != "false" }
+        snapshot.studyMode = values["word7000-study-mode-v1"].flatMap(StudyMode.init(rawValue:))
         if let prefs = decode(LegacyFilterPreferences.self, values["word7000-filter-preferences-v1"]) {
             snapshot.filters = (prefs.study.selection, prefs.quiz.selection, prefs.library.selection, prefs.quiz.questionCount)
         }

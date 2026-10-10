@@ -223,6 +223,15 @@ final class AccountModel {
         }
     }
 
+    /// Registers this iPhone for server-started lock screen cards.
+    func saveLiveActivityDevice(_ row: [String: JSONValue]) {
+        guard let client, let current = session else { return }
+        Task {
+            guard let valid = try? await validSession(client: client, current) else { return }
+            try? await client.saveLiveActivityDevice(row, session: valid)
+        }
+    }
+
     // MARK: Sign in
 
     /// Sign in with Apple. A guest is linked, so their account (and data)

@@ -51,6 +51,10 @@ struct MeView: View {
                         Text(L.wordsPerDay(value)).tag(value)
                     }
                 }
+                Toggle(L.reminder, isOn: Binding(
+                    get: { model.reminderEnabled },
+                    set: { model.setReminderEnabled($0) }
+                ))
                 Picker(L.appearance, selection: Binding(
                     get: { model.settings.theme },
                     set: { model.settings.theme = $0 }
@@ -62,7 +66,7 @@ struct MeView: View {
             } header: {
                 Text(L.settings)
             } footer: {
-                Text(L.dailyTargetText)
+                Text("\(L.dailyTargetText) \(L.reminderText)")
             }
 
             AccountSection()

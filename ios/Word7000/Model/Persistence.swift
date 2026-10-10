@@ -23,6 +23,8 @@ struct AppSettings: Codable, Equatable {
     var permanentAccountUsed: Bool?
     /// nil means `.english`, the default.
     var studyMode: StudyMode?
+    /// Lock screen study reminders; nil means on.
+    var streakReminder: Bool?
 }
 
 struct FilterSelection: Codable, Equatable, Hashable {

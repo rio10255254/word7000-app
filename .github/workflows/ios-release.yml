@@ -8,15 +8,17 @@
 #                     already stores, then uploads the build to TestFlight.
 #   ota-update        Sends JavaScript and UI changes to installed builds of
 #                     the same app version, without a new TestFlight build.
+#   native-testflight Builds the native SwiftUI app in ios/ (see
+#                     ios/Release/README.md) and uploads it to TestFlight.
 name: iOS release
 
 on:
   workflow_dispatch:
     inputs:
       operation:
-        description: 'build-testflight: new build uploaded to TestFlight. ota-update: push JS/UI changes to installed builds of this version.'
+        description: 'build-testflight: React Native build to TestFlight. ota-update: push JS/UI changes to installed RN builds. native-testflight: native SwiftUI build to TestFlight.'
         type: choice
-        options: ['build-testflight', 'ota-update']
+        options: ['build-testflight', 'ota-update', 'native-testflight']
         default: 'build-testflight'
       message:
         description: 'Short note shown for an OTA update'
@@ -73,3 +75,17 @@ jobs:
         run: |
           eas update --channel production --environment production --platform ios --non-interactive \
             --message "${MESSAGE:-$(git log -1 --pretty=%s)}"
+
+      - name: Build the native app and upload it to TestFlight
+        if: inputs.operation == 'native-testflight'
+        run: |
+          set -euo pipefail
+          node scripts/export-native-words.mjs --check
+          STAGE="$RUNNER_TEMP/native"
+          mkdir -p "$STAGE"
+          cp -R ios "$STAGE/ios"
+          rm -rf "$STAGE/ios/Release" "$STAGE/ios/PARITY.md"
+          cp ios/Release/app.json ios/Release/eas.json ios/Release/package.json "$STAGE/"
+          cp ios/Release/Podfile "$STAGE/ios/Podfile"
+          cd "$STAGE"
+          EAS_NO_VCS=1 eas build --platform ios --profile production --non-interactive --auto-submit --wait

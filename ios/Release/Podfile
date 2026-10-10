@@ -1,0 +1,6 @@
+# The app has no CocoaPods dependencies (it uses Swift packages). EAS always
+# runs `pod install`, so this only produces the workspace it builds from.
+platform :ios, '17.0'
+
+target 'Word7000' do
+end

@@ -94,10 +94,21 @@ struct FilterSheet: View {
 struct BankPickerSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    var onScan: () -> Void = {}
 
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    Button {
+                        dismiss()
+                        onScan()
+                    } label: {
+                        Label("掃描單字表", systemImage: "doc.text.viewfinder")
+                            .font(.body.weight(.semibold))
+                    }
+                    .accessibilityIdentifier("bank-scan")
+                }
                 Section {
                     bankRow(id: WordBanks.coreBankId, name: L.coreBankName, count: model.vocabularyWords.count, icon: "square.stack.3d.up.fill", tag: L.builtInBank, color: Palette.accent)
                     ForEach(model.customSets.sets) { set in

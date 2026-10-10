@@ -51,6 +51,18 @@ final class AppModel {
                 progress = LearningEngine.merge([progress, legacy.progress])
                 sets = CustomSetState.merge([sets, legacy.customSets])
                 if let bank = legacy.activeBankId { settings.activeBankId = bank }
+                if let theme = legacy.theme { settings.theme = theme }
+                // Keep the old device id: it is the per-device key in the
+                // activity counters and for lock screen reminders.
+                if let deviceId = legacy.deviceId { settings.deviceSourceId = deviceId }
+                if let filters = legacy.filters {
+                    settings.studyFilter = filters.study
+                    settings.quizFilter = filters.quiz
+                    settings.libraryFilter = filters.library
+                    if let count = filters.questionCount, QuizBuilder.questionCounts.contains(count) {
+                        settings.quizQuestionCount = count
+                    }
+                }
             }
             settings.migratedLegacyData = true
         }
@@ -106,6 +118,32 @@ final class AppModel {
         settings.activeBankId = id
         studySession = nil
         studyUndoStack = []
+    }
+
+    // MARK: Scanning
+
+    /// Saves reviewed scan rows into a new bank and switches to it.
+    func saveScannedWords(_ rows: [ReviewedScanWord], newBankName: String) -> (setId: String, added: Int, name: String)? {
+        let created = customSets.creatingSet(named: newBankName.trimmed.isEmpty ? WordBanks.defaultScanBankName() : newBankName)
+        customSets = created.state
+        return saveScannedWords(rows, intoSet: created.id)
+    }
+
+    /// Saves reviewed scan rows into an existing bank and switches to it.
+    /// Words already in that bank are skipped, so scanning the same sheet
+    /// twice does not fill it with copies.
+    func saveScannedWords(_ rows: [ReviewedScanWord], intoSet setId: String) -> (setId: String, added: Int, name: String)? {
+        guard let set = customSets.sets.first(where: { $0.id == setId }) else { return nil }
+        let existing = Set(WordBanks.words(of: set, in: allWords).map { $0.word.lowercased() })
+        let words = WordBanks.buildScannedWords(rows.filter { !existing.contains($0.word.trimmed.lowercased()) }, coreWords: vocabularyWords)
+        // New words go first in a set, so add them in reverse to keep the
+        // order they were printed in.
+        customSets = customSets.addingCustomWords(Array(words.reversed()), toSet: setId)
+        settings.activeBankId = setId
+        studySession = nil
+        studyUndoStack = []
+        scheduleSave()
+        return (setId, words.count, set.name)
     }
 
     // MARK: Today

@@ -1,0 +1,6 @@
+{
+  "name": "word7000-native",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Build wrapper so EAS can sign and upload the native SwiftUI app in ios/."
+}

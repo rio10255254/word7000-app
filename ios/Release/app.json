@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Word7000",
+    "slug": "word7000",
+    "owner": "rio10255254",
+    "version": "2.0.0",
+    "ios": {
+      "bundleIdentifier": "com.rio.word7000"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d973eb82-7066-453c-a361-afe987ba0ca1"
+      }
+    }
+  }
+}

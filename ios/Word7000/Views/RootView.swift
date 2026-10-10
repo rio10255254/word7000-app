@@ -9,6 +9,7 @@ struct RootView: View {
     @Environment(AppModel.self) private var model
     @State private var tab: AppTab = .home
     @State private var bankPickerOpen = false
+    @State private var scanOpen = false
 
     var body: some View {
         TabView(selection: $tab) {
@@ -43,9 +44,17 @@ struct RootView: View {
             .tag(AppTab.profile)
         }
         .sheet(isPresented: $bankPickerOpen) {
-            BankPickerSheet()
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
+            BankPickerSheet(onScan: {
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(350))
+                    scanOpen = true
+                }
+            })
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $scanOpen) {
+            ScanView(onStudy: { tab = .study })
         }
     }
 }

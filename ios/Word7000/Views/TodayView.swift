@@ -57,6 +57,7 @@ struct TodayView: View {
                 Button { start(.quiz) } label: {
                     ActionRow(icon: "checklist", tint: Palette.chinese, title: L.quickQuiz, value: L.quizLength)
                 }
+                .tint(.primary)
                 .accessibilityIdentifier("today-quiz")
                 if stats.review > 0 {
                     Button {
@@ -65,12 +66,13 @@ struct TodayView: View {
                     } label: {
                         ActionRow(icon: "arrow.counterclockwise", tint: Palette.review, title: L.practiceStruggling, value: "\(stats.review)")
                     }
+                    .tint(.primary)
                     .accessibilityIdentifier("today-review")
                 }
             } header: {
                 Text(L.practice)
             } footer: {
-                Text(L.studyingBank(model.bankName, count: model.bank.words.count))
+                Text(L.studyingBank(model.bankName))
             }
         }
         .navigationTitle(L.tabToday)

@@ -22,7 +22,7 @@ enum L {
     static let quickQuiz = "小測驗"
     static let quizLength = "10 題"
     static let practiceStruggling = "複習不熟的字"
-    static func studyingBank(_ name: String, count: Int) -> String { "目前字庫：\(name)（\(count) 個）。到「單字」可以換字庫或掃描單字表。" }
+    static func studyingBank(_ name: String) -> String { "字庫：\(name)" }
 
     // Study
     static let close = "關閉"

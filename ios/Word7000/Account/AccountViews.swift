@@ -10,15 +10,15 @@ struct SignInSheet: View {
 
         var title: String {
             switch self {
-            case .general: "登入 Word7000"
-            case .scan: "登入後就能掃描單字表"
+            case .general: L.t("登入 Word7000", "Sign in to Word7000")
+            case .scan: L.t("登入後就能掃描單字表", "Sign in to scan word lists")
             }
         }
 
         var body: String {
             switch self {
-            case .general: "換手機或重裝 App 時，學習進度、收藏和字庫都會跟著你。"
-            case .scan: "掃描的字庫會存在你的帳號，換手機也不會不見。"
+            case .general: L.t("換手機或重裝 App 時，學習進度、收藏和字庫都會跟著你。", "Your progress, saved words and banks follow you to a new iPhone.")
+            case .scan: L.t("掃描的字庫會存在你的帳號，換手機也不會不見。", "Scanned banks are kept in your account, so they are never lost.")
             }
         }
 
@@ -73,13 +73,13 @@ struct SignInSheet: View {
                         Button {
                             Task { await google() }
                         } label: {
-                            Label("使用 Google 繼續", systemImage: "globe")
+                            Label(L.t("使用 Google 繼續", "Continue with Google"), systemImage: "globe")
                                 .font(.headline)
                                 .frame(maxWidth: .infinity)
                         }
                         .secondaryAction()
 
-                        Button(showEmail ? "收起 Email 登入" : "使用 Email") {
+                        Button(showEmail ? L.t("收起 Email 登入", "Hide email sign-in") : L.t("使用 Email", "Use email")) {
                             withAnimation(.snappy) { showEmail.toggle() }
                         }
                         .font(.subheadline.weight(.semibold))
@@ -92,12 +92,12 @@ struct SignInSheet: View {
                                     .keyboardType(.emailAddress)
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
-                                SecureField("密碼", text: $password)
+                                SecureField(L.t("密碼", "Password"), text: $password)
                                     .textContentType(.password)
                                 HStack(spacing: 10) {
-                                    Button("註冊") { Task { await account.signUp(email: email.trimmed, password: password); finishIfSignedIn() } }
+                                    Button(L.t("註冊", "Sign up")) { Task { await account.signUp(email: email.trimmed, password: password); finishIfSignedIn() } }
                                         .secondaryAction()
-                                    Button("登入") { Task { await account.signIn(email: email.trimmed, password: password); finishIfSignedIn() } }
+                                    Button(L.t("登入", "Sign in")) { Task { await account.signIn(email: email.trimmed, password: password); finishIfSignedIn() } }
                                         .prominentAction()
                                 }
                             }
@@ -115,7 +115,7 @@ struct SignInSheet: View {
                         Text(account.message).font(.footnote).foregroundStyle(.secondary)
                     }
 
-                    Text("登入後，目前的進度會一起保留。")
+                    Text(L.t("登入後，目前的進度會一起保留。", "Your current progress is kept when you sign in."))
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -123,7 +123,7 @@ struct SignInSheet: View {
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("稍後") { dismiss() }
+                    Button(L.t("稍後", "Not now")) { dismiss() }
                         .disabled(account.busy)
                 }
             }
@@ -195,12 +195,12 @@ struct AccountSection: View {
                         .font(.system(size: 36))
                         .foregroundStyle(Palette.accent)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(account.displayName ?? "已登入").font(.headline)
+                        Text(account.displayName ?? L.t("已登入", "Signed in")).font(.headline)
                         statusLine
                     }
                 }
                 .padding(.vertical, 4)
-                Button("登出") { confirmSignOut = true }
+                Button(L.t("登出", "Sign out")) { confirmSignOut = true }
                     .disabled(account.busy)
             } else {
                 Button { signInOpen = true } label: {
@@ -209,8 +209,8 @@ struct AccountSection: View {
                             .font(.system(size: 30))
                             .foregroundStyle(Palette.accent)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("登入或建立帳號").font(.headline).foregroundStyle(.primary)
-                            Text("換手機也能保留進度").font(.subheadline).foregroundStyle(.secondary)
+                            Text(L.t("登入或建立帳號", "Sign in or create an account")).font(.headline).foregroundStyle(.primary)
+                            Text(L.t("換手機也能保留進度", "Keep your progress on any iPhone")).font(.subheadline).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
@@ -222,24 +222,24 @@ struct AccountSection: View {
             Text(L.account)
         }
         .sheet(isPresented: $signInOpen) { SignInSheet() }
-        .confirmationDialog("要登出嗎？", isPresented: $confirmSignOut, titleVisibility: .visible) {
-            Button("登出", role: .destructive) { Task { await account.signOut() } }
+        .confirmationDialog(L.t("要登出嗎？", "Sign out?"), isPresented: $confirmSignOut, titleVisibility: .visible) {
+            Button(L.t("登出", "Sign out"), role: .destructive) { Task { await account.signOut() } }
         } message: {
-            Text("進度已存在帳號裡，之後登入就會回來。這支 iPhone 會改用新的訪客進度。")
+            Text(L.t("進度已存在帳號裡，之後登入就會回來。這支 iPhone 會改用新的訪客進度。", "Your progress stays in your account and returns when you sign in. This iPhone starts fresh as a guest."))
         }
-        .alert("刪除帳號與所有資料？", isPresented: $confirmDelete) {
-            Button("取消", role: .cancel) {}
-            Button("刪除", role: .destructive) { Task { await account.deleteAccount() } }
+        .alert(L.t("刪除帳號與所有資料？", "Delete your account and all data?"), isPresented: $confirmDelete) {
+            Button(L.cancel, role: .cancel) {}
+            Button(L.t("刪除", "Delete"), role: .destructive) { Task { await account.deleteAccount() } }
         } message: {
-            Text("學習進度、字庫和每日紀錄都會永久刪除，無法復原。")
+            Text(L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
         }
 
         if account.configured, account.session != nil {
             Section {
-                Button("刪除帳號與資料", role: .destructive) { confirmDelete = true }
+                Button(L.t("刪除帳號與資料", "Delete account and data"), role: .destructive) { confirmDelete = true }
                     .disabled(account.busy)
             } footer: {
-                Text("會永久刪除這個帳號的學習進度和字庫，無法復原。")
+                Text(L.t("會永久刪除這個帳號的學習進度和字庫，無法復原。", "Permanently deletes this account's progress and banks. This cannot be undone."))
             }
         }
     }

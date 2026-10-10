@@ -1,0 +1,75 @@
+# Ships the iOS app from GitHub, so no computer is needed.
+#
+# Run it from the Actions tab (iOS release > Run workflow), or from a Claude
+# session. It needs one repository secret, EXPO_TOKEN (an Expo access token):
+# Settings > Secrets and variables > Actions > New repository secret.
+#
+#   build-testflight  Builds on Expo's servers with the iOS credentials Expo
+#                     already stores, then uploads the build to TestFlight.
+#   ota-update        Sends JavaScript and UI changes to installed builds of
+#                     the same app version, without a new TestFlight build.
+name: iOS release
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'build-testflight: new build uploaded to TestFlight. ota-update: push JS/UI changes to installed builds of this version.'
+        type: choice
+        options: ['build-testflight', 'ota-update']
+        default: 'build-testflight'
+      message:
+        description: 'Short note shown for an OTA update'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+# Never cancel a build or upload that is already running.
+concurrency:
+  group: ios-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - name: Check the Expo token
+        if: env.EXPO_TOKEN == ''
+        run: |
+          echo "::error::The EXPO_TOKEN secret is missing. Add it under Settings > Secrets and variables > Actions."
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 22
+
+      - run: npm ci
+
+      # A release should never carry a change that breaks the tests.
+      - run: npm run typecheck
+      - run: npm test
+
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build and upload to TestFlight
+        if: inputs.operation == 'build-testflight'
+        run: eas build --platform ios --profile production --non-interactive --auto-submit --wait
+
+      - name: Publish an OTA update
+        if: inputs.operation == 'ota-update'
+        env:
+          MESSAGE: ${{ inputs.message }}
+        run: |
+          eas update --channel production --environment production --platform ios --non-interactive \
+            --message "${MESSAGE:-$(git log -1 --pretty=%s)}"

@@ -208,6 +208,8 @@ final class PlusModel {
             try await AppStore.sync()
         } catch StoreKitError.userCancelled {
             return .cancelled
+        } catch let error as SKError where error.code == .paymentCancelled {
+            return .cancelled
         } catch {
             return .failed
         }

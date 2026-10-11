@@ -59,7 +59,7 @@ enum P {
     static var restore: String { L.t("恢復購買", "Restore") }
     static var terms: String { L.t("使用條款", "Terms") }
     static var retry: String { L.t("再試一次", "Try again") }
-    static var plansUnavailable: String { L.t("目前無法載入方案，請確認網路後再試一次。", "Plans could not be loaded. Check your connection and try again.") }
+    static var plansUnavailable: String { L.t("目前無法載入訂閱方案，請稍後再試。", "Subscription plans are unavailable right now. Please try again shortly.") }
     static var pending: String { L.t("購買等待核准中（例如家長同意），核准後會自動解鎖。", "The purchase is waiting for approval, e.g. from a parent. Plus unlocks once approved.") }
     static var failed: String { L.t("目前無法確認購買結果。若已完成付款，請使用「恢復購買」或稍後再試。", "We could not confirm the purchase. If payment completed, restore purchases or try again shortly.") }
     static var restoreFailed: String { L.t("目前無法恢復購買，請稍後再試。", "Purchases could not be restored right now. Please try again shortly.") }
@@ -80,7 +80,9 @@ enum P {
     static func memberDetail(planYearly: Bool, endsAt: Date?) -> String {
         let plan = planYearly ? yearly : monthly
         guard let endsAt else { return plan }
-        return L.t("\(plan) · 本期到 \(endsAt.formatted(date: .numeric, time: .omitted))", "\(plan) · period ends \(endsAt.formatted(date: .abbreviated, time: .omitted))")
+        let date = L.zh ? endsAt.formatted(date: .numeric, time: .omitted)
+            : endsAt.formatted(.dateTime.month(.abbreviated).day().year().locale(Locale(identifier: "en_US")))
+        return L.t("\(plan) · 本期到 \(date)", "\(plan) · period ends \(date)")
     }
     static var trialTitle: String { L.t("Plus 免費試用中", "Plus free trial") }
     static var trialDetail: String { L.t("所有功能都能用，試用結束前訂閱就不會中斷", "Everything is on. Subscribe before it ends to keep it all.") }

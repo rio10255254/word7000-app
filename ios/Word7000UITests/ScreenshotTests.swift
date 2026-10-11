@@ -34,9 +34,45 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "zh-4-speaking")
     }
 
+    /// After the trial: the one-time recap, the reminder on Today, the
+    /// paywall with plans, and a locked screen's preview.
+    func testPlusScreens() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingTrialExpired", "-uiTestingFakePlans"]
+        app.launch()
+        if app.buttons["plus-recap-later"].waitForExistence(timeout: 10) {
+            sleep(1)
+            snap(app, "plus-1-trial-recap")
+            app.buttons["plus-recap-later"].tap()
+        }
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        sleep(1)
+        snap(app, "plus-2-today-nudge")
+        if app.buttons["plus-nudge"].waitForExistence(timeout: 3) {
+            app.buttons["plus-nudge"].tap()
+            sleep(2)
+            snap(app, "plus-3-paywall")
+            if app.buttons["plan-monthly"].exists {
+                app.buttons["plan-monthly"].tap()
+                sleep(1)
+                snap(app, "plus-4-paywall-monthly")
+            }
+            app.buttons[L10n.close].firstMatch.tap()
+            sleep(1)
+        }
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        sleep(1)
+        snap(app, "plus-5-me")
+        if app.buttons["me-history"].waitForExistence(timeout: 3) {
+            app.buttons["me-history"].tap()
+            sleep(1)
+            snap(app, "plus-6-history-locked")
+        }
+    }
+
     private func walkThrough(theme: String) {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTesting\(theme)"]
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTesting\(theme)", "-uiTestingFakePlans"]
         app.launch()
         let prefix = theme.lowercased()
 

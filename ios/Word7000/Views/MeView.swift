@@ -40,12 +40,13 @@ struct MeView: View {
 
             Section {
                 Button {
-                    plus.require(.history) { historyOpen = true }
+                    historyOpen = true
                 } label: {
                     ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"),
-                              value: plus.decide(.history) == .allowed ? nil : P.plusBadge)
+                              locked: plus.decide(.history) != .allowed)
                 }
                 .tint(.primary)
+                .accessibilityIdentifier("me-history")
             }
 
             Section {

@@ -5,11 +5,13 @@ import Word7000Core
 /// that keep slipping back.
 struct HistoryView: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
     @State private var range = 30
 
     var body: some View {
         let summary = model.history(days: range)
         let weak = model.weakWords()
+        let locked = plus.decide(.history) != .allowed
         List {
             Section {
                 Picker(L.t("期間", "Range"), selection: $range) {
@@ -51,6 +53,17 @@ struct HistoryView: View {
                 Text(L.t("忘記越多次的字排越前面，可以優先複習。", "Words forgotten most often come first."))
             }
         }
+        // Locked: the learner's own history, blurred, under one way to unlock.
+        .blur(radius: locked ? 7 : 0)
+        .allowsHitTesting(!locked)
+        .accessibilityHidden(locked)
+        .overlay {
+            if locked {
+                PlusLockedOverlay(feature: .history)
+                    .transition(.scale(scale: 0.92).combined(with: .opacity))
+            }
+        }
+        .animation(.smooth, value: locked)
         .navigationTitle(L.t("學習紀錄", "History"))
         .navigationDestination(for: WordEntry.self) { word in WordDetailView(word: word) }
     }

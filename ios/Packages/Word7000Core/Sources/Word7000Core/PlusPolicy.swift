@@ -72,6 +72,43 @@ public struct PlusPolicy: Sendable {
 
     public var trialScansLeft: Int { max(0, Self.trialScanLimit - trialScansUsed) }
 
+    /// A gentle reminder worth showing on the home screen, or nil while there
+    /// is nothing pressing. Quiet for most of the trial on purpose.
+    public enum Nudge: Equatable, Sendable {
+        case scansUsedUp
+        case trialEnding(daysLeft: Int)
+        case lastScan
+        case trialEnded
+    }
+
+    public func nudge(now: Date = Date()) -> Nudge? {
+        switch access(now: now) {
+        case .subscribed:
+            return nil
+        case .expired:
+            return .trialEnded
+        case let .trial(daysLeft):
+            if trialScansLeft == 0 { return .scansUsedUp }
+            if daysLeft <= 2 { return .trialEnding(daysLeft: daysLeft) }
+            if trialScansLeft == 1 { return .lastScan }
+            return nil
+        }
+    }
+
+    /// How far into the trial, from 0 to 1.
+    public func trialFraction(now: Date = Date()) -> Double {
+        let total = trialEndsAt.timeIntervalSince(trialStartedAt)
+        return min(1, max(0, now.timeIntervalSince(trialStartedAt) / total))
+    }
+
+    /// Whole months a yearly price saves against paying monthly, e.g. 2 for
+    /// 490 a year against 49 a month.
+    public static func monthsSaved(monthly: Decimal, yearly: Decimal) -> Int {
+        guard monthly > 0 else { return 0 }
+        let saved = NSDecimalNumber(decimal: (monthly * 12 - yearly) / monthly).doubleValue
+        return max(0, Int(saved.rounded(.down)))
+    }
+
     /// The earliest of the trial starts recorded on this iPhone and in the
     /// account, so neither reinstalling nor a new device restarts the trial.
     public static func trialStart(_ dates: [Date?], fallback: Date = Date()) -> Date {

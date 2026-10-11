@@ -6,8 +6,6 @@ struct TodayView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
 
-    /// "Plus" next to features that are locked now.
-    private var plusBadge: String? { plus.decide(.examPractice) == .allowed ? nil : P.plusBadge }
     var start: (Activity) -> Void
 
     var body: some View {
@@ -57,6 +55,14 @@ struct TodayView: View {
                 .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 8, trailing: 4))
             }
 
+            if let nudge = plus.nudge {
+                Section {
+                    PlusNudgeBanner(nudge: nudge)
+                        .padding(.vertical, 4)
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+
             Section {
                 Button { start(.quiz) } label: {
                     ActionRow(icon: "checklist", tint: Palette.chinese, title: L.quickQuiz, value: L.quizLength)
@@ -69,7 +75,8 @@ struct TodayView: View {
                 .tint(.primary)
                 .accessibilityIdentifier("today-speaking")
                 Button { start(.exam) } label: {
-                    ActionRow(icon: "timer", tint: Palette.review, title: L.t("考前衝刺模擬", "Exam practice"), value: plusBadge)
+                    ActionRow(icon: "timer", tint: Palette.review, title: L.t("考前衝刺模擬", "Exam practice"),
+                              locked: plus.decide(.examPractice) != .allowed)
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("today-exam")
@@ -89,6 +96,7 @@ struct TodayView: View {
                 Text(L.studyingBank(model.bankName))
             }
         }
+        .animation(.snappy, value: plus.nudge)
         .navigationTitle(L.tabToday)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

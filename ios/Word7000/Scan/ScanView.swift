@@ -41,6 +41,8 @@ struct ScanView: View {
     @State private var suggester: WordSuggester?
     @State private var message: String?
     @State private var target: Target = .new
+    /// The paywall, shown over the scanner when the allowance runs out here.
+    @State private var paywall: PaywallReason?
     @State private var newBankName = WordBanks.defaultScanBankName(chineseMode: L.mode == .chinese)
 
     private var scanBanks: [CustomVocabSet] {
@@ -77,6 +79,7 @@ struct ScanView: View {
                 }
             }
         }
+        .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         .fullScreenCover(isPresented: $cameraOpen) {
             CameraPicker { image in Task { await read([image]) } }
                 .ignoresSafeArea()
@@ -113,22 +116,37 @@ struct ScanView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
+                    if case .trial = plus.access {
+                        Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background((plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent).opacity(0.12), in: Capsule())
+                            .contentTransition(.numericText())
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)
 
                 if DocumentScanner.isAvailable {
-                    Button { documentScannerOpen = true } label: {
+                    Button { allowScan { documentScannerOpen = true } } label: {
                         Label(S.scanDocument, systemImage: "doc.viewfinder.fill")
                     }
                     .accessibilityIdentifier("scan-document")
                 } else if CameraPicker.isAvailable {
-                    Button { cameraOpen = true } label: {
+                    Button { allowScan { cameraOpen = true } } label: {
                         Label(S.takePhoto, systemImage: "camera.fill")
                     }
                 }
-                PhotosPicker(selection: $photoItem, matching: .images) {
-                    Label(S.choosePhoto, systemImage: "photo.on.rectangle")
+                if plus.decide(.scan) == .allowed {
+                    PhotosPicker(selection: $photoItem, matching: .images) {
+                        Label(S.choosePhoto, systemImage: "photo.on.rectangle")
+                    }
+                } else {
+                    Button { allowScan {} } label: {
+                        Label(S.choosePhoto, systemImage: "photo.on.rectangle")
+                    }
                 }
                 if let message {
                     Label(message, systemImage: "exclamationmark.triangle.fill")
@@ -154,8 +172,21 @@ struct ScanView: View {
         }
     }
 
+    /// Every read counts against the trial allowance, so check before each one.
+    private func allowScan(_ action: () -> Void) {
+        switch plus.decide(.scan) {
+        case .allowed: action()
+        case .needsPlus: paywall = .locked(.scan)
+        case .trialLimitReached: paywall = .trialScansUsed
+        }
+    }
+
     private func read(_ images: [UIImage]) async {
         guard !images.isEmpty else { return }
+        guard plus.decide(.scan) == .allowed else {
+            allowScan {}
+            return
+        }
         message = nil
         phase = .reading
         do {
@@ -303,6 +334,12 @@ struct ScanView: View {
             Text(S.savedText(count, name))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
+            if case .trial = plus.access {
+                Button { paywall = .general } label: {
+                    Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
+                        .font(.footnote.weight(.semibold))
+                }
+            }
             Button {
                 dismiss()
                 onStudy()

@@ -50,6 +50,12 @@ public struct PlusPolicy: Sendable {
         return .trial(daysLeft: max(1, left))
     }
 
+    public func nextAccessChange(now: Date = Date()) -> Date? {
+        guard !subscribed, now < trialEndsAt else { return nil }
+        let elapsedDays = max(0, floor(now.timeIntervalSince(trialStartedAt) / 86_400))
+        return min(trialEndsAt, trialStartedAt.addingTimeInterval((elapsedDays + 1) * 86_400))
+    }
+
     public enum Decision: Equatable, Sendable {
         case allowed
         /// The trial ended (or never applied); a subscription unlocks it.

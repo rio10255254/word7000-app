@@ -34,6 +34,48 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "zh-4-speaking")
     }
 
+    func testTrialExpiresWhileAppRemainsOpen() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingTrialEndsSoon", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["plus-recap-later"].waitForExistence(timeout: 20))
+        snap(app, "plus-7-trial-expired-while-open")
+        app.buttons["plus-recap-later"].tap()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+    }
+
+    func testHistoryChartSelectionAndRange() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingPlus", "-uiTestingHistoryData", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.buttons["me-history"].tap()
+        let chart = app.descendants(matching: .any)["history-chart"].firstMatch
+        XCTAssertTrue(chart.waitForExistence(timeout: 5))
+        let date = app.staticTexts["history-selected-date"]
+        XCTAssertTrue(date.waitForExistence(timeout: 5))
+        let initial = date.label
+        chart.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.4))
+            .press(forDuration: 0.3, thenDragTo: chart.coordinate(withNormalizedOffset: CGVector(dx: 0.6, dy: 0.4)))
+        XCTAssertNotEqual(date.label, initial)
+        snap(app, "plus-8-history-selected-day")
+        app.buttons["90 天"].tap()
+        XCTAssertEqual(date.label, initial)
+        snap(app, "plus-9-history-ninety-days")
+    }
+
+    func testHistoryEmptyState() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingPlus", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.buttons["me-history"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["history-chart-empty"].firstMatch.waitForExistence(timeout: 5))
+        snap(app, "plus-10-history-empty")
+    }
+
     /// After the trial: the one-time recap, the reminder on Today, the
     /// paywall with plans, and a locked screen's preview.
     func testPlusScreens() {
@@ -52,12 +94,14 @@ final class ScreenshotTests: XCTestCase {
             app.buttons["plus-nudge"].tap()
             sleep(2)
             snap(app, "plus-3-paywall")
+            XCTAssertTrue(app.buttons["paywall-close"].isHittable)
             if app.buttons["plan-monthly"].exists {
                 app.buttons["plan-monthly"].tap()
                 sleep(1)
                 app.swipeUp()
                 sleep(1)
                 snap(app, "plus-4-paywall-monthly")
+                XCTAssertTrue(app.buttons["paywall-close"].isHittable)
             }
             app.buttons[L10n.close].firstMatch.tap()
             sleep(1)

@@ -33,6 +33,7 @@ struct PaywallView: View {
         }
         .animation(.smooth(duration: 0.45), value: purchased)
         .sensoryFeedback(.success, trigger: purchased)
+        .interactiveDismissDisabled(busy)
         .task {
             if plus.plansState != .loaded { await plus.loadPlans() }
             if selectedID == nil { selectedID = plus.plans.first(where: \.yearly)?.id ?? plus.plans.first?.id }
@@ -50,6 +51,7 @@ struct PaywallView: View {
             VStack(spacing: 18) {
                 hero
                 plans
+                    .disabled(busy)
                 benefits
                 Text(P.freeForever)
                     .font(.footnote)
@@ -58,29 +60,38 @@ struct PaywallView: View {
                     .padding(.horizontal, 8)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 20)
+            .padding(.top, 4)
             .padding(.bottom, 12)
         }
         .scrollIndicators(.hidden)
         .background(alignment: .top) { PlusGlow().frame(height: 360).ignoresSafeArea() }
         .background(Palette.background)
         .safeAreaInset(edge: .bottom, spacing: 0) { purchaseBar }
-        .overlay(alignment: .topTrailing) {
-            Button { dismiss() } label: {
-                Image(systemName: "xmark")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(.secondary)
-                    .frame(width: 32, height: 32)
-                    .background(.regularMaterial, in: Circle())
+        .safeAreaInset(edge: .top, spacing: 0) {
+            HStack {
+                Spacer()
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 32, height: 32)
+                        .background(.regularMaterial, in: Circle())
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel(L.close)
+                .accessibilityIdentifier("paywall-close")
+                .disabled(busy)
             }
-            .padding(16)
-            .accessibilityLabel(L.close)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 4)
+            .background(.bar)
         }
     }
 
     private var hero: some View {
         VStack(spacing: 10) {
-            PlusIcon(size: 64)
+            PlusIcon(size: 56)
                 .symbolEffect(.bounce, options: .nonRepeating, value: appeared)
                 .scaleEffect(appeared || reduceMotion ? 1 : 0.6)
                 .opacity(appeared ? 1 : 0)
@@ -100,7 +111,6 @@ struct PaywallView: View {
                     .background(Palette.review.opacity(0.12), in: Capsule())
             }
         }
-        .padding(.top, 8)
     }
 
     private var benefits: some View {
@@ -210,9 +220,14 @@ struct PaywallView: View {
         notice = nil
         busy = true
         Task {
-            let restored = await plus.restore()
+            let result = await plus.restore()
             busy = false
-            if restored { purchased = true } else { notice = P.nothingToRestore }
+            switch result {
+            case .restored: purchased = true
+            case .noneFound: notice = P.nothingToRestore
+            case .failed: notice = P.restoreFailed
+            case .cancelled: break
+            }
         }
     }
 }

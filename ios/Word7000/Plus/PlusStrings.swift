@@ -61,7 +61,8 @@ enum P {
     static var retry: String { L.t("再試一次", "Try again") }
     static var plansUnavailable: String { L.t("目前無法載入方案，請確認網路後再試一次。", "Plans could not be loaded. Check your connection and try again.") }
     static var pending: String { L.t("購買等待核准中（例如家長同意），核准後會自動解鎖。", "The purchase is waiting for approval, e.g. from a parent. Plus unlocks once approved.") }
-    static var failed: String { L.t("購買沒有完成，沒有扣款。請稍後再試。", "The purchase did not go through and you were not charged. Please try again.") }
+    static var failed: String { L.t("目前無法確認購買結果。若已完成付款，請使用「恢復購買」或稍後再試。", "We could not confirm the purchase. If payment completed, restore purchases or try again shortly.") }
+    static var restoreFailed: String { L.t("目前無法恢復購買，請稍後再試。", "Purchases could not be restored right now. Please try again shortly.") }
     static var nothingToRestore: String { L.t("這個 Apple 帳號沒有可恢復的訂閱。", "No subscription to restore for this Apple Account.") }
 
     // Welcome

@@ -23,6 +23,19 @@ final class PlusPolicyTests: XCTestCase {
         XCTAssertEqual(policy.trialScansLeft, 0)
     }
 
+    func testNextAccessChangeUsesTheTrialBoundary() {
+        let policy = PlusPolicy(trialStartedAt: start, subscribed: false, trialScansUsed: 0)
+        XCTAssertEqual(policy.nextAccessChange(now: day(0.5)), day(1))
+        XCTAssertEqual(policy.nextAccessChange(now: day(1)), day(2))
+        XCTAssertEqual(policy.nextAccessChange(now: day(6.9)), day(7))
+        XCTAssertNil(policy.nextAccessChange(now: day(7)))
+    }
+
+    func testSubscribedAccessDoesNotScheduleTrialChanges() {
+        let policy = PlusPolicy(trialStartedAt: start, subscribed: true, trialScansUsed: 0)
+        XCTAssertNil(policy.nextAccessChange(now: day(0.5)))
+    }
+
     func testSubscribersHaveEverything() {
         let policy = PlusPolicy(trialStartedAt: start, subscribed: true, trialScansUsed: 99)
         XCTAssertEqual(policy.access(now: day(100)), .subscribed)

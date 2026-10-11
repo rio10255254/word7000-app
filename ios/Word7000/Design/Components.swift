@@ -25,17 +25,18 @@ struct ProgressRing<Label: View>: View {
 
 /// A big rounded number over a small caption.
 struct StatTile: View {
-    var value: Int
+    var value: Int?
     var label: String
     var color: Color = .primary
 
     var body: some View {
         VStack(spacing: 2) {
-            Text("\(value)")
+            Text(value.map { String($0) } ?? "–")
                 .font(.roundedSize(26, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(color)
                 .contentTransition(.numericText())
+                .accessibilityLabel(value.map { String($0) } ?? L.t("尚無資料", "No data"))
             Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)

@@ -19,6 +19,7 @@ final class PlusModel {
     /// The plan and the end of the current period while subscribed.
     private(set) var activePlanID: String?
     private(set) var periodEndsAt: Date?
+    private(set) var referenceDate = Date()
 
     enum PlansState: Equatable { case loading, loaded, unavailable }
 
@@ -30,6 +31,7 @@ final class PlusModel {
     var paywallReason: PaywallReason?
 
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
+    @ObservationIgnored private var accessRefreshTask: Task<Void, Never>?
 
     private static let trialKey = "plus-trial-started"
     private static let scansKey = "plus-trial-scans"
@@ -48,6 +50,9 @@ final class PlusModel {
         let stored = Keychain.read(Self.trialKey).flatMap { String(data: $0, encoding: .utf8) }.flatMap(Double.init)
         let start = stored.map { Date(timeIntervalSince1970: $0) } ?? Date()
         trialStartedAt = arguments.contains("-uiTestingTrialExpired") ? Date().addingTimeInterval(-8 * 86_400) : start
+        if arguments.contains("-uiTestingTrialEndsSoon") {
+            trialStartedAt = Date().addingTimeInterval(-Double(PlusPolicy.trialDays) * 86_400 + 4)
+        }
         trialScansUsed = Keychain.read(Self.scansKey).flatMap { String(data: $0, encoding: .utf8) }.flatMap(Int.init) ?? 0
         if stored == nil { Self.write(start.timeIntervalSince1970, Self.trialKey) }
         if arguments.contains("-uiTestingPlus") { subscribed = true }
@@ -57,9 +62,11 @@ final class PlusModel {
         PlusPolicy(trialStartedAt: trialStartedAt, subscribed: subscribed, trialScansUsed: trialScansUsed)
     }
 
-    var access: PlusAccess { policy.access() }
+    var access: PlusAccess { policy.access(now: referenceDate) }
 
-    func decide(_ feature: PlusFeature) -> PlusPolicy.Decision { policy.decide(feature) }
+    func decide(_ feature: PlusFeature) -> PlusPolicy.Decision {
+        policy.decide(feature, now: max(referenceDate, Date()))
+    }
 
     /// Runs `action` if the feature is unlocked, otherwise shows the paywall.
     func require(_ feature: PlusFeature, _ action: () -> Void) {
@@ -72,8 +79,8 @@ final class PlusModel {
 
     /// The reminder for the home screen, unless it was closed today.
     var nudge: PlusPolicy.Nudge? {
-        guard nudgeDismissedDay != Self.dayKey(Date()) else { return nil }
-        return policy.nudge()
+        guard nudgeDismissedDay != Self.dayKey(referenceDate) else { return nil }
+        return policy.nudge(now: referenceDate)
     }
 
     func dismissNudge() {
@@ -110,6 +117,34 @@ final class PlusModel {
         guard earliest != trialStartedAt else { return }
         trialStartedAt = earliest
         Self.write(earliest.timeIntervalSince1970, Self.trialKey)
+        refreshAccessState()
+    }
+
+    func refreshAccessState() {
+        referenceDate = Date()
+        if access.isActive {
+            trialRecapPending = false
+        } else if !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
+            trialRecapPending = true
+        }
+        suspendTimeUpdates()
+        guard !subscribed else { return }
+        let midnight = Calendar.current.date(byAdding: .day, value: 1,
+                                             to: Calendar.current.startOfDay(for: referenceDate))
+        let next = [midnight, policy.nextAccessChange(now: referenceDate)].compactMap { $0 }.min()
+        guard let next else { return }
+        let delay = max(1, next.timeIntervalSince(referenceDate))
+        accessRefreshTask = Task { [weak self] in
+            do {
+                try await Task.sleep(for: .seconds(delay))
+                self?.refreshAccessState()
+            } catch { }
+        }
+    }
+
+    func suspendTimeUpdates() {
+        accessRefreshTask?.cancel()
+        accessRefreshTask = nil
     }
 
     // MARK: StoreKit
@@ -124,9 +159,6 @@ final class PlusModel {
             }
         }
         await refreshEntitlements()
-        if access == .expired, !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
-            trialRecapPending = true
-        }
         await loadPlans()
     }
 
@@ -169,15 +201,25 @@ final class PlusModel {
         }
     }
 
-    /// Restores purchases; true when a subscription is active afterwards.
-    func restore() async -> Bool {
-        try? await AppStore.sync()
+    enum RestoreOutcome { case restored, noneFound, cancelled, failed }
+
+    func restore() async -> RestoreOutcome {
+        do {
+            try await AppStore.sync()
+        } catch StoreKitError.userCancelled {
+            return .cancelled
+        } catch {
+            return .failed
+        }
         await refreshEntitlements()
-        return subscribed
+        return subscribed ? .restored : .noneFound
     }
 
     func refreshEntitlements() async {
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingPlus") { return }
+        if ProcessInfo.processInfo.arguments.contains("-uiTestingPlus") {
+            refreshAccessState()
+            return
+        }
         var active: StoreKit.Transaction?
         for await entitlement in StoreKit.Transaction.currentEntitlements {
             if case let .verified(transaction) = entitlement,
@@ -189,6 +231,7 @@ final class PlusModel {
         subscribed = active != nil
         activePlanID = active?.productID
         periodEndsAt = active?.expirationDate
+        refreshAccessState()
     }
 
     private static func write(_ value: Double, _ key: String, integer: Bool = false) {

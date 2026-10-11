@@ -23,9 +23,10 @@ struct HistoryView: View {
                 .listRowInsets(EdgeInsets())
             }
             Section {
-                WeekBars(days: model.activity(days: range))
-                    .frame(height: 140)
-                    .padding(.vertical, 8)
+                HistoryActivityChart(counts: model.activity(days: range).map(\.count),
+                                     endDate: model.today, dailyTarget: model.progress.dailyTarget)
+            } header: {
+                Text(L.t("每日學習次數", "Daily learning actions"))
             }
             Section {
                 HStack(spacing: 0) {
@@ -33,7 +34,7 @@ struct HistoryView: View {
                     Divider().frame(height: 36)
                     StatTile(value: summary.studied, label: L.t("學習卡", "Cards"), color: Palette.accent)
                     Divider().frame(height: 36)
-                    StatTile(value: summary.accuracy ?? 0, label: L.t("答對率 %", "Accuracy %"), color: Palette.known)
+                    StatTile(value: summary.accuracy, label: L.t("答對率 %", "Accuracy %"), color: Palette.known)
                 }
                 .padding(.vertical, 6)
             }

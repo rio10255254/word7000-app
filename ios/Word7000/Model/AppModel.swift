@@ -82,6 +82,19 @@ final class AppModel {
         if arguments.contains("-uiTestingSampleProgress") {
             progress = SampleData.progress(words: words, today: DayMath.today())
         }
+        if arguments.contains("-uiTestingHistoryData") {
+            var analytics = LearningAnalyticsState()
+            for back in 0..<90 {
+                guard let date = DayMath.addDays(DayMath.today(), -back) else { continue }
+                analytics.record(date: date, source: settings.deviceSourceId) { counters in
+                    counters.studyKnown = (back * 7 + 9) % 24
+                    counters.studyReview = back % 4
+                    counters.quizCorrect = back % 3
+                    counters.quizWrong = back % 2
+                }
+            }
+            progress.analytics = analytics
+        }
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
         if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
@@ -268,7 +281,9 @@ final class AppModel {
             .filter { $0.value.status == .review || ($0.value.lapses ?? 0) > 0 }
             .sorted { a, b in
                 let la = a.value.lapses ?? 0, lb = b.value.lapses ?? 0
-                return la != lb ? la > lb : a.value.reviewCount > b.value.reviewCount
+                if la != lb { return la > lb }
+                if a.value.reviewCount != b.value.reviewCount { return a.value.reviewCount > b.value.reviewCount }
+                return a.key < b.key
             }
             .prefix(limit)
         return ranked.compactMap { word(id: $0.key) }

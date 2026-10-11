@@ -53,8 +53,13 @@ struct Word7000App: App {
             case .active:
                 model.refreshToday()
                 account.heartbeat()
-                Task { await refreshReminders() }
+                Task {
+                    await plus.refreshEntitlements()
+                    await account.flush()
+                    await refreshReminders()
+                }
             case .background:
+                plus.suspendTimeUpdates()
                 model.saveNow()
                 account.flushBeforeBackground()
             case .inactive:

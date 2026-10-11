@@ -34,6 +34,20 @@ struct HistoryActivityChart: View {
         }
     }
 
+    private struct Segment: Identifiable {
+        var index: Int
+        var day: DailyLearningActivity
+        var kind: Kind
+        var id: String { "\(day.date)-\(kind.rawValue)" }
+        var count: Int { kind.count(in: day) }
+    }
+
+    private var segments: [Segment] {
+        activity.enumerated().flatMap { index, day in
+            Kind.allCases.map { Segment(index: index, day: day, kind: $0) }
+        }
+    }
+
     private var selectedIndex: Int? {
         guard let index = inspectedDay ?? selection, activity.indices.contains(index) else { return nil }
         return index
@@ -48,68 +62,10 @@ struct HistoryActivityChart: View {
         let detail = selectedIndex.map { activity[$0] } ?? activity.last
         VStack(alignment: .leading, spacing: 14) {
             if let detail {
-                HStack(alignment: .firstTextBaseline) {
-                    Text(detail.date)
-                        .font(.subheadline.weight(.semibold))
-                        .accessibilityIdentifier("history-selected-date")
-                    Spacer(minLength: 8)
-                    Text(L.t("\(detail.total) 次", "\(detail.total) actions"))
-                        .font(.subheadline.weight(.semibold))
-                        .monospacedDigit()
-                        .foregroundStyle(Palette.accent)
-                        .contentTransition(.numericText())
-                        .accessibilityIdentifier("history-selected-count")
-                }
-                ViewThatFits(in: .horizontal) {
-                    HStack(alignment: .top, spacing: 12) {
-                        ForEach(Kind.allCases) { kind in breakdown(kind, day: detail) }
-                    }
-                    VStack(alignment: .leading, spacing: 10) {
-                        ForEach(Kind.allCases) { kind in breakdown(kind, day: detail) }
-                    }
-                }
+                selectedSummary(detail)
             }
             if activity.contains(where: { $0.total > 0 }) {
-                Chart {
-                    ForEach(Array(activity.enumerated()), id: \.element.id) { index, day in
-                        ForEach(Kind.allCases) { kind in
-                            BarMark(x: .value("Day", index), y: .value("Actions", kind.count(in: day)),
-                                    width: .ratio(activity.count <= 7 ? 0.65 : 0.85), stacking: .standard)
-                                .foregroundStyle(by: .value("Practice", kind.rawValue))
-                                .opacity(selectedIndex == nil || selectedIndex == index ? 1 : 0.4)
-                                .accessibilityLabel("\(day.date), \(kind.label)")
-                                .accessibilityValue("\(kind.count(in: day))")
-                        }
-                    }
-                    if let index = selectedIndex {
-                        RuleMark(x: .value("Day", index))
-                            .foregroundStyle(Palette.accent.opacity(0.3))
-                            .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
-                    }
-                }
-                .chartXScale(domain: -1...max(1, activity.count))
-                .chartYScale(domain: 0...max(1, activity.map(\.total).max() ?? 0))
-                .chartForegroundStyleScale(domain: Kind.allCases.map(\.rawValue), range: Kind.allCases.map(\.color))
-                .chartXSelection(value: $selection)
-                .chartLegend(.hidden)
-                .chartXAxis {
-                    AxisMarks(values: ticks) { value in
-                        AxisValueLabel {
-                            if let index = value.as(Int.self), activity.indices.contains(index) {
-                                Text(dateLabel(activity[index].date)).font(.caption2)
-                            }
-                        }
-                    }
-                }
-                .chartYAxis {
-                    AxisMarks(position: .leading) {
-                        AxisGridLine()
-                        AxisValueLabel()
-                    }
-                }
-                .frame(height: chartHeight)
-                .accessibilityLabel(L.t("每日學習次數", "Daily learning actions"))
-                .accessibilityIdentifier("history-chart")
+                histogram
             } else {
                 ContentUnavailableView(L.t("這段期間尚無學習紀錄", "No learning activity in this period"),
                                        systemImage: "chart.bar.xaxis")
@@ -124,6 +80,72 @@ struct HistoryActivityChart: View {
         .onChange(of: activity.count) { _, _ in selection = nil; inspectedDay = nil }
         .onChange(of: activity.last?.date) { _, _ in selection = nil; inspectedDay = nil }
         .sensoryFeedback(.selection, trigger: selectedIndex)
+    }
+
+    private func selectedSummary(_ detail: DailyLearningActivity) -> some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(detail.date)
+                    .font(.subheadline.weight(.semibold))
+                    .accessibilityIdentifier("history-selected-date")
+                Spacer(minLength: 8)
+                Text(L.t("\(detail.total) 次", "\(detail.total) actions"))
+                    .font(.subheadline.weight(.semibold))
+                    .monospacedDigit()
+                    .foregroundStyle(Palette.accent)
+                    .contentTransition(.numericText())
+                    .accessibilityIdentifier("history-selected-count")
+            }
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top, spacing: 12) {
+                    ForEach(Kind.allCases) { kind in breakdown(kind, day: detail) }
+                }
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(Kind.allCases) { kind in breakdown(kind, day: detail) }
+                }
+            }
+        }
+    }
+
+    private var histogram: some View {
+        Chart {
+            ForEach(segments) { segment in
+                BarMark(x: .value("Day", segment.index), y: .value("Actions", segment.count),
+                        width: .ratio(activity.count <= 7 ? 0.65 : 0.85), stacking: .standard)
+                    .foregroundStyle(by: .value("Practice", segment.kind.rawValue))
+                    .opacity(selectedIndex == nil || selectedIndex == segment.index ? 1 : 0.4)
+                    .accessibilityLabel("\(segment.day.date), \(segment.kind.label)")
+                    .accessibilityValue("\(segment.count)")
+            }
+            if let index = selectedIndex {
+                RuleMark(x: .value("Day", index))
+                    .foregroundStyle(Palette.accent.opacity(0.3))
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
+            }
+        }
+        .chartXScale(domain: -1...max(1, activity.count))
+        .chartYScale(domain: 0...max(1, activity.map(\.total).max() ?? 0))
+        .chartForegroundStyleScale(domain: Kind.allCases.map(\.rawValue), range: Kind.allCases.map(\.color))
+        .chartXSelection(value: $selection)
+        .chartLegend(.hidden)
+        .chartXAxis {
+            AxisMarks(values: ticks) { value in
+                AxisValueLabel {
+                    if let index = value.as(Int.self), activity.indices.contains(index) {
+                        Text(dateLabel(activity[index].date)).font(.caption2)
+                    }
+                }
+            }
+        }
+        .chartYAxis {
+            AxisMarks(position: .leading) {
+                AxisGridLine()
+                AxisValueLabel()
+            }
+        }
+        .frame(height: chartHeight)
+        .accessibilityLabel(L.t("每日學習次數", "Daily learning actions"))
+        .accessibilityIdentifier("history-chart")
     }
 
     private func breakdown(_ kind: Kind, day: DailyLearningActivity) -> some View {

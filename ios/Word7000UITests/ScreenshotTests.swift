@@ -2,6 +2,10 @@ import XCTest
 
 /// Walks through the main screens and saves a screenshot of each, in light
 /// and dark mode. CI uploads them so every change can be checked by eye.
+enum L10n {
+    static let close = "關閉"
+}
+
 final class ScreenshotTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = true
@@ -74,6 +78,13 @@ final class ScreenshotTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 2).tap()
         sleep(1)
         snap(app, "\(prefix)-9-me")
+
+        if prefix == "light", app.buttons["me-plus"].waitForExistence(timeout: 3) {
+            app.buttons["me-plus"].tap()
+            sleep(3)
+            snap(app, "\(prefix)-11-paywall")
+            app.buttons[L10n.close].firstMatch.tap()
+        }
 
         app.tabBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.buttons["today-speaking"].waitForExistence(timeout: 5))

@@ -33,6 +33,8 @@ final class AccountModel {
     var email: String? { isPermanent ? session?.user.email : nil }
     var displayName: String? { isPermanent ? (session?.user.displayName ?? session?.user.email) : nil }
 
+    /// Uploading to the cloud is a Plus feature after the trial.
+    @ObservationIgnored weak var plus: PlusModel?
     private let client: SupabaseClient?
     private unowned let app: AppModel
     @ObservationIgnored private var dirty = SyncDirty()
@@ -143,9 +145,24 @@ final class AccountModel {
 
         status = .ready
         message = activeSession.user.anonymous ? A.guestSaved : A.signedIn
+        syncTrialStart(session: activeSession)
         dirty = SyncDirty(progress: true, customSets: true)
         await flush()
         heartbeat()
+    }
+
+    /// The trial start is kept in the account as well, so a new iPhone or a
+    /// reinstall continues the same trial instead of starting a new one.
+    private func syncTrialStart(session: AuthSession) {
+        guard let client, let plus else { return }
+        if case let .number(seconds)? = session.user.userMetadata?["plus_trial_started_at"] {
+            plus.mergeAccountTrialStart(Date(timeIntervalSince1970: seconds))
+        }
+        let start = plus.trialStartedAt.timeIntervalSince1970
+        if case let .number(stored)? = session.user.userMetadata?["plus_trial_started_at"], stored <= start { return }
+        Task {
+            try? await client.updateUserMetadata(["plus_trial_started_at": .number(start)], session: session)
+        }
     }
 
     // MARK: Background sync
@@ -165,6 +182,12 @@ final class AccountModel {
     /// file and is retried with growing delays (3 s … 5 min).
     func flush() async {
         guard let client, let current = session, !flushing, dirty.any else { return }
+        if let plus, plus.decide(.sync) != .allowed {
+            // Local data is untouched; the changes wait and go up after subscribing.
+            status = .ready
+            message = P.syncLocked
+            return
+        }
         flushing = true
         defer { flushing = false }
         let sending = dirty

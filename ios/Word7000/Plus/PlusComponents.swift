@@ -202,10 +202,14 @@ struct TrialRecapView: View {
                     .foregroundStyle(PlusStyle.gradient)
                     .symbolEffect(.bounce, value: shown)
                     .padding(.top, 28)
+                let hasWeek = week.studied + week.activeDays + plus.trialScansUsed > 0
                 VStack(spacing: 8) {
                     Text(P.recapTitle).font(.rounded(.title, weight: .heavy))
-                    Text(P.recapText).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    if hasWeek {
+                        Text(P.recapText).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    }
                 }
+                if hasWeek {
                 HStack(spacing: 0) {
                     StatTile(value: week.studied, label: P.recapCards, color: Palette.accent)
                     Divider().frame(height: 36)
@@ -214,6 +218,7 @@ struct TrialRecapView: View {
                     StatTile(value: plus.trialScansUsed, label: P.recapScans, color: Palette.known)
                 }
                 .card(padding: 14)
+                }
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text(P.recapKeepTitle).font(.subheadline.weight(.semibold))

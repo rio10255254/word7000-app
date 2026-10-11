@@ -144,6 +144,7 @@ struct WordsView: View {
 /// Horizontally scrolling banks; the last card scans a new sheet.
 struct BankShelf: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
     var scan: () -> Void
     var rename: (CustomVocabSet) -> Void
 
@@ -162,9 +163,13 @@ struct BankShelf: View {
                 }
                 Button(action: scan) {
                     VStack(alignment: .leading, spacing: 0) {
-                        Image(systemName: "plus.viewfinder")
-                            .font(.title2.weight(.semibold))
-                            .foregroundStyle(Palette.accent)
+                        HStack(alignment: .top) {
+                            Image(systemName: "plus.viewfinder")
+                                .font(.title2.weight(.semibold))
+                                .foregroundStyle(Palette.accent)
+                            Spacer(minLength: 0)
+                            scanAllowance
+                        }
                         Spacer(minLength: 0)
                         Text(L.scanSheet)
                             .font(.rounded(.subheadline, weight: .semibold))
@@ -179,6 +184,25 @@ struct BankShelf: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 4)
+        }
+    }
+
+    /// Trial scans left, or the Plus badge once scanning is locked.
+    @ViewBuilder
+    private var scanAllowance: some View {
+        switch plus.decide(.scan) {
+        case .allowed:
+            if case .trial = plus.access {
+                Text("\(plus.policy.trialScansLeft)")
+                    .font(.caption.weight(.bold))
+                    .monospacedDigit()
+                    .foregroundStyle(Palette.accent)
+                    .frame(minWidth: 22, minHeight: 22)
+                    .background(Palette.accent.opacity(0.16), in: Circle())
+                    .accessibilityLabel(P.scansLeft(plus.policy.trialScansLeft))
+            }
+        case .needsPlus, .trialLimitReached:
+            PlusBadge()
         }
     }
 

@@ -33,4 +33,25 @@ final class PlusPolicyTests: XCTestCase {
         XCTAssertEqual(PlusPolicy.trialStart([day(3), nil, day(1)]), day(1))
         XCTAssertEqual(PlusPolicy.trialStart([nil], fallback: day(5)), day(5))
     }
+
+    func testNudgesStayQuietUntilSomethingIsPressing() {
+        var policy = PlusPolicy(trialStartedAt: start, subscribed: false, trialScansUsed: 0)
+        XCTAssertNil(policy.nudge(now: day(1)))
+        XCTAssertEqual(policy.nudge(now: day(5.5)), .trialEnding(daysLeft: 2))
+        XCTAssertEqual(policy.nudge(now: day(8)), .trialEnded)
+        policy.trialScansUsed = PlusPolicy.trialScanLimit - 1
+        XCTAssertEqual(policy.nudge(now: day(1)), .lastScan)
+        policy.trialScansUsed = PlusPolicy.trialScanLimit
+        XCTAssertEqual(policy.nudge(now: day(6.5)), .scansUsedUp)
+        policy.subscribed = true
+        XCTAssertNil(policy.nudge(now: day(30)))
+    }
+
+    func testTrialFractionAndYearlySavings() {
+        let policy = PlusPolicy(trialStartedAt: start, subscribed: false, trialScansUsed: 0)
+        XCTAssertEqual(policy.trialFraction(now: day(3.5)), 0.5, accuracy: 0.001)
+        XCTAssertEqual(policy.trialFraction(now: day(9)), 1)
+        XCTAssertEqual(PlusPolicy.monthsSaved(monthly: 49, yearly: 490), 2)
+        XCTAssertEqual(PlusPolicy.monthsSaved(monthly: 0, yearly: 490), 0)
+    }
 }

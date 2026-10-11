@@ -57,6 +57,15 @@ struct RootView: View {
         .sheet(item: Binding(get: { plus.paywallReason }, set: { plus.paywallReason = $0 })) { reason in
             PaywallView(reason: reason)
         }
+        .sheet(isPresented: Binding(get: { plus.trialRecapPending && plus.paywallReason == nil && activity == nil },
+                                    set: { if !$0 { plus.markTrialRecapShown() } })) {
+            TrialRecapView(seePlans: {
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(450))
+                    plus.paywallReason = .general
+                }
+            })
+        }
         .sheet(isPresented: $signInForScan) {
             SignInSheet(reason: .scan, onSignedIn: {
                 Task { @MainActor in

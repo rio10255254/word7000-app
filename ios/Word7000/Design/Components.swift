@@ -51,6 +51,8 @@ struct ActionRow: View {
     var tint: Color
     var title: String
     var value: String? = nil
+    /// A "Plus" badge for features locked right now.
+    var locked = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -68,6 +70,7 @@ struct ActionRow: View {
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
             }
+            if locked { PlusBadge() }
             Image(systemName: "chevron.right")
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(Palette.tertiaryLabel)

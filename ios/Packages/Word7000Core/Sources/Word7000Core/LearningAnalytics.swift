@@ -22,6 +22,7 @@ public struct DailyLearningCounters: Codable, Equatable, Sendable {
 
     /// Learning actions that count toward the daily goal.
     public var goalActions: Int { otherActions + quizCorrect + quizWrong + studyKnown + studyReview }
+    public var practiceActions: Int { goalActions + speakingCompleted }
     public var totalActions: Int { goalActions + speakingCompleted + speakingSkipped }
 }
 

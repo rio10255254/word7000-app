@@ -5,7 +5,6 @@ import Word7000Core
 struct HistoryActivityChart: View {
     var counts: [Int]
     var endDate: String
-    var dailyTarget: Int
     @State private var selection: Int?
     @State private var inspectedDay: Int?
 
@@ -56,9 +55,6 @@ struct HistoryActivityChart: View {
                             .foregroundStyle(Palette.accent)
                             .lineStyle(StrokeStyle(lineWidth: 2.5, lineCap: .round))
                     }
-                    RuleMark(y: .value("Current goal", dailyTarget))
-                        .foregroundStyle(Color.secondary.opacity(0.45))
-                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
                     if let day = selectedDay {
                         RuleMark(x: .value("Day", day.id))
                             .foregroundStyle(Palette.accent.opacity(0.3))
@@ -68,7 +64,7 @@ struct HistoryActivityChart: View {
                     }
                 }
                 .chartXScale(domain: 0...max(1, values.count - 1))
-                .chartYScale(domain: 0...max(max(1, dailyTarget), counts.max() ?? 0))
+                .chartYScale(domain: 0...max(1, counts.max() ?? 0))
                 .chartXSelection(value: $selection)
                 .chartLegend(.hidden)
                 .chartXAxis {
@@ -89,9 +85,6 @@ struct HistoryActivityChart: View {
                 .frame(height: 180)
                 .accessibilityLabel(L.t("每日學習次數", "Daily learning actions"))
                 .accessibilityIdentifier("history-chart")
-                Text(L.t("目前每日目標 \(dailyTarget) 次", "Current daily goal: \(dailyTarget) actions"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             } else {
                 ContentUnavailableView(L.t("這段期間尚無學習紀錄", "No learning activity in this period"),
                                        systemImage: "chart.xyaxis.line")

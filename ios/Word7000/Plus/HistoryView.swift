@@ -23,8 +23,7 @@ struct HistoryView: View {
                 .listRowInsets(EdgeInsets())
             }
             Section {
-                HistoryActivityChart(counts: model.activity(days: range).map(\.count),
-                                     endDate: model.today, dailyTarget: model.progress.dailyTarget)
+                HistoryActivityChart(counts: model.activity(days: range).map(\.count), endDate: model.today)
             } header: {
                 Text(L.t("每日學習次數", "Daily learning actions"))
             }
@@ -37,6 +36,8 @@ struct HistoryView: View {
                     StatTile(value: summary.accuracy, label: L.t("答對率 %", "Accuracy %"), color: Palette.known)
                 }
                 .padding(.vertical, 6)
+                LabeledContent(L.t("完成口說練習", "Speaking practice completed"),
+                               value: L.t("\(summary.speakingCompleted) 次", "\(summary.speakingCompleted) sessions"))
             }
             Section {
                 if weak.isEmpty {

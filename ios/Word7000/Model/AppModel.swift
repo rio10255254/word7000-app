@@ -248,7 +248,7 @@ final class AppModel {
         return (0..<days).reversed().map { back -> (label: String, count: Int, isToday: Bool) in
             let date = DayMath.addDays(today, -back) ?? today
             let label = back % 7 == 0 ? String(Int(date.suffix(2)) ?? 0) : ""
-            return (label, analytics.day(date).goalActions, back == 0)
+            return (label, analytics.day(date).practiceActions, back == 0)
         }
     }
 
@@ -258,6 +258,7 @@ final class AppModel {
         var studied = 0
         var quizCorrect = 0
         var quizWrong = 0
+        var speakingCompleted = 0
         var accuracy: Int? { quizCorrect + quizWrong > 0 ? Int((Double(quizCorrect) / Double(quizCorrect + quizWrong) * 100).rounded()) : nil }
     }
 
@@ -266,11 +267,12 @@ final class AppModel {
         var summary = HistorySummary()
         for back in 0..<days {
             let day = analytics.day(DayMath.addDays(today, -back) ?? today)
-            if day.goalActions > 0 { summary.activeDays += 1 }
-            summary.actions += day.goalActions
+            if day.practiceActions > 0 { summary.activeDays += 1 }
+            summary.actions += day.practiceActions
             summary.studied += day.studyKnown + day.studyReview
             summary.quizCorrect += day.quizCorrect
             summary.quizWrong += day.quizWrong
+            summary.speakingCompleted += day.speakingCompleted
         }
         return summary
     }

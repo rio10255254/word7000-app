@@ -26,6 +26,16 @@ public struct DailyLearningCounters: Codable, Equatable, Sendable {
     public var totalActions: Int { goalActions + speakingCompleted + speakingSkipped }
 }
 
+public struct DailyLearningActivity: Identifiable, Equatable, Sendable {
+    public var date: String
+    public var counters: DailyLearningCounters
+    public var id: String { date }
+    public var words: Int { counters.studyKnown + counters.studyReview }
+    public var speaking: Int { counters.speakingCompleted }
+    public var other: Int { counters.otherActions + counters.quizCorrect + counters.quizWrong }
+    public var total: Int { words + speaking + other }
+}
+
 /// Per-day activity counters, kept per device ("source") so two devices
 /// syncing the same day never double count.
 public struct LearningAnalyticsState: Codable, Equatable, Sendable {
@@ -72,6 +82,13 @@ public struct LearningAnalyticsState: Codable, Equatable, Sendable {
             }
         }
         return total
+    }
+
+    public func activity(endingOn date: String, dayCount: Int) -> [DailyLearningActivity] {
+        (0..<max(0, dayCount)).reversed().map { back in
+            let key = DayMath.addDays(date, -back) ?? date
+            return DailyLearningActivity(date: key, counters: day(key))
+        }
     }
 
     public mutating func record(date: String, source: String, _ change: (inout DailyLearningCounters) -> Void) {

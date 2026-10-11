@@ -149,6 +149,7 @@ final class PlusModel {
     // MARK: StoreKit
 
     func start() async {
+        refreshAccessState()
         if updatesTask == nil {
             updatesTask = Task { [weak self] in
                 for await update in StoreKit.Transaction.updates {

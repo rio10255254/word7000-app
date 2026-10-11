@@ -45,8 +45,17 @@ final class ScreenshotTests: XCTestCase {
     }
 
     func testHistoryChartSelectionAndRange() {
+        historyChart(theme: "Light", chineseMode: false)
+    }
+
+    func testHistoryChartDarkEnglishInterface() {
+        historyChart(theme: "Dark", chineseMode: true)
+    }
+
+    private func historyChart(theme: String, chineseMode: Bool) {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingPlus", "-uiTestingHistoryData", "-uiTestingFakePlans"]
+        app.launchArguments = ["-uiTestingReset", "-uiTesting\(theme)", "-uiTestingPlus", "-uiTestingHistoryData", "-uiTestingFakePlans"]
+        if chineseMode { app.launchArguments.append("-uiTestingChineseMode") }
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 2).tap()
@@ -56,13 +65,24 @@ final class ScreenshotTests: XCTestCase {
         let date = app.staticTexts["history-selected-date"]
         XCTAssertTrue(date.waitForExistence(timeout: 5))
         let initial = date.label
+        XCTAssertEqual(app.staticTexts["history-selected-count"].label, chineseMode ? "11 actions" : "11 次")
+        let speaking = app.descendants(matching: .any)["history-selected-speaking"].firstMatch
+        XCTAssertTrue(speaking.exists)
+        XCTAssertEqual(speaking.label, chineseMode ? "Speaking, 2, 18%" : "口說, 2, 18%")
+        let prefix = chineseMode ? "dark-en" : "light"
+        snap(app, "\(prefix)-history-seven-days")
         chart.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.4))
             .press(forDuration: 0.3, thenDragTo: chart.coordinate(withNormalizedOffset: CGVector(dx: 0.6, dy: 0.4)))
         XCTAssertNotEqual(date.label, initial)
-        snap(app, "plus-8-history-selected-day")
-        app.buttons["90 天"].tap()
+        snap(app, "\(prefix)-history-selected-day")
+        app.buttons[chineseMode ? "30 days" : "30 天"].tap()
         XCTAssertEqual(date.label, initial)
-        snap(app, "plus-9-history-ninety-days")
+        snap(app, "\(prefix)-history-thirty-days")
+        app.buttons[chineseMode ? "90 days" : "90 天"].tap()
+        XCTAssertEqual(date.label, initial)
+        snap(app, "\(prefix)-history-ninety-days")
+        app.buttons[chineseMode ? "7 days" : "7 天"].tap()
+        XCTAssertEqual(date.label, initial)
     }
 
     func testHistoryEmptyState() {
@@ -80,7 +100,7 @@ final class ScreenshotTests: XCTestCase {
     /// paywall with plans, and a locked screen's preview.
     func testPlusScreens() {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingTrialExpired", "-uiTestingFakePlans"]
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingHistoryData", "-uiTestingLight", "-uiTestingTrialExpired", "-uiTestingFakePlans"]
         app.launch()
         if app.buttons["plus-recap-later"].waitForExistence(timeout: 10) {
             sleep(1)
@@ -111,8 +131,16 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "plus-5-me")
         if app.buttons["me-history"].waitForExistence(timeout: 3) {
             app.buttons["me-history"].tap()
+            XCTAssertTrue(app.descendants(matching: .any)["history-chart"].firstMatch.waitForExistence(timeout: 5))
+            XCTAssertFalse(app.buttons["locked-unlock"].exists)
+            snap(app, "plus-11-history-seven-free")
+            app.buttons["30 天"].tap()
+            XCTAssertTrue(app.buttons["locked-unlock"].waitForExistence(timeout: 5))
             sleep(1)
             snap(app, "plus-6-history-locked")
+            app.buttons["7 天"].tap()
+            XCTAssertTrue(app.descendants(matching: .any)["history-chart"].firstMatch.waitForExistence(timeout: 5))
+            XCTAssertFalse(app.buttons["locked-unlock"].exists)
         }
     }
 

@@ -52,6 +52,7 @@ struct Word7000App: App {
             switch phase {
             case .active:
                 model.refreshToday()
+                plus.refreshAccessState()
                 account.heartbeat()
                 Task {
                     await plus.refreshEntitlements()

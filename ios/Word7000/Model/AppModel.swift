@@ -91,6 +91,8 @@ final class AppModel {
                     counters.studyReview = back % 4
                     counters.quizCorrect = back % 3
                     counters.quizWrong = back % 2
+                    counters.speakingCompleted = (back * 3 + 2) % 6
+                    counters.otherActions = back % 3
                 }
             }
             progress.analytics = analytics
@@ -228,28 +230,8 @@ final class AppModel {
 
     // MARK: Insights
 
-    /// Learning actions per day for the last seven days, oldest first.
-    var lastSevenDays: [(label: String, count: Int, isToday: Bool)] {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.locale = Locale(identifier: "zh-Hant")
-        let symbols = calendar.veryShortWeekdaySymbols
-        let analytics = progress.analytics ?? LearningAnalyticsState()
-        return (0..<7).reversed().map { back -> (label: String, count: Int, isToday: Bool) in
-            let date = DayMath.addDays(today, -back) ?? today
-            let weekday = DayMath.dayNumber(date).map { (($0 % 7) + 11) % 7 } ?? 0 // 1970-01-01 was a Thursday
-            return (symbols[weekday], analytics.day(date).goalActions, back == 0)
-        }
-    }
-
-    /// Learning actions per day for the last `days` days, oldest first,
-    /// labelled with the day of the month.
-    func activity(days: Int) -> [(label: String, count: Int, isToday: Bool)] {
-        let analytics = progress.analytics ?? LearningAnalyticsState()
-        return (0..<days).reversed().map { back -> (label: String, count: Int, isToday: Bool) in
-            let date = DayMath.addDays(today, -back) ?? today
-            let label = back % 7 == 0 ? String(Int(date.suffix(2)) ?? 0) : ""
-            return (label, analytics.day(date).practiceActions, back == 0)
-        }
+    func activity(days: Int) -> [DailyLearningActivity] {
+        (progress.analytics ?? LearningAnalyticsState()).activity(endingOn: today, dayCount: days)
     }
 
     struct HistorySummary {

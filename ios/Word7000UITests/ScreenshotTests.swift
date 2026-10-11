@@ -102,10 +102,12 @@ final class ScreenshotTests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingHistoryData", "-uiTestingLight", "-uiTestingTrialExpired", "-uiTestingFakePlans"]
         app.launch()
-        if app.buttons["plus-recap-later"].waitForExistence(timeout: 10) {
+        let recap = app.buttons["plus-recap-later"]
+        XCTAssertTrue(recap.waitForExistence(timeout: 10))
+        if recap.exists {
             sleep(1)
             snap(app, "plus-1-trial-recap")
-            app.buttons["plus-recap-later"].tap()
+            recap.tap()
         }
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         sleep(1)

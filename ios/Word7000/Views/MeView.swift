@@ -26,16 +26,6 @@ struct MeView: View {
             PlusSection()
 
             Section {
-                HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 140)
-            } header: {
-                Text(L.thisWeek)
-            } footer: {
-                if let accuracy = model.quizAccuracy {
-                    Text(L.quizAccuracy(accuracy))
-                }
-            }
-
-            Section {
                 Button {
                     historyOpen = true
                 } label: {
@@ -43,6 +33,13 @@ struct MeView: View {
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("me-history")
+                HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 140)
+            } header: {
+                Text(L.thisWeek)
+            } footer: {
+                if let accuracy = model.quizAccuracy {
+                    Text(L.quizAccuracy(accuracy))
+                }
             }
 
             Section {

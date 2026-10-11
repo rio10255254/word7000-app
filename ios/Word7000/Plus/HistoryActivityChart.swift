@@ -5,8 +5,8 @@ import Word7000Core
 struct HistoryActivityChart: View {
     var activity: [DailyLearningActivity]
     var chartHeight: CGFloat = 180
-    @State private var selection: Int?
-    @State private var inspectedDay: Int?
+    @State private var selection: String?
+    @State private var inspectedDay: String?
 
     private enum Kind: String, CaseIterable, Identifiable {
         case words, speaking, other
@@ -35,7 +35,6 @@ struct HistoryActivityChart: View {
     }
 
     private struct Segment: Identifiable {
-        var index: Int
         var day: DailyLearningActivity
         var kind: Kind
         var id: String { "\(day.date)-\(kind.rawValue)" }
@@ -43,19 +42,20 @@ struct HistoryActivityChart: View {
     }
 
     private var segments: [Segment] {
-        activity.enumerated().flatMap { index, day in
-            Kind.allCases.map { Segment(index: index, day: day, kind: $0) }
+        activity.flatMap { day in
+            Kind.allCases.map { Segment(day: day, kind: $0) }
         }
     }
 
     private var selectedIndex: Int? {
-        guard let index = inspectedDay ?? selection, activity.indices.contains(index) else { return nil }
-        return index
+        guard let date = inspectedDay ?? selection else { return nil }
+        return activity.firstIndex { $0.date == date }
     }
 
-    private var ticks: [Int] {
-        if activity.count <= 7 { return Array(activity.indices) }
-        return Array(Array(stride(from: activity.count - 1, through: 0, by: activity.count > 30 ? -21 : -7)).reversed())
+    private var ticks: [String] {
+        if activity.count <= 7 { return activity.map(\.date) }
+        return stride(from: activity.count - 1, through: 0, by: activity.count > 30 ? -21 : -7)
+            .reversed().map { activity[$0].date }
     }
 
     var body: some View {
@@ -75,7 +75,7 @@ struct HistoryActivityChart: View {
         }
         .padding(.vertical, 4)
         .onChange(of: selection) { _, value in
-            if let value, activity.indices.contains(value) { inspectedDay = value }
+            if let value, activity.contains(where: { $0.date == value }) { inspectedDay = value }
         }
         .onChange(of: activity.count) { _, _ in selection = nil; inspectedDay = nil }
         .onChange(of: activity.last?.date) { _, _ in selection = nil; inspectedDay = nil }
@@ -108,22 +108,23 @@ struct HistoryActivityChart: View {
     }
 
     private var histogram: some View {
-        Chart {
+        let selectedDate = selectedIndex.map { activity[$0].date }
+        return Chart {
             ForEach(segments) { segment in
-                BarMark(x: .value("Day", segment.index), y: .value("Actions", segment.count),
+                BarMark(x: .value("Day", segment.day.date), y: .value("Actions", segment.count),
                         width: .ratio(activity.count <= 7 ? 0.65 : 0.85), stacking: .standard)
                     .foregroundStyle(by: .value("Practice", segment.kind.rawValue))
-                    .opacity(selectedIndex == nil || selectedIndex == segment.index ? 1 : 0.4)
+                    .opacity(selectedDate == nil || selectedDate == segment.day.date ? 1 : 0.4)
                     .accessibilityLabel("\(segment.day.date), \(segment.kind.label)")
                     .accessibilityValue("\(segment.count)")
             }
-            if let index = selectedIndex {
-                RuleMark(x: .value("Day", index))
+            if let selectedDate {
+                RuleMark(x: .value("Day", selectedDate))
                     .foregroundStyle(Palette.accent.opacity(0.3))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
             }
         }
-        .chartXScale(domain: -1...max(1, activity.count))
+        .chartXScale(domain: activity.map(\.date))
         .chartYScale(domain: 0...max(1, activity.map(\.total).max() ?? 0))
         .chartForegroundStyleScale(domain: Kind.allCases.map(\.rawValue), range: Kind.allCases.map(\.color))
         .chartXSelection(value: $selection)
@@ -131,8 +132,8 @@ struct HistoryActivityChart: View {
         .chartXAxis {
             AxisMarks(values: ticks) { value in
                 AxisValueLabel {
-                    if let index = value.as(Int.self), activity.indices.contains(index) {
-                        Text(dateLabel(activity[index].date)).font(.caption2)
+                    if let date = value.as(String.self) {
+                        Text(dateLabel(date)).font(.caption2)
                     }
                 }
             }

@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 
 /// Walks through the main screens and saves a screenshot of each, in light
 /// and dark mode. CI uploads them so every change can be checked by eye.
@@ -59,6 +60,7 @@ final class ScreenshotTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 2).tap()
+        XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
         let chart = app.descendants(matching: .any)["history-chart"].firstMatch
         XCTAssertTrue(chart.waitForExistence(timeout: 5))
@@ -69,6 +71,7 @@ final class ScreenshotTests: XCTestCase {
         let speaking = app.descendants(matching: .any)["history-selected-speaking"].firstMatch
         XCTAssertTrue(speaking.exists)
         XCTAssertEqual(speaking.label, chineseMode ? "Speaking, 2, 18%" : "口說, 2, 18%")
+        assertChartHasBars(chart)
         let prefix = chineseMode ? "dark-en" : "light"
         snap(app, "\(prefix)-history-seven-days")
         chart.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.4))
@@ -77,9 +80,11 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "\(prefix)-history-selected-day")
         app.buttons[chineseMode ? "30 days" : "30 天"].tap()
         XCTAssertEqual(date.label, initial)
+        assertChartHasBars(chart)
         snap(app, "\(prefix)-history-thirty-days")
         app.buttons[chineseMode ? "90 days" : "90 天"].tap()
         XCTAssertEqual(date.label, initial)
+        assertChartHasBars(chart)
         snap(app, "\(prefix)-history-ninety-days")
         app.buttons[chineseMode ? "7 days" : "7 天"].tap()
         XCTAssertEqual(date.label, initial)
@@ -91,6 +96,7 @@ final class ScreenshotTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 2).tap()
+        XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
         XCTAssertTrue(app.descendants(matching: .any)["history-chart-empty"].firstMatch.waitForExistence(timeout: 5))
         snap(app, "plus-10-history-empty")
@@ -131,7 +137,8 @@ final class ScreenshotTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 2).tap()
         sleep(1)
         snap(app, "plus-5-me")
-        if app.buttons["me-history"].waitForExistence(timeout: 3) {
+        XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
+        if app.buttons["me-history"].exists {
             app.buttons["me-history"].tap()
             XCTAssertTrue(app.descendants(matching: .any)["history-chart"].firstMatch.waitForExistence(timeout: 5))
             XCTAssertFalse(app.buttons["locked-unlock"].exists)
@@ -218,5 +225,34 @@ final class ScreenshotTests: XCTestCase {
             try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             try? screenshot.pngRepresentation.write(to: directory.appendingPathComponent("\(name).png"))
         }
+    }
+
+    private func assertChartHasBars(_ chart: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        guard let image = chart.screenshot().image.cgImage else {
+            XCTFail("The chart screenshot is unavailable", file: file, line: line)
+            return
+        }
+        var pixels = [UInt8](repeating: 0, count: image.width * image.height * 4)
+        let colors = pixels.withUnsafeMutableBytes { bytes -> (blue: Int, green: Int, orange: Int) in
+            guard let context = CGContext(data: bytes.baseAddress, width: image.width, height: image.height,
+                                          bitsPerComponent: 8, bytesPerRow: image.width * 4,
+                                          space: CGColorSpaceCreateDeviceRGB(),
+                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue) else {
+                return (0, 0, 0)
+            }
+            context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+            let data = bytes.bindMemory(to: UInt8.self)
+            var blue = 0, green = 0, orange = 0
+            for offset in stride(from: 0, to: data.count, by: 4) {
+                let r = Int(data[offset]), g = Int(data[offset + 1]), b = Int(data[offset + 2])
+                if b > 150, b > g + 40, g > 60, r < 100 { blue += 1 }
+                if g > 130, g > r + 50, g > b + 50 { green += 1 }
+                if r > 190, g > 70, g < 200, b < 120 { orange += 1 }
+            }
+            return (blue, green, orange)
+        }
+        XCTAssertGreaterThan(colors.blue, 500, "Vocabulary bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.green, 500, "Speaking bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.orange, 500, "Other practice bars are missing", file: file, line: line)
     }
 }

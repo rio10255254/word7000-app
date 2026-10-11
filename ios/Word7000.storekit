@@ -1,0 +1,86 @@
+{
+  "identifier" : "5D0E7C1A",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_compatibilityTimeRate" : {
+      "3" : 6
+    },
+    "_failTransactionsEnabled" : false,
+    "_locale" : "zh_TW",
+    "_storefront" : "TWN",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21581234",
+      "localizations" : [
+
+      ],
+      "name" : "Word7000 Plus",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "49",
+          "familyShareable" : true,
+          "groupNumber" : 1,
+          "internalID" : "6739012301",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "無限掃描、雲端同步、完整紀錄與考前衝刺",
+              "displayName" : "Plus 月訂閱",
+              "locale" : "zh_TW"
+            }
+          ],
+          "productID" : "com.rio.word7000.plus.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Plus Monthly",
+          "subscriptionGroupID" : "21581234",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "490",
+          "familyShareable" : true,
+          "groupNumber" : 2,
+          "internalID" : "6739012302",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "無限掃描、雲端同步、完整紀錄與考前衝刺",
+              "displayName" : "Plus 年訂閱",
+              "locale" : "zh_TW"
+            }
+          ],
+          "productID" : "com.rio.word7000.plus.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Plus Yearly",
+          "subscriptionGroupID" : "21581234",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

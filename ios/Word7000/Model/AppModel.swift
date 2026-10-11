@@ -228,6 +228,52 @@ final class AppModel {
         }
     }
 
+    /// Learning actions per day for the last `days` days, oldest first,
+    /// labelled with the day of the month.
+    func activity(days: Int) -> [(label: String, count: Int, isToday: Bool)] {
+        let analytics = progress.analytics ?? LearningAnalyticsState()
+        return (0..<days).reversed().map { back -> (label: String, count: Int, isToday: Bool) in
+            let date = DayMath.addDays(today, -back) ?? today
+            let label = back % 7 == 0 ? String(Int(date.suffix(2)) ?? 0) : ""
+            return (label, analytics.day(date).goalActions, back == 0)
+        }
+    }
+
+    struct HistorySummary {
+        var activeDays = 0
+        var actions = 0
+        var studied = 0
+        var quizCorrect = 0
+        var quizWrong = 0
+        var accuracy: Int? { quizCorrect + quizWrong > 0 ? Int((Double(quizCorrect) / Double(quizCorrect + quizWrong) * 100).rounded()) : nil }
+    }
+
+    func history(days: Int) -> HistorySummary {
+        let analytics = progress.analytics ?? LearningAnalyticsState()
+        var summary = HistorySummary()
+        for back in 0..<days {
+            let day = analytics.day(DayMath.addDays(today, -back) ?? today)
+            if day.goalActions > 0 { summary.activeDays += 1 }
+            summary.actions += day.goalActions
+            summary.studied += day.studyKnown + day.studyReview
+            summary.quizCorrect += day.quizCorrect
+            summary.quizWrong += day.quizWrong
+        }
+        return summary
+    }
+
+    /// Words that keep slipping back: most lapses, then most reviews.
+    func weakWords(limit: Int = 20) -> [WordEntry] {
+        let ranked = progress.words
+            .filter { $0.value.status == .review || ($0.value.lapses ?? 0) > 0 }
+            .sorted { a, b in
+                let la = a.value.lapses ?? 0, lb = b.value.lapses ?? 0
+                return la != lb ? la > lb : a.value.reviewCount > b.value.reviewCount
+            }
+            .prefix(limit)
+        return ranked.compactMap { word(id: $0.key) }
+    }
+
     /// Share of correct quiz answers in the last seven days, if any.
     var quizAccuracy: Int? {
         let analytics = progress.analytics ?? LearningAnalyticsState()

@@ -10,6 +10,7 @@ enum Activity: Identifiable, Hashable {
     case study
     case quiz
     case speaking
+    case exam
     case scan
 
     var id: Self { self }
@@ -20,6 +21,7 @@ enum Activity: Identifiable, Hashable {
 struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
+    @Environment(PlusModel.self) private var plus
     @State private var tab: AppTab = .today
     @State private var activity: Activity?
     @State private var signInForScan = false
@@ -27,7 +29,13 @@ struct RootView: View {
     var body: some View {
         TabView(selection: $tab) {
             NavigationStack {
-                TodayView(start: { activity = $0 })
+                TodayView(start: { next in
+                    if next == .exam {
+                        plus.require(.examPractice) { activity = .exam }
+                    } else {
+                        activity = next
+                    }
+                })
             }
             .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
             .tag(AppTab.today)
@@ -46,11 +54,14 @@ struct RootView: View {
         }
         // The interface language follows the study mode; rebuild on change.
         .id(model.studyMode)
+        .sheet(item: Binding(get: { plus.paywallReason }, set: { plus.paywallReason = $0 })) { reason in
+            PaywallView(reason: reason)
+        }
         .sheet(isPresented: $signInForScan) {
             SignInSheet(reason: .scan, onSignedIn: {
                 Task { @MainActor in
                     try? await Task.sleep(for: .milliseconds(450))
-                    activity = .scan
+                    plus.require(.scan) { activity = .scan }
                 }
             })
         }
@@ -65,6 +76,11 @@ struct RootView: View {
                 })
             case .speaking:
                 SpeakingSessionView()
+            case .exam:
+                ExamView(studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
             case .scan:
                 ScanView(onStudy: { switchTo(.study) })
             }
@@ -77,7 +93,7 @@ struct RootView: View {
         if account.configured, !account.isPermanent {
             signInForScan = true
         } else {
-            activity = .scan
+            plus.require(.scan) { activity = .scan }
         }
     }
 

@@ -5,12 +5,17 @@ struct Word7000App: App {
     @State private var model: AppModel
     @State private var account: AccountModel
     @State private var liveActivities = LiveActivityManager()
+    @State private var plus: PlusModel
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
         let model = AppModel.launch()
         _model = State(initialValue: model)
-        _account = State(initialValue: AccountModel(app: model))
+        let plus = PlusModel()
+        let account = AccountModel(app: model)
+        account.plus = plus
+        _account = State(initialValue: account)
+        _plus = State(initialValue: plus)
     }
 
     var body: some Scene {
@@ -18,6 +23,9 @@ struct Word7000App: App {
             RootView()
                 .environment(model)
                 .environment(account)
+                .environment(plus)
+                .task { await plus.start() }
+                .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)
                 .tint(Palette.accent)
                 .task {

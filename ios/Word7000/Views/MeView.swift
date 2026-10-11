@@ -4,6 +4,8 @@ import Word7000Core
 /// How it is going, and the few settings there are.
 struct MeView: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
+    @State private var historyOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
@@ -22,6 +24,8 @@ struct MeView: View {
                 .padding(.vertical, 6)
             }
 
+            PlusSection()
+
             Section {
                 WeekBars(days: week)
                     .frame(height: 120)
@@ -32,6 +36,16 @@ struct MeView: View {
                 if let accuracy = model.quizAccuracy {
                     Text(L.quizAccuracy(accuracy))
                 }
+            }
+
+            Section {
+                Button {
+                    plus.require(.history) { historyOpen = true }
+                } label: {
+                    ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"),
+                              value: plus.decide(.history) == .allowed ? nil : P.plusBadge)
+                }
+                .tint(.primary)
             }
 
             Section {
@@ -82,6 +96,7 @@ struct MeView: View {
             }
         }
         .navigationTitle(L.tabMe)
+        .navigationDestination(isPresented: $historyOpen) { HistoryView() }
     }
 }
 
@@ -91,21 +106,24 @@ struct WeekBars: View {
 
     var body: some View {
         let maximum = max(1, days.map(\.count).max() ?? 1)
-        HStack(alignment: .bottom, spacing: 10) {
+        let dense = days.count > 14
+        HStack(alignment: .bottom, spacing: dense ? 2 : 10) {
             ForEach(Array(days.enumerated()), id: \.offset) { _, day in
                 VStack(spacing: 6) {
-                    if day.count > 0 {
+                    if day.count > 0, !dense {
                         Text("\(day.count)").font(.caption2.weight(.semibold)).monospacedDigit().foregroundStyle(.secondary)
                     }
                     GeometryReader { proxy in
                         VStack {
                             Spacer(minLength: 0)
-                            RoundedRectangle(cornerRadius: 5, style: .continuous)
+                            RoundedRectangle(cornerRadius: dense ? 1.5 : 5, style: .continuous)
                                 .fill(day.isToday ? Palette.accent : Palette.accent.opacity(0.35))
                                 .frame(height: max(4, proxy.size.height * CGFloat(day.count) / CGFloat(maximum)))
                         }
                     }
                     Text(day.label).font(.caption2).foregroundStyle(day.isToday ? .primary : .secondary)
+                        .lineLimit(1)
+                        .fixedSize()
                 }
                 .frame(maxWidth: .infinity)
                 .accessibilityElement(children: .ignore)

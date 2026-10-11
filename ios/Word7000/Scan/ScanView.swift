@@ -6,6 +6,7 @@ import Word7000Core
 /// as a word bank. The meaning saved is the one printed on the paper.
 struct ScanView: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
     @Environment(\.dismiss) private var dismiss
     var onStudy: () -> Void
 
@@ -159,6 +160,7 @@ struct ScanView: View {
         phase = .reading
         do {
             showReview(try await TextRecognizer.candidates(in: images, suggester: dictionary()))
+            plus.noteScanUsed()
         } catch {
             message = S.readFailed
             phase = .choose

@@ -4,6 +4,10 @@ import Word7000Core
 /// One goal, one button. Everything else on this screen is optional.
 struct TodayView: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
+
+    /// "Plus" next to features that are locked now.
+    private var plusBadge: String? { plus.decide(.examPractice) == .allowed ? nil : P.plusBadge }
     var start: (Activity) -> Void
 
     var body: some View {
@@ -64,6 +68,11 @@ struct TodayView: View {
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("today-speaking")
+                Button { start(.exam) } label: {
+                    ActionRow(icon: "timer", tint: Palette.review, title: L.t("考前衝刺模擬", "Exam practice"), value: plusBadge)
+                }
+                .tint(.primary)
+                .accessibilityIdentifier("today-exam")
                 if stats.review > 0 {
                     Button {
                         model.startStudySession(onlyIds: model.reviewWordIds)

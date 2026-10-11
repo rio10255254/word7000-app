@@ -112,7 +112,7 @@ final class PlusModel {
     func start() async {
         if updatesTask == nil {
             updatesTask = Task { [weak self] in
-                for await update in Transaction.updates {
+                for await update in StoreKit.Transaction.updates {
                     if case let .verified(transaction) = update { await transaction.finish() }
                     await self?.refreshEntitlements()
                 }
@@ -173,8 +173,8 @@ final class PlusModel {
 
     func refreshEntitlements() async {
         if ProcessInfo.processInfo.arguments.contains("-uiTestingPlus") { return }
-        var active: Transaction?
-        for await entitlement in Transaction.currentEntitlements {
+        var active: StoreKit.Transaction?
+        for await entitlement in StoreKit.Transaction.currentEntitlements {
             if case let .verified(transaction) = entitlement,
                Self.productIDs.contains(transaction.productID),
                transaction.revocationDate == nil {

@@ -32,6 +32,7 @@ final class PlusModel {
 
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
     @ObservationIgnored private var accessRefreshTimer: Timer?
+    @ObservationIgnored private var entitlementsLoaded = false
 
     private static let trialKey = "plus-trial-started"
     private static let scansKey = "plus-trial-scans"
@@ -56,6 +57,7 @@ final class PlusModel {
         trialScansUsed = Keychain.read(Self.scansKey).flatMap { String(data: $0, encoding: .utf8) }.flatMap(Int.init) ?? 0
         if stored == nil { Self.write(start.timeIntervalSince1970, Self.trialKey) }
         if arguments.contains("-uiTestingPlus") { subscribed = true }
+        if arguments.contains("-uiTestingFakePlans") { entitlementsLoaded = true }
     }
 
     var policy: PlusPolicy {
@@ -124,7 +126,7 @@ final class PlusModel {
         referenceDate = Date()
         if access.isActive {
             trialRecapPending = false
-        } else if !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
+        } else if entitlementsLoaded, !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
             trialRecapPending = true
         }
         suspendTimeUpdates()
@@ -150,7 +152,7 @@ final class PlusModel {
 
     func start() async {
         refreshAccessState()
-        if updatesTask == nil {
+        if updatesTask == nil, !ProcessInfo.processInfo.arguments.contains("-uiTestingFakePlans") {
             updatesTask = Task { [weak self] in
                 for await update in StoreKit.Transaction.updates {
                     if case let .verified(transaction) = update { await transaction.finish() }
@@ -218,7 +220,9 @@ final class PlusModel {
     }
 
     func refreshEntitlements() async {
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingPlus") {
+        let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("-uiTestingPlus") || arguments.contains("-uiTestingFakePlans") {
+            entitlementsLoaded = true
             refreshAccessState()
             return
         }
@@ -233,6 +237,7 @@ final class PlusModel {
         subscribed = active != nil
         activePlanID = active?.productID
         periodEndsAt = active?.expirationDate
+        entitlementsLoaded = true
         refreshAccessState()
     }
 

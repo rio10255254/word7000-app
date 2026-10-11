@@ -82,9 +82,14 @@ final class PlusModel {
         UserDefaults.standard.set(key, forKey: Self.nudgeDismissedKey)
     }
 
+    /// Remembered as soon as the recap is on screen, so it never shows twice.
+    func noteTrialRecapSeen() {
+        UserDefaults.standard.set(true, forKey: Self.recapShownKey)
+    }
+
     func markTrialRecapShown() {
         trialRecapPending = false
-        UserDefaults.standard.set(true, forKey: Self.recapShownKey)
+        noteTrialRecapSeen()
     }
 
     private static func dayKey(_ date: Date) -> String {

@@ -47,10 +47,10 @@ struct PaywallView: View {
 
     private var offer: some View {
         ScrollView {
-            VStack(spacing: 22) {
+            VStack(spacing: 18) {
                 hero
-                benefits
                 plans
+                benefits
                 Text(P.freeForever)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -58,7 +58,7 @@ struct PaywallView: View {
                     .padding(.horizontal, 8)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 28)
+            .padding(.top, 20)
             .padding(.bottom, 12)
         }
         .scrollIndicators(.hidden)
@@ -79,15 +79,15 @@ struct PaywallView: View {
     }
 
     private var hero: some View {
-        VStack(spacing: 12) {
-            PlusIcon(size: 76)
+        VStack(spacing: 10) {
+            PlusIcon(size: 64)
                 .symbolEffect(.bounce, options: .nonRepeating, value: appeared)
                 .scaleEffect(appeared || reduceMotion ? 1 : 0.6)
                 .opacity(appeared ? 1 : 0)
             Text("Word7000 Plus")
-                .font(.rounded(.largeTitle, weight: .heavy))
+                .font(.rounded(.title, weight: .heavy))
             Text(P.headline(reason))
-                .font(.body)
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
@@ -299,7 +299,7 @@ struct PlusBenefitRow: View {
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 14)
-        .padding(.vertical, 12)
+        .padding(.vertical, 10)
         .accessibilityElement(children: .combine)
     }
 }

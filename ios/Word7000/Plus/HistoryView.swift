@@ -65,6 +65,7 @@ struct HistoryView: View {
         }
         .animation(.smooth, value: locked)
         .navigationTitle(L.t("學習紀錄", "History"))
+        .navigationBarTitleDisplayMode(locked ? .inline : .automatic)
         .navigationDestination(for: WordEntry.self) { word in WordDetailView(word: word) }
     }
 }

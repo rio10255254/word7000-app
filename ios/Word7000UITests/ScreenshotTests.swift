@@ -55,6 +55,8 @@ final class ScreenshotTests: XCTestCase {
             if app.buttons["plan-monthly"].exists {
                 app.buttons["plan-monthly"].tap()
                 sleep(1)
+                app.swipeUp()
+                sleep(1)
                 snap(app, "plus-4-paywall-monthly")
             }
             app.buttons[L10n.close].firstMatch.tap()

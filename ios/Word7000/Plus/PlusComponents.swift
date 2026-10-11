@@ -257,7 +257,7 @@ struct TrialRecapView: View {
         .background(Palette.background)
         .onAppear {
             shown = true
-            plus.markTrialRecapShown()
+            plus.noteTrialRecapSeen()
         }
     }
 }

@@ -31,7 +31,7 @@ final class PlusModel {
     var paywallReason: PaywallReason?
 
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
-    @ObservationIgnored private var accessRefreshTask: Task<Void, Never>?
+    @ObservationIgnored private var accessRefreshTimer: Timer?
 
     private static let trialKey = "plus-trial-started"
     private static let scansKey = "plus-trial-scans"
@@ -134,17 +134,16 @@ final class PlusModel {
         let next = [midnight, policy.nextAccessChange(now: referenceDate)].compactMap { $0 }.min()
         guard let next else { return }
         let delay = max(1, next.timeIntervalSince(referenceDate))
-        accessRefreshTask = Task { [weak self] in
-            do {
-                try await Task.sleep(for: .seconds(delay))
-                self?.refreshAccessState()
-            } catch { }
+        let timer = Timer(timeInterval: delay, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in self?.refreshAccessState() }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        accessRefreshTimer = timer
     }
 
     func suspendTimeUpdates() {
-        accessRefreshTask?.cancel()
-        accessRefreshTask = nil
+        accessRefreshTimer?.invalidate()
+        accessRefreshTimer = nil
     }
 
     // MARK: StoreKit

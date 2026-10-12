@@ -116,6 +116,7 @@ jobs:
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
           xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
           swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
+          xcrun simctl launch "$SIMULATOR_UDID" com.apple.mobileslideshow || true
           xcrun simctl addmedia "$SIMULATOR_UDID" "$RUNNER_TEMP"/scan-fixtures/*
           set +e
           xcodebuild test \
@@ -134,6 +135,11 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/screenshots"
           cp "$HOME"/word7000-screenshots/*.png "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
+          cp "$HOME"/word7000-screenshots/*-hierarchy.txt "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
+          cp "$RUNNER_TEMP/xcodebuild.log" "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
+          xcrun simctl spawn "$SIMULATOR_UDID" log show --last 10m --style compact \
+            --predicate 'process CONTAINS "Photos" OR process CONTAINS "photolibrary"' \
+            > "$RUNNER_TEMP/screenshots/photos-system.log" 2>/dev/null || true
           ls -la "$RUNNER_TEMP/screenshots"
           tail -n 80 "$RUNNER_TEMP/xcodebuild.log" > "$RUNNER_TEMP/screenshots/xcodebuild-tail.txt" 2>/dev/null || true
           grep -E "error:" "$RUNNER_TEMP/xcodebuild.log" | head -100 > "$RUNNER_TEMP/screenshots/errors.txt" 2>/dev/null || true

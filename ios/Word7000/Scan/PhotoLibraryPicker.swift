@@ -9,13 +9,12 @@ struct PhotoLibraryPicker: UIViewControllerRepresentable {
     var onSelection: ([NSItemProvider]) -> Void
 
     func makeUIViewController(context: Context) -> PHPickerViewController {
-        var configuration = PHPickerConfiguration(photoLibrary: .shared())
+        var configuration = PHPickerConfiguration()
         configuration.filter = .images
         configuration.selectionLimit = 1
         configuration.preferredAssetRepresentationMode = .current
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = context.coordinator
-        picker.view.accessibilityIdentifier = "scan-photo-library"
         return picker
     }
 

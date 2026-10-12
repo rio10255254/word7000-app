@@ -23,13 +23,14 @@ final class ScanPickerTests: XCTestCase {
             let app = openScanner()
             app.buttons["scan-choose-photo"].tap()
             XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
+            snapshot(app, name: "scan-photo-library-\(index)")
             func photos() -> [XCUIElement] {
                 app.images.allElementsBoundByIndex.filter {
                     $0.isHittable && $0.frame.width > 80 && $0.frame.height > 80 && $0.frame.height < 500
                 }
             }
             let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in photos().count >= 5 }, object: nil)
-            XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 15), .completed, app.debugDescription)
+            XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 60), .completed, app.debugDescription)
             photos()[index].tap()
             let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch
             if add.waitForExistence(timeout: 2) { add.tap() }
@@ -41,6 +42,11 @@ final class ScanPickerTests: XCTestCase {
                 .allElementsBoundByIndex.compactMap { $0.value as? String }
             XCTAssertEqual(Set(words), Set(["abandon", "benefit", "capture"]))
             XCTAssertEqual(Set(meanings), Set(["放棄", "好處", "捕獲"]))
+            let expected = ["abandon": "放棄", "benefit": "好處", "capture": "捕獲"]
+            for field in app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).allElementsBoundByIndex {
+                let id = String(field.identifier.dropFirst("scan-word-".count))
+                XCTAssertEqual(app.textFields["scan-meaning-" + id].value as? String, expected[field.value as? String ?? ""])
+            }
             snapshot(app, name: "scan-photo-\(index)-review")
             for _ in 0..<4 where !save.isHittable { app.swipeUp() }
             XCTAssertTrue(save.isEnabled)
@@ -78,6 +84,7 @@ final class ScanPickerTests: XCTestCase {
             let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-screenshots", isDirectory: true)
             try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             try? screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+            try? app.debugDescription.write(to: directory.appendingPathComponent(name + "-hierarchy.txt"), atomically: true, encoding: .utf8)
         }
     }
 }

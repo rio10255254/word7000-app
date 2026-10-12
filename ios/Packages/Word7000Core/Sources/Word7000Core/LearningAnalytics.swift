@@ -28,8 +28,35 @@ public struct DailyLearningCounters: Codable, Equatable, Sendable {
 
 public struct DailyLearningActivity: Identifiable, Equatable, Sendable {
     public var date: String
+    /// The last day covered: the same as `date` for a single day, later for a week.
+    public var endDate: String
     public var counters: DailyLearningCounters
     public var id: String { date }
+    public var isRange: Bool { endDate != date }
+
+    public init(date: String, endDate: String? = nil, counters: DailyLearningCounters) {
+        self.date = date
+        self.endDate = endDate ?? date
+        self.counters = counters
+    }
+
+    /// Days grouped into weeks that end on the last day, oldest first; the
+    /// oldest week may be shorter.
+    public static func weekly(_ days: [DailyLearningActivity]) -> [DailyLearningActivity] {
+        var weeks: [DailyLearningActivity] = []
+        var end = days.count
+        while end > 0 {
+            let start = max(0, end - 7)
+            var counters = DailyLearningCounters()
+            for day in days[start..<end] {
+                for key in DailyLearningCounters.keyPaths { counters[keyPath: key] += day.counters[keyPath: key] }
+            }
+            weeks.append(DailyLearningActivity(date: days[start].date, endDate: days[end - 1].endDate, counters: counters))
+            end = start
+        }
+        return weeks.reversed()
+    }
+
     public var words: Int { counters.studyKnown + counters.studyReview }
     public var speaking: Int { counters.speakingCompleted }
     public var other: Int { counters.otherActions + counters.quizCorrect + counters.quizWrong }

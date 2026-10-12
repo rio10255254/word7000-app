@@ -70,7 +70,7 @@ final class ScreenshotTests: XCTestCase {
         XCTAssertEqual(app.staticTexts["history-selected-count"].label, chineseMode ? "11 actions" : "11 次")
         let speaking = app.descendants(matching: .any)["history-selected-speaking"].firstMatch
         XCTAssertTrue(speaking.exists)
-        XCTAssertEqual(speaking.label, chineseMode ? "Speaking, 2, 18%" : "口說, 2, 18%")
+        XCTAssertEqual(speaking.label, chineseMode ? "Speaking, 2" : "口說, 2")
         assertChartHasBars(chart)
         let prefix = chineseMode ? "dark-en" : "light"
         snap(app, "\(prefix)-history-seven-days")
@@ -83,7 +83,7 @@ final class ScreenshotTests: XCTestCase {
         assertChartHasBars(chart)
         snap(app, "\(prefix)-history-thirty-days")
         app.buttons[chineseMode ? "90 days" : "90 天"].tap()
-        XCTAssertEqual(date.label, initial)
+        XCTAssertEqual(date.label, chineseMode ? "Last 7 days" : "最近 7 天")
         assertChartHasBars(chart)
         snap(app, "\(prefix)-history-ninety-days")
         app.buttons[chineseMode ? "7 days" : "7 天"].tap()
@@ -233,7 +233,7 @@ final class ScreenshotTests: XCTestCase {
             return
         }
         var pixels = [UInt8](repeating: 0, count: image.width * image.height * 4)
-        let colors = pixels.withUnsafeMutableBytes { bytes -> (blue: Int, green: Int, orange: Int) in
+        let colors = pixels.withUnsafeMutableBytes { bytes -> (blue: Int, green: Int, indigo: Int) in
             guard let context = CGContext(data: bytes.baseAddress, width: image.width, height: image.height,
                                           bitsPerComponent: 8, bytesPerRow: image.width * 4,
                                           space: CGColorSpaceCreateDeviceRGB(),
@@ -242,17 +242,17 @@ final class ScreenshotTests: XCTestCase {
             }
             context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
             let data = bytes.bindMemory(to: UInt8.self)
-            var blue = 0, green = 0, orange = 0
+            var blue = 0, green = 0, indigo = 0
             for offset in stride(from: 0, to: data.count, by: 4) {
                 let r = Int(data[offset]), g = Int(data[offset + 1]), b = Int(data[offset + 2])
                 if b > 150, b > g + 40, g > 60, r < 100 { blue += 1 }
                 if g > 130, g > r + 50, g > b + 50 { green += 1 }
-                if r > 190, g > 70, g < 200, b < 120 { orange += 1 }
+                if r > 70, abs(r - g) < 30, b > r + 90 { indigo += 1 }
             }
-            return (blue, green, orange)
+            return (blue, green, indigo)
         }
         XCTAssertGreaterThan(colors.blue, 500, "Vocabulary bars are missing", file: file, line: line)
         XCTAssertGreaterThan(colors.green, 500, "Speaking bars are missing", file: file, line: line)
-        XCTAssertGreaterThan(colors.orange, 500, "Other practice bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.indigo, 300, "Quiz bars are missing", file: file, line: line)
     }
 }

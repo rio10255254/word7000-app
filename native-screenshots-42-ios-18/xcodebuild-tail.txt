@@ -1,0 +1,80 @@
+    t =    23.06s     Wait for com.rio.word7000 to idle
+    t =    23.06s     Find the "me-history" Button
+    t =    23.11s     Check for interrupting elements affecting "me-history" Button
+    t =    23.17s     Synthesize event
+    t =    23.19s         Scroll element to visible
+    t =    23.20s         Find the "me-history" Button
+    t =    23.52s         Computed hit point {187.5, 315} after scrolling to visible
+    t =    23.83s     Wait for com.rio.word7000 to idle
+    t =    24.01s Waiting 5.0s for "history-chart" Any to exist
+    t =    25.01s     Checking `Expect predicate `existsNoRetry == 1` for object "history-chart" Any`
+    t =    25.01s         Checking existence of `"history-chart" Any`
+    t =    25.44s Checking existence of `"locked-unlock" Button`
+    t =    25.49s Find the Target Application 'com.rio.word7000'
+    t =    25.59s Added attachment named 'plus-11-history-seven-free'
+    t =    25.59s Tap "30 天" Button
+    t =    25.59s     Wait for com.rio.word7000 to idle
+    t =    25.60s     Find the "30 天" Button
+    t =    25.67s     Check for interrupting elements affecting "30 天" Button
+    t =    25.73s     Synthesize event
+    t =    26.04s     Wait for com.rio.word7000 to idle
+    t =    26.39s Waiting 5.0s for "locked-unlock" Button to exist
+    t =    27.40s     Checking `Expect predicate `existsNoRetry == 1` for object "locked-unlock" Button`
+    t =    27.40s         Checking existence of `"locked-unlock" Button`
+    t =    28.49s Find the Target Application 'com.rio.word7000'
+    t =    28.66s Added attachment named 'plus-6-history-locked'
+    t =    28.66s Tap "7 天" Button
+    t =    28.66s     Wait for com.rio.word7000 to idle
+    t =    28.67s     Find the "7 天" Button
+    t =    28.71s     Check for interrupting elements affecting "7 天" Button
+    t =    28.77s     Synthesize event
+    t =    29.08s     Wait for com.rio.word7000 to idle
+    t =    29.31s Waiting 5.0s for "history-chart" Any to exist
+    t =    30.33s     Checking `Expect predicate `existsNoRetry == 1` for object "history-chart" Any`
+    t =    30.33s         Checking existence of `"history-chart" Any`
+    t =    30.70s Checking existence of `"locked-unlock" Button`
+    t =    30.77s Tear Down
+Test Case '-[Word7000UITests.ScreenshotTests testPlusScreens]' passed (30.994 seconds).
+Test Case '-[Word7000UITests.ScreenshotTests testTrialExpiresWhileAppRemainsOpen]' started.
+    t =     0.00s Start Test at 2026-10-12 20:07:11.481
+    t =     0.03s Set Up
+    t =     0.03s Open com.rio.word7000
+    t =     0.03s     Launch com.rio.word7000
+    t =     0.03s         Terminate com.rio.word7000:29515
+    t =     2.01s         Setting up automation session
+    t =     3.81s         Wait for com.rio.word7000 to idle
+    t =     5.73s Waiting 20.0s for "plus-recap-later" Button to exist
+    t =     6.74s     Checking `Expect predicate `existsNoRetry == 1` for object "plus-recap-later" Button`
+    t =     6.74s         Checking existence of `"plus-recap-later" Button`
+    t =     6.88s         Capturing element debug description
+    t =     7.83s     Checking `Expect predicate `existsNoRetry == 1` for object "plus-recap-later" Button`
+    t =     7.83s         Checking existence of `"plus-recap-later" Button`
+    t =     8.36s Find the Target Application 'com.rio.word7000'
+    t =     8.78s Added attachment named 'plus-7-trial-expired-while-open'
+    t =     8.78s Tap "plus-recap-later" Button
+    t =     8.78s     Wait for com.rio.word7000 to idle
+    t =     8.79s     Find the "plus-recap-later" Button
+    t =     8.90s     Check for interrupting elements affecting "plus-recap-later" Button
+    t =     8.99s     Synthesize event
+    t =     9.41s     Wait for com.rio.word7000 to idle
+    t =     9.80s Waiting 5.0s for "today-start" Button to exist
+    t =    10.85s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =    10.85s         Checking existence of `"today-start" Button`
+    t =    10.90s Tear Down
+Test Case '-[Word7000UITests.ScreenshotTests testTrialExpiresWhileAppRemainsOpen]' passed (11.143 seconds).
+Test Suite 'ScreenshotTests' passed at 2026-10-12 20:07:22.625.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 169.916 (169.919) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-10-12 20:07:22.625.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 415.320 (415.327) seconds
+Test Suite 'All tests' passed at 2026-10-12 20:07:22.626.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 415.320 (415.328) seconds
+2026-10-12 20:07:25.387 xcodebuild[6966:25476] [MT] IDETestOperationsObserverDebug: 461.341 elapsed -- Testing started completed.
+2026-10-12 20:07:25.387 xcodebuild[6966:25476] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-12 20:07:25.387 xcodebuild[6966:25476] [MT] IDETestOperationsObserverDebug: 461.341 sec, +461.341 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

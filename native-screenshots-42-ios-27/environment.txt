@@ -1,0 +1,26 @@
+Xcode 27.2
+Build version 27B5028f
+== Devices ==
+-- iOS 27.0 --
+    iPhone 18 Pro (F916B711-E93C-4CDE-913E-1795E72EAC82) (Booted) 
+    iPhone 18 Pro Max (492F4900-B788-4ABE-9766-A4C19499E9B7) (Shutdown) 
+    iPhone 17e (BA623B38-183C-4B30-AF02-DAE1D02C3473) (Shutdown) 
+    iPhone Air (52C56CEA-5061-4D7B-B9A3-E362BC869392) (Shutdown) 
+    iPhone 17 (CD85F334-D4C3-44B6-A7B8-EAABB9C6C1B4) (Shutdown) 
+    iPad Pro 13-inch (M5) (A94882C9-6952-425C-A48F-76AEA5D6D4A3) (Shutdown) 
+    iPad Pro 11-inch (M5) (88EABAC7-0B47-4C53-8783-38B6CD0A3E9B) (Shutdown) 
+    iPad mini (A17 Pro) (C7C9EECC-EE9F-4407-8D79-E3307A01AD3F) (Shutdown) 
+    iPad Air 13-inch (M4) (A6FAC1BF-201B-47F3-B658-C37F3E3782F7) (Shutdown) 
+    iPad Air 11-inch (M4) (89B3FE1A-6CEB-4ED1-9E26-8AF753F26F9B) (Shutdown) 
+    iPad (A16) (4BF44C00-E83A-4BA4-B812-01BD62E0AB74) (Shutdown) 
+-- tvOS 27.0 --
+    Apple TV 4K (3rd generation) (25E7F935-D711-47BB-A9C1-FCF084476EAF) (Shutdown) 
+    Apple TV 4K (3rd generation) (at 1080p) (2A6B4A97-6441-4353-9CD7-B9DAA1DBAD3D) (Shutdown) 
+-- watchOS 27.0 --
+    Apple Watch Series 12 (46mm) (36BEFB0B-B5B6-4DBE-B0FF-682037570A7F) (Shutdown) 
+    Apple Watch Series 12 (42mm) (E42E1E88-5419-461D-AA45-D4A9A8EBD31F) (Shutdown) 
+    Apple Watch Ultra 4 (49mm) (B9767124-D7C7-493A-A1BD-B4DC6C3B081B) (Shutdown) 
+    Apple Watch SE 3 (44mm) (49F5D777-82C7-4607-BAD6-2569C9EBD1FC) (Shutdown) 
+    Apple Watch SE 3 (40mm) (669D7066-EBF2-4AA1-857E-74A2578DB004) (Shutdown) 
+-- visionOS 27.0 --
+    Apple Vision Pro (AB2E9495-1C21-4D5C-8E39-178EF38AF656) (Shutdown) 

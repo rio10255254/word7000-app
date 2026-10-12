@@ -1,0 +1,80 @@
+    t =    33.37s     Checking `Expect predicate `existsNoRetry == 1` for object "me-history" Button`
+    t =    33.38s         Checking existence of `"me-history" Button`
+    t =    33.45s Checking existence of `"me-history" Button`
+    t =    33.52s Tap "me-history" Button
+    t =    33.52s     Wait for com.rio.word7000 to idle
+    t =    33.52s     Find the "me-history" Button
+    t =    33.58s     Check for interrupting elements affecting "me-history" Button
+    t =    33.63s     Synthesize event
+    t =    33.95s     Wait for com.rio.word7000 to idle
+    t =    34.45s Waiting 5.0s for "history-chart" Any to exist
+    t =    35.48s     Checking `Expect predicate `existsNoRetry == 1` for object "history-chart" Any`
+    t =    35.48s         Checking existence of `"history-chart" Any`
+    t =    35.88s Checking existence of `"locked-unlock" Button`
+    t =    35.94s Find the Target Application 'com.rio.word7000'
+    t =    36.15s Added attachment named 'plus-11-history-seven-free'
+    t =    36.15s Tap "30 天" Button
+    t =    36.15s     Wait for com.rio.word7000 to idle
+    t =    36.16s     Find the "30 天" Button
+    t =    36.22s     Check for interrupting elements affecting "30 天" Button
+    t =    36.30s     Synthesize event
+    t =    36.62s     Wait for com.rio.word7000 to idle
+    t =    38.10s Waiting 5.0s for "locked-unlock" Button to exist
+    t =    39.13s     Checking `Expect predicate `existsNoRetry == 1` for object "locked-unlock" Button`
+    t =    39.13s         Checking existence of `"locked-unlock" Button`
+    t =    40.25s Find the Target Application 'com.rio.word7000'
+    t =    40.51s Added attachment named 'plus-6-history-locked'
+    t =    40.51s Tap "7 天" Button
+    t =    40.51s     Wait for com.rio.word7000 to idle
+    t =    40.51s     Find the "7 天" Button
+    t =    40.61s     Check for interrupting elements affecting "7 天" Button
+    t =    40.69s     Synthesize event
+    t =    41.02s     Wait for com.rio.word7000 to idle
+    t =    42.64s Waiting 5.0s for "history-chart" Any to exist
+    t =    43.68s     Checking `Expect predicate `existsNoRetry == 1` for object "history-chart" Any`
+    t =    43.68s         Checking existence of `"history-chart" Any`
+    t =    44.03s Checking existence of `"locked-unlock" Button`
+    t =    44.11s Tear Down
+Test Case '-[Word7000UITests.ScreenshotTests testPlusScreens]' passed (44.377 seconds).
+Test Case '-[Word7000UITests.ScreenshotTests testTrialExpiresWhileAppRemainsOpen]' started.
+    t =     0.00s Start Test at 2026-10-12 20:16:34.933
+    t =     0.04s Set Up
+    t =     0.04s Open com.rio.word7000
+    t =     0.04s     Launch com.rio.word7000
+    t =     0.04s         Terminate com.rio.word7000:62403
+2026-10-12 20:16:36.057 xcodebuild[33521:92318] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-12 20:16:36.057 xcodebuild[33521:92318] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.34s         Setting up automation session
+    t =     7.14s         Wait for com.rio.word7000 to idle
+    t =     9.87s Waiting 20.0s for "plus-recap-later" Button to exist
+    t =    10.94s     Checking `Expect predicate `existsNoRetry == 1` for object "plus-recap-later" Button`
+    t =    10.94s         Checking existence of `"plus-recap-later" Button`
+    t =    12.10s Find the Target Application 'com.rio.word7000'
+    t =    12.68s Added attachment named 'plus-7-trial-expired-while-open'
+    t =    12.69s Tap "plus-recap-later" Button
+    t =    12.69s     Wait for com.rio.word7000 to idle
+    t =    12.69s     Find the "plus-recap-later" Button
+    t =    12.77s     Check for interrupting elements affecting "plus-recap-later" Button
+    t =    12.85s     Synthesize event
+    t =    13.22s     Wait for com.rio.word7000 to idle
+    t =    13.65s Waiting 5.0s for "today-start" Button to exist
+    t =    14.69s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =    14.69s         Checking existence of `"today-start" Button`
+    t =    14.79s Tear Down
+Test Case '-[Word7000UITests.ScreenshotTests testTrialExpiresWhileAppRemainsOpen]' passed (15.032 seconds).
+Test Suite 'ScreenshotTests' passed at 2026-10-12 20:16:49.965.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 272.749 (272.755) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-10-12 20:16:49.967.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 626.079 (626.099) seconds
+Test Suite 'All tests' passed at 2026-10-12 20:16:49.968.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 626.079 (626.102) seconds
+2026-10-12 20:16:51.405 xcodebuild[33521:92318] [MT] IDETestOperationsObserverDebug: 683.176 elapsed -- Testing started completed.
+2026-10-12 20:16:51.405 xcodebuild[33521:92318] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-12 20:16:51.405 xcodebuild[33521:92318] [MT] IDETestOperationsObserverDebug: 683.176 sec, +683.176 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST SUCCEEDED **
+
+Testing started

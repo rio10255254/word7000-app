@@ -131,9 +131,9 @@ struct HistoryActivityChart: View {
         .chartLegend(.hidden)
         .chartXAxis {
             AxisMarks(values: ticks) { value in
-                AxisValueLabel {
+                AxisValueLabel(anchor: activity.count > 7 && value.as(String.self) == activity.last?.date ? .topTrailing : .top) {
                     if let date = value.as(String.self) {
-                        Text(dateLabel(date)).font(.caption2)
+                        Text(dateLabel(date)).font(.caption2).fixedSize()
                     }
                 }
             }

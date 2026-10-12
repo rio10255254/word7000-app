@@ -194,7 +194,7 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('Up to date');
     expect(appSource).toContain('新版已就緒');
     expect(appSource).toContain('Update ready');
-    expect(iosUpdatePolicy).toMatchObject({ latestBuild: 30, minimumBuild: 23 });
+    expect(iosUpdatePolicy).toMatchObject({ latestBuild: 34, minimumBuild: 23 });
     expect(appSource).toContain('iosUpdateDecision(currentBuild, policy)');
     expect(appSource).toContain('testFlightUpdateButton');
     expect(appSource).toContain('Linking.openURL(nativeStoreUpdate.testFlightUrl)');

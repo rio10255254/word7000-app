@@ -130,10 +130,10 @@ struct HistoryActivityChart: View {
         .chartXSelection(value: $selection)
         .chartLegend(.hidden)
         .chartXAxis {
-            AxisMarks(values: ticks) { value in
+            AxisMarks(values: activity.map(\.date)) { value in
                 AxisValueLabel(anchor: activity.count > 7 && value.as(String.self) == activity.last?.date ? .topTrailing : .top) {
                     if let date = value.as(String.self) {
-                        Text(dateLabel(date)).font(.caption2).fixedSize()
+                        Text(ticks.contains(date) ? dateLabel(date) : "").font(.caption2).fixedSize()
                     }
                 }
             }
@@ -147,6 +147,8 @@ struct HistoryActivityChart: View {
         .frame(height: chartHeight)
         .accessibilityLabel(L.t("每日學習次數", "Daily learning actions"))
         .accessibilityIdentifier("history-chart")
+        // Recreate the categorical axis when its date range changes.
+        .id(activity.count)
     }
 
     private func breakdown(_ kind: Kind, day: DailyLearningActivity) -> some View {

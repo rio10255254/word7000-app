@@ -36,7 +36,7 @@ public struct ScannedWordCandidate: Equatable, Identifiable, Sendable {
 
 /// Turns text recognised on a photo of a vocabulary sheet into word / meaning
 /// pairs. The meaning is the one printed on the paper; nothing is translated.
-/// Ported one-to-one from `src/lib/scanParser.ts`.
+/// Shares the original parser rules with `src/lib/scanParser.ts`.
 public enum ScanParser {
     struct Pair: Equatable {
         var meaningZh: String
@@ -111,6 +111,36 @@ public enum ScanParser {
             .filter { !$0.isEmpty }
             .enumerated()
             .map { index, value in ScannedLine(text: value, x: 0.05, y: 0.02 + Double(index) * 0.035, width: 0.9, height: 0.03) }
+    }
+
+    /// Vision may return the number, headword, part and meaning as separate
+    /// boxes. Join non-overlapping boxes on one baseline before pairing them.
+    public static func readingRows(_ lines: [ScannedLine]) -> [ScannedLine] {
+        let sorted = lines.sorted {
+            let left = $0.y + $0.height / 2, right = $1.y + $1.height / 2
+            return left == right ? $0.x < $1.x : left < right
+        }
+        var groups: [[ScannedLine]] = []
+        for line in sorted {
+            if let anchor = groups.last?.first,
+               abs((line.y + line.height / 2) - (anchor.y + anchor.height / 2)) <= max(anchor.height, line.height) * 0.45 {
+                groups[groups.count - 1].append(line)
+            } else {
+                groups.append([line])
+            }
+        }
+        return groups.flatMap { group -> [ScannedLine] in
+            let fragments = group.sorted { $0.x < $1.x }
+            guard fragments.count > 1 else { return fragments }
+            for i in 1..<fragments.count {
+                if fragments[i].x < fragments[i - 1].x + fragments[i - 1].width - 0.005 { return fragments }
+            }
+            let x = fragments.map(\.x).min() ?? 0
+            let y = fragments.map(\.y).min() ?? 0
+            let right = fragments.map { $0.x + $0.width }.max() ?? x
+            let bottom = fragments.map { $0.y + $0.height }.max() ?? y
+            return [ScannedLine(text: fragments.map(\.text).joined(separator: " "), x: x, y: y, width: right - x, height: bottom - y)]
+        }
     }
 
     // MARK: Pairing lines
@@ -225,7 +255,8 @@ public enum ScanParser {
     }
 
     static func parseHeadword(_ text: String) -> Headword? {
-        let bracketsAsSpaces = String(text.map { "()[]{}".contains($0) ? " " : $0 })
+        let withoutPronunciation = removingPronunciation(text)
+        let bracketsAsSpaces = String(withoutPronunciation.map { "()[]{}".contains($0) ? " " : $0 })
         var rawTokens = bracketsAsSpaces.split(whereSeparator: { $0.isWhitespace }).map(String.init)
         var tokens = rawTokens.map(trimToken).filter { !$0.isEmpty }
         guard !tokens.isEmpty else { return nil }
@@ -253,6 +284,19 @@ public enum ScanParser {
         return Headword(partOfSpeech: pos.joined(separator: " / "), word: cleaned.joined(separator: " "))
     }
 
+    static let pronunciationPattern = try! NSRegularExpression(pattern: #"(?<!\S)/[^/\n]+/(?=\s|$)|\[[^\]\n]+\]"#)
+
+    static func removingPronunciation(_ text: String) -> String {
+        var result = text
+        let matches = pronunciationPattern.matches(in: text, range: NSRange(text.startIndex..., in: text))
+        for match in matches.reversed() {
+            guard let range = Range(match.range, in: result) else { continue }
+            let content = String(result[range].dropFirst().dropLast()).trimmingCharacters(in: .whitespaces)
+            if !isPosToken(content) { result.replaceSubrange(range, with: " ") }
+        }
+        return result
+    }
+
     /// Strips leading non-letters and trailing characters that cannot end a
     /// word (letters, apostrophes, dots, slashes and hyphens stay).
     static func trimToken(_ token: String) -> String {
@@ -269,7 +313,8 @@ public enum ScanParser {
 
     static func isPosToken(_ token: String) -> Bool {
         let base = token.hasSuffix(".") ? String(token.dropLast()) : token
-        return splitPos(base).allSatisfy { posTokens.contains($0.lowercased()) }
+        let parts = splitPos(base)
+        return !parts.isEmpty && parts.allSatisfy { posTokens.contains($0.lowercased()) }
     }
 
     static func isHeadwordToken(_ token: String) -> Bool {

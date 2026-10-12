@@ -18,17 +18,17 @@ public enum ScanGrounding {
         }
     }
 
-    /// True when both the word and the meaning appear in the recognised text
-    /// (ignoring spaces, case and punctuation).
+    /// The word and meaning must belong to the same entry, not merely occur
+    /// somewhere on the page. This also prevents substring headword matches.
     public static func isGrounded(word: String, meaning: String, in source: String) -> Bool {
-        let haystack = normalised(source)
         let needleWord = normalised(word)
         let needleMeaning = normalised(meaning)
         guard needleWord.count >= 2, !needleMeaning.isEmpty,
               word.unicodeScalars.contains(where: { ("a"..."z").contains($0) || ("A"..."Z").contains($0) }),
               meaning.unicodeScalars.contains(where: ScanParser.isCJK)
         else { return false }
-        return haystack.contains(needleWord) && haystack.contains(needleMeaning)
+        let pairs = ScanParser.parse(ScanParser.lines(fromPlainText: source))
+        return pairs.contains { normalised($0.word) == needleWord && normalised($0.meaningZh).contains(needleMeaning) }
     }
 
     static func normalised(_ text: String) -> String {

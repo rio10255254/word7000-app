@@ -1,5 +1,5 @@
-import PhotosUI
 import SwiftUI
+import UIKit
 import Word7000Core
 
 /// Photograph (or paste) a vocabulary sheet, check what was read, and save it
@@ -12,6 +12,7 @@ struct ScanView: View {
 
     enum Phase: Equatable {
         case choose
+        case loadingPhoto
         case reading
         case review
         case saved(count: Int, name: String)
@@ -35,7 +36,9 @@ struct ScanView: View {
     @State private var phase: Phase = .choose
     @State private var rows: [Row] = []
     @State private var pasted = ""
-    @State private var photoItem: PhotosPickerItem?
+    @State private var photoLibraryOpen = false
+    @State private var pendingPhotos: [NSItemProvider] = []
+    @State private var scanTask: Task<Void, Never>?
     @State private var cameraOpen = false
     @State private var documentScannerOpen = false
     @State private var suggester: WordSuggester?
@@ -58,6 +61,10 @@ struct ScanView: View {
             Group {
                 switch phase {
                 case .choose: chooser
+                case .loadingPhoto:
+                    ProgressView(S.loadingPhoto)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .accessibilityIdentifier("scan-loading-photo")
                 case .reading:
                     ProgressView(SmartScan.canOrganize ? S.readingSmart : S.reading)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -79,26 +86,23 @@ struct ScanView: View {
                 }
             }
         }
+        .sheet(isPresented: $photoLibraryOpen, onDismiss: loadSelectedPhoto) {
+            PhotoLibraryPicker { providers in
+                pendingPhotos = providers
+                photoLibraryOpen = false
+            }
+            .ignoresSafeArea()
+        }
         .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         .fullScreenCover(isPresented: $cameraOpen) {
-            CameraPicker { image in Task { await read([image]) } }
+            CameraPicker { image in startReading([image]) }
                 .ignoresSafeArea()
         }
         .fullScreenCover(isPresented: $documentScannerOpen) {
-            DocumentScanner { pages in Task { await read(pages) } }
+            DocumentScanner { pages in startReading(pages) }
                 .ignoresSafeArea()
         }
-        .onChange(of: photoItem) { _, item in
-            guard let item else { return }
-            Task {
-                if let data = try? await item.loadTransferable(type: Data.self), let image = UIImage(data: data) {
-                    await read([image])
-                } else {
-                    message = S.readFailed
-                }
-                photoItem = nil
-            }
-        }
+        .onDisappear { scanTask?.cancel() }
     }
 
     // MARK: Choose a source
@@ -139,15 +143,10 @@ struct ScanView: View {
                         Label(S.takePhoto, systemImage: "camera.fill")
                     }
                 }
-                if plus.decide(.scan) == .allowed {
-                    PhotosPicker(selection: $photoItem, matching: .images) {
-                        Label(S.choosePhoto, systemImage: "photo.on.rectangle")
-                    }
-                } else {
-                    Button { allowScan {} } label: {
-                        Label(S.choosePhoto, systemImage: "photo.on.rectangle")
-                    }
+                Button { allowScan { photoLibraryOpen = true } } label: {
+                    Label(S.choosePhoto, systemImage: "photo.on.rectangle")
                 }
+                .accessibilityIdentifier("scan-choose-photo")
                 if let message {
                     Label(message, systemImage: "exclamationmark.triangle.fill")
                         .font(.footnote)
@@ -163,6 +162,7 @@ struct ScanView: View {
                     let found = ScanParser.parse(ScanParser.lines(fromPlainText: pasted))
                     showReview(found)
                 }
+                .accessibilityIdentifier("scan-read-pasted")
                 .disabled(pasted.trimmed.isEmpty)
             } header: {
                 Text(S.pasteTitle)
@@ -190,11 +190,40 @@ struct ScanView: View {
         message = nil
         phase = .reading
         do {
-            showReview(try await TextRecognizer.candidates(in: images, suggester: dictionary()))
-            plus.noteScanUsed()
+            let found = try await TextRecognizer.candidates(in: images, suggester: dictionary())
+            try Task.checkCancellation()
+            showReview(found)
+            if !found.isEmpty { plus.noteScanUsed() }
+        } catch is CancellationError {
+            return
         } catch {
             message = S.readFailed
             phase = .choose
+        }
+    }
+
+    private func startReading(_ images: [UIImage]) {
+        scanTask?.cancel()
+        scanTask = Task { await read(images) }
+    }
+
+    private func loadSelectedPhoto() {
+        guard let provider = pendingPhotos.first else { return }
+        pendingPhotos = []
+        scanTask?.cancel()
+        message = nil
+        phase = .loadingPhoto
+        scanTask = Task {
+            do {
+                let image = try await ScanPhotoLoader.image(from: provider)
+                await read([image])
+            } catch is CancellationError {
+                return
+            } catch {
+                guard !Task.isCancelled else { return }
+                message = S.photoLoadFailed
+                phase = .choose
+            }
         }
     }
 
@@ -240,6 +269,7 @@ struct ScanView: View {
                                     .font(.rounded(.headline))
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
+                                    .accessibilityIdentifier("scan-word-\(row.id)")
                                 TextField(S.pos, text: $row.partOfSpeech)
                                     .font(.subheadline)
                                     .foregroundStyle(Palette.accent)
@@ -249,6 +279,7 @@ struct ScanView: View {
                             }
                             TextField(S.meaning, text: $row.meaning)
                                 .font(.subheadline)
+                                .accessibilityIdentifier("scan-meaning-\(row.id)")
                             if row.id.contains("-ai-") {
                                 Label(S.organizedByAI, systemImage: "sparkles")
                                     .font(.caption)
@@ -303,6 +334,7 @@ struct ScanView: View {
                 }
                 .prominentAction()
                 .disabled(savableCount == 0)
+                .accessibilityIdentifier("scan-save")
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
@@ -331,6 +363,7 @@ struct ScanView: View {
                 .font(.system(size: 54))
                 .foregroundStyle(Palette.known)
             Text(S.savedTitle).font(.rounded(.title2, weight: .bold))
+                .accessibilityIdentifier("scan-saved")
             Text(S.savedText(count, name))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
@@ -376,6 +409,8 @@ private enum S {
     static var pastePlaceholder: String { L.t("abandon v. 放棄\nbenefit n. 好處", "abandon v. 放棄\nbenefit n. 好處") }
     static var readPasted: String { L.t("讀取貼上的文字", "Read pasted text") }
     static var reading: String { L.t("正在手機上辨識…", "Reading on your iPhone…") }
+    static var loadingPhoto: String { L.t("正在載入照片…", "Loading your photo…") }
+    static var photoLoadFailed: String { L.t("無法載入這張照片。若照片在 iCloud，請確認網路連線後再試一次，或改選另一張照片。", "Could not load this photo. If it is in iCloud, check your connection and try again, or choose another photo.") }
     static var readingSmart: String { L.t("正在手機上辨識並整理…", "Reading and organising on your iPhone…") }
     static var readFailed: String { L.t("辨識失敗，請換一張更清楚的照片再試一次。", "Could not read that photo. Try a clearer one.") }
     static func found(_ count: Int) -> String { L.t("找到 \(count) 個單字", "\(count) words found") }

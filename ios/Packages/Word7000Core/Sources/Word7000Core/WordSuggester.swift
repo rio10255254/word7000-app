@@ -21,6 +21,10 @@ public struct WordSuggester: Sendable {
         words.contains(word.lowercased())
     }
 
+    public var recognitionVocabulary: [String] {
+        words.filter { $0.count <= 40 && $0.unicodeScalars.allSatisfy { $0.isASCII } }.sorted()
+    }
+
     /// The dictionary spelling for `word`, or nil when it is already known or
     /// nothing is close enough. Phrases are corrected word by word.
     public func correction(for word: String) -> String? {
@@ -41,11 +45,24 @@ public struct WordSuggester: Sendable {
 
     /// Picks the candidate reading that is a dictionary word, if any.
     public func best(of candidates: [String]) -> String? {
-        candidates.first { candidate in
+        guard let primary = candidates.first else { return nil }
+        let preferred = candidates.first { candidate in
             let head = candidate.split(whereSeparator: { !$0.isLetter && $0 != "'" && $0 != "-" }).first.map(String.init) ?? ""
             return !head.isEmpty && words.contains(head.lowercased())
-        } ?? candidates.first
+        } ?? primary
+        guard preferred != primary, primary.unicodeScalars.contains(where: ScanParser.isCJK) else { return preferred }
+        let pattern = Self.leadingWordPattern
+        guard let original = pattern.firstMatch(in: primary, range: NSRange(primary.startIndex..., in: primary)),
+              let replacement = pattern.firstMatch(in: preferred, range: NSRange(preferred.startIndex..., in: preferred)),
+              let originalRange = Range(original.range(at: 1), in: primary),
+              let replacementRange = Range(replacement.range(at: 1), in: preferred),
+              !primary[..<originalRange.lowerBound].unicodeScalars.contains(where: ScanParser.isCJK)
+        else { return primary }
+        // A better English reading must not replace the paper's Chinese text.
+        return primary.replacingCharacters(in: originalRange, with: String(preferred[replacementRange]))
     }
+
+    static let leadingWordPattern = try! NSRegularExpression(pattern: #"^[^A-Za-z]*([A-Za-z][A-Za-z'’-]*)"#)
 
     func closest(to word: String) -> String? {
         // Short words have too many neighbours to guess safely.

@@ -1,4 +1,5 @@
 import ImageIO
+import CoreImage
 import UIKit
 import Vision
 import Word7000Core
@@ -17,42 +18,78 @@ enum TextRecognizer {
     /// Handwriting is often read slightly wrong, so each line keeps Vision's
     /// top three readings and the one that is a dictionary word wins.
     static func candidates(in images: [UIImage], suggester: WordSuggester?) async throws -> [ScannedWordCandidate] {
-        var seen = Set<String>()
+        var indices: [String: Int] = [:]
         var result: [ScannedWordCandidate] = []
+        let vocabulary = suggester?.recognitionVocabulary ?? []
         for (page, image) in images.enumerated() {
-            let lines = try await lines(in: image, suggester: suggester)
-            // Tables first (their rows are unambiguous), then the line parser,
-            // then whatever the on-device model can still find on the page.
-            var found = await SmartScan.tableCandidates(in: image)
-            found += ScanParser.parse(lines)
-            if SmartScan.canOrganize {
-                found += await SmartScan.organize(text: lines.map(\.text).joined(separator: "\n"))
+            try Task.checkCancellation()
+            let prepared = try await preparedImage(image)
+            let reading = try await recognize(prepared, languages: languages, vocabulary: vocabulary, suggester: suggester)
+            let rows = ScanParser.readingRows(reading.lines)
+            var found = await SmartScan.tableCandidates(in: UIImage(cgImage: prepared))
+            try Task.checkCancellation()
+            found += ScanParser.parse(rows)
+            found += ScanParser.parse(reading.lines)
+            let expected = reading.lines.filter { $0.text.unicodeScalars.contains(where: ScanParserContains.cjk) }.count
+            let unique = Set(found.map { $0.word.lowercased() }).count
+            let needsHelp = unique == 0 || (expected > 0 && Double(unique) < Double(expected) * 0.7)
+            if needsHelp || reading.confidence < 0.7 {
+                if let enhanced = await enhancedImage(prepared),
+                   let alternate = try? await recognize(enhanced, languages: ["en-US", "zh-Hant"], vocabulary: vocabulary, suggester: suggester) {
+                    found += ScanParser.parse(ScanParser.readingRows(alternate.lines))
+                    found += ScanParser.parse(alternate.lines)
+                }
             }
-            for candidate in found where seen.insert(candidate.word.lowercased()).inserted {
+            try Task.checkCancellation()
+            let recovered = Set(found.map { $0.word.lowercased() }).count
+            if (recovered == 0 || Double(recovered) < Double(expected) * 0.7), SmartScan.canOrganize {
+                found += await SmartScan.organize(text: rows.map(\.text).joined(separator: "\n"))
+            }
+            try Task.checkCancellation()
+            for candidate in found {
+                let key = (suggester?.correction(for: candidate.word) ?? candidate.word).lowercased()
                 var copy = candidate
                 copy.key = "p\(page)-\(candidate.key)"
-                result.append(copy)
+                if let index = indices[key] {
+                    if suggester?.contains(candidate.word) == true, suggester?.contains(result[index].word) != true {
+                        result[index] = copy
+                    }
+                } else {
+                    indices[key] = result.count
+                    result.append(copy)
+                }
             }
         }
         return result
     }
 
     static func lines(in image: UIImage, suggester: WordSuggester? = nil) async throws -> [ScannedLine] {
-        guard let cgImage = image.cgImage else { throw Failure.unreadableImage }
-        let orientation = CGImagePropertyOrientation(image.imageOrientation)
+        let prepared = try await preparedImage(image)
+        return try await recognize(prepared, languages: languages, vocabulary: suggester?.recognitionVocabulary ?? [], suggester: suggester).lines
+    }
+
+    private struct Reading: Sendable {
+        var lines: [ScannedLine]
+        var confidence: Double
+    }
+
+    private static func recognize(_ cgImage: CGImage, languages: [String], vocabulary: [String], suggester: WordSuggester?) async throws -> Reading {
         return try await Task.detached(priority: .userInitiated) {
             let request = VNRecognizeTextRequest()
             request.recognitionLevel = .accurate
             // Correction helps sentences but rewrites single headwords and short
             // Chinese meanings into "likelier" words, which is wrong for a word list.
             request.usesLanguageCorrection = false
+            request.minimumTextHeight = 0.004
+            request.customWords = vocabulary
             let supported = (try? request.supportedRecognitionLanguages()) ?? []
             let requested = languages.filter { supported.contains($0) }
             if !requested.isEmpty { request.recognitionLanguages = requested }
 
-            let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
+            let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
             try handler.perform([request])
-            return (request.results ?? []).compactMap { observation -> ScannedLine? in
+            let observations = request.results ?? []
+            let lines = observations.compactMap { observation -> ScannedLine? in
                 let readings = observation.topCandidates(3).map(\.string)
                 guard let text = suggester?.best(of: readings) ?? readings.first else { return nil }
                 let box = observation.boundingBox
@@ -64,22 +101,44 @@ enum TextRecognizer {
                     height: Double(box.height)
                 )
             }
+            let confidence = observations.isEmpty ? 0 : observations.reduce(0) { $0 + Double($1.topCandidates(1).first?.confidence ?? 0) } / Double(observations.count)
+            return Reading(lines: lines, confidence: confidence)
+        }.value
+    }
+
+    private static func preparedImage(_ image: UIImage) async throws -> CGImage {
+        try await Task.detached(priority: .userInitiated) {
+            if let cgImage = image.cgImage, image.imageOrientation == .up,
+               max(cgImage.width, cgImage.height) <= ScanPhotoLoader.maximumPixelDimension { return cgImage }
+            let pixels = image.cgImage.map { max($0.width, $0.height) } ?? Int(max(image.size.width, image.size.height) * image.scale)
+            guard pixels > 0, image.size.width > 0, image.size.height > 0 else { throw Failure.unreadableImage }
+            let factor = CGFloat(min(1, Double(ScanPhotoLoader.maximumPixelDimension) / Double(pixels)))
+            let size = CGSize(width: image.size.width * image.scale * factor, height: image.size.height * image.scale * factor)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.opaque = true
+            let rendered = UIGraphicsImageRenderer(size: size, format: format).image { context in
+                UIColor.white.setFill()
+                context.fill(CGRect(origin: .zero, size: size))
+                image.draw(in: CGRect(origin: .zero, size: size))
+            }
+            guard let result = rendered.cgImage else { throw Failure.unreadableImage }
+            return result
+        }.value
+    }
+
+    private static func enhancedImage(_ image: CGImage) async -> CGImage? {
+        await Task.detached(priority: .userInitiated) {
+            let adjusted = CIImage(cgImage: image)
+                .applyingFilter("CIColorControls", parameters: [kCIInputSaturationKey: 0, kCIInputContrastKey: 1.18])
+                .applyingFilter("CISharpenLuminance", parameters: [kCIInputSharpnessKey: 0.3])
+            return CIContext(options: [.cacheIntermediates: false]).createCGImage(adjusted, from: adjusted.extent)
         }.value
     }
 }
 
-private extension CGImagePropertyOrientation {
-    init(_ orientation: UIImage.Orientation) {
-        switch orientation {
-        case .up: self = .up
-        case .upMirrored: self = .upMirrored
-        case .down: self = .down
-        case .downMirrored: self = .downMirrored
-        case .left: self = .left
-        case .leftMirrored: self = .leftMirrored
-        case .right: self = .right
-        case .rightMirrored: self = .rightMirrored
-        @unknown default: self = .up
-        }
+private enum ScanParserContains {
+    static func cjk(_ scalar: Unicode.Scalar) -> Bool {
+        (0x3400...0x4DBF).contains(scalar.value) || (0x4E00...0x9FFF).contains(scalar.value) || (0xF900...0xFAFF).contains(scalar.value)
     }
 }

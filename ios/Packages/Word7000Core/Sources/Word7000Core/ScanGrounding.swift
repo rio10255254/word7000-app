@@ -27,7 +27,7 @@ public enum ScanGrounding {
               word.unicodeScalars.contains(where: { ("a"..."z").contains($0) || ("A"..."Z").contains($0) }),
               meaning.unicodeScalars.contains(where: ScanParser.isCJK)
         else { return false }
-        let pairs = ScanParser.parse(ScanParser.lines(fromPlainText: source))
+        let pairs = ScanParser.parse(ScanParser.lines(fromPlainText: source.lowercased()))
         return pairs.contains { normalised($0.word) == needleWord && normalised($0.meaningZh).contains(needleMeaning) }
     }
 

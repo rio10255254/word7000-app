@@ -43,15 +43,22 @@ enum ScanPhotoLoader {
         try Task.checkCancellation()
         guard provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) else { throw Failure.unsupportedImage }
         let type = provider.registeredTypeIdentifiers.first { UTType($0)?.conforms(to: .image) == true } ?? UTType.image.identifier
-        let image: UIImage = try await withCheckedThrowingContinuation { continuation in
-            provider.loadFileRepresentation(forTypeIdentifier: type) { url, error in
-                guard let url else { continuation.resume(throwing: error ?? Failure.unavailable); return }
-                do {
-                    continuation.resume(returning: try decode(url: url))
-                } catch {
-                    continuation.resume(throwing: error)
+        let transfer = Transfer()
+        let image: UIImage = try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                guard transfer.install(continuation) else { return }
+                let progress = provider.loadFileRepresentation(forTypeIdentifier: type) { url, error in
+                    guard let url else { transfer.finish(.failure(error ?? Failure.unavailable)); return }
+                    do {
+                        transfer.finish(.success(try decode(url: url)))
+                    } catch {
+                        transfer.finish(.failure(error))
+                    }
                 }
+                transfer.setProgress(progress)
             }
+        } onCancel: {
+            transfer.cancel()
         }
         try Task.checkCancellation()
         return image
@@ -67,5 +74,55 @@ enum ScanPhotoLoader {
               ] as CFDictionary)
         else { throw Failure.unsupportedImage }
         return UIImage(cgImage: image)
+    }
+
+    /// A provider may finish after cancellation, so only one path may resume.
+    private final class Transfer: @unchecked Sendable {
+        private let lock = NSLock()
+        private var continuation: CheckedContinuation<UIImage, Error>?
+        private var progress: Progress?
+        private var cancelled = false
+        private var finished = false
+
+        func install(_ continuation: CheckedContinuation<UIImage, Error>) -> Bool {
+            lock.lock()
+            if cancelled {
+                lock.unlock()
+                continuation.resume(throwing: CancellationError())
+                return false
+            }
+            self.continuation = continuation
+            lock.unlock()
+            return true
+        }
+
+        func setProgress(_ progress: Progress) {
+            lock.lock()
+            let shouldCancel = cancelled
+            if !cancelled && !finished { self.progress = progress }
+            lock.unlock()
+            if shouldCancel { progress.cancel() }
+        }
+
+        func finish(_ result: Result<UIImage, Error>) {
+            lock.lock()
+            let continuation = continuation
+            self.continuation = nil
+            progress = nil
+            finished = true
+            lock.unlock()
+            continuation?.resume(with: result)
+        }
+
+        func cancel() {
+            lock.lock()
+            cancelled = true
+            let continuation = continuation, progress = progress
+            self.continuation = nil
+            self.progress = nil
+            lock.unlock()
+            progress?.cancel()
+            continuation?.resume(throwing: CancellationError())
+        }
     }
 }

@@ -74,8 +74,10 @@ final class ScanPickerTests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
-        let directory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("word7000-screenshots", isDirectory: true)
-        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        try? screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+        if let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] {
+            let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-screenshots", isDirectory: true)
+            try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try? screenshot.pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+        }
     }
 }

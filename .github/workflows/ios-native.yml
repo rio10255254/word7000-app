@@ -116,7 +116,7 @@ jobs:
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
           xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
           swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
-          xcrun simctl addmedia "$SIMULATOR_UDID" "$RUNNER_TEMP"/scan-fixtures/*.jpg
+          xcrun simctl addmedia "$SIMULATOR_UDID" "$RUNNER_TEMP"/scan-fixtures/*
           set +e
           xcodebuild test \
             -project ios/Word7000.xcodeproj \

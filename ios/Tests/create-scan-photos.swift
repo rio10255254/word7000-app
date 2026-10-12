@@ -41,16 +41,16 @@ let context = CIContext(options: [.useSoftwareRenderer: true])
 let original = drawSheet()
 let sideways = CIImage(cgImage: original).oriented(.left)
 let rotated = context.createCGImage(sideways, from: sideways.extent)!
-let fixtures: [(String, CGImage, Int)] = [
-    ("01-printed", original, 1),
-    ("02-columns", drawSheet(columns: true), 1),
-    ("03-faint", drawSheet(faint: true), 1),
-    ("04-rotated", rotated, 6),
-    ("05-large", drawSheet(width: 6400, height: 4480), 1),
+let fixtures: [(String, CGImage, Int, UTType)] = [
+    ("01-printed", original, 1, .png),
+    ("02-columns", drawSheet(columns: true), 1, .jpeg),
+    ("03-faint", drawSheet(faint: true), 1, .jpeg),
+    ("04-rotated", rotated, 6, .heic),
+    ("05-large", drawSheet(width: 6400, height: 4480), 1, .jpeg),
 ]
 for (index, fixture) in fixtures.enumerated() {
-    let url = directory.appendingPathComponent(fixture.0 + ".jpg")
-    let destination = CGImageDestinationCreateWithURL(url as CFURL, UTType.jpeg.identifier as CFString, 1, nil)!
+    let url = directory.appendingPathComponent(fixture.0 + "." + fixture.3.preferredFilenameExtension!)
+    let destination = CGImageDestinationCreateWithURL(url as CFURL, fixture.3.identifier as CFString, 1, nil)!
     let date = String(format: "2026:10:13 08:00:%02d", index)
     let properties: [CFString: Any] = [
         kCGImagePropertyOrientation: fixture.2,

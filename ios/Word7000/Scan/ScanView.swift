@@ -184,6 +184,7 @@ struct ScanView: View {
     private func read(_ images: [UIImage]) async {
         guard !images.isEmpty else { return }
         guard plus.decide(.scan) == .allowed else {
+            phase = .choose
             allowScan {}
             return
         }

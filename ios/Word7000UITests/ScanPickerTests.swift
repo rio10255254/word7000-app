@@ -24,14 +24,11 @@ final class ScanPickerTests: XCTestCase {
             app.buttons["scan-choose-photo"].tap()
             XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
             snapshot(app, name: "scan-photo-library-\(index)")
-            func photos() -> [XCUIElement] {
-                app.images.allElementsBoundByIndex.filter {
-                    $0.isHittable && $0.frame.width > 80 && $0.frame.height > 80 && $0.frame.height < 500
-                }
-            }
-            let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in photos().count >= 5 }, object: nil)
+            let photos = app.images.matching(identifier: "PXGGridLayout-Info")
+            let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in photos.count >= 5 }, object: nil)
             XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 60), .completed, app.debugDescription)
-            photos()[index].tap()
+            snapshot(app, name: "scan-photo-library-\(index)-ready")
+            photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
             let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch
             if add.waitForExistence(timeout: 2) { add.tap() }
             let save = app.buttons["scan-save"]

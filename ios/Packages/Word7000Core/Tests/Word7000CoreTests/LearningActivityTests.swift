@@ -53,4 +53,21 @@ final class LearningActivityTests: XCTestCase {
         XCTAssertTrue(state.activity(endingOn: "2026-03-07", dayCount: 0).isEmpty)
         XCTAssertTrue(state.activity(endingOn: "2026-03-07", dayCount: -1).isEmpty)
     }
+
+    func testNinetyDaysGroupIntoWeeksEndingToday() {
+        var state = LearningAnalyticsState()
+        state.record(date: "2026-03-07", source: "phone") { $0.studyKnown = 4 }
+        state.record(date: "2026-03-01", source: "phone") { $0.speakingCompleted = 2 }
+        state.record(date: "2026-02-28", source: "phone") { $0.quizCorrect = 1 }
+        let weeks = DailyLearningActivity.weekly(state.activity(endingOn: "2026-03-07", dayCount: 90))
+        XCTAssertEqual(weeks.count, 13)
+        XCTAssertEqual(weeks.last?.date, "2026-03-01")
+        XCTAssertEqual(weeks.last?.endDate, "2026-03-07")
+        XCTAssertEqual(weeks.last?.total, 6)
+        XCTAssertEqual(weeks[weeks.count - 2].total, 1)
+        XCTAssertEqual(weeks.first?.date, DayMath.addDays("2026-03-07", -89))
+        XCTAssertEqual(weeks.reduce(0) { $0 + $1.total }, 7)
+        XCTAssertTrue(weeks.allSatisfy(\.isRange))
+        XCTAssertTrue(DailyLearningActivity.weekly([]).isEmpty)
+    }
 }

@@ -26,14 +26,14 @@ struct MeView: View {
             PlusSection()
 
             Section {
+                HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
                 Button {
                     historyOpen = true
                 } label: {
-                    ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("學習紀錄", "Learning history"))
+                    ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("me-history")
-                HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 140)
             } header: {
                 Text(L.thisWeek)
             } footer: {

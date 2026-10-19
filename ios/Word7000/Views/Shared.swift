@@ -25,11 +25,19 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
 
     func refreshVoices() async {
         if let task = voicesTask { voices = await task.value; return }
-        let task = Task.detached(priority: .utility) {
-            AVSpeechSynthesisVoice.speechVoices()
-                .filter { !$0.voiceTraits.contains(.isNoveltyVoice) && !$0.voiceTraits.contains(.isPersonalVoice) }
-                .map { SpeechVoiceOption(id: $0.identifier, name: $0.name, language: $0.language, quality: $0.quality.rawValue) }
-                .sorted { $0.name == $1.name ? $0.id < $1.id : $0.name < $1.name }
+        let task = Task.detached(priority: .utility) { () -> [SpeechVoiceOption] in
+            var options: [SpeechVoiceOption] = []
+            for voice in AVSpeechSynthesisVoice.speechVoices() {
+                guard !voice.voiceTraits.contains(.isNoveltyVoice),
+                      !voice.voiceTraits.contains(.isPersonalVoice) else { continue }
+                options.append(SpeechVoiceOption(id: voice.identifier, name: voice.name,
+                                                language: voice.language, quality: Int(voice.quality.rawValue)))
+            }
+            options.sort { a, b in
+                if a.name == b.name { return a.id < b.id }
+                return a.name < b.name
+            }
+            return options
         }
         voicesTask = task
         voices = await task.value

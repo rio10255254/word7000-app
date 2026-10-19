@@ -19,13 +19,19 @@ on:
       - 'src/nativeParity.test.ts'
       - 'scripts/export-native-words.mjs'
       - '.github/workflows/ios-native.yml'
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      checks:
+        description: 'Full regression, or focused bilingual screenshots after copy-only changes'
+        type: choice
+        options: ['all', 'copy']
+        default: 'all'
 
 permissions:
   contents: read
 
 concurrency:
-  group: ios-native-${{ github.ref }}
+  group: ios-native-${{ github.ref }}-${{ inputs.checks || 'all' }}
   cancel-in-progress: true
 
 jobs:
@@ -111,6 +117,8 @@ jobs:
           echo "SIMULATOR_UDID=$UDID" >> "$GITHUB_ENV"
 
       - name: Build and run the UI walk-through
+        env:
+          CHECKS: ${{ inputs.checks }}
         run: |
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
@@ -119,11 +127,16 @@ jobs:
           xcrun simctl launch "$SIMULATOR_UDID" com.apple.mobileslideshow || true
           xcrun simctl addmedia "$SIMULATOR_UDID" "$RUNNER_TEMP"/scan-fixtures/*
           set +e
+          TEST_SELECTION=()
+          if [ "$CHECKS" = "copy" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
+          fi
           xcodebuild test \
             -project ios/Word7000.xcodeproj \
             -scheme Word7000 \
             -destination "id=$SIMULATOR_UDID" \
             -parallel-testing-enabled NO \
+            "${TEST_SELECTION[@]}" \
             -resultBundlePath "$RUNNER_TEMP/Word7000.xcresult" \
             CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
           status=$?
@@ -155,7 +168,7 @@ jobs:
 
   publish-screenshots:
     needs: native
-    if: always() && github.event_name != 'pull_request'
+    if: always() && github.event_name != 'pull_request' && inputs.checks != 'copy'
     runs-on: ubuntu-latest
     permissions:
       contents: write

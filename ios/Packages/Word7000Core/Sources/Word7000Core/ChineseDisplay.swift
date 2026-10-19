@@ -97,6 +97,9 @@ public enum ChineseDisplay {
         let value = meaningParts(meaning).compactMap { part -> String? in
             let corrected = part.replacingOccurrences(of: "調整", with: "tiáo zhěng")
                 .replacingOccurrences(of: "敢於", with: "gǎn yú")
+                .replacingOccurrences(of: "為了", with: "wèi le")
+                .replacingOccurrences(of: "因為", with: "yīn wèi")
+                .replacingOccurrences(of: "為什麼", with: "wèi shén me")
             #if canImport(Darwin) || os(Linux)
             return corrected.applyingTransform(.mandarinToLatin, reverse: false)?
                 .split(whereSeparator: { $0.isWhitespace }).joined(separator: " ").lowercased()

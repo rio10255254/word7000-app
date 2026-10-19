@@ -73,7 +73,7 @@ enum L {
     // Speaking
     static var speakingPrompt: String { t("用英文回答", "Answer in Chinese") }
     static var spokeIt: String { t("我說完了", "I answered") }
-    static var showSample: String { t("看參考回答", "Show a sample answer") }
+    static var showSample: String { t("看參考回答", "Sample answer") }
     static var sampleAnswer: String { t("參考回答", "Sample answer") }
     static var speakingFinished: String { t("口說練習完成", "Speaking practice complete") }
     static func speakingScore(_ count: Int) -> String { t("完成 \(count) 張口說卡", "\(count) prompts answered") }

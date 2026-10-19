@@ -47,6 +47,7 @@ final class SpeakingPracticeTests: XCTestCase {
         #if canImport(Darwin) || os(Linux)
         XCTAssertEqual(ChineseDisplay.pronunciationWithTones("我的；你好"), "wǒ de；nǐ hǎo")
         XCTAssertEqual(ChineseDisplay.pronunciationWithTones("調整"), "tiáo zhěng")
+        XCTAssertEqual(ChineseDisplay.pronunciationWithTones("為了；因為；為什麼"), "wèi le；yīn wèi；wèi shén me")
         #endif
     }
 }

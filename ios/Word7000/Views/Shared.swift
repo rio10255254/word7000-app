@@ -1,19 +1,51 @@
 import AVFoundation
+import Observation
 import SwiftUI
 
 /// Reads a word aloud with the system voice; works offline.
 @MainActor
-final class Speaker {
+@Observable
+final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     static let shared = Speaker()
+    private(set) var activeText: String?
+    private(set) var activeLanguage: String?
+    @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
+    @ObservationIgnored
     private let synthesizer = AVSpeechSynthesizer()
 
+    override init() {
+        super.init()
+        synthesizer.delegate = self
+    }
+
     func speak(_ text: String, language: String = "en-US") {
+        if activeText == text, activeLanguage == language { stop(); return }
+        stop()
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-        synthesizer.stopSpeaking(at: .immediate)
+        try? AVAudioSession.sharedInstance().setActive(true)
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
+        activeUtterance = utterance
+        activeText = text
+        activeLanguage = language
         synthesizer.speak(utterance)
+    }
+
+    func stop() {
+        activeUtterance = nil
+        activeText = nil
+        activeLanguage = nil
+        synthesizer.stopSpeaking(at: .immediate)
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        if activeUtterance === utterance { stop() }
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        if activeUtterance === utterance { stop() }
     }
 }
 
@@ -22,14 +54,15 @@ struct SpeakButton: View {
     var language: String = "en-US"
 
     var body: some View {
+        let playing = Speaker.shared.activeText == text && Speaker.shared.activeLanguage == language
         Button { Speaker.shared.speak(text, language: language) } label: {
-            Image(systemName: "speaker.wave.2.fill")
+            Image(systemName: playing ? "stop.fill" : "speaker.wave.2.fill")
                 .font(.title3)
                 .foregroundStyle(Palette.accent)
-                .frame(width: 40, height: 40)
+                .frame(width: 44, height: 44)
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(L.pronounce)
+        .buttonStyle(SoftPressStyle())
+        .accessibilityLabel(playing ? L.t("停止播放", "Stop audio") : L.pronounce)
     }
 }
 

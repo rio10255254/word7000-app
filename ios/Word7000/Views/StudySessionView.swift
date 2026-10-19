@@ -6,11 +6,23 @@ import Word7000Core
 struct StudySessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .largeTitle) private var promptSize = 42.0
     var startQuiz: () -> Void
 
     @State private var revealed = false
     @State private var dragOffset: CGFloat = 0
     @State private var feedback = 0
+    @State private var phase: CardPhase = .idle
+    @State private var cardOpacity = 1.0
+    @State private var armed = false
+    @State private var cardWidth: CGFloat = 340
+    @State private var lifetime = UUID()
+    @State private var visible = true
+
+    private enum CardPhase { case idle, dragging, leaving, arriving }
+    private var committing: Bool { phase == .leaving || phase == .arriving }
+    private var threshold: CGFloat { min(110, cardWidth * 0.28) }
 
     var body: some View {
         NavigationStack {
@@ -23,8 +35,17 @@ struct StudySessionView: View {
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
                         SessionBar(fraction: Double(session.done) / Double(max(1, session.total)))
                             .padding(.top, 4)
-                        card(word: word)
+                        GeometryReader { proxy in
+                            card(word: word)
+                                .id("\(word.id)-\(session.index)")
+                                .onAppear {
+                                    cardWidth = proxy.size.width
+                                    enterCard()
+                                }
+                                .onChange(of: proxy.size.width) { _, value in cardWidth = value }
+                        }
                         controls
+                            .disabled(committing)
                     }
                 }
             }
@@ -44,22 +65,24 @@ struct StudySessionView: View {
                         Text(L.cardCount(done: session.done, total: session.total))
                             .font(.rounded(.subheadline, weight: .semibold))
                             .monospacedDigit()
+                            .accessibilityIdentifier("study-position")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { model.undoStudyGrade() } label: { Image(systemName: "arrow.uturn.backward") }
-                        .disabled(!model.canUndoStudy)
+                        .disabled(!model.canUndoStudy || committing)
                         .accessibilityLabel(L.undo)
                         .accessibilityIdentifier("study-undo")
                 }
             }
         }
-        .onAppear { model.ensureStudySession() }
+        .onAppear { visible = true; model.ensureStudySession() }
+        .onDisappear { visible = false; lifetime = UUID(); Speaker.shared.stop(); model.saveNow() }
         .onChange(of: model.studySession?.index) { _, _ in
-            revealed = false
-            dragOffset = 0
+            if !committing { revealed = false; dragOffset = 0; armed = false }
         }
-        .sensoryFeedback(.impact(weight: .light), trigger: feedback)
+        .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.impact(weight: .light), trigger: armed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
     }
 
     private func card(word: WordEntry) -> some View {
@@ -72,56 +95,70 @@ struct StudySessionView: View {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
                         .font(.title3)
                         .foregroundStyle(progress.favorite ? Palette.review : Palette.tertiaryLabel)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 44, height: 44)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(SoftPressStyle())
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
                 SpeakButton(text: face.speakText, language: face.speakLanguage)
             }
 
-            Spacer(minLength: 0)
-            VStack(spacing: 6) {
-                Text(face.prompt)
-                    .font(.roundedSize(46, weight: .bold))
-                    .minimumScaleFactor(0.4)
-                    .lineLimit(3)
-                    .multilineTextAlignment(.center)
-                if !face.promptDetail.isEmpty {
-                    Text(face.promptDetail)
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            Spacer(minLength: 0)
-
-            if revealed {
-                WordAnswer(word: word)
-                    .transition(.opacity.combined(with: .move(edge: .bottom)))
-            } else {
-                Text(L.tapToReveal)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+            ScrollView {
+                VStack(spacing: 28) {
+                    VStack(spacing: 10) {
+                        Text(face.prompt)
+                            .font(.roundedSize(promptSize, weight: .bold))
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(4)
+                            .multilineTextAlignment(.center)
+                            .accessibilityIdentifier("study-prompt")
+                        if !face.promptDetail.isEmpty {
+                            Text(face.promptDetail).font(.title3).foregroundStyle(.secondary)
+                        }
+                    }
                     .frame(maxWidth: .infinity)
-                    .padding(.bottom, 8)
+                    .padding(.top, revealed ? 18 : 52)
+                    .padding(.bottom, 12)
+
+                    if revealed {
+                        WordAnswer(word: word)
+                            .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
+                    } else {
+                        Text(L.tapToReveal).font(.subheadline).foregroundStyle(.secondary)
+                            .padding(.vertical, 24)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 20)
             }
+            .scrollIndicators(.hidden)
+            .scrollDisabled(phase == .dragging || committing)
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
         .overlay(alignment: .top) { swipeBadge }
         .offset(x: dragOffset)
-        .rotationEffect(.degrees(Double(dragOffset) / 28))
+        .opacity(cardOpacity)
         .contentShape(Rectangle())
         .onTapGesture { reveal() }
-        .gesture(
+        .simultaneousGesture(
             DragGesture(minimumDistance: 20)
-                .onChanged { value in dragOffset = value.translation.width }
+                .onChanged { value in
+                    guard !committing else { return }
+                    guard phase == .dragging || abs(value.translation.width) > abs(value.translation.height) * 1.25 else { return }
+                    phase = .dragging
+                    dragOffset = value.translation.width
+                    armed = abs(dragOffset) >= threshold
+                }
                 .onEnded { value in
-                    if abs(value.translation.width) > 110 {
+                    guard phase == .dragging else { return }
+                    let fast = abs(value.translation.width) > 30 && abs(value.predictedEndTranslation.width) > threshold * 1.5
+                    if armed || fast {
                         grade(value.translation.width > 0 ? .known : .review)
                     } else {
-                        withAnimation(.spring) { dragOffset = 0 }
+                        armed = false
+                        phase = .idle
+                        withAnimation(reduceMotion ? nil : Motion.card) { dragOffset = 0 }
                     }
                 }
         )
@@ -169,19 +206,43 @@ struct StudySessionView: View {
     }
 
     private func reveal() {
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.86)) { revealed = true }
+        guard !committing, phase != .dragging, !revealed else { return }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { revealed = true }
     }
 
     private func grade(_ grade: StudyGrade) {
-        feedback += 1
-        withAnimation(.easeIn(duration: 0.18)) {
-            dragOffset = grade == .known ? 700 : -700
+        guard !committing, let wordId = model.studySession?.currentCardId else { return }
+        let token = lifetime
+        let source = model.studySession?.sourceKey
+        if !armed { feedback += 1 }
+        phase = .leaving
+        Speaker.shared.stop()
+        withAnimation(reduceMotion ? .easeOut(duration: 0.12) : .easeIn(duration: 0.25), completionCriteria: .removed) {
+            if reduceMotion { cardOpacity = 0 } else { dragOffset = (grade == .known ? 1 : -1) * (cardWidth + 60) }
+        } completion: {
+            guard visible, token == lifetime, model.studySession?.sourceKey == source,
+                  model.studySession?.currentCardId == wordId else { return }
+            var transaction = Transaction(animation: nil)
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                phase = .arriving
+                dragOffset = reduceMotion ? 0 : 18
+                cardOpacity = 0
+                revealed = false
+                armed = false
+                model.gradeCurrentCard(grade, expectedWordId: wordId)
+            }
+            if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; dragOffset = 0 }
         }
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(170))
-            model.gradeCurrentCard(grade)
+    }
+
+    private func enterCard() {
+        guard phase == .arriving else { return }
+        withAnimation(reduceMotion ? .easeOut(duration: 0.15) : Motion.card, completionCriteria: .logicallyComplete) {
+            cardOpacity = 1
             dragOffset = 0
-            revealed = false
+        } completion: {
+            if visible { phase = .idle }
         }
     }
 }
@@ -216,16 +277,20 @@ struct WordAnswer: View {
             }
             if !face.examplePrimary.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(face.examplePrimary)
+                    HStack {
+                        Text(L.example).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                        Spacer()
+                        SpeakButton(text: face.examplePrimary, language: face.speakLanguage)
+                    }
+                    Text(face.examplePrimary).lineSpacing(4)
                     if !face.exampleSecondary.isEmpty {
                         Text(face.exampleSecondary)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                 }
-                .padding(14)
+                .padding(.top, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Palette.fill, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

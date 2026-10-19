@@ -25,6 +25,9 @@ struct RootView: View {
     @State private var tab: AppTab = .today
     @State private var activity: Activity?
     @State private var signInForScan = false
+    @State private var pendingActivity: Activity?
+    @State private var scanAfterSignIn = false
+    @State private var plansAfterRecap = false
 
     var body: some View {
         TabView(selection: $tab) {
@@ -58,23 +61,23 @@ struct RootView: View {
             PaywallView(reason: reason)
         }
         .sheet(isPresented: Binding(get: { plus.trialRecapPending && plus.paywallReason == nil && activity == nil && !signInForScan },
-                                    set: { if !$0 { plus.markTrialRecapShown() } })) {
-            TrialRecapView(seePlans: {
-                Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(450))
-                    plus.paywallReason = .general
-                }
-            })
+                                    set: { if !$0 { plus.markTrialRecapShown() } }), onDismiss: {
+            if plansAfterRecap { plansAfterRecap = false; plus.paywallReason = .general }
+        }) {
+            TrialRecapView(seePlans: { plansAfterRecap = true })
         }
-        .sheet(isPresented: $signInForScan) {
+        .sheet(isPresented: $signInForScan, onDismiss: {
+            if scanAfterSignIn { scanAfterSignIn = false; plus.require(.scan) { activity = .scan } }
+        }) {
             SignInSheet(reason: .scan, onSignedIn: {
-                Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(450))
-                    plus.require(.scan) { activity = .scan }
-                }
+                scanAfterSignIn = true
             })
         }
-        .fullScreenCover(item: $activity) { activity in
+        .fullScreenCover(item: $activity, onDismiss: {
+            guard let next = pendingActivity else { return }
+            pendingActivity = nil
+            activity = next
+        }) { activity in
             switch activity {
             case .study:
                 StudySessionView(startQuiz: { switchTo(.quiz) })
@@ -94,6 +97,17 @@ struct RootView: View {
                 ScanView(onStudy: { switchTo(.study) })
             }
         }
+        .sensoryFeedback(.selection, trigger: tab) { _, _ in model.settings.hapticsEnabled ?? true }
+        .safeAreaInset(edge: .top) {
+            if model.storageFailed {
+                HStack {
+                    Label(A.saveFailed, systemImage: "exclamationmark.triangle.fill").font(.footnote)
+                    Button(L.t("重試", "Retry")) { model.saveNow() }
+                }
+                .padding(12)
+                .background(Palette.surface)
+            }
+        }
     }
 
     /// Scanned banks live in the learner's account, so scanning asks a guest
@@ -108,13 +122,10 @@ struct RootView: View {
 
     /// Closes the current full-screen activity and opens another.
     private func switchTo(_ next: Activity) {
-        activity = nil
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(450))
-            if next == .study, model.studySession == nil || model.studySession?.isComplete == true {
-                model.startStudySession()
-            }
-            activity = next
+        if next == .study, model.studySession == nil || model.studySession?.isComplete == true {
+            model.startStudySession()
         }
+        pendingActivity = next
+        activity = nil
     }
 }

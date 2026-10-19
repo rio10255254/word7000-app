@@ -31,7 +31,12 @@ final class AccountModel {
     var configured: Bool { client != nil }
     var isPermanent: Bool { session.map { !$0.user.anonymous } ?? false }
     var email: String? { isPermanent ? session?.user.email : nil }
-    var displayName: String? { isPermanent ? (session?.user.displayName ?? session?.user.email) : nil }
+    var displayName: String? {
+        guard isPermanent else { return nil }
+        if let name = session?.user.displayName, !name.isEmpty, !name.contains("@") { return name }
+        return L.t("我的學習帳號", "My learning account")
+    }
+    var cloudSyncEnabled: Bool { plus?.decide(.sync) == .allowed }
 
     /// Uploading to the cloud is a Plus feature after the trial.
     @ObservationIgnored weak var plus: PlusModel?
@@ -42,6 +47,7 @@ final class AccountModel {
     @ObservationIgnored private var flushing = false
     @ObservationIgnored private var retryAttempt = 0
     @ObservationIgnored private var lastHeartbeat: Date?
+    @ObservationIgnored private var identityGeneration = 0
 
     static let redirectURL = "https://word7000-app.rio10255254.workers.dev/auth-native.html"
     private static let sessionKey = "session"
@@ -112,6 +118,7 @@ final class AccountModel {
     }
 
     private func store(_ session: AuthSession?) {
+        if self.session?.user.id != session?.user.id { identityGeneration += 1 }
         self.session = session
         if let session, let data = try? JSONEncoder().encode(session) {
             Keychain.write(data, for: Self.sessionKey)
@@ -127,18 +134,28 @@ final class AccountModel {
     /// left behind by a different permanent account never is.
     private func activate(_ newSession: AuthSession, fallbackEmail: String? = nil) async {
         guard let client else { return }
+        if let owner = app.settings.localOwnerId, owner != newSession.user.id {
+            guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: owner) else {
+                status = .error(A.saveFailed)
+                message = A.saveFailed
+                return
+            }
+        }
+        flushTask?.cancel()
         var activeSession = newSession
         if activeSession.user.email == nil, let fallbackEmail { activeSession.user.email = fallbackEmail }
         store(activeSession)
+        let generation = identityGeneration
 
         let ownerId = app.settings.localOwnerId
         let carryLocal = ownerId == nil || ownerId == activeSession.user.id || (app.settings.localOwnerIsAnonymous ?? true)
         let outbox = Outbox.load(userId: activeSession.user.id)
         let cloud = try? await client.loadProfile(session: activeSession)
+        guard generation == identityGeneration else { return }
 
         let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.progress : nil, outbox?.progress])
         let sets = CustomSetState.merge([cloud?.customSets, carryLocal ? app.customSets : nil, outbox?.customSets])
-        app.replaceData(progress: progress, customSets: sets)
+        app.replaceData(progress: progress, customSets: sets, preserveSession: carryLocal)
         app.settings.localOwnerId = activeSession.user.id
         app.settings.localOwnerIsAnonymous = activeSession.user.anonymous
         if !activeSession.user.anonymous { app.settings.permanentAccountUsed = true }
@@ -182,6 +199,11 @@ final class AccountModel {
     /// file and is retried with growing delays (3 s … 5 min).
     func flush() async {
         guard let client, let current = session, !flushing, dirty.any else { return }
+        guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: current.user.id) else {
+            status = .error(A.saveFailed)
+            message = A.saveFailed
+            return
+        }
         if let plus, plus.decide(.sync) != .allowed {
             // Local data is untouched; the changes wait and go up after subscribing.
             status = .ready
@@ -189,20 +211,25 @@ final class AccountModel {
             return
         }
         flushing = true
-        defer { flushing = false }
+        let generation = identityGeneration
+        defer {
+            flushing = false
+            if generation != identityGeneration, dirty.any { enqueue(SyncDirty()) }
+        }
         let sending = dirty
         dirty = SyncDirty()
         let progress = app.progress, sets = app.customSets
-        Outbox(progress: sending.progress ? progress : nil, customSets: sending.customSets ? sets : nil).save(userId: current.user.id)
         status = .syncing
         do {
             let valid = try await validSession(client: client, current)
             try await client.saveProfile(progress: sending.progress ? progress : nil, customSets: sending.customSets ? sets : nil, session: valid)
+            guard generation == identityGeneration else { return }
             retryAttempt = 0
-            if !dirty.any { Outbox.clear(userId: current.user.id) }
+            // Keep the local account copy after upload, including after the trial.
             status = .ready
             message = valid.user.anonymous ? A.guestSaved : A.synced
         } catch {
+            guard generation == identityGeneration else { return }
             dirty.formUnion(sending)
             status = .error(A.savedLocally)
             message = A.savedLocally
@@ -217,8 +244,10 @@ final class AccountModel {
     }
 
     private func validSession(client: SupabaseClient, _ current: AuthSession) async throws -> AuthSession {
+        guard session?.user.id == current.user.id else { throw CancellationError() }
         guard current.needsRefresh() else { return current }
         let refreshed = try await client.refresh(refreshToken: current.refreshToken)
+        guard session?.user.id == current.user.id else { throw CancellationError() }
         store(refreshed)
         return refreshed
     }
@@ -374,10 +403,17 @@ final class AccountModel {
         guard let client, let current = session else { return }
         busy = true
         defer { busy = false }
+        guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: current.user.id) else {
+            status = .error(A.saveFailed)
+            message = A.saveFailed
+            return
+        }
         dirty = SyncDirty(progress: true, customSets: true)
         await flush()
         try? await client.signOut(session: current)
+        flushTask?.cancel()
         store(nil)
+        dirty = SyncDirty()
         // This iPhone goes back to a fresh guest; the account's data stays in the cloud.
         app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
         app.settings.localOwnerId = nil
@@ -407,22 +443,23 @@ final class AccountModel {
 }
 
 /// Changes that have not reached the cloud yet, kept per user on disk.
-struct Outbox: Codable {
-    var progress: ProgressState?
-    var customSets: CustomSetState?
+typealias Outbox = AccountBackup
 
-    private static func name(_ userId: String) -> String { "outbox-\(userId).json" }
+extension AccountBackup {
 
     static func load(userId: String) -> Outbox? {
-        Persistence.live.load(Outbox.self, from: name(userId))
+        Persistence.live.load(Self.self, from: fileName(userId: userId))
+            ?? Persistence.live.load(Self.self, from: "outbox-\(userId).json")
     }
 
-    func save(userId: String) {
-        Persistence.live.save(self, to: Self.name(userId))
+    @discardableResult
+    func save(userId: String) -> Bool {
+        Persistence.live.save(self, to: Self.fileName(userId: userId))
     }
 
     static func clear(userId: String) {
-        try? FileManager.default.removeItem(at: Persistence.live.directory.appendingPathComponent(name(userId)))
+        try? Persistence.live.store.remove(fileName(userId: userId))
+        try? Persistence.live.store.remove("outbox-\(userId).json")
     }
 }
 
@@ -443,7 +480,8 @@ enum A {
     static var localOnly: String { L.t("進度保存在這支 iPhone", "Progress is saved on this iPhone") }
     static var preparing: String { L.t("正在準備…", "Getting ready…") }
     static var guestSaved: String { L.t("進度已自動備份", "Progress backed up automatically") }
-    static var signedIn: String { L.t("已登入並同步", "Signed in and synced") }
+    static var signedIn: String { L.t("已登入，正在確認備份", "Signed in; checking backup") }
+    static var saveFailed: String { L.t("目前無法儲存，請確認手機空間後重試。", "Unable to save. Check your iPhone storage and try again.") }
     static var synced: String { L.t("已同步", "Synced") }
     static var savedLocally: String { L.t("進度已存在手機，稍後自動同步", "Saved on this iPhone; will sync shortly") }
     static var offline: String { L.t("目前離線，進度先存在手機", "Offline; progress is saved on this iPhone") }

@@ -17,8 +17,8 @@ struct SignInSheet: View {
 
         var body: String {
             switch self {
-            case .general: L.t("換手機或重裝 App 時，學習進度、收藏和字庫都會跟著你。", "Your progress, saved words and banks follow you to a new iPhone.")
-            case .scan: L.t("掃描的字庫會存在你的帳號，換手機也不會不見。", "Scanned banks are kept in your account, so they are never lost.")
+            case .general: L.t("保留這支手機上的學習紀錄。Plus 與試用期間可同步到其他裝置。", "Keep your learning records on this iPhone. Plus and the trial include sync across devices.")
+            case .scan: L.t("將掃描字庫與你的帳號連結。Plus 與試用期間會提供雲端同步。", "Link scanned banks to your account. Cloud sync is included with Plus and during the trial.")
             }
         }
 
@@ -195,7 +195,7 @@ struct AccountSection: View {
                         .font(.system(size: 36))
                         .foregroundStyle(Palette.accent)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(account.displayName ?? L.t("已登入", "Signed in")).font(.headline)
+                        Text(account.displayName ?? L.t("已登入", "Signed in")).font(.headline).lineLimit(2)
                         statusLine
                     }
                 }
@@ -210,7 +210,7 @@ struct AccountSection: View {
                             .foregroundStyle(Palette.accent)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(L.t("登入或建立帳號", "Sign in or create an account")).font(.headline).foregroundStyle(.primary)
-                            Text(L.t("換手機也能保留進度", "Keep your progress on any iPhone")).font(.subheadline).foregroundStyle(.secondary)
+                            Text(L.t("保留紀錄與管理備份", "Keep records and manage backup")).font(.subheadline).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
@@ -225,7 +225,7 @@ struct AccountSection: View {
         .confirmationDialog(L.t("要登出嗎？", "Sign out?"), isPresented: $confirmSignOut, titleVisibility: .visible) {
             Button(L.t("登出", "Sign out"), role: .destructive) { Task { await account.signOut() } }
         } message: {
-            Text(L.t("進度已存在帳號裡，之後登入就會回來。這支 iPhone 會改用新的訪客進度。", "Your progress stays in your account and returns when you sign in. This iPhone starts fresh as a guest."))
+            Text(L.t("會先保留這個帳號在本機的紀錄，再切換到訪客。跨裝置備份請確認同步狀態。", "Your account's records will be kept on this iPhone before switching to a guest. Check sync status for backup on other devices."))
         }
         .alert(L.t("刪除帳號與所有資料？", "Delete your account and all data?"), isPresented: $confirmDelete) {
             Button(L.cancel, role: .cancel) {}
@@ -252,7 +252,8 @@ struct AccountSection: View {
             case .error:
                 Image(systemName: "exclamationmark.icloud").foregroundStyle(Palette.review)
             default:
-                Image(systemName: "checkmark.icloud").foregroundStyle(Palette.known)
+                Image(systemName: account.cloudSyncEnabled ? "checkmark.icloud" : "iphone")
+                    .foregroundStyle(account.cloudSyncEnabled ? Palette.known : .secondary)
             }
             Text(account.message)
         }

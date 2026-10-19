@@ -30,12 +30,12 @@ public enum QuizBuilder {
     /// how plausible they are next to the answer: same part of speech first,
     /// then the same level. Duplicate texts are dropped so two words that
     /// share a meaning can never both look correct.
-    public static func options(vocabulary: PreparedVocabulary, wordId: String, seed: String = SeededRandom.runtimeSeed(), mode: QuizAnswerMode = .meaning) -> [QuizOption] {
+    public static func options(vocabulary: PreparedVocabulary, wordId: String, seed: String = SeededRandom.runtimeSeed(), mode: QuizAnswerMode = .meaning, concise: Bool = false) -> [QuizOption] {
         let words = vocabulary.words
         let correctIndex = vocabulary.index(of: wordId) ?? 0
         guard words.indices.contains(correctIndex) else { return [] }
         let correctWord = words[correctIndex]
-        let correctText = answerText(correctWord, mode: mode)
+        let correctText = answerText(correctWord, mode: mode, concise: concise)
         let correctPos = primaryPartOfSpeech(correctWord.partOfSpeech)
 
         let candidates = SeededRandom.sampleIndexes(
@@ -52,15 +52,19 @@ public enum QuizBuilder {
         var used: Set<String> = [correctText]
         var wrong: [QuizOption] = []
         for candidate in candidates where wrong.count < optionCount - 1 {
-            let text = answerText(candidate.word, mode: mode)
+            if concise {
+                let targetSenses = Set(ChineseDisplay.meaningParts(correctWord.meaningZh))
+                if !targetSenses.isDisjoint(with: ChineseDisplay.meaningParts(candidate.word.meaningZh)) { continue }
+            }
+            let text = answerText(candidate.word, mode: mode, concise: concise)
             guard !text.isEmpty, used.insert(text).inserted else { continue }
             wrong.append(QuizOption(text: text, correct: false))
         }
         return SeededRandom.shuffle([QuizOption(text: correctText, correct: true)] + wrong, seed: "\(seed):options:\(wordId)")
     }
 
-    public static func answerText(_ word: WordEntry, mode: QuizAnswerMode) -> String {
-        mode == .word ? word.word : word.meaningZh
+    public static func answerText(_ word: WordEntry, mode: QuizAnswerMode, concise: Bool = false) -> String {
+        mode == .word ? word.word : concise ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? word.meaningZh) : word.meaningZh
     }
 
     /// vt, vi and v are all verbs as far as a plausible wrong answer goes.

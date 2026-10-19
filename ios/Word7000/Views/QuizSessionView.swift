@@ -5,6 +5,7 @@ import Word7000Core
 struct QuizSessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var studyMissed: ([String]) -> Void
 
     static let length = 10
@@ -17,11 +18,14 @@ struct QuizSessionView: View {
     @State private var missedIds: [String] = []
     @State private var finished = false
     @State private var seed = SeededRandom.runtimeSeed()
+    @State private var configured = false
 
     var body: some View {
         NavigationStack {
             Group {
-                if questions.isEmpty {
+                if !configured {
+                    QuizConfiguration(start: { start(); configured = true })
+                } else if questions.isEmpty {
                     ContentUnavailableView(L.noQuizWords, systemImage: "checklist")
                 } else if finished {
                     results
@@ -47,18 +51,25 @@ struct QuizSessionView: View {
                             .monospacedDigit()
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    if chosen != nil, !finished {
+                        Button(index + 1 >= questions.count ? L.seeResults : L.nextQuestion, action: next)
+                            .fontWeight(.semibold)
+                            .accessibilityIdentifier("quiz-next-toolbar")
+                    }
+                }
             }
         }
-        .onAppear { if questions.isEmpty { start() } }
+        .onDisappear { Speaker.shared.stop() }
         .sensoryFeedback(trigger: chosen) { _, new in
-            guard let new else { return nil }
+            guard let new, model.settings.hapticsEnabled ?? true else { return nil }
             return new.correct ? .success : .error
         }
     }
 
     private func start() {
         seed = SeededRandom.runtimeSeed()
-        questions = model.quizQuestions(count: Self.length, seed: seed)
+        questions = model.quizQuestions(count: model.settings.quizQuestionCount, seed: seed)
         index = 0
         correctCount = 0
         missedIds = []
@@ -69,29 +80,27 @@ struct QuizSessionView: View {
     private func loadOptions() {
         chosen = nil
         guard questions.indices.contains(index) else { return }
-        options = QuizBuilder.options(vocabulary: model.bank, wordId: questions[index].id, seed: seed, mode: model.quizMode)
+        options = QuizBuilder.options(vocabulary: model.bank, wordId: questions[index].id, seed: seed, mode: model.quizMode, concise: true)
     }
 
     // MARK: Question
 
     private func question(_ word: WordEntry) -> some View {
         let face = model.face(word)
-        return VStack(spacing: 16) {
+        return ScrollView {
+          VStack(spacing: 16) {
             SessionBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)))
                 .padding(.top, 4)
 
             VStack(spacing: 6) {
-                Text(face.prompt)
+                Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
                     .font(.roundedSize(42, weight: .bold))
                     .minimumScaleFactor(0.4)
                     .lineLimit(3)
-                if !face.promptDetail.isEmpty {
-                    Text(face.promptDetail).foregroundStyle(.secondary)
-                }
             }
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 28)
+            .padding(.vertical, 16)
             .overlay(alignment: .topTrailing) { SpeakButton(text: face.speakText, language: face.speakLanguage) }
 
             VStack(spacing: 10) {
@@ -101,10 +110,8 @@ struct QuizSessionView: View {
                 }
             }
 
-            Spacer(minLength: 0)
-
-            if let chosen {
-                if !chosen.correct, !face.examplePrimary.isEmpty {
+            if chosen != nil {
+                if !face.examplePrimary.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(face.examplePrimary)
                         Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
@@ -113,6 +120,13 @@ struct QuizSessionView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Palette.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
+            }
+          }
+          .padding(.bottom, 16)
+        }
+        .id(index)
+        .safeAreaInset(edge: .bottom) {
+            if let chosen {
                 Button(action: next) {
                     Text(index + 1 >= questions.count ? L.seeResults : L.nextQuestion)
                         .font(.headline)
@@ -120,6 +134,8 @@ struct QuizSessionView: View {
                 }
                 .prominentAction(tint: chosen.correct ? Palette.known : Palette.accent)
                 .accessibilityIdentifier("quiz-next")
+                .padding(.vertical, 8)
+                .background(Palette.background)
             }
         }
     }
@@ -148,19 +164,22 @@ struct QuizSessionView: View {
                 in: RoundedRectangle(cornerRadius: 18, style: .continuous)
             )
         }
-        .buttonStyle(.plain)
-        .disabled(answered)
+        .buttonStyle(SoftPressStyle())
+        .allowsHitTesting(!answered)
+        .accessibilityAddTraits(isChosen ? .isSelected : [])
     }
 
     private func answer(_ option: QuizOption) {
         guard chosen == nil, questions.indices.contains(index) else { return }
-        withAnimation(.snappy) { chosen = option }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { chosen = option }
         let wordId = questions[index].id
         model.recordQuizAnswer(wordId: wordId, correct: option.correct)
         if option.correct { correctCount += 1 } else { missedIds.append(wordId) }
     }
 
     private func next() {
+        guard chosen != nil else { return }
+        Speaker.shared.stop()
         if index + 1 >= questions.count {
             withAnimation { finished = true }
         } else {

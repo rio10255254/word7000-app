@@ -2,7 +2,7 @@ import Foundation
 import Word7000Core
 
 /// Settings that are not part of learning progress.
-struct AppSettings: Codable, Equatable {
+struct AppSettings: Codable, Equatable, Sendable {
     var theme: AppearancePreference = .system
     var activeBankId: String = WordBanks.coreBankId
     var studyFilter = FilterSelection()
@@ -25,13 +25,15 @@ struct AppSettings: Codable, Equatable {
     var studyMode: StudyMode?
     /// Lock screen study reminders; nil means on.
     var streakReminder: Bool?
+    var onboardingComplete: Bool?
+    var hapticsEnabled: Bool?
 }
 
-struct FilterSelection: Codable, Equatable, Hashable {
+struct FilterSelection: Codable, Equatable, Hashable, Sendable {
     var status: LibraryFilter = .all
     var level = "all"
     var initial = "all"
-    var sort: LibrarySort = .default
+    var sort: LibrarySort = .alphabetical
 
     var isActive: Bool { status != .all || level != "all" || initial != "all" }
 
@@ -42,8 +44,22 @@ struct FilterSelection: Codable, Equatable, Hashable {
 
 /// Small JSON documents in Application Support. Each is written atomically,
 /// so a crash mid-write can never leave a half-written file behind.
-struct Persistence {
+struct AppSnapshot: Codable, Sendable {
+    var progress: ProgressState
+    var customSets: CustomSetState
+    var settings: AppSettings
+    var studySession: StudySession?
+    var sessionDay: String?
+}
+
+struct Persistence: Sendable {
     let directory: URL
+    let store: LearningFileStore
+
+    init(directory: URL) {
+        self.directory = directory
+        self.store = LearningFileStore(directory: directory)
+    }
 
     static let live: Persistence = {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -51,20 +67,16 @@ struct Persistence {
     }()
 
     func load<T: Decodable>(_ type: T.Type, from name: String) -> T? {
-        let url = directory.appendingPathComponent(name)
-        guard let data = try? Data(contentsOf: url) else { return nil }
-        return try? JSONDecoder().decode(T.self, from: data)
+        try? store.load(type, from: name)
     }
 
-    func save<T: Encodable>(_ value: T, to name: String) {
+    @discardableResult
+    func save<T: Encodable>(_ value: T, to name: String) -> Bool {
         do {
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = [.sortedKeys]
-            let data = try encoder.encode(value)
-            try data.write(to: directory.appendingPathComponent(name), options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+            try store.save(value, to: name)
+            return true
         } catch {
-            // Saving is best effort; the next change tries again.
+            return false
         }
     }
 }

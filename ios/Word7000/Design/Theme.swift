@@ -35,6 +35,23 @@ enum Metrics {
     static let gutter: CGFloat = 16
 }
 
+enum Motion {
+    static let card = Animation.spring(response: 0.38, dampingFraction: 0.88)
+    static let reveal = Animation.smooth(duration: 0.3)
+    static let press = Animation.easeOut(duration: 0.12)
+}
+
+struct SoftPressStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? 0.72 : 1)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.97 : 1)
+            .animation(reduceMotion ? nil : Motion.press, value: configuration.isPressed)
+    }
+}
+
 /// A borderless grouped card, the building block of every screen.
 struct CardBackground: ViewModifier {
     var radius: CGFloat = Metrics.cardRadius
@@ -74,7 +91,7 @@ extension View {
     }
 }
 
-enum AppearancePreference: String, Codable, CaseIterable, Identifiable {
+enum AppearancePreference: String, Codable, CaseIterable, Identifiable, Sendable {
     case system, light, dark
 
     var id: String { rawValue }

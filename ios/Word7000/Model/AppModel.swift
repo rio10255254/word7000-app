@@ -14,7 +14,11 @@ final class AppModel {
         didSet { if !replacing { onDataChange?(SyncDirty(progress: true)) } }
     }
     private(set) var customSets: CustomSetState {
-        didSet { if !replacing { onDataChange?(SyncDirty(customSets: true)) } }
+        didSet {
+            preparedCache = nil
+            mergedWordsCache = nil
+            if !replacing { onDataChange?(SyncDirty(customSets: true)) }
+        }
     }
     /// Told about every local change so it can be synced.
     @ObservationIgnored var onDataChange: ((SyncDirty) -> Void)?
@@ -29,12 +33,14 @@ final class AppModel {
 
     // Study session state survives switching tabs.
     private(set) var studySession: StudySession?
+    private(set) var storageFailed = false
     private var studyUndoStack: [(progress: ProgressState, session: StudySession)] = []
     var canUndoStudy: Bool { !studyUndoStack.isEmpty }
 
     @ObservationIgnored private let persistence: Persistence
     @ObservationIgnored private var saveTask: Task<Void, Never>?
     @ObservationIgnored private var preparedCache: (key: String, vocabulary: PreparedVocabulary)?
+    @ObservationIgnored private var mergedWordsCache: [WordEntry]?
 
     init(coreWords: [WordEntry], progress: ProgressState, customSets: CustomSetState, settings: AppSettings, persistence: Persistence, today: String = DayMath.today()) {
         self.coreWords = coreWords
@@ -53,9 +59,10 @@ final class AppModel {
         if arguments.contains("-uiTestingReset") {
             try? FileManager.default.removeItem(at: persistence.directory)
         }
-        var settings = persistence.load(AppSettings.self, from: "settings.json") ?? AppSettings()
-        var progress = persistence.load(ProgressState.self, from: "progress.json") ?? .empty
-        var sets = persistence.load(CustomSetState.self, from: "custom-sets.json") ?? .empty
+        let snapshot = persistence.load(AppSnapshot.self, from: "snapshot.json")
+        var settings = snapshot?.settings ?? persistence.load(AppSettings.self, from: "settings.json") ?? AppSettings()
+        var progress = snapshot?.progress ?? persistence.load(ProgressState.self, from: "progress.json") ?? .empty
+        var sets = snapshot?.customSets ?? persistence.load(CustomSetState.self, from: "custom-sets.json") ?? .empty
 
         if !settings.migratedLegacyData {
             if let legacy = LegacyImport.load() {
@@ -102,6 +109,9 @@ final class AppModel {
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
 
         let model = AppModel(coreWords: words, progress: progress, customSets: sets, settings: settings, persistence: persistence)
+        if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
+            model.restoreStudySession(saved)
+        }
         model.saveNow()
         return model
     }
@@ -116,7 +126,8 @@ final class AppModel {
 
     /// Swaps in merged data (after sign-in or sign-out) without echoing it
     /// back to the sync queue, and drops a session built from the old data.
-    func replaceData(progress newProgress: ProgressState, customSets newSets: CustomSetState) {
+    func replaceData(progress newProgress: ProgressState, customSets newSets: CustomSetState, preserveSession: Bool = false) {
+        let previousSession = preserveSession ? studySession : nil
         replacing = true
         progress = LearningEngine.normalizeForDate(newProgress, today: today)
         customSets = newSets
@@ -126,6 +137,7 @@ final class AppModel {
         }
         studySession = nil
         studyUndoStack = []
+        if let previousSession { restoreStudySession(previousSession) }
         scheduleSave()
     }
 
@@ -159,7 +171,12 @@ final class AppModel {
     // MARK: Word lists and banks
 
     /// Built-in words plus hand-added ones; scanned words only live in their own bank.
-    var allWords: [WordEntry] { WordBanks.mergeCustomWords(base: coreWords, custom: customSets.customWords) }
+    var allWords: [WordEntry] {
+        if let cached = mergedWordsCache { return cached }
+        let words = WordBanks.mergeCustomWords(base: coreWords, custom: customSets.customWords)
+        mergedWordsCache = words
+        return words
+    }
     var vocabularyWords: [WordEntry] { allWords.filter { !WordBanks.isScannedWordId($0.id) } }
 
     var activeSet: CustomVocabSet? {
@@ -294,7 +311,29 @@ final class AppModel {
         guard progress.dailyTarget > 0 else { return 0 }
         return min(1, Double(progress.studiedToday) / Double(progress.dailyTarget))
     }
-    var newWordsLeftToday: Int { max(0, progress.dailyTarget - progress.studiedToday) }
+    var newWordsLeftToday: Int { studyPlan.fresh }
+
+    var studyPlan: (fresh: Int, review: Int, total: Int) {
+        let words: [WordEntry]
+        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete {
+            var seen = Set<String>()
+            words = session.cardIds.dropFirst(session.index).filter { seen.insert($0).inserted }.compactMap { word(id: $0) }
+        } else {
+            words = LearningEngine.buildStudyQueue(words: studyCandidates, state: progress, today: today,
+                                                   limit: nextSessionLimit, seed: "today-plan")
+        }
+        let fresh = words.filter { progress.progress(for: $0.id).status == .new }.count
+        return (fresh, words.count - fresh, words.count)
+    }
+
+    private var nextSessionLimit: Int {
+        max(1, goalDone ? progress.dailyTarget : progress.dailyTarget - progress.studiedToday)
+    }
+
+    var studyCandidates: [WordEntry] {
+        let filter = settings.studyFilter
+        return bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+    }
 
     var primaryActionTitle: String {
         goalDone ? L.extraAction : progress.studiedToday > 0 ? L.continueAction : L.primaryAction
@@ -330,7 +369,16 @@ final class AppModel {
     }
 
     /// The schedule decides what to study, so a session depends only on the bank.
-    var studySourceKey: String { "\(settings.activeBankId)|\(studyMode.rawValue)" }
+    var studySourceKey: String {
+        let filter = settings.studyFilter
+        return "\(settings.activeBankId)|\(studyMode.rawValue)|\(filter.status.rawValue)|\(filter.level)|\(filter.initial)"
+    }
+
+    private func restoreStudySession(_ saved: StudySession) {
+        guard !saved.isComplete, saved.sourceKey == studySourceKey,
+              saved.cardIds.allSatisfy({ bank.index(of: $0) != nil }) else { return }
+        studySession = saved
+    }
 
     func startStudySession(onlyIds: [String]? = nil) {
         let candidates: [WordEntry]
@@ -338,11 +386,13 @@ final class AppModel {
             let wanted = Set(onlyIds)
             candidates = bank.words.filter { wanted.contains($0.id) }
         } else {
-            candidates = bank.words
+            candidates = studyCandidates
         }
-        let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today, limit: max(1, progress.dailyTarget))
+        let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
+                                                  limit: onlyIds == nil ? nextSessionLimit : max(1, candidates.count))
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studyUndoStack = []
+        scheduleSave()
     }
 
     func word(id: String) -> WordEntry? {
@@ -350,8 +400,9 @@ final class AppModel {
         return allWords.first { $0.id == id }
     }
 
-    func gradeCurrentCard(_ grade: StudyGrade) {
+    func gradeCurrentCard(_ grade: StudyGrade, expectedWordId: String? = nil) {
         guard let session = studySession, let cardId = session.currentCardId else { return }
+        guard expectedWordId == nil || expectedWordId == cardId else { return }
         studyUndoStack.append((progress, session))
         if studyUndoStack.count > 20 { studyUndoStack.removeFirst() }
         let changed = grade == .known
@@ -377,8 +428,10 @@ final class AppModel {
     /// Questions favour words the learner has met: due and struggling words
     /// first, then known ones, topped up with new words if there are too few.
     func quizQuestions(count: Int, seed: String) -> [WordEntry] {
-        let seen = bank.words.filter { progress.words[$0.id].map { $0.status != .new } ?? false }
-        let pool = seen.count >= count ? seen : bank.words
+        let filter = settings.quizFilter
+        let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+        let seen = candidates.filter { progress.words[$0.id].map { $0.status != .new } ?? false }
+        let pool = seen.count >= count ? seen : candidates
         return QuizBuilder.session(words: pool, count: count, seed: seed)
     }
 
@@ -469,11 +522,10 @@ final class AppModel {
 
     func saveNow() {
         saveTask?.cancel()
-        let progress = progress, sets = customSets, settings = settings, persistence = persistence
-        Task.detached(priority: .utility) {
-            persistence.save(progress, to: "progress.json")
-            persistence.save(sets, to: "custom-sets.json")
-            persistence.save(settings, to: "settings.json")
+        let snapshot = AppSnapshot(progress: progress, customSets: customSets, settings: settings,
+                                   studySession: studySession, sessionDay: today)
+        persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in
+            Task { @MainActor in self?.storageFailed = !saved }
         }
     }
 }

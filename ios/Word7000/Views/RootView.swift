@@ -28,6 +28,8 @@ struct RootView: View {
     @State private var pendingActivity: Activity?
     @State private var scanAfterSignIn = false
     @State private var plansAfterRecap = false
+    @State private var welcomeOpen = false
+    @State private var studyAfterWelcome = false
 
     var body: some View {
         TabView(selection: $tab) {
@@ -61,7 +63,7 @@ struct RootView: View {
         .sheet(item: Binding(get: { plus.paywallReason }, set: { plus.paywallReason = $0 })) { reason in
             PaywallView(reason: reason)
         }
-        .sheet(isPresented: Binding(get: { plus.trialRecapPending && plus.paywallReason == nil && activity == nil && !signInForScan },
+        .sheet(isPresented: Binding(get: { plus.trialRecapPending && plus.paywallReason == nil && activity == nil && !signInForScan && !welcomeOpen && model.settings.onboardingComplete == true },
                                     set: { if !$0 { plus.markTrialRecapShown() } }), onDismiss: {
             if plansAfterRecap { plansAfterRecap = false; plus.paywallReason = .general }
         }) {
@@ -97,6 +99,25 @@ struct RootView: View {
             case .scan:
                 ScanView(onStudy: { switchTo(.study) })
             }
+        }
+        .fullScreenCover(isPresented: $welcomeOpen, onDismiss: {
+            if studyAfterWelcome { studyAfterWelcome = false; activity = .study }
+        }) {
+            WelcomeView { mode, target, practice in
+                model.settings.onboardingComplete = true
+                model.setStudyMode(mode)
+                model.setDailyTarget(target)
+                if practice { model.startStudySession(limit: 5) }
+                studyAfterWelcome = practice
+                if !practice { tab = .words }
+                welcomeOpen = false
+                model.saveNow()
+            }
+        }
+        .task { welcomeOpen = model.settings.onboardingComplete != true }
+        .onOpenURL { url in
+            guard url.scheme == "word7000", url.host == "study", !welcomeOpen else { return }
+            if activity == nil { activity = .study }
         }
         .sensoryFeedback(.selection, trigger: tab) { _, _ in model.settings.hapticsEnabled ?? true }
         .safeAreaInset(edge: .top) {

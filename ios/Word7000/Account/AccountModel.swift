@@ -276,12 +276,15 @@ final class AccountModel {
     }
 
     /// Registers this iPhone for server-started lock screen cards.
-    func saveLiveActivityDevice(_ row: [String: JSONValue]) {
-        guard let client, let current = session else { return }
-        Task {
-            guard let valid = try? await validSession(client: client, current) else { return }
-            try? await client.saveLiveActivityDevice(row, session: valid)
-        }
+    func saveLiveActivityDevice(_ row: [String: JSONValue]) async -> Bool {
+        guard let client, let current = session else { return false }
+        let generation = identityGeneration
+        do {
+            let valid = try await validSession(client: client, current)
+            guard generation == identityGeneration else { return false }
+            try await client.saveLiveActivityDevice(row, session: valid)
+            return generation == identityGeneration
+        } catch { return false }
     }
 
     // MARK: Sign in

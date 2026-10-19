@@ -112,6 +112,12 @@ final class AppModel {
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
         if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
+        if settings.onboardingComplete == nil {
+            settings.onboardingComplete = snapshot != nil || !progress.words.isEmpty || !sets.sets.isEmpty
+        }
+        if arguments.contains("-uiTestingReset"), !arguments.contains("-uiTestingOnboarding") {
+            settings.onboardingComplete = true
+        }
 
         let model = AppModel(coreWords: words, progress: progress, customSets: sets, settings: settings, persistence: persistence)
         if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
@@ -245,7 +251,7 @@ final class AppModel {
     func saveScannedWords(_ rows: [ReviewedScanWord], intoSet setId: String) -> (setId: String, added: Int, name: String)? {
         guard let set = customSets.sets.first(where: { $0.id == setId }) else { return nil }
         let existing = Set(WordBanks.words(of: set, in: allWords).map { $0.word.lowercased() })
-        let words = WordBanks.buildScannedWords(rows.filter { !existing.contains($0.word.trimmed.lowercased()) }, coreWords: vocabularyWords)
+        let words = WordBanks.buildScannedWords(rows.filter { !existing.contains($0.word.trimmed.lowercased()) }, coreWords: vocabularyWords, requireMatchingExample: true)
         // New words go first in a set, so add them in reverse to keep the
         // order they were printed in.
         customSets = customSets.addingCustomWords(Array(words.reversed()), toSet: setId)
@@ -423,7 +429,7 @@ final class AppModel {
         studySession = saved
     }
 
-    func startStudySession(onlyIds: [String]? = nil) {
+    func startStudySession(onlyIds: [String]? = nil, limit: Int? = nil) {
         let candidates: [WordEntry]
         if let onlyIds {
             let wanted = Set(onlyIds)
@@ -432,7 +438,7 @@ final class AppModel {
             candidates = studyCandidates
         }
         let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
-                                                  limit: onlyIds == nil ? nextSessionLimit : max(1, candidates.count))
+                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)))
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studyUndoStack = []
         scheduleSave()

@@ -51,6 +51,10 @@ final class ScanPickerTests: XCTestCase {
             save.tap()
             XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
             snapshot(app, name: "scan-photo-\(index)-saved")
+            app.buttons["scan-start-study"].tap()
+            XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
+            XCTAssertTrue(app.staticTexts["study-position"].label.hasSuffix("/ 3"))
+            snapshot(app, name: "scan-photo-\(index)-study")
             app.terminate()
         }
     }

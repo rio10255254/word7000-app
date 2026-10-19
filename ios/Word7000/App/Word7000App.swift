@@ -40,11 +40,18 @@ struct Word7000App: App {
                 .onChange(of: model.progress.lastStudyDate) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.progress.studiedToday) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.reminderEnabled) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: model.studyMode) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: model.progress.dailyTarget) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: account.session?.user.id) { _, _ in
+                    liveActivities.forgetRegistration()
+                    Task { await liveActivities.endAll(); await refreshReminders() }
+                }
                 .task {
                     // Counts the learner as active while the app is open.
                     while !Task.isCancelled {
                         try? await Task.sleep(for: .seconds(300))
-                        if scenePhase == .active { account.heartbeat() }
+                        guard !Task.isCancelled else { break }
+                        if scenePhase == .active { account.heartbeat(); await refreshReminders() }
                     }
                 }
         }
@@ -76,13 +83,13 @@ struct Word7000App: App {
     private func refreshReminders() async {
         let plan = model.streakPlan
         if model.reminderEnabled {
-            await liveActivities.sync(plan: plan, chineseInterface: model.studyMode == .english)
+            await liveActivities.sync(plan: plan, progress: model.progress, chineseInterface: model.studyMode == .english)
         } else {
             await liveActivities.endAll()
         }
         if let row = liveActivities.registration(deviceId: model.settings.deviceSourceId, plan: plan, enabled: model.reminderEnabled,
                                                  progress: model.progress, chineseInterface: model.studyMode == .english, today: model.today) {
-            account.saveLiveActivityDevice(row)
+            if await account.saveLiveActivityDevice(row) { liveActivities.acknowledgeRegistration(row) }
         }
     }
 }

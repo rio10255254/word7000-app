@@ -5,7 +5,7 @@ import VisionKit
 /// the light, and can take several pages in a row. Cleaner pages make
 /// handwriting much easier to read.
 struct DocumentScanner: UIViewControllerRepresentable {
-    var onScan: ([UIImage]) -> Void
+    var onScan: (VNDocumentCameraScan) -> Void
     @Environment(\.dismiss) private var dismiss
 
     static var isAvailable: Bool { VNDocumentCameraViewController.isSupported }
@@ -25,9 +25,8 @@ struct DocumentScanner: UIViewControllerRepresentable {
         init(_ parent: DocumentScanner) { self.parent = parent }
 
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
-            let pages = (0..<scan.pageCount).map { scan.imageOfPage(at: $0) }
             parent.dismiss()
-            parent.onScan(pages)
+            parent.onScan(scan)
         }
 
         func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {

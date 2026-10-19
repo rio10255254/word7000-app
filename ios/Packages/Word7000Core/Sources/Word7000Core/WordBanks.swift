@@ -65,7 +65,7 @@ public enum WordBanks {
     /// always wins. When the word is also in the built-in list, its
     /// pronunciation and example sentence are borrowed so the card is not left
     /// half empty.
-    public static func buildScannedWords(_ rows: [ReviewedScanWord], coreWords: [WordEntry], stamp: String = String(Int(Date().timeIntervalSince1970 * 1000), radix: 36)) -> [WordEntry] {
+    public static func buildScannedWords(_ rows: [ReviewedScanWord], coreWords: [WordEntry], stamp: String = String(Int(Date().timeIntervalSince1970 * 1000), radix: 36), requireMatchingExample: Bool = false) -> [WordEntry] {
         var coreByName: [String: WordEntry] = [:]
         for word in coreWords where coreByName[word.word.lowercased()] == nil {
             coreByName[word.word.lowercased()] = word
@@ -78,6 +78,7 @@ public enum WordBanks {
             let key = word.lowercased()
             guard !word.isEmpty, !meaning.isEmpty, seen.insert(key).inserted else { return nil }
             let core = coreByName[key]
+            let matchingExample = !requireMatchingExample || core?.meaningZh.trimmingCharacters(in: .whitespacesAndNewlines) == meaning
             let slug = slugify(key)
             let pos = row.partOfSpeech.trimmingCharacters(in: .whitespacesAndNewlines)
             return WordEntry(
@@ -87,8 +88,8 @@ public enum WordBanks {
                 pronunciation: core?.pronunciation ?? "",
                 meaningZh: meaning,
                 supplementalMeaningZh: "",
-                example: core?.example ?? "",
-                exampleZh: core?.exampleZh ?? "",
+                example: matchingExample ? (core?.example ?? "") : "",
+                exampleZh: matchingExample ? (core?.exampleZh ?? "") : "",
                 group: scannedWordGroup
             )
         }

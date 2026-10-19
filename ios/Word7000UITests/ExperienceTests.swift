@@ -78,6 +78,24 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
     }
 
+    func testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["welcome-start"].waitForExistence(timeout: 10))
+        snapshot(app, "welcome-first-practice")
+        app.buttons["welcome-start"].tap()
+        waitForReadyCard(app)
+        XCTAssertEqual(app.staticTexts["study-position"].label, "1 / 5")
+        XCUIDevice.shared.press(.home)
+        sleep(1)
+        app.terminate()
+        app.launchArguments = ["-uiTestingLight", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["welcome-start"].exists)
+    }
+
     private func snapshot(_ app: XCUIApplication, _ name: String) {
         guard let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] else { return }
         let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-screenshots")

@@ -2,6 +2,19 @@ import XCTest
 @testable import Word7000Core
 
 final class PracticeQualityTests: XCTestCase {
+    func testScannedDifferentSenseDoesNotBorrowAnUnrelatedExample() {
+        var source = word("bright", "bright", "明亮的")
+        source.example = "The room was bright in the morning."
+        source.exampleZh = "這個房間早上很明亮。"
+        let rows = [ReviewedScanWord(meaningZh: "聰明的", partOfSpeech: "a", word: "bright")]
+        let scanned = WordBanks.buildScannedWords(rows, coreWords: [source], requireMatchingExample: true)
+        XCTAssertEqual(scanned.first?.meaningZh, "聰明的")
+        XCTAssertEqual(scanned.first?.example, "")
+        XCTAssertEqual(scanned.first?.exampleZh, "")
+        let matching = WordBanks.buildScannedWords([.init(meaningZh: "明亮的", partOfSpeech: "a", word: "bright")], coreWords: [source], requireMatchingExample: true)
+        XCTAssertEqual(matching.first?.example, source.example)
+    }
+
     func testExactSearchComesFirstWhenBrowsingAlphabetically() {
         let words = [word("1", "catalog", "目錄"), word("2", "cat", "貓"), word("3", "aardvark", "cat")]
         let found = PreparedVocabulary(words).filter(state: .empty, query: "cat", filter: .all,

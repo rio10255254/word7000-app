@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import VisionKit
 import Word7000Core
 
 /// Photograph (or paste) a vocabulary sheet, check what was read, and save it
@@ -43,6 +44,9 @@ struct ScanView: View {
     @State private var documentScannerOpen = false
     @State private var suggester: WordSuggester?
     @State private var message: String?
+    @State private var sourcePreviews: [UIImage] = []
+    @State private var previewOpen = false
+    @State private var pageCount = 0
     @State private var target: Target = .new
     /// The paywall, shown over the scanner when the allowance runs out here.
     @State private var paywall: PaywallReason?
@@ -53,7 +57,14 @@ struct ScanView: View {
     }
 
     private var savableCount: Int {
-        rows.filter { $0.include && !$0.word.trimmed.isEmpty && !$0.meaning.trimmed.isEmpty }.count
+        var seen = Set<String>()
+        if case let .existing(id) = target, let set = model.customSets.sets.first(where: { $0.id == id }) {
+            seen = Set(WordBanks.words(of: set, in: model.allWords).map { $0.word.lowercased() })
+        }
+        return rows.filter { row in
+            let key = row.word.split(whereSeparator: { $0.isWhitespace }).joined(separator: " ").lowercased()
+            return row.include && !key.isEmpty && !row.meaning.trimmed.isEmpty && seen.insert(key).inserted
+        }.count
     }
 
     var body: some View {
@@ -94,12 +105,29 @@ struct ScanView: View {
             .ignoresSafeArea()
         }
         .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
+        .sheet(isPresented: $previewOpen) {
+            NavigationStack {
+                TabView {
+                    ForEach(sourcePreviews.indices, id: \.self) { index in
+                        ScanSourcePreview(image: sourcePreviews[index]).tag(index)
+                    }
+                }
+                .tabViewStyle(.page)
+                .background(Color.black)
+                .navigationTitle(L.t("原始頁面", "Source pages"))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.closeSheet) { previewOpen = false } } }
+            }
+        }
         .fullScreenCover(isPresented: $cameraOpen) {
             CameraPicker { image in startReading([image]) }
                 .ignoresSafeArea()
         }
         .fullScreenCover(isPresented: $documentScannerOpen) {
-            DocumentScanner { pages in startReading(pages) }
+            DocumentScanner { scan in
+                scanTask?.cancel()
+                scanTask = Task { await readPages(count: scan.pageCount) { scan.imageOfPage(at: $0) } }
+            }
                 .ignoresSafeArea()
         }
         .onDisappear { scanTask?.cancel() }
@@ -159,6 +187,8 @@ struct ScanView: View {
                     .lineLimit(4...10)
                     .font(.body.monospaced())
                 Button(S.readPasted) {
+                    sourcePreviews = []
+                    pageCount = 0
                     let found = ScanParser.parse(ScanParser.lines(fromPlainText: pasted))
                     showReview(found)
                 }
@@ -170,6 +200,7 @@ struct ScanView: View {
                 Text(S.pasteHint)
             }
         }
+        .scrollDismissesKeyboard(.interactively)
     }
 
     /// Every read counts against the trial allowance, so check before each one.
@@ -182,7 +213,11 @@ struct ScanView: View {
     }
 
     private func read(_ images: [UIImage]) async {
-        guard !images.isEmpty else { return }
+        await readPages(count: images.count) { images[$0] }
+    }
+
+    private func readPages(count: Int, imageAt: (Int) -> UIImage) async {
+        guard count > 0 else { return }
         guard plus.decide(.scan) == .allowed else {
             phase = .choose
             allowScan {}
@@ -190,8 +225,23 @@ struct ScanView: View {
         }
         message = nil
         phase = .reading
+        sourcePreviews = []
+        pageCount = count
         do {
-            let found = try await TextRecognizer.candidates(in: images, suggester: dictionary())
+            var found: [ScannedWordCandidate] = []
+            var seen = Set<String>()
+            for index in 0..<count {
+                try Task.checkCancellation()
+                let image = imageAt(index)
+                if index < 8, let thumbnail = await thumbnail(image) { sourcePreviews.append(thumbnail) }
+                let candidates = try await TextRecognizer.candidates(in: [image], suggester: dictionary())
+                for var candidate in candidates {
+                    let key = (dictionary().correction(for: candidate.word) ?? candidate.word).lowercased()
+                    guard seen.insert(key).inserted else { continue }
+                    candidate.key = "page\(index)-\(candidate.key)"
+                    found.append(candidate)
+                }
+            }
             try Task.checkCancellation()
             showReview(found)
             if !found.isEmpty { plus.noteScanUsed() }
@@ -200,6 +250,14 @@ struct ScanView: View {
         } catch {
             message = S.readFailed
             phase = .choose
+        }
+    }
+
+    private func thumbnail(_ image: UIImage) async -> UIImage? {
+        await withCheckedContinuation { continuation in
+            image.prepareThumbnail(of: CGSize(width: 1200, height: 1600)) { result in
+                continuation.resume(returning: result)
+            }
         }
     }
 
@@ -243,7 +301,7 @@ struct ScanView: View {
             }
             return Row(id: candidate.key, word: candidate.word, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh)
         }
-        if let latest = scanBanks.last { target = .existing(latest.id) } else { target = .new }
+        target = .new
         phase = .review
     }
 
@@ -251,6 +309,18 @@ struct ScanView: View {
 
     private var review: some View {
         Form {
+            if !sourcePreviews.isEmpty {
+                Section {
+                    Button { previewOpen = true } label: {
+                        Label(L.t("對照原始頁面", "Compare with source"), systemImage: "doc.text.magnifyingglass")
+                    }
+                    .accessibilityIdentifier("scan-source-preview")
+                    if pageCount > sourcePreviews.count {
+                        Text(L.t("已辨識全部 \(pageCount) 頁，預覽顯示前 \(sourcePreviews.count) 頁。", "All \(pageCount) pages were read. Preview shows the first \(sourcePreviews.count)."))
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
+                }
+            }
             Section {
                 if rows.isEmpty {
                     Text(S.noneFound).foregroundStyle(.secondary)
@@ -274,7 +344,7 @@ struct ScanView: View {
                                 TextField(S.pos, text: $row.partOfSpeech)
                                     .font(.subheadline)
                                     .foregroundStyle(Palette.accent)
-                                    .frame(width: 64)
+                                    .frame(minWidth: 64, maxWidth: 100)
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
                             }
@@ -326,6 +396,11 @@ struct ScanView: View {
             }
 
             Section {
+                let selectedCount = rows.filter { $0.include && !$0.word.trimmed.isEmpty && !$0.meaning.trimmed.isEmpty }.count
+                if selectedCount > savableCount {
+                    Text(L.t("\(selectedCount - savableCount) 個重複單字不會再次加入。", "\(selectedCount - savableCount) duplicate words will be skipped."))
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
                 Button {
                     save()
                 } label: {
@@ -340,6 +415,7 @@ struct ScanView: View {
                 .listRowInsets(EdgeInsets())
             }
         }
+        .scrollDismissesKeyboard(.interactively)
     }
 
     private func save() {
@@ -375,12 +451,12 @@ struct ScanView: View {
                 }
             }
             Button {
-                dismiss()
                 onStudy()
             } label: {
                 Label(S.startStudy, systemImage: "book.fill").font(.headline).frame(maxWidth: .infinity)
             }
             .prominentAction()
+            .accessibilityIdentifier("scan-start-study")
             Button {
                 rows = []
                 pasted = ""

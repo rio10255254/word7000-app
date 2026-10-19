@@ -11,9 +11,23 @@ final class LiveActivityManager {
     private var lastRegistration: String?
 
     /// Starts, updates or ends the local streak card to match the plan.
-    func sync(plan: StreakReminderPlan, chineseInterface: Bool) async {
+    func sync(plan: StreakReminderPlan, progress: ProgressState, chineseInterface: Bool) async {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
         let running = ActivityKit.Activity<LiveActivityAttributes>.activities
+        for activity in running {
+            guard var props = StreakActivityProps.decode(activity.content.state.props), props.isNoon else { continue }
+            if props.endDate <= Date() || progress.studiedToday >= progress.dailyTarget {
+                await activity.end(nil, dismissalPolicy: .immediate)
+            } else {
+                props.progressCurrent = Double(progress.studiedToday)
+                props.progressTarget = Double(progress.dailyTarget)
+                let remaining = max(0, progress.dailyTarget - progress.studiedToday)
+                props.keepStreakLabel = chineseInterface ? "再學 \(remaining) 個單字，完成今天目標" : "\(remaining) more words to reach your goal"
+                props.title = chineseInterface ? "今天的學習時間" : "Time for today's practice"
+                props.countdownLabel = chineseInterface ? "今日進度" : "Today's progress"
+                await activity.update(ActivityContent(state: LiveActivityAttributes.ContentState(props: props.json), staleDate: props.endDate))
+            }
+        }
         guard plan.activeNow, let props = StreakActivityProps.streak(plan: plan, chineseInterface: chineseInterface),
               let expiresAt = plan.expiresAt, Date() < expiresAt
         else {
@@ -68,16 +82,21 @@ final class LiveActivityManager {
             "daily_target": .number(Double(max(1, progress.dailyTarget))),
             "studied_today": .number(Double(max(0, progress.studiedToday))),
             "progress_date": .string(today),
-            "activity_push_token": .null,
-            "activity_started_for_expires_at": .null,
         ]
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let fingerprint = (try? encoder.encode(row)).flatMap { String(data: $0, encoding: .utf8) } ?? ""
         guard fingerprint != lastRegistration else { return nil }
-        lastRegistration = fingerprint
         row["updated_at"] = .string(DayMath.timestamp())
         return row
+    }
+
+    func acknowledgeRegistration(_ row: [String: JSONValue]) {
+        var values = row
+        values.removeValue(forKey: "updated_at")
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        lastRegistration = (try? encoder.encode(values)).flatMap { String(data: $0, encoding: .utf8) }
     }
 
     func forgetRegistration() { lastRegistration = nil }

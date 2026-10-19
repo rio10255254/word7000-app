@@ -156,7 +156,7 @@ async function sendStartRequest(
           : chinese
             ? '今天開始連勝'
             : 'Start your streak today',
-        title: chinese ? '中午學習時間' : 'Your noon study break',
+        title: chinese ? '今天的學習時間' : "Time for today's practice",
       };
   const payload = {
     aps: {

@@ -52,7 +52,8 @@ struct SpeechSettingsView: View {
     }
 
     private func voiceRow(language: String, title: String) -> some View {
-        NavigationLink {
+        let selectedName = Speaker.shared.selectedVoice(language: language, preferences: preferences)?.name ?? L.t("自動", "Automatic")
+        return NavigationLink {
             SpeechVoicePicker(language: language, title: title)
         } label: {
             HStack {
@@ -60,13 +61,13 @@ struct SpeechSettingsView: View {
                 Spacer(minLength: 8)
                 if loading { ProgressView() }
                 else {
-                    let selected = Speaker.shared.selectedVoice(language: language, preferences: preferences)
-                    Text(selected?.name ?? L.t("自動", "Automatic"))
+                    Text(selectedName)
                         .foregroundStyle(.secondary).multilineTextAlignment(.trailing)
-                        .accessibilityIdentifier("speech-active-\(language)")
                 }
             }
         }
+        .accessibilityLabel(title)
+        .accessibilityValue(loading ? L.t("載入中", "Loading") : selectedName)
         .accessibilityIdentifier("speech-voice-\(language)")
     }
 

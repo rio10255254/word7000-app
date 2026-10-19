@@ -347,6 +347,7 @@ struct ScanView: View {
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
                                     .accessibilityIdentifier("scan-word-\(row.id)")
+                                    .onChange(of: row.word) { _, _ in row.suggestedWord = nil }
                                 TextField(S.pos, text: $row.partOfSpeech)
                                     .font(.subheadline)
                                     .foregroundStyle(Palette.accent)

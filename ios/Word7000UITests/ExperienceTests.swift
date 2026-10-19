@@ -111,6 +111,44 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "library-exact-search-keyboard")
     }
 
+    func testSpeechVoiceAndSpeedPersist() {
+        let app = launch()
+        openSpeechSettings(app)
+        app.segmentedControls["speech-speed"].buttons.element(boundBy: 0).tap()
+        app.buttons["speech-voice-en-US"].tap()
+        let voice = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'speech-pick-' ")).firstMatch
+        XCTAssertTrue(voice.waitForExistence(timeout: 10), app.debugDescription)
+        voice.tap()
+        let selectedName = app.staticTexts["speech-active-en-US"].label
+        XCTAssertFalse(selectedName.isEmpty)
+        snapshot(app, "speech-preferences")
+        app.buttons["speech-preview-en-US"].tap()
+        app.buttons["speech-preview-zh-TW"].tap()
+        XCUIDevice.shared.press(.home)
+        sleep(1)
+        app.terminate()
+        app.launchArguments = ["-uiTestingLight", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        openSpeechSettings(app)
+        XCTAssertTrue(app.segmentedControls["speech-speed"].buttons.element(boundBy: 0).isSelected)
+        XCTAssertEqual(app.staticTexts["speech-active-en-US"].label, selectedName)
+    }
+
+    private func openSpeechSettings(_ app: XCUIApplication) {
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        let settings = app.buttons["me-settings"]
+        for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
+        XCTAssertTrue(settings.waitForExistence(timeout: 5))
+        settings.tap()
+        let speech = app.buttons["settings-speech"]
+        for _ in 0..<5 where !speech.isHittable { app.swipeUp() }
+        XCTAssertTrue(speech.waitForExistence(timeout: 5))
+        speech.tap()
+        XCTAssertTrue(app.segmentedControls["speech-speed"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["speech-active-en-US"].waitForExistence(timeout: 10))
+    }
+
     private func snapshot(_ app: XCUIApplication, _ name: String) {
         guard let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] else { return }
         let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-screenshots")

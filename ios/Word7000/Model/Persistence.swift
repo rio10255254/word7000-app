@@ -30,6 +30,7 @@ struct AppSettings: Codable, Equatable, Sendable {
     var hapticsEnabled: Bool?
     var speakingFilter: FilterSelection?
     var savedBankFilters: [String: BankFilterSettings]?
+    var speech: SpeechPreferences?
 }
 
 struct BankFilterSettings: Codable, Equatable, Sendable {

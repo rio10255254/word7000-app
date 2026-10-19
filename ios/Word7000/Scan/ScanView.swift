@@ -27,6 +27,8 @@ struct ScanView: View {
         var meaning: String
         /// What was read before it was matched to a dictionary word.
         var originalWord: String?
+        var suggestedWord: String?
+        var needsReview = false
     }
 
     enum Target: Hashable {
@@ -36,7 +38,8 @@ struct ScanView: View {
 
     @State private var phase: Phase = .choose
     @State private var rows: [Row] = []
-    @State private var pasted = ""
+    @State private var pasted = ProcessInfo.processInfo.arguments.contains("-uiTestingReset")
+        ? ProcessInfo.processInfo.environment["WORD7000_SCAN_TEST_TEXT"] ?? "" : ""
     @State private var photoLibraryOpen = false
     @State private var pendingPhotos: [NSItemProvider] = []
     @State private var scanTask: Task<Void, Never>?
@@ -186,6 +189,7 @@ struct ScanView: View {
                 TextField(S.pastePlaceholder, text: $pasted, axis: .vertical)
                     .lineLimit(4...10)
                     .font(.body.monospaced())
+                    .accessibilityIdentifier("scan-pasted-text")
                 Button(S.readPasted) {
                     sourcePreviews = []
                     pageCount = 0
@@ -236,7 +240,7 @@ struct ScanView: View {
                 if index < 8, let thumbnail = await thumbnail(image) { sourcePreviews.append(thumbnail) }
                 let candidates = try await TextRecognizer.candidates(in: [image], suggester: dictionary())
                 for var candidate in candidates {
-                    let key = (dictionary().correction(for: candidate.word) ?? candidate.word).lowercased()
+                    let key = candidate.word.lowercased()
                     guard seen.insert(key).inserted else { continue }
                     candidate.key = "page\(index)-\(candidate.key)"
                     found.append(candidate)
@@ -296,10 +300,8 @@ struct ScanView: View {
     private func showReview(_ candidates: [ScannedWordCandidate]) {
         let suggester = dictionary()
         rows = candidates.map { candidate in
-            if let corrected = suggester.correction(for: candidate.word) {
-                return Row(id: candidate.key, word: corrected, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh, originalWord: candidate.word)
-            }
-            return Row(id: candidate.key, word: candidate.word, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh)
+            Row(id: candidate.key, include: !candidate.needsReview, word: candidate.word, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh,
+                suggestedWord: suggester.correction(for: candidate.word), needsReview: candidate.needsReview)
         }
         target = .new
         phase = .review
@@ -335,6 +337,10 @@ struct ScanView: View {
                         .buttonStyle(.plain)
                         .padding(.top, 4)
                         VStack(alignment: .leading, spacing: 6) {
+                            if row.needsReview {
+                                Label(L.t("相近拼字，請對照原圖後勾選", "Similar readings: compare with the source before selecting"), systemImage: "exclamationmark.circle")
+                                    .font(.caption).foregroundStyle(Palette.review)
+                            }
                             HStack {
                                 TextField(S.word, text: $row.word)
                                     .font(.rounded(.headline))
@@ -366,6 +372,18 @@ struct ScanView: View {
                                         .foregroundStyle(Palette.review)
                                 }
                                 .buttonStyle(.plain)
+                            }
+                            if let suggestion = row.suggestedWord, suggestion != row.word {
+                                Button {
+                                    row.originalWord = row.word
+                                    row.word = suggestion
+                                    row.suggestedWord = nil
+                                } label: {
+                                    Label(L.t("改用建議拼字「\(suggestion)」", "Use suggested spelling: \(suggestion)"), systemImage: "text.badge.checkmark")
+                                        .font(.caption)
+                                }
+                                .buttonStyle(.borderless)
+                                .accessibilityIdentifier("scan-suggestion-\(row.id)")
                             }
                         }
                     }
@@ -479,7 +497,7 @@ private enum S {
     static var takePhoto: String { L.t("拍照", "Take Photo") }
     static var scanDocument: String { L.t("掃描單字表（可多頁、手寫也行）", "Scan a word list (several pages, handwriting OK)") }
     static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organised from the page by Apple Intelligence; please check") }
-    static func corrected(_ original: String) -> String { L.t("原本讀成「\(original)」，已對照字典修正。點這裡還原", "Read as \u{201C}\(original)\u{201D}; matched to the dictionary. Tap to undo") }
+    static func corrected(_ original: String) -> String { L.t("還原為「\(original)」", "Restore \u{201C}\(original)\u{201D}") }
     static var choosePhoto: String { L.t("從相簿選擇", "Choose Photo") }
     static var pasteTitle: String { L.t("或貼上文字", "Or paste text") }
     static var pasteHint: String { L.t("在「照片」App 長按文字即可拷貝（原況文字），再貼到這裡", "In Photos, touch and hold text to copy it (Live Text), then paste it here") }

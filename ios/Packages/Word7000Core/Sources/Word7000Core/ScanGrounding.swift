@@ -5,6 +5,32 @@ import Foundation
 /// messy (often handwritten) text. Only text that is really on the page may
 /// become a word or a meaning; nothing is translated or made up.
 public enum ScanGrounding {
+    /// Keep different spellings intact. Readers that disagree about an entry
+    /// mark both readings for review instead of silently dropping letters.
+    public static func merging(primary: [ScannedWordCandidate], supplemental: [ScannedWordCandidate]) -> [ScannedWordCandidate] {
+        var result: [ScannedWordCandidate] = []
+        var seen = Set<String>()
+        for candidate in primary where seen.insert(candidate.word.lowercased()).inserted { result.append(candidate) }
+        for var candidate in supplemental {
+            let word = candidate.word.lowercased()
+            guard !seen.contains(word) else { continue }
+            let conflicting = result.indices.filter { index in
+                let existing = result[index]
+                let other = existing.word.lowercased()
+                return normalised(existing.meaningZh) == normalised(candidate.meaningZh)
+                    && abs(other.count - word.count) <= 4
+                    && (other.hasPrefix(word) || word.hasPrefix(other))
+            }
+            if !conflicting.isEmpty {
+                for index in conflicting { result[index].needsReview = true }
+                candidate.needsReview = true
+            }
+            seen.insert(word)
+            result.append(candidate)
+        }
+        return result
+    }
+
     /// Each table row becomes one line, so a word and its meaning in
     /// neighbouring cells pair up like a printed "word  meaning" line.
     public static func candidates(fromTableRows rows: [[String]]) -> [ScannedWordCandidate] {

@@ -15,46 +15,39 @@ enum TextRecognizer {
     }
 
     /// Reads every page and pairs words with meanings page by page.
-    /// Handwriting is often read slightly wrong, so each line keeps Vision's
-    /// top three readings and the one that is a dictionary word wins.
+    /// Preserve Vision's highest-confidence spelling, including words and
+    /// inflections absent from the built-in vocabulary.
     static func candidates(in images: [UIImage], suggester: WordSuggester?) async throws -> [ScannedWordCandidate] {
         var indices: [String: Int] = [:]
         var result: [ScannedWordCandidate] = []
-        let vocabulary = suggester?.recognitionVocabulary ?? []
         for (page, image) in images.enumerated() {
             try Task.checkCancellation()
             let prepared = try await preparedImage(image)
-            let reading = try await recognize(prepared, languages: languages, vocabulary: vocabulary, suggester: suggester)
+            let reading = try await recognize(prepared, languages: languages, suggester: suggester)
             let rows = ScanParser.readingRows(reading.lines)
-            var found = await SmartScan.tableCandidates(in: UIImage(cgImage: prepared))
+            let table = await SmartScan.tableCandidates(in: UIImage(cgImage: prepared))
             try Task.checkCancellation()
-            found += ScanParser.parse(rows)
-            found += ScanParser.parse(reading.lines)
+            var found = ScanGrounding.merging(primary: ScanParser.parse(rows) + ScanParser.parse(reading.lines), supplemental: table)
             let expected = reading.lines.filter { $0.text.unicodeScalars.contains(where: ScanParserContains.cjk) }.count
             let unique = Set(found.map { $0.word.lowercased() }).count
             let needsHelp = unique == 0 || (expected > 0 && Double(unique) < Double(expected) * 0.7)
             if needsHelp || reading.confidence < 0.7 {
                 if let enhanced = await enhancedImage(prepared),
-                   let alternate = try? await recognize(enhanced, languages: ["en-US", "zh-Hant"], vocabulary: vocabulary, suggester: suggester) {
-                    found += ScanParser.parse(ScanParser.readingRows(alternate.lines))
-                    found += ScanParser.parse(alternate.lines)
+                   let alternate = try? await recognize(enhanced, languages: ["en-US", "zh-Hant"], suggester: suggester) {
+                    found = ScanGrounding.merging(primary: found, supplemental: ScanParser.parse(ScanParser.readingRows(alternate.lines)) + ScanParser.parse(alternate.lines))
                 }
             }
             try Task.checkCancellation()
             let recovered = Set(found.map { $0.word.lowercased() }).count
             if (recovered == 0 || Double(recovered) < Double(expected) * 0.7), SmartScan.canOrganize {
-                found += await SmartScan.organize(text: rows.map(\.text).joined(separator: "\n"))
+                found = ScanGrounding.merging(primary: found, supplemental: await SmartScan.organize(text: rows.map(\.text).joined(separator: "\n")))
             }
             try Task.checkCancellation()
             for candidate in found {
-                let key = (suggester?.correction(for: candidate.word) ?? candidate.word).lowercased()
+                let key = candidate.word.lowercased()
                 var copy = candidate
                 copy.key = "p\(page)-\(candidate.key)"
-                if let index = indices[key] {
-                    if suggester?.contains(candidate.word) == true, suggester?.contains(result[index].word) != true {
-                        result[index] = copy
-                    }
-                } else {
+                if indices[key] == nil {
                     indices[key] = result.count
                     result.append(copy)
                 }
@@ -65,7 +58,7 @@ enum TextRecognizer {
 
     static func lines(in image: UIImage, suggester: WordSuggester? = nil) async throws -> [ScannedLine] {
         let prepared = try await preparedImage(image)
-        return try await recognize(prepared, languages: languages, vocabulary: suggester?.recognitionVocabulary ?? [], suggester: suggester).lines
+        return try await recognize(prepared, languages: languages, suggester: suggester).lines
     }
 
     private struct Reading: Sendable {
@@ -73,7 +66,7 @@ enum TextRecognizer {
         var confidence: Double
     }
 
-    private static func recognize(_ cgImage: CGImage, languages: [String], vocabulary: [String], suggester: WordSuggester?) async throws -> Reading {
+    private static func recognize(_ cgImage: CGImage, languages: [String], suggester: WordSuggester?) async throws -> Reading {
         return try await Task.detached(priority: .userInitiated) {
             let request = VNRecognizeTextRequest()
             request.recognitionLevel = .accurate
@@ -81,7 +74,6 @@ enum TextRecognizer {
             // Chinese meanings into "likelier" words, which is wrong for a word list.
             request.usesLanguageCorrection = false
             request.minimumTextHeight = 0.004
-            request.customWords = vocabulary
             let supported = (try? request.supportedRecognitionLanguages()) ?? []
             let requested = languages.filter { supported.contains($0) }
             if !requested.isEmpty { request.recognitionLanguages = requested }

@@ -1,9 +1,7 @@
 import Foundation
 
-/// Fixes English headwords that handwriting recognition got slightly wrong
-/// ("abandan" → "abandon") by snapping them to the closest word in the
-/// built-in list. Only small edits are allowed, so a real word that is simply
-/// not in the list is left alone.
+/// Optional spelling suggestions for reviewed scans. The dictionary is not
+/// exhaustive; its absence must never erase a word's ending.
 public struct WordSuggester: Sendable {
     private let words: Set<String>
     private let byLength: [Int: [String]]
@@ -43,35 +41,33 @@ public struct WordSuggester: Sendable {
         return closest(to: lowered)
     }
 
-    /// Picks the candidate reading that is a dictionary word, if any.
+    /// Vision orders readings by confidence. A familiar dictionary stem is
+    /// not evidence that a longer, unfamiliar word was read incorrectly.
     public func best(of candidates: [String]) -> String? {
-        guard let primary = candidates.first else { return nil }
-        let preferred = candidates.first { candidate in
-            let head = candidate.split(whereSeparator: { !$0.isLetter && $0 != "'" && $0 != "-" }).first.map(String.init) ?? ""
-            return !head.isEmpty && words.contains(head.lowercased())
-        } ?? primary
-        guard preferred != primary, primary.unicodeScalars.contains(where: ScanParser.isCJK) else { return preferred }
-        let pattern = Self.leadingWordPattern
-        guard let original = pattern.firstMatch(in: primary, range: NSRange(primary.startIndex..., in: primary)),
-              let replacement = pattern.firstMatch(in: preferred, range: NSRange(preferred.startIndex..., in: preferred)),
-              let originalRange = Range(original.range(at: 1), in: primary),
-              let replacementRange = Range(replacement.range(at: 1), in: preferred),
-              !primary[..<originalRange.lowerBound].unicodeScalars.contains(where: ScanParser.isCJK)
-        else { return primary }
-        // A better English reading must not replace the paper's Chinese text.
-        return primary.replacingCharacters(in: originalRange, with: String(preferred[replacementRange]))
+        candidates.first
     }
 
-    static let leadingWordPattern = try! NSRegularExpression(pattern: #"^[^A-Za-z]*([A-Za-z][A-Za-z'’-]*)"#)
+    private func isWordForm(_ word: String) -> Bool {
+        for suffix in ["ly", "ally", "s", "es", "ed", "ing", "er", "est"] where word.hasSuffix(suffix) {
+            let stem = String(word.dropLast(suffix.count))
+            guard stem.count >= 3 else { continue }
+            if words.contains(stem) || words.contains(stem + "e") { return true }
+            if stem.hasSuffix("i"), words.contains(String(stem.dropLast()) + "y") { return true }
+            if stem.count >= 4, stem.last == stem.dropLast().last, words.contains(String(stem.dropLast())) { return true }
+        }
+        return false
+    }
 
     func closest(to word: String) -> String? {
         // Short words have too many neighbours to guess safely.
         guard word.count >= 4, word.allSatisfy({ $0.isASCII && $0.isLetter }) else { return nil }
+        guard !isWordForm(word) else { return nil }
         let budget = word.count >= 8 ? 2 : 1
         var best: (word: String, distance: Int)?
         var tie = false
         for length in (word.count - budget)...(word.count + budget) {
             for candidate in byLength[length] ?? [] {
+                guard !word.hasPrefix(candidate), !word.hasSuffix(candidate) else { continue }
                 let distance = Self.distance(word, candidate, limit: budget)
                 guard distance <= budget else { continue }
                 if best == nil || distance < best!.distance {

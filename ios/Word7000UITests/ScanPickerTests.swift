@@ -37,9 +37,9 @@ final class ScanPickerTests: XCTestCase {
                 .allElementsBoundByIndex.compactMap { $0.value as? String }
             let meanings = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-meaning-'"))
                 .allElementsBoundByIndex.compactMap { $0.value as? String }
-            XCTAssertEqual(Set(words), Set(["abandon", "benefit", "capture"]))
-            XCTAssertEqual(Set(meanings), Set(["放棄", "好處", "捕獲"]))
-            let expected = ["abandon": "放棄", "benefit": "好處", "capture": "捕獲"]
+            XCTAssertEqual(Set(words), Set(["objectively", "objective", "carefully"]))
+            XCTAssertEqual(Set(meanings), Set(["客觀地", "目標", "小心地"]))
+            let expected = ["objectively": "客觀地", "objective": "目標", "carefully": "小心地"]
             for field in app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).allElementsBoundByIndex {
                 let id = String(field.identifier.dropFirst("scan-word-".count))
                 XCTAssertEqual(app.textFields["scan-meaning-" + id].value as? String, expected[field.value as? String ?? ""])
@@ -54,14 +54,43 @@ final class ScanPickerTests: XCTestCase {
             app.buttons["scan-start-study"].tap()
             XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
             XCTAssertTrue(app.staticTexts["study-position"].label.hasSuffix("/ 3"))
+            var savedWords = Set<String>()
+            for position in 0..<3 {
+                let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: app.buttons["study-show-answer"])
+                XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+                savedWords.insert(app.staticTexts["study-prompt"].label)
+                if position < 2 {
+                    app.buttons["study-show-answer"].tap()
+                    app.buttons["study-grade-known"].tap()
+                    XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
+                }
+            }
+            XCTAssertEqual(savedWords, Set(expected.keys))
             snapshot(app, name: "scan-photo-\(index)-study")
             app.terminate()
         }
     }
 
-    private func openScanner() -> XCUIApplication {
+    func testSpellingSuggestionNeedsExplicitAcceptance() {
+        let app = openScanner(pastedText: "abandan v. 放棄\nobjectively adv. 客觀地\nobjective n. 目標")
+        let read = app.buttons["scan-read-pasted"]
+        for _ in 0..<4 where !read.isHittable { app.swipeUp() }
+        read.tap()
+        let word = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-' AND value == 'abandan'")).firstMatch
+        XCTAssertTrue(word.waitForExistence(timeout: 5))
+        let wordIdentifier = word.identifier
+        XCTAssertTrue(app.textFields.matching(NSPredicate(format: "value == 'objectively'")).firstMatch.exists)
+        let suggestion = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-suggestion-' ")).firstMatch
+        XCTAssertTrue(suggestion.exists)
+        suggestion.tap()
+        XCTAssertEqual(app.textFields[wordIdentifier].value as? String, "abandon")
+        snapshot(app, name: "scan-explicit-spelling-choice")
+    }
+
+    private func openScanner(pastedText: String? = nil) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingFakePlans"]
+        app.launchEnvironment["WORD7000_SCAN_TEST_TEXT"] = pastedText
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 1).tap()

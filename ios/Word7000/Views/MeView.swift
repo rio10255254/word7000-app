@@ -109,6 +109,13 @@ struct SettingsView: View {
                 Text("\(L.dailyTargetText) \(L.reminderText)")
             }
 
+            Section {
+                NavigationLink { SpeechSettingsView() } label: {
+                    Label(L.t("朗讀聲音", "Reading voice"), systemImage: "speaker.wave.2")
+                }
+                .accessibilityIdentifier("settings-speech")
+            }
+
             AccountSection(includeDeletion: true)
 
             Section {

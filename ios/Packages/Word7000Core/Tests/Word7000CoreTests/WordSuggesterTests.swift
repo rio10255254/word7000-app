@@ -21,9 +21,18 @@ final class WordSuggesterTests: XCTestCase {
         XCTAssertEqual(suggester.correction(for: "look forwrd to"), "look forward to")
     }
 
-    func testPrefersTheCandidateThatIsAWord() {
-        XCTAssertEqual(suggester.best(of: ["abandan v. 放棄", "abandon v. 放棄"]), "abandon v. 放棄")
+    func testDictionaryDoesNotOverrideThePrimaryReading() {
+        XCTAssertEqual(suggester.best(of: ["abandan v. 放棄", "abandon v. 放棄"]), "abandan v. 放棄")
         XCTAssertEqual(suggester.best(of: ["xyz", "qrs"]), "xyz")
+    }
+
+    func testPreservesCompleteWordsMissingFromTheBuiltInList() {
+        let dictionary = WordSuggester(words: ParityTests.words.map(\.word))
+        for word in ["objectively", "subjectively", "carefully", "declined", "easily"] {
+            XCTAssertNil(dictionary.correction(for: word), word)
+        }
+        XCTAssertEqual(dictionary.best(of: ["objectively adv. 客觀地", "objective n. 目標"]), "objectively adv. 客觀地")
+        XCTAssertNil(dictionary.correction(for: "assess objectively"))
     }
 
     func testDistance() {

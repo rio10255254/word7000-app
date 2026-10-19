@@ -1,6 +1,7 @@
 import AVFoundation
 import Observation
 import SwiftUI
+import Word7000Core
 
 /// Reads a word aloud with the system voice; works offline.
 @MainActor
@@ -9,6 +10,8 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     static let shared = Speaker()
     private(set) var activeText: String?
     private(set) var activeLanguage: String?
+    private(set) var voices: [SpeechVoiceOption] = []
+    @ObservationIgnored private var voicesTask: Task<[SpeechVoiceOption], Never>?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
     @ObservationIgnored private var speechID: UUID?
     @ObservationIgnored private let audioQueue = DispatchQueue(label: "word7000.speech-audio", qos: .userInitiated)
@@ -20,14 +23,38 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         synthesizer.delegate = self
     }
 
-    func speak(_ text: String, language: String = "en-US") {
+    func refreshVoices() async {
+        if let task = voicesTask { voices = await task.value; return }
+        let task = Task.detached(priority: .utility) {
+            AVSpeechSynthesisVoice.speechVoices()
+                .filter { !$0.voiceTraits.contains(.isNoveltyVoice) && !$0.voiceTraits.contains(.isPersonalVoice) }
+                .map { SpeechVoiceOption(id: $0.identifier, name: $0.name, language: $0.language, quality: $0.quality.rawValue) }
+                .sorted { $0.name == $1.name ? $0.id < $1.id : $0.name < $1.name }
+        }
+        voicesTask = task
+        voices = await task.value
+        voicesTask = nil
+    }
+
+    func selectedVoice(language: String, preferences: SpeechPreferences) -> SpeechVoiceOption? {
+        SpeechVoiceSelection.preferred(voices, language: language, selectedID: preferences.voiceID(for: language),
+                                       systemDefaultID: AVSpeechSynthesisVoice(language: language)?.identifier)
+    }
+
+    func speak(_ text: String, language: String = "en-US", preferences: SpeechPreferences = SpeechPreferences()) {
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         if activeText == text, activeLanguage == language { stop(); return }
         stop()
         let id = UUID()
         speechID = id
         activeText = text
         activeLanguage = language
-        audioQueue.async { [weak self] in
+        Task { [weak self] in
+          guard let self else { return }
+          if voices.isEmpty { await refreshVoices() }
+          guard speechID == id else { return }
+          let voiceID = selectedVoice(language: language, preferences: preferences)?.id
+          audioQueue.async { [weak self] in
             do {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
                 try AVAudioSession.sharedInstance().setActive(true)
@@ -38,11 +65,17 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
             Task { @MainActor in
                 guard let self, self.speechID == id else { return }
                 let utterance = AVSpeechUtterance(string: text)
-                utterance.voice = AVSpeechSynthesisVoice(language: language)
-                utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
+                utterance.voice = voiceID.flatMap { AVSpeechSynthesisVoice(identifier: $0) } ?? AVSpeechSynthesisVoice(language: language)
+                let isolatedWord = language.hasPrefix("en")
+                    ? text.split(whereSeparator: { $0.isWhitespace }).count == 1 && text.count < 30 : text.count <= 4
+                let rate = AVSpeechUtteranceDefaultSpeechRate * Float(preferences.speed.multiplier) * (isolatedWord ? 0.94 : 1)
+                utterance.rate = min(AVSpeechUtteranceMaximumSpeechRate, max(AVSpeechUtteranceMinimumSpeechRate, rate))
+                utterance.pitchMultiplier = 1
+                utterance.prefersAssistiveTechnologySettings = true
                 self.activeUtterance = utterance
                 self.synthesizer.speak(utterance)
             }
+          }
         }
     }
 
@@ -68,12 +101,13 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
 }
 
 struct SpeakButton: View {
+    @Environment(AppModel.self) private var model
     var text: String
     var language: String = "en-US"
 
     var body: some View {
         let playing = Speaker.shared.activeText == text && Speaker.shared.activeLanguage == language
-        Button { Speaker.shared.speak(text, language: language) } label: {
+        Button { Speaker.shared.speak(text, language: language, preferences: model.settings.speech ?? SpeechPreferences()) } label: {
             Image(systemName: playing ? "stop.fill" : "speaker.wave.2.fill")
                 .font(.title3)
                 .foregroundStyle(Palette.accent)

@@ -21,16 +21,16 @@ func drawSheet(width: Int = 2000, height: Int = 1400, columns: Bool = false, fai
     }
     text("WORD7000", x: 100, top: 100, size: 84)
     if columns {
-        text("abandon v.", x: 90, top: 450, size: 54)
-        text("放棄", x: 570, top: 450, size: 54)
-        text("benefit n.", x: 1080, top: 450, size: 54)
-        text("好處", x: 1580, top: 450, size: 54)
-        text("capture v.", x: 90, top: 730, size: 54)
-        text("捕獲", x: 570, top: 730, size: 54)
+        text("objectively adv.", x: 90, top: 450, size: 48)
+        text("客觀地", x: 620, top: 450, size: 48)
+        text("objective n.", x: 1080, top: 450, size: 48)
+        text("目標", x: 1630, top: 450, size: 48)
+        text("carefully adv.", x: 90, top: 730, size: 48)
+        text("小心地", x: 620, top: 730, size: 48)
     } else {
-        text("abandon v.   放棄", x: 140, top: 410)
-        text("benefit n.   好處", x: 140, top: 670)
-        text("capture v.   捕獲", x: 140, top: 930)
+        text("objectively adv.   客觀地", x: 140, top: 410)
+        text("objective n.   目標", x: 140, top: 670)
+        text("carefully adv.   小心地", x: 140, top: 930)
     }
     image.unlockFocus()
     var rect = NSRect(origin: .zero, size: image.size)

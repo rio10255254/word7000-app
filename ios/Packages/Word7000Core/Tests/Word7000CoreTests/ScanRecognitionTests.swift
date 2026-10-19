@@ -45,7 +45,25 @@ final class ScanRecognitionTests: XCTestCase {
 
     func testEnglishAlternativeDoesNotChangeChineseMeaning() {
         let dictionary = WordSuggester(words: ["abandon", "benefit"])
-        XCTAssertEqual(dictionary.best(of: ["abandan v. 放棄", "abandon v. 房棄"]), "abandon v. 放棄")
-        XCTAssertEqual(dictionary.best(of: ["2. benfit n. 好處", "2. benefit n. 好虎"]), "2. benefit n. 好處")
+        XCTAssertEqual(dictionary.best(of: ["abandan v. 放棄", "abandon v. 房棄"]), "abandan v. 放棄")
+        XCTAssertEqual(dictionary.best(of: ["2. benfit n. 好處", "2. benefit n. 好虎"]), "2. benfit n. 好處")
+    }
+
+    func testConflictingReadingsAreKeptForConfirmationWithoutTruncation() {
+        let primary = ScanParser.parse(ScanParser.lines(fromPlainText: "objectively adv. 客觀地\ncarefully adv. 小心地"))
+        let table = ScanParser.parse(ScanParser.lines(fromPlainText: "objective adv. 客觀地\ncareful adv. 小心地\nbenefit n. 好處"))
+        let merged = ScanGrounding.merging(primary: primary, supplemental: table)
+        XCTAssertEqual(merged.map(\.word), ["objectively", "carefully", "objective", "careful", "benefit"])
+        XCTAssertTrue(merged.prefix(4).allSatisfy(\.needsReview))
+        XCTAssertFalse(merged.last!.needsReview)
+    }
+
+    func testDifferentFormsActuallyOnThePageRemainSeparate() {
+        let primary = ScanParser.parse(ScanParser.lines(fromPlainText: "objective n. 目標\nobjectively adv. 客觀地\nrun v. 跑步\nrunning n. 跑步"))
+        let merged = ScanGrounding.merging(primary: primary, supplemental: primary)
+        XCTAssertEqual(merged.map(\.word), ["objective", "objectively", "run", "running"])
+        XCTAssertFalse(merged.contains(where: \.needsReview))
+        let entries = WordBanks.buildScannedWords(merged.map { ReviewedScanWord(meaningZh: $0.meaningZh, partOfSpeech: $0.partOfSpeech, word: $0.word) }, coreWords: ParityTests.words, requireMatchingExample: true)
+        XCTAssertEqual(entries.map(\.word), merged.map(\.word))
     }
 }

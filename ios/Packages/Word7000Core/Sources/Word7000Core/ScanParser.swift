@@ -24,13 +24,15 @@ public struct ScannedWordCandidate: Equatable, Identifiable, Sendable {
     public var meaningZh: String
     public var partOfSpeech: String
     public var word: String
+    public var needsReview: Bool
     public var id: String { key }
 
-    public init(key: String, meaningZh: String, partOfSpeech: String, word: String) {
+    public init(key: String, meaningZh: String, partOfSpeech: String, word: String, needsReview: Bool = false) {
         self.key = key
         self.meaningZh = meaningZh
         self.partOfSpeech = partOfSpeech
         self.word = word
+        self.needsReview = needsReview
     }
 }
 

@@ -27,6 +27,7 @@ struct Word7000App: App {
                 .environment(account)
                 .environment(plus)
                 .task { await plus.start() }
+                .task { await Speaker.shared.refreshVoices() }
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)
                 .tint(Palette.accent)
@@ -68,6 +69,7 @@ struct Word7000App: App {
             switch phase {
             case .active:
                 model.refreshToday()
+                Task { await Speaker.shared.refreshVoices() }
                 plus.refreshAccessState()
                 account.heartbeat()
                 Task {

@@ -53,6 +53,7 @@ struct MeView: View {
 
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
@@ -78,6 +79,18 @@ struct SettingsView: View {
                     get: { model.reminderEnabled },
                     set: { model.setReminderEnabled($0) }
                 ))
+                if model.reminderEnabled && account.supportsCustomReminderTime {
+                    DatePicker(L.t("每日學習時間", "Daily practice time"), selection: Binding(
+                        get: {
+                            let minute = model.settings.reminderMinute ?? 720
+                            return Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: Date()) ?? Date()
+                        },
+                        set: { date in
+                            let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
+                            model.settings.reminderMinute = (parts.hour ?? 12) * 60 + (parts.minute ?? 0)
+                        }
+                    ), displayedComponents: .hourAndMinute)
+                }
                 Toggle(L.t("觸覺回饋", "Haptic feedback"), isOn: Binding(
                     get: { model.settings.hapticsEnabled ?? true },
                     set: { model.settings.hapticsEnabled = $0 }
@@ -110,6 +123,7 @@ struct SettingsView: View {
         }
         .navigationTitle(L.settings)
         .navigationBarTitleDisplayMode(.inline)
+        .task { await account.checkReminderSupport() }
     }
 }
 

@@ -32,10 +32,10 @@ final class ExperienceTests: XCTestCase {
         app.buttons["study-grade-known"].doubleTap()
         waitForReadyCard(app)
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("2 /"))
-        app.descendants(matching: .any)["study-card"].firstMatch.swipeLeft()
+        app.scrollViews["study-card"].swipeLeft()
         waitForReadyCard(app)
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("3 /"))
-        app.descendants(matching: .any)["study-card"].firstMatch.swipeRight()
+        app.scrollViews["study-card"].swipeRight()
         waitForReadyCard(app)
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
     }
@@ -94,6 +94,21 @@ final class ExperienceTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["welcome-start"].exists)
+    }
+
+    func testLibrarySearchKeepsKeyboardAndExactMatch() {
+        let app = launch()
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 5))
+        search.tap()
+        search.typeText("c")
+        XCTAssertTrue(app.keyboards.firstMatch.exists)
+        search.typeText("apture")
+        XCTAssertTrue(app.keyboards.firstMatch.exists)
+        XCTAssertEqual(search.value as? String, "capture")
+        XCTAssertTrue(app.staticTexts["capture"].firstMatch.waitForExistence(timeout: 5))
+        snapshot(app, "library-exact-search-keyboard")
     }
 
     private func snapshot(_ app: XCUIApplication, _ name: String) {

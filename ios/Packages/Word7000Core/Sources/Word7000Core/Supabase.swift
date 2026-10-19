@@ -365,6 +365,13 @@ public struct AuthCallback: Equatable, Sendable {
 }
 
 extension SupabaseClient {
+    public func supportsCustomReminderTime(session: AuthSession) async -> Bool {
+        do {
+            _ = try await request("GET", "rest/v1/live_activity_devices", query: ["select": "reminder_minute", "limit": "0"], session: session)
+            return true
+        } catch { return false }
+    }
+
     /// Registers (or updates) this device for server-started lock screen
     /// cards; one row per user and device.
     public func saveLiveActivityDevice(_ row: [String: JSONValue], session: AuthSession) async throws {

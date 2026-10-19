@@ -29,3 +29,22 @@ are saved in version-specific folders on the `native-screenshots` branch.
 
 The React Native app is unaffected: the repository root `.easignore` keeps
 `/ios/` out of its uploads.
+
+## 2.0.1 experience candidate
+
+Keep the pending 2.0.0 (36) App Store submission unchanged. This branch is a
+separate TestFlight candidate, not an instruction to replace the review build.
+
+The custom reminder-time picker is capability-gated. Deploy
+`send-streak-live-activities` with its time-neutral title, then apply
+`supabase/migrations/20261019150000_personal_reminder_time.sql`. Until that
+migration is installed, the app omits the new field and preserves noon delivery.
+The migration has been exercised locally with PostgreSQL-compatible PGlite,
+including completed goals, disabled devices, account changes, repeated claims,
+and invalid times. This does not claim the production backend was changed.
+
+Native checks must cover: repeated card grading and swipes, session resume,
+first five-word practice, exact search with a visible keyboard, 20-question
+quiz navigation, and all five photo formats saved into a playable bank.
+Inspect light/dark and both-language screenshots on iOS 18, 26, and 27 before
+dispatching `native-testflight`.

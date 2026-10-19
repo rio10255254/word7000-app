@@ -24,6 +24,7 @@ final class AccountModel {
 
     private(set) var status: Status
     private(set) var session: AuthSession?
+    private(set) var supportsCustomReminderTime = false
     private(set) var busy = false
     /// A short line for the account section.
     private(set) var message: String
@@ -276,6 +277,15 @@ final class AccountModel {
     }
 
     /// Registers this iPhone for server-started lock screen cards.
+    func checkReminderSupport() async {
+        guard let client, let current = session else { supportsCustomReminderTime = false; return }
+        let generation = identityGeneration
+        guard let valid = try? await validSession(client: client, current) else { return }
+        let supported = await client.supportsCustomReminderTime(session: valid)
+        guard generation == identityGeneration else { return }
+        supportsCustomReminderTime = supported
+    }
+
     func saveLiveActivityDevice(_ row: [String: JSONValue]) async -> Bool {
         guard let client, let current = session else { return false }
         let generation = identityGeneration

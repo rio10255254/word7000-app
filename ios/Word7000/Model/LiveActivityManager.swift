@@ -68,7 +68,7 @@ final class LiveActivityManager {
 
     /// The row the server needs to start cards on this iPhone at the right
     /// time; nil when nothing changed since the last time.
-    func registration(deviceId: String, plan: StreakReminderPlan, enabled: Bool, progress: ProgressState, chineseInterface: Bool, today: String) -> [String: JSONValue]? {
+    func registration(deviceId: String, plan: StreakReminderPlan, enabled: Bool, progress: ProgressState, chineseInterface: Bool, today: String, reminderMinute: Int? = nil) -> [String: JSONValue]? {
         guard let token = pushToStartToken else { return nil }
         let iso = ISO8601DateFormatter()
         var row: [String: JSONValue] = [
@@ -83,6 +83,7 @@ final class LiveActivityManager {
             "studied_today": .number(Double(max(0, progress.studiedToday))),
             "progress_date": .string(today),
         ]
+        if let reminderMinute { row["reminder_minute"] = .number(Double(min(1439, max(0, reminderMinute)))) }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
         let fingerprint = (try? encoder.encode(row)).flatMap { String(data: $0, encoding: .utf8) } ?? ""

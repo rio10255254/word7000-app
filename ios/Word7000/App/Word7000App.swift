@@ -6,6 +6,8 @@ struct Word7000App: App {
     @State private var account: AccountModel
     @State private var liveActivities = LiveActivityManager()
     @State private var plus: PlusModel
+    @State private var refreshingReminders = false
+    @State private var reminderRefreshPending = false
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -30,6 +32,7 @@ struct Word7000App: App {
                 .tint(Palette.accent)
                 .task {
                     await account.bootstrap()
+                    await account.checkReminderSupport()
                     await refreshReminders()
                 }
                 .task {
@@ -40,11 +43,17 @@ struct Word7000App: App {
                 .onChange(of: model.progress.lastStudyDate) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.progress.studiedToday) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.reminderEnabled) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: model.settings.reminderMinute) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: account.supportsCustomReminderTime) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.studyMode) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.progress.dailyTarget) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: account.session?.user.id) { _, _ in
                     liveActivities.forgetRegistration()
-                    Task { await liveActivities.endAll(); await refreshReminders() }
+                    Task {
+                        await liveActivities.endAll()
+                        await account.checkReminderSupport()
+                        await refreshReminders()
+                    }
                 }
                 .task {
                     // Counts the learner as active while the app is open.
@@ -81,6 +90,16 @@ struct Word7000App: App {
     /// Keeps the local streak card and the server's view of this iPhone in
     /// step with today's progress.
     private func refreshReminders() async {
+        if refreshingReminders { reminderRefreshPending = true; return }
+        refreshingReminders = true
+        defer { refreshingReminders = false }
+        repeat {
+            reminderRefreshPending = false
+            await syncReminders()
+        } while reminderRefreshPending && !Task.isCancelled
+    }
+
+    private func syncReminders() async {
         let plan = model.streakPlan
         if model.reminderEnabled {
             await liveActivities.sync(plan: plan, progress: model.progress, chineseInterface: model.studyMode == .english)
@@ -88,7 +107,8 @@ struct Word7000App: App {
             await liveActivities.endAll()
         }
         if let row = liveActivities.registration(deviceId: model.settings.deviceSourceId, plan: plan, enabled: model.reminderEnabled,
-                                                 progress: model.progress, chineseInterface: model.studyMode == .english, today: model.today) {
+                                                 progress: model.progress, chineseInterface: model.studyMode == .english, today: model.today,
+                                                 reminderMinute: account.supportsCustomReminderTime ? (model.settings.reminderMinute ?? 720) : nil) {
             if await account.saveLiveActivityDevice(row) { liveActivities.acknowledgeRegistration(row) }
         }
     }

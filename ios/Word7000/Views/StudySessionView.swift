@@ -7,6 +7,7 @@ struct StudySessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .largeTitle) private var promptSize = 42.0
     var startQuiz: () -> Void
 
@@ -182,7 +183,8 @@ struct StudySessionView: View {
     }
 
     private var controls: some View {
-        HStack(spacing: 12) {
+        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 12))
+        return layout {
             if revealed {
                 Button { grade(.review) } label: {
                     Label(L.dontKnow, systemImage: "xmark").font(.headline).frame(maxWidth: .infinity)
@@ -299,6 +301,7 @@ struct WordAnswer: View {
 
 struct SessionSummary: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var session: StudySession
     var done: () -> Void
     var again: () -> Void
@@ -306,8 +309,8 @@ struct SessionSummary: View {
 
     var body: some View {
         let left = max(0, model.progress.dailyTarget - model.progress.studiedToday)
-        VStack(spacing: 18) {
-            Spacer()
+        ScrollView {
+          VStack(spacing: 18) {
             ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
                 Image(systemName: model.goalDone ? "checkmark" : "flame.fill")
                     .font(.system(size: 40, weight: .bold))
@@ -320,14 +323,14 @@ struct SessionSummary: View {
                 .foregroundStyle(.secondary)
             Text(left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
                 .font(.subheadline.weight(.semibold))
-            Spacer()
             VStack(spacing: 12) {
                 Button(action: done) {
                     Text(L.done).font(.headline).frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .accessibilityIdentifier("study-done")
-                HStack(spacing: 12) {
+                let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
+                layout {
                     Button(action: again) {
                         Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
                     }
@@ -338,6 +341,9 @@ struct SessionSummary: View {
                     .secondaryAction()
                 }
             }
+            .padding(.top, 16)
+          }
+          .padding(.vertical, 24)
         }
         .multilineTextAlignment(.center)
         .accessibilityIdentifier("study-summary")

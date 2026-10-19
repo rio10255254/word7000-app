@@ -25,6 +25,7 @@ struct AppSettings: Codable, Equatable, Sendable {
     var studyMode: StudyMode?
     /// Lock screen study reminders; nil means on.
     var streakReminder: Bool?
+    var reminderMinute: Int?
     var onboardingComplete: Bool?
     var hapticsEnabled: Bool?
     var speakingFilter: FilterSelection?

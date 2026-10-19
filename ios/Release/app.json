@@ -3,7 +3,7 @@
     "name": "Word7000",
     "slug": "word7000",
     "owner": "rio10255254",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "ios": {
       "bundleIdentifier": "com.rio.word7000"
     },

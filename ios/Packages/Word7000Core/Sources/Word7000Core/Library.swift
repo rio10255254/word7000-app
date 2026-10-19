@@ -58,7 +58,7 @@ public final class PreparedVocabulary: @unchecked Sendable {
 
     public func index(of wordId: String) -> Int? { indexById[wordId] }
 
-    public func filter(state: ProgressState, query: String, filter: LibraryFilter, options: LibraryFilterOptions = .init()) -> [WordEntry] {
+    public func filter(state: ProgressState, query: String, filter: LibraryFilter, options: LibraryFilterOptions = .init(), rankedSearch: Bool = false) -> [WordEntry] {
         let terms = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
             .split(whereSeparator: { $0.isWhitespace }).map(String.init)
         let level = options.level.flatMap { $0 == "all" ? nil : $0 }
@@ -86,9 +86,12 @@ public final class PreparedVocabulary: @unchecked Sendable {
             matches.append((record, progress, score))
         }
 
-        if options.sort != .alphabetical, !terms.isEmpty || filter == .favorites || filter == .review || filter == .mastered {
+        if (options.sort != .alphabetical || (rankedSearch && !terms.isEmpty)), !terms.isEmpty || filter == .favorites || filter == .review || filter == .mastered {
             matches.sort { a, b in
                 if !terms.isEmpty, a.score != b.score { return a.score > b.score }
+                if options.sort == .alphabetical {
+                    return a.record.normalizedWord < b.record.normalizedWord
+                }
                 let aTime = Self.recency(a.progress, filter: filter)
                 let bTime = Self.recency(b.progress, filter: filter)
                 if aTime != bTime { return aTime > bTime }

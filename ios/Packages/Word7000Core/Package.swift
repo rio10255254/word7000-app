@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "Word7000Core", targets: ["Word7000Core"]),
     ],
     targets: [
-        .target(name: "Word7000Core"),
+        .target(name: "Word7000Core", resources: [.process("Resources")]),
         .testTarget(name: "Word7000CoreTests", dependencies: ["Word7000Core"]),
     ]
 )

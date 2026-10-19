@@ -3,6 +3,12 @@ import XCTest
 final class ExperienceTests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
+    override func tearDown() {
+        let app = XCUIApplication()
+        if app.state == .runningForeground { snapshot(app, "experience-" + name.components(separatedBy: " ").last!.replacingOccurrences(of: "]", with: "")) }
+        super.tearDown()
+    }
+
     private func launch() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans"]
@@ -26,10 +32,10 @@ final class ExperienceTests: XCTestCase {
         app.buttons["study-grade-known"].doubleTap()
         waitForReadyCard(app)
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("2 /"))
-        app.otherElements["study-card"].swipeLeft()
+        app.descendants(matching: .any)["study-card"].firstMatch.swipeLeft()
         waitForReadyCard(app)
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("3 /"))
-        app.otherElements["study-card"].swipeRight()
+        app.descendants(matching: .any)["study-card"].firstMatch.swipeRight()
         waitForReadyCard(app)
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
     }
@@ -70,5 +76,13 @@ final class ExperienceTests: XCTestCase {
         app.buttons["quiz-close"].tap()
         app.buttons["today-quiz"].tap()
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
+    }
+
+    private func snapshot(_ app: XCUIApplication, _ name: String) {
+        guard let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] else { return }
+        let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-screenshots")
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try? app.screenshot().pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
+        try? app.debugDescription.write(to: directory.appendingPathComponent(name + "-hierarchy.txt"), atomically: true, encoding: .utf8)
     }
 }

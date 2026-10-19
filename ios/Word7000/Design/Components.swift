@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Today's progress as a ring, with the count in the middle.
 struct ProgressRing<Label: View>: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var fraction: Double
     var color: Color
     var lineWidth: CGFloat = 12
@@ -15,7 +16,7 @@ struct ProgressRing<Label: View>: View {
                 .trim(from: 0, to: max(0.001, fraction))
                 .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                 .rotationEffect(.degrees(-90))
-                .animation(.spring(response: 0.6, dampingFraction: 0.85), value: fraction)
+                .animation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 0.85), value: fraction)
             label()
         }
         .accessibilityElement(children: .combine)
@@ -97,6 +98,7 @@ struct Tag: View {
 
 /// Thin linear progress for a session.
 struct SessionBar: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var fraction: Double
 
     var body: some View {
@@ -105,7 +107,7 @@ struct SessionBar: View {
                 Capsule().fill(Palette.fill)
                 Capsule().fill(Palette.accent)
                     .frame(width: max(6, proxy.size.width * fraction))
-                    .animation(.spring(response: 0.45, dampingFraction: 0.9), value: fraction)
+                    .animation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.9), value: fraction)
             }
         }
         .frame(height: 6)

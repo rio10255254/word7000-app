@@ -87,6 +87,29 @@ public enum ChineseDisplay {
         )
     }
 
+    /// Native reading support keeps tone marks and the separator between senses.
+    public static func pronunciationWithTones(_ meaning: String) -> String {
+        let key = "tones:\(meaning)"
+        cacheLock.lock()
+        let cached = pinyinCache[key]
+        cacheLock.unlock()
+        if let cached { return cached }
+        let value = meaningParts(meaning).compactMap { part -> String? in
+            let corrected = part.replacingOccurrences(of: "調整", with: "tiáo zhěng")
+                .replacingOccurrences(of: "敢於", with: "gǎn yú")
+            #if canImport(Darwin) || os(Linux)
+            return corrected.applyingTransform(.mandarinToLatin, reverse: false)?
+                .split(whereSeparator: { $0.isWhitespace }).joined(separator: " ").lowercased()
+            #else
+            return nil
+            #endif
+        }.joined(separator: "；")
+        cacheLock.lock()
+        pinyinCache[key] = value
+        cacheLock.unlock()
+        return value
+    }
+
     // MARK: - Pinyin
 
     static func isHan(_ character: Character) -> Bool {

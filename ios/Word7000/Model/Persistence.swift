@@ -27,6 +27,15 @@ struct AppSettings: Codable, Equatable, Sendable {
     var streakReminder: Bool?
     var onboardingComplete: Bool?
     var hapticsEnabled: Bool?
+    var speakingFilter: FilterSelection?
+    var savedBankFilters: [String: BankFilterSettings]?
+}
+
+struct BankFilterSettings: Codable, Equatable, Sendable {
+    var study = FilterSelection()
+    var quiz = FilterSelection()
+    var library = FilterSelection()
+    var speaking = FilterSelection()
 }
 
 struct FilterSelection: Codable, Equatable, Hashable, Sendable {

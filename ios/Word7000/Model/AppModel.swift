@@ -11,12 +11,14 @@ import Word7000Core
 final class AppModel {
     let coreWords: [WordEntry]
     private(set) var progress: ProgressState {
-        didSet { if !replacing { onDataChange?(SyncDirty(progress: true)) } }
+        didSet { libraryRevision &+= 1; if !replacing { onDataChange?(SyncDirty(progress: true)) } }
     }
     private(set) var customSets: CustomSetState {
         didSet {
             preparedCache = nil
             mergedWordsCache = nil
+            vocabularyCache = nil
+            libraryRevision &+= 1
             if !replacing { onDataChange?(SyncDirty(customSets: true)) }
         }
     }
@@ -34,6 +36,8 @@ final class AppModel {
     // Study session state survives switching tabs.
     private(set) var studySession: StudySession?
     private(set) var storageFailed = false
+    private(set) var libraryRevision = 0
+    private(set) var deletedSetUndo: CustomVocabSet?
     private var studyUndoStack: [(progress: ProgressState, session: StudySession)] = []
     var canUndoStudy: Bool { !studyUndoStack.isEmpty }
 
@@ -41,6 +45,7 @@ final class AppModel {
     @ObservationIgnored private var saveTask: Task<Void, Never>?
     @ObservationIgnored private var preparedCache: (key: String, vocabulary: PreparedVocabulary)?
     @ObservationIgnored private var mergedWordsCache: [WordEntry]?
+    @ObservationIgnored private var vocabularyCache: [WordEntry]?
 
     init(coreWords: [WordEntry], progress: ProgressState, customSets: CustomSetState, settings: AppSettings, persistence: Persistence, today: String = DayMath.today()) {
         self.coreWords = coreWords
@@ -133,10 +138,11 @@ final class AppModel {
         customSets = newSets
         replacing = false
         if settings.activeBankId != WordBanks.coreBankId, !newSets.sets.contains(where: { $0.id == settings.activeBankId }) {
-            settings.activeBankId = WordBanks.coreBankId
+            selectBank(WordBanks.coreBankId)
         }
         studySession = nil
         studyUndoStack = []
+        deletedSetUndo = nil
         if let previousSession { restoreStudySession(previousSession) }
         scheduleSave()
     }
@@ -173,11 +179,16 @@ final class AppModel {
     /// Built-in words plus hand-added ones; scanned words only live in their own bank.
     var allWords: [WordEntry] {
         if let cached = mergedWordsCache { return cached }
-        let words = WordBanks.mergeCustomWords(base: coreWords, custom: customSets.customWords)
+        let words = WordBanks.mergeCustomWords(base: coreWords, custom: customSets.customWords, includeBankCopies: true)
         mergedWordsCache = words
         return words
     }
-    var vocabularyWords: [WordEntry] { allWords.filter { !WordBanks.isScannedWordId($0.id) } }
+    var vocabularyWords: [WordEntry] {
+        if let cached = vocabularyCache { return cached }
+        let words = WordBanks.mergeCustomWords(base: coreWords, custom: customSets.customWords.filter { !WordBanks.isScannedWordId($0.id) })
+        vocabularyCache = words
+        return words
+    }
 
     var activeSet: CustomVocabSet? {
         settings.activeBankId == WordBanks.coreBankId ? nil : customSets.sets.first { $0.id == settings.activeBankId }
@@ -203,7 +214,18 @@ final class AppModel {
 
     func selectBank(_ id: String) {
         guard settings.activeBankId != id else { return }
-        settings.activeBankId = id
+        var next = settings
+        var saved = next.savedBankFilters ?? [:]
+        saved[next.activeBankId] = BankFilterSettings(study: next.studyFilter, quiz: next.quizFilter,
+                                                      library: next.libraryFilter, speaking: next.speakingFilter ?? FilterSelection())
+        let filters = saved[id] ?? BankFilterSettings()
+        next.savedBankFilters = saved
+        next.activeBankId = id
+        next.studyFilter = filters.study
+        next.quizFilter = filters.quiz
+        next.libraryFilter = filters.library
+        next.speakingFilter = filters.speaking
+        settings = next
         studySession = nil
         studyUndoStack = []
     }
@@ -227,7 +249,7 @@ final class AppModel {
         // New words go first in a set, so add them in reverse to keep the
         // order they were printed in.
         customSets = customSets.addingCustomWords(Array(words.reversed()), toSet: setId)
-        settings.activeBankId = setId
+        selectBank(setId)
         studySession = nil
         studyUndoStack = []
         scheduleSave()
@@ -240,8 +262,29 @@ final class AppModel {
     }
 
     func deleteSet(_ id: String) {
+        deletedSetUndo = customSets.sets.first { $0.id == id }
         customSets = customSets.deletingSet(id)
         if settings.activeBankId == id { selectBank(WordBanks.coreBankId) }
+        scheduleSave()
+    }
+
+    func restoreDeletedSet() {
+        guard let deleted = deletedSetUndo else { return }
+        customSets = customSets.restoringSet(deleted)
+        deletedSetUndo = nil
+        selectBank(deleted.id)
+        scheduleSave()
+    }
+
+    func dismissDeletedSetUndo() { deletedSetUndo = nil }
+
+    func transferWords(_ ids: Set<String>, from source: String, to target: String, move: Bool) {
+        customSets = customSets.transferringWords(ids, from: source, to: target, move: move)
+        scheduleSave()
+    }
+
+    func editCustomWord(_ word: WordEntry) {
+        customSets = customSets.editingWord(word)
         scheduleSave()
     }
 
@@ -452,13 +495,22 @@ final class AppModel {
 
     /// Speaking practice counts as activity but does not change word progress.
     func recordSpeaking(completed: Bool) {
-        progress = recordActivity(in: progress) { counters in
+        let changed = completed ? LearningEngine.recordPracticeDay(progress, today: today) : progress
+        progress = recordActivity(in: changed) { counters in
             if completed { counters.speakingCompleted += 1 } else { counters.speakingSkipped += 1 }
+            if completed {
+                if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
+            }
         }
         scheduleSave()
     }
 
     var quizMode: QuizAnswerMode { studyMode == .english ? .meaning : .word }
+
+    var speakingCandidates: [WordEntry] {
+        let filter = settings.speakingFilter ?? FilterSelection()
+        return bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+    }
 
     // MARK: Word sets
 
@@ -480,8 +532,14 @@ final class AppModel {
         scheduleSave()
     }
 
+    func removeWords(_ ids: Set<String>, fromSet setId: String) {
+        customSets = customSets.removingWords(ids, fromSet: setId)
+        scheduleSave()
+    }
+
     /// A word typed in by hand, saved into a set.
-    func addCustomWord(word: String, partOfSpeech: String, meaning: String, toSet setId: String) {
+    @discardableResult
+    func addCustomWord(word: String, partOfSpeech: String, meaning: String, toSet setId: String) -> String {
         let stamp = String(Int(Date().timeIntervalSince1970 * 1000), radix: 36)
         let slug = WordBanks.slug(word.lowercased())
         let core = vocabularyWords.first { $0.word.lowercased() == word.trimmed.lowercased() }
@@ -498,6 +556,7 @@ final class AppModel {
         )
         customSets = customSets.addingCustomWords([entry], toSet: setId)
         scheduleSave()
+        return entry.id
     }
 
     private func recordActivity(in state: ProgressState, _ change: (inout DailyLearningCounters) -> Void) -> ProgressState {

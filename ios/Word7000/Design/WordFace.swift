@@ -34,13 +34,13 @@ struct WordFace {
         case .chinese:
             let concise = ChineseDisplay.conciseMeaning(word.meaningZh)
             prompt = concise
-            promptDetail = ChineseDisplay.meaningPinyin(concise)
+            promptDetail = ChineseDisplay.pronunciationWithTones(concise)
             answer = word.word
             answerLabel = L.englishWord
             answerDetail = [word.partOfSpeech, word.pronunciation].filter { !$0.isEmpty }.joined(separator: "  ")
             supplemental = Self.supplementalParts(word)
                 .map { part in
-                    let pinyin = ChineseDisplay.meaningPinyin(part)
+                    let pinyin = ChineseDisplay.pronunciationWithTones(part)
                     return pinyin.isEmpty ? part : "\(part) \(pinyin)"
                 }
                 .joined(separator: " · ")

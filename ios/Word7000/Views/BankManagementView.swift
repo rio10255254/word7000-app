@@ -1,0 +1,196 @@
+import SwiftUI
+import Word7000Core
+
+struct BankManagementView: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
+    var setId: String
+    @State private var name = ""
+    @State private var loaded = false
+    @State private var selected = Set<String>()
+    @State private var editingWord: WordEntry?
+    @State private var addingWord = false
+    @State private var deleting = false
+    @State private var removing = false
+    @State private var notice: String?
+
+    private var bank: CustomVocabSet? { model.customSets.sets.first { $0.id == setId } }
+    private var words: [WordEntry] { WordBanks.words(of: bank, in: model.allWords) }
+
+    var body: some View {
+        List {
+            Section(L.bankName) {
+                TextField(L.bankName, text: $name)
+                    .accessibilityIdentifier("bank-name")
+            }
+            Section {
+                HStack {
+                    Text(L.bankWordCount(words.count)).foregroundStyle(.secondary)
+                    Spacer()
+                    Button(selected.count == words.count && !words.isEmpty ? L.t("取消全選", "Deselect all") : L.t("全選", "Select all")) {
+                        selected = selected.count == words.count ? [] : Set(words.map(\.id))
+                    }
+                    .disabled(words.isEmpty)
+                }
+                if let notice { Label(notice, systemImage: "checkmark.circle").font(.footnote).foregroundStyle(Palette.known) }
+                ForEach(words) { word in
+                    HStack(spacing: 8) {
+                        Button {
+                            if !selected.insert(word.id).inserted { selected.remove(word.id) }
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: selected.contains(word.id) ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(selected.contains(word.id) ? Palette.accent : Palette.secondaryLabel)
+                                    .frame(width: 28)
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(model.face(word).prompt).font(.body.weight(.semibold)).foregroundStyle(.primary)
+                                    Text(model.face(word).answer).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
+                                }
+                                Spacer(minLength: 4)
+                            }
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.borderless)
+                        .accessibilityAddTraits(selected.contains(word.id) ? .isSelected : [])
+                        if model.customSets.customWords.contains(where: { $0.id == word.id }) {
+                            Button { editingWord = word } label: { Image(systemName: "pencil").frame(width: 44, height: 44) }
+                                .buttonStyle(.borderless)
+                                .accessibilityLabel(L.t("編輯 \(word.word)", "Edit \(word.word)"))
+                        }
+                    }
+                }
+                if words.isEmpty { Text(L.t("還沒有單字", "No words yet")).foregroundStyle(.secondary) }
+            }
+            Section {
+                Button(role: .destructive) { deleting = true } label: {
+                    Label(L.deleteBank, systemImage: "trash")
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .navigationTitle(L.t("管理單字集", "Manage bank"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(L.save) {
+                    model.renameSet(setId, to: name.trimmed)
+                    dismiss()
+                }
+                .disabled(name.trimmed.isEmpty)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { addingWord = true } label: { Image(systemName: "plus") }
+                    .accessibilityLabel(L.addWord)
+            }
+            ToolbarItemGroup(placement: .bottomBar) {
+                Menu {
+                    transferMenu(move: false)
+                    transferMenu(move: true)
+                } label: { Image(systemName: "folder.badge.plus") }
+                .disabled(selected.isEmpty || model.customSets.sets.count < 2)
+                .accessibilityLabel(L.t("複製或移動單字", "Copy or move words"))
+                Spacer()
+                Text(L.t("已選 \(selected.count) 個", "\(selected.count) selected")).font(.subheadline).monospacedDigit()
+                Spacer()
+                Button(role: .destructive) { removing = true } label: { Image(systemName: "minus.circle") }
+                    .disabled(selected.isEmpty)
+                    .accessibilityLabel(L.removeFromBank)
+            }
+        }
+        .onAppear { if !loaded { name = bank?.name ?? ""; loaded = true } }
+        .sheet(item: $editingWord) { WordEditorSheet(word: $0, setId: setId) }
+        .sheet(isPresented: $addingWord) { WordEditorSheet(setId: setId) }
+        .confirmationDialog(L.deleteBank, isPresented: $deleting, titleVisibility: .visible) {
+            Button(L.deleteBank, role: .destructive) { model.deleteSet(setId); dismiss() }
+        } message: {
+            Text(L.t("學習紀錄會保留，回到字庫後可以復原這次刪除。", "Learning records are kept. You can undo this deletion in the word library."))
+        }
+        .confirmationDialog(L.t("移出 \(selected.count) 個單字？", "Remove \(selected.count) words from this bank?"), isPresented: $removing, titleVisibility: .visible) {
+            Button(L.removeFromBank, role: .destructive) {
+                model.removeWords(selected, fromSet: setId)
+                selected = []
+            }
+        } message: {
+            Text(L.t("不會刪除這些單字的學習紀錄。", "Their learning records will be kept."))
+        }
+    }
+
+    private func transferMenu(move: Bool) -> some View {
+        Menu(move ? L.t("移至單字集", "Move to bank") : L.t("複製至單字集", "Copy to bank")) {
+            ForEach(model.customSets.sets.filter { $0.id != setId }) { target in
+                Button(target.name) {
+                    let count = selected.count
+                    model.transferWords(selected, from: setId, to: target.id, move: move)
+                    selected = []
+                    notice = L.t("已將 \(count) 個單字加入「\(target.name)」", "Added \(count) words to \(target.name)")
+                }
+            }
+        }
+    }
+}
+
+struct WordEditorSheet: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
+    var word: WordEntry?
+    var setId: String
+    @State private var english: String
+    @State private var meaning: String
+    @State private var part: String
+    @State private var supplemental: String
+    @State private var example: String
+    @State private var translation: String
+
+    init(word: WordEntry? = nil, setId: String) {
+        self.word = word
+        self.setId = setId
+        _english = State(initialValue: word?.word ?? "")
+        _meaning = State(initialValue: word?.meaningZh ?? "")
+        _part = State(initialValue: word?.partOfSpeech ?? "")
+        _supplemental = State(initialValue: word?.supplementalMeaningZh ?? "")
+        _example = State(initialValue: word?.example ?? "")
+        _translation = State(initialValue: word?.exampleZh ?? "")
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("English", text: $english).textInputAutocapitalization(.never).autocorrectionDisabled()
+                    TextField(L.t("主要意思", "Main meaning"), text: $meaning, axis: .vertical)
+                    TextField(L.t("詞性", "Part of speech"), text: $part).textInputAutocapitalization(.never)
+                    TextField(L.t("補充意思", "Other meanings"), text: $supplemental, axis: .vertical)
+                }
+                Section(L.t("例句（選填）", "Example (optional)")) {
+                    TextField(L.t("英文例句", "English example"), text: $example, axis: .vertical).lineLimit(2...6)
+                    TextField(L.t("中文翻譯", "Chinese translation"), text: $translation, axis: .vertical).lineLimit(2...6)
+                }
+            }
+            .scrollDismissesKeyboard(.interactively)
+            .navigationTitle(word == nil ? L.addWord : L.t("編輯單字", "Edit word"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button(L.cancel) { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L.save, action: save)
+                        .disabled(english.trimmed.isEmpty || meaning.trimmed.isEmpty)
+                        .accessibilityIdentifier("word-editor-save")
+                }
+            }
+        }
+    }
+
+    private func save() {
+        let id = word?.id ?? model.addCustomWord(word: english, partOfSpeech: part, meaning: meaning, toSet: setId)
+        guard var entry = model.customSets.customWords.first(where: { $0.id == id }) else { return }
+        entry.word = english.trimmed
+        entry.meaningZh = meaning.trimmed
+        entry.partOfSpeech = part.trimmed
+        entry.supplementalMeaningZh = supplemental.trimmed
+        entry.example = example.trimmed
+        entry.exampleZh = translation.trimmed
+        model.editCustomWord(entry)
+        dismiss()
+    }
+}

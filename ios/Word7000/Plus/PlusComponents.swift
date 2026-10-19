@@ -20,11 +20,34 @@ struct PlusBadge: View {
 
 /// Plus status and the way in, at the top of "我".
 struct PlusSection: View {
+    var compact = false
     @Environment(PlusModel.self) private var plus
     @State private var manageOpen = false
 
     var body: some View {
         Section {
+          if compact {
+            Button {
+                if plus.subscribed { manageOpen = true } else { plus.paywallReason = .general }
+            } label: {
+                HStack(spacing: 12) {
+                    PlusIcon(size: 34)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(title).font(.headline).foregroundStyle(.primary)
+                        if case let .trial(daysLeft) = plus.access {
+                            Text("\(P.trialDaysMeter(daysLeft)) · \(P.scansLeft(plus.policy.trialScansLeft))")
+                                .font(.caption).foregroundStyle(.secondary)
+                        } else {
+                            Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer(minLength: 8)
+                    Image(systemName: "chevron.right").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 4)
+            }
+            .accessibilityIdentifier("me-plus")
+          } else {
             VStack(alignment: .leading, spacing: 14) {
                 HStack(spacing: 12) {
                     PlusIcon(size: 40)
@@ -55,6 +78,7 @@ struct PlusSection: View {
                 }
             }
             .padding(.vertical, 6)
+          }
         }
         .manageSubscriptionsSheet(isPresented: $manageOpen)
     }
@@ -148,7 +172,7 @@ struct PlusNudgeBanner: View {
                 Image(systemName: "xmark")
                     .font(.caption.weight(.bold))
                     .foregroundStyle(.secondary)
-                    .frame(width: 26, height: 26)
+                    .frame(width: 44, height: 44)
                     .background(Palette.fill, in: Circle())
             }
             .buttonStyle(.plain)

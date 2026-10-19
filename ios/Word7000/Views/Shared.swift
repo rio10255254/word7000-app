@@ -10,6 +10,8 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     private(set) var activeText: String?
     private(set) var activeLanguage: String?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
+    @ObservationIgnored private var speechID: UUID?
+    @ObservationIgnored private let audioQueue = DispatchQueue(label: "word7000.speech-audio", qos: .userInitiated)
     @ObservationIgnored
     private let synthesizer = AVSpeechSynthesizer()
 
@@ -21,23 +23,39 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     func speak(_ text: String, language: String = "en-US") {
         if activeText == text, activeLanguage == language { stop(); return }
         stop()
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-        try? AVAudioSession.sharedInstance().setActive(true)
-        let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: language)
-        utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
-        activeUtterance = utterance
+        let id = UUID()
+        speechID = id
         activeText = text
         activeLanguage = language
-        synthesizer.speak(utterance)
+        audioQueue.async { [weak self] in
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                Task { @MainActor in if self?.speechID == id { self?.stop() } }
+                return
+            }
+            Task { @MainActor in
+                guard let self, self.speechID == id else { return }
+                let utterance = AVSpeechUtterance(string: text)
+                utterance.voice = AVSpeechSynthesisVoice(language: language)
+                utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
+                self.activeUtterance = utterance
+                self.synthesizer.speak(utterance)
+            }
+        }
     }
 
     func stop() {
+        guard activeText != nil else { return }
+        speechID = nil
         activeUtterance = nil
         activeText = nil
         activeLanguage = nil
         synthesizer.stopSpeaking(at: .immediate)
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        audioQueue.async {
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {

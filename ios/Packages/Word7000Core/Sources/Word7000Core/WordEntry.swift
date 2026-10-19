@@ -12,6 +12,7 @@ public struct WordEntry: Codable, Hashable, Identifiable, Sendable {
     public var example: String
     public var exampleZh: String
     public var group: String
+    public var updatedAt: String?
 
     public init(
         id: String,
@@ -22,7 +23,8 @@ public struct WordEntry: Codable, Hashable, Identifiable, Sendable {
         supplementalMeaningZh: String? = nil,
         example: String,
         exampleZh: String,
-        group: String
+        group: String,
+        updatedAt: String? = nil
     ) {
         self.id = id
         self.word = word
@@ -33,6 +35,7 @@ public struct WordEntry: Codable, Hashable, Identifiable, Sendable {
         self.example = example
         self.exampleZh = exampleZh
         self.group = group
+        self.updatedAt = updatedAt
     }
 }
 

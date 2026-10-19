@@ -5,6 +5,8 @@ import Word7000Core
 /// Learning actions per day (or per week, for 90 days), stacked by kind in
 /// the same colors as Today's rows: blue words, indigo quizzes, green speaking.
 struct HistoryActivityChart: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var activity: [DailyLearningActivity]
     var chartHeight: CGFloat = 180
     /// For "我": period totals and the bars, no selection.
@@ -94,19 +96,18 @@ struct HistoryActivityChart: View {
         }
         .onChange(of: activity.count) { _, _ in selection = nil; inspectedDay = nil }
         .onChange(of: activity.last?.date) { _, _ in selection = nil; inspectedDay = nil }
-        .sensoryFeedback(.selection, trigger: selectedIndex)
+        .sensoryFeedback(.selection, trigger: selectedIndex) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 
     // MARK: Summaries
 
     private var periodSummary: some View {
         let total = activity.reduce(0) { $0 + $1.total }
-        return HStack(alignment: .firstTextBaseline) {
+        return VStack(alignment: .leading, spacing: 8) {
             Text(L.t("共 \(total) 次", "\(total) actions"))
                 .font(.rounded(.title3, weight: .bold))
                 .monospacedDigit()
                 .contentTransition(.numericText())
-            Spacer(minLength: 8)
             legend { kind in activity.reduce(0) { $0 + kind.count(in: $1) } }
         }
     }
@@ -127,12 +128,20 @@ struct HistoryActivityChart: View {
             }
             legend { $0.count(in: detail) }
         }
-        .animation(.snappy, value: detail)
+        .animation(reduceMotion ? nil : Motion.reveal, value: detail)
     }
 
     /// Colored dots with counts, e.g. "● 單字 9  ● 測驗 3  ● 口說 2".
     private func legend(_ count: @escaping (Kind) -> Int) -> some View {
-        HStack(spacing: 12) {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) { legendItems(count) }
+            VStack(alignment: .leading, spacing: 6) { legendItems(count) }
+        }
+        .font(.caption)
+    }
+
+    private func legendItems(_ count: @escaping (Kind) -> Int) -> some View {
+        Group {
             ForEach(Kind.allCases) { kind in
                 HStack(spacing: 4) {
                     Circle().fill(kind.color).frame(width: 7, height: 7)
@@ -146,7 +155,6 @@ struct HistoryActivityChart: View {
                 .accessibilityIdentifier(compact ? "me-week-\(kind.rawValue)" : "history-selected-\(kind.rawValue)")
             }
         }
-        .font(.caption)
     }
 
     // MARK: Chart

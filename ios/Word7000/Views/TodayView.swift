@@ -5,20 +5,23 @@ import Word7000Core
 struct TodayView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var studySettingsOpen = false
 
     var start: (Activity) -> Void
 
     var body: some View {
         let stats = model.stats
         let progress = model.progress
+        let plan = model.studyPlan
 
         List {
             Section {
-                VStack(spacing: 20) {
+                VStack(spacing: 16) {
                     ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 16) {
                         VStack(spacing: 0) {
                             Text("\(progress.studiedToday)")
-                                .font(.roundedSize(48, weight: .bold))
+                                .font(.rounded(.largeTitle, weight: .bold))
                                 .monospacedDigit()
                                 .contentTransition(.numericText())
                             Text(L.ofTarget(progress.dailyTarget))
@@ -26,13 +29,13 @@ struct TodayView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    .frame(width: 170, height: 170)
+                    .frame(width: 142, height: 142)
                     .padding(.top, 8)
 
                     VStack(spacing: 6) {
                         Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
                             .font(.rounded(.title2, weight: .bold))
-                        Text(L.todayPlan(due: stats.due, fresh: model.newWordsLeftToday))
+                        Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -47,7 +50,12 @@ struct TodayView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .prominentAction()
+                    .disabled(plan.total == 0)
                     .accessibilityIdentifier("today-start")
+                    if model.settings.studyFilter.isActive {
+                        Button(L.t("調整學習範圍", "Adjust study scope")) { studySettingsOpen = true }
+                            .font(.subheadline)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
@@ -65,7 +73,8 @@ struct TodayView: View {
 
             Section {
                 Button { start(.quiz) } label: {
-                    ActionRow(icon: "checklist", tint: Palette.chinese, title: L.quickQuiz, value: L.quizLength)
+                    ActionRow(icon: "checklist", tint: Palette.chinese, title: L.quickQuiz,
+                              value: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions"))
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("today-quiz")
@@ -96,9 +105,17 @@ struct TodayView: View {
                 Text(L.studyingBank(model.bankName))
             }
         }
-        .animation(.snappy, value: plus.nudge)
+        .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
         .navigationTitle(L.tabToday)
+        .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet() }
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button { studySettingsOpen = true } label: {
+                    Image(systemName: model.settings.studyFilter.isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                }
+                .accessibilityLabel(L.t("學習範圍", "Study scope"))
+                .accessibilityIdentifier("today-study-filter")
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Label(L.streakDays(progress.streak), systemImage: "flame.fill")
                     .labelStyle(.titleAndIcon)

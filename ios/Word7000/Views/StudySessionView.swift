@@ -37,12 +37,12 @@ struct StudySessionView: View {
                             .padding(.top, 4)
                         GeometryReader { proxy in
                             card(word: word)
-                                .id("\(word.id)-\(session.index)")
                                 .onAppear {
                                     cardWidth = proxy.size.width
                                     enterCard()
                                 }
                                 .onChange(of: proxy.size.width) { _, value in cardWidth = value }
+                                .id("\(word.id)-\(session.index)")
                         }
                         controls
                             .disabled(committing)

@@ -9,30 +9,50 @@ struct WordsView: View {
 
     @State private var query = ""
     @State private var renaming: CustomVocabSet?
+    @State private var managingID: String?
+    @State private var filtersOpen = false
+    @State private var results: [WordEntry] = []
+    @State private var searching = true
     @State private var newName = ""
     @State private var creatingBank = false
     @State private var addingWord = false
 
     var body: some View {
         let filter = model.settings.libraryFilter
-        let results = model.bank.filter(state: model.progress, query: query, filter: filter.status, options: filter.options)
 
         List {
             if query.isEmpty {
                 Section {
-                    BankShelf(scan: scan, rename: { set in
-                        newName = set.name
-                        renaming = set
-                    })
+                    BankShelf(scan: scan, manage: { managingID = $0.id })
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
                 }
             }
 
             Section {
+                if filter.isActive {
+                    HStack(alignment: .top) {
+                        Text(filterSummary).font(.caption).foregroundStyle(.secondary)
+                        Spacer()
+                        Button(L.t("清除", "Clear")) { clearFilters() }.font(.caption.weight(.semibold))
+                    }
+                }
+                if results.isEmpty {
+                    if searching {
+                        HStack { Spacer(); ProgressView(); Spacer() }.padding(.vertical, 30)
+                    } else {
+                        ContentUnavailableView(L.noLibraryWords, systemImage: "text.magnifyingglass",
+                                               description: Text(query.isEmpty ? model.bankName : query))
+                        if filter.isActive {
+                            Button(L.t("清除篩選", "Clear filters")) { clearFilters() }
+                        } else if model.activeSet != nil, query.isEmpty {
+                            Button(L.addWord) { addingWord = true }
+                        }
+                    }
+                }
                 ForEach(results) { word in
                     NavigationLink(value: word) {
-                        WordRow(word: word, progress: model.progress(for: word.id))
+                        WordRow(word: word, progress: model.progress(for: word.id), query: query)
                     }
                     .swipeActions(edge: .trailing) {
                         let favorite = model.progress(for: word.id).favorite
@@ -50,20 +70,44 @@ struct WordsView: View {
                 }
             }
         }
-        .overlay {
-            if results.isEmpty {
-                if query.isEmpty {
-                    ContentUnavailableView(L.noLibraryWords, systemImage: "text.magnifyingglass")
-                } else {
-                    ContentUnavailableView.search(text: query)
-                }
-            }
-        }
         .navigationTitle(L.tabWords)
         .navigationDestination(for: WordEntry.self) { word in
             WordDetailView(word: word)
         }
-        .searchable(text: $query, prompt: L.searchPlaceholder)
+        .navigationDestination(item: $managingID) { BankManagementView(setId: $0) }
+        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: L.searchPlaceholder)
+        .textInputAutocapitalization(.never)
+        .autocorrectionDisabled()
+        .scrollDismissesKeyboard(.interactively)
+        .onChange(of: model.settings.activeBankId) { _, _ in query = "" }
+        .task(id: SearchKey(query: query, bank: model.settings.activeBankId, filter: filter, revision: model.libraryRevision)) {
+            await refreshResults()
+        }
+        .safeAreaInset(edge: .bottom) {
+            if let deleted = model.deletedSetUndo {
+                HStack {
+                    Text(L.t("已刪除「\(deleted.name)」", "Deleted \(deleted.name)")).font(.subheadline).lineLimit(2)
+                    Spacer()
+                    Button(L.undo) { model.restoreDeletedSet() }.fontWeight(.semibold)
+                    Button { model.dismissDeletedSetUndo() } label: { Image(systemName: "xmark").frame(width: 44, height: 44) }
+                        .accessibilityLabel(L.close)
+                }
+                .padding(.horizontal, 16)
+                .background(.regularMaterial)
+            }
+        }
+        .sheet(isPresented: $filtersOpen) {
+            NavigationStack {
+                Form {
+                    Section {
+                        FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
+                    }
+                }
+                .navigationTitle(L.filters)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 filterMenu
@@ -75,6 +119,7 @@ struct WordsView: View {
                         newName = ""
                         creatingBank = true
                     } label: { Label(L.newBank, systemImage: "folder.badge.plus") }
+                    .accessibilityIdentifier("words-new-bank")
                     if model.activeSet != nil {
                         Button { addingWord = true } label: { Label(L.addWord, systemImage: "plus") }
                     }
@@ -85,7 +130,7 @@ struct WordsView: View {
             }
         }
         .alert(L.newBank, isPresented: $creatingBank) {
-            TextField(L.bankName, text: $newName)
+            TextField(L.bankName, text: $newName).accessibilityIdentifier("new-bank-name")
             Button(L.cancel, role: .cancel) {}
             Button(L.save) {
                 let id = model.createSet(named: newName)
@@ -106,31 +151,48 @@ struct WordsView: View {
     }
 
     private var filterMenu: some View {
-        Menu {
-            Picker(L.filterStatus, selection: binding(\.status)) {
-                ForEach(LibraryFilter.allCases, id: \.self) { status in
-                    Text(L.filterLabel(status)).tag(status)
-                }
-            }
-            Picker(L.filterSort, selection: binding(\.sort)) {
-                Text(L.sortDefault).tag(LibrarySort.default)
-                Text(L.sortAlphabetical).tag(LibrarySort.alphabetical)
-            }
-            Menu(L.filterLevel) {
-                Picker(L.filterLevel, selection: binding(\.level)) {
-                    Text(L.allLevels).tag("all")
-                    ForEach(model.levels, id: \.self) { level in
-                        Text(level).tag(level)
-                    }
-                }
-            }
-        } label: {
+        Button { filtersOpen = true } label: {
             Image(systemName: model.settings.libraryFilter.isActive
                   ? "line.3.horizontal.decrease.circle.fill"
                   : "line.3.horizontal.decrease.circle")
         }
         .accessibilityLabel(L.filters)
         .accessibilityIdentifier("words-filter")
+    }
+
+    private struct SearchKey: Equatable {
+        var query: String
+        var bank: String
+        var filter: FilterSelection
+        var revision: Int
+    }
+
+    @MainActor private func refreshResults() async {
+        searching = true
+        if !query.trimmed.isEmpty {
+            do { try await Task.sleep(for: .milliseconds(120)) } catch { return }
+        }
+        let vocabulary = model.bank, state = model.progress, filter = model.settings.libraryFilter, text = query
+        let matches = await Task.detached(priority: .userInitiated) {
+            vocabulary.filter(state: state, query: text, filter: filter.status, options: filter.options, rankedSearch: true)
+        }.value
+        guard !Task.isCancelled else { return }
+        if results != matches { results = matches }
+        searching = false
+    }
+
+    private var filterSummary: String {
+        let filter = model.settings.libraryFilter
+        return [filter.status == .all ? nil : L.filterLabel(filter.status),
+                filter.level == "all" ? nil : filter.level,
+                filter.initial == "all" ? nil : "\(L.t("字首", "Letter")) \(filter.initial)"]
+            .compactMap { $0 }.joined(separator: " · ")
+    }
+
+    private func clearFilters() {
+        model.settings.libraryFilter.status = .all
+        model.settings.libraryFilter.level = "all"
+        model.settings.libraryFilter.initial = "all"
     }
 
     private func binding<T>(_ keyPath: WritableKeyPath<FilterSelection, T>) -> Binding<T> {
@@ -145,8 +207,11 @@ struct WordsView: View {
 struct BankShelf: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var scan: () -> Void
-    var rename: (CustomVocabSet) -> Void
+    var manage: (CustomVocabSet) -> Void
+    @ScaledMetric(relativeTo: .body) private var shelfWidth = 140.0
+    @ScaledMetric(relativeTo: .body) private var shelfHeight = 124.0
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -156,9 +221,18 @@ struct BankShelf: View {
                     let scanned = set.wordIds.contains(where: WordBanks.isScannedWordId)
                     card(id: set.id, name: set.name, count: WordBanks.words(of: set, in: model.allWords).count,
                          icon: scanned ? "doc.text.viewfinder" : "folder.fill", color: Color(hex: set.color) ?? Palette.accent)
+                        .overlay(alignment: .topTrailing) {
+                            Button { manage(set) } label: {
+                                Image(systemName: "ellipsis.circle")
+                                    .font(.body.weight(.semibold))
+                                    .foregroundStyle(model.settings.activeBankId == set.id ? .white : Palette.accent)
+                                    .frame(width: 44, height: 44)
+                            }
+                            .buttonStyle(SoftPressStyle())
+                            .accessibilityLabel(L.t("管理 \(set.name)", "Manage \(set.name)"))
+                        }
                         .contextMenu {
-                            Button { rename(set) } label: { Label(L.renameBank, systemImage: "pencil") }
-                            Button(role: .destructive) { model.deleteSet(set.id) } label: { Label(L.deleteBank, systemImage: "trash") }
+                            Button { manage(set) } label: { Label(L.t("管理", "Manage"), systemImage: "slider.horizontal.3") }
                         }
                 }
                 Button(action: scan) {
@@ -176,13 +250,13 @@ struct BankShelf: View {
                             .foregroundStyle(Palette.accent)
                     }
                     .padding(14)
-                    .frame(width: 128, height: 112, alignment: .leading)
+                    .frame(width: shelfWidth, height: shelfHeight, alignment: .leading)
                     .background(Palette.accent.opacity(0.1), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(SoftPressStyle())
                 .accessibilityIdentifier("words-scan")
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 0)
             .padding(.vertical, 4)
         }
     }
@@ -209,7 +283,7 @@ struct BankShelf: View {
     private func card(id: String, name: String, count: Int, icon: String, color: Color) -> some View {
         let active = model.settings.activeBankId == id
         return Button {
-            withAnimation(.snappy) { model.selectBank(id) }
+            withAnimation(reduceMotion ? nil : Motion.reveal) { model.selectBank(id) }
         } label: {
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
@@ -217,24 +291,24 @@ struct BankShelf: View {
                         .font(.title3.weight(.semibold))
                         .foregroundStyle(active ? .white : color)
                     Spacer()
-                    if active {
-                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.white)
-                    }
                 }
                 Spacer(minLength: 0)
                 Text(name)
                     .font(.rounded(.subheadline, weight: .bold))
                     .lineLimit(2)
                     .foregroundStyle(active ? .white : .primary)
-                Text(L.bankWordCount(count))
-                    .font(.caption)
-                    .foregroundStyle(active ? .white.opacity(0.8) : .secondary)
+                HStack {
+                    Text(L.bankWordCount(count)).font(.caption)
+                        .foregroundStyle(active ? .white.opacity(0.9) : .secondary)
+                    Spacer(minLength: 4)
+                    if active { Image(systemName: "checkmark.circle.fill").foregroundStyle(.white) }
+                }
             }
             .padding(14)
-            .frame(width: 128, height: 112, alignment: .leading)
+            .frame(width: shelfWidth, height: shelfHeight, alignment: .leading)
             .background(active ? color : Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SoftPressStyle())
         .accessibilityAddTraits(active ? .isSelected : [])
     }
 }
@@ -243,17 +317,19 @@ struct WordRow: View {
     @Environment(AppModel.self) private var model
     var word: WordEntry
     var progress: WordProgress
+    var query = ""
 
     var body: some View {
         HStack(spacing: 12) {
-            Circle()
-                .fill(color)
-                .frame(width: 8, height: 8)
+            Image(systemName: progress.status == .mastered ? "checkmark.circle.fill" : progress.status == .review ? "arrow.counterclockwise" : "circle")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(progress.status == .new ? Palette.tertiaryLabel : color)
+                .frame(width: 16)
                 .accessibilityLabel(L.statusLabel(progress.status))
             VStack(alignment: .leading, spacing: 2) {
                 let face = model.face(word)
-                Text(face.prompt).font(.rounded(.body, weight: .semibold))
-                Text(face.answer)
+                SearchHighlightedText(text: face.prompt, query: query).font(.rounded(.body, weight: .semibold))
+                SearchHighlightedText(text: face.answer, query: query)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -274,18 +350,38 @@ struct WordRow: View {
     }
 }
 
+struct SearchHighlightedText: View {
+    var text: String
+    var query: String
+
+    var body: some View {
+        var attributed = AttributedString(text)
+        for term in query.split(whereSeparator: { $0.isWhitespace }) {
+            if let range = attributed.range(of: String(term), options: [.caseInsensitive, .diacriticInsensitive]) {
+                attributed[range].foregroundColor = Palette.accent
+            }
+        }
+        return Text(attributed)
+    }
+}
+
 struct WordDetailView: View {
     @Environment(AppModel.self) private var model
     var word: WordEntry
+    @State private var editing = false
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize = 38.0
 
     var body: some View {
+        let word = model.customSets.customWords.first { $0.id == self.word.id } ?? self.word
         let progress = model.progress(for: word.id)
         let face = model.face(word)
         List {
             Section {
                 VStack(spacing: 6) {
                     Text(face.prompt)
-                        .font(.roundedSize(42, weight: .bold))
+                        .font(.roundedSize(titleSize, weight: .bold))
+                        .lineLimit(4)
+                        .minimumScaleFactor(0.6)
                         .multilineTextAlignment(.center)
                         .textSelection(.enabled)
                     if !face.promptDetail.isEmpty {
@@ -334,7 +430,17 @@ struct WordDetailView: View {
         }
         .navigationTitle(face.prompt)
         .navigationBarTitleDisplayMode(.inline)
+        .onDisappear { Speaker.shared.stop() }
+        .sheet(isPresented: $editing) {
+            WordEditorSheet(word: word, setId: model.customSets.sets.first { $0.wordIds.contains(word.id) }?.id ?? model.settings.activeBankId)
+        }
         .toolbar {
+            if model.customSets.customWords.contains(where: { $0.id == word.id }) {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { editing = true } label: { Image(systemName: "pencil") }
+                        .accessibilityLabel(L.t("編輯單字", "Edit word"))
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     ForEach(model.customSets.sets) { set in
@@ -378,40 +484,8 @@ struct WordDetailView: View {
 /// Type a word and its meaning into the current bank.
 struct AddWordSheet: View {
     @Environment(AppModel.self) private var model
-    @Environment(\.dismiss) private var dismiss
-    @State private var word = ""
-    @State private var partOfSpeech = ""
-    @State private var meaning = ""
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    TextField("English", text: $word)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                    TextField(L.t("詞性（可留空）", "Part of speech (optional)"), text: $partOfSpeech)
-                        .textInputAutocapitalization(.never)
-                    TextField(L.t("中文意思", "Chinese meaning"), text: $meaning)
-                } footer: {
-                    Text(L.t("會加入「\(model.bankName)」。", "Added to \u{201C}\(model.bankName)\u{201D}."))
-                }
-            }
-            .navigationTitle(L.addWord)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button(L.cancel) { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(L.save) {
-                        if let set = model.activeSet {
-                            model.addCustomWord(word: word, partOfSpeech: partOfSpeech, meaning: meaning, toSet: set.id)
-                        }
-                        dismiss()
-                    }
-                    .disabled(word.trimmed.isEmpty || meaning.trimmed.isEmpty)
-                }
-            }
-        }
-        .presentationDetents([.medium])
+        WordEditorSheet(setId: model.settings.activeBankId)
     }
 }

@@ -32,6 +32,10 @@ extension CustomSetState {
         updatingSet(setId, now: now) { set in set.wordIds.removeAll { $0 == wordId } }
     }
 
+    public func removingWords(_ ids: Set<String>, fromSet setId: String, now: String = DayMath.timestamp()) -> CustomSetState {
+        updatingSet(setId, now: now) { $0.wordIds.removeAll { ids.contains($0) } }
+    }
+
     public func renamingSet(_ setId: String, to name: String, now: String = DayMath.timestamp()) -> CustomSetState {
         let cleanName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanName.isEmpty else { return self }
@@ -47,6 +51,40 @@ extension CustomSetState {
             var copy = set
             copy.sortOrder = index + 1
             return copy
+        }
+        return next
+    }
+
+    public func restoringSet(_ set: CustomVocabSet, now: String = DayMath.timestamp()) -> CustomSetState {
+        guard !sets.contains(where: { $0.id == set.id }) else { return self }
+        var next = self
+        var restored = set
+        restored.updatedAt = now
+        restored.sortOrder = next.sets.count + 1
+        next.deletedSetIds?[set.id] = nil
+        next.sets.append(restored)
+        return next
+    }
+
+    public func transferringWords(_ ids: Set<String>, from sourceId: String, to targetId: String,
+                                  move: Bool, now: String = DayMath.timestamp()) -> CustomSetState {
+        guard sourceId != targetId, let source = sets.first(where: { $0.id == sourceId }),
+              let target = sets.first(where: { $0.id == targetId }) else { return self }
+        let selected = source.wordIds.filter { ids.contains($0) }
+        let fresh = selected.filter { !target.wordIds.contains($0) }
+        var next = updatingSet(targetId, now: now) { $0.wordIds.insert(contentsOf: fresh, at: 0) }
+        if move { next = next.updatingSet(sourceId, now: now) { $0.wordIds.removeAll { ids.contains($0) } } }
+        return next
+    }
+
+    public func editingWord(_ word: WordEntry, now: String = DayMath.timestamp()) -> CustomSetState {
+        guard let index = customWords.firstIndex(where: { $0.id == word.id }) else { return self }
+        var next = self
+        var updated = word
+        updated.updatedAt = now
+        next.customWords[index] = updated
+        for index in next.sets.indices where next.sets[index].wordIds.contains(word.id) {
+            next.sets[index].updatedAt = now
         }
         return next
     }
@@ -98,12 +136,26 @@ extension CustomSetState {
         }
 
         var customWords: [WordEntry] = []
-        var wordKeys = Set<String>()
+        var wordIndexes: [String: Int] = [:]
+        var wordVersions: [String: String] = [:]
         var sets: [CustomVocabSet] = []
         var setIndexById: [String: Int] = [:]
         for state in states.compactMap({ $0 }) {
-            for word in state.customWords where wordKeys.insert("\(word.id):\(word.word.lowercased())").inserted {
-                customWords.append(word)
+            var fallbackVersions: [String: String] = [:]
+            for set in state.sets {
+                for id in set.wordIds where set.updatedAt > (fallbackVersions[id] ?? "") {
+                    fallbackVersions[id] = set.updatedAt
+                }
+            }
+            for word in state.customWords {
+                let version = word.updatedAt ?? fallbackVersions[word.id] ?? ""
+                if let index = wordIndexes[word.id] {
+                    if version >= (wordVersions[word.id] ?? "") { customWords[index] = word; wordVersions[word.id] = version }
+                } else {
+                    wordIndexes[word.id] = customWords.count
+                    wordVersions[word.id] = version
+                    customWords.append(word)
+                }
             }
             for set in state.sets {
                 if let deletedAt = deleted[set.id], deletedAt >= set.updatedAt { continue }

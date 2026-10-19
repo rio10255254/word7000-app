@@ -9,27 +9,24 @@ struct MeView: View {
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
-        let stats = model.stats
+        let stats = LearningEngine.stats(words: model.allWords, state: model.progress, today: model.today)
 
         List {
+            AccountSection()
             Section {
                 HStack(spacing: 0) {
                     StatTile(value: model.progress.streak, label: L.streak, color: Palette.review)
                     Divider().frame(height: 36)
                     StatTile(value: stats.mastered, label: L.mastered, color: Palette.known)
                     Divider().frame(height: 36)
-                    StatTile(value: stats.review, label: L.reviewing, color: Palette.accent)
+                    StatTile(value: stats.review, label: L.reviewing, color: Palette.review)
                 }
                 .padding(.vertical, 6)
             }
 
-            PlusSection()
-
             Section {
                 HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
-                Button {
-                    historyOpen = true
-                } label: {
+                Button { historyOpen = true } label: {
                     ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
                 }
                 .tint(.primary)
@@ -37,11 +34,29 @@ struct MeView: View {
             } header: {
                 Text(L.thisWeek)
             } footer: {
-                if let accuracy = model.quizAccuracy {
-                    Text(L.quizAccuracy(accuracy))
-                }
+                if let accuracy = model.quizAccuracy { Text(L.quizAccuracy(accuracy)) }
             }
 
+            PlusSection(compact: true)
+
+            Section {
+                NavigationLink { SettingsView() } label: {
+                    Label(L.settings, systemImage: "gearshape")
+                }
+                .accessibilityIdentifier("me-settings")
+            }
+        }
+        .navigationTitle(L.tabMe)
+        .navigationDestination(isPresented: $historyOpen) { HistoryView() }
+    }
+}
+
+struct SettingsView: View {
+    @Environment(AppModel.self) private var model
+    private let dailyTargetOptions = [10, 20, 30, 50]
+
+    var body: some View {
+        Form {
             Section {
                 Picker(L.studyModeTitle, selection: Binding(
                     get: { model.studyMode },
@@ -63,6 +78,10 @@ struct MeView: View {
                     get: { model.reminderEnabled },
                     set: { model.setReminderEnabled($0) }
                 ))
+                Toggle(L.t("觸覺回饋", "Haptic feedback"), isOn: Binding(
+                    get: { model.settings.hapticsEnabled ?? true },
+                    set: { model.settings.hapticsEnabled = $0 }
+                ))
                 Picker(L.appearance, selection: Binding(
                     get: { model.settings.theme },
                     set: { model.settings.theme = $0 }
@@ -77,7 +96,7 @@ struct MeView: View {
                 Text("\(L.dailyTargetText) \(L.reminderText)")
             }
 
-            AccountSection()
+            AccountSection(includeDeletion: true)
 
             Section {
                 Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
@@ -89,8 +108,8 @@ struct MeView: View {
                 LabeledContent(L.version, value: Bundle.main.versionLabel)
             }
         }
-        .navigationTitle(L.tabMe)
-        .navigationDestination(isPresented: $historyOpen) { HistoryView() }
+        .navigationTitle(L.settings)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

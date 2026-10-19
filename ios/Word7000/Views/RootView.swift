@@ -57,6 +57,7 @@ struct RootView: View {
         }
         // The interface language follows the study mode; rebuild on change.
         .id(model.studyMode)
+        .environment(\.locale, Locale(identifier: L.zh ? "zh_Hant_TW" : "en_US"))
         .sheet(item: Binding(get: { plus.paywallReason }, set: { plus.paywallReason = $0 })) { reason in
             PaywallView(reason: reason)
         }

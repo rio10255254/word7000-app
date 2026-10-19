@@ -231,6 +231,10 @@ public enum LearningEngine {
         return next
     }
 
+    public static func recordPracticeDay(_ state: ProgressState, today: String) -> ProgressState {
+        advanceDailyProgress(state, today: today, increment: 0)
+    }
+
     static func advanceDailyProgress(_ state: ProgressState, today: String, increment: Int) -> ProgressState {
         var next = normalizeForDate(state, today: today)
         if next.lastStudyDate != today {

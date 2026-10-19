@@ -127,10 +127,10 @@ public enum WordBanks {
     }
 
     /// Hand-added words that do not clash with the base list, ahead of it.
-    public static func mergeCustomWords(base: [WordEntry], custom: [WordEntry]) -> [WordEntry] {
+    public static func mergeCustomWords(base: [WordEntry], custom: [WordEntry], includeBankCopies: Bool = false) -> [WordEntry] {
         let baseIds = Set(base.map(\.id))
         let baseNames = Set(base.map { $0.word.lowercased() })
-        return custom.filter { !baseIds.contains($0.id) && !baseNames.contains($0.word.lowercased()) } + base
+        return custom.filter { !baseIds.contains($0.id) && (includeBankCopies || !baseNames.contains($0.word.lowercased())) } + base
     }
 
     public static func nextColor(for sets: [CustomVocabSet]) -> String {

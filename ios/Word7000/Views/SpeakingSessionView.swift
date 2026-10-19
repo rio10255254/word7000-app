@@ -6,16 +6,24 @@ import Word7000Core
 struct SpeakingSessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var words: [WordEntry] = []
     @State private var index = 0
     @State private var revealed = false
     @State private var answered = 0
+    @State private var started = false
+    @State private var examplesOnly = false
+    @State private var completedCurrent = false
+    @State private var filtersOpen = false
+    @State private var previousFilter = FilterSelection()
 
     var body: some View {
         NavigationStack {
             Group {
-                if words.isEmpty {
+                if !started {
+                    ProgressView()
+                } else if words.isEmpty {
                     ContentUnavailableView(L.noQuizWords, systemImage: "bubble.left.and.text.bubble.right")
                 } else if index >= words.count {
                     finished
@@ -40,61 +48,125 @@ struct SpeakingSessionView: View {
                             .monospacedDigit()
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button(L.t("情境問答", "Conversation questions")) { examplesOnly = false; start() }
+                            .disabled(!model.speakingCandidates.contains { SpeakingPractice.entry(for: $0) != nil })
+                        Button(L.t("例句延伸", "Build on examples")) { examplesOnly = true; start() }
+                        Divider()
+                        Button(L.t("練習範圍", "Practice scope")) {
+                            previousFilter = model.settings.speakingFilter ?? FilterSelection()
+                            filtersOpen = true
+                        }
+                    } label: { Image(systemName: "slider.horizontal.3") }
+                    .accessibilityLabel(L.filters)
+                }
             }
         }
-        .onAppear {
-            if words.isEmpty { words = model.quizQuestions(count: 10, seed: SeededRandom.runtimeSeed()) }
+        .onAppear { if !started { start() } }
+        .onDisappear { Speaker.shared.stop() }
+        .sensoryFeedback(.success, trigger: completedCurrent) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .sheet(isPresented: $filtersOpen, onDismiss: {
+            if previousFilter != (model.settings.speakingFilter ?? FilterSelection()) { start() }
+        }) {
+            NavigationStack {
+                Form {
+                    Section {
+                        FilterControls(selection: Binding(get: { model.settings.speakingFilter ?? FilterSelection() }, set: { model.settings.speakingFilter = $0 }))
+                    }
+                }
+                .navigationTitle(L.t("練習範圍", "Practice scope"))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
+            }
         }
     }
 
+    private func start() {
+        Speaker.shared.stop()
+        let candidates = model.speakingCandidates
+        let reviewed = candidates.filter { SpeakingPractice.entry(for: $0) != nil }
+        if reviewed.isEmpty { examplesOnly = true }
+        words = QuizBuilder.session(words: examplesOnly ? candidates : reviewed, count: 10)
+        index = 0
+        answered = 0
+        revealed = false
+        completedCurrent = false
+        started = true
+    }
+
     private func prompt(_ word: WordEntry) -> some View {
-        let card = ConversationPrompts.build(word, mode: model.studyMode == .english ? .english : .chinese)
+        let mode: ConversationPromptMode = model.studyMode == .english ? .english : .chinese
+        let card = examplesOnly ? SpeakingPractice.exampleExercise(for: word, mode: mode)
+            : (SpeakingPractice.card(for: word, mode: mode) ?? SpeakingPractice.exampleExercise(for: word, mode: mode))
         let face = model.face(word)
         return VStack(spacing: 16) {
             SessionBar(fraction: Double(index + (revealed ? 1 : 0)) / Double(max(1, words.count)))
                 .padding(.top, 4)
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    Text(examplesOnly ? L.t("例句延伸", "Build on an example") : L.t("情境問答", "Conversation"))
+                        .font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                     HStack(alignment: .firstTextBaseline) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(card.keyword).font(.roundedSize(30, weight: .bold))
+                            Text(card.keyword).font(.rounded(.title3, weight: .bold)).foregroundStyle(Palette.accent)
                             if !card.keywordPronunciation.isEmpty {
                                 Text(card.keywordPronunciation).foregroundStyle(.secondary)
                             }
                         }
                         Spacer()
-                        SpeakButton(text: face.speakText, language: face.speakLanguage)
+                        SpeakButton(text: card.keyword, language: face.speakLanguage)
                     }
-                    Text(card.question)
-                        .font(.title3.weight(.semibold))
+                    if examplesOnly, !card.referenceAnswer.isEmpty {
+                        Text(card.referenceAnswer).font(.title3).lineSpacing(4)
+                    }
+                    HStack(alignment: .top, spacing: 8) {
+                        Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
+                            .accessibilityIdentifier("speaking-question")
+                        SpeakButton(text: card.question, language: "en-US")
+                    }
                     Text(card.questionSupport)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    if revealed {
+                    if revealed, !card.referenceAnswer.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(L.sampleAnswer).font(.caption.weight(.semibold)).foregroundStyle(Palette.accent)
-                            Text(card.referenceAnswer)
+                            Divider().padding(.bottom, 6)
+                            HStack {
+                                Text(examplesOnly ? L.t("例句與翻譯", "Example and translation") : L.sampleAnswer)
+                                    .font(.caption.weight(.semibold)).foregroundStyle(Palette.accent)
+                                Spacer()
+                                SpeakButton(text: card.referenceAnswer, language: face.speakLanguage)
+                            }
+                            if !examplesOnly { Text(card.referenceAnswer).lineSpacing(4) }
                             Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
                         }
-                        .padding(14)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Palette.fill, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .transition(.opacity.combined(with: .move(edge: .bottom)))
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                     }
                 }
                 .card(radius: Metrics.wordCardRadius, padding: 20)
             }
             if revealed {
+              HStack(spacing: 12) {
                 Button(action: next) {
-                    Text(index + 1 >= words.count ? L.seeResults : L.nextQuestion).font(.headline).frame(maxWidth: .infinity)
+                    Text(completedCurrent ? (index + 1 >= words.count ? L.seeResults : L.nextQuestion) : L.t("略過", "Skip"))
+                        .font(.headline).frame(maxWidth: .infinity)
                 }
                 .prominentAction()
+                if !completedCurrent {
+                    Button { reveal(completed: true); next() } label: {
+                        Text(L.t("練習完成", "Done")).font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .prominentAction(tint: Palette.known)
+                }
+              }
             } else {
                 HStack(spacing: 12) {
                     Button { reveal(completed: false) } label: {
-                        Text(L.showSample).font(.headline).frame(maxWidth: .infinity)
+                        Text(examplesOnly ? L.t("看翻譯", "Translation") : L.showSample).font(.headline).frame(maxWidth: .infinity)
                     }
                     .secondaryAction()
+                    .disabled(card.referenceAnswer.isEmpty)
                     Button { reveal(completed: true) } label: {
                         Text(L.spokeIt).font(.headline).frame(maxWidth: .infinity)
                     }
@@ -105,12 +177,19 @@ struct SpeakingSessionView: View {
     }
 
     private func reveal(completed: Bool) {
-        model.recordSpeaking(completed: completed)
-        if completed { answered += 1 }
-        withAnimation(.snappy) { revealed = true }
+        if completed, !completedCurrent {
+            model.recordSpeaking(completed: true)
+            answered += 1
+            completedCurrent = true
+        }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { revealed = true }
     }
 
     private func next() {
+        guard index < words.count else { return }
+        if !completedCurrent { model.recordSpeaking(completed: false) }
+        Speaker.shared.stop()
+        completedCurrent = false
         revealed = false
         index += 1
     }

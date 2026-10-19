@@ -179,6 +179,7 @@ struct SignInSheet: View {
 
 /// The account rows in "我".
 struct AccountSection: View {
+    var includeDeletion = false
     @Environment(AccountModel.self) private var account
     @State private var signInOpen = false
     @State private var confirmSignOut = false
@@ -234,7 +235,7 @@ struct AccountSection: View {
             Text(L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
         }
 
-        if account.configured, account.session != nil {
+        if includeDeletion, account.configured, account.session != nil {
             Section {
                 Button(L.t("刪除帳號與資料", "Delete account and data"), role: .destructive) { confirmDelete = true }
                     .disabled(account.busy)

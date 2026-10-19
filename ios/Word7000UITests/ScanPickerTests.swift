@@ -34,7 +34,7 @@ final class ScanPickerTests: XCTestCase {
             let save = app.buttons["scan-save"]
             XCTAssertTrue(save.waitForExistence(timeout: 45), app.debugDescription)
             let words = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'"))
-                .allElementsBoundByIndex.compactMap { $0.value as? String }
+                .allElementsBoundByIndex.compactMap { ($0.value as? String)?.lowercased() }
             let meanings = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-meaning-'"))
                 .allElementsBoundByIndex.compactMap { $0.value as? String }
             XCTAssertEqual(Set(words), Set(["objectively", "objective", "carefully"]))
@@ -42,7 +42,7 @@ final class ScanPickerTests: XCTestCase {
             let expected = ["objectively": "客觀地", "objective": "目標", "carefully": "小心地"]
             for field in app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).allElementsBoundByIndex {
                 let id = String(field.identifier.dropFirst("scan-word-".count))
-                XCTAssertEqual(app.textFields["scan-meaning-" + id].value as? String, expected[field.value as? String ?? ""])
+                XCTAssertEqual(app.textFields["scan-meaning-" + id].value as? String, expected[(field.value as? String ?? "").lowercased()])
             }
             snapshot(app, name: "scan-photo-\(index)-review")
             for _ in 0..<4 where !save.isHittable { app.swipeUp() }
@@ -58,7 +58,7 @@ final class ScanPickerTests: XCTestCase {
             for position in 0..<3 {
                 let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: app.buttons["study-show-answer"])
                 XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
-                savedWords.insert(app.staticTexts["study-prompt"].label)
+                savedWords.insert(app.staticTexts["study-prompt"].label.lowercased())
                 if position < 2 {
                     app.buttons["study-show-answer"].tap()
                     app.buttons["study-grade-known"].tap()

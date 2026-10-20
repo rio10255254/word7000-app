@@ -38,7 +38,8 @@ struct ScanView: View {
 
     @State private var phase: Phase = .choose
     @State private var rows: [Row] = []
-    @State private var pasted = ProcessInfo.processInfo.arguments.contains("-uiTestingReset")
+    @State private var pasted = (ProcessInfo.processInfo.arguments.contains("-uiTestingReset")
+        || ProcessInfo.processInfo.arguments.contains("-uiTestingScanText"))
         ? ProcessInfo.processInfo.environment["WORD7000_SCAN_TEST_TEXT"] ?? "" : ""
     @State private var photoLibraryOpen = false
     @State private var pendingPhotos: [NSItemProvider] = []
@@ -55,19 +56,18 @@ struct ScanView: View {
     @State private var paywall: PaywallReason?
     @State private var newBankName = WordBanks.defaultScanBankName(chineseMode: L.mode == .chinese)
 
-    private var scanBanks: [CustomVocabSet] {
-        model.customSets.sets.filter { set in set.wordIds.contains(where: WordBanks.isScannedWordId) }
-    }
+    private var destinationBanks: [CustomVocabSet] { model.customSets.sets }
 
-    private var savableCount: Int {
-        var seen = Set<String>()
+    private var selectedRows: [Row] { rows.filter(\.include) }
+
+    private var importPlan: ScanImportPlan {
+        let existing: [WordEntry]
         if case let .existing(id) = target, let set = model.customSets.sets.first(where: { $0.id == id }) {
-            seen = Set(WordBanks.words(of: set, in: model.allWords).map { $0.word.lowercased() })
-        }
-        return rows.filter { row in
-            let key = row.word.split(whereSeparator: { $0.isWhitespace }).joined(separator: " ").lowercased()
-            return row.include && !key.isEmpty && !row.meaning.trimmed.isEmpty && seen.insert(key).inserted
-        }.count
+            existing = WordBanks.words(of: set, in: model.allWords)
+        } else { existing = [] }
+        return ScanImportPlan(rows: selectedRows.map {
+            ReviewedScanWord(meaningZh: $0.meaning, partOfSpeech: $0.partOfSpeech, word: $0.word)
+        }, existing: existing)
     }
 
     var body: some View {
@@ -92,6 +92,7 @@ struct ScanView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(L.closeSheet) { dismiss() }
+                        .accessibilityIdentifier("scan-close")
                 }
                 if phase == .review {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -134,6 +135,9 @@ struct ScanView: View {
                 .ignoresSafeArea()
         }
         .onDisappear { scanTask?.cancel() }
+        .onChange(of: model.customSets.sets.map(\.id)) { _, ids in
+            if case let .existing(id) = target, !ids.contains(id) { target = .new }
+        }
     }
 
     // MARK: Choose a source
@@ -233,15 +237,16 @@ struct ScanView: View {
         pageCount = count
         do {
             var found: [ScannedWordCandidate] = []
-            var seen = Set<String>()
+            var seen: [String: [ReviewedScanWord]] = [:]
             for index in 0..<count {
                 try Task.checkCancellation()
                 let image = imageAt(index)
                 if index < 8, let thumbnail = await thumbnail(image) { sourcePreviews.append(thumbnail) }
                 let candidates = try await TextRecognizer.candidates(in: [image], suggester: dictionary())
                 for var candidate in candidates {
-                    let key = candidate.word.lowercased()
-                    guard seen.insert(key).inserted else { continue }
+                    let key = ScanImportPlan.wordKey(candidate.word)
+                    guard !(seen[key] ?? []).contains(where: { ScanImportPlan.sameEntry($0, candidate.reviewedWord) }) else { continue }
+                    seen[key, default: []].append(candidate.reviewedWord)
                     candidate.key = "page\(index)-\(candidate.key)"
                     found.append(candidate)
                 }
@@ -299,8 +304,8 @@ struct ScanView: View {
 
     private func showReview(_ candidates: [ScannedWordCandidate]) {
         let suggester = dictionary()
-        rows = candidates.map { candidate in
-            Row(id: candidate.key, include: !candidate.needsReview, word: candidate.word, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh,
+        rows = candidates.enumerated().map { index, candidate in
+            Row(id: "\(candidate.key)-r\(index)", include: !candidate.needsReview, word: candidate.word, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh,
                 suggestedWord: suggester.correction(for: candidate.word), needsReview: candidate.needsReview)
         }
         target = .new
@@ -310,7 +315,10 @@ struct ScanView: View {
     // MARK: Review
 
     private var review: some View {
-        Form {
+        let plan = importPlan
+        let count = plan.additions.count
+        let decisions = Dictionary(uniqueKeysWithValues: zip(selectedRows.map(\.id), plan.dispositions))
+        return Form {
             if !sourcePreviews.isEmpty {
                 Section {
                     Button { previewOpen = true } label: {
@@ -337,6 +345,7 @@ struct ScanView: View {
                         .buttonStyle(.plain)
                         .padding(.top, 4)
                         VStack(alignment: .leading, spacing: 6) {
+                            if let decision = decisions[row.id] { importStatus(decision, id: row.id) }
                             if row.needsReview {
                                 Label(L.t("相近拼字，請對照原圖後勾選", "Similar readings: compare with the source before selecting"), systemImage: "exclamationmark.circle")
                                     .font(.caption).foregroundStyle(Palette.review)
@@ -405,36 +414,56 @@ struct ScanView: View {
             Section(S.saveTo) {
                 Picker(S.saveTo, selection: $target) {
                     Text(S.newBank).tag(Target.new)
-                    ForEach(scanBanks) { set in
+                    ForEach(destinationBanks) { set in
                         Text(set.name).tag(Target.existing(set.id))
                     }
                 }
+                .pickerStyle(.menu)
+                .accessibilityIdentifier("scan-destination")
                 if target == .new {
                     TextField(S.bankName, text: $newBankName)
+                        .accessibilityIdentifier("scan-bank-name")
                 }
             }
 
             Section {
-                let selectedCount = rows.filter { $0.include && !$0.word.trimmed.isEmpty && !$0.meaning.trimmed.isEmpty }.count
-                if selectedCount > savableCount {
-                    Text(L.t("\(selectedCount - savableCount) 個重複單字不會再次加入。", "\(selectedCount - savableCount) duplicate words will be skipped."))
+                if plan.duplicateCount > 0 {
+                    Text(L.t("\(plan.duplicateCount) 筆相同拼字與意思不會再次加入；同字不同義會保留。", "\(plan.duplicateCount) identical entries will be skipped. Different meanings are kept."))
                         .font(.footnote).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("scan-duplicates-summary")
                 }
                 Button {
                     save()
                 } label: {
-                    Text(S.save(savableCount))
+                    Text(S.save(count))
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
-                .disabled(savableCount == 0)
+                .disabled(count == 0)
                 .accessibilityIdentifier("scan-save")
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
         }
         .scrollDismissesKeyboard(.interactively)
+    }
+
+    @ViewBuilder
+    private func importStatus(_ decision: ScanImportPlan.Disposition, id: String) -> some View {
+        switch decision {
+        case .duplicateInBank:
+            Label(L.t("此字庫已有相同單字與意思，略過", "Already in this bank; will be skipped"), systemImage: "checkmark.circle")
+                .font(.caption).foregroundStyle(.secondary).accessibilityIdentifier("scan-duplicate-\(id)")
+        case .duplicateInScan:
+            Label(L.t("與本次勾選的單字重複，略過", "Duplicate in this scan; will be skipped"), systemImage: "doc.on.doc")
+                .font(.caption).foregroundStyle(.secondary).accessibilityIdentifier("scan-duplicate-\(id)")
+        case .additionalMeaning:
+            Label(L.t("同字不同義或詞性，保留為另一筆", "Different meaning or word class; kept separately"), systemImage: "text.badge.plus")
+                .font(.caption).foregroundStyle(Palette.accent).accessibilityIdentifier("scan-new-meaning-\(id)")
+        case .newWord, .incomplete:
+            EmptyView()
+        }
     }
 
     private func save() {

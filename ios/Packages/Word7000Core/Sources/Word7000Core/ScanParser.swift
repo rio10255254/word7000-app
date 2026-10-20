@@ -95,10 +95,13 @@ public enum ScanParser {
             results.append(Pair(meaningZh: parsed[partner].meaningOnly ?? "", partOfSpeech: pending.partOfSpeech, word: pending.word))
         }
 
-        var seen = Set<String>()
+        var seen: [String: [ReviewedScanWord]] = [:]
         return results.enumerated().compactMap { index, result in
-            let dedupeKey = result.word.lowercased()
-            guard !result.meaningZh.isEmpty, seen.insert(dedupeKey).inserted else { return nil }
+            let dedupeKey = ScanImportPlan.wordKey(result.word)
+            let reviewed = ReviewedScanWord(meaningZh: result.meaningZh, partOfSpeech: result.partOfSpeech, word: result.word)
+            guard !result.meaningZh.isEmpty,
+                  !(seen[dedupeKey] ?? []).contains(where: { ScanImportPlan.sameEntry($0, reviewed) }) else { return nil }
+            seen[dedupeKey, default: []].append(reviewed)
             return ScannedWordCandidate(key: "\(index)-\(dedupeKey)", meaningZh: result.meaningZh, partOfSpeech: result.partOfSpeech, word: result.word)
         }
     }

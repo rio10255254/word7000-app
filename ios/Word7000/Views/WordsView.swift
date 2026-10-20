@@ -23,7 +23,10 @@ struct WordsView: View {
         List {
             if query.isEmpty {
                 Section {
-                    BankShelf(scan: scan, manage: { managingID = $0.id })
+                    BankShelf(scan: scan, manage: { managingID = $0.id }, rename: {
+                        newName = $0.name
+                        renaming = $0
+                    })
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
                 }
@@ -89,6 +92,7 @@ struct WordsView: View {
                     Text(L.t("已刪除「\(deleted.name)」", "Deleted \(deleted.name)")).font(.subheadline).lineLimit(2)
                     Spacer()
                     Button(L.undo) { model.restoreDeletedSet() }.fontWeight(.semibold)
+                        .accessibilityIdentifier("bank-undo-delete")
                     Button { model.dismissDeletedSetUndo() } label: { Image(systemName: "xmark").frame(width: 44, height: 44) }
                         .accessibilityLabel(L.close)
                 }
@@ -141,12 +145,13 @@ struct WordsView: View {
             AddWordSheet()
         }
         .alert(L.renameBank, isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
-            TextField(L.bankName, text: $newName)
+            TextField(L.bankName, text: $newName).accessibilityIdentifier("bank-rename-name")
             Button(L.cancel, role: .cancel) { renaming = nil }
             Button(L.save) {
                 if let set = renaming { model.renameSet(set.id, to: newName) }
                 renaming = nil
             }
+            .disabled(newName.trimmed.isEmpty)
         }
     }
 
@@ -210,6 +215,8 @@ struct BankShelf: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var scan: () -> Void
     var manage: (CustomVocabSet) -> Void
+    var rename: (CustomVocabSet) -> Void
+    @State private var deleting: CustomVocabSet?
     @ScaledMetric(relativeTo: .body) private var shelfWidth = 140.0
     @ScaledMetric(relativeTo: .body) private var shelfHeight = 124.0
 
@@ -233,6 +240,9 @@ struct BankShelf: View {
                         }
                         .contextMenu {
                             Button { manage(set) } label: { Label(L.t("管理", "Manage"), systemImage: "slider.horizontal.3") }
+                            Button { rename(set) } label: { Label(L.renameBank, systemImage: "pencil") }
+                            Button(role: .destructive) { deleting = set } label: { Label(L.deleteBank, systemImage: "trash") }
+                                .accessibilityIdentifier("bank-delete")
                         }
                 }
                 Button(action: scan) {
@@ -258,6 +268,17 @@ struct BankShelf: View {
             }
             .padding(.horizontal, 0)
             .padding(.vertical, 4)
+        }
+        .confirmationDialog(L.t("刪除「\(deleting?.name ?? "")」？", "Delete \u{201C}\(deleting?.name ?? "")\u{201D}?"),
+                            isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }), titleVisibility: .visible) {
+            Button(L.deleteBank, role: .destructive) {
+                if let set = deleting { model.deleteSet(set.id) }
+                deleting = nil
+            }
+            .accessibilityIdentifier("bank-delete-confirm")
+            Button(L.cancel, role: .cancel) { deleting = nil }
+        } message: {
+            Text(L.t("學習紀錄會保留，刪除後可按「復原」找回字庫。", "Learning records are kept. You can undo this deletion in the word library."))
         }
     }
 
@@ -310,6 +331,7 @@ struct BankShelf: View {
         }
         .buttonStyle(SoftPressStyle())
         .accessibilityAddTraits(active ? .isSelected : [])
+        .accessibilityIdentifier("bank-\(id)")
     }
 }
 

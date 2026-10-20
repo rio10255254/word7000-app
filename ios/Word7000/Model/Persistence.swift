@@ -29,6 +29,7 @@ struct AppSettings: Codable, Equatable, Sendable {
     var onboardingComplete: Bool?
     var hapticsEnabled: Bool?
     var speakingFilter: FilterSelection?
+    var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?
     var speech: SpeechPreferences?
 }

@@ -67,16 +67,16 @@ public enum WordBanks {
     /// half empty.
     public static func buildScannedWords(_ rows: [ReviewedScanWord], coreWords: [WordEntry], stamp: String = String(Int(Date().timeIntervalSince1970 * 1000), radix: 36), requireMatchingExample: Bool = false) -> [WordEntry] {
         var coreByName: [String: WordEntry] = [:]
-        for word in coreWords where coreByName[word.word.lowercased()] == nil {
-            coreByName[word.word.lowercased()] = word
+        for word in coreWords where coreByName[ScanImportPlan.wordKey(word.word)] == nil {
+            coreByName[ScanImportPlan.wordKey(word.word)] = word
         }
-        var seen = Set<String>()
-        return rows.enumerated().compactMap { index, row in
+        let reviewed = ScanImportPlan(rows: rows).additions
+        return reviewed.enumerated().compactMap { index, row in
             let word = row.word.trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(whereSeparator: { $0.isWhitespace }).joined(separator: " ")
             let meaning = row.meaningZh.trimmingCharacters(in: .whitespacesAndNewlines)
-            let key = word.lowercased()
-            guard !word.isEmpty, !meaning.isEmpty, seen.insert(key).inserted else { return nil }
+            let key = ScanImportPlan.wordKey(word)
+            guard !word.isEmpty, !meaning.isEmpty else { return nil }
             let core = coreByName[key]
             let matchingExample = !requireMatchingExample || core?.meaningZh.trimmingCharacters(in: .whitespacesAndNewlines) == meaning
             let slug = slugify(key)

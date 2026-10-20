@@ -240,6 +240,7 @@ final class AppModel {
 
     /// Saves reviewed scan rows into a new bank and switches to it.
     func saveScannedWords(_ rows: [ReviewedScanWord], newBankName: String) -> (setId: String, added: Int, name: String)? {
+        guard !ScanImportPlan(rows: rows).additions.isEmpty else { return nil }
         let created = customSets.creatingSet(named: newBankName.trimmed.isEmpty ? WordBanks.defaultScanBankName() : newBankName)
         customSets = created.state
         return saveScannedWords(rows, intoSet: created.id)
@@ -250,8 +251,8 @@ final class AppModel {
     /// twice does not fill it with copies.
     func saveScannedWords(_ rows: [ReviewedScanWord], intoSet setId: String) -> (setId: String, added: Int, name: String)? {
         guard let set = customSets.sets.first(where: { $0.id == setId }) else { return nil }
-        let existing = Set(WordBanks.words(of: set, in: allWords).map { $0.word.lowercased() })
-        let words = WordBanks.buildScannedWords(rows.filter { !existing.contains($0.word.trimmed.lowercased()) }, coreWords: vocabularyWords, requireMatchingExample: true)
+        let plan = ScanImportPlan(rows: rows, existing: WordBanks.words(of: set, in: allWords))
+        let words = WordBanks.buildScannedWords(plan.additions, coreWords: vocabularyWords, requireMatchingExample: true)
         // New words go first in a set, so add them in reverse to keep the
         // order they were printed in.
         customSets = customSets.addingCustomWords(Array(words.reversed()), toSet: setId)

@@ -3,6 +3,11 @@ import Foundation
 /// Reviewed questions have their own answers; ordinary word examples are a
 /// separate practice activity and are never presented as answers to a question.
 public enum SpeakingPractice {
+    public enum Activity: String, Codable, CaseIterable, Identifiable, Sendable {
+        case questions, examples
+        public var id: String { rawValue }
+    }
+
     public struct Entry: Decodable, Sendable {
         public let id: String
         public let word: String
@@ -25,6 +30,10 @@ public enum SpeakingPractice {
     }()
 
     private static let byWord = Dictionary(entries.map { ($0.word.lowercased(), $0) }, uniquingKeysWith: { first, _ in first })
+
+    public static func candidates(from words: [WordEntry], activity: Activity) -> [WordEntry] {
+        activity == .examples ? words : words.filter { entry(for: $0) != nil }
+    }
 
     public static func entry(for word: WordEntry) -> Entry? {
         guard let entry = byWord[word.word.lowercased()] else { return nil }

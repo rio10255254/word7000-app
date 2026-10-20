@@ -87,9 +87,136 @@ final class ScanPickerTests: XCTestCase {
         snapshot(app, name: "scan-explicit-spelling-choice")
     }
 
-    private func openScanner(pastedText: String? = nil) -> XCUIApplication {
-        let app = XCUIApplication()
+    func testRepeatedScanKeepsDifferentMeaningsAndSkipsExactDuplicates() {
+        var app = openScanner(pastedText: "bank n. 銀行")
+        let bankName = savePastedBank(app)
+        XCUIDevice.shared.press(.home)
+        sleep(1)
+        app.terminate()
+
+        app = openScanner(pastedText: "BANK n. 銀行\nbank n. 河岸\nobjectively adv. 客觀地\nobjective n. 目標", reset: false)
+        readPasted(app)
+        let destination = app.buttons["scan-destination"]
+        for _ in 0..<6 where !destination.isHittable { app.swipeUp() }
+        XCTAssertTrue(destination.isHittable)
+        destination.tap()
+        app.buttons[bankName].tap()
+        let save = app.buttons["scan-save"]
+        for _ in 0..<5 where !save.isHittable { app.swipeUp() }
+        XCTAssertEqual(save.label, "存入字庫（3 個）")
+        XCTAssertTrue(app.staticTexts["scan-duplicates-summary"].exists)
+        snapshot(app, name: "scan-precise-duplicate-review")
+        save.tap()
+        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        app.buttons["scan-start-study"].tap()
+        XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["study-position"].label.hasSuffix("/ 4"))
+    }
+
+    func testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord() {
+        let app = openScanner(pastedText: "objectively adv. 客觀地")
+        _ = savePastedBank(app)
+        app.buttons["scan-close"].tap()
+        app.tabBars.buttons.element(boundBy: 0).tap()
+        app.buttons["today-speaking"].tap()
+        let modes = app.segmentedControls["speaking-activity"]
+        XCTAssertTrue(modes.waitForExistence(timeout: 10))
+        XCTAssertTrue(modes.buttons.element(boundBy: 0).isSelected)
+        XCTAssertTrue(app.buttons["speaking-use-core"].exists)
+        snapshot(app, name: "speaking-empty-bank-choices")
+        modes.buttons.element(boundBy: 1).tap()
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        modes.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["speaking-use-core"].waitForExistence(timeout: 5))
+        app.buttons["speaking-use-core"].tap()
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        app.buttons["speaking-show-reference"].tap()
+        XCTAssertTrue(app.staticTexts["speaking-reference-answer"].waitForExistence(timeout: 5))
+        app.buttons["speaking-complete-after-reference"].tap()
+        XCTAssertTrue(app.staticTexts["speaking-position"].label.hasPrefix("2 /"))
+        modes.buttons.element(boundBy: 1).tap()
+        app.buttons["speaking-close"].tap()
+        app.buttons["today-speaking"].tap()
+        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons.element(boundBy: 1).isSelected)
+        snapshot(app, name: "speaking-visible-practice-types")
+    }
+
+    func testLongPressBankDeletionCanBeUndoneWithoutLosingWords() {
+        let app = openScanner(pastedText: "objectively adv. 客觀地")
+        _ = savePastedBank(app)
+        app.buttons["scan-close"].tap()
+        let bank = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-set-' ")).firstMatch
+        XCTAssertTrue(bank.waitForExistence(timeout: 5))
+        let bankID = bank.identifier
+        bank.coordinate(withNormalizedOffset: CGVector(dx: 0.35, dy: 0.7)).press(forDuration: 1)
+        let delete = app.buttons["刪除字庫"].firstMatch
+        XCTAssertTrue(delete.waitForExistence(timeout: 5))
+        snapshot(app, name: "bank-long-press-actions")
+        delete.tap()
+        let confirm = app.buttons["bank-delete-confirm"]
+        if confirm.waitForExistence(timeout: 2) { confirm.tap() }
+        else { app.buttons["刪除字庫"].firstMatch.tap() }
+        XCTAssertTrue(app.buttons["bank-undo-delete"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons[bankID].exists)
+        app.buttons["bank-undo-delete"].tap()
+        XCTAssertTrue(app.buttons[bankID].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["objectively"].firstMatch.waitForExistence(timeout: 5))
+        snapshot(app, name: "bank-deletion-restored")
+    }
+
+    func testScanCanBeAddedToAnEmptyManuallyCreatedBank() {
+        var app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.buttons["words-add"].tap()
+        app.buttons["words-new-bank"].tap()
+        let name = app.alerts.textFields["new-bank-name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("Lesson")
+        app.alerts.buttons["儲存"].tap()
+        XCUIDevice.shared.press(.home)
+        sleep(1)
+        app.terminate()
+        app = openScanner(pastedText: "objectively adv. 客觀地", reset: false)
+        readPasted(app)
+        let destination = app.buttons["scan-destination"]
+        for _ in 0..<5 where !destination.isHittable { app.swipeUp() }
+        destination.tap()
+        XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5))
+        app.buttons["Lesson"].tap()
+        let save = app.buttons["scan-save"]
+        for _ in 0..<5 where !save.isHittable { app.swipeUp() }
+        save.tap()
+        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+    }
+
+    private func readPasted(_ app: XCUIApplication) {
+        let read = app.buttons["scan-read-pasted"]
+        for _ in 0..<5 where !read.isHittable { app.swipeUp() }
+        read.tap()
+        XCTAssertTrue(app.buttons["scan-save"].waitForExistence(timeout: 5))
+    }
+
+    private func savePastedBank(_ app: XCUIApplication) -> String {
+        readPasted(app)
+        let name = app.textFields["scan-bank-name"]
+        for _ in 0..<5 where !name.isHittable { app.swipeUp() }
+        let bankName = name.value as? String ?? ""
+        XCTAssertFalse(bankName.isEmpty)
+        let save = app.buttons["scan-save"]
+        for _ in 0..<5 where !save.isHittable { app.swipeUp() }
+        save.tap()
+        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        return bankName
+    }
+
+    private func openScanner(pastedText: String? = nil, reset: Bool = true) -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingLight", "-uiTestingFakePlans", "-uiTestingScanText"]
+        if reset { app.launchArguments.append("-uiTestingReset") }
         app.launchEnvironment["WORD7000_SCAN_TEST_TEXT"] = pastedText
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))

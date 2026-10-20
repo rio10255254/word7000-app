@@ -13,22 +13,36 @@ struct SpeakingSessionView: View {
     @State private var revealed = false
     @State private var answered = 0
     @State private var started = false
-    @State private var examplesOnly = false
     @State private var completedCurrent = false
     @State private var filtersOpen = false
     @State private var previousFilter = FilterSelection()
 
+    private var activity: SpeakingPractice.Activity { model.settings.speakingActivity ?? .questions }
+    private var examplesOnly: Bool { activity == .examples }
+
     var body: some View {
         NavigationStack {
-            Group {
-                if !started {
-                    ProgressView()
-                } else if words.isEmpty {
-                    ContentUnavailableView(L.noQuizWords, systemImage: "bubble.left.and.text.bubble.right")
-                } else if index >= words.count {
-                    finished
-                } else {
-                    prompt(words[index])
+            VStack(spacing: 12) {
+                Picker(L.t("練習方式", "Practice type"), selection: Binding(
+                    get: { activity }, set: { model.settings.speakingActivity = $0 }
+                )) {
+                    Text(L.t("情境問答", "Questions")).tag(SpeakingPractice.Activity.questions)
+                    Text(L.t("例句延伸", "Examples")).tag(SpeakingPractice.Activity.examples)
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("speaking-activity")
+                .padding(.top, 4)
+                scopePicker
+                Group {
+                    if !started {
+                        ProgressView()
+                    } else if words.isEmpty {
+                        emptyScope
+                    } else if index >= words.count {
+                        finished
+                    } else {
+                        prompt(words[index])
+                    }
                 }
             }
             .padding(.horizontal, Metrics.gutter)
@@ -40,30 +54,29 @@ struct SpeakingSessionView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button { dismiss() } label: { Image(systemName: "xmark") }
                         .accessibilityLabel(L.close)
+                        .accessibilityIdentifier("speaking-close")
                 }
                 ToolbarItem(placement: .principal) {
                     if index < words.count {
                         Text("\(index + 1) / \(words.count)")
                             .font(.rounded(.subheadline, weight: .semibold))
                             .monospacedDigit()
+                            .accessibilityIdentifier("speaking-position")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button(L.t("情境問答", "Conversation questions")) { examplesOnly = false; start() }
-                            .disabled(!model.speakingCandidates.contains { SpeakingPractice.entry(for: $0) != nil })
-                        Button(L.t("例句延伸", "Build on examples")) { examplesOnly = true; start() }
-                        Divider()
-                        Button(L.t("練習範圍", "Practice scope")) {
-                            previousFilter = model.settings.speakingFilter ?? FilterSelection()
-                            filtersOpen = true
-                        }
+                    Button {
+                        previousFilter = model.settings.speakingFilter ?? FilterSelection()
+                        filtersOpen = true
                     } label: { Image(systemName: "slider.horizontal.3") }
                     .accessibilityLabel(L.filters)
+                    .accessibilityIdentifier("speaking-filters")
                 }
             }
         }
         .onAppear { if !started { start() } }
+        .onChange(of: activity) { _, _ in start() }
+        .onChange(of: model.settings.activeBankId) { _, _ in start() }
         .onDisappear { Speaker.shared.stop() }
         .sensoryFeedback(.success, trigger: completedCurrent) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sheet(isPresented: $filtersOpen, onDismiss: {
@@ -82,12 +95,65 @@ struct SpeakingSessionView: View {
         }
     }
 
+    private var scopePicker: some View {
+        HStack {
+            Menu {
+                Button { model.selectBank(WordBanks.coreBankId) } label: {
+                    Label(L.coreBankName, systemImage: model.activeSet == nil ? "checkmark" : "character.book.closed")
+                }
+                ForEach(model.customSets.sets) { set in
+                    Button { model.selectBank(set.id) } label: {
+                        Label(set.name, systemImage: model.settings.activeBankId == set.id ? "checkmark" : "folder")
+                    }
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "books.vertical")
+                    Text(model.bankName).lineLimit(1)
+                    Image(systemName: "chevron.down").font(.caption2.weight(.semibold))
+                }
+                .font(.subheadline.weight(.medium))
+            }
+            .accessibilityIdentifier("speaking-bank")
+            Spacer(minLength: 8)
+            if (model.settings.speakingFilter ?? FilterSelection()).isActive {
+                Image(systemName: "line.3.horizontal.decrease.circle.fill").foregroundStyle(Palette.accent)
+                    .accessibilityLabel(L.filters)
+            }
+        }
+        .frame(minHeight: 32)
+    }
+
+    private var emptyScope: some View {
+        ContentUnavailableView {
+            Label(examplesOnly ? L.noQuizWords : L.t("此範圍沒有情境題目", "No questions in this scope"),
+                  systemImage: "bubble.left.and.text.bubble.right")
+        } description: {
+            Text(examplesOnly ? model.bankName : L.t("這個字庫或篩選範圍尚未有配對完成的情境問答。", "No reviewed conversation questions match this bank and its filters."))
+        } actions: {
+            if model.activeSet != nil {
+                Button(L.coreBankName) {
+                    model.selectBank(WordBanks.coreBankId)
+                }
+                .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("speaking-use-core")
+            }
+            if (model.settings.speakingFilter ?? FilterSelection()).isActive {
+                Button(L.t("清除篩選", "Clear filters")) { model.settings.speakingFilter = FilterSelection(); start() }
+                    .accessibilityIdentifier("speaking-clear-filters")
+            }
+            if !examplesOnly {
+                Button(L.t("例句延伸", "Build on examples")) { model.settings.speakingActivity = .examples }
+                    .accessibilityIdentifier("speaking-use-examples")
+            }
+        }
+        .accessibilityIdentifier("speaking-empty-scope")
+    }
+
     private func start() {
         Speaker.shared.stop()
         let candidates = model.speakingCandidates
-        let reviewed = candidates.filter { SpeakingPractice.entry(for: $0) != nil }
-        if reviewed.isEmpty { examplesOnly = true }
-        words = QuizBuilder.session(words: examplesOnly ? candidates : reviewed, count: 10)
+        words = QuizBuilder.session(words: SpeakingPractice.candidates(from: candidates, activity: activity), count: 10)
         index = 0
         answered = 0
         revealed = false
@@ -137,7 +203,9 @@ struct SpeakingSessionView: View {
                                 Spacer()
                                 SpeakButton(text: card.referenceAnswer, language: face.speakLanguage)
                             }
-                            if !examplesOnly { Text(card.referenceAnswer).lineSpacing(4) }
+                            if !examplesOnly {
+                                Text(card.referenceAnswer).lineSpacing(4).accessibilityIdentifier("speaking-reference-answer")
+                            }
                             Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -153,11 +221,13 @@ struct SpeakingSessionView: View {
                         .font(.headline).frame(maxWidth: .infinity)
                 }
                 .prominentAction()
+                .accessibilityIdentifier("speaking-next")
                 if !completedCurrent {
                     Button { reveal(completed: true); next() } label: {
                         Text(L.t("練習完成", "Done")).font(.headline).frame(maxWidth: .infinity)
                     }
                     .prominentAction(tint: Palette.known)
+                    .accessibilityIdentifier("speaking-complete-after-reference")
                 }
               }
             } else {
@@ -167,10 +237,12 @@ struct SpeakingSessionView: View {
                     }
                     .secondaryAction()
                     .disabled(card.referenceAnswer.isEmpty)
+                    .accessibilityIdentifier("speaking-show-reference")
                     Button { reveal(completed: true) } label: {
                         Text(L.spokeIt).font(.headline).frame(maxWidth: .infinity)
                     }
                     .prominentAction(tint: Palette.known)
+                    .accessibilityIdentifier("speaking-complete")
                 }
             }
         }

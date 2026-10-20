@@ -31,6 +31,8 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["study-close"].tap()
         XCTAssertTrue(app.buttons["today-speaking"].waitForExistence(timeout: 5))
         app.buttons["today-speaking"].tap()
+        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons["Questions"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons["Examples"].exists)
         sleep(1)
         snap(app, "zh-4-speaking")
     }

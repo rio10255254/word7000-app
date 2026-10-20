@@ -35,6 +35,22 @@ final class SpeakingPracticeTests: XCTestCase {
         XCTAssertNil(SpeakingPractice.card(for: word, mode: .chinese))
     }
 
+    func testQuestionsNeverSilentlyTurnIntoAnExampleExercise() throws {
+        var custom = try XCTUnwrap(ParityTests.words.first { $0.word == "about" })
+        custom.id = "scan-about-local"
+        custom.meaningZh = "大約"
+        XCTAssertTrue(SpeakingPractice.candidates(from: [custom], activity: .questions).isEmpty)
+        XCTAssertEqual(SpeakingPractice.candidates(from: [custom], activity: .examples), [custom])
+        XCTAssertFalse(SpeakingPractice.candidates(from: ParityTests.words, activity: .questions).isEmpty)
+    }
+
+    func testBothPracticeChoicesSurviveSaving() throws {
+        for activity in SpeakingPractice.Activity.allCases {
+            let data = try JSONEncoder().encode(activity)
+            XCTAssertEqual(try JSONDecoder().decode(SpeakingPractice.Activity.self, from: data), activity)
+        }
+    }
+
     func testSpeakingProtectsStreakWithoutInflatingWordGoal() {
         let first = LearningEngine.recordPracticeDay(.empty, today: "2026-10-18")
         let next = LearningEngine.recordPracticeDay(first, today: "2026-10-19")

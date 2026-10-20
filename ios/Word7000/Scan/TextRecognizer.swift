@@ -18,7 +18,7 @@ enum TextRecognizer {
     /// Preserve Vision's highest-confidence spelling, including words and
     /// inflections absent from the built-in vocabulary.
     static func candidates(in images: [UIImage], suggester: WordSuggester?) async throws -> [ScannedWordCandidate] {
-        var indices: [String: Int] = [:]
+        var indices: [String: [Int]] = [:]
         var result: [ScannedWordCandidate] = []
         for (page, image) in images.enumerated() {
             try Task.checkCancellation()
@@ -29,7 +29,7 @@ enum TextRecognizer {
             try Task.checkCancellation()
             var found = ScanGrounding.merging(primary: ScanParser.parse(rows) + ScanParser.parse(reading.lines), supplemental: table)
             let expected = reading.lines.filter { $0.text.unicodeScalars.contains(where: ScanParserContains.cjk) }.count
-            let unique = Set(found.map { $0.word.lowercased() }).count
+            let unique = found.count
             let needsHelp = unique == 0 || (expected > 0 && Double(unique) < Double(expected) * 0.7)
             if needsHelp || reading.confidence < 0.7 {
                 if let enhanced = await enhancedImage(prepared),
@@ -38,17 +38,17 @@ enum TextRecognizer {
                 }
             }
             try Task.checkCancellation()
-            let recovered = Set(found.map { $0.word.lowercased() }).count
+            let recovered = found.count
             if (recovered == 0 || Double(recovered) < Double(expected) * 0.7), SmartScan.canOrganize {
                 found = ScanGrounding.merging(primary: found, supplemental: await SmartScan.organize(text: rows.map(\.text).joined(separator: "\n")))
             }
             try Task.checkCancellation()
             for candidate in found {
-                let key = candidate.word.lowercased()
+                let key = ScanImportPlan.wordKey(candidate.word)
                 var copy = candidate
                 copy.key = "p\(page)-\(candidate.key)"
-                if indices[key] == nil {
-                    indices[key] = result.count
+                if !(indices[key] ?? []).contains(where: { ScanImportPlan.sameEntry(result[$0].reviewedWord, candidate.reviewedWord) }) {
+                    indices[key, default: []].append(result.count)
                     result.append(copy)
                 }
             }

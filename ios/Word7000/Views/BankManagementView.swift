@@ -10,7 +10,6 @@ struct BankManagementView: View {
     @State private var selected = Set<String>()
     @State private var editingWord: WordEntry?
     @State private var addingWord = false
-    @State private var deleting = false
     @State private var removing = false
     @State private var notice: String?
 
@@ -62,12 +61,6 @@ struct BankManagementView: View {
                 }
                 if words.isEmpty { Text(L.t("還沒有單字", "No words yet")).foregroundStyle(.secondary) }
             }
-            Section {
-                Button(role: .destructive) { deleting = true } label: {
-                    Label(L.deleteBank, systemImage: "trash")
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
         }
         .navigationTitle(L.t("管理單字集", "Manage bank"))
         .navigationBarTitleDisplayMode(.inline)
@@ -101,11 +94,6 @@ struct BankManagementView: View {
         .onAppear { if !loaded { name = bank?.name ?? ""; loaded = true } }
         .sheet(item: $editingWord) { WordEditorSheet(word: $0, setId: setId) }
         .sheet(isPresented: $addingWord) { WordEditorSheet(setId: setId) }
-        .confirmationDialog(L.deleteBank, isPresented: $deleting, titleVisibility: .visible) {
-            Button(L.deleteBank, role: .destructive) { model.deleteSet(setId); dismiss() }
-        } message: {
-            Text(L.t("學習紀錄會保留，回到字庫後可以復原這次刪除。", "Learning records are kept. You can undo this deletion in the word library."))
-        }
         .confirmationDialog(L.t("移出 \(selected.count) 個單字？", "Remove \(selected.count) words from this bank?"), isPresented: $removing, titleVisibility: .visible) {
             Button(L.removeFromBank, role: .destructive) {
                 model.removeWords(selected, fromSet: setId)

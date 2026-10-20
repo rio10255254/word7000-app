@@ -9,15 +9,22 @@ public enum ScanGrounding {
     /// mark both readings for review instead of silently dropping letters.
     public static func merging(primary: [ScannedWordCandidate], supplemental: [ScannedWordCandidate]) -> [ScannedWordCandidate] {
         var result: [ScannedWordCandidate] = []
-        var seen = Set<String>()
-        for candidate in primary where seen.insert(candidate.word.lowercased()).inserted { result.append(candidate) }
+        var byWord: [String: [Int]] = [:]
+        for candidate in primary {
+            let key = ScanImportPlan.wordKey(candidate.word)
+            let matches = byWord[key] ?? []
+            guard !matches.contains(where: { ScanImportPlan.sameEntry(result[$0].reviewedWord, candidate.reviewedWord) }) else { continue }
+            byWord[key, default: []].append(result.count)
+            result.append(candidate)
+        }
         for var candidate in supplemental {
-            let word = candidate.word.lowercased()
-            guard !seen.contains(word) else { continue }
+            let word = ScanImportPlan.wordKey(candidate.word)
+            let matches = byWord[word] ?? []
+            guard !matches.contains(where: { ScanImportPlan.sameEntry(result[$0].reviewedWord, candidate.reviewedWord) }) else { continue }
             let conflicting = result.indices.filter { index in
                 let existing = result[index]
-                let other = existing.word.lowercased()
-                return normalised(existing.meaningZh) == normalised(candidate.meaningZh)
+                let other = ScanImportPlan.wordKey(existing.word)
+                return other != word && normalised(existing.meaningZh) == normalised(candidate.meaningZh)
                     && abs(other.count - word.count) <= 4
                     && (other.hasPrefix(word) || word.hasPrefix(other))
             }
@@ -25,7 +32,7 @@ public enum ScanGrounding {
                 for index in conflicting { result[index].needsReview = true }
                 candidate.needsReview = true
             }
-            seen.insert(word)
+            byWord[word, default: []].append(result.count)
             result.append(candidate)
         }
         return result

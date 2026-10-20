@@ -4,6 +4,14 @@ import UIKit
 final class ScanPickerTests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
+    override func tearDown() {
+        let app = XCUIApplication()
+        if app.state == .runningForeground {
+            snapshot(app, name: "scan-" + name.components(separatedBy: " ").last!.replacingOccurrences(of: "]", with: ""))
+        }
+        super.tearDown()
+    }
+
     func testPhotoPickerCancellationAndReopening() {
         let app = openScanner()
         app.buttons["scan-choose-photo"].tap()
@@ -122,7 +130,7 @@ final class ScanPickerTests: XCTestCase {
         let modes = app.segmentedControls["speaking-activity"]
         XCTAssertTrue(modes.waitForExistence(timeout: 10))
         XCTAssertTrue(modes.buttons.element(boundBy: 0).isSelected)
-        XCTAssertTrue(app.buttons["speaking-use-core"].exists)
+        XCTAssertTrue(app.buttons["speaking-use-core"].waitForExistence(timeout: 5), app.debugDescription)
         snapshot(app, name: "speaking-empty-bank-choices")
         modes.buttons.element(boundBy: 1).tap()
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
@@ -172,8 +180,10 @@ final class ScanPickerTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 1).tap()
         app.buttons["words-add"].tap()
         app.buttons["words-new-bank"].tap()
-        let name = app.alerts.textFields["new-bank-name"]
-        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        let alert = app.alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5), app.debugDescription)
+        let name = alert.textFields.firstMatch
+        XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
         name.tap()
         name.typeText("Lesson")
         app.alerts.buttons["儲存"].tap()

@@ -8,13 +8,13 @@ struct WordsView: View {
     var study: () -> Void
 
     @State private var query = ""
-    @State private var renaming: CustomVocabSet?
+    private enum BankNameAction { case create, rename(String) }
+    @State private var bankNameAction: BankNameAction?
     @State private var managingID: String?
     @State private var filtersOpen = false
     @State private var results: [WordEntry] = []
     @State private var searching = true
     @State private var newName = ""
-    @State private var creatingBank = false
     @State private var addingWord = false
 
     var body: some View {
@@ -25,7 +25,7 @@ struct WordsView: View {
                 Section {
                     BankShelf(scan: scan, manage: { managingID = $0.id }, rename: {
                         newName = $0.name
-                        renaming = $0
+                        bankNameAction = .rename($0.id)
                     })
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -121,7 +121,7 @@ struct WordsView: View {
                     Button(action: scan) { Label(L.scanSheet, systemImage: "doc.text.viewfinder") }
                     Button {
                         newName = ""
-                        creatingBank = true
+                        bankNameAction = .create
                     } label: { Label(L.newBank, systemImage: "folder.badge.plus") }
                     .accessibilityIdentifier("words-new-bank")
                     if model.activeSet != nil {
@@ -133,25 +133,31 @@ struct WordsView: View {
                 .accessibilityIdentifier("words-add")
             }
         }
-        .alert(L.newBank, isPresented: $creatingBank) {
-            TextField(L.bankName, text: $newName).accessibilityIdentifier("new-bank-name")
-            Button(L.cancel, role: .cancel) {}
-            Button(L.save) {
-                let id = model.createSet(named: newName)
-                model.selectBank(id)
-            }
-        }
         .sheet(isPresented: $addingWord) {
             AddWordSheet()
         }
-        .alert(L.renameBank, isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
-            TextField(L.bankName, text: $newName).accessibilityIdentifier("bank-rename-name")
-            Button(L.cancel, role: .cancel) { renaming = nil }
+        .alert(bankNameTitle, isPresented: Binding(get: { bankNameAction != nil }, set: { if !$0 { bankNameAction = nil } }), presenting: bankNameAction) { action in
+            TextField(L.bankName, text: $newName).accessibilityIdentifier("bank-name-input")
+            Button(L.cancel, role: .cancel) { bankNameAction = nil }
             Button(L.save) {
-                if let set = renaming { model.renameSet(set.id, to: newName) }
-                renaming = nil
+                switch action {
+                case .create:
+                    let id = model.createSet(named: newName)
+                    model.selectBank(id)
+                case let .rename(id):
+                    model.renameSet(id, to: newName)
+                }
+                bankNameAction = nil
             }
             .disabled(newName.trimmed.isEmpty)
+        }
+    }
+
+    private var bankNameTitle: String {
+        guard let action = bankNameAction else { return L.newBank }
+        switch action {
+        case .create: return L.newBank
+        case .rename: return L.renameBank
         }
     }
 

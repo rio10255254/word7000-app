@@ -59,6 +59,10 @@ jobs:
       - run: npm run typecheck
       - run: npm test
 
+      - name: Check native archive verification
+        if: inputs.operation == 'native-testflight'
+        run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
+
       - uses: expo/expo-github-action@v8
         with:
           eas-version: latest

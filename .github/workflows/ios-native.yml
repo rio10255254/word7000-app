@@ -18,6 +18,8 @@ on:
       - 'src/lib/scanParser.ts'
       - 'src/nativeParity.test.ts'
       - 'scripts/export-native-words.mjs'
+      - 'scripts/verify-native-release.py'
+      - 'scripts/test_verify_native_release.py'
       - '.github/workflows/ios-native.yml'
   workflow_dispatch:
     inputs:
@@ -81,6 +83,9 @@ jobs:
 
       - name: Word list matches the app data
         run: node scripts/export-native-words.mjs --check
+
+      - name: Release archive checks
+        run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
       - name: Learning engine tests
         run: |

@@ -147,7 +147,6 @@ struct SpeakingSessionView: View {
                     .accessibilityIdentifier("speaking-use-examples")
             }
         }
-        .accessibilityIdentifier("speaking-empty-scope")
     }
 
     private func start() {

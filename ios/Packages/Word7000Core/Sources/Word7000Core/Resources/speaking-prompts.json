@@ -24,11 +24,11 @@
     },
     {
       "file": "content/speaking/topics/learning.json",
-      "sha256": "3914f2eeb4baad561c9dc5173c644e06946b25319a1e642c71a7bdd18cdbf56c"
+      "sha256": "8202d750edc77e38f9a2874c5a83a2f20c0a4305bff772b92c1c04f99983c47c"
     },
     {
       "file": "content/speaking/topics/health.json",
-      "sha256": "70ec0df1f49e9c45aafa38832db4585ca9ac11d25576dc8d3f14f4cef5b28b8e"
+      "sha256": "893c210c586b669b81e5467775a7a25039b8ab2d2b0ef4d83cacda937d669ec8"
     },
     {
       "file": "content/speaking/topics/relationships.json",
@@ -40,7 +40,7 @@
     },
     {
       "file": "content/speaking/topics/nature.json",
-      "sha256": "3387f70c85cc4c227bd3544fb3b53b11d577e3956865d27b97389f98f0ceda39"
+      "sha256": "dbc7ba4b0ace724a443052680196897a97eee5d68981316a12029ef73a172bfd"
     },
     {
       "file": "content/speaking/topics/civic.json",
@@ -68,7 +68,7 @@
     },
     {
       "file": "content/speaking/topics/science.json",
-      "sha256": "fa8d21c8bef26122d58d46a904bd43a4803731fe006332298cf70089b7b72248"
+      "sha256": "55861dda7d780ccf3704966a2ff83a5d1a0eea579f7537d5e1199ff260595a38"
     },
     {
       "file": "content/speaking/topics/leisure.json",
@@ -1537,8 +1537,8 @@
       "word": "subject",
       "keywordZh": "科目",
       "question": "Which subject would you like to revisit as an adult?",
-      "answerEn": "I would revisit geography as a subject. Understanding maps and climate would make the places I visit more interesting.",
-      "answerZh": "我想重新學地理這個科目。了解地圖和氣候，旅行時看到的地方也會更有意思。"
+      "answerEn": "Geography is a subject I would like to study again. Understanding maps and climate would make the places I visit more interesting.",
+      "answerZh": "地理是我想重新學習的科目。了解地圖和氣候，旅行時看到的地方也會更有意思。"
     },
     {
       "id": "w0625-reviewed-1",
@@ -1825,8 +1825,8 @@
       "word": "theory",
       "keywordZh": "理論",
       "question": "How would you explain why a scientific theory is more than a personal guess?",
-      "answerEn": "A scientific theory brings evidence together and makes testable explanations. I would distinguish that from an unsupported idea I happened to like.",
-      "answerZh": "科學理論會整合證據，提出能檢驗的解釋。我會把它和自己喜歡、卻沒有根據的想法分開。"
+      "answerEn": "A scientific theory brings evidence together and offers testable explanations. That is different from an unsupported idea I simply happen to like.",
+      "answerZh": "科學理論會整合證據，提出能檢驗的解釋。這和我剛好喜歡、卻沒有根據的想法不同。"
     },
     {
       "id": "w0733-reviewed-1",
@@ -3289,8 +3289,8 @@
       "word": "breath",
       "keywordZh": "呼吸",
       "question": "What would you do before giving a speech if you felt rushed?",
-      "answerEn": "I would pause and take a steady breath before starting. Looking at my first sentence would help me settle into the speech.",
-      "answerZh": "開始講話前，我會停一下，穩住呼吸。再看看第一句，讓自己慢慢進入狀況。"
+      "answerEn": "I would pause and take a slow breath before starting. Looking at my first sentence would help me settle into the speech.",
+      "answerZh": "開始講話前，我會停一下，慢慢呼吸。再看看第一句，讓自己慢慢進入狀況。"
     },
     {
       "id": "w1752-reviewed-1",
@@ -4080,7 +4080,7 @@
       "id": "w2684-reviewed-1",
       "word": "carbon",
       "keywordZh": "碳",
-      "question": "What would you ask about a product advertised as low in carbon emissions?",
+      "question": "What would you ask before choosing a product advertised as having low carbon emissions?",
       "answerEn": "I would ask how its carbon emissions were measured. A clear comparison would help me understand the claim better than a green label alone.",
       "answerZh": "我會問產品的碳排放怎麼計算。清楚的比較，比只貼綠色標籤更能讓我理解。"
     },

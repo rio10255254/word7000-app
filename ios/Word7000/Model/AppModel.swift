@@ -308,7 +308,12 @@ final class AppModel {
         var quizCorrect = 0
         var quizWrong = 0
         var speakingCompleted = 0
-        var accuracy: Int? { quizCorrect + quizWrong > 0 ? Int((Double(quizCorrect) / Double(quizCorrect + quizWrong) * 100).rounded()) : nil }
+        /// Fewer answers than this say little, so no percentage is shown yet.
+        static let minimumAnswers = 5
+        var accuracy: Int? {
+            let total = quizCorrect + quizWrong
+            return total >= Self.minimumAnswers ? Int((Double(quizCorrect) / Double(total) * 100).rounded()) : nil
+        }
     }
 
     func history(days: Int) -> HistorySummary {
@@ -340,8 +345,8 @@ final class AppModel {
         return ranked.compactMap { word(id: $0.key) }
     }
 
-    /// Share of correct quiz answers in the last seven days, if any.
-    var quizAccuracy: Int? {
+    /// Share of correct quiz answers in the last seven days, once there are enough of them.
+    var quizAccuracy: (percent: Int, correct: Int, total: Int)? {
         let analytics = progress.analytics ?? LearningAnalyticsState()
         var correct = 0, wrong = 0
         for back in 0..<7 {
@@ -349,13 +354,24 @@ final class AppModel {
             correct += day.quizCorrect
             wrong += day.quizWrong
         }
-        guard correct + wrong > 0 else { return nil }
-        return Int((Double(correct) / Double(correct + wrong) * 100).rounded())
+        guard correct + wrong >= HistorySummary.minimumAnswers else { return nil }
+        return (Int((Double(correct) / Double(correct + wrong) * 100).rounded()), correct, correct + wrong)
+    }
+
+    // MARK: Streak protection
+
+    /// Protection covered yesterday; studying today keeps the streak going.
+    var streakProtectionJustUsed: Bool { StreakProtection.justUsed(in: progress, today: today) }
+
+    /// The day protection could next cover, or nil when it is ready now.
+    var streakProtectionReadyOn: String? {
+        guard let used = progress.streakFreezeDate, let ready = DayMath.addDays(used, StreakProtection.cooldownDays) else { return nil }
+        return ready > today ? ready : nil
     }
 
     // MARK: Today
 
-    var stats: ProgressStats { LearningEngine.stats(words: bank.words, state: progress, today: today) }
+    var stats: ProgressStats { LearningEngine.stats(vocabulary: bank, state: progress, today: today) }
     var goalDone: Bool { progress.studiedToday >= progress.dailyTarget }
     var dailyFraction: Double {
         guard progress.dailyTarget > 0 else { return 0 }
@@ -364,14 +380,12 @@ final class AppModel {
     var newWordsLeftToday: Int { studyPlan.fresh }
 
     var studyPlan: (fresh: Int, review: Int, total: Int) {
-        let words: [WordEntry]
-        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete {
-            var seen = Set<String>()
-            words = session.cardIds.dropFirst(session.index).filter { seen.insert($0).inserted }.compactMap { word(id: $0) }
-        } else {
-            words = LearningEngine.buildStudyQueue(words: studyCandidates, state: progress, today: today,
-                                                   limit: nextSessionLimit, seed: "today-plan")
+        guard let session = studySession, session.sourceKey == studySourceKey, !session.isComplete else {
+            // Only the counts are shown, so skip building and shuffling the queue.
+            return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit)
         }
+        var seen = Set<String>()
+        let words = session.cardIds.dropFirst(session.index).filter { seen.insert($0).inserted }.compactMap { word(id: $0) }
         let fresh = words.filter { progress.progress(for: $0.id).status == .new }.count
         return (fresh, words.count - fresh, words.count)
     }
@@ -479,9 +493,27 @@ final class AppModel {
 
     // MARK: Quiz
 
+    /// Set when a finished study set offers a quiz on the words just learned;
+    /// the next quiz takes it.
+    @ObservationIgnored private var todayQuizRequested = false
+
+    func requestQuizOnTodaysWords() { todayQuizRequested = true }
+
     /// Questions favour words the learner has met: due and struggling words
     /// first, then known ones, topped up with new words if there are too few.
     func quizQuestions(count: Int, seed: String) -> [WordEntry] {
+        if todayQuizRequested {
+            todayQuizRequested = false
+            let studied = bank.words.filter { progress.words[$0.id]?.lastStudied == today }
+            if !studied.isEmpty { return QuizBuilder.session(words: studied, count: count, seed: seed) }
+        }
+        return seenWordsFirst(count: count, seed: seed)
+    }
+
+    /// Spelling draws from the same words as a quiz.
+    func spellingQuestions(seed: String) -> [WordEntry] { seenWordsFirst(count: Spelling.sessionLength, seed: seed) }
+
+    private func seenWordsFirst(count: Int, seed: String) -> [WordEntry] {
         let filter = settings.quizFilter
         let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
         let seen = candidates.filter { progress.words[$0.id].map { $0.status != .new } ?? false }
@@ -505,6 +537,22 @@ final class AppModel {
         scheduleSave()
     }
 
+    /// A typed answer. Right with at most the first letter given counts as a
+    /// right quiz answer; with more help it is practice that leaves the
+    /// schedule alone; anything else sends the word back to review.
+    func recordSpellingAnswer(wordId: String, result: Spelling.Result, hints: Int) {
+        guard result == .correct, hints >= 2 else {
+            recordQuizAnswer(wordId: wordId, correct: result == .correct)
+            return
+        }
+        refreshToday()
+        progress = recordActivity(in: LearningEngine.recordPracticeDay(progress, today: today)) { counters in
+            counters.otherActions += 1
+            if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
+        }
+        scheduleSave()
+    }
+
     /// Speaking practice counts as activity but does not change word progress.
     func recordSpeaking(completed: Bool) {
         refreshToday()
@@ -519,6 +567,12 @@ final class AppModel {
     }
 
     var quizMode: QuizAnswerMode { studyMode == .english ? .meaning : .word }
+
+    /// Remembers a speaking question as practised, so the next sessions ask
+    /// about other words first.
+    func noteSpeakingPractised(_ wordId: String) {
+        settings.recentSpeakingIds = SpeakingPractice.remembering(wordId, in: settings.recentSpeakingIds ?? [])
+    }
 
     var speakingCandidates: [WordEntry] {
         let filter = settings.speakingFilter ?? FilterSelection()

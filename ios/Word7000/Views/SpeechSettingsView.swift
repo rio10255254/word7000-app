@@ -34,6 +34,16 @@ struct SpeechSettingsView: View {
                 preview(language: "en-US", title: L.t("試聽英文", "Preview English"), text: "Take your time. A little practice each day makes a real difference.")
                 preview(language: "zh-TW", title: L.t("試聽中文", "Preview Chinese"), text: "慢慢來，每天練習一點，就能看見自己的進步。")
             }
+            Section {
+                Toggle(L.t("學習卡自動發音", "Read cards aloud"), isOn: Binding(get: { preferences.autoSpeak ?? false }, set: { value in
+                    var next = preferences
+                    next.autoSpeak = value
+                    model.settings.speech = next
+                }))
+                .accessibilityIdentifier("speech-auto-speak")
+            } footer: {
+                Text(L.t("每翻到新的一張學習卡，就自動唸出卡片正面。", "Each new study card is read aloud as it appears."))
+            }
         }
         .navigationTitle(L.t("朗讀聲音", "Reading voice"))
         .navigationBarTitleDisplayMode(.inline)

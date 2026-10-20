@@ -70,8 +70,9 @@ public struct StreakReminderPlan: Equatable, Sendable {
     public var startsAt: Date?
     public var streak: Int
 
-    /// A streak ends at the end of the day after the last study day; the
-    /// reminder covers its final hour. Ported from `buildStreakReminderPlan`.
+    /// A streak ends at the end of the day after the last study day, or a
+    /// day later when streak protection covers that day; the reminder covers
+    /// its final hour. Ported from `buildStreakReminderPlan`.
     public static func make(progress: ProgressState, now: Date = Date(), enabled: Bool, calendar: Calendar = .current) -> StreakReminderPlan {
         let empty = StreakReminderPlan(activeNow: false, expiresAt: nil, startsAt: nil, streak: max(0, progress.streak))
         guard enabled, progress.streak > 0, let last = progress.lastStudyDate,
@@ -83,7 +84,9 @@ public struct StreakReminderPlan: Equatable, Sendable {
         guard let lastStart = calendar.date(from: DateComponents(year: parts.year, month: parts.month, day: parts.day)) else { return empty }
         let todayStart = calendar.startOfDay(for: now)
         let elapsed = calendar.dateComponents([.day], from: lastStart, to: todayStart).day ?? 99
-        guard (0...1).contains(elapsed), let expiresAt = calendar.date(byAdding: .day, value: 2, to: lastStart) else { return empty }
+        let protected = DayMath.addDays(last, 1).map { StreakProtection.covers(missed: $0, in: progress) } ?? false
+        let lifetime = protected ? 3 : 2
+        guard (0..<lifetime).contains(elapsed), let expiresAt = calendar.date(byAdding: .day, value: lifetime, to: lastStart) else { return empty }
         let startsAt = expiresAt.addingTimeInterval(-3600)
         return StreakReminderPlan(activeNow: startsAt <= now && now < expiresAt, expiresAt: expiresAt, startsAt: startsAt, streak: progress.streak)
     }

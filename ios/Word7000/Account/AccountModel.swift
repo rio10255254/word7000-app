@@ -200,10 +200,14 @@ final class AccountModel {
     /// file and is retried with growing delays (3 s … 5 min).
     func flush() async {
         guard let client, let current = session, !flushing, dirty.any else { return }
-        guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: current.user.id) else {
-            status = .error(A.saveFailed)
-            message = A.saveFailed
-            return
+        // Written in the background: this runs after every few graded cards,
+        // and encoding the whole history on the main thread stalls the cards.
+        Outbox(progress: app.progress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
+            guard !saved else { return }
+            Task { @MainActor in
+                self?.status = .error(A.saveFailed)
+                self?.message = A.saveFailed
+            }
         }
         if let plus, plus.decide(.sync) != .allowed {
             // Local data is untouched; the changes wait and go up after subscribing.
@@ -468,6 +472,12 @@ extension AccountBackup {
     @discardableResult
     func save(userId: String) -> Bool {
         Persistence.live.save(self, to: Self.fileName(userId: userId))
+    }
+
+    /// Writes without waiting. The store writes in order, so a later `load`,
+    /// `save` or `clear` still sees this copy.
+    func saveInBackground(userId: String, completion: @escaping @Sendable (Bool) -> Void) {
+        Persistence.live.store.enqueue(self, to: Self.fileName(userId: userId), completion: completion)
     }
 
     static func clear(userId: String) {

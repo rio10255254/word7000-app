@@ -67,6 +67,8 @@ public struct ProgressState: Codable, Equatable, Sendable {
     public var dailyProgressDate: String?
     public var lastStudyDate: String?
     public var words: [String: WordProgress]
+    /// The last missed day that streak protection covered (native app only).
+    public var streakFreezeDate: String?
 
     public init(
         analytics: LearningAnalyticsState? = nil,
@@ -75,7 +77,8 @@ public struct ProgressState: Codable, Equatable, Sendable {
         studiedToday: Int = 0,
         dailyProgressDate: String? = nil,
         lastStudyDate: String? = nil,
-        words: [String: WordProgress] = [:]
+        words: [String: WordProgress] = [:],
+        streakFreezeDate: String? = nil
     ) {
         self.analytics = analytics
         self.dailyTarget = dailyTarget
@@ -84,6 +87,7 @@ public struct ProgressState: Codable, Equatable, Sendable {
         self.dailyProgressDate = dailyProgressDate
         self.lastStudyDate = lastStudyDate
         self.words = words
+        self.streakFreezeDate = streakFreezeDate
     }
 
     public static let empty = ProgressState()
@@ -226,7 +230,12 @@ public enum LearningEngine {
             next.studiedToday = 0
         }
         if let last = next.lastStudyDate, last != today, !DayMath.isPreviousDay(last, of: today) {
-            next.streak = 0
+            if next.streak > 0, let missed = DayMath.addDays(today, -1), DayMath.isPreviousDay(last, of: missed),
+               StreakProtection.covers(missed: missed, in: next) {
+                next.streakFreezeDate = missed
+            } else {
+                next.streak = 0
+            }
         }
         return next
     }
@@ -238,7 +247,7 @@ public enum LearningEngine {
     static func advanceDailyProgress(_ state: ProgressState, today: String, increment: Int) -> ProgressState {
         var next = normalizeForDate(state, today: today)
         if next.lastStudyDate != today {
-            if let last = next.lastStudyDate, DayMath.isPreviousDay(last, of: today) {
+            if let last = next.lastStudyDate, DayMath.isPreviousDay(last, of: today) || StreakProtection.bridges(last, to: today, in: next) {
                 next.streak = max(1, next.streak + 1)
             } else {
                 next.streak = 1
@@ -277,7 +286,9 @@ public enum LearningEngine {
             studiedToday: dailySource.studiedToday,
             dailyProgressDate: dailySource.dailyProgressDate,
             lastStudyDate: dailySource.lastStudyDate,
-            words: words
+            words: words,
+            // The latest use on any device, so protection is never used twice in a week.
+            streakFreezeDate: available.compactMap(\.streakFreezeDate).max()
         )
     }
 
@@ -312,8 +323,18 @@ public enum LearningEngine {
 
     public static func stats(words: [WordEntry], state: ProgressState, today: String?) -> ProgressStats {
         let ids = Set(words.map(\.id))
+        return stats(wordCount: words.count, contains: ids.contains, state: state, today: today)
+    }
+
+    /// The same counts for a prepared list, looked up in its index instead of
+    /// a set of every id built on each call.
+    public static func stats(vocabulary: PreparedVocabulary, state: ProgressState, today: String?) -> ProgressStats {
+        stats(wordCount: vocabulary.words.count, contains: { vocabulary.index(of: $0) != nil }, state: state, today: today)
+    }
+
+    static func stats(wordCount: Int, contains: (String) -> Bool, state: ProgressState, today: String?) -> ProgressStats {
         var due = 0, mastered = 0, review = 0, favorites = 0
-        for (wordId, progress) in state.words where ids.contains(wordId) {
+        for (wordId, progress) in state.words where contains(wordId) {
             if progress.status == .mastered { mastered += 1 } else if progress.status == .review { review += 1 }
             if progress.favorite { favorites += 1 }
             if let today, isDue(progress, today: today) { due += 1 }
@@ -323,7 +344,7 @@ public enum LearningEngine {
             mastered: mastered,
             review: review,
             favorites: favorites,
-            remaining: words.count - mastered - review,
+            remaining: wordCount - mastered - review,
             studiedToday: state.studiedToday
         )
     }
@@ -363,5 +384,56 @@ public enum LearningEngine {
 
         let chosen = Array((due.map(\.word) + fresh + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
+    }
+
+    /// How many new and review cards `buildStudyQueue` would pick, counted
+    /// without sorting, copying or shuffling the words.
+    public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int) -> (fresh: Int, review: Int, total: Int) {
+        let size = max(0, limit)
+        guard size > 0 else { return (0, 0, 0) }
+        var due = 0, fresh = 0, ahead = 0
+        for word in words {
+            guard let dueDate = reviewDueDate(state.words[word.id]) else {
+                fresh += 1
+                continue
+            }
+            if dueDate <= today { due += 1 } else { ahead += 1 }
+        }
+        // Due words fill the queue first, then new ones, then words ahead of schedule.
+        let total = min(size, due + fresh + ahead)
+        let chosenFresh = min(fresh, max(0, size - due))
+        return (chosenFresh, total - chosenFresh, total)
+    }
+}
+
+/// Forgives one missed day at most once a week, so a single busy day does
+/// not wipe out a long streak. The missed day itself does not add to it.
+public enum StreakProtection {
+    public static let cooldownDays = 7
+
+    /// Whether `missed` can be covered: protection is unused for a week, or
+    /// already covers that very day.
+    public static func covers(missed: String, in state: ProgressState) -> Bool {
+        guard let missedDay = DayMath.dayNumber(missed) else { return false }
+        guard let used = state.streakFreezeDate, let usedDay = DayMath.dayNumber(used) else { return true }
+        return usedDay == missedDay || missedDay - usedDay >= cooldownDays
+    }
+
+    /// Whether studying `today` continues a streak last kept on `last`, with
+    /// the one day between them covered.
+    static func bridges(_ last: String, to today: String, in state: ProgressState) -> Bool {
+        guard let covered = state.streakFreezeDate else { return false }
+        return DayMath.isPreviousDay(last, of: covered) && DayMath.isPreviousDay(covered, of: today)
+    }
+
+    /// Whether protection could cover a missed day starting from `day`.
+    public static func isAvailable(on day: String, in state: ProgressState) -> Bool {
+        covers(missed: day, in: state) && state.streakFreezeDate != day
+    }
+
+    /// Protection covered yesterday and the learner has not studied yet today.
+    public static func justUsed(in state: ProgressState, today: String) -> Bool {
+        guard state.streak > 0, let covered = state.streakFreezeDate, state.lastStudyDate != today else { return false }
+        return DayMath.isPreviousDay(covered, of: today)
     }
 }

@@ -31,6 +31,30 @@ public enum SpeakingPractice {
 
     private static let byWord = Dictionary(entries.map { ($0.word.lowercased(), $0) }, uniquingKeysWith: { first, _ in first })
 
+    /// How many recently practised words are remembered, so the next
+    /// sessions ask about other words first.
+    public static let recentLimit = 300
+
+    /// Words for one session, preferring ones not practised recently. When
+    /// too few are left, the words practised longest ago fill the session.
+    /// `recent` runs from the oldest to the latest practised word id.
+    public static func session(from candidates: [WordEntry], recent: [String], count: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
+        let order = Dictionary(recent.enumerated().map { ($1, $0) }, uniquingKeysWith: { _, latest in latest })
+        let fresh = candidates.filter { order[$0.id] == nil }
+        guard fresh.count < count else { return QuizBuilder.session(words: fresh, count: count, seed: seed) }
+        let oldestFirst = candidates.compactMap { word in order[word.id].map { (word, $0) } }
+            .sorted { $0.1 < $1.1 }
+            .map(\.0)
+        return SeededRandom.shuffle(fresh + oldestFirst.prefix(max(0, count - fresh.count)), seed: seed)
+    }
+
+    /// `recent` with `wordId` moved to the end, keeping the latest `recentLimit`.
+    public static func remembering(_ wordId: String, in recent: [String]) -> [String] {
+        var next = recent.filter { $0 != wordId }
+        next.append(wordId)
+        return Array(next.suffix(recentLimit))
+    }
+
     public static func candidates(from words: [WordEntry], activity: Activity) -> [WordEntry] {
         activity == .examples ? words : words.filter { entry(for: $0) != nil }
     }

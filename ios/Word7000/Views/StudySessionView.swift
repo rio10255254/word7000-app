@@ -20,6 +20,9 @@ struct StudySessionView: View {
     @State private var cardWidth: CGFloat = 340
     @State private var lifetime = UUID()
     @State private var visible = true
+    /// The daily goal was reached during this visit, not before it.
+    @State private var reachedGoalHere = false
+    @State private var goalBanner = false
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
@@ -32,7 +35,8 @@ struct StudySessionView: View {
                     if session.total == 0 {
                         ContentUnavailableView(L.nothingToStudy, systemImage: "checkmark.seal", description: Text(L.nothingToStudyText))
                     } else if session.isComplete {
-                        SessionSummary(session: session, done: { dismiss() }, again: { model.startStudySession() }, startQuiz: startQuiz)
+                        SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
+                                       again: { model.startStudySession() }, startQuiz: startQuiz)
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
                         SessionBar(fraction: Double(session.done) / Double(max(1, session.total)))
                             .padding(.top, 4)
@@ -41,6 +45,7 @@ struct StudySessionView: View {
                                 .onAppear {
                                     cardWidth = proxy.size.width
                                     enterCard()
+                                    speakIfAutomatic(word)
                                 }
                                 .onChange(of: proxy.size.width) { _, value in cardWidth = value }
                                 .id("\(word.id)-\(session.index)")
@@ -54,6 +59,19 @@ struct StudySessionView: View {
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(Palette.background)
+            .overlay(alignment: .top) {
+                if goalBanner {
+                    Label(L.goalReachedBanner, systemImage: "checkmark.seal.fill")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 10)
+                        .background(Palette.known, in: Capsule())
+                        .padding(.top, 8)
+                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
+                        .accessibilityIdentifier("study-goal-banner")
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -79,9 +97,23 @@ struct StudySessionView: View {
         }
         .onAppear { visible = true; model.ensureStudySession() }
         .onDisappear { visible = false; lifetime = UUID(); Speaker.shared.stop(); model.saveNow() }
-        .onChange(of: model.studySession?.index) { _, _ in
+        .onChange(of: model.studySession?.index) { _, index in
             if !committing { revealed = false; dragOffset = 0; armed = false }
+            // A fresh set starts at the first card.
+            if index == 0 { reachedGoalHere = false }
         }
+        .onChange(of: model.goalDone) { was, now in
+            guard !was, now, visible else { return }
+            reachedGoalHere = true
+            // The summary celebrates on its own when the set ends here.
+            guard model.studySession?.isComplete == false else { return }
+            withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = true }
+            Task {
+                try? await Task.sleep(for: .seconds(2.4))
+                withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = false }
+            }
+        }
+        .sensoryFeedback(.success, trigger: reachedGoalHere) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }
         .sensoryFeedback(.impact(weight: .light), trigger: armed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
     }
@@ -91,6 +123,7 @@ struct StudySessionView: View {
         let face = model.face(word)
         return VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 4) {
+                CardStatusChip(status: progress.status)
                 Spacer()
                 Button { model.toggleFavorite(word.id) } label: {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
@@ -238,6 +271,15 @@ struct StudySessionView: View {
         }
     }
 
+    /// Reads the front of each new card aloud when the learner turned that on.
+    private func speakIfAutomatic(_ word: WordEntry) {
+        let preferences = model.settings.speech ?? SpeechPreferences()
+        guard preferences.autoSpeak == true, visible else { return }
+        let face = model.face(word)
+        guard Speaker.shared.activeText != face.speakText else { return }
+        Speaker.shared.speak(face.speakText, language: face.speakLanguage, preferences: preferences)
+    }
+
     private func enterCard() {
         guard phase == .arriving else { return }
         withAnimation(reduceMotion ? .easeOut(duration: 0.15) : Motion.card, completionCriteria: .logicallyComplete) {
@@ -299,10 +341,36 @@ struct WordAnswer: View {
     }
 }
 
+/// Whether the card is new, still being learned, or a scheduled review.
+private struct CardStatusChip: View {
+    var status: WordStatus
+
+    private var style: (text: String, color: Color) {
+        switch status {
+        case .new: (L.t("新字", "New"), Palette.accent)
+        case .review: (L.t("還不熟", "Still learning"), Palette.review)
+        case .mastered: (L.t("複習", "Review"), Palette.known)
+        }
+    }
+
+    var body: some View {
+        Text(style.text)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(style.color)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(style.color.opacity(0.14), in: Capsule())
+    }
+}
+
 struct SessionSummary: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var appeared = false
     var session: StudySession
+    /// The daily goal was reached during this set.
+    var reachedGoal = false
     var done: () -> Void
     var again: () -> Void
     var startQuiz: () -> Void
@@ -315,20 +383,34 @@ struct SessionSummary: View {
                 Image(systemName: model.goalDone ? "checkmark" : "flame.fill")
                     .font(.system(size: 40, weight: .bold))
                     .foregroundStyle(model.goalDone ? Palette.known : Palette.review)
+                    .symbolEffect(.bounce, value: reachedGoal && appeared && !reduceMotion)
             }
             .frame(width: 130, height: 130)
-            Text(L.sessionCompleteTitle)
+            Text(reachedGoal ? L.goalReachedTitle : L.sessionCompleteTitle)
                 .font(.rounded(.title, weight: .bold))
             Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
                 .foregroundStyle(.secondary)
-            Text(left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
+            Text(reachedGoal ? L.quizTodaysWordsHint : left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
                 .font(.subheadline.weight(.semibold))
             VStack(spacing: 12) {
-                Button(action: done) {
+                if reachedGoal {
+                    Button {
+                        model.requestQuizOnTodaysWords()
+                        startQuiz()
+                    } label: {
+                        Text(L.quizTodaysWords).font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .prominentAction(tint: Palette.known)
+                    .accessibilityIdentifier("study-quiz-today")
+                }
+                let doneButton = Button(action: done) {
                     Text(L.done).font(.headline).frame(maxWidth: .infinity)
                 }
-                .prominentAction()
-                .accessibilityIdentifier("study-done")
+                if reachedGoal {
+                    doneButton.secondaryAction().accessibilityIdentifier("study-done")
+                } else {
+                    doneButton.prominentAction().accessibilityIdentifier("study-done")
+                }
                 let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
                 layout {
                     Button(action: again) {
@@ -346,6 +428,7 @@ struct SessionSummary: View {
           .padding(.vertical, 24)
         }
         .multilineTextAlignment(.center)
+        .onAppear { appeared = true }
         .accessibilityIdentifier("study-summary")
     }
 }

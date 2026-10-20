@@ -160,7 +160,7 @@ struct SpeakingSessionView: View {
         let candidates = model.speakingCandidates
         let available = SpeakingPractice.candidates(from: candidates, activity: activity)
         availableCount = available.count
-        words = QuizBuilder.session(words: available, count: 10)
+        words = SpeakingPractice.session(from: available, recent: model.settings.recentSpeakingIds ?? [], count: 10)
         index = 0
         answered = 0
         revealed = false
@@ -267,6 +267,7 @@ struct SpeakingSessionView: View {
     private func next() {
         guard index < words.count else { return }
         if !completedCurrent { model.recordSpeaking(completed: false) }
+        model.noteSpeakingPractised(words[index].id)
         Speaker.shared.stop()
         completedCurrent = false
         revealed = false
@@ -282,10 +283,17 @@ struct SpeakingSessionView: View {
             Text(L.speakingFinished).font(.rounded(.title, weight: .bold))
             Text(L.speakingScore(answered)).foregroundStyle(.secondary)
             Spacer()
-            Button { dismiss() } label: {
-                Text(L.done).font(.headline).frame(maxWidth: .infinity)
+            VStack(spacing: 12) {
+                Button { dismiss() } label: {
+                    Text(L.done).font(.headline).frame(maxWidth: .infinity)
+                }
+                .prominentAction()
+                Button { start() } label: {
+                    Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
+                }
+                .secondaryAction()
+                .accessibilityIdentifier("speaking-again")
             }
-            .prominentAction()
         }
     }
 }

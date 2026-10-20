@@ -50,9 +50,13 @@ public enum DayMath {
     /// ISO 8601 with milliseconds, like JavaScript's `toISOString()`, so
     /// timestamps compare as strings across both apps.
     public static func timestamp(_ date: Date = Date()) -> String {
+        timestampFormatter.string(from: date)
+    }
+
+    nonisolated(unsafe) private static let timestampFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         formatter.timeZone = TimeZone(identifier: "UTC")
-        return formatter.string(from: date)
-    }
+        return formatter
+    }()
 }

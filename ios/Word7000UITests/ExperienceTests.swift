@@ -28,6 +28,8 @@ final class ExperienceTests: XCTestCase {
         let app = launch()
         app.buttons["today-start"].tap()
         waitForReadyCard(app)
+        // The card's own identifier covers its children, so find the chip by its text.
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label IN %@", ["新字", "還不熟", "複習"])).firstMatch.exists)
         app.buttons["study-show-answer"].tap()
         app.buttons["study-grade-known"].doubleTap()
         waitForReadyCard(app)
@@ -95,6 +97,27 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "exam-results-small-screen")
     }
 
+    func testSpellingChecksEachAnswerAndReachesResults() {
+        let app = launch()
+        let spelling = app.buttons["today-spelling"]
+        for _ in 0..<4 where !spelling.isHittable { app.swipeUp() }
+        spelling.tap()
+        let input = app.textFields["spelling-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["spelling-hint"].isEnabled)
+        let total = Int(app.staticTexts["spelling-position"].label.split(separator: "/").last?.trimmingCharacters(in: .whitespaces) ?? "") ?? 0
+        XCTAssertGreaterThan(total, 0)
+        for round in 0..<total {
+            input.tap()
+            input.typeText("qqqq\n")
+            XCTAssertTrue(app.staticTexts["spelling-answer"].waitForExistence(timeout: 5), "round \(round)")
+            if round == 0 { snapshot(app, "spelling-answer") }
+            app.buttons["spelling-next"].tap()
+        }
+        XCTAssertTrue(app.buttons["spelling-again"].waitForExistence(timeout: 5), app.debugDescription)
+        snapshot(app, "spelling-results")
+    }
+
     func testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
@@ -141,6 +164,11 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "speech-preferences")
         app.buttons["speech-preview-en-US"].tap()
         app.buttons["speech-preview-zh-TW"].tap()
+        let autoSpeak = app.switches["speech-auto-speak"]
+        for _ in 0..<3 where !autoSpeak.isHittable { app.swipeUp() }
+        XCTAssertEqual(autoSpeak.value as? String, "0")
+        autoSpeak.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        XCTAssertEqual(autoSpeak.value as? String, "1")
         XCUIDevice.shared.press(.home)
         sleep(1)
         app.terminate()
@@ -150,6 +178,9 @@ final class ExperienceTests: XCTestCase {
         openSpeechSettings(app)
         XCTAssertTrue(app.segmentedControls["speech-speed"].buttons.element(boundBy: 0).isSelected)
         XCTAssertEqual(app.buttons["speech-voice-en-US"].value as? String, selectedName)
+        let savedAutoSpeak = app.switches["speech-auto-speak"]
+        for _ in 0..<3 where !savedAutoSpeak.isHittable { app.swipeUp() }
+        XCTAssertEqual(savedAutoSpeak.value as? String, "1")
     }
 
     private func openSpeechSettings(_ app: XCUIApplication) {

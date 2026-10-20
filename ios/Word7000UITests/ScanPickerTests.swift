@@ -161,7 +161,7 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertTrue(delete.waitForExistence(timeout: 5))
         snapshot(app, name: "bank-long-press-actions")
         delete.tap()
-        let confirm = app.buttons["bank-delete-confirm"]
+        let confirm = app.buttons["bank-delete-confirm"].firstMatch
         if confirm.waitForExistence(timeout: 2) { confirm.tap() }
         else { app.buttons["刪除字庫"].firstMatch.tap() }
         XCTAssertTrue(app.buttons["bank-undo-delete"].waitForExistence(timeout: 5))

@@ -531,7 +531,7 @@ final class AppModel {
     func createSet(named name: String) -> String {
         let created = customSets.creatingSet(named: name.trimmed.isEmpty ? L.newBankDefault : name)
         customSets = created.state
-        scheduleSave()
+        saveNow()
         return created.id
     }
 

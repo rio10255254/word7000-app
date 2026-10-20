@@ -9,7 +9,8 @@ struct WordsView: View {
 
     @State private var query = ""
     private enum BankNameAction { case create, rename(String) }
-    @State private var bankNameAction: BankNameAction?
+    @State private var bankNameAction: BankNameAction = .create
+    @State private var bankNamePrompt = false
     @State private var managingID: String?
     @State private var filtersOpen = false
     @State private var results: [WordEntry] = []
@@ -26,6 +27,7 @@ struct WordsView: View {
                     BankShelf(scan: scan, manage: { managingID = $0.id }, rename: {
                         newName = $0.name
                         bankNameAction = .rename($0.id)
+                        bankNamePrompt = true
                     })
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -122,6 +124,7 @@ struct WordsView: View {
                     Button {
                         newName = ""
                         bankNameAction = .create
+                        bankNamePrompt = true
                     } label: { Label(L.newBank, systemImage: "folder.badge.plus") }
                     .accessibilityIdentifier("words-new-bank")
                     if model.activeSet != nil {
@@ -136,26 +139,25 @@ struct WordsView: View {
         .sheet(isPresented: $addingWord) {
             AddWordSheet()
         }
-        .alert(bankNameTitle, isPresented: Binding(get: { bankNameAction != nil }, set: { if !$0 { bankNameAction = nil } }), presenting: bankNameAction) { action in
+        .alert(bankNameTitle, isPresented: $bankNamePrompt) {
             TextField(L.bankName, text: $newName).accessibilityIdentifier("bank-name-input")
-            Button(L.cancel, role: .cancel) { bankNameAction = nil }
+            Button(L.cancel, role: .cancel) { bankNamePrompt = false }
             Button(L.save) {
-                switch action {
+                switch bankNameAction {
                 case .create:
                     let id = model.createSet(named: newName)
                     model.selectBank(id)
                 case let .rename(id):
                     model.renameSet(id, to: newName)
                 }
-                bankNameAction = nil
+                bankNamePrompt = false
             }
             .disabled(newName.trimmed.isEmpty)
         }
     }
 
     private var bankNameTitle: String {
-        guard let action = bankNameAction else { return L.newBank }
-        switch action {
+        switch bankNameAction {
         case .create: return L.newBank
         case .rename: return L.renameBank
         }

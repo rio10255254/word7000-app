@@ -186,7 +186,11 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
         name.tap()
         name.typeText("Lesson")
+        XCTAssertEqual(name.value as? String, "Lesson")
         app.alerts.buttons["儲存"].tap()
+        let created = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-set-' AND label CONTAINS 'Lesson'")).firstMatch
+        XCTAssertTrue(created.waitForExistence(timeout: 5), app.debugDescription)
+        snapshot(app, name: "empty-manual-bank-created")
         XCUIDevice.shared.press(.home)
         sleep(1)
         app.terminate()
@@ -195,7 +199,7 @@ final class ScanPickerTests: XCTestCase {
         let destination = app.buttons["scan-destination"]
         for _ in 0..<5 where !destination.isHittable { app.swipeUp() }
         destination.tap()
-        XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5), app.debugDescription)
         app.buttons["Lesson"].tap()
         let save = app.buttons["scan-save"]
         for _ in 0..<5 where !save.isHittable { app.swipeUp() }

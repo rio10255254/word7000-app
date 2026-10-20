@@ -1,0 +1,970 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-19",
+  "source": {
+    "file": "chunk-01-w0001-to-w0100_prompts.json",
+    "sha256": "89202a2ec90efe5afd63e6a5db6600c20054d95a680d80add08e4519aca27fbc"
+  },
+  "records": [
+    {
+      "id": "w0001-reviewed-1",
+      "word": "adapt",
+      "keywordZh": "適應",
+      "question": "When have you had to adapt to a new rule, place, or routine?",
+      "answerEn": "I had to adapt when I entered a new school. The schedule felt confusing at first, but I slowly learned what to do each day.",
+      "answerZh": "我進入新學校時必須適應。一開始作息讓我覺得很混亂，但我慢慢學會每天該做什麼。"
+    },
+    {
+      "id": "w0002-reviewed-1",
+      "word": "brief",
+      "keywordZh": "簡短",
+      "question": "When do you prefer a brief explanation instead of a long one?",
+      "answerEn": "I prefer a brief explanation when I am trying to solve a simple problem. Too many details can make the answer harder to follow.",
+      "answerZh": "當我想解決簡單問題時，我比較喜歡簡短的說明。太多細節反而會讓答案更難理解。"
+    },
+    {
+      "id": "w0003-reviewed-1",
+      "word": "contrast",
+      "keywordZh": "對比",
+      "question": "Can you describe a contrast between your weekday life and your weekend life?",
+      "answerEn": "My weekdays are packed with classes and deadlines. In contrast, my weekends are slower and more flexible.",
+      "answerZh": "我的平日忙著上課和趕作業。週末則步調較慢、安排也比較自由，和週間形成明顯的對比。"
+    },
+    {
+      "id": "w0004-reviewed-1",
+      "word": "expand",
+      "keywordZh": "擴展",
+      "question": "What would you like to learn to expand your knowledge?",
+      "answerEn": "I would like to learn some astronomy to expand my knowledge of the night sky. Then I could recognize more stars on camping trips.",
+      "answerZh": "我想學一點天文學，擴展自己對夜空的了解。這樣露營時，就能認出更多星星。"
+    },
+    {
+      "id": "w0005-reviewed-1",
+      "word": "precise",
+      "keywordZh": "精確",
+      "question": "When is it important to be precise in daily life?",
+      "answerEn": "It is important to be precise when giving directions or sharing a meeting time. A small mistake can make someone late or send them to the wrong place.",
+      "answerZh": "指路或告知開會時間時，資訊精確很重要。一個小錯誤，就可能讓人遲到或走錯地方。"
+    },
+    {
+      "id": "w0006-reviewed-1",
+      "word": "be",
+      "keywordZh": "成為",
+      "question": "What kind of person do you want to be when you face pressure?",
+      "answerEn": "I want to be a person who stays honest and calm under pressure. Even if I feel nervous, I hope I can make careful decisions.",
+      "answerZh": "面對壓力時，我想成為一個誠實又冷靜的人。即使我感到緊張，我也希望自己能謹慎做決定。"
+    },
+    {
+      "id": "w0007-reviewed-1",
+      "word": "and",
+      "keywordZh": "和",
+      "question": "What are two things you enjoy doing together, and why do they fit well?",
+      "answerEn": "I enjoy drinking coffee and reading in the morning. They fit well because both activities help me slow down before the day gets busy.",
+      "answerZh": "我喜歡早上喝咖啡和閱讀。這兩件事很搭，因為它們都能讓我在忙碌的一天開始前放慢步調。"
+    },
+    {
+      "id": "w0008-reviewed-1",
+      "word": "of",
+      "keywordZh": "的",
+      "question": "What part of your daily routine gives you the strongest sense of control?",
+      "answerEn": "The first hour of my morning gives me the strongest sense of control. If I start calmly, the rest of the day usually feels easier.",
+      "answerZh": "早上的第一個小時最能讓我有掌控感。如果我平靜地開始，一天剩下的時間通常會比較順。"
+    },
+    {
+      "id": "w0009-reviewed-1",
+      "word": "to",
+      "keywordZh": "到",
+      "question": "Where would you like to go to relax after a stressful week?",
+      "answerEn": "I would like to walk to a quiet cafe or a park. Getting away from my usual desk helps me relax.",
+      "answerZh": "我想散步到安靜的咖啡廳或公園。離開平常工作的書桌，能讓我放鬆心情。"
+    },
+    {
+      "id": "w0010-reviewed-1",
+      "word": "have",
+      "keywordZh": "有",
+      "question": "What useful things do you always have in your bag?",
+      "answerEn": "I always have a water bottle and a small notebook in my bag. They are useful when I am out for the day.",
+      "answerZh": "我的包包裡總是有水壺和一本小筆記本。出門一整天時，它們都很實用。"
+    },
+    {
+      "id": "w0011-reviewed-1",
+      "word": "for",
+      "keywordZh": "為了",
+      "question": "What are you preparing for this month?",
+      "answerEn": "I am preparing for a short trip with my family. I am checking train times so we do not have to rush on the day.",
+      "answerZh": "為了這個月的家庭小旅行，我正在做準備。我會先查好火車時刻，這樣出發當天就不用趕時間。"
+    },
+    {
+      "id": "w0012-reviewed-1",
+      "word": "that",
+      "keywordZh": "那個",
+      "question": "Someone points to a place in your town. What could you tell them about that place?",
+      "answerEn": "That park has a lovely walking path by the river. I often go there in the evening when the weather is cooler.",
+      "answerZh": "那個公園有一條很漂亮的河濱步道。傍晚天氣比較涼的時候，我常去那裡散步。"
+    },
+    {
+      "id": "w0013-reviewed-1",
+      "word": "he",
+      "keywordZh": "他",
+      "question": "Think of a person you respect. What does he do that makes you respect him?",
+      "answerEn": "I respect my teacher because he explains difficult ideas patiently. He does not make students feel stupid when they ask basic questions.",
+      "answerZh": "我尊敬我的老師，因為他會耐心解釋困難的概念。學生問基礎問題時，他不會讓人覺得自己很笨。"
+    },
+    {
+      "id": "w0014-reviewed-1",
+      "word": "you",
+      "keywordZh": "你",
+      "question": "What helps you feel ready before an important day?",
+      "answerEn": "I feel ready when I prepare my bag and review my schedule the night before. You can avoid a lot of stress by reducing small surprises.",
+      "answerZh": "我會在重要日子的前一晚準備好包包、確認行程，讓自己更安心。你也可以透過事先準備，減少臨時狀況帶來的壓力。"
+    },
+    {
+      "id": "w0015-reviewed-1",
+      "word": "with",
+      "keywordZh": "和",
+      "question": "Who do you enjoy spending time with when you want to relax?",
+      "answerEn": "I enjoy spending time with people who do not make every conversation feel competitive. With them, I can be quiet or silly without feeling judged.",
+      "answerZh": "想放鬆時，我喜歡和不用凡事比較的人相處。跟他們在一起，我可以安靜，也可以開點玩笑，不必擔心被批評。"
+    },
+    {
+      "id": "w0016-reviewed-1",
+      "word": "on",
+      "keywordZh": "上面",
+      "question": "What do you usually keep on your desk while you study?",
+      "answerEn": "I usually keep a notebook, a pen, and a bottle of water on my desk. Too many extra things make it easier for me to get distracted.",
+      "answerZh": "讀書時，我通常把筆記本、筆和水放在桌子上面。桌面上多餘的東西太多，我就容易分心。"
+    },
+    {
+      "id": "w0017-reviewed-1",
+      "word": "do",
+      "keywordZh": "做",
+      "question": "What do you do when you feel too tired to start a task?",
+      "answerEn": "I do one tiny part first, such as opening the file or writing one sentence. Starting small helps me stop avoiding the task.",
+      "answerZh": "當我累到不想開始任務時，我會先做一個很小的部分，例如打開檔案或寫一句話。從小地方開始能幫我停止逃避。"
+    },
+    {
+      "id": "w0018-reviewed-1",
+      "word": "not",
+      "keywordZh": "不",
+      "question": "What is something you are not willing to give up easily?",
+      "answerEn": "I am not willing to give up my rest time completely. If I never rest, I become less patient and less productive.",
+      "answerZh": "我不願意輕易放棄休息時間。如果我完全不休息，就會變得比較沒耐心，也比較沒效率。"
+    },
+    {
+      "id": "w0019-reviewed-1",
+      "word": "they",
+      "keywordZh": "他們",
+      "question": "What can you learn from people when they handle stress differently from you?",
+      "answerEn": "I can learn that there is not only one correct way to handle stress. They may use methods that I have never tried before.",
+      "answerZh": "當別人用不同方式處理壓力時，我能學到處理壓力不只一種正確方法。他們可能會使用我從未試過的方式。"
+    },
+    {
+      "id": "w0020-reviewed-1",
+      "word": "this",
+      "keywordZh": "這個",
+      "question": "What is something you want to improve this month?",
+      "answerEn": "This month, I want to improve how I manage my time. I often know what to do, but I do not always start early enough.",
+      "answerZh": "這個月我想改善時間管理。我常常知道該做什麼，但不一定夠早開始。"
+    },
+    {
+      "id": "w0021-reviewed-1",
+      "word": "at",
+      "keywordZh": "在",
+      "question": "Where do you usually meet a friend before going out together?",
+      "answerEn": "We usually meet at the station near my home. It is easy to find, and we can take the train from there.",
+      "answerZh": "我們通常在我家附近的車站碰面。那裡很好找，也方便一起搭火車出發。"
+    },
+    {
+      "id": "w0022-reviewed-1",
+      "word": "say",
+      "keywordZh": "說",
+      "question": "What do you usually say when someone thanks you for helping them?",
+      "answerEn": "I usually say that I am glad I could help. If the help was small, I also tell them not to worry about it.",
+      "answerZh": "當有人感謝我的幫忙時，我通常會說我很高興能幫上忙。如果只是小忙，我也會請對方不用太在意。"
+    },
+    {
+      "id": "w0023-reviewed-1",
+      "word": "but",
+      "keywordZh": "但是",
+      "question": "What is something you like but do not have enough time for?",
+      "answerEn": "I like reading, but I do not always have enough time for it. When I am busy, I try to read even a few pages before bed.",
+      "answerZh": "我喜歡閱讀，但是不一定有足夠時間。忙的時候，我會試著睡前至少讀幾頁。"
+    },
+    {
+      "id": "w0024-reviewed-1",
+      "word": "by",
+      "keywordZh": "旁邊",
+      "question": "Where would you choose to sit in a cafe, and why?",
+      "answerEn": "I would sit by the window because I like natural light. I can also watch people walking past while I drink my coffee.",
+      "answerZh": "我會坐在窗戶旁邊，因為我喜歡自然光。喝咖啡時，也可以看看外面經過的人。"
+    },
+    {
+      "id": "w0025-reviewed-1",
+      "word": "we",
+      "keywordZh": "我們",
+      "question": "What can we do to make group discussions more useful?",
+      "answerEn": "We can make group discussions more useful by setting a clear goal first. If nobody knows the purpose, the conversation can waste a lot of time.",
+      "answerZh": "我們可以先設定清楚目標，讓團體討論更有用。如果沒有人知道目的，對話可能會浪費很多時間。"
+    },
+    {
+      "id": "w0026-reviewed-1",
+      "word": "his",
+      "keywordZh": "他的",
+      "question": "Think of someone you admire. What is one of his strongest qualities?",
+      "answerEn": "One of his strongest qualities is patience. He can listen to people carefully even when the situation is tense.",
+      "answerZh": "他的優點之一是有耐心。即使氣氛緊張，他也願意仔細聽別人說話。"
+    },
+    {
+      "id": "w0027-reviewed-1",
+      "word": "from",
+      "keywordZh": "從",
+      "question": "What is one lesson you learned from a difficult experience?",
+      "answerEn": "I learned from a difficult project that asking questions early is important. Waiting too long can make a simple problem much harder.",
+      "answerZh": "我從一個困難專案中學到，早點問問題很重要。拖太久會讓簡單問題變得更難。"
+    },
+    {
+      "id": "w0028-reviewed-1",
+      "word": "or",
+      "keywordZh": "或",
+      "question": "Do you prefer to study alone or with other people?",
+      "answerEn": "I prefer to study alone when I am reading or writing. When I get stuck, I like to discuss the problem with a classmate.",
+      "answerZh": "閱讀或寫作時，我比較喜歡自己讀書。遇到卡住的地方，我則喜歡找同學討論。"
+    },
+    {
+      "id": "w0029-reviewed-1",
+      "word": "as",
+      "keywordZh": "視為",
+      "question": "Who do you see as a good example in your life?",
+      "answerEn": "I see my older classmate as a good example because she works hard without showing off. Her attitude reminds me to stay steady.",
+      "answerZh": "我把一位學姊視為生活中的好榜樣，因為她努力但不炫耀。她的態度提醒我要保持穩定。"
+    },
+    {
+      "id": "w0030-reviewed-1",
+      "word": "what",
+      "keywordZh": "什麼",
+      "question": "How do you decide what to do first on a busy morning?",
+      "answerEn": "I write down what needs to be finished that day. Then I choose the task with the nearest deadline.",
+      "answerZh": "我會先寫下今天需要完成什麼，再選出截止時間最近的那件事。這樣比較容易安排順序。"
+    },
+    {
+      "id": "w0031-reviewed-1",
+      "word": "their",
+      "keywordZh": "他們的",
+      "question": "How can people show respect for their teammates during a project?",
+      "answerEn": "People can show respect for their teammates by sharing updates and finishing their parts on time. Their effort affects the whole group, not only themselves.",
+      "answerZh": "在專案中，人們可以透過分享進度和準時完成自己的部分來尊重隊友。他們的努力影響整個團隊，不只是自己。"
+    },
+    {
+      "id": "w0032-reviewed-1",
+      "word": "would",
+      "keywordZh": "會",
+      "question": "What would you do if you suddenly had a free afternoon?",
+      "answerEn": "I would take a slow walk and then sit in a café for a while. A free afternoon would feel valuable because it does not happen often.",
+      "answerZh": "如果突然有一個空閒下午，我會慢慢散步，然後在咖啡廳坐一下。空閒下午很珍貴，因為它不常出現。"
+    },
+    {
+      "id": "w0033-reviewed-1",
+      "word": "go",
+      "keywordZh": "去",
+      "question": "Where do you like to go when you need to clear your mind?",
+      "answerEn": "I like to go outside and walk without a strict plan. Moving my body helps my thoughts become less tangled.",
+      "answerZh": "想整理思緒時，我喜歡去外面隨意走走。走動一下，往往能讓原本糾結的想法慢慢清楚。"
+    },
+    {
+      "id": "w0034-reviewed-1",
+      "word": "which",
+      "keywordZh": "哪一個",
+      "question": "What would you ask before choosing between several courses?",
+      "answerEn": "I would ask which course suits a beginner. I would also check which one fits my schedule.",
+      "answerZh": "我會先問哪一個課程適合初學者，再看看哪一個比較符合我的時間安排。"
+    },
+    {
+      "id": "w0035-reviewed-1",
+      "word": "get",
+      "keywordZh": "變得",
+      "question": "What would you like to get better at this year?",
+      "answerEn": "I want to get better at cooking. If I learn a few simple dishes, I can make dinner without relying on takeout.",
+      "answerZh": "我想讓自己的廚藝變得更好。學會幾道簡單的菜，就不用每次晚餐都靠外帶。"
+    },
+    {
+      "id": "w0036-reviewed-1",
+      "word": "if",
+      "keywordZh": "如果",
+      "question": "If you had one extra hour every day, how would you use it?",
+      "answerEn": "If I had one extra hour every day, I would use it for exercise or reading. I think that would make my days feel less rushed.",
+      "answerZh": "如果每天多一小時，我會用來運動或閱讀。我覺得那會讓每天比較不匆忙。"
+    },
+    {
+      "id": "w0037-reviewed-1",
+      "word": "all",
+      "keywordZh": "所有",
+      "question": "What helps you stay calm when all your tasks feel urgent?",
+      "answerEn": "When all my tasks feel urgent, I write them down and choose the first one. Seeing everything on paper makes the pressure feel less vague.",
+      "answerZh": "當所有事情都很急時，我會先把它們寫下來，再決定從哪一件開始。列出清單後，就比較能看清楚該怎麼安排。"
+    },
+    {
+      "id": "w0038-reviewed-1",
+      "word": "her",
+      "keywordZh": "她",
+      "question": "Think of someone you admire. What is one thing you learned from her?",
+      "answerEn": "I learned from her that being calm can be powerful. She does not speak loudly, but people listen because her ideas are clear.",
+      "answerZh": "我從她身上學到，冷靜也可以很有力量。她說話不大聲，但因為想法清楚，所以大家會聽。"
+    },
+    {
+      "id": "w0039-reviewed-1",
+      "word": "there",
+      "keywordZh": "那裡",
+      "question": "Is there a place where you can always calm down?",
+      "answerEn": "There is a small park near my home where I can calm down. Even a short walk there helps me breathe more slowly.",
+      "answerZh": "我家附近有一個小公園，我總是能在那裡冷靜下來。即使只是短暫散步，也能讓我呼吸變慢。"
+    },
+    {
+      "id": "w0040-reviewed-1",
+      "word": "one",
+      "keywordZh": "一個",
+      "question": "What is one small change that could make your daily life better?",
+      "answerEn": "One small change would be sleeping thirty minutes earlier. It sounds simple, but it could make my mornings much easier.",
+      "answerZh": "有一個小改變可以讓我的日常生活更好，就是早睡三十分鐘。這聽起來簡單，但能讓我的早晨輕鬆很多。"
+    },
+    {
+      "id": "w0041-reviewed-1",
+      "word": "my",
+      "keywordZh": "我的",
+      "question": "What part of your daily routine do you value most?",
+      "answerEn": "I value my quiet time before bed. It gives me a chance to put my thoughts in order and sleep more peacefully.",
+      "answerZh": "我很珍惜睡前屬於我的安靜時間。這段時間讓我整理思緒，也睡得更安穩。"
+    },
+    {
+      "id": "w0042-reviewed-1",
+      "word": "time",
+      "keywordZh": "時間",
+      "question": "How do you usually spend your time when you have no deadlines?",
+      "answerEn": "When I have no deadlines, I like to spend my time slowly. I may read, walk, or clean my room without rushing.",
+      "answerZh": "沒有事情要趕的時候，我喜歡放慢步調，自己安排時間。我可能會閱讀、散步或整理房間，不必一直看時鐘。"
+    },
+    {
+      "id": "w0043-reviewed-1",
+      "word": "about",
+      "keywordZh": "關於",
+      "question": "What is a topic you can talk about for a long time?",
+      "answerEn": "I can talk about learning habits for a long time. I enjoy thinking about why some routines work and others fail.",
+      "answerZh": "關於學習習慣，我可以聊很久。我喜歡想想哪些習慣有效、哪些行不通，以及背後的原因。"
+    },
+    {
+      "id": "w0044-reviewed-1",
+      "word": "year",
+      "keywordZh": "年",
+      "question": "What is one thing you hope to achieve this year?",
+      "answerEn": "This year, I hope to become more consistent with my study routine. I do not need perfect days, but I want fewer days with no progress.",
+      "answerZh": "今年我希望自己的讀書作息更穩定。我不需要每天完美，但希望完全沒有進度的日子變少。"
+    },
+    {
+      "id": "w0045-reviewed-1",
+      "word": "when",
+      "keywordZh": "當…時",
+      "question": "When do you feel most like yourself?",
+      "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
+      "answerZh": "當我有足夠安靜時間思考時，我最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
+    },
+    {
+      "id": "w0046-reviewed-1",
+      "word": "see",
+      "keywordZh": "看到",
+      "question": "What do you hope people see in you after working with you?",
+      "answerEn": "I hope people see that I am responsible and willing to communicate. Even if I am not perfect, I want them to feel that I take the work seriously.",
+      "answerZh": "和我合作後，我希望別人看到我負責任，而且願意溝通。即使我不完美，我也希望他們覺得我認真看待工作。"
+    },
+    {
+      "id": "w0047-reviewed-1",
+      "word": "some",
+      "keywordZh": "一些",
+      "question": "What are some small things that make your day better?",
+      "answerEn": "Some small things that make my day better are good coffee, a clean desk, and a short walk. They do not solve every problem, but they make the day feel lighter.",
+      "answerZh": "一些能讓我一天變好的小事包括好喝的咖啡、乾淨的桌面和短暫散步。它們不能解決所有問題，但會讓一天感覺輕鬆一點。"
+    },
+    {
+      "id": "w0048-reviewed-1",
+      "word": "think",
+      "keywordZh": "認為",
+      "question": "What do you think makes a conversation meaningful?",
+      "answerEn": "I think a conversation is meaningful when both people feel safe enough to be honest. It does not have to be deep all the time, but it should feel real.",
+      "answerZh": "我認為有意義的對話是雙方都能安心誠實表達的對話。它不必一直很深刻，但應該要真實。"
+    },
+    {
+      "id": "w0049-reviewed-1",
+      "word": "into",
+      "keywordZh": "變成",
+      "question": "What is a small action that can turn into a strong habit?",
+      "answerEn": "Writing one sentence every night can turn into a strong habit. It is small enough to start, but it can build consistency over time.",
+      "answerZh": "每晚寫一句話，慢慢就能變成穩定的習慣。這個起點很小，容易做到，也比較能持續下去。"
+    },
+    {
+      "id": "w0050-reviewed-1",
+      "word": "could",
+      "keywordZh": "可以",
+      "question": "What could make your study or work environment better?",
+      "answerEn": "Better lighting could make my work environment more comfortable. It would help me focus longer without feeling tired so quickly.",
+      "answerZh": "更好的光線可以讓我的工作環境更舒服。它能幫助我專注更久，不會那麼快疲倦。"
+    },
+    {
+      "id": "w0051-reviewed-1",
+      "word": "out",
+      "keywordZh": "出去",
+      "question": "What do you do when you feel burned out?",
+      "answerEn": "When I feel burned out, I step out for a short walk and take a break from my screen. A little fresh air helps me feel refreshed.",
+      "answerZh": "覺得筋疲力盡時，我會走出去散步，暫時離開螢幕。呼吸一點新鮮空氣，能讓精神恢復一些。"
+    },
+    {
+      "id": "w0052-reviewed-1",
+      "word": "people",
+      "keywordZh": "人",
+      "question": "What kind of people make you feel comfortable in a group?",
+      "answerEn": "I feel comfortable with people who listen and do not try to control every conversation. They make the group feel less tense.",
+      "answerZh": "在團體中，會傾聽而且不想控制每段對話的人會讓我覺得舒服。他們讓團體氣氛比較不緊繃。"
+    },
+    {
+      "id": "w0053-reviewed-1",
+      "word": "your",
+      "keywordZh": "你的",
+      "question": "What advice would you give a friend who is nervous before an exam?",
+      "answerEn": "Prepare your notes the night before and get enough sleep. Give yourself a little extra time in the morning so you do not feel rushed.",
+      "answerZh": "前一晚先整理好你的筆記，也要睡飽。早上多留一點時間給自己，就比較不會手忙腳亂。"
+    },
+    {
+      "id": "w0054-reviewed-1",
+      "word": "come",
+      "keywordZh": "來",
+      "question": "Who do you hope will come to you when they need advice?",
+      "answerEn": "I hope close friends will come to me when they need advice. I may not solve everything, but I can listen carefully.",
+      "answerZh": "我希望好朋友需要建議時會來找我。我不一定能解決所有事情，但我能仔細聽。"
+    },
+    {
+      "id": "w0055-reviewed-1",
+      "word": "its",
+      "keywordZh": "它的",
+      "question": "Think of a tool you use often. What is its most useful feature?",
+      "answerEn": "My calendar app is useful because its reminders help me avoid forgetting small tasks. Without them, I would miss many details.",
+      "answerZh": "我常用的日曆軟體很有用，因為它的提醒能幫我避免忘記小任務。沒有那些提醒，我會漏掉很多細節。"
+    },
+    {
+      "id": "w0056-reviewed-1",
+      "word": "then",
+      "keywordZh": "然後",
+      "question": "What do you usually do first, and what do you do then, when you start studying?",
+      "answerEn": "I usually clear my desk first, and then I open the materials I need. This order helps me move into study mode more smoothly.",
+      "answerZh": "開始讀書時，我通常先清桌面，然後打開需要的資料。這個順序能幫我更順利進入讀書狀態。"
+    },
+    {
+      "id": "w0057-reviewed-1",
+      "word": "now",
+      "keywordZh": "現在",
+      "question": "What is something you need to focus on now?",
+      "answerEn": "Right now, I need to focus on finishing the tasks that matter most. If I keep switching between small things, I will lose too much time.",
+      "answerZh": "現在我需要專注在完成最重要的任務。如果我一直在小事情之間切換，就會浪費太多時間。"
+    },
+    {
+      "id": "w0058-reviewed-1",
+      "word": "other",
+      "keywordZh": "其他",
+      "question": "What is one way you are different from other people you know?",
+      "answerEn": "One way I am different from other people I know is that I need more quiet time. I enjoy social time, but I get tired if there is too much of it.",
+      "answerZh": "和其他我認識的人相比，我需要更多安靜的時間。我也喜歡和人相處，但社交活動太密集時就容易累。"
+    },
+    {
+      "id": "w0059-reviewed-1",
+      "word": "more",
+      "keywordZh": "更多",
+      "question": "What do you want to spend more time doing?",
+      "answerEn": "I want to spend more time exercising and reading. These two habits make me feel healthier and more mentally clear.",
+      "answerZh": "我想花更多時間運動和閱讀。這兩個習慣讓我感覺更健康，也讓思緒更清楚。"
+    },
+    {
+      "id": "w0060-reviewed-1",
+      "word": "than",
+      "keywordZh": "比",
+      "question": "Which place is better for studying: your home or a library?",
+      "answerEn": "The library is quieter than my home. I can concentrate for longer because there are fewer interruptions.",
+      "answerZh": "圖書館比我家安靜。因為比較少被打斷，我能專心更久。"
+    },
+    {
+      "id": "w0061-reviewed-1",
+      "word": "like",
+      "keywordZh": "喜歡",
+      "question": "What kind of place do you like to visit when you have free time?",
+      "answerEn": "I like to visit places that are quiet but still have some life, like a small bookstore. I can look around without feeling rushed.",
+      "answerZh": "有空時，我喜歡去安靜但仍有生活感的地方，例如小書店。我可以慢慢逛，不會覺得被催促。"
+    },
+    {
+      "id": "w0062-reviewed-1",
+      "word": "no",
+      "keywordZh": "不",
+      "question": "When is it important to say no clearly?",
+      "answerEn": "It is important to say no clearly when I do not have enough time or energy. A vague answer can create false expectations.",
+      "answerZh": "當我沒有足夠時間或精力時，清楚說不很重要。模糊回答可能會造成錯誤期待。"
+    },
+    {
+      "id": "w0063-reviewed-1",
+      "word": "how",
+      "keywordZh": "怎麼",
+      "question": "How do you usually learn a skill that feels difficult at first?",
+      "answerEn": "I first learn how to do one small part of the skill. Once I understand that part, I add another step and keep practicing.",
+      "answerZh": "我會先學會其中一小部分該怎麼做，理解之後再多加一個步驟，繼續練習。"
+    },
+    {
+      "id": "w0064-reviewed-1",
+      "word": "also",
+      "keywordZh": "也",
+      "question": "What is a skill you use at school or work that is also useful in daily life?",
+      "answerEn": "Organizing information is useful at school, and it is also useful in daily life. It helps me handle bills, plans, and personal tasks more calmly.",
+      "answerZh": "整理資訊在學校很有用，在日常生活中也有用。它能幫我更冷靜地處理帳單、計畫和個人任務。"
+    },
+    {
+      "id": "w0065-reviewed-1",
+      "word": "first",
+      "keywordZh": "第一",
+      "question": "What do you usually do first when you wake up?",
+      "answerEn": "The first thing I usually do is check the time and drink some water. It helps me feel more awake before I look at messages.",
+      "answerZh": "我起床後通常第一件事是看時間和喝水。這能讓我在看訊息前比較清醒。"
+    },
+    {
+      "id": "w0066-reviewed-1",
+      "word": "look",
+      "keywordZh": "看",
+      "question": "What do you check before choosing a place to study?",
+      "answerEn": "I look at the lighting and tables first. A bright space with a comfortable seat helps me concentrate.",
+      "answerZh": "我會先看看燈光和桌椅。光線充足、座位舒服的地方，能讓我比較專心。"
+    },
+    {
+      "id": "w0067-reviewed-1",
+      "word": "give",
+      "keywordZh": "給",
+      "question": "What kind of advice would you give to someone starting a new school or job?",
+      "answerEn": "I would give them advice to ask questions early and observe how people work. Understanding the culture can reduce many small mistakes.",
+      "answerZh": "我會給剛進新學校或新公司的人一個建議：有問題早點問，也多觀察大家怎麼做事。了解環境後，就能少犯一些小錯。"
+    },
+    {
+      "id": "w0068-reviewed-1",
+      "word": "our",
+      "keywordZh": "我們的",
+      "question": "What is one thing our community could do to become more friendly?",
+      "answerEn": "Our community could create more shared spaces where people can talk naturally. Small connections can make a place feel safer and warmer.",
+      "answerZh": "我們的社區可以創造更多讓人自然交談的公共空間。小小的連結能讓一個地方感覺更安全、更溫暖。"
+    },
+    {
+      "id": "w0069-reviewed-1",
+      "word": "only",
+      "keywordZh": "只能",
+      "question": "What is one thing you can only learn through experience?",
+      "answerEn": "I think patience is something you can only learn through experience. People can explain it, but you understand it better after facing delays yourself.",
+      "answerZh": "我認為耐心是只能透過經驗學會的東西。別人可以解釋它，但親自面對延誤後會更理解。"
+    },
+    {
+      "id": "w0070-reviewed-1",
+      "word": "new",
+      "keywordZh": "新的",
+      "question": "What is a new habit you would like to build?",
+      "answerEn": "A new habit I would like to build is reviewing my notes every evening. It would help me remember things before they pile up.",
+      "answerZh": "我想養成一個新的習慣，每天晚上複習筆記。這樣就能及早消化內容，不會越積越多。"
+    },
+    {
+      "id": "w0071-reviewed-1",
+      "word": "way",
+      "keywordZh": "方法",
+      "question": "What is your favorite way to solve a difficult problem?",
+      "answerEn": "My favorite way is to write down what I know and what I do not know. This makes the problem less vague and easier to attack.",
+      "answerZh": "我最喜歡的解題方法是寫下我知道和不知道的部分。這會讓問題不那麼模糊，也比較容易處理。"
+    },
+    {
+      "id": "w0072-reviewed-1",
+      "word": "want",
+      "keywordZh": "想要",
+      "question": "What do you want to understand better about yourself?",
+      "answerEn": "I want to understand better why I avoid certain tasks even when they are important. Knowing the reason may help me change the habit.",
+      "answerZh": "我想要更了解自己為什麼會逃避一些重要的事。找出原因之後，也許就比較容易改變這個習慣。"
+    },
+    {
+      "id": "w0073-reviewed-1",
+      "word": "good",
+      "keywordZh": "好",
+      "question": "What makes a good friend different from a friendly person?",
+      "answerEn": "A good friend is not only nice in easy moments. They are also willing to listen when things become difficult.",
+      "answerZh": "好朋友和友善的人不同，不只是在輕鬆時刻對你好。他們也願意在事情變難時聽你說。"
+    },
+    {
+      "id": "w0074-reviewed-1",
+      "word": "day",
+      "keywordZh": "一天",
+      "question": "What does a perfect day look like to you?",
+      "answerEn": "A perfect day for me is calm but not empty. I would finish one important task, eat something good, and have time to walk outside.",
+      "answerZh": "對我來說，完美的一天是平靜但不空洞的。我會完成一件重要任務、吃好吃的東西，並有時間到外面走走。"
+    },
+    {
+      "id": "w0075-reviewed-1",
+      "word": "very",
+      "keywordZh": "非常",
+      "question": "What is something very small that can still affect your mood?",
+      "answerEn": "A very small thing that affects my mood is the first message I read in the morning. If it is stressful, I may feel tense right away.",
+      "answerZh": "一件非常小但會影響我心情的事是早上看到的第一則訊息。如果它很有壓力，我可能會立刻緊繃。"
+    },
+    {
+      "id": "w0076-reviewed-1",
+      "word": "man",
+      "keywordZh": "男人",
+      "question": "What makes a man a good role model?",
+      "answerEn": "A man can be a good role model if he is responsible and treats others with respect. Strength is not only about power; it is also about character.",
+      "answerZh": "一個男人如果負責任並尊重他人，就可以成為好榜樣。力量不只是權力，也包含品格。"
+    },
+    {
+      "id": "w0077-reviewed-1",
+      "word": "any",
+      "keywordZh": "任何",
+      "question": "How would you help a friend if you did not have any free time that day?",
+      "answerEn": "If I did not have any free time, I would explain that honestly. I could offer to help the next day or suggest someone else to ask.",
+      "answerZh": "如果那天沒有任何空檔，我會坦白說明。我可以約隔天幫忙，或建議他找其他人問問。"
+    },
+    {
+      "id": "w0078-reviewed-1",
+      "word": "find",
+      "keywordZh": "找",
+      "question": "What helps you find motivation when you feel tired?",
+      "answerEn": "When I feel tired, I find motivation by remembering the reason I started. I also make the next step very small so it feels possible.",
+      "answerZh": "當我累的時候，我會透過想起自己開始的原因來找回動力。我也會把下一步變得很小，讓它感覺可以完成。"
+    },
+    {
+      "id": "w0079-reviewed-1",
+      "word": "because",
+      "keywordZh": "因為",
+      "question": "What is one habit you keep because it really helps you?",
+      "answerEn": "I keep writing down tasks because it really helps me reduce mental clutter. Without a list, I waste energy trying to remember everything.",
+      "answerZh": "我保留寫待辦事項的習慣，因為它真的能減少腦中的混亂。沒有清單時，我會浪費力氣記住所有事情。"
+    },
+    {
+      "id": "w0080-reviewed-1",
+      "word": "many",
+      "keywordZh": "許多",
+      "question": "Why do many people find it hard to rest without feeling guilty?",
+      "answerEn": "Many people find it hard to rest because they connect value with productivity. They may feel guilty even when rest is necessary.",
+      "answerZh": "許多人覺得不帶愧疚地休息很難，因為他們把價值和生產力連在一起。即使休息是必要的，他們也可能感到愧疚。"
+    },
+    {
+      "id": "w0081-reviewed-1",
+      "word": "thing",
+      "keywordZh": "東西",
+      "question": "What is one thing you always forget to bring?",
+      "answerEn": "One thing I often forget to bring is an umbrella. I only remember it when the sky already looks dark.",
+      "answerZh": "我常常忘記帶的一樣東西是雨傘。我通常到天空已經變暗時才想起來。"
+    },
+    {
+      "id": "w0082-reviewed-1",
+      "word": "should",
+      "keywordZh": "應該",
+      "question": "What should people do when they realize they made a mistake?",
+      "answerEn": "People should admit the mistake first and then look for a way to fix it. Hiding it usually makes the situation worse.",
+      "answerZh": "當人們發現自己犯錯時，應該先承認錯誤，再找方法修正。隱瞞通常會讓情況更糟。"
+    },
+    {
+      "id": "w0083-reviewed-1",
+      "word": "here",
+      "keywordZh": "這裡",
+      "question": "Someone visiting your neighborhood asks where to have lunch. What would you say?",
+      "answerEn": "There is a good noodle shop here, just around the corner. It serves a small menu, but everything is freshly made.",
+      "answerZh": "這裡轉角有一間不錯的麵店。菜單的選擇不多，但每一道都是現做的。"
+    },
+    {
+      "id": "w0084-reviewed-1",
+      "word": "tell",
+      "keywordZh": "告訴",
+      "question": "What is something you find hard to tell other people?",
+      "answerEn": "I find it hard to tell people when I am overwhelmed. I often try to handle things alone until I realize I need help.",
+      "answerZh": "我覺得很難告訴別人自己已經壓力太大。我常常想自己處理，直到發現需要幫忙。"
+    },
+    {
+      "id": "w0085-reviewed-1",
+      "word": "them",
+      "keywordZh": "他們",
+      "question": "How do you support your friends when you cannot solve the problem for them?",
+      "answerEn": "I support them by listening and staying present. Even when I cannot fix the problem, I can make them feel less alone.",
+      "answerZh": "當我無法替朋友解決問題時，我會透過傾聽和陪伴支持他們。即使我不能修好問題，也能讓他們感覺不那麼孤單。"
+    },
+    {
+      "id": "w0086-reviewed-1",
+      "word": "back",
+      "keywordZh": "回去",
+      "question": "Which place would you like to visit again on a future trip?",
+      "answerEn": "I would love to go back to the small town where my grandparents grew up. I want to walk through the old market again.",
+      "answerZh": "我想再回去祖父母長大的小鎮，重新逛逛那裡的老市場。"
+    },
+    {
+      "id": "w0087-reviewed-1",
+      "word": "after",
+      "keywordZh": "之後",
+      "question": "What do you usually do after finishing a difficult task?",
+      "answerEn": "After finishing a difficult task, I usually rest for a while before starting anything new. I need time to let my mind slow down.",
+      "answerZh": "完成一件困難的事之後，我通常會先休息一下，再開始下一件。我需要一點時間讓思緒慢下來。"
+    },
+    {
+      "id": "w0088-reviewed-1",
+      "word": "through",
+      "keywordZh": "穿過",
+      "question": "What route would you recommend for a short walk near your home?",
+      "answerEn": "I would walk through the park and follow the path to the river. The trees provide shade, so it is pleasant even on a warm day.",
+      "answerZh": "我會先穿過公園，再沿著步道走到河邊。沿路有樹蔭，天氣暖的時候走起來也很舒服。"
+    },
+    {
+      "id": "w0089-reviewed-1",
+      "word": "child",
+      "keywordZh": "孩子",
+      "question": "What is one lesson every child should learn early?",
+      "answerEn": "Every child should learn that mistakes are part of learning. If children fear every mistake, they may stop trying new things.",
+      "answerZh": "每個孩子都應該早點學到錯誤是學習的一部分。如果孩子害怕每個錯誤，他們可能會停止嘗試新事物。"
+    },
+    {
+      "id": "w0090-reviewed-1",
+      "word": "between",
+      "keywordZh": "之間",
+      "question": "How do you find balance between work and rest?",
+      "answerEn": "I find balance between work and rest by setting a stopping time. Without a boundary, work can quietly take over the whole day.",
+      "answerZh": "我會設定收工時間，讓工作和休息之間保持平衡。沒有這條界線，工作很容易占滿一整天。"
+    },
+    {
+      "id": "w0091-reviewed-1",
+      "word": "over",
+      "keywordZh": "超過",
+      "question": "What do you do when a meeting or class runs over time?",
+      "answerEn": "When a meeting runs over time, I try to check whether the remaining discussion is necessary. If not, it is better to set a follow-up instead of tiring everyone out.",
+      "answerZh": "當會議超過時間時，我會試著確認剩下的討論是否必要。如果不是，最好安排後續，而不是讓所有人都累垮。"
+    },
+    {
+      "id": "w0092-reviewed-1",
+      "word": "woman",
+      "keywordZh": "女性",
+      "question": "Tell me about a woman you respect and why you respect her.",
+      "answerEn": "I respect a woman who stays kind even under pressure. She is not weak; she is strong enough to choose patience.",
+      "answerZh": "我尊敬一位在壓力下仍然保持善意的女性。她不是軟弱，而是強大到能選擇耐心。"
+    },
+    {
+      "id": "w0093-reviewed-1",
+      "word": "still",
+      "keywordZh": "仍然",
+      "question": "What is something you still want to learn?",
+      "answerEn": "I still want to learn how to speak more confidently in public. I have improved, but I know I can become clearer and calmer.",
+      "answerZh": "我仍然想學習如何更有自信地公開說話。我已經進步了，但知道自己可以變得更清楚、更冷靜。"
+    },
+    {
+      "id": "w0094-reviewed-1",
+      "word": "life",
+      "keywordZh": "生活",
+      "question": "What part of life do you think people often forget to enjoy?",
+      "answerEn": "People often forget to enjoy ordinary moments in life, such as eating slowly or talking with a friend. These moments are small, but they matter.",
+      "answerZh": "人們常常忘記享受生活中的普通時刻，例如慢慢吃飯或和朋友聊天。這些時刻很小，但很重要。"
+    },
+    {
+      "id": "w0095-reviewed-1",
+      "word": "work",
+      "keywordZh": "工作",
+      "question": "What kind of work gives you a sense of progress?",
+      "answerEn": "Work that has a visible result gives me a sense of progress. Even a small finished section can make me feel that I am moving forward.",
+      "answerZh": "有明確成果的工作會讓我有進展感。即使只完成一小段，也能讓我覺得自己在前進。"
+    },
+    {
+      "id": "w0096-reviewed-1",
+      "word": "too",
+      "keywordZh": "太",
+      "question": "What is something you enjoy too much to give up?",
+      "answerEn": "I enjoy quiet walks too much to give them up. They help me think and recover without needing anything complicated.",
+      "answerZh": "我太喜歡安靜散步了，所以不想放棄。它們能幫我思考和恢復，而且不需要複雜準備。"
+    },
+    {
+      "id": "w0097-reviewed-1",
+      "word": "become",
+      "keywordZh": "成為",
+      "question": "What kind of person do you hope to become in five years?",
+      "answerEn": "In five years, I hope to become more steady and clear about my direction. I do not need everything to be perfect, but I want to trust myself more.",
+      "answerZh": "五年後，我希望成為一個更穩定、對方向更有把握的人。我不求一切完美，但希望更相信自己。"
+    },
+    {
+      "id": "w0098-reviewed-1",
+      "word": "need",
+      "keywordZh": "需要",
+      "question": "What do you need before you can focus deeply?",
+      "answerEn": "I need a quiet space and a clear first step before I can focus deeply. If the task feels vague, my attention moves everywhere.",
+      "answerZh": "在能深入專注前，我需要安靜空間和清楚的第一步。如果任務太模糊，我的注意力會到處跑。"
+    },
+    {
+      "id": "w0099-reviewed-1",
+      "word": "world",
+      "keywordZh": "世界",
+      "question": "What problem in the world do you wish more people cared about?",
+      "answerEn": "I wish more people cared about loneliness in the modern world. Many people look connected online but still feel isolated in real life.",
+      "answerZh": "我希望更多人關心現代世界中的孤獨問題。很多人在網路上看似有連結，但現實中仍然感到孤立。"
+    },
+    {
+      "id": "w0100-reviewed-1",
+      "word": "own",
+      "keywordZh": "自己的",
+      "question": "What is something you want to do in your own way?",
+      "answerEn": "I want to organize my notes in my own way. If the system matches how I think, I can use it more naturally.",
+      "answerZh": "我想用自己的方式整理筆記。如果系統符合我的思考方式，我就能更自然地使用它。"
+    },
+    {
+      "id": "w0223-reviewed-1",
+      "word": "political",
+      "keywordZh": "政治",
+      "question": "What political issue most affects daily life in your community?",
+      "answerEn": "Housing is an important political issue in my city. I would like local leaders to explain how they plan to make rent more affordable.",
+      "answerZh": "在我住的城市，居住問題是很重要的政治議題。我希望地方首長能說明，打算怎麼讓租金更容易負擔。"
+    },
+    {
+      "id": "w0763-reviewed-1",
+      "word": "environment",
+      "keywordZh": "環境",
+      "question": "What is one change that could improve the environment in your neighborhood?",
+      "answerEn": "Planting more trees could improve the environment around my apartment. They would provide shade and make summer walks more comfortable.",
+      "answerZh": "多種一些樹，能改善我家附近的環境。有了樹蔭，夏天散步也會舒服一點。"
+    },
+    {
+      "id": "w0684-reviewed-1",
+      "word": "technology",
+      "keywordZh": "科技",
+      "question": "What technology has made an everyday task easier for you?",
+      "answerEn": "Navigation technology makes it easier for me to travel to unfamiliar places. I still check the route before leaving so I understand where I am going.",
+      "answerZh": "導航科技讓我更容易到不熟悉的地方。不過出發前，我還是會先看過路線，知道自己要往哪裡走。"
+    },
+    {
+      "id": "w0669-reviewed-1",
+      "word": "opportunity",
+      "keywordZh": "機會",
+      "question": "What opportunity would you like to try, even if it feels a little intimidating?",
+      "answerEn": "I would like an opportunity to speak at a local event. I might feel nervous, but it would help me practice sharing my ideas.",
+      "answerZh": "我想找個機會在社區活動中上台分享。雖然可能會緊張，卻能練習把自己的想法說出來。"
+    },
+    {
+      "id": "w1015-reviewed-1",
+      "word": "challenge",
+      "keywordZh": "挑戰",
+      "question": "What challenge have you learned to handle better recently?",
+      "answerEn": "Cooking dinner after a busy day used to be a challenge for me. Preparing a few ingredients on Sunday has made it much easier.",
+      "answerZh": "忙了一天還要煮晚餐，以前對我是一大挑戰。現在我會先在星期天備好一些食材，平日就輕鬆多了。"
+    },
+    {
+      "id": "w2217-reviewed-1",
+      "word": "confident",
+      "keywordZh": "有自信",
+      "question": "What helps you feel confident before trying something new?",
+      "answerEn": "I feel more confident when I can practice the first step beforehand. I do not need to know everything, but a little preparation helps.",
+      "answerZh": "事先練習過第一個步驟，我就會比較有自信。不必什麼都會，但做一點準備很有幫助。"
+    },
+    {
+      "id": "w0349-reviewed-1",
+      "word": "decision",
+      "keywordZh": "決定",
+      "question": "What decision do you like to discuss with someone before making it?",
+      "answerEn": "I like to discuss a big purchase before making a decision. Another person may notice a cost or problem that I have missed.",
+      "answerZh": "買比較貴的東西之前，我喜歡先和別人討論，再做決定。對方可能會注意到我漏看的費用或問題。"
+    },
+    {
+      "id": "w0866-reviewed-1",
+      "word": "responsibility",
+      "keywordZh": "責任",
+      "question": "What responsibility do you share with the people you live with?",
+      "answerEn": "Keeping the kitchen clean is a shared responsibility in our home. We take turns washing the dishes so one person does not have to do everything.",
+      "answerZh": "維持廚房清潔是我們共同的責任。我們輪流洗碗，讓家事不會全落在同一個人身上。"
+    },
+    {
+      "id": "w2737-reviewed-1",
+      "word": "reliable",
+      "keywordZh": "可靠",
+      "question": "What makes someone a reliable teammate?",
+      "answerEn": "A reliable teammate explains what they can do and follows through. If they need help or extra time, they tell the team early.",
+      "answerZh": "可靠的隊友會說清楚自己能做什麼，也會把答應的事做好。需要幫忙或更多時間時，他會提早讓大家知道。"
+    },
+    {
+      "id": "w0934-reviewed-1",
+      "word": "budget",
+      "keywordZh": "預算",
+      "question": "How would you plan a weekend outing on a small budget?",
+      "answerEn": "I would set a budget for food and transport first. Then I would choose a free activity, such as visiting a park or walking along the coast.",
+      "answerZh": "我會先訂好飲食和交通的預算，再選一個免費的活動，例如逛公園或到海邊散步。"
+    },
+    {
+      "id": "w1761-reviewed-1",
+      "word": "healthy",
+      "keywordZh": "健康",
+      "question": "What healthy habit is easy for you to keep on a busy day?",
+      "answerEn": "Taking a short walk after lunch is a healthy habit I can usually keep. It gives me a break from sitting and helps me feel refreshed.",
+      "answerZh": "午餐後散步一下，是我通常能維持的健康習慣。這讓我暫時離開座位，也能換個心情。"
+    },
+    {
+      "id": "w2347-reviewed-1",
+      "word": "curious",
+      "keywordZh": "好奇",
+      "question": "What are you curious about when you visit a new place?",
+      "answerEn": "I am curious about the food people eat every day. Visiting a small market often teaches me more than going straight to a famous restaurant.",
+      "answerZh": "到新的地方時，我很好奇當地人平常都吃什麼。逛逛小市場，往往比直接去知名餐廳更有收穫。"
+    },
+    {
+      "id": "w0618-reviewed-1",
+      "word": "patient",
+      "keywordZh": "有耐心",
+      "question": "When have you needed to be patient while helping someone learn?",
+      "answerEn": "I needed to be patient when I taught my grandfather to use a new phone. Repeating the steps slowly helped him feel comfortable asking questions.",
+      "answerZh": "教爺爺使用新手機時，我需要更有耐心。慢慢重複步驟，能讓他比較安心地提出問題。"
+    },
+    {
+      "id": "w2600-reviewed-1",
+      "word": "creative",
+      "keywordZh": "有創意",
+      "question": "How would you make a simple birthday gift feel personal?",
+      "answerEn": "I would try a creative gift, such as a small book of shared memories. A few photos and handwritten notes can make it feel special.",
+      "answerZh": "我會準備一份有創意的禮物，例如記錄共同回憶的小冊子。放幾張照片、寫些話，就能讓禮物很有心意。"
+    },
+    {
+      "id": "w1240-reviewed-1",
+      "word": "respect",
+      "keywordZh": "尊重",
+      "question": "How can people show respect when they disagree?",
+      "answerEn": "People can show respect by letting the other person finish speaking. They can explain a different view without making the disagreement personal.",
+      "answerZh": "意見不同時，可以先讓對方把話說完，表達尊重。說明自己的看法就好，不必把討論變成人身批評。"
+    },
+    {
+      "id": "w0251-reviewed-1",
+      "word": "community",
+      "keywordZh": "社區",
+      "question": "What would help newcomers feel welcome in your community?",
+      "answerEn": "A small welcome event could help newcomers meet people in the community. Sharing practical information about shops and transport would also be useful.",
+      "answerZh": "辦一場小型歡迎活動，可以幫助新住戶認識社區裡的人。分享附近商店和交通的實用資訊，也會很有幫助。"
+    },
+    {
+      "id": "w0872-reviewed-1",
+      "word": "improve",
+      "keywordZh": "改善",
+      "question": "What small change would improve your morning routine?",
+      "answerEn": "Getting my bag ready the night before would improve my morning routine. I could leave home calmly instead of searching for things.",
+      "answerZh": "前一晚先準備好包包，可以改善我早上的生活節奏。出門前就能從容一點，不用一直找東西。"
+    },
+    {
+      "id": "w1258-reviewed-1",
+      "word": "mistake",
+      "keywordZh": "錯誤",
+      "question": "How would you respond after sending someone the wrong information?",
+      "answerEn": "I would explain the mistake as soon as I noticed it. Then I would send the correct information and check whether they needed anything else.",
+      "answerZh": "發現錯誤後，我會盡快說明，再把正確資訊傳過去，也確認對方是否還需要其他協助。"
+    },
+    {
+      "id": "w1170-reviewed-1",
+      "word": "balance",
+      "keywordZh": "平衡",
+      "question": "How do you find a balance between making plans and leaving time to rest?",
+      "answerEn": "I find a balance by planning one main activity each day. I leave some free time around it so the day does not feel rushed.",
+      "answerZh": "我每天只安排一項主要活動，在規劃和休息之間取得平衡。前後留點空檔，一整天就不會太匆忙。"
+    },
+    {
+      "id": "w0343-reviewed-1",
+      "word": "experience",
+      "keywordZh": "經驗",
+      "question": "What experience changed the way you think about learning?",
+      "answerEn": "Helping a classmate was an important experience for me. Explaining a topic showed me which parts I understood and which parts I needed to review.",
+      "answerZh": "幫同學解惑是對我很重要的經驗。在說明的過程中，我會發現哪些地方真的懂了，哪些還需要複習。"
+    }
+  ]
+}

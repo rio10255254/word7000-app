@@ -138,6 +138,7 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertTrue(app.buttons["speaking-use-core"].waitForExistence(timeout: 5))
         app.buttons["speaking-use-core"].tap()
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["speaking-available-count"].label, "600 題")
         app.buttons["speaking-show-reference"].tap()
         XCTAssertTrue(app.staticTexts["speaking-reference-answer"].waitForExistence(timeout: 5))
         app.buttons["speaking-complete-after-reference"].tap()

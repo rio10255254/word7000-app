@@ -85,6 +85,7 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/export-native-words.mjs --check
+          node scripts/build-native-speaking-library.mjs --check
           STAGE="$RUNNER_TEMP/native"
           mkdir -p "$STAGE"
           cp -R ios "$STAGE/ios"

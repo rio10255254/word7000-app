@@ -13,6 +13,7 @@ struct SpeakingSessionView: View {
     @State private var revealed = false
     @State private var answered = 0
     @State private var started = false
+    @State private var availableCount = 0
     @State private var completedCurrent = false
     @State private var filtersOpen = false
     @State private var previousFilter = FilterSelection()
@@ -116,6 +117,11 @@ struct SpeakingSessionView: View {
             }
             .accessibilityIdentifier("speaking-bank")
             Spacer(minLength: 8)
+            Text(examplesOnly
+                 ? L.t("\(availableCount) 個單字", "\(availableCount) \(availableCount == 1 ? "word" : "words")")
+                 : L.t("\(availableCount) 題", "\(availableCount) \(availableCount == 1 ? "question" : "questions")"))
+                .font(.caption).foregroundStyle(.secondary).monospacedDigit()
+                .accessibilityIdentifier("speaking-available-count")
             if (model.settings.speakingFilter ?? FilterSelection()).isActive {
                 Image(systemName: "line.3.horizontal.decrease.circle.fill").foregroundStyle(Palette.accent)
                     .accessibilityLabel(L.filters)
@@ -152,7 +158,9 @@ struct SpeakingSessionView: View {
     private func start() {
         Speaker.shared.stop()
         let candidates = model.speakingCandidates
-        words = QuizBuilder.session(words: SpeakingPractice.candidates(from: candidates, activity: activity), count: 10)
+        let available = SpeakingPractice.candidates(from: candidates, activity: activity)
+        availableCount = available.count
+        words = QuizBuilder.session(words: available, count: 10)
         index = 0
         answered = 0
         revealed = false

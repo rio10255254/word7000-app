@@ -20,6 +20,8 @@ on:
       - 'scripts/export-native-words.mjs'
       - 'scripts/verify-native-release.py'
       - 'scripts/test_verify_native_release.py'
+      - 'scripts/build-native-speaking-library.mjs'
+      - 'content/speaking/**'
       - '.github/workflows/ios-native.yml'
   workflow_dispatch:
     inputs:
@@ -83,6 +85,9 @@ jobs:
 
       - name: Word list matches the app data
         run: node scripts/export-native-words.mjs --check
+
+      - name: Speaking questions match their editorial sources
+        run: node scripts/build-native-speaking-library.mjs --check
 
       - name: Release archive checks
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'

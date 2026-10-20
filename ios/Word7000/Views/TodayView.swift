@@ -63,6 +63,19 @@ struct TodayView: View {
                 .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 8, trailing: 4))
             }
 
+            if model.streakProtectionJustUsed {
+                Section {
+                    Label {
+                        Text(L.t("昨天沒有學習，連勝保護幫你保住了 \(progress.streak) 天連勝。今天學 1 個字就能延續。",
+                                 "You missed yesterday, so streak protection kept your \(progress.streak)-day streak. Study one word today to keep it going."))
+                            .font(.subheadline)
+                    } icon: {
+                        Image(systemName: "shield.lefthalf.filled").foregroundStyle(Palette.review)
+                    }
+                    .accessibilityIdentifier("today-streak-protected")
+                }
+            }
+
             if let nudge = plus.nudge {
                 Section {
                     PlusNudgeBanner(nudge: nudge)
@@ -83,6 +96,15 @@ struct TodayView: View {
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("today-speaking")
+                // Typing the word only makes sense when English is what is learned.
+                if model.studyMode == .english {
+                    Button { start(.spelling) } label: {
+                        ActionRow(icon: "character.cursor.ibeam", tint: Palette.accent, title: L.spelling,
+                                  value: L.t("\(Spelling.sessionLength) 題", "\(Spelling.sessionLength) words"))
+                    }
+                    .tint(.primary)
+                    .accessibilityIdentifier("today-spelling")
+                }
                 Button { start(.exam) } label: {
                     ActionRow(icon: "timer", tint: Palette.review, title: L.t("考前衝刺模擬", "Exam practice"),
                               locked: plus.decide(.examPractice) != .allowed)

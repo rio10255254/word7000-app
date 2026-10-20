@@ -22,6 +22,9 @@ struct MeView: View {
                     StatTile(value: stats.review, label: L.reviewing, color: Palette.review)
                 }
                 .padding(.vertical, 6)
+            } footer: {
+                Label(streakProtectionText, systemImage: "shield.lefthalf.filled")
+                    .accessibilityIdentifier("me-streak-protection")
             }
 
             Section {
@@ -34,7 +37,9 @@ struct MeView: View {
             } header: {
                 Text(L.thisWeek)
             } footer: {
-                if let accuracy = model.quizAccuracy { Text(L.quizAccuracy(accuracy)) }
+                if let accuracy = model.quizAccuracy {
+                    Text(L.quizAccuracy(accuracy.percent, correct: accuracy.correct, total: accuracy.total))
+                }
             }
 
             PlusSection(compact: true)
@@ -48,6 +53,15 @@ struct MeView: View {
         }
         .navigationTitle(L.tabMe)
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
+    }
+
+    private var streakProtectionText: String {
+        guard let ready = model.streakProtectionReadyOn else {
+            return L.t("連勝保護已就緒：每 7 天可補一天沒學，連勝不會中斷。", "Streak protection is ready: one missed day a week won't break your streak.")
+        }
+        let parts = ready.split(separator: "-").compactMap { Int($0) }
+        let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
+        return L.t("連勝保護已用過，\(date) 起可再使用。", "Streak protection was used; ready again on \(date).")
     }
 }
 

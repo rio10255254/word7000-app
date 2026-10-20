@@ -13,12 +13,25 @@ final class StreakReminderTests: XCTestCase {
     }
 
     func testCoversTheLastHourOfTheDayAfterStudying() {
-        let progress = ProgressState(streak: 4, lastStudyDate: "2026-10-09")
+        // Protection was used three days earlier, so it cannot cover the 10th.
+        let progress = ProgressState(streak: 4, lastStudyDate: "2026-10-09", streakFreezeDate: "2026-10-07")
         let early = StreakReminderPlan.make(progress: progress, now: date(10, 20), enabled: true, calendar: calendar)
         XCTAssertFalse(early.activeNow)
         XCTAssertEqual(early.expiresAt, date(11, 0))
         XCTAssertEqual(early.startsAt, date(10, 23))
         XCTAssertTrue(StreakReminderPlan.make(progress: progress, now: date(10, 23, 30), enabled: true, calendar: calendar).activeNow)
+    }
+
+    func testStreakProtectionMovesTheDeadlineOneDay() {
+        let progress = ProgressState(streak: 4, lastStudyDate: "2026-10-09")
+        let plan = StreakReminderPlan.make(progress: progress, now: date(10, 20), enabled: true, calendar: calendar)
+        XCTAssertEqual(plan.expiresAt, date(12, 0))
+        XCTAssertFalse(StreakReminderPlan.make(progress: progress, now: date(10, 23, 30), enabled: true, calendar: calendar).activeNow)
+        // On the covered day the streak is still alive until midnight.
+        let covered = ProgressState(streak: 4, lastStudyDate: "2026-10-09", streakFreezeDate: "2026-10-10")
+        let last = StreakReminderPlan.make(progress: covered, now: date(11, 23, 30), enabled: true, calendar: calendar)
+        XCTAssertTrue(last.activeNow)
+        XCTAssertEqual(last.expiresAt, date(12, 0))
     }
 
     func testNothingWhenDisabledBrokenOrNoStreak() {

@@ -10,6 +10,7 @@ enum Activity: Identifiable, Hashable {
     case study
     case quiz
     case speaking
+    case spelling
     case exam
     case scan
 
@@ -91,6 +92,11 @@ struct RootView: View {
                 })
             case .speaking:
                 SpeakingSessionView()
+            case .spelling:
+                SpellingSessionView(studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
             case .exam:
                 ExamView(studyMissed: { ids in
                     model.startStudySession(onlyIds: ids)

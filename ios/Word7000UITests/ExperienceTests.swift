@@ -28,6 +28,7 @@ final class ExperienceTests: XCTestCase {
         let app = launch()
         app.buttons["today-start"].tap()
         waitForReadyCard(app)
+        XCTAssertTrue(app.staticTexts["study-card-status"].exists)
         app.buttons["study-show-answer"].tap()
         app.buttons["study-grade-known"].doubleTap()
         waitForReadyCard(app)
@@ -93,6 +94,27 @@ final class ExperienceTests: XCTestCase {
         app.buttons["exam-submit"].tap()
         XCTAssertTrue(app.staticTexts["exam-summary"].waitForExistence(timeout: 5))
         snapshot(app, "exam-results-small-screen")
+    }
+
+    func testSpellingChecksEachAnswerAndReachesResults() {
+        let app = launch()
+        let spelling = app.buttons["today-spelling"]
+        for _ in 0..<4 where !spelling.isHittable { app.swipeUp() }
+        spelling.tap()
+        let input = app.textFields["spelling-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["spelling-hint"].isEnabled)
+        let total = Int(app.staticTexts["spelling-position"].label.split(separator: "/").last?.trimmingCharacters(in: .whitespaces) ?? "") ?? 0
+        XCTAssertGreaterThan(total, 0)
+        for round in 0..<total {
+            input.tap()
+            input.typeText("qqqq\n")
+            XCTAssertTrue(app.staticTexts["spelling-answer"].waitForExistence(timeout: 5), "round \(round)")
+            if round == 0 { snapshot(app, "spelling-answer") }
+            app.buttons["spelling-next"].tap()
+        }
+        XCTAssertTrue(app.buttons["spelling-again"].waitForExistence(timeout: 5), app.debugDescription)
+        snapshot(app, "spelling-results")
     }
 
     func testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated() {

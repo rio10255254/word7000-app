@@ -40,6 +40,7 @@ enum L {
     static var quizLength: String { t("10 題", "10 questions") }
     static var practiceStruggling: String { t("複習不熟的字", "Review tricky words") }
     static var speaking: String { t("口說練習", "Speaking practice") }
+    static var spelling: String { t("拼字練習", "Spelling") }
     static func studyingBank(_ name: String) -> String { t("字庫：\(name)", "Word bank: \(name)") }
 
     // Study
@@ -53,6 +54,10 @@ enum L {
     static var sessionCompleteTitle: String { t("這一組完成了", "Set complete") }
     static func sessionCompleteText(known: Int, review: Int) -> String { t("認識 \(known) 個 · 不熟 \(review) 個", "Knew \(known) · Not yet \(review)") }
     static var sessionGoalDone: String { t("今天的目標已達成", "Today's goal reached") }
+    static var goalReachedTitle: String { t("今天的目標達成了！", "You reached today's goal!") }
+    static var goalReachedBanner: String { t("今天的目標達成了", "Today's goal reached") }
+    static var quizTodaysWordsHint: String { t("趁記憶還新鮮，用小測驗複習今天學的字。", "While they are fresh, quiz yourself on today's words.") }
+    static var quizTodaysWords: String { t("小測驗複習今天的字", "Quiz today's words") }
     static func sessionGoalLeft(_ left: Int) -> String { t("今天還差 \(left) 個", "\(left) more for today") }
     static var done: String { t("完成", "Done") }
     static var nextSession: String { t("再一組", "Another set") }
@@ -116,7 +121,9 @@ enum L {
     static var mastered: String { t("已會", "Known") }
     static var reviewing: String { t("複習中", "Reviewing") }
     static var thisWeek: String { t("這 7 天", "Last 7 days") }
-    static func quizAccuracy(_ percent: Int) -> String { t("測驗答對率 \(percent)%", "Quiz accuracy \(percent)%") }
+    static func quizAccuracy(_ percent: Int, correct: Int, total: Int) -> String {
+        t("測驗答對率 \(percent)%（\(correct)/\(total) 題）", "Quiz accuracy \(percent)% (\(correct) of \(total))")
+    }
     static var settings: String { t("設定", "Settings") }
     static var studyModeTitle: String { t("學習內容", "Learning") }
     static func studyModeLabel(_ mode: StudyMode) -> String {

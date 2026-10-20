@@ -6,6 +6,7 @@ struct Word7000App: App {
     @State private var model: AppModel
     @State private var account: AccountModel
     @State private var liveActivities = LiveActivityManager()
+    @State private var homeWidget = HomeWidgetBridge()
     @State private var plus: PlusModel
     @State private var refreshingReminders = false
     @State private var reminderRefreshPending = false
@@ -50,6 +51,8 @@ struct Word7000App: App {
                 .onChange(of: account.supportsCustomReminderTime) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.studyMode) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.progress.dailyTarget) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: model.progress.streak) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: model.progress.streakFreezeDate) { _, _ in Task { await refreshReminders() } }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
                     model.refreshToday()
                     account.heartbeat()
@@ -110,6 +113,7 @@ struct Word7000App: App {
     }
 
     private func syncReminders() async {
+        homeWidget.update(model: model)
         let plan = model.streakPlan
         if model.reminderEnabled {
             await liveActivities.sync(plan: plan, progress: model.progress, chineseInterface: model.studyMode == .english)

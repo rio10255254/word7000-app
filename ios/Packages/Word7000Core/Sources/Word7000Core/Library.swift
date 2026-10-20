@@ -69,7 +69,9 @@ public final class PreparedVocabulary: @unchecked Sendable {
         }
 
         let source = options.sort == .alphabetical ? alphabeticalRecords : records
-        var matches: [(record: Record, progress: WordProgress, score: Int)] = []
+        // Parse each timestamp once here, not on every comparison while sorting.
+        let usesRecency = options.sort != .alphabetical && (filter == .favorites || filter == .review || filter == .mastered)
+        var matches: [(record: Record, recency: Double, score: Int)] = []
         for record in source {
             if let level, record.word.group != level { continue }
             if let initial, !record.normalizedWord.uppercased().hasPrefix(initial) { continue }
@@ -83,7 +85,7 @@ public final class PreparedVocabulary: @unchecked Sendable {
             case .new where progress.status != .new: continue
             default: break
             }
-            matches.append((record, progress, score))
+            matches.append((record, usesRecency ? Self.recency(progress, filter: filter) : 0, score))
         }
 
         if (options.sort != .alphabetical || (rankedSearch && !terms.isEmpty)), !terms.isEmpty || filter == .favorites || filter == .review || filter == .mastered {
@@ -92,9 +94,7 @@ public final class PreparedVocabulary: @unchecked Sendable {
                 if options.sort == .alphabetical {
                     return a.record.normalizedWord < b.record.normalizedWord
                 }
-                let aTime = Self.recency(a.progress, filter: filter)
-                let bTime = Self.recency(b.progress, filter: filter)
-                if aTime != bTime { return aTime > bTime }
+                if a.recency != b.recency { return a.recency > b.recency }
                 return a.record.index < b.record.index
             }
         }
@@ -129,14 +129,20 @@ public final class PreparedVocabulary: @unchecked Sendable {
         return Self.parseDate(value)?.timeIntervalSince1970 ?? 0
     }
 
+    // ISO8601DateFormatter is thread safe and costly to create, so these are shared.
+    nonisolated(unsafe) private static let withFraction: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+    nonisolated(unsafe) private static let plain = ISO8601DateFormatter()
+    nonisolated(unsafe) private static let dayOnly: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate]
+        return formatter
+    }()
+
     static func parseDate(_ value: String) -> Date? {
-        let withFraction = ISO8601DateFormatter()
-        withFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        if let date = withFraction.date(from: value) { return date }
-        let plain = ISO8601DateFormatter()
-        if let date = plain.date(from: value) { return date }
-        let dayOnly = ISO8601DateFormatter()
-        dayOnly.formatOptions = [.withFullDate]
-        return dayOnly.date(from: value)
+        withFraction.date(from: value) ?? plain.date(from: value) ?? dayOnly.date(from: value)
     }
 }

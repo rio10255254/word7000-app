@@ -9,6 +9,7 @@ struct Word7000App: App {
     @State private var plus: PlusModel
     @State private var refreshingReminders = false
     @State private var reminderRefreshPending = false
+    @State private var registrationGeneration = 0
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -87,6 +88,7 @@ struct Word7000App: App {
                 plus.suspendTimeUpdates()
                 model.saveNow()
                 account.flushBeforeBackground()
+                uploadRegistrationBeforeBackground()
             case .inactive:
                 model.saveNow()
             @unknown default:
@@ -114,7 +116,38 @@ struct Word7000App: App {
         } else {
             await liveActivities.endAll()
         }
-        if let row = liveActivities.registration(deviceId: model.settings.deviceSourceId, plan: plan, enabled: model.reminderEnabled,
+        scheduleRegistrationUpload()
+    }
+
+    /// The lock screen card is updated at once by `syncReminders`; the server's copy waits
+    /// for a pause, so a study session sends one update instead of one per card.
+    private func scheduleRegistrationUpload() {
+        registrationGeneration &+= 1
+        let generation = registrationGeneration
+        guard scenePhase == .active else {
+            Task { await uploadRegistration() }
+            return
+        }
+        Task {
+            try? await Task.sleep(for: .seconds(10))
+            guard generation == registrationGeneration else { return }
+            await uploadRegistration()
+        }
+    }
+
+    /// Sends a waiting update before iOS suspends the app, so the server
+    /// never nudges a learner who already reached today's goal.
+    private func uploadRegistrationBeforeBackground() {
+        registrationGeneration &+= 1
+        let identifier = UIApplication.shared.beginBackgroundTask(withName: "word7000-reminders")
+        Task {
+            await uploadRegistration()
+            UIApplication.shared.endBackgroundTask(identifier)
+        }
+    }
+
+    private func uploadRegistration() async {
+        if let row = liveActivities.registration(deviceId: model.settings.deviceSourceId, plan: model.streakPlan, enabled: model.reminderEnabled,
                                                  progress: model.progress, chineseInterface: model.studyMode == .english, today: model.today,
                                                  reminderMinute: account.supportsCustomReminderTime ? (model.settings.reminderMinute ?? 720) : nil) {
             if await account.saveLiveActivityDevice(row) { liveActivities.acknowledgeRegistration(row) }

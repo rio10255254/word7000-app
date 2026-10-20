@@ -89,6 +89,28 @@ final class ParityTests: XCTestCase {
         XCTAssertEqual(later.due, f.statsLater.due)
     }
 
+    func testPreparedStatsAndQueueCountsMatchTheFullQueue() {
+        let vocabulary = PreparedVocabulary(words)
+        for today in ["2026-06-06", "2026-06-20"] {
+            XCTAssertEqual(LearningEngine.stats(vocabulary: vocabulary, state: f.libraryState, today: today),
+                           LearningEngine.stats(words: words, state: f.libraryState, today: today))
+        }
+        let states = [f.libraryState, f.history.last!, ProgressState.empty]
+        for state in states {
+            for today in ["2026-06-06", "2026-06-20"] {
+                for limit in [0, 1, 5, 12, 40, 200] {
+                    for list in [Array(words.prefix(40)), words] {
+                        let queue = LearningEngine.buildStudyQueue(words: list, state: state, today: today, limit: limit, seed: "counts")
+                        let fresh = queue.filter { state.progress(for: $0.id).status == .new }.count
+                        let counts = LearningEngine.studyQueueCounts(words: list, state: state, today: today, limit: limit)
+                        XCTAssertEqual([counts.fresh, counts.review, counts.total], [fresh, queue.count - fresh, queue.count],
+                                       "\(today) limit \(limit)")
+                    }
+                }
+            }
+        }
+    }
+
     func testSeededOrders() {
         XCTAssertEqual(SeededRandom.shuffle(Array(words.prefix(30)), seed: "seed-1").map(\.id), f.studySession)
         XCTAssertEqual(QuizBuilder.session(words: Array(words.prefix(30)), count: 20, seed: "seed-2").map(\.id), f.quizSessionSmall)

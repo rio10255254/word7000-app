@@ -355,7 +355,7 @@ final class AppModel {
 
     // MARK: Today
 
-    var stats: ProgressStats { LearningEngine.stats(words: bank.words, state: progress, today: today) }
+    var stats: ProgressStats { LearningEngine.stats(vocabulary: bank, state: progress, today: today) }
     var goalDone: Bool { progress.studiedToday >= progress.dailyTarget }
     var dailyFraction: Double {
         guard progress.dailyTarget > 0 else { return 0 }
@@ -364,14 +364,12 @@ final class AppModel {
     var newWordsLeftToday: Int { studyPlan.fresh }
 
     var studyPlan: (fresh: Int, review: Int, total: Int) {
-        let words: [WordEntry]
-        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete {
-            var seen = Set<String>()
-            words = session.cardIds.dropFirst(session.index).filter { seen.insert($0).inserted }.compactMap { word(id: $0) }
-        } else {
-            words = LearningEngine.buildStudyQueue(words: studyCandidates, state: progress, today: today,
-                                                   limit: nextSessionLimit, seed: "today-plan")
+        guard let session = studySession, session.sourceKey == studySourceKey, !session.isComplete else {
+            // Only the counts are shown, so skip building and shuffling the queue.
+            return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit)
         }
+        var seen = Set<String>()
+        let words = session.cardIds.dropFirst(session.index).filter { seen.insert($0).inserted }.compactMap { word(id: $0) }
         let fresh = words.filter { progress.progress(for: $0.id).status == .new }.count
         return (fresh, words.count - fresh, words.count)
     }

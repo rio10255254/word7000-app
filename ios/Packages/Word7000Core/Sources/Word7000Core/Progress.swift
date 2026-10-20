@@ -312,8 +312,18 @@ public enum LearningEngine {
 
     public static func stats(words: [WordEntry], state: ProgressState, today: String?) -> ProgressStats {
         let ids = Set(words.map(\.id))
+        return stats(wordCount: words.count, contains: ids.contains, state: state, today: today)
+    }
+
+    /// The same counts for a prepared list, looked up in its index instead of
+    /// a set of every id built on each call.
+    public static func stats(vocabulary: PreparedVocabulary, state: ProgressState, today: String?) -> ProgressStats {
+        stats(wordCount: vocabulary.words.count, contains: { vocabulary.index(of: $0) != nil }, state: state, today: today)
+    }
+
+    static func stats(wordCount: Int, contains: (String) -> Bool, state: ProgressState, today: String?) -> ProgressStats {
         var due = 0, mastered = 0, review = 0, favorites = 0
-        for (wordId, progress) in state.words where ids.contains(wordId) {
+        for (wordId, progress) in state.words where contains(wordId) {
             if progress.status == .mastered { mastered += 1 } else if progress.status == .review { review += 1 }
             if progress.favorite { favorites += 1 }
             if let today, isDue(progress, today: today) { due += 1 }
@@ -323,7 +333,7 @@ public enum LearningEngine {
             mastered: mastered,
             review: review,
             favorites: favorites,
-            remaining: words.count - mastered - review,
+            remaining: wordCount - mastered - review,
             studiedToday: state.studiedToday
         )
     }
@@ -363,5 +373,24 @@ public enum LearningEngine {
 
         let chosen = Array((due.map(\.word) + fresh + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
+    }
+
+    /// How many new and review cards `buildStudyQueue` would pick, counted
+    /// without sorting, copying or shuffling the words.
+    public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int) -> (fresh: Int, review: Int, total: Int) {
+        let size = max(0, limit)
+        guard size > 0 else { return (0, 0, 0) }
+        var due = 0, fresh = 0, ahead = 0
+        for word in words {
+            guard let dueDate = reviewDueDate(state.words[word.id]) else {
+                fresh += 1
+                continue
+            }
+            if dueDate <= today { due += 1 } else { ahead += 1 }
+        }
+        // Due words fill the queue first, then new ones, then words ahead of schedule.
+        let total = min(size, due + fresh + ahead)
+        let chosenFresh = min(fresh, max(0, size - due))
+        return (chosenFresh, total - chosenFresh, total)
     }
 }

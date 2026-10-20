@@ -251,6 +251,17 @@ struct BankShelf: View {
                             Button { rename(set) } label: { Label(L.renameBank, systemImage: "pencil") }
                             Button(role: .destructive) { deleting = set } label: { Label(L.deleteBank, systemImage: "trash") }
                                 .accessibilityIdentifier("bank-delete")
+                        } preview: {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Image(systemName: scanned ? "doc.text.viewfinder" : "folder.fill").font(.title2)
+                                Spacer(minLength: 0)
+                                Text(set.name).font(.headline).lineLimit(3)
+                                Text(L.bankWordCount(set.wordIds.count)).font(.subheadline)
+                            }
+                            .foregroundStyle(.white)
+                            .padding(20)
+                            .frame(width: 220, height: 160, alignment: .leading)
+                            .background(Color(hex: set.color) ?? Palette.accent, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                         }
                 }
                 Button(action: scan) {

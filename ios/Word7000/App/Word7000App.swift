@@ -44,15 +44,7 @@ struct Word7000App: App {
                         Task { await refreshReminders() }
                     }
                 }
-                .onChange(of: model.progress.lastStudyDate) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: model.progress.studiedToday) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: model.reminderEnabled) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: model.settings.reminderMinute) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: account.supportsCustomReminderTime) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: model.studyMode) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: model.progress.dailyTarget) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: model.progress.streak) { _, _ in Task { await refreshReminders() } }
-                .onChange(of: model.progress.streakFreezeDate) { _, _ in Task { await refreshReminders() } }
+                .onChange(of: reminderInputs) { _, _ in Task { await refreshReminders() } }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
                     model.refreshToday()
                     account.heartbeat()
@@ -98,6 +90,28 @@ struct Word7000App: App {
                 break
             }
         }
+    }
+
+    /// Everything the reminders and widgets show; one value keeps the scene's
+    /// modifier chain short enough for the type checker.
+    private struct ReminderInputs: Equatable {
+        var lastStudyDate: String?
+        var studiedToday: Int
+        var dailyTarget: Int
+        var streak: Int
+        var streakFreezeDate: String?
+        var enabled: Bool
+        var reminderMinute: Int?
+        var customTime: Bool
+        var studyMode: StudyMode
+    }
+
+    private var reminderInputs: ReminderInputs {
+        ReminderInputs(lastStudyDate: model.progress.lastStudyDate, studiedToday: model.progress.studiedToday,
+                       dailyTarget: model.progress.dailyTarget, streak: model.progress.streak,
+                       streakFreezeDate: model.progress.streakFreezeDate, enabled: model.reminderEnabled,
+                       reminderMinute: model.settings.reminderMinute, customTime: account.supportsCustomReminderTime,
+                       studyMode: model.studyMode)
     }
 
     /// Keeps the local streak card and the server's view of this iPhone in

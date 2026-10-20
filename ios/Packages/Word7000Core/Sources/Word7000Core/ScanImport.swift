@@ -74,7 +74,11 @@ public struct ScanImportPlan: Sendable {
         init(word: String, meaning: String, part: String) {
             self.word = ScanImportPlan.wordKey(word)
             meanings = Set(ChineseDisplay.meaningParts(meaning.precomposedStringWithCompatibilityMapping)
-                .map { $0.filter { !$0.isWhitespace && $0 != "\u{200B}" && $0 != "\u{FEFF}" } }
+                .map { part in
+                    let clean = part.replacingOccurrences(of: "\u{200B}", with: "").replacingOccurrences(of: "\u{FEFF}", with: "")
+                    let spaced = clean.split(whereSeparator: \.isWhitespace).joined(separator: " ")
+                    return spaced.replacingOccurrences(of: "(?<=\\p{Han})\\s+(?=\\p{Han})", with: "", options: .regularExpression)
+                }
                 .filter { !$0.isEmpty })
             let aliases = ["noun": "n", "verb": "v", "adjective": "adj", "a": "adj",
                            "adverb": "adv", "pronoun": "pron", "preposition": "prep",

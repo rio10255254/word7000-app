@@ -15,11 +15,34 @@ final class PracticeQualityTests: XCTestCase {
         XCTAssertEqual(matching.first?.example, source.example)
     }
 
+    func testScannedExamplesAllowFormattingDifferencesButNotDifferentWordClasses() {
+        var source = word("own", "record", "紀錄；記載")
+        source.partOfSpeech = "n"
+        source.example = "This record shows every delivery."
+        source.exampleZh = "這份紀錄列出了每次配送。"
+        let matching = WordBanks.buildScannedWords([.init(meaningZh: "記載, 紀錄", partOfSpeech: "noun", word: "RECORD")],
+                                                  coreWords: [source], requireMatchingExample: true)
+        XCTAssertEqual(matching.first?.example, source.example)
+        let different = WordBanks.buildScannedWords([.init(meaningZh: "紀錄；記載", partOfSpeech: "v", word: "record")],
+                                                   coreWords: [source], requireMatchingExample: true)
+        XCTAssertTrue(different.first?.example.isEmpty == true)
+    }
+
     func testExactSearchComesFirstWhenBrowsingAlphabetically() {
         let words = [word("1", "catalog", "目錄"), word("2", "cat", "貓"), word("3", "aardvark", "cat")]
         let found = PreparedVocabulary(words).filter(state: .empty, query: "cat", filter: .all,
                                                      options: .init(sort: .alphabetical), rankedSearch: true)
         XCTAssertEqual(found.map(\.word), ["cat", "catalog", "aardvark"])
+    }
+
+    func testPracticeAfterMidnightStartsANewDailyCountAndKeepsTheStreak() {
+        let yesterday = LearningEngine.markKnown(.empty, wordId: "first", today: "2026-10-19")
+        let today = LearningEngine.normalizeForDate(yesterday, today: "2026-10-20")
+        XCTAssertEqual(today.studiedToday, 0)
+        let practiced = LearningEngine.markKnown(today, wordId: "second", today: "2026-10-20")
+        XCTAssertEqual(practiced.studiedToday, 1)
+        XCTAssertEqual(practiced.streak, 2)
+        XCTAssertEqual(practiced.lastStudyDate, "2026-10-20")
     }
 
     func testScannedCopyKeepsItsOwnMeaningInItsBank() {

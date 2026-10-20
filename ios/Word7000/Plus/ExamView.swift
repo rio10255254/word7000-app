@@ -41,6 +41,7 @@ struct ExamView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button { dismiss() } label: { Image(systemName: "xmark") }
                         .accessibilityLabel(L.close)
+                        .accessibilityIdentifier("exam-close")
                 }
                 ToolbarItem(placement: .principal) {
                     if !finished, !questions.isEmpty {
@@ -52,6 +53,7 @@ struct ExamView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     if !finished, !questions.isEmpty {
                         Button(L.t("交卷", "Submit")) { submit() }
+                            .accessibilityIdentifier("exam-submit")
                     }
                 }
             }
@@ -68,7 +70,7 @@ struct ExamView: View {
     private func start() {
         seed = SeededRandom.runtimeSeed()
         questions = QuizBuilder.session(words: model.bank.words, count: Self.questionCount, seed: seed)
-        options = questions.map { QuizBuilder.options(vocabulary: model.bank, wordId: $0.id, seed: seed, mode: model.quizMode) }
+        options = questions.map { QuizBuilder.options(vocabulary: model.bank, wordId: $0.id, seed: seed, mode: model.quizMode, concise: true) }
         answers = [:]
         index = 0
         finished = false
@@ -81,19 +83,23 @@ struct ExamView: View {
         let word = questions[index]
         let face = model.face(word)
         return VStack(spacing: 16) {
+          ScrollView {
+           VStack(spacing: 16) {
             SessionBar(fraction: Double(answers.count) / Double(max(1, questions.count)))
                 .padding(.top, 4)
             Text("\(index + 1) / \(questions.count)")
                 .font(.rounded(.footnote, weight: .semibold))
                 .foregroundStyle(.secondary)
-            Text(face.prompt)
+                .accessibilityIdentifier("exam-position")
+            Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
                 .font(.roundedSize(38, weight: .bold))
                 .minimumScaleFactor(0.4)
                 .lineLimit(3)
                 .multilineTextAlignment(.center)
                 .padding(.vertical, 16)
+                .accessibilityIdentifier("exam-prompt")
             VStack(spacing: 10) {
-                ForEach(Array(options[index].enumerated()), id: \.element) { _, option in
+                ForEach(Array(options[index].enumerated()), id: \.element) { offset, option in
                     let chosen = answers[index] == option
                     Button {
                         answers[index] = option
@@ -112,9 +118,13 @@ struct ExamView: View {
                         .background(chosen ? Palette.accent.opacity(0.14) : Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("exam-option-\(offset)")
                 }
             }
-            Spacer(minLength: 0)
+           }
+           .padding(.bottom, 8)
+          }
+          .scrollIndicators(.hidden)
             HStack(spacing: 12) {
                 Button { withAnimation(.snappy) { index = max(0, index - 1) } } label: {
                     Image(systemName: "chevron.left").font(.headline).frame(width: 30)
@@ -183,6 +193,7 @@ struct ExamView: View {
                 .padding(.top, 12)
                 Text(L.t("答對 \(correctCount) / \(total) 題", "\(correctCount) of \(total) correct"))
                     .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("exam-summary")
                 VStack(spacing: 8) {
                     ForEach(byLevel, id: \.level) { row in
                         HStack {

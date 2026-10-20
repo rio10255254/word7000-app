@@ -78,6 +78,23 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
     }
 
+    func testExamUsesConciseOptionsAndCanBeSubmittedOnSmallScreens() {
+        let app = launch()
+        let exam = app.buttons["today-exam"]
+        for _ in 0..<4 where !exam.isHittable { app.swipeUp() }
+        exam.tap()
+        let first = app.buttons["exam-option-0"]
+        XCTAssertTrue(first.waitForExistence(timeout: 10))
+        for index in 0..<4 {
+            XCTAssertFalse(app.buttons["exam-option-\(index)"].label.contains("；"))
+        }
+        first.tap()
+        XCTAssertTrue(app.staticTexts["exam-position"].label.hasPrefix("2 /"))
+        app.buttons["exam-submit"].tap()
+        XCTAssertTrue(app.staticTexts["exam-summary"].waitForExistence(timeout: 5))
+        snapshot(app, "exam-results-small-screen")
+    }
+
     func testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]

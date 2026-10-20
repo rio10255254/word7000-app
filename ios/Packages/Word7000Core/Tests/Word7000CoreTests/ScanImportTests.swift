@@ -47,6 +47,12 @@ final class ScanImportTests: XCTestCase {
         XCTAssertEqual(plan.additions.count, 1)
     }
 
+    func testSpacesInEnglishMeaningsDoNotGetErased() {
+        let plan = ScanImportPlan(rows: [row("part", "一部分；a part"), row("part", "一部分；apart")])
+        XCTAssertEqual(plan.additions.count, 2)
+        XCTAssertFalse(ScanImportPlan.sameEntry(row("part", "一部分；a part"), row("part", "一部分；apart")))
+    }
+
     func testParserMultipleReadersAndSavedBankKeepSeparateSenses() {
         let parsed = ScanParser.parse(ScanParser.lines(fromPlainText: "bank n. 銀行\nbank n. 河岸\nBANK n. 銀行"))
         XCTAssertEqual(parsed.map(\.meaningZh), ["銀行", "河岸"])

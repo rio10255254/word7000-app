@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 @main
 struct Word7000App: App {
@@ -48,6 +49,11 @@ struct Word7000App: App {
                 .onChange(of: account.supportsCustomReminderTime) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.studyMode) { _, _ in Task { await refreshReminders() } }
                 .onChange(of: model.progress.dailyTarget) { _, _ in Task { await refreshReminders() } }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+                    model.refreshToday()
+                    account.heartbeat()
+                    Task { await refreshReminders() }
+                }
                 .onChange(of: account.session?.user.id) { _, _ in
                     liveActivities.forgetRegistration()
                     Task {
@@ -61,7 +67,7 @@ struct Word7000App: App {
                     while !Task.isCancelled {
                         try? await Task.sleep(for: .seconds(300))
                         guard !Task.isCancelled else { break }
-                        if scenePhase == .active { account.heartbeat(); await refreshReminders() }
+                        if scenePhase == .active { model.refreshToday(); account.heartbeat(); await refreshReminders() }
                     }
                 }
         }

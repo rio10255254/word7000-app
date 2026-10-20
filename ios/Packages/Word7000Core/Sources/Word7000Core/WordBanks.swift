@@ -78,7 +78,10 @@ public enum WordBanks {
             let key = ScanImportPlan.wordKey(word)
             guard !word.isEmpty, !meaning.isEmpty else { return nil }
             let core = coreByName[key]
-            let matchingExample = !requireMatchingExample || core?.meaningZh.trimmingCharacters(in: .whitespacesAndNewlines) == meaning
+            let sameEntry = core.map {
+                ScanImportPlan.sameEntry(row, ReviewedScanWord(meaningZh: $0.meaningZh, partOfSpeech: $0.partOfSpeech, word: $0.word))
+            } ?? false
+            let matchingExample = !requireMatchingExample || sameEntry
             let slug = slugify(key)
             let pos = row.partOfSpeech.trimmingCharacters(in: .whitespacesAndNewlines)
             return WordEntry(

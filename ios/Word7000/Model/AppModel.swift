@@ -394,6 +394,7 @@ final class AppModel {
         guard now != today else { return }
         today = now
         progress = LearningEngine.normalizeForDate(progress, today: now)
+        studyUndoStack = []
         scheduleSave()
     }
 
@@ -431,6 +432,7 @@ final class AppModel {
     }
 
     func startStudySession(onlyIds: [String]? = nil, limit: Int? = nil) {
+        refreshToday()
         let candidates: [WordEntry]
         if let onlyIds {
             let wanted = Set(onlyIds)
@@ -451,6 +453,7 @@ final class AppModel {
     }
 
     func gradeCurrentCard(_ grade: StudyGrade, expectedWordId: String? = nil) {
+        refreshToday()
         guard let session = studySession, let cardId = session.currentCardId else { return }
         guard expectedWordId == nil || expectedWordId == cardId else { return }
         studyUndoStack.append((progress, session))
@@ -467,6 +470,7 @@ final class AppModel {
     }
 
     func undoStudyGrade() {
+        refreshToday()
         guard let last = studyUndoStack.popLast() else { return }
         progress = last.progress
         studySession = last.session
@@ -490,6 +494,7 @@ final class AppModel {
     }
 
     func recordQuizAnswer(wordId: String, correct: Bool) {
+        refreshToday()
         let changed = correct
             ? LearningEngine.markQuizCorrect(progress, wordId: wordId, today: today)
             : LearningEngine.markReview(progress, wordId: wordId, today: today)
@@ -502,6 +507,7 @@ final class AppModel {
 
     /// Speaking practice counts as activity but does not change word progress.
     func recordSpeaking(completed: Bool) {
+        refreshToday()
         let changed = completed ? LearningEngine.recordPracticeDay(progress, today: today) : progress
         progress = recordActivity(in: changed) { counters in
             if completed { counters.speakingCompleted += 1 } else { counters.speakingSkipped += 1 }

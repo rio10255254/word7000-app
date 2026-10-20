@@ -518,6 +518,12 @@ final class AppModel {
 
     var quizMode: QuizAnswerMode { studyMode == .english ? .meaning : .word }
 
+    /// Remembers a speaking question as practised, so the next sessions ask
+    /// about other words first.
+    func noteSpeakingPractised(_ wordId: String) {
+        settings.recentSpeakingIds = SpeakingPractice.remembering(wordId, in: settings.recentSpeakingIds ?? [])
+    }
+
     var speakingCandidates: [WordEntry] {
         let filter = settings.speakingFilter ?? FilterSelection()
         return bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)

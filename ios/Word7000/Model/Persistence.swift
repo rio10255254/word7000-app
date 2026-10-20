@@ -32,6 +32,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?
     var speech: SpeechPreferences?
+    /// Word ids of recent speaking questions, oldest first.
+    var recentSpeakingIds: [String]?
 }
 
 struct BankFilterSettings: Codable, Equatable, Sendable {

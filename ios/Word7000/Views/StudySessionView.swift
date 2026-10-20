@@ -41,6 +41,7 @@ struct StudySessionView: View {
                                 .onAppear {
                                     cardWidth = proxy.size.width
                                     enterCard()
+                                    speakIfAutomatic(word)
                                 }
                                 .onChange(of: proxy.size.width) { _, value in cardWidth = value }
                                 .id("\(word.id)-\(session.index)")
@@ -236,6 +237,15 @@ struct StudySessionView: View {
             }
             if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; dragOffset = 0 }
         }
+    }
+
+    /// Reads the front of each new card aloud when the learner turned that on.
+    private func speakIfAutomatic(_ word: WordEntry) {
+        let preferences = model.settings.speech ?? SpeechPreferences()
+        guard preferences.autoSpeak == true, visible else { return }
+        let face = model.face(word)
+        guard Speaker.shared.activeText != face.speakText else { return }
+        Speaker.shared.speak(face.speakText, language: face.speakLanguage, preferences: preferences)
     }
 
     private func enterCard() {

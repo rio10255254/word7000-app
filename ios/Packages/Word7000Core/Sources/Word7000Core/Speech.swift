@@ -16,11 +16,15 @@ public struct SpeechPreferences: Codable, Equatable, Sendable {
     public var englishVoiceID: String?
     public var chineseVoiceID: String?
     public var speed: SpeechSpeed
+    /// Reads each new study card aloud. Optional so settings saved before it
+    /// existed still decode; nil means off.
+    public var autoSpeak: Bool?
 
-    public init(englishVoiceID: String? = nil, chineseVoiceID: String? = nil, speed: SpeechSpeed = .natural) {
+    public init(englishVoiceID: String? = nil, chineseVoiceID: String? = nil, speed: SpeechSpeed = .natural, autoSpeak: Bool? = nil) {
         self.englishVoiceID = englishVoiceID
         self.chineseVoiceID = chineseVoiceID
         self.speed = speed
+        self.autoSpeak = autoSpeak
     }
 
     public func voiceID(for language: String) -> String? {

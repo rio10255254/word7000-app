@@ -102,4 +102,40 @@ final class SpeakingPracticeTests: XCTestCase {
         XCTAssertEqual(ChineseDisplay.pronunciationWithTones("為了；因為；為什麼"), "wèi le；yīn wèi；wèi shén me")
         #endif
     }
+
+    func testSessionsPreferQuestionsNotPractisedRecently() {
+        let candidates = SpeakingPractice.candidates(from: ParityTests.words, activity: .questions)
+        var recent: [String] = []
+        var asked = Set<String>()
+        for round in 0..<60 {
+            let session = SpeakingPractice.session(from: candidates, recent: recent, count: 10, seed: "round-\(round)")
+            XCTAssertEqual(session.count, 10)
+            XCTAssertEqual(Set(session.map(\.id)).count, 10)
+            XCTAssertTrue(asked.isDisjoint(with: session.map(\.id)), "round \(round) repeated a question")
+            for word in session {
+                asked.insert(word.id)
+                recent = SpeakingPractice.remembering(word.id, in: recent)
+            }
+            // Nothing within the remembered window comes back.
+            if asked.count >= SpeakingPractice.recentLimit { asked = Set(recent) }
+        }
+        XCTAssertEqual(recent.count, SpeakingPractice.recentLimit)
+    }
+
+    func testSmallScopesRefillWithTheLongestAgoPractisedWords() {
+        let words = Array(ParityTests.words.prefix(12))
+        let recent = words.prefix(10).map(\.id)
+        let session = SpeakingPractice.session(from: words, recent: recent, count: 5, seed: "small")
+        XCTAssertEqual(Set(session.map(\.id)), Set([words[10].id, words[11].id, words[0].id, words[1].id, words[2].id]))
+        XCTAssertEqual(SpeakingPractice.session(from: Array(words.prefix(3)), recent: recent, count: 10, seed: "tiny").count, 3)
+        XCTAssertEqual(SpeakingPractice.remembering(words[0].id, in: recent).last, words[0].id)
+        XCTAssertEqual(SpeakingPractice.remembering(words[0].id, in: recent).count, 10)
+    }
+
+    func testSpeechPreferencesSavedBeforeAutoSpeakStillDecode() throws {
+        let old = #"{"speed":"slow","englishVoiceID":"voice"}"#
+        let decoded = try JSONDecoder().decode(SpeechPreferences.self, from: Data(old.utf8))
+        XCTAssertEqual(decoded, SpeechPreferences(englishVoiceID: "voice", speed: .slow))
+        XCTAssertNil(decoded.autoSpeak)
+    }
 }

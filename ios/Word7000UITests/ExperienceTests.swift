@@ -141,6 +141,11 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "speech-preferences")
         app.buttons["speech-preview-en-US"].tap()
         app.buttons["speech-preview-zh-TW"].tap()
+        let autoSpeak = app.switches["speech-auto-speak"]
+        for _ in 0..<3 where !autoSpeak.isHittable { app.swipeUp() }
+        XCTAssertEqual(autoSpeak.value as? String, "0")
+        autoSpeak.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+        XCTAssertEqual(autoSpeak.value as? String, "1")
         XCUIDevice.shared.press(.home)
         sleep(1)
         app.terminate()
@@ -150,6 +155,9 @@ final class ExperienceTests: XCTestCase {
         openSpeechSettings(app)
         XCTAssertTrue(app.segmentedControls["speech-speed"].buttons.element(boundBy: 0).isSelected)
         XCTAssertEqual(app.buttons["speech-voice-en-US"].value as? String, selectedName)
+        let savedAutoSpeak = app.switches["speech-auto-speak"]
+        for _ in 0..<3 where !savedAutoSpeak.isHittable { app.swipeUp() }
+        XCTAssertEqual(savedAutoSpeak.value as? String, "1")
     }
 
     private func openSpeechSettings(_ app: XCUIApplication) {

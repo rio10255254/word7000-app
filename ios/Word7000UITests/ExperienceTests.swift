@@ -28,7 +28,8 @@ final class ExperienceTests: XCTestCase {
         let app = launch()
         app.buttons["today-start"].tap()
         waitForReadyCard(app)
-        XCTAssertTrue(app.staticTexts["study-card-status"].exists)
+        // The card's own identifier covers its children, so find the chip by its text.
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label IN %@", ["新字", "還不熟", "複習"])).firstMatch.exists)
         app.buttons["study-show-answer"].tap()
         app.buttons["study-grade-known"].doubleTap()
         waitForReadyCard(app)

@@ -360,7 +360,6 @@ private struct CardStatusChip: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(style.color.opacity(0.14), in: Capsule())
-            .accessibilityIdentifier("study-card-status")
     }
 }
 

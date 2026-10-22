@@ -279,6 +279,26 @@ final class SpeakingCoachTests: XCTestCase {
         closeCoach(app)
     }
 
+    func testEditorialNotesAreReachableInBothLanguages() {
+        for englishUI in [false, true] {
+            let app = launch(dark: englishUI, englishUI: englishUI)
+            app.tabBars.buttons.element(boundBy: 1).tap()
+            let search = app.searchFields.firstMatch
+            XCTAssertTrue(search.waitForExistence(timeout: 5))
+            search.tap()
+            search.typeText("advice")
+            let word = app.staticTexts["advice"].firstMatch
+            XCTAssertTrue(word.waitForExistence(timeout: 5))
+            word.tap()
+            reveal(app.staticTexts["advice / advise"], in: app)
+            let explanation = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@",
+                englishUI ? "Advice is an uncountable noun" : "advice 是不可數名詞")).firstMatch
+            reveal(explanation, in: app)
+            snapshot(app, englishUI ? "editorial-dark-en" : "editorial-light-zh")
+            app.terminate()
+        }
+    }
+
     private func openSpeaking(_ app: XCUIApplication) {
         tap(app.buttons["today-speaking"], in: app)
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))

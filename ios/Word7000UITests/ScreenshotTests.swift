@@ -99,6 +99,7 @@ final class ScreenshotTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 2).tap()
+        for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
         XCTAssertTrue(app.descendants(matching: .any)["history-chart-empty"].firstMatch.waitForExistence(timeout: 5))
@@ -140,6 +141,7 @@ final class ScreenshotTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 2).tap()
         sleep(1)
         snap(app, "plus-5-me")
+        for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         if app.buttons["me-history"].exists {
             app.buttons["me-history"].tap()

@@ -290,10 +290,15 @@ final class SpeakingCoachTests: XCTestCase {
             let word = app.staticTexts["advice"].firstMatch
             XCTAssertTrue(word.waitForExistence(timeout: 5))
             word.tap()
-            reveal(app.staticTexts["advice / advise"], in: app)
-            let explanation = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@",
-                englishUI ? "Advice is an uncountable noun" : "advice 是不可數名詞")).firstMatch
-            reveal(explanation, in: app)
+            if englishUI {
+                let example = app.staticTexts["word-note-chinese-example"]
+                reveal(example, in: app)
+                XCTAssertEqual(example.label, "我請老師給我一些選大學的建議。")
+            } else {
+                reveal(app.staticTexts["advice / advise"], in: app)
+                let explanation = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "advice 是不可數名詞")).firstMatch
+                reveal(explanation, in: app)
+            }
             snapshot(app, englishUI ? "editorial-dark-en" : "editorial-light-zh")
             app.terminate()
         }

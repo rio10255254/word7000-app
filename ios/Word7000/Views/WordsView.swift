@@ -462,7 +462,8 @@ struct WordDetailView: View {
                 }
             }
             if let note = WordNotes.note(for: word.word) {
-                Section(L.t("易混字與搭配", "Usage and commonly confused words")) { WordNoteView(note: note) }
+                Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
+                        : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
             }
             Section {
                 LabeledContent(L.status, value: L.statusLabel(progress.status))

@@ -237,8 +237,6 @@ struct SpeakingCoachView: View {
             if needsTranscriptReview {
                 Text(L.t("先確認辨識文字，必要時可直接修改。", "Review the transcript and edit any misheard words."))
                     .font(.footnote).foregroundStyle(.secondary)
-                Button(L.t("文字已確認", "Transcript checked")) { needsTranscriptReview = false }
-                    .accessibilityIdentifier("coach-confirm-transcript")
             }
             if answer.count > SpeakingCoach.maximumAnswerCharacters {
                 Text(L.t("請將回答精簡至 600 字以內再取得建議。", "Shorten your answer to 600 characters before requesting suggestions."))
@@ -326,6 +324,17 @@ struct SpeakingCoachView: View {
                 if session.isBusy || provider.isBusy {
                     Text(L.t("正在結束上一個請求…", "Finishing the previous request…"))
                         .font(.caption).foregroundStyle(.secondary)
+                }
+                // Lives in the bar, not below the answer: on small iPhones the
+                // answer section ends under this bar, hiding the one control
+                // that unlocks suggestions.
+                if needsTranscriptReview {
+                    Button { needsTranscriptReview = false } label: {
+                        Label(L.t("辨識文字已確認", "Transcript checked"), systemImage: "checkmark")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .secondaryAction()
+                    .accessibilityIdentifier("coach-confirm-transcript")
                 }
                 Button { submit() } label: {
                     Label(L.t("取得建議", "Get suggestions"), systemImage: "sparkles").frame(maxWidth: .infinity)

@@ -72,6 +72,9 @@ final class SpeakingCoachTests: XCTestCase {
         let pendingAnswer = answer.value as? String ?? ""
         submitButton.tap()
         wait(app.keyboards.firstMatch, matching: "exists == false")
+        // The form scrolls to the suggestions when they arrive; come back to the answer.
+        XCTAssertTrue(app.staticTexts["coach-rewrite"].waitForExistence(timeout: 5))
+        reveal(answer, in: app)
         let finalAnswer = answer.value as? String ?? ""
         XCTAssertEqual(finalAnswer, "I practice with my friend every day.")
         XCTAssertNotEqual(finalAnswer, pendingAnswer, "Ending native editing must really change the submitted text")

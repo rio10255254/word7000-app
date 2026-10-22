@@ -161,7 +161,7 @@ jobs:
           elif [ "$CHECKS" = "coach" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
           elif [ "$CHECKS" = "polish" ]; then
-            TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testMockAIDisabledStillExplainsStatusAndAllowsPractice -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState)
+            TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testMockAIDisabledStillExplainsStatusAndAllowsPractice -only-testing:Word7000UITests/SpeakingCoachTests/testRecordingReviewPlaybackAndDeletionWithExplicitFixture -only-testing:Word7000UITests/SpeakingCoachTests/testNativeRecorderPermissionTimerPlaybackAndCleanup -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState)
           fi
           xcodebuild test \
             -project ios/Word7000.xcodeproj \

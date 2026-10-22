@@ -391,10 +391,24 @@ final class SpeakingCoachTests: XCTestCase {
         // Forms can omit offscreen rows from the accessibility tree on small phones.
         _ = element.waitForExistence(timeout: 1)
         for _ in 0..<5 where !element.isHittable {
-            if scrollingUp { app.swipeUp() } else { app.swipeDown() }
+            scrollForm(in: app, up: scrollingUp)
+        }
+        // Reopened forms can restore an offset beyond the target row.
+        for _ in 0..<6 where !element.isHittable {
+            scrollForm(in: app, up: !scrollingUp)
         }
         XCTAssertTrue(element.waitForExistence(timeout: 5), file: file, line: line)
         XCTAssertTrue(element.isHittable, "Control must remain reachable on small screens", file: file, line: line)
+    }
+
+    private func scrollForm(in app: XCUIApplication, up: Bool) {
+        let form = app.collectionViews["coach-form"]
+        if form.exists {
+            // Use the form margin so the gesture doesn't scroll the editor itself.
+            let upper = form.coordinate(withNormalizedOffset: CGVector(dx: 0.025, dy: 0.3))
+            let lower = form.coordinate(withNormalizedOffset: CGVector(dx: 0.025, dy: 0.75))
+            (up ? lower : upper).press(forDuration: 0.01, thenDragTo: up ? upper : lower)
+        } else if up { app.swipeUp() } else { app.swipeDown() }
     }
 
     private func tap(_ element: XCUIElement, in app: XCUIApplication,

@@ -110,6 +110,7 @@ struct SpeakingCoachView: View {
                     ))
                 }
             }
+            .accessibilityIdentifier("coach-form")
             .scrollDismissesKeyboard(.interactively)
             .background(Palette.background)
             .navigationTitle(L.t("口說教練", "Speaking coach"))

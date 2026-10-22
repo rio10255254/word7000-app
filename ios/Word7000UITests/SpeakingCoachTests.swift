@@ -220,7 +220,7 @@ final class SpeakingCoachTests: XCTestCase {
         openCoach(app)
         XCTAssertFalse(app.buttons["coach-submit"].isEnabled, "Reopening must not silently confirm the transcript")
         tap(app.buttons["coach-confirm-transcript"], in: app)
-        XCTAssertTrue(app.buttons["coach-submit"].isEnabled)
+        wait(app.buttons["coach-submit"], matching: "exists == true AND enabled == true")
         snapshot(app, "studio-confirmed-transcript")
         closeCoach(app)
         openCoach(app)

@@ -376,8 +376,15 @@ extension SupabaseClient {
     /// cards; one row per user and device.
     public func saveLiveActivityDevice(_ row: [String: JSONValue], session: AuthSession) async throws {
         var row = row
+        if let owner = row["user_id"], owner != .string(session.user.id) { throw CancellationError() }
         row["user_id"] = .string(session.user.id)
-        _ = try await request("POST", "rest/v1/live_activity_devices", query: ["on_conflict": "user_id,device_id"], body: .array([.object(row)]), session: session,
-                              headers: ["Prefer": "resolution=merge-duplicates,return=minimal"])
+        let data = try await request("POST", "rest/v1/live_activity_devices", query: ["on_conflict": "user_id,device_id"], body: .array([.object(row)]), session: session,
+                                     headers: ["Prefer": "resolution=merge-duplicates,return=representation"])
+        // The server silently ignores stale registrations. HTTP success alone
+        // is not an acknowledgment of this snapshot.
+        let saved = try decode([[String: JSONValue]].self, data)
+        guard saved.count == 1, saved[0]["user_id"] == row["user_id"], saved[0]["device_id"] == row["device_id"] else {
+            throw SupabaseError(status: 409, code: "registration_not_saved", message: "Reminder registration was not saved")
+        }
     }
 }

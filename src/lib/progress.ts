@@ -34,6 +34,8 @@ export type ProgressState = {
   studiedToday: number;
   dailyProgressDate?: string;
   lastStudyDate?: string;
+  /** The last missed day covered by the shared seven-day streak protection. */
+  streakFreezeDate?: string;
   words: Record<string, WordProgress>;
 };
 
@@ -249,12 +251,12 @@ export function mergeProgressStates(...states: Array<ProgressState | null | unde
   });
 
   const analytics = mergeLearningAnalyticsStates(...available.map((state) => state.analytics));
+  const streak = reconcileStreakProtection(available, dailySource);
   return {
     ...(analytics ? { analytics } : {}),
     dailyProgressDate: dailySource.dailyProgressDate,
     dailyTarget: dailySource.dailyTarget,
-    lastStudyDate: dailySource.lastStudyDate,
-    streak: dailySource.streak,
+    ...streak,
     studiedToday: dailySource.studiedToday,
     words,
   };
@@ -535,9 +537,68 @@ export function normalizeProgressForDate(state: ProgressState, today: string): P
     return nextState;
   }
 
+  const missed = addDays(today, -1);
+  if (nextState.streak > 0 && missed && isPreviousDate(nextState.lastStudyDate, missed)
+      && streakProtectionCovers(missed, nextState.streakFreezeDate)) {
+    return { ...nextState, streakFreezeDate: missed };
+  }
+
   return {
     ...nextState,
     streak: 0,
+  };
+}
+
+export const STREAK_PROTECTION_COOLDOWN_DAYS = 7;
+
+function streakProtectionCovers(missed: string, freezeDate?: string): boolean {
+  const missedDay = dateOnlyToDayNumber(missed);
+  if (missedDay === null) return false;
+  const usedDay = freezeDate ? dateOnlyToDayNumber(freezeDate) : null;
+  return usedDay === null || usedDay === missedDay || missedDay - usedDay >= STREAK_PROTECTION_COOLDOWN_DAYS;
+}
+
+/** Reconcile only evidenced study-day continuity, then expire at the latest observed day. */
+export function reconcileStreakProtection(
+  states: ProgressState[],
+  fallback: ProgressState,
+): Pick<ProgressState, 'streak' | 'lastStudyDate' | 'streakFreezeDate'> {
+  const latestValidDate = (dates: Array<string | undefined>) => dates
+    .filter((date): date is string => typeof date === 'string' && dateOnlyToDayNumber(date) !== null)
+    .sort().at(-1);
+  let streakFreezeDate = latestValidDate(states.map((state) => state.streakFreezeDate));
+  const lastStudyDate = latestValidDate(states.map((state) => state.lastStudyDate));
+  if (!lastStudyDate) {
+    return { streak: fallback.streak, lastStudyDate: fallback.lastStudyDate, ...(streakFreezeDate ? { streakFreezeDate } : {}) };
+  }
+
+  let streak = 0;
+  let protectedStreak = 0;
+  const lastDay = dateOnlyToDayNumber(lastStudyDate)!;
+  for (const state of states) {
+    const sourceDay = state.lastStudyDate ? dateOnlyToDayNumber(state.lastStudyDate) : null;
+    if (sourceDay === null || state.streak <= 0) continue;
+    const gap = lastDay - sourceDay;
+    if (gap === 0 || gap === 1) {
+      streak = Math.max(streak, state.streak + gap);
+    } else if (gap === 2) {
+      protectedStreak = Math.max(protectedStreak, state.streak + 1);
+    }
+  }
+  // A newer count may already include study on the intervening day. Do not
+  // spend protection on a stale snapshot that cannot improve that count.
+  const missed = addDays(lastStudyDate, -1)!;
+  if (protectedStreak > streak && streakProtectionCovers(missed, streakFreezeDate)) {
+    streak = protectedStreak;
+    streakFreezeDate = missed;
+  }
+
+  const observedDay = latestValidDate(states.flatMap((state) => [state.dailyProgressDate, state.lastStudyDate]))!;
+  const normalized = normalizeProgressForDate({ ...fallback, streak, lastStudyDate, streakFreezeDate }, observedDay);
+  return {
+    streak: normalized.streak,
+    lastStudyDate,
+    ...(normalized.streakFreezeDate ? { streakFreezeDate: normalized.streakFreezeDate } : {}),
   };
 }
 
@@ -673,7 +734,9 @@ function advanceDailyProgress(state: ProgressState, today: string, increment = 1
   const alreadyStudiedToday = normalized.lastStudyDate === today;
   const nextStreak = alreadyStudiedToday
     ? normalized.streak
-    : normalized.lastStudyDate && isPreviousDate(normalized.lastStudyDate, today)
+    : normalized.lastStudyDate && (isPreviousDate(normalized.lastStudyDate, today)
+      || (normalized.streakFreezeDate && isPreviousDate(normalized.lastStudyDate, normalized.streakFreezeDate)
+        && isPreviousDate(normalized.streakFreezeDate, today)))
       ? Math.max(1, normalized.streak + 1)
       : 1;
 

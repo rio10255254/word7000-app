@@ -17,6 +17,7 @@ struct SpeakingSessionView: View {
     @State private var completedCurrent = false
     @State private var filtersOpen = false
     @State private var previousFilter = FilterSelection()
+    @State private var historyOwnerKey = ""
 
     private var activity: SpeakingPractice.Activity { model.settings.speakingActivity ?? .questions }
     private var examplesOnly: Bool { activity == .examples }
@@ -78,6 +79,7 @@ struct SpeakingSessionView: View {
         .onAppear { if !started { start() } }
         .onChange(of: activity) { _, _ in start() }
         .onChange(of: model.settings.activeBankId) { _, _ in start() }
+        .onChange(of: model.speakingHistoryOwnerKey) { _, _ in start() }
         .onDisappear { Speaker.shared.stop() }
         .sensoryFeedback(.success, trigger: completedCurrent) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sheet(isPresented: $filtersOpen, onDismiss: {
@@ -157,10 +159,11 @@ struct SpeakingSessionView: View {
 
     private func start() {
         Speaker.shared.stop()
+        historyOwnerKey = model.speakingHistoryOwnerKey
         let candidates = model.speakingCandidates
         let available = SpeakingPractice.candidates(from: candidates, activity: activity)
         availableCount = available.count
-        words = SpeakingPractice.session(from: available, recent: model.settings.recentSpeakingIds ?? [], count: 10)
+        words = SpeakingPractice.session(from: available, recent: model.recentSpeakingIds, count: 10)
         index = 0
         answered = 0
         revealed = false
@@ -256,6 +259,7 @@ struct SpeakingSessionView: View {
     }
 
     private func reveal(completed: Bool) {
+        guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(); return }
         if completed, !completedCurrent {
             model.recordSpeaking(completed: true)
             answered += 1
@@ -265,6 +269,7 @@ struct SpeakingSessionView: View {
     }
 
     private func next() {
+        guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(); return }
         guard index < words.count else { return }
         if !completedCurrent { model.recordSpeaking(completed: false) }
         model.noteSpeakingPractised(words[index].id)

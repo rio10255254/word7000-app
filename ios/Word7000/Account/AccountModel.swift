@@ -157,8 +157,7 @@ final class AccountModel {
         let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.progress : nil, outbox?.progress])
         let sets = CustomSetState.merge([cloud?.customSets, carryLocal ? app.customSets : nil, outbox?.customSets])
         app.replaceData(progress: progress, customSets: sets, preserveSession: carryLocal)
-        app.settings.localOwnerId = activeSession.user.id
-        app.settings.localOwnerIsAnonymous = activeSession.user.anonymous
+        app.setLocalOwner(activeSession.user.id, anonymous: activeSession.user.anonymous)
         if !activeSession.user.anonymous { app.settings.permanentAccountUsed = true }
 
         status = .ready
@@ -433,8 +432,7 @@ final class AccountModel {
         dirty = SyncDirty()
         // This iPhone goes back to a fresh guest; the account's data stays in the cloud.
         app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
-        app.settings.localOwnerId = nil
-        app.settings.localOwnerIsAnonymous = true
+        app.setLocalOwner(nil, anonymous: true)
         message = A.signedOut
         await bootstrap()
     }
@@ -447,10 +445,10 @@ final class AccountModel {
         do {
             try await client.deleteAccount(session: try await validSession(client: client, current))
             Outbox.clear(userId: current.user.id)
+            app.forgetSpeakingHistory(ownerId: current.user.id, anonymous: current.user.anonymous)
             store(nil)
             app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
-            app.settings.localOwnerId = nil
-            app.settings.localOwnerIsAnonymous = true
+            app.setLocalOwner(nil, anonymous: true)
             message = A.deleted
             await bootstrap()
         } catch {

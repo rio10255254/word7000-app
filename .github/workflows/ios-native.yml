@@ -21,6 +21,8 @@ on:
       - 'scripts/verify-native-release.py'
       - 'scripts/test_verify_native_release.py'
       - 'scripts/build-native-speaking-library.mjs'
+      - 'scripts/test-native-speaking-recency.mjs'
+      - 'src/nativeSpeakingRecency.test.ts'
       - 'content/speaking/**'
       - '.github/workflows/ios-native.yml'
   workflow_dispatch:
@@ -96,6 +98,9 @@ jobs:
         run: |
           xcodebuild -version
           swift test --package-path ios/Packages/Word7000Core
+
+      - name: Speaking history account isolation
+        run: node scripts/test-native-speaking-recency.mjs
 
       - name: Pick an iPhone simulator
         run: |

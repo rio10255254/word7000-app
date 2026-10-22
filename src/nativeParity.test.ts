@@ -60,6 +60,32 @@ function buildFixtures() {
 
   const otherDevice = markReview(markKnown(empty, 'w0005', '2026-06-06', '2026-06-06T11:00:00.000Z'), 'w0002', '2026-06-06', '2026-06-06T12:00:00.000Z');
   const merged = mergeProgressStates(state, otherDevice);
+  // Both devices studied on June 6; more words today cannot erase the
+  // two-day streak already earned on the first device.
+  expect(state.streak).toBe(2);
+  expect(otherDevice.streak).toBe(1);
+  expect(merged.streak).toBe(2);
+
+  const protectedState: ProgressState = {
+    ...empty, streak: 5, lastStudyDate: '2026-10-01', dailyProgressDate: '2026-10-03', streakFreezeDate: '2026-10-02',
+  };
+  const streakCases = [
+    { name: 'continuous study', source: { ...protectedState, dailyProgressDate: '2026-10-01', streakFreezeDate: undefined }, incoming: { ...empty, streak: 7, lastStudyDate: '2026-10-03', dailyProgressDate: '2026-10-03' }, today: '2026-10-03', count: 7 },
+    { name: 'legacy open', source: protectedState, incoming: { ...empty, lastStudyDate: '2026-10-01', dailyProgressDate: '2026-10-03' }, today: '2026-10-03', count: 5 },
+    { name: 'legacy study', source: protectedState, incoming: { ...empty, streak: 1, lastStudyDate: '2026-10-03', dailyProgressDate: '2026-10-03', studiedToday: 3 }, today: '2026-10-03', count: 6 },
+    { name: 'expired open', source: protectedState, incoming: { ...empty, lastStudyDate: '2026-10-01', dailyProgressDate: '2026-10-04' }, today: '2026-10-04', count: 0 },
+    { name: 'distant study', source: protectedState, incoming: { ...empty, streak: 1, lastStudyDate: '2026-10-04', dailyProgressDate: '2026-10-04' }, today: '2026-10-04', count: 1 },
+    { name: 'unused protection', source: { ...protectedState, streakFreezeDate: undefined }, incoming: { ...empty, streak: 1, lastStudyDate: '2026-10-03', dailyProgressDate: '2026-10-03' }, today: '2026-10-03', count: 6 },
+    { name: 'cooldown', source: { ...protectedState, streakFreezeDate: '2026-09-28' }, incoming: { ...empty, streak: 1, lastStudyDate: '2026-10-03', dailyProgressDate: '2026-10-03' }, today: '2026-10-03', count: 1 },
+  ].map(({ name, source, incoming, today, count }) => {
+    const merged = mergeProgressStates(source, incoming);
+    expect(merged.streak, name).toBe(count);
+    return {
+      name, source, incoming, today, merged,
+      normalized: normalizeProgressForDate(source, today),
+      studied: markKnown(source, 'streak-word', today, `${today}T08:00:00.000Z`),
+    };
+  });
 
   const queueState = history[history.length - 1];
   const libraryState = toggleFavorite(markReview(markKnown(queueState, 'w0100', '2026-06-06', '2026-06-06T13:00:00.000Z'), 'w0200', '2026-06-06', '2026-06-06T13:05:00.000Z'), 'w0100', '2026-06-06T13:06:00.000Z');
@@ -118,6 +144,7 @@ function buildFixtures() {
     history,
     otherDevice,
     merged,
+    streakCases,
     normalized: normalizeProgressForDate(state, '2026-06-09'),
     stats: computeStats(words, libraryState, '2026-06-06'),
     statsLater: computeStats(words, libraryState, '2026-06-20'),

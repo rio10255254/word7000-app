@@ -32,8 +32,57 @@ struct AppSettings: Codable, Equatable, Sendable {
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?
     var speech: SpeechPreferences?
-    /// Word ids of recent speaking questions, oldest first.
+    /// Legacy device-wide history, consumed once before changing owners.
     var recentSpeakingIds: [String]?
+    /// Local account copies, oldest first; guests never share an account's copy.
+    var speakingHistoryByOwner: [String: [String]]?
+
+    var speakingHistoryOwnerKey: String {
+        Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)
+    }
+
+    private static func speakingHistoryKey(ownerId: String?, anonymous: Bool?) -> String {
+        guard let ownerId else { return "guest" }
+        return anonymous == true ? "guest:\(ownerId)" : "account:\(ownerId)"
+    }
+
+    var currentRecentSpeakingIds: [String] {
+        speakingHistoryByOwner?[speakingHistoryOwnerKey] ?? []
+    }
+
+    mutating func migrateSpeakingHistory() {
+        // A missing map means pre-isolation settings. Never seed later accounts
+        // from the legacy list, even if that field reappears in an older backup.
+        if speakingHistoryByOwner == nil {
+            speakingHistoryByOwner = [speakingHistoryOwnerKey: Array((recentSpeakingIds ?? []).suffix(SpeakingPractice.recentLimit))]
+        }
+        recentSpeakingIds = nil
+    }
+
+    mutating func rememberSpeaking(_ wordId: String) {
+        migrateSpeakingHistory()
+        speakingHistoryByOwner?[speakingHistoryOwnerKey] = SpeakingPractice.remembering(wordId, in: currentRecentSpeakingIds)
+    }
+
+    mutating func setLocalOwner(_ ownerId: String?, anonymous: Bool) {
+        migrateSpeakingHistory()
+        // A local-only guest becomes an identified guest once. Move, never
+        // copy, that history so later anonymous accounts start independently.
+        if localOwnerId == nil, ownerId != nil, anonymous,
+           let pending = speakingHistoryByOwner?.removeValue(forKey: "guest") {
+            let key = Self.speakingHistoryKey(ownerId: ownerId, anonymous: true)
+            speakingHistoryByOwner?[key] = pending.reduce(speakingHistoryByOwner?[key] ?? []) {
+                SpeakingPractice.remembering($1, in: $0)
+            }
+        }
+        localOwnerId = ownerId
+        localOwnerIsAnonymous = anonymous
+    }
+
+    mutating func forgetSpeakingHistory(ownerId: String, anonymous: Bool) {
+        migrateSpeakingHistory()
+        speakingHistoryByOwner?.removeValue(forKey: Self.speakingHistoryKey(ownerId: ownerId, anonymous: anonymous))
+    }
 }
 
 struct BankFilterSettings: Codable, Equatable, Sendable {

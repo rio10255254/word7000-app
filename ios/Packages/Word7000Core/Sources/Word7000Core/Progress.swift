@@ -67,7 +67,7 @@ public struct ProgressState: Codable, Equatable, Sendable {
     public var dailyProgressDate: String?
     public var lastStudyDate: String?
     public var words: [String: WordProgress]
-    /// The last missed day that streak protection covered (native app only).
+    /// The last missed day covered by the shared seven-day streak protection.
     public var streakFreezeDate: String?
 
     public init(
@@ -279,16 +279,17 @@ public enum LearningEngine {
             }
         }
 
+        let streak = StreakProtection.reconcile(available, fallback: dailySource)
         return ProgressState(
             analytics: LearningAnalyticsState.merge(available.map(\.analytics)),
             dailyTarget: dailySource.dailyTarget,
-            streak: dailySource.streak,
+            streak: streak.streak,
             studiedToday: dailySource.studiedToday,
             dailyProgressDate: dailySource.dailyProgressDate,
-            lastStudyDate: dailySource.lastStudyDate,
+            lastStudyDate: streak.lastStudyDate,
             words: words,
             // The latest use on any device, so protection is never used twice in a week.
-            streakFreezeDate: available.compactMap(\.streakFreezeDate).max()
+            streakFreezeDate: streak.streakFreezeDate
         )
     }
 
@@ -410,6 +411,39 @@ public enum LearningEngine {
 /// not wipe out a long streak. The missed day itself does not add to it.
 public enum StreakProtection {
     public static let cooldownDays = 7
+
+    /// Carry counts only across evidenced study-day continuity, then expire at
+    /// the latest observed day. A legacy daily reset is not a new study event.
+    public static func reconcile(_ states: [ProgressState], fallback: ProgressState) -> ProgressState {
+        func latestValidDate(_ dates: [String?]) -> String? {
+            dates.compactMap { $0 }.filter { DayMath.dayNumber($0) != nil }.max()
+        }
+        var result = fallback
+        result.streakFreezeDate = latestValidDate(states.map(\.streakFreezeDate))
+        guard let last = latestValidDate(states.map(\.lastStudyDate)),
+              let lastDay = DayMath.dayNumber(last) else { return result }
+        result.lastStudyDate = last
+        result.streak = 0
+        var protectedStreak = 0
+        for state in states {
+            guard state.streak > 0, let source = state.lastStudyDate,
+                  let sourceDay = DayMath.dayNumber(source) else { continue }
+            let gap = lastDay - sourceDay
+            if gap == 0 || gap == 1 {
+                result.streak = max(result.streak, state.streak + gap)
+            } else if gap == 2 {
+                protectedStreak = max(protectedStreak, state.streak + 1)
+            }
+        }
+        // A stale snapshot must not spend protection when the newer count
+        // already accounts for continuity through the intervening day.
+        if protectedStreak > result.streak, let missed = DayMath.addDays(last, -1), covers(missed: missed, in: result) {
+            result.streak = protectedStreak
+            result.streakFreezeDate = missed
+        }
+        let observedDay = latestValidDate(states.flatMap { [$0.dailyProgressDate, $0.lastStudyDate] }) ?? last
+        return LearningEngine.normalizeForDate(result, today: observedDay)
+    }
 
     /// Whether `missed` can be covered: protection is unused for a week, or
     /// already covers that very day.

@@ -98,4 +98,55 @@ final class SupabaseTests: XCTestCase {
         XCTAssertEqual(parsed.refreshToken, "r")
         XCTAssertEqual(parsed.error, "Nope here")
     }
+
+    func testReminderRegistrationRequiresReturnedRowAndKeepsSnapshotTimestamp() async throws {
+        let transport = FakeTransport([(#"[{"user_id":"u1","device_id":"iphone"}]"#, 201)])
+        let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
+        let row: [String: JSONValue] = ["user_id": .string("u1"), "device_id": .string("iphone"),
+                                       "updated_at": .string("2026-10-22T01:00:00.001Z")]
+        try await SupabaseClient(config: config, transport: transport).saveLiveActivityDevice(row, session: session)
+        let request = try XCTUnwrap(transport.requests.first)
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Prefer"), "resolution=merge-duplicates,return=representation")
+        let rows = try JSONDecoder().decode([[String: JSONValue]].self, from: XCTUnwrap(request.httpBody))
+        XCTAssertEqual(rows.first?["updated_at"], row["updated_at"])
+        XCTAssertNil(rows.first?["registration_updated_at"])
+    }
+
+    func testIgnoredStaleRegistrationIsNotReportedAsSaved() async throws {
+        let transport = FakeTransport([("[]", 201)])
+        let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
+        do {
+            try await SupabaseClient(config: config, transport: transport)
+                .saveLiveActivityDevice(["device_id": .string("iphone")], session: session)
+            XCTFail("A silently rejected write must not be acknowledged")
+        } catch let error as SupabaseError {
+            XCTAssertEqual(error.code, "registration_not_saved")
+        }
+    }
+
+    func testReminderSnapshotCannotBeRelabelledAsAnotherUser() async throws {
+        let transport = FakeTransport([])
+        let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
+        do {
+            try await SupabaseClient(config: config, transport: transport)
+                .saveLiveActivityDevice(["user_id": .string("old-user"), "device_id": .string("iphone")], session: session)
+            XCTFail("Mismatched owner must not be sent")
+        } catch is CancellationError {}
+        XCTAssertTrue(transport.requests.isEmpty)
+    }
+
+    func testRefreshedSessionForDifferentOwnerCannotUploadCapturedRegistration() async throws {
+        let response = #"{"access_token":"new","refresh_token":"r2","expires_in":3600,"user":{"id":"u2"}}"#
+        let transport = FakeTransport([(response, 200)])
+        let client = SupabaseClient(config: config, transport: transport)
+        let snapshot: [String: JSONValue] = ["user_id": .string("u1"), "device_id": .string("iphone"),
+                                            "updated_at": .string("2026-10-22T01:00:00.001Z")]
+        let refreshed = try await client.refresh(refreshToken: "r1")
+        do {
+            try await client.saveLiveActivityDevice(snapshot, session: refreshed)
+            XCTFail("A stale owner's snapshot must not use the refreshed owner's credentials")
+        } catch is CancellationError {}
+        XCTAssertEqual(transport.requests.count, 1)
+        XCTAssertEqual(transport.requests.first?.url?.path, "/auth/v1/token")
+    }
 }

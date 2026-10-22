@@ -30,9 +30,12 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
     /// A word for each of the next few days, so the widget can turn over at
     /// midnight without the app.
     public var words: [String: Word]
+    /// A bounded offline pool for any day outside `words`. Optional so snapshots
+    /// written before this field existed still decode with synthesized Codable.
+    public var fallbackWords: [Word]?
 
     public init(date: String, studiedToday: Int, dailyTarget: Int, streak: Int, lastStudyDate: String?,
-                streakFreezeDate: String?, chineseInterface: Bool, words: [String: Word]) {
+                streakFreezeDate: String?, chineseInterface: Bool, words: [String: Word], fallbackWords: [Word]? = nil) {
         self.date = date
         self.studiedToday = studiedToday
         self.dailyTarget = dailyTarget
@@ -41,9 +44,11 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
         self.streakFreezeDate = streakFreezeDate
         self.chineseInterface = chineseInterface
         self.words = words
+        self.fallbackWords = fallbackWords.map { Array($0.prefix(Self.fallbackWordLimit)) }
     }
 
     public static let daysAhead = 3
+    public static let fallbackWordLimit = 128
 
     /// Days already given a word in `previous` keep it, so the word does not
     /// change during the day as the learner masters words.
@@ -51,17 +56,49 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
                             previous: HomeWidgetSnapshot? = nil) -> HomeWidgetSnapshot {
         var daily: [String: Word] = [:]
         let days = (0..<daysAhead).compactMap { DayMath.addDays(today, $0) }
-        let missing = days.filter { previous?.words[$0] == nil }
-        let pool = missing.isEmpty ? [] : wordPool(words, progress: progress)
+        // Progress changes on every card. Reuse today's pool without scanning
+        // the library; mastery changes take effect at the next daily refresh.
+        let keepFallback = previous?.date == today && previous?.fallbackWords?.isEmpty == false
+        let needsPool = !keepFallback || days.contains { previous?.words[$0] == nil }
+        let pool = needsPool ? wordPool(words, progress: progress) : []
+        // The bundled library already has a stable order; no full-library sort.
+        let fallback = keepFallback || pool.isEmpty ? (previous?.rotationPool ?? []) :
+            pool.prefix(fallbackWordLimit).map(widgetWord)
         for day in days {
-            if let kept = previous?.words[day] { daily[day] = kept; continue }
+            // After a long absence, today's word may come from the old offline
+            // pool. Pin it before refreshing that pool with current progress.
+            if let kept = previous?.words[day] ?? (day == today ? previous?.word(on: day) : nil) {
+                daily[day] = kept
+                continue
+            }
             guard let entry = wordOfTheDay(pool, date: day) else { continue }
-            daily[day] = Word(word: entry.word, pronunciation: entry.pronunciation,
-                              meaning: ChineseDisplay.conciseMeaning(entry.meaningZh), partOfSpeech: entry.partOfSpeech)
+            daily[day] = widgetWord(entry)
         }
         return HomeWidgetSnapshot(date: today, studiedToday: progress.studiedToday, dailyTarget: max(1, progress.dailyTarget),
                                   streak: progress.streak, lastStudyDate: progress.lastStudyDate,
-                                  streakFreezeDate: progress.streakFreezeDate, chineseInterface: chineseInterface, words: daily)
+                                  streakFreezeDate: progress.streakFreezeDate, chineseInterface: chineseInterface,
+                                  words: daily, fallbackWords: fallback)
+    }
+
+    private static func widgetWord(_ entry: WordEntry) -> Word {
+        Word(word: entry.word, pronunciation: entry.pronunciation,
+             meaning: ChineseDisplay.conciseMeaning(entry.meaningZh), partOfSpeech: entry.partOfSpeech)
+    }
+
+    private var rotationPool: [Word] {
+        if let fallbackWords, !fallbackWords.isEmpty {
+            return Array(fallbackWords.prefix(Self.fallbackWordLimit))
+        }
+        // Dictionary iteration order is not stable across widget launches.
+        return words.keys.sorted().prefix(Self.fallbackWordLimit).compactMap { words[$0] }
+    }
+
+    private func word(on day: String) -> Word? {
+        if let scheduled = words[day] { return scheduled }
+        let pool = rotationPool
+        guard !pool.isEmpty else { return nil }
+        let index = Int(SeededRandom.hash("word-of-the-day:\(day)") % UInt32(pool.count))
+        return pool[index]
     }
 
     /// Words not yet mastered, or all of them once everything is.
@@ -93,7 +130,7 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
                                   dailyProgressDate: date, lastStudyDate: lastStudyDate, streakFreezeDate: streakFreezeDate)
         let current = LearningEngine.normalizeForDate(state, today: day)
         return Display(studied: current.studiedToday, target: dailyTarget, streak: current.streak,
-                       studiedToday: lastStudyDate == day, word: words[day])
+                       studiedToday: lastStudyDate == day, word: word(on: day))
     }
 }
 

@@ -20,6 +20,11 @@ final class ParityTests: XCTestCase {
     struct Candidate: Decodable, Equatable { let key: String; let meaningZh: String; let partOfSpeech: String; let word: String }
     struct ScanCase: Decodable { let lines: [Line]; let result: [Candidate] }
     struct Stats: Decodable { let due, mastered, review, favorites, remaining, studiedToday: Int }
+    struct StreakCase: Decodable {
+        let name: String
+        let source, incoming, merged, normalized, studied: ProgressState
+        let today: String
+    }
     struct Session: Decodable { let cardIds: [String]; let index: Int; let initialCount: Int; let knownIds: [String]; let reviewIds: [String]; let requeued: [String: Int] }
 
     struct Fixtures: Decodable {
@@ -27,6 +32,7 @@ final class ParityTests: XCTestCase {
         let history: [ProgressState]
         let otherDevice: ProgressState
         let merged: ProgressState
+        let streakCases: [StreakCase]
         let normalized: ProgressState
         let stats: Stats
         let statsLater: Stats
@@ -87,6 +93,16 @@ final class ParityTests: XCTestCase {
                        [f.stats.due, f.stats.mastered, f.stats.review, f.stats.favorites, f.stats.remaining, f.stats.studiedToday])
         let later = LearningEngine.stats(words: words, state: f.libraryState, today: "2026-06-20")
         XCTAssertEqual(later.due, f.statsLater.due)
+    }
+
+    func testStreakProtectionMatchesSharedClient() {
+        for item in f.streakCases {
+            XCTAssertEqual(LearningEngine.merge([item.source, item.incoming]), item.merged, item.name)
+            XCTAssertEqual(LearningEngine.merge([item.incoming, item.source]), item.merged, item.name)
+            XCTAssertEqual(LearningEngine.normalizeForDate(item.source, today: item.today), item.normalized, item.name)
+            XCTAssertEqual(LearningEngine.markKnown(item.source, wordId: "streak-word", today: item.today,
+                                                   changedAt: "\(item.today)T08:00:00.000Z"), item.studied, item.name)
+        }
     }
 
     func testPreparedStatsAndQueueCountsMatchTheFullQueue() {

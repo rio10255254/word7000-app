@@ -564,8 +564,8 @@
  "merged": {
   "dailyProgressDate": "2026-06-06",
   "dailyTarget": 20,
+  "streak": 2,
   "lastStudyDate": "2026-06-06",
-  "streak": 1,
   "studiedToday": 2,
   "words": {
    "w0001": {
@@ -624,6 +624,418 @@
    }
   }
  },
+ "streakCases": [
+  {
+   "name": "continuous study",
+   "source": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-01"
+   },
+   "incoming": {
+    "dailyTarget": 20,
+    "streak": 7,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03"
+   },
+   "today": "2026-10-03",
+   "merged": {
+    "dailyProgressDate": "2026-10-03",
+    "dailyTarget": 20,
+    "streak": 7,
+    "lastStudyDate": "2026-10-03",
+    "studiedToday": 0,
+    "words": {}
+   },
+   "normalized": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "studied": {
+    "dailyTarget": 20,
+    "streak": 6,
+    "studiedToday": 1,
+    "words": {
+     "streak-word": {
+      "status": "mastered",
+      "favorite": false,
+      "difficult": false,
+      "reviewCount": 0,
+      "dueDate": "2026-10-10",
+      "lastStudied": "2026-10-03",
+      "stage": 3,
+      "statusUpdatedAt": "2026-10-03T08:00:00.000Z"
+     }
+    },
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   }
+  },
+  {
+   "name": "legacy open",
+   "source": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "incoming": {
+    "dailyTarget": 20,
+    "streak": 0,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03"
+   },
+   "today": "2026-10-03",
+   "merged": {
+    "dailyProgressDate": "2026-10-03",
+    "dailyTarget": 20,
+    "streak": 5,
+    "lastStudyDate": "2026-10-01",
+    "streakFreezeDate": "2026-10-02",
+    "studiedToday": 0,
+    "words": {}
+   },
+   "normalized": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "studied": {
+    "dailyTarget": 20,
+    "streak": 6,
+    "studiedToday": 1,
+    "words": {
+     "streak-word": {
+      "status": "mastered",
+      "favorite": false,
+      "difficult": false,
+      "reviewCount": 0,
+      "dueDate": "2026-10-10",
+      "lastStudied": "2026-10-03",
+      "stage": 3,
+      "statusUpdatedAt": "2026-10-03T08:00:00.000Z"
+     }
+    },
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   }
+  },
+  {
+   "name": "legacy study",
+   "source": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "incoming": {
+    "dailyTarget": 20,
+    "streak": 1,
+    "studiedToday": 3,
+    "words": {},
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03"
+   },
+   "today": "2026-10-03",
+   "merged": {
+    "dailyProgressDate": "2026-10-03",
+    "dailyTarget": 20,
+    "streak": 6,
+    "lastStudyDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02",
+    "studiedToday": 3,
+    "words": {}
+   },
+   "normalized": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "studied": {
+    "dailyTarget": 20,
+    "streak": 6,
+    "studiedToday": 1,
+    "words": {
+     "streak-word": {
+      "status": "mastered",
+      "favorite": false,
+      "difficult": false,
+      "reviewCount": 0,
+      "dueDate": "2026-10-10",
+      "lastStudied": "2026-10-03",
+      "stage": 3,
+      "statusUpdatedAt": "2026-10-03T08:00:00.000Z"
+     }
+    },
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   }
+  },
+  {
+   "name": "expired open",
+   "source": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "incoming": {
+    "dailyTarget": 20,
+    "streak": 0,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-04"
+   },
+   "today": "2026-10-04",
+   "merged": {
+    "dailyProgressDate": "2026-10-04",
+    "dailyTarget": 20,
+    "streak": 0,
+    "lastStudyDate": "2026-10-01",
+    "streakFreezeDate": "2026-10-02",
+    "studiedToday": 0,
+    "words": {}
+   },
+   "normalized": {
+    "dailyTarget": 20,
+    "streak": 0,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-04",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "studied": {
+    "dailyTarget": 20,
+    "streak": 1,
+    "studiedToday": 1,
+    "words": {
+     "streak-word": {
+      "status": "mastered",
+      "favorite": false,
+      "difficult": false,
+      "reviewCount": 0,
+      "dueDate": "2026-10-11",
+      "lastStudied": "2026-10-04",
+      "stage": 3,
+      "statusUpdatedAt": "2026-10-04T08:00:00.000Z"
+     }
+    },
+    "lastStudyDate": "2026-10-04",
+    "dailyProgressDate": "2026-10-04",
+    "streakFreezeDate": "2026-10-02"
+   }
+  },
+  {
+   "name": "distant study",
+   "source": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "incoming": {
+    "dailyTarget": 20,
+    "streak": 1,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-04",
+    "dailyProgressDate": "2026-10-04"
+   },
+   "today": "2026-10-04",
+   "merged": {
+    "dailyProgressDate": "2026-10-04",
+    "dailyTarget": 20,
+    "streak": 1,
+    "lastStudyDate": "2026-10-04",
+    "streakFreezeDate": "2026-10-02",
+    "studiedToday": 0,
+    "words": {}
+   },
+   "normalized": {
+    "dailyTarget": 20,
+    "streak": 0,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-04",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "studied": {
+    "dailyTarget": 20,
+    "streak": 1,
+    "studiedToday": 1,
+    "words": {
+     "streak-word": {
+      "status": "mastered",
+      "favorite": false,
+      "difficult": false,
+      "reviewCount": 0,
+      "dueDate": "2026-10-11",
+      "lastStudied": "2026-10-04",
+      "stage": 3,
+      "statusUpdatedAt": "2026-10-04T08:00:00.000Z"
+     }
+    },
+    "lastStudyDate": "2026-10-04",
+    "dailyProgressDate": "2026-10-04",
+    "streakFreezeDate": "2026-10-02"
+   }
+  },
+  {
+   "name": "unused protection",
+   "source": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03"
+   },
+   "incoming": {
+    "dailyTarget": 20,
+    "streak": 1,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03"
+   },
+   "today": "2026-10-03",
+   "merged": {
+    "dailyProgressDate": "2026-10-03",
+    "dailyTarget": 20,
+    "streak": 6,
+    "lastStudyDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02",
+    "studiedToday": 0,
+    "words": {}
+   },
+   "normalized": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   },
+   "studied": {
+    "dailyTarget": 20,
+    "streak": 6,
+    "studiedToday": 1,
+    "words": {
+     "streak-word": {
+      "status": "mastered",
+      "favorite": false,
+      "difficult": false,
+      "reviewCount": 0,
+      "dueDate": "2026-10-10",
+      "lastStudied": "2026-10-03",
+      "stage": 3,
+      "statusUpdatedAt": "2026-10-03T08:00:00.000Z"
+     }
+    },
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-10-02"
+   }
+  },
+  {
+   "name": "cooldown",
+   "source": {
+    "dailyTarget": 20,
+    "streak": 5,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-09-28"
+   },
+   "incoming": {
+    "dailyTarget": 20,
+    "streak": 1,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03"
+   },
+   "today": "2026-10-03",
+   "merged": {
+    "dailyProgressDate": "2026-10-03",
+    "dailyTarget": 20,
+    "streak": 1,
+    "lastStudyDate": "2026-10-03",
+    "streakFreezeDate": "2026-09-28",
+    "studiedToday": 0,
+    "words": {}
+   },
+   "normalized": {
+    "dailyTarget": 20,
+    "streak": 0,
+    "studiedToday": 0,
+    "words": {},
+    "lastStudyDate": "2026-10-01",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-09-28"
+   },
+   "studied": {
+    "dailyTarget": 20,
+    "streak": 1,
+    "studiedToday": 1,
+    "words": {
+     "streak-word": {
+      "status": "mastered",
+      "favorite": false,
+      "difficult": false,
+      "reviewCount": 0,
+      "dueDate": "2026-10-10",
+      "lastStudied": "2026-10-03",
+      "stage": 3,
+      "statusUpdatedAt": "2026-10-03T08:00:00.000Z"
+     }
+    },
+    "lastStudyDate": "2026-10-03",
+    "dailyProgressDate": "2026-10-03",
+    "streakFreezeDate": "2026-09-28"
+   }
+  }
+ ],
  "normalized": {
   "dailyTarget": 20,
   "streak": 0,

@@ -87,7 +87,7 @@ describe('progress state', () => {
     expect(dayTwo.lastStudyDate).toBe('2026-06-29');
   });
 
-  test('study after a missed day starts a new streak', () => {
+  test('study after two missed days starts a new streak', () => {
     const dayOne = markKnown(emptyProgress(), sampleWords[0].id, '2026-06-28');
     const dayFour = markReview(dayOne, sampleWords[1].id, '2026-07-01');
 
@@ -105,12 +105,12 @@ describe('progress state', () => {
         streak: 3,
         studiedToday: 8,
       },
-      '2026-06-30',
+      '2026-07-01',
     );
 
     expect(current.studiedToday).toBe(0);
     expect(current.streak).toBe(0);
-    expect(current.dailyProgressDate).toBe('2026-06-30');
+    expect(current.dailyProgressDate).toBe('2026-07-01');
   });
 
   test('markReview records a difficult word without counting it as mastered', () => {

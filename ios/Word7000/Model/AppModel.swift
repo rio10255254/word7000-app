@@ -48,6 +48,8 @@ final class AppModel {
     @ObservationIgnored private var vocabularyCache: [WordEntry]?
 
     init(coreWords: [WordEntry], progress: ProgressState, customSets: CustomSetState, settings: AppSettings, persistence: Persistence, today: String = DayMath.today()) {
+        var settings = settings
+        settings.migrateSpeakingHistory()
         self.coreWords = coreWords
         self.progress = LearningEngine.normalizeForDate(progress, today: today)
         self.customSets = customSets
@@ -568,10 +570,23 @@ final class AppModel {
 
     var quizMode: QuizAnswerMode { studyMode == .english ? .meaning : .word }
 
+    var recentSpeakingIds: [String] { settings.currentRecentSpeakingIds }
+    var speakingHistoryOwnerKey: String { settings.speakingHistoryOwnerKey }
+
+    func setLocalOwner(_ ownerId: String?, anonymous: Bool) {
+        settings.setLocalOwner(ownerId, anonymous: anonymous)
+        saveNow()
+    }
+
+    func forgetSpeakingHistory(ownerId: String, anonymous: Bool) {
+        settings.forgetSpeakingHistory(ownerId: ownerId, anonymous: anonymous)
+        saveNow()
+    }
+
     /// Remembers a speaking question as practised, so the next sessions ask
     /// about other words first.
     func noteSpeakingPractised(_ wordId: String) {
-        settings.recentSpeakingIds = SpeakingPractice.remembering(wordId, in: settings.recentSpeakingIds ?? [])
+        settings.rememberSpeaking(wordId)
     }
 
     var speakingCandidates: [WordEntry] {

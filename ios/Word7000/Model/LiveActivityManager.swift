@@ -8,7 +8,6 @@ import Word7000Core
 @MainActor
 final class LiveActivityManager {
     private(set) var pushToStartToken: String?
-    private var lastRegistration: String?
 
     /// Starts, updates or ends the local streak card to match the plan.
     func sync(plan: StreakReminderPlan, progress: ProgressState, chineseInterface: Bool) async {
@@ -67,7 +66,7 @@ final class LiveActivityManager {
     }
 
     /// The row the server needs to start cards on this iPhone at the right
-    /// time; nil when nothing changed since the last time.
+    /// time. The upload coordinator owns deduplication and acknowledgments.
     func registration(deviceId: String, plan: StreakReminderPlan, enabled: Bool, progress: ProgressState, chineseInterface: Bool, today: String, reminderMinute: Int? = nil) -> [String: JSONValue]? {
         guard let token = pushToStartToken else { return nil }
         let iso = ISO8601DateFormatter()
@@ -84,21 +83,6 @@ final class LiveActivityManager {
             "progress_date": .string(today),
         ]
         if let reminderMinute { row["reminder_minute"] = .number(Double(min(1439, max(0, reminderMinute)))) }
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        let fingerprint = (try? encoder.encode(row)).flatMap { String(data: $0, encoding: .utf8) } ?? ""
-        guard fingerprint != lastRegistration else { return nil }
-        row["updated_at"] = .string(DayMath.timestamp())
         return row
     }
-
-    func acknowledgeRegistration(_ row: [String: JSONValue]) {
-        var values = row
-        values.removeValue(forKey: "updated_at")
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        lastRegistration = (try? encoder.encode(values)).flatMap { String(data: $0, encoding: .utf8) }
-    }
-
-    func forgetRegistration() { lastRegistration = nil }
 }

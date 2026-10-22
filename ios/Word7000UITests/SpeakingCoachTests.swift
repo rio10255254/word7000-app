@@ -221,6 +221,11 @@ final class SpeakingCoachTests: XCTestCase {
         let answer = app.textViews["coach-answer"]
         answer.tap()
         answer.typeText(text)
+        // The accessibility value can lag the final keyboard event on older
+        // simulators. Keep the exact-text assertion; never retry the keystroke.
+        let committed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", text), object: answer)
+        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 5), .completed)
         XCTAssertEqual(answer.value as? String, text)
     }
 

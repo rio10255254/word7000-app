@@ -337,7 +337,7 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
         }
     }
 
-    static func reflection(answer: String, target: String, chinese: Bool) -> SpeakingReflection {
+    nonisolated static func reflection(answer: String, target: String, chinese: Bool) -> SpeakingReflection {
         var matched = false
         if !chinese, SpeakingReflection.tokens(target).count == 1, !answer.isEmpty {
             let tagger = NLTagger(tagSchemes: [.lemma])

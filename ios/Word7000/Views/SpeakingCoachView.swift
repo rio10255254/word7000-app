@@ -143,7 +143,12 @@ struct SpeakingCoachView: View {
             do { try await Task.sleep(for: .milliseconds(250)) } catch { return }
             guard !Task.isCancelled else { return }
             guard answer.count <= SpeakingCoach.maximumAnswerCharacters else { reflection = nil; return }
-            reflection = SpeakingRecorder.reflection(answer: answer, target: request.keyword, chinese: request.mode == .chinese)
+            let text = answer, target = request.keyword, chinese = request.mode == .chinese
+            let result = await Task.detached(priority: .utility) {
+                SpeakingRecorder.reflection(answer: text, target: target, chinese: chinese)
+            }.value
+            guard !Task.isCancelled, answer == text else { return }
+            reflection = result
         }
         .onChange(of: recording.transcript) { _, value in
             guard let value else { return }

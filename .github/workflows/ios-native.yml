@@ -28,9 +28,9 @@ on:
   workflow_dispatch:
     inputs:
       checks:
-        description: 'Full regression, or focused bilingual screenshots after copy-only changes'
+        description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy']
+        options: ['all', 'copy', 'coach']
         default: 'all'
 
 permissions:
@@ -145,6 +145,8 @@ jobs:
           TEST_SELECTION=()
           if [ "$CHECKS" = "copy" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
+          elif [ "$CHECKS" = "coach" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
           fi
           xcodebuild test \
             -project ios/Word7000.xcodeproj \
@@ -158,6 +160,24 @@ jobs:
           grep -E "error:|Test Case|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -200
           exit $status
 
+      - name: Coach Release build excludes debug responses
+        if: inputs.checks == 'coach'
+        run: |
+          set -euo pipefail
+          xcodebuild build -project ios/Word7000.xcodeproj -scheme Word7000 \
+            -configuration Release -destination "id=$SIMULATOR_UDID" \
+            -derivedDataPath "$RUNNER_TEMP/CoachRelease" CODE_SIGNING_ALLOWED=NO \
+            > "$RUNNER_TEMP/coach-release.log" 2>&1
+          python3 - "$RUNNER_TEMP/CoachRelease/Build/Products/Release-iphonesimulator/Word7000.app/Word7000" "$RUNNER_TEMP/screenshots/coach-release-verification.json" <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          binary = Path(sys.argv[1])
+          assert binary.is_file(), 'Release app executable is missing'
+          assert b'-uiTestingCoach' not in binary.read_bytes(), 'Release app contains coach test fixtures'
+          Path(sys.argv[2]).write_text(json.dumps({'commit': os.environ['GITHUB_SHA'], 'coachTestFixturesExcluded': True}))
+          print('Release app built successfully without coach test fixtures')
+          PY
+
       - name: Collect screenshots
         if: always()
         run: |
@@ -165,6 +185,7 @@ jobs:
           cp "$HOME"/word7000-screenshots/*.png "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           cp "$HOME"/word7000-screenshots/*-hierarchy.txt "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           cp "$RUNNER_TEMP/xcodebuild.log" "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
+          cp "$RUNNER_TEMP/coach-release.log" "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           xcrun simctl spawn "$SIMULATOR_UDID" log show --last 10m --style compact \
             --predicate 'process CONTAINS "Photos" OR process CONTAINS "photolibrary"' \
             > "$RUNNER_TEMP/screenshots/photos-system.log" 2>/dev/null || true
@@ -183,7 +204,7 @@ jobs:
 
   publish-screenshots:
     needs: native
-    if: always() && github.event_name != 'pull_request' && inputs.checks != 'copy'
+    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all')
     runs-on: ubuntu-latest
     permissions:
       contents: write

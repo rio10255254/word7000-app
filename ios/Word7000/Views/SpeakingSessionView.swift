@@ -20,6 +20,7 @@ struct SpeakingSessionView: View {
     @State private var historyOwnerKey = ""
     @State private var coachOpen = false
     @State private var coachAnswer = ""
+    @State private var coachContextID = UUID()
     @State private var coachSession = SpeakingCoachSession { request in
         try await AppleSpeakingCoach.shared.generate(request)
     }
@@ -102,6 +103,12 @@ struct SpeakingSessionView: View {
                 let card = practiceCard(word)
                 let meaning = examplesOnly ? ChineseDisplay.conciseMeaning(word.meaningZh)
                     : (SpeakingPractice.entry(for: word)?.keywordZh ?? ChineseDisplay.conciseMeaning(word.meaningZh))
+                let contextID = coachContextID
+                // Ignore a late keyboard commit from a dismissed account/card.
+                let draft = Binding<String>(
+                    get: { contextID == coachContextID ? coachAnswer : "" },
+                    set: { if contextID == coachContextID { coachAnswer = $0 } }
+                )
                 SpeakingCoachView(request: SpeakingCoach.Request(
                     keyword: card.keyword,
                     meaning: model.studyMode == .english ? meaning : word.word,
@@ -109,7 +116,8 @@ struct SpeakingSessionView: View {
                     context: examplesOnly ? card.referenceAnswer : "",
                     answer: "",
                     mode: model.studyMode == .english ? .english : .chinese
-                ), answer: $coachAnswer, session: coachSession)
+                ), answer: draft, session: coachSession)
+                .id(contextID)
             }
         }
         .sheet(isPresented: $filtersOpen, onDismiss: {
@@ -203,6 +211,7 @@ struct SpeakingSessionView: View {
     }
 
     private func clearCoach() {
+        coachContextID = UUID()
         coachSession.reset()
         coachAnswer = ""
         coachOpen = false

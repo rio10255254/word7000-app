@@ -36,7 +36,7 @@ final class SpeakingCoachTests: XCTestCase {
     }
 
     func testMockSuccessEditingDraftAndProgressInLightEnglishUI() {
-        let app = launch(coach: "success", englishUI: true)
+        let app = launch(coach: "commitCorrection", englishUI: true)
         let completedBefore = weeklySpeakingCount(app)
         app.tabBars.buttons.element(boundBy: 0).tap()
         openSpeaking(app)
@@ -50,16 +50,31 @@ final class SpeakingCoachTests: XCTestCase {
 
         let answer = app.textViews["coach-answer"]
         answer.tap()
-        answer.typeText("I practice dailyx")
+        answer.typeText("I practice with my x")
         XCTAssertTrue(app.keyboards.firstMatch.exists)
         answer.typeText(XCUIKeyboardKey.delete.rawValue)
-        answer.typeText(".")
-        let draft = "I practice daily."
-        XCTAssertEqual(answer.value as? String, draft)
+        answer.typeText("freind")
         XCTAssertTrue(app.keyboards.firstMatch.exists, "Editing must not recreate the editor or dismiss its keyboard")
+        assertNoFeedback(app)
         snapshot(app, "coach-mock-light-en-keyboard")
-        submit(app)
+        // Leave the final word pending: the CTA must commit keyboard edits itself.
+        let submitButton = app.buttons["coach-submit"]
+        XCTAssertTrue(submitButton.isEnabled)
+        XCTAssertTrue(submitButton.isHittable)
+        XCTAssertTrue(app.keyboards.firstMatch.exists)
+        let pendingAnswer = answer.value as? String ?? ""
+        submitButton.tap()
+        wait(app.keyboards.firstMatch, matching: "exists == false")
+        let finalAnswer = answer.value as? String ?? ""
+        XCTAssertEqual(finalAnswer, "I practice with my friend every day.")
+        XCTAssertNotEqual(finalAnswer, pendingAnswer, "Ending native editing must really change the submitted text")
+        XCTAssertFalse(finalAnswer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         assertFeedback(app, snapshotPrefix: "coach-mock-light-en")
+        let tip = app.staticTexts["coach-tip"]
+        reveal(tip, in: app, scrollingUp: false)
+        XCTAssertEqual(tip.label, "Received: " + finalAnswer.trimmingCharacters(in: .whitespacesAndNewlines))
+        XCTAssertFalse(app.descendants(matching: .any)["coach-error"].firstMatch.exists)
+        wait(submitButton, matching: "exists == true AND enabled == true")
 
         closeCoach(app)
         XCTAssertEqual(app.staticTexts["speaking-question"].label, question)
@@ -67,7 +82,7 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertEqual(completionValue(app), completed)
         XCTAssertTrue(app.buttons["speaking-complete"].isEnabled)
         XCTAssertEqual(openCoach(app), question)
-        XCTAssertEqual(app.textViews["coach-answer"].value as? String, draft)
+        XCTAssertEqual(app.textViews["coach-answer"].value as? String, finalAnswer)
         closeCoach(app)
 
         app.buttons["speaking-show-reference"].tap()

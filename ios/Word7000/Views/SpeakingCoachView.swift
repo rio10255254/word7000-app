@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import Word7000Core
 
 @MainActor
@@ -8,6 +9,9 @@ struct SpeakingCoachView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @FocusState private var answerFocused: Bool
+    @State private var pendingSubmission = false
+    @State private var inputCommitFailed = false
+    @State private var submittedAnswer: String?
 
     let request: SpeakingCoach.Request
     @Binding var answer: String
@@ -17,7 +21,14 @@ struct SpeakingCoachView: View {
     private var answerLanguage: String { request.mode == .english ? "en-US" : "zh-TW" }
     private var canSubmit: Bool {
         !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            && !session.isBusy && !provider.isBusy
+            && !pendingSubmission && !session.isBusy && !provider.isBusy
+    }
+
+    private var visibleFailure: String? {
+        if inputCommitFailed {
+            return L.t("輸入尚未完成，請再試一次。你的回答仍在。", "Editing did not finish. Try again; your answer is still here.")
+        }
+        return session.failure.map(failureMessage)
     }
 
     var body: some View {
@@ -36,11 +47,11 @@ struct SpeakingCoachView: View {
 
                 if provider.availability == .ready {
                     answerSection
-                    if let failure = session.failure {
+                    if let message = visibleFailure {
                         Section {
                             HStack(alignment: .top) {
                                 Image(systemName: "exclamationmark.circle").accessibilityHidden(true)
-                                Text(failureMessage(failure))
+                                Text(message)
                                     .fixedSize(horizontal: false, vertical: true)
                                     .accessibilityIdentifier("coach-error")
                             }
@@ -87,14 +98,39 @@ struct SpeakingCoachView: View {
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .onAppear { provider.refreshAvailability() }
-        .onDisappear { session.cancel(); Speaker.shared.stop() }
-        .onChange(of: answer) { _, _ in session.reset(); Speaker.shared.stop() }
+        .onDisappear { pendingSubmission = false; session.cancel(); Speaker.shared.stop() }
+        .onChange(of: answer) { _, text in
+            // SwiftUI may deliver the final keyboard correction after its native
+            // end-editing notification. The captured text is already current.
+            if text != submittedAnswer { session.reset() }
+            inputCommitFailed = false
+            Speaker.shared.stop()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UITextView.textDidEndEditingNotification)) { notification in
+            guard pendingSubmission, let editor = notification.object as? UITextView else { return }
+            #if DEBUG
+            // Force a final native edit in the UI regression, independently of
+            // the simulator's keyboard language/autocorrection preferences.
+            if let correction = provider.testingCommittedAnswer { editor.text = correction }
+            #endif
+            finishInput(committedText: editor.text)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)) { _ in
+            finishInput(committedText: nil)
+        }
+        .task(id: pendingSubmission) {
+            guard pendingSubmission else { return }
+            do { try await Task.sleep(for: .seconds(2)) } catch { return }
+            guard !Task.isCancelled, pendingSubmission else { return }
+            pendingSubmission = false
+            inputCommitFailed = true
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { provider.refreshAvailability() }
-            else { session.cancel(); Speaker.shared.stop() }
+            else { pendingSubmission = false; session.cancel(); Speaker.shared.stop() }
         }
         .onChange(of: provider.availability) { _, availability in
-            if availability != .ready { session.cancel(clearFeedback: true) }
+            if availability != .ready { pendingSubmission = false; session.cancel(clearFeedback: true) }
         }
         .sensoryFeedback(.success, trigger: session.feedback) { _, feedback in
             feedback != nil && (model.settings.hapticsEnabled ?? true)
@@ -149,12 +185,13 @@ struct SpeakingCoachView: View {
 
     private var actions: some View {
         VStack(spacing: 8) {
-            if session.isWorking {
+            if session.isWorking || pendingSubmission {
                 HStack(spacing: 8) {
                     ProgressView()
-                    Text(L.t("正在整理建議…", "Preparing suggestions…")).font(.subheadline)
+                    Text(pendingSubmission ? L.t("正在完成輸入…", "Finishing input…")
+                         : L.t("正在整理建議…", "Preparing suggestions…")).font(.subheadline)
                 }
-                Button { session.cancel() } label: {
+                Button { pendingSubmission = false; session.cancel() } label: {
                     Label(L.t("取消", "Cancel"), systemImage: "stop.fill").frame(maxWidth: .infinity)
                 }
                 .secondaryAction()
@@ -217,10 +254,28 @@ struct SpeakingCoachView: View {
     }
 
     private func submit() {
-        answerFocused = false
+        guard canSubmit else { return }
+        inputCommitFailed = false
         Speaker.shared.stop()
+        if answerFocused {
+            pendingSubmission = true
+            answerFocused = false
+        } else {
+            generateSuggestions()
+        }
+    }
+
+    private func finishInput(committedText: String?) {
+        guard pendingSubmission else { return }
+        pendingSubmission = false
+        if let committedText { answer = committedText }
+        generateSuggestions()
+    }
+
+    private func generateSuggestions() {
         provider.refreshAvailability()
         guard provider.availability == .ready, canSubmit else { return }
+        submittedAnswer = answer
         let submitted = SpeakingCoach.Request(keyword: request.keyword, meaning: request.meaning,
             question: request.question, context: request.context, answer: answer, mode: request.mode)
         #if DEBUG
@@ -230,6 +285,7 @@ struct SpeakingCoachView: View {
     }
 
     private func close() {
+        pendingSubmission = false
         answerFocused = false
         session.cancel()
         Speaker.shared.stop()

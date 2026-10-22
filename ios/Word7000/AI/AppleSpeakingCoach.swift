@@ -94,7 +94,7 @@ final class AppleSpeakingCoach {
     }
 
     #if DEBUG
-    enum Fixture: String { case success, errorOnce, slow, timeout, unavailable }
+    enum Fixture: String { case success, commitCorrection, errorOnce, slow, timeout, unavailable }
 
     private var fixture: Fixture? {
         let arguments = ProcessInfo.processInfo.arguments
@@ -103,6 +103,9 @@ final class AppleSpeakingCoach {
     }
 
     var testingTimeout: Duration? { fixture == .timeout ? .milliseconds(250) : nil }
+    var testingCommittedAnswer: String? {
+        fixture == .commitCorrection ? "I practice with my friend every day." : nil
+    }
     @ObservationIgnored private var didFailFixture = false
 
     private func generateFixture(_ request: SpeakingCoach.Request, fixture: Fixture) async throws -> SpeakingCoach.Feedback {
@@ -116,7 +119,7 @@ final class AppleSpeakingCoach {
         try Task.checkCancellation()
         return try SpeakingCoach.Feedback(
             rewrite: request.mode == .english ? "I enjoy learning something new with my friends." : "我喜歡和朋友一起學習新事物。",
-            tip: request.mode == .english ? "用一個具體細節，讓你的意思更清楚。" : "Add one specific detail to make your meaning clearer.",
+            tip: request.mode == .english ? "已收到：\(request.answer.prefix(200))" : "Received: \(request.answer.prefix(200))",
             followUp: request.mode == .english ? "What would you like to try next?" : "你接下來想嘗試什麼？"
         ).validated()
     }

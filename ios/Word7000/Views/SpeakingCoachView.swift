@@ -20,6 +20,8 @@ struct SpeakingCoachView: View {
     @State private var helpful: Bool?
 
     let request: SpeakingCoach.Request
+    let referenceAnswer: String
+    let referenceTranslation: String
     @Binding var answer: String
     let session: SpeakingCoachSession
 
@@ -66,6 +68,18 @@ struct SpeakingCoachView: View {
                         LabeledContent(request.mode == .english ? L.t("字數", "Words") : L.t("中文字數", "Chinese characters"), value: "\(reflection.unitCount)")
                     } header: { Text(L.t("回答檢視", "Your answer at a glance")) }
                     footer: { Text(L.t("找到詞語不代表用法或發音正確，也不影響學習成績。", "Finding a word does not verify usage or pronunciation, and does not change your progress.")) }
+                }
+                if !referenceAnswer.isEmpty {
+                    Section {
+                        DisclosureGroup(L.t("參考回答", "Reference answer")) {
+                            HStack(alignment: .top) {
+                                Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 8)
+                                SpeakButton(text: referenceAnswer, language: answerLanguage).disabled(recording.busy)
+                            }
+                            Text(referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
+                        }.accessibilityIdentifier("coach-reference")
+                    }
                 }
                 if provider.availability == .ready {
                     if let message = visibleFailure {
@@ -446,8 +460,9 @@ struct SpeakingCoachView: View {
     }
 
     private func beginRecording() {
+        pendingSubmission = false
         dismissKeyboard()
-        session.reset()
+        session.cancel()
         recording.start()
     }
 

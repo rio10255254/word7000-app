@@ -120,7 +120,8 @@ struct SpeakingSessionView: View {
                     context: examplesOnly ? card.referenceAnswer : "",
                     answer: "",
                     mode: model.studyMode == .english ? .english : .chinese
-                ), answer: draft, session: coachSession)
+                ), referenceAnswer: card.referenceAnswer, referenceTranslation: card.referenceTranslation,
+                    answer: draft, session: coachSession)
                 .id(contextID)
             }
         }

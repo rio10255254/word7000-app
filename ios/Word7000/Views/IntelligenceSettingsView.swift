@@ -59,7 +59,11 @@ struct IntelligenceSettingsView: View {
     private var speechStatus: String {
         switch speech.support {
         case .checking: L.t("檢查中", "Checking")
-        case .modern, .legacy: L.t("此語言可使用", "Available for this language")
+        case .modern: L.t("此語言可使用", "Available for this language")
+        case .legacy:
+            SFSpeechRecognizer.authorizationStatus() == .denied || SFSpeechRecognizer.authorizationStatus() == .restricted
+                ? L.t("尚未允許辨識", "Recognition not allowed")
+                : L.t("此語言可使用", "Available for this language")
         case .download: L.t("需先下載語言", "Language download needed")
         case .unavailable: L.t("此裝置或語言未支援", "Device or language unsupported")
         }

@@ -13,7 +13,11 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     private(set) var support: TranscriptionSupport = .checking
     private(set) var seconds: TimeInterval = 0
     private(set) var level: Float = 0
-    private(set) var message: String?
+    private(set) var message: String? {
+        didSet { messageNeedsSettings = false }
+    }
+    /// Only permission problems are fixed in Settings; other messages are not.
+    private(set) var messageNeedsSettings = false
     private(set) var transcript: String?
     private(set) var hasRecording = false
     var ownsAudio: Bool { state == .recording || state == .playing || state == .requesting }
@@ -67,6 +71,7 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
             guard allowed else {
                 state = .idle
                 message = L.t("未開啟麥克風權限。你仍可輸入回答，或到系統設定開啟。", "Microphone access is off. You can still type, or enable it in Settings.")
+                messageNeedsSettings = true
                 return
             }
             await Speaker.shared.stopAndRelease()
@@ -183,6 +188,7 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
                     message = L.t("沒有辨識到清楚的語音。可以先回放，再重新錄製或自行輸入。", "No clear speech was recognized. Replay the recording, then try another take or type your answer.")
                 } else if case RecordingError.permission = error {
                     message = L.t("尚未允許語音辨識。可以到系統設定開啟，或繼續回放與自行輸入。", "Speech recognition is not allowed. Enable it in Settings, or keep using playback and typed answers.")
+                    messageNeedsSettings = true
                 } else {
                     message = L.t("這次無法在手機內辨識。錄音仍可回放，也可以自行輸入回答。", "On-device transcription was unavailable. Your recording can still be replayed, or you can type your answer.")
                 }

@@ -72,9 +72,8 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
             await Speaker.shared.stopAndRelease()
             guard generation == id, !Task.isCancelled else { return }
             do {
-                let audio = AVAudioSession.sharedInstance()
-                try audio.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
-                try audio.setActive(true)
+                try await WordAudioSession.activate(recording: true)
+                guard generation == id, !Task.isCancelled else { return }
                 let url = FileManager.default.temporaryDirectory.appendingPathComponent("word7000-take-\(UUID().uuidString).m4a")
                 file = url
                 let recorder = try AVAudioRecorder(url: url, settings: [
@@ -127,9 +126,8 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
             await Speaker.shared.stopAndRelease()
             guard let self, generation == id, !Task.isCancelled else { return }
             do {
-                let audio = AVAudioSession.sharedInstance()
-                try audio.setCategory(.playback, mode: .spokenAudio)
-                try audio.setActive(true)
+                try await WordAudioSession.activate(recording: false)
+                guard generation == id, !Task.isCancelled else { return }
                 player = try AVAudioPlayer(contentsOf: file)
                 player?.delegate = self
                 guard player?.play() == true else { throw RecordingError.failed }
@@ -277,11 +275,13 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     }
 
     func cancelProcessing() {
+        let wasRequestingAudio = state == .requesting
         generation = UUID()
         operation?.cancel(); operation = nil
         deadline?.cancel(); deadline = nil
         cancelRecognition?(); cancelRecognition = nil
         state = hasRecording ? .ready : .idle
+        if wasRequestingAudio { releaseAudio() }
     }
 
     func interrupt() {
@@ -310,7 +310,7 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
         }
     }
 
-    private func releaseAudio() { try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation) }
+    private func releaseAudio() { WordAudioSession.release() }
     private enum RecordingError: Error { case failed, permission, empty }
 
     nonisolated func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {

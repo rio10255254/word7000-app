@@ -463,6 +463,7 @@ struct SpeakingCoachView: View {
         pendingSubmission = false
         dismissKeyboard()
         session.cancel()
+        Speaker.shared.stop()
         recording.start()
     }
 

@@ -61,7 +61,9 @@ struct AppSettings: Codable, Equatable, Sendable {
 
     mutating func rememberSpeaking(_ wordId: String) {
         migrateSpeakingHistory()
-        speakingHistoryByOwner?[speakingHistoryOwnerKey] = SpeakingPractice.remembering(wordId, in: currentRecentSpeakingIds)
+        let key = speakingHistoryOwnerKey
+        let history = SpeakingPractice.remembering(wordId, in: currentRecentSpeakingIds)
+        speakingHistoryByOwner?[key] = history
     }
 
     mutating func setLocalOwner(_ ownerId: String?, anonymous: Bool) {
@@ -71,9 +73,10 @@ struct AppSettings: Codable, Equatable, Sendable {
         if localOwnerId == nil, ownerId != nil, anonymous,
            let pending = speakingHistoryByOwner?.removeValue(forKey: "guest") {
             let key = Self.speakingHistoryKey(ownerId: ownerId, anonymous: true)
-            speakingHistoryByOwner?[key] = pending.reduce(speakingHistoryByOwner?[key] ?? []) {
+            let history = pending.reduce(speakingHistoryByOwner?[key] ?? []) {
                 SpeakingPractice.remembering($1, in: $0)
             }
+            speakingHistoryByOwner?[key] = history
         }
         localOwnerId = ownerId
         localOwnerIsAnonymous = anonymous

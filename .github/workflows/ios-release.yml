@@ -24,9 +24,14 @@ on:
         description: 'Short note shown for an OTA update'
         type: string
         default: ''
+      native_validation_run:
+        description: 'Optional full Native iOS push-run ID for identical source; otherwise use this commit'
+        type: string
+        default: ''
 
 permissions:
   contents: read
+  actions: read
 
 # Never cancel a build or upload that is already running.
 concurrency:
@@ -39,6 +44,7 @@ jobs:
     timeout-minutes: 120
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - name: Check the Expo token
         if: env.EXPO_TOKEN == ''
@@ -47,6 +53,8 @@ jobs:
           exit 1
 
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -68,6 +76,23 @@ jobs:
       - name: Check native archive verification
         if: inputs.operation == 'native-testflight'
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
+
+      - name: Pin full native validation to the release source
+        if: inputs.operation == 'native-testflight'
+        env:
+          REQUESTED_RUN: ${{ inputs.native_validation_run }}
+        run: |
+          set -euo pipefail
+          RUN_ID="$REQUESTED_RUN"
+          if [ -z "$RUN_ID" ]; then
+            RUN_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ios-native.yml/runs?head_sha=$GITHUB_SHA&event=push&per_page=20" --jq '.workflow_runs[0].id // empty')
+          fi
+          [[ "$RUN_ID" =~ ^[0-9]+$ ]] || { echo "::error::A full Native iOS push run is required."; exit 1; }
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$RUNNER_TEMP/native-validation.json"
+          TESTED_SHA=$(node -e 'const r=require(process.argv[1]); if(r.path!==".github/workflows/ios-native.yml" || r.event!=="push" || !/^[a-f0-9]{40}$/.test(r.head_sha)) throw new Error("Not a full native push run"); if(r.status==="completed" && r.conclusion!=="success") throw new Error("Native validation failed"); process.stdout.write(r.head_sha);' "$RUNNER_TEMP/native-validation.json")
+          # Only release orchestration may differ; app code, tests and data must match.
+          git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml'
+          echo "NATIVE_VALIDATION_RUN=$RUN_ID" >> "$GITHUB_ENV"
 
       - uses: expo/expo-github-action@v8
         with:
@@ -111,4 +136,14 @@ jobs:
             --archive "$RUNNER_TEMP/native.ipa" --metadata "$RUNNER_TEMP/native-build.json" \
             --words "$GITHUB_WORKSPACE/ios/Word7000/Resources/words.json" \
             --expected-build "$NEXT_BUILD" --expected-version "$(node -p 'require("./app.json").expo.version')"
+          PASSED=false
+          for attempt in $(seq 1 60); do
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$NATIVE_VALIDATION_RUN" > "$RUNNER_TEMP/native-validation.json"
+            STATE=$(node -e 'const r=require(process.argv[1]); process.stdout.write(r.status==="completed" ? r.conclusion : r.status);' "$RUNNER_TEMP/native-validation.json")
+            if [ "$STATE" = success ]; then PASSED=true; break; fi
+            case "$STATE" in queued|in_progress|pending|requested|waiting) ;; *) echo "::error::Native validation ended with $STATE. Not submitting to TestFlight."; exit 1 ;; esac
+            echo "Waiting for full native validation $NATIVE_VALIDATION_RUN ($STATE)."
+            sleep 60
+          done
+          [ "$PASSED" = true ] || { echo "::error::Native validation did not finish. Not submitting to TestFlight."; exit 1; }
           EAS_NO_VCS=1 eas submit --platform ios --profile production --id "$BUILD_ID" --non-interactive --wait

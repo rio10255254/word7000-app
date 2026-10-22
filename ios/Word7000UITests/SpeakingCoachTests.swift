@@ -237,8 +237,17 @@ final class SpeakingCoachTests: XCTestCase {
         app.buttons["coach-record"].tap()
         let system = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allow = system.buttons["Allow"]
-        if allow.waitForExistence(timeout: 3) { allow.tap() }
-        else if system.buttons["OK"].exists { system.buttons["OK"].tap() }
+        if allow.waitForExistence(timeout: 5) {
+            // A system sheet can still be animating when its button appears in
+            // accessibility. Only retry that permission tap, never the recording.
+            for _ in 0..<2 where allow.exists {
+                wait(allow, matching: "exists == true AND hittable == true")
+                allow.tap()
+                let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: allow)
+                if XCTWaiter.wait(for: [dismissed], timeout: 5) == .completed { break }
+            }
+            XCTAssertFalse(allow.exists)
+        } else if system.buttons["OK"].exists { system.buttons["OK"].tap() }
         let duration = app.staticTexts["coach-recording-duration"]
         let ticking = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let number = Int(duration.label.split(separator: " ").first ?? "0") ?? 0

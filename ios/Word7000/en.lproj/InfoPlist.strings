@@ -1,0 +1,2 @@
+"NSMicrophoneUsageDescription" = "Record your practice answer for playback on this iPhone. Recordings are temporary and are not uploaded.";
+"NSSpeechRecognitionUsageDescription" = "Turn your practice recording into text on this iPhone when on-device recognition is supported. Audio is not sent for server recognition.";

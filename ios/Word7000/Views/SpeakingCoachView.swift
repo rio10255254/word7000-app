@@ -85,10 +85,14 @@ struct SpeakingCoachView: View {
                         .accessibilityLabel(L.close)
                         .accessibilityIdentifier("coach-close")
                 }
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button(L.done) { answerFocused = false }
+                ToolbarItem(placement: .topBarTrailing) {
+                    if answerFocused {
+                        Button { answerFocused = false } label: {
+                            Image(systemName: "keyboard.chevron.compact.down")
+                        }
+                        .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
                         .accessibilityIdentifier("coach-keyboard-done")
+                    }
                 }
             }
             .safeAreaInset(edge: .bottom) {

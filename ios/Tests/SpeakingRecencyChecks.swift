@@ -188,7 +188,9 @@ preferences = try roundTrip(preferences)
 let after = try JSONSerialization.jsonObject(with: JSONEncoder().encode(preferences)) as! [String: Any]
 for (key, value) in before {
     guard let saved = after[key] else { fatalError("Preference missing: \(key)") }
-    check(NSDictionary(dictionary: [key: value]).isEqual(to: [key: saved]), "Preference changed: \(key)")
+    let originalJSON = try JSONSerialization.data(withJSONObject: [key: value], options: .sortedKeys)
+    let savedJSON = try JSONSerialization.data(withJSONObject: [key: saved], options: .sortedKeys)
+    check(originalJSON == savedJSON, "Preference changed: \(key)")
 }
 
 let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)

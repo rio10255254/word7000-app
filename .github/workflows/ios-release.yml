@@ -90,8 +90,10 @@ jobs:
           [[ "$RUN_ID" =~ ^[0-9]+$ ]] || { echo "::error::A full Native iOS push run is required."; exit 1; }
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$RUNNER_TEMP/native-validation.json"
           TESTED_SHA=$(node -e 'const r=require(process.argv[1]); if(r.path!==".github/workflows/ios-native.yml" || r.event!=="push" || !/^[a-f0-9]{40}$/.test(r.head_sha)) throw new Error("Not a full native push run"); if(r.status==="completed" && r.conclusion!=="success") throw new Error("Native validation failed"); process.stdout.write(r.head_sha);' "$RUNNER_TEMP/native-validation.json")
-          # Only release orchestration may differ; app code, tests and data must match.
-          git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml'
+          # Release orchestration and its portable settings-check harness may differ.
+          # All shipped code/data and the native core/UI tests must still match.
+          # The portable harness is executed by npm test above, including on Linux.
+          git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift'
           echo "NATIVE_VALIDATION_RUN=$RUN_ID" >> "$GITHUB_ENV"
 
       - uses: expo/expo-github-action@v8

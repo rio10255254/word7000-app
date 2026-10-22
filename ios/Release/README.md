@@ -48,3 +48,24 @@ first five-word practice, exact search with a visible keyboard, 20-question
 quiz navigation, and all five photo formats saved into a playable bank.
 Inspect light/dark and both-language screenshots on iOS 18, 26, and 27 before
 dispatching `native-testflight`.
+
+## Speaking coach TestFlight preview
+
+Rio authorized a TestFlight preview on 2026-10-22. Release from
+`native/apple-speaking-coach`; do not merge it into `master` or replace the
+formal App Store submission. The release must wait for a successful full
+Native iOS push run of the same source, and the signed archive must exclude
+both coach and recording test fixtures.
+
+This preview adds optional local recording, playback, editable on-device
+transcription, and Apple Intelligence speaking suggestions when available.
+Recording and manual answers remain available without Apple Intelligence.
+No cloud AI, new subscription promise, or answer-content analytics is enabled.
+It also includes reviewed notes for 24 words, a seven-day summary, and practice
+shortcuts. It does not claim expanded notes for all 7000 words.
+
+The iOS 18, 26, and 27 targeted UI checks passed. Hosted test machines cannot
+run the real Apple Intelligence model. TestFlight is therefore needed to
+evaluate real speech transcription, suggestion quality, response time, audio
+routing, and Siri on supported physical devices. The 200 evaluation inputs
+validate request structure, not model accuracy or 200 independent learners.

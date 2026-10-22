@@ -319,10 +319,17 @@ struct SpeakingCoachView: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("coach-unavailable")
             }
-            Button { provider.refreshAvailability() } label: {
+            Button {
+                Task {
+                    await IntelligenceSettings.shared.refreshPolicy(force: true)
+                    provider.refreshAvailability()
+                }
+            } label: {
                 Label(L.t("再次檢查", "Check again"), systemImage: "arrow.clockwise")
             }
+            .disabled(IntelligenceSettings.shared.checking)
             .accessibilityIdentifier("coach-check-again")
+            if IntelligenceSettings.shared.checking { ProgressView() }
         } header: { Text(L.t("暫時無法提供建議", "Suggestions unavailable")) }
     }
 

@@ -24,9 +24,11 @@ struct IntelligenceSettingsView: View {
             Section {
                 LabeledContent(L.t("麥克風", "Microphone"), value: microphoneStatus)
                 LabeledContent(L.t("離線語音辨識", "Offline transcription"), value: speechStatus)
-                Button { Task { await refresh() } } label: {
+                Button { Task { await settings.refreshPolicy(force: true); await refresh() } } label: {
                     Label(L.t("重新檢查", "Check again"), systemImage: "arrow.clockwise")
                 }
+                .disabled(settings.checking)
+                if settings.checking { ProgressView() }
                 Button(L.t("開啟系統設定", "Open System Settings")) {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                 }

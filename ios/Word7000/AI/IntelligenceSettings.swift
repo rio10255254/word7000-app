@@ -9,7 +9,7 @@ final class IntelligenceSettings {
         didSet { UserDefaults.standard.set(enabled, forKey: "intelligence.enabled") }
     }
     private(set) var policy: IntelligencePolicy?
-    private var checking = false
+    private(set) var checking = false
     private var lastCheck: Date?
     var coachAllowed: Bool { enabled && policy?.speakingCoachEnabled != false }
     var scanAllowed: Bool { enabled && policy?.scanAssistantEnabled != false }
@@ -22,10 +22,10 @@ final class IntelligenceSettings {
         #endif
     }
 
-    func refreshPolicy() async {
+    func refreshPolicy(force: Bool = false) async {
         // UI tests never read live configuration or alter production state.
         guard !ProcessInfo.processInfo.arguments.contains("-uiTestingReset"), !checking,
-              lastCheck.map({ Date().timeIntervalSince($0) > 21_600 }) ?? true else { return }
+              force || (lastCheck.map({ Date().timeIntervalSince($0) > 21_600 }) ?? true) else { return }
         checking = true
         defer { checking = false; lastCheck = Date() }
         let url = URL(string: "https://word7000-app.rio10255254.workers.dev/ai-features.json")!

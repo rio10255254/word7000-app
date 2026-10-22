@@ -20,6 +20,23 @@ struct EvaluationResult: Encodable {
 struct CoachEvaluation {
     static func main() async throws {
         let arguments = CommandLine.arguments
+        if arguments.count == 2, arguments[1] == "--probe" {
+            #if canImport(FoundationModels)
+            if #available(macOS 26.0, *) {
+                let model = SystemLanguageModel.default
+                let status: [String: String] = [
+                    "availability": String(describing: model.availability),
+                    "english": String(model.supportsLocale(Locale(identifier: "en-US"))),
+                    "traditionalChinese": String(model.supportsLocale(Locale(identifier: "zh-Hant-TW"))),
+                    "modelCalled": "false"
+                ]
+                print(String(decoding: try JSONEncoder().encode(status), as: UTF8.self))
+                return
+            }
+            #endif
+            print("{\"availability\":\"unsupportedHost\",\"modelCalled\":\"false\"}")
+            return
+        }
         guard arguments.count == 4, arguments[1] == "--run-on-device" else {
             print("Usage: CoachEvaluation --run-on-device cases.generated.json new-results.jsonl")
             print("Uses Apple Intelligence on this Mac. Artificial test cases only; no cloud model. Results still require human review.")

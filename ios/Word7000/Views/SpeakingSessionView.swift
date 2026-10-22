@@ -18,6 +18,11 @@ struct SpeakingSessionView: View {
     @State private var filtersOpen = false
     @State private var previousFilter = FilterSelection()
     @State private var historyOwnerKey = ""
+    @State private var coachOpen = false
+    @State private var coachAnswer = ""
+    @State private var coachSession = SpeakingCoachSession { request in
+        try await AppleSpeakingCoach.shared.generate(request)
+    }
 
     private var activity: SpeakingPractice.Activity { model.settings.speakingActivity ?? .questions }
     private var examplesOnly: Bool { activity == .examples }
@@ -64,6 +69,7 @@ struct SpeakingSessionView: View {
                             .font(.rounded(.subheadline, weight: .semibold))
                             .monospacedDigit()
                             .accessibilityIdentifier("speaking-position")
+                            .accessibilityValue(L.t("已完成 \(answered) 題", "Completed: \(answered)"))
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -76,12 +82,36 @@ struct SpeakingSessionView: View {
                 }
             }
         }
-        .onAppear { if !started { start() } }
+        .onAppear {
+            AppleSpeakingCoach.shared.refreshAvailability()
+            if !started { start() }
+        }
         .onChange(of: activity) { _, _ in start() }
         .onChange(of: model.settings.activeBankId) { _, _ in start() }
+        .onChange(of: model.studyMode) { _, _ in start() }
+        .onChange(of: model.settings.speakingFilter) { _, _ in clearCoach() }
         .onChange(of: model.speakingHistoryOwnerKey) { _, _ in start() }
-        .onDisappear { Speaker.shared.stop() }
+        .onDisappear { coachSession.cancel(); Speaker.shared.stop() }
         .sensoryFeedback(.success, trigger: completedCurrent) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .sheet(isPresented: $coachOpen, onDismiss: {
+            coachSession.cancel()
+            Speaker.shared.stop()
+        }) {
+            if index < words.count {
+                let word = words[index]
+                let card = practiceCard(word)
+                let meaning = examplesOnly ? ChineseDisplay.conciseMeaning(word.meaningZh)
+                    : (SpeakingPractice.entry(for: word)?.keywordZh ?? ChineseDisplay.conciseMeaning(word.meaningZh))
+                SpeakingCoachView(request: SpeakingCoach.Request(
+                    keyword: card.keyword,
+                    meaning: model.studyMode == .english ? meaning : word.word,
+                    question: card.question,
+                    context: examplesOnly ? card.referenceAnswer : "",
+                    answer: "",
+                    mode: model.studyMode == .english ? .english : .chinese
+                ), answer: $coachAnswer, session: coachSession)
+            }
+        }
         .sheet(isPresented: $filtersOpen, onDismiss: {
             if previousFilter != (model.settings.speakingFilter ?? FilterSelection()) { start() }
         }) {
@@ -158,6 +188,7 @@ struct SpeakingSessionView: View {
     }
 
     private func start() {
+        clearCoach()
         Speaker.shared.stop()
         historyOwnerKey = model.speakingHistoryOwnerKey
         let candidates = model.speakingCandidates
@@ -171,15 +202,27 @@ struct SpeakingSessionView: View {
         started = true
     }
 
-    private func prompt(_ word: WordEntry) -> some View {
+    private func clearCoach() {
+        coachSession.reset()
+        coachAnswer = ""
+        coachOpen = false
+        Speaker.shared.stop()
+    }
+
+    private func practiceCard(_ word: WordEntry) -> ConversationPromptCard {
         let mode: ConversationPromptMode = model.studyMode == .english ? .english : .chinese
-        let card = examplesOnly ? SpeakingPractice.exampleExercise(for: word, mode: mode)
+        return examplesOnly ? SpeakingPractice.exampleExercise(for: word, mode: mode)
             : (SpeakingPractice.card(for: word, mode: mode) ?? SpeakingPractice.exampleExercise(for: word, mode: mode))
+    }
+
+    private func prompt(_ word: WordEntry) -> some View {
+        let card = practiceCard(word)
         let face = model.face(word)
         return VStack(spacing: 16) {
             SessionBar(fraction: Double(index + (revealed ? 1 : 0)) / Double(max(1, words.count)))
                 .padding(.top, 4)
             ScrollView {
+              VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(examplesOnly ? L.t("例句延伸", "Build on an example") : L.t("情境問答", "Conversation"))
                         .font(.caption.weight(.semibold)).foregroundStyle(.secondary)
@@ -223,6 +266,19 @@ struct SpeakingSessionView: View {
                     }
                 }
                 .card(radius: Metrics.wordCardRadius, padding: 20)
+                if AppleSpeakingCoach.shared.availability.showsEntry {
+                    Button {
+                        Speaker.shared.stop()
+                        AppleSpeakingCoach.shared.refreshAvailability()
+                        coachOpen = true
+                    } label: {
+                        Label(L.t("口說教練", "Speaking coach"), systemImage: "sparkles")
+                            .font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .secondaryAction()
+                    .accessibilityIdentifier("speaking-coach-open")
+                }
+              }
             }
             if revealed {
               HStack(spacing: 12) {
@@ -271,6 +327,7 @@ struct SpeakingSessionView: View {
     private func next() {
         guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(); return }
         guard index < words.count else { return }
+        clearCoach()
         if !completedCurrent { model.recordSpeaking(completed: false) }
         model.noteSpeakingPractised(words[index].id)
         Speaker.shared.stop()

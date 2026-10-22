@@ -316,6 +316,20 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         Task { @MainActor in if self.player === player { stopPlayback() } }
     }
+    nonisolated func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
+        Task { @MainActor in
+            guard self.recorder === recorder else { return }
+            clear()
+            message = L.t("錄音中斷，請重新錄製或輸入回答。", "Recording was interrupted. Record again or type your answer.")
+        }
+    }
+    nonisolated func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        Task { @MainActor in
+            guard self.player === player else { return }
+            stopPlayback()
+            message = L.t("無法播放這段錄音，請重新錄製。", "This recording could not play. Please record another take.")
+        }
+    }
 
     static func reflection(answer: String, target: String, chinese: Bool) -> SpeakingReflection {
         var matched = false

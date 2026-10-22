@@ -144,10 +144,10 @@ struct SpellingSessionView: View {
                     Text(L.t("你的答案：\(input.trimmed)", "You typed: \(input.trimmed)"))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                        .padding(.top, 4)
                     if let note = WordNotes.note(for: word.word) {
                         Text(L.t(note.explanationZh, note.explanationEn)).font(.subheadline)
                     }
-                        .padding(.top, 4)
                 }
             }
             if !word.example.isEmpty {

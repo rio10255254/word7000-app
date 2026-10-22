@@ -91,6 +91,9 @@ jobs:
       - name: Speaking questions match their editorial sources
         run: node scripts/build-native-speaking-library.mjs --check
 
+      - name: Coaching evaluation cases match their authored sources
+        run: node scripts/build-coach-evaluation.mjs --check
+
       - name: Release archive checks
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 

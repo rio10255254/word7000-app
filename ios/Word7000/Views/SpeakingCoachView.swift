@@ -14,7 +14,7 @@ struct SpeakingCoachView: View {
     @State private var inputCommitFailed = false
     @State private var submittedAnswer: String?
     @State private var recording = SpeakingRecorder()
-    @State private var needsTranscriptReview = false
+    @Binding var needsTranscriptReview: Bool
     @State private var retakeOpen = false
     @State private var reflection: SpeakingReflection?
     @State private var helpful: Bool?
@@ -138,6 +138,10 @@ struct SpeakingCoachView: View {
         .onChange(of: session.feedback) { _, _ in helpful = nil }
         .onChange(of: IntelligenceSettings.shared.coachAllowed) { _, _ in provider.refreshAvailability() }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in recording.interrupt() }
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)) { event in
+            if let raw = event.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
+               AVAudioSession.RouteChangeReason(rawValue: raw) == .oldDeviceUnavailable { recording.interrupt() }
+        }
         .confirmationDialog(L.t("重新錄製會刪除上一段錄音", "A new take replaces the previous recording"), isPresented: $retakeOpen) {
             Button(L.t("重新錄製", "Record again"), role: .destructive) { beginRecording() }
         }

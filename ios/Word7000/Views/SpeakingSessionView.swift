@@ -20,6 +20,7 @@ struct SpeakingSessionView: View {
     @State private var historyOwnerKey = ""
     @State private var coachOpen = false
     @State private var coachAnswer = ""
+    @State private var coachTranscriptNeedsReview = false
     @State private var coachContextID = UUID()
     @State private var coachSession = SpeakingCoachSession { request in
         try await AppleSpeakingCoach.shared.generate(request)
@@ -109,7 +110,10 @@ struct SpeakingSessionView: View {
                     get: { contextID == coachContextID ? coachAnswer : "" },
                     set: { if contextID == coachContextID { coachAnswer = $0 } }
                 )
-                SpeakingCoachView(request: SpeakingCoach.Request(
+                SpeakingCoachView(needsTranscriptReview: Binding(
+                    get: { contextID == coachContextID && coachTranscriptNeedsReview },
+                    set: { if contextID == coachContextID { coachTranscriptNeedsReview = $0 } }
+                ), request: SpeakingCoach.Request(
                     keyword: card.keyword,
                     meaning: model.studyMode == .english ? meaning : word.word,
                     question: card.question,
@@ -214,6 +218,7 @@ struct SpeakingSessionView: View {
         coachContextID = UUID()
         coachSession.reset()
         coachAnswer = ""
+        coachTranscriptNeedsReview = false
         coachOpen = false
         Speaker.shared.stop()
     }

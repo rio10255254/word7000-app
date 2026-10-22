@@ -28,6 +28,6 @@ for (const item of cases) {
 }
 const output = path.join(root, 'content/coach-evaluation/cases.generated.json');
 const text = JSON.stringify(cases, null, 2) + '\n';
-if (process.argv.includes('--check')) assert.equal(fs.readFileSync(output, 'utf8'), text);
+if (process.argv.includes('--check')) assert.deepEqual(JSON.parse(fs.readFileSync(output, 'utf8')), cases);
 else fs.writeFileSync(output, text);
 console.log('Verified 50 authored bilingual seeds and 200 deterministic evaluation cases. No model was called.');

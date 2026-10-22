@@ -20,6 +20,13 @@ struct EvaluationResult: Encodable {
 struct CoachEvaluation {
     static func main() async throws {
         let arguments = CommandLine.arguments
+        if arguments.count == 3, arguments[1] == "--validate" {
+            let cases = try JSONDecoder().decode([EvaluationCase].self, from: Data(contentsOf: URL(fileURLWithPath: arguments[2])))
+            guard cases.count == 200, Set(cases.map(\.id)).count == 200 else { throw EvaluationError.invalidCases }
+            for item in cases { _ = try item.request.validated() }
+            print("200 evaluation requests passed the app's actual input validation. No model called.")
+            return
+        }
         if arguments.count == 2, arguments[1] == "--probe" {
             #if canImport(FoundationModels)
             if #available(macOS 26.0, *) {

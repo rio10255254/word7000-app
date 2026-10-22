@@ -101,6 +101,7 @@ jobs:
         run: |
           xcodebuild -version
           swift test --package-path ios/Packages/Word7000Core
+          swift run --package-path ios/Packages/Word7000Core CoachEvaluation --validate content/coach-evaluation/cases.generated.json
           swift run --package-path ios/Packages/Word7000Core CoachEvaluation --probe
 
       - name: Speaking history account isolation

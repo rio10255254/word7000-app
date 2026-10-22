@@ -181,7 +181,13 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
             } catch {
                 guard generation == id, !Task.isCancelled else { return }
                 state = .ready
-                message = L.t("這次無法在手機內辨識。錄音仍可回放，也可以自行輸入回答。", "On-device transcription was unavailable. Your recording can still be replayed, or you can type your answer.")
+                if case RecordingError.empty = error {
+                    message = L.t("沒有辨識到清楚的語音。可以先回放，再重新錄製或自行輸入。", "No clear speech was recognized. Replay the recording, then try another take or type your answer.")
+                } else if case RecordingError.permission = error {
+                    message = L.t("尚未允許語音辨識。可以到系統設定開啟，或繼續回放與自行輸入。", "Speech recognition is not allowed. Enable it in Settings, or keep using playback and typed answers.")
+                } else {
+                    message = L.t("這次無法在手機內辨識。錄音仍可回放，也可以自行輸入回答。", "On-device transcription was unavailable. Your recording can still be replayed, or you can type your answer.")
+                }
             }
             deadline?.cancel(); deadline = nil; cancelRecognition = nil
         }

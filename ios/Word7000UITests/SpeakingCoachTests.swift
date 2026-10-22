@@ -4,6 +4,17 @@ import UIKit
 /// Mock responses exercise the interface, not the quality of an on-device model.
 final class SpeakingCoachTests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
+    override func tearDown() {
+        if (testRun?.failureCount ?? 0) > 0 {
+            let app = XCUIApplication()
+            if app.state == .runningForeground {
+                let identifier = name.components(separatedBy: CharacterSet.alphanumerics.inverted)
+                    .filter { !$0.isEmpty }.joined(separator: "-")
+                snapshot(app, "studio-failure-" + identifier)
+            }
+        }
+        super.tearDown()
+    }
 
     func testOriginalPracticeWithoutCoachOverride() {
         let app = launch()
@@ -253,7 +264,9 @@ final class SpeakingCoachTests: XCTestCase {
         tap(app.buttons["settings-intelligence"], in: app)
         let toggle = app.switches["settings-ai-toggle"]
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
-        toggle.tap()
+        let control = toggle.switches.firstMatch
+        if control.exists { control.tap() } else { toggle.tap() }
+        wait(toggle, matching: "value == '0'")
         snapshot(app, "studio-ai-disabled-settings")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.navigationBars.buttons.element(boundBy: 0).tap()

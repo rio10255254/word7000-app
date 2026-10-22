@@ -9,7 +9,7 @@ struct SpeakingCoachView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @FocusState private var answerFocused: Bool
+    @State private var answerFocused = false
     @State private var pendingSubmission = false
     @State private var inputCommitFailed = false
     @State private var submittedAnswer: String?
@@ -161,22 +161,6 @@ struct SpeakingCoachView: View {
         .confirmationDialog(L.t("重新錄製會刪除上一段錄音", "A new take replaces the previous recording"), isPresented: $retakeOpen) {
             Button(L.t("重新錄製", "Record again"), role: .destructive) { beginRecording() }
         }
-        .onChange(of: answer) { _, text in
-            // SwiftUI may deliver the final keyboard correction after its native
-            // end-editing notification. The captured text is already current.
-            if text != submittedAnswer { session.reset() }
-            inputCommitFailed = false
-            Speaker.shared.stop()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UITextView.textDidEndEditingNotification)) { notification in
-            guard pendingSubmission, let editor = notification.object as? UITextView else { return }
-            #if DEBUG
-            // Force a final native edit in the UI regression, independently of
-            // the simulator's keyboard language/autocorrection preferences.
-            if let correction = provider.testingCommittedAnswer { editor.text = correction }
-            #endif
-            finishInput(committedText: editor.text)
-        }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)) { _ in
             finishInput(committedText: nil)
         }
@@ -202,12 +186,23 @@ struct SpeakingCoachView: View {
 
     private var answerSection: some View {
         Section {
-            TextEditor(text: $answer)
-                .focused($answerFocused)
+            PracticeAnswerEditor(text: $answer, focused: $answerFocused,
+                                 editable: recording.state != .recording && recording.state != .transcribing,
+                                 onEdit: { text in
+                                     if text != submittedAnswer { session.reset() }
+                                     inputCommitFailed = false
+                                     Speaker.shared.stop()
+                                 }, onCommit: { finishInput(committedText: $0) },
+                                 committedOverride: {
+                                     #if DEBUG
+                                     return pendingSubmission ? provider.testingCommittedAnswer : nil
+                                     #else
+                                     return nil
+                                     #endif
+                                 })
                 .frame(minHeight: 120, maxHeight: 220)
                 .accessibilityLabel(L.t("你的回答", "Your answer"))
                 .accessibilityIdentifier("coach-answer")
-                .disabled(recording.state == .recording || recording.state == .transcribing)
             if needsTranscriptReview {
                 Text(L.t("先確認辨識文字，必要時可直接修改。", "Review the transcript and edit any misheard words."))
                     .font(.footnote).foregroundStyle(.secondary)

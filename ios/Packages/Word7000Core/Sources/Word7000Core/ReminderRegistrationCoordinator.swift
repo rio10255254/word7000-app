@@ -24,12 +24,17 @@ public final class ReminderRegistrationCoordinator {
     private var timer: Task<Void, Never>?
     private var worker: Task<Void, Never>?
     private var paused = false
+    private var retiringOwner: String?
+    private var revocation: (generation: Int, completion: CheckedContinuation<Bool, Never>)?
+    private var revocationTimeout: Task<Void, Never>?
 
     public init() {}
 
     public func setOwner(_ owner: String?) {
         guard self.owner != owner else { return }
+        if let revocation { completeRevocation(false, generation: revocation.generation) }
         self.owner = owner
+        retiringOwner = nil
         generation &+= 1
         timer?.cancel()
         timer = nil
@@ -42,6 +47,7 @@ public final class ReminderRegistrationCoordinator {
     public func submit(owner: String, values: Row, delay: Duration = .seconds(10),
                        now: Date = Date(), upload: @escaping Upload) {
         setOwner(owner)
+        guard retiringOwner != owner else { return }
         var values = values
         values.removeValue(forKey: "updated_at")
         values.removeValue(forKey: "registration_updated_at")
@@ -56,9 +62,8 @@ public final class ReminderRegistrationCoordinator {
                 timer = nil
                 return
             }
-            lastMillisecond = max(lastMillisecond + 1, Int64((now.timeIntervalSince1970 * 1000).rounded(.down)))
             var row = values
-            row["updated_at"] = .string(DayMath.timestamp(Date(timeIntervalSince1970: Double(lastMillisecond) / 1000)))
+            row["updated_at"] = .string(nextTimestamp(now))
             pending = Snapshot(owner: owner, generation: generation, values: values, row: row, upload: upload)
         }
         timer?.cancel()
@@ -91,15 +96,62 @@ public final class ReminderRegistrationCoordinator {
 
     public func suspend() {
         paused = true
+        if let revocation { completeRevocation(false, generation: revocation.generation) }
         timer?.cancel()
         timer = nil
-        if pending == nil, let inFlight, inFlight.generation == generation { pending = inFlight }
+        if retiringOwner == nil, pending == nil, let inFlight, inFlight.generation == generation { pending = inFlight }
         acknowledged = nil
         worker?.cancel()
     }
 
     /// The caller submits a fresh snapshot before flushing again.
     public func resume() { paused = false }
+
+    /// A terminal write for this account. The timeout resumes the caller
+    /// directly; unlike a task group it does not wait for an uncooperative HTTP
+    /// request to finish. The writer slot remains occupied until it does.
+    public func revoke(owner: String, deviceId: String, timeout: Duration = .seconds(3),
+                       now: Date = Date(), upload: @escaping Upload) async -> Bool {
+        setOwner(owner)
+        guard retiringOwner != owner else { return false }
+        retiringOwner = owner
+        generation &+= 1
+        let current = generation
+        timer?.cancel()
+        timer = nil
+        pending = nil
+        acknowledged = nil
+        guard !paused, !Task.isCancelled else { return false }
+        let values: Row = ["user_id": .string(owner), "device_id": .string(deviceId), "enabled": .bool(false)]
+        var row = values
+        row["updated_at"] = .string(nextTimestamp(now))
+        return await withCheckedContinuation { completion in
+            revocation = (current, completion)
+            pending = Snapshot(owner: owner, generation: current, values: values, row: row, upload: upload)
+            revocationTimeout = Task { [weak self] in
+                do { try await Task.sleep(for: timeout) } catch { return }
+                self?.completeRevocation(false, generation: current)
+            }
+            startWorker()
+        }
+    }
+
+    private func nextTimestamp(_ now: Date) -> String {
+        lastMillisecond = max(lastMillisecond + 1, Int64((now.timeIntervalSince1970 * 1000).rounded(.down)))
+        return DayMath.timestamp(Date(timeIntervalSince1970: Double(lastMillisecond) / 1000))
+    }
+
+    private func completeRevocation(_ saved: Bool, generation: Int) {
+        guard let revocation, revocation.generation == generation else { return }
+        self.revocation = nil
+        revocationTimeout?.cancel()
+        revocationTimeout = nil
+        if !saved {
+            if pending?.generation == generation { pending = nil }
+            worker?.cancel()
+        }
+        revocation.completion.resume(returning: saved)
+    }
 
     private func startWorker() {
         guard !paused, worker == nil, pending != nil else { return }
@@ -126,6 +178,11 @@ public final class ReminderRegistrationCoordinator {
             inFlight = nil
             guard !Task.isCancelled else { return }
             guard next.generation == generation, next.owner == owner else { continue }
+            if revocation?.generation == next.generation {
+                if saved { acknowledged = next }
+                completeRevocation(saved, generation: next.generation)
+                return
+            }
             if saved {
                 acknowledged = next
             } else if pending == nil {

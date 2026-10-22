@@ -78,6 +78,18 @@ struct AppSettings: Codable, Equatable, Sendable {
             }
             speakingHistoryByOwner?[key] = history
         }
+        // Linking preserves the same learner; signing into a different ID
+        // must leave the anonymous history with its original owner.
+        if let ownerId, localOwnerId == ownerId, localOwnerIsAnonymous == true, !anonymous {
+            let guestKey = speakingHistoryOwnerKey
+            if let pending = speakingHistoryByOwner?.removeValue(forKey: guestKey) {
+                let key = Self.speakingHistoryKey(ownerId: ownerId, anonymous: false)
+                let history = ((speakingHistoryByOwner?[key] ?? []) + pending).reduce([String]()) {
+                    SpeakingPractice.remembering($1, in: $0)
+                }
+                speakingHistoryByOwner?[key] = history
+            }
+        }
         localOwnerId = ownerId
         localOwnerIsAnonymous = anonymous
     }

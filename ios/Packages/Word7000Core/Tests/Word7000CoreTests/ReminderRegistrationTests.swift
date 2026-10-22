@@ -264,4 +264,105 @@ final class ReminderRegistrationTests: XCTestCase {
         XCTAssertEqual(stamps.count, 4)
         for index in 1..<stamps.count { XCTAssertLessThan(stamps[index - 1], stamps[index]) }
     }
+
+    func testLogoutReplacesPendingWorkAndBlocksRefreshUntilOwnerChanges() async {
+        let queue = ReminderRegistrationCoordinator(), transport = Transport()
+        queue.submit(owner: "a", values: values(1), delay: .zero, upload: transport.send)
+        await transport.waitForCount(1)
+        queue.submit(owner: "a", values: values(2), delay: .zero, upload: transport.send)
+        let logout = Task { await queue.revoke(owner: "a", deviceId: "iphone", upload: transport.send) }
+        // Yield until revoke has replaced the pending registration.
+        for _ in 0..<20 { await Task.yield() }
+        queue.submit(owner: "a", values: values(3), delay: .zero, upload: transport.send)
+        transport.finish(0)
+        await transport.waitForCount(2)
+        XCTAssertEqual(transport.rows.last?["enabled"], .bool(false))
+        XCTAssertNil(transport.rows.last?["studied_today"])
+        if case let .string(first)? = transport.rows.first?["updated_at"],
+           case let .string(last)? = transport.rows.last?["updated_at"] { XCTAssertLessThan(first, last) }
+        transport.finish(1)
+        let disabled = await logout.value
+        XCTAssertTrue(disabled)
+        queue.submit(owner: "a", values: values(4), delay: .zero, upload: transport.send)
+        await queue.flush()
+        XCTAssertEqual(transport.rows.count, 2)
+        // A failed guest bootstrap leaves no new owner and must not reopen A.
+        queue.setOwner(nil)
+        await queue.flush()
+        XCTAssertEqual(transport.rows.count, 2)
+        queue.submit(owner: "guest", values: values(0), delay: .zero, upload: transport.send)
+        await transport.waitForCount(3)
+        XCTAssertEqual(transport.rows.last?["user_id"], .string("guest"))
+        transport.finish(2)
+        await queue.flush()
+        XCTAssertEqual(transport.peak, 1)
+    }
+
+    func testLogoutDeadlineDoesNotWaitForOldTransportOrDispatchAfterTimeout() async {
+        let queue = ReminderRegistrationCoordinator(), transport = Transport()
+        queue.submit(owner: "a", values: values(1), delay: .zero, upload: transport.send)
+        await transport.waitForCount(1)
+        var result: Bool?
+        var disableAttempts = 0
+        let logout = Task {
+            result = await queue.revoke(owner: "a", deviceId: "iphone", timeout: .milliseconds(20)) { _ in
+                disableAttempts += 1
+                return true
+            }
+        }
+        try? await Task.sleep(for: .milliseconds(150))
+        XCTAssertEqual(result, false, "Logout must return while the old request is still held")
+        queue.submit(owner: "a", values: values(9), delay: .zero, upload: transport.send)
+        transport.finish(0)
+        await logout.value
+        await queue.flush()
+        XCTAssertEqual(disableAttempts, 0)
+        XCTAssertEqual(transport.rows.count, 1)
+    }
+
+    func testLogoutTimeoutKeepsWriterOccupiedUntilDisableTransportFinishes() async {
+        let queue = ReminderRegistrationCoordinator(), transport = Transport()
+        var result: Bool?
+        let logout = Task {
+            result = await queue.revoke(owner: "a", deviceId: "iphone", timeout: .milliseconds(20), upload: transport.send)
+        }
+        await transport.waitForCount(1)
+        try? await Task.sleep(for: .milliseconds(150))
+        XCTAssertEqual(result, false)
+        queue.submit(owner: "guest", values: values(0), delay: .zero, upload: transport.send)
+        XCTAssertEqual(transport.rows.count, 1)
+        transport.finish(0)
+        await transport.waitForCount(2)
+        XCTAssertEqual(transport.rows.last?["user_id"], .string("guest"))
+        transport.finish(1)
+        await logout.value
+        await queue.flush()
+        XCTAssertEqual(transport.peak, 1)
+    }
+
+    func testFailedLogoutDisableDoesNotRetryOrAllowOldAccountRefresh() async {
+        let queue = ReminderRegistrationCoordinator()
+        var sent: [Row] = []
+        let disabled = await queue.revoke(owner: "a", deviceId: "iphone") { sent.append($0); return false }
+        XCTAssertFalse(disabled)
+        queue.submit(owner: "a", values: values(1), delay: .zero) { sent.append($0); return true }
+        await queue.flush()
+        XCTAssertEqual(sent.count, 1)
+        XCTAssertEqual(sent.first?["enabled"], .bool(false))
+    }
+
+    func testBackgroundExpirationCompletesLogoutWithoutWaitingForTransport() async {
+        let queue = ReminderRegistrationCoordinator(), transport = Transport()
+        let logout = Task { await queue.revoke(owner: "a", deviceId: "iphone", upload: transport.send) }
+        await transport.waitForCount(1)
+        queue.suspend()
+        let disabled = await logout.value
+        XCTAssertFalse(disabled)
+        transport.finish(0)
+        await queue.flush()
+        queue.resume()
+        queue.submit(owner: "a", values: values(2), delay: .zero, upload: transport.send)
+        await queue.flush()
+        XCTAssertEqual(transport.rows.count, 1)
+    }
 }

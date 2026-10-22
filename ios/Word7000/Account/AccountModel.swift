@@ -41,6 +41,7 @@ final class AccountModel {
 
     /// Uploading to the cloud is a Plus feature after the trial.
     @ObservationIgnored weak var plus: PlusModel?
+    @ObservationIgnored var beforeSignOut: (@MainActor (String, String) async -> Bool)?
     private let client: SupabaseClient?
     private unowned let app: AppModel
     @ObservationIgnored private var dirty = SyncDirty()
@@ -290,13 +291,24 @@ final class AccountModel {
     }
 
     func saveLiveActivityDevice(_ row: [String: JSONValue]) async -> Bool {
-        guard let client, let current = session else { return false }
+        guard let client, let current = session, !Task.isCancelled else { return false }
         let generation = identityGeneration
         do {
             let valid = try await validSession(client: client, current)
-            guard generation == identityGeneration else { return false }
+            guard generation == identityGeneration, !Task.isCancelled else { return false }
             try await client.saveLiveActivityDevice(row, session: valid)
             return generation == identityGeneration
+        } catch { return false }
+    }
+
+    func disableLiveActivityDevice(_ row: [String: JSONValue]) async -> Bool {
+        guard let client, let current = session, row["user_id"] == .string(current.user.id), !Task.isCancelled else { return false }
+        let generation = identityGeneration
+        do {
+            let valid = try await validSession(client: client, current)
+            guard generation == identityGeneration, !Task.isCancelled else { return false }
+            try await client.disableLiveActivityDevice(row, session: valid)
+            return generation == identityGeneration && !Task.isCancelled
         } catch { return false }
     }
 
@@ -416,7 +428,7 @@ final class AccountModel {
     // MARK: Sign out and delete
 
     func signOut() async {
-        guard let client, let current = session else { return }
+        guard let client, let current = session, !busy else { return }
         busy = true
         defer { busy = false }
         guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: current.user.id) else {
@@ -424,9 +436,14 @@ final class AccountModel {
             message = A.saveFailed
             return
         }
+        let generation = identityGeneration
+        let remindersDisabled = await beforeSignOut?(current.user.id, app.settings.deviceSourceId) ?? false
+        guard generation == identityGeneration else { return }
         dirty = SyncDirty(progress: true, customSets: true)
         await flush()
+        guard generation == identityGeneration else { return }
         try? await client.signOut(session: current)
+        guard generation == identityGeneration else { return }
         flushTask?.cancel()
         store(nil)
         dirty = SyncDirty()
@@ -435,6 +452,7 @@ final class AccountModel {
         app.setLocalOwner(nil, anonymous: true)
         message = A.signedOut
         await bootstrap()
+        if !remindersDisabled { message = A.signedOutReminderUnconfirmed }
     }
 
     func deleteAccount() async {
@@ -516,6 +534,7 @@ enum A {
     static var googleFailed: String { L.t("Google 登入沒有完成", "Google sign-in did not finish") }
     static var cancelled: String { L.t("已取消登入", "Sign-in cancelled") }
     static var signedOut: String { L.t("已登出", "Signed out") }
+    static var signedOutReminderUnconfirmed: String { L.t("已登出，但尚未確認停用這支手機的舊帳號提醒。", "Signed out, but reminders for the previous account on this iPhone could not be confirmed off.") }
     static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
     static var deleted: String { L.t("帳號已刪除", "Account deleted") }
     static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }

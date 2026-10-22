@@ -383,8 +383,60 @@ extension SupabaseClient {
         // The server silently ignores stale registrations. HTTP success alone
         // is not an acknowledgment of this snapshot.
         let saved = try decode([[String: JSONValue]].self, data)
-        guard saved.count == 1, saved[0]["user_id"] == row["user_id"], saved[0]["device_id"] == row["device_id"] else {
+        guard saved.count == 1, Self.matchesRegistration(saved[0], snapshot: row) else {
             throw SupabaseError(status: 409, code: "registration_not_saved", message: "Reminder registration was not saved")
         }
+    }
+
+    /// Only this account's device is changed; no token or reminder preferences
+    /// are needed, and unrelated devices are never disabled.
+    public func disableLiveActivityDevice(_ snapshot: [String: JSONValue], session: AuthSession) async throws {
+        guard snapshot["user_id"] == .string(session.user.id),
+              case let .string(deviceId)? = snapshot["device_id"],
+              let timestamp = snapshot["updated_at"], Self.registrationDate(timestamp) != nil,
+              snapshot["enabled"] == .bool(false), !Task.isCancelled else { throw CancellationError() }
+        let data = try await request("PATCH", "rest/v1/live_activity_devices",
+                                     query: ["user_id": "eq.\(session.user.id)", "device_id": "eq.\(deviceId)"],
+                                     body: .object(["enabled": .bool(false), "updated_at": timestamp]), session: session,
+                                     headers: ["Prefer": "return=representation"])
+        let saved = try decode([[String: JSONValue]].self, data)
+        guard saved.count == 1, Self.matchesRegistration(saved[0], snapshot: snapshot) else {
+            if saved.isEmpty {
+                // Empty PATCH means either no registration or a rejected stale
+                // write. Only confirmed absence is a successful no-op logout.
+                try Task.checkCancellation()
+                let existing = try await request("GET", "rest/v1/live_activity_devices",
+                                                 query: ["user_id": "eq.\(session.user.id)", "device_id": "eq.\(deviceId)",
+                                                         "select": "user_id", "limit": "1"], session: session)
+                if try decode([[String: JSONValue]].self, existing).isEmpty { return }
+            }
+            throw SupabaseError(status: 409, code: "registration_not_saved", message: "Reminder disable was not confirmed")
+        }
+    }
+
+    private static func matchesRegistration(_ saved: [String: JSONValue], snapshot: [String: JSONValue]) -> Bool {
+        guard case .string(_)? = snapshot["device_id"],
+              let expectedTime = registrationDate(snapshot["updated_at"]),
+              let savedTime = registrationDate(saved["registration_updated_at"] ?? saved["updated_at"]),
+              expectedTime == savedTime else { return false }
+        // An equal-timestamp retry may return OLD. Verify the entire submitted
+        // registration, not just its IDs; cron-only fields are not submitted.
+        return snapshot.allSatisfy { key, value in
+            if key == "updated_at" || key == "registration_updated_at" { return true }
+            if key == "streak_expires_at", value != .null {
+                guard let expected = registrationDate(value), let actual = registrationDate(saved[key]) else { return false }
+                return expected == actual
+            }
+            return saved[key] == value
+        }
+    }
+
+    private static func registrationDate(_ value: JSONValue?) -> Date? {
+        guard case let .string(text)? = value else { return nil }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: text) { return date }
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: text)
     }
 }

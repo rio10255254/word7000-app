@@ -37,6 +37,12 @@ struct Word7000App: App {
                 .preferredColorScheme(model.settings.theme.colorScheme)
                 .tint(Palette.accent)
                 .task {
+                    account.beforeSignOut = { [weak account, registrations] owner, deviceId in
+                        await registrations.revoke(owner: owner, deviceId: deviceId) { [weak account] row in
+                            guard let account else { return false }
+                            return await account.disableLiveActivityDevice(row)
+                        }
+                    }
                     await account.bootstrap()
                     await account.checkReminderSupport()
                     await refreshReminders()

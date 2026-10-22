@@ -28,6 +28,17 @@ function fallbackProgress(): ProgressState {
 }
 
 describe('local progress storage', () => {
+  test('retains the protection date and rejects malformed protection values', () => {
+    const storage = new MemoryStorage();
+    const progress = { ...fallbackProgress(), streakFreezeDate: '2026-10-02' };
+    saveProgressToStorage(storage, progress);
+    expect(loadProgressFromStorage(storage, fallbackProgress())).toEqual(progress);
+    for (const streakFreezeDate of [123, {}, [], true]) {
+      storage.setItem(progressStorageKey(), JSON.stringify({ ...progress, streakFreezeDate }));
+      expect(loadProgressFromStorage(storage, fallbackProgress())).toEqual(fallbackProgress());
+    }
+  });
+
   test('saves and loads progress from browser storage', () => {
     const storage = new MemoryStorage();
     const progress: ProgressState = {

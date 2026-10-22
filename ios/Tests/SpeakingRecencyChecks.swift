@@ -41,7 +41,7 @@ check(settings.currentRecentSpeakingIds == ["offline-after-signout"], "A new ano
 settings.setLocalOwner("guest-server-id", anonymous: true)
 check(settings.currentRecentSpeakingIds == ["guest-old", "guest-new"], "Returning to the original anonymous ID restores only its history")
 settings.setLocalOwner("another-guest-id", anonymous: false)
-check(settings.currentRecentSpeakingIds.isEmpty, "Linking the same guest ID to a permanent account still isolates history")
+check(settings.currentRecentSpeakingIds.isEmpty, "Switching to a different permanent ID cannot claim even that ID's saved guest history")
 settings.setLocalOwner("B", anonymous: false)
 check(settings.currentRecentSpeakingIds == ["b-only"], "B retains its own history")
 settings.forgetSpeakingHistory(ownerId: "A", anonymous: false)
@@ -60,6 +60,47 @@ check(settings.currentRecentSpeakingIds.isEmpty, "Deleted anonymous history cann
 settings.setLocalOwner(nil, anonymous: true)
 settings.setLocalOwner("third-guest-id", anonymous: true)
 check(settings.currentRecentSpeakingIds.isEmpty, "Previously claimed local guest history cannot seed another anonymous account")
+
+var linking = AppSettings()
+linking.setLocalOwner("linked", anonymous: true)
+linking.rememberSpeaking("shared")
+linking.rememberSpeaking("guest-latest")
+linking.speakingHistoryByOwner?["account:linked"] = ["account-only", "shared"]
+linking.speakingHistoryByOwner?["account:other"] = ["other-only"]
+var differentAccount = linking
+differentAccount.setLocalOwner("other", anonymous: false)
+check(differentAccount.currentRecentSpeakingIds == ["other-only"], "A different permanent account receives no anonymous history")
+differentAccount.setLocalOwner("linked", anonymous: true)
+check(differentAccount.currentRecentSpeakingIds == ["shared", "guest-latest"], "Switching to another account leaves the original anonymous history intact")
+
+linking.setLocalOwner("linked", anonymous: false)
+check(linking.currentRecentSpeakingIds == ["account-only", "shared", "guest-latest"], "Same-ID linking merges both histories with current guest practice most recent")
+check(linking.speakingHistoryByOwner?["guest:linked"] == nil, "Same-ID linking moves rather than copies the anonymous history")
+check(linking.speakingHistoryByOwner?["account:other"] == ["other-only"], "Linking does not change another account")
+linking = try roundTrip(linking)
+linking.setLocalOwner("linked", anonymous: false)
+check(linking.currentRecentSpeakingIds == ["account-only", "shared", "guest-latest"], "Linked history survives restart and repeated activation without duplicates")
+linking.forgetSpeakingHistory(ownerId: "linked", anonymous: false)
+linking.setLocalOwner("linked", anonymous: true)
+check(linking.currentRecentSpeakingIds.isEmpty, "Deleted linked history cannot return from an old anonymous copy")
+linking.setLocalOwner("linked", anonymous: false)
+check(linking.currentRecentSpeakingIds.isEmpty, "Relinking cannot recreate deleted history")
+
+var legacyLink = AppSettings()
+legacyLink.localOwnerId = "legacy-linked"
+legacyLink.localOwnerIsAnonymous = true
+legacyLink.recentSpeakingIds = ["legacy-question"]
+legacyLink.setLocalOwner("legacy-linked", anonymous: false)
+check(legacyLink.currentRecentSpeakingIds == ["legacy-question"], "Same-ID linking also preserves unmigrated legacy history")
+check(legacyLink.recentSpeakingIds == nil && legacyLink.speakingHistoryByOwner?["guest:legacy-linked"] == nil, "Legacy linking leaves no old copy to replay")
+
+var boundedLink = AppSettings()
+boundedLink.setLocalOwner("bounded", anonymous: true)
+boundedLink.speakingHistoryByOwner?["account:bounded"] = (0..<SpeakingPractice.recentLimit).map { "word-\($0)" }
+boundedLink.rememberSpeaking("word-\(SpeakingPractice.recentLimit - 1)")
+boundedLink.rememberSpeaking("word-\(SpeakingPractice.recentLimit)")
+boundedLink.setLocalOwner("bounded", anonymous: false)
+check(boundedLink.currentRecentSpeakingIds == (1...SpeakingPractice.recentLimit).map { "word-\($0)" }, "Linking deduplicates overlap, drops the oldest entry and retains exactly the history limit")
 
 for anonymous in [false, true] {
     var old = AppSettings()

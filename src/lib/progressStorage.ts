@@ -23,6 +23,7 @@ export function isProgressState(value: unknown): value is ProgressState {
     typeof progress.studiedToday !== 'number' ||
     (progress.dailyProgressDate !== undefined && typeof progress.dailyProgressDate !== 'string') ||
     (progress.lastStudyDate !== undefined && typeof progress.lastStudyDate !== 'string') ||
+    (progress.streakFreezeDate !== undefined && typeof progress.streakFreezeDate !== 'string') ||
     (progress.analytics !== undefined && !isLearningAnalyticsState(progress.analytics)) ||
     !progress.words ||
     typeof progress.words !== 'object' ||

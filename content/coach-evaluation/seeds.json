@@ -40,13 +40,13 @@
   ["zh14","chinese","設備","equipment","What does your club need?","社團需要添購兩台設備，但還沒決定買哪一種。","accept","Do not invent a device type; Chinese classifiers need not mirror English countability."],
   ["zh15","chinese","有趣","interesting","What did you enjoy recently?","昨天逛夜市很有趣，下次還想再去。","accept","Preserve informal Taiwan style and the desire to return."],
   ["zh16","chinese","安靜","quiet","Where do you like to study?","我喜歡去車站附近那間安靜的咖啡廳讀書。","accept","Do not invent a cafe name or location."],
-  ["zh17","chinese","興趣","interest","Which class do you enjoy?","我對歷史很有興趣，尤其喜歡聽老師說故事。","accept","Preserve the speaker's interest rather than saying history is objectively easy."],
+  ["zh17","chinese","興趣","interest","Which class do you enjoy?","我很興趣對歷史，尤其喜歡聽老師說故事。","correct","Repair the order to 我對歷史很有興趣; preserve the interest in the teacher's stories."],
   ["zh18","chinese","資料","information","What did the guide give you?","導遊給了我們一些步道的資料。","accept","Do not change the recipient or invent safety advice."],
   ["zh19","chinese","舉手","raise a hand","How do students ask questions?","有問題的話可以先舉手。","accept","Accept subject omission in natural Chinese."],
   ["zh20","chinese","記得","remember","What do you do before leaving?","出門前要記得鎖門。","accept","Do not force an explicit subject or unnecessary tense markers."],
   ["zh21","chinese","旅行","travel","What did you do last summer?","去年暑假我和姊姊去台南旅行。","accept","姊姊 is a valid Taiwan spelling; do not force 姐姐."],
-  ["zh22","chinese","支持","support","Who supports your decision?","家人都很支持我的決定。","accept","Do not add a reason or a career choice."],
+  ["zh22","chinese","支持","support","Who supports your decision?","家人都很支持的我的決定。","correct","Remove the redundant 的 between 支持 and 我的決定; do not invent a career choice."],
   ["zh23","chinese","幫忙","help","How do you help at home?","我星期天會幫媽媽煮晚餐。","accept","Helping can be expressed with 幫, not necessarily the entire target 幫忙."],
   ["zh24","chinese","因為","because","Why were you late?","因為公車晚到，所以我遲到了。","accept","因為 and 所以 together are natural Chinese; do not apply English because/so rules."],
-  ["zh25","chinese","正在","currently","What is your friend doing now?","他正在圖書館看書。","accept","正在 precedes the location here naturally; do not invent who 他 refers to."]
+  ["zh25","chinese","正在","currently","What is your friend doing now?","他正在圖書館看一個書。","correct","Use 一本書 rather than 一個書. Preserve the location and do not invent who 他 refers to."]
 ]

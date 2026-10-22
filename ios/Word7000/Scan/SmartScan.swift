@@ -33,7 +33,7 @@ enum SmartScan {
     }
 
     /// Whether the on-device model can help on this iPhone.
-    static var canOrganize: Bool {
+    @MainActor static var canOrganize: Bool {
         guard IntelligenceSettings.shared.scanAllowed else { return false }
         #if canImport(FoundationModels)
         if #available(iOS 26.0, *) { return SystemLanguageModel.default.isAvailable }
@@ -43,7 +43,7 @@ enum SmartScan {
 
     /// Asks the on-device model to copy word / meaning pairs out of the
     /// recognised text, then keeps only the pairs that are on the page.
-    static func organize(text: String) async -> [ScannedWordCandidate] {
+    @MainActor static func organize(text: String) async -> [ScannedWordCandidate] {
         #if canImport(FoundationModels)
         if #available(iOS 26.0, *), canOrganize, SystemLanguageModel.default.isAvailable {
             var chunks: [String] = [], current = ""

@@ -78,7 +78,7 @@ struct RootView: View {
             })
         }
         .fullScreenCover(item: $activity, onDismiss: {
-            guard let next = pendingActivity else { return }
+            guard let next = pendingActivity else { openRequestedPractice(); return }
             pendingActivity = nil
             activity = next
         }) { activity in
@@ -107,7 +107,11 @@ struct RootView: View {
             }
         }
         .fullScreenCover(isPresented: $welcomeOpen, onDismiss: {
-            if studyAfterWelcome { studyAfterWelcome = false; activity = .study }
+            if studyAfterWelcome {
+                studyAfterWelcome = false
+                PracticeLaunch.shared.requested = nil
+                activity = .study
+            } else { openRequestedPractice() }
         }) {
             WelcomeView { mode, target, practice in
                 model.settings.onboardingComplete = true
@@ -122,8 +126,6 @@ struct RootView: View {
         }
         .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
         .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }
-        .onChange(of: activity) { _, next in if next == nil { openRequestedPractice() } }
-        .onChange(of: welcomeOpen) { _, open in if !open { openRequestedPractice() } }
         .task { await IntelligenceSettings.shared.refreshPolicy() }
         .onOpenURL { url in
             guard url.scheme == "word7000", url.host == "study", !welcomeOpen else { return }
@@ -153,6 +155,10 @@ struct RootView: View {
     }
 
     private func openRequestedPractice() {
+        if let requested = PracticeLaunch.shared.requested, requested == activity {
+            PracticeLaunch.shared.requested = nil
+            return
+        }
         guard !welcomeOpen, model.settings.onboardingComplete == true, activity == nil,
               !signInForScan, plus.paywallReason == nil,
               let requested = PracticeLaunch.shared.requested else { return }

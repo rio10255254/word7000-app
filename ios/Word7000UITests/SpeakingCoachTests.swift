@@ -241,6 +241,26 @@ final class SpeakingCoachTests: XCTestCase {
         closeCoach(app)
     }
 
+    func testAISettingsDisableSuggestionsButKeepRecordingAndText() {
+        let app = launch(coach: "success", englishUI: true)
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        tap(app.buttons["me-settings"], in: app)
+        tap(app.buttons["settings-intelligence"], in: app)
+        let toggle = app.switches["settings-ai-toggle"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.tap()
+        snapshot(app, "studio-ai-disabled-settings")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.tabBars.buttons.element(boundBy: 0).tap()
+        openSpeaking(app)
+        openCoach(app)
+        XCTAssertFalse(app.buttons["coach-submit"].exists)
+        reveal(app.buttons["coach-record"], in: app, scrollingUp: false)
+        XCTAssertTrue(app.buttons["coach-record"].isEnabled)
+        closeCoach(app)
+    }
+
     private func openSpeaking(_ app: XCUIApplication) {
         tap(app.buttons["today-speaking"], in: app)
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))

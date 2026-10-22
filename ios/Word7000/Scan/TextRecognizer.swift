@@ -39,7 +39,8 @@ enum TextRecognizer {
             }
             try Task.checkCancellation()
             let recovered = found.count
-            if (recovered == 0 || Double(recovered) < Double(expected) * 0.7), SmartScan.canOrganize {
+            let assistanceAllowed = await SmartScan.canOrganize
+            if (recovered == 0 || Double(recovered) < Double(expected) * 0.7), assistanceAllowed {
                 found = ScanGrounding.merging(primary: found, supplemental: await SmartScan.organize(text: rows.map(\.text).joined(separator: "\n")))
             }
             try Task.checkCancellation()

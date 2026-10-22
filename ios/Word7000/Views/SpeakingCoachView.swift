@@ -29,6 +29,7 @@ struct SpeakingCoachView: View {
         !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && !pendingSubmission && !session.isBusy && !provider.isBusy
             && !recording.busy && !needsTranscriptReview
+            && answer.count <= SpeakingCoach.maximumAnswerCharacters
     }
 
     private var visibleFailure: String? {
@@ -127,7 +128,8 @@ struct SpeakingCoachView: View {
         .task(id: answer) {
             do { try await Task.sleep(for: .milliseconds(250)) } catch { return }
             guard !Task.isCancelled else { return }
-            reflection = SpeakingRecorder.reflection(answer: String(answer.prefix(1200)), target: request.keyword, chinese: request.mode == .chinese)
+            guard answer.count <= SpeakingCoach.maximumAnswerCharacters else { reflection = nil; return }
+            reflection = SpeakingRecorder.reflection(answer: answer, target: request.keyword, chinese: request.mode == .chinese)
         }
         .onChange(of: recording.transcript) { _, value in
             guard let value else { return }
@@ -197,6 +199,10 @@ struct SpeakingCoachView: View {
                     .font(.footnote).foregroundStyle(.secondary)
                 Button(L.t("文字已確認", "Transcript checked")) { needsTranscriptReview = false }
                     .accessibilityIdentifier("coach-confirm-transcript")
+            }
+            if answer.count > SpeakingCoach.maximumAnswerCharacters {
+                Text(L.t("請將回答精簡至 600 字以內再取得建議。", "Shorten your answer to 600 characters before requesting suggestions."))
+                    .font(.footnote).foregroundStyle(Palette.miss)
             }
             HStack {
                 Spacer()

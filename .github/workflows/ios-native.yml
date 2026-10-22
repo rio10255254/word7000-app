@@ -30,7 +30,7 @@ on:
       checks:
         description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy', 'coach', 'compile']
+        options: ['all', 'copy', 'coach', 'compile', 'polish']
         default: 'all'
 
 permissions:
@@ -160,6 +160,8 @@ jobs:
             TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
           elif [ "$CHECKS" = "coach" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
+          elif [ "$CHECKS" = "polish" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testMockAIDisabledStillExplainsStatusAndAllowsPractice -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState)
           fi
           xcodebuild test \
             -project ios/Word7000.xcodeproj \
@@ -174,7 +176,7 @@ jobs:
           exit $status
 
       - name: Coach Release build excludes debug responses
-        if: inputs.checks == 'coach'
+        if: inputs.checks == 'coach' || inputs.checks == 'polish'
         run: |
           set -euo pipefail
           xcodebuild build -project ios/Word7000.xcodeproj -scheme Word7000 \

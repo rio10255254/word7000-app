@@ -126,7 +126,10 @@ jobs:
                   if not name.startswith("iPhone"):
                       continue
                   preferred = "SE" in name if requested_major == 18 else "Pro" in name and "Max" not in name
-                  score = (version(runtime), preferred, name)
+                  # The preferred model wins over a newer point release: runner
+                  # images can add new form factors (e.g. iPhone Duo on 27.1)
+                  # whose layouts the walkthrough was never written for.
+                  score = (preferred, version(runtime), name)
                   if best is None or score > best[0]:
                       best = (score, item["udid"], name, runtime)
           if best is None:

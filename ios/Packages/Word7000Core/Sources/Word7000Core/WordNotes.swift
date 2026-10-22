@@ -1,0 +1,43 @@
+import Foundation
+
+/// A deliberately small, reviewed editorial pack, not generated at runtime.
+public enum WordNotes {
+    public struct Note: Equatable, Sendable {
+        public let word: String
+        public let contrast: String
+        public let explanationZh: String
+        public let explanationEn: String
+        public let collocation: String
+        public let example: String
+        public let translation: String
+    }
+    public static func note(for word: String) -> Note? {
+        all.first { $0.word == word.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) }
+    }
+    public static let all: [Note] = [
+        .init(word: "affect", contrast: "effect", explanationZh: "affect 常作動詞，表示影響；effect 常作名詞，表示影響或效果。", explanationEn: "Affect is usually a verb meaning influence; effect is usually a noun meaning a result.", collocation: "affect your sleep", example: "Drinking coffee late at night can affect your sleep.", translation: "太晚喝咖啡可能會影響睡眠。"),
+        .init(word: "effect", contrast: "affect", explanationZh: "說某件事帶來的效果，常用 have an effect on。", explanationEn: "Use have an effect on to describe the result or influence of something.", collocation: "have an effect on", example: "The new bus route has had a positive effect on local businesses.", translation: "新公車路線對附近商家帶來了正面影響。"),
+        .init(word: "accept", contrast: "except", explanationZh: "accept 是接受；except 是除了。兩個字發音接近，意思不同。", explanationEn: "Accept means receive or agree to; except means excluding.", collocation: "accept an offer", example: "I decided to accept the offer after talking with my family.", translation: "和家人討論後，我決定接受這個提議。"),
+        .init(word: "except", contrast: "accept", explanationZh: "except 用來排除一部分，例如除了星期一以外。", explanationEn: "Except leaves someone or something out of a group.", collocation: "except on Mondays", example: "The museum is open every day except Monday.", translation: "這間博物館除了星期一以外，每天都開放。"),
+        .init(word: "adapt", contrast: "adopt", explanationZh: "adapt 是適應或調整，常接 to；adopt 是採用或收養。", explanationEn: "Adapt means adjust, often with to; adopt means take up or legally become a parent to.", collocation: "adapt to change", example: "It took me a month to adapt to my new school.", translation: "我花了一個月才適應新學校。"),
+        .init(word: "adopt", contrast: "adapt", explanationZh: "adopt 除了收養，也能表示採用做法或政策。", explanationEn: "Adopt can mean begin using an approach or policy, as well as adopt a child.", collocation: "adopt a policy", example: "Our team decided to adopt a simpler way of sharing files.", translation: "我們團隊決定採用更簡單的檔案分享方式。"),
+        .init(word: "advice", contrast: "advise", explanationZh: "advice 是不可數名詞。說一個建議可用 a piece of advice，不說 an advice。", explanationEn: "Advice is an uncountable noun. Use a piece of advice, not an advice.", collocation: "ask for advice", example: "I asked my teacher for advice about choosing a university.", translation: "我請老師給我一些選大學的建議。"),
+        .init(word: "advise", contrast: "advice", explanationZh: "advise 是動詞，常用 advise someone to do something。", explanationEn: "Advise is a verb. A common pattern is advise someone to do something.", collocation: "advise someone to", example: "My teacher advised me to visit the campus before deciding.", translation: "老師建議我先去校園看看，再做決定。"),
+        .init(word: "borrow", contrast: "lend", explanationZh: "borrow 是向別人借入，常接 from；lend 是借給別人。", explanationEn: "Borrow means receive something temporarily, often from someone; lend means give it temporarily.", collocation: "borrow from", example: "Could I borrow your umbrella until tomorrow?", translation: "我可以借你的雨傘用到明天嗎？"),
+        .init(word: "lend", contrast: "borrow", explanationZh: "lend 是借出，可說 lend someone something 或 lend something to someone。", explanationEn: "Lend means give temporarily. Use lend someone something or lend something to someone.", collocation: "lend a book to someone", example: "Could you lend me your notes for the weekend?", translation: "你可以把筆記借我看一個週末嗎？"),
+        .init(word: "economic", contrast: "economical", explanationZh: "economic 指經濟相關；economical 指省錢或省資源。", explanationEn: "Economic relates to the economy; economical means avoiding waste or saving money.", collocation: "economic growth", example: "The report compares economic growth in several cities.", translation: "這份報告比較了幾座城市的經濟成長。"),
+        .init(word: "economical", contrast: "economic", explanationZh: "economical 強調使用起來省錢或不浪費，不只是購買價格低。", explanationEn: "Economical describes low running costs or efficient use of resources, not just a low purchase price.", collocation: "economical to run", example: "This small car is economical to run.", translation: "這台小車的日常使用成本很低。"),
+        .init(word: "sensible", contrast: "sensitive", explanationZh: "sensible 是明智、合理；sensitive 是敏感、容易受影響。", explanationEn: "Sensible means reasonable and practical; sensitive means easily affected or aware of feelings.", collocation: "a sensible decision", example: "Taking the train was a sensible decision in such heavy rain.", translation: "雨下得這麼大，搭火車是個明智的決定。"),
+        .init(word: "sensitive", contrast: "sensible", explanationZh: "對某事敏感可用 sensitive to，不是 sensible to。", explanationEn: "Use sensitive to for something that easily affects a person or thing.", collocation: "sensitive to noise", example: "My younger brother is sensitive to loud noises.", translation: "我弟弟對很大的聲音很敏感。"),
+        .init(word: "principal", contrast: "principle", explanationZh: "principal 可指校長，也可作形容詞表示主要的。", explanationEn: "Principal can mean a school head, or main when used as an adjective.", collocation: "the principal reason", example: "The principal reason for moving was to live closer to work.", translation: "搬家的主要原因是想住得離公司近一點。"),
+        .init(word: "principle", contrast: "principal", explanationZh: "principle 是原則或原理，字尾是 ple，不是 pal。", explanationEn: "Principle is a rule, belief or underlying idea; its ending is ple, not pal.", collocation: "a basic principle", example: "Fairness is an important principle in our classroom.", translation: "公平是我們班上很重視的原則。"),
+        .init(word: "quiet", contrast: "quite", explanationZh: "quiet 是安靜，字尾是 et；quite 是相當，字尾是 te。", explanationEn: "Quiet means not noisy and ends in et; quite is an adverb and ends in te.", collocation: "a quiet place", example: "We found a quiet place to study near the library.", translation: "我們在圖書館附近找到一個安靜的讀書地方。"),
+        .init(word: "quite", contrast: "quiet", explanationZh: "quite 可表示相當，常放在形容詞前面；不要和安靜的 quiet 混淆。", explanationEn: "Quite often means fairly or rather before an adjective; do not confuse it with quiet.", collocation: "quite difficult", example: "The first exercise was quite difficult, but the next one was easier.", translation: "第一個練習相當難，不過下一個比較簡單。"),
+        .init(word: "personal", contrast: "personnel", explanationZh: "personal 是個人的或私人的；personnel 指員工或人事。", explanationEn: "Personal relates to an individual or private life; personnel refers to staff.", collocation: "personal information", example: "Please do not share other people's personal information.", translation: "請不要分享別人的個人資料。"),
+        .init(word: "personnel", contrast: "personal", explanationZh: "personnel 指一個組織的工作人員，重音通常在最後一節。", explanationEn: "Personnel means the people employed by an organization, with stress on the final syllable.", collocation: "medical personnel", example: "Medical personnel stayed at the station to help injured passengers.", translation: "醫護人員留在車站協助受傷的乘客。"),
+        .init(word: "lose", contrast: "loose", explanationZh: "lose 是失去，只有一個 o；loose 是鬆的，有兩個 o。", explanationEn: "Lose means fail to keep and has one o; loose means not tight and has two.", collocation: "lose your keys", example: "Keep your ticket in your wallet so you do not lose it.", translation: "把票放在皮夾裡，才不會弄丟。"),
+        .init(word: "loose", contrast: "lose", explanationZh: "loose 常作形容詞，表示不緊、不牢固，不是失去的 lose。", explanationEn: "Loose usually describes something not tight or firmly attached, unlike the verb lose.", collocation: "a loose button", example: "One of the buttons on my coat is loose.", translation: "我外套上的一顆鈕扣鬆了。"),
+        .init(word: "raise", contrast: "rise", explanationZh: "raise 表示把某物提高，後面通常有受詞；rise 表示自己上升。", explanationEn: "Raise normally takes an object: you raise something. Rise describes going up without an object.", collocation: "raise your hand", example: "Please raise your hand if you have a question.", translation: "有問題的話，請舉手。"),
+        .init(word: "rise", contrast: "raise", explanationZh: "rise 的過去式是 rose，過去分詞是 risen；不是 raised。", explanationEn: "Rise has the past tense rose and past participle risen; raised belongs to raise.", collocation: "prices rise", example: "Prices often rise when demand increases.", translation: "需求增加時，價格通常也會上漲。")
+    ]
+}

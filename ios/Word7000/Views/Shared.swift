@@ -99,6 +99,13 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
 
+    func stopAndRelease() async {
+        stop()
+        await withCheckedContinuation { continuation in
+            audioQueue.async { continuation.resume() }
+        }
+    }
+
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         Task { @MainActor in if activeUtterance === utterance { stop() } }
     }

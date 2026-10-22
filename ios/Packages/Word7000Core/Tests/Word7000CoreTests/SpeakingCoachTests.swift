@@ -195,7 +195,7 @@ final class SpeakingCoachTests: XCTestCase {
             XCTAssertTrue(instructions.contains("Never invent facts to force the keyword"))
             XCTAssertLessThanOrEqual(instructions.utf8.count, SpeakingCoach.maximumInstructionsUTF8Bytes)
         }
-        XCTAssertEqual(SpeakingCoach.maximumInstructionsUTF8Bytes, 900)
+        XCTAssertEqual(SpeakingCoach.maximumInstructionsUTF8Bytes, 1100)
     }
 
     func testFeedbackRequiresEveryFieldAndRejectsOverlength() throws {

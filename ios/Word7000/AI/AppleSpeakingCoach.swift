@@ -10,7 +10,7 @@ final class AppleSpeakingCoach {
     static let shared = AppleSpeakingCoach()
 
     enum Availability: Equatable {
-        case unsupported, disabled, preparing, unsupportedLanguage, unavailable, ready
+        case unsupported, disabled, preparing, unsupportedLanguage, unavailable, paused, ready
 
         var showsEntry: Bool { self != .unsupported }
     }
@@ -21,6 +21,7 @@ final class AppleSpeakingCoach {
     private init() { refreshAvailability() }
 
     func refreshAvailability() {
+        guard IntelligenceSettings.shared.coachAllowed else { availability = .paused; return }
         #if DEBUG
         if let fixture {
             availability = fixture == .unavailable ? .disabled : .ready
@@ -70,8 +71,11 @@ final class AppleSpeakingCoach {
                 refreshAvailability()
                 guard availability == .ready else { throw SpeakingCoach.Failure.unavailable }
                 return try SpeakingCoach.Feedback(
-                    rewrite: response.content.rewrite, tip: response.content.tip, followUp: response.content.followUp
-                ).validated()
+                    rewrite: response.content.rewrite, tip: response.content.tip, followUp: response.content.followUp,
+                    corrections: response.content.corrections.map {
+                        .init(original: $0.original, replacement: $0.replacement, reason: $0.reason)
+                    }
+                ).validated(answer: request.answer)
             } catch {
                 try Task.checkCancellation()
                 if error is CancellationError { throw CancellationError() }
@@ -136,5 +140,18 @@ private struct CoachResponse {
     var tip: String
     @Guide(description: "One brief related follow-up question in the language being learned.")
     var followUp: String
+    @Guide(description: "Zero to two clear errors, not stylistic preferences. Empty if the answer is correct or you are uncertain.")
+    var corrections: [CoachCorrection]
+}
+
+@available(iOS 26.0, *)
+@Generable
+private struct CoachCorrection {
+    @Guide(description: "Exact quote from the student's answer, at most 120 characters. Never invent a quote.")
+    var original: String
+    @Guide(description: "Correction preserving the learner's meaning, at most 160 characters.")
+    var replacement: String
+    @Guide(description: "Brief reason in the interface language, at most 180 characters.")
+    var reason: String
 }
 #endif

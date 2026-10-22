@@ -13,11 +13,7 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertFalse(question.isEmpty)
         XCTAssertTrue(app.buttons["speaking-show-reference"].isEnabled)
         XCTAssertTrue(app.buttons["speaking-complete"].isEnabled)
-        if #available(iOS 26, *) {
-            // Actual device eligibility is intentionally not overridden here.
-        } else {
-            XCTAssertFalse(app.buttons["speaking-coach-open"].exists)
-        }
+        XCTAssertTrue(app.buttons["speaking-coach-open"].exists, "Recording and reflection remain available without AI")
 
         app.buttons["speaking-show-reference"].tap()
         let reference = app.staticTexts["speaking-reference-answer"]
@@ -163,13 +159,13 @@ final class SpeakingCoachTests: XCTestCase {
         // The fixture means AI is turned off, not an unsupported device.
         XCTAssertTrue(unavailable.label.contains("\u{958B}\u{555F} Apple Intelligence"))
         XCTAssertTrue(app.navigationBars["\u{53E3}\u{8AAA}\u{6559}\u{7DF4}"].exists)
-        XCTAssertFalse(app.textViews["coach-answer"].exists)
+        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
         XCTAssertFalse(app.buttons["coach-submit"].exists)
         XCTAssertFalse(app.buttons["coach-cancel"].exists)
         assertNoFeedback(app)
         tap(app.buttons["coach-check-again"], in: app)
         XCTAssertTrue(unavailable.exists)
-        XCTAssertFalse(app.textViews["coach-answer"].exists)
+        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
         XCTAssertFalse(app.buttons["coach-submit"].exists)
         snapshot(app, "coach-mock-light-zh-ai-off")
         closeCoach(app)
@@ -183,15 +179,66 @@ final class SpeakingCoachTests: XCTestCase {
         wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
     }
 
-    private func launch(coach: String? = nil, dark: Bool = false, englishUI: Bool = false) -> XCUIApplication {
+    private func launch(coach: String? = nil, dark: Bool = false, englishUI: Bool = false, recording: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", dark ? "-uiTestingDark" : "-uiTestingLight",
                                "-uiTestingSampleProgress", "-uiTestingFakePlans"]
         if let coach { app.launchArguments += ["-uiTestingCoach", coach] }
+        if recording { app.launchArguments.append("-uiTestingRecording") }
         if englishUI { app.launchArguments.append("-uiTestingChineseMode") }
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         return app
+    }
+
+    func testRecordingReviewPlaybackAndDeletionWithExplicitFixture() {
+        let app = launch(coach: "success", englishUI: true, recording: true)
+        openSpeaking(app)
+        openCoach(app)
+        reveal(app.buttons["coach-record"], in: app, scrollingUp: false)
+        tap(app.buttons["coach-record"], in: app)
+        app.buttons["coach-record"].tap()
+        let playback = app.buttons["coach-play-recording"]
+        tap(playback, in: app)
+        XCTAssertTrue(playback.label.contains("Stop"))
+        playback.tap()
+        tap(app.buttons["coach-transcribe"], in: app)
+        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "I practice with my friend every day.")
+        XCTAssertFalse(app.buttons["coach-submit"].isEnabled, "Never coach an unconfirmed transcript")
+        tap(app.buttons["coach-confirm-transcript"], in: app)
+        XCTAssertTrue(app.buttons["coach-submit"].isEnabled)
+        snapshot(app, "studio-confirmed-transcript")
+        closeCoach(app)
+        openCoach(app)
+        XCTAssertFalse(app.buttons["coach-play-recording"].exists, "Leaving deletes the recording")
+        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "I practice with my friend every day.")
+        closeCoach(app)
+    }
+
+    func testNativeRecorderPermissionTimerPlaybackAndCleanup() {
+        let app = launch(englishUI: true)
+        openSpeaking(app)
+        openCoach(app)
+        reveal(app.buttons["coach-record"], in: app, scrollingUp: false)
+        app.buttons["coach-record"].tap()
+        let system = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let allow = system.buttons["Allow"]
+        if allow.waitForExistence(timeout: 3) { allow.tap() }
+        else if system.buttons["OK"].exists { system.buttons["OK"].tap() }
+        let duration = app.staticTexts["coach-recording-duration"]
+        let ticking = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let number = Int(duration.label.split(separator: " ").first ?? "0") ?? 0
+            return number >= 1
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [ticking], timeout: 10), .completed)
+        app.buttons["coach-record"].tap()
+        XCTAssertTrue(app.buttons["coach-play-recording"].waitForExistence(timeout: 5))
+        snapshot(app, "studio-native-recording")
+        app.buttons["coach-play-recording"].tap()
+        closeCoach(app)
+        openCoach(app)
+        XCTAssertFalse(app.buttons["coach-play-recording"].exists)
+        closeCoach(app)
     }
 
     private func openSpeaking(_ app: XCUIApplication) {

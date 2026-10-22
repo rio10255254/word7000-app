@@ -30,7 +30,7 @@ on:
       checks:
         description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy', 'coach']
+        options: ['all', 'copy', 'coach', 'compile']
         default: 'all'
 
 permissions:
@@ -79,7 +79,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/screenshots"
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
-          for fw in Vision FoundationModels; do
+          for fw in Vision FoundationModels Speech; do
             f=$(find "$SDK/System/Library/Frameworks/$fw.framework" -name "arm64e-apple-ios.swiftinterface" 2>/dev/null | head -1)
             if [ -n "$f" ]; then cp "$f" "$RUNNER_TEMP/screenshots/api-$fw.swiftinterface.txt"; fi
           done
@@ -135,6 +135,14 @@ jobs:
         env:
           CHECKS: ${{ inputs.checks }}
         run: |
+          if [ "$CHECKS" = "compile" ]; then
+            set +e
+            xcodebuild build -project ios/Word7000.xcodeproj -scheme Word7000 \
+              -destination "id=$SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
+            status=$?
+            grep -E "error:|warning:|\*\* BUILD" "$RUNNER_TEMP/xcodebuild.log" | tail -100
+            exit $status
+          fi
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
           xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
@@ -174,6 +182,7 @@ jobs:
           binary = Path(sys.argv[1])
           assert binary.is_file(), 'Release app executable is missing'
           assert b'-uiTestingCoach' not in binary.read_bytes(), 'Release app contains coach test fixtures'
+          assert b'-uiTestingRecording' not in binary.read_bytes(), 'Release app contains recording test fixtures'
           Path(sys.argv[2]).write_text(json.dumps({'commit': os.environ['GITHUB_SHA'], 'coachTestFixturesExcluded': True}))
           print('Release app built successfully without coach test fixtures')
           PY

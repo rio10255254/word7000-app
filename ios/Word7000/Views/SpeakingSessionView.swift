@@ -2,7 +2,7 @@ import SwiftUI
 import Word7000Core
 
 /// Ten short questions to answer out loud, each built around one word.
-/// Nothing is recorded; the learner answers, then compares with a sample.
+/// Recording and text reflection are optional; the original practice stays available.
 struct SpeakingSessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -275,13 +275,13 @@ struct SpeakingSessionView: View {
                     }
                 }
                 .card(radius: Metrics.wordCardRadius, padding: 20)
-                if AppleSpeakingCoach.shared.availability.showsEntry {
+                Group {
                     Button {
                         Speaker.shared.stop()
                         AppleSpeakingCoach.shared.refreshAvailability()
                         coachOpen = true
                     } label: {
-                        Label(L.t("口說教練", "Speaking coach"), systemImage: "sparkles")
+                        Label(L.t("錄音與口說練習", "Record and reflect"), systemImage: "mic")
                             .font(.headline).frame(maxWidth: .infinity)
                     }
                     .secondaryAction()

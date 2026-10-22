@@ -16,6 +16,7 @@ struct Word7000App: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        SpeakingRecorder.removeAbandonedTakes()
         let model = AppModel.launch()
         _model = State(initialValue: model)
         let plus = PlusModel()
@@ -78,6 +79,7 @@ struct Word7000App: App {
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .active:
+                Task { await IntelligenceSettings.shared.refreshPolicy() }
                 reminderBackground.stop()
                 registrations.resume()
                 model.refreshToday()

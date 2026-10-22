@@ -461,6 +461,9 @@ struct WordDetailView: View {
                     .padding(.vertical, 4)
                 }
             }
+            if let note = WordNotes.note(for: word.word) {
+                Section(L.t("易混字與搭配", "Usage and commonly confused words")) { WordNoteView(note: note) }
+            }
             Section {
                 LabeledContent(L.status, value: L.statusLabel(progress.status))
                 if progress.status != .new, let due = LearningEngine.reviewDueDate(progress) {

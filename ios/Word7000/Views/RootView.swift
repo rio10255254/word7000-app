@@ -121,6 +121,7 @@ struct RootView: View {
             }
         }
         .task { welcomeOpen = model.settings.onboardingComplete != true }
+        .task { await IntelligenceSettings.shared.refreshPolicy() }
         .onOpenURL { url in
             guard url.scheme == "word7000", url.host == "study", !welcomeOpen else { return }
             if activity == nil { activity = .study }

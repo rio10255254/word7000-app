@@ -157,6 +157,8 @@ jobs:
               executable = name.rsplit('/', 1)[0] + '/' + info['CFBundleExecutable']
               if b'-uiTestingCoach' in archive.read(executable):
                   raise SystemExit('Coach test fixtures must not ship in a Release app')
+              if b'-uiTestingRecording' in archive.read(executable):
+                  raise SystemExit('Recording test fixtures must not ship in a Release app')
           receipt = Path(sys.argv[2])
           verified = json.loads(receipt.read_text())
           verified['coachTestFixturesExcluded'] = True

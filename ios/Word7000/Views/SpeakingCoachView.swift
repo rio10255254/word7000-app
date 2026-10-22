@@ -87,7 +87,7 @@ struct SpeakingCoachView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if answerFocused {
-                        Button { answerFocused = false } label: {
+                        Button { dismissKeyboard() } label: {
                             Image(systemName: "keyboard.chevron.compact.down")
                         }
                         .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
@@ -263,7 +263,7 @@ struct SpeakingCoachView: View {
         Speaker.shared.stop()
         if answerFocused {
             pendingSubmission = true
-            answerFocused = false
+            dismissKeyboard()
         } else {
             generateSuggestions()
         }
@@ -290,9 +290,17 @@ struct SpeakingCoachView: View {
 
     private func close() {
         pendingSubmission = false
-        answerFocused = false
+        dismissKeyboard()
         session.cancel()
         Speaker.shared.stop()
         dismiss()
+    }
+
+    private func dismissKeyboard() {
+        answerFocused = false
+        // End the native edit as well: FocusState alone can leave a sheet's
+        // TextEditor as first responder during a toolbar/layout update.
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                       to: nil, from: nil, for: nil)
     }
 }

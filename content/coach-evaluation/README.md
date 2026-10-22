@@ -64,3 +64,46 @@ it has valid JSON or contains the target word.
   be confirmed before any cloud prototype; no cloud fallback is allowed here.
 - No new AI analytics collection or paid AI promise has been enabled.
 - The 24-word editorial pack is a starter, not 7,000 completed new word notes.
+
+## Implementation and verification, 2026-10-22
+
+Implemented on `native/apple-speaking-coach`, not published:
+
+- Optional 60-second native recording, playback, deletion, interruptions and
+  background stop. Audio activation shares the reading voice's serial queue.
+- SpeechAnalyzer on supported iOS 26+ devices/languages with explicit asset
+  download; older recognition is gated on on-device support. No server fallback.
+- Editable transcript confirmation before AI. Confirmation survives reopening
+  the same question; recordings do not. Account/question changes clear drafts.
+- Native text editor commits final input before generation. At most two quoted
+  corrections are accepted, and quotes must occur in the learner's actual text.
+- AI status/preferences, safe disable controls, and a draft public feature
+  policy. That policy and the updated privacy page are not deployed to production.
+- 12 editorial pairs (24 words), translated examples for Chinese study, spelling
+  notes, deterministic seven-day summaries, and three App Shortcuts declarations.
+- No new telemetry, cloud AI, paid AI feature, or automatic practice credit.
+
+Evidence:
+
+- Full regression: [run 39782252014](https://github.com/rio10255254/word7000-app/actions/runs/39782252014).
+  iOS 27 completed all 30 UI cases. iOS 18 failed a restored-form test scroll;
+  iOS 26 failed a screenshot walk-through that continued before quiz dismissal.
+  Those original failures remain recorded, not reclassified as passing.
+- Corrected recording/settings/editorial/empty-history flows and Release builds:
+  [run 39786463969](https://github.com/rio10255254/word7000-app/actions/runs/39786463969),
+  source `0020a04`, passed on iOS 18, 26 and 27. Release executables exclude both
+  coach and recording fixture flags.
+- Final main-screen and bilingual walk-through:
+  [run 39790601061](https://github.com/rio10255254/word7000-app/actions/runs/39790601061),
+  source `5f5a073`, passed both selected UI tests on all three systems. App sources
+  match `0020a04`; only workflow and screenshot-test changes followed that source.
+- 186 Swift core checks and all 200 evaluation request validations passed.
+  The existing 7000-word and 600-question exports remain unchanged and verified.
+- Actual model probes reported `unsupportedHost` on the older Mac runners and
+  `deviceNotEligible` on the macOS 27 runner. No real AI quality evaluation was
+  possible here. Native recording tests used simulator audio, not spoken human
+  samples; transcription quality and Siri invocation still require real devices.
+
+Do not infer that every historical CI run is green, that the 200 cases were
+answered by a real model, or that this work has reached TestFlight. Production
+`master` and TestFlight 2.0.1 (43) were intentionally left unchanged.

@@ -62,6 +62,7 @@ final class ScreenshotTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 2).tap()
+        for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
         let chart = app.descendants(matching: .any)["history-chart"].firstMatch

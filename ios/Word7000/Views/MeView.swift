@@ -33,10 +33,12 @@ struct MeView: View {
             Section {
                 HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
                 let summary = LearningWeekSummary(days: model.activity(days: 7))
-                Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
-                         "In the last 7 days: \(summary.activeDays) active days, \(summary.words) word practices and \(summary.speaking) speaking practices."))
-                    .font(.subheadline).foregroundStyle(.secondary)
-                    .accessibilityIdentifier("me-week-summary")
+                if summary.activeDays > 0 {
+                    Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
+                             "In the last 7 days: \(summary.activeDays) active days, \(summary.words) word practices and \(summary.speaking) speaking practices."))
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("me-week-summary")
+                }
                 Button { historyOpen = true } label: {
                     ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
                 }

@@ -33,8 +33,9 @@ final class ScanPickerTests: XCTestCase {
             XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
             snapshot(app, name: "scan-photo-library-\(index)")
             let photos = app.images.matching(identifier: "PXGGridLayout-Info")
-            let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in photos.count >= 5 }, object: nil)
-            XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 60), .completed, app.debugDescription)
+            // Resolve the last required photo instead of repeatedly enumerating
+            // the remote Photos accessibility tree inside a predicate callback.
+            XCTAssertTrue(photos.element(boundBy: 4).waitForExistence(timeout: 60), app.debugDescription)
             snapshot(app, name: "scan-photo-library-\(index)-ready")
             photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
             let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch

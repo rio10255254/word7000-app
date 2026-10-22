@@ -37,6 +37,8 @@ final class SpeakingReflectionTests: XCTestCase {
         let result = SpeakingReflection(answer: "我想試試看。你呢？", target: "試試看", chinese: true)
         XCTAssertTrue(result.containsTarget)
         XCTAssertEqual(result.sentenceCount, 2)
+        XCTAssertEqual(result.unitCount, "我想試試看。你呢？".count)
+        XCTAssertTrue(SpeakingReflection(answer: "我很確信。", target: "確信；必然的", chinese: true).containsTarget)
         XCTAssertFalse(SpeakingReflection(answer: "", target: "", chinese: true).containsTarget)
         XCTAssertEqual(SpeakingReflection(answer: " ...! ", target: "a", chinese: false).sentenceCount, 0)
     }

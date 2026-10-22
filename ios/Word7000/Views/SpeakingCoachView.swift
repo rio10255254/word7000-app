@@ -65,7 +65,7 @@ struct SpeakingCoachView: View {
                               : L.t("尚未找到目標詞：\(request.keyword)", "Target not found: \(request.keyword)"),
                               systemImage: reflection.containsTarget ? "checkmark.circle" : "circle.dashed")
                         LabeledContent(L.t("句數（約）", "Sentences (approx.)"), value: "\(reflection.sentenceCount)")
-                        LabeledContent(request.mode == .english ? L.t("字數", "Words") : L.t("中文字數", "Chinese characters"), value: "\(reflection.unitCount)")
+                        LabeledContent(request.mode == .english ? L.t("字數", "Words") : L.t("字元數", "Characters"), value: "\(reflection.unitCount)")
                     } header: { Text(L.t("回答檢視", "Your answer at a glance")) }
                     footer: { Text(L.t("找到詞語不代表用法或發音正確，也不影響學習成績。", "Finding a word does not verify usage or pronunciation, and does not change your progress.")) }
                 }

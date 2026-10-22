@@ -13,7 +13,7 @@ public struct SpeakingReflection: Equatable, Sendable {
         let targetWords = Self.tokens(normalizedTarget)
         if chinese {
             containsTarget = ChineseDisplay.meaningParts(normalizedTarget).contains { text.localizedCaseInsensitiveContains($0) }
-            unitCount = text.filter { !$0.isWhitespace && !$0.isPunctuation }.count
+            unitCount = text.count
         } else {
             containsTarget = matchedLemma || (!targetWords.isEmpty && words.count >= targetWords.count
                 && (0...(words.count - targetWords.count)).contains { start in

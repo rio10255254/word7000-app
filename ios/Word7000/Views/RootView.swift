@@ -120,7 +120,10 @@ struct RootView: View {
                 model.saveNow()
             }
         }
-        .task { welcomeOpen = model.settings.onboardingComplete != true }
+        .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
+        .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }
+        .onChange(of: activity) { _, next in if next == nil { openRequestedPractice() } }
+        .onChange(of: welcomeOpen) { _, open in if !open { openRequestedPractice() } }
         .task { await IntelligenceSettings.shared.refreshPolicy() }
         .onOpenURL { url in
             guard url.scheme == "word7000", url.host == "study", !welcomeOpen else { return }
@@ -147,6 +150,14 @@ struct RootView: View {
         } else {
             plus.require(.scan) { activity = .scan }
         }
+    }
+
+    private func openRequestedPractice() {
+        guard !welcomeOpen, model.settings.onboardingComplete == true, activity == nil,
+              !signInForScan, plus.paywallReason == nil,
+              let requested = PracticeLaunch.shared.requested else { return }
+        PracticeLaunch.shared.requested = nil
+        activity = requested
     }
 
     /// Closes the current full-screen activity and opens another.

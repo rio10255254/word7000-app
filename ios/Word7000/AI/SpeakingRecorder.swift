@@ -151,7 +151,9 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
         releaseAudio()
     }
 
-    func transcribe() {
+    /// `hints` are words the learner is likely to say, such as the question's
+    /// own; the recognizer otherwise hears "recurring" as "mercury".
+    func transcribe(hints: [String] = []) {
         #if DEBUG
         if simulated, hasRecording, !busy {
             transcript = "I practice with my friend every day."
@@ -168,14 +170,14 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
             do {
                 let text: String
                 if #available(iOS 26.0, *), support == .modern {
-                    text = try await modernTranscript(file: file, language: language)
+                    text = try await modernTranscript(file: file, language: language, hints: hints)
                 } else {
                     let permission = await withCheckedContinuation { continuation in
                         SFSpeechRecognizer.requestAuthorization { continuation.resume(returning: $0) }
                     }
                     guard generation == id, !Task.isCancelled else { return }
                     guard permission == .authorized else { throw RecordingError.permission }
-                    text = try await legacyTranscript(file: file, language: language)
+                    text = try await legacyTranscript(file: file, language: language, hints: hints)
                 }
                 guard generation == id, !Task.isCancelled else { return }
                 guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw RecordingError.empty }
@@ -204,13 +206,19 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     }
 
     @available(iOS 26.0, *)
-    private func modernTranscript(file: URL, language: String) async throws -> String {
+    private func modernTranscript(file: URL, language: String, hints: [String]) async throws -> String {
         guard let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)) else { throw RecordingError.failed }
         try Task.checkCancellation()
         let transcriber = SpeechTranscriber(locale: locale, preset: .transcription)
         guard await AssetInventory.status(forModules: [transcriber]) == .installed else { throw RecordingError.failed }
         try Task.checkCancellation()
         let analyzer = SpeechAnalyzer(modules: [transcriber])
+        if !hints.isEmpty {
+            let context = AnalysisContext()
+            context.contextualStrings[.general] = hints
+            // Hints only bias recognition; transcribe without them if refused.
+            try? await analyzer.setContext(context)
+        }
         cancelRecognition = { Task { await analyzer.cancelAndFinishNow() } }
         do {
             try await analyzer.start(inputAudioFile: AVAudioFile(forReading: file), finishAfterFile: true)
@@ -227,12 +235,13 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
         }
     }
 
-    private func legacyTranscript(file: URL, language: String) async throws -> String {
+    private func legacyTranscript(file: URL, language: String, hints: [String]) async throws -> String {
         guard let recognizer = SFSpeechRecognizer(locale: Locale(identifier: language)),
               recognizer.supportsOnDeviceRecognition else { throw RecordingError.failed }
         let request = SFSpeechURLRecognitionRequest(url: file)
         request.requiresOnDeviceRecognition = true
         request.shouldReportPartialResults = false
+        request.contextualStrings = hints
         let id = generation
         cancelRecognition = { [weak self] in self?.finishLegacy(.failure(CancellationError())) }
         return try await withCheckedThrowingContinuation { continuation in

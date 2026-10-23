@@ -35,6 +35,34 @@ struct SpeakingCoachView: View {
             && answer.count <= SpeakingCoach.maximumAnswerCharacters
     }
 
+    /// The keyword and the question's longer words, which a learner's answer
+    /// usually reuses; short function words need no help being recognized.
+    private var transcriptionHints: [String] {
+        var seen = Set<String>()
+        let words = request.question.split(whereSeparator: { !$0.isLetter && $0 != "'" }).map(String.init)
+        return ([request.keyword] + words.filter { $0.count >= 4 })
+            .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
+            .prefix(20).map { $0 }
+    }
+
+    /// The question read back is not an answer; say so before the AI would
+    /// politely "improve" it.
+    private var answerEchoesQuestion: Bool {
+        SpeakingCoach.echoesQuestion(answer: answer, question: request.question)
+    }
+
+    /// Apple's server model sees the answer text, so the promise changes with it.
+    private var privacyNote: String {
+        provider.usesCloud
+            ? L.t("錄音只留在這部手機，離開此頁便清除。取得建議時，回答文字會交給 Apple 的 Private Cloud Compute 處理，Apple 表示不會保存，也無法讀取。AI 建議可能有誤，不評分發音。系統鍵盤聽寫另依 Apple 設定，可能需要網路。",
+                  "Recordings stay on this iPhone and are deleted when you leave this screen. For suggestions, your answer text is processed by Apple's Private Cloud Compute, which Apple says is not stored or accessible to it. AI suggestions may be wrong, and do not score pronunciation. System keyboard dictation follows Apple's settings and may use a network connection.")
+            : L.t("錄音、回答與建議僅暫存於這次練習，離開此頁便清除錄音。App 不上傳音訊或回答。AI 建議可能有誤，不評分發音。系統鍵盤聽寫另依 Apple 設定，可能需要網路。",
+                  "Recordings, answers and suggestions are temporary. Leaving this screen deletes the recording. The app does not upload audio or answers. AI suggestions may be wrong, and do not score pronunciation. System keyboard dictation follows Apple's settings and may use a network connection.")
+    }
+
+    /// After suggestions arrive, the same button asks again for the same answer.
+    private var askedForThisAnswer: Bool { session.feedback != nil && submittedAnswer == answer }
+
     private var visibleFailure: String? {
         if inputCommitFailed {
             return L.t("輸入尚未完成，請再試一次。你的回答仍在。", "Editing did not finish. Try again; your answer is still here.")
@@ -127,10 +155,18 @@ struct SpeakingCoachView: View {
             answerSection
             if let reflection, !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 Section {
-                    Label(reflection.containsTarget
-                          ? L.t("找到目標詞：\(request.keyword)", "Target found: \(request.keyword)")
-                          : L.t("尚未找到目標詞：\(request.keyword)", "Target not found: \(request.keyword)"),
-                          systemImage: reflection.containsTarget ? "checkmark.circle" : "circle.dashed")
+                    if answerEchoesQuestion {
+                        // The keyword is in the question, so finding it here proves nothing.
+                        Label(L.t("這段和題目幾乎一樣，像是把題目念了一遍", "This is almost the same as the question"),
+                              systemImage: "exclamationmark.circle")
+                            .foregroundStyle(Palette.review)
+                            .accessibilityIdentifier("coach-echo")
+                    } else {
+                        Label(reflection.containsTarget
+                              ? L.t("找到目標詞：\(request.keyword)", "Target found: \(request.keyword)")
+                              : L.t("尚未找到目標詞：\(request.keyword)", "Target not found: \(request.keyword)"),
+                              systemImage: reflection.containsTarget ? "checkmark.circle" : "circle.dashed")
+                    }
                     LabeledContent(L.t("句數（約）", "Sentences (approx.)"), value: "\(reflection.sentenceCount)")
                     LabeledContent(request.mode == .english ? L.t("字數", "Words") : L.t("字元數", "Characters"), value: "\(reflection.unitCount)")
                 } header: { Text(L.t("回答檢視", "Your answer at a glance")) }
@@ -168,13 +204,11 @@ struct SpeakingCoachView: View {
             }
 
             Section {
-                Label(L.t("錄音與回答留在這部手機", "Recordings and answers stay on this iPhone"), systemImage: "hand.raised")
+                Label(provider.usesCloud ? L.t("錄音留在這部手機", "Recordings stay on this iPhone")
+                      : L.t("錄音與回答留在這部手機", "Recordings and answers stay on this iPhone"), systemImage: "hand.raised")
                     .font(.footnote).foregroundStyle(.secondary)
             } footer: {
-                Text(L.t(
-                    "錄音、回答與建議僅暫存於這次練習，離開此頁便清除錄音。App 不上傳音訊或回答。AI 建議可能有誤，不評分發音。系統鍵盤聽寫另依 Apple 設定，可能需要網路。",
-                    "Recordings, answers and suggestions are temporary. Leaving this screen deletes the recording. The app does not upload audio or answers. AI suggestions may be wrong, and do not score pronunciation. System keyboard dictation follows Apple's settings and may use a network connection."
-                ))
+                Text(privacyNote)
             }
         }
         .accessibilityIdentifier("coach-form")
@@ -337,7 +371,8 @@ struct SpeakingCoachView: View {
                     .accessibilityIdentifier("coach-confirm-transcript")
                 }
                 Button { submit() } label: {
-                    Label(L.t("取得建議", "Get suggestions"), systemImage: "sparkles").frame(maxWidth: .infinity)
+                    Label(askedForThisAnswer ? L.t("再給一次建議", "Suggest again") : L.t("取得建議", "Get suggestions"),
+                          systemImage: askedForThisAnswer ? "arrow.clockwise" : "sparkles").frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .disabled(!canSubmit)
@@ -409,11 +444,17 @@ struct SpeakingCoachView: View {
     private func failureMessage(_ failure: SpeakingCoach.Failure) -> String {
         switch failure {
         case .emptyAnswer: L.t("請先輸入回答。", "Enter an answer first.")
+        case .echoesQuestion:
+            request.mode == .english
+                ? L.t("這段回答和題目幾乎一樣，像是把題目念了一遍。試著回答它，例如用「I would…」或「I think…」開頭。",
+                      "This is almost the same as the question. Try answering it, starting with \"I would…\" or \"I think…\".")
+                : L.t("這段回答和題目幾乎一樣，像是把題目念了一遍。試著用自己的話回答它。",
+                      "This is almost the same as the question. Try answering it in your own words.")
         case .tooLong: L.t("回答或題目背景太長。請縮短回答，或改用背景較短的題目再試。", "The answer or question context is too long. Shorten your answer or try a question with less context.")
         case .busy: L.t("上一個請求尚未結束，請稍候再試。", "The previous request is still finishing. Try again shortly.")
         case .timedOut: L.t("這次等候太久，請再試一次。你的回答仍在。", "This took too long. Try again; your answer is still here.")
         case .unavailable: L.t("裝置上的建議暫時無法使用，請稍後再試。", "On-device suggestions are temporarily unavailable. Try again later.")
-        case .invalidFeedback, .generationFailed: L.t("這次未能產生合適的建議，請調整回答或再試一次。", "No suitable suggestions were produced. Edit your answer or try again.")
+        case .invalidFeedback, .wrongLanguage, .generationFailed: L.t("這次未能產生合適的建議，請調整回答或再試一次。", "No suitable suggestions were produced. Edit your answer or try again.")
         }
     }
 
@@ -477,7 +518,8 @@ struct SpeakingCoachView: View {
                     else if recording.hasRecording { retakeOpen = true }
                     else { beginRecording() }
                 } label: {
-                    Label(recording.state == .recording ? L.t("停止", "Stop") : L.t("錄一段", "Record"),
+                    Label(recording.state == .recording ? L.t("停止", "Stop")
+                          : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄一段", "Record"),
                           systemImage: recording.state == .recording ? "stop.fill" : "mic.fill")
                 }
                 .disabled(recording.busy && recording.state != .recording || session.isBusy)
@@ -508,7 +550,7 @@ struct SpeakingCoachView: View {
                 Text(L.t("會向 Apple 下載語言資料，不會上傳錄音。", "Downloads language assets from Apple, without uploading your recording."))
                     .font(.footnote).foregroundStyle(.secondary)
             } else if recording.hasRecording && (recording.support == .modern || recording.support == .legacy) {
-                Button { recording.transcribe() } label: {
+                Button { recording.transcribe(hints: transcriptionHints) } label: {
                     Label(L.t("轉成文字", "Transcribe"), systemImage: "text.bubble")
                 }.disabled(recording.busy || session.isBusy)
                     .accessibilityIdentifier("coach-transcribe")

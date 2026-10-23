@@ -82,7 +82,7 @@ struct CoachEvaluation {
                     options: GenerationOptions(temperature: 0.3, maximumResponseTokens: SpeakingCoach.maximumResponseTokens)).content
                 let feedback = try SpeakingCoach.Feedback(rewrite: value.rewrite, tip: value.tip, followUp: value.followUp,
                     corrections: value.corrections.map { .init(original: $0.original, replacement: $0.replacement, reason: $0.reason) })
-                    .validated(answer: request.answer)
+                    .validated(for: request)
                 result = .init(id: item.id, feedback: feedback, error: nil, seconds: Date().timeIntervalSince(start))
             } catch {
                 result = .init(id: item.id, feedback: nil, error: String(describing: error), seconds: Date().timeIntervalSince(start))

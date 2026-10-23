@@ -213,6 +213,10 @@ jobs:
               --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
             echo "Uploaded to App Store Connect. Apple processes the build for TestFlight in about 5-15 minutes."
           else
+            # Name what is missing (never the values) so a misplaced secret is obvious.
+            MISSING=""
+            for name in ASC_KEY_ID ASC_ISSUER_ID ASC_PRIVATE_KEY; do [ -n "${!name}" ] || MISSING="$MISSING $name"; done
+            echo "::notice::Uploading through Expo: repository secret(s) not available to this run:$MISSING"
             EAS_NO_VCS=1 eas submit --platform ios --profile production --path "$RUNNER_TEMP/native.ipa" --non-interactive --wait
           fi
 

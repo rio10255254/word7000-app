@@ -142,6 +142,12 @@ jobs:
 
       - name: Build the native app and upload it to TestFlight
         if: inputs.operation == 'native-testflight'
+        env:
+          # App Store Connect API key for uploading straight to Apple. Without
+          # all three, the upload falls back to Expo's submit service.
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: |
           set -euo pipefail
           node scripts/export-native-words.mjs --check
@@ -193,7 +199,21 @@ jobs:
             sleep 60
           done
           [ "$PASSED" = true ] || { echo "::error::Native validation did not finish. Not submitting to TestFlight."; exit 1; }
-          EAS_NO_VCS=1 eas submit --platform ios --profile production --path "$RUNNER_TEMP/native.ipa" --non-interactive --wait
+          if [ -n "$ASC_KEY_ID" ] && [ -n "$ASC_ISSUER_ID" ] && [ -n "$ASC_PRIVATE_KEY" ]; then
+            # Straight to Apple. Expo's submit queue once added half an hour,
+            # and once lost the result to a network error after scheduling.
+            KEY_DIR="$HOME/.appstoreconnect/private_keys"
+            mkdir -p "$KEY_DIR"
+            KEY="$KEY_DIR/AuthKey_${ASC_KEY_ID}.p8"
+            trap 'rm -f "$KEY"' EXIT
+            printf '%s\n' "$ASC_PRIVATE_KEY" > "$KEY"
+            chmod 600 "$KEY"
+            xcrun altool --upload-app --type ios --file "$RUNNER_TEMP/native.ipa" \
+              --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
+            echo "Uploaded to App Store Connect. Apple processes the build for TestFlight in about 5-15 minutes."
+          else
+            EAS_NO_VCS=1 eas submit --platform ios --profile production --path "$RUNNER_TEMP/native.ipa" --non-interactive --wait
+          fi
 
       - name: Save the native release verification receipt
         if: always() && inputs.operation == 'native-testflight'

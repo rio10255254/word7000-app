@@ -193,6 +193,83 @@ public enum SpeakingCoach {
         return tokens
     }
 
+    /// One run of text in a comparison; `changed` marks words the other side lacks.
+    public struct Piece: Equatable, Sendable {
+        public let text: String
+        public let changed: Bool
+    }
+
+    /// What the rewrite changed, word by word (character by character for
+    /// Chinese), for highlighting both sides. Spaces and punctuation are never
+    /// marked, and nil means the rewrite shares too little with the answer for
+    /// highlights to help.
+    public static func comparison(answer: String, rewrite: String) -> (answer: [Piece], rewrite: [Piece])? {
+        let said = diffTokens(answer), better = diffTokens(rewrite)
+        let saidWords = said.indices.filter { said[$0].isWord }, betterWords = better.indices.filter { better[$0].isWord }
+        guard !saidWords.isEmpty, !betterWords.isEmpty else { return nil }
+        // Longest common subsequence over words only.
+        let rows = saidWords.count, columns = betterWords.count
+        var length = Array(repeating: Array(repeating: 0, count: columns + 1), count: rows + 1)
+        for i in stride(from: rows - 1, through: 0, by: -1) {
+            for j in stride(from: columns - 1, through: 0, by: -1) {
+                length[i][j] = said[saidWords[i]].key == better[betterWords[j]].key
+                    ? length[i + 1][j + 1] + 1 : max(length[i + 1][j], length[i][j + 1])
+            }
+        }
+        guard length[0][0] * 10 >= columns * 3 else { return nil }
+        var keptSaid = Set<Int>(), keptBetter = Set<Int>()
+        var i = 0, j = 0
+        while i < rows, j < columns {
+            if said[saidWords[i]].key == better[betterWords[j]].key {
+                keptSaid.insert(saidWords[i]); keptBetter.insert(betterWords[j]); i += 1; j += 1
+            } else if length[i + 1][j] >= length[i][j + 1] { i += 1 } else { j += 1 }
+        }
+        func pieces(_ tokens: [DiffToken], kept: Set<Int>) -> [Piece] {
+            var result: [Piece] = []
+            for (index, token) in tokens.enumerated() {
+                var changed = token.isWord && !kept.contains(index)
+                // A space between two changed words joins one highlight.
+                if !token.isWord, token.text.allSatisfy(\.isWhitespace), result.last?.changed == true,
+                   tokens.indices.contains(index + 1), tokens[index + 1].isWord, !kept.contains(index + 1) { changed = true }
+                if let last = result.last, last.changed == changed {
+                    result[result.count - 1] = Piece(text: last.text + token.text, changed: changed)
+                } else {
+                    result.append(Piece(text: token.text, changed: changed))
+                }
+            }
+            return result
+        }
+        return (pieces(said, kept: keptSaid), pieces(better, kept: keptBetter))
+    }
+
+    struct DiffToken {
+        let text: String
+        let isWord: Bool
+        var key: String { text.lowercased().replacingOccurrences(of: "’", with: "'") }
+    }
+
+    static func diffTokens(_ text: String) -> [DiffToken] {
+        var tokens: [DiffToken] = []
+        var word = ""
+        func flush() { if !word.isEmpty { tokens.append(DiffToken(text: word, isWord: true)); word = "" } }
+        for character in text {
+            if character.unicodeScalars.contains(where: { $0.properties.isIdeographic }) {
+                flush(); tokens.append(DiffToken(text: String(character), isWord: true))
+            } else if character.isLetter || character.isNumber || character == "'" || character == "’" {
+                word.append(character)
+            } else {
+                flush()
+                if let last = tokens.last, !last.isWord {
+                    tokens[tokens.count - 1] = DiffToken(text: last.text + String(character), isWord: false)
+                } else {
+                    tokens.append(DiffToken(text: String(character), isWord: false))
+                }
+            }
+        }
+        flush()
+        return tokens
+    }
+
     /// True when the answer is the question read back, perhaps with a word
     /// or two misheard: almost nothing new, and half the question or more.
     /// A real answer reuses the question's words but adds its own.

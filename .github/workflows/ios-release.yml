@@ -25,7 +25,7 @@ on:
         type: string
         default: ''
       native_validation_run:
-        description: 'Optional full Native iOS push-run ID for identical source; otherwise use this commit'
+        description: 'Optional full Native iOS run ID (push, or manual with all checks) for identical source; otherwise a passed run of identical source, then this commit'
         type: string
         default: ''
 
@@ -92,16 +92,34 @@ jobs:
           REQUESTED_RUN: ${{ inputs.native_validation_run }}
         run: |
           set -euo pipefail
-          RUN_ID="$REQUESTED_RUN"
-          if [ -z "$RUN_ID" ]; then
-            RUN_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ios-native.yml/runs?head_sha=$GITHUB_SHA&event=push&per_page=20" --jq '.workflow_runs[0].id // empty')
-          fi
-          [[ "$RUN_ID" =~ ^[0-9]+$ ]] || { echo "::error::A full Native iOS push run is required."; exit 1; }
-          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$RUNNER_TEMP/native-validation.json"
-          TESTED_SHA=$(node -e 'const r=require(process.argv[1]); if(r.path!==".github/workflows/ios-native.yml" || r.event!=="push" || !/^[a-f0-9]{40}$/.test(r.head_sha)) throw new Error("Not a full native push run"); if(r.status==="completed" && r.conclusion!=="success") throw new Error("Native validation failed"); process.stdout.write(r.head_sha);' "$RUNNER_TEMP/native-validation.json")
           # Release orchestration and its portable settings-check harness may differ.
           # All shipped code/data and the native core/UI tests must still match.
           # The portable harness is executed by npm test above, including on Linux.
+          same_source() {
+            git diff --quiet "$1" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift'
+          }
+          RUN_ID="$REQUESTED_RUN"
+          if [ -z "$RUN_ID" ]; then
+            # A full run that already passed on identical source, usually on the
+            # pull request branch before merging, is not repeated after the merge.
+            gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ios-native.yml/runs?status=success&per_page=40" \
+              --jq '.workflow_runs[] | select(.event == "push" or (.event == "workflow_dispatch" and .display_title == "Native iOS: all checks")) | "\(.id) \(.head_sha)"' \
+              > "$RUNNER_TEMP/passed-native-runs.txt"
+            while read -r id sha; do
+              if git cat-file -e "$sha^{commit}" 2>/dev/null && same_source "$sha"; then
+                RUN_ID="$id"
+                echo "Reusing full native validation $id from $sha: the source is identical."
+                break
+              fi
+            done < "$RUNNER_TEMP/passed-native-runs.txt"
+          fi
+          if [ -z "$RUN_ID" ]; then
+            RUN_ID=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ios-native.yml/runs?head_sha=$GITHUB_SHA&event=push&per_page=20" --jq '.workflow_runs[0].id // empty')
+          fi
+          [[ "$RUN_ID" =~ ^[0-9]+$ ]] || { echo "::error::A full Native iOS run is required."; exit 1; }
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$RUNNER_TEMP/native-validation.json"
+          # A push run is always the full suite; a manual run counts only with checks=all.
+          TESTED_SHA=$(node -e 'const r=require(process.argv[1]); const full = r.event==="push" || (r.event==="workflow_dispatch" && r.display_title==="Native iOS: all checks"); if(r.path!==".github/workflows/ios-native.yml" || !full || !/^[a-f0-9]{40}$/.test(r.head_sha)) throw new Error("Not a full native run"); if(r.status==="completed" && r.conclusion!=="success") throw new Error("Native validation failed"); process.stdout.write(r.head_sha);' "$RUNNER_TEMP/native-validation.json")
           git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift'
           echo "NATIVE_VALIDATION_RUN=$RUN_ID" >> "$GITHUB_ENV"
 

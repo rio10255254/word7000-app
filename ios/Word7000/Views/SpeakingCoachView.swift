@@ -17,7 +17,6 @@ struct SpeakingCoachView: View {
     @Binding var needsTranscriptReview: Bool
     @State private var retakeOpen = false
     @State private var reflection: SpeakingReflection?
-    @State private var helpful: Bool?
     /// The coach's follow-up, once the learner chose to answer it here.
     @State private var followUpQuestion: String?
     @State private var scrollToTop = 0
@@ -34,10 +33,11 @@ struct SpeakingCoachView: View {
     /// The question being answered: the card's, or the coach's follow-up.
     private var question: String { followUpQuestion ?? request.question }
     private var answerLanguage: String { request.mode == .english ? "en-US" : "zh-TW" }
-    private var canSubmit: Bool {
+    /// Ready to send, apart from confirming a transcript, which sending does.
+    private var canSubmitAnswer: Bool {
         !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && !pendingSubmission && !session.isBusy && !provider.isBusy
-            && !recording.busy && !needsTranscriptReview
+            && !recording.busy
             && answer.count <= SpeakingCoach.maximumAnswerCharacters
     }
 
@@ -60,10 +60,10 @@ struct SpeakingCoachView: View {
     /// Apple's server model sees the answer text, so the promise changes with it.
     private var privacyNote: String {
         provider.usesCloud
-            ? L.t("錄音只留在這部手機，離開此頁便清除。取得建議時，回答文字會交給 Apple 的 Private Cloud Compute 處理，Apple 表示不會保存，也無法讀取。AI 建議可能有誤，不評分發音。系統鍵盤聽寫另依 Apple 設定，可能需要網路。",
-                  "Recordings stay on this iPhone and are deleted when you leave this screen. For suggestions, your answer text is processed by Apple's Private Cloud Compute, which Apple says is not stored or accessible to it. AI suggestions may be wrong, and do not score pronunciation. System keyboard dictation follows Apple's settings and may use a network connection.")
-            : L.t("錄音、回答與建議僅暫存於這次練習，離開此頁便清除錄音。App 不上傳音訊或回答。AI 建議可能有誤，不評分發音。系統鍵盤聽寫另依 Apple 設定，可能需要網路。",
-                  "Recordings, answers and suggestions are temporary. Leaving this screen deletes the recording. The app does not upload audio or answers. AI suggestions may be wrong, and do not score pronunciation. System keyboard dictation follows Apple's settings and may use a network connection.")
+            ? L.t("錄音只留在這部手機，離開即刪除。取得建議時，回答文字交給 Apple 的 Private Cloud Compute 處理，Apple 表示不會保存。AI 建議可能有誤，也不評分發音。",
+                  "Recordings stay on this iPhone and are deleted when you leave. For suggestions, your answer text goes to Apple's Private Cloud Compute, which Apple says is not stored. AI suggestions may be wrong and do not score pronunciation.")
+            : L.t("錄音與回答只留在這部手機，離開即刪除錄音。AI 建議可能有誤，也不評分發音。鍵盤聽寫依 Apple 設定，可能需要網路。",
+                  "Recordings and answers stay on this iPhone; leaving deletes the recording. AI suggestions may be wrong and do not score pronunciation. Keyboard dictation follows Apple's settings and may use the network.")
     }
 
     /// After suggestions arrive, the same button asks again for the same answer.
@@ -116,7 +116,6 @@ struct SpeakingCoachView: View {
             needsTranscriptReview = true
             session.reset()
         }
-        .onChange(of: session.feedback) { _, _ in helpful = nil }
         .onChange(of: recording.state) { old, new in
             // Stopping a take is when the learner wants to see it as text; a
             // typed or edited answer is never replaced without asking.
@@ -160,39 +159,7 @@ struct SpeakingCoachView: View {
     private var coachForm: some View {
         Form {
             questionSection
-
-            recordingSection
             answerSection
-            if let reflection, !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                Section {
-                    if answerEchoesQuestion {
-                        // The keyword is in the question, so finding it here proves nothing.
-                        Label(L.t("這段和題目幾乎一樣，像是把題目念了一遍", "This is almost the same as the question"),
-                              systemImage: "exclamationmark.circle")
-                            .foregroundStyle(Palette.review)
-                            .accessibilityIdentifier("coach-echo")
-                    } else {
-                        // One line: whether the word was used matters most, the counts less.
-                        Label(answerSummary(reflection),
-                              systemImage: reflection.containsTarget ? "checkmark.circle" : "circle.dashed")
-                            .accessibilityIdentifier("coach-answer-check")
-                    }
-                } header: { Text(L.t("回答檢視", "Your answer at a glance")) }
-                footer: { Text(L.t("找到詞語不代表用法或發音正確，也不影響學習成績。", "Finding a word does not verify usage or pronunciation, and does not change your progress.")) }
-            }
-            // The card's model answer does not answer a follow-up.
-            if !referenceAnswer.isEmpty && followUpQuestion == nil {
-                Section {
-                    DisclosureGroup(L.t("參考回答", "Reference answer")) {
-                        HStack(alignment: .top) {
-                            Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
-                            Spacer(minLength: 8)
-                            SpeakButton(text: referenceAnswer, language: answerLanguage).disabled(recording.busy)
-                        }
-                        Text(referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
-                    }.accessibilityIdentifier("coach-reference")
-                }
-            }
             if provider.availability == .ready {
                 if let message = visibleFailure {
                     Section {
@@ -211,13 +178,22 @@ struct SpeakingCoachView: View {
             } else {
                 unavailableSection
             }
-
-            Section {
-                Label(provider.usesCloud ? L.t("錄音留在這部手機", "Recordings stay on this iPhone")
-                      : L.t("錄音與回答留在這部手機", "Recordings and answers stay on this iPhone"), systemImage: "hand.raised")
-                    .font(.footnote).foregroundStyle(.secondary)
-            } footer: {
-                Text(privacyNote)
+            // After the learner's own attempt and the coach, not before: a model
+            // answer read first gets repeated instead of answered. The card's
+            // answer does not fit a follow-up.
+            if !referenceAnswer.isEmpty && followUpQuestion == nil {
+                Section {
+                    DisclosureGroup(L.t("參考回答", "Reference answer")) {
+                        HStack(alignment: .top) {
+                            Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
+                            Spacer(minLength: 8)
+                            SpeakButton(text: referenceAnswer, language: answerLanguage).disabled(recording.busy)
+                        }
+                        Text(referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
+                    }.accessibilityIdentifier("coach-reference")
+                } footer: { Text(privacyNote) }
+            } else {
+                Section {} footer: { Text(privacyNote) }
             }
         }
         .accessibilityIdentifier("coach-form")
@@ -293,10 +269,13 @@ struct SpeakingCoachView: View {
     private func rewriteRow(_ feedback: SpeakingCoach.Feedback, id: String) -> some View {
         let comparison = SpeakingCoach.comparison(answer: submittedAnswer ?? answer, rewrite: feedback.rewrite)
         HStack(alignment: .top) {
-            Text(comparison.map { highlighted($0.rewrite, removed: false) } ?? AttributedString(feedback.rewrite))
-                .textSelection(.enabled)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityIdentifier("coach-rewrite")
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L.t("更自然的說法", "More natural")).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                Text(comparison.map { highlighted($0.rewrite, removed: false) } ?? AttributedString(feedback.rewrite))
+                    .textSelection(.enabled)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("coach-rewrite")
+            }
             Spacer(minLength: 8)
             SpeakButton(text: feedback.rewrite, language: answerLanguage)
                 .disabled(recording.busy)
@@ -346,6 +325,8 @@ struct SpeakingCoachView: View {
         scrollToTop += 1
     }
 
+    /// The answer and the take that produced it live in one card: record,
+    /// replay and edit happen in the same place.
     private var answerSection: some View {
         Section {
             PracticeAnswerEditor(text: $answer, focused: $answerFocused,
@@ -362,13 +343,13 @@ struct SpeakingCoachView: View {
                                      return nil
                                      #endif
                                  })
-                .frame(minHeight: 120, maxHeight: 220)
+                .frame(minHeight: 96, maxHeight: 200)
                 .overlay(alignment: .topLeading) {
                     if answer.isEmpty {
                         // UITextView has no placeholder; match its default text insets.
                         Text(request.mode == .english
-                             ? L.t("用英文回答，或先錄音再轉成文字", "Answer in English, or record and transcribe")
-                             : L.t("用中文回答，或先錄音再轉成文字", "Answer in Chinese, or record and transcribe"))
+                             ? L.t("按錄音說出你的回答，或直接用英文輸入", "Tap Record and say your answer, or type it in English")
+                             : L.t("按錄音說出你的回答，或直接用中文輸入", "Tap Record and say your answer, or type it in Chinese"))
                             .foregroundStyle(.tertiary)
                             .padding(.top, 8).padding(.leading, 5)
                             .allowsHitTesting(false)
@@ -377,52 +358,154 @@ struct SpeakingCoachView: View {
                 }
                 .accessibilityLabel(L.t("你的回答", "Your answer"))
                 .accessibilityIdentifier("coach-answer")
+            recorderControls
+            recorderStatus
             if needsTranscriptReview {
-                Text(L.t("先確認辨識文字，必要時可直接修改。", "Review the transcript and edit any misheard words."))
+                Label(L.t("這是語音辨識的文字，送出前看看有沒有聽錯的字。", "This is a transcript. Check for misheard words before sending."),
+                      systemImage: "text.magnifyingglass")
                     .font(.footnote).foregroundStyle(.secondary)
+            }
+            if let reflection, !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                if answerEchoesQuestion {
+                    // The keyword is in the question, so finding it here proves nothing.
+                    Label(L.t("這段和題目幾乎一樣，像是把題目念了一遍", "This is almost the same as the question"),
+                          systemImage: "exclamationmark.circle")
+                        .font(.footnote).foregroundStyle(Palette.review)
+                        .accessibilityIdentifier("coach-echo")
+                } else {
+                    Label(answerSummary(reflection),
+                          systemImage: reflection.containsTarget ? "checkmark.circle" : "circle.dashed")
+                        .font(.footnote).foregroundStyle(reflection.containsTarget ? Palette.known : Color.secondary)
+                        .accessibilityIdentifier("coach-answer-check")
+                }
             }
             if answer.count > SpeakingCoach.maximumAnswerCharacters {
                 Text(L.t("請將回答精簡至 600 字以內再取得建議。", "Shorten your answer to 600 characters before requesting suggestions."))
                     .font(.footnote).foregroundStyle(Palette.miss)
             }
-            HStack {
-                Spacer()
-                Text("\(answer.count) / \(SpeakingCoach.maximumAnswerCharacters)")
-                    .font(.caption).monospacedDigit()
-                    .foregroundStyle(answer.count > SpeakingCoach.maximumAnswerCharacters ? Palette.miss : Palette.secondaryLabel)
-            }
         } header: {
-            Text(L.t("你的回答", "Your answer"))
+            HStack {
+                Text(L.t("你的回答", "Your answer"))
+                Spacer()
+                // Only worth a glance near the limit.
+                if answer.count > SpeakingCoach.maximumAnswerCharacters - 100 {
+                    Text("\(answer.count) / \(SpeakingCoach.maximumAnswerCharacters)").monospacedDigit()
+                        .foregroundStyle(answer.count > SpeakingCoach.maximumAnswerCharacters ? Palette.miss : Palette.secondaryLabel)
+                }
+            }
         }
     }
 
+    private var recorderControls: some View {
+        HStack(spacing: 16) {
+            Button {
+                if recording.state == .recording { recording.stop() }
+                else if recording.hasRecording { retakeOpen = true }
+                else { beginRecording() }
+            } label: {
+                Label(recording.state == .recording ? L.t("停止", "Stop")
+                      : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄音", "Record"),
+                      systemImage: recording.state == .recording ? "stop.circle.fill" : "mic.circle.fill")
+                    .font(.headline)
+                    .foregroundStyle(recording.state == .recording ? Palette.miss : Palette.accent)
+            }
+            .disabled(recording.busy && recording.state != .recording || session.isBusy)
+            .accessibilityIdentifier("coach-record")
+            if recording.state == .recording || recording.hasRecording {
+                Text("\(Int(recording.seconds)) / 60 \(L.t("秒", "s"))").font(.subheadline).monospacedDigit()
+                    .foregroundStyle(recording.state == .recording ? Palette.miss : Color.secondary)
+                    .accessibilityIdentifier("coach-recording-duration")
+            }
+            Spacer()
+            if recording.hasRecording {
+                Button { recording.togglePlayback() } label: {
+                    Label(recording.state == .playing ? L.t("停止回放", "Stop playback") : L.t("回放", "Play"),
+                          systemImage: recording.state == .playing ? "stop.fill" : "play.fill")
+                        .labelStyle(.iconOnly)
+                }
+                .disabled(recording.busy && recording.state != .playing)
+                .accessibilityIdentifier("coach-play-recording")
+                Button { recording.clear() } label: { Image(systemName: "trash") }
+                    .disabled(recording.busy)
+                    .accessibilityLabel(L.t("刪除錄音", "Delete recording"))
+            }
+        }
+        .buttonStyle(.borderless)
+    }
+
+    /// Only what needs the learner: a level while recording, progress, a
+    /// way to transcribe when it did not happen on its own, and problems.
+    @ViewBuilder
+    private var recorderStatus: some View {
+        if recording.state == .recording {
+            ProgressView(value: Double(recording.level)).tint(Palette.miss)
+                .accessibilityLabel(L.t("麥克風音量", "Microphone level"))
+        }
+        if recording.state == .transcribing || recording.state == .downloading || recording.state == .requesting {
+            HStack {
+                ProgressView()
+                Text(recording.state == .downloading ? L.t("下載語言中…", "Downloading language…")
+                     : recording.state == .transcribing ? L.t("轉成文字中…", "Transcribing…") : L.t("處理中…", "Processing…"))
+                    .font(.subheadline)
+                Spacer()
+                Button(L.t("取消", "Cancel")) { recording.interrupt() }.buttonStyle(.borderless)
+            }
+        } else if recording.support == .download && recording.hasRecording {
+            Button { recording.downloadLanguage() } label: {
+                Label(L.t("下載離線辨識，把錄音轉成文字", "Download offline transcription"), systemImage: "arrow.down.circle")
+            }
+            .buttonStyle(.borderless)
+        } else if recording.hasRecording, recording.transcript == nil,
+                  recording.support == .modern || recording.support == .legacy {
+            // Stopping a take transcribes it; this is for a take that would
+            // have replaced a typed answer, or a failed attempt.
+            Button { recording.transcribe(hints: transcriptionHints) } label: {
+                Label(answer.isEmpty ? L.t("轉成文字", "Transcribe") : L.t("轉成文字（取代目前的回答）", "Transcribe (replaces your answer)"),
+                      systemImage: "text.bubble")
+            }
+            .buttonStyle(.borderless)
+            .disabled(recording.busy || session.isBusy)
+            .accessibilityIdentifier("coach-transcribe")
+        } else if recording.support == .unavailable && recording.hasRecording {
+            Text(L.t("這部手機沒有離線辨識，可以回放後自己輸入。", "No offline transcription on this iPhone. Replay and type your answer."))
+                .font(.footnote).foregroundStyle(.secondary)
+        }
+        if let message = recording.message {
+            Text(message).font(.footnote).foregroundStyle(Palette.miss)
+            if recording.messageNeedsSettings {
+                Button(L.t("系統設定", "System Settings")) {
+                    if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                }
+                .buttonStyle(.borderless)
+            }
+        }
+    }
+
+    /// One card of suggestions, then one way to keep going. The corrections,
+    /// the rewrite and the tip are a single lesson, so they share a card.
     @ViewBuilder
     private func feedbackSections(_ feedback: SpeakingCoach.Feedback) -> some View {
-        if !feedback.corrections.isEmpty {
-            Section {
-                ForEach(Array(feedback.corrections.enumerated()), id: \.offset) { offset, correction in
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(correction.original).foregroundStyle(.secondary)
-                        Label(correction.replacement, systemImage: "arrow.turn.down.right").foregroundStyle(Palette.accent)
-                        Text(correction.reason).font(.subheadline)
-                    }.textSelection(.enabled)
-                    // Scroll targets are rows; a Section's own id is not reliably one.
-                    .id(offset == 0 ? Self.feedbackAnchor : "coach-correction-\(offset)")
+        Section {
+            ForEach(Array(feedback.corrections.enumerated()), id: \.offset) { offset, correction in
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(correctionLine(correction))
+                    Text(correction.reason).font(.subheadline).foregroundStyle(.secondary)
                 }
-            } header: { Text(L.t("可留意的地方", "Suggestions to consider")) }
-            footer: { Text(L.t("這是 AI 建議，不是標準答案。", "AI suggestions, not an answer key.")) }
-        }
-        Section {
+                .textSelection(.enabled)
+                // Scroll targets are rows; a Section's own id is not reliably one.
+                .id(offset == 0 ? Self.feedbackAnchor : "coach-correction-\(offset)")
+            }
             rewriteRow(feedback, id: feedback.corrections.isEmpty ? Self.feedbackAnchor : "coach-rewrite")
-        } header: { Text(L.t("更自然的說法", "A natural rewrite")) }
-        Section {
-            Text(feedback.tip).textSelection(.enabled)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityIdentifier("coach-tip")
-        } header: { Text(L.t("一個小提示", "One tip")) }
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                Image(systemName: "lightbulb").foregroundStyle(Palette.review).accessibilityHidden(true)
+                Text(feedback.tip).font(.subheadline).textSelection(.enabled)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("coach-tip")
+            }
+        } header: { Label(L.t("AI 建議", "AI suggestions"), systemImage: "sparkles") }
         Section {
             HStack(alignment: .top) {
-                Text(feedback.followUp).textSelection(.enabled)
+                Text(feedback.followUp).font(.headline).textSelection(.enabled)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("coach-follow-up")
                 Spacer(minLength: 8)
@@ -434,17 +517,18 @@ struct SpeakingCoachView: View {
             }
             .disabled(recording.busy || session.isBusy)
             .accessibilityIdentifier("coach-answer-follow-up")
-        } header: { Text(L.t("再想一想", "A follow-up")) }
-        Section {
-            HStack {
-                Text(L.t("這次建議有幫助嗎？", "Was this helpful?"))
-                Spacer()
-                Button { helpful = true } label: { Image(systemName: helpful == true ? "hand.thumbsup.fill" : "hand.thumbsup") }
-                    .accessibilityLabel(L.t("有幫助", "Helpful"))
-                Button { helpful = false } label: { Image(systemName: helpful == false ? "hand.thumbsdown.fill" : "hand.thumbsdown") }
-                    .accessibilityLabel(L.t("沒有幫助", "Not helpful"))
-            }.buttonStyle(.borderless)
-        } footer: { Text(L.t("回饋僅保留在本次畫面，不會傳送回答。", "Feedback stays in this screen. Your answer is not sent anywhere.")) }
+        } header: { Text(L.t("接著練", "Keep going")) }
+    }
+
+    /// "original → replacement", the original struck through.
+    private func correctionLine(_ correction: SpeakingCoach.Correction) -> AttributedString {
+        var original = AttributedString(correction.original)
+        original.swiftUI.strikethroughStyle = .single
+        original.swiftUI.foregroundColor = .secondary
+        var replacement = AttributedString(correction.replacement)
+        replacement.swiftUI.foregroundColor = Palette.accent
+        replacement.swiftUI.font = .body.weight(.semibold)
+        return original + AttributedString("  →  ") + replacement
     }
 
     private var actions: some View {
@@ -465,24 +549,21 @@ struct SpeakingCoachView: View {
                     Text(L.t("正在結束上一個請求…", "Finishing the previous request…"))
                         .font(.caption).foregroundStyle(.secondary)
                 }
-                // Lives in the bar, not below the answer: on small iPhones the
-                // answer section ends under this bar, hiding the one control
-                // that unlocks suggestions.
-                if needsTranscriptReview {
-                    Button { needsTranscriptReview = false } label: {
-                        Label(L.t("辨識文字已確認", "Transcript checked"), systemImage: "checkmark")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                    .accessibilityIdentifier("coach-confirm-transcript")
-                }
-                Button { submit() } label: {
-                    Label(askedForThisAnswer ? L.t("再給一次建議", "Suggest again") : L.t("取得建議", "Get suggestions"),
-                          systemImage: askedForThisAnswer ? "arrow.clockwise" : "sparkles").frame(maxWidth: .infinity)
+                // One button. A fresh transcript is confirmed by sending it,
+                // so no extra step; the label says the text is being accepted.
+                Button {
+                    guard canSubmitAnswer else { return }
+                    needsTranscriptReview = false
+                    submit()
+                } label: {
+                    Label(needsTranscriptReview ? L.t("文字沒問題，取得建議", "Looks right, get suggestions")
+                          : askedForThisAnswer ? L.t("再給一次建議", "Suggest again") : L.t("取得建議", "Get suggestions"),
+                          systemImage: askedForThisAnswer && !needsTranscriptReview ? "arrow.clockwise" : "sparkles")
+                        .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
-                .disabled(!canSubmit)
-                .accessibilityIdentifier("coach-submit")
+                .disabled(!canSubmitAnswer)
+                .accessibilityIdentifier(needsTranscriptReview ? "coach-confirm-transcript" : "coach-submit")
             }
         }
         .padding(.horizontal, Metrics.gutter)
@@ -565,7 +646,7 @@ struct SpeakingCoachView: View {
     }
 
     private func submit() {
-        guard canSubmit else { return }
+        guard canSubmitAnswer else { return }
         inputCommitFailed = false
         Speaker.shared.stop()
         if answerFocused {
@@ -585,7 +666,7 @@ struct SpeakingCoachView: View {
 
     private func generateSuggestions() {
         provider.refreshAvailability()
-        guard provider.availability == .ready, canSubmit else { return }
+        guard provider.availability == .ready, canSubmitAnswer, !needsTranscriptReview else { return }
         submittedAnswer = answer
         let submitted = SpeakingCoach.Request(keyword: request.keyword, meaning: request.meaning,
             question: question, context: followUpQuestion == nil ? request.context : "", answer: answer, mode: request.mode)
@@ -602,77 +683,6 @@ struct SpeakingCoachView: View {
         recording.clear()
         Speaker.shared.stop()
         dismiss()
-    }
-
-    private var recordingSection: some View {
-        Section {
-            HStack {
-                // A status row, not a control: only the buttons below use the accent colour.
-                Label(L.t("錄音", "Recording"), systemImage: recording.state == .recording ? "mic.fill" : "waveform")
-                    .foregroundStyle(recording.state == .recording ? Palette.miss : Color.primary)
-                Spacer()
-                Text("\(Int(recording.seconds)) / 60 \(L.t("秒", "s"))").monospacedDigit().foregroundStyle(.secondary)
-                    .accessibilityIdentifier("coach-recording-duration")
-            }
-            if recording.state == .recording {
-                ProgressView(value: Double(recording.level)).tint(Palette.miss)
-                    .accessibilityLabel(L.t("麥克風音量", "Microphone level"))
-            }
-            HStack {
-                Button {
-                    if recording.state == .recording { recording.stop() }
-                    else if recording.hasRecording { retakeOpen = true }
-                    else { beginRecording() }
-                } label: {
-                    Label(recording.state == .recording ? L.t("停止", "Stop")
-                          : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄一段", "Record"),
-                          systemImage: recording.state == .recording ? "stop.fill" : "mic.fill")
-                }
-                .disabled(recording.busy && recording.state != .recording || session.isBusy)
-                .accessibilityIdentifier("coach-record")
-                Spacer()
-                if recording.hasRecording {
-                    Button { recording.togglePlayback() } label: {
-                        Label(recording.state == .playing ? L.t("停止回放", "Stop playback") : L.t("回放", "Play"),
-                              systemImage: recording.state == .playing ? "stop.fill" : "play.fill")
-                    }.disabled(recording.busy && recording.state != .playing)
-                        .accessibilityIdentifier("coach-play-recording")
-                    Button { recording.clear() } label: { Image(systemName: "trash") }
-                        .disabled(recording.busy)
-                        .accessibilityLabel(L.t("刪除錄音", "Delete recording"))
-                }
-            }.buttonStyle(.borderless)
-            if recording.state == .transcribing || recording.state == .downloading || recording.state == .requesting {
-                HStack {
-                    ProgressView()
-                    Text(recording.state == .downloading ? L.t("下載語言中…", "Downloading language…") : L.t("處理中…", "Processing…"))
-                    Spacer()
-                    Button(L.t("取消", "Cancel")) { recording.interrupt() }
-                }
-            } else if recording.support == .download {
-                Button { recording.downloadLanguage() } label: {
-                    Label(L.t("下載離線辨識語言", "Download transcription language"), systemImage: "arrow.down.circle")
-                }
-                Text(L.t("會向 Apple 下載語言資料，不會上傳錄音。", "Downloads language assets from Apple, without uploading your recording."))
-                    .font(.footnote).foregroundStyle(.secondary)
-            } else if recording.hasRecording && (recording.support == .modern || recording.support == .legacy) {
-                Button { recording.transcribe(hints: transcriptionHints) } label: {
-                    Label(L.t("轉成文字", "Transcribe"), systemImage: "text.bubble")
-                }.disabled(recording.busy || session.isBusy)
-                    .accessibilityIdentifier("coach-transcribe")
-            } else if recording.support == .unavailable {
-                Text(L.t("這部手機目前沒有可用的離線辨識。仍可錄音回放或自行輸入。", "Offline transcription is unavailable on this iPhone. You can still record, replay or type."))
-                    .font(.footnote).foregroundStyle(.secondary)
-            }
-            if let message = recording.message {
-                Text(message).font(.footnote).foregroundStyle(Palette.miss)
-                if recording.messageNeedsSettings {
-                    Button(L.t("系統設定", "System Settings")) {
-                        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
-                    }
-                }
-            }
-        } header: { Text(L.t("這次練習", "This take")) }
     }
 
     private func beginRecording() {

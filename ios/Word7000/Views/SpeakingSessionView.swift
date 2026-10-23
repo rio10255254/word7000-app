@@ -239,8 +239,7 @@ struct SpeakingSessionView: View {
             ScrollView {
               VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text(examplesOnly ? L.t("例句延伸", "Build on an example") : L.t("情境問答", "Conversation"))
-                        .font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                    // The practice type is already chosen right above the card.
                     HStack(alignment: .firstTextBaseline) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(card.keyword).font(.rounded(.title3, weight: .bold)).foregroundStyle(Palette.accent)
@@ -281,18 +280,7 @@ struct SpeakingSessionView: View {
                     }
                 }
                 .card(radius: Metrics.wordCardRadius, padding: 20)
-                Group {
-                    Button {
-                        Speaker.shared.stop()
-                        AppleSpeakingCoach.shared.refreshAvailability()
-                        coachOpen = true
-                    } label: {
-                        Label(L.t("錄音與口說練習", "Record and reflect"), systemImage: "mic")
-                            .font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                    .accessibilityIdentifier("speaking-coach-open")
-                }
+                coachEntry
               }
             }
             if revealed {
@@ -327,6 +315,38 @@ struct SpeakingSessionView: View {
                 }
             }
         }
+    }
+
+    /// Recording is part of answering, so it reads as the next step under the
+    /// question rather than one more equal-weight button.
+    private var coachEntry: some View {
+        let suggests = AppleSpeakingCoach.shared.availability == .ready
+        return Button {
+            Speaker.shared.stop()
+            AppleSpeakingCoach.shared.refreshAvailability()
+            coachOpen = true
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: "mic.circle.fill")
+                    .font(.system(size: 36))
+                    .foregroundStyle(Palette.accent)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L.t("錄下你的回答", "Record your answer")).font(.headline)
+                    Text(suggests ? L.t("回放、轉成文字，並取得 AI 建議", "Replay it, see it as text, and get AI suggestions")
+                         : L.t("回放、轉成文字，自己檢查一遍", "Replay it and check it as text"))
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                }
+                Spacer(minLength: 8)
+                Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .contentShape(Rectangle())
+            .card(radius: Metrics.wordCardRadius, padding: 16)
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("speaking-coach-open")
     }
 
     private func reveal(completed: Bool) {

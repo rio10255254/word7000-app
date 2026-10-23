@@ -240,6 +240,32 @@ final class SpeakingCoachTests: XCTestCase {
         assertFailure(.echoesQuestion) { try echo.validated() }
     }
 
+    func testComparisonMarksOnlyTheWordsTheRewriteChanged() throws {
+        let result = try XCTUnwrap(SpeakingCoach.comparison(
+            answer: "Yesterday I go to the park with my friend.",
+            rewrite: "Yesterday I went to the park with my friends."))
+        XCTAssertEqual(result.answer.filter(\.changed).map(\.text), ["go", "friend"])
+        XCTAssertEqual(result.rewrite.filter(\.changed).map(\.text), ["went", "friends"])
+        // Joining the pieces gives back each text exactly.
+        XCTAssertEqual(result.answer.map(\.text).joined(), "Yesterday I go to the park with my friend.")
+        XCTAssertEqual(result.rewrite.map(\.text).joined(), "Yesterday I went to the park with my friends.")
+
+        let joined = try XCTUnwrap(SpeakingCoach.comparison(answer: "I like it.", rewrite: "I really like it a lot."))
+        XCTAssertEqual(joined.rewrite.filter(\.changed).map(\.text), ["really", "a lot"])
+        XCTAssertTrue(joined.answer.allSatisfy { !$0.changed })
+
+        let caseOnly = try XCTUnwrap(SpeakingCoach.comparison(answer: "i think so", rewrite: "I think so."))
+        XCTAssertTrue(caseOnly.rewrite.allSatisfy { !$0.changed })
+
+        let chinese = try XCTUnwrap(SpeakingCoach.comparison(answer: "我昨天去公園玩。", rewrite: "我昨天去公園散步。"))
+        XCTAssertEqual(chinese.answer.filter(\.changed).map(\.text), ["玩"])
+        XCTAssertEqual(chinese.rewrite.filter(\.changed).map(\.text), ["散步"])
+
+        // A rewrite that shares almost nothing is not worth highlighting.
+        XCTAssertNil(SpeakingCoach.comparison(answer: "Dogs are fun.", rewrite: "My budget would shrink first on streaming services."))
+        XCTAssertNil(SpeakingCoach.comparison(answer: "...", rewrite: "Fine."))
+    }
+
     func testInstructionsFocusOnSuppliedWordSenseWithoutForcingLearnerFacts() {
         for mode in ConversationPromptMode.allCases {
             let instructions = request(mode: mode).instructions

@@ -18,6 +18,9 @@ struct SpeakingCoachView: View {
     @State private var retakeOpen = false
     @State private var reflection: SpeakingReflection?
     @State private var helpful: Bool?
+    /// The coach's follow-up, once the learner chose to answer it here.
+    @State private var followUpQuestion: String?
+    @State private var scrollToTop = 0
 
     let request: SpeakingCoach.Request
     let referenceAnswer: String
@@ -27,6 +30,9 @@ struct SpeakingCoachView: View {
 
     private var provider: AppleSpeakingCoach { .shared }
     private static let feedbackAnchor = "coach-feedback"
+    private static let topAnchor = "coach-top"
+    /// The question being answered: the card's, or the coach's follow-up.
+    private var question: String { followUpQuestion ?? request.question }
     private var answerLanguage: String { request.mode == .english ? "en-US" : "zh-TW" }
     private var canSubmit: Bool {
         !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -39,7 +45,7 @@ struct SpeakingCoachView: View {
     /// usually reuses; short function words need no help being recognized.
     private var transcriptionHints: [String] {
         var seen = Set<String>()
-        let words = request.question.split(whereSeparator: { !$0.isLetter && $0 != "'" }).map(String.init)
+        let words = question.split(whereSeparator: { !$0.isLetter && $0 != "'" }).map(String.init)
         return ([request.keyword] + words.filter { $0.count >= 4 })
             .filter { !$0.isEmpty && seen.insert($0.lowercased()).inserted }
             .prefix(20).map { $0 }
@@ -48,7 +54,7 @@ struct SpeakingCoachView: View {
     /// The question read back is not an answer; say so before the AI would
     /// politely "improve" it.
     private var answerEchoesQuestion: Bool {
-        SpeakingCoach.echoesQuestion(answer: answer, question: request.question)
+        SpeakingCoach.echoesQuestion(answer: answer, question: question)
     }
 
     /// Apple's server model sees the answer text, so the promise changes with it.
@@ -79,12 +85,19 @@ struct SpeakingCoachView: View {
                         guard feedback != nil else { return }
                         withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo(Self.feedbackAnchor, anchor: .top) }
                     }
+                    .onChange(of: scrollToTop) { _, _ in
+                        withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo(Self.topAnchor, anchor: .top) }
+                    }
             }
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .onAppear { provider.refreshAvailability() }
-        .onDisappear { pendingSubmission = false; session.cancel(); recording.clear(); Speaker.shared.stop() }
+        .onDisappear {
+            pendingSubmission = false; session.cancel(); recording.clear(); Speaker.shared.stop()
+            // The draft is kept for the card's question; a follow-up answer would reopen under it.
+            if followUpQuestion != nil { answer = ""; needsTranscriptReview = false }
+        }
         .task { await recording.refresh(language: answerLanguage) }
         .task(id: answer) {
             do { try await Task.sleep(for: .milliseconds(250)) } catch { return }
@@ -104,6 +117,13 @@ struct SpeakingCoachView: View {
             session.reset()
         }
         .onChange(of: session.feedback) { _, _ in helpful = nil }
+        .onChange(of: recording.state) { old, new in
+            // Stopping a take is when the learner wants to see it as text; a
+            // typed or edited answer is never replaced without asking.
+            guard old == .recording, new == .ready, recording.support == .modern || recording.support == .legacy,
+                  answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || answer == recording.transcript else { return }
+            recording.transcribe(hints: transcriptionHints)
+        }
         .onChange(of: IntelligenceSettings.shared.coachAllowed) { _, _ in provider.refreshAvailability() }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in recording.interrupt() }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)) { event in
@@ -139,17 +159,7 @@ struct SpeakingCoachView: View {
     /// The form on its own keeps the body's modifier chain short enough to type-check.
     private var coachForm: some View {
         Form {
-            Section {
-                Text(request.keyword)
-                    .font(.rounded(.headline)).foregroundStyle(Palette.accent)
-                HStack(alignment: .top) {
-                    Text(request.question).font(.headline).fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("coach-question")
-                    Spacer(minLength: 8)
-                    SpeakButton(text: request.question, language: "en-US")
-                        .disabled(recording.busy)
-                }
-            }
+            questionSection
 
             recordingSection
             answerSection
@@ -162,17 +172,16 @@ struct SpeakingCoachView: View {
                             .foregroundStyle(Palette.review)
                             .accessibilityIdentifier("coach-echo")
                     } else {
-                        Label(reflection.containsTarget
-                              ? L.t("找到目標詞：\(request.keyword)", "Target found: \(request.keyword)")
-                              : L.t("尚未找到目標詞：\(request.keyword)", "Target not found: \(request.keyword)"),
+                        // One line: whether the word was used matters most, the counts less.
+                        Label(answerSummary(reflection),
                               systemImage: reflection.containsTarget ? "checkmark.circle" : "circle.dashed")
+                            .accessibilityIdentifier("coach-answer-check")
                     }
-                    LabeledContent(L.t("句數（約）", "Sentences (approx.)"), value: "\(reflection.sentenceCount)")
-                    LabeledContent(request.mode == .english ? L.t("字數", "Words") : L.t("字元數", "Characters"), value: "\(reflection.unitCount)")
                 } header: { Text(L.t("回答檢視", "Your answer at a glance")) }
                 footer: { Text(L.t("找到詞語不代表用法或發音正確，也不影響學習成績。", "Finding a word does not verify usage or pronunciation, and does not change your progress.")) }
             }
-            if !referenceAnswer.isEmpty {
+            // The card's model answer does not answer a follow-up.
+            if !referenceAnswer.isEmpty && followUpQuestion == nil {
                 Section {
                     DisclosureGroup(L.t("參考回答", "Reference answer")) {
                         HStack(alignment: .top) {
@@ -235,6 +244,106 @@ struct SpeakingCoachView: View {
         .safeAreaInset(edge: .bottom) {
             if provider.availability == .ready { actions }
         }
+    }
+
+    private var questionSection: some View {
+        Section {
+            HStack {
+                Text(request.keyword)
+                    .font(.rounded(.headline)).foregroundStyle(Palette.accent)
+                if followUpQuestion != nil {
+                    Spacer()
+                    Text(L.t("接續提問", "Follow-up")).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                }
+            }
+            .id(Self.topAnchor)
+            HStack(alignment: .top) {
+                Text(question).font(.headline).fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("coach-question")
+                Spacer(minLength: 8)
+                // A follow-up comes from the coach in the practiced language.
+                SpeakButton(text: question, language: followUpQuestion == nil ? "en-US" : answerLanguage)
+                    .disabled(recording.busy)
+            }
+            if followUpQuestion != nil {
+                Button { answerFollowUp(nil) } label: {
+                    Label(L.t("回到原來的題目", "Back to the original question"), systemImage: "arrow.uturn.backward")
+                }
+                .disabled(recording.busy || session.isBusy)
+                .accessibilityIdentifier("coach-original-question")
+            }
+        }
+    }
+
+    private func answerSummary(_ reflection: SpeakingReflection) -> String {
+        let used = reflection.containsTarget
+            ? L.t("用到 \(request.keyword)", "Used \(request.keyword)")
+            : L.t("還沒用到 \(request.keyword)", "\(request.keyword) not used yet")
+        let size = request.mode == .english
+            ? L.t("\(reflection.unitCount) 個字", reflection.unitCount == 1 ? "1 word" : "\(reflection.unitCount) words")
+            : L.t("\(reflection.unitCount) 個字元", reflection.unitCount == 1 ? "1 character" : "\(reflection.unitCount) characters")
+        let sentences = L.t("約 \(reflection.sentenceCount) 句", reflection.sentenceCount == 1 ? "about 1 sentence" : "about \(reflection.sentenceCount) sentences")
+        return "\(used) · \(size) · \(sentences)"
+    }
+
+    /// The rewrite with what it changed highlighted, and the learner's own
+    /// words below with what it replaced struck through, so the lesson is
+    /// visible without comparing two sentences by eye.
+    @ViewBuilder
+    private func rewriteRow(_ feedback: SpeakingCoach.Feedback, id: String) -> some View {
+        let comparison = SpeakingCoach.comparison(answer: submittedAnswer ?? answer, rewrite: feedback.rewrite)
+        HStack(alignment: .top) {
+            Text(comparison.map { highlighted($0.rewrite, removed: false) } ?? AttributedString(feedback.rewrite))
+                .textSelection(.enabled)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("coach-rewrite")
+            Spacer(minLength: 8)
+            SpeakButton(text: feedback.rewrite, language: answerLanguage)
+                .disabled(recording.busy)
+        }
+        .id(id)
+        if let comparison, comparison.answer.contains(where: \.changed) || comparison.rewrite.contains(where: \.changed) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L.t("你的說法", "You said")).font(.caption).foregroundStyle(.secondary)
+                Text(highlighted(comparison.answer, removed: true))
+                    .font(.subheadline).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("coach-your-words")
+        }
+    }
+
+    private func highlighted(_ pieces: [SpeakingCoach.Piece], removed: Bool) -> AttributedString {
+        pieces.reduce(into: AttributedString()) { result, piece in
+            var part = AttributedString(piece.text)
+            if piece.changed {
+                if removed {
+                    part.swiftUI.strikethroughStyle = .single
+                    part.swiftUI.foregroundColor = Palette.miss
+                } else {
+                    part.swiftUI.foregroundColor = Palette.accent
+                    part.swiftUI.font = .body.weight(.semibold)
+                }
+            }
+            result += part
+        }
+    }
+
+    /// Answering the follow-up turns one reply into a short conversation. Nil
+    /// returns to the card's own question.
+    private func answerFollowUp(_ followUp: String?) {
+        pendingSubmission = false
+        dismissKeyboard()
+        Speaker.shared.stop()
+        recording.clear()
+        session.reset()
+        submittedAnswer = nil
+        needsTranscriptReview = false
+        inputCommitFailed = false
+        answer = ""
+        followUpQuestion = followUp
+        scrollToTop += 1
     }
 
     private var answerSection: some View {
@@ -304,15 +413,7 @@ struct SpeakingCoachView: View {
             footer: { Text(L.t("這是 AI 建議，不是標準答案。", "AI suggestions, not an answer key.")) }
         }
         Section {
-            HStack(alignment: .top) {
-                Text(feedback.rewrite).textSelection(.enabled)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("coach-rewrite")
-                Spacer(minLength: 8)
-                SpeakButton(text: feedback.rewrite, language: answerLanguage)
-                    .disabled(recording.busy)
-            }
-            .id(feedback.corrections.isEmpty ? Self.feedbackAnchor : "coach-rewrite")
+            rewriteRow(feedback, id: feedback.corrections.isEmpty ? Self.feedbackAnchor : "coach-rewrite")
         } header: { Text(L.t("更自然的說法", "A natural rewrite")) }
         Section {
             Text(feedback.tip).textSelection(.enabled)
@@ -328,6 +429,11 @@ struct SpeakingCoachView: View {
                 SpeakButton(text: feedback.followUp, language: answerLanguage)
                     .disabled(recording.busy)
             }
+            Button { answerFollowUp(feedback.followUp) } label: {
+                Label(L.t("回答這題", "Answer this"), systemImage: "arrowshape.turn.up.left")
+            }
+            .disabled(recording.busy || session.isBusy)
+            .accessibilityIdentifier("coach-answer-follow-up")
         } header: { Text(L.t("再想一想", "A follow-up")) }
         Section {
             HStack {
@@ -482,7 +588,7 @@ struct SpeakingCoachView: View {
         guard provider.availability == .ready, canSubmit else { return }
         submittedAnswer = answer
         let submitted = SpeakingCoach.Request(keyword: request.keyword, meaning: request.meaning,
-            question: request.question, context: request.context, answer: answer, mode: request.mode)
+            question: question, context: followUpQuestion == nil ? request.context : "", answer: answer, mode: request.mode)
         #if DEBUG
         if let timeout = provider.testingTimeout { session.submit(submitted, timeout: timeout); return }
         #endif

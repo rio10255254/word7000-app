@@ -205,6 +205,31 @@ final class SpeakingCoachTests: XCTestCase {
         return app
     }
 
+    func testFollowUpCanBeAnsweredThenLeftForTheOriginalQuestion() {
+        let app = launch(coach: "success", englishUI: true)
+        openSpeaking(app)
+        let question = openCoach(app)
+        enterAnswer("I practice daily.", in: app)
+        submit(app)
+        let followUp = app.staticTexts["coach-follow-up"]
+        reveal(followUp, in: app, scrollingUp: false)
+        let followUpText = followUp.label
+        XCTAssertFalse(followUpText.isEmpty)
+        tap(app.buttons["coach-answer-follow-up"], in: app)
+        let shown = app.staticTexts["coach-question"]
+        reveal(shown, in: app)
+        XCTAssertEqual(shown.label, followUpText)
+        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
+        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "", "A new question starts a new answer")
+        assertNoFeedback(app)
+        XCTAssertFalse(app.buttons["coach-submit"].isEnabled)
+        snapshot(app, "coach-follow-up-question")
+        tap(app.buttons["coach-original-question"], in: app)
+        reveal(app.staticTexts["coach-question"], in: app)
+        XCTAssertEqual(app.staticTexts["coach-question"].label, question)
+        closeCoach(app)
+    }
+
     func testRecordingReviewPlaybackAndDeletionWithExplicitFixture() {
         let app = launch(coach: "success", englishUI: true, recording: true)
         openSpeaking(app)
@@ -216,6 +241,8 @@ final class SpeakingCoachTests: XCTestCase {
         tap(playback, in: app)
         XCTAssertTrue(playback.label.contains("Stop"))
         playback.tap()
+        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "I practice with my friend every day.",
+                       "Stopping a take transcribes it without another tap")
         tap(app.buttons["coach-transcribe"], in: app)
         XCTAssertEqual(app.textViews["coach-answer"].value as? String, "I practice with my friend every day.")
         XCTAssertFalse(app.buttons["coach-submit"].isEnabled, "Never coach an unconfirmed transcript")

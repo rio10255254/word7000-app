@@ -92,11 +92,12 @@ jobs:
           REQUESTED_RUN: ${{ inputs.native_validation_run }}
         run: |
           set -euo pipefail
-          # Release orchestration and its portable settings-check harness may differ.
+          # Release orchestration, its portable settings-check harness and the
+          # release notes (removed from the staged build) may differ.
           # All shipped code/data and the native core/UI tests must still match.
           # The portable harness is executed by npm test above, including on Linux.
           same_source() {
-            git diff --quiet "$1" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift'
+            git diff --quiet "$1" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift' ':(exclude)ios/Release/README.md'
           }
           RUN_ID="$REQUESTED_RUN"
           if [ -z "$RUN_ID" ]; then
@@ -120,7 +121,7 @@ jobs:
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$RUNNER_TEMP/native-validation.json"
           # A push run is always the full suite; a manual run counts only with checks=all.
           TESTED_SHA=$(node -e 'const r=require(process.argv[1]); const full = r.event==="push" || (r.event==="workflow_dispatch" && r.display_title==="Native iOS: all checks"); if(r.path!==".github/workflows/ios-native.yml" || !full || !/^[a-f0-9]{40}$/.test(r.head_sha)) throw new Error("Not a full native run"); if(r.status==="completed" && r.conclusion!=="success") throw new Error("Native validation failed"); process.stdout.write(r.head_sha);' "$RUNNER_TEMP/native-validation.json")
-          git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift'
+          git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift' ':(exclude)ios/Release/README.md'
           echo "NATIVE_VALIDATION_RUN=$RUN_ID" >> "$GITHUB_ENV"
 
       - uses: expo/expo-github-action@v8

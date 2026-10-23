@@ -6,6 +6,9 @@
 # Screenshots are uploaded as an artifact and pushed to the
 # `native-screenshots` branch so they can be viewed from a phone.
 name: Native iOS
+# A full manual run is named so a release can recognise it and reuse it for
+# identical source (see ios-release.yml) instead of testing the same code again.
+run-name: "${{ inputs.checks && format('Native iOS: {0} checks', inputs.checks) || github.event.head_commit.message }}"
 
 on:
   push:

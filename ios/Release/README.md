@@ -24,6 +24,29 @@ The app and widget targets both declare the existing App Group
 `com.rio.word7000.ExpoWidgetsTarget`: omitting it makes EAS try to disable the
 group on Apple's registered identifier and blocks the release.
 
+### Uploading straight to Apple
+
+Signing still uses the certificate and profiles EAS stores, which takes
+seconds. The upload goes straight to App Store Connect with `xcrun altool`
+when these repository secrets exist (Settings > Secrets and variables >
+Actions); otherwise it falls back to `eas submit`:
+
+- `ASC_KEY_ID`: the key's ID, such as `ABC123DEFG`.
+- `ASC_ISSUER_ID`: the Issuer ID shown above the key list.
+- `ASC_PRIVATE_KEY`: the whole contents of the downloaded `AuthKey_<ID>.p8`,
+  including the BEGIN and END lines.
+
+Create the key in App Store Connect > Users and Access > Integrations >
+App Store Connect API > Team Keys, with the App Manager role. Apple lets you
+download the `.p8` only once.
+
+### Reusing a passed run
+
+A release reuses a passed full Native iOS run of identical source, usually
+the pull request's run before merging, instead of waiting for the merge
+commit's own run. Start one from Actions > Native iOS > Run workflow with
+`all` checks.
+
 The Native iOS workflow checks iOS 18, 26, and 27 separately. Its screenshots
 are saved in version-specific folders on the `native-screenshots` branch.
 

@@ -48,6 +48,9 @@ enum L {
     static func cardCount(done: Int, total: Int) -> String { "\(min(done + 1, total)) / \(total)" }
     static var showAnswer: String { t("看答案", "Show answer") }
     static var tapToReveal: String { t("點一下看答案", "Tap to see the answer") }
+    // The answer is Chinese when learning English and English when learning Chinese.
+    static var autoReveal: String { t("直接顯示中文", "Show English right away") }
+    static var autoRevealHint: String { t("卡片直接顯示中文，不用先點一下", "Cards show the English without a tap first") }
     static var dontKnow: String { t("不熟", "Not yet") }
     static var knowIt: String { t("認識", "Know it") }
     static var undo: String { t("復原上一張", "Undo") }

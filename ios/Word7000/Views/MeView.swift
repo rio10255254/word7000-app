@@ -115,6 +115,11 @@ struct SettingsView: View {
                         }
                     ), displayedComponents: .hourAndMinute)
                 }
+                Toggle(L.autoReveal, isOn: Binding(
+                    get: { model.settings.studyAutoReveal ?? false },
+                    set: { model.settings.studyAutoReveal = $0 }
+                ))
+                .accessibilityIdentifier("settings-auto-reveal")
                 Toggle(L.t("觸覺回饋", "Haptic feedback"), isOn: Binding(
                     get: { model.settings.hapticsEnabled ?? true },
                     set: { model.settings.hapticsEnabled = $0 }

@@ -1,0 +1,80 @@
+    t =    69.02s     Find the "speaking-coach-open" Button
+    t =    69.08s     Check for interrupting elements affecting "speaking-coach-open" Button
+    t =    69.13s     Synthesize event
+    t =    69.46s     Wait for com.rio.word7000 to idle
+    t =    69.95s Waiting 5.0s for "coach-close" Button to exist
+    t =    70.98s     Checking `Expect predicate `existsNoRetry == 1` for object "coach-close" Button`
+    t =    70.98s         Checking existence of `"coach-close" Button`
+    t =    71.08s Waiting 5.0s for "coach-question" StaticText to exist
+    t =    72.09s     Checking `Expect predicate `existsNoRetry == 1` for object "coach-question" StaticText`
+    t =    72.09s         Checking existence of `"coach-question" StaticText`
+    t =    72.21s Find the "coach-question" StaticText
+    t =    72.31s Waiting 1.0s for "coach-answer" TextView to exist
+    t =    73.31s     Checking `Expect predicate `existsNoRetry == 1` for object "coach-answer" TextView`
+    t =    73.31s         Checking existence of `"coach-answer" TextView`
+    t =    73.41s     Checking existence of `"coach-answer" TextView`
+    t =    73.50s Find the "coach-answer" TextView
+    t =    73.62s Find the "coach-answer" TextView
+    t =    73.73s Find the "coach-answer" TextView
+    t =    73.82s Find the "coach-answer" TextView
+    t =    73.91s Find the "coach-answer" TextView
+    t =    74.01s Find the "coach-answer" TextView
+    t =    74.09s Find the "coach-answer" TextView
+    t =    74.19s Find the "coach-answer" TextView
+    t =    74.28s Find the "coach-answer" TextView
+    t =    74.39s Find the "coach-answer" TextView
+    t =    74.47s Find the "coach-answer" TextView
+    t =    74.56s Waiting 5.0s for "coach-answer" TextView to exist
+    t =    75.61s     Checking `Expect predicate `existsNoRetry == 1` for object "coach-answer" TextView`
+    t =    75.61s         Checking existence of `"coach-answer" TextView`
+    t =    75.71s Find the "coach-answer" TextView
+    t =    75.82s Checking existence of `"coach-play-recording" Button`
+    t =    75.92s Find the "coach-answer" TextView
+    t =    76.06s Waiting 1.0s for "coach-close" Button to exist
+    t =    77.07s     Checking `Expect predicate `existsNoRetry == 1` for object "coach-close" Button`
+    t =    77.07s         Checking existence of `"coach-close" Button`
+    t =    77.16s     Checking existence of `"coach-close" Button`
+    t =    77.26s Find the "coach-close" Button
+    t =    77.36s Find the "coach-close" Button
+    t =    77.47s Find the "coach-close" Button
+    t =    77.57s Find the "coach-close" Button
+    t =    77.68s Find the "coach-close" Button
+    t =    77.79s Find the "coach-close" Button
+    t =    77.89s Find the "coach-close" Button
+    t =    77.98s Find the "coach-close" Button
+    t =    78.08s Find the "coach-close" Button
+    t =    78.18s Find the "coach-close" Button
+    t =    78.26s Find the "coach-close" Button
+    t =    78.36s Waiting 5.0s for "coach-close" Button to exist
+    t =    79.36s     Checking `Expect predicate `existsNoRetry == 1` for object "coach-close" Button`
+    t =    79.36s         Checking existence of `"coach-close" Button`
+    t =    79.46s Find the "coach-close" Button
+    t =    79.57s Tap "coach-close" Button
+    t =    79.57s     Wait for com.rio.word7000 to idle
+    t =    79.58s     Find the "coach-close" Button
+    t =    79.67s     Check for interrupting elements affecting "coach-close" Button
+    t =    79.78s     Synthesize event
+    t =    80.11s     Wait for com.rio.word7000 to idle
+    t =    81.52s Checking `Expect predicate `exists == 0` for object "coach-close" Button`
+    t =    81.52s     Checking existence of `"coach-close" Button`
+    t =    81.59s Waiting 5.0s for "speaking-question" StaticText to exist
+    t =    82.62s     Checking `Expect predicate `existsNoRetry == 1` for object "speaking-question" StaticText`
+    t =    82.62s         Checking existence of `"speaking-question" StaticText`
+    t =    82.71s Tear Down
+Test Case '-[Word7000UITests.SpeakingCoachTests testRecordingReviewPlaybackAndDeletionWithExplicitFixture]' passed (82.943 seconds).
+Test Suite 'SpeakingCoachTests' passed at 2026-10-24 09:29:50.292.
+	 Executed 9 tests, with 0 failures (0 unexpected) in 797.570 (797.589) seconds
+Test Suite 'Word7000UITests.xctest' failed at 2026-10-24 09:29:50.295.
+	 Executed 33 tests, with 1 failure (0 unexpected) in 1771.834 (1771.879) seconds
+Test Suite 'All tests' failed at 2026-10-24 09:29:50.296.
+	 Executed 33 tests, with 1 failure (0 unexpected) in 1771.834 (1771.885) seconds
+2026-10-24 09:30:48.373 xcodebuild[14830:45994] [MT] IDETestOperationsObserverDebug: 1865.719 elapsed -- Testing started completed.
+2026-10-24 09:30:48.381 xcodebuild[14830:45994] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-24 09:30:48.381 xcodebuild[14830:45994] [MT] IDETestOperationsObserverDebug: 1865.719 sec, +1865.719 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST FAILED **
+
+Testing started

@@ -1,0 +1,302 @@
+Attributes: Application, 0x115040f40, pid: 48409, label: 'Word7000'
+Element subtree:
+ →Application, 0x115040f40, pid: 48409, label: 'Word7000'
+    Window (Main), 0x1150421a0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x115042560, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x115042680, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x115043970, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x115043a90, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x115318d60, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x115043730, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x115043850, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1150422c0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1150423e0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1150427a0, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x1150428c0, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x115042b90, {{0.0, 20.0}, {375.0, 148.0}}, identifier: '單字'
+                              Other, 0x115042cb0, {{278.5, 25.0}, {42.0, 34.0}}, identifier: 'words-filter', label: '篩選'
+                                Other, 0x115042dd0, {{278.5, 25.0}, {42.0, 34.0}}
+                                  Button, 0x115042ef0, {{278.5, 25.0}, {42.0, 34.0}}, identifier: 'words-filter', label: '篩選'
+                              Other, 0x115043010, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'words-add', label: '加號'
+                                Other, 0x115043130, {{328.5, 27.5}, {30.5, 29.5}}
+                                  Button, 0x115043250, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'words-add', label: '加號'
+                                    Button, 0x115043370, {{328.5, 27.5}, {30.5, 29.5}}
+                                      Other, 0x11504b6f0, {{328.5, 27.5}, {30.5, 29.5}}
+                                        Image, 0x11504b810, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'plus', label: '加號'
+                              StaticText, 0x11504b930, {{16.0, 67.5}, {64.5, 41.0}}, label: '單字'
+                              SearchField, 0x11504ba50, {{16.0, 117.0}, {343.0, 36.0}}, label: '搜尋英文、中文或例句', placeholderValue: '搜尋英文、中文或例句'
+                                Image, 0x11504bb70, {{22.0, 125.5}, {20.5, 18.5}}, identifier: 'magnifyingglass', label: 'Search'
+                            Other, 0x11504bc90, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x11504bf50, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x11504c070, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x11504c190, {{0.0, 0.0}, {375.0, 667.0}}
+                                    CollectionView, 0x115046330, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x115046450, {{-16.0, -1166.0}, {407.0, 1483.5}}
+                                      Cell, 0x115046570, {{16.0, 168.0}, {343.0, 132.0}}
+                                        Other, 0x115046690, {{16.0, 168.0}, {343.0, 132.0}}
+                                          Other, 0x1150467b0, {{16.0, 168.0}, {343.0, 132.0}}
+                                            Other, 0x1150468d0, {{16.0, 168.0}, {343.0, 132.0}}
+                                        Other, 0x1150469f0, {{16.0, 168.0}, {343.0, 132.0}}
+                                          Other, 0x115046b10, {{16.0, 168.0}, {343.0, 132.0}}
+                                            Other, 0x115046c30, {{16.0, 168.0}, {343.0, 132.0}}
+                                              ScrollView, 0x115046d50, {{16.0, 168.0}, {343.0, 132.0}}
+                                                Other, 0x115046e70, {{16.0, 168.0}, {292.0, 132.0}}
+                                                  Button, 0x115046f90, {{16.0, 172.0}, {140.0, 124.0}}, identifier: 'bank-core', label: '7000 單字、7000 個', Selected
+                                                    Image, 0x1150470b0, {{32.5, 187.5}, {17.5, 21.5}}, identifier: 'character.book.closed.fill', label: 'character.book.closed.fill'
+                                                    StaticText, 0x1150471d0, {{30.0, 245.0}, {73.0, 18.0}}, label: '7000 單字'
+                                                    StaticText, 0x1150472f0, {{30.0, 265.2}, {45.0, 14.5}}, label: '7000 個'
+                                                    Image, 0x115047410, {{123.5, 264.0}, {17.0, 17.0}}, identifier: 'checkmark.circle.fill', label: '已選取', Selected
+                                                  Button, 0x115047530, {{168.0, 172.0}, {140.0, 124.0}}, identifier: 'words-scan', label: '試用還能掃描 5 次、掃描單字表'
+                                                    Image, 0x115047650, {{184.5, 188.0}, {21.5, 21.5}}, identifier: 'plus.viewfinder', label: 'plus.viewfinder'
+                                                    StaticText, 0x115047770, {{272.0, 186.0}, {22.0, 22.0}}, label: '試用還能掃描 5 次'
+                                                    StaticText, 0x115047890, {{182.0, 264.0}, {74.5, 18.0}}, label: '掃描單字表'
+                                      Other, 0x1150479b0, {{-16.0, 317.5}, {407.0, 309485.5}}
+                                      Cell, 0x115047ad0, {{16.0, 317.5}, {343.0, 39.0}}
+                                        Other, 0x115047bf0, {{16.0, 317.5}, {343.0, 39.0}}
+                                        Other, 0x115047d10, {{16.0, 317.5}, {343.0, 39.0}}
+                                          Other, 0x115047e30, {{16.0, 317.5}, {343.0, 39.0}}
+                                            Other, 0x115047f50, {{16.0, 317.5}, {343.0, 39.0}}
+                                              StaticText, 0x115048070, {{32.0, 334.5}, {61.0, 16.0}}, label: '7000 單字'
+                                              StaticText, 0x115048190, {{294.0, 334.5}, {49.0, 16.0}}, label: '7000 個'
+                                      Cell, 0x1150482b0, {{16.0, 356.5}, {343.0, 62.5}}
+                                        Other, 0x1150483d0, {{16.0, 356.5}, {343.0, 62.5}}
+                                          Other, 0x1150484f0, {{16.0, 356.5}, {343.0, 62.5}}
+                                        Other, 0x115048610, {{16.0, 356.5}, {343.0, 62.5}}
+                                          Other, 0x115048730, {{16.0, 356.5}, {343.0, 62.5}}
+                                            Other, 0x115048850, {{16.0, 356.5}, {343.0, 62.5}}
+                                              Button, 0x115048970, {{16.0, 356.5}, {343.0, 62.5}}, label: '未學、abandon、遺棄'
+                                                Image, 0x115048a90, {{34.0, 381.5}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x115048bb0, {{60.0, 367.5}, {69.0, 20.5}}, label: 'abandon'
+                                                StaticText, 0x115048cd0, {{60.0, 390.0}, {30.0, 18.0}}, label: '遺棄'
+                                                Image, 0x115048df0, {{335.0, 381.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x115048f10, {{16.0, 419.0}, {343.0, 62.5}}
+                                        Other, 0x115049030, {{16.0, 419.0}, {343.0, 62.5}}
+                                          Other, 0x115049150, {{16.0, 419.0}, {343.0, 62.5}}
+                                        Other, 0x115049270, {{16.0, 419.0}, {343.0, 62.5}}
+                                          Other, 0x115049390, {{16.0, 419.0}, {343.0, 62.5}}
+                                            Other, 0x1150494b0, {{16.0, 419.0}, {343.0, 62.5}}
+                                              Button, 0x1150495d0, {{16.0, 419.0}, {343.0, 62.5}}, label: '未學、abandoned、廢棄的'
+                                                Image, 0x1150496f0, {{34.0, 444.0}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x115049810, {{60.0, 430.0}, {89.0, 20.5}}, label: 'abandoned'
+                                                StaticText, 0x115049930, {{60.0, 452.5}, {45.0, 18.0}}, label: '廢棄的'
+                                                Image, 0x115049a50, {{335.0, 444.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x115049b70, {{60.0, 418.5}, {299.0, 0.5}}
+                                      Cell, 0x115049c90, {{16.0, 481.5}, {343.0, 62.5}}
+                                        Other, 0x11503a690, {{16.0, 481.5}, {343.0, 62.5}}
+                                          Other, 0x11503a7b0, {{16.0, 481.5}, {343.0, 62.5}}
+                                        Other, 0x11503a8d0, {{16.0, 481.5}, {343.0, 62.5}}
+                                          Other, 0x11503a9f0, {{16.0, 481.5}, {343.0, 62.5}}
+                                            Other, 0x11503ab10, {{16.0, 481.5}, {343.0, 62.5}}
+                                              Button, 0x115404080, {{16.0, 481.5}, {343.0, 62.5}}, label: '未學、abbey、大修道院'
+                                                Image, 0x1154041a0, {{34.0, 506.5}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x1154042c0, {{60.0, 492.5}, {49.0, 20.5}}, label: 'abbey'
+                                                StaticText, 0x1154043e0, {{60.0, 515.0}, {60.0, 18.0}}, label: '大修道院'
+                                                Image, 0x115404500, {{335.0, 506.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x115404620, {{60.0, 481.0}, {299.0, 0.5}}
+                                      Cell, 0x115404740, {{16.0, 544.0}, {343.0, 62.5}}
+                                        Other, 0x115404a70, {{16.0, 544.0}, {343.0, 62.5}}
+                                          Other, 0x115404b90, {{16.0, 544.0}, {343.0, 62.5}}
+                                        Other, 0x115404cb0, {{16.0, 544.0}, {343.0, 62.5}}
+                                          Other, 0x115404dd0, {{16.0, 544.0}, {343.0, 62.5}}
+                                            Other, 0x115404ef0, {{16.0, 544.0}, {343.0, 62.5}}
+                                              Button, 0x115405010, {{16.0, 544.0}, {343.0, 62.5}}, label: '未學、abc、字母'
+                                                Image, 0x115405130, {{34.0, 569.0}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x115405250, {{60.0, 555.0}, {29.5, 20.5}}, label: 'abc'
+                                                StaticText, 0x115405370, {{60.0, 577.5}, {30.0, 18.0}}, label: '字母'
+                                                Image, 0x115405490, {{335.0, 569.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x1154055b0, {{60.0, 543.5}, {299.0, 0.5}}
+                                      Cell, 0x1154056d0, {{16.0, 606.5}, {343.0, 62.5}}
+                                        Other, 0x1154057f0, {{16.0, 606.5}, {343.0, 62.5}}
+                                          Other, 0x115405910, {{16.0, 606.5}, {343.0, 62.5}}
+                                        Other, 0x115405a30, {{16.0, 606.5}, {343.0, 62.5}}
+                                          Other, 0x115405b50, {{16.0, 606.5}, {343.0, 62.5}}
+                                            Other, 0x115405c70, {{16.0, 606.5}, {343.0, 62.5}}
+                                              Button, 0x115405d90, {{16.0, 606.5}, {343.0, 62.5}}, label: '未學、abide、遵守'
+                                                Image, 0x115405eb0, {{34.0, 631.5}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x115405fd0, {{60.0, 617.5}, {44.0, 20.5}}, label: 'abide'
+                                                StaticText, 0x1154060f0, {{60.0, 640.0}, {30.0, 18.0}}, label: '遵守'
+                                                Image, 0x115406210, {{335.0, 631.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x115406330, {{60.0, 606.0}, {299.0, 0.5}}
+                                      Other, 0x115406450, {{342.0, 168.0}, {30.0, 450.0}}, label: 'Vertical scroll bar, 686 pages', value: 0%
+                                        Other, 0x115406570, {{369.0, 171.0}, {3.0, 36.0}}
+                                      Other, 0x115406690, {{342.0, 168.0}, {30.0, 450.0}}, label: 'Vertical scroll bar, 686 pages', value: 0%
+                                        Other, 0x1154067b0, {{369.0, 171.0}, {3.0, 36.0}}
+                TabBar, 0x1154068d0, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x1154069f0, {{2.0, 619.0}, {121.0, 48.0}}, identifier: 'sun.max.fill', label: '今天'
+                  Button, 0x115406b10, {{127.0, 619.0}, {121.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字', Selected
+                    Image, 0x115406c30, {{170.5, 621.5}, {33.5, 29.5}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                  Button, 0x115406d50, {{252.0, 619.0}, {121.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我'
+      Other, 0x115406e70, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x115406f90, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1154070b0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1154071d0, {{0.0, 0.0}, {375.0, 667.0}}
+              NavigationBar, 0x1154072f0, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '掃描單字表'
+                Other, 0x115407410, {{16.0, 28.0}, {42.0, 28.5}}, identifier: 'scan-close', label: '關閉'
+                  Other, 0x115407530, {{16.0, 28.0}, {42.0, 28.5}}
+                    Button, 0x115407650, {{16.0, 28.0}, {42.0, 28.5}}, identifier: 'scan-close', label: '關閉'
+                StaticText, 0x115407770, {{145.5, 32.0}, {84.5, 20.5}}, label: '掃描單字表'
+              Other, 0x115407890, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1154079b0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x115407ad0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x115407bf0, {{0.0, 0.0}, {375.0, 667.0}}
+                      CollectionView, 0x115407d10, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x115407e30, {{-16.0, -1270.0}, {407.0, 1639.0}}
+                        Cell, 0x115407f50, {{16.0, 99.0}, {343.0, 208.5}}
+                          Other, 0x115408070, {{16.0, 99.0}, {343.0, 208.5}}
+                            Other, 0x115408190, {{16.0, 99.0}, {343.0, 208.5}}
+                          Other, 0x1154082b0, {{16.0, 99.0}, {343.0, 208.5}}
+                            Other, 0x1154083d0, {{16.0, 99.0}, {343.0, 208.5}}
+                              Other, 0x1154084f0, {{16.0, 99.0}, {343.0, 208.5}}
+                                Image, 0x115408610, {{173.0, 133.5}, {29.5, 29.5}}, identifier: 'doc.text.viewfinder', label: 'Scan Document'
+                                StaticText, 0x115408730, {{37.5, 192.0}, {300.0, 58.0}}, label: '掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。'
+                                Image, 0x115408850, {{123.5, 267.5}, {14.5, 17.5}}, identifier: 'sparkles', label: 'Sparkle'
+                                StaticText, 0x115408970, {{123.5, 267.5}, {135.0, 17.5}}, label: '試用還能掃描 5 次'
+                        Cell, 0x115408a90, {{16.0, 307.5}, {343.0, 44.0}}
+                          Other, 0x115408bb0, {{16.0, 307.5}, {343.0, 44.0}}
+                            Other, 0x115408cd0, {{16.0, 307.5}, {343.0, 44.0}}
+                          Other, 0x115408df0, {{16.0, 307.5}, {343.0, 44.0}}
+                            Other, 0x115408f10, {{16.0, 307.5}, {343.0, 44.0}}
+                              Other, 0x115409030, {{16.0, 307.5}, {343.0, 44.0}}
+                                Button, 0x115409150, {{16.0, 307.5}, {343.0, 44.0}}, identifier: 'scan-choose-photo', label: '從相簿選擇'
+                                  Image, 0x115409270, {{33.0, 319.0}, {26.5, 21.5}}, identifier: 'photo.on.rectangle', label: 'photo.on.rectangle'
+                                  StaticText, 0x115409390, {{33.0, 319.0}, {127.5, 21.5}}, label: '從相簿選擇'
+                        Other, 0x1154094b0, {{160.5, 307.0}, {198.5, 0.5}}
+                        Other, 0x114eeb810, {{-16.0, 369.0}, {407.0, 1575.5}}
+                        Cell, 0x114eb25a0, {{16.0, 369.0}, {343.0, 39.0}}
+                          Other, 0x114ef0020, {{16.0, 369.0}, {343.0, 39.0}}
+                          Other, 0x114eed260, {{16.0, 369.0}, {343.0, 39.0}}
+                            Other, 0x114ef0580, {{16.0, 369.0}, {343.0, 39.0}}
+                              Other, 0x114eefc00, {{16.0, 369.0}, {343.0, 39.0}}
+                                StaticText, 0x114eebf70, {{16.0, 369.0}, {343.0, 39.0}}, label: '或貼上文字'
+                        Cell, 0x114eef7e0, {{16.0, 408.0}, {343.0, 108.5}}
+                          Other, 0x114eef3c0, {{16.0, 408.0}, {343.0, 108.5}}
+                            Other, 0x114eebb50, {{16.0, 408.0}, {343.0, 108.5}}
+                          Other, 0x114eeefa0, {{16.0, 408.0}, {343.0, 108.5}}
+                            Other, 0x114e2d410, {{16.0, 408.0}, {343.0, 108.5}}
+                              Other, 0x114e2d530, {{16.0, 408.0}, {343.0, 108.5}}
+                                TextField, 0x114e2d650, {{32.0, 419.0}, {311.0, 86.5}}, identifier: 'scan-pasted-text', placeholderValue: 'abandon v. 放棄 benefit n. 好處'
+                                  Other, 0x114e2d770, {{32.0, 472.5}, {311.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                    Other, 0x114e2d890, {{35.0, 499.5}, {305.0, 3.0}}
+                        Cell, 0x114e2d9b0, {{16.0, 516.5}, {343.0, 44.0}}
+                          Other, 0x114e2dad0, {{16.0, 516.5}, {343.0, 44.0}}
+                            Other, 0x114e2dbf0, {{16.0, 516.5}, {343.0, 44.0}}
+                          Other, 0x114e2dd10, {{16.0, 516.5}, {343.0, 44.0}}
+                            Other, 0x114e2de30, {{16.0, 516.5}, {343.0, 44.0}}
+                              Other, 0x114e2df50, {{16.0, 516.5}, {343.0, 44.0}}
+                                Button, 0x114e2e070, {{16.0, 516.5}, {343.0, 44.0}}, identifier: 'scan-read-pasted', label: '讀取貼上的文字', Disabled
+                        Other, 0x114e2e190, {{32.0, 516.0}, {327.0, 0.5}}
+                        Cell, 0x114e2e2b0, {{16.0, 560.5}, {343.0, 50.0}}
+                          Other, 0x114e2e3d0, {{16.0, 560.5}, {343.0, 50.0}}
+                          Other, 0x114e2e4f0, {{16.0, 560.5}, {343.0, 50.0}}
+                            Other, 0x114e2e610, {{16.0, 560.5}, {343.0, 50.0}}
+                              Other, 0x114e2e730, {{16.0, 560.5}, {343.0, 50.0}}
+                                StaticText, 0x114e2e850, {{16.0, 560.5}, {343.0, 50.0}}, label: '在「照片」App 長按文字即可拷貝（原況文字），再貼到這裡'
+                        Other, 0x114e2e970, {{342.0, 64.0}, {30.0, 603.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x114e2ea90, {{369.0, 123.5}, {3.0, 540.5}}
+                        Other, 0x114e2ebb0, {{342.0, 64.0}, {30.0, 603.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x114e2ecd0, {{369.0, 123.5}, {3.0, 540.5}}
+      Other, 0x114e2edf0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x114e2ef10, {{-375.0, -667.0}, {1125.0, 2001.0}}
+        Other, 0x114e2f030, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x114e2f150, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x114e2f270, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x114e2f390, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x114e2f4b0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x114e2f5d0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x114e2f6f0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x114e2f810, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x114e2f930, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x114e2fa50, {{0.0, 40.0}, {375.0, 627.0}}
+                            Image, 0x114e2fb70, {{-150.0, -110.0}, {675.0, 927.0}}
+                            Other, 0x114e2fc90, {{0.0, 40.0}, {375.0, 627.0}}
+                              Other, 0x114e2fdb0, {{0.0, 40.0}, {375.0, 627.0}}
+                                Other, 0x114e2fed0, {{0.0, 40.0}, {375.0, 627.0}}
+                                  Other, 0x114e2fff0, {{0.0, 40.0}, {375.0, 627.0}}
+                                    Other, 0x114e30110, {{0.0, 40.0}, {375.0, 627.0}}
+                                      Other, 0x114e30230, {{0.0, 40.0}, {375.0, 627.0}}
+                                        Other, 0x114e30350, {{0.0, 40.0}, {375.0, 627.0}}
+                                          Other, 0x114e30470, {{0.0, 40.0}, {375.0, 627.0}}
+                                            NavigationBar, 0x114e30590, {{0.0, 40.0}, {375.0, 109.0}}, identifier: 'Photos'
+                                              Button, 0x114e306b0, {{8.0, 46.0}, {63.5, 44.0}}, identifier: 'Cancel', label: 'Cancel'
+                                              SegmentedControl, 0x114e307d0, {{99.0, 52.0}, {177.0, 32.0}}, label: 'Photos'
+                                                Button, 0x114e308f0, {{99.0, 52.0}, {88.0, 32.0}}, label: 'Photos', Selected
+                                                Button, 0x114e30a10, {{188.0, 52.0}, {88.0, 32.0}}, label: 'Collections'
+                                              Other, 0x114e30b30, {{18.0, 96.0}, {339.0, 37.0}}
+                                                Other, 0x114e30c50, {{18.0, 96.0}, {339.0, 37.0}}
+                                                  Image, 0x114e30d70, {{28.0, 106.5}, {16.5, 16.5}}, identifier: 'magnifyingglass', label: 'Search'
+                                                  StaticText, 0x114e30e90, {{54.5, 104.2}, {155.0, 20.5}}, label: 'Search your library…'
+                                                  ScrollView, 0x114e30fb0, {{50.5, 96.0}, {298.5, 37.0}}
+                                                    Other, 0x114e310d0, {{50.5, 96.0}, {298.5, 37.0}}
+                                                      TextView, 0x114e311f0, {{50.5, 102.5}, {298.5, 24.0}}, value: Search your library…
+                                                        Other, 0x114e31310, {{316.0, 102.5}, {30.0, 24.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                                          Other, 0x114e31430, {{343.0, 87.5}, {3.0, 36.0}}
+                                                        Other, 0x114e31550, {{50.5, 111.5}, {298.5, 12.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                                          Other, 0x114e31670, {{53.5, 120.5}, {292.5, 3.0}}
+                                            Other, 0x114e31790, {{0.0, 40.0}, {375.0, 627.0}}
+                                              Other, 0x114e318b0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                Other, 0x114e319d0, {{0.0, 40.0}, {375.0, 627.0}}
+                                                  Other, 0x114e31af0, {{0.0, 40.0}, {375.0, 627.0}}, label: 'Photos'
+                                                    Other, 0x114e31c10, {{0.0, 40.0}, {375.0, 627.0}}
+                                                      Other, 0x114e31d30, {{0.0, 40.0}, {375.0, 627.0}}
+                                                      ScrollView, 0x114e31e50, {{0.0, 40.0}, {375.0, 627.0}}, identifier: 'content_scroll_view'
+                                                        Other, 0x114e31f70, {{0.0, 149.0}, {375.0, 663.0}}, identifier: 'photos_layout'
+                                                          Other, 0x114e32090, {{0.0, 149.0}, {375.0, 162.5}}, identifier: 'PXGSingleViewLayout-Group'
+                                                            Other, 0x114e321b0, {{0.0, 149.0}, {375.0, 162.5}}, identifier: 'PXGSingleViewContainerView_AX', label: 'Private Access to Photos, Your photo library is shown here, but “Word7000” can only access the items you select.'
+                                                              Button, 0x114e322d0, {{323.0, 157.0}, {30.0, 22.0}}, label: 'Close'
+                                                              Button, 0x114e323f0, {{76.0, 267.0}, {99.5, 20.5}}, label: 'Learn More…'
+                                                                StaticText, 0x114e32510, {{76.0, 267.0}, {99.5, 20.5}}, label: 'Learn More…'
+                                                          Other, 0x114e32630, {{0.0, 149.0}, {375.0, 162.5}}, label: 'Private Access to Photos, Your photo library is shown here, but “Word7000” can only access the items you select.'
+                                                            Button, 0x114e32750, {{323.0, 157.0}, {30.0, 22.0}}, label: 'Close'
+                                                            Button, 0x114e32870, {{76.0, 267.0}, {99.5, 20.5}}, label: 'Learn More…'
+                                                              StaticText, 0x114e32990, {{76.0, 267.0}, {99.5, 20.5}}, label: 'Learn More…'
+                                                          Other, 0x114e32ab0, {{0.0, 311.5}, {375.0, 500.5}}, identifier: 'photos_sectioned_layout'
+                                                            Other, 0x114e32bd0, {{0.0, 311.5}, {375.0, 500.5}}, identifier: 'PXAssetsSectionLayout-Group'
+                                                              Other, 0x114eb28e0, {{0.0, 311.5}, {375.0, 500.5}}, identifier: 'PXZoomablePhotosLayout-Group'
+                                                                Other, 0x114eb2a00, {{0.0, 311.5}, {375.0, 500.5}}, identifier: 'PXGZoomLayout-Group'
+                                                                  Other, 0x114eb2b20, {{0.0, 311.5}, {375.0, 500.5}}, identifier: 'PXGDecoratingLayout-Group'
+                                                                    Other, 0x114eb2c40, {{0.0, 311.5}, {375.0, 500.5}}, identifier: 'PXGGridLayout-Group', label: 'Photo, October 13, 8:00 AM, Photo, October 13, 8:00 AM, Photo, October 13, 8:00 AM, Photo, October 13, 8:00 AM, Photo, October 13, 8:00 AM, Photo, March 30, 2018, 7:14 PM, Photo, August 08, 2012, 9:55 PM, Photo, August 08, 2012, 9:29 PM, Photo, August 08, 2012, 6:52 PM'
+                                                                      Image, 0x114eb2fa0, {{0.0, 311.5}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, October 13, 8:00 AM'
+                                                                      Image, 0x114eb30c0, {{125.5, 311.5}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, October 13, 8:00 AM'
+                                                                      Image, 0x114eb31e0, {{251.0, 311.5}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, October 13, 8:00 AM'
+                                                                      Image, 0x114eec390, {{0.0, 437.0}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, October 13, 8:00 AM'
+                                                                      Image, 0x114eec4b0, {{125.5, 437.0}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, October 13, 8:00 AM'
+                                                                      Image, 0x114eec5d0, {{251.0, 437.0}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, March 30, 2018, 7:14 PM'
+                                                                      Image, 0x114e34140, {{0.0, 562.5}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, August 08, 2012, 9:55 PM'
+                                                                      Image, 0x114e34260, {{125.5, 562.5}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, August 08, 2012, 9:29 PM'
+                                                                      Image, 0x114e34380, {{251.0, 562.5}, {124.0, 124.0}}, identifier: 'PXGGridLayout-Info', label: 'Photo, August 08, 2012, 6:52 PM'
+                                                                Other, 0x114e344a0, {{0.0, 311.5}, {375.0, 0.0}}, identifier: 'PXZoomableInlineHeadersLayout-Group'
+                                                          Other, 0x114e345c0, {{342.0, 149.0}, {30.0, 469.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                                            Other, 0x114e346e0, {{369.0, 152.0}, {3.0, 353.5}}
+                                                          Other, 0x114e34800, {{0.0, 585.0}, {375.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                                            Other, 0x114e34920, {{3.0, 612.0}, {366.0, 3.0}}
+                                                        Other, 0x114e34a40, {{342.0, 149.0}, {30.0, 469.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                                          Other, 0x114e34b60, {{369.0, 152.0}, {3.0, 353.5}}
+                                                        Other, 0x114e34c80, {{0.0, 585.0}, {375.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                                          Other, 0x114e34da0, {{3.0, 612.0}, {366.0, 3.0}}
+                                            Toolbar, 0x114e34ec0, {{0.0, 618.0}, {375.0, 49.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                                              Other, 0x114e34fe0, {{0.0, 618.0}, {375.0, 49.0}}
+                                                Other, 0x114e35100, {{16.0, 618.0}, {359.0, 49.0}}
+                                                  Other, 0x114e35220, {{16.0, 631.0}, {28.0, 28.0}}
+                                                    Button, 0x114e35340, {{16.0, 631.0}, {28.0, 28.0}}, identifier: 'Sort and Filter', label: 'Sort and Filter'
+                                                  Button, 0x114e35460, {{328.5, 623.0}, {46.5, 44.0}}, identifier: 'Options', label: 'Options'
+                                                  Other, 0x114e35580, {{104.0, 634.5}, {183.5, 21.0}}
+                                                    StaticText, 0x114e356a0, {{104.0, 634.5}, {183.5, 21.0}}, label: ' Location Is Included'
+    Window, 0x114e357c0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x114e358e0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x114e35a00, {{0.0, 0.0}, {375.0, 667.0}}
+    Window, 0x114e35b20, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x114e35c40, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x114e35d60, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x114e35e80, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x114e35fa0, {{0.0, 0.0}, {375.0, 667.0}}
+    Window, 0x114e360c0, {{0.0, 0.0}, {187.5, 333.5}}
+      Other, 0x114e361e0, {{0.0, 0.0}, {187.5, 333.5}}
+        Other, 0x114e36300, {{0.0, 0.0}, {187.5, 333.5}}
+          Other, 0x114e36420, {{0.0, 0.0}, {187.5, 333.5}}
+Path to element:
+ →Application, 0x115040f40, pid: 48409, label: 'Word7000'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x114e34010, pid: 48409, label: 'Word7000'
+  }

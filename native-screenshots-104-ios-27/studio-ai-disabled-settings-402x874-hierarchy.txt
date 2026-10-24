@@ -1,0 +1,174 @@
+Attributes: Application, 0x112857840, pid: 41818, label: 'Word7000'
+Element subtree:
+ →Application, 0x112857840, pid: 41818, label: 'Word7000'
+    Window (Main), 0x1128575c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x112854280, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x112857ac0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x112856a80, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x112854640, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x112855400, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x112856d00, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x112855a40, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x112857c00, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x112856580, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x112854000, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x112855040, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1128566c0, {{0.0, 0.0}, {402.0, 874.0}}
+                            NavigationBar, 0x112855cc0, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'AI and recording'
+                              Button, 0x112854dc0, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Settings'
+                              StaticText, 0x112854c80, {{135.3, 73.7}, {131.0, 20.7}}, label: 'AI and recording'
+                            Other, 0x112855680, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x112857200, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x112857340, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x112855540, {{0.0, 0.0}, {402.0, 874.0}}
+                                    CollectionView, 0x112855b80, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x112857e80, {{-16.0, -1632.0}, {434.0, 2036.7}}
+                                      Other, 0x112857480, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x1128552c0, {{0.0, 0.0}, {402.0, 156.0}}
+                                        Other, 0x112854140, {{0.0, 741.0}, {402.0, 133.0}}
+                                      Other, 0x112856bc0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x1128548c0, {{0.0, 741.0}, {402.0, 133.0}}
+                                      Cell, 0x112854500, {{16.0, 151.0}, {370.0, 52.0}}
+                                        Other, 0x112856f80, {{16.0, 151.0}, {370.0, 52.0}}
+                                          Other, 0x1128543c0, {{16.0, 151.0}, {370.0, 52.0}}
+                                        Other, 0x112856300, {{16.0, 151.0}, {370.0, 52.0}}
+                                          Other, 0x112857980, {{16.0, 151.0}, {370.0, 52.0}}
+                                            Other, 0x112855900, {{16.0, 151.0}, {370.0, 52.0}}
+                                              Switch, 0x112856440, {{16.0, 151.0}, {370.0, 52.0}}, identifier: 'settings-ai-toggle', label: 'On-device AI suggestions', value: 0
+                                                StaticText, 0x1128561c0, {{32.0, 166.8}, {196.3, 20.3}}, label: 'On-device AI suggestions'
+                                                Switch, 0x112856940, {{309.0, 163.0}, {63.0, 28.0}}, value: 0
+                                      Cell, 0x112856080, {{16.0, 203.0}, {370.0, 52.0}}
+                                        Other, 0x1128557c0, {{16.0, 203.0}, {370.0, 52.0}}
+                                          Other, 0x112855e00, {{16.0, 203.0}, {370.0, 52.0}}
+                                        Other, 0x112856800, {{16.0, 203.0}, {370.0, 52.0}}
+                                          Other, 0x112855f40, {{16.0, 203.0}, {370.0, 52.0}}
+                                            Other, 0x1128570c0, {{16.0, 203.0}, {370.0, 52.0}}
+                                              StaticText, 0x112856e40, {{16.0, 203.0}, {370.0, 52.0}}, identifier: 'settings-ai-status', label: 'Speaking coach, Currently off'
+                                              StaticText, 0x112854780, {{32.0, 218.8}, {121.3, 20.3}}, label: 'Speaking coach'
+                                      Other, 0x112d3aa80, {{32.0, 202.0}, {338.0, 1.0}}
+                                      Cell, 0x112d38dc0, {{16.0, 255.0}, {370.0, 52.0}}
+                                        Other, 0x112d3abc0, {{16.0, 255.0}, {370.0, 52.0}}
+                                          Other, 0x112d39400, {{16.0, 255.0}, {370.0, 52.0}}
+                                        Other, 0x112d3b5c0, {{16.0, 255.0}, {370.0, 52.0}}
+                                          Other, 0x112d39b80, {{16.0, 255.0}, {370.0, 52.0}}
+                                            Other, 0x112d3ad00, {{16.0, 255.0}, {370.0, 52.0}}
+                                              StaticText, 0x112d3a440, {{16.0, 255.0}, {370.0, 52.0}}, label: 'Scan assistance, Unavailable'
+                                              StaticText, 0x112d3af80, {{32.0, 270.8}, {123.0, 20.3}}, label: 'Scan assistance'
+                                      Other, 0x112d392c0, {{32.0, 254.0}, {338.0, 1.0}}
+                                      Cell, 0x112d3bd40, {{16.0, 307.0}, {370.0, 52.0}}
+                                        Other, 0x112d39f40, {{16.0, 307.0}, {370.0, 52.0}}
+                                          Other, 0x112d3a1c0, {{16.0, 307.0}, {370.0, 52.0}}
+                                        Other, 0x112d3b0c0, {{16.0, 307.0}, {370.0, 52.0}}
+                                          Other, 0x112d39540, {{16.0, 307.0}, {370.0, 52.0}}
+                                            Other, 0x112d3a6c0, {{16.0, 307.0}, {370.0, 52.0}}
+                                              StaticText, 0x112d38a00, {{16.0, 307.0}, {370.0, 52.0}}, label: 'Cloud AI, Not connected'
+                                              StaticText, 0x112d38280, {{32.0, 322.8}, {64.3, 20.3}}, label: 'Cloud AI'
+                                      Other, 0x112d38140, {{32.0, 306.0}, {338.0, 1.0}}
+                                      Cell, 0x112d3a080, {{16.0, 359.0}, {370.0, 45.7}}
+                                        Other, 0x112d3b840, {{16.0, 359.0}, {370.0, 45.7}}
+                                        Other, 0x112d39040, {{16.0, 359.0}, {370.0, 45.7}}
+                                          Other, 0x112d38000, {{16.0, 359.0}, {370.0, 45.7}}
+                                            Other, 0x112d3ae40, {{16.0, 359.0}, {370.0, 45.7}}
+                                              StaticText, 0x112d3b980, {{16.0, 359.0}, {370.0, 45.7}}, label: 'Turning AI off does not change your words, quizzes, recordings or regular speaking practice.'
+                                      Other, 0x112d39e00, {{-16.0, 404.7}, {434.0, 265.7}}
+                                      Cell, 0x112d3a580, {{16.0, 422.3}, {370.0, 52.0}}
+                                        Other, 0x112d388c0, {{16.0, 422.3}, {370.0, 52.0}}
+                                          Other, 0x112d39cc0, {{16.0, 422.3}, {370.0, 52.0}}
+                                        Other, 0x112d3b200, {{16.0, 422.3}, {370.0, 52.0}}
+                                          Other, 0x112d3be80, {{16.0, 422.3}, {370.0, 52.0}}
+                                            Other, 0x112d39900, {{16.0, 422.3}, {370.0, 52.0}}
+                                              StaticText, 0x112d38f00, {{16.0, 422.3}, {370.0, 52.0}}, label: 'Microphone, Not requested'
+                                              StaticText, 0x112d3a940, {{32.0, 438.2}, {90.7, 20.3}}, label: 'Microphone'
+                                      Cell, 0x112d38780, {{16.0, 474.3}, {370.0, 74.7}}
+                                        Other, 0x112d3a800, {{16.0, 474.3}, {370.0, 74.7}}
+                                          Other, 0x112d3bc00, {{16.0, 474.3}, {370.0, 74.7}}
+                                        Other, 0x112d3b340, {{16.0, 474.3}, {370.0, 74.7}}
+                                          Other, 0x112d38c80, {{16.0, 474.3}, {370.0, 74.7}}
+                                            Other, 0x112d39180, {{16.0, 474.3}, {370.0, 74.7}}
+                                              StaticText, 0x112d3b480, {{16.0, 474.3}, {370.0, 74.7}}, label: 'Offline transcription, Device or language unsupported'
+                                              StaticText, 0x112d3a300, {{32.0, 489.3}, {151.3, 20.3}}, label: 'Offline transcription'
+                                      Other, 0x112d38500, {{32.0, 473.3}, {338.0, 1.0}}
+                                      Cell, 0x112d397c0, {{16.0, 549.0}, {370.0, 52.0}}
+                                        Other, 0x112d39680, {{16.0, 549.0}, {370.0, 52.0}}
+                                          Other, 0x112d39a40, {{16.0, 549.0}, {370.0, 52.0}}
+                                        Other, 0x1117bee40, {{16.0, 549.0}, {370.0, 52.0}}
+                                          Other, 0x1117bca00, {{16.0, 549.0}, {370.0, 52.0}}
+                                            Other, 0x1117bebc0, {{16.0, 549.0}, {370.0, 52.0}}
+                                              Button, 0x1117bcf00, {{16.0, 549.0}, {370.0, 52.0}}, label: 'Check again'
+                                                Image, 0x1117bcc80, {{34.7, 563.7}, {19.0, 23.0}}, identifier: 'arrow.clockwise', label: 'Refresh'
+                                                StaticText, 0x1117be580, {{34.7, 563.7}, {131.3, 23.0}}, label: 'Check again'
+                                      Other, 0x1117be940, {{32.0, 548.0}, {338.0, 1.0}}
+                                      Cell, 0x1117bde00, {{16.0, 601.0}, {370.0, 52.0}}
+                                        Other, 0x1117bdb80, {{16.0, 601.0}, {370.0, 52.0}}
+                                          Other, 0x1117bc780, {{16.0, 601.0}, {370.0, 52.0}}
+                                        Other, 0x1117bcb40, {{16.0, 601.0}, {370.0, 52.0}}
+                                          Other, 0x1117be6c0, {{16.0, 601.0}, {370.0, 52.0}}
+                                            Other, 0x1117bc500, {{16.0, 601.0}, {370.0, 52.0}}
+                                              Button, 0x1117bf340, {{16.0, 601.0}, {370.0, 52.0}}, label: 'Open System Settings'
+                                      Other, 0x1117bfd40, {{72.0, 600.0}, {298.0, 1.0}}
+                                      Other, 0x1117be800, {{-16.0, 670.3}, {434.0, 2135.3}}
+                                      Cell, 0x1117bfac0, {{16.0, 670.3}, {370.0, 40.3}}
+                                        Other, 0x1117bfc00, {{16.0, 670.3}, {370.0, 40.3}}
+                                        Other, 0x1117bcdc0, {{16.0, 670.3}, {370.0, 40.3}}
+                                          Other, 0x1117bc280, {{16.0, 670.3}, {370.0, 40.3}}
+                                            Other, 0x1117bc8c0, {{16.0, 670.3}, {370.0, 40.3}}
+                                              StaticText, 0x1117bd540, {{16.0, 670.3}, {370.0, 40.3}}, label: 'Privacy'
+                                      Cell, 0x1117bf480, {{16.0, 710.7}, {370.0, 138.3}}
+                                        Other, 0x1117be300, {{16.0, 710.7}, {370.0, 138.3}}
+                                          Other, 0x1117bd040, {{16.0, 710.7}, {370.0, 138.3}}
+                                        Other, 0x1117bf5c0, {{16.0, 710.7}, {370.0, 138.3}}
+                                          Other, 0x1117bda40, {{16.0, 710.7}, {370.0, 138.3}}
+                                            Other, 0x1117bed00, {{16.0, 710.7}, {370.0, 138.3}}
+                                              StaticText, 0x1117bd7c0, {{16.0, 710.7}, {370.0, 138.3}}, label: 'Recordings, speaking answers and AI suggestions are not uploaded or saved to your account. Recordings are deleted when you leave the practice sheet; answers are cleared when you leave the question.'
+                                      Cell, 0x1117bc640, {{16.0, 849.0}, {370.0, 116.3}}
+                                        Other, 0x1117bc140, {{16.0, 849.0}, {370.0, 116.3}}
+                                          Other, 0x1117bc3c0, {{16.0, 849.0}, {370.0, 116.3}}
+                                        Other, 0x1117bd680, {{16.0, 849.0}, {370.0, 116.3}}
+                                          Other, 0x1117bd180, {{16.0, 849.0}, {370.0, 116.3}}
+                                            Other, 0x1117bdcc0, {{16.0, 849.0}, {370.0, 116.3}}
+                                              StaticText, 0x1117be1c0, {{16.0, 849.0}, {370.0, 116.3}}, label: 'AI usage and satisfaction are not collected. The app only fetches feature availability settings, without account details, recordings or answers.'
+                                      Other, 0x1117bd400, {{32.0, 848.0}, {338.0, 1.0}}
+                                      Other, 0x1117bf840, {{369.0, 116.0}, {30.0, 675.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x1117bef80, {{396.0, 119.0}, {3.0, 512.7}}
+                                      Other, 0x1117bf0c0, {{369.0, 116.0}, {30.0, 675.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x1117bea80, {{396.0, 119.0}, {3.0, 512.7}}
+                            Toolbar, 0x1117bdf40, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                              Other, 0x1117bf980, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10806f0c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10806e800, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x10806ef80, {{0.0, 0.0}, {402.0, 874.0}}
+                      TabBar, 0x10806e580, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                        Other, 0x10806f5c0, {{64.0, 791.0}, {274.0, 62.0}}
+                          Other, 0x10806f700, {{64.0, 791.0}, {94.0, 54.0}}
+                          Other, 0x10806e6c0, {{64.0, 791.0}, {274.0, 62.0}}
+                            Button, 0x10806ee40, {{68.0, 795.0}, {94.0, 54.0}}, identifier: 'sun.max.fill', label: 'Today'
+                              Image, 0x10806de00, {{100.7, 800.0}, {29.0, 29.3}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                            Button, 0x10806f340, {{154.0, 795.0}, {94.0, 54.0}}, identifier: 'books.vertical.fill', label: 'Words'
+                              Image, 0x10806fc00, {{184.3, 800.0}, {33.3, 29.3}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                            Button, 0x10806f980, {{240.0, 795.0}, {94.0, 54.0}}, identifier: 'person.crop.circle.fill', label: 'Me', Selected
+                              Image, 0x10806f480, {{273.3, 801.3}, {27.3, 27.3}}, identifier: 'person.crop.circle.fill', label: 'account'
+                          Other, 0x10806fac0, {{64.0, 791.0}, {274.0, 62.0}}
+                          Other, 0x10806e300, {{240.0, 795.0}, {94.0, 54.0}}
+                            Other, 0x10806e940, {{240.0, 795.0}, {94.0, 54.0}}
+                              Other, 0x113fce440, {{240.0, 795.0}, {94.0, 54.0}}
+                              Other, 0x113fcc3c0, {{240.0, 795.0}, {94.0, 54.0}}
+                                Other, 0x113fce1c0, {{240.0, 795.0}, {94.0, 54.0}}
+                                  Other, 0x113fce300, {{240.0, 795.0}, {94.0, 54.0}}
+                                    Other, 0x113fcea80, {{240.0, 795.0}, {94.0, 54.0}}
+                                  Other, 0x113fce580, {{240.0, 795.0}, {94.0, 54.0}}
+                                Other, 0x113fce6c0, {{240.0, 795.0}, {94.0, 54.0}}
+                    Other, 0x113fcda40, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x113fcee40, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x113fcf0c0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x113fcf840, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x113fcf340, {{0.0, 791.0}, {402.0, 83.0}}
+                              Other, 0x113fcd400, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x113fcde00, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x113fcd2c0, {{0.0, 791.0}, {402.0, 83.0}}
+Path to element:
+ →Application, 0x112857840, pid: 41818, label: 'Word7000'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x113fccf00, pid: 41818, label: 'Word7000'
+  }

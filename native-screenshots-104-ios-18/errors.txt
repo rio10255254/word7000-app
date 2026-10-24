@@ -1,0 +1,1 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/ExperienceTests.swift:156: error: -[Word7000UITests.ExperienceTests testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated] : XCTAssertFalse failed

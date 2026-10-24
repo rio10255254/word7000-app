@@ -1,0 +1,2 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/ExperienceTests.swift:203: error: -[Word7000UITests.ExperienceTests testSpeechVoiceAndSpeedPersist] : XCTAssertEqual failed: ("Optional("0")") is not equal to ("Optional("1")")
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/ScreenshotTests.swift:206: error: -[Word7000UITests.ScreenshotTests testDarkScreens] : Failed to not hittable: Button, {{168.0, 232.0}, {140.0, 124.0}}, identifier: 'words-scan', label: '試用還能掃描 5 次、掃描單字表'

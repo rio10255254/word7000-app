@@ -42,6 +42,26 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
     }
 
+    func testAutoRevealShowsAnswersWithoutATap() {
+        let app = launch()
+        app.buttons["today-start"].tap()
+        waitForReadyCard(app)
+        let toggle = app.descendants(matching: .any)["study-auto-reveal"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.tap()
+        XCTAssertTrue(app.buttons["study-grade-known"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["study-show-answer"].exists)
+        app.buttons["study-grade-known"].tap()
+        // The next card arrives already answered, and the choice outlives the card.
+        let known = app.buttons["study-grade-known"]
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: known)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+        XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("2 /"))
+        XCTAssertFalse(app.buttons["study-show-answer"].exists)
+        toggle.tap()
+        waitForReadyCard(app)
+    }
+
     func testStudyResumesAfterRelaunch() {
         let app = launch()
         app.buttons["today-start"].tap()

@@ -2,7 +2,8 @@ import SwiftUI
 import Word7000Core
 
 /// Full-screen flash cards. Tap the card (or the button) to see the answer,
-/// then grade it; swiping right or left does the same.
+/// then grade it; swiping right or left does the same. The eye toggle in the
+/// toolbar skips the tap and opens every card with its answer showing.
 struct StudySessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -27,6 +28,8 @@ struct StudySessionView: View {
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
     private var threshold: CGFloat { min(110, cardWidth * 0.28) }
+    private var autoReveal: Bool { model.settings.studyAutoReveal ?? false }
+    private var showsAnswer: Bool { revealed || autoReveal }
 
     var body: some View {
         NavigationStack {
@@ -87,7 +90,16 @@ struct StudySessionView: View {
                             .accessibilityIdentifier("study-position")
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Toggle(isOn: Binding(
+                        get: { autoReveal },
+                        set: { on in withAnimation(reduceMotion ? nil : Motion.reveal) { model.settings.studyAutoReveal = on } }
+                    )) {
+                        Label(L.autoReveal, systemImage: autoReveal ? "eye" : "eye.slash")
+                    }
+                    .toggleStyle(.button)
+                    .accessibilityHint(L.autoRevealHint)
+                    .accessibilityIdentifier("study-auto-reveal")
                     Button { model.undoStudyGrade() } label: { Image(systemName: "arrow.uturn.backward") }
                         .disabled(!model.canUndoStudy || committing)
                         .accessibilityLabel(L.undo)
@@ -150,10 +162,10 @@ struct StudySessionView: View {
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.top, revealed ? 18 : 52)
+                    .padding(.top, showsAnswer ? 18 : 52)
                     .padding(.bottom, 12)
 
-                    if revealed {
+                    if showsAnswer {
                         WordAnswer(word: word)
                             .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                     } else {
@@ -218,7 +230,7 @@ struct StudySessionView: View {
     private var controls: some View {
         let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 12))
         return layout {
-            if revealed {
+            if showsAnswer {
                 Button { grade(.review) } label: {
                     Label(L.dontKnow, systemImage: "xmark").font(.headline).frame(maxWidth: .infinity)
                 }
@@ -241,7 +253,7 @@ struct StudySessionView: View {
     }
 
     private func reveal() {
-        guard !committing, phase != .dragging, !revealed else { return }
+        guard !committing, phase != .dragging, !showsAnswer else { return }
         withAnimation(reduceMotion ? nil : Motion.reveal) { revealed = true }
     }
 

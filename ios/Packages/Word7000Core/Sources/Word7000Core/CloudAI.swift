@@ -8,7 +8,7 @@ import FoundationNetworking
 /// server, which tries the strongest model first and fails over to the second.
 public enum CloudAI {
     public enum Kind: String, Codable, Sendable {
-        case coach, scan, explain, quizWhy, fillWord
+        case coach, scan, explain, quizWhy, fillWord, insights
     }
 
     public enum Failure: Error, Equatable, Sendable {
@@ -20,6 +20,25 @@ public enum CloudAI {
         case quota
         case invalidInput
         case signInRequired
+    }
+
+    /// Decided by the server: Plus from an Apple-signed subscription, the trial
+    /// for 7 days after a learner's first AI request, otherwise free.
+    public enum Tier: String, Codable, Sendable {
+        case free, trial, plus
+
+        /// Plus and the trial start on the strongest model.
+        public var usesStrongestModel: Bool { self != .free }
+    }
+
+    /// Where the learner stands today, as the server reported with its last answer.
+    public struct Usage: Equatable, Sendable {
+        public let tier: Tier
+        public let limit: Int
+        public let remaining: Int
+        public init(tier: Tier, limit: Int, remaining: Int) {
+            self.tier = tier; self.limit = limit; self.remaining = remaining
+        }
     }
 
     /// Long enough for the server to try both models.
@@ -66,6 +85,42 @@ public enum CloudAI {
         public func cleaned() throws -> QuizExplanation {
             let result = QuizExplanation(explanation: CloudAI.clip(explanation, 280), memoryTip: CloudAI.clip(memoryTip, 180))
             guard !result.explanation.isEmpty else { throw Failure.unavailable }
+            return result
+        }
+    }
+
+    /// What the AI read in the learner's recent numbers, for the Me tab.
+    public struct Insights: Codable, Equatable, Sendable {
+        public struct FocusWord: Codable, Equatable, Sendable {
+            public let word: String
+            public let tip: String
+            public init(word: String, tip: String) { self.word = word; self.tip = tip }
+        }
+
+        public let headline: String
+        public let summary: String
+        public let strengths: [String]
+        public let focusWords: [FocusWord]
+        public let plan: [String]
+
+        public init(headline: String, summary: String, strengths: [String], focusWords: [FocusWord], plan: [String]) {
+            self.headline = headline; self.summary = summary; self.strengths = strengths
+            self.focusWords = focusWords; self.plan = plan
+        }
+
+        public func cleaned() throws -> Insights {
+            let lines = { (items: [String], limit: Int) in
+                items.map { CloudAI.clip($0, 160) }.filter { !$0.isEmpty }.prefix(limit).map { $0 }
+            }
+            let result = Insights(
+                headline: CloudAI.clip(headline, 80),
+                summary: CloudAI.clip(summary, 360),
+                strengths: lines(strengths, 3),
+                focusWords: focusWords.map { FocusWord(word: CloudAI.clip($0.word, 60), tip: CloudAI.clip($0.tip, 120)) }
+                    .filter { !$0.word.isEmpty }.prefix(5).map { $0 },
+                plan: lines(plan, 4)
+            )
+            guard !result.headline.isEmpty, !result.summary.isEmpty else { throw Failure.unavailable }
             return result
         }
     }
@@ -120,18 +175,34 @@ public enum CloudAI {
 }
 
 /// Generic types cannot be nested in a generic function.
-private struct CloudAIReply<Body: Decodable>: Decodable { let result: Body }
+private struct CloudAIReply<Body: Decodable>: Decodable {
+    let result: Body
+    let tier: CloudAI.Tier?
+    let limit: Int?
+    let remaining: Int?
+}
 
 extension SupabaseClient {
     /// Runs one AI task with the learner's session (a guest session is enough).
     public func runAI<Value: Decodable>(_ task: CloudAI.Kind, input: [String: JSONValue], session: AuthSession,
                                          as type: Value.Type = Value.self) async throws -> Value {
+        try await runAI(task, input: input, session: session, entitlement: nil, as: type).value
+    }
+
+    /// Runs one AI task and reports today's usage. `entitlement` is the signed
+    /// StoreKit transaction of an active Plus subscription, if there is one.
+    public func runAI<Value: Decodable>(_ task: CloudAI.Kind, input: [String: JSONValue], session: AuthSession,
+                                         entitlement: String?, as type: Value.Type = Value.self) async throws -> (value: Value, usage: CloudAI.Usage?) {
         let client = SupabaseClient(config: config, transport: transport, timeout: CloudAI.timeout)
+        var body: [String: JSONValue] = ["task": .string(task.rawValue), "input": .object(input)]
+        if let entitlement { body["entitlement"] = .string(entitlement) }
         do {
-            let data = try await client.request("POST", "functions/v1/ai",
-                                                body: .object(["task": .string(task.rawValue), "input": .object(input)]),
-                                                session: session)
-            return try JSONDecoder().decode(CloudAIReply<Value>.self, from: data).result
+            let data = try await client.request("POST", "functions/v1/ai", body: .object(body), session: session)
+            let reply = try JSONDecoder().decode(CloudAIReply<Value>.self, from: data)
+            let usage = reply.tier.flatMap { tier in
+                reply.limit.flatMap { limit in reply.remaining.map { CloudAI.Usage(tier: tier, limit: limit, remaining: $0) } }
+            }
+            return (reply.result, usage)
         } catch is CancellationError {
             throw CancellationError()
         } catch {

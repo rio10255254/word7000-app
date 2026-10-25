@@ -37,7 +37,12 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
   let lastKind: 'busy' | 'unavailable' = 'unavailable';
   let retryAfter: number | undefined;
 
-  for (const model of plan.models) {
+  // A reply in the wrong language earns that model one corrected retry.
+  const attempts: { model: string; corrective: boolean }[] = plan.models.map((model) => ({ model, corrective: false }));
+  let retried = false;
+
+  for (let index = 0; index < attempts.length; index++) {
+    const { model, corrective } = attempts[index];
     const remaining = deadline - now();
     if (remaining < 1_500) break;
     const controller = new AbortController();
@@ -46,7 +51,7 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
       const response = await fetchImpl(GROQ_URL, {
         method: 'POST',
         headers: { Authorization: `Bearer ${options.apiKey}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody(plan, model)),
+        body: JSON.stringify(requestBody(plan, model, corrective)),
         signal: controller.signal,
       });
       if (response.status === 401 || response.status === 403) {
@@ -66,7 +71,15 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
       const payload = await response.json() as { choices?: { message?: { content?: string } }[] };
       const raw = payload.choices?.[0]?.message?.content;
       if (typeof raw !== 'string') continue;
-      return { model, content: JSON.parse(raw) };
+      const content = JSON.parse(raw);
+      if (plan.accept && !plan.accept(content)) {
+        if (!retried) {
+          retried = true;
+          attempts.splice(index + 1, 0, { model, corrective: true });
+        }
+        continue;
+      }
+      return { model, content };
     } catch (error) {
       if (error instanceof GroqFailure) throw error;
       // Timeout, network error or malformed JSON: try the next model.
@@ -77,11 +90,12 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
   throw new GroqFailure(lastKind, lastKind === 'busy' ? 'Every model is rate limited' : 'No model answered', retryAfter);
 }
 
-export function requestBody(plan: TaskPlan, model: string): Record<string, unknown> {
+export function requestBody(plan: TaskPlan, model: string, corrective = false): Record<string, unknown> {
+  const system = corrective && plan.retryNote ? `${plan.retryNote}\n\n${plan.system}` : plan.system;
   return {
     model,
     messages: [
-      { role: 'system', content: plan.system },
+      { role: 'system', content: system },
       { role: 'user', content: plan.user },
     ],
     temperature: 0.3,

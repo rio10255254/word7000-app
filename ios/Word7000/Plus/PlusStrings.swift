@@ -17,6 +17,7 @@ enum P {
             case .sync: return L.t("7 天試用已結束。進度仍保存在這支 iPhone，訂閱後就能繼續雲端同步。", "Your 7-day trial has ended. Progress stays on this iPhone; subscribe to keep syncing.")
             case .history: return L.t("看清楚自己這幾個月怎麼進步，哪些字一直忘。", "See how you have improved over months, and which words keep slipping.")
             case .examPractice: return L.t("考前用限時模擬測驗，找出還不熟的級別。", "Timed mock exams show which levels still need work.")
+            case .smartAI: return L.t("口說教練、單字解說和測驗講解，都改由最強的 AI 模型回答，每天 \(PlusAI.plusDaily) 次。", "The speaking coach, word explanations and quiz explanations answered by the strongest AI model, \(PlusAI.plusDaily) times a day.")
             }
         }
     }
@@ -36,7 +37,12 @@ enum P {
     static var benefitHistoryDetail: String { L.t("30、90 天的學習趨勢和最常忘記的字", "30- and 90-day trends and the words you forget most") }
     static var benefitExam: String { L.t("考前衝刺模擬", "Exam practice") }
     static var benefitExamDetail: String { L.t("50 題限時 15 分鐘，交卷看各級分數", "50 questions in 15 minutes, scored by level") }
-    static var freeForever: String { L.t("背 7000 單字、複習、小測驗和口說練習永遠免費。", "Studying the 7000 words, reviews, quizzes and speaking stay free.") }
+    static var benefitSmartAI: String { L.t("最強 AI 老師", "The smartest AI tutor") }
+    static var benefitSmartAIDetail: String {
+        L.t("GPT-OSS 120B 回答更精準，每天 \(PlusAI.plusDaily) 次（免費版為 20B、每天 \(PlusAI.freeDaily) 次）",
+            "GPT-OSS 120B for sharper answers, \(PlusAI.plusDaily) a day (free: 20B, \(PlusAI.freeDaily) a day)")
+    }
+    static var freeForever: String { L.t("背 7000 單字、複習、小測驗和口說練習永遠免費，每天也有 \(PlusAI.freeDaily) 次 AI 建議。", "Studying the 7000 words, reviews, quizzes and speaking stay free, with \(PlusAI.freeDaily) AI suggestions a day.") }
 
     // Plans
     static var yearly: String { L.t("年費方案", "Yearly") }
@@ -112,8 +118,8 @@ enum P {
     static func nudgeText(_ nudge: PlusPolicy.Nudge) -> String {
         switch nudge {
         case .scansUsedUp, .lastScan: L.t("訂閱 Plus 就能無限掃描單字表和手寫筆記。", "Plus scans word lists and handwriting without limits.")
-        case .trialEnding: L.t("到期後掃描、同步和考前衝刺會鎖起來。", "Scanning, sync and exam practice lock when it ends.")
-        case .trialEnded: L.t("繼續掃描、雲端同步、完整紀錄和考前衝刺。", "Keep scanning, syncing, your full history and exam practice.")
+        case .trialEnding: L.t("到期後 AI 會換回標準模型，掃描、同步和考前衝刺會鎖起來。", "When it ends, AI goes back to the standard model and scanning, sync and exam practice lock.")
+        case .trialEnded: L.t("繼續使用最強 AI 老師、掃描、雲端同步、完整紀錄和考前衝刺。", "Keep the smartest AI tutor, scanning, sync, your full history and exam practice.")
         }
     }
 
@@ -124,6 +130,7 @@ enum P {
         case .examPractice: L.t("考前衝刺是 Plus 功能", "Exam practice is part of Plus")
         case .scan: L.t("掃描是 Plus 功能", "Scanning is part of Plus")
         case .sync: L.t("雲端同步是 Plus 功能", "Sync is part of Plus")
+        case .smartAI: L.t("最強 AI 模型是 Plus 功能", "The strongest AI is part of Plus")
         }
     }
     static func lockedText(_ feature: PlusFeature) -> String {
@@ -132,6 +139,7 @@ enum P {
         case .examPractice: benefitExamDetail
         case .scan: benefitScanDetail
         case .sync: benefitSyncDetail
+        case .smartAI: benefitSmartAIDetail
         }
     }
 

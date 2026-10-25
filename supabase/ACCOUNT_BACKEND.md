@@ -48,7 +48,7 @@ fill-in. The Groq key is a function secret and never ships in the app.
 - Each account (guests included) may make `AI_DAILY_LIMIT` requests per UTC day
   (default 120), counted in `word7000_private.ai_usage`.
 - Deploy with the **AI backend** GitHub workflow. It needs the repository
-  secrets `GROQ_API_KEY`, `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD`.
+  secrets `GROQ` (the Groq key), `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD`.
   Or by hand:
 
 ```powershell

@@ -5,7 +5,7 @@
 # key out of it. The app calls this function with its Supabase session instead.
 #
 # Repository secrets (Settings > Secrets and variables > Actions):
-#   GROQ_API_KEY           the Groq API key
+#   GROQ                   the Groq API key for this app (GROQ_API_KEY also works)
 #   SUPABASE_ACCESS_TOKEN  a Supabase personal access token (supabase.com/dashboard/account/tokens)
 #   SUPABASE_DB_PASSWORD   the project's database password, to apply the quota migration
 name: AI backend
@@ -41,13 +41,13 @@ jobs:
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || secrets.GROQ_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ || secrets.GROQ_API_KEY || secrets.GROQ_KEY }}
       DAILY_LIMIT: ${{ inputs.daily_limit || '120' }}
     steps:
       - name: Check the secrets
         run: |
           missing=""
-          [ -n "$GROQ_API_KEY" ] || missing="$missing GROQ_API_KEY"
+          [ -n "$GROQ_API_KEY" ] || missing="$missing GROQ"
           [ -n "$SUPABASE_ACCESS_TOKEN" ] || missing="$missing SUPABASE_ACCESS_TOKEN"
           [ -n "$SUPABASE_DB_PASSWORD" ] || missing="$missing SUPABASE_DB_PASSWORD"
           if [ -n "$missing" ]; then
@@ -90,3 +90,22 @@ jobs:
             -H 'Content-Type: application/json' -d '{"task":"fillWord","input":{"word":"apple"}}')
           echo "Unauthenticated request returned $status"
           [ "$status" = "401" ] || { echo "::error::Expected 401 from the deployed function, got $status"; exit 1; }
+
+      - name: Ask Groq one real question through the function
+        run: |
+          set -euo pipefail
+          url="https://$PROJECT_REF.supabase.co"
+          # The app's public key; a guest session is what the app itself uses.
+          key=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json | jq -r '[.[] | select(.name == "anon" or .type == "publishable")][0].api_key')
+          [ -n "$key" ] && [ "$key" != "null" ] || { echo "::error::Could not read the project's public API key"; exit 1; }
+          token=$(curl -sf -X POST "$url/auth/v1/signup" -H "apikey: $key" -H 'Content-Type: application/json' -d '{"data":{}}' | jq -r '.access_token')
+          [ -n "$token" ] && [ "$token" != "null" ] || { echo "::error::Guest sign-in failed; is anonymous sign-in enabled?"; exit 1; }
+          reply=$(curl -s -w '\n%{http_code}' -X POST "$url/functions/v1/ai" -H "apikey: $key" -H "Authorization: Bearer $token" \
+            -H 'Content-Type: application/json' -d '{"task":"fillWord","input":{"word":"apple"}}')
+          status=$(echo "$reply" | tail -1)
+          body=$(echo "$reply" | sed '$d')
+          echo "Status $status: $(echo "$body" | jq -c '{model, meaning: .result.meaning, error}')"
+          [ "$status" = "200" ] && [ -n "$(echo "$body" | jq -r '.result.meaning // empty')" ] || {
+            echo "::error::The AI function did not answer. 503 usually means the Groq key is wrong; check the function logs in Supabase."
+            exit 1
+          }

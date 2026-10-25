@@ -146,7 +146,8 @@ struct StudySessionView: View {
         return VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 6) {
                 CardStatusChip(status: progress.status)
-                if !word.group.isEmpty {
+                // At accessibility text sizes the level would crowd the buttons.
+                if !word.group.isEmpty, !dynamicTypeSize.isAccessibilitySize {
                     Text(word.group)
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)

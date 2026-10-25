@@ -93,11 +93,16 @@ jobs:
         run: |
           set -euo pipefail
           # Release orchestration, its portable settings-check harness and the
-          # release notes (removed from the staged build) may differ.
+          # release notes (removed from the staged build) may differ, and so may
+          # the online AI server (supabase/, its deploy workflow and its tests),
+          # which ships separately and is never part of the app.
           # All shipped code/data and the native core/UI tests must still match.
           # The portable harness is executed by npm test above, including on Linux.
+          OUTSIDE_APP=(':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift'
+            ':(exclude)ios/Release/README.md' ':(exclude)supabase' ':(exclude).github/workflows/ai-backend.yml'
+            ':(exclude)src/aiFunction.test.ts')
           same_source() {
-            git diff --quiet "$1" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift' ':(exclude)ios/Release/README.md'
+            git diff --quiet "$1" "$GITHUB_SHA" -- . "${OUTSIDE_APP[@]}"
           }
           RUN_ID="$REQUESTED_RUN"
           if [ -z "$RUN_ID" ]; then
@@ -121,7 +126,7 @@ jobs:
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$RUNNER_TEMP/native-validation.json"
           # A push run is always the full suite; a manual run counts only with checks=all.
           TESTED_SHA=$(node -e 'const r=require(process.argv[1]); const full = r.event==="push" || (r.event==="workflow_dispatch" && r.display_title==="Native iOS: all checks"); if(r.path!==".github/workflows/ios-native.yml" || !full || !/^[a-f0-9]{40}$/.test(r.head_sha)) throw new Error("Not a full native run"); if(r.status==="completed" && r.conclusion!=="success") throw new Error("Native validation failed"); process.stdout.write(r.head_sha);' "$RUNNER_TEMP/native-validation.json")
-          git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . ':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift' ':(exclude)ios/Release/README.md'
+          git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . "${OUTSIDE_APP[@]}"
           echo "NATIVE_VALIDATION_RUN=$RUN_ID" >> "$GITHUB_ENV"
 
       - uses: expo/expo-github-action@v8

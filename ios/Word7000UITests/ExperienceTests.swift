@@ -191,6 +191,33 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "polish-me-week")
     }
 
+    func testLargestTextKeepsTheMainFlowUsable() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans",
+                               "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXL"]
+        app.launch()
+        let start = app.buttons["today-start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        snapshot(app, "large-text-1-today")
+        for _ in 0..<3 where !start.isHittable { app.swipeUp() }
+        XCTAssertTrue(start.isHittable)
+        start.tap()
+        waitForReadyCard(app)
+        snapshot(app, "large-text-2-study")
+        XCTAssertTrue(app.buttons["study-show-answer"].isHittable)
+        app.buttons["study-show-answer"].tap()
+        let known = app.buttons["study-grade-known"]
+        XCTAssertTrue(known.waitForExistence(timeout: 5))
+        snapshot(app, "large-text-3-answer")
+        XCTAssertTrue(known.isHittable)
+        XCTAssertTrue(app.buttons["study-grade-review"].isHittable)
+        app.buttons["study-close"].tap()
+
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        sleep(1)
+        snapshot(app, "large-text-4-me")
+    }
+
     func testLibrarySearchKeepsKeyboardAndExactMatch() {
         let app = launch()
         app.tabBars.buttons.element(boundBy: 1).tap()

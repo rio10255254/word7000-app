@@ -42,6 +42,23 @@ final class CloudAITests: XCTestCase {
         XCTAssertEqual(feedback.corrections.first?.replacement, "every day")
     }
 
+    func testSendsThePlusProofAndReportsTodaysUsage() async throws {
+        let transport = FakeTransport([(#"{"result":{"explanation":"x","memoryTip":"y"},"model":"openai/gpt-oss-120b","tier":"plus","limit":100,"remaining":87}"#, 200)])
+        let reply = try await SupabaseClient(config: config, transport: transport)
+            .runAI(.quizWhy, input: [:], session: session, entitlement: "header.payload.sig", as: CloudAI.QuizExplanation.self)
+        XCTAssertEqual(reply.usage, CloudAI.Usage(tier: .plus, limit: 100, remaining: 87))
+        XCTAssertTrue(reply.usage?.tier.usesStrongestModel == true)
+        let body = try JSONDecoder().decode([String: JSONValue].self, from: XCTUnwrap(transport.requests.first?.httpBody))
+        XCTAssertEqual(body["entitlement"], .string("header.payload.sig"))
+    }
+
+    func testOlderRepliesWithoutUsageStillDecode() async throws {
+        let reply = try await SupabaseClient(config: config, transport: FakeTransport([(#"{"result":{"explanation":"x","memoryTip":"y"}}"#, 200)]))
+            .runAI(.quizWhy, input: [:], session: session, entitlement: nil, as: CloudAI.QuizExplanation.self)
+        XCTAssertNil(reply.usage)
+        XCTAssertFalse(CloudAI.Tier.free.usesStrongestModel)
+    }
+
     func testMapsServerErrorsToFallbackDecisions() async {
         let cases: [(String, Int, CloudAI.Failure)] = [
             (#"{"error":"quota"}"#, 429, .quota),
@@ -61,6 +78,19 @@ final class CloudAITests: XCTestCase {
                 XCTAssertEqual(error as? CloudAI.Failure, expected, body)
             }
         }
+    }
+
+    func testInsightsDecodeAndTrimLongLists() async throws {
+        let json = #"{"result":{"headline":" 很穩定 ","summary":"這週每天都有學。","strengths":["a","","b","c","d"],"focusWords":[{"word":"abandon","tip":"想成放棄"},{"word":"","tip":"x"}],"plan":["1","2","3","4","5"]},"tier":"free","limit":20,"remaining":19}"#
+        let reply = try await SupabaseClient(config: config, transport: FakeTransport([(json, 200)]))
+            .runAI(.insights, input: [:], session: session, entitlement: nil, as: CloudAI.Insights.self)
+        let insights = try reply.value.cleaned()
+        XCTAssertEqual(insights.headline, "很穩定")
+        XCTAssertEqual(insights.strengths, ["a", "b", "c"])
+        XCTAssertEqual(insights.focusWords, [.init(word: "abandon", tip: "想成放棄")])
+        XCTAssertEqual(insights.plan.count, 4)
+        XCTAssertEqual(reply.usage?.remaining, 19)
+        XCTAssertThrowsError(try CloudAI.Insights(headline: "", summary: "x", strengths: [], focusWords: [], plan: []).cleaned())
     }
 
     func testCleaningCapsListsAndRejectsAnEmptyExplanation() throws {

@@ -523,6 +523,48 @@ final class AppModel {
         return QuizBuilder.session(words: pool, count: count, seed: seed)
     }
 
+    /// The numbers the AI learning analysis reads: totals, the last 14 days
+    /// and the words forgotten most often. No word lists beyond those.
+    func insightsInput() -> [String: JSONValue] {
+        let stats = self.stats
+        let days = activity(days: 14)
+        let quizCorrect = days.reduce(0) { $0 + $1.counters.quizCorrect }
+        let quizTotal = days.reduce(0) { $0 + $1.counters.quizCorrect + $1.counters.quizWrong }
+        let struggling = bank.words
+            .compactMap { word -> (WordEntry, WordProgress)? in
+                guard let progress = progress.words[word.id], progress.status == .review || (progress.lapses ?? 0) > 0 else { return nil }
+                return (word, progress)
+            }
+            .sorted { ($0.1.lapses ?? 0, $0.1.reviewCount) > ($1.1.lapses ?? 0, $1.1.reviewCount) }
+            .prefix(12)
+        return [
+            "mode": .string(studyMode.rawValue),
+            "streak": .number(Double(max(0, progress.streak))),
+            "mastered": .number(Double(stats.mastered)),
+            "reviewing": .number(Double(stats.review)),
+            "due": .number(Double(stats.due)),
+            "dailyTarget": .number(Double(max(1, progress.dailyTarget))),
+            "quizCorrect": .number(Double(quizCorrect)),
+            "quizTotal": .number(Double(quizTotal)),
+            "days": .array(days.map { day in
+                .object([
+                    "date": .string(day.date),
+                    "words": .number(Double(day.words)),
+                    "quiz": .number(Double(day.other)),
+                    "speaking": .number(Double(day.speaking)),
+                ])
+            }),
+            "struggling": .array(struggling.map { word, progress in
+                let face = self.face(word)
+                return .object([
+                    "word": .string(String(face.prompt.prefix(80))),
+                    "meaning": .string(String(ChineseDisplay.conciseMeaning(word.meaningZh).prefix(120))),
+                    "misses": .number(Double(min(999, max(progress.lapses ?? 0, progress.status == .review ? 1 : 0)))),
+                ])
+            }),
+        ]
+    }
+
     var reviewWordIds: [String] {
         bank.words.filter { progress.words[$0.id]?.status == .review }.map(\.id)
     }

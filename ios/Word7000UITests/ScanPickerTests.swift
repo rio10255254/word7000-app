@@ -17,12 +17,10 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["scan-choose-photo"].tap()
         XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
         snapshot(app, name: "scan-photo-picker")
-        cancelButton(in: app).tap()
-        XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))
+        dismissPhotoPicker(in: app)
         app.buttons["scan-choose-photo"].tap()
         XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
-        cancelButton(in: app).tap()
-        XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))
+        dismissPhotoPicker(in: app)
         XCTAssertFalse(app.staticTexts["辨識失敗"].exists)
     }
 
@@ -57,8 +55,7 @@ final class ScanPickerTests: XCTestCase {
             for _ in 0..<4 where !save.isHittable { app.swipeUp() }
             XCTAssertTrue(save.isEnabled)
             XCTAssertTrue(save.isHittable)
-            save.tap()
-            XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+            saveScan(save, in: app)
             snapshot(app, name: "scan-photo-\(index)-saved")
             app.buttons["scan-start-study"].tap()
             XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
@@ -115,8 +112,7 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertEqual(save.label, "存入字庫（3 個）")
         XCTAssertTrue(app.staticTexts["scan-duplicates-summary"].exists)
         snapshot(app, name: "scan-precise-duplicate-review")
-        save.tap()
-        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        saveScan(save, in: app)
         app.buttons["scan-start-study"].tap()
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["study-position"].label.hasSuffix("/ 4"))
@@ -205,8 +201,7 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["Lesson"].tap()
         let save = app.buttons["scan-save"]
         for _ in 0..<5 where !save.isHittable { app.swipeUp() }
-        save.tap()
-        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        saveScan(save, in: app)
     }
 
     private func readPasted(_ app: XCUIApplication) {
@@ -224,8 +219,7 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertFalse(bankName.isEmpty)
         let save = app.buttons["scan-save"]
         for _ in 0..<5 where !save.isHittable { app.swipeUp() }
-        save.tap()
-        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        saveScan(save, in: app)
         return bankName
     }
 
@@ -241,6 +235,33 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["words-scan"].tap()
         XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))
         return app
+    }
+
+    /// The system photo picker animates away on its own schedule, and on a slow
+    /// simulator the scanner underneath is not tappable until it has gone.
+    /// A Cancel tap made while the picker is still loading can be dropped too,
+    /// so tap it again while it is still there.
+    private func dismissPhotoPicker(in app: XCUIApplication) {
+        let choose = app.buttons["scan-choose-photo"]
+        for _ in 0..<3 {
+            let cancel = cancelButton(in: app)
+            if cancel.exists, cancel.isHittable { cancel.tap() }
+            let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: choose)
+            if XCTWaiter.wait(for: [ready], timeout: 8) == .completed { return }
+        }
+        XCTFail("The photo picker did not close\n\(app.debugDescription)")
+    }
+
+    /// Right after the picker closes, a tap on Save can land while the sheet is
+    /// still settling and be dropped. Saving moves straight to the saved screen,
+    /// so a Save button still on screen means the tap never arrived; try once more.
+    private func saveScan(_ save: XCUIElement, in app: XCUIApplication) {
+        let saved = app.staticTexts["scan-saved"]
+        save.tap()
+        if !saved.waitForExistence(timeout: 10), save.exists, save.isHittable {
+            save.tap()
+        }
+        XCTAssertTrue(saved.waitForExistence(timeout: 10), app.debugDescription)
     }
 
     private func cancelButton(in app: XCUIApplication) -> XCUIElement {

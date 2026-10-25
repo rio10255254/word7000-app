@@ -1,0 +1,92 @@
+# Deploys the Groq-backed AI service (supabase/functions/ai) and its daily
+# quota table, and hands the Groq key to Supabase as a function secret.
+#
+# The key never ships inside the iOS app: anyone can unpack an app and copy a
+# key out of it. The app calls this function with its Supabase session instead.
+#
+# Repository secrets (Settings > Secrets and variables > Actions):
+#   GROQ_API_KEY           the Groq API key
+#   SUPABASE_ACCESS_TOKEN  a Supabase personal access token (supabase.com/dashboard/account/tokens)
+#   SUPABASE_DB_PASSWORD   the project's database password, to apply the quota migration
+name: AI backend
+
+on:
+  workflow_dispatch:
+    inputs:
+      daily_limit:
+        description: 'AI requests each learner may make per day'
+        type: string
+        default: '120'
+  push:
+    branches: ['master', 'native/**']
+    paths:
+      - 'supabase/functions/ai/**'
+      - 'supabase/migrations/**'
+      - '.github/workflows/ai-backend.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-backend
+  cancel-in-progress: false
+
+env:
+  PROJECT_REF: byyaepkhxexppjrdhcaw
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || secrets.GROQ_KEY }}
+      DAILY_LIMIT: ${{ inputs.daily_limit || '120' }}
+    steps:
+      - name: Check the secrets
+        run: |
+          missing=""
+          [ -n "$GROQ_API_KEY" ] || missing="$missing GROQ_API_KEY"
+          [ -n "$SUPABASE_ACCESS_TOKEN" ] || missing="$missing SUPABASE_ACCESS_TOKEN"
+          [ -n "$SUPABASE_DB_PASSWORD" ] || missing="$missing SUPABASE_DB_PASSWORD"
+          if [ -n "$missing" ]; then
+            echo "::error::Add these repository secrets, then run this workflow again:$missing"
+            exit 1
+          fi
+          [[ "$DAILY_LIMIT" =~ ^[0-9]+$ ]] || { echo "::error::daily_limit must be a whole number"; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test the AI routing
+        run: |
+          npm ci
+          npx vitest run src/aiFunction.test.ts
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Apply the quota migration
+        run: |
+          supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+          supabase db push --password "$SUPABASE_DB_PASSWORD"
+
+      - name: Store the Groq key as a function secret
+        run: supabase secrets set --project-ref "$PROJECT_REF" GROQ_API_KEY="$GROQ_API_KEY" AI_DAILY_LIMIT="$DAILY_LIMIT"
+
+      - name: Deploy the AI function
+        run: supabase functions deploy ai --project-ref "$PROJECT_REF" --use-api
+
+      - name: Check the function answers
+        run: |
+          # No session: the function must refuse, which proves it is deployed
+          # and that it does not answer anonymous callers.
+          status=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/functions/v1/ai" \
+            -H 'Content-Type: application/json' -d '{"task":"fillWord","input":{"word":"apple"}}')
+          echo "Unauthenticated request returned $status"
+          [ "$status" = "401" ] || { echo "::error::Expected 401 from the deployed function, got $status"; exit 1; }

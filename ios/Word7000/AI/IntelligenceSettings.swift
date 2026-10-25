@@ -8,17 +8,32 @@ final class IntelligenceSettings {
     var enabled: Bool {
         didSet { UserDefaults.standard.set(enabled, forKey: "intelligence.enabled") }
     }
+    /// The learner's switch for the online AI (Groq). On by default, but
+    /// nothing is sent until they agree once (`cloudConsent`).
+    var cloudEnabled: Bool {
+        didSet { UserDefaults.standard.set(cloudEnabled, forKey: "intelligence.cloud") }
+    }
+    /// nil until the learner answers the one-time question about sending text online.
+    var cloudConsent: Bool? {
+        didSet { UserDefaults.standard.set(cloudConsent, forKey: "intelligence.cloudConsent") }
+    }
     private(set) var policy: IntelligencePolicy?
     private(set) var checking = false
     private var lastCheck: Date?
     var coachAllowed: Bool { enabled && policy?.speakingCoachEnabled != false }
     var scanAllowed: Bool { enabled && policy?.scanAssistantEnabled != false }
+    /// Online AI may be offered (consent may still be pending).
+    var cloudOffered: Bool { enabled && cloudEnabled && cloudConsent != false && policy?.cloudEnabled != false }
+    /// Online AI may be used right now.
+    var cloudAllowed: Bool { cloudOffered && cloudConsent == true }
 
     private init() {
         enabled = UserDefaults.standard.object(forKey: "intelligence.enabled") as? Bool ?? true
+        cloudEnabled = UserDefaults.standard.object(forKey: "intelligence.cloud") as? Bool ?? true
+        cloudConsent = UserDefaults.standard.object(forKey: "intelligence.cloudConsent") as? Bool
         policy = UserDefaults.standard.data(forKey: "intelligence.policy").flatMap(IntelligencePolicy.decode)
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { enabled = true; policy = nil }
+        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { enabled = true; cloudEnabled = true; cloudConsent = nil; policy = nil }
         #endif
     }
 

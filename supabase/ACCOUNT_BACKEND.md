@@ -32,3 +32,31 @@ npx supabase functions deploy delete-account --project-ref byyaepkhxexppjrdhcaw 
 Hosted Auth settings are managed separately from schema migrations. Compare
 the complete remote diff before using `supabase config push`; never replace the
 hosted site URL, redirect allow list, or provider settings with local defaults.
+
+## Online AI (Groq)
+
+The `ai` edge function answers every online AI feature in the iOS app: the
+speaking coach, word explanations, quiz explanations, scan tidy-up and word
+fill-in. The Groq key is a function secret and never ships in the app.
+
+- Models: `openai/gpt-oss-120b` (strongest) and `openai/gpt-oss-20b` (second).
+  Coaching and explanations start on 120B; scan, quiz and fill-in start on 20B.
+  A rate limit, outage, timeout or off-schema reply moves the request to the
+  other model; if both fail the app uses Apple's on-device model.
+- Prompts and JSON schemas live in `supabase/functions/ai/tasks.ts`; the app only
+  sends data for a named task.
+- Each account (guests included) may make `AI_DAILY_LIMIT` requests per UTC day
+  (default 120), counted in `word7000_private.ai_usage`.
+- Deploy with the **AI backend** GitHub workflow. It needs the repository
+  secrets `GROQ_API_KEY`, `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD`.
+  Or by hand:
+
+```powershell
+npx supabase db push --linked
+npx supabase secrets set GROQ_API_KEY=... AI_DAILY_LIMIT=120 --project-ref byyaepkhxexppjrdhcaw
+npx supabase functions deploy ai --project-ref byyaepkhxexppjrdhcaw --use-api
+```
+
+- Turn online AI off for everyone without an app update: set the function
+  secret `AI_DISABLED=true`, or publish `"cloudEnabled": false` in
+  `public/ai-features.json`. The app then falls back to on-device AI.

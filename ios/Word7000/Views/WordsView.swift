@@ -465,6 +465,7 @@ struct WordDetailView: View {
                 Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
                         : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
             }
+            AIExplanationSection(word: word)
             Section {
                 LabeledContent(L.status, value: L.statusLabel(progress.status))
                 if progress.status != .new, let due = LearningEngine.reviewDueDate(progress) {

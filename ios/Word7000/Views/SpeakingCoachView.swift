@@ -11,6 +11,7 @@ struct SpeakingCoachView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var answerFocused = false
     @State private var pendingSubmission = false
+    @State private var askCloud = false
     @State private var inputCommitFailed = false
     @State private var submittedAnswer: String?
     @State private var recording = SpeakingRecorder()
@@ -59,7 +60,11 @@ struct SpeakingCoachView: View {
 
     /// Apple's server model sees the answer text, so the promise changes with it.
     private var privacyNote: String {
-        provider.usesCloud
+        if provider.usesOnline, IntelligenceSettings.shared.cloudConsent == true {
+            return L.t("錄音只留在這部手機，離開即刪除。取得建議時，回答文字會傳送到 Groq 的線上 AI 處理。AI 建議可能有誤，也不評分發音。",
+                       "Recordings stay on this iPhone and are deleted when you leave. For suggestions, your answer text is sent to Groq's online AI. AI suggestions may be wrong and do not score pronunciation.")
+        }
+        return provider.usesCloud
             ? L.t("錄音只留在這部手機，離開即刪除。取得建議時，回答文字交給 Apple 的 Private Cloud Compute 處理，Apple 表示不會保存。AI 建議可能有誤，也不評分發音。",
                   "Recordings stay on this iPhone and are deleted when you leave. For suggestions, your answer text goes to Apple's Private Cloud Compute, which Apple says is not stored. AI suggestions may be wrong and do not score pronunciation.")
             : L.t("錄音與回答只留在這部手機，離開即刪除錄音。AI 建議可能有誤，也不評分發音。鍵盤聽寫依 Apple 設定，可能需要網路。",
@@ -93,6 +98,7 @@ struct SpeakingCoachView: View {
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .onAppear { provider.refreshAvailability() }
+        .cloudConsentAlert(isPresented: $askCloud) { provider.refreshAvailability(); generateSuggestions() }
         .onDisappear {
             pendingSubmission = false; session.cancel(); recording.clear(); Speaker.shared.stop()
             // The draft is kept for the card's question; a follow-up answer would reopen under it.
@@ -640,7 +646,7 @@ struct SpeakingCoachView: View {
         case .tooLong: L.t("回答或題目背景太長。請縮短回答，或改用背景較短的題目再試。", "The answer or question context is too long. Shorten your answer or try a question with less context.")
         case .busy: L.t("上一個請求尚未結束，請稍候再試。", "The previous request is still finishing. Try again shortly.")
         case .timedOut: L.t("這次等候太久，請再試一次。你的回答仍在。", "This took too long. Try again; your answer is still here.")
-        case .unavailable: L.t("裝置上的建議暫時無法使用，請稍後再試。", "On-device suggestions are temporarily unavailable. Try again later.")
+        case .unavailable: L.t("AI 建議暫時無法使用，請稍後再試。", "AI suggestions are temporarily unavailable. Try again later.")
         case .invalidFeedback, .wrongLanguage, .generationFailed: L.t("這次未能產生合適的建議，請調整回答或再試一次。", "No suitable suggestions were produced. Edit your answer or try again.")
         }
     }
@@ -667,13 +673,15 @@ struct SpeakingCoachView: View {
     private func generateSuggestions() {
         provider.refreshAvailability()
         guard provider.availability == .ready, canSubmitAnswer, !needsTranscriptReview else { return }
+        if provider.usesOnline, CloudAssistant.shared.needsConsent { askCloud = true; return }
         submittedAnswer = answer
         let submitted = SpeakingCoach.Request(keyword: request.keyword, meaning: request.meaning,
             question: question, context: followUpQuestion == nil ? request.context : "", answer: answer, mode: request.mode)
         #if DEBUG
         if let timeout = provider.testingTimeout { session.submit(submitted, timeout: timeout); return }
         #endif
-        session.submit(submitted)
+        // Room for both online models and then the on-device one.
+        session.submit(submitted, timeout: provider.usesOnline ? .seconds(50) : .seconds(30))
     }
 
     private func close() {

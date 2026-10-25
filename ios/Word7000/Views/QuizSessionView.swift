@@ -110,7 +110,12 @@ struct QuizSessionView: View {
                 }
             }
 
-            if chosen != nil {
+            if let chosen {
+                if !chosen.correct, let correct = options.first(where: \.correct) {
+                    QuizWhyView(word: word,
+                                question: model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt,
+                                correctAnswer: correct.text, chosenAnswer: chosen.text)
+                }
                 if !face.examplePrimary.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(face.examplePrimary)

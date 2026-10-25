@@ -29,5 +29,8 @@ enabled = false
 [functions.delete-account]
 verify_jwt = true
 
+[functions.ai]
+verify_jwt = true
+
 [functions.send-streak-live-activities]
 verify_jwt = false

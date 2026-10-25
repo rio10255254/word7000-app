@@ -16,6 +16,10 @@ final class AppleSpeakingCoach {
     }
 
     private(set) var availability: Availability = .unsupported
+    /// Apple's model on this iPhone, whatever the online AI is doing.
+    private(set) var deviceAvailability: Availability = .unsupported
+    /// Suggestions come from the online AI (Groq) first; Apple's model is the fallback.
+    private(set) var usesOnline = false
     private(set) var isBusy = false
     /// Answers go to Apple's server model rather than staying on this iPhone.
     private(set) var usesCloud = false
@@ -28,11 +32,27 @@ final class AppleSpeakingCoach {
     private init() { refreshAvailability() }
 
     func refreshAvailability() {
+        refreshDeviceAvailability()
+        // The online AI makes the coach available on every iPhone, with or
+        // without Apple Intelligence.
+        usesOnline = IntelligenceSettings.shared.coachAllowed && CloudAssistant.shared.offered && !testingFixtureActive
+        availability = usesOnline ? .ready : deviceAvailability
+    }
+
+    private var testingFixtureActive: Bool {
+        #if DEBUG
+        return fixture != nil
+        #else
+        return false
+        #endif
+    }
+
+    private func refreshDeviceAvailability() {
         usesCloud = false
-        guard IntelligenceSettings.shared.coachAllowed else { availability = .paused; return }
+        guard IntelligenceSettings.shared.coachAllowed else { deviceAvailability = .paused; return }
         #if DEBUG
         if let fixture {
-            availability = fixture == .unavailable ? .disabled : .ready
+            deviceAvailability = fixture == .unavailable ? .disabled : .ready
             return
         }
         #endif
@@ -41,19 +61,19 @@ final class AppleSpeakingCoach {
             let model = SystemLanguageModel.default
             switch model.availability {
             case .available:
-                availability = model.supportsLocale(Locale(identifier: "en-US"))
+                deviceAvailability = model.supportsLocale(Locale(identifier: "en-US"))
                     && model.supportsLocale(Locale(identifier: "zh-Hant-TW")) ? .ready : .unsupportedLanguage
-                usesCloud = availability == .ready && cloudReady
-            case .unavailable(.deviceNotEligible): availability = .unsupported
-            case .unavailable(.appleIntelligenceNotEnabled): availability = .disabled
-            case .unavailable(.modelNotReady): availability = .preparing
-            case .unavailable: availability = .unavailable
-            @unknown default: availability = .unavailable
+                usesCloud = deviceAvailability == .ready && cloudReady
+            case .unavailable(.deviceNotEligible): deviceAvailability = .unsupported
+            case .unavailable(.appleIntelligenceNotEnabled): deviceAvailability = .disabled
+            case .unavailable(.modelNotReady): deviceAvailability = .preparing
+            case .unavailable: deviceAvailability = .unavailable
+            @unknown default: deviceAvailability = .unavailable
             }
             return
         }
         #endif
-        availability = .unsupported
+        deviceAvailability = .unsupported
     }
 
     func generate(_ request: SpeakingCoach.Request) async throws -> SpeakingCoach.Feedback {
@@ -68,19 +88,37 @@ final class AppleSpeakingCoach {
         #if DEBUG
         if let fixture { return try await generateFixture(request, fixture: fixture) }
         #endif
+        if usesOnline, CloudAssistant.shared.ready {
+            do {
+                let feedback = try await CloudAssistant.shared.run(.coach, request.cloudInput, as: SpeakingCoach.Feedback.self)
+                try Task.checkCancellation()
+                return try feedback.validated(for: request)
+            } catch {
+                try Task.checkCancellation()
+                if error is CancellationError { throw CancellationError() }
+                // Busy, over today's allowance, offline or an unusable reply:
+                // this iPhone's own model answers when it can.
+                refreshAvailability()
+                guard deviceAvailability == .ready else {
+                    if let failure = error as? SpeakingCoach.Failure { throw failure }
+                    throw (error as? CloudAI.Failure) == .busy ? SpeakingCoach.Failure.busy : SpeakingCoach.Failure.unavailable
+                }
+            }
+        }
+        guard deviceAvailability == .ready else { throw SpeakingCoach.Failure.unavailable }
         #if canImport(FoundationModels)
         if #available(iOS 26.0, *) {
             do {
                 let feedback = try await coach(request)
                 try Task.checkCancellation()
                 refreshAvailability()
-                guard availability == .ready else { throw SpeakingCoach.Failure.unavailable }
+                guard deviceAvailability == .ready else { throw SpeakingCoach.Failure.unavailable }
                 return feedback
             } catch {
                 try Task.checkCancellation()
                 if error is CancellationError { throw CancellationError() }
                 refreshAvailability()
-                guard availability == .ready else { throw SpeakingCoach.Failure.unavailable }
+                guard deviceAvailability == .ready else { throw SpeakingCoach.Failure.unavailable }
                 if let failure = error as? SpeakingCoach.Failure { throw failure }
                 if let failure = error as? LanguageModelSession.GenerationError {
                     switch failure {
@@ -251,3 +289,11 @@ extension ChinesePracticeReply: CoachReply {
     }
 }
 #endif
+
+extension SpeakingCoach.Request {
+    /// The fields the online coach needs; the server writes the instructions.
+    var cloudInput: [String: JSONValue] {
+        ["keyword": .string(keyword), "meaning": .string(meaning), "question": .string(question),
+         "context": .string(context), "answer": .string(answer), "mode": .string(mode.rawValue)]
+    }
+}

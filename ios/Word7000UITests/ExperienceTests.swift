@@ -203,6 +203,30 @@ final class ExperienceTests: XCTestCase {
         XCTAssertEqual(savedAutoSpeak.value as? String, "1")
     }
 
+    func testSettingsAreGroupedAndReachable() {
+        let app = launch()
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        let settings = app.buttons["me-settings"]
+        for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
+        settings.tap()
+        XCTAssertTrue(app.switches["settings-auto-reveal"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.switches["settings-reminder"].exists)
+        XCTAssertTrue(app.buttons["settings-intelligence"].exists)
+        snapshot(app, "settings-top")
+        let speech = app.buttons["settings-speech"]
+        for _ in 0..<3 where !speech.isHittable { app.swipeUp() }
+        XCTAssertTrue(speech.isHittable)
+        app.swipeUp()
+        app.swipeUp()
+        snapshot(app, "settings-bottom")
+        app.swipeDown()
+        app.swipeDown()
+        let intelligence = app.buttons["settings-intelligence"]
+        for _ in 0..<3 where !intelligence.isHittable { app.swipeDown() }
+        intelligence.tap()
+        XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
+    }
+
     private func openSpeechSettings(_ app: XCUIApplication) {
         app.tabBars.buttons.element(boundBy: 2).tap()
         let settings = app.buttons["me-settings"]

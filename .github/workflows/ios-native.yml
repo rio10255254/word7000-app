@@ -60,7 +60,9 @@ jobs:
             xcode: 27
             runner: xcode-27
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
+    # The full iOS 27 walk-through on the xcode-27 runners takes 50-55 minutes,
+    # too close to an hour once the simulator is slow to boot.
+    timeout-minutes: 90
     env:
       IOS_MAJOR: ${{ matrix.ios }}
       XCODE_MAJOR: ${{ matrix.xcode }}
@@ -169,14 +171,38 @@ jobs:
           elif [ "$CHECKS" = "polish" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testMockAIDisabledStillExplainsStatusAndAllowsPractice -only-testing:Word7000UITests/SpeakingCoachTests/testRecordingReviewPlaybackAndDeletionWithExplicitFixture -only-testing:Word7000UITests/SpeakingCoachTests/testNativeRecorderPermissionTimerPlaybackAndCleanup -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
           fi
-          xcodebuild test \
+          DERIVED="$RUNNER_TEMP/DerivedData"
+          xcodebuild build-for-testing \
             -project ios/Word7000.xcodeproj \
             -scheme Word7000 \
             -destination "id=$SIMULATOR_UDID" \
+            -derivedDataPath "$DERIVED" \
+            CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
+          status=$?
+          if [ $status -ne 0 ]; then
+            grep -E "error:|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -100
+            exit $status
+          fi
+          # The first launch after installing on a freshly booted simulator can
+          # outlast XCTest's launch window ("Timed out while acquiring background
+          # assertion", seen on iOS 27), failing whichever test happens to run
+          # first. Launch the app once here so the tests start warm.
+          APP=$(find "$DERIVED/Build/Products" -maxdepth 2 -type d -name Word7000.app -path '*iphonesimulator*' | head -1)
+          if [ -n "$APP" ]; then
+            xcrun simctl install "$SIMULATOR_UDID" "$APP" \
+              && xcrun simctl launch "$SIMULATOR_UDID" com.rio.word7000 -uiTestingReset -uiTestingLight \
+              && sleep 10
+            xcrun simctl terminate "$SIMULATOR_UDID" com.rio.word7000 || true
+          fi
+          xcodebuild test-without-building \
+            -project ios/Word7000.xcodeproj \
+            -scheme Word7000 \
+            -destination "id=$SIMULATOR_UDID" \
+            -derivedDataPath "$DERIVED" \
             -parallel-testing-enabled NO \
             "${TEST_SELECTION[@]}" \
             -resultBundlePath "$RUNNER_TEMP/Word7000.xcresult" \
-            CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
+            CODE_SIGNING_ALLOWED=NO >> "$RUNNER_TEMP/xcodebuild.log" 2>&1
           status=$?
           grep -E "error:|Test Case|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -200
           exit $status

@@ -156,6 +156,41 @@ final class ExperienceTests: XCTestCase {
         XCTAssertFalse(app.buttons["welcome-start"].exists)
     }
 
+    func testFinishingASetShowsTheSummaryAndWordProgress() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["welcome-start"].waitForExistence(timeout: 10))
+        app.buttons["welcome-start"].tap()
+        waitForReadyCard(app)
+        snapshot(app, "polish-study-front")
+        for _ in 0..<5 {
+            waitForReadyCard(app)
+            app.buttons["study-show-answer"].tap()
+            let known = app.buttons["study-grade-known"]
+            XCTAssertTrue(known.waitForExistence(timeout: 5))
+            known.tap()
+            if app.descendants(matching: .any)["study-summary"].waitForExistence(timeout: 2) { break }
+        }
+        XCTAssertTrue(app.descendants(matching: .any)["study-summary"].waitForExistence(timeout: 5))
+        sleep(1)
+        snapshot(app, "polish-session-summary")
+        app.buttons["study-done"].tap()
+
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
+        app.cells.element(boundBy: 2).tap()
+        let progress = app.descendants(matching: .any)["word-progress"].firstMatch
+        for _ in 0..<4 where !progress.exists { app.swipeUp() }
+        XCTAssertTrue(progress.waitForExistence(timeout: 5))
+        snapshot(app, "polish-word-progress")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        XCTAssertTrue(app.descendants(matching: .any)["me-week-strip"].firstMatch.waitForExistence(timeout: 5))
+        snapshot(app, "polish-me-week")
+    }
+
     func testLibrarySearchKeepsKeyboardAndExactMatch() {
         let app = launch()
         app.tabBars.buttons.element(boundBy: 1).tap()

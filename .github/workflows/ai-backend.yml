@@ -18,7 +18,8 @@ on:
         type: string
         default: '120'
   push:
-    branches: ['master', 'native/**']
+    # The PR branch is listed only to deploy and verify before merging.
+    branches: ['master', 'native/**', 'claude/exciting-cerf-sbrfa6']
     paths:
       - 'supabase/functions/ai/**'
       - 'supabase/migrations/**'

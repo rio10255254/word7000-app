@@ -184,6 +184,143 @@ struct QuizWhyView: View {
     }
 }
 
+/// The AI's read of the learner's recent numbers, on the Me tab. One analysis
+/// a day is kept on this iPhone, so opening the tab again costs nothing.
+struct AIInsightsSection: View {
+    @Environment(AppModel.self) private var model
+    @State private var insights: CloudAI.Insights?
+    @State private var loading = false
+    @State private var failure: CloudAI.Failure?
+    @State private var askCloud = false
+
+    private struct Saved: Codable {
+        var day: String
+        var mode: String
+        var insights: CloudAI.Insights
+    }
+    private static let storageKey = "word7000.aiInsights"
+
+    var body: some View {
+        if CloudAssistant.shared.offered || insights != nil {
+            Section {
+                if let insights {
+                    content(insights)
+                } else if loading {
+                    HStack(spacing: 10) {
+                        ProgressView()
+                        Text(L.t("AI 正在讀你的學習紀錄…", "AI is reading your progress…")).foregroundStyle(.secondary)
+                    }
+                    .accessibilityIdentifier("ai-insights-loading")
+                } else {
+                    Button(action: start) {
+                        ActionRow(icon: "sparkles", tint: Palette.chinese, title: L.t("分析我的學習", "Analyse my learning"),
+                                  value: L.t("每天一次", "Once a day"))
+                    }
+                    .tint(.primary)
+                    .accessibilityIdentifier("ai-insights-run")
+                    if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                }
+            } header: {
+                Text(L.t("AI 學習分析", "AI learning insights"))
+            } footer: {
+                if insights != nil {
+                    Text(L.t("根據最近 14 天的紀錄，由 Groq 線上 AI 產生，可能有誤。明天會再更新。",
+                             "Based on the last 14 days, by Groq's online AI, and may contain mistakes. Refreshes tomorrow."))
+                } else {
+                    Text(L.t("AI 會讀你的練習次數、測驗正確率和最常忘記的字，告訴你接下來怎麼練。",
+                             "AI reads your practice, quiz accuracy and most-forgotten words, and suggests what to do next."))
+                }
+            }
+            .onAppear(perform: restore)
+            .onChange(of: model.studyMode) { _, _ in insights = nil; restore() }
+            .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { start() } }
+        }
+    }
+
+    @ViewBuilder
+    private func content(_ insights: CloudAI.Insights) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(insights.headline, systemImage: "sparkles")
+                .font(.headline)
+                .foregroundStyle(Palette.chinese)
+                .accessibilityIdentifier("ai-insights-headline")
+            Text(insights.summary)
+        }
+        .padding(.vertical, 4)
+        if !insights.strengths.isEmpty {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(L.t("做得好的地方", "Going well")).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.known)
+                ForEach(insights.strengths, id: \.self) { line in
+                    Label { Text(line) } icon: { Image(systemName: "checkmark.circle.fill").foregroundStyle(Palette.known) }
+                        .font(.subheadline)
+                }
+            }
+            .padding(.vertical, 2)
+        }
+        if !insights.focusWords.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(L.t("要加強的字", "Words to focus on")).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.review)
+                ForEach(insights.focusWords, id: \.word) { focus in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(focus.word).font(.body.weight(.semibold))
+                        if !focus.tip.isEmpty { Text(focus.tip).font(.subheadline).foregroundStyle(.secondary) }
+                    }
+                }
+            }
+            .padding(.vertical, 2)
+        }
+        if !insights.plan.isEmpty {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(L.t("接下來幾天", "Next few days")).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
+                ForEach(Array(insights.plan.enumerated()), id: \.offset) { index, step in
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("\(index + 1)")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 20, height: 20)
+                            .background(Palette.accent, in: Circle())
+                        Text(step).font(.subheadline)
+                    }
+                }
+            }
+            .padding(.vertical, 2)
+        }
+        PlusAIUpsell()
+    }
+
+    private func restore() {
+        guard insights == nil,
+              let data = UserDefaults.standard.data(forKey: Self.storageKey),
+              let saved = try? JSONDecoder().decode(Saved.self, from: data),
+              saved.day == DayMath.today(), saved.mode == model.studyMode.rawValue else { return }
+        insights = saved.insights
+    }
+
+    private func start() {
+        guard !loading else { return }
+        if CloudAssistant.shared.needsConsent { askCloud = true; return }
+        let mode = model.studyMode.rawValue
+        let input = model.insightsInput()
+        loading = true
+        failure = nil
+        Task {
+            defer { loading = false }
+            do {
+                let value = try await CloudAssistant.shared.run(.insights, input, as: CloudAI.Insights.self).cleaned()
+                if let data = try? JSONEncoder().encode(Saved(day: DayMath.today(), mode: mode, insights: value)) {
+                    UserDefaults.standard.set(data, forKey: Self.storageKey)
+                }
+                if mode == model.studyMode.rawValue {
+                    withAnimation(Motion.reveal) { insights = value }
+                }
+            } catch is CancellationError {
+            } catch {
+                failure = (error as? CloudAI.Failure) ?? .unavailable
+            }
+        }
+    }
+}
+
 /// Under a free learner's AI answer: what Plus would have answered with.
 /// Hidden for Plus and the trial, and when online AI is off.
 struct PlusAIUpsell: View {

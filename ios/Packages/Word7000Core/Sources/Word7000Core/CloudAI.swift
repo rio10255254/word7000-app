@@ -8,7 +8,7 @@ import FoundationNetworking
 /// server, which tries the strongest model first and fails over to the second.
 public enum CloudAI {
     public enum Kind: String, Codable, Sendable {
-        case coach, scan, explain, quizWhy, fillWord
+        case coach, scan, explain, quizWhy, fillWord, insights
     }
 
     public enum Failure: Error, Equatable, Sendable {
@@ -85,6 +85,42 @@ public enum CloudAI {
         public func cleaned() throws -> QuizExplanation {
             let result = QuizExplanation(explanation: CloudAI.clip(explanation, 280), memoryTip: CloudAI.clip(memoryTip, 180))
             guard !result.explanation.isEmpty else { throw Failure.unavailable }
+            return result
+        }
+    }
+
+    /// What the AI read in the learner's recent numbers, for the Me tab.
+    public struct Insights: Codable, Equatable, Sendable {
+        public struct FocusWord: Codable, Equatable, Sendable {
+            public let word: String
+            public let tip: String
+            public init(word: String, tip: String) { self.word = word; self.tip = tip }
+        }
+
+        public let headline: String
+        public let summary: String
+        public let strengths: [String]
+        public let focusWords: [FocusWord]
+        public let plan: [String]
+
+        public init(headline: String, summary: String, strengths: [String], focusWords: [FocusWord], plan: [String]) {
+            self.headline = headline; self.summary = summary; self.strengths = strengths
+            self.focusWords = focusWords; self.plan = plan
+        }
+
+        public func cleaned() throws -> Insights {
+            let lines = { (items: [String], limit: Int) in
+                items.map { CloudAI.clip($0, 160) }.filter { !$0.isEmpty }.prefix(limit).map { $0 }
+            }
+            let result = Insights(
+                headline: CloudAI.clip(headline, 80),
+                summary: CloudAI.clip(summary, 360),
+                strengths: lines(strengths, 3),
+                focusWords: focusWords.map { FocusWord(word: CloudAI.clip($0.word, 60), tip: CloudAI.clip($0.tip, 120)) }
+                    .filter { !$0.word.isEmpty }.prefix(5).map { $0 },
+                plan: lines(plan, 4)
+            )
+            guard !result.headline.isEmpty, !result.summary.isEmpty else { throw Failure.unavailable }
             return result
         }
     }

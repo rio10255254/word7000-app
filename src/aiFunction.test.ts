@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { complete, GroqFailure, requestBody, type Fetch } from '../supabase/functions/ai/groq';
-import { dailyLimit, FAST_MODEL, InputError, isTaskName, planTask, STRONG_MODEL, tierFor } from '../supabase/functions/ai/tasks';
+import { dailyLimit, FAST_MODEL, hanShare, InputError, isTaskName, planTask, STRONG_MODEL, tierFor } from '../supabase/functions/ai/tasks';
 
 const coachInput = {
   keyword: 'practice',
@@ -67,6 +67,7 @@ describe('AI tasks', () => {
       planTask('explain', { word: 'run', meaning: '跑', mode: 'chinese' }),
       planTask('quizWhy', { question: 'run', correctAnswer: '跑', chosenAnswer: '走', word: 'run', mode: 'chinese' }),
       planTask('fillWord', { word: 'serendipity' }),
+      planTask('insights', { mode: 'english', streak: 0, mastered: 0, reviewing: 0, due: 0, dailyTarget: 20, quizCorrect: 0, quizTotal: 0 }),
     ]) {
       const visit = (node: Record<string, unknown>) => {
         if (node.type === 'object') {
@@ -110,6 +111,94 @@ describe('AI tiers', () => {
     expect(dailyLimit('trial')).toBe(100);
     expect(dailyLimit('plus')).toBe(100);
     expect(dailyLimit('free', { free: 5, plus: 50 })).toBe(5);
+  });
+});
+
+describe('AI reply language', () => {
+  const explainInput = { word: 'run', meaning: '跑', mode: 'english' };
+  const chineseExplanation = {
+    summary: 'run 最常見的意思是「跑」，也可以指經營。', usage: '經營公司時說 run a business。', collocations: ['run fast', 'run a shop'],
+    examples: [{ sentence: 'I run every morning.', translation: '我每天早上跑步。' }], pitfall: '不要和 ran 搞混。', memoryTip: '想像自己在跑道上 run。',
+  };
+  const englishExplanation = {
+    ...chineseExplanation,
+    summary: 'Run usually means to move fast on foot.', usage: 'Also used for managing a business.',
+    examples: [{ sentence: 'I run every morning.', translation: 'I jog each morning.' }], pitfall: 'Do not confuse with ran.', memoryTip: 'Picture a track.',
+  };
+
+  it('measures how much of a text is Chinese', () => {
+    expect(hanShare('完全是中文')).toBe(1);
+    expect(hanShare('only English here')).toBe(0);
+    expect(hanShare('run 是「跑」的意思')).toBeGreaterThan(0.35);
+  });
+
+  it('rejects an English explanation for a learner using the Chinese interface', () => {
+    const plan = planTask('explain', explainInput);
+    expect(plan.accept?.(chineseExplanation)).toBe(true);
+    expect(plan.accept?.(englishExplanation)).toBe(false);
+    expect(plan.system.startsWith('The learner is a Taiwanese student')).toBe(true);
+  });
+
+  it('expects English explanations for learners of Chinese', () => {
+    const plan = planTask('explain', { ...explainInput, mode: 'chinese' });
+    expect(plan.accept?.(englishExplanation)).toBe(true);
+    expect(plan.accept?.(chineseExplanation)).toBe(false);
+  });
+
+  it('checks quiz explanations and coaching tips too', () => {
+    const quiz = planTask('quizWhy', { question: 'run', correctAnswer: '跑', chosenAnswer: '走', word: 'run', mode: 'english' });
+    expect(quiz.accept?.({ explanation: 'run 是跑，不是走。', memoryTip: '跑比走快。' })).toBe(true);
+    expect(quiz.accept?.({ explanation: 'Run means to move fast.', memoryTip: 'Running is faster.' })).toBe(false);
+    const coach = planTask('coach', coachInput);
+    expect(coach.accept?.({ rewrite: 'I practice every day.', tip: '很好，記得用 every day。', followUp: 'Why?', corrections: [] })).toBe(true);
+    expect(coach.accept?.({ rewrite: 'I practice every day.', tip: 'Great job.', followUp: 'Why?', corrections: [] })).toBe(false);
+  });
+
+  it('asks the same model once more with a reminder, then moves on', async () => {
+    const plan = planTask('explain', explainInput, 'free');
+    const systems: string[] = [];
+    const responses = [reply(200, englishExplanation), reply(200, chineseExplanation)];
+    const fetch: Fetch = async (_url, init) => {
+      systems.push(JSON.parse(String(init.body)).messages[0].content);
+      return responses.shift()!;
+    };
+    await expect(complete(plan, { apiKey: 'k', fetch })).resolves.toEqual({ model: FAST_MODEL, content: chineseExplanation });
+    expect(systems).toHaveLength(2);
+    expect(systems[1]).toContain('繁體中文');
+    expect(systems[1].length).toBeGreaterThan(systems[0].length);
+  });
+
+  it('gives up after the corrected try and the other models', async () => {
+    const plan = planTask('explain', explainInput, 'plus');
+    const calls = recording([reply(200, englishExplanation), reply(200, englishExplanation), reply(200, englishExplanation)]);
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).rejects.toMatchObject({ kind: 'unavailable' });
+    expect(calls.models).toEqual([STRONG_MODEL, STRONG_MODEL, FAST_MODEL]);
+  });
+});
+
+describe('Learning insights', () => {
+  const input = {
+    mode: 'english', streak: 4, mastered: 120, reviewing: 18, due: 9, dailyTarget: 20, quizCorrect: 31, quizTotal: 40,
+    days: [{ date: '2026-10-24', words: 20, quiz: 10, speaking: 1 }],
+    struggling: [{ word: 'abandon', meaning: '遺棄', misses: 3 }],
+  };
+
+  it('sends only the learner numbers and asks for advice in their language', () => {
+    expect(isTaskName('insights')).toBe(true);
+    const plan = planTask('insights', input);
+    const data = JSON.parse(plan.user);
+    expect(data.totals).toMatchObject({ streakDays: 4, wordsKnown: 120, quizTotal: 40 });
+    expect(data.hardestWords[0]).toEqual({ word: 'abandon', meaning: '遺棄', timesForgotten: 3 });
+    expect(plan.models).toEqual([STRONG_MODEL, FAST_MODEL]);
+    expect(plan.accept?.({ headline: '很穩定', summary: '這週每天都有學。', strengths: ['測驗正確率高'], focusWords: [{ word: 'abandon', tip: '想成放棄' }], plan: ['每天複習 10 個'] })).toBe(true);
+    expect(plan.accept?.({ headline: 'Steady', summary: 'You studied daily.', strengths: ['Good accuracy'], focusWords: [], plan: ['Review 10 a day'] })).toBe(false);
+  });
+
+  it('rejects malformed numbers and oversized lists', () => {
+    expect(() => planTask('insights', { ...input, streak: -1 })).toThrow(InputError);
+    expect(() => planTask('insights', { ...input, mastered: '120' })).toThrow(InputError);
+    expect(() => planTask('insights', { ...input, days: Array(15).fill(input.days[0]) })).toThrow(InputError);
+    expect(() => planTask('insights', { ...input, struggling: [{ word: 'x'.repeat(81), misses: 1 }] })).toThrow(InputError);
   });
 });
 

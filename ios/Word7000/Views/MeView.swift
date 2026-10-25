@@ -52,6 +52,8 @@ struct MeView: View {
                 }
             }
 
+            AIInsightsSection()
+
             PlusSection(compact: true)
 
             Section {

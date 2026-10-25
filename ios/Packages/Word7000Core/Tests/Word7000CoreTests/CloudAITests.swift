@@ -80,6 +80,19 @@ final class CloudAITests: XCTestCase {
         }
     }
 
+    func testInsightsDecodeAndTrimLongLists() async throws {
+        let json = #"{"result":{"headline":" 很穩定 ","summary":"這週每天都有學。","strengths":["a","","b","c","d"],"focusWords":[{"word":"abandon","tip":"想成放棄"},{"word":"","tip":"x"}],"plan":["1","2","3","4","5"]},"tier":"free","limit":20,"remaining":19}"#
+        let reply = try await SupabaseClient(config: config, transport: FakeTransport([(json, 200)]))
+            .runAI(.insights, input: [:], session: session, entitlement: nil, as: CloudAI.Insights.self)
+        let insights = try reply.value.cleaned()
+        XCTAssertEqual(insights.headline, "很穩定")
+        XCTAssertEqual(insights.strengths, ["a", "b", "c"])
+        XCTAssertEqual(insights.focusWords, [.init(word: "abandon", tip: "想成放棄")])
+        XCTAssertEqual(insights.plan.count, 4)
+        XCTAssertEqual(reply.usage?.remaining, 19)
+        XCTAssertThrowsError(try CloudAI.Insights(headline: "", summary: "x", strengths: [], focusWords: [], plan: []).cleaned())
+    }
+
     func testCleaningCapsListsAndRejectsAnEmptyExplanation() throws {
         let long = String(repeating: "字", count: 500)
         let explanation = CloudAI.Explanation(summary: " 意思 ", usage: long, collocations: ["a", "", "b", "c", "d", "e", "f"],

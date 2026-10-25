@@ -50,7 +50,7 @@ struct IntelligenceSettingsView: View {
             }
             Section {
                 Text(L.t("錄音不會上傳，離開練習頁即刪除。口說回答和 AI 建議不會存入帳號，回答在離開這題後清除。", "Recordings are never uploaded and are deleted when you leave the practice sheet. Speaking answers and AI suggestions are not saved to your account; answers are cleared when you leave the question."))
-                Text(L.t("使用線上 AI 時，你的文字回答、掃描到的文字或查詢的單字會傳送到 Groq（美國）產生建議，不包含錄音、帳號名稱或 Email。只用裝置內 AI 時，這些內容都留在 iPhone 上。", "With online AI, your typed or spoken answer text, scanned text or the word you ask about is sent to Groq (USA) to produce suggestions, without recordings, your account name or email. With on-device AI only, all of it stays on this iPhone."))
+                Text(L.t("使用線上 AI 時，你的文字回答、掃描到的文字、查詢的單字，或你要求分析時的學習次數與常忘記的字，會傳送到 Groq（美國）產生建議，不包含錄音、帳號名稱或 Email。只用裝置內 AI 時，這些內容都留在 iPhone 上。", "With online AI, your typed or spoken answer text, scanned text, the word you ask about, or, when you ask for an analysis, your practice counts and most-forgotten words are sent to Groq (USA) to produce suggestions, without recordings, your account name or email. With on-device AI only, all of it stays on this iPhone."))
                 Text(L.t("為了公平分配線上 AI，伺服器只記錄每個帳號每天的使用次數，不記錄內容。", "To share online AI fairly, the server counts requests per account per day, without their content."))
                 Text(L.t("登入與學習同步仍依原本的隱私權政策處理。", "Sign-in and learning sync still follow the existing privacy policy."))
             } header: { Text(L.t("隱私", "Privacy")) }

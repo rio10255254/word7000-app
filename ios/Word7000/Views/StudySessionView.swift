@@ -44,14 +44,24 @@ struct StudySessionView: View {
                         SessionBar(fraction: Double(session.done) / Double(max(1, session.total)))
                             .padding(.top, 4)
                         GeometryReader { proxy in
-                            card(word: word)
-                                .onAppear {
-                                    cardWidth = proxy.size.width
-                                    enterCard()
-                                    speakIfAutomatic(word)
+                            ZStack {
+                                // The next card peeking out underneath, while there is one.
+                                if session.total - session.done > 1 {
+                                    RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
+                                        .fill(Palette.surface.opacity(0.55))
+                                        .scaleEffect(x: 0.92, y: 1, anchor: .bottom)
+                                        .offset(y: 9)
+                                        .accessibilityHidden(true)
                                 }
-                                .onChange(of: proxy.size.width) { _, value in cardWidth = value }
-                                .id("\(word.id)-\(session.index)")
+                                card(word: word)
+                                    .onAppear {
+                                        cardWidth = proxy.size.width
+                                        enterCard()
+                                        speakIfAutomatic(word)
+                                    }
+                                    .onChange(of: proxy.size.width) { _, value in cardWidth = value }
+                                    .id("\(word.id)-\(session.index)")
+                            }
                         }
                         controls
                             .disabled(committing)
@@ -134,8 +144,15 @@ struct StudySessionView: View {
         let progress = model.progress(for: word.id)
         let face = model.face(word)
         return VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 CardStatusChip(status: progress.status)
+                // At accessibility text sizes the level would crowd the buttons.
+                if !word.group.isEmpty, !dynamicTypeSize.isAccessibilitySize {
+                    Text(word.group)
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
                 Spacer()
                 Button { model.toggleFavorite(word.id) } label: {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
@@ -148,41 +165,60 @@ struct StudySessionView: View {
                 SpeakButton(text: face.speakText, language: face.speakLanguage)
             }
 
-            ScrollView {
-                VStack(spacing: 28) {
-                    VStack(spacing: 10) {
-                        Text(face.prompt)
-                            .font(.roundedSize(promptSize, weight: .bold))
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(4)
-                            .multilineTextAlignment(.center)
-                            .accessibilityIdentifier("study-prompt")
-                        if !face.promptDetail.isEmpty {
-                            Text(face.promptDetail).font(.title3).foregroundStyle(.secondary)
+            GeometryReader { area in
+                ScrollView {
+                    VStack(spacing: 28) {
+                        VStack(spacing: 10) {
+                            Text(face.prompt)
+                                .font(.roundedSize(promptSize, weight: .bold))
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(4)
+                                .multilineTextAlignment(.center)
+                                .accessibilityIdentifier("study-prompt")
+                            if !face.promptDetail.isEmpty {
+                                Text(face.promptDetail).font(.title3).foregroundStyle(.secondary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, showsAnswer ? 18 : 0)
+                        .padding(.bottom, 12)
+
+                        if showsAnswer {
+                            WordAnswer(word: word)
+                                .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.top, showsAnswer ? 18 : 52)
-                    .padding(.bottom, 12)
-
-                    if showsAnswer {
-                        WordAnswer(word: word)
-                            .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
-                    } else {
-                        Text(L.tapToReveal).font(.subheadline).foregroundStyle(.secondary)
-                            .padding(.vertical, 24)
+                    .padding(.bottom, 20)
+                    // Before the answer, the word sits in the middle of the card.
+                    .frame(minHeight: showsAnswer ? 0 : area.size.height, alignment: showsAnswer ? .top : .center)
+                }
+                .scrollIndicators(.hidden)
+                .scrollDisabled(phase == .dragging || committing)
+                .overlay(alignment: .bottom) {
+                    if !showsAnswer {
+                        Label(L.tapToReveal, systemImage: "hand.tap")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .padding(.bottom, 6)
+                            .transition(.opacity)
+                            .allowsHitTesting(false)
                     }
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 20)
             }
-            .scrollIndicators(.hidden)
-            .scrollDisabled(phase == .dragging || committing)
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
+        .overlay {
+            // The verdict colours the card as it is dragged toward it.
+            RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
+                .fill((dragOffset > 0 ? Palette.known : Palette.miss).opacity(swipeTint))
+                .allowsHitTesting(false)
+        }
+        .shadow(color: .black.opacity(0.06), radius: 12, y: 4)
         .overlay(alignment: .top) { swipeBadge }
+        .rotationEffect(.degrees(reduceMotion ? 0 : Double(dragOffset / max(cardWidth, 1)) * 8), anchor: .bottom)
         .offset(x: dragOffset)
         .opacity(cardOpacity)
         .contentShape(Rectangle())
@@ -210,6 +246,11 @@ struct StudySessionView: View {
         )
         .accessibilityIdentifier("study-card")
         .accessibilityAction(named: L.showAnswer) { reveal() }
+    }
+
+    private var swipeTint: Double {
+        guard phase == .dragging || phase == .leaving else { return 0 }
+        return min(0.16, Double(abs(dragOffset) / max(threshold, 1)) * 0.12)
     }
 
     @ViewBuilder
@@ -354,7 +395,7 @@ struct WordAnswer: View {
 }
 
 /// Whether the card is new, still being learned, or a scheduled review.
-private struct CardStatusChip: View {
+struct CardStatusChip: View {
     var status: WordStatus
 
     private var style: (text: String, color: Color) {
@@ -380,6 +421,7 @@ struct SessionSummary: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
+    @State private var ringFraction = 0.0
     var session: StudySession
     /// The daily goal was reached during this set.
     var reachedGoal = false
@@ -391,7 +433,7 @@ struct SessionSummary: View {
         let left = max(0, model.progress.dailyTarget - model.progress.studiedToday)
         ScrollView {
           VStack(spacing: 18) {
-            ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
+            ProgressRing(fraction: reduceMotion ? model.dailyFraction : ringFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
                 Image(systemName: model.goalDone ? "checkmark" : "flame.fill")
                     .font(.system(size: 40, weight: .bold))
                     .foregroundStyle(model.goalDone ? Palette.known : Palette.review)
@@ -402,6 +444,12 @@ struct SessionSummary: View {
                 .font(.rounded(.title, weight: .bold))
             Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
                 .foregroundStyle(.secondary)
+            HStack(spacing: 10) {
+                SummaryChip(value: session.knownIds.count, label: L.knowIt, icon: "checkmark", tint: Palette.known)
+                SummaryChip(value: session.reviewIds.count, label: L.dontKnow, icon: "arrow.counterclockwise", tint: Palette.review)
+                SummaryChip(value: model.progress.streak, label: L.streak, icon: "flame.fill", tint: Palette.review)
+            }
+            .accessibilityElement(children: .contain)
             Text(reachedGoal ? L.quizTodaysWordsHint : left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
                 .font(.subheadline.weight(.semibold))
             VStack(spacing: 12) {
@@ -440,7 +488,99 @@ struct SessionSummary: View {
           .padding(.vertical, 24)
         }
         .multilineTextAlignment(.center)
-        .onAppear { appeared = true }
+        .overlay(alignment: .top) {
+            if reachedGoal && appeared && !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
+        }
+        .onAppear {
+            appeared = true
+            // Fill the ring in front of the learner instead of showing it already full.
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(150))
+                ringFraction = model.dailyFraction
+            }
+        }
+        .onChange(of: model.dailyFraction) { _, value in ringFraction = value }
         .accessibilityIdentifier("study-summary")
+    }
+}
+
+/// A number with its label, e.g. "12 · Know it", on the end-of-set screen.
+private struct SummaryChip: View {
+    var value: Int
+    var label: String
+    var icon: String
+    var tint: Color
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Label("\(value)", systemImage: icon)
+                .font(.rounded(.title3, weight: .bold))
+                .monospacedDigit()
+                .foregroundStyle(tint)
+                .contentTransition(.numericText())
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 12)
+        .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// A short shower of paper when the daily goal is reached. Purely decorative.
+struct ConfettiBurst: View {
+    private struct Piece {
+        var x: Double, delay: Double, speed: Double, spin: Double, drift: Double, size: CGSize, color: Color
+    }
+
+    private static let colors: [Color] = [Palette.accent, Palette.known, Palette.review, Palette.chinese, Palette.miss]
+    @State private var start = Date()
+    @State private var finished = false
+    private let pieces: [Piece] = (0..<48).map { index in
+        var random = SystemRandomNumberGenerator()
+        return Piece(x: .random(in: 0...1, using: &random),
+                     delay: .random(in: 0...0.5, using: &random),
+                     speed: .random(in: 260...420, using: &random),
+                     spin: .random(in: -4...4, using: &random),
+                     drift: .random(in: -40...40, using: &random),
+                     size: CGSize(width: .random(in: 6...10, using: &random), height: .random(in: 10...16, using: &random)),
+                     color: colors[index % colors.count])
+    }
+    private let duration = 2.6
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: nil, paused: finished)) { timeline in
+            let elapsed = timeline.date.timeIntervalSince(start)
+            Canvas { context, size in
+                guard !finished, elapsed < duration + 0.6 else { return }
+                for piece in pieces {
+                    let t = elapsed - piece.delay
+                    guard t > 0 else { continue }
+                    let y = -20 + piece.speed * t + 60 * t * t
+                    guard y < size.height + 20 else { continue }
+                    let x = piece.x * size.width + piece.drift * sin(t * 3)
+                    let fade = max(0, min(1, (duration - t) / 0.6))
+                    var pieceContext = context
+                    pieceContext.opacity = fade
+                    pieceContext.translateBy(x: x, y: y)
+                    pieceContext.rotate(by: .radians(piece.spin * t))
+                    let rect = CGRect(x: -piece.size.width / 2, y: -piece.size.height / 2,
+                                      width: piece.size.width, height: piece.size.height)
+                    pieceContext.fill(Path(roundedRect: rect, cornerRadius: 2), with: .color(piece.color))
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: 600)
+        .onAppear { start = Date() }
+        .task {
+            // Stop redrawing once the last piece has gone.
+            try? await Task.sleep(for: .seconds(duration + 0.6))
+            finished = true
+        }
+        .accessibilityHidden(true)
     }
 }

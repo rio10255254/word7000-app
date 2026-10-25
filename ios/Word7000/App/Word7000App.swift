@@ -23,6 +23,7 @@ struct Word7000App: App {
         let account = AccountModel(app: model)
         account.plus = plus
         CloudAssistant.shared.account = account
+        CloudAssistant.shared.plus = plus
         _account = State(initialValue: account)
         _plus = State(initialValue: plus)
     }

@@ -11,7 +11,11 @@ final class CloudAssistant {
 
     /// Set at launch; the session it holds signs each request.
     @ObservationIgnored weak var account: AccountModel?
+    /// Set at launch; its signed subscription unlocks the Plus model on the server.
+    @ObservationIgnored weak var plus: PlusModel?
     private(set) var lastFailure: CloudAI.Failure?
+    /// The plan and today's allowance, as the server last reported them.
+    private(set) var usage: CloudAI.Usage?
     /// After both models were rate limited, wait a moment before asking again
     /// so learners get the on-device answer quickly instead of another wait.
     @ObservationIgnored private var pausedUntil: Date?
@@ -40,9 +44,10 @@ final class CloudAssistant {
     func run<Value: Decodable>(_ kind: CloudAI.Kind, _ input: [String: JSONValue], as type: Value.Type = Value.self) async throws -> Value {
         guard ready, let account else { throw CloudAI.Failure.unavailable }
         do {
-            let value = try await account.runAI(kind, input: input, as: type)
+            let reply = try await account.runAI(kind, input: input, entitlement: plus?.entitlementJWS, as: type)
             lastFailure = nil
-            return value
+            if let usage = reply.usage { self.usage = usage; usageDay = DayMath.today() }
+            return reply.value
         } catch is CancellationError {
             throw CancellationError()
         } catch {
@@ -50,7 +55,9 @@ final class CloudAssistant {
             lastFailure = failure
             switch failure {
             case .busy: pausedUntil = Date().addingTimeInterval(45)
-            case .quota: quotaDay = DayMath.today()
+            case .quota:
+                quotaDay = DayMath.today()
+                if let usage { self.usage = CloudAI.Usage(tier: usage.tier, limit: usage.limit, remaining: 0) }
             case .unavailable: pausedUntil = Date().addingTimeInterval(20)
             case .invalidInput, .signInRequired: break
             }
@@ -69,9 +76,43 @@ final class CloudAssistant {
         case true?:
             if lastFailure == .quota, sameDay { return L.t("今日額度已用完", "Today's allowance used") }
             if lastFailure == .busy { return L.t("使用人數多，暫用裝置內 AI", "Busy, using on-device AI") }
-            return L.t("使用中", "On")
+            return planLabel
         }
     }
+
+    @ObservationIgnored private var usageDay = DayMath.today()
+
+    /// False until the server first answers, unless the learner subscribes.
+    var tierKnown: Bool { plus?.subscribed == true || usage != nil }
+
+    /// What the learner gets, for settings rows and answer footers.
+    var tier: CloudAI.Tier {
+        if plus?.subscribed == true { return .plus }
+        return usage?.tier ?? .free
+    }
+
+    var planLabel: String {
+        switch tier {
+        case .plus: L.t("Plus・最強模型", "Plus · Strongest model")
+        case .trial: L.t("試用・最強模型", "Trial · Strongest model")
+        case .free: L.t("免費版・標準模型", "Free · Standard model")
+        }
+    }
+
+    /// "12 left today", once the server has said.
+    var remainingText: String? {
+        guard let usage, usageDay == DayMath.today() else { return nil }
+        return L.t("今天還剩 \(usage.remaining) / \(usage.limit) 次", "\(usage.remaining) of \(usage.limit) left today")
+    }
+
+    /// Free learners see a gentle nudge toward the Plus model.
+    var showsUpgrade: Bool { offered && tierKnown && tier == .free }
+}
+
+/// Must match AI_FREE_LIMIT / AI_PLUS_LIMIT on the server (supabase/functions/ai).
+enum PlusAI {
+    static let freeDaily = 20
+    static let plusDaily = 100
 }
 
 extension L {

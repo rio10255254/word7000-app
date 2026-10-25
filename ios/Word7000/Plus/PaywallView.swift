@@ -281,6 +281,7 @@ struct PlusBenefit {
 
     static var all: [PlusBenefit] {
         [
+            PlusBenefit(feature: .smartAI, icon: "sparkles", title: P.benefitSmartAI, detail: P.benefitSmartAIDetail),
             PlusBenefit(feature: .scan, icon: "doc.text.viewfinder", title: P.benefitScan, detail: P.benefitScanDetail),
             PlusBenefit(feature: .sync, icon: "icloud.fill", title: P.benefitSync, detail: P.benefitSyncDetail),
             PlusBenefit(feature: .history, icon: "chart.line.uptrend.xyaxis", title: P.benefitHistory, detail: P.benefitHistoryDetail),

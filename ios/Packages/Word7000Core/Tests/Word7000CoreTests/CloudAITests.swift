@@ -42,6 +42,23 @@ final class CloudAITests: XCTestCase {
         XCTAssertEqual(feedback.corrections.first?.replacement, "every day")
     }
 
+    func testSendsThePlusProofAndReportsTodaysUsage() async throws {
+        let transport = FakeTransport([(#"{"result":{"explanation":"x","memoryTip":"y"},"model":"openai/gpt-oss-120b","tier":"plus","limit":100,"remaining":87}"#, 200)])
+        let reply = try await SupabaseClient(config: config, transport: transport)
+            .runAI(.quizWhy, input: [:], session: session, entitlement: "header.payload.sig", as: CloudAI.QuizExplanation.self)
+        XCTAssertEqual(reply.usage, CloudAI.Usage(tier: .plus, limit: 100, remaining: 87))
+        XCTAssertTrue(reply.usage?.tier.usesStrongestModel == true)
+        let body = try JSONDecoder().decode([String: JSONValue].self, from: XCTUnwrap(transport.requests.first?.httpBody))
+        XCTAssertEqual(body["entitlement"], .string("header.payload.sig"))
+    }
+
+    func testOlderRepliesWithoutUsageStillDecode() async throws {
+        let reply = try await SupabaseClient(config: config, transport: FakeTransport([(#"{"result":{"explanation":"x","memoryTip":"y"}}"#, 200)]))
+            .runAI(.quizWhy, input: [:], session: session, entitlement: nil, as: CloudAI.QuizExplanation.self)
+        XCTAssertNil(reply.usage)
+        XCTAssertFalse(CloudAI.Tier.free.usesStrongestModel)
+    }
+
     func testMapsServerErrorsToFallbackDecisions() async {
         let cases: [(String, Int, CloudAI.Failure)] = [
             (#"{"error":"quota"}"#, 429, .quota),

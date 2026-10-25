@@ -1,12 +1,14 @@
 import SwiftUI
 import AVFoundation
 import Speech
+import Word7000Core
 
 struct IntelligenceSettingsView: View {
     @Environment(\.scenePhase) private var phase
     @State private var speech = SpeakingRecorder()
     @State private var permissionsRevision = 0
     @State private var askCloud = false
+    @State private var paywall: PaywallReason?
     private var settings: IntelligenceSettings { .shared }
 
     var body: some View {
@@ -30,9 +32,10 @@ struct IntelligenceSettingsView: View {
                     .accessibilityIdentifier("settings-ai-status")
                 LabeledContent(L.t("掃描整理", "Scan assistance"), value: SmartScan.canOrganize ? L.t("可使用", "Available") : L.t("未啟用", "Unavailable"))
             } footer: {
-                Text(L.t("線上 AI 由 Groq 的最強與次強模型（GPT-OSS 120B、20B）回答，忙碌時自動分流到另一個模型，再不行就改用裝置內 AI。關閉 AI 不影響原本的單字、測驗、錄音與口說練習。",
-                         "Online AI answers with Groq's strongest and second-strongest models (GPT-OSS 120B and 20B), switching to the other model when one is busy and to on-device AI after that. Turning AI off does not change your words, quizzes, recordings or regular speaking practice."))
+                Text(L.t("線上 AI 由 Groq 的 GPT-OSS 模型回答，忙碌時自動分流，再不行就改用裝置內 AI。關閉 AI 不影響原本的單字、測驗、錄音與口說練習。",
+                         "Online AI answers with Groq's GPT-OSS models, sharing the load when busy and falling back to on-device AI after that. Turning AI off does not change your words, quizzes, recordings or regular speaking practice."))
             }
+            if CloudAssistant.shared.offered { plan }
             Section {
                 LabeledContent(L.t("麥克風", "Microphone"), value: microphoneStatus)
                 LabeledContent(L.t("離線語音辨識", "Offline transcription"), value: speechStatus)
@@ -53,10 +56,39 @@ struct IntelligenceSettingsView: View {
             } header: { Text(L.t("隱私", "Privacy")) }
         }
         .cloudConsentAlert(isPresented: $askCloud) { AppleSpeakingCoach.shared.refreshAvailability() }
+        .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         .navigationTitle(L.t("AI 與錄音", "AI and recording"))
         .navigationBarTitleDisplayMode(.inline)
         .task { await refresh() }
         .onChange(of: phase) { _, value in if value == .active { Task { await refresh() } } }
+    }
+
+    /// Free and Plus side by side, with the learner's own plan marked.
+    private var plan: some View {
+        let tier = CloudAssistant.shared.tier
+        let known = CloudAssistant.shared.tierKnown
+        return Section {
+            PlanRow(title: L.t("免費版", "Free"), model: L.t("標準模型 GPT-OSS 20B", "Standard model GPT-OSS 20B"),
+                    daily: PlusAI.freeDaily, current: known && tier == .free)
+            PlanRow(title: tier == .trial ? L.t("Plus（試用中）", "Plus (trial)") : "Plus",
+                    model: L.t("最強模型 GPT-OSS 120B 優先", "Strongest model GPT-OSS 120B first"),
+                    daily: PlusAI.plusDaily, current: known && tier != .free)
+            if let remaining = CloudAssistant.shared.remainingText {
+                LabeledContent(L.t("今天", "Today"), value: remaining)
+                    .accessibilityIdentifier("settings-ai-remaining")
+            }
+            if tier != .plus {
+                Button { paywall = .locked(.smartAI) } label: {
+                    Label(L.t("升級 Plus，用最強的 AI 老師", "Upgrade to Plus for the smartest AI tutor"), systemImage: "sparkles")
+                }
+                .accessibilityIdentifier("settings-ai-upgrade")
+            }
+        } header: {
+            Text(L.t("AI 方案", "AI plan"))
+        } footer: {
+            Text(L.t("新用戶前 7 天可免費體驗 Plus 等級的 AI。次數每天重置。",
+                     "New learners get Plus-level AI free for their first 7 days. The allowance resets daily."))
+        }
     }
 
     private func refresh() async {
@@ -94,5 +126,30 @@ struct IntelligenceSettingsView: View {
         case .paused: L.t("目前已關閉", "Currently off")
         case .unavailable: L.t("暫時無法使用", "Temporarily unavailable")
         }
+    }
+}
+
+private struct PlanRow: View {
+    let title: String
+    let model: String
+    let daily: Int
+    let current: Bool
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.body.weight(.semibold))
+                Text(model).font(.caption).foregroundStyle(.secondary)
+                Text(L.t("每天 \(daily) 次", "\(daily) a day")).font(.caption).foregroundStyle(.secondary)
+            }
+            Spacer()
+            if current {
+                Text(L.t("目前方案", "Current")).font(.caption.weight(.semibold))
+                    .padding(.horizontal, 8).padding(.vertical, 3)
+                    .background(Palette.accent.opacity(0.15), in: Capsule())
+                    .foregroundStyle(Palette.accent)
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }

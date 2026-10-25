@@ -6,6 +6,15 @@ export const STRONG_MODEL = 'openai/gpt-oss-120b';
 export const FAST_MODEL = 'openai/gpt-oss-20b';
 
 export type Mode = 'english' | 'chinese';
+/** Free learners get the fast model; Plus subscribers and the 7-day trial start on the strongest. */
+export type Tier = 'free' | 'trial' | 'plus';
+
+export interface TierLimits { free: number; plus: number }
+export const DEFAULT_LIMITS: TierLimits = { free: 20, plus: 100 };
+
+export function dailyLimit(tier: Tier, limits: TierLimits = DEFAULT_LIMITS): number {
+  return tier === 'free' ? limits.free : limits.plus;
+}
 export type TaskName = 'coach' | 'scan' | 'explain' | 'quizWhy' | 'fillWord';
 
 export interface TaskPlan {
@@ -198,7 +207,20 @@ export function isTaskName(value: unknown): value is TaskName {
   return typeof value === 'string' && Object.prototype.hasOwnProperty.call(builders, value);
 }
 
-export function planTask(task: TaskName, input: unknown): TaskPlan {
+export function planTask(task: TaskName, input: unknown, tier: Tier = 'plus'): TaskPlan {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new InputError('input must be an object');
-  return builders[task](input as Record<string, unknown>);
+  const plan = builders[task](input as Record<string, unknown>);
+  // The free tier stays on the fast model; Plus and the trial keep the
+  // per-task order, with the other model taking over when one is busy.
+  return tier === 'free' ? { ...plan, models: [FAST_MODEL] } : plan;
+}
+
+/** Days of Plus-level AI from a learner's first online AI request. */
+export const TRIAL_DAYS = 7;
+
+export function tierFor(subscribed: boolean, firstSeen: string | null | undefined, now = Date.now()): Tier {
+  if (subscribed) return 'plus';
+  const started = firstSeen ? Date.parse(firstSeen) : NaN;
+  if (Number.isFinite(started) && now - started < TRIAL_DAYS * 86_400_000) return 'trial';
+  return 'free';
 }

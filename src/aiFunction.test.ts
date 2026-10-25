@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { complete, GroqFailure, requestBody, type Fetch } from '../supabase/functions/ai/groq';
-import { FAST_MODEL, InputError, isTaskName, planTask, STRONG_MODEL } from '../supabase/functions/ai/tasks';
+import { dailyLimit, FAST_MODEL, InputError, isTaskName, planTask, STRONG_MODEL, tierFor } from '../supabase/functions/ai/tasks';
 
 const coachInput = {
   keyword: 'practice',
@@ -81,6 +81,35 @@ describe('AI tasks', () => {
       expect(body.response_format).toMatchObject({ type: 'json_schema', json_schema: { strict: true } });
       expect(body.include_reasoning).toBe(false);
     }
+  });
+});
+
+describe('AI tiers', () => {
+  const now = Date.UTC(2026, 9, 25);
+  const daysAgo = (days: number) => new Date(now - days * 86_400_000).toISOString();
+
+  it('keeps free learners on the fast model and gives Plus and the trial the strongest first', () => {
+    expect(planTask('coach', coachInput, 'free').models).toEqual([FAST_MODEL]);
+    expect(planTask('explain', { word: 'run', meaning: '跑', mode: 'english' }, 'free').models).toEqual([FAST_MODEL]);
+    expect(planTask('coach', coachInput, 'trial').models).toEqual([STRONG_MODEL, FAST_MODEL]);
+    expect(planTask('coach', coachInput, 'plus').models).toEqual([STRONG_MODEL, FAST_MODEL]);
+    expect(planTask('scan', { text: 'apple 蘋果' }, 'plus').models).toEqual([FAST_MODEL, STRONG_MODEL]);
+  });
+
+  it('gives a subscription Plus and the first seven days of AI use the trial', () => {
+    expect(tierFor(true, daysAgo(400), now)).toBe('plus');
+    expect(tierFor(false, daysAgo(0), now)).toBe('trial');
+    expect(tierFor(false, daysAgo(6.9), now)).toBe('trial');
+    expect(tierFor(false, daysAgo(7), now)).toBe('free');
+    expect(tierFor(false, null, now)).toBe('free');
+    expect(tierFor(false, 'not a date', now)).toBe('free');
+  });
+
+  it('allows 20 requests a day free and 100 with Plus or the trial', () => {
+    expect(dailyLimit('free')).toBe(20);
+    expect(dailyLimit('trial')).toBe(100);
+    expect(dailyLimit('plus')).toBe(100);
+    expect(dailyLimit('free', { free: 5, plus: 50 })).toBe(5);
   });
 });
 

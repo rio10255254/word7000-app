@@ -40,20 +40,24 @@ speaking coach, word explanations, quiz explanations, scan tidy-up and word
 fill-in. The Groq key is a function secret and never ships in the app.
 
 - Models: `openai/gpt-oss-120b` (strongest) and `openai/gpt-oss-20b` (second).
-  Coaching and explanations start on 120B; scan, quiz and fill-in start on 20B.
+  Plus subscribers and the 7-day trial: coaching and explanations start on
+  120B; scan, quiz and fill-in start on 20B. Free learners use 20B only.
+- Tiers are decided on the server. Plus needs the StoreKit transaction the app
+  sends, verified against Apple Root CA G3 (`entitlement.ts`); the trial is the
+  first 7 days after a learner's first AI request (`word7000_private.ai_members`).
   A rate limit, outage, timeout or off-schema reply moves the request to the
   other model; if both fail the app uses Apple's on-device model.
 - Prompts and JSON schemas live in `supabase/functions/ai/tasks.ts`; the app only
   sends data for a named task.
-- Each account (guests included) may make `AI_DAILY_LIMIT` requests per UTC day
-  (default 120), counted in `word7000_private.ai_usage`.
+- Requests per UTC day, counted in `word7000_private.ai_usage`: `AI_FREE_LIMIT`
+  (default 20) for free learners, `AI_PLUS_LIMIT` (default 100) for Plus and the trial.
 - Deploy with the **AI backend** GitHub workflow. It needs the repository
   secrets `GROQ` (the Groq key), `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD`.
   Or by hand:
 
 ```powershell
 npx supabase db push --linked
-npx supabase secrets set GROQ_API_KEY=... AI_DAILY_LIMIT=120 --project-ref byyaepkhxexppjrdhcaw
+npx supabase secrets set GROQ_API_KEY=... AI_FREE_LIMIT=20 AI_PLUS_LIMIT=100 --project-ref byyaepkhxexppjrdhcaw
 npx supabase functions deploy ai --project-ref byyaepkhxexppjrdhcaw --use-api
 ```
 

@@ -38,6 +38,7 @@ struct AIExplanationSection: View {
                     .accessibilityIdentifier("ai-explain")
                     if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
                 }
+                if explanation != nil || failure == .quota { PlusAIUpsell() }
             } header: {
                 Text(L.t("AI 解說", "AI explanation"))
             } footer: {
@@ -135,6 +136,7 @@ struct QuizWhyView: View {
                         Label { Text(reply.memoryTip) } icon: { Image(systemName: "lightbulb").foregroundStyle(Palette.known) }
                             .font(.subheadline)
                     }
+                    PlusAIUpsell()
                 } else if loading {
                     HStack(spacing: 10) { ProgressView(); Text(L.t("AI 解釋中…", "AI is explaining…")).foregroundStyle(.secondary) }
                 } else {
@@ -144,6 +146,7 @@ struct QuizWhyView: View {
                     }
                     .accessibilityIdentifier("quiz-why")
                     if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                    if failure == .quota { PlusAIUpsell() }
                 }
             }
             .padding(14)
@@ -177,6 +180,42 @@ struct QuizWhyView: View {
             } catch {
                 failure = (error as? CloudAI.Failure) ?? .unavailable
             }
+        }
+    }
+}
+
+/// Under a free learner's AI answer: what Plus would have answered with.
+/// Hidden for Plus and the trial, and when online AI is off.
+struct PlusAIUpsell: View {
+    @State private var paywall: PaywallReason?
+
+    var body: some View {
+        let assistant = CloudAssistant.shared
+        if assistant.showsUpgrade {
+            Button { paywall = .locked(.smartAI) } label: {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Image(systemName: "sparkles").foregroundStyle(Palette.accent)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(assistant.lastFailure == .quota
+                             ? L.t("Plus 每天可問 \(PlusAI.plusDaily) 次", "Plus gets \(PlusAI.plusDaily) AI answers a day")
+                             : L.t("想要更聰明的回答？", "Want sharper answers?"))
+                            .font(.footnote.weight(.semibold))
+                        Text(L.t("免費版用標準模型（20B）。Plus 改用最強的 120B 模型，每天 \(PlusAI.plusDaily) 次。",
+                                 "Free uses the standard 20B model. Plus uses the strongest 120B model, \(PlusAI.plusDaily) times a day."))
+                            .font(.caption).foregroundStyle(.secondary)
+                            .multilineTextAlignment(.leading)
+                        if let remaining = assistant.remainingText {
+                            Text(remaining).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer(minLength: 4)
+                    Image(systemName: "chevron.right").font(.caption.weight(.semibold)).foregroundStyle(.tertiary)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("ai-plus-upsell")
+            .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         }
     }
 }

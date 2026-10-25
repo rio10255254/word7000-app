@@ -60,7 +60,9 @@ jobs:
             xcode: 27
             runner: xcode-27
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
+    # The full iOS 27 walk-through on the xcode-27 runners takes 50-55 minutes,
+    # too close to an hour once the simulator is slow to boot.
+    timeout-minutes: 90
     env:
       IOS_MAJOR: ${{ matrix.ios }}
       XCODE_MAJOR: ${{ matrix.xcode }}

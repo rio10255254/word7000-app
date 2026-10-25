@@ -54,6 +54,8 @@ public struct IntelligencePolicy: Codable, Equatable, Sendable {
     public let version: Int
     public let speakingCoachEnabled: Bool
     public let scanAssistantEnabled: Bool
+    /// The online (Groq) AI; missing means on. Off sends every feature back to the on-device model.
+    public let cloudEnabled: Bool?
 
     public static func decode(_ data: Data) -> IntelligencePolicy? {
         guard data.count <= 4096, let policy = try? JSONDecoder().decode(Self.self, from: data),

@@ -4,8 +4,9 @@ import UIKit
 import Vision
 import Word7000Core
 
-/// Reads every line of text in a photo on the device with Apple Vision.
-/// Nothing leaves the phone. Boxes come back normalised to the image with the
+/// Reads every line of text in a photo on the device with Apple Vision; the
+/// photo never leaves the phone (only recognised text may go to the online AI
+/// for tidying up, see `SmartScan`). Boxes come back normalised to the image with the
 /// origin at the top left, which is what `ScanParser` expects.
 enum TextRecognizer {
     static let languages = ["zh-Hant", "en-US"]

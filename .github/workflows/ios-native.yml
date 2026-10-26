@@ -110,7 +110,6 @@ jobs:
           swift test --package-path ios/Packages/Word7000Core
 
       - name: Speaking history account isolation
-        if: matrix.suite == 'app'
         run: node scripts/test-native-speaking-recency.mjs
 
       - name: Pick an iPhone simulator

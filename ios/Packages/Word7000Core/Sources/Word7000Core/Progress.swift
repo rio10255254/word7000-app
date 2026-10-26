@@ -162,7 +162,11 @@ public enum LearningEngine {
             let stage: Int
             if progress.status == .new {
                 stage = firstSightStage
-            } else if alreadyGradedToday {
+            } else if alreadyGradedToday || !isDue(progress, today: today) {
+                // Recalling a word before it is due shows little about whether
+                // the longer wait would hold: keep its box and restart the wait
+                // from today. Small banks pull such words in every session, and
+                // climbing a box each time sent them 120 days out within a week.
                 stage = reviewStage(progress)
             } else {
                 stage = min(maxReviewStage, max(1, reviewStage(progress) + 1))
@@ -229,7 +233,9 @@ public enum LearningEngine {
             next.dailyProgressDate = today
             next.studiedToday = 0
         }
-        if let last = next.lastStudyDate, last != today, !DayMath.isPreviousDay(last, of: today) {
+        // A last study day after today (synced from a device in a zone ahead,
+        // travel westwards, a clock set wrong) is not a missed day.
+        if let last = next.lastStudyDate, last < today, !DayMath.isPreviousDay(last, of: today) {
             if next.streak > 0, let missed = DayMath.addDays(today, -1), DayMath.isPreviousDay(last, of: missed),
                StreakProtection.covers(missed: missed, in: next) {
                 next.streakFreezeDate = missed
@@ -246,15 +252,17 @@ public enum LearningEngine {
 
     static func advanceDailyProgress(_ state: ProgressState, today: String, increment: Int) -> ProgressState {
         var next = normalizeForDate(state, today: today)
-        if next.lastStudyDate != today {
+        // Only a first study on a later day moves the streak on. A last study
+        // day already today or after it has counted, and is never moved back.
+        if next.lastStudyDate.map({ $0 < today }) ?? true {
             if let last = next.lastStudyDate, DayMath.isPreviousDay(last, of: today) || StreakProtection.bridges(last, to: today, in: next) {
                 next.streak = max(1, next.streak + 1)
             } else {
                 next.streak = 1
             }
+            next.lastStudyDate = today
         }
         next.dailyProgressDate = today
-        next.lastStudyDate = today
         next.studiedToday += increment
         return next
     }
@@ -279,12 +287,19 @@ public enum LearningEngine {
             }
         }
 
+        // Each device counts only the words it studied itself. The same day on
+        // two devices covers every word whose last study is that day.
+        var studiedToday = dailySource.studiedToday
+        if let day = dailySource.dailyProgressDate {
+            studiedToday = max(studiedToday, words.values.reduce(0) { $0 + ($1.lastStudied == day ? 1 : 0) })
+        }
+
         let streak = StreakProtection.reconcile(available, fallback: dailySource)
         return ProgressState(
             analytics: LearningAnalyticsState.merge(available.map(\.analytics)),
             dailyTarget: dailySource.dailyTarget,
             streak: streak.streak,
-            studiedToday: dailySource.studiedToday,
+            studiedToday: studiedToday,
             dailyProgressDate: dailySource.dailyProgressDate,
             lastStudyDate: streak.lastStudyDate,
             words: words,
@@ -467,7 +482,7 @@ public enum StreakProtection {
 
     /// Protection covered yesterday and the learner has not studied yet today.
     public static func justUsed(in state: ProgressState, today: String) -> Bool {
-        guard state.streak > 0, let covered = state.streakFreezeDate, state.lastStudyDate != today else { return false }
+        guard state.streak > 0, let covered = state.streakFreezeDate, (state.lastStudyDate ?? "") < today else { return false }
         return DayMath.isPreviousDay(covered, of: today)
     }
 }

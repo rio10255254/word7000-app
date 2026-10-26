@@ -118,7 +118,7 @@ jobs:
                   continue
               for item in items:
                   name = item["name"]
-                  # iPhone Duo's wide screen turns the tab bar into a side rail,
+                  # The wide iPhone Duo turns the tab bar into a side rail,
                   # which the UI checks are not written for; never test on it.
                   if not name.startswith("iPhone") or "Duo" in name:
                       continue

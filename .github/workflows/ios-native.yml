@@ -118,12 +118,12 @@ jobs:
                   continue
               for item in items:
                   name = item["name"]
-                  if not name.startswith("iPhone"):
+                  # iPhone Duo's wide screen turns the tab bar into a side rail,
+                  # which the UI checks are not written for; never test on it.
+                  if not name.startswith("iPhone") or "Duo" in name:
                       continue
                   preferred = "SE" in name if requested_major == 18 else "Pro" in name and "Max" not in name
-                  # The usual phone shape beats a newer point release: Xcode 27.2
-                  # ships iOS 27.1 only on the wide "iPhone Duo", where the tab bar
-                  # becomes a side rail and every app.tabBars query fails.
+                  # The usual phone shape beats a newer point release.
                   score = (preferred, version(runtime), name)
                   if best is None or score > best[0]:
                       best = (score, item["udid"], name, runtime)

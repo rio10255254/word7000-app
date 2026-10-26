@@ -3,6 +3,9 @@
 #      the React Native app (parity.json),
 #   2. a simulator build plus a UI walk-through that screenshots every main
 #      screen in light and dark mode on iOS 18, 26, and 27.
+# Each iOS version runs as two jobs side by side: "app" (study, quiz, exam,
+# screenshots, plus the engine and data checks) and "scan" (photo scanning,
+# whose on-device text recognition takes as long as everything else).
 # Screenshots are uploaded as an artifact and pushed to the
 # `native-screenshots` branch so they can be viewed from a phone.
 name: Native iOS
@@ -42,10 +45,13 @@ concurrency:
 
 jobs:
   native:
-    name: Native iOS ${{ matrix.ios }}
+    name: Native iOS ${{ matrix.ios }} (${{ matrix.suite }})
     strategy:
       fail-fast: false
       matrix:
+        ios: [18, 26, 27]
+        # The copy-only check runs one screenshot test, all in the app suite.
+        suite: ${{ fromJSON(inputs.checks == 'copy' && '["app"]' || '["app", "scan"]') }}
         include:
           - ios: 18
             xcode: 26
@@ -86,20 +92,25 @@ jobs:
           ls -la "$RUNNER_TEMP/screenshots"
 
       - name: Word list matches the app data
+        if: matrix.suite == 'app'
         run: node scripts/export-native-words.mjs --check
 
       - name: Speaking questions match their editorial sources
+        if: matrix.suite == 'app'
         run: node scripts/build-native-speaking-library.mjs --check
 
       - name: Release archive checks
+        if: matrix.suite == 'app'
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
       - name: Learning engine tests
+        if: matrix.suite == 'app'
         run: |
           xcodebuild -version
           swift test --package-path ios/Packages/Word7000Core
 
       - name: Speaking history account isolation
+        if: matrix.suite == 'app'
         run: node scripts/test-native-speaking-recency.mjs
 
       - name: Pick an iPhone simulator
@@ -137,17 +148,24 @@ jobs:
       - name: Build and run the UI walk-through
         env:
           CHECKS: ${{ inputs.checks }}
+          SUITE: ${{ matrix.suite }}
         run: |
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
           xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
-          swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
-          xcrun simctl launch "$SIMULATOR_UDID" com.apple.mobileslideshow || true
-          xcrun simctl addmedia "$SIMULATOR_UDID" "$RUNNER_TEMP"/scan-fixtures/*
+          if [ "$SUITE" = "scan" ]; then
+            swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
+            xcrun simctl launch "$SIMULATOR_UDID" com.apple.mobileslideshow || true
+            xcrun simctl addmedia "$SIMULATOR_UDID" "$RUNNER_TEMP"/scan-fixtures/*
+          fi
           set +e
-          TEST_SELECTION=()
           if [ "$CHECKS" = "copy" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
+          elif [ "$SUITE" = "scan" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/ScanPickerTests)
+          else
+            # Everything but scanning, so a new test class always runs somewhere.
+            TEST_SELECTION=(-skip-testing:Word7000UITests/ScanPickerTests)
           fi
           xcodebuild test \
             -project ios/Word7000.xcodeproj \
@@ -180,7 +198,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: native-screenshots-${{ github.run_number }}-ios-${{ matrix.ios }}
+          name: native-screenshots-${{ github.run_number }}-ios-${{ matrix.ios }}-${{ matrix.suite }}
           path: ${{ runner.temp }}/screenshots
           retention-days: 14
 

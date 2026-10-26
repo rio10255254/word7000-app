@@ -1,0 +1,723 @@
+[
+  {
+    "word": "and",
+    "keywordZh": "和",
+    "question": "What are two activities you like to do at the same time, and why do they go well together?",
+    "answerEn": "I like listening to music and drawing at the same time. They go well together because music helps me relax and focus on my drawing.",
+    "answerZh": "我喜歡同時聽音樂和畫畫。這兩件事很搭，因為音樂能讓我放鬆，畫畫時也更專心。"
+  },
+  {
+    "word": "of",
+    "keywordZh": "的",
+    "question": "What is your favorite part of the day, and why?",
+    "answerEn": "My favorite part of the day is the end of my last class. I feel free and can finally chat with my friends.",
+    "answerZh": "我一天中最喜歡的時刻是最後一節課結束的時候。那時我覺得很自由，終於可以和朋友聊天。"
+  },
+  {
+    "word": "they",
+    "keywordZh": "他們",
+    "question": "How do your friends deal with stress before big exams?",
+    "answerEn": "Some of my friends play basketball before exams, and they say it clears their minds. Others listen to music while they review their notes.",
+    "answerZh": "我有些朋友考試前會去打籃球，他們說這樣頭腦會比較清楚。其他人則會一邊聽音樂一邊複習筆記。"
+  },
+  {
+    "word": "there",
+    "keywordZh": "那裡",
+    "question": "Describe a place where you can always calm down.",
+    "answerEn": "There is a small park near my home. I go there after school when I feel stressed, and a short walk always helps me calm down.",
+    "answerZh": "我家附近有一個小公園。放學後覺得有壓力時，我會去那裡，短短散步一下就能讓我冷靜下來。"
+  },
+  {
+    "word": "then",
+    "keywordZh": "然後",
+    "question": "What steps do you usually follow when you start studying at home?",
+    "answerEn": "I usually clear my desk first, and then I open the materials I need. This order helps me move into study mode more smoothly.",
+    "answerZh": "開始讀書時，我通常先清桌面，然後打開需要的資料。這個順序能幫我更順利進入讀書狀態。"
+  },
+  {
+    "word": "also",
+    "keywordZh": "也",
+    "question": "What is a skill you learned at school that is also useful in daily life?",
+    "answerEn": "Making a plan is a skill I learned at school, and it is also useful in daily life. It helps me organize my weekends and save money for things I want.",
+    "answerZh": "做計畫是我在學校學到的技能，在日常生活中也很有用。它能幫我安排週末，也能幫我存錢買想要的東西。"
+  },
+  {
+    "word": "many",
+    "keywordZh": "許多",
+    "question": "Why do many students feel guilty when they take a break from studying?",
+    "answerEn": "Many students feel guilty because they think every free minute should be used for studying. They also know that many of their classmates are still studying at the same time.",
+    "answerZh": "許多學生會有罪惡感，因為他們覺得每一分鐘都應該拿來讀書。他們也知道，許多同學這時候還在用功。"
+  },
+  {
+    "word": "over",
+    "keywordZh": "超過",
+    "question": "What do you do when a meeting or class runs over time?",
+    "answerEn": "When a class runs over time, I feel a little anxious because I might be late for cram school. I usually pack my bag quietly so I can leave as soon as the teacher finishes.",
+    "answerZh": "課堂超過時間時，我會有點焦慮，因為補習可能會遲到。我通常會先安靜地收好書包，老師一講完就能馬上離開。"
+  },
+  {
+    "word": "woman",
+    "keywordZh": "女性",
+    "question": "Tell me about a woman you respect and why you respect her.",
+    "answerEn": "I respect my aunt, a woman who runs a small bakery by herself. She works long hours, but she is always kind to her customers.",
+    "answerZh": "我很尊敬我的阿姨，她是一位獨自經營小麵包店的女性。她工作時間很長，但對客人總是很親切。"
+  },
+  {
+    "word": "opportunity",
+    "keywordZh": "機會",
+    "question": "What kind of opportunity would you take even if it made you a little nervous?",
+    "answerEn": "I would take an opportunity to speak at a school event. I might feel nervous, but it would help me practice sharing my ideas in front of people.",
+    "answerZh": "我會把握在學校活動上台分享的機會。雖然可能會緊張，卻能練習在大家面前說出自己的想法。"
+  },
+  {
+    "word": "challenge",
+    "keywordZh": "挑戰",
+    "question": "What challenge have you learned to handle better recently?",
+    "answerEn": "Waking up early for school used to be a challenge for me. Going to bed before eleven has made it much easier.",
+    "answerZh": "以前早起上學對我來說是一大挑戰。現在我會在十一點前上床睡覺，早上就輕鬆多了。"
+  },
+  {
+    "word": "home",
+    "keywordZh": "家",
+    "question": "What makes a place feel like home to you?",
+    "answerEn": "The smell of my mom's cooking makes any place feel like home. When I sleep somewhere else, having my own pillow also helps me feel at home.",
+    "answerZh": "媽媽煮菜的香味，會讓任何地方都有家的感覺。在別的地方過夜時，帶著自己的枕頭也能讓我覺得像在家一樣。"
+  },
+  {
+    "word": "house",
+    "keywordZh": "房子",
+    "question": "What kind of house would you like to live in someday?",
+    "answerEn": "I would like to live in a small house near the mountains. It would have a little garden where I could grow vegetables.",
+    "answerZh": "我以後想住在靠近山邊的小房子。房子有一個小花園，我可以在那裡種菜。"
+  },
+  {
+    "word": "kitchen",
+    "keywordZh": "廚房",
+    "question": "What would you change to make the kitchen in your home nicer to use?",
+    "answerEn": "I would add more lights to our kitchen because it is a little dark. I would also put a small table there so my family could eat breakfast together.",
+    "answerZh": "我們家的廚房有點暗，所以我會多裝一些燈。我也會在那裡放一張小桌子，讓家人可以一起吃早餐。"
+  },
+  {
+    "word": "bathroom",
+    "keywordZh": "浴室",
+    "question": "How does your family share the bathroom on busy mornings?",
+    "answerEn": "We take turns using the bathroom on busy mornings. My dad goes first because he leaves the earliest, and I go after him.",
+    "answerZh": "早上很忙的時候，我們家會輪流用浴室。爸爸最早出門，所以他先用，我再接著用。"
+  },
+  {
+    "word": "rent",
+    "keywordZh": "房租",
+    "question": "If you go to university in another city, how would you keep your rent low?",
+    "answerEn": "I would share an apartment with a few classmates to keep the rent low. I could also live a little farther from campus and ride a bike to class.",
+    "answerZh": "我會和幾個同學合租公寓，讓房租低一點。我也可以住得離學校遠一點，再騎腳踏車去上課。"
+  },
+  {
+    "word": "private",
+    "keywordZh": "私人",
+    "question": "How do you get some private time when you share a home with your family?",
+    "answerEn": "I tell my family that I need some private time after school. When my bedroom door is closed, they know I want to be alone for a while.",
+    "answerZh": "我會跟家人說放學後需要一點私人時間。我的房門關著時，他們就知道我想自己待一下。"
+  },
+  {
+    "word": "meal",
+    "keywordZh": "一餐",
+    "question": "What would you make for a quick meal when you get home late?",
+    "answerEn": "For a quick meal, I would make fried rice with eggs and vegetables. It only needs one pan, so there is not much to wash afterward.",
+    "answerZh": "回家晚了想快點吃一餐，我會用蛋和蔬菜做炒飯。只要一個鍋子，事後也不用洗太多東西。"
+  },
+  {
+    "word": "lunch",
+    "keywordZh": "午餐",
+    "question": "Do you prefer bringing lunch from home or buying it at school?",
+    "answerEn": "I bring lunch from home most days because my mom cooks healthy food. On Fridays, I sometimes buy lunch with my classmates for a change.",
+    "answerZh": "大部分日子我都帶家裡的便當，因為媽媽煮的菜比較健康。星期五我有時會和同學一起買午餐，換換口味。"
+  },
+  {
+    "word": "portion",
+    "keywordZh": "份量",
+    "question": "What would you do if a restaurant served a much larger portion than expected?",
+    "answerEn": "I would eat a comfortable portion and take the rest home. There is no reason to finish everything just because it was served.",
+    "answerZh": "我會吃自己剛好吃得下的份量，剩下的打包帶回家。不必因為店家端上來了，就勉強全部吃完。"
+  },
+  {
+    "word": "ticket",
+    "keywordZh": "車票",
+    "question": "Do you usually buy your train ticket early or at the station, and why?",
+    "answerEn": "I usually buy my train ticket online a few days early, especially before long weekends. If I wait until the last minute, all the seats may be sold out.",
+    "answerZh": "我通常會提前幾天上網買車票，尤其是連假前。如果拖到最後一刻，座位可能都賣光了。"
+  },
+  {
+    "word": "depart",
+    "keywordZh": "出發",
+    "question": "What would you check before you depart on a family trip?",
+    "answerEn": "Before we depart, I would check the weather and make sure I have my phone charger. I would also ask my parents what time we plan to arrive.",
+    "answerZh": "出發前，我會先看天氣，也確認手機充電器有帶。我還會問爸媽預計幾點抵達。"
+  },
+  {
+    "word": "job",
+    "keywordZh": "工作",
+    "question": "What would matter most to you when choosing your first job?",
+    "answerEn": "I would choose a job where I could learn from experienced people. A friendly team would matter more to me than a high salary.",
+    "answerZh": "我會選能向有經驗的人學習的工作。比起高薪水，我更在意團隊是否友善。"
+  },
+  {
+    "word": "career",
+    "keywordZh": "職涯",
+    "question": "How could you find out whether a career is right for you before college?",
+    "answerEn": "I could explore a career by joining a summer camp or talking to people who work in that field. That would help me see whether I really like it before choosing a major.",
+    "answerZh": "我可以參加營隊，或找在那個領域工作的人聊聊，來探索這個職涯。這樣在選科系前，就能確認自己是不是真的喜歡。"
+  },
+  {
+    "word": "qualification",
+    "keywordZh": "資格",
+    "question": "What would you do if you wanted a part-time job but lacked one of the qualifications listed?",
+    "answerEn": "I would still apply if the missing qualification did not seem essential. I would explain what related experience I have instead of pretending to have it.",
+    "answerZh": "如果缺少的資格看起來不是必要條件，我還是會應徵。我會說明自己有哪些相關經驗，而不是假裝符合。"
+  },
+  {
+    "word": "performance",
+    "keywordZh": "表現",
+    "question": "How would you assess your performance after a difficult month at school?",
+    "answerEn": "I would compare my performance with realistic goals, not just how busy I felt. I would also note what slowed me down.",
+    "answerZh": "我會用合理的目標檢查表現，不只看自己忙不忙。也記下哪些事情拖慢了進度。"
+  },
+  {
+    "word": "professional",
+    "keywordZh": "專業",
+    "question": "If you had a part-time job, how would you stay professional when a customer got angry with you?",
+    "answerEn": "I would stay professional by listening calmly and focusing on the problem instead of arguing. If I could not solve it myself, I would ask my manager for help.",
+    "answerZh": "我會冷靜聽客人說，針對問題處理，不跟他爭辯，保持專業。如果自己解決不了，就請店長幫忙。"
+  },
+  {
+    "word": "flexible",
+    "keywordZh": "彈性",
+    "question": "Would you prefer a part-time job with flexible hours, and why?",
+    "answerEn": "I would prefer flexible hours because my exam schedule changes a lot. I could work more during the holidays and less before big tests.",
+    "answerZh": "我比較喜歡有彈性的工時，因為我的考試時間常常變動。放假時可以多排班，大考前就少排一點。"
+  },
+  {
+    "word": "efficient",
+    "keywordZh": "有效率",
+    "question": "What simple change could make your group projects more efficient?",
+    "answerEn": "A shared checklist would make our group work more efficient. We would spend less time asking each other whether the important steps were done.",
+    "answerZh": "共用檢查表能讓分組作業更有效率。大家就不用一直互問重要的步驟做完了沒。"
+  },
+  {
+    "word": "school",
+    "keywordZh": "學校",
+    "question": "If you could change one thing about your school, what would it be?",
+    "answerEn": "I would give the school more spaces for small group discussions. Not every useful lesson needs a large classroom.",
+    "answerZh": "我會讓學校多一些小組討論空間。有用的課程，不一定都要在大教室裡進行。"
+  },
+  {
+    "word": "student",
+    "keywordZh": "學生",
+    "question": "What advice would you give a student joining a class halfway through the term?",
+    "answerEn": "I would tell the student to borrow a classmate's notes first. A friendly classmate could also explain the class routines and upcoming tests.",
+    "answerZh": "我會建議那位學生先跟同學借筆記。熱心的同學也能說明班上的規矩和接下來的考試。"
+  },
+  {
+    "word": "attention",
+    "keywordZh": "注意力",
+    "question": "What helps you bring your attention back when a long class starts to feel boring?",
+    "answerEn": "A brief question would bring my attention back to the topic. I would write down one point I still wanted to understand.",
+    "answerZh": "問一個簡短問題，能讓我的注意力回到課程。我也會寫下還沒弄懂的一個重點。"
+  },
+  {
+    "word": "energy",
+    "keywordZh": "體力",
+    "question": "Which activities use up the most energy for you?",
+    "answerEn": "Basketball practice after school uses the most energy for me. Afterwards, I need a snack and a short rest before I can start my homework.",
+    "answerZh": "放學後的籃球練習最耗體力。練完之後，我得先吃點東西、休息一下，才有辦法寫功課。"
+  },
+  {
+    "word": "routine",
+    "keywordZh": "作息",
+    "question": "What part of your routine helps you switch off after a busy day?",
+    "answerEn": "A short walk after dinner is part of my evening routine. It helps me clear my head before I start my homework.",
+    "answerZh": "晚餐後散個步是我作息的一部分。走一走能讓腦袋放空，再開始寫功課。"
+  },
+  {
+    "word": "pain",
+    "keywordZh": "疼痛",
+    "question": "If you hurt your ankle, how would you describe the pain to your coach or parents?",
+    "answerEn": "I would explain where the pain is and when it gets worse. For example, I would say it hurts most when I walk down the stairs.",
+    "answerZh": "我會說明哪裡痛，還有什麼時候疼痛會變嚴重。例如，下樓梯的時候最痛。"
+  },
+  {
+    "word": "prevent",
+    "keywordZh": "避免",
+    "question": "What could prevent you from staying up too late on school nights?",
+    "answerEn": "Setting a bedtime alarm could prevent me from staying up too late. I could also charge my phone outside my bedroom.",
+    "answerZh": "設一個睡覺時間的鬧鐘，可以避免我熬夜太晚。我也可以把手機放在房間外面充電。"
+  },
+  {
+    "word": "regular",
+    "keywordZh": "固定",
+    "question": "How would you fit regular breaks into a long evening of homework?",
+    "answerEn": "I would take regular breaks after finishing each subject. Stopping at a natural point would make the breaks easier to keep short.",
+    "answerZh": "我會每寫完一科就固定休息一下。在告一段落時停下來，休息比較不會拖太久。"
+  },
+  {
+    "word": "moderate",
+    "keywordZh": "適度",
+    "question": "If you had not exercised for months, what moderate activity would you start with?",
+    "answerEn": "I would choose a moderate walk at a comfortable pace. The first outing should feel manageable rather than like a test.",
+    "answerZh": "久沒活動後，我會先選步調舒服的適度散步。第一次出門，不必變成對自己的考驗。"
+  },
+  {
+    "word": "partner",
+    "keywordZh": "夥伴",
+    "question": "How would you choose a partner for a difficult school project?",
+    "answerEn": "I would choose a partner who communicates clearly about difficulties. Being able to ask for help matters more than appearing perfect.",
+    "answerZh": "我會找能清楚說明困難的夥伴。願意開口求助，比看起來什麼都會更重要。"
+  },
+  {
+    "word": "care",
+    "keywordZh": "照顧",
+    "question": "How could your family share the care of a grandparent who needs help?",
+    "answerEn": "We could share the care by taking turns visiting and running errands. A simple schedule would stop everything from falling on one person.",
+    "answerZh": "我們可以輪流探望、幫忙跑腿，一起分擔照顧的工作。排個簡單的班表，就不會全落在同一個人身上。"
+  },
+  {
+    "word": "income",
+    "keywordZh": "收入",
+    "question": "If your income from a part-time job changed each month, how would you plan your spending?",
+    "answerEn": "I would plan my spending based on my lowest monthly income. In better months, I would save the extra money instead of spending it right away.",
+    "answerZh": "我會用收入最少的月份來規劃花費。收入比較多的月份，就把多出來的錢存起來，不馬上花掉。"
+  },
+  {
+    "word": "receipt",
+    "keywordZh": "收據",
+    "question": "What do you usually do with the receipt after buying something expensive, like headphones?",
+    "answerEn": "I keep the receipt in case I need to return the headphones. I also take a photo of it so I can still find the details if the paper fades.",
+    "answerZh": "我會留著收據，以防耳機需要退貨。也會拍張照，就算紙上的字褪色了，還是找得到購買資料。"
+  },
+  {
+    "word": "debt",
+    "keywordZh": "債務",
+    "question": "What would you tell a friend who wants to borrow money to buy an expensive new phone?",
+    "answerEn": "I would tell my friend to think carefully before going into debt for a phone. Paying it back could take months, and an older model might work just as well.",
+    "answerZh": "我會叫朋友在為了手機背上債務之前，先好好想清楚。還錢可能要好幾個月，舊一點的機型說不定也很好用。"
+  },
+  {
+    "word": "loan",
+    "keywordZh": "貸款",
+    "question": "If you needed a student loan for university, what would you want to know first?",
+    "answerEn": "I would want to know how much interest the loan charges and when I have to start paying it back. I would also ask what happens if I cannot find a job right away.",
+    "answerZh": "我會想知道這筆就學貸款利息多少、什麼時候開始還。也會問如果畢業後沒馬上找到工作，該怎麼辦。"
+  },
+  {
+    "word": "financial",
+    "keywordZh": "財務",
+    "question": "Your class wants to save for a graduation trip. How would you plan this financial goal together?",
+    "answerEn": "We would first agree on how much the trip will cost and how much each person can pay. Then someone would keep simple records so our financial plan stays clear to everyone.",
+    "answerZh": "我們會先確認旅行要花多少錢、每個人能出多少。再請一個人簡單記帳，讓大家都清楚這個財務計畫。"
+  },
+  {
+    "word": "emergency",
+    "keywordZh": "緊急狀況",
+    "question": "What would you always carry with you in case of an emergency?",
+    "answerEn": "In case of an emergency, I keep my parents' phone numbers on a card in my wallet. If my phone died, I could still contact them.",
+    "answerZh": "為了以防緊急狀況，我會把爸媽的電話寫在小卡上放在錢包裡。就算手機沒電，也還能聯絡到他們。"
+  },
+  {
+    "word": "climate",
+    "keywordZh": "氣候",
+    "question": "How would a different climate affect your choice of a place to live?",
+    "answerEn": "I would prefer a place with a mild climate because I hate hot, sticky summers. A place I enjoy visiting might be harder to live in all year round.",
+    "answerZh": "我比較想住在氣候溫和的地方，因為我很怕又熱又黏的夏天。旅行時喜歡的地方，一整年住下來可能就不一樣了。"
+  },
+  {
+    "word": "pollution",
+    "keywordZh": "污染",
+    "question": "What sign of pollution would you report in your neighbourhood?",
+    "answerEn": "If a stream near my home suddenly changed color, I would report the pollution to the local environmental office. I would include the location, the time, and a photo if possible.",
+    "answerZh": "如果家附近的溪水突然變色，我會向環保局通報污染。也會附上地點、時間，可以的話再拍張照片。"
+  },
+  {
+    "word": "recycle",
+    "keywordZh": "回收",
+    "question": "How would you help your classmates recycle correctly at school?",
+    "answerEn": "I would label the bins with pictures of what to recycle in each one. Clear pictures are easier to follow than a long list of rules.",
+    "answerZh": "我會在每個回收桶貼上可回收物品的圖片。清楚的圖片，比一長串規定容易看懂。"
+  },
+  {
+    "word": "conserve",
+    "keywordZh": "節省",
+    "question": "What could your family do to conserve water at home?",
+    "answerEn": "We could conserve water by taking shorter showers and turning off the tap while brushing our teeth. Fixing a dripping tap would also make a difference.",
+    "answerZh": "我們可以縮短洗澡時間、刷牙時關掉水龍頭來節省用水。修好會滴水的水龍頭，也很有幫助。"
+  },
+  {
+    "word": "river",
+    "keywordZh": "河流",
+    "question": "What do you like to do along a river near where you live?",
+    "answerEn": "I like riding my bike along the river near my home on weekends. In the evening, the breeze from the river makes it a great place to relax.",
+    "answerZh": "週末我喜歡沿著家附近那條河流騎腳踏車。傍晚河邊吹來的風很舒服，是放鬆的好地方。"
+  },
+  {
+    "word": "ocean",
+    "keywordZh": "海洋",
+    "question": "What would you like to understand better about the ocean?",
+    "answerEn": "I would like to understand what lives in the deepest parts of the ocean. It amazes me that we know more about the moon than about the deep sea.",
+    "answerZh": "我想多了解海洋最深處住著什麼生物。我們對月球的了解竟然比對深海還多，真的很神奇。"
+  },
+  {
+    "word": "drought",
+    "keywordZh": "乾旱",
+    "question": "If your city had to limit water use during a drought, how would your family adjust?",
+    "answerEn": "During a drought, my family would fill buckets with water before the supply was cut. We would also reuse water from washing vegetables to flush the toilet.",
+    "answerZh": "乾旱限水期間，我們家會在停水前先用水桶儲水。洗菜的水也會留下來沖馬桶。"
+  },
+  {
+    "word": "habitat",
+    "keywordZh": "棲息地",
+    "question": "What would you say to someone who wants to turn a wild, overgrown corner of your school into a parking lot?",
+    "answerEn": "I would say that the overgrown corner is a habitat for insects, frogs, and birds. Before paving it, we should find out what lives there.",
+    "answerZh": "我會說那個雜草叢生的角落是昆蟲、青蛙和鳥的棲息地。鋪成水泥地之前，應該先了解有什麼生物住在那裡。"
+  },
+  {
+    "word": "rule",
+    "keywordZh": "規則",
+    "question": "What makes a school rule easier for students to accept?",
+    "answerEn": "A rule is easier to accept when its purpose is clear. People should understand the problem it addresses, not just face a warning.",
+    "answerZh": "規則的目的清楚，大家比較能接受。要知道它解決什麼問題，不只是看到一張警告。"
+  },
+  {
+    "word": "available",
+    "keywordZh": "可用",
+    "question": "What would you do if the school study room was never available when you needed it?",
+    "answerEn": "I would ask the office when the room is usually available. If it is always full, I could suggest a sign-up sheet so more students get a turn.",
+    "answerZh": "我會問學校辦公室，自習室通常什麼時候可用。如果總是客滿，可以建議用登記表，讓更多同學輪得到。"
+  },
+  {
+    "word": "fair",
+    "keywordZh": "公平",
+    "question": "How would you make the use of the school basketball courts fair at lunchtime?",
+    "answerEn": "A fair system would let classes take turns on different days. The schedule should be posted so nobody feels that older students always get the best times.",
+    "answerZh": "公平的做法是讓各班在不同天輪流使用。時間表要公布出來，大家才不會覺得學長姐總是占到最好的時段。"
+  },
+  {
+    "word": "equal",
+    "keywordZh": "平等",
+    "question": "How could a teacher give quieter students an equal chance to share ideas in class?",
+    "answerEn": "Giving everyone equal speaking time is a good start, but some students need other ways to contribute. Written comments or small groups could help quieter classmates share their ideas.",
+    "answerZh": "給每個人平等的發言時間是好的開始，但有些人需要別的表達方式。用寫的或分小組，能幫助比較安靜的同學分享想法。"
+  },
+  {
+    "word": "participate",
+    "keywordZh": "參加",
+    "question": "What would make you more willing to participate in a class meeting?",
+    "answerEn": "I would participate more if we knew the topics beforehand. Knowing that my ideas could really change something would make the meeting worthwhile.",
+    "answerZh": "如果事先知道要討論什麼，我會更願意參加。知道自己的意見真的能改變什麼，開班會才值得。"
+  },
+  {
+    "word": "traffic",
+    "keywordZh": "交通",
+    "question": "How could traffic around your school be made safer in the morning?",
+    "answerEn": "In the morning, traffic near my school gets very busy when parents stop to drop off their kids. A drop-off zone a little farther away would keep the crossing clearer.",
+    "answerZh": "早上家長停車送小孩，學校附近的交通就很混亂。如果在稍遠的地方設接送區，路口就不會那麼擠。"
+  },
+  {
+    "word": "housing",
+    "keywordZh": "住宅",
+    "question": "If many new apartments were built near your home, what would your neighbourhood need?",
+    "answerEn": "New housing would bring more families, so we would need more parks and a bigger school. Without them, the area could feel crowded and stressful.",
+    "answerZh": "新住宅會帶來更多家庭，所以需要更多公園和更大的學校。不然這一帶可能會變得擁擠又讓人煩躁。"
+  },
+  {
+    "word": "opinion",
+    "keywordZh": "看法",
+    "question": "How would you express an opinion when you have only limited information?",
+    "answerEn": "I would say that this is only my opinion based on what I know so far. If I learned more, I would be open to changing my mind.",
+    "answerZh": "我會說這只是根據目前所知的看法。如果知道更多資訊，我也願意改變想法。"
+  },
+  {
+    "word": "gesture",
+    "keywordZh": "手勢",
+    "question": "How could a gesture help you communicate with a tourist who does not speak your language?",
+    "answerEn": "A pointing gesture can help me show a tourist which way to go. I would be careful, though, because some gestures mean different things in other countries.",
+    "answerZh": "用手指方向的手勢，能幫我替觀光客指路。不過我會小心，因為有些手勢在其他國家意思不一樣。"
+  },
+  {
+    "word": "misunderstand",
+    "keywordZh": "誤解",
+    "question": "How would you respond if you thought someone might misunderstand your joke?",
+    "answerEn": "I would quickly explain what I meant so they would not misunderstand me. If the joke hurt them, I would apologize instead of defending it.",
+    "answerZh": "我會趕快說明原意，免得對方誤解。如果玩笑讓他受傷，我會道歉，不會替玩笑辯護。"
+  },
+  {
+    "word": "digital",
+    "keywordZh": "數位",
+    "question": "Which digital tool would you miss most if you lost your phone for a day?",
+    "answerEn": "I would miss my digital map app most. Without it, I would have to ask people for directions whenever I went somewhere new.",
+    "answerZh": "我最想念的會是數位地圖。沒有它，每次去新的地方都得問路。"
+  },
+  {
+    "word": "update",
+    "keywordZh": "更新",
+    "question": "When would you choose to postpone a software update on your computer?",
+    "answerEn": "I would postpone an update if I were in the middle of writing a report for school. Afterwards, I would save my work and install it before going to bed.",
+    "answerZh": "如果正在寫學校報告，我會先延後更新。寫完存好檔，再趁睡前安裝。"
+  },
+  {
+    "word": "hopeful",
+    "keywordZh": "希望",
+    "question": "What makes you feel hopeful after a setback?",
+    "answerEn": "I feel hopeful when I can see one useful next step. Having something clear to do makes the situation feel like it can still change.",
+    "answerZh": "只要看得到下一個能做的步驟，我就覺得還有希望。有具體能做的事，就不會覺得事情已經沒救了。"
+  },
+  {
+    "word": "content",
+    "keywordZh": "滿足",
+    "question": "What helps you feel content without comparing your life with others?",
+    "answerEn": "I feel content when I notice what is already working in my day. A peaceful meal and an honest conversation can be enough.",
+    "answerZh": "注意到生活裡已經不錯的部分，就比較滿足。安心吃頓飯、真誠聊個天，就已經足夠了。"
+  },
+  {
+    "word": "mood",
+    "keywordZh": "心情",
+    "question": "How would you tell a friend you are in a quiet mood without making them feel unwelcome?",
+    "answerEn": "I would tell my friend I am just in a quiet mood today, not upset with them. Then I might suggest something relaxed, like watching a movie together.",
+    "answerZh": "我會跟朋友說，我今天只是心情比較想安靜，不是在生他的氣。然後可以提議一起做點輕鬆的事，像是看部電影。"
+  },
+  {
+    "word": "emotion",
+    "keywordZh": "情緒",
+    "question": "When a friend says something that hurts you, how would you tell them how you feel?",
+    "answerEn": "I would name the emotion directly and say I felt hurt when they laughed at me. That is clearer than staying silent and expecting my friend to guess.",
+    "answerZh": "我會直接說出自己的情緒，讓他知道他笑我的時候，我很受傷。這比悶著不說、讓朋友自己猜清楚多了。"
+  },
+  {
+    "word": "overwhelm",
+    "keywordZh": "壓垮",
+    "question": "What do you do when your to-do list starts to overwhelm you?",
+    "answerEn": "A long to-do list can overwhelm me when every task looks urgent. I pick just one thing to do next and set the rest aside for a while.",
+    "answerZh": "待辦事項一長串、每件看起來都很急時，很容易把我壓垮。我會先挑下一件要做的事，其他的暫時放一邊。"
+  },
+  {
+    "word": "benefit",
+    "keywordZh": "好處",
+    "question": "What is the biggest benefit of living close to your school?",
+    "answerEn": "The biggest benefit is that I can sleep a little longer every morning. I also do not have to squeeze onto a crowded bus after a long day.",
+    "answerZh": "最大的好處是每天早上可以多睡一下。放學累了一整天，也不用再去擠公車。"
+  },
+  {
+    "word": "drawback",
+    "keywordZh": "缺點",
+    "question": "What drawback would make you say no to joining a club you like?",
+    "answerEn": "One big drawback would be practices every weekend. Even if I liked the club, I would not have enough time to study or rest.",
+    "answerZh": "一個很大的缺點是每個週末都要練習。就算我喜歡這個社團，也會沒時間讀書和休息。"
+  },
+  {
+    "word": "evaluate",
+    "keywordZh": "評估",
+    "question": "How would you evaluate whether a new study method is really working for you?",
+    "answerEn": "I would evaluate it by comparing my quiz scores from the two weeks before and after. I would also notice whether I can remember new words more easily.",
+    "answerZh": "我會比較用這個方法前後兩週的小考成績來評估。也會注意自己是不是比較容易記住新單字。"
+  },
+  {
+    "word": "trade",
+    "keywordZh": "換取",
+    "question": "What convenience would you trade for a lower price when you travel?",
+    "answerEn": "On a long trip, I would trade a faster train ride for a cheaper bus ticket. Sitting for an extra hour is fine if I can save a lot of money.",
+    "answerZh": "長途旅行時，我願意多花點時間搭客運，換取比較便宜的票價。多坐一個小時沒關係，只要能省下不少錢。"
+  },
+  {
+    "word": "experiment",
+    "keywordZh": "實驗",
+    "question": "In an experiment comparing two kinds of fertilizer, what would you keep the same?",
+    "answerEn": "In the experiment, I would keep water, light, and plant type similar. Changing several things together would make the results harder to interpret.",
+    "answerZh": "實驗時，我會盡量讓水量、光照和植物種類相近。一起改太多因素，就難以理解結果。"
+  },
+  {
+    "word": "measure",
+    "keywordZh": "測量",
+    "question": "You want to buy a bookshelf for your room. How would you measure the space first?",
+    "answerEn": "I would measure the width and height of the empty wall with a tape measure. Then I would measure again to make sure the numbers are right before buying anything.",
+    "answerZh": "我會用捲尺測量那面空牆的寬度和高度。買之前再測量一次，確定數字沒錯。"
+  },
+  {
+    "word": "calculate",
+    "keywordZh": "計算",
+    "question": "How would you calculate each person's share when friends rent a place for a graduation trip?",
+    "answerEn": "I would calculate the room price, cleaning fee, and other shared costs first. Then we could decide together whether someone staying fewer nights should pay less.",
+    "answerZh": "我會先計算房價、清潔費和其他共同費用。再一起討論，住比較少晚的人要不要少付一點。"
+  },
+  {
+    "word": "analysis",
+    "keywordZh": "分析",
+    "question": "You surveyed only your friends about school lunch. Why could your analysis be misleading?",
+    "answerEn": "My analysis would only show what my friends think, not the whole school. They might have similar tastes, so the results could look more positive than they really are.",
+    "answerZh": "我的分析只反映朋友的想法，不代表全校。他們口味可能很像，所以結果看起來會比實際更正面。"
+  },
+  {
+    "word": "precision",
+    "keywordZh": "精確度",
+    "question": "When might greater precision be worth the extra effort in a measurement?",
+    "answerEn": "Greater precision could matter when fitting a replacement part into a narrow space. For a rough room sketch, that extra effort might be unnecessary.",
+    "answerZh": "要把零件塞進很窄的空間時，就值得花力氣提高精確度。如果只是隨手畫房間草圖，就沒必要那麼講究。"
+  },
+  {
+    "word": "uncertainty",
+    "keywordZh": "不確定性",
+    "question": "When you tell your parents what score you expect on a test, how could you show some uncertainty?",
+    "answerEn": "I would give a range, like seventy to eighty-five, instead of one exact number. That honestly shows my uncertainty, because I am not sure how I did on the hard questions.",
+    "answerZh": "我會給一個範圍，例如七十到八十五分，而不是只說一個數字。這樣能誠實表達不確定性，因為我不確定難題寫得怎麼樣。"
+  },
+  {
+    "word": "average",
+    "keywordZh": "平均",
+    "question": "Your class average on a test looks fine. What problem could the average hide?",
+    "answerEn": "The average could hide that a few students failed badly. If some scores are very high, the class average still looks fine even when several people need help.",
+    "answerZh": "平均分數可能掩蓋少數同學考得很差。有人考很高分的話，全班平均看起來還是不錯，但其實有幾個人需要幫忙。"
+  },
+  {
+    "word": "pressure",
+    "keywordZh": "氣壓",
+    "question": "How do you check whether your bike tyres have enough pressure?",
+    "answerEn": "I use a pump with a gauge to check the pressure. Squeezing the tyre with my fingers is not very reliable, so I prefer seeing the actual number.",
+    "answerZh": "我會用有氣壓表的打氣筒檢查輪胎氣壓。用手指捏輪胎不太準，所以我比較想看到實際數字。"
+  },
+  {
+    "word": "vacation",
+    "keywordZh": "假期",
+    "question": "What would help you return from a vacation feeling refreshed?",
+    "answerEn": "I would leave a quiet day at the end of the vacation. Unpacking and resting before school starts would make the return less abrupt.",
+    "answerZh": "我會在假期最後留一天安靜整理。先收行李、休息一下，開學時就不會那麼難適應。"
+  },
+  {
+    "word": "plan",
+    "keywordZh": "計畫",
+    "question": "Your class trip might be cancelled because of rain. What backup plan would you make?",
+    "answerEn": "Our backup plan would be visiting the science museum near the station. We would tell everyone the new meeting time in advance, so the change is easy to remember.",
+    "answerZh": "我們的備用計畫是去車站附近的科學博物館。事先告訴大家新的集合時間，臨時改行程也容易記住。"
+  },
+  {
+    "word": "survive",
+    "keywordZh": "熬過",
+    "question": "What would help you survive a very long journey with several delays?",
+    "answerEn": "I could survive the long delays with water, snacks, and a good book. I would also text my family updates so nobody worries about when I will arrive.",
+    "answerZh": "有水、點心和一本好書，我就能熬過一再延誤的長途旅程。我也會傳訊息跟家人報告進度，免得大家擔心我什麼時候到。"
+  },
+  {
+    "word": "damage",
+    "keywordZh": "損壞",
+    "question": "What would you do if you accidentally caused damage to something you borrowed from a friend?",
+    "answerEn": "I would tell my friend about the damage right away. I would offer to pay for the repair or replace it instead of quietly giving it back.",
+    "answerZh": "我會馬上告訴朋友東西有損壞。也會主動說要出錢修理或賠一個新的，不會悄悄還回去。"
+  },
+  {
+    "word": "loss",
+    "keywordZh": "遺失",
+    "question": "How could you prepare for the loss of your phone during a trip?",
+    "answerEn": "I would write important phone numbers on a card in my wallet. That way, the loss of my phone would not leave me unable to call my family.",
+    "answerZh": "我會把重要的電話號碼寫在錢包裡的小卡上。這樣就算手機遺失，也還能打電話給家人。"
+  },
+  {
+    "word": "caution",
+    "keywordZh": "小心",
+    "question": "Your teacher hands you lab equipment you have never used. How would you show caution?",
+    "answerEn": "I would use caution and ask the teacher how it works before touching anything. Pretending I knew could cause an accident that was easy to prevent.",
+    "answerZh": "我會小心一點，先問老師怎麼用，再動手碰。假裝自己會用，可能造成本來很容易避免的意外。"
+  },
+  {
+    "word": "justice",
+    "keywordZh": "公道",
+    "question": "If a teacher punished the wrong student, what would justice look like?",
+    "answerEn": "The teacher should admit the mistake and clear the student's name in front of the class. That is what justice looks like, not just telling the student to forget about it.",
+    "answerZh": "老師應該承認弄錯，在全班面前還那位同學清白。這才是還他公道，而不是只叫他算了、別再計較。"
+  },
+  {
+    "word": "equity",
+    "keywordZh": "公平",
+    "question": "What could a school do to improve equity for students who cannot afford club equipment?",
+    "answerEn": "To improve equity, the school could lend equipment to students who need it. That way, nobody would have to skip a club just because their family has less money.",
+    "answerZh": "為了更公平，學校可以把器材借給需要的同學。這樣就不會有人只因為家裡比較不寬裕，就放棄參加社團。"
+  },
+  {
+    "word": "honesty",
+    "keywordZh": "誠實",
+    "question": "What would you do if your teacher marked one of your wrong answers as correct?",
+    "answerEn": "I would tell the teacher about the mistake, even if I lost a few points. For me, honesty matters more than a slightly higher score.",
+    "answerZh": "我會告訴老師改錯了，就算會被扣幾分也沒關係。對我來說，誠實比多幾分更重要。"
+  },
+  {
+    "word": "accountable",
+    "keywordZh": "負責",
+    "question": "In a group project, how can you make sure everyone stays accountable?",
+    "answerEn": "We could write down who is accountable for each part of the project. Then, if something is late, we know exactly who needs to explain and fix it.",
+    "answerZh": "我們可以寫清楚每個部分由誰負責。這樣如果有東西遲交，就知道該由誰說明、補救。"
+  },
+  {
+    "word": "transparent",
+    "keywordZh": "透明",
+    "question": "How could a coach make the selection for a school team more transparent?",
+    "answerEn": "The coach could announce the selection rules before tryouts. If the process were transparent, students who were not chosen would understand why and know what to improve.",
+    "answerZh": "教練可以在選拔前公布標準。如果過程透明，沒被選上的同學也會明白原因，知道要加強哪裡。"
+  },
+  {
+    "word": "confidential",
+    "keywordZh": "機密",
+    "question": "You help in the school office, and a classmate asks about confidential test information. What would you say?",
+    "answerEn": "I would tell my classmate that the information is confidential and I cannot share it. If they have questions about the test, they should ask the teacher directly.",
+    "answerZh": "我會跟同學說，這是機密資訊，我不能透露。如果他對考試有疑問，應該直接去問老師。"
+  },
+  {
+    "word": "bias",
+    "keywordZh": "偏見",
+    "question": "If you were judging a class poster contest, how could you reduce bias?",
+    "answerEn": "I would cover the students' names before scoring to reduce bias. Then I would judge each poster only by the criteria we agreed on.",
+    "answerZh": "評分前，我會先把同學的名字遮起來，減少偏見。然後只依照大家說好的標準評每張海報。"
+  },
+  {
+    "word": "aim",
+    "keywordZh": "目標",
+    "question": "What would be your main aim in your first month at a new school?",
+    "answerEn": "My main aim would be to make a few friends and learn how things work. I would not try to join every club right away.",
+    "answerZh": "我的主要目標是交幾個朋友，弄清楚學校的運作方式。不會一開始就想參加所有社團。"
+  },
+  {
+    "word": "step",
+    "keywordZh": "步驟",
+    "question": "What would be a small first step towards a project you have been avoiding?",
+    "answerEn": "My first step would be writing a rough outline for fifteen minutes. It does not have to be good; it just has to get me started.",
+    "answerZh": "我的第一個步驟是花十五分鐘寫個粗略大綱。不用寫得很好，只要能讓我開始動手就好。"
+  },
+  {
+    "word": "phase",
+    "keywordZh": "階段",
+    "question": "When preparing for a big exam, how would you know you were ready for the next phase of review?",
+    "answerEn": "I would move to the next phase when I could finish practice tests without many mistakes. Feeling impatient is not a good reason to skip ahead.",
+    "answerZh": "等我能把模擬考寫完、錯得不多，就進入下一階段。只是心急，不是跳過前面的好理由。"
+  },
+  {
+    "word": "persist",
+    "keywordZh": "堅持",
+    "question": "You have practiced piano for months and it still feels hard. Would you persist or quit?",
+    "answerEn": "I would persist if I still enjoyed playing and could hear myself improving. But if I dreaded every lesson, I would think about trying a different instrument.",
+    "answerZh": "如果我還喜歡彈、也聽得出自己在進步，我就會堅持下去。但如果每次上課都很怕，我會考慮換別的樂器。"
+  },
+  {
+    "word": "temporary",
+    "keywordZh": "臨時",
+    "question": "Your classroom is being repaired, so your class must use the library for a while. What would make this temporary change easier?",
+    "answerEn": "The temporary change would be easier if we knew how long it would last. A clear schedule would also help us remember where to bring our books each day.",
+    "answerZh": "如果知道這個臨時安排要持續多久，就比較容易適應。清楚的時間表，也能幫我們記得每天要把書帶去哪裡。"
+  },
+  {
+    "word": "realistic",
+    "keywordZh": "實際",
+    "question": "Your group wants to finish a big project in two days. How would you suggest a more realistic plan?",
+    "answerEn": "I would list all the tasks and how long each one takes. Seeing everything together would show that a week is a more realistic timeline.",
+    "answerZh": "我會列出所有工作和各自需要的時間。大家一起看完，就會知道一週才是比較實際的時程。"
+  },
+  {
+    "word": "potential",
+    "keywordZh": "潛力",
+    "question": "How would you test the potential of selling handmade bookmarks at a school fair?",
+    "answerEn": "I would test the idea's potential by making twenty bookmarks first. If they sold well, I would make more instead of spending all my savings at once.",
+    "answerZh": "我會先做二十張書籤，測試這個點子的潛力。如果賣得好，再多做一些，不會一下子把存款全花掉。"
+  }
+]

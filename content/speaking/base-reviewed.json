@@ -58,17 +58,17 @@
       "id": "w0007-reviewed-1",
       "word": "and",
       "keywordZh": "和",
-      "question": "What are two things you enjoy doing together, and why do they fit well?",
-      "answerEn": "I enjoy drinking coffee and reading in the morning. They fit well because both activities help me slow down before the day gets busy.",
-      "answerZh": "我喜歡早上喝咖啡和閱讀。這兩件事很搭，因為它們都能讓我在忙碌的一天開始前放慢步調。"
+      "question": "What are two activities you like to do at the same time, and why do they go well together?",
+      "answerEn": "I like listening to music and drawing at the same time. They go well together because music helps me relax and focus on my drawing.",
+      "answerZh": "我喜歡同時聽音樂和畫畫。這兩件事很搭，因為音樂能讓我放鬆，畫畫時也更專心。"
     },
     {
       "id": "w0008-reviewed-1",
       "word": "of",
       "keywordZh": "的",
-      "question": "What part of your daily routine gives you the strongest sense of control?",
-      "answerEn": "The first hour of my morning gives me the strongest sense of control. If I start calmly, the rest of the day usually feels easier.",
-      "answerZh": "早上的第一個小時最能讓我有掌控感。如果我平靜地開始，一天剩下的時間通常會比較順。"
+      "question": "What is your favorite part of the day, and why?",
+      "answerEn": "My favorite part of the day is the end of my last class. I feel free and can finally chat with my friends.",
+      "answerZh": "我一天中最喜歡的時刻是最後一節課結束的時候。那時我覺得很自由，終於可以和朋友聊天。"
     },
     {
       "id": "w0009-reviewed-1",
@@ -154,9 +154,9 @@
       "id": "w0019-reviewed-1",
       "word": "they",
       "keywordZh": "他們",
-      "question": "What can you learn from people when they handle stress differently from you?",
-      "answerEn": "I can learn that there is not only one correct way to handle stress. They may use methods that I have never tried before.",
-      "answerZh": "當別人用不同方式處理壓力時，我能學到處理壓力不只一種正確方法。他們可能會使用我從未試過的方式。"
+      "question": "How do your friends deal with stress before big exams?",
+      "answerEn": "Some of my friends play basketball before exams, and they say it clears their minds. Others listen to music while they review their notes.",
+      "answerZh": "我有些朋友考試前會去打籃球，他們說這樣頭腦會比較清楚。其他人則會一邊聽音樂一邊複習筆記。"
     },
     {
       "id": "w0020-reviewed-1",
@@ -314,9 +314,9 @@
       "id": "w0039-reviewed-1",
       "word": "there",
       "keywordZh": "那裡",
-      "question": "Is there a place where you can always calm down?",
-      "answerEn": "There is a small park near my home where I can calm down. Even a short walk there helps me breathe more slowly.",
-      "answerZh": "我家附近有一個小公園，我總是能在那裡冷靜下來。即使只是短暫散步，也能讓我呼吸變慢。"
+      "question": "Describe a place where you can always calm down.",
+      "answerEn": "There is a small park near my home. I go there after school when I feel stressed, and a short walk always helps me calm down.",
+      "answerZh": "我家附近有一個小公園。放學後覺得有壓力時，我會去那裡，短短散步一下就能讓我冷靜下來。"
     },
     {
       "id": "w0040-reviewed-1",
@@ -450,7 +450,7 @@
       "id": "w0056-reviewed-1",
       "word": "then",
       "keywordZh": "然後",
-      "question": "What do you usually do first, and what do you do then, when you start studying?",
+      "question": "What steps do you usually follow when you start studying at home?",
       "answerEn": "I usually clear my desk first, and then I open the materials I need. This order helps me move into study mode more smoothly.",
       "answerZh": "開始讀書時，我通常先清桌面，然後打開需要的資料。這個順序能幫我更順利進入讀書狀態。"
     },
@@ -514,9 +514,9 @@
       "id": "w0064-reviewed-1",
       "word": "also",
       "keywordZh": "也",
-      "question": "What is a skill you use at school or work that is also useful in daily life?",
-      "answerEn": "Organizing information is useful at school, and it is also useful in daily life. It helps me handle bills, plans, and personal tasks more calmly.",
-      "answerZh": "整理資訊在學校很有用，在日常生活中也有用。它能幫我更冷靜地處理帳單、計畫和個人任務。"
+      "question": "What is a skill you learned at school that is also useful in daily life?",
+      "answerEn": "Making a plan is a skill I learned at school, and it is also useful in daily life. It helps me organize my weekends and save money for things I want.",
+      "answerZh": "做計畫是我在學校學到的技能，在日常生活中也很有用。它能幫我安排週末，也能幫我存錢買想要的東西。"
     },
     {
       "id": "w0065-reviewed-1",
@@ -642,9 +642,9 @@
       "id": "w0080-reviewed-1",
       "word": "many",
       "keywordZh": "許多",
-      "question": "Why do many people find it hard to rest without feeling guilty?",
-      "answerEn": "Many people find it hard to rest because they connect value with productivity. They may feel guilty even when rest is necessary.",
-      "answerZh": "許多人覺得不帶愧疚地休息很難，因為他們把價值和生產力連在一起。即使休息是必要的，他們也可能感到愧疚。"
+      "question": "Why do many students feel guilty when they take a break from studying?",
+      "answerEn": "Many students feel guilty because they think every free minute should be used for studying. They also know that many of their classmates are still studying at the same time.",
+      "answerZh": "許多學生會有罪惡感，因為他們覺得每一分鐘都應該拿來讀書。他們也知道，許多同學這時候還在用功。"
     },
     {
       "id": "w0081-reviewed-1",
@@ -731,16 +731,16 @@
       "word": "over",
       "keywordZh": "超過",
       "question": "What do you do when a meeting or class runs over time?",
-      "answerEn": "When a meeting runs over time, I try to check whether the remaining discussion is necessary. If not, it is better to set a follow-up instead of tiring everyone out.",
-      "answerZh": "當會議超過時間時，我會試著確認剩下的討論是否必要。如果不是，最好安排後續，而不是讓所有人都累垮。"
+      "answerEn": "When a class runs over time, I feel a little anxious because I might be late for cram school. I usually pack my bag quietly so I can leave as soon as the teacher finishes.",
+      "answerZh": "課堂超過時間時，我會有點焦慮，因為補習可能會遲到。我通常會先安靜地收好書包，老師一講完就能馬上離開。"
     },
     {
       "id": "w0092-reviewed-1",
       "word": "woman",
       "keywordZh": "女性",
       "question": "Tell me about a woman you respect and why you respect her.",
-      "answerEn": "I respect a woman who stays kind even under pressure. She is not weak; she is strong enough to choose patience.",
-      "answerZh": "我尊敬一位在壓力下仍然保持善意的女性。她不是軟弱，而是強大到能選擇耐心。"
+      "answerEn": "I respect my aunt, a woman who runs a small bakery by herself. She works long hours, but she is always kind to her customers.",
+      "answerZh": "我很尊敬我的阿姨，她是一位獨自經營小麵包店的女性。她工作時間很長，但對客人總是很親切。"
     },
     {
       "id": "w0093-reviewed-1",
@@ -834,17 +834,17 @@
       "id": "w0669-reviewed-1",
       "word": "opportunity",
       "keywordZh": "機會",
-      "question": "What opportunity would you like to try, even if it feels a little intimidating?",
-      "answerEn": "I would like an opportunity to speak at a local event. I might feel nervous, but it would help me practice sharing my ideas.",
-      "answerZh": "我想找個機會在社區活動中上台分享。雖然可能會緊張，卻能練習把自己的想法說出來。"
+      "question": "What kind of opportunity would you take even if it made you a little nervous?",
+      "answerEn": "I would take an opportunity to speak at a school event. I might feel nervous, but it would help me practice sharing my ideas in front of people.",
+      "answerZh": "我會把握在學校活動上台分享的機會。雖然可能會緊張，卻能練習在大家面前說出自己的想法。"
     },
     {
       "id": "w1015-reviewed-1",
       "word": "challenge",
       "keywordZh": "挑戰",
       "question": "What challenge have you learned to handle better recently?",
-      "answerEn": "Cooking dinner after a busy day used to be a challenge for me. Preparing a few ingredients on Sunday has made it much easier.",
-      "answerZh": "忙了一天還要煮晚餐，以前對我是一大挑戰。現在我會先在星期天備好一些食材，平日就輕鬆多了。"
+      "answerEn": "Waking up early for school used to be a challenge for me. Going to bed before eleven has made it much easier.",
+      "answerZh": "以前早起上學對我來說是一大挑戰。現在我會在十一點前上床睡覺，早上就輕鬆多了。"
     },
     {
       "id": "w2217-reviewed-1",

@@ -380,7 +380,7 @@
   {
     "word": "its",
     "example": "The cafe changed its menu after the chef retired.",
-    "exampleZh": "主廚退休後，那間咖啡館換了自己的菜單。",
+    "exampleZh": "主廚退休後，那間咖啡館換了它的菜單。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -576,7 +576,7 @@
   {
     "word": "here",
     "example": "Please park here while I unlock the gate.",
-    "exampleZh": "我開門時，請先把車停這裡。",
+    "exampleZh": "我開門時，請先把車停在這裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -645,8 +645,8 @@
   },
   {
     "word": "still",
-    "example": "The lake was still after the evening wind stopped.",
-    "exampleZh": "晚風停後湖面平靜無波。",
+    "example": "The lake is still calm after the evening wind stopped.",
+    "exampleZh": "晚風停後，湖面仍然很平靜。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -911,8 +911,8 @@
   },
   {
     "word": "against",
-    "example": "The ladder rested against the mango tree during harvest.",
-    "exampleZh": "採芒果時梯子靠在芒果樹上。",
+    "example": "Many students were against the plan to shorten the lunch break.",
+    "exampleZh": "許多學生反對縮短午休時間的計畫。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -1115,7 +1115,7 @@
   {
     "word": "run",
     "example": "I run beside the canal after sunrise every Saturday.",
-    "exampleZh": "每週六日出後我沿著運河跑步。",
+    "exampleZh": "每個週六日出後，我都沿著運河跑步。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -1185,7 +1185,7 @@
   {
     "word": "night",
     "example": "The harbor lights look beautiful at night after rain.",
-    "exampleZh": "雨後夜裡，港口燈火很美。",
+    "exampleZh": "雨後的夜晚，港口的燈火看起來很美。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -1352,22 +1352,22 @@
   },
   {
     "word": "follow",
-    "example": "Follow the red lanterns to the courtyard entrance.",
-    "exampleZh": "沿著紅燈籠走到庭院入口。",
+    "example": "Follow me, and I will show you the way to the library.",
+    "exampleZh": "跟我來，我帶你去圖書館。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
   {
     "word": "power",
-    "example": "The storm cut power to the fishing village.",
-    "exampleZh": "暴風雨造成那座漁村停電。",
+    "example": "The power of the waves surprised the children at the beach.",
+    "exampleZh": "海浪的力量讓海灘上的孩子們很驚訝。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
   {
     "word": "study",
-    "example": "I study maps before every long bike ride.",
-    "exampleZh": "每次長途騎車前我都研究地圖。",
+    "example": "I study English for an hour every evening after dinner.",
+    "exampleZh": "我每天晚餐後學習一小時英文。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -1878,7 +1878,7 @@
   {
     "word": "able",
     "example": "She is able to repair radios with simple tools.",
-    "exampleZh": "她能用簡單工具修收音機。",
+    "exampleZh": "她能用簡單的工具修理收音機。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2235,7 +2235,7 @@
   {
     "word": "police",
     "example": "The police directed traffic after the concert ended.",
-    "exampleZh": "音樂會結束後警方指揮交通。",
+    "exampleZh": "音樂會結束後警察指揮交通。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2283,8 +2283,8 @@
   },
   {
     "word": "across",
-    "example": "The bank is across the street from the clinic.",
-    "exampleZh": "銀行就在診所的街道對面。",
+    "example": "We walked across the bridge to reach the night market.",
+    "exampleZh": "我們走過那座橋前往夜市。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2318,8 +2318,8 @@
   },
   {
     "word": "sense",
-    "example": "This answer makes sense after the diagram appears.",
-    "exampleZh": "圖示出現後這個答案說得通。",
+    "example": "She has a good sense of direction in the city.",
+    "exampleZh": "她在城市裡的方向感很好。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2361,7 +2361,7 @@
   {
     "word": "die",
     "example": "Many herbs die if the soil stays wet.",
-    "exampleZh": "土壤一直潮濕時，許多香草會枯死。",
+    "exampleZh": "土壤一直潮濕時，許多香草會死亡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2514,8 +2514,8 @@
   },
   {
     "word": "return",
-    "example": "His return brought comfort to the worried family.",
-    "exampleZh": "他回來後，焦急的家人終於放下心來。",
+    "example": "I will return to school on Monday after my short trip.",
+    "exampleZh": "短途旅行結束後，我星期一會回學校。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2584,8 +2584,8 @@
   },
   {
     "word": "cut",
-    "example": "The cut on his finger needed a bandage.",
-    "exampleZh": "他手指上的傷口需要包紮。",
+    "example": "She will cut the cake into eight pieces.",
+    "exampleZh": "她會把蛋糕切成八塊。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2634,7 +2634,7 @@
   {
     "word": "general",
     "example": "The general rule is simple for visitors here.",
-    "exampleZh": "這裡給訪客的基本規則很簡單。",
+    "exampleZh": "這裡給訪客的一般規則很簡單。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2808,7 +2808,7 @@
   },
   {
     "word": "half",
-    "example": "She ate half of the sandwich before swimming.",
+    "example": "She ate half of the sandwich before going swimming with us.",
     "exampleZh": "游泳前她吃了半個三明治。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
@@ -2941,8 +2941,8 @@
   },
   {
     "word": "cover",
-    "example": "Put the cover back on the rice pot.",
-    "exampleZh": "把蓋子蓋回飯鍋上。",
+    "example": "Please cover the rice pot with a lid.",
+    "exampleZh": "請用蓋子把飯鍋蓋起來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -3201,7 +3201,7 @@
   {
     "word": "security",
     "example": "Airport security checked every bag before boarding today.",
-    "exampleZh": "今天登機前機場安檢檢查每件行李。",
+    "exampleZh": "今天登機前機場安檢檢查了每件行李。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -3481,14 +3481,14 @@
   {
     "word": "fight",
     "example": "The fight ended before anyone was badly hurt.",
-    "exampleZh": "在有人嚴重受傷前衝突就結束了。",
+    "exampleZh": "在有人嚴重受傷前，這場打架就結束了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
   {
     "word": "concern",
     "example": "Her main concern is safety on the stairs.",
-    "exampleZh": "她主要擔心樓梯安全。",
+    "exampleZh": "她最擔心的是樓梯上的安全。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },

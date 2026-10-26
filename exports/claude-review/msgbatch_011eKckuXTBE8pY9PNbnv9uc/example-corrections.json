@@ -1,0 +1,4304 @@
+[
+  {
+    "core": 7,
+    "word": "attraction",
+    "example": "The night market's main attraction is a century-old tofu stall.",
+    "exampleZh": "夜市最吸引人的景點是一家百年豆腐攤。"
+  },
+  {
+    "core": 7,
+    "word": "reservation",
+    "example": "Our reservation at the hot spring inn includes breakfast.",
+    "exampleZh": "我們在溫泉旅館的預訂包含早餐。"
+  },
+  {
+    "core": 7,
+    "word": "dirt",
+    "example": "Fine dirt from the vegetable plot covered his sandals.",
+    "exampleZh": "菜園的細泥土沾滿了他的涼鞋。"
+  },
+  {
+    "core": 11,
+    "word": "cavalry",
+    "example": "The cavalry crossed the plain before the dust hid them from view.",
+    "exampleZh": "騎兵部隊穿越平原後，身影便被塵土遮住了。"
+  },
+  {
+    "core": 11,
+    "word": "dismay",
+    "example": "Dismay crossed his face when the violin string snapped.",
+    "exampleZh": "小提琴弦突然斷掉時，他臉上閃過驚愕。"
+  },
+  {
+    "core": 11,
+    "word": "flap",
+    "example": "The bird began to flap its wings above the fruit stand.",
+    "exampleZh": "那隻鳥開始在水果攤上方拍動翅膀。"
+  },
+  {
+    "core": 13,
+    "word": "deed",
+    "example": "Helping the lost child find her mother was a kind deed.",
+    "exampleZh": "幫助迷路的小孩找到媽媽是一件善行。"
+  },
+  {
+    "core": 13,
+    "word": "consistency",
+    "example": "Consistency is important if you want to improve your English.",
+    "exampleZh": "想提升英文的話，持之以恆很重要。"
+  },
+  {
+    "core": 12,
+    "word": "stuck",
+    "example": "The stuck drawer finally opened after Mira pulled the handle hard.",
+    "exampleZh": "米拉用力拉把手後，卡住的抽屜終於打開了。"
+  },
+  {
+    "core": 12,
+    "word": "tricky",
+    "example": "The tricky math problem took Mira almost an hour to solve.",
+    "exampleZh": "這道棘手的數學題花了米拉將近一小時才解出來。"
+  },
+  {
+    "core": 12,
+    "word": "unwanted",
+    "example": "Several unwanted weeds grew between the tiles after spring rain.",
+    "exampleZh": "春雨過後，幾株不想要的雜草從磁磚縫長出來。"
+  },
+  {
+    "core": 12,
+    "word": "striker",
+    "example": "The striker scored twice before the school team won the match.",
+    "exampleZh": "那名前鋒進了兩球，學校球隊贏得了比賽。"
+  },
+  {
+    "core": 12,
+    "word": "binding",
+    "example": "The contract is binding, so both sides must follow every rule.",
+    "exampleZh": "這份合約具有約束力，所以雙方都必須遵守每項規定。"
+  },
+  {
+    "core": 10,
+    "word": "thoughtful",
+    "example": "Her thoughtful note arrived on the anniversary of his loss.",
+    "exampleZh": "她體貼的紙條在他喪親週年那天送達。"
+  },
+  {
+    "core": 10,
+    "word": "underestimate",
+    "example": "Do not underestimate the climb behind the waterfall.",
+    "exampleZh": "別低估瀑布後方那段攀爬路程。"
+  },
+  {
+    "core": 10,
+    "word": "hike",
+    "example": "We took a hike through bamboo groves before breakfast.",
+    "exampleZh": "早餐前我們去竹林健行了一趟。"
+  },
+  {
+    "core": 12,
+    "word": "holding",
+    "example": "The investor sold her largest holding in the tech company last week.",
+    "exampleZh": "那位投資人上週賣掉了她在那家科技公司的最大持股。"
+  },
+  {
+    "core": 12,
+    "word": "advisory",
+    "example": "She joined the advisory board to help the school choose new clubs.",
+    "exampleZh": "她加入顧問委員會，協助學校挑選新社團。"
+  },
+  {
+    "core": 12,
+    "word": "philosophical",
+    "example": "The class had a philosophical discussion about what makes people happy.",
+    "exampleZh": "全班針對什麼讓人快樂進行了一場哲學討論。"
+  },
+  {
+    "core": 12,
+    "word": "pro",
+    "example": "The pro at the golf club gave Leo some useful tips.",
+    "exampleZh": "高爾夫球場的專業球員給了里奧一些實用的建議。"
+  },
+  {
+    "core": 12,
+    "word": "bastard",
+    "example": "The angry driver called the other man a bastard.",
+    "exampleZh": "那位憤怒的駕駛罵另一個男人是混蛋。"
+  },
+  {
+    "core": 12,
+    "word": "huh",
+    "example": "Huh, I thought the test was tomorrow, not today.",
+    "exampleZh": "蛤，我還以為考試是明天，不是今天。"
+  },
+  {
+    "core": 3,
+    "word": "prospect",
+    "example": "The prospect of studying abroad made her both excited and nervous.",
+    "exampleZh": "出國留學的前景讓她既興奮又緊張。"
+  },
+  {
+    "core": 3,
+    "word": "secure",
+    "example": "Please make sure the windows are secure before the storm arrives.",
+    "exampleZh": "暴風雨來臨前，請確認窗戶都已關緊。"
+  },
+  {
+    "core": 3,
+    "word": "sharp",
+    "example": "A sharp knife sliced the papaya cleanly into thin strips.",
+    "exampleZh": "鋒利的刀子俐落地把木瓜切成細條。"
+  },
+  {
+    "core": 3,
+    "word": "weak",
+    "example": "The weak bridge shook under the loaded truck.",
+    "exampleZh": "那座脆弱的橋在滿載的卡車下搖晃。"
+  },
+  {
+    "core": 3,
+    "word": "decline",
+    "example": "Tourist numbers often decline when ferry prices rise in summer.",
+    "exampleZh": "夏天渡輪票價上漲時，遊客人數常會減少。"
+  },
+  {
+    "core": 12,
+    "word": "equalize",
+    "example": "The late goal helped Spain equalize before extra time.",
+    "exampleZh": "那記晚進球幫西班牙在延長賽前追平比分。"
+  },
+  {
+    "core": 2,
+    "word": "outside",
+    "example": "No one waited outside after the temple bell stopped ringing.",
+    "exampleZh": "廟鐘停響後，外面沒有人在等待。"
+  },
+  {
+    "core": 2,
+    "word": "attack",
+    "example": "Mosquitoes attack bare ankles near the pond after sunset.",
+    "exampleZh": "日落後，池塘邊的蚊子會叮咬裸露的腳踝。"
+  },
+  {
+    "core": 2,
+    "word": "visit",
+    "example": "We plan to visit the lantern market before it gets crowded.",
+    "exampleZh": "我們打算在人潮變多前去參觀燈籠市集。"
+  },
+  {
+    "core": 5,
+    "word": "unknown",
+    "example": "An unknown number kept calling during the family dinner.",
+    "exampleZh": "全家吃晚餐時，一通陌生號碼一直打來。"
+  },
+  {
+    "core": 4,
+    "word": "grab",
+    "example": "Grab your raincoat before the clouds reach us.",
+    "exampleZh": "趁烏雲飄到我們這裡之前，先拿起你的雨衣。"
+  },
+  {
+    "core": 4,
+    "word": "tank",
+    "example": "The water tank cracked during the strong earthquake.",
+    "exampleZh": "水箱在強震中裂開了。"
+  },
+  {
+    "core": 4,
+    "word": "angry",
+    "example": "The angry customer returned with the cracked phone case.",
+    "exampleZh": "生氣的顧客拿著裂開的手機殼回來了。"
+  },
+  {
+    "core": 4,
+    "word": "sick",
+    "example": "The sick child slept through the temple fireworks.",
+    "exampleZh": "生病的孩子在廟會煙火聲中睡著了。"
+  },
+  {
+    "core": 4,
+    "word": "pupil",
+    "example": "The pupil raised her hand to answer the teacher's question.",
+    "exampleZh": "那位學生舉手回答老師的問題。"
+  },
+  {
+    "core": 4,
+    "word": "intelligence",
+    "example": "Her intelligence helped her solve the difficult math problem quickly.",
+    "exampleZh": "她的智力讓她很快解開了那道困難的數學題。"
+  },
+  {
+    "core": 4,
+    "word": "fairly",
+    "example": "The test was fairly easy, so most students finished early.",
+    "exampleZh": "這次考試相當簡單，所以大多數學生都提早完成。"
+  },
+  {
+    "core": 12,
+    "word": "superpower",
+    "example": "The superpower sent two carriers into the disputed sea.",
+    "exampleZh": "那個超級大國派兩艘航空母艦進入爭議海域。"
+  },
+  {
+    "core": 12,
+    "word": "disturbed",
+    "example": "The disturbed child could not sleep after the loud storm.",
+    "exampleZh": "那個不安的孩子在巨大的暴風雨後無法入睡。"
+  },
+  {
+    "core": 12,
+    "word": "sub",
+    "example": "A sub replaced the injured goalkeeper after halftime.",
+    "exampleZh": "一名替補球員在中場休息後替換了受傷的守門員。"
+  },
+  {
+    "core": 10,
+    "word": "prestigious",
+    "example": "She rejected a prestigious award to protest the sponsor.",
+    "exampleZh": "她拒絕了一個享有盛名的獎項，以抗議贊助商。"
+  },
+  {
+    "core": 2,
+    "word": "language",
+    "example": "Their language changes when relatives gather for New Year.",
+    "exampleZh": "親戚過年團聚時，他們說的語言會改變。"
+  },
+  {
+    "core": 2,
+    "word": "guy",
+    "example": "That guy sells roasted chestnuts outside the cinema.",
+    "exampleZh": "那個傢伙在電影院外賣烤栗子。"
+  },
+  {
+    "core": 6,
+    "word": "yen",
+    "example": "The ticket cost five thousand yen at the counter.",
+    "exampleZh": "那張票在櫃檯要價五千日圓。"
+  },
+  {
+    "core": 6,
+    "word": "victimize",
+    "example": "Scammers often victimize older adults with official-looking tax letters.",
+    "exampleZh": "詐騙者常用看似官方的稅務信件，欺騙並傷害年長者。"
+  },
+  {
+    "core": 6,
+    "word": "associated",
+    "example": "Three associated clinics share one emergency hotline in the valley.",
+    "exampleZh": "三間聯合診所在山谷共用一支緊急專線。"
+  },
+  {
+    "core": 11,
+    "word": "insane",
+    "example": "It was insane to swim there during a typhoon warning.",
+    "exampleZh": "颱風警報期間在那裡游泳簡直瘋狂。"
+  },
+  {
+    "core": 11,
+    "word": "blossom",
+    "example": "Plum trees blossom beside the temple every February.",
+    "exampleZh": "每年二月，寺旁的李樹都會開花。"
+  },
+  {
+    "core": 14,
+    "word": "defective",
+    "example": "A defective brake light made the scooter unsafe.",
+    "exampleZh": "有瑕疵的煞車燈讓這輛機車騎起來不安全。"
+  },
+  {
+    "core": 1,
+    "word": "across",
+    "example": "We walked across the bridge to reach the night market.",
+    "exampleZh": "我們走過那座橋前往夜市。"
+  },
+  {
+    "core": 1,
+    "word": "sense",
+    "example": "She has a good sense of direction in the city.",
+    "exampleZh": "她在城市裡的方向感很好。"
+  },
+  {
+    "core": 1,
+    "word": "die",
+    "example": "Many herbs die if the soil stays wet.",
+    "exampleZh": "土壤一直潮濕時，許多香草會死亡。"
+  },
+  {
+    "core": 6,
+    "word": "roach",
+    "example": "A roach ran across the kitchen floor when I turned on the light.",
+    "exampleZh": "我一開燈，一隻蟑螂就從廚房地板上跑過去。"
+  },
+  {
+    "core": 6,
+    "word": "done",
+    "example": "My homework is done, so I can watch TV now.",
+    "exampleZh": "我的功課寫完了，所以現在可以看電視。"
+  },
+  {
+    "core": 6,
+    "word": "last",
+    "example": "This is the last bus to the station tonight.",
+    "exampleZh": "這是今晚開往車站的最後一班公車。"
+  },
+  {
+    "core": 6,
+    "word": "case",
+    "example": "In that case, we should take the earlier train.",
+    "exampleZh": "那樣的話，我們應該搭早一點的火車。"
+  },
+  {
+    "core": 6,
+    "word": "place",
+    "example": "This is a quiet place to study after school.",
+    "exampleZh": "這是個放學後適合念書的安靜地方。"
+  },
+  {
+    "core": 6,
+    "word": "long",
+    "example": "The line for bubble tea was very long today.",
+    "exampleZh": "今天買珍珠奶茶的隊伍非常長。"
+  },
+  {
+    "core": 6,
+    "word": "present",
+    "example": "She gave me a present for my birthday yesterday.",
+    "exampleZh": "她昨天送了我一份生日禮物。"
+  },
+  {
+    "core": 5,
+    "word": "rough",
+    "example": "The rough blanket scratched Nora's chin during the cold night.",
+    "exampleZh": "寒冷的夜裡，粗糙的毯子刮得諾拉的下巴很不舒服。"
+  },
+  {
+    "core": 14,
+    "word": "eradicate",
+    "example": "Inspectors hope to eradicate mosquitoes from the storage yard.",
+    "exampleZh": "稽查員希望根除倉庫院子裡的蚊子。"
+  },
+  {
+    "core": 12,
+    "word": "spelling",
+    "example": "The sign's spelling changed after the painter returned.",
+    "exampleZh": "油漆工回來後，招牌上的拼字變了。"
+  },
+  {
+    "core": 12,
+    "word": "nephew",
+    "example": "My nephew hid warm dumplings in his lunchbox.",
+    "exampleZh": "我的姪子把熱水餃藏在午餐盒裡。"
+  },
+  {
+    "core": 12,
+    "word": "motorcycle",
+    "example": "A motorcycle splashed mud onto the shop window.",
+    "exampleZh": "一輛機車把泥水濺到店窗上。"
+  },
+  {
+    "core": 8,
+    "word": "scatter",
+    "example": "The wind will scatter the receipts if you open that window.",
+    "exampleZh": "如果你打開那扇窗，風會把收據吹散。"
+  },
+  {
+    "core": 8,
+    "word": "equip",
+    "example": "The school will equip every classroom with a new projector.",
+    "exampleZh": "學校會為每間教室配備一台新的投影機。"
+  },
+  {
+    "core": 8,
+    "word": "handsome",
+    "example": "The handsome actor smiled at the fans outside the theater.",
+    "exampleZh": "那位英俊的演員對劇院外的粉絲微笑。"
+  },
+  {
+    "core": 8,
+    "word": "imperial",
+    "example": "The imperial palace attracts thousands of visitors every year.",
+    "exampleZh": "這座帝國皇宮每年吸引數千名遊客。"
+  },
+  {
+    "core": 12,
+    "word": "lawmaker",
+    "example": "A lawmaker proposed stricter rules for basement rentals.",
+    "exampleZh": "一名立法委員提議加嚴地下室出租規定。"
+  },
+  {
+    "core": 12,
+    "word": "scattered",
+    "example": "The scattered sandals lay outside the crowded temple gate after prayers.",
+    "exampleZh": "祈禱結束後，散落的涼鞋躺在擁擠的廟門外。"
+  },
+  {
+    "core": 2,
+    "word": "movement",
+    "example": "Sudden movement in the bushes startled the hikers.",
+    "exampleZh": "樹叢裡突然的動靜嚇到了登山客。"
+  },
+  {
+    "core": 2,
+    "word": "private",
+    "example": "The clinic keeps private records in locked cabinets.",
+    "exampleZh": "診所把私人紀錄鎖在櫃子裡。"
+  },
+  {
+    "core": 6,
+    "word": "assembly",
+    "example": "The whole school gathered in the hall for the Monday morning assembly.",
+    "exampleZh": "全校師生星期一早上聚集在禮堂參加集會。"
+  },
+  {
+    "core": 6,
+    "word": "solicitor",
+    "example": "The solicitor explained the inheritance papers beside the stove.",
+    "exampleZh": "事務律師在爐邊解釋繼承文件。"
+  },
+  {
+    "core": 6,
+    "word": "bare",
+    "example": "Long bare branches scratched the roof during the typhoon.",
+    "exampleZh": "光禿的長樹枝在颱風中刮著屋頂。"
+  },
+  {
+    "core": 6,
+    "word": "jet",
+    "example": "A private jet crossed the moon above the runway.",
+    "exampleZh": "一架私人噴射機從跑道上空的月亮前方飛過。"
+  },
+  {
+    "core": 9,
+    "word": "betray",
+    "example": "His shaking voice seemed to betray his fear.",
+    "exampleZh": "他顫抖的聲音似乎流露出他的恐懼。"
+  },
+  {
+    "core": 9,
+    "word": "boxing",
+    "example": "Boxing taught him patience as well as strength.",
+    "exampleZh": "拳擊不只讓他變強壯，也教會他耐心。"
+  },
+  {
+    "core": 9,
+    "word": "homeland",
+    "example": "Songs from her homeland made the room quiet.",
+    "exampleZh": "來自她祖國的歌曲讓房間安靜下來。"
+  },
+  {
+    "core": 14,
+    "word": "obstruction",
+    "example": "A fallen sign caused an obstruction on the bike lane.",
+    "exampleZh": "倒下的招牌在自行車道上造成阻礙。"
+  },
+  {
+    "core": 14,
+    "word": "capsule",
+    "example": "The doctor told me to take one capsule after dinner.",
+    "exampleZh": "醫生要我晚餐後服用一顆膠囊。"
+  },
+  {
+    "core": 2,
+    "word": "dog",
+    "example": "The dog waited patiently outside the noodle shop for its owner.",
+    "exampleZh": "那隻狗耐心地在麵店外等主人。"
+  },
+  {
+    "core": 2,
+    "word": "wonder",
+    "example": "I wonder why the crab crossed the road.",
+    "exampleZh": "我想知道螃蟹為什麼要過馬路。"
+  },
+  {
+    "core": 3,
+    "word": "telephone",
+    "example": "The telephone rang while we were eating dinner last night.",
+    "exampleZh": "昨晚我們吃晚餐時，電話響了。"
+  },
+  {
+    "core": 3,
+    "word": "launch",
+    "example": "Scientists will launch the small rocket from the beach tomorrow morning.",
+    "exampleZh": "科學家明天早上會在海灘發射這枚小火箭。"
+  },
+  {
+    "core": 10,
+    "word": "bark",
+    "example": "The dog began to bark whenever a stranger walked past our house.",
+    "exampleZh": "每當陌生人走過我們家，那隻狗就會開始吠叫。"
+  },
+  {
+    "core": 14,
+    "word": "replicate",
+    "example": "No kitchen could replicate the taste of her aunt's noodles.",
+    "exampleZh": "沒有一間廚房能重現她阿姨做的麵條味道。"
+  },
+  {
+    "core": 14,
+    "word": "admittedly",
+    "example": "Admittedly, the attic smelled better after we opened the windows.",
+    "exampleZh": "誠然，我們打開窗戶後，閣樓的氣味好多了。"
+  },
+  {
+    "core": 14,
+    "word": "sensibility",
+    "example": "The film appealed deeply to her romantic sensibility.",
+    "exampleZh": "這部電影深深打動了她浪漫的情感特質。"
+  },
+  {
+    "core": 14,
+    "word": "treasurer",
+    "example": "The treasurer locked the donation box inside the temple office.",
+    "exampleZh": "財務主管把捐款箱鎖進廟務辦公室。"
+  },
+  {
+    "core": 8,
+    "word": "liability",
+    "example": "The company accepted liability after several visitors slipped on the cracked sidewalk.",
+    "exampleZh": "幾名訪客在裂開的人行道上滑倒後，公司承擔了責任。"
+  },
+  {
+    "core": 11,
+    "word": "daring",
+    "example": "The daring rescue began from a broken balcony.",
+    "exampleZh": "大膽的救援行動從一座破損的陽台開始。"
+  },
+  {
+    "core": 12,
+    "word": "sooner",
+    "example": "The sooner you start studying, the better you will do.",
+    "exampleZh": "你愈早開始讀書，成績就會愈好。"
+  },
+  {
+    "core": 12,
+    "word": "gnp",
+    "example": "The economist linked GNP growth to exports of machine tools.",
+    "exampleZh": "經濟學家認為國民生產毛額成長與工具機出口有關。"
+  },
+  {
+    "core": 11,
+    "word": "guild",
+    "example": "The weavers' guild repaired the ancient loom together.",
+    "exampleZh": "織布工行會一起修復了古老的織布機。"
+  },
+  {
+    "core": 11,
+    "word": "favourable",
+    "example": "Clear weather was favourable for drying tea leaves outside.",
+    "exampleZh": "晴朗的天氣有利於在戶外曬茶葉。"
+  },
+  {
+    "core": 11,
+    "word": "martial",
+    "example": "The martial arts club meets every Friday after school.",
+    "exampleZh": "武術社每週五放學後聚會。"
+  },
+  {
+    "core": 13,
+    "word": "tenure",
+    "example": "The professor's tenure as department head ended after four years.",
+    "exampleZh": "那位教授擔任系主任的任期四年後結束。"
+  },
+  {
+    "core": 13,
+    "word": "layout",
+    "example": "The kitchen layout lets cooks reach every pan quickly.",
+    "exampleZh": "這種廚房佈局，讓廚師能迅速拿到每一個鍋子。"
+  },
+  {
+    "core": 6,
+    "word": "islam",
+    "example": "The course on islam filled quickly at the community center.",
+    "exampleZh": "社區中心的伊斯蘭教課程很快額滿。"
+  },
+  {
+    "core": 11,
+    "word": "sceptical",
+    "example": "The mechanic sounded sceptical about the cheap replacement part.",
+    "exampleZh": "技師對那個便宜的替代零件抱持懷疑。"
+  },
+  {
+    "core": 11,
+    "word": "manoeuvre",
+    "example": "The driver used a clever manoeuvre to avoid the sinkhole.",
+    "exampleZh": "駕駛用巧妙的操控動作避開了地洞。"
+  },
+  {
+    "core": 11,
+    "word": "rehabilitate",
+    "example": "Therapists helped rehabilitate his injured wrist after surgery.",
+    "exampleZh": "治療師在手術後協助他受傷的手腕復原。"
+  },
+  {
+    "core": 2,
+    "word": "death",
+    "example": "His death left the whole fishing village unusually quiet.",
+    "exampleZh": "他的死讓整個漁村異常安靜。"
+  },
+  {
+    "core": 11,
+    "word": "parish",
+    "example": "The parish collected blankets for families after the typhoon.",
+    "exampleZh": "教區在颱風後為家庭募集毛毯。"
+  },
+  {
+    "core": 14,
+    "word": "ginger",
+    "example": "Fresh ginger warmed the soup on cold nights.",
+    "exampleZh": "寒夜裡，新鮮的薑讓湯更暖身。"
+  },
+  {
+    "core": 14,
+    "word": "gall",
+    "example": "He had the gall to ask for a refund after eating everything.",
+    "exampleZh": "他把東西都吃光了，居然還厚著臉皮要求退款。"
+  },
+  {
+    "core": 14,
+    "word": "overtime",
+    "example": "Chen worked overtime to finish the wedding dress.",
+    "exampleZh": "陳小姐加班完成了那件婚紗。"
+  },
+  {
+    "core": 14,
+    "word": "bracelet",
+    "example": "A jade bracelet clicked against her porcelain teacup.",
+    "exampleZh": "一只玉手鐲碰到她的瓷茶杯，發出輕響。"
+  },
+  {
+    "core": 13,
+    "word": "tractor",
+    "example": "A tractor pulled the stuck van out of the mud.",
+    "exampleZh": "曳引機把陷住的廂型車拖出泥地。"
+  },
+  {
+    "core": 13,
+    "word": "dietary",
+    "example": "Dietary changes helped Mr. Chen control his blood sugar.",
+    "exampleZh": "飲食改變幫助陳先生控制血糖。"
+  },
+  {
+    "core": 1,
+    "word": "able",
+    "example": "She is able to repair radios with simple tools.",
+    "exampleZh": "她能用簡單的工具修理收音機。"
+  },
+  {
+    "core": 13,
+    "word": "inheritance",
+    "example": "Her inheritance included a watch, two letters, and farmland.",
+    "exampleZh": "她繼承的財產包括一只錶、兩封信和農地。"
+  },
+  {
+    "core": 13,
+    "word": "amusement",
+    "example": "Grandpa watched the magician with quiet amusement from the sofa.",
+    "exampleZh": "爺爺坐在沙發上，面帶淡淡的笑意看魔術師表演。"
+  },
+  {
+    "core": 13,
+    "word": "vegetation",
+    "example": "Dense vegetation hid the abandoned railway from the road.",
+    "exampleZh": "茂密的植物遮住了路旁的廢棄鐵道。"
+  },
+  {
+    "core": 2,
+    "word": "involve",
+    "example": "The ceremony will involve lanterns, drums, and a river blessing.",
+    "exampleZh": "儀式將包括燈籠、鼓聲和河祭祝福。"
+  },
+  {
+    "core": 2,
+    "word": "college",
+    "example": "Her college overlooks the sea on Taiwan's east coast.",
+    "exampleZh": "她的學院位於台灣東海岸，可以俯瞰大海。"
+  },
+  {
+    "core": 13,
+    "word": "remnant",
+    "example": "A remnant of blue silk lined the drawer.",
+    "exampleZh": "一塊藍色的絲綢碎料襯在抽屜裡。"
+  },
+  {
+    "core": 13,
+    "word": "turning",
+    "example": "The turning on the mountain road was so sharp that the bus slowed down.",
+    "exampleZh": "山路上的轉彎非常急，公車因此放慢了速度。"
+  },
+  {
+    "core": 13,
+    "word": "sweeping",
+    "example": "The school announced sweeping changes to the lunch menu this semester.",
+    "exampleZh": "學校宣布本學期將全面更動午餐菜單。"
+  },
+  {
+    "core": 4,
+    "word": "connection",
+    "example": "The internet connection at the hotel was too slow for video calls.",
+    "exampleZh": "飯店的網路連線太慢，無法視訊通話。"
+  },
+  {
+    "core": 4,
+    "word": "lesson",
+    "example": "Our English lesson starts at nine on Monday morning.",
+    "exampleZh": "我們星期一早上九點上英文課。"
+  },
+  {
+    "core": 5,
+    "word": "vegetable",
+    "example": "Nina added one vegetable to the noodles for color and crunch.",
+    "exampleZh": "妮娜在麵裡加了一樣蔬菜，增添色彩和口感。"
+  },
+  {
+    "core": 5,
+    "word": "perfectly",
+    "example": "The new key turned perfectly after Aaron cleaned the rusty lock.",
+    "exampleZh": "亞倫清完生鏽的鎖之後，新鑰匙轉得很順暢。"
+  },
+  {
+    "core": 5,
+    "word": "lock",
+    "example": "Jun forgot to lock the balcony door before the typhoon arrived.",
+    "exampleZh": "颱風來臨前，阿俊忘了把陽台門鎖上。"
+  },
+  {
+    "core": 5,
+    "word": "boot",
+    "example": "Mud soaked one boot when Paul crossed the flooded farm path.",
+    "exampleZh": "保羅走過淹水的農路時，有一隻靴子被泥水浸濕了。"
+  },
+  {
+    "core": 13,
+    "word": "usher",
+    "example": "The usher guided late guests to the balcony seats.",
+    "exampleZh": "引座員帶遲到的賓客到樓上座位。"
+  },
+  {
+    "core": 9,
+    "word": "puzzle",
+    "example": "The missing key remained a puzzle all week.",
+    "exampleZh": "那把鑰匙不見的原因整整一週都是個謎。"
+  },
+  {
+    "core": 5,
+    "word": "mere",
+    "example": "A mere apology could not replace the broken heirloom.",
+    "exampleZh": "光是一句道歉，無法彌補那件破碎的傳家寶。"
+  },
+  {
+    "core": 5,
+    "word": "dear",
+    "example": "My dear friend saved a seat beside the window.",
+    "exampleZh": "我親愛的朋友在窗邊幫我留了座位。"
+  },
+  {
+    "core": 5,
+    "word": "advanced",
+    "example": "An advanced camera caught stars above the fishing port.",
+    "exampleZh": "一台先進的相機拍下了漁港上空的繁星。"
+  },
+  {
+    "core": 5,
+    "word": "sink",
+    "example": "The heavy stone began to sink in the muddy pond.",
+    "exampleZh": "沉重的石頭開始沉入泥濘的池塘。"
+  },
+  {
+    "core": 5,
+    "word": "stupid",
+    "example": "Leaving medicine in the sun was a stupid mistake.",
+    "exampleZh": "把藥放在太陽下是個愚蠢的錯誤。"
+  },
+  {
+    "core": 5,
+    "word": "entertainment",
+    "example": "Street entertainment kept the children awake after dinner.",
+    "exampleZh": "晚餐後的街頭娛樂讓孩子們都不想睡。"
+  },
+  {
+    "core": 5,
+    "word": "fortune",
+    "example": "Good fortune saved us from the falling roof tile.",
+    "exampleZh": "好運讓我們躲過了掉落的屋瓦。"
+  },
+  {
+    "core": 5,
+    "word": "confront",
+    "example": "Maya had to confront the neighbor about midnight drumming.",
+    "exampleZh": "瑪雅得為了半夜打鼓的事當面質問鄰居。"
+  },
+  {
+    "core": 10,
+    "word": "obsession",
+    "example": "His obsession with germs made every handshake feel dangerous.",
+    "exampleZh": "他對細菌的執念，讓每次握手都顯得危險。"
+  },
+  {
+    "core": 3,
+    "word": "proper",
+    "example": "Wear proper shoes for the slippery stone steps.",
+    "exampleZh": "濕滑石階要穿適當的鞋子。"
+  },
+  {
+    "core": 14,
+    "word": "forensic",
+    "example": "The forensic team collected fingerprints from the broken window.",
+    "exampleZh": "鑑識小組從破掉的窗戶上採集指紋。"
+  },
+  {
+    "core": 3,
+    "word": "monday",
+    "example": "Monday is the day I return my library books.",
+    "exampleZh": "星期一是我還圖書館書籍的日子。"
+  },
+  {
+    "core": 3,
+    "word": "wednesday",
+    "example": "We have a short English quiz every Wednesday morning.",
+    "exampleZh": "我們每個星期三早上都有一個簡短的英文小考。"
+  },
+  {
+    "core": 3,
+    "word": "thursday",
+    "example": "Our class has a swimming lesson every Thursday afternoon.",
+    "exampleZh": "我們班每個星期四下午有游泳課。"
+  },
+  {
+    "core": 3,
+    "word": "tuesday",
+    "example": "The museum is quiet on Tuesday mornings, so we often go then.",
+    "exampleZh": "博物館星期二早上很安靜，所以我們常在那時去。"
+  },
+  {
+    "core": 3,
+    "word": "latest",
+    "example": "The latest phone update improved battery life overnight.",
+    "exampleZh": "手機最新的更新在一夜之間改善了電池續航力。"
+  },
+  {
+    "core": 3,
+    "word": "armed",
+    "example": "Armed officers guarded the courthouse after the threat.",
+    "exampleZh": "接獲威脅後，武裝警員守衛著法院。"
+  },
+  {
+    "core": 7,
+    "word": "logic",
+    "example": "The logic behind his shortcut failed at the flooded underpass.",
+    "exampleZh": "他走捷徑的邏輯，在淹水的地下道前徹底行不通。"
+  },
+  {
+    "core": 7,
+    "word": "sheep",
+    "example": "A lost sheep wandered near the tea farm fence.",
+    "exampleZh": "一隻迷路的綿羊在茶園圍籬旁徘徊。"
+  },
+  {
+    "core": 4,
+    "word": "substantial",
+    "example": "A substantial number of students joined the beach cleanup last weekend.",
+    "exampleZh": "上週末有相當多的學生參加了淨灘活動。"
+  },
+  {
+    "core": 4,
+    "word": "contemporary",
+    "example": "Contemporary art museums attract many students on weekends.",
+    "exampleZh": "當代藝術館在週末吸引許多學生。"
+  },
+  {
+    "core": 4,
+    "word": "recognition",
+    "example": "Facial recognition lets my phone unlock when I look at it.",
+    "exampleZh": "臉部辨識讓我的手機一看就能解鎖。"
+  },
+  {
+    "core": 14,
+    "word": "wan",
+    "example": "A wan light shone through the hospital curtain.",
+    "exampleZh": "一道蒼白的光線透過醫院窗簾照進來。"
+  },
+  {
+    "core": 10,
+    "word": "tread",
+    "example": "Please tread carefully on the wet temple steps.",
+    "exampleZh": "請小心走在潮濕的廟階上。"
+  },
+  {
+    "core": 10,
+    "word": "redundancy",
+    "example": "The editor removed redundancy from the final safety instructions.",
+    "exampleZh": "編輯刪掉了最後安全指示中的冗詞。"
+  },
+  {
+    "core": 10,
+    "word": "prose",
+    "example": "Her prose made the fishing village feel alive.",
+    "exampleZh": "她的散文讓那座漁村彷彿活了起來。"
+  },
+  {
+    "core": 7,
+    "word": "depressing",
+    "example": "The empty amusement park looked depressing in the rain.",
+    "exampleZh": "雨中空蕩蕩的遊樂園看起來令人沮喪。"
+  },
+  {
+    "core": 7,
+    "word": "kindly",
+    "example": "The old barber spoke kindly to nervous children.",
+    "exampleZh": "老理髮師親切地安撫緊張的孩子。"
+  },
+  {
+    "core": 7,
+    "word": "riding",
+    "example": "Riding a bike through the tunnel made her ears pop.",
+    "exampleZh": "騎腳踏車穿過隧道時，她的耳朵因氣壓變化而悶住。"
+  },
+  {
+    "core": 7,
+    "word": "covering",
+    "example": "A bamboo covering shaded the vegetable stall all afternoon.",
+    "exampleZh": "竹製覆蓋物整個下午替菜攤遮陰。"
+  },
+  {
+    "core": 7,
+    "word": "finding",
+    "example": "The scientist's finding surprised everyone in the class.",
+    "exampleZh": "科學家的發現讓全班同學都很驚訝。"
+  },
+  {
+    "core": 7,
+    "word": "setting",
+    "example": "The mountain setting made the wedding feel private.",
+    "exampleZh": "山間的環境讓這場婚禮感覺格外私密。"
+  },
+  {
+    "core": 8,
+    "word": "evolution",
+    "example": "The evolution of the harbor began with one wooden pier.",
+    "exampleZh": "這座港口的演變從一座木碼頭開始。"
+  },
+  {
+    "core": 8,
+    "word": "input",
+    "example": "The device records input from the keypad every few seconds.",
+    "exampleZh": "這台裝置每隔幾秒就會記錄鍵盤的輸入內容。"
+  },
+  {
+    "core": 2,
+    "word": "store",
+    "example": "I bought a notebook at the store near my school.",
+    "exampleZh": "我在學校附近的商店買了一本筆記本。"
+  },
+  {
+    "core": 2,
+    "word": "memory",
+    "example": "That melody brought back a childhood memory during dinner.",
+    "exampleZh": "晚餐時那段旋律喚回了一段童年回憶。"
+  },
+  {
+    "core": 2,
+    "word": "investment",
+    "example": "Her investment in good boots saved her ankles.",
+    "exampleZh": "她買好靴子這項投資保護了她的腳踝。"
+  },
+  {
+    "core": 2,
+    "word": "institution",
+    "example": "The temple became an institution for local charity.",
+    "exampleZh": "那座廟成了地方慈善的重要機構。"
+  },
+  {
+    "core": 3,
+    "word": "address",
+    "example": "Please write your address clearly on the envelope before mailing the letter today.",
+    "exampleZh": "今天寄信前，請在信封上清楚寫下你的地址。"
+  },
+  {
+    "core": 3,
+    "word": "highly",
+    "example": "The guide spoke highly of this quiet mountain inn.",
+    "exampleZh": "導遊對這間安靜的山莊讚不絕口。"
+  },
+  {
+    "core": 14,
+    "word": "plank",
+    "example": "A loose plank creaked beneath the fisherman's rubber boots.",
+    "exampleZh": "一塊鬆動的木板在漁夫的膠靴下嘎吱作響。"
+  },
+  {
+    "core": 14,
+    "word": "doom",
+    "example": "Loose wiring spelled doom for the carnival ride.",
+    "exampleZh": "電線鬆脫，預示這座遊樂設施將面臨厄運。"
+  },
+  {
+    "core": 6,
+    "word": "mill",
+    "example": "The old rice mill still smells of warm grain.",
+    "exampleZh": "那間老碾米廠仍有溫熱穀物的味道。"
+  },
+  {
+    "core": 6,
+    "word": "prominent",
+    "example": "A prominent scar crossed the chef's left hand.",
+    "exampleZh": "主廚左手上有一道明顯的疤痕。"
+  },
+  {
+    "core": 6,
+    "word": "ownership",
+    "example": "Legal ownership of the orchard passed to the youngest daughter.",
+    "exampleZh": "果園的所有權轉到了小女兒名下。"
+  },
+  {
+    "core": 3,
+    "word": "flower",
+    "example": "A single flower grew through the cracked pavement overnight.",
+    "exampleZh": "一朵花一夜之間從裂開的人行道長了出來。"
+  },
+  {
+    "core": 2,
+    "word": "manage",
+    "example": "Ken can manage the shop while his aunt rests.",
+    "exampleZh": "阿姨休息時，阿肯能負責管理這家店。"
+  },
+  {
+    "core": 2,
+    "word": "sea",
+    "example": "The sea turned silver under the full moon.",
+    "exampleZh": "滿月下的海面變成了銀色。"
+  },
+  {
+    "core": 2,
+    "word": "career",
+    "example": "A long career in nursing taught her patience.",
+    "exampleZh": "長年的護理生涯教會了她耐心。"
+  },
+  {
+    "core": 2,
+    "word": "leg",
+    "example": "His left leg cramped during the river crossing.",
+    "exampleZh": "過河時他的左腿抽筋了。"
+  },
+  {
+    "core": 2,
+    "word": "lay",
+    "example": "Lay the fish on ice before the drive home.",
+    "exampleZh": "開車回家前，先把魚放在冰上。"
+  },
+  {
+    "core": 2,
+    "word": "television",
+    "example": "Public television showed the typhoon path all night.",
+    "exampleZh": "公共電視整夜播放颱風路徑。"
+  },
+  {
+    "core": 2,
+    "word": "remove",
+    "example": "Remove the wet shoes before stepping onto the mat.",
+    "exampleZh": "踏上墊子前，先脫掉濕鞋。"
+  },
+  {
+    "core": 13,
+    "word": "imagery",
+    "example": "The poet used vivid imagery of storms to describe the crisis.",
+    "exampleZh": "詩人用生動的風暴意象來描寫那場危機。"
+  },
+  {
+    "core": 13,
+    "word": "exclaim",
+    "example": "Children exclaim with delight when the fireworks begin.",
+    "exampleZh": "煙火開始時，孩子們高興地驚呼。"
+  },
+  {
+    "core": 8,
+    "word": "attribute",
+    "example": "Honesty is the attribute I admire most in my best friend.",
+    "exampleZh": "誠實是我最欣賞好朋友的特質。"
+  },
+  {
+    "core": 8,
+    "word": "heritage",
+    "example": "The festival preserves the fishing heritage of the old village.",
+    "exampleZh": "這場祭典保存了老村莊的漁業文化遺產。"
+  },
+  {
+    "core": 8,
+    "word": "resemble",
+    "example": "The newborn's eyes resemble her father's in old photos.",
+    "exampleZh": "在舊照片裡，新生兒的眼睛長得像她父親的眼睛。"
+  },
+  {
+    "core": 8,
+    "word": "warrior",
+    "example": "A painted warrior stood beside the temple doorway.",
+    "exampleZh": "一位臉上彩繪的戰士站在寺廟門口旁。"
+  },
+  {
+    "core": 8,
+    "word": "feedback",
+    "example": "Customer feedback persuaded the bakery to open earlier on weekends.",
+    "exampleZh": "顧客的回饋促使麵包店週末提早開門。"
+  },
+  {
+    "core": 8,
+    "word": "exclusively",
+    "example": "The upstairs room is used exclusively for storing tea.",
+    "exampleZh": "樓上的房間專門用來存放茶葉。"
+  },
+  {
+    "core": 9,
+    "word": "follower",
+    "example": "The singer thanked every follower for the kind messages.",
+    "exampleZh": "那位歌手感謝每位追隨者傳來的暖心訊息。"
+  },
+  {
+    "core": 9,
+    "word": "worm",
+    "example": "A worm wriggled from the soil after rain.",
+    "exampleZh": "雨後一條蠕蟲從土裡扭動爬出。"
+  },
+  {
+    "core": 9,
+    "word": "inn",
+    "example": "The mountain inn served tea beside a wood stove.",
+    "exampleZh": "山中小旅館在柴爐旁為旅客奉茶。"
+  },
+  {
+    "core": 9,
+    "word": "exclusion",
+    "example": "Her exclusion from the contest angered local artists.",
+    "exampleZh": "她被排除在比賽之外，激怒了當地藝術家。"
+  },
+  {
+    "core": 9,
+    "word": "pavement",
+    "example": "Fresh mango juice spilled across the hot pavement.",
+    "exampleZh": "新鮮芒果汁灑在滾燙的路面上。"
+  },
+  {
+    "core": 12,
+    "word": "diagram",
+    "example": "The diagram showed how rainwater reached the basement.",
+    "exampleZh": "示意圖顯示雨水如何流到地下室。"
+  },
+  {
+    "core": 8,
+    "word": "emission",
+    "example": "The factory's emission of smoke worried the people living near the river.",
+    "exampleZh": "工廠排放的煙霧讓住在河邊的居民很擔心。"
+  },
+  {
+    "core": 8,
+    "word": "architecture",
+    "example": "She wants to study architecture at university because she loves designing buildings.",
+    "exampleZh": "她想在大學讀建築學，因為她喜歡設計建築物。"
+  },
+  {
+    "core": 7,
+    "word": "carrot",
+    "example": "A crooked carrot poked out of the market basket.",
+    "exampleZh": "一根彎曲的胡蘿蔔從市場籃子裡探出來。"
+  },
+  {
+    "core": 7,
+    "word": "ending",
+    "example": "The film's quiet ending left the theater silent.",
+    "exampleZh": "電影安靜的結局讓整間戲院沉默下來。"
+  },
+  {
+    "core": 7,
+    "word": "inability",
+    "example": "His inability to sleep worsened after the quake.",
+    "exampleZh": "地震後，他無法入睡的情況更嚴重了。"
+  },
+  {
+    "core": 12,
+    "word": "gilt",
+    "example": "Thin gilt edges made the wedding invitations shine under candlelight.",
+    "exampleZh": "薄薄的鍍金邊讓婚禮請柬在燭光下閃閃發亮。"
+  },
+  {
+    "core": 12,
+    "word": "topical",
+    "example": "The teacher chose a topical issue for today's class discussion.",
+    "exampleZh": "老師為今天的課堂討論挑了一個時事議題。"
+  },
+  {
+    "core": 12,
+    "word": "modernize",
+    "example": "The museum will modernize its ticket gates next spring.",
+    "exampleZh": "博物館明年春天將使售票閘門現代化。"
+  },
+  {
+    "core": 12,
+    "word": "soundtrack",
+    "example": "The film's soundtrack made the final scene feel very emotional.",
+    "exampleZh": "這部電影的配樂讓最後一幕非常感人。"
+  },
+  {
+    "core": 12,
+    "word": "insecure",
+    "example": "She felt insecure about speaking English in front of the class.",
+    "exampleZh": "她在全班面前說英語時覺得沒有安全感。"
+  },
+  {
+    "core": 12,
+    "word": "gore",
+    "example": "The horror film used too much gore for my taste.",
+    "exampleZh": "那部恐怖片的血腥畫面對我來說太多了。"
+  },
+  {
+    "core": 12,
+    "word": "consuming",
+    "example": "She has a consuming passion for painting after school every day.",
+    "exampleZh": "她對放學後每天畫畫有著強烈的熱情。"
+  },
+  {
+    "core": 12,
+    "word": "vatican",
+    "example": "The Vatican announced new rules for archive access.",
+    "exampleZh": "梵蒂岡宣佈檔案查閱的新規定。"
+  },
+  {
+    "core": 12,
+    "word": "brit",
+    "example": "My teacher is a Brit who loves Taiwanese bubble tea.",
+    "exampleZh": "我的老師是個愛喝台灣珍珠奶茶的英國人。"
+  },
+  {
+    "core": 12,
+    "word": "poised",
+    "example": "The team is poised to win the school basketball final.",
+    "exampleZh": "這支隊伍準備好贏得學校籃球決賽了。"
+  },
+  {
+    "core": 8,
+    "word": "assurance",
+    "example": "The manager gave us his assurance that the repairs would finish by Friday.",
+    "exampleZh": "經理向我們保證維修會在週五前完成。"
+  },
+  {
+    "core": 13,
+    "word": "nucleus",
+    "example": "The nucleus controls the activities of the cell.",
+    "exampleZh": "細胞核控制細胞的各種活動。"
+  },
+  {
+    "core": 13,
+    "word": "tub",
+    "example": "The toddler filled the tub with plastic boats.",
+    "exampleZh": "幼兒把浴缸裝滿塑膠船。"
+  },
+  {
+    "core": 2,
+    "word": "nice",
+    "example": "A nice breeze cooled the rooftop after sunset.",
+    "exampleZh": "日落後宜人的微風讓屋頂涼爽下來。"
+  },
+  {
+    "core": 2,
+    "word": "ready",
+    "example": "The soup is ready when the clams open.",
+    "exampleZh": "蛤蜊打開時，湯就準備好了。"
+  },
+  {
+    "core": 2,
+    "word": "realize",
+    "example": "At dawn, I realize how quiet the harbor feels.",
+    "exampleZh": "清晨我才領悟港口有多安靜。"
+  },
+  {
+    "core": 11,
+    "word": "hardy",
+    "example": "Hardy sailors crossed the bay during the winter storm.",
+    "exampleZh": "強健的水手在冬季暴風中穿越海灣。"
+  },
+  {
+    "core": 11,
+    "word": "teen",
+    "example": "The teen waited at the bus stop with her school bag.",
+    "exampleZh": "那位青少年揹著書包在公車站等車。"
+  },
+  {
+    "core": 11,
+    "word": "legislative",
+    "example": "The legislative committee will discuss the new bill tomorrow morning.",
+    "exampleZh": "立法委員會明天早上將討論這項新法案。"
+  },
+  {
+    "core": 11,
+    "word": "trillion",
+    "example": "The country's debt has grown to more than a trillion dollars.",
+    "exampleZh": "這個國家的債務已增加到超過一兆美元。"
+  },
+  {
+    "core": 11,
+    "word": "irritation",
+    "example": "She could not hide her irritation when the bus was late again.",
+    "exampleZh": "公車又誤點，她掩不住心中的惱怒。"
+  },
+  {
+    "core": 8,
+    "word": "universal",
+    "example": "A smile is universal, and it often softens awkward moments between strangers.",
+    "exampleZh": "微笑是普遍的，常能緩和陌生人之間的尷尬時刻。"
+  },
+  {
+    "core": 8,
+    "word": "scope",
+    "example": "The scope of the school project was too large for one weekend.",
+    "exampleZh": "這個學校專題的範圍太大，一個週末做不完。"
+  },
+  {
+    "core": 8,
+    "word": "parking",
+    "example": "The hotel offers free parking behind the building on weekdays.",
+    "exampleZh": "這家旅館平日在大樓後方提供免費停車。"
+  },
+  {
+    "core": 8,
+    "word": "conservation",
+    "example": "Water conservation saved the village during three rainless weeks.",
+    "exampleZh": "三週無雨期間，節約用水讓整個村子撐了過來。"
+  },
+  {
+    "core": 10,
+    "word": "daylight",
+    "example": "By daylight, the broken pier looked more dangerous than romantic.",
+    "exampleZh": "天亮後，那座破碼頭看起來危險多於浪漫。"
+  },
+  {
+    "core": 10,
+    "word": "tutor",
+    "example": "Her tutor noticed the fever before the piano lesson began.",
+    "exampleZh": "她的家教老師在鋼琴課開始前發現她發燒了。"
+  },
+  {
+    "core": 8,
+    "word": "testify",
+    "example": "Two neighbors will testify about the noise before sunrise.",
+    "exampleZh": "兩名鄰居將就日出前的噪音作證。"
+  },
+  {
+    "core": 8,
+    "word": "horrible",
+    "example": "A horrible smell rose from the drain after the flood.",
+    "exampleZh": "水災過後，排水孔冒出一股可怕的臭味。"
+  },
+  {
+    "core": 8,
+    "word": "telescope",
+    "example": "The telescope revealed craters along the moon's bright edge.",
+    "exampleZh": "望遠鏡讓人看見月亮明亮邊緣的坑洞。"
+  },
+  {
+    "core": 9,
+    "word": "conceal",
+    "example": "Heavy curtains conceal the tiny kitchen from street view.",
+    "exampleZh": "厚重的窗簾把小廚房遮住，從街上看不到。"
+  },
+  {
+    "core": 9,
+    "word": "outlet",
+    "example": "Running became her outlet after long shifts at the hospital.",
+    "exampleZh": "在醫院輪完長班後，跑步成了她紓壓的出口。"
+  },
+  {
+    "core": 5,
+    "word": "violent",
+    "example": "A violent wave knocked the camera from the ferry rail.",
+    "exampleZh": "猛烈的海浪把相機從渡輪欄杆上打落了。"
+  },
+  {
+    "core": 5,
+    "word": "slide",
+    "example": "Children waited for the blue slide after the rain stopped.",
+    "exampleZh": "雨停後，孩子們排隊等著玩藍色的溜滑梯。"
+  },
+  {
+    "core": 11,
+    "word": "superficial",
+    "example": "His apology felt superficial because he never named the damage.",
+    "exampleZh": "他的道歉很膚淺，因為他從未說出造成的傷害。"
+  },
+  {
+    "core": 8,
+    "word": "bold",
+    "example": "Her bold red scarf stood out in the gray crowd.",
+    "exampleZh": "她那條醒目的紅圍巾在灰暗的人群中很突出。"
+  },
+  {
+    "core": 4,
+    "word": "consequence",
+    "example": "One consequence of the drought was smaller dragon fruit.",
+    "exampleZh": "乾旱的一個後果是火龍果變小。"
+  },
+  {
+    "core": 13,
+    "word": "polar",
+    "example": "The twins held polar opinions about selling the orchard.",
+    "exampleZh": "雙胞胎對出售果園持截然相反的意見。"
+  },
+  {
+    "core": 13,
+    "word": "devastate",
+    "example": "One careless spark could devastate the entire pine forest.",
+    "exampleZh": "一點火星就可能毀掉整片松林。"
+  },
+  {
+    "core": 9,
+    "word": "texture",
+    "example": "The soup had a silky texture from blended tofu.",
+    "exampleZh": "這湯因為加了打成泥的豆腐，質地滑順。"
+  },
+  {
+    "core": 3,
+    "word": "wave",
+    "example": "A sudden wave soaked our shoes on the pier.",
+    "exampleZh": "突來的一個浪打濕了我們在碼頭上的鞋子。"
+  },
+  {
+    "core": 3,
+    "word": "thinking",
+    "example": "Clear thinking helped her escape the room filled with smoke.",
+    "exampleZh": "冷靜的思考幫助她逃出充滿濃煙的房間。"
+  },
+  {
+    "core": 3,
+    "word": "leading",
+    "example": "The leading dancer stood at the front of the line.",
+    "exampleZh": "領頭的舞者站在隊伍最前方。"
+  },
+  {
+    "core": 3,
+    "word": "narrow",
+    "example": "A narrow lane led to the hidden teahouse.",
+    "exampleZh": "一條狹窄的巷子通往隱密的茶館。"
+  },
+  {
+    "core": 3,
+    "word": "succeed",
+    "example": "She worked hard to succeed in her English exam.",
+    "exampleZh": "她努力讀書，希望英文考試能成功。"
+  },
+  {
+    "core": 3,
+    "word": "impose",
+    "example": "Officials may impose fines for dumping trash here.",
+    "exampleZh": "官員可能對在此亂倒垃圾的人處以罰款。"
+  },
+  {
+    "core": 12,
+    "word": "barrack",
+    "example": "The soldiers returned to the barrack before the heavy rain started.",
+    "exampleZh": "士兵們在大雨開始前回到了兵營。"
+  },
+  {
+    "core": 12,
+    "word": "made",
+    "example": "This table is made of recycled wood from old school desks.",
+    "exampleZh": "這張桌子是用舊課桌的回收木材製成的。"
+  },
+  {
+    "core": 12,
+    "word": "tempted",
+    "example": "Nina was tempted to buy another snack when she passed the night market.",
+    "exampleZh": "妮娜經過夜市時，很想再買一份點心。"
+  },
+  {
+    "core": 12,
+    "word": "home",
+    "example": "Mia walked home after cram school because the last bus had already left.",
+    "exampleZh": "最後一班公車已開走，所以咪雅補習後走路回家。"
+  },
+  {
+    "core": 12,
+    "word": "minute",
+    "example": "Please wait a minute while I find my student ID card.",
+    "exampleZh": "請等一分鐘，我找一下我的學生證。"
+  },
+  {
+    "core": 12,
+    "word": "bank",
+    "example": "My mother goes to the bank every Friday to deposit money.",
+    "exampleZh": "我媽媽每週五都會去銀行存錢。"
+  },
+  {
+    "core": 12,
+    "word": "con",
+    "example": "The salesman tried to con elderly customers out of their savings.",
+    "exampleZh": "那名推銷員企圖騙走年長顧客的積蓄。"
+  },
+  {
+    "core": 12,
+    "word": "condom",
+    "example": "The health teacher explained how a condom helps prevent disease.",
+    "exampleZh": "健康教育老師說明保險套如何幫助預防疾病。"
+  },
+  {
+    "core": 1,
+    "word": "half",
+    "example": "She ate half of the sandwich before going swimming with us.",
+    "exampleZh": "游泳前她吃了半個三明治。"
+  },
+  {
+    "core": 14,
+    "word": "helper",
+    "example": "A quiet helper guided elders across the flooded street.",
+    "exampleZh": "一名安靜的幫手帶著長者穿過淹水的街道。"
+  },
+  {
+    "core": 14,
+    "word": "orderly",
+    "example": "Patients waited in an orderly line outside the clinic.",
+    "exampleZh": "病人在診所外排成整齊的隊伍等候。"
+  },
+  {
+    "core": 6,
+    "word": "cutting",
+    "example": "She kept a cutting from the newspaper about the school festival.",
+    "exampleZh": "她留著一份關於校慶的報紙剪報。"
+  },
+  {
+    "core": 6,
+    "word": "whip",
+    "example": "The rider held a whip while the horse trotted around the field.",
+    "exampleZh": "馬在場上小跑時，騎士手裡拿著一根鞭子。"
+  },
+  {
+    "core": 6,
+    "word": "slim",
+    "example": "She stayed slim by walking to school every day.",
+    "exampleZh": "她每天走路上學，所以保持苗條。"
+  },
+  {
+    "core": 7,
+    "word": "absent",
+    "example": "Her brother was absent from the family portrait again.",
+    "exampleZh": "她哥哥又沒有出現在全家合照中。"
+  },
+  {
+    "core": 7,
+    "word": "nonsense",
+    "example": "His excuse about invisible ink was pure nonsense.",
+    "exampleZh": "他說隱形墨水的藉口純屬胡說八道。"
+  },
+  {
+    "core": 7,
+    "word": "devoted",
+    "example": "A devoted nurse visited the old fisherman every morning.",
+    "exampleZh": "一位盡心盡力的護理師每天早上探望老漁夫。"
+  },
+  {
+    "core": 14,
+    "word": "curtail",
+    "example": "New rules may curtail late-night karaoke near hospitals.",
+    "exampleZh": "新規定可能縮減醫院附近的深夜卡拉OK營業。"
+  },
+  {
+    "core": 14,
+    "word": "thwart",
+    "example": "Locked gates could not thwart the determined hikers.",
+    "exampleZh": "上鎖的大門無法阻撓下定決心的健行者。"
+  },
+  {
+    "core": 14,
+    "word": "monumental",
+    "example": "Her monumental achievement changed science education across the country.",
+    "exampleZh": "她劃時代的成就改變了全國的科學教育。"
+  },
+  {
+    "core": 14,
+    "word": "luxurious",
+    "example": "The luxurious train cabin had silk curtains and orchids.",
+    "exampleZh": "豪華列車包廂裡有絲質窗簾和蘭花。"
+  },
+  {
+    "core": 14,
+    "word": "buffer",
+    "example": "A row of bamboo served as a buffer against traffic noise.",
+    "exampleZh": "一排竹子成了阻隔車聲的緩衝物。"
+  },
+  {
+    "core": 14,
+    "word": "deposition",
+    "example": "Heavy rain increased the deposition of mud at the river mouth.",
+    "exampleZh": "大雨使河口的泥沙沉積增加了。"
+  },
+  {
+    "core": 14,
+    "word": "crater",
+    "example": "Hikers stood at the edge of the crater and looked down.",
+    "exampleZh": "登山客站在火山口邊緣往下看。"
+  },
+  {
+    "core": 14,
+    "word": "foe",
+    "example": "The boxer greeted his former foe with a quick hug.",
+    "exampleZh": "拳擊手用短暫擁抱問候昔日的對手。"
+  },
+  {
+    "core": 14,
+    "word": "boiler",
+    "example": "A leaking boiler forced the hotel to close early.",
+    "exampleZh": "漏水的鍋爐迫使旅館提早關門。"
+  },
+  {
+    "core": 4,
+    "word": "democratic",
+    "example": "The island council chose a democratic process for sharing fishing rights.",
+    "exampleZh": "島上議會選擇以民主程序來分配捕魚權。"
+  },
+  {
+    "core": 4,
+    "word": "involved",
+    "example": "Several students were involved in organizing the school charity sale last week.",
+    "exampleZh": "上週有幾位學生參與籌辦學校的慈善義賣。"
+  },
+  {
+    "core": 4,
+    "word": "democrat",
+    "example": "A democrat from Kaohsiung promised cheaper buses for elderly residents.",
+    "exampleZh": "一位來自高雄的民主主義者承諾，會降低長者的公車票價。"
+  },
+  {
+    "core": 7,
+    "word": "sour",
+    "example": "The milk smelled sour after hours in the sun.",
+    "exampleZh": "牛奶曬了幾小時後聞起來酸酸的。"
+  },
+  {
+    "core": 7,
+    "word": "lazy",
+    "example": "A lazy afternoon settled over the fishing port.",
+    "exampleZh": "慵懶的午後籠罩著漁港。"
+  },
+  {
+    "core": 7,
+    "word": "backward",
+    "example": "The old truck rolled backward toward the ditch.",
+    "exampleZh": "那輛老卡車向後滑向水溝。"
+  },
+  {
+    "core": 10,
+    "word": "intercourse",
+    "example": "Trade created regular intercourse between the two port cities.",
+    "exampleZh": "貿易使這兩座港口城市之間有了定期的往來。"
+  },
+  {
+    "core": 10,
+    "word": "stark",
+    "example": "The empty shelves offered a stark warning before the storm.",
+    "exampleZh": "風暴來臨前，空貨架發出了鮮明的警訊。"
+  },
+  {
+    "core": 10,
+    "word": "plague",
+    "example": "The plague spread quickly through the crowded medieval city.",
+    "exampleZh": "瘟疫在擁擠的中世紀城市中迅速蔓延。"
+  },
+  {
+    "core": 13,
+    "word": "auditor",
+    "example": "An auditor found the missing receipt under the cash drawer.",
+    "exampleZh": "審計員在收銀抽屜下找到遺失的收據。"
+  },
+  {
+    "core": 5,
+    "word": "tight",
+    "example": "The lid was tight after sitting in the refrigerator overnight.",
+    "exampleZh": "蓋子在冰箱裡放了一夜後變得很緊。"
+  },
+  {
+    "core": 2,
+    "word": "executive",
+    "example": "The executive of the company spoke to the students.",
+    "exampleZh": "公司的主管對學生們發表了談話。"
+  },
+  {
+    "core": 2,
+    "word": "structure",
+    "example": "The bamboo structure survived three typhoons without damage.",
+    "exampleZh": "這座竹造結構物挺過三次颱風，沒有受損。"
+  },
+  {
+    "core": 2,
+    "word": "federal",
+    "example": "Federal rules protect migratory birds across state borders.",
+    "exampleZh": "聯邦法規保護跨州遷徙的鳥類。"
+  },
+  {
+    "core": 10,
+    "word": "fitting",
+    "example": "A simple wooden frame is fitting for the old photograph.",
+    "exampleZh": "簡單的木框很適合那張老照片。"
+  },
+  {
+    "core": 10,
+    "word": "groan",
+    "example": "The old stairs groan whenever anyone carries luggage up.",
+    "exampleZh": "每當有人提行李上樓，老樓梯就會嘎吱作響。"
+  },
+  {
+    "core": 9,
+    "word": "supervision",
+    "example": "Children may swim here only under adult supervision.",
+    "exampleZh": "孩子只能在大人的監督下在此游泳。"
+  },
+  {
+    "core": 9,
+    "word": "outfit",
+    "example": "She wore a bright outfit to the school dance.",
+    "exampleZh": "她穿著一套亮麗的服裝去參加學校舞會。"
+  },
+  {
+    "core": 9,
+    "word": "notebook",
+    "example": "His notebook smelled faintly of ink and rain.",
+    "exampleZh": "他的筆記本有淡淡的墨水和雨水味。"
+  },
+  {
+    "core": 13,
+    "word": "integral",
+    "example": "Music is an integral part of the school festival every year.",
+    "exampleZh": "音樂每年都是校慶不可或缺的一部分。"
+  },
+  {
+    "core": 13,
+    "word": "brow",
+    "example": "Sweat gathered on Omar's brow as the oven door opened.",
+    "exampleZh": "烤箱門打開時，汗水聚在奧瑪的額頭上。"
+  },
+  {
+    "core": 7,
+    "word": "jam",
+    "example": "She spread strawberry jam on her toast before going to school.",
+    "exampleZh": "她上學前在吐司上抹了草莓果醬。"
+  },
+  {
+    "core": 7,
+    "word": "alcoholic",
+    "example": "All alcoholic drinks are locked away during the school fair.",
+    "exampleZh": "校慶期間所有含酒精的飲料都被鎖起來。"
+  },
+  {
+    "core": 7,
+    "word": "approximate",
+    "example": "The approximate cost includes paint, tiles, and delivery.",
+    "exampleZh": "大約的費用包含油漆、磁磚和運費。"
+  },
+  {
+    "core": 7,
+    "word": "irritate",
+    "example": "Loud chewing can irritate me during quiet exams.",
+    "exampleZh": "安靜的考試中，大聲咀嚼會讓我很煩。"
+  },
+  {
+    "core": 9,
+    "word": "vacuum",
+    "example": "Astronauts float in a vacuum because there is no air around them.",
+    "exampleZh": "太空人漂浮在真空中，因為周圍沒有空氣。"
+  },
+  {
+    "core": 9,
+    "word": "remainder",
+    "example": "She packed the remainder of the dinner for lunch the next day.",
+    "exampleZh": "她把晚餐剩下的部分打包留作隔天的午餐。"
+  },
+  {
+    "core": 9,
+    "word": "provincial",
+    "example": "The provincial museum displayed old tools from local sugar farms.",
+    "exampleZh": "省立博物館展示了來自當地糖業農場的舊工具。"
+  },
+  {
+    "core": 9,
+    "word": "furious",
+    "example": "She was furious when the ferry left without her.",
+    "exampleZh": "渡船沒等她就開走，她氣得暴跳如雷。"
+  },
+  {
+    "core": 10,
+    "word": "virgin",
+    "example": "Hikers found a virgin forest far from any road.",
+    "exampleZh": "登山客在遠離道路的地方發現一片原始森林。"
+  },
+  {
+    "core": 5,
+    "word": "leather",
+    "example": "A leather bag cracked after years in humid weather.",
+    "exampleZh": "皮包在潮濕天氣放了多年後裂開了。"
+  },
+  {
+    "core": 6,
+    "word": "counsel",
+    "example": "She followed her teacher's counsel and chose the safer route.",
+    "exampleZh": "她聽從老師的建議，選了比較安全的路線。"
+  },
+  {
+    "core": 11,
+    "word": "skate",
+    "example": "Children skate around the pond when the winter ice thickens.",
+    "exampleZh": "冬天冰層變厚時，孩子們繞著池塘滑冰。"
+  },
+  {
+    "core": 11,
+    "word": "booking",
+    "example": "Her booking at the hotel includes two nights in Taipei.",
+    "exampleZh": "她在飯店的預訂包含在台北住兩晚。"
+  },
+  {
+    "core": 11,
+    "word": "clearing",
+    "example": "They found a sunny clearing beyond the last pine trees.",
+    "exampleZh": "他們在最後一排松樹後面找到一片陽光普照的空地。"
+  },
+  {
+    "core": 13,
+    "word": "secular",
+    "example": "A secular charity rented the church hall for winter meals.",
+    "exampleZh": "一個非宗教的慈善團體租下教堂大廳供應冬季餐點。"
+  },
+  {
+    "core": 8,
+    "word": "jack",
+    "example": "A rusty jack lifted the van enough to change tires.",
+    "exampleZh": "生鏽的千斤頂把廂型車頂高到足以換輪胎。"
+  },
+  {
+    "core": 8,
+    "word": "terror",
+    "example": "The sudden blackout filled the tunnel with terror.",
+    "exampleZh": "隧道突然停電，讓隧道裡充滿了恐懼。"
+  },
+  {
+    "core": 8,
+    "word": "companion",
+    "example": "His dog became a quiet companion during months of recovery.",
+    "exampleZh": "在休養的幾個月裡，他的狗成了安靜的同伴。"
+  },
+  {
+    "core": 7,
+    "word": "engaged",
+    "example": "She was engaged to her classmate before they finished university.",
+    "exampleZh": "她在大學畢業前就和同班同學訂婚了。"
+  },
+  {
+    "core": 7,
+    "word": "bin",
+    "example": "Please throw the empty bottles into the recycling bin.",
+    "exampleZh": "請把空瓶丟進資源回收桶。"
+  },
+  {
+    "core": 7,
+    "word": "bent",
+    "example": "A bent spoon lay under the noodle cart.",
+    "exampleZh": "一支彎曲的湯匙躺在麵攤下。"
+  },
+  {
+    "core": 7,
+    "word": "customs",
+    "example": "The customs officer opened her suitcase after the long flight.",
+    "exampleZh": "長途飛行後，海關人員打開了她的行李箱。"
+  },
+  {
+    "core": 7,
+    "word": "typically",
+    "example": "Students typically arrive at school before eight in the morning.",
+    "exampleZh": "學生通常在早上八點前到校。"
+  },
+  {
+    "core": 7,
+    "word": "closed",
+    "example": "The closed bakery still smelled of butter after midnight.",
+    "exampleZh": "午夜過後，打烊的麵包店仍飄著奶油香。"
+  },
+  {
+    "core": 2,
+    "word": "significant",
+    "example": "A significant crack appeared in the old sea wall.",
+    "exampleZh": "舊海堤出現一道明顯的裂縫。"
+  },
+  {
+    "core": 2,
+    "word": "whatever",
+    "example": "Take whatever fruit is ripe from the basket.",
+    "exampleZh": "籃子裡任何熟的水果你都可以拿。"
+  },
+  {
+    "core": 9,
+    "word": "brake",
+    "example": "The brake squealed as the bus reached the curve.",
+    "exampleZh": "公車開到彎道時，煞車發出刺耳的聲音。"
+  },
+  {
+    "core": 9,
+    "word": "satisfactory",
+    "example": "The repair was satisfactory, though the radio still buzzed.",
+    "exampleZh": "維修結果還算令人滿意，不過收音機仍有雜音。"
+  },
+  {
+    "core": 9,
+    "word": "scramble",
+    "example": "Fans scramble for tickets as soon as the concert goes on sale.",
+    "exampleZh": "演唱會一開賣，歌迷就爭搶門票。"
+  },
+  {
+    "core": 9,
+    "word": "drill",
+    "example": "The dentist's drill whined behind the blue curtain.",
+    "exampleZh": "牙醫的鑽孔機在藍簾後嗡嗡作響。"
+  },
+  {
+    "core": 13,
+    "word": "preclude",
+    "example": "Heavy fog may preclude helicopter rescue before noon.",
+    "exampleZh": "濃霧可能使中午前無法出動直升機救援。"
+  },
+  {
+    "core": 13,
+    "word": "fellowship",
+    "example": "The club's fellowship made every new student feel welcome at school.",
+    "exampleZh": "社團的情誼讓每位新生在學校都感到受歡迎。"
+  },
+  {
+    "core": 4,
+    "word": "sky",
+    "example": "The sky turned orange above the fishing boats.",
+    "exampleZh": "漁船上空的天空染成了一片橘紅。"
+  },
+  {
+    "core": 4,
+    "word": "contribute",
+    "example": "Local cooks contribute soup whenever floods close the road.",
+    "exampleZh": "淹水封路時，當地廚師都會捐出湯品幫忙。"
+  },
+  {
+    "core": 1,
+    "word": "return",
+    "example": "I will return to school on Monday after my short trip.",
+    "exampleZh": "短途旅行結束後，我星期一會回學校。"
+  },
+  {
+    "core": 10,
+    "word": "splash",
+    "example": "A splash of seawater hit the camera lens.",
+    "exampleZh": "一陣海水濺到相機鏡頭上。"
+  },
+  {
+    "core": 10,
+    "word": "nutrient",
+    "example": "Iron is a nutrient many toddlers lack during rapid growth.",
+    "exampleZh": "鐵是許多幼兒在快速成長期間缺乏的營養素。"
+  },
+  {
+    "core": 2,
+    "word": "anyway",
+    "example": "It was raining hard, but we went anyway.",
+    "exampleZh": "雨下得很大，但我們還是去了。"
+  },
+  {
+    "core": 13,
+    "word": "heading",
+    "example": "The bold heading at the top of the page told students where to begin.",
+    "exampleZh": "頁面頂端的粗體標題告訴學生從哪裡開始。"
+  },
+  {
+    "core": 13,
+    "word": "submission",
+    "example": "Online submission closes at midnight, so upload the form now.",
+    "exampleZh": "線上提交將在午夜截止，所以現在就上傳表格吧。"
+  },
+  {
+    "core": 1,
+    "word": "against",
+    "example": "Many students were against the plan to shorten the lunch break.",
+    "exampleZh": "許多學生反對縮短午休時間的計畫。"
+  },
+  {
+    "core": 4,
+    "word": "definition",
+    "example": "The dictionary gives a clear definition of every difficult word in this lesson.",
+    "exampleZh": "字典為這一課每個困難的單字都提供了清楚的定義。"
+  },
+  {
+    "core": 4,
+    "word": "discipline",
+    "example": "Daily discipline helped him practice calligraphy before breakfast.",
+    "exampleZh": "每天的自律讓他在早餐前練習書法。"
+  },
+  {
+    "core": 4,
+    "word": "acknowledge",
+    "example": "Please acknowledge the message so we know you received it.",
+    "exampleZh": "請回覆這則訊息，讓我們知道你已收到。"
+  },
+  {
+    "core": 4,
+    "word": "busy",
+    "example": "The busy market smelled of basil, fish, and diesel.",
+    "exampleZh": "忙碌熱鬧的市場聞得到九層塔、魚和柴油味。"
+  },
+  {
+    "core": 14,
+    "word": "navigation",
+    "example": "Clouds ruined navigation for the sailors near the reef.",
+    "exampleZh": "礁石附近雲層密布，導航對水手來說變得很困難。"
+  },
+  {
+    "core": 10,
+    "word": "compassion",
+    "example": "A nurse showed compassion by washing the old man’s feet.",
+    "exampleZh": "護理師替老人洗腳，展現了同情心。"
+  },
+  {
+    "core": 5,
+    "word": "tourist",
+    "example": "A lost tourist asked for directions near the lantern shop.",
+    "exampleZh": "一位迷路的觀光客在燈籠店旁問路。"
+  },
+  {
+    "core": 5,
+    "word": "conventional",
+    "example": "Nora prefers conventional medicine when her asthma gets worse.",
+    "exampleZh": "諾拉氣喘加重時，偏好傳統醫療。"
+  },
+  {
+    "core": 5,
+    "word": "wet",
+    "example": "My socks stayed wet after the scooter ride through rain.",
+    "exampleZh": "騎機車穿過雨中後，我的襪子一直是濕的。"
+  },
+  {
+    "core": 5,
+    "word": "whenever",
+    "example": "Vendors lift baskets whenever the train slows beside their stalls.",
+    "exampleZh": "每當火車在攤位旁放慢速度，攤販就會舉起籃子。"
+  },
+  {
+    "core": 5,
+    "word": "string",
+    "example": "A red string held the garlic beside the kitchen window.",
+    "exampleZh": "一條紅繩把大蒜掛在廚房窗邊。"
+  },
+  {
+    "core": 5,
+    "word": "pose",
+    "example": "The bride changed her pose beside the banyan tree.",
+    "exampleZh": "新娘在榕樹旁換了個姿勢。"
+  },
+  {
+    "core": 5,
+    "word": "cake",
+    "example": "A mango cake waited in the fridge for Auntie's birthday.",
+    "exampleZh": "一個芒果蛋糕在冰箱裡，等著給阿姨慶生。"
+  },
+  {
+    "core": 5,
+    "word": "naturally",
+    "example": "The puppy naturally followed anyone carrying a bowl of rice.",
+    "exampleZh": "小狗自然而然地跟著任何端著飯碗的人走。"
+  },
+  {
+    "core": 7,
+    "word": "punish",
+    "example": "The teacher decided not to punish the boy for protecting himself.",
+    "exampleZh": "老師決定不因那名男孩保護自己而懲罰他。"
+  },
+  {
+    "core": 7,
+    "word": "shallow",
+    "example": "Children played safely in the shallow end of the pool.",
+    "exampleZh": "孩子們在泳池的淺水區安全地玩耍。"
+  },
+  {
+    "core": 7,
+    "word": "sweat",
+    "example": "Cold sweat soaked his shirt during the temple procession.",
+    "exampleZh": "廟會遊行時，冷汗浸濕了他的襯衫。"
+  },
+  {
+    "core": 6,
+    "word": "surplus",
+    "example": "Government surplus rice was stored in the school gym.",
+    "exampleZh": "政府的剩餘稻米被存放在學校體育館。"
+  },
+  {
+    "core": 6,
+    "word": "pact",
+    "example": "The pact ended fishing disputes around the reef.",
+    "exampleZh": "這項協定平息了礁岩周邊的捕魚爭端。"
+  },
+  {
+    "core": 4,
+    "word": "gentleman",
+    "example": "An elderly gentleman gave his seat to the nurse.",
+    "exampleZh": "一位年長的紳士把座位讓給護理師。"
+  },
+  {
+    "core": 4,
+    "word": "initiative",
+    "example": "She showed initiative by organizing the beach cleanup herself.",
+    "exampleZh": "她主動自己籌辦淨灘活動，展現了積極的主動性。"
+  },
+  {
+    "core": 4,
+    "word": "surely",
+    "example": "This bridge will surely flood if the rain continues.",
+    "exampleZh": "如果雨不停，這座橋一定會淹水。"
+  },
+  {
+    "core": 4,
+    "word": "resolution",
+    "example": "The club passed a resolution to clean the school garden every Friday afternoon.",
+    "exampleZh": "社團通過決議，每週五下午打掃學校花園。"
+  },
+  {
+    "core": 3,
+    "word": "cabinet",
+    "example": "Medicine belongs in the locked bathroom cabinet upstairs.",
+    "exampleZh": "藥品應該放在樓上那個上鎖的浴室櫥櫃裡。"
+  },
+  {
+    "core": 3,
+    "word": "dance",
+    "example": "Villagers dance around the fire after harvest each year.",
+    "exampleZh": "村民每年收成後都會圍著火堆跳舞。"
+  },
+  {
+    "core": 3,
+    "word": "mass",
+    "example": "A mass of clouds hid the moon completely.",
+    "exampleZh": "一大片雲完全遮住了月亮。"
+  },
+  {
+    "core": 3,
+    "word": "organize",
+    "example": "Volunteers organize beach cleanups after every storm season.",
+    "exampleZh": "志工每個風暴季後都會舉辦淨灘活動。"
+  },
+  {
+    "core": 9,
+    "word": "haunt",
+    "example": "The accident continued to haunt him for years.",
+    "exampleZh": "那場事故多年來仍縈繞在他心頭。"
+  },
+  {
+    "core": 9,
+    "word": "stunning",
+    "example": "Her stunning mural covered the station wall overnight.",
+    "exampleZh": "她那幅極漂亮的壁畫一夜之間就覆蓋了車站牆面。"
+  },
+  {
+    "core": 9,
+    "word": "embark",
+    "example": "They will embark on a bike trip around Taiwan this summer.",
+    "exampleZh": "他們今年夏天要展開環島自行車之旅。"
+  },
+  {
+    "core": 9,
+    "word": "outlook",
+    "example": "The economic outlook for next year looks quite positive.",
+    "exampleZh": "明年的經濟前景看起來相當樂觀。"
+  },
+  {
+    "core": 1,
+    "word": "here",
+    "example": "Please park here while I unlock the gate.",
+    "exampleZh": "我開門時，請先把車停在這裡。"
+  },
+  {
+    "core": 1,
+    "word": "still",
+    "example": "The lake is still calm after the evening wind stopped.",
+    "exampleZh": "晚風停後，湖面仍然很平靜。"
+  },
+  {
+    "core": 9,
+    "word": "alike",
+    "example": "The twins dressed alike for their grandmother's birthday.",
+    "exampleZh": "雙胞胎為祖母的生日穿得一模一樣。"
+  },
+  {
+    "core": 9,
+    "word": "haul",
+    "example": "Fishermen haul heavy nets onto the pier before noon.",
+    "exampleZh": "漁民中午前把沉重的漁網拖上碼頭。"
+  },
+  {
+    "core": 9,
+    "word": "electronics",
+    "example": "She repairs electronics such as phones and old cameras after school.",
+    "exampleZh": "她放學後修理手機和老相機等電子產品。"
+  },
+  {
+    "core": 9,
+    "word": "patrol",
+    "example": "A night patrol checked the harbor after the theft.",
+    "exampleZh": "竊案發生後，夜間巡邏隊檢查了港口。"
+  },
+  {
+    "core": 9,
+    "word": "slap",
+    "example": "The wet newspaper landed with a slap against the door.",
+    "exampleZh": "濕報紙啪的一聲打在門上。"
+  },
+  {
+    "core": 4,
+    "word": "gone",
+    "example": "The mangoes were gone before the cousins reached the kitchen.",
+    "exampleZh": "表親們到廚房前，芒果已經被吃光了。"
+  },
+  {
+    "core": 4,
+    "word": "mind",
+    "example": "Her mind stayed calm while the power flickered.",
+    "exampleZh": "電燈閃爍時，她的心情仍很平靜。"
+  },
+  {
+    "core": 8,
+    "word": "identical",
+    "example": "The twins wore identical raincoats at the crowded station.",
+    "exampleZh": "雙胞胎在擁擠的車站穿著一模一樣的雨衣。"
+  },
+  {
+    "core": 8,
+    "word": "subtle",
+    "example": "A subtle ginger note lingered after the tea cooled.",
+    "exampleZh": "茶涼後，仍留著一絲淡淡的薑味。"
+  },
+  {
+    "core": 8,
+    "word": "prediction",
+    "example": "His prediction of heavy fog saved the morning ferry.",
+    "exampleZh": "他預測會有濃霧，保住了早班渡輪的安全。"
+  },
+  {
+    "core": 14,
+    "word": "pumpkin",
+    "example": "A pumpkin sat on the windowsill until winter.",
+    "exampleZh": "一顆南瓜在窗臺上放到了冬天。"
+  },
+  {
+    "core": 10,
+    "word": "defy",
+    "example": "The swimmer tried to defy the warning and enter the rough water.",
+    "exampleZh": "游泳者想無視警告，進入洶湧的海水。"
+  },
+  {
+    "core": 10,
+    "word": "goose",
+    "example": "A goose chased the postman across the muddy farmyard.",
+    "exampleZh": "一隻鵝追著郵差穿過泥濘的農場院子。"
+  },
+  {
+    "core": 10,
+    "word": "eternal",
+    "example": "Grandpa called the sea his eternal source of patience.",
+    "exampleZh": "祖父稱大海是他永不枯竭的耐心來源。"
+  },
+  {
+    "core": 12,
+    "word": "knitting",
+    "example": "Her knitting slipped from the basket during the bus ride.",
+    "exampleZh": "她的編織物在公車上從籃子滑了出來。"
+  },
+  {
+    "core": 12,
+    "word": "congratulations",
+    "example": "Congratulations poured in after Mei passed the bar exam.",
+    "exampleZh": "美通過律師考試後，祝賀的訊息紛紛湧來。"
+  },
+  {
+    "core": 9,
+    "word": "clarify",
+    "example": "Please clarify the address before the driver leaves.",
+    "exampleZh": "司機離開前請先澄清地址。"
+  },
+  {
+    "core": 9,
+    "word": "jungle",
+    "example": "Monsoon rain soaked the trail through dense jungle before noon.",
+    "exampleZh": "中午前，季風雨把穿越茂密叢林的小徑淋得濕透。"
+  },
+  {
+    "core": 9,
+    "word": "patron",
+    "example": "The museum thanked each patron who donated money this year.",
+    "exampleZh": "博物館感謝今年每一位捐款的贊助人。"
+  },
+  {
+    "core": 9,
+    "word": "foster",
+    "example": "Good teachers foster curiosity in their students every day.",
+    "exampleZh": "好老師每天都在培養學生的好奇心。"
+  },
+  {
+    "core": 9,
+    "word": "shield",
+    "example": "The knight lifted his shield to block the sword.",
+    "exampleZh": "騎士舉起盾牌擋住那把劍。"
+  },
+  {
+    "core": 10,
+    "word": "compulsory",
+    "example": "Helmet use is compulsory on every ride through the quarry.",
+    "exampleZh": "騎車穿越採石場時，每次都必須戴安全帽。"
+  },
+  {
+    "core": 6,
+    "word": "revolutionary",
+    "example": "The revolutionary pamphlet was hidden inside a cookbook.",
+    "exampleZh": "那本革命小冊子被藏在一本食譜裡。"
+  },
+  {
+    "core": 4,
+    "word": "pick",
+    "example": "Pick the smaller mangoes if you need them ripe tomorrow.",
+    "exampleZh": "如果明天就要吃熟的，請挑小一點的芒果。"
+  },
+  {
+    "core": 12,
+    "word": "used",
+    "example": "My brother is used to riding his scooter to school every morning.",
+    "exampleZh": "我哥哥習慣每天早上騎機車去上學。"
+  },
+  {
+    "core": 12,
+    "word": "planning",
+    "example": "Careful planning kept the hikers off the dangerous ridge.",
+    "exampleZh": "周詳的規劃讓登山客避開了危險的山脊。"
+  },
+  {
+    "core": 12,
+    "word": "unemployment",
+    "example": "Local unemployment rose after the cannery closed in March.",
+    "exampleZh": "罐頭廠三月關閉後，當地失業率上升。"
+  },
+  {
+    "core": 12,
+    "word": "walking",
+    "example": "Gentle walking to the harbor cleared her head after lunch.",
+    "exampleZh": "午餐後輕鬆步行到港口，讓她的思緒清醒許多。"
+  },
+  {
+    "core": 12,
+    "word": "driving",
+    "example": "Driving at night can be tiring for new drivers.",
+    "exampleZh": "夜間駕駛對新手來說可能很累人。"
+  },
+  {
+    "core": 12,
+    "word": "mall",
+    "example": "We watched a movie at the mall after school yesterday.",
+    "exampleZh": "我們昨天放學後在購物中心看了電影。"
+  },
+  {
+    "core": 12,
+    "word": "builder",
+    "example": "The builder repaired the broken roof before the typhoon arrived.",
+    "exampleZh": "建築工人在颱風來臨前修好了破損的屋頂。"
+  },
+  {
+    "core": 12,
+    "word": "constituency",
+    "example": "Her constituency demanded safer buses after the mountain crash.",
+    "exampleZh": "她的選區居民在山區事故後要求更安全的公車。"
+  },
+  {
+    "core": 12,
+    "word": "sergeant",
+    "example": "A sergeant guided the lost hikers through the flooded checkpoint.",
+    "exampleZh": "一名軍士帶領迷路的登山客穿過淹水的檢查站。"
+  },
+  {
+    "core": 8,
+    "word": "verse",
+    "example": "She copied one verse onto the back of a receipt.",
+    "exampleZh": "她把一段詩句抄在收據背面。"
+  },
+  {
+    "core": 8,
+    "word": "pope",
+    "example": "The pope blessed pilgrims gathered outside the basilica.",
+    "exampleZh": "教宗祝福聚集在大殿外的朝聖者。"
+  },
+  {
+    "core": 8,
+    "word": "avenue",
+    "example": "Trees along the avenue shaded the bakery until late afternoon.",
+    "exampleZh": "大道旁的樹一直遮蔽著麵包店到傍晚。"
+  },
+  {
+    "core": 8,
+    "word": "genius",
+    "example": "His genius for repairs saved the flooded theater.",
+    "exampleZh": "他在修理方面的天賦拯救了淹水的戲院。"
+  },
+  {
+    "core": 8,
+    "word": "manipulate",
+    "example": "Do not manipulate the evidence before police arrive.",
+    "exampleZh": "警方抵達前，不要竄改證據。"
+  },
+  {
+    "core": 8,
+    "word": "mutter",
+    "example": "He began to mutter when the vending machine jammed.",
+    "exampleZh": "販賣機卡住時，他開始低聲嘀咕。"
+  },
+  {
+    "core": 8,
+    "word": "hostile",
+    "example": "A hostile crowd blocked the clinic entrance after the rumor.",
+    "exampleZh": "謠言傳出後，一群懷有敵意的人堵住診所入口。"
+  },
+  {
+    "core": 8,
+    "word": "lawsuit",
+    "example": "The lawsuit began after sewage flooded three kitchens.",
+    "exampleZh": "汙水淹進三間廚房後，這場訴訟就展開了。"
+  },
+  {
+    "core": 7,
+    "word": "blank",
+    "example": "Please leave the last page of your notebook blank.",
+    "exampleZh": "請把你筆記本的最後一頁留白。"
+  },
+  {
+    "core": 8,
+    "word": "rhetoric",
+    "example": "His rhetoric sounded noble but avoided every hard question.",
+    "exampleZh": "他的言辭聽來高尚，卻避開所有難題。"
+  },
+  {
+    "core": 3,
+    "word": "dismiss",
+    "example": "The principal will dismiss students early before the typhoon.",
+    "exampleZh": "校長會在颱風前提早讓學生放學。"
+  },
+  {
+    "core": 3,
+    "word": "august",
+    "example": "The august professor walked slowly into the quiet hall.",
+    "exampleZh": "那位威嚴的教授慢慢走進安靜的大廳。"
+  },
+  {
+    "core": 3,
+    "word": "saturday",
+    "example": "Saturday vendors arrive before sunrise at the harbor market.",
+    "exampleZh": "星期六港邊市場的攤販日出前就到了。"
+  },
+  {
+    "core": 14,
+    "word": "swan",
+    "example": "A swan drifted past the reeds near the palace.",
+    "exampleZh": "一隻天鵝漂過宮殿附近的蘆葦叢。"
+  },
+  {
+    "core": 14,
+    "word": "refrain",
+    "example": "Please refrain from feeding birds near the platform.",
+    "exampleZh": "請勿在月台附近餵鳥。"
+  },
+  {
+    "core": 14,
+    "word": "intellect",
+    "example": "Her sharp intellect solved the puzzle before dinner.",
+    "exampleZh": "她敏銳的智力讓她在晚餐前解開了謎題。"
+  },
+  {
+    "core": 1,
+    "word": "night",
+    "example": "The harbor lights look beautiful at night after rain.",
+    "exampleZh": "雨後的夜晚，港口的燈火看起來很美。"
+  },
+  {
+    "core": 9,
+    "word": "midst",
+    "example": "In the midst of the noisy crowd, she found her little brother.",
+    "exampleZh": "在嘈雜的人群中，她找到了自己的弟弟。"
+  },
+  {
+    "core": 9,
+    "word": "abolish",
+    "example": "The council voted to abolish the old curfew.",
+    "exampleZh": "議會投票廢除舊宵禁。"
+  },
+  {
+    "core": 9,
+    "word": "outbreak",
+    "example": "An outbreak of fever closed the dormitory quickly.",
+    "exampleZh": "一場發燒疫情使宿舍很快就關閉了。"
+  },
+  {
+    "core": 9,
+    "word": "lightning",
+    "example": "Bright lightning split the palm tree beside the road.",
+    "exampleZh": "明亮的閃電劈開了路旁的棕櫚樹。"
+  },
+  {
+    "core": 9,
+    "word": "retrieve",
+    "example": "Divers retrieve lost phones from the shallow harbor.",
+    "exampleZh": "潛水員從淺水港灣取回遺失的手機。"
+  },
+  {
+    "core": 8,
+    "word": "breach",
+    "example": "Leaving the gate unlocked was a breach of security.",
+    "exampleZh": "沒有鎖上大門，是違反安全規定的行為。"
+  },
+  {
+    "core": 1,
+    "word": "run",
+    "example": "I run beside the canal after sunrise every Saturday.",
+    "exampleZh": "每個週六日出後，我都沿著運河跑步。"
+  },
+  {
+    "core": 14,
+    "word": "clasp",
+    "example": "Her frozen fingers could not close the necklace clasp.",
+    "exampleZh": "她凍僵的手指扣不上項鍊的釦環。"
+  },
+  {
+    "core": 14,
+    "word": "clone",
+    "example": "The lab grew a clone of the rare orchid.",
+    "exampleZh": "實驗室培育出那株稀有蘭花的複製體。"
+  },
+  {
+    "core": 5,
+    "word": "strict",
+    "example": "The strict lifeguard closed the beach before sunset.",
+    "exampleZh": "嚴格的救生員在日落前關閉了海灘。"
+  },
+  {
+    "core": 5,
+    "word": "countryside",
+    "example": "The countryside smelled of wet grass after harvest.",
+    "exampleZh": "收割後，鄉間瀰漫著濕草的氣味。"
+  },
+  {
+    "core": 4,
+    "word": "negative",
+    "example": "He tried not to say anything negative about the school trip.",
+    "exampleZh": "他盡量不說任何關於校外教學的負面話。"
+  },
+  {
+    "core": 4,
+    "word": "panel",
+    "example": "The control panel beside the door shows the water level.",
+    "exampleZh": "門旁的控制面板顯示水位。"
+  },
+  {
+    "core": 9,
+    "word": "gown",
+    "example": "She wore a long silk gown to the school dance.",
+    "exampleZh": "她穿著一件絲質長禮服去參加學校舞會。"
+  },
+  {
+    "core": 9,
+    "word": "landmark",
+    "example": "The old temple is a famous landmark in our town.",
+    "exampleZh": "那座古老的廟是我們鎮上著名的地標。"
+  },
+  {
+    "core": 9,
+    "word": "recorder",
+    "example": "Our music teacher asked us to play the recorder.",
+    "exampleZh": "音樂老師要我們吹直笛。"
+  },
+  {
+    "core": 9,
+    "word": "intake",
+    "example": "Doctors say a high sugar intake is bad for your teeth.",
+    "exampleZh": "醫生說糖的攝取量過高對牙齒不好。"
+  },
+  {
+    "core": 10,
+    "word": "overhead",
+    "example": "An overhead sign warned trucks about the low tunnel.",
+    "exampleZh": "頭頂上的標誌提醒卡車駕駛，前方隧道高度不足。"
+  },
+  {
+    "core": 10,
+    "word": "fabulous",
+    "example": "We had a fabulous time at the night market with our cousins.",
+    "exampleZh": "我們和表兄弟姊妹在夜市玩得非常開心。"
+  },
+  {
+    "core": 10,
+    "word": "plantation",
+    "example": "Workers harvested tea leaves on the mountain plantation at dawn.",
+    "exampleZh": "工人清晨在山上的茶園種植園採摘茶葉。"
+  },
+  {
+    "core": 6,
+    "word": "jail",
+    "example": "He spent two nights in jail after the protest.",
+    "exampleZh": "抗議之後，他在牢裡待了兩個晚上。"
+  },
+  {
+    "core": 11,
+    "word": "zoom",
+    "example": "The motorbikes zoom past the school gate every morning.",
+    "exampleZh": "每天早上機車都呼嘯駛過校門。"
+  },
+  {
+    "core": 11,
+    "word": "accomplished",
+    "example": "An accomplished dancer taught tango in the old warehouse.",
+    "exampleZh": "一位技藝精湛的舞者在舊倉庫教探戈。"
+  },
+  {
+    "core": 7,
+    "word": "shiny",
+    "example": "The shiny coins covered the fortune teller's table.",
+    "exampleZh": "閃亮的硬幣鋪滿了算命師的桌面。"
+  },
+  {
+    "core": 7,
+    "word": "surroundings",
+    "example": "The quiet surroundings made the hill temple feel remote.",
+    "exampleZh": "安靜的周遭環境讓這座山寺顯得很偏遠。"
+  },
+  {
+    "core": 7,
+    "word": "goodbye",
+    "example": "She whispered goodbye before boarding the midnight train.",
+    "exampleZh": "她在登上午夜列車前輕聲說了再見。"
+  },
+  {
+    "core": 7,
+    "word": "rubbish",
+    "example": "Wind blew rubbish across the empty parking lot.",
+    "exampleZh": "風把垃圾吹過了空蕩蕩的停車場。"
+  },
+  {
+    "core": 7,
+    "word": "suitcase",
+    "example": "Her suitcase rolled down the ferry ramp alone.",
+    "exampleZh": "她的行李箱自己滾下了渡輪的斜坡。"
+  },
+  {
+    "core": 7,
+    "word": "jealous",
+    "example": "He felt jealous when his sister won the kite race.",
+    "exampleZh": "妹妹贏得風箏比賽時，他覺得很嫉妒。"
+  },
+  {
+    "core": 4,
+    "word": "gay",
+    "example": "Their gay friends joined the parade and celebrated together downtown.",
+    "exampleZh": "他們的同性戀朋友加入遊行，一起在市中心慶祝。"
+  },
+  {
+    "core": 4,
+    "word": "journal",
+    "example": "The student read a science journal article about sea turtles.",
+    "exampleZh": "那位學生讀了一篇關於海龜的科學期刊文章。"
+  },
+  {
+    "core": 6,
+    "word": "earnings",
+    "example": "Her weekend earnings paid for new violin strings.",
+    "exampleZh": "她週末賺的錢，付了新小提琴弦的費用。"
+  },
+  {
+    "core": 7,
+    "word": "heating",
+    "example": "The heating failed during the coldest night in January.",
+    "exampleZh": "一月最冷的那個晚上，暖氣設備故障了。"
+  },
+  {
+    "core": 9,
+    "word": "prescribe",
+    "example": "Doctors prescribe rest when the fever returns at night.",
+    "exampleZh": "夜裡發燒復發時，醫師會囑咐要多休息。"
+  },
+  {
+    "core": 9,
+    "word": "weed",
+    "example": "A stubborn weed grew through the cracked sidewalk.",
+    "exampleZh": "一株頑強的雜草從裂開的人行道長了出來。"
+  },
+  {
+    "core": 9,
+    "word": "clip",
+    "example": "A silver clip held her hair during the dance.",
+    "exampleZh": "跳舞時，一個銀色髮夾固定著她的頭髮。"
+  },
+  {
+    "core": 9,
+    "word": "soar",
+    "example": "Kites soar above the riverbank every autumn afternoon.",
+    "exampleZh": "每年秋天的午後，風箏都在河岸上空高飛。"
+  },
+  {
+    "core": 9,
+    "word": "passive",
+    "example": "His passive response frustrated the rescue volunteers nearby.",
+    "exampleZh": "他被動的反應，讓附近的救援志工很挫折。"
+  },
+  {
+    "core": 9,
+    "word": "cater",
+    "example": "Small vendors cater to hikers near the trailhead.",
+    "exampleZh": "小攤販在登山口為健行者提供餐飲。"
+  },
+  {
+    "core": 2,
+    "word": "quality",
+    "example": "This tea shop is known for quality oolong.",
+    "exampleZh": "這家茶行以優質烏龍茶聞名。"
+  },
+  {
+    "core": 12,
+    "word": "sponsorship",
+    "example": "The forum ran under university sponsorship for three years.",
+    "exampleZh": "這場論壇在大學的贊助下舉辦了三年。"
+  },
+  {
+    "core": 12,
+    "word": "comeback",
+    "example": "Nina's sharp comeback made the rude waiter stop laughing.",
+    "exampleZh": "妮娜尖銳地回嘴，讓無禮的服務生笑不出來。"
+  },
+  {
+    "core": 12,
+    "word": "bureaucrat",
+    "example": "A bureaucrat misplaced the permit inside a green folder.",
+    "exampleZh": "一名官僚把許可證錯放進綠色資料夾裡。"
+  },
+  {
+    "core": 13,
+    "word": "stagger",
+    "example": "He began to stagger after carrying rice up three flights.",
+    "exampleZh": "扛米上了三層樓後，他開始步履蹣跚。"
+  },
+  {
+    "core": 13,
+    "word": "stocking",
+    "example": "One red stocking hung from the hostel fireplace.",
+    "exampleZh": "一隻紅色長襪掛在旅社的壁爐上。"
+  },
+  {
+    "core": 13,
+    "word": "excursion",
+    "example": "Our boat excursion ended at a quiet coral beach.",
+    "exampleZh": "我們的乘船短途旅行在一處安靜的珊瑚海灘結束。"
+  },
+  {
+    "core": 3,
+    "word": "below",
+    "example": "The spare key hangs on a hook below the kitchen shelf.",
+    "exampleZh": "備用鑰匙掛在廚房架子下方的掛鉤上。"
+  },
+  {
+    "core": 3,
+    "word": "shot",
+    "example": "The hunter fired one shot into the air to scare the birds.",
+    "exampleZh": "獵人朝空中開了一槍來驚嚇鳥群。"
+  },
+  {
+    "core": 3,
+    "word": "critical",
+    "example": "Clean water became critical after the hillside road collapsed.",
+    "exampleZh": "山路坍方後，乾淨的水變得非常緊要。"
+  },
+  {
+    "core": 3,
+    "word": "mountain",
+    "example": "A blue mountain rose behind the morning mist today.",
+    "exampleZh": "今天晨霧後方矗立著一座藍色的山。"
+  },
+  {
+    "core": 3,
+    "word": "recall",
+    "example": "I recall the smell of rain on hot pavement.",
+    "exampleZh": "我想起了雨水落在炙熱路面上的氣味。"
+  },
+  {
+    "core": 3,
+    "word": "settle",
+    "example": "Dust began to settle on the unused piano upstairs.",
+    "exampleZh": "灰塵開始落在樓上閒置的鋼琴上。"
+  },
+  {
+    "core": 3,
+    "word": "wood",
+    "example": "Dry wood cracked loudly in the beach fire tonight.",
+    "exampleZh": "今晚乾木柴在海邊的火堆中劈啪作響。"
+  },
+  {
+    "core": 9,
+    "word": "preach",
+    "example": "He would preach kindness while refusing to help neighbors.",
+    "exampleZh": "他嘴上說教要人善良，自己卻拒絕幫助鄰居。"
+  },
+  {
+    "core": 3,
+    "word": "attend",
+    "example": "Nearly all my classmates will attend the school concert on Friday evening.",
+    "exampleZh": "我幾乎所有同學都會出席週五晚上的學校音樂會。"
+  },
+  {
+    "core": 3,
+    "word": "rich",
+    "example": "The soup had a rich mushroom aroma after two hours.",
+    "exampleZh": "湯熬了兩小時後，散發出濃郁的菇香。"
+  },
+  {
+    "core": 3,
+    "word": "affair",
+    "example": "Neighbors still whispered about the affair at the corner bakery.",
+    "exampleZh": "街坊鄰居仍低聲談論轉角麵包店的那件事。"
+  },
+  {
+    "core": 3,
+    "word": "key",
+    "example": "Patience is the key to teaching a nervous puppy.",
+    "exampleZh": "耐心是訓練膽小小狗的關鍵。"
+  },
+  {
+    "core": 3,
+    "word": "safety",
+    "example": "Bike lights improve safety on rainy evening rides.",
+    "exampleZh": "雨天傍晚騎車時，車燈能提升安全性。"
+  },
+  {
+    "core": 10,
+    "word": "bald",
+    "example": "The bald man wore a hat to protect his head from the sun.",
+    "exampleZh": "那位禿頭的男子戴著帽子保護頭部免於曬傷。"
+  },
+  {
+    "core": 10,
+    "word": "olive",
+    "example": "An olive rolled from the plate under the counter.",
+    "exampleZh": "一顆橄欖從盤子滾到櫃檯下。"
+  },
+  {
+    "core": 10,
+    "word": "junk",
+    "example": "Old junk filled the garage until rats moved in.",
+    "exampleZh": "舊雜物塞滿了車庫，後來連老鼠都搬進來了。"
+  },
+  {
+    "core": 10,
+    "word": "denounce",
+    "example": "Protesters denounce the fraud outside the bank every Friday.",
+    "exampleZh": "抗議民眾每週五在銀行外譴責這項詐欺行為。"
+  },
+  {
+    "core": 11,
+    "word": "acting",
+    "example": "The acting manager approved refunds while the owner traveled.",
+    "exampleZh": "老闆出外旅行期間，代理經理核准了退款。"
+  },
+  {
+    "core": 11,
+    "word": "envy",
+    "example": "I envy her calm voice during difficult phone calls.",
+    "exampleZh": "我羨慕她在棘手的電話中仍保持冷靜的聲音。"
+  },
+  {
+    "core": 4,
+    "word": "cycle",
+    "example": "The washing cycle ended while we prepared dinner.",
+    "exampleZh": "我們準備晚餐時，洗衣程序結束了。"
+  },
+  {
+    "core": 6,
+    "word": "penny",
+    "example": "A penny rolled under the vending machine and disappeared.",
+    "exampleZh": "一枚一分錢硬幣滾進販賣機底下不見了。"
+  },
+  {
+    "core": 1,
+    "word": "cover",
+    "example": "Please cover the rice pot with a lid.",
+    "exampleZh": "請用蓋子把飯鍋蓋起來。"
+  },
+  {
+    "core": 6,
+    "word": "carrier",
+    "example": "A mail carrier rescued letters from the flooded porch.",
+    "exampleZh": "郵遞員從淹水的門廊搶救出信件。"
+  },
+  {
+    "core": 6,
+    "word": "segment",
+    "example": "The orange segment slipped from the child's chopsticks.",
+    "exampleZh": "那瓣橘子從孩子的筷子間滑落。"
+  },
+  {
+    "core": 3,
+    "word": "quote",
+    "example": "The teacher asked us to quote one line from the poem.",
+    "exampleZh": "老師要我們從這首詩裡引用一行。"
+  },
+  {
+    "core": 3,
+    "word": "shock",
+    "example": "The sad news came as a shock to the whole class.",
+    "exampleZh": "這個壞消息讓全班同學都很震驚。"
+  },
+  {
+    "core": 3,
+    "word": "purchase",
+    "example": "Keep the receipt at home after each appliance purchase.",
+    "exampleZh": "每次購買家電後，都要把收據留在家裡。"
+  },
+  {
+    "core": 8,
+    "word": "desirable",
+    "example": "Shade makes that corner desirable during summer lunch hours.",
+    "exampleZh": "夏季午餐時段，那個有遮蔭的角落特別令人嚮往。"
+  },
+  {
+    "core": 8,
+    "word": "deadly",
+    "example": "The deadly currents form near the rocks after heavy rain.",
+    "exampleZh": "大雨後，岩石附近會形成致命的急流。"
+  },
+  {
+    "core": 8,
+    "word": "burning",
+    "example": "A burning smell drifted from the closed bakery.",
+    "exampleZh": "一股燃燒的味道從關門的麵包店飄出。"
+  },
+  {
+    "core": 1,
+    "word": "cut",
+    "example": "She will cut the cake into eight pieces.",
+    "exampleZh": "她會把蛋糕切成八塊。"
+  },
+  {
+    "core": 1,
+    "word": "general",
+    "example": "The general rule is simple for visitors here.",
+    "exampleZh": "這裡給訪客的一般規則很簡單。"
+  },
+  {
+    "core": 12,
+    "word": "facilitate",
+    "example": "Clear signs facilitate boarding at the busy ferry terminal.",
+    "exampleZh": "清楚的標示使旅客在繁忙的渡輪站更容易登船。"
+  },
+  {
+    "core": 12,
+    "word": "resume",
+    "example": "Classes resume after workers clean the flooded rooms.",
+    "exampleZh": "工人清理完淹水的教室後，課程就會重新開始。"
+  },
+  {
+    "core": 12,
+    "word": "orientation",
+    "example": "The map showed the correct orientation of the old temple.",
+    "exampleZh": "地圖顯示了這座舊寺廟的正確方位。"
+  },
+  {
+    "core": 12,
+    "word": "functional",
+    "example": "The chart showed functional differences between the two clinics.",
+    "exampleZh": "圖表顯示這兩間診所在功能上的差異。"
+  },
+  {
+    "core": 12,
+    "word": "harry",
+    "example": "Creditors began to harry him with calls before breakfast.",
+    "exampleZh": "債主在早餐前就開始打電話騷擾他。"
+  },
+  {
+    "core": 12,
+    "word": "pant",
+    "example": "After the sprint, I could only pant beside the fence.",
+    "exampleZh": "衝刺之後，我只能在圍欄旁喘氣。"
+  },
+  {
+    "core": 9,
+    "word": "sentiment",
+    "example": "Public sentiment shifted after the mayor apologized on television.",
+    "exampleZh": "市長上電視道歉後，民意轉變了。"
+  },
+  {
+    "core": 10,
+    "word": "indictment",
+    "example": "The indictment named three bankers and one city official.",
+    "exampleZh": "起訴書上列名三名銀行員和一名市府官員。"
+  },
+  {
+    "core": 9,
+    "word": "bureaucracy",
+    "example": "The bureaucracy resisted the mayor's reforms for months.",
+    "exampleZh": "官僚體制數月來抗拒市長的改革。"
+  },
+  {
+    "core": 10,
+    "word": "terminate",
+    "example": "The landlord may terminate the lease after two missed payments.",
+    "exampleZh": "房客漏繳兩次後，房東可以終止租約。"
+  },
+  {
+    "core": 14,
+    "word": "succumb",
+    "example": "Weak seedlings may succumb to frost before spring arrives.",
+    "exampleZh": "弱小的幼苗可能在春天來臨前就被凍死。"
+  },
+  {
+    "core": 14,
+    "word": "prominence",
+    "example": "The singer rose to prominence after her first album.",
+    "exampleZh": "那位歌手在第一張專輯後聲名大噪。"
+  },
+  {
+    "core": 3,
+    "word": "sentence",
+    "example": "Please read the first sentence of the story aloud.",
+    "exampleZh": "請大聲朗讀這個故事的第一句。"
+  },
+  {
+    "core": 3,
+    "word": "separate",
+    "example": "Please separate the paper from the plastic before recycling.",
+    "exampleZh": "回收前請把紙類和塑膠分開。"
+  },
+  {
+    "core": 5,
+    "word": "nerve",
+    "example": "The doctor said the injury had damaged a nerve in his arm.",
+    "exampleZh": "醫生說這個傷勢損傷了他手臂上的一條神經。"
+  },
+  {
+    "core": 5,
+    "word": "genuine",
+    "example": "She bought a genuine leather wallet at the night market.",
+    "exampleZh": "她在夜市買了一個真正的皮革皮夾。"
+  },
+  {
+    "core": 5,
+    "word": "entertain",
+    "example": "The puppet troupe will entertain children near the temple.",
+    "exampleZh": "布袋戲團會在廟旁娛樂孩子。"
+  },
+  {
+    "core": 5,
+    "word": "dirty",
+    "example": "The dirty rainwater splashed onto Mina's white sneakers.",
+    "exampleZh": "髒兮兮的雨水濺到了米娜的白球鞋上。"
+  },
+  {
+    "core": 5,
+    "word": "pitch",
+    "example": "The pitcher tried to pitch the ball faster than before.",
+    "exampleZh": "投手試著把球投得比以前更快。"
+  },
+  {
+    "core": 5,
+    "word": "craft",
+    "example": "She learned a traditional craft from her grandmother in Tainan.",
+    "exampleZh": "她在台南向祖母學了一項傳統手工藝。"
+  },
+  {
+    "core": 5,
+    "word": "strip",
+    "example": "Cut a strip of cloth to tie the splint.",
+    "exampleZh": "剪一條布來綁住固定夾板。"
+  },
+  {
+    "core": 12,
+    "word": "standing",
+    "example": "Her standing in the class improved after she won the speech contest.",
+    "exampleZh": "她贏得演講比賽後，在班上的地位提升了。"
+  },
+  {
+    "core": 12,
+    "word": "domain",
+    "example": "Marine biology became Lin's domain after he finished college.",
+    "exampleZh": "大學畢業後，海洋生物學成了阿林的專門領域。"
+  },
+  {
+    "core": 2,
+    "word": "reality",
+    "example": "The harsh reality was that the bridge could not reopen.",
+    "exampleZh": "殘酷的現實是，那座橋無法重新開放。"
+  },
+  {
+    "core": 2,
+    "word": "entire",
+    "example": "The entire family searched the beach for her ring.",
+    "exampleZh": "全家人一起在海灘上找她的戒指。"
+  },
+  {
+    "core": 2,
+    "word": "positive",
+    "example": "Her positive attitude helped the team finish the repair.",
+    "exampleZh": "她積極的態度幫助團隊完成了修理工作。"
+  },
+  {
+    "core": 9,
+    "word": "erect",
+    "example": "The soldiers stood erect while the flag was raised.",
+    "exampleZh": "升旗時士兵們筆直地站著。"
+  },
+  {
+    "core": 9,
+    "word": "strive",
+    "example": "Students strive to improve their English every day.",
+    "exampleZh": "學生們每天努力提升自己的英文。"
+  },
+  {
+    "core": 6,
+    "word": "liberty",
+    "example": "The new rules gave sailors liberty after six weeks at sea.",
+    "exampleZh": "新規定讓水手出海六週後獲准上岸休假。"
+  },
+  {
+    "core": 6,
+    "word": "compromise",
+    "example": "Their compromise allowed music until ten at night.",
+    "exampleZh": "他們的折衷方案允許音樂播放到晚上十點。"
+  },
+  {
+    "core": 9,
+    "word": "monkey",
+    "example": "A monkey stole peanuts from an open backpack.",
+    "exampleZh": "一隻猴子從敞開的背包裡偷走了花生。"
+  },
+  {
+    "core": 9,
+    "word": "exceptional",
+    "example": "Her exceptional hearing caught the faint alarm outside.",
+    "exampleZh": "她出色的聽力聽到了外面微弱的警報聲。"
+  },
+  {
+    "core": 9,
+    "word": "contradiction",
+    "example": "His warm smile was a contradiction of his harsh words.",
+    "exampleZh": "他溫暖的笑容與刺耳的話語互相矛盾。"
+  },
+  {
+    "core": 9,
+    "word": "downtown",
+    "example": "They moved downtown to live above a bakery.",
+    "exampleZh": "他們搬到市中心，住在一間麵包店樓上。"
+  },
+  {
+    "core": 9,
+    "word": "certainty",
+    "example": "She spoke with certainty about the ferry schedule.",
+    "exampleZh": "她很有把握地談論渡輪的時刻表。"
+  },
+  {
+    "core": 1,
+    "word": "its",
+    "example": "The cafe changed its menu after the chef retired.",
+    "exampleZh": "主廚退休後，那間咖啡館換了它的菜單。"
+  },
+  {
+    "core": 2,
+    "word": "customer",
+    "example": "The customer returned because the soup tasted sour.",
+    "exampleZh": "顧客因為湯有酸味而回來了。"
+  },
+  {
+    "core": 6,
+    "word": "counterpart",
+    "example": "Her counterpart in Japan sent heirloom seeds from Hokkaido.",
+    "exampleZh": "她在日本的職務相當者寄來北海道的傳家種子。"
+  },
+  {
+    "core": 6,
+    "word": "presidency",
+    "example": "Her presidency began with a promise to improve public schools.",
+    "exampleZh": "她的總統任期從承諾改善公立學校開始。"
+  },
+  {
+    "core": 7,
+    "word": "faint",
+    "example": "A faint smell of smoke drifted from the kitchen.",
+    "exampleZh": "一股淡淡的煙味從廚房飄了出來。"
+  },
+  {
+    "core": 8,
+    "word": "gravity",
+    "example": "Gravity pulled the spilled marbles down the sloped hallway.",
+    "exampleZh": "重力使灑出的彈珠沿著傾斜的走廊滾下去。"
+  },
+  {
+    "core": 3,
+    "word": "collect",
+    "example": "Grandpa likes to collect train tickets from old journeys.",
+    "exampleZh": "爺爺喜歡收集舊旅程留下的火車票。"
+  },
+  {
+    "core": 14,
+    "word": "earring",
+    "example": "One silver earring slipped through the bathroom drain.",
+    "exampleZh": "一隻銀耳環滑進了浴室的排水孔。"
+  },
+  {
+    "core": 14,
+    "word": "ram",
+    "example": "A metal ram cracked the locked warehouse door.",
+    "exampleZh": "金屬撞槌撞裂了上鎖的倉庫門。"
+  },
+  {
+    "core": 14,
+    "word": "plainly",
+    "example": "She plainly refused the bribe and left the office.",
+    "exampleZh": "她明白拒絕了賄賂，然後離開辦公室。"
+  },
+  {
+    "core": 14,
+    "word": "provocative",
+    "example": "A provocative poster drew complaints from nearby parents.",
+    "exampleZh": "一張挑釁的海報引來附近家長投訴。"
+  },
+  {
+    "core": 14,
+    "word": "depot",
+    "example": "Buses slept overnight at the depot beside the river.",
+    "exampleZh": "公車整夜停在河邊的車庫裡。"
+  },
+  {
+    "core": 14,
+    "word": "squint",
+    "example": "She had to squint at the board without her glasses.",
+    "exampleZh": "沒戴眼鏡，她得瞇著眼看黑板。"
+  },
+  {
+    "core": 6,
+    "word": "crew",
+    "example": "The film crew waited for sunlight beside the temple pond.",
+    "exampleZh": "劇組人員在廟池旁等待陽光。"
+  },
+  {
+    "core": 6,
+    "word": "welfare",
+    "example": "The shelter checks each rescued dog's welfare before adoption.",
+    "exampleZh": "收容所在送養前會確認每隻救援犬的福祉。"
+  },
+  {
+    "core": 6,
+    "word": "catholic",
+    "example": "My neighbor goes to a catholic church every Sunday morning.",
+    "exampleZh": "我的鄰居每個週日早上都去天主教堂。"
+  },
+  {
+    "core": 10,
+    "word": "banner",
+    "example": "A torn banner still hung above the bakery after the storm.",
+    "exampleZh": "暴風雨過後，那面破損的橫幅仍掛在麵包店上方。"
+  },
+  {
+    "core": 10,
+    "word": "pal",
+    "example": "Rina saved a seat for her pal at the crowded cinema.",
+    "exampleZh": "莉娜在擁擠的戲院替好友留了一個位子。"
+  },
+  {
+    "core": 5,
+    "word": "slight",
+    "example": "A slight fever kept Jonah away from the baby.",
+    "exampleZh": "輕微發燒讓喬納不敢靠近嬰兒。"
+  },
+  {
+    "core": 13,
+    "word": "oath",
+    "example": "The witness repeated the oath in a steady voice.",
+    "exampleZh": "證人用平穩的聲音複誦誓言。"
+  },
+  {
+    "core": 13,
+    "word": "devotion",
+    "example": "Her devotion to the injured child moved the nurses.",
+    "exampleZh": "她對受傷孩子的奉獻精神感動了護理師。"
+  },
+  {
+    "core": 13,
+    "word": "realism",
+    "example": "The painter's realism made the wet street seem to glisten.",
+    "exampleZh": "畫家的寫實手法讓濕漉漉的街道彷彿閃著光。"
+  },
+  {
+    "core": 13,
+    "word": "touchdown",
+    "example": "The plane's touchdown was rough enough to wake sleeping passengers.",
+    "exampleZh": "飛機著陸時很顛簸，吵醒了熟睡的乘客。"
+  },
+  {
+    "core": 13,
+    "word": "synthetic",
+    "example": "Synthetic leather covered the cafe's bright yellow chairs.",
+    "exampleZh": "人造皮革包覆著咖啡館亮黃色的椅子。"
+  },
+  {
+    "core": 7,
+    "word": "farming",
+    "example": "Organic farming saved the hillside from chemical runoff.",
+    "exampleZh": "有機農業讓山坡免受化學逕流污染。"
+  },
+  {
+    "core": 11,
+    "word": "offshore",
+    "example": "Offshore wind turbines now power many towns along the western coast.",
+    "exampleZh": "離岸風力發電機如今為西部沿海許多城鎮供電。"
+  },
+  {
+    "core": 5,
+    "word": "entitle",
+    "example": "This ticket will entitle you to one free drink.",
+    "exampleZh": "憑這張票你可以享有一杯免費飲料。"
+  },
+  {
+    "core": 5,
+    "word": "curious",
+    "example": "A curious child opened every drawer in the guesthouse.",
+    "exampleZh": "好奇的孩子打開了民宿的每個抽屜。"
+  },
+  {
+    "core": 5,
+    "word": "strain",
+    "example": "Too much lifting put strain on his injured shoulder.",
+    "exampleZh": "搬太多重物，使他受傷的肩膀負擔更重。"
+  },
+  {
+    "core": 5,
+    "word": "conscious",
+    "example": "She stayed conscious while waiting for the ambulance.",
+    "exampleZh": "她在等救護車時一直保持清醒。"
+  },
+  {
+    "core": 9,
+    "word": "couch",
+    "example": "Dad fell asleep on the couch before the movie ended.",
+    "exampleZh": "電影結束前爸爸就在長沙發上睡著了。"
+  },
+  {
+    "core": 9,
+    "word": "bull",
+    "example": "A bull blocked the farm road until the gate opened.",
+    "exampleZh": "一頭公牛擋在農路上，直到大門打開。"
+  },
+  {
+    "core": 11,
+    "word": "knight",
+    "example": "The queen will knight the surgeon for his service.",
+    "exampleZh": "女王將因那名外科醫師的貢獻而授予他爵位。"
+  },
+  {
+    "core": 3,
+    "word": "attract",
+    "example": "Night blossoms attract moths to the garden wall.",
+    "exampleZh": "夜間開花的植物會把蛾吸引到花園牆邊。"
+  },
+  {
+    "core": 3,
+    "word": "plus",
+    "example": "Two bowls of noodles plus tea cost two hundred dollars.",
+    "exampleZh": "兩碗麵加茶要兩百元。"
+  },
+  {
+    "core": 9,
+    "word": "scarcely",
+    "example": "I could scarcely hear the teacher over the noise in the hallway.",
+    "exampleZh": "走廊上太吵，我幾乎聽不到老師說話。"
+  },
+  {
+    "core": 9,
+    "word": "tolerance",
+    "example": "Teachers should show tolerance toward students who think differently.",
+    "exampleZh": "老師應該對想法不同的學生表現出寬容。"
+  },
+  {
+    "core": 9,
+    "word": "revenge",
+    "example": "He dreamed of revenge long after the trial had ended.",
+    "exampleZh": "審判結束很久以後，他仍夢想著復仇。"
+  },
+  {
+    "core": 9,
+    "word": "chorus",
+    "example": "The school chorus practices every Tuesday after class.",
+    "exampleZh": "學校合唱團每週二下課後練習。"
+  },
+  {
+    "core": 9,
+    "word": "cult",
+    "example": "The cult met secretly in the abandoned theater.",
+    "exampleZh": "那個邪教在廢棄的劇院祕密聚會。"
+  },
+  {
+    "core": 4,
+    "word": "emphasis",
+    "example": "The coach put emphasis on rest after hard practice.",
+    "exampleZh": "教練強調高強度練習後要充分休息。"
+  },
+  {
+    "core": 4,
+    "word": "capture",
+    "example": "The camera can capture fireflies without using flash.",
+    "exampleZh": "這台相機不用閃光燈也能捕捉螢火蟲的身影。"
+  },
+  {
+    "core": 4,
+    "word": "foundation",
+    "example": "The foundation of the house cracked after repeated flooding.",
+    "exampleZh": "房子的地基在多次淹水後裂開了。"
+  },
+  {
+    "core": 3,
+    "word": "lord",
+    "example": "The villagers once called the landowner their lord.",
+    "exampleZh": "村民曾稱地主為他們的領主。"
+  },
+  {
+    "core": 3,
+    "word": "hurt",
+    "example": "My wrist began to hurt after carrying groceries upstairs.",
+    "exampleZh": "提雜貨上樓後，我的手腕開始疼痛。"
+  },
+  {
+    "core": 3,
+    "word": "progress",
+    "example": "Her walking progress surprised the therapist this month.",
+    "exampleZh": "這個月，她走路方面的進步讓治療師十分驚訝。"
+  },
+  {
+    "core": 3,
+    "word": "screen",
+    "example": "The outdoor screen showed cartoons beside the temple tonight.",
+    "exampleZh": "今晚戶外螢幕在廟旁播放卡通。"
+  },
+  {
+    "core": 3,
+    "word": "spot",
+    "example": "There was a small spot on my white shirt after lunch.",
+    "exampleZh": "午餐後，我的白襯衫上有一個小汙點。"
+  },
+  {
+    "core": 7,
+    "word": "rub",
+    "example": "Please rub sesame oil gently onto the bruised shoulder.",
+    "exampleZh": "請把芝麻油輕輕擦在瘀青的肩膀上。"
+  },
+  {
+    "core": 7,
+    "word": "concerning",
+    "example": "Passengers asked questions concerning the missing luggage at the service counter.",
+    "exampleZh": "旅客在服務櫃台詢問有關遺失行李的問題。"
+  },
+  {
+    "core": 7,
+    "word": "mouse",
+    "example": "A mouse ran under the hotel bed last night.",
+    "exampleZh": "昨晚有一隻老鼠跑到旅館床底下。"
+  },
+  {
+    "core": 7,
+    "word": "hunting",
+    "example": "Hunting is not allowed in this national park.",
+    "exampleZh": "這座國家公園內禁止狩獵。"
+  },
+  {
+    "core": 7,
+    "word": "adventure",
+    "example": "Their canoe adventure ended at a quiet sandbar.",
+    "exampleZh": "他們的獨木舟冒險最後在一處安靜的沙洲結束。"
+  },
+  {
+    "core": 7,
+    "word": "flesh",
+    "example": "The knife cut deep into the flesh of his arm.",
+    "exampleZh": "刀子深深割進他手臂的肉裡。"
+  },
+  {
+    "core": 7,
+    "word": "weakness",
+    "example": "The fever left him with weakness in his legs for days.",
+    "exampleZh": "發燒讓他的雙腿虛弱無力好幾天。"
+  },
+  {
+    "core": 8,
+    "word": "cabin",
+    "example": "Their cabin overlooked pines and a narrow winter creek.",
+    "exampleZh": "他們的小木屋俯瞰著松林和一條狹窄的冬季溪流。"
+  },
+  {
+    "core": 11,
+    "word": "disco",
+    "example": "The disco stayed open until sunrise on New Year's Day.",
+    "exampleZh": "那家迪斯可舞廳在元旦開到日出。"
+  },
+  {
+    "core": 11,
+    "word": "aerospace",
+    "example": "Aerospace attracts engineers who enjoy testing satellites in desert hangars.",
+    "exampleZh": "航太產業吸引喜歡在沙漠機棚測試衛星的工程師。"
+  },
+  {
+    "core": 11,
+    "word": "stalk",
+    "example": "The farmer cut each corn stalk close to the ground.",
+    "exampleZh": "農夫把每根玉米莖貼近地面割下。"
+  },
+  {
+    "core": 11,
+    "word": "conserve",
+    "example": "The chef tried to conserve water by rinsing vegetables together.",
+    "exampleZh": "主廚把蔬菜一起沖洗來節約用水。"
+  },
+  {
+    "core": 1,
+    "word": "police",
+    "example": "The police directed traffic after the concert ended.",
+    "exampleZh": "音樂會結束後警察指揮交通。"
+  },
+  {
+    "core": 13,
+    "word": "feminism",
+    "example": "Feminism shaped the magazine's bold coverage of factory women.",
+    "exampleZh": "女性主義影響了這本雜誌對女工的大膽報導。"
+  },
+  {
+    "core": 13,
+    "word": "lever",
+    "example": "Pull the red lever to release the loading gate.",
+    "exampleZh": "拉下紅色控制桿就能打開裝貨門。"
+  },
+  {
+    "core": 13,
+    "word": "probation",
+    "example": "The new employee met her manager weekly during probation.",
+    "exampleZh": "試用期間，這位新員工每週都和主管見面。"
+  },
+  {
+    "core": 14,
+    "word": "recess",
+    "example": "Children traded stickers during recess behind the gym.",
+    "exampleZh": "孩子們在體育館後方的下課時間交換貼紙。"
+  },
+  {
+    "core": 14,
+    "word": "multitude",
+    "example": "A multitude of lanterns floated above the river.",
+    "exampleZh": "無數燈籠飄浮在河面上。"
+  },
+  {
+    "core": 10,
+    "word": "mighty",
+    "example": "The mighty river swallowed the old ferry dock overnight.",
+    "exampleZh": "洶湧的河水一夜之間吞沒了舊渡船碼頭。"
+  },
+  {
+    "core": 10,
+    "word": "pesticide",
+    "example": "The farmer stopped using pesticide near the beehives last spring.",
+    "exampleZh": "農夫去年春天停止在蜂箱附近使用殺蟲劑。"
+  },
+  {
+    "core": 7,
+    "word": "toilet",
+    "example": "The public toilet behind the station had no paper.",
+    "exampleZh": "車站後方的公廁沒有衛生紙。"
+  },
+  {
+    "core": 7,
+    "word": "delicate",
+    "example": "Two delicate tea cups rattled when the train passed.",
+    "exampleZh": "兩個精緻的茶杯在火車經過時輕輕作響。"
+  },
+  {
+    "core": 7,
+    "word": "envelope",
+    "example": "The envelope contained two tickets and a pressed fern.",
+    "exampleZh": "信封裡有兩張票和一片壓乾的蕨葉。"
+  },
+  {
+    "core": 7,
+    "word": "suck",
+    "example": "The pump can suck water from the flooded basement.",
+    "exampleZh": "幫浦能從淹水的地下室把水吸出來。"
+  },
+  {
+    "core": 7,
+    "word": "drunk",
+    "example": "A drunk tourist sang softly outside the hostel.",
+    "exampleZh": "一名醉酒的旅客在旅舍外輕聲唱歌。"
+  },
+  {
+    "core": 9,
+    "word": "nick",
+    "example": "A tiny nick appeared on the chef's knife.",
+    "exampleZh": "主廚的刀上出現了一個小缺口。"
+  },
+  {
+    "core": 9,
+    "word": "brutal",
+    "example": "The brutal attack shocked the quiet fishing village.",
+    "exampleZh": "這起殘忍的攻擊震驚了安靜的漁村。"
+  },
+  {
+    "core": 9,
+    "word": "compact",
+    "example": "Her compact umbrella fit inside a jacket pocket.",
+    "exampleZh": "她的小巧雨傘可以放進外套口袋。"
+  },
+  {
+    "core": 9,
+    "word": "albeit",
+    "example": "The soup was tasty, albeit far too salty.",
+    "exampleZh": "這湯很好喝，雖然實在太鹹了。"
+  },
+  {
+    "core": 9,
+    "word": "vocal",
+    "example": "Vocal training strengthened her voice before the audition.",
+    "exampleZh": "試唱前，聲樂訓練強化了她的嗓音。"
+  },
+  {
+    "core": 9,
+    "word": "transit",
+    "example": "City transit workers reopened the station before rush hour.",
+    "exampleZh": "市區大眾運輸員工在尖峰時段前重新開放了車站。"
+  },
+  {
+    "core": 11,
+    "word": "relentless",
+    "example": "The relentless rain forced us to cancel the school picnic.",
+    "exampleZh": "持續不斷的大雨使我們取消了學校野餐。"
+  },
+  {
+    "core": 6,
+    "word": "mixed",
+    "example": "The chef served a mixed salad with tomatoes and cucumbers.",
+    "exampleZh": "主廚端上一份有番茄和小黃瓜的綜合沙拉。"
+  },
+  {
+    "core": 12,
+    "word": "jumper",
+    "example": "She wore a warm wool jumper to school on the cold morning.",
+    "exampleZh": "寒冷的早晨，她穿了一件保暖的羊毛衣去上學。"
+  },
+  {
+    "core": 4,
+    "word": "motion",
+    "example": "The boat's motion made several tourists feel sick.",
+    "exampleZh": "船身的晃動讓幾位遊客覺得噁心。"
+  },
+  {
+    "core": 4,
+    "word": "tooth",
+    "example": "My tooth hurt whenever I drank iced tea.",
+    "exampleZh": "我每次喝冰茶，牙齒就會痛。"
+  },
+  {
+    "core": 4,
+    "word": "selection",
+    "example": "The bakery's selection of bread was best before seven in the morning.",
+    "exampleZh": "麵包店的麵包種類在早上七點前最齊全。"
+  },
+  {
+    "core": 7,
+    "word": "presentation",
+    "example": "Her presentation on jade necklaces made every buyer lean closer.",
+    "exampleZh": "她關於翡翠項鍊的簡報讓每位買家都湊近看。"
+  },
+  {
+    "core": 7,
+    "word": "custom",
+    "example": "It is a local custom to bring fruit when visiting a neighbor.",
+    "exampleZh": "拜訪鄰居時帶水果是當地的習俗。"
+  },
+  {
+    "core": 11,
+    "word": "elevate",
+    "example": "A wooden crate can elevate the speaker above the crowded platform.",
+    "exampleZh": "木箱可以把講者抬高到擁擠的月台人群之上。"
+  },
+  {
+    "core": 11,
+    "word": "foul",
+    "example": "Foul water leaked from the pipe beneath the seafood stall.",
+    "exampleZh": "海鮮攤底下的水管漏出惡臭的污水。"
+  },
+  {
+    "core": 8,
+    "word": "random",
+    "example": "A random stranger paid for her tea at the station.",
+    "exampleZh": "一位素不相識的陌生人在車站替她付茶錢。"
+  },
+  {
+    "core": 7,
+    "word": "honestly",
+    "example": "She honestly told her teacher that she had forgotten the homework.",
+    "exampleZh": "她誠實地告訴老師自己忘了寫作業。"
+  },
+  {
+    "core": 7,
+    "word": "broadly",
+    "example": "The new rule applies broadly to all students in our school.",
+    "exampleZh": "新規定廣泛適用於我們學校的所有學生。"
+  },
+  {
+    "core": 7,
+    "word": "alternatively",
+    "example": "We could take the bus; alternatively, we could ride our bikes.",
+    "exampleZh": "我們可以搭公車，或者也可以騎腳踏車。"
+  },
+  {
+    "core": 7,
+    "word": "attempted",
+    "example": "The attempted robbery failed when the alarm rang.",
+    "exampleZh": "警報一響，那起搶劫未遂。"
+  },
+  {
+    "core": 5,
+    "word": "sail",
+    "example": "We sail only when the captain trusts the weather.",
+    "exampleZh": "船長信任天氣狀況時，我們才會出航。"
+  },
+  {
+    "core": 5,
+    "word": "cooking",
+    "example": "Grandma's cooking filled the stairwell with the aroma of soy sauce.",
+    "exampleZh": "奶奶煮的菜讓醬油香瀰漫整座樓梯間。"
+  },
+  {
+    "core": 5,
+    "word": "mate",
+    "example": "The plumber's mate carried extra washers for the sink repair.",
+    "exampleZh": "水電工的助手帶了修水槽用的備用墊圈。"
+  },
+  {
+    "core": 5,
+    "word": "invitation",
+    "example": "The wedding invitation arrived with a pressed jasmine flower.",
+    "exampleZh": "婚禮請帖附著一朵壓乾的茉莉花寄到了。"
+  },
+  {
+    "core": 5,
+    "word": "generous",
+    "example": "A generous neighbor shared soup after our stove broke.",
+    "exampleZh": "爐子壞掉後，慷慨的鄰居分了湯給我們。"
+  },
+  {
+    "core": 11,
+    "word": "cola",
+    "example": "I bought a cold cola from the vending machine after class.",
+    "exampleZh": "下課後我在自動販賣機買了一罐冰可樂。"
+  },
+  {
+    "core": 1,
+    "word": "security",
+    "example": "Airport security checked every bag before boarding today.",
+    "exampleZh": "今天登機前機場安檢檢查了每件行李。"
+  },
+  {
+    "core": 7,
+    "word": "lemon",
+    "example": "A bright yellow lemon rolled under the restaurant refrigerator.",
+    "exampleZh": "一顆亮黃色檸檬滾到餐廳冰箱下。"
+  },
+  {
+    "core": 13,
+    "word": "imitation",
+    "example": "The imitation jade bracelet turned green in the rain.",
+    "exampleZh": "那條仿玉手環淋雨後變綠了。"
+  },
+  {
+    "core": 5,
+    "word": "friendly",
+    "example": "The friendly driver waited while Grandpa climbed aboard slowly.",
+    "exampleZh": "那位友善的司機等爺爺慢慢上車。"
+  },
+  {
+    "core": 5,
+    "word": "extreme",
+    "example": "The extreme heat kept fruit sellers under wet towels.",
+    "exampleZh": "酷熱讓水果攤販只好披著濕毛巾降溫。"
+  },
+  {
+    "core": 14,
+    "word": "daytime",
+    "example": "Owls usually sleep during the daytime inside old trees.",
+    "exampleZh": "貓頭鷹通常白天在老樹裡睡覺。"
+  },
+  {
+    "core": 14,
+    "word": "orient",
+    "example": "New students attend a meeting to orient themselves to school life.",
+    "exampleZh": "新生參加說明會，以適應學校生活。"
+  },
+  {
+    "core": 14,
+    "word": "gem",
+    "example": "She wore a small blue gem on her silver ring.",
+    "exampleZh": "她銀戒指上鑲著一顆藍色小寶石。"
+  },
+  {
+    "core": 14,
+    "word": "bun",
+    "example": "She bought a warm bun from the bakery on her way to school.",
+    "exampleZh": "她上學途中在麵包店買了一個溫熱的小圓麵包。"
+  },
+  {
+    "core": 1,
+    "word": "fight",
+    "example": "The fight ended before anyone was badly hurt.",
+    "exampleZh": "在有人嚴重受傷前，這場打架就結束了。"
+  },
+  {
+    "core": 1,
+    "word": "concern",
+    "example": "Her main concern is safety on the stairs.",
+    "exampleZh": "她最擔心的是樓梯上的安全。"
+  },
+  {
+    "core": 4,
+    "word": "capable",
+    "example": "She is capable of repairing radios without instructions.",
+    "exampleZh": "她有能力不看說明書就修好收音機。"
+  },
+  {
+    "core": 4,
+    "word": "invest",
+    "example": "They invest in solar panels for the family farm.",
+    "exampleZh": "他們投資太陽能板，為自家農場所用。"
+  },
+  {
+    "core": 4,
+    "word": "lovely",
+    "example": "Your grandmother has a lovely smile in old photographs.",
+    "exampleZh": "舊照片裡，你奶奶的笑容很迷人。"
+  },
+  {
+    "core": 3,
+    "word": "block",
+    "example": "Fallen branches block the shortcut behind the school today.",
+    "exampleZh": "今天倒下的樹枝擋住了學校後方的捷徑。"
+  },
+  {
+    "core": 3,
+    "word": "youth",
+    "example": "Youth gave him courage to cross the ocean alone.",
+    "exampleZh": "青春賦予他獨自橫渡大海的勇氣。"
+  },
+  {
+    "core": 3,
+    "word": "spread",
+    "example": "The flu spread quickly through the crowded dormitory overnight.",
+    "exampleZh": "流感一夜之間在擁擠的宿舍裡傳開。"
+  },
+  {
+    "core": 12,
+    "word": "annoy",
+    "example": "Mosquitoes annoy campers more than the cold wind.",
+    "exampleZh": "比起冷風，蚊子更讓露營者心煩。"
+  },
+  {
+    "core": 12,
+    "word": "disapproval",
+    "example": "Her disapproval showed when she pushed away the contract.",
+    "exampleZh": "她把合約推開時，明顯流露出不贊成的神情。"
+  },
+  {
+    "core": 4,
+    "word": "instrument",
+    "example": "My sister plays an instrument in the school orchestra every Friday.",
+    "exampleZh": "我姊姊每週五都在學校管弦樂團演奏一種樂器。"
+  },
+  {
+    "core": 6,
+    "word": "auction",
+    "example": "The auction began with a cracked porcelain bowl.",
+    "exampleZh": "拍賣從一只裂紋陶瓷碗開始。"
+  },
+  {
+    "core": 6,
+    "word": "naval",
+    "example": "Two naval officers boarded the ferry near the cape.",
+    "exampleZh": "兩名海軍軍官在海岬附近登上渡輪。"
+  },
+  {
+    "core": 6,
+    "word": "plunge",
+    "example": "Tourists watched salmon plunge over the low waterfall.",
+    "exampleZh": "遊客看著鮭魚衝下低矮的瀑布。"
+  },
+  {
+    "core": 11,
+    "word": "shattered",
+    "example": "The shattered window glass covered the classroom floor.",
+    "exampleZh": "破碎的窗玻璃撒滿了教室地板。"
+  },
+  {
+    "core": 11,
+    "word": "bog",
+    "example": "The hikers got stuck in a muddy bog near the lake.",
+    "exampleZh": "登山客困在湖邊一處泥濘的沼澤裡。"
+  },
+  {
+    "core": 11,
+    "word": "brew",
+    "example": "My father likes to brew tea every morning before work.",
+    "exampleZh": "我爸爸每天早上上班前都喜歡泡茶。"
+  },
+  {
+    "core": 2,
+    "word": "civil",
+    "example": "Civil rights protect every citizen under the law.",
+    "exampleZh": "公民權利在法律下保障每一位公民。"
+  },
+  {
+    "core": 8,
+    "word": "wealthy",
+    "example": "A wealthy collector bought the cracked vase anyway.",
+    "exampleZh": "一位富有的收藏家還是買下了那只裂花瓶。"
+  },
+  {
+    "core": 2,
+    "word": "in",
+    "example": "Your keys are in the blue bag on the table.",
+    "exampleZh": "你的鑰匙在桌上的藍色袋子裡。"
+  },
+  {
+    "core": 2,
+    "word": "will",
+    "example": "I will call you after the baseball game tonight.",
+    "exampleZh": "今晚棒球比賽結束後我會打電話給你。"
+  },
+  {
+    "core": 2,
+    "word": "lot",
+    "example": "We saw a lot of stars on the mountain last night.",
+    "exampleZh": "昨晚我們在山上看見了很多星星。"
+  },
+  {
+    "core": 9,
+    "word": "constituent",
+    "example": "Salt is a key constituent of seawater and many snacks.",
+    "exampleZh": "鹽是海水和許多零食的重要成分。"
+  },
+  {
+    "core": 9,
+    "word": "wagon",
+    "example": "The old wagon carried pumpkins from the field.",
+    "exampleZh": "舊馬車把南瓜從田裡載出來。"
+  },
+  {
+    "core": 9,
+    "word": "uncover",
+    "example": "Workers uncover old tiles by lifting the station floor.",
+    "exampleZh": "工人掀開車站地板，露出了舊瓷磚。"
+  },
+  {
+    "core": 6,
+    "word": "gesture",
+    "example": "He made a quiet gesture to tell us to stop talking.",
+    "exampleZh": "他比了個安靜的手勢，要我們別再講話。"
+  },
+  {
+    "core": 6,
+    "word": "dominant",
+    "example": "Pop music is the dominant style among students at our school.",
+    "exampleZh": "流行音樂是我們學校學生之間最盛行的風格。"
+  },
+  {
+    "core": 6,
+    "word": "treasury",
+    "example": "The treasury ran short of money after the long war.",
+    "exampleZh": "長期戰爭過後，國庫的資金不足了。"
+  },
+  {
+    "core": 6,
+    "word": "beaten",
+    "example": "Our team felt beaten after losing the final game by ten points.",
+    "exampleZh": "我們隊伍以十分之差輸掉決賽，大家覺得被打敗了。"
+  },
+  {
+    "core": 10,
+    "word": "startle",
+    "example": "The loud temple bell can startle pigeons on the roof.",
+    "exampleZh": "響亮的廟鐘聲可能會嚇到屋頂上的鴿子。"
+  },
+  {
+    "core": 10,
+    "word": "sandy",
+    "example": "His sandy shoes left prints across the clean floor.",
+    "exampleZh": "他沾滿沙子的鞋在乾淨的地板上留下腳印。"
+  },
+  {
+    "core": 10,
+    "word": "minus",
+    "example": "Dinner cost forty dollars minus the coupon discount.",
+    "exampleZh": "晚餐花了四十美元，扣掉折價券優惠後的金額。"
+  },
+  {
+    "core": 11,
+    "word": "obituary",
+    "example": "The obituary described her years rescuing injured workers.",
+    "exampleZh": "訃聞提到她多年來救助受傷工人的事蹟。"
+  },
+  {
+    "core": 11,
+    "word": "armour",
+    "example": "Rusty armour lined the castle wall near the stairs.",
+    "exampleZh": "生鏽的盔甲排列在樓梯旁的城堡牆邊。"
+  },
+  {
+    "core": 11,
+    "word": "psychiatry",
+    "example": "Psychiatry helped him name the fear he had carried.",
+    "exampleZh": "精神醫學幫他說出一直承受的恐懼。"
+  },
+  {
+    "core": 9,
+    "word": "directory",
+    "example": "The hotel directory listed a nearby dentist in the downtown area.",
+    "exampleZh": "飯店的名錄列出了市中心附近的一間牙醫診所。"
+  },
+  {
+    "core": 9,
+    "word": "mansion",
+    "example": "The old mansion overlooked the tea fields below.",
+    "exampleZh": "那棟老豪宅俯瞰著下方的茶園。"
+  },
+  {
+    "core": 9,
+    "word": "enact",
+    "example": "Lawmakers voted to enact stricter rules for factory waste after the protests.",
+    "exampleZh": "抗議之後，立法者投票通過制定更嚴格的工廠廢棄物規定。"
+  },
+  {
+    "core": 2,
+    "word": "accord",
+    "example": "The fishermen signed an accord to share the small pier.",
+    "exampleZh": "漁民簽署了協議，同意共用這座小碼頭。"
+  },
+  {
+    "core": 13,
+    "word": "scarf",
+    "example": "Mina wrapped a red scarf around her neck before leaving the house.",
+    "exampleZh": "米娜出門前把一條紅圍巾圍在脖子上。"
+  },
+  {
+    "core": 13,
+    "word": "compartment",
+    "example": "She hid the passport in a secret compartment of her suitcase.",
+    "exampleZh": "她把護照藏在行李箱的一個暗格裡。"
+  },
+  {
+    "core": 13,
+    "word": "ensemble",
+    "example": "The school ensemble practiced a new piece after class every Friday.",
+    "exampleZh": "學校的合奏團每週五放學後練習一首新曲子。"
+  },
+  {
+    "core": 13,
+    "word": "cone",
+    "example": "The ice cream cone melted quickly under the hot afternoon sun.",
+    "exampleZh": "冰淇淋甜筒在炎熱的午後陽光下很快就融化了。"
+  },
+  {
+    "core": 13,
+    "word": "thanksgiving",
+    "example": "Our family eats turkey together every year at Thanksgiving.",
+    "exampleZh": "我們家每年感恩節都會一起吃火雞。"
+  },
+  {
+    "core": 4,
+    "word": "personality",
+    "example": "Her warm personality makes shy children feel welcome in class.",
+    "exampleZh": "她親切的個性讓害羞的孩子在班上感到自在。"
+  },
+  {
+    "core": 3,
+    "word": "strange",
+    "example": "A strange smell drifted from the old elevator upstairs.",
+    "exampleZh": "一股奇怪的氣味從樓上的舊電梯飄了出來。"
+  },
+  {
+    "core": 3,
+    "word": "session",
+    "example": "The photography session ended when rain struck the tin roof.",
+    "exampleZh": "雨點打上鐵皮屋頂時，攝影時段便結束了。"
+  },
+  {
+    "core": 3,
+    "word": "essential",
+    "example": "Clean hands are essential before preparing baby formula safely.",
+    "exampleZh": "安全沖泡嬰兒配方奶粉前，雙手清潔是必要的。"
+  },
+  {
+    "core": 3,
+    "word": "copy",
+    "example": "Please copy the recipe before returning the notebook tomorrow.",
+    "exampleZh": "明天還筆記本之前，請先抄下這份食譜。"
+  },
+  {
+    "core": 3,
+    "word": "writing",
+    "example": "Her writing appears on postcards sold at the station.",
+    "exampleZh": "她的作品出現在車站販售的明信片上。"
+  },
+  {
+    "core": 8,
+    "word": "initiate",
+    "example": "The museum will initiate night tours during the lantern festival.",
+    "exampleZh": "博物館將在燈會期間推出夜間導覽。"
+  },
+  {
+    "core": 8,
+    "word": "basket",
+    "example": "A bamboo basket held mangoes beside the roadside scale.",
+    "exampleZh": "路邊的秤旁放著一個裝芒果的竹籃。"
+  },
+  {
+    "core": 8,
+    "word": "sue",
+    "example": "The tenant may sue if repairs are delayed again.",
+    "exampleZh": "若維修再次拖延，房客可能會提出告訴。"
+  },
+  {
+    "core": 8,
+    "word": "pond",
+    "example": "Frogs crowded the pond after rain filled the cracked mud.",
+    "exampleZh": "雨水填滿乾裂的泥地後，青蛙擠滿了池塘。"
+  },
+  {
+    "core": 5,
+    "word": "tower",
+    "example": "A red tower marks the harbor entrance for fishing boats.",
+    "exampleZh": "紅色高塔標示漁船進港口的位置。"
+  },
+  {
+    "core": 5,
+    "word": "sand",
+    "example": "Warm sand stuck to our feet after the beach concert ended.",
+    "exampleZh": "海邊演唱會結束後，溫熱的沙子黏在我們腳上。"
+  },
+  {
+    "core": 5,
+    "word": "gentle",
+    "example": "A gentle breeze moved the prayer flags above us.",
+    "exampleZh": "一陣微風吹動我們頭頂上的祈願旗。"
+  },
+  {
+    "core": 5,
+    "word": "plain",
+    "example": "She chose plain rice because the curry was spicy.",
+    "exampleZh": "因為咖哩太辣，所以她選擇了白飯。"
+  },
+  {
+    "core": 5,
+    "word": "prompt",
+    "example": "A prompt reply saved our room at the inn.",
+    "exampleZh": "迅速的回覆保住了我們在旅店的房間。"
+  },
+  {
+    "core": 5,
+    "word": "singer",
+    "example": "The singer warmed up behind the temple stage.",
+    "exampleZh": "歌手在廟前舞台後方暖嗓。"
+  },
+  {
+    "core": 10,
+    "word": "conquer",
+    "example": "The army tried to conquer the island before winter arrived.",
+    "exampleZh": "軍隊試圖在冬天來臨前征服那座島嶼。"
+  },
+  {
+    "core": 10,
+    "word": "wicked",
+    "example": "A wicked grin spread across her face after the prank worked.",
+    "exampleZh": "惡作劇成功後，她臉上露出了壞笑。"
+  },
+  {
+    "core": 10,
+    "word": "regiment",
+    "example": "A regiment marched past the station before the ceremony.",
+    "exampleZh": "典禮前，一個團的士兵列隊走過車站。"
+  },
+  {
+    "core": 11,
+    "word": "boycott",
+    "example": "Residents decided to boycott the café after cameras appeared in the restroom.",
+    "exampleZh": "廁所出現攝影機後，居民決定抵制那家咖啡館。"
+  },
+  {
+    "core": 11,
+    "word": "contingent",
+    "example": "Our picnic is contingent on the weather this weekend.",
+    "exampleZh": "我們這個週末的野餐要視天氣而定。"
+  },
+  {
+    "core": 11,
+    "word": "savage",
+    "example": "The savage guard kicked prisoners away from the well.",
+    "exampleZh": "那名殘酷的守衛把囚犯踢離水井。"
+  },
+  {
+    "core": 1,
+    "word": "follow",
+    "example": "Follow me, and I will show you the way to the library.",
+    "exampleZh": "跟我來，我帶你去圖書館。"
+  },
+  {
+    "core": 1,
+    "word": "power",
+    "example": "The power of the waves surprised the children at the beach.",
+    "exampleZh": "海浪的力量讓海灘上的孩子們很驚訝。"
+  },
+  {
+    "core": 1,
+    "word": "study",
+    "example": "I study English for an hour every evening after dinner.",
+    "exampleZh": "我每天晚餐後學習一小時英文。"
+  },
+  {
+    "core": 6,
+    "word": "organized",
+    "example": "Her organized pantry had labels on every spice jar.",
+    "exampleZh": "她井然有序的食品櫃裡每罐香料都貼著標籤。"
+  },
+  {
+    "core": 6,
+    "word": "provision",
+    "example": "The school made provision for extra buses during the typhoon season.",
+    "exampleZh": "學校為颱風季節預先安排了額外的公車。"
+  },
+  {
+    "core": 6,
+    "word": "anybody",
+    "example": "Can anybody here help me carry these boxes upstairs?",
+    "exampleZh": "這裡有誰能幫我把這些箱子搬上樓嗎？"
+  },
+  {
+    "core": 6,
+    "word": "folk",
+    "example": "Local folk dancers filled the square with bells and red scarves.",
+    "exampleZh": "當地民俗舞者帶著鈴鐺和紅圍巾擠滿廣場。"
+  },
+  {
+    "core": 12,
+    "word": "outdoors",
+    "example": "Meals taste better outdoors beside the river at dusk.",
+    "exampleZh": "黃昏時在河邊的戶外用餐，飯菜吃起來更美味。"
+  },
+  {
+    "core": 12,
+    "word": "beak",
+    "example": "The bird's beak tapped against the metal feeder.",
+    "exampleZh": "那隻鳥的嘴敲著金屬餵食器。"
+  },
+  {
+    "core": 12,
+    "word": "yawn",
+    "example": "A loud yawn escaped from the sleepy driver.",
+    "exampleZh": "那位疲倦的駕駛忍不住打了個大哈欠。"
+  }
+]

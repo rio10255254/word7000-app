@@ -188,7 +188,7 @@ jobs:
           count() { jq '.'"$1"' | length' "$OUT/review.json"; }
           MEANINGS=$(count meanings); EXAMPLES=$(count examples); SPEAKING=$(count speaking)
           if [ "$CONTENT" = "speaking" ]; then
-            git add content/speaking ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
+            git add content/speaking ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json src/data/speaking-cards.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
             git commit -m "Apply Claude's speaking card review $BATCH_ID" -m "$SPEAKING speaking card corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
           else
             git add src/data ios/Word7000/Resources/words.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"

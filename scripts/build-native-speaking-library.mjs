@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const destination = 'ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json';
+// The web app reads the same reviewed cards, without the provenance fields.
+const webDestination = 'src/data/speaking-cards.json';
 const fields = ['id', 'word', 'keywordZh', 'question', 'answerEn', 'answerZh'];
 const tokens = text => text.toLowerCase().match(/[a-z]+/g) ?? [];
 
@@ -82,13 +84,17 @@ export function buildLibrary() {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const document = buildLibrary();
-  const output = JSON.stringify(document, null, 2) + '\n';
-  if (process.argv.includes('--check')) {
-    if (fs.readFileSync(path.join(root, destination), 'utf8').replace(/\r\n/g, '\n') !== output) {
-      throw new Error('Packaged questions are stale. Run node scripts/build-native-speaking-library.mjs');
+  const outputs = [
+    [destination, JSON.stringify(document, null, 2) + '\n'],
+    [webDestination, JSON.stringify(document.records) + '\n'],
+  ];
+  for (const [file, output] of outputs) {
+    if (process.argv.includes('--check')) {
+      const current = fs.existsSync(path.join(root, file)) ? fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n') : '';
+      if (current !== output) throw new Error(`${file} is stale. Run node scripts/build-native-speaking-library.mjs`);
+    } else {
+      fs.writeFileSync(path.join(root, file), output);
     }
-  } else {
-    fs.writeFileSync(path.join(root, destination), output);
   }
   console.log(JSON.stringify({ questions: document.records.length, newQuestions: 480, topics: 20, levels: document.coverage.levels, checked: process.argv.includes('--check') }));
 }

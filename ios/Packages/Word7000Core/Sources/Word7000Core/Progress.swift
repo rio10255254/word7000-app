@@ -353,9 +353,9 @@ public enum LearningEngine {
     // MARK: Study queue
 
     /// Picks the cards for one study session. Words due for review come first
-    /// (oldest due date first), then words never seen before in library
-    /// order, and only when both run out does it pull known words ahead of
-    /// their schedule. The chosen cards are then shuffled so reviews and new
+    /// (oldest due date first), then words never seen before picked at random
+    /// from the whole pool, and only when both run out does it pull known
+    /// words ahead of their schedule. The chosen cards are then shuffled so reviews and new
     /// words mix.
     public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
         let size = max(0, limit)
@@ -383,7 +383,7 @@ public enum LearningEngine {
         }
         ahead.sort { $0.date != $1.date ? $0.date < $1.date : $0.order < $1.order }
 
-        let chosen = Array((due.map(\.word) + fresh + ahead.map(\.word)).prefix(size))
+        let chosen = Array((due.map(\.word) + SeededRandom.shuffle(fresh, seed: "\(seed):fresh") + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
     }
 

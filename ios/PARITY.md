@@ -1463,10 +1463,10 @@ buildStudyQueue(pool, progress, today, limit = max(5, dailyTarget), seed = "<ms>
     else               -> ahead.append((d, word))
   due.sort  by date asc, then struggling first          (stable)
   ahead.sort by date asc                                 (stable)
-  chosen = (due + fresh + ahead).prefix(limit)
+  chosen = (due + shuffleWithSeed(fresh, "\(seed):fresh") + ahead).prefix(limit)
   return shuffleWithSeed(chosen, "\(seed):queue")
 ```
-i.e. overdue reviews first (oldest first, "review"-status before "mastered" on the same date), then never-seen words in library order, and only if both run out, known words ahead of schedule. The chosen cards are shuffled.
+i.e. overdue reviews first (oldest first, "review"-status before "mastered" on the same date), then never-seen words picked at random from the whole pool, and only if both run out, known words ahead of schedule. The chosen cards are shuffled.
 
 Session object (in memory only, never persisted):
 ```

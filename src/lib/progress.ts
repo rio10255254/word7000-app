@@ -680,9 +680,11 @@ export type StudyQueueOptions = {
 
 /**
  * Picks the cards for one study session. Words that are due for review come
- * first (oldest due date first), then words never seen before in library
- * order, and only when both run out does it pull known words ahead of their
- * schedule. The chosen cards are then shuffled so reviews and new words mix.
+ * first (oldest due date first), then words never seen before picked at
+ * random from the whole pool, and only when both run out does it pull known
+ * words ahead of their schedule. New words used to come in library order, so
+ * with "all levels" every session was Core 1. The chosen cards are then
+ * shuffled so reviews and new words mix.
  */
 export function buildStudyQueue(
   words: WordEntry[],
@@ -714,7 +716,7 @@ export function buildStudyQueue(
   ahead.sort((left, right) => left.date.localeCompare(right.date));
   const chosen = [
     ...due.map((entry) => entry.word),
-    ...fresh,
+    ...shuffleWithSeed(fresh, `${seed}:fresh`),
     ...ahead.map((entry) => entry.word),
   ].slice(0, size);
 

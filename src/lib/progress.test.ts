@@ -396,6 +396,24 @@ describe('library and quiz helpers', () => {
     expect(session.map((word) => word.id)).not.toEqual(sampleWords.slice(0, 10).map((word) => word.id));
   });
 
+  test('seeded shuffles reach every ordering and put each card first equally often', () => {
+    const words = sampleWords.slice(0, 4);
+    const orders = new Map<string, number>();
+    const firstPositions = [0, 0, 0, 0];
+    for (let run = 0; run < 4800; run += 1) {
+      const order = buildStudySession(words, `fairness-${run}`);
+      firstPositions[words.indexOf(order[0])] += 1;
+      const key = order.map((word) => word.id).join('|');
+      orders.set(key, (orders.get(key) ?? 0) + 1);
+    }
+
+    expect(orders.size).toBe(24);
+    for (const count of firstPositions) {
+      expect(count).toBeGreaterThan(1050);
+      expect(count).toBeLessThan(1350);
+    }
+  });
+
   test('buildQuizSession caps the count when the filtered bank is smaller than requested', () => {
     const session = buildQuizSession(sampleWords.slice(0, 6), 10, 'small-bank');
 
@@ -524,8 +542,19 @@ describe('study queue', () => {
     const queue = buildStudyQueue(words, state, today, { limit: 4, seed: 'queue' }).map((entry) => entry.id);
 
     expect(queue).toHaveLength(4);
-    expect(queue).toEqual(expect.arrayContaining(['w00', 'w01', 'w03', 'w04']));
+    expect(queue).toEqual(expect.arrayContaining(['w00', 'w01']));
     expect(queue).not.toContain('w02');
+  });
+
+  test('draws new words from the whole pool instead of the start of the library', () => {
+    const levels = new Set<number>();
+    for (let run = 0; run < 20; run += 1) {
+      for (const entry of buildStudyQueue(words, emptyProgress(), today, { limit: 5, seed: `spread-${run}` })) {
+        levels.add(Math.floor(Number(entry.id.slice(1)) / 10));
+      }
+    }
+
+    expect(levels).toEqual(new Set([0, 1, 2]));
   });
 
   test('falls back to known words early when nothing else is left', () => {

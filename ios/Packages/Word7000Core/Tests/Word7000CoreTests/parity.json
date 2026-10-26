@@ -1108,79 +1108,79 @@
  },
  "studySession": [
   "w0001",
-  "w0013",
-  "w0019",
-  "w0007",
-  "w0003",
-  "w0014",
-  "w0009",
-  "w0017",
-  "w0023",
-  "w0029",
-  "w0025",
-  "w0015",
-  "w0002",
-  "w0018",
-  "w0012",
-  "w0028",
-  "w0026",
-  "w0021",
-  "w0005",
-  "w0016",
-  "w0010",
-  "w0006",
-  "w0011",
-  "w0020",
-  "w0030",
   "w0027",
+  "w0029",
+  "w0017",
+  "w0013",
+  "w0008",
   "w0024",
   "w0004",
+  "w0018",
+  "w0016",
+  "w0014",
+  "w0002",
+  "w0005",
+  "w0019",
+  "w0020",
+  "w0025",
+  "w0026",
+  "w0030",
+  "w0012",
   "w0022",
-  "w0008"
+  "w0011",
+  "w0007",
+  "w0015",
+  "w0021",
+  "w0010",
+  "w0003",
+  "w0028",
+  "w0009",
+  "w0006",
+  "w0023"
  ],
  "quizSessionSmall": [
-  "w0003",
-  "w0010",
-  "w0026",
-  "w0011",
-  "w0006",
-  "w0008",
-  "w0004",
-  "w0014",
-  "w0012",
-  "w0021",
-  "w0020",
-  "w0023",
-  "w0022",
-  "w0017",
-  "w0015",
   "w0018",
   "w0016",
+  "w0025",
+  "w0030",
+  "w0029",
+  "w0003",
+  "w0027",
+  "w0008",
+  "w0005",
+  "w0020",
+  "w0023",
+  "w0010",
+  "w0021",
+  "w0026",
+  "w0007",
   "w0024",
-  "w0028",
-  "w0013"
+  "w0012",
+  "w0022",
+  "w0006",
+  "w0011"
  ],
  "quizSessionLarge": [
-  "w4842",
-  "w6813",
-  "w1532",
-  "w6279",
-  "w0598",
-  "w5681",
-  "w3096",
-  "w4979",
-  "w1858",
-  "w3797",
-  "w6988",
-  "w3303",
-  "w3446",
-  "w4225",
-  "w6464",
-  "w5195",
-  "w4506",
-  "w2157",
-  "w3596",
-  "w1375"
+  "w1977",
+  "w3783",
+  "w6744",
+  "w1177",
+  "w2557",
+  "w1794",
+  "w1066",
+  "w6623",
+  "w4792",
+  "w5367",
+  "w1784",
+  "w1775",
+  "w2503",
+  "w1889",
+  "w0527",
+  "w3979",
+  "w5915",
+  "w6670",
+  "w2885",
+  "w6739"
  ],
  "quizOptions": [
   {
@@ -1188,37 +1188,37 @@
    "meaning": [
     {
      "correct": false,
-     "meaning": "注射"
-    },
-    {
-     "correct": false,
-     "meaning": "阻止"
-    },
-    {
-     "correct": false,
-     "meaning": "分發"
+     "meaning": "使更強烈"
     },
     {
      "correct": true,
      "meaning": "適應"
+    },
+    {
+     "correct": false,
+     "meaning": "清點"
+    },
+    {
+     "correct": false,
+     "meaning": "使失望"
     }
    ],
    "word": [
     {
      "correct": false,
-     "meaning": "inject"
-    },
-    {
-     "correct": false,
-     "meaning": "preclude"
-    },
-    {
-     "correct": false,
-     "meaning": "dispense"
+     "meaning": "intensify"
     },
     {
      "correct": true,
      "meaning": "adapt"
+    },
+    {
+     "correct": false,
+     "meaning": "count"
+    },
+    {
+     "correct": false,
+     "meaning": "disappoint"
     }
    ]
   },
@@ -1227,37 +1227,37 @@
    "meaning": [
     {
      "correct": false,
-     "meaning": "相當"
+     "meaning": "變成"
+    },
+    {
+     "correct": false,
+     "meaning": "某物"
+    },
+    {
+     "correct": false,
+     "meaning": "老的"
     },
     {
      "correct": true,
      "meaning": "可以"
-    },
-    {
-     "correct": false,
-     "meaning": "貶值"
-    },
-    {
-     "correct": false,
-     "meaning": "作證"
     }
    ],
    "word": [
     {
      "correct": false,
-     "meaning": "quite"
+     "meaning": "become"
+    },
+    {
+     "correct": false,
+     "meaning": "something"
+    },
+    {
+     "correct": false,
+     "meaning": "old"
     },
     {
      "correct": true,
      "meaning": "could"
-    },
-    {
-     "correct": false,
-     "meaning": "devalue"
-    },
-    {
-     "correct": false,
-     "meaning": "testify"
     }
    ]
   },
@@ -1266,37 +1266,37 @@
    "meaning": [
     {
      "correct": false,
-     "meaning": "檢查員"
+     "meaning": "蝙蝠"
     },
     {
      "correct": false,
-     "meaning": "桶"
-    },
-    {
-     "correct": false,
-     "meaning": "掛"
+     "meaning": "經紀人"
     },
     {
      "correct": true,
      "meaning": "太陽"
+    },
+    {
+     "correct": false,
+     "meaning": "剩餘的"
     }
    ],
    "word": [
     {
      "correct": false,
-     "meaning": "inspector"
+     "meaning": "bat"
     },
     {
      "correct": false,
-     "meaning": "barrel"
-    },
-    {
-     "correct": false,
-     "meaning": "hang"
+     "meaning": "broker"
     },
     {
      "correct": true,
      "meaning": "sun"
+    },
+    {
+     "correct": false,
+     "meaning": "surplus"
     }
    ]
   },
@@ -1305,54 +1305,54 @@
    "meaning": [
     {
      "correct": false,
-     "meaning": "寄生蟲"
+     "meaning": "金庫"
     },
     {
      "correct": false,
-     "meaning": "撞槌"
-    },
-    {
-     "correct": false,
-     "meaning": "鏟子"
+     "meaning": "蜜月"
     },
     {
      "correct": true,
      "meaning": "逃避"
+    },
+    {
+     "correct": false,
+     "meaning": "日圓"
     }
    ],
    "word": [
     {
      "correct": false,
-     "meaning": "parasite"
+     "meaning": "vault"
     },
     {
      "correct": false,
-     "meaning": "ram"
-    },
-    {
-     "correct": false,
-     "meaning": "shovel"
+     "meaning": "honeymoon"
     },
     {
      "correct": true,
      "meaning": "avoidance"
+    },
+    {
+     "correct": false,
+     "meaning": "yen"
     }
    ]
   }
  ],
  "studyQueue": [
-  "w0010",
-  "w0008",
-  "w0011",
-  "w0005",
-  "w0006",
-  "w0012",
-  "w0007",
-  "w0014",
   "w0001",
+  "w0034",
+  "w0015",
+  "w0023",
+  "w0005",
   "w0003",
-  "w0013",
-  "w0009"
+  "w0037",
+  "w0030",
+  "w0028",
+  "w0020",
+  "w0019",
+  "w0027"
  ],
  "libraryState": {
   "dailyTarget": 20,

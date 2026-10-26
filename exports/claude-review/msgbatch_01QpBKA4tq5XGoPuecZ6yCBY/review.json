@@ -1,0 +1,87 @@
+{
+  "batchId": "msgbatch_01QpBKA4tq5XGoPuecZ6yCBY",
+  "content": "speaking",
+  "model": "claude-sonnet-5-5",
+  "effort": "medium",
+  "usage": {
+    "input": 112823,
+    "output": 21227,
+    "cost": 0.218958
+  },
+  "meanings": [],
+  "examples": [],
+  "speaking": [
+    {
+      "word": "when",
+      "reason": "keywordZh「當…時」含省略號，未逐字出現在answerZh中；已改為「的時候」並調整譯文。",
+      "keywordZh": "的時候",
+      "question": "When do you feel most like yourself?",
+      "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
+      "answerZh": "我有足夠的安靜時間可以思考的時候，最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。",
+      "before": {
+        "keywordZh": "當…時",
+        "question": "When do you feel most like yourself?",
+        "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
+        "answerZh": "當我有足夠安靜時間思考時，我最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
+      }
+    },
+    {
+      "word": "signal",
+      "reason": "「信號」是中國大陸用法，臺灣手機說「訊號」，關鍵詞與譯文需一併修正。",
+      "keywordZh": "訊號",
+      "question": "How would you stay in touch with a group where phone signal was unreliable?",
+      "answerEn": "We would agree on meeting points before losing the signal. A clear plan would reduce the need for constant messages.",
+      "answerZh": "失去訊號前，我們會先約好集合點。有清楚的安排，就不必一直靠訊息聯繫。",
+      "before": {
+        "keywordZh": "信號",
+        "question": "How would you stay in touch with a group where phone signal was unreliable?",
+        "answerEn": "We would agree on meeting points before losing the signal. A clear plan would reduce the need for constant messages.",
+        "answerZh": "失去信號前，我們會先約好集合點。有清楚的安排，就不必一直靠訊息聯繫。"
+      }
+    },
+    {
+      "word": "schedule",
+      "reason": "答句中 schedule 是動詞「安排」，不是名詞「行程」；中文「行程時段」也不自然。",
+      "keywordZh": "安排",
+      "question": "How would you schedule demanding work during a busy week?",
+      "answerEn": "I would schedule demanding work when I usually have the most energy. I would leave smaller gaps for routine messages.",
+      "answerZh": "我會把需要動腦的工作安排在精神最好的時段。零碎的空檔則留給例行訊息。",
+      "before": {
+        "keywordZh": "行程",
+        "question": "How would you schedule demanding work during a busy week?",
+        "answerEn": "I would schedule demanding work when I usually have the most energy. I would leave smaller gaps for routine messages.",
+        "answerZh": "我會把需要動腦的工作排進精神最好的行程時段。零碎的空檔，再回一般訊息。"
+      }
+    },
+    {
+      "word": "conserve",
+      "reason": "原中文漏譯 avoid waste，且「不會影響植物照顧」誤譯 without harming the plants。",
+      "keywordZh": "節省",
+      "question": "What would help people conserve water in a shared garden?",
+      "answerEn": "We could conserve water by checking the soil before watering. Fixing a leaking hose would also avoid waste without harming the plants.",
+      "answerZh": "澆水前先看看土壤，就能節省用水。修好漏水的水管，也能避免浪費，又不會傷到植物。",
+      "before": {
+        "keywordZh": "節省",
+        "question": "What would help people conserve water in a shared garden?",
+        "answerEn": "We could conserve water by checking the soil before watering. Fixing a leaking hose would also avoid waste without harming the plants.",
+        "answerZh": "澆水前先看看土壤，就能節省用水。修好漏水的水管，也不會影響植物照顧。"
+      }
+    },
+    {
+      "word": "package",
+      "reason": "此處 package 指寄送的包裹，「包裝」是不同詞義，應改為「包裹」。",
+      "keywordZh": "包裹",
+      "question": "You receive a small item in an enormous package. What could you tell the seller?",
+      "answerEn": "I would ask whether a smaller package was available for future orders. The item could still be protected without so much empty space.",
+      "answerZh": "我會問賣家，以後能不能改用小一點的包裹。保護好商品，不一定需要留那麼多空間。",
+      "before": {
+        "keywordZh": "包裝",
+        "question": "You receive a small item in an enormous package. What could you tell the seller?",
+        "answerEn": "I would ask whether a smaller package was available for future orders. The item could still be protected without so much empty space.",
+        "answerZh": "我會問賣家，以後能不能用小一點的包裝。保護好商品，不一定需要留那麼多空間。"
+      }
+    }
+  ],
+  "rejected": [],
+  "failed": []
+}

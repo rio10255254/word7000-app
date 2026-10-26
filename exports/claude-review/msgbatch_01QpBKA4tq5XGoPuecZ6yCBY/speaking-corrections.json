@@ -1,0 +1,37 @@
+[
+  {
+    "word": "when",
+    "keywordZh": "的時候",
+    "question": "When do you feel most like yourself?",
+    "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
+    "answerZh": "我有足夠的安靜時間可以思考的時候，最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
+  },
+  {
+    "word": "signal",
+    "keywordZh": "訊號",
+    "question": "How would you stay in touch with a group where phone signal was unreliable?",
+    "answerEn": "We would agree on meeting points before losing the signal. A clear plan would reduce the need for constant messages.",
+    "answerZh": "失去訊號前，我們會先約好集合點。有清楚的安排，就不必一直靠訊息聯繫。"
+  },
+  {
+    "word": "schedule",
+    "keywordZh": "安排",
+    "question": "How would you schedule demanding work during a busy week?",
+    "answerEn": "I would schedule demanding work when I usually have the most energy. I would leave smaller gaps for routine messages.",
+    "answerZh": "我會把需要動腦的工作安排在精神最好的時段。零碎的空檔則留給例行訊息。"
+  },
+  {
+    "word": "conserve",
+    "keywordZh": "節省",
+    "question": "What would help people conserve water in a shared garden?",
+    "answerEn": "We could conserve water by checking the soil before watering. Fixing a leaking hose would also avoid waste without harming the plants.",
+    "answerZh": "澆水前先看看土壤，就能節省用水。修好漏水的水管，也能避免浪費，又不會傷到植物。"
+  },
+  {
+    "word": "package",
+    "keywordZh": "包裹",
+    "question": "You receive a small item in an enormous package. What could you tell the seller?",
+    "answerEn": "I would ask whether a smaller package was available for future orders. The item could still be protected without so much empty space.",
+    "answerZh": "我會問賣家，以後能不能改用小一點的包裹。保護好商品，不一定需要留那麼多空間。"
+  }
+]

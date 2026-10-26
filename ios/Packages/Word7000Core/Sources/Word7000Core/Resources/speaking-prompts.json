@@ -4,7 +4,7 @@
   "sources": [
     {
       "file": "content/speaking/base-reviewed.json",
-      "sha256": "af32673136330e9ba7040679e3769a1e8e67fb74213b352e5372f5ab626e8269"
+      "sha256": "15d078e3a05a30a2f49d485513bc5c252e7515d3aa4d905de0f74ae074313cfd"
     },
     {
       "file": "content/speaking/topics/home.json",
@@ -20,7 +20,7 @@
     },
     {
       "file": "content/speaking/topics/work.json",
-      "sha256": "3bc3ddcd7976e47417e9635df9d51e1133eaf7e34e1cf576948e2c1cfec513d0"
+      "sha256": "3553d0a877ccc2911cd92146f3623e3da6bd293d8af6a5c5f8b3455f0e0af7a5"
     },
     {
       "file": "content/speaking/topics/learning.json",
@@ -40,7 +40,7 @@
     },
     {
       "file": "content/speaking/topics/nature.json",
-      "sha256": "dbc7ba4b0ace724a443052680196897a97eee5d68981316a12029ef73a172bfd"
+      "sha256": "cfc1260335a7e7bbc631a988d73e013a283d2f93b535d73666fd8f16106483aa"
     },
     {
       "file": "content/speaking/topics/civic.json",
@@ -76,7 +76,7 @@
     },
     {
       "file": "content/speaking/topics/risks.json",
-      "sha256": "853b169f4104a8c2d409dfe5a570e507dde0aa4a828e536118c84c213b527331"
+      "sha256": "353cfd5c6ebd20347528488bdce0ab0b799ca2202fc672497aba02ef2fd94b3b"
     },
     {
       "file": "content/speaking/topics/ethics.json",
@@ -463,10 +463,10 @@
     {
       "id": "w0045-reviewed-1",
       "word": "when",
-      "keywordZh": "當…時",
+      "keywordZh": "的時候",
       "question": "When do you feel most like yourself?",
       "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
-      "answerZh": "當我有足夠安靜時間思考時，我最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
+      "answerZh": "我有足夠的安靜時間可以思考的時候，最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
     },
     {
       "id": "w0046-reviewed-1",
@@ -2727,10 +2727,10 @@
     {
       "id": "w1237-reviewed-1",
       "word": "package",
-      "keywordZh": "包裝",
+      "keywordZh": "包裹",
       "question": "You receive a small item in an enormous package. What could you tell the seller?",
       "answerEn": "I would ask whether a smaller package was available for future orders. The item could still be protected without so much empty space.",
-      "answerZh": "我會問賣家，以後能不能用小一點的包裝。保護好商品，不一定需要留那麼多空間。"
+      "answerZh": "我會問賣家，以後能不能改用小一點的包裹。保護好商品，不一定需要留那麼多空間。"
     },
     {
       "id": "w1240-reviewed-1",
@@ -3039,10 +3039,10 @@
     {
       "id": "w1432-reviewed-1",
       "word": "schedule",
-      "keywordZh": "行程",
+      "keywordZh": "安排",
       "question": "How would you schedule demanding work during a busy week?",
       "answerEn": "I would schedule demanding work when I usually have the most energy. I would leave smaller gaps for routine messages.",
-      "answerZh": "我會把需要動腦的工作排進精神最好的行程時段。零碎的空檔，再回一般訊息。"
+      "answerZh": "我會把需要動腦的工作安排在精神最好的時段。零碎的空檔則留給例行訊息。"
     },
     {
       "id": "w1461-reviewed-1",
@@ -3471,10 +3471,10 @@
     {
       "id": "w1907-reviewed-1",
       "word": "signal",
-      "keywordZh": "信號",
+      "keywordZh": "訊號",
       "question": "How would you stay in touch with a group where phone signal was unreliable?",
       "answerEn": "We would agree on meeting points before losing the signal. A clear plan would reduce the need for constant messages.",
-      "answerZh": "失去信號前，我們會先約好集合點。有清楚的安排，就不必一直靠訊息聯繫。"
+      "answerZh": "失去訊號前，我們會先約好集合點。有清楚的安排，就不必一直靠訊息聯繫。"
     },
     {
       "id": "w1913-reviewed-1",
@@ -4762,7 +4762,7 @@
       "keywordZh": "節省",
       "question": "What would help people conserve water in a shared garden?",
       "answerEn": "We could conserve water by checking the soil before watering. Fixing a leaking hose would also avoid waste without harming the plants.",
-      "answerZh": "澆水前先看看土壤，就能節省用水。修好漏水的水管，也不會影響植物照顧。"
+      "answerZh": "澆水前先看看土壤，就能節省用水。修好漏水的水管，也能避免浪費，又不會傷到植物。"
     },
     {
       "id": "w5206-reviewed-1",

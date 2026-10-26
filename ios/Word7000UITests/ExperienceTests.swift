@@ -249,9 +249,19 @@ final class ExperienceTests: XCTestCase {
         let autoSpeak = app.switches["speech-auto-speak"]
         autoSpeak.scrollIntoView(in: app, swipes: 3)
         XCTAssertEqual(autoSpeak.value as? String, "0")
-        autoSpeak.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
-        let switchedOn = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == '1'"), object: autoSpeak)
-        XCTAssertEqual(XCTWaiter.wait(for: [switchedOn], timeout: 3), .completed, app.debugDescription)
+        // Tap the switch itself rather than a point in its row. A tap the
+        // system drops leaves it off (iOS 27, runs 126 and 132), so retry once;
+        // the retry only happens while it still reads off, so it can never
+        // switch the setting back.
+        let inner = autoSpeak.switches.firstMatch
+        let control = inner.exists ? inner : autoSpeak
+        func switchedOn(within seconds: TimeInterval) -> Bool {
+            let on = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == '1'"), object: autoSpeak)
+            return XCTWaiter.wait(for: [on], timeout: seconds) == .completed
+        }
+        control.tap()
+        if !switchedOn(within: 3), autoSpeak.value as? String == "0" { control.tap() }
+        XCTAssertTrue(switchedOn(within: 3), app.debugDescription)
         XCUIDevice.shared.press(.home)
         sleep(1)
         app.terminate()

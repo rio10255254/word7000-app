@@ -362,9 +362,17 @@ final class SpeakingCoachTests: XCTestCase {
         return text
     }
 
+    /// On iOS 26 a tap on Close right after the sheet re-renders (such as after
+    /// "Check again") can be dropped, leaving the sheet exactly as it was.
+    /// A Close button still on screen means the tap never arrived; try once more.
     private func closeCoach(_ app: XCUIApplication) {
-        tap(app.buttons["coach-close"], in: app)
-        wait(app.buttons["coach-close"], matching: "exists == false")
+        let close = app.buttons["coach-close"]
+        tap(close, in: app)
+        let gone = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: close)
+        if XCTWaiter.wait(for: [gone], timeout: 5) != .completed, close.exists, close.isHittable {
+            close.tap()
+        }
+        wait(close, matching: "exists == false")
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
     }
 

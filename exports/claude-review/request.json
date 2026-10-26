@@ -1,6 +1,6 @@
 {
+  "content": "speaking",
   "model": "claude-sonnet-5-5",
   "effort": "medium",
-  "cores": "1-14",
   "limit": 0
 }

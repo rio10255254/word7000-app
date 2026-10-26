@@ -1,6 +1,6 @@
 # Claude word review opus-5-5-session-words
 
-Model `claude-opus-5-5`. 186 meaning corrections, 215 example corrections, 2 rejected suggestions, 0 requests without an answer.
+Model `claude-opus-5-5`. 187 meaning corrections, 216 example corrections, 0 rejected suggestions, 0 requests without an answer.
 Reviewed in a Claude Code session, so no API tokens were billed.
 
 ## Meanings
@@ -193,6 +193,7 @@ Reviewed in a Claude Code session, so no API tokens were billed.
 | 14 | cutter | 切模；切割器 | 切割工具；切模；快艇 | cutter 泛指切割工具，「切模」只是 cookie cutter 的特定用法，主要詞義過窄。 |
 | 14 | gall | 苦味；膽汁；厚臉皮；惱怒 | 厚臉皮；膽汁；苦味；惱怒 | gall 現代最常見義為厚顏無恥，「苦味」屬文學性古義，不宜作主要詞義考學生。 |
 | 14 | bun | 包子；小圓麵包；髮髻 | 小圓麵包；包子；髮髻 | bun 單用指小圓麵包，包子是 steamed bun，主要詞義會誤導學生。 |
+| 2 | ms | 微軟 | 女士；小姐 | Ms. 是對女性的稱謂「女士」，「微軟」是品牌名稱，不是應學的詞義。 |
 
 ## Examples
 
@@ -1486,10 +1487,9 @@ Reviewed in a Claude Code session, so no API tokens were billed.
 - After: She bought a warm bun from the bakery on her way to school. 她上學途中在麵包店買了一個溫熱的小圓麵包。
 - Why: bun 單用指小圓麵包，包子是 steamed bun，主要詞義會誤導學生。
 
-## Rejected suggestions
+### Core 2 · ms
 
-These broke the data rules and were not applied.
-
-- 2 · ms: audit: incorrect-headword-capitalization (Ms. 是對女性的稱謂「女士」，「微軟」是品牌名稱，不是應學的詞義。)
-- 2 · ms: audit: incorrect-headword-capitalization (Ms. 是對女性的稱謂「女士」，「微軟」是品牌名稱，不是應學的詞義。)
+- Before: The office still uses MS software for old accounting files. 辦公室仍用微軟軟體處理舊帳務檔案。
+- After: Ms. Chen is the new nurse at our school. 陳女士是我們學校新來的護理師。
+- Why: Ms. 是對女性的稱謂「女士」，「微軟」是品牌名稱，不是應學的詞義。
 

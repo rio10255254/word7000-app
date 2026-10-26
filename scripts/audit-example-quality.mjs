@@ -34,7 +34,7 @@ const riskPatterns = [
 const requiredHeadwordForms = new Map([
   ['mr', /\bMr\./],
   ['mrs', /\bMrs\./],
-  ['ms', /\bMS\b/],
+  ['ms', /\bMs\./],
   ['tv', /\bTV\b/],
   ['aids', /\bAIDS\b/],
   ['tion', /\bTION\b/],

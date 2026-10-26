@@ -6187,10 +6187,10 @@ export const sampleWords: WordEntry[] = [
     "word": "ms",
     "partOfSpeech": "word",
     "pronunciation": "/miz/",
-    "meaningZh": "微軟",
-    "supplementalMeaningZh": "",
-    "example": "The office still uses MS software for old accounting files.",
-    "exampleZh": "辦公室仍用微軟軟體處理舊帳務檔案。",
+    "meaningZh": "女士",
+    "supplementalMeaningZh": "小姐",
+    "example": "Ms. Chen is the new nurse at our school.",
+    "exampleZh": "陳女士是我們學校新來的護理師。",
     "group": "Core 2"
   },
   {

@@ -2054,6 +2054,17 @@
         "primaryMeaningZh": "包子",
         "supplementalMeaningZh": "小圓麵包；髮髻"
       }
+    },
+    {
+      "core": 2,
+      "word": "ms",
+      "reason": "Ms. 是對女性的稱謂「女士」，「微軟」是品牌名稱，不是應學的詞義。",
+      "primaryMeaningZh": "女士",
+      "supplementalMeaningZh": "小姐",
+      "before": {
+        "primaryMeaningZh": "微軟",
+        "supplementalMeaningZh": ""
+      }
     }
   ],
   "examples": [
@@ -4421,22 +4432,6 @@
         "example": "A steamed bun warmed his hands at dawn.",
         "exampleZh": "黎明時，一顆熱包子溫暖了他的手。"
       }
-    }
-  ],
-  "speaking": [],
-  "rejected": [
-    {
-      "core": 2,
-      "word": "ms",
-      "reason": "Ms. 是對女性的稱謂「女士」，「微軟」是品牌名稱，不是應學的詞義。",
-      "primaryMeaningZh": "女士",
-      "supplementalMeaningZh": "小姐",
-      "before": {
-        "primaryMeaningZh": "微軟",
-        "supplementalMeaningZh": ""
-      },
-      "field": "meaning",
-      "problem": "audit: incorrect-headword-capitalization"
     },
     {
       "core": 2,
@@ -4447,10 +4442,10 @@
       "before": {
         "example": "The office still uses MS software for old accounting files.",
         "exampleZh": "辦公室仍用微軟軟體處理舊帳務檔案。"
-      },
-      "field": "example",
-      "problem": "audit: incorrect-headword-capitalization"
+      }
     }
   ],
+  "speaking": [],
+  "rejected": [],
   "failed": []
 }

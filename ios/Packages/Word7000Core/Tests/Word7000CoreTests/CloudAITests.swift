@@ -22,7 +22,7 @@ final class CloudAITests: XCTestCase {
         #"{"access_token":"a1","refresh_token":"r1","expires_in":3600,"user":{"id":"u1","is_anonymous":true}}"#.utf8))
 
     func testSendsTheTaskWithTheLearnersSessionAndDecodesTheResult() async throws {
-        let transport = FakeTransport([(#"{"result":{"explanation":"run 是跑","memoryTip":"想像跑步"},"model":"openai/gpt-oss-20b"}"#, 200)])
+        let transport = FakeTransport([(#"{"result":{"explanation":"run 是跑","memoryTip":"想像跑步"},"model":"claude-haiku-5-5","effort":"low"}"#, 200)])
         let reply = try await SupabaseClient(config: config, transport: transport)
             .runAI(.quizWhy, input: ["word": .string("run")], session: session, as: CloudAI.QuizExplanation.self)
         XCTAssertEqual(reply, CloudAI.QuizExplanation(explanation: "run 是跑", memoryTip: "想像跑步"))
@@ -33,6 +33,7 @@ final class CloudAITests: XCTestCase {
         let body = try JSONDecoder().decode([String: JSONValue].self, from: XCTUnwrap(request.httpBody))
         XCTAssertEqual(body["task"], .string("quizWhy"))
         XCTAssertEqual(body["input"], .object(["word": .string("run")]))
+        XCTAssertEqual(body["consent"], .string("anthropic"))
     }
 
     func testCoachFeedbackDecodesFromTheServerShape() async throws {
@@ -43,11 +44,11 @@ final class CloudAITests: XCTestCase {
     }
 
     func testSendsThePlusProofAndReportsTodaysUsage() async throws {
-        let transport = FakeTransport([(#"{"result":{"explanation":"x","memoryTip":"y"},"model":"openai/gpt-oss-120b","tier":"plus","limit":100,"remaining":87}"#, 200)])
+        let transport = FakeTransport([(#"{"result":{"explanation":"x","memoryTip":"y"},"model":"claude-haiku-5-5","effort":"medium","tier":"plus","limit":100,"remaining":87}"#, 200)])
         let reply = try await SupabaseClient(config: config, transport: transport)
             .runAI(.quizWhy, input: [:], session: session, entitlement: "header.payload.sig", as: CloudAI.QuizExplanation.self)
         XCTAssertEqual(reply.usage, CloudAI.Usage(tier: .plus, limit: 100, remaining: 87))
-        XCTAssertTrue(reply.usage?.tier.usesStrongestModel == true)
+        XCTAssertTrue(reply.usage?.tier.usesDeeperReasoning == true)
         let body = try JSONDecoder().decode([String: JSONValue].self, from: XCTUnwrap(transport.requests.first?.httpBody))
         XCTAssertEqual(body["entitlement"], .string("header.payload.sig"))
     }
@@ -56,7 +57,7 @@ final class CloudAITests: XCTestCase {
         let reply = try await SupabaseClient(config: config, transport: FakeTransport([(#"{"result":{"explanation":"x","memoryTip":"y"}}"#, 200)]))
             .runAI(.quizWhy, input: [:], session: session, entitlement: nil, as: CloudAI.QuizExplanation.self)
         XCTAssertNil(reply.usage)
-        XCTAssertFalse(CloudAI.Tier.free.usesStrongestModel)
+        XCTAssertFalse(CloudAI.Tier.free.usesDeeperReasoning)
     }
 
     func testMapsServerErrorsToFallbackDecisions() async {

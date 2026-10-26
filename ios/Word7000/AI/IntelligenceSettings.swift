@@ -8,15 +8,19 @@ final class IntelligenceSettings {
     var enabled: Bool {
         didSet { UserDefaults.standard.set(enabled, forKey: "intelligence.enabled") }
     }
-    /// The learner's switch for the online AI (Groq). On by default, but
+    /// The learner's switch for the online AI (Claude). On by default, but
     /// nothing is sent until they agree once (`cloudConsent`).
     var cloudEnabled: Bool {
         didSet { UserDefaults.standard.set(cloudEnabled, forKey: "intelligence.cloud") }
     }
-    /// nil until the learner answers the one-time question about sending text online.
+    /// nil until the learner answers the one-time question about sending text
+    /// to Anthropic. Agreement given for an earlier provider does not count.
     var cloudConsent: Bool? {
-        didSet { UserDefaults.standard.set(cloudConsent, forKey: "intelligence.cloudConsent") }
+        didSet { UserDefaults.standard.set(cloudConsent, forKey: Self.consentKey) }
     }
+    private static let consentKey = "intelligence.cloudConsent.anthropic"
+    /// The answer about Groq, the earlier provider: only a "no" carries over.
+    private static let groqConsentKey = "intelligence.cloudConsent"
     private(set) var policy: IntelligencePolicy?
     private(set) var checking = false
     private var lastCheck: Date?
@@ -30,7 +34,8 @@ final class IntelligenceSettings {
     private init() {
         enabled = UserDefaults.standard.object(forKey: "intelligence.enabled") as? Bool ?? true
         cloudEnabled = UserDefaults.standard.object(forKey: "intelligence.cloud") as? Bool ?? true
-        cloudConsent = UserDefaults.standard.object(forKey: "intelligence.cloudConsent") as? Bool
+        let groqDeclined = UserDefaults.standard.object(forKey: Self.groqConsentKey) as? Bool == false
+        cloudConsent = UserDefaults.standard.object(forKey: Self.consentKey) as? Bool ?? (groqDeclined ? false : nil)
         policy = UserDefaults.standard.data(forKey: "intelligence.policy").flatMap(IntelligencePolicy.decode)
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { enabled = true; cloudEnabled = true; cloudConsent = nil; policy = nil }

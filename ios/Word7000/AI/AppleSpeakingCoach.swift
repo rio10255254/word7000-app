@@ -18,7 +18,7 @@ final class AppleSpeakingCoach {
     private(set) var availability: Availability = .unsupported
     /// Apple's model on this iPhone, whatever the online AI is doing.
     private(set) var deviceAvailability: Availability = .unsupported
-    /// Suggestions come from the online AI (Groq) first; Apple's model is the fallback.
+    /// Suggestions come from the online AI (Claude) first; Apple's model is the fallback.
     private(set) var usesOnline = false
     private(set) var isBusy = false
     /// Answers go to Apple's server model rather than staying on this iPhone.

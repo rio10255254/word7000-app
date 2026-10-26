@@ -26,6 +26,17 @@ public enum QuizBuilder {
         return SeededRandom.sampleIndexes(length: words.count, count: count, seed: "\(seed):session").map { words[$0] }
     }
 
+    /// Questions on words the learner has met, topped up with new words only
+    /// when there are too few of them. Every answer is graded, so asking about
+    /// words never studied fills the review queue with guesses.
+    public static func seenFirstSession(words: [WordEntry], state: ProgressState, count requested: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
+        let isSeen = { (word: WordEntry) in (state.words[word.id]?.status ?? .new) != .new }
+        let seen = words.filter(isSeen)
+        guard seen.count < requested else { return session(words: seen, count: requested, seed: seed) }
+        let topUp = session(words: words.filter { !isSeen($0) }, count: requested - seen.count, seed: "\(seed):new")
+        return SeededRandom.shuffle(seen + topUp, seed: "\(seed):mix")
+    }
+
     /// Four options. Distractors are drawn from a random sample and ranked by
     /// how plausible they are next to the answer: same part of speech first,
     /// then the same level. Duplicate texts are dropped so two words that

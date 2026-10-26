@@ -11,7 +11,13 @@ import Word7000Core
 final class AppModel {
     let coreWords: [WordEntry]
     private(set) var progress: ProgressState {
-        didSet { libraryRevision &+= 1; if !replacing { onDataChange?(SyncDirty(progress: true)) } }
+        didSet {
+            libraryRevision &+= 1
+            // Undo restores a whole snapshot, so any other change since (a quiz
+            // answer, a favourite, the daily goal) would be rolled back with it.
+            if !gradingStudyCard { studyUndoStack = [] }
+            if !replacing { onDataChange?(SyncDirty(progress: true)) }
+        }
     }
     private(set) var customSets: CustomSetState {
         didSet {
@@ -25,6 +31,7 @@ final class AppModel {
     /// Told about every local change so it can be synced.
     @ObservationIgnored var onDataChange: ((SyncDirty) -> Void)?
     @ObservationIgnored private var replacing = false
+    @ObservationIgnored private var gradingStudyCard = false
     var settings: AppSettings {
         didSet {
             L.mode = settings.studyMode ?? .english
@@ -472,15 +479,18 @@ final class AppModel {
         refreshToday()
         guard let session = studySession, let cardId = session.currentCardId else { return }
         guard expectedWordId == nil || expectedWordId == cardId else { return }
-        studyUndoStack.append((progress, session))
-        if studyUndoStack.count > 20 { studyUndoStack.removeFirst() }
         let changed = grade == .known
             ? LearningEngine.markKnown(progress, wordId: cardId, today: today)
             : LearningEngine.markReview(progress, wordId: cardId, today: today)
-        progress = recordActivity(in: changed) { counters in
+        let graded = recordActivity(in: changed) { counters in
             if grade == .known { counters.studyKnown += 1 } else { counters.studyReview += 1 }
             if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
         }
+        studyUndoStack.append((progress, session))
+        if studyUndoStack.count > 20 { studyUndoStack.removeFirst() }
+        gradingStudyCard = true
+        progress = graded
+        gradingStudyCard = false
         studySession = session.grading(cardId, as: grade)
         scheduleSave()
     }
@@ -488,7 +498,9 @@ final class AppModel {
     func undoStudyGrade() {
         refreshToday()
         guard let last = studyUndoStack.popLast() else { return }
+        gradingStudyCard = true
         progress = last.progress
+        gradingStudyCard = false
         studySession = last.session
         scheduleSave()
     }
@@ -501,8 +513,11 @@ final class AppModel {
 
     func requestQuizOnTodaysWords() { todayQuizRequested = true }
 
-    /// Questions favour words the learner has met: due and struggling words
-    /// first, then known ones, topped up with new words if there are too few.
+    /// A quiz closed before it started must not leave the next one on today's words.
+    func cancelQuizOnTodaysWords() { todayQuizRequested = false }
+
+    /// Questions come from words the learner has met, topped up with new
+    /// words only if there are too few.
     func quizQuestions(count: Int, seed: String) -> [WordEntry] {
         if todayQuizRequested {
             todayQuizRequested = false
@@ -518,9 +533,7 @@ final class AppModel {
     private func seenWordsFirst(count: Int, seed: String) -> [WordEntry] {
         let filter = settings.quizFilter
         let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
-        let seen = candidates.filter { progress.words[$0.id].map { $0.status != .new } ?? false }
-        let pool = seen.count >= count ? seen : candidates
-        return QuizBuilder.session(words: pool, count: count, seed: seed)
+        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed)
     }
 
     var reviewWordIds: [String] {

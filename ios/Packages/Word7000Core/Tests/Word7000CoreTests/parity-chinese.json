@@ -21,7 +21,7 @@
   {
    "id": "w0421",
    "word": "cover",
-   "concise": "蓋子",
+   "concise": "覆蓋",
    "supplemental": ""
   },
   {
@@ -105,7 +105,7 @@
   {
    "id": "w2381",
    "word": "excuse",
-   "concise": "藉口",
+   "concise": "原諒",
    "supplemental": ""
   },
   {
@@ -117,7 +117,7 @@
   {
    "id": "w2661",
    "word": "peer",
-   "concise": "費力看",
+   "concise": "同儕",
    "supplemental": ""
   },
   {
@@ -171,7 +171,7 @@
   {
    "id": "w3921",
    "word": "desirable",
-   "concise": "搶手的",
+   "concise": "令人嚮往的",
    "supplemental": ""
   },
   {
@@ -279,7 +279,7 @@
   {
    "id": "w6441",
    "word": "feminism",
-   "concise": "女權主義",
+   "concise": "女性主義",
    "supplemental": ""
   },
   {
@@ -339,13 +339,13 @@
   {
    "id": "w0011",
    "word": "for",
-   "concise": "替",
+   "concise": "為了",
    "supplemental": ""
   },
   {
    "id": "w0012",
    "word": "that",
-   "concise": "那",
+   "concise": "那個",
    "supplemental": ""
   },
   {
@@ -369,7 +369,7 @@
   {
    "id": "w0016",
    "word": "on",
-   "concise": "在上面",
+   "concise": "在…上面",
    "supplemental": ""
   },
   {
@@ -465,7 +465,7 @@
   {
    "id": "w0382",
    "word": "love",
-   "concise": "喜歡",
+   "concise": "愛",
    "supplemental": ""
   },
   {
@@ -487,9 +487,9 @@
    "supplemental": ""
   },
   {
-   "id": "w5812",
-   "word": "ple",
-   "concise": "個人化學習環境",
+   "id": "w0196",
+   "word": "study",
+   "concise": "學習",
    "supplemental": ""
   },
   {
@@ -501,7 +501,7 @@
   {
    "id": "w3041",
    "word": "secondary",
-   "concise": "次要的",
+   "concise": "中等教育的",
    "supplemental": ""
   },
   {
@@ -563,8 +563,8 @@
    "pinyin": "kao lü"
   },
   {
-   "text": "蓋子",
-   "pinyin": "gai zi"
+   "text": "覆蓋",
+   "pinyin": "fu gai"
   },
   {
    "text": "太太",
@@ -619,16 +619,16 @@
    "pinyin": "deng ji"
   },
   {
-   "text": "藉口",
-   "pinyin": "jie kou"
+   "text": "原諒",
+   "pinyin": "yuan liang"
   },
   {
    "text": "公里",
    "pinyin": "gong li"
   },
   {
-   "text": "費力看",
-   "pinyin": "fei li kan"
+   "text": "同儕",
+   "pinyin": "tong chai"
   },
   {
    "text": "海外的",
@@ -663,8 +663,8 @@
    "pinyin": "shi san kai"
   },
   {
-   "text": "搶手的",
-   "pinyin": "qiang shou de"
+   "text": "令人嚮往的",
+   "pinyin": "ling ren xiang wang de"
   },
   {
    "text": "異國的",
@@ -735,8 +735,8 @@
    "pinyin": "cha yi"
   },
   {
-   "text": "女權主義",
-   "pinyin": "nü quan zhu yi"
+   "text": "女性主義",
+   "pinyin": "nü xing zhu yi"
   },
   {
    "text": "複製",
@@ -775,12 +775,12 @@
    "pinyin": "you"
   },
   {
-   "text": "替",
-   "pinyin": "ti"
+   "text": "為了",
+   "pinyin": "wei le"
   },
   {
-   "text": "那",
-   "pinyin": "na"
+   "text": "那個",
+   "pinyin": "na ge"
   },
   {
    "text": "他",
@@ -795,7 +795,7 @@
    "pinyin": "yong"
   },
   {
-   "text": "在上面",
+   "text": "在…上面",
    "pinyin": "zai shang mian"
   },
   {
@@ -855,8 +855,8 @@
    "pinyin": "qing xu ji dong de"
   },
   {
-   "text": "喜歡",
-   "pinyin": "xi huan"
+   "text": "愛",
+   "pinyin": "ai"
   },
   {
    "text": "朋友",
@@ -871,16 +871,16 @@
    "pinyin": "gong zuo"
   },
   {
-   "text": "個人化學習環境",
-   "pinyin": "ge ren hua xue xi huan jing"
+   "text": "學習",
+   "pinyin": "xue xi"
   },
   {
    "text": "有效地",
    "pinyin": "you xiao di"
   },
   {
-   "text": "次要的",
-   "pinyin": "ci yao de"
+   "text": "中等教育的",
+   "pinyin": "zhong deng jiao yu de"
   },
   {
    "text": "連接",

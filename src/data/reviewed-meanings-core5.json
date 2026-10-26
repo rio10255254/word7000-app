@@ -23,7 +23,7 @@
   {
     "word": "vegetable",
     "primaryMeaningZh": "蔬菜",
-    "supplementalMeaningZh": "植物人；植物的",
+    "supplementalMeaningZh": "植物的；植物人",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -37,7 +37,7 @@
   {
     "word": "perfectly",
     "primaryMeaningZh": "完美地",
-    "supplementalMeaningZh": "完全地；非常",
+    "supplementalMeaningZh": "完全地；很順利地",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -71,8 +71,8 @@
   },
   {
     "word": "chip",
-    "primaryMeaningZh": "缺口",
-    "supplementalMeaningZh": "碎片；洋芋片；晶片",
+    "primaryMeaningZh": "洋芋片",
+    "supplementalMeaningZh": "缺口；碎片；晶片",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -141,8 +141,8 @@
   },
   {
     "word": "revolution",
-    "primaryMeaningZh": "旋轉一圈",
-    "supplementalMeaningZh": "革命；重大變革；循環",
+    "primaryMeaningZh": "革命",
+    "supplementalMeaningZh": "旋轉一圈；重大變革；循環",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -169,8 +169,8 @@
   },
   {
     "word": "tower",
-    "primaryMeaningZh": "塔樓",
-    "supplementalMeaningZh": "高樓；高聳",
+    "primaryMeaningZh": "塔",
+    "supplementalMeaningZh": "塔樓；高聳",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -190,8 +190,8 @@
   },
   {
     "word": "philosophy",
-    "primaryMeaningZh": "人生觀",
-    "supplementalMeaningZh": "哲學；基本理念",
+    "primaryMeaningZh": "哲學",
+    "supplementalMeaningZh": "人生觀；基本理念",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -219,7 +219,7 @@
   {
     "word": "preparation",
     "primaryMeaningZh": "準備",
-    "supplementalMeaningZh": "預習",
+    "supplementalMeaningZh": "預備工作；籌備",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -233,7 +233,7 @@
   {
     "word": "sand",
     "primaryMeaningZh": "沙",
-    "supplementalMeaningZh": "沙灘；撒沙",
+    "supplementalMeaningZh": "沙灘；用砂紙磨",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -254,7 +254,7 @@
   {
     "word": "jacket",
     "primaryMeaningZh": "外套",
-    "supplementalMeaningZh": "護套",
+    "supplementalMeaningZh": "夾克；書套",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -470,8 +470,8 @@
   },
   {
     "word": "slide",
-    "primaryMeaningZh": "溜滑梯",
-    "supplementalMeaningZh": "滑動；投影片；滑落",
+    "primaryMeaningZh": "滑動",
+    "supplementalMeaningZh": "溜滑梯；投影片；滑落",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -498,8 +498,8 @@
   },
   {
     "word": "monitor",
-    "primaryMeaningZh": "監測",
-    "supplementalMeaningZh": "螢幕；班長",
+    "primaryMeaningZh": "螢幕",
+    "supplementalMeaningZh": "監測；班長",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -547,8 +547,8 @@
   },
   {
     "word": "violent",
-    "primaryMeaningZh": "猛烈的",
-    "supplementalMeaningZh": "暴力的；激烈的",
+    "primaryMeaningZh": "暴力的",
+    "supplementalMeaningZh": "猛烈的；激烈的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -575,22 +575,22 @@
   },
   {
     "word": "tourist",
-    "primaryMeaningZh": "旅客",
+    "primaryMeaningZh": "觀光客",
     "supplementalMeaningZh": "旅遊的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "conventional",
-    "primaryMeaningZh": "正規的",
-    "supplementalMeaningZh": "傳統的；一般的",
+    "primaryMeaningZh": "傳統的",
+    "supplementalMeaningZh": "慣例的；常規的；一般的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "wet",
     "primaryMeaningZh": "濕的",
-    "supplementalMeaningZh": "弄濕；雨天",
+    "supplementalMeaningZh": "弄濕；雨天；潮濕",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -632,14 +632,14 @@
   {
     "word": "string",
     "primaryMeaningZh": "繩子",
-    "supplementalMeaningZh": "一串；字串；串起",
+    "supplementalMeaningZh": "一串；字串；弦",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "pose",
     "primaryMeaningZh": "姿勢",
-    "supplementalMeaningZh": "提出；造成",
+    "supplementalMeaningZh": "擺姿勢；提出；造成",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -729,15 +729,15 @@
   },
   {
     "word": "unknown",
-    "primaryMeaningZh": "陌生的",
-    "supplementalMeaningZh": "未知的；未知數",
+    "primaryMeaningZh": "未知的",
+    "supplementalMeaningZh": "陌生的；未知數",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "sum",
-    "primaryMeaningZh": "總金額",
-    "supplementalMeaningZh": "總和；概要",
+    "primaryMeaningZh": "總和",
+    "supplementalMeaningZh": "金額；概要",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -807,7 +807,7 @@
   {
     "word": "drama",
     "primaryMeaningZh": "戲劇",
-    "supplementalMeaningZh": "戲劇性事件；連續劇",
+    "supplementalMeaningZh": "戲劇性事件；劇集",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -946,7 +946,7 @@
   },
   {
     "word": "whisper",
-    "primaryMeaningZh": "低聲說",
+    "primaryMeaningZh": "低語",
     "supplementalMeaningZh": "耳語；傳聞；沙沙聲",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
@@ -968,7 +968,7 @@
   {
     "word": "extreme",
     "primaryMeaningZh": "極端的",
-    "supplementalMeaningZh": "極度的；極限；偏激的",
+    "supplementalMeaningZh": "極度的；極端；偏激的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1016,8 +1016,8 @@
   },
   {
     "word": "chamber",
-    "primaryMeaningZh": "室",
-    "supplementalMeaningZh": "房間；議院；腔室",
+    "primaryMeaningZh": "房間",
+    "supplementalMeaningZh": "議院；腔室；石室",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1086,8 +1086,8 @@
   },
   {
     "word": "rank",
-    "primaryMeaningZh": "級別",
-    "supplementalMeaningZh": "排名；排列；軍階",
+    "primaryMeaningZh": "等級",
+    "supplementalMeaningZh": "排列；軍階；排名",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1135,8 +1135,8 @@
   },
   {
     "word": "twin",
-    "primaryMeaningZh": "雙胞胎的",
-    "supplementalMeaningZh": "雙胞胎之一；成對的",
+    "primaryMeaningZh": "雙胞胎之一",
+    "supplementalMeaningZh": "成對的；雙胞胎的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1149,8 +1149,8 @@
   },
   {
     "word": "pink",
-    "primaryMeaningZh": "粉紅色的",
-    "supplementalMeaningZh": "粉紅色",
+    "primaryMeaningZh": "粉紅色",
+    "supplementalMeaningZh": "粉紅色的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1185,7 +1185,7 @@
   {
     "word": "tube",
     "primaryMeaningZh": "管子",
-    "supplementalMeaningZh": "軟管；試管；倫敦地鐵",
+    "supplementalMeaningZh": "軟管；地下鐵；試管",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1226,8 +1226,8 @@
   },
   {
     "word": "junior",
-    "primaryMeaningZh": "資淺的",
-    "supplementalMeaningZh": "下級的；年少者；大三學生",
+    "primaryMeaningZh": "年少者",
+    "supplementalMeaningZh": "大三學生；資淺者",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1352,8 +1352,8 @@
   },
   {
     "word": "fortune",
-    "primaryMeaningZh": "好運",
-    "supplementalMeaningZh": "財富；命運；大筆財產",
+    "primaryMeaningZh": "財富",
+    "supplementalMeaningZh": "好運；命運；大筆財產",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1367,7 +1367,7 @@
   {
     "word": "confront",
     "primaryMeaningZh": "面對",
-    "supplementalMeaningZh": "對抗；當面質問",
+    "supplementalMeaningZh": "對質；對抗；找人談判",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1408,14 +1408,14 @@
   },
   {
     "word": "advanced",
-    "primaryMeaningZh": "高階的",
-    "supplementalMeaningZh": "先進的；進階的",
+    "primaryMeaningZh": "先進的",
+    "supplementalMeaningZh": "高階的；進階的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "mere",
-    "primaryMeaningZh": "光是",
+    "primaryMeaningZh": "僅僅的",
     "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
@@ -1423,13 +1423,13 @@
   {
     "word": "dear",
     "primaryMeaningZh": "親愛的",
-    "supplementalMeaningZh": "昂貴的；可愛的人",
+    "supplementalMeaningZh": "昂貴的；親愛的人",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "sink",
-    "primaryMeaningZh": "沉入",
+    "primaryMeaningZh": "下沉",
     "supplementalMeaningZh": "水槽；下陷；降低",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
@@ -1598,7 +1598,7 @@
   {
     "word": "tight",
     "primaryMeaningZh": "緊的",
-    "supplementalMeaningZh": "嚴密的；拮据的；緊緊地",
+    "supplementalMeaningZh": "嚴密的；拮据的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1822,7 +1822,7 @@
   {
     "word": "dirty",
     "primaryMeaningZh": "髒的",
-    "supplementalMeaningZh": "弄髒；卑鄙的",
+    "supplementalMeaningZh": "弄髒；卑鄙的；下流的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1906,7 +1906,7 @@
   {
     "word": "strip",
     "primaryMeaningZh": "長條",
-    "supplementalMeaningZh": "剝去；脫衣",
+    "supplementalMeaningZh": "剝去；脫衣；條狀地帶",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1954,15 +1954,15 @@
   },
   {
     "word": "craft",
-    "primaryMeaningZh": "製作",
-    "supplementalMeaningZh": "手藝；船隻；技巧",
+    "primaryMeaningZh": "手工藝",
+    "supplementalMeaningZh": "技巧；船隻；精心製作",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "steady",
-    "primaryMeaningZh": "穩的",
-    "supplementalMeaningZh": "穩定的；固定的；沉著的",
+    "primaryMeaningZh": "穩定的",
+    "supplementalMeaningZh": "穩固的；固定的；沉著的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2003,8 +2003,8 @@
   },
   {
     "word": "leather",
-    "primaryMeaningZh": "皮製的",
-    "supplementalMeaningZh": "皮革；皮製品",
+    "primaryMeaningZh": "皮革",
+    "supplementalMeaningZh": "皮製品；皮製的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2031,8 +2031,8 @@
   },
   {
     "word": "maximum",
-    "primaryMeaningZh": "上限",
-    "supplementalMeaningZh": "最大量；最高的",
+    "primaryMeaningZh": "最大量",
+    "supplementalMeaningZh": "最高限度；最大的；最高的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2157,8 +2157,8 @@
   },
   {
     "word": "nerve",
-    "primaryMeaningZh": "勇氣",
-    "supplementalMeaningZh": "神經",
+    "primaryMeaningZh": "神經",
+    "supplementalMeaningZh": "勇氣；膽量",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2234,15 +2234,15 @@
   },
   {
     "word": "genuine",
-    "primaryMeaningZh": "真誠的",
-    "supplementalMeaningZh": "真正的；正品的",
+    "primaryMeaningZh": "真正的",
+    "supplementalMeaningZh": "真誠的；正品的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "gentle",
-    "primaryMeaningZh": "輕柔的",
-    "supplementalMeaningZh": "溫和的",
+    "primaryMeaningZh": "溫和的",
+    "supplementalMeaningZh": "輕柔的；溫柔的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2332,8 +2332,8 @@
   },
   {
     "word": "plain",
-    "primaryMeaningZh": "無調味的",
-    "supplementalMeaningZh": "簡單的；清楚的；平原",
+    "primaryMeaningZh": "簡單的",
+    "supplementalMeaningZh": "無調味的；清楚的；平原",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2354,7 +2354,7 @@
   {
     "word": "bath",
     "primaryMeaningZh": "洗澡",
-    "supplementalMeaningZh": "浴缸",
+    "supplementalMeaningZh": "浴缸；浴室",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2381,8 +2381,8 @@
   },
   {
     "word": "cotton",
-    "primaryMeaningZh": "棉",
-    "supplementalMeaningZh": "棉花；棉布",
+    "primaryMeaningZh": "棉花",
+    "supplementalMeaningZh": "棉布；棉線",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2403,7 +2403,7 @@
   {
     "word": "entitle",
     "primaryMeaningZh": "使有權利",
-    "supplementalMeaningZh": "給命名",
+    "supplementalMeaningZh": "給書籍命名",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2430,15 +2430,15 @@
   },
   {
     "word": "strain",
-    "primaryMeaningZh": "負擔",
-    "supplementalMeaningZh": "拉傷；壓力；品種",
+    "primaryMeaningZh": "拉傷",
+    "supplementalMeaningZh": "負擔；壓力；品種",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "conscious",
-    "primaryMeaningZh": "清醒的",
-    "supplementalMeaningZh": "有意識的；察覺的",
+    "primaryMeaningZh": "有意識的",
+    "supplementalMeaningZh": "清醒的；察覺的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2661,15 +2661,15 @@
   },
   {
     "word": "excuse",
-    "primaryMeaningZh": "藉口",
-    "supplementalMeaningZh": "理由；原諒；免除",
+    "primaryMeaningZh": "原諒",
+    "supplementalMeaningZh": "藉口；理由；免除",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "reverse",
-    "primaryMeaningZh": "倒車",
-    "supplementalMeaningZh": "反轉；相反；背面",
+    "primaryMeaningZh": "相反的",
+    "supplementalMeaningZh": "倒車；反轉；背面",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2746,7 +2746,7 @@
   {
     "word": "explode",
     "primaryMeaningZh": "爆炸",
-    "supplementalMeaningZh": "爆發；激增",
+    "supplementalMeaningZh": "爆發；激增；爆響",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2787,8 +2787,8 @@
   },
   {
     "word": "orange",
-    "primaryMeaningZh": "橘色的",
-    "supplementalMeaningZh": "橘子；橘色",
+    "primaryMeaningZh": "橘子",
+    "supplementalMeaningZh": "橘色；橘色的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2858,7 +2858,7 @@
   {
     "word": "generous",
     "primaryMeaningZh": "慷慨的",
-    "supplementalMeaningZh": "大量的",
+    "supplementalMeaningZh": "大方的；豐盛的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2872,7 +2872,7 @@
   {
     "word": "mate",
     "primaryMeaningZh": "夥伴",
-    "supplementalMeaningZh": "配偶；助手；交配",
+    "supplementalMeaningZh": "配偶；助手；配對",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2913,8 +2913,8 @@
   },
   {
     "word": "cooking",
-    "primaryMeaningZh": "飯菜",
-    "supplementalMeaningZh": "烹飪；料理",
+    "primaryMeaningZh": "烹飪",
+    "supplementalMeaningZh": "料理；飯菜",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2927,8 +2927,8 @@
   },
   {
     "word": "invitation",
-    "primaryMeaningZh": "請帖",
-    "supplementalMeaningZh": "邀請",
+    "primaryMeaningZh": "邀請",
+    "supplementalMeaningZh": "請帖；邀請函",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3095,8 +3095,8 @@
   },
   {
     "word": "missing",
-    "primaryMeaningZh": "少了的",
-    "supplementalMeaningZh": "不見的；失蹤的",
+    "primaryMeaningZh": "失蹤的",
+    "supplementalMeaningZh": "不見的；少了的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3123,15 +3123,15 @@
   },
   {
     "word": "spell",
-    "primaryMeaningZh": "拼出",
-    "supplementalMeaningZh": "拼字；咒語；一段時間",
+    "primaryMeaningZh": "拼字",
+    "supplementalMeaningZh": "咒語；一段時間",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
   {
     "word": "rescue",
     "primaryMeaningZh": "救援",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "營救",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3236,7 +3236,7 @@
   {
     "word": "decorate",
     "primaryMeaningZh": "裝飾",
-    "supplementalMeaningZh": "布置",
+    "supplementalMeaningZh": "佈置",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3320,7 +3320,7 @@
   {
     "word": "brave",
     "primaryMeaningZh": "勇敢的",
-    "supplementalMeaningZh": "勇敢面對",
+    "supplementalMeaningZh": "勇士；勇敢面對",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3347,8 +3347,8 @@
   },
   {
     "word": "boil",
-    "primaryMeaningZh": "煮",
-    "supplementalMeaningZh": "沸騰",
+    "primaryMeaningZh": "煮沸",
+    "supplementalMeaningZh": "沸騰；水煮",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3361,8 +3361,8 @@
   },
   {
     "word": "sack",
-    "primaryMeaningZh": "一袋",
-    "supplementalMeaningZh": "麻布袋；解雇；洗劫",
+    "primaryMeaningZh": "麻袋",
+    "supplementalMeaningZh": "一袋；解雇；洗劫",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3417,8 +3417,8 @@
   },
   {
     "word": "entertain",
-    "primaryMeaningZh": "逗開心",
-    "supplementalMeaningZh": "娛樂；招待；懷有想法",
+    "primaryMeaningZh": "娛樂",
+    "supplementalMeaningZh": "招待；使開心；懷有想法",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3438,8 +3438,8 @@
   },
   {
     "word": "bound",
-    "primaryMeaningZh": "開往",
-    "supplementalMeaningZh": "一定會；受約束的；邊界",
+    "primaryMeaningZh": "一定會",
+    "supplementalMeaningZh": "開往；受約束的；邊界",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3480,7 +3480,7 @@
   },
   {
     "word": "bargain",
-    "primaryMeaningZh": "划算的東西",
+    "primaryMeaningZh": "便宜貨",
     "supplementalMeaningZh": "特價品；講價；交易",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"

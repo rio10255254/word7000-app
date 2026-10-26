@@ -22,6 +22,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Anthropic from '@anthropic-ai/sdk';
 import { validateRecords } from './build-native-speaking-library.mjs';
+import { exampleRuleProblem } from '../src/data/exampleRules.mjs';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const wordsPath = path.join(projectRoot, 'src', 'data', 'words.ts');
@@ -58,7 +59,7 @@ const SYSTEM = [
   'For each reported entry return all four fields with their final values: copy the fields that are fine unchanged, and fix only what is wrong.',
   '- meaningZh: one meaning, at most 28 characters, no commas, 、 or semicolons.',
   '- supplementalMeaningZh: zero to three meanings separated by "；", at most 48 characters, no commas or 、, or an empty string.',
-  '- example: 8 to 22 English words, contains the exact word as given, ends with . ! or ?, an everyday situation a teenager in Taiwan would recognise.',
+  '- example: 8 to 22 English words, contains the exact word as given (capitalised where English requires it, as in Easter or at the start of the sentence), starts with a capital letter, ends with . ! or ?, an everyday situation a teenager in Taiwan would recognise. Never talk about the word itself (no "the word", "the meaning of", "learners").',
   '- exampleZh: 8 to 42 Chinese characters, ends with 。 ！ or ？, natural Taiwan Mandarin.',
   '- reason: what was wrong, in Traditional Chinese, at most 80 characters.',
   'Return an empty reviews array when every entry is fine.',
@@ -314,15 +315,18 @@ export function meaningProblem(primary, supplemental) {
   return null;
 }
 
-/** The same rules apply-example-corrections.mjs enforces; null when the example passes. */
-export function exampleProblem(word, example, exampleZh) {
+/**
+ * The rules apply-example-corrections.mjs enforces plus the per-example rules
+ * words.test.ts checks; null when the example passes.
+ */
+export function exampleProblem(word, example, exampleZh, group = '') {
   const englishLength = englishTokenCount(example);
   const chineseLength = chineseCharacterCount(exampleZh);
   if (englishLength < 8 || englishLength > 22) return `English is ${englishLength} words; expected 8-22`;
   if (chineseLength < 8 || chineseLength > 42) return `Chinese is ${chineseLength} characters; expected 8-42`;
   if (!new RegExp(`(^|[^a-z])${escapeRegex(word.toLowerCase())}([^a-z]|$)`, 'i').test(example)) return 'example does not contain the word';
   if (!/[.!?]$/.test(example) || !/[。！？]$/.test(exampleZh)) return 'missing terminal punctuation';
-  return null;
+  return exampleRuleProblem({ word, example, exampleZh, group });
 }
 
 /**
@@ -357,7 +361,7 @@ export function correctionsFrom(chunkWordsList, reviews) {
       else meanings.push({ ...base, primaryMeaningZh: primary, supplementalMeaningZh: supplemental, before: { primaryMeaningZh: current.meaningZh, supplementalMeaningZh: current.supplementalMeaningZh ?? '' } });
     }
     if (exampleChanged) {
-      const problem = exampleProblem(current.word, example, exampleZh);
+      const problem = exampleProblem(current.word, example, exampleZh, current.group);
       if (problem) rejected.push({ ...base, field: 'example', example, exampleZh, problem });
       else examples.push({ ...base, example, exampleZh, before: { example: current.example, exampleZh: current.exampleZh } });
     }

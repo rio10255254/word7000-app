@@ -34,6 +34,8 @@ describe('Claude word review', () => {
     expect(exampleProblem('bus', 'The bus came.', '公車來了，大家都上車了。')).toMatch(/English/);
     expect(exampleProblem('bus', 'We waited for the train near the school gate today.', '我們今天在校門附近等公車。')).toMatch(/contain/);
     expect(exampleProblem('bus', 'We waited for the bus near the school gate today', '我們今天在校門附近等公車。')).toMatch(/punctuation/);
+    expect(exampleProblem('easter', 'easter brings crowded trains to her mountain town every spring.', '每年春天復活節，前往她山城的火車都很擠。')).toMatch(/lowercase/);
+    expect(exampleProblem('define', 'Teachers define the meaning of the word before every quiz.', '老師在每次小考前先定義這個字的意思。')).toMatch(/meta-learning/);
   });
 
   it('keeps only changed, valid fields and sets the rest aside', () => {

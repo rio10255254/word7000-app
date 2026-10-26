@@ -130,7 +130,7 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
                                   dailyProgressDate: date, lastStudyDate: lastStudyDate, streakFreezeDate: streakFreezeDate)
         let current = LearningEngine.normalizeForDate(state, today: day)
         return Display(studied: current.studiedToday, target: dailyTarget, streak: current.streak,
-                       studiedToday: lastStudyDate == day, word: word(on: day))
+                       studiedToday: lastStudyDate.map { $0 >= day } ?? false, word: word(on: day))
     }
 }
 

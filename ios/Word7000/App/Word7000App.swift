@@ -91,7 +91,8 @@ struct Word7000App: App {
                 account.heartbeat()
                 Task {
                     await plus.refreshEntitlements()
-                    await account.flush()
+                    // Picks up what other devices saved while this one was away.
+                    await account.flush(pullingCloud: true)
                     await refreshReminders()
                 }
             case .background:

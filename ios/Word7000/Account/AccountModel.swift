@@ -50,6 +50,9 @@ final class AccountModel {
     @ObservationIgnored private var retryAttempt = 0
     @ObservationIgnored private var lastHeartbeat: Date?
     @ObservationIgnored private var identityGeneration = 0
+    /// The cloud profile's version this device last read or wrote. Another
+    /// version there means another device saved since.
+    @ObservationIgnored private var cloudVersion: String?
 
     static let redirectURL = "https://word7000-app.rio10255254.workers.dev/auth-native.html"
     private static let sessionKey = "session"
@@ -120,7 +123,10 @@ final class AccountModel {
     }
 
     private func store(_ session: AuthSession?) {
-        if self.session?.user.id != session?.user.id { identityGeneration += 1 }
+        if self.session?.user.id != session?.user.id {
+            identityGeneration += 1
+            cloudVersion = nil
+        }
         self.session = session
         if let session, let data = try? JSONEncoder().encode(session) {
             Keychain.write(data, for: Self.sessionKey)
@@ -158,6 +164,7 @@ final class AccountModel {
         let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.progress : nil, outbox?.progress])
         let sets = CustomSetState.merge([cloud?.customSets, carryLocal ? app.customSets : nil, outbox?.customSets])
         app.replaceData(progress: progress, customSets: sets, preserveSession: carryLocal)
+        cloudVersion = cloud?.version
         app.setLocalOwner(activeSession.user.id, anonymous: activeSession.user.anonymous)
         if !activeSession.user.anonymous { app.settings.permanentAccountUsed = true }
 
@@ -196,20 +203,27 @@ final class AccountModel {
         }
     }
 
-    /// Uploads whatever changed. On failure the snapshot waits in an outbox
-    /// file and is retried with growing delays (3 s … 5 min).
-    func flush() async {
-        guard let client, let current = session, !flushing, dirty.any else { return }
-        // Written in the background: this runs after every few graded cards,
-        // and encoding the whole history on the main thread stalls the cards.
-        Outbox(progress: app.progress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
-            guard !saved else { return }
-            Task { @MainActor in
-                self?.status = .error(A.saveFailed)
-                self?.message = A.saveFailed
+    /// Uploads whatever changed, after first merging in anything another
+    /// device saved since this one last synced: a save replaces the whole
+    /// cloud document. `pullingCloud` also checks for such changes when
+    /// nothing local is waiting (coming back to the foreground). On failure
+    /// the snapshot waits in an outbox file and is retried with growing
+    /// delays (3 s … 5 min).
+    func flush(pullingCloud: Bool = false) async {
+        guard let client, let current = session, !flushing, dirty.any || pullingCloud else { return }
+        if dirty.any {
+            // Written in the background: this runs after every few graded cards,
+            // and encoding the whole history on the main thread stalls the cards.
+            Outbox(progress: app.progress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
+                guard !saved else { return }
+                Task { @MainActor in
+                    self?.status = .error(A.saveFailed)
+                    self?.message = A.saveFailed
+                }
             }
         }
         if let plus, plus.decide(.sync) != .allowed {
+            guard dirty.any else { return }
             // Local data is untouched; the changes wait and go up after subscribing.
             status = .ready
             message = P.syncLocked
@@ -217,24 +231,42 @@ final class AccountModel {
         }
         flushing = true
         let generation = identityGeneration
+        var failed = false
         defer {
             flushing = false
-            if generation != identityGeneration, dirty.any { enqueue(SyncDirty()) }
+            // Changes made while this upload was running wait for the next one;
+            // after a failure the scheduled retry carries them.
+            if generation != identityGeneration || !failed, dirty.any { enqueue(SyncDirty()) }
         }
-        let sending = dirty
+        var sending = dirty
         dirty = SyncDirty()
-        let progress = app.progress, sets = app.customSets
         status = .syncing
         do {
             let valid = try await validSession(client: client, current)
-            try await client.saveProfile(progress: sending.progress ? progress : nil, customSets: sending.customSets ? sets : nil, session: valid)
-            guard generation == identityGeneration else { return }
+            if try await client.profileVersion(session: valid) != cloudVersion {
+                let cloud = try await client.loadProfile(session: valid)
+                guard generation == identityGeneration else { return }
+                let merged = CloudSync.merge(localProgress: app.progress, localSets: app.customSets, cloud: cloud, today: app.today)
+                if merged.changedLocal {
+                    app.replaceData(progress: merged.progress, customSets: merged.customSets, preserveSession: true)
+                }
+                cloudVersion = cloud.version
+                if merged.uploadProgress { sending.progress = true }
+                if merged.uploadCustomSets { sending.customSets = true }
+            }
+            if sending.any {
+                let version = try await client.saveProfile(progress: sending.progress ? app.progress : nil,
+                                                           customSets: sending.customSets ? app.customSets : nil, session: valid)
+                guard generation == identityGeneration else { return }
+                cloudVersion = version
+            }
             retryAttempt = 0
             // Keep the local account copy after upload, including after the trial.
             status = .ready
             message = valid.user.anonymous ? A.guestSaved : A.synced
         } catch {
             guard generation == identityGeneration else { return }
+            failed = true
             dirty.formUnion(sending)
             status = .error(A.savedLocally)
             message = A.savedLocally

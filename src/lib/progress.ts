@@ -680,9 +680,11 @@ export type StudyQueueOptions = {
 
 /**
  * Picks the cards for one study session. Words that are due for review come
- * first (oldest due date first), then words never seen before in library
- * order, and only when both run out does it pull known words ahead of their
- * schedule. The chosen cards are then shuffled so reviews and new words mix.
+ * first (oldest due date first), then words never seen before picked at
+ * random from the whole pool, and only when both run out does it pull known
+ * words ahead of their schedule. New words used to come in library order, so
+ * with "all levels" every session was Core 1. The chosen cards are then
+ * shuffled so reviews and new words mix.
  */
 export function buildStudyQueue(
   words: WordEntry[],
@@ -714,7 +716,7 @@ export function buildStudyQueue(
   ahead.sort((left, right) => left.date.localeCompare(right.date));
   const chosen = [
     ...due.map((entry) => entry.word),
-    ...fresh,
+    ...shuffleWithSeed(fresh, `${seed}:fresh`),
     ...ahead.map((entry) => entry.word),
   ].slice(0, size);
 
@@ -788,7 +790,7 @@ function shuffleWithSeed<T>(values: T[], seed: string): T[] {
 
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
     randomState = nextRandomState(randomState);
-    const swapIndex = randomState % (index + 1);
+    const swapIndex = scrambleRandomState(randomState) % (index + 1);
     [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
   }
 
@@ -806,7 +808,7 @@ function sampleDistinctIndexes(length: number, count: number, seed: string, excl
 
   while (selected.size < targetCount) {
     randomState = nextRandomState(randomState);
-    const index = randomState % length;
+    const index = scrambleRandomState(randomState) % length;
     if (index !== excludedIndex) {
       selected.add(index);
     }
@@ -817,6 +819,20 @@ function sampleDistinctIndexes(length: number, count: number, seed: string, excl
 
 function nextRandomState(value: number): number {
   return (value * 1664525 + 1013904223) >>> 0;
+}
+
+// The low bits of a power-of-two LCG barely change (bit 0 just alternates), so
+// taking `state % n` directly left whole orderings unreachable: four quiz
+// options only ever came out in 12 of their 24 orders, with the answer first a
+// third of the time. Mixing the high bits down (murmur3's finalizer) fixes that.
+function scrambleRandomState(value: number): number {
+  let mixed = value;
+  mixed ^= mixed >>> 16;
+  mixed = Math.imul(mixed, 0x85ebca6b);
+  mixed ^= mixed >>> 13;
+  mixed = Math.imul(mixed, 0xc2b2ae35);
+  mixed ^= mixed >>> 16;
+  return mixed >>> 0;
 }
 
 function hashText(value: string): number {

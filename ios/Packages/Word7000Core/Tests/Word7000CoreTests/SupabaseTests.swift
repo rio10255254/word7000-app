@@ -61,19 +61,42 @@ final class SupabaseTests: XCTestCase {
         XCTAssertTrue(profile.found)
         XCTAssertNil(profile.progress)
         XCTAssertEqual(profile.customSets, CustomSetState())
-        XCTAssertEqual(transport.requests.first?.url?.query, "id=eq.u1&select=progress,custom_sets")
+        XCTAssertEqual(transport.requests.first?.url?.query, "id=eq.u1&select=progress,custom_sets,updated_at")
+        XCTAssertNil(profile.version)
+    }
+
+    func testProfileVersionIsTheServersUpdatedAt() async throws {
+        let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
+        let stamp = "2026-10-26T04:00:00.123+00:00"
+        let loaded = FakeTransport([(#"[{"progress":{"dailyTarget":20,"streak":0,"studiedToday":0,"words":{}},"updated_at":"\#(stamp)"}]"#, 200)])
+        let profile = try await SupabaseClient(config: config, transport: loaded).loadProfile(session: session)
+        XCTAssertEqual(profile.version, stamp)
+
+        let checked = FakeTransport([(#"[{"updated_at":"\#(stamp)"}]"#, 200), ("[]", 200)])
+        let client = SupabaseClient(config: config, transport: checked)
+        let found = try await client.profileVersion(session: session)
+        XCTAssertEqual(found, stamp)
+        XCTAssertEqual(checked.requests.first?.url?.query, "id=eq.u1&select=updated_at")
+        let missing = try await client.profileVersion(session: session)
+        XCTAssertNil(missing, "no profile yet")
     }
 
     func testSaveProfileUpsertsOneRow() async throws {
-        let transport = FakeTransport([("", 201)])
+        let transport = FakeTransport([(#"[{"updated_at":"2026-10-26T04:00:01.5+00:00"}]"#, 201), ("", 201)])
         let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
-        try await SupabaseClient(config: config, transport: transport).saveProfile(progress: ProgressState(), customSets: nil, session: session)
+        let client = SupabaseClient(config: config, transport: transport)
+        let version = try await client.saveProfile(progress: ProgressState(), customSets: nil, session: session)
+        XCTAssertEqual(version, "2026-10-26T04:00:01.5+00:00")
         let request = try XCTUnwrap(transport.requests.first)
-        XCTAssertEqual(request.value(forHTTPHeaderField: "Prefer"), "resolution=merge-duplicates,return=minimal")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Prefer"), "resolution=merge-duplicates,return=representation")
+        XCTAssertEqual(request.url?.query, "on_conflict=id&select=updated_at")
         let rows = try JSONDecoder().decode([[String: JSONValue]].self, from: XCTUnwrap(request.httpBody))
         XCTAssertEqual(rows.first?["id"], .string("u1"))
         XCTAssertNotNil(rows.first?["progress"])
         XCTAssertNil(rows.first?["custom_sets"])
+        // A save the server answers without the row still succeeds.
+        let unreported = try await client.saveProfile(progress: nil, customSets: CustomSetState(), session: session)
+        XCTAssertNil(unreported)
     }
 
     func testErrorsCarryCodeAndRecogniseLinkedIdentities() async {

@@ -52,7 +52,7 @@ final class ScanPickerTests: XCTestCase {
                 XCTAssertEqual(app.textFields["scan-meaning-" + id].value as? String, expected[(field.value as? String ?? "").lowercased()])
             }
             snapshot(app, name: "scan-photo-\(index)-review")
-            for _ in 0..<4 where !save.isHittable { app.swipeUp() }
+            save.scrollIntoView(in: app, swipes: 4)
             XCTAssertTrue(save.isEnabled)
             XCTAssertTrue(save.isHittable)
             saveScan(save, in: app)
@@ -80,7 +80,7 @@ final class ScanPickerTests: XCTestCase {
     func testSpellingSuggestionNeedsExplicitAcceptance() {
         let app = openScanner(pastedText: "abandan v. 放棄\nobjectively adv. 客觀地\nobjective n. 目標")
         let read = app.buttons["scan-read-pasted"]
-        for _ in 0..<4 where !read.isHittable { app.swipeUp() }
+        read.scrollIntoView(in: app, swipes: 4)
         read.tap()
         let word = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-' AND value == 'abandan'")).firstMatch
         XCTAssertTrue(word.waitForExistence(timeout: 5))
@@ -103,12 +103,12 @@ final class ScanPickerTests: XCTestCase {
         app = openScanner(pastedText: "BANK n. 銀行\nbank n. 河岸\nobjectively adv. 客觀地\nobjective n. 目標", reset: false)
         readPasted(app)
         let destination = app.buttons["scan-destination"]
-        for _ in 0..<6 where !destination.isHittable { app.swipeUp() }
+        destination.scrollIntoView(in: app, swipes: 6)
         XCTAssertTrue(destination.isHittable)
         destination.tap()
         app.buttons[bankName].tap()
         let save = app.buttons["scan-save"]
-        for _ in 0..<5 where !save.isHittable { app.swipeUp() }
+        save.scrollIntoView(in: app, swipes: 5)
         XCTAssertEqual(save.label, "存入字庫（3 個）")
         XCTAssertTrue(app.staticTexts["scan-duplicates-summary"].exists)
         snapshot(app, name: "scan-precise-duplicate-review")
@@ -195,18 +195,18 @@ final class ScanPickerTests: XCTestCase {
         app = openScanner(pastedText: "objectively adv. 客觀地", reset: false)
         readPasted(app)
         let destination = app.buttons["scan-destination"]
-        for _ in 0..<5 where !destination.isHittable { app.swipeUp() }
+        destination.scrollIntoView(in: app, swipes: 5)
         destination.tap()
         XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5), app.debugDescription)
         app.buttons["Lesson"].tap()
         let save = app.buttons["scan-save"]
-        for _ in 0..<5 where !save.isHittable { app.swipeUp() }
+        save.scrollIntoView(in: app, swipes: 5)
         saveScan(save, in: app)
     }
 
     private func readPasted(_ app: XCUIApplication) {
         let read = app.buttons["scan-read-pasted"]
-        for _ in 0..<5 where !read.isHittable { app.swipeUp() }
+        read.scrollIntoView(in: app, swipes: 5)
         read.tap()
         XCTAssertTrue(app.buttons["scan-save"].waitForExistence(timeout: 5))
     }
@@ -214,11 +214,11 @@ final class ScanPickerTests: XCTestCase {
     private func savePastedBank(_ app: XCUIApplication) -> String {
         readPasted(app)
         let name = app.textFields["scan-bank-name"]
-        for _ in 0..<5 where !name.isHittable { app.swipeUp() }
+        name.scrollIntoView(in: app, swipes: 5)
         let bankName = name.value as? String ?? ""
         XCTAssertFalse(bankName.isEmpty)
         let save = app.buttons["scan-save"]
-        for _ in 0..<5 where !save.isHittable { app.swipeUp() }
+        save.scrollIntoView(in: app, swipes: 5)
         saveScan(save, in: app)
         return bankName
     }

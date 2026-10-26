@@ -1,0 +1,38 @@
+{
+  "batchId": "msgbatch_01FjhBkfinuwFusibuA66qE6",
+  "model": "claude-opus-5-5",
+  "effort": "medium",
+  "usage": {
+    "input": 6216,
+    "output": 1314,
+    "cost": 0.025572
+  },
+  "meanings": [
+    {
+      "core": 1,
+      "word": "precise",
+      "reason": "precise 最常見的意思是「精確的」，原本把「明確的」列為主要意思，主次顛倒，例句翻譯也一併修正。",
+      "primaryMeaningZh": "精確的",
+      "supplementalMeaningZh": "明確的",
+      "before": {
+        "primaryMeaningZh": "明確的",
+        "supplementalMeaningZh": "精確的"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "core": 1,
+      "word": "precise",
+      "reason": "precise 最常見的意思是「精確的」，原本把「明確的」列為主要意思，主次顛倒，例句翻譯也一併修正。",
+      "example": "The nurse gave precise instructions for taking the medicine safely.",
+      "exampleZh": "護理師給了精確的安全用藥說明。",
+      "before": {
+        "example": "The nurse gave precise instructions for taking the medicine safely.",
+        "exampleZh": "護理師給了明確的安全用藥說明。"
+      }
+    }
+  ],
+  "rejected": [],
+  "failed": []
+}

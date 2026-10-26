@@ -60,10 +60,10 @@ export const sampleWords: WordEntry[] = [
     "word": "precise",
     "partOfSpeech": "a",
     "pronunciation": "/pri'sais/",
-    "meaningZh": "明確的",
-    "supplementalMeaningZh": "精確的",
+    "meaningZh": "精確的",
+    "supplementalMeaningZh": "明確的",
     "example": "The nurse gave precise instructions for taking the medicine safely.",
-    "exampleZh": "護理師給了明確的安全用藥說明。",
+    "exampleZh": "護理師給了精確的安全用藥說明。",
     "group": "Core 1"
   },
   {

@@ -3,10 +3,15 @@ import Foundation
 import FoundationNetworking
 #endif
 
-/// The online AI service (the `ai` Supabase function, backed by Groq). The app
-/// sends data for one named task; prompts, models and the Groq key stay on the
-/// server, which tries the strongest model first and fails over to the second.
+/// The online AI service (the `ai` Supabase function, backed by Anthropic's
+/// Claude). The app sends data for one named task; prompts, the model and the
+/// Anthropic key stay on the server, which sets how much Claude reasons per tier.
 public enum CloudAI {
+    /// Who the learner agreed to send text to. The server refuses requests
+    /// that name no provider or another one, so a consent given for an earlier
+    /// provider never covers this one.
+    public static let provider = "anthropic"
+
     public enum Kind: String, Codable, Sendable {
         case coach, scan, explain, quizWhy, fillWord, insights
     }
@@ -14,7 +19,7 @@ public enum CloudAI {
     public enum Failure: Error, Equatable, Sendable {
         /// Not set up, offline, or the service is down: use the on-device model.
         case unavailable
-        /// Both models are rate limited right now.
+        /// Claude is rate limited or overloaded right now.
         case busy
         /// This learner used today's allowance.
         case quota
@@ -27,8 +32,8 @@ public enum CloudAI {
     public enum Tier: String, Codable, Sendable {
         case free, trial, plus
 
-        /// Plus and the trial start on the strongest model.
-        public var usesStrongestModel: Bool { self != .free }
+        /// Plus and the trial get more reasoning on coaching, explanations and insights.
+        public var usesDeeperReasoning: Bool { self != .free }
     }
 
     /// Where the learner stands today, as the server reported with its last answer.
@@ -41,7 +46,7 @@ public enum CloudAI {
         }
     }
 
-    /// Long enough for the server to try both models.
+    /// Long enough for the server to try twice.
     public static let timeout: TimeInterval = 30
 
     /// A word page explanation.
@@ -194,7 +199,7 @@ extension SupabaseClient {
     public func runAI<Value: Decodable>(_ task: CloudAI.Kind, input: [String: JSONValue], session: AuthSession,
                                          entitlement: String?, as type: Value.Type = Value.self) async throws -> (value: Value, usage: CloudAI.Usage?) {
         let client = SupabaseClient(config: config, transport: transport, timeout: CloudAI.timeout)
-        var body: [String: JSONValue] = ["task": .string(task.rawValue), "input": .object(input)]
+        var body: [String: JSONValue] = ["task": .string(task.rawValue), "input": .object(input), "consent": .string(CloudAI.provider)]
         if let entitlement { body["entitlement"] = .string(entitlement) }
         do {
             let data = try await client.request("POST", "functions/v1/ai", body: .object(body), session: session)

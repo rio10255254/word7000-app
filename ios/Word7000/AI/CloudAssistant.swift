@@ -3,7 +3,7 @@ import Observation
 import SwiftUI
 import Word7000Core
 
-/// First choice for every AI feature: Groq's models through the `ai` service.
+/// First choice for every AI feature: Anthropic's Claude through the `ai` service.
 /// Callers fall back to the on-device model (or to no AI) whenever this throws.
 @MainActor @Observable
 final class CloudAssistant {
@@ -16,7 +16,7 @@ final class CloudAssistant {
     private(set) var lastFailure: CloudAI.Failure?
     /// The plan and today's allowance, as the server last reported them.
     private(set) var usage: CloudAI.Usage?
-    /// After both models were rate limited, wait a moment before asking again
+    /// After Claude was rate limited or overloaded, wait a moment before asking again
     /// so learners get the on-device answer quickly instead of another wait.
     @ObservationIgnored private var pausedUntil: Date?
 
@@ -93,9 +93,9 @@ final class CloudAssistant {
 
     var planLabel: String {
         switch tier {
-        case .plus: L.t("Plus・最強模型", "Plus · Strongest model")
-        case .trial: L.t("試用・最強模型", "Trial · Strongest model")
-        case .free: L.t("免費版・標準模型", "Free · Standard model")
+        case .plus: L.t("Plus・深度思考", "Plus · Deeper reasoning")
+        case .trial: L.t("試用・深度思考", "Trial · Deeper reasoning")
+        case .free: L.t("免費版・快速回答", "Free · Quick answers")
         }
     }
 
@@ -118,8 +118,8 @@ enum PlusAI {
 extension L {
     static var cloudConsentTitle: String { t("使用線上 AI？", "Use online AI?") }
     static var cloudConsentMessage: String {
-        t("口說教練、單字解說、測驗講解、掃描整理與單字建議可以改用更聰明、更快的線上 AI（Groq）。使用時，你輸入或說出的文字與相關單字會傳送到 Groq（美國）處理，不包含錄音、帳號名稱或 Email。你隨時可以在「AI 與錄音」關閉。",
-          "The speaking coach, word explanations, quiz explanations, scan tidy-up and word suggestions can use smarter, faster online AI (Groq). When used, the text you type or say and the related words are sent to Groq (USA) for processing, without recordings, your account name or email. You can turn this off anytime in AI and recording.")
+        t("口說教練、單字解說、測驗講解、掃描整理、單字建議與學習分析可以改用更聰明的線上 AI（Anthropic 的 Claude）。使用時，你輸入或說出的文字與相關單字會傳送到 Anthropic（美國）處理，不包含錄音、帳號名稱或 Email。你隨時可以在「AI 與錄音」關閉。",
+          "The speaking coach, word explanations, quiz explanations, scan tidy-up, word suggestions and learning insights can use smarter online AI (Anthropic's Claude). When used, the text you type or say and the related words are sent to Anthropic (USA) for processing, without recordings, your account name or email. You can turn this off anytime in AI and recording.")
     }
     static var cloudConsentAllow: String { t("使用線上 AI", "Use online AI") }
     static var cloudConsentDecline: String { t("只用裝置內", "On-device only") }

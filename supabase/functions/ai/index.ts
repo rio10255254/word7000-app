@@ -1,10 +1,10 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
 import { verifyEntitlement } from './entitlement.ts';
-import { complete, GroqFailure } from './groq.ts';
+import { AIFailure, complete } from './claude.ts';
 import { dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
 
-// The Groq key lives only here, as the GROQ_API_KEY function secret. The app
-// signs in (a guest account is enough) and sends task data with that session.
+// The Anthropic key lives only here, as the ANTHROPIC_API_KEY function secret.
+// The app signs in (a guest account is enough) and sends task data with that session.
 
 const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
@@ -16,12 +16,16 @@ const corsHeaders = {
 const MAX_BODY_BYTES = 32_768;
 const BUNDLE_ID = 'com.rio.word7000';
 const PLUS_PRODUCTS = ['com.rio.word7000.plus.monthly', 'com.rio.word7000.plus.yearly'];
+// Learners agreed to send text to a named provider. Builds that asked about an
+// earlier provider do not send this, so their text is never sent to Anthropic;
+// they get `unavailable` and use the on-device model until they update.
+const PROVIDER = 'anthropic';
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (request.method !== 'POST') return reply({ error: 'method_not_allowed' }, 405);
 
-  const apiKey = Deno.env.get('GROQ_API_KEY');
+  const apiKey = Deno.env.get('ANTHROPIC_API_KEY');
   if (!apiKey || Deno.env.get('AI_DISABLED') === 'true') return reply({ error: 'unavailable' }, 503);
 
   const authorization = request.headers.get('Authorization');
@@ -39,8 +43,9 @@ Deno.serve(async (request) => {
 
   const raw = await request.text();
   if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
-  let body: { task?: unknown; input?: unknown; entitlement?: unknown };
+  let body: { task?: unknown; input?: unknown; entitlement?: unknown; consent?: unknown };
   try { body = JSON.parse(raw); } catch { return reply({ error: 'invalid_input' }, 400); }
+  if (body.consent !== PROVIDER) return reply({ error: 'unavailable' }, 503);
   if (!isTaskName(body.task)) return reply({ error: 'invalid_input' }, 400);
 
   const task = body.task;
@@ -67,9 +72,9 @@ Deno.serve(async (request) => {
 
   try {
     const result = await complete(plan, { apiKey });
-    return reply({ result: result.content, model: result.model, tier, limit, remaining: Math.max(0, limit - used) });
+    return reply({ result: result.content, model: result.model, effort: result.effort, tier, limit, remaining: Math.max(0, limit - used) });
   } catch (error) {
-    if (error instanceof GroqFailure) {
+    if (error instanceof AIFailure) {
       if (error.kind === 'misconfigured') console.error(error.message);
       return reply({ error: error.kind === 'busy' ? 'busy' : 'unavailable', retryAfter: error.retryAfter ?? null },
         error.kind === 'busy' ? 429 : 503);

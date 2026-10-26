@@ -61,8 +61,8 @@ struct SpeakingCoachView: View {
     /// Apple's server model sees the answer text, so the promise changes with it.
     private var privacyNote: String {
         if provider.usesOnline, IntelligenceSettings.shared.cloudConsent == true {
-            return L.t("錄音只留在這部手機，離開即刪除。取得建議時，回答文字會傳送到 Groq 的線上 AI 處理。AI 建議可能有誤，也不評分發音。",
-                       "Recordings stay on this iPhone and are deleted when you leave. For suggestions, your answer text is sent to Groq's online AI. AI suggestions may be wrong and do not score pronunciation.")
+            return L.t("錄音只留在這部手機，離開即刪除。取得建議時，回答文字會傳送到 Anthropic 的 Claude 線上 AI 處理。AI 建議可能有誤，也不評分發音。",
+                       "Recordings stay on this iPhone and are deleted when you leave. For suggestions, your answer text is sent to Anthropic's Claude online AI. AI suggestions may be wrong and do not score pronunciation.")
         }
         return provider.usesCloud
             ? L.t("錄音只留在這部手機，離開即刪除。取得建議時，回答文字交給 Apple 的 Private Cloud Compute 處理，Apple 表示不會保存。AI 建議可能有誤，也不評分發音。",

@@ -17528,10 +17528,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tion",
     "partOfSpeech": "n",
     "pronunciation": "/-/",
-    "meaningZh": "電子支票託收系統",
+    "meaningZh": "名詞字尾",
     "supplementalMeaningZh": "",
-    "example": "The bank used TION for electronic check collection services.",
-    "exampleZh": "銀行使用 TION 提供電子支票託收服務。",
+    "example": "Add -tion to the verb act, and you get the noun action.",
+    "exampleZh": "在動詞 act 後面加上 -tion，就變成名詞 action。",
     "group": "Core 4"
   },
   {
@@ -62639,10 +62639,10 @@ export const sampleWords: WordEntry[] = [
     "word": "min",
     "partOfSpeech": "abbr",
     "pronunciation": "/-/",
-    "meaningZh": "部長",
-    "supplementalMeaningZh": "部會；分鐘",
-    "example": "Min. Chen approved the transport plan before the meeting.",
-    "exampleZh": "陳部長會前批准交通計畫。",
+    "meaningZh": "分鐘",
+    "supplementalMeaningZh": "最小值；部長",
+    "example": "The next bus comes in 5 min, so we can wait here.",
+    "exampleZh": "下一班公車五分鐘後就來，我們在這裡等就好。",
     "group": "Core 12"
   },
   {
@@ -62672,10 +62672,10 @@ export const sampleWords: WordEntry[] = [
     "word": "op",
     "partOfSpeech": "word",
     "pronunciation": "/'әjp/",
-    "meaningZh": "觀測所",
+    "meaningZh": "手術",
     "supplementalMeaningZh": "",
-    "example": "Guards watched the harbor from the old OP during their night patrol.",
-    "exampleZh": "警衛夜間巡邏時從舊觀測所監看港口。",
+    "example": "My grandmother's knee op went well, and she is walking again.",
+    "exampleZh": "奶奶的膝蓋手術很順利，她又能走路了。",
     "group": "Core 12"
   },
   {
@@ -63213,8 +63213,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/skɔts/",
     "meaningZh": "蘇格蘭的",
     "supplementalMeaningZh": "蘇格蘭語",
-    "example": "Old Scots songs echoed through the pub after midnight.",
-    "exampleZh": "午夜後，古老蘇格蘭歌曲迴盪在酒吧裡。",
+    "example": "Old Scots songs filled the village hall during the winter festival.",
+    "exampleZh": "冬季慶典期間，古老的蘇格蘭歌曲響遍整個村莊禮堂。",
     "group": "Core 12"
   },
   {

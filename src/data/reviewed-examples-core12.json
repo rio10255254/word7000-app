@@ -1352,8 +1352,8 @@
   },
   {
     "word": "min",
-    "example": "Min. Chen approved the transport plan before the meeting.",
-    "exampleZh": "陳部長會前批准交通計畫。",
+    "example": "The next bus comes in 5 min, so we can wait here.",
+    "exampleZh": "下一班公車五分鐘後就來，我們在這裡等就好。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1373,8 +1373,8 @@
   },
   {
     "word": "op",
-    "example": "Guards watched the harbor from the old OP during their night patrol.",
-    "exampleZh": "警衛夜間巡邏時從舊觀測所監看港口。",
+    "example": "My grandmother's knee op went well, and she is walking again.",
+    "exampleZh": "奶奶的膝蓋手術很順利，她又能走路了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1716,8 +1716,8 @@
   },
   {
     "word": "scots",
-    "example": "Old Scots songs echoed through the pub after midnight.",
-    "exampleZh": "午夜後，古老蘇格蘭歌曲迴盪在酒吧裡。",
+    "example": "Old Scots songs filled the village hall during the winter festival.",
+    "exampleZh": "冬季慶典期間，古老的蘇格蘭歌曲響遍整個村莊禮堂。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },

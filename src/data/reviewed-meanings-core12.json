@@ -1352,8 +1352,8 @@
   },
   {
     "word": "min",
-    "primaryMeaningZh": "部長",
-    "supplementalMeaningZh": "部會；分鐘",
+    "primaryMeaningZh": "分鐘",
+    "supplementalMeaningZh": "最小值；部長",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -1373,7 +1373,7 @@
   },
   {
     "word": "op",
-    "primaryMeaningZh": "觀測所",
+    "primaryMeaningZh": "手術",
     "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"

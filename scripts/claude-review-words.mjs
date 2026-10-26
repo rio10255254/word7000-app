@@ -386,15 +386,17 @@ export function correctionsFrom(chunkWordsList, reviews) {
   return { meanings, examples, rejected };
 }
 
-function report({ batchId, content, model, effort, meanings, examples, speaking, rejected, failed, usage }) {
+export function report({ batchId, content, model, effort, meanings, examples, speaking, rejected, failed, usage }) {
   const counts = content === 'speaking'
     ? `${speaking.length} speaking card corrections`
     : `${meanings.length} meaning corrections, ${examples.length} example corrections`;
   const lines = [
     `# Claude ${content === 'speaking' ? 'speaking card' : 'word'} review ${batchId}`,
     '',
-    `Model \`${model}\` at effort \`${effort}\`. ${counts}, ${rejected.length} rejected suggestions, ${failed.length} requests without an answer.`,
-    `Tokens: ${usage.input.toLocaleString('en-US')} in, ${usage.output.toLocaleString('en-US')} out (about US$${usage.cost.toFixed(2)} at batch prices).`,
+    `Model \`${model}\`${effort === 'n/a' ? '' : ` at effort \`${effort}\``}. ${counts}, ${rejected.length} rejected suggestions, ${failed.length} requests without an answer.`,
+    usage.input + usage.output === 0
+      ? 'Reviewed in a Claude Code session, so no API tokens were billed.'
+      : `Tokens: ${usage.input.toLocaleString('en-US')} in, ${usage.output.toLocaleString('en-US')} out (about US$${usage.cost.toFixed(2)} at batch prices).`,
     '',
   ];
   if (meanings.length) {

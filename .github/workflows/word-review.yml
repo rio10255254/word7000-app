@@ -137,6 +137,8 @@ jobs:
             git checkout -- src/data ios/Word7000/Resources/words.json
             node scripts/claude-review-words.mjs apply-words "$OUT"
           done
+          # The Swift tests replay golden results built from the word data.
+          UPDATE_NATIVE_FIXTURES=1 npx vitest run src/nativeParity.test.ts src/nativeParityChinese.test.ts
 
       - name: Apply the speaking card corrections
         if: steps.collect.outputs.content == 'speaking'
@@ -145,17 +147,18 @@ jobs:
         run: |
           [ "${{ steps.collect.outputs.speaking }}" = "0" ] || node scripts/claude-review-words.mjs apply-speaking "$OUT/speaking-corrections.json"
           node scripts/build-native-speaking-library.mjs
+          UPDATE_NATIVE_FIXTURES=1 npx vitest run src/nativeParity.test.ts src/nativeParityChinese.test.ts
 
       - name: Run the speaking card checks
         if: steps.collect.outputs.content == 'speaking'
         run: |
           node scripts/build-native-speaking-library.mjs --check
-          npx vitest run scripts/native-speaking-library.test.mjs src/nativeSpeakingRecency.test.ts scripts/claude-review-words.test.mjs
+          npx vitest run
 
       - name: Run the word checks
         if: steps.collect.outputs.content == 'words'
         run: |
-          npx vitest run src/data scripts/claude-review-words.test.mjs
+          npx vitest run
           npm run validate:meanings
           npm run audit:meanings
           npm run audit:examples
@@ -185,10 +188,10 @@ jobs:
           count() { jq '.'"$1"' | length' "$OUT/review.json"; }
           MEANINGS=$(count meanings); EXAMPLES=$(count examples); SPEAKING=$(count speaking)
           if [ "$CONTENT" = "speaking" ]; then
-            git add content/speaking ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json "exports/claude-review/$BATCH_ID"
+            git add content/speaking ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
             git commit -m "Apply Claude's speaking card review $BATCH_ID" -m "$SPEAKING speaking card corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
           else
-            git add src/data ios/Word7000/Resources/words.json "exports/claude-review/$BATCH_ID"
+            git add src/data ios/Word7000/Resources/words.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
             git commit -m "Apply Claude's word review $BATCH_ID" -m "$MEANINGS meaning and $EXAMPLES example corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
           fi
           git pull --rebase origin "$GITHUB_REF_NAME"

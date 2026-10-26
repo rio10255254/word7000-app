@@ -57,8 +57,8 @@
   },
   {
     "word": "incorporate",
-    "primaryMeaningZh": "拌入",
-    "supplementalMeaningZh": "納入；合併",
+    "primaryMeaningZh": "納入",
+    "supplementalMeaningZh": "合併；拌入",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core08"
   },
@@ -92,7 +92,7 @@
   },
   {
     "word": "undertake",
-    "primaryMeaningZh": "嘗試",
+    "primaryMeaningZh": "從事",
     "supplementalMeaningZh": "承擔；著手進行；保證",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core08"
@@ -302,8 +302,8 @@
   },
   {
     "word": "scope",
-    "primaryMeaningZh": "眼界",
-    "supplementalMeaningZh": "範圍；機會",
+    "primaryMeaningZh": "範圍",
+    "supplementalMeaningZh": "眼界；機會",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core08"
   },
@@ -618,7 +618,7 @@
   {
     "word": "equation",
     "primaryMeaningZh": "等式",
-    "supplementalMeaningZh": "平衡",
+    "supplementalMeaningZh": "方程式",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core08"
   },

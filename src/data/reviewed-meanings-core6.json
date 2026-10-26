@@ -477,8 +477,8 @@
   },
   {
     "word": "welfare",
-    "primaryMeaningZh": "照護狀況",
-    "supplementalMeaningZh": "福利；福祉",
+    "primaryMeaningZh": "福祉",
+    "supplementalMeaningZh": "福利；社會救助",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -505,8 +505,8 @@
   },
   {
     "word": "catholic",
-    "primaryMeaningZh": "廣泛的",
-    "supplementalMeaningZh": "包容的；天主教的",
+    "primaryMeaningZh": "天主教的",
+    "supplementalMeaningZh": "天主教徒；廣泛的；包容的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -582,8 +582,8 @@
   },
   {
     "word": "mechanism",
-    "primaryMeaningZh": "機構",
-    "supplementalMeaningZh": "機制；原理",
+    "primaryMeaningZh": "機械裝置",
+    "supplementalMeaningZh": "機制；原理；機構",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -1191,8 +1191,8 @@
   },
   {
     "word": "dominant",
-    "primaryMeaningZh": "最明顯的",
-    "supplementalMeaningZh": "主導的；占優勢的",
+    "primaryMeaningZh": "占優勢的",
+    "supplementalMeaningZh": "主導的；最顯著的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -1513,8 +1513,8 @@
   },
   {
     "word": "unity",
-    "primaryMeaningZh": "一致感",
-    "supplementalMeaningZh": "團結；統一",
+    "primaryMeaningZh": "團結",
+    "supplementalMeaningZh": "一致；統一",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -1681,15 +1681,15 @@
   },
   {
     "word": "carrier",
-    "primaryMeaningZh": "郵遞員",
-    "supplementalMeaningZh": "運送者；帶原者",
+    "primaryMeaningZh": "運送者",
+    "supplementalMeaningZh": "郵差；帶原者；航空公司",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
   {
     "word": "segment",
-    "primaryMeaningZh": "一瓣",
-    "supplementalMeaningZh": "片段；部分；分割",
+    "primaryMeaningZh": "部分",
+    "supplementalMeaningZh": "片段；一瓣；分割",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -1737,8 +1737,8 @@
   },
   {
     "word": "allegation",
-    "primaryMeaningZh": "說法",
-    "supplementalMeaningZh": "指控；主張",
+    "primaryMeaningZh": "指控",
+    "supplementalMeaningZh": "聲稱；說法",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -1821,8 +1821,8 @@
   },
   {
     "word": "monthly",
-    "primaryMeaningZh": "月刊",
-    "supplementalMeaningZh": "每月的",
+    "primaryMeaningZh": "每月的",
+    "supplementalMeaningZh": "月刊；每月一次地",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -1905,8 +1905,8 @@
   },
   {
     "word": "execute",
-    "primaryMeaningZh": "完成",
-    "supplementalMeaningZh": "執行；處決",
+    "primaryMeaningZh": "執行",
+    "supplementalMeaningZh": "實行；完成；處決",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -1961,8 +1961,8 @@
   },
   {
     "word": "hint",
-    "primaryMeaningZh": "一點",
-    "supplementalMeaningZh": "暗示；提示",
+    "primaryMeaningZh": "暗示",
+    "supplementalMeaningZh": "提示；少許",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -2017,8 +2017,8 @@
   },
   {
     "word": "liberty",
-    "primaryMeaningZh": "休假",
-    "supplementalMeaningZh": "自由；許可",
+    "primaryMeaningZh": "自由",
+    "supplementalMeaningZh": "許可；冒昧",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -2129,8 +2129,8 @@
   },
   {
     "word": "counterpart",
-    "primaryMeaningZh": "對應窗口",
-    "supplementalMeaningZh": "相對應的人；對等物",
+    "primaryMeaningZh": "職位相當的人",
+    "supplementalMeaningZh": "對應的人事物；對等物",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -2199,8 +2199,8 @@
   },
   {
     "word": "presidency",
-    "primaryMeaningZh": "總裁職位",
-    "supplementalMeaningZh": "總統任期；總統職權",
+    "primaryMeaningZh": "總統職位",
+    "supplementalMeaningZh": "總統任期；總裁職位",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -3214,8 +3214,8 @@
   },
   {
     "word": "associated",
-    "primaryMeaningZh": "合作的",
-    "supplementalMeaningZh": "相關的；聯合的",
+    "primaryMeaningZh": "相關的",
+    "supplementalMeaningZh": "聯合的；附屬的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -3242,8 +3242,8 @@
   },
   {
     "word": "treasury",
-    "primaryMeaningZh": "寶庫",
-    "supplementalMeaningZh": "國庫；財政部",
+    "primaryMeaningZh": "國庫",
+    "supplementalMeaningZh": "財政部；寶庫",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },
@@ -3361,8 +3361,8 @@
   },
   {
     "word": "roach",
-    "primaryMeaningZh": "斜齒鯿",
-    "supplementalMeaningZh": "蟑螂",
+    "primaryMeaningZh": "蟑螂",
+    "supplementalMeaningZh": "斜齒鯿",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core06"
   },

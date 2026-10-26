@@ -8,11 +8,9 @@ import {
   conciseChineseMeaning,
   supplementalChineseMeaning,
 } from './lib/chineseDisplay';
-import { buildConversationPrompt } from './lib/conversationPrompts';
 
 /**
- * Golden results for the Swift ports of chineseDisplay.ts and
- * conversationPrompts.ts, replayed by
+ * Golden results for the Swift port of chineseDisplay.ts, replayed by
  * ios/Packages/Word7000Core/Tests/Word7000CoreTests/ChineseParityTests.swift.
  * Pinyin is kept separate because the Swift side uses the system
  * transliterator instead of pinyin-pro, so heteronyms can differ.
@@ -53,19 +51,15 @@ function buildFixtures() {
   const words = pickWords();
   const pinyinTexts = new Set<string>(['調整', '敢於', '調整好；敢於說', '綠色', '女人']);
   const cases = words.map((word) => {
-    const english = buildConversationPrompt(word, 'english');
-    const chinese = buildConversationPrompt(word, 'chinese');
     const display = chineseMeaningDisplay(word.meaningZh);
     pinyinTexts.add(word.meaningZh);
     pinyinTexts.add(display.primary);
-    pinyinTexts.add(chinese.keyword);
+    pinyinTexts.add(display.primary.split('；')[0]?.trim() ?? '');
     return {
       id: word.id,
       word: word.word,
       concise: conciseChineseMeaning(word.meaningZh),
       supplemental: supplementalChineseMeaning(word.meaningZh),
-      english,
-      chinese,
     };
   });
   const pinyin = [...pinyinTexts].map((text) => ({ text, pinyin: chineseMeaningPinyin(text) }));
@@ -73,7 +67,7 @@ function buildFixtures() {
 }
 
 describe('native Chinese parity fixtures', () => {
-  test('the Swift Chinese display and speaking prompts replay the same golden results', () => {
+  test('the Swift Chinese display replays the same golden results', () => {
     const fixtures = `${JSON.stringify(buildFixtures(), null, 1)}\n`;
     if (process.env.UPDATE_NATIVE_FIXTURES === '1' || !fs.existsSync(fixturePath)) {
       fs.mkdirSync(path.dirname(fixturePath), { recursive: true });

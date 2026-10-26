@@ -44,7 +44,7 @@
   {
     "word": "protocol",
     "primaryMeaningZh": "禮儀",
-    "supplementalMeaningZh": "協議",
+    "supplementalMeaningZh": "協定；議定書",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -484,8 +484,8 @@
   },
   {
     "word": "integral",
-    "primaryMeaningZh": "積分",
-    "supplementalMeaningZh": "必要的；完整的",
+    "primaryMeaningZh": "不可或缺的",
+    "supplementalMeaningZh": "完整的；積分",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -555,7 +555,7 @@
   {
     "word": "repetition",
     "primaryMeaningZh": "重複",
-    "supplementalMeaningZh": "背誦",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -1240,8 +1240,8 @@
   },
   {
     "word": "turning",
-    "primaryMeaningZh": "車削",
-    "supplementalMeaningZh": "轉彎；轉折點",
+    "primaryMeaningZh": "轉彎處",
+    "supplementalMeaningZh": "岔路；轉折點",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -1877,7 +1877,7 @@
   },
   {
     "word": "tractor",
-    "primaryMeaningZh": "拖拉機",
+    "primaryMeaningZh": "曳引機",
     "supplementalMeaningZh": "牽引車",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
@@ -2416,8 +2416,8 @@
   },
   {
     "word": "magnet",
-    "primaryMeaningZh": "吸引人的事物",
-    "supplementalMeaningZh": "磁鐵",
+    "primaryMeaningZh": "磁鐵",
+    "supplementalMeaningZh": "吸引人的事物",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -2591,8 +2591,8 @@
   },
   {
     "word": "recite",
-    "primaryMeaningZh": "朗讀",
-    "supplementalMeaningZh": "背誦；敘述",
+    "primaryMeaningZh": "背誦",
+    "supplementalMeaningZh": "朗誦；列舉",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -2605,8 +2605,8 @@
   },
   {
     "word": "imitation",
-    "primaryMeaningZh": "仿製的",
-    "supplementalMeaningZh": "仿製品；模仿",
+    "primaryMeaningZh": "仿製品",
+    "supplementalMeaningZh": "模仿；仿造",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -3201,7 +3201,7 @@
   {
     "word": "kite",
     "primaryMeaningZh": "風箏",
-    "supplementalMeaningZh": "空頭支票",
+    "supplementalMeaningZh": "鳶",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },
@@ -3341,7 +3341,7 @@
   {
     "word": "beetle",
     "primaryMeaningZh": "甲蟲",
-    "supplementalMeaningZh": "快速移動",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core13"
   },

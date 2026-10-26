@@ -50,8 +50,8 @@
   },
   {
     "word": "trait",
-    "example": "Her calmest trait emerged whenever the toddler spilled juice.",
-    "exampleZh": "幼兒每次打翻果汁，她總能展現格外冷靜的一面。",
+    "example": "Patience is Mia's best trait, especially when the toddler spills juice.",
+    "exampleZh": "耐心是米亞最好的特質，尤其在幼兒打翻果汁的時候。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
@@ -197,8 +197,8 @@
   },
   {
     "word": "grid",
-    "example": "Each vendor marked a square on the festival grid.",
-    "exampleZh": "每個攤販在祭典格線上標出一格。",
+    "example": "Each vendor picked a square on the grid printed on the festival map.",
+    "exampleZh": "每個攤販都在祭典地圖印的格線上選了一格。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
@@ -484,8 +484,8 @@
   },
   {
     "word": "integral",
-    "example": "The integral of the curve matched the stored energy estimate.",
-    "exampleZh": "曲線積分符合儲能估算。",
+    "example": "Music is an integral part of the school festival every year.",
+    "exampleZh": "音樂每年都是校慶不可或缺的一部分。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
@@ -569,14 +569,14 @@
   {
     "word": "methodology",
     "example": "Their methodology compared river samples before and after each storm.",
-    "exampleZh": "他們的方法論比較每場暴雨前後的河水樣本。",
+    "exampleZh": "他們的研究方法是比較每場暴雨前後的河水樣本。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
   {
     "word": "sibling",
-    "example": "My younger sibling hid the mooncake behind the rice cooker.",
-    "exampleZh": "我弟妹把月餅藏在電鍋後面。",
+    "example": "Ken's only sibling hid the mooncake behind the rice cooker.",
+    "exampleZh": "阿健唯一的手足把月餅藏在電鍋後面。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
@@ -1240,8 +1240,8 @@
   },
   {
     "word": "turning",
-    "example": "Careful turning on the lathe shaped the cedar bowl.",
-    "exampleZh": "車床上的細心車削塑成雪松碗。",
+    "example": "Take the first turning on the left after the temple.",
+    "exampleZh": "過了廟之後，在第一個轉彎處左轉。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
@@ -1878,7 +1878,7 @@
   {
     "word": "tractor",
     "example": "A tractor pulled the stuck van out of the mud.",
-    "exampleZh": "拖拉機把陷住的廂型車拖出泥地。",
+    "exampleZh": "曳引機把陷住的廂型車拖出泥地。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
@@ -1997,7 +1997,7 @@
   {
     "word": "remnant",
     "example": "A remnant of blue silk lined the drawer.",
-    "exampleZh": "一塊藍色殘布襯在抽屜裡。",
+    "exampleZh": "一塊藍色絲綢碎布襯在抽屜裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },
@@ -2416,8 +2416,8 @@
   },
   {
     "word": "magnet",
-    "example": "The lighthouse became a magnet for storm photographers.",
-    "exampleZh": "燈塔成了吸引風暴攝影師的地方。",
+    "example": "Lily stuck the class schedule on the fridge with a magnet.",
+    "exampleZh": "莉莉用磁鐵把課表貼在冰箱上。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core13"
   },

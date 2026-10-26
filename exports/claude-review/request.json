@@ -1,6 +1,5 @@
 {
-  "model": "claude-opus-5-5",
-  "effort": "medium",
-  "cores": "1",
-  "limit": 40
+  "content": "words",
+  "batch_id": "msgbatch_011eKckuXTBE8pY9PNbnv9uc",
+  "attempt": 3
 }

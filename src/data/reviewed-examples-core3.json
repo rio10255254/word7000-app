@@ -1,8 +1,8 @@
 [
   {
     "word": "attend",
-    "example": "A nurse will attend my grandmother during the long night shift.",
-    "exampleZh": "護理師會在漫長夜班照料我的奶奶。",
+    "example": "Nearly all my classmates will attend the school concert on Friday evening.",
+    "exampleZh": "我幾乎所有同學都會出席週五晚上的學校音樂會。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -205,7 +205,7 @@
   {
     "word": "trip",
     "example": "Their short trip to Penghu ended with sudden rain.",
-    "exampleZh": "他們的澎湖短旅行以驟雨收尾。",
+    "exampleZh": "他們的澎湖小旅行在一場驟雨中結束。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -288,8 +288,8 @@
   },
   {
     "word": "address",
-    "example": "Please address the envelope before mailing the letter today.",
-    "exampleZh": "今天寄信前請先在信封寫地址。",
+    "example": "Please write your address clearly on the envelope before mailing the letter today.",
+    "exampleZh": "今天寄信前，請在信封上清楚寫下你的地址。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -310,7 +310,7 @@
   {
     "word": "strike",
     "example": "Factory workers planned a strike after wages were delayed.",
-    "exampleZh": "工資延後後工廠工人計畫罷工。",
+    "exampleZh": "薪水延遲發放後，工廠工人打算罷工。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -337,8 +337,8 @@
   },
   {
     "word": "highly",
-    "example": "The guide spoke highly of this quiet mountain inn.",
-    "exampleZh": "導遊非常稱讚這間安靜山莊。",
+    "example": "The new bubble tea shop near our school is highly popular with students.",
+    "exampleZh": "學校附近新開的手搖飲店非常受學生歡迎。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -464,7 +464,7 @@
   {
     "word": "quarter",
     "example": "A quarter of the mangoes spoiled during transport yesterday.",
-    "exampleZh": "昨天四分之一芒果在運送中壞掉。",
+    "exampleZh": "昨天有四分之一的芒果在運送途中壞掉了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1275,8 +1275,8 @@
   },
   {
     "word": "broad",
-    "example": "A broad smile crossed her face after the call.",
-    "exampleZh": "接完電話後她露出大大的笑容。",
+    "example": "A broad river runs through the middle of our city.",
+    "exampleZh": "一條寬闊的河流穿過我們城市的中心。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1318,7 +1318,7 @@
   {
     "word": "block",
     "example": "Fallen branches block the shortcut behind the school today.",
-    "exampleZh": "今天倒下樹枝堵住學校後方捷徑。",
+    "exampleZh": "今天倒下的樹枝堵住了學校後方的捷徑。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1339,7 +1339,7 @@
   {
     "word": "youth",
     "example": "Youth gave him courage to cross the ocean alone.",
-    "exampleZh": "年輕氣盛，讓他有勇氣獨自橫渡大海。",
+    "exampleZh": "正因為年輕，他才有勇氣獨自橫渡大海。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1451,7 +1451,7 @@
   {
     "word": "sight",
     "example": "The first sight of snow made Grandpa silent today.",
-    "exampleZh": "爺爺今天第一次看見雪，感動得一時說不出話。",
+    "exampleZh": "第一次看見雪，讓爺爺今天一時說不出話來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1493,7 +1493,7 @@
   {
     "word": "wave",
     "example": "A sudden wave soaked our shoes on the pier.",
-    "exampleZh": "突來浪花在碼頭弄濕我們鞋子。",
+    "exampleZh": "一道突如其來的浪打濕了我們在碼頭上的鞋子。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1794,7 +1794,7 @@
   {
     "word": "prefer",
     "example": "I prefer steamed fish to fried chicken tonight.",
-    "exampleZh": "今晚我比較喜歡清蒸魚勝過炸雞。",
+    "exampleZh": "比起炸雞，今晚我比較想吃清蒸魚。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -1933,8 +1933,8 @@
   },
   {
     "word": "launch",
-    "example": "They will launch the fishing boat at sunrise tomorrow.",
-    "exampleZh": "他們明天會在日出時讓漁船下水。",
+    "example": "Scientists will launch the small rocket from the beach tomorrow morning.",
+    "exampleZh": "科學家明天早上會在海灘發射這枚小火箭。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2396,7 +2396,7 @@
   {
     "word": "thinking",
     "example": "Clear thinking helped her escape the room filled with smoke.",
-    "exampleZh": "冷靜思考幫她逃出濃煙房間。",
+    "exampleZh": "清晰的思考幫助她逃出充滿濃煙的房間。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2536,7 +2536,7 @@
   {
     "word": "cabinet",
     "example": "Medicine belongs in the locked bathroom cabinet upstairs.",
-    "exampleZh": "藥品應放在樓上上鎖浴室櫥櫃裡。",
+    "exampleZh": "藥品應該放在樓上浴室上鎖的櫥櫃裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2675,8 +2675,8 @@
   },
   {
     "word": "prospect",
-    "example": "The tower offers a broad prospect of the harbor.",
-    "exampleZh": "高塔提供寬闊的港口景色。",
+    "example": "The prospect of working abroad excites many young engineers in Taiwan.",
+    "exampleZh": "出國工作的前景讓台灣許多年輕工程師感到興奮。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -2907,7 +2907,7 @@
   {
     "word": "purchase",
     "example": "Keep the receipt at home after each appliance purchase.",
-    "exampleZh": "每次買完家電，他都會把收據留在家裡。",
+    "exampleZh": "每次購買家電後，都要把收據留在家裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },
@@ -3144,8 +3144,8 @@
   },
   {
     "word": "guarantee",
-    "example": "This stamp is the guarantee for your repaired watch.",
-    "exampleZh": "這枚保固章，是手錶維修保固的憑證。",
+    "example": "My new laptop comes with a two-year guarantee for free repairs.",
+    "exampleZh": "我的新筆電附有兩年免費維修的保固。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core03"
   },

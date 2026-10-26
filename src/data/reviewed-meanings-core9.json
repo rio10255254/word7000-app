@@ -85,8 +85,8 @@
   },
   {
     "word": "commodity",
-    "primaryMeaningZh": "農產品",
-    "supplementalMeaningZh": "商品",
+    "primaryMeaningZh": "商品",
+    "supplementalMeaningZh": "日用品；大宗物資",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -722,8 +722,8 @@
   },
   {
     "word": "bureaucracy",
-    "primaryMeaningZh": "官僚人員",
-    "supplementalMeaningZh": "官僚體制；官僚作風",
+    "primaryMeaningZh": "官僚體制",
+    "supplementalMeaningZh": "官僚人員；官僚作風",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -911,8 +911,8 @@
   },
   {
     "word": "outfit",
-    "primaryMeaningZh": "機構",
-    "supplementalMeaningZh": "配備；服裝",
+    "primaryMeaningZh": "一套服裝",
+    "supplementalMeaningZh": "全套裝備；團體",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -1171,7 +1171,7 @@
   {
     "word": "goat",
     "primaryMeaningZh": "山羊",
-    "supplementalMeaningZh": "替罪羊",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -1226,8 +1226,8 @@
   },
   {
     "word": "starter",
-    "primaryMeaningZh": "發酵種",
-    "supplementalMeaningZh": "先發選手；啟動器；開胃菜",
+    "primaryMeaningZh": "開胃菜",
+    "supplementalMeaningZh": "先發選手；啟動器；發酵種",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -1324,8 +1324,8 @@
   },
   {
     "word": "exceptional",
-    "primaryMeaningZh": "異常的",
-    "supplementalMeaningZh": "出色的；例外的",
+    "primaryMeaningZh": "出色的",
+    "supplementalMeaningZh": "特殊的；例外的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -1737,8 +1737,8 @@
   },
   {
     "word": "follower",
-    "primaryMeaningZh": "隨從",
-    "supplementalMeaningZh": "粉絲；信徒",
+    "primaryMeaningZh": "追隨者",
+    "supplementalMeaningZh": "粉絲；信徒；隨從",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -1815,7 +1815,7 @@
   {
     "word": "purse",
     "primaryMeaningZh": "錢包",
-    "supplementalMeaningZh": "小錢包；皮夾；獎金",
+    "supplementalMeaningZh": "手提包；皮夾；獎金",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -1849,8 +1849,8 @@
   },
   {
     "word": "prescribe",
-    "primaryMeaningZh": "囑咐",
-    "supplementalMeaningZh": "開處方；規定",
+    "primaryMeaningZh": "開處方",
+    "supplementalMeaningZh": "規定；囑咐",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -2437,7 +2437,7 @@
   },
   {
     "word": "cocaine",
-    "primaryMeaningZh": "可卡因",
+    "primaryMeaningZh": "古柯鹼",
     "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
@@ -2556,8 +2556,8 @@
   },
   {
     "word": "scarcely",
-    "primaryMeaningZh": "才剛",
-    "supplementalMeaningZh": "幾乎不；勉強",
+    "primaryMeaningZh": "幾乎不",
+    "supplementalMeaningZh": "才剛；勉強",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -2654,8 +2654,8 @@
   },
   {
     "word": "cult",
-    "primaryMeaningZh": "信徒團體",
-    "supplementalMeaningZh": "邪教；狂熱崇拜；風潮",
+    "primaryMeaningZh": "邪教",
+    "supplementalMeaningZh": "狂熱崇拜；風潮",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -2668,8 +2668,8 @@
   },
   {
     "word": "viable",
-    "primaryMeaningZh": "能生長的",
-    "supplementalMeaningZh": "可行的",
+    "primaryMeaningZh": "可行的",
+    "supplementalMeaningZh": "能生長的；能存活的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -2738,8 +2738,8 @@
   },
   {
     "word": "skip",
-    "primaryMeaningZh": "不吃",
-    "supplementalMeaningZh": "跳過；跳躍；翹課",
+    "primaryMeaningZh": "跳過",
+    "supplementalMeaningZh": "不吃；跳躍；翹課",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -2773,7 +2773,7 @@
   },
   {
     "word": "dual",
-    "primaryMeaningZh": "雙的",
+    "primaryMeaningZh": "雙重的",
     "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
@@ -2801,8 +2801,8 @@
   },
   {
     "word": "directory",
-    "primaryMeaningZh": "指南",
-    "supplementalMeaningZh": "名錄；目錄",
+    "primaryMeaningZh": "名錄",
+    "supplementalMeaningZh": "通訊錄；目錄；指南",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -2948,8 +2948,8 @@
   },
   {
     "word": "betray",
-    "primaryMeaningZh": "暴露",
-    "supplementalMeaningZh": "背叛；出賣；辜負",
+    "primaryMeaningZh": "背叛",
+    "supplementalMeaningZh": "出賣；辜負；流露",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -3242,8 +3242,8 @@
   },
   {
     "word": "gown",
-    "primaryMeaningZh": "睡衣",
-    "supplementalMeaningZh": "禮服；長袍；法袍",
+    "primaryMeaningZh": "禮服",
+    "supplementalMeaningZh": "長袍；法袍；睡袍",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -3284,8 +3284,8 @@
   },
   {
     "word": "landmark",
-    "primaryMeaningZh": "地界標",
-    "supplementalMeaningZh": "地標；里程碑",
+    "primaryMeaningZh": "地標",
+    "supplementalMeaningZh": "里程碑；地界標",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },
@@ -3326,8 +3326,8 @@
   },
   {
     "word": "intake",
-    "primaryMeaningZh": "進氣口",
-    "supplementalMeaningZh": "攝取量；吸入；進入人數",
+    "primaryMeaningZh": "攝取量",
+    "supplementalMeaningZh": "進氣口；吸入；招收人數",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core09"
   },

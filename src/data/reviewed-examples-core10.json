@@ -212,7 +212,7 @@
   {
     "word": "decisive",
     "example": "One decisive phone call saved the clinic from losing its lease.",
-    "exampleZh": "一通果斷的電話，讓診所保住了租約。",
+    "exampleZh": "一通決定性的電話，讓診所保住了租約。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -254,7 +254,7 @@
   {
     "word": "warrant",
     "example": "Detectives waited for a warrant before entering the locked apartment.",
-    "exampleZh": "偵探等到搜索令才進入上鎖公寓。",
+    "exampleZh": "警探等拿到搜索令後，才進入那間上鎖的公寓。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -548,7 +548,7 @@
   {
     "word": "eternal",
     "example": "Grandpa called the sea his eternal source of patience.",
-    "exampleZh": "祖父說，他一輩子的耐心都是大海教會他的。",
+    "exampleZh": "祖父說大海是他永恆的耐心來源。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -793,7 +793,7 @@
   {
     "word": "obsession",
     "example": "His obsession with germs made every handshake feel dangerous.",
-    "exampleZh": "他被細菌念頭困擾，每次握手都覺得危險。",
+    "exampleZh": "他對細菌的執念，讓每次握手都顯得危險。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -821,7 +821,7 @@
   {
     "word": "implicit",
     "example": "Her silence carried an implicit warning that nobody missed.",
-    "exampleZh": "她的沉默帶著沒有人忽略的含蓄警告。",
+    "exampleZh": "她的沉默隱含著警告，每個人都察覺到了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -856,7 +856,7 @@
   {
     "word": "compassion",
     "example": "A nurse showed compassion by washing the old man’s feet.",
-    "exampleZh": "護理師替老人洗腳展現同理心。",
+    "exampleZh": "護理師替老人洗腳，展現了同情心。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -1219,8 +1219,8 @@
   },
   {
     "word": "competing",
-    "example": "Two competing explanations divided the family after the accident.",
-    "exampleZh": "事故發生後，兩種互相衝突的說法讓家人各執一詞。",
+    "example": "Two competing teams practiced on the same field after school.",
+    "exampleZh": "兩支相互競爭的隊伍放學後在同一個球場練習。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -1758,8 +1758,8 @@
   },
   {
     "word": "fabulous",
-    "example": "Children repeated a fabulous tale about a dragon under the pier.",
-    "exampleZh": "孩子們反覆講碼頭下有龍的傳說故事。",
+    "example": "We had a fabulous time at the night market with our cousins.",
+    "exampleZh": "我們和表兄弟姊妹在夜市度過了一段極好的時光。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -1829,7 +1829,7 @@
   {
     "word": "startle",
     "example": "The temple bell can startle pigeons from the roof.",
-    "exampleZh": "廟鐘會驚起屋頂上的鴿子。",
+    "exampleZh": "廟鐘一響，屋頂上的鴿子就會嚇得飛走。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -2171,8 +2171,8 @@
   },
   {
     "word": "infinite",
-    "example": "The child asked infinite questions during the train ride.",
-    "exampleZh": "孩子搭火車時，問了數不清的問題。",
+    "example": "On a clear night in the mountains, the stars seem infinite.",
+    "exampleZh": "在山上晴朗的夜裡，星星彷彿無窮無盡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },
@@ -2794,8 +2794,8 @@
   },
   {
     "word": "imaginative",
-    "example": "The teacher asked for an imaginative scene, not a real memory.",
-    "exampleZh": "老師要的是想像出來的情境，而不是真實的回憶。",
+    "example": "Her imaginative drawings turned our classroom wall into an underwater world.",
+    "exampleZh": "她充滿想像力的畫作，把我們教室的牆變成了海底世界。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core10"
   },

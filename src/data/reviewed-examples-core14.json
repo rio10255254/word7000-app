@@ -596,8 +596,8 @@
   },
   {
     "word": "admittedly",
-    "example": "The attic admittedly smelled better after we opened the windows.",
-    "exampleZh": "我們打開窗戶後，閣樓氣味確實好多了。",
+    "example": "Admittedly, the attic was dusty, but the view from its window was beautiful.",
+    "exampleZh": "不可否認，閣樓滿是灰塵，但從窗戶看出去的景色很美。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -625,7 +625,7 @@
   {
     "word": "treasurer",
     "example": "The treasurer locked the donation box inside the temple office.",
-    "exampleZh": "出納把捐款箱鎖進廟務辦公室。",
+    "exampleZh": "財務主管把捐款箱鎖進廟務辦公室。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -806,8 +806,8 @@
   },
   {
     "word": "forensic",
-    "example": "Her forensic skills improved after weekly debate practice.",
-    "exampleZh": "每週辯論練習後，她的辯論能力進步了。",
+    "example": "The forensic team collected fingerprints from the broken window.",
+    "exampleZh": "鑑識小組從破掉的窗戶上採集指紋。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1191,8 +1191,8 @@
   },
   {
     "word": "prominence",
-    "example": "A rocky prominence jutted above the narrow mountain trail.",
-    "exampleZh": "一塊突出的岩體，懸在狹窄山徑上方。",
+    "example": "The young singer rose to prominence after her first album.",
+    "exampleZh": "那位年輕歌手發行第一張專輯後就聲名大噪。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1282,8 +1282,8 @@
   },
   {
     "word": "ram",
-    "example": "A metal ram cracked the locked warehouse door.",
-    "exampleZh": "金屬撞槌撞裂上鎖倉庫門。",
+    "example": "A ram with curled horns blocked the narrow farm path.",
+    "exampleZh": "一頭長著捲角的公羊擋住了狹窄的農場小路。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1345,8 +1345,8 @@
   },
   {
     "word": "squint",
-    "example": "His left eye began to squint after the injury.",
-    "exampleZh": "受傷後，他左眼開始斜視。",
+    "example": "She had to squint at the board without her glasses.",
+    "exampleZh": "沒戴眼鏡，她得瞇著眼看黑板。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1878,7 +1878,7 @@
   {
     "word": "recess",
     "example": "Children traded stickers during recess behind the gym.",
-    "exampleZh": "孩子們在體育館後方休息時間交換貼紙。",
+    "exampleZh": "下課時間，孩子們在體育館後方交換貼紙。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2381,8 +2381,8 @@
   },
   {
     "word": "lunar",
-    "example": "Traffic during lunar New Year filled every mountain road.",
-    "exampleZh": "農曆新年期間，車潮塞滿每條山路。",
+    "example": "Astronauts brought lunar rocks back to Earth for scientists to study.",
+    "exampleZh": "太空人把月球岩石帶回地球，供科學家研究。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2998,7 +2998,7 @@
   {
     "word": "eradicate",
     "example": "Inspectors hope to eradicate mosquitoes from the storage yard.",
-    "exampleZh": "稽查員希望清除倉庫院子裡的蚊子。",
+    "exampleZh": "稽查員希望徹底根除倉庫院子裡的蚊子。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -3095,8 +3095,8 @@
   },
   {
     "word": "gall",
-    "example": "The herbal drink left a taste of gall on his tongue.",
-    "exampleZh": "草藥飲料在他舌上留下膽汁般苦味。",
+    "example": "He had the gall to ask for a refund after eating everything.",
+    "exampleZh": "他把東西都吃光了，居然還厚著臉皮要求退款。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -3368,8 +3368,8 @@
   },
   {
     "word": "bun",
-    "example": "A steamed bun warmed his hands at dawn.",
-    "exampleZh": "黎明時，一顆熱包子溫暖了他的手。",
+    "example": "She bought a warm bun from the bakery on her way to school.",
+    "exampleZh": "她上學途中在麵包店買了一個溫熱的小圓麵包。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },

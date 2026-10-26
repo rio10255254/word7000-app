@@ -168,7 +168,8 @@ import {
   conciseChineseMeaning,
   supplementalChineseMeaning,
 } from './src/lib/chineseDisplay';
-import { buildConversationPrompt, type ConversationPromptCard } from './src/lib/conversationPrompts';
+import type { ConversationPromptCard } from './src/lib/conversationPrompts';
+import { loadSpeakingCards, speakingPromptFor, speakingSessionPool, type SpeakingCardIndex } from './src/lib/speakingCards';
 import {
   loadFilterPreferences,
   saveFilterPreferences,
@@ -1501,6 +1502,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [studyFiltersOpen, setStudyFiltersOpen] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizPracticeMode, setQuizPracticeMode] = useState<QuizPracticeMode>('choice');
+  const [speakingCards, setSpeakingCards] = useState<SpeakingCardIndex | null>(null);
   const [quizResult, setQuizResult] = useState<'correct' | 'wrong' | null>(null);
   const [speakingAnswerVisible, setSpeakingAnswerVisible] = useState(false);
   const [answeredQuizWord, setAnsweredQuizWord] = useState<WordEntry | null>(null);
@@ -1661,9 +1663,28 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const visibleQuizWord = answeredQuizWord ?? quizWord;
   const visibleQuizOptions = lockedQuizOptions ?? quizOptions;
   const conversationPrompt = useMemo(
-    () => (visibleQuizWord ? buildConversationPrompt(visibleQuizWord, studyMode) : null),
-    [studyMode, visibleQuizWord],
+    () => (visibleQuizWord ? speakingPromptFor(visibleQuizWord, studyMode, speakingCards) : null),
+    [speakingCards, studyMode, visibleQuizWord],
   );
+
+  useEffect(() => {
+    if (quizPracticeMode !== 'speaking' || speakingCards) {
+      return undefined;
+    }
+    let mounted = true;
+    loadSpeakingCards()
+      .then((cards) => {
+        if (mounted) {
+          setSpeakingCards(cards);
+        }
+      })
+      // Without the reviewed questions every word falls back to example practice.
+      .catch(() => undefined);
+    return () => {
+      mounted = false;
+    };
+  }, [quizPracticeMode, speakingCards]);
+
   const quizSessionTotal = quizStarted || quizFinished ? quizSession.length : Math.min(quizQuestionCount, quizWords.length);
   const libraryProgressDependency = activeTab === 'library' && activeFilter !== 'all' ? progress : null;
   const libraryWords = useMemo(
@@ -2947,7 +2968,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
   function startQuiz() {
     const seed = `${Date.now()}:${Math.random()}`;
-    const session = buildQuizSession(quizWords, quizQuestionCount, seed);
+    const pool = quizPracticeMode === 'speaking' ? speakingSessionPool(quizWords, speakingCards, quizQuestionCount) : quizWords;
+    const session = buildQuizSession(pool, quizQuestionCount, seed);
     setQuizSession(session);
     setQuizSeed(seed);
     setQuizIndex(0);

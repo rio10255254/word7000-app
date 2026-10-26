@@ -1,4 +1,5 @@
-# Has Claude proofread the word list through the Message Batches API, applies
+# Has Claude proofread the word list (or, with content "speaking", the 600
+# speaking practice cards) through the Message Batches API, applies
 # the corrections that pass the data rules, runs the content audits and commits
 # the result to the branch this workflow runs on, with a report of every change.
 #
@@ -6,7 +7,7 @@
 #
 # Start it from the Actions tab (once this file is on the default branch), or
 # by pushing exports/claude-review/request.json to a feature branch, e.g.
-#   {"model": "claude-opus-5-5", "effort": "medium", "cores": "1-14", "limit": 0}
+#   {"content": "words", "model": "claude-opus-5-5", "effort": "medium", "cores": "1-14", "limit": 0}
 # A batch usually ends within an hour. If it is still running when the wait
 # below runs out, start again with "batch_id" set to collect it.
 name: Word review
@@ -14,6 +15,11 @@ name: Word review
 on:
   workflow_dispatch:
     inputs:
+      content:
+        description: 'What to review'
+        type: choice
+        options: ['words', 'speaking']
+        default: 'words'
       model:
         description: 'Claude model'
         type: choice
@@ -66,6 +72,7 @@ jobs:
       - name: Read the request
         id: request
         env:
+          INPUT_CONTENT: ${{ inputs.content }}
           INPUT_MODEL: ${{ inputs.model }}
           INPUT_EFFORT: ${{ inputs.effort }}
           INPUT_CORES: ${{ inputs.cores }}
@@ -73,15 +80,16 @@ jobs:
           INPUT_BATCH_ID: ${{ inputs.batch_id }}
         run: |
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
-            model=$INPUT_MODEL; effort=$INPUT_EFFORT; cores=$INPUT_CORES; limit=$INPUT_LIMIT; batch_id=$INPUT_BATCH_ID
+            content=$INPUT_CONTENT; model=$INPUT_MODEL; effort=$INPUT_EFFORT; cores=$INPUT_CORES; limit=$INPUT_LIMIT; batch_id=$INPUT_BATCH_ID
           else
             file=exports/claude-review/request.json
             read_key() { jq -r --arg key "$1" --arg fallback "$2" '.[$key] // $fallback | tostring' "$file"; }
-            model=$(read_key model claude-opus-5-5); effort=$(read_key effort medium); cores=$(read_key cores 1-14)
+            content=$(read_key content words); model=$(read_key model claude-opus-5-5); effort=$(read_key effort medium); cores=$(read_key cores 1-14)
             limit=$(read_key limit 0); batch_id=$(read_key batch_id "")
           fi
           [[ "$batch_id" =~ ^(msgbatch_[A-Za-z0-9]+)?$ ]] || { echo "::error::batch_id does not look like a batch id"; exit 1; }
-          { echo "model=$model"; echo "effort=$effort"; echo "cores=$cores"; echo "limit=$limit"; echo "batch_id=$batch_id"; } >> "$GITHUB_OUTPUT"
+          [[ "$content" =~ ^(words|speaking)$ ]] || { echo "::error::content must be words or speaking"; exit 1; }
+          { echo "content=$content"; echo "model=$model"; echo "effort=$effort"; echo "cores=$cores"; echo "limit=$limit"; echo "batch_id=$batch_id"; } >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
         with:
@@ -93,11 +101,12 @@ jobs:
         id: submit
         if: steps.request.outputs.batch_id == ''
         env:
+          CONTENT: ${{ steps.request.outputs.content }}
           MODEL: ${{ steps.request.outputs.model }}
           EFFORT: ${{ steps.request.outputs.effort }}
           CORES: ${{ steps.request.outputs.cores }}
           LIMIT: ${{ steps.request.outputs.limit }}
-        run: node scripts/claude-review-words.mjs submit --model "$MODEL" --effort "$EFFORT" --cores "$CORES" --limit "$LIMIT"
+        run: node scripts/claude-review-words.mjs submit --content "$CONTENT" --model "$MODEL" --effort "$EFFORT" --cores "$CORES" --limit "$LIMIT"
 
       - name: Wait for the batch
         env:
@@ -110,24 +119,56 @@ jobs:
           BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
         run: |
           node scripts/claude-review-words.mjs collect "$BATCH_ID"
-          cat "exports/claude-review/$BATCH_ID/REPORT.md" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Apply the corrections
+      - name: Apply the word corrections
+        if: steps.collect.outputs.content == 'words'
         env:
           OUT: ${{ steps.collect.outputs.out_dir }}
         run: |
-          [ "${{ steps.collect.outputs.meanings }}" = "0" ] || node scripts/apply-meaning-corrections.mjs "$OUT/meaning-corrections.json"
-          [ "${{ steps.collect.outputs.examples }}" = "0" ] || node scripts/apply-example-corrections.mjs "$OUT/example-corrections.json"
-          node scripts/claude-review-words.mjs sync
-          node scripts/export-native-words.mjs
+          node scripts/claude-review-words.mjs apply-words "$OUT"
+          # Drop the corrections the content audits flag, then apply the rest again.
+          for attempt in 1 2 3; do
+            npm run -s audit:meanings > /dev/null || true
+            npm run -s audit:examples > /dev/null || true
+            npm run -s audit:examples:zh-tw > /dev/null || true
+            pruned=$(node scripts/claude-review-words.mjs prune "$OUT")
+            echo "Attempt $attempt: dropped corrections for $pruned flagged words"
+            [ "$pruned" = "0" ] && break
+            git checkout -- src/data ios/Word7000/Resources/words.json
+            node scripts/claude-review-words.mjs apply-words "$OUT"
+          done
+          # The Swift tests replay golden results built from the word data.
+          UPDATE_NATIVE_FIXTURES=1 npx vitest run src/nativeParity.test.ts src/nativeParityChinese.test.ts
 
-      - name: Run the content checks
+      - name: Apply the speaking card corrections
+        if: steps.collect.outputs.content == 'speaking'
+        env:
+          OUT: ${{ steps.collect.outputs.out_dir }}
         run: |
-          npx vitest run src/data scripts/claude-review-words.test.mjs
+          [ "${{ steps.collect.outputs.speaking }}" = "0" ] || node scripts/claude-review-words.mjs apply-speaking "$OUT/speaking-corrections.json"
+          node scripts/build-native-speaking-library.mjs
+          UPDATE_NATIVE_FIXTURES=1 npx vitest run src/nativeParity.test.ts src/nativeParityChinese.test.ts
+
+      - name: Run the speaking card checks
+        if: steps.collect.outputs.content == 'speaking'
+        run: |
+          node scripts/build-native-speaking-library.mjs --check
+          npx vitest run
+
+      - name: Run the word checks
+        if: steps.collect.outputs.content == 'words'
+        run: |
+          npx vitest run
           npm run validate:meanings
           npm run audit:meanings
           npm run audit:examples
           npm run audit:examples:zh-tw
+
+      - name: Show the report
+        if: always() && steps.collect.outcome == 'success'
+        env:
+          OUT: ${{ steps.collect.outputs.out_dir }}
+        run: cat "$OUT/REPORT.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Keep the report even if a check failed
         if: always() && steps.collect.outcome == 'success'
@@ -139,12 +180,19 @@ jobs:
       - name: Commit the result
         env:
           BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
-          MEANINGS: ${{ steps.collect.outputs.meanings }}
-          EXAMPLES: ${{ steps.collect.outputs.examples }}
+          CONTENT: ${{ steps.collect.outputs.content }}
+          OUT: ${{ steps.collect.outputs.out_dir }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
-          git add src/data ios/Word7000/Resources/words.json "exports/claude-review/$BATCH_ID"
-          git commit -m "Apply Claude's word review $BATCH_ID" -m "$MEANINGS meaning and $EXAMPLES example corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
+          count() { jq '.'"$1"' | length' "$OUT/review.json"; }
+          MEANINGS=$(count meanings); EXAMPLES=$(count examples); SPEAKING=$(count speaking)
+          if [ "$CONTENT" = "speaking" ]; then
+            git add content/speaking ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json src/data/speaking-cards.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
+            git commit -m "Apply Claude's speaking card review $BATCH_ID" -m "$SPEAKING speaking card corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
+          else
+            git add src/data ios/Word7000/Resources/words.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
+            git commit -m "Apply Claude's word review $BATCH_ID" -m "$MEANINGS meaning and $EXAMPLES example corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
+          fi
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"

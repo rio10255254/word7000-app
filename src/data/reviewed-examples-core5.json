@@ -163,7 +163,7 @@
   {
     "word": "command",
     "example": "The shepherd gave one command, and the dog circled the goats.",
-    "exampleZh": "牧羊人一下命令狗就繞到羊群旁。",
+    "exampleZh": "牧羊人一下令，狗就繞著羊群跑。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -534,7 +534,7 @@
   {
     "word": "approval",
     "example": "The mural needs approval from residents facing the lane.",
-    "exampleZh": "巷口壁畫需要面巷住戶同意。",
+    "exampleZh": "這幅壁畫需要得到面向巷子的住戶同意。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -904,8 +904,8 @@
   },
   {
     "word": "initially",
-    "example": "The herbal soup initially tasted bitter but comforting at dinner.",
-    "exampleZh": "晚餐時那碗藥膳湯起初苦卻讓人安心。",
+    "example": "Mia initially disliked the herbal soup, but now she drinks it every week.",
+    "exampleZh": "米亞起初不喜歡藥膳湯，但現在她每週都會喝。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -1366,8 +1366,8 @@
   },
   {
     "word": "confront",
-    "example": "Maya had to confront the neighbor about midnight drumming.",
-    "exampleZh": "瑪雅得找鄰居談半夜打鼓聲。",
+    "example": "Firefighters must confront danger calmly when a building is burning.",
+    "exampleZh": "建築物失火時，消防員必須冷靜面對危險。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -1842,8 +1842,8 @@
   },
   {
     "word": "poetry",
-    "example": "His poetry helped describe grief without naming it aloud.",
-    "exampleZh": "他的詩幫他不明說也能寫悲傷。",
+    "example": "Her poetry about the sea won first prize in the school contest.",
+    "exampleZh": "她寫大海的詩在校內比賽中拿下第一名。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -1947,8 +1947,8 @@
   },
   {
     "word": "pitch",
-    "example": "The vendor chose a sunny pitch beside the station.",
-    "exampleZh": "攤販選了車站旁的向陽攤位。",
+    "example": "Coach Lin taught me how to pitch a baseball without hurting my arm.",
+    "exampleZh": "林教練教我怎麼投棒球才不會傷到手臂。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -2745,8 +2745,8 @@
   },
   {
     "word": "explode",
-    "example": "Firecrackers explode outside the temple at midnight tonight.",
-    "exampleZh": "今晚午夜時鞭炮在廟外爆響。",
+    "example": "Firecrackers explode loudly outside the temple every Lunar New Year's Eve.",
+    "exampleZh": "每年除夕夜，廟外的鞭炮都會爆炸作響。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -2823,7 +2823,7 @@
   {
     "word": "unexpected",
     "example": "An unexpected guest brought soup during the blackout.",
-    "exampleZh": "停電時意外客人帶來熱湯。",
+    "exampleZh": "停電時，一位意想不到的客人帶來了熱湯。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },
@@ -2871,8 +2871,8 @@
   },
   {
     "word": "mate",
-    "example": "The plumber's mate carried extra washers for the sink repair.",
-    "exampleZh": "水電工助手帶了修水槽用的備用墊圈。",
+    "example": "Kai and his best mate shared fried chicken after the basketball game.",
+    "exampleZh": "籃球賽結束後，阿凱和他最好的夥伴分著吃炸雞。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core05"
   },

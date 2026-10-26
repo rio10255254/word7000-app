@@ -1,0 +1,95 @@
+{
+  "batchId": "opus-5-5-session-abbreviations",
+  "content": "words",
+  "model": "claude-opus-5-5",
+  "effort": "n/a",
+  "usage": {
+    "input": 0,
+    "output": 0,
+    "cost": 0
+  },
+  "meanings": [
+    {
+      "core": 4,
+      "word": "tion",
+      "reason": "tion 是名詞字尾 -tion；「電子支票託收系統」不是這個字該學的意思。",
+      "primaryMeaningZh": "名詞字尾",
+      "supplementalMeaningZh": "",
+      "before": {
+        "primaryMeaningZh": "電子支票託收系統",
+        "supplementalMeaningZh": ""
+      }
+    },
+    {
+      "core": 12,
+      "word": "op",
+      "reason": "op 最常見是 operation 的口語「手術」；「觀測所」是罕見的軍事用法。",
+      "primaryMeaningZh": "手術",
+      "supplementalMeaningZh": "",
+      "before": {
+        "primaryMeaningZh": "觀測所",
+        "supplementalMeaningZh": ""
+      }
+    },
+    {
+      "core": 12,
+      "word": "min",
+      "reason": "min 最常見是 minute(s) 的縮寫「分鐘」；「部長」很少用。",
+      "primaryMeaningZh": "分鐘",
+      "supplementalMeaningZh": "最小值；部長",
+      "before": {
+        "primaryMeaningZh": "部長",
+        "supplementalMeaningZh": "部會；分鐘"
+      }
+    }
+  ],
+  "examples": [
+    {
+      "core": 4,
+      "word": "tion",
+      "reason": "tion 是名詞字尾 -tion；「電子支票託收系統」不是這個字該學的意思。",
+      "example": "Add -tion to the verb act, and you get the noun action.",
+      "exampleZh": "在動詞 act 後面加上 -tion，就變成名詞 action。",
+      "before": {
+        "example": "The bank used TION for electronic check collection services.",
+        "exampleZh": "銀行使用 TION 提供電子支票託收服務。"
+      }
+    },
+    {
+      "core": 12,
+      "word": "op",
+      "reason": "op 最常見是 operation 的口語「手術」；「觀測所」是罕見的軍事用法。",
+      "example": "My grandmother's knee op went well, and she is walking again.",
+      "exampleZh": "奶奶的膝蓋手術很順利，她又能走路了。",
+      "before": {
+        "example": "Guards watched the harbor from the old OP during their night patrol.",
+        "exampleZh": "警衛夜間巡邏時從舊觀測所監看港口。"
+      }
+    },
+    {
+      "core": 12,
+      "word": "min",
+      "reason": "min 最常見是 minute(s) 的縮寫「分鐘」；「部長」很少用。",
+      "example": "The next bus comes in 5 min, so we can wait here.",
+      "exampleZh": "下一班公車五分鐘後就來，我們在這裡等就好。",
+      "before": {
+        "example": "Min. Chen approved the transport plan before the meeting.",
+        "exampleZh": "陳部長會前批准交通計畫。"
+      }
+    },
+    {
+      "core": 12,
+      "word": "scots",
+      "reason": "原例句發生在午夜的酒吧，不適合高中生，改成村莊的冬季慶典。",
+      "example": "Old Scots songs filled the village hall during the winter festival.",
+      "exampleZh": "冬季慶典期間，古老的蘇格蘭歌曲響遍整個村莊禮堂。",
+      "before": {
+        "example": "Old Scots songs echoed through the pub after midnight.",
+        "exampleZh": "午夜後，古老蘇格蘭歌曲迴盪在酒吧裡。"
+      }
+    }
+  ],
+  "speaking": [],
+  "rejected": [],
+  "failed": []
+}

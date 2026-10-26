@@ -36,8 +36,8 @@
   },
   {
     "word": "perfectly",
-    "primaryMeaningZh": "很順利地",
-    "supplementalMeaningZh": "完全地；完美地",
+    "primaryMeaningZh": "完美地",
+    "supplementalMeaningZh": "完全地；非常",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -170,7 +170,7 @@
   {
     "word": "tower",
     "primaryMeaningZh": "塔樓",
-    "supplementalMeaningZh": "高塔；高聳",
+    "supplementalMeaningZh": "高樓；高聳",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -303,7 +303,7 @@
   {
     "word": "cheese",
     "primaryMeaningZh": "起司",
-    "supplementalMeaningZh": "乳酪",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -806,8 +806,8 @@
   },
   {
     "word": "drama",
-    "primaryMeaningZh": "戲",
-    "supplementalMeaningZh": "戲劇；戲劇性事件",
+    "primaryMeaningZh": "戲劇",
+    "supplementalMeaningZh": "戲劇性事件；連續劇",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1065,8 +1065,8 @@
   },
   {
     "word": "badly",
-    "primaryMeaningZh": "很厲害地",
-    "supplementalMeaningZh": "嚴重地；差勁地；非常想",
+    "primaryMeaningZh": "嚴重地",
+    "supplementalMeaningZh": "差勁地；非常想",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1087,7 +1087,7 @@
   {
     "word": "rank",
     "primaryMeaningZh": "級別",
-    "supplementalMeaningZh": "等級；排列；軍階",
+    "supplementalMeaningZh": "排名；排列；軍階",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1185,7 +1185,7 @@
   {
     "word": "tube",
     "primaryMeaningZh": "管子",
-    "supplementalMeaningZh": "軟管；隧道；試管",
+    "supplementalMeaningZh": "軟管；試管；倫敦地鐵",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1366,8 +1366,8 @@
   },
   {
     "word": "confront",
-    "primaryMeaningZh": "找……談",
-    "supplementalMeaningZh": "面對；對質；對抗",
+    "primaryMeaningZh": "面對",
+    "supplementalMeaningZh": "對抗；當面質問",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1597,8 +1597,8 @@
   },
   {
     "word": "tight",
-    "primaryMeaningZh": "很緊",
-    "supplementalMeaningZh": "緊的；嚴密的；拮据的",
+    "primaryMeaningZh": "緊的",
+    "supplementalMeaningZh": "嚴密的；拮据的；緊緊地",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1947,8 +1947,8 @@
   },
   {
     "word": "pitch",
-    "primaryMeaningZh": "攤位",
-    "supplementalMeaningZh": "音高；投擲；推銷",
+    "primaryMeaningZh": "投擲",
+    "supplementalMeaningZh": "音高；推銷；球場",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -1983,7 +1983,7 @@
   {
     "word": "swim",
     "primaryMeaningZh": "游泳",
-    "supplementalMeaningZh": "漂浮",
+    "supplementalMeaningZh": "游過；暈眩",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2634,7 +2634,7 @@
   {
     "word": "countryside",
     "primaryMeaningZh": "鄉間",
-    "supplementalMeaningZh": "鄉下",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2745,8 +2745,8 @@
   },
   {
     "word": "explode",
-    "primaryMeaningZh": "爆響",
-    "supplementalMeaningZh": "爆炸；爆發；激增",
+    "primaryMeaningZh": "爆炸",
+    "supplementalMeaningZh": "爆發；激增",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2871,8 +2871,8 @@
   },
   {
     "word": "mate",
-    "primaryMeaningZh": "助手",
-    "supplementalMeaningZh": "夥伴；配偶；配對",
+    "primaryMeaningZh": "夥伴",
+    "supplementalMeaningZh": "配偶；助手；交配",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -2928,7 +2928,7 @@
   {
     "word": "invitation",
     "primaryMeaningZh": "請帖",
-    "supplementalMeaningZh": "邀請；邀請函",
+    "supplementalMeaningZh": "邀請",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3116,8 +3116,8 @@
   },
   {
     "word": "dump",
-    "primaryMeaningZh": "倒",
-    "supplementalMeaningZh": "傾倒；垃圾場；甩掉",
+    "primaryMeaningZh": "傾倒",
+    "supplementalMeaningZh": "垃圾場；甩掉",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },
@@ -3404,7 +3404,7 @@
   {
     "word": "bay",
     "primaryMeaningZh": "海灣",
-    "supplementalMeaningZh": "灣；吠叫",
+    "supplementalMeaningZh": "月桂樹；吠叫",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core05"
   },

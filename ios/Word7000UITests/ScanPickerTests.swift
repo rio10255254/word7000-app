@@ -27,19 +27,32 @@ final class ScanPickerTests: XCTestCase {
     func testPhotosAreReadAndSavedAcrossInputFormats() {
         for index in 0..<5 {
             let app = openScanner()
-            app.buttons["scan-choose-photo"].tap()
-            XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
-            snapshot(app, name: "scan-photo-library-\(index)")
-            let photos = app.images.matching(identifier: "PXGGridLayout-Info")
-            // Resolve the last required photo instead of repeatedly enumerating
-            // the remote Photos accessibility tree inside a predicate callback.
-            XCTAssertTrue(photos.element(boundBy: 4).waitForExistence(timeout: 60), app.debugDescription)
-            snapshot(app, name: "scan-photo-library-\(index)-ready")
-            photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-            let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch
-            if add.waitForExistence(timeout: 2) { add.tap() }
+            func pickPhoto() {
+                app.buttons["scan-choose-photo"].tap()
+                XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
+                snapshot(app, name: "scan-photo-library-\(index)")
+                let photos = app.images.matching(identifier: "PXGGridLayout-Info")
+                // Resolve the last required photo instead of repeatedly enumerating
+                // the remote Photos accessibility tree inside a predicate callback.
+                XCTAssertTrue(photos.element(boundBy: 4).waitForExistence(timeout: 60), app.debugDescription)
+                snapshot(app, name: "scan-photo-library-\(index)-ready")
+                photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+                let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch
+                if add.waitForExistence(timeout: 2) { add.tap() }
+            }
+            pickPhoto()
             let save = app.buttons["scan-save"]
-            XCTAssertTrue(save.waitForExistence(timeout: 45), app.debugDescription)
+            // The iOS 18 simulator's Photos service sometimes never delivers the
+            // photo; after ScanPhotoLoader.transferTimeout the app says so and
+            // offers the photo picker again. Pick it once more, as a learner would.
+            let loadFailed = app.descendants(matching: .any)["scan-message"]
+            let deadline = Date().addingTimeInterval(80)
+            while !save.exists, !loadFailed.exists, Date() < deadline { _ = save.waitForExistence(timeout: 2) }
+            if !save.exists, loadFailed.exists {
+                snapshot(app, name: "scan-photo-\(index)-load-failed")
+                pickPhoto()
+            }
+            XCTAssertTrue(save.waitForExistence(timeout: 80), app.debugDescription)
             let words = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'"))
                 .allElementsBoundByIndex.compactMap { ($0.value as? String)?.lowercased() }
             let meanings = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-meaning-'"))

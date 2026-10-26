@@ -193,6 +193,7 @@ struct ScanView: View {
                     Label(message, systemImage: "exclamationmark.triangle.fill")
                         .font(.footnote)
                         .foregroundStyle(Palette.review)
+                        .accessibilityIdentifier("scan-message")
                 }
             }
 

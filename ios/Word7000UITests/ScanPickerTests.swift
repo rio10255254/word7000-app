@@ -241,14 +241,14 @@ final class ScanPickerTests: XCTestCase {
     /// simulator the scanner underneath is not tappable until it has gone.
     /// A Cancel tap made while the picker is still loading can be dropped too,
     /// so tap it again while it is still there. Mid-animation, Cancel can have
-    /// no activation point, and reading `isHittable` then fails the test, so
-    /// ask through a predicate, which only answers no.
+    /// an empty frame, and reading `isHittable` then fails the test outright, so
+    /// it is read only once Cancel has a frame. (A `hittable` predicate did not
+    /// come true for the picker's out-of-process Cancel on iOS 18.)
     private func dismissPhotoPicker(in app: XCUIApplication) {
         let choose = app.buttons["scan-choose-photo"]
         for _ in 0..<3 {
             let cancel = cancelButton(in: app)
-            let tappable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: cancel)
-            if XCTWaiter.wait(for: [tappable], timeout: 2) == .completed { cancel.tap() }
+            if cancel.exists, !cancel.frame.isEmpty, cancel.isHittable { cancel.tap() }
             let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: choose)
             if XCTWaiter.wait(for: [ready], timeout: 8) == .completed { return }
         }

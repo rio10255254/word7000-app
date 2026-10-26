@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { chunkWords, correctionsFrom, exampleProblem, meaningProblem, requestFor } from './claude-review-words.mjs';
+import fs from 'node:fs';
+import { chunkSpeaking, chunkWords, correctionsFrom, exampleProblem, meaningProblem, readSpeaking, requestFor, speakingCorrectionsFrom, speakingProblem, speakingRequestFor } from './claude-review-words.mjs';
 
 const word = (id, text, core = 1, overrides = {}) => ({
   id, word: text, core, group: `Core ${core}`, partOfSpeech: 'n', meaningZh: '公車', supplementalMeaningZh: '巴士',
@@ -47,5 +48,39 @@ describe('Claude word review', () => {
     expect(found.meanings).toEqual([{ core: 1, word: 'video', reason: '視頻是中國用語', primaryMeaningZh: '影片', supplementalMeaningZh: '', before: { primaryMeaningZh: '視頻', supplementalMeaningZh: '' } }]);
     expect(found.examples.map((row) => [row.word, row.example])).toEqual([['bus', 'We waited for the bus near the school gate after class.']]);
     expect(found.rejected.map((row) => [row.word, row.problem])).toEqual([['video', 'English is 2 words; expected 8-22'], ['train', 'not in this request']]);
+  });
+
+  describe('speaking cards', () => {
+    const vocabulary = JSON.parse(fs.readFileSync('ios/Word7000/Resources/words.json', 'utf8'));
+    const cards = readSpeaking();
+    const card = cards[0];
+
+    it('reads all 600 cards and asks about them in requests of twenty', () => {
+      expect(cards).toHaveLength(600);
+      expect(chunkSpeaking(cards)).toHaveLength(30);
+      const request = speakingRequestFor(chunkSpeaking(cards)[0], 'claude-sonnet-5-5', 'medium');
+      expect(request.custom_id).toBe('speaking-001');
+      expect(JSON.parse(request.params.messages[0].content).cards[0]).toEqual({
+        word: card.word, keywordZh: card.keywordZh, question: card.question, answerEn: card.answerEn, answerZh: card.answerZh,
+      });
+    });
+
+    it('checks cards against the rules the speaking library build enforces', () => {
+      expect(speakingProblem(card, vocabulary)).toBeNull();
+      expect(speakingProblem({ ...card, answerEn: 'Too short.' }, vocabulary)).toMatch(/target|length|development/);
+      expect(speakingProblem({ ...card, answerZh: '沒有關鍵字的翻譯。' }, vocabulary)).toMatch(/Chinese target/);
+    });
+
+    it('keeps changed, valid cards and sets the rest aside', () => {
+      const better = `${card.answerEn} It took a few weeks, but now it feels normal.`;
+      const found = speakingCorrectionsFrom([card, cards[1]], [
+        { word: card.word, keywordZh: card.keywordZh, question: card.question, answerEn: better, answerZh: card.answerZh, reason: '補充' },
+        { word: cards[1].word, keywordZh: cards[1].keywordZh, question: cards[1].question, answerEn: cards[1].answerEn, answerZh: cards[1].answerZh, reason: '沒改' },
+        { word: card.word, keywordZh: card.keywordZh, question: 'Why?', answerEn: card.answerEn, answerZh: card.answerZh, reason: '重複' },
+      ], vocabulary);
+      expect(found.speaking.map((row) => [row.word, row.answerEn])).toEqual([[card.word, better]]);
+      expect(found.speaking[0].before.answerEn).toBe(card.answerEn);
+      expect(found.rejected.map((row) => row.problem)).toEqual(['reported twice']);
+    });
   });
 });

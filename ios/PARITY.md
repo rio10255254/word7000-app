@@ -1529,12 +1529,13 @@ Undo is available iff an undo record exists AND `progress` is still exactly `aft
 ```
 hashText(s): h = 2166136261; for each UTF-16 code unit c of s: h ^= c; h = imul32(h, 16777619); return h as UInt32   // FNV-1a over UTF-16
 next(x) = (x * 1664525 + 1013904223) mod 2^32
+scramble(x): x ^= x >> 16; x = imul32(x, 0x85ebca6b); x ^= x >> 13; x = imul32(x, 0xc2b2ae35); x ^= x >> 16   // murmur3 fmix32
 shuffleWithSeed(values, seed): a = copy; r = hashText(seed.isEmpty ? "word7000" : seed)
-    for i in (1..<a.count).reversed(): r = next(r); j = r % (i+1); swap(a[i], a[j])
+    for i in (1..<a.count).reversed(): r = next(r); j = scramble(r) % (i+1); swap(a[i], a[j])
 sampleDistinctIndexes(len, count, seed, excluded = -1):
     if len <= 0 || count <= 0: return []
     target = min(count, len - (excluded >= 0 ? 1 : 0)); r = hashText(seed or "word7000"); set = OrderedSet()
-    while set.count < target: r = next(r); i = r % len; if i != excluded: set.insert(i)
+    while set.count < target: r = next(r); i = scramble(r) % len; if i != excluded: set.insert(i)
     return Array(set)            // insertion order
 ```
 Use `UInt32` wrapping arithmetic (`&*`, `&+`). Runtime seeds are random, so exact parity only matters for unit tests.

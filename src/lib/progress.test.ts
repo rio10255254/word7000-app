@@ -396,6 +396,24 @@ describe('library and quiz helpers', () => {
     expect(session.map((word) => word.id)).not.toEqual(sampleWords.slice(0, 10).map((word) => word.id));
   });
 
+  test('seeded shuffles reach every ordering and put each card first equally often', () => {
+    const words = sampleWords.slice(0, 4);
+    const orders = new Map<string, number>();
+    const firstPositions = [0, 0, 0, 0];
+    for (let run = 0; run < 4800; run += 1) {
+      const order = buildStudySession(words, `fairness-${run}`);
+      firstPositions[words.indexOf(order[0])] += 1;
+      const key = order.map((word) => word.id).join('|');
+      orders.set(key, (orders.get(key) ?? 0) + 1);
+    }
+
+    expect(orders.size).toBe(24);
+    for (const count of firstPositions) {
+      expect(count).toBeGreaterThan(1050);
+      expect(count).toBeLessThan(1350);
+    }
+  });
+
   test('buildQuizSession caps the count when the filtered bank is smaller than requested', () => {
     const session = buildQuizSession(sampleWords.slice(0, 6), 10, 'small-bank');
 

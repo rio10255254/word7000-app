@@ -788,7 +788,7 @@ function shuffleWithSeed<T>(values: T[], seed: string): T[] {
 
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
     randomState = nextRandomState(randomState);
-    const swapIndex = randomState % (index + 1);
+    const swapIndex = scrambleRandomState(randomState) % (index + 1);
     [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
   }
 
@@ -806,7 +806,7 @@ function sampleDistinctIndexes(length: number, count: number, seed: string, excl
 
   while (selected.size < targetCount) {
     randomState = nextRandomState(randomState);
-    const index = randomState % length;
+    const index = scrambleRandomState(randomState) % length;
     if (index !== excludedIndex) {
       selected.add(index);
     }
@@ -817,6 +817,20 @@ function sampleDistinctIndexes(length: number, count: number, seed: string, excl
 
 function nextRandomState(value: number): number {
   return (value * 1664525 + 1013904223) >>> 0;
+}
+
+// The low bits of a power-of-two LCG barely change (bit 0 just alternates), so
+// taking `state % n` directly left whole orderings unreachable: four quiz
+// options only ever came out in 12 of their 24 orders, with the answer first a
+// third of the time. Mixing the high bits down (murmur3's finalizer) fixes that.
+function scrambleRandomState(value: number): number {
+  let mixed = value;
+  mixed ^= mixed >>> 16;
+  mixed = Math.imul(mixed, 0x85ebca6b);
+  mixed ^= mixed >>> 13;
+  mixed = Math.imul(mixed, 0xc2b2ae35);
+  mixed ^= mixed >>> 16;
+  return mixed >>> 0;
 }
 
 function hashText(value: string): number {

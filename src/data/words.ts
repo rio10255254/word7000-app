@@ -28,7 +28,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/bri:f/",
     "meaningZh": "簡短的",
-    "supplementalMeaningZh": "簡要的；簡潔的",
+    "supplementalMeaningZh": "摘要；簡報",
     "example": "Mina sent a brief voice message before boarding the train.",
     "exampleZh": "美娜上車前傳了一段簡短的語音訊息。",
     "group": "Core 1"
@@ -116,7 +116,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / aux",
     "pronunciation": "/hæv/",
     "meaningZh": "有",
-    "supplementalMeaningZh": "吃；擁有",
+    "supplementalMeaningZh": "吃；舉行；必須",
     "example": "We have fresh towels ready for the visiting cousins.",
     "exampleZh": "我們已為來訪表親備好乾淨毛巾。",
     "group": "Core 1"
@@ -126,8 +126,8 @@ export const sampleWords: WordEntry[] = [
     "word": "for",
     "partOfSpeech": "prep / conj",
     "pronunciation": "/fɒ:/",
-    "meaningZh": "為了",
-    "supplementalMeaningZh": "替；因為；給",
+    "meaningZh": "替",
+    "supplementalMeaningZh": "為了；因為",
     "example": "Grandma saved a seat for me beside the window.",
     "exampleZh": "奶奶替我留了靠窗的座位。",
     "group": "Core 1"
@@ -137,8 +137,8 @@ export const sampleWords: WordEntry[] = [
     "word": "that",
     "partOfSpeech": "a / conj / pron",
     "pronunciation": "/ðæt/",
-    "meaningZh": "那個",
-    "supplementalMeaningZh": "那；那麼；所…的",
+    "meaningZh": "那",
+    "supplementalMeaningZh": "那個；以致",
     "example": "I remember that small bookstore near the temple gate.",
     "exampleZh": "我記得廟口附近那間小書店。",
     "group": "Core 1"
@@ -181,8 +181,8 @@ export const sampleWords: WordEntry[] = [
     "word": "on",
     "partOfSpeech": "prep / adv / a",
     "pronunciation": "/ɒn/",
-    "meaningZh": "在…上面",
-    "supplementalMeaningZh": "關於；開著；持續",
+    "meaningZh": "在上面",
+    "supplementalMeaningZh": "開著；關於；持續",
     "example": "A sleepy cat rested on the warm scooter seat.",
     "exampleZh": "一隻愛睏的貓躺在溫熱的機車座墊上。",
     "group": "Core 1"
@@ -402,7 +402,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "conj / n",
     "pronunciation": "/if/",
     "meaningZh": "如果",
-    "supplementalMeaningZh": "是否",
+    "supplementalMeaningZh": "是否；即使",
     "example": "Bring a jacket if the mountain air feels cold.",
     "exampleZh": "如果山上空氣變冷，就帶件外套。",
     "group": "Core 1"
@@ -613,7 +613,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "它的",
     "supplementalMeaningZh": "",
     "example": "The cafe changed its menu after the chef retired.",
-    "exampleZh": "主廚退休後，那間咖啡館換了它的菜單。",
+    "exampleZh": "主廚退休後，那間咖啡館換了自己的菜單。",
     "group": "Core 1"
   },
   {
@@ -666,7 +666,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "conj / prep",
     "pronunciation": "/ðæn/",
     "meaningZh": "比",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "除了",
     "example": "This alley is quieter than the main road.",
     "exampleZh": "這條巷子比大馬路安靜。",
     "group": "Core 1"
@@ -720,8 +720,8 @@ export const sampleWords: WordEntry[] = [
     "word": "first",
     "partOfSpeech": "adv / a / num",
     "pronunciation": "/fә:st/",
-    "meaningZh": "第一",
-    "supplementalMeaningZh": "首先；最初",
+    "meaningZh": "先",
+    "supplementalMeaningZh": "第一",
     "example": "First taste the broth before adding extra chili.",
     "exampleZh": "先嘗湯頭，再加辣椒。",
     "group": "Core 1"
@@ -731,8 +731,8 @@ export const sampleWords: WordEntry[] = [
     "word": "look",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/luk/",
-    "meaningZh": "看",
-    "supplementalMeaningZh": "查看；看起來；樣子",
+    "meaningZh": "查看",
+    "supplementalMeaningZh": "看；看起來；樣子",
     "example": "Look under the seat for your missing ticket.",
     "exampleZh": "到座位下找找你遺失的票。",
     "group": "Core 1"
@@ -897,7 +897,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/θiŋ/",
     "meaningZh": "東西",
-    "supplementalMeaningZh": "事情；情況；地方",
+    "supplementalMeaningZh": "事情；情況",
     "example": "What is that strange thing on the kitchen table?",
     "exampleZh": "廚房桌上那個奇怪的東西是什麼？",
     "group": "Core 1"
@@ -921,7 +921,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "這裡",
     "supplementalMeaningZh": "此時",
     "example": "Please park here while I unlock the gate.",
-    "exampleZh": "我開門時，請先把車停在這裡。",
+    "exampleZh": "我開門時，請先把車停這裡。",
     "group": "Core 1"
   },
   {
@@ -951,7 +951,7 @@ export const sampleWords: WordEntry[] = [
     "word": "back",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/bæk/",
-    "meaningZh": "背部",
+    "meaningZh": "背",
     "supplementalMeaningZh": "後面；回去；支持",
     "example": "His back hurt after carrying the rice upstairs.",
     "exampleZh": "他把米扛上樓後背很痛。",
@@ -1028,10 +1028,10 @@ export const sampleWords: WordEntry[] = [
     "word": "still",
     "partOfSpeech": "n / v / a",
     "pronunciation": "/stil/",
-    "meaningZh": "仍然",
-    "supplementalMeaningZh": "平靜的；不動的；然而",
-    "example": "The lake is still calm after the evening wind stopped.",
-    "exampleZh": "晚風停後，湖面仍然很平靜。",
+    "meaningZh": "平靜的",
+    "supplementalMeaningZh": "不動的；仍然；然而",
+    "example": "The lake was still after the evening wind stopped.",
+    "exampleZh": "晚風停後湖面平靜無波。",
     "group": "Core 1"
   },
   {
@@ -1062,7 +1062,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/tu:/",
     "meaningZh": "太",
-    "supplementalMeaningZh": "也；過於",
+    "supplementalMeaningZh": "也；非常",
     "example": "This backpack is too heavy for the steep trail.",
     "exampleZh": "這個背包對陡坡來說太重了。",
     "group": "Core 1"
@@ -1084,7 +1084,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ni:d/",
     "meaningZh": "需要",
-    "supplementalMeaningZh": "需求；必要；缺乏",
+    "supplementalMeaningZh": "必須；需求；缺乏",
     "example": "You need warm socks for the mountain cabin.",
     "exampleZh": "住山屋時你需要保暖襪子。",
     "group": "Core 1"
@@ -1141,7 +1141,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "問",
     "supplementalMeaningZh": "要求；邀請；打聽",
     "example": "Travelers often ask locals for the best breakfast.",
-    "exampleZh": "旅人常向當地人打聽最好吃的早餐。",
+    "exampleZh": "旅人常向當地人詢問哪裡的早餐最好吃。",
     "group": "Core 1"
   },
   {
@@ -1215,8 +1215,8 @@ export const sampleWords: WordEntry[] = [
     "word": "great",
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/greit/",
-    "meaningZh": "很棒的",
-    "supplementalMeaningZh": "大的；偉大的；重大的",
+    "meaningZh": "大的",
+    "supplementalMeaningZh": "很棒的；偉大的；重大的",
     "example": "A great wave crashed against the seawall at dawn.",
     "exampleZh": "黎明時一道大浪撞上了海堤。",
     "group": "Core 1"
@@ -1303,8 +1303,8 @@ export const sampleWords: WordEntry[] = [
     "word": "something",
     "partOfSpeech": "pron",
     "pronunciation": "/'sʌmθiŋ/",
-    "meaningZh": "某事物",
-    "supplementalMeaningZh": "某種東西",
+    "meaningZh": "某物",
+    "supplementalMeaningZh": "某事",
     "example": "Something smelled sweet near the pineapple cake shop.",
     "exampleZh": "鳳梨酥店附近有股甜甜的味道。",
     "group": "Core 1"
@@ -1326,7 +1326,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/mʌtʃ/",
     "meaningZh": "許多",
-    "supplementalMeaningZh": "非常；太多",
+    "supplementalMeaningZh": "非常",
     "example": "There is not much shade on this trail.",
     "exampleZh": "這條步道上沒有太多遮蔭。",
     "group": "Core 1"
@@ -1435,7 +1435,7 @@ export const sampleWords: WordEntry[] = [
     "word": "family",
     "partOfSpeech": "n / a",
     "pronunciation": "/'fæmәli/",
-    "meaningZh": "家庭",
+    "meaningZh": "家",
     "supplementalMeaningZh": "家人；家族",
     "example": "Our family cooks hot pot on rainy Sundays.",
     "exampleZh": "我們家下雨的星期日會煮火鍋。",
@@ -1446,10 +1446,10 @@ export const sampleWords: WordEntry[] = [
     "word": "against",
     "partOfSpeech": "prep",
     "pronunciation": "/ә'geinst/",
-    "meaningZh": "反對",
-    "supplementalMeaningZh": "靠著；對著；違反",
-    "example": "Many students were against the plan to shorten the lunch break.",
-    "exampleZh": "許多學生反對縮短午休時間的計畫。",
+    "meaningZh": "靠著",
+    "supplementalMeaningZh": "反對；對著；違反",
+    "example": "The ladder rested against the mango tree during harvest.",
+    "exampleZh": "採芒果時梯子靠在芒果樹上。",
     "group": "Core 1"
   },
   {
@@ -1645,7 +1645,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv / n / v",
     "pronunciation": "/jes/",
     "meaningZh": "是的",
-    "supplementalMeaningZh": "同意；好",
+    "supplementalMeaningZh": "同意",
     "example": "She whispered yes after reading the invitation twice.",
     "exampleZh": "她讀完兩次邀請函後輕聲答應。",
     "group": "Core 1"
@@ -1768,7 +1768,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "跑步",
     "supplementalMeaningZh": "經營；運轉；流動",
     "example": "I run beside the canal after sunrise every Saturday.",
-    "exampleZh": "每個週六日出後，我都沿著運河跑步。",
+    "exampleZh": "每個星期六日出後，我都沿著運河跑步。",
     "group": "Core 1"
   },
   {
@@ -1853,8 +1853,8 @@ export const sampleWords: WordEntry[] = [
     "word": "play",
     "partOfSpeech": "n / v",
     "pronunciation": "/plei/",
-    "meaningZh": "玩",
-    "supplementalMeaningZh": "打球；演奏；扮演",
+    "meaningZh": "打球",
+    "supplementalMeaningZh": "玩；演奏；扮演",
     "example": "Children play badminton in the alley after dinner.",
     "exampleZh": "孩子們晚餐後在巷子裡打羽球。",
     "group": "Core 1"
@@ -1875,10 +1875,10 @@ export const sampleWords: WordEntry[] = [
     "word": "night",
     "partOfSpeech": "n",
     "pronunciation": "/nait/",
-    "meaningZh": "夜晚",
+    "meaningZh": "夜裡",
     "supplementalMeaningZh": "",
     "example": "The harbor lights look beautiful at night after rain.",
-    "exampleZh": "雨後的夜晚，港口的燈火看起來很美。",
+    "exampleZh": "雨後夜裡，港口燈火很美。",
     "group": "Core 1"
   },
   {
@@ -1974,8 +1974,8 @@ export const sampleWords: WordEntry[] = [
     "word": "end",
     "partOfSpeech": "n / v",
     "pronunciation": "/end/",
-    "meaningZh": "結束",
-    "supplementalMeaningZh": "末端；終點；目的",
+    "meaningZh": "末端",
+    "supplementalMeaningZh": "結束；終點；目的",
     "example": "The road narrows near the end of town.",
     "exampleZh": "道路在鎮尾附近變窄。",
     "group": "Core 1"
@@ -2139,10 +2139,10 @@ export const sampleWords: WordEntry[] = [
     "word": "follow",
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/'fɒlәu/",
-    "meaningZh": "跟隨",
-    "supplementalMeaningZh": "遵循；沿著走；接著",
-    "example": "Follow me, and I will show you the way to the library.",
-    "exampleZh": "跟我來，我帶你去圖書館。",
+    "meaningZh": "沿著走",
+    "supplementalMeaningZh": "跟隨；遵循；接著",
+    "example": "Follow the red lanterns to the courtyard entrance.",
+    "exampleZh": "沿著紅燈籠走到庭院入口。",
     "group": "Core 1"
   },
   {
@@ -2150,10 +2150,10 @@ export const sampleWords: WordEntry[] = [
     "word": "power",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'pauә/",
-    "meaningZh": "力量",
-    "supplementalMeaningZh": "權力；電力；動力",
-    "example": "The power of the waves surprised the children at the beach.",
-    "exampleZh": "海浪的力量讓海灘上的孩子們很驚訝。",
+    "meaningZh": "電力",
+    "supplementalMeaningZh": "力量；權力；動力",
+    "example": "The storm cut power to the fishing village.",
+    "exampleZh": "暴風雨造成那座漁村停電。",
     "group": "Core 1"
   },
   {
@@ -2161,10 +2161,10 @@ export const sampleWords: WordEntry[] = [
     "word": "study",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'stʌdi/",
-    "meaningZh": "學習",
-    "supplementalMeaningZh": "研究；讀書；書房",
-    "example": "I study English for an hour every evening after dinner.",
-    "exampleZh": "我每天晚餐後學習一小時英文。",
+    "meaningZh": "研究",
+    "supplementalMeaningZh": "學習；讀書；書房",
+    "example": "I study maps before every long bike ride.",
+    "exampleZh": "每次長途騎車前我都研究地圖。",
     "group": "Core 1"
   },
   {
@@ -2216,8 +2216,8 @@ export const sampleWords: WordEntry[] = [
     "word": "within",
     "partOfSpeech": "n / adv / prep",
     "pronunciation": "/wi'ðin/",
-    "meaningZh": "在…之內",
-    "supplementalMeaningZh": "在內部；在範圍內",
+    "meaningZh": "之內",
+    "supplementalMeaningZh": "在內部；心裡",
     "example": "The package arrived within three days of ordering.",
     "exampleZh": "下單後不到三天，包裹就送到了。",
     "group": "Core 1"
@@ -2502,8 +2502,8 @@ export const sampleWords: WordEntry[] = [
     "word": "level",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'levl/",
-    "meaningZh": "程度",
-    "supplementalMeaningZh": "水平；水位；樓層",
+    "meaningZh": "高度",
+    "supplementalMeaningZh": "水平；程度；樓層",
     "example": "The river level rose after three days of rain.",
     "exampleZh": "連下三天雨後，河流水位上升。",
     "group": "Core 1"
@@ -2601,8 +2601,8 @@ export const sampleWords: WordEntry[] = [
     "word": "early",
     "partOfSpeech": "a / adv",
     "pronunciation": "/'ә:li/",
-    "meaningZh": "早的",
-    "supplementalMeaningZh": "提早；初期的",
+    "meaningZh": "提早",
+    "supplementalMeaningZh": "早的；初期的",
     "example": "We arrived early and watched the vendors unpack.",
     "exampleZh": "我們提早到，看著攤販卸貨。",
     "group": "Core 1"
@@ -2679,7 +2679,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/blæk/",
     "meaningZh": "黑色的",
-    "supplementalMeaningZh": "黑色；黑人",
+    "supplementalMeaningZh": "",
     "example": "A black dog slept beside the fruit stand.",
     "exampleZh": "一隻黑狗睡在水果攤旁。",
     "group": "Core 1"
@@ -2766,8 +2766,8 @@ export const sampleWords: WordEntry[] = [
     "word": "community",
     "partOfSpeech": "n",
     "pronunciation": "/kә'mju:niti/",
-    "meaningZh": "社區",
-    "supplementalMeaningZh": "社群；團體；社會大眾",
+    "meaningZh": "社區居民",
+    "supplementalMeaningZh": "社區；社群",
     "example": "The community planted trees beside the school fence.",
     "exampleZh": "社區居民在學校圍牆旁種樹。",
     "group": "Core 1"
@@ -2854,8 +2854,8 @@ export const sampleWords: WordEntry[] = [
     "word": "himself",
     "partOfSpeech": "pron",
     "pronunciation": "/him'self/",
-    "meaningZh": "他自己",
-    "supplementalMeaningZh": "他親自",
+    "meaningZh": "他親自",
+    "supplementalMeaningZh": "他自己",
     "example": "He cooked the entire birthday dinner himself yesterday.",
     "exampleZh": "他昨天親自做了整桌生日晚餐。",
     "group": "Core 1"
@@ -2910,7 +2910,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v / a / n",
     "pronunciation": "/ri:d/",
     "meaningZh": "閱讀",
-    "supplementalMeaningZh": "讀懂；顯示",
+    "supplementalMeaningZh": "理解；顯示",
     "example": "Please read the sign before touching the exhibit.",
     "exampleZh": "觸摸展品前請先閱讀標示。",
     "group": "Core 1"
@@ -2964,10 +2964,10 @@ export const sampleWords: WordEntry[] = [
     "word": "able",
     "partOfSpeech": "a",
     "pronunciation": "/'eibl/",
-    "meaningZh": "有能力的",
-    "supplementalMeaningZh": "能幹的；能夠的",
+    "meaningZh": "能",
+    "supplementalMeaningZh": "有能力的；能幹的",
     "example": "She is able to repair radios with simple tools.",
-    "exampleZh": "她能用簡單的工具修理收音機。",
+    "exampleZh": "她能用簡單工具修收音機。",
     "group": "Core 1"
   },
   {
@@ -3030,7 +3030,7 @@ export const sampleWords: WordEntry[] = [
     "word": "stop",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/stɒp/",
-    "meaningZh": "停止",
+    "meaningZh": "停",
     "supplementalMeaningZh": "車站；阻止",
     "example": "The bus will stop near the oyster farm.",
     "exampleZh": "公車會停在蚵田附近。",
@@ -3239,8 +3239,8 @@ export const sampleWords: WordEntry[] = [
     "word": "rate",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/reit/",
-    "meaningZh": "比率",
-    "supplementalMeaningZh": "價格；速度；評價",
+    "meaningZh": "價格",
+    "supplementalMeaningZh": "比率；速度；評價",
     "example": "The hotel rate rises during cherry blossom season.",
     "exampleZh": "櫻花季時旅館房價會上漲。",
     "group": "Core 1"
@@ -3261,8 +3261,8 @@ export const sampleWords: WordEntry[] = [
     "word": "carry",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'kæri/",
-    "meaningZh": "攜帶",
-    "supplementalMeaningZh": "運送；搬運；承載",
+    "meaningZh": "拿著",
+    "supplementalMeaningZh": "攜帶；運送；包含",
     "example": "Can you carry the soup without spilling it?",
     "exampleZh": "你可以端著湯不灑出來嗎？",
     "group": "Core 1"
@@ -3327,8 +3327,8 @@ export const sampleWords: WordEntry[] = [
     "word": "spend",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/spend/",
-    "meaningZh": "花費",
-    "supplementalMeaningZh": "度過；消耗",
+    "meaningZh": "度過",
+    "supplementalMeaningZh": "花費；消耗",
     "example": "We spend weekends tending vegetables behind the house.",
     "exampleZh": "我們週末在屋後照料蔬菜。",
     "group": "Core 1"
@@ -3481,8 +3481,8 @@ export const sampleWords: WordEntry[] = [
     "word": "send",
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/send/",
-    "meaningZh": "寄送",
-    "supplementalMeaningZh": "傳送；派遣",
+    "meaningZh": "傳",
+    "supplementalMeaningZh": "寄送；派遣",
     "example": "Please send the photos before the train leaves.",
     "exampleZh": "火車開走前請把照片傳來。",
     "group": "Core 1"
@@ -3525,10 +3525,10 @@ export const sampleWords: WordEntry[] = [
     "word": "police",
     "partOfSpeech": "n / vt",
     "pronunciation": "/pә'li:s/",
-    "meaningZh": "警察",
-    "supplementalMeaningZh": "警方；維持治安",
+    "meaningZh": "警方",
+    "supplementalMeaningZh": "警察；維持治安",
     "example": "The police directed traffic after the concert ended.",
-    "exampleZh": "音樂會結束後警察指揮交通。",
+    "exampleZh": "音樂會結束後警方指揮交通。",
     "group": "Core 1"
   },
   {
@@ -3602,10 +3602,10 @@ export const sampleWords: WordEntry[] = [
     "word": "across",
     "partOfSpeech": "prep / adv",
     "pronunciation": "/ә'krɒs/",
-    "meaningZh": "橫越",
-    "supplementalMeaningZh": "在對面；越過",
-    "example": "We walked across the bridge to reach the night market.",
-    "exampleZh": "我們走過那座橋前往夜市。",
+    "meaningZh": "在對面",
+    "supplementalMeaningZh": "穿過；橫越",
+    "example": "The bank is across the street from the clinic.",
+    "exampleZh": "銀行就在診所的街道對面。",
     "group": "Core 1"
   },
   {
@@ -3657,10 +3657,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sense",
     "partOfSpeech": "n / vt",
     "pronunciation": "/sens/",
-    "meaningZh": "感覺",
-    "supplementalMeaningZh": "意義；常識；察覺",
-    "example": "She has a good sense of direction in the city.",
-    "exampleZh": "她在城市裡的方向感很好。",
+    "meaningZh": "意義",
+    "supplementalMeaningZh": "感覺；常識；察覺",
+    "example": "This answer makes sense after the diagram appears.",
+    "exampleZh": "圖示出現後這個答案說得通。",
     "group": "Core 1"
   },
   {
@@ -3723,10 +3723,10 @@ export const sampleWords: WordEntry[] = [
     "word": "die",
     "partOfSpeech": "vi / vt / n",
     "pronunciation": "/dai/",
-    "meaningZh": "死亡",
-    "supplementalMeaningZh": "枯萎；熄滅；消失",
+    "meaningZh": "死",
+    "supplementalMeaningZh": "枯死；熄滅；消失",
     "example": "Many herbs die if the soil stays wet.",
-    "exampleZh": "土壤一直潮濕時，許多香草會死亡。",
+    "exampleZh": "土壤一直潮濕時，許多香草會枯死。",
     "group": "Core 1"
   },
   {
@@ -3965,10 +3965,10 @@ export const sampleWords: WordEntry[] = [
     "word": "return",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/ri'tә:n/",
-    "meaningZh": "返回",
-    "supplementalMeaningZh": "歸還；回報；報酬",
-    "example": "I will return to school on Monday after my short trip.",
-    "exampleZh": "短途旅行結束後，我星期一會回學校。",
+    "meaningZh": "回來",
+    "supplementalMeaningZh": "返回；歸還；回報",
+    "example": "His return brought comfort to the worried family.",
+    "exampleZh": "他回來後，焦急的家人終於放下心來。",
     "group": "Core 1"
   },
   {
@@ -3976,8 +3976,8 @@ export const sampleWords: WordEntry[] = [
     "word": "authority",
     "partOfSpeech": "n",
     "pronunciation": "/ɒ:'θɒriti/",
-    "meaningZh": "權威",
-    "supplementalMeaningZh": "當局；權力；專家",
+    "meaningZh": "當局",
+    "supplementalMeaningZh": "權力；權威；專家",
     "example": "The local authority closed the bridge after inspection.",
     "exampleZh": "地方政府完成檢查後，封閉了那座橋。",
     "group": "Core 1"
@@ -4020,8 +4020,8 @@ export const sampleWords: WordEntry[] = [
     "word": "pass",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/pæs/",
-    "meaningZh": "經過",
-    "supplementalMeaningZh": "遞；通過；及格",
+    "meaningZh": "遞",
+    "supplementalMeaningZh": "經過；通過；及格",
     "example": "Please pass the salt before the soup cools.",
     "exampleZh": "湯變冷前請把鹽遞過來。",
     "group": "Core 1"
@@ -4075,10 +4075,10 @@ export const sampleWords: WordEntry[] = [
     "word": "cut",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/kʌt/",
-    "meaningZh": "切",
-    "supplementalMeaningZh": "傷口；削減；剪",
-    "example": "She will cut the cake into eight pieces.",
-    "exampleZh": "她會把蛋糕切成八塊。",
+    "meaningZh": "傷口",
+    "supplementalMeaningZh": "切；削減；剪",
+    "example": "The cut on his finger needed a bandage.",
+    "exampleZh": "他手指上的傷口需要包紮。",
     "group": "Core 1"
   },
   {
@@ -4141,8 +4141,8 @@ export const sampleWords: WordEntry[] = [
     "word": "raise",
     "partOfSpeech": "n / vt",
     "pronunciation": "/reiz/",
-    "meaningZh": "提高",
-    "supplementalMeaningZh": "舉起；養育；籌集",
+    "meaningZh": "籌集",
+    "supplementalMeaningZh": "提高；舉起；養育",
     "example": "The school will raise money for library repairs.",
     "exampleZh": "學校會為圖書館修繕募款。",
     "group": "Core 1"
@@ -4155,7 +4155,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "一般的",
     "supplementalMeaningZh": "大致的；將軍",
     "example": "The general rule is simple for visitors here.",
-    "exampleZh": "這裡給訪客的一般規則很簡單。",
+    "exampleZh": "這裡對訪客的一般規定很簡單。",
     "group": "Core 1"
   },
   {
@@ -4207,8 +4207,8 @@ export const sampleWords: WordEntry[] = [
     "word": "love",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/lʌv/",
-    "meaningZh": "愛",
-    "supplementalMeaningZh": "喜歡；愛情；熱愛",
+    "meaningZh": "喜歡",
+    "supplementalMeaningZh": "愛；愛情",
     "example": "They love hiking along quiet mountain roads together.",
     "exampleZh": "他們喜歡一起沿安靜的山路健行。",
     "group": "Core 1"
@@ -4218,8 +4218,8 @@ export const sampleWords: WordEntry[] = [
     "word": "strong",
     "partOfSpeech": "a / adv",
     "pronunciation": "/strɒŋ/",
-    "meaningZh": "強壯的",
-    "supplementalMeaningZh": "強勁的；堅固的；濃的",
+    "meaningZh": "強勁的",
+    "supplementalMeaningZh": "堅固的；強壯的",
     "example": "A strong wind shook the windows all night.",
     "exampleZh": "強風吹得窗戶整晚震動。",
     "group": "Core 1"
@@ -4284,8 +4284,8 @@ export const sampleWords: WordEntry[] = [
     "word": "hard",
     "partOfSpeech": "a / adv",
     "pronunciation": "/hɑ:d/",
-    "meaningZh": "困難的",
-    "supplementalMeaningZh": "硬的；努力地；猛烈的",
+    "meaningZh": "硬的",
+    "supplementalMeaningZh": "困難的；努力地；猛烈的",
     "example": "This chair is too hard for long dinners.",
     "exampleZh": "這張椅子太硬，不適合久坐吃飯。",
     "group": "Core 1"
@@ -4350,8 +4350,8 @@ export const sampleWords: WordEntry[] = [
     "word": "either",
     "partOfSpeech": "a / pron / conj",
     "pronunciation": "/'i:ðә/",
-    "meaningZh": "任一個的",
-    "supplementalMeaningZh": "也（不）；兩者之一；要麼",
+    "meaningZh": "任一個",
+    "supplementalMeaningZh": "也；要麼",
     "example": "Either answer is acceptable for this form today.",
     "exampleZh": "今天這張表格兩個答案都可以。",
     "group": "Core 1"
@@ -4429,7 +4429,7 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/hɑ:f/",
     "meaningZh": "一半",
     "supplementalMeaningZh": "半場；部分地",
-    "example": "She ate half of the sandwich before going swimming with us.",
+    "example": "She ate half of the sandwich before swimming.",
     "exampleZh": "游泳前她吃了半個三明治。",
     "group": "Core 1"
   },
@@ -4493,8 +4493,8 @@ export const sampleWords: WordEntry[] = [
     "word": "likely",
     "partOfSpeech": "a / adv",
     "pronunciation": "/'laikli/",
-    "meaningZh": "可能的",
-    "supplementalMeaningZh": "適合的",
+    "meaningZh": "可能",
+    "supplementalMeaningZh": "合適的",
     "example": "Rain is likely after the clouds gather tonight.",
     "exampleZh": "今晚雲層聚集後可能會下雨。",
     "group": "Core 1"
@@ -4636,10 +4636,10 @@ export const sampleWords: WordEntry[] = [
     "word": "cover",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'kʌvә/",
-    "meaningZh": "覆蓋",
-    "supplementalMeaningZh": "蓋子；保護；封面",
-    "example": "Please cover the rice pot with a lid.",
-    "exampleZh": "請用蓋子把飯鍋蓋起來。",
+    "meaningZh": "蓋子",
+    "supplementalMeaningZh": "覆蓋；保護；封面",
+    "example": "Put the cover back on the rice pot.",
+    "exampleZh": "把蓋子蓋回飯鍋上。",
     "group": "Core 1"
   },
   {
@@ -4647,7 +4647,7 @@ export const sampleWords: WordEntry[] = [
     "word": "drive",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/draiv/",
-    "meaningZh": "駕駛",
+    "meaningZh": "開車",
     "supplementalMeaningZh": "推動；車程；動力",
     "example": "I drive to work on rainy mornings now.",
     "exampleZh": "現在下雨的早晨我會開車上班。",
@@ -4801,8 +4801,8 @@ export const sampleWords: WordEntry[] = [
     "word": "increase",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/in'kri:s/",
-    "meaningZh": "增加",
-    "supplementalMeaningZh": "上漲；增長",
+    "meaningZh": "上漲",
+    "supplementalMeaningZh": "增加",
     "example": "Prices may increase before the holiday weekend arrives.",
     "exampleZh": "連假週末到來前價格可能上漲。",
     "group": "Core 1"
@@ -5044,9 +5044,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/si'kjuriti/",
     "meaningZh": "安全",
-    "supplementalMeaningZh": "保全；保障；安檢",
-    "example": "Airport security checked every bag before boarding today.",
-    "exampleZh": "今天登機前機場安檢檢查了每件行李。",
+    "supplementalMeaningZh": "保全；保障；安檢人員",
+    "example": "The hotel added cameras to improve security at night.",
+    "exampleZh": "飯店加裝了監視器來加強夜間的安全。",
     "group": "Core 1"
   },
   {
@@ -5054,8 +5054,8 @@ export const sampleWords: WordEntry[] = [
     "word": "film",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/film/",
-    "meaningZh": "電影",
-    "supplementalMeaningZh": "影片；拍攝；底片",
+    "meaningZh": "影片",
+    "supplementalMeaningZh": "電影；拍攝；薄膜",
     "example": "We watched a short film about coral reefs.",
     "exampleZh": "我們看了一部關於珊瑚礁的短片。",
     "group": "Core 1"
@@ -5109,8 +5109,8 @@ export const sampleWords: WordEntry[] = [
     "word": "share",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ʃєә/",
-    "meaningZh": "分享",
-    "supplementalMeaningZh": "股份；分擔；一份",
+    "meaningZh": "股份",
+    "supplementalMeaningZh": "分享；分擔",
     "example": "She owns a small share of the company.",
     "exampleZh": "她擁有那家公司的一小部分股份。",
     "group": "Core 1"
@@ -5153,8 +5153,8 @@ export const sampleWords: WordEntry[] = [
     "word": "herself",
     "partOfSpeech": "pron",
     "pronunciation": "/hә:'self/",
-    "meaningZh": "她自己",
-    "supplementalMeaningZh": "她親自",
+    "meaningZh": "她親自",
+    "supplementalMeaningZh": "她自己",
     "example": "She made the dress herself for the wedding.",
     "exampleZh": "她為婚禮親手做了那件洋裝。",
     "group": "Core 1"
@@ -5197,8 +5197,8 @@ export const sampleWords: WordEntry[] = [
     "word": "brother",
     "partOfSpeech": "n",
     "pronunciation": "/'brʌðә/",
-    "meaningZh": "哥哥或弟弟",
-    "supplementalMeaningZh": "兄弟",
+    "meaningZh": "兄弟",
+    "supplementalMeaningZh": "哥哥；弟弟",
     "example": "My brother studies in Taichung during the week.",
     "exampleZh": "我哥哥平日都在台中讀書。",
     "group": "Core 1"
@@ -5209,7 +5209,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'kʌrәnt/",
     "meaningZh": "目前的",
-    "supplementalMeaningZh": "水流；潮流；電流",
+    "supplementalMeaningZh": "水流；潮流",
     "example": "The current plan saves money and time for everyone.",
     "exampleZh": "目前的計畫為大家省錢省時間。",
     "group": "Core 1"
@@ -5296,8 +5296,8 @@ export const sampleWords: WordEntry[] = [
     "word": "top",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/tɒp/",
-    "meaningZh": "頂端",
-    "supplementalMeaningZh": "最高的；上衣",
+    "meaningZh": "上方",
+    "supplementalMeaningZh": "最高的",
     "example": "Write your name at the top of the page.",
     "exampleZh": "請把名字寫在頁面頂端。",
     "group": "Core 1"
@@ -5406,8 +5406,8 @@ export const sampleWords: WordEntry[] = [
     "word": "centre",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'sentә/",
-    "meaningZh": "中心",
-    "supplementalMeaningZh": "集中；中央",
+    "meaningZh": "中央",
+    "supplementalMeaningZh": "集中",
     "example": "The statue stands in the centre of the square.",
     "exampleZh": "雕像立在廣場中央。",
     "group": "Core 1"
@@ -5483,10 +5483,10 @@ export const sampleWords: WordEntry[] = [
     "word": "fight",
     "partOfSpeech": "n / v",
     "pronunciation": "/fait/",
-    "meaningZh": "打架",
-    "supplementalMeaningZh": "戰鬥；對抗",
+    "meaningZh": "衝突",
+    "supplementalMeaningZh": "打架；對抗",
     "example": "The fight ended before anyone was badly hurt.",
-    "exampleZh": "在有人嚴重受傷前，這場打架就結束了。",
+    "exampleZh": "在有人嚴重受傷前衝突就結束了。",
     "group": "Core 1"
   },
   {
@@ -5497,7 +5497,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "擔憂",
     "supplementalMeaningZh": "關心；涉及",
     "example": "Her main concern is safety on the stairs.",
-    "exampleZh": "她最擔心的是樓梯上的安全。",
+    "exampleZh": "她主要擔心樓梯安全。",
     "group": "Core 1"
   },
   {
@@ -5527,8 +5527,8 @@ export const sampleWords: WordEntry[] = [
     "word": "save",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/seiv/",
-    "meaningZh": "節省",
-    "supplementalMeaningZh": "存錢；拯救；保存",
+    "meaningZh": "存錢",
+    "supplementalMeaningZh": "保存；節省；拯救",
     "example": "Leo used a jar to save coins for his scooter repair.",
     "exampleZh": "里歐用玻璃罐存硬幣修他的機車。",
     "group": "Core 2"
@@ -5637,10 +5637,10 @@ export const sampleWords: WordEntry[] = [
     "word": "outside",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'aut'said/",
-    "meaningZh": "外面",
-    "supplementalMeaningZh": "外面的；在外面",
+    "meaningZh": "在外面",
+    "supplementalMeaningZh": "外面；外面的",
     "example": "No one waited outside after the temple bell stopped ringing.",
-    "exampleZh": "廟鐘停響後，外面沒有人在等待。",
+    "exampleZh": "廟鐘停響後外面沒有人等著。",
     "group": "Core 2"
   },
   {
@@ -5661,8 +5661,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/ә'tæk/",
     "meaningZh": "攻擊",
     "supplementalMeaningZh": "襲擊；抨擊；發作",
-    "example": "Mosquitoes attack bare ankles near the pond after sunset.",
-    "exampleZh": "日落後，池塘邊的蚊子會叮咬裸露的腳踝。",
+    "example": "Geese may attack people who walk too close to their nests.",
+    "exampleZh": "鵝可能會攻擊太靠近巢的人。",
     "group": "Core 2"
   },
   {
@@ -5704,9 +5704,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'vizit/",
     "meaningZh": "拜訪",
-    "supplementalMeaningZh": "參觀；造訪；遊覽",
-    "example": "We plan to visit the lantern market before it gets crowded.",
-    "exampleZh": "我們打算在人潮變多前去參觀燈籠市集。",
+    "supplementalMeaningZh": "參觀；造訪；探望",
+    "example": "We plan to visit our grandparents in Hualien this weekend.",
+    "exampleZh": "我們打算這個週末去花蓮拜訪爺爺奶奶。",
     "group": "Core 2"
   },
   {
@@ -5715,9 +5715,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'sistә/",
     "meaningZh": "姊妹",
-    "supplementalMeaningZh": "姐姐；妹妹；修女",
+    "supplementalMeaningZh": "姊姊；妹妹；修女",
     "example": "My sister fixes bicycles behind the family tea shop.",
-    "exampleZh": "我姐姐在家裡茶行後面修腳踏車。",
+    "exampleZh": "我姊姊在家裡茶行後面修腳踏車。",
     "group": "Core 2"
   },
   {
@@ -5748,9 +5748,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/gri:n/",
     "meaningZh": "綠色的",
-    "supplementalMeaningZh": "青的；未成熟的；沒經驗的",
-    "example": "A green mango tastes sharper than a ripe yellow one.",
-    "exampleZh": "青芒果比熟黃芒果吃起來更酸。",
+    "supplementalMeaningZh": "綠色；未成熟的；沒經驗的",
+    "example": "She painted her bedroom door green to match her plants.",
+    "exampleZh": "她把臥室的門漆成綠色，好搭配她的植物。",
     "group": "Core 2"
   },
   {
@@ -5879,8 +5879,8 @@ export const sampleWords: WordEntry[] = [
     "word": "beat",
     "partOfSpeech": "n / v / a",
     "pronunciation": "/bi:t/",
-    "meaningZh": "打敗",
-    "supplementalMeaningZh": "敲打；心跳；節拍",
+    "meaningZh": "敲打",
+    "supplementalMeaningZh": "打敗；心跳；節拍",
     "example": "Our drummer can beat the metal lid like a festival gong.",
     "exampleZh": "我們鼓手能把金屬蓋敲得像廟會鑼。",
     "group": "Core 2"
@@ -5890,8 +5890,8 @@ export const sampleWords: WordEntry[] = [
     "word": "complete",
     "partOfSpeech": "a / vt",
     "pronunciation": "/kәm'pli:t/",
-    "meaningZh": "完整的",
-    "supplementalMeaningZh": "完成；徹底的",
+    "meaningZh": "完成",
+    "supplementalMeaningZh": "完整的；徹底的",
     "example": "Tara stayed late to complete the mural before sunrise.",
     "exampleZh": "塔拉熬到很晚才在日出前完成壁畫。",
     "group": "Core 2"
@@ -5923,8 +5923,8 @@ export const sampleWords: WordEntry[] = [
     "word": "front",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/frʌnt/",
-    "meaningZh": "前面",
-    "supplementalMeaningZh": "前線；正面；前面的",
+    "meaningZh": "前面的",
+    "supplementalMeaningZh": "前方；前線；正面",
     "example": "The cat slept by the front window all afternoon.",
     "exampleZh": "那隻貓整個下午睡在前窗旁。",
     "group": "Core 2"
@@ -6220,10 +6220,10 @@ export const sampleWords: WordEntry[] = [
     "word": "will",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/wil/",
-    "meaningZh": "將會",
-    "supplementalMeaningZh": "意志；意願；遺囑",
-    "example": "I will call you after the baseball game tonight.",
-    "exampleZh": "今晚棒球比賽結束後我會打電話給你。",
+    "meaningZh": "意志",
+    "supplementalMeaningZh": "意願；將會；遺囑",
+    "example": "Her will kept the family shop open through hard winters.",
+    "exampleZh": "她的意志讓家裡店鋪撐過艱難冬季。",
     "group": "Core 2"
   },
   {
@@ -6298,9 +6298,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/lɒt/",
     "meaningZh": "許多",
-    "supplementalMeaningZh": "一塊地；抽籤；一批",
-    "example": "We saw a lot of stars on the mountain last night.",
-    "exampleZh": "昨晚我們在山上看見了很多星星。",
+    "supplementalMeaningZh": "一塊地；一批；命運",
+    "example": "A lot of steam rose from the bamboo baskets.",
+    "exampleZh": "許多蒸氣從竹籠裡冒出來。",
     "group": "Core 2"
   },
   {
@@ -6430,7 +6430,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v / a",
     "pronunciation": "/'fәutәu/",
     "meaningZh": "照片",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "拍照",
     "example": "Rina framed a photo of her parents dancing by the sea.",
     "exampleZh": "莉娜裱起父母在海邊跳舞的照片。",
     "group": "Core 2"
@@ -6596,8 +6596,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/ә'kɒ:d/",
     "meaningZh": "協議",
     "supplementalMeaningZh": "一致；給予",
-    "example": "The fishermen signed an accord to share the small pier.",
-    "exampleZh": "漁民簽署了協議，同意共用這座小碼頭。",
+    "example": "The fishermen signed an accord about sharing the small pier.",
+    "exampleZh": "漁民簽署協議共同使用小碼頭。",
     "group": "Core 2"
   },
   {
@@ -6748,10 +6748,10 @@ export const sampleWords: WordEntry[] = [
     "word": "death",
     "partOfSpeech": "n",
     "pronunciation": "/deθ/",
-    "meaningZh": "死亡",
-    "supplementalMeaningZh": "去世；死因",
+    "meaningZh": "去世",
+    "supplementalMeaningZh": "死亡",
     "example": "His death left the whole fishing village unusually quiet.",
-    "exampleZh": "他的死讓整個漁村異常安靜。",
+    "exampleZh": "他的去世讓整個漁村異常安靜。",
     "group": "Core 2"
   },
   {
@@ -6803,8 +6803,8 @@ export const sampleWords: WordEntry[] = [
     "word": "patient",
     "partOfSpeech": "n / a",
     "pronunciation": "/'peiʃәnt/",
-    "meaningZh": "病人",
-    "supplementalMeaningZh": "有耐心的",
+    "meaningZh": "有耐心的",
+    "supplementalMeaningZh": "病人",
     "example": "The patient man waited quietly for his dumplings.",
     "exampleZh": "那個有耐心的男人安靜等水餃。",
     "group": "Core 2"
@@ -6891,8 +6891,8 @@ export const sampleWords: WordEntry[] = [
     "word": "order",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'ɒ:dә/",
-    "meaningZh": "命令",
-    "supplementalMeaningZh": "點餐；順序；訂購",
+    "meaningZh": "訂單",
+    "supplementalMeaningZh": "命令；順序；訂購",
     "example": "The vendor wrote each order on a banana leaf.",
     "exampleZh": "攤販把每一筆點餐內容寫在香蕉葉上。",
     "group": "Core 2"
@@ -6979,8 +6979,8 @@ export const sampleWords: WordEntry[] = [
     "word": "model",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'mɒdәl/",
-    "meaningZh": "模型",
-    "supplementalMeaningZh": "型號；模特兒；典範",
+    "meaningZh": "型號",
+    "supplementalMeaningZh": "模型；模特兒；典範",
     "example": "This rice cooker model uses less electricity than ours.",
     "exampleZh": "這款電鍋型號比我們家的省電。",
     "group": "Core 2"
@@ -6990,10 +6990,10 @@ export const sampleWords: WordEntry[] = [
     "word": "involve",
     "partOfSpeech": "vt",
     "pronunciation": "/in'vɒlv/",
-    "meaningZh": "涉及",
-    "supplementalMeaningZh": "包括；使參與",
+    "meaningZh": "包括",
+    "supplementalMeaningZh": "涉及；使參與",
     "example": "The ceremony will involve lanterns, drums, and a river blessing.",
-    "exampleZh": "儀式將包括燈籠、鼓聲和河祭祝福。",
+    "exampleZh": "儀式會包括燈籠、鼓聲和河祭祝福。",
     "group": "Core 2"
   },
   {
@@ -7001,10 +7001,10 @@ export const sampleWords: WordEntry[] = [
     "word": "college",
     "partOfSpeech": "n",
     "pronunciation": "/'kɒlidʒ/",
-    "meaningZh": "學院",
-    "supplementalMeaningZh": "大學",
+    "meaningZh": "大學",
+    "supplementalMeaningZh": "學院",
     "example": "Her college overlooks the sea on Taiwan's east coast.",
-    "exampleZh": "她的學院位於台灣東海岸，可以俯瞰大海。",
+    "exampleZh": "她的大學位於台灣東海岸，可以俯瞰大海。",
     "group": "Core 2"
   },
   {
@@ -7080,8 +7080,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'læŋgwidʒ/",
     "meaningZh": "語言",
     "supplementalMeaningZh": "用語；文字；措辭",
-    "example": "Their language changes when relatives gather for New Year.",
-    "exampleZh": "親戚過年團聚時，他們說的語言會改變。",
+    "example": "Hakka is the language Grandma uses when she sings to the baby.",
+    "exampleZh": "客家話是奶奶唱歌給寶寶聽時用的語言。",
     "group": "Core 2"
   },
   {
@@ -7122,8 +7122,8 @@ export const sampleWords: WordEntry[] = [
     "word": "material",
     "partOfSpeech": "n / a",
     "pronunciation": "/mә'tiәriәl/",
-    "meaningZh": "材料",
-    "supplementalMeaningZh": "布料；素材；重要的",
+    "meaningZh": "布料",
+    "supplementalMeaningZh": "材料；素材；重要的",
     "example": "The tailor chose soft material for the baby's jacket.",
     "exampleZh": "裁縫替寶寶外套挑了柔軟布料。",
     "group": "Core 2"
@@ -7177,10 +7177,10 @@ export const sampleWords: WordEntry[] = [
     "word": "guy",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/gai/",
-    "meaningZh": "傢伙",
-    "supplementalMeaningZh": "男人；人",
+    "meaningZh": "男人",
+    "supplementalMeaningZh": "傢伙；人",
     "example": "That guy sells roasted chestnuts outside the cinema.",
-    "exampleZh": "那個傢伙在電影院外賣烤栗子。",
+    "exampleZh": "那個人在電影院外賣烤栗子。",
     "group": "Core 2"
   },
   {
@@ -7331,8 +7331,8 @@ export const sampleWords: WordEntry[] = [
     "word": "south",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/sauθ/",
-    "meaningZh": "南方",
-    "supplementalMeaningZh": "南部；向南；朝南的",
+    "meaningZh": "向南",
+    "supplementalMeaningZh": "南方；南部",
     "example": "Wild geese flew south over the rice fields.",
     "exampleZh": "雁群向南飛過稻田。",
     "group": "Core 2"
@@ -7422,7 +7422,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "私人的",
     "supplementalMeaningZh": "私立的；祕密的；個人的",
     "example": "The clinic keeps private records in locked cabinets.",
-    "exampleZh": "診所把私人紀錄鎖在櫃子裡。",
+    "exampleZh": "診所把私人病歷鎖在櫃子裡。",
     "group": "Core 2"
   },
   {
@@ -7431,7 +7431,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/hєә/",
     "meaningZh": "頭髮",
-    "supplementalMeaningZh": "毛髮；體毛",
+    "supplementalMeaningZh": "毛髮",
     "example": "Her hair smelled of smoke after the barbecue.",
     "exampleZh": "烤肉後她的頭髮有煙味。",
     "group": "Core 2"
@@ -7474,10 +7474,10 @@ export const sampleWords: WordEntry[] = [
     "word": "movement",
     "partOfSpeech": "n",
     "pronunciation": "/'mu:vmәnt/",
-    "meaningZh": "動作",
-    "supplementalMeaningZh": "運動；動靜；樂章",
+    "meaningZh": "移動",
+    "supplementalMeaningZh": "動作；運動；樂章",
     "example": "Sudden movement in the bushes startled the hikers.",
-    "exampleZh": "樹叢裡突然的動靜嚇到了登山客。",
+    "exampleZh": "樹叢裡突然有東西移動，嚇到了登山客。",
     "group": "Core 2"
   },
   {
@@ -7496,8 +7496,8 @@ export const sampleWords: WordEntry[] = [
     "word": "board",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/bɒ:d/",
-    "meaningZh": "木板",
-    "supplementalMeaningZh": "登上；董事會；膳宿",
+    "meaningZh": "登上",
+    "supplementalMeaningZh": "木板；董事會；膳宿",
     "example": "Passengers board the night ferry after the horn sounds.",
     "exampleZh": "汽笛響起後，乘客陸續登上夜間渡輪。",
     "group": "Core 2"
@@ -7520,8 +7520,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'kwɒlәti/",
     "meaningZh": "品質",
     "supplementalMeaningZh": "優質的；特性",
-    "example": "This tea shop is known for quality oolong.",
-    "exampleZh": "這家茶行以優質烏龍茶聞名。",
+    "example": "The quality of the tea depends on the mountain weather.",
+    "exampleZh": "茶葉的品質取決於山上的天氣。",
     "group": "Core 2"
   },
   {
@@ -7540,8 +7540,8 @@ export const sampleWords: WordEntry[] = [
     "word": "poor",
     "partOfSpeech": "a",
     "pronunciation": "/puә. pɒ:/",
-    "meaningZh": "貧窮的",
-    "supplementalMeaningZh": "不良的；可憐的",
+    "meaningZh": "不良的",
+    "supplementalMeaningZh": "貧窮的；可憐的",
     "example": "Poor drainage made the alley smell after rain.",
     "exampleZh": "排水不良，巷子每逢下雨就會散發臭味。",
     "group": "Core 2"
@@ -7552,9 +7552,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.pɒpju'leiʃәn/",
     "meaningZh": "人口",
-    "supplementalMeaningZh": "族群數量",
-    "example": "The deer population increased after hunting was banned.",
-    "exampleZh": "禁獵後鹿群數量增加。",
+    "supplementalMeaningZh": "族群數量；全體居民",
+    "example": "The population of our town grew after the new station opened.",
+    "exampleZh": "新車站啟用後，我們鎮上的人口增加了。",
     "group": "Core 2"
   },
   {
@@ -7595,8 +7595,8 @@ export const sampleWords: WordEntry[] = [
     "word": "approach",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ә'prәutʃ/",
-    "meaningZh": "接近",
-    "supplementalMeaningZh": "方法；靠近",
+    "meaningZh": "方法",
+    "supplementalMeaningZh": "接近；靠近",
     "example": "Her gentle approach calmed the frightened rescued dog.",
     "exampleZh": "她溫和的方法安撫了受驚的獲救犬。",
     "group": "Core 2"
@@ -7650,8 +7650,8 @@ export const sampleWords: WordEntry[] = [
     "word": "energy",
     "partOfSpeech": "n",
     "pronunciation": "/'enәdʒi/",
-    "meaningZh": "能量",
-    "supplementalMeaningZh": "體力；活力",
+    "meaningZh": "體力",
+    "supplementalMeaningZh": "能量；活力",
     "example": "The dancers saved energy by resting between rehearsals.",
     "exampleZh": "舞者在排練間休息來保存體力。",
     "group": "Core 2"
@@ -7673,7 +7673,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/in'di:d/",
     "meaningZh": "確實",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "甚至",
     "example": "The temple was indeed quieter before the tour buses arrived.",
     "exampleZh": "遊覽車到來前寺廟確實安靜多了。",
     "group": "Core 2"
@@ -7694,8 +7694,8 @@ export const sampleWords: WordEntry[] = [
     "word": "amount",
     "partOfSpeech": "n / vi",
     "pronunciation": "/ә'maunt/",
-    "meaningZh": "數量",
-    "supplementalMeaningZh": "總額；總計",
+    "meaningZh": "量",
+    "supplementalMeaningZh": "數量；總額",
     "example": "A small amount of vinegar brightens the soup.",
     "exampleZh": "少量醋能讓湯更提味。",
     "group": "Core 2"
@@ -7771,8 +7771,8 @@ export const sampleWords: WordEntry[] = [
     "word": "apply",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/ә'plai/",
-    "meaningZh": "申請",
-    "supplementalMeaningZh": "塗抹；應用；適用",
+    "meaningZh": "塗",
+    "supplementalMeaningZh": "申請；應用；適用",
     "example": "Farmers apply neem oil to keep beetles away.",
     "exampleZh": "農民塗上苦楝油來驅趕甲蟲。",
     "group": "Core 2"
@@ -7837,8 +7837,8 @@ export const sampleWords: WordEntry[] = [
     "word": "enter",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'entә/",
-    "meaningZh": "進入",
-    "supplementalMeaningZh": "輸入；參加",
+    "meaningZh": "輸入",
+    "supplementalMeaningZh": "進入；參加",
     "example": "Enter your phone number before collecting the rental bike.",
     "exampleZh": "領租借腳踏車前輸入電話號碼。",
     "group": "Core 2"
@@ -7884,7 +7884,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "儘管",
     "supplementalMeaningZh": "",
     "example": "Despite the heat, Grandpa walked to the shrine.",
-    "exampleZh": "儘管天氣炎熱，阿公仍走到神龕。",
+    "exampleZh": "儘管天氣炎熱，阿公仍走到小廟去。",
     "group": "Core 2"
   },
   {
@@ -7903,8 +7903,8 @@ export const sampleWords: WordEntry[] = [
     "word": "loss",
     "partOfSpeech": "n",
     "pronunciation": "/lɒs/",
-    "meaningZh": "損失",
-    "supplementalMeaningZh": "遺失；失敗；傷亡",
+    "meaningZh": "遺失",
+    "supplementalMeaningZh": "損失；失敗；傷亡",
     "example": "The loss of old photos saddened the family.",
     "exampleZh": "老照片遺失讓全家難過。",
     "group": "Core 2"
@@ -7936,10 +7936,10 @@ export const sampleWords: WordEntry[] = [
     "word": "structure",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'strʌktʃә/",
-    "meaningZh": "結構",
-    "supplementalMeaningZh": "建築物；組織；構造",
+    "meaningZh": "結構物",
+    "supplementalMeaningZh": "結構；建築物；組織",
     "example": "The bamboo structure survived three typhoons without damage.",
-    "exampleZh": "這座竹造結構物挺過三次颱風，沒有受損。",
+    "exampleZh": "這座竹造棚架挺過三次颱風沒受損。",
     "group": "Core 2"
   },
   {
@@ -7969,8 +7969,8 @@ export const sampleWords: WordEntry[] = [
     "word": "standard",
     "partOfSpeech": "n / a",
     "pronunciation": "/'stændәd/",
-    "meaningZh": "標準",
-    "supplementalMeaningZh": "規格；水準",
+    "meaningZh": "標準的",
+    "supplementalMeaningZh": "標準；規格",
     "example": "A standard ticket includes one free museum map.",
     "exampleZh": "標準票包含一份免費博物館地圖。",
     "group": "Core 2"
@@ -8013,8 +8013,8 @@ export const sampleWords: WordEntry[] = [
     "word": "benefit",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'benifit/",
-    "meaningZh": "好處",
-    "supplementalMeaningZh": "利益；使受益",
+    "meaningZh": "使受益",
+    "supplementalMeaningZh": "好處；利益",
     "example": "Regular walking can benefit people with sore knees.",
     "exampleZh": "規律走路能使膝蓋痠痛的人受益。",
     "group": "Core 2"
@@ -8047,9 +8047,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'θiәri/",
     "meaningZh": "理論",
-    "supplementalMeaningZh": "學說；推測",
-    "example": "His theory about the missing boat sounded possible.",
-    "exampleZh": "他對那艘失蹤船隻的推測，聽起來不無可能。",
+    "supplementalMeaningZh": "學說；推測；說法",
+    "example": "Our science teacher explained the theory with a simple experiment.",
+    "exampleZh": "自然老師用一個簡單的實驗說明這個理論。",
     "group": "Core 2"
   },
   {
@@ -8112,8 +8112,8 @@ export const sampleWords: WordEntry[] = [
     "word": "phone",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/fәun/",
-    "meaningZh": "電話",
-    "supplementalMeaningZh": "手機；打電話",
+    "meaningZh": "打電話",
+    "supplementalMeaningZh": "電話；手機",
     "example": "Please phone the hostel before the last bus leaves.",
     "exampleZh": "末班車離開前請打電話給旅舍。",
     "group": "Core 2"
@@ -8146,9 +8146,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'fedәrәl/",
     "meaningZh": "聯邦的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "聯合的",
     "example": "Federal rules protect migratory birds across state borders.",
-    "exampleZh": "聯邦法規保護跨州遷徙的鳥類。",
+    "exampleZh": "聯邦規則保護跨州遷徙鳥類。",
     "group": "Core 2"
   },
   {
@@ -8266,10 +8266,10 @@ export const sampleWords: WordEntry[] = [
     "word": "significant",
     "partOfSpeech": "a",
     "pronunciation": "/sig'nifikәnt/",
-    "meaningZh": "重要的",
-    "supplementalMeaningZh": "顯著的；有意義的",
+    "meaningZh": "明顯的",
+    "supplementalMeaningZh": "重要的；有意義的",
     "example": "A significant crack appeared in the old sea wall.",
-    "exampleZh": "舊海堤出現一道明顯的裂縫。",
+    "exampleZh": "舊海堤出現一道明顯裂縫。",
     "group": "Core 2"
   },
   {
@@ -8288,10 +8288,10 @@ export const sampleWords: WordEntry[] = [
     "word": "whatever",
     "partOfSpeech": "pron",
     "pronunciation": "/hwɒt'evә/",
-    "meaningZh": "無論什麼",
-    "supplementalMeaningZh": "任何事物",
+    "meaningZh": "任何……都",
+    "supplementalMeaningZh": "無論什麼",
     "example": "Take whatever fruit is ripe from the basket.",
-    "exampleZh": "籃子裡任何熟的水果你都可以拿。",
+    "exampleZh": "籃中熟了的水果你都可以拿。",
     "group": "Core 2"
   },
   {
@@ -8354,8 +8354,8 @@ export const sampleWords: WordEntry[] = [
     "word": "forward",
     "partOfSpeech": "a / vt / adv",
     "pronunciation": "/'fɒ:wәd/",
-    "meaningZh": "向前的",
-    "supplementalMeaningZh": "往前；轉寄；促進",
+    "meaningZh": "往前",
+    "supplementalMeaningZh": "向前的；轉寄；促進",
     "example": "Move forward slowly when the fog hides the trail.",
     "exampleZh": "霧遮住步道時慢慢往前走。",
     "group": "Core 2"
@@ -8389,8 +8389,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/dɒg/",
     "meaningZh": "狗",
     "supplementalMeaningZh": "尾隨",
-    "example": "The dog waited patiently outside the noodle shop for its owner.",
-    "exampleZh": "那隻狗耐心地在麵店外等主人。",
+    "example": "The dog waited outside the noodle shop patiently.",
+    "exampleZh": "那隻狗耐心等在麵店外。",
     "group": "Core 2"
   },
   {
@@ -8410,7 +8410,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'medikl/",
     "meaningZh": "醫療的",
-    "supplementalMeaningZh": "醫學的",
+    "supplementalMeaningZh": "醫學的；體檢",
     "example": "The medical tent opened beside the marathon route.",
     "exampleZh": "醫療帳篷設在馬拉松路線旁。",
     "group": "Core 2"
@@ -8511,7 +8511,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "想知道",
     "supplementalMeaningZh": "驚奇；奇蹟",
     "example": "I wonder why the crab crossed the road.",
-    "exampleZh": "我想知道螃蟹為什麼要過馬路。",
+    "exampleZh": "我想知道螃蟹為何過馬路。",
     "group": "Core 2"
   },
   {
@@ -8563,8 +8563,8 @@ export const sampleWords: WordEntry[] = [
     "word": "agreement",
     "partOfSpeech": "n",
     "pronunciation": "/ә'gri:mәnt/",
-    "meaningZh": "協議",
-    "supplementalMeaningZh": "合約；同意",
+    "meaningZh": "合約",
+    "supplementalMeaningZh": "協議；同意",
     "example": "The rental agreement forbids smoking on the balcony.",
     "exampleZh": "租約禁止在陽台抽菸。",
     "group": "Core 2"
@@ -8673,7 +8673,7 @@ export const sampleWords: WordEntry[] = [
     "word": "nice",
     "partOfSpeech": "a",
     "pronunciation": "/nais/",
-    "meaningZh": "好的",
+    "meaningZh": "美好的",
     "supplementalMeaningZh": "友善的；宜人的；漂亮的",
     "example": "A nice breeze cooled the rooftop after sunset.",
     "exampleZh": "日落後宜人的微風讓屋頂涼爽下來。",
@@ -8708,8 +8708,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/glɑ:s/",
     "meaningZh": "玻璃",
     "supplementalMeaningZh": "玻璃杯；一杯；眼鏡",
-    "example": "A glass of barley tea cooled beside the stove.",
-    "exampleZh": "一杯麥茶在爐邊放涼。",
+    "example": "Be careful because the kitchen floor is covered with broken glass.",
+    "exampleZh": "小心，廚房地板上都是碎玻璃。",
     "group": "Core 2"
   },
   {
@@ -8775,7 +8775,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "準備好的",
     "supplementalMeaningZh": "現成的；願意的",
     "example": "The soup is ready when the clams open.",
-    "exampleZh": "蛤蜊打開時，湯就準備好了。",
+    "exampleZh": "蛤蜊打開時湯就好了。",
     "group": "Core 2"
   },
   {
@@ -8783,10 +8783,10 @@ export const sampleWords: WordEntry[] = [
     "word": "realize",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'riәlaiz/",
-    "meaningZh": "領悟",
+    "meaningZh": "明白",
     "supplementalMeaningZh": "實現；變賣",
-    "example": "At dawn, I realize how quiet the harbor feels.",
-    "exampleZh": "清晨我才領悟港口有多安靜。",
+    "example": "Only after moving out did I realize how hard my mom worked.",
+    "exampleZh": "搬出去住以後，我才明白媽媽有多辛苦。",
     "group": "Core 2"
   },
   {
@@ -8827,10 +8827,10 @@ export const sampleWords: WordEntry[] = [
     "word": "manage",
     "partOfSpeech": "vi / vt",
     "pronunciation": "/'mænidʒ/",
-    "meaningZh": "設法做到",
-    "supplementalMeaningZh": "管理；處理；經營",
+    "meaningZh": "管理",
+    "supplementalMeaningZh": "處理；經營；設法做到",
     "example": "Ken can manage the shop while his aunt rests.",
-    "exampleZh": "阿姨休息時，阿肯能負責管理這家店。",
+    "exampleZh": "阿姨休息時阿肯能幫忙看店。",
     "group": "Core 2"
   },
   {
@@ -8841,7 +8841,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "海",
     "supplementalMeaningZh": "海洋；大量",
     "example": "The sea turned silver under the full moon.",
-    "exampleZh": "滿月下的海面變成了銀色。",
+    "exampleZh": "滿月下海面變成銀色。",
     "group": "Core 2"
   },
   {
@@ -8850,9 +8850,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/kә'riә/",
     "meaningZh": "職業生涯",
-    "supplementalMeaningZh": "事業；職業",
+    "supplementalMeaningZh": "事業",
     "example": "A long career in nursing taught her patience.",
-    "exampleZh": "長年的護理生涯教會了她耐心。",
+    "exampleZh": "長年護理生涯教會她耐心。",
     "group": "Core 2"
   },
   {
@@ -8863,7 +8863,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "腿",
     "supplementalMeaningZh": "路程；桌腳",
     "example": "His left leg cramped during the river crossing.",
-    "exampleZh": "過河時他的左腿抽筋了。",
+    "exampleZh": "過河時他的左腿抽筋。",
     "group": "Core 2"
   },
   {
@@ -8907,7 +8907,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "放置",
     "supplementalMeaningZh": "鋪設；下蛋",
     "example": "Lay the fish on ice before the drive home.",
-    "exampleZh": "開車回家前，先把魚放在冰上。",
+    "exampleZh": "開車回家前把魚放在冰上。",
     "group": "Core 2"
   },
   {
@@ -8916,9 +8916,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'teli.viʒәn/",
     "meaningZh": "電視",
-    "supplementalMeaningZh": "電視機",
+    "supplementalMeaningZh": "",
     "example": "Public television showed the typhoon path all night.",
-    "exampleZh": "公共電視整夜播放颱風路徑。",
+    "exampleZh": "公共電視整夜播報颱風路徑。",
     "group": "Core 2"
   },
   {
@@ -8951,7 +8951,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "移除",
     "supplementalMeaningZh": "脫掉；搬走；解除",
     "example": "Remove the wet shoes before stepping onto the mat.",
-    "exampleZh": "踏上墊子前，先脫掉濕鞋。",
+    "exampleZh": "踏上墊子前先脫掉濕鞋。",
     "group": "Core 2"
   },
   {
@@ -9114,9 +9114,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/dɑ:k/",
     "meaningZh": "黑暗的",
-    "supplementalMeaningZh": "深色的；陰沉的；隱密的",
-    "example": "Dark clouds gathered behind the mountain temple before evening prayers.",
-    "exampleZh": "晚禱前烏雲聚集在山寺後方。",
+    "supplementalMeaningZh": "深色的；烏黑的；隱密的",
+    "example": "The hallway was so dark that I could not find the light switch.",
+    "exampleZh": "走廊太暗了，我找不到電燈開關。",
     "group": "Core 2"
   },
   {
@@ -9168,8 +9168,8 @@ export const sampleWords: WordEntry[] = [
     "word": "treat",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/tri:t/",
-    "meaningZh": "對待",
-    "supplementalMeaningZh": "治療；請客；款待",
+    "meaningZh": "治療",
+    "supplementalMeaningZh": "對待；請客；款待",
     "example": "The dentist will treat the sore gum tomorrow.",
     "exampleZh": "牙醫明天會治療疼痛的牙齦。",
     "group": "Core 2"
@@ -9179,8 +9179,8 @@ export const sampleWords: WordEntry[] = [
     "word": "shop",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/ʃɒp/",
-    "meaningZh": "商店",
-    "supplementalMeaningZh": "買東西；購物；工作坊",
+    "meaningZh": "買東西",
+    "supplementalMeaningZh": "商店",
     "example": "We shop for vegetables before the noon heat.",
     "exampleZh": "我們趁中午變熱前買菜。",
     "group": "Core 2"
@@ -9201,8 +9201,8 @@ export const sampleWords: WordEntry[] = [
     "word": "god",
     "partOfSpeech": "n / vt",
     "pronunciation": "/^ɔd/",
-    "meaningZh": "神",
-    "supplementalMeaningZh": "上帝；神像",
+    "meaningZh": "上帝",
+    "supplementalMeaningZh": "神；神像",
     "example": "They thanked God after the miners reached daylight.",
     "exampleZh": "礦工重見天日後他們感謝上帝。",
     "group": "Core 2"
@@ -9257,7 +9257,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/kәuld/",
     "meaningZh": "冷的",
-    "supplementalMeaningZh": "感冒；冷淡的；寒冷",
+    "supplementalMeaningZh": "感冒；冷淡的",
     "example": "Cold noodles taste best with cucumber and sesame sauce.",
     "exampleZh": "冷麵配小黃瓜和芝麻醬最好吃。",
     "group": "Core 2"
@@ -9300,10 +9300,10 @@ export const sampleWords: WordEntry[] = [
     "word": "store",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/stɒ:/",
-    "meaningZh": "商店",
-    "supplementalMeaningZh": "存放；儲存；倉庫",
-    "example": "I bought a notebook at the store near my school.",
-    "exampleZh": "我在學校附近的商店買了一本筆記本。",
+    "meaningZh": "存放",
+    "supplementalMeaningZh": "商店；倉庫",
+    "example": "Store dried mushrooms in a sealed glass jar.",
+    "exampleZh": "把乾香菇存放在密封玻璃罐裡。",
     "group": "Core 2"
   },
   {
@@ -9311,10 +9311,10 @@ export const sampleWords: WordEntry[] = [
     "word": "memory",
     "partOfSpeech": "n",
     "pronunciation": "/'memәri/",
-    "meaningZh": "記憶",
-    "supplementalMeaningZh": "回憶；記憶力；紀念",
+    "meaningZh": "回憶",
+    "supplementalMeaningZh": "記憶；記憶力；紀念",
     "example": "That melody brought back a childhood memory during dinner.",
-    "exampleZh": "晚餐時那段旋律喚回了一段童年回憶。",
+    "exampleZh": "晚餐時那段旋律喚回童年記憶。",
     "group": "Core 2"
   },
   {
@@ -9323,9 +9323,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/in'vestmәnt/",
     "meaningZh": "投資",
-    "supplementalMeaningZh": "投資額；值得的投入",
+    "supplementalMeaningZh": "投入",
     "example": "Her investment in good boots saved her ankles.",
-    "exampleZh": "她買好靴子這項投資保護了她的腳踝。",
+    "exampleZh": "她投資一雙好靴子保護了腳踝。",
     "group": "Core 2"
   },
   {
@@ -9391,7 +9391,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "機構",
     "supplementalMeaningZh": "制度；慣例",
     "example": "The temple became an institution for local charity.",
-    "exampleZh": "那座廟成了地方慈善的重要機構。",
+    "exampleZh": "那座廟成了地方慈善中心。",
     "group": "Core 2"
   },
   {
@@ -9476,8 +9476,8 @@ export const sampleWords: WordEntry[] = [
     "word": "tend",
     "partOfSpeech": "vi / vt",
     "pronunciation": "/tend/",
-    "meaningZh": "傾向於",
-    "supplementalMeaningZh": "往往；照顧",
+    "meaningZh": "往往",
+    "supplementalMeaningZh": "傾向於；照顧",
     "example": "Cats tend to sleep near sunny windows in winter.",
     "exampleZh": "冬天貓往往睡在有陽光的窗邊。",
     "group": "Core 2"
@@ -9487,8 +9487,8 @@ export const sampleWords: WordEntry[] = [
     "word": "rock",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/rɒk/",
-    "meaningZh": "岩石",
-    "supplementalMeaningZh": "搖滾樂；搖動",
+    "meaningZh": "搖動",
+    "supplementalMeaningZh": "岩石；搖滾樂",
     "example": "The cradle began to rock in the breeze.",
     "exampleZh": "搖籃在微風中開始搖動。",
     "group": "Core 2"
@@ -9586,10 +9586,10 @@ export const sampleWords: WordEntry[] = [
     "word": "executive",
     "partOfSpeech": "n / a",
     "pronunciation": "/ig'zekjutiv/",
-    "meaningZh": "主管",
-    "supplementalMeaningZh": "執行的；行政部門",
-    "example": "The executive of the company spoke to the students.",
-    "exampleZh": "公司的主管對學生們發表了談話。",
+    "meaningZh": "執行的",
+    "supplementalMeaningZh": "主管；行政部門",
+    "example": "The executive committee approved repairs for the old market.",
+    "exampleZh": "執行委員會核准了老市場的修繕計畫。",
     "group": "Core 2"
   },
   {
@@ -9620,9 +9620,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'vilidʒ/",
     "meaningZh": "村莊",
-    "supplementalMeaningZh": "村民",
-    "example": "The village bakery opens before the first bus.",
-    "exampleZh": "村裡麵包店在首班公車前開門。",
+    "supplementalMeaningZh": "村裡的；村民",
+    "example": "My grandparents live in a small village near the mountains.",
+    "exampleZh": "我的祖父母住在山邊的一個小村莊。",
     "group": "Core 2"
   },
   {
@@ -9630,10 +9630,10 @@ export const sampleWords: WordEntry[] = [
     "word": "focus",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'fәukәs/",
-    "meaningZh": "焦點",
-    "supplementalMeaningZh": "集中；對焦",
-    "example": "Focus the camera on the bride's hands during the vows.",
-    "exampleZh": "誓詞時把相機焦點對準新娘的手。",
+    "meaningZh": "專注",
+    "supplementalMeaningZh": "焦點；集中；對焦",
+    "example": "Turn off your phone so you can focus on your homework.",
+    "exampleZh": "把手機關掉，你才能專心寫作業。",
     "group": "Core 2"
   },
   {
@@ -9732,7 +9732,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "顧客",
     "supplementalMeaningZh": "客戶；消費者",
     "example": "The customer returned because the soup tasted sour.",
-    "exampleZh": "顧客因為湯有酸味而回來了。",
+    "exampleZh": "顧客因湯有酸味而回來。",
     "group": "Core 2"
   },
   {
@@ -9764,8 +9764,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'trʌbl/",
     "meaningZh": "麻煩",
     "supplementalMeaningZh": "故障；煩惱；困擾",
-    "example": "Engine trouble delayed the fishing boat until sunrise.",
-    "exampleZh": "引擎故障，讓那艘漁船一直耽擱到日出。",
+    "example": "Sorry for all the trouble I caused you yesterday.",
+    "exampleZh": "抱歉昨天給你添了這麼多麻煩。",
     "group": "Core 2"
   },
   {
@@ -9839,8 +9839,8 @@ export const sampleWords: WordEntry[] = [
     "word": "shake",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ʃeik/",
-    "meaningZh": "搖晃",
-    "supplementalMeaningZh": "抖動；震動；發抖",
+    "meaningZh": "抖",
+    "supplementalMeaningZh": "搖晃；震動；發抖",
     "example": "Shake the umbrella outside before entering the clinic.",
     "exampleZh": "進診所前在外面抖一抖傘。",
     "group": "Core 2"
@@ -9861,8 +9861,8 @@ export const sampleWords: WordEntry[] = [
     "word": "trial",
     "partOfSpeech": "n / a",
     "pronunciation": "/'traiәl/",
-    "meaningZh": "試驗",
-    "supplementalMeaningZh": "審判；考驗",
+    "meaningZh": "審判",
+    "supplementalMeaningZh": "試驗；考驗",
     "example": "The trial for the ferry accident starts Monday.",
     "exampleZh": "渡輪事故審判週一開始。",
     "group": "Core 2"
@@ -10059,8 +10059,8 @@ export const sampleWords: WordEntry[] = [
     "word": "previous",
     "partOfSpeech": "a",
     "pronunciation": "/'pri:viәs/",
-    "meaningZh": "先前的",
-    "supplementalMeaningZh": "前任的",
+    "meaningZh": "前任的",
+    "supplementalMeaningZh": "先前的",
     "example": "The previous owner planted jasmine beside the doorway.",
     "exampleZh": "前任屋主在門旁種了茉莉。",
     "group": "Core 2"
@@ -10488,10 +10488,10 @@ export const sampleWords: WordEntry[] = [
     "word": "anyway",
     "partOfSpeech": "adv",
     "pronunciation": "/'eniwei/",
-    "meaningZh": "無論如何",
-    "supplementalMeaningZh": "還是；反正；至少",
+    "meaningZh": "還是",
+    "supplementalMeaningZh": "無論如何；至少",
     "example": "It was raining hard, but we went anyway.",
-    "exampleZh": "雨下得很大，但我們還是去了。",
+    "exampleZh": "雨下得很大但我們還是去了。",
     "group": "Core 2"
   },
   {
@@ -10621,9 +10621,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'sivәl/",
     "meaningZh": "公民的",
-    "supplementalMeaningZh": "民事的；有禮貌的",
-    "example": "Civil rights protect every citizen under the law.",
-    "exampleZh": "公民權利在法律下保障每一位公民。",
+    "supplementalMeaningZh": "民事的；國內的；有禮貌的",
+    "example": "Students learned about civil rights in history class today.",
+    "exampleZh": "學生們今天在歷史課上認識了公民權利。",
     "group": "Core 2"
   },
   {
@@ -10810,7 +10810,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "積極的",
     "supplementalMeaningZh": "正面的；肯定的；陽性的",
     "example": "Her positive attitude helped the team finish the repair.",
-    "exampleZh": "她積極的態度幫助團隊完成了修理工作。",
+    "exampleZh": "她積極的態度幫團隊完成修理。",
     "group": "Core 2"
   },
   {
@@ -11008,7 +11008,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "整個的",
     "supplementalMeaningZh": "完全的",
     "example": "The entire family searched the beach for her ring.",
-    "exampleZh": "全家人一起在海灘上找她的戒指。",
+    "exampleZh": "全家人在海灘找她的戒指。",
     "group": "Core 2"
   },
   {
@@ -11027,10 +11027,10 @@ export const sampleWords: WordEntry[] = [
     "word": "rich",
     "partOfSpeech": "a",
     "pronunciation": "/ri:tʃ/",
-    "meaningZh": "富有的",
-    "supplementalMeaningZh": "豐富的；濃郁的；肥沃的",
+    "meaningZh": "濃郁的",
+    "supplementalMeaningZh": "富有的；豐富的；肥沃的",
     "example": "The soup had a rich mushroom aroma after two hours.",
-    "exampleZh": "湯熬了兩小時後，散發出濃郁的菇香。",
+    "exampleZh": "湯熬兩小時後有濃郁菇香。",
     "group": "Core 3"
   },
   {
@@ -11038,10 +11038,10 @@ export const sampleWords: WordEntry[] = [
     "word": "affair",
     "partOfSpeech": "n",
     "pronunciation": "/ә'fєә/",
-    "meaningZh": "事務",
-    "supplementalMeaningZh": "事件；外遇",
+    "meaningZh": "事件",
+    "supplementalMeaningZh": "事務；外遇",
     "example": "Neighbors still whispered about the affair at the corner bakery.",
-    "exampleZh": "街坊鄰居仍低聲談論轉角麵包店的那件事。",
+    "exampleZh": "街坊仍低聲談那間轉角麵包店的事件。",
     "group": "Core 3"
   },
   {
@@ -11060,8 +11060,8 @@ export const sampleWords: WordEntry[] = [
     "word": "solution",
     "partOfSpeech": "n",
     "pronunciation": "/sә'lu:ʃәn/",
-    "meaningZh": "解決方法",
-    "supplementalMeaningZh": "溶液；答案",
+    "meaningZh": "溶液",
+    "supplementalMeaningZh": "解決方法；答案",
     "example": "Vinegar made a safe cleaning solution for the kettle.",
     "exampleZh": "醋可調成安全清潔溶液清洗水壺。",
     "group": "Core 3"
@@ -11085,7 +11085,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "安全",
     "supplementalMeaningZh": "",
     "example": "Bike lights improve safety on rainy evening rides.",
-    "exampleZh": "雨天傍晚騎車時，車燈能提升安全性。",
+    "exampleZh": "雨天傍晚騎車時車燈能提高安全。",
     "group": "Core 3"
   },
   {
@@ -11181,10 +11181,10 @@ export const sampleWords: WordEntry[] = [
     "word": "key",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ki:/",
-    "meaningZh": "鑰匙",
-    "supplementalMeaningZh": "關鍵；按鍵；答案",
+    "meaningZh": "關鍵",
+    "supplementalMeaningZh": "鑰匙；按鍵；答案",
     "example": "Patience is the key to teaching a nervous puppy.",
-    "exampleZh": "耐心是訓練膽小小狗的關鍵。",
+    "exampleZh": "耐心是教容易緊張的小狗的關鍵。",
     "group": "Core 3"
   },
   {
@@ -11545,9 +11545,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'haili/",
     "meaningZh": "非常",
-    "supplementalMeaningZh": "高度地；讚許地",
-    "example": "The guide spoke highly of this quiet mountain inn.",
-    "exampleZh": "導遊對這間安靜的山莊讚不絕口。",
+    "supplementalMeaningZh": "讚許地",
+    "example": "The new bubble tea shop near our school is highly popular with students.",
+    "exampleZh": "學校附近新開的手搖飲店非常受學生歡迎。",
     "group": "Core 3"
   },
   {
@@ -11687,8 +11687,8 @@ export const sampleWords: WordEntry[] = [
     "word": "heat",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/hi:t/",
-    "meaningZh": "熱",
-    "supplementalMeaningZh": "高溫；加熱；熱度",
+    "meaningZh": "高溫",
+    "supplementalMeaningZh": "加熱",
     "example": "The afternoon heat softened the tar on the road.",
     "exampleZh": "午後高溫讓路面柏油變軟。",
     "group": "Core 3"
@@ -11699,7 +11699,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'sәuldʒә/",
     "meaningZh": "士兵",
-    "supplementalMeaningZh": "軍人",
+    "supplementalMeaningZh": "",
     "example": "The soldier carried blankets to families after the flood.",
     "exampleZh": "士兵在洪水後送毛毯給受災家庭。",
     "group": "Core 3"
@@ -11754,7 +11754,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'prezns/",
     "meaningZh": "在場",
-    "supplementalMeaningZh": "出席；存在；風采",
+    "supplementalMeaningZh": "出席；存在；存在感",
     "example": "His calm presence helped the upset child stop crying.",
     "exampleZh": "他沉穩地陪在身旁，難過的孩子才漸漸停止哭泣。",
     "group": "Core 3"
@@ -11786,7 +11786,7 @@ export const sampleWords: WordEntry[] = [
     "word": "touch",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/tʌtʃ/",
-    "meaningZh": "觸摸",
+    "meaningZh": "碰",
     "supplementalMeaningZh": "接觸；感動；少許",
     "example": "Do not touch the coral while snorkeling here today.",
     "exampleZh": "今天在這裡浮潛時不要碰珊瑚。",
@@ -11852,8 +11852,8 @@ export const sampleWords: WordEntry[] = [
     "word": "drink",
     "partOfSpeech": "n / v",
     "pronunciation": "/driŋk/",
-    "meaningZh": "喝",
-    "supplementalMeaningZh": "飲料；酒",
+    "meaningZh": "飲料",
+    "supplementalMeaningZh": "喝；酒",
     "example": "Cold barley tea is my favorite summer drink here.",
     "exampleZh": "夏天在這裡，我最愛喝冰麥茶。",
     "group": "Core 3"
@@ -11863,8 +11863,8 @@ export const sampleWords: WordEntry[] = [
     "word": "division",
     "partOfSpeech": "n",
     "pronunciation": "/di'viʒәn/",
-    "meaningZh": "分割",
-    "supplementalMeaningZh": "部門；除法；分界",
+    "meaningZh": "分界",
+    "supplementalMeaningZh": "部門；除法",
     "example": "The river marks a natural division between the farms.",
     "exampleZh": "河流成為農田間的自然分界。",
     "group": "Core 3"
@@ -11874,8 +11874,8 @@ export const sampleWords: WordEntry[] = [
     "word": "failure",
     "partOfSpeech": "n",
     "pronunciation": "/'feiljә/",
-    "meaningZh": "失敗",
-    "supplementalMeaningZh": "故障；失靈；破產",
+    "meaningZh": "失靈",
+    "supplementalMeaningZh": "失敗；不足；破產",
     "example": "Brake failure caused the truck to stop in a field.",
     "exampleZh": "卡車因煞車失靈，最後停在田裡。",
     "group": "Core 3"
@@ -11907,8 +11907,8 @@ export const sampleWords: WordEntry[] = [
     "word": "supply",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/sә'plai/",
-    "meaningZh": "供應",
-    "supplementalMeaningZh": "儲備；補給品；提供",
+    "meaningZh": "儲備",
+    "supplementalMeaningZh": "供應；補給品；提供",
     "example": "The village kept a supply of candles for typhoon nights.",
     "exampleZh": "村子備有颱風夜可用的蠟燭。",
     "group": "Core 3"
@@ -11973,8 +11973,8 @@ export const sampleWords: WordEntry[] = [
     "word": "gold",
     "partOfSpeech": "n / a",
     "pronunciation": "/gәuld/",
-    "meaningZh": "黃金",
-    "supplementalMeaningZh": "金色；金製的",
+    "meaningZh": "金色",
+    "supplementalMeaningZh": "黃金；金製的",
     "example": "The old temple roof shone with gold tiles today.",
     "exampleZh": "今天老廟屋頂閃著金色瓦片。",
     "group": "Core 3"
@@ -11984,8 +11984,8 @@ export const sampleWords: WordEntry[] = [
     "word": "earth",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ә:θ/",
-    "meaningZh": "地球",
-    "supplementalMeaningZh": "泥土；大地",
+    "meaningZh": "泥土",
+    "supplementalMeaningZh": "地球；大地",
     "example": "Wet earth stuck to our shoes after the rain.",
     "exampleZh": "雨後濕泥土黏在我們鞋上。",
     "group": "Core 3"
@@ -12029,9 +12029,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v / a / adv",
     "pronunciation": "/kә'lekt/",
     "meaningZh": "收集",
-    "supplementalMeaningZh": "聚集；收取",
+    "supplementalMeaningZh": "聚集；集中",
     "example": "Grandpa likes to collect train tickets from old journeys.",
-    "exampleZh": "爺爺喜歡收集舊旅程留下的火車票。",
+    "exampleZh": "爺爺喜歡收集舊旅行的火車票。",
     "group": "Core 3"
   },
   {
@@ -12138,10 +12138,10 @@ export const sampleWords: WordEntry[] = [
     "word": "below",
     "partOfSpeech": "prep / adv",
     "pronunciation": "/bi'lәu/",
-    "meaningZh": "在下方",
-    "supplementalMeaningZh": "在樓下；低於",
-    "example": "The spare key hangs on a hook below the kitchen shelf.",
-    "exampleZh": "備用鑰匙掛在廚房架子下方的掛鉤上。",
+    "meaningZh": "下方",
+    "supplementalMeaningZh": "樓下",
+    "example": "The spare key hangs below the kitchen shelf downstairs.",
+    "exampleZh": "備用鑰匙掛在樓下廚房的架子底下。",
     "group": "Core 3"
   },
   {
@@ -12149,10 +12149,10 @@ export const sampleWords: WordEntry[] = [
     "word": "shot",
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/ʃɒt/",
-    "meaningZh": "射擊",
-    "supplementalMeaningZh": "投籃；注射；照片",
-    "example": "The hunter fired one shot into the air to scare the birds.",
-    "exampleZh": "獵人朝空中開了一槍來驚嚇鳥群。",
+    "meaningZh": "投籃",
+    "supplementalMeaningZh": "射擊；注射；照片",
+    "example": "One lucky shot won the basketball game at dusk.",
+    "exampleZh": "黃昏時一記幸運投籃贏得比賽。",
     "group": "Core 3"
   },
   {
@@ -12182,10 +12182,10 @@ export const sampleWords: WordEntry[] = [
     "word": "critical",
     "partOfSpeech": "a",
     "pronunciation": "/'kritikәl/",
-    "meaningZh": "危急的",
-    "supplementalMeaningZh": "關鍵的；批判的；挑剔的",
+    "meaningZh": "關鍵的",
+    "supplementalMeaningZh": "嚴重的；批判的",
     "example": "Clean water became critical after the hillside road collapsed.",
-    "exampleZh": "山路坍方後，乾淨的水變得非常緊要。",
+    "exampleZh": "山路坍方後，乾淨的飲用水成了最迫切的需求。",
     "group": "Core 3"
   },
   {
@@ -12259,10 +12259,10 @@ export const sampleWords: WordEntry[] = [
     "word": "mountain",
     "partOfSpeech": "n",
     "pronunciation": "/'mauntin/",
-    "meaningZh": "山",
+    "meaningZh": "山峰",
     "supplementalMeaningZh": "山脈；大量",
     "example": "A blue mountain rose behind the morning mist today.",
-    "exampleZh": "今天晨霧後方矗立著一座藍色的山。",
+    "exampleZh": "今天晨霧後方矗立著一座藍色山峰。",
     "group": "Core 3"
   },
   {
@@ -12270,10 +12270,10 @@ export const sampleWords: WordEntry[] = [
     "word": "recall",
     "partOfSpeech": "n / vt",
     "pronunciation": "/ri'kɒ:l/",
-    "meaningZh": "回想起",
+    "meaningZh": "想起",
     "supplementalMeaningZh": "召回；撤回",
     "example": "I recall the smell of rain on hot pavement.",
-    "exampleZh": "我想起了雨水落在炙熱路面上的氣味。",
+    "exampleZh": "我想起熱路面上的雨味。",
     "group": "Core 3"
   },
   {
@@ -12281,10 +12281,10 @@ export const sampleWords: WordEntry[] = [
     "word": "settle",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'setl/",
-    "meaningZh": "解決",
-    "supplementalMeaningZh": "定居；落下；付清",
+    "meaningZh": "落下",
+    "supplementalMeaningZh": "解決；定居；付清",
     "example": "Dust began to settle on the unused piano upstairs.",
-    "exampleZh": "灰塵開始落在樓上閒置的鋼琴上。",
+    "exampleZh": "灰塵開始落在樓上閒置鋼琴上。",
     "group": "Core 3"
   },
   {
@@ -12303,10 +12303,10 @@ export const sampleWords: WordEntry[] = [
     "word": "wood",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/wud/",
-    "meaningZh": "木材",
-    "supplementalMeaningZh": "木柴；樹林",
+    "meaningZh": "木柴",
+    "supplementalMeaningZh": "木材；樹林",
     "example": "Dry wood cracked loudly in the beach fire tonight.",
-    "exampleZh": "今晚乾木柴在海邊的火堆中劈啪作響。",
+    "exampleZh": "今晚乾木柴在海邊火堆中劈啪作響。",
     "group": "Core 3"
   },
   {
@@ -12347,8 +12347,8 @@ export const sampleWords: WordEntry[] = [
     "word": "male",
     "partOfSpeech": "n / a",
     "pronunciation": "/meil/",
-    "meaningZh": "男性的",
-    "supplementalMeaningZh": "雄性的；男人",
+    "meaningZh": "雄性的",
+    "supplementalMeaningZh": "男性的；男人",
     "example": "A male deer crossed the road near dawn today.",
     "exampleZh": "今天黎明時一隻公鹿穿越馬路。",
     "group": "Core 3"
@@ -12402,8 +12402,8 @@ export const sampleWords: WordEntry[] = [
     "word": "fast",
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/fɑ:st/",
-    "meaningZh": "快的",
-    "supplementalMeaningZh": "很快地；牢固的；禁食",
+    "meaningZh": "很快地",
+    "supplementalMeaningZh": "牢固的；禁食",
     "example": "The river runs fast after three days of rain.",
     "exampleZh": "連下三天雨後河水流得很快。",
     "group": "Core 3"
@@ -12501,8 +12501,8 @@ export const sampleWords: WordEntry[] = [
     "word": "perfect",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'pә:fikt/",
-    "meaningZh": "完美的",
-    "supplementalMeaningZh": "適合的；改善",
+    "meaningZh": "適合的",
+    "supplementalMeaningZh": "完美的；改善",
     "example": "This shaded bench is perfect for feeding the baby.",
     "exampleZh": "這張樹蔭下的長椅很適合餵寶寶。",
     "group": "Core 3"
@@ -12644,8 +12644,8 @@ export const sampleWords: WordEntry[] = [
     "word": "handle",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/hændl/",
-    "meaningZh": "處理",
-    "supplementalMeaningZh": "把手；操作；拿取",
+    "meaningZh": "拿",
+    "supplementalMeaningZh": "把手；處理；操作",
     "example": "Use both hands to handle the hot soup pot.",
     "exampleZh": "端熱湯鍋時要用雙手。",
     "group": "Core 3"
@@ -12732,8 +12732,8 @@ export const sampleWords: WordEntry[] = [
     "word": "commission",
     "partOfSpeech": "n / vt",
     "pronunciation": "/kә'miʃәn/",
-    "meaningZh": "佣金",
-    "supplementalMeaningZh": "委託；委員會；任命",
+    "meaningZh": "委託",
+    "supplementalMeaningZh": "佣金；委員會；任命",
     "example": "The artist received a commission to paint the temple doors.",
     "exampleZh": "畫家受委託為廟門作畫。",
     "group": "Core 3"
@@ -12757,7 +12757,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "花",
     "supplementalMeaningZh": "開花；精華",
     "example": "A single flower grew through the cracked pavement overnight.",
-    "exampleZh": "一朵花一夜之間從裂開的人行道長了出來。",
+    "exampleZh": "一朵花一夜間從裂開的人行道長出。",
     "group": "Core 3"
   },
   {
@@ -12798,10 +12798,10 @@ export const sampleWords: WordEntry[] = [
     "word": "lord",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/lɒ:d/",
-    "meaningZh": "上帝",
-    "supplementalMeaningZh": "貴族；領主；君主",
+    "meaningZh": "統治者",
+    "supplementalMeaningZh": "上帝；貴族",
     "example": "The villagers once called the landowner their lord.",
-    "exampleZh": "村民曾稱地主為他們的領主。",
+    "exampleZh": "村民曾稱地主為他們的統治者。",
     "group": "Core 3"
   },
   {
@@ -12809,10 +12809,10 @@ export const sampleWords: WordEntry[] = [
     "word": "hurt",
     "partOfSpeech": "n / v",
     "pronunciation": "/hә:t/",
-    "meaningZh": "受傷",
-    "supplementalMeaningZh": "傷害；使傷心；疼痛",
+    "meaningZh": "痛",
+    "supplementalMeaningZh": "傷害；使傷心",
     "example": "My wrist began to hurt after carrying groceries upstairs.",
-    "exampleZh": "提雜貨上樓後，我的手腕開始疼痛。",
+    "exampleZh": "提雜貨上樓後我的手腕開始痛。",
     "group": "Core 3"
   },
   {
@@ -12831,8 +12831,8 @@ export const sampleWords: WordEntry[] = [
     "word": "average",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'ævәridʒ/",
-    "meaningZh": "平均數",
-    "supplementalMeaningZh": "平均的；普通的；求平均",
+    "meaningZh": "平均的",
+    "supplementalMeaningZh": "平均數；普通的",
     "example": "The average rent here rose after the bridge opened.",
     "exampleZh": "大橋開通後，這裡的平均租金上漲了。",
     "group": "Core 3"
@@ -12843,9 +12843,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'prәugres/",
     "meaningZh": "進步",
-    "supplementalMeaningZh": "進展；前進",
+    "supplementalMeaningZh": "前進",
     "example": "Her walking progress surprised the therapist this month.",
-    "exampleZh": "這個月，她走路方面的進步讓治療師十分驚訝。",
+    "exampleZh": "這個月，她走路能力的進步讓治療師十分驚訝。",
     "group": "Core 3"
   },
   {
@@ -12897,10 +12897,10 @@ export const sampleWords: WordEntry[] = [
     "word": "screen",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/skri:n/",
-    "meaningZh": "螢幕",
-    "supplementalMeaningZh": "銀幕；篩選；遮蔽",
+    "meaningZh": "銀幕",
+    "supplementalMeaningZh": "螢幕；篩選；遮蔽",
     "example": "The outdoor screen showed cartoons beside the temple tonight.",
-    "exampleZh": "今晚戶外螢幕在廟旁播放卡通。",
+    "exampleZh": "今晚戶外銀幕在廟旁播放卡通。",
     "group": "Core 3"
   },
   {
@@ -12919,10 +12919,10 @@ export const sampleWords: WordEntry[] = [
     "word": "spot",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/spɒt/",
-    "meaningZh": "斑點",
-    "supplementalMeaningZh": "地點；認出；汙漬",
-    "example": "There was a small spot on my white shirt after lunch.",
-    "exampleZh": "午餐後，我的白襯衫上有一個小汙點。",
+    "meaningZh": "地點",
+    "supplementalMeaningZh": "斑點；認出；少許",
+    "example": "This quiet spot overlooks the whole fishing port below.",
+    "exampleZh": "從這個安靜的地方，可以俯瞰整座漁港。",
     "group": "Core 3"
   },
   {
@@ -13019,9 +13019,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/brɒ:d/",
     "meaningZh": "寬廣的",
-    "supplementalMeaningZh": "大大的；概略的",
-    "example": "A broad smile crossed her face after the call.",
-    "exampleZh": "接完電話後她露出大大的笑容。",
+    "supplementalMeaningZh": "廣泛的；概略的",
+    "example": "A broad river runs through the middle of our city.",
+    "exampleZh": "一條寬闊的河流穿過我們城市的中心。",
     "group": "Core 3"
   },
   {
@@ -13041,7 +13041,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'kwaiәt/",
     "meaningZh": "安靜的",
-    "supplementalMeaningZh": "寧靜；使安靜",
+    "supplementalMeaningZh": "使安靜",
     "example": "The library garden stays quiet even on weekends now.",
     "exampleZh": "圖書館花園如今即使週末也很安靜。",
     "group": "Core 3"
@@ -13084,10 +13084,10 @@ export const sampleWords: WordEntry[] = [
     "word": "block",
     "partOfSpeech": "n / vt",
     "pronunciation": "/blɒk/",
-    "meaningZh": "街區",
-    "supplementalMeaningZh": "堵住；方塊；封鎖",
+    "meaningZh": "堵住",
+    "supplementalMeaningZh": "街區；方塊；封鎖",
     "example": "Fallen branches block the shortcut behind the school today.",
-    "exampleZh": "今天倒下的樹枝擋住了學校後方的捷徑。",
+    "exampleZh": "今天倒下的樹枝堵住了學校後方的捷徑。",
     "group": "Core 3"
   },
   {
@@ -13117,10 +13117,10 @@ export const sampleWords: WordEntry[] = [
     "word": "youth",
     "partOfSpeech": "n",
     "pronunciation": "/ju:θ/",
-    "meaningZh": "青春",
-    "supplementalMeaningZh": "青年；年輕人",
+    "meaningZh": "年輕",
+    "supplementalMeaningZh": "青年",
     "example": "Youth gave him courage to cross the ocean alone.",
-    "exampleZh": "青春賦予他獨自橫渡大海的勇氣。",
+    "exampleZh": "正因為年輕，他才有勇氣獨自橫渡大海。",
     "group": "Core 3"
   },
   {
@@ -13183,10 +13183,10 @@ export const sampleWords: WordEntry[] = [
     "word": "spread",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/spred/",
-    "meaningZh": "傳播",
-    "supplementalMeaningZh": "塗抹；展開；蔓延",
+    "meaningZh": "傳開",
+    "supplementalMeaningZh": "塗抹；展開",
     "example": "The flu spread quickly through the crowded dormitory overnight.",
-    "exampleZh": "流感一夜之間在擁擠的宿舍裡傳開。",
+    "exampleZh": "流感一夜間在擁擠宿舍裡傳開。",
     "group": "Core 3"
   },
   {
@@ -13216,8 +13216,8 @@ export const sampleWords: WordEntry[] = [
     "word": "roll",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/rәul/",
-    "meaningZh": "滾動",
-    "supplementalMeaningZh": "紙卷；名單；麵包卷",
+    "meaningZh": "紙卷",
+    "supplementalMeaningZh": "滾動；名單；麵包卷",
     "example": "The paper roll fell from the shelf during cleaning.",
     "exampleZh": "打掃時紙卷從架上掉下來。",
     "group": "Core 3"
@@ -13283,7 +13283,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/trʌst/",
     "meaningZh": "信任",
-    "supplementalMeaningZh": "信心；託管",
+    "supplementalMeaningZh": "信心",
     "example": "Children quickly trust the librarian who remembers their names.",
     "exampleZh": "孩子很快信任記得他們名字的圖書館員。",
     "group": "Core 3"
@@ -13293,10 +13293,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sight",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/sait/",
-    "meaningZh": "視力",
-    "supplementalMeaningZh": "景象；視野；看見",
+    "meaningZh": "看見",
+    "supplementalMeaningZh": "景象；視力；視野",
     "example": "The first sight of snow made Grandpa silent today.",
-    "exampleZh": "爺爺今天第一次看見雪，感動得一時說不出話。",
+    "exampleZh": "第一次看見雪，讓爺爺今天一時說不出話來。",
     "group": "Core 3"
   },
   {
@@ -13326,8 +13326,8 @@ export const sampleWords: WordEntry[] = [
     "word": "ride",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/raid/",
-    "meaningZh": "乘坐",
-    "supplementalMeaningZh": "騎；旅程",
+    "meaningZh": "旅程",
+    "supplementalMeaningZh": "乘坐；騎",
     "example": "The ferry ride across the bay felt peaceful today.",
     "exampleZh": "今天搭渡輪橫越海灣，感覺十分平靜。",
     "group": "Core 3"
@@ -13362,7 +13362,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "波浪",
     "supplementalMeaningZh": "揮手；波動",
     "example": "A sudden wave soaked our shoes on the pier.",
-    "exampleZh": "突來的一個浪打濕了我們在碼頭上的鞋子。",
+    "exampleZh": "一道突如其來的浪打濕了我們在碼頭上的鞋子。",
     "group": "Core 3"
   },
   {
@@ -13436,8 +13436,8 @@ export const sampleWords: WordEntry[] = [
     "word": "victory",
     "partOfSpeech": "n",
     "pronunciation": "/'viktәri/",
-    "meaningZh": "勝利",
-    "supplementalMeaningZh": "成功；戰勝",
+    "meaningZh": "獲勝",
+    "supplementalMeaningZh": "克服",
     "example": "Her victory in the marathon surprised the town yesterday.",
     "exampleZh": "她昨天贏得馬拉松冠軍，讓全鎮居民都很驚訝。",
     "group": "Core 3"
@@ -13450,7 +13450,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "奇怪的",
     "supplementalMeaningZh": "陌生的",
     "example": "A strange smell drifted from the old elevator upstairs.",
-    "exampleZh": "一股奇怪的氣味從樓上的舊電梯飄了出來。",
+    "exampleZh": "奇怪氣味從樓上老電梯飄出。",
     "group": "Core 3"
   },
   {
@@ -13469,10 +13469,10 @@ export const sampleWords: WordEntry[] = [
     "word": "session",
     "partOfSpeech": "n",
     "pronunciation": "/'seʃәn/",
-    "meaningZh": "一段時間",
-    "supplementalMeaningZh": "會議；學期；開庭",
+    "meaningZh": "活動",
+    "supplementalMeaningZh": "會議；一段時間；學期",
     "example": "The photography session ended when rain struck the tin roof.",
-    "exampleZh": "雨點打上鐵皮屋頂時，攝影時段便結束了。",
+    "exampleZh": "雨點打上鐵皮屋頂時，攝影活動便結束了。",
     "group": "Core 3"
   },
   {
@@ -13481,9 +13481,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/i'senʃәl/",
     "meaningZh": "必要的",
-    "supplementalMeaningZh": "要素；必需品",
+    "supplementalMeaningZh": "要素；本質的",
     "example": "Clean hands are essential before preparing baby formula safely.",
-    "exampleZh": "安全沖泡嬰兒配方奶粉前，雙手清潔是必要的。",
+    "exampleZh": "安全泡嬰兒奶粉前雙手清潔很重要。",
     "group": "Core 3"
   },
   {
@@ -13535,10 +13535,10 @@ export const sampleWords: WordEntry[] = [
     "word": "copy",
     "partOfSpeech": "n / v",
     "pronunciation": "/'kɒpi/",
-    "meaningZh": "複製",
-    "supplementalMeaningZh": "抄寫；影印；副本",
+    "meaningZh": "抄下",
+    "supplementalMeaningZh": "複製；副本；一本",
     "example": "Please copy the recipe before returning the notebook tomorrow.",
-    "exampleZh": "明天還筆記本之前，請先抄下這份食譜。",
+    "exampleZh": "明天還筆記本前請抄下食譜。",
     "group": "Core 3"
   },
   {
@@ -13557,8 +13557,8 @@ export const sampleWords: WordEntry[] = [
     "word": "gather",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'gæðә/",
-    "meaningZh": "聚集",
-    "supplementalMeaningZh": "採集；推測",
+    "meaningZh": "採集",
+    "supplementalMeaningZh": "聚集；推測",
     "example": "Villagers gather seaweed after the morning tide every spring.",
     "exampleZh": "村民每年春天早潮後採集海草。",
     "group": "Core 3"
@@ -13569,7 +13569,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/dʒʌmp/",
     "meaningZh": "跳",
-    "supplementalMeaningZh": "驟升",
+    "supplementalMeaningZh": "暴漲",
     "example": "The cat can jump from the fridge to the shelf.",
     "exampleZh": "那隻貓能從冰箱跳到架子上。",
     "group": "Core 3"
@@ -13590,10 +13590,10 @@ export const sampleWords: WordEntry[] = [
     "word": "writing",
     "partOfSpeech": "n",
     "pronunciation": "/'raitiŋ/",
-    "meaningZh": "寫作",
-    "supplementalMeaningZh": "文字；筆跡；作品",
+    "meaningZh": "文字",
+    "supplementalMeaningZh": "寫作；筆跡；作品",
     "example": "Her writing appears on postcards sold at the station.",
-    "exampleZh": "她的作品出現在車站販售的明信片上。",
+    "exampleZh": "她的文字出現在車站販售的明信片上。",
     "group": "Core 3"
   },
   {
@@ -13668,7 +13668,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/teip/",
     "meaningZh": "膠帶",
-    "supplementalMeaningZh": "錄音帶；錄影帶；捲尺",
+    "supplementalMeaningZh": "錄音帶；錄音；捲尺",
     "example": "She sealed the lantern frame with red tape carefully.",
     "exampleZh": "她小心地用紅膠帶封好燈籠骨架。",
     "group": "Core 3"
@@ -13689,8 +13689,8 @@ export const sampleWords: WordEntry[] = [
     "word": "master",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'mɑ:stә. 'mæstә/",
-    "meaningZh": "主人",
-    "supplementalMeaningZh": "大師；碩士；精通",
+    "meaningZh": "精通",
+    "supplementalMeaningZh": "大師；主人；碩士",
     "example": "The chef hopes to master hand-pulled noodles someday.",
     "exampleZh": "廚師希望有一天能精通手工拉麵技術。",
     "group": "Core 3"
@@ -13723,7 +13723,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/dju:/",
     "meaningZh": "到期的",
-    "supplementalMeaningZh": "應得的；預定的",
+    "supplementalMeaningZh": "應得的；應付的",
     "example": "The borrowed library book is due by Friday evening.",
     "exampleZh": "借來的圖書館書星期五傍晚前要還。",
     "group": "Core 3"
@@ -13766,10 +13766,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sentence",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'sentәns/",
-    "meaningZh": "句子",
-    "supplementalMeaningZh": "宣判；刑期",
-    "example": "Please read the first sentence of the story aloud.",
-    "exampleZh": "請大聲朗讀這個故事的第一句。",
+    "meaningZh": "宣判",
+    "supplementalMeaningZh": "句子；刑期",
+    "example": "The judge will sentence the burglar after lunch today.",
+    "exampleZh": "法官將在今天午餐後對竊賊宣判。",
     "group": "Core 3"
   },
   {
@@ -13799,10 +13799,10 @@ export const sampleWords: WordEntry[] = [
     "word": "separate",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'sepәreit/",
-    "meaningZh": "分開",
-    "supplementalMeaningZh": "分離；單獨的；不同的",
-    "example": "Please separate the paper from the plastic before recycling.",
-    "exampleZh": "回收前請把紙類和塑膠分開。",
+    "meaningZh": "不同的",
+    "supplementalMeaningZh": "分開；單獨的",
+    "example": "Keep separate towels for the baby and guests upstairs.",
+    "exampleZh": "樓上要替嬰兒和客人備不同毛巾。",
     "group": "Core 3"
   },
   {
@@ -14008,10 +14008,10 @@ export const sampleWords: WordEntry[] = [
     "word": "telephone",
     "partOfSpeech": "n / v",
     "pronunciation": "/'telifәun/",
-    "meaningZh": "電話",
-    "supplementalMeaningZh": "打電話",
-    "example": "The telephone rang while we were eating dinner last night.",
-    "exampleZh": "昨晚我們吃晚餐時，電話響了。",
+    "meaningZh": "打電話",
+    "supplementalMeaningZh": "電話",
+    "example": "Please telephone Aunt Lin before visiting the farm tomorrow.",
+    "exampleZh": "明天去農場前請先打電話給林阿姨。",
     "group": "Core 3"
   },
   {
@@ -14053,7 +14053,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/lɒ:ntʃ/",
     "meaningZh": "發射",
-    "supplementalMeaningZh": "使下水；推出；開始",
+    "supplementalMeaningZh": "推出；開始；使下水",
     "example": "Scientists will launch the small rocket from the beach tomorrow morning.",
     "exampleZh": "科學家明天早上會在海灘發射這枚小火箭。",
     "group": "Core 3"
@@ -14129,8 +14129,8 @@ export const sampleWords: WordEntry[] = [
     "word": "straight",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/streit/",
-    "meaningZh": "直的",
-    "supplementalMeaningZh": "筆直地；直接地；連續的",
+    "meaningZh": "筆直地",
+    "supplementalMeaningZh": "直的；直接地；連續的",
     "example": "Walk straight past the pharmacy, then turn left immediately.",
     "exampleZh": "直走經過藥局後立刻左轉。",
     "group": "Core 3"
@@ -14140,8 +14140,8 @@ export const sampleWords: WordEntry[] = [
     "word": "clean",
     "partOfSpeech": "a / adv / vt",
     "pronunciation": "/kli:n/",
-    "meaningZh": "乾淨的",
-    "supplementalMeaningZh": "清理；清白的；徹底地",
+    "meaningZh": "清理",
+    "supplementalMeaningZh": "乾淨的；清白的",
     "example": "Please clean the fish before putting it on ice.",
     "exampleZh": "冰鎮前請先清理魚。",
     "group": "Core 3"
@@ -14297,7 +14297,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "吸引",
     "supplementalMeaningZh": "",
     "example": "Night blossoms attract moths to the garden wall.",
-    "exampleZh": "夜間開花的植物會把蛾吸引到花園牆邊。",
+    "exampleZh": "夜間開花植物吸引蛾停在花園牆上。",
     "group": "Core 3"
   },
   {
@@ -14307,7 +14307,7 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/plʌs/",
     "meaningZh": "加",
     "supplementalMeaningZh": "優點；正號",
-    "example": "Two bowls of noodles plus tea cost two hundred dollars.",
+    "example": "Two bowls of noodles plus tea cost two hundred.",
     "exampleZh": "兩碗麵加茶要兩百元。",
     "group": "Core 3"
   },
@@ -14382,8 +14382,8 @@ export const sampleWords: WordEntry[] = [
     "word": "arrange",
     "partOfSpeech": "v",
     "pronunciation": "/ә'reindʒ/",
-    "meaningZh": "安排",
-    "supplementalMeaningZh": "排列；整理",
+    "meaningZh": "排列",
+    "supplementalMeaningZh": "安排；整理",
     "example": "She will arrange flowers for the wedding arch tomorrow.",
     "exampleZh": "她明天會為婚禮拱門插花。",
     "group": "Core 3"
@@ -14404,8 +14404,8 @@ export const sampleWords: WordEntry[] = [
     "word": "slow",
     "partOfSpeech": "a / adv / v",
     "pronunciation": "/slәu/",
-    "meaningZh": "慢的",
-    "supplementalMeaningZh": "變慢；遲鈍的",
+    "meaningZh": "變慢",
+    "supplementalMeaningZh": "慢的；遲鈍的",
     "example": "Traffic became slow near the flooded underpass after noon.",
     "exampleZh": "中午後淹水地下道附近車流變慢。",
     "group": "Core 3"
@@ -14416,7 +14416,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/.repri'zentәtiv/",
     "meaningZh": "代表",
-    "supplementalMeaningZh": "眾議員；典型的",
+    "supplementalMeaningZh": "眾議員；典型",
     "example": "Our representative visited farmers after the irrigation failure yesterday.",
     "exampleZh": "我們的代表昨天在灌溉故障後拜訪農民。",
     "group": "Core 3"
@@ -14503,8 +14503,8 @@ export const sampleWords: WordEntry[] = [
     "word": "excellent",
     "partOfSpeech": "a",
     "pronunciation": "/'ekslәnt/",
-    "meaningZh": "優秀的",
-    "supplementalMeaningZh": "傑出的；極好的",
+    "meaningZh": "非常好",
+    "supplementalMeaningZh": "傑出的；優秀的",
     "example": "The dumplings were excellent despite the tiny shop.",
     "exampleZh": "雖然店面很小，水餃卻非常好吃。",
     "group": "Core 3"
@@ -14515,9 +14515,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/'prɒpә/",
     "meaningZh": "適當的",
-    "supplementalMeaningZh": "合宜的；正式的",
+    "supplementalMeaningZh": "合宜的；真正的",
     "example": "Wear proper shoes for the slippery stone steps.",
-    "exampleZh": "濕滑石階要穿適當的鞋子。",
+    "exampleZh": "濕滑石階要穿適當鞋子。",
     "group": "Core 3"
   },
   {
@@ -14592,7 +14592,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/mail/",
     "meaningZh": "英里",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "很遠",
     "example": "The nearest clinic is one mile from here.",
     "exampleZh": "離這裡最近的診所約一英里遠。",
     "group": "Core 3"
@@ -14624,8 +14624,8 @@ export const sampleWords: WordEntry[] = [
     "word": "entry",
     "partOfSpeech": "n",
     "pronunciation": "/'entri/",
-    "meaningZh": "進入",
-    "supplementalMeaningZh": "入口；登記；項目",
+    "meaningZh": "入口",
+    "supplementalMeaningZh": "進入；登記；項目",
     "example": "The rear entry stayed locked after the concert.",
     "exampleZh": "演唱會後後方入口一直上鎖。",
     "group": "Core 3"
@@ -14680,7 +14680,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/mai'nɒriti/",
     "meaningZh": "少數人",
-    "supplementalMeaningZh": "少數族群；少數派",
+    "supplementalMeaningZh": "少數族群；未成年",
     "example": "A small minority opposed closing the coastal road.",
     "exampleZh": "少數人反對關閉海岸道路。",
     "group": "Core 3"
@@ -14779,9 +14779,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'θiŋkiŋ/",
     "meaningZh": "思考",
-    "supplementalMeaningZh": "想法；思維方式",
+    "supplementalMeaningZh": "想法；有理性的",
     "example": "Clear thinking helped her escape the room filled with smoke.",
-    "exampleZh": "冷靜的思考幫助她逃出充滿濃煙的房間。",
+    "exampleZh": "清晰的思考幫助她逃出充滿濃煙的房間。",
     "group": "Core 3"
   },
   {
@@ -14801,9 +14801,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'li:diŋ/",
     "meaningZh": "領頭的",
-    "supplementalMeaningZh": "主要的；領先的",
+    "supplementalMeaningZh": "主要的；領導",
     "example": "The leading dancer stood at the front of the line.",
-    "exampleZh": "領頭的舞者站在隊伍最前方。",
+    "exampleZh": "領頭舞者站在隊伍最前方。",
     "group": "Core 3"
   },
   {
@@ -14823,7 +14823,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / adv",
     "pronunciation": "/'mi:nhwail/",
     "meaningZh": "同時",
-    "supplementalMeaningZh": "在此期間",
+    "supplementalMeaningZh": "其間",
     "example": "The soup simmered; meanwhile, rain filled the gutters.",
     "exampleZh": "湯慢慢煨著，同時雨水灌滿水溝。",
     "group": "Core 3"
@@ -14889,9 +14889,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'nærәu/",
     "meaningZh": "狹窄的",
-    "supplementalMeaningZh": "縮小；勉強的",
+    "supplementalMeaningZh": "變窄；有限的",
     "example": "A narrow lane led to the hidden teahouse.",
-    "exampleZh": "一條狹窄的巷子通往隱密的茶館。",
+    "exampleZh": "一條狹窄巷子通往隱密的茶館。",
     "group": "Core 3"
   },
   {
@@ -14910,10 +14910,10 @@ export const sampleWords: WordEntry[] = [
     "word": "succeed",
     "partOfSpeech": "vi / vt",
     "pronunciation": "/sәk'si:d/",
-    "meaningZh": "成功",
-    "supplementalMeaningZh": "接替；繼承",
-    "example": "She worked hard to succeed in her English exam.",
-    "exampleZh": "她努力讀書，希望英文考試能成功。",
+    "meaningZh": "接替",
+    "supplementalMeaningZh": "成功；繼承",
+    "example": "She hopes to succeed her father as temple keeper.",
+    "exampleZh": "她希望接替父親成為廟宇管理人。",
     "group": "Core 3"
   },
   {
@@ -14921,10 +14921,10 @@ export const sampleWords: WordEntry[] = [
     "word": "impose",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/im'pәuz/",
-    "meaningZh": "強加",
-    "supplementalMeaningZh": "處以；徵收",
+    "meaningZh": "處以",
+    "supplementalMeaningZh": "強加；徵收",
     "example": "Officials may impose fines for dumping trash here.",
-    "exampleZh": "官員可能對在此亂倒垃圾的人處以罰款。",
+    "exampleZh": "官員可能對在此亂倒垃圾開罰。",
     "group": "Core 3"
   },
   {
@@ -15001,7 +15001,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "櫥櫃",
     "supplementalMeaningZh": "內閣",
     "example": "Medicine belongs in the locked bathroom cabinet upstairs.",
-    "exampleZh": "藥品應該放在樓上那個上鎖的浴室櫥櫃裡。",
+    "exampleZh": "藥品應該放在樓上浴室上鎖的櫥櫃裡。",
     "group": "Core 3"
   },
   {
@@ -15023,7 +15023,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "跳舞",
     "supplementalMeaningZh": "舞蹈；舞會",
     "example": "Villagers dance around the fire after harvest each year.",
-    "exampleZh": "村民每年收成後都會圍著火堆跳舞。",
+    "exampleZh": "村民每年收成後圍著火跳舞。",
     "group": "Core 3"
   },
   {
@@ -15031,8 +15031,8 @@ export const sampleWords: WordEntry[] = [
     "word": "mix",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/miks/",
-    "meaningZh": "混合",
-    "supplementalMeaningZh": "拌勻；混亂",
+    "meaningZh": "拌勻",
+    "supplementalMeaningZh": "混合；混亂",
     "example": "Mix sesame paste with warm water before adding noodles.",
     "exampleZh": "加麵前先把芝麻醬和溫水拌勻。",
     "group": "Core 3"
@@ -15053,8 +15053,8 @@ export const sampleWords: WordEntry[] = [
     "word": "double",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'dʌbl/",
-    "meaningZh": "兩倍的",
-    "supplementalMeaningZh": "雙重的；加倍；替身",
+    "meaningZh": "雙重的",
+    "supplementalMeaningZh": "兩倍；加倍；替身",
     "example": "A double rainbow appeared above the fishing port.",
     "exampleZh": "一道雙彩虹出現在漁港上空。",
     "group": "Core 3"
@@ -15064,8 +15064,8 @@ export const sampleWords: WordEntry[] = [
     "word": "flat",
     "partOfSpeech": "a / adv / n",
     "pronunciation": "/flæt/",
-    "meaningZh": "平坦的",
-    "supplementalMeaningZh": "沒氣的；公寓",
+    "meaningZh": "沒氣的",
+    "supplementalMeaningZh": "平坦的；公寓",
     "example": "The tire went flat beside the rice field.",
     "exampleZh": "輪胎在稻田旁沒氣了。",
     "group": "Core 3"
@@ -15086,10 +15086,10 @@ export const sampleWords: WordEntry[] = [
     "word": "mass",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/mæs/",
-    "meaningZh": "大量",
-    "supplementalMeaningZh": "一大片；群眾；質量",
+    "meaningZh": "一大片",
+    "supplementalMeaningZh": "大量；群眾；質量",
     "example": "A mass of clouds hid the moon completely.",
-    "exampleZh": "一大片雲完全遮住了月亮。",
+    "exampleZh": "一大片雲完全遮住月亮。",
     "group": "Core 3"
   },
   {
@@ -15108,8 +15108,8 @@ export const sampleWords: WordEntry[] = [
     "word": "transfer",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/træns'fә:/",
-    "meaningZh": "轉移",
-    "supplementalMeaningZh": "轉帳；轉乘；調職",
+    "meaningZh": "轉帳",
+    "supplementalMeaningZh": "轉移；轉乘；調職",
     "example": "She will transfer money to her younger brother tonight.",
     "exampleZh": "她今晚會轉帳給弟弟。",
     "group": "Core 3"
@@ -15119,10 +15119,10 @@ export const sampleWords: WordEntry[] = [
     "word": "organize",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'ɒ:gәnaiz/",
-    "meaningZh": "組織",
-    "supplementalMeaningZh": "舉辦；整理",
+    "meaningZh": "舉辦",
+    "supplementalMeaningZh": "組織；整理",
     "example": "Volunteers organize beach cleanups after every storm season.",
-    "exampleZh": "志工每個風暴季後都會舉辦淨灘活動。",
+    "exampleZh": "志工每個風暴季後舉辦淨灘。",
     "group": "Core 3"
   },
   {
@@ -15141,8 +15141,8 @@ export const sampleWords: WordEntry[] = [
     "word": "terrible",
     "partOfSpeech": "a",
     "pronunciation": "/'terәbl/",
-    "meaningZh": "可怕的",
-    "supplementalMeaningZh": "很糟的；極壞的",
+    "meaningZh": "很糟的",
+    "supplementalMeaningZh": "可怕的；極壞的",
     "example": "A terrible smell came from the spoiled milk carton.",
     "exampleZh": "壞掉的牛奶紙盒傳出很難聞的氣味。",
     "group": "Core 3"
@@ -15152,8 +15152,8 @@ export const sampleWords: WordEntry[] = [
     "word": "fat",
     "partOfSpeech": "n / a",
     "pronunciation": "/fæt/",
-    "meaningZh": "胖的",
-    "supplementalMeaningZh": "油脂；肥肉",
+    "meaningZh": "油脂",
+    "supplementalMeaningZh": "肥肉；胖的",
     "example": "Duck fat made the fried rice smell wonderful.",
     "exampleZh": "鴨油讓炒飯香氣十足。",
     "group": "Core 3"
@@ -15219,9 +15219,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'prɒspekt/",
     "meaningZh": "前景",
-    "supplementalMeaningZh": "景色；可能性；勘探",
-    "example": "The prospect of studying abroad made her both excited and nervous.",
-    "exampleZh": "出國留學的前景讓她既興奮又緊張。",
+    "supplementalMeaningZh": "可能性；景色；勘探",
+    "example": "The prospect of working abroad excites many young engineers in Taiwan.",
+    "exampleZh": "出國工作的前景讓台灣許多年輕工程師感到興奮。",
     "group": "Core 3"
   },
   {
@@ -15262,10 +15262,10 @@ export const sampleWords: WordEntry[] = [
     "word": "weak",
     "partOfSpeech": "a",
     "pronunciation": "/wi:k/",
-    "meaningZh": "虛弱的",
-    "supplementalMeaningZh": "脆弱的；薄弱的",
+    "meaningZh": "脆弱的",
+    "supplementalMeaningZh": "虛弱的；薄弱的",
     "example": "The weak bridge shook under the loaded truck.",
-    "exampleZh": "那座脆弱的橋在滿載的卡車下搖晃。",
+    "exampleZh": "脆弱的橋在滿載卡車下搖晃。",
     "group": "Core 3"
   },
   {
@@ -15284,10 +15284,10 @@ export const sampleWords: WordEntry[] = [
     "word": "secure",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/si'kjuә/",
-    "meaningZh": "安全的",
-    "supplementalMeaningZh": "固定；取得；可靠的",
-    "example": "Please make sure the windows are secure before the storm arrives.",
-    "exampleZh": "暴風雨來臨前，請確認窗戶都已關緊。",
+    "meaningZh": "固定",
+    "supplementalMeaningZh": "安全的；取得；可靠的",
+    "example": "Please secure the windows before the storm arrives.",
+    "exampleZh": "暴風雨來前請固定窗戶。",
     "group": "Core 3"
   },
   {
@@ -15297,8 +15297,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/ʃɑ:p/",
     "meaningZh": "鋒利的",
     "supplementalMeaningZh": "敏銳的；急劇的；刺耳的",
-    "example": "A sharp knife sliced the papaya cleanly into thin strips.",
-    "exampleZh": "鋒利的刀子俐落地把木瓜切成細條。",
+    "example": "A sharp knife sliced the papaya cleanly into strips.",
+    "exampleZh": "鋒利的刀子俐落地把木瓜切成條。",
     "group": "Core 3"
   },
   {
@@ -15385,8 +15385,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/di'klain/",
     "meaningZh": "減少",
     "supplementalMeaningZh": "衰退；婉拒",
-    "example": "Tourist numbers often decline when ferry prices rise in summer.",
-    "exampleZh": "夏天渡輪票價上漲時，遊客人數常會減少。",
+    "example": "Tourist numbers decline sharply when ferry prices rise in summer.",
+    "exampleZh": "夏天渡輪票價上漲時遊客數會大幅減少。",
     "group": "Core 3"
   },
   {
@@ -15515,10 +15515,10 @@ export const sampleWords: WordEntry[] = [
     "word": "quote",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/kwәut/",
-    "meaningZh": "引用",
-    "supplementalMeaningZh": "報價；引文",
-    "example": "The teacher asked us to quote one line from the poem.",
-    "exampleZh": "老師要我們從這首詩裡引用一行。",
+    "meaningZh": "報價",
+    "supplementalMeaningZh": "引用",
+    "example": "The plumber gave a quote for fixing the leak.",
+    "exampleZh": "水電工提供修漏水的報價。",
     "group": "Core 3"
   },
   {
@@ -15526,10 +15526,10 @@ export const sampleWords: WordEntry[] = [
     "word": "shock",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ʃɒk/",
-    "meaningZh": "震驚",
-    "supplementalMeaningZh": "震動；休克；電擊",
-    "example": "The sad news came as a shock to the whole class.",
-    "exampleZh": "這個壞消息讓全班同學都很震驚。",
+    "meaningZh": "震動",
+    "supplementalMeaningZh": "震驚；休克；電擊",
+    "example": "The sudden shock knocked cups from the shelf.",
+    "exampleZh": "一陣突如其來的震動，把杯子從架上震落。",
     "group": "Core 3"
   },
   {
@@ -15856,10 +15856,10 @@ export const sampleWords: WordEntry[] = [
     "word": "dismiss",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/dis'mis/",
-    "meaningZh": "解散",
-    "supplementalMeaningZh": "開除；駁回；准許離開",
+    "meaningZh": "准予離開",
+    "supplementalMeaningZh": "解散；開除；駁回",
     "example": "The principal will dismiss students early before the typhoon.",
-    "exampleZh": "校長會在颱風前提早讓學生放學。",
+    "exampleZh": "校長會在颱風前提早放學生離校。",
     "group": "Core 3"
   },
   {
@@ -15911,8 +15911,8 @@ export const sampleWords: WordEntry[] = [
     "word": "fellow",
     "partOfSpeech": "n / a",
     "pronunciation": "/'felәu/",
-    "meaningZh": "夥伴",
-    "supplementalMeaningZh": "同伴的；同事的；傢伙",
+    "meaningZh": "同伴的",
+    "supplementalMeaningZh": "同事的；同伴；男人",
     "example": "A fellow passenger shared oranges during the delay.",
     "exampleZh": "一位同車旅客在延誤時分享柳丁。",
     "group": "Core 3"
@@ -15933,10 +15933,10 @@ export const sampleWords: WordEntry[] = [
     "word": "august",
     "partOfSpeech": "n / a",
     "pronunciation": "/ɒ:'gʌst. 'ɒ:gәst/",
-    "meaningZh": "威嚴的",
-    "supplementalMeaningZh": "",
-    "example": "The august professor walked slowly into the quiet hall.",
-    "exampleZh": "那位威嚴的教授慢慢走進安靜的大廳。",
+    "meaningZh": "八月",
+    "supplementalMeaningZh": "威嚴的",
+    "example": "August afternoons drive cats under cars for shade.",
+    "exampleZh": "八月午後酷熱難耐，貓都躲到車底下乘涼。",
     "group": "Core 3"
   },
   {
@@ -15947,7 +15947,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "星期六",
     "supplementalMeaningZh": "",
     "example": "Saturday vendors arrive before sunrise at the harbor market.",
-    "exampleZh": "星期六港邊市場的攤販日出前就到了。",
+    "exampleZh": "星期六港邊市場攤販日出前就到。",
     "group": "Core 3"
   },
   {
@@ -16021,8 +16021,8 @@ export const sampleWords: WordEntry[] = [
     "word": "split",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/split/",
-    "meaningZh": "分裂",
-    "supplementalMeaningZh": "裂縫；分開；劈開",
+    "meaningZh": "裂縫",
+    "supplementalMeaningZh": "分裂；分開；劈開",
     "example": "A deep split opened in the wooden door.",
     "exampleZh": "木門出現一道深裂縫。",
     "group": "Core 3"
@@ -16044,7 +16044,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'steibl/",
     "meaningZh": "穩定的",
-    "supplementalMeaningZh": "馬廄；穩固的",
+    "supplementalMeaningZh": "穩固的；馬廄",
     "example": "The old ladder feels stable on the stone floor.",
     "exampleZh": "舊梯子放在石地上很穩。",
     "group": "Core 3"
@@ -16298,8 +16298,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'mʌndi/",
     "meaningZh": "星期一",
     "supplementalMeaningZh": "",
-    "example": "Monday is the day I return my library books.",
-    "exampleZh": "星期一是我還圖書館書籍的日子。",
+    "example": "Monday rain delayed garbage collection in our lane.",
+    "exampleZh": "星期一的雨，耽誤了我們巷子的垃圾清運。",
     "group": "Core 3"
   },
   {
@@ -16320,8 +16320,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'wenzdi/",
     "meaningZh": "星期三",
     "supplementalMeaningZh": "",
-    "example": "We have a short English quiz every Wednesday morning.",
-    "exampleZh": "我們每個星期三早上都有一個簡短的英文小考。",
+    "example": "Wednesday markets sell the freshest mountain vegetables after dawn.",
+    "exampleZh": "星期三市場天亮後賣最新鮮山菜。",
     "group": "Core 3"
   },
   {
@@ -16342,8 +16342,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'θә:zdi/",
     "meaningZh": "星期四",
     "supplementalMeaningZh": "",
-    "example": "Our class has a swimming lesson every Thursday afternoon.",
-    "exampleZh": "我們班每個星期四下午有游泳課。",
+    "example": "Thursday flights to Kinmen often leave before dawn.",
+    "exampleZh": "星期四飛金門的班機常在黎明前起飛。",
     "group": "Core 3"
   },
   {
@@ -16353,8 +16353,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'tju:zdi/",
     "meaningZh": "星期二",
     "supplementalMeaningZh": "",
-    "example": "The museum is quiet on Tuesday mornings, so we often go then.",
-    "exampleZh": "博物館星期二早上很安靜，所以我們常在那時去。",
+    "example": "Tuesday is best for visiting the quiet museum.",
+    "exampleZh": "星期二最適合參觀安靜的博物館。",
     "group": "Core 3"
   },
   {
@@ -16376,7 +16376,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "最新的",
     "supplementalMeaningZh": "",
     "example": "The latest phone update improved battery life overnight.",
-    "exampleZh": "手機最新的更新在一夜之間改善了電池續航力。",
+    "exampleZh": "手機安裝最新更新後，電池續航力隔天就改善了。",
     "group": "Core 3"
   },
   {
@@ -16418,9 +16418,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/ɑ:md/",
     "meaningZh": "武裝的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "配備的",
     "example": "Armed officers guarded the courthouse after the threat.",
-    "exampleZh": "接獲威脅後，武裝警員守衛著法院。",
+    "exampleZh": "接獲威脅後武裝警員守著法院。",
     "group": "Core 3"
   },
   {
@@ -16429,7 +16429,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/pri'pєәd/",
     "meaningZh": "準備好的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "願意的",
     "example": "We were prepared for rain on the ridge.",
     "exampleZh": "我們已準備好應付山脊上的雨。",
     "group": "Core 3"
@@ -16517,7 +16517,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/ri'pʌblikәn/",
     "meaningZh": "共和主義的",
-    "supplementalMeaningZh": "共和主義者；共和國的",
+    "supplementalMeaningZh": "共和黨員；共和國的",
     "example": "The republican movement demanded an elected president after the king fled.",
     "exampleZh": "國王逃走後，共和主義運動要求選出總統。",
     "group": "Core 4"
@@ -16541,7 +16541,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "民主的",
     "supplementalMeaningZh": "",
     "example": "The island council chose a democratic process for sharing fishing rights.",
-    "exampleZh": "島上議會選擇以民主程序來分配捕魚權。",
+    "exampleZh": "島上議會用民主程序分配捕魚權。",
     "group": "Core 4"
   },
   {
@@ -16549,10 +16549,10 @@ export const sampleWords: WordEntry[] = [
     "word": "involved",
     "partOfSpeech": "a",
     "pronunciation": "/in'vɔlvd/",
-    "meaningZh": "牽涉其中的",
-    "supplementalMeaningZh": "複雜的；投入的",
-    "example": "Several students were involved in organizing the school charity sale last week.",
-    "exampleZh": "上週有幾位學生參與籌辦學校的慈善義賣。",
+    "meaningZh": "複雜的",
+    "supplementalMeaningZh": "牽涉其中的",
+    "example": "The repair was too involved for me to finish before dinner.",
+    "exampleZh": "這項維修太複雜，我晚餐前做不完。",
     "group": "Core 4"
   },
   {
@@ -16593,10 +16593,10 @@ export const sampleWords: WordEntry[] = [
     "word": "democrat",
     "partOfSpeech": "n",
     "pronunciation": "/'demәkræt/",
-    "meaningZh": "民主主義者",
-    "supplementalMeaningZh": "民主黨員；民主人士",
+    "meaningZh": "民主人士",
+    "supplementalMeaningZh": "民主黨員；民主主義者",
     "example": "A democrat from Kaohsiung promised cheaper buses for elderly residents.",
-    "exampleZh": "一位來自高雄的民主主義者承諾，會降低長者的公車票價。",
+    "exampleZh": "一位來自高雄的民主派人士承諾，會降低長者的公車票價。",
     "group": "Core 4"
   },
   {
@@ -16747,10 +16747,10 @@ export const sampleWords: WordEntry[] = [
     "word": "resolution",
     "partOfSpeech": "n",
     "pronunciation": "/.rezә'lu:ʃәn/",
-    "meaningZh": "決議",
-    "supplementalMeaningZh": "決心；解析度；解決",
-    "example": "The club passed a resolution to clean the school garden every Friday afternoon.",
-    "exampleZh": "社團通過決議，每週五下午打掃學校花園。",
+    "meaningZh": "解析度",
+    "supplementalMeaningZh": "決議；決心；解決",
+    "example": "The old tablet has poor resolution when displaying mountain photos.",
+    "exampleZh": "那台舊平板顯示山景照片時解析度很差。",
     "group": "Core 4"
   },
   {
@@ -17000,10 +17000,10 @@ export const sampleWords: WordEntry[] = [
     "word": "journal",
     "partOfSpeech": "n",
     "pronunciation": "/'dʒә:nәl/",
-    "meaningZh": "期刊",
-    "supplementalMeaningZh": "日記；日誌",
-    "example": "The student read a science journal article about sea turtles.",
-    "exampleZh": "那位學生讀了一篇關於海龜的科學期刊文章。",
+    "meaningZh": "日記",
+    "supplementalMeaningZh": "期刊",
+    "example": "Mei keeps a travel journal during every cycling trip.",
+    "exampleZh": "小美每次騎車旅行都寫旅行日記。",
     "group": "Core 4"
   },
   {
@@ -17013,8 +17013,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/gei/",
     "meaningZh": "同性戀的",
     "supplementalMeaningZh": "快樂的；鮮豔的",
-    "example": "Their gay friends joined the parade and celebrated together downtown.",
-    "exampleZh": "他們的同性戀朋友加入遊行，一起在市中心慶祝。",
+    "example": "Our school club welcomes all students, whether they are gay or straight.",
+    "exampleZh": "我們學校的社團歡迎所有學生，不論是同性戀或異性戀。",
     "group": "Core 4"
   },
   {
@@ -17045,7 +17045,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kʌrәnsi/",
     "meaningZh": "貨幣",
-    "supplementalMeaningZh": "通用；流行",
+    "supplementalMeaningZh": "流通",
     "example": "I exchanged currency at the airport before boarding the ferry.",
     "exampleZh": "我登上渡輪前在機場兌換貨幣。",
     "group": "Core 4"
@@ -17517,10 +17517,10 @@ export const sampleWords: WordEntry[] = [
     "word": "gone",
     "partOfSpeech": "a",
     "pronunciation": "/gɒn/",
-    "meaningZh": "離開的",
-    "supplementalMeaningZh": "用完的；死去的",
+    "meaningZh": "沒有了",
+    "supplementalMeaningZh": "離開的；死去的",
     "example": "The mangoes were gone before the cousins reached the kitchen.",
-    "exampleZh": "表親們到廚房前，芒果已經被吃光了。",
+    "exampleZh": "表親們到廚房前，芒果已經吃完了。",
     "group": "Core 4"
   },
   {
@@ -17539,8 +17539,8 @@ export const sampleWords: WordEntry[] = [
     "word": "part",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/pɑ:t/",
-    "meaningZh": "部分",
-    "supplementalMeaningZh": "零件；角色；分開",
+    "meaningZh": "零件",
+    "supplementalMeaningZh": "部分；角色；分開",
     "example": "I saved the broken part from the old bicycle bell.",
     "exampleZh": "我留下舊腳踏車鈴壞掉的零件。",
     "group": "Core 4"
@@ -17550,8 +17550,8 @@ export const sampleWords: WordEntry[] = [
     "word": "right",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/rait/",
-    "meaningZh": "正確的",
-    "supplementalMeaningZh": "右邊的；權利；向右",
+    "meaningZh": "向右",
+    "supplementalMeaningZh": "右邊；正確的；權利",
     "example": "Turn right after the temple and follow the river path.",
     "exampleZh": "過了廟後向右轉，沿著河邊走。",
     "group": "Core 4"
@@ -17561,7 +17561,7 @@ export const sampleWords: WordEntry[] = [
     "word": "live",
     "partOfSpeech": "a / vi / vt",
     "pronunciation": "/liv.laiv/",
-    "meaningZh": "居住",
+    "meaningZh": "住",
     "supplementalMeaningZh": "活著；現場的；直播的",
     "example": "They live above the bakery and wake before dawn.",
     "exampleZh": "他們住在麵包店樓上，天亮前就醒來。",
@@ -17572,8 +17572,8 @@ export const sampleWords: WordEntry[] = [
     "word": "set",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/set/",
-    "meaningZh": "一組",
-    "supplementalMeaningZh": "放置；設定；固定的",
+    "meaningZh": "放置",
+    "supplementalMeaningZh": "設定；一組；固定的",
     "example": "Please set the lantern on the stone wall carefully.",
     "exampleZh": "請小心把燈籠放在石牆上。",
     "group": "Core 4"
@@ -17583,8 +17583,8 @@ export const sampleWords: WordEntry[] = [
     "word": "form",
     "partOfSpeech": "n / v",
     "pronunciation": "/fɒ:m/",
-    "meaningZh": "形式",
-    "supplementalMeaningZh": "表格；形成；排成",
+    "meaningZh": "排成",
+    "supplementalMeaningZh": "表格；形式；形成",
     "example": "Please form a line beside the ferry entrance.",
     "exampleZh": "請在渡輪入口旁排成一列。",
     "group": "Core 4"
@@ -17605,10 +17605,10 @@ export const sampleWords: WordEntry[] = [
     "word": "mind",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/maind/",
-    "meaningZh": "心智",
-    "supplementalMeaningZh": "介意；頭腦；注意",
+    "meaningZh": "頭腦",
+    "supplementalMeaningZh": "介意；心思；注意",
     "example": "Her mind stayed calm while the power flickered.",
-    "exampleZh": "電燈閃爍時，她的心情仍很平靜。",
+    "exampleZh": "電燈閃爍時，她的頭腦仍很冷靜。",
     "group": "Core 4"
   },
   {
@@ -17616,8 +17616,8 @@ export const sampleWords: WordEntry[] = [
     "word": "light",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/lait/",
-    "meaningZh": "光線",
-    "supplementalMeaningZh": "燈；輕的；輕微的",
+    "meaningZh": "輕微的",
+    "supplementalMeaningZh": "光；燈；輕的",
     "example": "A light rain cooled the street after sunset.",
     "exampleZh": "日落後一場小雨讓街道變涼。",
     "group": "Core 4"
@@ -17641,7 +17641,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "挑選",
     "supplementalMeaningZh": "採摘",
     "example": "Pick the smaller mangoes if you need them ripe tomorrow.",
-    "exampleZh": "如果明天就要吃熟的，請挑小一點的芒果。",
+    "exampleZh": "如果明天要熟，挑小一點的芒果。",
     "group": "Core 4"
   },
   {
@@ -17682,8 +17682,8 @@ export const sampleWords: WordEntry[] = [
     "word": "fine",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/fain/",
-    "meaningZh": "好的",
-    "supplementalMeaningZh": "細小的；罰款；晴朗的",
+    "meaningZh": "細小的",
+    "supplementalMeaningZh": "好的；罰款；晴朗的",
     "example": "The fine dust made my throat dry on the trail.",
     "exampleZh": "細小塵土讓我在步道上喉嚨發乾。",
     "group": "Core 4"
@@ -17748,8 +17748,8 @@ export const sampleWords: WordEntry[] = [
     "word": "relate",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/ri'leit/",
-    "meaningZh": "與…有關",
-    "supplementalMeaningZh": "講述；使關聯；相處",
+    "meaningZh": "有關",
+    "supplementalMeaningZh": "講述；相處",
     "example": "The receipts relate to repairs after the kitchen flood.",
     "exampleZh": "這些收據和廚房淹水後的修理有關。",
     "group": "Core 4"
@@ -17902,8 +17902,8 @@ export const sampleWords: WordEntry[] = [
     "word": "define",
     "partOfSpeech": "vt",
     "pronunciation": "/di'fain/",
-    "meaningZh": "下定義",
-    "supplementalMeaningZh": "明定；使明確",
+    "meaningZh": "明定",
+    "supplementalMeaningZh": "定義；使明確",
     "example": "The contract should define who pays for broken tiles.",
     "exampleZh": "合約應該明定誰負責破裂磁磚。",
     "group": "Core 4"
@@ -18012,7 +18012,7 @@ export const sampleWords: WordEntry[] = [
     "word": "march",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/mɑ:tʃ/",
-    "meaningZh": "行軍",
+    "meaningZh": "前進",
     "supplementalMeaningZh": "遊行；三月；進行曲",
     "example": "Villagers march behind the drum during the temple parade.",
     "exampleZh": "村民在廟會遊行中跟著鼓聲前進。",
@@ -18045,8 +18045,8 @@ export const sampleWords: WordEntry[] = [
     "word": "understanding",
     "partOfSpeech": "n",
     "pronunciation": "/.ʌndә'stændiŋ/",
-    "meaningZh": "理解",
-    "supplementalMeaningZh": "諒解；默契",
+    "meaningZh": "默契",
+    "supplementalMeaningZh": "理解；諒解",
     "example": "A quiet understanding passed between the sisters at dinner.",
     "exampleZh": "晚餐時，姊妹之間有了安靜的默契。",
     "group": "Core 4"
@@ -18056,8 +18056,8 @@ export const sampleWords: WordEntry[] = [
     "word": "associate",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ә'sәuʃieit/",
-    "meaningZh": "使聯想在一起",
-    "supplementalMeaningZh": "夥伴；交往；結交",
+    "meaningZh": "聯想",
+    "supplementalMeaningZh": "夥伴；交往",
     "example": "Many visitors associate Alishan with sunrise and high mountain tea.",
     "exampleZh": "許多遊客會把阿里山和日出、高山茶聯想在一起。",
     "group": "Core 4"
@@ -18136,7 +18136,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "天空",
     "supplementalMeaningZh": "天色",
     "example": "The sky turned orange above the fishing boats.",
-    "exampleZh": "漁船上空的天空染成了一片橘紅。",
+    "exampleZh": "漁船上空染成了一片橘紅。",
     "group": "Core 4"
   },
   {
@@ -18199,8 +18199,8 @@ export const sampleWords: WordEntry[] = [
     "word": "reference",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'refәrәns/",
-    "meaningZh": "參考",
-    "supplementalMeaningZh": "提及；引用；推薦人",
+    "meaningZh": "提及",
+    "supplementalMeaningZh": "參考；引用；參照",
     "example": "The guidebook includes a reference to the old lighthouse.",
     "exampleZh": "旅遊書有一處提到那座老燈塔。",
     "group": "Core 4"
@@ -18213,7 +18213,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "捐助",
     "supplementalMeaningZh": "投稿；促成",
     "example": "Local cooks contribute soup whenever floods close the road.",
-    "exampleZh": "淹水封路時，當地廚師都會捐出湯品幫忙。",
+    "exampleZh": "淹水封路時，當地廚師都會捐湯幫忙。",
     "group": "Core 4"
   },
   {
@@ -18299,9 +18299,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kɒnsikwәns/",
     "meaningZh": "結果",
-    "supplementalMeaningZh": "重要性；後果",
+    "supplementalMeaningZh": "重要性",
     "example": "One consequence of the drought was smaller dragon fruit.",
-    "exampleZh": "乾旱的一個後果是火龍果變小。",
+    "exampleZh": "乾旱的一個結果是火龍果變小。",
     "group": "Core 4"
   },
   {
@@ -18354,7 +18354,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/iә/",
     "meaningZh": "耳朵",
-    "supplementalMeaningZh": "聽力；穗",
+    "supplementalMeaningZh": "聽覺；穗",
     "example": "My left ear hurt after we passed through the mountain tunnel.",
     "exampleZh": "我們穿過山洞後，我的左耳很痛。",
     "group": "Core 4"
@@ -18529,10 +18529,10 @@ export const sampleWords: WordEntry[] = [
     "word": "connection",
     "partOfSpeech": "n",
     "pronunciation": "/kә'nekʃәn/",
-    "meaningZh": "連接",
-    "supplementalMeaningZh": "關係；連線",
-    "example": "The internet connection at the hotel was too slow for video calls.",
-    "exampleZh": "飯店的網路連線太慢，無法視訊通話。",
+    "meaningZh": "接駁",
+    "supplementalMeaningZh": "關係",
+    "example": "The ferry connection to Green Island stopped during the storm.",
+    "exampleZh": "通往綠島的渡輪接駁在暴風中停駛。",
     "group": "Core 4"
   },
   {
@@ -18595,10 +18595,10 @@ export const sampleWords: WordEntry[] = [
     "word": "lesson",
     "partOfSpeech": "n",
     "pronunciation": "/'lesn/",
-    "meaningZh": "課程",
-    "supplementalMeaningZh": "教訓",
-    "example": "Our English lesson starts at nine on Monday morning.",
-    "exampleZh": "我們星期一早上九點上英文課。",
+    "meaningZh": "教訓",
+    "supplementalMeaningZh": "課程",
+    "example": "The storm taught everyone a lesson about mountain weather.",
+    "exampleZh": "那場暴風給大家上了山區天氣的一課。",
     "group": "Core 4"
   },
   {
@@ -18705,8 +18705,8 @@ export const sampleWords: WordEntry[] = [
     "word": "arrangement",
     "partOfSpeech": "n",
     "pronunciation": "/ә'reindʒmәnt/",
-    "meaningZh": "安排",
-    "supplementalMeaningZh": "協議；佈置",
+    "meaningZh": "擺設",
+    "supplementalMeaningZh": "安排；協議",
     "example": "The flower arrangement brightened the funeral hall entrance.",
     "exampleZh": "那盆花藝擺設點綴了告別式入口。",
     "group": "Core 4"
@@ -18738,8 +18738,8 @@ export const sampleWords: WordEntry[] = [
     "word": "blow",
     "partOfSpeech": "n / v",
     "pronunciation": "/blәu/",
-    "meaningZh": "吹",
-    "supplementalMeaningZh": "一擊；打擊；吹響",
+    "meaningZh": "一擊",
+    "supplementalMeaningZh": "吹；吹響",
     "example": "A sudden blow knocked the helmet from his hand.",
     "exampleZh": "突來一擊把安全帽從他手中打落。",
     "group": "Core 4"
@@ -18815,8 +18815,8 @@ export const sampleWords: WordEntry[] = [
     "word": "internal",
     "partOfSpeech": "a",
     "pronunciation": "/in'tә:nәl/",
-    "meaningZh": "內部的",
-    "supplementalMeaningZh": "體內的；國內的",
+    "meaningZh": "體內的",
+    "supplementalMeaningZh": "內部的；國內的",
     "example": "Internal bleeding made the doctor order another scan.",
     "exampleZh": "發現內出血後，醫師要求再做一次掃描。",
     "group": "Core 4"
@@ -18826,8 +18826,8 @@ export const sampleWords: WordEntry[] = [
     "word": "medium",
     "partOfSpeech": "n / a",
     "pronunciation": "/'mi:diәm/",
-    "meaningZh": "中等的",
-    "supplementalMeaningZh": "五分熟的；媒介；媒體",
+    "meaningZh": "五分熟的",
+    "supplementalMeaningZh": "中等的；媒介；媒體",
     "example": "The steak arrived medium, just as my brother requested.",
     "exampleZh": "牛排送上桌時是五分熟，正合我哥哥的要求。",
     "group": "Core 4"
@@ -18837,8 +18837,8 @@ export const sampleWords: WordEntry[] = [
     "word": "moral",
     "partOfSpeech": "n / a",
     "pronunciation": "/'mɒrәl/",
-    "meaningZh": "道德的",
-    "supplementalMeaningZh": "寓意；品行；士氣",
+    "meaningZh": "寓意",
+    "supplementalMeaningZh": "道德的；品行",
     "example": "The story has a moral about sharing water fairly.",
     "exampleZh": "這個故事有公平分享水源的寓意。",
     "group": "Core 4"
@@ -18981,7 +18981,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'ti:tʃiŋ/",
     "meaningZh": "教學",
-    "supplementalMeaningZh": "教導；教義",
+    "supplementalMeaningZh": "學說",
     "example": "Her teaching uses cooking to explain fractions to children.",
     "exampleZh": "她的教學用料理向孩子說明分數。",
     "group": "Core 4"
@@ -19123,10 +19123,10 @@ export const sampleWords: WordEntry[] = [
     "word": "instrument",
     "partOfSpeech": "n",
     "pronunciation": "/'instrumәnt/",
-    "meaningZh": "樂器",
-    "supplementalMeaningZh": "器械；工具",
-    "example": "My sister plays an instrument in the school orchestra every Friday.",
-    "exampleZh": "我姊姊每週五都在學校管弦樂團演奏一種樂器。",
+    "meaningZh": "器械",
+    "supplementalMeaningZh": "樂器；手段",
+    "example": "The doctor cleaned each instrument before the small operation.",
+    "exampleZh": "小手術前，醫師清潔每件器械。",
     "group": "Core 4"
   },
   {
@@ -19167,10 +19167,10 @@ export const sampleWords: WordEntry[] = [
     "word": "negative",
     "partOfSpeech": "n / a",
     "pronunciation": "/'negәtiv/",
-    "meaningZh": "負面的",
-    "supplementalMeaningZh": "否定的；陰性的；負數",
-    "example": "He tried not to say anything negative about the school trip.",
-    "exampleZh": "他盡量不說任何關於校外教學的負面話。",
+    "meaningZh": "陰性的",
+    "supplementalMeaningZh": "負面的；否定的；負數",
+    "example": "The test result was negative, so he returned to work.",
+    "exampleZh": "檢測結果呈陰性後，他便回去工作了。",
     "group": "Core 4"
   },
   {
@@ -19332,10 +19332,10 @@ export const sampleWords: WordEntry[] = [
     "word": "panel",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'pænl/",
-    "meaningZh": "面板",
-    "supplementalMeaningZh": "討論小組；儀表板；嵌板",
-    "example": "The control panel beside the door shows the water level.",
-    "exampleZh": "門旁的控制面板顯示水位。",
+    "meaningZh": "板",
+    "supplementalMeaningZh": "面板；討論小組；儀表板",
+    "example": "A wooden panel hid the old fuse box.",
+    "exampleZh": "一片木板遮住舊保險絲盒。",
     "group": "Core 4"
   },
   {
@@ -19442,10 +19442,10 @@ export const sampleWords: WordEntry[] = [
     "word": "intelligence",
     "partOfSpeech": "n",
     "pronunciation": "/in'telidʒәns/",
-    "meaningZh": "智力",
-    "supplementalMeaningZh": "情報；聰明才智",
-    "example": "Her intelligence helped her solve the difficult math problem quickly.",
-    "exampleZh": "她的智力讓她很快解開了那道困難的數學題。",
+    "meaningZh": "情報",
+    "supplementalMeaningZh": "智力；資訊",
+    "example": "Border officers used intelligence to stop the smuggling boat.",
+    "exampleZh": "邊境人員靠情報攔下走私船。",
     "group": "Core 4"
   },
   {
@@ -19486,10 +19486,10 @@ export const sampleWords: WordEntry[] = [
     "word": "pupil",
     "partOfSpeech": "n",
     "pronunciation": "/'pju:pl/",
-    "meaningZh": "學生",
-    "supplementalMeaningZh": "瞳孔",
-    "example": "The pupil raised her hand to answer the teacher's question.",
-    "exampleZh": "那位學生舉手回答老師的問題。",
+    "meaningZh": "瞳孔",
+    "supplementalMeaningZh": "學生",
+    "example": "The pupil widened when the doctor shone a light.",
+    "exampleZh": "醫師照光時，瞳孔放大了。",
     "group": "Core 4"
   },
   {
@@ -19497,10 +19497,10 @@ export const sampleWords: WordEntry[] = [
     "word": "fairly",
     "partOfSpeech": "adv",
     "pronunciation": "/'fєәli/",
-    "meaningZh": "相當地",
-    "supplementalMeaningZh": "公平地",
-    "example": "The test was fairly easy, so most students finished early.",
-    "exampleZh": "這次考試相當簡單，所以大多數學生都提早完成。",
+    "meaningZh": "公平地",
+    "supplementalMeaningZh": "相當地",
+    "example": "The judge divided the prize money fairly among the dancers.",
+    "exampleZh": "評審把獎金公平分給舞者。",
     "group": "Core 4"
   },
   {
@@ -19640,8 +19640,8 @@ export const sampleWords: WordEntry[] = [
     "word": "unable",
     "partOfSpeech": "a",
     "pronunciation": "/ʌn'eibl/",
-    "meaningZh": "無法的",
-    "supplementalMeaningZh": "不能的",
+    "meaningZh": "無法",
+    "supplementalMeaningZh": "",
     "example": "Unable to sleep, he counted scooters passing below.",
     "exampleZh": "他睡不著，只好數樓下經過的機車。",
     "group": "Core 4"
@@ -19652,7 +19652,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ә'pɑ:tmәnt/",
     "meaningZh": "公寓",
-    "supplementalMeaningZh": "一套房；住宅",
+    "supplementalMeaningZh": "",
     "example": "Their apartment overlooks the river and the morning market.",
     "exampleZh": "他們的公寓俯瞰河流和早市。",
     "group": "Core 4"
@@ -19706,10 +19706,10 @@ export const sampleWords: WordEntry[] = [
     "word": "motion",
     "partOfSpeech": "n / v",
     "pronunciation": "/'mәuʃәn/",
-    "meaningZh": "動作",
-    "supplementalMeaningZh": "晃動；手勢；提議",
+    "meaningZh": "移動",
+    "supplementalMeaningZh": "動作；手勢；提議",
     "example": "The boat's motion made several tourists feel sick.",
-    "exampleZh": "船身的晃動讓幾位遊客覺得噁心。",
+    "exampleZh": "船身晃動讓幾位遊客覺得噁心。",
     "group": "Core 4"
   },
   {
@@ -19717,7 +19717,7 @@ export const sampleWords: WordEntry[] = [
     "word": "latter",
     "partOfSpeech": "a",
     "pronunciation": "/'lætә/",
-    "meaningZh": "後者的",
+    "meaningZh": "後者",
     "supplementalMeaningZh": "後半的",
     "example": "Of the two routes, the latter avoids the tunnel.",
     "exampleZh": "兩條路線中，後者避開隧道。",
@@ -19729,7 +19729,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/nәuz/",
     "meaningZh": "鼻子",
-    "supplementalMeaningZh": "嗅覺；探問",
+    "supplementalMeaningZh": "嗅覺",
     "example": "His nose turned red in the mountain wind.",
     "exampleZh": "山風吹得他的鼻子變紅。",
     "group": "Core 4"
@@ -19775,7 +19775,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "牙齒",
     "supplementalMeaningZh": "齒狀物",
     "example": "My tooth hurt whenever I drank iced tea.",
-    "exampleZh": "我每次喝冰茶，牙齒就會痛。",
+    "exampleZh": "我每次喝冰茶牙齒就痛。",
     "group": "Core 4"
   },
   {
@@ -19794,10 +19794,10 @@ export const sampleWords: WordEntry[] = [
     "word": "selection",
     "partOfSpeech": "n",
     "pronunciation": "/si'lekʃәn/",
-    "meaningZh": "挑選",
+    "meaningZh": "選擇",
     "supplementalMeaningZh": "精選品；選集",
-    "example": "The bakery's selection of bread was best before seven in the morning.",
-    "exampleZh": "麵包店的麵包種類在早上七點前最齊全。",
+    "example": "The bakery's selection was best before seven in the morning.",
+    "exampleZh": "麵包店早上七點前選擇最多。",
     "group": "Core 4"
   },
   {
@@ -19829,8 +19829,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/.defi'niʃәn/",
     "meaningZh": "定義",
     "supplementalMeaningZh": "解析度；清晰度",
-    "example": "The dictionary gives a clear definition of every difficult word in this lesson.",
-    "exampleZh": "字典為這一課每個困難的單字都提供了清楚的定義。",
+    "example": "Everyone has a different definition of success in life.",
+    "exampleZh": "每個人對人生成功的定義都不一樣。",
     "group": "Core 4"
   },
   {
@@ -19860,10 +19860,10 @@ export const sampleWords: WordEntry[] = [
     "word": "discipline",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'disiplin/",
-    "meaningZh": "紀律",
-    "supplementalMeaningZh": "自律；訓練；懲罰",
+    "meaningZh": "自律",
+    "supplementalMeaningZh": "紀律；訓練；懲罰",
     "example": "Daily discipline helped him practice calligraphy before breakfast.",
-    "exampleZh": "每天的自律讓他在早餐前練習書法。",
+    "exampleZh": "他每天嚴格自律，早餐前都會練習書法。",
     "group": "Core 4"
   },
   {
@@ -19871,10 +19871,10 @@ export const sampleWords: WordEntry[] = [
     "word": "acknowledge",
     "partOfSpeech": "vt",
     "pronunciation": "/әk'nɒlidʒ/",
-    "meaningZh": "承認",
-    "supplementalMeaningZh": "致謝；告知收到",
-    "example": "Please acknowledge the message so we know you received it.",
-    "exampleZh": "請回覆這則訊息，讓我們知道你已收到。",
+    "meaningZh": "致謝",
+    "supplementalMeaningZh": "承認；告知收到",
+    "example": "Please acknowledge the volunteer who found your lost wallet.",
+    "exampleZh": "請向找到你錢包的志工致謝。",
     "group": "Core 4"
   },
   {
@@ -20014,10 +20014,10 @@ export const sampleWords: WordEntry[] = [
     "word": "busy",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/'bizi/",
-    "meaningZh": "忙碌的",
-    "supplementalMeaningZh": "熱鬧的；使忙著",
+    "meaningZh": "熱鬧的",
+    "supplementalMeaningZh": "忙碌的；使忙著",
     "example": "The busy market smelled of basil, fish, and diesel.",
-    "exampleZh": "忙碌熱鬧的市場聞得到九層塔、魚和柴油味。",
+    "exampleZh": "熱鬧的市場聞得到九層塔、魚和柴油味。",
     "group": "Core 4"
   },
   {
@@ -20061,7 +20061,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "生氣的",
     "supplementalMeaningZh": "",
     "example": "The angry customer returned with the cracked phone case.",
-    "exampleZh": "生氣的顧客拿著裂開的手機殼回來了。",
+    "exampleZh": "生氣的顧客拿著裂開手機殼回來。",
     "group": "Core 4"
   },
   {
@@ -20113,10 +20113,10 @@ export const sampleWords: WordEntry[] = [
     "word": "grab",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/græb/",
-    "meaningZh": "抓住",
+    "meaningZh": "抓起",
     "supplementalMeaningZh": "搶走；吸引",
     "example": "Grab your raincoat before the clouds reach us.",
-    "exampleZh": "趁烏雲飄到我們這裡之前，先拿起你的雨衣。",
+    "exampleZh": "烏雲到達前先抓起你的雨衣。",
     "group": "Core 4"
   },
   {
@@ -20160,7 +20160,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "生病的",
     "supplementalMeaningZh": "噁心的；厭倦的",
     "example": "The sick child slept through the temple fireworks.",
-    "exampleZh": "生病的孩子在廟會煙火聲中睡著了。",
+    "exampleZh": "生病的孩子在廟會煙火中睡著。",
     "group": "Core 4"
   },
   {
@@ -20234,10 +20234,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tank",
     "partOfSpeech": "n / vt",
     "pronunciation": "/tæŋk/",
-    "meaningZh": "水箱",
-    "supplementalMeaningZh": "坦克；油箱；儲槽",
+    "meaningZh": "儲槽",
+    "supplementalMeaningZh": "坦克；水箱；油箱",
     "example": "The water tank cracked during the strong earthquake.",
-    "exampleZh": "水箱在強震中裂開了。",
+    "exampleZh": "水塔在強震中裂開。",
     "group": "Core 4"
   },
   {
@@ -20256,10 +20256,10 @@ export const sampleWords: WordEntry[] = [
     "word": "gentleman",
     "partOfSpeech": "n",
     "pronunciation": "/'dʒentlmәn/",
-    "meaningZh": "紳士",
-    "supplementalMeaningZh": "先生；男士",
+    "meaningZh": "先生",
+    "supplementalMeaningZh": "紳士",
     "example": "An elderly gentleman gave his seat to the nurse.",
-    "exampleZh": "一位年長的紳士把座位讓給護理師。",
+    "exampleZh": "一位老先生把座位讓給護理師。",
     "group": "Core 4"
   },
   {
@@ -20399,10 +20399,10 @@ export const sampleWords: WordEntry[] = [
     "word": "initiative",
     "partOfSpeech": "n / a",
     "pronunciation": "/i'niʃiәtiv/",
-    "meaningZh": "主動性",
-    "supplementalMeaningZh": "倡議；主動權",
-    "example": "She showed initiative by organizing the beach cleanup herself.",
-    "exampleZh": "她主動自己籌辦淨灘活動，展現了積極的主動性。",
+    "meaningZh": "倡議",
+    "supplementalMeaningZh": "主動性；主動權",
+    "example": "Her initiative brought solar lights to the fishing village.",
+    "exampleZh": "她的倡議為漁村帶來太陽能燈。",
     "group": "Core 4"
   },
   {
@@ -20410,10 +20410,10 @@ export const sampleWords: WordEntry[] = [
     "word": "surely",
     "partOfSpeech": "adv",
     "pronunciation": "/'ʃuәli/",
-    "meaningZh": "必定",
-    "supplementalMeaningZh": "確實；當然",
+    "meaningZh": "肯定",
+    "supplementalMeaningZh": "",
     "example": "This bridge will surely flood if the rain continues.",
-    "exampleZh": "如果雨不停，這座橋一定會淹水。",
+    "exampleZh": "如果雨不停，這座橋肯定會淹水。",
     "group": "Core 4"
   },
   {
@@ -20707,10 +20707,10 @@ export const sampleWords: WordEntry[] = [
     "word": "substantial",
     "partOfSpeech": "n / a",
     "pronunciation": "/sәb'stænʃәl/",
-    "meaningZh": "大量的",
-    "supplementalMeaningZh": "重要的；結實的；實質的",
-    "example": "A substantial number of students joined the beach cleanup last weekend.",
-    "exampleZh": "上週末有相當多的學生參加了淨灘活動。",
+    "meaningZh": "結實的",
+    "supplementalMeaningZh": "大量的；重要的；實質的",
+    "example": "A substantial stone wall protected the house during the storm.",
+    "exampleZh": "一道結實的石牆在暴風雨中保護了房子。",
     "group": "Core 4"
   },
   {
@@ -20784,10 +20784,10 @@ export const sampleWords: WordEntry[] = [
     "word": "contemporary",
     "partOfSpeech": "n / a",
     "pronunciation": "/kәn'tempәrәri/",
-    "meaningZh": "當代的",
-    "supplementalMeaningZh": "同時代的；同輩",
-    "example": "Contemporary art museums attract many students on weekends.",
-    "exampleZh": "當代藝術館在週末吸引許多學生。",
+    "meaningZh": "同時代的",
+    "supplementalMeaningZh": "當代的；同輩",
+    "example": "Contemporary writers described the flood in very different ways.",
+    "exampleZh": "同時代的作家用截然不同的方式描述那場洪水。",
     "group": "Core 4"
   },
   {
@@ -20839,10 +20839,10 @@ export const sampleWords: WordEntry[] = [
     "word": "recognition",
     "partOfSpeech": "n",
     "pronunciation": "/.rekәg'niʃәn/",
-    "meaningZh": "認出",
-    "supplementalMeaningZh": "表揚；認可；承認",
-    "example": "Facial recognition lets my phone unlock when I look at it.",
-    "exampleZh": "臉部辨識讓我的手機一看就能解鎖。",
+    "meaningZh": "表揚",
+    "supplementalMeaningZh": "認出；認可；承認",
+    "example": "The rescue worker received recognition from the mayor.",
+    "exampleZh": "那名救難員得到市長表揚。",
     "group": "Core 4"
   },
   {
@@ -20894,8 +20894,8 @@ export const sampleWords: WordEntry[] = [
     "word": "breast",
     "partOfSpeech": "n / vt",
     "pronunciation": "/brest/",
-    "meaningZh": "胸部",
-    "supplementalMeaningZh": "乳房",
+    "meaningZh": "乳房",
+    "supplementalMeaningZh": "胸部",
     "example": "The doctor found a lump in her breast.",
     "exampleZh": "醫師在她乳房發現腫塊。",
     "group": "Core 4"
@@ -20974,7 +20974,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "強調",
     "supplementalMeaningZh": "重點",
     "example": "The coach put emphasis on rest after hard practice.",
-    "exampleZh": "教練強調高強度練習後要充分休息。",
+    "exampleZh": "教練強調，高強度練習後一定要休息。",
     "group": "Core 4"
   },
   {
@@ -20982,10 +20982,10 @@ export const sampleWords: WordEntry[] = [
     "word": "signal",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'signl/",
-    "meaningZh": "信號",
+    "meaningZh": "訊號",
     "supplementalMeaningZh": "暗號；示意；標誌",
     "example": "The red signal warned boats to stay outside the harbor.",
-    "exampleZh": "紅色信號警告船隻留在港外。",
+    "exampleZh": "紅色訊號警告船隻留在港外。",
     "group": "Core 4"
   },
   {
@@ -21037,10 +21037,10 @@ export const sampleWords: WordEntry[] = [
     "word": "capture",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'kæptʃә/",
-    "meaningZh": "捕捉",
-    "supplementalMeaningZh": "拍下；奪取；吸引",
+    "meaningZh": "拍下",
+    "supplementalMeaningZh": "捕捉；奪取；吸引",
     "example": "The camera can capture fireflies without using flash.",
-    "exampleZh": "這台相機不用閃光燈也能捕捉螢火蟲的身影。",
+    "exampleZh": "這台相機不用閃光燈也能拍下螢火蟲。",
     "group": "Core 4"
   },
   {
@@ -21103,10 +21103,10 @@ export const sampleWords: WordEntry[] = [
     "word": "foundation",
     "partOfSpeech": "n",
     "pronunciation": "/faun'deiʃәn/",
-    "meaningZh": "基礎",
-    "supplementalMeaningZh": "地基；基金會；創立",
+    "meaningZh": "地基",
+    "supplementalMeaningZh": "基礎；基金會；建立",
     "example": "The foundation of the house cracked after repeated flooding.",
-    "exampleZh": "房子的地基在多次淹水後裂開了。",
+    "exampleZh": "房子地基在多次淹水後裂開。",
     "group": "Core 4"
   },
   {
@@ -21381,7 +21381,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "有能力的",
     "supplementalMeaningZh": "能幹的",
     "example": "She is capable of repairing radios without instructions.",
-    "exampleZh": "她有能力不看說明書就修好收音機。",
+    "exampleZh": "她有能力不用說明書修收音機。",
     "group": "Core 4"
   },
   {
@@ -21469,7 +21469,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "投資",
     "supplementalMeaningZh": "投入",
     "example": "They invest in solar panels for the family farm.",
-    "exampleZh": "他們投資太陽能板，為自家農場所用。",
+    "exampleZh": "他們出資為自家農場裝設太陽能板。",
     "group": "Core 4"
   },
   {
@@ -21546,7 +21546,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "可愛的",
     "supplementalMeaningZh": "美好的",
     "example": "Your grandmother has a lovely smile in old photographs.",
-    "exampleZh": "舊照片裡，你奶奶的笑容很迷人。",
+    "exampleZh": "舊照片裡，你奶奶的笑容很可愛。",
     "group": "Core 4"
   },
   {
@@ -21554,8 +21554,8 @@ export const sampleWords: WordEntry[] = [
     "word": "specialist",
     "partOfSpeech": "n / a",
     "pronunciation": "/'speiʃәlist/",
-    "meaningZh": "專家",
-    "supplementalMeaningZh": "專科醫師；專業的",
+    "meaningZh": "專科醫師",
+    "supplementalMeaningZh": "專家；專業的",
     "example": "A heart specialist examined him after the mountain rescue.",
     "exampleZh": "山難救援後，心臟專科醫師檢查了他。",
     "group": "Core 4"
@@ -21631,8 +21631,8 @@ export const sampleWords: WordEntry[] = [
     "word": "solid",
     "partOfSpeech": "n / a",
     "pronunciation": "/'sɒlid/",
-    "meaningZh": "固體",
-    "supplementalMeaningZh": "固體的；穩固的；實心的",
+    "meaningZh": "穩固的",
+    "supplementalMeaningZh": "固體的；實心的；可靠的",
     "example": "The wooden bridge felt solid despite the swollen river.",
     "exampleZh": "雖然河水暴漲，木橋感覺仍很穩固。",
     "group": "Core 4"
@@ -21642,8 +21642,8 @@ export const sampleWords: WordEntry[] = [
     "word": "rush",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/rʌʃ/",
-    "meaningZh": "匆忙",
-    "supplementalMeaningZh": "催促；衝；高峰期",
+    "meaningZh": "催促",
+    "supplementalMeaningZh": "急忙；衝；高峰期",
     "example": "Do not rush the guests while they remove their shoes.",
     "exampleZh": "客人脫鞋時不要催他們。",
     "group": "Core 4"
@@ -21677,8 +21677,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/.pә:sә'næliti/",
     "meaningZh": "個性",
     "supplementalMeaningZh": "人格；名人",
-    "example": "Her warm personality makes shy children feel welcome in class.",
-    "exampleZh": "她親切的個性讓害羞的孩子在班上感到自在。",
+    "example": "Her personality makes shy children feel welcome in class.",
+    "exampleZh": "她個性親切，讓害羞的孩子在班上也能感到自在。",
     "group": "Core 4"
   },
   {
@@ -21742,7 +21742,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/bred/",
     "meaningZh": "麵包",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "生計",
     "example": "Fresh bread sold out before the rain stopped.",
     "exampleZh": "雨停前，新鮮麵包就賣完了。",
     "group": "Core 4"
@@ -21840,8 +21840,8 @@ export const sampleWords: WordEntry[] = [
     "word": "convention",
     "partOfSpeech": "n",
     "pronunciation": "/kәn'venʃәn/",
-    "meaningZh": "慣例",
-    "supplementalMeaningZh": "大會；協定",
+    "meaningZh": "大會",
+    "supplementalMeaningZh": "慣例；協定",
     "example": "The convention brought herbal medicine practitioners from across the island.",
     "exampleZh": "這場大會聚集全島草藥師。",
     "group": "Core 4"
@@ -21852,9 +21852,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'saikl/",
     "meaningZh": "週期",
-    "supplementalMeaningZh": "循環；騎自行車；程序",
-    "example": "The washing cycle ended while we prepared dinner.",
-    "exampleZh": "我們準備晚餐時，洗衣程序結束了。",
+    "supplementalMeaningZh": "循環；騎自行車；行程",
+    "example": "The life cycle of a butterfly has four stages.",
+    "exampleZh": "蝴蝶的生命週期有四個階段。",
     "group": "Core 4"
   },
   {
@@ -22050,9 +22050,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'vedʒәtәbl/",
     "meaningZh": "蔬菜",
-    "supplementalMeaningZh": "植物的；植物人",
+    "supplementalMeaningZh": "植物人；植物的",
     "example": "Nina added one vegetable to the noodles for color and crunch.",
-    "exampleZh": "妮娜在麵裡加了一樣蔬菜，增添色彩和口感。",
+    "exampleZh": "妮娜在麵裡加一樣蔬菜添色和口感。",
     "group": "Core 5"
   },
   {
@@ -22072,9 +22072,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/'pә:fiktli/",
     "meaningZh": "完美地",
-    "supplementalMeaningZh": "完全地；很順利地",
+    "supplementalMeaningZh": "完全地；非常",
     "example": "The new key turned perfectly after Aaron cleaned the rusty lock.",
-    "exampleZh": "亞倫清完生鏽的鎖之後，新鑰匙轉得很順暢。",
+    "exampleZh": "亞倫清完鏽鎖後新鑰匙轉得很順。",
     "group": "Core 5"
   },
   {
@@ -22126,8 +22126,8 @@ export const sampleWords: WordEntry[] = [
     "word": "chip",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/tʃip/",
-    "meaningZh": "洋芋片",
-    "supplementalMeaningZh": "缺口；碎片；晶片",
+    "meaningZh": "缺口",
+    "supplementalMeaningZh": "碎片；洋芋片；晶片",
     "example": "A chip in the blue bowl scratched my thumb during breakfast.",
     "exampleZh": "早餐時，藍色碗的缺口刮傷了我的拇指。",
     "group": "Core 5"
@@ -22195,7 +22195,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "鎖上",
     "supplementalMeaningZh": "鎖具；水閘",
     "example": "Jun forgot to lock the balcony door before the typhoon arrived.",
-    "exampleZh": "颱風來臨前，阿俊忘了把陽台門鎖上。",
+    "exampleZh": "颱風來前阿俊忘了鎖陽台門。",
     "group": "Core 5"
   },
   {
@@ -22206,7 +22206,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "靴子",
     "supplementalMeaningZh": "踢；開機；解雇",
     "example": "Mud soaked one boot when Paul crossed the flooded farm path.",
-    "exampleZh": "保羅走過淹水的農路時，有一隻靴子被泥水浸濕了。",
+    "exampleZh": "保羅走過淹水農路時一隻靴子濕透。",
     "group": "Core 5"
   },
   {
@@ -22236,8 +22236,8 @@ export const sampleWords: WordEntry[] = [
     "word": "revolution",
     "partOfSpeech": "n",
     "pronunciation": "/.revә'lu:ʃәn/",
-    "meaningZh": "革命",
-    "supplementalMeaningZh": "旋轉一圈；重大變革；循環",
+    "meaningZh": "旋轉一圈",
+    "supplementalMeaningZh": "革命；重大變革；循環",
     "example": "The bicycle wheel made one full revolution before wobbling again.",
     "exampleZh": "腳踏車輪完整轉了一圈後，又開始搖晃。",
     "group": "Core 5"
@@ -22280,10 +22280,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tower",
     "partOfSpeech": "n / vi",
     "pronunciation": "/'tauә/",
-    "meaningZh": "塔",
-    "supplementalMeaningZh": "塔樓；高聳",
+    "meaningZh": "塔樓",
+    "supplementalMeaningZh": "高樓；高聳",
     "example": "A red tower marks the harbor entrance for fishing boats.",
-    "exampleZh": "紅色高塔標示漁船進港口的位置。",
+    "exampleZh": "紅色塔樓標示漁船進港口的位置。",
     "group": "Core 5"
   },
   {
@@ -22313,8 +22313,8 @@ export const sampleWords: WordEntry[] = [
     "word": "philosophy",
     "partOfSpeech": "n",
     "pronunciation": "/fi'lɒsәfi/",
-    "meaningZh": "哲學",
-    "supplementalMeaningZh": "人生觀；基本理念",
+    "meaningZh": "人生觀",
+    "supplementalMeaningZh": "哲學；基本理念",
     "example": "Her philosophy is to cook slowly and waste nothing edible.",
     "exampleZh": "她的人生信念是慢火細煮，不浪費任何能吃的食物。",
     "group": "Core 5"
@@ -22358,7 +22358,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.prepә'reiʃәn/",
     "meaningZh": "準備",
-    "supplementalMeaningZh": "預備工作；籌備",
+    "supplementalMeaningZh": "預習",
     "example": "Careful preparation helped Eva pack medicine for the long ferry ride.",
     "exampleZh": "伊娃事前準備得很仔細，搭長途渡輪需要的藥都有帶齊。",
     "group": "Core 5"
@@ -22380,9 +22380,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/sænd/",
     "meaningZh": "沙",
-    "supplementalMeaningZh": "沙灘；用砂紙磨",
+    "supplementalMeaningZh": "沙灘；撒沙",
     "example": "Warm sand stuck to our feet after the beach concert ended.",
-    "exampleZh": "海邊演唱會結束後，溫熱的沙子黏在我們腳上。",
+    "exampleZh": "海邊演唱會結束後暖沙黏在腳上。",
     "group": "Core 5"
   },
   {
@@ -22413,7 +22413,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'dʒækit/",
     "meaningZh": "外套",
-    "supplementalMeaningZh": "夾克；書套",
+    "supplementalMeaningZh": "護套",
     "example": "Tara left her denim jacket on the ferry by mistake.",
     "exampleZh": "塔拉不小心把牛仔外套留在渡輪上。",
     "group": "Core 5"
@@ -22753,10 +22753,10 @@ export const sampleWords: WordEntry[] = [
     "word": "slide",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/slaid/",
-    "meaningZh": "滑動",
-    "supplementalMeaningZh": "溜滑梯；投影片；滑落",
+    "meaningZh": "溜滑梯",
+    "supplementalMeaningZh": "滑動；投影片；滑落",
     "example": "Children waited for the blue slide after the rain stopped.",
-    "exampleZh": "雨停後，孩子們排隊等著玩藍色的溜滑梯。",
+    "exampleZh": "雨停後孩子排隊等藍色溜滑梯。",
     "group": "Core 5"
   },
   {
@@ -22797,8 +22797,8 @@ export const sampleWords: WordEntry[] = [
     "word": "monitor",
     "partOfSpeech": "n / v",
     "pronunciation": "/'mɒnitә/",
-    "meaningZh": "螢幕",
-    "supplementalMeaningZh": "監測；班長",
+    "meaningZh": "監測",
+    "supplementalMeaningZh": "螢幕；班長",
     "example": "A nurse will monitor his pulse during the mountain transfer.",
     "exampleZh": "護理師會在山區轉送時監測他的脈搏。",
     "group": "Core 5"
@@ -22874,10 +22874,10 @@ export const sampleWords: WordEntry[] = [
     "word": "violent",
     "partOfSpeech": "a",
     "pronunciation": "/'vaiәlәnt/",
-    "meaningZh": "暴力的",
-    "supplementalMeaningZh": "猛烈的；激烈的",
+    "meaningZh": "猛烈的",
+    "supplementalMeaningZh": "暴力的；激烈的",
     "example": "A violent wave knocked the camera from the ferry rail.",
-    "exampleZh": "猛烈的海浪把相機從渡輪欄杆上打落了。",
+    "exampleZh": "猛烈海浪把相機從渡輪欄杆打落。",
     "group": "Core 5"
   },
   {
@@ -22918,10 +22918,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tourist",
     "partOfSpeech": "n / a",
     "pronunciation": "/'tuәrist/",
-    "meaningZh": "觀光客",
+    "meaningZh": "旅客",
     "supplementalMeaningZh": "旅遊的",
     "example": "A lost tourist asked for directions near the lantern shop.",
-    "exampleZh": "一位迷路的觀光客在燈籠店旁問路。",
+    "exampleZh": "迷路旅客在燈籠店旁問路。",
     "group": "Core 5"
   },
   {
@@ -22929,10 +22929,10 @@ export const sampleWords: WordEntry[] = [
     "word": "conventional",
     "partOfSpeech": "a",
     "pronunciation": "/kәn'venʃәnl/",
-    "meaningZh": "傳統的",
-    "supplementalMeaningZh": "慣例的；常規的；一般的",
+    "meaningZh": "正規的",
+    "supplementalMeaningZh": "傳統的；一般的",
     "example": "Nora prefers conventional medicine when her asthma gets worse.",
-    "exampleZh": "諾拉氣喘加重時，偏好傳統醫療。",
+    "exampleZh": "諾拉氣喘加重時偏好正規醫療。",
     "group": "Core 5"
   },
   {
@@ -22941,9 +22941,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/wet/",
     "meaningZh": "濕的",
-    "supplementalMeaningZh": "弄濕；雨天；潮濕",
+    "supplementalMeaningZh": "弄濕；雨天",
     "example": "My socks stayed wet after the scooter ride through rain.",
-    "exampleZh": "騎機車穿過雨中後，我的襪子一直是濕的。",
+    "exampleZh": "雨中騎車後我的襪子一直濕著。",
     "group": "Core 5"
   },
   {
@@ -22976,7 +22976,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "每當",
     "supplementalMeaningZh": "無論何時",
     "example": "Vendors lift baskets whenever the train slows beside their stalls.",
-    "exampleZh": "每當火車在攤位旁放慢速度，攤販就會舉起籃子。",
+    "exampleZh": "火車在攤位旁放慢時攤販就舉起籃子。",
     "group": "Core 5"
   },
   {
@@ -23007,9 +23007,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/striŋ/",
     "meaningZh": "繩子",
-    "supplementalMeaningZh": "一串；字串；弦",
+    "supplementalMeaningZh": "一串；字串；串起",
     "example": "A red string held the garlic beside the kitchen window.",
-    "exampleZh": "一條紅繩把大蒜掛在廚房窗邊。",
+    "exampleZh": "紅繩把大蒜掛在廚房窗邊。",
     "group": "Core 5"
   },
   {
@@ -23018,9 +23018,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/pәuz/",
     "meaningZh": "姿勢",
-    "supplementalMeaningZh": "擺姿勢；提出；造成",
+    "supplementalMeaningZh": "提出；造成",
     "example": "The bride changed her pose beside the banyan tree.",
-    "exampleZh": "新娘在榕樹旁換了個姿勢。",
+    "exampleZh": "新娘在榕樹旁換了姿勢。",
     "group": "Core 5"
   },
   {
@@ -23042,7 +23042,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "蛋糕",
     "supplementalMeaningZh": "餅狀物；結塊",
     "example": "A mango cake waited in the fridge for Auntie's birthday.",
-    "exampleZh": "一個芒果蛋糕在冰箱裡，等著給阿姨慶生。",
+    "exampleZh": "芒果蛋糕在冰箱裡等阿姨生日。",
     "group": "Core 5"
   },
   {
@@ -23053,7 +23053,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "自然地",
     "supplementalMeaningZh": "天生地；當然",
     "example": "The puppy naturally followed anyone carrying a bowl of rice.",
-    "exampleZh": "小狗自然而然地跟著任何端著飯碗的人走。",
+    "exampleZh": "小狗自然跟著端飯碗的人走。",
     "group": "Core 5"
   },
   {
@@ -23160,10 +23160,10 @@ export const sampleWords: WordEntry[] = [
     "word": "unknown",
     "partOfSpeech": "a / n",
     "pronunciation": "/.ʌn'nәun/",
-    "meaningZh": "未知的",
-    "supplementalMeaningZh": "陌生的；未知數",
+    "meaningZh": "陌生的",
+    "supplementalMeaningZh": "未知的；未知數",
     "example": "An unknown number kept calling during the family dinner.",
-    "exampleZh": "全家吃晚餐時，一通陌生號碼一直打來。",
+    "exampleZh": "晚餐時陌生號碼一直打來。",
     "group": "Core 5"
   },
   {
@@ -23171,8 +23171,8 @@ export const sampleWords: WordEntry[] = [
     "word": "sum",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/sʌm/",
-    "meaningZh": "總和",
-    "supplementalMeaningZh": "金額；概要",
+    "meaningZh": "總金額",
+    "supplementalMeaningZh": "總和；概要",
     "example": "The final sum on the receipt shocked the tourists.",
     "exampleZh": "收據上的總金額嚇到那些旅客。",
     "group": "Core 5"
@@ -23282,7 +23282,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'drɑ:mә/",
     "meaningZh": "戲劇",
-    "supplementalMeaningZh": "戲劇性事件；劇集",
+    "supplementalMeaningZh": "戲劇性事件；連續劇",
     "example": "The temple drama drew families from three nearby villages.",
     "exampleZh": "廟口的戲劇表演，吸引了三個鄰村的家庭前來觀看。",
     "group": "Core 5"
@@ -23416,7 +23416,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "友善的",
     "supplementalMeaningZh": "",
     "example": "The friendly driver waited while Grandpa climbed aboard slowly.",
-    "exampleZh": "那位友善的司機等爺爺慢慢上車。",
+    "exampleZh": "友善司機等爺爺慢慢上車。",
     "group": "Core 5"
   },
   {
@@ -23501,7 +23501,7 @@ export const sampleWords: WordEntry[] = [
     "word": "whisper",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'hwispә/",
-    "meaningZh": "低語",
+    "meaningZh": "低聲說",
     "supplementalMeaningZh": "耳語；傳聞；沙沙聲",
     "example": "I heard Grandma whisper a prayer beside the hospital bed.",
     "exampleZh": "我聽見奶奶在病床旁低聲祈禱。",
@@ -23535,9 +23535,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/ik'stri:m/",
     "meaningZh": "極端的",
-    "supplementalMeaningZh": "極度的；極端；偏激的",
+    "supplementalMeaningZh": "極度的；極限；偏激的",
     "example": "The extreme heat kept fruit sellers under wet towels.",
-    "exampleZh": "酷熱讓水果攤販只好披著濕毛巾降溫。",
+    "exampleZh": "天氣酷熱難耐，水果攤販只好一直披著濕毛巾降溫。",
     "group": "Core 5"
   },
   {
@@ -23603,7 +23603,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "粗糙的",
     "supplementalMeaningZh": "粗暴的；大概的；艱難的",
     "example": "The rough blanket scratched Nora's chin during the cold night.",
-    "exampleZh": "寒冷的夜裡，粗糙的毯子刮得諾拉的下巴很不舒服。",
+    "exampleZh": "寒夜裡粗毯子刮著諾拉下巴。",
     "group": "Core 5"
   },
   {
@@ -23611,8 +23611,8 @@ export const sampleWords: WordEntry[] = [
     "word": "chamber",
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/'tʃeimbә/",
-    "meaningZh": "房間",
-    "supplementalMeaningZh": "議院；腔室；石室",
+    "meaningZh": "室",
+    "supplementalMeaningZh": "房間；議院；腔室",
     "example": "Echoes filled the stone chamber beneath the old fort.",
     "exampleZh": "老堡底下的石室裡迴盪著回音。",
     "group": "Core 5"
@@ -23721,8 +23721,8 @@ export const sampleWords: WordEntry[] = [
     "word": "rank",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/ræŋk/",
-    "meaningZh": "等級",
-    "supplementalMeaningZh": "排列；軍階；排名",
+    "meaningZh": "級別",
+    "supplementalMeaningZh": "排名；排列；軍階",
     "example": "Her badge showed her rank in the volunteer rescue group.",
     "exampleZh": "她的徽章顯示她在救援志工隊裡的職級。",
     "group": "Core 5"
@@ -23798,8 +23798,8 @@ export const sampleWords: WordEntry[] = [
     "word": "twin",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/twin/",
-    "meaningZh": "雙胞胎之一",
-    "supplementalMeaningZh": "成對的；雙胞胎的",
+    "meaningZh": "雙胞胎的",
+    "supplementalMeaningZh": "雙胞胎之一；成對的",
     "example": "My twin brother always notices when I change shampoo.",
     "exampleZh": "我的雙胞胎哥哥總會發現我換洗髮精。",
     "group": "Core 5"
@@ -23820,8 +23820,8 @@ export const sampleWords: WordEntry[] = [
     "word": "pink",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/piŋk/",
-    "meaningZh": "粉紅色",
-    "supplementalMeaningZh": "粉紅色的",
+    "meaningZh": "粉紅色的",
+    "supplementalMeaningZh": "粉紅色",
     "example": "A pink umbrella stood out in the gray rain.",
     "exampleZh": "灰雨中一把粉紅傘特別醒目。",
     "group": "Core 5"
@@ -23876,7 +23876,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/tju:b/",
     "meaningZh": "管子",
-    "supplementalMeaningZh": "軟管；地下鐵；試管",
+    "supplementalMeaningZh": "軟管；試管；倫敦地鐵",
     "example": "The nurse changed the tube beside the patient's bed.",
     "exampleZh": "護理師在病床旁更換管子。",
     "group": "Core 5"
@@ -23941,8 +23941,8 @@ export const sampleWords: WordEntry[] = [
     "word": "junior",
     "partOfSpeech": "n / a",
     "pronunciation": "/'dʒu:njә/",
-    "meaningZh": "年少者",
-    "supplementalMeaningZh": "大三學生；資淺者",
+    "meaningZh": "資淺的",
+    "supplementalMeaningZh": "下級的；年少者；大三學生",
     "example": "A junior cook burned the first tray of biscuits.",
     "exampleZh": "資淺廚師烤焦了第一盤餅乾。",
     "group": "Core 5"
@@ -23966,7 +23966,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "輕微的",
     "supplementalMeaningZh": "輕視",
     "example": "A slight fever kept Jonah away from the baby.",
-    "exampleZh": "輕微發燒讓喬納不敢靠近嬰兒。",
+    "exampleZh": "喬納只是微微發燒，仍不敢靠近嬰兒。",
     "group": "Core 5"
   },
   {
@@ -24076,7 +24076,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "愚蠢的",
     "supplementalMeaningZh": "",
     "example": "Leaving medicine in the sun was a stupid mistake.",
-    "exampleZh": "把藥放在太陽下是個愚蠢的錯誤。",
+    "exampleZh": "把藥放在太陽下，是個很不明智的錯誤。",
     "group": "Core 5"
   },
   {
@@ -24109,7 +24109,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "娛樂",
     "supplementalMeaningZh": "表演；招待",
     "example": "Street entertainment kept the children awake after dinner.",
-    "exampleZh": "晚餐後的街頭娛樂讓孩子們都不想睡。",
+    "exampleZh": "晚餐後的街頭表演，讓孩子們興奮得不肯睡覺。",
     "group": "Core 5"
   },
   {
@@ -24139,10 +24139,10 @@ export const sampleWords: WordEntry[] = [
     "word": "fortune",
     "partOfSpeech": "n",
     "pronunciation": "/'fɒ:tʃәn/",
-    "meaningZh": "財富",
-    "supplementalMeaningZh": "好運；命運；大筆財產",
+    "meaningZh": "好運",
+    "supplementalMeaningZh": "財富；命運；大筆財產",
     "example": "Good fortune saved us from the falling roof tile.",
-    "exampleZh": "好運讓我們躲過了掉落的屋瓦。",
+    "exampleZh": "幸好運氣不錯，我們躲過了從屋頂掉下來的瓦片。",
     "group": "Core 5"
   },
   {
@@ -24162,9 +24162,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/kәn'frʌnt/",
     "meaningZh": "面對",
-    "supplementalMeaningZh": "對質；對抗；找人談判",
-    "example": "Maya had to confront the neighbor about midnight drumming.",
-    "exampleZh": "瑪雅得為了半夜打鼓的事當面質問鄰居。",
+    "supplementalMeaningZh": "對抗；當面質問",
+    "example": "Firefighters must confront danger calmly when a building is burning.",
+    "exampleZh": "建築物失火時，消防員必須冷靜面對危險。",
     "group": "Core 5"
   },
   {
@@ -24227,10 +24227,10 @@ export const sampleWords: WordEntry[] = [
     "word": "advanced",
     "partOfSpeech": "a",
     "pronunciation": "/әd'vɑ:nst/",
-    "meaningZh": "先進的",
-    "supplementalMeaningZh": "高階的；進階的",
+    "meaningZh": "高階的",
+    "supplementalMeaningZh": "先進的；進階的",
     "example": "An advanced camera caught stars above the fishing port.",
-    "exampleZh": "一台先進的相機拍下了漁港上空的繁星。",
+    "exampleZh": "高階相機拍下漁港夜空中的繁星。",
     "group": "Core 5"
   },
   {
@@ -24238,10 +24238,10 @@ export const sampleWords: WordEntry[] = [
     "word": "mere",
     "partOfSpeech": "n / a",
     "pronunciation": "/miә/",
-    "meaningZh": "僅僅的",
+    "meaningZh": "光是",
     "supplementalMeaningZh": "",
     "example": "A mere apology could not replace the broken heirloom.",
-    "exampleZh": "光是一句道歉，無法彌補那件破碎的傳家寶。",
+    "exampleZh": "光一句道歉不能補回破碎傳家物。",
     "group": "Core 5"
   },
   {
@@ -24250,9 +24250,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / interj",
     "pronunciation": "/'diә/",
     "meaningZh": "親愛的",
-    "supplementalMeaningZh": "昂貴的；親愛的人",
+    "supplementalMeaningZh": "昂貴的；可愛的人",
     "example": "My dear friend saved a seat beside the window.",
-    "exampleZh": "我親愛的朋友在窗邊幫我留了座位。",
+    "exampleZh": "我親愛的朋友在窗邊幫我留座。",
     "group": "Core 5"
   },
   {
@@ -24260,10 +24260,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sink",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/siŋk/",
-    "meaningZh": "下沉",
+    "meaningZh": "沉入",
     "supplementalMeaningZh": "水槽；下陷；降低",
     "example": "The heavy stone began to sink in the muddy pond.",
-    "exampleZh": "沉重的石頭開始沉入泥濘的池塘。",
+    "exampleZh": "沉重石頭開始沉入泥池。",
     "group": "Core 5"
   },
   {
@@ -24525,9 +24525,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/tait/",
     "meaningZh": "緊的",
-    "supplementalMeaningZh": "嚴密的；拮据的",
+    "supplementalMeaningZh": "嚴密的；拮据的；緊緊地",
     "example": "The lid was tight after sitting in the refrigerator overnight.",
-    "exampleZh": "蓋子在冰箱裡放了一夜後變得很緊。",
+    "exampleZh": "蓋子在冰箱裡放了一夜後，變得很難打開。",
     "group": "Core 5"
   },
   {
@@ -24877,9 +24877,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/'dә:ti/",
     "meaningZh": "髒的",
-    "supplementalMeaningZh": "弄髒；卑鄙的；下流的",
+    "supplementalMeaningZh": "弄髒；卑鄙的",
     "example": "The dirty rainwater splashed onto Mina's white sneakers.",
-    "exampleZh": "髒兮兮的雨水濺到了米娜的白球鞋上。",
+    "exampleZh": "髒雨水濺到米娜白球鞋上。",
     "group": "Core 5"
   },
   {
@@ -25009,9 +25009,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/strip/",
     "meaningZh": "長條",
-    "supplementalMeaningZh": "剝去；脫衣；條狀地帶",
+    "supplementalMeaningZh": "剝去；脫衣",
     "example": "Cut a strip of cloth to tie the splint.",
-    "exampleZh": "剪一條布來綁住固定夾板。",
+    "exampleZh": "剪一條布來綁固定板。",
     "group": "Core 5"
   },
   {
@@ -25076,8 +25076,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/pitʃ/",
     "meaningZh": "投擲",
     "supplementalMeaningZh": "音高；推銷；球場",
-    "example": "The pitcher tried to pitch the ball faster than before.",
-    "exampleZh": "投手試著把球投得比以前更快。",
+    "example": "Coach Lin taught me how to pitch a baseball without hurting my arm.",
+    "exampleZh": "林教練教我怎麼投棒球才不會傷到手臂。",
     "group": "Core 5"
   },
   {
@@ -25085,10 +25085,10 @@ export const sampleWords: WordEntry[] = [
     "word": "craft",
     "partOfSpeech": "n / vt",
     "pronunciation": "/kræft/",
-    "meaningZh": "手工藝",
-    "supplementalMeaningZh": "技巧；船隻；精心製作",
-    "example": "She learned a traditional craft from her grandmother in Tainan.",
-    "exampleZh": "她在台南向祖母學了一項傳統手工藝。",
+    "meaningZh": "製作",
+    "supplementalMeaningZh": "手藝；船隻；技巧",
+    "example": "Local artists craft bowls from driftwood after typhoons.",
+    "exampleZh": "在地藝術家用颱風後漂流木做碗。",
     "group": "Core 5"
   },
   {
@@ -25096,8 +25096,8 @@ export const sampleWords: WordEntry[] = [
     "word": "steady",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/'stedi/",
-    "meaningZh": "穩定的",
-    "supplementalMeaningZh": "穩固的；固定的；沉著的",
+    "meaningZh": "穩的",
+    "supplementalMeaningZh": "穩定的；固定的；沉著的",
     "example": "Keep a steady hand while pouring tea for elders.",
     "exampleZh": "替長輩倒茶時手要穩。",
     "group": "Core 5"
@@ -25162,10 +25162,10 @@ export const sampleWords: WordEntry[] = [
     "word": "leather",
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/'leðә/",
-    "meaningZh": "皮革",
-    "supplementalMeaningZh": "皮製品；皮製的",
+    "meaningZh": "皮製的",
+    "supplementalMeaningZh": "皮革；皮製品",
     "example": "A leather bag cracked after years in humid weather.",
-    "exampleZh": "皮包在潮濕天氣放了多年後裂開了。",
+    "exampleZh": "皮包多年受潮後裂開。",
     "group": "Core 5"
   },
   {
@@ -25206,8 +25206,8 @@ export const sampleWords: WordEntry[] = [
     "word": "maximum",
     "partOfSpeech": "n / a",
     "pronunciation": "/'mæksimәn/",
-    "meaningZh": "最大量",
-    "supplementalMeaningZh": "最高限度；最大的；最高的",
+    "meaningZh": "上限",
+    "supplementalMeaningZh": "最大量；最高的",
     "example": "The elevator allows a maximum of eight passengers.",
     "exampleZh": "電梯最多可搭八名乘客。",
     "group": "Core 5"
@@ -25404,10 +25404,10 @@ export const sampleWords: WordEntry[] = [
     "word": "nerve",
     "partOfSpeech": "n / vt",
     "pronunciation": "/nә:v/",
-    "meaningZh": "神經",
-    "supplementalMeaningZh": "勇氣；膽量",
-    "example": "The doctor said the injury had damaged a nerve in his arm.",
-    "exampleZh": "醫生說這個傷勢損傷了他手臂上的一條神經。",
+    "meaningZh": "勇氣",
+    "supplementalMeaningZh": "神經",
+    "example": "It took nerve to cross the swaying bridge.",
+    "exampleZh": "走過搖晃吊橋需要勇氣。",
     "group": "Core 5"
   },
   {
@@ -25525,10 +25525,10 @@ export const sampleWords: WordEntry[] = [
     "word": "genuine",
     "partOfSpeech": "a",
     "pronunciation": "/'dʒenjuin/",
-    "meaningZh": "真正的",
-    "supplementalMeaningZh": "真誠的；正品的",
-    "example": "She bought a genuine leather wallet at the night market.",
-    "exampleZh": "她在夜市買了一個真正的皮革皮夾。",
+    "meaningZh": "真誠的",
+    "supplementalMeaningZh": "真正的；正品的",
+    "example": "Her genuine concern showed when she packed extra medicine.",
+    "exampleZh": "她多帶藥時顯出真誠關心。",
     "group": "Core 5"
   },
   {
@@ -25536,10 +25536,10 @@ export const sampleWords: WordEntry[] = [
     "word": "gentle",
     "partOfSpeech": "a",
     "pronunciation": "/'dʒentl/",
-    "meaningZh": "溫和的",
-    "supplementalMeaningZh": "輕柔的；溫柔的",
+    "meaningZh": "輕柔的",
+    "supplementalMeaningZh": "溫和的",
     "example": "A gentle breeze moved the prayer flags above us.",
-    "exampleZh": "一陣微風吹動我們頭頂上的祈願旗。",
+    "exampleZh": "一陣微風，吹動我們頭頂上的祈願旗。",
     "group": "Core 5"
   },
   {
@@ -25561,7 +25561,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "歌手",
     "supplementalMeaningZh": "",
     "example": "The singer warmed up behind the temple stage.",
-    "exampleZh": "歌手在廟前舞台後方暖嗓。",
+    "exampleZh": "歌手在廟台後暖嗓。",
     "group": "Core 5"
   },
   {
@@ -25679,10 +25679,10 @@ export const sampleWords: WordEntry[] = [
     "word": "plain",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/plein/",
-    "meaningZh": "簡單的",
-    "supplementalMeaningZh": "無調味的；清楚的；平原",
+    "meaningZh": "無調味的",
+    "supplementalMeaningZh": "簡單的；清楚的；平原",
     "example": "She chose plain rice because the curry was spicy.",
-    "exampleZh": "因為咖哩太辣，所以她選擇了白飯。",
+    "exampleZh": "咖哩太辣所以她選白飯。",
     "group": "Core 5"
   },
   {
@@ -25693,7 +25693,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "迅速的",
     "supplementalMeaningZh": "提示；促使；準時的",
     "example": "A prompt reply saved our room at the inn.",
-    "exampleZh": "迅速的回覆保住了我們在旅店的房間。",
+    "exampleZh": "迅速回覆保住了我們在旅店的房間。",
     "group": "Core 5"
   },
   {
@@ -25713,7 +25713,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/bæθ.bɑ:θ/",
     "meaningZh": "洗澡",
-    "supplementalMeaningZh": "浴缸；浴室",
+    "supplementalMeaningZh": "浴缸",
     "example": "A warm bath helped the child stop shivering.",
     "exampleZh": "孩子泡過熱水澡後，終於不再發抖。",
     "group": "Core 5"
@@ -25756,8 +25756,8 @@ export const sampleWords: WordEntry[] = [
     "word": "cotton",
     "partOfSpeech": "n / vi",
     "pronunciation": "/'kɒtn/",
-    "meaningZh": "棉花",
-    "supplementalMeaningZh": "棉布；棉線",
+    "meaningZh": "棉",
+    "supplementalMeaningZh": "棉花；棉布",
     "example": "This shirt is made of cotton and dries quickly in sea breeze.",
     "exampleZh": "這件棉質襯衫吹到海風，很快就乾了。",
     "group": "Core 5"
@@ -25790,9 +25790,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/in'taitl/",
     "meaningZh": "使有權利",
-    "supplementalMeaningZh": "給書籍命名",
+    "supplementalMeaningZh": "給命名",
     "example": "This ticket will entitle you to one free drink.",
-    "exampleZh": "憑這張票你可以享有一杯免費飲料。",
+    "exampleZh": "憑這張票可以兌換一杯免費飲料。",
     "group": "Core 5"
   },
   {
@@ -25825,7 +25825,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "好奇的",
     "supplementalMeaningZh": "古怪的",
     "example": "A curious child opened every drawer in the guesthouse.",
-    "exampleZh": "好奇的孩子打開了民宿的每個抽屜。",
+    "exampleZh": "好奇孩子打開民宿每個抽屜。",
     "group": "Core 5"
   },
   {
@@ -25833,10 +25833,10 @@ export const sampleWords: WordEntry[] = [
     "word": "strain",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/strein/",
-    "meaningZh": "拉傷",
-    "supplementalMeaningZh": "負擔；壓力；品種",
+    "meaningZh": "負擔",
+    "supplementalMeaningZh": "拉傷；壓力；品種",
     "example": "Too much lifting put strain on his injured shoulder.",
-    "exampleZh": "搬太多重物，使他受傷的肩膀負擔更重。",
+    "exampleZh": "搬太多重物加重他受傷肩膀負擔。",
     "group": "Core 5"
   },
   {
@@ -25844,10 +25844,10 @@ export const sampleWords: WordEntry[] = [
     "word": "conscious",
     "partOfSpeech": "a",
     "pronunciation": "/'kɒnʃәs/",
-    "meaningZh": "有意識的",
-    "supplementalMeaningZh": "清醒的；察覺的",
+    "meaningZh": "清醒的",
+    "supplementalMeaningZh": "有意識的；察覺的",
     "example": "She stayed conscious while waiting for the ambulance.",
-    "exampleZh": "她在等救護車時一直保持清醒。",
+    "exampleZh": "她等救護車時保持清醒。",
     "group": "Core 5"
   },
   {
@@ -26155,7 +26155,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "鄉間",
     "supplementalMeaningZh": "",
     "example": "The countryside smelled of wet grass after harvest.",
-    "exampleZh": "收割後，鄉間瀰漫著濕草的氣味。",
+    "exampleZh": "收割後鄉間有濕草氣味。",
     "group": "Core 5"
   },
   {
@@ -26166,7 +26166,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "嚴格的",
     "supplementalMeaningZh": "嚴厲的；精確的",
     "example": "The strict lifeguard closed the beach before sunset.",
-    "exampleZh": "嚴格的救生員在日落前關閉了海灘。",
+    "exampleZh": "嚴格救生員在日落前關閉海灘。",
     "group": "Core 5"
   },
   {
@@ -26196,8 +26196,8 @@ export const sampleWords: WordEntry[] = [
     "word": "excuse",
     "partOfSpeech": "vt / n",
     "pronunciation": "/ik'skju:z/",
-    "meaningZh": "原諒",
-    "supplementalMeaningZh": "藉口；理由；免除",
+    "meaningZh": "藉口",
+    "supplementalMeaningZh": "理由；原諒；免除",
     "example": "A broken umbrella was no excuse for arriving late.",
     "exampleZh": "傘壞了不是遲到的藉口。",
     "group": "Core 5"
@@ -26207,8 +26207,8 @@ export const sampleWords: WordEntry[] = [
     "word": "reverse",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/ri'vә:s/",
-    "meaningZh": "相反的",
-    "supplementalMeaningZh": "倒車；反轉；背面",
+    "meaningZh": "倒車",
+    "supplementalMeaningZh": "反轉；相反；背面",
     "example": "Please reverse the van slowly out of the alley.",
     "exampleZh": "請慢慢把貨車倒出巷子。",
     "group": "Core 5"
@@ -26329,9 +26329,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi / vt",
     "pronunciation": "/ik'splәud/",
     "meaningZh": "爆炸",
-    "supplementalMeaningZh": "爆發；激增；爆響",
-    "example": "Firecrackers explode outside the temple at midnight tonight.",
-    "exampleZh": "今晚午夜時鞭炮在廟外爆響。",
+    "supplementalMeaningZh": "爆發；激增",
+    "example": "Firecrackers explode loudly outside the temple every Lunar New Year's Eve.",
+    "exampleZh": "每年除夕夜，廟外的鞭炮都會爆炸作響。",
     "group": "Core 5"
   },
   {
@@ -26394,8 +26394,8 @@ export const sampleWords: WordEntry[] = [
     "word": "orange",
     "partOfSpeech": "n / a",
     "pronunciation": "/'ɒ:rindʒ/",
-    "meaningZh": "橘子",
-    "supplementalMeaningZh": "橘色；橘色的",
+    "meaningZh": "橘色的",
+    "supplementalMeaningZh": "橘子；橘色",
     "example": "An orange scarf marked her bag at the station.",
     "exampleZh": "橘色圍巾標出她在車站的包。",
     "group": "Core 5"
@@ -26430,7 +26430,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "航行",
     "supplementalMeaningZh": "啟航；帆；帆船",
     "example": "We sail only when the captain trusts the weather.",
-    "exampleZh": "船長信任天氣狀況時，我們才會出航。",
+    "exampleZh": "船長相信天氣時我們才航行。",
     "group": "Core 5"
   },
   {
@@ -26505,9 +26505,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'dʒenәrәs/",
     "meaningZh": "慷慨的",
-    "supplementalMeaningZh": "大方的；豐盛的",
+    "supplementalMeaningZh": "大量的",
     "example": "A generous neighbor shared soup after our stove broke.",
-    "exampleZh": "爐子壞掉後，慷慨的鄰居分了湯給我們。",
+    "exampleZh": "爐子壞掉後慷慨的鄰居分我們湯。",
     "group": "Core 5"
   },
   {
@@ -26527,9 +26527,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/meit/",
     "meaningZh": "夥伴",
-    "supplementalMeaningZh": "配偶；助手；配對",
-    "example": "The plumber's mate carried extra washers for the sink repair.",
-    "exampleZh": "水電工的助手帶了修水槽用的備用墊圈。",
+    "supplementalMeaningZh": "配偶；助手；交配",
+    "example": "Kai and his best mate shared fried chicken after the basketball game.",
+    "exampleZh": "籃球賽結束後，阿凱和他最好的夥伴分著吃炸雞。",
     "group": "Core 5"
   },
   {
@@ -26592,10 +26592,10 @@ export const sampleWords: WordEntry[] = [
     "word": "cooking",
     "partOfSpeech": "n",
     "pronunciation": "/'kukiŋ/",
-    "meaningZh": "烹飪",
-    "supplementalMeaningZh": "料理；飯菜",
+    "meaningZh": "飯菜",
+    "supplementalMeaningZh": "烹飪；料理",
     "example": "Grandma's cooking filled the stairwell with the aroma of soy sauce.",
-    "exampleZh": "奶奶煮的菜讓醬油香瀰漫整座樓梯間。",
+    "exampleZh": "奶奶煮飯時，醬油香瀰漫整座樓梯間。",
     "group": "Core 5"
   },
   {
@@ -26614,10 +26614,10 @@ export const sampleWords: WordEntry[] = [
     "word": "invitation",
     "partOfSpeech": "n",
     "pronunciation": "/.invi'teiʃәn/",
-    "meaningZh": "邀請",
-    "supplementalMeaningZh": "請帖；邀請函",
+    "meaningZh": "請帖",
+    "supplementalMeaningZh": "邀請",
     "example": "The wedding invitation arrived with a pressed jasmine flower.",
-    "exampleZh": "婚禮請帖附著一朵壓乾的茉莉花寄到了。",
+    "exampleZh": "婚禮請帖夾著壓乾茉莉花寄到。",
     "group": "Core 5"
   },
   {
@@ -26878,8 +26878,8 @@ export const sampleWords: WordEntry[] = [
     "word": "missing",
     "partOfSpeech": "a",
     "pronunciation": "/'misiŋ/",
-    "meaningZh": "失蹤的",
-    "supplementalMeaningZh": "不見的；少了的",
+    "meaningZh": "少了的",
+    "supplementalMeaningZh": "不見的；失蹤的",
     "example": "A missing screw made the chair wobble during breakfast.",
     "exampleZh": "早餐時，那張少了一顆螺絲的椅子一直搖晃。",
     "group": "Core 5"
@@ -26922,8 +26922,8 @@ export const sampleWords: WordEntry[] = [
     "word": "spell",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/spel/",
-    "meaningZh": "拼字",
-    "supplementalMeaningZh": "咒語；一段時間",
+    "meaningZh": "拼出",
+    "supplementalMeaningZh": "拼字；咒語；一段時間",
     "example": "Please spell your surname for the ferry booking.",
     "exampleZh": "訂渡輪票時請拼出你的姓氏。",
     "group": "Core 5"
@@ -26934,7 +26934,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'reskju:/",
     "meaningZh": "救援",
-    "supplementalMeaningZh": "營救",
+    "supplementalMeaningZh": "",
     "example": "Volunteers rescue dogs stranded after the river rises.",
     "exampleZh": "志工救援河水上漲後受困的狗。",
     "group": "Core 5"
@@ -27099,7 +27099,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "v",
     "pronunciation": "/'dekәreit/",
     "meaningZh": "裝飾",
-    "supplementalMeaningZh": "佈置",
+    "supplementalMeaningZh": "布置",
     "example": "Children decorate the mango stall with paper stars.",
     "exampleZh": "孩子用紙星星裝飾芒果攤。",
     "group": "Core 5"
@@ -27231,7 +27231,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n / vt",
     "pronunciation": "/breiv/",
     "meaningZh": "勇敢的",
-    "supplementalMeaningZh": "勇士；勇敢面對",
+    "supplementalMeaningZh": "勇敢面對",
     "example": "A brave child led his sister through smoke.",
     "exampleZh": "勇敢的孩子帶妹妹穿過濃煙。",
     "group": "Core 5"
@@ -27274,8 +27274,8 @@ export const sampleWords: WordEntry[] = [
     "word": "boil",
     "partOfSpeech": "n / v",
     "pronunciation": "/bɒil/",
-    "meaningZh": "煮沸",
-    "supplementalMeaningZh": "沸騰；水煮",
+    "meaningZh": "煮",
+    "supplementalMeaningZh": "沸騰",
     "example": "Please boil the eggs for seven minutes before peeling them.",
     "exampleZh": "剝蛋前請先把蛋煮七分鐘。",
     "group": "Core 5"
@@ -27296,8 +27296,8 @@ export const sampleWords: WordEntry[] = [
     "word": "sack",
     "partOfSpeech": "n / vt",
     "pronunciation": "/sæk/",
-    "meaningZh": "麻袋",
-    "supplementalMeaningZh": "一袋；解雇；洗劫",
+    "meaningZh": "一袋",
+    "supplementalMeaningZh": "麻布袋；解雇；洗劫",
     "example": "A sack of rice split open on the stairs.",
     "exampleZh": "一袋米在樓梯上破了，米粒灑了出來。",
     "group": "Core 5"
@@ -27384,10 +27384,10 @@ export const sampleWords: WordEntry[] = [
     "word": "entertain",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/.entә'tein/",
-    "meaningZh": "娛樂",
-    "supplementalMeaningZh": "招待；使開心；懷有想法",
+    "meaningZh": "逗開心",
+    "supplementalMeaningZh": "娛樂；招待；懷有想法",
     "example": "The puppet troupe will entertain children near the temple.",
-    "exampleZh": "布袋戲團會在廟旁娛樂孩子。",
+    "exampleZh": "布袋戲團會在廟旁逗孩子開心。",
     "group": "Core 5"
   },
   {
@@ -27417,8 +27417,8 @@ export const sampleWords: WordEntry[] = [
     "word": "bound",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/baund/",
-    "meaningZh": "一定會",
-    "supplementalMeaningZh": "開往；受約束的；邊界",
+    "meaningZh": "開往",
+    "supplementalMeaningZh": "一定會；受約束的；邊界",
     "example": "The ferry is bound for Penghu after sunset.",
     "exampleZh": "這班渡輪日落後開往澎湖。",
     "group": "Core 5"
@@ -27483,7 +27483,7 @@ export const sampleWords: WordEntry[] = [
     "word": "bargain",
     "partOfSpeech": "n / v",
     "pronunciation": "/'bɑ:gin/",
-    "meaningZh": "便宜貨",
+    "meaningZh": "划算的東西",
     "supplementalMeaningZh": "特價品；講價；交易",
     "example": "That wool coat was a bargain after winter ended.",
     "exampleZh": "冬天結束後那件羊毛外套很划算。",
@@ -27560,8 +27560,8 @@ export const sampleWords: WordEntry[] = [
     "word": "underground",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'ʌndәgraund/",
-    "meaningZh": "地下的",
-    "supplementalMeaningZh": "在地下；秘密的；地下鐵",
+    "meaningZh": "在地下",
+    "supplementalMeaningZh": "地下的；秘密的；地下鐵",
     "example": "The pipes ran underground beneath the closed fruit market.",
     "exampleZh": "管線在停業果菜市場地下延伸。",
     "group": "Core 6"
@@ -27571,8 +27571,8 @@ export const sampleWords: WordEntry[] = [
     "word": "bore",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/bɒ:/",
-    "meaningZh": "使厭煩",
-    "supplementalMeaningZh": "乏味的事；討厭的人；鑽孔",
+    "meaningZh": "乏味的事",
+    "supplementalMeaningZh": "討厭的人；使厭煩；鑽孔",
     "example": "The cruise became a bore after three days of fog.",
     "exampleZh": "連續三天都在起霧，那趟郵輪之旅開始令人厭倦。",
     "group": "Core 6"
@@ -27714,10 +27714,10 @@ export const sampleWords: WordEntry[] = [
     "word": "penny",
     "partOfSpeech": "n",
     "pronunciation": "/'peni/",
-    "meaningZh": "一分錢",
-    "supplementalMeaningZh": "便士；小錢",
+    "meaningZh": "便士",
+    "supplementalMeaningZh": "小錢",
     "example": "A penny rolled under the vending machine and disappeared.",
-    "exampleZh": "一枚一分錢硬幣滾進販賣機底下不見了。",
+    "exampleZh": "一枚便士滾進販賣機底下不見了。",
     "group": "Core 6"
   },
   {
@@ -27780,8 +27780,8 @@ export const sampleWords: WordEntry[] = [
     "word": "mum",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/mʌm/",
-    "meaningZh": "媽媽",
-    "supplementalMeaningZh": "沉默的；菊花",
+    "meaningZh": "沉默的",
+    "supplementalMeaningZh": "媽媽；菊花",
     "example": "The suspect stayed mum when reporters asked about the missing funds.",
     "exampleZh": "記者問失蹤款項時，嫌犯保持沉默。",
     "group": "Core 6"
@@ -27892,8 +27892,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/mikst/",
     "meaningZh": "混合的",
     "supplementalMeaningZh": "混雜的；複雜的",
-    "example": "The chef served a mixed salad with tomatoes and cucumbers.",
-    "exampleZh": "主廚端上一份有番茄和小黃瓜的綜合沙拉。",
+    "example": "The soup had mixed mushrooms from three mountain farms.",
+    "exampleZh": "那鍋湯用了三座山區農場的混合菇類。",
     "group": "Core 6"
   },
   {
@@ -27956,10 +27956,10 @@ export const sampleWords: WordEntry[] = [
     "word": "organized",
     "partOfSpeech": "a",
     "pronunciation": "/'ɔ:^әnaizd/",
-    "meaningZh": "有組織的",
-    "supplementalMeaningZh": "井然有序的；安排好的",
+    "meaningZh": "整齊的",
+    "supplementalMeaningZh": "有組織的；安排好的",
     "example": "Her organized pantry had labels on every spice jar.",
-    "exampleZh": "她井然有序的食品櫃裡每罐香料都貼著標籤。",
+    "exampleZh": "她整齊的食品櫃裡每罐香料都貼著標籤。",
     "group": "Core 6"
   },
   {
@@ -27979,7 +27979,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'reisiŋ/",
     "meaningZh": "賽車",
-    "supplementalMeaningZh": "賽馬；競賽",
+    "supplementalMeaningZh": "賽馬；競速",
     "example": "Night racing returned to the track after the typhoon repairs.",
     "exampleZh": "颱風修復後，夜間賽車重回賽道。",
     "group": "Core 6"
@@ -28044,8 +28044,8 @@ export const sampleWords: WordEntry[] = [
     "word": "prime",
     "partOfSpeech": "n / a / v",
     "pronunciation": "/praim/",
-    "meaningZh": "首要的",
-    "supplementalMeaningZh": "絕佳的；全盛期；質數",
+    "meaningZh": "絕佳的",
+    "supplementalMeaningZh": "主要的；全盛期",
     "example": "The old pier became a prime spot for sunset photos.",
     "exampleZh": "舊碼頭成了拍夕陽照的絕佳地點。",
     "group": "Core 6"
@@ -28055,10 +28055,10 @@ export const sampleWords: WordEntry[] = [
     "word": "provision",
     "partOfSpeech": "n / vt",
     "pronunciation": "/prә'viʒәn/",
-    "meaningZh": "供應",
-    "supplementalMeaningZh": "條款；準備；糧食",
-    "example": "The school made provision for extra buses during the typhoon season.",
-    "exampleZh": "學校為颱風季節預先安排了額外的公車。",
+    "meaningZh": "條款",
+    "supplementalMeaningZh": "規定；供應；準備",
+    "example": "One provision allows tenants to keep pets indoors.",
+    "exampleZh": "其中一項條款允許房客在室內養寵物。",
     "group": "Core 6"
   },
   {
@@ -28079,8 +28079,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'enibɒdi/",
     "meaningZh": "任何人",
     "supplementalMeaningZh": "有人；重要人物",
-    "example": "Can anybody here help me carry these boxes upstairs?",
-    "exampleZh": "這裡有誰能幫我把這些箱子搬上樓嗎？",
+    "example": "Can anybody with a flashlight help me check the broken lock?",
+    "exampleZh": "有沒有人可以拿手電筒幫我看看壞掉的鎖？",
     "group": "Core 6"
   },
   {
@@ -28168,7 +28168,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "民間的",
     "supplementalMeaningZh": "人們；家人",
     "example": "Local folk dancers filled the square with bells and red scarves.",
-    "exampleZh": "當地民俗舞者帶著鈴鐺和紅圍巾擠滿廣場。",
+    "exampleZh": "民間舞者帶著鈴鐺和紅圍巾擠滿廣場。",
     "group": "Core 6"
   },
   {
@@ -28176,8 +28176,8 @@ export const sampleWords: WordEntry[] = [
     "word": "being",
     "partOfSpeech": "n",
     "pronunciation": "/'bi:iŋ/",
-    "meaningZh": "存在",
-    "supplementalMeaningZh": "生物；生命",
+    "meaningZh": "生物",
+    "supplementalMeaningZh": "存在；生命",
     "example": "Every living being in the tide pool vanished at noon.",
     "exampleZh": "到了中午，潮池裡的生物全都消失了。",
     "group": "Core 6"
@@ -28253,10 +28253,10 @@ export const sampleWords: WordEntry[] = [
     "word": "crew",
     "partOfSpeech": "n",
     "pronunciation": "/kru:/",
-    "meaningZh": "全體工作人員",
-    "supplementalMeaningZh": "船員；團隊",
+    "meaningZh": "團隊",
+    "supplementalMeaningZh": "工作人員；船員",
     "example": "The film crew waited for sunlight beside the temple pond.",
-    "exampleZh": "劇組人員在廟池旁等待陽光。",
+    "exampleZh": "攝影團隊在廟池旁等待陽光。",
     "group": "Core 6"
   },
   {
@@ -28264,10 +28264,10 @@ export const sampleWords: WordEntry[] = [
     "word": "welfare",
     "partOfSpeech": "n / a",
     "pronunciation": "/'welfєә/",
-    "meaningZh": "福利",
-    "supplementalMeaningZh": "福祉；幸福",
+    "meaningZh": "福祉",
+    "supplementalMeaningZh": "福利；社會救助",
     "example": "The shelter checks each rescued dog's welfare before adoption.",
-    "exampleZh": "收容所在送養前會確認每隻救援犬的福祉。",
+    "exampleZh": "收容所在送養前會確認每隻救援犬的健康與福祉。",
     "group": "Core 6"
   },
   {
@@ -28309,9 +28309,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'kæθәlik/",
     "meaningZh": "天主教的",
-    "supplementalMeaningZh": "天主教徒；廣泛的",
-    "example": "My neighbor goes to a catholic church every Sunday morning.",
-    "exampleZh": "我的鄰居每個週日早上都去天主教堂。",
+    "supplementalMeaningZh": "天主教徒；廣泛的；包容的",
+    "example": "My aunt goes to a small Catholic church near the night market every Sunday.",
+    "exampleZh": "我阿姨每個星期天都會去夜市附近的一間小天主教堂。",
     "group": "Core 6"
   },
   {
@@ -28330,8 +28330,8 @@ export const sampleWords: WordEntry[] = [
     "word": "jury",
     "partOfSpeech": "n / a",
     "pronunciation": "/'dʒuәri/",
-    "meaningZh": "陪審團",
-    "supplementalMeaningZh": "評審團",
+    "meaningZh": "評審團",
+    "supplementalMeaningZh": "陪審團",
     "example": "The jury chose a clay teapot shaped like a whale.",
     "exampleZh": "評審團選中一把鯨魚造型陶壺。",
     "group": "Core 6"
@@ -28649,10 +28649,10 @@ export const sampleWords: WordEntry[] = [
     "word": "assembly",
     "partOfSpeech": "n",
     "pronunciation": "/ә'sembli/",
-    "meaningZh": "集會",
-    "supplementalMeaningZh": "組裝；議會",
-    "example": "The whole school gathered in the hall for the Monday morning assembly.",
-    "exampleZh": "全校師生星期一早上聚集在禮堂參加集會。",
+    "meaningZh": "組裝",
+    "supplementalMeaningZh": "集會；議會",
+    "example": "The assembly of the wooden puppet took three evenings.",
+    "exampleZh": "組裝那尊木偶花了三個晚上。",
     "group": "Core 6"
   },
   {
@@ -28903,7 +28903,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'grædʒueit/",
     "meaningZh": "畢業生",
-    "supplementalMeaningZh": "畢業；研究生；研究所的",
+    "supplementalMeaningZh": "畢業；研究生",
     "example": "The graduate sold coffee while applying for museum jobs.",
     "exampleZh": "那名畢業生邊賣咖啡邊應徵博物館工作。",
     "group": "Core 6"
@@ -29045,8 +29045,8 @@ export const sampleWords: WordEntry[] = [
     "word": "tissue",
     "partOfSpeech": "n",
     "pronunciation": "/'tiʃu:/",
-    "meaningZh": "面紙",
-    "supplementalMeaningZh": "組織；衛生紙",
+    "meaningZh": "組織",
+    "supplementalMeaningZh": "面紙",
     "example": "The surgeon sent tissue samples to the laboratory.",
     "exampleZh": "外科醫師把組織樣本送到實驗室。",
     "group": "Core 6"
@@ -29090,9 +29090,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'ә:niŋ/",
     "meaningZh": "收入",
-    "supplementalMeaningZh": "賺得的錢；薪資",
+    "supplementalMeaningZh": "賺來的錢；薪資",
     "example": "Her weekend earnings paid for new violin strings.",
-    "exampleZh": "她週末賺的錢，付了新小提琴弦的費用。",
+    "exampleZh": "她用週末賺來的錢買了新的小提琴弦。",
     "group": "Core 6"
   },
   {
@@ -29210,8 +29210,8 @@ export const sampleWords: WordEntry[] = [
     "word": "sustain",
     "partOfSpeech": "vt",
     "pronunciation": "/sә'stein/",
-    "meaningZh": "維持",
-    "supplementalMeaningZh": "支撐；承受；遭受",
+    "meaningZh": "承受",
+    "supplementalMeaningZh": "維持；支撐；遭受",
     "example": "The old dam cannot sustain another week of rain.",
     "exampleZh": "老舊水壩無法再承受一週雨勢。",
     "group": "Core 6"
@@ -29222,7 +29222,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'reiʃәl/",
     "meaningZh": "種族的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "族群的",
     "example": "Clear racial bias affected who received housing near the factory.",
     "exampleZh": "明顯的種族偏見，影響了誰有機會租到工廠附近的住處。",
     "group": "Core 6"
@@ -29276,8 +29276,8 @@ export const sampleWords: WordEntry[] = [
     "word": "peer",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/piә/",
-    "meaningZh": "同儕",
-    "supplementalMeaningZh": "費力看；貴族",
+    "meaningZh": "費力看",
+    "supplementalMeaningZh": "同輩；貴族",
     "example": "She had to peer through steam to read the sign.",
     "exampleZh": "她得隔著蒸氣費力細看，才能看清招牌。",
     "group": "Core 6"
@@ -29342,10 +29342,10 @@ export const sampleWords: WordEntry[] = [
     "word": "gesture",
     "partOfSpeech": "n / vi",
     "pronunciation": "/'dʒestʃә/",
-    "meaningZh": "手勢",
-    "supplementalMeaningZh": "姿態；表示善意的舉動",
-    "example": "He made a quiet gesture to tell us to stop talking.",
-    "exampleZh": "他比了個安靜的手勢，要我們別再講話。",
+    "meaningZh": "舉動",
+    "supplementalMeaningZh": "手勢；姿態",
+    "example": "Her small gesture of pouring tea softened his anger.",
+    "exampleZh": "她倒茶的小舉動緩和了他的怒氣。",
     "group": "Core 6"
   },
   {
@@ -29364,8 +29364,8 @@ export const sampleWords: WordEntry[] = [
     "word": "gang",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/gæŋ/",
-    "meaningZh": "幫派",
-    "supplementalMeaningZh": "一夥人；一群",
+    "meaningZh": "一幫",
+    "supplementalMeaningZh": "幫派；一群",
     "example": "A gang of pickpockets worked the festival entrance.",
     "exampleZh": "一幫扒手在節慶入口下手。",
     "group": "Core 6"
@@ -29387,9 +29387,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'dɒminәnt/",
     "meaningZh": "占優勢的",
-    "supplementalMeaningZh": "主導的；最明顯的",
-    "example": "Pop music is the dominant style among students at our school.",
-    "exampleZh": "流行音樂是我們學校學生之間最盛行的風格。",
+    "supplementalMeaningZh": "主導的；最顯著的",
+    "example": "The dominant scent in the shop was roasted sesame.",
+    "exampleZh": "店裡壓過其他味道的，是烘烤芝麻的香氣。",
     "group": "Core 6"
   },
   {
@@ -29499,7 +29499,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "磨坊",
     "supplementalMeaningZh": "工廠；研磨",
     "example": "The old rice mill still smells of warm grain.",
-    "exampleZh": "那間老碾米廠仍有溫熱穀物的味道。",
+    "exampleZh": "老碾米廠仍有溫熱穀物的味道。",
     "group": "Core 6"
   },
   {
@@ -29540,10 +29540,10 @@ export const sampleWords: WordEntry[] = [
     "word": "prominent",
     "partOfSpeech": "a",
     "pronunciation": "/'prɒminәnt/",
-    "meaningZh": "顯著的",
+    "meaningZh": "明顯的",
     "supplementalMeaningZh": "知名的；突出的",
     "example": "A prominent scar crossed the chef's left hand.",
-    "exampleZh": "主廚左手上有一道明顯的疤痕。",
+    "exampleZh": "主廚左手上有一道明顯疤痕。",
     "group": "Core 6"
   },
   {
@@ -29607,7 +29607,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'ædvәkeit/",
     "meaningZh": "倡議者",
-    "supplementalMeaningZh": "提倡；擁護者",
+    "supplementalMeaningZh": "提倡；支持者",
     "example": "Lena became an advocate for cleaner river water.",
     "exampleZh": "莉娜成了乾淨河水的倡議者。",
     "group": "Core 6"
@@ -29628,8 +29628,8 @@ export const sampleWords: WordEntry[] = [
     "word": "seize",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/si:z/",
-    "meaningZh": "抓住",
-    "supplementalMeaningZh": "查扣；逮捕；把握",
+    "meaningZh": "查扣",
+    "supplementalMeaningZh": "抓住；逮捕；把握",
     "example": "Customs officers seize fake medicine at the harbor weekly.",
     "exampleZh": "海關人員每週在港口查扣假藥。",
     "group": "Core 6"
@@ -29664,7 +29664,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "所有權",
     "supplementalMeaningZh": "擁有",
     "example": "Legal ownership of the orchard passed to the youngest daughter.",
-    "exampleZh": "果園的所有權轉到了小女兒名下。",
+    "exampleZh": "果園所有權轉到小女兒名下。",
     "group": "Core 6"
   },
   {
@@ -29870,10 +29870,10 @@ export const sampleWords: WordEntry[] = [
     "word": "jail",
     "partOfSpeech": "n / vt",
     "pronunciation": "/dʒeil/",
-    "meaningZh": "監獄",
-    "supplementalMeaningZh": "拘留所；監禁",
+    "meaningZh": "拘留所",
+    "supplementalMeaningZh": "監獄；監禁",
     "example": "He spent two nights in jail after the protest.",
-    "exampleZh": "抗議之後，他在牢裡待了兩個晚上。",
+    "exampleZh": "抗議後他在拘留所待了兩晚。",
     "group": "Core 6"
   },
   {
@@ -29895,7 +29895,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "團結",
     "supplementalMeaningZh": "一致；統一",
     "example": "The lantern parade gave the neighborhood a rare unity.",
-    "exampleZh": "燈籠遊行難得凝聚了整個社區。",
+    "exampleZh": "燈籠遊行讓整個社區難得團結在一起。",
     "group": "Core 6"
   },
   {
@@ -29936,8 +29936,8 @@ export const sampleWords: WordEntry[] = [
     "word": "veteran",
     "partOfSpeech": "n / a",
     "pronunciation": "/'vetәrәn/",
-    "meaningZh": "退伍軍人",
-    "supplementalMeaningZh": "老手；經驗豐富的",
+    "meaningZh": "老練的",
+    "supplementalMeaningZh": "退伍軍人；老手",
     "example": "The veteran sailor tied knots without looking down.",
     "exampleZh": "經驗老到的水手不用低頭也能打好繩結。",
     "group": "Core 6"
@@ -29947,10 +29947,10 @@ export const sampleWords: WordEntry[] = [
     "word": "solicitor",
     "partOfSpeech": "n",
     "pronunciation": "/sә'lisitә/",
-    "meaningZh": "事務律師",
-    "supplementalMeaningZh": "法律顧問；拉票員",
+    "meaningZh": "律師",
+    "supplementalMeaningZh": "法律顧問",
     "example": "The solicitor explained the inheritance papers beside the stove.",
-    "exampleZh": "事務律師在爐邊解釋繼承文件。",
+    "exampleZh": "律師在爐邊解釋繼承文件。",
     "group": "Core 6"
   },
   {
@@ -29958,10 +29958,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bare",
     "partOfSpeech": "a / vt",
     "pronunciation": "/bєә/",
-    "meaningZh": "赤裸的",
-    "supplementalMeaningZh": "光禿的；空的；露出",
+    "meaningZh": "光禿的",
+    "supplementalMeaningZh": "赤裸的；空的；露出",
     "example": "Long bare branches scratched the roof during the typhoon.",
-    "exampleZh": "光禿的長樹枝在颱風中刮著屋頂。",
+    "exampleZh": "光禿樹枝在颱風中刮著屋頂。",
     "group": "Core 6"
   },
   {
@@ -30079,8 +30079,8 @@ export const sampleWords: WordEntry[] = [
     "word": "fighter",
     "partOfSpeech": "n",
     "pronunciation": "/'faitә/",
-    "meaningZh": "戰士",
-    "supplementalMeaningZh": "鬥士；戰鬥機",
+    "meaningZh": "戰鬥機",
+    "supplementalMeaningZh": "戰士；鬥士",
     "example": "The fighter jet circled above the burning oil depot.",
     "exampleZh": "戰鬥機在燃燒的油庫上空盤旋。",
     "group": "Core 6"
@@ -30090,8 +30090,8 @@ export const sampleWords: WordEntry[] = [
     "word": "recruit",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/ri'kru:t/",
-    "meaningZh": "招募",
-    "supplementalMeaningZh": "新兵；新進人員",
+    "meaningZh": "新兵",
+    "supplementalMeaningZh": "招募；新人",
     "example": "The new recruit polished boots outside the barracks.",
     "exampleZh": "新兵在營房外擦亮靴子。",
     "group": "Core 6"
@@ -30148,7 +30148,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "噴射機",
     "supplementalMeaningZh": "噴射流；墨黑的",
     "example": "A private jet crossed the moon above the runway.",
-    "exampleZh": "一架私人噴射機從跑道上空的月亮前方飛過。",
+    "exampleZh": "一架私人噴射機掠過跑道上空，從月亮前方飛過。",
     "group": "Core 6"
   },
   {
@@ -30157,9 +30157,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kæriә/",
     "meaningZh": "運送者",
-    "supplementalMeaningZh": "帶原者；郵遞員；載體",
+    "supplementalMeaningZh": "郵差；帶原者；航空公司",
     "example": "A mail carrier rescued letters from the flooded porch.",
-    "exampleZh": "郵遞員從淹水的門廊搶救出信件。",
+    "exampleZh": "郵差從淹水的門廊搶救出信件。",
     "group": "Core 6"
   },
   {
@@ -30169,8 +30169,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'segmәnt/",
     "meaningZh": "部分",
     "supplementalMeaningZh": "片段；一瓣；分割",
-    "example": "The orange segment slipped from the child's chopsticks.",
-    "exampleZh": "那瓣橘子從孩子的筷子間滑落。",
+    "example": "The first segment of the class video shows how to fold paper cranes.",
+    "exampleZh": "課堂影片的第一部分示範如何摺紙鶴。",
     "group": "Core 6"
   },
   {
@@ -30245,7 +30245,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.æli'geiʃәn/",
     "meaningZh": "指控",
-    "supplementalMeaningZh": "主張；聲稱",
+    "supplementalMeaningZh": "聲稱；說法",
     "example": "The allegation that the spring was polluted alarmed tourists.",
     "exampleZh": "有人聲稱泉水遭到污染，讓遊客十分不安。",
     "group": "Core 6"
@@ -30277,8 +30277,8 @@ export const sampleWords: WordEntry[] = [
     "word": "retail",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'ri:teil/",
-    "meaningZh": "零售",
-    "supplementalMeaningZh": "零售的；零售業",
+    "meaningZh": "零售的",
+    "supplementalMeaningZh": "零售",
     "example": "Local retail prices rose sharply after the port strike.",
     "exampleZh": "港口罷工後，零售價格大幅上漲。",
     "group": "Core 6"
@@ -30310,7 +30310,7 @@ export const sampleWords: WordEntry[] = [
     "word": "await",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/ә'weit/",
-    "meaningZh": "等候",
+    "meaningZh": "等著",
     "supplementalMeaningZh": "",
     "example": "Three forms await signatures on the kitchen counter.",
     "exampleZh": "三份表格放在廚房流理台上等著簽名。",
@@ -30377,9 +30377,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'mʌnθli/",
     "meaningZh": "每月的",
-    "supplementalMeaningZh": "月刊；每月一次的",
-    "example": "The monthly magazine featured abandoned cinemas this issue.",
-    "exampleZh": "這期月刊專題介紹廢棄電影院。",
+    "supplementalMeaningZh": "月刊；每月一次地",
+    "example": "We pay the monthly phone bill at the convenience store near school.",
+    "exampleZh": "我們在學校附近的便利商店繳每個月的電話費。",
     "group": "Core 6"
   },
   {
@@ -30388,9 +30388,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/.revә'lu:ʃәnәri/",
     "meaningZh": "革命的",
-    "supplementalMeaningZh": "革命者；創新的；革新的",
+    "supplementalMeaningZh": "革命者；創新的",
     "example": "The revolutionary pamphlet was hidden inside a cookbook.",
-    "exampleZh": "那本革命小冊子被藏在一本食譜裡。",
+    "exampleZh": "革命小冊子藏在一本食譜裡。",
     "group": "Core 6"
   },
   {
@@ -30497,8 +30497,8 @@ export const sampleWords: WordEntry[] = [
     "word": "exploit",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'eksplɒit/",
-    "meaningZh": "利用",
-    "supplementalMeaningZh": "剝削；開發；功績",
+    "meaningZh": "剝削",
+    "supplementalMeaningZh": "利用；開發；功績",
     "example": "Unscrupulous brokers exploit migrants who cannot read contracts.",
     "exampleZh": "無良仲介剝削看不懂合約的移工。",
     "group": "Core 6"
@@ -30509,9 +30509,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/'eksikju:t/",
     "meaningZh": "執行",
-    "supplementalMeaningZh": "完成；處決",
-    "example": "The chef can execute the knife cut in seconds.",
-    "exampleZh": "主廚能在幾秒內完成那種刀工。",
+    "supplementalMeaningZh": "實行；完成；處決",
+    "example": "Our class will execute the cleanup plan as soon as the rain stops.",
+    "exampleZh": "雨一停，我們班就會執行打掃計畫。",
     "group": "Core 6"
   },
   {
@@ -30621,7 +30621,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "妥協",
     "supplementalMeaningZh": "折衷方案；危及",
     "example": "Their compromise allowed music until ten at night.",
-    "exampleZh": "他們的折衷方案允許音樂播放到晚上十點。",
+    "exampleZh": "他們的妥協允許音樂播放到晚上十點。",
     "group": "Core 6"
   },
   {
@@ -30685,9 +30685,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'libәli/",
     "meaningZh": "自由",
-    "supplementalMeaningZh": "自主權；許可",
-    "example": "The new rules gave sailors liberty after six weeks at sea.",
-    "exampleZh": "新規定讓水手出海六週後獲准上岸休假。",
+    "supplementalMeaningZh": "許可；冒昧",
+    "example": "Living alone gave my cousin the liberty to decorate her room however she liked.",
+    "exampleZh": "自己一個人住，讓表姊可以自由地照喜好布置房間。",
     "group": "Core 6"
   },
   {
@@ -30783,8 +30783,8 @@ export const sampleWords: WordEntry[] = [
     "word": "civilian",
     "partOfSpeech": "n / a",
     "pronunciation": "/si'viljәn/",
-    "meaningZh": "平民",
-    "supplementalMeaningZh": "民用的",
+    "meaningZh": "民用的",
+    "supplementalMeaningZh": "平民",
     "example": "Small civilian boats ferried medicine after the bridge collapsed.",
     "exampleZh": "橋塌後，民用船隻運送藥品。",
     "group": "Core 6"
@@ -30860,10 +30860,10 @@ export const sampleWords: WordEntry[] = [
     "word": "counterpart",
     "partOfSpeech": "n",
     "pronunciation": "/'kauntәpɑ:t/",
-    "meaningZh": "職務相當的人",
+    "meaningZh": "職位相當的人",
     "supplementalMeaningZh": "對應的人事物；對等物",
     "example": "Her counterpart in Japan sent heirloom seeds from Hokkaido.",
-    "exampleZh": "她在日本的職務相當者寄來北海道的傳家種子。",
+    "exampleZh": "她在日本職位相當的同行寄來北海道的傳家種子。",
     "group": "Core 6"
   },
   {
@@ -30972,8 +30972,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'prezidәnsi/",
     "meaningZh": "總統職位",
     "supplementalMeaningZh": "總統任期；總裁職位",
-    "example": "Her presidency began with a promise to improve public schools.",
-    "exampleZh": "她的總統任期從承諾改善公立學校開始。",
+    "example": "Her presidency began with a promise to improve public schools across the country.",
+    "exampleZh": "她就任總統之初，就承諾要改善全國的公立學校。",
     "group": "Core 6"
   },
   {
@@ -31091,8 +31091,8 @@ export const sampleWords: WordEntry[] = [
     "word": "convict",
     "partOfSpeech": "n / vt",
     "pronunciation": "/kәn'vikt/",
-    "meaningZh": "罪犯",
-    "supplementalMeaningZh": "判有罪；囚犯",
+    "meaningZh": "判有罪",
+    "supplementalMeaningZh": "罪犯；囚犯",
     "example": "The judge may convict him of stealing medicine.",
     "exampleZh": "法官可能判定他偷竊藥品有罪。",
     "group": "Core 6"
@@ -31159,7 +31159,7 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'izlɑ:m/",
     "meaningZh": "伊斯蘭教",
     "supplementalMeaningZh": "",
-    "example": "The course on islam filled quickly at the community center.",
+    "example": "The course on Islam filled quickly at the community center.",
     "exampleZh": "社區中心的伊斯蘭教課程很快額滿。",
     "group": "Core 6"
   },
@@ -31311,10 +31311,10 @@ export const sampleWords: WordEntry[] = [
     "word": "counsel",
     "partOfSpeech": "n / v",
     "pronunciation": "/'kaunsәl/",
-    "meaningZh": "建議",
-    "supplementalMeaningZh": "勸告；法律顧問",
-    "example": "She followed her teacher's counsel and chose the safer route.",
-    "exampleZh": "她聽從老師的建議，選了比較安全的路線。",
+    "meaningZh": "法律顧問",
+    "supplementalMeaningZh": "建議；勸告",
+    "example": "Her counsel advised silence until the warrant arrived.",
+    "exampleZh": "她的法律顧問建議在搜索令到前保持沉默。",
     "group": "Core 6"
   },
   {
@@ -31545,7 +31545,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "拍賣",
     "supplementalMeaningZh": "拍賣會",
     "example": "The auction began with a cracked porcelain bowl.",
-    "exampleZh": "拍賣從一只裂紋陶瓷碗開始。",
+    "exampleZh": "拍賣從一只裂紋瓷碗開始。",
     "group": "Core 6"
   },
   {
@@ -31597,10 +31597,10 @@ export const sampleWords: WordEntry[] = [
     "word": "plunge",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/plʌndʒ/",
-    "meaningZh": "跳入",
-    "supplementalMeaningZh": "暴跌；投入；驟降",
+    "meaningZh": "躍下",
+    "supplementalMeaningZh": "暴跌；投入；跳入",
     "example": "Tourists watched salmon plunge over the low waterfall.",
-    "exampleZh": "遊客看著鮭魚衝下低矮的瀑布。",
+    "exampleZh": "遊客看著鮭魚躍下低矮瀑布。",
     "group": "Core 6"
   },
   {
@@ -31641,8 +31641,8 @@ export const sampleWords: WordEntry[] = [
     "word": "instant",
     "partOfSpeech": "n / a",
     "pronunciation": "/'instәnt/",
-    "meaningZh": "立即的",
-    "supplementalMeaningZh": "瞬間；速食的",
+    "meaningZh": "速食的",
+    "supplementalMeaningZh": "立即的；瞬間",
     "example": "The instant noodles tasted better with pickled bamboo.",
     "exampleZh": "加了醃筍後，這碗泡麵更好吃。",
     "group": "Core 6"
@@ -31718,8 +31718,8 @@ export const sampleWords: WordEntry[] = [
     "word": "immune",
     "partOfSpeech": "a / n",
     "pronunciation": "/i'mju:n/",
-    "meaningZh": "免疫的",
-    "supplementalMeaningZh": "不受影響的；豁免的",
+    "meaningZh": "不受影響的",
+    "supplementalMeaningZh": "免疫的；豁免的",
     "example": "The nurse seemed immune to panic during the blackout.",
     "exampleZh": "停電期間，那名護理師似乎完全不受恐慌影響。",
     "group": "Core 6"
@@ -31751,10 +31751,10 @@ export const sampleWords: WordEntry[] = [
     "word": "cutting",
     "partOfSpeech": "n",
     "pronunciation": "/'kʌtiŋ/",
-    "meaningZh": "剪報",
-    "supplementalMeaningZh": "插枝；切割",
-    "example": "She kept a cutting from the newspaper about the school festival.",
-    "exampleZh": "她留著一份關於校慶的報紙剪報。",
+    "meaningZh": "切割",
+    "supplementalMeaningZh": "剪報；插枝",
+    "example": "The cutting of the ribbon took place before noon.",
+    "exampleZh": "剪綵在中午前舉行。",
     "group": "Core 6"
   },
   {
@@ -31763,7 +31763,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'rɒkit/",
     "meaningZh": "火箭",
-    "supplementalMeaningZh": "煙火；飛漲",
+    "supplementalMeaningZh": "煙火；急升",
     "example": "The homemade rocket landed behind the rice barn.",
     "exampleZh": "自製火箭落在米倉後方。",
     "group": "Core 6"
@@ -31806,8 +31806,8 @@ export const sampleWords: WordEntry[] = [
     "word": "halt",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/hɒ:lt/",
-    "meaningZh": "停止",
-    "supplementalMeaningZh": "中止；暫停",
+    "meaningZh": "停下",
+    "supplementalMeaningZh": "中止",
     "example": "The parade came to a halt beside the bakery.",
     "exampleZh": "遊行在麵包店旁停了下來。",
     "group": "Core 6"
@@ -31839,10 +31839,10 @@ export const sampleWords: WordEntry[] = [
     "word": "whip",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/hwip/",
-    "meaningZh": "鞭子",
-    "supplementalMeaningZh": "鞭打；攪打",
-    "example": "The rider held a whip while the horse trotted around the field.",
-    "exampleZh": "馬在場上小跑時，騎士手裡拿著一根鞭子。",
+    "meaningZh": "攪打",
+    "supplementalMeaningZh": "鞭打；鞭子；迅速完成",
+    "example": "The baker used a whisk to whip the cream.",
+    "exampleZh": "麵包師用打蛋器攪打鮮奶油。",
     "group": "Core 6"
   },
   {
@@ -31894,10 +31894,10 @@ export const sampleWords: WordEntry[] = [
     "word": "slim",
     "partOfSpeech": "a / vi / vt",
     "pronunciation": "/slim/",
-    "meaningZh": "苗條的",
-    "supplementalMeaningZh": "微小的；稀少的",
-    "example": "She stayed slim by walking to school every day.",
-    "exampleZh": "她每天走路上學，所以保持苗條。",
+    "meaningZh": "微小的",
+    "supplementalMeaningZh": "苗條的；稀少的",
+    "example": "A slim chance remained after the ferry departed.",
+    "exampleZh": "渡輪離開後，只剩微小機會。",
     "group": "Core 6"
   },
   {
@@ -31960,7 +31960,7 @@ export const sampleWords: WordEntry[] = [
     "word": "excess",
     "partOfSpeech": "n / a",
     "pronunciation": "/ik'ses/",
-    "meaningZh": "過量",
+    "meaningZh": "過量的",
     "supplementalMeaningZh": "過度；超額",
     "example": "Last month's excess rain split the tomatoes on the vine.",
     "exampleZh": "上個月雨下得太多，藤上的番茄都裂開了。",
@@ -31993,8 +31993,8 @@ export const sampleWords: WordEntry[] = [
     "word": "exile",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'eksail/",
-    "meaningZh": "流亡",
-    "supplementalMeaningZh": "流放；被放逐者",
+    "meaningZh": "流放",
+    "supplementalMeaningZh": "流亡者",
     "example": "Years of exile made the writer miss winter rain.",
     "exampleZh": "流亡多年，讓那位作家格外想念冬雨。",
     "group": "Core 6"
@@ -32037,8 +32037,8 @@ export const sampleWords: WordEntry[] = [
     "word": "renew",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/ri'nju:/",
-    "meaningZh": "更新",
-    "supplementalMeaningZh": "續約；恢復；換發",
+    "meaningZh": "換發",
+    "supplementalMeaningZh": "更新；續約；恢復",
     "example": "She must renew her passport before the concert tour.",
     "exampleZh": "巡演前她必須換發護照。",
     "group": "Core 6"
@@ -32125,8 +32125,8 @@ export const sampleWords: WordEntry[] = [
     "word": "amateur",
     "partOfSpeech": "n",
     "pronunciation": "/'æmәtә/",
-    "meaningZh": "業餘愛好者",
-    "supplementalMeaningZh": "外行人；業餘的",
+    "meaningZh": "業餘的",
+    "supplementalMeaningZh": "業餘愛好者；外行",
     "example": "An amateur astronomer spotted the comet from her balcony.",
     "exampleZh": "一名業餘天文愛好者從陽台看見彗星。",
     "group": "Core 6"
@@ -32180,10 +32180,10 @@ export const sampleWords: WordEntry[] = [
     "word": "surplus",
     "partOfSpeech": "n / a",
     "pronunciation": "/'sә:plәs/",
-    "meaningZh": "盈餘",
-    "supplementalMeaningZh": "過剩；剩餘的",
+    "meaningZh": "剩餘的",
+    "supplementalMeaningZh": "盈餘；過剩",
     "example": "Government surplus rice was stored in the school gym.",
-    "exampleZh": "政府的剩餘稻米被存放在學校體育館。",
+    "exampleZh": "政府餘糧被存放在學校體育館。",
     "group": "Core 6"
   },
   {
@@ -32249,7 +32249,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "協定",
     "supplementalMeaningZh": "條約；契約",
     "example": "The pact ended fishing disputes around the reef.",
-    "exampleZh": "這項協定平息了礁岩周邊的捕魚爭端。",
+    "exampleZh": "這項協議平息了礁岩周邊的捕魚爭端。",
     "group": "Core 6"
   },
   {
@@ -32346,7 +32346,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / prep",
     "pronunciation": "/vais/",
     "meaningZh": "惡習",
-    "supplementalMeaningZh": "缺點；副的",
+    "supplementalMeaningZh": "缺點；老虎鉗",
     "example": "Gambling became his vice after the shipyard closed.",
     "exampleZh": "造船廠關閉後，賭博成了他的惡習。",
     "group": "Core 6"
@@ -32370,7 +32370,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "日圓",
     "supplementalMeaningZh": "渴望",
     "example": "The ticket cost five thousand yen at the counter.",
-    "exampleZh": "那張票在櫃檯要價五千日圓。",
+    "exampleZh": "櫃台那張票要五千日圓。",
     "group": "Core 6"
   },
   {
@@ -32425,7 +32425,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "使受害",
     "supplementalMeaningZh": "迫害",
     "example": "Scammers often victimize older adults with official-looking tax letters.",
-    "exampleZh": "詐騙者常用看似官方的稅務信件，欺騙並傷害年長者。",
+    "exampleZh": "詐騙者常用看似官方的稅務信件，誘使年長者受騙。",
     "group": "Core 6"
   },
   {
@@ -32566,9 +32566,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/-/",
     "meaningZh": "相關的",
-    "supplementalMeaningZh": "聯合的；合作的",
-    "example": "Three associated clinics share one emergency hotline in the valley.",
-    "exampleZh": "三間聯合診所在山谷共用一支緊急專線。",
+    "supplementalMeaningZh": "聯合的；附屬的",
+    "example": "Headaches are often associated with too little sleep and too much screen time.",
+    "exampleZh": "頭痛常與睡眠不足和長時間盯著螢幕相關。",
     "group": "Core 6"
   },
   {
@@ -32611,8 +32611,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'treʒәri/",
     "meaningZh": "國庫",
     "supplementalMeaningZh": "財政部；寶庫",
-    "example": "The treasury ran short of money after the long war.",
-    "exampleZh": "長期戰爭過後，國庫的資金不足了。",
+    "example": "After years of war, the kingdom's treasury had almost no gold left.",
+    "exampleZh": "經過多年戰爭，王國的國庫幾乎沒有黃金了。",
     "group": "Core 6"
   },
   {
@@ -32763,10 +32763,10 @@ export const sampleWords: WordEntry[] = [
     "word": "beaten",
     "partOfSpeech": "a",
     "pronunciation": "/'bi:tn/",
-    "meaningZh": "被打敗的",
-    "supplementalMeaningZh": "被毆打的；筋疲力盡的；踩平的",
-    "example": "Our team felt beaten after losing the final game by ten points.",
-    "exampleZh": "我們隊伍以十分之差輸掉決賽，大家覺得被打敗了。",
+    "meaningZh": "被踩平的",
+    "supplementalMeaningZh": "被打敗的；筋疲力盡的",
+    "example": "The beaten path led behind the tea warehouse.",
+    "exampleZh": "被踩平的小路通到茶倉後方。",
     "group": "Core 6"
   },
   {
@@ -32799,7 +32799,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "蟑螂",
     "supplementalMeaningZh": "斜齒鯿",
     "example": "A roach ran across the kitchen floor when I turned on the light.",
-    "exampleZh": "我一開燈，一隻蟑螂就從廚房地板上跑過去。",
+    "exampleZh": "我一開燈，就有一隻蟑螂從廚房地板上跑過去。",
     "group": "Core 6"
   },
   {
@@ -32829,10 +32829,10 @@ export const sampleWords: WordEntry[] = [
     "word": "done",
     "partOfSpeech": "a",
     "pronunciation": "/dʌn/",
-    "meaningZh": "完成的",
-    "supplementalMeaningZh": "煮熟的；結束的",
-    "example": "My homework is done, so I can watch TV now.",
-    "exampleZh": "我的功課寫完了，所以現在可以看電視。",
+    "meaningZh": "熟的",
+    "supplementalMeaningZh": "完成的",
+    "example": "The dumplings are done when they float to the top.",
+    "exampleZh": "水餃浮上水面時就煮好了。",
     "group": "Core 6"
   },
   {
@@ -32851,10 +32851,10 @@ export const sampleWords: WordEntry[] = [
     "word": "last",
     "partOfSpeech": "a / vi / vt",
     "pronunciation": "/lɑ:st/",
-    "meaningZh": "最後的",
-    "supplementalMeaningZh": "上一個的；持續；維持",
-    "example": "This is the last bus to the station tonight.",
-    "exampleZh": "這是今晚開往車站的最後一班公車。",
+    "meaningZh": "夠用",
+    "supplementalMeaningZh": "持續；最後的；維持",
+    "example": "These batteries should last through the lantern parade.",
+    "exampleZh": "這些電池應該能撐完整場燈籠遊行。",
     "group": "Core 6"
   },
   {
@@ -32862,8 +32862,8 @@ export const sampleWords: WordEntry[] = [
     "word": "mean",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/mi:n/",
-    "meaningZh": "意指",
-    "supplementalMeaningZh": "吝嗇的；刻薄的；平均的",
+    "meaningZh": "表示",
+    "supplementalMeaningZh": "吝嗇的；平均的；刻薄的",
     "example": "The red flag can mean danger near the surf.",
     "exampleZh": "紅旗可能表示近岸浪區有危險。",
     "group": "Core 6"
@@ -32873,10 +32873,10 @@ export const sampleWords: WordEntry[] = [
     "word": "case",
     "partOfSpeech": "n / vt",
     "pronunciation": "/keis/",
-    "meaningZh": "情況",
-    "supplementalMeaningZh": "箱子；案例；案件",
-    "example": "In that case, we should take the earlier train.",
-    "exampleZh": "那樣的話，我們應該搭早一點的火車。",
+    "meaningZh": "箱子",
+    "supplementalMeaningZh": "情況；案例；案件",
+    "example": "This case holds six bottles of winter plum wine.",
+    "exampleZh": "這個箱子裝著六瓶冬梅酒。",
     "group": "Core 6"
   },
   {
@@ -32884,10 +32884,10 @@ export const sampleWords: WordEntry[] = [
     "word": "place",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/pleis/",
-    "meaningZh": "地方",
-    "supplementalMeaningZh": "放置；位置；名次",
-    "example": "This is a quiet place to study after school.",
-    "exampleZh": "這是個放學後適合念書的安靜地方。",
+    "meaningZh": "放置",
+    "supplementalMeaningZh": "地方；位置；名次",
+    "example": "Please place the lanterns beside the north gate.",
+    "exampleZh": "請把燈籠放在北門旁。",
     "group": "Core 6"
   },
   {
@@ -32895,10 +32895,10 @@ export const sampleWords: WordEntry[] = [
     "word": "long",
     "partOfSpeech": "a / vi / adv",
     "pronunciation": "/lɒŋ/",
-    "meaningZh": "長的",
-    "supplementalMeaningZh": "長久地；渴望",
-    "example": "The line for bubble tea was very long today.",
-    "exampleZh": "今天買珍珠奶茶的隊伍非常長。",
+    "meaningZh": "渴望",
+    "supplementalMeaningZh": "長的；長久地",
+    "example": "I long for the quiet harbor of my childhood.",
+    "exampleZh": "我渴望童年那座安靜港口。",
     "group": "Core 6"
   },
   {
@@ -32918,7 +32918,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/li:d. led/",
     "meaningZh": "帶領",
-    "supplementalMeaningZh": "領先；導致；鉛",
+    "supplementalMeaningZh": "領導；導致；鉛",
     "example": "The guide will lead hikers across the suspension bridge.",
     "exampleZh": "嚮導會帶領健行者穿越吊橋。",
     "group": "Core 6"
@@ -32983,10 +32983,10 @@ export const sampleWords: WordEntry[] = [
     "word": "present",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'preznt/",
-    "meaningZh": "禮物",
-    "supplementalMeaningZh": "現在的；在場的；提出",
-    "example": "She gave me a present for my birthday yesterday.",
-    "exampleZh": "她昨天送了我一份生日禮物。",
+    "meaningZh": "在場的",
+    "supplementalMeaningZh": "現在的；禮物；提出",
+    "example": "Every volunteer was present when the trucks arrived.",
+    "exampleZh": "卡車抵達時，每位志工都在場。",
     "group": "Core 6"
   },
   {
@@ -33170,8 +33170,8 @@ export const sampleWords: WordEntry[] = [
     "word": "introduction",
     "partOfSpeech": "n",
     "pronunciation": "/.intrә'dʌkʃәn/",
-    "meaningZh": "介紹",
-    "supplementalMeaningZh": "引進；序言；採用",
+    "meaningZh": "引進",
+    "supplementalMeaningZh": "介紹；序言",
     "example": "The introduction of night buses changed how nurses returned home.",
     "exampleZh": "夜間公車的引進改變護理師回家的方式。",
     "group": "Core 7"
@@ -33215,7 +33215,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/main/",
     "meaningZh": "礦坑",
-    "supplementalMeaningZh": "地雷；開採",
+    "supplementalMeaningZh": "我的；地雷；開採",
     "example": "The abandoned mine still stains the creek orange after heavy rain.",
     "exampleZh": "廢棄礦坑在大雨後仍把溪水染成橘色。",
     "group": "Core 7"
@@ -33412,10 +33412,10 @@ export const sampleWords: WordEntry[] = [
     "word": "presentation",
     "partOfSpeech": "n",
     "pronunciation": "/.prezәn'teiʃәn/",
-    "meaningZh": "簡報",
-    "supplementalMeaningZh": "介紹；呈現",
+    "meaningZh": "介紹",
+    "supplementalMeaningZh": "簡報；呈現",
     "example": "Her presentation on jade necklaces made every buyer lean closer.",
-    "exampleZh": "她關於翡翠項鍊的簡報讓每位買家都湊近看。",
+    "exampleZh": "她介紹翡翠項鍊時每位買家都湊近看。",
     "group": "Core 7"
   },
   {
@@ -33445,10 +33445,10 @@ export const sampleWords: WordEntry[] = [
     "word": "custom",
     "partOfSpeech": "n / a",
     "pronunciation": "/'kʌstәm/",
-    "meaningZh": "習俗",
-    "supplementalMeaningZh": "慣例；訂製的",
-    "example": "It is a local custom to bring fruit when visiting a neighbor.",
-    "exampleZh": "拜訪鄰居時帶水果是當地的習俗。",
+    "meaningZh": "訂製的",
+    "supplementalMeaningZh": "習俗；慣例",
+    "example": "The tailor made a custom jacket for the violinist.",
+    "exampleZh": "裁縫替那位小提琴手做了訂製外套。",
     "group": "Core 7"
   },
   {
@@ -33456,8 +33456,8 @@ export const sampleWords: WordEntry[] = [
     "word": "secondary",
     "partOfSpeech": "a",
     "pronunciation": "/'sekәndәri/",
-    "meaningZh": "中等教育的",
-    "supplementalMeaningZh": "次要的；輔助的",
+    "meaningZh": "次要的",
+    "supplementalMeaningZh": "中等教育的；輔助的",
     "example": "A secondary road led us around the fallen trees.",
     "exampleZh": "一條次要道路帶我們繞過倒樹。",
     "group": "Core 7"
@@ -33699,9 +33699,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/rʌb/",
     "meaningZh": "擦",
-    "supplementalMeaningZh": "摩擦；搓揉",
+    "supplementalMeaningZh": "摩擦；難處",
     "example": "Please rub sesame oil gently onto the bruised shoulder.",
-    "exampleZh": "請把芝麻油輕輕擦在瘀青的肩膀上。",
+    "exampleZh": "把芝麻油輕輕擦在瘀青肩膀上。",
     "group": "Core 7"
   },
   {
@@ -33712,7 +33712,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "關於",
     "supplementalMeaningZh": "",
     "example": "Passengers asked questions concerning the missing luggage at the service counter.",
-    "exampleZh": "旅客在服務櫃台詢問有關遺失行李的問題。",
+    "exampleZh": "旅客在服務櫃台詢問遺失行李問題。",
     "group": "Core 7"
   },
   {
@@ -33764,10 +33764,10 @@ export const sampleWords: WordEntry[] = [
     "word": "mouse",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/maus/",
-    "meaningZh": "老鼠",
-    "supplementalMeaningZh": "滑鼠",
-    "example": "A mouse ran under the hotel bed last night.",
-    "exampleZh": "昨晚有一隻老鼠跑到旅館床底下。",
+    "meaningZh": "滑鼠",
+    "supplementalMeaningZh": "老鼠",
+    "example": "A wireless mouse disappeared beneath the hotel bed.",
+    "exampleZh": "一隻無線滑鼠掉到旅館床底下。",
     "group": "Core 7"
   },
   {
@@ -33787,9 +33787,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/әd'ventʃә/",
     "meaningZh": "冒險經歷",
-    "supplementalMeaningZh": "冒險活動",
+    "supplementalMeaningZh": "冒險",
     "example": "Their canoe adventure ended at a quiet sandbar.",
-    "exampleZh": "他們的獨木舟冒險最後在一處安靜的沙洲結束。",
+    "exampleZh": "他們划著獨木舟冒險，最後抵達一處安靜的沙洲。",
     "group": "Core 7"
   },
   {
@@ -33797,10 +33797,10 @@ export const sampleWords: WordEntry[] = [
     "word": "flesh",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'fleʃ/",
-    "meaningZh": "肉",
-    "supplementalMeaningZh": "肉體；肌膚；果肉",
-    "example": "The knife cut deep into the flesh of his arm.",
-    "exampleZh": "刀子深深割進他手臂的肉裡。",
+    "meaningZh": "果肉",
+    "supplementalMeaningZh": "肉；肉體；肌膚",
+    "example": "Mango flesh stuck to the knife in golden strips.",
+    "exampleZh": "芒果果肉一條條黏在刀上。",
     "group": "Core 7"
   },
   {
@@ -33830,10 +33830,10 @@ export const sampleWords: WordEntry[] = [
     "word": "hunting",
     "partOfSpeech": "n",
     "pronunciation": "/'hʌntiŋ/",
-    "meaningZh": "狩獵",
-    "supplementalMeaningZh": "搜尋",
-    "example": "Hunting is not allowed in this national park.",
-    "exampleZh": "這座國家公園內禁止狩獵。",
+    "meaningZh": "尋找",
+    "supplementalMeaningZh": "狩獵",
+    "example": "Mushroom hunting kept them in the cedar forest until dusk.",
+    "exampleZh": "他們為了採菇，在杉林裡一直待到黃昏。",
     "group": "Core 7"
   },
   {
@@ -33865,8 +33865,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'wi:knis/",
     "meaningZh": "虛弱",
     "supplementalMeaningZh": "弱點",
-    "example": "The fever left him with weakness in his legs for days.",
-    "exampleZh": "發燒讓他的雙腿虛弱無力好幾天。",
+    "example": "The fever left a weakness in his legs for days.",
+    "exampleZh": "退燒後的好幾天，他的雙腿仍然虛弱無力。",
     "group": "Core 7"
   },
   {
@@ -33952,7 +33952,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/pig/",
     "meaningZh": "豬",
-    "supplementalMeaningZh": "貪吃的人",
+    "supplementalMeaningZh": "貪吃的人；邋遢的人",
     "example": "The farmer weighed the pig before loading the truck.",
     "exampleZh": "農夫把豬裝車前先秤重。",
     "group": "Core 7"
@@ -34117,9 +34117,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'lɒdʒik/",
     "meaningZh": "邏輯",
-    "supplementalMeaningZh": "推理方式；道理",
+    "supplementalMeaningZh": "推理；道理",
     "example": "The logic behind his shortcut failed at the flooded underpass.",
-    "exampleZh": "他走捷徑的邏輯，在淹水的地下道前徹底行不通。",
+    "exampleZh": "他抄捷徑的邏輯，在淹水的地下道前完全行不通。",
     "group": "Core 7"
   },
   {
@@ -34204,10 +34204,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sheep",
     "partOfSpeech": "n",
     "pronunciation": "/ʃi:p/",
-    "meaningZh": "綿羊",
-    "supplementalMeaningZh": "羊",
+    "meaningZh": "羊",
+    "supplementalMeaningZh": "綿羊",
     "example": "A lost sheep wandered near the tea farm fence.",
-    "exampleZh": "一隻迷路的綿羊在茶園圍籬旁徘徊。",
+    "exampleZh": "一隻迷路的羊在茶園圍籬旁徘徊。",
     "group": "Core 7"
   },
   {
@@ -34227,7 +34227,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'grændfɑ:ðә/",
     "meaningZh": "祖父",
-    "supplementalMeaningZh": "外祖父",
+    "supplementalMeaningZh": "外公",
     "example": "My grandfather carved bamboo whistles behind the house.",
     "exampleZh": "我祖父在屋後雕刻竹哨子。",
     "group": "Core 7"
@@ -34293,7 +34293,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'swɒlәu/",
     "meaningZh": "吞下",
-    "supplementalMeaningZh": "燕子；忍受；吞嚥",
+    "supplementalMeaningZh": "燕子；忍受；相信",
     "example": "She could barely swallow the bitter herbal tea.",
     "exampleZh": "她幾乎吞不下那杯苦草藥茶。",
     "group": "Core 7"
@@ -34347,8 +34347,8 @@ export const sampleWords: WordEntry[] = [
     "word": "disabled",
     "partOfSpeech": "a",
     "pronunciation": "/dis'eibld/",
-    "meaningZh": "身心障礙的",
-    "supplementalMeaningZh": "故障的；停用的",
+    "meaningZh": "故障的",
+    "supplementalMeaningZh": "身心障礙的；停用的",
     "example": "The disabled elevator forced guests to use the back stairs.",
     "exampleZh": "故障電梯迫使房客走後樓梯。",
     "group": "Core 7"
@@ -34358,8 +34358,8 @@ export const sampleWords: WordEntry[] = [
     "word": "cloth",
     "partOfSpeech": "n",
     "pronunciation": "/klɒ:θ. klɒθ/",
-    "meaningZh": "布料",
-    "supplementalMeaningZh": "抹布；布巾",
+    "meaningZh": "布巾",
+    "supplementalMeaningZh": "布料；抹布",
     "example": "A damp cloth cooled the feverish child's forehead.",
     "exampleZh": "濕布巾替發燒孩子額頭降溫。",
     "group": "Core 7"
@@ -34370,9 +34370,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.rezә'veiʃәn/",
     "meaningZh": "預訂",
-    "supplementalMeaningZh": "保留；疑慮",
+    "supplementalMeaningZh": "訂房；保留；疑慮",
     "example": "Our reservation at the hot spring inn includes breakfast.",
-    "exampleZh": "我們在溫泉旅館的預訂包含早餐。",
+    "exampleZh": "我們的溫泉旅館訂房包含早餐。",
     "group": "Core 7"
   },
   {
@@ -34380,10 +34380,10 @@ export const sampleWords: WordEntry[] = [
     "word": "attraction",
     "partOfSpeech": "n",
     "pronunciation": "/ә'trækʃәn/",
-    "meaningZh": "吸引力",
-    "supplementalMeaningZh": "景點；吸引人的事物",
+    "meaningZh": "吸引人的事物",
+    "supplementalMeaningZh": "吸引力；景點",
     "example": "The night market's main attraction is a century-old tofu stall.",
-    "exampleZh": "夜市最吸引人的景點是一家百年豆腐攤。",
+    "exampleZh": "那家百年豆腐攤，是夜市最吸引人的攤位。",
     "group": "Core 7"
   },
   {
@@ -34502,9 +34502,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/dә:t/",
     "meaningZh": "泥土",
-    "supplementalMeaningZh": "髒污",
+    "supplementalMeaningZh": "污垢",
     "example": "Fine dirt from the vegetable plot covered his sandals.",
-    "exampleZh": "菜園的細泥土沾滿了他的涼鞋。",
+    "exampleZh": "菜園細土沾滿他的涼鞋。",
     "group": "Core 7"
   },
   {
@@ -34545,8 +34545,8 @@ export const sampleWords: WordEntry[] = [
     "word": "silk",
     "partOfSpeech": "n / a",
     "pronunciation": "/silk/",
-    "meaningZh": "絲綢",
-    "supplementalMeaningZh": "絲織品；絲的",
+    "meaningZh": "絲的",
+    "supplementalMeaningZh": "絲綢；絲織品",
     "example": "Bright silk scarves fluttered outside the old fabric shop.",
     "exampleZh": "亮色絲巾在老布店外飄動。",
     "group": "Core 7"
@@ -34568,7 +34568,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/mʌd/",
     "meaningZh": "泥巴",
-    "supplementalMeaningZh": "泥濘；汙泥",
+    "supplementalMeaningZh": "污泥",
     "example": "Wet mud splashed onto the bride's white shoes.",
     "exampleZh": "濕泥巴濺到新娘的白鞋上。",
     "group": "Core 7"
@@ -34701,8 +34701,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'lemәn/",
     "meaningZh": "檸檬",
     "supplementalMeaningZh": "檸檬色",
-    "example": "A bright yellow lemon rolled under the restaurant refrigerator.",
-    "exampleZh": "一顆亮黃色檸檬滾到餐廳冰箱下。",
+    "example": "A bright lemon rolled under the restaurant refrigerator.",
+    "exampleZh": "一顆亮黃檸檬滾到餐廳冰箱下。",
     "group": "Core 7"
   },
   {
@@ -34779,7 +34779,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "廁所",
     "supplementalMeaningZh": "馬桶",
     "example": "The public toilet behind the station had no paper.",
-    "exampleZh": "車站後方的公廁沒有衛生紙。",
+    "exampleZh": "車站後方公廁沒有衛生紙。",
     "group": "Core 7"
   },
   {
@@ -34787,10 +34787,10 @@ export const sampleWords: WordEntry[] = [
     "word": "delicate",
     "partOfSpeech": "a",
     "pronunciation": "/'delikәt/",
-    "meaningZh": "脆弱易碎的",
-    "supplementalMeaningZh": "微妙的；精巧的；細緻的",
+    "meaningZh": "細緻的",
+    "supplementalMeaningZh": "微妙的；脆弱的；精巧的",
     "example": "Two delicate tea cups rattled when the train passed.",
-    "exampleZh": "兩個精緻的茶杯在火車經過時輕輕作響。",
+    "exampleZh": "兩只細緻茶杯在火車經過時輕響。",
     "group": "Core 7"
   },
   {
@@ -34812,7 +34812,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "信封",
     "supplementalMeaningZh": "封套",
     "example": "The envelope contained two tickets and a pressed fern.",
-    "exampleZh": "信封裡有兩張票和一片壓乾的蕨葉。",
+    "exampleZh": "信封裡有兩張票和壓乾蕨葉。",
     "group": "Core 7"
   },
   {
@@ -34831,8 +34831,8 @@ export const sampleWords: WordEntry[] = [
     "word": "realistic",
     "partOfSpeech": "a",
     "pronunciation": "/riә'listik/",
-    "meaningZh": "現實的",
-    "supplementalMeaningZh": "逼真的；實際的",
+    "meaningZh": "逼真的",
+    "supplementalMeaningZh": "實際的",
     "example": "The mural's realistic waves fooled visitors at first glance.",
     "exampleZh": "壁畫上的海浪太逼真，讓遊客第一眼以為是真的。",
     "group": "Core 7"
@@ -34854,9 +34854,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/sʌk/",
     "meaningZh": "吸",
-    "supplementalMeaningZh": "吮吸",
+    "supplementalMeaningZh": "吮吸；很糟",
     "example": "The pump can suck water from the flooded basement.",
-    "exampleZh": "幫浦能從淹水的地下室把水吸出來。",
+    "exampleZh": "幫浦能從淹水地下室吸水。",
     "group": "Core 7"
   },
   {
@@ -34975,9 +34975,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/drʌŋk/",
     "meaningZh": "醉酒的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "喝醉的人",
     "example": "A drunk tourist sang softly outside the hostel.",
-    "exampleZh": "一名醉酒的旅客在旅舍外輕聲唱歌。",
+    "exampleZh": "醉酒旅客在旅舍外輕聲唱歌。",
     "group": "Core 7"
   },
   {
@@ -35029,10 +35029,10 @@ export const sampleWords: WordEntry[] = [
     "word": "faint",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/feint/",
-    "meaningZh": "微弱的",
-    "supplementalMeaningZh": "昏倒；模糊的；淡淡的",
+    "meaningZh": "淡淡的",
+    "supplementalMeaningZh": "昏倒；微弱的",
     "example": "A faint smell of smoke drifted from the kitchen.",
-    "exampleZh": "一股淡淡的煙味從廚房飄了出來。",
+    "exampleZh": "淡淡煙味從廚房飄出。",
     "group": "Core 7"
   },
   {
@@ -35271,8 +35271,8 @@ export const sampleWords: WordEntry[] = [
     "word": "stiff",
     "partOfSpeech": "a / n / vt",
     "pronunciation": "/stif/",
-    "meaningZh": "僵硬的",
-    "supplementalMeaningZh": "硬挺的；嚴厲的；艱難的",
+    "meaningZh": "硬的",
+    "supplementalMeaningZh": "僵硬的；嚴厲的；艱難的",
     "example": "His stiff collar scratched his neck during the ceremony.",
     "exampleZh": "典禮進行時，硬挺的領子磨痛了他的脖子。",
     "group": "Core 7"
@@ -35304,10 +35304,10 @@ export const sampleWords: WordEntry[] = [
     "word": "farming",
     "partOfSpeech": "n",
     "pronunciation": "/'fɑ:miŋ/",
-    "meaningZh": "農業",
-    "supplementalMeaningZh": "耕作",
+    "meaningZh": "耕作",
+    "supplementalMeaningZh": "農業",
     "example": "Organic farming saved the hillside from chemical runoff.",
-    "exampleZh": "有機農業讓山坡免受化學逕流污染。",
+    "exampleZh": "有機耕作讓山坡免受化學逕流污染。",
     "group": "Core 7"
   },
   {
@@ -35437,9 +35437,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'pʌniʃ/",
     "meaningZh": "懲罰",
-    "supplementalMeaningZh": "",
-    "example": "The teacher decided not to punish the boy for protecting himself.",
-    "exampleZh": "老師決定不因那名男孩保護自己而懲罰他。",
+    "supplementalMeaningZh": "嚴厲對待",
+    "example": "The judge refused to punish the boy for protecting himself.",
+    "exampleZh": "法官拒絕懲罰那名為了自保的男孩。",
     "group": "Core 7"
   },
   {
@@ -35448,9 +35448,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / v",
     "pronunciation": "/'ʃælәu/",
     "meaningZh": "淺的",
-    "supplementalMeaningZh": "膚淺的",
+    "supplementalMeaningZh": "膚淺的；淺水處",
     "example": "Children played safely in the shallow end of the pool.",
-    "exampleZh": "孩子們在泳池的淺水區安全地玩耍。",
+    "exampleZh": "孩子們在泳池淺水區安全玩耍。",
     "group": "Core 7"
   },
   {
@@ -35514,9 +35514,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/swet/",
     "meaningZh": "汗",
-    "supplementalMeaningZh": "流汗；汗水",
+    "supplementalMeaningZh": "流汗；焦慮",
     "example": "Cold sweat soaked his shirt during the temple procession.",
-    "exampleZh": "廟會遊行時，冷汗浸濕了他的襯衫。",
+    "exampleZh": "廟會隊伍中冷汗浸透他的襯衫。",
     "group": "Core 7"
   },
   {
@@ -35711,8 +35711,8 @@ export const sampleWords: WordEntry[] = [
     "word": "purple",
     "partOfSpeech": "n / a / v",
     "pronunciation": "/'pә:pl/",
-    "meaningZh": "紫色",
-    "supplementalMeaningZh": "紫色的",
+    "meaningZh": "紫色的",
+    "supplementalMeaningZh": "紫色",
     "example": "Deep purple clouds gathered behind the lighthouse at dusk.",
     "exampleZh": "黃昏時深紫雲層聚在燈塔後方。",
     "group": "Core 7"
@@ -35745,7 +35745,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/sәb'stænʃәli/",
     "meaningZh": "大幅地",
-    "supplementalMeaningZh": "本質上；大體上",
+    "supplementalMeaningZh": "大體上；實質上",
     "example": "Prices at the night market rose substantially after the new metro station opened.",
     "exampleZh": "新捷運站開通後，夜市的物價大幅上漲。",
     "group": "Core 7"
@@ -35777,10 +35777,10 @@ export const sampleWords: WordEntry[] = [
     "word": "blank",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/blæŋk/",
-    "meaningZh": "空白的",
-    "supplementalMeaningZh": "空洞的；空格",
-    "example": "Please leave the last page of your notebook blank.",
-    "exampleZh": "請把你筆記本的最後一頁留白。",
+    "meaningZh": "空洞的",
+    "supplementalMeaningZh": "空白的",
+    "example": "His blank stare worried the nurse on duty.",
+    "exampleZh": "他空洞的眼神讓值班護理師擔心。",
     "group": "Core 7"
   },
   {
@@ -35876,8 +35876,8 @@ export const sampleWords: WordEntry[] = [
     "word": "awkward",
     "partOfSpeech": "a",
     "pronunciation": "/'ɒ:kwәd/",
-    "meaningZh": "尷尬的",
-    "supplementalMeaningZh": "笨拙的；棘手的；不便的",
+    "meaningZh": "彆扭的",
+    "supplementalMeaningZh": "尷尬的；笨拙的；棘手的",
     "example": "The awkward ladder angle made the balcony repair dangerous.",
     "exampleZh": "梯子的角度不對，讓修理陽台變得很危險。",
     "group": "Core 7"
@@ -35920,10 +35920,10 @@ export const sampleWords: WordEntry[] = [
     "word": "heating",
     "partOfSpeech": "n / a",
     "pronunciation": "/'hi:tiŋ/",
-    "meaningZh": "暖氣設備",
-    "supplementalMeaningZh": "供暖；加熱",
+    "meaningZh": "暖氣",
+    "supplementalMeaningZh": "加熱",
     "example": "The heating failed during the coldest night in January.",
-    "exampleZh": "一月最冷的那個晚上，暖氣設備故障了。",
+    "exampleZh": "一月最冷那晚暖氣故障。",
     "group": "Core 7"
   },
   {
@@ -35942,8 +35942,8 @@ export const sampleWords: WordEntry[] = [
     "word": "aged",
     "partOfSpeech": "a",
     "pronunciation": "/'eidʒid/",
-    "meaningZh": "年老的",
-    "supplementalMeaningZh": "熟成的；…歲的",
+    "meaningZh": "熟成的",
+    "supplementalMeaningZh": "年老的",
     "example": "The aged cheese tasted sharp and nutty tonight.",
     "exampleZh": "熟成起司今晚吃來辛香帶堅果味。",
     "group": "Core 7"
@@ -36096,8 +36096,8 @@ export const sampleWords: WordEntry[] = [
     "word": "click",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/klik/",
-    "meaningZh": "點擊",
-    "supplementalMeaningZh": "喀噠聲；突然懂了",
+    "meaningZh": "喀聲",
+    "supplementalMeaningZh": "點擊；突然懂了",
     "example": "A soft click came from the gate latch.",
     "exampleZh": "門閂傳來輕輕的喀噠聲。",
     "group": "Core 7"
@@ -36130,7 +36130,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'ætәm/",
     "meaningZh": "原子",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "微量",
     "example": "A single atom cannot be seen without special equipment.",
     "exampleZh": "沒有特殊設備就看不見單個原子。",
     "group": "Core 7"
@@ -36162,8 +36162,8 @@ export const sampleWords: WordEntry[] = [
     "word": "steer",
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/stiә/",
-    "meaningZh": "掌舵",
-    "supplementalMeaningZh": "引導；駕駛",
+    "meaningZh": "駕駛",
+    "supplementalMeaningZh": "引導；掌舵",
     "example": "The captain tried to steer away from drifting logs.",
     "exampleZh": "船長試著駛離漂流木。",
     "group": "Core 7"
@@ -36283,8 +36283,8 @@ export const sampleWords: WordEntry[] = [
     "word": "headache",
     "partOfSpeech": "n",
     "pronunciation": "/'hedeik/",
-    "meaningZh": "頭痛",
-    "supplementalMeaningZh": "麻煩事",
+    "meaningZh": "麻煩",
+    "supplementalMeaningZh": "頭痛",
     "example": "The broken elevator became a daily headache for residents.",
     "exampleZh": "故障電梯成了住戶每天的麻煩。",
     "group": "Core 7"
@@ -36329,8 +36329,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'æbsәnt/",
     "meaningZh": "缺席的",
     "supplementalMeaningZh": "不在的；缺乏的；心不在焉的",
-    "example": "Her brother was absent from the family portrait again.",
-    "exampleZh": "她哥哥又沒有出現在全家合照中。",
+    "example": "Her brother was absent from the family dinner again because of work.",
+    "exampleZh": "她哥哥又因為工作缺席了家庭聚餐。",
     "group": "Core 7"
   },
   {
@@ -36371,10 +36371,10 @@ export const sampleWords: WordEntry[] = [
     "word": "nonsense",
     "partOfSpeech": "n",
     "pronunciation": "/'nɒnsәns/",
-    "meaningZh": "胡說八道",
-    "supplementalMeaningZh": "無意義的話；荒唐的事",
+    "meaningZh": "荒唐",
+    "supplementalMeaningZh": "胡說",
     "example": "His excuse about invisible ink was pure nonsense.",
-    "exampleZh": "他說隱形墨水的藉口純屬胡說八道。",
+    "exampleZh": "他說隱形墨水的藉口完全荒唐。",
     "group": "Core 7"
   },
   {
@@ -36506,7 +36506,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "盡心的",
     "supplementalMeaningZh": "深愛的；忠誠的",
     "example": "A devoted nurse visited the old fisherman every morning.",
-    "exampleZh": "一位盡心盡力的護理師每天早上探望老漁夫。",
+    "exampleZh": "一位盡心護理師每天早上探望老漁夫。",
     "group": "Core 7"
   },
   {
@@ -36536,8 +36536,8 @@ export const sampleWords: WordEntry[] = [
     "word": "stair",
     "partOfSpeech": "n",
     "pronunciation": "/stєә/",
-    "meaningZh": "樓梯的一階",
-    "supplementalMeaningZh": "樓梯；階梯",
+    "meaningZh": "階梯",
+    "supplementalMeaningZh": "樓梯",
     "example": "The broken stair creaked under every careful step.",
     "exampleZh": "每當有人小心踩過，破損的階梯就吱吱作響。",
     "group": "Core 7"
@@ -36571,8 +36571,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'kærәt/",
     "meaningZh": "胡蘿蔔",
     "supplementalMeaningZh": "",
-    "example": "A crooked carrot poked out of the market basket.",
-    "exampleZh": "一根彎曲的胡蘿蔔從市場籃子裡探出來。",
+    "example": "A crooked carrot poked from the market basket.",
+    "exampleZh": "一根彎胡蘿蔔從市場籃裡探出。",
     "group": "Core 7"
   },
   {
@@ -36668,10 +36668,10 @@ export const sampleWords: WordEntry[] = [
     "word": "inability",
     "partOfSpeech": "n",
     "pronunciation": "/.inә'biliti/",
-    "meaningZh": "無能為力",
-    "supplementalMeaningZh": "無法；無能",
+    "meaningZh": "缺乏能力",
+    "supplementalMeaningZh": "無力；不能",
     "example": "His inability to sleep worsened after the quake.",
-    "exampleZh": "地震後，他無法入睡的情況更嚴重了。",
+    "exampleZh": "地震後他無法入睡的情況惡化。",
     "group": "Core 7"
   },
   {
@@ -36679,10 +36679,10 @@ export const sampleWords: WordEntry[] = [
     "word": "ending",
     "partOfSpeech": "n",
     "pronunciation": "/'endiŋ/",
-    "meaningZh": "結局",
-    "supplementalMeaningZh": "結尾",
+    "meaningZh": "結尾",
+    "supplementalMeaningZh": "結局",
     "example": "The film's quiet ending left the theater silent.",
-    "exampleZh": "電影安靜的結局讓整間戲院沉默下來。",
+    "exampleZh": "電影在寂靜中結束，整間戲院也跟著沉默下來。",
     "group": "Core 7"
   },
   {
@@ -36877,10 +36877,10 @@ export const sampleWords: WordEntry[] = [
     "word": "jam",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/dʒæm/",
-    "meaningZh": "果醬",
-    "supplementalMeaningZh": "堵塞；卡住；困境",
-    "example": "She spread strawberry jam on her toast before going to school.",
-    "exampleZh": "她上學前在吐司上抹了草莓果醬。",
+    "meaningZh": "堵塞",
+    "supplementalMeaningZh": "果醬；卡住；困境",
+    "example": "A traffic jam trapped the ambulance near the bridge.",
+    "exampleZh": "交通堵塞讓救護車困在橋邊。",
     "group": "Core 7"
   },
   {
@@ -36977,7 +36977,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/ʌm'brelә/",
     "meaningZh": "雨傘",
-    "supplementalMeaningZh": "陽傘；保護傘；傘狀物",
+    "supplementalMeaningZh": "保護傘；傘狀物",
     "example": "Her umbrella turned inside out on the harbor road.",
     "exampleZh": "她的雨傘在港邊道路上被風吹到整個翻了過去。",
     "group": "Core 7"
@@ -37001,7 +37001,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "發亮的",
     "supplementalMeaningZh": "有光澤的",
     "example": "The shiny coins covered the fortune teller's table.",
-    "exampleZh": "閃亮的硬幣鋪滿了算命師的桌面。",
+    "exampleZh": "發亮硬幣鋪滿算命師桌面。",
     "group": "Core 7"
   },
   {
@@ -37012,7 +37012,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "環境",
     "supplementalMeaningZh": "周遭事物",
     "example": "The quiet surroundings made the hill temple feel remote.",
-    "exampleZh": "安靜的周遭環境讓這座山寺顯得很偏遠。",
+    "exampleZh": "安靜環境讓山寺顯得偏遠。",
     "group": "Core 7"
   },
   {
@@ -37034,7 +37034,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "再見",
     "supplementalMeaningZh": "告別；道別",
     "example": "She whispered goodbye before boarding the midnight train.",
-    "exampleZh": "她在登上午夜列車前輕聲說了再見。",
+    "exampleZh": "她登上午夜列車前輕聲道別。",
     "group": "Core 7"
   },
   {
@@ -37054,9 +37054,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'rʌbiʃ/",
     "meaningZh": "垃圾",
-    "supplementalMeaningZh": "廢話；胡說",
+    "supplementalMeaningZh": "胡說",
     "example": "Wind blew rubbish across the empty parking lot.",
-    "exampleZh": "風把垃圾吹過了空蕩蕩的停車場。",
+    "exampleZh": "風把垃圾吹過空停車場。",
     "group": "Core 7"
   },
   {
@@ -37163,10 +37163,10 @@ export const sampleWords: WordEntry[] = [
     "word": "suitcase",
     "partOfSpeech": "n",
     "pronunciation": "/'sju:tkeis/",
-    "meaningZh": "行李箱",
-    "supplementalMeaningZh": "手提箱",
+    "meaningZh": "手提箱",
+    "supplementalMeaningZh": "行李箱",
     "example": "Her suitcase rolled down the ferry ramp alone.",
-    "exampleZh": "她的行李箱自己滾下了渡輪的斜坡。",
+    "exampleZh": "她的手提箱自己滾下渡輪斜坡。",
     "group": "Core 7"
   },
   {
@@ -37175,9 +37175,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'dʒelәs/",
     "meaningZh": "嫉妒的",
-    "supplementalMeaningZh": "吃醋的",
+    "supplementalMeaningZh": "羨慕的",
     "example": "He felt jealous when his sister won the kite race.",
-    "exampleZh": "妹妹贏得風箏比賽時，他覺得很嫉妒。",
+    "exampleZh": "妹妹贏風箏賽時他很嫉妒。",
     "group": "Core 7"
   },
   {
@@ -37252,9 +37252,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vi / vt",
     "pronunciation": "/'sauә/",
     "meaningZh": "酸的",
-    "supplementalMeaningZh": "酸臭的；變壞；乖戾的",
+    "supplementalMeaningZh": "酸臭的；變壞",
     "example": "The milk smelled sour after hours in the sun.",
-    "exampleZh": "牛奶曬了幾小時後聞起來酸酸的。",
+    "exampleZh": "牛奶曬了幾小時後聞起來酸臭。",
     "group": "Core 7"
   },
   {
@@ -37317,10 +37317,10 @@ export const sampleWords: WordEntry[] = [
     "word": "backward",
     "partOfSpeech": "adv / a",
     "pronunciation": "/'bækwәd/",
-    "meaningZh": "向後地",
-    "supplementalMeaningZh": "落後的；倒過來地",
+    "meaningZh": "向後",
+    "supplementalMeaningZh": "落後的",
     "example": "The old truck rolled backward toward the ditch.",
-    "exampleZh": "那輛老卡車向後滑向水溝。",
+    "exampleZh": "老卡車向後滑向水溝。",
     "group": "Core 7"
   },
   {
@@ -37372,10 +37372,10 @@ export const sampleWords: WordEntry[] = [
     "word": "lazy",
     "partOfSpeech": "a / vi",
     "pronunciation": "/'leizi/",
-    "meaningZh": "懶惰的",
-    "supplementalMeaningZh": "慵懶的；緩慢的",
+    "meaningZh": "慵懶的",
+    "supplementalMeaningZh": "懶惰的；緩慢的",
     "example": "A lazy afternoon settled over the fishing port.",
-    "exampleZh": "慵懶的午後籠罩著漁港。",
+    "exampleZh": "慵懶午後籠罩漁港。",
     "group": "Core 7"
   },
   {
@@ -37526,8 +37526,8 @@ export const sampleWords: WordEntry[] = [
     "word": "whistle",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'hwisl/",
-    "meaningZh": "口哨聲",
-    "supplementalMeaningZh": "哨子；吹口哨；鳴笛",
+    "meaningZh": "哨聲",
+    "supplementalMeaningZh": "口哨；吹口哨；鳴笛",
     "example": "A whistle from the lifeguard cleared swimmers from the rocks.",
     "exampleZh": "救生員一吹哨，泳客便紛紛離開礁石區。",
     "group": "Core 7"
@@ -37548,8 +37548,8 @@ export const sampleWords: WordEntry[] = [
     "word": "chemist",
     "partOfSpeech": "n",
     "pronunciation": "/'kemist/",
-    "meaningZh": "藥師",
-    "supplementalMeaningZh": "化學家",
+    "meaningZh": "化學家",
+    "supplementalMeaningZh": "藥師",
     "example": "The chemist tested the dye under ultraviolet light.",
     "exampleZh": "化學家用紫外光檢測染料。",
     "group": "Core 7"
@@ -37724,10 +37724,10 @@ export const sampleWords: WordEntry[] = [
     "word": "alcoholic",
     "partOfSpeech": "n / a",
     "pronunciation": "/.ælkә'hɒlik/",
-    "meaningZh": "含酒精的",
+    "meaningZh": "酒精的",
     "supplementalMeaningZh": "酗酒者",
     "example": "All alcoholic drinks are locked away during the school fair.",
-    "exampleZh": "校慶期間所有含酒精的飲料都被鎖起來。",
+    "exampleZh": "校慶期間所有酒精飲料都被鎖起來。",
     "group": "Core 7"
   },
   {
@@ -37757,10 +37757,10 @@ export const sampleWords: WordEntry[] = [
     "word": "irritate",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'iriteit/",
-    "meaningZh": "激怒",
-    "supplementalMeaningZh": "刺激；使發炎",
-    "example": "Loud chewing can irritate me during quiet exams.",
-    "exampleZh": "安靜的考試中，大聲咀嚼會讓我很煩。",
+    "meaningZh": "刺激",
+    "supplementalMeaningZh": "惹惱；使發炎",
+    "example": "Dry dust can irritate the eyes during harvest.",
+    "exampleZh": "收割時乾塵會刺激眼睛。",
     "group": "Core 7"
   },
   {
@@ -37768,8 +37768,8 @@ export const sampleWords: WordEntry[] = [
     "word": "sting",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/stiŋ/",
-    "meaningZh": "刺痛",
-    "supplementalMeaningZh": "叮咬；螫傷",
+    "meaningZh": "叮咬",
+    "supplementalMeaningZh": "刺痛；刺傷",
     "example": "A wasp sting left his wrist swollen for hours.",
     "exampleZh": "被黃蜂螫了一下後，他的手腕腫了好幾個小時。",
     "group": "Core 7"
@@ -37835,9 +37835,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/ә'prɒksimәt/",
     "meaningZh": "大約的",
-    "supplementalMeaningZh": "近似的；接近",
+    "supplementalMeaningZh": "近似的；粗估",
     "example": "The approximate cost includes paint, tiles, and delivery.",
-    "exampleZh": "大約的費用包含油漆、磁磚和運費。",
+    "exampleZh": "估算費用包含油漆磁磚和運費。",
     "group": "Core 7"
   },
   {
@@ -37856,10 +37856,10 @@ export const sampleWords: WordEntry[] = [
     "word": "engaged",
     "partOfSpeech": "a",
     "pronunciation": "/in'geidʒd/",
-    "meaningZh": "訂婚的",
-    "supplementalMeaningZh": "忙碌的；佔線的；從事的",
-    "example": "She was engaged to her classmate before they finished university.",
-    "exampleZh": "她在大學畢業前就和同班同學訂婚了。",
+    "meaningZh": "佔線的",
+    "supplementalMeaningZh": "忙碌的；訂婚的；使用中的",
+    "example": "The phone line stayed engaged through the storm.",
+    "exampleZh": "暴風雨中電話線一直占線。",
     "group": "Core 7"
   },
   {
@@ -37867,10 +37867,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bin",
     "partOfSpeech": "n",
     "pronunciation": "/bin/",
-    "meaningZh": "垃圾桶",
-    "supplementalMeaningZh": "箱子；儲物箱",
-    "example": "Please throw the empty bottles into the recycling bin.",
-    "exampleZh": "請把空瓶丟進資源回收桶。",
+    "meaningZh": "桶",
+    "supplementalMeaningZh": "箱子；垃圾桶",
+    "example": "Place the broken glass in the metal bin.",
+    "exampleZh": "把碎玻璃放進金屬桶裡。",
     "group": "Core 7"
   },
   {
@@ -37878,10 +37878,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bent",
     "partOfSpeech": "a / n",
     "pronunciation": "/bent/",
-    "meaningZh": "彎曲的",
-    "supplementalMeaningZh": "決心的；天分",
+    "meaningZh": "彎掉的",
+    "supplementalMeaningZh": "決心的；興趣",
     "example": "A bent spoon lay under the noodle cart.",
-    "exampleZh": "一支彎曲的湯匙躺在麵攤下。",
+    "exampleZh": "彎掉的湯匙躺在麵攤下。",
     "group": "Core 7"
   },
   {
@@ -37945,9 +37945,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/-/",
     "meaningZh": "海關",
-    "supplementalMeaningZh": "關稅；風俗習慣",
-    "example": "The customs officer opened her suitcase after the long flight.",
-    "exampleZh": "長途飛行後，海關人員打開了她的行李箱。",
+    "supplementalMeaningZh": "關稅",
+    "example": "Airport customs opened her suitcase after the long flight.",
+    "exampleZh": "長途飛行後機場海關打開她的手提箱。",
     "group": "Core 7"
   },
   {
@@ -37955,10 +37955,10 @@ export const sampleWords: WordEntry[] = [
     "word": "typically",
     "partOfSpeech": "adv",
     "pronunciation": "/'tipikәli/",
-    "meaningZh": "通常",
-    "supplementalMeaningZh": "典型地；具代表性地",
-    "example": "Students typically arrive at school before eight in the morning.",
-    "exampleZh": "學生通常在早上八點前到校。",
+    "meaningZh": "典型地",
+    "supplementalMeaningZh": "通常",
+    "example": "The design is typically Taiwanese, with tiles and shaded arcades.",
+    "exampleZh": "這設計很有台灣特色，有磁磚和騎樓。",
     "group": "Core 7"
   },
   {
@@ -37977,10 +37977,10 @@ export const sampleWords: WordEntry[] = [
     "word": "closed",
     "partOfSpeech": "a",
     "pronunciation": "/klәuzd/",
-    "meaningZh": "關閉的",
-    "supplementalMeaningZh": "打烊的；封閉的",
+    "meaningZh": "關門的",
+    "supplementalMeaningZh": "關閉的；封閉的",
     "example": "The closed bakery still smelled of butter after midnight.",
-    "exampleZh": "午夜過後，打烊的麵包店仍飄著奶油香。",
+    "exampleZh": "午夜過後，關了門的麵包店仍飄著奶油香。",
     "group": "Core 7"
   },
   {
@@ -38087,10 +38087,10 @@ export const sampleWords: WordEntry[] = [
     "word": "honestly",
     "partOfSpeech": "adv",
     "pronunciation": "/'ɒnistli/",
-    "meaningZh": "誠實地",
-    "supplementalMeaningZh": "說真的；老實說",
-    "example": "She honestly told her teacher that she had forgotten the homework.",
-    "exampleZh": "她誠實地告訴老師自己忘了寫作業。",
+    "meaningZh": "真心地",
+    "supplementalMeaningZh": "誠實地",
+    "example": "She honestly thought the fried oysters tasted better yesterday.",
+    "exampleZh": "她真心覺得炸蚵昨天比較好吃。",
     "group": "Core 7"
   },
   {
@@ -38111,8 +38111,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'brɒ:dli/",
     "meaningZh": "廣泛地",
     "supplementalMeaningZh": "大致上",
-    "example": "The new rule applies broadly to all students in our school.",
-    "exampleZh": "新規定廣泛適用於我們學校的所有學生。",
+    "example": "The new rule applies broadly to coastal rentals.",
+    "exampleZh": "新規定廣泛適用海岸出租屋。",
     "group": "Core 7"
   },
   {
@@ -38176,9 +38176,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv",
     "pronunciation": "/ɒ:l'tә:nәtivli/",
     "meaningZh": "或者",
-    "supplementalMeaningZh": "否則",
-    "example": "We could take the bus; alternatively, we could ride our bikes.",
-    "exampleZh": "我們可以搭公車，或者也可以騎腳踏車。",
+    "supplementalMeaningZh": "",
+    "example": "You can alternatively take the coastal bus after lunch.",
+    "exampleZh": "或者你午餐後可以搭海岸公車。",
     "group": "Core 7"
   },
   {
@@ -38266,7 +38266,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "未遂的",
     "supplementalMeaningZh": "企圖的",
     "example": "The attempted robbery failed when the alarm rang.",
-    "exampleZh": "警報一響，那起搶劫未遂。",
+    "exampleZh": "警報響起後那起搶劫沒有得逞。",
     "group": "Core 7"
   },
   {
@@ -38275,7 +38275,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'klaimiŋ/",
     "meaningZh": "攀爬",
-    "supplementalMeaningZh": "登山運動",
+    "supplementalMeaningZh": "上升的",
     "example": "Careful climbing on the wet ladder required both hands.",
     "exampleZh": "在濕梯上小心攀爬需要雙手並用。",
     "group": "Core 7"
@@ -38319,9 +38319,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/di'presiŋ/",
     "meaningZh": "令人沮喪的",
-    "supplementalMeaningZh": "陰鬱的；令人憂鬱的",
+    "supplementalMeaningZh": "沉悶的；陰鬱的",
     "example": "The empty amusement park looked depressing in the rain.",
-    "exampleZh": "雨中空蕩蕩的遊樂園看起來令人沮喪。",
+    "exampleZh": "雨中空無一人的遊樂園看起來令人沮喪。",
     "group": "Core 7"
   },
   {
@@ -38329,10 +38329,10 @@ export const sampleWords: WordEntry[] = [
     "word": "kindly",
     "partOfSpeech": "a / adv",
     "pronunciation": "/'kaindli/",
-    "meaningZh": "和藹的",
-    "supplementalMeaningZh": "親切地；好心地",
+    "meaningZh": "親切地",
+    "supplementalMeaningZh": "和藹的；請",
     "example": "The old barber spoke kindly to nervous children.",
-    "exampleZh": "老理髮師親切地安撫緊張的孩子。",
+    "exampleZh": "老理髮師親切安撫緊張孩子。",
     "group": "Core 7"
   },
   {
@@ -38353,8 +38353,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'raidiŋ/",
     "meaningZh": "騎乘",
     "supplementalMeaningZh": "騎術；騎馬",
-    "example": "Riding a bike through the tunnel made her ears pop.",
-    "exampleZh": "騎腳踏車穿過隧道時，她的耳朵因氣壓變化而悶住。",
+    "example": "Night riding through the tunnel made her ears pop.",
+    "exampleZh": "夜裡騎車穿過隧道時，她的耳朵因氣壓變化而悶住。",
     "group": "Core 7"
   },
   {
@@ -38373,10 +38373,10 @@ export const sampleWords: WordEntry[] = [
     "word": "covering",
     "partOfSpeech": "n / a",
     "pronunciation": "/'kʌvәriŋ/",
-    "meaningZh": "覆蓋物",
-    "supplementalMeaningZh": "遮蔽物；覆蓋層",
+    "meaningZh": "遮蔽物",
+    "supplementalMeaningZh": "覆蓋物",
     "example": "A bamboo covering shaded the vegetable stall all afternoon.",
-    "exampleZh": "竹製覆蓋物整個下午替菜攤遮陰。",
+    "exampleZh": "竹製遮蔽物整下午替菜攤遮陰。",
     "group": "Core 7"
   },
   {
@@ -38406,8 +38406,8 @@ export const sampleWords: WordEntry[] = [
     "word": "confined",
     "partOfSpeech": "a",
     "pronunciation": "/kәn'faind/",
-    "meaningZh": "受限制的",
-    "supplementalMeaningZh": "狹窄的；被禁閉的",
+    "meaningZh": "狹窄的",
+    "supplementalMeaningZh": "受限制的；禁閉的",
     "example": "The confined room smelled of paint and wet plaster.",
     "exampleZh": "狹小的房間裡瀰漫著油漆和濕灰泥的味道。",
     "group": "Core 7"
@@ -38439,8 +38439,8 @@ export const sampleWords: WordEntry[] = [
     "word": "just",
     "partOfSpeech": "a / adv",
     "pronunciation": "/dʒʌst/",
-    "meaningZh": "剛剛",
-    "supplementalMeaningZh": "只是；正好；公正的",
+    "meaningZh": "公正的",
+    "supplementalMeaningZh": "剛剛；只是；正好",
     "example": "A just decision gave both sisters equal shares.",
     "exampleZh": "公正決定讓姊妹分得相同份額。",
     "group": "Core 7"
@@ -38463,8 +38463,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'faindiŋ/",
     "meaningZh": "發現",
     "supplementalMeaningZh": "調查結果；裁決",
-    "example": "The scientist's finding surprised everyone in the class.",
-    "exampleZh": "科學家的發現讓全班同學都很驚訝。",
+    "example": "The study's main finding surprised every student in our science club.",
+    "exampleZh": "這項研究的主要發現讓科學社每位同學都很驚訝。",
     "group": "Core 7"
   },
   {
@@ -38483,10 +38483,10 @@ export const sampleWords: WordEntry[] = [
     "word": "setting",
     "partOfSpeech": "n",
     "pronunciation": "/'setiŋ/",
-    "meaningZh": "環境",
-    "supplementalMeaningZh": "背景；設定；鑲嵌",
+    "meaningZh": "背景",
+    "supplementalMeaningZh": "環境；設定；鑲嵌",
     "example": "The mountain setting made the wedding feel private.",
-    "exampleZh": "山間的環境讓這場婚禮感覺格外私密。",
+    "exampleZh": "婚禮辦在山間，感覺格外私密。",
     "group": "Core 7"
   },
   {
@@ -38527,8 +38527,8 @@ export const sampleWords: WordEntry[] = [
     "word": "bind",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/baind/",
-    "meaningZh": "綁住",
-    "supplementalMeaningZh": "裝訂；約束；包紮",
+    "meaningZh": "裝訂",
+    "supplementalMeaningZh": "綁住；約束；包紮",
     "example": "Please bind the loose pages before the wind scatters them again.",
     "exampleZh": "風再次吹散前，請把散頁裝訂好。",
     "group": "Core 8"
@@ -38615,8 +38615,8 @@ export const sampleWords: WordEntry[] = [
     "word": "multiple",
     "partOfSpeech": "n / a",
     "pronunciation": "/'mʌltipl/",
-    "meaningZh": "多重的",
-    "supplementalMeaningZh": "許多的；倍數",
+    "meaningZh": "許多的",
+    "supplementalMeaningZh": "多重的；倍數",
     "example": "On Monday, multiple trains were delayed after branches fell across the mountain line.",
     "exampleZh": "週一樹枝倒在山線鐵軌上，許多列車因此誤點。",
     "group": "Core 8"
@@ -38637,8 +38637,8 @@ export const sampleWords: WordEntry[] = [
     "word": "perceive",
     "partOfSpeech": "vt",
     "pronunciation": "/pә'si:v/",
-    "meaningZh": "察覺",
-    "supplementalMeaningZh": "理解；認為",
+    "meaningZh": "感受",
+    "supplementalMeaningZh": "察覺；理解",
     "example": "Children perceive danger differently when adults remain calm beside them.",
     "exampleZh": "大人陪在身旁保持冷靜時，孩子對危險的感受會不同。",
     "group": "Core 8"
@@ -38659,10 +38659,10 @@ export const sampleWords: WordEntry[] = [
     "word": "undertake",
     "partOfSpeech": "vt",
     "pronunciation": "/.ʌndә'teik/",
-    "meaningZh": "承擔",
-    "supplementalMeaningZh": "著手進行；保證；從事",
+    "meaningZh": "從事",
+    "supplementalMeaningZh": "承擔；著手進行；保證",
     "example": "Few climbers undertake that climb without checking the weather first.",
-    "exampleZh": "很少登山者不先查天氣就嘗試那趟攀登。",
+    "exampleZh": "很少登山者會不先查天氣就進行那趟攀登。",
     "group": "Core 8"
   },
   {
@@ -38736,8 +38736,8 @@ export const sampleWords: WordEntry[] = [
     "word": "framework",
     "partOfSpeech": "n",
     "pronunciation": "/'freimwә:k/",
-    "meaningZh": "架構",
-    "supplementalMeaningZh": "骨架；準則",
+    "meaningZh": "骨架",
+    "supplementalMeaningZh": "架構；準則",
     "example": "The wooden framework held the greenhouse steady through the typhoon.",
     "exampleZh": "木造骨架讓溫室在颱風中保持穩固。",
     "group": "Core 8"
@@ -38759,7 +38759,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/kәn'stitjut/",
     "meaningZh": "構成",
-    "supplementalMeaningZh": "組成；設立",
+    "supplementalMeaningZh": "組成；任命",
     "example": "Three missed payments constitute a breach under the rental agreement.",
     "exampleZh": "依租約，三次未付款就構成違約。",
     "group": "Core 8"
@@ -38925,8 +38925,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/laiә'biliti/",
     "meaningZh": "責任",
     "supplementalMeaningZh": "負債；累贅",
-    "example": "The company accepted liability after several visitors slipped on the cracked sidewalk.",
-    "exampleZh": "幾名訪客在裂開的人行道上滑倒後，公司承擔了責任。",
+    "example": "The store accepted liability after a customer slipped on its wet floor.",
+    "exampleZh": "一名顧客在濕滑的地板上滑倒後，店家承擔了責任。",
     "group": "Core 8"
   },
   {
@@ -38956,10 +38956,10 @@ export const sampleWords: WordEntry[] = [
     "word": "universal",
     "partOfSpeech": "a / n",
     "pronunciation": "/.ju:ni'vә:sl/",
-    "meaningZh": "普遍的",
+    "meaningZh": "普遍通用的",
     "supplementalMeaningZh": "全體的；宇宙的",
-    "example": "A smile is universal, and it often softens awkward moments between strangers.",
-    "exampleZh": "微笑是普遍的，常能緩和陌生人之間的尷尬時刻。",
+    "example": "A smile is not universal, but it often softens awkward moments.",
+    "exampleZh": "微笑並非普遍通用，卻常能緩和尷尬時刻。",
     "group": "Core 8"
   },
   {
@@ -38991,8 +38991,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/skәup/",
     "meaningZh": "範圍",
     "supplementalMeaningZh": "眼界；機會",
-    "example": "The scope of the school project was too large for one weekend.",
-    "exampleZh": "這個學校專題的範圍太大，一個週末做不完。",
+    "example": "The scope of our science project became much larger than we planned.",
+    "exampleZh": "我們自然科專題的範圍比原先計畫的大得多。",
     "group": "Core 8"
   },
   {
@@ -39044,8 +39044,8 @@ export const sampleWords: WordEntry[] = [
     "word": "consumption",
     "partOfSpeech": "n",
     "pronunciation": "/kәn'sʌmpʃәn/",
-    "meaningZh": "消費",
-    "supplementalMeaningZh": "消耗；用量",
+    "meaningZh": "用量",
+    "supplementalMeaningZh": "消費；消耗",
     "example": "Electricity consumption dropped after the hotel replaced every air conditioner.",
     "exampleZh": "旅館更換所有冷氣後，用電量下降了。",
     "group": "Core 8"
@@ -39111,9 +39111,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'pɑ:kiŋ/",
     "meaningZh": "停車",
-    "supplementalMeaningZh": "停車位；停車場",
-    "example": "The hotel offers free parking behind the building on weekdays.",
-    "exampleZh": "這家旅館平日在大樓後方提供免費停車。",
+    "supplementalMeaningZh": "車位",
+    "example": "The hotel offers parking behind the terminal on weekdays.",
+    "exampleZh": "這家旅館平日在碼頭後方提供停車。",
     "group": "Core 8"
   },
   {
@@ -39121,10 +39121,10 @@ export const sampleWords: WordEntry[] = [
     "word": "conservation",
     "partOfSpeech": "n",
     "pronunciation": "/.kɒnsә'veiʃәn/",
-    "meaningZh": "保育",
-    "supplementalMeaningZh": "節約；保存",
+    "meaningZh": "節約",
+    "supplementalMeaningZh": "保育；保存",
     "example": "Water conservation saved the village during three rainless weeks.",
-    "exampleZh": "三週無雨期間，節約用水讓整個村子撐了過來。",
+    "exampleZh": "三週無雨期間，節水讓整個村子撐了過來。",
     "group": "Core 8"
   },
   {
@@ -39231,10 +39231,10 @@ export const sampleWords: WordEntry[] = [
     "word": "evolution",
     "partOfSpeech": "n",
     "pronunciation": "/.i:vә'lu:ʃәn/",
-    "meaningZh": "進化",
-    "supplementalMeaningZh": "演變；發展",
+    "meaningZh": "發展",
+    "supplementalMeaningZh": "進化；演變",
     "example": "The evolution of the harbor began with one wooden pier.",
-    "exampleZh": "這座港口的演變從一座木碼頭開始。",
+    "exampleZh": "這座港口的發展從一座木碼頭開始。",
     "group": "Core 8"
   },
   {
@@ -39322,7 +39322,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "輸入",
     "supplementalMeaningZh": "意見；投入",
     "example": "The device records input from the keypad every few seconds.",
-    "exampleZh": "這台裝置每隔幾秒就會記錄鍵盤的輸入內容。",
+    "exampleZh": "這台裝置每隔幾秒記錄鍵盤輸入。",
     "group": "Core 8"
   },
   {
@@ -39451,10 +39451,10 @@ export const sampleWords: WordEntry[] = [
     "word": "architecture",
     "partOfSpeech": "n",
     "pronunciation": "/'ɑ:kitektʃә/",
-    "meaningZh": "建築學",
-    "supplementalMeaningZh": "建築風格；建築物",
-    "example": "She wants to study architecture at university because she loves designing buildings.",
-    "exampleZh": "她想在大學讀建築學，因為她喜歡設計建築物。",
+    "meaningZh": "建築風格",
+    "supplementalMeaningZh": "建築學",
+    "example": "Spanish architecture still shapes the church facing the central plaza.",
+    "exampleZh": "西班牙建築風格仍塑造著廣場前的教堂。",
     "group": "Core 8"
   },
   {
@@ -39485,7 +39485,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/i'kweiʃәn/",
     "meaningZh": "等式",
-    "supplementalMeaningZh": "方程式；平衡",
+    "supplementalMeaningZh": "方程式",
     "example": "The equation balanced only after she corrected one tiny sign.",
     "exampleZh": "她修正一個小符號後，等式才平衡。",
     "group": "Core 8"
@@ -39506,10 +39506,10 @@ export const sampleWords: WordEntry[] = [
     "word": "emission",
     "partOfSpeech": "n",
     "pronunciation": "/i'miʃәn/",
-    "meaningZh": "排放",
-    "supplementalMeaningZh": "排出物；放射",
-    "example": "The factory's emission of smoke worried the people living near the river.",
-    "exampleZh": "工廠排放的煙霧讓住在河邊的居民很擔心。",
+    "meaningZh": "放射",
+    "supplementalMeaningZh": "排放；排出物",
+    "example": "The lamp's emission of blue light attracted insects after dusk.",
+    "exampleZh": "黃昏後，燈發出的藍光吸引昆蟲。",
     "group": "Core 8"
   },
   {
@@ -39573,7 +39573,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'tenәnt/",
     "meaningZh": "房客",
-    "supplementalMeaningZh": "佃戶；承租人",
+    "supplementalMeaningZh": "",
     "example": "The tenant watered the rooftop herbs while the owner traveled.",
     "exampleZh": "屋主旅行時，房客替屋頂香草澆水。",
     "group": "Core 8"
@@ -39661,9 +39661,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/dʒæk/",
     "meaningZh": "千斤頂",
-    "supplementalMeaningZh": "插孔；傑克；男人",
+    "supplementalMeaningZh": "插孔",
     "example": "A rusty jack lifted the van enough to change tires.",
-    "exampleZh": "生鏽的千斤頂把廂型車頂高到足以換輪胎。",
+    "exampleZh": "生鏽千斤頂把廂型車頂高到足以換胎。",
     "group": "Core 8"
   },
   {
@@ -39674,7 +39674,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "恐懼",
     "supplementalMeaningZh": "恐怖；可怕的人",
     "example": "The sudden blackout filled the tunnel with terror.",
-    "exampleZh": "隧道突然停電，讓隧道裡充滿了恐懼。",
+    "exampleZh": "隧道突然停電，讓在場的人十分恐慌。",
     "group": "Core 8"
   },
   {
@@ -39814,10 +39814,10 @@ export const sampleWords: WordEntry[] = [
     "word": "companion",
     "partOfSpeech": "n / vt",
     "pronunciation": "/kәm'pænjәn/",
-    "meaningZh": "同伴",
-    "supplementalMeaningZh": "伴侶；陪伴",
+    "meaningZh": "伴侶",
+    "supplementalMeaningZh": "同伴；陪伴",
     "example": "His dog became a quiet companion during months of recovery.",
-    "exampleZh": "在休養的幾個月裡，他的狗成了安靜的同伴。",
+    "exampleZh": "復原數月期間，他的狗成了安靜伴侶。",
     "group": "Core 8"
   },
   {
@@ -39836,10 +39836,10 @@ export const sampleWords: WordEntry[] = [
     "word": "attribute",
     "partOfSpeech": "n / vt",
     "pronunciation": "/ә'tribju:t/",
-    "meaningZh": "屬性",
-    "supplementalMeaningZh": "特質；把…歸因於",
-    "example": "Honesty is the attribute I admire most in my best friend.",
-    "exampleZh": "誠實是我最欣賞好朋友的特質。",
+    "meaningZh": "歸因於",
+    "supplementalMeaningZh": "屬性；特質",
+    "example": "Many residents attribute the cracks to last winter's earthquake.",
+    "exampleZh": "許多居民把裂縫歸因於去年冬天的地震。",
     "group": "Core 8"
   },
   {
@@ -39847,8 +39847,8 @@ export const sampleWords: WordEntry[] = [
     "word": "comprise",
     "partOfSpeech": "vt",
     "pronunciation": "/kәm'praiz/",
-    "meaningZh": "包含",
-    "supplementalMeaningZh": "構成",
+    "meaningZh": "構成",
+    "supplementalMeaningZh": "包含",
     "example": "Five small islands comprise the protected marine reserve.",
     "exampleZh": "五座小島構成這片受保護的海洋保留區。",
     "group": "Core 8"
@@ -39902,10 +39902,10 @@ export const sampleWords: WordEntry[] = [
     "word": "heritage",
     "partOfSpeech": "n",
     "pronunciation": "/'heritidʒ/",
-    "meaningZh": "遺產",
-    "supplementalMeaningZh": "傳統；傳承",
+    "meaningZh": "傳承",
+    "supplementalMeaningZh": "遺產",
     "example": "The festival preserves the fishing heritage of the old village.",
-    "exampleZh": "這場祭典保存了老村莊的漁業文化遺產。",
+    "exampleZh": "這場祭典保存老村莊的漁業傳承。",
     "group": "Core 8"
   },
   {
@@ -39938,7 +39938,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "像",
     "supplementalMeaningZh": "類似",
     "example": "The newborn's eyes resemble her father's in old photos.",
-    "exampleZh": "在舊照片裡，新生兒的眼睛長得像她父親的眼睛。",
+    "exampleZh": "新生兒的眼睛像舊照片裡的父親。",
     "group": "Core 8"
   },
   {
@@ -39990,10 +39990,10 @@ export const sampleWords: WordEntry[] = [
     "word": "regardless",
     "partOfSpeech": "a",
     "pronunciation": "/ri'gɑ:dlis/",
-    "meaningZh": "不顧一切地",
-    "supplementalMeaningZh": "不管",
-    "example": "The ferry leaves regardless of rain at seven sharp.",
-    "exampleZh": "不管下雨與否，渡輪七點整出發。",
+    "meaningZh": "不管",
+    "supplementalMeaningZh": "不顧",
+    "example": "The ferry leaves at seven sharp regardless of the rain.",
+    "exampleZh": "不管有沒有下雨，渡輪都會在七點整出發。",
     "group": "Core 8"
   },
   {
@@ -40057,7 +40057,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/gri:t/",
     "meaningZh": "迎接",
-    "supplementalMeaningZh": "問候；打招呼",
+    "supplementalMeaningZh": "問候；映入眼簾",
     "example": "Volunteers greet each runner with water and sliced oranges.",
     "exampleZh": "志工用水和切片柳橙迎接每位跑者。",
     "group": "Core 8"
@@ -40112,9 +40112,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'welθi/",
     "meaningZh": "富有的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "豐富的",
     "example": "A wealthy collector bought the cracked vase anyway.",
-    "exampleZh": "一位富有的收藏家還是買下了那只裂花瓶。",
+    "exampleZh": "一位富有收藏家仍買下那只裂花瓶。",
     "group": "Core 8"
   },
   {
@@ -40166,8 +40166,8 @@ export const sampleWords: WordEntry[] = [
     "word": "china",
     "partOfSpeech": "n / a",
     "pronunciation": "/'tʃainә/",
-    "meaningZh": "瓷器",
-    "supplementalMeaningZh": "瓷製的",
+    "meaningZh": "瓷製的",
+    "supplementalMeaningZh": "瓷器",
     "example": "Her china cup cracked when hot tea touched the rim.",
     "exampleZh": "熱茶碰到杯緣時，她的瓷杯裂了。",
     "group": "Core 8"
@@ -40298,10 +40298,10 @@ export const sampleWords: WordEntry[] = [
     "word": "initiate",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/i'niʃieit/",
-    "meaningZh": "發起",
-    "supplementalMeaningZh": "開始；使入門；新加入者",
+    "meaningZh": "開始",
+    "supplementalMeaningZh": "發起；入門者",
     "example": "The museum will initiate night tours during the lantern festival.",
-    "exampleZh": "博物館將在燈會期間推出夜間導覽。",
+    "exampleZh": "博物館將在燈會期間開始夜間導覽。",
     "group": "Core 8"
   },
   {
@@ -40310,9 +40310,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'bɑ:skit/",
     "meaningZh": "籃子",
-    "supplementalMeaningZh": "一籃；籃框",
+    "supplementalMeaningZh": "一籃",
     "example": "A bamboo basket held mangoes beside the roadside scale.",
-    "exampleZh": "路邊的秤旁放著一個裝芒果的竹籃。",
+    "exampleZh": "路邊秤旁放著一只裝芒果的竹籃。",
     "group": "Core 8"
   },
   {
@@ -40331,10 +40331,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sue",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/su:/",
-    "meaningZh": "控告",
-    "supplementalMeaningZh": "提起訴訟",
+    "meaningZh": "提告",
+    "supplementalMeaningZh": "請求",
     "example": "The tenant may sue if repairs are delayed again.",
-    "exampleZh": "若維修再次拖延，房客可能會提出告訴。",
+    "exampleZh": "若維修再次拖延，房客可能會提告。",
     "group": "Core 8"
   },
   {
@@ -40354,9 +40354,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ә'kauntiŋ/",
     "meaningZh": "會計",
-    "supplementalMeaningZh": "帳目；會計學",
-    "example": "Careful accounting revealed coins hidden inside the donation box.",
-    "exampleZh": "仔細查帳發現捐款箱裡藏著硬幣。",
+    "supplementalMeaningZh": "",
+    "example": "Careful accounting showed that our class spent too much on snacks last month.",
+    "exampleZh": "仔細記帳後發現，我們班上個月花太多錢買零食了。",
     "group": "Core 8"
   },
   {
@@ -40367,7 +40367,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "池塘",
     "supplementalMeaningZh": "",
     "example": "Frogs crowded the pond after rain filled the cracked mud.",
-    "exampleZh": "雨水填滿乾裂的泥地後，青蛙擠滿了池塘。",
+    "exampleZh": "雨水填滿裂泥後，青蛙擠滿池塘。",
     "group": "Core 8"
   },
   {
@@ -40508,7 +40508,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/'blæŋkit/",
     "meaningZh": "毛毯",
-    "supplementalMeaningZh": "覆蓋物；全面的",
+    "supplementalMeaningZh": "覆蓋；全面的",
     "example": "She wrapped the shivering puppy in a wool blanket.",
     "exampleZh": "她用羊毛毯包住發抖的小狗。",
     "group": "Core 8"
@@ -40541,9 +40541,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/ai'dentikәl/",
     "meaningZh": "一模一樣的",
-    "supplementalMeaningZh": "完全相同的",
+    "supplementalMeaningZh": "",
     "example": "The twins wore identical raincoats at the crowded station.",
-    "exampleZh": "雙胞胎在擁擠的車站穿著一模一樣的雨衣。",
+    "exampleZh": "雙胞胎在擁擠車站穿著一模一樣雨衣。",
     "group": "Core 8"
   },
   {
@@ -40551,8 +40551,8 @@ export const sampleWords: WordEntry[] = [
     "word": "colony",
     "partOfSpeech": "n",
     "pronunciation": "/'kɒlәni/",
-    "meaningZh": "殖民地",
-    "supplementalMeaningZh": "聚居地；群落",
+    "meaningZh": "聚居地",
+    "supplementalMeaningZh": "殖民地；群落",
     "example": "The island began as a small fishing colony near the fort.",
     "exampleZh": "這座島最初只是堡壘旁的一處小漁村聚落。",
     "group": "Core 8"
@@ -40598,7 +40598,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "細微的",
     "supplementalMeaningZh": "微妙的；巧妙的；敏銳的",
     "example": "A subtle ginger note lingered after the tea cooled.",
-    "exampleZh": "茶涼後，仍留著一絲淡淡的薑味。",
+    "exampleZh": "茶涼後，仍留著一絲微妙薑味。",
     "group": "Core 8"
   },
   {
@@ -40694,8 +40694,8 @@ export const sampleWords: WordEntry[] = [
     "word": "cluster",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'klʌstә/",
-    "meaningZh": "群",
-    "supplementalMeaningZh": "串；群集；群組",
+    "meaningZh": "一串",
+    "supplementalMeaningZh": "群集；群組",
     "example": "A cluster of lanterns glowed above the temple steps.",
     "exampleZh": "廟階上方亮著一串燈籠。",
     "group": "Core 8"
@@ -40882,7 +40882,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'ɒ:rәl/",
     "meaningZh": "口頭的",
-    "supplementalMeaningZh": "口腔的；口試的",
+    "supplementalMeaningZh": "口腔的；口試",
     "example": "Those oral instructions confused guests who missed the first announcement.",
     "exampleZh": "錯過第一次廣播的旅客，聽了那些口頭指示仍一頭霧水。",
     "group": "Core 8"
@@ -40903,10 +40903,10 @@ export const sampleWords: WordEntry[] = [
     "word": "random",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'rændәm/",
-    "meaningZh": "隨機的",
-    "supplementalMeaningZh": "隨便的；偶然的",
+    "meaningZh": "偶然的",
+    "supplementalMeaningZh": "隨機的；隨便的",
     "example": "A random stranger paid for her tea at the station.",
-    "exampleZh": "一位素不相識的陌生人在車站替她付茶錢。",
+    "exampleZh": "一位偶然遇見的陌生人在車站替她付茶錢。",
     "group": "Core 8"
   },
   {
@@ -40958,10 +40958,10 @@ export const sampleWords: WordEntry[] = [
     "word": "cabin",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'kæbin/",
-    "meaningZh": "小木屋",
-    "supplementalMeaningZh": "客艙；機艙",
+    "meaningZh": "小屋",
+    "supplementalMeaningZh": "客艙",
     "example": "Their cabin overlooked pines and a narrow winter creek.",
-    "exampleZh": "他們的小木屋俯瞰著松林和一條狹窄的冬季溪流。",
+    "exampleZh": "他們的小屋俯瞰松林和狹窄冬溪。",
     "group": "Core 8"
   },
   {
@@ -41156,8 +41156,8 @@ export const sampleWords: WordEntry[] = [
     "word": "limb",
     "partOfSpeech": "n / vt",
     "pronunciation": "/lim/",
-    "meaningZh": "四肢",
-    "supplementalMeaningZh": "大樹枝；肢體",
+    "meaningZh": "樹枝",
+    "supplementalMeaningZh": "肢體",
     "example": "A broken limb blocked the lane after the storm.",
     "exampleZh": "暴風雨後，一根斷枝擋住巷道。",
     "group": "Core 8"
@@ -41167,8 +41167,8 @@ export const sampleWords: WordEntry[] = [
     "word": "pine",
     "partOfSpeech": "n / vi",
     "pronunciation": "/pain/",
-    "meaningZh": "松樹",
-    "supplementalMeaningZh": "松木；渴望",
+    "meaningZh": "松木",
+    "supplementalMeaningZh": "松樹；渴望",
     "example": "The pine smoke drifted from the stove into the yard.",
     "exampleZh": "松木煙從爐子飄進院子裡。",
     "group": "Core 8"
@@ -41354,10 +41354,10 @@ export const sampleWords: WordEntry[] = [
     "word": "prediction",
     "partOfSpeech": "n",
     "pronunciation": "/pri'dikʃәn/",
-    "meaningZh": "預測",
-    "supplementalMeaningZh": "預報；預言",
+    "meaningZh": "預報",
+    "supplementalMeaningZh": "預測；預言",
     "example": "His prediction of heavy fog saved the morning ferry.",
-    "exampleZh": "他預測會有濃霧，保住了早班渡輪的安全。",
+    "exampleZh": "他預報濃霧，保住了早班渡輪安全。",
     "group": "Core 8"
   },
   {
@@ -41376,8 +41376,8 @@ export const sampleWords: WordEntry[] = [
     "word": "conversion",
     "partOfSpeech": "n",
     "pronunciation": "/kәn'vә:ʃәn/",
-    "meaningZh": "轉換",
-    "supplementalMeaningZh": "改建；改信宗教",
+    "meaningZh": "改建",
+    "supplementalMeaningZh": "轉換；改信宗教",
     "example": "The barn's conversion into apartments angered nearby farmers.",
     "exampleZh": "穀倉改建成公寓，惹怒了附近農民。",
     "group": "Core 8"
@@ -41412,7 +41412,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "作證",
     "supplementalMeaningZh": "證明；表明",
     "example": "Two neighbors will testify about the noise before sunrise.",
-    "exampleZh": "兩名鄰居將就日出前的噪音作證。",
+    "exampleZh": "兩名鄰居將作證說明日出前的噪音。",
     "group": "Core 8"
   },
   {
@@ -41434,7 +41434,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "可怕的",
     "supplementalMeaningZh": "糟糕的",
     "example": "A horrible smell rose from the drain after the flood.",
-    "exampleZh": "水災過後，排水孔冒出一股可怕的臭味。",
+    "exampleZh": "水災過後，排水孔冒出一股惡臭。",
     "group": "Core 8"
   },
   {
@@ -41555,7 +41555,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "望遠鏡",
     "supplementalMeaningZh": "縮短；套疊",
     "example": "The telescope revealed craters along the moon's bright edge.",
-    "exampleZh": "望遠鏡讓人看見月亮明亮邊緣的坑洞。",
+    "exampleZh": "望遠鏡顯示月亮亮邊上的坑洞。",
     "group": "Core 8"
   },
   {
@@ -41598,8 +41598,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'skætә/",
     "meaningZh": "使散開",
     "supplementalMeaningZh": "散播；撒；分散",
-    "example": "The wind will scatter the receipts if you open that window.",
-    "exampleZh": "如果你打開那扇窗，風會把收據吹散。",
+    "example": "Wind will scatter the receipts if you open that drawer.",
+    "exampleZh": "你打開抽屜的話，風會吹散那些收據。",
     "group": "Core 8"
   },
   {
@@ -41631,8 +41631,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/i'kwip/",
     "meaningZh": "配備",
     "supplementalMeaningZh": "裝備",
-    "example": "The school will equip every classroom with a new projector.",
-    "exampleZh": "學校會為每間教室配備一台新的投影機。",
+    "example": "The rescue team will equip each seat on the boat with a flashlight.",
+    "exampleZh": "救援隊會為船上每個座位配備手電筒。",
     "group": "Core 8"
   },
   {
@@ -41662,10 +41662,10 @@ export const sampleWords: WordEntry[] = [
     "word": "handsome",
     "partOfSpeech": "a",
     "pronunciation": "/'hænsәm/",
-    "meaningZh": "英俊的",
-    "supplementalMeaningZh": "可觀的；美觀的；慷慨的",
-    "example": "The handsome actor smiled at the fans outside the theater.",
-    "exampleZh": "那位英俊的演員對劇院外的粉絲微笑。",
+    "meaningZh": "可觀的",
+    "supplementalMeaningZh": "英俊的；美觀的；慷慨的",
+    "example": "A handsome reward was offered for the missing necklace.",
+    "exampleZh": "為了找回遺失項鍊，有人提供可觀賞金。",
     "group": "Core 8"
   },
   {
@@ -41805,10 +41805,10 @@ export const sampleWords: WordEntry[] = [
     "word": "imperial",
     "partOfSpeech": "a / n",
     "pronunciation": "/im'piәriәl/",
-    "meaningZh": "帝國的",
-    "supplementalMeaningZh": "帝王的；宏偉的",
-    "example": "The imperial palace attracts thousands of visitors every year.",
-    "exampleZh": "這座帝國皇宮每年吸引數千名遊客。",
+    "meaningZh": "帝王的",
+    "supplementalMeaningZh": "帝國的；宏偉的",
+    "example": "Old imperial seals decorated the museum's crimson gate.",
+    "exampleZh": "古老帝王印記裝飾著博物館的深紅大門。",
     "group": "Core 8"
   },
   {
@@ -41816,8 +41816,8 @@ export const sampleWords: WordEntry[] = [
     "word": "filter",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'filtә/",
-    "meaningZh": "過濾器",
-    "supplementalMeaningZh": "過濾；篩選；濾除",
+    "meaningZh": "濾器",
+    "supplementalMeaningZh": "過濾；篩選；滲透",
     "example": "A paper filter caught the coffee grounds before serving.",
     "exampleZh": "上桌前，紙濾器濾住了咖啡渣。",
     "group": "Core 8"
@@ -41871,10 +41871,10 @@ export const sampleWords: WordEntry[] = [
     "word": "descend",
     "partOfSpeech": "vi / vt",
     "pronunciation": "/di'send/",
-    "meaningZh": "下降",
-    "supplementalMeaningZh": "降落；傳下來；來襲",
+    "meaningZh": "降落",
+    "supplementalMeaningZh": "下降；傳下來；來襲",
     "example": "Mist began to descend over the fields before sunset.",
-    "exampleZh": "日落前，霧開始降落在田野上。",
+    "exampleZh": "日落前，霧氣開始緩緩降到田野上。",
     "group": "Core 8"
   },
   {
@@ -41918,7 +41918,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "違反",
     "supplementalMeaningZh": "裂口；突破；破壞",
     "example": "Leaving the gate unlocked was a breach of security.",
-    "exampleZh": "沒有鎖上大門，是違反安全規定的行為。",
+    "exampleZh": "大門沒有上鎖，造成了安全漏洞。",
     "group": "Core 8"
   },
   {
@@ -41959,7 +41959,7 @@ export const sampleWords: WordEntry[] = [
     "word": "devise",
     "partOfSpeech": "vt / n",
     "pronunciation": "/di'vaiz/",
-    "meaningZh": "設計出",
+    "meaningZh": "設計",
     "supplementalMeaningZh": "發明；策劃",
     "example": "They devise a pulley system for lifting heavy baskets.",
     "exampleZh": "他們設計滑輪系統來吊起沉重籃子。",
@@ -42267,7 +42267,7 @@ export const sampleWords: WordEntry[] = [
     "word": "rip",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/rip/",
-    "meaningZh": "撕開",
+    "meaningZh": "撕",
     "supplementalMeaningZh": "裂口；猛衝",
     "example": "Please rip the label off before washing the jar.",
     "exampleZh": "洗罐子前，請先把標籤撕掉。",
@@ -42322,8 +42322,8 @@ export const sampleWords: WordEntry[] = [
     "word": "catalogue",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'kætәlɒg/",
-    "meaningZh": "目錄",
-    "supplementalMeaningZh": "編目",
+    "meaningZh": "編目",
+    "supplementalMeaningZh": "目錄",
     "example": "The archive will catalogue every photograph found in the attic.",
     "exampleZh": "檔案館會把閣樓裡找到的每張照片編目。",
     "group": "Core 8"
@@ -42443,8 +42443,8 @@ export const sampleWords: WordEntry[] = [
     "word": "progressive",
     "partOfSpeech": "n / a",
     "pronunciation": "/prә'gresiv/",
-    "meaningZh": "進步的",
-    "supplementalMeaningZh": "漸進的；累進的；革新的",
+    "meaningZh": "累進的",
+    "supplementalMeaningZh": "進步的；漸進的",
     "example": "The progressive taxes funded repairs to rural health clinics.",
     "exampleZh": "累進稅支應了鄉村診所的修繕費。",
     "group": "Core 8"
@@ -42457,7 +42457,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "大膽的",
     "supplementalMeaningZh": "粗體的；醒目的",
     "example": "Her bold red scarf stood out in the gray crowd.",
-    "exampleZh": "她那條醒目的紅圍巾在灰暗的人群中很突出。",
+    "exampleZh": "她那條大膽的紅圍巾在灰色調的人群中格外顯眼。",
     "group": "Core 8"
   },
   {
@@ -42476,10 +42476,10 @@ export const sampleWords: WordEntry[] = [
     "word": "mutter",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'mʌtә/",
-    "meaningZh": "低聲嘀咕",
-    "supplementalMeaningZh": "喃喃自語；抱怨",
+    "meaningZh": "喃喃抱怨",
+    "supplementalMeaningZh": "低聲說；咕噥",
     "example": "He began to mutter when the vending machine jammed.",
-    "exampleZh": "販賣機卡住時，他開始低聲嘀咕。",
+    "exampleZh": "販賣機卡住時，他開始喃喃抱怨。",
     "group": "Core 8"
   },
   {
@@ -42597,10 +42597,10 @@ export const sampleWords: WordEntry[] = [
     "word": "hostile",
     "partOfSpeech": "a / n",
     "pronunciation": "/'hɒstail/",
-    "meaningZh": "敵意的",
-    "supplementalMeaningZh": "不友善的；敵對分子",
+    "meaningZh": "敵對的",
+    "supplementalMeaningZh": "懷敵意的；敵對分子",
     "example": "A hostile crowd blocked the clinic entrance after the rumor.",
-    "exampleZh": "謠言傳出後，一群懷有敵意的人堵住診所入口。",
+    "exampleZh": "謠言傳出後，敵對人群堵住診所入口。",
     "group": "Core 8"
   },
   {
@@ -42655,7 +42655,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "訴訟",
     "supplementalMeaningZh": "官司",
     "example": "The lawsuit began after sewage flooded three kitchens.",
-    "exampleZh": "汙水淹進三間廚房後，這場訴訟就展開了。",
+    "exampleZh": "污水淹進三間廚房後，訴訟開始了。",
     "group": "Core 8"
   },
   {
@@ -42828,10 +42828,10 @@ export const sampleWords: WordEntry[] = [
     "word": "assurance",
     "partOfSpeech": "n",
     "pronunciation": "/ә'ʃuәrәns/",
-    "meaningZh": "保證",
-    "supplementalMeaningZh": "信心；把握；安心感",
-    "example": "The manager gave us his assurance that the repairs would finish by Friday.",
-    "exampleZh": "經理向我們保證維修會在週五前完成。",
+    "meaningZh": "安心感",
+    "supplementalMeaningZh": "保證；信心；把握",
+    "example": "Her calm voice gave passengers assurance during the delay.",
+    "exampleZh": "延誤期間，她平穩的聲音讓乘客安心。",
     "group": "Core 8"
   },
   {
@@ -42938,10 +42938,10 @@ export const sampleWords: WordEntry[] = [
     "word": "warrior",
     "partOfSpeech": "n",
     "pronunciation": "/'wɒ:riә/",
-    "meaningZh": "戰士",
-    "supplementalMeaningZh": "勇士；武士",
+    "meaningZh": "武士",
+    "supplementalMeaningZh": "戰士；勇士",
     "example": "A painted warrior stood beside the temple doorway.",
-    "exampleZh": "一位臉上彩繪的戰士站在寺廟門口旁。",
+    "exampleZh": "一位彩繪武士立在寺廟門口旁。",
     "group": "Core 8"
   },
   {
@@ -42972,7 +42972,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v / adv",
     "pronunciation": "/pæt/",
     "meaningZh": "輕拍",
-    "supplementalMeaningZh": "恰好的；拍打聲",
+    "supplementalMeaningZh": "恰好的",
     "example": "Give the dough a gentle pat before it rises.",
     "exampleZh": "麵團發酵前，先輕輕拍一下。",
     "group": "Core 8"
@@ -43048,10 +43048,10 @@ export const sampleWords: WordEntry[] = [
     "word": "feedback",
     "partOfSpeech": "n",
     "pronunciation": "/'fi:dbæk/",
-    "meaningZh": "回饋",
-    "supplementalMeaningZh": "意見；反應",
+    "meaningZh": "意見",
+    "supplementalMeaningZh": "回饋；反應",
     "example": "Customer feedback persuaded the bakery to open earlier on weekends.",
-    "exampleZh": "顧客的回饋促使麵包店週末提早開門。",
+    "exampleZh": "顧客意見促使麵包店在週末提早開門。",
     "group": "Core 8"
   },
   {
@@ -43070,10 +43070,10 @@ export const sampleWords: WordEntry[] = [
     "word": "exclusively",
     "partOfSpeech": "adv",
     "pronunciation": "/ik'sklu:sivli/",
-    "meaningZh": "專門地",
-    "supplementalMeaningZh": "僅僅；獨家地",
+    "meaningZh": "專門",
+    "supplementalMeaningZh": "只；獨家地",
     "example": "The upstairs room is used exclusively for storing tea.",
-    "exampleZh": "樓上的房間專門用來存放茶葉。",
+    "exampleZh": "樓上房間專門用來存放茶葉。",
     "group": "Core 8"
   },
   {
@@ -43136,10 +43136,10 @@ export const sampleWords: WordEntry[] = [
     "word": "desirable",
     "partOfSpeech": "a",
     "pronunciation": "/di'zairәbl/",
-    "meaningZh": "令人嚮往的",
-    "supplementalMeaningZh": "可取的；值得擁有的",
+    "meaningZh": "搶手的",
+    "supplementalMeaningZh": "可取的；令人想要的",
     "example": "Shade makes that corner desirable during summer lunch hours.",
-    "exampleZh": "夏季午餐時段，那個有遮蔭的角落特別令人嚮往。",
+    "exampleZh": "夏季午餐時段，那個有遮蔭的角落特別搶手。",
     "group": "Core 8"
   },
   {
@@ -43258,9 +43258,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/'dedli/",
     "meaningZh": "致命的",
-    "supplementalMeaningZh": "極度的；死一般的",
+    "supplementalMeaningZh": "非常",
     "example": "The deadly currents form near the rocks after heavy rain.",
-    "exampleZh": "大雨後，岩石附近會形成致命的急流。",
+    "exampleZh": "大雨後，岩石附近會形成致命急流。",
     "group": "Core 8"
   },
   {
@@ -43280,9 +43280,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'bә:niŋ/",
     "meaningZh": "燃燒的",
-    "supplementalMeaningZh": "灼熱的；強烈的；迫切的",
+    "supplementalMeaningZh": "火辣的；迫切的",
     "example": "A burning smell drifted from the closed bakery.",
-    "exampleZh": "一股燃燒的味道從關門的麵包店飄出。",
+    "exampleZh": "一股燃燒味從關門的麵包店飄出。",
     "group": "Core 8"
   },
   {
@@ -43402,8 +43402,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'græviti/",
     "meaningZh": "重力",
     "supplementalMeaningZh": "嚴重性；莊重",
-    "example": "Gravity pulled the spilled marbles down the sloped hallway.",
-    "exampleZh": "重力使灑出的彈珠沿著傾斜的走廊滾下去。",
+    "example": "Earth's gravity sent the spilled marbles rolling down the sloped hallway.",
+    "exampleZh": "灑出的彈珠受地心引力影響，沿著傾斜的走廊滾下去。",
     "group": "Core 8"
   },
   {
@@ -43500,7 +43500,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/kә.læbә'ræʃәn/",
     "meaningZh": "合作",
-    "supplementalMeaningZh": "通敵",
+    "supplementalMeaningZh": "勾結",
     "example": "Close collaboration between farmers and cooks revived the old grain.",
     "exampleZh": "農民與廚師緊密合作，讓古老穀物重獲新生。",
     "group": "Core 8"
@@ -43554,8 +43554,8 @@ export const sampleWords: WordEntry[] = [
     "word": "nursery",
     "partOfSpeech": "n",
     "pronunciation": "/'nә:sәri/",
-    "meaningZh": "托兒所",
-    "supplementalMeaningZh": "苗圃；育嬰室",
+    "meaningZh": "苗圃",
+    "supplementalMeaningZh": "托兒所；溫床",
     "example": "The nursery kept seedlings warm through the cold snap.",
     "exampleZh": "寒流來襲時，苗圃仍能讓幼苗保持溫暖。",
     "group": "Core 8"
@@ -43576,8 +43576,8 @@ export const sampleWords: WordEntry[] = [
     "word": "extract",
     "partOfSpeech": "n / vt",
     "pronunciation": "/ik'strækt/",
-    "meaningZh": "提取",
-    "supplementalMeaningZh": "摘錄；萃取物；榨取",
+    "meaningZh": "榨取",
+    "supplementalMeaningZh": "取出；摘錄；萃取物",
     "example": "They extract oil from tea seeds in winter.",
     "exampleZh": "冬天時，他們會從茶籽中榨油。",
     "group": "Core 8"
@@ -43642,10 +43642,10 @@ export const sampleWords: WordEntry[] = [
     "word": "rhetoric",
     "partOfSpeech": "n",
     "pronunciation": "/'retәrik/",
-    "meaningZh": "修辭",
-    "supplementalMeaningZh": "雄辯術；空談",
+    "meaningZh": "說辭",
+    "supplementalMeaningZh": "修辭；雄辯術",
     "example": "His rhetoric sounded noble but avoided every hard question.",
-    "exampleZh": "他的言辭聽來高尚，卻避開所有難題。",
+    "exampleZh": "他的說辭聽來高尚，卻避開所有難題。",
     "group": "Core 8"
   },
   {
@@ -43808,9 +43808,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/vә:s/",
     "meaningZh": "詩句",
-    "supplementalMeaningZh": "韻文；詩節",
+    "supplementalMeaningZh": "韻文",
     "example": "She copied one verse onto the back of a receipt.",
-    "exampleZh": "她把一段詩句抄在收據背面。",
+    "exampleZh": "她把一行詩抄在收據背面。",
     "group": "Core 8"
   },
   {
@@ -43884,10 +43884,10 @@ export const sampleWords: WordEntry[] = [
     "word": "avenue",
     "partOfSpeech": "n",
     "pronunciation": "/'ævәnju:/",
-    "meaningZh": "大道",
-    "supplementalMeaningZh": "林蔭大道；途徑",
+    "meaningZh": "林蔭道",
+    "supplementalMeaningZh": "大街；途徑",
     "example": "Trees along the avenue shaded the bakery until late afternoon.",
-    "exampleZh": "大道旁的樹一直遮蔽著麵包店到傍晚。",
+    "exampleZh": "林蔭道旁的樹遮住麵包店直到午後。",
     "group": "Core 8"
   },
   {
@@ -43928,10 +43928,10 @@ export const sampleWords: WordEntry[] = [
     "word": "genius",
     "partOfSpeech": "n",
     "pronunciation": "/'dʒi:njәs/",
-    "meaningZh": "天才",
-    "supplementalMeaningZh": "天賦；才華",
+    "meaningZh": "天賦",
+    "supplementalMeaningZh": "天才；才華",
     "example": "His genius for repairs saved the flooded theater.",
-    "exampleZh": "他在修理方面的天賦拯救了淹水的戲院。",
+    "exampleZh": "他的修理天賦救了淹水的戲院。",
     "group": "Core 8"
   },
   {
@@ -43939,10 +43939,10 @@ export const sampleWords: WordEntry[] = [
     "word": "manipulate",
     "partOfSpeech": "vt",
     "pronunciation": "/mә'nipjuleit/",
-    "meaningZh": "操縱",
-    "supplementalMeaningZh": "操作；竄改；巧妙處理",
+    "meaningZh": "操弄",
+    "supplementalMeaningZh": "操縱；操作；利用",
     "example": "Do not manipulate the evidence before police arrive.",
-    "exampleZh": "警方抵達前，不要竄改證據。",
+    "exampleZh": "警方抵達前，不要操弄證據。",
     "group": "Core 8"
   },
   {
@@ -44027,8 +44027,8 @@ export const sampleWords: WordEntry[] = [
     "word": "tribute",
     "partOfSpeech": "n",
     "pronunciation": "/'tribju:t/",
-    "meaningZh": "讚辭",
-    "supplementalMeaningZh": "貢品；敬意",
+    "meaningZh": "致敬",
+    "supplementalMeaningZh": "貢品；頌辭",
     "example": "Neighbors planted roses as a tribute to the retired nurse.",
     "exampleZh": "鄰居種玫瑰向退休護理師致敬。",
     "group": "Core 9"
@@ -44149,9 +44149,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/kә'mɒditi/",
     "meaningZh": "商品",
-    "supplementalMeaningZh": "日用品；有用的東西",
-    "example": "Rice became the village commodity most affected by drought.",
-    "exampleZh": "稻米成了村裡最受乾旱影響的農產品。",
+    "supplementalMeaningZh": "日用品；大宗物資",
+    "example": "Coffee is a valuable commodity for many farming families in the mountains.",
+    "exampleZh": "對許多山區農家來說，咖啡是很有價值的商品。",
     "group": "Core 9"
   },
   {
@@ -44225,10 +44225,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sentiment",
     "partOfSpeech": "n",
     "pronunciation": "/'sentimәnt/",
-    "meaningZh": "情感",
-    "supplementalMeaningZh": "看法；感情",
+    "meaningZh": "看法",
+    "supplementalMeaningZh": "情緒；感情",
     "example": "Public sentiment shifted after the mayor apologized on television.",
-    "exampleZh": "市長上電視道歉後，民意轉變了。",
+    "exampleZh": "市長上電視道歉後民意轉變。",
     "group": "Core 9"
   },
   {
@@ -44283,7 +44283,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "公牛",
     "supplementalMeaningZh": "",
     "example": "A bull blocked the farm road until the gate opened.",
-    "exampleZh": "一頭公牛擋在農路上，直到大門打開。",
+    "exampleZh": "一頭公牛擋住農路直到大門打開。",
     "group": "Core 9"
   },
   {
@@ -44336,9 +44336,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/kautʃ/",
     "meaningZh": "長沙發",
-    "supplementalMeaningZh": "措辭表達",
+    "supplementalMeaningZh": "表達",
     "example": "Dad fell asleep on the couch before the movie ended.",
-    "exampleZh": "電影結束前爸爸就在長沙發上睡著了。",
+    "exampleZh": "電影結束前爸爸就在長沙發上睡著。",
     "group": "Core 9"
   },
   {
@@ -44368,8 +44368,8 @@ export const sampleWords: WordEntry[] = [
     "word": "straw",
     "partOfSpeech": "n / a",
     "pronunciation": "/strɒ:/",
-    "meaningZh": "稻草",
-    "supplementalMeaningZh": "吸管；草編的",
+    "meaningZh": "草編的",
+    "supplementalMeaningZh": "稻草；吸管",
     "example": "A straw hat hung beside the farmhouse door.",
     "exampleZh": "一頂草帽掛在農舍門旁。",
     "group": "Core 9"
@@ -44456,10 +44456,10 @@ export const sampleWords: WordEntry[] = [
     "word": "conceal",
     "partOfSpeech": "vt",
     "pronunciation": "/kәn'si:l/",
-    "meaningZh": "隱藏",
-    "supplementalMeaningZh": "隱瞞；遮住",
+    "meaningZh": "遮住",
+    "supplementalMeaningZh": "隱藏；隱瞞",
     "example": "Heavy curtains conceal the tiny kitchen from street view.",
-    "exampleZh": "厚重的窗簾把小廚房遮住，從街上看不到。",
+    "exampleZh": "厚窗簾遮住從街上可見的小廚房。",
     "group": "Core 9"
   },
   {
@@ -44478,10 +44478,10 @@ export const sampleWords: WordEntry[] = [
     "word": "outlet",
     "partOfSpeech": "n",
     "pronunciation": "/'autlet/",
-    "meaningZh": "出口",
-    "supplementalMeaningZh": "發洩管道；銷售通路",
+    "meaningZh": "發洩管道",
+    "supplementalMeaningZh": "出口；銷售通路",
     "example": "Running became her outlet after long shifts at the hospital.",
-    "exampleZh": "在醫院輪完長班後，跑步成了她紓壓的出口。",
+    "exampleZh": "醫院長班後跑步成了她的紓壓出口。",
     "group": "Core 9"
   },
   {
@@ -44511,8 +44511,8 @@ export const sampleWords: WordEntry[] = [
     "word": "tolerate",
     "partOfSpeech": "vt",
     "pronunciation": "/'tɒlәreit/",
-    "meaningZh": "忍受",
-    "supplementalMeaningZh": "容忍；容許",
+    "meaningZh": "耐受",
+    "supplementalMeaningZh": "忍受；容許",
     "example": "My skin cannot tolerate that strong mosquito repellent.",
     "exampleZh": "我的皮膚受不了那種強效防蚊液。",
     "group": "Core 9"
@@ -44720,10 +44720,10 @@ export const sampleWords: WordEntry[] = [
     "word": "alike",
     "partOfSpeech": "a / adv",
     "pronunciation": "/ә'laik/",
-    "meaningZh": "相似的",
-    "supplementalMeaningZh": "一樣地",
+    "meaningZh": "一樣地",
+    "supplementalMeaningZh": "相似的",
     "example": "The twins dressed alike for their grandmother's birthday.",
-    "exampleZh": "雙胞胎為祖母的生日穿得一模一樣。",
+    "exampleZh": "雙胞胎為祖母生日穿得一模一樣。",
     "group": "Core 9"
   },
   {
@@ -44731,10 +44731,10 @@ export const sampleWords: WordEntry[] = [
     "word": "haul",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/hɒ:l/",
-    "meaningZh": "用力拖拉",
+    "meaningZh": "拖拉",
     "supplementalMeaningZh": "運送；一批收穫",
     "example": "Fishermen haul heavy nets onto the pier before noon.",
-    "exampleZh": "漁民中午前把沉重的漁網拖上碼頭。",
+    "exampleZh": "漁民中午前把沉重漁網拖上碼頭。",
     "group": "Core 9"
   },
   {
@@ -44753,8 +44753,8 @@ export const sampleWords: WordEntry[] = [
     "word": "mature",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/mә'tjuә/",
-    "meaningZh": "成熟的",
-    "supplementalMeaningZh": "使成熟；到期的",
+    "meaningZh": "成熟",
+    "supplementalMeaningZh": "到期的",
     "example": "The mangoes mature slowly in the shaded courtyard.",
     "exampleZh": "芒果在陰涼庭院裡慢慢成熟。",
     "group": "Core 9"
@@ -44819,10 +44819,10 @@ export const sampleWords: WordEntry[] = [
     "word": "electronics",
     "partOfSpeech": "n",
     "pronunciation": "/.ilek'trɒniks/",
-    "meaningZh": "電子產品",
-    "supplementalMeaningZh": "電子學",
-    "example": "She repairs electronics such as phones and old cameras after school.",
-    "exampleZh": "她放學後修理手機和老相機等電子產品。",
+    "meaningZh": "電子學",
+    "supplementalMeaningZh": "電子產品",
+    "example": "My brother studies electronics because he loves building small robots.",
+    "exampleZh": "我哥哥學電子學，因為他喜歡做小型機器人。",
     "group": "Core 9"
   },
   {
@@ -44852,10 +44852,10 @@ export const sampleWords: WordEntry[] = [
     "word": "patrol",
     "partOfSpeech": "n / v",
     "pronunciation": "/pә'trәul/",
-    "meaningZh": "巡邏",
-    "supplementalMeaningZh": "巡邏隊；巡視",
+    "meaningZh": "巡邏隊",
+    "supplementalMeaningZh": "巡邏；巡視",
     "example": "A night patrol checked the harbor after the theft.",
-    "exampleZh": "竊案發生後，夜間巡邏隊檢查了港口。",
+    "exampleZh": "竊案後夜間巡邏隊檢查港口。",
     "group": "Core 9"
   },
   {
@@ -44885,10 +44885,10 @@ export const sampleWords: WordEntry[] = [
     "word": "slap",
     "partOfSpeech": "n / v / adv",
     "pronunciation": "/slæp/",
-    "meaningZh": "掌摑",
-    "supplementalMeaningZh": "巴掌；啪的一聲",
+    "meaningZh": "拍擊聲",
+    "supplementalMeaningZh": "巴掌；摑",
     "example": "The wet newspaper landed with a slap against the door.",
-    "exampleZh": "濕報紙啪的一聲打在門上。",
+    "exampleZh": "濕報紙啪一聲拍在門上。",
     "group": "Core 9"
   },
   {
@@ -44907,8 +44907,8 @@ export const sampleWords: WordEntry[] = [
     "word": "elaborate",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/i'læbәreit/",
-    "meaningZh": "詳盡的",
-    "supplementalMeaningZh": "精緻的；詳細說明",
+    "meaningZh": "精緻的",
+    "supplementalMeaningZh": "詳盡的；詳細說明",
     "example": "An elaborate gate marked the entrance to the mansion.",
     "exampleZh": "一座精緻大門標示宅邸入口。",
     "group": "Core 9"
@@ -44951,10 +44951,10 @@ export const sampleWords: WordEntry[] = [
     "word": "texture",
     "partOfSpeech": "n",
     "pronunciation": "/'tekstʃә/",
-    "meaningZh": "質地",
-    "supplementalMeaningZh": "口感；紋理",
+    "meaningZh": "口感",
+    "supplementalMeaningZh": "質地；紋理",
     "example": "The soup had a silky texture from blended tofu.",
-    "exampleZh": "這湯因為加了打成泥的豆腐，質地滑順。",
+    "exampleZh": "這湯因打成泥的豆腐而口感滑順。",
     "group": "Core 9"
   },
   {
@@ -45106,7 +45106,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/vein/",
     "meaningZh": "靜脈",
-    "supplementalMeaningZh": "紋理；葉脈",
+    "supplementalMeaningZh": "紋理；脈絡",
     "example": "A blue vein showed clearly on his wrist.",
     "exampleZh": "他手腕上一條藍色靜脈清楚可見。",
     "group": "Core 9"
@@ -45152,7 +45152,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "官僚體制",
     "supplementalMeaningZh": "官僚人員；官僚作風",
     "example": "The bureaucracy resisted the mayor's reforms for months.",
-    "exampleZh": "官僚體制數月來抗拒市長的改革。",
+    "exampleZh": "官僚體制數月來一直抗拒市長的改革。",
     "group": "Core 9"
   },
   {
@@ -45204,8 +45204,8 @@ export const sampleWords: WordEntry[] = [
     "word": "drown",
     "partOfSpeech": "vi / vt",
     "pronunciation": "/draun/",
-    "meaningZh": "淹死",
-    "supplementalMeaningZh": "淹沒；使窒息",
+    "meaningZh": "淹沒",
+    "supplementalMeaningZh": "淹死；使窒息",
     "example": "Do not drown the basil with too much water.",
     "exampleZh": "不要澆太多水把羅勒淹壞。",
     "group": "Core 9"
@@ -45303,8 +45303,8 @@ export const sampleWords: WordEntry[] = [
     "word": "notable",
     "partOfSpeech": "n / a",
     "pronunciation": "/'nәutәbl/",
-    "meaningZh": "著名的",
-    "supplementalMeaningZh": "顯著的；值得注意的",
+    "meaningZh": "明顯的",
+    "supplementalMeaningZh": "著名的",
     "example": "The most notable scratch ran across the wooden table.",
     "exampleZh": "最明顯的刮痕橫過木桌。",
     "group": "Core 9"
@@ -45339,7 +45339,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "監督",
     "supplementalMeaningZh": "管理；指導",
     "example": "Children may swim here only under adult supervision.",
-    "exampleZh": "孩子只能在大人的監督下在此游泳。",
+    "exampleZh": "孩子只能在成人監督下在此游泳。",
     "group": "Core 9"
   },
   {
@@ -45446,10 +45446,10 @@ export const sampleWords: WordEntry[] = [
     "word": "outfit",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'autfit/",
-    "meaningZh": "服裝",
-    "supplementalMeaningZh": "全套裝備；機構",
-    "example": "She wore a bright outfit to the school dance.",
-    "exampleZh": "她穿著一套亮麗的服裝去參加學校舞會。",
+    "meaningZh": "一套服裝",
+    "supplementalMeaningZh": "全套裝備；團體",
+    "example": "She bought a new outfit for her cousin's wedding.",
+    "exampleZh": "她為了表姊的婚禮買了一套新衣服。",
     "group": "Core 9"
   },
   {
@@ -45513,7 +45513,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'helmit/",
     "meaningZh": "安全帽",
-    "supplementalMeaningZh": "頭盔；鋼盔",
+    "supplementalMeaningZh": "鋼盔",
     "example": "The cracked helmet saved her during the scooter crash.",
     "exampleZh": "裂開的安全帽在機車事故中救了她。",
     "group": "Core 9"
@@ -45524,9 +45524,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'nәutbuk/",
     "meaningZh": "筆記本",
-    "supplementalMeaningZh": "筆記型電腦",
+    "supplementalMeaningZh": "筆電",
     "example": "His notebook smelled faintly of ink and rain.",
-    "exampleZh": "他的筆記本有淡淡的墨水和雨水味。",
+    "exampleZh": "他的筆記本有淡淡墨水和雨水味。",
     "group": "Core 9"
   },
   {
@@ -45567,10 +45567,10 @@ export const sampleWords: WordEntry[] = [
     "word": "clarify",
     "partOfSpeech": "vi / vt",
     "pronunciation": "/'klærifai/",
-    "meaningZh": "澄清",
-    "supplementalMeaningZh": "闡明；使清楚",
+    "meaningZh": "釐清",
+    "supplementalMeaningZh": "澄清",
     "example": "Please clarify the address before the driver leaves.",
-    "exampleZh": "司機離開前請先澄清地址。",
+    "exampleZh": "司機離開前請先釐清地址。",
     "group": "Core 9"
   },
   {
@@ -45623,9 +45623,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'dʒʌŋgl/",
     "meaningZh": "叢林",
-    "supplementalMeaningZh": "熱帶雨林；混亂的地方",
+    "supplementalMeaningZh": "混亂競爭的地方",
     "example": "Monsoon rain soaked the trail through dense jungle before noon.",
-    "exampleZh": "中午前，季風雨把穿越茂密叢林的小徑淋得濕透。",
+    "exampleZh": "季風雨在中午前濕透叢林小徑。",
     "group": "Core 9"
   },
   {
@@ -45633,10 +45633,10 @@ export const sampleWords: WordEntry[] = [
     "word": "patron",
     "partOfSpeech": "n",
     "pronunciation": "/'peitrәn/",
-    "meaningZh": "贊助人",
-    "supplementalMeaningZh": "老顧客；守護者",
-    "example": "The museum thanked each patron who donated money this year.",
-    "exampleZh": "博物館感謝今年每一位捐款的贊助人。",
+    "meaningZh": "顧客",
+    "supplementalMeaningZh": "贊助人；守護者",
+    "example": "A loyal patron bought breakfast there every morning.",
+    "exampleZh": "一名老顧客每天早上都在那裡買早餐。",
     "group": "Core 9"
   },
   {
@@ -45655,10 +45655,10 @@ export const sampleWords: WordEntry[] = [
     "word": "foster",
     "partOfSpeech": "a / vt",
     "pronunciation": "/'fɒstә/",
-    "meaningZh": "培養",
-    "supplementalMeaningZh": "促進；收養；寄養的",
-    "example": "Good teachers foster curiosity in their students every day.",
-    "exampleZh": "好老師每天都在培養學生的好奇心。",
+    "meaningZh": "寄養",
+    "supplementalMeaningZh": "培養；鼓勵；收養的",
+    "example": "Neighbors foster abandoned puppies until homes are found.",
+    "exampleZh": "鄰居暫時養育棄犬直到找到新家。",
     "group": "Core 9"
   },
   {
@@ -45699,10 +45699,10 @@ export const sampleWords: WordEntry[] = [
     "word": "shield",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'ʃi:ld/",
-    "meaningZh": "盾牌",
-    "supplementalMeaningZh": "防護板；保護",
-    "example": "The knight lifted his shield to block the sword.",
-    "exampleZh": "騎士舉起盾牌擋住那把劍。",
+    "meaningZh": "防護板",
+    "supplementalMeaningZh": "盾牌；保護",
+    "example": "A clear plastic shield protected the cashier from sudden splashes.",
+    "exampleZh": "透明塑膠防護板保護收銀員免受突然濺來的液體。",
     "group": "Core 9"
   },
   {
@@ -45820,10 +45820,10 @@ export const sampleWords: WordEntry[] = [
     "word": "constituent",
     "partOfSpeech": "n / a",
     "pronunciation": "/kәn'stitjuәnt/",
-    "meaningZh": "成分",
-    "supplementalMeaningZh": "選民；構成的",
-    "example": "Salt is a key constituent of seawater and many snacks.",
-    "exampleZh": "鹽是海水和許多零食的重要成分。",
+    "meaningZh": "選民",
+    "supplementalMeaningZh": "成分；構成的",
+    "example": "One constituent complained about broken streetlights near the park.",
+    "exampleZh": "一位選民抱怨公園旁路燈壞了。",
     "group": "Core 9"
   },
   {
@@ -45832,7 +45832,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'fɒsәl/",
     "meaningZh": "化石",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "守舊的人",
     "example": "The fossil lay embedded in a slab of limestone.",
     "exampleZh": "化石嵌在一片石灰岩中。",
     "group": "Core 9"
@@ -45875,10 +45875,10 @@ export const sampleWords: WordEntry[] = [
     "word": "wagon",
     "partOfSpeech": "n",
     "pronunciation": "/'wægәn/",
-    "meaningZh": "馬車",
-    "supplementalMeaningZh": "貨車；四輪推車",
+    "meaningZh": "四輪車",
+    "supplementalMeaningZh": "馬車；貨車",
     "example": "The old wagon carried pumpkins from the field.",
-    "exampleZh": "舊馬車把南瓜從田裡載出來。",
+    "exampleZh": "舊農用車把南瓜從田裡載出來。",
     "group": "Core 9"
   },
   {
@@ -45919,10 +45919,10 @@ export const sampleWords: WordEntry[] = [
     "word": "uncover",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/.ʌn'kʌvә/",
-    "meaningZh": "揭露",
-    "supplementalMeaningZh": "掀開；露出",
+    "meaningZh": "露出",
+    "supplementalMeaningZh": "揭開；揭露",
     "example": "Workers uncover old tiles by lifting the station floor.",
-    "exampleZh": "工人掀開車站地板，露出了舊瓷磚。",
+    "exampleZh": "工人掀開車站地板露出舊瓷磚。",
     "group": "Core 9"
   },
   {
@@ -46052,9 +46052,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'mʌŋki/",
     "meaningZh": "猴子",
-    "supplementalMeaningZh": "胡鬧；瞎弄",
+    "supplementalMeaningZh": "胡鬧",
     "example": "A monkey stole peanuts from an open backpack.",
-    "exampleZh": "一隻猴子從敞開的背包裡偷走了花生。",
+    "exampleZh": "一隻猴子從打開的背包偷花生。",
     "group": "Core 9"
   },
   {
@@ -46096,9 +46096,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/ik'sepʃәnәl/",
     "meaningZh": "出色的",
-    "supplementalMeaningZh": "異常的；例外的",
+    "supplementalMeaningZh": "特殊的；例外的",
     "example": "Her exceptional hearing caught the faint alarm outside.",
-    "exampleZh": "她出色的聽力聽到了外面微弱的警報聲。",
+    "exampleZh": "她出色的聽力聽見了外面微弱的警報聲。",
     "group": "Core 9"
   },
   {
@@ -46107,9 +46107,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.kɒntrә'dikʃәn/",
     "meaningZh": "矛盾",
-    "supplementalMeaningZh": "反駁；否認",
-    "example": "His warm smile was a contradiction of his harsh words.",
-    "exampleZh": "他溫暖的笑容與刺耳的話語互相矛盾。",
+    "supplementalMeaningZh": "反駁",
+    "example": "His smile was a contradiction to the harsh words.",
+    "exampleZh": "他的笑容和刺耳言語形成矛盾。",
     "group": "Core 9"
   },
   {
@@ -46118,9 +46118,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'daun'taun/",
     "meaningZh": "市中心",
-    "supplementalMeaningZh": "在市中心；住商業區",
-    "example": "They moved downtown to live above a bakery.",
-    "exampleZh": "他們搬到市中心，住在一間麵包店樓上。",
+    "supplementalMeaningZh": "往市中心",
+    "example": "They moved downtown to live above the bakery.",
+    "exampleZh": "他們搬到市中心住在麵包店樓上。",
     "group": "Core 9"
   },
   {
@@ -46161,10 +46161,10 @@ export const sampleWords: WordEntry[] = [
     "word": "certainty",
     "partOfSpeech": "n",
     "pronunciation": "/'sә:tәnti/",
-    "meaningZh": "確定的事",
-    "supplementalMeaningZh": "確信；確定性",
+    "meaningZh": "確信",
+    "supplementalMeaningZh": "確定性；必然的事",
     "example": "She spoke with certainty about the ferry schedule.",
-    "exampleZh": "她很有把握地談論渡輪的時刻表。",
+    "exampleZh": "她很有把握地談起渡輪的時刻表。",
     "group": "Core 9"
   },
   {
@@ -46172,8 +46172,8 @@ export const sampleWords: WordEntry[] = [
     "word": "pioneer",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/.paiә'niә/",
-    "meaningZh": "先驅",
-    "supplementalMeaningZh": "開拓者；開創",
+    "meaningZh": "開創",
+    "supplementalMeaningZh": "先驅；拓荒者",
     "example": "A local doctor helped pioneer a new treatment for severe hand burns.",
     "exampleZh": "一名當地醫師協助開創治療嚴重手部燒傷的新療法。",
     "group": "Core 9"
@@ -46239,7 +46239,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/breik/",
     "meaningZh": "煞車",
-    "supplementalMeaningZh": "阻礙；減速",
+    "supplementalMeaningZh": "阻礙",
     "example": "The brake squealed as the bus reached the curve.",
     "exampleZh": "公車開到彎道時，煞車發出刺耳的聲音。",
     "group": "Core 9"
@@ -46395,7 +46395,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "令人滿意的",
     "supplementalMeaningZh": "",
     "example": "The repair was satisfactory, though the radio still buzzed.",
-    "exampleZh": "維修結果還算令人滿意，不過收音機仍有雜音。",
+    "exampleZh": "維修算令人滿意但收音機仍有雜音。",
     "group": "Core 9"
   },
   {
@@ -46414,10 +46414,10 @@ export const sampleWords: WordEntry[] = [
     "word": "scramble",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'skræmbl/",
-    "meaningZh": "爭搶",
-    "supplementalMeaningZh": "攀爬；混亂；炒蛋",
-    "example": "Fans scramble for tickets as soon as the concert goes on sale.",
-    "exampleZh": "演唱會一開賣，歌迷就爭搶門票。",
+    "meaningZh": "攀爬",
+    "supplementalMeaningZh": "爭搶；混亂；炒蛋",
+    "example": "Tourists scramble up the rocks to watch sunrise.",
+    "exampleZh": "遊客爬上岩石去看日出。",
     "group": "Core 9"
   },
   {
@@ -46425,10 +46425,10 @@ export const sampleWords: WordEntry[] = [
     "word": "drill",
     "partOfSpeech": "n / v",
     "pronunciation": "/dril/",
-    "meaningZh": "鑽孔機",
+    "meaningZh": "鑽子",
     "supplementalMeaningZh": "鑽孔；訓練；演習",
     "example": "The dentist's drill whined behind the blue curtain.",
-    "exampleZh": "牙醫的鑽孔機在藍簾後嗡嗡作響。",
+    "exampleZh": "牙醫的鑽子在藍簾後嗡嗡響。",
     "group": "Core 9"
   },
   {
@@ -46502,10 +46502,10 @@ export const sampleWords: WordEntry[] = [
     "word": "preach",
     "partOfSpeech": "v / n",
     "pronunciation": "/pri:tʃ/",
-    "meaningZh": "講道",
-    "supplementalMeaningZh": "說教；宣揚；鼓吹",
+    "meaningZh": "宣講",
+    "supplementalMeaningZh": "說教；講道；鼓吹",
     "example": "He would preach kindness while refusing to help neighbors.",
-    "exampleZh": "他嘴上說教要人善良，自己卻拒絕幫助鄰居。",
+    "exampleZh": "他嘴上宣講要待人善良，自己卻不肯幫助鄰居。",
     "group": "Core 9"
   },
   {
@@ -46656,8 +46656,8 @@ export const sampleWords: WordEntry[] = [
     "word": "correspondence",
     "partOfSpeech": "n",
     "pronunciation": "/.kɒri'spɒndәns/",
-    "meaningZh": "通信",
-    "supplementalMeaningZh": "信件；相符",
+    "meaningZh": "信件",
+    "supplementalMeaningZh": "通信；相符",
     "example": "Their correspondence survived in a tin cookie box.",
     "exampleZh": "他們的信件保存在鐵餅乾盒裡。",
     "group": "Core 9"
@@ -46711,10 +46711,10 @@ export const sampleWords: WordEntry[] = [
     "word": "pavement",
     "partOfSpeech": "n",
     "pronunciation": "/'peivmәnt/",
-    "meaningZh": "人行道",
-    "supplementalMeaningZh": "路面；鋪面",
+    "meaningZh": "路面",
+    "supplementalMeaningZh": "人行道；鋪面",
     "example": "Fresh mango juice spilled across the hot pavement.",
-    "exampleZh": "新鮮芒果汁灑在滾燙的路面上。",
+    "exampleZh": "新鮮芒果汁灑在滾燙路面上。",
     "group": "Core 9"
   },
   {
@@ -46746,8 +46746,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'fɒlәuә/",
     "meaningZh": "追隨者",
     "supplementalMeaningZh": "粉絲；信徒；隨從",
-    "example": "The singer thanked every follower for the kind messages.",
-    "exampleZh": "那位歌手感謝每位追隨者傳來的暖心訊息。",
+    "example": "As a loyal follower of the band, she never misses a concert.",
+    "exampleZh": "身為這個樂團的忠實追隨者，她從不錯過任何一場演唱會。",
     "group": "Core 9"
   },
   {
@@ -46755,10 +46755,10 @@ export const sampleWords: WordEntry[] = [
     "word": "worm",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/wә:m/",
-    "meaningZh": "蠕蟲",
-    "supplementalMeaningZh": "蛔蟲；螺紋；電腦蠕蟲",
+    "meaningZh": "蟲",
+    "supplementalMeaningZh": "蠕蟲；螺紋",
     "example": "A worm wriggled from the soil after rain.",
-    "exampleZh": "雨後一條蠕蟲從土裡扭動爬出。",
+    "exampleZh": "雨後一條蟲從土裡扭動爬出。",
     "group": "Core 9"
   },
   {
@@ -46766,10 +46766,10 @@ export const sampleWords: WordEntry[] = [
     "word": "inn",
     "partOfSpeech": "n / vi",
     "pronunciation": "/in/",
-    "meaningZh": "小旅館",
-    "supplementalMeaningZh": "客棧；酒館",
+    "meaningZh": "旅館",
+    "supplementalMeaningZh": "客棧",
     "example": "The mountain inn served tea beside a wood stove.",
-    "exampleZh": "山中小旅館在柴爐旁為旅客奉茶。",
+    "exampleZh": "山中旅館在柴爐旁為旅客奉茶。",
     "group": "Core 9"
   },
   {
@@ -46899,7 +46899,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/stæk/",
     "meaningZh": "一疊",
-    "supplementalMeaningZh": "大量；堆疊；煙囪",
+    "supplementalMeaningZh": "大量；堆疊；書庫",
     "example": "A stack of bowls rattled during the quake.",
     "exampleZh": "一疊碗在地震中喀喀作響。",
     "group": "Core 9"
@@ -46922,8 +46922,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/pris'kraib/",
     "meaningZh": "開處方",
     "supplementalMeaningZh": "規定；囑咐",
-    "example": "Doctors prescribe rest when the fever returns at night.",
-    "exampleZh": "夜裡發燒復發時，醫師會囑咐要多休息。",
+    "example": "The doctor will prescribe medicine for your cough after the checkup.",
+    "exampleZh": "檢查完後，醫師會開治療咳嗽的藥給你。",
     "group": "Core 9"
   },
   {
@@ -46956,7 +46956,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "雜草",
     "supplementalMeaningZh": "除草；剔除",
     "example": "A stubborn weed grew through the cracked sidewalk.",
-    "exampleZh": "一株頑強的雜草從裂開的人行道長了出來。",
+    "exampleZh": "一株頑強雜草從裂開人行道長出。",
     "group": "Core 9"
   },
   {
@@ -46987,9 +46987,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/klip/",
     "meaningZh": "夾子",
-    "supplementalMeaningZh": "修剪；片段；剪輯",
+    "supplementalMeaningZh": "修剪；片段；迴紋針",
     "example": "A silver clip held her hair during the dance.",
-    "exampleZh": "跳舞時，一個銀色髮夾固定著她的頭髮。",
+    "exampleZh": "跳舞時，一枚銀色髮夾固定著她的頭髮。",
     "group": "Core 9"
   },
   {
@@ -47000,7 +47000,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "高飛",
     "supplementalMeaningZh": "急升；高聳",
     "example": "Kites soar above the riverbank every autumn afternoon.",
-    "exampleZh": "每年秋天的午後，風箏都在河岸上空高飛。",
+    "exampleZh": "每年秋天下午風箏都在河岸上空高飛。",
     "group": "Core 9"
   },
   {
@@ -47022,7 +47022,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "被動的",
     "supplementalMeaningZh": "消極的；順從的",
     "example": "His passive response frustrated the rescue volunteers nearby.",
-    "exampleZh": "他被動的反應，讓附近的救援志工很挫折。",
+    "exampleZh": "他消極的反應，讓附近的救援志工很挫折。",
     "group": "Core 9"
   },
   {
@@ -47063,10 +47063,10 @@ export const sampleWords: WordEntry[] = [
     "word": "cater",
     "partOfSpeech": "v",
     "pronunciation": "/'keitә/",
-    "meaningZh": "提供餐飲",
-    "supplementalMeaningZh": "迎合；服務",
+    "meaningZh": "服務",
+    "supplementalMeaningZh": "供應餐飲；迎合",
     "example": "Small vendors cater to hikers near the trailhead.",
-    "exampleZh": "小攤販在登山口為健行者提供餐飲。",
+    "exampleZh": "小攤販在登山口服務健行者。",
     "group": "Core 9"
   },
   {
@@ -47096,8 +47096,8 @@ export const sampleWords: WordEntry[] = [
     "word": "prospective",
     "partOfSpeech": "a",
     "pronunciation": "/prәs'pektiv/",
-    "meaningZh": "預期的",
-    "supplementalMeaningZh": "未來的；潛在的",
+    "meaningZh": "潛在的",
+    "supplementalMeaningZh": "預期的；未來的",
     "example": "Several prospective tenants waited outside the renovated apartment.",
     "exampleZh": "幾名準租客在翻新公寓外等候。",
     "group": "Core 9"
@@ -47140,10 +47140,10 @@ export const sampleWords: WordEntry[] = [
     "word": "puzzle",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'pʌzl/",
-    "meaningZh": "難題",
-    "supplementalMeaningZh": "謎；拼圖；使困惑",
+    "meaningZh": "謎",
+    "supplementalMeaningZh": "難題；拼圖；使困惑",
     "example": "The missing key remained a puzzle all week.",
-    "exampleZh": "那把鑰匙不見的原因整整一週都是個謎。",
+    "exampleZh": "那把鑰匙究竟去了哪裡，整整一週都沒人解得開。",
     "group": "Core 9"
   },
   {
@@ -47152,7 +47152,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'mә:si/",
     "meaningZh": "仁慈",
-    "supplementalMeaningZh": "寬恕；慈悲",
+    "supplementalMeaningZh": "寬恕；幸運",
     "example": "The judge showed mercy to the hungry thief.",
     "exampleZh": "法官對飢餓的小偷展現仁慈。",
     "group": "Core 9"
@@ -47294,8 +47294,8 @@ export const sampleWords: WordEntry[] = [
     "word": "damn",
     "partOfSpeech": "n / interj / vt",
     "pronunciation": "/dæm/",
-    "meaningZh": "詛咒",
-    "supplementalMeaningZh": "譴責；該死；絲毫",
+    "meaningZh": "譴責",
+    "supplementalMeaningZh": "詛咒；該死；絲毫",
     "example": "The judge refused to damn the suspect on gossip alone.",
     "exampleZh": "法官拒絕只憑流言譴責嫌疑人。",
     "group": "Core 9"
@@ -47406,8 +47406,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'fjuәriәs/",
     "meaningZh": "暴怒的",
     "supplementalMeaningZh": "猛烈的",
-    "example": "She was furious when the ferry left without her.",
-    "exampleZh": "渡船沒等她就開走，她氣得暴跳如雷。",
+    "example": "She was furious when the ferry left early.",
+    "exampleZh": "渡船提早開走時她氣炸了。",
     "group": "Core 9"
   },
   {
@@ -47415,10 +47415,10 @@ export const sampleWords: WordEntry[] = [
     "word": "provincial",
     "partOfSpeech": "n / a",
     "pronunciation": "/prә'vinʃәl/",
-    "meaningZh": "省的",
+    "meaningZh": "省級的",
     "supplementalMeaningZh": "地方的；偏狹的",
-    "example": "The provincial museum displayed old tools from local sugar farms.",
-    "exampleZh": "省立博物館展示了來自當地糖業農場的舊工具。",
+    "example": "The provincial museum displayed tools from sugar farms.",
+    "exampleZh": "省立博物館展示糖業農場工具。",
     "group": "Core 9"
   },
   {
@@ -47470,10 +47470,10 @@ export const sampleWords: WordEntry[] = [
     "word": "remainder",
     "partOfSpeech": "n / v / a",
     "pronunciation": "/ri'meindә/",
-    "meaningZh": "剩餘部分",
+    "meaningZh": "剩下的部分",
     "supplementalMeaningZh": "餘數；其餘的人",
-    "example": "She packed the remainder of the dinner for lunch the next day.",
-    "exampleZh": "她把晚餐剩下的部分打包留作隔天的午餐。",
+    "example": "She packed the remainder of dinner for lunch.",
+    "exampleZh": "她把晚餐剩下的部分打包當午餐。",
     "group": "Core 9"
   },
   {
@@ -47481,10 +47481,10 @@ export const sampleWords: WordEntry[] = [
     "word": "vacuum",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/''vækjuәm/",
-    "meaningZh": "真空",
-    "supplementalMeaningZh": "吸塵器；空白；用吸塵器清理",
-    "example": "Astronauts float in a vacuum because there is no air around them.",
-    "exampleZh": "太空人漂浮在真空中，因為周圍沒有空氣。",
+    "meaningZh": "吸塵器",
+    "supplementalMeaningZh": "真空；空白；用吸塵器清理",
+    "example": "A tiny vacuum cleaned crumbs from the taxi seat.",
+    "exampleZh": "小型吸塵器清掉計程車座位上的碎屑。",
     "group": "Core 9"
   },
   {
@@ -47536,10 +47536,10 @@ export const sampleWords: WordEntry[] = [
     "word": "midst",
     "partOfSpeech": "n / prep",
     "pronunciation": "/midst/",
-    "meaningZh": "中間",
-    "supplementalMeaningZh": "在…之中",
-    "example": "In the midst of the noisy crowd, she found her little brother.",
-    "exampleZh": "在嘈雜的人群中，她找到了自己的弟弟。",
+    "meaningZh": "當中",
+    "supplementalMeaningZh": "",
+    "example": "In the midst of chaos, she found the baby.",
+    "exampleZh": "混亂中她找到了那名嬰兒。",
     "group": "Core 9"
   },
   {
@@ -47581,7 +47581,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'nәubl/",
     "meaningZh": "高尚的",
-    "supplementalMeaningZh": "貴族的；高貴的",
+    "supplementalMeaningZh": "貴族；高貴的",
     "example": "Her noble gesture protected the stranger's dignity during the dispute.",
     "exampleZh": "她高尚的舉動在爭執中維護了陌生人的尊嚴。",
     "group": "Core 9"
@@ -47591,10 +47591,10 @@ export const sampleWords: WordEntry[] = [
     "word": "abolish",
     "partOfSpeech": "vt",
     "pronunciation": "/ә'bɒliʃ/",
-    "meaningZh": "廢除",
-    "supplementalMeaningZh": "",
+    "meaningZh": "廢止",
+    "supplementalMeaningZh": "消除",
     "example": "The council voted to abolish the old curfew.",
-    "exampleZh": "議會投票廢除舊宵禁。",
+    "exampleZh": "議會投票廢止舊宵禁。",
     "group": "Core 9"
   },
   {
@@ -47647,9 +47647,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'autbreik/",
     "meaningZh": "爆發",
-    "supplementalMeaningZh": "暴動；突然發生",
+    "supplementalMeaningZh": "疫情爆發；暴動",
     "example": "An outbreak of fever closed the dormitory quickly.",
-    "exampleZh": "一場發燒疫情使宿舍很快就關閉了。",
+    "exampleZh": "一波發燒疫情爆發後，宿舍很快就關閉了。",
     "group": "Core 9"
   },
   {
@@ -47658,9 +47658,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / a",
     "pronunciation": "/'laitniŋ/",
     "meaningZh": "閃電",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "閃電般的",
     "example": "Bright lightning split the palm tree beside the road.",
-    "exampleZh": "明亮的閃電劈開了路旁的棕櫚樹。",
+    "exampleZh": "明亮閃電劈開路旁的棕櫚樹。",
     "group": "Core 9"
   },
   {
@@ -47715,7 +47715,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "取回",
     "supplementalMeaningZh": "挽回；檢索",
     "example": "Divers retrieve lost phones from the shallow harbor.",
-    "exampleZh": "潛水員從淺水港灣取回遺失的手機。",
+    "exampleZh": "潛水員從淺港取回遺失手機。",
     "group": "Core 9"
   },
   {
@@ -47811,8 +47811,8 @@ export const sampleWords: WordEntry[] = [
     "word": "textile",
     "partOfSpeech": "n / a",
     "pronunciation": "/'tekstail/",
-    "meaningZh": "紡織品",
-    "supplementalMeaningZh": "紡織業；紡織的",
+    "meaningZh": "紡織的",
+    "supplementalMeaningZh": "紡織品；紡織業",
     "example": "The textile factory dyed cotton cloth indigo yesterday.",
     "exampleZh": "紡織工廠昨天把棉布染成靛藍色。",
     "group": "Core 9"
@@ -47877,10 +47877,10 @@ export const sampleWords: WordEntry[] = [
     "word": "erect",
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/i'rekt/",
-    "meaningZh": "直立的",
-    "supplementalMeaningZh": "搭建；建立",
-    "example": "The soldiers stood erect while the flag was raised.",
-    "exampleZh": "升旗時士兵們筆直地站著。",
+    "meaningZh": "搭建",
+    "supplementalMeaningZh": "直立的；建立",
+    "example": "Workers erect a temporary stage beside the temple.",
+    "exampleZh": "工人在廟旁搭起臨時舞台。",
     "group": "Core 9"
   },
   {
@@ -47890,8 +47890,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/straiv/",
     "meaningZh": "努力",
     "supplementalMeaningZh": "奮鬥；力求",
-    "example": "Students strive to improve their English every day.",
-    "exampleZh": "學生們每天努力提升自己的英文。",
+    "example": "Athletes strive for balance on the narrow beam.",
+    "exampleZh": "運動員努力在窄木樑上保持平衡。",
     "group": "Core 9"
   },
   {
@@ -47922,7 +47922,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'pistl/",
     "meaningZh": "手槍",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "信號槍",
     "example": "The guard locked his pistol inside a steel drawer.",
     "exampleZh": "警衛把手槍鎖進鋼製抽屜。",
     "group": "Core 9"
@@ -48064,10 +48064,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tolerance",
     "partOfSpeech": "n",
     "pronunciation": "/'tɒlәrәns/",
-    "meaningZh": "寬容",
-    "supplementalMeaningZh": "耐受度；容許量",
-    "example": "Teachers should show tolerance toward students who think differently.",
-    "exampleZh": "老師應該對想法不同的學生表現出寬容。",
+    "meaningZh": "耐受度",
+    "supplementalMeaningZh": "寬容；容許量",
+    "example": "Years abroad increased his tolerance for spicy food.",
+    "exampleZh": "多年在外提高了他對辣食的耐受度。",
     "group": "Core 9"
   },
   {
@@ -48077,8 +48077,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/ri'vendʒ/",
     "meaningZh": "復仇",
     "supplementalMeaningZh": "報復",
-    "example": "He dreamed of revenge long after the trial had ended.",
-    "exampleZh": "審判結束很久以後，他仍夢想著復仇。",
+    "example": "After losing the game, Tom planned his revenge for the next match.",
+    "exampleZh": "輸了比賽後，湯姆計劃在下一場比賽復仇。",
     "group": "Core 9"
   },
   {
@@ -48130,10 +48130,10 @@ export const sampleWords: WordEntry[] = [
     "word": "chorus",
     "partOfSpeech": "n / v",
     "pronunciation": "/'kɒ:rәs/",
-    "meaningZh": "合唱團",
-    "supplementalMeaningZh": "副歌；齊聲；合唱",
-    "example": "The school chorus practices every Tuesday after class.",
-    "exampleZh": "學校合唱團每週二下課後練習。",
+    "meaningZh": "齊聲歌唱",
+    "supplementalMeaningZh": "副歌；合唱團；齊聲說",
+    "example": "A chorus of children echoed through the alley.",
+    "exampleZh": "孩子們的齊聲歌唱在巷弄迴盪。",
     "group": "Core 9"
   },
   {
@@ -48188,7 +48188,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "邪教",
     "supplementalMeaningZh": "狂熱崇拜；風潮",
     "example": "The cult met secretly in the abandoned theater.",
-    "exampleZh": "那個邪教在廢棄的劇院祕密聚會。",
+    "exampleZh": "那個邪教團體在廢棄劇院裡祕密聚會。",
     "group": "Core 9"
   },
   {
@@ -48196,7 +48196,7 @@ export const sampleWords: WordEntry[] = [
     "word": "dispose",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/dis'pәuz/",
-    "meaningZh": "處置",
+    "meaningZh": "處理",
     "supplementalMeaningZh": "丟棄；安排；使傾向",
     "example": "Residents dispose of batteries at the library counter.",
     "exampleZh": "居民可以把廢電池拿到圖書館櫃台回收。",
@@ -48209,8 +48209,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'vaiәbl/",
     "meaningZh": "可行的",
     "supplementalMeaningZh": "能生長的；能存活的",
-    "example": "Only three viable seeds sprouted after the long drought.",
-    "exampleZh": "長期乾旱後只有三顆能生長的種子發芽。",
+    "example": "Taking the MRT is a viable way to avoid traffic downtown.",
+    "exampleZh": "搭捷運是避開市區塞車的可行方法。",
     "group": "Core 9"
   },
   {
@@ -48232,7 +48232,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "小缺口",
     "supplementalMeaningZh": "割傷；綽號",
     "example": "A tiny nick appeared on the chef's knife.",
-    "exampleZh": "主廚的刀上出現了一個小缺口。",
+    "exampleZh": "主廚刀上出現一個小缺口。",
     "group": "Core 9"
   },
   {
@@ -48265,7 +48265,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "小巧的",
     "supplementalMeaningZh": "壓縮；契約",
     "example": "Her compact umbrella fit inside a jacket pocket.",
-    "exampleZh": "她的小巧雨傘可以放進外套口袋。",
+    "exampleZh": "她的小巧雨傘可放進外套口袋。",
     "group": "Core 9"
   },
   {
@@ -48309,7 +48309,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "雖然",
     "supplementalMeaningZh": "",
     "example": "The soup was tasty, albeit far too salty.",
-    "exampleZh": "這湯很好喝，雖然實在太鹹了。",
+    "exampleZh": "這湯雖然實在太鹹但很好喝。",
     "group": "Core 9"
   },
   {
@@ -48319,8 +48319,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/skip/",
     "meaningZh": "跳過",
     "supplementalMeaningZh": "不吃；跳躍；翹課",
-    "example": "Do not skip breakfast before the long ride.",
-    "exampleZh": "長途騎乘前不要不吃早餐。",
+    "example": "You can skip the first chapter if you already know the basics.",
+    "exampleZh": "如果你已經懂基本概念，可以跳過第一章。",
     "group": "Core 9"
   },
   {
@@ -48328,10 +48328,10 @@ export const sampleWords: WordEntry[] = [
     "word": "vocal",
     "partOfSpeech": "a / n",
     "pronunciation": "/'vәukl/",
-    "meaningZh": "嗓音的",
-    "supplementalMeaningZh": "直言的；人聲的",
+    "meaningZh": "聲樂的",
+    "supplementalMeaningZh": "嗓音的；直言的；人聲",
     "example": "Vocal training strengthened her voice before the audition.",
-    "exampleZh": "試唱前，聲樂訓練強化了她的嗓音。",
+    "exampleZh": "聲樂訓練在試唱前強化她的嗓音。",
     "group": "Core 9"
   },
   {
@@ -48408,7 +48408,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "大眾運輸",
     "supplementalMeaningZh": "通過；轉運",
     "example": "City transit workers reopened the station before rush hour.",
-    "exampleZh": "市區大眾運輸員工在尖峰時段前重新開放了車站。",
+    "exampleZh": "大眾運輸員工在尖峰前重開車站。",
     "group": "Core 9"
   },
   {
@@ -48417,9 +48417,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/di'rektәri/",
     "meaningZh": "名錄",
-    "supplementalMeaningZh": "目錄；指南",
-    "example": "The hotel directory listed a nearby dentist in the downtown area.",
-    "exampleZh": "飯店的名錄列出了市中心附近的一間牙醫診所。",
+    "supplementalMeaningZh": "通訊錄；目錄；指南",
+    "example": "The school directory lists every teacher's office and phone number.",
+    "exampleZh": "學校名錄列出每位老師的辦公室和電話。",
     "group": "Core 9"
   },
   {
@@ -48549,9 +48549,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/i'nækt/",
     "meaningZh": "制定",
-    "supplementalMeaningZh": "頒布；扮演",
-    "example": "Lawmakers voted to enact stricter rules for factory waste after the protests.",
-    "exampleZh": "抗議之後，立法者投票通過制定更嚴格的工廠廢棄物規定。",
+    "supplementalMeaningZh": "扮演",
+    "example": "Lawmakers enact stricter rules for factory waste after protests.",
+    "exampleZh": "抗議後立法者制定更嚴格的工廠廢棄物規則。",
     "group": "Core 9"
   },
   {
@@ -48570,10 +48570,10 @@ export const sampleWords: WordEntry[] = [
     "word": "mansion",
     "partOfSpeech": "n",
     "pronunciation": "/'mænʃәn/",
-    "meaningZh": "豪宅",
-    "supplementalMeaningZh": "宅邸",
+    "meaningZh": "宅邸",
+    "supplementalMeaningZh": "豪宅",
     "example": "The old mansion overlooked the tea fields below.",
-    "exampleZh": "那棟老豪宅俯瞰著下方的茶園。",
+    "exampleZh": "從那棟老宅可以俯瞰整片茶園。",
     "group": "Core 9"
   },
   {
@@ -48649,8 +48649,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/bi'trei/",
     "meaningZh": "背叛",
     "supplementalMeaningZh": "出賣；辜負；流露",
-    "example": "His shaking voice seemed to betray his fear.",
-    "exampleZh": "他顫抖的聲音似乎流露出他的恐懼。",
+    "example": "She would never betray her teammates to win the game.",
+    "exampleZh": "她絕不會為了贏得比賽而背叛隊友。",
     "group": "Core 9"
   },
   {
@@ -48671,7 +48671,7 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'bɒksiŋ/",
     "meaningZh": "拳擊",
     "supplementalMeaningZh": "",
-    "example": "Boxing taught him patience as well as strength.",
+    "example": "His boxing taught him patience as well as strength.",
     "exampleZh": "拳擊不只讓他變強壯，也教會他耐心。",
     "group": "Core 9"
   },
@@ -48746,10 +48746,10 @@ export const sampleWords: WordEntry[] = [
     "word": "homeland",
     "partOfSpeech": "n",
     "pronunciation": "/'hәumlænd/",
-    "meaningZh": "祖國",
-    "supplementalMeaningZh": "故國；家鄉",
+    "meaningZh": "故國",
+    "supplementalMeaningZh": "祖國；家鄉",
     "example": "Songs from her homeland made the room quiet.",
-    "exampleZh": "來自她祖國的歌曲讓房間安靜下來。",
+    "exampleZh": "故鄉的歌曲一響起，房間裡頓時安靜下來。",
     "group": "Core 9"
   },
   {
@@ -48856,10 +48856,10 @@ export const sampleWords: WordEntry[] = [
     "word": "haunt",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/hɒ:nt/",
-    "meaningZh": "出沒於",
-    "supplementalMeaningZh": "縈繞心頭；常去的地方",
+    "meaningZh": "困擾",
+    "supplementalMeaningZh": "出沒；常去的地方",
     "example": "The accident continued to haunt him for years.",
-    "exampleZh": "那場事故多年來仍縈繞在他心頭。",
+    "exampleZh": "那場事故多年來仍困擾著他。",
     "group": "Core 9"
   },
   {
@@ -48890,7 +48890,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/graind/",
     "meaningZh": "研磨",
-    "supplementalMeaningZh": "苦差事；摩擦聲；磨利",
+    "supplementalMeaningZh": "苦差事；摩擦聲；苦幹",
     "example": "Please grind the sesame seeds until they release oil.",
     "exampleZh": "請把芝麻磨到出油為止。",
     "group": "Core 9"
@@ -48922,10 +48922,10 @@ export const sampleWords: WordEntry[] = [
     "word": "stunning",
     "partOfSpeech": "a",
     "pronunciation": "/'stʌniŋ/",
-    "meaningZh": "極漂亮的",
-    "supplementalMeaningZh": "令人震驚的",
+    "meaningZh": "驚人的",
+    "supplementalMeaningZh": "使昏迷的",
     "example": "Her stunning mural covered the station wall overnight.",
-    "exampleZh": "她那幅極漂亮的壁畫一夜之間就覆蓋了車站牆面。",
+    "exampleZh": "她驚人的壁畫一夜間覆蓋車站牆面。",
     "group": "Core 9"
   },
   {
@@ -48999,10 +48999,10 @@ export const sampleWords: WordEntry[] = [
     "word": "embark",
     "partOfSpeech": "vi / vt",
     "pronunciation": "/im'bɑ:k/",
-    "meaningZh": "著手進行",
-    "supplementalMeaningZh": "上船；上飛機",
-    "example": "They will embark on a bike trip around Taiwan this summer.",
-    "exampleZh": "他們今年夏天要展開環島自行車之旅。",
+    "meaningZh": "上船",
+    "supplementalMeaningZh": "著手進行；上飛機",
+    "example": "They embark before sunrise to avoid rough seas.",
+    "exampleZh": "他們日出前上船以避開惡劣海象。",
     "group": "Core 9"
   },
   {
@@ -49012,8 +49012,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'autluk/",
     "meaningZh": "前景",
     "supplementalMeaningZh": "看法；景色",
-    "example": "The economic outlook for next year looks quite positive.",
-    "exampleZh": "明年的經濟前景看起來相當樂觀。",
+    "example": "The job outlook for nurses in Taiwan is very good.",
+    "exampleZh": "台灣護理師的就業前景非常好。",
     "group": "Core 9"
   },
   {
@@ -49111,8 +49111,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/gaun/",
     "meaningZh": "禮服",
     "supplementalMeaningZh": "長袍；法袍；睡袍",
-    "example": "She wore a long silk gown to the school dance.",
-    "exampleZh": "她穿著一件絲質長禮服去參加學校舞會。",
+    "example": "She wore a long blue gown to her sister's wedding.",
+    "exampleZh": "她穿著一件藍色長禮服參加姊姊的婚禮。",
     "group": "Core 9"
   },
   {
@@ -49177,8 +49177,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'lændmɑ:k/",
     "meaningZh": "地標",
     "supplementalMeaningZh": "里程碑；地界標",
-    "example": "The old temple is a famous landmark in our town.",
-    "exampleZh": "那座古老的廟是我們鎮上著名的地標。",
+    "example": "Taipei 101 is the most famous landmark in the city.",
+    "exampleZh": "台北101是這座城市最有名的地標。",
     "group": "Core 9"
   },
   {
@@ -49197,10 +49197,10 @@ export const sampleWords: WordEntry[] = [
     "word": "recorder",
     "partOfSpeech": "n",
     "pronunciation": "/ri'kɒ:dә/",
-    "meaningZh": "直笛",
-    "supplementalMeaningZh": "錄音機；記錄員",
-    "example": "Our music teacher asked us to play the recorder.",
-    "exampleZh": "音樂老師要我們吹直笛。",
+    "meaningZh": "錄音機",
+    "supplementalMeaningZh": "記錄員；直笛",
+    "example": "The recorder clearly captured whispers behind the curtain.",
+    "exampleZh": "錄音機清楚錄下簾後的低語。",
     "group": "Core 9"
   },
   {
@@ -49243,8 +49243,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'inteik/",
     "meaningZh": "攝取量",
     "supplementalMeaningZh": "進氣口；吸入；招收人數",
-    "example": "Doctors say a high sugar intake is bad for your teeth.",
-    "exampleZh": "醫生說糖的攝取量過高對牙齒不好。",
+    "example": "Doctors advise people to reduce their daily sugar intake.",
+    "exampleZh": "醫師建議大家減少每天的糖分攝取量。",
     "group": "Core 9"
   },
   {
@@ -49473,7 +49473,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'reidә/",
     "meaningZh": "雷達",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "注意範圍",
     "example": "Weather radar showed rain moving toward the coast.",
     "exampleZh": "氣象雷達顯示雨帶正移向海岸。",
     "group": "Core 9"
@@ -49516,10 +49516,10 @@ export const sampleWords: WordEntry[] = [
     "word": "banner",
     "partOfSpeech": "n / a",
     "pronunciation": "/'bænә/",
-    "meaningZh": "橫幅",
-    "supplementalMeaningZh": "旗幟；標語",
+    "meaningZh": "旗幟",
+    "supplementalMeaningZh": "橫幅；傑出的",
     "example": "A torn banner still hung above the bakery after the storm.",
-    "exampleZh": "暴風雨過後，那面破損的橫幅仍掛在麵包店上方。",
+    "exampleZh": "暴風雨過後，那面破損的布條仍掛在麵包店上方。",
     "group": "Core 10"
   },
   {
@@ -49596,7 +49596,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "好友",
     "supplementalMeaningZh": "夥伴",
     "example": "Rina saved a seat for her pal at the crowded cinema.",
-    "exampleZh": "莉娜在擁擠的戲院替好友留了一個位子。",
+    "exampleZh": "莉娜在擁擠戲院替好友留了一個位子。",
     "group": "Core 10"
   },
   {
@@ -49681,8 +49681,8 @@ export const sampleWords: WordEntry[] = [
     "word": "crossing",
     "partOfSpeech": "n",
     "pronunciation": "/'krɒsiŋ/",
-    "meaningZh": "平交道",
-    "supplementalMeaningZh": "十字路口；渡口；橫越",
+    "meaningZh": "交叉處",
+    "supplementalMeaningZh": "橫越；渡口；平交道",
     "example": "Flashing lights warned drivers that the railway crossing was closing.",
     "exampleZh": "閃燈提醒駕駛鐵路平交道即將關閉。",
     "group": "Core 10"
@@ -49780,8 +49780,8 @@ export const sampleWords: WordEntry[] = [
     "word": "stab",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/stæb/",
-    "meaningZh": "刺",
-    "supplementalMeaningZh": "刺傷；嘗試；一陣強烈感受",
+    "meaningZh": "一陣強烈感受",
+    "supplementalMeaningZh": "刺；刺傷；嘗試",
     "example": "A sudden stab of guilt stopped him from opening the letter.",
     "exampleZh": "一股突如其來的罪惡感，讓他停下來，沒有拆開那封信。",
     "group": "Core 10"
@@ -49813,8 +49813,8 @@ export const sampleWords: WordEntry[] = [
     "word": "stride",
     "partOfSpeech": "n / v",
     "pronunciation": "/straid/",
-    "meaningZh": "大步走",
-    "supplementalMeaningZh": "步伐；進展",
+    "meaningZh": "步伐",
+    "supplementalMeaningZh": "大步；進展；邁大步走",
     "example": "Daniel crossed the lobby with a quick confident stride.",
     "exampleZh": "丹尼爾用快速自信的步伐穿過大廳。",
     "group": "Core 10"
@@ -49857,10 +49857,10 @@ export const sampleWords: WordEntry[] = [
     "word": "daylight",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'deilait/",
-    "meaningZh": "日光",
-    "supplementalMeaningZh": "白天；黎明",
+    "meaningZh": "白天",
+    "supplementalMeaningZh": "日光",
     "example": "By daylight, the broken pier looked more dangerous than romantic.",
-    "exampleZh": "天亮後，那座破碼頭看起來危險多於浪漫。",
+    "exampleZh": "天亮後破碼頭看來危險多於浪漫。",
     "group": "Core 10"
   },
   {
@@ -49946,9 +49946,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'tju:tә/",
     "meaningZh": "家教",
-    "supplementalMeaningZh": "助教；指導",
+    "supplementalMeaningZh": "導師；指導",
     "example": "Her tutor noticed the fever before the piano lesson began.",
-    "exampleZh": "她的家教老師在鋼琴課開始前發現她發燒了。",
+    "exampleZh": "她的家教在鋼琴課前發現她發燒。",
     "group": "Core 10"
   },
   {
@@ -49957,7 +49957,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/'spriŋkl/",
     "meaningZh": "撒",
-    "supplementalMeaningZh": "下毛毛雨；少量",
+    "supplementalMeaningZh": "小雨；少量",
     "example": "Grandma likes to sprinkle sesame seeds over warm scallion pancakes.",
     "exampleZh": "奶奶喜歡把芝麻撒在熱蔥油餅上。",
     "group": "Core 10"
@@ -50000,8 +50000,8 @@ export const sampleWords: WordEntry[] = [
     "word": "flush",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/flʌʃ/",
-    "meaningZh": "沖水",
-    "supplementalMeaningZh": "臉紅；齊平的",
+    "meaningZh": "臉紅",
+    "supplementalMeaningZh": "沖洗；齊平的",
     "example": "Her cheeks began to flush when the old photograph appeared.",
     "exampleZh": "老照片出現時她的臉頰開始泛紅。",
     "group": "Core 10"
@@ -50044,8 +50044,8 @@ export const sampleWords: WordEntry[] = [
     "word": "rental",
     "partOfSpeech": "n / a",
     "pronunciation": "/'rentl/",
-    "meaningZh": "租賃",
-    "supplementalMeaningZh": "租金；租用物",
+    "meaningZh": "租金",
+    "supplementalMeaningZh": "租賃的；租用物",
     "example": "The monthly rental includes insurance for scratches and broken mirrors.",
     "exampleZh": "每月租費包含刮痕和破鏡子的保險。",
     "group": "Core 10"
@@ -50122,9 +50122,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'nju:triәnt/",
     "meaningZh": "營養素",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "滋養的",
     "example": "Iron is a nutrient many toddlers lack during rapid growth.",
-    "exampleZh": "鐵是許多幼兒在快速成長期間缺乏的營養素。",
+    "exampleZh": "鐵是許多幼兒快速成長時缺乏的營養素。",
     "group": "Core 10"
   },
   {
@@ -50245,7 +50245,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "違抗",
     "supplementalMeaningZh": "藐視；挑戰",
     "example": "The swimmer tried to defy the warning and enter the rough water.",
-    "exampleZh": "游泳者想無視警告，進入洶湧的海水。",
+    "exampleZh": "游泳者想無視警告進入洶湧海水。",
     "group": "Core 10"
   },
   {
@@ -50267,7 +50267,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "鵝",
     "supplementalMeaningZh": "鵝肉",
     "example": "A goose chased the postman across the muddy farmyard.",
-    "exampleZh": "一隻鵝追著郵差穿過泥濘的農場院子。",
+    "exampleZh": "一隻鵝追著郵差穿過泥濘農院。",
     "group": "Core 10"
   },
   {
@@ -50377,7 +50377,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "永恆的",
     "supplementalMeaningZh": "沒完沒了的",
     "example": "Grandpa called the sea his eternal source of patience.",
-    "exampleZh": "祖父稱大海是他永不枯竭的耐心來源。",
+    "exampleZh": "祖父說大海是他永恆的耐心來源。",
     "group": "Core 10"
   },
   {
@@ -50419,9 +50419,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'maiti/",
     "meaningZh": "強大的",
-    "supplementalMeaningZh": "強而有力的；巨大的；很",
+    "supplementalMeaningZh": "很",
     "example": "The mighty river swallowed the old ferry dock overnight.",
-    "exampleZh": "洶湧的河水一夜之間吞沒了舊渡船碼頭。",
+    "exampleZh": "洶湧河水一夜間吞沒舊渡船碼頭。",
     "group": "Core 10"
   },
   {
@@ -50476,7 +50476,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "殺蟲劑",
     "supplementalMeaningZh": "農藥",
     "example": "The farmer stopped using pesticide near the beehives last spring.",
-    "exampleZh": "農夫去年春天停止在蜂箱附近使用殺蟲劑。",
+    "exampleZh": "農夫去年春天停止在蜂箱附近用殺蟲劑。",
     "group": "Core 10"
   },
   {
@@ -50617,7 +50617,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / v",
     "pronunciation": "/kәu'ɒ:dineit/",
     "meaningZh": "協調",
-    "supplementalMeaningZh": "座標；同等的；使配合",
+    "supplementalMeaningZh": "座標",
     "example": "Maya will coordinate food deliveries for the flooded neighborhood tomorrow.",
     "exampleZh": "瑪雅明天會協調淹水社區的餐點配送。",
     "group": "Core 10"
@@ -50759,8 +50759,8 @@ export const sampleWords: WordEntry[] = [
     "word": "obsession",
     "partOfSpeech": "n",
     "pronunciation": "/әb'seʃәn/",
-    "meaningZh": "著迷",
-    "supplementalMeaningZh": "執念；困擾的念頭",
+    "meaningZh": "執念",
+    "supplementalMeaningZh": "困擾念頭；著迷",
     "example": "His obsession with germs made every handshake feel dangerous.",
     "exampleZh": "他對細菌的執念，讓每次握手都顯得危險。",
     "group": "Core 10"
@@ -50804,9 +50804,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/im'plisit/",
     "meaningZh": "隱含的",
-    "supplementalMeaningZh": "絕對的；無疑問的",
+    "supplementalMeaningZh": "無條件的",
     "example": "Her silence carried an implicit warning that nobody missed.",
-    "exampleZh": "她的沉默帶著沒有人忽略的含蓄警告。",
+    "exampleZh": "她的沉默隱含著警告，每個人都察覺到了。",
     "group": "Core 10"
   },
   {
@@ -50990,8 +50990,8 @@ export const sampleWords: WordEntry[] = [
     "word": "explosive",
     "partOfSpeech": "n / a",
     "pronunciation": "/ik'splәusiv/",
-    "meaningZh": "爆炸性的",
-    "supplementalMeaningZh": "炸藥；火爆的",
+    "meaningZh": "火爆的",
+    "supplementalMeaningZh": "爆炸性的；炸藥",
     "example": "An explosive argument erupted over the missing lottery ticket.",
     "exampleZh": "遺失的彩票引發一場火爆爭吵。",
     "group": "Core 10"
@@ -51045,8 +51045,8 @@ export const sampleWords: WordEntry[] = [
     "word": "migrant",
     "partOfSpeech": "n",
     "pronunciation": "/'maigrәnt/",
-    "meaningZh": "移居者",
-    "supplementalMeaningZh": "候鳥；移工",
+    "meaningZh": "移居的",
+    "supplementalMeaningZh": "移居者；候鳥",
     "example": "A migrant worker sent most of her wages home.",
     "exampleZh": "一名移工把大部分薪水寄回家。",
     "group": "Core 10"
@@ -51079,7 +51079,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'piknik/",
     "meaningZh": "野餐",
-    "supplementalMeaningZh": "輕而易舉的事",
+    "supplementalMeaningZh": "愉快的事",
     "example": "We planned a picnic beside the lake before clouds gathered.",
     "exampleZh": "烏雲聚集前我們計畫在湖邊野餐。",
     "group": "Core 10"
@@ -51178,9 +51178,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/dʒʌŋk/",
     "meaningZh": "垃圾",
-    "supplementalMeaningZh": "破爛；舊貨",
+    "supplementalMeaningZh": "破爛",
     "example": "Old junk filled the garage until rats moved in.",
-    "exampleZh": "舊雜物塞滿了車庫，後來連老鼠都搬進來了。",
+    "exampleZh": "舊垃圾塞滿車庫直到老鼠搬進來。",
     "group": "Core 10"
   },
   {
@@ -51245,8 +51245,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/di'nauns/",
     "meaningZh": "譴責",
     "supplementalMeaningZh": "告發",
-    "example": "Protesters denounce the fraud outside the bank every Friday.",
-    "exampleZh": "抗議民眾每週五在銀行外譴責這項詐欺行為。",
+    "example": "Relatives denounce the fraud outside the bank every Friday.",
+    "exampleZh": "親屬每週五在銀行外譴責詐欺。",
     "group": "Core 10"
   },
   {
@@ -51386,8 +51386,8 @@ export const sampleWords: WordEntry[] = [
     "word": "quantum",
     "partOfSpeech": "n",
     "pronunciation": "/'kwɒntәm/",
-    "meaningZh": "量子",
-    "supplementalMeaningZh": "量子的；定量",
+    "meaningZh": "量子的",
+    "supplementalMeaningZh": "量子",
     "example": "A quantum sensor measured tiny changes in the magnetic field.",
     "exampleZh": "量子感測器測量磁場中的細微變化。",
     "group": "Core 10"
@@ -51432,8 +51432,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/-/",
     "meaningZh": "相互競爭的",
     "supplementalMeaningZh": "相互衝突的",
-    "example": "Two competing explanations divided the family after the accident.",
-    "exampleZh": "事故發生後，兩種互相衝突的說法讓家人各執一詞。",
+    "example": "Two competing teams practiced on the same field after school.",
+    "exampleZh": "兩支相互競爭的隊伍放學後在同一個球場練習。",
     "group": "Core 10"
   },
   {
@@ -51441,8 +51441,8 @@ export const sampleWords: WordEntry[] = [
     "word": "sickness",
     "partOfSpeech": "n",
     "pronunciation": "/'siknis/",
-    "meaningZh": "疾病",
-    "supplementalMeaningZh": "噁心；暈眩",
+    "meaningZh": "噁心不適",
+    "supplementalMeaningZh": "疾病",
     "example": "Motion sickness forced her to leave the boat early.",
     "exampleZh": "暈船讓她不得不提早下船。",
     "group": "Core 10"
@@ -51628,8 +51628,8 @@ export const sampleWords: WordEntry[] = [
     "word": "juvenile",
     "partOfSpeech": "n / a",
     "pronunciation": "/'dʒu:vinail/",
-    "meaningZh": "少年",
-    "supplementalMeaningZh": "少年的；幼稚的",
+    "meaningZh": "少年的",
+    "supplementalMeaningZh": "少年；幼稚的",
     "example": "The juvenile court sealed the boy’s record after counseling.",
     "exampleZh": "少年法院在輔導後封存男孩的紀錄。",
     "group": "Core 10"
@@ -51705,10 +51705,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bark",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/bɑ:k/",
-    "meaningZh": "吠叫",
-    "supplementalMeaningZh": "樹皮；厲聲說",
-    "example": "The dog began to bark whenever a stranger walked past our house.",
-    "exampleZh": "每當陌生人走過我們家，那隻狗就會開始吠叫。",
+    "meaningZh": "樹皮",
+    "supplementalMeaningZh": "吠叫；厲聲說",
+    "example": "The old tree’s bark peeled away in long strips.",
+    "exampleZh": "老樹樹皮一長條一長條剝落。",
     "group": "Core 10"
   },
   {
@@ -51837,10 +51837,10 @@ export const sampleWords: WordEntry[] = [
     "word": "virgin",
     "partOfSpeech": "n / a",
     "pronunciation": "/'vә:dʒin/",
-    "meaningZh": "未開發的",
-    "supplementalMeaningZh": "純的；初榨的；處女",
-    "example": "Hikers found a virgin forest far from any road.",
-    "exampleZh": "登山客在遠離道路的地方發現一片原始森林。",
+    "meaningZh": "初榨的",
+    "supplementalMeaningZh": "純的；處女；未開發的",
+    "example": "The chef used virgin olive oil on the tomato salad.",
+    "exampleZh": "主廚在番茄沙拉上用初榨橄欖油。",
     "group": "Core 10"
   },
   {
@@ -51969,8 +51969,8 @@ export const sampleWords: WordEntry[] = [
     "word": "miniature",
     "partOfSpeech": "n / a",
     "pronunciation": "/'miniәtʃә/",
-    "meaningZh": "小模型",
-    "supplementalMeaningZh": "迷你的；縮小畫",
+    "meaningZh": "迷你的",
+    "supplementalMeaningZh": "小模型；縮小畫",
     "example": "A miniature temple sat inside the glass display case.",
     "exampleZh": "一座迷你廟宇擺在玻璃展示櫃裡。",
     "group": "Core 10"
@@ -52005,7 +52005,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "終止",
     "supplementalMeaningZh": "結束；解雇",
     "example": "The landlord may terminate the lease after two missed payments.",
-    "exampleZh": "房客漏繳兩次後，房東可以終止租約。",
+    "exampleZh": "房客漏繳兩次後房東可終止租約。",
     "group": "Core 10"
   },
   {
@@ -52024,8 +52024,8 @@ export const sampleWords: WordEntry[] = [
     "word": "gauge",
     "partOfSpeech": "n / vt",
     "pronunciation": "/geidʒ/",
-    "meaningZh": "量測",
-    "supplementalMeaningZh": "估計；儀表",
+    "meaningZh": "估計",
+    "supplementalMeaningZh": "量測；儀表",
     "example": "We used river marks to gauge how fast the flood rose.",
     "exampleZh": "我們用河岸標記估計洪水上升速度。",
     "group": "Core 10"
@@ -52157,7 +52157,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/laim/",
     "meaningZh": "萊姆",
-    "supplementalMeaningZh": "石灰；萊姆樹",
+    "supplementalMeaningZh": "石灰；撒石灰",
     "example": "She squeezed lime over grilled fish at the harbor stall.",
     "exampleZh": "她在港邊攤子的烤魚上擠萊姆。",
     "group": "Core 10"
@@ -52168,9 +52168,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'әuvәhed/",
     "meaningZh": "上方的",
-    "supplementalMeaningZh": "經常開支；在頭上方",
+    "supplementalMeaningZh": "經常開支",
     "example": "An overhead sign warned trucks about the low tunnel.",
-    "exampleZh": "頭頂上的標誌提醒卡車駕駛，前方隧道高度不足。",
+    "exampleZh": "高架標誌提醒卡車駕駛，前方隧道高度不足。",
     "group": "Core 10"
   },
   {
@@ -52280,7 +52280,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "極好的",
     "supplementalMeaningZh": "難以置信的；傳說中的",
     "example": "We had a fabulous time at the night market with our cousins.",
-    "exampleZh": "我們和表兄弟姊妹在夜市玩得非常開心。",
+    "exampleZh": "我們和表兄弟姊妹在夜市度過了一段極好的時光。",
     "group": "Core 10"
   },
   {
@@ -52333,9 +52333,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/plæn'teiʃәn/",
     "meaningZh": "種植園",
-    "supplementalMeaningZh": "大農場；人造林",
+    "supplementalMeaningZh": "大農場；造林",
     "example": "Workers harvested tea leaves on the mountain plantation at dawn.",
-    "exampleZh": "工人清晨在山上的茶園種植園採摘茶葉。",
+    "exampleZh": "工人清晨在山坡茶園採摘茶葉。",
     "group": "Core 10"
   },
   {
@@ -52387,10 +52387,10 @@ export const sampleWords: WordEntry[] = [
     "word": "startle",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'stɑ:tl/",
-    "meaningZh": "使受驚嚇",
-    "supplementalMeaningZh": "驚跳；嚇一跳",
-    "example": "The loud temple bell can startle pigeons on the roof.",
-    "exampleZh": "響亮的廟鐘聲可能會嚇到屋頂上的鴿子。",
+    "meaningZh": "使嚇一跳",
+    "supplementalMeaningZh": "驚嚇；驚跳",
+    "example": "The temple bell can startle pigeons from the roof.",
+    "exampleZh": "廟鐘一響，屋頂上的鴿子就會嚇得飛走。",
     "group": "Core 10"
   },
   {
@@ -52497,10 +52497,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sandy",
     "partOfSpeech": "a",
     "pronunciation": "/'sændi/",
-    "meaningZh": "沙質的",
-    "supplementalMeaningZh": "沙色的；多沙的",
+    "meaningZh": "沾沙的",
+    "supplementalMeaningZh": "沙質的；沙色的",
     "example": "His sandy shoes left prints across the clean floor.",
-    "exampleZh": "他沾滿沙子的鞋在乾淨的地板上留下腳印。",
+    "exampleZh": "他沾沙的鞋在乾淨地板上留下腳印。",
     "group": "Core 10"
   },
   {
@@ -52552,10 +52552,10 @@ export const sampleWords: WordEntry[] = [
     "word": "minus",
     "partOfSpeech": "n / a / prep",
     "pronunciation": "/'mainәs/",
-    "meaningZh": "減去",
+    "meaningZh": "扣掉",
     "supplementalMeaningZh": "負號；缺點",
     "example": "Dinner cost forty dollars minus the coupon discount.",
-    "exampleZh": "晚餐花了四十美元，扣掉折價券優惠後的金額。",
+    "exampleZh": "晚餐四十美元再扣掉折價券優惠。",
     "group": "Core 10"
   },
   {
@@ -52610,7 +52610,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "體貼的",
     "supplementalMeaningZh": "深思熟慮的",
     "example": "Her thoughtful note arrived on the anniversary of his loss.",
-    "exampleZh": "她體貼的紙條在他喪親週年那天送達。",
+    "exampleZh": "她體貼的紙條在他喪親周年那天送達。",
     "group": "Core 10"
   },
   {
@@ -52698,7 +52698,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "低估",
     "supplementalMeaningZh": "",
     "example": "Do not underestimate the climb behind the waterfall.",
-    "exampleZh": "別低估瀑布後方那段攀爬路程。",
+    "exampleZh": "別低估瀑布後方那段攀爬。",
     "group": "Core 10"
   },
   {
@@ -52709,7 +52709,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "健行",
     "supplementalMeaningZh": "大幅上漲",
     "example": "We took a hike through bamboo groves before breakfast.",
-    "exampleZh": "早餐前我們去竹林健行了一趟。",
+    "exampleZh": "早餐前我們穿過竹林健行。",
     "group": "Core 10"
   },
   {
@@ -52805,8 +52805,8 @@ export const sampleWords: WordEntry[] = [
     "word": "cube",
     "partOfSpeech": "n",
     "pronunciation": "/kju:b/",
-    "meaningZh": "立方體",
-    "supplementalMeaningZh": "立方；方塊",
+    "meaningZh": "方塊",
+    "supplementalMeaningZh": "立方體",
     "example": "Drop one cube of ice into the bitter tea.",
     "exampleZh": "把一塊冰塊放進苦茶裡。",
     "group": "Core 10"
@@ -52816,10 +52816,10 @@ export const sampleWords: WordEntry[] = [
     "word": "wicked",
     "partOfSpeech": "a",
     "pronunciation": "/'wikid/",
-    "meaningZh": "邪惡的",
-    "supplementalMeaningZh": "淘氣的；很棒的",
+    "meaningZh": "壞的",
+    "supplementalMeaningZh": "邪惡的；淘氣的；很棒的",
     "example": "A wicked grin spread across her face after the prank worked.",
-    "exampleZh": "惡作劇成功後，她臉上露出了壞笑。",
+    "exampleZh": "惡作劇成功後她臉上露出壞笑。",
     "group": "Core 10"
   },
   {
@@ -52926,8 +52926,8 @@ export const sampleWords: WordEntry[] = [
     "word": "infinite",
     "partOfSpeech": "n / a",
     "pronunciation": "/'infinit/",
-    "meaningZh": "無限的",
-    "supplementalMeaningZh": "極大的；無數的",
+    "meaningZh": "無窮無盡的",
+    "supplementalMeaningZh": "極大的",
     "example": "On a clear night in the mountains, the stars seem infinite.",
     "exampleZh": "在山上晴朗的夜裡，星星彷彿無窮無盡。",
     "group": "Core 10"
@@ -52982,9 +52982,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'redʒimәnt/",
     "meaningZh": "團",
-    "supplementalMeaningZh": "大量",
+    "supplementalMeaningZh": "大量；嚴格管制",
     "example": "A regiment marched past the station before the ceremony.",
-    "exampleZh": "典禮前，一個團的士兵列隊走過車站。",
+    "exampleZh": "典禮前一個團的士兵走過車站。",
     "group": "Core 10"
   },
   {
@@ -53037,7 +53037,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'rɒiәlti/",
     "meaningZh": "王室成員",
-    "supplementalMeaningZh": "版稅；皇室身分",
+    "supplementalMeaningZh": "版稅",
     "example": "Local royalty arrived in black cars before the memorial began.",
     "exampleZh": "追思會開始前，當地王室成員搭黑色轎車抵達。",
     "group": "Core 10"
@@ -53069,8 +53069,8 @@ export const sampleWords: WordEntry[] = [
     "word": "perch",
     "partOfSpeech": "n / v",
     "pronunciation": "/pә:tʃ/",
-    "meaningZh": "棲木",
-    "supplementalMeaningZh": "高處；棲息",
+    "meaningZh": "高處",
+    "supplementalMeaningZh": "棲木；棲息",
     "example": "The guard watched from a perch above the market gate.",
     "exampleZh": "守衛站在市場大門上方的高台觀察。",
     "group": "Core 10"
@@ -53103,9 +53103,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/kәm'pʌlsәri/",
     "meaningZh": "強制的",
-    "supplementalMeaningZh": "義務的；必修的",
+    "supplementalMeaningZh": "必修的",
     "example": "Helmet use is compulsory on every ride through the quarry.",
-    "exampleZh": "騎車穿越採石場時，每次都必須戴安全帽。",
+    "exampleZh": "每次騎車穿越採石場都必須戴安全帽。",
     "group": "Core 10"
   },
   {
@@ -53267,10 +53267,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bald",
     "partOfSpeech": "a / vi",
     "pronunciation": "/bɒ:ld/",
-    "meaningZh": "禿頭的",
-    "supplementalMeaningZh": "直白的；光禿的",
-    "example": "The bald man wore a hat to protect his head from the sun.",
-    "exampleZh": "那位禿頭的男子戴著帽子保護頭部免於曬傷。",
+    "meaningZh": "禿的",
+    "supplementalMeaningZh": "直白的",
+    "example": "A bald patch appeared where the dog scratched constantly.",
+    "exampleZh": "狗一直抓的地方出現一塊禿斑。",
     "group": "Core 10"
   },
   {
@@ -53358,7 +53358,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "橄欖",
     "supplementalMeaningZh": "橄欖樹；橄欖色",
     "example": "An olive rolled from the plate under the counter.",
-    "exampleZh": "一顆橄欖從盤子滾到櫃檯下。",
+    "exampleZh": "一顆橄欖從盤子滾到櫃台下。",
     "group": "Core 10"
   },
   {
@@ -53366,8 +53366,8 @@ export const sampleWords: WordEntry[] = [
     "word": "commonwealth",
     "partOfSpeech": "n",
     "pronunciation": "/'kɔmәnwelθ/",
-    "meaningZh": "國協",
-    "supplementalMeaningZh": "聯邦；國民整體",
+    "meaningZh": "聯邦",
+    "supplementalMeaningZh": "共和國；國民整體",
     "example": "The island joined a commonwealth after decades of isolation.",
     "exampleZh": "那座島歷經數十年孤立後，加入了一個國協。",
     "group": "Core 10"
@@ -53553,8 +53553,8 @@ export const sampleWords: WordEntry[] = [
     "word": "default",
     "partOfSpeech": "n / v",
     "pronunciation": "/di'fɒ:lt/",
-    "meaningZh": "預設值",
-    "supplementalMeaningZh": "違約；缺席；拖欠",
+    "meaningZh": "預設的",
+    "supplementalMeaningZh": "違約；缺席",
     "example": "The phone returned to its default settings after the update.",
     "exampleZh": "手機更新後回到預設設定。",
     "group": "Core 10"
@@ -53652,10 +53652,10 @@ export const sampleWords: WordEntry[] = [
     "word": "splash",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/splæʃ/",
-    "meaningZh": "濺起的水花",
-    "supplementalMeaningZh": "濺潑聲；濺灑",
+    "meaningZh": "一陣飛濺",
+    "supplementalMeaningZh": "濺潑聲；醒目色塊",
     "example": "A splash of seawater hit the camera lens.",
-    "exampleZh": "一陣海水濺到相機鏡頭上。",
+    "exampleZh": "一陣海水濺到相機鏡頭。",
     "group": "Core 10"
   },
   {
@@ -53795,10 +53795,10 @@ export const sampleWords: WordEntry[] = [
     "word": "groan",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/grәun/",
-    "meaningZh": "呻吟",
-    "supplementalMeaningZh": "抱怨；嘎吱作響",
+    "meaningZh": "呻吟般作響",
+    "supplementalMeaningZh": "抱怨",
     "example": "The old stairs groan whenever anyone carries luggage up.",
-    "exampleZh": "每當有人提行李上樓，老樓梯就會嘎吱作響。",
+    "exampleZh": "有人提行李上樓時老樓梯就呻吟般作響。",
     "group": "Core 10"
   },
   {
@@ -53861,10 +53861,10 @@ export const sampleWords: WordEntry[] = [
     "word": "fitting",
     "partOfSpeech": "a / n",
     "pronunciation": "/'fitiŋ/",
-    "meaningZh": "適當的",
+    "meaningZh": "適合的",
     "supplementalMeaningZh": "試穿；配件",
-    "example": "A simple wooden frame is fitting for the old photograph.",
-    "exampleZh": "簡單的木框很適合那張老照片。",
+    "example": "A simple wooden frame was fitting for the old photograph.",
+    "exampleZh": "簡單木框很適合那張老照片。",
     "group": "Core 10"
   },
   {
@@ -53906,9 +53906,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/i'mædʒinәtiv/",
     "meaningZh": "有想像力的",
-    "supplementalMeaningZh": "富創意的",
-    "example": "The teacher asked for an imaginative scene, not a real memory.",
-    "exampleZh": "老師要的是想像出來的情境，而不是真實的回憶。",
+    "supplementalMeaningZh": "富有創意的",
+    "example": "Her imaginative drawings turned our classroom wall into an underwater world.",
+    "exampleZh": "她充滿想像力的畫作，把我們教室的牆變成了海底世界。",
     "group": "Core 10"
   },
   {
@@ -53917,7 +53917,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v / a",
     "pronunciation": "/'pәuni/",
     "meaningZh": "小馬",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "小型的",
     "example": "The girl brushed her pony before the village fair opened.",
     "exampleZh": "女孩在村莊市集開幕前替小馬刷毛。",
     "group": "Core 10"
@@ -53939,7 +53939,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/hi'rәuik/",
     "meaningZh": "英勇的",
-    "supplementalMeaningZh": "英雄的；壯烈的",
+    "supplementalMeaningZh": "壯麗的",
     "example": "Her heroic rescue saved two children from the current.",
     "exampleZh": "她英勇救援，救出被水流困住的兩個孩子。",
     "group": "Core 10"
@@ -54015,8 +54015,8 @@ export const sampleWords: WordEntry[] = [
     "word": "audio",
     "partOfSpeech": "a",
     "pronunciation": "/'ɒ:diou/",
-    "meaningZh": "聲音的",
-    "supplementalMeaningZh": "音訊的",
+    "meaningZh": "音訊的",
+    "supplementalMeaningZh": "",
     "example": "The audio guide stopped working inside the third gallery.",
     "exampleZh": "語音導覽在第三展間裡故障。",
     "group": "Core 10"
@@ -54029,7 +54029,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "享有盛名的",
     "supplementalMeaningZh": "",
     "example": "She rejected a prestigious award to protest the sponsor.",
-    "exampleZh": "她拒絕了一個享有盛名的獎項，以抗議贊助商。",
+    "exampleZh": "她拒領那個聲望崇高的獎項，以抗議贊助商。",
     "group": "Core 10"
   },
   {
@@ -54161,7 +54161,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "踩著走",
     "supplementalMeaningZh": "步態；鞋底",
     "example": "Please tread carefully on the wet temple steps.",
-    "exampleZh": "請小心走在潮濕的廟階上。",
+    "exampleZh": "請小心走在潮濕廟階上。",
     "group": "Core 10"
   },
   {
@@ -54203,9 +54203,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v / a",
     "pronunciation": "/prәuz/",
     "meaningZh": "散文",
-    "supplementalMeaningZh": "平淡乏味",
+    "supplementalMeaningZh": "散文的",
     "example": "Her prose made the fishing village feel alive.",
-    "exampleZh": "她的散文讓那座漁村彷彿活了起來。",
+    "exampleZh": "她筆下的散文，讓那座漁村彷彿活了起來。",
     "group": "Core 10"
   },
   {
@@ -54279,10 +54279,10 @@ export const sampleWords: WordEntry[] = [
     "word": "redundancy",
     "partOfSpeech": "n",
     "pronunciation": "/ri'dʌndәnsi/",
-    "meaningZh": "冗餘",
-    "supplementalMeaningZh": "裁員；冗詞",
+    "meaningZh": "冗詞",
+    "supplementalMeaningZh": "冗餘；裁員",
     "example": "The editor removed redundancy from the final safety instructions.",
-    "exampleZh": "編輯刪掉了最後安全指示中的冗詞。",
+    "exampleZh": "編輯刪掉最後安全指示中的冗詞。",
     "group": "Core 10"
   },
   {
@@ -54356,8 +54356,8 @@ export const sampleWords: WordEntry[] = [
     "word": "stereo",
     "partOfSpeech": "n / a",
     "pronunciation": "/'stiәriәu/",
-    "meaningZh": "立體音響",
-    "supplementalMeaningZh": "立體聲的；立體聲",
+    "meaningZh": "立體聲的",
+    "supplementalMeaningZh": "音響",
     "example": "The stereo recording made the choir sound close and clear.",
     "exampleZh": "那段立體聲錄音，讓合唱聲聽起來清晰又有臨場感。",
     "group": "Core 10"
@@ -54466,8 +54466,8 @@ export const sampleWords: WordEntry[] = [
     "word": "resistant",
     "partOfSpeech": "n / a",
     "pronunciation": "/ri'zistәnt/",
-    "meaningZh": "抵抗的",
-    "supplementalMeaningZh": "耐...的；抗拒的",
+    "meaningZh": "耐...的",
+    "supplementalMeaningZh": "抵抗的；抗拒的",
     "example": "This paint is resistant to salt spray from the sea.",
     "exampleZh": "這種油漆耐得住海風鹽霧。",
     "group": "Core 10"
@@ -54511,7 +54511,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/in'lɑ:dʒ/",
     "meaningZh": "放大",
-    "supplementalMeaningZh": "擴大；擴建",
+    "supplementalMeaningZh": "詳述",
     "example": "The museum will enlarge the map for elderly visitors.",
     "exampleZh": "博物館會放大地圖給年長訪客看。",
     "group": "Core 10"
@@ -54535,7 +54535,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "起訴書",
     "supplementalMeaningZh": "起訴；控告",
     "example": "The indictment named three bankers and one city official.",
-    "exampleZh": "起訴書上列名三名銀行員和一名市府官員。",
+    "exampleZh": "起訴書列名三名銀行員和一名市府官員。",
     "group": "Core 10"
   },
   {
@@ -54620,10 +54620,10 @@ export const sampleWords: WordEntry[] = [
     "word": "intercourse",
     "partOfSpeech": "n",
     "pronunciation": "/'intәkɒ:s/",
-    "meaningZh": "往來",
-    "supplementalMeaningZh": "交流；性交",
+    "meaningZh": "交流",
+    "supplementalMeaningZh": "往來；性交",
     "example": "Trade created regular intercourse between the two port cities.",
-    "exampleZh": "貿易使這兩座港口城市之間有了定期的往來。",
+    "exampleZh": "貿易往來，讓兩座港口城市定期交流。",
     "group": "Core 10"
   },
   {
@@ -54653,10 +54653,10 @@ export const sampleWords: WordEntry[] = [
     "word": "stark",
     "partOfSpeech": "a / adv",
     "pronunciation": "/stɑ:k/",
-    "meaningZh": "荒涼的",
-    "supplementalMeaningZh": "鮮明的；完全的",
+    "meaningZh": "鮮明的",
+    "supplementalMeaningZh": "荒涼的；全然的",
     "example": "The empty shelves offered a stark warning before the storm.",
-    "exampleZh": "風暴來臨前，空貨架發出了鮮明的警訊。",
+    "exampleZh": "空貨架在風暴前成了鮮明警訊。",
     "group": "Core 10"
   },
   {
@@ -54697,10 +54697,10 @@ export const sampleWords: WordEntry[] = [
     "word": "plague",
     "partOfSpeech": "n / vt",
     "pronunciation": "/pleig/",
-    "meaningZh": "瘟疫",
-    "supplementalMeaningZh": "困擾；折磨",
-    "example": "The plague spread quickly through the crowded medieval city.",
-    "exampleZh": "瘟疫在擁擠的中世紀城市中迅速蔓延。",
+    "meaningZh": "困擾",
+    "supplementalMeaningZh": "折磨；瘟疫",
+    "example": "Mosquitoes plague the riverside apartments every humid summer evening.",
+    "exampleZh": "每個潮濕夏夜蚊子都困擾河邊公寓住戶。",
     "group": "Core 10"
   },
   {
@@ -54797,7 +54797,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/'mi:dieit/",
     "meaningZh": "調解",
-    "supplementalMeaningZh": "居中調停；斡旋",
+    "supplementalMeaningZh": "居中",
     "example": "A retired judge agreed to mediate the family dispute.",
     "exampleZh": "退休法官同意調解那場家庭糾紛。",
     "group": "Core 10"
@@ -54807,10 +54807,10 @@ export const sampleWords: WordEntry[] = [
     "word": "conquer",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'kɒŋkә/",
-    "meaningZh": "征服",
-    "supplementalMeaningZh": "克服；戰勝",
-    "example": "The army tried to conquer the island before winter arrived.",
-    "exampleZh": "軍隊試圖在冬天來臨前征服那座島嶼。",
+    "meaningZh": "克服",
+    "supplementalMeaningZh": "征服；戰勝",
+    "example": "She trained daily to conquer her fear of deep water.",
+    "exampleZh": "她每天訓練以克服對深水的恐懼。",
     "group": "Core 10"
   },
   {
@@ -54818,8 +54818,8 @@ export const sampleWords: WordEntry[] = [
     "word": "definitive",
     "partOfSpeech": "n / a",
     "pronunciation": "/di'finitiv/",
-    "meaningZh": "最終的",
-    "supplementalMeaningZh": "決定性的；明確的",
+    "meaningZh": "決定性的",
+    "supplementalMeaningZh": "明確的；最終的",
     "example": "The lab produced definitive proof that the vase was fake.",
     "exampleZh": "實驗室提出了決定性證據，證明那只花瓶是贗品。",
     "group": "Core 10"
@@ -54829,8 +54829,8 @@ export const sampleWords: WordEntry[] = [
     "word": "wholesale",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'hәulseil/",
-    "meaningZh": "批發的",
-    "supplementalMeaningZh": "以批發方式；大規模的",
+    "meaningZh": "以批發方式",
+    "supplementalMeaningZh": "批發的；大規模的",
     "example": "The bakery buys flour wholesale from a mill in Taichung.",
     "exampleZh": "麵包店向台中磨坊批發採購麵粉。",
     "group": "Core 10"
@@ -55052,7 +55052,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "抬高",
     "supplementalMeaningZh": "提拔；振奮",
     "example": "A wooden crate can elevate the speaker above the crowded platform.",
-    "exampleZh": "木箱可以把講者抬高到擁擠的月台人群之上。",
+    "exampleZh": "木箱可以把講者墊高，讓他高出擁擠月台上的人群。",
     "group": "Core 11"
   },
   {
@@ -55071,8 +55071,8 @@ export const sampleWords: WordEntry[] = [
     "word": "slate",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/sleit/",
-    "meaningZh": "石板",
-    "supplementalMeaningZh": "板岩；候選人名單；石板瓦",
+    "meaningZh": "石板的",
+    "supplementalMeaningZh": "板岩；名單",
     "example": "Rain darkened the slate roof until it looked almost blue.",
     "exampleZh": "雨水讓石板屋頂顏色變深，幾乎呈現藍色。",
     "group": "Core 11"
@@ -55226,9 +55226,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/faul/",
     "meaningZh": "惡臭的",
-    "supplementalMeaningZh": "骯髒的；犯規；惡劣的",
+    "supplementalMeaningZh": "骯髒的；犯規",
     "example": "Foul water leaked from the pipe beneath the seafood stall.",
-    "exampleZh": "海鮮攤底下的水管漏出惡臭的污水。",
+    "exampleZh": "海鮮攤底下的水管漏出惡臭污水。",
     "group": "Core 11"
   },
   {
@@ -55236,8 +55236,8 @@ export const sampleWords: WordEntry[] = [
     "word": "litter",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'litә/",
-    "meaningZh": "垃圾",
-    "supplementalMeaningZh": "亂丟垃圾；弄亂",
+    "meaningZh": "亂丟垃圾",
+    "supplementalMeaningZh": "垃圾；弄亂",
     "example": "Tourists who litter on the beach face an immediate fine.",
     "exampleZh": "遊客若在海灘亂丟垃圾會立刻受罰。",
     "group": "Core 11"
@@ -55258,8 +55258,8 @@ export const sampleWords: WordEntry[] = [
     "word": "pending",
     "partOfSpeech": "a / prep",
     "pronunciation": "/'pendiŋ/",
-    "meaningZh": "待決的",
-    "supplementalMeaningZh": "即將發生的；在...期間",
+    "meaningZh": "待核准的",
+    "supplementalMeaningZh": "在...期間",
     "example": "Her visa remains pending until the embassy receives the fee.",
     "exampleZh": "大使館收到費用前，她的簽證仍待核准。",
     "group": "Core 11"
@@ -55357,8 +55357,8 @@ export const sampleWords: WordEntry[] = [
     "word": "addict",
     "partOfSpeech": "vt / n",
     "pronunciation": "/ә'dikt/",
-    "meaningZh": "有毒癮的人",
-    "supplementalMeaningZh": "使上癮；沉迷者",
+    "meaningZh": "成癮者",
+    "supplementalMeaningZh": "使上癮",
     "example": "A former addict now counsels teenagers outside the subway station.",
     "exampleZh": "一位前成癮者如今在捷運站外輔導青少年。",
     "group": "Core 11"
@@ -55369,7 +55369,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'beri/",
     "meaningZh": "莓果",
-    "supplementalMeaningZh": "漿果",
+    "supplementalMeaningZh": "",
     "example": "One ripe berry stained the linen napkin beside her plate.",
     "exampleZh": "一顆熟莓果弄髒了她盤旁的亞麻餐巾。",
     "group": "Core 11"
@@ -55401,10 +55401,10 @@ export const sampleWords: WordEntry[] = [
     "word": "superficial",
     "partOfSpeech": "n / a",
     "pronunciation": "/.sju:pә'fiʃәl/",
-    "meaningZh": "膚淺的",
-    "supplementalMeaningZh": "表面的",
+    "meaningZh": "表面的",
+    "supplementalMeaningZh": "膚淺的",
     "example": "His apology felt superficial because he never named the damage.",
-    "exampleZh": "他的道歉很膚淺，因為他從未說出造成的傷害。",
+    "exampleZh": "他的道歉很表面，因為從未說出造成的傷害。",
     "group": "Core 11"
   },
   {
@@ -55457,7 +55457,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/sku:p/",
     "meaningZh": "勺子",
-    "supplementalMeaningZh": "舀取；獨家新聞",
+    "supplementalMeaningZh": "舀取；獨家消息",
     "example": "Jia used a steel scoop to serve shaved ice faster.",
     "exampleZh": "佳用鋼勺更快盛出剉冰。",
     "group": "Core 11"
@@ -55534,9 +55534,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'bukiŋ/",
     "meaningZh": "預訂",
-    "supplementalMeaningZh": "演出邀約",
-    "example": "Her booking at the hotel includes two nights in Taipei.",
-    "exampleZh": "她在飯店的預訂包含在台北住兩晚。",
+    "supplementalMeaningZh": "訂位；演出檔期",
+    "example": "Our booking at the seafood restaurant is for seven o'clock on Saturday.",
+    "exampleZh": "我們在海鮮餐廳的訂位是星期六晚上七點。",
     "group": "Core 11"
   },
   {
@@ -55558,7 +55558,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "滑冰",
     "supplementalMeaningZh": "冰鞋",
     "example": "Children skate around the pond when the winter ice thickens.",
-    "exampleZh": "冬天冰層變厚時，孩子們繞著池塘滑冰。",
+    "exampleZh": "冬天池面的冰變厚時，孩子們就繞著池塘滑冰。",
     "group": "Core 11"
   },
   {
@@ -55589,7 +55589,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/smæk/",
     "meaningZh": "拍打",
-    "supplementalMeaningZh": "啪的一聲；一絲味道",
+    "supplementalMeaningZh": "滋味；啪的一聲",
     "example": "Waves smack against the seawall during every winter storm.",
     "exampleZh": "每逢冬季暴風，海浪都拍打海堤。",
     "group": "Core 11"
@@ -55666,9 +55666,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'kliәriŋ/",
     "meaningZh": "空地",
-    "supplementalMeaningZh": "清理；結算",
+    "supplementalMeaningZh": "清理；清算",
     "example": "They found a sunny clearing beyond the last pine trees.",
-    "exampleZh": "他們在最後一排松樹後面找到一片陽光普照的空地。",
+    "exampleZh": "他們在最後一排松樹後找到一片陽光空地。",
     "group": "Core 11"
   },
   {
@@ -55731,7 +55731,7 @@ export const sampleWords: WordEntry[] = [
     "word": "celebrated",
     "partOfSpeech": "a",
     "pronunciation": "/'selibreitid/",
-    "meaningZh": "著名的",
+    "meaningZh": "有名的",
     "supplementalMeaningZh": "",
     "example": "A celebrated pianist played quietly in the hotel lobby.",
     "exampleZh": "一位知名鋼琴家在飯店大廳靜靜演奏。",
@@ -55742,8 +55742,8 @@ export const sampleWords: WordEntry[] = [
     "word": "chant",
     "partOfSpeech": "n / v",
     "pronunciation": "/tʃænt. tʃɑ:nt/",
-    "meaningZh": "吟唱",
-    "supplementalMeaningZh": "高喊；聖歌",
+    "meaningZh": "高喊",
+    "supplementalMeaningZh": "吟唱；聖歌",
     "example": "Fans began to chant the striker's name after his goal.",
     "exampleZh": "前鋒進球後，球迷開始高喊他的名字。",
     "group": "Core 11"
@@ -55875,9 +55875,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/ɒ:f'ʃɒ:/",
     "meaningZh": "近海的",
-    "supplementalMeaningZh": "離岸的；吹向海面的",
-    "example": "Offshore wind turbines now power many towns along the western coast.",
-    "exampleZh": "離岸風力發電機如今為西部沿海許多城鎮供電。",
+    "supplementalMeaningZh": "離岸的；境外的；吹向海面的",
+    "example": "Offshore wind turbines now supply electricity to many homes in central Taiwan.",
+    "exampleZh": "離岸風力發電機現在為台灣中部許多家庭供電。",
     "group": "Core 11"
   },
   {
@@ -56007,7 +56007,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'sɒvrin/",
     "meaningZh": "有主權的",
-    "supplementalMeaningZh": "君主；元首；獨立自主的",
+    "supplementalMeaningZh": "主權國家；君主",
     "example": "The island became a sovereign nation after years of negotiations.",
     "exampleZh": "多年談判後，該島成為主權國家。",
     "group": "Core 11"
@@ -56172,9 +56172,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'blɒsәm/",
     "meaningZh": "開花",
-    "supplementalMeaningZh": "花朵；興盛",
+    "supplementalMeaningZh": "花；興盛",
     "example": "Plum trees blossom beside the temple every February.",
-    "exampleZh": "每年二月，寺旁的李樹都會開花。",
+    "exampleZh": "每年二月，寺旁李樹都會開花。",
     "group": "Core 11"
   },
   {
@@ -56282,7 +56282,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/skrʌb/",
     "meaningZh": "用力刷洗",
-    "supplementalMeaningZh": "灌木叢；擦洗",
+    "supplementalMeaningZh": "取消；矮樹叢",
     "example": "I scrub the burnt pan with salt and lemon.",
     "exampleZh": "我用鹽和檸檬用力刷洗燒焦的鍋子。",
     "group": "Core 11"
@@ -56315,7 +56315,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/fi:t/",
     "meaningZh": "壯舉",
-    "supplementalMeaningZh": "功績；絕技",
+    "supplementalMeaningZh": "",
     "example": "Climbing the frozen waterfall was a feat few attempted.",
     "exampleZh": "攀上結冰的瀑布，是少有人敢嘗試的壯舉。",
     "group": "Core 11"
@@ -56369,8 +56369,8 @@ export const sampleWords: WordEntry[] = [
     "word": "mock",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/mɒk/",
-    "meaningZh": "嘲弄的",
-    "supplementalMeaningZh": "模擬的；假的；嘲笑",
+    "meaningZh": "模擬的",
+    "supplementalMeaningZh": "嘲笑；模仿",
     "example": "The store held a mock auction using empty jewelry boxes.",
     "exampleZh": "商店用空珠寶盒辦了一場模擬拍賣。",
     "group": "Core 11"
@@ -56468,7 +56468,7 @@ export const sampleWords: WordEntry[] = [
     "word": "aerospace",
     "partOfSpeech": "n",
     "pronunciation": "/'єәrәuspeis/",
-    "meaningZh": "航太",
+    "meaningZh": "航太技術",
     "supplementalMeaningZh": "",
     "example": "Aerospace attracts engineers who enjoy testing satellites in desert hangars.",
     "exampleZh": "航太產業吸引喜歡在沙漠機棚測試衛星的工程師。",
@@ -56490,10 +56490,10 @@ export const sampleWords: WordEntry[] = [
     "word": "conserve",
     "partOfSpeech": "n / vt",
     "pronunciation": "/kәn'sә:v/",
-    "meaningZh": "節約",
+    "meaningZh": "節省",
     "supplementalMeaningZh": "保護；保存",
     "example": "The chef tried to conserve water by rinsing vegetables together.",
-    "exampleZh": "主廚把蔬菜一起沖洗來節約用水。",
+    "exampleZh": "主廚把蔬菜一起沖洗來節省用水。",
     "group": "Core 11"
   },
   {
@@ -56523,10 +56523,10 @@ export const sampleWords: WordEntry[] = [
     "word": "stalk",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/stɒ:k/",
-    "meaningZh": "莖",
-    "supplementalMeaningZh": "跟蹤；昂首闊步",
-    "example": "The farmer cut each corn stalk close to the ground.",
-    "exampleZh": "農夫把每根玉米莖貼近地面割下。",
+    "meaningZh": "跟蹤",
+    "supplementalMeaningZh": "莖；昂首闊步",
+    "example": "Detectives watched the thief stalk the jeweler through the market.",
+    "exampleZh": "偵探看著小偷在市場裡跟蹤珠寶商。",
     "group": "Core 11"
   },
   {
@@ -56567,8 +56567,8 @@ export const sampleWords: WordEntry[] = [
     "word": "batter",
     "partOfSpeech": "v / n",
     "pronunciation": "/'bætә/",
-    "meaningZh": "猛打",
-    "supplementalMeaningZh": "麵糊；打者",
+    "meaningZh": "麵糊",
+    "supplementalMeaningZh": "猛打；打者",
     "example": "The baker whisked the batter until no lumps remained.",
     "exampleZh": "烘焙師攪打麵糊直到沒有結塊。",
     "group": "Core 11"
@@ -56644,8 +56644,8 @@ export const sampleWords: WordEntry[] = [
     "word": "bypass",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'baipɑ:s/",
-    "meaningZh": "旁道",
-    "supplementalMeaningZh": "繞過；忽視",
+    "meaningZh": "繞過",
+    "supplementalMeaningZh": "旁道；忽視",
     "example": "Drivers bypass the bridge whenever fog covers the river.",
     "exampleZh": "霧罩住河面時，駕駛會繞過那座橋。",
     "group": "Core 11"
@@ -56677,8 +56677,8 @@ export const sampleWords: WordEntry[] = [
     "word": "staple",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'steipl/",
-    "meaningZh": "主食",
-    "supplementalMeaningZh": "主要的；常用品；訂書針",
+    "meaningZh": "主要的",
+    "supplementalMeaningZh": "主食；常用品；訂書針",
     "example": "Rice is a staple food in many Taiwanese households.",
     "exampleZh": "米飯是許多台灣家庭的主食。",
     "group": "Core 11"
@@ -56765,10 +56765,10 @@ export const sampleWords: WordEntry[] = [
     "word": "relentless",
     "partOfSpeech": "a",
     "pronunciation": "/ri'lentlis/",
-    "meaningZh": "持續不斷的",
-    "supplementalMeaningZh": "無情的；嚴酷的",
-    "example": "The relentless rain forced us to cancel the school picnic.",
-    "exampleZh": "持續不斷的大雨使我們取消了學校野餐。",
+    "meaningZh": "冷酷的",
+    "supplementalMeaningZh": "持續不斷的",
+    "example": "The relentless guard refused water to the exhausted prisoners.",
+    "exampleZh": "冷酷守衛拒絕給疲憊囚犯水喝。",
     "group": "Core 11"
   },
   {
@@ -56886,10 +56886,10 @@ export const sampleWords: WordEntry[] = [
     "word": "irritation",
     "partOfSpeech": "n",
     "pronunciation": "/.iri'teiʃәn/",
-    "meaningZh": "惱怒",
-    "supplementalMeaningZh": "刺激；發炎",
-    "example": "She could not hide her irritation when the bus was late again.",
-    "exampleZh": "公車又誤點，她掩不住心中的惱怒。",
+    "meaningZh": "刺激反應",
+    "supplementalMeaningZh": "煩躁",
+    "example": "Skin irritation appeared after he touched the cleaning powder.",
+    "exampleZh": "他碰到清潔粉後，皮膚出現紅癢反應。",
     "group": "Core 11"
   },
   {
@@ -57019,9 +57019,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/gild/",
     "meaningZh": "行會",
-    "supplementalMeaningZh": "同業公會",
+    "supplementalMeaningZh": "協會",
     "example": "The weavers' guild repaired the ancient loom together.",
-    "exampleZh": "織布工行會一起修復了古老的織布機。",
+    "exampleZh": "織布工協會一起修復古老織機。",
     "group": "Core 11"
   },
   {
@@ -57031,8 +57031,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'viktә/",
     "meaningZh": "勝利者",
     "supplementalMeaningZh": "",
-    "example": "The victor raised her paddle after the final bid.",
-    "exampleZh": "勝利者在最後一次出價後舉起號牌。",
+    "example": "The victor raised the shiny trophy while the crowd cheered loudly.",
+    "exampleZh": "勝利者在群眾熱烈歡呼聲中舉起閃亮的獎盃。",
     "group": "Core 11"
   },
   {
@@ -57194,10 +57194,10 @@ export const sampleWords: WordEntry[] = [
     "word": "favourable",
     "partOfSpeech": "a",
     "pronunciation": "/'feivәrәbl/",
-    "meaningZh": "有利的",
-    "supplementalMeaningZh": "贊成的；適合的",
+    "meaningZh": "適合的",
+    "supplementalMeaningZh": "贊成的；有利的",
     "example": "Clear weather was favourable for drying tea leaves outside.",
-    "exampleZh": "晴朗的天氣有利於在戶外曬茶葉。",
+    "exampleZh": "晴朗天氣很適合在戶外曬茶葉。",
     "group": "Core 11"
   },
   {
@@ -57205,10 +57205,10 @@ export const sampleWords: WordEntry[] = [
     "word": "martial",
     "partOfSpeech": "a",
     "pronunciation": "/'mɑ:ʃәl/",
-    "meaningZh": "軍事的",
-    "supplementalMeaningZh": "武術的；尚武的",
-    "example": "The martial arts club meets every Friday after school.",
-    "exampleZh": "武術社每週五放學後聚會。",
+    "meaningZh": "武術的",
+    "supplementalMeaningZh": "軍事的；尚武的",
+    "example": "Children learn martial discipline at the mountain kung fu school.",
+    "exampleZh": "孩子們在山上武術館學習武術紀律。",
     "group": "Core 11"
   },
   {
@@ -57284,8 +57284,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'kævәlri/",
     "meaningZh": "騎兵部隊",
     "supplementalMeaningZh": "",
-    "example": "The cavalry crossed the plain before the dust hid them from view.",
-    "exampleZh": "騎兵部隊穿越平原後，身影便被塵土遮住了。",
+    "example": "The cavalry crossed the plain before dust hid them.",
+    "exampleZh": "騎兵穿越平原後被塵土遮住。",
     "group": "Core 11"
   },
   {
@@ -57306,8 +57306,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/flæp/",
     "meaningZh": "拍動",
     "supplementalMeaningZh": "垂片；慌亂",
-    "example": "The bird began to flap its wings above the fruit stand.",
-    "exampleZh": "那隻鳥開始在水果攤上方拍動翅膀。",
+    "example": "The torn awning began to flap above the fruit stand.",
+    "exampleZh": "水果攤上方的破遮雨棚開始啪啪作響。",
     "group": "Core 11"
   },
   {
@@ -57348,10 +57348,10 @@ export const sampleWords: WordEntry[] = [
     "word": "dismay",
     "partOfSpeech": "n / vt",
     "pronunciation": "/dis'mei/",
-    "meaningZh": "驚愕",
-    "supplementalMeaningZh": "使驚愕；沮喪",
+    "meaningZh": "沮喪",
+    "supplementalMeaningZh": "使驚愕",
     "example": "Dismay crossed his face when the violin string snapped.",
-    "exampleZh": "小提琴弦突然斷掉時，他臉上閃過驚愕。",
+    "exampleZh": "小提琴弦斷時，他臉上露出沮喪。",
     "group": "Core 11"
   },
   {
@@ -57472,7 +57472,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "羨慕",
     "supplementalMeaningZh": "嫉妒",
     "example": "I envy her calm voice during difficult phone calls.",
-    "exampleZh": "我羨慕她在棘手的電話中仍保持冷靜的聲音。",
+    "exampleZh": "我很羨慕她講棘手電話時，聲音仍能保持冷靜。",
     "group": "Core 11"
   },
   {
@@ -57569,9 +57569,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'æktiŋ/",
     "meaningZh": "代理的",
-    "supplementalMeaningZh": "演戲；表演",
+    "supplementalMeaningZh": "演戲",
     "example": "The acting manager approved refunds while the owner traveled.",
-    "exampleZh": "老闆出外旅行期間，代理經理核准了退款。",
+    "exampleZh": "老闆旅行時，代理經理批准退款。",
     "group": "Core 11"
   },
   {
@@ -57657,7 +57657,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/kruk/",
     "meaningZh": "騙子",
-    "supplementalMeaningZh": "彎曲處；彎鉤",
+    "supplementalMeaningZh": "彎曲處",
     "example": "A crook sold fake jade outside the temple.",
     "exampleZh": "一名騙子在廟外賣假玉。",
     "group": "Core 11"
@@ -57702,8 +57702,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/.ju:nifi'keiʃәn/",
     "meaningZh": "統一",
     "supplementalMeaningZh": "合併",
-    "example": "Unification of the two clinics reduced paperwork for patients.",
-    "exampleZh": "兩家診所合併後，病患要填的文件變少了。",
+    "example": "The unification of Germany took place in 1990 after the Berlin Wall fell.",
+    "exampleZh": "柏林圍牆倒塌後，德國在1990年完成統一。",
     "group": "Core 11"
   },
   {
@@ -57747,7 +57747,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "吃苦耐勞的",
     "supplementalMeaningZh": "耐寒的；強健的",
     "example": "Hardy sailors crossed the bay during the winter storm.",
-    "exampleZh": "強健的水手在冬季暴風中穿越海灣。",
+    "exampleZh": "吃苦耐勞的水手在冬季暴風中橫越海灣。",
     "group": "Core 11"
   },
   {
@@ -57944,8 +57944,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'bɒikɒt/",
     "meaningZh": "抵制",
     "supplementalMeaningZh": "",
-    "example": "Residents decided to boycott the café after cameras appeared in the restroom.",
-    "exampleZh": "廁所出現攝影機後，居民決定抵制那家咖啡館。",
+    "example": "Residents began to boycott the café after cameras appeared in the restroom.",
+    "exampleZh": "廁所被發現裝了攝影機後，居民開始抵制那家咖啡館。",
     "group": "Core 11"
   },
   {
@@ -57954,9 +57954,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / n",
     "pronunciation": "/'sævidʒ/",
     "meaningZh": "殘酷的",
-    "supplementalMeaningZh": "兇猛攻擊；野蠻的",
+    "supplementalMeaningZh": "兇猛攻擊",
     "example": "The savage guard kicked prisoners away from the well.",
-    "exampleZh": "那名殘酷的守衛把囚犯踢離水井。",
+    "exampleZh": "殘酷守衛把囚犯踢離水井。",
     "group": "Core 11"
   },
   {
@@ -57997,8 +57997,8 @@ export const sampleWords: WordEntry[] = [
     "word": "lag",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/læg/",
-    "meaningZh": "落後",
-    "supplementalMeaningZh": "延遲",
+    "meaningZh": "延遲",
+    "supplementalMeaningZh": "落後",
     "example": "Slow buses lag behind schedule during heavy rain.",
     "exampleZh": "大雨時，慢速公車會誤點。",
     "group": "Core 11"
@@ -58053,7 +58053,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'pilgrim/",
     "meaningZh": "朝聖者",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "旅人",
     "example": "Each pilgrim carried water up the temple steps.",
     "exampleZh": "每位朝聖者都提水走上寺廟台階。",
     "group": "Core 11"
@@ -58074,10 +58074,10 @@ export const sampleWords: WordEntry[] = [
     "word": "contingent",
     "partOfSpeech": "a / n",
     "pronunciation": "/kәn'tindʒәnt/",
-    "meaningZh": "視情況而定的",
-    "supplementalMeaningZh": "代表團；分遣隊",
-    "example": "Our picnic is contingent on the weather this weekend.",
-    "exampleZh": "我們這個週末的野餐要視天氣而定。",
+    "meaningZh": "隊伍",
+    "supplementalMeaningZh": "代表團；視情況而定的",
+    "example": "A small contingent of medics entered the disaster zone.",
+    "exampleZh": "一小隊醫護人員進入災區。",
     "group": "Core 11"
   },
   {
@@ -58339,7 +58339,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/dis'kredit/",
     "meaningZh": "損害名聲",
-    "supplementalMeaningZh": "不信任；使人懷疑",
+    "supplementalMeaningZh": "懷疑",
     "example": "Forged letters can discredit an honest candidate overnight.",
     "exampleZh": "偽造信件可能一夜間損害誠實候選人的名聲。",
     "group": "Core 11"
@@ -58382,8 +58382,8 @@ export const sampleWords: WordEntry[] = [
     "word": "outright",
     "partOfSpeech": "a / adv",
     "pronunciation": "/'autrait/",
-    "meaningZh": "完全的",
-    "supplementalMeaningZh": "直截了當地；立即地",
+    "meaningZh": "直截了當地",
+    "supplementalMeaningZh": "完全地；立即地",
     "example": "The shop owner refused the offer outright at breakfast.",
     "exampleZh": "店主早餐時直截了當拒絕提議。",
     "group": "Core 11"
@@ -58393,8 +58393,8 @@ export const sampleWords: WordEntry[] = [
     "word": "tan",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/tæn/",
-    "meaningZh": "棕褐色",
-    "supplementalMeaningZh": "曬黑的；曬黑膚色；鞣皮",
+    "meaningZh": "曬黑的",
+    "supplementalMeaningZh": "棕褐色；曬黑膚色；鞣皮",
     "example": "A tan line showed where his watch had been.",
     "exampleZh": "手錶原本的位置留下曬痕。",
     "group": "Core 11"
@@ -58526,9 +58526,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'dєәriŋ/",
     "meaningZh": "大膽的",
-    "supplementalMeaningZh": "膽量",
+    "supplementalMeaningZh": "冒險精神",
     "example": "The daring rescue began from a broken balcony.",
-    "exampleZh": "大膽的救援行動從一座破損的陽台開始。",
+    "exampleZh": "大膽救援從一座破陽台開始。",
     "group": "Core 11"
   },
   {
@@ -58569,8 +58569,8 @@ export const sampleWords: WordEntry[] = [
     "word": "knight",
     "partOfSpeech": "n / vt",
     "pronunciation": "/nait/",
-    "meaningZh": "騎士",
-    "supplementalMeaningZh": "爵士；授予爵位",
+    "meaningZh": "授予爵位",
+    "supplementalMeaningZh": "騎士；爵士",
     "example": "The queen will knight the surgeon for his service.",
     "exampleZh": "女王將因那名外科醫師的貢獻而授予他爵位。",
     "group": "Core 11"
@@ -58591,8 +58591,8 @@ export const sampleWords: WordEntry[] = [
     "word": "marshal",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'mɑ:ʃәl/",
-    "meaningZh": "元帥",
-    "supplementalMeaningZh": "典禮官；引導",
+    "meaningZh": "典禮官",
+    "supplementalMeaningZh": "元帥；引導",
     "example": "The marshal guided guests through the palace doorway.",
     "exampleZh": "典禮官引導賓客穿過宮殿門口。",
     "group": "Core 11"
@@ -58613,8 +58613,8 @@ export const sampleWords: WordEntry[] = [
     "word": "vegetarian",
     "partOfSpeech": "n / a",
     "pronunciation": "/.vedʒi'tєәriәn/",
-    "meaningZh": "素食者",
-    "supplementalMeaningZh": "素食的",
+    "meaningZh": "素食的",
+    "supplementalMeaningZh": "素食者",
     "example": "A vegetarian menu hung beside the temple kitchen.",
     "exampleZh": "素食菜單掛在寺廟廚房旁。",
     "group": "Core 11"
@@ -58712,8 +58712,8 @@ export const sampleWords: WordEntry[] = [
     "word": "limp",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/limp/",
-    "meaningZh": "跛行",
-    "supplementalMeaningZh": "無力下垂的；柔軟的",
+    "meaningZh": "無力下垂的",
+    "supplementalMeaningZh": "跛行",
     "example": "A limp flag hung above the empty ticket booth.",
     "exampleZh": "空售票亭上方掛著一面無力垂下的旗子。",
     "group": "Core 11"
@@ -58778,8 +58778,8 @@ export const sampleWords: WordEntry[] = [
     "word": "levy",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'levi/",
-    "meaningZh": "徵收",
-    "supplementalMeaningZh": "稅款；徵召",
+    "meaningZh": "徵稅",
+    "supplementalMeaningZh": "稅款",
     "example": "The town will levy a tax on empty apartments.",
     "exampleZh": "鎮公所將對空屋徵稅。",
     "group": "Core 11"
@@ -58789,10 +58789,10 @@ export const sampleWords: WordEntry[] = [
     "word": "zoom",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/zu:m/",
-    "meaningZh": "急速移動",
+    "meaningZh": "疾駛",
     "supplementalMeaningZh": "變焦；猛漲",
-    "example": "The motorbikes zoom past the school gate every morning.",
-    "exampleZh": "每天早上機車都呼嘯駛過校門。",
+    "example": "Scooters zoom past the school gate every morning before eight.",
+    "exampleZh": "每天早上八點前，機車都會從校門前呼嘯而過。",
     "group": "Core 11"
   },
   {
@@ -58866,8 +58866,8 @@ export const sampleWords: WordEntry[] = [
     "word": "defiant",
     "partOfSpeech": "a",
     "pronunciation": "/di'faiәnt/",
-    "meaningZh": "反抗的",
-    "supplementalMeaningZh": "挑釁的",
+    "meaningZh": "挑釁的",
+    "supplementalMeaningZh": "",
     "example": "The defiant child crossed his arms beside the broken vase.",
     "exampleZh": "那個不服氣的孩子站在破花瓶旁，雙手抱胸。",
     "group": "Core 11"
@@ -58921,8 +58921,8 @@ export const sampleWords: WordEntry[] = [
     "word": "shred",
     "partOfSpeech": "n / v",
     "pronunciation": "/ʃred/",
-    "meaningZh": "碎片",
-    "supplementalMeaningZh": "撕碎；一絲",
+    "meaningZh": "一絲",
+    "supplementalMeaningZh": "碎片；撕碎",
     "example": "The chef used a shred of ginger in the sauce.",
     "exampleZh": "主廚在醬汁裡加了一小絲薑。",
     "group": "Core 11"
@@ -58932,10 +58932,10 @@ export const sampleWords: WordEntry[] = [
     "word": "accomplished",
     "partOfSpeech": "a",
     "pronunciation": "/ә'kʌmpliʃt/",
-    "meaningZh": "有才藝的",
-    "supplementalMeaningZh": "有成就的；熟練的",
+    "meaningZh": "熟練的",
+    "supplementalMeaningZh": "有成就的",
     "example": "An accomplished dancer taught tango in the old warehouse.",
-    "exampleZh": "一位技藝精湛的舞者在舊倉庫教探戈。",
+    "exampleZh": "一位熟練舞者在舊倉庫教探戈。",
     "group": "Core 11"
   },
   {
@@ -59042,10 +59042,10 @@ export const sampleWords: WordEntry[] = [
     "word": "shattered",
     "partOfSpeech": "a",
     "pronunciation": "/-/",
-    "meaningZh": "破碎的",
-    "supplementalMeaningZh": "極度疲憊的",
-    "example": "The shattered window glass covered the classroom floor.",
-    "exampleZh": "破碎的窗玻璃撒滿了教室地板。",
+    "meaningZh": "極度疲憊的",
+    "supplementalMeaningZh": "破碎的",
+    "example": "She looked shattered after the overnight bus ride.",
+    "exampleZh": "搭完夜車後，她看起來極度疲憊。",
     "group": "Core 11"
   },
   {
@@ -59119,10 +59119,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bog",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/bɒg/",
-    "meaningZh": "沼澤",
-    "supplementalMeaningZh": "陷入泥沼；拖慢",
-    "example": "The hikers got stuck in a muddy bog near the lake.",
-    "exampleZh": "登山客困在湖邊一處泥濘的沼澤裡。",
+    "meaningZh": "陷入泥沼",
+    "supplementalMeaningZh": "沼澤；拖慢",
+    "example": "Wheels bog down when trucks cross the wet field.",
+    "exampleZh": "卡車穿越濕田時，車輪會陷入泥沼。",
     "group": "Core 11"
   },
   {
@@ -59130,10 +59130,10 @@ export const sampleWords: WordEntry[] = [
     "word": "brew",
     "partOfSpeech": "n / v",
     "pronunciation": "/bru:/",
-    "meaningZh": "釀造",
-    "supplementalMeaningZh": "沖泡；醞釀",
-    "example": "My father likes to brew tea every morning before work.",
-    "exampleZh": "我爸爸每天早上上班前都喜歡泡茶。",
+    "meaningZh": "醞釀",
+    "supplementalMeaningZh": "釀造；沖泡",
+    "example": "Trouble began to brew after the ferry tickets sold out.",
+    "exampleZh": "渡輪票售完後，麻煩開始醞釀。",
     "group": "Core 11"
   },
   {
@@ -59319,8 +59319,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'fi:dә/",
     "meaningZh": "餵食器",
     "supplementalMeaningZh": "奶瓶；支線",
-    "example": "The orphaned lamb drank milk from a rubber feeder.",
-    "exampleZh": "失親小羊用橡膠奶瓶喝奶。",
+    "example": "We hung a bird feeder outside the classroom window last week.",
+    "exampleZh": "我們上週在教室窗外掛了一個餵鳥器。",
     "group": "Core 11"
   },
   {
@@ -59329,7 +59329,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / vi",
     "pronunciation": "/'dʒɒli/",
     "meaningZh": "開朗的",
-    "supplementalMeaningZh": "非常；使愉快",
+    "supplementalMeaningZh": "非常；開玩笑",
     "example": "Jolly sailors sang while painting the pier railings.",
     "exampleZh": "開朗的水手一邊粉刷碼頭欄杆一邊唱歌。",
     "group": "Core 11"
@@ -59372,8 +59372,8 @@ export const sampleWords: WordEntry[] = [
     "word": "dole",
     "partOfSpeech": "n / vt",
     "pronunciation": "/dәul/",
-    "meaningZh": "救濟金",
-    "supplementalMeaningZh": "發放；少量分發",
+    "meaningZh": "發放",
+    "supplementalMeaningZh": "救濟金",
     "example": "Volunteers dole out rice outside the temple after floods.",
     "exampleZh": "水災後志工在廟外發放米糧。",
     "group": "Core 11"
@@ -59427,8 +59427,8 @@ export const sampleWords: WordEntry[] = [
     "word": "speaking",
     "partOfSpeech": "n / a",
     "pronunciation": "/'spi:kiŋ/",
-    "meaningZh": "說話",
-    "supplementalMeaningZh": "演說；說話的",
+    "meaningZh": "說話的",
+    "supplementalMeaningZh": "演說；口語的",
     "example": "Her speaking voice carries well in the old theater.",
     "exampleZh": "她說話的聲音在舊劇院裡傳得很遠。",
     "group": "Core 11"
@@ -59461,7 +59461,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/reiv/",
     "meaningZh": "胡言亂語",
-    "supplementalMeaningZh": "狂讚；熱烈讚賞",
+    "supplementalMeaningZh": "狂讚",
     "example": "Fever made the patient rave through the humid night.",
     "exampleZh": "病人高燒不退，在悶熱的夜裡不停胡言亂語。",
     "group": "Core 11"
@@ -59471,10 +59471,10 @@ export const sampleWords: WordEntry[] = [
     "word": "obituary",
     "partOfSpeech": "a / n",
     "pronunciation": "/ә'bitjuәri/",
-    "meaningZh": "訃聞",
+    "meaningZh": "訃告",
     "supplementalMeaningZh": "",
     "example": "The obituary described her years rescuing injured workers.",
-    "exampleZh": "訃聞提到她多年來救助受傷工人的事蹟。",
+    "exampleZh": "訃告提到她多年來救助受傷工人的事蹟。",
     "group": "Core 11"
   },
   {
@@ -59482,8 +59482,8 @@ export const sampleWords: WordEntry[] = [
     "word": "convertible",
     "partOfSpeech": "a / n",
     "pronunciation": "/kәn'vә:tәbl/",
-    "meaningZh": "可轉換的",
-    "supplementalMeaningZh": "敞篷車",
+    "meaningZh": "敞篷車",
+    "supplementalMeaningZh": "可轉換的",
     "example": "A convertible waited outside the hotel with its roof down.",
     "exampleZh": "一輛敞篷車放下車頂停在飯店外。",
     "group": "Core 11"
@@ -59493,8 +59493,8 @@ export const sampleWords: WordEntry[] = [
     "word": "pagan",
     "partOfSpeech": "n / a",
     "pronunciation": "/'peigәn/",
-    "meaningZh": "異教徒",
-    "supplementalMeaningZh": "異教的",
+    "meaningZh": "異教的",
+    "supplementalMeaningZh": "異教徒",
     "example": "Pagan symbols covered the stone near the ancient spring.",
     "exampleZh": "異教符號覆蓋古泉旁的石頭。",
     "group": "Core 11"
@@ -59505,7 +59505,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'glitә/",
     "meaningZh": "閃耀",
-    "supplementalMeaningZh": "閃亮的小亮片",
+    "supplementalMeaningZh": "亮粉",
     "example": "Glass towers glitter above the river after sunset.",
     "exampleZh": "日落後，河畔的玻璃高樓閃閃發亮。",
     "group": "Core 11"
@@ -59537,8 +59537,8 @@ export const sampleWords: WordEntry[] = [
     "word": "advert",
     "partOfSpeech": "vi / n",
     "pronunciation": "/әd'vә:t/",
-    "meaningZh": "留意",
-    "supplementalMeaningZh": "提及",
+    "meaningZh": "廣告",
+    "supplementalMeaningZh": "",
     "example": "The advert promised free soup with every lunch order.",
     "exampleZh": "廣告承諾每份午餐附免費湯。",
     "group": "Core 11"
@@ -59603,10 +59603,10 @@ export const sampleWords: WordEntry[] = [
     "word": "armour",
     "partOfSpeech": "n",
     "pronunciation": "/'ɑ:mә/",
-    "meaningZh": "盔甲",
+    "meaningZh": "甲冑",
     "supplementalMeaningZh": "裝甲",
     "example": "Rusty armour lined the castle wall near the stairs.",
-    "exampleZh": "生鏽的盔甲排列在樓梯旁的城堡牆邊。",
+    "exampleZh": "生鏽甲冑排列在樓梯旁的城堡牆邊。",
     "group": "Core 11"
   },
   {
@@ -59628,7 +59628,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "精神醫學",
     "supplementalMeaningZh": "",
     "example": "Psychiatry helped him name the fear he had carried.",
-    "exampleZh": "精神醫學幫他說出一直承受的恐懼。",
+    "exampleZh": "精神病學幫他說出一直承受的恐懼。",
     "group": "Core 11"
   },
   {
@@ -59637,7 +59637,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/vәug/",
     "meaningZh": "流行",
-    "supplementalMeaningZh": "時尚；時髦",
+    "supplementalMeaningZh": "時髦的",
     "example": "Wide trousers came back into vogue among young dancers.",
     "exampleZh": "寬褲重新在年輕舞者之間流行起來。",
     "group": "Core 11"
@@ -59650,7 +59650,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "懷疑的",
     "supplementalMeaningZh": "",
     "example": "The mechanic sounded sceptical about the cheap replacement part.",
-    "exampleZh": "技師對那個便宜的替代零件抱持懷疑。",
+    "exampleZh": "技師聽起來對那個便宜的替代零件抱持懷疑。",
     "group": "Core 11"
   },
   {
@@ -59724,10 +59724,10 @@ export const sampleWords: WordEntry[] = [
     "word": "manoeuvre",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/mә'nu:vә/",
-    "meaningZh": "策略",
-    "supplementalMeaningZh": "演習；操縱",
+    "meaningZh": "操作",
+    "supplementalMeaningZh": "策略；演習",
     "example": "The driver used a clever manoeuvre to avoid the sinkhole.",
-    "exampleZh": "駕駛用巧妙的操控動作避開了地洞。",
+    "exampleZh": "駕駛用巧妙的操作避開地洞。",
     "group": "Core 11"
   },
   {
@@ -59771,7 +59771,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "使康復",
     "supplementalMeaningZh": "修復；恢復名譽",
     "example": "Therapists helped rehabilitate his injured wrist after surgery.",
-    "exampleZh": "治療師在手術後協助他受傷的手腕復原。",
+    "exampleZh": "治療師在手術後協助他受傷的手腕復健。",
     "group": "Core 11"
   },
   {
@@ -59802,7 +59802,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/-/",
     "meaningZh": "溫暖舒適的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "保溫套",
     "example": "The attic felt cosy after they lit the stove.",
     "exampleZh": "他們點起暖爐後，閣樓頓時溫暖舒適起來。",
     "group": "Core 11"
@@ -60043,8 +60043,8 @@ export const sampleWords: WordEntry[] = [
     "word": "resigned",
     "partOfSpeech": "a",
     "pronunciation": "/ri'zaind/",
-    "meaningZh": "順從的",
-    "supplementalMeaningZh": "無奈的",
+    "meaningZh": "無奈的",
+    "supplementalMeaningZh": "聽天由命的",
     "example": "With a resigned sigh, Dan signed the repair bill.",
     "exampleZh": "丹無奈嘆氣後簽下修理帳單。",
     "group": "Core 11"
@@ -60121,7 +60121,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/auns/",
     "meaningZh": "盎司",
-    "supplementalMeaningZh": "一點點",
+    "supplementalMeaningZh": "少量",
     "example": "Add one ounce of cream to the mushroom sauce.",
     "exampleZh": "在蘑菇醬裡加入一盎司鮮奶油。",
     "group": "Core 11"
@@ -60274,10 +60274,10 @@ export const sampleWords: WordEntry[] = [
     "word": "parish",
     "partOfSpeech": "n",
     "pronunciation": "/'pæriʃ/",
-    "meaningZh": "教區",
-    "supplementalMeaningZh": "堂區",
+    "meaningZh": "堂區",
+    "supplementalMeaningZh": "教區",
     "example": "The parish collected blankets for families after the typhoon.",
-    "exampleZh": "教區在颱風後為家庭募集毛毯。",
+    "exampleZh": "堂區在颱風後為家庭募集毛毯。",
     "group": "Core 11"
   },
   {
@@ -60352,9 +60352,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'ledʒislәtiv/",
     "meaningZh": "立法的",
-    "supplementalMeaningZh": "",
-    "example": "The legislative committee will discuss the new bill tomorrow morning.",
-    "exampleZh": "立法委員會明天早上將討論這項新法案。",
+    "supplementalMeaningZh": "立法機構",
+    "example": "A legislative aide carried the bill into the chamber.",
+    "exampleZh": "一名立法助理把法案帶進議場。",
     "group": "Core 11"
   },
   {
@@ -60385,9 +60385,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ti:n/",
     "meaningZh": "青少年",
-    "supplementalMeaningZh": "十幾歲的人",
-    "example": "The teen waited at the bus stop with her school bag.",
-    "exampleZh": "那位青少年揹著書包在公車站等車。",
+    "supplementalMeaningZh": "",
+    "example": "The teen waited at the bus stop with her heavy school bag.",
+    "exampleZh": "那名青少年揹著沉重的書包在公車站等車。",
     "group": "Core 11"
   },
   {
@@ -60483,8 +60483,8 @@ export const sampleWords: WordEntry[] = [
     "word": "meter",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'mi:tә/",
-    "meaningZh": "公尺",
-    "supplementalMeaningZh": "計費表；儀表",
+    "meaningZh": "計費表",
+    "supplementalMeaningZh": "公尺；計量表",
     "example": "The taxi meter kept running while traffic barely moved.",
     "exampleZh": "車流幾乎不動時，計程車計費表仍繼續跳錶。",
     "group": "Core 11"
@@ -60516,10 +60516,10 @@ export const sampleWords: WordEntry[] = [
     "word": "builder",
     "partOfSpeech": "n",
     "pronunciation": "/'bildә/",
-    "meaningZh": "建築工人",
-    "supplementalMeaningZh": "建商；建造者",
-    "example": "The builder repaired the broken roof before the typhoon arrived.",
-    "exampleZh": "建築工人在颱風來臨前修好了破損的屋頂。",
+    "meaningZh": "建造者",
+    "supplementalMeaningZh": "建築工人；建商",
+    "example": "The builder of the charity school returned for its anniversary.",
+    "exampleZh": "那所慈善學校的建造者，在校慶時回到學校。",
     "group": "Core 12"
   },
   {
@@ -60549,10 +60549,10 @@ export const sampleWords: WordEntry[] = [
     "word": "constituency",
     "partOfSpeech": "n",
     "pronunciation": "/kәn'stitjuәnsi/",
-    "meaningZh": "選區",
-    "supplementalMeaningZh": "選民；支持群體",
+    "meaningZh": "選民",
+    "supplementalMeaningZh": "選區；支持群體",
     "example": "Her constituency demanded safer buses after the mountain crash.",
-    "exampleZh": "她的選區居民在山區事故後要求更安全的公車。",
+    "exampleZh": "她的選民在山區事故後要求更安全公車。",
     "group": "Core 12"
   },
   {
@@ -60563,7 +60563,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "軍士",
     "supplementalMeaningZh": "警佐",
     "example": "A sergeant guided the lost hikers through the flooded checkpoint.",
-    "exampleZh": "一名軍士帶領迷路的登山客穿過淹水的檢查站。",
+    "exampleZh": "一名軍士帶迷路登山客穿過淹水檢查站。",
     "group": "Core 12"
   },
   {
@@ -60748,7 +60748,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'hәuldiŋ/",
     "meaningZh": "持有物",
-    "supplementalMeaningZh": "持股；抓握",
+    "supplementalMeaningZh": "持股；所持土地",
     "example": "The investor sold her largest holding in the tech company last week.",
     "exampleZh": "那位投資人上週賣掉了她在那家科技公司的最大持股。",
     "group": "Core 12"
@@ -60780,10 +60780,10 @@ export const sampleWords: WordEntry[] = [
     "word": "advisory",
     "partOfSpeech": "a",
     "pronunciation": "/әd'vaizәri/",
-    "meaningZh": "顧問的",
-    "supplementalMeaningZh": "諮詢的；勸告的",
-    "example": "She joined the advisory board to help the school choose new clubs.",
-    "exampleZh": "她加入顧問委員會，協助學校挑選新社團。",
+    "meaningZh": "警示的",
+    "supplementalMeaningZh": "諮詢的；顧問的",
+    "example": "An advisory notice warned swimmers about strong currents near the pier.",
+    "exampleZh": "一則警示公告提醒泳客碼頭旁有強勁海流。",
     "group": "Core 12"
   },
   {
@@ -60802,10 +60802,10 @@ export const sampleWords: WordEntry[] = [
     "word": "philosophical",
     "partOfSpeech": "a",
     "pronunciation": "/.filә'sɒfikl/",
-    "meaningZh": "哲學的",
-    "supplementalMeaningZh": "豁達的；冷靜的",
-    "example": "The class had a philosophical discussion about what makes people happy.",
-    "exampleZh": "全班針對什麼讓人快樂進行了一場哲學討論。",
+    "meaningZh": "豁達的",
+    "supplementalMeaningZh": "哲學的；冷靜的",
+    "example": "Nora sounded philosophical after the storm ruined her picnic.",
+    "exampleZh": "暴風雨毀了野餐後，諾拉聽起來很豁達。",
     "group": "Core 12"
   },
   {
@@ -60835,10 +60835,10 @@ export const sampleWords: WordEntry[] = [
     "word": "pro",
     "partOfSpeech": "adv",
     "pronunciation": "/prәu/",
-    "meaningZh": "贊成者",
-    "supplementalMeaningZh": "專業人士；贊成的",
-    "example": "The pro at the golf club gave Leo some useful tips.",
-    "exampleZh": "高爾夫球場的專業球員給了里奧一些實用的建議。",
+    "meaningZh": "從正面",
+    "supplementalMeaningZh": "贊成地；專業人士；贊成者",
+    "example": "Students argued the new phone rule pro and con before voting.",
+    "exampleZh": "投票前，學生從正反兩面辯論新的手機規定。",
     "group": "Core 12"
   },
   {
@@ -60846,10 +60846,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bastard",
     "partOfSpeech": "n / a",
     "pronunciation": "/'bæstәd/",
-    "meaningZh": "混蛋",
-    "supplementalMeaningZh": "私生子",
-    "example": "The angry driver called the other man a bastard.",
-    "exampleZh": "那位憤怒的駕駛罵另一個男人是混蛋。",
+    "meaningZh": "私生子",
+    "supplementalMeaningZh": "混蛋；該死的",
+    "example": "In the old play, the king's bastard son dreamed of taking the throne.",
+    "exampleZh": "在那齣古老的戲劇裡，國王的私生子一心想奪取王位。",
     "group": "Core 12"
   },
   {
@@ -60913,9 +60913,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "interj",
     "pronunciation": "/hʌ/",
     "meaningZh": "蛤",
-    "supplementalMeaningZh": "嗯；咦",
-    "example": "Huh, I thought the test was tomorrow, not today.",
-    "exampleZh": "蛤，我還以為考試是明天，不是今天。",
+    "supplementalMeaningZh": "咦；嗯",
+    "example": "Huh? I thought the math test was tomorrow, not today.",
+    "exampleZh": "蛤？我還以為數學考試是明天，不是今天。",
     "group": "Core 12"
   },
   {
@@ -60989,8 +60989,8 @@ export const sampleWords: WordEntry[] = [
     "word": "halfway",
     "partOfSpeech": "a / adv",
     "pronunciation": "/'hɑ:f'wei/",
-    "meaningZh": "中途的",
-    "supplementalMeaningZh": "不徹底的；半途地",
+    "meaningZh": "到一半",
+    "supplementalMeaningZh": "不徹底的",
     "example": "Dinner stopped halfway when the lights failed across the block.",
     "exampleZh": "整條街突然停電，大家晚餐才吃到一半就被迫中斷。",
     "group": "Core 12"
@@ -61044,8 +61044,8 @@ export const sampleWords: WordEntry[] = [
     "word": "caller",
     "partOfSpeech": "n / a",
     "pronunciation": "/'kɒ:lә/",
-    "meaningZh": "來電者",
-    "supplementalMeaningZh": "訪客",
+    "meaningZh": "訪客",
+    "supplementalMeaningZh": "來電者",
     "example": "The caller waited politely in the front parlor.",
     "exampleZh": "那位訪客在前客廳禮貌等候。",
     "group": "Core 12"
@@ -61056,7 +61056,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'hɒki/",
     "meaningZh": "曲棍球",
-    "supplementalMeaningZh": "冰上曲棍球",
+    "supplementalMeaningZh": "冰球",
     "example": "Rain forced the children to play hockey inside the gym.",
     "exampleZh": "下雨迫使孩子們在體育館裡打曲棍球。",
     "group": "Core 12"
@@ -61099,8 +61099,8 @@ export const sampleWords: WordEntry[] = [
     "word": "selective",
     "partOfSpeech": "a",
     "pronunciation": "/si'lektiv/",
-    "meaningZh": "選擇性的",
-    "supplementalMeaningZh": "挑剔的；精挑細選的",
+    "meaningZh": "挑剔的",
+    "supplementalMeaningZh": "選擇性的",
     "example": "The editor became selective after reading hundreds of weak submissions.",
     "exampleZh": "讀過數百篇水準不佳的投稿後，編輯挑選稿件時變得更嚴格。",
     "group": "Core 12"
@@ -61176,8 +61176,8 @@ export const sampleWords: WordEntry[] = [
     "word": "protestant",
     "partOfSpeech": "n / a",
     "pronunciation": "/'prɒtistәnt/",
-    "meaningZh": "新教徒",
-    "supplementalMeaningZh": "新教的",
+    "meaningZh": "新教的",
+    "supplementalMeaningZh": "新教徒",
     "example": "A Protestant pastor welcomed refugees into the stone chapel.",
     "exampleZh": "一位新教牧師將難民迎進石造禮拜堂。",
     "group": "Core 12"
@@ -61198,7 +61198,7 @@ export const sampleWords: WordEntry[] = [
     "word": "sporting",
     "partOfSpeech": "a",
     "pronunciation": "/'spɒ:tiŋ/",
-    "meaningZh": "運動的",
+    "meaningZh": "運動用的",
     "supplementalMeaningZh": "喜好運動的；有運動精神的",
     "example": "A sporting goods shop lent helmets for the river race.",
     "exampleZh": "一家運動用品店借出河道競賽用的安全帽。",
@@ -61298,7 +61298,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / adv / a",
     "pronunciation": "/kɒn/",
     "meaningZh": "欺騙",
-    "supplementalMeaningZh": "騙局；反對理由；熟記",
+    "supplementalMeaningZh": "騙局；反對理由",
     "example": "The salesman tried to con elderly customers out of their savings.",
     "exampleZh": "那名推銷員企圖騙走年長顧客的積蓄。",
     "group": "Core 12"
@@ -61332,8 +61332,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'kɒndәm/",
     "meaningZh": "保險套",
     "supplementalMeaningZh": "",
-    "example": "The health teacher explained how a condom helps prevent disease.",
-    "exampleZh": "健康教育老師說明保險套如何幫助預防疾病。",
+    "example": "The nurse placed a condom in each travel health kit.",
+    "exampleZh": "護理師在每份旅行保健包放入一個保險套。",
     "group": "Core 12"
   },
   {
@@ -61421,7 +61421,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "卡住的",
     "supplementalMeaningZh": "困住的；無法擺脫的",
     "example": "The stuck drawer finally opened after Mira pulled the handle hard.",
-    "exampleZh": "米拉用力拉把手後，卡住的抽屜終於打開了。",
+    "exampleZh": "米拉用力拉把手後，卡住的抽屜終於打開。",
     "group": "Core 12"
   },
   {
@@ -61440,10 +61440,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tricky",
     "partOfSpeech": "a",
     "pronunciation": "/'triki/",
-    "meaningZh": "棘手的",
-    "supplementalMeaningZh": "狡猾的；需要技巧的",
-    "example": "The tricky math problem took Mira almost an hour to solve.",
-    "exampleZh": "這道棘手的數學題花了米拉將近一小時才解出來。",
+    "meaningZh": "狡猾的",
+    "supplementalMeaningZh": "棘手的；需要技巧的",
+    "example": "The tricky salesman hid the extra fee until signing.",
+    "exampleZh": "那個狡猾業務把額外費用藏到簽約時才說。",
     "group": "Core 12"
   },
   {
@@ -61495,10 +61495,10 @@ export const sampleWords: WordEntry[] = [
     "word": "unwanted",
     "partOfSpeech": "a",
     "pronunciation": "/.ʌn'wɒntid/",
-    "meaningZh": "不想要的",
-    "supplementalMeaningZh": "多餘的；不受歡迎的",
+    "meaningZh": "多餘的",
+    "supplementalMeaningZh": "不受歡迎的",
     "example": "Several unwanted weeds grew between the tiles after spring rain.",
-    "exampleZh": "春雨過後，幾株不想要的雜草從磁磚縫長出來。",
+    "exampleZh": "春雨過後，幾株多餘雜草從磁磚縫長出。",
     "group": "Core 12"
   },
   {
@@ -61517,10 +61517,10 @@ export const sampleWords: WordEntry[] = [
     "word": "striker",
     "partOfSpeech": "n",
     "pronunciation": "/'straikә/",
-    "meaningZh": "前鋒",
-    "supplementalMeaningZh": "罷工者",
-    "example": "The striker scored twice before the school team won the match.",
-    "exampleZh": "那名前鋒進了兩球，學校球隊贏得了比賽。",
+    "meaningZh": "罷工者",
+    "supplementalMeaningZh": "前鋒",
+    "example": "The striker carried a sign outside the factory gate.",
+    "exampleZh": "那名罷工者在工廠門外舉著標語。",
     "group": "Core 12"
   },
   {
@@ -61594,10 +61594,10 @@ export const sampleWords: WordEntry[] = [
     "word": "binding",
     "partOfSpeech": "n",
     "pronunciation": "/'baindiŋ/",
-    "meaningZh": "有約束力的",
-    "supplementalMeaningZh": "裝訂；封面",
-    "example": "The contract is binding, so both sides must follow every rule.",
-    "exampleZh": "這份合約具有約束力，所以雙方都必須遵守每項規定。",
+    "meaningZh": "裝訂",
+    "supplementalMeaningZh": "有約束力的",
+    "example": "The notebook's red binding cracked after years of travel.",
+    "exampleZh": "那本筆記本紅色裝訂經多年旅行後裂開。",
     "group": "Core 12"
   },
   {
@@ -61630,7 +61630,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "贊助",
     "supplementalMeaningZh": "資助；主辦",
     "example": "The forum ran under university sponsorship for three years.",
-    "exampleZh": "這場論壇在大學的贊助下舉辦了三年。",
+    "exampleZh": "這個論壇在大學的贊助下舉辦了三年。",
     "group": "Core 12"
   },
   {
@@ -61728,7 +61728,7 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'kʌmbæk/",
     "meaningZh": "回嘴",
     "supplementalMeaningZh": "復出；東山再起",
-    "example": "Nina's sharp comeback made the rude waiter stop laughing.",
+    "example": "Nina's comeback made the rude waiter stop laughing.",
     "exampleZh": "妮娜尖銳地回嘴，讓無禮的服務生笑不出來。",
     "group": "Core 12"
   },
@@ -61782,7 +61782,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/kræp/",
     "meaningZh": "廢話",
-    "supplementalMeaningZh": "爛東西；糞便",
+    "supplementalMeaningZh": "爛東西；大便",
     "example": "His excuse was crap, and everyone saw the truth.",
     "exampleZh": "他的藉口根本是胡扯，大家都看得出真相。",
     "group": "Core 12"
@@ -61814,10 +61814,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bureaucrat",
     "partOfSpeech": "n",
     "pronunciation": "/'bjuәrәukræt/",
-    "meaningZh": "官僚",
-    "supplementalMeaningZh": "官員；公務員",
+    "meaningZh": "官員",
+    "supplementalMeaningZh": "官僚",
     "example": "A bureaucrat misplaced the permit inside a green folder.",
-    "exampleZh": "一名官僚把許可證錯放進綠色資料夾裡。",
+    "exampleZh": "一名官員把許可證錯放進綠色資料夾裡。",
     "group": "Core 12"
   },
   {
@@ -61869,8 +61869,8 @@ export const sampleWords: WordEntry[] = [
     "word": "theatrical",
     "partOfSpeech": "a / n",
     "pronunciation": "/θi'ætrikl/",
-    "meaningZh": "戲劇的",
-    "supplementalMeaningZh": "誇張做作的；劇場的",
+    "meaningZh": "誇張的",
+    "supplementalMeaningZh": "戲劇性的；劇場的",
     "example": "His theatrical sigh made the children laugh during dinner.",
     "exampleZh": "他故意誇張地嘆了口氣，逗得吃晚餐的孩子們笑了。",
     "group": "Core 12"
@@ -61902,10 +61902,10 @@ export const sampleWords: WordEntry[] = [
     "word": "lawmaker",
     "partOfSpeech": "n",
     "pronunciation": "/lɒ:'meikә/",
-    "meaningZh": "立法委員",
-    "supplementalMeaningZh": "立法者；議員",
+    "meaningZh": "立法者",
+    "supplementalMeaningZh": "立法委員",
     "example": "A lawmaker proposed stricter rules for basement rentals.",
-    "exampleZh": "一名立法委員提議加嚴地下室出租規定。",
+    "exampleZh": "一名立法者提議加嚴地下室出租規定。",
     "group": "Core 12"
   },
   {
@@ -62013,7 +62013,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / adv",
     "pronunciation": "/'bɒiliŋ/",
     "meaningZh": "沸騰的",
-    "supplementalMeaningZh": "滾燙的；酷熱的",
+    "supplementalMeaningZh": "滾燙的；炎熱的",
     "example": "The boiling soup splashed onto the counter during lunch.",
     "exampleZh": "午餐時，沸騰的湯濺到流理台上。",
     "group": "Core 12"
@@ -62048,7 +62048,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "散落的",
     "supplementalMeaningZh": "零星的",
     "example": "The scattered sandals lay outside the crowded temple gate after prayers.",
-    "exampleZh": "祈禱結束後，散落的涼鞋躺在擁擠的廟門外。",
+    "exampleZh": "祈禱結束後，涼鞋散落在擁擠的廟門外。",
     "group": "Core 12"
   },
   {
@@ -62166,8 +62166,8 @@ export const sampleWords: WordEntry[] = [
     "word": "chuck",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/tʃʌk/",
-    "meaningZh": "丟",
-    "supplementalMeaningZh": "投擲；輕拍；放棄",
+    "meaningZh": "丟掉",
+    "supplementalMeaningZh": "投擲；輕拍；趕走",
     "example": "Please chuck those spoiled peaches into the compost bin.",
     "exampleZh": "請把那些壞掉的桃子丟進堆肥桶。",
     "group": "Core 12"
@@ -62243,10 +62243,10 @@ export const sampleWords: WordEntry[] = [
     "word": "jumper",
     "partOfSpeech": "n",
     "pronunciation": "/'dʒʌmpә/",
-    "meaningZh": "毛衣",
-    "supplementalMeaningZh": "跳躍者；工作服",
-    "example": "She wore a warm wool jumper to school on the cold morning.",
-    "exampleZh": "寒冷的早晨，她穿了一件保暖的羊毛衣去上學。",
+    "meaningZh": "跳躍者",
+    "supplementalMeaningZh": "毛衣；工作服",
+    "example": "The jumper cleared the puddle and landed beside the gate.",
+    "exampleZh": "那名跳躍者越過水坑，落在門邊。",
     "group": "Core 12"
   },
   {
@@ -62276,8 +62276,8 @@ export const sampleWords: WordEntry[] = [
     "word": "psychic",
     "partOfSpeech": "a / n",
     "pronunciation": "/'saikik/",
-    "meaningZh": "通靈的",
-    "supplementalMeaningZh": "靈媒；心靈的；超自然的",
+    "meaningZh": "靈媒",
+    "supplementalMeaningZh": "通靈的；心靈的；超自然的",
     "example": "A psychic claimed she saw smoke near the harbor.",
     "exampleZh": "一名靈媒聲稱她看見港口附近有煙。",
     "group": "Core 12"
@@ -62408,10 +62408,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sooner",
     "partOfSpeech": "n",
     "pronunciation": "/'su:nә/",
-    "meaningZh": "更早地",
-    "supplementalMeaningZh": "寧可；較快",
-    "example": "The sooner you start studying, the better you will do.",
-    "exampleZh": "你愈早開始讀書，成績就會愈好。",
+    "meaningZh": "搶先者",
+    "supplementalMeaningZh": "搶先佔地者",
+    "example": "A sooner grabbed the corner lot before others arrived.",
+    "exampleZh": "一名搶先者在其他人到前佔下角落土地。",
     "group": "Core 12"
   },
   {
@@ -62463,8 +62463,8 @@ export const sampleWords: WordEntry[] = [
     "word": "heavyweight",
     "partOfSpeech": "n / a",
     "pronunciation": "/'heviweit/",
-    "meaningZh": "重量級選手",
-    "supplementalMeaningZh": "重量級的；重要人物",
+    "meaningZh": "重量級的",
+    "supplementalMeaningZh": "重量級拳擊手；重要人物",
     "example": "The heavyweight champion skipped rope beside the harbor gym.",
     "exampleZh": "重量級冠軍在港邊健身房旁跳繩。",
     "group": "Core 12"
@@ -62518,8 +62518,8 @@ export const sampleWords: WordEntry[] = [
     "word": "cosmetic",
     "partOfSpeech": "n / a",
     "pronunciation": "/kɒz'metik/",
-    "meaningZh": "化妝品",
-    "supplementalMeaningZh": "化妝用的；表面的",
+    "meaningZh": "化妝用的",
+    "supplementalMeaningZh": "化妝品；表面的",
     "example": "She packed one cosmetic product in the tiny travel pouch.",
     "exampleZh": "她把一樣化妝品放進小旅行袋裡。",
     "group": "Core 12"
@@ -62640,9 +62640,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "abbr",
     "pronunciation": "/-/",
     "meaningZh": "分鐘",
-    "supplementalMeaningZh": "最小的；部長",
-    "example": "The bus leaves in ten min, so please hurry up.",
-    "exampleZh": "公車十分鐘後就開了，請你快一點。",
+    "supplementalMeaningZh": "最小值；部長",
+    "example": "The next bus comes in 5 min, so we can wait here.",
+    "exampleZh": "下一班公車五分鐘後就來，我們在這裡等就好。",
     "group": "Core 12"
   },
   {
@@ -62673,9 +62673,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "word",
     "pronunciation": "/'әjp/",
     "meaningZh": "手術",
-    "supplementalMeaningZh": "觀測所；操作",
-    "example": "The doctor said the op would take about two hours.",
-    "exampleZh": "醫師說這項手術大約需要兩小時。",
+    "supplementalMeaningZh": "",
+    "example": "My grandmother's knee op went well, and she is walking again.",
+    "exampleZh": "奶奶的膝蓋手術很順利，她又能走路了。",
     "group": "Core 12"
   },
   {
@@ -62706,7 +62706,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'dʒipsi/",
     "meaningZh": "吉卜賽人",
-    "supplementalMeaningZh": "流浪者",
+    "supplementalMeaningZh": "羅姆人；流浪者",
     "example": "The old poster called the Roma violinist a gypsy.",
     "exampleZh": "舊海報稱那位羅姆小提琴手為吉卜賽人。",
     "group": "Core 12"
@@ -62716,8 +62716,8 @@ export const sampleWords: WordEntry[] = [
     "word": "ghetto",
     "partOfSpeech": "n",
     "pronunciation": "/'getәu/",
-    "meaningZh": "貧民區",
-    "supplementalMeaningZh": "猶太人區；少數族群聚居區",
+    "meaningZh": "猶太人區",
+    "supplementalMeaningZh": "貧民區；少數族群聚居區",
     "example": "The ghetto's brick lanes filled with vendors before sunrise.",
     "exampleZh": "貧民區的磚巷在日出前就擠滿攤販。",
     "group": "Core 12"
@@ -62763,7 +62763,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "超級大國",
     "supplementalMeaningZh": "超級強權；超能力",
     "example": "The superpower sent two carriers into the disputed sea.",
-    "exampleZh": "那個超級大國派兩艘航空母艦進入爭議海域。",
+    "exampleZh": "那個超級大國派兩艘航母進入爭議海域。",
     "group": "Core 12"
   },
   {
@@ -62794,9 +62794,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/di'stә:bd/",
     "meaningZh": "不安的",
-    "supplementalMeaningZh": "受干擾的；心理失常的",
-    "example": "The disturbed child could not sleep after the loud storm.",
-    "exampleZh": "那個不安的孩子在巨大的暴風雨後無法入睡。",
+    "supplementalMeaningZh": "受干擾的；心理失常的；被弄亂的",
+    "example": "Mia felt disturbed after watching the news about the earthquake.",
+    "exampleZh": "看完地震的新聞後，米亞心裡很不安。",
     "group": "Core 12"
   },
   {
@@ -62815,10 +62815,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sub",
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/sʌb/",
-    "meaningZh": "替補球員",
-    "supplementalMeaningZh": "潛水艇；代課老師；三明治",
+    "meaningZh": "替補",
+    "supplementalMeaningZh": "潛水艇；代課老師；訂戶",
     "example": "A sub replaced the injured goalkeeper after halftime.",
-    "exampleZh": "一名替補球員在中場休息後替換了受傷的守門員。",
+    "exampleZh": "一名替補在中場後取代受傷守門員。",
     "group": "Core 12"
   },
   {
@@ -62980,10 +62980,10 @@ export const sampleWords: WordEntry[] = [
     "word": "insecure",
     "partOfSpeech": "a",
     "pronunciation": "/.insi'kjuә/",
-    "meaningZh": "缺乏安全感的",
-    "supplementalMeaningZh": "不牢固的；不安全的",
-    "example": "She felt insecure about speaking English in front of the class.",
-    "exampleZh": "她在全班面前說英語時覺得沒有安全感。",
+    "meaningZh": "不牢靠的",
+    "supplementalMeaningZh": "沒自信的",
+    "example": "An insecure railing made the balcony unsafe for children.",
+    "exampleZh": "欄杆不夠牢固，孩子待在陽台上很危險。",
     "group": "Core 12"
   },
   {
@@ -63057,10 +63057,10 @@ export const sampleWords: WordEntry[] = [
     "word": "gilt",
     "partOfSpeech": "n / a",
     "pronunciation": "/gilt/",
-    "meaningZh": "鍍金",
-    "supplementalMeaningZh": "金色塗層",
+    "meaningZh": "鍍金的",
+    "supplementalMeaningZh": "",
     "example": "Thin gilt edges made the wedding invitations shine under candlelight.",
-    "exampleZh": "薄薄的鍍金邊讓婚禮請柬在燭光下閃閃發亮。",
+    "exampleZh": "薄鍍金邊讓婚禮請柬在燭光下發亮。",
     "group": "Core 12"
   },
   {
@@ -63068,10 +63068,10 @@ export const sampleWords: WordEntry[] = [
     "word": "topical",
     "partOfSpeech": "a",
     "pronunciation": "/'tɒpikl/",
-    "meaningZh": "時事性的",
-    "supplementalMeaningZh": "外用的；話題的",
-    "example": "The teacher chose a topical issue for today's class discussion.",
-    "exampleZh": "老師為今天的課堂討論挑了一個時事議題。",
+    "meaningZh": "外用的",
+    "supplementalMeaningZh": "時事性的；話題的",
+    "example": "The pharmacist gave Mei a topical cream for the rash.",
+    "exampleZh": "藥師給美一條治皮疹的外用乳膏。",
     "group": "Core 12"
   },
   {
@@ -63079,10 +63079,10 @@ export const sampleWords: WordEntry[] = [
     "word": "soundtrack",
     "partOfSpeech": "n",
     "pronunciation": "/-/",
-    "meaningZh": "電影配樂",
-    "supplementalMeaningZh": "原聲帶；聲帶",
-    "example": "The film's soundtrack made the final scene feel very emotional.",
-    "exampleZh": "這部電影的配樂讓最後一幕非常感人。",
+    "meaningZh": "電影聲帶",
+    "supplementalMeaningZh": "配樂",
+    "example": "The film's soundtrack carried scratches from the old projector.",
+    "exampleZh": "電影聲帶留有舊放映機造成的刮痕。",
     "group": "Core 12"
   },
   {
@@ -63135,9 +63135,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi / vt",
     "pronunciation": "/'mɒdәnaiz/",
     "meaningZh": "使現代化",
-    "supplementalMeaningZh": "更新",
+    "supplementalMeaningZh": "現代化",
     "example": "The museum will modernize its ticket gates next spring.",
-    "exampleZh": "博物館明年春天將使售票閘門現代化。",
+    "exampleZh": "博物館明年春天將把售票閘門現代化。",
     "group": "Core 12"
   },
   {
@@ -63201,7 +63201,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/.ʌn'bi:tn/",
     "meaningZh": "未敗的",
-    "supplementalMeaningZh": "未被擊敗的",
+    "supplementalMeaningZh": "未走過的",
     "example": "The unbeaten boxer trained alone before the title bout.",
     "exampleZh": "那名未敗拳手在冠軍戰前獨自訓練。",
     "group": "Core 12"
@@ -63574,10 +63574,10 @@ export const sampleWords: WordEntry[] = [
     "word": "equalize",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'i:kwәlaiz/",
-    "meaningZh": "使相等",
-    "supplementalMeaningZh": "追平比分；使平等",
+    "meaningZh": "追平",
+    "supplementalMeaningZh": "使相等",
     "example": "The late goal helped Spain equalize before extra time.",
-    "exampleZh": "那記晚進球幫西班牙在延長賽前追平比分。",
+    "exampleZh": "那記晚進球幫西班牙在延長賽前追平。",
     "group": "Core 12"
   },
   {
@@ -63619,9 +63619,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/gɒ:/",
     "meaningZh": "血腥畫面",
-    "supplementalMeaningZh": "凝結的血；用角刺傷",
+    "supplementalMeaningZh": "凝血；刺傷",
     "example": "The horror film used too much gore for my taste.",
-    "exampleZh": "那部恐怖片的血腥畫面對我來說太多了。",
+    "exampleZh": "那部恐怖片的血腥畫面對我來說太多。",
     "group": "Core 12"
   },
   {
@@ -63640,10 +63640,10 @@ export const sampleWords: WordEntry[] = [
     "word": "consuming",
     "partOfSpeech": "a",
     "pronunciation": "/kәn'su:miŋ/",
-    "meaningZh": "強烈的",
-    "supplementalMeaningZh": "耗費的；消費的",
-    "example": "She has a consuming passion for painting after school every day.",
-    "exampleZh": "她對放學後每天畫畫有著強烈的熱情。",
+    "meaningZh": "消費的",
+    "supplementalMeaningZh": "耗費的；強烈的",
+    "example": "The consuming public rejected the costly imported fruit.",
+    "exampleZh": "消費大眾拒買昂貴進口水果。",
     "group": "Core 12"
   },
   {
@@ -63665,7 +63665,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "梵蒂岡",
     "supplementalMeaningZh": "羅馬教廷",
     "example": "The Vatican announced new rules for archive access.",
-    "exampleZh": "梵蒂岡宣佈檔案查閱的新規定。",
+    "exampleZh": "梵蒂岡宣布檔案查閱的新規定。",
     "group": "Core 12"
   },
   {
@@ -63686,8 +63686,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/brit/",
     "meaningZh": "英國人",
     "supplementalMeaningZh": "小鯡魚群",
-    "example": "My teacher is a Brit who loves Taiwanese bubble tea.",
-    "exampleZh": "我的老師是個愛喝台灣珍珠奶茶的英國人。",
+    "example": "Our new English teacher is a Brit who loves bubble tea.",
+    "exampleZh": "我們的新英文老師是個愛喝珍珠奶茶的英國人。",
     "group": "Core 12"
   },
   {
@@ -63739,10 +63739,10 @@ export const sampleWords: WordEntry[] = [
     "word": "poised",
     "partOfSpeech": "a",
     "pronunciation": "/pɔizd/",
-    "meaningZh": "準備好的",
-    "supplementalMeaningZh": "沉著的；平衡的",
-    "example": "The team is poised to win the school basketball final.",
-    "exampleZh": "這支隊伍準備好贏得學校籃球決賽了。",
+    "meaningZh": "沉著的",
+    "supplementalMeaningZh": "準備好的；平衡的",
+    "example": "The dancer stood poised before the curtain rose.",
+    "exampleZh": "布幕升起前，舞者沉著地站著。",
     "group": "Core 12"
   },
   {
@@ -63882,10 +63882,10 @@ export const sampleWords: WordEntry[] = [
     "word": "barrack",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'bærәk/",
-    "meaningZh": "兵營",
-    "supplementalMeaningZh": "喝倒采；高聲嘲弄",
-    "example": "The soldiers returned to the barrack before the heavy rain started.",
-    "exampleZh": "士兵們在大雨開始前回到了兵營。",
+    "meaningZh": "兵舍",
+    "supplementalMeaningZh": "喝倒采",
+    "example": "Soldiers returned to the barrack before heavy rain.",
+    "exampleZh": "士兵在大雨前回到兵舍。",
     "group": "Core 12"
   },
   {
@@ -63927,9 +63927,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/meid/",
     "meaningZh": "製成的",
-    "supplementalMeaningZh": "人造的；成功的",
-    "example": "This table is made of recycled wood from old school desks.",
-    "exampleZh": "這張桌子是用舊課桌的回收木材製成的。",
+    "supplementalMeaningZh": "成功的；鋪好的",
+    "example": "This school bag is made from recycled plastic bottles.",
+    "exampleZh": "這個書包是用回收塑膠瓶製成的。",
     "group": "Core 12"
   },
   {
@@ -63948,10 +63948,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tempted",
     "partOfSpeech": "v",
     "pronunciation": "/'temptid/",
-    "meaningZh": "被誘惑的",
+    "meaningZh": "受到誘惑的",
     "supplementalMeaningZh": "很想做的",
-    "example": "Nina was tempted to buy another snack when she passed the night market.",
-    "exampleZh": "妮娜經過夜市時，很想再買一份點心。",
+    "example": "Nina was tempted to steal buns when hunger grew.",
+    "exampleZh": "飢餓加劇時，妮娜受到誘惑想偷包子。",
     "group": "Core 12"
   },
   {
@@ -63992,10 +63992,10 @@ export const sampleWords: WordEntry[] = [
     "word": "home",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/hәum/",
-    "meaningZh": "家",
-    "supplementalMeaningZh": "回家；故鄉；本地的",
-    "example": "Mia walked home after cram school because the last bus had already left.",
-    "exampleZh": "最後一班公車已開走，所以咪雅補習後走路回家。",
+    "meaningZh": "回家",
+    "supplementalMeaningZh": "家；故鄉",
+    "example": "The rescue boat brought every fisherman home before dark.",
+    "exampleZh": "救援船在天黑前把每位漁夫送回家。",
     "group": "Core 12"
   },
   {
@@ -64003,10 +64003,10 @@ export const sampleWords: WordEntry[] = [
     "word": "minute",
     "partOfSpeech": "n / vt / a",
     "pronunciation": "/'minit. mai'nju:t/",
-    "meaningZh": "分鐘",
-    "supplementalMeaningZh": "片刻；會議記錄；細小的",
-    "example": "Please wait a minute while I find my student ID card.",
-    "exampleZh": "請等一分鐘，我找一下我的學生證。",
+    "meaningZh": "細小的",
+    "supplementalMeaningZh": "分鐘；片刻；會議記錄",
+    "example": "A minute crack appeared near the porcelain handle.",
+    "exampleZh": "瓷把手旁出現一道細小裂痕。",
     "group": "Core 12"
   },
   {
@@ -64014,10 +64014,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bank",
     "partOfSpeech": "n",
     "pronunciation": "/bæŋk/",
-    "meaningZh": "銀行",
-    "supplementalMeaningZh": "河岸；堤岸",
-    "example": "My mother goes to the bank every Friday to deposit money.",
-    "exampleZh": "我媽媽每週五都會去銀行存錢。",
+    "meaningZh": "河岸",
+    "supplementalMeaningZh": "銀行；堤岸",
+    "example": "Children slid down the grassy bank after school.",
+    "exampleZh": "放學後，孩子們從長草的河岸滑下。",
     "group": "Core 12"
   },
   {
@@ -64036,10 +64036,10 @@ export const sampleWords: WordEntry[] = [
     "word": "used",
     "partOfSpeech": "a",
     "pronunciation": "/'ju:st/",
-    "meaningZh": "習慣於",
-    "supplementalMeaningZh": "二手的；用過的",
-    "example": "My brother is used to riding his scooter to school every morning.",
-    "exampleZh": "我哥哥習慣每天早上騎機車去上學。",
+    "meaningZh": "二手的",
+    "supplementalMeaningZh": "習慣於",
+    "example": "A used scooter stood outside the repair shop.",
+    "exampleZh": "一輛二手機車停在修車行外。",
     "group": "Core 12"
   },
   {
@@ -64047,8 +64047,8 @@ export const sampleWords: WordEntry[] = [
     "word": "senior",
     "partOfSpeech": "n / a",
     "pronunciation": "/'si:njә/",
-    "meaningZh": "年長者",
-    "supplementalMeaningZh": "資深的；年長的；畢業班學生",
+    "meaningZh": "資深的",
+    "supplementalMeaningZh": "年長的；高級的；畢業班學生",
     "example": "A senior nurse noticed the baby's breathing change.",
     "exampleZh": "一位資深護理師注意到嬰兒呼吸變化。",
     "group": "Core 12"
@@ -64058,7 +64058,7 @@ export const sampleWords: WordEntry[] = [
     "word": "directly",
     "partOfSpeech": "adv / conj",
     "pronunciation": "/di'rektli, dai'rektli/",
-    "meaningZh": "直接地",
+    "meaningZh": "直接",
     "supplementalMeaningZh": "立刻；坦率地",
     "example": "The taxi drove directly to the airport tollgate.",
     "exampleZh": "計程車直接開到機場收費站。",
@@ -64083,7 +64083,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "規劃",
     "supplementalMeaningZh": "計畫；籌備",
     "example": "Careful planning kept the hikers off the dangerous ridge.",
-    "exampleZh": "周詳的規劃讓登山客避開了危險的山脊。",
+    "exampleZh": "仔細規劃讓登山客避開危險山脊。",
     "group": "Core 12"
   },
   {
@@ -64102,10 +64102,10 @@ export const sampleWords: WordEntry[] = [
     "word": "unemployment",
     "partOfSpeech": "n",
     "pronunciation": "/.ʌnim'plɒimәnt/",
-    "meaningZh": "失業",
-    "supplementalMeaningZh": "失業人數；失業率",
+    "meaningZh": "失業人數",
+    "supplementalMeaningZh": "失業；失業率",
     "example": "Local unemployment rose after the cannery closed in March.",
-    "exampleZh": "罐頭廠三月關閉後，當地失業率上升。",
+    "exampleZh": "罐頭廠三月關閉後，當地失業人數上升。",
     "group": "Core 12"
   },
   {
@@ -64180,9 +64180,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'wɒ:kiŋ/",
     "meaningZh": "步行",
-    "supplementalMeaningZh": "步行的；走路",
+    "supplementalMeaningZh": "步行的；走路方式",
     "example": "Gentle walking to the harbor cleared her head after lunch.",
-    "exampleZh": "午餐後輕鬆步行到港口，讓她的思緒清醒許多。",
+    "exampleZh": "午餐後輕鬆走到港口，讓她的思緒清醒許多。",
     "group": "Core 12"
   },
   {
@@ -64190,10 +64190,10 @@ export const sampleWords: WordEntry[] = [
     "word": "driving",
     "partOfSpeech": "n / a",
     "pronunciation": "/'draiviŋ/",
-    "meaningZh": "駕駛",
-    "supplementalMeaningZh": "強勁的；推動的",
-    "example": "Driving at night can be tiring for new drivers.",
-    "exampleZh": "夜間駕駛對新手來說可能很累人。",
+    "meaningZh": "強勁的",
+    "supplementalMeaningZh": "駕駛；推動的",
+    "example": "The driving rain blurred the windshield on the mountain road.",
+    "exampleZh": "強勁大雨模糊了山路上的擋風玻璃。",
     "group": "Core 12"
   },
   {
@@ -64333,10 +64333,10 @@ export const sampleWords: WordEntry[] = [
     "word": "diagram",
     "partOfSpeech": "n",
     "pronunciation": "/'daiәɡræm/",
-    "meaningZh": "圖表",
-    "supplementalMeaningZh": "示意圖",
+    "meaningZh": "示意圖",
+    "supplementalMeaningZh": "",
     "example": "The diagram showed how rainwater reached the basement.",
-    "exampleZh": "示意圖顯示雨水如何流到地下室。",
+    "exampleZh": "圖表顯示雨水如何流到地下室。",
     "group": "Core 12"
   },
   {
@@ -64488,7 +64488,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/træns'pærәnt/",
     "meaningZh": "透明的",
-    "supplementalMeaningZh": "易懂的；坦誠的",
+    "supplementalMeaningZh": "清楚的；坦誠的",
     "example": "The transparent curtains softened the glare from the sea.",
     "exampleZh": "透明窗簾柔化了海面反光。",
     "group": "Core 12"
@@ -64498,10 +64498,10 @@ export const sampleWords: WordEntry[] = [
     "word": "nephew",
     "partOfSpeech": "n",
     "pronunciation": "/'nefju:/",
-    "meaningZh": "姪子",
-    "supplementalMeaningZh": "外甥",
+    "meaningZh": "外甥",
+    "supplementalMeaningZh": "姪子",
     "example": "My nephew hid warm dumplings in his lunchbox.",
-    "exampleZh": "我的姪子把熱水餃藏在午餐盒裡。",
+    "exampleZh": "我的外甥把熱水餃藏在午餐盒裡。",
     "group": "Core 12"
   },
   {
@@ -64587,9 +64587,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'speliŋ/",
     "meaningZh": "拼字",
-    "supplementalMeaningZh": "拼法",
+    "supplementalMeaningZh": "",
     "example": "The sign's spelling changed after the painter returned.",
-    "exampleZh": "油漆工回來後，招牌上的拼字變了。",
+    "exampleZh": "油漆工回來後，修正了招牌上的拼字。",
     "group": "Core 12"
   },
   {
@@ -64609,7 +64609,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "adv / a",
     "pronunciation": "/'saidweiz/",
     "meaningZh": "橫著",
-    "supplementalMeaningZh": "斜向一旁",
+    "supplementalMeaningZh": "側向的",
     "example": "The crab walked sideways across the wet sand.",
     "exampleZh": "螃蟹橫著走過濕沙地。",
     "group": "Core 12"
@@ -64663,10 +64663,10 @@ export const sampleWords: WordEntry[] = [
     "word": "motorcycle",
     "partOfSpeech": "n",
     "pronunciation": "/'mәutәsaikl/",
-    "meaningZh": "機車",
-    "supplementalMeaningZh": "摩托車",
+    "meaningZh": "摩托車",
+    "supplementalMeaningZh": "機車",
     "example": "A motorcycle splashed mud onto the shop window.",
-    "exampleZh": "一輛機車把泥水濺到店窗上。",
+    "exampleZh": "一輛摩托車把泥水濺到店窗上。",
     "group": "Core 12"
   },
   {
@@ -64707,8 +64707,8 @@ export const sampleWords: WordEntry[] = [
     "word": "kindness",
     "partOfSpeech": "n",
     "pronunciation": "/'kaindnis/",
-    "meaningZh": "仁慈",
-    "supplementalMeaningZh": "親切；善意",
+    "meaningZh": "親切",
+    "supplementalMeaningZh": "仁慈；善意",
     "example": "Her kindness made a frightening hospital night feel bearable.",
     "exampleZh": "她的善意，讓那個令人害怕的住院夜晚不再那麼難熬。",
     "group": "Core 12"
@@ -64828,8 +64828,8 @@ export const sampleWords: WordEntry[] = [
     "word": "annoy",
     "partOfSpeech": "vt",
     "pronunciation": "/ә'nɒi/",
-    "meaningZh": "使惱怒",
-    "supplementalMeaningZh": "打擾；使心煩",
+    "meaningZh": "惹惱",
+    "supplementalMeaningZh": "使心煩；騷擾",
     "example": "Mosquitoes annoy campers more than the cold wind.",
     "exampleZh": "比起冷風，蚊子更讓露營者心煩。",
     "group": "Core 12"
@@ -64906,9 +64906,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.disә'pru:vәl/",
     "meaningZh": "不贊成",
-    "supplementalMeaningZh": "反對",
+    "supplementalMeaningZh": "",
     "example": "Her disapproval showed when she pushed away the contract.",
-    "exampleZh": "她把合約推開時，明顯流露出不贊成的神情。",
+    "exampleZh": "她推開合約時，反對之意很明顯。",
     "group": "Core 12"
   },
   {
@@ -64928,9 +64928,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / adv",
     "pronunciation": "/'aut'dɒ:z/",
     "meaningZh": "在戶外",
-    "supplementalMeaningZh": "戶外；野外",
+    "supplementalMeaningZh": "戶外活動；野外",
     "example": "Meals taste better outdoors beside the river at dusk.",
-    "exampleZh": "黃昏時在河邊的戶外用餐，飯菜吃起來更美味。",
+    "exampleZh": "黃昏在河邊戶外吃飯味道更好。",
     "group": "Core 12"
   },
   {
@@ -65062,7 +65062,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "哈欠",
     "supplementalMeaningZh": "打哈欠",
     "example": "A loud yawn escaped from the sleepy driver.",
-    "exampleZh": "那位疲倦的駕駛忍不住打了個大哈欠。",
+    "exampleZh": "疲倦駕駛忍不住打了個大哈欠。",
     "group": "Core 12"
   },
   {
@@ -65071,9 +65071,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/bi:k/",
     "meaningZh": "鳥嘴",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "喙",
     "example": "The bird's beak tapped against the metal feeder.",
-    "exampleZh": "那隻鳥的嘴敲著金屬餵食器。",
+    "exampleZh": "鳥嘴敲著金屬餵食器。",
     "group": "Core 12"
   },
   {
@@ -65137,7 +65137,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'sɒ:lti/",
     "meaningZh": "鹹的",
-    "supplementalMeaningZh": "含鹽的；尖酸的",
+    "supplementalMeaningZh": "含鹽的；辛辣的",
     "example": "The salty wind left crystals on the ferry windows.",
     "exampleZh": "帶著鹽分的海風，在渡輪窗戶上留下結晶。",
     "group": "Core 12"
@@ -65214,7 +65214,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/'sju:tid/",
     "meaningZh": "適合的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "穿西裝的",
     "example": "This narrow pan is suited to frying dumplings.",
     "exampleZh": "這只窄鍋適合煎水餃。",
     "group": "Core 12"
@@ -65324,7 +65324,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/ә'mju:zd/",
     "meaningZh": "被逗樂的",
-    "supplementalMeaningZh": "覺得有趣的",
+    "supplementalMeaningZh": "愉快的",
     "example": "The amused children watched the clown chase his hat.",
     "exampleZh": "被逗樂的孩子看著小丑追帽子。",
     "group": "Core 12"
@@ -65356,10 +65356,10 @@ export const sampleWords: WordEntry[] = [
     "word": "congratulations",
     "partOfSpeech": "n",
     "pronunciation": "/-/",
-    "meaningZh": "恭喜",
-    "supplementalMeaningZh": "祝賀；賀詞",
-    "example": "Congratulations poured in after Mei passed the bar exam.",
-    "exampleZh": "美通過律師考試後，祝賀的訊息紛紛湧來。",
+    "meaningZh": "祝賀",
+    "supplementalMeaningZh": "賀詞",
+    "example": "Warm congratulations poured in after Mei passed the bar exam.",
+    "exampleZh": "美通過律師考試後，熱烈祝賀紛紛湧來。",
     "group": "Core 12"
   },
   {
@@ -65367,10 +65367,10 @@ export const sampleWords: WordEntry[] = [
     "word": "knitting",
     "partOfSpeech": "n",
     "pronunciation": "/'nitiŋ/",
-    "meaningZh": "編織",
-    "supplementalMeaningZh": "編織物；針織品",
+    "meaningZh": "針織物",
+    "supplementalMeaningZh": "編織",
     "example": "Her knitting slipped from the basket during the bus ride.",
-    "exampleZh": "她的編織物在公車上從籃子滑了出來。",
+    "exampleZh": "她的針織物在公車上從籃子滑出。",
     "group": "Core 12"
   },
   {
@@ -65631,8 +65631,8 @@ export const sampleWords: WordEntry[] = [
     "word": "module",
     "partOfSpeech": "n",
     "pronunciation": "/'mɒdju:l/",
-    "meaningZh": "模組",
-    "supplementalMeaningZh": "組件；單元",
+    "meaningZh": "組件",
+    "supplementalMeaningZh": "模組；單元",
     "example": "The solar module powered lights in the mountain hut.",
     "exampleZh": "太陽能模組為山屋提供照明用電。",
     "group": "Core 12"
@@ -65644,7 +65644,7 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'stændiŋ/",
     "meaningZh": "地位",
     "supplementalMeaningZh": "起立；常設的；持續的",
-    "example": "Her standing in the class improved after she won the speech contest.",
+    "example": "Her standing in the class rose after she won the speech contest.",
     "exampleZh": "她贏得演講比賽後，在班上的地位提升了。",
     "group": "Core 12"
   },
@@ -65732,8 +65732,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/dәu'mein/",
     "meaningZh": "領域",
     "supplementalMeaningZh": "範圍；網域；領土",
-    "example": "Marine biology became Lin's domain after he finished college.",
-    "exampleZh": "大學畢業後，海洋生物學成了阿林的專門領域。",
+    "example": "Marine biology became Lin's domain after college graduation.",
+    "exampleZh": "大學畢業後，海洋生物學成了林的領域。",
     "group": "Core 12"
   },
   {
@@ -65796,10 +65796,10 @@ export const sampleWords: WordEntry[] = [
     "word": "facilitate",
     "partOfSpeech": "vt",
     "pronunciation": "/fә'siliteit/",
-    "meaningZh": "促進",
-    "supplementalMeaningZh": "使更容易；使便利",
+    "meaningZh": "有助於",
+    "supplementalMeaningZh": "促進；使更容易",
     "example": "Clear signs facilitate boarding at the busy ferry terminal.",
-    "exampleZh": "清楚的標示使旅客在繁忙的渡輪站更容易登船。",
+    "exampleZh": "清楚的標示，方便旅客在繁忙的渡輪站登船。",
     "group": "Core 12"
   },
   {
@@ -65829,10 +65829,10 @@ export const sampleWords: WordEntry[] = [
     "word": "resume",
     "partOfSpeech": "vt / vi / n",
     "pronunciation": "/ri'zju:m/",
-    "meaningZh": "重新開始",
-    "supplementalMeaningZh": "恢復；繼續",
+    "meaningZh": "恢復",
+    "supplementalMeaningZh": "重新開始；履歷；摘要",
     "example": "Classes resume after workers clean the flooded rooms.",
-    "exampleZh": "工人清理完淹水的教室後，課程就會重新開始。",
+    "exampleZh": "工人清理淹水教室後，課程恢復。",
     "group": "Core 12"
   },
   {
@@ -65840,10 +65840,10 @@ export const sampleWords: WordEntry[] = [
     "word": "orientation",
     "partOfSpeech": "n",
     "pronunciation": "/.ɒ:rien'teiʃәn/",
-    "meaningZh": "方位",
-    "supplementalMeaningZh": "迎新；取向；方向",
+    "meaningZh": "方向",
+    "supplementalMeaningZh": "方位；迎新；取向",
     "example": "The map showed the correct orientation of the old temple.",
-    "exampleZh": "地圖顯示了這座舊寺廟的正確方位。",
+    "exampleZh": "地圖顯示舊寺廟的正確方向。",
     "group": "Core 12"
   },
   {
@@ -65863,7 +65863,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / n",
     "pronunciation": "/'aisәleit/",
     "meaningZh": "隔離",
-    "supplementalMeaningZh": "使孤立；分離",
+    "supplementalMeaningZh": "孤立",
     "example": "Nurses isolate patients with fever behind glass doors.",
     "exampleZh": "護理師把發燒病患隔離在玻璃門後。",
     "group": "Core 12"
@@ -65876,7 +65876,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "功能的",
     "supplementalMeaningZh": "實用的；運作正常的",
     "example": "The chart showed functional differences between the two clinics.",
-    "exampleZh": "圖表顯示這兩間診所在功能上的差異。",
+    "exampleZh": "圖表顯示兩間診所的功能差異。",
     "group": "Core 12"
   },
   {
@@ -65887,7 +65887,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "騷擾",
     "supplementalMeaningZh": "掠奪；折磨",
     "example": "Creditors began to harry him with calls before breakfast.",
-    "exampleZh": "債主在早餐前就開始打電話騷擾他。",
+    "exampleZh": "債主早餐前就開始打電話騷擾他。",
     "group": "Core 12"
   },
   {
@@ -65909,7 +65909,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "喘氣",
     "supplementalMeaningZh": "氣喘吁吁地說",
     "example": "After the sprint, I could only pant beside the fence.",
-    "exampleZh": "衝刺之後，我只能在圍欄旁喘氣。",
+    "exampleZh": "衝刺後，我只能在圍欄旁喘氣。",
     "group": "Core 12"
   },
   {
@@ -66050,7 +66050,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/rәuz/",
     "meaningZh": "玫瑰",
-    "supplementalMeaningZh": "玫瑰色；上升",
+    "supplementalMeaningZh": "玫瑰色；升起了",
     "example": "One rose lay beside the teacup after the wedding tea ceremony.",
     "exampleZh": "婚禮奉茶後，一朵玫瑰放在茶杯旁。",
     "group": "Core 13"
@@ -66083,7 +66083,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'prәutәkɒl/",
     "meaningZh": "禮儀",
-    "supplementalMeaningZh": "協定；草案",
+    "supplementalMeaningZh": "協定；議定書",
     "example": "The palace protocol required guests to bow before greeting the prince.",
     "exampleZh": "宮廷禮儀要求賓客先鞠躬再問候王子。",
     "group": "Core 13"
@@ -66173,7 +66173,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "非宗教的",
     "supplementalMeaningZh": "世俗的",
     "example": "A secular charity rented the church hall for winter meals.",
-    "exampleZh": "一個非宗教的慈善團體租下教堂大廳供應冬季餐點。",
+    "exampleZh": "一個世俗慈善團體租下教堂大廳供應冬餐。",
     "group": "Core 13"
   },
   {
@@ -66226,7 +66226,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/em'pirikәl/",
     "meaningZh": "實證的",
-    "supplementalMeaningZh": "經驗主義的",
+    "supplementalMeaningZh": "經驗的",
     "example": "Empirical evidence convinced the coach to change the warmup routine.",
     "exampleZh": "實證證據說服教練改變熱身流程。",
     "group": "Core 13"
@@ -66358,7 +66358,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a",
     "pronunciation": "/in'klaind/",
     "meaningZh": "傾向於",
-    "supplementalMeaningZh": "傾斜的",
+    "supplementalMeaningZh": "斜的",
     "example": "Tara felt inclined to forgive him after reading the apology.",
     "exampleZh": "塔拉讀完道歉信後，傾向於原諒他。",
     "group": "Core 13"
@@ -66434,10 +66434,10 @@ export const sampleWords: WordEntry[] = [
     "word": "deed",
     "partOfSpeech": "n / vt",
     "pronunciation": "/di:d/",
-    "meaningZh": "行為",
-    "supplementalMeaningZh": "契約；功績",
-    "example": "Helping the lost child find her mother was a kind deed.",
-    "exampleZh": "幫助迷路的小孩找到媽媽是一件善行。",
+    "meaningZh": "契約",
+    "supplementalMeaningZh": "行為",
+    "example": "The lawyer found the deed folded inside a biscuit tin.",
+    "exampleZh": "律師在餅乾鐵盒裡找到折好的契約。",
     "group": "Core 13"
   },
   {
@@ -66445,10 +66445,10 @@ export const sampleWords: WordEntry[] = [
     "word": "consistency",
     "partOfSpeech": "n",
     "pronunciation": "/kәn'sistәnsi/",
-    "meaningZh": "一致性",
-    "supplementalMeaningZh": "濃稠度",
-    "example": "Consistency is important if you want to improve your English.",
-    "exampleZh": "想提升英文的話，持之以恆很重要。",
+    "meaningZh": "濃稠度",
+    "supplementalMeaningZh": "一致性",
+    "example": "The soup reached the perfect consistency after ten more minutes.",
+    "exampleZh": "再煮十分鐘後，湯達到剛好的濃稠度。",
     "group": "Core 13"
   },
   {
@@ -66459,7 +66459,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "審計員",
     "supplementalMeaningZh": "旁聽生",
     "example": "An auditor found the missing receipt under the cash drawer.",
-    "exampleZh": "審計員在收銀抽屜下找到遺失的收據。",
+    "exampleZh": "審計員在收銀抽屜下找到遺失收據。",
     "group": "Core 13"
   },
   {
@@ -66767,7 +66767,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "額頭",
     "supplementalMeaningZh": "眉毛",
     "example": "Sweat gathered on Omar's brow as the oven door opened.",
-    "exampleZh": "烤箱門打開時，汗水聚在奧瑪的額頭上。",
+    "exampleZh": "烤箱門打開時，汗水聚在奧瑪額頭上。",
     "group": "Core 13"
   },
   {
@@ -66930,9 +66930,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'hediŋ/",
     "meaningZh": "標題",
-    "supplementalMeaningZh": "前進方向",
-    "example": "The bold heading at the top of the page told students where to begin.",
-    "exampleZh": "頁面頂端的粗體標題告訴學生從哪裡開始。",
+    "supplementalMeaningZh": "方向",
+    "example": "The bold heading warned hikers about sudden rockfall.",
+    "exampleZh": "粗體標題提醒健行者小心突發落石。",
     "group": "Core 13"
   },
   {
@@ -67072,10 +67072,10 @@ export const sampleWords: WordEntry[] = [
     "word": "submission",
     "partOfSpeech": "n",
     "pronunciation": "/sәb'miʃәn/",
-    "meaningZh": "提交",
-    "supplementalMeaningZh": "屈服；投稿作品",
+    "meaningZh": "遞交",
+    "supplementalMeaningZh": "屈服；意見",
     "example": "Online submission closes at midnight, so upload the form now.",
-    "exampleZh": "線上提交將在午夜截止，所以現在就上傳表格吧。",
+    "exampleZh": "線上提交午夜截止，所以現在就上傳表格。",
     "group": "Core 13"
   },
   {
@@ -67117,7 +67117,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/rәub/",
     "meaningZh": "長袍",
-    "supplementalMeaningZh": "禮袍；浴袍",
+    "supplementalMeaningZh": "禮袍",
     "example": "The judge hung her black robe behind the chamber door.",
     "exampleZh": "法官把黑色法袍掛在辦公室門後。",
     "group": "Core 13"
@@ -67149,10 +67149,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tenure",
     "partOfSpeech": "n",
     "pronunciation": "/'tenjuә/",
-    "meaningZh": "任期",
-    "supplementalMeaningZh": "終身職；保有期",
-    "example": "The professor's tenure as department head ended after four years.",
-    "exampleZh": "那位教授擔任系主任的任期四年後結束。",
+    "meaningZh": "租用期間",
+    "supplementalMeaningZh": "任期；終身職",
+    "example": "The lease set the tenant's tenure at three years.",
+    "exampleZh": "租約把租戶的保有期定為三年。",
     "group": "Core 13"
   },
   {
@@ -67193,8 +67193,8 @@ export const sampleWords: WordEntry[] = [
     "word": "variance",
     "partOfSpeech": "n",
     "pronunciation": "/'vєәriәns/",
-    "meaningZh": "差異",
-    "supplementalMeaningZh": "分歧；變異數",
+    "meaningZh": "變異",
+    "supplementalMeaningZh": "差異；分歧",
     "example": "Rainfall variance made the tea harvest hard to predict.",
     "exampleZh": "降雨量變化太大，茶葉收成也難以預測。",
     "group": "Core 13"
@@ -67216,7 +67216,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'kɒrәleit/",
     "meaningZh": "相關",
-    "supplementalMeaningZh": "使相互關聯；相關物",
+    "supplementalMeaningZh": "使有關聯；相關物",
     "example": "Sleep hours correlate strongly with reaction time in the trial.",
     "exampleZh": "試驗中睡眠時數和反應時間高度相關。",
     "group": "Core 13"
@@ -67251,7 +67251,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "佈局",
     "supplementalMeaningZh": "版面",
     "example": "The kitchen layout lets cooks reach every pan quickly.",
-    "exampleZh": "這種廚房佈局，讓廚師能迅速拿到每一個鍋子。",
+    "exampleZh": "這種廚房格局，讓廚師能迅速拿到每一只鍋子。",
     "group": "Core 13"
   },
   {
@@ -67380,10 +67380,10 @@ export const sampleWords: WordEntry[] = [
     "word": "exclaim",
     "partOfSpeech": "v",
     "pronunciation": "/iks'kleim/",
-    "meaningZh": "驚呼",
-    "supplementalMeaningZh": "大聲說",
+    "meaningZh": "大叫",
+    "supplementalMeaningZh": "",
     "example": "Children exclaim with delight when the fireworks begin.",
-    "exampleZh": "煙火開始時，孩子們高興地驚呼。",
+    "exampleZh": "煙火開始時，孩子們開心地大叫。",
     "group": "Core 13"
   },
   {
@@ -67436,9 +67436,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'imidʒәri/",
     "meaningZh": "意象",
-    "supplementalMeaningZh": "圖像；形象描寫",
-    "example": "The poet used vivid imagery of storms to describe the crisis.",
-    "exampleZh": "詩人用生動的風暴意象來描寫那場危機。",
+    "supplementalMeaningZh": "比喻；圖像",
+    "example": "The speech used storm imagery to describe the crisis.",
+    "exampleZh": "演說用風暴比喻描述那場危機。",
     "group": "Core 13"
   },
   {
@@ -67567,10 +67567,10 @@ export const sampleWords: WordEntry[] = [
     "word": "inheritance",
     "partOfSpeech": "n",
     "pronunciation": "/in'heritәns/",
-    "meaningZh": "繼承的財產",
+    "meaningZh": "遺產",
     "supplementalMeaningZh": "繼承；遺傳",
     "example": "Her inheritance included a watch, two letters, and farmland.",
-    "exampleZh": "她繼承的財產包括一只錶、兩封信和農地。",
+    "exampleZh": "她的遺產包括一只錶、兩封信和農地。",
     "group": "Core 13"
   },
   {
@@ -67578,10 +67578,10 @@ export const sampleWords: WordEntry[] = [
     "word": "amusement",
     "partOfSpeech": "n",
     "pronunciation": "/ә'mju:zmәnt/",
-    "meaningZh": "娛樂",
-    "supplementalMeaningZh": "消遣；愉快",
+    "meaningZh": "興味",
+    "supplementalMeaningZh": "娛樂",
     "example": "Grandpa watched the magician with quiet amusement from the sofa.",
-    "exampleZh": "爺爺坐在沙發上，面帶淡淡的笑意看魔術師表演。",
+    "exampleZh": "爺爺坐在沙發上，帶著淡淡興味看魔術師。",
     "group": "Core 13"
   },
   {
@@ -67589,8 +67589,8 @@ export const sampleWords: WordEntry[] = [
     "word": "lick",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/lik/",
-    "meaningZh": "舔",
-    "supplementalMeaningZh": "舔一下",
+    "meaningZh": "舔一下",
+    "supplementalMeaningZh": "少量",
     "example": "The child gave the melting ice cream one careful lick.",
     "exampleZh": "孩子小心舔了一口正在融化的冰淇淋。",
     "group": "Core 13"
@@ -67601,7 +67601,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'pæstʃә/",
     "meaningZh": "牧場",
-    "supplementalMeaningZh": "牧草地",
+    "supplementalMeaningZh": "放牧",
     "example": "Cows grazed in the pasture below the misty ridge.",
     "exampleZh": "牛群在霧氣山脊下的牧場吃草。",
     "group": "Core 13"
@@ -67623,7 +67623,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/kræb/",
     "meaningZh": "螃蟹",
-    "supplementalMeaningZh": "蟹肉",
+    "supplementalMeaningZh": "",
     "example": "A red crab crawled sideways into the tide pool.",
     "exampleZh": "一隻紅螃蟹橫著爬進潮池。",
     "group": "Core 13"
@@ -67633,10 +67633,10 @@ export const sampleWords: WordEntry[] = [
     "word": "vegetation",
     "partOfSpeech": "n",
     "pronunciation": "/.vedʒi'teiʃәn/",
-    "meaningZh": "植物",
-    "supplementalMeaningZh": "植被",
+    "meaningZh": "植被",
+    "supplementalMeaningZh": "",
     "example": "Dense vegetation hid the abandoned railway from the road.",
-    "exampleZh": "茂密的植物遮住了路旁的廢棄鐵道。",
+    "exampleZh": "茂密植被遮住路旁的廢棄鐵道。",
     "group": "Core 13"
   },
   {
@@ -67666,8 +67666,8 @@ export const sampleWords: WordEntry[] = [
     "word": "undertaking",
     "partOfSpeech": "n",
     "pronunciation": "/.ʌndә'teikiŋ/",
-    "meaningZh": "事業",
-    "supplementalMeaningZh": "任務；承諾",
+    "meaningZh": "任務",
+    "supplementalMeaningZh": "工程；承諾",
     "example": "Restoring the temple roof became a costly undertaking.",
     "exampleZh": "修復寺廟屋頂成了一項昂貴的大工程。",
     "group": "Core 13"
@@ -67821,9 +67821,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'swi:piŋ/",
     "meaningZh": "全面的",
-    "supplementalMeaningZh": "影響深遠的",
-    "example": "The school announced sweeping changes to the lunch menu this semester.",
-    "exampleZh": "學校宣布本學期將全面更動午餐菜單。",
+    "supplementalMeaningZh": "掃除",
+    "example": "Sweeping changes turned the quiet pier into a market.",
+    "exampleZh": "大刀闊斧的改造，把安靜的碼頭變成了市集。",
     "group": "Core 13"
   },
   {
@@ -67876,7 +67876,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/ɑ:k/",
     "meaningZh": "弧線",
-    "supplementalMeaningZh": "弧形",
+    "supplementalMeaningZh": "弧光",
     "example": "The comet traced a pale arc above the observatory.",
     "exampleZh": "彗星在天文台上空劃出一道淡淡的弧線。",
     "group": "Core 13"
@@ -67963,10 +67963,10 @@ export const sampleWords: WordEntry[] = [
     "word": "turning",
     "partOfSpeech": "n",
     "pronunciation": "/'tә:niŋ/",
-    "meaningZh": "轉彎",
-    "supplementalMeaningZh": "轉折點；車削",
-    "example": "The turning on the mountain road was so sharp that the bus slowed down.",
-    "exampleZh": "山路上的轉彎非常急，公車因此放慢了速度。",
+    "meaningZh": "轉彎處",
+    "supplementalMeaningZh": "岔路；轉折點",
+    "example": "Take the first turning on the left after the temple.",
+    "exampleZh": "過了廟之後，在第一個轉彎處左轉。",
     "group": "Core 13"
   },
   {
@@ -68019,9 +68019,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/skɑ:f/",
     "meaningZh": "圍巾",
-    "supplementalMeaningZh": "頭巾；狼吞虎嚥",
-    "example": "Mina wrapped a red scarf around her neck before leaving the house.",
-    "exampleZh": "米娜出門前把一條紅圍巾圍在脖子上。",
+    "supplementalMeaningZh": "頭巾",
+    "example": "Mina wrapped a red scarf around the cracked statue.",
+    "exampleZh": "米娜把紅圍巾繞在裂開的雕像上。",
     "group": "Core 13"
   },
   {
@@ -68118,9 +68118,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/kәm'pɑ:tmәnt/",
     "meaningZh": "隔間",
-    "supplementalMeaningZh": "車廂包廂；分隔空間",
-    "example": "She hid the passport in a secret compartment of her suitcase.",
-    "exampleZh": "她把護照藏在行李箱的一個暗格裡。",
+    "supplementalMeaningZh": "車廂包廂",
+    "example": "She hid the passport in a secret suitcase compartment.",
+    "exampleZh": "她把護照藏在行李箱的暗格裡。",
     "group": "Core 13"
   },
   {
@@ -68172,10 +68172,10 @@ export const sampleWords: WordEntry[] = [
     "word": "ensemble",
     "partOfSpeech": "n",
     "pronunciation": "/ɒn'sɒŋblә/",
-    "meaningZh": "合奏團",
-    "supplementalMeaningZh": "全套服裝；整體",
-    "example": "The school ensemble practiced a new piece after class every Friday.",
-    "exampleZh": "學校的合奏團每週五放學後練習一首新曲子。",
+    "meaningZh": "全套服裝",
+    "supplementalMeaningZh": "合奏團；整體",
+    "example": "Her linen ensemble looked crisp at the courthouse ceremony.",
+    "exampleZh": "她的亞麻全套服裝在法院典禮上很俐落。",
     "group": "Core 13"
   },
   {
@@ -68183,10 +68183,10 @@ export const sampleWords: WordEntry[] = [
     "word": "cone",
     "partOfSpeech": "n / vt",
     "pronunciation": "/kәun/",
-    "meaningZh": "圓錐體",
-    "supplementalMeaningZh": "球果；甜筒",
-    "example": "The ice cream cone melted quickly under the hot afternoon sun.",
-    "exampleZh": "冰淇淋甜筒在炎熱的午後陽光下很快就融化了。",
+    "meaningZh": "球果",
+    "supplementalMeaningZh": "圓錐體",
+    "example": "A pine cone fell into the baby's stroller.",
+    "exampleZh": "一顆松果掉進嬰兒推車裡。",
     "group": "Core 13"
   },
   {
@@ -68205,10 +68205,10 @@ export const sampleWords: WordEntry[] = [
     "word": "thanksgiving",
     "partOfSpeech": "n",
     "pronunciation": "/'θæŋks.giviŋ/",
-    "meaningZh": "感恩節",
-    "supplementalMeaningZh": "感恩；感謝",
-    "example": "Our family eats turkey together every year at Thanksgiving.",
-    "exampleZh": "我們家每年感恩節都會一起吃火雞。",
+    "meaningZh": "感謝",
+    "supplementalMeaningZh": "感恩節",
+    "example": "Their quiet thanksgiving came after the fishing boat returned safely.",
+    "exampleZh": "漁船平安返航後，他們默默表達感謝。",
     "group": "Core 13"
   },
   {
@@ -68261,7 +68261,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/flɒ:/",
     "meaningZh": "瑕疵",
-    "supplementalMeaningZh": "缺陷；裂縫",
+    "supplementalMeaningZh": "裂縫",
     "example": "A tiny flaw in the jade pendant caught her eye.",
     "exampleZh": "玉墜上的小瑕疵吸引了她的目光。",
     "group": "Core 13"
@@ -68271,10 +68271,10 @@ export const sampleWords: WordEntry[] = [
     "word": "nucleus",
     "partOfSpeech": "n",
     "pronunciation": "/'nju:kliәs/",
-    "meaningZh": "細胞核",
-    "supplementalMeaningZh": "原子核；核心",
-    "example": "The nucleus controls the activities of the cell.",
-    "exampleZh": "細胞核控制細胞的各種活動。",
+    "meaningZh": "核心",
+    "supplementalMeaningZh": "細胞核；原子核",
+    "example": "The old library became the nucleus of the new campus.",
+    "exampleZh": "舊圖書館成了新校園的核心。",
     "group": "Core 13"
   },
   {
@@ -68316,7 +68316,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'sɒlitәri/",
     "meaningZh": "單獨的",
-    "supplementalMeaningZh": "孤獨的；獨居者",
+    "supplementalMeaningZh": "獨居者",
     "example": "A solitary lantern burned beside the empty ferry dock.",
     "exampleZh": "空蕩渡輪碼頭旁亮著一盞孤燈。",
     "group": "Core 13"
@@ -68381,10 +68381,10 @@ export const sampleWords: WordEntry[] = [
     "word": "tub",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/tʌb/",
-    "meaningZh": "浴缸",
-    "supplementalMeaningZh": "桶子；盆",
+    "meaningZh": "浴盆",
+    "supplementalMeaningZh": "桶子",
     "example": "The toddler filled the tub with plastic boats.",
-    "exampleZh": "幼兒把浴缸裝滿塑膠船。",
+    "exampleZh": "幼兒把浴盆裝滿塑膠船。",
     "group": "Core 13"
   },
   {
@@ -68657,7 +68657,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi",
     "pronunciation": "/'sɒrәu/",
     "meaningZh": "悲傷",
-    "supplementalMeaningZh": "悲痛；憾事",
+    "supplementalMeaningZh": "遺憾",
     "example": "Sorrow filled the room after the old dog died.",
     "exampleZh": "老狗過世後，房間裡籠罩著悲傷的氣氛。",
     "group": "Core 13"
@@ -68679,9 +68679,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/әuθ/",
     "meaningZh": "誓言",
-    "supplementalMeaningZh": "咒罵語；宣誓",
+    "supplementalMeaningZh": "咒罵",
     "example": "The witness repeated the oath in a steady voice.",
-    "exampleZh": "證人用平穩的聲音複誦誓言。",
+    "exampleZh": "證人用穩定聲音重複誓言。",
     "group": "Core 13"
   },
   {
@@ -68711,10 +68711,10 @@ export const sampleWords: WordEntry[] = [
     "word": "devotion",
     "partOfSpeech": "n",
     "pronunciation": "/di'vәuʃәn/",
-    "meaningZh": "奉獻",
-    "supplementalMeaningZh": "熱愛；虔誠",
+    "meaningZh": "投入",
+    "supplementalMeaningZh": "熱愛",
     "example": "Her devotion to the injured child moved the nurses.",
-    "exampleZh": "她對受傷孩子的奉獻精神感動了護理師。",
+    "exampleZh": "她對受傷孩子的投入感動了護理師。",
     "group": "Core 13"
   },
   {
@@ -68723,9 +68723,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'riәlizm/",
     "meaningZh": "寫實主義",
-    "supplementalMeaningZh": "現實感；逼真",
-    "example": "The painter's realism made the wet street seem to glisten.",
-    "exampleZh": "畫家的寫實手法讓濕漉漉的街道彷彿閃著光。",
+    "supplementalMeaningZh": "現實主義",
+    "example": "Realism in the painting made the wet street glisten.",
+    "exampleZh": "畫作逼真的筆觸，讓濕漉漉的街道閃著光。",
     "group": "Core 13"
   },
   {
@@ -68799,8 +68799,8 @@ export const sampleWords: WordEntry[] = [
     "word": "underlie",
     "partOfSpeech": "vt",
     "pronunciation": "/.ʌndә'lai/",
-    "meaningZh": "構成基礎",
-    "supplementalMeaningZh": "位於下方",
+    "meaningZh": "位於下方",
+    "supplementalMeaningZh": "構成基礎",
     "example": "Old river stones underlie the temple's front steps.",
     "exampleZh": "寺廟前方的台階底下鋪著古老的河石。",
     "group": "Core 13"
@@ -68821,8 +68821,8 @@ export const sampleWords: WordEntry[] = [
     "word": "specialty",
     "partOfSpeech": "n / a",
     "pronunciation": "/'speʃәlti/",
-    "meaningZh": "專長",
-    "supplementalMeaningZh": "特產；招牌菜",
+    "meaningZh": "特產",
+    "supplementalMeaningZh": "專長",
     "example": "Mullet roe is the harbor town's winter specialty.",
     "exampleZh": "烏魚子是這座港鎮的冬季特產。",
     "group": "Core 13"
@@ -68854,10 +68854,10 @@ export const sampleWords: WordEntry[] = [
     "word": "touchdown",
     "partOfSpeech": "n",
     "pronunciation": "/'tʌtʃdaun/",
-    "meaningZh": "觸地得分",
-    "supplementalMeaningZh": "著陸",
+    "meaningZh": "著地",
+    "supplementalMeaningZh": "觸地得分",
     "example": "The plane's touchdown was rough enough to wake sleeping passengers.",
-    "exampleZh": "飛機著陸時很顛簸，吵醒了熟睡的乘客。",
+    "exampleZh": "飛機著地時很顛簸，吵醒了熟睡乘客。",
     "group": "Core 13"
   },
   {
@@ -68866,9 +68866,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/sin'θetik/",
     "meaningZh": "人造的",
-    "supplementalMeaningZh": "合成纖維",
+    "supplementalMeaningZh": "合成物",
     "example": "Synthetic leather covered the cafe's bright yellow chairs.",
-    "exampleZh": "人造皮革包覆著咖啡館亮黃色的椅子。",
+    "exampleZh": "人造皮革包著咖啡館亮黃色椅子。",
     "group": "Core 13"
   },
   {
@@ -69009,9 +69009,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'daiәtәri/",
     "meaningZh": "飲食的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "規定飲食",
     "example": "Dietary changes helped Mr. Chen control his blood sugar.",
-    "exampleZh": "飲食改變幫助陳先生控制血糖。",
+    "exampleZh": "飲食改變幫陳先生控制血糖。",
     "group": "Core 13"
   },
   {
@@ -69030,8 +69030,8 @@ export const sampleWords: WordEntry[] = [
     "word": "liquor",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'likә/",
-    "meaningZh": "烈酒",
-    "supplementalMeaningZh": "酒精飲料；汁液",
+    "meaningZh": "酒",
+    "supplementalMeaningZh": "液體",
     "example": "The chef added rice liquor to the ginger soup.",
     "exampleZh": "主廚在薑湯裡加入米酒。",
     "group": "Core 13"
@@ -69085,8 +69085,8 @@ export const sampleWords: WordEntry[] = [
     "word": "graduation",
     "partOfSpeech": "n",
     "pronunciation": "/.grædʒu'eiʃәn/",
-    "meaningZh": "畢業",
-    "supplementalMeaningZh": "畢業典禮；刻度",
+    "meaningZh": "畢業典禮",
+    "supplementalMeaningZh": "刻度",
     "example": "Graduation brought her parents to tears in the auditorium.",
     "exampleZh": "畢業典禮上，她的父母在禮堂裡感動落淚。",
     "group": "Core 13"
@@ -69154,7 +69154,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "殘餘物",
     "supplementalMeaningZh": "遺跡；剩餘的",
     "example": "A remnant of blue silk lined the drawer.",
-    "exampleZh": "一塊藍色的絲綢碎料襯在抽屜裡。",
+    "exampleZh": "一塊藍色絲綢碎布襯在抽屜裡。",
     "group": "Core 13"
   },
   {
@@ -69339,9 +69339,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt",
     "pronunciation": "/'devәsteit/",
     "meaningZh": "毀壞",
-    "supplementalMeaningZh": "使震驚；使悲痛",
+    "supplementalMeaningZh": "使震驚",
     "example": "One careless spark could devastate the entire pine forest.",
-    "exampleZh": "一點火星就可能毀掉整片松林。",
+    "exampleZh": "一點火星就可能毀壞整片松林。",
     "group": "Core 13"
   },
   {
@@ -69371,10 +69371,10 @@ export const sampleWords: WordEntry[] = [
     "word": "polar",
     "partOfSpeech": "a / n",
     "pronunciation": "/'pәulә/",
-    "meaningZh": "極地的",
-    "supplementalMeaningZh": "兩極的；截然相反的",
+    "meaningZh": "完全相反的",
+    "supplementalMeaningZh": "極地的；兩極的",
     "example": "The twins held polar opinions about selling the orchard.",
-    "exampleZh": "雙胞胎對出售果園持截然相反的意見。",
+    "exampleZh": "雙胞胎對出售果園持完全相反的意見。",
     "group": "Core 13"
   },
   {
@@ -69482,7 +69482,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi",
     "pronunciation": "/kә'læbәreit/",
     "meaningZh": "合作",
-    "supplementalMeaningZh": "通敵",
+    "supplementalMeaningZh": "勾結",
     "example": "Two potters collaborate on each teapot in the studio.",
     "exampleZh": "兩位陶工在工作室合作，製作每一把茶壺。",
     "group": "Core 13"
@@ -69582,8 +69582,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'ʌʃә/",
     "meaningZh": "引座員",
     "supplementalMeaningZh": "引導；招待員",
-    "example": "The usher guided late guests to the balcony seats.",
-    "exampleZh": "引座員帶遲到的賓客到樓上座位。",
+    "example": "An usher guided late guests to the balcony seats.",
+    "exampleZh": "引座員帶遲到賓客到樓上座位。",
     "group": "Core 13"
   },
   {
@@ -69603,7 +69603,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'presiŋ/",
     "meaningZh": "緊迫的",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "壓製品",
     "example": "A pressing deadline kept the tailor sewing past midnight.",
     "exampleZh": "交件期限緊迫，裁縫一路縫到半夜以後。",
     "group": "Core 13"
@@ -69756,8 +69756,8 @@ export const sampleWords: WordEntry[] = [
     "word": "ecology",
     "partOfSpeech": "n",
     "pronunciation": "/i:'kɒlәdʒi/",
-    "meaningZh": "生態",
-    "supplementalMeaningZh": "生態學",
+    "meaningZh": "生態學",
+    "supplementalMeaningZh": "生態",
     "example": "Ecology shaped the plan for restoring the riverbank.",
     "exampleZh": "生態學影響了修復河岸的方案。",
     "group": "Core 13"
@@ -69767,8 +69767,8 @@ export const sampleWords: WordEntry[] = [
     "word": "lurk",
     "partOfSpeech": "n / vi",
     "pronunciation": "/lә:k/",
-    "meaningZh": "潛伏",
-    "supplementalMeaningZh": "埋伏；暗藏",
+    "meaningZh": "暗藏",
+    "supplementalMeaningZh": "",
     "example": "Scams can lurk behind cheerful travel advertisements online.",
     "exampleZh": "網路上，愉快的旅遊廣告背後可能暗藏詐騙。",
     "group": "Core 13"
@@ -69813,8 +69813,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'mægnit/",
     "meaningZh": "磁鐵",
     "supplementalMeaningZh": "吸引人的事物",
-    "example": "The lighthouse became a magnet for storm photographers.",
-    "exampleZh": "燈塔成了吸引風暴攝影師的地方。",
+    "example": "Lily stuck the class schedule on the fridge with a magnet.",
+    "exampleZh": "莉莉用磁鐵把課表貼在冰箱上。",
     "group": "Core 13"
   },
   {
@@ -69877,8 +69877,8 @@ export const sampleWords: WordEntry[] = [
     "word": "clearance",
     "partOfSpeech": "n",
     "pronunciation": "/'kliәrәns/",
-    "meaningZh": "清除",
-    "supplementalMeaningZh": "間隙；批准；特價出清",
+    "meaningZh": "間隙",
+    "supplementalMeaningZh": "清除；批准；特價出清",
     "example": "The truck lacked clearance under the low bridge.",
     "exampleZh": "卡車與低橋之間的淨高不足，無法通過。",
     "group": "Core 13"
@@ -70109,9 +70109,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/.imi'teiʃәn/",
     "meaningZh": "仿製品",
-    "supplementalMeaningZh": "模仿；贗品",
+    "supplementalMeaningZh": "模仿；仿造",
     "example": "The imitation jade bracelet turned green in the rain.",
-    "exampleZh": "那條仿玉手環淋雨後變綠了。",
+    "exampleZh": "仿玉手環在雨中變綠。",
     "group": "Core 13"
   },
   {
@@ -70164,7 +70164,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/sɒ:/",
     "meaningZh": "鋸子",
-    "supplementalMeaningZh": "鋸；格言",
+    "supplementalMeaningZh": "鋸；諺語",
     "example": "Nina hung the saw above the workbench after sharpening it.",
     "exampleZh": "妮娜磨利鋸子後，把它掛在工作台上方。",
     "group": "Core 13"
@@ -70196,10 +70196,10 @@ export const sampleWords: WordEntry[] = [
     "word": "lever",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/'levә/",
-    "meaningZh": "槓桿",
-    "supplementalMeaningZh": "控制桿；撬動",
+    "meaningZh": "控制桿",
+    "supplementalMeaningZh": "槓桿；撬動",
     "example": "Pull the red lever to release the loading gate.",
-    "exampleZh": "拉下紅色控制桿就能打開裝貨門。",
+    "exampleZh": "拉紅色槓桿即可放下裝貨門。",
     "group": "Core 13"
   },
   {
@@ -70229,10 +70229,10 @@ export const sampleWords: WordEntry[] = [
     "word": "probation",
     "partOfSpeech": "n",
     "pronunciation": "/prәu'beiʃәn/",
-    "meaningZh": "試用期",
-    "supplementalMeaningZh": "緩刑；察看期",
-    "example": "The new employee met her manager weekly during probation.",
-    "exampleZh": "試用期間，這位新員工每週都和主管見面。",
+    "meaningZh": "緩刑",
+    "supplementalMeaningZh": "試用期",
+    "example": "The offender met his counselor weekly during probation.",
+    "exampleZh": "緩刑期間，那名違規者每週見輔導員。",
     "group": "Core 13"
   },
   {
@@ -70251,8 +70251,8 @@ export const sampleWords: WordEntry[] = [
     "word": "crest",
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/krest/",
-    "meaningZh": "頂部",
-    "supplementalMeaningZh": "雞冠；山脊；浪頭",
+    "meaningZh": "雞冠",
+    "supplementalMeaningZh": "頂部；山脊",
     "example": "The rooster's red crest shook as it chased beetles.",
     "exampleZh": "公雞追甲蟲時，紅冠跟著晃動。",
     "group": "Core 13"
@@ -70570,8 +70570,8 @@ export const sampleWords: WordEntry[] = [
     "word": "sturdy",
     "partOfSpeech": "a",
     "pronunciation": "/'stә:di/",
-    "meaningZh": "堅固的",
-    "supplementalMeaningZh": "強健的",
+    "meaningZh": "強健的",
+    "supplementalMeaningZh": "堅固的",
     "example": "The sturdy farmer carried two water buckets up the hill.",
     "exampleZh": "那位強健農夫把兩桶水扛上山。",
     "group": "Core 13"
@@ -70625,8 +70625,8 @@ export const sampleWords: WordEntry[] = [
     "word": "claw",
     "partOfSpeech": "n / v",
     "pronunciation": "/klɒ:/",
-    "meaningZh": "爪子",
-    "supplementalMeaningZh": "螯；抓",
+    "meaningZh": "螯",
+    "supplementalMeaningZh": "爪子；抓",
     "example": "The crab raised one claw toward the curious child.",
     "exampleZh": "螃蟹朝好奇孩子舉起一隻螯。",
     "group": "Core 13"
@@ -70637,7 +70637,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "pron",
     "pronunciation": "/wʌn'self/",
     "meaningZh": "自己",
-    "supplementalMeaningZh": "",
+    "supplementalMeaningZh": "親自",
     "example": "Learning to cook for oneself made college less lonely.",
     "exampleZh": "學會自己煮飯後，大學生活也沒那麼孤單了。",
     "group": "Core 13"
@@ -70661,7 +70661,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "蹣跚",
     "supplementalMeaningZh": "錯開",
     "example": "He began to stagger after carrying rice up three flights.",
-    "exampleZh": "扛米上了三層樓後，他開始步履蹣跚。",
+    "exampleZh": "扛米上三層樓後，他開始蹣跚。",
     "group": "Core 13"
   },
   {
@@ -70804,7 +70804,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "長襪",
     "supplementalMeaningZh": "聖誕襪",
     "example": "One red stocking hung from the hostel fireplace.",
-    "exampleZh": "一隻紅色長襪掛在旅社的壁爐上。",
+    "exampleZh": "一隻紅長襪掛在旅社壁爐上。",
     "group": "Core 13"
   },
   {
@@ -70812,8 +70812,8 @@ export const sampleWords: WordEntry[] = [
     "word": "aerial",
     "partOfSpeech": "a / n",
     "pronunciation": "/'єәriәl/",
-    "meaningZh": "空中的",
-    "supplementalMeaningZh": "天線；空拍的",
+    "meaningZh": "空拍的",
+    "supplementalMeaningZh": "空中的；天線",
     "example": "Aerial photographs revealed old paths beneath the forest.",
     "exampleZh": "空拍照片顯示出被森林遮蔽的舊路徑。",
     "group": "Core 13"
@@ -70826,7 +70826,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "短程旅行",
     "supplementalMeaningZh": "遠足",
     "example": "Our boat excursion ended at a quiet coral beach.",
-    "exampleZh": "我們的乘船短途旅行在一處安靜的珊瑚海灘結束。",
+    "exampleZh": "我們的搭船短遊在安靜珊瑚海灘結束。",
     "group": "Core 13"
   },
   {
@@ -70856,10 +70856,10 @@ export const sampleWords: WordEntry[] = [
     "word": "feminism",
     "partOfSpeech": "n",
     "pronunciation": "/'feminizm/",
-    "meaningZh": "女性主義",
-    "supplementalMeaningZh": "男女平權",
+    "meaningZh": "女權主義",
+    "supplementalMeaningZh": "性別平權",
     "example": "Feminism shaped the magazine's bold coverage of factory women.",
-    "exampleZh": "女性主義影響了這本雜誌對女工的大膽報導。",
+    "exampleZh": "女權主義影響雜誌大膽報導女工。",
     "group": "Core 13"
   },
   {
@@ -70867,8 +70867,8 @@ export const sampleWords: WordEntry[] = [
     "word": "void",
     "partOfSpeech": "n / a",
     "pronunciation": "/vɒid/",
-    "meaningZh": "空白",
-    "supplementalMeaningZh": "空虛感；空的；無效的",
+    "meaningZh": "空虛感",
+    "supplementalMeaningZh": "空白；空的；無效的",
     "example": "After the piano left, a quiet void filled the parlor.",
     "exampleZh": "鋼琴搬走後，客廳顯得空蕩又寂靜。",
     "group": "Core 13"
@@ -71120,8 +71120,8 @@ export const sampleWords: WordEntry[] = [
     "word": "cloak",
     "partOfSpeech": "n / vt",
     "pronunciation": "/klәuk/",
-    "meaningZh": "斗篷",
-    "supplementalMeaningZh": "遮蔽；掩飾",
+    "meaningZh": "遮蔽",
+    "supplementalMeaningZh": "斗篷；掩飾",
     "example": "Fog began to cloak the harbor after midnight.",
     "exampleZh": "午夜後，霧開始遮蔽港口。",
     "group": "Core 13"
@@ -71241,7 +71241,7 @@ export const sampleWords: WordEntry[] = [
     "word": "subway",
     "partOfSpeech": "n / vi",
     "pronunciation": "/'sʌbwei/",
-    "meaningZh": "地下鐵",
+    "meaningZh": "地鐵",
     "supplementalMeaningZh": "地下道",
     "example": "The subway shook as it passed under the river.",
     "exampleZh": "捷運列車從河底經過時，車廂微微震動。",
@@ -71296,10 +71296,10 @@ export const sampleWords: WordEntry[] = [
     "word": "preclude",
     "partOfSpeech": "vt",
     "pronunciation": "/pri'klu:d/",
-    "meaningZh": "排除",
-    "supplementalMeaningZh": "阻止；使不可能",
+    "meaningZh": "阻止",
+    "supplementalMeaningZh": "排除",
     "example": "Heavy fog may preclude helicopter rescue before noon.",
-    "exampleZh": "濃霧可能使中午前無法出動直升機救援。",
+    "exampleZh": "濃霧可能導致中午前無法出動直升機救援。",
     "group": "Core 13"
   },
   {
@@ -71417,10 +71417,10 @@ export const sampleWords: WordEntry[] = [
     "word": "fellowship",
     "partOfSpeech": "n",
     "pronunciation": "/'felәuʃip/",
-    "meaningZh": "友誼",
-    "supplementalMeaningZh": "團體；研究獎助金",
-    "example": "The club's fellowship made every new student feel welcome at school.",
-    "exampleZh": "社團的情誼讓每位新生在學校都感到受歡迎。",
+    "meaningZh": "研究獎助金",
+    "supplementalMeaningZh": "友誼；團體",
+    "example": "The fellowship paid for Ana's research in rural clinics.",
+    "exampleZh": "研究獎助金支付安娜在鄉間診所的研究費用。",
     "group": "Core 13"
   },
   {
@@ -71528,7 +71528,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vi / vt / n",
     "pronunciation": "/sɒb/",
     "meaningZh": "啜泣",
-    "supplementalMeaningZh": "嗚咽；哭著說",
+    "supplementalMeaningZh": "哭訴",
     "example": "Nina began to sob when the rescue worker returned her lost cat.",
     "exampleZh": "救難人員把走失的貓抱回來時，妮娜開始啜泣。",
     "group": "Core 14"
@@ -71549,10 +71549,10 @@ export const sampleWords: WordEntry[] = [
     "word": "buffer",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'bʌfә/",
-    "meaningZh": "緩衝物",
-    "supplementalMeaningZh": "緩衝；暫存區",
+    "meaningZh": "緩衝帶",
+    "supplementalMeaningZh": "暫存區",
     "example": "A row of bamboo served as a buffer against traffic noise.",
-    "exampleZh": "一排竹子成了阻隔車聲的緩衝物。",
+    "exampleZh": "一排竹子成了阻隔車聲的緩衝帶。",
     "group": "Core 14"
   },
   {
@@ -71615,8 +71615,8 @@ export const sampleWords: WordEntry[] = [
     "word": "spawn",
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/spɒ:n/",
-    "meaningZh": "產卵",
-    "supplementalMeaningZh": "引發；大量產生",
+    "meaningZh": "引發",
+    "supplementalMeaningZh": "產卵；大量產生",
     "example": "Heavy spring rain can spawn landslides along the trail.",
     "exampleZh": "春天大雨會在步道沿線引發山崩。",
     "group": "Core 14"
@@ -71626,8 +71626,8 @@ export const sampleWords: WordEntry[] = [
     "word": "deception",
     "partOfSpeech": "n",
     "pronunciation": "/di'sepʃәn/",
-    "meaningZh": "欺騙",
-    "supplementalMeaningZh": "騙局；詭計",
+    "meaningZh": "騙局",
+    "supplementalMeaningZh": "欺騙",
     "example": "Her calm smile hid a careful deception about the broken vase.",
     "exampleZh": "她面帶平靜的微笑，掩飾了自己對花瓶破裂一事精心編造的謊言。",
     "group": "Core 14"
@@ -71781,7 +71781,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/si:m/",
     "meaningZh": "接縫",
-    "supplementalMeaningZh": "縫線；煤層",
+    "supplementalMeaningZh": "裂縫",
     "example": "The seam split when he stuffed boots into the backpack.",
     "exampleZh": "他把靴子塞進背包時，接縫裂開了。",
     "group": "Core 14"
@@ -71825,7 +71825,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/ri'hә:s/",
     "meaningZh": "排練",
-    "supplementalMeaningZh": "複述；預演",
+    "supplementalMeaningZh": "複述",
     "example": "The quartet will rehearse the funeral piece after breakfast.",
     "exampleZh": "四重奏會在早餐後排練那首葬禮曲。",
     "group": "Core 14"
@@ -71948,7 +71948,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "導航",
     "supplementalMeaningZh": "航行",
     "example": "Clouds ruined navigation for the sailors near the reef.",
-    "exampleZh": "礁石附近雲層密布，導航對水手來說變得很困難。",
+    "exampleZh": "礁石附近雲層密布，水手很難辨認方向。",
     "group": "Core 14"
   },
   {
@@ -71958,8 +71958,8 @@ export const sampleWords: WordEntry[] = [
     "pronunciation": "/'deitaim/",
     "meaningZh": "白天",
     "supplementalMeaningZh": "",
-    "example": "Owls usually sleep during the daytime inside old trees.",
-    "exampleZh": "貓頭鷹通常白天在老樹裡睡覺。",
+    "example": "Owls sleep during daytime beneath the abandoned temple roof.",
+    "exampleZh": "貓頭鷹白天睡在廢棄寺廟屋頂下。",
     "group": "Core 14"
   },
   {
@@ -71989,10 +71989,10 @@ export const sampleWords: WordEntry[] = [
     "word": "orient",
     "partOfSpeech": "n / a / vi",
     "pronunciation": "/'ɒ:riәnt/",
-    "meaningZh": "使適應",
-    "supplementalMeaningZh": "辨別方向；使朝向",
-    "example": "New students attend a meeting to orient themselves to school life.",
-    "exampleZh": "新生參加說明會，以適應學校生活。",
+    "meaningZh": "辨別方向",
+    "supplementalMeaningZh": "使適應",
+    "example": "Migrating birds orient by the stars on clear nights.",
+    "exampleZh": "候鳥在晴朗夜晚靠星星辨別方向。",
     "group": "Core 14"
   },
   {
@@ -72011,10 +72011,10 @@ export const sampleWords: WordEntry[] = [
     "word": "gem",
     "partOfSpeech": "n / vt",
     "pronunciation": "/dʒem/",
-    "meaningZh": "寶石",
-    "supplementalMeaningZh": "珍寶；極珍貴的人事物",
-    "example": "She wore a small blue gem on her silver ring.",
-    "exampleZh": "她銀戒指上鑲著一顆藍色小寶石。",
+    "meaningZh": "珍寶",
+    "supplementalMeaningZh": "寶石",
+    "example": "The tiny cafe is a hidden gem near the harbor.",
+    "exampleZh": "那間小咖啡館是港口旁隱藏的珍寶。",
     "group": "Core 14"
   },
   {
@@ -72223,7 +72223,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "木板",
     "supplementalMeaningZh": "政綱條目",
     "example": "A loose plank creaked beneath the fisherman's rubber boots.",
-    "exampleZh": "一塊鬆動的木板在漁夫的膠靴下嘎吱作響。",
+    "exampleZh": "一塊鬆動木板在漁夫的膠靴下嘎吱作響。",
     "group": "Core 14"
   },
   {
@@ -72386,9 +72386,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/du:m/",
     "meaningZh": "厄運",
-    "supplementalMeaningZh": "毀滅；劫數",
+    "supplementalMeaningZh": "毀滅；注定失敗",
     "example": "Loose wiring spelled doom for the carnival ride.",
-    "exampleZh": "電線鬆脫，預示這座遊樂設施將面臨厄運。",
+    "exampleZh": "電線鬆脫，這座遊樂設施注定要停擺。",
     "group": "Core 14"
   },
   {
@@ -72399,7 +72399,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "複製",
     "supplementalMeaningZh": "重現",
     "example": "No kitchen could replicate the taste of her aunt's noodles.",
-    "exampleZh": "沒有一間廚房能重現她阿姨做的麵條味道。",
+    "exampleZh": "沒有一家廚房能重現她阿姨做的麵條味道。",
     "group": "Core 14"
   },
   {
@@ -72451,10 +72451,10 @@ export const sampleWords: WordEntry[] = [
     "word": "admittedly",
     "partOfSpeech": "adv",
     "pronunciation": "/әd'mitidli/",
-    "meaningZh": "誠然",
-    "supplementalMeaningZh": "公認地",
-    "example": "Admittedly, the attic smelled better after we opened the windows.",
-    "exampleZh": "誠然，我們打開窗戶後，閣樓的氣味好多了。",
+    "meaningZh": "不可否認地",
+    "supplementalMeaningZh": "誠然",
+    "example": "Admittedly, the attic was dusty, but the view from its window was beautiful.",
+    "exampleZh": "不可否認，閣樓滿是灰塵，但從窗戶看出去的景色很美。",
     "group": "Core 14"
   },
   {
@@ -72473,10 +72473,10 @@ export const sampleWords: WordEntry[] = [
     "word": "sensibility",
     "partOfSpeech": "n",
     "pronunciation": "/.sensi'biliti/",
-    "meaningZh": "敏感度",
-    "supplementalMeaningZh": "感受力；審美品味",
+    "meaningZh": "感性",
+    "supplementalMeaningZh": "審美品味",
     "example": "The film appealed deeply to her romantic sensibility.",
-    "exampleZh": "這部電影深深打動了她浪漫的情感特質。",
+    "exampleZh": "這部電影深深打動了她浪漫的感性。",
     "group": "Core 14"
   },
   {
@@ -72605,8 +72605,8 @@ export const sampleWords: WordEntry[] = [
     "word": "barbecue",
     "partOfSpeech": "n / vt",
     "pronunciation": "/'bɑ:bikju:/",
-    "meaningZh": "烤肉",
-    "supplementalMeaningZh": "烤肉餐會；烤肉架",
+    "meaningZh": "烤",
+    "supplementalMeaningZh": "烤肉",
     "example": "Dad will barbecue corn on the balcony tonight.",
     "exampleZh": "爸爸今晚會在陽台烤玉米。",
     "group": "Core 14"
@@ -72760,7 +72760,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'twailait/",
     "meaningZh": "暮光",
-    "supplementalMeaningZh": "黃昏；衰退期",
+    "supplementalMeaningZh": "黎明",
     "example": "Bats crossed the courtyard in the blue twilight.",
     "exampleZh": "蝙蝠在藍色暮光中掠過庭院。",
     "group": "Core 14"
@@ -72782,7 +72782,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/fә'rensik/",
     "meaningZh": "鑑識的",
-    "supplementalMeaningZh": "法庭的；辯論的",
+    "supplementalMeaningZh": "法醫的；法庭的；辯論的",
     "example": "The forensic team collected fingerprints from the broken window.",
     "exampleZh": "鑑識小組從破掉的窗戶上採集指紋。",
     "group": "Core 14"
@@ -72825,8 +72825,8 @@ export const sampleWords: WordEntry[] = [
     "word": "glowing",
     "partOfSpeech": "a",
     "pronunciation": "/'glәuiŋ/",
-    "meaningZh": "發光的",
-    "supplementalMeaningZh": "灼熱的；熱烈讚揚的",
+    "meaningZh": "灼熱的",
+    "supplementalMeaningZh": "發光的；熱烈讚揚的",
     "example": "The glowing coals warmed the room after the power failed.",
     "exampleZh": "停電後，燒紅的炭火替房間帶來暖意。",
     "group": "Core 14"
@@ -72837,9 +72837,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'helpә/",
     "meaningZh": "幫手",
-    "supplementalMeaningZh": "助手；幫傭",
+    "supplementalMeaningZh": "",
     "example": "A quiet helper guided elders across the flooded street.",
-    "exampleZh": "一名安靜的幫手帶著長者穿過淹水的街道。",
+    "exampleZh": "一名沉默寡言的助手，帶著長者穿過淹水的街道。",
     "group": "Core 14"
   },
   {
@@ -72869,8 +72869,8 @@ export const sampleWords: WordEntry[] = [
     "word": "stifle",
     "partOfSpeech": "vt / vi",
     "pronunciation": "/'staifl/",
-    "meaningZh": "壓抑",
-    "supplementalMeaningZh": "使窒息；扼殺；忍住",
+    "meaningZh": "忍住",
+    "supplementalMeaningZh": "壓抑；使窒息；扼殺",
     "example": "Do not stifle a sneeze when your chest hurts.",
     "exampleZh": "胸口疼痛時，不要硬忍住噴嚏。",
     "group": "Core 14"
@@ -72958,9 +72958,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n / adv",
     "pronunciation": "/'ɒ:dәli/",
     "meaningZh": "整齊的",
-    "supplementalMeaningZh": "有秩序的；勤務員",
+    "supplementalMeaningZh": "勤務員",
     "example": "Patients waited in an orderly line outside the clinic.",
-    "exampleZh": "病人在診所外排成整齊的隊伍等候。",
+    "exampleZh": "病人在診所外排成整齊隊伍等候。",
     "group": "Core 14"
   },
   {
@@ -73056,10 +73056,10 @@ export const sampleWords: WordEntry[] = [
     "word": "deposition",
     "partOfSpeech": "n",
     "pronunciation": "/.depә'ziʃәn/",
-    "meaningZh": "沉積",
-    "supplementalMeaningZh": "證詞；罷免",
-    "example": "Heavy rain increased the deposition of mud at the river mouth.",
-    "exampleZh": "大雨使河口的泥沙沉積增加了。",
+    "meaningZh": "證詞",
+    "supplementalMeaningZh": "作證；沉積",
+    "example": "Her deposition described the crash in calm detail.",
+    "exampleZh": "她的證詞冷靜詳細地描述那場撞車。",
     "group": "Core 14"
   },
   {
@@ -73199,10 +73199,10 @@ export const sampleWords: WordEntry[] = [
     "word": "crater",
     "partOfSpeech": "n",
     "pronunciation": "/'kreitә/",
-    "meaningZh": "火山口",
-    "supplementalMeaningZh": "隕石坑；彈坑",
-    "example": "Hikers stood at the edge of the crater and looked down.",
-    "exampleZh": "登山客站在火山口邊緣往下看。",
+    "meaningZh": "彈坑",
+    "supplementalMeaningZh": "火山口；隕石坑",
+    "example": "Rainwater filled the crater left by the explosion.",
+    "exampleZh": "雨水填滿爆炸留下的彈坑。",
     "group": "Core 14"
   },
   {
@@ -73210,10 +73210,10 @@ export const sampleWords: WordEntry[] = [
     "word": "foe",
     "partOfSpeech": "n",
     "pronunciation": "/fou/",
-    "meaningZh": "敵人",
-    "supplementalMeaningZh": "對手",
+    "meaningZh": "對手",
+    "supplementalMeaningZh": "敵人",
     "example": "The boxer greeted his former foe with a quick hug.",
-    "exampleZh": "拳擊手用短暫擁抱問候昔日的對手。",
+    "exampleZh": "拳擊手用短暫擁抱問候昔日對手。",
     "group": "Core 14"
   },
   {
@@ -73224,7 +73224,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "鍋爐",
     "supplementalMeaningZh": "熱水器",
     "example": "A leaking boiler forced the hotel to close early.",
-    "exampleZh": "漏水的鍋爐迫使旅館提早關門。",
+    "exampleZh": "漏水鍋爐迫使旅館提早關門。",
     "group": "Core 14"
   },
   {
@@ -73255,7 +73255,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'weivleŋθ/",
     "meaningZh": "波長",
-    "supplementalMeaningZh": "思路頻率",
+    "supplementalMeaningZh": "想法一致",
     "example": "Radio engineers adjusted the wavelength during the storm.",
     "exampleZh": "暴風雨中，無線電工程師調整了波長。",
     "group": "Core 14"
@@ -73298,10 +73298,10 @@ export const sampleWords: WordEntry[] = [
     "word": "succumb",
     "partOfSpeech": "vi",
     "pronunciation": "/sә'kʌm/",
-    "meaningZh": "屈服",
-    "supplementalMeaningZh": "死於；不敵",
+    "meaningZh": "死於",
+    "supplementalMeaningZh": "屈服",
     "example": "Weak seedlings may succumb to frost before spring arrives.",
-    "exampleZh": "弱小的幼苗可能在春天來臨前就被凍死。",
+    "exampleZh": "弱小幼苗可能在春天前凍死。",
     "group": "Core 14"
   },
   {
@@ -73387,9 +73387,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'prɒminәns/",
     "meaningZh": "顯著",
-    "supplementalMeaningZh": "突出物；知名",
-    "example": "The singer rose to prominence after her first album.",
-    "exampleZh": "那位歌手在第一張專輯後聲名大噪。",
+    "supplementalMeaningZh": "知名度；突出物",
+    "example": "The young singer rose to prominence after her first album.",
+    "exampleZh": "那位年輕歌手發行第一張專輯後就聲名大噪。",
     "group": "Core 14"
   },
   {
@@ -73419,8 +73419,8 @@ export const sampleWords: WordEntry[] = [
     "word": "paste",
     "partOfSpeech": "n / vt",
     "pronunciation": "/peist/",
-    "meaningZh": "糊狀物",
-    "supplementalMeaningZh": "漿糊；醬",
+    "meaningZh": "醬",
+    "supplementalMeaningZh": "糊狀物；漿糊",
     "example": "Spread the sesame paste thinly over the warm noodles.",
     "exampleZh": "把芝麻醬薄薄抹在熱麵上。",
     "group": "Core 14"
@@ -73499,7 +73499,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "耳環",
     "supplementalMeaningZh": "",
     "example": "One silver earring slipped through the bathroom drain.",
-    "exampleZh": "一隻銀耳環滑進了浴室的排水孔。",
+    "exampleZh": "一只銀耳環滑進浴室的排水孔。",
     "group": "Core 14"
   },
   {
@@ -73530,9 +73530,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/ræm/",
     "meaningZh": "公羊",
-    "supplementalMeaningZh": "撞槌；猛撞",
-    "example": "A metal ram cracked the locked warehouse door.",
-    "exampleZh": "金屬撞槌撞裂了上鎖的倉庫門。",
+    "supplementalMeaningZh": "猛撞；撞槌",
+    "example": "A ram with curled horns blocked the narrow farm path.",
+    "exampleZh": "一頭長著捲角的公羊擋住了狹窄的農場小路。",
     "group": "Core 14"
   },
   {
@@ -73540,10 +73540,10 @@ export const sampleWords: WordEntry[] = [
     "word": "plainly",
     "partOfSpeech": "adv",
     "pronunciation": "/'pleinli/",
-    "meaningZh": "明白地",
-    "supplementalMeaningZh": "坦白地；簡單地",
+    "meaningZh": "明確地",
+    "supplementalMeaningZh": "坦白地",
     "example": "She plainly refused the bribe and left the office.",
-    "exampleZh": "她明白拒絕了賄賂，然後離開辦公室。",
+    "exampleZh": "她明白拒絕賄賂後離開辦公室。",
     "group": "Core 14"
   },
   {
@@ -73565,7 +73565,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "挑釁的",
     "supplementalMeaningZh": "刺激性的",
     "example": "A provocative poster drew complaints from nearby parents.",
-    "exampleZh": "一張挑釁的海報引來附近家長投訴。",
+    "exampleZh": "一張挑釁海報引來附近家長投訴。",
     "group": "Core 14"
   },
   {
@@ -73606,10 +73606,10 @@ export const sampleWords: WordEntry[] = [
     "word": "depot",
     "partOfSpeech": "n",
     "pronunciation": "/'depәu/",
-    "meaningZh": "車站",
-    "supplementalMeaningZh": "倉庫；車庫",
+    "meaningZh": "車庫",
+    "supplementalMeaningZh": "車站；倉庫",
     "example": "Buses slept overnight at the depot beside the river.",
-    "exampleZh": "公車整夜停在河邊的車庫裡。",
+    "exampleZh": "公車整夜停在河邊車庫裡。",
     "group": "Core 14"
   },
   {
@@ -73752,7 +73752,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "釦子",
     "supplementalMeaningZh": "緊握",
     "example": "Her frozen fingers could not close the necklace clasp.",
-    "exampleZh": "她凍僵的手指扣不上項鍊的釦環。",
+    "exampleZh": "她凍僵的手指扣不上項鍊釦子。",
     "group": "Core 14"
   },
   {
@@ -73804,10 +73804,10 @@ export const sampleWords: WordEntry[] = [
     "word": "clone",
     "partOfSpeech": "n",
     "pronunciation": "/klәun/",
-    "meaningZh": "複製體",
+    "meaningZh": "複製株",
     "supplementalMeaningZh": "複製人；複製品",
     "example": "The lab grew a clone of the rare orchid.",
-    "exampleZh": "實驗室培育出那株稀有蘭花的複製體。",
+    "exampleZh": "實驗室培育出那株稀有蘭花的複製株。",
     "group": "Core 14"
   },
   {
@@ -74167,10 +74167,10 @@ export const sampleWords: WordEntry[] = [
     "word": "obstruction",
     "partOfSpeech": "n",
     "pronunciation": "/әb'strʌʃәn/",
-    "meaningZh": "阻礙物",
-    "supplementalMeaningZh": "阻塞；妨礙",
+    "meaningZh": "障礙",
+    "supplementalMeaningZh": "阻塞",
     "example": "A fallen sign caused an obstruction on the bike lane.",
-    "exampleZh": "倒下的招牌在自行車道上造成阻礙。",
+    "exampleZh": "倒下的招牌造成自行車道障礙。",
     "group": "Core 14"
   },
   {
@@ -74354,10 +74354,10 @@ export const sampleWords: WordEntry[] = [
     "word": "capsule",
     "partOfSpeech": "n",
     "pronunciation": "/'kæpsju:l/",
-    "meaningZh": "膠囊",
-    "supplementalMeaningZh": "太空艙",
-    "example": "The doctor told me to take one capsule after dinner.",
-    "exampleZh": "醫生要我晚餐後服用一顆膠囊。",
+    "meaningZh": "太空艙",
+    "supplementalMeaningZh": "膠囊",
+    "example": "The capsule brought rock samples back from the asteroid.",
+    "exampleZh": "太空艙從小行星帶回岩石樣本。",
     "group": "Core 14"
   },
   {
@@ -74467,7 +74467,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "休息時間",
     "supplementalMeaningZh": "休會；凹處",
     "example": "Children traded stickers during recess behind the gym.",
-    "exampleZh": "孩子們在體育館後方的下課時間交換貼紙。",
+    "exampleZh": "下課時間，孩子們在體育館後方交換貼紙。",
     "group": "Core 14"
   },
   {
@@ -74530,10 +74530,10 @@ export const sampleWords: WordEntry[] = [
     "word": "multitude",
     "partOfSpeech": "n",
     "pronunciation": "/'mʌltitju:d/",
-    "meaningZh": "大量",
-    "supplementalMeaningZh": "群眾；許多人",
+    "meaningZh": "無數",
+    "supplementalMeaningZh": "群眾",
     "example": "A multitude of lanterns floated above the river.",
-    "exampleZh": "無數燈籠飄浮在河面上。",
+    "exampleZh": "無數燈籠飄過河面。",
     "group": "Core 14"
   },
   {
@@ -74597,7 +74597,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a",
     "pronunciation": "/'miriәd/",
     "meaningZh": "無數的",
-    "supplementalMeaningZh": "無數；大量",
+    "supplementalMeaningZh": "各式各樣的",
     "example": "A myriad of insects flashed above the wet rice field.",
     "exampleZh": "無數昆蟲在潮濕的稻田上飛舞，閃閃發光。",
     "group": "Core 14"
@@ -74651,8 +74651,8 @@ export const sampleWords: WordEntry[] = [
     "word": "slack",
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/slæk/",
-    "meaningZh": "鬆弛的",
-    "supplementalMeaningZh": "鬆弛部分；懈怠的；淡季",
+    "meaningZh": "鬆弛量",
+    "supplementalMeaningZh": "鬆的；鬆懈；淡季",
     "example": "Pull the rope tight; too much slack is dangerous.",
     "exampleZh": "把繩子拉緊，太鬆會很危險。",
     "group": "Core 14"
@@ -74674,9 +74674,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / v",
     "pronunciation": "/wɒn/",
     "meaningZh": "蒼白的",
-    "supplementalMeaningZh": "暗淡的；病弱的",
+    "supplementalMeaningZh": "暗淡的",
     "example": "A wan light shone through the hospital curtain.",
-    "exampleZh": "一道蒼白的光線透過醫院窗簾照進來。",
+    "exampleZh": "一道蒼白光線透過醫院窗簾照進來。",
     "group": "Core 14"
   },
   {
@@ -74707,7 +74707,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'fɒ:tris/",
     "meaningZh": "要塞",
-    "supplementalMeaningZh": "堡壘；城堡",
+    "supplementalMeaningZh": "城堡",
     "example": "The hilltop fortress still overlooks the fishing town.",
     "exampleZh": "山頂要塞仍俯瞰著那座漁鎮。",
     "group": "Core 14"
@@ -74816,8 +74816,8 @@ export const sampleWords: WordEntry[] = [
     "word": "growl",
     "partOfSpeech": "n / v",
     "pronunciation": "/graul/",
-    "meaningZh": "咆哮聲",
-    "supplementalMeaningZh": "低吼；咆哮",
+    "meaningZh": "低吼聲",
+    "supplementalMeaningZh": "咆哮",
     "example": "A low growl came from beneath the porch.",
     "exampleZh": "門廊底下傳來一聲低沉的咆哮。",
     "group": "Core 14"
@@ -74970,8 +74970,8 @@ export const sampleWords: WordEntry[] = [
     "word": "imperative",
     "partOfSpeech": "n / a",
     "pronunciation": "/im'perәtiv/",
-    "meaningZh": "絕對必要的",
-    "supplementalMeaningZh": "命令的；祈使語氣的；緊急的事",
+    "meaningZh": "必要的",
+    "supplementalMeaningZh": "命令；祈使語氣",
     "example": "It is imperative to boil water after the flood.",
     "exampleZh": "洪水過後，務必把水煮沸。",
     "group": "Core 14"
@@ -75039,7 +75039,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "南瓜",
     "supplementalMeaningZh": "",
     "example": "A pumpkin sat on the windowsill until winter.",
-    "exampleZh": "一顆南瓜在窗臺上放到了冬天。",
+    "exampleZh": "一顆南瓜在窗台上放到了冬天。",
     "group": "Core 14"
   },
   {
@@ -75091,8 +75091,8 @@ export const sampleWords: WordEntry[] = [
     "word": "commonplace",
     "partOfSpeech": "n / a",
     "pronunciation": "/'kɒmәnpleis/",
-    "meaningZh": "平凡的",
-    "supplementalMeaningZh": "常見的；老生常談",
+    "meaningZh": "常見的",
+    "supplementalMeaningZh": "老生常談",
     "example": "Solar panels became commonplace on farms near the coast.",
     "exampleZh": "海岸附近的農場，現在隨處可見太陽能板。",
     "group": "Core 14"
@@ -75102,8 +75102,8 @@ export const sampleWords: WordEntry[] = [
     "word": "overt",
     "partOfSpeech": "a",
     "pronunciation": "/'әuvә:t/",
-    "meaningZh": "公開的",
-    "supplementalMeaningZh": "明顯的；公然的",
+    "meaningZh": "明顯的",
+    "supplementalMeaningZh": "公然的",
     "example": "His overt anger made the children stop laughing.",
     "exampleZh": "他毫不掩飾怒氣，孩子們立刻不敢再笑。",
     "group": "Core 14"
@@ -75256,10 +75256,10 @@ export const sampleWords: WordEntry[] = [
     "word": "lunar",
     "partOfSpeech": "a",
     "pronunciation": "/'lu:nә/",
-    "meaningZh": "月亮的",
-    "supplementalMeaningZh": "月球的；農曆的",
-    "example": "Traffic during lunar New Year filled every mountain road.",
-    "exampleZh": "農曆新年期間，車潮塞滿每條山路。",
+    "meaningZh": "月球的",
+    "supplementalMeaningZh": "月亮的；陰曆的",
+    "example": "Astronauts brought lunar rocks back to Earth for scientists to study.",
+    "exampleZh": "太空人把月球岩石帶回地球，供科學家研究。",
     "group": "Core 14"
   },
   {
@@ -75278,8 +75278,8 @@ export const sampleWords: WordEntry[] = [
     "word": "outweigh",
     "partOfSpeech": "vt",
     "pronunciation": "/.aut'wei/",
-    "meaningZh": "比…更重要",
-    "supplementalMeaningZh": "重於；超過",
+    "meaningZh": "更重要",
+    "supplementalMeaningZh": "更重",
     "example": "For Lina, comfort can outweigh fashion on long flights.",
     "exampleZh": "對莉娜來說，長途飛行時舒適比時尚重要。",
     "group": "Core 14"
@@ -75290,7 +75290,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vi / vt",
     "pronunciation": "/'grʌmbl/",
     "meaningZh": "抱怨",
-    "supplementalMeaningZh": "發牢騷；隆隆作響",
+    "supplementalMeaningZh": "隆隆作響",
     "example": "Passengers began to grumble when the last ferry left.",
     "exampleZh": "最後一班渡輪離開時，乘客開始抱怨。",
     "group": "Core 14"
@@ -75389,7 +75389,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt / vi",
     "pronunciation": "/spʌndʒ/",
     "meaningZh": "海綿",
-    "supplementalMeaningZh": "用海綿擦拭",
+    "supplementalMeaningZh": "用海綿擦",
     "example": "Use a damp sponge to wipe the counter.",
     "exampleZh": "用濕海綿擦拭流理臺。",
     "group": "Core 14"
@@ -75488,7 +75488,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'didʒit/",
     "meaningZh": "數字",
-    "supplementalMeaningZh": "手指；腳趾",
+    "supplementalMeaningZh": "手指",
     "example": "Enter the final digit before pressing the green button.",
     "exampleZh": "按綠色按鈕前，輸入最後一位數字。",
     "group": "Core 14"
@@ -75509,7 +75509,7 @@ export const sampleWords: WordEntry[] = [
     "word": "cutter",
     "partOfSpeech": "n",
     "pronunciation": "/'kʌtә/",
-    "meaningZh": "切割器",
+    "meaningZh": "切割工具",
     "supplementalMeaningZh": "切模；快艇",
     "example": "A cookie cutter shaped the dough into stars.",
     "exampleZh": "餅乾切模把麵團壓成星星。",
@@ -75732,7 +75732,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "天鵝",
     "supplementalMeaningZh": "",
     "example": "A swan drifted past the reeds near the palace.",
-    "exampleZh": "一隻天鵝漂過宮殿附近的蘆葦叢。",
+    "exampleZh": "一隻天鵝漂過宮殿附近蘆葦叢。",
     "group": "Core 14"
   },
   {
@@ -75787,7 +75787,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "避免",
     "supplementalMeaningZh": "副歌",
     "example": "Please refrain from feeding birds near the platform.",
-    "exampleZh": "請勿在月台附近餵鳥。",
+    "exampleZh": "請避免在月台附近餵鳥。",
     "group": "Core 14"
   },
   {
@@ -75884,9 +75884,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'intәlekt/",
     "meaningZh": "智力",
-    "supplementalMeaningZh": "知識份子；才智",
+    "supplementalMeaningZh": "知識分子",
     "example": "Her sharp intellect solved the puzzle before dinner.",
-    "exampleZh": "她敏銳的智力讓她在晚餐前解開了謎題。",
+    "exampleZh": "她敏銳的智力在晚餐前解開謎題。",
     "group": "Core 14"
   },
   {
@@ -75917,7 +75917,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/'sʌnraiz/",
     "meaningZh": "日出",
-    "supplementalMeaningZh": "黎明；朝霞",
+    "supplementalMeaningZh": "黎明",
     "example": "At sunrise, oyster farms turned pale pink beside us.",
     "exampleZh": "日出時，身旁的蚵棚映成淡淡的粉紅色。",
     "group": "Core 14"
@@ -75938,10 +75938,10 @@ export const sampleWords: WordEntry[] = [
     "word": "curtail",
     "partOfSpeech": "vt",
     "pronunciation": "/kә:'teil/",
-    "meaningZh": "縮減",
-    "supplementalMeaningZh": "削減；限制",
+    "meaningZh": "限制",
+    "supplementalMeaningZh": "縮減；剝奪",
     "example": "New rules may curtail late-night karaoke near hospitals.",
-    "exampleZh": "新規定可能縮減醫院附近的深夜卡拉OK營業。",
+    "exampleZh": "新規定可能限制醫院附近深夜卡拉OK。",
     "group": "Core 14"
   },
   {
@@ -75961,7 +75961,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / vt",
     "pronunciation": "/'laitә/",
     "meaningZh": "打火機",
-    "supplementalMeaningZh": "駁船；較輕的",
+    "supplementalMeaningZh": "點火者；駁船",
     "example": "His silver lighter clicked open in the dark alley.",
     "exampleZh": "他的銀色打火機在黑巷裡喀一聲打開。",
     "group": "Core 14"
@@ -75994,9 +75994,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / vt / prep",
     "pronunciation": "/θwɒ:t/",
     "meaningZh": "阻撓",
-    "supplementalMeaningZh": "挫敗；破壞",
+    "supplementalMeaningZh": "",
     "example": "Locked gates could not thwart the determined hikers.",
-    "exampleZh": "上鎖的大門無法阻撓下定決心的健行者。",
+    "exampleZh": "上鎖大門無法阻撓下定決心的健行者。",
     "group": "Core 14"
   },
   {
@@ -76048,10 +76048,10 @@ export const sampleWords: WordEntry[] = [
     "word": "monumental",
     "partOfSpeech": "a",
     "pronunciation": "/.mɒnju'mentәl/",
-    "meaningZh": "不朽的",
-    "supplementalMeaningZh": "巨大的；紀念碑的",
-    "example": "Her monumental achievement changed science education across the country.",
-    "exampleZh": "她劃時代的成就改變了全國的科學教育。",
+    "meaningZh": "紀念碑式的",
+    "supplementalMeaningZh": "不朽的；巨大的",
+    "example": "A monumental arch marked the entrance to the old cemetery.",
+    "exampleZh": "一座紀念碑式拱門標示老墓園入口。",
     "group": "Core 14"
   },
   {
@@ -76128,7 +76128,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "豪華的",
     "supplementalMeaningZh": "奢侈的",
     "example": "The luxurious train cabin had silk curtains and orchids.",
-    "exampleZh": "豪華列車包廂裡有絲質窗簾和蘭花。",
+    "exampleZh": "豪華列車包廂有絲窗簾和蘭花。",
     "group": "Core 14"
   },
   {
@@ -76158,8 +76158,8 @@ export const sampleWords: WordEntry[] = [
     "word": "beckon",
     "partOfSpeech": "v / n",
     "pronunciation": "/'bekәn/",
-    "meaningZh": "招手示意",
-    "supplementalMeaningZh": "吸引；召喚",
+    "meaningZh": "吸引",
+    "supplementalMeaningZh": "招手示意；召喚",
     "example": "Warm lights beckon travelers toward the mountain inn.",
     "exampleZh": "溫暖燈光吸引旅人走向山中旅店。",
     "group": "Core 14"
@@ -76227,7 +76227,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "根除",
     "supplementalMeaningZh": "",
     "example": "Inspectors hope to eradicate mosquitoes from the storage yard.",
-    "exampleZh": "稽查員希望根除倉庫院子裡的蚊子。",
+    "exampleZh": "稽查員希望徹底根除倉庫院子裡的蚊子。",
     "group": "Core 14"
   },
   {
@@ -76247,7 +76247,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "a / n",
     "pronunciation": "/'mjuәrәl/",
     "meaningZh": "壁畫",
-    "supplementalMeaningZh": "牆壁的",
+    "supplementalMeaningZh": "牆上的",
     "example": "A mural of fishermen covered the school wall.",
     "exampleZh": "學校牆上畫著一幅以漁民為主題的壁畫。",
     "group": "Core 14"
@@ -76268,8 +76268,8 @@ export const sampleWords: WordEntry[] = [
     "word": "puff",
     "partOfSpeech": "n / v",
     "pronunciation": "/pʌf/",
-    "meaningZh": "噴出的一股",
-    "supplementalMeaningZh": "喘氣；吹氣",
+    "meaningZh": "一股",
+    "supplementalMeaningZh": "喘氣",
     "example": "A puff of steam escaped from the rice cooker.",
     "exampleZh": "一股蒸氣從電鍋冒出。",
     "group": "Core 14"
@@ -76357,9 +76357,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / vt",
     "pronunciation": "/'dʒindʒә/",
     "meaningZh": "薑",
-    "supplementalMeaningZh": "薑黃色",
+    "supplementalMeaningZh": "薑黃色；活力",
     "example": "Fresh ginger warmed the soup on cold nights.",
-    "exampleZh": "寒夜裡，新鮮的薑讓湯更暖身。",
+    "exampleZh": "寒夜裡，新鮮薑讓湯更暖身。",
     "group": "Core 14"
   },
   {
@@ -76423,9 +76423,9 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / a / adv",
     "pronunciation": "/'әuvәtaim/",
     "meaningZh": "加班",
-    "supplementalMeaningZh": "加班費；延長賽",
+    "supplementalMeaningZh": "延長時間",
     "example": "Chen worked overtime to finish the wedding dress.",
-    "exampleZh": "陳小姐加班完成了那件婚紗。",
+    "exampleZh": "陳加班完成那件婚紗。",
     "group": "Core 14"
   },
   {
@@ -76433,10 +76433,10 @@ export const sampleWords: WordEntry[] = [
     "word": "bracelet",
     "partOfSpeech": "n",
     "pronunciation": "/'breislit/",
-    "meaningZh": "手環",
-    "supplementalMeaningZh": "手鐲",
+    "meaningZh": "手鐲",
+    "supplementalMeaningZh": "",
     "example": "A jade bracelet clicked against her porcelain teacup.",
-    "exampleZh": "一只玉手鐲碰到她的瓷茶杯，發出輕響。",
+    "exampleZh": "一只玉手鐲碰到她的瓷茶杯發出輕響。",
     "group": "Core 14"
   },
   {
@@ -76609,8 +76609,8 @@ export const sampleWords: WordEntry[] = [
     "word": "porcelain",
     "partOfSpeech": "n / a",
     "pronunciation": "/'pɒ:slin/",
-    "meaningZh": "瓷器",
-    "supplementalMeaningZh": "瓷製的",
+    "meaningZh": "瓷製的",
+    "supplementalMeaningZh": "瓷器",
     "example": "The porcelain bowl chipped when it hit the sink.",
     "exampleZh": "瓷碗撞到水槽時缺了一角。",
     "group": "Core 14"
@@ -76634,7 +76634,7 @@ export const sampleWords: WordEntry[] = [
     "meaningZh": "有缺陷的",
     "supplementalMeaningZh": "",
     "example": "A defective brake light made the scooter unsafe.",
-    "exampleZh": "有瑕疵的煞車燈讓這輛機車騎起來不安全。",
+    "exampleZh": "這輛機車的煞車燈故障，騎上路很危險。",
     "group": "Core 14"
   },
   {
@@ -76697,8 +76697,8 @@ export const sampleWords: WordEntry[] = [
     "word": "retrospective",
     "partOfSpeech": "a / n",
     "pronunciation": "/.retrә'spektiv/",
-    "meaningZh": "回顧的",
-    "supplementalMeaningZh": "回顧展；懷舊的",
+    "meaningZh": "回顧展",
+    "supplementalMeaningZh": "回顧的；懷舊的",
     "example": "The museum opened a retrospective of her ceramic work.",
     "exampleZh": "博物館舉辦她陶藝作品的回顧展。",
     "group": "Core 14"
@@ -76808,7 +76808,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n",
     "pronunciation": "/bʌn/",
     "meaningZh": "小圓麵包",
-    "supplementalMeaningZh": "髮髻；包子",
+    "supplementalMeaningZh": "包子；髮髻",
     "example": "She bought a warm bun from the bakery on her way to school.",
     "exampleZh": "她上學途中在麵包店買了一個溫熱的小圓麵包。",
     "group": "Core 14"
@@ -76874,7 +76874,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "n / v",
     "pronunciation": "/'mә:tʃәndaiz/",
     "meaningZh": "商品",
-    "supplementalMeaningZh": "推銷",
+    "supplementalMeaningZh": "買賣",
     "example": "Damaged merchandise was stacked behind the checkout counter.",
     "exampleZh": "受損商品堆在收銀台後方。",
     "group": "Core 14"
@@ -76918,7 +76918,7 @@ export const sampleWords: WordEntry[] = [
     "partOfSpeech": "vt / vi",
     "pronunciation": "/.ʌn'rævl/",
     "meaningZh": "解開",
-    "supplementalMeaningZh": "拆散；瓦解",
+    "supplementalMeaningZh": "散開",
     "example": "Detectives worked to unravel the coded diary before dawn.",
     "exampleZh": "偵探在黎明前努力解開那本密碼日記。",
     "group": "Core 14"

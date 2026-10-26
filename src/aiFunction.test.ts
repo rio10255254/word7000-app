@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { complete, GroqFailure, requestBody, type Fetch } from '../supabase/functions/ai/groq';
-import { dailyLimit, FAST_MODEL, hanShare, InputError, isTaskName, planTask, STRONG_MODEL, tierFor } from '../supabase/functions/ai/tasks';
+import { AIFailure, complete, requestBody, THINKING_ROOM, type Fetch } from '../supabase/functions/ai/claude';
+import { dailyLimit, hanShare, InputError, isTaskName, MODEL, planTask, tierFor } from '../supabase/functions/ai/tasks';
 
 const coachInput = {
   keyword: 'practice',
@@ -11,31 +11,44 @@ const coachInput = {
   mode: 'english',
 };
 
-function reply(status: number, content?: unknown, headers: Record<string, string> = {}): Response {
-  const body = content === undefined ? '{}' : JSON.stringify({ choices: [{ message: { content: JSON.stringify(content) } }] });
-  return new Response(body, { status, headers });
+const json = { 'content-type': 'application/json' };
+
+/** A Messages API reply: a thinking block, then the JSON answer. */
+function reply(content: unknown, stopReason = 'end_turn'): Response {
+  return new Response(JSON.stringify({
+    id: 'msg_1', type: 'message', role: 'assistant', model: MODEL,
+    content: [{ type: 'thinking', thinking: '', signature: 's' }, { type: 'text', text: JSON.stringify(content) }],
+    stop_reason: stopReason, stop_details: stopReason === 'refusal' ? { type: 'refusal', category: null, explanation: null } : null,
+    usage: { input_tokens: 10, output_tokens: 10 },
+  }), { status: 200, headers: json });
+}
+
+function failure(status: number, headers: Record<string, string> = {}): Response {
+  return new Response(JSON.stringify({ type: 'error', error: { type: 'api_error', message: 'nope' } }), { status, headers: { ...json, ...headers } });
 }
 
 function recording(responses: (Response | Error)[]) {
-  const models: string[] = [];
+  const efforts: string[] = [];
+  const systems: string[] = [];
   const fetch: Fetch = async (_url, init) => {
-    models.push(JSON.parse(String(init.body)).model);
+    const body = JSON.parse(String(init?.body));
+    efforts.push(body.output_config.effort);
+    systems.push(body.system);
     const next = responses.shift();
     if (!next) throw new Error('unexpected call');
     if (next instanceof Error) throw next;
     return next;
   };
-  return { fetch, models };
+  return { fetch, efforts, systems };
 }
 
 describe('AI tasks', () => {
-  it('routes writing tasks to the strongest model first and short tasks to the fast one', () => {
-    expect(planTask('coach', coachInput).models).toEqual([STRONG_MODEL, FAST_MODEL]);
-    expect(planTask('explain', { word: 'run', meaning: '跑', mode: 'english' }).models).toEqual([STRONG_MODEL, FAST_MODEL]);
-    expect(planTask('scan', { text: 'apple 蘋果' }).models).toEqual([FAST_MODEL, STRONG_MODEL]);
-    expect(planTask('quizWhy', { question: 'run', correctAnswer: '跑', chosenAnswer: '走', word: 'run', mode: 'english' }).models)
-      .toEqual([FAST_MODEL, STRONG_MODEL]);
-    expect(planTask('fillWord', { word: 'serendipity' }).models).toEqual([FAST_MODEL, STRONG_MODEL]);
+  it('reasons more on writing tasks and answers short tasks quickly', () => {
+    expect(planTask('coach', coachInput).effort).toBe('medium');
+    expect(planTask('explain', { word: 'run', meaning: '跑', mode: 'english' }).effort).toBe('medium');
+    expect(planTask('scan', { text: 'apple 蘋果' }).effort).toBe('low');
+    expect(planTask('quizWhy', { question: 'run', correctAnswer: '跑', chosenAnswer: '走', word: 'run', mode: 'english' }).effort).toBe('low');
+    expect(planTask('fillWord', { word: 'serendipity' }).effort).toBe('low');
   });
 
   it('keeps learner text out of the system prompt', () => {
@@ -60,7 +73,7 @@ describe('AI tasks', () => {
     expect(() => planTask('scan', null)).toThrow(InputError);
   });
 
-  it('builds strict schemas Groq accepts', () => {
+  it('builds strict schemas for structured outputs', () => {
     for (const plan of [
       planTask('coach', coachInput),
       planTask('scan', { text: 'apple 蘋果' }),
@@ -78,9 +91,13 @@ describe('AI tasks', () => {
         if (node.type === 'array') visit(node.items as Record<string, unknown>);
       };
       visit(plan.schema);
-      const body = requestBody(plan, STRONG_MODEL);
-      expect(body.response_format).toMatchObject({ type: 'json_schema', json_schema: { strict: true } });
-      expect(body.include_reasoning).toBe(false);
+      const body = requestBody(plan, plan.effort);
+      expect(body.model).toBe('claude-haiku-5-5');
+      expect(body.output_config).toEqual({ effort: plan.effort, format: { type: 'json_schema', schema: plan.schema } });
+      expect(body.thinking).toEqual({ type: 'adaptive' });
+      // The 2026-10-21 API version rejects sampling parameters.
+      expect(body).not.toHaveProperty('temperature');
+      expect(body.max_tokens).toBe(plan.maxTokens + THINKING_ROOM[plan.effort]);
     }
   });
 });
@@ -89,12 +106,12 @@ describe('AI tiers', () => {
   const now = Date.UTC(2026, 9, 25);
   const daysAgo = (days: number) => new Date(now - days * 86_400_000).toISOString();
 
-  it('keeps free learners on the fast model and gives Plus and the trial the strongest first', () => {
-    expect(planTask('coach', coachInput, 'free').models).toEqual([FAST_MODEL]);
-    expect(planTask('explain', { word: 'run', meaning: '跑', mode: 'english' }, 'free').models).toEqual([FAST_MODEL]);
-    expect(planTask('coach', coachInput, 'trial').models).toEqual([STRONG_MODEL, FAST_MODEL]);
-    expect(planTask('coach', coachInput, 'plus').models).toEqual([STRONG_MODEL, FAST_MODEL]);
-    expect(planTask('scan', { text: 'apple 蘋果' }, 'plus').models).toEqual([FAST_MODEL, STRONG_MODEL]);
+  it('keeps free learners at low reasoning and gives Plus and the trial more on writing tasks', () => {
+    expect(planTask('coach', coachInput, 'free').effort).toBe('low');
+    expect(planTask('explain', { word: 'run', meaning: '跑', mode: 'english' }, 'free').effort).toBe('low');
+    expect(planTask('coach', coachInput, 'trial').effort).toBe('medium');
+    expect(planTask('coach', coachInput, 'plus').effort).toBe('medium');
+    expect(planTask('scan', { text: 'apple 蘋果' }, 'plus').effort).toBe('low');
   });
 
   it('gives a subscription Plus and the first seven days of AI use the trial', () => {
@@ -154,25 +171,21 @@ describe('AI reply language', () => {
     expect(coach.accept?.({ rewrite: 'I practice every day.', tip: 'Great job.', followUp: 'Why?', corrections: [] })).toBe(false);
   });
 
-  it('asks the same model once more with a reminder, then moves on', async () => {
-    const plan = planTask('explain', explainInput, 'free');
-    const systems: string[] = [];
-    const responses = [reply(200, englishExplanation), reply(200, chineseExplanation)];
-    const fetch: Fetch = async (_url, init) => {
-      systems.push(JSON.parse(String(init.body)).messages[0].content);
-      return responses.shift()!;
-    };
-    await expect(complete(plan, { apiKey: 'k', fetch })).resolves.toEqual({ model: FAST_MODEL, content: chineseExplanation });
-    expect(systems).toHaveLength(2);
-    expect(systems[1]).toContain('繁體中文');
-    expect(systems[1].length).toBeGreaterThan(systems[0].length);
+  it('asks once more with a reminder at the same reasoning level', async () => {
+    const plan = planTask('explain', explainInput, 'plus');
+    const calls = recording([reply(englishExplanation), reply(chineseExplanation)]);
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch }))
+      .resolves.toEqual({ model: MODEL, effort: 'medium', content: chineseExplanation });
+    expect(calls.efforts).toEqual(['medium', 'medium']);
+    expect(calls.systems[1]).toContain('繁體中文');
+    expect(calls.systems[1].length).toBeGreaterThan(calls.systems[0].length);
   });
 
-  it('gives up after the corrected try and the other models', async () => {
+  it('gives up after the corrected try', async () => {
     const plan = planTask('explain', explainInput, 'plus');
-    const calls = recording([reply(200, englishExplanation), reply(200, englishExplanation), reply(200, englishExplanation)]);
+    const calls = recording([reply(englishExplanation), reply(englishExplanation), reply(englishExplanation)]);
     await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).rejects.toMatchObject({ kind: 'unavailable' });
-    expect(calls.models).toEqual([STRONG_MODEL, STRONG_MODEL, FAST_MODEL]);
+    expect(calls.efforts).toHaveLength(2);
   });
 });
 
@@ -189,7 +202,7 @@ describe('Learning insights', () => {
     const data = JSON.parse(plan.user);
     expect(data.totals).toMatchObject({ streakDays: 4, wordsKnown: 120, quizTotal: 40 });
     expect(data.hardestWords[0]).toEqual({ word: 'abandon', meaning: '遺棄', timesForgotten: 3 });
-    expect(plan.models).toEqual([STRONG_MODEL, FAST_MODEL]);
+    expect(plan.effort).toBe('medium');
     expect(plan.accept?.({ headline: '很穩定', summary: '這週每天都有學。', strengths: ['測驗正確率高'], focusWords: [{ word: 'abandon', tip: '想成放棄' }], plan: ['每天複習 10 個'] })).toBe(true);
     expect(plan.accept?.({ headline: 'Steady', summary: 'You studied daily.', strengths: ['Good accuracy'], focusWords: [], plan: ['Review 10 a day'] })).toBe(false);
   });
@@ -202,42 +215,84 @@ describe('Learning insights', () => {
   });
 });
 
-describe('Groq routing', () => {
+describe('Claude calls', () => {
   const plan = planTask('coach', coachInput);
   const feedback = { rewrite: 'I practice with my friend every day.', tip: '很好', followUp: 'What do you practice?', corrections: [] };
 
-  it('answers from the first model when it succeeds', async () => {
-    const calls = recording([reply(200, feedback)]);
-    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).resolves.toEqual({ model: STRONG_MODEL, content: feedback });
-    expect(calls.models).toEqual([STRONG_MODEL]);
+  it('answers from the first attempt when it succeeds', async () => {
+    const calls = recording([reply(feedback)]);
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).resolves.toEqual({ model: MODEL, effort: 'medium', content: feedback });
+    expect(calls.efforts).toEqual(['medium']);
   });
 
-  it('moves to the other model on a rate limit, outage, bad reply or network error', async () => {
-    for (const first of [reply(429), reply(503), reply(400), new Error('offline')]) {
-      const calls = recording([first, reply(200, feedback)]);
-      await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).resolves.toMatchObject({ model: FAST_MODEL });
-      expect(calls.models).toEqual([STRONG_MODEL, FAST_MODEL]);
+  it('retries once at the same level after an outage, overload, network error or unreadable reply', async () => {
+    for (const first of [failure(500), failure(529), new TypeError('offline'), new Response(JSON.stringify({
+      id: 'msg_1', type: 'message', role: 'assistant', model: MODEL, content: [{ type: 'text', text: 'not json' }],
+      stop_reason: 'end_turn', stop_details: null, usage: { input_tokens: 1, output_tokens: 1 },
+    }), { status: 200, headers: json })]) {
+      const calls = recording([first, reply(feedback)]);
+      await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).resolves.toMatchObject({ effort: 'medium' });
+      expect(calls.efforts).toEqual(['medium', 'medium']);
     }
   });
 
-  it('reports busy with the longest retry-after when every model is rate limited', async () => {
-    const calls = recording([reply(429, undefined, { 'retry-after': '3' }), reply(429, undefined, { 'retry-after': '7' })]);
-    const failure = await complete(plan, { apiKey: 'k', fetch: calls.fetch }).catch((error) => error);
-    expect(failure).toBeInstanceOf(GroqFailure);
-    expect(failure).toMatchObject({ kind: 'busy', retryAfter: 7 });
+  it('retries at low reasoning when the answer was cut short', async () => {
+    const calls = recording([reply({}, 'max_tokens'), reply(feedback)]);
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).resolves.toMatchObject({ effort: 'low', content: feedback });
+    expect(calls.efforts).toEqual(['medium', 'low']);
   });
 
-  it('stops at once when the key is rejected', async () => {
-    const calls = recording([reply(401)]);
-    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).rejects.toMatchObject({ kind: 'misconfigured' });
-    expect(calls.models).toEqual([STRONG_MODEL]);
+  it('retries only once', async () => {
+    const calls = recording([failure(500), failure(500)]);
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).rejects.toMatchObject({ kind: 'unavailable' });
+    expect(calls.efforts).toHaveLength(2);
   });
 
-  it('does not start another model once the deadline is nearly spent', async () => {
+  it('reports busy when Anthropic stays overloaded', async () => {
+    const calls = recording([failure(529), failure(529)]);
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).rejects.toMatchObject({ kind: 'busy' });
+  });
+
+  it('reports busy with retry-after at once when rate limited', async () => {
+    const calls = recording([failure(429, { 'retry-after': '7' })]);
+    const error = await complete(plan, { apiKey: 'k', fetch: calls.fetch }).catch((caught) => caught);
+    expect(error).toBeInstanceOf(AIFailure);
+    expect(error).toMatchObject({ kind: 'busy', retryAfter: 7 });
+    expect(calls.efforts).toHaveLength(1);
+  });
+
+  it('stops at once when the key is rejected or the request is malformed', async () => {
+    for (const status of [401, 403, 400]) {
+      const calls = recording([failure(status)]);
+      await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).rejects.toMatchObject({ kind: 'misconfigured' });
+      expect(calls.efforts).toHaveLength(1);
+    }
+  });
+
+  it('does not ask again after a refusal, so the app falls back to the on-device model', async () => {
+    const calls = recording([reply({}, 'refusal')]);
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).rejects.toMatchObject({ kind: 'unavailable' });
+    expect(calls.efforts).toHaveLength(1);
+  });
+
+  it('retries at low reasoning after a timeout', async () => {
+    let calls = 0;
+    const efforts: string[] = [];
+    const fetch: Fetch = (_url, init) => {
+      efforts.push(JSON.parse(String(init?.body)).output_config.effort);
+      if (calls++ > 0) return Promise.resolve(reply(feedback));
+      // Never answers; the per-attempt timer aborts it.
+      return new Promise((_resolve, reject) => init?.signal?.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError'))));
+    };
+    await expect(complete(plan, { apiKey: 'k', fetch, attemptTimeoutMs: 20 })).resolves.toMatchObject({ effort: 'low' });
+    expect(efforts).toEqual(['medium', 'low']);
+  });
+
+  it('does not retry once the deadline is nearly spent', async () => {
     let clock = 0;
-    const calls = recording([reply(503)]);
-    const fetch: Fetch = async (url, init) => { clock += 23_000; return calls.fetch(url, init); };
+    const calls = recording([failure(500)]);
+    const fetch: Fetch = async (url, init) => { clock += 25_000; return calls.fetch(url, init); };
     await expect(complete(plan, { apiKey: 'k', fetch, now: () => clock })).rejects.toMatchObject({ kind: 'unavailable' });
-    expect(calls.models).toEqual([STRONG_MODEL]);
+    expect(calls.efforts).toHaveLength(1);
   });
 });

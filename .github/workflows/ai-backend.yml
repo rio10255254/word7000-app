@@ -1,11 +1,11 @@
-# Deploys the Groq-backed AI service (supabase/functions/ai) and its daily
-# quota table, and hands the Groq key to Supabase as a function secret.
+# Deploys the Claude-backed AI service (supabase/functions/ai) and its daily
+# quota table, and hands the Anthropic key to Supabase as a function secret.
 #
 # The key never ships inside the iOS app: anyone can unpack an app and copy a
 # key out of it. The app calls this function with its Supabase session instead.
 #
 # Repository secrets (Settings > Secrets and variables > Actions):
-#   GROQ                   the Groq API key for this app (GROQ_API_KEY also works)
+#   ANTHROPIC_API_KEY      the Anthropic API key for this app (console.anthropic.com)
 #   SUPABASE_ACCESS_TOKEN  a Supabase personal access token (supabase.com/dashboard/account/tokens)
 #   SUPABASE_DB_PASSWORD   the project's database password, to apply the quota migration
 name: AI backend
@@ -14,11 +14,11 @@ on:
   workflow_dispatch:
     inputs:
       free_limit:
-        description: 'Daily AI requests for free learners (fast model)'
+        description: 'Daily AI requests for free learners (low reasoning)'
         type: string
         default: '20'
       plus_limit:
-        description: 'Daily AI requests for Plus and the 7-day trial (strongest model first)'
+        description: 'Daily AI requests for Plus and the 7-day trial (more reasoning on writing tasks)'
         type: string
         default: '100'
   push:
@@ -45,14 +45,14 @@ jobs:
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      GROQ_API_KEY: ${{ secrets.GROQ || secrets.GROQ_API_KEY || secrets.GROQ_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       FREE_LIMIT: ${{ inputs.free_limit || '20' }}
       PLUS_LIMIT: ${{ inputs.plus_limit || '100' }}
     steps:
       - name: Check the secrets
         run: |
           missing=""
-          [ -n "$GROQ_API_KEY" ] || missing="$missing GROQ"
+          [ -n "$ANTHROPIC_API_KEY" ] || missing="$missing ANTHROPIC_API_KEY"
           [ -n "$SUPABASE_ACCESS_TOKEN" ] || missing="$missing SUPABASE_ACCESS_TOKEN"
           [ -n "$SUPABASE_DB_PASSWORD" ] || missing="$missing SUPABASE_DB_PASSWORD"
           if [ -n "$missing" ]; then
@@ -81,8 +81,13 @@ jobs:
           supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
           supabase db push --password "$SUPABASE_DB_PASSWORD"
 
-      - name: Store the Groq key as a function secret
-        run: supabase secrets set --project-ref "$PROJECT_REF" GROQ_API_KEY="$GROQ_API_KEY" AI_FREE_LIMIT="$FREE_LIMIT" AI_PLUS_LIMIT="$PLUS_LIMIT"
+      - name: Store the Anthropic key as a function secret
+        run: |
+          supabase secrets set --project-ref "$PROJECT_REF" ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" AI_FREE_LIMIT="$FREE_LIMIT" AI_PLUS_LIMIT="$PLUS_LIMIT"
+          # The Groq key is no longer used; drop it if an earlier deploy stored it.
+          if supabase secrets list --project-ref "$PROJECT_REF" | grep -q GROQ_API_KEY; then
+            supabase secrets unset --project-ref "$PROJECT_REF" GROQ_API_KEY
+          fi
 
       - name: Deploy the AI function
         run: supabase functions deploy ai --project-ref "$PROJECT_REF" --use-api
@@ -92,11 +97,11 @@ jobs:
           # No session: the function must refuse, which proves it is deployed
           # and that it does not answer anonymous callers.
           status=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/functions/v1/ai" \
-            -H 'Content-Type: application/json' -d '{"task":"fillWord","input":{"word":"apple"}}')
+            -H 'Content-Type: application/json' -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}')
           echo "Unauthenticated request returned $status"
           [ "$status" = "401" ] || { echo "::error::Expected 401 from the deployed function, got $status"; exit 1; }
 
-      - name: Ask Groq one real question through the function
+      - name: Ask Claude one real question through the function
         run: |
           set -euo pipefail
           url="https://$PROJECT_REF.supabase.co"
@@ -106,11 +111,11 @@ jobs:
           token=$(curl -sf -X POST "$url/auth/v1/signup" -H "apikey: $key" -H 'Content-Type: application/json' -d '{"data":{}}' | jq -r '.access_token')
           [ -n "$token" ] && [ "$token" != "null" ] || { echo "::error::Guest sign-in failed; is anonymous sign-in enabled?"; exit 1; }
           reply=$(curl -s -w '\n%{http_code}' -X POST "$url/functions/v1/ai" -H "apikey: $key" -H "Authorization: Bearer $token" \
-            -H 'Content-Type: application/json' -d '{"task":"fillWord","input":{"word":"apple"}}')
+            -H 'Content-Type: application/json' -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}')
           status=$(echo "$reply" | tail -1)
           body=$(echo "$reply" | sed '$d')
-          echo "Status $status: $(echo "$body" | jq -c '{model, tier, remaining, meaning: .result.meaning, error}')"
+          echo "Status $status: $(echo "$body" | jq -c '{model, effort, tier, remaining, meaning: .result.meaning, error}')"
           [ "$status" = "200" ] && [ -n "$(echo "$body" | jq -r '.result.meaning // empty')" ] || {
-            echo "::error::The AI function did not answer. 503 usually means the Groq key is wrong; check the function logs in Supabase."
+            echo "::error::The AI function did not answer. 503 usually means the Anthropic key is wrong; check the function logs in Supabase."
             exit 1
           }

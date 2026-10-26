@@ -119,17 +119,24 @@ jobs:
           BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
         run: |
           node scripts/claude-review-words.mjs collect "$BATCH_ID"
-          cat "exports/claude-review/$BATCH_ID/REPORT.md" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Apply the word corrections
         if: steps.collect.outputs.content == 'words'
         env:
           OUT: ${{ steps.collect.outputs.out_dir }}
         run: |
-          [ "${{ steps.collect.outputs.meanings }}" = "0" ] || node scripts/apply-meaning-corrections.mjs "$OUT/meaning-corrections.json"
-          [ "${{ steps.collect.outputs.examples }}" = "0" ] || node scripts/apply-example-corrections.mjs "$OUT/example-corrections.json"
-          node scripts/claude-review-words.mjs sync
-          node scripts/export-native-words.mjs
+          node scripts/claude-review-words.mjs apply-words "$OUT"
+          # Drop the corrections the content audits flag, then apply the rest again.
+          for attempt in 1 2 3; do
+            npm run -s audit:meanings > /dev/null || true
+            npm run -s audit:examples > /dev/null || true
+            npm run -s audit:examples:zh-tw > /dev/null || true
+            pruned=$(node scripts/claude-review-words.mjs prune "$OUT")
+            echo "Attempt $attempt: dropped corrections for $pruned flagged words"
+            [ "$pruned" = "0" ] && break
+            git checkout -- src/data ios/Word7000/Resources/words.json
+            node scripts/claude-review-words.mjs apply-words "$OUT"
+          done
 
       - name: Apply the speaking card corrections
         if: steps.collect.outputs.content == 'speaking'
@@ -154,6 +161,12 @@ jobs:
           npm run audit:examples
           npm run audit:examples:zh-tw
 
+      - name: Show the report
+        if: always() && steps.collect.outcome == 'success'
+        env:
+          OUT: ${{ steps.collect.outputs.out_dir }}
+        run: cat "$OUT/REPORT.md" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Keep the report even if a check failed
         if: always() && steps.collect.outcome == 'success'
         uses: actions/upload-artifact@v4
@@ -165,12 +178,12 @@ jobs:
         env:
           BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
           CONTENT: ${{ steps.collect.outputs.content }}
-          MEANINGS: ${{ steps.collect.outputs.meanings }}
-          EXAMPLES: ${{ steps.collect.outputs.examples }}
-          SPEAKING: ${{ steps.collect.outputs.speaking }}
+          OUT: ${{ steps.collect.outputs.out_dir }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          count() { jq '.'"$1"' | length' "$OUT/review.json"; }
+          MEANINGS=$(count meanings); EXAMPLES=$(count examples); SPEAKING=$(count speaking)
           if [ "$CONTENT" = "speaking" ]; then
             git add content/speaking ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json "exports/claude-review/$BATCH_ID"
             git commit -m "Apply Claude's speaking card review $BATCH_ID" -m "$SPEAKING speaking card corrections; see exports/claude-review/$BATCH_ID/REPORT.md."

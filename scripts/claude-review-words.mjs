@@ -10,6 +10,13 @@
 //   node scripts/claude-review-words.mjs collect <batch-id> [--out exports/claude-review/<batch-id>]
 //   node scripts/claude-review-words.mjs sync
 //   node scripts/claude-review-words.mjs apply-speaking <speaking-corrections.json>
+//   node scripts/claude-review-words.mjs apply-words <out-dir>
+//   node scripts/claude-review-words.mjs prune <out-dir>
+//
+// `apply-words` runs both apply scripts on a collected review, then `sync` and
+// export-native-words.mjs. `prune` reads the reports the three content audits
+// just wrote and drops every correction for a word they flagged, so the rest
+// can be applied again without it.
 //
 // `sync` copies the reviewed JSON files into src/data/words.ts after the apply
 // scripts ran, the way generate-word-data.mjs would, without the dictionary
@@ -17,6 +24,7 @@
 // app's question file afterwards with build-native-speaking-library.mjs.
 //
 // Needs ANTHROPIC_API_KEY (or another credential the Anthropic SDK can find).
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,6 +50,10 @@ const BATCH_PRICES = {
   'claude-haiku-5-5': { input: 0.05, output: 0.25 },
 };
 const EFFORTS = ['low', 'medium', 'high'];
+// words.test.ts pins these meanings; a review must not change them.
+const PINNED_MEANINGS = new Set(['capt', 'unfriendly', 'fairness', 'stressful']);
+const AUDIT_REPORTS = ['example-quality-audit.json', 'taiwan-chinese-example-audit.json', 'meaning-quality-audit.json']
+  .map((name) => path.join(projectRoot, '.codex-run', name));
 
 const SYSTEM = [
   'You proofread the word list of Word7000, an app that teaches the 7000 most common English words to high-school students in Taiwan.',
@@ -356,7 +368,7 @@ export function correctionsFrom(chunkWordsList, reviews) {
     const exampleChanged = example !== current.example || exampleZh !== current.exampleZh;
     const base = { core: current.core, word: current.word.trim().toLowerCase(), reason: review.reason.trim() };
     if (meaningChanged) {
-      const problem = meaningProblem(primary, supplemental);
+      const problem = PINNED_MEANINGS.has(base.word) ? 'meaning is pinned by words.test.ts' : meaningProblem(primary, supplemental);
       if (problem) rejected.push({ ...base, field: 'meaning', primaryMeaningZh: primary, supplementalMeaningZh: supplemental, problem });
       else meanings.push({ ...base, primaryMeaningZh: primary, supplementalMeaningZh: supplemental, before: { primaryMeaningZh: current.meaningZh, supplementalMeaningZh: current.supplementalMeaningZh ?? '' } });
     }
@@ -542,16 +554,7 @@ async function collect(args) {
 
   const outDir = path.resolve(projectRoot, option(args, 'out', path.join('exports', 'claude-review', batchId)));
   fs.mkdirSync(outDir, { recursive: true });
-  const strip = (rows) => rows.map(({ before, reason, ...row }) => row);
-  const write = (name, value) => fs.writeFileSync(path.join(outDir, name), `${JSON.stringify(value, null, 2)}\n`);
-  if (content === 'speaking') {
-    write('speaking-corrections.json', strip(speaking));
-  } else {
-    write('meaning-corrections.json', strip(meanings));
-    write('example-corrections.json', strip(examples));
-  }
-  write('review.json', { batchId, content, model, effort, usage, meanings, examples, speaking, rejected, failed });
-  fs.writeFileSync(path.join(outDir, 'REPORT.md'), report({ batchId, content, model, effort, meanings, examples, speaking, rejected, failed, usage }));
+  writeReview(outDir, { batchId, content, model, effort, usage, meanings, examples, speaking, rejected, failed });
   console.log(`${meanings.length} meaning, ${examples.length} example and ${speaking.length} speaking corrections, ${rejected.length} rejected, ${failed.length} failed; about US$${usage.cost.toFixed(2)}. Written to ${path.relative(projectRoot, outDir)}.`);
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(process.env.GITHUB_OUTPUT, `out_dir=${path.relative(projectRoot, outDir)}\ncontent=${content}\nmeanings=${meanings.length}\nexamples=${examples.length}\nspeaking=${speaking.length}\n`);
@@ -584,12 +587,67 @@ function sync() {
   console.log(`Updated ${changed} words in ${path.relative(projectRoot, wordsPath)}.`);
 }
 
+function writeReview(outDir, review) {
+  const strip = (rows) => rows.map(({ before, reason, ...row }) => row);
+  const write = (name, value) => fs.writeFileSync(path.join(outDir, name), `${JSON.stringify(value, null, 2)}\n`);
+  if (review.content === 'speaking') {
+    write('speaking-corrections.json', strip(review.speaking));
+  } else {
+    write('meaning-corrections.json', strip(review.meanings));
+    write('example-corrections.json', strip(review.examples));
+  }
+  write('review.json', review);
+  fs.writeFileSync(path.join(outDir, 'REPORT.md'), report(review));
+}
+
+function applyWords(args) {
+  const outDir = path.resolve(projectRoot, args[0] ?? '');
+  const run = (script, file) => {
+    if (readJson(file).length === 0) return;
+    const result = spawnSync(process.execPath, [path.join(projectRoot, 'scripts', script), file], { stdio: 'inherit' });
+    if (result.status !== 0) throw new Error(`${script} failed`);
+  };
+  run('apply-meaning-corrections.mjs', path.join(outDir, 'meaning-corrections.json'));
+  run('apply-example-corrections.mjs', path.join(outDir, 'example-corrections.json'));
+  sync();
+  const exported = spawnSync(process.execPath, [path.join(projectRoot, 'scripts', 'export-native-words.mjs')], { stdio: 'inherit' });
+  if (exported.status !== 0) throw new Error('export-native-words.mjs failed');
+}
+
+/** Prints how many words lost their corrections because an audit flagged them. */
+function prune(args) {
+  const outDir = path.resolve(projectRoot, args[0] ?? '');
+  const review = readJson(path.join(outDir, 'review.json'));
+  const flagged = new Map();
+  for (const file of AUDIT_REPORTS) {
+    if (!fs.existsSync(file)) continue;
+    for (const issue of readJson(file).issues ?? []) {
+      if (!issue.word) continue;
+      const word = issue.word.trim().toLowerCase();
+      flagged.set(word, [...new Set([...(flagged.get(word) ?? []), issue.label])]);
+    }
+  }
+  const pruned = new Set();
+  const keep = (rows, field) => rows.filter((row) => {
+    if (!flagged.has(row.word)) return true;
+    pruned.add(row.word);
+    review.rejected.push({ ...row, field, problem: `audit: ${flagged.get(row.word).join(', ')}` });
+    return false;
+  });
+  review.meanings = keep(review.meanings, 'meaning');
+  review.examples = keep(review.examples, 'example');
+  const unexplained = [...flagged.keys()].filter((word) => !pruned.has(word));
+  if (unexplained.length) console.error(`Audits also flagged words this review did not change: ${unexplained.join(', ')}`);
+  writeReview(outDir, review);
+  console.log(pruned.size);
+}
+
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const [command, ...args] = process.argv.slice(2);
-  const commands = { submit, wait, collect, sync, 'apply-speaking': applySpeaking };
+  const commands = { submit, wait, collect, sync, 'apply-speaking': applySpeaking, 'apply-words': applyWords, prune };
   if (!commands[command]) {
-    console.error('Usage: node scripts/claude-review-words.mjs submit|wait|collect|sync|apply-speaking ...');
+    console.error('Usage: node scripts/claude-review-words.mjs submit|wait|collect|sync|apply-words|prune|apply-speaking ...');
     process.exit(1);
   }
   await commands[command](args);

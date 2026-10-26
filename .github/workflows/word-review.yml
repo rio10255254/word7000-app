@@ -1,0 +1,185 @@
+# Has Claude proofread the word list (or, with content "speaking", the 600
+# speaking practice cards) through the Message Batches API, applies
+# the corrections that pass the data rules, runs the content audits and commits
+# the result to the branch this workflow runs on, with a report of every change.
+#
+# Repository secret: ANTHROPIC_API_KEY (the same key the AI backend uses).
+#
+# Start it from the Actions tab on a feature branch. A batch usually ends
+# within an hour. If it is still running when the wait below runs out, start
+# it again with the batch id to collect it.
+name: Word review
+
+on:
+  workflow_dispatch:
+    inputs:
+      content:
+        description: 'What to review'
+        type: choice
+        options: ['words', 'speaking']
+        default: 'words'
+      model:
+        description: 'Claude model'
+        type: choice
+        options: ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-5-5']
+        default: 'claude-opus-5-5'
+      effort:
+        description: 'Reasoning effort'
+        type: choice
+        options: ['low', 'medium', 'high']
+        default: 'medium'
+      cores:
+        description: 'Levels to review, such as 1-14 or 1,3'
+        type: string
+        default: '1-14'
+      limit:
+        description: 'Review only the first N of those words (0 = all of them)'
+        type: string
+        default: '0'
+      batch_id:
+        description: 'Collect this earlier batch instead of starting a new one'
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: word-review-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - name: Check the branch and the key
+        run: |
+          case "$GITHUB_REF_NAME" in
+            master|native/*) echo "::error::Run this on a feature branch; it commits the corrections for review in a pull request."; exit 1 ;;
+          esac
+          [ -n "$ANTHROPIC_API_KEY" ] || { echo "::error::Add the ANTHROPIC_API_KEY repository secret first."; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - name: Read the request
+        id: request
+        env:
+          content: ${{ inputs.content }}
+          model: ${{ inputs.model }}
+          effort: ${{ inputs.effort }}
+          cores: ${{ inputs.cores }}
+          limit: ${{ inputs.limit }}
+          batch_id: ${{ inputs.batch_id }}
+        run: |
+          [[ "$batch_id" =~ ^(msgbatch_[A-Za-z0-9]+)?$ ]] || { echo "::error::batch_id does not look like a batch id"; exit 1; }
+          [[ "$content" =~ ^(words|speaking)$ ]] || { echo "::error::content must be words or speaking"; exit 1; }
+          { echo "content=$content"; echo "model=$model"; echo "effort=$effort"; echo "cores=$cores"; echo "limit=$limit"; echo "batch_id=$batch_id"; } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Start the batch
+        id: submit
+        if: steps.request.outputs.batch_id == ''
+        env:
+          CONTENT: ${{ steps.request.outputs.content }}
+          MODEL: ${{ steps.request.outputs.model }}
+          EFFORT: ${{ steps.request.outputs.effort }}
+          CORES: ${{ steps.request.outputs.cores }}
+          LIMIT: ${{ steps.request.outputs.limit }}
+        run: node scripts/claude-review-words.mjs submit --content "$CONTENT" --model "$MODEL" --effort "$EFFORT" --cores "$CORES" --limit "$LIMIT"
+
+      - name: Wait for the batch
+        env:
+          BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
+        run: node scripts/claude-review-words.mjs wait "$BATCH_ID" --minutes 300
+
+      - name: Collect the corrections
+        id: collect
+        env:
+          BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
+        run: |
+          node scripts/claude-review-words.mjs collect "$BATCH_ID"
+
+      - name: Apply the word corrections
+        if: steps.collect.outputs.content == 'words'
+        env:
+          OUT: ${{ steps.collect.outputs.out_dir }}
+        run: |
+          node scripts/claude-review-words.mjs apply-words "$OUT"
+          # Drop the corrections the content audits flag, then apply the rest again.
+          for attempt in 1 2 3; do
+            npm run -s audit:meanings > /dev/null || true
+            npm run -s audit:examples > /dev/null || true
+            npm run -s audit:examples:zh-tw > /dev/null || true
+            pruned=$(node scripts/claude-review-words.mjs prune "$OUT")
+            echo "Attempt $attempt: dropped corrections for $pruned flagged words"
+            [ "$pruned" = "0" ] && break
+            git checkout -- src/data ios/Word7000/Resources/words.json
+            node scripts/claude-review-words.mjs apply-words "$OUT"
+          done
+          # The Swift tests replay golden results built from the word data.
+          UPDATE_NATIVE_FIXTURES=1 npx vitest run src/nativeParity.test.ts src/nativeParityChinese.test.ts
+
+      - name: Apply the speaking card corrections
+        if: steps.collect.outputs.content == 'speaking'
+        env:
+          OUT: ${{ steps.collect.outputs.out_dir }}
+        run: |
+          [ "${{ steps.collect.outputs.speaking }}" = "0" ] || node scripts/claude-review-words.mjs apply-speaking "$OUT/speaking-corrections.json"
+          node scripts/build-native-speaking-library.mjs
+          UPDATE_NATIVE_FIXTURES=1 npx vitest run src/nativeParity.test.ts src/nativeParityChinese.test.ts
+
+      - name: Run the speaking card checks
+        if: steps.collect.outputs.content == 'speaking'
+        run: |
+          node scripts/build-native-speaking-library.mjs --check
+          npx vitest run
+
+      - name: Run the word checks
+        if: steps.collect.outputs.content == 'words'
+        run: |
+          npx vitest run
+          npm run validate:meanings
+          npm run audit:meanings
+          npm run audit:examples
+          npm run audit:examples:zh-tw
+
+      - name: Show the report
+        if: always() && steps.collect.outcome == 'success'
+        env:
+          OUT: ${{ steps.collect.outputs.out_dir }}
+        run: cat "$OUT/REPORT.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the report even if a check failed
+        if: always() && steps.collect.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-review-${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
+          path: ${{ steps.collect.outputs.out_dir }}
+
+      - name: Commit the result
+        env:
+          BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
+          CONTENT: ${{ steps.collect.outputs.content }}
+          OUT: ${{ steps.collect.outputs.out_dir }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          count() { jq '.'"$1"' | length' "$OUT/review.json"; }
+          MEANINGS=$(count meanings); EXAMPLES=$(count examples); SPEAKING=$(count speaking)
+          if [ "$CONTENT" = "speaking" ]; then
+            git add content/speaking ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json src/data/speaking-cards.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
+            git commit -m "Apply Claude's speaking card review $BATCH_ID" -m "$SPEAKING speaking card corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
+          else
+            git add src/data ios/Word7000/Resources/words.json ios/Packages/Word7000Core/Tests/Word7000CoreTests "exports/claude-review/$BATCH_ID"
+            git commit -m "Apply Claude's word review $BATCH_ID" -m "$MEANINGS meaning and $EXAMPLES example corrections; see exports/claude-review/$BATCH_ID/REPORT.md."
+          fi
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

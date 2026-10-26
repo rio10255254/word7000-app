@@ -145,6 +145,9 @@ struct SpellingSessionView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .padding(.top, 4)
+                    if let note = WordNotes.note(for: word.word) {
+                        Text(L.t(note.explanationZh, note.explanationEn)).font(.subheadline)
+                    }
                 }
             }
             if !word.example.isEmpty {

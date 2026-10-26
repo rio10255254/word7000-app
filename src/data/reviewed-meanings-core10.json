@@ -1219,8 +1219,8 @@
   },
   {
     "word": "competing",
-    "primaryMeaningZh": "相互矛盾的",
-    "supplementalMeaningZh": "相互競爭的",
+    "primaryMeaningZh": "相互競爭的",
+    "supplementalMeaningZh": "相互衝突的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core10"
   },
@@ -1758,8 +1758,8 @@
   },
   {
     "word": "fabulous",
-    "primaryMeaningZh": "傳說中的",
-    "supplementalMeaningZh": "難以置信的；極好的",
+    "primaryMeaningZh": "極好的",
+    "supplementalMeaningZh": "難以置信的；傳說中的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core10"
   },
@@ -1828,8 +1828,8 @@
   },
   {
     "word": "startle",
-    "primaryMeaningZh": "驚起",
-    "supplementalMeaningZh": "",
+    "primaryMeaningZh": "使嚇一跳",
+    "supplementalMeaningZh": "驚嚇；驚跳",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core10"
   },
@@ -2794,8 +2794,8 @@
   },
   {
     "word": "imaginative",
-    "primaryMeaningZh": "想像中的",
-    "supplementalMeaningZh": "有想像力的；虛構的",
+    "primaryMeaningZh": "有想像力的",
+    "supplementalMeaningZh": "富有創意的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core10"
   },

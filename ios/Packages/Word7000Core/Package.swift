@@ -9,9 +9,11 @@ let package = Package(
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
         .library(name: "Word7000Core", targets: ["Word7000Core"]),
+        .executable(name: "CoachEvaluation", targets: ["CoachEvaluation"]),
     ],
     targets: [
         .target(name: "Word7000Core", resources: [.process("Resources")]),
         .testTarget(name: "Word7000CoreTests", dependencies: ["Word7000Core"]),
+        .executableTarget(name: "CoachEvaluation", dependencies: ["Word7000Core"]),
     ]
 )

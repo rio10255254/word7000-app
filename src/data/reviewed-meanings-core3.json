@@ -1,8 +1,8 @@
 [
   {
     "word": "attend",
-    "primaryMeaningZh": "照料",
-    "supplementalMeaningZh": "出席；參加；專心處理",
+    "primaryMeaningZh": "出席",
+    "supplementalMeaningZh": "參加；照料；專心處理",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -282,14 +282,14 @@
   {
     "word": "nuclear",
     "primaryMeaningZh": "核的",
-    "supplementalMeaningZh": "核子的；原子能的",
+    "supplementalMeaningZh": "原子能的；核武的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
   {
     "word": "address",
-    "primaryMeaningZh": "寫地址",
-    "supplementalMeaningZh": "地址；處理；演說",
+    "primaryMeaningZh": "地址",
+    "supplementalMeaningZh": "寫地址；處理；演說",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -470,8 +470,8 @@
   },
   {
     "word": "presence",
-    "primaryMeaningZh": "存在感",
-    "supplementalMeaningZh": "在場；出席；存在",
+    "primaryMeaningZh": "在場",
+    "supplementalMeaningZh": "出席；存在；存在感",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -611,7 +611,7 @@
   {
     "word": "gold",
     "primaryMeaningZh": "金色",
-    "supplementalMeaningZh": "黃金；寶貴的",
+    "supplementalMeaningZh": "黃金；金製的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -1275,8 +1275,8 @@
   },
   {
     "word": "broad",
-    "primaryMeaningZh": "大大的",
-    "supplementalMeaningZh": "寬廣的；概略的",
+    "primaryMeaningZh": "寬廣的",
+    "supplementalMeaningZh": "廣泛的；概略的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -1492,7 +1492,7 @@
   },
   {
     "word": "wave",
-    "primaryMeaningZh": "浪花",
+    "primaryMeaningZh": "波浪",
     "supplementalMeaningZh": "揮手；波動",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
@@ -1933,8 +1933,8 @@
   },
   {
     "word": "launch",
-    "primaryMeaningZh": "使下水",
-    "supplementalMeaningZh": "發射；推出；開始",
+    "primaryMeaningZh": "發射",
+    "supplementalMeaningZh": "推出；開始；使下水",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -2570,7 +2570,7 @@
   },
   {
     "word": "double",
-    "primaryMeaningZh": "雙的",
+    "primaryMeaningZh": "雙重的",
     "supplementalMeaningZh": "兩倍；加倍；替身",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
@@ -2675,8 +2675,8 @@
   },
   {
     "word": "prospect",
-    "primaryMeaningZh": "景色",
-    "supplementalMeaningZh": "前景；可能性；勘探",
+    "primaryMeaningZh": "前景",
+    "supplementalMeaningZh": "可能性；景色；勘探",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -3200,8 +3200,8 @@
   },
   {
     "word": "stable",
-    "primaryMeaningZh": "穩的",
-    "supplementalMeaningZh": "馬廄",
+    "primaryMeaningZh": "穩定的",
+    "supplementalMeaningZh": "穩固的；馬廄",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },
@@ -3446,7 +3446,7 @@
   {
     "word": "prepared",
     "primaryMeaningZh": "準備好的",
-    "supplementalMeaningZh": "特製的",
+    "supplementalMeaningZh": "願意的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core03"
   },

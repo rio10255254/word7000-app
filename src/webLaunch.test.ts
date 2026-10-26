@@ -251,7 +251,7 @@ describe('free web launch configuration', () => {
     const quizSource = appSource.slice(quizStart, libraryStart);
 
     expect(appSource).toContain("type QuizPracticeMode = 'choice' | 'speaking'");
-    expect(appSource).toContain('buildConversationPrompt');
+    expect(appSource).toContain('speakingPromptFor');
     expect(quizSource).toContain('ui.choiceQuizMode');
     expect(quizSource).toContain('ui.speakingQuizMode');
     expect(quizSource).toContain('conversationPrompt');

@@ -54,6 +54,8 @@ struct ScanView: View {
     @State private var target: Target = .new
     /// The paywall, shown over the scanner when the allowance runs out here.
     @State private var paywall: PaywallReason?
+    @State private var askCloud = false
+    @State private var afterCloudAnswer: (() -> Void)?
     @State private var newBankName = WordBanks.defaultScanBankName(chineseMode: L.mode == .chinese)
 
     private var destinationBanks: [CustomVocabSet] { model.customSets.sets }
@@ -109,6 +111,11 @@ struct ScanView: View {
             .ignoresSafeArea()
         }
         .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
+        .cloudConsentAlert(isPresented: $askCloud) {
+            let action = afterCloudAnswer
+            afterCloudAnswer = nil
+            action?()
+        }
         .sheet(isPresented: $previewOpen) {
             NavigationStack {
                 TabView {
@@ -186,6 +193,7 @@ struct ScanView: View {
                     Label(message, systemImage: "exclamationmark.triangle.fill")
                         .font(.footnote)
                         .foregroundStyle(Palette.review)
+                        .accessibilityIdentifier("scan-message")
                 }
             }
 
@@ -212,9 +220,16 @@ struct ScanView: View {
     }
 
     /// Every read counts against the trial allowance, so check before each one.
-    private func allowScan(_ action: () -> Void) {
+    private func allowScan(_ action: @escaping () -> Void) {
         switch plus.decide(.scan) {
-        case .allowed: action()
+        case .allowed:
+            // Ask about the online AI before the camera opens, not halfway through reading.
+            if IntelligenceSettings.shared.scanAllowed, CloudAssistant.shared.needsConsent {
+                afterCloudAnswer = action
+                askCloud = true
+            } else {
+                action()
+            }
         case .needsPlus: paywall = .locked(.scan)
         case .trialLimitReached: paywall = .trialScansUsed
         }

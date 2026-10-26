@@ -1,0 +1,26 @@
+[
+  {
+    "core": 4,
+    "word": "tion",
+    "example": "Add -tion to the verb act, and you get the noun action.",
+    "exampleZh": "在動詞 act 後面加上 -tion，就變成名詞 action。"
+  },
+  {
+    "core": 12,
+    "word": "op",
+    "example": "My grandmother's knee op went well, and she is walking again.",
+    "exampleZh": "奶奶的膝蓋手術很順利，她又能走路了。"
+  },
+  {
+    "core": 12,
+    "word": "min",
+    "example": "The next bus comes in 5 min, so we can wait here.",
+    "exampleZh": "下一班公車五分鐘後就來，我們在這裡等就好。"
+  },
+  {
+    "core": 12,
+    "word": "scots",
+    "example": "Old Scots songs filled the village hall during the winter festival.",
+    "exampleZh": "冬季慶典期間，古老的蘇格蘭歌曲響遍整個村莊禮堂。"
+  }
+]

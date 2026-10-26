@@ -16,6 +16,9 @@ public enum PlusFeature: String, CaseIterable, Sendable {
     case history
     /// Timed mock exams.
     case examPractice
+    /// Deeper online AI reasoning and more AI requests a day. Free learners
+    /// still get quick answers; the server decides how much Claude reasons.
+    case smartAI
 }
 
 public enum PlusAccess: Equatable, Sendable {

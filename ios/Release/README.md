@@ -24,6 +24,29 @@ The app and widget targets both declare the existing App Group
 `com.rio.word7000.ExpoWidgetsTarget`: omitting it makes EAS try to disable the
 group on Apple's registered identifier and blocks the release.
 
+### Uploading straight to Apple
+
+Signing still uses the certificate and profiles EAS stores, which takes
+seconds. The upload goes straight to App Store Connect with `xcrun altool`
+when these repository secrets exist (Settings > Secrets and variables >
+Actions); otherwise it falls back to `eas submit`:
+
+- `ASC_KEY_ID`: the key's ID, such as `ABC123DEFG`.
+- `ASC_ISSUER_ID`: the Issuer ID shown above the key list.
+- `ASC_PRIVATE_KEY`: the whole contents of the downloaded `AuthKey_<ID>.p8`,
+  including the BEGIN and END lines.
+
+Create the key in App Store Connect > Users and Access > Integrations >
+App Store Connect API > Team Keys, with the App Manager role. Apple lets you
+download the `.p8` only once.
+
+### Reusing a passed run
+
+A release reuses a passed full Native iOS run of identical source, usually
+the pull request's run before merging, instead of waiting for the merge
+commit's own run. Start one from Actions > Native iOS > Run workflow with
+`all` checks.
+
 The Native iOS workflow checks iOS 18, 26, and 27 separately. Its screenshots
 are saved in version-specific folders on the `native-screenshots` branch.
 
@@ -48,3 +71,24 @@ first five-word practice, exact search with a visible keyboard, 20-question
 quiz navigation, and all five photo formats saved into a playable bank.
 Inspect light/dark and both-language screenshots on iOS 18, 26, and 27 before
 dispatching `native-testflight`.
+
+## Speaking coach TestFlight preview
+
+Rio authorized a TestFlight preview on 2026-10-22. Release from
+`native/apple-speaking-coach`; do not merge it into `master` or replace the
+formal App Store submission. The release must wait for a successful full
+Native iOS push run of the same source, and the signed archive must exclude
+both coach and recording test fixtures.
+
+This preview adds optional local recording, playback, editable on-device
+transcription, and Apple Intelligence speaking suggestions when available.
+Recording and manual answers remain available without Apple Intelligence.
+No cloud AI, new subscription promise, or answer-content analytics is enabled.
+It also includes reviewed notes for 24 words, a seven-day summary, and practice
+shortcuts. It does not claim expanded notes for all 7000 words.
+
+The iOS 18, 26, and 27 targeted UI checks passed. Hosted test machines cannot
+run the real Apple Intelligence model. TestFlight is therefore needed to
+evaluate real speech transcription, suggestion quality, response time, audio
+routing, and Siri on supported physical devices. The 200 evaluation inputs
+validate request structure, not model accuracy or 200 independent learners.

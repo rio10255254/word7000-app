@@ -62,6 +62,7 @@ final class ScreenshotTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 2).tap()
+        for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
         let chart = app.descendants(matching: .any)["history-chart"].firstMatch
@@ -98,6 +99,7 @@ final class ScreenshotTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 2).tap()
+        for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
         XCTAssertTrue(app.descendants(matching: .any)["history-chart-empty"].firstMatch.waitForExistence(timeout: 5))
@@ -139,6 +141,7 @@ final class ScreenshotTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 2).tap()
         sleep(1)
         snap(app, "plus-5-me")
+        for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         if app.buttons["me-history"].exists {
             app.buttons["me-history"].tap()
@@ -183,7 +186,14 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["quiz-option-0"].tap()
         XCTAssertTrue(app.buttons["quiz-next"].waitForExistence(timeout: 5))
         snap(app, "\(prefix)-5-quiz-answered")
-        app.buttons["quiz-close"].tap()
+        let closeQuiz = app.buttons["quiz-close"]
+        let closeReady = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            closeQuiz.exists && closeQuiz.isHittable && closeQuiz.frame.maxX < app.frame.midX
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [closeReady], timeout: 5), .completed)
+        closeQuiz.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        let quizGone = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: closeQuiz)
+        XCTAssertEqual(XCTWaiter.wait(for: [quizGone], timeout: 5), .completed)
 
         app.tabBars.buttons.element(boundBy: 1).tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))

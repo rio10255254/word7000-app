@@ -17,30 +17,42 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["scan-choose-photo"].tap()
         XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
         snapshot(app, name: "scan-photo-picker")
-        cancelButton(in: app).tap()
-        XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))
+        dismissPhotoPicker(in: app)
         app.buttons["scan-choose-photo"].tap()
         XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
-        cancelButton(in: app).tap()
-        XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))
+        dismissPhotoPicker(in: app)
         XCTAssertFalse(app.staticTexts["辨識失敗"].exists)
     }
 
     func testPhotosAreReadAndSavedAcrossInputFormats() {
         for index in 0..<5 {
             let app = openScanner()
-            app.buttons["scan-choose-photo"].tap()
-            XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
-            snapshot(app, name: "scan-photo-library-\(index)")
-            let photos = app.images.matching(identifier: "PXGGridLayout-Info")
-            let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in photos.count >= 5 }, object: nil)
-            XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 60), .completed, app.debugDescription)
-            snapshot(app, name: "scan-photo-library-\(index)-ready")
-            photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-            let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch
-            if add.waitForExistence(timeout: 2) { add.tap() }
+            func pickPhoto() {
+                app.buttons["scan-choose-photo"].tap()
+                XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
+                snapshot(app, name: "scan-photo-library-\(index)")
+                let photos = app.images.matching(identifier: "PXGGridLayout-Info")
+                // Resolve the last required photo instead of repeatedly enumerating
+                // the remote Photos accessibility tree inside a predicate callback.
+                XCTAssertTrue(photos.element(boundBy: 4).waitForExistence(timeout: 60), app.debugDescription)
+                snapshot(app, name: "scan-photo-library-\(index)-ready")
+                photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+                let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch
+                if add.waitForExistence(timeout: 2) { add.tap() }
+            }
+            pickPhoto()
             let save = app.buttons["scan-save"]
-            XCTAssertTrue(save.waitForExistence(timeout: 45), app.debugDescription)
+            // The iOS 18 simulator's Photos service sometimes never delivers the
+            // photo; after ScanPhotoLoader.transferTimeout the app says so and
+            // offers the photo picker again. Pick it once more, as a learner would.
+            let loadFailed = app.descendants(matching: .any)["scan-message"]
+            let deadline = Date().addingTimeInterval(80)
+            while !save.exists, !loadFailed.exists, Date() < deadline { _ = save.waitForExistence(timeout: 2) }
+            if !save.exists, loadFailed.exists {
+                snapshot(app, name: "scan-photo-\(index)-load-failed")
+                pickPhoto()
+            }
+            XCTAssertTrue(save.waitForExistence(timeout: 80), app.debugDescription)
             let words = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'"))
                 .allElementsBoundByIndex.compactMap { ($0.value as? String)?.lowercased() }
             let meanings = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-meaning-'"))
@@ -56,8 +68,7 @@ final class ScanPickerTests: XCTestCase {
             save.scrollIntoView(in: app, swipes: 4)
             XCTAssertTrue(save.isEnabled)
             XCTAssertTrue(save.isHittable)
-            save.tap()
-            XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+            saveScan(save, in: app)
             snapshot(app, name: "scan-photo-\(index)-saved")
             app.buttons["scan-start-study"].tap()
             XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
@@ -114,8 +125,7 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertEqual(save.label, "存入字庫（3 個）")
         XCTAssertTrue(app.staticTexts["scan-duplicates-summary"].exists)
         snapshot(app, name: "scan-precise-duplicate-review")
-        save.tap()
-        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        saveScan(save, in: app)
         app.buttons["scan-start-study"].tap()
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["study-position"].label.hasSuffix("/ 4"))
@@ -204,8 +214,7 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["Lesson"].tap()
         let save = app.buttons["scan-save"]
         save.scrollIntoView(in: app, swipes: 5)
-        save.tap()
-        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        saveScan(save, in: app)
     }
 
     private func readPasted(_ app: XCUIApplication) {
@@ -223,8 +232,7 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertFalse(bankName.isEmpty)
         let save = app.buttons["scan-save"]
         save.scrollIntoView(in: app, swipes: 5)
-        save.tap()
-        XCTAssertTrue(app.staticTexts["scan-saved"].waitForExistence(timeout: 10))
+        saveScan(save, in: app)
         return bankName
     }
 
@@ -240,6 +248,36 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["words-scan"].tap()
         XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))
         return app
+    }
+
+    /// The system photo picker animates away on its own schedule, and on a slow
+    /// simulator the scanner underneath is not tappable until it has gone.
+    /// A Cancel tap made while the picker is still loading can be dropped too,
+    /// so tap it again while it is still there. Mid-animation, Cancel can have
+    /// an empty frame, and reading `isHittable` then fails the test outright, so
+    /// it is read only once Cancel has a frame. (A `hittable` predicate did not
+    /// come true for the picker's out-of-process Cancel on iOS 18.)
+    private func dismissPhotoPicker(in app: XCUIApplication) {
+        let choose = app.buttons["scan-choose-photo"]
+        for _ in 0..<3 {
+            let cancel = cancelButton(in: app)
+            if cancel.exists, !cancel.frame.isEmpty, cancel.isHittable { cancel.tap() }
+            let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: choose)
+            if XCTWaiter.wait(for: [ready], timeout: 8) == .completed { return }
+        }
+        XCTFail("The photo picker did not close\n\(app.debugDescription)")
+    }
+
+    /// Right after the picker closes, a tap on Save can land while the sheet is
+    /// still settling and be dropped. Saving moves straight to the saved screen,
+    /// so a Save button still on screen means the tap never arrived; try once more.
+    private func saveScan(_ save: XCUIElement, in app: XCUIApplication) {
+        let saved = app.staticTexts["scan-saved"]
+        save.tap()
+        if !saved.waitForExistence(timeout: 10), save.exists, save.isHittable {
+            save.tap()
+        }
+        XCTAssertTrue(saved.waitForExistence(timeout: 10), app.debugDescription)
     }
 
     private func cancelButton(in app: XCUIApplication) -> XCUIElement {

@@ -78,7 +78,9 @@ struct HistoryActivityChart: View {
             } else if hasActivity, let detail = selectedIndex.map({ bars[$0] }) ?? bars.last {
                 selectedSummary(detail)
             }
-            if hasActivity {
+            if compact, hasActivity, activeDays < 3 {
+                weekStrip
+            } else if hasActivity {
                 histogram
             } else {
                 ContentUnavailableView {
@@ -155,6 +157,40 @@ struct HistoryActivityChart: View {
                 .accessibilityIdentifier(compact ? "me-week-\(kind.rawValue)" : "history-selected-\(kind.rawValue)")
             }
         }
+    }
+
+    private var activeDays: Int { activity.filter { $0.total > 0 }.count }
+
+    /// A quiet first week: one dot per day instead of a mostly empty chart.
+    private var weekStrip: some View {
+        HStack(spacing: 0) {
+            ForEach(activity) { day in
+                let today = day.date == activity.last?.date
+                VStack(spacing: 8) {
+                    ZStack {
+                        Circle()
+                            .fill(day.total > 0 ? Palette.accent : Palette.fill)
+                        if day.total > 0 {
+                            Image(systemName: "checkmark")
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .frame(width: 30, height: 30)
+                    .overlay {
+                        if today { Circle().stroke(Palette.accent, lineWidth: 2).padding(-4) }
+                    }
+                    Text(axisLabel(day.date))
+                        .font(.caption2.weight(today ? .bold : .regular))
+                        .foregroundStyle(today ? Palette.accent : Palette.secondaryLabel)
+                }
+                .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("\(title(for: day)), \(L.t("\(day.total) 次", "\(day.total) actions"))")
+            }
+        }
+        .padding(.vertical, 6)
+        .accessibilityIdentifier("me-week-strip")
     }
 
     // MARK: Chart

@@ -1341,7 +1341,7 @@ Changing mode resets the quiz to setup and rebuilds the study session (mode is p
 
 ## 3. Learning engine
 
-Reference implementation: `src/lib/progress.ts`, `src/lib/studySession.ts`, `src/lib/learningAnalytics*.ts`, `src/lib/conversationPrompts.ts`, `src/lib/chineseDisplay.ts`. Port the functions 1:1 as pure Swift functions on value types and port `progress.test.ts`, `studySession.test.ts`, `learningAnalytics.test.ts`, `conversationPrompts.test.ts` as XCTest.
+Reference implementation: `src/lib/progress.ts`, `src/lib/studySession.ts`, `src/lib/learningAnalytics*.ts`, `src/lib/speakingCards.ts`, `src/lib/chineseDisplay.ts`. Port the functions 1:1 as pure Swift functions on value types and port `progress.test.ts`, `studySession.test.ts`, `learningAnalytics.test.ts`, `speakingCards.test.ts` as XCTest.
 
 ### 3.1 Progress data model (JSON — this exact shape is stored locally AND in Supabase `profiles.progress`)
 
@@ -1542,7 +1542,7 @@ Use `UInt32` wrapping arithmetic (`&*`, `&+`). Runtime seeds are random, so exac
 
 ### 3.10 Speaking practice
 
-Same session machinery as the choice quiz (same pool, count, order). For the visible word, `buildConversationPrompt(word, mode)` produces `{keyword, keywordPronunciation, question, questionSupport, referenceAnswer, referenceTranslation}` — port `src/lib/conversationPrompts.ts` **1:1** (keyword lists, 20 exact-word questions per mode, topic matching against `"<word lowercased> <meaningZh lowercased>"`, part-of-speech fallbacks via `pos.lowercased().split(/[\/,;]/)[0].trim()` with `startsWith('v')`, `'adv'`, `'a'`). English mode: keyword = word, no pronunciation, support `Try to answer in 2-3 sentences and include "<word>" naturally.`, reference answer = `example + " I would add one personal reason or example to make the answer sound natural."`, translation = `exampleZh + " 我會再補上一個自己的原因或例子，讓回答聽起來更自然。"`. Chinese mode: keyword = first part of the concise meaning, pronunciation = its pinyin, support `Try to answer in Chinese and include "<kw>" once. English hint: "<word>".`, reference = `exampleZh + " 我會再補上一個自己的原因或例子，讓回答更像真實對話。"`, translation = `example + " I would add one personal reason or example to make the answer sound natural."`.
+Same session machinery as the choice quiz (same count and order). Questions come from the 600 reviewed cards in `content/speaking` (built by `scripts/build-native-speaking-library.mjs` into the native `speaking-prompts.json` and the web `src/data/speaking-cards.json`); a session draws on words that have a card when there are enough of them. For a word with a card, `speakingPromptFor(word, mode, cards)` (`src/lib/speakingCards.ts`, native `SpeakingPractice.card`) shows the card's question and its own model answer: English mode keyword = word, support `試著用 <word> 回答兩到三句，說出自己的經驗或想法。`, reference = `answerEn`, translation = `answerZh`; Chinese mode keyword = `keywordZh` with pinyin, support `Answer in Chinese and try to use “<keywordZh>”.`, reference = `answerZh`, translation = `answerEn`. A word without a card asks for one sentence of the learner's own about their day, school or plans using the word (Chinese mode: the first part of the concise meaning) and shows the word's reviewed example and its translation as the sample; nothing is appended to it. Never generate questions from templates.
 
 Revealing (either button) records exactly one analytics event per question: `speakingCompleted` ("I finished speaking") or `speakingSkipped` ("show sample answer"). Speaking does **not** change word progress, studiedToday or streak. There is no audio/recording/speech recognition.
 
@@ -2261,8 +2261,8 @@ Labels/hints in copy tables (`a11y` keys like `viewWordDetails`, `favoriteWordNa
 
 **M1 — Core engine, pure Swift + tests (1 week)**
 - [ ] Models `WordEntry`, `WordProgress`, `ProgressState`, `LearningAnalyticsState`, `CustomSetState` with lossless Codable and RN validators.
-- [ ] Port `progress.ts` (SRS, daily/streak, filterWords/search, computeStats, buildStudyQueue, quiz session/options, merge), PRNG, `studySession.ts`, `learningAnalytics*.ts`, `chineseDisplay.ts`, `conversationPrompts.ts`, `customSets.ts`, `wordBanks.ts`, `scanParser.ts`.
-- [ ] Port the vitest suites listed in §3/§5 to XCTest (progress, studySession, learningAnalytics, conversationPrompts, customSets, wordBanks, scanParser, filterPreferences, progressStorage, userMemorySync, streakReminder, nativeUpdatePolicy, oauthCallback, accountIdentity).
+- [ ] Port `progress.ts` (SRS, daily/streak, filterWords/search, computeStats, buildStudyQueue, quiz session/options, merge), PRNG, `studySession.ts`, `learningAnalytics*.ts`, `chineseDisplay.ts`, `speakingCards.ts`, `customSets.ts`, `wordBanks.ts`, `scanParser.ts`.
+- [ ] Port the vitest suites listed in §3/§5 to XCTest (progress, studySession, learningAnalytics, speakingCards, customSets, wordBanks, scanParser, filterPreferences, progressStorage, userMemorySync, streakReminder, nativeUpdatePolicy, oauthCallback, accountIdentity).
 
 **M2 — Persistence + migration (½ week)**
 - [ ] Key-value store with the same keys/JSON; debounced progress writer; flush on background.

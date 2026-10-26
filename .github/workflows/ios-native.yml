@@ -6,6 +6,9 @@
 # Screenshots are uploaded as an artifact and pushed to the
 # `native-screenshots` branch so they can be viewed from a phone.
 name: Native iOS
+# A full manual run is named so a release can recognise it and reuse it for
+# identical source (see ios-release.yml) instead of testing the same code again.
+run-name: "${{ inputs.checks && format('Native iOS: {0} checks', inputs.checks) || github.event.head_commit.message }}"
 
 on:
   push:
@@ -28,9 +31,9 @@ on:
   workflow_dispatch:
     inputs:
       checks:
-        description: 'Full regression, or focused bilingual screenshots after copy-only changes'
+        description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy']
+        options: ['all', 'copy', 'coach', 'compile', 'polish']
         default: 'all'
 
 permissions:
@@ -57,7 +60,9 @@ jobs:
             xcode: 27
             runner: xcode-27
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
+    # The full iOS 27 walk-through on the xcode-27 runners takes 50-55 minutes,
+    # too close to an hour once the simulator is slow to boot.
+    timeout-minutes: 90
     env:
       IOS_MAJOR: ${{ matrix.ios }}
       XCODE_MAJOR: ${{ matrix.xcode }}
@@ -79,7 +84,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/screenshots"
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
-          for fw in Vision FoundationModels; do
+          for fw in Vision FoundationModels Speech; do
             f=$(find "$SDK/System/Library/Frameworks/$fw.framework" -name "arm64e-apple-ios.swiftinterface" 2>/dev/null | head -1)
             if [ -n "$f" ]; then cp "$f" "$RUNNER_TEMP/screenshots/api-$fw.swiftinterface.txt"; fi
           done
@@ -91,6 +96,9 @@ jobs:
       - name: Speaking questions match their editorial sources
         run: node scripts/build-native-speaking-library.mjs --check
 
+      - name: Coaching evaluation cases match their authored sources
+        run: node scripts/build-coach-evaluation.mjs --check
+
       - name: Release archive checks
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
@@ -98,6 +106,8 @@ jobs:
         run: |
           xcodebuild -version
           swift test --package-path ios/Packages/Word7000Core
+          swift run --package-path ios/Packages/Word7000Core CoachEvaluation --validate content/coach-evaluation/cases.generated.json
+          swift run --package-path ios/Packages/Word7000Core CoachEvaluation --probe
 
       - name: Speaking history account isolation
         run: node scripts/test-native-speaking-recency.mjs
@@ -138,6 +148,14 @@ jobs:
         env:
           CHECKS: ${{ inputs.checks }}
         run: |
+          if [ "$CHECKS" = "compile" ]; then
+            set +e
+            xcodebuild build -project ios/Word7000.xcodeproj -scheme Word7000 \
+              -destination "id=$SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
+            status=$?
+            grep -E "error:|warning:|\*\* BUILD" "$RUNNER_TEMP/xcodebuild.log" | tail -100
+            exit $status
+          fi
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
           xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
@@ -147,19 +165,66 @@ jobs:
           set +e
           TEST_SELECTION=()
           if [ "$CHECKS" = "copy" ]; then
-            TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
+            TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
+          elif [ "$CHECKS" = "coach" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
+          elif [ "$CHECKS" = "polish" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testMockAIDisabledStillExplainsStatusAndAllowsPractice -only-testing:Word7000UITests/SpeakingCoachTests/testRecordingReviewPlaybackAndDeletionWithExplicitFixture -only-testing:Word7000UITests/SpeakingCoachTests/testNativeRecorderPermissionTimerPlaybackAndCleanup -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
           fi
-          xcodebuild test \
+          DERIVED="$RUNNER_TEMP/DerivedData"
+          xcodebuild build-for-testing \
             -project ios/Word7000.xcodeproj \
             -scheme Word7000 \
             -destination "id=$SIMULATOR_UDID" \
+            -derivedDataPath "$DERIVED" \
+            CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
+          status=$?
+          if [ $status -ne 0 ]; then
+            grep -E "error:|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -100
+            exit $status
+          fi
+          # The first launch after installing on a freshly booted simulator can
+          # outlast XCTest's launch window ("Timed out while acquiring background
+          # assertion", seen on iOS 27), failing whichever test happens to run
+          # first. Launch the app once here so the tests start warm.
+          APP=$(find "$DERIVED/Build/Products" -maxdepth 2 -type d -name Word7000.app -path '*iphonesimulator*' | head -1)
+          if [ -n "$APP" ]; then
+            xcrun simctl install "$SIMULATOR_UDID" "$APP" \
+              && xcrun simctl launch "$SIMULATOR_UDID" com.rio.word7000 -uiTestingReset -uiTestingLight \
+              && sleep 10
+            xcrun simctl terminate "$SIMULATOR_UDID" com.rio.word7000 || true
+          fi
+          xcodebuild test-without-building \
+            -project ios/Word7000.xcodeproj \
+            -scheme Word7000 \
+            -destination "id=$SIMULATOR_UDID" \
+            -derivedDataPath "$DERIVED" \
             -parallel-testing-enabled NO \
             "${TEST_SELECTION[@]}" \
             -resultBundlePath "$RUNNER_TEMP/Word7000.xcresult" \
-            CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
+            CODE_SIGNING_ALLOWED=NO >> "$RUNNER_TEMP/xcodebuild.log" 2>&1
           status=$?
           grep -E "error:|Test Case|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -200
           exit $status
+
+      - name: Coach Release build excludes debug responses
+        if: inputs.checks == 'coach' || inputs.checks == 'polish'
+        run: |
+          set -euo pipefail
+          xcodebuild build -project ios/Word7000.xcodeproj -scheme Word7000 \
+            -configuration Release -destination "id=$SIMULATOR_UDID" \
+            -derivedDataPath "$RUNNER_TEMP/CoachRelease" CODE_SIGNING_ALLOWED=NO \
+            > "$RUNNER_TEMP/coach-release.log" 2>&1
+          python3 - "$RUNNER_TEMP/CoachRelease/Build/Products/Release-iphonesimulator/Word7000.app/Word7000" "$RUNNER_TEMP/screenshots/coach-release-verification.json" <<'PY'
+          import json, os, sys
+          from pathlib import Path
+          binary = Path(sys.argv[1])
+          assert binary.is_file(), 'Release app executable is missing'
+          assert b'-uiTestingCoach' not in binary.read_bytes(), 'Release app contains coach test fixtures'
+          assert b'-uiTestingRecording' not in binary.read_bytes(), 'Release app contains recording test fixtures'
+          Path(sys.argv[2]).write_text(json.dumps({'commit': os.environ['GITHUB_SHA'], 'coachTestFixturesExcluded': True}))
+          print('Release app built successfully without coach test fixtures')
+          PY
 
       - name: Collect screenshots
         if: always()
@@ -168,6 +233,7 @@ jobs:
           cp "$HOME"/word7000-screenshots/*.png "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           cp "$HOME"/word7000-screenshots/*-hierarchy.txt "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           cp "$RUNNER_TEMP/xcodebuild.log" "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
+          cp "$RUNNER_TEMP/coach-release.log" "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           xcrun simctl spawn "$SIMULATOR_UDID" log show --last 10m --style compact \
             --predicate 'process CONTAINS "Photos" OR process CONTAINS "photolibrary"' \
             > "$RUNNER_TEMP/screenshots/photos-system.log" 2>/dev/null || true
@@ -186,7 +252,7 @@ jobs:
 
   publish-screenshots:
     needs: native
-    if: always() && github.event_name != 'pull_request' && inputs.checks != 'copy'
+    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all')
     runs-on: ubuntu-latest
     permissions:
       contents: write

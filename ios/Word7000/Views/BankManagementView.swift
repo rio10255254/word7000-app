@@ -129,6 +129,9 @@ struct WordEditorSheet: View {
     @State private var supplemental: String
     @State private var example: String
     @State private var translation: String
+    @State private var filling = false
+    @State private var fillFailure: CloudAI.Failure?
+    @State private var askCloud = false
 
     init(word: WordEntry? = nil, setId: String) {
         self.word = word
@@ -149,6 +152,21 @@ struct WordEditorSheet: View {
                     TextField(L.t("主要意思", "Main meaning"), text: $meaning, axis: .vertical)
                     TextField(L.t("詞性", "Part of speech"), text: $part).textInputAutocapitalization(.never)
                     TextField(L.t("補充意思", "Other meanings"), text: $supplemental, axis: .vertical)
+                    if CloudAssistant.shared.offered {
+                        Button(action: fill) {
+                            HStack {
+                                Label(L.t("AI 幫我填意思、詞性和例句", "AI fill-in: meaning, part of speech and example"), systemImage: "sparkles")
+                                if filling { Spacer(); ProgressView() }
+                            }
+                        }
+                        .disabled(english.trimmed.isEmpty || filling)
+                        .accessibilityIdentifier("word-editor-ai-fill")
+                        if let fillFailure { Text(fillFailure.message).font(.footnote).foregroundStyle(.secondary) }
+                    }
+                } footer: {
+                    if CloudAssistant.shared.offered {
+                        Text(L.t("AI 只會填入空白的欄位，存入前請再確認。", "AI fills only empty fields; check them before saving."))
+                    }
                 }
                 Section(L.t("例句（選填）", "Example (optional)")) {
                     TextField(L.t("英文例句", "English example"), text: $example, axis: .vertical).lineLimit(2...6)
@@ -156,6 +174,7 @@ struct WordEditorSheet: View {
                 }
             }
             .scrollDismissesKeyboard(.interactively)
+            .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { fill() } }
             .navigationTitle(word == nil ? L.addWord : L.t("編輯單字", "Edit word"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -165,6 +184,31 @@ struct WordEditorSheet: View {
                         .disabled(english.trimmed.isEmpty || meaning.trimmed.isEmpty)
                         .accessibilityIdentifier("word-editor-save")
                 }
+            }
+        }
+    }
+
+    /// Suggests the fields the learner left empty; what they typed stays.
+    private func fill() {
+        let text = english.trimmed
+        guard !text.isEmpty, !filling else { return }
+        if CloudAssistant.shared.needsConsent { askCloud = true; return }
+        filling = true
+        fillFailure = nil
+        Task {
+            defer { filling = false }
+            do {
+                let suggestion = try await CloudAssistant.shared.run(.fillWord, ["word": .string(String(text.prefix(80)))], as: CloudAI.WordSuggestion.self).cleaned()
+                guard english.trimmed == text else { return }
+                guard !suggestion.meaning.isEmpty else { fillFailure = .invalidInput; return }
+                if meaning.trimmed.isEmpty { meaning = suggestion.meaning }
+                if part.trimmed.isEmpty { part = suggestion.partOfSpeech }
+                if supplemental.trimmed.isEmpty { supplemental = suggestion.otherMeanings }
+                if example.trimmed.isEmpty { example = suggestion.example }
+                if translation.trimmed.isEmpty { translation = suggestion.exampleTranslation }
+            } catch is CancellationError {
+            } catch {
+                fillFailure = (error as? CloudAI.Failure) ?? .unavailable
             }
         }
     }

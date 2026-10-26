@@ -40,6 +40,15 @@ final class ReminderRegistrationTests: XCTestCase {
         ["device_id": .string("iphone"), "studied_today": .number(Double(count))]
     }
 
+    private func waitForLogout(_ finished: () -> Bool) async {
+        // Await the observable completion while the transport stays held.
+        // A fixed 150ms sleep races task scheduling on shared CI machines.
+        let deadline = ContinuousClock.now.advanced(by: .seconds(2))
+        while !finished(), ContinuousClock.now < deadline {
+            try? await Task.sleep(for: .milliseconds(10))
+        }
+    }
+
     func testDebounceCoalescesBeforeDispatch() async {
         let queue = ReminderRegistrationCoordinator()
         var sent: [Row] = []
@@ -310,10 +319,7 @@ final class ReminderRegistrationTests: XCTestCase {
                 return true
             }
         }
-        // The old request stays held throughout, so any return proves logout
-        // did not wait for it. Polling rather than a fixed sleep keeps a busy
-        // CI machine's scheduling delay from failing the test.
-        for _ in 0..<300 where result == nil { try? await Task.sleep(for: .milliseconds(10)) }
+        await waitForLogout { result != nil }
         XCTAssertEqual(result, false, "Logout must return while the old request is still held")
         queue.submit(owner: "a", values: values(9), delay: .zero, upload: transport.send)
         transport.finish(0)
@@ -330,7 +336,7 @@ final class ReminderRegistrationTests: XCTestCase {
             result = await queue.revoke(owner: "a", deviceId: "iphone", timeout: .milliseconds(20), upload: transport.send)
         }
         await transport.waitForCount(1)
-        for _ in 0..<300 where result == nil { try? await Task.sleep(for: .milliseconds(10)) }
+        await waitForLogout { result != nil }
         XCTAssertEqual(result, false)
         queue.submit(owner: "guest", values: values(0), delay: .zero, upload: transport.send)
         XCTAssertEqual(transport.rows.count, 1)

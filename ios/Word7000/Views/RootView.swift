@@ -78,7 +78,7 @@ struct RootView: View {
             })
         }
         .fullScreenCover(item: $activity, onDismiss: {
-            guard let next = pendingActivity else { return }
+            guard let next = pendingActivity else { openRequestedPractice(); return }
             pendingActivity = nil
             activity = next
         }) { activity in
@@ -107,7 +107,11 @@ struct RootView: View {
             }
         }
         .fullScreenCover(isPresented: $welcomeOpen, onDismiss: {
-            if studyAfterWelcome { studyAfterWelcome = false; activity = .study }
+            if studyAfterWelcome {
+                studyAfterWelcome = false
+                PracticeLaunch.shared.requested = nil
+                activity = .study
+            } else { openRequestedPractice() }
         }) {
             WelcomeView { mode, target, practice in
                 model.settings.onboardingComplete = true
@@ -120,7 +124,9 @@ struct RootView: View {
                 model.saveNow()
             }
         }
-        .task { welcomeOpen = model.settings.onboardingComplete != true }
+        .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
+        .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }
+        .task { await IntelligenceSettings.shared.refreshPolicy() }
         .onOpenURL { url in
             guard url.scheme == "word7000", url.host == "study", !welcomeOpen else { return }
             if activity == nil { activity = .study }
@@ -146,6 +152,18 @@ struct RootView: View {
         } else {
             plus.require(.scan) { activity = .scan }
         }
+    }
+
+    private func openRequestedPractice() {
+        if let requested = PracticeLaunch.shared.requested, requested == activity {
+            PracticeLaunch.shared.requested = nil
+            return
+        }
+        guard !welcomeOpen, model.settings.onboardingComplete == true, activity == nil,
+              !signInForScan, plus.paywallReason == nil,
+              let requested = PracticeLaunch.shared.requested else { return }
+        PracticeLaunch.shared.requested = nil
+        activity = requested
     }
 
     /// Closes the current full-screen activity and opens another.

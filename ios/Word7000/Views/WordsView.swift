@@ -461,12 +461,13 @@ struct WordDetailView: View {
                     .padding(.vertical, 4)
                 }
             }
-            Section {
-                LabeledContent(L.status, value: L.statusLabel(progress.status))
-                if progress.status != .new, let due = LearningEngine.reviewDueDate(progress) {
-                    LabeledContent(L.nextReviewTitle, value: due)
-                }
-                LabeledContent(L.level, value: word.group)
+            if let note = WordNotes.note(for: word.word) {
+                Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
+                        : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
+            }
+            AIExplanationSection(word: word)
+            Section(L.t("學習進度", "Progress")) {
+                WordProgressCard(progress: progress, level: word.group)
             }
         }
         .navigationTitle(face.prompt)
@@ -528,5 +529,61 @@ struct AddWordSheet: View {
 
     var body: some View {
         WordEditorSheet(setId: model.settings.activeBankId)
+    }
+}
+
+/// Where a word stands in the review schedule: a short track that fills one
+/// step per successful review, and when it comes back.
+struct WordProgressCard: View {
+    var progress: WordProgress
+    var level: String
+
+    private var steps: Int { LearningEngine.reviewIntervalDays.count }
+    private var filled: Int { progress.status == .new ? 0 : LearningEngine.reviewStage(progress) + 1 }
+    private var tint: Color { progress.status == .review ? Palette.review : Palette.known }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                CardStatusChip(status: progress.status)
+                Spacer()
+                if !level.isEmpty {
+                    Text(level).font(.subheadline).foregroundStyle(.secondary)
+                }
+            }
+            HStack(spacing: 4) {
+                ForEach(0..<steps, id: \.self) { step in
+                    Capsule()
+                        .fill(step < filled ? tint : Palette.fill)
+                        .frame(height: 6)
+                }
+            }
+            .accessibilityHidden(true)
+            Text(caption)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 6)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("word-progress")
+    }
+
+    private var caption: String {
+        guard progress.status != .new else {
+            return L.t("還沒學過，在學習卡第一次見到它後就會開始安排複習。",
+                       "Not studied yet. Reviews are scheduled after you first meet it in a study session.")
+        }
+        guard let due = LearningEngine.reviewDueDate(progress),
+              let dueDay = DayMath.dayNumber(due), let today = DayMath.dayNumber(DayMath.today()) else {
+            return L.statusLabel(progress.status)
+        }
+        let days = dueDay - today
+        let when: String
+        switch days {
+        case ...0: when = L.t("今天", "today")
+        case 1: when = L.t("明天", "tomorrow")
+        default: when = L.t("\(days) 天後", "in \(days) days")
+        }
+        return L.t("\(L.nextReviewTitle)：\(when)", "\(L.nextReviewTitle): \(when)")
     }
 }

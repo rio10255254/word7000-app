@@ -322,6 +322,20 @@ final class AccountModel {
         supportsCustomReminderTime = supported
     }
 
+    /// Whether the online AI service can be reached with a session.
+    var canUseCloudAI: Bool { client != nil && session != nil }
+
+    /// Runs one online AI task with this learner's session; guests count too.
+    func runAI<Value: Decodable>(_ kind: CloudAI.Kind, input: [String: JSONValue], entitlement: String?,
+                                 as type: Value.Type = Value.self) async throws -> (value: Value, usage: CloudAI.Usage?) {
+        guard let client, let current = session else { throw CloudAI.Failure.unavailable }
+        let valid: AuthSession
+        do { valid = try await validSession(client: client, current) }
+        catch is CancellationError { throw CancellationError() }
+        catch { throw CloudAI.Failure.unavailable }
+        return try await client.runAI(kind, input: input, session: valid, entitlement: entitlement, as: type)
+    }
+
     func saveLiveActivityDevice(_ row: [String: JSONValue]) async -> Bool {
         guard let client, let current = session, !Task.isCancelled else { return false }
         let generation = identityGeneration

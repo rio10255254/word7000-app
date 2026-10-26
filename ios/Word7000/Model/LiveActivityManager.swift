@@ -8,6 +8,8 @@ import Word7000Core
 @MainActor
 final class LiveActivityManager {
     private(set) var pushToStartToken: String?
+    /// How long a "done" card stays before it goes away on its own.
+    static let celebrationTime: TimeInterval = 8 * 60
 
     /// Starts, updates or ends the local streak card to match the plan.
     func sync(plan: StreakReminderPlan, progress: ProgressState, chineseInterface: Bool) async {
@@ -15,8 +17,18 @@ final class LiveActivityManager {
         let running = ActivityKit.Activity<LiveActivityAttributes>.activities
         for activity in running {
             guard var props = StreakActivityProps.decode(activity.content.state.props), props.isNoon else { continue }
-            if props.endDate <= Date() || progress.studiedToday >= progress.dailyTarget {
+            if props.endDate <= Date() {
                 await activity.end(nil, dismissalPolicy: .immediate)
+            } else if progress.studiedToday >= progress.dailyTarget {
+                // Show the goal as done for a few minutes rather than vanishing.
+                guard (props.progressCurrent ?? 0) < (props.progressTarget ?? 1) else { continue }
+                props.progressCurrent = Double(progress.dailyTarget)
+                props.progressTarget = Double(progress.dailyTarget)
+                props.title = chineseInterface ? "今天的目標完成了" : "Today's goal is done"
+                props.keepStreakLabel = chineseInterface ? "學了 \(progress.studiedToday) 個單字，明天見！" : "\(progress.studiedToday) words today. See you tomorrow!"
+                props.streakLabel = chineseInterface ? "連續 \(max(1, progress.streak)) 天" : "\(max(1, progress.streak))-day streak"
+                await activity.end(ActivityContent(state: LiveActivityAttributes.ContentState(props: props.json), staleDate: nil),
+                                   dismissalPolicy: .after(Date().addingTimeInterval(Self.celebrationTime)))
             } else {
                 props.progressCurrent = Double(progress.studiedToday)
                 props.progressTarget = Double(progress.dailyTarget)
@@ -30,13 +42,27 @@ final class LiveActivityManager {
         guard plan.activeNow, let props = StreakActivityProps.streak(plan: plan, chineseInterface: chineseInterface),
               let expiresAt = plan.expiresAt, Date() < expiresAt
         else {
-            for activity in running where StreakActivityProps.decode(activity.content.state.props)?.isNoon != true {
-                await activity.end(nil, dismissalPolicy: .immediate)
+            // Studying today in the last hour saves the streak: say so briefly.
+            let saved = progress.lastStudyDate == DayMath.today() && progress.streak > 0
+            for activity in running {
+                guard var props = StreakActivityProps.decode(activity.content.state.props), !props.isNoon else { continue }
+                if saved, props.endDate > Date(), (props.progressCurrent ?? 0) < (props.progressTarget ?? 1) {
+                    props.progressCurrent = 1
+                    props.progressTarget = 1
+                    props.streak = progress.streak
+                    props.title = chineseInterface ? "連勝保住了！" : "Streak saved!"
+                    props.keepStreakLabel = chineseInterface ? "今天也學了，繼續保持" : "You studied today. Keep it going"
+                    props.streakLabel = chineseInterface ? "連續 \(progress.streak) 天" : "\(progress.streak)-day streak"
+                    await activity.end(ActivityContent(state: LiveActivityAttributes.ContentState(props: props.json), staleDate: nil),
+                                       dismissalPolicy: .after(Date().addingTimeInterval(Self.celebrationTime)))
+                } else if !saved || props.endDate <= Date() {
+                    await activity.end(nil, dismissalPolicy: .immediate)
+                }
             }
             return
         }
         let content = ActivityContent(state: LiveActivityAttributes.ContentState(props: props.json), staleDate: expiresAt)
-        if let first = running.first(where: { StreakActivityProps.decode($0.content.state.props)?.isNoon != true }) {
+        if let first = running.first(where: { $0.activityState == .active && StreakActivityProps.decode($0.content.state.props)?.isNoon != true }) {
             await first.update(content)
         } else {
             _ = try? ActivityKit.Activity<LiveActivityAttributes>.request(attributes: LiveActivityAttributes(url: "word7000://study"), content: content, pushType: .token)

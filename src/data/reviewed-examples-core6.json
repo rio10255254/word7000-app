@@ -358,8 +358,8 @@
   },
   {
     "word": "anybody",
-    "example": "Could anybody with a flashlight see the broken lock?",
-    "exampleZh": "拿手電筒的人能看見壞掉的鎖嗎？",
+    "example": "Can anybody with a flashlight help me check the broken lock?",
+    "exampleZh": "有沒有人可以拿手電筒幫我看看壞掉的鎖？",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -478,7 +478,7 @@
   {
     "word": "welfare",
     "example": "The shelter checks each rescued dog's welfare before adoption.",
-    "exampleZh": "收容所送養前會確認每隻救援犬的照護狀況。",
+    "exampleZh": "收容所在送養前會確認每隻救援犬的健康與福祉。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -505,8 +505,8 @@
   },
   {
     "word": "catholic",
-    "example": "His catholic taste covered opera, comics, and folk metal.",
-    "exampleZh": "他廣泛的品味涵蓋歌劇、漫畫和民謠金屬。",
+    "example": "My aunt goes to a small Catholic church near the night market every Sunday.",
+    "exampleZh": "我阿姨每個星期天都會去夜市附近的一間小天主教堂。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -583,7 +583,7 @@
   {
     "word": "mechanism",
     "example": "A tiny mechanism locks the camera when film runs out.",
-    "exampleZh": "底片用完時，一個小機構會鎖住相機。",
+    "exampleZh": "底片用完時，一個小小的機械裝置會把相機鎖住。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -730,7 +730,7 @@
   {
     "word": "numerous",
     "example": "By dawn, numerous sparrows crowded wires above the breakfast stall.",
-    "exampleZh": "許多麻雀擠在早餐攤上方的電線上。",
+    "exampleZh": "天亮時，許多麻雀擠在早餐攤上方的電線上。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -758,7 +758,7 @@
   {
     "word": "poverty",
     "example": "Years of poverty forced the family to sell their fishing boat.",
-    "exampleZh": "貧窮迫使那家人賣掉漁船。",
+    "exampleZh": "多年的貧窮迫使那家人賣掉了漁船。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1003,7 +1003,7 @@
   {
     "word": "earnings",
     "example": "Her weekend earnings paid for new violin strings.",
-    "exampleZh": "她週末賺來的收入支付了新小提琴弦費用。",
+    "exampleZh": "她用週末賺來的錢買了新的小提琴弦。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1122,7 +1122,7 @@
   {
     "word": "peer",
     "example": "She had to peer through steam to read the sign.",
-    "exampleZh": "她得瞇著眼穿過蒸氣，才能看清招牌。",
+    "exampleZh": "她得隔著蒸氣費力細看，才能看清招牌。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1192,7 +1192,7 @@
   {
     "word": "dominant",
     "example": "The dominant scent in the shop was roasted sesame.",
-    "exampleZh": "店裡最濃郁的是烘烤芝麻的香氣。",
+    "exampleZh": "店裡壓過其他味道的，是烘烤芝麻的香氣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1514,7 +1514,7 @@
   {
     "word": "unity",
     "example": "The lantern parade gave the neighborhood a rare unity.",
-    "exampleZh": "燈籠遊行難得凝聚了整個社區。",
+    "exampleZh": "燈籠遊行讓整個社區難得團結在一起。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1682,21 +1682,21 @@
   {
     "word": "carrier",
     "example": "A mail carrier rescued letters from the flooded porch.",
-    "exampleZh": "郵遞員從淹水門廊搶救信件。",
+    "exampleZh": "郵差從淹水的門廊搶救出信件。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
   {
     "word": "segment",
-    "example": "The orange segment slipped from the child's chopsticks.",
-    "exampleZh": "那瓣橘子從孩子筷子間滑落。",
+    "example": "The first segment of the class video shows how to fold paper cranes.",
+    "exampleZh": "課堂影片的第一部分示範如何摺紙鶴。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
   {
     "word": "congressional",
-    "example": "Two congressional staff visited the damaged fish market after sunrise.",
-    "exampleZh": "日出後，國會幕僚走訪受損魚市場。",
+    "example": "Two congressional staffers visited the damaged fish market after sunrise.",
+    "exampleZh": "日出後，兩名國會幕僚走訪了受損的魚市場。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1821,8 +1821,8 @@
   },
   {
     "word": "monthly",
-    "example": "The monthly magazine featured abandoned cinemas this issue.",
-    "exampleZh": "這期月刊專題介紹廢棄電影院。",
+    "example": "We pay the monthly phone bill at the convenience store near school.",
+    "exampleZh": "我們在學校附近的便利商店繳每個月的電話費。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1905,8 +1905,8 @@
   },
   {
     "word": "execute",
-    "example": "The chef can execute the knife cut in seconds.",
-    "exampleZh": "主廚能在幾秒內完成那種刀工。",
+    "example": "Our class will execute the cleanup plan as soon as the rain stops.",
+    "exampleZh": "雨一停，我們班就會執行打掃計畫。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -1961,8 +1961,8 @@
   },
   {
     "word": "hint",
-    "example": "A hint of ginger lingered in the pear soup.",
-    "exampleZh": "梨湯裡殘留一點薑味。",
+    "example": "Mom gave me a hint about my birthday present, but I still couldn't guess it.",
+    "exampleZh": "媽媽給了我一點暗示，但我還是猜不出生日禮物是什麼。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -2017,8 +2017,8 @@
   },
   {
     "word": "liberty",
-    "example": "The new rules gave sailors liberty after six weeks at sea.",
-    "exampleZh": "新規定讓水手出海六週後獲准休假。",
+    "example": "Living alone gave my cousin the liberty to decorate her room however she liked.",
+    "exampleZh": "自己一個人住，讓表姊可以自由地照喜好布置房間。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -2130,7 +2130,7 @@
   {
     "word": "counterpart",
     "example": "Her counterpart in Japan sent heirloom seeds from Hokkaido.",
-    "exampleZh": "她在日本的對應窗口寄來北海道傳家種子。",
+    "exampleZh": "她在日本職位相當的同行寄來北海道的傳家種子。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -2199,8 +2199,8 @@
   },
   {
     "word": "presidency",
-    "example": "His presidency at the bank began with strict audits.",
-    "exampleZh": "他擔任銀行總裁後先展開嚴格稽核。",
+    "example": "Her presidency began with a promise to improve public schools across the country.",
+    "exampleZh": "她就任總統之初，就承諾要改善全國的公立學校。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -2480,7 +2480,7 @@
   {
     "word": "debut",
     "example": "Her debut at the opera house sold out quickly.",
-    "exampleZh": "她在歌劇院的初次登台很快售罄。",
+    "exampleZh": "她在歌劇院初次登台的門票很快就賣光了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -2641,7 +2641,7 @@
   {
     "word": "naval",
     "example": "Two naval officers boarded the ferry near the cape.",
-    "exampleZh": "海軍軍官在海岬附近登上渡輪。",
+    "exampleZh": "兩名海軍軍官在海岬附近登上渡輪。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -3214,8 +3214,8 @@
   },
   {
     "word": "associated",
-    "example": "Three associated clinics share one emergency hotline in the valley.",
-    "exampleZh": "三間合作診所在山谷共用一支緊急熱線。",
+    "example": "Headaches are often associated with too little sleep and too much screen time.",
+    "exampleZh": "頭痛常與睡眠不足和長時間盯著螢幕相關。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -3242,8 +3242,8 @@
   },
   {
     "word": "treasury",
-    "example": "The treasury stored coins from three former kingdoms.",
-    "exampleZh": "寶庫收藏三個舊王國的硬幣。",
+    "example": "After years of war, the kingdom's treasury had almost no gold left.",
+    "exampleZh": "經過多年戰爭，王國的國庫幾乎沒有黃金了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },
@@ -3361,8 +3361,8 @@
   },
   {
     "word": "roach",
-    "example": "A roach flashed silver under the bridge before sunrise.",
-    "exampleZh": "日出前，一條斜齒鯿在橋下游過，閃著銀光。",
+    "example": "A roach ran across the kitchen floor when I turned on the light.",
+    "exampleZh": "我一開燈，就有一隻蟑螂從廚房地板上跑過去。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core06"
   },

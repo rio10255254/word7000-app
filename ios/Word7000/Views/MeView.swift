@@ -32,6 +32,13 @@ struct MeView: View {
 
             Section {
                 HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
+                let summary = LearningWeekSummary(days: model.activity(days: 7))
+                if summary.activeDays > 0 {
+                    Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
+                             "In the last 7 days: \(summary.activeDays) active days, \(summary.words) word practices and \(summary.speaking) speaking practices."))
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("me-week-summary")
+                }
                 Button { historyOpen = true } label: {
                     ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
                 }
@@ -44,6 +51,8 @@ struct MeView: View {
                     Text(L.quizAccuracy(accuracy.percent, correct: accuracy.correct, total: accuracy.total))
                 }
             }
+
+            AIInsightsSection()
 
             PlusSection(compact: true)
 
@@ -68,6 +77,10 @@ struct MeView: View {
     }
 }
 
+/// Grouped the way the iPhone's own Settings app is: what you study, when
+/// you are reminded, AI and voices, how the app looks and feels, the account,
+/// and the fine print. Each row shows its current value, so the page reads at
+/// a glance without opening anything.
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
@@ -76,28 +89,49 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                Picker(L.studyModeTitle, selection: Binding(
+                Picker(selection: Binding(
                     get: { model.studyMode },
                     set: { model.setStudyMode($0) }
                 )) {
                     ForEach(StudyMode.allCases) { mode in
                         Text(L.studyModeLabel(mode)).tag(mode)
                     }
+                } label: {
+                    SettingsLabel(L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent)
                 }
-                Picker(L.dailyTargetTitle, selection: Binding(
+                Picker(selection: Binding(
                     get: { model.progress.dailyTarget },
                     set: { model.setDailyTarget($0) }
                 )) {
                     ForEach(dailyTargetOptions, id: \.self) { value in
                         Text(L.wordsPerDay(value)).tag(value)
                     }
+                } label: {
+                    SettingsLabel(L.dailyTargetTitle, icon: "target", tint: .orange)
                 }
-                Toggle(L.reminder, isOn: Binding(
+                Toggle(isOn: Binding(
+                    get: { model.settings.studyAutoReveal ?? false },
+                    set: { model.settings.studyAutoReveal = $0 }
+                )) {
+                    SettingsLabel(L.autoReveal, icon: "eye.fill", tint: .teal)
+                }
+                .accessibilityIdentifier("settings-auto-reveal")
+            } header: {
+                Text(L.t("學習", "Learning"))
+            } footer: {
+                Text(L.dailyTargetText)
+            }
+
+            Section {
+                Toggle(isOn: Binding(
                     get: { model.reminderEnabled },
                     set: { model.setReminderEnabled($0) }
-                ))
+                )) {
+                    SettingsLabel(L.reminder, icon: "bell.badge.fill", tint: .red)
+                }
+                .accessibilityIdentifier("settings-reminder")
                 if model.reminderEnabled && account.supportsCustomReminderTime {
-                    DatePicker(L.t("每日學習時間", "Daily practice time"), selection: Binding(
+                    DatePicker(selection: Binding(
                         get: {
                             let minute = model.settings.reminderMinute ?? 720
                             return Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: Date()) ?? Date()
@@ -106,48 +140,119 @@ struct SettingsView: View {
                             let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
                             model.settings.reminderMinute = (parts.hour ?? 12) * 60 + (parts.minute ?? 0)
                         }
-                    ), displayedComponents: .hourAndMinute)
+                    ), displayedComponents: .hourAndMinute) {
+                        SettingsLabel(L.t("每日學習時間", "Daily practice time"), icon: "clock.fill", tint: .red)
+                    }
                 }
-                Toggle(L.t("觸覺回饋", "Haptic feedback"), isOn: Binding(
-                    get: { model.settings.hapticsEnabled ?? true },
-                    set: { model.settings.hapticsEnabled = $0 }
-                ))
-                Picker(L.appearance, selection: Binding(
+            } header: {
+                Text(L.t("提醒", "Reminders"))
+            } footer: {
+                Text(L.reminderText)
+            }
+
+            Section {
+                NavigationLink { IntelligenceSettingsView() } label: {
+                    SettingsLabel(L.t("AI 與錄音", "AI and recording"), icon: "sparkles", tint: .purple,
+                                  value: CloudAssistant.shared.statusText)
+                }
+                .accessibilityIdentifier("settings-intelligence")
+                NavigationLink { SpeechSettingsView() } label: {
+                    SettingsLabel(L.t("朗讀聲音", "Reading voice"), icon: "speaker.wave.2.fill", tint: .pink,
+                                  value: speedLabel)
+                }
+                .accessibilityIdentifier("settings-speech")
+            } header: {
+                Text(L.t("AI 與聲音", "AI and voice"))
+            }
+
+            Section {
+                Picker(selection: Binding(
                     get: { model.settings.theme },
                     set: { model.settings.theme = $0 }
                 )) {
                     ForEach(AppearancePreference.allCases) { option in
                         Text(option.label).tag(option)
                     }
+                } label: {
+                    SettingsLabel(L.appearance, icon: "circle.lefthalf.filled", tint: .indigo)
+                }
+                Toggle(isOn: Binding(
+                    get: { model.settings.hapticsEnabled ?? true },
+                    set: { model.settings.hapticsEnabled = $0 }
+                )) {
+                    SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: .green)
                 }
             } header: {
-                Text(L.settings)
-            } footer: {
-                Text("\(L.dailyTargetText) \(L.reminderText)")
-            }
-
-            Section {
-                NavigationLink { SpeechSettingsView() } label: {
-                    Label(L.t("朗讀聲音", "Reading voice"), systemImage: "speaker.wave.2")
-                }
-                .accessibilityIdentifier("settings-speech")
+                Text(L.t("顯示與操作", "Display and feel"))
             }
 
             AccountSection(includeDeletion: true)
 
             Section {
                 Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
-                    Label(L.privacyPolicy, systemImage: "hand.raised")
+                    SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: .blue, external: true)
                 }
                 Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/support.html")!) {
-                    Label(L.supportPage, systemImage: "questionmark.circle")
+                    SettingsLabel(L.supportPage, icon: "questionmark.circle.fill", tint: .gray, external: true)
                 }
-                LabeledContent(L.version, value: Bundle.main.versionLabel)
+                HStack {
+                    SettingsLabel(L.version, icon: "info.circle.fill", tint: .gray)
+                    Spacer()
+                    Text(Bundle.main.versionLabel).foregroundStyle(.secondary).monospacedDigit()
+                }
+                .accessibilityElement(children: .combine)
+            } header: {
+                Text(L.t("關於", "About"))
             }
         }
         .navigationTitle(L.settings)
         .navigationBarTitleDisplayMode(.inline)
         .task { await account.checkReminderSupport() }
+    }
+
+    private var speedLabel: String {
+        switch (model.settings.speech ?? SpeechPreferences()).speed {
+        case .slow: L.t("慢速", "Slow")
+        case .natural: L.t("自然", "Natural")
+        case .brisk: L.t("稍快", "Brisk")
+        }
+    }
+}
+
+/// A settings row title with a small coloured icon, like the iPhone's Settings app.
+struct SettingsLabel: View {
+    let title: String
+    let icon: String
+    let tint: Color
+    var value: String? = nil
+    var external = false
+
+    init(_ title: String, icon: String, tint: Color, value: String? = nil, external: Bool = false) {
+        self.title = title
+        self.icon = icon
+        self.tint = tint
+        self.value = value
+        self.external = external
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 29, height: 29)
+                .background(tint.gradient, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+                .accessibilityHidden(true)
+            Text(title).foregroundStyle(.primary)
+            if value != nil || external { Spacer(minLength: 8) }
+            if let value {
+                Text(value).foregroundStyle(.secondary).lineLimit(1)
+            }
+            if external {
+                Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+        }
     }
 }
 

@@ -12,6 +12,9 @@ final class PlusModel {
     static let productIDs = ["com.rio.word7000.plus.monthly", "com.rio.word7000.plus.yearly"]
 
     private(set) var subscribed = false
+    /// Apple's signed copy of the active subscription. The AI server checks it
+    /// itself before giving the Plus model, so it cannot be faked by the app.
+    private(set) var entitlementJWS: String?
     private(set) var trialStartedAt: Date
     private(set) var trialScansUsed: Int
     private(set) var plans: [PlusPlan] = []
@@ -227,14 +230,17 @@ final class PlusModel {
             return
         }
         var active: StoreKit.Transaction?
+        var activeJWS: String?
         for await entitlement in StoreKit.Transaction.currentEntitlements {
             if case let .verified(transaction) = entitlement,
                Self.productIDs.contains(transaction.productID),
                transaction.revocationDate == nil {
                 active = transaction
+                activeJWS = entitlement.jwsRepresentation
             }
         }
         subscribed = active != nil
+        entitlementJWS = activeJWS
         activePlanID = active?.productID
         periodEndsAt = active?.expirationDate
         entitlementsLoaded = true

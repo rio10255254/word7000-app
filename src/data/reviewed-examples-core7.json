@@ -288,8 +288,8 @@
   },
   {
     "word": "distinguish",
-    "example": "Good headphones distinguish soft rain from distant applause.",
-    "exampleZh": "好耳機能分辨細雨聲和遠處掌聲。",
+    "example": "With good headphones, you can distinguish soft rain from distant applause.",
+    "exampleZh": "戴上好耳機，你就能分辨細雨聲和遠處的掌聲。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -702,7 +702,7 @@
   {
     "word": "logic",
     "example": "The logic behind his shortcut failed at the flooded underpass.",
-    "exampleZh": "他想走捷徑的盤算，在淹水的地下道前徹底失算。",
+    "exampleZh": "他抄捷徑的邏輯，在淹水的地下道前完全行不通。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -891,7 +891,7 @@
   {
     "word": "wherever",
     "example": "Noah mails postcards wherever his ferry work takes him.",
-    "exampleZh": "諾亞渡輪工作到哪都寄明信片。",
+    "exampleZh": "諾亞的渡輪工作帶他到哪裡，他就從哪裡寄明信片。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -1737,8 +1737,8 @@
   },
   {
     "word": "substantially",
-    "example": "The old bridge is substantially wooden despite its metal railings.",
-    "exampleZh": "那座舊橋雖有金屬欄杆，本質上仍是一座木橋。",
+    "example": "Prices at the night market rose substantially after the new metro station opened.",
+    "exampleZh": "新捷運站開通後，夜市的物價大幅上漲。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -2108,8 +2108,8 @@
   },
   {
     "word": "absent",
-    "example": "Her absent brother missed the family portrait again.",
-    "exampleZh": "她缺席的哥哥又錯過全家合照。",
+    "example": "Her brother was absent from the family dinner again because of work.",
+    "exampleZh": "她哥哥又因為工作缺席了家庭聚餐。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -3039,8 +3039,8 @@
   },
   {
     "word": "pint",
-    "example": "He ordered a pint of bitter at the pub.",
-    "exampleZh": "他在酒吧點了一品脫苦啤。",
+    "example": "She bought a pint of fresh milk at the corner shop.",
+    "exampleZh": "她在街角小店買了一品脫鮮奶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -3159,7 +3159,7 @@
   {
     "word": "closed",
     "example": "The closed bakery still smelled of butter after midnight.",
-    "exampleZh": "午夜後關門麵包店仍有奶油香。",
+    "exampleZh": "午夜過後，關了門的麵包店仍飄著奶油香。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -3376,7 +3376,7 @@
   {
     "word": "depressing",
     "example": "The empty amusement park looked depressing in the rain.",
-    "exampleZh": "雨中的空遊樂園看起來很沉悶。",
+    "exampleZh": "雨中空無一人的遊樂園看起來令人沮喪。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },
@@ -3466,8 +3466,8 @@
   },
   {
     "word": "finding",
-    "example": "The judge's finding changed how the land was divided.",
-    "exampleZh": "法官裁決改變土地分配方式。",
+    "example": "The study's main finding surprised every student in our science club.",
+    "exampleZh": "這項研究的主要發現讓科學社每位同學都很驚訝。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core07"
   },

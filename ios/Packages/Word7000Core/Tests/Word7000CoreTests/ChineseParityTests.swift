@@ -2,17 +2,15 @@ import Foundation
 import XCTest
 @testable import Word7000Core
 
-/// Replays golden results from src/nativeParityChinese.test.ts for the ports of
-/// chineseDisplay.ts and conversationPrompts.ts. Pinyin comes from the system
-/// transliterator instead of pinyin-pro, so it is checked by match rate.
+/// Replays golden results from src/nativeParityChinese.test.ts for the port of
+/// chineseDisplay.ts. Pinyin comes from the system transliterator instead of
+/// pinyin-pro, so it is checked by match rate.
 final class ChineseParityTests: XCTestCase {
     struct Case: Decodable {
         let id: String
         let word: String
         let concise: String
         let supplemental: String
-        let english: ConversationPromptCard
-        let chinese: ConversationPromptCard
     }
     struct PinyinCase: Decodable { let text: String; let pinyin: String }
     struct Fixtures: Decodable { let cases: [Case]; let pinyin: [PinyinCase] }
@@ -34,10 +32,8 @@ final class ChineseParityTests: XCTestCase {
         return word!
     }
 
-    func testFixturesCoverExactQuestionsAndBranches() {
+    func testFixturesCoverManyWords() {
         XCTAssertGreaterThanOrEqual(f.cases.count, 60)
-        let covered = Set(f.cases.map { $0.word.lowercased() })
-        XCTAssertTrue(Set(ConversationPrompts.exactQuestionWords).isSubset(of: covered))
     }
 
     func testConciseAndSupplementalMeaning() {
@@ -58,19 +54,6 @@ final class ChineseParityTests: XCTestCase {
         XCTAssertEqual(conciseChineseMeaning(""), "")
     }
 
-    func testEnglishPrompts() {
-        for testCase in f.cases {
-            XCTAssertEqual(buildConversationPrompt(word(testCase), .english), testCase.english, testCase.word)
-        }
-    }
-
-    func testChinesePromptsExceptPinyin() {
-        for testCase in f.cases {
-            var card = buildConversationPrompt(word(testCase), .chinese)
-            card.keywordPronunciation = testCase.chinese.keywordPronunciation
-            XCTAssertEqual(card, testCase.chinese, testCase.word)
-        }
-    }
 
     func testPinyinOverridesAndFormat() {
         XCTAssertEqual(chineseMeaningPinyin("調整"), "tiao zheng")
@@ -82,19 +65,13 @@ final class ChineseParityTests: XCTestCase {
     }
 
     /// pinyin-pro and the system transliterator disagree on some heteronyms,
-    /// so pinyin (including the Chinese-mode keyword pronunciation) must match
-    /// for at least 90% of texts rather than all of them.
+    /// so pinyin must match for at least 90% of texts rather than all of them.
     func testPinyinMatchRate() {
-        var texts = f.pinyin.map { ($0.text, $0.pinyin) }
-        texts += f.cases.map { ($0.chinese.keyword, $0.chinese.keywordPronunciation) }
+        let texts = f.pinyin.map { ($0.text, $0.pinyin) }
         var mismatches: [String] = []
         for (text, expected) in texts {
             let actual = chineseMeaningPinyin(text)
             if actual != expected { mismatches.append("\(text): \(actual) ≠ \(expected)") }
-        }
-        for testCase in f.cases {
-            let card = buildConversationPrompt(word(testCase), .chinese)
-            XCTAssertEqual(card.keywordPronunciation, chineseMeaningPinyin(card.keyword), testCase.word)
         }
 
         let rate = Double(texts.count - mismatches.count) / Double(texts.count)

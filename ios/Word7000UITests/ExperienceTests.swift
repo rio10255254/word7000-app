@@ -42,6 +42,26 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
     }
 
+    func testAutoRevealShowsAnswersWithoutATap() {
+        let app = launch()
+        app.buttons["today-start"].tap()
+        waitForReadyCard(app)
+        let toggle = app.descendants(matching: .any)["study-auto-reveal"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.tap()
+        XCTAssertTrue(app.buttons["study-grade-known"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["study-show-answer"].exists)
+        app.buttons["study-grade-known"].tap()
+        // The next card arrives already answered, and the choice outlives the card.
+        let known = app.buttons["study-grade-known"]
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: known)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+        XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("2 /"))
+        XCTAssertFalse(app.buttons["study-show-answer"].exists)
+        toggle.tap()
+        waitForReadyCard(app)
+    }
+
     func testStudyResumesAfterRelaunch() {
         let app = launch()
         app.buttons["today-start"].tap()
@@ -136,6 +156,68 @@ final class ExperienceTests: XCTestCase {
         XCTAssertFalse(app.buttons["welcome-start"].exists)
     }
 
+    func testFinishingASetShowsTheSummaryAndWordProgress() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
+        app.launch()
+        XCTAssertTrue(app.buttons["welcome-start"].waitForExistence(timeout: 10))
+        app.buttons["welcome-start"].tap()
+        waitForReadyCard(app)
+        snapshot(app, "polish-study-front")
+        for _ in 0..<5 {
+            waitForReadyCard(app)
+            app.buttons["study-show-answer"].tap()
+            let known = app.buttons["study-grade-known"]
+            XCTAssertTrue(known.waitForExistence(timeout: 5))
+            known.tap()
+            if app.descendants(matching: .any)["study-summary"].waitForExistence(timeout: 2) { break }
+        }
+        XCTAssertTrue(app.descendants(matching: .any)["study-summary"].waitForExistence(timeout: 5))
+        sleep(1)
+        snapshot(app, "polish-session-summary")
+        app.buttons["study-done"].tap()
+
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
+        app.cells.element(boundBy: 2).tap()
+        let progress = app.descendants(matching: .any)["word-progress"].firstMatch
+        for _ in 0..<4 where !progress.exists { app.swipeUp() }
+        XCTAssertTrue(progress.waitForExistence(timeout: 5))
+        snapshot(app, "polish-word-progress")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        XCTAssertTrue(app.descendants(matching: .any)["me-week-strip"].firstMatch.waitForExistence(timeout: 5))
+        snapshot(app, "polish-me-week")
+    }
+
+    func testLargestTextKeepsTheMainFlowUsable() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans",
+                               "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXL"]
+        app.launch()
+        let start = app.buttons["today-start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        snapshot(app, "large-text-1-today")
+        for _ in 0..<3 where !start.isHittable { app.swipeUp() }
+        XCTAssertTrue(start.isHittable)
+        start.tap()
+        waitForReadyCard(app)
+        snapshot(app, "large-text-2-study")
+        XCTAssertTrue(app.buttons["study-show-answer"].isHittable)
+        app.buttons["study-show-answer"].tap()
+        let known = app.buttons["study-grade-known"]
+        XCTAssertTrue(known.waitForExistence(timeout: 5))
+        snapshot(app, "large-text-3-answer")
+        XCTAssertTrue(known.isHittable)
+        XCTAssertTrue(app.buttons["study-grade-review"].isHittable)
+        app.buttons["study-close"].tap()
+
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        sleep(1)
+        snapshot(app, "large-text-4-me")
+    }
+
     func testLibrarySearchKeepsKeyboardAndExactMatch() {
         let app = launch()
         app.tabBars.buttons.element(boundBy: 1).tap()
@@ -192,6 +274,30 @@ final class ExperienceTests: XCTestCase {
         let savedAutoSpeak = app.switches["speech-auto-speak"]
         savedAutoSpeak.scrollIntoView(in: app, swipes: 3)
         XCTAssertEqual(savedAutoSpeak.value as? String, "1")
+    }
+
+    func testSettingsAreGroupedAndReachable() {
+        let app = launch()
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        let settings = app.buttons["me-settings"]
+        for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
+        settings.tap()
+        XCTAssertTrue(app.switches["settings-auto-reveal"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.switches["settings-reminder"].exists)
+        XCTAssertTrue(app.buttons["settings-intelligence"].exists)
+        snapshot(app, "settings-top")
+        let speech = app.buttons["settings-speech"]
+        for _ in 0..<3 where !speech.isHittable { app.swipeUp() }
+        XCTAssertTrue(speech.isHittable)
+        app.swipeUp()
+        app.swipeUp()
+        snapshot(app, "settings-bottom")
+        app.swipeDown()
+        app.swipeDown()
+        let intelligence = app.buttons["settings-intelligence"]
+        for _ in 0..<3 where !intelligence.isHittable { app.swipeDown() }
+        intelligence.tap()
+        XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }
 
     private func openSpeechSettings(_ app: XCUIApplication) {

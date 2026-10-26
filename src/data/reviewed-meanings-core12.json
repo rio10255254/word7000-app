@@ -1,7 +1,7 @@
 [
   {
     "word": "builder",
-    "primaryMeaningZh": "建立者",
+    "primaryMeaningZh": "建造者",
     "supplementalMeaningZh": "建築工人；建商",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
@@ -148,8 +148,8 @@
   },
   {
     "word": "holding",
-    "primaryMeaningZh": "抓握",
-    "supplementalMeaningZh": "持有；持股",
+    "primaryMeaningZh": "持有物",
+    "supplementalMeaningZh": "持股；所持土地",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -211,8 +211,8 @@
   },
   {
     "word": "bastard",
-    "primaryMeaningZh": "該死的",
-    "supplementalMeaningZh": "混蛋；私生子",
+    "primaryMeaningZh": "私生子",
+    "supplementalMeaningZh": "混蛋；該死的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -253,8 +253,8 @@
   },
   {
     "word": "huh",
-    "primaryMeaningZh": "哼",
-    "supplementalMeaningZh": "蛤；咦",
+    "primaryMeaningZh": "蛤",
+    "supplementalMeaningZh": "咦；嗯",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -498,8 +498,8 @@
   },
   {
     "word": "con",
-    "primaryMeaningZh": "熟記",
-    "supplementalMeaningZh": "欺騙；騙局；反對理由",
+    "primaryMeaningZh": "欺騙",
+    "supplementalMeaningZh": "騙局；反對理由",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -541,7 +541,7 @@
   {
     "word": "detention",
     "primaryMeaningZh": "拘留",
-    "supplementalMeaningZh": "留校察看；扣押",
+    "supplementalMeaningZh": "課後留校；扣押",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -708,8 +708,8 @@
   },
   {
     "word": "sponsorship",
-    "primaryMeaningZh": "主辦",
-    "supplementalMeaningZh": "贊助；資助",
+    "primaryMeaningZh": "贊助",
+    "supplementalMeaningZh": "資助；主辦",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -1254,7 +1254,7 @@
   },
   {
     "word": "gnp",
-    "primaryMeaningZh": "國民生產總值",
+    "primaryMeaningZh": "國民生產毛額",
     "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
@@ -1352,8 +1352,8 @@
   },
   {
     "word": "min",
-    "primaryMeaningZh": "部長",
-    "supplementalMeaningZh": "部會；分鐘",
+    "primaryMeaningZh": "分鐘",
+    "supplementalMeaningZh": "最小值；部長",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -1373,7 +1373,7 @@
   },
   {
     "word": "op",
-    "primaryMeaningZh": "觀測所",
+    "primaryMeaningZh": "手術",
     "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
@@ -1450,8 +1450,8 @@
   },
   {
     "word": "disturbed",
-    "primaryMeaningZh": "混亂的",
-    "supplementalMeaningZh": "受干擾的；不安的",
+    "primaryMeaningZh": "不安的",
+    "supplementalMeaningZh": "受干擾的；心理失常的；被弄亂的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -1787,7 +1787,7 @@
   {
     "word": "draught",
     "primaryMeaningZh": "冷風",
-    "supplementalMeaningZh": "氣流；草稿；生啤酒",
+    "supplementalMeaningZh": "氣流；生啤酒",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -2017,8 +2017,8 @@
   },
   {
     "word": "brit",
-    "primaryMeaningZh": "小鯡魚群",
-    "supplementalMeaningZh": "英國人",
+    "primaryMeaningZh": "英國人",
+    "supplementalMeaningZh": "小鯡魚群",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -2171,8 +2171,8 @@
   },
   {
     "word": "made",
-    "primaryMeaningZh": "鋪好的",
-    "supplementalMeaningZh": "製成的；成功的",
+    "primaryMeaningZh": "製成的",
+    "supplementalMeaningZh": "成功的；鋪好的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -2374,8 +2374,8 @@
   },
   {
     "word": "mall",
-    "primaryMeaningZh": "林蔭大道",
-    "supplementalMeaningZh": "購物中心",
+    "primaryMeaningZh": "購物中心",
+    "supplementalMeaningZh": "林蔭大道",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -2745,8 +2745,8 @@
   },
   {
     "word": "annoy",
-    "primaryMeaningZh": "惹煩",
-    "supplementalMeaningZh": "騷擾",
+    "primaryMeaningZh": "惹惱",
+    "supplementalMeaningZh": "使心煩；騷擾",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -3263,8 +3263,8 @@
   },
   {
     "word": "standing",
-    "primaryMeaningZh": "起立",
-    "supplementalMeaningZh": "地位；常設的；持續的",
+    "primaryMeaningZh": "地位",
+    "supplementalMeaningZh": "起立；常設的；持續的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },
@@ -3432,7 +3432,7 @@
   {
     "word": "pant",
     "primaryMeaningZh": "喘氣",
-    "supplementalMeaningZh": "喘息；氣喘吁吁地說",
+    "supplementalMeaningZh": "氣喘吁吁地說",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core12"
   },

@@ -3,6 +3,29 @@ import Observation
 import SwiftUI
 import Word7000Core
 
+enum WordAudioSession {
+    static let queue = DispatchQueue(label: "word7000.speech-audio", qos: .userInitiated)
+
+    static func activate(recording: Bool) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            queue.async {
+                do {
+                    let session = AVAudioSession.sharedInstance()
+                    try session.setCategory(recording ? .playAndRecord : .playback,
+                                            mode: recording ? .default : .spokenAudio,
+                                            options: recording ? [.defaultToSpeaker] : [])
+                    try session.setActive(true)
+                    continuation.resume()
+                } catch { continuation.resume(throwing: error) }
+            }
+        }
+    }
+
+    static func release() {
+        queue.async { try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation) }
+    }
+}
+
 /// Reads a word aloud with the system voice; works offline.
 @MainActor
 @Observable
@@ -14,7 +37,7 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     @ObservationIgnored private var voicesTask: Task<[SpeechVoiceOption], Never>?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
     @ObservationIgnored private var speechID: UUID?
-    @ObservationIgnored private let audioQueue = DispatchQueue(label: "word7000.speech-audio", qos: .userInitiated)
+    @ObservationIgnored private let audioQueue = WordAudioSession.queue
     @ObservationIgnored
     private let synthesizer = AVSpeechSynthesizer()
 
@@ -96,6 +119,13 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         synthesizer.stopSpeaking(at: .immediate)
         audioQueue.async {
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
+    }
+
+    func stopAndRelease() async {
+        stop()
+        await withCheckedContinuation { continuation in
+            audioQueue.async { continuation.resume() }
         }
     }
 

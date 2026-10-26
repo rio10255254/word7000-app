@@ -28,6 +28,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var reminderMinute: Int?
     var onboardingComplete: Bool?
     var hapticsEnabled: Bool?
+    /// Study cards open with the answer already showing; nil means off.
+    var studyAutoReveal: Bool?
     var speakingFilter: FilterSelection?
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?

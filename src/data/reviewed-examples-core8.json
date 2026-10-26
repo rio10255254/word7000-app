@@ -57,8 +57,8 @@
   },
   {
     "word": "incorporate",
-    "example": "The chef will incorporate basil into the sauce just before serving.",
-    "exampleZh": "主廚會在上菜前把九層塔拌進醬汁。",
+    "example": "Our class will incorporate everyone's ideas into the plan for the school fair.",
+    "exampleZh": "全班會把每個人的點子都納入園遊會的規劃中。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -93,7 +93,7 @@
   {
     "word": "undertake",
     "example": "Few climbers undertake that climb without checking the weather first.",
-    "exampleZh": "很少登山者不先查天氣就嘗試那趟攀登。",
+    "exampleZh": "很少登山者會不先查天氣就進行那趟攀登。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -260,8 +260,8 @@
   },
   {
     "word": "liability",
-    "example": "The cracked sidewalk became a liability after several visitors slipped.",
-    "exampleZh": "幾名訪客滑倒後，裂開的人行道成了責任問題。",
+    "example": "The store accepted liability after a customer slipped on its wet floor.",
+    "exampleZh": "一名顧客在濕滑的地板上滑倒後，店家承擔了責任。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -302,8 +302,8 @@
   },
   {
     "word": "scope",
-    "example": "The old telescope expanded her scope far beyond the valley.",
-    "exampleZh": "那支舊望遠鏡把她的眼界帶出山谷之外。",
+    "example": "The scope of our science project became much larger than we planned.",
+    "exampleZh": "我們自然科專題的範圍比原先計畫的大得多。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -414,8 +414,8 @@
   },
   {
     "word": "basketball",
-    "example": "After sunset, basketball echoed through the alley until the streetlights clicked on.",
-    "exampleZh": "日落後，巷子裡籃球聲一直響到路燈亮起。",
+    "example": "After school, we played basketball in the alley until the streetlights came on.",
+    "exampleZh": "放學後，我們在巷子裡打籃球，一直打到路燈亮起。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -939,8 +939,8 @@
   },
   {
     "word": "regardless",
-    "example": "The ferry leaves regardless of rain at seven sharp.",
-    "exampleZh": "不管下雨與否，渡輪七點整出發。",
+    "example": "The ferry leaves at seven sharp regardless of the rain.",
+    "exampleZh": "不管有沒有下雨，渡輪都會在七點整出發。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -1170,8 +1170,8 @@
   },
   {
     "word": "accounting",
-    "example": "Careful accounting revealed coins hidden inside the donation box.",
-    "exampleZh": "仔細查帳發現捐款箱裡藏著硬幣。",
+    "example": "Careful accounting showed that our class spent too much on snacks last month.",
+    "exampleZh": "仔細記帳後發現，我們班上個月花太多錢買零食了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -1982,8 +1982,8 @@
   },
   {
     "word": "equip",
-    "example": "The rescue boat will equip each seat with a flashlight.",
-    "exampleZh": "救援船會為每個座位配備手電筒。",
+    "example": "The rescue team will equip each seat on the boat with a flashlight.",
+    "exampleZh": "救援隊會為船上每個座位配備手電筒。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -2137,7 +2137,7 @@
   {
     "word": "descend",
     "example": "Mist began to descend over the fields before sunset.",
-    "exampleZh": "日落前，霧開始降落在田野上。",
+    "exampleZh": "日落前，霧氣開始緩緩降到田野上。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -2269,8 +2269,8 @@
   },
   {
     "word": "humanity",
-    "example": "After the flood, humanity appeared in every shared meal.",
-    "exampleZh": "水災後，每頓共食都流露出人情味。",
+    "example": "The nurses treated every lonely patient with warmth and humanity.",
+    "exampleZh": "護理師們以溫暖和人情味對待每位孤單的病人。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -2508,7 +2508,7 @@
   {
     "word": "bold",
     "example": "Her bold red scarf stood out in the gray crowd.",
-    "exampleZh": "她大膽的紅圍巾在人群灰色中很醒目。",
+    "exampleZh": "她那條大膽的紅圍巾在灰色調的人群中格外顯眼。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -3264,7 +3264,7 @@
   {
     "word": "rhetoric",
     "example": "His rhetoric sounded noble but avoided every hard question.",
-    "exampleZh": "他的修辭聽來高尚，卻避開所有難題。",
+    "exampleZh": "他的說辭聽來高尚，卻避開所有難題。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },
@@ -3460,7 +3460,7 @@
   {
     "word": "pope",
     "example": "The pope blessed pilgrims gathered outside the basilica.",
-    "exampleZh": "教皇祝福聚集在大殿外的朝聖者。",
+    "exampleZh": "教宗祝福聚集在大殿外的朝聖者。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core08"
   },

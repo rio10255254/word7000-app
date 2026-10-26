@@ -330,8 +330,8 @@
   },
   {
     "word": "booking",
-    "primaryMeaningZh": "演出預約",
-    "supplementalMeaningZh": "預訂",
+    "primaryMeaningZh": "預訂",
+    "supplementalMeaningZh": "訂位；演出檔期",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -547,8 +547,8 @@
   },
   {
     "word": "offshore",
-    "primaryMeaningZh": "吹向海面的",
-    "supplementalMeaningZh": "近海的；離岸的",
+    "primaryMeaningZh": "近海的",
+    "supplementalMeaningZh": "離岸的；境外的；吹向海面的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -701,8 +701,8 @@
   },
   {
     "word": "insane",
-    "primaryMeaningZh": "極蠢的",
-    "supplementalMeaningZh": "精神失常的",
+    "primaryMeaningZh": "瘋狂的",
+    "supplementalMeaningZh": "精神失常的；極愚蠢的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -1128,8 +1128,8 @@
   },
   {
     "word": "trillion",
-    "primaryMeaningZh": "無數",
-    "supplementalMeaningZh": "兆",
+    "primaryMeaningZh": "兆",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -1709,8 +1709,8 @@
   },
   {
     "word": "unification",
-    "primaryMeaningZh": "合併",
-    "supplementalMeaningZh": "統一",
+    "primaryMeaningZh": "統一",
+    "supplementalMeaningZh": "合併",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -2199,8 +2199,8 @@
   },
   {
     "word": "stray",
-    "primaryMeaningZh": "偶然的",
-    "supplementalMeaningZh": "走失的；迷路",
+    "primaryMeaningZh": "流浪的",
+    "supplementalMeaningZh": "走失的；偶然的；迷路",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -2402,8 +2402,8 @@
   },
   {
     "word": "zoom",
-    "primaryMeaningZh": "猛漲",
-    "supplementalMeaningZh": "變焦；快速移動",
+    "primaryMeaningZh": "疾駛",
+    "supplementalMeaningZh": "變焦；猛漲",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -2662,7 +2662,7 @@
   {
     "word": "outlaw",
     "primaryMeaningZh": "禁止",
-    "supplementalMeaningZh": "罪犯；宣布違法",
+    "supplementalMeaningZh": "歹徒；亡命之徒",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -2738,8 +2738,8 @@
   },
   {
     "word": "feeder",
-    "primaryMeaningZh": "奶瓶",
-    "supplementalMeaningZh": "餵食器；供給者",
+    "primaryMeaningZh": "餵食器",
+    "supplementalMeaningZh": "奶瓶；支線",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -2829,7 +2829,7 @@
   },
   {
     "word": "rave",
-    "primaryMeaningZh": "胡言叫嚷",
+    "primaryMeaningZh": "胡言亂語",
     "supplementalMeaningZh": "狂讚",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
@@ -3201,14 +3201,14 @@
   {
     "word": "resigned",
     "primaryMeaningZh": "無奈的",
-    "supplementalMeaningZh": "已辭職的",
+    "supplementalMeaningZh": "聽天由命的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
   {
     "word": "cola",
-    "primaryMeaningZh": "結腸",
-    "supplementalMeaningZh": "可樂",
+    "primaryMeaningZh": "可樂",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },
@@ -3417,8 +3417,8 @@
   },
   {
     "word": "teen",
-    "primaryMeaningZh": "悲憤",
-    "supplementalMeaningZh": "青少年",
+    "primaryMeaningZh": "青少年",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core11"
   },

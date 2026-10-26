@@ -23,7 +23,7 @@
   {
     "word": "elevate",
     "example": "A wooden crate can elevate the speaker above the crowded platform.",
-    "exampleZh": "講者站上木箱後，月台上的人群就都看得見他。",
+    "exampleZh": "木箱可以把講者墊高，讓他高出擁擠月台上的人群。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -330,8 +330,8 @@
   },
   {
     "word": "booking",
-    "example": "Her booking at the jazz club includes two Saturday performances.",
-    "exampleZh": "她在爵士酒吧的演出預約包含兩場週六表演。",
+    "example": "Our booking at the seafood restaurant is for seven o'clock on Saturday.",
+    "exampleZh": "我們在海鮮餐廳的訂位是星期六晚上七點。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -345,7 +345,7 @@
   {
     "word": "skate",
     "example": "Children skate around the pond when the winter ice thickens.",
-    "exampleZh": "冬冰變厚時，孩子們繞著池塘滑冰。",
+    "exampleZh": "冬天池面的冰變厚時，孩子們就繞著池塘滑冰。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -547,8 +547,8 @@
   },
   {
     "word": "offshore",
-    "example": "Offshore wind rattled the windows of the seaside hostel.",
-    "exampleZh": "吹向海面的風搖響海邊旅舍窗戶。",
+    "example": "Offshore wind turbines now supply electricity to many homes in central Taiwan.",
+    "exampleZh": "離岸風力發電機現在為台灣中部許多家庭供電。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -702,7 +702,7 @@
   {
     "word": "insane",
     "example": "It was insane to swim there during a typhoon warning.",
-    "exampleZh": "颱風警報期間在那裡游泳極其愚蠢。",
+    "exampleZh": "颱風警報期間在那裡游泳簡直瘋狂。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -870,7 +870,7 @@
   {
     "word": "disco",
     "example": "The disco stayed open until sunrise on New Year's Day.",
-    "exampleZh": "那家迪斯科在元旦開到日出。",
+    "exampleZh": "那家迪斯可舞廳在元旦開到日出。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -926,7 +926,7 @@
   {
     "word": "aerospace",
     "example": "Aerospace attracts engineers who enjoy testing satellites in desert hangars.",
-    "exampleZh": "航天技術吸引喜歡在沙漠機棚測試衛星的工程師。",
+    "exampleZh": "航太產業吸引喜歡在沙漠機棚測試衛星的工程師。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1128,8 +1128,8 @@
   },
   {
     "word": "trillion",
-    "example": "A trillion stars seemed visible above the desert camp.",
-    "exampleZh": "沙漠營地的夜空彷彿有數不清的星星。",
+    "example": "The country's debt has grown to more than a trillion dollars.",
+    "exampleZh": "這個國家的債務已增加到超過一兆美元。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1156,8 +1156,8 @@
   },
   {
     "word": "oriental",
-    "example": "The antique catalog still used oriental to describe several painted vases.",
-    "exampleZh": "古董目錄仍用東方式稱呼幾個彩繪花瓶。",
+    "example": "The hotel lobby was decorated with oriental rugs and painted vases.",
+    "exampleZh": "飯店大廳以東方風格的地毯和彩繪花瓶裝飾。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1282,8 +1282,8 @@
   },
   {
     "word": "victor",
-    "example": "The victor raised her paddle after the final bid.",
-    "exampleZh": "勝利者在最後一次出價後舉起號牌。",
+    "example": "The victor raised the shiny trophy while the crowd cheered loudly.",
+    "exampleZh": "勝利者在群眾熱烈歡呼聲中舉起閃亮的獎盃。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1563,7 +1563,7 @@
   {
     "word": "envy",
     "example": "I envy her calm voice during difficult phone calls.",
-    "exampleZh": "我羨慕她在艱難電話中的冷靜聲音。",
+    "exampleZh": "我很羨慕她講棘手電話時，聲音仍能保持冷靜。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1709,8 +1709,8 @@
   },
   {
     "word": "unification",
-    "example": "Unification of the two clinics reduced paperwork for patients.",
-    "exampleZh": "兩家診所合併後，病患要填的文件變少了。",
+    "example": "The unification of Germany took place in 1990 after the Berlin Wall fell.",
+    "exampleZh": "柏林圍牆倒塌後，德國在1990年完成統一。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1738,7 +1738,7 @@
   {
     "word": "hardy",
     "example": "Hardy sailors crossed the bay during the winter storm.",
-    "exampleZh": "勇敢水手在冬季暴風中穿越海灣。",
+    "exampleZh": "吃苦耐勞的水手在冬季暴風中橫越海灣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1863,8 +1863,8 @@
   },
   {
     "word": "boycott",
-    "example": "Residents boycott the café after cameras appeared in the restroom.",
-    "exampleZh": "廁所出現攝影機後，居民抵制那家咖啡館。",
+    "example": "Residents began to boycott the café after cameras appeared in the restroom.",
+    "exampleZh": "廁所被發現裝了攝影機後，居民開始抵制那家咖啡館。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2199,8 +2199,8 @@
   },
   {
     "word": "stray",
-    "example": "A stray receipt proved he had bought the necklace.",
-    "exampleZh": "一張偶然留下的收據證明他買過項鍊。",
+    "example": "A stray dog followed us all the way home from the night market.",
+    "exampleZh": "一隻流浪狗從夜市一路跟著我們回家。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2263,7 +2263,7 @@
   {
     "word": "knight",
     "example": "The queen will knight the surgeon for his service.",
-    "exampleZh": "女王將因那名外科醫師的服務授予爵位。",
+    "exampleZh": "女王將因那名外科醫師的貢獻而授予他爵位。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2402,8 +2402,8 @@
   },
   {
     "word": "zoom",
-    "example": "Prices zoom whenever tourists fill the harbor hotels.",
-    "exampleZh": "遊客擠滿港邊旅館時，價格就猛漲。",
+    "example": "Scooters zoom past the school gate every morning before eight.",
+    "exampleZh": "每天早上八點前，機車都會從校門前呼嘯而過。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2738,8 +2738,8 @@
   },
   {
     "word": "feeder",
-    "example": "The orphaned lamb drank milk from a rubber feeder.",
-    "exampleZh": "失親小羊用橡膠奶瓶喝奶。",
+    "example": "We hung a bird feeder outside the classroom window last week.",
+    "exampleZh": "我們上週在教室窗外掛了一個餵鳥器。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2949,7 +2949,7 @@
   {
     "word": "sceptical",
     "example": "The mechanic sounded sceptical about the cheap replacement part.",
-    "exampleZh": "技師對那個便宜的替代零件很不放心。",
+    "exampleZh": "技師聽起來對那個便宜的替代零件抱持懷疑。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -3207,8 +3207,8 @@
   },
   {
     "word": "cola",
-    "example": "The anatomy chart labeled two cola in different colors.",
-    "exampleZh": "解剖圖用不同顏色標示兩段結腸。",
+    "example": "I bought a cold cola from the vending machine after class.",
+    "exampleZh": "下課後我在自動販賣機買了一罐冰可樂。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -3417,8 +3417,8 @@
   },
   {
     "word": "teen",
-    "example": "The old ballad uses teen for grief after betrayal.",
-    "exampleZh": "那首古歌用此詞表示背叛後的悲憤。",
+    "example": "The teen waited at the bus stop with her heavy school bag.",
+    "exampleZh": "那名青少年揹著沉重的書包在公車站等車。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },

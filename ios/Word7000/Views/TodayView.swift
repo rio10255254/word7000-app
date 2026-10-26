@@ -28,6 +28,10 @@ struct TodayView: View {
                                 .font(.rounded(.subheadline, weight: .semibold))
                                 .foregroundStyle(.secondary)
                         }
+                        // Large text shrinks to stay inside the ring.
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.4)
+                        .padding(.horizontal, 20)
                     }
                     .frame(width: 142, height: 142)
                     .padding(.top, 8)

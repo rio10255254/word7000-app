@@ -113,7 +113,12 @@ struct QuizSessionView: View {
                 }
             }
 
-            if chosen != nil {
+            if let chosen {
+                if !chosen.correct, let correct = options.first(where: \.correct) {
+                    QuizWhyView(word: word,
+                                question: model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt,
+                                correctAnswer: correct.text, chosenAnswer: chosen.text)
+                }
                 if !face.examplePrimary.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(face.examplePrimary)
@@ -156,6 +161,8 @@ struct QuizSessionView: View {
                 if let highlight {
                     Image(systemName: option.correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .foregroundStyle(highlight)
+                        .transition(.scale.combined(with: .opacity))
+                        .symbolEffect(.bounce, value: reduceMotion ? false : answered)
                 }
             }
             .foregroundStyle(answered && highlight == nil ? Color.secondary : Color.primary)
@@ -168,6 +175,17 @@ struct QuizSessionView: View {
             )
         }
         .buttonStyle(SoftPressStyle())
+        // A wrong pick gives a small shake; the right answer is marked either way.
+        .keyframeAnimator(initialValue: 0.0, trigger: !reduceMotion && isChosen && !option.correct) { content, x in
+            content.offset(x: x)
+        } keyframes: { _ in
+            KeyframeTrack {
+                CubicKeyframe(-7, duration: 0.07)
+                CubicKeyframe(6, duration: 0.08)
+                CubicKeyframe(-4, duration: 0.08)
+                CubicKeyframe(0, duration: 0.1)
+            }
+        }
         .allowsHitTesting(!answered)
         .accessibilityAddTraits(isChosen ? .isSelected : [])
     }

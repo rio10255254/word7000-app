@@ -65,7 +65,7 @@
   {
     "word": "have",
     "primaryMeaningZh": "有",
-    "supplementalMeaningZh": "已經；進行",
+    "supplementalMeaningZh": "吃；舉行；必須",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },
@@ -197,8 +197,8 @@
   },
   {
     "word": "as",
-    "primaryMeaningZh": "擔任",
-    "supplementalMeaningZh": "當作；像；因為",
+    "primaryMeaningZh": "作為",
+    "supplementalMeaningZh": "像；因為；當…時",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },
@@ -561,8 +561,8 @@
   },
   {
     "word": "thing",
-    "primaryMeaningZh": "地方",
-    "supplementalMeaningZh": "事情；東西；情況",
+    "primaryMeaningZh": "東西",
+    "supplementalMeaningZh": "事情；情況",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },
@@ -715,8 +715,8 @@
   },
   {
     "word": "ask",
-    "primaryMeaningZh": "打聽",
-    "supplementalMeaningZh": "要求；邀請",
+    "primaryMeaningZh": "問",
+    "supplementalMeaningZh": "要求；邀請；打聽",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },
@@ -834,7 +834,7 @@
   },
   {
     "word": "much",
-    "primaryMeaningZh": "太多",
+    "primaryMeaningZh": "許多",
     "supplementalMeaningZh": "非常",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
@@ -1037,8 +1037,8 @@
   },
   {
     "word": "yes",
-    "primaryMeaningZh": "同意",
-    "supplementalMeaningZh": "是的",
+    "primaryMeaningZh": "是的",
+    "supplementalMeaningZh": "同意",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },
@@ -2360,8 +2360,8 @@
   },
   {
     "word": "die",
-    "primaryMeaningZh": "枯死",
-    "supplementalMeaningZh": "熄滅；消失",
+    "primaryMeaningZh": "死",
+    "supplementalMeaningZh": "枯死；熄滅；消失",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },
@@ -2633,7 +2633,7 @@
   },
   {
     "word": "general",
-    "primaryMeaningZh": "基本的",
+    "primaryMeaningZh": "一般的",
     "supplementalMeaningZh": "大致的；將軍",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
@@ -3200,8 +3200,8 @@
   },
   {
     "word": "security",
-    "primaryMeaningZh": "安檢人員",
-    "supplementalMeaningZh": "安全；保全；保障",
+    "primaryMeaningZh": "安全",
+    "supplementalMeaningZh": "保全；保障；安檢人員",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },
@@ -3446,7 +3446,7 @@
   {
     "word": "club",
     "primaryMeaningZh": "社團",
-    "supplementalMeaningZh": "球棒；夜店",
+    "supplementalMeaningZh": "球桿；棍棒；夜店",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core01"
   },

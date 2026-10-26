@@ -92,8 +92,8 @@
   },
   {
     "word": "attack",
-    "example": "Mosquitoes attack bare ankles near the pond after sunset.",
-    "exampleZh": "日落後蚊子會在池塘邊叮裸露腳踝。",
+    "example": "Geese may attack people who walk too close to their nests.",
+    "exampleZh": "鵝可能會攻擊太靠近巢的人。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -120,15 +120,15 @@
   },
   {
     "word": "visit",
-    "example": "We plan to visit the lantern market before it gets crowded.",
-    "exampleZh": "我們打算趁人潮前去逛燈籠市集。",
+    "example": "We plan to visit our grandparents in Hualien this weekend.",
+    "exampleZh": "我們打算這個週末去花蓮拜訪爺爺奶奶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
   {
     "word": "sister",
     "example": "My sister fixes bicycles behind the family tea shop.",
-    "exampleZh": "我姐姐在家裡茶行後面修腳踏車。",
+    "exampleZh": "我姊姊在家裡茶行後面修腳踏車。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -148,8 +148,8 @@
   },
   {
     "word": "green",
-    "example": "A green mango tastes sharper than a ripe yellow one.",
-    "exampleZh": "青芒果比熟黃芒果吃起來更酸。",
+    "example": "She painted her bedroom door green to match her plants.",
+    "exampleZh": "她把臥室的門漆成綠色，好搭配她的植物。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -309,8 +309,8 @@
   },
   {
     "word": "quick",
-    "example": "A quick shower cooled the market street before dusk.",
-    "exampleZh": "黃昏前的一場短暫陣雨，讓市場街道涼了下來。",
+    "example": "Ben is a quick runner, so he always runs the last leg of the relay.",
+    "exampleZh": "班跑得很快，所以接力賽他總是跑最後一棒。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -435,8 +435,8 @@
   },
   {
     "word": "in",
-    "example": "Mushrooms dried in the sun beside the farmhouse.",
-    "exampleZh": "香菇在農舍旁曬太陽風乾。",
+    "example": "Your keys are in the blue bag on the table.",
+    "exampleZh": "你的鑰匙在桌上的藍色袋子裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -576,7 +576,7 @@
   {
     "word": "fifty",
     "example": "Fifty candles lined the path to the shrine.",
-    "exampleZh": "五十支蠟燭排列在通往神龕的小路上。",
+    "exampleZh": "五十支蠟燭排列在通往小廟的小路上。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -940,7 +940,7 @@
   {
     "word": "involve",
     "example": "The ceremony will involve lanterns, drums, and a river blessing.",
-    "exampleZh": "儀式會包括燈籠鼓聲和河祭祝福。",
+    "exampleZh": "儀式會包括燈籠、鼓聲和河祭祝福。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -995,8 +995,8 @@
   },
   {
     "word": "language",
-    "example": "Their language changes when relatives gather for New Year.",
-    "exampleZh": "親戚過年團聚時他們的用語會改變。",
+    "example": "Hakka is the language Grandma uses when she sings to the baby.",
+    "exampleZh": "客家話是奶奶唱歌給寶寶聽時用的語言。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -1213,7 +1213,7 @@
   {
     "word": "private",
     "example": "The clinic keeps private records in locked cabinets.",
-    "exampleZh": "診所把個人紀錄鎖在櫃中。",
+    "exampleZh": "診所把私人病歷鎖在櫃子裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -1248,7 +1248,7 @@
   {
     "word": "movement",
     "example": "Sudden movement in the bushes startled the hikers.",
-    "exampleZh": "樹叢裡突然有動靜嚇到登山客。",
+    "exampleZh": "樹叢裡突然有東西移動，嚇到了登山客。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -1275,8 +1275,8 @@
   },
   {
     "word": "quality",
-    "example": "This tea shop is known for quality oolong.",
-    "exampleZh": "這家茶行以優質烏龍聞名。",
+    "example": "The quality of the tea depends on the mountain weather.",
+    "exampleZh": "茶葉的品質取決於山上的天氣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -1296,8 +1296,8 @@
   },
   {
     "word": "population",
-    "example": "The deer population increased after hunting was banned.",
-    "exampleZh": "禁獵後鹿群數量增加。",
+    "example": "The population of our town grew after the new station opened.",
+    "exampleZh": "新車站啟用後，我們鎮上的人口增加了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -1507,7 +1507,7 @@
   {
     "word": "despite",
     "example": "Despite the heat, Grandpa walked to the shrine.",
-    "exampleZh": "儘管天氣炎熱，阿公仍走到神龕。",
+    "exampleZh": "儘管天氣炎熱，阿公仍走到小廟去。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -1611,8 +1611,8 @@
   },
   {
     "word": "theory",
-    "example": "His theory about the missing boat sounded possible.",
-    "exampleZh": "他對那艘失蹤船隻的推測，聽起來不無可能。",
+    "example": "Our science teacher explained the theory with a simple experiment.",
+    "exampleZh": "自然老師用一個簡單的實驗說明這個理論。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2011,7 +2011,7 @@
   {
     "word": "nice",
     "example": "A nice breeze cooled the rooftop after sunset.",
-    "exampleZh": "日落後舒服的微風讓屋頂變涼。",
+    "exampleZh": "日落後宜人的微風讓屋頂涼爽下來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2031,8 +2031,8 @@
   },
   {
     "word": "glass",
-    "example": "A glass of barley tea cooled beside the stove.",
-    "exampleZh": "一杯麥茶在爐邊放涼。",
+    "example": "Be careful because the kitchen floor is covered with broken glass.",
+    "exampleZh": "小心，廚房地板上都是碎玻璃。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2080,8 +2080,8 @@
   },
   {
     "word": "realize",
-    "example": "At dawn, I realize how quiet the harbor feels.",
-    "exampleZh": "清晨我才明白港口有多安靜。",
+    "example": "Only after moving out did I realize how hard my mom worked.",
+    "exampleZh": "搬出去住以後，我才明白媽媽有多辛苦。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2165,7 +2165,7 @@
   {
     "word": "television",
     "example": "Public television showed the typhoon path all night.",
-    "exampleZh": "公共電視整夜顯示颱風路徑。",
+    "exampleZh": "公共電視整夜播報颱風路徑。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2290,8 +2290,8 @@
   },
   {
     "word": "dark",
-    "example": "Dark clouds gathered behind the mountain temple before evening prayers.",
-    "exampleZh": "晚禱前烏雲聚集在山寺後方。",
+    "example": "The hallway was so dark that I could not find the light switch.",
+    "exampleZh": "走廊太暗了，我找不到電燈開關。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2361,7 +2361,7 @@
   {
     "word": "sex",
     "example": "The clinic form asks for sex, age, and usual transport.",
-    "exampleZh": "診所表格詢問性別年齡和常用交通方式。",
+    "exampleZh": "診所表格會詢問性別、年齡和常用的交通方式。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2612,15 +2612,15 @@
   },
   {
     "word": "village",
-    "example": "The village bakery opens before the first bus.",
-    "exampleZh": "村裡麵包店在首班公車前開門。",
+    "example": "My grandparents live in a small village near the mountains.",
+    "exampleZh": "我的祖父母住在山邊的一個小村莊。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
   {
     "word": "focus",
-    "example": "Focus the camera on the bride's hands during the vows.",
-    "exampleZh": "誓詞時把相機焦點對準新娘的手。",
+    "example": "Turn off your phone so you can focus on your homework.",
+    "exampleZh": "把手機關掉，你才能專心寫作業。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -2703,8 +2703,8 @@
   },
   {
     "word": "trouble",
-    "example": "Engine trouble delayed the fishing boat until sunrise.",
-    "exampleZh": "引擎故障，讓那艘漁船一直耽擱到日出。",
+    "example": "Sorry for all the trouble I caused you yesterday.",
+    "exampleZh": "抱歉昨天給你添了這麼多麻煩。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -3249,8 +3249,8 @@
   },
   {
     "word": "civil",
-    "example": "Civil behavior matters when strangers share crowded trains.",
-    "exampleZh": "陌生人共擠火車時保持禮貌很重要。",
+    "example": "Students learned about civil rights in history class today.",
+    "exampleZh": "學生們今天在歷史課上認識了公民權利。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -3313,7 +3313,7 @@
   {
     "word": "instead",
     "example": "We took the slow road instead of the tunnel.",
-    "exampleZh": "我們改走慢路而不是隧道。",
+    "exampleZh": "我們改走較慢的路，沒有走隧道。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },
@@ -3481,7 +3481,7 @@
   {
     "word": "reality",
     "example": "The harsh reality was that the bridge could not reopen.",
-    "exampleZh": "殘酷的事實是，那座橋無法重新開放。",
+    "exampleZh": "殘酷的現實是，那座橋無法重新開放。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
   },

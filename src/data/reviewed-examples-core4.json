@@ -36,8 +36,8 @@
   },
   {
     "word": "christmas",
-    "example": "Our bakery sells ginger cookies during Christmas near the station.",
-    "exampleZh": "聖誕節期間，我們的麵包店會在車站附近賣薑餅。",
+    "example": "Our bakery near the station sells ginger cookies during Christmas.",
+    "exampleZh": "我們在車站附近的麵包店，聖誕節期間會賣薑餅。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -316,8 +316,8 @@
   },
   {
     "word": "gay",
-    "example": "The antique poster used gay colors around the circus title.",
-    "exampleZh": "那張古董海報在馬戲團標題周圍用了鮮豔色彩。",
+    "example": "Our school club welcomes all students, whether they are gay or straight.",
+    "exampleZh": "我們學校的社團歡迎所有學生，不論是同性戀或異性戀。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -478,7 +478,7 @@
   {
     "word": "supposed",
     "example": "The supposed shortcut ended at a locked orchard gate.",
-    "exampleZh": "那條據說的捷徑最後通到鎖住的果園門。",
+    "exampleZh": "那條所謂的捷徑，最後卻通到一扇上鎖的果園門。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -2010,8 +2010,8 @@
   },
   {
     "word": "actor",
-    "example": "The male actor practiced sword moves behind the opera tent.",
-    "exampleZh": "男演員在戲棚後練習劍招。",
+    "example": "The actor practiced sword moves behind the opera tent.",
+    "exampleZh": "那位演員在戲棚後練習劍招。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -2108,8 +2108,8 @@
   },
   {
     "word": "definition",
-    "example": "High definition captured every wrinkle in the carved stone.",
-    "exampleZh": "高解析度拍出石雕每道皺紋。",
+    "example": "Everyone has a different definition of success in life.",
+    "exampleZh": "每個人對人生成功的定義都不一樣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -2311,8 +2311,8 @@
   },
   {
     "word": "pursue",
-    "example": "She will pursue nursing after caring for her grandfather.",
-    "exampleZh": "照顧祖父後，她決定攻讀護理。",
+    "example": "She plans to pursue her dream of becoming a nurse.",
+    "exampleZh": "她打算追求成為護理師的夢想。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -2507,8 +2507,8 @@
   },
   {
     "word": "wake",
-    "example": "I wake before dawn when fishing boats start engines.",
-    "exampleZh": "漁船啟動引擎時，我天亮前就醒。",
+    "example": "I wake before dawn when the fishing boats start their engines.",
+    "exampleZh": "漁船發動引擎時，我在天亮前就會醒來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -2844,7 +2844,7 @@
   {
     "word": "signal",
     "example": "The red signal warned boats to stay outside the harbor.",
-    "exampleZh": "紅色信號警告船隻留在港外。",
+    "exampleZh": "紅色訊號警告船隻留在港外。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -3201,7 +3201,7 @@
   {
     "word": "lovely",
     "example": "Your grandmother has a lovely smile in old photographs.",
-    "exampleZh": "舊照片裡你奶奶有可愛笑容。",
+    "exampleZh": "舊照片裡，你奶奶的笑容很可愛。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },
@@ -3396,8 +3396,8 @@
   },
   {
     "word": "cycle",
-    "example": "The washing cycle ended while we prepared dinner.",
-    "exampleZh": "我們準備晚餐時，洗衣行程結束了。",
+    "example": "The life cycle of a butterfly has four stages.",
+    "exampleZh": "蝴蝶的生命週期有四個階段。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core04"
   },

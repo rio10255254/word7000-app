@@ -148,8 +148,8 @@
   },
   {
     "word": "holding",
-    "example": "By holding the rope firmly, he kept the gate closed.",
-    "exampleZh": "他牢牢抓著繩子，讓大門維持關閉。",
+    "example": "The investor sold her largest holding in the tech company last week.",
+    "exampleZh": "那位投資人上週賣掉了她在那家科技公司的最大持股。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -204,15 +204,15 @@
   },
   {
     "word": "pro",
-    "example": "The essay argued pro before listing objections from parents.",
-    "exampleZh": "那篇文章先從正面論述，再列出家長反對意見。",
+    "example": "Students argued the new phone rule pro and con before voting.",
+    "exampleZh": "投票前，學生從正反兩面辯論新的手機規定。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "bastard",
-    "example": "That bastard hinge scratched Mei's hand whenever the gate swung.",
-    "exampleZh": "那個該死的鉸鏈，每次大門一動就會刮傷小美的手。",
+    "example": "In the old play, the king's bastard son dreamed of taking the throne.",
+    "exampleZh": "在那齣古老的戲劇裡，國王的私生子一心想奪取王位。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -253,8 +253,8 @@
   },
   {
     "word": "huh",
-    "example": "Omar said huh after hearing the same excuse again.",
-    "exampleZh": "聽到同樣藉口後，奧馬哼了一聲。",
+    "example": "Huh? I thought the math test was tomorrow, not today.",
+    "exampleZh": "蛤？我還以為數學考試是明天，不是今天。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -498,8 +498,8 @@
   },
   {
     "word": "con",
-    "example": "Mira had to con the poem before the oral exam.",
-    "exampleZh": "米拉口試前必須熟記那首詩。",
+    "example": "The salesman tried to con elderly customers out of their savings.",
+    "exampleZh": "那名推銷員企圖騙走年長顧客的積蓄。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -709,14 +709,14 @@
   {
     "word": "sponsorship",
     "example": "The forum ran under university sponsorship for three years.",
-    "exampleZh": "該論壇由大學主辦三年。",
+    "exampleZh": "這個論壇在大學的贊助下舉辦了三年。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "paid",
-    "example": "Three paid volunteers guided elderly voters through the crowded station.",
-    "exampleZh": "三名受薪志工引導年長選民通過擁擠投票站。",
+    "example": "Three paid helpers guided elderly voters through the crowded polling station.",
+    "exampleZh": "三名受薪工作人員引導年長選民穿過擁擠的投票所。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1255,7 +1255,7 @@
   {
     "word": "gnp",
     "example": "The economist linked GNP growth to exports of machine tools.",
-    "exampleZh": "經濟學家認為國民生產總值成長與工具機出口有關。",
+    "exampleZh": "經濟學家認為國民生產毛額成長與工具機出口有關。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1450,8 +1450,8 @@
   },
   {
     "word": "disturbed",
-    "example": "The disturbed room showed signs of a hurried search.",
-    "exampleZh": "混亂的房間顯示有人倉促搜過。",
+    "example": "Mia felt disturbed after watching the news about the earthquake.",
+    "exampleZh": "看完地震的新聞後，米亞心裡很不安。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1668,7 +1668,7 @@
   {
     "word": "modernize",
     "example": "The museum will modernize its ticket gates next spring.",
-    "exampleZh": "博物館明年春天將售票閘門現代化。",
+    "exampleZh": "博物館明年春天將把售票閘門現代化。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2017,8 +2017,8 @@
   },
   {
     "word": "brit",
-    "example": "The brit drifted in bright patches near the surface.",
-    "exampleZh": "小鯡魚群在水面附近形成亮色斑塊。",
+    "example": "Our new English teacher is a Brit who loves bubble tea.",
+    "exampleZh": "我們的新英文老師是個愛喝珍珠奶茶的英國人。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2171,8 +2171,8 @@
   },
   {
     "word": "made",
-    "example": "The made bed looked neat before the guests arrived.",
-    "exampleZh": "客人抵達前，鋪好的床看起來整齊乾淨。",
+    "example": "This school bag is made from recycled plastic bottles.",
+    "exampleZh": "這個書包是用回收塑膠瓶製成的。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2374,8 +2374,8 @@
   },
   {
     "word": "mall",
-    "example": "A tree-lined mall led visitors toward the fountain.",
-    "exampleZh": "一條林蔭大道引導遊客走向噴水池。",
+    "example": "We watched a movie at the mall after school yesterday.",
+    "exampleZh": "我們昨天放學後在購物中心看了電影。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2746,7 +2746,7 @@
   {
     "word": "annoy",
     "example": "Mosquitoes annoy campers more than the cold wind.",
-    "exampleZh": "蚊子比冷風更惹露營者煩。",
+    "exampleZh": "比起冷風，蚊子更讓露營者心煩。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2815,7 +2815,7 @@
   },
   {
     "word": "curly",
-    "example": "Her curly hair escaped from under Lina's swim cap.",
+    "example": "Lina's curly hair escaped from under her swim cap.",
     "exampleZh": "莉娜的捲髮從泳帽下露出來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
@@ -3263,8 +3263,8 @@
   },
   {
     "word": "standing",
-    "example": "Required standing during the anthem made the assembly feel formal.",
-    "exampleZh": "唱國歌時必須起立，讓集會顯得正式。",
+    "example": "Her standing in the class rose after she won the speech contest.",
+    "exampleZh": "她贏得演講比賽後，在班上的地位提升了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },

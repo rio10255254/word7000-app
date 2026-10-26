@@ -4,7 +4,7 @@
   "sources": [
     {
       "file": "content/speaking/base-reviewed.json",
-      "sha256": "15d078e3a05a30a2f49d485513bc5c252e7515d3aa4d905de0f74ae074313cfd"
+      "sha256": "d6caa05447aabc83f863c3d19e5969d17425070767607f0ef30c7644e713d398"
     },
     {
       "file": "content/speaking/topics/home.json",
@@ -12,7 +12,7 @@
     },
     {
       "file": "content/speaking/topics/food.json",
-      "sha256": "bb3e839b55505603b9b1a278ddf29aafe3c967578e0f1309a6135247726fea91"
+      "sha256": "84daad03e429d92581a89f98a30b0ffde8657f2c74ecae46eac0c842dee4caef"
     },
     {
       "file": "content/speaking/topics/travel.json",
@@ -32,11 +32,11 @@
     },
     {
       "file": "content/speaking/topics/relationships.json",
-      "sha256": "9ccbfc3c8a413de6e754d7e4c88ab894b01f418daff4ccd6b7094383dca3dbb8"
+      "sha256": "4695ecff2a8b74c04c50bd40858e0c32a64eed9c273baa150260f0d1212f2aaa"
     },
     {
       "file": "content/speaking/topics/money.json",
-      "sha256": "593e0d9ab27bc99d46fabffb9b3fed1ef679db18b33548eb7b96e3cb4e382ab3"
+      "sha256": "ed7d276b1c33358a9052248bda2be2ad1a702b54e3ca4af092415ec322e6cb8c"
     },
     {
       "file": "content/speaking/topics/nature.json",
@@ -52,31 +52,31 @@
     },
     {
       "file": "content/speaking/topics/digital.json",
-      "sha256": "0e163ab4e24ba5679599195cfdd1bc37ffcf4879a4b4f1324528c5553b2a5c24"
+      "sha256": "c70b46aa6fba66b63451e3aae44bf03c6110ef0974c5764788c67ba5d4e92558"
     },
     {
       "file": "content/speaking/topics/emotions.json",
-      "sha256": "9cbd22f583d3730d2a6aed351fd0437a84501d0127cafc7657a7a6ebd05a5a1e"
+      "sha256": "0794fb16bc6f7ea662fcfb26236beb89afc4c48ae1821cd0ed2d5dff43e73c81"
     },
     {
       "file": "content/speaking/topics/choices.json",
-      "sha256": "161d996ade13035acfb26a110321202f57e0c7bb21aa69d11bc7034c6a04fed9"
+      "sha256": "09850478c98aa08c3076b090b33f1fd765444d42be639e6c4b2236022fc791bb"
     },
     {
       "file": "content/speaking/topics/arts.json",
-      "sha256": "7bae988161126ef6d240f892f91fd81ef15d2a0abc2aeac6f8567be5dda1e061"
+      "sha256": "e32a65416a064beb777c11192ff7d056e3c758631d4c266c7aced52d34a8b24b"
     },
     {
       "file": "content/speaking/topics/science.json",
-      "sha256": "55861dda7d780ccf3704966a2ff83a5d1a0eea579f7537d5e1199ff260595a38"
+      "sha256": "430a16712ba216894e0f6195f5f69dfa1d479087b90b9b6c432d4d6af5587b98"
     },
     {
       "file": "content/speaking/topics/leisure.json",
-      "sha256": "8a8fc2e40f6f8a9a1b4ccea08c5629fa5e94c31b93a0c7ba718c72e80f0294b9"
+      "sha256": "764ed9f6e95c76df2050f7993bdffd81b4b213c852cbf0cf0d6f88df0350e67c"
     },
     {
       "file": "content/speaking/topics/risks.json",
-      "sha256": "353cfd5c6ebd20347528488bdce0ab0b799ca2202fc672497aba02ef2fd94b3b"
+      "sha256": "cbe1e96752686a3d2dc0aa22f8d2655bde22c633e3cd8b14d21533f966feb5a6"
     },
     {
       "file": "content/speaking/topics/ethics.json",
@@ -84,7 +84,7 @@
     },
     {
       "file": "content/speaking/topics/planning.json",
-      "sha256": "a0e03c5acb17ba0a0f46f8f91cf918e24ff1880f59809723d5b4fdd8433079e9"
+      "sha256": "1d562c863e7ff773b8c18429460e11d42788123e92b7a7faf39b588160f4b387"
     }
   ],
   "coverage": {
@@ -346,7 +346,7 @@
       "keywordZh": "什麼",
       "question": "How do you decide what to do first on a busy morning?",
       "answerEn": "I write down what needs to be finished that day. Then I choose the task with the nearest deadline.",
-      "answerZh": "我會先寫下今天需要完成什麼，再選出截止時間最近的那件事。這樣比較容易安排順序。"
+      "answerZh": "我會先寫下今天需要完成什麼，然後選出截止時間最近的那件事。"
     },
     {
       "id": "w0031-reviewed-1",
@@ -401,8 +401,8 @@
       "word": "all",
       "keywordZh": "所有",
       "question": "What helps you stay calm when all your tasks feel urgent?",
-      "answerEn": "When all my tasks feel urgent, I write them down and choose the first one. Seeing everything on paper makes the pressure feel less vague.",
-      "answerZh": "當所有事情都很急時，我會先把它們寫下來，再決定從哪一件開始。列出清單後，就比較能看清楚該怎麼安排。"
+      "answerEn": "When all my tasks feel urgent, I write them down and choose one to start with. Seeing everything on paper makes the pressure feel more manageable.",
+      "answerZh": "當所有任務都感覺很急時，我會先把它們寫下來，再選一件開始做。把每件事都寫在紙上，壓力就比較容易應付。"
     },
     {
       "id": "w0038-reviewed-1",
@@ -463,10 +463,10 @@
     {
       "id": "w0045-reviewed-1",
       "word": "when",
-      "keywordZh": "的時候",
+      "keywordZh": "當…時",
       "question": "When do you feel most like yourself?",
       "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
-      "answerZh": "我有足夠的安靜時間可以思考的時候，最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
+      "answerZh": "當我有足夠安靜時間思考時，我最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
     },
     {
       "id": "w0046-reviewed-1",
@@ -1450,7 +1450,7 @@
       "keywordZh": "壓力",
       "question": "How could you compare pressure in two tyres without relying on appearance?",
       "answerEn": "I would check the pressure with a suitable gauge. Looking at the tyres alone would not give me a reliable numerical comparison.",
-      "answerZh": "我會用合適的壓力表檢查。只看輪胎外觀，得不到可靠的數值比較。"
+      "answerZh": "我會用合適的胎壓計測量輪胎壓力。只看輪胎外觀，得不到可靠的數值比較。"
     },
     {
       "id": "w0497-reviewed-1",
@@ -2290,7 +2290,7 @@
       "keywordZh": "選項",
       "question": "What would you do if none of the available options met all your needs?",
       "answerEn": "I would identify which need mattered most before choosing an option. I could accept a smaller compromise on less important details.",
-      "answerZh": "選選項前，我會先找出最重要的需求。不那麼關鍵的細節，就接受一點取捨。"
+      "answerZh": "決定選哪個選項前，我會先找出最重要的需求。不那麼關鍵的細節，就接受一點取捨。"
     },
     {
       "id": "w0971-reviewed-1",
@@ -2369,8 +2369,8 @@
       "word": "threat",
       "keywordZh": "威脅",
       "question": "How would you respond to a suspicious message that included a threat?",
-      "answerEn": "I would preserve the threat without engaging in an argument. I would seek help through appropriate, trusted channels rather than act under pressure.",
-      "answerZh": "我會保留威脅內容，不和對方爭吵。透過合適、可信的管道求助，不被催著行動。"
+      "answerEn": "I would keep a record of the threat without replying or starting an argument. I would seek help through appropriate, trusted channels rather than act under pressure.",
+      "answerZh": "我會把威脅內容留存下來，不回覆也不和對方爭吵。我會透過合適、可信的管道求助，不被催著行動。"
     },
     {
       "id": "w1030-reviewed-1",
@@ -2881,7 +2881,7 @@
       "word": "fruit",
       "keywordZh": "水果",
       "question": "Which fruit would you take on a short day trip?",
-      "answerEn": "I would take an apple or an orange. This fruit travels well and does not need a container or refrigeration for a short outing.",
+      "answerEn": "I would take an apple or an orange. Either fruit travels well and does not need a container or refrigeration for a short outing.",
       "answerZh": "短程出遊我會帶蘋果或柳橙。這類水果好攜帶，也不用另外裝盒或冷藏。"
     },
     {
@@ -3010,7 +3010,7 @@
       "keywordZh": "好玩",
       "question": "How would you keep a group activity fun when people started taking it too seriously?",
       "answerEn": "I would remind everyone that we came for fun, not a final ranking. Switching to a cooperative round could change the mood.",
-      "answerZh": "我會提醒大家是來找好玩的，不是來排名。換成合作的一輪，也許就能改變氣氛。"
+      "answerZh": "我會提醒大家，我們是為了好玩才來，不是為了排名。換成合作的一輪，也許就能改變氣氛。"
     },
     {
       "id": "w1406-reviewed-1",
@@ -3183,10 +3183,10 @@
     {
       "id": "w1684-reviewed-1",
       "word": "connection",
-      "keywordZh": "接駁",
+      "keywordZh": "轉乘",
       "question": "Your travel app shows only a few minutes for a train connection. What would you check?",
       "answerEn": "I would check whether the connection required changing platforms. If the transfer looked unrealistic, I would choose a later train.",
-      "answerZh": "我會查列車接駁需不需要換月台。如果轉乘時間太勉強，就改搭晚一班。"
+      "answerZh": "我會查這次轉乘需不需要換月台。如果轉乘時間太勉強，就改搭晚一班。"
     },
     {
       "id": "w1688-reviewed-1",
@@ -3578,7 +3578,7 @@
       "keywordZh": "情緒",
       "question": "Why might naming an emotion help during a difficult conversation?",
       "answerEn": "Naming the emotion could make my reaction easier to explain. Saying I feel hurt is clearer than expecting someone to guess.",
-      "answerZh": "說出情緒，能讓對方比較理解我的反應。直接說自己受傷，比要他一直猜清楚。"
+      "answerZh": "說出情緒，能讓我的反應比較容易說明。直接說自己受傷了，比讓對方去猜更清楚。"
     },
     {
       "id": "w2023-reviewed-1",
@@ -3617,7 +3617,7 @@
       "word": "poem",
       "keywordZh": "詩",
       "question": "How would you choose a poem to read aloud to a small group?",
-      "answerEn": "I would choose a poem whose rhythm I enjoyed speaking. I would read it beforehand to understand where the pauses belong.",
+      "answerEn": "I would choose a poem with a rhythm I enjoyed reading aloud. I would read it beforehand to understand where the pauses belong.",
       "answerZh": "我會選朗讀節奏自己喜歡的詩。先唸過一次，知道哪裡適合停頓。"
     },
     {
@@ -3778,7 +3778,7 @@
       "keywordZh": "允許",
       "question": "When would you ask for permission before sharing something?",
       "answerEn": "I would ask permission before sharing a friend's personal story. Removing their name might not prevent others from recognizing them.",
-      "answerZh": "分享朋友的私事前，我會先取得允許。就算拿掉名字，別人還是可能認得出來。"
+      "answerZh": "分享朋友的私事前，我會先問他是否允許。就算拿掉名字，別人還是可能認得出來。"
     },
     {
       "id": "w2268-reviewed-1",
@@ -4168,8 +4168,8 @@
       "id": "w2991-reviewed-1",
       "word": "kind",
       "keywordZh": "親切",
-      "question": "What kind action could make a newcomer feel less awkward?",
-      "answerEn": "A kind action would be inviting them into a small conversation. I would explain any shared references instead of leaving them outside the joke.",
+      "question": "What is one kind thing you could do to make a newcomer feel less awkward?",
+      "answerEn": "A kind thing to do would be inviting them into a small conversation. I would explain any shared references instead of leaving them out of the joke.",
       "answerZh": "親切的做法，是主動邀他加入聊天。聊到共同經驗時也補充說明，不讓他只能在旁邊陪笑。"
     },
     {
@@ -4298,7 +4298,7 @@
       "keywordZh": "實際",
       "question": "How would you set a realistic timeline when others expected a faster result?",
       "answerEn": "I would show the work behind a realistic timeline. Explaining dependencies and trade-offs could make the estimate easier to understand.",
-      "answerZh": "我會列出實際時程背後要做的事。說明先後依賴和取捨，別人比較能理解估計。"
+      "answerZh": "我會說明實際可行的時程背後有哪些工作。說明先後依賴和取捨，別人比較能理解這個估計。"
     },
     {
       "id": "w3170-reviewed-1",
@@ -4335,18 +4335,18 @@
     {
       "id": "w3282-reviewed-1",
       "word": "disadvantage",
-      "keywordZh": "不利",
+      "keywordZh": "劣勢",
       "question": "How could you reduce the disadvantage of being new to a group?",
       "answerEn": "I could reduce that disadvantage by asking for the group's shared notes. A clear introduction to their routines would help me contribute sooner.",
-      "answerZh": "我會先請大家分享筆記，減少新加入的不利。了解日常做法，也能更快幫上忙。"
+      "answerZh": "我可以先請大家分享共用筆記，降低剛加入的劣勢。了解大家的日常做法，也能更快幫上忙。"
     },
     {
       "id": "w3295-reviewed-1",
       "word": "receipt",
       "keywordZh": "收據",
       "question": "Why might you keep a receipt after buying an electronic device?",
-      "answerEn": "I would keep the receipt in case the device needed a return. A photo would also make the purchase details easier to find.",
-      "answerZh": "我會留下收據，以備裝置需要退換。也拍張照片，之後比較容易找到購買資料。"
+      "answerEn": "I would keep the receipt in case I needed to return the device. Taking a photo of it would also make the purchase details easier to find.",
+      "answerZh": "我會留下收據，以備日後需要退貨。也會拍張照片，之後比較容易找到購買資料。"
     },
     {
       "id": "w3314-reviewed-1",
@@ -4746,7 +4746,7 @@
       "keywordZh": "健行",
       "question": "How would you choose a hike for a group with different experience levels?",
       "answerEn": "I would choose a hike that suited the least experienced person. A manageable route would leave everyone enough energy to enjoy the scenery.",
-      "answerZh": "我會以經驗最少的人為準，挑適合的健行路線。走得應付得來，大家才有心情看風景。"
+      "answerZh": "我會以經驗最少的人為準，挑適合的健行路線。路線不會太吃力，大家才有體力欣賞風景。"
     },
     {
       "id": "w4806-reviewed-1",

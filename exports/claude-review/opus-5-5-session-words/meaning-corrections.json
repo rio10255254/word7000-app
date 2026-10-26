@@ -1,0 +1,1118 @@
+[
+  {
+    "core": 1,
+    "word": "have",
+    "primaryMeaningZh": "有",
+    "supplementalMeaningZh": "吃；舉行；必須"
+  },
+  {
+    "core": 1,
+    "word": "as",
+    "primaryMeaningZh": "作為",
+    "supplementalMeaningZh": "像；因為；當…時"
+  },
+  {
+    "core": 1,
+    "word": "thing",
+    "primaryMeaningZh": "東西",
+    "supplementalMeaningZh": "事情；情況"
+  },
+  {
+    "core": 1,
+    "word": "ask",
+    "primaryMeaningZh": "問",
+    "supplementalMeaningZh": "要求；邀請；打聽"
+  },
+  {
+    "core": 1,
+    "word": "much",
+    "primaryMeaningZh": "許多",
+    "supplementalMeaningZh": "非常"
+  },
+  {
+    "core": 1,
+    "word": "yes",
+    "primaryMeaningZh": "是的",
+    "supplementalMeaningZh": "同意"
+  },
+  {
+    "core": 1,
+    "word": "die",
+    "primaryMeaningZh": "死",
+    "supplementalMeaningZh": "枯死；熄滅；消失"
+  },
+  {
+    "core": 1,
+    "word": "general",
+    "primaryMeaningZh": "一般的",
+    "supplementalMeaningZh": "大致的；將軍"
+  },
+  {
+    "core": 1,
+    "word": "security",
+    "primaryMeaningZh": "安全",
+    "supplementalMeaningZh": "保全；保障；安檢人員"
+  },
+  {
+    "core": 1,
+    "word": "club",
+    "primaryMeaningZh": "社團",
+    "supplementalMeaningZh": "球桿；棍棒；夜店"
+  },
+  {
+    "core": 2,
+    "word": "attack",
+    "primaryMeaningZh": "攻擊",
+    "supplementalMeaningZh": "襲擊；抨擊；發作"
+  },
+  {
+    "core": 2,
+    "word": "visit",
+    "primaryMeaningZh": "拜訪",
+    "supplementalMeaningZh": "參觀；造訪；探望"
+  },
+  {
+    "core": 2,
+    "word": "sister",
+    "primaryMeaningZh": "姊妹",
+    "supplementalMeaningZh": "姊姊；妹妹；修女"
+  },
+  {
+    "core": 2,
+    "word": "green",
+    "primaryMeaningZh": "綠色的",
+    "supplementalMeaningZh": "綠色；未成熟的；沒經驗的"
+  },
+  {
+    "core": 2,
+    "word": "quick",
+    "primaryMeaningZh": "快的",
+    "supplementalMeaningZh": "迅速的；短暫的；敏捷的"
+  },
+  {
+    "core": 2,
+    "word": "in",
+    "primaryMeaningZh": "在……裡面",
+    "supplementalMeaningZh": "進入；穿著；在……期間"
+  },
+  {
+    "core": 2,
+    "word": "lot",
+    "primaryMeaningZh": "許多",
+    "supplementalMeaningZh": "一塊地；一批；命運"
+  },
+  {
+    "core": 2,
+    "word": "got",
+    "primaryMeaningZh": "得到",
+    "supplementalMeaningZh": "買到；變得；到達"
+  },
+  {
+    "core": 2,
+    "word": "hold",
+    "primaryMeaningZh": "握住",
+    "supplementalMeaningZh": "扶住；持有；舉行"
+  },
+  {
+    "core": 2,
+    "word": "order",
+    "primaryMeaningZh": "訂單",
+    "supplementalMeaningZh": "命令；順序；訂購"
+  },
+  {
+    "core": 2,
+    "word": "language",
+    "primaryMeaningZh": "語言",
+    "supplementalMeaningZh": "用語；文字；措辭"
+  },
+  {
+    "core": 2,
+    "word": "private",
+    "primaryMeaningZh": "私人的",
+    "supplementalMeaningZh": "私立的；祕密的；個人的"
+  },
+  {
+    "core": 2,
+    "word": "hair",
+    "primaryMeaningZh": "頭髮",
+    "supplementalMeaningZh": "毛髮"
+  },
+  {
+    "core": 2,
+    "word": "movement",
+    "primaryMeaningZh": "移動",
+    "supplementalMeaningZh": "動作；運動；樂章"
+  },
+  {
+    "core": 2,
+    "word": "quality",
+    "primaryMeaningZh": "品質",
+    "supplementalMeaningZh": "優質的；特性"
+  },
+  {
+    "core": 2,
+    "word": "population",
+    "primaryMeaningZh": "人口",
+    "supplementalMeaningZh": "族群數量；全體居民"
+  },
+  {
+    "core": 2,
+    "word": "theory",
+    "primaryMeaningZh": "理論",
+    "supplementalMeaningZh": "學說；推測；說法"
+  },
+  {
+    "core": 2,
+    "word": "dead",
+    "primaryMeaningZh": "死的",
+    "supplementalMeaningZh": "枯死的；失效的；完全地"
+  },
+  {
+    "core": 2,
+    "word": "nice",
+    "primaryMeaningZh": "美好的",
+    "supplementalMeaningZh": "友善的；宜人的；漂亮的"
+  },
+  {
+    "core": 2,
+    "word": "glass",
+    "primaryMeaningZh": "玻璃",
+    "supplementalMeaningZh": "玻璃杯；一杯；眼鏡"
+  },
+  {
+    "core": 2,
+    "word": "ready",
+    "primaryMeaningZh": "準備好的",
+    "supplementalMeaningZh": "現成的；願意的"
+  },
+  {
+    "core": 2,
+    "word": "remove",
+    "primaryMeaningZh": "移除",
+    "supplementalMeaningZh": "脫掉；搬走；解除"
+  },
+  {
+    "core": 2,
+    "word": "dark",
+    "primaryMeaningZh": "黑暗的",
+    "supplementalMeaningZh": "深色的；烏黑的；隱密的"
+  },
+  {
+    "core": 2,
+    "word": "village",
+    "primaryMeaningZh": "村莊",
+    "supplementalMeaningZh": "村裡的；村民"
+  },
+  {
+    "core": 2,
+    "word": "focus",
+    "primaryMeaningZh": "專注",
+    "supplementalMeaningZh": "焦點；集中；對焦"
+  },
+  {
+    "core": 2,
+    "word": "trouble",
+    "primaryMeaningZh": "麻煩",
+    "supplementalMeaningZh": "故障；煩惱；困擾"
+  },
+  {
+    "core": 2,
+    "word": "horse",
+    "primaryMeaningZh": "馬",
+    "supplementalMeaningZh": "騎馬"
+  },
+  {
+    "core": 2,
+    "word": "marriage",
+    "primaryMeaningZh": "婚姻",
+    "supplementalMeaningZh": "婚禮；結合"
+  },
+  {
+    "core": 2,
+    "word": "finger",
+    "primaryMeaningZh": "手指",
+    "supplementalMeaningZh": "指狀物；用手指觸碰"
+  },
+  {
+    "core": 2,
+    "word": "civil",
+    "primaryMeaningZh": "公民的",
+    "supplementalMeaningZh": "民事的；國內的；有禮貌的"
+  },
+  {
+    "core": 2,
+    "word": "reality",
+    "primaryMeaningZh": "現實",
+    "supplementalMeaningZh": "事實；真實性"
+  },
+  {
+    "core": 3,
+    "word": "attend",
+    "primaryMeaningZh": "出席",
+    "supplementalMeaningZh": "參加；照料；專心處理"
+  },
+  {
+    "core": 3,
+    "word": "nuclear",
+    "primaryMeaningZh": "核的",
+    "supplementalMeaningZh": "原子能的；核武的"
+  },
+  {
+    "core": 3,
+    "word": "address",
+    "primaryMeaningZh": "地址",
+    "supplementalMeaningZh": "寫地址；處理；演說"
+  },
+  {
+    "core": 3,
+    "word": "presence",
+    "primaryMeaningZh": "在場",
+    "supplementalMeaningZh": "出席；存在；存在感"
+  },
+  {
+    "core": 3,
+    "word": "gold",
+    "primaryMeaningZh": "金色",
+    "supplementalMeaningZh": "黃金；金製的"
+  },
+  {
+    "core": 3,
+    "word": "broad",
+    "primaryMeaningZh": "寬廣的",
+    "supplementalMeaningZh": "廣泛的；概略的"
+  },
+  {
+    "core": 3,
+    "word": "wave",
+    "primaryMeaningZh": "波浪",
+    "supplementalMeaningZh": "揮手；波動"
+  },
+  {
+    "core": 3,
+    "word": "launch",
+    "primaryMeaningZh": "發射",
+    "supplementalMeaningZh": "推出；開始；使下水"
+  },
+  {
+    "core": 3,
+    "word": "double",
+    "primaryMeaningZh": "雙重的",
+    "supplementalMeaningZh": "兩倍；加倍；替身"
+  },
+  {
+    "core": 3,
+    "word": "prospect",
+    "primaryMeaningZh": "前景",
+    "supplementalMeaningZh": "可能性；景色；勘探"
+  },
+  {
+    "core": 3,
+    "word": "stable",
+    "primaryMeaningZh": "穩定的",
+    "supplementalMeaningZh": "穩固的；馬廄"
+  },
+  {
+    "core": 3,
+    "word": "prepared",
+    "primaryMeaningZh": "準備好的",
+    "supplementalMeaningZh": "願意的"
+  },
+  {
+    "core": 4,
+    "word": "gay",
+    "primaryMeaningZh": "同性戀的",
+    "supplementalMeaningZh": "快樂的；鮮豔的"
+  },
+  {
+    "core": 4,
+    "word": "definition",
+    "primaryMeaningZh": "定義",
+    "supplementalMeaningZh": "解析度；清晰度"
+  },
+  {
+    "core": 4,
+    "word": "pursue",
+    "primaryMeaningZh": "追求",
+    "supplementalMeaningZh": "追趕；從事；攻讀"
+  },
+  {
+    "core": 4,
+    "word": "cycle",
+    "primaryMeaningZh": "週期",
+    "supplementalMeaningZh": "循環；騎自行車；行程"
+  },
+  {
+    "core": 4,
+    "word": "motion",
+    "primaryMeaningZh": "移動",
+    "supplementalMeaningZh": "動作；手勢；提議"
+  },
+  {
+    "core": 4,
+    "word": "signal",
+    "primaryMeaningZh": "訊號",
+    "supplementalMeaningZh": "暗號；示意；標誌"
+  },
+  {
+    "core": 4,
+    "word": "nineteenth",
+    "primaryMeaningZh": "第十九",
+    "supplementalMeaningZh": "十九分之一"
+  },
+  {
+    "core": 4,
+    "word": "apartment",
+    "primaryMeaningZh": "公寓",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 4,
+    "word": "unable",
+    "primaryMeaningZh": "無法",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 4,
+    "word": "lucky",
+    "primaryMeaningZh": "幸運的",
+    "supplementalMeaningZh": "帶來好運的"
+  },
+  {
+    "core": 5,
+    "word": "perfectly",
+    "primaryMeaningZh": "完美地",
+    "supplementalMeaningZh": "完全地；非常"
+  },
+  {
+    "core": 5,
+    "word": "tower",
+    "primaryMeaningZh": "塔樓",
+    "supplementalMeaningZh": "高樓；高聳"
+  },
+  {
+    "core": 5,
+    "word": "cheese",
+    "primaryMeaningZh": "起司",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 5,
+    "word": "drama",
+    "primaryMeaningZh": "戲劇",
+    "supplementalMeaningZh": "戲劇性事件；連續劇"
+  },
+  {
+    "core": 5,
+    "word": "badly",
+    "primaryMeaningZh": "嚴重地",
+    "supplementalMeaningZh": "差勁地；非常想"
+  },
+  {
+    "core": 5,
+    "word": "rank",
+    "primaryMeaningZh": "級別",
+    "supplementalMeaningZh": "排名；排列；軍階"
+  },
+  {
+    "core": 5,
+    "word": "tube",
+    "primaryMeaningZh": "管子",
+    "supplementalMeaningZh": "軟管；試管；倫敦地鐵"
+  },
+  {
+    "core": 5,
+    "word": "confront",
+    "primaryMeaningZh": "面對",
+    "supplementalMeaningZh": "對抗；當面質問"
+  },
+  {
+    "core": 5,
+    "word": "tight",
+    "primaryMeaningZh": "緊的",
+    "supplementalMeaningZh": "嚴密的；拮据的；緊緊地"
+  },
+  {
+    "core": 5,
+    "word": "pitch",
+    "primaryMeaningZh": "投擲",
+    "supplementalMeaningZh": "音高；推銷；球場"
+  },
+  {
+    "core": 5,
+    "word": "swim",
+    "primaryMeaningZh": "游泳",
+    "supplementalMeaningZh": "游過；暈眩"
+  },
+  {
+    "core": 5,
+    "word": "countryside",
+    "primaryMeaningZh": "鄉間",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 5,
+    "word": "explode",
+    "primaryMeaningZh": "爆炸",
+    "supplementalMeaningZh": "爆發；激增"
+  },
+  {
+    "core": 5,
+    "word": "mate",
+    "primaryMeaningZh": "夥伴",
+    "supplementalMeaningZh": "配偶；助手；交配"
+  },
+  {
+    "core": 5,
+    "word": "invitation",
+    "primaryMeaningZh": "請帖",
+    "supplementalMeaningZh": "邀請"
+  },
+  {
+    "core": 5,
+    "word": "dump",
+    "primaryMeaningZh": "傾倒",
+    "supplementalMeaningZh": "垃圾場；甩掉"
+  },
+  {
+    "core": 5,
+    "word": "bay",
+    "primaryMeaningZh": "海灣",
+    "supplementalMeaningZh": "月桂樹；吠叫"
+  },
+  {
+    "core": 6,
+    "word": "welfare",
+    "primaryMeaningZh": "福祉",
+    "supplementalMeaningZh": "福利；社會救助"
+  },
+  {
+    "core": 6,
+    "word": "catholic",
+    "primaryMeaningZh": "天主教的",
+    "supplementalMeaningZh": "天主教徒；廣泛的；包容的"
+  },
+  {
+    "core": 6,
+    "word": "mechanism",
+    "primaryMeaningZh": "機械裝置",
+    "supplementalMeaningZh": "機制；原理；機構"
+  },
+  {
+    "core": 6,
+    "word": "dominant",
+    "primaryMeaningZh": "占優勢的",
+    "supplementalMeaningZh": "主導的；最顯著的"
+  },
+  {
+    "core": 6,
+    "word": "unity",
+    "primaryMeaningZh": "團結",
+    "supplementalMeaningZh": "一致；統一"
+  },
+  {
+    "core": 6,
+    "word": "carrier",
+    "primaryMeaningZh": "運送者",
+    "supplementalMeaningZh": "郵差；帶原者；航空公司"
+  },
+  {
+    "core": 6,
+    "word": "segment",
+    "primaryMeaningZh": "部分",
+    "supplementalMeaningZh": "片段；一瓣；分割"
+  },
+  {
+    "core": 6,
+    "word": "allegation",
+    "primaryMeaningZh": "指控",
+    "supplementalMeaningZh": "聲稱；說法"
+  },
+  {
+    "core": 6,
+    "word": "monthly",
+    "primaryMeaningZh": "每月的",
+    "supplementalMeaningZh": "月刊；每月一次地"
+  },
+  {
+    "core": 6,
+    "word": "execute",
+    "primaryMeaningZh": "執行",
+    "supplementalMeaningZh": "實行；完成；處決"
+  },
+  {
+    "core": 6,
+    "word": "hint",
+    "primaryMeaningZh": "暗示",
+    "supplementalMeaningZh": "提示；少許"
+  },
+  {
+    "core": 6,
+    "word": "liberty",
+    "primaryMeaningZh": "自由",
+    "supplementalMeaningZh": "許可；冒昧"
+  },
+  {
+    "core": 6,
+    "word": "counterpart",
+    "primaryMeaningZh": "職位相當的人",
+    "supplementalMeaningZh": "對應的人事物；對等物"
+  },
+  {
+    "core": 6,
+    "word": "presidency",
+    "primaryMeaningZh": "總統職位",
+    "supplementalMeaningZh": "總統任期；總裁職位"
+  },
+  {
+    "core": 6,
+    "word": "associated",
+    "primaryMeaningZh": "相關的",
+    "supplementalMeaningZh": "聯合的；附屬的"
+  },
+  {
+    "core": 6,
+    "word": "treasury",
+    "primaryMeaningZh": "國庫",
+    "supplementalMeaningZh": "財政部；寶庫"
+  },
+  {
+    "core": 6,
+    "word": "roach",
+    "primaryMeaningZh": "蟑螂",
+    "supplementalMeaningZh": "斜齒鯿"
+  },
+  {
+    "core": 7,
+    "word": "anticipate",
+    "primaryMeaningZh": "預期",
+    "supplementalMeaningZh": "期待；預先處理"
+  },
+  {
+    "core": 7,
+    "word": "pig",
+    "primaryMeaningZh": "豬",
+    "supplementalMeaningZh": "貪吃的人；邋遢的人"
+  },
+  {
+    "core": 7,
+    "word": "logic",
+    "primaryMeaningZh": "邏輯",
+    "supplementalMeaningZh": "推理；道理"
+  },
+  {
+    "core": 7,
+    "word": "attraction",
+    "primaryMeaningZh": "吸引人的事物",
+    "supplementalMeaningZh": "吸引力；景點"
+  },
+  {
+    "core": 7,
+    "word": "unemployed",
+    "primaryMeaningZh": "失業的",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 7,
+    "word": "substantially",
+    "primaryMeaningZh": "大幅地",
+    "supplementalMeaningZh": "大體上；實質上"
+  },
+  {
+    "core": 7,
+    "word": "loyal",
+    "primaryMeaningZh": "忠心的",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 7,
+    "word": "dying",
+    "primaryMeaningZh": "垂死的",
+    "supplementalMeaningZh": "快枯死的；消逝中的"
+  },
+  {
+    "core": 7,
+    "word": "sour",
+    "primaryMeaningZh": "酸的",
+    "supplementalMeaningZh": "酸臭的；變壞"
+  },
+  {
+    "core": 7,
+    "word": "depressing",
+    "primaryMeaningZh": "令人沮喪的",
+    "supplementalMeaningZh": "沉悶的；陰鬱的"
+  },
+  {
+    "core": 7,
+    "word": "finding",
+    "primaryMeaningZh": "發現",
+    "supplementalMeaningZh": "調查結果；裁決"
+  },
+  {
+    "core": 8,
+    "word": "incorporate",
+    "primaryMeaningZh": "納入",
+    "supplementalMeaningZh": "合併；拌入"
+  },
+  {
+    "core": 8,
+    "word": "undertake",
+    "primaryMeaningZh": "從事",
+    "supplementalMeaningZh": "承擔；著手進行；保證"
+  },
+  {
+    "core": 8,
+    "word": "scope",
+    "primaryMeaningZh": "範圍",
+    "supplementalMeaningZh": "眼界；機會"
+  },
+  {
+    "core": 8,
+    "word": "equation",
+    "primaryMeaningZh": "等式",
+    "supplementalMeaningZh": "方程式"
+  },
+  {
+    "core": 9,
+    "word": "commodity",
+    "primaryMeaningZh": "商品",
+    "supplementalMeaningZh": "日用品；大宗物資"
+  },
+  {
+    "core": 9,
+    "word": "bureaucracy",
+    "primaryMeaningZh": "官僚體制",
+    "supplementalMeaningZh": "官僚人員；官僚作風"
+  },
+  {
+    "core": 9,
+    "word": "outfit",
+    "primaryMeaningZh": "一套服裝",
+    "supplementalMeaningZh": "全套裝備；團體"
+  },
+  {
+    "core": 9,
+    "word": "goat",
+    "primaryMeaningZh": "山羊",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 9,
+    "word": "starter",
+    "primaryMeaningZh": "開胃菜",
+    "supplementalMeaningZh": "先發選手；啟動器；發酵種"
+  },
+  {
+    "core": 9,
+    "word": "exceptional",
+    "primaryMeaningZh": "出色的",
+    "supplementalMeaningZh": "特殊的；例外的"
+  },
+  {
+    "core": 9,
+    "word": "follower",
+    "primaryMeaningZh": "追隨者",
+    "supplementalMeaningZh": "粉絲；信徒；隨從"
+  },
+  {
+    "core": 9,
+    "word": "purse",
+    "primaryMeaningZh": "錢包",
+    "supplementalMeaningZh": "手提包；皮夾；獎金"
+  },
+  {
+    "core": 9,
+    "word": "prescribe",
+    "primaryMeaningZh": "開處方",
+    "supplementalMeaningZh": "規定；囑咐"
+  },
+  {
+    "core": 9,
+    "word": "cocaine",
+    "primaryMeaningZh": "古柯鹼",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 9,
+    "word": "scarcely",
+    "primaryMeaningZh": "幾乎不",
+    "supplementalMeaningZh": "才剛；勉強"
+  },
+  {
+    "core": 9,
+    "word": "cult",
+    "primaryMeaningZh": "邪教",
+    "supplementalMeaningZh": "狂熱崇拜；風潮"
+  },
+  {
+    "core": 9,
+    "word": "viable",
+    "primaryMeaningZh": "可行的",
+    "supplementalMeaningZh": "能生長的；能存活的"
+  },
+  {
+    "core": 9,
+    "word": "skip",
+    "primaryMeaningZh": "跳過",
+    "supplementalMeaningZh": "不吃；跳躍；翹課"
+  },
+  {
+    "core": 9,
+    "word": "dual",
+    "primaryMeaningZh": "雙重的",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 9,
+    "word": "directory",
+    "primaryMeaningZh": "名錄",
+    "supplementalMeaningZh": "通訊錄；目錄；指南"
+  },
+  {
+    "core": 9,
+    "word": "betray",
+    "primaryMeaningZh": "背叛",
+    "supplementalMeaningZh": "出賣；辜負；流露"
+  },
+  {
+    "core": 9,
+    "word": "gown",
+    "primaryMeaningZh": "禮服",
+    "supplementalMeaningZh": "長袍；法袍；睡袍"
+  },
+  {
+    "core": 9,
+    "word": "landmark",
+    "primaryMeaningZh": "地標",
+    "supplementalMeaningZh": "里程碑；地界標"
+  },
+  {
+    "core": 9,
+    "word": "intake",
+    "primaryMeaningZh": "攝取量",
+    "supplementalMeaningZh": "進氣口；吸入；招收人數"
+  },
+  {
+    "core": 10,
+    "word": "competing",
+    "primaryMeaningZh": "相互競爭的",
+    "supplementalMeaningZh": "相互衝突的"
+  },
+  {
+    "core": 10,
+    "word": "startle",
+    "primaryMeaningZh": "使嚇一跳",
+    "supplementalMeaningZh": "驚嚇；驚跳"
+  },
+  {
+    "core": 10,
+    "word": "fabulous",
+    "primaryMeaningZh": "極好的",
+    "supplementalMeaningZh": "難以置信的；傳說中的"
+  },
+  {
+    "core": 10,
+    "word": "imaginative",
+    "primaryMeaningZh": "有想像力的",
+    "supplementalMeaningZh": "富有創意的"
+  },
+  {
+    "core": 11,
+    "word": "booking",
+    "primaryMeaningZh": "預訂",
+    "supplementalMeaningZh": "訂位；演出檔期"
+  },
+  {
+    "core": 11,
+    "word": "offshore",
+    "primaryMeaningZh": "近海的",
+    "supplementalMeaningZh": "離岸的；境外的；吹向海面的"
+  },
+  {
+    "core": 11,
+    "word": "insane",
+    "primaryMeaningZh": "瘋狂的",
+    "supplementalMeaningZh": "精神失常的；極愚蠢的"
+  },
+  {
+    "core": 11,
+    "word": "trillion",
+    "primaryMeaningZh": "兆",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 11,
+    "word": "unification",
+    "primaryMeaningZh": "統一",
+    "supplementalMeaningZh": "合併"
+  },
+  {
+    "core": 11,
+    "word": "stray",
+    "primaryMeaningZh": "流浪的",
+    "supplementalMeaningZh": "走失的；偶然的；迷路"
+  },
+  {
+    "core": 11,
+    "word": "zoom",
+    "primaryMeaningZh": "疾駛",
+    "supplementalMeaningZh": "變焦；猛漲"
+  },
+  {
+    "core": 11,
+    "word": "outlaw",
+    "primaryMeaningZh": "禁止",
+    "supplementalMeaningZh": "歹徒；亡命之徒"
+  },
+  {
+    "core": 11,
+    "word": "feeder",
+    "primaryMeaningZh": "餵食器",
+    "supplementalMeaningZh": "奶瓶；支線"
+  },
+  {
+    "core": 11,
+    "word": "rave",
+    "primaryMeaningZh": "胡言亂語",
+    "supplementalMeaningZh": "狂讚"
+  },
+  {
+    "core": 11,
+    "word": "resigned",
+    "primaryMeaningZh": "無奈的",
+    "supplementalMeaningZh": "聽天由命的"
+  },
+  {
+    "core": 11,
+    "word": "cola",
+    "primaryMeaningZh": "可樂",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 11,
+    "word": "teen",
+    "primaryMeaningZh": "青少年",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 12,
+    "word": "builder",
+    "primaryMeaningZh": "建造者",
+    "supplementalMeaningZh": "建築工人；建商"
+  },
+  {
+    "core": 12,
+    "word": "holding",
+    "primaryMeaningZh": "持有物",
+    "supplementalMeaningZh": "持股；所持土地"
+  },
+  {
+    "core": 12,
+    "word": "bastard",
+    "primaryMeaningZh": "私生子",
+    "supplementalMeaningZh": "混蛋；該死的"
+  },
+  {
+    "core": 12,
+    "word": "huh",
+    "primaryMeaningZh": "蛤",
+    "supplementalMeaningZh": "咦；嗯"
+  },
+  {
+    "core": 12,
+    "word": "con",
+    "primaryMeaningZh": "欺騙",
+    "supplementalMeaningZh": "騙局；反對理由"
+  },
+  {
+    "core": 12,
+    "word": "detention",
+    "primaryMeaningZh": "拘留",
+    "supplementalMeaningZh": "課後留校；扣押"
+  },
+  {
+    "core": 12,
+    "word": "sponsorship",
+    "primaryMeaningZh": "贊助",
+    "supplementalMeaningZh": "資助；主辦"
+  },
+  {
+    "core": 12,
+    "word": "gnp",
+    "primaryMeaningZh": "國民生產毛額",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 12,
+    "word": "disturbed",
+    "primaryMeaningZh": "不安的",
+    "supplementalMeaningZh": "受干擾的；心理失常的；被弄亂的"
+  },
+  {
+    "core": 12,
+    "word": "draught",
+    "primaryMeaningZh": "冷風",
+    "supplementalMeaningZh": "氣流；生啤酒"
+  },
+  {
+    "core": 12,
+    "word": "brit",
+    "primaryMeaningZh": "英國人",
+    "supplementalMeaningZh": "小鯡魚群"
+  },
+  {
+    "core": 12,
+    "word": "made",
+    "primaryMeaningZh": "製成的",
+    "supplementalMeaningZh": "成功的；鋪好的"
+  },
+  {
+    "core": 12,
+    "word": "mall",
+    "primaryMeaningZh": "購物中心",
+    "supplementalMeaningZh": "林蔭大道"
+  },
+  {
+    "core": 12,
+    "word": "annoy",
+    "primaryMeaningZh": "惹惱",
+    "supplementalMeaningZh": "使心煩；騷擾"
+  },
+  {
+    "core": 12,
+    "word": "standing",
+    "primaryMeaningZh": "地位",
+    "supplementalMeaningZh": "起立；常設的；持續的"
+  },
+  {
+    "core": 12,
+    "word": "pant",
+    "primaryMeaningZh": "喘氣",
+    "supplementalMeaningZh": "氣喘吁吁地說"
+  },
+  {
+    "core": 13,
+    "word": "protocol",
+    "primaryMeaningZh": "禮儀",
+    "supplementalMeaningZh": "協定；議定書"
+  },
+  {
+    "core": 13,
+    "word": "integral",
+    "primaryMeaningZh": "不可或缺的",
+    "supplementalMeaningZh": "完整的；積分"
+  },
+  {
+    "core": 13,
+    "word": "repetition",
+    "primaryMeaningZh": "重複",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 13,
+    "word": "turning",
+    "primaryMeaningZh": "轉彎處",
+    "supplementalMeaningZh": "岔路；轉折點"
+  },
+  {
+    "core": 13,
+    "word": "tractor",
+    "primaryMeaningZh": "曳引機",
+    "supplementalMeaningZh": "牽引車"
+  },
+  {
+    "core": 13,
+    "word": "magnet",
+    "primaryMeaningZh": "磁鐵",
+    "supplementalMeaningZh": "吸引人的事物"
+  },
+  {
+    "core": 13,
+    "word": "recite",
+    "primaryMeaningZh": "背誦",
+    "supplementalMeaningZh": "朗誦；列舉"
+  },
+  {
+    "core": 13,
+    "word": "imitation",
+    "primaryMeaningZh": "仿製品",
+    "supplementalMeaningZh": "模仿；仿造"
+  },
+  {
+    "core": 13,
+    "word": "kite",
+    "primaryMeaningZh": "風箏",
+    "supplementalMeaningZh": "鳶"
+  },
+  {
+    "core": 13,
+    "word": "beetle",
+    "primaryMeaningZh": "甲蟲",
+    "supplementalMeaningZh": ""
+  },
+  {
+    "core": 14,
+    "word": "admittedly",
+    "primaryMeaningZh": "不可否認地",
+    "supplementalMeaningZh": "誠然"
+  },
+  {
+    "core": 14,
+    "word": "treasurer",
+    "primaryMeaningZh": "財務主管",
+    "supplementalMeaningZh": "司庫；會計"
+  },
+  {
+    "core": 14,
+    "word": "forensic",
+    "primaryMeaningZh": "鑑識的",
+    "supplementalMeaningZh": "法醫的；法庭的；辯論的"
+  },
+  {
+    "core": 14,
+    "word": "pronounced",
+    "primaryMeaningZh": "明顯的",
+    "supplementalMeaningZh": "強烈的；明確的"
+  },
+  {
+    "core": 14,
+    "word": "prominence",
+    "primaryMeaningZh": "顯著",
+    "supplementalMeaningZh": "知名度；突出物"
+  },
+  {
+    "core": 14,
+    "word": "ram",
+    "primaryMeaningZh": "公羊",
+    "supplementalMeaningZh": "猛撞；撞槌"
+  },
+  {
+    "core": 14,
+    "word": "squint",
+    "primaryMeaningZh": "瞇眼看",
+    "supplementalMeaningZh": "斜視"
+  },
+  {
+    "core": 14,
+    "word": "lunar",
+    "primaryMeaningZh": "月球的",
+    "supplementalMeaningZh": "月亮的；陰曆的"
+  },
+  {
+    "core": 14,
+    "word": "cutter",
+    "primaryMeaningZh": "切割工具",
+    "supplementalMeaningZh": "切模；快艇"
+  },
+  {
+    "core": 14,
+    "word": "gall",
+    "primaryMeaningZh": "厚臉皮",
+    "supplementalMeaningZh": "膽汁；苦味；惱怒"
+  },
+  {
+    "core": 14,
+    "word": "bun",
+    "primaryMeaningZh": "小圓麵包",
+    "supplementalMeaningZh": "包子；髮髻"
+  }
+]

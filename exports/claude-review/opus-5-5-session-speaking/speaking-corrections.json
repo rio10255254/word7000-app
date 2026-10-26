@@ -1,0 +1,121 @@
+[
+  {
+    "word": "what",
+    "keywordZh": "什麼",
+    "question": "How do you decide what to do first on a busy morning?",
+    "answerEn": "I write down what needs to be finished that day. Then I choose the task with the nearest deadline.",
+    "answerZh": "我會先寫下今天需要完成什麼，然後選出截止時間最近的那件事。"
+  },
+  {
+    "word": "all",
+    "keywordZh": "所有",
+    "question": "What helps you stay calm when all your tasks feel urgent?",
+    "answerEn": "When all my tasks feel urgent, I write them down and choose one to start with. Seeing everything on paper makes the pressure feel more manageable.",
+    "answerZh": "當所有任務都感覺很急時，我會先把它們寫下來，再選一件開始做。把每件事都寫在紙上，壓力就比較容易應付。"
+  },
+  {
+    "word": "when",
+    "keywordZh": "當…時",
+    "question": "When do you feel most like yourself?",
+    "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
+    "answerZh": "當我有足夠安靜時間思考時，我最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
+  },
+  {
+    "word": "fruit",
+    "keywordZh": "水果",
+    "question": "Which fruit would you take on a short day trip?",
+    "answerEn": "I would take an apple or an orange. Either fruit travels well and does not need a container or refrigeration for a short outing.",
+    "answerZh": "短程出遊我會帶蘋果或柳橙。這類水果好攜帶，也不用另外裝盒或冷藏。"
+  },
+  {
+    "word": "kind",
+    "keywordZh": "親切",
+    "question": "What is one kind thing you could do to make a newcomer feel less awkward?",
+    "answerEn": "A kind thing to do would be inviting them into a small conversation. I would explain any shared references instead of leaving them out of the joke.",
+    "answerZh": "親切的做法，是主動邀他加入聊天。聊到共同經驗時也補充說明，不讓他只能在旁邊陪笑。"
+  },
+  {
+    "word": "receipt",
+    "keywordZh": "收據",
+    "question": "Why might you keep a receipt after buying an electronic device?",
+    "answerEn": "I would keep the receipt in case I needed to return the device. Taking a photo of it would also make the purchase details easier to find.",
+    "answerZh": "我會留下收據，以備日後需要退貨。也會拍張照片，之後比較容易找到購買資料。"
+  },
+  {
+    "word": "connection",
+    "keywordZh": "轉乘",
+    "question": "Your travel app shows only a few minutes for a train connection. What would you check?",
+    "answerEn": "I would check whether the connection required changing platforms. If the transfer looked unrealistic, I would choose a later train.",
+    "answerZh": "我會查這次轉乘需不需要換月台。如果轉乘時間太勉強，就改搭晚一班。"
+  },
+  {
+    "word": "emotion",
+    "keywordZh": "情緒",
+    "question": "Why might naming an emotion help during a difficult conversation?",
+    "answerEn": "Naming the emotion could make my reaction easier to explain. Saying I feel hurt is clearer than expecting someone to guess.",
+    "answerZh": "說出情緒，能讓我的反應比較容易說明。直接說自己受傷了，比讓對方去猜更清楚。"
+  },
+  {
+    "word": "option",
+    "keywordZh": "選項",
+    "question": "What would you do if none of the available options met all your needs?",
+    "answerEn": "I would identify which need mattered most before choosing an option. I could accept a smaller compromise on less important details.",
+    "answerZh": "決定選哪個選項前，我會先找出最重要的需求。不那麼關鍵的細節，就接受一點取捨。"
+  },
+  {
+    "word": "disadvantage",
+    "keywordZh": "劣勢",
+    "question": "How could you reduce the disadvantage of being new to a group?",
+    "answerEn": "I could reduce that disadvantage by asking for the group's shared notes. A clear introduction to their routines would help me contribute sooner.",
+    "answerZh": "我可以先請大家分享共用筆記，降低剛加入的劣勢。了解大家的日常做法，也能更快幫上忙。"
+  },
+  {
+    "word": "permission",
+    "keywordZh": "允許",
+    "question": "When would you ask for permission before sharing something?",
+    "answerEn": "I would ask permission before sharing a friend's personal story. Removing their name might not prevent others from recognizing them.",
+    "answerZh": "分享朋友的私事前，我會先問他是否允許。就算拿掉名字，別人還是可能認得出來。"
+  },
+  {
+    "word": "poem",
+    "keywordZh": "詩",
+    "question": "How would you choose a poem to read aloud to a small group?",
+    "answerEn": "I would choose a poem with a rhythm I enjoyed reading aloud. I would read it beforehand to understand where the pauses belong.",
+    "answerZh": "我會選朗讀節奏自己喜歡的詩。先唸過一次，知道哪裡適合停頓。"
+  },
+  {
+    "word": "pressure",
+    "keywordZh": "壓力",
+    "question": "How could you compare pressure in two tyres without relying on appearance?",
+    "answerEn": "I would check the pressure with a suitable gauge. Looking at the tyres alone would not give me a reliable numerical comparison.",
+    "answerZh": "我會用合適的胎壓計測量輪胎壓力。只看輪胎外觀，得不到可靠的數值比較。"
+  },
+  {
+    "word": "hike",
+    "keywordZh": "健行",
+    "question": "How would you choose a hike for a group with different experience levels?",
+    "answerEn": "I would choose a hike that suited the least experienced person. A manageable route would leave everyone enough energy to enjoy the scenery.",
+    "answerZh": "我會以經驗最少的人為準，挑適合的健行路線。路線不會太吃力，大家才有體力欣賞風景。"
+  },
+  {
+    "word": "fun",
+    "keywordZh": "好玩",
+    "question": "How would you keep a group activity fun when people started taking it too seriously?",
+    "answerEn": "I would remind everyone that we came for fun, not a final ranking. Switching to a cooperative round could change the mood.",
+    "answerZh": "我會提醒大家，我們是為了好玩才來，不是為了排名。換成合作的一輪，也許就能改變氣氛。"
+  },
+  {
+    "word": "threat",
+    "keywordZh": "威脅",
+    "question": "How would you respond to a suspicious message that included a threat?",
+    "answerEn": "I would keep a record of the threat without replying or starting an argument. I would seek help through appropriate, trusted channels rather than act under pressure.",
+    "answerZh": "我會把威脅內容留存下來，不回覆也不和對方爭吵。我會透過合適、可信的管道求助，不被催著行動。"
+  },
+  {
+    "word": "realistic",
+    "keywordZh": "實際",
+    "question": "How would you set a realistic timeline when others expected a faster result?",
+    "answerEn": "I would show the work behind a realistic timeline. Explaining dependencies and trade-offs could make the estimate easier to understand.",
+    "answerZh": "我會說明實際可行的時程背後有哪些工作。說明先後依賴和取捨，別人比較能理解這個估計。"
+  }
+]

@@ -92,8 +92,8 @@
   },
   {
     "word": "attack",
-    "primaryMeaningZh": "叮咬",
-    "supplementalMeaningZh": "攻擊；襲擊；抨擊",
+    "primaryMeaningZh": "攻擊",
+    "supplementalMeaningZh": "襲擊；抨擊；發作",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -120,15 +120,15 @@
   },
   {
     "word": "visit",
-    "primaryMeaningZh": "去逛",
-    "supplementalMeaningZh": "拜訪；參觀；造訪",
+    "primaryMeaningZh": "拜訪",
+    "supplementalMeaningZh": "參觀；造訪；探望",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
   {
     "word": "sister",
-    "primaryMeaningZh": "姐姐",
-    "supplementalMeaningZh": "妹妹；修女",
+    "primaryMeaningZh": "姊妹",
+    "supplementalMeaningZh": "姊姊；妹妹；修女",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -148,8 +148,8 @@
   },
   {
     "word": "green",
-    "primaryMeaningZh": "青的",
-    "supplementalMeaningZh": "綠色的；未成熟的；沒經驗的",
+    "primaryMeaningZh": "綠色的",
+    "supplementalMeaningZh": "綠色；未成熟的；沒經驗的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -309,8 +309,8 @@
   },
   {
     "word": "quick",
-    "primaryMeaningZh": "短暫的",
-    "supplementalMeaningZh": "快的；敏捷的",
+    "primaryMeaningZh": "快的",
+    "supplementalMeaningZh": "迅速的；短暫的；敏捷的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -435,8 +435,8 @@
   },
   {
     "word": "in",
-    "primaryMeaningZh": "在……下",
-    "supplementalMeaningZh": "在裡面；進入；穿著",
+    "primaryMeaningZh": "在……裡面",
+    "supplementalMeaningZh": "進入；穿著；在……期間",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -499,7 +499,7 @@
   {
     "word": "lot",
     "primaryMeaningZh": "許多",
-    "supplementalMeaningZh": "一堆；抽籤；份額",
+    "supplementalMeaningZh": "一塊地；一批；命運",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -729,8 +729,8 @@
   },
   {
     "word": "got",
-    "primaryMeaningZh": "買到",
-    "supplementalMeaningZh": "得到；變得；到達",
+    "primaryMeaningZh": "得到",
+    "supplementalMeaningZh": "買到；變得；到達",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -757,8 +757,8 @@
   },
   {
     "word": "hold",
-    "primaryMeaningZh": "扶住",
-    "supplementalMeaningZh": "握住；持有；舉行",
+    "primaryMeaningZh": "握住",
+    "supplementalMeaningZh": "扶住；持有；舉行",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -876,7 +876,7 @@
   },
   {
     "word": "order",
-    "primaryMeaningZh": "點單",
+    "primaryMeaningZh": "訂單",
     "supplementalMeaningZh": "命令；順序；訂購",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
@@ -995,8 +995,8 @@
   },
   {
     "word": "language",
-    "primaryMeaningZh": "用語",
-    "supplementalMeaningZh": "語言；文字；措辭",
+    "primaryMeaningZh": "語言",
+    "supplementalMeaningZh": "用語；文字；措辭",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -1212,15 +1212,15 @@
   },
   {
     "word": "private",
-    "primaryMeaningZh": "個人的",
-    "supplementalMeaningZh": "私人的；祕密的；私立的",
+    "primaryMeaningZh": "私人的",
+    "supplementalMeaningZh": "私立的；祕密的；個人的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
   {
     "word": "hair",
     "primaryMeaningZh": "頭髮",
-    "supplementalMeaningZh": "毛髮；一點點",
+    "supplementalMeaningZh": "毛髮",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -1247,7 +1247,7 @@
   },
   {
     "word": "movement",
-    "primaryMeaningZh": "動靜",
+    "primaryMeaningZh": "移動",
     "supplementalMeaningZh": "動作；運動；樂章",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
@@ -1275,8 +1275,8 @@
   },
   {
     "word": "quality",
-    "primaryMeaningZh": "優質的",
-    "supplementalMeaningZh": "品質；特性",
+    "primaryMeaningZh": "品質",
+    "supplementalMeaningZh": "優質的；特性",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -1296,8 +1296,8 @@
   },
   {
     "word": "population",
-    "primaryMeaningZh": "族群數量",
-    "supplementalMeaningZh": "人口",
+    "primaryMeaningZh": "人口",
+    "supplementalMeaningZh": "族群數量；全體居民",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -1611,8 +1611,8 @@
   },
   {
     "word": "theory",
-    "primaryMeaningZh": "推測",
-    "supplementalMeaningZh": "理論；學說",
+    "primaryMeaningZh": "理論",
+    "supplementalMeaningZh": "學說；推測；說法",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -1863,8 +1863,8 @@
   },
   {
     "word": "dead",
-    "primaryMeaningZh": "枯死的",
-    "supplementalMeaningZh": "死的；失效的；完全地",
+    "primaryMeaningZh": "死的",
+    "supplementalMeaningZh": "枯死的；失效的；完全地",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2010,8 +2010,8 @@
   },
   {
     "word": "nice",
-    "primaryMeaningZh": "舒服的",
-    "supplementalMeaningZh": "友善的；漂亮的",
+    "primaryMeaningZh": "美好的",
+    "supplementalMeaningZh": "友善的；宜人的；漂亮的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2031,8 +2031,8 @@
   },
   {
     "word": "glass",
-    "primaryMeaningZh": "一杯",
-    "supplementalMeaningZh": "玻璃；玻璃杯；眼鏡",
+    "primaryMeaningZh": "玻璃",
+    "supplementalMeaningZh": "玻璃杯；一杯；眼鏡",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2073,8 +2073,8 @@
   },
   {
     "word": "ready",
-    "primaryMeaningZh": "好了",
-    "supplementalMeaningZh": "準備好的；現成的",
+    "primaryMeaningZh": "準備好的",
+    "supplementalMeaningZh": "現成的；願意的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2185,8 +2185,8 @@
   },
   {
     "word": "remove",
-    "primaryMeaningZh": "脫掉",
-    "supplementalMeaningZh": "移除；搬走；解除",
+    "primaryMeaningZh": "移除",
+    "supplementalMeaningZh": "脫掉；搬走；解除",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2290,8 +2290,8 @@
   },
   {
     "word": "dark",
-    "primaryMeaningZh": "烏黑的",
-    "supplementalMeaningZh": "黑暗的；隱密的",
+    "primaryMeaningZh": "黑暗的",
+    "supplementalMeaningZh": "深色的；烏黑的；隱密的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2612,15 +2612,15 @@
   },
   {
     "word": "village",
-    "primaryMeaningZh": "村裡的",
-    "supplementalMeaningZh": "村莊",
+    "primaryMeaningZh": "村莊",
+    "supplementalMeaningZh": "村裡的；村民",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
   {
     "word": "focus",
-    "primaryMeaningZh": "對焦",
-    "supplementalMeaningZh": "集中；焦點",
+    "primaryMeaningZh": "專注",
+    "supplementalMeaningZh": "焦點；集中；對焦",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2703,8 +2703,8 @@
   },
   {
     "word": "trouble",
-    "primaryMeaningZh": "故障",
-    "supplementalMeaningZh": "麻煩；煩惱；困擾",
+    "primaryMeaningZh": "麻煩",
+    "supplementalMeaningZh": "故障；煩惱；困擾",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -2816,7 +2816,7 @@
   {
     "word": "horse",
     "primaryMeaningZh": "馬",
-    "supplementalMeaningZh": "腳架；騎馬",
+    "supplementalMeaningZh": "騎馬",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -3096,7 +3096,7 @@
   {
     "word": "marriage",
     "primaryMeaningZh": "婚姻",
-    "supplementalMeaningZh": "婚禮；合併",
+    "supplementalMeaningZh": "婚禮；結合",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -3117,7 +3117,7 @@
   {
     "word": "finger",
     "primaryMeaningZh": "手指",
-    "supplementalMeaningZh": "指針；用手指觸碰",
+    "supplementalMeaningZh": "指狀物；用手指觸碰",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -3249,8 +3249,8 @@
   },
   {
     "word": "civil",
-    "primaryMeaningZh": "有禮貌的",
-    "supplementalMeaningZh": "公民的；民事的",
+    "primaryMeaningZh": "公民的",
+    "supplementalMeaningZh": "民事的；國內的；有禮貌的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },
@@ -3480,8 +3480,8 @@
   },
   {
     "word": "reality",
-    "primaryMeaningZh": "事實",
-    "supplementalMeaningZh": "現實；真實性",
+    "primaryMeaningZh": "現實",
+    "supplementalMeaningZh": "事實；真實性",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core02"
   },

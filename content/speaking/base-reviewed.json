@@ -244,7 +244,7 @@
       "keywordZh": "什麼",
       "question": "How do you decide what to do first on a busy morning?",
       "answerEn": "I write down what needs to be finished that day. Then I choose the task with the nearest deadline.",
-      "answerZh": "我會先寫下今天需要完成什麼，再選出截止時間最近的那件事。這樣比較容易安排順序。"
+      "answerZh": "我會先寫下今天需要完成什麼，然後選出截止時間最近的那件事。"
     },
     {
       "id": "w0031-reviewed-1",
@@ -299,8 +299,8 @@
       "word": "all",
       "keywordZh": "所有",
       "question": "What helps you stay calm when all your tasks feel urgent?",
-      "answerEn": "When all my tasks feel urgent, I write them down and choose the first one. Seeing everything on paper makes the pressure feel less vague.",
-      "answerZh": "當所有事情都很急時，我會先把它們寫下來，再決定從哪一件開始。列出清單後，就比較能看清楚該怎麼安排。"
+      "answerEn": "When all my tasks feel urgent, I write them down and choose one to start with. Seeing everything on paper makes the pressure feel more manageable.",
+      "answerZh": "當所有任務都感覺很急時，我會先把它們寫下來，再選一件開始做。把每件事都寫在紙上，壓力就比較容易應付。"
     },
     {
       "id": "w0038-reviewed-1",
@@ -361,10 +361,10 @@
     {
       "id": "w0045-reviewed-1",
       "word": "when",
-      "keywordZh": "的時候",
+      "keywordZh": "當…時",
       "question": "When do you feel most like yourself?",
       "answerEn": "I feel most like myself when I have enough quiet time to think. Without that time, I become more reactive and less patient.",
-      "answerZh": "我有足夠的安靜時間可以思考的時候，最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
+      "answerZh": "當我有足夠安靜時間思考時，我最像自己。沒有那段時間時，我會比較容易反應過度，也比較沒耐心。"
     },
     {
       "id": "w0046-reviewed-1",

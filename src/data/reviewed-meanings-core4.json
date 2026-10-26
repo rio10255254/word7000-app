@@ -316,8 +316,8 @@
   },
   {
     "word": "gay",
-    "primaryMeaningZh": "鮮豔的",
-    "supplementalMeaningZh": "同性戀的；快樂的",
+    "primaryMeaningZh": "同性戀的",
+    "supplementalMeaningZh": "快樂的；鮮豔的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },
@@ -513,7 +513,7 @@
   {
     "word": "nineteenth",
     "primaryMeaningZh": "第十九",
-    "supplementalMeaningZh": "十九分之一；十九世紀的",
+    "supplementalMeaningZh": "十九分之一",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },
@@ -1990,14 +1990,14 @@
   {
     "word": "unable",
     "primaryMeaningZh": "無法",
-    "supplementalMeaningZh": "不能的",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },
   {
     "word": "apartment",
     "primaryMeaningZh": "公寓",
-    "supplementalMeaningZh": "房間",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },
@@ -2031,7 +2031,7 @@
   },
   {
     "word": "motion",
-    "primaryMeaningZh": "晃動",
+    "primaryMeaningZh": "移動",
     "supplementalMeaningZh": "動作；手勢；提議",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
@@ -2108,8 +2108,8 @@
   },
   {
     "word": "definition",
-    "primaryMeaningZh": "解析度",
-    "supplementalMeaningZh": "定義",
+    "primaryMeaningZh": "定義",
+    "supplementalMeaningZh": "解析度；清晰度",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },
@@ -2311,8 +2311,8 @@
   },
   {
     "word": "pursue",
-    "primaryMeaningZh": "攻讀",
-    "supplementalMeaningZh": "追求；追趕；從事",
+    "primaryMeaningZh": "追求",
+    "supplementalMeaningZh": "追趕；從事；攻讀",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },
@@ -2843,7 +2843,7 @@
   },
   {
     "word": "signal",
-    "primaryMeaningZh": "信號",
+    "primaryMeaningZh": "訊號",
     "supplementalMeaningZh": "暗號；示意；標誌",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
@@ -3131,7 +3131,7 @@
   {
     "word": "lucky",
     "primaryMeaningZh": "幸運的",
-    "supplementalMeaningZh": "好運的",
+    "supplementalMeaningZh": "帶來好運的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },
@@ -3396,8 +3396,8 @@
   },
   {
     "word": "cycle",
-    "primaryMeaningZh": "行程",
-    "supplementalMeaningZh": "週期；循環；騎自行車",
+    "primaryMeaningZh": "週期",
+    "supplementalMeaningZh": "循環；騎自行車；行程",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core04"
   },

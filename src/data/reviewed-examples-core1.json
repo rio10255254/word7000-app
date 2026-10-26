@@ -561,8 +561,8 @@
   },
   {
     "word": "thing",
-    "example": "The best thing about dawn is the quiet harbor.",
-    "exampleZh": "黎明最迷人的地方，就是港口格外寧靜。",
+    "example": "What is that strange thing on the kitchen table?",
+    "exampleZh": "廚房桌上那個奇怪的東西是什麼？",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -716,7 +716,7 @@
   {
     "word": "ask",
     "example": "Travelers often ask locals for the best breakfast.",
-    "exampleZh": "旅人常向當地人打聽最好吃的早餐。",
+    "exampleZh": "旅人常向當地人詢問哪裡的早餐最好吃。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -1065,7 +1065,7 @@
   },
   {
     "word": "during",
-    "example": "The dog slept during the afternoon thunderstorm under the table.",
+    "example": "The dog slept under the table during the afternoon thunderstorm.",
     "exampleZh": "午後雷雨時那隻狗睡在桌下。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
@@ -1115,7 +1115,7 @@
   {
     "word": "run",
     "example": "I run beside the canal after sunrise every Saturday.",
-    "exampleZh": "每週六日出後我沿著運河跑步。",
+    "exampleZh": "每個星期六日出後，我都沿著運河跑步。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -1212,8 +1212,8 @@
   },
   {
     "word": "fact",
-    "example": "The fact shocked everyone at the dinner table.",
-    "exampleZh": "這個事實讓餐桌旁所有人震驚。",
+    "example": "The fact that the bakery had closed shocked everyone at dinner.",
+    "exampleZh": "麵包店已經關門的事實，讓晚餐桌上每個人都很震驚。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -2634,7 +2634,7 @@
   {
     "word": "general",
     "example": "The general rule is simple for visitors here.",
-    "exampleZh": "這裡給訪客的基本規則很簡單。",
+    "exampleZh": "這裡對訪客的一般規定很簡單。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },
@@ -3200,8 +3200,8 @@
   },
   {
     "word": "security",
-    "example": "Airport security checked every bag before boarding today.",
-    "exampleZh": "今天登機前機場安檢檢查每件行李。",
+    "example": "The hotel added cameras to improve security at night.",
+    "exampleZh": "飯店加裝了監視器來加強夜間的安全。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core01"
   },

@@ -513,7 +513,7 @@
   {
     "word": "anticipate",
     "primaryMeaningZh": "預期",
-    "supplementalMeaningZh": "預料",
+    "supplementalMeaningZh": "期待；預先處理",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -597,7 +597,7 @@
   {
     "word": "pig",
     "primaryMeaningZh": "豬",
-    "supplementalMeaningZh": "豬肉；貪吃的人",
+    "supplementalMeaningZh": "貪吃的人；邋遢的人",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -701,8 +701,8 @@
   },
   {
     "word": "logic",
-    "primaryMeaningZh": "理由",
-    "supplementalMeaningZh": "邏輯；推理方式",
+    "primaryMeaningZh": "邏輯",
+    "supplementalMeaningZh": "推理；道理",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -869,7 +869,7 @@
   },
   {
     "word": "attraction",
-    "primaryMeaningZh": "賣點",
+    "primaryMeaningZh": "吸引人的事物",
     "supplementalMeaningZh": "吸引力；景點",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
@@ -1472,7 +1472,7 @@
   {
     "word": "unemployed",
     "primaryMeaningZh": "失業的",
-    "supplementalMeaningZh": "未使用的",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -1737,8 +1737,8 @@
   },
   {
     "word": "substantially",
-    "primaryMeaningZh": "本質上",
-    "supplementalMeaningZh": "大幅地；大體上",
+    "primaryMeaningZh": "大幅地",
+    "supplementalMeaningZh": "大體上；實質上",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -1906,7 +1906,7 @@
   {
     "word": "loyal",
     "primaryMeaningZh": "忠心的",
-    "supplementalMeaningZh": "忠誠的",
+    "supplementalMeaningZh": "",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -2087,8 +2087,8 @@
   },
   {
     "word": "dying",
-    "primaryMeaningZh": "快枯死的",
-    "supplementalMeaningZh": "垂死的；消逝中的",
+    "primaryMeaningZh": "垂死的",
+    "supplementalMeaningZh": "快枯死的；消逝中的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -2696,8 +2696,8 @@
   },
   {
     "word": "sour",
-    "primaryMeaningZh": "酸臭的",
-    "supplementalMeaningZh": "酸的；變壞",
+    "primaryMeaningZh": "酸的",
+    "supplementalMeaningZh": "酸臭的；變壞",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -3375,8 +3375,8 @@
   },
   {
     "word": "depressing",
-    "primaryMeaningZh": "沉悶的",
-    "supplementalMeaningZh": "令人沮喪的",
+    "primaryMeaningZh": "令人沮喪的",
+    "supplementalMeaningZh": "沉悶的；陰鬱的",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },
@@ -3466,8 +3466,8 @@
   },
   {
     "word": "finding",
-    "primaryMeaningZh": "裁決",
-    "supplementalMeaningZh": "發現；調查結果",
+    "primaryMeaningZh": "發現",
+    "supplementalMeaningZh": "調查結果；裁決",
     "status": "approved",
     "batch": "meaning-review-2026-08-09-core07"
   },

@@ -36,9 +36,13 @@ enum ScanPhotoLoader {
     enum Failure: Error { case unavailable, unsupportedImage }
     static let maximumPixelDimension = 4096
 
+    /// The Photos service can drop a transfer without ever calling back; after
+    /// this long the learner is told to try again instead of waiting forever.
+    static let transferTimeout: TimeInterval = 60
+
     /// Decode the provider's temporary file inside its callback, before it is
     /// removed. ImageIO also handles HEIC, iCloud downloads and EXIF rotation.
-    static func image(from provider: NSItemProvider) async throws -> UIImage {
+    static func image(from provider: NSItemProvider, timeout: TimeInterval = transferTimeout) async throws -> UIImage {
         try Task.checkCancellation()
         guard provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) else { throw Failure.unsupportedImage }
         let type = provider.registeredTypeIdentifiers.first { UTType($0)?.conforms(to: .image) == true } ?? UTType.image.identifier
@@ -55,6 +59,7 @@ enum ScanPhotoLoader {
                     }
                 }
                 transfer.setProgress(progress)
+                DispatchQueue.global().asyncAfter(deadline: .now() + timeout) { transfer.expire() }
             }
         } onCancel: {
             transfer.cancel()
@@ -111,6 +116,19 @@ enum ScanPhotoLoader {
             finished = true
             lock.unlock()
             continuation?.resume(with: result)
+        }
+
+        /// Gives up on a transfer that never called back; a late callback is ignored.
+        func expire() {
+            lock.lock()
+            guard !finished, let continuation else { lock.unlock(); return }
+            let progress = progress
+            self.continuation = nil
+            self.progress = nil
+            finished = true
+            lock.unlock()
+            progress?.cancel()
+            continuation.resume(throwing: Failure.unavailable)
         }
 
         func cancel() {

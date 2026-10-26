@@ -23,7 +23,7 @@
   {
     "word": "elevate",
     "example": "A wooden crate can elevate the speaker above the crowded platform.",
-    "exampleZh": "木箱可以把講者抬高到擁擠的月台人群之上。",
+    "exampleZh": "講者站上木箱後，月台上的人群就都看得見他。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -135,7 +135,7 @@
   {
     "word": "foul",
     "example": "Foul water leaked from the pipe beneath the seafood stall.",
-    "exampleZh": "海鮮攤底下的水管漏出惡臭的污水。",
+    "exampleZh": "海鮮攤底下的水管漏出惡臭污水。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -247,7 +247,7 @@
   {
     "word": "superficial",
     "example": "His apology felt superficial because he never named the damage.",
-    "exampleZh": "他的道歉很膚淺，因為他從未說出造成的傷害。",
+    "exampleZh": "他的道歉很表面，因為從未說出造成的傷害。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -330,8 +330,8 @@
   },
   {
     "word": "booking",
-    "example": "Her booking at the hotel includes two nights in Taipei.",
-    "exampleZh": "她在飯店的預訂包含在台北住兩晚。",
+    "example": "Her booking at the jazz club includes two Saturday performances.",
+    "exampleZh": "她在爵士酒吧的演出預約包含兩場週六表演。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -345,7 +345,7 @@
   {
     "word": "skate",
     "example": "Children skate around the pond when the winter ice thickens.",
-    "exampleZh": "冬天冰層變厚時，孩子們繞著池塘滑冰。",
+    "exampleZh": "冬冰變厚時，孩子們繞著池塘滑冰。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -415,7 +415,7 @@
   {
     "word": "clearing",
     "example": "They found a sunny clearing beyond the last pine trees.",
-    "exampleZh": "他們在最後一排松樹後面找到一片陽光普照的空地。",
+    "exampleZh": "他們在最後一排松樹後找到一片陽光空地。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -547,8 +547,8 @@
   },
   {
     "word": "offshore",
-    "example": "Offshore wind turbines now power many towns along the western coast.",
-    "exampleZh": "離岸風力發電機如今為西部沿海許多城鎮供電。",
+    "example": "Offshore wind rattled the windows of the seaside hostel.",
+    "exampleZh": "吹向海面的風搖響海邊旅舍窗戶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -702,7 +702,7 @@
   {
     "word": "insane",
     "example": "It was insane to swim there during a typhoon warning.",
-    "exampleZh": "颱風警報期間在那裡游泳簡直瘋狂。",
+    "exampleZh": "颱風警報期間在那裡游泳極其愚蠢。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -737,7 +737,7 @@
   {
     "word": "blossom",
     "example": "Plum trees blossom beside the temple every February.",
-    "exampleZh": "每年二月，寺旁的李樹都會開花。",
+    "exampleZh": "每年二月，寺旁李樹都會開花。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -870,7 +870,7 @@
   {
     "word": "disco",
     "example": "The disco stayed open until sunrise on New Year's Day.",
-    "exampleZh": "那家迪斯可舞廳在元旦開到日出。",
+    "exampleZh": "那家迪斯科在元旦開到日出。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -926,7 +926,7 @@
   {
     "word": "aerospace",
     "example": "Aerospace attracts engineers who enjoy testing satellites in desert hangars.",
-    "exampleZh": "航太產業吸引喜歡在沙漠機棚測試衛星的工程師。",
+    "exampleZh": "航天技術吸引喜歡在沙漠機棚測試衛星的工程師。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -940,7 +940,7 @@
   {
     "word": "conserve",
     "example": "The chef tried to conserve water by rinsing vegetables together.",
-    "exampleZh": "主廚把蔬菜一起沖洗來節約用水。",
+    "exampleZh": "主廚把蔬菜一起沖洗來節省用水。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -960,8 +960,8 @@
   },
   {
     "word": "stalk",
-    "example": "The farmer cut each corn stalk close to the ground.",
-    "exampleZh": "農夫把每根玉米莖貼近地面割下。",
+    "example": "Detectives watched the thief stalk the jeweler through the market.",
+    "exampleZh": "偵探看著小偷在市場裡跟蹤珠寶商。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1114,8 +1114,8 @@
   },
   {
     "word": "relentless",
-    "example": "The relentless rain forced us to cancel the school picnic.",
-    "exampleZh": "持續不斷的大雨使我們取消了學校野餐。",
+    "example": "The relentless guard refused water to the exhausted prisoners.",
+    "exampleZh": "冷酷守衛拒絕給疲憊囚犯水喝。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1128,8 +1128,8 @@
   },
   {
     "word": "trillion",
-    "example": "The country's debt has grown to more than a trillion dollars.",
-    "exampleZh": "這個國家的債務已增加到超過一兆美元。",
+    "example": "A trillion stars seemed visible above the desert camp.",
+    "exampleZh": "沙漠營地的夜空彷彿有數不清的星星。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1191,8 +1191,8 @@
   },
   {
     "word": "irritation",
-    "example": "She could not hide her irritation when the bus was late again.",
-    "exampleZh": "公車又誤點，她掩不住心中的惱怒。",
+    "example": "Skin irritation appeared after he touched the cleaning powder.",
+    "exampleZh": "他碰到清潔粉後，皮膚出現紅癢反應。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1276,7 +1276,7 @@
   {
     "word": "guild",
     "example": "The weavers' guild repaired the ancient loom together.",
-    "exampleZh": "織布工行會一起修復了古老的織布機。",
+    "exampleZh": "織布工協會一起修復古老織機。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1388,14 +1388,14 @@
   {
     "word": "favourable",
     "example": "Clear weather was favourable for drying tea leaves outside.",
-    "exampleZh": "晴朗的天氣有利於在戶外曬茶葉。",
+    "exampleZh": "晴朗天氣很適合在戶外曬茶葉。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
   {
     "word": "martial",
-    "example": "The martial arts club meets every Friday after school.",
-    "exampleZh": "武術社每週五放學後聚會。",
+    "example": "Children learn martial discipline at the mountain kung fu school.",
+    "exampleZh": "孩子們在山上武術館學習武術紀律。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1443,8 +1443,8 @@
   },
   {
     "word": "cavalry",
-    "example": "The cavalry crossed the plain before the dust hid them from view.",
-    "exampleZh": "騎兵部隊穿越平原後，身影便被塵土遮住了。",
+    "example": "The cavalry crossed the plain before dust hid them.",
+    "exampleZh": "騎兵穿越平原後被塵土遮住。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1457,8 +1457,8 @@
   },
   {
     "word": "flap",
-    "example": "The bird began to flap its wings above the fruit stand.",
-    "exampleZh": "那隻鳥開始在水果攤上方拍動翅膀。",
+    "example": "The torn awning began to flap above the fruit stand.",
+    "exampleZh": "水果攤上方的破遮雨棚開始啪啪作響。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1486,7 +1486,7 @@
   {
     "word": "dismay",
     "example": "Dismay crossed his face when the violin string snapped.",
-    "exampleZh": "小提琴弦突然斷掉時，他臉上閃過驚愕。",
+    "exampleZh": "小提琴弦斷時，他臉上露出沮喪。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1563,7 +1563,7 @@
   {
     "word": "envy",
     "example": "I envy her calm voice during difficult phone calls.",
-    "exampleZh": "我羨慕她在棘手的電話中仍保持冷靜的聲音。",
+    "exampleZh": "我羨慕她在艱難電話中的冷靜聲音。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1626,7 +1626,7 @@
   {
     "word": "acting",
     "example": "The acting manager approved refunds while the owner traveled.",
-    "exampleZh": "老闆出外旅行期間，代理經理核准了退款。",
+    "exampleZh": "老闆旅行時，代理經理批准退款。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1738,7 +1738,7 @@
   {
     "word": "hardy",
     "example": "Hardy sailors crossed the bay during the winter storm.",
-    "exampleZh": "強健的水手在冬季暴風中穿越海灣。",
+    "exampleZh": "勇敢水手在冬季暴風中穿越海灣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1863,15 +1863,15 @@
   },
   {
     "word": "boycott",
-    "example": "Residents decided to boycott the café after cameras appeared in the restroom.",
-    "exampleZh": "廁所出現攝影機後，居民決定抵制那家咖啡館。",
+    "example": "Residents boycott the café after cameras appeared in the restroom.",
+    "exampleZh": "廁所出現攝影機後，居民抵制那家咖啡館。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
   {
     "word": "savage",
     "example": "The savage guard kicked prisoners away from the well.",
-    "exampleZh": "那名殘酷的守衛把囚犯踢離水井。",
+    "exampleZh": "殘酷守衛把囚犯踢離水井。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -1947,8 +1947,8 @@
   },
   {
     "word": "contingent",
-    "example": "Our picnic is contingent on the weather this weekend.",
-    "exampleZh": "我們這個週末的野餐要視天氣而定。",
+    "example": "A small contingent of medics entered the disaster zone.",
+    "exampleZh": "一小隊醫護人員進入災區。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2235,7 +2235,7 @@
   {
     "word": "daring",
     "example": "The daring rescue began from a broken balcony.",
-    "exampleZh": "大膽的救援行動從一座破損的陽台開始。",
+    "exampleZh": "大膽救援從一座破陽台開始。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2263,7 +2263,7 @@
   {
     "word": "knight",
     "example": "The queen will knight the surgeon for his service.",
-    "exampleZh": "女王將因那名外科醫師的貢獻而授予他爵位。",
+    "exampleZh": "女王將因那名外科醫師的服務授予爵位。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2402,8 +2402,8 @@
   },
   {
     "word": "zoom",
-    "example": "The motorbikes zoom past the school gate every morning.",
-    "exampleZh": "每天早上機車都呼嘯駛過校門。",
+    "example": "Prices zoom whenever tourists fill the harbor hotels.",
+    "exampleZh": "遊客擠滿港邊旅館時，價格就猛漲。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2494,7 +2494,7 @@
   {
     "word": "accomplished",
     "example": "An accomplished dancer taught tango in the old warehouse.",
-    "exampleZh": "一位技藝精湛的舞者在舊倉庫教探戈。",
+    "exampleZh": "一位熟練舞者在舊倉庫教探戈。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2563,8 +2563,8 @@
   },
   {
     "word": "shattered",
-    "example": "The shattered window glass covered the classroom floor.",
-    "exampleZh": "破碎的窗玻璃撒滿了教室地板。",
+    "example": "She looked shattered after the overnight bus ride.",
+    "exampleZh": "搭完夜車後，她看起來極度疲憊。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2612,15 +2612,15 @@
   },
   {
     "word": "bog",
-    "example": "The hikers got stuck in a muddy bog near the lake.",
-    "exampleZh": "登山客困在湖邊一處泥濘的沼澤裡。",
+    "example": "Wheels bog down when trucks cross the wet field.",
+    "exampleZh": "卡車穿越濕田時，車輪會陷入泥沼。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
   {
     "word": "brew",
-    "example": "My father likes to brew tea every morning before work.",
-    "exampleZh": "我爸爸每天早上上班前都喜歡泡茶。",
+    "example": "Trouble began to brew after the ferry tickets sold out.",
+    "exampleZh": "渡輪票售完後，麻煩開始醞釀。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2837,7 +2837,7 @@
   {
     "word": "obituary",
     "example": "The obituary described her years rescuing injured workers.",
-    "exampleZh": "訃聞提到她多年來救助受傷工人的事蹟。",
+    "exampleZh": "訃告提到她多年來救助受傷工人的事蹟。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2921,7 +2921,7 @@
   {
     "word": "armour",
     "example": "Rusty armour lined the castle wall near the stairs.",
-    "exampleZh": "生鏽的盔甲排列在樓梯旁的城堡牆邊。",
+    "exampleZh": "生鏽甲冑排列在樓梯旁的城堡牆邊。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2935,7 +2935,7 @@
   {
     "word": "psychiatry",
     "example": "Psychiatry helped him name the fear he had carried.",
-    "exampleZh": "精神醫學幫他說出一直承受的恐懼。",
+    "exampleZh": "精神病學幫他說出一直承受的恐懼。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2949,7 +2949,7 @@
   {
     "word": "sceptical",
     "example": "The mechanic sounded sceptical about the cheap replacement part.",
-    "exampleZh": "技師對那個便宜的替代零件抱持懷疑。",
+    "exampleZh": "技師對那個便宜的替代零件很不放心。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -2998,7 +2998,7 @@
   {
     "word": "manoeuvre",
     "example": "The driver used a clever manoeuvre to avoid the sinkhole.",
-    "exampleZh": "駕駛用巧妙的操控動作避開了地洞。",
+    "exampleZh": "駕駛用巧妙的操作避開地洞。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -3026,7 +3026,7 @@
   {
     "word": "rehabilitate",
     "example": "Therapists helped rehabilitate his injured wrist after surgery.",
-    "exampleZh": "治療師在手術後協助他受傷的手腕復原。",
+    "exampleZh": "治療師在手術後協助他受傷的手腕復健。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -3207,8 +3207,8 @@
   },
   {
     "word": "cola",
-    "example": "I bought a cold cola from the vending machine after class.",
-    "exampleZh": "下課後我在自動販賣機買了一罐冰可樂。",
+    "example": "The anatomy chart labeled two cola in different colors.",
+    "exampleZh": "解剖圖用不同顏色標示兩段結腸。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -3348,7 +3348,7 @@
   {
     "word": "parish",
     "example": "The parish collected blankets for families after the typhoon.",
-    "exampleZh": "教區在颱風後為家庭募集毛毯。",
+    "exampleZh": "堂區在颱風後為家庭募集毛毯。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -3396,8 +3396,8 @@
   },
   {
     "word": "legislative",
-    "example": "The legislative committee will discuss the new bill tomorrow morning.",
-    "exampleZh": "立法委員會明天早上將討論這項新法案。",
+    "example": "A legislative aide carried the bill into the chamber.",
+    "exampleZh": "一名立法助理把法案帶進議場。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },
@@ -3417,8 +3417,8 @@
   },
   {
     "word": "teen",
-    "example": "The teen waited at the bus stop with her school bag.",
-    "exampleZh": "那位青少年揹著書包在公車站等車。",
+    "example": "The old ballad uses teen for grief after betrayal.",
+    "exampleZh": "那首古歌用此詞表示背叛後的悲憤。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core11"
   },

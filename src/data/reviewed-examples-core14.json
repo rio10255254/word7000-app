@@ -23,7 +23,7 @@
   {
     "word": "buffer",
     "example": "A row of bamboo served as a buffer against traffic noise.",
-    "exampleZh": "一排竹子成了阻隔車聲的緩衝物。",
+    "exampleZh": "一排竹子成了阻隔車聲的緩衝帶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -275,14 +275,14 @@
   {
     "word": "navigation",
     "example": "Clouds ruined navigation for the sailors near the reef.",
-    "exampleZh": "礁石附近雲層密布，導航對水手來說變得很困難。",
+    "exampleZh": "礁石附近雲層密布，水手很難辨認方向。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
   {
     "word": "daytime",
-    "example": "Owls usually sleep during the daytime inside old trees.",
-    "exampleZh": "貓頭鷹通常白天在老樹裡睡覺。",
+    "example": "Owls sleep during daytime beneath the abandoned temple roof.",
+    "exampleZh": "貓頭鷹白天睡在廢棄寺廟屋頂下。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -302,8 +302,8 @@
   },
   {
     "word": "orient",
-    "example": "New students attend a meeting to orient themselves to school life.",
-    "exampleZh": "新生參加說明會，以適應學校生活。",
+    "example": "Migrating birds orient by the stars on clear nights.",
+    "exampleZh": "候鳥在晴朗夜晚靠星星辨別方向。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -316,8 +316,8 @@
   },
   {
     "word": "gem",
-    "example": "She wore a small blue gem on her silver ring.",
-    "exampleZh": "她銀戒指上鑲著一顆藍色小寶石。",
+    "example": "The tiny cafe is a hidden gem near the harbor.",
+    "exampleZh": "那間小咖啡館是港口旁隱藏的珍寶。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -450,7 +450,7 @@
   {
     "word": "plank",
     "example": "A loose plank creaked beneath the fisherman's rubber boots.",
-    "exampleZh": "一塊鬆動的木板在漁夫的膠靴下嘎吱作響。",
+    "exampleZh": "一塊鬆動木板在漁夫的膠靴下嘎吱作響。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -555,14 +555,14 @@
   {
     "word": "doom",
     "example": "Loose wiring spelled doom for the carnival ride.",
-    "exampleZh": "電線鬆脫，預示這座遊樂設施將面臨厄運。",
+    "exampleZh": "電線鬆脫，這座遊樂設施注定要停擺。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
   {
     "word": "replicate",
     "example": "No kitchen could replicate the taste of her aunt's noodles.",
-    "exampleZh": "沒有一間廚房能重現她阿姨做的麵條味道。",
+    "exampleZh": "沒有一家廚房能重現她阿姨做的麵條味道。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -596,8 +596,8 @@
   },
   {
     "word": "admittedly",
-    "example": "Admittedly, the attic smelled better after we opened the windows.",
-    "exampleZh": "誠然，我們打開窗戶後，閣樓的氣味好多了。",
+    "example": "The attic admittedly smelled better after we opened the windows.",
+    "exampleZh": "我們打開窗戶後，閣樓氣味確實好多了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -611,7 +611,7 @@
   {
     "word": "sensibility",
     "example": "The film appealed deeply to her romantic sensibility.",
-    "exampleZh": "這部電影深深打動了她浪漫的情感特質。",
+    "exampleZh": "這部電影深深打動了她浪漫的感性。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -625,7 +625,7 @@
   {
     "word": "treasurer",
     "example": "The treasurer locked the donation box inside the temple office.",
-    "exampleZh": "財務主管把捐款箱鎖進廟務辦公室。",
+    "exampleZh": "出納把捐款箱鎖進廟務辦公室。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -806,8 +806,8 @@
   },
   {
     "word": "forensic",
-    "example": "The forensic team collected fingerprints from the broken window.",
-    "exampleZh": "鑑識小組從破掉的窗戶上採集指紋。",
+    "example": "Her forensic skills improved after weekly debate practice.",
+    "exampleZh": "每週辯論練習後，她的辯論能力進步了。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -842,7 +842,7 @@
   {
     "word": "helper",
     "example": "A quiet helper guided elders across the flooded street.",
-    "exampleZh": "一名安靜的幫手帶著長者穿過淹水的街道。",
+    "exampleZh": "一名沉默寡言的助手，帶著長者穿過淹水的街道。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -919,7 +919,7 @@
   {
     "word": "orderly",
     "example": "Patients waited in an orderly line outside the clinic.",
-    "exampleZh": "病人在診所外排成整齊的隊伍等候。",
+    "exampleZh": "病人在診所外排成整齊隊伍等候。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -981,8 +981,8 @@
   },
   {
     "word": "deposition",
-    "example": "Heavy rain increased the deposition of mud at the river mouth.",
-    "exampleZh": "大雨使河口的泥沙沉積增加了。",
+    "example": "Her deposition described the crash in calm detail.",
+    "exampleZh": "她的證詞冷靜詳細地描述那場撞車。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1072,22 +1072,22 @@
   },
   {
     "word": "crater",
-    "example": "Hikers stood at the edge of the crater and looked down.",
-    "exampleZh": "登山客站在火山口邊緣往下看。",
+    "example": "Rainwater filled the crater left by the explosion.",
+    "exampleZh": "雨水填滿爆炸留下的彈坑。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
   {
     "word": "foe",
     "example": "The boxer greeted his former foe with a quick hug.",
-    "exampleZh": "拳擊手用短暫擁抱問候昔日的對手。",
+    "exampleZh": "拳擊手用短暫擁抱問候昔日對手。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
   {
     "word": "boiler",
     "example": "A leaking boiler forced the hotel to close early.",
-    "exampleZh": "漏水的鍋爐迫使旅館提早關門。",
+    "exampleZh": "漏水鍋爐迫使旅館提早關門。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1136,7 +1136,7 @@
   {
     "word": "succumb",
     "example": "Weak seedlings may succumb to frost before spring arrives.",
-    "exampleZh": "弱小的幼苗可能在春天來臨前就被凍死。",
+    "exampleZh": "弱小幼苗可能在春天前凍死。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1191,8 +1191,8 @@
   },
   {
     "word": "prominence",
-    "example": "The singer rose to prominence after her first album.",
-    "exampleZh": "那位歌手在第一張專輯後聲名大噪。",
+    "example": "A rocky prominence jutted above the narrow mountain trail.",
+    "exampleZh": "一塊突出的岩體，懸在狹窄山徑上方。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1262,7 +1262,7 @@
   {
     "word": "earring",
     "example": "One silver earring slipped through the bathroom drain.",
-    "exampleZh": "一隻銀耳環滑進了浴室的排水孔。",
+    "exampleZh": "一只銀耳環滑進浴室的排水孔。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1283,14 +1283,14 @@
   {
     "word": "ram",
     "example": "A metal ram cracked the locked warehouse door.",
-    "exampleZh": "金屬撞槌撞裂了上鎖的倉庫門。",
+    "exampleZh": "金屬撞槌撞裂上鎖倉庫門。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
   {
     "word": "plainly",
     "example": "She plainly refused the bribe and left the office.",
-    "exampleZh": "她明白拒絕了賄賂，然後離開辦公室。",
+    "exampleZh": "她明白拒絕賄賂後離開辦公室。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1304,7 +1304,7 @@
   {
     "word": "provocative",
     "example": "A provocative poster drew complaints from nearby parents.",
-    "exampleZh": "一張挑釁的海報引來附近家長投訴。",
+    "exampleZh": "一張挑釁海報引來附近家長投訴。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1332,7 +1332,7 @@
   {
     "word": "depot",
     "example": "Buses slept overnight at the depot beside the river.",
-    "exampleZh": "公車整夜停在河邊的車庫裡。",
+    "exampleZh": "公車整夜停在河邊車庫裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1345,8 +1345,8 @@
   },
   {
     "word": "squint",
-    "example": "She had to squint at the board without her glasses.",
-    "exampleZh": "沒戴眼鏡，她得瞇著眼看黑板。",
+    "example": "His left eye began to squint after the injury.",
+    "exampleZh": "受傷後，他左眼開始斜視。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1423,7 +1423,7 @@
   {
     "word": "clasp",
     "example": "Her frozen fingers could not close the necklace clasp.",
-    "exampleZh": "她凍僵的手指扣不上項鍊的釦環。",
+    "exampleZh": "她凍僵的手指扣不上項鍊釦子。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1458,7 +1458,7 @@
   {
     "word": "clone",
     "example": "The lab grew a clone of the rare orchid.",
-    "exampleZh": "實驗室培育出那株稀有蘭花的複製體。",
+    "exampleZh": "實驗室培育出那株稀有蘭花的複製株。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1689,7 +1689,7 @@
   {
     "word": "obstruction",
     "example": "A fallen sign caused an obstruction on the bike lane.",
-    "exampleZh": "倒下的招牌在自行車道上造成阻礙。",
+    "exampleZh": "倒下的招牌造成自行車道障礙。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1807,8 +1807,8 @@
   },
   {
     "word": "capsule",
-    "example": "The doctor told me to take one capsule after dinner.",
-    "exampleZh": "醫生要我晚餐後服用一顆膠囊。",
+    "example": "The capsule brought rock samples back from the asteroid.",
+    "exampleZh": "太空艙從小行星帶回岩石樣本。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1878,7 +1878,7 @@
   {
     "word": "recess",
     "example": "Children traded stickers during recess behind the gym.",
-    "exampleZh": "孩子們在體育館後方的下課時間交換貼紙。",
+    "exampleZh": "孩子們在體育館後方休息時間交換貼紙。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -1920,7 +1920,7 @@
   {
     "word": "multitude",
     "example": "A multitude of lanterns floated above the river.",
-    "exampleZh": "無數燈籠飄浮在河面上。",
+    "exampleZh": "無數燈籠飄過河面。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2011,7 +2011,7 @@
   {
     "word": "wan",
     "example": "A wan light shone through the hospital curtain.",
-    "exampleZh": "一道蒼白的光線透過醫院窗簾照進來。",
+    "exampleZh": "一道蒼白光線透過醫院窗簾照進來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2242,7 +2242,7 @@
   {
     "word": "pumpkin",
     "example": "A pumpkin sat on the windowsill until winter.",
-    "exampleZh": "一顆南瓜在窗臺上放到了冬天。",
+    "exampleZh": "一顆南瓜在窗台上放到了冬天。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2683,7 +2683,7 @@
   {
     "word": "swan",
     "example": "A swan drifted past the reeds near the palace.",
-    "exampleZh": "一隻天鵝漂過宮殿附近的蘆葦叢。",
+    "exampleZh": "一隻天鵝漂過宮殿附近蘆葦叢。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2718,7 +2718,7 @@
   {
     "word": "refrain",
     "example": "Please refrain from feeding birds near the platform.",
-    "exampleZh": "請勿在月台附近餵鳥。",
+    "exampleZh": "請避免在月台附近餵鳥。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2781,7 +2781,7 @@
   {
     "word": "intellect",
     "example": "Her sharp intellect solved the puzzle before dinner.",
-    "exampleZh": "她敏銳的智力讓她在晚餐前解開了謎題。",
+    "exampleZh": "她敏銳的智力在晚餐前解開謎題。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2816,7 +2816,7 @@
   {
     "word": "curtail",
     "example": "New rules may curtail late-night karaoke near hospitals.",
-    "exampleZh": "新規定可能縮減醫院附近的深夜卡拉OK營業。",
+    "exampleZh": "新規定可能限制醫院附近深夜卡拉OK。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2851,7 +2851,7 @@
   {
     "word": "thwart",
     "example": "Locked gates could not thwart the determined hikers.",
-    "exampleZh": "上鎖的大門無法阻撓下定決心的健行者。",
+    "exampleZh": "上鎖大門無法阻撓下定決心的健行者。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2885,8 +2885,8 @@
   },
   {
     "word": "monumental",
-    "example": "Her monumental achievement changed science education across the country.",
-    "exampleZh": "她劃時代的成就改變了全國的科學教育。",
+    "example": "A monumental arch marked the entrance to the old cemetery.",
+    "exampleZh": "一座紀念碑式拱門標示老墓園入口。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2935,7 +2935,7 @@
   {
     "word": "luxurious",
     "example": "The luxurious train cabin had silk curtains and orchids.",
-    "exampleZh": "豪華列車包廂裡有絲質窗簾和蘭花。",
+    "exampleZh": "豪華列車包廂有絲窗簾和蘭花。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -2998,7 +2998,7 @@
   {
     "word": "eradicate",
     "example": "Inspectors hope to eradicate mosquitoes from the storage yard.",
-    "exampleZh": "稽查員希望根除倉庫院子裡的蚊子。",
+    "exampleZh": "稽查員希望清除倉庫院子裡的蚊子。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -3082,7 +3082,7 @@
   {
     "word": "ginger",
     "example": "Fresh ginger warmed the soup on cold nights.",
-    "exampleZh": "寒夜裡，新鮮的薑讓湯更暖身。",
+    "exampleZh": "寒夜裡，新鮮薑讓湯更暖身。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -3095,8 +3095,8 @@
   },
   {
     "word": "gall",
-    "example": "He had the gall to ask for a refund after eating everything.",
-    "exampleZh": "他把東西都吃光了，居然還厚著臉皮要求退款。",
+    "example": "The herbal drink left a taste of gall on his tongue.",
+    "exampleZh": "草藥飲料在他舌上留下膽汁般苦味。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -3124,14 +3124,14 @@
   {
     "word": "overtime",
     "example": "Chen worked overtime to finish the wedding dress.",
-    "exampleZh": "陳小姐加班完成了那件婚紗。",
+    "exampleZh": "陳加班完成那件婚紗。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
   {
     "word": "bracelet",
     "example": "A jade bracelet clicked against her porcelain teacup.",
-    "exampleZh": "一只玉手鐲碰到她的瓷茶杯，發出輕響。",
+    "exampleZh": "一只玉手鐲碰到她的瓷茶杯發出輕響。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -3257,7 +3257,7 @@
   {
     "word": "defective",
     "example": "A defective brake light made the scooter unsafe.",
-    "exampleZh": "有瑕疵的煞車燈讓這輛機車騎起來不安全。",
+    "exampleZh": "這輛機車的煞車燈故障，騎上路很危險。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },
@@ -3368,8 +3368,8 @@
   },
   {
     "word": "bun",
-    "example": "She bought a warm bun from the bakery on her way to school.",
-    "exampleZh": "她上學途中在麵包店買了一個溫熱的小圓麵包。",
+    "example": "A steamed bun warmed his hands at dawn.",
+    "exampleZh": "黎明時，一顆熱包子溫暖了他的手。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core14"
   },

@@ -1,8 +1,8 @@
 [
   {
     "word": "builder",
-    "example": "The builder repaired the broken roof before the typhoon arrived.",
-    "exampleZh": "建築工人在颱風來臨前修好了破損的屋頂。",
+    "example": "The builder of the charity school returned for its anniversary.",
+    "exampleZh": "那所慈善學校的建造者，在校慶時回到學校。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -23,14 +23,14 @@
   {
     "word": "constituency",
     "example": "Her constituency demanded safer buses after the mountain crash.",
-    "exampleZh": "她的選區居民在山區事故後要求更安全的公車。",
+    "exampleZh": "她的選民在山區事故後要求更安全公車。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "sergeant",
     "example": "A sergeant guided the lost hikers through the flooded checkpoint.",
-    "exampleZh": "一名軍士帶領迷路的登山客穿過淹水的檢查站。",
+    "exampleZh": "一名軍士帶迷路登山客穿過淹水檢查站。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -148,8 +148,8 @@
   },
   {
     "word": "holding",
-    "example": "The investor sold her largest holding in the tech company last week.",
-    "exampleZh": "那位投資人上週賣掉了她在那家科技公司的最大持股。",
+    "example": "By holding the rope firmly, he kept the gate closed.",
+    "exampleZh": "他牢牢抓著繩子，讓大門維持關閉。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -169,8 +169,8 @@
   },
   {
     "word": "advisory",
-    "example": "She joined the advisory board to help the school choose new clubs.",
-    "exampleZh": "她加入顧問委員會，協助學校挑選新社團。",
+    "example": "An advisory notice warned swimmers about strong currents near the pier.",
+    "exampleZh": "一則警示公告提醒泳客碼頭旁有強勁海流。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -183,8 +183,8 @@
   },
   {
     "word": "philosophical",
-    "example": "The class had a philosophical discussion about what makes people happy.",
-    "exampleZh": "全班針對什麼讓人快樂進行了一場哲學討論。",
+    "example": "Nora sounded philosophical after the storm ruined her picnic.",
+    "exampleZh": "暴風雨毀了野餐後，諾拉聽起來很豁達。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -204,15 +204,15 @@
   },
   {
     "word": "pro",
-    "example": "The pro at the golf club gave Leo some useful tips.",
-    "exampleZh": "高爾夫球場的專業球員給了里奧一些實用的建議。",
+    "example": "The essay argued pro before listing objections from parents.",
+    "exampleZh": "那篇文章先從正面論述，再列出家長反對意見。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "bastard",
-    "example": "The angry driver called the other man a bastard.",
-    "exampleZh": "那位憤怒的駕駛罵另一個男人是混蛋。",
+    "example": "That bastard hinge scratched Mei's hand whenever the gate swung.",
+    "exampleZh": "那個該死的鉸鏈，每次大門一動就會刮傷小美的手。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -253,8 +253,8 @@
   },
   {
     "word": "huh",
-    "example": "Huh, I thought the test was tomorrow, not today.",
-    "exampleZh": "蛤，我還以為考試是明天，不是今天。",
+    "example": "Omar said huh after hearing the same excuse again.",
+    "exampleZh": "聽到同樣藉口後，奧馬哼了一聲。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -498,8 +498,8 @@
   },
   {
     "word": "con",
-    "example": "The salesman tried to con elderly customers out of their savings.",
-    "exampleZh": "那名推銷員企圖騙走年長顧客的積蓄。",
+    "example": "Mira had to con the poem before the oral exam.",
+    "exampleZh": "米拉口試前必須熟記那首詩。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -519,8 +519,8 @@
   },
   {
     "word": "condom",
-    "example": "The health teacher explained how a condom helps prevent disease.",
-    "exampleZh": "健康教育老師說明保險套如何幫助預防疾病。",
+    "example": "The nurse placed a condom in each travel health kit.",
+    "exampleZh": "護理師在每份旅行保健包放入一個保險套。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -576,7 +576,7 @@
   {
     "word": "stuck",
     "example": "The stuck drawer finally opened after Mira pulled the handle hard.",
-    "exampleZh": "米拉用力拉把手後，卡住的抽屜終於打開了。",
+    "exampleZh": "米拉用力拉把手後，卡住的抽屜終於打開。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -589,8 +589,8 @@
   },
   {
     "word": "tricky",
-    "example": "The tricky math problem took Mira almost an hour to solve.",
-    "exampleZh": "這道棘手的數學題花了米拉將近一小時才解出來。",
+    "example": "The tricky salesman hid the extra fee until signing.",
+    "exampleZh": "那個狡猾業務把額外費用藏到簽約時才說。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -625,7 +625,7 @@
   {
     "word": "unwanted",
     "example": "Several unwanted weeds grew between the tiles after spring rain.",
-    "exampleZh": "春雨過後，幾株不想要的雜草從磁磚縫長出來。",
+    "exampleZh": "春雨過後，幾株多餘雜草從磁磚縫長出。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -638,8 +638,8 @@
   },
   {
     "word": "striker",
-    "example": "The striker scored twice before the school team won the match.",
-    "exampleZh": "那名前鋒進了兩球，學校球隊贏得了比賽。",
+    "example": "The striker carried a sign outside the factory gate.",
+    "exampleZh": "那名罷工者在工廠門外舉著標語。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -687,8 +687,8 @@
   },
   {
     "word": "binding",
-    "example": "The contract is binding, so both sides must follow every rule.",
-    "exampleZh": "這份合約具有約束力，所以雙方都必須遵守每項規定。",
+    "example": "The notebook's red binding cracked after years of travel.",
+    "exampleZh": "那本筆記本紅色裝訂經多年旅行後裂開。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -709,7 +709,7 @@
   {
     "word": "sponsorship",
     "example": "The forum ran under university sponsorship for three years.",
-    "exampleZh": "這場論壇在大學的贊助下舉辦了三年。",
+    "exampleZh": "該論壇由大學主辦三年。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -771,7 +771,7 @@
   },
   {
     "word": "comeback",
-    "example": "Nina's sharp comeback made the rude waiter stop laughing.",
+    "example": "Nina's comeback made the rude waiter stop laughing.",
     "exampleZh": "妮娜尖銳地回嘴，讓無禮的服務生笑不出來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
@@ -828,7 +828,7 @@
   {
     "word": "bureaucrat",
     "example": "A bureaucrat misplaced the permit inside a green folder.",
-    "exampleZh": "一名官僚把許可證錯放進綠色資料夾裡。",
+    "exampleZh": "一名官員把許可證錯放進綠色資料夾裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -884,7 +884,7 @@
   {
     "word": "lawmaker",
     "example": "A lawmaker proposed stricter rules for basement rentals.",
-    "exampleZh": "一名立法委員提議加嚴地下室出租規定。",
+    "exampleZh": "一名立法者提議加嚴地下室出租規定。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -975,7 +975,7 @@
   {
     "word": "scattered",
     "example": "The scattered sandals lay outside the crowded temple gate after prayers.",
-    "exampleZh": "祈禱結束後，散落的涼鞋躺在擁擠的廟門外。",
+    "exampleZh": "祈禱結束後，涼鞋散落在擁擠的廟門外。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1100,8 +1100,8 @@
   },
   {
     "word": "jumper",
-    "example": "She wore a warm wool jumper to school on the cold morning.",
-    "exampleZh": "寒冷的早晨，她穿了一件保暖的羊毛衣去上學。",
+    "example": "The jumper cleared the puddle and landed beside the gate.",
+    "exampleZh": "那名跳躍者越過水坑，落在門邊。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1205,8 +1205,8 @@
   },
   {
     "word": "sooner",
-    "example": "The sooner you start studying, the better you will do.",
-    "exampleZh": "你愈早開始讀書，成績就會愈好。",
+    "example": "A sooner grabbed the corner lot before others arrived.",
+    "exampleZh": "一名搶先者在其他人到前佔下角落土地。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1255,7 +1255,7 @@
   {
     "word": "gnp",
     "example": "The economist linked GNP growth to exports of machine tools.",
-    "exampleZh": "經濟學家認為國民生產毛額成長與工具機出口有關。",
+    "exampleZh": "經濟學家認為國民生產總值成長與工具機出口有關。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1430,7 +1430,7 @@
   {
     "word": "superpower",
     "example": "The superpower sent two carriers into the disputed sea.",
-    "exampleZh": "那個超級大國派兩艘航空母艦進入爭議海域。",
+    "exampleZh": "那個超級大國派兩艘航母進入爭議海域。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1450,8 +1450,8 @@
   },
   {
     "word": "disturbed",
-    "example": "The disturbed child could not sleep after the loud storm.",
-    "exampleZh": "那個不安的孩子在巨大的暴風雨後無法入睡。",
+    "example": "The disturbed room showed signs of a hurried search.",
+    "exampleZh": "混亂的房間顯示有人倉促搜過。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1465,7 +1465,7 @@
   {
     "word": "sub",
     "example": "A sub replaced the injured goalkeeper after halftime.",
-    "exampleZh": "一名替補球員在中場休息後替換了受傷的守門員。",
+    "exampleZh": "一名替補在中場後取代受傷守門員。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1569,8 +1569,8 @@
   },
   {
     "word": "insecure",
-    "example": "She felt insecure about speaking English in front of the class.",
-    "exampleZh": "她在全班面前說英語時覺得沒有安全感。",
+    "example": "An insecure railing made the balcony unsafe for children.",
+    "exampleZh": "欄杆不夠牢固，孩子待在陽台上很危險。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1619,21 +1619,21 @@
   {
     "word": "gilt",
     "example": "Thin gilt edges made the wedding invitations shine under candlelight.",
-    "exampleZh": "薄薄的鍍金邊讓婚禮請柬在燭光下閃閃發亮。",
+    "exampleZh": "薄鍍金邊讓婚禮請柬在燭光下發亮。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "topical",
-    "example": "The teacher chose a topical issue for today's class discussion.",
-    "exampleZh": "老師為今天的課堂討論挑了一個時事議題。",
+    "example": "The pharmacist gave Mei a topical cream for the rash.",
+    "exampleZh": "藥師給美一條治皮疹的外用乳膏。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "soundtrack",
-    "example": "The film's soundtrack made the final scene feel very emotional.",
-    "exampleZh": "這部電影的配樂讓最後一幕非常感人。",
+    "example": "The film's soundtrack carried scratches from the old projector.",
+    "exampleZh": "電影聲帶留有舊放映機造成的刮痕。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1668,7 +1668,7 @@
   {
     "word": "modernize",
     "example": "The museum will modernize its ticket gates next spring.",
-    "exampleZh": "博物館明年春天將使售票閘門現代化。",
+    "exampleZh": "博物館明年春天將售票閘門現代化。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1948,7 +1948,7 @@
   {
     "word": "equalize",
     "example": "The late goal helped Spain equalize before extra time.",
-    "exampleZh": "那記晚進球幫西班牙在延長賽前追平比分。",
+    "exampleZh": "那記晚進球幫西班牙在延長賽前追平。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1976,7 +1976,7 @@
   {
     "word": "gore",
     "example": "The horror film used too much gore for my taste.",
-    "exampleZh": "那部恐怖片的血腥畫面對我來說太多了。",
+    "exampleZh": "那部恐怖片的血腥畫面對我來說太多。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -1989,8 +1989,8 @@
   },
   {
     "word": "consuming",
-    "example": "She has a consuming passion for painting after school every day.",
-    "exampleZh": "她對放學後每天畫畫有著強烈的熱情。",
+    "example": "The consuming public rejected the costly imported fruit.",
+    "exampleZh": "消費大眾拒買昂貴進口水果。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2004,7 +2004,7 @@
   {
     "word": "vatican",
     "example": "The Vatican announced new rules for archive access.",
-    "exampleZh": "梵蒂岡宣佈檔案查閱的新規定。",
+    "exampleZh": "梵蒂岡宣布檔案查閱的新規定。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2017,8 +2017,8 @@
   },
   {
     "word": "brit",
-    "example": "My teacher is a Brit who loves Taiwanese bubble tea.",
-    "exampleZh": "我的老師是個愛喝台灣珍珠奶茶的英國人。",
+    "example": "The brit drifted in bright patches near the surface.",
+    "exampleZh": "小鯡魚群在水面附近形成亮色斑塊。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2052,8 +2052,8 @@
   },
   {
     "word": "poised",
-    "example": "The team is poised to win the school basketball final.",
-    "exampleZh": "這支隊伍準備好贏得學校籃球決賽了。",
+    "example": "The dancer stood poised before the curtain rose.",
+    "exampleZh": "布幕升起前，舞者沉著地站著。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2143,8 +2143,8 @@
   },
   {
     "word": "barrack",
-    "example": "The soldiers returned to the barrack before the heavy rain started.",
-    "exampleZh": "士兵們在大雨開始前回到了兵營。",
+    "example": "Soldiers returned to the barrack before heavy rain.",
+    "exampleZh": "士兵在大雨前回到兵舍。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2171,8 +2171,8 @@
   },
   {
     "word": "made",
-    "example": "This table is made of recycled wood from old school desks.",
-    "exampleZh": "這張桌子是用舊課桌的回收木材製成的。",
+    "example": "The made bed looked neat before the guests arrived.",
+    "exampleZh": "客人抵達前，鋪好的床看起來整齊乾淨。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2185,8 +2185,8 @@
   },
   {
     "word": "tempted",
-    "example": "Nina was tempted to buy another snack when she passed the night market.",
-    "exampleZh": "妮娜經過夜市時，很想再買一份點心。",
+    "example": "Nina was tempted to steal buns when hunger grew.",
+    "exampleZh": "飢餓加劇時，妮娜受到誘惑想偷包子。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2213,22 +2213,22 @@
   },
   {
     "word": "home",
-    "example": "Mia walked home after cram school because the last bus had already left.",
-    "exampleZh": "最後一班公車已開走，所以咪雅補習後走路回家。",
+    "example": "The rescue boat brought every fisherman home before dark.",
+    "exampleZh": "救援船在天黑前把每位漁夫送回家。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "minute",
-    "example": "Please wait a minute while I find my student ID card.",
-    "exampleZh": "請等一分鐘，我找一下我的學生證。",
+    "example": "A minute crack appeared near the porcelain handle.",
+    "exampleZh": "瓷把手旁出現一道細小裂痕。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "bank",
-    "example": "My mother goes to the bank every Friday to deposit money.",
-    "exampleZh": "我媽媽每週五都會去銀行存錢。",
+    "example": "Children slid down the grassy bank after school.",
+    "exampleZh": "放學後，孩子們從長草的河岸滑下。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2241,8 +2241,8 @@
   },
   {
     "word": "used",
-    "example": "My brother is used to riding his scooter to school every morning.",
-    "exampleZh": "我哥哥習慣每天早上騎機車去上學。",
+    "example": "A used scooter stood outside the repair shop.",
+    "exampleZh": "一輛二手機車停在修車行外。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2270,7 +2270,7 @@
   {
     "word": "planning",
     "example": "Careful planning kept the hikers off the dangerous ridge.",
-    "exampleZh": "周詳的規劃讓登山客避開了危險的山脊。",
+    "exampleZh": "仔細規劃讓登山客避開危險山脊。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2284,7 +2284,7 @@
   {
     "word": "unemployment",
     "example": "Local unemployment rose after the cannery closed in March.",
-    "exampleZh": "罐頭廠三月關閉後，當地失業率上升。",
+    "exampleZh": "罐頭廠三月關閉後，當地失業人數上升。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2333,14 +2333,14 @@
   {
     "word": "walking",
     "example": "Gentle walking to the harbor cleared her head after lunch.",
-    "exampleZh": "午餐後輕鬆步行到港口，讓她的思緒清醒許多。",
+    "exampleZh": "午餐後輕鬆走到港口，讓她的思緒清醒許多。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "driving",
-    "example": "Driving at night can be tiring for new drivers.",
-    "exampleZh": "夜間駕駛對新手來說可能很累人。",
+    "example": "The driving rain blurred the windshield on the mountain road.",
+    "exampleZh": "強勁大雨模糊了山路上的擋風玻璃。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2374,8 +2374,8 @@
   },
   {
     "word": "mall",
-    "example": "We watched a movie at the mall after school yesterday.",
-    "exampleZh": "我們昨天放學後在購物中心看了電影。",
+    "example": "A tree-lined mall led visitors toward the fountain.",
+    "exampleZh": "一條林蔭大道引導遊客走向噴水池。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2431,7 +2431,7 @@
   {
     "word": "diagram",
     "example": "The diagram showed how rainwater reached the basement.",
-    "exampleZh": "示意圖顯示雨水如何流到地下室。",
+    "exampleZh": "圖表顯示雨水如何流到地下室。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2536,7 +2536,7 @@
   {
     "word": "nephew",
     "example": "My nephew hid warm dumplings in his lunchbox.",
-    "exampleZh": "我的姪子把熱水餃藏在午餐盒裡。",
+    "exampleZh": "我的外甥把熱水餃藏在午餐盒裡。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2592,7 +2592,7 @@
   {
     "word": "spelling",
     "example": "The sign's spelling changed after the painter returned.",
-    "exampleZh": "油漆工回來後，招牌上的拼字變了。",
+    "exampleZh": "油漆工回來後，修正了招牌上的拼字。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2641,7 +2641,7 @@
   {
     "word": "motorcycle",
     "example": "A motorcycle splashed mud onto the shop window.",
-    "exampleZh": "一輛機車把泥水濺到店窗上。",
+    "exampleZh": "一輛摩托車把泥水濺到店窗上。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2746,7 +2746,7 @@
   {
     "word": "annoy",
     "example": "Mosquitoes annoy campers more than the cold wind.",
-    "exampleZh": "比起冷風，蚊子更讓露營者心煩。",
+    "exampleZh": "蚊子比冷風更惹露營者煩。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2795,7 +2795,7 @@
   {
     "word": "disapproval",
     "example": "Her disapproval showed when she pushed away the contract.",
-    "exampleZh": "她把合約推開時，明顯流露出不贊成的神情。",
+    "exampleZh": "她推開合約時，反對之意很明顯。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2809,7 +2809,7 @@
   {
     "word": "outdoors",
     "example": "Meals taste better outdoors beside the river at dusk.",
-    "exampleZh": "黃昏時在河邊的戶外用餐，飯菜吃起來更美味。",
+    "exampleZh": "黃昏在河邊戶外吃飯味道更好。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -2893,14 +2893,14 @@
   {
     "word": "yawn",
     "example": "A loud yawn escaped from the sleepy driver.",
-    "exampleZh": "那位疲倦的駕駛忍不住打了個大哈欠。",
+    "exampleZh": "疲倦駕駛忍不住打了個大哈欠。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "beak",
     "example": "The bird's beak tapped against the metal feeder.",
-    "exampleZh": "那隻鳥的嘴敲著金屬餵食器。",
+    "exampleZh": "鳥嘴敲著金屬餵食器。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -3081,15 +3081,15 @@
   },
   {
     "word": "congratulations",
-    "example": "Congratulations poured in after Mei passed the bar exam.",
-    "exampleZh": "美通過律師考試後，祝賀的訊息紛紛湧來。",
+    "example": "Warm congratulations poured in after Mei passed the bar exam.",
+    "exampleZh": "美通過律師考試後，熱烈祝賀紛紛湧來。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "knitting",
     "example": "Her knitting slipped from the basket during the bus ride.",
-    "exampleZh": "她的編織物在公車上從籃子滑了出來。",
+    "exampleZh": "她的針織物在公車上從籃子滑出。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -3263,8 +3263,8 @@
   },
   {
     "word": "standing",
-    "example": "Her standing in the class improved after she won the speech contest.",
-    "exampleZh": "她贏得演講比賽後，在班上的地位提升了。",
+    "example": "Required standing during the anthem made the assembly feel formal.",
+    "exampleZh": "唱國歌時必須起立，讓集會顯得正式。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -3319,8 +3319,8 @@
   },
   {
     "word": "domain",
-    "example": "Marine biology became Lin's domain after he finished college.",
-    "exampleZh": "大學畢業後，海洋生物學成了阿林的專門領域。",
+    "example": "Marine biology became Lin's domain after college graduation.",
+    "exampleZh": "大學畢業後，海洋生物學成了林的領域。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -3362,7 +3362,7 @@
   {
     "word": "facilitate",
     "example": "Clear signs facilitate boarding at the busy ferry terminal.",
-    "exampleZh": "清楚的標示使旅客在繁忙的渡輪站更容易登船。",
+    "exampleZh": "清楚的標示，方便旅客在繁忙的渡輪站登船。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -3383,14 +3383,14 @@
   {
     "word": "resume",
     "example": "Classes resume after workers clean the flooded rooms.",
-    "exampleZh": "工人清理完淹水的教室後，課程就會重新開始。",
+    "exampleZh": "工人清理淹水教室後，課程恢復。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "orientation",
     "example": "The map showed the correct orientation of the old temple.",
-    "exampleZh": "地圖顯示了這座舊寺廟的正確方位。",
+    "exampleZh": "地圖顯示舊寺廟的正確方向。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -3411,14 +3411,14 @@
   {
     "word": "functional",
     "example": "The chart showed functional differences between the two clinics.",
-    "exampleZh": "圖表顯示這兩間診所在功能上的差異。",
+    "exampleZh": "圖表顯示兩間診所的功能差異。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
   {
     "word": "harry",
     "example": "Creditors began to harry him with calls before breakfast.",
-    "exampleZh": "債主在早餐前就開始打電話騷擾他。",
+    "exampleZh": "債主早餐前就開始打電話騷擾他。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },
@@ -3432,7 +3432,7 @@
   {
     "word": "pant",
     "example": "After the sprint, I could only pant beside the fence.",
-    "exampleZh": "衝刺之後，我只能在圍欄旁喘氣。",
+    "exampleZh": "衝刺後，我只能在圍欄旁喘氣。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core12"
   },

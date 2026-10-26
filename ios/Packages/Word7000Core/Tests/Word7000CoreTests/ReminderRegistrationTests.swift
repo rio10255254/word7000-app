@@ -310,7 +310,10 @@ final class ReminderRegistrationTests: XCTestCase {
                 return true
             }
         }
-        try? await Task.sleep(for: .milliseconds(150))
+        // The old request stays held throughout, so any return proves logout
+        // did not wait for it. Polling rather than a fixed sleep keeps a busy
+        // CI machine's scheduling delay from failing the test.
+        for _ in 0..<300 where result == nil { try? await Task.sleep(for: .milliseconds(10)) }
         XCTAssertEqual(result, false, "Logout must return while the old request is still held")
         queue.submit(owner: "a", values: values(9), delay: .zero, upload: transport.send)
         transport.finish(0)
@@ -327,7 +330,7 @@ final class ReminderRegistrationTests: XCTestCase {
             result = await queue.revoke(owner: "a", deviceId: "iphone", timeout: .milliseconds(20), upload: transport.send)
         }
         await transport.waitForCount(1)
-        try? await Task.sleep(for: .milliseconds(150))
+        for _ in 0..<300 where result == nil { try? await Task.sleep(for: .milliseconds(10)) }
         XCTAssertEqual(result, false)
         queue.submit(owner: "guest", values: values(0), delay: .zero, upload: transport.send)
         XCTAssertEqual(transport.rows.count, 1)

@@ -5,11 +5,9 @@
 #
 # Repository secret: ANTHROPIC_API_KEY (the same key the AI backend uses).
 #
-# Start it from the Actions tab (once this file is on the default branch), or
-# by pushing exports/claude-review/request.json to a feature branch, e.g.
-#   {"content": "words", "model": "claude-opus-5-5", "effort": "medium", "cores": "1-14", "limit": 0}
-# A batch usually ends within an hour. If it is still running when the wait
-# below runs out, start again with "batch_id" set to collect it.
+# Start it from the Actions tab on a feature branch. A batch usually ends
+# within an hour. If it is still running when the wait below runs out, start
+# it again with the batch id to collect it.
 name: Word review
 
 on:
@@ -42,9 +40,6 @@ on:
         description: 'Collect this earlier batch instead of starting a new one'
         type: string
         default: ''
-  push:
-    branches-ignore: ['master', 'native/**']
-    paths: ['exports/claude-review/request.json']
 
 permissions:
   contents: write
@@ -72,21 +67,13 @@ jobs:
       - name: Read the request
         id: request
         env:
-          INPUT_CONTENT: ${{ inputs.content }}
-          INPUT_MODEL: ${{ inputs.model }}
-          INPUT_EFFORT: ${{ inputs.effort }}
-          INPUT_CORES: ${{ inputs.cores }}
-          INPUT_LIMIT: ${{ inputs.limit }}
-          INPUT_BATCH_ID: ${{ inputs.batch_id }}
+          content: ${{ inputs.content }}
+          model: ${{ inputs.model }}
+          effort: ${{ inputs.effort }}
+          cores: ${{ inputs.cores }}
+          limit: ${{ inputs.limit }}
+          batch_id: ${{ inputs.batch_id }}
         run: |
-          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
-            content=$INPUT_CONTENT; model=$INPUT_MODEL; effort=$INPUT_EFFORT; cores=$INPUT_CORES; limit=$INPUT_LIMIT; batch_id=$INPUT_BATCH_ID
-          else
-            file=exports/claude-review/request.json
-            read_key() { jq -r --arg key "$1" --arg fallback "$2" '.[$key] // $fallback | tostring' "$file"; }
-            content=$(read_key content words); model=$(read_key model claude-opus-5-5); effort=$(read_key effort medium); cores=$(read_key cores 1-14)
-            limit=$(read_key limit 0); batch_id=$(read_key batch_id "")
-          fi
           [[ "$batch_id" =~ ^(msgbatch_[A-Za-z0-9]+)?$ ]] || { echo "::error::batch_id does not look like a batch id"; exit 1; }
           [[ "$content" =~ ^(words|speaking)$ ]] || { echo "::error::content must be words or speaking"; exit 1; }
           { echo "content=$content"; echo "model=$model"; echo "effort=$effort"; echo "cores=$cores"; echo "limit=$limit"; echo "batch_id=$batch_id"; } >> "$GITHUB_OUTPUT"

@@ -25,6 +25,7 @@ import {
   BookOpen,
   ScanText,
   Eye,
+  EyeOff,
   PartyPopper,
   Undo2,
   Check,
@@ -323,6 +324,7 @@ const ACTIVE_USER_HEARTBEAT_MIN_GAP_MS = 60_000;
 const NATIVE_UPDATE_CHECK_COOLDOWN_MS = 15 * 60_000;
 const THEME_STORAGE_KEY = 'word7000-theme-v1';
 const STUDY_MODE_STORAGE_KEY = 'word7000-study-mode-v1';
+const STUDY_AUTO_REVEAL_STORAGE_KEY = 'word7000-study-auto-reveal-v1';
 const CUSTOM_SET_SORT_STORAGE_KEY = 'word7000-custom-set-sort-v1';
 const APP_LINKING_SCHEME = 'word7000';
 const WEB_IOS_PREVIEW_QUERY_KEYS = ['ios-preview', 'iosPreview', 'preview-ios'];
@@ -547,6 +549,8 @@ const modeInterfaceCopy = {
     scanShort: '掃描',
     closeSheet: '關閉',
     showAnswer: '顯示答案',
+    autoReveal: '直接顯示中文',
+    autoRevealHint: '開啟後卡片直接顯示中文，不用先點一下',
     dontKnow: '不熟',
     knowIt: '認識',
     undo: '復原上一張',
@@ -808,6 +812,8 @@ const modeInterfaceCopy = {
     scanShort: 'Scan',
     closeSheet: 'Close',
     showAnswer: 'Show Answer',
+    autoReveal: 'Show English',
+    autoRevealHint: 'When on, cards show the English right away instead of waiting for a tap',
     dontKnow: 'Not Yet',
     knowIt: 'I Know It',
     undo: 'Undo last card',
@@ -4923,6 +4929,22 @@ function saveStudyMode(storage: StorageLike | undefined, studyMode: StudyMode) {
   }
 }
 
+function loadStudyAutoReveal(storage?: StorageLike): boolean {
+  try {
+    return storage?.getItem(STUDY_AUTO_REVEAL_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function saveStudyAutoReveal(storage: StorageLike | undefined, autoReveal: boolean) {
+  try {
+    storage?.setItem(STUDY_AUTO_REVEAL_STORAGE_KEY, autoReveal ? '1' : '0');
+  } catch {
+    // The toggle still works for this session if storage is blocked.
+  }
+}
+
 function loadCustomSetSort(storage?: StorageLike): CustomSetSort {
   try {
     const stored = storage?.getItem(CUSTOM_SET_SORT_STORAGE_KEY);
@@ -6502,7 +6524,18 @@ const StudyView = memo(function StudyView({
   // the top row is a bare pill, which is shorter than a row containing icon
   // buttons — so the card grew by that difference at the moment it took over.
   const deckFavorited = Boolean(deckWord ? progress.words[deckWord.id]?.favorite : false);
-  const [revealed, setRevealed] = useState(false);
+  const [revealedByTap, setRevealed] = useState(false);
+  // Some learners would rather read every card with its meaning already open
+  // (a quick skim) than recall first. The toggle only skips the tap; grading
+  // still works the same, and switching it off brings the recall face back.
+  const [autoReveal, setAutoReveal] = useState(() => loadStudyAutoReveal(getAppStorage()));
+  const revealed = revealedByTap || autoReveal;
+  const toggleAutoReveal = useCallback(() => {
+    setAutoReveal((current) => {
+      saveStudyAutoReveal(getAppStorage(), !current);
+      return !current;
+    });
+  }, []);
   const studyHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const studyInitialHintScheduledRef = useRef(false);
   // Everything that belongs to the live card — travel, tilt, entry, visibility
@@ -7111,10 +7144,54 @@ const StudyView = memo(function StudyView({
         <>
       <View style={styles.studySessionHeader} testID="study-session-header">
         <View style={styles.rowBetween}>
-          <Text style={[styles.studySessionLabel, themeStyles?.studySessionLabel]}>
-            {ui.sessionLabel(sessionProgress.done, sessionProgress.total)}
-          </Text>
-          <Text style={[styles.studySessionGoal, themeStyles?.cardMeta]}>{ui.todayGoalLine(studiedToday, dailyTarget)}</Text>
+          <View style={styles.studySessionMeta}>
+            <Text style={[styles.studySessionLabel, themeStyles?.studySessionLabel]}>
+              {ui.sessionLabel(sessionProgress.done, sessionProgress.total)}
+            </Text>
+            <Text style={[styles.studySessionGoal, themeStyles?.cardMeta]}>{ui.todayGoalLine(studiedToday, dailyTarget)}</Text>
+          </View>
+          <AnimatedPressable
+            accessibilityHint={ui.autoRevealHint}
+            accessibilityLabel={ui.autoReveal}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: autoReveal }}
+            hitSlop={6}
+            onPress={toggleAutoReveal}
+            pressTone="secondary"
+            style={[
+              styles.studyAutoRevealToggle,
+              themeStyles?.studyAutoRevealToggle,
+              autoReveal && styles.studyAutoRevealToggleOn,
+              autoReveal && themeStyles?.studyAutoRevealToggleOn,
+            ]}
+            testID="study-auto-reveal-toggle"
+          >
+            {autoReveal ? (
+              <Eye size={15} color={darkMode ? '#0A84FF' : '#007AFF'} strokeWidth={2.4} />
+            ) : (
+              <EyeOff size={15} color={darkMode ? '#8E8E93' : '#6C6C70'} strokeWidth={2.4} />
+            )}
+            <Text
+              numberOfLines={1}
+              style={[
+                styles.studyAutoRevealText,
+                themeStyles?.studyAutoRevealText,
+                autoReveal && styles.studyAutoRevealTextOn,
+                autoReveal && themeStyles?.studyAutoRevealTextOn,
+              ]}
+            >
+              {ui.autoReveal}
+            </Text>
+            <View
+              style={[
+                styles.studyAutoRevealTrack,
+                themeStyles?.studyAutoRevealTrack,
+                autoReveal && styles.studyAutoRevealTrackOn,
+              ]}
+            >
+              <View style={[styles.studyAutoRevealKnob, autoReveal && styles.studyAutoRevealKnobOn]} />
+            </View>
+          </AnimatedPressable>
         </View>
         <View style={[styles.progressTrack, styles.studySessionTrack, themeStyles?.progressTrack]}>
           <View style={[styles.progressFill, { width: `${Math.round(progressRatio * 100)}%` }]} />
@@ -7147,7 +7224,7 @@ const StudyView = memo(function StudyView({
                 </View>
               </View>
             </View>
-            <StudyCardBody revealed={false} studyMode={studyMode} word={deckWord} />
+            <StudyCardBody revealed={autoReveal} studyMode={studyMode} word={deckWord} />
           </Reanimated.View>
         )}
          <Reanimated.View
@@ -13656,6 +13733,52 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 2,
   },
+  studySessionMeta: {
+    flexShrink: 1,
+    gap: 2,
+  },
+  studyAutoRevealToggle: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
+    borderRadius: 999,
+    flexDirection: 'row',
+    flexShrink: 0,
+    gap: 6,
+    paddingLeft: 10,
+    paddingRight: 6,
+    paddingVertical: 6,
+  },
+  studyAutoRevealToggleOn: {
+    backgroundColor: 'rgba(0, 122, 255, 0.12)',
+  },
+  studyAutoRevealText: {
+    color: '#3A3A3C',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  studyAutoRevealTextOn: {
+    color: '#0066CC',
+  },
+  studyAutoRevealTrack: {
+    backgroundColor: '#C7C7CC',
+    borderRadius: 999,
+    height: 18,
+    justifyContent: 'center',
+    paddingHorizontal: 2,
+    width: 30,
+  },
+  studyAutoRevealTrackOn: {
+    backgroundColor: '#34C759',
+  },
+  studyAutoRevealKnob: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 7,
+    height: 14,
+    width: 14,
+  },
+  studyAutoRevealKnobOn: {
+    alignSelf: 'flex-end',
+  },
   studySessionLabel: {
     fontFamily: ROUNDED_FONT,
     color: '#1C1C1E',
@@ -14913,6 +15036,21 @@ const darkStyles = StyleSheet.create({
   },
   studySessionLabel: {
     color: '#FFFFFF',
+  },
+  studyAutoRevealToggle: {
+    backgroundColor: 'rgba(118, 118, 128, 0.24)',
+  },
+  studyAutoRevealToggleOn: {
+    backgroundColor: 'rgba(10, 132, 255, 0.2)',
+  },
+  studyAutoRevealText: {
+    color: '#EBEBF5',
+  },
+  studyAutoRevealTextOn: {
+    color: '#0A84FF',
+  },
+  studyAutoRevealTrack: {
+    backgroundColor: '#48484A',
   },
   studyGradeReview: {
     backgroundColor: '#3A1714',

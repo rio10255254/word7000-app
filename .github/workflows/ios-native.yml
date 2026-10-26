@@ -128,12 +128,12 @@ jobs:
                   continue
               for item in items:
                   name = item["name"]
-                  if not name.startswith("iPhone"):
+                  # The wide iPhone Duo turns the tab bar into a side rail,
+                  # which the UI checks are not written for; never test on it.
+                  if not name.startswith("iPhone") or "Duo" in name:
                       continue
                   preferred = "SE" in name if requested_major == 18 else "Pro" in name and "Max" not in name
-                  # The preferred model wins over a newer point release: runner
-                  # images can add new form factors (e.g. iPhone Duo on 27.1)
-                  # whose layouts the walkthrough was never written for.
+                  # The usual phone shape beats a newer point release.
                   score = (preferred, version(runtime), name)
                   if best is None or score > best[0]:
                       best = (score, item["udid"], name, runtime)

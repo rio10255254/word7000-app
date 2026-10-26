@@ -103,7 +103,7 @@ final class ExperienceTests: XCTestCase {
     func testExamUsesConciseOptionsAndCanBeSubmittedOnSmallScreens() {
         let app = launch()
         let exam = app.buttons["today-exam"]
-        for _ in 0..<4 where !exam.isHittable { app.swipeUp() }
+        exam.scrollIntoView(in: app, swipes: 4)
         exam.tap()
         let first = app.buttons["exam-option-0"]
         XCTAssertTrue(first.waitForExistence(timeout: 10))
@@ -120,7 +120,7 @@ final class ExperienceTests: XCTestCase {
     func testSpellingChecksEachAnswerAndReachesResults() {
         let app = launch()
         let spelling = app.buttons["today-spelling"]
-        for _ in 0..<4 where !spelling.isHittable { app.swipeUp() }
+        spelling.scrollIntoView(in: app, swipes: 4)
         spelling.tap()
         let input = app.textFields["spelling-input"]
         XCTAssertTrue(input.waitForExistence(timeout: 10))
@@ -247,10 +247,11 @@ final class ExperienceTests: XCTestCase {
         app.buttons["speech-preview-en-US"].tap()
         app.buttons["speech-preview-zh-TW"].tap()
         let autoSpeak = app.switches["speech-auto-speak"]
-        for _ in 0..<3 where !autoSpeak.isHittable { app.swipeUp() }
+        autoSpeak.scrollIntoView(in: app, swipes: 3)
         XCTAssertEqual(autoSpeak.value as? String, "0")
         autoSpeak.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
-        XCTAssertEqual(autoSpeak.value as? String, "1")
+        let switchedOn = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == '1'"), object: autoSpeak)
+        XCTAssertEqual(XCTWaiter.wait(for: [switchedOn], timeout: 3), .completed, app.debugDescription)
         XCUIDevice.shared.press(.home)
         sleep(1)
         app.terminate()
@@ -261,7 +262,7 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.segmentedControls["speech-speed"].buttons.element(boundBy: 0).isSelected)
         XCTAssertEqual(app.buttons["speech-voice-en-US"].value as? String, selectedName)
         let savedAutoSpeak = app.switches["speech-auto-speak"]
-        for _ in 0..<3 where !savedAutoSpeak.isHittable { app.swipeUp() }
+        savedAutoSpeak.scrollIntoView(in: app, swipes: 3)
         XCTAssertEqual(savedAutoSpeak.value as? String, "1")
     }
 
@@ -292,11 +293,11 @@ final class ExperienceTests: XCTestCase {
     private func openSpeechSettings(_ app: XCUIApplication) {
         app.tabBars.buttons.element(boundBy: 2).tap()
         let settings = app.buttons["me-settings"]
-        for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
+        settings.scrollIntoView(in: app, swipes: 5)
         XCTAssertTrue(settings.waitForExistence(timeout: 5))
         settings.tap()
         let speech = app.buttons["settings-speech"]
-        for _ in 0..<5 where !speech.isHittable { app.swipeUp() }
+        speech.scrollIntoView(in: app, swipes: 5)
         XCTAssertTrue(speech.waitForExistence(timeout: 5))
         speech.tap()
         XCTAssertTrue(app.segmentedControls["speech-speed"].waitForExistence(timeout: 10))
@@ -310,5 +311,22 @@ final class ExperienceTests: XCTestCase {
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try? app.screenshot().pngRepresentation.write(to: directory.appendingPathComponent(name + ".png"))
         try? app.debugDescription.write(to: directory.appendingPathComponent(name + "-hierarchy.txt"), atomically: true, encoding: .utf8)
+    }
+}
+
+extension XCUIElement {
+    /// Swipes up until the element can be tapped, then waits for the scroll
+    /// to come to rest: a tap while the list is still gliding only stops it,
+    /// so the next tap would silently miss.
+    func scrollIntoView(in app: XCUIApplication, swipes: Int) {
+        for _ in 0..<swipes where !isHittable { app.swipeUp() }
+        guard exists else { return }
+        var last = frame
+        for _ in 0..<10 {
+            usleep(150_000)
+            let now = frame
+            if now == last { return }
+            last = now
+        }
     }
 }

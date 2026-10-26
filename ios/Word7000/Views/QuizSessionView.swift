@@ -60,7 +60,10 @@ struct QuizSessionView: View {
                 }
             }
         }
-        .onDisappear { Speaker.shared.stop() }
+        .onDisappear {
+            Speaker.shared.stop()
+            model.cancelQuizOnTodaysWords()
+        }
         .sensoryFeedback(trigger: chosen) { _, new in
             guard let new, model.settings.hapticsEnabled ?? true else { return nil }
             return new.correct ? .success : .error

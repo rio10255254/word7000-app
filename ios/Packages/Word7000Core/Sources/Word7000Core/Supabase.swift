@@ -265,22 +265,50 @@ public struct SupabaseClient: Sendable {
         public var found: Bool
         public var progress: ProgressState?
         public var customSets: CustomSetState?
+        /// The row's `updated_at` as the server reports it. Every save changes
+        /// it, so an unchanged value means no other device has saved since.
+        public var version: String?
+
+        public init(found: Bool, progress: ProgressState? = nil, customSets: CustomSetState? = nil, version: String? = nil) {
+            self.found = found
+            self.progress = progress
+            self.customSets = customSets
+            self.version = version
+        }
     }
 
     public func loadProfile(session: AuthSession) async throws -> Profile {
-        let data = try await request("GET", "rest/v1/profiles", query: ["id": "eq.\(session.user.id)", "select": "progress,custom_sets"], session: session)
+        let data = try await request("GET", "rest/v1/profiles", query: ["id": "eq.\(session.user.id)", "select": "progress,custom_sets,updated_at"], session: session)
         let rows = (try? JSONDecoder().decode([[String: JSONValue]].self, from: data)) ?? []
         guard let row = rows.first else { return Profile(found: false) }
-        return Profile(found: true, progress: Self.decode(ProgressState.self, row["progress"]), customSets: Self.decode(CustomSetState.self, row["custom_sets"]))
+        return Profile(found: true, progress: Self.decode(ProgressState.self, row["progress"]),
+                       customSets: Self.decode(CustomSetState.self, row["custom_sets"]), version: Self.version(row))
     }
 
-    /// Overwrites the learner's documents; either may be left out.
-    public func saveProfile(progress: ProgressState?, customSets: CustomSetState?, session: AuthSession, now: Date = Date()) async throws {
+    /// Just the profile's `version`, without downloading the documents; nil
+    /// when there is no profile yet.
+    public func profileVersion(session: AuthSession) async throws -> String? {
+        let data = try await request("GET", "rest/v1/profiles", query: ["id": "eq.\(session.user.id)", "select": "updated_at"], session: session)
+        let rows = try decode([[String: JSONValue]].self, data)
+        return rows.first.flatMap(Self.version)
+    }
+
+    /// Overwrites the learner's documents; either may be left out. Returns the
+    /// profile's new `version`, or nil if the server did not report it.
+    @discardableResult
+    public func saveProfile(progress: ProgressState?, customSets: CustomSetState?, session: AuthSession, now: Date = Date()) async throws -> String? {
         var row: [String: JSONValue] = ["id": .string(session.user.id), "updated_at": .string(DayMath.timestamp(now))]
         if let progress { row["progress"] = try Self.json(progress) }
         if let customSets { row["custom_sets"] = try Self.json(customSets) }
-        _ = try await request("POST", "rest/v1/profiles", query: ["on_conflict": "id"], body: .array([.object(row)]), session: session,
-                              headers: ["Prefer": "resolution=merge-duplicates,return=minimal"])
+        let data = try await request("POST", "rest/v1/profiles", query: ["on_conflict": "id", "select": "updated_at"], body: .array([.object(row)]),
+                                     session: session, headers: ["Prefer": "resolution=merge-duplicates,return=representation"])
+        let rows = (try? JSONDecoder().decode([[String: JSONValue]].self, from: data)) ?? []
+        return rows.first.flatMap(Self.version)
+    }
+
+    private static func version(_ row: [String: JSONValue]) -> String? {
+        if case let .string(value)? = row["updated_at"] { return value }
+        return nil
     }
 
     public func recordDailyActivity(date: String, session: AuthSession, now: Date = Date()) async throws {

@@ -1246,8 +1246,8 @@ describe('free web launch configuration', () => {
     expect(appSource).toContain('minimumFontScale={0.72}');
     expect(appSource).toContain('styles.studyWordIdentity');
     // Recall before reveal: the answer face only renders once revealed, the
-    // incoming card always shows its front, and every card ends in a grade.
-    expect(studySource).toContain('<StudyCardBody revealed={false} studyMode={studyMode} word={deckWord} />');
+    // incoming card shows its front (unless auto-reveal is on), and every card ends in a grade.
+    expect(studySource).toContain('<StudyCardBody revealed={autoReveal} studyMode={studyMode} word={deckWord} />');
     expect(studySource).toContain('testID="study-show-answer"');
     expect(studySource).toContain('testID="study-grade-review"');
     expect(studySource).toContain('testID="study-grade-known"');

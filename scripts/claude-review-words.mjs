@@ -12,6 +12,11 @@
 //   node scripts/claude-review-words.mjs apply-speaking <speaking-corrections.json>
 //   node scripts/claude-review-words.mjs apply-words <out-dir>
 //   node scripts/claude-review-words.mjs prune <out-dir>
+//   node scripts/claude-review-words.mjs ingest <reviews.json> --out <out-dir> [--content words|speaking] [--model <label>]
+//
+// `ingest` turns reviews written outside the Batches API (for example in a
+// Claude Code session) into the same correction files, report and checks as
+// `collect`. <reviews.json> is an array in the shape the batch replies use.
 //
 // `apply-words` runs both apply scripts on a collected review, then `sync` and
 // export-native-words.mjs. `prune` reads the reports the three content audits
@@ -600,6 +605,27 @@ function writeReview(outDir, review) {
   fs.writeFileSync(path.join(outDir, 'REPORT.md'), report(review));
 }
 
+function ingest(args) {
+  const input = args[0];
+  if (!input || input.startsWith('--')) throw new Error('Usage: ingest <reviews.json> --out <out-dir>');
+  const content = option(args, 'content', 'words');
+  const outDir = path.resolve(projectRoot, option(args, 'out', ''));
+  const reviews = readJson(path.resolve(projectRoot, input));
+  if (!Array.isArray(reviews)) throw new Error('Reviews must be an array.');
+  const review = { batchId: path.basename(outDir), content, model: option(args, 'model', 'claude-code'), effort: 'n/a', usage: { input: 0, output: 0, cost: 0 }, meanings: [], examples: [], speaking: [], rejected: [], failed: [] };
+  if (content === 'speaking') {
+    Object.assign(review, speakingCorrectionsFrom(readSpeaking(), reviews, readJson(nativeWordsPath)));
+  } else {
+    const found = correctionsFrom(readWords(), reviews);
+    review.meanings = found.meanings;
+    review.examples = found.examples;
+    review.rejected = found.rejected;
+  }
+  fs.mkdirSync(outDir, { recursive: true });
+  writeReview(outDir, review);
+  console.log(`${review.meanings.length} meaning, ${review.examples.length} example and ${review.speaking.length} speaking corrections, ${review.rejected.length} rejected. Written to ${path.relative(projectRoot, outDir)}.`);
+}
+
 function applyWords(args) {
   const outDir = path.resolve(projectRoot, args[0] ?? '');
   const run = (script, file) => {
@@ -645,9 +671,9 @@ function prune(args) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const [command, ...args] = process.argv.slice(2);
-  const commands = { submit, wait, collect, sync, 'apply-speaking': applySpeaking, 'apply-words': applyWords, prune };
+  const commands = { submit, wait, collect, sync, 'apply-speaking': applySpeaking, 'apply-words': applyWords, prune, ingest };
   if (!commands[command]) {
-    console.error('Usage: node scripts/claude-review-words.mjs submit|wait|collect|sync|apply-words|prune|apply-speaking ...');
+    console.error('Usage: node scripts/claude-review-words.mjs submit|wait|collect|sync|apply-words|prune|ingest|apply-speaking ...');
     process.exit(1);
   }
   await commands[command](args);

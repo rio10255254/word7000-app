@@ -54,3 +54,4 @@ ios/Packages/*/.swiftpm/
 # generated Android folder
 /android
 exports/ai-eval/
+exports/chinese-course/

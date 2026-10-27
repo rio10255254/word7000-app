@@ -642,5 +642,56 @@
    "answerPinyin": "duì, wǒ cháng cháng dīng zhe shǒu jī kàn xīn wén."
   },
   "reason": "pinyin: aspect particle 著 zhe"
+ },
+ {
+  "hanzi": "默契",
+  "set": {
+   "questionPinyin": "nǐ hé shéi zuì yǒu mò qì?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "陰性",
+  "set": {
+   "question": "快篩結果是陰性，代表什麼？",
+   "questionPinyin": "kuài shāi jié guǒ shì yīn xìng, dài biǎo shén me?",
+   "questionEnglish": "What does a negative rapid test result mean?",
+   "answer": "陰性代表沒有被感染。",
+   "answerPinyin": "yīn xìng dài biǎo méi yǒu bèi gǎn rǎn.",
+   "answerEnglish": "Negative means you're not infected."
+  },
+  "reason": "sensitive: question asked about the learner's own medical test; made general"
+ },
+ {
+  "hanzi": "最初",
+  "set": {
+   "examplePinyin": "wǒ zuì chū lái tái wān zhǐ xiǎng zhù yì nián."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "平凡",
+  "set": {
+   "examplePinyin": "wǒ zhǐ xiǎng guò píng fán de shēng huó."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "負擔得起",
+  "set": {
+   "pinyin": "fù dān de qǐ",
+   "examplePinyin": "tái běi de fáng zū wǒ hái fù dān de qǐ.",
+   "questionPinyin": "nǐ fù dān de qǐ tái běi de fáng zū ma?",
+   "answerPinyin": "hái kě yǐ, wǒ fù dān de qǐ xiǎo tào fáng."
+  },
+  "reason": "pinyin: potential 得 de"
+ },
+ {
+  "hanzi": "分配",
+  "set": {
+   "examplePinyin": "lǎo bǎn bǎ gōng zuò fēn pèi gěi dà jiā.",
+   "answerPinyin": "wǒ bǎ yí bàn de xīn shuǐ fēn pèi gěi fáng zū."
+  },
+  "reason": "pinyin: 給 gěi, 分 fēn"
  }
 ]

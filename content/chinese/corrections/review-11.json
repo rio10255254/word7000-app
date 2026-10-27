@@ -1,0 +1,210 @@
+[
+ {
+  "hanzi": "免除",
+  "set": {
+   "answerPinyin": "wǒ xī wàng kuà háng zhuǎn zhàng de shǒu xù fèi kě yǐ miǎn chú."
+  },
+  "reason": "跨行 (inter-bank) is kuà háng"
+ },
+ {
+  "hanzi": "直截了當",
+  "set": {
+   "examplePinyin": "tā zhí jié liǎo dàng de jù jué le wǒ."
+  },
+  "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "預示",
+  "set": {
+   "examplePinyin": "tiān shàng de wū yún yù shì zhe kuài yào xià yǔ le."
+  },
+  "reason": "著 particle is zhe"
+ },
+ {
+  "hanzi": "魯莽",
+  "set": {
+   "answerPinyin": "wǒ céng jīng hěn lǔ mǎng de cí zhí qù lǚ xíng."
+  },
+  "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "陷入泥沼",
+  "set": {
+   "answerPinyin": "yǒu, àn zi yì zhí kǎ zhù, jiù xiàng xiàn rù ní zhǎo."
+  },
+  "reason": "案子 suffix is zi"
+ },
+ {
+  "hanzi": "特使",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng tè shǐ xū yào shén me néng lì?"
+  },
+  "reason": "覺得 is jué de; 當 (serve as) is dāng"
+ },
+ {
+  "hanzi": "鋅",
+  "set": {
+   "answerPinyin": "wǒ zhī dào é zǎi yǒu hěn duō xīn."
+  },
+  "reason": "蚵仔 is é zǎi in Taiwan"
+ },
+ {
+  "hanzi": "反駁",
+  "set": {
+   "answerPinyin": "yǒu shí hòu huì, kě shì wǒ huì hěn yǒu lǐ mào de fǎn bó."
+  },
+  "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "本能",
+  "set": {
+   "answerPinyin": "wǒ jué de dù zi è xiǎng chī dōng xī shì běn néng."
+  },
+  "reason": "肚子 suffix is zi"
+ },
+ {
+  "hanzi": "敞篷車",
+  "set": {
+   "answerPinyin": "xiǎng, wǒ xiǎng kāi chǎng péng chē yán zhe hǎi biān dōu fēng."
+  },
+  "reason": "沿著 is yán zhe"
+ },
+ {
+  "hanzi": "擴散",
+  "set": {
+   "questionPinyin": "nǐ jué de jiǎ xīn wén wèi shén me kuò sàn de zhè me kuài?"
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "鳥舍",
+  "set": {
+   "answerPinyin": "kàn guò, mù zhà dòng wù yuán de niǎo shè hěn dà."
+  },
+  "reason": "木柵 is mù zhà"
+ },
+ {
+  "hanzi": "豁達",
+  "set": {
+   "pinyin": "huò dá",
+   "examplePinyin": "wǒ nǎi nai gè xìng hěn huò dá, shén me shì dōu kàn de kāi.",
+   "questionPinyin": "nǐ jué de zì jǐ shì gè huò dá de rén ma?",
+   "answerPinyin": "wǒ jué de wǒ mǎn huò dá de, hěn shǎo wèi xiǎo shì shēng qì."
+  },
+  "reason": "豁達 is huò dá; 看得開 is kàn de kāi"
+ },
+ {
+  "hanzi": "戰時",
+  "set": {
+   "questionPinyin": "zhàn shí de rén men guò zhe zěn yàng de shēng huó?"
+  },
+  "reason": "過著 is guò zhe"
+ },
+ {
+  "hanzi": "罷工者",
+  "set": {
+   "examplePinyin": "bà gōng zhě zài gōng sī mén kǒu ná zhe pái zi."
+  },
+  "reason": "拿著 is ná zhe"
+ },
+ {
+  "hanzi": "種植者",
+  "set": {
+   "pinyin": "zhòng zhí zhě",
+   "examplePinyin": "zhè xiē kā fēi dòu shì píng dōng de zhòng zhí zhě zhòng de.",
+   "questionPinyin": "nǐ xiǎng guò dāng kā fēi zhòng zhí zhě ma?",
+   "answerPinyin": "xiǎng guò, dāng kā fēi zhòng zhí zhě yīng gāi hěn yǒu qù."
+  },
+  "reason": "種 (plant) is zhòng"
+ },
+ {
+  "hanzi": "駕駛艙",
+  "set": {
+   "answerPinyin": "méi yǒu, wǒ hěn xiǎng kàn kàn jià shǐ cāng zhǎng shén me yàng zi."
+  },
+  "reason": "長什麼樣子 is zhǎng"
+ },
+ {
+  "hanzi": "散落",
+  "set": {
+   "examplePinyin": "tái fēng guò hòu, lù shang sàn luò zhe hěn duō shù zhī."
+  },
+  "reason": "著 particle is zhe"
+ },
+ {
+  "hanzi": "巴西里",
+  "set": {
+   "examplePinyin": "yì dà lì miàn shàng sǎ le yì diǎn bā xī lǐ."
+  },
+  "reason": "撒 (sprinkle) is sǎ"
+ },
+ {
+  "hanzi": "重組",
+  "set": {
+   "pinyin": "chóng zǔ",
+   "examplePinyin": "gōng sī míng nián yào chóng zǔ jǐ gè bù mén.",
+   "questionPinyin": "nǐ jué de gōng sī chóng zǔ shì hǎo shì ma?",
+   "answerPinyin": "bù yí dìng, gōng sī chóng zǔ cháng cháng ràng yuán gōng hěn jǐn zhāng."
+  },
+  "reason": "重組 (restructure) is chóng zǔ"
+ },
+ {
+  "hanzi": "輕量",
+  "set": {
+   "pinyin": "qīng liàng",
+   "examplePinyin": "zhè tái qīng liàng bǐ diàn dài chū mén hěn fāng biàn.",
+   "questionPinyin": "nǐ chū guó shí xǐ huan dài qīng liàng de xíng li xiāng ma?",
+   "answerPinyin": "xǐ huan, qīng liàng de xíng li xiāng bǐ jiào hǎo ná."
+  },
+  "reason": "量 (weight) is liàng"
+ },
+ {
+  "hanzi": "貧民區",
+  "set": {
+   "questionPinyin": "hěn duō dà chéng shì dōu yǒu pín mín qū ma?",
+   "answerPinyin": "duì, hěn duō dà chéng shì dōu yǒu pín mín qū."
+  },
+  "reason": "大城市 is dà"
+ },
+ {
+  "hanzi": "滿載",
+  "set": {
+   "examplePinyin": "zhè tái huò chē mǎn zài zhe xī guā."
+  },
+  "reason": "著 particle is zhe"
+ },
+ {
+  "hanzi": "重賽",
+  "set": {
+   "pinyin": "chóng sài",
+   "examplePinyin": "yīn wèi xià dà yǔ, bǐ sài yào chóng sài.",
+   "questionPinyin": "bǐ sài shén me shí hòu xū yào chóng sài?",
+   "answerPinyin": "tiān qì tài chà shí, bǐ sài kě néng yào chóng sài."
+  },
+  "reason": "重賽 (replay) is chóng sài"
+ },
+ {
+  "hanzi": "鍍金",
+  "set": {
+   "examplePinyin": "zhè ge bēi zi shì dù jīn de, bú shì zhēn de jīn zi."
+  },
+  "reason": "金子 suffix is zi"
+ },
+ {
+  "hanzi": "蛆",
+  "set": {
+   "examplePinyin": "lè sè fàng tài jiǔ, lǐ miàn zhǎng le qū."
+  },
+  "reason": "長 (grow) is zhǎng"
+ },
+ {
+  "hanzi": "雷鬼樂",
+  "set": {
+   "pinyin": "léi guǐ yuè",
+   "examplePinyin": "zhè jiā jiǔ bā wǎn shàng huì fàng léi guǐ yuè.",
+   "questionPinyin": "nǐ xǐ huan tīng léi guǐ yuè ma?",
+   "answerPinyin": "xǐ huan, léi guǐ yuè tīng qǐ lái hěn qīng sōng."
+  },
+  "reason": "樂 (music) is yuè"
+ }
+]

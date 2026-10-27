@@ -64,6 +64,7 @@ const TAIWAN_CHARACTERS = new Map([
   ['檔', 'dàng'], ['綜', 'zòng'], ['播', 'bò'], ['頻', 'pín'], ['髮', 'fǎ'],
   // Read one way in Traditional text (隻 is the measure word, 只 only).
   ['誰', 'shéi'], ['姊', 'jiě'], ['只', 'zhǐ'], ['喔', 'ō'],
+  ['突', 'tú'], ['究', 'jiù'], ['叔', 'shú'], ['署', 'shù'], ['傍', 'bāng'], ['血', 'xiě'],
 ]);
 // 得 after a verb, before how it was done (跑得很快, 說得好), is de.
 const DE_FOLLOWERS = new Set([...'很好太非常不真快慢多清滿更越']);

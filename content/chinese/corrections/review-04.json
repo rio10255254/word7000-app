@@ -244,6 +244,215 @@
   "reason": "誰 is shéi"
  },
  {
+  "hanzi": "皮帶",
+  "set": {
+   "questionPinyin": "nǐ shàng bān huì jì pí dài ma?",
+   "answerPinyin": "huì, wǒ shàng bān dōu huì jì pí dài."
+  },
+  "reason": "繫 (fasten) is jì"
+ },
+ {
+  "hanzi": "鐘",
+  "set": {
+   "questionPinyin": "nǐ jiā fù jìn tīng de dào zhōng shēng ma?",
+   "answerPinyin": "tīng de dào, fù jìn jiào táng de zhōng shēng hěn hǎo tīng."
+  },
+  "reason": "聽得到 is tīng de dào"
+ },
+ {
+  "hanzi": "市長",
+  "set": {
+   "examplePinyin": "shì zhǎng xuān bù míng tiān fàng tái fēng jià.",
+   "questionPinyin": "nǐ zhī dào nǐ men chéng shì de shì zhǎng shì shéi ma?",
+   "answerPinyin": "wǒ bù zhī dào wǒ men de shì zhǎng shì shéi."
+  },
+  "reason": "假 (day off) is jià; 誰 is shéi"
+ },
+ {
+  "hanzi": "旗子",
+  "set": {
+   "examplePinyin": "dǎo yóu ná zhe yí miàn huáng sè de qí zǐ."
+  },
+  "reason": "拿著 is ná zhe"
+ },
+ {
+  "hanzi": "圖表",
+  "set": {
+   "examplePinyin": "zhè zhāng tú biǎo kàn de chū jīn nián mài de bǐ jiào hǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "懷孕",
+  "set": {
+   "examplePinyin": "wǒ jiě jie huái yùn le, míng nián sān yuè shēng."
+  },
+  "reason": "姊姊 is jiě jie"
+ },
+ {
+  "hanzi": "安慰",
+  "set": {
+   "questionPinyin": "nǐ nán guò de shí hòu, shéi huì ān wèi nǐ?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "打賭",
+  "set": {
+   "answerPinyin": "yǒu, wǒ gēn péng yǒu dǎ dǔ shéi xiān xué huì qí jī chē."
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "投",
+  "set": {
+   "examplePinyin": "nà ge tóu shǒu tóu qiú tóu de hěn kuài.",
+   "answerPinyin": "huì yì diǎn, kě shì wǒ tóu de bú tài zhǔn."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "穩",
+  "set": {
+   "questionPinyin": "nǐ qí jiǎo tà chē qí de wěn ma?",
+   "answerPinyin": "qí de hěn wěn, wǒ měi tiān qí chē shàng bān."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "表現",
+  "set": {
+   "examplePinyin": "tā jīn tiān kāi huì de shí hòu biǎo xiàn de hěn hǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "病毒",
+  "set": {
+   "questionPinyin": "nǐ de diàn nǎo zhòng guò bìng dú ma?",
+   "answerPinyin": "zhòng guò, nà ge bìng dú ràng wǒ de dǎng àn dōu bú jiàn le."
+  },
+  "reason": "中毒 sense of 中 is zhòng; 檔 is dǎng in Taiwan"
+ },
+ {
+  "hanzi": "串",
+  "set": {
+   "questionPinyin": "nǐ shēn shàng dài zhe yí chuàn yào shi ma?",
+   "answerPinyin": "duì, wǒ dài zhe yí chuàn jiā lǐ hé gōng sī de yào shi."
+  },
+  "reason": "帶著 is dài zhe"
+ },
+ {
+  "hanzi": "意外",
+  "set": {
+   "examplePinyin": "tā tú rán lái kàn wǒ, wǒ hěn yì wài."
+  },
+  "reason": "突 is tú in Taiwan"
+ },
+ {
+  "hanzi": "商人",
+  "set": {
+   "answerPinyin": "bù xiǎng, wǒ jué de dāng shāng rén yā lì tài dà."
+  },
+  "reason": "覺得 is jué de; 當 (be) is dāng"
+ },
+ {
+  "hanzi": "稱讚",
+  "set": {
+   "examplePinyin": "lǎo bǎn chēng zàn wǒ zhè cì zuò de hěn hǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "不公平",
+  "set": {
+   "examplePinyin": "tā zuò de bǐ jiào shǎo, xīn shuǐ què bǐ jiào duō, zhēn bù gōng píng!"
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "緊急",
+  "set": {
+   "questionPinyin": "nǐ yù dào jǐn jí de shì huì dǎ gěi shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "事業",
+  "set": {
+   "examplePinyin": "tā de shì yè zuò de hěn chéng gōng."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "完整",
+  "set": {
+   "answerPinyin": "hái méi, wǒ zhǐ dú guò wán zhěng de duǎn piān gù shì."
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "青少年",
+  "set": {
+   "examplePinyin": "hěn duō qīng shào nián xǐ huan qù xī mén dīng."
+  },
+  "reason": "西門町 is xī mén dīng"
+ },
+ {
+  "hanzi": "對話",
+  "set": {
+   "examplePinyin": "wǒ tīng de dǒng tā men de duì huà."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "標題",
+  "set": {
+   "questionPinyin": "nǐ kàn xīn wén shí zhǐ kàn biāo tí ma?",
+   "answerPinyin": "yǒu shí hòu, wǒ tài máng jiù zhǐ kàn biāo tí."
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "指示",
+  "set": {
+   "examplePinyin": "qǐng zhào zhe yíng mù shàng de zhǐ shì cāo zuò.",
+   "answerPinyin": "huì, wǒ dōu zhào zhe zhǐ shì yí bù yi bù zuò."
+  },
+  "reason": "照著 is zhào zhe"
+ },
+ {
+  "hanzi": "自信",
+  "set": {
+   "examplePinyin": "tā shuō zhōng wén shuō de hěn yǒu zì xìn."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "手術",
+  "set": {
+   "question": "動完手術以後，通常要做什麼？",
+   "questionEnglish": "What do people usually need to do after surgery?",
+   "questionPinyin": "dòng wán shǒu shù yǐ hòu, tōng cháng yào zuò shén me?",
+   "answer": "動完手術以後，通常要好好休息。",
+   "answerEnglish": "After surgery, people usually need plenty of rest.",
+   "answerPinyin": "dòng wán shǒu shù yǐ hòu, tōng cháng yào hǎo hǎo xiū xí."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ },
+ {
+  "hanzi": "症狀",
+  "set": {
+   "question": "感冒常見的症狀有哪些？",
+   "questionEnglish": "What are the common symptoms of a cold?",
+   "questionPinyin": "gǎn mào cháng jiàn de zhèng zhuàng yǒu nǎ xiē?",
+   "answer": "感冒常見的症狀是喉嚨痛和咳嗽。",
+   "answerEnglish": "The common symptoms of a cold are a sore throat and a cough.",
+   "answerPinyin": "gǎn mào cháng jiàn de zhèng zhuàng shì hóu lóng tòng hé ké sou."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ },
+ {
   "hanzi": "疾病",
   "set": {
    "question": "怎麼做可以預防疾病？",

@@ -579,5 +579,68 @@
    "answerPinyin": "bú cuò, wǒ jué de zhè háng de qián jǐng hěn hǎo."
   },
   "reason": "pinyin: 這行 (line of work) háng"
+ },
+ {
+  "hanzi": "炸彈",
+  "set": {
+   "question": "動作片裡常有什麼場面？",
+   "questionPinyin": "dòng zuò piàn lǐ cháng yǒu shén me chǎng miàn?",
+   "questionEnglish": "What kind of scenes do action films often have?",
+   "answer": "動作片裡常有炸彈爆炸的場面。",
+   "answerPinyin": "dòng zuò piàn lǐ cháng yǒu zhà dàn bào zhà de chǎng miàn.",
+   "answerEnglish": "Action films often have scenes of bombs exploding."
+  },
+  "reason": "sensitive: question asked the learner's own taste in bomb scenes; made general"
+ },
+ {
+  "hanzi": "佔據",
+  "set": {
+   "answerPinyin": "gōng zuò zhàn jù le wǒ dà bù fèn de shí jiān."
+  },
+  "reason": "pinyin: 部分 bù fèn (教育部)"
+ },
+ {
+  "hanzi": "確切",
+  "set": {
+   "answerPinyin": "bù zhī dào què qiè de shí jiān, zhǐ zhī dào shì zǎo shàng."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "行政",
+  "set": {
+   "questionPinyin": "nǐ de gōng zuò yǒu hěn duō xíng zhèng de shì ma?"
+  },
+  "reason": "pinyin: 行政 xíng zhèng"
+ },
+ {
+  "hanzi": "分析師",
+  "set": {
+   "examplePinyin": "tā zài yín háng dāng fēn xī shī."
+  },
+  "reason": "pinyin: 當 dāng (missing tone)"
+ },
+ {
+  "hanzi": "製作者",
+  "set": {
+   "questionPinyin": "nǐ zhī dào nǐ zuì xǐ huan de yóu xì de zhì zuò zhě shì shéi ma?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "管道",
+  "set": {
+   "answerPinyin": "wǒ kàn xīn wén de guǎn dào zhǔ yào shì wǎng lù."
+  },
+  "reason": "pinyin: 是 shì"
+ },
+ {
+  "hanzi": "盯",
+  "set": {
+   "examplePinyin": "tā yì zhí dīng zhe shǒu jī kàn.",
+   "questionPinyin": "nǐ zài jié yùn shàng cháng dīng zhe shǒu jī ma?",
+   "answerPinyin": "duì, wǒ cháng cháng dīng zhe shǒu jī kàn xīn wén."
+  },
+  "reason": "pinyin: aspect particle 著 zhe"
  }
 ]

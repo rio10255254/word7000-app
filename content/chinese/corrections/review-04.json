@@ -146,6 +146,104 @@
   "reason": "了 is le"
  },
  {
+  "hanzi": "嘴唇",
+  "set": {
+   "questionPinyin": "dōng tiān nǐ de zuǐ chún huì gān ma?"
+  },
+  "reason": "乾嗎 here is gān ma (dry + question particle)"
+ },
+ {
+  "hanzi": "消失",
+  "set": {
+   "examplePinyin": "wǒ de yǔ sǎn tú rán xiāo shī le."
+  },
+  "reason": "突 is tú in Taiwan"
+ },
+ {
+  "hanzi": "實用",
+  "set": {
+   "answerPinyin": "hěn shí yòng, zài tái wān měi tiān dōu yòng de dào."
+  },
+  "reason": "得 in 用得到 is de"
+ },
+ {
+  "hanzi": "敵人",
+  "set": {
+   "questionPinyin": "nǐ jué de zì jǐ zuì dà de dí rén shì shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "護理師",
+  "set": {
+   "examplePinyin": "wǒ jiě jie zài yī yuàn dāng hù lǐ shī."
+  },
+  "reason": "姊姊 is jiě jie"
+ },
+ {
+  "hanzi": "噪音",
+  "set": {
+   "examplePinyin": "lóu shàng de zào yīn ràng wǒ shuì bù zháo."
+  },
+  "reason": "睡不著 is shuì bù zháo"
+ },
+ {
+  "hanzi": "輪班",
+  "set": {
+   "examplePinyin": "wǒ jiě jie zài yī yuàn gōng zuò, yào lún bān."
+  },
+  "reason": "姊姊 is jiě jie"
+ },
+ {
+  "hanzi": "附上",
+  "set": {
+   "examplePinyin": "wǒ zài yóu jiàn lǐ fù shàng le dǎng àn."
+  },
+  "reason": "檔 is dǎng in Taiwan (教育部)"
+ },
+ {
+  "hanzi": "協助",
+  "set": {
+   "questionPinyin": "gōng zuò shàng xū yào xié zhù shí, nǐ huì zhǎo shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "能幹",
+  "set": {
+   "questionPinyin": "nǐ shēn biān shéi zuì néng gàn?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "英雄",
+  "set": {
+   "questionPinyin": "nǐ xīn zhōng de yīng xióng shì shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "詳細",
+  "set": {
+   "examplePinyin": "kě yǐ shuō de gèng xiáng xì yì diǎn ma?"
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "陪伴",
+  "set": {
+   "questionPinyin": "nǐ jué de shéi zuì xū yào jiā rén péi bàn?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "說服",
+  "set": {
+   "questionPinyin": "nǐ zuì jìn shuō fú shéi zuò le shén me shì?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
   "hanzi": "疾病",
   "set": {
    "question": "怎麼做可以預防疾病？",

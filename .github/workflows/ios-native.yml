@@ -375,6 +375,11 @@ jobs:
           cp "$HOME"/word7000-device-screenshots/* "$RUNNER_TEMP/devices/" 2>/dev/null || true
           cp "$RUNNER_TEMP/devices.txt" "$RUNNER_TEMP/xcodebuild.log" "$RUNNER_TEMP/devices/" 2>/dev/null || true
           grep -E "error:" "$RUNNER_TEMP/xcodebuild.log" > "$RUNNER_TEMP/devices/errors.txt" 2>/dev/null || true
+          # With several destinations the log leaves out why a check failed; the result bundle has it.
+          if [ -d "$RUNNER_TEMP/Devices.xcresult" ]; then
+            xcrun xcresulttool get test-results summary --path "$RUNNER_TEMP/Devices.xcresult" > "$RUNNER_TEMP/devices/failures.json" 2>&1 || true
+            xcrun xcresulttool get test-results tests --path "$RUNNER_TEMP/Devices.xcresult" > "$RUNNER_TEMP/devices/tests.json" 2>&1 || true
+          fi
           ls "$RUNNER_TEMP/devices" | wc -l
 
       - uses: actions/upload-artifact@v4

@@ -17,14 +17,8 @@ struct TodayView: View {
 
         List {
             Section {
-                StudyModeSwitch()
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
-            }
-
-            Section {
-                VStack(spacing: 16) {
-                    ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 16) {
+                VStack(spacing: 12) {
+                    ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
                         VStack(spacing: 0) {
                             Text("\(progress.studiedToday)")
                                 .font(.rounded(.largeTitle, weight: .bold))
@@ -39,8 +33,7 @@ struct TodayView: View {
                         .minimumScaleFactor(0.4)
                         .padding(.horizontal, 20)
                     }
-                    .frame(width: 142, height: 142)
-                    .padding(.top, 8)
+                    .frame(width: 124, height: 124)
 
                     VStack(spacing: 6) {
                         Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
@@ -68,7 +61,6 @@ struct TodayView: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 8, trailing: 4))
             }
@@ -147,8 +139,12 @@ struct TodayView: View {
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
         .navigationTitle(L.tabToday)
+        // The mode switch takes the title's place, so the whole day fits on
+        // one screen; the tab bar already says where this is.
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet() }
         .toolbar {
+            ToolbarItem(placement: .principal) { StudyModeSwitch() }
             ToolbarItem(placement: .topBarLeading) {
                 Button { studySettingsOpen = true } label: {
                     Image(systemName: model.settings.studyFilter.isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
@@ -169,63 +165,37 @@ struct TodayView: View {
 
 /// What is learned, switchable from the first screen. Each side is written in
 /// the language of the person who would pick it, so a learner who reads no
-/// Chinese still finds "Learn Chinese". Switching also switches the interface
-/// language; progress is shared.
+/// Chinese still finds "Learn Chinese". The filled side is the current one.
 struct StudyModeSwitch: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 4) { options }
-            VStack(spacing: 4) { options }
+        HStack(spacing: 2) {
+            option(.english, title: "學英文")
+            option(.chinese, title: "Learn Chinese")
         }
-        .padding(4)
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(L.studyModeTitle)
+        .padding(2)
+        .background(Palette.fill, in: Capsule())
+        .fixedSize()
     }
 
-    @ViewBuilder private var options: some View {
-        option(.english, glyph: "A", title: "學英文", detail: "中文介面")
-        option(.chinese, glyph: "中", title: "Learn Chinese", detail: "English interface")
-    }
-
-    private func option(_ mode: StudyMode, glyph: String, title: String, detail: String) -> some View {
+    private func option(_ mode: StudyMode, title: String) -> some View {
         let selected = model.studyMode == mode
         return Button {
             // The whole interface changes language; fade rather than jump.
             withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) { model.setStudyMode(mode) }
         } label: {
-            HStack(spacing: 10) {
-                Text(glyph)
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(selected ? .white : Palette.secondaryLabel)
-                    .frame(width: 32, height: 32)
-                    .background(selected ? Palette.accent : Palette.fill, in: Circle())
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(title)
-                        .font(.rounded(.subheadline, weight: .bold))
-                        .foregroundStyle(selected ? Palette.accent : .primary)
-                    Text(detail)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer(minLength: 0)
-                if selected {
-                    Image(systemName: "checkmark")
-                        .font(.caption.weight(.bold))
-                        .foregroundStyle(Palette.accent)
-                }
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(selected ? Palette.accent.opacity(0.12) : .clear, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            Text(title)
+                .font(.rounded(.subheadline, weight: .bold))
+                .lineLimit(1)
+                .foregroundStyle(selected ? .white : Palette.secondaryLabel)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(selected ? Palette.accent : .clear, in: Capsule())
+                .contentShape(Capsule())
         }
-        .buttonStyle(SoftPressStyle())
-        .accessibilityLabel("\(title), \(detail)")
+        .buttonStyle(.plain)
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("today-mode-\(mode.rawValue)")
     }

@@ -1,0 +1,117 @@
+# Has Claude write the word list Learn Chinese mode teaches (see
+# scripts/build-chinese-course.mjs) through the Message Batches API, checks
+# every entry, rebuilds the app's course file and commits both to the branch
+# this workflow runs on, for review in a pull request.
+#
+# Repository secret: ANTHROPIC_API_KEY (the same key the AI backend uses).
+# Start it from the Actions tab on a feature branch, or by pushing a change to
+# content/chinese/request.json ({"model", "effort", "limit", "batchId"}) on one.
+# Try a small limit first.
+name: Chinese course
+
+on:
+  push:
+    branches-ignore: ['master', 'native/**']
+    paths: ['content/chinese/request.json']
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'Claude model'
+        type: choice
+        options: ['claude-opus-5-5', 'claude-sonnet-5-5']
+        default: 'claude-opus-5-5'
+      effort:
+        description: 'Reasoning effort'
+        type: choice
+        options: ['low', 'medium', 'high']
+        default: 'medium'
+      limit:
+        description: 'Only the first N Chinese senses (0 = all of them)'
+        type: string
+        default: '0'
+      batch_id:
+        description: 'Collect this earlier batch instead of starting a new one'
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chinese-course-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  course:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - name: Check the branch and the key
+        run: |
+          case "$GITHUB_REF_NAME" in
+            master|native/*) echo "::error::Run this on a feature branch; it commits the course for review in a pull request."; exit 1 ;;
+          esac
+          [ -n "$ANTHROPIC_API_KEY" ] || { echo "::error::Add the ANTHROPIC_API_KEY repository secret first."; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - name: Read the request
+        id: request
+        env:
+          model: ${{ inputs.model }}
+          effort: ${{ inputs.effort }}
+          limit: ${{ inputs.limit }}
+          batch_id: ${{ inputs.batch_id }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            model=$(jq -r '.model // "claude-opus-5-5"' content/chinese/request.json)
+            effort=$(jq -r '.effort // "medium"' content/chinese/request.json)
+            limit=$(jq -r '.limit // 0' content/chinese/request.json)
+            batch_id=$(jq -r '.batchId // ""' content/chinese/request.json)
+            [[ "$model" =~ ^claude-(opus|sonnet)-5-5$ ]] || { echo "::error::unknown model"; exit 1; }
+            [[ "$effort" =~ ^(low|medium|high)$ ]] || { echo "::error::unknown effort"; exit 1; }
+          fi
+          [[ "$batch_id" =~ ^(msgbatch_[A-Za-z0-9]+)?$ ]] || { echo "::error::batch_id does not look like a batch id"; exit 1; }
+          [[ "$limit" =~ ^[0-9]+$ ]] || { echo "::error::limit must be a whole number"; exit 1; }
+          { echo "model=$model"; echo "effort=$effort"; echo "limit=$limit"; echo "batch_id=$batch_id"; } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Start the batch
+        id: submit
+        if: steps.request.outputs.batch_id == ''
+        env:
+          MODEL: ${{ steps.request.outputs.model }}
+          EFFORT: ${{ steps.request.outputs.effort }}
+          LIMIT: ${{ steps.request.outputs.limit }}
+        run: node scripts/build-chinese-course.mjs submit --model "$MODEL" --effort "$EFFORT" --limit "$LIMIT"
+
+      - name: Wait for the batch
+        env:
+          BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
+        run: node scripts/build-chinese-course.mjs wait "$BATCH_ID" --minutes 300
+
+      - name: Collect and check the entries
+        env:
+          BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
+        run: |
+          node scripts/build-chinese-course.mjs collect "$BATCH_ID" | tee -a "$GITHUB_STEP_SUMMARY"
+          node scripts/build-chinese-course.mjs build | tee -a "$GITHUB_STEP_SUMMARY"
+          npx vitest run src/chineseCourse.test.ts
+
+      - name: Commit the course
+        env:
+          BATCH_ID: ${{ steps.request.outputs.batch_id || steps.submit.outputs.batch_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git add content/chinese ios/Packages/Word7000Core/Sources/Word7000Core/Resources/chinese-course.json
+          git commit -m "Add Claude's Chinese course batch $BATCH_ID"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

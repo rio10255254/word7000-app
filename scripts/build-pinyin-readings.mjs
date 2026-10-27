@@ -59,6 +59,12 @@ const TAIWAN_WORDS = new Map([
   ['睡著', ['shuì', 'zháo']],
   ['部分', ['bù', 'fèn']],
   ['盡量', ['jìn', 'liàng']],
+  ['著急', ['zháo', 'jí']],
+  ['著迷', ['zháo', 'mí']],
+  ['著火', ['zháo', 'huǒ']],
+  ['著涼', ['zháo', 'liáng']],
+  ['沉著', ['chén', 'zhuó']],
+  ['執著', ['zhí', 'zhuó']],
 ]);
 const TAIWAN_CHARACTERS = new Map([
   ['期', 'qí'], ['危', 'wéi'], ['微', 'wéi'], ['企', 'qì'], ['質', 'zhí'], ['液', 'yì'],
@@ -70,6 +76,9 @@ const TAIWAN_CHARACTERS = new Map([
   ['擊', 'jí'], ['識', 'shì'], ['菌', 'jùn'], ['跌', 'dié'], ['築', 'zhú'], ['儲', 'chú'], ['蹟', 'jī'],
 ]);
 const SPACE_WORDS = new Set([...'間氣位調白中']);
+// 著 after a verb (看著, 拿著, 等著) is zhe; these neighbours keep zhù, zhuó or zháo.
+const ZHE_NOT_AFTER = new Set([...'顯土名沉執衣睡不原論專巨合']);
+const ZHE_NOT_BEFORE = new Set([...'名作陸手重想迷急火涼稱']);
 // 得 after a verb, before how it was done (跑得很快, 說得好), is de.
 const DE_FOLLOWERS = new Set([...'很好太非常不真快慢多清滿更越']);
 
@@ -105,6 +114,11 @@ export function makeSyllableReader({ pinyin, toSimplified }) {
       if (TAIWAN_CHARACTERS.has(character) && !TAIWAN_WORDS.has(characters.slice(index - 1, index + 1).join(''))
         && !TAIWAN_WORDS.has(characters.slice(index, index + 2).join(''))) {
         readings[index] = TAIWAN_CHARACTERS.get(character);
+      }
+      if (character === '著' && index > 0 && han.test(characters[index - 1]) && !ZHE_NOT_AFTER.has(characters[index - 1])
+        && !ZHE_NOT_BEFORE.has(characters[index + 1]) && !TAIWAN_WORDS.has(characters.slice(index - 2, index + 1).join(''))
+        && !TAIWAN_WORDS.has(characters.slice(index - 1, index + 1).join(''))) {
+        readings[index] = 'zhe';
       }
       if (character === '得' && index > 0 && han.test(characters[index - 1]) && DE_FOLLOWERS.has(characters[index + 1])
         && !TAIWAN_WORDS.has(characters.slice(index - 1, index + 1).join(''))) {

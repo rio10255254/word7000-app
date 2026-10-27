@@ -1,12 +1,57 @@
 import SwiftUI
 import Word7000Core
 
-/// Answers already fetched this launch, so reopening a word or question does
-/// not spend the learner's daily allowance again.
+/// AI answers kept on this iPhone, newest last, so reopening a word or a quiz
+/// question never spends the learner's daily allowance again, even after a relaunch.
+@MainActor
+final class SavedAnswers<Value: Codable> {
+    private struct Item: Codable {
+        let key: String
+        let value: Value
+    }
+
+    private let url: URL?
+    private let limit: Int
+    private var items: [Item]?
+
+    init(file: String, limit: Int) {
+        url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("AIAnswers", isDirectory: true)
+            .appendingPathComponent(file)
+        self.limit = limit
+    }
+
+    subscript(key: String) -> Value? {
+        get { loaded().last { $0.key == key }?.value }
+        set {
+            var all = loaded().filter { $0.key != key }
+            if let newValue { all.append(Item(key: key, value: newValue)) }
+            items = Array(all.suffix(limit))
+            save()
+        }
+    }
+
+    private func loaded() -> [Item] {
+        if let items { return items }
+        let saved = url.flatMap { try? Data(contentsOf: $0) }
+            .flatMap { try? JSONDecoder().decode([Item].self, from: $0) } ?? []
+        items = saved
+        return saved
+    }
+
+    private func save() {
+        guard let url, let items, let data = try? JSONEncoder().encode(items) else { return }
+        try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try? data.write(to: url, options: .atomic)
+    }
+}
+
 @MainActor
 enum CloudAnswerCache {
-    static var explanations: [String: CloudAI.Explanation] = [:]
-    static var quiz: [String: CloudAI.QuizExplanation] = [:]
+    /// Raise when the prompts change enough that saved answers should be asked for again.
+    private static let version = 2
+    static let explanations = SavedAnswers<CloudAI.Explanation>(file: "explanations-v\(version).json", limit: 300)
+    static let quiz = SavedAnswers<CloudAI.QuizExplanation>(file: "quiz-v\(version).json", limit: 300)
 }
 
 /// A tutor-style explanation of one word, on the word page.
@@ -36,6 +81,22 @@ struct AIExplanationSection: View {
                         Label(L.t("AI 解說：用法、搭配與例句", "AI explains: usage, collocations and examples"), systemImage: "sparkles")
                     }
                     .accessibilityIdentifier("ai-explain")
+                    if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                }
+                if explanation != nil {
+                    if loading {
+                        HStack(spacing: 8) {
+                            ProgressView()
+                            Text(L.t("AI 正在換個方式解說…", "AI is explaining it another way…")).font(.footnote).foregroundStyle(.secondary)
+                        }
+                    } else {
+                        // Spends one more request; the current explanation stays until the new one arrives.
+                        Button(action: start) {
+                            Label(L.t("換一個解說", "Explain it differently"), systemImage: "arrow.clockwise")
+                                .font(.footnote)
+                        }
+                        .accessibilityIdentifier("ai-explain-again")
+                    }
                     if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
                 }
                 if explanation != nil || failure == .quota { PlusAIUpsell() }
@@ -89,10 +150,13 @@ struct AIExplanationSection: View {
         guard !loading else { return }
         if CloudAssistant.shared.needsConsent { askCloud = true; return }
         let key = cacheKey
+        // The example already on the page, so the AI writes new ones.
+        let example = model.studyMode == .english ? word.example : word.exampleZh
         let input: [String: JSONValue] = [
             "word": .string(String(word.word.prefix(80))),
             "partOfSpeech": .string(String(word.partOfSpeech.prefix(40))),
             "meaning": .string(String(ChineseDisplay.conciseMeaning(word.meaningZh).prefix(240))),
+            "example": .string(String(example.prefix(240))),
             "mode": .string(model.studyMode.rawValue),
         ]
         loading = true
@@ -102,7 +166,7 @@ struct AIExplanationSection: View {
             do {
                 let value = try await CloudAssistant.shared.run(.explain, input, as: CloudAI.Explanation.self).cleaned()
                 CloudAnswerCache.explanations[key] = value
-                if key == cacheKey { explanation = value }
+                if key == cacheKey { withAnimation(Motion.reveal) { explanation = value } }
             } catch is CancellationError {
             } catch {
                 failure = (error as? CloudAI.Failure) ?? .unavailable
@@ -268,6 +332,18 @@ struct AIInsightsSection: View {
                 }
             }
             .padding(.vertical, 2)
+        }
+        let focusIds = model.wordIds(forPrompts: insights.focusWords.map(\.word))
+        if !focusIds.isEmpty {
+            Button {
+                model.startStudySession(onlyIds: focusIds)
+                PracticeLaunch.shared.requested = .study
+            } label: {
+                ActionRow(icon: "play.circle.fill", tint: Palette.review,
+                          title: L.t("現在練習這 \(focusIds.count) 個字", "Practise these \(focusIds.count) words now"))
+            }
+            .tint(.primary)
+            .accessibilityIdentifier("ai-insights-practice")
         }
         if !insights.plan.isEmpty {
             VStack(alignment: .leading, spacing: 6) {

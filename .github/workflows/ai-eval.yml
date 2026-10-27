@@ -1,0 +1,69 @@
+# Sends a fixed set of real learner cases through the AI service's own task
+# plans (supabase/functions/ai) with the real Anthropic key, and checks each
+# answer: language, Traditional Chinese wording, examples that use the word,
+# corrections that quote the learner, focus words the learner really has.
+# The report lists every answer for a human read as well.
+#
+# It runs on pull requests that change the prompts, and from the Actions tab.
+# It calls the API directly (about 40 short requests for both tiers) and uses
+# no app quota. Answers vary from run to run, so a failed check is a warning
+# to read in the report; the run fails only when Claude gives no answer.
+# Repository secret: ANTHROPIC_API_KEY (the same key the AI backend uses).
+name: AI eval
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/ai/**'
+      - 'scripts/ai-eval.ts'
+      - '.github/workflows/ai-eval.yml'
+  workflow_dispatch:
+    inputs:
+      tiers:
+        description: 'Tiers to test: free (low reasoning), plus (medium on writing tasks)'
+        type: string
+        default: 'free,plus'
+      only:
+        description: 'Only these tasks (coach, scan, explain, quizWhy, fillWord, insights); empty = all'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      TIERS: ${{ inputs.tiers || 'free,plus' }}
+      ONLY: ${{ inputs.only || '' }}
+    steps:
+      - name: Check the key
+        run: '[ -n "$ANTHROPIC_API_KEY" ] || { echo "::error::Add the ANTHROPIC_API_KEY repository secret first."; exit 1; }'
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Ask Claude and check the answers
+        run: |
+          args=(exports/ai-eval --tiers "${TIERS:-free,plus}")
+          [ -z "$ONLY" ] || args+=(--only "$ONLY")
+          node --experimental-transform-types --no-warnings scripts/ai-eval.ts "${args[@]}"
+
+      - name: Show the report
+        if: always()
+        run: '[ -f exports/ai-eval/REPORT.md ] && cat exports/ai-eval/REPORT.md >> "$GITHUB_STEP_SUMMARY" || true'
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-eval-${{ github.run_id }}
+          path: exports/ai-eval

@@ -67,7 +67,7 @@ final class ExperienceTests: XCTestCase {
         input.tap()
         input.typeText("zz")
         app.buttons["spelling-check"].tap()
-        XCTAssertTrue(app.staticTexts["spelling-result"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["spelling-result"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["spelling-answer"].exists)
         snapshot(app, "chinese-mode-pinyin-answer")
         app.buttons["spelling-close"].tap()

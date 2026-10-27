@@ -66,8 +66,12 @@ public final class PreparedVocabulary: @unchecked Sendable {
             )
         }
         self.records = records
+        // Chinese course words go by pinyin, every other word by its English.
+        let sortKey = records.map { record in
+            ChineseCourse.isCourseWordId(record.word.id) ? ChineseDisplay.stripTones(record.word.pronunciation) : record.word.word
+        }
         let alphabetical = records.sorted { left, right in
-            let order = left.word.word.compare(right.word.word, options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "en"))
+            let order = sortKey[left.index].compare(sortKey[right.index], options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "en"))
             return order == .orderedSame ? left.index < right.index : order == .orderedAscending
         }
         self.alphabeticalRecords = alphabetical

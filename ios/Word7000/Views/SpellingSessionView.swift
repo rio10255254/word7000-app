@@ -79,6 +79,10 @@ struct SpellingSessionView: View {
                         Text("\(word.word)\(word.partOfSpeech.isEmpty ? "" : "  ·  \(word.partOfSpeech)")")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Palette.accent)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                            // Clear of the speak button in the corner.
+                            .padding(.horizontal, 44)
                         Text(target.characters)
                             .font(.roundedSize(52, weight: .bold))
                             .minimumScaleFactor(0.5)
@@ -157,7 +161,11 @@ struct SpellingSessionView: View {
           // the field, so the answer is brought into view once checked.
           .onChange(of: result) { _, new in
               guard new != nil else { return }
-              withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("feedback", anchor: .top) }
+              // After the feedback has been laid out.
+              Task { @MainActor in
+                  try? await Task.sleep(for: .milliseconds(80))
+                  withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("feedback", anchor: .top) }
+              }
           }
         }
         .safeAreaInset(edge: .bottom) { actions(word) }
@@ -165,19 +173,24 @@ struct SpellingSessionView: View {
 
     private func pinyinFeedback(_ result: Spelling.Result, word: WordEntry, target: PinyinPractice.Target) -> some View {
         VStack(alignment: .leading, spacing: 12) {
+            // The reading sits on the first line, so it shows even when the
+            // keyboard leaves room for little else on a small iPhone.
             HStack(alignment: .firstTextBaseline) {
-                Label(title(result), systemImage: symbol(result))
+                Image(systemName: symbol(result))
                     .font(.headline)
                     .foregroundStyle(color(result))
+                    .accessibilityLabel(title(result))
                     .accessibilityIdentifier("spelling-result")
+                Text(target.reading)
+                    .font(.rounded(.title2, weight: .bold))
+                    .accessibilityIdentifier("spelling-answer")
                 Spacer()
                 SpeakButton(text: target.characters, language: "zh-TW")
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(target.reading)
-                    .font(.rounded(.title, weight: .bold))
-                    .accessibilityIdentifier("spelling-answer")
-                Text("\(target.characters)  ·  \(word.word)").foregroundStyle(.secondary)
+                Text("\(title(result))  ·  \(target.characters)  ·  \(word.word)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 if result != .correct {
                     Text("You typed: \(input.trimmed)")
                         .font(.subheadline)

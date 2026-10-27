@@ -31,7 +31,7 @@ final class DeviceLayoutTests: XCTestCase {
         snapshot(app, mode, "today")
         // The whole day fits on one screen: no scrolling to reach practice.
         for id in ["today-start", "today-quiz", "today-speaking", chinese ? "today-pinyin" : "today-spelling", "today-exam"] {
-            assertOnScreen(app, app.buttons[id], "\(mode) Today: \(id)")
+            assertOnScreen(app, app.buttons[id], "\(mode) Today: \(id)", aboveTabBar: true)
         }
 
         // Study card, front and back.
@@ -139,7 +139,9 @@ final class DeviceLayoutTests: XCTestCase {
     private func settle() { usleep(600_000) }
 
     /// On screen now, inside the window and clear of the tab bar.
-    private func assertOnScreen(_ app: XCUIApplication, _ element: XCUIElement, _ what: String) {
+    /// `aboveTabBar` for screens with the tab bar; a full-screen session
+    /// covers it, though it may still be in the accessibility tree.
+    private func assertOnScreen(_ app: XCUIApplication, _ element: XCUIElement, _ what: String, aboveTabBar: Bool = false) {
         guard element.waitForExistence(timeout: 3) else {
             XCTFail("\(what) is not on screen on \(device) (it may need scrolling)")
             return
@@ -147,7 +149,7 @@ final class DeviceLayoutTests: XCTestCase {
         let frame = element.frame
         var visible = app.frame
         let tabBar = app.tabBars.firstMatch
-        if tabBar.exists, tabBar.frame.minY > app.frame.midY { visible.size.height = tabBar.frame.minY - visible.minY }
+        if aboveTabBar, tabBar.exists, tabBar.frame.minY > app.frame.midY { visible.size.height = tabBar.frame.minY - visible.minY }
         XCTAssertTrue(element.isHittable && visible.contains(CGPoint(x: frame.midX, y: frame.maxY - 1)),
                       "\(what) needs scrolling on \(device): \(frame) outside \(visible)")
     }

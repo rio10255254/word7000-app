@@ -109,7 +109,7 @@ enum L {
     static var filterLevel: String { t("分級", "Level") }
     static var filterSort: String { t("排序", "Sort") }
     static var sortDefault: String { t("原本順序", "Original order") }
-    static var sortAlphabetical: String { t("A 到 Z", "English A to Z") }
+    static var sortAlphabetical: String { t("A 到 Z", ChineseCourse.isAvailable ? "Pinyin A to Z" : "English A to Z") }
     static var allLevels: String { t("全部分級", "All levels") }
     static var favoriteWord: String { t("收藏", "Save") }
     static var unfavoriteWord: String { t("取消收藏", "Unsave") }

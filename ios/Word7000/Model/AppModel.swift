@@ -191,6 +191,8 @@ final class AppModel {
                 settings[keyPath: keyPath].level = "all"
                 settings[keyPath: keyPath].initial = "all"
             }
+            // The course reads best easiest first; English words A to Z.
+            settings.libraryFilter.sort = mode == .chinese ? .default : .alphabetical
         }
         studySession = nil
         studyUndoStack = []
@@ -493,7 +495,9 @@ final class AppModel {
         } else {
             candidates = studyCandidates
         }
-        let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
+        // Filters may sort the bank; the course is learned easiest first.
+        let ordered = learnsCourseInOrder ? candidates.sorted { (bank.index(of: $0.id) ?? 0) < (bank.index(of: $1.id) ?? 0) } : candidates
+        let queue = LearningEngine.buildStudyQueue(words: ordered, state: progress, today: today,
                                                   limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)),
                                                   freshInOrder: learnsCourseInOrder)
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
@@ -569,6 +573,14 @@ final class AppModel {
         let filter = settings.quizFilter
         var candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
         if let include { candidates = candidates.filter(include) }
+        if learnsCourseInOrder {
+            // Words not met yet come from the next ones in the course, not from
+            // anywhere in it: a beginner is not quizzed on 熔岩.
+            let ordered = candidates.sorted { (bank.index(of: $0.id) ?? 0) < (bank.index(of: $1.id) ?? 0) }
+            let seen = ordered.filter { progress.words[$0.id] != nil }
+            let next = ordered.filter { progress.words[$0.id] == nil }.prefix(max(count * 3, 30))
+            candidates = seen + next
+        }
         return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed)
     }
 

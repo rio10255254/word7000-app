@@ -1,0 +1,228 @@
+[
+ {
+  "hanzi": "目擊者",
+  "set": {
+   "pinyin": "mù jí zhě",
+   "examplePinyin": "jǐng chá zhèng zài zhǎo zhè chǎng chē huò de mù jí zhě.",
+   "question": "警察為什麼要找車禍的目擊者？",
+   "questionEnglish": "Why do the police look for witnesses to a car accident?",
+   "questionPinyin": "jǐng chá wèi shén me yào zhǎo chē huò de mù jí zhě?",
+   "answer": "因為目擊者知道當時發生了什麼事。",
+   "answerEnglish": "Because witnesses know what happened at the time.",
+   "answerPinyin": "yīn wèi mù jí zhě zhī dào dāng shí fā shēng le shén me shì."
+  },
+  "reason": "sensitive: question asked about the learner witnessing an accident; made impersonal; Taiwan MOE reading of 擊 is jí"
+ },
+ {
+  "hanzi": "鋼",
+  "set": {
+   "questionPinyin": "nǐ jiā de guō zi shì bú xiù gāng de ma?",
+   "answerPinyin": "duì, wǒ jiā de guō zi dōu shì bú xiù gāng de."
+  },
+  "reason": "pinyin: 鍋子 is guō zi"
+ },
+ {
+  "hanzi": "應得",
+  "set": {
+   "questionPinyin": "nǐ jué de nǐ yīng dé gèng duō jià qí ma?"
+  },
+  "reason": "pinyin: 應得 is yīng dé"
+ },
+ {
+  "hanzi": "抵擋",
+  "set": {
+   "questionPinyin": "nǐ dǐ dǎng de liǎo tián diǎn de yòu huò ma?"
+  },
+  "reason": "pinyin: potential complement 得了 is de liǎo"
+ },
+ {
+  "hanzi": "作物",
+  "set": {
+   "questionPinyin": "nǐ de jiā xiāng zhǔ yào zhòng shén me zuò wù?"
+  },
+  "reason": "pinyin: 種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "負荷",
+  "set": {
+   "questionPinyin": "nǐ zuì jìn de gōng zuò liàng fù hè de liǎo ma?"
+  },
+  "reason": "pinyin: potential complement 得了 is de liǎo"
+ },
+ {
+  "hanzi": "欄杆",
+  "set": {
+   "examplePinyin": "xià lóu tī de shí hòu, qǐng fú zhe lán gān."
+  },
+  "reason": "pinyin: 扶著 is fú zhe"
+ },
+ {
+  "hanzi": "驚人",
+  "set": {
+   "examplePinyin": "tái běi de fáng jià gāo de jīng rén."
+  },
+  "reason": "pinyin: complement 得 is de"
+ },
+ {
+  "hanzi": "管子",
+  "set": {
+   "pinyin": "guǎn zi",
+   "examplePinyin": "shuǐ cóng zhè gēn guǎn zi liú chū lái.",
+   "answerPinyin": "yǒu, shàng gè yuè chú fáng de guǎn zi lòu shuǐ."
+  },
+  "reason": "pinyin: suffix 子 is neutral zi"
+ },
+ {
+  "hanzi": "克服",
+  "set": {
+   "answerPinyin": "wǒ kè fú le shēng diào de wèn tí, xiàn zài shuō de bǐ jiào hǎo le."
+  },
+  "reason": "pinyin: 得 after verb is de"
+ },
+ {
+  "hanzi": "感染",
+  "set": {
+   "question": "怎麼做可以避免感染流感？",
+   "questionEnglish": "What can you do to avoid catching the flu?",
+   "questionPinyin": "zěn me zuò kě yǐ bì miǎn gǎn rǎn liú gǎn?",
+   "answer": "常常洗手、打疫苗，可以避免感染。",
+   "answerEnglish": "Washing your hands often and getting vaccinated helps you avoid infection.",
+   "answerPinyin": "cháng cháng xǐ shǒu, dǎ yì miáo, kě yǐ bì miǎn gǎn rǎn."
+  },
+  "reason": "sensitive (illness): question asked about the learner's own health; made general"
+ },
+ {
+  "hanzi": "竿子",
+  "set": {
+   "pinyin": "gān zi",
+   "examplePinyin": "tā yòng yì gēn gān zi bǎ shù shàng de qiú ná xià lái.",
+   "questionPinyin": "nǐ jiā yáng tái yǒu shài yī fu de gān zi ma?",
+   "answerPinyin": "yǒu, wǒ men yáng tái yǒu liǎng gēn gān zi."
+  },
+  "reason": "pinyin: suffix 子 is neutral zi"
+ },
+ {
+  "hanzi": "痕跡",
+  "set": {
+   "pinyin": "hén jī",
+   "examplePinyin": "bái sè de zhuō zi shàng yǒu hěn duō kā fēi de hén jī.",
+   "questionPinyin": "nǐ de xíng li xiāng shàng yǒu hěn duō hén jī ma?",
+   "answerPinyin": "yǒu, shàng miàn dōu shì lǚ xíng liú xià de hén jī."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 跡 is jī"
+ },
+ {
+  "hanzi": "上限",
+  "set": {
+   "examplePinyin": "yōu yóu kǎ de chú zhí shàng xiàn shì yí wàn yuán."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 儲 is chú"
+ },
+ {
+  "hanzi": "獎賞",
+  "set": {
+   "examplePinyin": "zhè ge yuè gōng zuò hěn xīn kǔ, wǒ mǎi le xīn xié gěi zì jǐ dàng jiǎng shǎng."
+  },
+  "reason": "pinyin: 當 (as) is dàng"
+ },
+ {
+  "hanzi": "漂",
+  "set": {
+   "questionPinyin": "nǐ qù hǎi biān huì zài shuǐ shàng piāo zhe xiū xí ma?"
+  },
+  "reason": "pinyin: 漂著 is piāo zhe"
+ },
+ {
+  "hanzi": "藉口",
+  "set": {
+   "answerPinyin": "wǒ cháng yòng xià yǔ dàng jiè kǒu."
+  },
+  "reason": "pinyin: 當 (as) is dàng"
+ },
+ {
+  "hanzi": "倒車",
+  "set": {
+   "pinyin": "dào chē",
+   "examplePinyin": "wǒ dào chē de shí hòu bù xiǎo xīn zhuàng dào qiáng.",
+   "questionPinyin": "nǐ kāi chē de shí hòu, dào chē róng yì ma?",
+   "answerPinyin": "bù róng yì, wǒ dào chē rù kù cháng cháng shī bài."
+  },
+  "reason": "pinyin: 倒車 (reverse) is dào chē"
+ },
+ {
+  "hanzi": "警報",
+  "set": {
+   "examplePinyin": "bàn yè shǒu jī tú rán xiǎng qǐ dì zhèn jǐng bào."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 突 is tú"
+ },
+ {
+  "hanzi": "蒸氣",
+  "set": {
+   "questionPinyin": "nǐ yòng guò zhēng qì yùn dǒu ma?",
+   "answerPinyin": "yòng guò, zhēng qì yùn dǒu tàng yī fu hěn fāng biàn."
+  },
+  "reason": "pinyin: 熨斗 is yùn dǒu"
+ },
+ {
+  "hanzi": "喜帖",
+  "set": {
+   "pinyin": "xǐ tiě",
+   "examplePinyin": "tóng shì jīn tiān gěi le wǒ yì zhāng xǐ tiě.",
+   "questionPinyin": "nǐ jīn nián shōu dào jǐ zhāng xǐ tiě?",
+   "answerPinyin": "wǒ jīn nián shōu dào sān zhāng xǐ tiě."
+  },
+  "reason": "pinyin: 喜帖 is xǐ tiě"
+ },
+ {
+  "hanzi": "閃光",
+  "set": {
+   "examplePinyin": "tiān kōng tú rán chū xiàn yí dào shǎn guāng, jiē zhe jiù dǎ léi le."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 突 is tú; 接著 is jiē zhe"
+ },
+ {
+  "hanzi": "執照",
+  "set": {
+   "answerPinyin": "yǒu, wǒ yǒu jiāo yīng wén de zhí zhào."
+  },
+  "reason": "pinyin: 教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "噴",
+  "set": {
+   "questionPinyin": "nǐ chū mén qián huì pēn xiāng shuǐ ma?"
+  },
+  "reason": "pinyin: 噴 (spray) is pēn"
+ },
+ {
+  "hanzi": "替代品",
+  "set": {
+   "examplePinyin": "hē bù liǎo niú nǎi de rén kě yǐ yòng dòu jiāng dàng tì dài pǐn.",
+   "questionPinyin": "nǐ huì yòng shén me dàng kā fēi de tì dài pǐn?",
+   "answerPinyin": "wǒ huì hē lǜ chá dàng kā fēi de tì dài pǐn."
+  },
+  "reason": "pinyin: 當 (as) is dàng"
+ },
+ {
+  "hanzi": "廢棄",
+  "set": {
+   "questionPinyin": "nǐ qù guò fèi qì de jiàn zhú ma?"
+  },
+  "reason": "pinyin: Taiwan MOE reading of 築 is zhú"
+ },
+ {
+  "hanzi": "機械",
+  "set": {
+   "answerPinyin": "yǒu, wǒ hěn xǐ huan yán jiù jī xiè."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 究 is jiù"
+ },
+ {
+  "hanzi": "小徑",
+  "set": {
+   "examplePinyin": "wǒ men yán zhe shān shàng de xiǎo jìng màn màn zǒu."
+  },
+  "reason": "pinyin: 沿著 is yán zhe"
+ }
+]

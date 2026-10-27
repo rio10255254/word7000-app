@@ -206,5 +206,123 @@
    "answerPinyin": "xǐ huan, léi guǐ yuè tīng qǐ lái hěn qīng sōng."
   },
   "reason": "樂 (music) is yuè"
+ },
+ {
+  "hanzi": "中央情報局",
+  "set": {
+   "answerPinyin": "kàn guò, wǒ hěn xǐ huan kàn zhōng yāng qíng bào jú de jiàn dié piàn."
+  },
+  "reason": "中央 is zhōng yāng"
+ },
+ {
+  "hanzi": "聯邦調查局",
+  "set": {
+   "examplePinyin": "lián bāng diào chá jú zhèng zài diào chá zhè ge àn zi."
+  },
+  "reason": "案子 suffix is zi"
+ },
+ {
+  "hanzi": "薄膜",
+  "set": {
+   "pinyin": "bó mó",
+   "examplePinyin": "shǒu jī yíng mù shàng yǒu yì céng bó mó.",
+   "questionPinyin": "xīn shǒu jī shàng de bó mó nǐ huì mǎ shàng sī diào ma?",
+   "answerPinyin": "huì, wǒ yì ná dào jiù bǎ bó mó sī diào."
+  },
+  "reason": "薄膜 is bó mó in Taiwan (教育部)"
+ },
+ {
+  "hanzi": "殘留物",
+  "set": {
+   "examplePinyin": "guō zi lǐ hái yǒu yì xiē cán liú wù."
+  },
+  "reason": "鍋子 suffix is zi"
+ },
+ {
+  "hanzi": "著地",
+  "set": {
+   "pinyin": "zhuó dì",
+   "examplePinyin": "māo cóng gāo chù tiào xià lái dōu néng sì jiǎo zhuó dì.",
+   "questionPinyin": "nǐ pǎo bù shí shì jiǎo gēn xiān zhuó dì ma?",
+   "answerPinyin": "bú shì, wǒ pǎo bù shì jiǎo jiān xiān zhuó dì."
+  },
+  "reason": "著地 is zhuó dì"
+ },
+ {
+  "hanzi": "曳引機",
+  "set": {
+   "examplePinyin": "nóng fū kāi zhe yè yǐn jī qù tián lǐ."
+  },
+  "reason": "開著 is kāi zhe"
+ },
+ {
+  "hanzi": "男性化",
+  "set": {
+   "examplePinyin": "tā de chuān zhuó hěn nán xìng huà."
+  },
+  "reason": "穿著 (attire) is chuān zhuó"
+ },
+ {
+  "hanzi": "牌匾",
+  "set": {
+   "examplePinyin": "miào lǐ guà zhe hěn duō lǎo pái biǎn."
+  },
+  "reason": "掛著 is guà zhe"
+ },
+ {
+  "hanzi": "蹣跚",
+  "set": {
+   "examplePinyin": "lǎo yé ye bù lǚ pán shān de zǒu guò mǎ lù.",
+   "answerPinyin": "kàn guò, wǒ zhí zi gāng kāi shǐ pán shān xué bù, hěn kě ài."
+  },
+  "reason": "adverbial 地 is de; 姪子 suffix is zi"
+ },
+ {
+  "hanzi": "真菌",
+  "set": {
+   "pinyin": "zhēn jùn",
+   "examplePinyin": "xiāng gū qí shí shì yì zhǒng zhēn jùn.",
+   "questionPinyin": "nǐ zhī dào nǎ xiē shí wù shì zhēn jùn ma?",
+   "answerPinyin": "wǒ zhī dào xiāng gū hé mù ěr dōu shì zhēn jùn."
+  },
+  "reason": "菌 is jùn in Taiwan (教育部)"
+ },
+ {
+  "hanzi": "接縫",
+  "set": {
+   "questionPinyin": "yī fu de jiē fèng liè kāi le, nǐ huì zì jǐ féng ma?",
+   "answerPinyin": "huì, jiē fèng liè kāi wǒ huì zì jǐ féng hǎo."
+  },
+  "reason": "縫 (sew) is féng"
+ },
+ {
+  "hanzi": "咕噥",
+  "set": {
+   "questionPinyin": "bié rén gū nóng de shí hòu, nǐ tīng de dǒng ma?"
+  },
+  "reason": "聽得懂 is tīng de dǒng"
+ },
+ {
+  "hanzi": "財務主管",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng cái wù zhǔ guǎn xū yào shén me néng lì?"
+  },
+  "reason": "覺得 is jué de; 當 (serve as) is dāng"
+ },
+ {
+  "hanzi": "瀰漫",
+  "set": {
+   "examplePinyin": "yè shì lǐ mí màn zhe chòu dòu fu de wèi dào.",
+   "answerPinyin": "wǒ jiā fù jìn cháng mí màn zhe miàn bāo de xiāng wèi."
+  },
+  "reason": "著 particle is zhe"
+ },
+ {
+  "hanzi": "債務人",
+  "set": {
+   "questionPinyin": "zhài wù rén huán bù chū qián huì zěn me yàng?",
+   "answerPinyin": "zhài wù rén huán bù chū qián, yín háng kě néng huì pāi mài fáng zi."
+  },
+  "reason": "還 (repay) is huán"
  }
 ]

@@ -217,5 +217,193 @@
    "answerPinyin": "huì, xiǎo cè zi shàng cháng cháng yǒu dì tú."
   },
   "reason": "冊子 suffix is zi"
+ },
+ {
+  "hanzi": "可預期",
+  "set": {
+   "examplePinyin": "lián jià sāi chē shì kě yù qí de."
+  },
+  "reason": "連假 is lián jià"
+ },
+ {
+  "hanzi": "全國性",
+  "set": {
+   "examplePinyin": "zhè shì quán guó xìng de bǐ sài, hěn duō rén cān jiā."
+  },
+  "reason": "參加 is cān jiā (not 人參)"
+ },
+ {
+  "hanzi": "體面",
+  "set": {
+   "examplePinyin": "miàn shì yào chuān de tǐ miàn yì diǎn."
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "火把",
+  "set": {
+   "examplePinyin": "tā men ná zhe huǒ bǎ zǒu jìn shān dòng."
+  },
+  "reason": "拿著 is ná zhe"
+ },
+ {
+  "hanzi": "簡樸",
+  "set": {
+   "examplePinyin": "tā men guò zhe jiǎn pǔ de shēng huó."
+  },
+  "reason": "過著 is guò zhe"
+ },
+ {
+  "hanzi": "殘留",
+  "set": {
+   "examplePinyin": "yī fu shàng hái cán liú zhe xiāng shuǐ wèi."
+  },
+  "reason": "著 aspect marker is zhe"
+ },
+ {
+  "hanzi": "移植",
+  "set": {
+   "examplePinyin": "wǒ bǎ huā yí zhí dào dà yì diǎn de pén zi.",
+   "answerPinyin": "huì, wǒ huì bǎ tā yí zhí dào bǐ jiào dà de pén zi."
+  },
+  "reason": "盆子 suffix is zi"
+ },
+ {
+  "hanzi": "濺",
+  "set": {
+   "answerPinyin": "yǒu, zuó tiān gōng chē bǎ shuǐ jiàn dào wǒ kù zi shàng."
+  },
+  "reason": "褲子 suffix is zi"
+ },
+ {
+  "hanzi": "滴答",
+  "set": {
+   "pinyin": "dī dā",
+   "examplePinyin": "fáng jiān hěn ān jìng, zhǐ tīng dào shí zhōng dī dā xiǎng.",
+   "questionPinyin": "shí zhōng de dī dā shēng huì chǎo dào nǐ shuì jiào ma?",
+   "answerPinyin": "huì, shí zhōng de dī dā shēng ràng wǒ shuì bù zháo."
+  },
+  "reason": "滴答 is dī dā"
+ },
+ {
+  "hanzi": "花苞",
+  "set": {
+   "examplePinyin": "yīng huā shù zhǎng chū le hěn duō huā bāo.",
+   "answerPinyin": "yǒu, wǒ yáng tái de méi guī zhǎng chū huā bāo le.",
+   "questionPinyin": "nǐ zhòng de huā yǒu huā bāo le ma?"
+  },
+  "reason": "長出 (grow) is zhǎng; 種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "害蟲",
+  "set": {
+   "answerPinyin": "wǒ jiā zuì cháng jiàn de hài chóng shì wén zi."
+  },
+  "reason": "蚊子 suffix is zi"
+ },
+ {
+  "hanzi": "敲擊",
+  "set": {
+   "examplePinyin": "yǔ dī bù tíng de qiāo jī zhe chuāng hù."
+  },
+  "reason": "adverbial 地 is de; 著 aspect marker is zhe"
+ },
+ {
+  "hanzi": "難以置信",
+  "set": {
+   "examplePinyin": "zhè ge jià qián pián yi de nán yǐ zhì xìn."
+  },
+  "reason": "得 after adjective is de"
+ },
+ {
+  "hanzi": "魚餌",
+  "set": {
+   "answerPinyin": "wǒ cháng yòng xiā zi dàng yú ěr."
+  },
+  "reason": "蝦子 suffix is zi; 當 (use as) is dàng"
+ },
+ {
+  "hanzi": "石板",
+  "set": {
+   "examplePinyin": "zhè tiáo lǎo jiē pū zhe shí bǎn."
+  },
+  "reason": "鋪 (to pave) is pū; 著 is zhe"
+ },
+ {
+  "hanzi": "拍打",
+  "set": {
+   "examplePinyin": "hǎi làng pāi dǎ zhe yán shí."
+  },
+  "reason": "著 aspect marker is zhe"
+ },
+ {
+  "hanzi": "挨餓",
+  "set": {
+   "pinyin": "ái è",
+   "examplePinyin": "wǒ bù xiǎng ái è, suǒ yǐ dài le líng shí.",
+   "questionPinyin": "nǐ jiǎn féi de shí hòu huì ái è ma?",
+   "answerPinyin": "bú huì, wǒ bù xǐ huan ái è."
+  },
+  "reason": "挨餓 (suffer hunger) is ái è"
+ },
+ {
+  "hanzi": "披風",
+  "set": {
+   "examplePinyin": "chāo rén chuān zhe hóng sè de pī fēng."
+  },
+  "reason": "著 aspect marker is zhe"
+ },
+ {
+  "hanzi": "刺穿",
+  "set": {
+   "answerPinyin": "lún tāi bèi cì chuān de huà, yào qù jī chē háng bǔ tāi."
+  },
+  "reason": "機車行 (shop) is háng"
+ },
+ {
+  "hanzi": "牧羊人",
+  "set": {
+   "examplePinyin": "mù yáng rén dài zhe yáng shàng shān."
+  },
+  "reason": "帶著 is dài zhe"
+ },
+ {
+  "hanzi": "肥料",
+  "set": {
+   "questionPinyin": "nǐ zhòng zhí wù huì yòng féi liào ma?"
+  },
+  "reason": "種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "支撐",
+  "set": {
+   "examplePinyin": "zhè gēn zhù zi zhī chēng zhe zhěng gè wū dǐng.",
+   "questionPinyin": "gōng zuò hěn lèi de shí hòu, shì shén me zhī chēng zhe nǐ?",
+   "answerPinyin": "jiā rén de gǔ lì yì zhí zhī chēng zhe wǒ."
+  },
+  "reason": "著 aspect marker is zhe"
+ },
+ {
+  "hanzi": "麵糊",
+  "set": {
+   "examplePinyin": "bǎ miàn hù dǎo jìn guō zi lǐ zuò sōng bǐng."
+  },
+  "reason": "鍋子 suffix is zi"
+ },
+ {
+  "hanzi": "嗡嗡聲",
+  "set": {
+   "examplePinyin": "wǒ tīng dào wén zi de wēng wēng shēng.",
+   "questionPinyin": "wǎn shàng tīng dào wén zi de shēng yīn nǐ huì zěn me bàn?",
+   "answerPinyin": "wǒ huì qǐ lái zhǎo wén zi, wēng wēng shēng hěn chǎo."
+  },
+  "reason": "蚊子 suffix is zi"
+ },
+ {
+  "hanzi": "裁縫",
+  "set": {
+   "examplePinyin": "wǒ qǐng cái feng bāng wǒ gǎi kù zi."
+  },
+  "reason": "褲子 suffix is zi"
  }
 ]

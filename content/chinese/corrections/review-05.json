@@ -621,11 +621,12 @@
  {
   "hanzi": "縫",
   "set": {
-   "examplePinyin": "wǒ bǎ diào xià lái de kòu zi fèng huí qù le.",
-   "questionPinyin": "nǐ huì zì jǐ fèng kòu zi ma?",
-   "answerPinyin": "huì, wǒ huì zì jǐ fèng kòu zi."
+   "examplePinyin": "wǒ bǎ diào xià lái de kòu zi féng huí qù le.",
+   "questionPinyin": "nǐ huì zì jǐ féng kòu zi ma?",
+   "answerPinyin": "huì, wǒ huì zì jǐ féng kòu zi.",
+   "pinyin": "féng"
   },
-  "reason": "釦子 is kòu zi"
+  "reason": "釦子 is kòu zi; 縫 (to sew) is féng"
  },
  {
   "hanzi": "橫著",
@@ -658,5 +659,44 @@
    "answerPinyin": "hěn shǎo, zhǐ yù guò yí cì hěn bù yǒu shàn de sī jī."
   },
   "reason": "只 is zhǐ"
+ },
+ {
+  "hanzi": "撒",
+  "set": {
+   "pinyin": "sǎ",
+   "examplePinyin": "zài tāng lǐ sǎ yì diǎn hú jiāo.",
+   "questionPinyin": "nǐ chī jī pái xǐ huan sǎ hú jiāo fěn ma?",
+   "answerPinyin": "xǐ huan, wǒ dōu qǐng lǎo bǎn duō sǎ yì diǎn."
+  },
+  "reason": "撒 (to sprinkle) is sǎ"
+ },
+ {
+  "hanzi": "資格",
+  "set": {
+   "questionPinyin": "nǐ jué de nǐ yǒu zī gé jiāo shén me?",
+   "answerPinyin": "wǒ jué de wǒ yǒu zī gé jiāo yīng wén."
+  },
+  "reason": "教 (to teach) is jiāo"
+ },
+ {
+  "hanzi": "籠子",
+  "set": {
+   "answerPinyin": "bù hǎo, dòng wù bú yīng gāi yì zhí dāi zài lóng zi lǐ."
+  },
+  "reason": "待 (to stay) is dāi"
+ },
+ {
+  "hanzi": "高處",
+  "set": {
+   "examplePinyin": "wǒ jiā de māo xǐ huan dāi zài gāo chù."
+  },
+  "reason": "待 (to stay) is dāi"
+ },
+ {
+  "hanzi": "手肘",
+  "set": {
+   "examplePinyin": "wǒ dié dǎo le, shǒu zhǒu shòu shāng le."
+  },
+  "reason": "Taiwan MOE reading of 跌 is dié"
  }
 ]

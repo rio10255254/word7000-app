@@ -286,13 +286,15 @@
   "hanzi": "攻擊",
   "set": {
    "question": "山上的猴子為什麼會攻擊遊客？",
-   "questionPinyin": "shān shàng de hóu zi wèi shén me huì gōng jī yóu kè?",
+   "questionPinyin": "shān shàng de hóu zi wèi shén me huì gōng jí yóu kè?",
    "questionEnglish": "Why do monkeys in the mountains attack tourists?",
    "answer": "牠們想搶遊客的食物，所以會攻擊人。",
-   "answerPinyin": "tā men xiǎng qiǎng yóu kè de shí wù, suǒ yǐ huì gōng jī rén.",
-   "answerEnglish": "They want to grab tourists' food, so they attack people."
+   "answerPinyin": "tā men xiǎng qiǎng yóu kè de shí wù, suǒ yǐ huì gōng jí rén.",
+   "answerEnglish": "They want to grab tourists' food, so they attack people.",
+   "pinyin": "gōng jí",
+   "examplePinyin": "nà zhī gǒu tú rán gōng jí le yí gè lù rén."
   },
-  "reason": "sensitive: question asked about the learner being attacked; made general"
+  "reason": "sensitive: question asked about the learner being attacked; made general; pinyin: 擊 jí, 突 tú (教育部)"
  },
  {
   "hanzi": "相配",
@@ -470,9 +472,10 @@
  {
   "hanzi": "冒出",
   "set": {
-   "examplePinyin": "shuǐ gǔn le, guō zi mào chū hěn duō bái yān."
+   "examplePinyin": "shuǐ gǔn le, guō zi mào chū hěn duō bái yān.",
+   "answerPinyin": "yǒu, wǒ tú rán mào chū xiǎng xué chōng làng de xiǎng fǎ."
   },
-  "reason": "pinyin: 鍋子 guō zi"
+  "reason": "pinyin: 鍋子 guō zi; pinyin: 鍋子 guō zi, 突 tú (教育部)"
  },
  {
   "hanzi": "監獄",
@@ -693,5 +696,97 @@
    "answerPinyin": "wǒ bǎ yí bàn de xīn shuǐ fēn pèi gěi fáng zū."
   },
   "reason": "pinyin: 給 gěi, 分 fēn"
+ },
+ {
+  "hanzi": "變回",
+  "set": {
+   "examplePinyin": "fàng wán jià, wǒ yòu biàn huí shàng bān zú le."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "空房",
+  "set": {
+   "answerPinyin": "yù guò, lián jià de shí hòu cháng cháng méi yǒu kōng fáng."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "勞動",
+  "set": {
+   "answerPinyin": "yǒu, láo dòng jié wǒ men fàng yì tiān jià."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "即將",
+  "set": {
+   "examplePinyin": "tái fēng jí jiāng lái tái wān, míng tiān kě néng fàng tái fēng jià."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "解鎖",
+  "set": {
+   "answerPinyin": "wǒ yòng liǎn bù biàn shì jiě suǒ shǒu jī."
+  },
+  "reason": "pinyin: 識 shì (教育部)"
+ },
+ {
+  "hanzi": "顯微鏡",
+  "set": {
+   "examplePinyin": "yòng xiǎn wéi jìng kě yǐ kàn dào xì jùn."
+  },
+  "reason": "pinyin: 菌 jùn (教育部)"
+ },
+ {
+  "hanzi": "打擊",
+  "set": {
+   "pinyin": "dǎ jí",
+   "examplePinyin": "shī yè duì tā shì hěn dà de dǎ jí.",
+   "questionPinyin": "nǐ yù guò hěn dà de dǎ jí ma?",
+   "answerPinyin": "yǒu, bèi cái yuán duì wǒ shì hěn dà de dǎ jí."
+  },
+  "reason": "pinyin: 擊 jí (教育部)"
+ },
+ {
+  "hanzi": "衝突",
+  "set": {
+   "pinyin": "chōng tú",
+   "examplePinyin": "tā men liǎng gè rén cháng cháng yǒu chōng tú.",
+   "questionPinyin": "nǐ gēn shì yǒu yǒu guò chōng tú ma?",
+   "answerPinyin": "yǒu guò xiǎo chōng tú, yīn wèi tā tài chǎo le."
+  },
+  "reason": "pinyin: 突 tú (教育部)"
+ },
+ {
+  "hanzi": "失靈",
+  "set": {
+   "examplePinyin": "jī chē de shā chē tú rán shī líng le.",
+   "questionPinyin": "nǐ de shǒu jī céng jīng tú rán shī líng ma?",
+   "answerPinyin": "yǒu, wǒ de shǒu jī shàng gè yuè tú rán shī líng le."
+  },
+  "reason": "pinyin: 突 tú (教育部)"
+ },
+ {
+  "hanzi": "來源",
+  "set": {
+   "answerPinyin": "wǒ de shōu rù lái yuán shì jiāo yīng wén."
+  },
+  "reason": "pinyin: 教 (teach) jiāo"
+ },
+ {
+  "hanzi": "機構",
+  "set": {
+   "answerPinyin": "wǒ zài yì jiā jiào yù jī gòu jiāo yīng wén."
+  },
+  "reason": "pinyin: 教 (teach) jiāo"
+ },
+ {
+  "hanzi": "學院",
+  "set": {
+   "examplePinyin": "tā zài yì jiā yīn yuè xué yuàn jiāo gāng qín."
+  },
+  "reason": "pinyin: 教 (teach) jiāo"
  }
 ]

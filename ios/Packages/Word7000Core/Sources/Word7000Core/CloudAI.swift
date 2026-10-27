@@ -95,7 +95,7 @@ public enum CloudAI {
 
         public func cleaned() throws -> Answer {
             let result = Answer(
-                onTopic: onTopic, answer: CloudAI.clip(answer, 420),
+                onTopic: onTopic, answer: CloudAI.clip(answer, 600),
                 examples: onTopic ? examples.map { Explanation.Example(sentence: CloudAI.clip($0.sentence, 220), translation: CloudAI.clip($0.translation, 220)) }
                     .filter { !$0.sentence.isEmpty }.prefix(2).map { $0 } : [])
             guard !result.answer.isEmpty else { throw Failure.unavailable }

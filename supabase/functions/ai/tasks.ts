@@ -177,6 +177,24 @@ export function usesWord(sentence: string, word: string): boolean {
     || (target.length >= 3 && token.length >= 3 && token[0] === target[0] && editDistance(token, target) <= (target.length <= 4 ? 1 : 2)));
 }
 
+/**
+ * Common characters only Simplified Chinese uses (Traditional writes 們, 這,
+ * 說, 賓…). Characters shared by both scripts are left out on purpose.
+ */
+export const SIMPLIFIED_ONLY = /[们这说为时个会学习么语词来对还没发现经过动关样点开问题实应该让从网视频软质宾补级练记忆读书写听译释复杂单汇组织运场边见观间东车长门马鸟鱼钱买卖热爱乐欢图标确认识请谢谁难码电脑络岁两国际产业务员给带惯态虑议论设计试验错误]/u;
+
+/** The first Simplified-only character in any string of a reply, if there is one. */
+export function simplifiedCharacter(content: unknown): string | null {
+  const all: string[] = [];
+  const visit = (value: unknown) => {
+    if (typeof value === 'string') all.push(value);
+    else if (Array.isArray(value)) value.forEach(visit);
+    else if (value && typeof value === 'object') Object.values(value).forEach(visit);
+  };
+  visit(content);
+  return all.join(' ').match(SIMPLIFIED_ONLY)?.[0] ?? null;
+}
+
 const RETRY_CHINESE = '上一次的回覆用錯了語言。說明文字一律改用繁體中文（台灣用語）重寫，英文只用在單字、搭配詞與英文例句。 Your previous reply used the wrong language: rewrite every explanation field in Traditional Chinese.';
 const RETRY_ENGLISH = 'Your previous reply used the wrong language. Rewrite every explanation field in English; use Chinese only where the instructions ask for it.';
 
@@ -521,7 +539,19 @@ export function isTaskName(value: unknown): value is TaskName {
 
 export function planTask(task: TaskName, input: unknown, tier: Tier = 'plus'): TaskPlan {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new InputError('input must be an object');
-  const plan = builders[task](input as Record<string, unknown>);
+  const built = builders[task](input as Record<string, unknown>);
+  // Every Chinese a learner reads must be Traditional. A scanned page is copied
+  // as written, so the scan task is left as it is.
+  const plan: TaskPlan = task === 'scan' ? built : {
+    ...built,
+    review: (content) => {
+      const simplified = simplifiedCharacter(content);
+      if (simplified) {
+        return `上一次的回覆用了簡體字（例如「${simplified}」）。所有中文一律改用繁體中文（台灣用語）重寫。 Your previous reply used Simplified Chinese characters such as "${simplified}"; rewrite all Chinese in Traditional Chinese as used in Taiwan.`;
+      }
+      return built.review?.(content) ?? null;
+    },
+  };
   // Free learners get the quickest answer; Plus and the trial keep the
   // per-task reasoning level.
   return tier === 'free' ? { ...plan, effort: 'low' } : plan;

@@ -299,6 +299,16 @@ describe('Questions about a word', () => {
   });
 });
 
+describe('Traditional Chinese', () => {
+  it('asks again when a reply uses Simplified characters, except when copying a scanned page', () => {
+    const plan = planTask('ask', { word: 'abandon', meaning: '拋棄', question: '和 give up 的差別？', mode: 'english' });
+    const note = plan.review?.({ onTopic: true, answer: 'abandon 的宾語通常是具體的人或物。', examples: [] });
+    expect(note).toContain('「宾」');
+    expect(plan.review?.({ onTopic: true, answer: 'abandon 的受詞通常是具體的人或物。', examples: [] })).toBeNull();
+    expect(planTask('scan', { text: '学习 study' }).review).toBeUndefined();
+  });
+});
+
 describe('Coach corrections', () => {
   it('keeps at most two corrections that quote the answer, as the app requires', () => {
     const answer = 'I am practice English with my friend every days and watch movie.';

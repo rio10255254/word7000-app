@@ -17,7 +17,11 @@
 //   node scripts/build-chinese-course.mjs check <entries.json>   lists the problems in a part
 //   node scripts/build-chinese-course.mjs ingest <entries.json>  keeps a part's good entries
 //                                                               in content/chinese/parts/
-//   node scripts/build-chinese-course.mjs build                  merges the parts into
+//   node scripts/build-chinese-course.mjs review-prepare [--size 500]  writes the merged course, with
+//                                                               its pinyin, in parts for review
+//   node scripts/build-chinese-course.mjs build                  merges the parts, applies the
+//                                                               review's corrections
+//                                                               (content/chinese/corrections/) and writes
 //                                                               content/chinese/course.json and
 //                                                               the app's chinese-course.json
 import fs from 'node:fs';
@@ -28,6 +32,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const wordsFile = path.join(root, 'ios/Word7000/Resources/words.json');
 const contentDir = path.join(root, 'content/chinese');
 const partsDir = path.join(contentDir, 'parts');
+const correctionsDir = path.join(contentDir, 'corrections');
 const courseFile = path.join(contentDir, 'course.json');
 const exportDir = path.join(root, 'exports/chinese-course');
 const appFile = path.join(root, 'ios/Packages/Word7000Core/Sources/Word7000Core/Resources/chinese-course.json');
@@ -224,31 +229,96 @@ export async function appCourse(entries) {
     entries: entries.map((entry) => ({
       id: `zh-${entry.hanzi}`,
       hanzi: entry.hanzi,
-      pinyin: headword(entry),
+      pinyin: entry.readings?.pinyin ?? headword(entry),
       english: entry.english,
       partOfSpeech: entry.partOfSpeech,
       measureWord: entry.measureWord,
       level: entry.level,
       example: entry.example,
-      examplePinyin: read(entry.example),
+      examplePinyin: entry.readings?.examplePinyin ?? read(entry.example),
       exampleEnglish: entry.exampleEnglish,
       question: entry.question,
-      questionPinyin: read(entry.question),
+      questionPinyin: entry.readings?.questionPinyin ?? read(entry.question),
       questionEnglish: entry.questionEnglish,
       answer: entry.answer,
-      answerPinyin: read(entry.answer),
+      answerPinyin: entry.readings?.answerPinyin ?? read(entry.answer),
       answerEnglish: entry.answerEnglish,
       sources: entry.sources,
     })),
   };
 }
 
-async function build(args) {
+const TEXT_FIELDS = ['english', 'partOfSpeech', 'measureWord', 'example', 'exampleEnglish', 'question', 'questionEnglish', 'answer', 'answerEnglish'];
+const READING_FIELDS = ['pinyin', 'examplePinyin', 'questionPinyin', 'answerPinyin'];
+
+/**
+ * Applies the review: each correction names an entry by its headword and
+ * either drops it or sets fields; readings set by hand replace the reader's.
+ * A correction that would break an entry's rules is reported and skipped.
+ */
+export function applyCorrections(entries, corrections) {
+  const byHanzi = new Map(corrections.map((correction) => [correction.hanzi, correction]));
+  const skipped = [];
+  const result = [];
+  for (const entry of entries) {
+    const correction = byHanzi.get(entry.hanzi);
+    if (!correction) { result.push(entry); continue; }
+    if (correction.drop) continue;
+    const next = { ...entry, readings: { ...(entry.readings ?? {}) } };
+    for (const [field, value] of Object.entries(correction.set ?? {})) {
+      if (TEXT_FIELDS.includes(field)) next[field] = String(value).trim();
+      else if (field === 'level') next.level = Number(value);
+      else if (READING_FIELDS.includes(field)) next.readings[field] = String(value).trim();
+    }
+    // A rewritten sentence needs its own reading, never the old one.
+    for (const [text, reading] of [['example', 'examplePinyin'], ['question', 'questionPinyin'], ['answer', 'answerPinyin']]) {
+      if (next[text] !== entry[text] && !(correction.set ?? {})[reading]) delete next.readings[reading];
+    }
+    if (!Object.keys(next.readings).length) delete next.readings;
+    const problem = entryProblem(next);
+    if (problem) { skipped.push({ hanzi: entry.hanzi, problem }); result.push(entry); continue; }
+    result.push(next);
+  }
+  return { entries: result.sort((a, b) => a.level - b.level || a.order - b.order), skipped };
+}
+
+function mergedParts() {
   const collected = fs.readdirSync(partsDir).filter((name) => name.endsWith('.json')).sort();
   // A later part's entry for the same candidate replaces an earlier one.
   const byKey = new Map();
   for (const name of collected) for (const entry of readJson(path.join(partsDir, name)).entries) byKey.set(entry.order, entry);
-  const merged = mergeEntries([...byKey.values()]);
+  return { collected, merged: mergeEntries([...byKey.values()]) };
+}
+
+function readCorrections() {
+  if (!fs.existsSync(correctionsDir)) return [];
+  return fs.readdirSync(correctionsDir).filter((name) => name.endsWith('.json')).sort()
+    .flatMap((name) => readJson(path.join(correctionsDir, name)));
+}
+
+async function reviewPrepare(args) {
+  const { merged } = mergedParts();
+  const course = await appCourse(merged);
+  const english = new Map(readJson(wordsFile).map((word) => [word.id, word.word]));
+  const rows = course.entries.map((entry) => ({
+    hanzi: entry.hanzi, from: entry.sources.map((id) => english.get(id)).filter(Boolean), english: entry.english,
+    level: entry.level, pinyin: entry.pinyin, example: entry.example, examplePinyin: entry.examplePinyin,
+    question: entry.question, questionPinyin: entry.questionPinyin, answer: entry.answer, answerPinyin: entry.answerPinyin,
+  }));
+  const size = Number(option(args, 'size', '500'));
+  fs.mkdirSync(exportDir, { recursive: true });
+  let count = 0;
+  for (let index = 0; index < rows.length; index += size) {
+    count += 1;
+    fs.writeFileSync(path.join(exportDir, `review-${String(count).padStart(2, '0')}.json`), `${JSON.stringify(rows.slice(index, index + size), null, 1)}\n`);
+  }
+  console.log(`${rows.length} entries in ${count} review files in ${path.relative(root, exportDir)}.`);
+}
+
+async function build(args) {
+  const { collected, merged: parts } = mergedParts();
+  const { entries: merged, skipped } = applyCorrections(parts, readCorrections());
+  for (const row of skipped) console.log(`  correction skipped for ${row.hanzi}: ${row.problem}`);
   const course = await appCourse(merged);
   const text = `${JSON.stringify(course)}\n`;
   if (args.includes('--check')) {
@@ -265,11 +335,11 @@ async function build(args) {
   console.log(`${merged.length} Chinese words by level ${JSON.stringify(levels)}, written to ${path.relative(root, appFile)}.`);
 }
 
-const commands = { prepare, check, ingest, build };
+const commands = { prepare, check, ingest, 'review-prepare': reviewPrepare, build };
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const [command, ...args] = process.argv.slice(2);
   if (!commands[command]) {
-    console.error('Usage: build-chinese-course.mjs prepare|check|ingest|build');
+    console.error('Usage: build-chinese-course.mjs prepare|check|ingest|review-prepare|build');
     process.exit(1);
   }
   await commands[command](args);

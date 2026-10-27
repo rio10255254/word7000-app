@@ -57,3 +57,25 @@ describe('Chinese course builder', () => {
     for (const entry of entries) expect(entryProblem(entry), entry.hanzi).toBeNull();
   }, 120_000);
 });
+
+describe('Chinese course review', () => {
+  it('drops, rewrites and re-reads entries, and refuses a correction that breaks the rules', async () => {
+    // @ts-expect-error The builder is a plain ES module script.
+    const { applyCorrections } = await import('../scripts/build-chinese-course.mjs');
+    const entries = [good, { ...good, hanzi: '茶', example: '我喝茶。', answer: '我喜歡喝茶。', order: 1 }, { ...good, hanzi: '量', example: '量很多。', answer: '量很多。', order: 2 }];
+    const { entries: out, skipped } = applyCorrections(entries, [
+      { hanzi: '茶', drop: true },
+      { hanzi: '量', set: { pinyin: 'liàng', examplePinyin: 'liàng hěn duō.' } },
+      { hanzi: '喜歡', set: { example: '他不喜歡。' } },
+      { hanzi: '不存在', set: { english: 'x' } },
+    ]);
+    expect(out.map((entry: { hanzi: string }) => entry.hanzi)).toEqual(['喜歡', '量']);
+    expect(out[0].example).toBe('他不喜歡。');
+    expect(out[1].readings).toEqual({ pinyin: 'liàng', examplePinyin: 'liàng hěn duō.' });
+    const refused = applyCorrections([good], [{ hanzi: '喜歡', set: { example: '他很愛。' } }]);
+    expect(refused.entries[0].example).toBe(good.example);
+    expect(refused.skipped).toHaveLength(1);
+    const course = await appCourse(out);
+    expect(course.entries[1]).toMatchObject({ pinyin: 'liàng', examplePinyin: 'liàng hěn duō.' });
+  });
+});

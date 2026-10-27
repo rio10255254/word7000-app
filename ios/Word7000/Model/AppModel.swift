@@ -254,6 +254,8 @@ final class AppModel {
         if let cached = preparedCache, cached.key == key { return cached.vocabulary }
         let prepared = PreparedVocabulary(bankWords)
         preparedCache = (key, prepared)
+        // Sort A to Z off the main thread, before the Words tab asks.
+        Task.detached(priority: .utility) { _ = prepared.alphabeticalWords }
         return prepared
     }
 

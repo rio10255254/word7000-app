@@ -287,17 +287,35 @@ jobs:
   # screen and the main timings; the images go to the
   # native-device-screenshots branch.
   devices:
-    name: iPhone shapes on Xcode ${{ matrix.xcode }}
+    name: iPhone shapes, ${{ matrix.label }}
     if: inputs.checks == 'devices'
     strategy:
       fail-fast: false
       matrix:
+        # Four iPhones a job: twelve on one runner came within minutes of
+        # the job's time limit.
         include:
-          - xcode: 26
+          - label: iOS 18 small
+            slug: ios-18-small
+            xcode: 26
             runner: macos-15
-            wanted: '18=iPhone SE (3rd generation),iPhone Xs,iPhone 11,iPhone 12 mini,iPhone 13 mini,iPhone 14,iPhone 14 Plus,iPhone 15 Pro Max;26=iPhone 16e,iPhone 17,iPhone Air,iPhone 17 Pro Max'
+            wanted: '18=iPhone SE (3rd generation),iPhone Xs,iPhone 11,iPhone 12 mini'
             concurrent: 2
-          - xcode: 27
+          - label: iOS 18 large
+            slug: ios-18-large
+            xcode: 26
+            runner: macos-15
+            wanted: '18=iPhone 13 mini,iPhone 14,iPhone 14 Plus,iPhone 15 Pro Max'
+            concurrent: 2
+          - label: iOS 26
+            slug: ios-26
+            xcode: 26
+            runner: macos-15
+            wanted: '26=iPhone 16e,iPhone 17,iPhone Air,iPhone 17 Pro Max'
+            concurrent: 2
+          - label: iOS 27
+            slug: ios-27
+            xcode: 27
             runner: xcode-27
             wanted: '27=iPhone 17e,iPhone 18 Pro,iPhone 18 Pro Max,iPhone Duo'
             # Several simulators at once lose CoreSimulator here; one at a time.
@@ -379,13 +397,19 @@ jobs:
           if [ -d "$RUNNER_TEMP/Devices.xcresult" ]; then
             xcrun xcresulttool get test-results summary --path "$RUNNER_TEMP/Devices.xcresult" > "$RUNNER_TEMP/devices/failures.json" 2>&1 || true
             xcrun xcresulttool get test-results tests --path "$RUNNER_TEMP/Devices.xcresult" > "$RUNNER_TEMP/devices/tests.json" 2>&1 || true
+            # And in the log, so a failure can be read before every job ends.
+            python3 - "$RUNNER_TEMP/devices/failures.json" <<'PY' || true
+          import json, sys
+          for failure in json.load(open(sys.argv[1])).get("testFailures", [])[:200]:
+              print(f"{failure.get('testName')}: {failure.get('failureText')}")
+          PY
           fi
           ls "$RUNNER_TEMP/devices" | wc -l
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: device-screenshots-${{ github.run_number }}-xcode-${{ matrix.xcode }}
+          name: device-screenshots-${{ github.run_number }}-${{ matrix.slug }}
           path: ${{ runner.temp }}/devices
           retention-days: 14
 

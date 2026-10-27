@@ -171,7 +171,8 @@ struct AskAISection: View {
                     .accessibilityIdentifier("ai-ask-send")
                 }
                 if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
-                if !asked.isEmpty || failure == .quota { PlusAIUpsell() }
+                // The explanation above already carries the Plus note; repeat it only when today's allowance ran out here.
+                if failure == .quota { PlusAIUpsell() }
             } header: {
                 Text(L.t("問 AI", "Ask AI"))
             } footer: {

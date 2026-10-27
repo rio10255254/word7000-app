@@ -335,5 +335,84 @@
    "examplePinyin": "wǒ wài pó jiā yǐ qián yǒu yì kǒu jǐng."
   },
   "reason": "pinyin: 外婆家 is wài pó jiā"
+ },
+ {
+  "hanzi": "臉頰",
+  "set": {
+   "examplePinyin": "tā hài xiū de liǎn jiá dōu hóng le."
+  },
+  "reason": "pinyin: complement 得 is de"
+ },
+ {
+  "hanzi": "葬禮",
+  "set": {
+   "question": "台灣傳統的葬禮有什麼特色？",
+   "questionEnglish": "What are traditional funerals in Taiwan like?",
+   "questionPinyin": "tái wān chuán tǒng de zàng lǐ yǒu shén me tè sè?",
+   "answer": "台灣傳統的葬禮常常很熱鬧。",
+   "answerEnglish": "Traditional funerals in Taiwan are often quite lively.",
+   "answerPinyin": "tái wān chuán tǒng de zàng lǐ cháng cháng hěn rè nào."
+  },
+  "reason": "sensitive (death): question asked about the learner's own experience; made general"
+ },
+ {
+  "hanzi": "腳後跟",
+  "set": {
+   "examplePinyin": "xīn xié zi bǎ wǒ de jiǎo hòu gēn mó pò le."
+  },
+  "reason": "pinyin: 鞋子 is xié zi"
+ },
+ {
+  "hanzi": "器官",
+  "set": {
+   "question": "人體最大的器官是什麼？",
+   "questionEnglish": "What is the largest organ of the human body?",
+   "questionPinyin": "rén tǐ zuì dà de qì guān shì shén me?",
+   "answer": "人體最大的器官是皮膚。",
+   "answerEnglish": "The largest organ of the human body is the skin.",
+   "answerPinyin": "rén tǐ zuì dà de qì guān shì pí fū."
+  },
+  "reason": "sensitive (death): question asked the learner's views on organ donation; made general"
+ },
+ {
+  "hanzi": "子彈",
+  "set": {
+   "question": "子彈通常是用什麼做的？",
+   "questionEnglish": "What are bullets usually made of?",
+   "questionPinyin": "zǐ dàn tōng cháng shì yòng shén me zuò de?",
+   "answer": "子彈通常是用金屬做的。",
+   "answerEnglish": "Bullets are usually made of metal.",
+   "answerPinyin": "zǐ dàn tōng cháng shì yòng jīn shǔ zuò de."
+  },
+  "reason": "sensitive (violence): question asked about the learner's own experience; made general"
+ },
+ {
+  "hanzi": "滑稽",
+  "set": {
+   "answerPinyin": "wǒ zài xī mén dīng kàn guò hěn huá jī de jiē tóu biǎo yǎn."
+  },
+  "reason": "pinyin: 西門町 is xī mén dīng"
+ },
+ {
+  "hanzi": "射擊",
+  "set": {
+   "pinyin": "shè jí",
+   "examplePinyin": "tā měi gè zhōu mò dōu qù liàn xí shè jí.",
+   "question": "射擊是奧運的比賽項目嗎？",
+   "questionEnglish": "Is shooting an Olympic event?",
+   "questionPinyin": "shè jí shì ào yùn de bǐ sài xiàng mù ma?",
+   "answer": "是，射擊是奧運的比賽項目。",
+   "answerEnglish": "Yes, shooting is an Olympic event.",
+   "answerPinyin": "shì, shè jí shì ào yùn de bǐ sài xiàng mù."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 擊 is jí; sensitive (violence): question asked the learner's taste in shooting games; made general"
+ },
+ {
+  "hanzi": "釘子",
+  "set": {
+   "questionPinyin": "nǐ huì zì jǐ zài qiáng shàng dìng dīng zi ma?",
+   "answerPinyin": "huì, wǒ cháng zì jǐ dìng dīng zi guà zhào piàn."
+  },
+  "reason": "pinyin: 釘 (to nail) is dìng"
  }
 ]

@@ -67,8 +67,9 @@ const TAIWAN_CHARACTERS = new Map([
   // Read one way in Traditional text (隻 is the measure word, 只 only).
   ['誰', 'shéi'], ['姊', 'jiě'], ['只', 'zhǐ'], ['喔', 'ō'],
   ['突', 'tú'], ['究', 'jiù'], ['叔', 'shú'], ['署', 'shù'], ['傍', 'bāng'], ['血', 'xiě'],
-  ['擊', 'jí'], ['識', 'shì'], ['菌', 'jùn'], ['跌', 'dié'],
+  ['擊', 'jí'], ['識', 'shì'], ['菌', 'jùn'], ['跌', 'dié'], ['築', 'zhú'], ['儲', 'chú'], ['蹟', 'jī'],
 ]);
+const SPACE_WORDS = new Set([...'間氣位調白中']);
 // 得 after a verb, before how it was done (跑得很快, 說得好), is de.
 const DE_FOLLOWERS = new Set([...'很好太非常不真快慢多清滿更越']);
 
@@ -93,6 +94,8 @@ export function makeSyllableReader({ pinyin, toSimplified }) {
     for (const character of characters) readings.push(han.test(character) ? syllables[next++] ?? '' : null);
     for (let index = 0; index < characters.length; index += 1) {
       for (const [word, sounds] of TAIWAN_WORDS) {
+        // 有空 is free time, but 沒有空間 is no space.
+        if (word.endsWith('空') && SPACE_WORDS.has(characters[index + word.length])) continue;
         if (characters.slice(index, index + word.length).join('') === word) {
           sounds.forEach((sound, offset) => { readings[index + offset] = sound; });
         }

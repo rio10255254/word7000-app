@@ -56,7 +56,7 @@ public enum SpeakingPractice {
     }
 
     public static func candidates(from words: [WordEntry], activity: Activity) -> [WordEntry] {
-        activity == .examples ? words : words.filter { entry(for: $0) != nil }
+        activity == .examples ? words : words.filter { entry(for: $0) != nil || ChineseCourse.entry(id: $0.id) != nil }
     }
 
     public static func entry(for word: WordEntry) -> Entry? {
@@ -67,6 +67,17 @@ public enum SpeakingPractice {
     }
 
     public static func card(for word: WordEntry, mode: ConversationPromptMode) -> ConversationPromptCard? {
+        // A Chinese course word has its own question, asked in simple Chinese.
+        if let course = ChineseCourse.entry(id: word.id) {
+            return ConversationPromptCard(
+                keyword: course.hanzi,
+                keywordPronunciation: course.pinyin,
+                question: course.question,
+                questionSupport: course.questionEnglish,
+                referenceAnswer: course.answer,
+                referenceTranslation: course.answerEnglish
+            )
+        }
         guard let entry = entry(for: word) else { return nil }
         let chinese = mode == .chinese
         return ConversationPromptCard(

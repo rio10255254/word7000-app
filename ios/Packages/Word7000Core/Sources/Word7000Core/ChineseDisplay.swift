@@ -95,17 +95,23 @@ public enum ChineseDisplay {
     }
 
     /// Tone-marked pinyin for every sense, example sentence and speaking card
-    /// the app ships, written by scripts/build-pinyin-readings.mjs. It reads
+    /// the app ships, written by scripts/build-pinyin-readings.mjs and
+    /// build-chinese-course.mjs. It reads
     /// whole words in context (長大 zhǎng dà, 銀行 yín háng, 還是 hái shì) and uses
     /// Taiwan's standard readings, which the system transliterator, reading
     /// one character at a time, gets wrong. Words a learner adds fall back to
     /// the transliterator.
     static let readings: [String: String] = {
-        guard let url = Bundle.module.url(forResource: "pinyin-readings", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let document = try? JSONDecoder().decode(ReadingsDocument.self, from: data),
-              document.schemaVersion == 1 else { return [:] }
-        return document.readings
+        var readings: [String: String] = [:]
+        if let url = Bundle.module.url(forResource: "pinyin-readings", withExtension: "json"),
+           let data = try? Data(contentsOf: url),
+           let document = try? JSONDecoder().decode(ReadingsDocument.self, from: data),
+           document.schemaVersion == 1 {
+            readings = document.readings
+        }
+        // The Chinese course carries its own readings, made the same way.
+        readings.merge(ChineseCourse.readings) { _, course in course }
+        return readings
     }()
 
     /// Loads the bundled readings, so the first card in Learn Chinese mode

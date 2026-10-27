@@ -64,3 +64,31 @@ final class PinyinReadingsTests: XCTestCase {
         XCTAssertNil(PinyinPractice.target(for: mixed))
     }
 }
+
+final class ChineseCourseTests: XCTestCase {
+    func testCourseWordsAreOrderedAndReadyForEveryDrill() throws {
+        // The course is bundled once its content has been generated.
+        try XCTSkipIf(!ChineseCourse.isAvailable)
+        let levels = ChineseCourse.entries.map(\.level)
+        XCTAssertEqual(levels, levels.sorted())
+        XCTAssertEqual(Set(ChineseCourse.entries.map(\.id)).count, ChineseCourse.entries.count)
+        let first = try XCTUnwrap(ChineseCourse.entries.first)
+        let word = first.word
+        XCTAssertTrue(ChineseCourse.isCourseWordId(word.id))
+        XCTAssertEqual(word.meaningZh, first.hanzi)
+        XCTAssertEqual(ChineseDisplay.pronunciationWithTones(first.hanzi), first.pinyin)
+        XCTAssertEqual(ChineseDisplay.sentencePinyin(first.example), first.examplePinyin)
+        let card = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .chinese))
+        XCTAssertEqual(card.question, first.question)
+        XCTAssertEqual(card.referenceAnswer, first.answer)
+        XCTAssertFalse(SpeakingPractice.candidates(from: [word], activity: .questions).isEmpty)
+    }
+
+    func testNewCourseWordsComeEasiestFirst() {
+        let words = (1...6).map { WordEntry(id: "zh-\($0)", word: "w\($0)", partOfSpeech: "noun", pronunciation: "", meaningZh: "字",
+                                             example: "", exampleZh: "", group: ChineseCourse.levelName($0)) }
+        let queue = LearningEngine.buildStudyQueue(words: words, state: ProgressState(), today: "2026-10-27", limit: 3, seed: "s", freshInOrder: true)
+        XCTAssertEqual(Set(queue.map(\.id)), ["zh-1", "zh-2", "zh-3"])
+        XCTAssertEqual(ChineseCourse.levelName(9), "Advanced")
+    }
+}

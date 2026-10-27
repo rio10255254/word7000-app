@@ -233,7 +233,7 @@ struct BankShelf: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                card(id: WordBanks.coreBankId, name: L.coreBankName, count: model.vocabularyWords.count, icon: "character.book.closed.fill", color: Palette.accent)
+                card(id: WordBanks.coreBankId, name: L.coreBankName, count: model.coreBankWords.count, icon: "character.book.closed.fill", color: Palette.accent)
                 ForEach(model.customSets.sets) { set in
                     let scanned = set.wordIds.contains(where: WordBanks.isScannedWordId)
                     card(id: set.id, name: set.name, count: WordBanks.words(of: set, in: model.allWords).count,

@@ -184,6 +184,14 @@ final class AppModel {
     func setStudyMode(_ mode: StudyMode) {
         guard mode != studyMode else { return }
         settings.studyMode = mode
+        // The two modes teach different word lists, so English levels and
+        // first letters do not carry over.
+        if ChineseCourse.isAvailable {
+            for keyPath in [\AppSettings.studyFilter, \AppSettings.quizFilter, \AppSettings.libraryFilter] {
+                settings[keyPath: keyPath].level = "all"
+                settings[keyPath: keyPath].initial = "all"
+            }
+        }
         studySession = nil
         studyUndoStack = []
         if mode == .chinese { Self.prepareChineseReadings() }
@@ -218,6 +226,15 @@ final class AppModel {
         return words
     }
 
+    /// The built-in list: the English words, or, learning Chinese, the Chinese
+    /// course ordered easiest first.
+    var coreBankWords: [WordEntry] {
+        studyMode == .chinese && ChineseCourse.isAvailable ? ChineseCourse.words : vocabularyWords
+    }
+
+    /// New Chinese course words come easiest first rather than at random.
+    var learnsCourseInOrder: Bool { studyMode == .chinese && activeSet == nil && ChineseCourse.isAvailable }
+
     var activeSet: CustomVocabSet? {
         settings.activeBankId == WordBanks.coreBankId ? nil : customSets.sets.first { $0.id == settings.activeBankId }
     }
@@ -227,11 +244,11 @@ final class AppModel {
 
     var bankWords: [WordEntry] {
         if let set = activeSet { return WordBanks.words(of: set, in: allWords) }
-        return vocabularyWords
+        return coreBankWords
     }
 
     var bank: PreparedVocabulary {
-        let key = "\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
+        let key = "\(settings.activeBankId)|\(studyMode.rawValue)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
         if let cached = preparedCache, cached.key == key { return cached.vocabulary }
         let prepared = PreparedVocabulary(bankWords)
         preparedCache = (key, prepared)
@@ -477,7 +494,8 @@ final class AppModel {
             candidates = studyCandidates
         }
         let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
-                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)))
+                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)),
+                                                  freshInOrder: learnsCourseInOrder)
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studyUndoStack = []
         scheduleSave()
@@ -485,7 +503,7 @@ final class AppModel {
 
     func word(id: String) -> WordEntry? {
         if let index = bank.index(of: id) { return bank.words[index] }
-        return allWords.first { $0.id == id }
+        return allWords.first { $0.id == id } ?? ChineseCourse.entry(id: id)?.word
     }
 
     func gradeCurrentCard(_ grade: StudyGrade, expectedWordId: String? = nil) {

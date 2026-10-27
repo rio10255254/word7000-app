@@ -40,10 +40,14 @@ struct WordFace {
             prompt = concise
             promptDetail = pinyin ? ChineseDisplay.pronunciationWithTones(concise) : ""
             answer = word.word
-            answerLabel = L.englishWord
+            // The answer is plainly English; no label needed.
+            answerLabel = ""
             // The English IPA means little to a learner of Chinese; the part
             // of speech tells which of two similar English words fits.
-            answerDetail = word.partOfSpeech
+            answerDetail = ChineseCourse.entry(id: word.id).map { course in
+                course.measureWord.isEmpty ? course.partOfSpeech
+                    : "\(course.partOfSpeech) · measure word \(course.measureWord) \(ChineseDisplay.pronunciationWithTones(course.measureWord))"
+            } ?? word.partOfSpeech
             supplemental = Self.supplementalParts(word)
                 .map { part in
                     let reading = pinyin ? ChineseDisplay.pronunciationWithTones(part) : ""

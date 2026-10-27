@@ -67,7 +67,6 @@ enum L {
     static var nextSession: String { t("再一組", "Another set") }
     static var nothingToStudy: String { t("目前沒有要學的字", "Nothing to study") }
     static var nothingToStudyText: String { t("這個字庫都學完了，可以換一個字庫。", "You have finished this bank. Pick another one.") }
-    static var englishWord: String { t("英文", "English") }
 
     // Quiz
     static var noQuizWords: String { t("這個字庫還沒有單字", "This bank has no words yet") }
@@ -89,7 +88,7 @@ enum L {
 
     // Words
     static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search English, Chinese, pinyin or examples") }
-    static var coreBankName: String { t("7000 單字", "7000 Words") }
+    static var coreBankName: String { t("7000 單字", ChineseCourse.isAvailable ? "Chinese words" : "7000 Words") }
     static func bankWordCount(_ count: Int) -> String { t("\(count) 個", "\(count)") }
     static var scanSheet: String { t("掃描單字表", "Scan a word list") }
     static var newBank: String { t("新字庫", "New bank") }

@@ -256,10 +256,15 @@ struct SpeakingSessionView: View {
                             PinyinLine(text: model.pinyin(card.referenceAnswer))
                         }
                     }
+                    // Chinese course questions are asked in Chinese, with pinyin.
+                    let chineseQuestion = card.question.contains(where: { $0.unicodeScalars.contains { (0x4E00...0x9FFF).contains($0.value) } })
                     HStack(alignment: .top, spacing: 8) {
-                        Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
-                            .accessibilityIdentifier("speaking-question")
-                        SpeakButton(text: card.question, language: "en-US")
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
+                                .accessibilityIdentifier("speaking-question")
+                            if chineseQuestion { PinyinLine(text: model.pinyin(card.question)) }
+                        }
+                        SpeakButton(text: card.question, language: chineseQuestion ? "zh-TW" : "en-US")
                     }
                     Text(card.questionSupport)
                         .font(.subheadline)

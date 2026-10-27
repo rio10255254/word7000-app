@@ -278,16 +278,6 @@
   "reason": "adverbial 地 is de; 姪子 suffix is zi"
  },
  {
-  "hanzi": "真菌",
-  "set": {
-   "pinyin": "zhēn jùn",
-   "examplePinyin": "xiāng gū qí shí shì yì zhǒng zhēn jùn.",
-   "questionPinyin": "nǐ zhī dào nǎ xiē shí wù shì zhēn jùn ma?",
-   "answerPinyin": "wǒ zhī dào xiāng gū hé mù ěr dōu shì zhēn jùn."
-  },
-  "reason": "菌 is jùn in Taiwan (教育部)"
- },
- {
   "hanzi": "接縫",
   "set": {
    "questionPinyin": "yī fu de jiē fèng liè kāi le, nǐ huì zì jǐ féng ma?",
@@ -324,26 +314,6 @@
    "answerPinyin": "zhài wù rén huán bù chū qián, yín háng kě néng huì pāi mài fáng zi."
   },
   "reason": "還 (repay) is huán"
- },
- {
-  "hanzi": "鑑識",
-  "set": {
-   "pinyin": "jiàn shì",
-   "examplePinyin": "jiàn shì rén yuán zài xiàn chǎng zhǎo zhèng jù.",
-   "questionPinyin": "jiàn shì rén yuán de gōng zuò shì shén me?",
-   "answerPinyin": "jiàn shì rén yuán fù zé zài xiàn chǎng shōu jí zhèng jù."
-  },
-  "reason": "識 is shì (教育部)"
- },
- {
-  "hanzi": "見多識廣",
-  "set": {
-   "pinyin": "jiàn duō shì guǎng",
-   "examplePinyin": "wǒ de zhǔ guǎn jiàn duō shì guǎng, shén me dōu dǒng.",
-   "questionPinyin": "nǐ shēn biān yǒu jiàn duō shì guǎng de péng yǒu ma?",
-   "answerPinyin": "yǒu, wǒ de shì yǒu qù guò hěn duō guó jiā, jiàn duō shì guǎng."
-  },
-  "reason": "識 is shì (教育部)"
  },
  {
   "hanzi": "推論",
@@ -395,24 +365,56 @@
   "reason": "對著 is duì zhe"
  },
  {
-  "hanzi": "建設性",
-  "set": {
-   "answerPinyin": "wǒ huì jìn liàng tí chū yǒu jiàn shè xìng de jiàn yì."
-  },
-  "reason": "盡量 is jìn liàng (教育部)"
- },
- {
-  "hanzi": "灼熱",
-  "set": {
-   "answerPinyin": "wǒ huì cā fáng shài, jìn liàng bì kāi zhuó rè de yáng guāng."
-  },
-  "reason": "盡量 is jìn liàng (教育部)"
- },
- {
   "hanzi": "腫瘤",
   "set": {
    "answerPinyin": "fā xiàn zhǒng liú yīng gāi jìn kuài qù dà yī yuàn jiǎn chá."
   },
   "reason": "盡 is jìn (教育部)"
+ },
+ {
+  "hanzi": "原封不動",
+  "set": {
+   "examplePinyin": "tā bǎ biàn dāng yuán fēng bú dòng de dài huí jiā le.",
+   "answerPinyin": "wǒ huì yuán fēng bú dòng de fàng zài guì zi lǐ."
+  },
+  "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "苔蘚",
+  "set": {
+   "examplePinyin": "lǎo fáng zi de qiáng shàng zhǎng mǎn le tái xiǎn."
+  },
+  "reason": "長 (grow) is zhǎng"
+ },
+ {
+  "hanzi": "手榴彈",
+  "set": {
+   "examplePinyin": "bó wù guǎn lǐ zhǎn shì zhe yǐ qián de shǒu liú dàn."
+  },
+  "reason": "著 particle is zhe"
+ },
+ {
+  "hanzi": "贖回",
+  "set": {
+   "answerPinyin": "bú huì, wǒ huì zài děng yí zhèn zi cái shú huí."
+  },
+  "reason": "一陣子 suffix is zi"
+ },
+ {
+  "hanzi": "錫克教徒",
+  "set": {
+   "pinyin": "xí kè jiào tú",
+   "examplePinyin": "tā shì xí kè jiào tú, měi tiān dōu huì dài tóu jīn.",
+   "questionPinyin": "nǐ rèn shì xí kè jiào tú ma?",
+   "answerPinyin": "rèn shì, wǒ yǐ qián de tóng shì shì xí kè jiào tú."
+  },
+  "reason": "錫 is xí in Taiwan (教育部)"
+ },
+ {
+  "hanzi": "病灶",
+  "set": {
+   "examplePinyin": "yī shēng zài piàn zi shàng fā xiàn yí gè xiǎo bìng zào."
+  },
+  "reason": "片 is piàn in Taiwan (教育部)"
  }
 ]

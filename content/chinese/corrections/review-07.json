@@ -277,9 +277,12 @@
  {
   "hanzi": "洞穴",
   "set": {
-   "examplePinyin": "zhè ge dòng xué lǐ zhù zhe hěn duō biān fú."
+   "examplePinyin": "zhè ge dòng xuè lǐ zhù zhe hěn duō biān fú.",
+   "pinyin": "dòng xuè",
+   "questionPinyin": "nǐ qù guò dòng xuè tàn xiǎn ma?",
+   "answerPinyin": "qù guò, wǒ zài yuè nán jìn guò yí gè dà dòng xuè."
   },
-  "reason": "pinyin: 住著 is zhù zhe"
+  "reason": "pinyin: 住著 is zhù zhe; pinyin: Taiwan MOE reading of 穴 is xuè"
  },
  {
   "hanzi": "貪汙",
@@ -405,7 +408,7 @@
    "answerEnglish": "Yes, shooting is an Olympic event.",
    "answerPinyin": "shì, shè jí shì ào yùn de bǐ sài xiàng mù."
   },
-  "reason": "pinyin: Taiwan MOE reading of 擊 is jí; sensitive (violence): question asked the learner's taste in shooting games; made general"
+  "reason": "sensitive (violence): question asked the learner's taste in shooting games; made general; pinyin: Taiwan MOE reading of 擊 is jí"
  },
  {
   "hanzi": "釘子",
@@ -648,5 +651,12 @@
    "answerPinyin": "yǒu, wǒ cháng qù nà jiā wǔ jīn háng mǎi gōng jù."
   },
   "reason": "pinyin: 五金行 (shop) is wǔ jīn háng"
+ },
+ {
+  "hanzi": "呈現",
+  "set": {
+   "examplePinyin": "zhè zhāng tú biǎo qīng chǔ chéng xiàn le jīn nián de yè jī."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 績 is jī"
  }
 ]

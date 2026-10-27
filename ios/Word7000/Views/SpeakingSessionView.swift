@@ -243,7 +243,7 @@ struct SpeakingSessionView: View {
                     HStack(alignment: .firstTextBaseline) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(card.keyword).font(.rounded(.title3, weight: .bold)).foregroundStyle(Palette.accent)
-                            if !card.keywordPronunciation.isEmpty {
+                            if !card.keywordPronunciation.isEmpty, model.settings.showPinyin ?? true {
                                 Text(card.keywordPronunciation).foregroundStyle(.secondary)
                             }
                         }
@@ -251,7 +251,10 @@ struct SpeakingSessionView: View {
                         SpeakButton(text: card.keyword, language: face.speakLanguage)
                     }
                     if examplesOnly, !card.referenceAnswer.isEmpty {
-                        Text(card.referenceAnswer).font(.title3).lineSpacing(4)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(card.referenceAnswer).font(.title3).lineSpacing(4)
+                            PinyinLine(text: model.pinyin(card.referenceAnswer))
+                        }
                     }
                     HStack(alignment: .top, spacing: 8) {
                         Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
@@ -272,6 +275,7 @@ struct SpeakingSessionView: View {
                             }
                             if !examplesOnly {
                                 Text(card.referenceAnswer).lineSpacing(4).accessibilityIdentifier("speaking-reference-answer")
+                                PinyinLine(text: model.pinyin(card.referenceAnswer))
                             }
                             Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
                         }

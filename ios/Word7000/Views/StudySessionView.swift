@@ -381,6 +381,7 @@ struct WordAnswer: View {
                         SpeakButton(text: face.examplePrimary, language: face.speakLanguage)
                     }
                     Text(face.examplePrimary).lineSpacing(4)
+                    PinyinLine(text: face.examplePinyin)
                     if !face.exampleSecondary.isEmpty {
                         Text(face.exampleSecondary)
                             .font(.subheadline)

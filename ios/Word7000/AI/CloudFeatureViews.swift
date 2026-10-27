@@ -124,6 +124,7 @@ struct AskAISection: View {
                         HStack(alignment: .top) {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(example.sentence)
+                                PinyinLine(text: model.pinyin(example.sentence))
                                 if !example.translation.isEmpty {
                                     Text(example.translation).font(.subheadline).foregroundStyle(.secondary)
                                 }
@@ -295,6 +296,7 @@ struct AIExplanationSection: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(example.sentence)
+                    PinyinLine(text: model.pinyin(example.sentence))
                     if !example.translation.isEmpty {
                         Text(example.translation).font(.subheadline).foregroundStyle(.secondary)
                     }

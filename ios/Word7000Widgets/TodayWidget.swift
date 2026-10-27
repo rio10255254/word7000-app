@@ -14,7 +14,7 @@ struct TodayWidget: Widget {
                 .widgetURL(URL(string: "word7000://study"))
         }
         .configurationDisplayName("Word7000")
-        .description("今天的學習進度、連續天數與每日一字。")
+        .description("今天的學習進度、連續天數與每日一字。Today's progress, streak and word of the day.")
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular, .accessoryInline])
     }
 }
@@ -151,6 +151,8 @@ struct TodayWidgetView: View {
                     .minimumScaleFactor(0.5)
                 if entry.chinese, !word.pronunciation.isEmpty {
                     Text(word.pronunciation).font(.system(size: 13)).foregroundStyle(.secondary).lineLimit(1)
+                } else if !entry.chinese, let pinyin = word.pinyin, !pinyin.isEmpty {
+                    Text(pinyin).font(.system(size: 13)).foregroundStyle(.secondary).lineLimit(1)
                 }
                 Text([word.partOfSpeech, entry.chinese ? word.meaning : word.word].filter { !$0.isEmpty }.joined(separator: "  "))
                     .font(.system(size: 14, weight: .medium))

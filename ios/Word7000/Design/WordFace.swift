@@ -14,11 +14,14 @@ struct WordFace {
     var answerDetail: String
     var supplemental: String
     var examplePrimary: String
+    /// Pinyin under the Chinese example when learning Chinese.
+    var examplePinyin: String
     var exampleSecondary: String
     var speakText: String
     var speakLanguage: String
 
-    init(_ word: WordEntry, mode: StudyMode) {
+    /// `pinyin` off hides pinyin for learners of Chinese who read characters.
+    init(_ word: WordEntry, mode: StudyMode, pinyin: Bool = true) {
         switch mode {
         case .english:
             prompt = word.word
@@ -28,23 +31,27 @@ struct WordFace {
             answerDetail = ""
             supplemental = Self.supplementalParts(word).joined(separator: " · ")
             examplePrimary = word.example
+            examplePinyin = ""
             exampleSecondary = word.exampleZh
             speakText = word.word
             speakLanguage = "en-US"
         case .chinese:
             let concise = ChineseDisplay.conciseMeaning(word.meaningZh)
             prompt = concise
-            promptDetail = ChineseDisplay.pronunciationWithTones(concise)
+            promptDetail = pinyin ? ChineseDisplay.pronunciationWithTones(concise) : ""
             answer = word.word
             answerLabel = L.englishWord
-            answerDetail = [word.partOfSpeech, word.pronunciation].filter { !$0.isEmpty }.joined(separator: "  ")
+            // The English IPA means little to a learner of Chinese; the part
+            // of speech tells which of two similar English words fits.
+            answerDetail = word.partOfSpeech
             supplemental = Self.supplementalParts(word)
                 .map { part in
-                    let pinyin = ChineseDisplay.pronunciationWithTones(part)
-                    return pinyin.isEmpty ? part : "\(part) \(pinyin)"
+                    let reading = pinyin ? ChineseDisplay.pronunciationWithTones(part) : ""
+                    return reading.isEmpty ? part : "\(part) \(reading)"
                 }
                 .joined(separator: " · ")
             examplePrimary = word.exampleZh
+            examplePinyin = pinyin ? ChineseDisplay.sentencePinyin(word.exampleZh) : ""
             exampleSecondary = word.example
             speakText = concise
             speakLanguage = "zh-TW"

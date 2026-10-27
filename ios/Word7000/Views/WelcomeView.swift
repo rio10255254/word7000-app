@@ -2,11 +2,19 @@ import SwiftUI
 import Word7000Core
 
 struct WelcomeView: View {
-    @State private var mode: StudyMode = .english
+    @State private var mode: StudyMode = WelcomeView.suggestedMode
     @State private var target = 20
     var finish: (StudyMode, Int, Bool) -> Void
 
     private var chinese: Bool { mode == .english }
+
+    /// A phone set to Chinese most likely belongs to a learner of English;
+    /// any other language, to a learner of Chinese. UI tests keep English.
+    static var suggestedMode: StudyMode {
+        if ProcessInfo.processInfo.arguments.contains("-uiTestingOnboarding") { return .english }
+        return Locale.preferredLanguages.first?.lowercased().hasPrefix("zh") == false ? .chinese : .english
+    }
+
     private func text(_ zh: String, _ en: String) -> String { chinese ? zh : en }
 
     var body: some View {
@@ -30,6 +38,10 @@ struct WelcomeView: View {
                     }
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("welcome-language")
+                    Text(text("中文介面，用中文意思學 7000 個英文單字。之後可以在首頁切換。",
+                              "An English interface for learning the Chinese for 7000 English words, with pinyin. Switch any time on the Today screen."))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
                 Section(text("每日目標", "Daily goal")) {
                     Picker(text("單字數量", "Words"), selection: $target) {

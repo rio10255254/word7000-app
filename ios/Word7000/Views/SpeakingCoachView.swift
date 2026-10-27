@@ -191,7 +191,10 @@ struct SpeakingCoachView: View {
                 Section {
                     DisclosureGroup(L.t("參考回答", "Reference answer")) {
                         HStack(alignment: .top) {
-                            Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
+                                PinyinLine(text: request.mode == .chinese ? model.pinyin(referenceAnswer) : "")
+                            }
                             Spacer(minLength: 8)
                             SpeakButton(text: referenceAnswer, language: answerLanguage).disabled(recording.busy)
                         }
@@ -281,6 +284,7 @@ struct SpeakingCoachView: View {
                     .textSelection(.enabled)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("coach-rewrite")
+                PinyinLine(text: request.mode == .chinese ? model.pinyin(feedback.rewrite) : "")
             }
             Spacer(minLength: 8)
             SpeakButton(text: feedback.rewrite, language: answerLanguage)

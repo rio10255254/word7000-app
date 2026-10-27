@@ -41,6 +41,7 @@ enum L {
     static var practiceStruggling: String { t("複習不熟的字", "Review tricky words") }
     static var speaking: String { t("口說練習", "Speaking practice") }
     static var spelling: String { t("拼字練習", "Spelling") }
+    static var pinyinPractice: String { t("拼音練習", "Pinyin practice") }
     static func studyingBank(_ name: String) -> String { t("字庫：\(name)", "Word bank: \(name)") }
 
     // Study
@@ -87,7 +88,7 @@ enum L {
     static func speakingScore(_ count: Int) -> String { t("完成 \(count) 張口說卡", "\(count) prompts answered") }
 
     // Words
-    static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search English, Chinese or examples") }
+    static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search English, Chinese, pinyin or examples") }
     static var coreBankName: String { t("7000 單字", "7000 Words") }
     static func bankWordCount(_ count: Int) -> String { t("\(count) 個", "\(count)") }
     static var scanSheet: String { t("掃描單字表", "Scan a word list") }
@@ -108,7 +109,7 @@ enum L {
     static var filterLevel: String { t("分級", "Level") }
     static var filterSort: String { t("排序", "Sort") }
     static var sortDefault: String { t("原本順序", "Original order") }
-    static var sortAlphabetical: String { t("A 到 Z", "A to Z") }
+    static var sortAlphabetical: String { t("A 到 Z", "English A to Z") }
     static var allLevels: String { t("全部分級", "All levels") }
     static var favoriteWord: String { t("收藏", "Save") }
     static var unfavoriteWord: String { t("取消收藏", "Unsave") }

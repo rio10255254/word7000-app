@@ -42,6 +42,39 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
     }
 
+    func testTodaySwitchesToLearnChineseWithPinyinPractice() {
+        let app = launch()
+        let chinese = app.buttons["today-mode-chinese"]
+        XCTAssertTrue(chinese.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["today-spelling"].exists)
+        snapshot(app, "chinese-mode-switch-english")
+        chinese.tap()
+        // The interface turns English and spelling becomes pinyin practice.
+        let pinyin = app.buttons["today-pinyin"]
+        XCTAssertTrue(pinyin.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["today-spelling"].exists)
+        XCTAssertTrue(app.buttons["today-mode-chinese"].isSelected)
+        snapshot(app, "chinese-mode-today")
+
+        pinyin.tap()
+        let input = app.textFields["spelling-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["spelling-meaning"].exists)
+        snapshot(app, "chinese-mode-pinyin-question")
+        input.tap()
+        input.typeText("zz")
+        app.buttons["spelling-check"].tap()
+        XCTAssertTrue(app.staticTexts["spelling-result"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["spelling-answer"].exists)
+        snapshot(app, "chinese-mode-pinyin-answer")
+        app.buttons["spelling-close"].tap()
+
+        let english = app.buttons["today-mode-english"]
+        XCTAssertTrue(english.waitForExistence(timeout: 5))
+        english.tap()
+        XCTAssertTrue(app.buttons["today-spelling"].waitForExistence(timeout: 5))
+    }
+
     func testAutoRevealShowsAnswersWithoutATap() {
         let app = launch()
         app.buttons["today-start"].tap()

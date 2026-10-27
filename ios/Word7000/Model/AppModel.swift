@@ -64,6 +64,7 @@ final class AppModel {
         L.mode = settings.studyMode ?? .english
         self.persistence = persistence
         self.today = today
+        if settings.studyMode == .chinese { Self.prepareChineseReadings() }
     }
 
     static func launch() -> AppModel {
@@ -185,9 +186,21 @@ final class AppModel {
         settings.studyMode = mode
         studySession = nil
         studyUndoStack = []
+        if mode == .chinese { Self.prepareChineseReadings() }
     }
 
-    func face(_ word: WordEntry) -> WordFace { WordFace(word, mode: studyMode) }
+    /// The pinyin table is a megabyte of JSON; read it before the first card.
+    private static func prepareChineseReadings() {
+        Task.detached(priority: .userInitiated) { ChineseDisplay.prepareReadings() }
+    }
+
+    /// Learn Chinese mode, with pinyin under Chinese text unless turned off.
+    var showsPinyin: Bool { studyMode == .chinese && (settings.showPinyin ?? true) }
+
+    /// Pinyin for a Chinese sentence or answer when pinyin is showing.
+    func pinyin(_ text: String) -> String { showsPinyin ? ChineseDisplay.sentencePinyin(text) : "" }
+
+    func face(_ word: WordEntry) -> WordFace { WordFace(word, mode: studyMode, pinyin: settings.showPinyin ?? true) }
 
     // MARK: Word lists and banks
 
@@ -250,7 +263,7 @@ final class AppModel {
     /// Saves reviewed scan rows into a new bank and switches to it.
     func saveScannedWords(_ rows: [ReviewedScanWord], newBankName: String) -> (setId: String, added: Int, name: String)? {
         guard !ScanImportPlan(rows: rows).additions.isEmpty else { return nil }
-        let created = customSets.creatingSet(named: newBankName.trimmed.isEmpty ? WordBanks.defaultScanBankName() : newBankName)
+        let created = customSets.creatingSet(named: newBankName.trimmed.isEmpty ? WordBanks.defaultScanBankName(chineseMode: studyMode == .chinese) : newBankName)
         customSets = created.state
         return saveScannedWords(rows, intoSet: created.id)
     }
@@ -527,12 +540,17 @@ final class AppModel {
         return seenWordsFirst(count: count, seed: seed)
     }
 
-    /// Spelling draws from the same words as a quiz.
-    func spellingQuestions(seed: String) -> [WordEntry] { seenWordsFirst(count: Spelling.sessionLength, seed: seed) }
+    /// Spelling draws from the same words as a quiz. Learning English: words to spell. Learning Chinese: words whose
+    /// characters can be read and typed as pinyin.
+    func spellingQuestions(seed: String) -> [WordEntry] {
+        guard studyMode == .chinese else { return seenWordsFirst(count: Spelling.sessionLength, seed: seed) }
+        return seenWordsFirst(count: Spelling.sessionLength, seed: seed) { PinyinPractice.target(for: $0) != nil }
+    }
 
-    private func seenWordsFirst(count: Int, seed: String) -> [WordEntry] {
+    private func seenWordsFirst(count: Int, seed: String, matching include: ((WordEntry) -> Bool)? = nil) -> [WordEntry] {
         let filter = settings.quizFilter
-        let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+        var candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+        if let include { candidates = candidates.filter(include) }
         return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed)
     }
 

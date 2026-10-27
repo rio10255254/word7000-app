@@ -87,6 +87,83 @@ public enum ChineseDisplay {
         )
     }
 
+    // MARK: - Readings
+
+    private struct ReadingsDocument: Decodable {
+        let schemaVersion: Int
+        let readings: [String: String]
+    }
+
+    /// Tone-marked pinyin for every sense, example sentence and speaking card
+    /// the app ships, written by scripts/build-pinyin-readings.mjs. It reads
+    /// whole words in context (長大 zhǎng dà, 銀行 yín háng, 還是 hái shì) and uses
+    /// Taiwan's standard readings, which the system transliterator, reading
+    /// one character at a time, gets wrong. Words a learner adds fall back to
+    /// the transliterator.
+    static let readings: [String: String] = {
+        guard let url = Bundle.module.url(forResource: "pinyin-readings", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let document = try? JSONDecoder().decode(ReadingsDocument.self, from: data),
+              document.schemaVersion == 1 else { return [:] }
+        return document.readings
+    }()
+
+    /// Loads the bundled readings, so the first card in Learn Chinese mode
+    /// does not wait for them. Call it off the main thread.
+    public static func prepareReadings() { _ = readings.isEmpty }
+
+    /// Pinyin for a sentence, with Chinese punctuation in its Latin form.
+    /// Empty when the text has no Chinese characters.
+    public static func sentencePinyin(_ text: String) -> String {
+        let trimmed = jsTrim(text)
+        guard trimmed.contains(where: isHan) else { return "" }
+        if let reading = readings[trimmed] { return reading }
+        let key = "sentence:\(trimmed)"
+        cacheLock.lock()
+        let cached = pinyinCache[key]
+        cacheLock.unlock()
+        if let cached { return cached }
+        var value = ""
+        #if canImport(Darwin) || os(Linux)
+        let latinPunctuation: [(String, String)] = [("，", ", "), ("。", ". "), ("！", "! "), ("？", "? "), ("：", ": "),
+                                                    ("；", "; "), ("、", ", "), ("「", " \u{201C}"), ("」", "\u{201D} ")]
+        var marked = trimmed
+        for (chinese, latin) in latinPunctuation { marked = marked.replacingOccurrences(of: chinese, with: latin) }
+        if let latin = marked.applyingTransform(.mandarinToLatin, reverse: false) {
+            value = latin.split(whereSeparator: { $0.isWhitespace }).joined(separator: " ").lowercased()
+            for mark in [",", ".", "!", "?", ":", ";", "\u{201D}"] {
+                value = value.replacingOccurrences(of: " \(mark)", with: mark)
+            }
+            value = value.replacingOccurrences(of: "\u{201C} ", with: "\u{201C}")
+        }
+        #endif
+        cacheLock.lock()
+        pinyinCache[key] = value
+        cacheLock.unlock()
+        return value
+    }
+
+    /// Toneless pinyin for each sense, without spaces and with `ü` as `v`,
+    /// separated by single spaces: what a pinyin search is compared with.
+    public static func pinyinSearchKey(_ meaning: String) -> String {
+        meaningParts(meaning)
+            .map { pinyinSearchTerm(pronunciationWithTones($0)) ?? "" }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+    }
+
+    /// What a learner typed as pinyin, the way search keys are written:
+    /// tones (marks or numbers), spaces and apostrophes removed, `ü`, `u:`
+    /// and `v` all as `v`. Nil when it is not pinyin at all.
+    public static func pinyinSearchTerm(_ text: String) -> String? {
+        let plain = stripTones(text.lowercased())
+            .replacingOccurrences(of: "u:", with: "v")
+            .replacingOccurrences(of: "ü", with: "v")
+            .filter { !$0.isWhitespace && !"'’012345；;".contains($0) }
+        guard !plain.isEmpty, plain.allSatisfy({ $0.isASCII && $0.isLetter }) else { return nil }
+        return plain
+    }
+
     /// Native reading support keeps tone marks and the separator between senses.
     public static func pronunciationWithTones(_ meaning: String) -> String {
         let key = "tones:\(meaning)"
@@ -95,6 +172,7 @@ public enum ChineseDisplay {
         cacheLock.unlock()
         if let cached { return cached }
         let value = meaningParts(meaning).compactMap { part -> String? in
+            if let reading = readings[part] { return reading }
             let corrected = part.replacingOccurrences(of: "調整", with: "tiáo zhěng")
                 .replacingOccurrences(of: "敢於", with: "gǎn yú")
                 .replacingOccurrences(of: "為了", with: "wèi le")

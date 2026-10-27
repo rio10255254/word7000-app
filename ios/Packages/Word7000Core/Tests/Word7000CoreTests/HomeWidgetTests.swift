@@ -182,7 +182,10 @@ final class HomeWidgetTests: XCTestCase {
                                                    chineseInterface: chineseInterface, words: [entry])
             let restored = try JSONDecoder().decode(HomeWidgetSnapshot.self, from: JSONEncoder().encode(snapshot))
             XCTAssertEqual(restored.chineseInterface, chineseInterface)
-            XCTAssertEqual(restored.display(on: "2036-10-20").word, expected)
+            var shown = expected
+            // Learners of Chinese also see the meaning's pinyin.
+            if !chineseInterface { shown.pinyin = "xué xí；xué huì" }
+            XCTAssertEqual(restored.display(on: "2036-10-20").word, shown)
         }
     }
 

@@ -219,6 +219,9 @@ export async function appCourse(entries) {
     for (let index = 0; index + word.length <= characters.length; index += 1) {
       if (characters.slice(index, index + word.length).join('') === entry.hanzi) {
         const syllables = syllablesOf(entry.example).slice(index, index + word.length);
+        // 一 and 不 change tone before the next syllable; after a headword
+        // that syllable is the sentence's, not the word's (一 is yī).
+        if (/[一不]$/.test(entry.hanzi)) syllables[syllables.length - 1] = syllablesOf(entry.hanzi).at(-1);
         if (syllables.every(Boolean)) return syllables.join(' ');
       }
     }

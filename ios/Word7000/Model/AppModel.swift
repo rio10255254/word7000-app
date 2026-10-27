@@ -120,7 +120,11 @@ final class AppModel {
             progress.analytics = analytics
         }
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
-        if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
+        if arguments.contains("-uiTestingChineseMode") {
+            // As the switch on Today leaves it: the course in its own order.
+            settings.studyMode = .chinese
+            settings.libraryFilter.sort = .default
+        }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
         if settings.onboardingComplete == nil {
             settings.onboardingComplete = snapshot != nil || !progress.words.isEmpty || !sets.sets.isEmpty
@@ -575,15 +579,18 @@ final class AppModel {
         let filter = settings.quizFilter
         var candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
         if let include { candidates = candidates.filter(include) }
-        if learnsCourseInOrder {
-            // Words not met yet come from the next ones in the course, not from
-            // anywhere in it: a beginner is not quizzed on 熔岩.
-            let ordered = candidates.sorted { (bank.index(of: $0.id) ?? 0) < (bank.index(of: $1.id) ?? 0) }
-            let seen = ordered.filter { progress.words[$0.id] != nil }
-            let next = ordered.filter { progress.words[$0.id] == nil }.prefix(max(count * 3, 30))
-            candidates = seen + next
-        }
+        if learnsCourseInOrder { candidates = courseSoFar(candidates, ahead: max(count * 3, 30)) }
         return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed)
+    }
+
+    /// Learning the course: the words met so far and the next `ahead` in
+    /// course order, not words from anywhere in it: a beginner is not quizzed
+    /// on 熔岩 or asked about 品牌.
+    private func courseSoFar(_ words: [WordEntry], ahead: Int) -> [WordEntry] {
+        let ordered = words.sorted { (bank.index(of: $0.id) ?? 0) < (bank.index(of: $1.id) ?? 0) }
+        let seen = ordered.filter { progress.words[$0.id] != nil }
+        let next = ordered.filter { progress.words[$0.id] == nil }.prefix(ahead)
+        return seen + next
     }
 
     /// The numbers the AI learning analysis reads: totals, the last 14 days
@@ -703,7 +710,8 @@ final class AppModel {
 
     var speakingCandidates: [WordEntry] {
         let filter = settings.speakingFilter ?? FilterSelection()
-        return bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+        let words = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+        return learnsCourseInOrder ? courseSoFar(words, ahead: 30) : words
     }
 
     // MARK: Word sets

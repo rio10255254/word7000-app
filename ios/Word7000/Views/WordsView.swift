@@ -472,7 +472,9 @@ struct WordDetailView: View {
                     .padding(.vertical, 4)
                 }
             }
-            if let note = WordNotes.note(for: word.word) {
+            // Notes are about English words; a course word's gloss can match
+            // one by chance (收養 "adopt").
+            if !ChineseCourse.isCourseWordId(word.id), let note = WordNotes.note(for: word.word) {
                 Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
                         : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
             }

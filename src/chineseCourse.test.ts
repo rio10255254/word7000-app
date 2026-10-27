@@ -49,6 +49,15 @@ describe('Chinese course builder', () => {
     expect(merged[1]).toMatchObject({ level: 1, english: 'like; be fond of', sources: ['w1', 'w2'] });
   });
 
+  it('reads a headword as its example uses it, but 一 and 不 at its end in their own tone', async () => {
+    const course = await appCourse([
+      { ...good, hanzi: '一', example: '我要一杯咖啡。', answer: '我要一杯咖啡。' },
+      { ...good, hanzi: '一定', example: '我一定去。', answer: '我一定去。' },
+      { ...good, hanzi: '長大', example: '我在台北長大。', answer: '我在台北長大。' },
+    ]);
+    expect(course.entries.map((entry: { pinyin: string }) => entry.pinyin)).toEqual(['yī', 'yí dìng', 'zhǎng dà']);
+  });
+
   it('keeps the app file in step with the reviewed course', async () => {
     if (!fs.existsSync(courseFile)) return;
     const { entries } = JSON.parse(fs.readFileSync(courseFile, 'utf8'));

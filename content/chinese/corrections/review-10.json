@@ -1,0 +1,768 @@
+[
+ {
+  "hanzi": "驚恐",
+  "set": {
+   "answerPinyin": "huì, kàn dào zuì kě pà de dì fāng wǒ huì jīng kǒng de dà jiào."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "規範",
+  "set": {
+   "examplePinyin": "gōng sī duì yuán gōng de chuān zhuó yǒu hěn qīng chǔ de guī fàn."
+  },
+  "reason": "pinyin: 穿著 (attire) is chuān zhuó"
+ },
+ {
+  "hanzi": "混凝土",
+  "set": {
+   "questionPinyin": "nǐ xǐ huan hùn níng tǔ jiàn zhú hái shì mù tou fáng zi?"
+  },
+  "reason": "pinyin: Taiwan MOE reading of 築 is zhú"
+ },
+ {
+  "hanzi": "輪廓",
+  "set": {
+   "examplePinyin": "qǐ wù le, wǒ men zhǐ kàn de dào shān de lún kuò."
+  },
+  "reason": "pinyin: potential 得 is de"
+ },
+ {
+  "hanzi": "醒目",
+  "set": {
+   "questionPinyin": "nǐ xǐ huan chuān yán sè xǐng mù de yī fu ma?",
+   "answerPinyin": "bù xǐ huan, wǒ jué de xǐng mù de yán sè tài yǐn rén zhù yì le."
+  },
+  "reason": "pinyin: 醒目的 is xǐng mù de (not 目的 mù dì)"
+ },
+ {
+  "hanzi": "痊癒",
+  "set": {
+   "question": "感冒通常要多久才會痊癒？",
+   "questionPinyin": "gǎn mào tōng cháng yào duō jiǔ cái huì quán yù?",
+   "questionEnglish": "How long does a cold usually take to clear up?",
+   "answer": "通常一個禮拜左右就會痊癒了。",
+   "answerPinyin": "tōng cháng yí gè lǐ bài zuǒ yòu jiù huì quán yù le.",
+   "answerEnglish": "It usually clears up in about a week."
+  },
+  "reason": "sensitive: question asked about the learner's own illness; made general"
+ },
+ {
+  "hanzi": "便士",
+  "set": {
+   "answerPinyin": "yòng guò, wǒ hái liú zhe jǐ gè biàn shì dàng jì niàn."
+  },
+  "reason": "pinyin: 留著 is liú zhe; 當 (as) is dàng"
+ },
+ {
+  "hanzi": "謀殺",
+  "set": {
+   "question": "推理小說裡常常有什麼案子？",
+   "questionPinyin": "tuī lǐ xiǎo shuō lǐ cháng cháng yǒu shén me àn zi?",
+   "questionEnglish": "What kind of cases often come up in mystery novels?",
+   "answer": "推理小說裡常常有謀殺案。",
+   "answerPinyin": "tuī lǐ xiǎo shuō lǐ cháng cháng yǒu móu shā àn.",
+   "answerEnglish": "Mystery novels often have murder cases."
+  },
+  "reason": "sensitive: question asked the learner's own taste in murder stories; made general"
+ },
+ {
+  "hanzi": "肖像畫",
+  "set": {
+   "examplePinyin": "qiáng shàng guà zhe yì fú yé ye de xiào xiàng huà."
+  },
+  "reason": "pinyin: 掛著 is guà zhe"
+ },
+ {
+  "hanzi": "飛彈",
+  "set": {
+   "question": "飛彈和火箭有什麼不同？",
+   "questionPinyin": "fēi dàn hé huǒ jiàn yǒu shén me bù tóng?",
+   "questionEnglish": "What's the difference between a missile and a rocket?",
+   "answer": "飛彈是武器，火箭可以把衛星送上太空。",
+   "answerPinyin": "fēi dàn shì wǔ qì, huǒ jiàn kě yǐ bǎ wèi xīng sòng shàng tài kōng.",
+   "answerEnglish": "A missile is a weapon; a rocket can carry satellites into space."
+  },
+  "reason": "sensitive: question asked the learner's own fear of missile news; made general"
+ },
+ {
+  "hanzi": "憲法",
+  "set": {
+   "answerPinyin": "dú guò yì diǎn, xué xiào jiāo guò xiàn fǎ."
+  },
+  "reason": "pinyin: 教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "襲擊",
+  "set": {
+   "pinyin": "xí jí",
+   "examplePinyin": "shān shàng yǒu dēng shān kè bèi hǔ tóu fēng xí jí.",
+   "question": "在海邊，什麼動物可能會襲擊人？",
+   "questionPinyin": "zài hǎi biān, shén me dòng wù kě néng huì xí jí rén?",
+   "questionEnglish": "At the beach, what animals might attack people?",
+   "answer": "海鷗有時候會襲擊拿食物的人。",
+   "answerPinyin": "hǎi ōu yǒu shí hòu huì xí jí ná shí wù de rén.",
+   "answerEnglish": "Seagulls sometimes attack people holding food."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 擊 is jí; sensitive: question asked about the learner being attacked; made general"
+ },
+ {
+  "hanzi": "知識分子",
+  "set": {
+   "pinyin": "zhī shì fèn zǐ",
+   "examplePinyin": "tā de bà ba shì gè zhī shì fèn zǐ.",
+   "questionPinyin": "nǐ jué de zì jǐ shì zhī shì fèn zǐ ma?",
+   "answerPinyin": "bú shì, wǒ bú suàn shì zhī shì fèn zǐ."
+  },
+  "reason": "pinyin: 分子 (member) is fèn zǐ; Taiwan MOE 知識 is zhī shì"
+ },
+ {
+  "hanzi": "定罪",
+  "set": {
+   "question": "沒有證據，法院可以定罪嗎？",
+   "questionPinyin": "méi yǒu zhèng jù, fǎ yuàn kě yǐ dìng zuì ma?",
+   "questionEnglish": "Can a court convict someone without evidence?"
+  },
+  "reason": "sensitive: question asked the learner's views on convicting; made impersonal"
+ },
+ {
+  "hanzi": "意識",
+  "set": {
+   "pinyin": "yì shì",
+   "examplePinyin": "tā hūn dǎo yǐ hòu shī qù le yì shì.",
+   "questionPinyin": "nǐ yǒu huán bǎo yì shì ma?",
+   "answerPinyin": "yǒu, wǒ de huán bǎo yì shì hěn qiáng."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 識 in 意識 is shì"
+ },
+ {
+  "hanzi": "競爭者",
+  "set": {
+   "answerPinyin": "yǒu, wǒ zhè háng de jìng zhēng zhě hěn duō."
+  },
+  "reason": "pinyin: 這行 (line of work) is háng"
+ },
+ {
+  "hanzi": "恐怖分子",
+  "set": {
+   "pinyin": "kǒng bù fèn zǐ",
+   "examplePinyin": "jǐng chá zhuā dào le liǎng gè kǒng bù fèn zǐ.",
+   "question": "機場為什麼要做安全檢查？",
+   "questionPinyin": "jī chǎng wèi shén me yào zuò ān quán jiǎn chá?",
+   "questionEnglish": "Why do airports do security checks?",
+   "answer": "為了防止恐怖分子帶危險物品上飛機。",
+   "answerPinyin": "wèi le fáng zhǐ kǒng bù fèn zǐ dài wéi xiǎn wù pǐn shàng fēi jī.",
+   "answerEnglish": "To stop terrorists from taking dangerous items onto planes."
+  },
+  "reason": "pinyin: 分子 (member) is fèn zǐ; sensitive: question asked the learner's own fear of terrorists; made general"
+ },
+ {
+  "hanzi": "強暴",
+  "set": {
+   "question": "強暴在法律上是很重的罪嗎？",
+   "questionPinyin": "qiáng bào zài fǎ lǜ shàng shì hěn zhòng de zuì ma?",
+   "questionEnglish": "Is rape a serious crime under the law?",
+   "answer": "是，強暴是很重的罪，會被判刑。",
+   "answerPinyin": "shì, qiáng bào shì hěn zhòng de zuì, huì bèi pàn xíng.",
+   "answerEnglish": "Yes, rape is a serious crime that leads to a prison sentence."
+  },
+  "reason": "sensitive: question asked the learner's views on punishing rapists; made impersonal"
+ },
+ {
+  "hanzi": "緊握",
+  "set": {
+   "examplePinyin": "tā jǐn zhāng de jǐn wò zhe wǒ de shǒu."
+  },
+  "reason": "pinyin: complement 得 is de; 握著 is wò zhe"
+ },
+ {
+  "hanzi": "剝削",
+  "set": {
+   "pinyin": "bō xuè",
+   "examplePinyin": "zhè jiā gōng sī bō xuè yuán gōng, cháng cháng bù gěi jiā bān fèi.",
+   "questionPinyin": "nǐ jué de nǐ bèi lǎo bǎn bō xuè guò ma?",
+   "answerPinyin": "yǒu, yǐ qián de lǎo bǎn cháng bō xuè wǒ men."
+  },
+  "reason": "pinyin: Taiwan MOE 剝削 is bō xuè"
+ },
+ {
+  "hanzi": "短缺",
+  "set": {
+   "answerPinyin": "yù guò, yǒu yí zhèn zi jī dàn duǎn quē, hěn nán mǎi."
+  },
+  "reason": "pinyin: 一陣子 is yí zhèn zi"
+ },
+ {
+  "hanzi": "分子",
+  "set": {
+   "pinyin": "fēn zǐ",
+   "examplePinyin": "shuǐ fēn zǐ shì yóu qīng hé yǎng zǔ chéng de.",
+   "answerPinyin": "xǐ huan, wǒ jué de yán jiù fēn zǐ hěn yǒu qù."
+  },
+  "reason": "pinyin: 分子 (molecule) is fēn zǐ; Taiwan MOE reading of 究 is jiù"
+ },
+ {
+  "hanzi": "蟋蟀",
+  "set": {
+   "questionPinyin": "nǐ jiā fù jìn wǎn shàng tīng de dào xī shuài ma?",
+   "answerPinyin": "tīng de dào, xià tiān wǎn shàng cháng yǒu xī shuài jiào."
+  },
+  "reason": "pinyin: potential 得 is de"
+ },
+ {
+  "hanzi": "股利",
+  "set": {
+   "answerPinyin": "duì, wǒ mǎi gǔ piào zhǔ yào shì wèi le lǐng gǔ lì."
+  },
+  "reason": "pinyin: 主要是 is zhǔ yào shì"
+ },
+ {
+  "hanzi": "突襲",
+  "set": {
+   "pinyin": "tú xí",
+   "examplePinyin": "jǐng chá bàn yè tú xí le nà jiā diàn.",
+   "questionPinyin": "nǐ de lǎo bǎn huì tú xí jiǎn chá nǐ de gōng zuò ma?",
+   "answerPinyin": "huì, tā cháng cháng tú xí jiǎn chá wǒ men de jìn dù."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 突 is tú"
+ },
+ {
+  "hanzi": "削弱",
+  "set": {
+   "pinyin": "xuè ruò",
+   "examplePinyin": "áo yè huì xuè ruò nǐ de dǐ kàng lì.",
+   "questionPinyin": "nǐ jué de shén me huì xuè ruò nǐ de dòng lì?",
+   "answerPinyin": "tài lèi de shí hòu huì xuè ruò wǒ de dòng lì."
+  },
+  "reason": "pinyin: Taiwan MOE 削弱 is xuè ruò"
+ },
+ {
+  "hanzi": "暴跌",
+  "set": {
+   "pinyin": "bào dié",
+   "examplePinyin": "jīn tiān gǔ jià bào dié, dà jiā dōu hěn jǐn zhāng.",
+   "questionPinyin": "rú guǒ gǔ piào bào dié, nǐ huì zěn me zuò?",
+   "answerPinyin": "gǔ piào bào dié shí, wǒ huì zài mǎi yì diǎn."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 跌 is dié"
+ },
+ {
+  "hanzi": "起訴",
+  "set": {
+   "question": "在台灣，酒駕會被起訴嗎？",
+   "questionPinyin": "zài tái wān, jiǔ jià huì bèi qǐ sù ma?",
+   "questionEnglish": "In Taiwan, can you be prosecuted for drunk driving?",
+   "answer": "會，酒駕的人可能會被起訴。",
+   "answerPinyin": "huì, jiǔ jià de rén kě néng huì bèi qǐ sù.",
+   "answerEnglish": "Yes, drunk drivers can be prosecuted."
+  },
+  "reason": "sensitive: question asked the learner's views on prosecuting a crime; made impersonal"
+ },
+ {
+  "hanzi": "聖人",
+  "set": {
+   "examplePinyin": "tā pí qì hǎo de xiàng shèng rén yí yàng.",
+   "questionPinyin": "nǐ rèn shi pí qì hǎo de xiàng shèng rén de rén ma?"
+  },
+  "reason": "pinyin: complement 得 is de"
+ },
+ {
+  "hanzi": "遊艇",
+  "set": {
+   "examplePinyin": "wǒ men zū le yì sāo yóu tǐng chū hǎi."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 艘 is sāo"
+ },
+ {
+  "hanzi": "裁定",
+  "set": {
+   "answerPinyin": "dà bù fèn xiāng xìn, dàn yǒu xiē cái dìng bù gōng píng."
+  },
+  "reason": "pinyin: 部分 is bù fèn (教育部)"
+ },
+ {
+  "hanzi": "游擊隊",
+  "set": {
+   "pinyin": "yóu jí duì",
+   "examplePinyin": "nà ge guó jiā de shān qū yǒu yóu jí duì.",
+   "questionPinyin": "nǐ kàn guò guān yú yóu jí duì de diàn yǐng ma?",
+   "answerPinyin": "kàn guò, wǒ kàn guò yí bù guān yú yóu jí duì de diàn yǐng."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 擊 is jí"
+ },
+ {
+  "hanzi": "垂死",
+  "set": {
+   "question": "在路上看到垂死的小動物，該怎麼辦？",
+   "questionPinyin": "zài lù shàng kàn dào chuí sǐ de xiǎo dòng wù, gāi zěn me bàn?",
+   "questionEnglish": "What should you do if you see a dying animal on the road?",
+   "answer": "可以把垂死的小動物送去動物醫院。",
+   "answerPinyin": "kě yǐ bǎ chuí sǐ de xiǎo dòng wù sòng qù dòng wù yī yuàn.",
+   "answerEnglish": "You can take the dying animal to an animal hospital."
+  },
+  "reason": "sensitive: question asked about the learner's own experience with death; made general"
+ },
+ {
+  "hanzi": "仇恨",
+  "set": {
+   "examplePinyin": "wǒ men bú yīng gāi jiāo xiǎo hái chóu hèn."
+  },
+  "reason": "pinyin: 教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "未遂",
+  "set": {
+   "question": "在台灣，犯罪未遂也會被處罰嗎？",
+   "questionPinyin": "zài tái wān, fàn zuì wèi suì yě huì bèi chǔ fá ma?",
+   "questionEnglish": "In Taiwan, can an attempted crime also be punished?",
+   "answer": "會，犯罪未遂也可能會被處罰。",
+   "answerPinyin": "huì, fàn zuì wèi suì yě kě néng huì bèi chǔ fá.",
+   "answerEnglish": "Yes, an attempted crime can also be punished."
+  },
+  "reason": "sensitive: question asked the learner's views on punishment; made impersonal"
+ },
+ {
+  "hanzi": "檢察官",
+  "set": {
+   "examplePinyin": "jiǎn chá guān zhèng zài diào chá zhè ge àn zi.",
+   "questionPinyin": "nǐ jué de dāng jiǎn chá guān yā lì dà ma?",
+   "answerPinyin": "wǒ jué de dāng jiǎn chá guān yā lì hěn dà."
+  },
+  "reason": "pinyin: 案子 is àn zi; 覺得 is jué de; 當 (be) is dāng"
+ },
+ {
+  "hanzi": "傳承",
+  "set": {
+   "pinyin": "chuán chéng",
+   "examplePinyin": "zhè jiā lǎo diàn yǐ jīng chuán chéng le sān dài."
+  },
+  "reason": "pinyin: 傳承 is chuán chéng"
+ },
+ {
+  "hanzi": "意識形態",
+  "set": {
+   "pinyin": "yì shì xíng tài",
+   "examplePinyin": "tā men chǎo jià shì yīn wèi yì shì xíng tài bù tóng.",
+   "questionPinyin": "nǐ hé péng yǒu huì tǎo lùn yì shì xíng tài ma?",
+   "answerPinyin": "hěn shǎo, yì shì xíng tài de huà tí róng yì chǎo jià."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 識 in 意識 is shì"
+ },
+ {
+  "hanzi": "司法",
+  "set": {
+   "answerPinyin": "dà bù fèn xiāng xìn, dàn sī fǎ hái shì yǒu wèn tí."
+  },
+  "reason": "pinyin: 部分 is bù fèn (教育部)"
+ },
+ {
+  "hanzi": "證詞",
+  "set": {
+   "questionPinyin": "nǐ jué de mù jí zhě de zhèng cí kě kào ma?"
+  },
+  "reason": "pinyin: Taiwan MOE reading of 擊 is jí"
+ },
+ {
+  "hanzi": "咧嘴笑",
+  "set": {
+   "questionPinyin": "shén me shì huì ràng nǐ kāi xīn de liě zuǐ xiào?",
+   "answerPinyin": "shōu dào lǐ wù shí, wǒ huì kāi xīn de liě zuǐ xiào."
+  },
+  "reason": "pinyin: complement 得 is de"
+ },
+ {
+  "hanzi": "殖民",
+  "set": {
+   "questionPinyin": "nǐ kàn guò zhí mín shí qí de jiàn zhú ma?",
+   "answerPinyin": "kàn guò, dàn shuǐ de hóng máo chéng jiù shì zhí mín shí qí de jiàn zhú."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 築 is zhú"
+ },
+ {
+  "hanzi": "步槍",
+  "set": {
+   "examplePinyin": "shì bīng men bēi zhe bù qiāng zài lù shang xíng jūn."
+  },
+  "reason": "pinyin: 背著 (carry on the back) is bēi zhe"
+ },
+ {
+  "hanzi": "無盡",
+  "set": {
+   "examplePinyin": "zhàn zài hǎi biān, kàn zhe wú jìn de dà hǎi, xīn qíng hěn píng jìng.",
+   "questionPinyin": "nǐ jué de jiā shì zuò de wán ma?"
+  },
+  "reason": "pinyin: 看著 is kàn zhe; potential 得 is de"
+ },
+ {
+  "hanzi": "中世紀",
+  "set": {
+   "answerPinyin": "yǒu, wǒ hěn xǐ huan kàn zhōng shì jì de gù shì."
+  },
+  "reason": "pinyin: 看 + 中世紀 is kàn zhōng (not 看中 kàn zhòng)"
+ },
+ {
+  "hanzi": "大都會",
+  "set": {
+   "pinyin": "dà dū huì",
+   "examplePinyin": "dōng jīng shì yí gè guó jì dà dū huì.",
+   "questionPinyin": "nǐ xǐ huan zhù zài dà dū huì ma?",
+   "answerPinyin": "xǐ huan, dà dū huì de shēng huó hěn fāng biàn."
+  },
+  "reason": "pinyin: 都會 (metropolis) is dū huì"
+ },
+ {
+  "hanzi": "雄心勃勃",
+  "set": {
+   "answerPinyin": "wǒ xióng xīn bó bó de xiǎng zài wǔ nián nèi huán yóu shì jiè."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "肝臟",
+  "set": {
+   "pinyin": "gān zàng",
+   "examplePinyin": "gān zàng shì hěn zhòng yào de qì guān.",
+   "questionPinyin": "píng cháng zěn me zuò kě yǐ bǎo hù gān zàng?",
+   "answerPinyin": "shǎo hē jiǔ, zǎo diǎn shuì kě yǐ bǎo hù gān zàng."
+  },
+  "reason": "pinyin: 臟 is zàng"
+ },
+ {
+  "hanzi": "尊嚴",
+  "set": {
+   "examplePinyin": "měi gè rén dōu yīng gāi bèi yǒu zūn yán de duì dài."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "項圈",
+  "set": {
+   "examplePinyin": "wǒ de gǒu dài zhe hóng sè de xiàng quān.",
+   "answerPinyin": "yǒu, wǒ jiā de māo dài zhe yí gè yǒu líng dang de xiàng quān."
+  },
+  "reason": "pinyin: 戴著 is dài zhe"
+ },
+ {
+  "hanzi": "意味深長",
+  "set": {
+   "examplePinyin": "tā yì wèi shēn cháng de kàn le wǒ yì yǎn."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "詩句",
+  "set": {
+   "examplePinyin": "qiáng shàng xiě zhe yí duàn měi lì de shī jù."
+  },
+  "reason": "pinyin: 寫著 is xiě zhe"
+ },
+ {
+  "hanzi": "山脊",
+  "set": {
+   "examplePinyin": "wǒ men yán zhe shān jǐ zǒu dào shān dǐng."
+  },
+  "reason": "pinyin: 沿著 is yán zhe"
+ },
+ {
+  "hanzi": "債權人",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng zhài quán rén róng yì ma?"
+  },
+  "reason": "pinyin: 覺得 is jué de; 當 (be) is dāng"
+ },
+ {
+  "hanzi": "剝奪",
+  "set": {
+   "pinyin": "bō duó",
+   "examplePinyin": "méi yǒu rén kě yǐ bō duó nǐ shòu jiào yù de quán lì.",
+   "questionPinyin": "nǐ jué de shǒu jī bō duó le nǐ de shuì mián ma?",
+   "answer": "有，滑手機剝奪了我很多睡眠時間。",
+   "answerPinyin": "yǒu, huá shǒu jī bō duó le wǒ hěn duō shuì mián shí jiān."
+  },
+  "reason": "pinyin: 剝奪 is bō duó; other: answer 會 does not fit a 了 question, use 有"
+ },
+ {
+  "hanzi": "僧侶",
+  "set": {
+   "examplePinyin": "shān shàng de sì miào zhù zhe jǐ wèi sēng lǚ."
+  },
+  "reason": "pinyin: 住著 is zhù zhe"
+ },
+ {
+  "hanzi": "流蘇",
+  "set": {
+   "examplePinyin": "zhè jiàn wài tào de xiù zi shàng yǒu liú sū."
+  },
+  "reason": "pinyin: 袖子 is xiù zi"
+ },
+ {
+  "hanzi": "繼承人",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng yǒu qián rén jiā de jì chéng rén hǎo ma?"
+  },
+  "reason": "pinyin: 覺得 is jué de; 當 (be) is dāng"
+ },
+ {
+  "hanzi": "圓頂",
+  "set": {
+   "questionPinyin": "nǐ kàn guò nǎ zuò yǒu yuán dǐng de jiàn zhú?"
+  },
+  "reason": "pinyin: Taiwan MOE reading of 築 is zhú"
+ },
+ {
+  "hanzi": "政治宣傳",
+  "set": {
+   "questionPinyin": "nǐ kàn de chū lái nǎ xiē shì zhèng zhì xuān chuán ma?",
+   "answerPinyin": "yǒu shí hòu kàn de chū lái, zhèng zhì xuān chuán tōng cháng hěn kuā zhāng."
+  },
+  "reason": "pinyin: potential 得 is de"
+ },
+ {
+  "hanzi": "看守人",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng dēng tǎ kān shǒu rén huì jì mò ma?"
+  },
+  "reason": "pinyin: 覺得 is jué de; 當 (be) is dāng"
+ },
+ {
+  "hanzi": "輕蔑",
+  "set": {
+   "examplePinyin": "tā yòng qīng miè de yǎn shén kàn zhe wǒ."
+  },
+  "reason": "pinyin: 看著 is kàn zhe"
+ },
+ {
+  "hanzi": "攝取量",
+  "set": {
+   "pinyin": "shè qǔ liàng",
+   "examplePinyin": "yī shēng yào wǒ jiǎn shǎo táng de shè qǔ liàng.",
+   "questionPinyin": "nǐ huì zhù yì měi tiān kā fēi yīn de shè qǔ liàng ma?",
+   "answerPinyin": "huì, wǒ měi tiān zuì duō hē liǎng bēi, kòng zhì shè qǔ liàng."
+  },
+  "reason": "pinyin: 量 (amount) is liàng"
+ },
+ {
+  "hanzi": "激增",
+  "set": {
+   "examplePinyin": "lián jià de shí hòu, guān guāng kè rén shù jī zēng."
+  },
+  "reason": "pinyin: 連假 (holiday) is lián jià"
+ },
+ {
+  "hanzi": "鍛造",
+  "set": {
+   "questionPinyin": "nǐ kàn guò shī fu duàn zào dāo zi ma?"
+  },
+  "reason": "pinyin: 刀子 is dāo zi"
+ },
+ {
+  "hanzi": "歐陸",
+  "set": {
+   "questionPinyin": "nǐ xǐ huan ōu lù fēng gé de jiàn zhú ma?",
+   "answerPinyin": "xǐ huan, ōu lù fēng gé de jiàn zhú hěn yǒu qì zhí."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 築 is zhú"
+ },
+ {
+  "hanzi": "錨",
+  "set": {
+   "examplePinyin": "nà sāo chuán zài gǎng kǒu xià le máo."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 艘 is sāo"
+ },
+ {
+  "hanzi": "隱含",
+  "set": {
+   "examplePinyin": "tā de huà lǐ yǐn hán zhe bù mǎn.",
+   "answerPinyin": "hěn duō guǎng gào yǐn hán zhe mǎi le dōng xī jiù huì kuài lè de yì sī."
+  },
+  "reason": "pinyin: 隱含著 is yǐn hán zhe"
+ },
+ {
+  "hanzi": "情婦",
+  "set": {
+   "answerPinyin": "yīn wèi qíng fù de jué sè kě yǐ ràng jù qíng gèng yǒu chōng tú."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 突 is tú"
+ },
+ {
+  "hanzi": "藤蔓",
+  "set": {
+   "examplePinyin": "nà miàn qiáng shàng zhǎng mǎn le téng wàn.",
+   "questionPinyin": "nǐ jiā fù jìn yǒu zhǎng mǎn téng wàn de fáng zi ma?",
+   "answerPinyin": "yǒu, xiàng zi lǐ yǒu yí dòng zhǎng mǎn téng wàn de lǎo fáng zi."
+  },
+  "reason": "pinyin: 長滿 (grow all over) is zhǎng mǎn"
+ },
+ {
+  "hanzi": "船身",
+  "set": {
+   "examplePinyin": "zhè sāo chuán de chuán shēn shì bái sè de."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 艘 is sāo"
+ },
+ {
+  "hanzi": "量子",
+  "set": {
+   "examplePinyin": "tā zài dà xué yán jiù liàng zǐ wù lǐ."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 究 is jiù"
+ },
+ {
+  "hanzi": "自發",
+  "set": {
+   "examplePinyin": "lín jū men zì fā de dǎ sǎo gōng yuán."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "舊識",
+  "set": {
+   "pinyin": "jiù shì",
+   "examplePinyin": "wǒ zài jié yùn shàng yù dào yí wèi jiù shì.",
+   "questionPinyin": "nǐ zài tái wān yù guò jiù shì ma?",
+   "answerPinyin": "yǒu, wǒ zài yè shì qiǎo yù yí wèi dà xué de jiù shì."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 識 in 舊識 is shì"
+ },
+ {
+  "hanzi": "種植園",
+  "set": {
+   "pinyin": "zhòng zhí yuán",
+   "examplePinyin": "tā zài nán bù jīng yíng yí zuò kā fēi zhòng zhí yuán.",
+   "questionPinyin": "nǐ cān guān guò kā fēi zhòng zhí yuán ma?",
+   "answerPinyin": "cān guān guò, wǒ qù guò yún lín de kā fēi zhòng zhí yuán."
+  },
+  "reason": "pinyin: 種植 (to plant) is zhòng zhí"
+ },
+ {
+  "hanzi": "嚇阻",
+  "set": {
+   "pinyin": "hè zǔ",
+   "examplePinyin": "lù kǒu de jiān shì qì kě yǐ hè zǔ xiǎo tōu.",
+   "questionPinyin": "shén me fāng fǎ kě yǐ hè zǔ chuǎng hóng dēng?",
+   "answerPinyin": "zhuāng gèng duō jiān shì qì kě yǐ hè zǔ chuǎng hóng dēng."
+  },
+  "reason": "pinyin: Taiwan MOE 嚇阻 is hè zǔ"
+ },
+ {
+  "hanzi": "外交手腕",
+  "set": {
+   "examplePinyin": "tā hěn yǒu wài jiāo shǒu wàn, gēn shéi dōu chǔ de hǎo."
+  },
+  "reason": "pinyin: 處得好 (get along) is chǔ de hǎo"
+ },
+ {
+  "hanzi": "附著",
+  "set": {
+   "pinyin": "fù zhuó",
+   "examplePinyin": "huī chén fù zhuó zài chuāng hù shàng.",
+   "questionPinyin": "nǐ jiā shén me dì fāng róng yì fù zhuó huī chén?",
+   "answerPinyin": "wǒ jiā de diàn fēng shàn zuì róng yì fù zhuó huī chén."
+  },
+  "reason": "pinyin: 附著 is fù zhuó; 什麼 is shén me"
+ },
+ {
+  "hanzi": "宗族",
+  "set": {
+   "examplePinyin": "zhè ge cūn zi de rén dōu shǔ yú tóng yí gè zōng zú."
+  },
+  "reason": "pinyin: 村子 is cūn zi"
+ },
+ {
+  "hanzi": "胚胎",
+  "set": {
+   "examplePinyin": "pēi tāi zài mā ma de dù zi lǐ màn màn zhǎng dà."
+  },
+  "reason": "pinyin: 肚子 is dù zi"
+ },
+ {
+  "hanzi": "搖曳",
+  "set": {
+   "examplePinyin": "hǎi biān de yē zi shù zài fēng zhōng yáo yè."
+  },
+  "reason": "pinyin: 椰子 is yē zi"
+ },
+ {
+  "hanzi": "動脈",
+  "set": {
+   "examplePinyin": "xīn zàng bǎ xuè sòng dào dòng mài."
+  },
+  "reason": "pinyin: 心臟 is xīn zàng"
+ },
+ {
+  "hanzi": "迫遷",
+  "set": {
+   "answerPinyin": "tīng guò, yǒu xiē lǎo shè qū yīn wèi dū gēng miàn lín pò qiān."
+  },
+  "reason": "pinyin: 都更 (urban renewal) is dū gēng"
+ },
+ {
+  "hanzi": "楔子",
+  "set": {
+   "pinyin": "xiē zi",
+   "examplePinyin": "tā yòng yí gè mù tou xiē zi bǎ mén kǎ zhù.",
+   "questionPinyin": "nǐ zhī dào xiē zi kě yǐ yòng lái zuò shén me ma?",
+   "answerPinyin": "xiē zi kě yǐ yòng lái gù dìng mén huò zhuō jiǎo."
+  },
+  "reason": "pinyin: suffix 子 in 楔子 is neutral zi"
+ },
+ {
+  "hanzi": "殘骸",
+  "set": {
+   "examplePinyin": "hǎi biān yǒu yì sāo jiù chuán de cán hái.",
+   "answerPinyin": "kàn guò, nà sāo chuán de cán hái zài hǎi dǐ hěn duō nián le."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 艘 is sāo"
+ },
+ {
+  "hanzi": "馬克思主義",
+  "set": {
+   "examplePinyin": "tā zài dà xué yán jiù mǎ kè sī zhǔ yì."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 究 is jiù"
+ },
+ {
+  "hanzi": "騎師",
+  "set": {
+   "answerPinyin": "bù xiǎng, wǒ jué de dāng qí shī tài wéi xiǎn le."
+  },
+  "reason": "pinyin: 覺得 is jué de; 當 (be) is dāng"
+ },
+ {
+  "hanzi": "肥沃",
+  "set": {
+   "answerPinyin": "hěn féi wò, wǒ men nà lǐ zhòng hěn duō mài zi."
+  },
+  "reason": "pinyin: 種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "羞辱",
+  "set": {
+   "examplePinyin": "lǎo bǎn dāng zhe dà jiā de miàn xiū rǔ tā.",
+   "answerPinyin": "bèi rén xiū rǔ de shí hòu, yào lěng jìng de shuō chū gǎn shòu."
+  },
+  "reason": "pinyin: 當著 is dāng zhe; adverbial 地 is de"
+ },
+ {
+  "hanzi": "韁繩",
+  "set": {
+   "answerPinyin": "huì, wǒ yì zhí jǐn jǐn lā zhe jiāng shéng."
+  },
+  "reason": "pinyin: 拉著 is lā zhe"
+ },
+ {
+  "hanzi": "騎兵",
+  "set": {
+   "examplePinyin": "gǔ dài dǎ zhàng de shí hòu, qí bīng pǎo de zuì kuài."
+  },
+  "reason": "pinyin: complement 得 is de"
+ },
+ {
+  "hanzi": "抽打",
+  "set": {
+   "examplePinyin": "dà yǔ yì zhí chōu dǎ zhe chuāng hù."
+  },
+  "reason": "pinyin: 抽打著 is chōu dǎ zhe"
+ }
+]

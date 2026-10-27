@@ -405,5 +405,42 @@
    "examplePinyin": "wǒ qǐng cái feng bāng wǒ gǎi kù zi."
   },
   "reason": "褲子 suffix is zi"
+ },
+ {
+  "hanzi": "代理",
+  "set": {
+   "examplePinyin": "diàn zhǎng qǐng jià, zhè zhōu yóu wǒ dài lǐ."
+  },
+  "reason": "店長 is diàn zhǎng"
+ },
+ {
+  "hanzi": "持續不斷",
+  "set": {
+   "examplePinyin": "wài miàn chí xù bú duàn de xià yǔ.",
+   "answerPinyin": "yǒu, gé bì gōng dì měi tiān chí xù bú duàn de shī gōng."
+  },
+  "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "圖釘",
+  "set": {
+   "examplePinyin": "wǒ yòng tú dīng bǎ hǎi bào dìng zài qiáng shàng.",
+   "answerPinyin": "huì, wǒ yòng tú dīng bǎ xíng shì lì dìng zài qiáng shàng."
+  },
+  "reason": "釘 (to pin, verb) is dìng"
+ },
+ {
+  "hanzi": "鋁",
+  "set": {
+   "questionPinyin": "nǐ jiā yǒu lǚ zuò de guō zi ma?"
+  },
+  "reason": "鍋子 suffix is zi"
+ },
+ {
+  "hanzi": "匆忙",
+  "set": {
+   "examplePinyin": "tā cōng máng de pǎo qù gǎn jié yùn."
+  },
+  "reason": "adverbial 地 is de"
  }
 ]

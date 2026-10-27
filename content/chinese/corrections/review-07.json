@@ -292,5 +292,48 @@
    "answerPinyin": "guān yuán tān wū bèi zhuā dào, kě néng yào zuò láo."
   },
   "reason": "sensitive (crime): question asked the learner's views on corruption in their country; made impersonal"
+ },
+ {
+  "hanzi": "有罪",
+  "set": {
+   "question": "法官要有什麼才能判人有罪？",
+   "questionEnglish": "What does a judge need before finding someone guilty?",
+   "questionPinyin": "fǎ guān yào yǒu shén me cái néng pàn rén yǒu zuì?",
+   "answer": "法官要有足夠的證據才能判人有罪。",
+   "answerEnglish": "A judge needs enough evidence to find someone guilty.",
+   "answerPinyin": "fǎ guān yào yǒu zú gòu de zhèng jù cái néng pàn rén yǒu zuì."
+  },
+  "reason": "sensitive (crime): question asked the learner's own taste; made impersonal"
+ },
+ {
+  "hanzi": "銀行家",
+  "set": {
+   "pinyin": "yín háng jiā",
+   "examplePinyin": "tā bà ba shì yí wèi yín háng jiā.",
+   "questionPinyin": "nǐ xiǎng dāng yín háng jiā ma?",
+   "answerPinyin": "bù xiǎng, yín háng jiā de yā lì tài dà le."
+  },
+  "reason": "pinyin: 銀行家 is yín háng jiā"
+ },
+ {
+  "hanzi": "微小",
+  "set": {
+   "answerPinyin": "wǒ kāi shǐ měi tiān zǒu lù shàng bān, zhè shì gè wéi xiǎo de gǎi biàn."
+  },
+  "reason": "pinyin: 走路上班 is zǒu lù shàng bān"
+ },
+ {
+  "hanzi": "精心",
+  "set": {
+   "answerPinyin": "wǒ céng jīng jīng xīn zuò le yì běn xiàng bù sòng gěi nǚ péng yǒu."
+  },
+  "reason": "pinyin: 相簿 is xiàng bù"
+ },
+ {
+  "hanzi": "井",
+  "set": {
+   "examplePinyin": "wǒ wài pó jiā yǐ qián yǒu yì kǒu jǐng."
+  },
+  "reason": "pinyin: 外婆家 is wài pó jiā"
  }
 ]

@@ -315,6 +315,18 @@ async function reviewPrepare(args) {
   console.log(`${rows.length} entries in ${count} review files in ${path.relative(root, exportDir)}.`);
 }
 
+function checkCorrections(args) {
+  const corrections = readJson(path.resolve(args[0]));
+  const { merged } = mergedParts();
+  const known = new Set(merged.map((entry) => entry.hanzi));
+  const unknown = corrections.filter((correction) => !known.has(correction.hanzi));
+  const { skipped } = applyCorrections(merged, corrections);
+  console.log(`${corrections.length} corrections, ${unknown.length} for unknown headwords, ${skipped.length} that break the rules.`);
+  for (const row of unknown) console.log(`  unknown headword: ${row.hanzi}`);
+  for (const row of skipped) console.log(`  ${row.hanzi}: ${row.problem}`);
+  if (unknown.length || skipped.length) process.exit(1);
+}
+
 async function build(args) {
   const { collected, merged: parts } = mergedParts();
   const { entries: merged, skipped } = applyCorrections(parts, readCorrections());
@@ -335,7 +347,7 @@ async function build(args) {
   console.log(`${merged.length} Chinese words by level ${JSON.stringify(levels)}, written to ${path.relative(root, appFile)}.`);
 }
 
-const commands = { prepare, check, ingest, 'review-prepare': reviewPrepare, build };
+const commands = { prepare, check, ingest, 'review-prepare': reviewPrepare, 'check-corrections': checkCorrections, build };
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const [command, ...args] = process.argv.slice(2);
   if (!commands[command]) {

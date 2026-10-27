@@ -10,9 +10,13 @@ struct ProgressRing<Label: View>: View {
 
     var body: some View {
         ZStack {
+            // Inset by half the stroke, so the ring stays inside its frame
+            // and is never clipped at the edge of a row.
             Circle()
+                .inset(by: lineWidth / 2)
                 .stroke(Palette.fill, lineWidth: lineWidth)
             Circle()
+                .inset(by: lineWidth / 2)
                 .trim(from: 0, to: max(0.001, fraction))
                 .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                 .rotationEffect(.degrees(-90))

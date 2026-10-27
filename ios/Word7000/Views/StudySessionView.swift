@@ -190,8 +190,10 @@ struct StudySessionView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.bottom, 20)
-                    // Before the answer, the word sits in the middle of the card.
-                    .frame(minHeight: showsAnswer ? 0 : area.size.height, alignment: showsAnswer ? .top : .center)
+                    // The word, and then the word with its answer, sit in the
+                    // middle of the card; on a tall iPhone the answer no longer
+                    // leaves half the card empty below it.
+                    .frame(minHeight: area.size.height, alignment: .center)
                 }
                 .scrollIndicators(.hidden)
                 .scrollDisabled(phase == .dragging || committing)

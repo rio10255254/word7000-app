@@ -54,6 +54,14 @@ final class DeviceLayoutTests: XCTestCase {
         // Quiz: every answer reachable without scrolling.
         began = Date()
         app.buttons["today-quiz"].tap()
+        // The quiz asks how many questions first.
+        let quizStart = app.buttons["quiz-start"]
+        if quizStart.waitForExistence(timeout: 5) {
+            settle()
+            snapshot(app, mode, "quiz-setup")
+            assertOnScreen(app, quizStart, "\(mode) quiz setup: start")
+            quizStart.tap()
+        }
         let firstOption = app.buttons["quiz-option-0"]
         XCTAssertTrue(firstOption.waitForExistence(timeout: 10))
         timings["openQuiz"] = Date().timeIntervalSince(began)

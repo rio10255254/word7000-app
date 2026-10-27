@@ -7,6 +7,7 @@ struct TodayView: View {
     @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var studySettingsOpen = false
+    @ScaledMetric(relativeTo: .title) private var ringSize = 92.0
 
     var start: (Activity) -> Void
 
@@ -17,32 +18,36 @@ struct TodayView: View {
 
         List {
             Section {
-                VStack(spacing: 12) {
-                    ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
-                        VStack(spacing: 0) {
-                            Text("\(progress.studiedToday)")
-                                .font(.rounded(.largeTitle, weight: .bold))
-                                .monospacedDigit()
-                                .contentTransition(.numericText())
-                            Text(L.ofTarget(progress.dailyTarget))
-                                .font(.rounded(.subheadline, weight: .semibold))
+                VStack(spacing: 14) {
+                    // Ring and plan side by side keep the day's practice on
+                    // screen even on the smallest iPhone.
+                    HStack(spacing: 18) {
+                        ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 11) {
+                            VStack(spacing: 0) {
+                                Text("\(progress.studiedToday)")
+                                    .font(.rounded(.title, weight: .bold))
+                                    .monospacedDigit()
+                                    .contentTransition(.numericText())
+                                Text(L.ofTarget(progress.dailyTarget))
+                                    .font(.rounded(.caption, weight: .semibold))
+                                    .foregroundStyle(.secondary)
+                            }
+                            // Large text shrinks to stay inside the ring.
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.4)
+                            .padding(.horizontal, 14)
+                        }
+                        .frame(width: min(ringSize, 140), height: min(ringSize, 140))
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
+                                .font(.rounded(.title3, weight: .bold))
+                            Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
-                        // Large text shrinks to stay inside the ring.
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.4)
-                        .padding(.horizontal, 20)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(width: 124, height: 124)
-
-                    VStack(spacing: 6) {
-                        Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
-                            .font(.rounded(.title2, weight: .bold))
-                        Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    .multilineTextAlignment(.center)
 
                     Button {
                         model.ensureStudySession()
@@ -62,7 +67,7 @@ struct TodayView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 8, trailing: 4))
+                .listRowInsets(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
             }
 
             if model.streakProtectionJustUsed {
@@ -134,9 +139,11 @@ struct TodayView: View {
             } header: {
                 Text(L.practice)
             } footer: {
-                Text(L.studyingBank(model.bankName))
+                // The built-in list needs no reminder; a bank of one's own does.
+                if model.activeSet != nil { Text(L.studyingBank(model.bankName)) }
             }
         }
+        .listSectionSpacing(.compact)
         .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
         .navigationTitle(L.tabToday)
         // The mode switch takes the title's place, so the whole day fits on

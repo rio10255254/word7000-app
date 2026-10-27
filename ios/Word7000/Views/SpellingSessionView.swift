@@ -68,7 +68,8 @@ struct SpellingSessionView: View {
 
     private func question(_ word: WordEntry) -> some View {
         let target = pinyin ? PinyinPractice.target(for: word) : nil
-        return ScrollView {
+        return ScrollViewReader { proxy in
+          ScrollView {
             VStack(spacing: 18) {
                 SessionBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)))
                     .padding(.top, 4)
@@ -141,15 +142,24 @@ struct SpellingSessionView: View {
 
                 if let result, let target {
                     pinyinFeedback(result, word: word, target: target)
+                        .id("feedback")
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                 } else if let result {
                     feedback(result, word: word)
+                        .id("feedback")
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                 }
             }
             .padding(.bottom, 16)
         }
-        .scrollDismissesKeyboard(.never)
+          .scrollDismissesKeyboard(.never)
+          // With the keyboard up a small iPhone has room for little more than
+          // the field, so the answer is brought into view once checked.
+          .onChange(of: result) { _, new in
+              guard new != nil else { return }
+              withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("feedback", anchor: .top) }
+          }
+        }
         .safeAreaInset(edge: .bottom) { actions(word) }
     }
 

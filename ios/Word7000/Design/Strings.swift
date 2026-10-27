@@ -88,7 +88,8 @@ enum L {
 
     // Words
     static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search English, Chinese, pinyin or examples") }
-    static var coreBankName: String { t("7000 單字", ChineseCourse.isAvailable ? "Chinese words" : "7000 Words") }
+    // Not through t(): its English side would load the Chinese course for learners of English.
+    static var coreBankName: String { zh ? "7000 單字" : (ChineseCourse.isAvailable ? "Chinese words" : "7000 Words") }
     static func bankWordCount(_ count: Int) -> String { t("\(count) 個", "\(count)") }
     static var scanSheet: String { t("掃描單字表", "Scan a word list") }
     static var newBank: String { t("新字庫", "New bank") }

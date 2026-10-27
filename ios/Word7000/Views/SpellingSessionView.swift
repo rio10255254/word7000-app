@@ -123,7 +123,7 @@ struct SpellingSessionView: View {
                     .overlay(alignment: .topTrailing) { SpeakButton(text: word.word, language: "en-US") }
                 }
 
-                TextField(target == nil ? L.t("輸入英文單字", "Type the English word") : "Type the pinyin (tones optional)", text: Binding(
+                TextField(target == nil ? L.t("輸入英文單字", "Type the English word") : "Pinyin (tones optional)", text: Binding(
                     get: { input },
                     set: { if result == nil { input = $0 } }
                 ))

@@ -65,6 +65,9 @@ const TAIWAN_WORDS = new Map([
   ['著涼', ['zháo', 'liáng']],
   ['沉著', ['chén', 'zhuó']],
   ['執著', ['zhí', 'zhuó']],
+  ['覺得', ['jué', 'de']],
+  ['剝削', ['bō', 'xuè']],
+  ['削弱', ['xuè', 'ruò']],
 ]);
 const TAIWAN_CHARACTERS = new Map([
   ['期', 'qí'], ['危', 'wéi'], ['微', 'wéi'], ['企', 'qì'], ['質', 'zhí'], ['液', 'yì'],
@@ -73,7 +76,7 @@ const TAIWAN_CHARACTERS = new Map([
   // Read one way in Traditional text (隻 is the measure word, 只 only).
   ['誰', 'shéi'], ['姊', 'jiě'], ['只', 'zhǐ'], ['喔', 'ō'],
   ['突', 'tú'], ['究', 'jiù'], ['叔', 'shú'], ['署', 'shù'], ['傍', 'bāng'], ['血', 'xiě'],
-  ['擊', 'jí'], ['識', 'shì'], ['菌', 'jùn'], ['跌', 'dié'], ['築', 'zhú'], ['儲', 'chú'], ['蹟', 'jī'], ['跡', 'jī'], ['績', 'jī'], ['穴', 'xuè'], ['錫', 'xí'],
+  ['擊', 'jí'], ['識', 'shì'], ['菌', 'jùn'], ['跌', 'dié'], ['築', 'zhú'], ['儲', 'chú'], ['蹟', 'jī'], ['跡', 'jī'], ['績', 'jī'], ['穴', 'xuè'], ['錫', 'xí'], ['艘', 'sāo'], ['臟', 'zàng'], ['剝', 'bō'],
 ]);
 const SPACE_WORDS = new Set([...'間氣位調白中']);
 // 著 after a verb (看著, 拿著, 等著) is zhe; these neighbours keep zhù, zhuó or zháo.

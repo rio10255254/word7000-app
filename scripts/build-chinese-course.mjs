@@ -58,7 +58,7 @@ export const GUIDE = [
   '- level: 1 to 6, roughly the TOCFL vocabulary bands: 1 = Novice (準備級, the first 500 words: 我, 吃, 喜歡, 今天), 2 = Level 1 入門, 3 = Level 2 基礎, 4 = Level 3 進階, 5 = Level 4 高階, 6 = Level 5 流利 and beyond. Judge how early a learner of Chinese meets the word, not how hard the English is.',
   `- example: one natural sentence using hanzi exactly as written, in everyday Taiwan Mandarin. Use only words a learner at that level knows, and keep it short: at most ${Object.entries(EXAMPLE_LIMITS).map(([level, limit]) => `${limit} characters at level ${level}`).join(', ')}. Set it in the daily life of an adult in Taiwan (work, friends, family, the MRT, night markets, convenience stores, travel, food, weather), not in a Taiwanese high school. End with 。 ！ or ？.`,
   '- exampleEnglish: a natural English translation of example.',
-  '- question: a speaking question in simple Chinese, at or below the word\'s level, that a learner can answer using hanzi, at most 20 characters, ending with ？. Ask about the learner\'s own life or opinions.',
+  '- question: a speaking question in simple Chinese, at or below the word\'s level, that a learner can answer using hanzi, at most 20 characters, ending with ？. Ask about the learner\'s own life or opinions. For a sensitive word (crime, violence, sex, self-harm, death, illness), keep the example neutral and factual and ask a general, impersonal question instead (什麼地方可以找到幫助？), never about the learner\'s experience or views.',
   '- questionEnglish: its English translation.',
   '- answer: a short model answer in Chinese that uses hanzi, one sentence at levels 1 to 3 and at most two at levels 4 to 6, within the same length limit as example plus 8 characters.',
   '- answerEnglish: its English translation.',

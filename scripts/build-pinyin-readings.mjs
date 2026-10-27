@@ -63,11 +63,11 @@ const PUNCTUATION = new Map(Object.entries({
 const OPENING = new Set(['“', '‘', '(']);
 
 /**
- * Tone-marked pinyin for `text`: syllables separated by spaces, Chinese
- * punctuation turned into its Latin form, other text kept as it is.
+ * One reading per character of `text`, null for characters that are not
+ * Chinese: whole words read in context, then Taiwan's standard readings.
  */
-export function makeReader({ pinyin, toSimplified }) {
-  return function read(text) {
+export function makeSyllableReader({ pinyin, toSimplified }) {
+  return function syllablesOf(text) {
     const characters = [...text];
     const simplified = [...toSimplified(text)];
     const source = simplified.length === characters.length ? simplified.join('') : text;
@@ -88,6 +88,20 @@ export function makeReader({ pinyin, toSimplified }) {
         readings[index] = TAIWAN_CHARACTERS.get(character);
       }
     });
+
+    return readings;
+  };
+}
+
+/**
+ * Tone-marked pinyin for `text`: syllables separated by spaces, Chinese
+ * punctuation turned into its Latin form, other text kept as it is.
+ */
+export function makeReader({ pinyin, toSimplified }) {
+  const syllablesOf = makeSyllableReader({ pinyin, toSimplified });
+  return function read(text) {
+    const characters = [...text];
+    const readings = syllablesOf(text);
 
     let out = '';
     let latin = '';

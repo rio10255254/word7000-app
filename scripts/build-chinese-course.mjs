@@ -202,14 +202,29 @@ function ingest(args) {
 export async function appCourse(entries) {
   const { pinyin } = await import('pinyin-pro');
   const OpenCC = await import('opencc-js');
-  const { makeReader } = await import('./build-pinyin-readings.mjs');
-  const read = makeReader({ pinyin, toSimplified: OpenCC.Converter({ from: 't', to: 'cn' }) });
+  const { makeReader, makeSyllableReader } = await import('./build-pinyin-readings.mjs');
+  const toSimplified = OpenCC.Converter({ from: 't', to: 'cn' });
+  const read = makeReader({ pinyin, toSimplified });
+  const syllablesOf = makeSyllableReader({ pinyin, toSimplified });
+  // A headword on its own can be ambiguous (量 liàng or liáng, 長 cháng or
+  // zhǎng); read it as its own example uses it.
+  const headword = (entry) => {
+    const characters = [...entry.example];
+    const word = [...entry.hanzi];
+    for (let index = 0; index + word.length <= characters.length; index += 1) {
+      if (characters.slice(index, index + word.length).join('') === entry.hanzi) {
+        const syllables = syllablesOf(entry.example).slice(index, index + word.length);
+        if (syllables.every(Boolean)) return syllables.join(' ');
+      }
+    }
+    return read(entry.hanzi);
+  };
   return {
     schemaVersion: 1,
     entries: entries.map((entry) => ({
       id: `zh-${entry.hanzi}`,
       hanzi: entry.hanzi,
-      pinyin: read(entry.hanzi),
+      pinyin: headword(entry),
       english: entry.english,
       partOfSpeech: entry.partOfSpeech,
       measureWord: entry.measureWord,

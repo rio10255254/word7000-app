@@ -272,6 +272,20 @@ describe('AI answer checks', () => {
   });
 });
 
+describe('Coach corrections', () => {
+  it('keeps at most two corrections that quote the answer, as the app requires', () => {
+    const answer = 'I am practice English with my friend every days and watch movie.';
+    const plan = planTask('coach', { ...coachInput, answer });
+    const fix = (original: string, replacement: string) => ({ original, replacement, reason: '原因。' });
+    const refined = plan.refine?.({
+      rewrite: 'I practice English with my friend every day and watch movies.', tip: '很好。', followUp: 'Why?',
+      corrections: [fix('I am practice English', 'I practice English'), fix('every dayz', 'every day'),
+        fix('every days', 'every day'), fix('every days', 'each day'), fix('watch movie', 'watch movies')],
+    }) as { corrections: { original: string }[] };
+    expect(refined.corrections.map((item) => item.original)).toEqual(['I am practice English', 'every days']);
+  });
+});
+
 describe('Learning insights', () => {
   const input = {
     mode: 'english', streak: 4, mastered: 120, reviewing: 18, due: 9, dailyTarget: 20, quizCorrect: 31, quizTotal: 40,

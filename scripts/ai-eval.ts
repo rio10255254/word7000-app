@@ -68,7 +68,13 @@ function explainCheck(word: string, mode: 'english' | 'chinese', appExample: str
       }
     }
     const explain = mode === 'english' ? chinese : english;
-    problems.push(...explain(content.summary, 'summary'), ...explain(content.usage, 'usage'), ...explain(content.pitfall, 'pitfall'));
+    problems.push(...explain(content.summary, 'summary'));
+    // Usage and pitfall quote English patterns and wrong sentences, so they only need to be partly Chinese.
+    if (mode === 'english') {
+      for (const key of ['usage', 'pitfall']) if (hanShare(String(content[key] ?? '')) < 0.15) problems.push(`${key} is not in Chinese`);
+    } else {
+      problems.push(...english(content.usage, 'usage'), ...english(content.pitfall, 'pitfall'));
+    }
     return problems;
   };
 }
@@ -144,7 +150,7 @@ const coachAnswers: [string, string, string][] = [
 ];
 
 const insightsActive = {
-  mode: 'english', streak: 6, mastered: 240, reviewing: 35, due: 18, dailyTarget: 20, quizCorrect: 52, quizTotal: 70,
+  mode: 'english', streak: 4, mastered: 240, reviewing: 35, due: 18, dailyTarget: 20, quizCorrect: 52, quizTotal: 70,
   days: [
     { date: '2026-10-20', words: 22, quiz: 10, speaking: 1 }, { date: '2026-10-21', words: 20, quiz: 0, speaking: 0 },
     { date: '2026-10-22', words: 0, quiz: 0, speaking: 0 }, { date: '2026-10-23', words: 25, quiz: 20, speaking: 2 },

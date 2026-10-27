@@ -204,6 +204,25 @@ function coach(input: Record<string, unknown>): TaskPlan {
     review: practice === 'english'
       ? languageReview({ chinese: ['tip', 'reason'], english: ['rewrite', 'followUp'] }, RETRY_CHINESE)
       : languageReview({ chinese: ['rewrite', 'followUp'], english: ['tip', 'reason'] }, RETRY_ENGLISH),
+    // The app turns away a reply with more than two corrections, or one that does
+    // not quote the answer exactly, and the learner then loses the whole reply.
+    // Keep the first two the app can show (SpeakingCoach.Feedback.validated).
+    refine: (content) => {
+      const reply = record(content);
+      const answer = data.studentContent.answer;
+      const seen = new Set<string>();
+      const corrections = (Array.isArray(reply.corrections) ? reply.corrections : []).filter((item) => {
+        const original = String(record(item).original ?? '');
+        const replacement = String(record(item).replacement ?? '');
+        const reason = String(record(item).reason ?? '');
+        const fits = original.trim() && replacement.trim() && reason.trim() && original !== replacement
+          && [...original].length <= 120 && [...replacement].length <= 160 && [...reason].length <= 180
+          && answer.includes(original) && !seen.has(original);
+        if (fits) seen.add(original);
+        return fits;
+      }).slice(0, 2);
+      return { ...reply, corrections };
+    },
     system: [
       languages,
       'You are a warm, precise language coach in a vocabulary app.',

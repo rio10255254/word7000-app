@@ -355,12 +355,13 @@ jobs:
           while IFS=$'\t' read -r udid name os; do DESTINATIONS+=(-destination "id=$udid"); done < "$RUNNER_TEMP/devices.txt"
           xcodebuild test-without-building -project ios/Word7000.xcodeproj -scheme Word7000 \
             -derivedDataPath "$DERIVED" "${DESTINATIONS[@]}" \
-            -maximum-concurrent-test-simulator-destinations 2 -parallel-testing-enabled NO \
+            -maximum-concurrent-test-simulator-destinations 3 -parallel-testing-enabled NO \
             -only-testing:Word7000UITests/DeviceLayoutTests \
             -resultBundlePath "$RUNNER_TEMP/Devices.xcresult" \
             CODE_SIGNING_ALLOWED=NO >> "$RUNNER_TEMP/xcodebuild.log" 2>&1
           status=$?
-          grep -E "error:|Test Case .* (passed|failed)|\*\* TEST" "$RUNNER_TEMP/xcodebuild.log" | tail -200
+          # With several destinations xcodebuild writes "Test case '…' passed on '<device>'".
+          grep -iE "error:|test case .* (passed|failed)|\*\* TEST" "$RUNNER_TEMP/xcodebuild.log" | tail -200
           exit $status
 
       - name: Collect screenshots and timings

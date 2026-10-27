@@ -220,7 +220,15 @@ const only = option('--only');
 const apiKey = process.env.ANTHROPIC_API_KEY;
 if (!apiKey) { console.error('Set ANTHROPIC_API_KEY.'); process.exit(2); }
 
-interface Result { name: string; task: TaskName; tier: Tier; effort?: string; ms: number; problems: string[]; content?: unknown; error?: string }
+/** Claude Haiku 5.5 list prices per million tokens (prompts under 100K); thinking bills as output. */
+const PRICE = { input: 0.10, output: 0.50 };
+const dollars = (usage?: { inputTokens: number; outputTokens: number }) =>
+  usage ? (usage.inputTokens * PRICE.input + usage.outputTokens * PRICE.output) / 1_000_000 : 0;
+
+interface Result {
+  name: string; task: TaskName; tier: Tier; effort?: string; ms: number; problems: string[]; content?: unknown; error?: string;
+  usage?: { inputTokens: number; outputTokens: number };
+}
 const results: Result[] = [];
 const selected = cases.filter((item) => !only || only.includes(item.task));
 
@@ -232,7 +240,7 @@ for (const tier of tiers) {
       const reply = await complete(plan, { apiKey });
       const content = reply.content as Content;
       results.push({ name: item.name, task: item.task, tier, effort: reply.effort, ms: Date.now() - started,
-        problems: [...common(content), ...item.check(content)], content });
+        problems: [...common(content), ...item.check(content)], content, usage: reply.usage });
     } catch (error) {
       const message = error instanceof AIFailure ? `${error.kind}: ${error.message}` : String(error);
       results.push({ name: item.name, task: item.task, tier, ms: Date.now() - started, problems: [`no answer (${message})`], error: message });
@@ -250,19 +258,23 @@ const lines = [
   '',
   `${results.length - failed.length} of ${results.length} answers passed every check.`,
   '',
-  '| Task | Tier | Passed | Median time |',
-  '| --- | --- | --- | --- |',
+  `Total cost of this run: US$${results.reduce((sum, result) => sum + dollars(result.usage), 0).toFixed(4)}.`,
+  '',
+  '| Task | Tier | Passed | Median time | Avg input tokens | Avg output tokens (incl. thinking) | Avg cost per answer |',
+  '| --- | --- | --- | --- | --- | --- | --- |',
   ...[...new Set(results.map((result) => `${result.task}|${result.tier}`))].map((key) => {
     const [task, tier] = key.split('|');
     const group = results.filter((result) => result.task === task && result.tier === tier);
-    return `| ${task} | ${tier} | ${group.filter((result) => !result.problems.length).length} / ${group.length} | ${(median(group.map((result) => result.ms)) / 1000).toFixed(1)} s |`;
+    const answered = group.filter((result) => result.usage);
+    const average = (pick: (result: Result) => number) => (answered.length ? answered.reduce((sum, result) => sum + pick(result), 0) / answered.length : 0);
+    return `| ${task} | ${tier} | ${group.filter((result) => !result.problems.length).length} / ${group.length} | ${(median(group.map((result) => result.ms)) / 1000).toFixed(1)} s | ${Math.round(average((result) => result.usage!.inputTokens))} | ${Math.round(average((result) => result.usage!.outputTokens))} | US$${average((result) => dollars(result.usage)).toFixed(5)} |`;
   }),
   '',
   ...(failed.length ? ['## Problems', '', ...failed.map((result) => `- **${result.name}** (${result.tier}): ${result.problems.join('; ')}`), ''] : []),
   '## Answers',
   '',
   ...results.flatMap((result) => [
-    `### ${result.problems.length ? '❌' : '✅'} ${result.name} · ${result.tier}${result.effort ? ` · ${result.effort}` : ''} · ${(result.ms / 1000).toFixed(1)} s`,
+    `### ${result.problems.length ? '❌' : '✅'} ${result.name} · ${result.tier}${result.effort ? ` · ${result.effort}` : ''} · ${(result.ms / 1000).toFixed(1)} s${result.usage ? ` · ${result.usage.inputTokens}+${result.usage.outputTokens} tokens · US$${dollars(result.usage).toFixed(5)}` : ''}`,
     '',
     '```json',
     JSON.stringify(result.content ?? { error: result.error }, null, 2),

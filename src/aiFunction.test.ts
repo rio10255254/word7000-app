@@ -183,7 +183,7 @@ describe('AI reply language', () => {
     const plan = planTask('explain', explainInput, 'plus');
     const calls = recording([reply(englishExplanation), reply(chineseExplanation)]);
     await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch }))
-      .resolves.toEqual({ model: MODEL, effort: 'medium', content: chineseExplanation });
+      .resolves.toMatchObject({ model: MODEL, effort: 'medium', content: chineseExplanation });
     expect(calls.efforts).toEqual(['medium', 'medium']);
     expect(calls.systems[1]).toContain('繁體中文');
     expect(calls.systems[1].length).toBeGreaterThan(calls.systems[0].length);
@@ -260,6 +260,8 @@ describe('AI answer checks', () => {
     const result = await complete(plan, { apiKey: 'k', fetch: calls.fetch });
     expect(calls.systems[1].startsWith('Your previous reply did not give three example sentences that use "study"')).toBe(true);
     expect((result.content as { examples: unknown[] }).examples).toHaveLength(2);
+    // Both attempts are billed: each test reply reports 10 input and 10 output tokens.
+    expect(result.usage).toEqual({ inputTokens: 20, outputTokens: 20 });
   });
 
   it('leaves out a suggested example that does not use the new word', () => {
@@ -311,7 +313,7 @@ describe('Claude calls', () => {
 
   it('answers from the first attempt when it succeeds', async () => {
     const calls = recording([reply(feedback)]);
-    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).resolves.toEqual({ model: MODEL, effort: 'medium', content: feedback });
+    await expect(complete(plan, { apiKey: 'k', fetch: calls.fetch })).resolves.toMatchObject({ model: MODEL, effort: 'medium', content: feedback });
     expect(calls.efforts).toEqual(['medium']);
   });
 

@@ -3,10 +3,17 @@ import { type Effort, MODEL, type TaskPlan } from './tasks.ts';
 
 export type Fetch = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 
+/** Tokens billed across every attempt, thinking included in output. */
+export interface Usage {
+  inputTokens: number;
+  outputTokens: number;
+}
+
 export interface Completion {
   model: string;
   effort: Effort;
   content: unknown;
+  usage: Usage;
 }
 
 /** Why Claude did not answer. `busy` and `unavailable` let the app fall back to the on-device model. */
@@ -49,6 +56,7 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
   let lastKind: 'busy' | 'unavailable' = 'unavailable';
   let retried = false;
   let corrected = false;
+  const usage: Usage = { inputTokens: 0, outputTokens: 0 };
 
   const attempts: Attempt[] = [{ effort: plan.effort }];
   const retry = (effort: Effort) => {
@@ -65,6 +73,8 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
     const timer = setTimeout(() => controller.abort(), Math.min(options.attemptTimeoutMs ?? 18_000, remaining));
     try {
       const message = await client.messages.create(requestBody(plan, attempt.effort, attempt.note), { signal: controller.signal });
+      usage.inputTokens += message.usage?.input_tokens ?? 0;
+      usage.outputTokens += message.usage?.output_tokens ?? 0;
       if (message.stop_reason === 'refusal') {
         // Asking again would be declined again; the on-device model answers instead.
         throw new AIFailure('unavailable', `Claude declined the request (${message.stop_details?.category ?? 'no category'})`);
@@ -81,7 +91,7 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
         }
         continue;
       }
-      return { model: MODEL, effort: attempt.effort, content: plan.refine ? plan.refine(content) : content };
+      return { model: MODEL, effort: attempt.effort, content: plan.refine ? plan.refine(content) : content, usage };
     } catch (error) {
       if (error instanceof AIFailure) throw error;
       if (error instanceof Anthropic.AuthenticationError || error instanceof Anthropic.PermissionDeniedError) {

@@ -1,0 +1,278 @@
+[
+ {
+  "hanzi": "走道",
+  "set": {
+   "examplePinyin": "wǒ xiǎng yào kào zǒu dào de wèi zi."
+  },
+  "reason": "pinyin: 位子 wèi zi"
+ },
+ {
+  "hanzi": "說不出話",
+  "set": {
+   "examplePinyin": "wǒ gǎn dòng de shuō bù chū huà.",
+   "questionPinyin": "shén me shì ràng nǐ jīng yà de shuō bù chū huà?",
+   "answerPinyin": "dì yī cì kàn dào tài lǔ gé, wǒ jīng yà de shuō bù chū huà."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "鯊魚",
+  "set": {
+   "answerPinyin": "méi yǒu, wǒ zhǐ zài shuǐ zú guǎn kàn guò shā yú."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "概念",
+  "set": {
+   "answerPinyin": "wǒ jué de “le” zhè ge gài niàn zuì nán."
+  },
+  "reason": "pinyin: grammar particle 了 le"
+ },
+ {
+  "hanzi": "隨意",
+  "set": {
+   "examplePinyin": "nǐ kě yǐ suí yì xuǎn yí gè wèi zi."
+  },
+  "reason": "pinyin: 位子 wèi zi"
+ },
+ {
+  "hanzi": "聯絡人",
+  "set": {
+   "examplePinyin": "wǒ shì zhè ge àn zi de lián luò rén."
+  },
+  "reason": "pinyin: 案子 àn zi"
+ },
+ {
+  "hanzi": "山坡",
+  "set": {
+   "examplePinyin": "shān pō shàng zhòng le hěn duō chá shù."
+  },
+  "reason": "pinyin: 種 (plant) zhòng"
+ },
+ {
+  "hanzi": "模仿",
+  "set": {
+   "answerPinyin": "huì, wǒ cháng mó fǎng tái wān rén shuō “hǎo ō”."
+  },
+  "reason": "pinyin: 喔 ō (Taiwan)"
+ },
+ {
+  "hanzi": "感激",
+  "set": {
+   "questionPinyin": "nǐ zuì gǎn jī shéi?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "畢業典禮",
+  "set": {
+   "questionPinyin": "nǐ de bì yè diǎn lǐ shéi yǒu lái?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "閒逛",
+  "set": {
+   "answerPinyin": "wǒ xǐ huan qù xī mén dīng xián guàng."
+  },
+  "reason": "pinyin: 西門町 dīng"
+ },
+ {
+  "hanzi": "芥末",
+  "set": {
+   "pinyin": "jiè mò",
+   "examplePinyin": "rè gǒu yào jiā yì diǎn jiè mò.",
+   "questionPinyin": "nǐ chī rè gǒu huì jiā jiè mò ma?",
+   "answerPinyin": "huì, wǒ xǐ huan jiā hěn duō jiè mò."
+  },
+  "reason": "pinyin: 芥末 jiè mò (教育部)"
+ },
+ {
+  "hanzi": "果園",
+  "set": {
+   "examplePinyin": "zhōu mò wǒ men qù guǒ yuán cǎi jú zi.",
+   "answerPinyin": "qù guò, wǒ zài xīn zhú de guǒ yuán cǎi guò jú zi."
+  },
+  "reason": "pinyin: 橘子 jú zi"
+ },
+ {
+  "hanzi": "具體",
+  "set": {
+   "examplePinyin": "nǐ kě yǐ shuō de jù tǐ yì diǎn ma?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "彩券",
+  "set": {
+   "answerPinyin": "mǎi guò, kě shì wǒ de cǎi quàn cóng lái méi zhòng guò."
+  },
+  "reason": "pinyin: 中 (win) zhòng"
+ },
+ {
+  "hanzi": "擠進",
+  "set": {
+   "questionPinyin": "shàng xià bān shí jiān, nǐ dā de shàng jié yùn ma?"
+  },
+  "reason": "pinyin: potential 得 de"
+ },
+ {
+  "hanzi": "木偶",
+  "set": {
+   "answerPinyin": "kàn guò, bù dài xì de mù ǒu zuò de hěn jīng zhì."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "充實",
+  "set": {
+   "examplePinyin": "zhè ge zhōu mò guò de hěn chōng shí."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "推動",
+  "set": {
+   "answerPinyin": "wǒ xiǎng zài gōng sī tuī dòng tán xìng shàng bān."
+  },
+  "reason": "pinyin: 彈性 tán xìng"
+ },
+ {
+  "hanzi": "簡化",
+  "set": {
+   "answerPinyin": "wǒ xiǎng jiǎn huà wǒ de yī guì, zhǐ liú cháng chuān de yī fu."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "消防員",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng xiāo fáng yuán xīn kǔ ma?"
+  },
+  "reason": "pinyin: 覺得 jué de, 當 (serve as) dāng"
+ },
+ {
+  "hanzi": "髒兮兮",
+  "set": {
+   "examplePinyin": "xiǎo hái zài gōng yuán wán de zāng xī xī de.",
+   "questionPinyin": "nǐ zuì jìn shén me shí hòu nòng de zāng xī xī de?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "看清",
+  "set": {
+   "questionPinyin": "bú dài yǎn jìng, nǐ kàn de qīng chǔ ma?"
+  },
+  "reason": "pinyin: potential 得 de"
+ },
+ {
+  "hanzi": "明確",
+  "set": {
+   "examplePinyin": "lǎo bǎn míng què de shuō jīn nián bù jiā xīn.",
+   "questionPinyin": "jù jué bié rén shí, nǐ huì shuō de hěn míng què ma?",
+   "answerPinyin": "huì, wǒ huì hěn míng què de shuō “bú yào”."
+  },
+  "reason": "pinyin: adverbial 地 de, complement 得 de"
+ },
+ {
+  "hanzi": "栗子",
+  "set": {
+   "pinyin": "lì zi",
+   "examplePinyin": "dōng tiān lù biān yǒu rén zài mài táng chǎo lì zi.",
+   "questionPinyin": "nǐ chī guò táng chǎo lì zi ma?",
+   "answerPinyin": "chī guò, dōng tiān de lì zi yòu xiāng yòu tián."
+  },
+  "reason": "pinyin: 栗子 lì zi"
+ },
+ {
+  "hanzi": "冒煙",
+  "set": {
+   "questionPinyin": "nǐ zhǔ fàn shí guō zi mào yān guò ma?",
+   "answerPinyin": "yǒu, wǒ jiān niú pái shí guō zi mào yān le."
+  },
+  "reason": "pinyin: 鍋子 guō zi"
+ },
+ {
+  "hanzi": "公事包",
+  "set": {
+   "answerPinyin": "bú huì, wǒ bú dài gōng shì bāo, dōu bēi hòu bēi bāo."
+  },
+  "reason": "pinyin: 背 (carry on back) bēi"
+ },
+ {
+  "hanzi": "鏟子",
+  "set": {
+   "pinyin": "chǎn zi",
+   "examplePinyin": "tā ná chǎn zi zài yuàn zi lǐ wā dòng.",
+   "questionPinyin": "nǐ zhòng huā de shí hòu huì yòng chǎn zi ma?",
+   "answerPinyin": "huì, wǒ yòng yì bǎ xiǎo chǎn zi zhòng huā."
+  },
+  "reason": "pinyin: 鏟子 chǎn zi, 種 (plant) zhòng"
+ },
+ {
+  "hanzi": "打字機",
+  "set": {
+   "examplePinyin": "wǒ ā gōng hái liú zhe yì tái jiù dǎ zì jī."
+  },
+  "reason": "pinyin: aspect particle 著 zhe"
+ },
+ {
+  "hanzi": "新郎",
+  "set": {
+   "examplePinyin": "xīn láng jīn tiān chuān de hěn shuài."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "方言",
+  "set": {
+   "examplePinyin": "wǒ nǎi nai zhǐ huì shuō jiā xiāng de fāng yán."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "旋轉",
+  "set": {
+   "examplePinyin": "xiǎo nǚ hái zài cǎo dì shàng kāi xīn de xuán zhuǎn."
+  },
+  "reason": "pinyin: adverbial 地 de"
+ },
+ {
+  "hanzi": "精確",
+  "set": {
+   "answerPinyin": "dà bù fèn hěn jīng què, dàn yǒu shí hòu huì cuò."
+  },
+  "reason": "pinyin: 部分 bù fèn (教育部)"
+ },
+ {
+  "hanzi": "可用",
+  "set": {
+   "answerPinyin": "bù duō le, kě yòng kōng jiān zhǐ shèng yì diǎn diǎn."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "上漲",
+  "set": {
+   "questionPinyin": "nǐ jué de tái běi de fáng zū shàng zhǎng de kuài ma?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "單一",
+  "set": {
+   "examplePinyin": "zhè jiā diàn zhǐ mài dān yī kǒu wèi de bīng qí lín.",
+   "questionPinyin": "nǐ jué de zhǐ kào dān yī shōu rù ān quán ma?"
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "尋求",
+  "set": {
+   "questionPinyin": "nǐ gōng zuò yǒu yā lì shí, huì xiàng shéi xún qiú bāng zhù?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ }
+]

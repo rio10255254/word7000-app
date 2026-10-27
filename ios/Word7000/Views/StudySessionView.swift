@@ -348,6 +348,7 @@ struct StudySessionView: View {
 struct WordAnswer: View {
     @Environment(AppModel.self) private var model
     var word: WordEntry
+    @State private var aiOpen = false
 
     var body: some View {
         let face = model.face(word)
@@ -389,8 +390,17 @@ struct WordAnswer: View {
                 .padding(.top, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            if CloudAssistant.shared.offered {
+                Button { aiOpen = true } label: {
+                    Label(L.t("AI 解說與提問", "AI explanation and questions"), systemImage: "sparkles")
+                        .font(.subheadline.weight(.semibold))
+                }
+                .padding(.top, 4)
+                .accessibilityIdentifier("study-ai")
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .sheet(isPresented: $aiOpen) { AIWordSheet(word: word) }
     }
 }
 

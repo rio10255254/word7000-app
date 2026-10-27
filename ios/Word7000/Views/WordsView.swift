@@ -466,6 +466,7 @@ struct WordDetailView: View {
                         : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
             }
             AIExplanationSection(word: word)
+            AskAISection(word: word)
             Section(L.t("學習進度", "Progress")) {
                 WordProgressCard(progress: progress, level: word.group)
             }

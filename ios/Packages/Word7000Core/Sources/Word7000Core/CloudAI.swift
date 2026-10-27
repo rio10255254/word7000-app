@@ -13,7 +13,7 @@ public enum CloudAI {
     public static let provider = "anthropic"
 
     public enum Kind: String, Codable, Sendable {
-        case coach, scan, explain, quizWhy, fillWord, insights
+        case coach, scan, explain, quizWhy, fillWord, insights, ask
     }
 
     public enum Failure: Error, Equatable, Sendable {
@@ -77,6 +77,28 @@ public enum CloudAI {
                     .filter { !$0.sentence.isEmpty }.prefix(3).map { $0 },
                 pitfall: CloudAI.clip(pitfall, 300), memoryTip: CloudAI.clip(memoryTip, 200))
             guard !result.summary.isEmpty else { throw Failure.unavailable }
+            return result
+        }
+    }
+
+    /// The tutor's reply to a learner's own question about a word.
+    public struct Answer: Codable, Equatable, Sendable {
+        /// False when the question was not about the word; the answer then
+        /// says what the learner can ask instead.
+        public let onTopic: Bool
+        public let answer: String
+        public let examples: [Explanation.Example]
+
+        public init(onTopic: Bool, answer: String, examples: [Explanation.Example]) {
+            self.onTopic = onTopic; self.answer = answer; self.examples = examples
+        }
+
+        public func cleaned() throws -> Answer {
+            let result = Answer(
+                onTopic: onTopic, answer: CloudAI.clip(answer, 420),
+                examples: onTopic ? examples.map { Explanation.Example(sentence: CloudAI.clip($0.sentence, 220), translation: CloudAI.clip($0.translation, 220)) }
+                    .filter { !$0.sentence.isEmpty }.prefix(2).map { $0 } : [])
+            guard !result.answer.isEmpty else { throw Failure.unavailable }
             return result
         }
     }

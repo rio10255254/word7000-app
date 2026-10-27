@@ -52,6 +52,171 @@ enum CloudAnswerCache {
     private static let version = 2
     static let explanations = SavedAnswers<CloudAI.Explanation>(file: "explanations-v\(version).json", limit: 300)
     static let quiz = SavedAnswers<CloudAI.QuizExplanation>(file: "quiz-v\(version).json", limit: 300)
+    static let questions = SavedAnswers<[AskedQuestion]>(file: "questions-v1.json", limit: 200)
+}
+
+/// One question a learner asked about a word, with the tutor's answer.
+struct AskedQuestion: Codable, Equatable {
+    let question: String
+    let reply: CloudAI.Answer
+}
+
+/// The AI explanation and questions for one word, opened from a study card
+/// so a learner can ask the moment a word puzzles them.
+struct AIWordSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(AppModel.self) private var model
+    let word: WordEntry
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                AIExplanationSection(word: word)
+                AskAISection(word: word)
+            }
+            .navigationTitle(model.face(word).prompt)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L.t("完成", "Done")) { dismiss() }
+                        .accessibilityIdentifier("ai-sheet-done")
+                }
+            }
+        }
+    }
+}
+
+/// The learner's own questions about one word, answered by the AI tutor.
+/// The last five answers per word stay on this iPhone.
+struct AskAISection: View {
+    @Environment(AppModel.self) private var model
+    let word: WordEntry
+    @State private var asked: [AskedQuestion] = []
+    @State private var question = ""
+    @State private var pending: String?
+    @State private var loading = false
+    @State private var failure: CloudAI.Failure?
+    @State private var askCloud = false
+    @FocusState private var focused: Bool
+
+    private var cacheKey: String { "\(model.studyMode.rawValue):\(word.id):\(word.meaningZh)" }
+    private var exampleLanguage: String { model.studyMode == .english ? "en-US" : "zh-TW" }
+    private var suggestions: [String] {
+        [L.t("常見的錯誤用法是什麼？", "What mistakes do learners make with it?"),
+         L.t("跟意思相近的字有什麼不同？", "How is it different from similar words?"),
+         L.t("口語和正式場合都能用嗎？", "Is it casual, formal or both?")]
+    }
+
+    var body: some View {
+        if CloudAssistant.shared.offered || !asked.isEmpty {
+            Section {
+                ForEach(Array(asked.enumerated()), id: \.offset) { _, item in
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(item.question)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Palette.accent)
+                        Text(item.reply.answer)
+                    }
+                    .padding(.vertical, 4)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("ai-ask-answer")
+                    ForEach(Array(item.reply.examples.enumerated()), id: \.offset) { _, example in
+                        HStack(alignment: .top) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(example.sentence)
+                                if !example.translation.isEmpty {
+                                    Text(example.translation).font(.subheadline).foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer(minLength: 8)
+                            SpeakButton(text: example.sentence, language: exampleLanguage)
+                        }
+                    }
+                }
+                if loading {
+                    HStack(spacing: 10) {
+                        ProgressView()
+                        Text(L.t("AI 正在回答…", "AI is answering…")).foregroundStyle(.secondary)
+                    }
+                    .accessibilityIdentifier("ai-ask-loading")
+                } else if asked.isEmpty {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 8) {
+                            ForEach(suggestions, id: \.self) { suggestion in
+                                Button { send(suggestion) } label: {
+                                    Text(suggestion)
+                                        .font(.footnote)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 7)
+                                        .background(Palette.accent.opacity(0.12), in: Capsule())
+                                }
+                                .buttonStyle(.borderless)
+                            }
+                        }
+                    }
+                    .scrollIndicators(.hidden)
+                }
+                HStack(spacing: 8) {
+                    TextField(L.t("問 AI 關於這個字的問題", "Ask AI about this word"), text: $question)
+                        .submitLabel(.send)
+                        .focused($focused)
+                        .onSubmit { send() }
+                        .accessibilityIdentifier("ai-ask-field")
+                    Button { send() } label: {
+                        Image(systemName: "arrow.up.circle.fill").font(.title2)
+                    }
+                    .buttonStyle(.borderless)
+                    .disabled(question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || loading)
+                    .accessibilityLabel(L.t("送出問題", "Send question"))
+                    .accessibilityIdentifier("ai-ask-send")
+                }
+                if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                if !asked.isEmpty || failure == .quota { PlusAIUpsell() }
+            } header: {
+                Text(L.t("問 AI", "Ask AI"))
+            } footer: {
+                Text(L.t("只回答和這個字有關的問題，每問一次算一次線上 AI。由 Claude 產生，可能有誤。",
+                         "Answers questions about this word; each one counts as one online AI request. By Anthropic's Claude, and may contain mistakes."))
+            }
+            .onAppear { asked = CloudAnswerCache.questions[cacheKey] ?? [] }
+            .cloudConsentAlert(isPresented: $askCloud) {
+                if IntelligenceSettings.shared.cloudConsent == true, let pending { send(pending) }
+                pending = nil
+            }
+        }
+    }
+
+    private func send(_ text: String? = nil) {
+        let asking = (text ?? question).trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !asking.isEmpty, !loading else { return }
+        if CloudAssistant.shared.needsConsent { pending = asking; askCloud = true; return }
+        let key = cacheKey
+        let input: [String: JSONValue] = [
+            "word": .string(String(word.word.prefix(80))),
+            "partOfSpeech": .string(String(word.partOfSpeech.prefix(40))),
+            "meaning": .string(String(ChineseDisplay.conciseMeaning(word.meaningZh).prefix(240))),
+            "question": .string(String(asking.prefix(200))),
+            "mode": .string(model.studyMode.rawValue),
+        ]
+        loading = true
+        failure = nil
+        question = ""
+        focused = false
+        Task {
+            defer { loading = false }
+            do {
+                let reply = try await CloudAssistant.shared.run(.ask, input, as: CloudAI.Answer.self).cleaned()
+                let saved = Array(((CloudAnswerCache.questions[key] ?? []) + [AskedQuestion(question: asking, reply: reply)]).suffix(5))
+                CloudAnswerCache.questions[key] = saved
+                if key == cacheKey { withAnimation(Motion.reveal) { asked = saved } }
+            } catch is CancellationError {
+            } catch {
+                failure = (error as? CloudAI.Failure) ?? .unavailable
+                // Give the learner their question back to try again.
+                if question.isEmpty { question = asking }
+            }
+        }
+    }
 }
 
 /// A tutor-style explanation of one word, on the word page.

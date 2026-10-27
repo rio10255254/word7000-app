@@ -324,5 +324,95 @@
    "answerPinyin": "zhài wù rén huán bù chū qián, yín háng kě néng huì pāi mài fáng zi."
   },
   "reason": "還 (repay) is huán"
+ },
+ {
+  "hanzi": "鑑識",
+  "set": {
+   "pinyin": "jiàn shì",
+   "examplePinyin": "jiàn shì rén yuán zài xiàn chǎng zhǎo zhèng jù.",
+   "questionPinyin": "jiàn shì rén yuán de gōng zuò shì shén me?",
+   "answerPinyin": "jiàn shì rén yuán fù zé zài xiàn chǎng shōu jí zhèng jù."
+  },
+  "reason": "識 is shì (教育部)"
+ },
+ {
+  "hanzi": "見多識廣",
+  "set": {
+   "pinyin": "jiàn duō shì guǎng",
+   "examplePinyin": "wǒ de zhǔ guǎn jiàn duō shì guǎng, shén me dōu dǒng.",
+   "questionPinyin": "nǐ shēn biān yǒu jiàn duō shì guǎng de péng yǒu ma?",
+   "answerPinyin": "yǒu, wǒ de shì yǒu qù guò hěn duō guó jiā, jiàn duō shì guǎng."
+  },
+  "reason": "識 is shì (教育部)"
+ },
+ {
+  "hanzi": "推論",
+  "set": {
+   "answerPinyin": "xǐ huan, wǒ xǐ huan gēn zhe zhēn tàn yì qǐ tuī lùn."
+  },
+  "reason": "跟著 is gēn zhe"
+ },
+ {
+  "hanzi": "逐字",
+  "set": {
+   "examplePinyin": "bú yào zhú zì fān yì, yào fān de zì rán yì diǎn."
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "飄散",
+  "set": {
+   "examplePinyin": "xiàng zi lǐ piāo sàn zhe guì huā de xiāng wèi."
+  },
+  "reason": "著 particle is zhe"
+ },
+ {
+  "hanzi": "碑文",
+  "set": {
+   "questionPinyin": "nǐ kàn de dǒng gǔ lǎo de bēi wén ma?"
+  },
+  "reason": "potential 得 is de"
+ },
+ {
+  "hanzi": "解剖學",
+  "set": {
+   "examplePinyin": "wǒ péng yǒu zài yī xué yuàn jiāo jiě pōu xué."
+  },
+  "reason": "教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "烈士",
+  "set": {
+   "examplePinyin": "zhōng liè cí lǐ gòng fèng zhe hěn duō liè shì."
+  },
+  "reason": "著 particle is zhe"
+ },
+ {
+  "hanzi": "低吼",
+  "set": {
+   "examplePinyin": "nà zhī gǒu duì zhe mò shēng rén dī hǒu."
+  },
+  "reason": "對著 is duì zhe"
+ },
+ {
+  "hanzi": "建設性",
+  "set": {
+   "answerPinyin": "wǒ huì jìn liàng tí chū yǒu jiàn shè xìng de jiàn yì."
+  },
+  "reason": "盡量 is jìn liàng (教育部)"
+ },
+ {
+  "hanzi": "灼熱",
+  "set": {
+   "answerPinyin": "wǒ huì cā fáng shài, jìn liàng bì kāi zhuó rè de yáng guāng."
+  },
+  "reason": "盡量 is jìn liàng (教育部)"
+ },
+ {
+  "hanzi": "腫瘤",
+  "set": {
+   "answerPinyin": "fā xiàn zhǒng liú yīng gāi jìn kuài qù dà yī yuàn jiǎn chá."
+  },
+  "reason": "盡 is jìn (教育部)"
  }
 ]

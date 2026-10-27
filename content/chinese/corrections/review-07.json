@@ -224,5 +224,73 @@
    "examplePinyin": "wǒ men yán zhe shān shàng de xiǎo jìng màn màn zǒu."
   },
   "reason": "pinyin: 沿著 is yán zhe"
+ },
+ {
+  "hanzi": "承受",
+  "set": {
+   "questionPinyin": "gōng zuò yā lì dà de shí hòu, nǐ chéng shòu de liǎo ma?",
+   "answerPinyin": "chéng shòu de liǎo, wǒ huì yòng yùn dòng lái jiǎn yā."
+  },
+  "reason": "pinyin: potential complement 得了 is de liǎo"
+ },
+ {
+  "hanzi": "兇手",
+  "set": {
+   "question": "推理小說裡，通常什麼時候會知道兇手是誰？",
+   "questionEnglish": "In a mystery novel, when do you usually find out who the killer is?",
+   "questionPinyin": "tuī lǐ xiǎo shuō lǐ, tōng cháng shén me shí hòu huì zhī dào xiōng shǒu shì shéi?",
+   "answer": "通常到最後才會知道兇手是誰。",
+   "answerEnglish": "Usually you only find out who the killer is at the very end.",
+   "answerPinyin": "tōng cháng dào zuì hòu cái huì zhī dào xiōng shǒu shì shéi."
+  },
+  "reason": "sensitive: question asked about the learner's own experience; made general"
+ },
+ {
+  "hanzi": "幻想",
+  "set": {
+   "examplePinyin": "wǒ cháng huàn xiǎng zì jǐ zhòng lè tòu."
+  },
+  "reason": "pinyin: 中 (win the lottery) is zhòng"
+ },
+ {
+  "hanzi": "嘆氣",
+  "set": {
+   "examplePinyin": "tā kàn zhe zhàng dān yì zhí tàn qì."
+  },
+  "reason": "pinyin: 看著 is kàn zhe; 一直 is yì zhí"
+ },
+ {
+  "hanzi": "跳躍",
+  "set": {
+   "examplePinyin": "xiǎo gǒu zài cǎo dì shàng kāi xīn de tiào yuè."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "不情願",
+  "set": {
+   "examplePinyin": "tā hěn bù qíng yuàn de qù jiā bān.",
+   "answerPinyin": "wǒ hěn bù qíng yuàn de cān jiā le wěi yá biǎo yǎn."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "洞穴",
+  "set": {
+   "examplePinyin": "zhè ge dòng xué lǐ zhù zhe hěn duō biān fú."
+  },
+  "reason": "pinyin: 住著 is zhù zhe"
+ },
+ {
+  "hanzi": "貪汙",
+  "set": {
+   "question": "官員貪汙會有什麼結果？",
+   "questionEnglish": "What happens to officials who are corrupt?",
+   "questionPinyin": "guān yuán tān wū huì yǒu shén me jié guǒ?",
+   "answer": "官員貪汙被抓到，可能要坐牢。",
+   "answerEnglish": "Corrupt officials who get caught may go to prison.",
+   "answerPinyin": "guān yuán tān wū bèi zhuā dào, kě néng yào zuò láo."
+  },
+  "reason": "sensitive (crime): question asked the learner's views on corruption in their country; made impersonal"
  }
 ]

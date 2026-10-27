@@ -429,6 +429,32 @@
   "reason": "得 after a verb is de"
  },
  {
+  "hanzi": "單位",
+  "set": {
+   "answerPinyin": "wǒ men yòng bàng dàng dān wèi, bú yòng gōng jīn."
+  },
+  "reason": "當 (use as) is dàng"
+ },
+ {
+  "hanzi": "場地",
+  "set": {
+   "answerPinyin": "wǒ xǐ huan yòng KTV bāo xiāng dàng chǎng dì."
+  },
+  "reason": "當 (use as) is dàng"
+ },
+ {
+  "hanzi": "治療",
+  "set": {
+   "question": "中醫常用什麼方法治療？",
+   "questionEnglish": "What methods does Chinese medicine often use for treatment?",
+   "questionPinyin": "zhōng yī cháng yòng shén me fāng fǎ zhì liáo?",
+   "answer": "中醫常用中藥和針灸治療。",
+   "answerEnglish": "Chinese medicine often uses herbal medicine and acupuncture for treatment.",
+   "answerPinyin": "zhōng yī cháng yòng zhōng yào hé zhēn jiǔ zhì liáo."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ },
+ {
   "hanzi": "手術",
   "set": {
    "question": "動完手術以後，通常要做什麼？",

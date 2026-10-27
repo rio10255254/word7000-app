@@ -578,6 +578,13 @@ final class AppModel {
         ]
     }
 
+    /// Bank words shown with these prompts in the current study mode, such as
+    /// the focus words the AI picked from `insightsInput`.
+    func wordIds(forPrompts prompts: [String]) -> [String] {
+        let wanted = Set(prompts.map { String($0.prefix(80)).lowercased() })
+        return bank.words.filter { wanted.contains(String(face($0).prompt.prefix(80)).lowercased()) }.map(\.id)
+    }
+
     var reviewWordIds: [String] {
         bank.words.filter { progress.words[$0.id]?.status == .review }.map(\.id)
     }

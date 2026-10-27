@@ -72,6 +72,8 @@ Deno.serve(async (request) => {
 
   try {
     const result = await complete(plan, { apiKey });
+    // One line per answer, so the function logs show what each task really costs.
+    console.log(JSON.stringify({ task, tier, effort: result.effort, ...result.usage }));
     return reply({ result: result.content, model: result.model, effort: result.effort, tier, limit, remaining: Math.max(0, limit - used) });
   } catch (error) {
     if (error instanceof AIFailure) {

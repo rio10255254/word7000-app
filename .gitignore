@@ -53,3 +53,4 @@ ios/Packages/*/.swiftpm/
 
 # generated Android folder
 /android
+exports/ai-eval/

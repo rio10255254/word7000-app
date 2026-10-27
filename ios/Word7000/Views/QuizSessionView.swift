@@ -19,6 +19,8 @@ struct QuizSessionView: View {
     @State private var finished = false
     @State private var seed = SeededRandom.runtimeSeed()
     @State private var configured = false
+    /// A missed word opened for its AI explanation from the results.
+    @State private var aiWord: WordEntry?
 
     var body: some View {
         NavigationStack {
@@ -225,6 +227,9 @@ struct QuizSessionView: View {
             Text(missedIds.isEmpty ? L.quizPerfect : L.quizMissedHint(missedIds.count))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+            if CloudAssistant.shared.offered, !missedIds.isEmpty {
+                missedWordsForAI
+            }
             Spacer()
             VStack(spacing: 12) {
                 if missedIds.isEmpty {
@@ -246,5 +251,35 @@ struct QuizSessionView: View {
             }
         }
         .accessibilityIdentifier("quiz-results")
+        .sheet(item: $aiWord) { word in AIWordSheet(word: word) }
+    }
+
+    /// The words missed in this quiz, each opening its AI explanation.
+    private var missedWordsForAI: some View {
+        VStack(spacing: 8) {
+            Label(L.t("點錯的字看 AI 解說", "Tap a missed word for its AI explanation"), systemImage: "sparkles")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Palette.accent)
+            ScrollView(.horizontal) {
+                HStack(spacing: 8) {
+                    ForEach(missedIds.reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }, id: \.self) { id in
+                        if let word = model.word(id: id) {
+                            Button { aiWord = word } label: {
+                                Text(model.face(word).prompt)
+                                    .font(.subheadline.weight(.medium))
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 8)
+                                    .background(Palette.surface, in: Capsule())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint(L.t("開啟 AI 解說", "Opens the AI explanation"))
+                        }
+                    }
+                }
+                .padding(.horizontal, 2)
+            }
+            .scrollIndicators(.hidden)
+        }
+        .accessibilityIdentifier("quiz-missed-ai")
     }
 }

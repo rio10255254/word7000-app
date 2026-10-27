@@ -118,8 +118,8 @@ enum PlusAI {
 extension L {
     static var cloudConsentTitle: String { t("使用線上 AI？", "Use online AI?") }
     static var cloudConsentMessage: String {
-        t("口說教練、單字解說、測驗講解、掃描整理、單字建議與學習分析可以改用更聰明的線上 AI（Anthropic 的 Claude）。使用時，你輸入或說出的文字與相關單字會傳送到 Anthropic（美國）處理，不包含錄音、帳號名稱或 Email。你隨時可以在「AI 與錄音」關閉。",
-          "The speaking coach, word explanations, quiz explanations, scan tidy-up, word suggestions and learning insights can use smarter online AI (Anthropic's Claude). When used, the text you type or say and the related words are sent to Anthropic (USA) for processing, without recordings, your account name or email. You can turn this off anytime in AI and recording.")
+        t("口說教練、單字解說與提問、測驗講解、掃描整理、單字建議與學習分析可以改用更聰明的線上 AI（Anthropic 的 Claude）。使用時，你輸入或說出的文字與相關單字會傳送到 Anthropic（美國）處理，不包含錄音、帳號名稱或 Email。你隨時可以在「AI 與錄音」關閉。",
+          "The speaking coach, word explanations and questions, quiz explanations, scan tidy-up, word suggestions and learning insights can use smarter online AI (Anthropic's Claude). When used, the text you type or say and the related words are sent to Anthropic (USA) for processing, without recordings, your account name or email. You can turn this off anytime in AI and recording.")
     }
     static var cloudConsentAllow: String { t("使用線上 AI", "Use online AI") }
     static var cloudConsentDecline: String { t("只用裝置內", "On-device only") }

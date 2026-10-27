@@ -94,6 +94,20 @@ final class CloudAITests: XCTestCase {
         XCTAssertThrowsError(try CloudAI.Insights(headline: "", summary: "x", strengths: [], focusWords: [], plan: []).cleaned())
     }
 
+    func testAnswersToALearnersQuestionKeepTwoExamplesAndNoneOffTopic() async throws {
+        let json = #"{"result":{"onTopic":true,"answer":" abandon 是完全丟下不管。 ","examples":[{"sentence":"They abandoned the car.","translation":"他們丟下車子。"},{"sentence":" ","translation":"x"},{"sentence":"B","translation":"b"},{"sentence":"C","translation":"c"}]}}"#
+        let transport = FakeTransport([(json, 200)])
+        let answer = try await SupabaseClient(config: config, transport: transport)
+            .runAI(.ask, input: ["question": .string("abandon 和 give up 的差別？")], session: session, as: CloudAI.Answer.self).cleaned()
+        XCTAssertEqual(answer.answer, "abandon 是完全丟下不管。")
+        XCTAssertEqual(answer.examples.map(\.sentence), ["They abandoned the car.", "B"])
+        let body = try JSONDecoder().decode([String: JSONValue].self, from: XCTUnwrap(transport.requests.first?.httpBody))
+        XCTAssertEqual(body["task"], .string("ask"))
+        let offTopic = try CloudAI.Answer(onTopic: false, answer: "我可以幫你了解這個字。", examples: [.init(sentence: "A", translation: "a")]).cleaned()
+        XCTAssertTrue(offTopic.examples.isEmpty)
+        XCTAssertThrowsError(try CloudAI.Answer(onTopic: true, answer: " ", examples: []).cleaned())
+    }
+
     func testCleaningCapsListsAndRejectsAnEmptyExplanation() throws {
         let long = String(repeating: "字", count: 500)
         let explanation = CloudAI.Explanation(summary: " 意思 ", usage: long, collocations: ["a", "", "b", "c", "d", "e", "f"],

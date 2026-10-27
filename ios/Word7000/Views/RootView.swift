@@ -132,6 +132,7 @@ struct RootView: View {
             if activity == nil { activity = .study }
         }
         .sensoryFeedback(.selection, trigger: tab) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in model.settings.hapticsEnabled ?? true }
         .safeAreaInset(edge: .top) {
             if model.storageFailed {
                 HStack {

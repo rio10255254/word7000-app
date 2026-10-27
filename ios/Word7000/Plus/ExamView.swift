@@ -91,13 +91,16 @@ struct ExamView: View {
                 .font(.rounded(.footnote, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("exam-position")
-            Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
-                .font(.roundedSize(38, weight: .bold))
-                .minimumScaleFactor(0.4)
-                .lineLimit(3)
-                .multilineTextAlignment(.center)
-                .padding(.vertical, 16)
-                .accessibilityIdentifier("exam-prompt")
+            VStack(spacing: 6) {
+                Text(face.prompt)
+                    .font(.roundedSize(38, weight: .bold))
+                    .minimumScaleFactor(0.4)
+                    .lineLimit(3)
+                    .multilineTextAlignment(.center)
+                    .accessibilityIdentifier("exam-prompt")
+                PinyinLine(text: face.promptDetail, font: .title3)
+            }
+            .padding(.vertical, 16)
             VStack(spacing: 10) {
                 ForEach(Array(options[index].enumerated()), id: \.element) { offset, option in
                     let chosen = answers[index] == option

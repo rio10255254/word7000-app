@@ -253,15 +253,31 @@ final class ScanPickerTests: XCTestCase {
     /// The system photo picker animates away on its own schedule, and on a slow
     /// simulator the scanner underneath is not tappable until it has gone.
     /// A Cancel tap made while the picker is still loading can be dropped too,
-    /// so tap it again while it is still there. Mid-animation, Cancel can have
-    /// an empty frame, and reading `isHittable` then fails the test outright, so
-    /// it is read only once Cancel has a frame. (A `hittable` predicate did not
-    /// come true for the picker's out-of-process Cancel on iOS 18.)
+    /// so tap it again while it is still there. Mid-animation, reading Cancel's
+    /// `isHittable` can fail the test outright ("activation point invalid",
+    /// iOS 26 and 27), and a `hittable` predicate never came true for the
+    /// picker's out-of-process Cancel on iOS 18. So Cancel is tapped at the
+    /// middle of its frame once that frame is on screen and has stopped moving,
+    /// that is once the picker has finished sliding in over the scanner.
     private func dismissPhotoPicker(in app: XCUIApplication) {
         let choose = app.buttons["scan-choose-photo"]
         for _ in 0..<3 {
             let cancel = cancelButton(in: app)
-            if cancel.exists, !cancel.frame.isEmpty, cancel.isHittable { cancel.tap() }
+            if cancel.exists {
+                var frame = cancel.frame
+                for _ in 0..<10 {
+                    usleep(300_000)
+                    guard cancel.exists else { break }
+                    let next = cancel.frame
+                    if next == frame { break }
+                    frame = next
+                }
+                if cancel.exists, frame.width > 0, frame.height > 0, app.frame.contains(CGPoint(x: frame.midX, y: frame.midY)) {
+                    app.coordinate(withNormalizedOffset: .zero)
+                        .withOffset(CGVector(dx: frame.midX - app.frame.minX, dy: frame.midY - app.frame.minY))
+                        .tap()
+                }
+            }
             let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: choose)
             if XCTWaiter.wait(for: [ready], timeout: 8) == .completed { return }
         }

@@ -30,6 +30,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var hapticsEnabled: Bool?
     /// Study cards open with the answer already showing; nil means off.
     var studyAutoReveal: Bool?
+    /// Learn Chinese mode shows pinyin under Chinese text; nil means on.
+    var showPinyin: Bool?
     var speakingFilter: FilterSelection?
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?

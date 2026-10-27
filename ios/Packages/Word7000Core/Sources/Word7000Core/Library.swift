@@ -4,11 +4,15 @@ public struct LibraryFilterOptions: Equatable, Sendable {
     public var initial: String?
     public var level: String?
     public var sort: LibrarySort
+    /// Learn Chinese mode: a search also finds a word by the pinyin of its
+    /// Chinese meaning, with or without tones ("xuexi", "xué xí", "xue2xi2").
+    public var matchPinyin: Bool
 
-    public init(initial: String? = nil, level: String? = nil, sort: LibrarySort = .default) {
+    public init(initial: String? = nil, level: String? = nil, sort: LibrarySort = .default, matchPinyin: Bool = false) {
         self.initial = initial
         self.level = level
         self.sort = sort
+        self.matchPinyin = matchPinyin
     }
 }
 
@@ -29,6 +33,20 @@ public final class PreparedVocabulary: @unchecked Sendable {
     let indexById: [String: Int]
     let records: [Record]
     let alphabeticalRecords: [Record]
+    private let pinyinLock = NSLock()
+    private var pinyinKeysStorage: [String]?
+
+    /// Pinyin search keys by record index, built on the first pinyin search.
+    func pinyinKeys() -> [String] {
+        pinyinLock.lock()
+        defer { pinyinLock.unlock() }
+        if let pinyinKeysStorage { return pinyinKeysStorage }
+        let keys = words.map { word in
+            ChineseDisplay.pinyinSearchKey("\(word.meaningZh)；\(word.supplementalMeaningZh ?? "")")
+        }
+        pinyinKeysStorage = keys
+        return keys
+    }
 
     public init(_ words: [WordEntry]) {
         self.words = words
@@ -69,13 +87,22 @@ public final class PreparedVocabulary: @unchecked Sendable {
         }
 
         let source = options.sort == .alphabetical ? alphabeticalRecords : records
+        // Every term as pinyin, and the whole query as one word ("xue xi").
+        let pinyinTerms = options.matchPinyin ? terms.compactMap(ChineseDisplay.pinyinSearchTerm) : []
+        let usesPinyin = !terms.isEmpty && pinyinTerms.count == terms.count
+        let pinyinKeys = usesPinyin ? self.pinyinKeys() : []
+        let pinyinWhole = usesPinyin && terms.count > 1 ? pinyinTerms.joined() : nil
         // Parse each timestamp once here, not on every comparison while sorting.
         let usesRecency = options.sort != .alphabetical && (filter == .favorites || filter == .review || filter == .mastered)
         var matches: [(record: Record, recency: Double, score: Int)] = []
         for record in source {
             if let level, record.word.group != level { continue }
             if let initial, !record.normalizedWord.uppercased().hasPrefix(initial) { continue }
-            let score = Self.searchScore(record, terms: terms)
+            var score = Self.searchScore(record, terms: terms)
+            if usesPinyin, pinyinKeys.indices.contains(record.index) {
+                let key = pinyinKeys[record.index]
+                score = max(score, Self.pinyinScore(key, terms: pinyinTerms), pinyinWhole.map { Self.pinyinScore(key, terms: [$0]) } ?? 0)
+            }
             if !terms.isEmpty, score == 0 { continue }
             let progress = state.progress(for: record.word.id)
             switch filter {
@@ -114,6 +141,20 @@ public final class PreparedVocabulary: @unchecked Sendable {
             else if record.exampleZh.contains(term) { score = 520 }
             else { return 0 }
             total += score
+        }
+        return total
+    }
+
+    /// Pinyin matches rank below the English word itself and above examples.
+    static func pinyinScore(_ key: String, terms: [String]) -> Int {
+        guard !key.isEmpty, !terms.isEmpty else { return 0 }
+        let senses = key.split(separator: " ")
+        var total = 0
+        for term in terms {
+            if senses.contains(where: { $0 == term }) { total += 700 }
+            else if senses.contains(where: { $0.hasPrefix(term) }) { total += 640 }
+            else if key.contains(term) { total += 500 }
+            else { return 0 }
         }
         return total
     }

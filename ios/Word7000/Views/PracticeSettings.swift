@@ -16,7 +16,7 @@ struct FilterControls: View {
             Text(L.allLevels).tag("all")
             ForEach(model.levels, id: \.self) { Text($0).tag($0) }
         }
-        Picker(L.t("英文字首", "First letter"), selection: $selection.initial) {
+        Picker(L.t("英文字首", "English first letter"), selection: $selection.initial) {
             Text(L.t("全部字首", "All letters")).tag("all")
             ForEach(Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init), id: \.self) { Text($0).tag($0) }
         }

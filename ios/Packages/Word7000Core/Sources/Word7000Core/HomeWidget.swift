@@ -9,12 +9,16 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
         public var pronunciation: String
         public var meaning: String
         public var partOfSpeech: String
+        /// The meaning's pinyin, for learners of Chinese. Optional so words
+        /// written before this field existed still decode.
+        public var pinyin: String?
 
-        public init(word: String, pronunciation: String, meaning: String, partOfSpeech: String) {
+        public init(word: String, pronunciation: String, meaning: String, partOfSpeech: String, pinyin: String? = nil) {
             self.word = word
             self.pronunciation = pronunciation
             self.meaning = meaning
             self.partOfSpeech = partOfSpeech
+            self.pinyin = pinyin
         }
     }
 
@@ -63,7 +67,7 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
         let pool = needsPool ? wordPool(words, progress: progress) : []
         // The bundled library already has a stable order; no full-library sort.
         let fallback = keepFallback || pool.isEmpty ? (previous?.rotationPool ?? []) :
-            pool.prefix(fallbackWordLimit).map(widgetWord)
+            pool.prefix(fallbackWordLimit).map { widgetWord($0, chineseInterface: chineseInterface) }
         for day in days {
             // After a long absence, today's word may come from the old offline
             // pool. Pin it before refreshing that pool with current progress.
@@ -72,7 +76,7 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
                 continue
             }
             guard let entry = wordOfTheDay(pool, date: day) else { continue }
-            daily[day] = widgetWord(entry)
+            daily[day] = widgetWord(entry, chineseInterface: chineseInterface)
         }
         return HomeWidgetSnapshot(date: today, studiedToday: progress.studiedToday, dailyTarget: max(1, progress.dailyTarget),
                                   streak: progress.streak, lastStudyDate: progress.lastStudyDate,
@@ -80,9 +84,10 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
                                   words: daily, fallbackWords: fallback)
     }
 
-    private static func widgetWord(_ entry: WordEntry) -> Word {
-        Word(word: entry.word, pronunciation: entry.pronunciation,
-             meaning: ChineseDisplay.conciseMeaning(entry.meaningZh), partOfSpeech: entry.partOfSpeech)
+    private static func widgetWord(_ entry: WordEntry, chineseInterface: Bool) -> Word {
+        let meaning = ChineseDisplay.conciseMeaning(entry.meaningZh)
+        return Word(word: entry.word, pronunciation: entry.pronunciation, meaning: meaning, partOfSpeech: entry.partOfSpeech,
+                    pinyin: chineseInterface ? nil : ChineseDisplay.pronunciationWithTones(meaning))
     }
 
     private var rotationPool: [Word] {

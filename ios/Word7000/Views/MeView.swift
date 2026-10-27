@@ -116,6 +116,15 @@ struct SettingsView: View {
                     SettingsLabel(L.autoReveal, icon: "eye.fill", tint: .teal)
                 }
                 .accessibilityIdentifier("settings-auto-reveal")
+                if model.studyMode == .chinese {
+                    Toggle(isOn: Binding(
+                        get: { model.settings.showPinyin ?? true },
+                        set: { model.settings.showPinyin = $0 }
+                    )) {
+                        SettingsLabel("Show pinyin", icon: "character.phonetic", tint: .indigo)
+                    }
+                    .accessibilityIdentifier("settings-pinyin")
+                }
             } header: {
                 Text(L.t("學習", "Learning"))
             } footer: {

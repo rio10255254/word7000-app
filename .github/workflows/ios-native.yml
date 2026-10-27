@@ -24,6 +24,7 @@ on:
       - 'scripts/verify-native-release.py'
       - 'scripts/test_verify_native_release.py'
       - 'scripts/build-native-speaking-library.mjs'
+      - 'scripts/build-pinyin-readings.mjs'
       - 'scripts/test-native-speaking-recency.mjs'
       - 'src/nativeSpeakingRecency.test.ts'
       - 'content/speaking/**'
@@ -95,6 +96,9 @@ jobs:
 
       - name: Speaking questions match their editorial sources
         run: node scripts/build-native-speaking-library.mjs --check
+
+      - name: Every Chinese text has pinyin
+        run: node scripts/build-pinyin-readings.mjs --check
 
       - name: Coaching evaluation cases match their authored sources
         run: node scripts/build-coach-evaluation.mjs --check

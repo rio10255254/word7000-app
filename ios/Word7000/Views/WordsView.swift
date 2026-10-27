@@ -186,8 +186,10 @@ struct WordsView: View {
             do { try await Task.sleep(for: .milliseconds(120)) } catch { return }
         }
         let vocabulary = model.bank, state = model.progress, filter = model.settings.libraryFilter, text = query
-        let matches = await Task.detached(priority: .userInitiated) {
-            vocabulary.filter(state: state, query: text, filter: filter.status, options: filter.options, rankedSearch: true)
+        var options = filter.options
+        options.matchPinyin = model.studyMode == .chinese
+        let matches = await Task.detached(priority: .userInitiated) { [options] in
+            vocabulary.filter(state: state, query: text, filter: filter.status, options: options, rankedSearch: true)
         }.value
         guard !Task.isCancelled else { return }
         if results != matches { results = matches }
@@ -370,10 +372,18 @@ struct WordRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 let face = model.face(word)
                 SearchHighlightedText(text: face.prompt, query: query).font(.rounded(.body, weight: .semibold))
-                SearchHighlightedText(text: face.answer, query: query)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                HStack(spacing: 8) {
+                    if !face.promptDetail.isEmpty, model.studyMode == .chinese {
+                        Text(face.promptDetail)
+                            .foregroundStyle(Palette.accent.opacity(0.85))
+                            .layoutPriority(1)
+                            .accessibilityHidden(true)
+                    }
+                    SearchHighlightedText(text: face.answer, query: query)
+                        .foregroundStyle(.secondary)
+                }
+                .font(.subheadline)
+                .lineLimit(1)
             }
             Spacer(minLength: 4)
             if progress.favorite {
@@ -454,6 +464,7 @@ struct WordDetailView: View {
                 Section(L.example) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(face.examplePrimary)
+                        PinyinLine(text: face.examplePinyin)
                         if !face.exampleSecondary.isEmpty {
                             Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
                         }

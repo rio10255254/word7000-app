@@ -42,6 +42,54 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
     }
 
+    func testTodaySwitchesToLearnChineseWithPinyinPractice() {
+        let app = launch()
+        let chinese = app.buttons["today-mode-chinese"]
+        XCTAssertTrue(chinese.waitForExistence(timeout: 5))
+        snapshot(app, "chinese-mode-switch-english")
+        XCTAssertTrue(revealOnToday(app, "today-spelling"))
+        for _ in 0..<4 where !(chinese.exists && chinese.isHittable) { app.swipeDown() }
+        XCTAssertTrue(chinese.waitForExistence(timeout: 5))
+        chinese.tap()
+        // The interface turns English and spelling becomes pinyin practice.
+        XCTAssertTrue(app.buttons["today-mode-chinese"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["today-mode-chinese"].isSelected)
+        snapshot(app, "chinese-mode-today")
+        XCTAssertTrue(revealOnToday(app, "today-pinyin"))
+        XCTAssertFalse(app.buttons["today-spelling"].exists)
+        let pinyin = app.buttons["today-pinyin"]
+
+        pinyin.tap()
+        let input = app.textFields["spelling-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["spelling-meaning"].exists)
+        snapshot(app, "chinese-mode-pinyin-question")
+        input.tap()
+        input.typeText("zz")
+        app.buttons["spelling-check"].tap()
+        XCTAssertTrue(app.staticTexts["spelling-result"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["spelling-answer"].exists)
+        snapshot(app, "chinese-mode-pinyin-answer")
+        app.buttons["spelling-close"].tap()
+
+        let english = app.buttons["today-mode-english"]
+        for _ in 0..<4 where !(english.exists && english.isHittable) { app.swipeDown() }
+        XCTAssertTrue(english.waitForExistence(timeout: 5))
+        english.tap()
+        XCTAssertTrue(revealOnToday(app, "today-spelling"))
+    }
+
+    /// Today's practice rows sit below the switch and the ring; on a small
+    /// phone they start off screen, where the list has not built them yet.
+    private func revealOnToday(_ app: XCUIApplication, _ identifier: String) -> Bool {
+        let button = app.buttons[identifier]
+        for _ in 0..<4 {
+            if button.waitForExistence(timeout: 2), button.isHittable { return true }
+            app.swipeUp()
+        }
+        return button.exists && button.isHittable
+    }
+
     func testAutoRevealShowsAnswersWithoutATap() {
         let app = launch()
         app.buttons["today-start"].tap()

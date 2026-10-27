@@ -97,11 +97,15 @@ struct QuizSessionView: View {
             SessionBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)))
                 .padding(.top, 4)
 
+            // The same two senses as the study card, so a sense shared by two
+            // English words (做: do, make) has the other one to tell them apart.
             VStack(spacing: 6) {
-                Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
+                Text(face.prompt)
                     .font(.roundedSize(42, weight: .bold))
                     .minimumScaleFactor(0.4)
                     .lineLimit(3)
+                    .accessibilityIdentifier("quiz-prompt")
+                PinyinLine(text: face.promptDetail, font: .title3)
             }
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
@@ -118,12 +122,13 @@ struct QuizSessionView: View {
             if let chosen {
                 if !chosen.correct, let correct = options.first(where: \.correct) {
                     QuizWhyView(word: word,
-                                question: model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt,
+                                question: face.prompt,
                                 correctAnswer: correct.text, chosenAnswer: chosen.text)
                 }
                 if !face.examplePrimary.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(face.examplePrimary)
+                        PinyinLine(text: face.examplePinyin)
                         Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
                     }
                     .padding(14)

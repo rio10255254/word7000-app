@@ -17,6 +17,12 @@ struct TodayView: View {
 
         List {
             Section {
+                StudyModeSwitch()
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+            }
+
+            Section {
                 VStack(spacing: 16) {
                     ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 16) {
                         VStack(spacing: 0) {
@@ -100,7 +106,8 @@ struct TodayView: View {
                 }
                 .tint(.primary)
                 .accessibilityIdentifier("today-speaking")
-                // Typing the word only makes sense when English is what is learned.
+                // Learners of English type the word; learners of Chinese read
+                // the characters and type their pinyin.
                 if model.studyMode == .english {
                     Button { start(.spelling) } label: {
                         ActionRow(icon: "character.cursor.ibeam", tint: Palette.accent, title: L.spelling,
@@ -108,6 +115,13 @@ struct TodayView: View {
                     }
                     .tint(.primary)
                     .accessibilityIdentifier("today-spelling")
+                } else {
+                    Button { start(.spelling) } label: {
+                        ActionRow(icon: "character.phonetic", tint: Palette.accent, title: L.pinyinPractice,
+                                  value: L.t("\(Spelling.sessionLength) 題", "\(Spelling.sessionLength) words"))
+                    }
+                    .tint(.primary)
+                    .accessibilityIdentifier("today-pinyin")
                 }
                 Button { start(.exam) } label: {
                     ActionRow(icon: "timer", tint: Palette.review, title: L.t("考前衝刺模擬", "Exam practice"),
@@ -150,5 +164,69 @@ struct TodayView: View {
                     .accessibilityLabel("\(L.streak) \(progress.streak)")
             }
         }
+    }
+}
+
+/// What is learned, switchable from the first screen. Each side is written in
+/// the language of the person who would pick it, so a learner who reads no
+/// Chinese still finds "Learn Chinese". Switching also switches the interface
+/// language; progress is shared.
+struct StudyModeSwitch: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 4) { options }
+            VStack(spacing: 4) { options }
+        }
+        .padding(4)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L.studyModeTitle)
+    }
+
+    @ViewBuilder private var options: some View {
+        option(.english, glyph: "A", title: "學英文", detail: "中文介面")
+        option(.chinese, glyph: "中", title: "Learn Chinese", detail: "English interface")
+    }
+
+    private func option(_ mode: StudyMode, glyph: String, title: String, detail: String) -> some View {
+        let selected = model.studyMode == mode
+        return Button {
+            // The whole interface changes language; fade rather than jump.
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.25)) { model.setStudyMode(mode) }
+        } label: {
+            HStack(spacing: 10) {
+                Text(glyph)
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(selected ? .white : Palette.secondaryLabel)
+                    .frame(width: 32, height: 32)
+                    .background(selected ? Palette.accent : Palette.fill, in: Circle())
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(title)
+                        .font(.rounded(.subheadline, weight: .bold))
+                        .foregroundStyle(selected ? Palette.accent : .primary)
+                    Text(detail)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer(minLength: 0)
+                if selected {
+                    Image(systemName: "checkmark")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(Palette.accent)
+                }
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(selected ? Palette.accent.opacity(0.12) : .clear, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+        .buttonStyle(SoftPressStyle())
+        .accessibilityLabel("\(title), \(detail)")
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("today-mode-\(mode.rawValue)")
     }
 }

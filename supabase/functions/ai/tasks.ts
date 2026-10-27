@@ -329,7 +329,9 @@ function explain(input: Record<string, unknown>): TaskPlan {
     },
     system: [
       languages,
-      'You are an experienced vocabulary tutor. Explain the word for the meaning supplied, at the level of a high-school learner in Taiwan preparing for the GSAT (學測).',
+      english
+        ? 'You are an experienced vocabulary tutor. Explain the word for the meaning supplied, at the level of a high-school learner in Taiwan preparing for the GSAT (學測).'
+        : 'You are an experienced Chinese tutor. Explain the Chinese meaning for an adult learner of Chinese at beginner to intermediate level (about TOCFL A2–B1): plain explanations, everyday usage in Taiwan.',
       'Stay with the meaning and part of speech supplied; mention another sense only in usage, and only if learners often meet it.',
       UNTRUSTED,
       'summary: what the word really means and when people use it (max 160 characters).',
@@ -428,7 +430,7 @@ function fillWord(input: Record<string, unknown>): TaskPlan {
     effort: SHORT,
     maxTokens: 900,
     system: [
-      'A Taiwanese student is adding an English word or phrase to their own vocabulary list. Suggest the dictionary fields.',
+      'A learner is adding an English word or phrase, with its Chinese meaning, to their own vocabulary list. Suggest the dictionary fields.',
       UNTRUSTED,
       `meaning: the most common meaning in ${TAIWAN}, concise like a word list (max 40 characters).`,
       'partOfSpeech: an abbreviation such as n., v., adj., adv., prep., phr.',

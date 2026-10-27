@@ -49,12 +49,24 @@ const TAIWAN_WORDS = new Map([
   ['垃圾', ['lè', 'sè']],
   ['頭髮', ['tóu', 'fǎ']],
   ['理髮', ['lǐ', 'fǎ']],
+  // Words the reader gets wrong in context.
+  ['有空', ['yǒu', 'kòng']],
+  ['沒空', ['méi', 'kòng']],
+  ['旅行', ['lǚ', 'xíng']],
+  ['中文', ['zhōng', 'wén']],
+  ['長得', ['zhǎng', 'de']],
+  ['睡不著', ['shuì', 'bù', 'zháo']],
+  ['睡著', ['shuì', 'zháo']],
 ]);
 const TAIWAN_CHARACTERS = new Map([
   ['期', 'qí'], ['危', 'wéi'], ['微', 'wéi'], ['企', 'qì'], ['質', 'zhí'], ['液', 'yì'],
   ['擁', 'yǒng'], ['暫', 'zhàn'], ['息', 'xí'], ['惜', 'xí'], ['昔', 'xí'], ['夕', 'xì'],
   ['檔', 'dàng'], ['綜', 'zòng'], ['播', 'bò'], ['頻', 'pín'], ['髮', 'fǎ'],
+  // Read one way in Traditional text (隻 is the measure word, 只 only).
+  ['誰', 'shéi'], ['姊', 'jiě'], ['只', 'zhǐ'], ['喔', 'ō'],
 ]);
+// 得 after a verb, before how it was done (跑得很快, 說得好), is de.
+const DE_FOLLOWERS = new Set([...'很好太非常不真快慢多清滿更越']);
 
 const PUNCTUATION = new Map(Object.entries({
   '，': ',', '。': '.', '！': '!', '？': '?', '：': ':', '；': ';', '、': ',',
@@ -86,6 +98,10 @@ export function makeSyllableReader({ pinyin, toSimplified }) {
       if (TAIWAN_CHARACTERS.has(character) && !TAIWAN_WORDS.has(characters.slice(index - 1, index + 1).join(''))
         && !TAIWAN_WORDS.has(characters.slice(index, index + 2).join(''))) {
         readings[index] = TAIWAN_CHARACTERS.get(character);
+      }
+      if (character === '得' && index > 0 && han.test(characters[index - 1]) && DE_FOLLOWERS.has(characters[index + 1])
+        && !TAIWAN_WORDS.has(characters.slice(index - 1, index + 1).join(''))) {
+        readings[index] = 'de';
       }
     });
 

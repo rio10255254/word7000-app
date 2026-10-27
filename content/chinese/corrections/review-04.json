@@ -1,0 +1,160 @@
+[
+ {
+  "hanzi": "賽跑",
+  "set": {
+   "examplePinyin": "wǒ men lái sài pǎo, kàn shéi xiān dào!"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "宣布",
+  "set": {
+   "examplePinyin": "gōng sī xuān bù míng tiān fàng jià yī tiān."
+  },
+  "reason": "放假 is fàng jià"
+ },
+ {
+  "hanzi": "握住",
+  "set": {
+   "answerPinyin": "huì, bú wò zhù fú shǒu hěn róng yì dié dǎo."
+  },
+  "reason": "跌 is dié in Taiwan"
+ },
+ {
+  "hanzi": "心臟",
+  "set": {
+   "pinyin": "xīn zàng",
+   "examplePinyin": "yī shēng shuō wǒ de xīn zàng hěn jiàn kāng.",
+   "answerPinyin": "huì, hē tài duō kā fēi, wǒ de xīn zàng huì tiào hěn kuài."
+  },
+  "reason": "心臟 is xīn zàng"
+ },
+ {
+  "hanzi": "相似",
+  "set": {
+   "questionPinyin": "nǐ de mǔ yǔ hé zhōng wén yǒu xiāng sì de dì fāng ma?",
+   "answerPinyin": "méi yǒu xiāng sì de dì fāng, wán quán bù yí yàng."
+  },
+  "reason": "相似 is xiāng sì"
+ },
+ {
+  "hanzi": "量",
+  "set": {
+   "pinyin": "liàng",
+   "examplePinyin": "zhè jiā biàn dāng diàn de liàng hěn dà.",
+   "questionPinyin": "nǐ xǐ huan liàng dà de cān tīng ma?",
+   "answerPinyin": "xǐ huan, liàng dà cái chī de bǎo."
+  },
+  "reason": "量 (amount) is liàng; 吃得飽 is de"
+ },
+ {
+  "hanzi": "明顯",
+  "set": {
+   "examplePinyin": "tā de zhōng wén jìn bù de hěn míng xiǎn."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "表面",
+  "set": {
+   "questionPinyin": "nǐ huì zhǐ kàn biǎo miàn jiù jué dìng xǐ bu xǐ huan yí gè rén ma?"
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "堅持",
+  "set": {
+   "examplePinyin": "tā jiān chí měi tiān zǒu lù shàng bān."
+  },
+  "reason": "上班 is shàng bān"
+ },
+ {
+  "hanzi": "檔案",
+  "set": {
+   "pinyin": "dǎng àn",
+   "examplePinyin": "qǐng bǎ dǎng àn jì gěi wǒ.",
+   "questionPinyin": "nǐ diàn nǎo lǐ de dǎng àn zhěng lǐ hǎo le ma?",
+   "answerPinyin": "méi yǒu, wǒ de dǎng àn hěn luàn."
+  },
+  "reason": "檔 is dǎng in Taiwan (教育部)"
+ },
+ {
+  "hanzi": "信任",
+  "set": {
+   "questionPinyin": "nǐ zuì xìn rèn shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "一打",
+  "set": {
+   "pinyin": "yì dá",
+   "examplePinyin": "wǒ men mǎi le yì dá pí jiǔ qù hǎi biān.",
+   "questionPinyin": "nǐ yí cì huì mǎi yì dá pí jiǔ ma?",
+   "answerPinyin": "bú huì, yì dá tài duō le."
+  },
+  "reason": "打 (dozen) is dá"
+ },
+ {
+  "hanzi": "音量",
+  "set": {
+   "answerPinyin": "bú huì, wǒ de yīn liàng dōu kāi de hěn xiǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "種子",
+  "set": {
+   "examplePinyin": "wǒ zài yáng tái zhòng le yì xiē zhǒng zi.",
+   "questionPinyin": "nǐ xiǎng zài yáng tái zhòng shén me zhǒng zi?",
+   "answerPinyin": "wǒ xiǎng mǎi yì xiē fān qié de zhǒng zi lái zhòng."
+  },
+  "reason": "種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "船長",
+  "set": {
+   "pinyin": "chuán zhǎng",
+   "examplePinyin": "chuán zhǎng qǐng dà jiā chuān shàng jiù shēng yī.",
+   "questionPinyin": "nǐ xiǎo shí hòu xiǎng dāng chuán zhǎng ma?",
+   "answerPinyin": "xiǎng guò, wǒ jué de dāng chuán zhǎng hěn kù."
+  },
+  "reason": "船長 is chuán zhǎng; 覺得 jué de; 當 (be) dāng"
+ },
+ {
+  "hanzi": "相簿",
+  "set": {
+   "pinyin": "xiàng bù",
+   "examplePinyin": "wǒ bǎ lǚ xíng zhào piàn fàng jìn xiàng bù.",
+   "questionPinyin": "nǐ de shǒu jī lǐ yǒu jǐ gè xiàng bù?",
+   "answerPinyin": "wǒ de shǒu jī lǐ yǒu shí jǐ gè xiàng bù."
+  },
+  "reason": "相簿 is xiàng bù"
+ },
+ {
+  "hanzi": "排成",
+  "set": {
+   "questionPinyin": "nǐ zài tái wān kàn guò dà jiā pái chéng cháng cháng de duì ma?"
+  },
+  "reason": "長長 is cháng cháng"
+ },
+ {
+  "hanzi": "事故",
+  "set": {
+   "examplePinyin": "gāo sù gōng lù shang fā shēng le shì gù."
+  },
+  "reason": "了 is le"
+ },
+ {
+  "hanzi": "疾病",
+  "set": {
+   "question": "怎麼做可以預防疾病？",
+   "questionEnglish": "What can you do to prevent disease?",
+   "questionPinyin": "zěn me zuò kě yǐ yù fáng jí bìng?",
+   "answer": "多運動、多洗手可以預防疾病。",
+   "answerEnglish": "Exercising and washing your hands often can help prevent disease.",
+   "answerPinyin": "duō yùn dòng, duō xǐ shǒu kě yǐ yù fáng jí bìng."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ }
+]

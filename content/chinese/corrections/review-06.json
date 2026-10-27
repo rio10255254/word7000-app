@@ -274,5 +274,310 @@
    "questionPinyin": "nǐ gōng zuò yǒu yā lì shí, huì xiàng shéi xún qiú bāng zhù?"
   },
   "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "財務",
+  "set": {
+   "questionPinyin": "nǐ jiā de cái wù shì shéi guǎn?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "攻擊",
+  "set": {
+   "question": "山上的猴子為什麼會攻擊遊客？",
+   "questionPinyin": "shān shàng de hóu zi wèi shén me huì gōng jī yóu kè?",
+   "questionEnglish": "Why do monkeys in the mountains attack tourists?",
+   "answer": "牠們想搶遊客的食物，所以會攻擊人。",
+   "answerPinyin": "tā men xiǎng qiǎng yóu kè de shí wù, suǒ yǐ huì gōng jī rén.",
+   "answerEnglish": "They want to grab tourists' food, so they attack people."
+  },
+  "reason": "sensitive: question asked about the learner being attacked; made general"
+ },
+ {
+  "hanzi": "相配",
+  "set": {
+   "examplePinyin": "zhè jiàn chèn shān hé nǐ de kù zi hěn xiāng pèi."
+  },
+  "reason": "pinyin: 褲子 kù zi"
+ },
+ {
+  "hanzi": "運轉",
+  "set": {
+   "examplePinyin": "lěng qì yùn zhuǎn de shēng yīn tài dà, wǒ shuì bù zháo."
+  },
+  "reason": "pinyin: 睡不著 shuì bù zháo"
+ },
+ {
+  "hanzi": "協議",
+  "set": {
+   "answerPinyin": "wǒ men yǒu xié yì, měi gè rén lún liú dào lè sè."
+  },
+  "reason": "pinyin: 倒垃圾 dào"
+ },
+ {
+  "hanzi": "供應",
+  "set": {
+   "answerPinyin": "méi yǒu, gōng sī zhǐ gōng yìng kā fēi hé chá."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "特定",
+  "set": {
+   "questionPinyin": "nǐ zhǐ hē tè dìng pái zi de kā fēi ma?"
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "塗",
+  "set": {
+   "examplePinyin": "wǒ zài wén zi yǎo de dì fāng tú le yì diǎn yào."
+  },
+  "reason": "pinyin: 蚊子 wén zi"
+ },
+ {
+  "hanzi": "發射",
+  "set": {
+   "answerPinyin": "wǒ zhǐ zài diàn shì shàng kàn guò huǒ jiàn fā shè."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "犯罪",
+  "set": {
+   "question": "台灣的犯罪率高嗎？",
+   "questionPinyin": "tái wān de fàn zuì lǜ gāo ma?",
+   "questionEnglish": "Is the crime rate in Taiwan high?",
+   "answer": "不高，台灣的犯罪率很低。",
+   "answerPinyin": "bù gāo, tái wān de fàn zuì lǜ hěn dī.",
+   "answerEnglish": "No, Taiwan's crime rate is low."
+  },
+  "reason": "sensitive: question asked the learner's views on crime; made impersonal"
+ },
+ {
+  "hanzi": "防止",
+  "set": {
+   "questionPinyin": "xià tiān nǐ zěn me fáng zhǐ bèi wén zi yǎo?"
+  },
+  "reason": "pinyin: 蚊子 wén zi"
+ },
+ {
+  "hanzi": "疼痛",
+  "set": {
+   "question": "長時間用電腦，哪裡容易疼痛？",
+   "questionPinyin": "cháng shí jiān yòng diàn nǎo, nǎ lǐ róng yì téng tòng?",
+   "questionEnglish": "After using a computer for a long time, where do people tend to ache?",
+   "answer": "長時間用電腦，肩膀和脖子容易疼痛。",
+   "answerPinyin": "cháng shí jiān yòng diàn nǎo, jiān bǎng hé bó zi róng yì téng tòng.",
+   "answerEnglish": "Using a computer for a long time tends to make your shoulders and neck ache."
+  },
+  "reason": "sensitive: question asked about the learner's own pain; made general"
+ },
+ {
+  "hanzi": "主席",
+  "set": {
+   "questionPinyin": "nǐ men gōng sī kāi huì shí, shéi dāng zhǔ xí?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "改為",
+  "set": {
+   "questionPinyin": "rú guǒ xià dà yǔ, nǐ de zhōu mò jì huà huì gǎi wéi shén me?"
+  },
+  "reason": "pinyin: 改為 gǎi wéi"
+ },
+ {
+  "hanzi": "武器",
+  "set": {
+   "question": "機場為什麼要檢查行李裡有沒有武器？",
+   "questionPinyin": "jī chǎng wèi shén me yào jiǎn chá xíng li lǐ yǒu méi yǒu wǔ qì?",
+   "questionEnglish": "Why do airports check luggage for weapons?",
+   "answer": "為了安全，機場不讓旅客帶武器上飛機。",
+   "answerPinyin": "wèi le ān quán, jī chǎng bú ràng lǚ kè dài wǔ qì shàng fēi jī.",
+   "answerEnglish": "For safety, airports don't let passengers take weapons on planes."
+  },
+  "reason": "sensitive: question asked the learner's views on owning weapons; made impersonal"
+ },
+ {
+  "hanzi": "租期",
+  "set": {
+   "english": "lease term; rental period"
+  },
+  "reason": "meaning: 租期 is a lease term, not tenure"
+ },
+ {
+  "hanzi": "受害者",
+  "set": {
+   "question": "詐騙電話的受害者常常是什麼人？",
+   "questionPinyin": "zhà piàn diàn huà de shòu hài zhě cháng cháng shì shén me rén?",
+   "questionEnglish": "What kind of people often fall victim to scam calls?",
+   "answer": "很多受害者是老人。",
+   "answerPinyin": "hěn duō shòu hài zhě shì lǎo rén.",
+   "answerEnglish": "Many of the victims are elderly people."
+  },
+  "reason": "sensitive: question asked the learner's views on crime victims; made impersonal"
+ },
+ {
+  "hanzi": "功勞",
+  "set": {
+   "questionPinyin": "gōng zuò shùn lì de shí hòu, nǐ jué de shì shéi de gōng láo?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "法官",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng fǎ guān nán ma?"
+  },
+  "reason": "pinyin: 覺得 jué de, 當 (serve as) dāng"
+ },
+ {
+  "hanzi": "依靠",
+  "set": {
+   "questionPinyin": "nǐ zài tái wān yù dào wèn tí shí, yī kào shéi?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "高溫",
+  "set": {
+   "answerPinyin": "gāo wēn de shí hòu, wǒ jìn liàng bù chū mén."
+  },
+  "reason": "pinyin: 盡量 jìn liàng"
+ },
+ {
+  "hanzi": "士兵",
+  "set": {
+   "examplePinyin": "huǒ chē shàng yǒu hěn duō fàng jià de shì bīng.",
+   "answerPinyin": "bú yòng, wǒ men de shì bīng dōu shì zhì yuàn de."
+  },
+  "reason": "pinyin: particle 的 de"
+ },
+ {
+  "hanzi": "暴力",
+  "set": {
+   "question": "為什麼有些電影不適合小孩看？",
+   "questionPinyin": "wèi shén me yǒu xiē diàn yǐng bú shì hé xiǎo hái kàn?",
+   "questionEnglish": "Why are some movies not suitable for children?",
+   "answer": "因為有些電影有太多暴力畫面。",
+   "answerPinyin": "yīn wèi yǒu xiē diàn yǐng yǒu tài duō bào lì huà miàn.",
+   "answerEnglish": "Because some movies have too many violent scenes."
+  },
+  "reason": "sensitive: question asked the learner's own taste in violence; made general"
+ },
+ {
+  "hanzi": "冒出",
+  "set": {
+   "examplePinyin": "shuǐ gǔn le, guō zi mào chū hěn duō bái yān."
+  },
+  "reason": "pinyin: 鍋子 guō zi"
+ },
+ {
+  "hanzi": "監獄",
+  "set": {
+   "question": "在台灣，酒駕可能會被關進監獄嗎？",
+   "questionPinyin": "zài tái wān, jiǔ jià kě néng huì bèi guān jìn jiān yù ma?",
+   "questionEnglish": "In Taiwan, can drunk drivers be sent to prison?",
+   "answer": "會，嚴重的酒駕會被關進監獄。",
+   "answerPinyin": "huì, yán zhòng de jiǔ jià huì bèi guān jìn jiān yù.",
+   "answerEnglish": "Yes, serious drunk-driving cases can lead to prison."
+  },
+  "reason": "sensitive: question asked the learner's views on punishment; made impersonal"
+ },
+ {
+  "hanzi": "癌症",
+  "set": {
+   "question": "怎麼做可以預防癌症？",
+   "questionPinyin": "zěn me zuò kě yǐ yù fáng ái zhèng?",
+   "questionEnglish": "What can people do to help prevent cancer?"
+  },
+  "reason": "sensitive: made the illness question impersonal"
+ },
+ {
+  "hanzi": "額外",
+  "set": {
+   "questionPinyin": "nǐ chū guó lǚ xíng huì é wài mǎi bǎo xiǎn ma?"
+  },
+  "reason": "pinyin: 旅行 lǚ xíng"
+ },
+ {
+  "hanzi": "公道",
+  "set": {
+   "answerPinyin": "dà bù fèn hěn gōng dào, bú huì tài guì."
+  },
+  "reason": "pinyin: 部分 bù fèn (教育部)"
+ },
+ {
+  "hanzi": "傳開",
+  "set": {
+   "questionPinyin": "nǐ gōng sī lǐ de bā guà chuán de kuài ma?",
+   "answerPinyin": "hěn kuài, bā guà yí xià zi jiù chuán kāi le."
+  },
+  "reason": "pinyin: complement 得 de, 一下子 yí xià zi"
+ },
+ {
+  "hanzi": "承諾",
+  "set": {
+   "examplePinyin": "tā chéng nuò míng tiān huì huán qián."
+  },
+  "reason": "pinyin: 還錢 huán qián"
+ },
+ {
+  "hanzi": "引擎",
+  "set": {
+   "answerPinyin": "bú huì, yǐn qíng yǒu wèn tí wǒ dōu qù jī chē háng."
+  },
+  "reason": "pinyin: 機車行 háng"
+ },
+ {
+  "hanzi": "關節",
+  "set": {
+   "question": "什麼運動對膝蓋關節比較好？",
+   "questionPinyin": "shén me yùn dòng duì xī gài guān jié bǐ jiào hǎo?",
+   "questionEnglish": "What kind of exercise is better for your knee joints?",
+   "answer": "游泳對膝蓋關節比較好。",
+   "answerPinyin": "yóu yǒng duì xī gài guān jié bǐ jiào hǎo.",
+   "answerEnglish": "Swimming is better for your knee joints."
+  },
+  "reason": "sensitive: question asked about the learner's own joint pain; made general"
+ },
+ {
+  "hanzi": "政治人物",
+  "set": {
+   "answerPinyin": "bú tài xǐ huan, hěn duō zhèng zhì rén wù zhǐ huì shuō bú huì zuò."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "時尚",
+  "set": {
+   "examplePinyin": "tā chuān de hěn shí shàng.",
+   "questionPinyin": "nǐ jué de tái běi rén chuān de shí shàng ma?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "陳列",
+  "set": {
+   "examplePinyin": "diàn lǐ chén liè zhe hěn duō shǒu gōng yì pǐn.",
+   "answerPinyin": "yǒu, wǒ de shū jià shàng chén liè zhe hěn duō gōng zǎi."
+  },
+  "reason": "pinyin: aspect particle 著 zhe"
+ },
+ {
+  "hanzi": "油脂",
+  "set": {
+   "answerPinyin": "huì, wǒ jìn liàng shǎo chī yóu zhī duō de dōng xī."
+  },
+  "reason": "pinyin: 盡量 jìn liàng"
+ },
+ {
+  "hanzi": "前景",
+  "set": {
+   "answerPinyin": "bú cuò, wǒ jué de zhè háng de qián jǐng hěn hǎo."
+  },
+  "reason": "pinyin: 這行 (line of work) háng"
  }
 ]

@@ -442,5 +442,26 @@
    "examplePinyin": "tā cōng máng de pǎo qù gǎn jié yùn."
   },
   "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "更正",
+  "set": {
+   "answerPinyin": "huì, wǒ huì hěn kè qì de gēng zhèng tā."
+  },
+  "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "英勇",
+  "set": {
+   "examplePinyin": "xiāo fáng yuán yīng yǒng de jiù chū le sān gè rén."
+  },
+  "reason": "adverbial 地 is de"
+ },
+ {
+  "hanzi": "冷酷",
+  "set": {
+   "english": "cold; cold-hearted; ruthless"
+  },
+  "reason": "冷酷 means cold-hearted, not relentless"
  }
 ]

@@ -364,6 +364,18 @@ jobs:
           cat "$RUNNER_TEMP/devices.txt"
           [ -s "$RUNNER_TEMP/devices.txt" ] || { echo "::error::No iPhone simulator could be created."; exit 1; }
 
+      # A new simulator's first boot sets itself up for minutes, and an app
+      # launched meanwhile can time out; boot each once, one at a time.
+      - name: Boot each iPhone once
+        timeout-minutes: 25
+        run: |
+          while IFS=$'\t' read -r udid name os; do
+            xcrun simctl boot "$udid" < /dev/null || true
+            xcrun simctl bootstatus "$udid" -b < /dev/null > /dev/null || true
+            xcrun simctl shutdown "$udid" < /dev/null || true
+            echo "$name ($os) has booted once"
+          done < "$RUNNER_TEMP/devices.txt"
+
       - name: Build once and walk every iPhone
         run: |
           set +e

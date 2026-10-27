@@ -25,12 +25,12 @@ final class DeviceLayoutTests: XCTestCase {
 
         // The first launch on a simulator that has just booted times the
         // simulator settling, not the app: launch once, then time a fresh
-        // launch, as on an iPhone that has been on for a while.
+        // launch (launching again ends the first), as on an iPhone that has
+        // been on for a while.
         var launched = Date()
         app.launch()
         _ = start.waitForExistence(timeout: 120)
         timings["firstLaunchToToday"] = Date().timeIntervalSince(launched)
-        app.terminate()
         launched = Date()
         app.launch()
         XCTAssertTrue(start.waitForExistence(timeout: 20))

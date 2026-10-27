@@ -74,14 +74,17 @@ public final class PreparedVocabulary: @unchecked Sendable {
         alphabeticalLock.lock()
         defer { alphabeticalLock.unlock() }
         if let alphabeticalStorage { return alphabeticalStorage }
-        // Chinese course words go by pinyin, every other word by its English.
+        // Chinese course words go by pinyin, every other word by its English,
+        // without case or accents: for every built-in word the same order as
+        // the web app's localeCompare(…, 'en', base), with each key folded
+        // once instead of on every comparison.
         let sortKey = records.map { record in
-            ChineseCourse.isCourseWordId(record.word.id) ? ChineseDisplay.stripTones(record.word.pronunciation) : record.word.word
+            let key = ChineseCourse.isCourseWordId(record.word.id) ? record.word.pronunciation : record.word.word
+            return key.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
         }
-        let locale = Locale(identifier: "en")
         let sorted = records.sorted { left, right in
-            let order = sortKey[left.index].compare(sortKey[right.index], options: [.caseInsensitive, .diacriticInsensitive], locale: locale)
-            return order == .orderedSame ? left.index < right.index : order == .orderedAscending
+            let (a, b) = (sortKey[left.index], sortKey[right.index])
+            return a == b ? left.index < right.index : a < b
         }
         let storage = (records: sorted, words: sorted.map(\.word))
         alphabeticalStorage = storage

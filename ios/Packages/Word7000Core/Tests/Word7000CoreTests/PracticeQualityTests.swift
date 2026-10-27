@@ -35,6 +35,15 @@ final class PracticeQualityTests: XCTestCase {
         XCTAssertEqual(found.map(\.word), ["cat", "catalog", "aardvark"])
     }
 
+    func testAToZIgnoresCaseAndAccentsAndPutsCourseWordsByPinyin() {
+        var course = [word("zh-知道", "to know", "知道"), word("zh-綠色", "green", "綠色"), word("zh-愛好", "hobby", "愛好")]
+        for (index, pinyin) in ["zhīdào", "lǜsè", "àihào"].enumerated() { course[index].pronunciation = pinyin }
+        let english = [word("1", "Zebra", "斑馬"), word("2", "apple", "蘋果"), word("3", "café", "咖啡館"), word("4", "cafe", "咖啡館")]
+        XCTAssertEqual(PreparedVocabulary(course).alphabeticalWords.map(\.meaningZh), ["愛好", "綠色", "知道"])
+        // Equal keys keep the list's own order.
+        XCTAssertEqual(PreparedVocabulary(english).alphabeticalWords.map(\.id), ["2", "3", "4", "1"])
+    }
+
     func testPracticeAfterMidnightStartsANewDailyCountAndKeepsTheStreak() {
         let yesterday = LearningEngine.markKnown(.empty, wordId: "first", today: "2026-10-19")
         let today = LearningEngine.normalizeForDate(yesterday, today: "2026-10-20")

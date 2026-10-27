@@ -24,7 +24,7 @@ on:
         type: string
         default: 'free,plus'
       only:
-        description: 'Only these tasks (coach, scan, explain, quizWhy, fillWord, insights); empty = all'
+        description: 'Only these tasks (coach, scan, explain, quizWhy, fillWord, insights, ask); empty = all'
         type: string
         default: ''
 

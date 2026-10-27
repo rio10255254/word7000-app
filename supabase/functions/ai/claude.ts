@@ -32,13 +32,15 @@ export interface CompleteOptions {
  */
 export const THINKING_ROOM: Record<Effort, number> = { low: 2_000, medium: 6_000 };
 
-type Attempt = { effort: Effort; corrective: boolean };
+/** `note` asks the model to fix what was wrong with its previous reply. */
+type Attempt = { effort: Effort; note?: string };
 
 /**
  * Runs the plan at its reasoning level. One failed attempt earns one retry:
  * at `low` after a timeout or a reply cut short, so the learner still gets an
- * answer in time, otherwise at the same level. A reply in the wrong language
- * gets one corrected retry of its own.
+ * answer in time, otherwise at the same level. A reply the plan's review
+ * rejects (wrong language, examples without the word…) gets one corrected
+ * retry of its own, told what to fix.
  */
 export async function complete(plan: TaskPlan, options: CompleteOptions): Promise<Completion> {
   const now = options.now ?? Date.now;
@@ -48,11 +50,11 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
   let retried = false;
   let corrected = false;
 
-  const attempts: Attempt[] = [{ effort: plan.effort, corrective: false }];
+  const attempts: Attempt[] = [{ effort: plan.effort }];
   const retry = (effort: Effort) => {
     if (retried) return;
     retried = true;
-    attempts.push({ effort, corrective: false });
+    attempts.push({ effort });
   };
 
   for (let index = 0; index < attempts.length; index++) {
@@ -62,7 +64,7 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), Math.min(options.attemptTimeoutMs ?? 18_000, remaining));
     try {
-      const message = await client.messages.create(requestBody(plan, attempt.effort, attempt.corrective), { signal: controller.signal });
+      const message = await client.messages.create(requestBody(plan, attempt.effort, attempt.note), { signal: controller.signal });
       if (message.stop_reason === 'refusal') {
         // Asking again would be declined again; the on-device model answers instead.
         throw new AIFailure('unavailable', `Claude declined the request (${message.stop_details?.category ?? 'no category'})`);
@@ -71,14 +73,15 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
       const text = message.content.find((block) => block.type === 'text');
       if (!text || text.type !== 'text') { retry(attempt.effort); continue; }
       const content = JSON.parse(text.text);
-      if (plan.accept && !plan.accept(content)) {
+      const note = plan.review?.(content) ?? null;
+      if (note) {
         if (!corrected) {
           corrected = true;
-          attempts.splice(index + 1, 0, { effort: attempt.effort, corrective: true });
+          attempts.splice(index + 1, 0, { effort: attempt.effort, note });
         }
         continue;
       }
-      return { model: MODEL, effort: attempt.effort, content };
+      return { model: MODEL, effort: attempt.effort, content: plan.refine ? plan.refine(content) : content };
     } catch (error) {
       if (error instanceof AIFailure) throw error;
       if (error instanceof Anthropic.AuthenticationError || error instanceof Anthropic.PermissionDeniedError) {
@@ -115,8 +118,8 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
   throw new AIFailure(lastKind, lastKind === 'busy' ? 'Claude is overloaded' : 'Claude did not answer');
 }
 
-export function requestBody(plan: TaskPlan, effort: Effort, corrective = false): Anthropic.MessageCreateParamsNonStreaming {
-  const system = corrective && plan.retryNote ? `${plan.retryNote}\n\n${plan.system}` : plan.system;
+export function requestBody(plan: TaskPlan, effort: Effort, note?: string): Anthropic.MessageCreateParamsNonStreaming {
+  const system = note ? `${note}\n\n${plan.system}` : plan.system;
   return {
     model: MODEL,
     max_tokens: plan.maxTokens + THINKING_ROOM[effort],

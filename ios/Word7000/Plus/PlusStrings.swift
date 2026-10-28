@@ -51,7 +51,8 @@ enum P {
     static func perMonth(_ price: String) -> String { L.t("每月只要 \(price)", "Just \(price) a month") }
     static var perYear: String { L.t("每年", "per year") }
     static var perMonthUnit: String { L.t("每月", "per month") }
-    static func saveMonths(_ months: Int) -> String { L.t("省 \(months) 個月", "\(months) months free") }
+    /// Never "free": the yearly plan costs less, it is not a free trial.
+    static func saveMonths(_ months: Int) -> String { L.t("省 \(months) 個月", months == 1 ? "Save 1 month" : "Save \(months) months") }
     static func cta(_ plan: PlusPlan?) -> String {
         guard let plan else { return L.t("訂閱 Plus", "Subscribe") }
         return plan.yearly ? L.t("訂閱年費方案", "Subscribe yearly") : L.t("訂閱月費方案", "Subscribe monthly")

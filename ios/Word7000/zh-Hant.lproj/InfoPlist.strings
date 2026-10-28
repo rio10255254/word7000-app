@@ -1,2 +1,4 @@
 "NSMicrophoneUsageDescription" = "錄下你的練習回答，供你在這部 iPhone 回放。錄音僅暫存，不會上傳。";
 "NSSpeechRecognitionUsageDescription" = "在這部 iPhone 支援離線辨識時，將練習錄音轉成文字。音訊不會傳到伺服器辨識。";
+"NSCameraUsageDescription" = "Word7000 需要使用相機拍下單字表，在手機上辨識英文與中文意思。照片不會上傳。";
+"NSPhotoLibraryUsageDescription" = "Word7000 需要讀取你選的照片，在手機上辨識單字表裡的英文與中文意思。照片不會上傳。";

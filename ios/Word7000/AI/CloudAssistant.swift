@@ -23,11 +23,12 @@ final class CloudAssistant {
     private init() {}
 
     private var reachable: Bool {
-        #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { return false }
-        #endif
+        if UITesting.on(.reset) { return false }
         return account?.canUseCloudAI == true
     }
+
+    /// A guest, who gets online AI by signing in.
+    var needsSignIn: Bool { account?.cloudAIneedsSignIn == true }
 
     /// The online AI could be used once the learner agrees.
     var offered: Bool { reachable && IntelligenceSettings.shared.cloudOffered }
@@ -69,6 +70,7 @@ final class CloudAssistant {
     var statusText: String {
         if !IntelligenceSettings.shared.enabled || !IntelligenceSettings.shared.cloudEnabled { return L.t("已關閉", "Off") }
         if IntelligenceSettings.shared.policy?.cloudEnabled == false { return L.t("暫停中", "Paused") }
+        if needsSignIn { return L.t("登入後可使用", "Sign in to use") }
         if !reachable { return L.t("連線後可使用", "Available when online") }
         switch IntelligenceSettings.shared.cloudConsent {
         case nil: return L.t("第一次使用時詢問", "Asks before first use")

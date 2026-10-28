@@ -201,9 +201,16 @@ struct SettingsView: View {
                 Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
                     SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: .blue, external: true)
                 }
+                Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
+                    SettingsLabel(L.t("使用條款", "Terms of Use"), icon: "doc.text.fill", tint: .gray, external: true)
+                }
                 Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/support.html")!) {
                     SettingsLabel(L.supportPage, icon: "questionmark.circle.fill", tint: .gray, external: true)
                 }
+                Link(destination: URL(string: "https://apps.apple.com/account/subscriptions")!) {
+                    SettingsLabel(L.t("管理訂閱", "Manage subscription"), icon: "creditcard.fill", tint: .orange, external: true)
+                }
+                .accessibilityIdentifier("settings-manage-subscription")
                 HStack {
                     SettingsLabel(L.version, icon: "info.circle.fill", tint: .gray)
                     Spacer()

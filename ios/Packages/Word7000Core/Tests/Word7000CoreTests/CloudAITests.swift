@@ -66,6 +66,7 @@ final class CloudAITests: XCTestCase {
             (#"{"error":"busy","retryAfter":3}"#, 429, .busy),
             (#"{"error":"invalid_input"}"#, 400, .invalidInput),
             (#"{"error":"unauthorized"}"#, 401, .signInRequired),
+            (#"{"error":"sign_in_required"}"#, 403, .signInRequired),
             (#"{"error":"unavailable"}"#, 503, .unavailable),
             ("not json", 502, .unavailable),
             (#"{"unexpected":true}"#, 200, .unavailable),

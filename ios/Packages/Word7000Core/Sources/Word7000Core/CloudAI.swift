@@ -194,6 +194,7 @@ public enum CloudAI {
         switch (error.status, error.message) {
         case (_, "quota"): return .quota
         case (_, "busy"): return .busy
+        case (_, "sign_in_required"): return .signInRequired
         case (400, _): return .invalidInput
         case (401, _): return .signInRequired
         default: return .unavailable

@@ -122,6 +122,31 @@ final class SupabaseTests: XCTestCase {
         XCTAssertEqual(parsed.error, "Nope here")
     }
 
+    func testPasswordResetLinkAndRequests() async throws {
+        let link = AuthCallback(url: URL(string: "word7000://auth/callback#access_token=a&refresh_token=r&expires_in=3600&type=recovery")!)
+        XCTAssertTrue(link.isPasswordRecovery)
+        XCTAssertFalse(AuthCallback(url: URL(string: "word7000://auth/callback#access_token=a&refresh_token=r")!).isPasswordRecovery)
+        XCTAssertFalse(AuthCallback(url: URL(string: "word7000://auth/callback#type=recovery")!).isPasswordRecovery)
+
+        let transport = FakeTransport([("{}", 200), (#"{"id":"u2","email":"a@example.com"}"#, 200)])
+        let client = SupabaseClient(config: config, transport: transport)
+        try await client.requestPasswordReset(email: "a@example.com", redirectTo: "https://example.com/auth-native.html")
+        let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
+        let user = try await client.updatePassword("new secret", session: session)
+        XCTAssertEqual(user.id, "u2")
+        let reset = transport.requests[0]
+        XCTAssertEqual(reset.httpMethod, "POST")
+        XCTAssertEqual(reset.url?.path, "/auth/v1/recover")
+        XCTAssertEqual(URLComponents(url: reset.url!, resolvingAgainstBaseURL: false)?.queryItems?.first?.value,
+                       "https://example.com/auth-native.html")
+        XCTAssertEqual(try JSONDecoder().decode([String: String].self, from: reset.httpBody ?? Data()), ["email": "a@example.com"])
+        let update = transport.requests[1]
+        XCTAssertEqual(update.httpMethod, "PUT")
+        XCTAssertEqual(update.url?.path, "/auth/v1/user")
+        XCTAssertEqual(update.value(forHTTPHeaderField: "Authorization"), "Bearer a1")
+        XCTAssertEqual(try JSONDecoder().decode([String: String].self, from: update.httpBody ?? Data()), ["password": "new secret"])
+    }
+
     func testReminderRegistrationRequiresReturnedRowAndKeepsSnapshotTimestamp() async throws {
         let transport = FakeTransport([(#"[{"user_id":"u1","device_id":"iphone","updated_at":"2026-10-22T01:00:00.001+00:00"}]"#, 201)])
         let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))

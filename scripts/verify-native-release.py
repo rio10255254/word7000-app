@@ -74,7 +74,14 @@ def verify(args):
                 "Speaking questions or paired answers are missing")
         require(len({row["id"] for row in records}) == len(records), "Speaking question identifiers are not unique")
 
-        for root in [app_root, widget_root]:
+        for label, root in [("App", app_root), ("Widget", widget_root)]:
+            privacy = plistlib.loads(archive.read(root + "PrivacyInfo.xcprivacy"))
+            require(privacy.get("NSPrivacyTracking") is False, f"{label} privacy manifest must declare no tracking")
+            reasons = {entry.get("NSPrivacyAccessedAPIType"): entry.get("NSPrivacyAccessedAPITypeReasons", [])
+                       for entry in privacy.get("NSPrivacyAccessedAPITypes", [])}
+            if root == app_root:
+                require("CA92.1" in reasons.get("NSPrivacyAccessedAPICategoryUserDefaults", []),
+                        "App privacy manifest must give the reason for UserDefaults")
             raw = archive.read(root + "embedded.mobileprovision")
             start = raw.index(b"<?xml")
             end = raw.index(b"</plist>", start) + len(b"</plist>")
@@ -84,7 +91,8 @@ def verify(args):
 
     return {"version": args.expected_version, "build": args.expected_build, "wordCount": len(words),
             "reviewedSpeakingQuestions": len(records), "speakingLibraryMatchesSource": True,
-            "accountBackendConfigured": True, "dynamicIslandEmbedded": True, "signingGroupsMatched": True}
+            "accountBackendConfigured": True, "dynamicIslandEmbedded": True, "signingGroupsMatched": True,
+            "privacyManifests": True}
 
 
 if __name__ == "__main__":

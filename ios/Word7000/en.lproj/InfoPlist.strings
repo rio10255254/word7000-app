@@ -1,2 +1,4 @@
 "NSMicrophoneUsageDescription" = "Record your practice answer for playback on this iPhone. Recordings are temporary and are not uploaded.";
 "NSSpeechRecognitionUsageDescription" = "Turn your practice recording into text on this iPhone when on-device recognition is supported. Audio is not sent for server recognition.";
+"NSCameraUsageDescription" = "Word7000 uses the camera to photograph word lists and read their English words and Chinese meanings on this iPhone. Photos are not uploaded.";
+"NSPhotoLibraryUsageDescription" = "Word7000 reads the photos you choose to find the English words and Chinese meanings in a word list on this iPhone. Photos are not uploaded.";

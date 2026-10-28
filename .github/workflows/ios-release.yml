@@ -183,13 +183,17 @@ jobs:
           import json, plistlib, sys, zipfile
           from pathlib import Path
           with zipfile.ZipFile(sys.argv[1]) as archive:
-              name = next(n for n in archive.namelist() if n.startswith('Payload/') and n.endswith('.app/Info.plist') and '/PlugIns/' not in n)
-              info = plistlib.loads(archive.read(name))
-              executable = name.rsplit('/', 1)[0] + '/' + info['CFBundleExecutable']
-              if b'-uiTestingCoach' in archive.read(executable):
-                  raise SystemExit('Coach test fixtures must not ship in a Release app')
-              if b'-uiTestingRecording' in archive.read(executable):
-                  raise SystemExit('Recording test fixtures must not ship in a Release app')
+              # The app and every extension: no UI-test launch arguments or
+              # fixtures (a test flag could otherwise unlock Plus or wipe data).
+              bundles = [n for n in archive.namelist() if n.startswith('Payload/')
+                         and (n.endswith('.app/Info.plist') or n.endswith('.appex/Info.plist'))]
+              assert any('/PlugIns/' not in n for n in bundles), 'No app bundle in the archive'
+              for name in bundles:
+                  info = plistlib.loads(archive.read(name))
+                  executable = name.rsplit('/', 1)[0] + '/' + info['CFBundleExecutable']
+                  for marker in (b'-uiTesting', b'WORD7000_SCAN_TEST_TEXT'):
+                      if marker in archive.read(executable):
+                          raise SystemExit(f'{executable} contains test hooks ({marker.decode()}); they must not ship')
           receipt = Path(sys.argv[2])
           verified = json.loads(receipt.read_text())
           verified['coachTestFixturesExcluded'] = True

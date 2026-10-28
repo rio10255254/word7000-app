@@ -37,14 +37,12 @@ final class IntelligenceSettings {
         let groqDeclined = UserDefaults.standard.object(forKey: Self.groqConsentKey) as? Bool == false
         cloudConsent = UserDefaults.standard.object(forKey: Self.consentKey) as? Bool ?? (groqDeclined ? false : nil)
         policy = UserDefaults.standard.data(forKey: "intelligence.policy").flatMap(IntelligencePolicy.decode)
-        #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { enabled = true; cloudEnabled = true; cloudConsent = nil; policy = nil }
-        #endif
+        if UITesting.on(.reset) { enabled = true; cloudEnabled = true; cloudConsent = nil; policy = nil }
     }
 
     func refreshPolicy(force: Bool = false) async {
         // UI tests never read live configuration or alter production state.
-        guard !ProcessInfo.processInfo.arguments.contains("-uiTestingReset"), !checking,
+        guard !UITesting.on(.reset), !checking,
               force || (lastCheck.map({ Date().timeIntervalSince($0) > 21_600 }) ?? true) else { return }
         checking = true
         defer { checking = false; lastCheck = Date() }

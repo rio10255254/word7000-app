@@ -31,6 +31,11 @@ final class SavedAnswers<Value: Codable> {
         }
     }
 
+    func removeAll() {
+        items = []
+        if let url { try? FileManager.default.removeItem(at: url) }
+    }
+
     private func loaded() -> [Item] {
         if let items { return items }
         let saved = url.flatMap { try? Data(contentsOf: $0) }
@@ -53,6 +58,16 @@ enum CloudAnswerCache {
     static let explanations = SavedAnswers<CloudAI.Explanation>(file: "explanations-v\(version).json", limit: 300)
     static let quiz = SavedAnswers<CloudAI.QuizExplanation>(file: "quiz-v\(version).json", limit: 300)
     static let questions = SavedAnswers<[AskedQuestion]>(file: "questions-v1.json", limit: 200)
+    static let insightsKey = "word7000.aiInsights"
+
+    /// On sign-out or account deletion: the next learner on this iPhone does
+    /// not see the questions and analysis of the last one.
+    static func removeAll() {
+        explanations.removeAll()
+        quiz.removeAll()
+        questions.removeAll()
+        UserDefaults.standard.removeObject(forKey: insightsKey)
+    }
 }
 
 /// One question a learner asked about a word, with the tutor's answer.
@@ -430,7 +445,7 @@ struct AIInsightsSection: View {
         var mode: String
         var insights: CloudAI.Insights
     }
-    private static let storageKey = "word7000.aiInsights"
+    private static let storageKey = CloudAnswerCache.insightsKey
 
     var body: some View {
         if CloudAssistant.shared.offered || insights != nil {
@@ -607,7 +622,8 @@ extension CloudAI.Failure {
         case .quota: L.t("今天的線上 AI 次數已用完，明天會再恢復。", "Today's online AI allowance is used up. It resets tomorrow.")
         case .busy: L.t("線上 AI 使用人數較多，請稍後再試。", "Online AI is busy right now. Try again shortly.")
         case .invalidInput: L.t("這個內容無法交給 AI 處理。", "This can't be sent to the AI.")
-        case .unavailable, .signInRequired: L.t("線上 AI 暫時無法使用，請確認網路後再試。", "Online AI is unavailable. Check your connection and try again.")
+        case .signInRequired: L.t("登入帳號後就能使用線上 AI。", "Sign in to use online AI.")
+        case .unavailable: L.t("線上 AI 暫時無法使用，請確認網路後再試。", "Online AI is unavailable. Check your connection and try again.")
         }
     }
 }

@@ -44,8 +44,7 @@ final class PlusModel {
     private static let nudgeDismissedKey = "plus-nudge-dismissed-day"
 
     init() {
-        let arguments = ProcessInfo.processInfo.arguments
-        if arguments.contains("-uiTestingReset") {
+        if UITesting.on(.reset) {
             Keychain.delete(Self.trialKey)
             Keychain.delete(Self.scansKey)
             UserDefaults.standard.removeObject(forKey: Self.recapShownKey)
@@ -54,14 +53,14 @@ final class PlusModel {
         nudgeDismissedDay = UserDefaults.standard.string(forKey: Self.nudgeDismissedKey)
         let stored = Keychain.read(Self.trialKey).flatMap { String(data: $0, encoding: .utf8) }.flatMap(Double.init)
         let start = stored.map { Date(timeIntervalSince1970: $0) } ?? Date()
-        trialStartedAt = arguments.contains("-uiTestingTrialExpired") ? Date().addingTimeInterval(-8 * 86_400) : start
-        if arguments.contains("-uiTestingTrialEndsSoon") {
+        trialStartedAt = UITesting.on(.trialExpired) ? Date().addingTimeInterval(-8 * 86_400) : start
+        if UITesting.on(.trialEndsSoon) {
             trialStartedAt = Date().addingTimeInterval(-Double(PlusPolicy.trialDays) * 86_400 + 4)
         }
         trialScansUsed = Keychain.read(Self.scansKey).flatMap { String(data: $0, encoding: .utf8) }.flatMap(Int.init) ?? 0
         if stored == nil { Self.write(start.timeIntervalSince1970, Self.trialKey) }
-        if arguments.contains("-uiTestingPlus") { subscribed = true }
-        if arguments.contains("-uiTestingFakePlans") { entitlementsLoaded = true }
+        if UITesting.on(.plus) { subscribed = true }
+        if UITesting.on(.fakePlans) { entitlementsLoaded = true }
     }
 
     var policy: PlusPolicy {
@@ -156,7 +155,7 @@ final class PlusModel {
 
     func start() async {
         refreshAccessState()
-        if updatesTask == nil, !ProcessInfo.processInfo.arguments.contains("-uiTestingFakePlans") {
+        if updatesTask == nil, !UITesting.on(.fakePlans) {
             updatesTask = Task { [weak self] in
                 for await update in StoreKit.Transaction.updates {
                     if case let .verified(transaction) = update { await transaction.finish() }
@@ -169,7 +168,7 @@ final class PlusModel {
     }
 
     func loadPlans() async {
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingFakePlans") {
+        if UITesting.on(.fakePlans) {
             plans = PlusPlan.samples
             plansState = .loaded
             return
@@ -224,8 +223,7 @@ final class PlusModel {
     }
 
     func refreshEntitlements() async {
-        let arguments = ProcessInfo.processInfo.arguments
-        if arguments.contains("-uiTestingPlus") || arguments.contains("-uiTestingFakePlans") {
+        if UITesting.on(.plus) || UITesting.on(.fakePlans) {
             entitlementsLoaded = true
             refreshAccessState()
             return

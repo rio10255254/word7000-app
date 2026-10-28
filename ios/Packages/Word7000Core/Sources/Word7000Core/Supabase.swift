@@ -255,6 +255,17 @@ public struct SupabaseClient: Sendable {
         _ = try await request("PUT", "auth/v1/user", body: .object(["data": .object(data)]), session: session)
     }
 
+    /// Emails a link that brings the learner back to the app to choose a new
+    /// password. Supabase answers the same whether or not the address exists.
+    public func requestPasswordReset(email: String, redirectTo: String) async throws {
+        _ = try await request("POST", "auth/v1/recover", query: ["redirect_to": redirectTo], body: .object(["email": .string(email)]))
+    }
+
+    /// Sets a new password with the session from a reset link; returns that user.
+    public func updatePassword(_ password: String, session: AuthSession) async throws -> AuthUser {
+        try await decode(AuthUser.self, request("PUT", "auth/v1/user", body: .object(["password": .string(password)]), session: session))
+    }
+
     public func signOut(session: AuthSession) async throws {
         _ = try await request("POST", "auth/v1/logout", query: ["scope": "local"], session: session)
     }
@@ -369,6 +380,8 @@ public struct AuthCallback: Equatable, Sendable {
     public var code: String?
     public var error: String?
     public var errorCode: String?
+    /// "recovery" when the link came from a password reset email.
+    public var type: String?
 
     public init(url: URL) {
         var values: [String: String] = [:]
@@ -384,7 +397,11 @@ public struct AuthCallback: Equatable, Sendable {
         code = values["code"]
         error = values["error_description"] ?? values["error"]
         errorCode = values["error_code"]
+        type = values["type"]
     }
+
+    /// A password reset link, carrying a session to set the new password with.
+    public var isPasswordRecovery: Bool { type == "recovery" && accessToken != nil && refreshToken != nil }
 
     public var isIdentityAlreadyLinked: Bool {
         errorCode == "identity_already_exists"

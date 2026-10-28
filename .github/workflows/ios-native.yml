@@ -258,8 +258,8 @@ jobs:
           from pathlib import Path
           binary = Path(sys.argv[1])
           assert binary.is_file(), 'Release app executable is missing'
-          assert b'-uiTestingCoach' not in binary.read_bytes(), 'Release app contains coach test fixtures'
-          assert b'-uiTestingRecording' not in binary.read_bytes(), 'Release app contains recording test fixtures'
+          for marker in (b'-uiTesting', b'WORD7000_SCAN_TEST_TEXT'):
+              assert marker not in binary.read_bytes(), f'Release app contains test hooks ({marker.decode()})'
           Path(sys.argv[2]).write_text(json.dumps({'commit': os.environ['GITHUB_SHA'], 'coachTestFixturesExcluded': True}))
           print('Release app built successfully without coach test fixtures')
           PY

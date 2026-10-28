@@ -31,7 +31,7 @@ class NativeReleaseTests(unittest.TestCase):
                                        words=str(self.root / "words.json"), speaking=str(self.root / "speaking.json"),
                                        expected_build="39", expected_version="2.0.1")
 
-    def archive(self, *, app_questions=True, questions=None, config=None):
+    def archive(self, *, app_questions=True, questions=None, config=None, privacy=True):
         app_root = "Payload/Word7000.app/"
         widget_root = app_root + "PlugIns/Word7000Widgets.appex/"
         app = {"CFBundleIdentifier": "com.rio.word7000", "CFBundleVersion": "39", "CFBundleShortVersionString": "2.0.1",
@@ -48,6 +48,12 @@ class NativeReleaseTests(unittest.TestCase):
             archive.writestr(app_root + "embedded.mobileprovision", profile)
             archive.writestr(widget_root + "embedded.mobileprovision", profile)
             archive.writestr(widget_root + resource, json.dumps(self.speaking))
+            if privacy:
+                archive.writestr(app_root + "PrivacyInfo.xcprivacy", plistlib.dumps({
+                    "NSPrivacyTracking": False, "NSPrivacyAccessedAPITypes": [{
+                        "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                        "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]}]}))
+                archive.writestr(widget_root + "PrivacyInfo.xcprivacy", plistlib.dumps({"NSPrivacyTracking": False}))
             if app_questions:
                 archive.writestr(app_root + resource, json.dumps(questions if questions is not None else self.speaking))
 
@@ -97,6 +103,20 @@ class NativeReleaseTests(unittest.TestCase):
         self.archive(config={"Word7000SupabasePublishableKey": "eyJhbGciOiJIUzI1NiJ9." + payload + ".test-signature"})
         with self.assertRaisesRegex(ValueError, "Privileged"):
             release.verify(self.args)
+
+    def test_privacy_manifests_are_required(self):
+        self.archive(privacy=False)
+        with self.assertRaises(KeyError):
+            release.verify(self.args)
+
+    def test_the_shipped_privacy_manifests_pass(self):
+        self.archive(privacy=False)
+        repo = Path(__file__).resolve().parents[1]
+        with zipfile.ZipFile(self.args.archive, "a") as archive:
+            archive.write(repo / "ios/Word7000/PrivacyInfo.xcprivacy", "Payload/Word7000.app/PrivacyInfo.xcprivacy")
+            archive.write(repo / "ios/Word7000Widgets/PrivacyInfo.xcprivacy",
+                          "Payload/Word7000.app/PlugIns/Word7000Widgets.appex/PrivacyInfo.xcprivacy")
+        self.assertTrue(release.verify(self.args)["privacyManifests"])
 
 
 if __name__ == "__main__":

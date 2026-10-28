@@ -130,7 +130,10 @@ jobs:
                   ("iOS 27 iPhones", "shapes-27", "27=iPhone 17e,iPhone 18 Pro,iPhone 18 Pro Max,iPhone Duo", xc27),
               ):
                   ios = int(shapes.split("=")[0])
-                  jobs.append({**cfg, "ios": ios, "slug": slug, "label": label, "shards": "", "shapes": shapes, "engine": False})
+                  # One iPhone at a time too: two booting together lost
+                  # launchd_sim on iOS 18 (run 181).
+                  jobs.append({**cfg, "ios": ios, "slug": slug, "label": label, "shards": "", "shapes": shapes,
+                               "engine": False, "concurrent": 1})
           elif mode == "quick":
               # Every day: the oldest and newest toolchains build, and iOS 26
               # walks the main screens once. Minutes, not an hour.
@@ -159,7 +162,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 90
+    timeout-minutes: 110  # four iPhones one after another can pass an hour
     env:
       IOS_MAJOR: ${{ matrix.ios }}
       XCODE_MAJOR: ${{ matrix.xcode }}

@@ -99,9 +99,12 @@ final class DeviceLayoutTests: XCTestCase {
             XCTAssertTrue(answer.waitForExistence(timeout: 5))
             settle()
             snapshot(app, mode, "typing-answer")
+            // Neither the keyboard nor the Next button above it may cover it.
             let keyboard = app.keyboards.firstMatch
-            let limit = keyboard.exists ? keyboard.frame.minY : app.frame.maxY
-            XCTAssertLessThanOrEqual(answer.frame.maxY, limit, "\(mode) typing: the answer is hidden under the keyboard on \(device)")
+            let next = app.buttons["spelling-next"]
+            var limit = keyboard.exists ? keyboard.frame.minY : app.frame.maxY
+            if next.exists { limit = min(limit, next.frame.minY) }
+            XCTAssertLessThanOrEqual(answer.frame.maxY, limit, "\(mode) typing: the answer is hidden on \(device)")
             assertOnScreen(app, app.buttons["spelling-next"], "\(mode) typing: next")
             close(app, "spelling-close")
         } else {

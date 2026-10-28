@@ -213,21 +213,24 @@ struct SpellingSessionView: View {
 
     private func feedback(_ result: Spelling.Result, word: WordEntry) -> some View {
         VStack(alignment: .leading, spacing: 12) {
+            // The word sits on the first line, as the pinyin reading does: with
+            // the keyboard up an SE or the wide iPhone Duo shows little more.
             HStack(alignment: .firstTextBaseline) {
-                Label(title(result), systemImage: symbol(result))
+                Image(systemName: symbol(result))
                     .font(.headline)
                     .foregroundStyle(color(result))
+                    .accessibilityLabel(title(result))
                     .accessibilityIdentifier("spelling-result")
+                Text(word.word)
+                    .font(.rounded(.title2, weight: .bold))
+                    .accessibilityIdentifier("spelling-answer")
                 Spacer()
                 SpeakButton(text: word.word, language: "en-US")
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(word.word)
-                    .font(.rounded(.title, weight: .bold))
-                    .accessibilityIdentifier("spelling-answer")
-                if !word.pronunciation.isEmpty {
-                    Text(word.pronunciation).foregroundStyle(.secondary)
-                }
+                Text(word.pronunciation.isEmpty ? title(result) : "\(title(result))  ·  \(word.pronunciation)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 if result != .correct {
                     Text(L.t("你的答案：\(input.trimmed)", "You typed: \(input.trimmed)"))
                         .font(.subheadline)

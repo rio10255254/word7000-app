@@ -5,6 +5,9 @@
 #      screen in light and dark mode on iOS 17, 18, 26, and 27,
 #   3. with all checks, the main screens on every iPhone shape (the devices
 #      check alone runs only those).
+# Pushes and the default manual run are quick checks (builds and one walk of
+# the main screens, about ten minutes). The full check (all) runs before a
+# release: ios-release.yml starts it when the source has not passed one.
 # A full check fits in five Mac jobs, so it never waits for a free runner.
 # Screenshots are uploaded as an artifact and pushed to the
 # `native-screenshots` branch so they can be viewed from a phone.
@@ -37,14 +40,14 @@ on:
       checks:
         description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy', 'coach', 'compile', 'polish', 'devices']
-        default: 'all'
+        options: ['quick', 'all', 'copy', 'coach', 'compile', 'polish', 'devices']
+        default: 'quick'
 
 permissions:
   contents: read
 
 concurrency:
-  group: ios-native-${{ github.ref }}-${{ inputs.checks || 'all' }}
+  group: ios-native-${{ github.ref }}-${{ inputs.checks || 'quick' }}
   cancel-in-progress: true
 
 jobs:
@@ -71,7 +74,7 @@ jobs:
         id: plan
         env:
           GH_TOKEN: ${{ github.token }}
-          CHECKS: ${{ inputs.checks || 'all' }}
+          CHECKS: ${{ inputs.checks || 'quick' }}
           EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
@@ -84,7 +87,7 @@ jobs:
               ':(exclude)ios/Release/README.md' ':(exclude)supabase' ':(exclude).github/workflows/ai-backend.yml'
               ':(exclude)src/aiFunction.test.ts')
             gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ios-native.yml/runs?status=success&per_page=40" \
-              --jq '.workflow_runs[] | select(.event == "push" or (.event == "workflow_dispatch" and .display_title == "Native iOS: all checks")) | "\(.id) \(.head_sha)"' \
+              --jq '.workflow_runs[] | select(.event == "workflow_dispatch" and .display_title == "Native iOS: all checks") | "\(.id) \(.head_sha)"' \
               > "$RUNNER_TEMP/passed.txt" || true
             while read -r id sha; do
               [ "$id" != "$GITHUB_RUN_ID" ] || continue
@@ -122,6 +125,12 @@ jobs:
                   {"slug": "ios-27-a", "shards": a, "shapes": "27=iPhone 17e,iPhone 18 Pro", **xc27},
                   {"slug": "ios-27-b", "shards": b, "shapes": "27=iPhone 18 Pro Max,iPhone Duo", **xc27},
               ]
+          elif mode == "quick":
+              # Every day: the oldest and newest toolchains build, and iOS 26
+              # walks the main screens once. Minutes, not an hour.
+              jobs = [{"ios": 17, "slug": "ios-17", "shards": "", "shapes": "", "smoke": False, **mac},
+                      {"ios": 26, "slug": "ios-26", "shards": "", "shapes": "", "smoke": True, **mac},
+                      {"slug": "ios-27", "shards": "", "shapes": "", "smoke": False, **xc27}]
           else:
               jobs = [{"ios": v, "slug": f"ios-{v}", "shards": "", "shapes": "", **mac} for v in (17, 18, 26)]
               jobs.append({"slug": "ios-27", "shards": "", "shapes": "", **xc27})
@@ -151,6 +160,7 @@ jobs:
       SHARDS: ${{ matrix.shards }}
       WANTED: ${{ matrix.shapes }}
       CONCURRENT: ${{ matrix.concurrent }}
+      SMOKE: ${{ matrix.smoke }}
     steps:
       - uses: actions/checkout@v4
 
@@ -273,7 +283,7 @@ jobs:
         env:
           CHECKS: ${{ needs.plan.outputs.mode }}
         run: |
-          if [ "$CHECKS" = "compile" ]; then
+          if [ "$CHECKS" = "compile" ] || { [ "$CHECKS" = "quick" ] && [ "$SMOKE" != "true" ]; }; then
             set +e
             xcodebuild build -project ios/Word7000.xcodeproj -scheme Word7000 \
               -destination "id=$SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
@@ -283,7 +293,9 @@ jobs:
           fi
           set +e
           TEST_SELECTION=()
-          if [ "$CHECKS" = "copy" ]; then
+          if [ "$CHECKS" = "quick" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testLightScreens -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ExperienceTests/testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated -only-testing:Word7000UITests/DeviceLayoutTests/testEnglishModeFitsThisIPhone)
+          elif [ "$CHECKS" = "copy" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
           elif [ "$CHECKS" = "coach" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
@@ -473,7 +485,7 @@ jobs:
   publish-screenshots:
     needs: native
     # After the tests ran, passed or not; a cancelled run has nothing to show.
-    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all') && (needs.native.result == 'success' || needs.native.result == 'failure')
+    if: always() && github.event_name != 'pull_request' && inputs.checks == 'all' && (needs.native.result == 'success' || needs.native.result == 'failure')
     runs-on: ubuntu-latest
     permissions:
       contents: write

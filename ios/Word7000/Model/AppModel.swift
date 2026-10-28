@@ -120,7 +120,11 @@ final class AppModel {
             progress.analytics = analytics
         }
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
-        if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
+        if arguments.contains("-uiTestingChineseMode") {
+            // As the switch on Today leaves it: the course in its own order.
+            settings.studyMode = .chinese
+            settings.libraryFilter.sort = .default
+        }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
         if settings.onboardingComplete == nil {
             settings.onboardingComplete = snapshot != nil || !progress.words.isEmpty || !sets.sets.isEmpty
@@ -184,6 +188,16 @@ final class AppModel {
     func setStudyMode(_ mode: StudyMode) {
         guard mode != studyMode else { return }
         settings.studyMode = mode
+        // The two modes teach different word lists, so English levels and
+        // first letters do not carry over.
+        if ChineseCourse.isAvailable {
+            for keyPath in [\AppSettings.studyFilter, \AppSettings.quizFilter, \AppSettings.libraryFilter] {
+                settings[keyPath: keyPath].level = "all"
+                settings[keyPath: keyPath].initial = "all"
+            }
+            // The course reads best easiest first; English words A to Z.
+            settings.libraryFilter.sort = mode == .chinese ? .default : .alphabetical
+        }
         studySession = nil
         studyUndoStack = []
         if mode == .chinese { Self.prepareChineseReadings() }
@@ -218,6 +232,15 @@ final class AppModel {
         return words
     }
 
+    /// The built-in list: the English words, or, learning Chinese, the Chinese
+    /// course ordered easiest first.
+    var coreBankWords: [WordEntry] {
+        studyMode == .chinese && ChineseCourse.isAvailable ? ChineseCourse.words : vocabularyWords
+    }
+
+    /// New Chinese course words come easiest first rather than at random.
+    var learnsCourseInOrder: Bool { studyMode == .chinese && activeSet == nil && ChineseCourse.isAvailable }
+
     var activeSet: CustomVocabSet? {
         settings.activeBankId == WordBanks.coreBankId ? nil : customSets.sets.first { $0.id == settings.activeBankId }
     }
@@ -227,14 +250,16 @@ final class AppModel {
 
     var bankWords: [WordEntry] {
         if let set = activeSet { return WordBanks.words(of: set, in: allWords) }
-        return vocabularyWords
+        return coreBankWords
     }
 
     var bank: PreparedVocabulary {
-        let key = "\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
+        let key = "\(settings.activeBankId)|\(studyMode.rawValue)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
         if let cached = preparedCache, cached.key == key { return cached.vocabulary }
         let prepared = PreparedVocabulary(bankWords)
         preparedCache = (key, prepared)
+        // Sort A to Z off the main thread, before the Words tab asks.
+        Task.detached(priority: .utility) { _ = prepared.alphabeticalWords }
         return prepared
     }
 
@@ -476,8 +501,11 @@ final class AppModel {
         } else {
             candidates = studyCandidates
         }
-        let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
-                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)))
+        // Filters may sort the bank; the course is learned easiest first.
+        let ordered = learnsCourseInOrder ? candidates.sorted { (bank.index(of: $0.id) ?? 0) < (bank.index(of: $1.id) ?? 0) } : candidates
+        let queue = LearningEngine.buildStudyQueue(words: ordered, state: progress, today: today,
+                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)),
+                                                  freshInOrder: learnsCourseInOrder)
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studyUndoStack = []
         scheduleSave()
@@ -485,7 +513,7 @@ final class AppModel {
 
     func word(id: String) -> WordEntry? {
         if let index = bank.index(of: id) { return bank.words[index] }
-        return allWords.first { $0.id == id }
+        return allWords.first { $0.id == id } ?? ChineseCourse.entry(id: id)?.word
     }
 
     func gradeCurrentCard(_ grade: StudyGrade, expectedWordId: String? = nil) {
@@ -551,7 +579,18 @@ final class AppModel {
         let filter = settings.quizFilter
         var candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
         if let include { candidates = candidates.filter(include) }
+        if learnsCourseInOrder { candidates = courseSoFar(candidates, ahead: max(count * 3, 30)) }
         return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed)
+    }
+
+    /// Learning the course: the words met so far and the next `ahead` in
+    /// course order, not words from anywhere in it: a beginner is not quizzed
+    /// on 熔岩 or asked about 品牌.
+    private func courseSoFar(_ words: [WordEntry], ahead: Int) -> [WordEntry] {
+        let ordered = words.sorted { (bank.index(of: $0.id) ?? 0) < (bank.index(of: $1.id) ?? 0) }
+        let seen = ordered.filter { progress.words[$0.id] != nil }
+        let next = ordered.filter { progress.words[$0.id] == nil }.prefix(ahead)
+        return seen + next
     }
 
     /// The numbers the AI learning analysis reads: totals, the last 14 days
@@ -671,7 +710,8 @@ final class AppModel {
 
     var speakingCandidates: [WordEntry] {
         let filter = settings.speakingFilter ?? FilterSelection()
-        return bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+        let words = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+        return learnsCourseInOrder ? courseSoFar(words, ahead: 30) : words
     }
 
     // MARK: Word sets

@@ -29,12 +29,12 @@ public final class PreparedVocabulary: @unchecked Sendable {
     }
 
     public let words: [WordEntry]
-    public let alphabeticalWords: [WordEntry]
     let indexById: [String: Int]
     let records: [Record]
-    let alphabeticalRecords: [Record]
     private let pinyinLock = NSLock()
     private var pinyinKeysStorage: [String]?
+    private let alphabeticalLock = NSLock()
+    private var alphabeticalStorage: (records: [Record], words: [WordEntry])?
 
     /// Pinyin search keys by record index, built on the first pinyin search.
     func pinyinKeys() -> [String] {
@@ -66,13 +66,32 @@ public final class PreparedVocabulary: @unchecked Sendable {
             )
         }
         self.records = records
-        let alphabetical = records.sorted { left, right in
-            let order = left.word.word.compare(right.word.word, options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "en"))
-            return order == .orderedSame ? left.index < right.index : order == .orderedAscending
-        }
-        self.alphabeticalRecords = alphabetical
-        self.alphabeticalWords = alphabetical.map(\.word)
     }
+
+    /// The list A to Z, sorted on first use: Today and the study queue never
+    /// ask, so launching does not wait for thousands of comparisons.
+    private func alphabetical() -> (records: [Record], words: [WordEntry]) {
+        alphabeticalLock.lock()
+        defer { alphabeticalLock.unlock() }
+        if let alphabeticalStorage { return alphabeticalStorage }
+        // Chinese course words go by pinyin, every other word by its English,
+        // without case or accents: for every built-in word the same order as
+        // the web app's localeCompare(…, 'en', base), with each key folded
+        // once instead of on every comparison.
+        let sortKey = records.map { record in
+            let key = ChineseCourse.isCourseWordId(record.word.id) ? record.word.pronunciation : record.word.word
+            return key.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
+        }
+        let sorted = records.sorted { left, right in
+            let (a, b) = (sortKey[left.index], sortKey[right.index])
+            return a == b ? left.index < right.index : a < b
+        }
+        let storage = (records: sorted, words: sorted.map(\.word))
+        alphabeticalStorage = storage
+        return storage
+    }
+
+    public var alphabeticalWords: [WordEntry] { alphabetical().words }
 
     public func index(of wordId: String) -> Int? { indexById[wordId] }
 
@@ -86,7 +105,7 @@ public final class PreparedVocabulary: @unchecked Sendable {
             return options.sort == .alphabetical ? alphabeticalWords : words
         }
 
-        let source = options.sort == .alphabetical ? alphabeticalRecords : records
+        let source = options.sort == .alphabetical ? alphabetical().records : records
         // Every term as pinyin, and the whole query as one word ("xue xi").
         let pinyinTerms = options.matchPinyin ? terms.compactMap(ChineseDisplay.pinyinSearchTerm) : []
         let usesPinyin = !terms.isEmpty && pinyinTerms.count == terms.count

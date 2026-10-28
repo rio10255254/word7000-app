@@ -1,0 +1,662 @@
+[
+ {
+  "hanzi": "目擊者",
+  "set": {
+   "pinyin": "mù jí zhě",
+   "examplePinyin": "jǐng chá zhèng zài zhǎo zhè chǎng chē huò de mù jí zhě.",
+   "question": "警察為什麼要找車禍的目擊者？",
+   "questionEnglish": "Why do the police look for witnesses to a car accident?",
+   "questionPinyin": "jǐng chá wèi shén me yào zhǎo chē huò de mù jí zhě?",
+   "answer": "因為目擊者知道當時發生了什麼事。",
+   "answerEnglish": "Because witnesses know what happened at the time.",
+   "answerPinyin": "yīn wèi mù jí zhě zhī dào dāng shí fā shēng le shén me shì."
+  },
+  "reason": "sensitive: question asked about the learner witnessing an accident; made impersonal; Taiwan MOE reading of 擊 is jí"
+ },
+ {
+  "hanzi": "鋼",
+  "set": {
+   "questionPinyin": "nǐ jiā de guō zi shì bú xiù gāng de ma?",
+   "answerPinyin": "duì, wǒ jiā de guō zi dōu shì bú xiù gāng de."
+  },
+  "reason": "pinyin: 鍋子 is guō zi"
+ },
+ {
+  "hanzi": "應得",
+  "set": {
+   "questionPinyin": "nǐ jué de nǐ yīng dé gèng duō jià qí ma?"
+  },
+  "reason": "pinyin: 應得 is yīng dé"
+ },
+ {
+  "hanzi": "抵擋",
+  "set": {
+   "questionPinyin": "nǐ dǐ dǎng de liǎo tián diǎn de yòu huò ma?"
+  },
+  "reason": "pinyin: potential complement 得了 is de liǎo"
+ },
+ {
+  "hanzi": "作物",
+  "set": {
+   "questionPinyin": "nǐ de jiā xiāng zhǔ yào zhòng shén me zuò wù?"
+  },
+  "reason": "pinyin: 種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "負荷",
+  "set": {
+   "questionPinyin": "nǐ zuì jìn de gōng zuò liàng fù hè de liǎo ma?"
+  },
+  "reason": "pinyin: potential complement 得了 is de liǎo"
+ },
+ {
+  "hanzi": "欄杆",
+  "set": {
+   "examplePinyin": "xià lóu tī de shí hòu, qǐng fú zhe lán gān."
+  },
+  "reason": "pinyin: 扶著 is fú zhe"
+ },
+ {
+  "hanzi": "驚人",
+  "set": {
+   "examplePinyin": "tái běi de fáng jià gāo de jīng rén."
+  },
+  "reason": "pinyin: complement 得 is de"
+ },
+ {
+  "hanzi": "管子",
+  "set": {
+   "pinyin": "guǎn zi",
+   "examplePinyin": "shuǐ cóng zhè gēn guǎn zi liú chū lái.",
+   "answerPinyin": "yǒu, shàng gè yuè chú fáng de guǎn zi lòu shuǐ."
+  },
+  "reason": "pinyin: suffix 子 is neutral zi"
+ },
+ {
+  "hanzi": "克服",
+  "set": {
+   "answerPinyin": "wǒ kè fú le shēng diào de wèn tí, xiàn zài shuō de bǐ jiào hǎo le."
+  },
+  "reason": "pinyin: 得 after verb is de"
+ },
+ {
+  "hanzi": "感染",
+  "set": {
+   "question": "怎麼做可以避免感染流感？",
+   "questionEnglish": "What can you do to avoid catching the flu?",
+   "questionPinyin": "zěn me zuò kě yǐ bì miǎn gǎn rǎn liú gǎn?",
+   "answer": "常常洗手、打疫苗，可以避免感染。",
+   "answerEnglish": "Washing your hands often and getting vaccinated helps you avoid infection.",
+   "answerPinyin": "cháng cháng xǐ shǒu, dǎ yì miáo, kě yǐ bì miǎn gǎn rǎn."
+  },
+  "reason": "sensitive (illness): question asked about the learner's own health; made general"
+ },
+ {
+  "hanzi": "竿子",
+  "set": {
+   "pinyin": "gān zi",
+   "examplePinyin": "tā yòng yì gēn gān zi bǎ shù shàng de qiú ná xià lái.",
+   "questionPinyin": "nǐ jiā yáng tái yǒu shài yī fu de gān zi ma?",
+   "answerPinyin": "yǒu, wǒ men yáng tái yǒu liǎng gēn gān zi."
+  },
+  "reason": "pinyin: suffix 子 is neutral zi"
+ },
+ {
+  "hanzi": "痕跡",
+  "set": {
+   "pinyin": "hén jī",
+   "examplePinyin": "bái sè de zhuō zi shàng yǒu hěn duō kā fēi de hén jī.",
+   "questionPinyin": "nǐ de xíng li xiāng shàng yǒu hěn duō hén jī ma?",
+   "answerPinyin": "yǒu, shàng miàn dōu shì lǚ xíng liú xià de hén jī."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 跡 is jī"
+ },
+ {
+  "hanzi": "上限",
+  "set": {
+   "examplePinyin": "yōu yóu kǎ de chú zhí shàng xiàn shì yí wàn yuán."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 儲 is chú"
+ },
+ {
+  "hanzi": "獎賞",
+  "set": {
+   "examplePinyin": "zhè ge yuè gōng zuò hěn xīn kǔ, wǒ mǎi le xīn xié gěi zì jǐ dàng jiǎng shǎng."
+  },
+  "reason": "pinyin: 當 (as) is dàng"
+ },
+ {
+  "hanzi": "漂",
+  "set": {
+   "questionPinyin": "nǐ qù hǎi biān huì zài shuǐ shàng piāo zhe xiū xí ma?"
+  },
+  "reason": "pinyin: 漂著 is piāo zhe"
+ },
+ {
+  "hanzi": "藉口",
+  "set": {
+   "answerPinyin": "wǒ cháng yòng xià yǔ dàng jiè kǒu."
+  },
+  "reason": "pinyin: 當 (as) is dàng"
+ },
+ {
+  "hanzi": "倒車",
+  "set": {
+   "pinyin": "dào chē",
+   "examplePinyin": "wǒ dào chē de shí hòu bù xiǎo xīn zhuàng dào qiáng.",
+   "questionPinyin": "nǐ kāi chē de shí hòu, dào chē róng yì ma?",
+   "answerPinyin": "bù róng yì, wǒ dào chē rù kù cháng cháng shī bài."
+  },
+  "reason": "pinyin: 倒車 (reverse) is dào chē"
+ },
+ {
+  "hanzi": "警報",
+  "set": {
+   "examplePinyin": "bàn yè shǒu jī tú rán xiǎng qǐ dì zhèn jǐng bào."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 突 is tú"
+ },
+ {
+  "hanzi": "蒸氣",
+  "set": {
+   "questionPinyin": "nǐ yòng guò zhēng qì yùn dǒu ma?",
+   "answerPinyin": "yòng guò, zhēng qì yùn dǒu tàng yī fu hěn fāng biàn."
+  },
+  "reason": "pinyin: 熨斗 is yùn dǒu"
+ },
+ {
+  "hanzi": "喜帖",
+  "set": {
+   "pinyin": "xǐ tiě",
+   "examplePinyin": "tóng shì jīn tiān gěi le wǒ yì zhāng xǐ tiě.",
+   "questionPinyin": "nǐ jīn nián shōu dào jǐ zhāng xǐ tiě?",
+   "answerPinyin": "wǒ jīn nián shōu dào sān zhāng xǐ tiě."
+  },
+  "reason": "pinyin: 喜帖 is xǐ tiě"
+ },
+ {
+  "hanzi": "閃光",
+  "set": {
+   "examplePinyin": "tiān kōng tú rán chū xiàn yí dào shǎn guāng, jiē zhe jiù dǎ léi le."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 突 is tú; 接著 is jiē zhe"
+ },
+ {
+  "hanzi": "執照",
+  "set": {
+   "answerPinyin": "yǒu, wǒ yǒu jiāo yīng wén de zhí zhào."
+  },
+  "reason": "pinyin: 教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "噴",
+  "set": {
+   "questionPinyin": "nǐ chū mén qián huì pēn xiāng shuǐ ma?"
+  },
+  "reason": "pinyin: 噴 (spray) is pēn"
+ },
+ {
+  "hanzi": "替代品",
+  "set": {
+   "examplePinyin": "hē bù liǎo niú nǎi de rén kě yǐ yòng dòu jiāng dàng tì dài pǐn.",
+   "questionPinyin": "nǐ huì yòng shén me dàng kā fēi de tì dài pǐn?",
+   "answerPinyin": "wǒ huì hē lǜ chá dàng kā fēi de tì dài pǐn."
+  },
+  "reason": "pinyin: 當 (as) is dàng"
+ },
+ {
+  "hanzi": "廢棄",
+  "set": {
+   "questionPinyin": "nǐ qù guò fèi qì de jiàn zhú ma?"
+  },
+  "reason": "pinyin: Taiwan MOE reading of 築 is zhú"
+ },
+ {
+  "hanzi": "機械",
+  "set": {
+   "answerPinyin": "yǒu, wǒ hěn xǐ huan yán jiù jī xiè."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 究 is jiù"
+ },
+ {
+  "hanzi": "小徑",
+  "set": {
+   "examplePinyin": "wǒ men yán zhe shān shàng de xiǎo jìng màn màn zǒu."
+  },
+  "reason": "pinyin: 沿著 is yán zhe"
+ },
+ {
+  "hanzi": "承受",
+  "set": {
+   "questionPinyin": "gōng zuò yā lì dà de shí hòu, nǐ chéng shòu de liǎo ma?",
+   "answerPinyin": "chéng shòu de liǎo, wǒ huì yòng yùn dòng lái jiǎn yā."
+  },
+  "reason": "pinyin: potential complement 得了 is de liǎo"
+ },
+ {
+  "hanzi": "兇手",
+  "set": {
+   "question": "推理小說裡，通常什麼時候會知道兇手是誰？",
+   "questionEnglish": "In a mystery novel, when do you usually find out who the killer is?",
+   "questionPinyin": "tuī lǐ xiǎo shuō lǐ, tōng cháng shén me shí hòu huì zhī dào xiōng shǒu shì shéi?",
+   "answer": "通常到最後才會知道兇手是誰。",
+   "answerEnglish": "Usually you only find out who the killer is at the very end.",
+   "answerPinyin": "tōng cháng dào zuì hòu cái huì zhī dào xiōng shǒu shì shéi."
+  },
+  "reason": "sensitive: question asked about the learner's own experience; made general"
+ },
+ {
+  "hanzi": "幻想",
+  "set": {
+   "examplePinyin": "wǒ cháng huàn xiǎng zì jǐ zhòng lè tòu."
+  },
+  "reason": "pinyin: 中 (win the lottery) is zhòng"
+ },
+ {
+  "hanzi": "嘆氣",
+  "set": {
+   "examplePinyin": "tā kàn zhe zhàng dān yì zhí tàn qì."
+  },
+  "reason": "pinyin: 看著 is kàn zhe; 一直 is yì zhí"
+ },
+ {
+  "hanzi": "跳躍",
+  "set": {
+   "examplePinyin": "xiǎo gǒu zài cǎo dì shàng kāi xīn de tiào yuè."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "不情願",
+  "set": {
+   "examplePinyin": "tā hěn bù qíng yuàn de qù jiā bān.",
+   "answerPinyin": "wǒ hěn bù qíng yuàn de cān jiā le wěi yá biǎo yǎn."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "洞穴",
+  "set": {
+   "examplePinyin": "zhè ge dòng xuè lǐ zhù zhe hěn duō biān fú.",
+   "pinyin": "dòng xuè",
+   "questionPinyin": "nǐ qù guò dòng xuè tàn xiǎn ma?",
+   "answerPinyin": "qù guò, wǒ zài yuè nán jìn guò yí gè dà dòng xuè."
+  },
+  "reason": "pinyin: 住著 is zhù zhe; pinyin: Taiwan MOE reading of 穴 is xuè"
+ },
+ {
+  "hanzi": "貪汙",
+  "set": {
+   "question": "官員貪汙會有什麼結果？",
+   "questionEnglish": "What happens to officials who are corrupt?",
+   "questionPinyin": "guān yuán tān wū huì yǒu shén me jié guǒ?",
+   "answer": "官員貪汙被抓到，可能要坐牢。",
+   "answerEnglish": "Corrupt officials who get caught may go to prison.",
+   "answerPinyin": "guān yuán tān wū bèi zhuā dào, kě néng yào zuò láo."
+  },
+  "reason": "sensitive (crime): question asked the learner's views on corruption in their country; made impersonal"
+ },
+ {
+  "hanzi": "有罪",
+  "set": {
+   "question": "法官要有什麼才能判人有罪？",
+   "questionEnglish": "What does a judge need before finding someone guilty?",
+   "questionPinyin": "fǎ guān yào yǒu shén me cái néng pàn rén yǒu zuì?",
+   "answer": "法官要有足夠的證據才能判人有罪。",
+   "answerEnglish": "A judge needs enough evidence to find someone guilty.",
+   "answerPinyin": "fǎ guān yào yǒu zú gòu de zhèng jù cái néng pàn rén yǒu zuì."
+  },
+  "reason": "sensitive (crime): question asked the learner's own taste; made impersonal"
+ },
+ {
+  "hanzi": "銀行家",
+  "set": {
+   "pinyin": "yín háng jiā",
+   "examplePinyin": "tā bà ba shì yí wèi yín háng jiā.",
+   "questionPinyin": "nǐ xiǎng dāng yín háng jiā ma?",
+   "answerPinyin": "bù xiǎng, yín háng jiā de yā lì tài dà le."
+  },
+  "reason": "pinyin: 銀行家 is yín háng jiā"
+ },
+ {
+  "hanzi": "微小",
+  "set": {
+   "answerPinyin": "wǒ kāi shǐ měi tiān zǒu lù shàng bān, zhè shì gè wéi xiǎo de gǎi biàn."
+  },
+  "reason": "pinyin: 走路上班 is zǒu lù shàng bān"
+ },
+ {
+  "hanzi": "精心",
+  "set": {
+   "answerPinyin": "wǒ céng jīng jīng xīn zuò le yì běn xiàng bù sòng gěi nǚ péng yǒu."
+  },
+  "reason": "pinyin: 相簿 is xiàng bù"
+ },
+ {
+  "hanzi": "井",
+  "set": {
+   "examplePinyin": "wǒ wài pó jiā yǐ qián yǒu yì kǒu jǐng."
+  },
+  "reason": "pinyin: 外婆家 is wài pó jiā"
+ },
+ {
+  "hanzi": "臉頰",
+  "set": {
+   "examplePinyin": "tā hài xiū de liǎn jiá dōu hóng le."
+  },
+  "reason": "pinyin: complement 得 is de"
+ },
+ {
+  "hanzi": "葬禮",
+  "set": {
+   "question": "台灣傳統的葬禮有什麼特色？",
+   "questionEnglish": "What are traditional funerals in Taiwan like?",
+   "questionPinyin": "tái wān chuán tǒng de zàng lǐ yǒu shén me tè sè?",
+   "answer": "台灣傳統的葬禮常常很熱鬧。",
+   "answerEnglish": "Traditional funerals in Taiwan are often quite lively.",
+   "answerPinyin": "tái wān chuán tǒng de zàng lǐ cháng cháng hěn rè nào."
+  },
+  "reason": "sensitive (death): question asked about the learner's own experience; made general"
+ },
+ {
+  "hanzi": "腳後跟",
+  "set": {
+   "examplePinyin": "xīn xié zi bǎ wǒ de jiǎo hòu gēn mó pò le."
+  },
+  "reason": "pinyin: 鞋子 is xié zi"
+ },
+ {
+  "hanzi": "器官",
+  "set": {
+   "question": "人體最大的器官是什麼？",
+   "questionEnglish": "What is the largest organ of the human body?",
+   "questionPinyin": "rén tǐ zuì dà de qì guān shì shén me?",
+   "answer": "人體最大的器官是皮膚。",
+   "answerEnglish": "The largest organ of the human body is the skin.",
+   "answerPinyin": "rén tǐ zuì dà de qì guān shì pí fū."
+  },
+  "reason": "sensitive (death): question asked the learner's views on organ donation; made general"
+ },
+ {
+  "hanzi": "子彈",
+  "set": {
+   "question": "子彈通常是用什麼做的？",
+   "questionEnglish": "What are bullets usually made of?",
+   "questionPinyin": "zǐ dàn tōng cháng shì yòng shén me zuò de?",
+   "answer": "子彈通常是用金屬做的。",
+   "answerEnglish": "Bullets are usually made of metal.",
+   "answerPinyin": "zǐ dàn tōng cháng shì yòng jīn shǔ zuò de."
+  },
+  "reason": "sensitive (violence): question asked about the learner's own experience; made general"
+ },
+ {
+  "hanzi": "滑稽",
+  "set": {
+   "answerPinyin": "wǒ zài xī mén dīng kàn guò hěn huá jī de jiē tóu biǎo yǎn."
+  },
+  "reason": "pinyin: 西門町 is xī mén dīng"
+ },
+ {
+  "hanzi": "射擊",
+  "set": {
+   "pinyin": "shè jí",
+   "examplePinyin": "tā měi gè zhōu mò dōu qù liàn xí shè jí.",
+   "question": "射擊是奧運的比賽項目嗎？",
+   "questionEnglish": "Is shooting an Olympic event?",
+   "questionPinyin": "shè jí shì ào yùn de bǐ sài xiàng mù ma?",
+   "answer": "是，射擊是奧運的比賽項目。",
+   "answerEnglish": "Yes, shooting is an Olympic event.",
+   "answerPinyin": "shì, shè jí shì ào yùn de bǐ sài xiàng mù."
+  },
+  "reason": "sensitive (violence): question asked the learner's taste in shooting games; made general; pinyin: Taiwan MOE reading of 擊 is jí"
+ },
+ {
+  "hanzi": "釘子",
+  "set": {
+   "questionPinyin": "nǐ huì zì jǐ zài qiáng shàng dìng dīng zi ma?",
+   "answerPinyin": "huì, wǒ cháng zì jǐ dìng dīng zi guà zhào piàn."
+  },
+  "reason": "pinyin: 釘 (to nail) is dìng"
+ },
+ {
+  "hanzi": "熟練",
+  "set": {
+   "questionPinyin": "nǐ yòng kuài zi yòng de shú liàn ma?"
+  },
+  "reason": "pinyin: 得 after verb is de"
+ },
+ {
+  "hanzi": "鈍",
+  "set": {
+   "examplePinyin": "zhè bǎ dāo tài dùn le, qiē bú dòng ròu."
+  },
+  "reason": "pinyin: 切 (cut) is qiē"
+ },
+ {
+  "hanzi": "繁殖",
+  "set": {
+   "examplePinyin": "xià tiān wén zi fán zhí de hěn kuài.",
+   "answerPinyin": "huì, wǒ cháng dào diào jī shuǐ, miǎn de wén zi fán zhí."
+  },
+  "reason": "pinyin: 蚊子 is wén zi; 倒掉 (pour out) is dào diào"
+ },
+ {
+  "hanzi": "擦亮",
+  "set": {
+   "questionPinyin": "nǐ huì huā shí jiān cā liàng nǐ de xié zi ma?"
+  },
+  "reason": "pinyin: 鞋子 is xié zi"
+ },
+ {
+  "hanzi": "盡心",
+  "set": {
+   "questionPinyin": "nǐ jué de nǐ de zhōng wén lǎo shī jiāo de jìn xīn ma?"
+  },
+  "reason": "pinyin: 教得 is jiāo de"
+ },
+ {
+  "hanzi": "搶劫",
+  "set": {
+   "question": "遇到搶劫時，應該怎麼做？",
+   "questionEnglish": "What should you do if you are being robbed?",
+   "questionPinyin": "yù dào qiǎng jié shí, yīng gāi zěn me zuò?",
+   "answer": "遇到搶劫時，應該先保護自己，再報警。",
+   "answerEnglish": "If you are being robbed, protect yourself first, then call the police.",
+   "answerPinyin": "yù dào qiǎng jié shí, yīng gāi xiān bǎo hù zì jǐ, zài bào jǐng."
+  },
+  "reason": "sensitive (crime): question asked the learner's views on crime; made general"
+ },
+ {
+  "hanzi": "毒藥",
+  "set": {
+   "question": "為什麼有人說糖是毒藥？",
+   "questionEnglish": "Why do some people say sugar is poison?",
+   "questionPinyin": "wèi shén me yǒu rén shuō táng shì dú yào?",
+   "answer": "吃太多糖對身體不好，就像毒藥一樣。",
+   "answerEnglish": "Eating too much sugar is bad for you, just like poison.",
+   "answerPinyin": "chī tài duō táng duì shēn tǐ bù hǎo, jiù xiàng dú yào yí yàng."
+  },
+  "reason": "sensitive: question asked about the learner's own views; made general (also fixed 炸雞 zhá jī)"
+ },
+ {
+  "hanzi": "灌木",
+  "set": {
+   "examplePinyin": "gōng yuán lǐ zhòng le hěn duō guàn mù.",
+   "answerPinyin": "yǒu, lù biān zhòng le hěn duō guàn mù."
+  },
+  "reason": "pinyin: 種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "慵懶",
+  "set": {
+   "examplePinyin": "nà zhī māo zài yáng guāng xià yōng lǎn de shuì jiào.",
+   "answerPinyin": "wǒ xǐ huan yōng lǎn de tǎng zài shā fā shàng kàn diàn yǐng."
+  },
+  "reason": "pinyin: adverbial 地 is de"
+ },
+ {
+  "hanzi": "難堪",
+  "set": {
+   "answerPinyin": "zài lù shang dié dǎo huì ràng wǒ hěn nán kān."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 跌 is dié"
+ },
+ {
+  "hanzi": "公噸",
+  "set": {
+   "examplePinyin": "zhè tái kǎ chē kě yǐ zài shí gōng dūn de huò."
+  },
+  "reason": "pinyin: 載 (carry a load) is zài"
+ },
+ {
+  "hanzi": "遮蔽物",
+  "set": {
+   "answerPinyin": "wǒ huì zhǎo qí lóu dàng zhē bì wù."
+  },
+  "reason": "pinyin: 當 (as) is dàng"
+ },
+ {
+  "hanzi": "歷史學家",
+  "set": {
+   "examplePinyin": "tā shì yán jiù tái wān de lì shǐ xué jiā."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 究 is jiù"
+ },
+ {
+  "hanzi": "學者",
+  "set": {
+   "examplePinyin": "zhè wèi xué zhě zhuān mén yán jiù tái wān de yǔ yán."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 究 is jiù"
+ },
+ {
+  "hanzi": "用量",
+  "set": {
+   "pinyin": "yòng liàng",
+   "examplePinyin": "zhè zhǒng xǐ yī jīng de yòng liàng hěn shǎo.",
+   "questionPinyin": "nǐ zuò cài shí, yán de yòng liàng duō ma?",
+   "answerPinyin": "bù duō, wǒ zuò cài shí yán de yòng liàng hěn shǎo."
+  },
+  "reason": "pinyin: 量 (amount) is liàng"
+ },
+ {
+  "hanzi": "倒影",
+  "set": {
+   "pinyin": "dào yǐng",
+   "examplePinyin": "hú shàng yǒu shān de dào yǐng, hǎo piào liang.",
+   "questionPinyin": "nǐ xǐ huan pāi shuǐ lǐ de dào yǐng ma?",
+   "answerPinyin": "xǐ huan, rì yuè tán de dào yǐng hěn měi."
+  },
+  "reason": "pinyin: 倒影 is dào yǐng"
+ },
+ {
+  "hanzi": "工作坊",
+  "set": {
+   "pinyin": "gōng zuò fāng",
+   "examplePinyin": "wǒ zhōu mò cān jiā le yí gè kā fēi gōng zuò fāng.",
+   "questionPinyin": "nǐ cān jiā guò shén me gōng zuò fāng?",
+   "answerPinyin": "wǒ cān jiā guò yí gè zuò pí bāo de gōng zuò fāng."
+  },
+  "reason": "pinyin: 工作坊 is gōng zuò fāng"
+ },
+ {
+  "hanzi": "指引",
+  "set": {
+   "examplePinyin": "qǐng zhào zhe pái zi shàng de zhǐ yǐn zǒu."
+  },
+  "reason": "pinyin: 照著 is zhào zhe"
+ },
+ {
+  "hanzi": "指派",
+  "set": {
+   "examplePinyin": "zhǔ guǎn zhǐ pài wǒ fù zé zhè ge àn zi."
+  },
+  "reason": "pinyin: 案子 is àn zi"
+ },
+ {
+  "hanzi": "補丁",
+  "set": {
+   "answerPinyin": "yǒu, wǒ de jiù kù zi shàng yǒu bǔ dīng."
+  },
+  "reason": "pinyin: 褲子 is kù zi"
+ },
+ {
+  "hanzi": "目光",
+  "set": {
+   "answerPinyin": "yǐ qián hěn zài yì, xiàn zài bú zài yì bié rén de mù guāng le."
+  },
+  "reason": "pinyin: 不在意 is bú zài yì (not an A-not-A question)"
+ },
+ {
+  "hanzi": "歧視",
+  "set": {
+   "question": "在工作上被歧視，可以找誰幫忙？",
+   "questionEnglish": "Who can you turn to if you face discrimination at work?",
+   "questionPinyin": "zài gōng zuò shàng bèi qí shì, kě yǐ zhǎo shéi bāng máng?",
+   "answer": "在工作上被歧視，可以找勞工局幫忙。",
+   "answerEnglish": "If you face discrimination at work, you can ask the Labor Affairs Bureau for help.",
+   "answerPinyin": "zài gōng zuò shàng bèi qí shì, kě yǐ zhǎo láo gōng jú bāng máng."
+  },
+  "reason": "sensitive: question asked about the learner's own experience of discrimination; made general"
+ },
+ {
+  "hanzi": "細微",
+  "set": {
+   "questionPinyin": "nǐ zhù yì de dào péng yǒu xīn qíng xì wéi de biàn huà ma?"
+  },
+  "reason": "pinyin: potential complement 得 is de"
+ },
+ {
+  "hanzi": "機率",
+  "set": {
+   "questionPinyin": "nǐ jué de zhòng fā piào de jī lǜ gāo ma?",
+   "answerPinyin": "bù gāo, wǒ zhòng fā piào de jī lǜ hěn dī."
+  },
+  "reason": "pinyin: 中 (win) is zhòng"
+ },
+ {
+  "hanzi": "著陸",
+  "set": {
+   "pinyin": "zhuó lù",
+   "examplePinyin": "fēi jī yǐ jīng ān quán zhuó lù le.",
+   "questionPinyin": "nǐ zuò fēi jī zhuó lù shí huì jǐn zhāng ma?",
+   "answerPinyin": "huì, fēi jī zhuó lù shí wǒ hěn jǐn zhāng."
+  },
+  "reason": "pinyin: 著陸 is zhuó lù"
+ },
+ {
+  "hanzi": "外科醫師",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng wài kē yī shī xīn kǔ ma?"
+  },
+  "reason": "pinyin: 覺得 is jué de; 當 (work as) is dāng"
+ },
+ {
+  "hanzi": "診斷",
+  "set": {
+   "question": "醫生診斷前，通常會先問什麼？",
+   "questionEnglish": "What does a doctor usually ask before making a diagnosis?",
+   "questionPinyin": "yī shēng zhěn duàn qián, tōng cháng huì xiān wèn shén me?",
+   "answer": "醫生會先問你哪裡不舒服，再做診斷。",
+   "answerEnglish": "The doctor first asks where you feel unwell, then makes a diagnosis.",
+   "answerPinyin": "yī shēng huì xiān wèn nǐ nǎ lǐ bù shū fu, zài zuò zhěn duàn."
+  },
+  "reason": "sensitive (illness): question asked about the learner's own medical visit; made general"
+ },
+ {
+  "hanzi": "五金",
+  "set": {
+   "examplePinyin": "wǒ qù xiàng kǒu de wǔ jīn háng mǎi luó sī.",
+   "questionPinyin": "nǐ jiā fù jìn yǒu wǔ jīn háng ma?",
+   "answerPinyin": "yǒu, wǒ cháng qù nà jiā wǔ jīn háng mǎi gōng jù."
+  },
+  "reason": "pinyin: 五金行 (shop) is wǔ jīn háng"
+ },
+ {
+  "hanzi": "呈現",
+  "set": {
+   "examplePinyin": "zhè zhāng tú biǎo qīng chǔ chéng xiàn le jīn nián de yè jī."
+  },
+  "reason": "pinyin: Taiwan MOE reading of 績 is jī"
+ }
+]

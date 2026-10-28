@@ -1,0 +1,493 @@
+[
+ {
+  "hanzi": "賽跑",
+  "set": {
+   "examplePinyin": "wǒ men lái sài pǎo, kàn shéi xiān dào!"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "宣布",
+  "set": {
+   "examplePinyin": "gōng sī xuān bù míng tiān fàng jià yī tiān."
+  },
+  "reason": "放假 is fàng jià"
+ },
+ {
+  "hanzi": "握住",
+  "set": {
+   "answerPinyin": "huì, bú wò zhù fú shǒu hěn róng yì dié dǎo."
+  },
+  "reason": "跌 is dié in Taiwan"
+ },
+ {
+  "hanzi": "心臟",
+  "set": {
+   "pinyin": "xīn zàng",
+   "examplePinyin": "yī shēng shuō wǒ de xīn zàng hěn jiàn kāng.",
+   "answerPinyin": "huì, hē tài duō kā fēi, wǒ de xīn zàng huì tiào hěn kuài."
+  },
+  "reason": "心臟 is xīn zàng"
+ },
+ {
+  "hanzi": "相似",
+  "set": {
+   "questionPinyin": "nǐ de mǔ yǔ hé zhōng wén yǒu xiāng sì de dì fāng ma?",
+   "answerPinyin": "méi yǒu xiāng sì de dì fāng, wán quán bù yí yàng."
+  },
+  "reason": "相似 is xiāng sì"
+ },
+ {
+  "hanzi": "量",
+  "set": {
+   "pinyin": "liàng",
+   "examplePinyin": "zhè jiā biàn dāng diàn de liàng hěn dà.",
+   "questionPinyin": "nǐ xǐ huan liàng dà de cān tīng ma?",
+   "answerPinyin": "xǐ huan, liàng dà cái chī de bǎo."
+  },
+  "reason": "量 (amount) is liàng; 吃得飽 is de"
+ },
+ {
+  "hanzi": "明顯",
+  "set": {
+   "examplePinyin": "tā de zhōng wén jìn bù de hěn míng xiǎn."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "表面",
+  "set": {
+   "questionPinyin": "nǐ huì zhǐ kàn biǎo miàn jiù jué dìng xǐ bu xǐ huan yí gè rén ma?"
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "堅持",
+  "set": {
+   "examplePinyin": "tā jiān chí měi tiān zǒu lù shàng bān."
+  },
+  "reason": "上班 is shàng bān"
+ },
+ {
+  "hanzi": "檔案",
+  "set": {
+   "pinyin": "dǎng àn",
+   "examplePinyin": "qǐng bǎ dǎng àn jì gěi wǒ.",
+   "questionPinyin": "nǐ diàn nǎo lǐ de dǎng àn zhěng lǐ hǎo le ma?",
+   "answerPinyin": "méi yǒu, wǒ de dǎng àn hěn luàn."
+  },
+  "reason": "檔 is dǎng in Taiwan (教育部)"
+ },
+ {
+  "hanzi": "信任",
+  "set": {
+   "questionPinyin": "nǐ zuì xìn rèn shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "一打",
+  "set": {
+   "pinyin": "yì dá",
+   "examplePinyin": "wǒ men mǎi le yì dá pí jiǔ qù hǎi biān.",
+   "questionPinyin": "nǐ yí cì huì mǎi yì dá pí jiǔ ma?",
+   "answerPinyin": "bú huì, yì dá tài duō le."
+  },
+  "reason": "打 (dozen) is dá"
+ },
+ {
+  "hanzi": "音量",
+  "set": {
+   "answerPinyin": "bú huì, wǒ de yīn liàng dōu kāi de hěn xiǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "種子",
+  "set": {
+   "examplePinyin": "wǒ zài yáng tái zhòng le yì xiē zhǒng zi.",
+   "questionPinyin": "nǐ xiǎng zài yáng tái zhòng shén me zhǒng zi?",
+   "answerPinyin": "wǒ xiǎng mǎi yì xiē fān qié de zhǒng zi lái zhòng."
+  },
+  "reason": "種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "船長",
+  "set": {
+   "pinyin": "chuán zhǎng",
+   "examplePinyin": "chuán zhǎng qǐng dà jiā chuān shàng jiù shēng yī.",
+   "questionPinyin": "nǐ xiǎo shí hòu xiǎng dāng chuán zhǎng ma?",
+   "answerPinyin": "xiǎng guò, wǒ jué de dāng chuán zhǎng hěn kù."
+  },
+  "reason": "船長 is chuán zhǎng; 覺得 jué de; 當 (be) dāng"
+ },
+ {
+  "hanzi": "相簿",
+  "set": {
+   "pinyin": "xiàng bù",
+   "examplePinyin": "wǒ bǎ lǚ xíng zhào piàn fàng jìn xiàng bù.",
+   "questionPinyin": "nǐ de shǒu jī lǐ yǒu jǐ gè xiàng bù?",
+   "answerPinyin": "wǒ de shǒu jī lǐ yǒu shí jǐ gè xiàng bù."
+  },
+  "reason": "相簿 is xiàng bù"
+ },
+ {
+  "hanzi": "排成",
+  "set": {
+   "questionPinyin": "nǐ zài tái wān kàn guò dà jiā pái chéng cháng cháng de duì ma?"
+  },
+  "reason": "長長 is cháng cháng"
+ },
+ {
+  "hanzi": "事故",
+  "set": {
+   "examplePinyin": "gāo sù gōng lù shang fā shēng le shì gù."
+  },
+  "reason": "了 is le"
+ },
+ {
+  "hanzi": "嘴唇",
+  "set": {
+   "questionPinyin": "dōng tiān nǐ de zuǐ chún huì gān ma?"
+  },
+  "reason": "乾嗎 here is gān ma (dry + question particle)"
+ },
+ {
+  "hanzi": "消失",
+  "set": {
+   "examplePinyin": "wǒ de yǔ sǎn tú rán xiāo shī le."
+  },
+  "reason": "突 is tú in Taiwan"
+ },
+ {
+  "hanzi": "實用",
+  "set": {
+   "answerPinyin": "hěn shí yòng, zài tái wān měi tiān dōu yòng de dào."
+  },
+  "reason": "得 in 用得到 is de"
+ },
+ {
+  "hanzi": "敵人",
+  "set": {
+   "questionPinyin": "nǐ jué de zì jǐ zuì dà de dí rén shì shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "護理師",
+  "set": {
+   "examplePinyin": "wǒ jiě jie zài yī yuàn dāng hù lǐ shī."
+  },
+  "reason": "姊姊 is jiě jie"
+ },
+ {
+  "hanzi": "噪音",
+  "set": {
+   "examplePinyin": "lóu shàng de zào yīn ràng wǒ shuì bù zháo."
+  },
+  "reason": "睡不著 is shuì bù zháo"
+ },
+ {
+  "hanzi": "輪班",
+  "set": {
+   "examplePinyin": "wǒ jiě jie zài yī yuàn gōng zuò, yào lún bān."
+  },
+  "reason": "姊姊 is jiě jie"
+ },
+ {
+  "hanzi": "附上",
+  "set": {
+   "examplePinyin": "wǒ zài yóu jiàn lǐ fù shàng le dǎng àn."
+  },
+  "reason": "檔 is dǎng in Taiwan (教育部)"
+ },
+ {
+  "hanzi": "協助",
+  "set": {
+   "questionPinyin": "gōng zuò shàng xū yào xié zhù shí, nǐ huì zhǎo shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "能幹",
+  "set": {
+   "questionPinyin": "nǐ shēn biān shéi zuì néng gàn?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "英雄",
+  "set": {
+   "questionPinyin": "nǐ xīn zhōng de yīng xióng shì shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "詳細",
+  "set": {
+   "examplePinyin": "kě yǐ shuō de gèng xiáng xì yì diǎn ma?"
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "陪伴",
+  "set": {
+   "questionPinyin": "nǐ jué de shéi zuì xū yào jiā rén péi bàn?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "說服",
+  "set": {
+   "questionPinyin": "nǐ zuì jìn shuō fú shéi zuò le shén me shì?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "皮帶",
+  "set": {
+   "questionPinyin": "nǐ shàng bān huì jì pí dài ma?",
+   "answerPinyin": "huì, wǒ shàng bān dōu huì jì pí dài."
+  },
+  "reason": "繫 (fasten) is jì"
+ },
+ {
+  "hanzi": "鐘",
+  "set": {
+   "questionPinyin": "nǐ jiā fù jìn tīng de dào zhōng shēng ma?",
+   "answerPinyin": "tīng de dào, fù jìn jiào táng de zhōng shēng hěn hǎo tīng."
+  },
+  "reason": "聽得到 is tīng de dào"
+ },
+ {
+  "hanzi": "市長",
+  "set": {
+   "examplePinyin": "shì zhǎng xuān bù míng tiān fàng tái fēng jià.",
+   "questionPinyin": "nǐ zhī dào nǐ men chéng shì de shì zhǎng shì shéi ma?",
+   "answerPinyin": "wǒ bù zhī dào wǒ men de shì zhǎng shì shéi."
+  },
+  "reason": "假 (day off) is jià; 誰 is shéi"
+ },
+ {
+  "hanzi": "旗子",
+  "set": {
+   "examplePinyin": "dǎo yóu ná zhe yí miàn huáng sè de qí zǐ."
+  },
+  "reason": "拿著 is ná zhe"
+ },
+ {
+  "hanzi": "圖表",
+  "set": {
+   "examplePinyin": "zhè zhāng tú biǎo kàn de chū jīn nián mài de bǐ jiào hǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "懷孕",
+  "set": {
+   "examplePinyin": "wǒ jiě jie huái yùn le, míng nián sān yuè shēng."
+  },
+  "reason": "姊姊 is jiě jie"
+ },
+ {
+  "hanzi": "安慰",
+  "set": {
+   "questionPinyin": "nǐ nán guò de shí hòu, shéi huì ān wèi nǐ?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "打賭",
+  "set": {
+   "answerPinyin": "yǒu, wǒ gēn péng yǒu dǎ dǔ shéi xiān xué huì qí jī chē."
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "投",
+  "set": {
+   "examplePinyin": "nà ge tóu shǒu tóu qiú tóu de hěn kuài.",
+   "answerPinyin": "huì yì diǎn, kě shì wǒ tóu de bú tài zhǔn."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "穩",
+  "set": {
+   "questionPinyin": "nǐ qí jiǎo tà chē qí de wěn ma?",
+   "answerPinyin": "qí de hěn wěn, wǒ měi tiān qí chē shàng bān."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "表現",
+  "set": {
+   "examplePinyin": "tā jīn tiān kāi huì de shí hòu biǎo xiàn de hěn hǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "病毒",
+  "set": {
+   "questionPinyin": "nǐ de diàn nǎo zhòng guò bìng dú ma?",
+   "answerPinyin": "zhòng guò, nà ge bìng dú ràng wǒ de dǎng àn dōu bú jiàn le."
+  },
+  "reason": "中毒 sense of 中 is zhòng; 檔 is dǎng in Taiwan"
+ },
+ {
+  "hanzi": "串",
+  "set": {
+   "questionPinyin": "nǐ shēn shàng dài zhe yí chuàn yào shi ma?",
+   "answerPinyin": "duì, wǒ dài zhe yí chuàn jiā lǐ hé gōng sī de yào shi."
+  },
+  "reason": "帶著 is dài zhe"
+ },
+ {
+  "hanzi": "意外",
+  "set": {
+   "examplePinyin": "tā tú rán lái kàn wǒ, wǒ hěn yì wài."
+  },
+  "reason": "突 is tú in Taiwan"
+ },
+ {
+  "hanzi": "商人",
+  "set": {
+   "answerPinyin": "bù xiǎng, wǒ jué de dāng shāng rén yā lì tài dà."
+  },
+  "reason": "覺得 is jué de; 當 (be) is dāng"
+ },
+ {
+  "hanzi": "稱讚",
+  "set": {
+   "examplePinyin": "lǎo bǎn chēng zàn wǒ zhè cì zuò de hěn hǎo."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "不公平",
+  "set": {
+   "examplePinyin": "tā zuò de bǐ jiào shǎo, xīn shuǐ què bǐ jiào duō, zhēn bù gōng píng!"
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "緊急",
+  "set": {
+   "questionPinyin": "nǐ yù dào jǐn jí de shì huì dǎ gěi shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "事業",
+  "set": {
+   "examplePinyin": "tā de shì yè zuò de hěn chéng gōng."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "完整",
+  "set": {
+   "answerPinyin": "hái méi, wǒ zhǐ dú guò wán zhěng de duǎn piān gù shì."
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "青少年",
+  "set": {
+   "examplePinyin": "hěn duō qīng shào nián xǐ huan qù xī mén dīng."
+  },
+  "reason": "西門町 is xī mén dīng"
+ },
+ {
+  "hanzi": "對話",
+  "set": {
+   "examplePinyin": "wǒ tīng de dǒng tā men de duì huà."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "標題",
+  "set": {
+   "questionPinyin": "nǐ kàn xīn wén shí zhǐ kàn biāo tí ma?",
+   "answerPinyin": "yǒu shí hòu, wǒ tài máng jiù zhǐ kàn biāo tí."
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "指示",
+  "set": {
+   "examplePinyin": "qǐng zhào zhe yíng mù shàng de zhǐ shì cāo zuò.",
+   "answerPinyin": "huì, wǒ dōu zhào zhe zhǐ shì yí bù yi bù zuò."
+  },
+  "reason": "照著 is zhào zhe"
+ },
+ {
+  "hanzi": "自信",
+  "set": {
+   "examplePinyin": "tā shuō zhōng wén shuō de hěn yǒu zì xìn."
+  },
+  "reason": "得 after a verb is de"
+ },
+ {
+  "hanzi": "單位",
+  "set": {
+   "answerPinyin": "wǒ men yòng bàng dàng dān wèi, bú yòng gōng jīn."
+  },
+  "reason": "當 (use as) is dàng"
+ },
+ {
+  "hanzi": "場地",
+  "set": {
+   "answerPinyin": "wǒ xǐ huan yòng KTV bāo xiāng dàng chǎng dì."
+  },
+  "reason": "當 (use as) is dàng"
+ },
+ {
+  "hanzi": "治療",
+  "set": {
+   "question": "中醫常用什麼方法治療？",
+   "questionEnglish": "What methods does Chinese medicine often use for treatment?",
+   "questionPinyin": "zhōng yī cháng yòng shén me fāng fǎ zhì liáo?",
+   "answer": "中醫常用中藥和針灸治療。",
+   "answerEnglish": "Chinese medicine often uses herbal medicine and acupuncture for treatment.",
+   "answerPinyin": "zhōng yī cháng yòng zhōng yào hé zhēn jiǔ zhì liáo."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ },
+ {
+  "hanzi": "手術",
+  "set": {
+   "question": "動完手術以後，通常要做什麼？",
+   "questionEnglish": "What do people usually need to do after surgery?",
+   "questionPinyin": "dòng wán shǒu shù yǐ hòu, tōng cháng yào zuò shén me?",
+   "answer": "動完手術以後，通常要好好休息。",
+   "answerEnglish": "After surgery, people usually need plenty of rest.",
+   "answerPinyin": "dòng wán shǒu shù yǐ hòu, tōng cháng yào hǎo hǎo xiū xí."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ },
+ {
+  "hanzi": "症狀",
+  "set": {
+   "question": "感冒常見的症狀有哪些？",
+   "questionEnglish": "What are the common symptoms of a cold?",
+   "questionPinyin": "gǎn mào cháng jiàn de zhèng zhuàng yǒu nǎ xiē?",
+   "answer": "感冒常見的症狀是喉嚨痛和咳嗽。",
+   "answerEnglish": "The common symptoms of a cold are a sore throat and a cough.",
+   "answerPinyin": "gǎn mào cháng jiàn de zhèng zhuàng shì hóu lóng tòng hé ké sou."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ },
+ {
+  "hanzi": "疾病",
+  "set": {
+   "question": "怎麼做可以預防疾病？",
+   "questionEnglish": "What can you do to prevent disease?",
+   "questionPinyin": "zěn me zuò kě yǐ yù fáng jí bìng?",
+   "answer": "多運動、多洗手可以預防疾病。",
+   "answerEnglish": "Exercising and washing your hands often can help prevent disease.",
+   "answerPinyin": "duō yùn dòng, duō xǐ shǒu kě yǐ yù fáng jí bìng."
+  },
+  "reason": "illness: ask a general question, not about the learner"
+ }
+]

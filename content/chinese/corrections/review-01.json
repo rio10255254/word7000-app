@@ -1,0 +1,458 @@
+[
+ {
+  "hanzi": "和",
+  "set": {
+   "questionPinyin": "nǐ zhōu mò cháng hé shéi chū qù?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "有",
+  "set": {
+   "questionPinyin": "nǐ yǒu xiōng dì jiě mèi ma?"
+  },
+  "reason": "姊 is jiě"
+ },
+ {
+  "hanzi": "說",
+  "set": {
+   "examplePinyin": "tā shuō zhōng wén shuō de hěn hǎo.",
+   "answerPinyin": "wǒ huì shuō yīng wén hé yì diǎn zhōng wén."
+  },
+  "reason": "得 after verb is de; 中文 is zhōng wén"
+ },
+ {
+  "hanzi": "怎麼",
+  "set": {
+   "answerPinyin": "huì, péng yǒu jiāo wǒ zěn me yòng."
+  },
+  "reason": "教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "新",
+  "set": {
+   "answerPinyin": "wǒ mǎi le yì shuāng xīn xié zi."
+  },
+  "reason": "鞋子 suffix is zi"
+ },
+ {
+  "hanzi": "工作",
+  "set": {
+   "answerPinyin": "wǒ de gōng zuò shì jiāo yīng wén."
+  },
+  "reason": "教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "問",
+  "set": {
+   "questionPinyin": "nǐ bù dǒng de shí hòu huì wèn shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "下面",
+  "set": {
+   "answerPinyin": "xià miàn yǒu hěn duō xiāng zi."
+  },
+  "reason": "箱子 suffix is zi"
+ },
+ {
+  "hanzi": "喔",
+  "set": {
+   "pinyin": "ō",
+   "examplePinyin": "ō, wǒ zhī dào le!",
+   "answerPinyin": "ō, hǎo, méi guān xì."
+  },
+  "reason": "喔 interjection is ō"
+ },
+ {
+  "hanzi": "寫",
+  "set": {
+   "answerPinyin": "wǒ huì xiě yì diǎn zhōng wén zì."
+  },
+  "reason": "中文 is zhōng wén"
+ },
+ {
+  "hanzi": "一點",
+  "set": {
+   "examplePinyin": "wǒ huì shuō yì diǎn zhōng wén."
+  },
+  "reason": "中文 is zhōng wén"
+ },
+ {
+  "hanzi": "站",
+  "set": {
+   "examplePinyin": "jié yùn rén hěn duō, wǒ zhàn zhe.",
+   "questionPinyin": "nǐ zuò jié yùn yǒu wèi zi ma, hái shì zhàn zhe?",
+   "answerPinyin": "wǒ cháng cháng zhàn zhe, rén tài duō le."
+  },
+  "reason": "著 after verb is zhe; 位子 is wèi zi"
+ },
+ {
+  "hanzi": "一起",
+  "set": {
+   "questionPinyin": "nǐ cháng gēn shéi yì qǐ chī wǔ cān?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "幾個",
+  "set": {
+   "examplePinyin": "wǒ zuó tiān mǎi le jǐ gè bāo zi."
+  },
+  "reason": "包子 suffix is zi"
+ },
+ {
+  "hanzi": "白色",
+  "set": {
+   "examplePinyin": "wǒ xiǎng mǎi bái sè de xié zi."
+  },
+  "reason": "鞋子 suffix is zi"
+ },
+ {
+  "hanzi": "賣",
+  "set": {
+   "examplePinyin": "nà jiā diàn mài hěn hǎo chī de bāo zi."
+  },
+  "reason": "包子 suffix is zi"
+ },
+ {
+  "hanzi": "誰",
+  "set": {
+   "pinyin": "shéi",
+   "examplePinyin": "zhè shì shéi de yǔ sǎn?",
+   "answerPinyin": "bú shì, wǒ bù zhī dào shì shéi de."
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "謝謝",
+  "set": {
+   "questionPinyin": "nǐ jīn tiān gēn shéi shuō le xiè xiè?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "一點點",
+  "set": {
+   "examplePinyin": "wǒ huì shuō yì diǎn diǎn zhōng wén.",
+   "answerPinyin": "wǒ zhǐ huì shuō yì diǎn diǎn tái yǔ."
+  },
+  "reason": "中文 is zhōng wén; 只 is zhǐ"
+ },
+ {
+  "hanzi": "笑",
+  "set": {
+   "examplePinyin": "tā xiào de hěn kāi xīn."
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "兩",
+  "set": {
+   "questionPinyin": "nǐ yǒu jǐ gè xiōng dì jiě mèi?",
+   "answerPinyin": "wǒ yǒu liǎng gè jiě jie."
+  },
+  "reason": "姊 is jiě"
+ },
+ {
+  "hanzi": "教",
+  "set": {
+   "pinyin": "jiāo",
+   "examplePinyin": "wǒ de péng yǒu jiāo wǒ zuò cài.",
+   "questionPinyin": "nǐ huì jiāo péng yǒu shuō nǐ de yǔ yán ma?",
+   "answerPinyin": "huì, wǒ cháng jiāo péng yǒu shuō yīng wén."
+  },
+  "reason": "教 (teach) is jiāo"
+ },
+ {
+  "hanzi": "慢",
+  "set": {
+   "questionPinyin": "nǐ shuō zhōng wén shuō de hěn màn ma?",
+   "answerPinyin": "duì, wǒ shuō de hěn màn."
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "右邊",
+  "set": {
+   "questionPinyin": "nǐ de zuò wèi yòu biān zuò shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "鞋子",
+  "set": {
+   "pinyin": "xié zi",
+   "examplePinyin": "zhè shuāng xié zi hěn hǎo chuān.",
+   "questionPinyin": "nǐ yǒu jǐ shuāng xié zi?",
+   "answerPinyin": "wǒ yǒu wǔ shuāng xié zi."
+  },
+  "reason": "鞋子 suffix is zi"
+ },
+ {
+  "hanzi": "聊天",
+  "set": {
+   "questionPinyin": "nǐ cháng gēn shéi liáo tiān?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "短",
+  "set": {
+   "questionPinyin": "nǐ xǐ huan cháng tóu fǎ hái shì duǎn tóu fǎ?"
+  },
+  "reason": "還是 is hái shì"
+ },
+ {
+  "hanzi": "褲子",
+  "set": {
+   "pinyin": "kù zi",
+   "examplePinyin": "zhè tiáo kù zi tài cháng le.",
+   "questionPinyin": "nǐ jīn tiān chuān shén me yán sè de kù zi?",
+   "answerPinyin": "wǒ jīn tiān chuān hēi sè de kù zi."
+  },
+  "reason": "褲子 suffix is zi"
+ },
+ {
+  "hanzi": "像",
+  "set": {
+   "examplePinyin": "nǐ zhǎng de hěn xiàng nǐ mā ma.",
+   "questionPinyin": "nǐ zhǎng de bǐ jiào xiàng bà ba hái shì mā ma?",
+   "answerPinyin": "wǒ zhǎng de bǐ jiào xiàng wǒ bà ba."
+  },
+  "reason": "長得 is zhǎng de"
+ },
+ {
+  "hanzi": "一樣",
+  "set": {
+   "questionPinyin": "nǐ gēn nǐ de jiā rén zhǎng de yí yàng ma?",
+   "answerPinyin": "wǒ gēn wǒ jiě jie zhǎng de bú tài yí yàng."
+  },
+  "reason": "長得 is zhǎng de"
+ },
+ {
+  "hanzi": "只",
+  "set": {
+   "answerPinyin": "wǒ yí gè xīng qí zhǐ yùn dòng yí cì."
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "告訴",
+  "set": {
+   "questionPinyin": "nǐ yǒu hǎo xiāo xí, huì xiān gào sù shéi?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "需要",
+  "set": {
+   "answerPinyin": "wǒ gōng zuò xū yào yòng yì diǎn zhōng wén."
+  },
+  "reason": "中文 is zhōng wén"
+ },
+ {
+  "hanzi": "號碼",
+  "set": {
+   "answerPinyin": "wǒ zhǐ jì de wǒ mā ma de hào mǎ."
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "帶",
+  "set": {
+   "examplePinyin": "jīn tiān yào dài yǔ sǎn ō!"
+  },
+  "reason": "喔 particle is ō"
+ },
+ {
+  "hanzi": "健康",
+  "set": {
+   "answerPinyin": "wèi le jiàn kāng, wǒ měi tiān zǒu lù shàng bān."
+  },
+  "reason": "走路上班: 上班 is shàng bān"
+ },
+ {
+  "hanzi": "滿",
+  "set": {
+   "answerPinyin": "hěn mǎn, cháng cháng méi yǒu wèi zi."
+  },
+  "reason": "位子 suffix is zi"
+ },
+ {
+  "hanzi": "照顧",
+  "set": {
+   "questionPinyin": "nǐ shēng bìng de shí hòu shéi zhào gù nǐ?"
+  },
+  "reason": "誰 is shéi"
+ },
+ {
+  "hanzi": "清楚",
+  "set": {
+   "questionPinyin": "nǐ tīng de qīng chǔ tái wān rén shuō de zhōng wén ma?",
+   "answerPinyin": "shuō màn yì diǎn de huà, wǒ tīng de hěn qīng chǔ."
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "很快",
+  "set": {
+   "questionPinyin": "nǐ chī fàn chī de hěn kuài ma?",
+   "answerPinyin": "duì, wǒ chī de hěn kuài."
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "油",
+  "set": {
+   "answerPinyin": "bú huì, wǒ zuò cài zhǐ yòng yì diǎn diǎn yóu."
+  },
+  "reason": "只 (only) is zhǐ"
+ },
+ {
+  "hanzi": "星星",
+  "set": {
+   "questionPinyin": "nǐ zài tái běi kàn de dào xīng xīng ma?"
+  },
+  "reason": "看得到: 得 is de"
+ },
+ {
+  "hanzi": "姊妹",
+  "set": {
+   "pinyin": "jiě mèi",
+   "examplePinyin": "tā men liǎng gè shì jiě mèi.",
+   "questionPinyin": "nǐ yǒu jiě mèi ma?",
+   "answerPinyin": "yǒu, wǒ men jiā yǒu sān gè jiě mèi."
+  },
+  "reason": "姊 is jiě"
+ },
+ {
+  "hanzi": "咖啡色",
+  "set": {
+   "examplePinyin": "wǒ mǎi le yì shuāng kā fēi sè de xié zi."
+  },
+  "reason": "鞋子 suffix is zi"
+ },
+ {
+  "hanzi": "千",
+  "set": {
+   "examplePinyin": "zhè shuāng xié zi yào liǎng qiān kuài."
+  },
+  "reason": "鞋子 suffix is zi"
+ },
+ {
+  "hanzi": "聲音",
+  "set": {
+   "answerPinyin": "pà, yì diǎn shēng yīn wǒ jiù shuì bù zháo."
+  },
+  "reason": "睡不著 is shuì bù zháo"
+ },
+ {
+  "hanzi": "拉",
+  "set": {
+   "questionPinyin": "nǐ dā jié yùn huì lā zhe lā huán ma?",
+   "answerPinyin": "rén duō de shí hòu wǒ huì lā zhe lā huán."
+  },
+  "reason": "著 after verb is zhe"
+ },
+ {
+  "hanzi": "盒子",
+  "set": {
+   "questionPinyin": "nǐ huì liú zhe lǐ wù de hé zi ma?",
+   "answerPinyin": "huì, piào liang de hé zi wǒ dōu liú zhe."
+  },
+  "reason": "著 after verb is zhe"
+ },
+ {
+  "hanzi": "袋子",
+  "set": {
+   "pinyin": "dài zi",
+   "examplePinyin": "qǐng wèn xū yào dài zi ma?",
+   "questionPinyin": "nǐ qù chāo shì huì zì jǐ dài dài zi ma?",
+   "answerPinyin": "huì, wǒ dōu zì jǐ dài dài zi."
+  },
+  "reason": "袋子 suffix is zi"
+ },
+ {
+  "hanzi": "有點",
+  "set": {
+   "answerPinyin": "yǒu diǎn lèi, zuó tiān shuì de hěn wǎn."
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "相機",
+  "set": {
+   "questionPinyin": "nǐ lǚ xíng huì dài xiàng jī ma?"
+  },
+  "reason": "旅行 is lǚ xíng"
+ },
+ {
+  "hanzi": "雙",
+  "set": {
+   "examplePinyin": "wǒ mǎi le yì shuāng xīn xié zi.",
+   "questionPinyin": "nǐ yǒu jǐ shuāng xié zi?",
+   "answerPinyin": "wǒ yǒu wǔ shuāng xié zi."
+  },
+  "reason": "鞋子 suffix is zi"
+ },
+ {
+  "hanzi": "棒",
+  "set": {
+   "examplePinyin": "nǐ de zhōng wén shuō de hěn bàng!"
+  },
+  "reason": "得 after verb is de"
+ },
+ {
+  "hanzi": "這",
+  "set": {
+   "questionPinyin": "zhè ge zhōu mò nǐ yǒu kòng ma?",
+   "answerPinyin": "zhè ge zhōu mò wǒ yǒu kòng."
+  },
+  "reason": "有空 is yǒu kòng"
+ },
+ {
+  "hanzi": "週末",
+  "set": {
+   "examplePinyin": "zhè ge zhōu mò nǐ yǒu kòng ma?"
+  },
+  "reason": "有空 is yǒu kòng"
+ },
+ {
+  "hanzi": "星期四",
+  "set": {
+   "questionPinyin": "nǐ xīng qí sì wǎn shàng yǒu kòng ma?",
+   "answerPinyin": "yǒu kòng, wǒ xīng qí sì wǎn shàng méi shì."
+  },
+  "reason": "有空 is yǒu kòng"
+ },
+ {
+  "hanzi": "時間",
+  "set": {
+   "english": "time"
+  },
+  "reason": "時間 is a noun; 'temporal' is not a meaning"
+ },
+ {
+  "hanzi": "他",
+  "set": {
+   "question": "你的老闆是男生嗎？他人好嗎？",
+   "questionPinyin": "nǐ de lǎo bǎn shì nán shēng ma? tā rén hǎo ma?",
+   "questionEnglish": "Is your boss a man? Is he a nice person?"
+  },
+  "reason": "他好嗎 means 'how is he', not 'is he nice'; match the answer 他人很好"
+ },
+ {
+  "hanzi": "死",
+  "set": {
+   "question": "什麼植物不容易死？",
+   "questionPinyin": "shén me zhí wù bù róng yì sǐ?",
+   "questionEnglish": "Which plants don't die easily?",
+   "answer": "仙人掌不容易死，很好養。",
+   "answerPinyin": "xiān rén zhǎng bù róng yì sǐ, hěn hǎo yǎng.",
+   "answerEnglish": "Cacti don't die easily. They're easy to look after."
+  },
+  "reason": "death word: make the question general, not about the learner's own plants"
+ }
+]

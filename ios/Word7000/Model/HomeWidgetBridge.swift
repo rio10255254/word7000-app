@@ -11,7 +11,7 @@ final class HomeWidgetBridge {
     func update(model: AppModel) {
         let snapshot = HomeWidgetSnapshot.make(progress: model.progress, today: model.today,
                                                chineseInterface: model.studyMode == .english,
-                                               words: model.coreWords, previous: store.load())
+                                               words: model.studyMode == .chinese ? model.coreBankWords : model.coreWords, previous: store.load())
         if store.save(snapshot) {
             WidgetCenter.shared.reloadTimelines(ofKind: HomeWidgetStore.kind)
         }

@@ -49,12 +49,41 @@ const TAIWAN_WORDS = new Map([
   ['垃圾', ['lè', 'sè']],
   ['頭髮', ['tóu', 'fǎ']],
   ['理髮', ['lǐ', 'fǎ']],
+  // Words the reader gets wrong in context.
+  ['有空', ['yǒu', 'kòng']],
+  ['沒空', ['méi', 'kòng']],
+  ['旅行', ['lǚ', 'xíng']],
+  ['中文', ['zhōng', 'wén']],
+  ['長得', ['zhǎng', 'de']],
+  ['睡不著', ['shuì', 'bù', 'zháo']],
+  ['睡著', ['shuì', 'zháo']],
+  ['部分', ['bù', 'fèn']],
+  ['盡量', ['jìn', 'liàng']],
+  ['著急', ['zháo', 'jí']],
+  ['著迷', ['zháo', 'mí']],
+  ['著火', ['zháo', 'huǒ']],
+  ['著涼', ['zháo', 'liáng']],
+  ['沉著', ['chén', 'zhuó']],
+  ['執著', ['zhí', 'zhuó']],
+  ['覺得', ['jué', 'de']],
+  ['剝削', ['bō', 'xuè']],
+  ['削弱', ['xuè', 'ruò']],
 ]);
 const TAIWAN_CHARACTERS = new Map([
   ['期', 'qí'], ['危', 'wéi'], ['微', 'wéi'], ['企', 'qì'], ['質', 'zhí'], ['液', 'yì'],
   ['擁', 'yǒng'], ['暫', 'zhàn'], ['息', 'xí'], ['惜', 'xí'], ['昔', 'xí'], ['夕', 'xì'],
-  ['檔', 'dàng'], ['綜', 'zòng'], ['播', 'bò'], ['頻', 'pín'], ['髮', 'fǎ'],
+  ['檔', 'dǎng'], ['綜', 'zòng'], ['播', 'bò'], ['頻', 'pín'], ['髮', 'fǎ'],
+  // Read one way in Traditional text (隻 is the measure word, 只 only).
+  ['誰', 'shéi'], ['姊', 'jiě'], ['只', 'zhǐ'], ['喔', 'ō'],
+  ['突', 'tú'], ['究', 'jiù'], ['叔', 'shú'], ['署', 'shù'], ['傍', 'bāng'], ['血', 'xiě'],
+  ['擊', 'jí'], ['識', 'shì'], ['菌', 'jùn'], ['跌', 'dié'], ['築', 'zhú'], ['儲', 'chú'], ['蹟', 'jī'], ['跡', 'jī'], ['績', 'jī'], ['穴', 'xuè'], ['錫', 'xí'], ['艘', 'sāo'], ['臟', 'zàng'], ['剝', 'bō'],
 ]);
+const SPACE_WORDS = new Set([...'間氣位調白中']);
+// 著 after a verb (看著, 拿著, 等著) is zhe; these neighbours keep zhù, zhuó or zháo.
+const ZHE_NOT_AFTER = new Set([...'顯土名沉執衣睡不原論專巨合']);
+const ZHE_NOT_BEFORE = new Set([...'名作陸手重想迷急火涼稱']);
+// 得 after a verb, before how it was done (跑得很快, 說得好), is de.
+const DE_FOLLOWERS = new Set([...'很好太非常不真快慢多清滿更越']);
 
 const PUNCTUATION = new Map(Object.entries({
   '，': ',', '。': '.', '！': '!', '？': '?', '：': ':', '；': ';', '、': ',',
@@ -63,11 +92,11 @@ const PUNCTUATION = new Map(Object.entries({
 const OPENING = new Set(['“', '‘', '(']);
 
 /**
- * Tone-marked pinyin for `text`: syllables separated by spaces, Chinese
- * punctuation turned into its Latin form, other text kept as it is.
+ * One reading per character of `text`, null for characters that are not
+ * Chinese: whole words read in context, then Taiwan's standard readings.
  */
-export function makeReader({ pinyin, toSimplified }) {
-  return function read(text) {
+export function makeSyllableReader({ pinyin, toSimplified }) {
+  return function syllablesOf(text) {
     const characters = [...text];
     const simplified = [...toSimplified(text)];
     const source = simplified.length === characters.length ? simplified.join('') : text;
@@ -77,6 +106,8 @@ export function makeReader({ pinyin, toSimplified }) {
     for (const character of characters) readings.push(han.test(character) ? syllables[next++] ?? '' : null);
     for (let index = 0; index < characters.length; index += 1) {
       for (const [word, sounds] of TAIWAN_WORDS) {
+        // 有空 is free time, but 沒有空間 is no space.
+        if (word.endsWith('空') && SPACE_WORDS.has(characters[index + word.length])) continue;
         if (characters.slice(index, index + word.length).join('') === word) {
           sounds.forEach((sound, offset) => { readings[index + offset] = sound; });
         }
@@ -87,7 +118,30 @@ export function makeReader({ pinyin, toSimplified }) {
         && !TAIWAN_WORDS.has(characters.slice(index, index + 2).join(''))) {
         readings[index] = TAIWAN_CHARACTERS.get(character);
       }
+      if (character === '著' && index > 0 && han.test(characters[index - 1]) && !ZHE_NOT_AFTER.has(characters[index - 1])
+        && !ZHE_NOT_BEFORE.has(characters[index + 1]) && !TAIWAN_WORDS.has(characters.slice(index - 2, index + 1).join(''))
+        && !TAIWAN_WORDS.has(characters.slice(index - 1, index + 1).join(''))) {
+        readings[index] = 'zhe';
+      }
+      if (character === '得' && index > 0 && han.test(characters[index - 1]) && DE_FOLLOWERS.has(characters[index + 1])
+        && !TAIWAN_WORDS.has(characters.slice(index - 1, index + 1).join(''))) {
+        readings[index] = 'de';
+      }
     });
+
+    return readings;
+  };
+}
+
+/**
+ * Tone-marked pinyin for `text`: syllables separated by spaces, Chinese
+ * punctuation turned into its Latin form, other text kept as it is.
+ */
+export function makeReader({ pinyin, toSimplified }) {
+  const syllablesOf = makeSyllableReader({ pinyin, toSimplified });
+  return function read(text) {
+    const characters = [...text];
+    const readings = syllablesOf(text);
 
     let out = '';
     let latin = '';

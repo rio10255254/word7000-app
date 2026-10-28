@@ -372,7 +372,10 @@ public enum LearningEngine {
     /// from the whole pool, and only when both run out does it pull known
     /// words ahead of their schedule. The chosen cards are then shuffled so reviews and new
     /// words mix.
-    public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
+    /// With `freshInOrder` (a course ordered easiest first), new words come in
+    /// the order given instead of at random.
+    public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int,
+                                       seed: String = SeededRandom.runtimeSeed(), freshInOrder: Bool = false) -> [WordEntry] {
         let size = max(0, limit)
         guard size > 0, !words.isEmpty else { return [] }
 
@@ -398,7 +401,8 @@ public enum LearningEngine {
         }
         ahead.sort { $0.date != $1.date ? $0.date < $1.date : $0.order < $1.order }
 
-        let chosen = Array((due.map(\.word) + SeededRandom.shuffle(fresh, seed: "\(seed):fresh") + ahead.map(\.word)).prefix(size))
+        let newWords = freshInOrder ? fresh : SeededRandom.shuffle(fresh, seed: "\(seed):fresh")
+        let chosen = Array((due.map(\.word) + newWords + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
     }
 

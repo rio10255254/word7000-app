@@ -1,0 +1,4338 @@
+{
+ "entries": [
+  {
+   "hanzi": "人",
+   "english": "person; people",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 1,
+   "example": "夜市的人很多。",
+   "exampleEnglish": "There are lots of people at the night market.",
+   "question": "你覺得台灣人怎麼樣？",
+   "questionEnglish": "What do you think of Taiwanese people?",
+   "answer": "台灣人很好，很熱情。",
+   "answerEnglish": "Taiwanese people are nice and very warm.",
+   "sources": [
+    "w0262",
+    "w0363"
+   ],
+   "order": 250
+  },
+  {
+   "hanzi": "也許",
+   "english": "perhaps; maybe",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 2,
+   "example": "也許明天會下雨。",
+   "exampleEnglish": "Maybe it'll rain tomorrow.",
+   "question": "你明年會回國嗎？",
+   "questionEnglish": "Will you go back to your home country next year?",
+   "answer": "也許會，可是還不知道。",
+   "answerEnglish": "Maybe, but I don't know yet.",
+   "sources": [
+    "w0263",
+    "w0632"
+   ],
+   "order": 251
+  },
+  {
+   "hanzi": "閱讀",
+   "english": "read; reading",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我每天睡前會閱讀半小時。",
+   "exampleEnglish": "I read for half an hour before bed every day.",
+   "question": "你平常喜歡閱讀什麼？",
+   "questionEnglish": "What do you usually like to read?",
+   "answer": "我喜歡閱讀小說和旅遊書。",
+   "answerEnglish": "I like reading novels and travel books.",
+   "sources": [
+    "w0264",
+    "w1729"
+   ],
+   "order": 252
+  },
+  {
+   "hanzi": "比賽",
+   "english": "match; game; competition",
+   "partOfSpeech": "noun",
+   "measureWord": "場",
+   "level": 2,
+   "example": "今天晚上有籃球比賽。",
+   "exampleEnglish": "There's a basketball game tonight.",
+   "question": "你喜歡看什麼比賽？",
+   "questionEnglish": "What kinds of games do you like to watch?",
+   "answer": "我喜歡看棒球比賽。",
+   "answerEnglish": "I like watching baseball games.",
+   "sources": [
+    "w0265"
+   ],
+   "order": 253
+  },
+  {
+   "hanzi": "效果",
+   "english": "effect; result",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "這個藥的效果很好。",
+   "exampleEnglish": "This medicine works really well.",
+   "question": "你覺得喝咖啡提神的效果好嗎？",
+   "questionEnglish": "Do you think coffee works well to wake you up?",
+   "answer": "效果很好，我每天早上都喝。",
+   "answerEnglish": "It works well. I drink it every morning.",
+   "sources": [
+    "w0266"
+   ],
+   "order": 254
+  },
+  {
+   "hanzi": "加入",
+   "english": "join; add (in)",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "他下個月會加入我們公司。",
+   "exampleEnglish": "He's joining our company next month.",
+   "question": "你有加入健身房嗎？",
+   "questionEnglish": "Have you joined a gym?",
+   "answer": "有，我加入了公司附近的健身房。",
+   "answerEnglish": "Yes, I joined a gym near my office.",
+   "sources": [
+    "w0267"
+   ],
+   "order": 255
+  },
+  {
+   "hanzi": "原因",
+   "english": "reason; cause",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "我不知道他生氣的原因。",
+   "exampleEnglish": "I don't know why he's angry.",
+   "question": "你來台灣的原因是什麼？",
+   "questionEnglish": "What's your reason for coming to Taiwan?",
+   "answer": "原因是我在這裡找到工作了。",
+   "answerEnglish": "The reason is that I found a job here.",
+   "sources": [
+    "w0268"
+   ],
+   "order": 256
+  },
+  {
+   "hanzi": "能",
+   "english": "can; be able to",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "你明天能來嗎？",
+   "exampleEnglish": "Can you come tomorrow?",
+   "question": "你能吃辣嗎？",
+   "questionEnglish": "Can you eat spicy food?",
+   "answer": "能，我很喜歡吃辣。",
+   "answerEnglish": "Yes, I love spicy food.",
+   "sources": [
+    "w0269",
+    "w2546"
+   ],
+   "order": 257
+  },
+  {
+   "hanzi": "幾個",
+   "english": "a few; several; how many",
+   "partOfSpeech": "phrase",
+   "measureWord": "",
+   "level": 1,
+   "example": "我昨天買了幾個包子。",
+   "exampleEnglish": "I bought a few steamed buns yesterday.",
+   "question": "你在台灣有朋友嗎？",
+   "questionEnglish": "Do you have friends in Taiwan?",
+   "answer": "有，我有幾個好朋友。",
+   "answerEnglish": "Yes, I have a few good friends.",
+   "sources": [
+    "w0270"
+   ],
+   "order": 258
+  },
+  {
+   "hanzi": "低",
+   "english": "low",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "今天的氣溫很低。",
+   "exampleEnglish": "The temperature is very low today.",
+   "question": "你家附近的房租高還是低？",
+   "questionEnglish": "Is the rent near your home high or low?",
+   "answer": "我家附近的房租比較低。",
+   "answerEnglish": "The rent near my place is fairly low.",
+   "sources": [
+    "w0271"
+   ],
+   "order": 259
+  },
+  {
+   "hanzi": "可能",
+   "english": "possible; possibility",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "今天有可能會下雨。",
+   "exampleEnglish": "It might rain today.",
+   "question": "你今年有可能去日本玩嗎？",
+   "questionEnglish": "Is it possible you'll go to Japan this year?",
+   "answer": "很有可能，我想十月去。",
+   "answerEnglish": "Quite possibly. I'd like to go in October.",
+   "sources": [
+    "w0272",
+    "w5858"
+   ],
+   "order": 260
+  },
+  {
+   "hanzi": "提議",
+   "english": "propose; suggest; proposal",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "同事提議週末一起去爬山。",
+   "exampleEnglish": "A coworker suggested we all go hiking this weekend.",
+   "question": "朋友提議去吃火鍋，你會去嗎？",
+   "questionEnglish": "If a friend suggested going for hot pot, would you go?",
+   "answer": "會，我很贊成這個提議。",
+   "answerEnglish": "Yes, I'd be all for that idea.",
+   "sources": [
+    "w0273",
+    "w1043",
+    "w3977"
+   ],
+   "order": 261
+  },
+  {
+   "hanzi": "出現",
+   "english": "appear; show up",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "他到十點才出現。",
+   "exampleEnglish": "He didn't show up until ten.",
+   "question": "你家附近最近出現了什麼新店？",
+   "questionEnglish": "What new shops have opened near your home recently?",
+   "answer": "最近出現了一家很好吃的早餐店。",
+   "answerEnglish": "A really good breakfast shop opened recently.",
+   "sources": [
+    "w0274",
+    "w1262",
+    "w1705"
+   ],
+   "order": 262
+  },
+  {
+   "hanzi": "停",
+   "english": "stop; park (a vehicle)",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "公車在這裡停嗎？",
+   "exampleEnglish": "Does the bus stop here?",
+   "question": "你家附近好停車嗎？",
+   "questionEnglish": "Is it easy to park near your home?",
+   "answer": "不好停，我都騎機車。",
+   "answerEnglish": "It's hard to park. I always ride my scooter.",
+   "sources": [
+    "w0275"
+   ],
+   "order": 263
+  },
+  {
+   "hanzi": "說話",
+   "english": "speak; talk",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "他說話很小聲。",
+   "exampleEnglish": "He speaks very quietly.",
+   "question": "你說話快不快？",
+   "questionEnglish": "Do you talk fast?",
+   "answer": "我說話很快，朋友常聽不懂。",
+   "answerEnglish": "I talk fast. My friends often can't follow me.",
+   "sources": [
+    "w0276"
+   ],
+   "order": 264
+  },
+  {
+   "hanzi": "理解",
+   "english": "understand; comprehend",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我能理解你的想法。",
+   "exampleEnglish": "I can understand where you're coming from.",
+   "question": "你看台灣新聞能理解多少？",
+   "questionEnglish": "How much can you understand when you watch Taiwanese news?",
+   "answer": "我大概能理解一半。",
+   "answerEnglish": "I can understand about half.",
+   "sources": [
+    "w0277",
+    "w6468"
+   ],
+   "order": 265
+  },
+  {
+   "hanzi": "真實",
+   "english": "real; true; genuine",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 4,
+   "example": "這部電影是真實的故事。",
+   "exampleEnglish": "This movie is based on a true story.",
+   "question": "你覺得網路上的評論真實嗎？",
+   "questionEnglish": "Do you think online reviews are genuine?",
+   "answer": "有的很真實，有的是假的。",
+   "answerEnglish": "Some are genuine, some are fake.",
+   "sources": [
+    "w0278"
+   ],
+   "order": 266
+  },
+  {
+   "hanzi": "團隊",
+   "english": "team",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "我們的團隊有八個人。",
+   "exampleEnglish": "There are eight people on our team.",
+   "question": "你在公司的團隊大不大？",
+   "questionEnglish": "Is your team at work big?",
+   "answer": "不大，我們團隊只有五個人。",
+   "answerEnglish": "Not really. Our team has only five people.",
+   "sources": [
+    "w0279",
+    "w2568"
+   ],
+   "order": 267
+  },
+  {
+   "hanzi": "報告",
+   "english": "report; presentation",
+   "partOfSpeech": "noun",
+   "measureWord": "份",
+   "level": 3,
+   "example": "我明天要交一份報告。",
+   "exampleEnglish": "I have to hand in a report tomorrow.",
+   "question": "你工作常要寫報告嗎？",
+   "questionEnglish": "Do you often have to write reports at work?",
+   "answer": "常常，我每個星期都要寫報告。",
+   "answerEnglish": "Often. I have to write a report every week.",
+   "sources": [
+    "w0280"
+   ],
+   "order": 268
+  },
+  {
+   "hanzi": "考慮",
+   "english": "consider; think over",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我在考慮換工作。",
+   "exampleEnglish": "I'm thinking about changing jobs.",
+   "question": "你考慮過在台灣買房子嗎？",
+   "questionEnglish": "Have you ever considered buying a home in Taiwan?",
+   "answer": "考慮過，可是台北的房子太貴了。",
+   "answerEnglish": "I have, but homes in Taipei are too expensive.",
+   "sources": [
+    "w0281",
+    "w3969"
+   ],
+   "order": 269
+  },
+  {
+   "hanzi": "健康",
+   "english": "health; healthy",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 2,
+   "example": "多運動對健康很好。",
+   "exampleEnglish": "Exercising more is good for your health.",
+   "question": "你為了健康做什麼運動？",
+   "questionEnglish": "What exercise do you do for your health?",
+   "answer": "為了健康，我每天走路上班。",
+   "answerEnglish": "For my health, I walk to work every day.",
+   "sources": [
+    "w0282"
+   ],
+   "order": 270
+  },
+  {
+   "hanzi": "白色",
+   "english": "white",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 1,
+   "example": "我想買白色的鞋子。",
+   "exampleEnglish": "I want to buy white shoes.",
+   "question": "你喜歡白色的衣服嗎？",
+   "questionEnglish": "Do you like white clothes?",
+   "answer": "喜歡，我常穿白色的衣服。",
+   "answerEnglish": "Yes, I often wear white.",
+   "sources": [
+    "w0283"
+   ],
+   "order": 271
+  },
+  {
+   "hanzi": "預期",
+   "english": "expect; anticipate",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 5,
+   "example": "這次的結果比我預期的好。",
+   "exampleEnglish": "The result was better than I expected.",
+   "question": "台灣的生活和你預期的一樣嗎？",
+   "questionEnglish": "Is life in Taiwan what you expected?",
+   "answer": "不太一樣，比我預期的方便很多。",
+   "answerEnglish": "Not quite. It's much more convenient than I expected.",
+   "sources": [
+    "w0284",
+    "w3074"
+   ],
+   "order": 272
+  },
+  {
+   "hanzi": "女生",
+   "english": "girl; woman; female",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 1,
+   "example": "那個女生是我同事。",
+   "exampleEnglish": "That woman is my coworker.",
+   "question": "你的中文班有幾個女生？",
+   "questionEnglish": "How many women are in your Chinese class?",
+   "answer": "我們班有三個女生。",
+   "answerEnglish": "There are three women in our class.",
+   "sources": [
+    "w0286"
+   ],
+   "order": 273
+  },
+  {
+   "hanzi": "晚",
+   "english": "late",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 1,
+   "example": "太晚了，我們回家吧。",
+   "exampleEnglish": "It's late. Let's go home.",
+   "question": "你常常很晚睡覺嗎？",
+   "questionEnglish": "Do you often go to bed late?",
+   "answer": "對，我常常很晚睡。",
+   "answerEnglish": "Yes, I often go to bed late.",
+   "sources": [
+    "w0287"
+   ],
+   "order": 274
+  },
+  {
+   "hanzi": "確定",
+   "english": "be sure; certain; confirm",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我不確定他今天會不會來。",
+   "exampleEnglish": "I'm not sure if he's coming today.",
+   "question": "你確定明年還住在台灣嗎？",
+   "questionEnglish": "Are you sure you'll still live in Taiwan next year?",
+   "answer": "我很確定，我很喜歡這裡。",
+   "answerEnglish": "I'm quite sure. I really like it here.",
+   "sources": [
+    "w0288"
+   ],
+   "order": 275
+  },
+  {
+   "hanzi": "記得",
+   "english": "remember",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "記得帶雨傘！",
+   "exampleEnglish": "Remember to bring an umbrella!",
+   "question": "你還記得第一天來台灣的事嗎？",
+   "questionEnglish": "Do you still remember your first day in Taiwan?",
+   "answer": "記得，那天下了很大的雨。",
+   "answerEnglish": "I do. It rained really hard that day.",
+   "sources": [
+    "w0289"
+   ],
+   "order": 276
+  },
+  {
+   "hanzi": "片刻",
+   "english": "a moment; a short while",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 5,
+   "example": "請在這裡稍等片刻。",
+   "exampleEnglish": "Please wait here a moment.",
+   "question": "你工作累的時候會休息片刻嗎？",
+   "questionEnglish": "When you're tired at work, do you take a short break?",
+   "answer": "會，我會下樓買杯咖啡，休息片刻。",
+   "answerEnglish": "Yes, I go downstairs, get a coffee and rest for a bit.",
+   "sources": [
+    "w0290"
+   ],
+   "order": 277
+  },
+  {
+   "hanzi": "教育",
+   "english": "education; educate",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "台灣的教育跟我的國家很不一樣。",
+   "exampleEnglish": "Education in Taiwan is very different from my country.",
+   "question": "你覺得台灣的教育怎麼樣？",
+   "questionEnglish": "What do you think of education in Taiwan?",
+   "answer": "我覺得台灣的教育壓力很大。",
+   "answerEnglish": "I think education in Taiwan is very stressful.",
+   "sources": [
+    "w0291",
+    "w3090"
+   ],
+   "order": 278
+  },
+  {
+   "hanzi": "大概",
+   "english": "probably; about; roughly",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我大概七點到。",
+   "exampleEnglish": "I'll probably get there around seven.",
+   "question": "你每天大概睡幾個小時？",
+   "questionEnglish": "About how many hours do you sleep a night?",
+   "answer": "我大概睡七個小時。",
+   "answerEnglish": "I sleep about seven hours.",
+   "sources": [
+    "w0292",
+    "w2363"
+   ],
+   "order": 279
+  },
+  {
+   "hanzi": "過程",
+   "english": "process; course (of events)",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "學中文的過程很有意思。",
+   "exampleEnglish": "Learning Chinese is an interesting process.",
+   "question": "你找房子的過程順利嗎？",
+   "questionEnglish": "Did your apartment hunt go smoothly?",
+   "answer": "過程有點麻煩，可是最後找到了。",
+   "answerEnglish": "The process was a bit of a hassle, but I found one in the end.",
+   "sources": [
+    "w0293"
+   ],
+   "order": 280
+  },
+  {
+   "hanzi": "價格",
+   "english": "price",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "這家店的價格很便宜。",
+   "exampleEnglish": "This shop's prices are very cheap.",
+   "question": "你覺得台北的餐廳價格貴嗎？",
+   "questionEnglish": "Do you think restaurant prices in Taipei are high?",
+   "answer": "有的貴，夜市的價格比較便宜。",
+   "answerEnglish": "Some are. Night market prices are cheaper.",
+   "sources": [
+    "w0294",
+    "w0325"
+   ],
+   "order": 281
+  },
+  {
+   "hanzi": "建議",
+   "english": "suggest; advise; suggestion",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "醫生建議我多喝水。",
+   "exampleEnglish": "The doctor advised me to drink more water.",
+   "question": "你會建議朋友來台灣玩嗎？",
+   "questionEnglish": "Would you suggest your friends come to Taiwan on holiday?",
+   "answer": "當然會，我建議他們去花蓮。",
+   "answerEnglish": "Of course. I'd suggest they go to Hualien.",
+   "sources": [
+    "w0295",
+    "w1076",
+    "w1941",
+    "w1945"
+   ],
+   "order": 282
+  },
+  {
+   "hanzi": "拿",
+   "english": "take; hold; carry",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "可以幫我拿一下嗎？",
+   "exampleEnglish": "Could you hold this for me for a second?",
+   "question": "你出門都拿什麼東西？",
+   "questionEnglish": "What do you take with you when you go out?",
+   "answer": "我都拿手機、錢包和雨傘。",
+   "answerEnglish": "I always take my phone, wallet and umbrella.",
+   "sources": [
+    "w0296"
+   ],
+   "order": 283
+  },
+  {
+   "hanzi": "力道",
+   "english": "force; strength; pressure (of a massage)",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 5,
+   "example": "這位按摩師的力道剛剛好。",
+   "exampleEnglish": "This masseur's pressure is just right.",
+   "question": "你按摩的時候喜歡力道大一點嗎？",
+   "questionEnglish": "When you get a massage, do you like firmer pressure?",
+   "answer": "我喜歡力道大一點，比較舒服。",
+   "answerEnglish": "I like it a bit firmer. It feels better.",
+   "sources": [
+    "w0297"
+   ],
+   "order": 284
+  },
+  {
+   "hanzi": "學",
+   "english": "learn; study",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "我在學中文。",
+   "exampleEnglish": "I'm learning Chinese.",
+   "question": "你學中文多久了？",
+   "questionEnglish": "How long have you been learning Chinese?",
+   "answer": "我學了一年多。",
+   "answerEnglish": "I've been learning for over a year.",
+   "sources": [
+    "w0298"
+   ],
+   "order": 285
+  },
+  {
+   "hanzi": "路",
+   "english": "road; street; way",
+   "partOfSpeech": "noun",
+   "measureWord": "條",
+   "level": 1,
+   "example": "這條路車很多。",
+   "exampleEnglish": "There's a lot of traffic on this road.",
+   "question": "你上班走哪條路？",
+   "questionEnglish": "Which road do you take to work?",
+   "answer": "我走中山路。",
+   "answerEnglish": "I take Zhongshan Road.",
+   "sources": [
+    "w0299"
+   ],
+   "order": 286
+  },
+  {
+   "hanzi": "掉",
+   "english": "fall; drop; lose",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我的手機掉了！",
+   "exampleEnglish": "I dropped my phone!",
+   "question": "你在捷運上掉過東西嗎？",
+   "questionEnglish": "Have you ever lost anything on the MRT?",
+   "answer": "有，我掉過一把雨傘。",
+   "answerEnglish": "Yes, I once lost an umbrella.",
+   "sources": [
+    "w0300"
+   ],
+   "order": 287
+  },
+  {
+   "hanzi": "贏",
+   "english": "win; beat",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我們隊贏了！",
+   "exampleEnglish": "Our team won!",
+   "question": "你玩遊戲常常贏嗎？",
+   "questionEnglish": "Do you often win when you play games?",
+   "answer": "不常，我朋友常常贏我。",
+   "answerEnglish": "Not often. My friends usually beat me.",
+   "sources": [
+    "w0301"
+   ],
+   "order": 288
+  },
+  {
+   "hanzi": "度過",
+   "english": "spend (time); get through",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我們在墾丁度過了一個很棒的週末。",
+   "exampleEnglish": "We spent a great weekend in Kenting.",
+   "question": "你通常怎麼度過週末？",
+   "questionEnglish": "How do you usually spend your weekends?",
+   "answer": "我通常跟朋友一起度過週末。",
+   "answerEnglish": "I usually spend the weekend with friends.",
+   "sources": [
+    "w0302"
+   ],
+   "order": 289
+  },
+  {
+   "hanzi": "打開",
+   "english": "open; turn on",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "可以打開窗戶嗎？",
+   "exampleEnglish": "Can I open the window?",
+   "question": "你回家第一件事是打開什麼？",
+   "questionEnglish": "What's the first thing you turn on when you get home?",
+   "answer": "我回家會先打開冷氣。",
+   "answerEnglish": "I turn on the air conditioning first.",
+   "sources": [
+    "w0304"
+   ],
+   "order": 290
+  },
+  {
+   "hanzi": "創作",
+   "english": "create; creative work",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "這首歌是他自己創作的。",
+   "exampleEnglish": "He wrote this song himself.",
+   "question": "你有沒有自己創作過歌或畫？",
+   "questionEnglish": "Have you ever created a song or a painting yourself?",
+   "answer": "沒有，可是我很想試試看創作音樂。",
+   "answerEnglish": "No, but I'd really like to try making music.",
+   "sources": [
+    "w0305",
+    "w3499"
+   ],
+   "order": 291
+  },
+  {
+   "hanzi": "買",
+   "english": "buy",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "我去便利商店買水。",
+   "exampleEnglish": "I'm going to the convenience store to buy water.",
+   "question": "你常在網路上買東西嗎？",
+   "questionEnglish": "Do you often buy things online?",
+   "answer": "常常，我很喜歡在網路上買衣服。",
+   "answerEnglish": "Often. I love buying clothes online.",
+   "sources": [
+    "w0306"
+   ],
+   "order": 292
+  },
+  {
+   "hanzi": "年齡",
+   "english": "age",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "我們兩個的年齡差不多。",
+   "exampleEnglish": "We're about the same age.",
+   "question": "你覺得幾歲是結婚最好的年齡？",
+   "questionEnglish": "What do you think is the best age to get married?",
+   "answer": "我覺得三十歲左右是最好的年齡。",
+   "answerEnglish": "I think around thirty is the best age.",
+   "sources": [
+    "w0307"
+   ],
+   "order": 293
+  },
+  {
+   "hanzi": "足夠",
+   "english": "enough; sufficient",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 4,
+   "example": "你有足夠的時間嗎？",
+   "exampleEnglish": "Do you have enough time?",
+   "question": "你每天有足夠的睡眠嗎？",
+   "questionEnglish": "Do you get enough sleep every day?",
+   "answer": "平常不夠，週末才有足夠的睡眠。",
+   "answerEnglish": "Not usually. I only get enough sleep at the weekend.",
+   "sources": [
+    "w0308",
+    "w1973",
+    "w2250",
+    "w4763"
+   ],
+   "order": 294
+  },
+  {
+   "hanzi": "其實",
+   "english": "actually; in fact",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 2,
+   "example": "其實我不太會吃辣。",
+   "exampleEnglish": "Actually, I can't really handle spicy food.",
+   "question": "你覺得台灣的夏天熱嗎？",
+   "questionEnglish": "Do you find Taiwan's summers hot?",
+   "answer": "其實還好，我的國家更熱。",
+   "answerEnglish": "Actually it's OK. My country is even hotter.",
+   "sources": [
+    "w0309"
+   ],
+   "order": 295
+  },
+  {
+   "hanzi": "以前",
+   "english": "before; in the past; ago",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 2,
+   "example": "我以前住在台中。",
+   "exampleEnglish": "I used to live in Taichung.",
+   "question": "你以前做什麼工作？",
+   "questionEnglish": "What did you do for work before?",
+   "answer": "我以前是英文老師。",
+   "answerEnglish": "I used to be an English teacher.",
+   "sources": [
+    "w0310",
+    "w1784",
+    "w3213"
+   ],
+   "order": 296
+  },
+  {
+   "hanzi": "課",
+   "english": "class; lesson; course",
+   "partOfSpeech": "noun",
+   "measureWord": "堂",
+   "level": 1,
+   "example": "我今天有兩堂中文課。",
+   "exampleEnglish": "I have two Chinese lessons today.",
+   "question": "你一個星期上幾堂課？",
+   "questionEnglish": "How many classes do you have a week?",
+   "answer": "我一個星期上三堂課。",
+   "answerEnglish": "I have three classes a week.",
+   "sources": [
+    "w0311"
+   ],
+   "order": 297
+  },
+  {
+   "hanzi": "家長",
+   "english": "parent (of a child at school)",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 4,
+   "example": "很多家長在校門口等小孩。",
+   "exampleEnglish": "Lots of parents are waiting for their kids at the school gate.",
+   "question": "你覺得台灣的家長給小孩很大的壓力嗎？",
+   "questionEnglish": "Do you think parents in Taiwan put a lot of pressure on their kids?",
+   "answer": "我覺得有些家長給的壓力很大。",
+   "answerEnglish": "I think some parents put a lot of pressure on them.",
+   "sources": [
+    "w0312"
+   ],
+   "order": 298
+  },
+  {
+   "hanzi": "總統",
+   "english": "president (of a country)",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 3,
+   "example": "台灣每四年選一次總統。",
+   "exampleEnglish": "Taiwan elects a president every four years.",
+   "question": "你覺得當總統很累嗎？",
+   "questionEnglish": "Do you think being president is exhausting?",
+   "answer": "很累，我不想當總統。",
+   "answerEnglish": "Very. I wouldn't want to be president.",
+   "sources": [
+    "w0313"
+   ],
+   "order": 299
+  },
+  {
+   "hanzi": "控制",
+   "english": "control",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我很難控制自己不吃宵夜。",
+   "exampleEnglish": "It's hard for me to stop myself eating late-night snacks.",
+   "question": "你會控制自己用手機的時間嗎？",
+   "questionEnglish": "Do you limit how much time you spend on your phone?",
+   "answer": "我試著控制，可是很難。",
+   "answerEnglish": "I try to, but it's hard.",
+   "sources": [
+    "w0314"
+   ],
+   "order": 300
+  },
+  {
+   "hanzi": "剩下",
+   "english": "be left (over); remain",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "冰箱裡只剩下兩顆蛋。",
+   "exampleEnglish": "There are only two eggs left in the fridge.",
+   "question": "這個月你的薪水還剩下多少？",
+   "questionEnglish": "How much of your salary is left this month?",
+   "answer": "只剩下五千塊了。",
+   "answerEnglish": "There's only five thousand dollars left.",
+   "sources": [
+    "w0315"
+   ],
+   "order": 301
+  },
+  {
+   "hanzi": "傳",
+   "english": "send (a message, photo); pass on",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我等一下傳照片給你。",
+   "exampleEnglish": "I'll send you the photos in a bit.",
+   "question": "你常傳訊息給家人嗎？",
+   "questionEnglish": "Do you often send messages to your family?",
+   "answer": "常常，我每天都傳訊息給我媽。",
+   "answerEnglish": "Often. I message my mom every day.",
+   "sources": [
+    "w0316"
+   ],
+   "order": 302
+  },
+  {
+   "hanzi": "景色",
+   "english": "scenery; view",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "從象山看台北的景色很美。",
+   "exampleEnglish": "The view of Taipei from Elephant Mountain is beautiful.",
+   "question": "你覺得台灣哪裡的景色最美？",
+   "questionEnglish": "Where in Taiwan do you think has the most beautiful scenery?",
+   "answer": "我覺得太魯閣的景色最美。",
+   "answerEnglish": "I think Taroko has the most beautiful scenery.",
+   "sources": [
+    "w0317",
+    "w0811"
+   ],
+   "order": 303
+  },
+  {
+   "hanzi": "早上",
+   "english": "morning",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 1,
+   "example": "我早上喝咖啡。",
+   "exampleEnglish": "I drink coffee in the morning.",
+   "question": "你早上幾點起床？",
+   "questionEnglish": "What time do you get up in the morning?",
+   "answer": "我早上七點起床。",
+   "answerEnglish": "I get up at seven in the morning.",
+   "sources": [
+    "w0318"
+   ],
+   "order": 304
+  },
+  {
+   "hanzi": "藝術",
+   "english": "art; the arts",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "華山常常有藝術活動。",
+   "exampleEnglish": "There are often art events at Huashan.",
+   "question": "你對藝術有興趣嗎？",
+   "questionEnglish": "Are you interested in art?",
+   "answer": "有，我常去看藝術展。",
+   "answerEnglish": "Yes, I often go to art exhibitions.",
+   "sources": [
+    "w0319"
+   ],
+   "order": 305
+  },
+  {
+   "hanzi": "警察",
+   "english": "police; police officer",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 2,
+   "example": "有問題可以找警察。",
+   "exampleEnglish": "If there's a problem, you can go to the police.",
+   "question": "你在台灣找過警察幫忙嗎？",
+   "questionEnglish": "Have you ever asked the police for help in Taiwan?",
+   "answer": "有，我掉錢包的時候找過警察。",
+   "answerEnglish": "Yes, I went to the police when I lost my wallet.",
+   "sources": [
+    "w0320"
+   ],
+   "order": 306
+  },
+  {
+   "hanzi": "滿",
+   "english": "full; packed",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "早上的捷運都很滿。",
+   "exampleEnglish": "The MRT is always packed in the morning.",
+   "question": "你上班的時候捷運滿不滿？",
+   "questionEnglish": "Is the MRT crowded when you go to work?",
+   "answer": "很滿，常常沒有位子。",
+   "answerEnglish": "Very full. There's often nowhere to sit.",
+   "sources": [
+    "w0321"
+   ],
+   "order": 307
+  },
+  {
+   "hanzi": "散步",
+   "english": "take a walk; stroll",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我們吃完飯去散步吧。",
+   "exampleEnglish": "Let's go for a walk after we eat.",
+   "question": "你常去哪裡散步？",
+   "questionEnglish": "Where do you usually go for walks?",
+   "answer": "我常去河邊散步。",
+   "answerEnglish": "I often walk along the river.",
+   "sources": [
+    "w0322",
+    "w4999"
+   ],
+   "order": 308
+  },
+  {
+   "hanzi": "生產",
+   "english": "produce; manufacture; production",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "這家工廠生產腳踏車。",
+   "exampleEnglish": "This factory makes bicycles.",
+   "question": "你的國家生產什麼有名的東西？",
+   "questionEnglish": "What famous products does your country make?",
+   "answer": "我的國家生產很多咖啡。",
+   "answerEnglish": "My country produces a lot of coffee.",
+   "sources": [
+    "w0323",
+    "w0750"
+   ],
+   "order": 309
+  },
+  {
+   "hanzi": "歷史",
+   "english": "history",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 2,
+   "example": "這間廟有三百年的歷史。",
+   "exampleEnglish": "This temple is three hundred years old.",
+   "question": "你對台灣的歷史有興趣嗎？",
+   "questionEnglish": "Are you interested in Taiwan's history?",
+   "answer": "有興趣，我想多了解台灣歷史。",
+   "answerEnglish": "Yes, I'd like to learn more about Taiwan's history.",
+   "sources": [
+    "w0324"
+   ],
+   "order": 310
+  },
+  {
+   "hanzi": "食物",
+   "english": "food",
+   "partOfSpeech": "noun",
+   "measureWord": "種",
+   "level": 2,
+   "example": "台灣的食物很好吃。",
+   "exampleEnglish": "Taiwanese food is delicious.",
+   "question": "你最喜歡哪一種台灣食物？",
+   "questionEnglish": "What's your favorite Taiwanese food?",
+   "answer": "我最喜歡的食物是牛肉麵。",
+   "answerEnglish": "My favorite food is beef noodle soup.",
+   "sources": [
+    "w0326"
+   ],
+   "order": 311
+  },
+  {
+   "hanzi": "對面",
+   "english": "opposite; across (from)",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 2,
+   "example": "便利商店在銀行對面。",
+   "exampleEnglish": "The convenience store is across from the bank.",
+   "question": "你家對面有什麼？",
+   "questionEnglish": "What's across from your home?",
+   "answer": "我家對面有一家早餐店。",
+   "answerEnglish": "There's a breakfast shop across from my place.",
+   "sources": [
+    "w0327"
+   ],
+   "order": 312
+  },
+  {
+   "hanzi": "社會",
+   "english": "society",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "台灣是一個很自由的社會。",
+   "exampleEnglish": "Taiwan is a very free society.",
+   "question": "你覺得台灣社會跟你的國家像嗎？",
+   "questionEnglish": "Do you think Taiwanese society is like your country's?",
+   "answer": "不太像，台灣社會比較重視家庭。",
+   "answerEnglish": "Not really. Taiwanese society puts more weight on family.",
+   "sources": [
+    "w0328"
+   ],
+   "order": 313
+  },
+  {
+   "hanzi": "班",
+   "english": "class (group); shift",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 2,
+   "example": "我的中文班有八個學生。",
+   "exampleEnglish": "There are eight students in my Chinese class.",
+   "question": "你們班有幾個人？",
+   "questionEnglish": "How many people are in your class?",
+   "answer": "我們班有十二個人。",
+   "answerEnglish": "There are twelve people in our class.",
+   "sources": [
+    "w0329"
+   ],
+   "order": 314
+  },
+  {
+   "hanzi": "腳",
+   "english": "foot; leg",
+   "partOfSpeech": "noun",
+   "measureWord": "隻",
+   "level": 1,
+   "example": "我的腳好痛。",
+   "exampleEnglish": "My feet really hurt.",
+   "question": "你走路走久了腳會痛嗎？",
+   "questionEnglish": "Do your feet hurt when you walk for a long time?",
+   "answer": "會，走太久我的腳會痛。",
+   "answerEnglish": "Yes, my feet hurt if I walk too long.",
+   "sources": [
+    "w0330"
+   ],
+   "order": 315
+  },
+  {
+   "hanzi": "建造",
+   "english": "build; construct",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "這座橋是日本時代建造的。",
+   "exampleEnglish": "This bridge was built during the Japanese era.",
+   "question": "你的城市最近有建造新的大樓嗎？",
+   "questionEnglish": "Have any new buildings gone up in your city recently?",
+   "answer": "有，最近建造了很多新大樓。",
+   "answerEnglish": "Yes, lots of new buildings have gone up recently.",
+   "sources": [
+    "w0331",
+    "w2022"
+   ],
+   "order": 316
+  },
+  {
+   "hanzi": "意義",
+   "english": "meaning; significance",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "這個名字有特別的意義。",
+   "exampleEnglish": "This name has a special meaning.",
+   "question": "你的中文名字有什麼意義？",
+   "questionEnglish": "What does your Chinese name mean?",
+   "answer": "我的中文名字有很好的意義。",
+   "answerEnglish": "My Chinese name has a really nice meaning.",
+   "sources": [
+    "w0332",
+    "w1660",
+    "w3511"
+   ],
+   "order": 317
+  },
+  {
+   "hanzi": "生長",
+   "english": "grow",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "這種水果只在南部生長。",
+   "exampleEnglish": "This kind of fruit only grows in the south.",
+   "question": "你家的植物生長得好嗎？",
+   "questionEnglish": "Are the plants at your place growing well?",
+   "answer": "不太好，我家沒有陽光，植物生長得很慢。",
+   "answerEnglish": "Not really. My place gets no sun, so they grow slowly.",
+   "sources": [
+    "w0333"
+   ],
+   "order": 318
+  },
+  {
+   "hanzi": "男生",
+   "english": "boy; man; male",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 1,
+   "example": "那個男生很高。",
+   "exampleEnglish": "That guy is really tall.",
+   "question": "你的同事男生多還是女生多？",
+   "questionEnglish": "Are there more men or women among your coworkers?",
+   "answer": "我們公司男生比較多。",
+   "answerEnglish": "There are more men at our company.",
+   "sources": [
+    "w0334"
+   ],
+   "order": 319
+  },
+  {
+   "hanzi": "搆",
+   "english": "reach (with the hand)",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 5,
+   "example": "架子太高了，我搆不到。",
+   "exampleEnglish": "The shelf is too high. I can't reach it.",
+   "question": "你在家裡有搆不到的地方嗎？",
+   "questionEnglish": "Are there places at home you can't reach?",
+   "answer": "有，冰箱上面我搆不到。",
+   "answerEnglish": "Yes, I can't reach the top of the fridge.",
+   "sources": [
+    "w0335"
+   ],
+   "order": 320
+  },
+  {
+   "hanzi": "行動",
+   "english": "act; take action; action",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "別再說了，我們開始行動吧！",
+   "exampleEnglish": "Enough talk. Let's get moving!",
+   "question": "你想做一件事的時候，會馬上行動嗎？",
+   "questionEnglish": "When you want to do something, do you act on it right away?",
+   "answer": "會，我想到就馬上行動。",
+   "answerEnglish": "Yes, as soon as I think of it, I do it.",
+   "sources": [
+    "w0336",
+    "w0420"
+   ],
+   "order": 321
+  },
+  {
+   "hanzi": "決定",
+   "english": "decide; decision",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我決定明年去日本。",
+   "exampleEnglish": "I've decided to go to Japan next year.",
+   "question": "你為什麼決定來台灣？",
+   "questionEnglish": "Why did you decide to come to Taiwan?",
+   "answer": "我決定來台灣是因為工作。",
+   "answerEnglish": "I decided to come to Taiwan for work.",
+   "sources": [
+    "w0337",
+    "w0349",
+    "w0775"
+   ],
+   "order": 322
+  },
+  {
+   "hanzi": "死",
+   "english": "die; dead",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我的植物都死了。",
+   "exampleEnglish": "All my plants died.",
+   "question": "你種的植物容易死嗎？",
+   "questionEnglish": "Do your plants die easily?",
+   "answer": "很容易死，我常常忘記澆水。",
+   "answerEnglish": "They die easily. I often forget to water them.",
+   "sources": [
+    "w0338"
+   ],
+   "order": 323
+  },
+  {
+   "hanzi": "主要",
+   "english": "main; major; mainly",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 3,
+   "example": "我的主要工作是寫程式。",
+   "exampleEnglish": "My main job is writing code.",
+   "question": "你學中文的主要原因是什麼？",
+   "questionEnglish": "What's the main reason you're learning Chinese?",
+   "answer": "主要是因為我住在台灣。",
+   "answerEnglish": "Mainly because I live in Taiwan.",
+   "sources": [
+    "w0339",
+    "w0425",
+    "w5152",
+    "w5382"
+   ],
+   "order": 324
+  },
+  {
+   "hanzi": "職位",
+   "english": "position; post (job)",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 5,
+   "example": "她在公司的職位很高。",
+   "exampleEnglish": "She holds a senior position in the company.",
+   "question": "你在公司是什麼職位？",
+   "questionEnglish": "What's your position at your company?",
+   "answer": "我的職位是業務經理。",
+   "answerEnglish": "I'm a sales manager.",
+   "sources": [
+    "w0340"
+   ],
+   "order": 325
+  },
+  {
+   "hanzi": "數字",
+   "english": "number; figure; digit",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 2,
+   "example": "這個數字是八還是六？",
+   "exampleEnglish": "Is this number an eight or a six?",
+   "question": "你最喜歡哪個數字？",
+   "questionEnglish": "What's your favorite number?",
+   "answer": "我最喜歡的數字是七。",
+   "answerEnglish": "My favorite number is seven.",
+   "sources": [
+    "w0341",
+    "w6862"
+   ],
+   "order": 326
+  },
+  {
+   "hanzi": "自己",
+   "english": "oneself; themselves; on one's own",
+   "partOfSpeech": "pronoun",
+   "measureWord": "",
+   "level": 2,
+   "example": "他們自己做了晚餐。",
+   "exampleEnglish": "They made dinner themselves.",
+   "question": "你常自己做飯嗎？",
+   "questionEnglish": "Do you often cook for yourself?",
+   "answer": "週末我會自己做飯。",
+   "answerEnglish": "I cook for myself at the weekend.",
+   "sources": [
+    "w0342"
+   ],
+   "order": 327
+  },
+  {
+   "hanzi": "經驗",
+   "english": "experience",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "他有十年的工作經驗。",
+   "exampleEnglish": "He has ten years of work experience.",
+   "question": "你有在國外工作的經驗嗎？",
+   "questionEnglish": "Do you have experience working abroad?",
+   "answer": "有，我在日本有兩年的工作經驗。",
+   "answerEnglish": "Yes, I have two years' work experience in Japan.",
+   "sources": [
+    "w0343"
+   ],
+   "order": 328
+  },
+  {
+   "hanzi": "計畫",
+   "english": "plan; project",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "我們的旅行計畫改了。",
+   "exampleEnglish": "Our travel plans have changed.",
+   "question": "你這個週末有什麼計畫？",
+   "questionEnglish": "What are your plans this weekend?",
+   "answer": "我的計畫是去淡水走走。",
+   "answerEnglish": "My plan is to go for a wander in Tamsui.",
+   "sources": [
+    "w0344",
+    "w0633"
+   ],
+   "order": 329
+  },
+  {
+   "hanzi": "等",
+   "english": "wait; wait for",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "請等我一下。",
+   "exampleEnglish": "Please wait for me a moment.",
+   "question": "你等公車通常要等多久？",
+   "questionEnglish": "How long do you usually wait for the bus?",
+   "answer": "我通常等十分鐘。",
+   "answerEnglish": "I usually wait ten minutes.",
+   "sources": [
+    "w0345"
+   ],
+   "order": 330
+  },
+  {
+   "hanzi": "空氣",
+   "english": "air",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 2,
+   "example": "山上的空氣很好。",
+   "exampleEnglish": "The air in the mountains is great.",
+   "question": "你覺得台北的空氣好嗎？",
+   "questionEnglish": "Do you think the air in Taipei is good?",
+   "answer": "還不錯，可是冬天的空氣比較差。",
+   "answerEnglish": "It's not bad, but the air is worse in winter.",
+   "sources": [
+    "w0346"
+   ],
+   "order": 331
+  },
+  {
+   "hanzi": "少",
+   "english": "few; little; less",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 1,
+   "example": "我要少冰，謝謝。",
+   "exampleEnglish": "Less ice, please. Thanks.",
+   "question": "你買飲料喜歡少糖嗎？",
+   "questionEnglish": "When you buy drinks, do you like less sugar?",
+   "answer": "對，我都點半糖少冰。",
+   "answerEnglish": "Yes, I always order half sugar, less ice.",
+   "sources": [
+    "w0347"
+   ],
+   "order": 332
+  },
+  {
+   "hanzi": "經濟",
+   "english": "economy; economic",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "今年台灣的經濟不錯。",
+   "exampleEnglish": "Taiwan's economy is doing well this year.",
+   "question": "你覺得你們國家的經濟好嗎？",
+   "questionEnglish": "Do you think your country's economy is good?",
+   "answer": "最近經濟不太好，物價很高。",
+   "answerEnglish": "The economy isn't great lately. Prices are high.",
+   "sources": [
+    "w0348"
+   ],
+   "order": 333
+  },
+  {
+   "hanzi": "價值",
+   "english": "value; worth",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "這張舊照片對我很有價值。",
+   "exampleEnglish": "This old photo means a lot to me.",
+   "question": "你有什麼很有價值的東西？",
+   "questionEnglish": "What do you own that's really valuable?",
+   "answer": "我奶奶給我的手錶最有價值。",
+   "answerEnglish": "The watch my grandma gave me is the most valuable.",
+   "sources": [
+    "w0350"
+   ],
+   "order": 334
+  },
+  {
+   "hanzi": "收到",
+   "english": "receive; get",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我收到你的訊息了。",
+   "exampleEnglish": "I got your message.",
+   "question": "你今天收到幾封電子郵件？",
+   "questionEnglish": "How many emails did you get today?",
+   "answer": "我今天收到二十幾封。",
+   "answerEnglish": "I got over twenty today.",
+   "sources": [
+    "w0351"
+   ],
+   "order": 335
+  },
+  {
+   "hanzi": "費用",
+   "english": "cost; fee; expenses",
+   "partOfSpeech": "noun",
+   "measureWord": "筆",
+   "level": 4,
+   "example": "住宿費用已經包含早餐了。",
+   "exampleEnglish": "Breakfast is already included in the room rate.",
+   "question": "你每個月的生活費用大概多少？",
+   "questionEnglish": "Roughly how much are your living expenses each month?",
+   "answer": "我每個月的生活費用大概三萬塊。",
+   "answerEnglish": "My living expenses are about thirty thousand a month.",
+   "sources": [
+    "w0352",
+    "w1315"
+   ],
+   "order": 336
+  },
+  {
+   "hanzi": "術語",
+   "english": "term; technical term; terminology",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 5,
+   "example": "這份報告有很多專業術語。",
+   "exampleEnglish": "This report has a lot of technical terms.",
+   "question": "你工作的時候會用到很多術語嗎？",
+   "questionEnglish": "Do you use a lot of technical terms at work?",
+   "answer": "會，我的工作有很多電腦術語。",
+   "answerEnglish": "Yes, my job involves lots of computer terms.",
+   "sources": [
+    "w0353",
+    "w6701"
+   ],
+   "order": 337
+  },
+  {
+   "hanzi": "一切",
+   "english": "everything; all",
+   "partOfSpeech": "pronoun",
+   "measureWord": "",
+   "level": 4,
+   "example": "一切都準備好了。",
+   "exampleEnglish": "Everything is ready.",
+   "question": "你來台灣以後，一切都順利嗎？",
+   "questionEnglish": "Has everything gone smoothly since you came to Taiwan?",
+   "answer": "一切都很順利，謝謝關心。",
+   "answerEnglish": "Everything's gone well, thanks for asking.",
+   "sources": [
+    "w0354"
+   ],
+   "order": 338
+  },
+  {
+   "hanzi": "培養",
+   "english": "develop; cultivate; foster",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我想培養運動的習慣。",
+   "exampleEnglish": "I want to get into the habit of exercising.",
+   "question": "你最近想培養什麼新習慣？",
+   "questionEnglish": "What new habit would you like to develop?",
+   "answer": "我想培養早起的習慣。",
+   "answerEnglish": "I want to get into the habit of getting up early.",
+   "sources": [
+    "w0355",
+    "w4626",
+    "w4841"
+   ],
+   "order": 339
+  },
+  {
+   "hanzi": "事情",
+   "english": "matter; thing; affair",
+   "partOfSpeech": "noun",
+   "measureWord": "件",
+   "level": 2,
+   "example": "我今天有很多事情要做。",
+   "exampleEnglish": "I have a lot of things to do today.",
+   "question": "你週末通常做什麼事情？",
+   "questionEnglish": "What do you usually do at the weekend?",
+   "answer": "我週末通常做家裡的事情。",
+   "answerEnglish": "At the weekend I usually do housework.",
+   "sources": [
+    "w0356"
+   ],
+   "order": 340
+  },
+  {
+   "hanzi": "後面",
+   "english": "behind; back; at the back",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 1,
+   "example": "廁所在後面。",
+   "exampleEnglish": "The restroom is at the back.",
+   "question": "你家後面有什麼？",
+   "questionEnglish": "What's behind your home?",
+   "answer": "我家後面有一個公園。",
+   "answerEnglish": "There's a park behind my place.",
+   "sources": [
+    "w0357"
+   ],
+   "order": 341
+  },
+  {
+   "hanzi": "賣",
+   "english": "sell",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "那家店賣很好吃的包子。",
+   "exampleEnglish": "That shop sells really good steamed buns.",
+   "question": "你家附近的夜市賣什麼？",
+   "questionEnglish": "What do they sell at the night market near you?",
+   "answer": "那裡賣很多小吃。",
+   "answerEnglish": "They sell lots of snacks there.",
+   "sources": [
+    "w0358"
+   ],
+   "order": 342
+  },
+  {
+   "hanzi": "可用",
+   "english": "available; usable",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 5,
+   "example": "我的手機可用空間不多了。",
+   "exampleEnglish": "My phone is running out of free storage.",
+   "question": "你的手機還有很多可用空間嗎？",
+   "questionEnglish": "Does your phone still have lots of free storage?",
+   "answer": "不多了，可用空間只剩一點點。",
+   "answerEnglish": "Not much. There's only a little free space left.",
+   "sources": [
+    "w0359"
+   ],
+   "order": 343
+  },
+  {
+   "hanzi": "回來",
+   "english": "come back; return",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "我晚上十點回來。",
+   "exampleEnglish": "I'll be back at ten tonight.",
+   "question": "你今天晚上幾點回來？",
+   "questionEnglish": "What time will you be back tonight?",
+   "answer": "我大概九點回來。",
+   "answerEnglish": "I'll be back around nine.",
+   "sources": [
+    "w0360"
+   ],
+   "order": 344
+  },
+  {
+   "hanzi": "當局",
+   "english": "the authorities",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 6,
+   "example": "當局要求大家颱風天不要出門。",
+   "exampleEnglish": "The authorities asked everyone to stay indoors during the typhoon.",
+   "question": "你覺得當局處理颱風的方式好嗎？",
+   "questionEnglish": "Do you think the authorities handle typhoons well?",
+   "answer": "我覺得很好，當局都會提早通知大家放颱風假。",
+   "answerEnglish": "I think so. The authorities always announce typhoon days off early.",
+   "sources": [
+    "w0361"
+   ],
+   "order": 345
+  },
+  {
+   "hanzi": "其他",
+   "english": "other; else",
+   "partOfSpeech": "pronoun",
+   "measureWord": "",
+   "level": 2,
+   "example": "你還要其他的東西嗎？",
+   "exampleEnglish": "Do you want anything else?",
+   "question": "除了中文，你還會說其他語言嗎？",
+   "questionEnglish": "Besides Chinese, do you speak any other languages?",
+   "answer": "除了英文，我不會說其他語言。",
+   "answerEnglish": "Apart from English, I don't speak any other languages.",
+   "sources": [
+    "w0362"
+   ],
+   "order": 346
+  },
+  {
+   "hanzi": "紙",
+   "english": "paper",
+   "partOfSpeech": "noun",
+   "measureWord": "張",
+   "level": 2,
+   "example": "可以給我一張紙嗎？",
+   "exampleEnglish": "Could you give me a sheet of paper?",
+   "question": "你上班還常用紙嗎？",
+   "questionEnglish": "Do you still use much paper at work?",
+   "answer": "不常，我都用電腦，很少用紙。",
+   "answerEnglish": "Not often. I use my computer and hardly use paper.",
+   "sources": [
+    "w0364"
+   ],
+   "order": 347
+  },
+  {
+   "hanzi": "遞",
+   "english": "pass; hand (over)",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "可以幫我遞一下醬油嗎？",
+   "exampleEnglish": "Could you pass me the soy sauce?",
+   "question": "吃飯的時候，你常幫別人遞東西嗎？",
+   "questionEnglish": "At meals, do you often pass things to other people?",
+   "answer": "會，我常幫家人遞碗筷。",
+   "answerEnglish": "Yes, I often hand my family their bowls and chopsticks.",
+   "sources": [
+    "w0365"
+   ],
+   "order": 348
+  },
+  {
+   "hanzi": "同意",
+   "english": "agree; approve; consent",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我同意你的看法。",
+   "exampleEnglish": "I agree with you.",
+   "question": "你同意「台灣最美的風景是人」嗎？",
+   "questionEnglish": "Do you agree that \"Taiwan's most beautiful sight is its people\"?",
+   "answer": "我很同意，台灣人很熱情。",
+   "answerEnglish": "I totally agree. Taiwanese people are very warm.",
+   "sources": [
+    "w0366",
+    "w2077",
+    "w3620"
+   ],
+   "order": 349
+  },
+  {
+   "hanzi": "角色",
+   "english": "role; character (in a story)",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "他在電影裡的角色很有趣。",
+   "exampleEnglish": "His character in the movie is really fun.",
+   "question": "你最喜歡哪部電影的哪個角色？",
+   "questionEnglish": "Which character from which movie do you like best?",
+   "answer": "我最喜歡哈利波特這個角色。",
+   "answerEnglish": "My favorite character is Harry Potter.",
+   "sources": [
+    "w0367"
+   ],
+   "order": 350
+  },
+  {
+   "hanzi": "整個",
+   "english": "whole; entire",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 3,
+   "example": "我整個週末都在睡覺。",
+   "exampleEnglish": "I slept the whole weekend.",
+   "question": "你可以一個人吃完整個披薩嗎？",
+   "questionEnglish": "Can you eat a whole pizza by yourself?",
+   "answer": "可以，我一個人能吃完整個披薩。",
+   "answerEnglish": "Yes, I can finish a whole pizza on my own.",
+   "sources": [
+    "w0368"
+   ],
+   "order": 351
+  },
+  {
+   "hanzi": "待",
+   "english": "stay",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我在台灣待了三年。",
+   "exampleEnglish": "I've been in Taiwan for three years.",
+   "question": "你打算在台灣待多久？",
+   "questionEnglish": "How long are you planning to stay in Taiwan?",
+   "answer": "我想在台灣待五年以上。",
+   "answerEnglish": "I'd like to stay in Taiwan for over five years.",
+   "sources": [
+    "w0369"
+   ],
+   "order": 352
+  },
+  {
+   "hanzi": "傷口",
+   "english": "wound; cut",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "我手上的傷口快好了。",
+   "exampleEnglish": "The cut on my hand has almost healed.",
+   "question": "你受傷的時候會怎麼處理傷口？",
+   "questionEnglish": "When you get hurt, how do you take care of the wound?",
+   "answer": "我會先把傷口洗乾淨，再貼OK繃。",
+   "answerEnglish": "I clean the wound first, then put on a Band-Aid.",
+   "sources": [
+    "w0370",
+    "w1475"
+   ],
+   "order": 353
+  },
+  {
+   "hanzi": "街道",
+   "english": "street; streets",
+   "partOfSpeech": "noun",
+   "measureWord": "條",
+   "level": 3,
+   "example": "台北的街道很乾淨。",
+   "exampleEnglish": "The streets in Taipei are very clean.",
+   "question": "你家附近的街道熱鬧嗎？",
+   "questionEnglish": "Are the streets near your home busy?",
+   "answer": "很熱鬧，街道兩邊都是商店。",
+   "answerEnglish": "Very. Both sides of the street are lined with shops.",
+   "sources": [
+    "w0371"
+   ],
+   "order": 354
+  },
+  {
+   "hanzi": "建築物",
+   "english": "building; structure",
+   "partOfSpeech": "noun",
+   "measureWord": "棟",
+   "level": 4,
+   "example": "台北101是很有名的建築物。",
+   "exampleEnglish": "Taipei 101 is a very famous building.",
+   "question": "你最喜歡台灣的哪一棟建築物？",
+   "questionEnglish": "Which building in Taiwan do you like best?",
+   "answer": "我最喜歡總統府這棟建築物。",
+   "answerEnglish": "I like the Presidential Office Building best.",
+   "sources": [
+    "w0372"
+   ],
+   "order": 355
+  },
+  {
+   "hanzi": "產業",
+   "english": "industry",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 5,
+   "example": "半導體是台灣很重要的產業。",
+   "exampleEnglish": "Semiconductors are a very important industry in Taiwan.",
+   "question": "你在哪一個產業工作？",
+   "questionEnglish": "What industry do you work in?",
+   "answer": "我在科技產業工作。",
+   "answerEnglish": "I work in the tech industry.",
+   "sources": [
+    "w0373"
+   ],
+   "order": 356
+  },
+  {
+   "hanzi": "小鎮",
+   "english": "small town",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "九份是一個很漂亮的小鎮。",
+   "exampleEnglish": "Jiufen is a very pretty little town.",
+   "question": "你喜歡住在大城市還是小鎮？",
+   "questionEnglish": "Do you prefer living in a big city or a small town?",
+   "answer": "我比較喜歡住在安靜的小鎮。",
+   "answerEnglish": "I'd rather live in a quiet small town.",
+   "sources": [
+    "w0374"
+   ],
+   "order": 357
+  },
+  {
+   "hanzi": "照顧",
+   "english": "take care of; look after",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "她在家照顧小孩。",
+   "exampleEnglish": "She stays home looking after the kids.",
+   "question": "你生病的時候誰照顧你？",
+   "questionEnglish": "Who looks after you when you're sick?",
+   "answer": "我的室友會照顧我。",
+   "answerEnglish": "My roommate looks after me.",
+   "sources": [
+    "w0375"
+   ],
+   "order": 358
+  },
+  {
+   "hanzi": "籌錢",
+   "english": "raise money; raise funds",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 5,
+   "example": "他們在網路上籌錢幫助流浪狗。",
+   "exampleEnglish": "They're raising money online to help stray dogs.",
+   "question": "你參加過籌錢幫助別人的活動嗎？",
+   "questionEnglish": "Have you ever taken part in raising money to help others?",
+   "answer": "參加過，我們幫一家醫院籌錢。",
+   "answerEnglish": "Yes, we raised money for a hospital.",
+   "sources": [
+    "w0376"
+   ],
+   "order": 359
+  },
+  {
+   "hanzi": "一般",
+   "english": "general; ordinary; usually",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 3,
+   "example": "一般的便當大概一百塊。",
+   "exampleEnglish": "An ordinary lunch box costs about a hundred dollars.",
+   "question": "你一般幾點下班？",
+   "questionEnglish": "What time do you usually get off work?",
+   "answer": "我一般六點下班。",
+   "answerEnglish": "I usually get off at six.",
+   "sources": [
+    "w0377",
+    "w6349"
+   ],
+   "order": 360
+  },
+  {
+   "hanzi": "希望",
+   "english": "hope; wish",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "希望明天不要下雨。",
+   "exampleEnglish": "I hope it doesn't rain tomorrow.",
+   "question": "你希望明年可以去哪裡玩？",
+   "questionEnglish": "Where do you hope you can travel next year?",
+   "answer": "我希望明年可以去日本玩。",
+   "answerEnglish": "I hope I can go to Japan next year.",
+   "sources": [
+    "w0378"
+   ],
+   "order": 361
+  },
+  {
+   "hanzi": "國際",
+   "english": "international",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 3,
+   "example": "我在一家國際公司上班。",
+   "exampleEnglish": "I work for an international company.",
+   "question": "你在台灣有很多國際朋友嗎？",
+   "questionEnglish": "Do you have many international friends in Taiwan?",
+   "answer": "有，我的國際朋友比台灣朋友多。",
+   "answerEnglish": "Yes, I have more international friends than Taiwanese ones.",
+   "sources": [
+    "w0379"
+   ],
+   "order": 362
+  },
+  {
+   "hanzi": "清楚",
+   "english": "clear; clearly",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "你可以說清楚一點嗎？",
+   "exampleEnglish": "Could you say that a bit more clearly?",
+   "question": "你聽得清楚台灣人說的中文嗎？",
+   "questionEnglish": "Can you clearly understand the Chinese Taiwanese people speak?",
+   "answer": "說慢一點的話，我聽得很清楚。",
+   "answerEnglish": "If they speak slowly, I can hear it clearly.",
+   "sources": [
+    "w0380",
+    "w3922"
+   ],
+   "order": 363
+  },
+  {
+   "hanzi": "自己",
+   "english": "oneself; self; by oneself",
+   "partOfSpeech": "pronoun",
+   "measureWord": "",
+   "level": 2,
+   "example": "我自己一個人住。",
+   "exampleEnglish": "I live by myself.",
+   "question": "你喜歡自己去旅行嗎？",
+   "questionEnglish": "Do you like traveling on your own?",
+   "answer": "喜歡，我常常自己去旅行。",
+   "answerEnglish": "Yes, I often travel on my own.",
+   "sources": [
+    "w0381",
+    "w1991",
+    "w6421"
+   ],
+   "order": 364
+  },
+  {
+   "hanzi": "強勁",
+   "english": "strong; powerful (wind, growth)",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 5,
+   "example": "今天東北季風很強勁。",
+   "exampleEnglish": "The northeast monsoon is really strong today.",
+   "question": "你遇過強勁的颱風嗎？",
+   "questionEnglish": "Have you ever been through a strong typhoon?",
+   "answer": "遇過，那次的風很強勁，樹都倒了。",
+   "answerEnglish": "Yes. The wind was so strong that trees fell down.",
+   "sources": [
+    "w0383",
+    "w5835"
+   ],
+   "order": 365
+  },
+  {
+   "hanzi": "音樂",
+   "english": "music",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 1,
+   "example": "我喜歡聽音樂。",
+   "exampleEnglish": "I like listening to music.",
+   "question": "你喜歡聽什麼音樂？",
+   "questionEnglish": "What kind of music do you like?",
+   "answer": "我喜歡聽流行音樂。",
+   "answerEnglish": "I like listening to pop music.",
+   "sources": [
+    "w0384"
+   ],
+   "order": 366
+  },
+  {
+   "hanzi": "描述",
+   "english": "describe; description",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "你可以描述一下那個人嗎？",
+   "exampleEnglish": "Can you describe that person?",
+   "question": "你會怎麼描述你的家鄉？",
+   "questionEnglish": "How would you describe your hometown?",
+   "answer": "我會這樣描述：又小又安靜。",
+   "answerEnglish": "I'd describe it like this: small and quiet.",
+   "sources": [
+    "w0385",
+    "w1783"
+   ],
+   "order": 367
+  },
+  {
+   "hanzi": "特別",
+   "english": "special; especially",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "今天是很特別的日子。",
+   "exampleEnglish": "Today is a very special day.",
+   "question": "你週末有什麼特別的計畫嗎？",
+   "questionEnglish": "Do you have any special plans this weekend?",
+   "answer": "沒有特別的計畫，在家休息。",
+   "answerEnglish": "No special plans. I'm resting at home.",
+   "sources": [
+    "w0386"
+   ],
+   "order": 368
+  },
+  {
+   "hanzi": "最少",
+   "english": "least; at least",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 2,
+   "example": "最少要等二十分鐘。",
+   "exampleEnglish": "You'll have to wait at least twenty minutes.",
+   "question": "你一天最少喝幾杯水？",
+   "questionEnglish": "What's the least number of glasses of water you drink a day?",
+   "answer": "我一天最少喝五杯水。",
+   "answerEnglish": "I drink at least five glasses of water a day.",
+   "sources": [
+    "w0387"
+   ],
+   "order": 369
+  },
+  {
+   "hanzi": "免費",
+   "english": "free (of charge)",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "這家店的白飯是免費的。",
+   "exampleEnglish": "The rice at this restaurant is free.",
+   "question": "你知道台北有什麼免費的活動嗎？",
+   "questionEnglish": "Do you know any free events in Taipei?",
+   "answer": "知道，市政府常辦免費的音樂會。",
+   "answerEnglish": "Yes, the city government often holds free concerts.",
+   "sources": [
+    "w0388"
+   ],
+   "order": 370
+  },
+  {
+   "hanzi": "硬",
+   "english": "hard; stiff; tough",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 3,
+   "example": "這張床太硬了。",
+   "exampleEnglish": "This bed is too hard.",
+   "question": "你喜歡睡硬的床還是軟的床？",
+   "questionEnglish": "Do you like sleeping on a hard bed or a soft one?",
+   "answer": "我喜歡睡硬一點的床。",
+   "answerEnglish": "I like a slightly firmer bed.",
+   "sources": [
+    "w0389",
+    "w1121",
+    "w3206"
+   ],
+   "order": 371
+  },
+  {
+   "hanzi": "地面",
+   "english": "ground; floor (surface)",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "地震的時候地面一直在動。",
+   "exampleEnglish": "During the earthquake, the ground kept shaking.",
+   "question": "你下雨天走路會注意什麼？",
+   "questionEnglish": "What do you watch out for when walking on rainy days?",
+   "answer": "我會注意地面滑不滑。",
+   "answerEnglish": "I watch out for whether the ground is slippery.",
+   "sources": [
+    "w0390"
+   ],
+   "order": 372
+  },
+  {
+   "hanzi": "手臂",
+   "english": "arm",
+   "partOfSpeech": "noun",
+   "measureWord": "隻",
+   "level": 3,
+   "example": "我的手臂被蚊子咬了。",
+   "exampleEnglish": "I got bitten on the arm by a mosquito.",
+   "question": "你運動完手臂會痠嗎？",
+   "questionEnglish": "Do your arms ache after you exercise?",
+   "answer": "會，我打完網球手臂很痠。",
+   "answerEnglish": "Yes, my arms ache after tennis.",
+   "sources": [
+    "w0391"
+   ],
+   "order": 373
+  },
+  {
+   "hanzi": "太太",
+   "english": "wife; Mrs.",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 1,
+   "example": "王太太住在我樓上。",
+   "exampleEnglish": "Mrs. Wang lives upstairs from me.",
+   "question": "你結婚了嗎？",
+   "questionEnglish": "Are you married?",
+   "answer": "結婚了，我太太是日本人。",
+   "answerEnglish": "Yes, my wife is Japanese.",
+   "sources": [
+    "w0392"
+   ],
+   "order": 374
+  },
+  {
+   "hanzi": "前任",
+   "english": "former; previous (in a post); ex",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 5,
+   "example": "他是我們公司的前任經理。",
+   "exampleEnglish": "He's our company's former manager.",
+   "question": "你覺得前任的老闆比現在的好嗎？",
+   "questionEnglish": "Do you think your previous boss was better than your current one?",
+   "answer": "我覺得前任老闆比較好，他很少讓我們加班。",
+   "answerEnglish": "I think my previous boss was better. He rarely made us work overtime.",
+   "sources": [
+    "w0393",
+    "w0914"
+   ],
+   "order": 375
+  },
+  {
+   "hanzi": "殺死",
+   "english": "kill",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "這種藥可以殺死蟑螂。",
+   "exampleEnglish": "This stuff kills cockroaches.",
+   "question": "你在家看到蟑螂會殺死牠嗎？",
+   "questionEnglish": "If you see a cockroach at home, do you kill it?",
+   "answer": "會，我一定會殺死牠。",
+   "answerEnglish": "Yes, I definitely kill it.",
+   "sources": [
+    "w0394"
+   ],
+   "order": 376
+  },
+  {
+   "hanzi": "世紀",
+   "english": "century",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "這間老房子有一個世紀了。",
+   "exampleEnglish": "This old house is a century old.",
+   "question": "你覺得二十一世紀最重要的發明是什麼？",
+   "questionEnglish": "What do you think is the most important invention of the 21st century?",
+   "answer": "我覺得是手機，它改變了這個世紀。",
+   "answerEnglish": "I think it's the smartphone. It changed this century.",
+   "sources": [
+    "w0396"
+   ],
+   "order": 378
+  },
+  {
+   "hanzi": "活動",
+   "english": "activity; event",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "這個週末公園有很多活動。",
+   "exampleEnglish": "There are lots of events in the park this weekend.",
+   "question": "你週末喜歡參加什麼活動？",
+   "questionEnglish": "What activities do you like doing at the weekend?",
+   "answer": "我喜歡參加戶外活動，像是爬山。",
+   "answerEnglish": "I like outdoor activities, like hiking.",
+   "sources": [
+    "w0397",
+    "w0620",
+    "w1224"
+   ],
+   "order": 379
+  },
+  {
+   "hanzi": "狀況",
+   "english": "condition; situation; state",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "我爸爸的身體狀況還不錯。",
+   "exampleEnglish": "My dad's health is pretty good.",
+   "question": "你最近的身體狀況怎麼樣？",
+   "questionEnglish": "How has your health been lately?",
+   "answer": "我最近的狀況很好，每天都有運動。",
+   "answerEnglish": "I'm in good shape lately. I exercise every day.",
+   "sources": [
+    "w0398"
+   ],
+   "order": 380
+  },
+  {
+   "hanzi": "支持",
+   "english": "support; back",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我的家人都很支持我。",
+   "exampleEnglish": "My family really supports me.",
+   "question": "你來台灣的時候，家人支持你嗎？",
+   "questionEnglish": "When you came to Taiwan, did your family support you?",
+   "answer": "很支持，他們覺得這是好機會。",
+   "answerEnglish": "Very much. They thought it was a great opportunity.",
+   "sources": [
+    "w0399",
+    "w2970"
+   ],
+   "order": 381
+  },
+  {
+   "hanzi": "休息",
+   "english": "rest; take a break",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我們休息十分鐘吧。",
+   "exampleEnglish": "Let's take a ten-minute break.",
+   "question": "你中午會休息多久？",
+   "questionEnglish": "How long is your lunch break?",
+   "answer": "我中午休息一個小時。",
+   "answerEnglish": "I take an hour off at lunchtime.",
+   "sources": [
+    "w0400",
+    "w0701"
+   ],
+   "order": 382
+  },
+  {
+   "hanzi": "畫",
+   "english": "draw; paint; painting",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我女兒很喜歡畫畫。",
+   "exampleEnglish": "My daughter loves drawing.",
+   "question": "你會畫畫嗎？",
+   "questionEnglish": "Can you draw?",
+   "answer": "會一點，我喜歡畫貓。",
+   "answerEnglish": "A little. I like drawing cats.",
+   "sources": [
+    "w0401",
+    "w3021"
+   ],
+   "order": 383
+  },
+  {
+   "hanzi": "一半",
+   "english": "half",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 2,
+   "example": "這個蛋糕我們一人一半。",
+   "exampleEnglish": "Let's split this cake half and half.",
+   "question": "你的薪水一半都花在房租上嗎？",
+   "questionEnglish": "Does half your salary go on rent?",
+   "answer": "差不多，房租是我薪水的一半。",
+   "answerEnglish": "About that. Rent is half my salary.",
+   "sources": [
+    "w0402"
+   ],
+   "order": 384
+  },
+  {
+   "hanzi": "產品",
+   "english": "product",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "這家公司的產品很好用。",
+   "exampleEnglish": "This company's products are really good.",
+   "question": "你最喜歡哪個牌子的產品？",
+   "questionEnglish": "Which brand's products do you like best?",
+   "answer": "我最喜歡蘋果的產品。",
+   "answerEnglish": "I like Apple's products best.",
+   "sources": [
+    "w0403"
+   ],
+   "order": 385
+  },
+  {
+   "hanzi": "議會",
+   "english": "council; parliament; legislature",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 6,
+   "example": "市議會今天討論捷運的新路線。",
+   "exampleEnglish": "The city council discussed the new MRT line today.",
+   "question": "你看過議會開會的新聞嗎？",
+   "questionEnglish": "Have you seen news coverage of council meetings?",
+   "answer": "看過，議會裡常常吵得很兇。",
+   "answerEnglish": "Yes. There are often fierce arguments in the council.",
+   "sources": [
+    "w0404"
+   ],
+   "order": 386
+  },
+  {
+   "hanzi": "記錄",
+   "english": "record; write down; keep track of",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我每天都記錄花了多少錢。",
+   "exampleEnglish": "I write down how much I spend every day.",
+   "question": "你會記錄每天花的錢嗎？",
+   "questionEnglish": "Do you keep track of what you spend every day?",
+   "answer": "會，我用手機APP記錄。",
+   "answerEnglish": "Yes, I track it with an app on my phone.",
+   "sources": [
+    "w0405",
+    "w6795"
+   ],
+   "order": 387
+  },
+  {
+   "hanzi": "誰",
+   "english": "who; whom; whose",
+   "partOfSpeech": "pronoun",
+   "measureWord": "",
+   "level": 1,
+   "example": "這是誰的雨傘？",
+   "exampleEnglish": "Whose umbrella is this?",
+   "question": "桌上的手機是你的嗎？",
+   "questionEnglish": "Is the phone on the table yours?",
+   "answer": "不是，我不知道是誰的。",
+   "answerEnglish": "No, I don't know whose it is.",
+   "sources": [
+    "w0406"
+   ],
+   "order": 388
+  },
+  {
+   "hanzi": "領導者",
+   "english": "leader",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 5,
+   "example": "他是一個很好的領導者。",
+   "exampleEnglish": "He's a very good leader.",
+   "question": "你覺得好的領導者需要什麼特質？",
+   "questionEnglish": "What qualities do you think a good leader needs?",
+   "answer": "我覺得好的領導者要會聽別人的意見。",
+   "answerEnglish": "I think a good leader needs to listen to other people's opinions.",
+   "sources": [
+    "w0407"
+   ],
+   "order": 389
+  },
+  {
+   "hanzi": "可能",
+   "english": "maybe; likely; possibly",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 2,
+   "example": "他可能會晚一點到。",
+   "exampleEnglish": "He might arrive a bit late.",
+   "question": "你明年可能會搬家嗎？",
+   "questionEnglish": "Are you likely to move next year?",
+   "answer": "可能會，我想搬到離公司近一點的地方。",
+   "answerEnglish": "Maybe. I'd like to move somewhere closer to work.",
+   "sources": [
+    "w0408",
+    "w1228"
+   ],
+   "order": 390
+  },
+  {
+   "hanzi": "難",
+   "english": "difficult; hard",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 1,
+   "example": "寫漢字很難。",
+   "exampleEnglish": "Writing Chinese characters is hard.",
+   "question": "你覺得中文難嗎？",
+   "questionEnglish": "Do you think Chinese is difficult?",
+   "answer": "說話不難，寫字很難。",
+   "answerEnglish": "Speaking isn't hard, but writing is.",
+   "sources": [
+    "w0409"
+   ],
+   "order": 391
+  },
+  {
+   "hanzi": "降落",
+   "english": "land; descend",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "飛機快要降落了。",
+   "exampleEnglish": "The plane is about to land.",
+   "question": "你坐飛機的時候，降落時會緊張嗎？",
+   "questionEnglish": "When you fly, do you get nervous during landing?",
+   "answer": "不會，可是降落的時候耳朵會痛。",
+   "answerEnglish": "No, but my ears hurt when we land.",
+   "sources": [
+    "w0410",
+    "w3806"
+   ],
+   "order": 392
+  },
+  {
+   "hanzi": "稅",
+   "english": "tax",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "這個價錢有含稅嗎？",
+   "exampleEnglish": "Does this price include tax?",
+   "question": "你每年什麼時候報稅？",
+   "questionEnglish": "When do you file your taxes each year?",
+   "answer": "我每年五月報稅。",
+   "answerEnglish": "I file my taxes every May.",
+   "sources": [
+    "w0411"
+   ],
+   "order": 393
+  },
+  {
+   "hanzi": "底座",
+   "english": "base; stand; pedestal",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 5,
+   "example": "這個檯燈的底座很重。",
+   "exampleEnglish": "The base of this desk lamp is heavy.",
+   "question": "你買檯燈的時候會注意底座嗎？",
+   "questionEnglish": "When you buy a desk lamp, do you pay attention to the base?",
+   "answer": "會，底座重一點比較不會倒。",
+   "answerEnglish": "Yes. A heavier base means it won't tip over.",
+   "sources": [
+    "w0412"
+   ],
+   "order": 394
+  },
+  {
+   "hanzi": "兒子",
+   "english": "son",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 1,
+   "example": "我的兒子三歲。",
+   "exampleEnglish": "My son is three.",
+   "question": "你有兒子還是女兒？",
+   "questionEnglish": "Do you have a son or a daughter?",
+   "answer": "我有一個兒子。",
+   "answerEnglish": "I have a son.",
+   "sources": [
+    "w0413"
+   ],
+   "order": 395
+  },
+  {
+   "hanzi": "情況",
+   "english": "situation; circumstances",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "現在的情況有點複雜。",
+   "exampleEnglish": "The situation is a bit complicated right now.",
+   "question": "遇到緊急情況，你會打幾號？",
+   "questionEnglish": "In an emergency, what number would you call?",
+   "answer": "遇到緊急情況，我會打119。",
+   "answerEnglish": "In an emergency, I'd call 119.",
+   "sources": [
+    "w0414",
+    "w1636"
+   ],
+   "order": 396
+  },
+  {
+   "hanzi": "容易",
+   "english": "easy",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "這道菜很容易做。",
+   "exampleEnglish": "This dish is easy to make.",
+   "question": "你覺得在台灣找工作容易嗎？",
+   "questionEnglish": "Do you think it's easy to find a job in Taiwan?",
+   "answer": "不太容易，因為我中文還不好。",
+   "answerEnglish": "Not very, because my Chinese isn't good yet.",
+   "sources": [
+    "w0415"
+   ],
+   "order": 397
+  },
+  {
+   "hanzi": "參加",
+   "english": "take part in; join; attend",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我週末要參加朋友的婚禮。",
+   "exampleEnglish": "I'm going to a friend's wedding this weekend.",
+   "question": "你參加過台灣的婚禮嗎？",
+   "questionEnglish": "Have you ever been to a Taiwanese wedding?",
+   "answer": "參加過，菜很多，很熱鬧。",
+   "answerEnglish": "Yes. There was lots of food and it was really lively.",
+   "sources": [
+    "w0416",
+    "w2567"
+   ],
+   "order": 398
+  },
+  {
+   "hanzi": "更好",
+   "english": "better; even better",
+   "partOfSpeech": "phrase",
+   "measureWord": "",
+   "level": 2,
+   "example": "明天的天氣會更好。",
+   "exampleEnglish": "The weather will be even better tomorrow.",
+   "question": "你覺得怎麼樣可以讓中文更好？",
+   "questionEnglish": "What do you think makes your Chinese better?",
+   "answer": "多跟台灣人聊天，中文會更好。",
+   "answerEnglish": "Chatting more with Taiwanese people makes your Chinese better.",
+   "sources": [
+    "w0417",
+    "w5238"
+   ],
+   "order": 399
+  },
+  {
+   "hanzi": "信",
+   "english": "letter; mail",
+   "partOfSpeech": "noun",
+   "measureWord": "封",
+   "level": 2,
+   "example": "我收到一封朋友寫的信。",
+   "exampleEnglish": "I got a letter from a friend.",
+   "question": "你上次寫信是什麼時候？",
+   "questionEnglish": "When did you last write a letter?",
+   "answer": "我上次寫信是去年聖誕節。",
+   "answerEnglish": "The last time I wrote a letter was last Christmas.",
+   "sources": [
+    "w0418"
+   ],
+   "order": 400
+  },
+  {
+   "hanzi": "造成",
+   "english": "cause; bring about",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "颱風造成很多地方停電。",
+   "exampleEnglish": "The typhoon caused power cuts in many places.",
+   "question": "你覺得什麼造成台北塞車？",
+   "questionEnglish": "What do you think causes traffic jams in Taipei?",
+   "answer": "我覺得是車子太多造成的。",
+   "answerEnglish": "I think it's caused by too many cars.",
+   "sources": [
+    "w0419",
+    "w4624"
+   ],
+   "order": 401
+  },
+  {
+   "hanzi": "蓋子",
+   "english": "lid; cover; cap",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "記得把蓋子蓋好。",
+   "exampleEnglish": "Remember to put the lid back on properly.",
+   "question": "你常忘記蓋上蓋子嗎？",
+   "questionEnglish": "Do you often forget to put the lid back on?",
+   "answer": "常常，我常忘了把牙膏蓋子蓋好。",
+   "answerEnglish": "Often. I keep forgetting to put the cap back on the toothpaste.",
+   "sources": [
+    "w0421",
+    "w3269"
+   ],
+   "order": 402
+  },
+  {
+   "hanzi": "開車",
+   "english": "drive (a car)",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我每天開車上班。",
+   "exampleEnglish": "I drive to work every day.",
+   "question": "你在台灣開車嗎？",
+   "questionEnglish": "Do you drive in Taiwan?",
+   "answer": "不開車，我都坐捷運。",
+   "answerEnglish": "No, I always take the MRT.",
+   "sources": [
+    "w0422"
+   ],
+   "order": 403
+  },
+  {
+   "hanzi": "導演",
+   "english": "director (of a film or play)",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 4,
+   "example": "這部電影的導演是台灣人。",
+   "exampleEnglish": "The director of this film is Taiwanese.",
+   "question": "你最喜歡哪位導演？",
+   "questionEnglish": "Who's your favorite director?",
+   "answer": "我最喜歡李安這位導演。",
+   "answerEnglish": "My favorite director is Ang Lee.",
+   "sources": [
+    "w0423"
+   ],
+   "order": 404
+  },
+  {
+   "hanzi": "努力",
+   "english": "work hard; try hard; effort",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "我很努力學中文。",
+   "exampleEnglish": "I'm working hard at my Chinese.",
+   "question": "你現在最努力做的事是什麼？",
+   "questionEnglish": "What are you working hardest at right now?",
+   "answer": "我現在最努力的是學中文。",
+   "answerEnglish": "Right now I'm working hardest at learning Chinese.",
+   "sources": [
+    "w0424",
+    "w1336",
+    "w4353",
+    "w5431"
+   ],
+   "order": 405
+  },
+  {
+   "hanzi": "沿著",
+   "english": "along",
+   "partOfSpeech": "preposition",
+   "measureWord": "",
+   "level": 4,
+   "example": "我們沿著河邊騎腳踏車。",
+   "exampleEnglish": "We rode our bikes along the river.",
+   "question": "你喜歡沿著河邊散步嗎？",
+   "questionEnglish": "Do you like walking along the river?",
+   "answer": "喜歡，我週末常沿著淡水河散步。",
+   "answerEnglish": "Yes, I often walk along the Tamsui River at the weekend.",
+   "sources": [
+    "w0426"
+   ],
+   "order": 406
+  },
+  {
+   "hanzi": "工人",
+   "english": "worker; laborer",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "工地的工人很早就開始工作。",
+   "exampleEnglish": "The workers on the building site start very early.",
+   "question": "你家最近有請工人來修東西嗎？",
+   "questionEnglish": "Have you had workers come to fix anything at home recently?",
+   "answer": "有，上個月請工人來修冷氣。",
+   "answerEnglish": "Yes, last month a worker came to fix the AC.",
+   "sources": [
+    "w0427"
+   ],
+   "order": 407
+  },
+  {
+   "hanzi": "部長",
+   "english": "minister (of government)",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 5,
+   "example": "部長今天在新聞上說明新政策。",
+   "exampleEnglish": "The minister explained the new policy on the news today.",
+   "question": "如果你當部長，你想做什麼？",
+   "questionEnglish": "If you were a minister, what would you want to do?",
+   "answer": "如果我當部長，我想多蓋公園。",
+   "answerEnglish": "If I were a minister, I'd build more parks.",
+   "sources": [
+    "w0428"
+   ],
+   "order": 408
+  },
+  {
+   "hanzi": "工作人員",
+   "english": "staff; staff member; crew",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 4,
+   "example": "有問題可以問工作人員。",
+   "exampleEnglish": "If you have any questions, ask a staff member.",
+   "question": "你在活動當過工作人員嗎？",
+   "questionEnglish": "Have you ever worked as staff at an event?",
+   "answer": "當過，我在音樂節當過工作人員。",
+   "answerEnglish": "Yes, I've worked as staff at a music festival.",
+   "sources": [
+    "w0429"
+   ],
+   "order": 409
+  },
+  {
+   "hanzi": "牆",
+   "english": "wall",
+   "partOfSpeech": "noun",
+   "measureWord": "面",
+   "level": 3,
+   "example": "牆上有一張很大的地圖。",
+   "exampleEnglish": "There's a big map on the wall.",
+   "question": "你房間的牆是什麼顏色？",
+   "questionEnglish": "What color are the walls in your room?",
+   "answer": "我房間的牆是白色的。",
+   "answerEnglish": "The walls in my room are white.",
+   "sources": [
+    "w0430"
+   ],
+   "order": 410
+  },
+  {
+   "hanzi": "全國",
+   "english": "the whole country; nationwide",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "這家店在全國有三百家分店。",
+   "exampleEnglish": "This chain has three hundred branches nationwide.",
+   "question": "你覺得全國最好吃的小吃在哪裡？",
+   "questionEnglish": "Where do you think has the best snacks in the whole country?",
+   "answer": "我覺得全國最好吃的小吃在台南。",
+   "answerEnglish": "I think Tainan has the best snacks in the country.",
+   "sources": [
+    "w0431"
+   ],
+   "order": 411
+  },
+  {
+   "hanzi": "分類",
+   "english": "sort; classify; category",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "台灣的垃圾一定要分類。",
+   "exampleEnglish": "In Taiwan you have to sort your rubbish.",
+   "question": "你在家會做垃圾分類嗎？",
+   "questionEnglish": "Do you sort your rubbish at home?",
+   "answer": "會，我每天都會把垃圾分類好。",
+   "answerEnglish": "Yes, I sort my rubbish every day.",
+   "sources": [
+    "w0432",
+    "w3953",
+    "w6012"
+   ],
+   "order": 412
+  },
+  {
+   "hanzi": "規則",
+   "english": "rule; regulation",
+   "partOfSpeech": "noun",
+   "measureWord": "條",
+   "level": 3,
+   "example": "搭捷運的規則是不能吃東西。",
+   "exampleEnglish": "One of the MRT rules is no eating.",
+   "question": "你覺得台灣哪個規則最特別？",
+   "questionEnglish": "Which rule in Taiwan do you find most unusual?",
+   "answer": "捷運上不能喝水的規則很特別。",
+   "answerEnglish": "The rule against drinking water on the MRT is pretty unusual.",
+   "sources": [
+    "w0433"
+   ],
+   "order": 413
+  },
+  {
+   "hanzi": "謝謝",
+   "english": "thank; thanks; thank you",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "謝謝你請我吃飯！",
+   "exampleEnglish": "Thanks for treating me to dinner!",
+   "question": "你今天跟誰說了謝謝？",
+   "questionEnglish": "Who did you say thank you to today?",
+   "answer": "我跟便利商店的店員說了謝謝。",
+   "answerEnglish": "I said thank you to the convenience store clerk.",
+   "sources": [
+    "w0434"
+   ],
+   "order": 414
+  },
+  {
+   "hanzi": "球員",
+   "english": "player (in a ball game)",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 3,
+   "example": "這位球員打得很好。",
+   "exampleEnglish": "This player is really good.",
+   "question": "你最喜歡哪一位球員？",
+   "questionEnglish": "Which player do you like best?",
+   "answer": "我最喜歡的球員是大谷翔平。",
+   "answerEnglish": "My favorite player is Shohei Ohtani.",
+   "sources": [
+    "w0435"
+   ],
+   "order": 415
+  },
+  {
+   "hanzi": "上漲",
+   "english": "rise; go up (in price)",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 5,
+   "example": "最近的菜價一直上漲。",
+   "exampleEnglish": "Vegetable prices keep going up lately.",
+   "question": "你覺得台北的房租上漲得快嗎？",
+   "questionEnglish": "Do you think rents in Taipei are rising fast?",
+   "answer": "很快，我的房租今年上漲了兩千塊。",
+   "answerEnglish": "Very fast. My rent went up two thousand this year.",
+   "sources": [
+    "w0436",
+    "w0470"
+   ],
+   "order": 416
+  },
+  {
+   "hanzi": "最近",
+   "english": "recently; lately; recent",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 2,
+   "example": "我最近很忙。",
+   "exampleEnglish": "I've been really busy lately.",
+   "question": "你最近在看什麼電視劇？",
+   "questionEnglish": "What TV series are you watching these days?",
+   "answer": "我最近在看一部台劇。",
+   "answerEnglish": "I've been watching a Taiwanese drama lately.",
+   "sources": [
+    "w0437"
+   ],
+   "order": 417
+  },
+  {
+   "hanzi": "會議",
+   "english": "meeting; conference",
+   "partOfSpeech": "noun",
+   "measureWord": "場",
+   "level": 3,
+   "example": "今天的會議開了三個小時。",
+   "exampleEnglish": "Today's meeting went on for three hours.",
+   "question": "你一個星期要開幾次會議？",
+   "questionEnglish": "How many meetings do you have a week?",
+   "answer": "我一個星期大概有五個會議。",
+   "answerEnglish": "I have about five meetings a week.",
+   "sources": [
+    "w0438",
+    "w0523"
+   ],
+   "order": 418
+  },
+  {
+   "hanzi": "測驗",
+   "english": "test; quiz; exam",
+   "partOfSpeech": "noun",
+   "measureWord": "次",
+   "level": 4,
+   "example": "我下週要考中文能力測驗。",
+   "exampleEnglish": "I'm taking a Chinese proficiency test next week.",
+   "question": "你考過華語文能力測驗嗎？",
+   "questionEnglish": "Have you taken the TOCFL Chinese proficiency test?",
+   "answer": "還沒有，我打算明年考這個測驗。",
+   "answerEnglish": "Not yet. I'm planning to take it next year.",
+   "sources": [
+    "w0439"
+   ],
+   "order": 419
+  },
+  {
+   "hanzi": "藥",
+   "english": "medicine; drug",
+   "partOfSpeech": "noun",
+   "measureWord": "顆",
+   "level": 2,
+   "example": "這個藥一天吃三次。",
+   "exampleEnglish": "Take this medicine three times a day.",
+   "question": "你感冒的時候會吃藥嗎？",
+   "questionEnglish": "Do you take medicine when you have a cold?",
+   "answer": "會，我會去看醫生拿藥。",
+   "answerEnglish": "Yes, I see a doctor and get some medicine.",
+   "sources": [
+    "w0440",
+    "w1790"
+   ],
+   "order": 420
+  },
+  {
+   "hanzi": "軍事",
+   "english": "military",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 5,
+   "example": "這裡以前是軍事基地。",
+   "exampleEnglish": "This used to be a military base.",
+   "question": "你對軍事新聞有興趣嗎？",
+   "questionEnglish": "Are you interested in military news?",
+   "answer": "沒什麼興趣，我很少看軍事新聞。",
+   "answerEnglish": "Not really. I rarely read military news.",
+   "sources": [
+    "w0441"
+   ],
+   "order": 421
+  },
+  {
+   "hanzi": "朝",
+   "english": "towards; facing",
+   "partOfSpeech": "preposition",
+   "measureWord": "",
+   "level": 5,
+   "example": "他朝我走過來。",
+   "exampleEnglish": "He walked towards me.",
+   "question": "你家的窗戶朝哪個方向？",
+   "questionEnglish": "Which direction do your windows face?",
+   "answer": "我家的窗戶朝東，早上很亮。",
+   "answerEnglish": "My windows face east, so it's bright in the morning.",
+   "sources": [
+    "w0442"
+   ],
+   "order": 422
+  },
+  {
+   "hanzi": "單一",
+   "english": "single; sole; one only",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 5,
+   "example": "這家店只賣單一口味的冰淇淋。",
+   "exampleEnglish": "This shop only sells one flavor of ice cream.",
+   "question": "你覺得只靠單一收入安全嗎？",
+   "questionEnglish": "Do you think relying on a single income is safe?",
+   "answer": "不太安全，單一收入的風險比較高。",
+   "answerEnglish": "Not really. A single income is riskier.",
+   "sources": [
+    "w0443"
+   ],
+   "order": 423
+  },
+  {
+   "hanzi": "醫院",
+   "english": "hospital",
+   "partOfSpeech": "noun",
+   "measureWord": "家",
+   "level": 1,
+   "example": "我明天要去醫院。",
+   "exampleEnglish": "I'm going to the hospital tomorrow.",
+   "question": "你家附近有醫院嗎？",
+   "questionEnglish": "Is there a hospital near your home?",
+   "answer": "有，走路五分鐘就到醫院。",
+   "answerEnglish": "Yes, the hospital is a five-minute walk away.",
+   "sources": [
+    "w0444"
+   ],
+   "order": 424
+  },
+  {
+   "hanzi": "季節",
+   "english": "season",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "秋天是我最喜歡的季節。",
+   "exampleEnglish": "Autumn is my favorite season.",
+   "question": "你最喜歡台灣的哪個季節？",
+   "questionEnglish": "Which season do you like best in Taiwan?",
+   "answer": "我最喜歡秋天這個季節，不冷也不熱。",
+   "answerEnglish": "I like autumn best. It's neither cold nor hot.",
+   "sources": [
+    "w0445"
+   ],
+   "order": 425
+  },
+  {
+   "hanzi": "很快",
+   "english": "soon; quickly; very fast",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 2,
+   "example": "公車很快就來了。",
+   "exampleEnglish": "The bus will be here soon.",
+   "question": "你吃飯吃得很快嗎？",
+   "questionEnglish": "Do you eat fast?",
+   "answer": "對，我吃得很快。",
+   "answerEnglish": "Yes, I eat really fast.",
+   "sources": [
+    "w0446"
+   ],
+   "order": 426
+  },
+  {
+   "hanzi": "接受",
+   "english": "accept; take; undergo",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "這家店不接受信用卡。",
+   "exampleEnglish": "This shop doesn't take credit cards.",
+   "question": "你能接受吃臭豆腐嗎？",
+   "questionEnglish": "Can you handle eating stinky tofu?",
+   "answer": "可以接受，我還滿喜歡的。",
+   "answerEnglish": "I can handle it. I actually quite like it.",
+   "sources": [
+    "w0447",
+    "w3585",
+    "w3602"
+   ],
+   "order": 427
+  },
+  {
+   "hanzi": "機會",
+   "english": "chance; opportunity",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "我很想有機會去花蓮玩。",
+   "exampleEnglish": "I'd love a chance to go to Hualien.",
+   "question": "你在台灣有機會說中文嗎？",
+   "questionEnglish": "Do you get chances to speak Chinese in Taiwan?",
+   "answer": "有，我每天都有機會說中文。",
+   "answerEnglish": "Yes, I get to speak Chinese every day.",
+   "sources": [
+    "w0448",
+    "w0669"
+   ],
+   "order": 428
+  },
+  {
+   "hanzi": "官員",
+   "english": "official; government officer",
+   "partOfSpeech": "noun",
+   "measureWord": "位",
+   "level": 5,
+   "example": "政府官員今天去災區看看。",
+   "exampleEnglish": "Government officials visited the disaster area today.",
+   "question": "你見過政府官員嗎？",
+   "questionEnglish": "Have you ever met a government official?",
+   "answer": "見過，有一位官員來我們公司參觀。",
+   "answerEnglish": "Yes, an official once came to visit our company.",
+   "sources": [
+    "w0449",
+    "w5619"
+   ],
+   "order": 429
+  },
+  {
+   "hanzi": "消息",
+   "english": "news; information",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "我有一個好消息要告訴你！",
+   "exampleEnglish": "I've got some good news to tell you!",
+   "question": "你最近有什麼好消息嗎？",
+   "questionEnglish": "Have you had any good news lately?",
+   "answer": "有，我的好消息是我要結婚了！",
+   "answerEnglish": "Yes! My good news is that I'm getting married!",
+   "sources": [
+    "w0450"
+   ],
+   "order": 430
+  },
+  {
+   "hanzi": "貿易",
+   "english": "trade; commerce",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 5,
+   "example": "我在一家貿易公司上班。",
+   "exampleEnglish": "I work for a trading company.",
+   "question": "你的國家和台灣有很多貿易嗎？",
+   "questionEnglish": "Is there much trade between your country and Taiwan?",
+   "answer": "有，我們的貿易很多，特別是電子產品。",
+   "answerEnglish": "Yes, there's a lot of trade, especially in electronics.",
+   "sources": [
+    "w0451"
+   ],
+   "order": 431
+  },
+  {
+   "hanzi": "寧願",
+   "english": "would rather; prefer to",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我寧願走路，也不想等公車。",
+   "exampleEnglish": "I'd rather walk than wait for the bus.",
+   "question": "你寧願住在城市還是鄉下？",
+   "questionEnglish": "Would you rather live in the city or the countryside?",
+   "answer": "我寧願住在鄉下，比較安靜。",
+   "answerEnglish": "I'd rather live in the countryside. It's quieter.",
+   "sources": [
+    "w0452"
+   ],
+   "order": 432
+  },
+  {
+   "hanzi": "中央",
+   "english": "central; centre; middle",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "中央氣象署說明天會下雨。",
+   "exampleEnglish": "The Central Weather Administration says it'll rain tomorrow.",
+   "question": "你常看中央氣象署的天氣預報嗎？",
+   "questionEnglish": "Do you often check the Central Weather Administration's forecast?",
+   "answer": "常看，我出門前會看中央氣象署的預報。",
+   "answerEnglish": "Often. I check the CWA forecast before going out.",
+   "sources": [
+    "w0453"
+   ],
+   "order": 433
+  },
+  {
+   "hanzi": "舞台",
+   "english": "stage",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "歌手走上舞台，大家都尖叫。",
+   "exampleEnglish": "When the singer walked on stage, everyone screamed.",
+   "question": "你上過舞台表演嗎？",
+   "questionEnglish": "Have you ever performed on stage?",
+   "answer": "上過，我以前在舞台上唱過歌。",
+   "answerEnglish": "Yes, I've sung on stage before.",
+   "sources": [
+    "w0454"
+   ],
+   "order": 434
+  },
+  {
+   "hanzi": "尋求",
+   "english": "seek; look for (help, advice)",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 5,
+   "example": "遇到問題時，可以尋求專業的幫助。",
+   "exampleEnglish": "When you run into problems, you can seek professional help.",
+   "question": "你工作有壓力時，會向誰尋求幫助？",
+   "questionEnglish": "When you're stressed at work, who do you turn to for help?",
+   "answer": "我會向我的好朋友尋求建議。",
+   "answerEnglish": "I go to my best friend for advice.",
+   "sources": [
+    "w0455"
+   ],
+   "order": 435
+  },
+  {
+   "hanzi": "步驟",
+   "english": "step (in a process); procedure",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "這道菜的步驟很簡單。",
+   "exampleEnglish": "The steps for this dish are simple.",
+   "question": "你辦居留證的時候，步驟多嗎？",
+   "questionEnglish": "When you applied for your residence permit, were there many steps?",
+   "answer": "步驟不多，可是要準備很多文件。",
+   "answerEnglish": "Not many steps, but you need to prepare lots of documents.",
+   "sources": [
+    "w0456"
+   ],
+   "order": 436
+  },
+  {
+   "hanzi": "未來",
+   "english": "future; in the future",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 3,
+   "example": "我未來想開一家咖啡店。",
+   "exampleEnglish": "In the future I want to open a café.",
+   "question": "你未來想住在哪裡？",
+   "questionEnglish": "Where do you want to live in the future?",
+   "answer": "我未來想住在台南。",
+   "answerEnglish": "In the future I'd like to live in Tainan.",
+   "sources": [
+    "w0457"
+   ],
+   "order": 437
+  },
+  {
+   "hanzi": "安全",
+   "english": "safe; safety; security",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 2,
+   "example": "台灣晚上很安全。",
+   "exampleEnglish": "Taiwan is very safe at night.",
+   "question": "你覺得台灣安全嗎？",
+   "questionEnglish": "Do you think Taiwan is safe?",
+   "answer": "很安全，晚上一個人走路也不怕。",
+   "answerEnglish": "Very safe. I'm not scared walking alone at night.",
+   "sources": [
+    "w0458",
+    "w1007"
+   ],
+   "order": 438
+  },
+  {
+   "hanzi": "影片",
+   "english": "video; film",
+   "partOfSpeech": "noun",
+   "measureWord": "部",
+   "level": 2,
+   "example": "我在看一部好笑的影片。",
+   "exampleEnglish": "I'm watching a funny video.",
+   "question": "你常在網路上看影片嗎？",
+   "questionEnglish": "Do you often watch videos online?",
+   "answer": "常常，我每天晚上都看影片。",
+   "answerEnglish": "Often. I watch videos every night.",
+   "sources": [
+    "w0459",
+    "w1024"
+   ],
+   "order": 439
+  },
+  {
+   "hanzi": "植物",
+   "english": "plant",
+   "partOfSpeech": "noun",
+   "measureWord": "棵",
+   "level": 3,
+   "example": "我的陽台有很多植物。",
+   "exampleEnglish": "There are lots of plants on my balcony.",
+   "question": "你家裡有種植物嗎？",
+   "questionEnglish": "Do you grow any plants at home?",
+   "answer": "有，我在窗邊種了幾棵小植物。",
+   "answerEnglish": "Yes, I have a few small plants by the window.",
+   "sources": [
+    "w0460"
+   ],
+   "order": 440
+  },
+  {
+   "hanzi": "打到",
+   "english": "hit; strike",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "小心，別被球打到！",
+   "exampleEnglish": "Careful, don't get hit by the ball!",
+   "question": "你被球打到過嗎？",
+   "questionEnglish": "Have you ever been hit by a ball?",
+   "answer": "有，我打棒球的時候被球打到過。",
+   "answerEnglish": "Yes, I got hit by a ball playing baseball.",
+   "sources": [
+    "w0461"
+   ],
+   "order": 441
+  },
+  {
+   "hanzi": "範例",
+   "english": "example; sample; model",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 5,
+   "example": "表格上面有填寫的範例。",
+   "exampleEnglish": "There's a sample of how to fill it in at the top of the form.",
+   "question": "你寫報告的時候，會先看範例嗎？",
+   "questionEnglish": "When you write a report, do you look at a sample first?",
+   "answer": "會，看範例比較知道怎麼寫。",
+   "answerEnglish": "Yes. Looking at a sample helps me know how to write it.",
+   "sources": [
+    "w0462",
+    "w6134"
+   ],
+   "order": 442
+  },
+  {
+   "hanzi": "油",
+   "english": "oil; grease",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 2,
+   "example": "這道菜的油太多了。",
+   "exampleEnglish": "This dish is too oily.",
+   "question": "你做菜會用很多油嗎？",
+   "questionEnglish": "Do you use a lot of oil when you cook?",
+   "answer": "不會，我做菜只用一點點油。",
+   "answerEnglish": "No, I only use a little oil.",
+   "sources": [
+    "w0463"
+   ],
+   "order": 443
+  },
+  {
+   "hanzi": "股份",
+   "english": "share; stock (in a company)",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 6,
+   "example": "他把公司的股份賣給了朋友。",
+   "exampleEnglish": "He sold his shares in the company to a friend.",
+   "question": "你想買哪家公司的股份？",
+   "questionEnglish": "Which company would you like to buy shares in?",
+   "answer": "我想買台積電的股份。",
+   "answerEnglish": "I'd like to buy shares in TSMC.",
+   "sources": [
+    "w0464"
+   ],
+   "order": 444
+  },
+  {
+   "hanzi": "紅色",
+   "english": "red",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 1,
+   "example": "我買了紅色的包包。",
+   "exampleEnglish": "I bought a red bag.",
+   "question": "你有紅色的衣服嗎？",
+   "questionEnglish": "Do you have any red clothes?",
+   "answer": "有，過年的時候我穿紅色。",
+   "answerEnglish": "Yes, I wear red at Chinese New Year.",
+   "sources": [
+    "w0465"
+   ],
+   "order": 445
+  },
+  {
+   "hanzi": "星星",
+   "english": "star",
+   "partOfSpeech": "noun",
+   "measureWord": "顆",
+   "level": 2,
+   "example": "山上可以看到很多星星。",
+   "exampleEnglish": "You can see lots of stars in the mountains.",
+   "question": "你在台北看得到星星嗎？",
+   "questionEnglish": "Can you see the stars in Taipei?",
+   "answer": "看不太到，台北的星星很少。",
+   "answerEnglish": "Not really. You can't see many stars in Taipei.",
+   "sources": [
+    "w0466"
+   ],
+   "order": 446
+  },
+  {
+   "hanzi": "說法",
+   "english": "way of saying; version; claim",
+   "partOfSpeech": "noun",
+   "measureWord": "種",
+   "level": 4,
+   "example": "每個人的說法都不一樣。",
+   "exampleEnglish": "Everyone tells it differently.",
+   "question": "你知道「很機車」這個說法嗎？",
+   "questionEnglish": "Do you know the expression \"hen jiche\"?",
+   "answer": "知道，這個說法的意思是「很討厭」。",
+   "answerEnglish": "Yes. The expression means \"really annoying\".",
+   "sources": [
+    "w0467",
+    "w2048"
+   ],
+   "order": 447
+  },
+  {
+   "hanzi": "親自",
+   "english": "personally; in person; oneself",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 4,
+   "example": "她親自做了這個蛋糕。",
+   "exampleEnglish": "She made this cake herself.",
+   "question": "你會親自做生日蛋糕給朋友嗎？",
+   "questionEnglish": "Would you make a birthday cake yourself for a friend?",
+   "answer": "會，我去年親自做過一個。",
+   "answerEnglish": "Yes, I made one myself last year.",
+   "sources": [
+    "w0468"
+   ],
+   "order": 448
+  },
+  {
+   "hanzi": "頁",
+   "english": "page",
+   "partOfSpeech": "measure word",
+   "measureWord": "",
+   "level": 2,
+   "example": "請翻到第十頁。",
+   "exampleEnglish": "Please turn to page ten.",
+   "question": "你一天可以看幾頁中文書？",
+   "questionEnglish": "How many pages of a Chinese book can you read in a day?",
+   "answer": "我一天可以看兩三頁。",
+   "answerEnglish": "I can read two or three pages a day.",
+   "sources": [
+    "w0469"
+   ],
+   "order": 449
+  },
+  {
+   "hanzi": "部門",
+   "english": "department; section",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "我在行銷部門工作。",
+   "exampleEnglish": "I work in the marketing department.",
+   "question": "你在公司的哪個部門工作？",
+   "questionEnglish": "Which department do you work in?",
+   "answer": "我在財務部門工作。",
+   "answerEnglish": "I work in the finance department.",
+   "sources": [
+    "w0471"
+   ],
+   "order": 450
+  },
+  {
+   "hanzi": "兄弟",
+   "english": "brothers; brother",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 2,
+   "example": "他們兩個是兄弟。",
+   "exampleEnglish": "Those two are brothers.",
+   "question": "你有兄弟嗎？",
+   "questionEnglish": "Do you have any brothers?",
+   "answer": "有，我有兩個兄弟。",
+   "answerEnglish": "Yes, I have two brothers.",
+   "sources": [
+    "w0472"
+   ],
+   "order": 451
+  },
+  {
+   "hanzi": "目前",
+   "english": "currently; at present; current",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 3,
+   "example": "我目前住在新北。",
+   "exampleEnglish": "I currently live in New Taipei.",
+   "question": "你目前在做什麼工作？",
+   "questionEnglish": "What do you do for work at the moment?",
+   "answer": "我目前在一家科技公司上班。",
+   "answerEnglish": "I currently work at a tech company.",
+   "sources": [
+    "w0473"
+   ],
+   "order": 452
+  },
+  {
+   "hanzi": "正式",
+   "english": "formal; official",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 4,
+   "example": "今天的會議要穿正式一點。",
+   "exampleEnglish": "You should dress a bit more formally for today's meeting.",
+   "question": "你上班要穿正式的衣服嗎？",
+   "questionEnglish": "Do you have to wear formal clothes to work?",
+   "answer": "不用，我們公司不用穿得很正式。",
+   "answerEnglish": "No, we don't have to dress formally at my company.",
+   "sources": [
+    "w0474",
+    "w1337"
+   ],
+   "order": 453
+  },
+  {
+   "hanzi": "經濟",
+   "english": "economy; economic",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "最近經濟不太好，大家都很少花錢。",
+   "exampleEnglish": "The economy isn't great lately, so people aren't spending much.",
+   "question": "你平常會看經濟新聞嗎？",
+   "questionEnglish": "Do you usually follow economic news?",
+   "answer": "會，我每天早上都看經濟新聞。",
+   "answerEnglish": "Yes, I read the business news every morning.",
+   "sources": [
+    "w0475"
+   ],
+   "order": 454
+  },
+  {
+   "hanzi": "財務",
+   "english": "finance; financial affairs",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 5,
+   "example": "她在公司負責財務。",
+   "exampleEnglish": "She's in charge of finance at her company.",
+   "question": "你家的財務是誰管？",
+   "questionEnglish": "Who manages the finances in your household?",
+   "answer": "我家的財務都是我太太在管。",
+   "answerEnglish": "My wife manages all our finances.",
+   "sources": [
+    "w0476"
+   ],
+   "order": 455
+  },
+  {
+   "hanzi": "失敗",
+   "english": "fail; failure; be defeated",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我第一次做蛋糕就失敗了。",
+   "exampleEnglish": "The first time I made a cake, it was a failure.",
+   "question": "你做菜失敗過嗎？",
+   "questionEnglish": "Have you ever had a cooking disaster?",
+   "answer": "常常失敗，我做的菜都太鹹了。",
+   "answerEnglish": "All the time. My dishes always come out too salty.",
+   "sources": [
+    "w0477",
+    "w1464"
+   ],
+   "order": 456
+  },
+  {
+   "hanzi": "解釋",
+   "english": "explain; explanation",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "你可以再解釋一次嗎？",
+   "exampleEnglish": "Could you explain that again?",
+   "question": "你會怎麼跟朋友解釋「小確幸」？",
+   "questionEnglish": "How would you explain \"xiao que xing\" to a friend?",
+   "answer": "我會解釋說，就是生活裡小小的快樂。",
+   "answerEnglish": "I'd explain that it means the small joys in everyday life.",
+   "sources": [
+    "w0478"
+   ],
+   "order": 457
+  },
+  {
+   "hanzi": "西方",
+   "english": "west; the West",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "太陽從西方下山。",
+   "exampleEnglish": "The sun sets in the west.",
+   "question": "你覺得西方人和台灣人哪裡不一樣？",
+   "questionEnglish": "How do you think Westerners and Taiwanese people are different?",
+   "answer": "我覺得西方人說話比較直接。",
+   "answerEnglish": "I think Westerners speak more directly.",
+   "sources": [
+    "w0479"
+   ],
+   "order": 458
+  },
+  {
+   "hanzi": "附近",
+   "english": "nearby; near; vicinity",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 2,
+   "example": "這附近有捷運站嗎？",
+   "exampleEnglish": "Is there an MRT station near here?",
+   "question": "你家附近有什麼好吃的？",
+   "questionEnglish": "What good food is there near your home?",
+   "answer": "我家附近有很多小吃店。",
+   "answerEnglish": "There are lots of snack shops near my place.",
+   "sources": [
+    "w0480",
+    "w6810"
+   ],
+   "order": 459
+  },
+  {
+   "hanzi": "女兒",
+   "english": "daughter",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 1,
+   "example": "我女兒今年五歲。",
+   "exampleEnglish": "My daughter is five this year.",
+   "question": "你想要兒子還是女兒？",
+   "questionEnglish": "Would you like a son or a daughter?",
+   "answer": "我想要一個女兒。",
+   "answerEnglish": "I'd like a daughter.",
+   "sources": [
+    "w0482"
+   ],
+   "order": 460
+  },
+  {
+   "hanzi": "選舉",
+   "english": "election; elect",
+   "partOfSpeech": "noun",
+   "measureWord": "次",
+   "level": 4,
+   "example": "台灣的選舉很熱鬧。",
+   "exampleEnglish": "Elections in Taiwan are very lively.",
+   "question": "你在台灣看過選舉活動嗎？",
+   "questionEnglish": "Have you seen election campaigning in Taiwan?",
+   "answer": "看過，選舉的時候街上到處都是旗子。",
+   "answerEnglish": "Yes. At election time there are flags all over the streets.",
+   "sources": [
+    "w0483"
+   ],
+   "order": 461
+  },
+  {
+   "hanzi": "操作",
+   "english": "operate; work (a machine); operation",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 5,
+   "example": "這台機器很容易操作。",
+   "exampleEnglish": "This machine is easy to operate.",
+   "question": "你會操作咖啡機嗎？",
+   "questionEnglish": "Do you know how to use a coffee machine?",
+   "answer": "會，我們公司的咖啡機很好操作。",
+   "answerEnglish": "Yes, the coffee machine at work is easy to use.",
+   "sources": [
+    "w0484",
+    "w0539",
+    "w5429"
+   ],
+   "order": 462
+  },
+  {
+   "hanzi": "壓力",
+   "english": "pressure; stress",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "我最近工作壓力很大。",
+   "exampleEnglish": "I've been under a lot of pressure at work lately.",
+   "question": "你壓力大的時候會做什麼？",
+   "questionEnglish": "What do you do when you're stressed?",
+   "answer": "壓力大的時候，我會去運動。",
+   "answerEnglish": "When I'm stressed, I go and exercise.",
+   "sources": [
+    "w0485",
+    "w1352"
+   ],
+   "order": 463
+  },
+  {
+   "hanzi": "委員會",
+   "english": "committee",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 6,
+   "example": "大樓的管理委員會每個月開一次會。",
+   "exampleEnglish": "The building's management committee meets once a month.",
+   "question": "你住的大樓有管理委員會嗎？",
+   "questionEnglish": "Does your apartment building have a management committee?",
+   "answer": "有，可是我沒參加過委員會的會議。",
+   "answerEnglish": "Yes, but I've never been to a committee meeting.",
+   "sources": [
+    "w0486"
+   ],
+   "order": 464
+  },
+  {
+   "hanzi": "清單",
+   "english": "list",
+   "partOfSpeech": "noun",
+   "measureWord": "張",
+   "level": 4,
+   "example": "我寫了一張購物清單。",
+   "exampleEnglish": "I wrote a shopping list.",
+   "question": "你去超市前會寫清單嗎？",
+   "questionEnglish": "Do you write a list before going to the supermarket?",
+   "answer": "會，我都把清單寫在手機裡。",
+   "answerEnglish": "Yes, I always keep my list on my phone.",
+   "sources": [
+    "w0488"
+   ],
+   "order": 465
+  },
+  {
+   "hanzi": "一點點",
+   "english": "a little bit; a tiny bit",
+   "partOfSpeech": "phrase",
+   "measureWord": "",
+   "level": 1,
+   "example": "我會說一點點中文。",
+   "exampleEnglish": "I can speak a little Chinese.",
+   "question": "你會說台語嗎？",
+   "questionEnglish": "Can you speak Taiwanese?",
+   "answer": "我只會說一點點台語。",
+   "answerEnglish": "I can only speak a tiny bit of Taiwanese.",
+   "sources": [
+    "w0490"
+   ],
+   "order": 466
+  },
+  {
+   "hanzi": "中央",
+   "english": "centre; middle; central",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 4,
+   "example": "桌子放在客廳的中央。",
+   "exampleEnglish": "The table is in the middle of the living room.",
+   "question": "你在電影院喜歡坐中央還是旁邊？",
+   "questionEnglish": "At the cinema, do you like sitting in the middle or on the side?",
+   "answer": "我喜歡坐中央，看得比較清楚。",
+   "answerEnglish": "I like sitting in the middle. I can see better.",
+   "sources": [
+    "w0491",
+    "w0537"
+   ],
+   "order": 467
+  },
+  {
+   "hanzi": "宣傳",
+   "english": "promote; publicize; publicity",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "很多店家在網路上宣傳。",
+   "exampleEnglish": "Lots of shops advertise online.",
+   "question": "你會在網路上幫朋友宣傳嗎？",
+   "questionEnglish": "Do you help promote your friends' things online?",
+   "answer": "會，我常在臉書上幫朋友的店宣傳。",
+   "answerEnglish": "Yes, I often promote my friend's shop on Facebook.",
+   "sources": [
+    "w0492"
+   ],
+   "order": 468
+  },
+  {
+   "hanzi": "社團",
+   "english": "club; society; group",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 4,
+   "example": "我加入了一個登山社團。",
+   "exampleEnglish": "I joined a hiking club.",
+   "question": "你有參加什麼社團嗎？",
+   "questionEnglish": "Are you in any clubs?",
+   "answer": "有，我參加了一個羽毛球社團。",
+   "answerEnglish": "Yes, I joined a badminton club.",
+   "sources": [
+    "w0493"
+   ],
+   "order": 469
+  },
+  {
+   "hanzi": "大學",
+   "english": "university; college",
+   "partOfSpeech": "noun",
+   "measureWord": "所",
+   "level": 2,
+   "example": "我弟弟在台中讀大學。",
+   "exampleEnglish": "My younger brother goes to university in Taichung.",
+   "question": "你在哪裡讀大學？",
+   "questionEnglish": "Where did you go to university?",
+   "answer": "我在美國讀大學。",
+   "answerEnglish": "I went to university in the US.",
+   "sources": [
+    "w0494",
+    "w0636"
+   ],
+   "order": 470
+  },
+  {
+   "hanzi": "寬",
+   "english": "wide; broad",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 3,
+   "example": "這條馬路很寬。",
+   "exampleEnglish": "This road is very wide.",
+   "question": "你家前面的馬路寬不寬？",
+   "questionEnglish": "Is the road in front of your home wide?",
+   "answer": "不太寬，只能過一台車。",
+   "answerEnglish": "Not very. Only one car can get through.",
+   "sources": [
+    "w0495"
+   ],
+   "order": 471
+  },
+  {
+   "hanzi": "東方",
+   "english": "east; the East",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 3,
+   "example": "太陽從東方升起來。",
+   "exampleEnglish": "The sun rises in the east.",
+   "question": "你覺得東方和西方的文化差很多嗎？",
+   "questionEnglish": "Do you think Eastern and Western cultures are very different?",
+   "answer": "差很多，東方人比較重視家庭。",
+   "answerEnglish": "Very different. People in the East care more about family.",
+   "sources": [
+    "w0496"
+   ],
+   "order": 472
+  },
+  {
+   "hanzi": "設計",
+   "english": "design; plan",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "這家咖啡店的設計很漂亮。",
+   "exampleEnglish": "This café is beautifully designed.",
+   "question": "如果可以，你想怎麼設計你的房間？",
+   "questionEnglish": "If you could, how would you design your room?",
+   "answer": "我想把房間設計得簡單一點。",
+   "answerEnglish": "I'd design my room to be a bit simpler.",
+   "sources": [
+    "w0497",
+    "w3814"
+   ],
+   "order": 473
+  },
+  {
+   "hanzi": "衝突",
+   "english": "conflict; clash",
+   "partOfSpeech": "noun",
+   "measureWord": "次",
+   "level": 5,
+   "example": "他們兩個人常常有衝突。",
+   "exampleEnglish": "Those two often clash.",
+   "question": "你跟室友有過衝突嗎？",
+   "questionEnglish": "Have you ever had a conflict with a roommate?",
+   "answer": "有過小衝突，因為他太吵了。",
+   "answerEnglish": "A small one, because he was too noisy.",
+   "sources": [
+    "w0498",
+    "w2893"
+   ],
+   "order": 474
+  },
+  {
+   "hanzi": "擔心",
+   "english": "worry; be worried; concern",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 2,
+   "example": "別擔心，我沒事。",
+   "exampleEnglish": "Don't worry, I'm fine.",
+   "question": "你最擔心什麼事？",
+   "questionEnglish": "What do you worry about most?",
+   "answer": "我最擔心我的家人。",
+   "answerEnglish": "I worry most about my family.",
+   "sources": [
+    "w0499"
+   ],
+   "order": 475
+  },
+  {
+   "hanzi": "杯子",
+   "english": "cup; glass; mug",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 1,
+   "example": "這個杯子是我的。",
+   "exampleEnglish": "This cup is mine.",
+   "question": "你上班會帶自己的杯子嗎？",
+   "questionEnglish": "Do you bring your own cup to work?",
+   "answer": "會，我都帶自己的杯子。",
+   "answerEnglish": "Yes, I always bring my own cup.",
+   "sources": [
+    "w0500"
+   ],
+   "order": 476
+  },
+  {
+   "hanzi": "嚴肅",
+   "english": "serious; solemn; stern",
+   "partOfSpeech": "adjective",
+   "measureWord": "",
+   "level": 4,
+   "example": "我的老闆看起來很嚴肅。",
+   "exampleEnglish": "My boss looks very serious.",
+   "question": "你覺得自己是一個嚴肅的人嗎？",
+   "questionEnglish": "Do you think of yourself as a serious person?",
+   "answer": "不是，我一點也不嚴肅。",
+   "answerEnglish": "No, I'm not serious at all.",
+   "sources": [
+    "w0501"
+   ],
+   "order": 477
+  },
+  {
+   "hanzi": "存錢",
+   "english": "save money",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我在存錢買機車。",
+   "exampleEnglish": "I'm saving up for a scooter.",
+   "question": "你每個月會存錢嗎？",
+   "questionEnglish": "Do you save money every month?",
+   "answer": "會，我在存錢去日本玩。",
+   "answerEnglish": "Yes, I'm saving up for a trip to Japan.",
+   "sources": [
+    "w0502"
+   ],
+   "order": 478
+  },
+  {
+   "hanzi": "工會",
+   "english": "labor union; trade union",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 5,
+   "example": "很多工會今天上街抗議。",
+   "exampleEnglish": "Many unions took to the streets in protest today.",
+   "question": "你的公司有工會嗎？",
+   "questionEnglish": "Does your company have a union?",
+   "answer": "沒有，我們公司沒有工會。",
+   "answerEnglish": "No, our company doesn't have a union.",
+   "sources": [
+    "w0503"
+   ],
+   "order": 479
+  },
+  {
+   "hanzi": "答案",
+   "english": "answer; solution",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 2,
+   "example": "我不知道答案。",
+   "exampleEnglish": "I don't know the answer.",
+   "question": "你遇到問題時，會上網找答案嗎？",
+   "questionEnglish": "When you have a question, do you look for the answer online?",
+   "answer": "會，我常上網找答案。",
+   "answerEnglish": "Yes, I often look for answers online.",
+   "sources": [
+    "w0504"
+   ],
+   "order": 480
+  },
+  {
+   "hanzi": "基金",
+   "english": "fund",
+   "partOfSpeech": "noun",
+   "measureWord": "檔",
+   "level": 5,
+   "example": "公司有一個員工旅遊基金。",
+   "exampleEnglish": "The company has a staff travel fund.",
+   "question": "你有買基金嗎？",
+   "questionEnglish": "Do you invest in funds?",
+   "answer": "有，我每個月都買一點基金。",
+   "answerEnglish": "Yes, I put a little into funds every month.",
+   "sources": [
+    "w0505"
+   ],
+   "order": 481
+  },
+  {
+   "hanzi": "收費",
+   "english": "charge (a fee); fee",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "這個停車場一小時收費五十元。",
+   "exampleEnglish": "This parking lot charges fifty dollars an hour.",
+   "question": "你家附近的停車場收費貴嗎？",
+   "questionEnglish": "Are parking lots near your home expensive?",
+   "answer": "很貴，一小時收費八十塊。",
+   "answerEnglish": "Very. They charge eighty dollars an hour.",
+   "sources": [
+    "w0506"
+   ],
+   "order": 482
+  },
+  {
+   "hanzi": "磅",
+   "english": "pound (unit of weight)",
+   "partOfSpeech": "measure word",
+   "measureWord": "",
+   "level": 5,
+   "example": "這隻狗有二十磅重。",
+   "exampleEnglish": "This dog weighs twenty pounds.",
+   "question": "你的國家用公斤還是磅？",
+   "questionEnglish": "Does your country use kilograms or pounds?",
+   "answer": "我的國家用磅，不用公斤。",
+   "answerEnglish": "My country uses pounds, not kilograms.",
+   "sources": [
+    "w0507"
+   ],
+   "order": 483
+  },
+  {
+   "hanzi": "昨天",
+   "english": "yesterday",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 1,
+   "example": "我昨天去夜市了。",
+   "exampleEnglish": "I went to the night market yesterday.",
+   "question": "你昨天晚上吃什麼？",
+   "questionEnglish": "What did you eat last night?",
+   "answer": "我昨天吃了牛肉麵。",
+   "answerEnglish": "Yesterday I had beef noodle soup.",
+   "sources": [
+    "w0508"
+   ],
+   "order": 484
+  },
+  {
+   "hanzi": "過去",
+   "english": "the past; past; previous",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 3,
+   "example": "過去的事就不要想了。",
+   "exampleEnglish": "Don't dwell on the past.",
+   "question": "過去一年，你最開心的事是什麼？",
+   "questionEnglish": "What was the happiest thing for you in the past year?",
+   "answer": "過去一年最開心的是我來到台灣。",
+   "answerEnglish": "The happiest thing this past year was coming to Taiwan.",
+   "sources": [
+    "w0509"
+   ],
+   "order": 485
+  },
+  {
+   "hanzi": "節目",
+   "english": "program; show",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "這個電視節目很好笑。",
+   "exampleEnglish": "This TV show is really funny.",
+   "question": "你喜歡看什麼節目？",
+   "questionEnglish": "What kind of shows do you like to watch?",
+   "answer": "我喜歡看美食節目。",
+   "answerEnglish": "I like watching food shows.",
+   "sources": [
+    "w0510",
+    "w0611"
+   ],
+   "order": 486
+  },
+  {
+   "hanzi": "標誌",
+   "english": "sign; logo; symbol",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 5,
+   "example": "這家公司的標誌是一隻鳥。",
+   "exampleEnglish": "This company's logo is a bird.",
+   "question": "你最喜歡哪家公司的標誌？",
+   "questionEnglish": "Which company logo do you like best?",
+   "answer": "我最喜歡蘋果的標誌，很簡單。",
+   "answerEnglish": "I like Apple's logo best. It's simple.",
+   "sources": [
+    "w0511"
+   ],
+   "order": 487
+  },
+  {
+   "hanzi": "外面",
+   "english": "outside; out",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 1,
+   "example": "外面在下雨。",
+   "exampleEnglish": "It's raining outside.",
+   "question": "你常在外面吃飯嗎？",
+   "questionEnglish": "Do you often eat out?",
+   "answer": "對，我天天在外面吃。",
+   "answerEnglish": "Yes, I eat out every day.",
+   "sources": [
+    "w0512"
+   ],
+   "order": 488
+  },
+  {
+   "hanzi": "最後",
+   "english": "last; final; finally",
+   "partOfSpeech": "time word",
+   "measureWord": "",
+   "level": 2,
+   "example": "這是最後一班捷運。",
+   "exampleEnglish": "This is the last MRT train.",
+   "question": "你最後一次回國是什麼時候？",
+   "questionEnglish": "When was the last time you went back to your home country?",
+   "answer": "我最後一次回國是去年夏天。",
+   "answerEnglish": "The last time I went home was last summer.",
+   "sources": [
+    "w0513",
+    "w4792"
+   ],
+   "order": 489
+  },
+  {
+   "hanzi": "攻擊",
+   "english": "attack",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 5,
+   "example": "那隻狗突然攻擊了一個路人。",
+   "exampleEnglish": "That dog suddenly attacked a passer-by.",
+   "question": "你在山上被猴子攻擊過嗎？",
+   "questionEnglish": "Have you ever been attacked by a monkey in the mountains?",
+   "answer": "沒有，可是我看過猴子攻擊遊客。",
+   "answerEnglish": "No, but I've seen monkeys attack tourists.",
+   "sources": [
+    "w0514"
+   ],
+   "order": 490
+  },
+  {
+   "hanzi": "賽跑",
+   "english": "race; run a race",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 4,
+   "example": "我們來賽跑，看誰先到！",
+   "exampleEnglish": "Let's race and see who gets there first!",
+   "question": "你小時候參加過賽跑嗎？",
+   "questionEnglish": "Did you ever run in races as a kid?",
+   "answer": "參加過，我賽跑還得過第一名。",
+   "answerEnglish": "Yes, I even won first place in a race.",
+   "sources": [
+    "w0515"
+   ],
+   "order": 491
+  },
+  {
+   "hanzi": "庫存",
+   "english": "stock; inventory",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 5,
+   "example": "這雙鞋已經沒有庫存了。",
+   "exampleEnglish": "These shoes are out of stock.",
+   "question": "你想買的東西常常沒有庫存嗎？",
+   "questionEnglish": "Are the things you want to buy often out of stock?",
+   "answer": "常常，我喜歡的東西很快就沒有庫存了。",
+   "answerEnglish": "Often. The things I like sell out fast.",
+   "sources": [
+    "w0516"
+   ],
+   "order": 492
+  },
+  {
+   "hanzi": "首都",
+   "english": "capital (city)",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 3,
+   "example": "東京是日本的首都。",
+   "exampleEnglish": "Tokyo is the capital of Japan.",
+   "question": "你們國家的首都在哪裡？",
+   "questionEnglish": "What's the capital of your country?",
+   "answer": "我們國家的首都是倫敦。",
+   "answerEnglish": "Our capital is London.",
+   "sources": [
+    "w0517"
+   ],
+   "order": 493
+  },
+  {
+   "hanzi": "拜訪",
+   "english": "visit; call on",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 3,
+   "example": "我明天要去拜訪一個客戶。",
+   "exampleEnglish": "I'm visiting a client tomorrow.",
+   "question": "你來台灣以後拜訪過朋友的家嗎？",
+   "questionEnglish": "Since coming to Taiwan, have you visited a friend's home?",
+   "answer": "拜訪過，我去過同事家吃飯。",
+   "answerEnglish": "Yes, I've been to a coworker's home for dinner.",
+   "sources": [
+    "w0518"
+   ],
+   "order": 494
+  },
+  {
+   "hanzi": "姊妹",
+   "english": "sisters; sister",
+   "partOfSpeech": "noun",
+   "measureWord": "個",
+   "level": 2,
+   "example": "她們兩個是姊妹。",
+   "exampleEnglish": "Those two are sisters.",
+   "question": "你有姊妹嗎？",
+   "questionEnglish": "Do you have any sisters?",
+   "answer": "有，我們家有三個姊妹。",
+   "answerEnglish": "Yes, there are three sisters in my family.",
+   "sources": [
+    "w0519"
+   ],
+   "order": 495
+  },
+  {
+   "hanzi": "笑",
+   "english": "laugh; smile",
+   "partOfSpeech": "verb",
+   "measureWord": "",
+   "level": 1,
+   "example": "她笑得很開心。",
+   "exampleEnglish": "She was laughing happily.",
+   "question": "你常常笑嗎？",
+   "questionEnglish": "Do you laugh a lot?",
+   "answer": "常常，我很愛笑。",
+   "answerEnglish": "Yes, I laugh a lot.",
+   "sources": [
+    "w0521"
+   ],
+   "order": 496
+  },
+  {
+   "hanzi": "綠色",
+   "english": "green",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 1,
+   "example": "我的機車是綠色的。",
+   "exampleEnglish": "My scooter is green.",
+   "question": "你喜歡綠色嗎？",
+   "questionEnglish": "Do you like green?",
+   "answer": "喜歡，我的包包是綠色的。",
+   "answerEnglish": "Yes, my bag is green.",
+   "sources": [
+    "w0522"
+   ],
+   "order": 497
+  },
+  {
+   "hanzi": "藍色",
+   "english": "blue",
+   "partOfSpeech": "noun",
+   "measureWord": "",
+   "level": 1,
+   "example": "我想買藍色的外套。",
+   "exampleEnglish": "I want to buy a blue jacket.",
+   "question": "你有幾件藍色的衣服？",
+   "questionEnglish": "How many blue clothes do you have?",
+   "answer": "我有很多藍色的衣服。",
+   "answerEnglish": "I have lots of blue clothes.",
+   "sources": [
+    "w0524"
+   ],
+   "order": 498
+  },
+  {
+   "hanzi": "總共",
+   "english": "in total; altogether",
+   "partOfSpeech": "adverb",
+   "measureWord": "",
+   "level": 2,
+   "example": "總共是兩百五十塊。",
+   "exampleEnglish": "That's two hundred and fifty dollars altogether.",
+   "question": "你家總共有幾個人？",
+   "questionEnglish": "How many people are in your family altogether?",
+   "answer": "我家總共有五個人。",
+   "answerEnglish": "There are five people in my family altogether.",
+   "sources": [
+    "w0525",
+    "w5174"
+   ],
+   "order": 499
+  }
+ ],
+ "dropped": [
+  "任一個"
+ ],
+ "rejected": []
+}

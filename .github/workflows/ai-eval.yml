@@ -4,7 +4,7 @@
 # corrections that quote the learner, focus words the learner really has.
 # The report lists every answer for a human read as well.
 #
-# It runs on pull requests that change the prompts, and from the Actions tab.
+# It runs only when started from the Actions tab.
 # It calls the API directly (about 40 short requests for both tiers) and uses
 # no app quota. Answers vary from run to run, so a failed check is a warning
 # to read in the report; the run fails only when Claude gives no answer.
@@ -12,11 +12,7 @@
 name: AI eval
 
 on:
-  pull_request:
-    paths:
-      - 'supabase/functions/ai/**'
-      - 'scripts/ai-eval.ts'
-      - '.github/workflows/ai-eval.yml'
+  # Only when started by hand: it spends API credit.
   workflow_dispatch:
     inputs:
       tiers:

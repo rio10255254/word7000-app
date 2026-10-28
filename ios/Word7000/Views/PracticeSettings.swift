@@ -16,9 +16,12 @@ struct FilterControls: View {
             Text(L.allLevels).tag("all")
             ForEach(model.levels, id: \.self) { Text($0).tag($0) }
         }
-        Picker(L.t("英文字首", "English first letter"), selection: $selection.initial) {
-            Text(L.t("全部字首", "All letters")).tag("all")
-            ForEach(Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init), id: \.self) { Text($0).tag($0) }
+        // English first letters only sort English words.
+        if model.studyMode == .english || !ChineseCourse.isAvailable {
+            Picker(L.t("英文字首", "English first letter"), selection: $selection.initial) {
+                Text(L.t("全部字首", "All letters")).tag("all")
+                ForEach(Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init), id: \.self) { Text($0).tag($0) }
+            }
         }
         if includesSort {
             Picker(L.filterSort, selection: $selection.sort) {

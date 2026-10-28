@@ -1,0 +1,632 @@
+[
+ {
+  "hanzi": "掙扎",
+  "set": {
+   "examplePinyin": "yú zài wǎng zi lǐ yì zhí zhēng zhá."
+  },
+  "reason": "網子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "上下晃動",
+  "set": {
+   "examplePinyin": "tīng yīn yuè shí, tā de tóu gēn zhe jié zòu shàng xià huàng dòng."
+  },
+  "reason": "跟著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "拖車",
+  "set": {
+   "examplePinyin": "tā men kāi chē lā zhe tuō chē qù lù yíng.",
+   "questionPinyin": "nǐ kàn guò yǒu rén lā zhe tuō chē qù lù yíng ma?",
+   "answerPinyin": "kàn guò, zài měi guó hěn duō rén lā zhe tuō chē qù lù yíng."
+  },
+  "reason": "拉著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "保險套",
+  "set": {
+   "examplePinyin": "biàn lì shāng diàn yě mǎi de dào bǎo xiǎn tào.",
+   "answerPinyin": "yào jú hé biàn lì shāng diàn dōu mǎi de dào bǎo xiǎn tào."
+  },
+  "reason": "買得到: potential 得 is de"
+ },
+ {
+  "hanzi": "還款",
+  "set": {
+   "pinyin": "huán kuǎn",
+   "examplePinyin": "zhè ge yuè de fáng dài huán kuǎn rì shì shí hào.",
+   "questionPinyin": "nǐ měi gè yuè yǒu gù dìng yào huán kuǎn ma?",
+   "answerPinyin": "yǒu, wǒ měi gè yuè yào huán kuǎn gěi yín háng."
+  },
+  "reason": "還 (repay) is huán"
+ },
+ {
+  "hanzi": "時髦",
+  "set": {
+   "questionPinyin": "nǐ jué de tái běi rén chuān de shí máo ma?"
+  },
+  "reason": "穿得: 得 after a verb is de"
+ },
+ {
+  "hanzi": "家庭醫師",
+  "set": {
+   "examplePinyin": "bù shū fú de shí hòu, wǒ huì xiān qù kàn jiā tíng yī shī.",
+   "answerPinyin": "kě yǐ xiān qù kàn jiā tíng yī shī."
+  },
+  "reason": "看 (see a doctor) is kàn"
+ },
+ {
+  "hanzi": "預留",
+  "set": {
+   "examplePinyin": "wǒ bāng nǐ yù liú le yí gè kào chuāng de wèi zi."
+  },
+  "reason": "位子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "社交",
+  "set": {
+   "questionPinyin": "nǐ xǐ huan shè jiāo hái shì yí gè rén dāi zhe?"
+  },
+  "reason": "還是 is hái shì; 待著 (stay) is dāi zhe"
+ },
+ {
+  "hanzi": "導向",
+  "set": {
+   "examplePinyin": "zhè jiā gōng sī yǐ kè hù xū qiú wéi dǎo xiàng.",
+   "questionPinyin": "nǐ de gōng zuò shì yǐ shén me wéi dǎo xiàng?",
+   "answerPinyin": "wǒ de gōng zuò shì yǐ jié guǒ wéi dǎo xiàng."
+  },
+  "reason": "以…為 is wéi"
+ },
+ {
+  "hanzi": "沉著",
+  "set": {
+   "pinyin": "chén zhuó",
+   "examplePinyin": "miàn shì de shí hòu, tā biǎo xiàn de hěn chén zhuó.",
+   "questionPinyin": "yù dào jǐn jí zhuàng kuàng, nǐ néng bǎo chí chén zhuó ma?",
+   "answerPinyin": "wǒ huì jìn liàng bǎo chí chén zhuó, xiān shēn hū xī."
+  },
+  "reason": "沉著 is chén zhuó; 盡量 is jìn liàng (教育部)"
+ },
+ {
+  "hanzi": "均勻",
+  "set": {
+   "answerPinyin": "huì, wǒ huì jìn liàng cā jūn yún."
+  },
+  "reason": "盡量 is jìn liàng (教育部)"
+ },
+ {
+  "hanzi": "封住",
+  "set": {
+   "examplePinyin": "jì bāo guǒ qián, xiāng zi yào yòng jiāo dài fēng zhù.",
+   "questionPinyin": "nǐ jì bāo guǒ shí, zěn me fēng zhù xiāng zi?",
+   "answerPinyin": "wǒ yòng hěn duō jiāo dài bǎ xiāng zi fēng zhù."
+  },
+  "reason": "箱子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "卸下",
+  "set": {
+   "examplePinyin": "gōng rén zhèng zài xiè xià huò chē shàng de xiāng zi."
+  },
+  "reason": "箱子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "姪女",
+  "set": {
+   "questionPinyin": "nǐ yǒu zhí zi huò zhí nǚ ma?"
+  },
+  "reason": "姪子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "惱人",
+  "set": {
+   "examplePinyin": "xià tiān zuì nǎo rén de jiù shì wén zi."
+  },
+  "reason": "蚊子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "捲曲",
+  "set": {
+   "questionPinyin": "nǐ xǐ huan zhí fǎ hái shì juǎn qū de tóu fǎ?"
+  },
+  "reason": "還是 is hái shì"
+ },
+ {
+  "hanzi": "炊具",
+  "set": {
+   "answerPinyin": "wǒ huì dài kǎ shì lú hé xiǎo guō zi zhè xiē chuī jù."
+  },
+  "reason": "鍋子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "受訪者",
+  "set": {
+   "answerPinyin": "dāng guò, wǒ zài xī mén dīng dāng guò shòu fǎng zhě."
+  },
+  "reason": "西門町 is Xīméndīng"
+ },
+ {
+  "hanzi": "假設",
+  "set": {
+   "questionPinyin": "jiǎ shè nǐ zhòng le lè tòu, nǐ xiǎng zuò shén me?",
+   "answerPinyin": "jiǎ shè wǒ zhòng le lè tòu, wǒ huì qù huán yóu shì jiè."
+  },
+  "reason": "中 (win the lottery) is zhòng"
+ },
+ {
+  "hanzi": "院長",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng yuàn zhǎng xū yào shén me néng lì?"
+  },
+  "reason": "覺得 is jué de; 當 (serve as) is dāng"
+ },
+ {
+  "hanzi": "警長",
+  "set": {
+   "pinyin": "jǐng zhǎng",
+   "examplePinyin": "zhè bù xī bù piàn de zhǔ jué shì yí wèi jǐng zhǎng.",
+   "questionPinyin": "nǐ xiǎo shí hòu xiǎng dāng jǐng zhǎng ma?",
+   "answerPinyin": "xiǎng guò, wǒ xiǎo shí hòu hěn xiǎng dāng jǐng zhǎng."
+  },
+  "reason": "長 (chief) is zhǎng"
+ },
+ {
+  "hanzi": "長袍",
+  "set": {
+   "examplePinyin": "tā chuān zhe yí jiàn hēi sè de cháng páo."
+  },
+  "reason": "穿著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "庭院",
+  "set": {
+   "answerPinyin": "xǐ huan, wǒ xiǎng zài tíng yuàn lǐ zhòng huā."
+  },
+  "reason": "種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "珠子",
+  "set": {
+   "pinyin": "zhū zi",
+   "examplePinyin": "tā yòng zhū zi zuò le yì tiáo shǒu liàn.",
+   "questionPinyin": "nǐ yǒu zhū zi zuò de shǒu liàn ma?",
+   "answerPinyin": "yǒu, wǒ yǒu yì tiáo mù tou zhū zi de shǒu liàn."
+  },
+  "reason": "珠子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "著迷",
+  "set": {
+   "pinyin": "zháo mí",
+   "examplePinyin": "tā duì tái wān de lǎo miào hěn zháo mí.",
+   "questionPinyin": "nǐ duì shén me dōng xī hěn zháo mí?",
+   "answerPinyin": "wǒ duì tái wān de yè shì hěn zháo mí."
+  },
+  "reason": "著迷 is zháo mí"
+ },
+ {
+  "hanzi": "雪茄",
+  "set": {
+   "pinyin": "xuě jiā",
+   "examplePinyin": "tā xǐ huan fàn hòu chōu yì gēn xuě jiā.",
+   "questionPinyin": "nǐ wén guò xuě jiā de wèi dào ma?",
+   "answerPinyin": "wén guò, xuě jiā de wèi dào hěn zhòng."
+  },
+  "reason": "雪茄 is xuě jiā"
+ },
+ {
+  "hanzi": "館長",
+  "set": {
+   "pinyin": "guǎn zhǎng",
+   "examplePinyin": "bó wù guǎn de guǎn zhǎng dài wǒ men cān guān.",
+   "questionPinyin": "nǐ xiǎng dāng bó wù guǎn de guǎn zhǎng ma?",
+   "answerPinyin": "xiǎng, dāng guǎn zhǎng yīng gāi hěn yǒu qù."
+  },
+  "reason": "長 (head) is zhǎng"
+ },
+ {
+  "hanzi": "鋸子",
+  "set": {
+   "pinyin": "jù zi",
+   "examplePinyin": "tā yòng jù zi bǎ mù tou jù kāi.",
+   "questionPinyin": "nǐ jiā yǒu jù zi ma?",
+   "answerPinyin": "yǒu, wǒ bà ba yǒu yì bǎ jù zi."
+  },
+  "reason": "鋸子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "控制桿",
+  "set": {
+   "pinyin": "kòng zhì gǎn",
+   "examplePinyin": "zhè tái jī qì yào lā xià kòng zhì gǎn cái huì qǐ dòng.",
+   "questionPinyin": "nǐ cāo zuò guò yǒu kòng zhì gǎn de jī qì ma?",
+   "answerPinyin": "yǒu, wǒ yǐ qián zài gōng chǎng gōng zuò shí cháng lā kòng zhì gǎn."
+  },
+  "reason": "桿 (lever, shaft) is gǎn"
+ },
+ {
+  "hanzi": "周長",
+  "set": {
+   "pinyin": "zhōu cháng",
+   "examplePinyin": "zhè ge gōng yuán de zhōu cháng dà yuē liǎng gōng lǐ.",
+   "questionPinyin": "nǐ cháng qù pǎo bù de gōng yuán zhōu cháng dà gài duō shǎo?",
+   "answerPinyin": "nà ge gōng yuán de zhōu cháng dà gài yì gōng lǐ."
+  },
+  "reason": "長 (length) is cháng"
+ },
+ {
+  "hanzi": "晉升",
+  "set": {
+   "examplePinyin": "tā qù nián jìn shēng wéi bù mén jīng lǐ."
+  },
+  "reason": "晉升為 (become) is wéi"
+ },
+ {
+  "hanzi": "空虛",
+  "set": {
+   "examplePinyin": "lián jià yī gè rén zài jiā, jué de yǒu diǎn kōng xū.",
+   "questionPinyin": "shén me shí hòu nǐ huì jué de kōng xū?",
+   "answerPinyin": "xià bān yí gè rén chī wǎn cān shí, wǒ huì jué de kōng xū."
+  },
+  "reason": "連假 is lián jià; 覺得 is jué de; 空虛 is kōng xū"
+ },
+ {
+  "hanzi": "牡蠣",
+  "set": {
+   "examplePinyin": "é zǎi jiān shì yòng mǔ lì zuò de."
+  },
+  "reason": "蚵 is é in Taiwan"
+ },
+ {
+  "hanzi": "獨木舟",
+  "set": {
+   "examplePinyin": "wǒ men zài yí lán huá dú mù zhōu."
+  },
+  "reason": "划 (paddle) is huá"
+ },
+ {
+  "hanzi": "展現",
+  "set": {
+   "answerPinyin": "wǒ huì jǔ jù tǐ de lì zi zhǎn xiàn wǒ de néng lì."
+  },
+  "reason": "例子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "面紗",
+  "set": {
+   "examplePinyin": "xīn niáng dài zhe bái sè de miàn shā."
+  },
+  "reason": "戴著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "高雅",
+  "set": {
+   "questionPinyin": "nǐ jué de shén me yàng de chuān zhuó hěn gāo yǎ?"
+  },
+  "reason": "穿著 (attire) is chuān zhuó"
+ },
+ {
+  "hanzi": "蘆葦",
+  "set": {
+   "examplePinyin": "hé biān zhǎng le hěn duō lú wěi."
+  },
+  "reason": "長 (grow) is zhǎng"
+ },
+ {
+  "hanzi": "揮動",
+  "set": {
+   "examplePinyin": "qiú mí men huī dòng zhe shǒu shàng de qí zi.",
+   "answerPinyin": "huì, wǒ huì gēn zhe dà jiā yì qǐ huī dòng jiā yóu bàng."
+  },
+  "reason": "particle 著 is zhe; 旗子 suffix is zi"
+ },
+ {
+  "hanzi": "茂盛",
+  "set": {
+   "questionPinyin": "nǐ zhòng de zhí wù zhǎng de mào shèng ma?"
+  },
+  "reason": "種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "破爛",
+  "set": {
+   "examplePinyin": "tā hái chuān zhe nà jiàn pò làn de wài tào.",
+   "questionPinyin": "yī fu pò làn le, nǐ hái huì liú zhe ma?"
+  },
+  "reason": "particle 著 is zhe"
+ },
+ {
+  "hanzi": "蒸發",
+  "set": {
+   "questionPinyin": "nǐ de xīn shuǐ shì bu shì yí xià zi jiù zhēng fā le?"
+  },
+  "reason": "一下子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "波長",
+  "set": {
+   "examplePinyin": "wǒ gēn tā hěn liáo de lái, wǒ men bō cháng hěn hé."
+  },
+  "reason": "聊得來: 得 is de"
+ },
+ {
+  "hanzi": "瞇眼",
+  "set": {
+   "examplePinyin": "yáng guāng hěn qiáng, tā mī yǎn kàn zhe yuǎn fāng."
+  },
+  "reason": "看著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "踏板",
+  "set": {
+   "answerPinyin": "bú huì, wǒ dōu qǐng chē háng bāng wǒ huàn tà bǎn."
+  },
+  "reason": "車行 (shop) is chē háng"
+ },
+ {
+  "hanzi": "大批",
+  "set": {
+   "examplePinyin": "lián jià shí yǒu dà pī yóu kè qù kěn dīng."
+  },
+  "reason": "連假 (holiday) is lián jià"
+ },
+ {
+  "hanzi": "阿斯匹靈",
+  "set": {
+   "questionPinyin": "zài tái wān, nǎ lǐ mǎi de dào ā sī pǐ líng?",
+   "answerPinyin": "yì bān de yào jú jiù mǎi de dào ā sī pǐ líng."
+  },
+  "reason": "買得到: potential 得 is de"
+ },
+ {
+  "hanzi": "降落傘",
+  "set": {
+   "examplePinyin": "tā bēi zhe jiàng luò sǎn tiào xià fēi jī.",
+   "questionPinyin": "nǐ gǎn bēi jiàng luò sǎn cóng fēi jī shàng tiào xià lái ma?"
+  },
+  "reason": "背 (carry on the back) is bēi; particle 著 is zhe"
+ },
+ {
+  "hanzi": "笨拙",
+  "set": {
+   "pinyin": "bèn zhuó",
+   "examplePinyin": "wǒ gāng kāi shǐ xué yòng kuài zi shí hěn bèn zhuó.",
+   "questionPinyin": "nǐ zuò shén me shì de shí hòu hěn bèn zhuó?",
+   "answerPinyin": "wǒ bāo shuǐ jiǎo de shí hòu hěn bèn zhuó."
+  },
+  "reason": "拙 is zhuó (教育部)"
+ },
+ {
+  "hanzi": "烏鴉",
+  "set": {
+   "examplePinyin": "shù shàng tíng zhe yì zhī hēi sè de wū yā."
+  },
+  "reason": "停著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "當局",
+  "set": {
+   "answerPinyin": "wǒ jué de hěn hǎo, dāng jú dōu huì tí zǎo tōng zhī dà jiā fàng tái fēng jià."
+  },
+  "reason": "颱風假 (holiday) is jià"
+ },
+ {
+  "hanzi": "首席",
+  "set": {
+   "questionPinyin": "nǐ de gōng sī yǒu shǒu xí zhí xíng zhǎng ma?",
+   "answerPinyin": "yǒu, wǒ men de shǒu xí zhí xíng zhǎng shì měi guó rén."
+  },
+  "reason": "執行長 is zhí xíng zhǎng"
+ },
+ {
+  "hanzi": "審判",
+  "set": {
+   "examplePinyin": "zhè ge àn zi xià gè yuè kāi shǐ shěn pàn."
+  },
+  "reason": "案子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "溶液",
+  "set": {
+   "answerPinyin": "wǒ yòng yǎn jìng háng sòng de qīng jié róng yì."
+  },
+  "reason": "眼鏡行 (shop) is háng"
+ },
+ {
+  "hanzi": "存活",
+  "set": {
+   "questionPinyin": "nǐ zhòng de zhí wù dōu néng cún huó ma?",
+   "answerPinyin": "bú tài néng, wǒ zhòng de huā hěn shǎo cún huó."
+  },
+  "reason": "種 (to plant) is zhòng"
+ },
+ {
+  "hanzi": "視為",
+  "set": {
+   "pinyin": "shì wéi",
+   "examplePinyin": "zhēn zhū nǎi chá bèi shì wéi tái wān de guó mín yǐn liào.",
+   "questionPinyin": "nǐ bǎ tái wān shì wéi dì èr gè jiā ma?",
+   "answerPinyin": "shì de, wǒ bǎ tái wān shì wéi wǒ de dì èr gè jiā."
+  },
+  "reason": "視為 is shì wéi"
+ },
+ {
+  "hanzi": "統治者",
+  "set": {
+   "examplePinyin": "zhè zuò chéng bǎo yǐ qián zhù zhe yí wèi tǒng zhì zhě."
+  },
+  "reason": "住著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "宣判",
+  "set": {
+   "examplePinyin": "fǎ guān míng tiān huì xuān pàn zhè ge àn zi.",
+   "answerPinyin": "yǒu shí hòu huì, dà àn zi xuān pàn wǒ huì kàn."
+  },
+  "reason": "案子 suffix 子 is zi"
+ },
+ {
+  "hanzi": "處以",
+  "set": {
+   "pinyin": "chǔ yǐ",
+   "examplePinyin": "zài jié yùn shàng chī dōng xī huì bèi chǔ yǐ fá kuǎn.",
+   "answerPinyin": "zhī dào, zài jié yùn shàng hē shuǐ huì bèi chǔ yǐ fá kuǎn."
+  },
+  "reason": "處以 (impose a penalty) is chǔ yǐ"
+ },
+ {
+  "hanzi": "民調",
+  "set": {
+   "pinyin": "mín diào",
+   "examplePinyin": "zuì xīn mín diào xiǎn shì tā lǐng xiān.",
+   "questionPinyin": "nǐ xiāng xìn mín diào ma?",
+   "answerPinyin": "bú tài xiāng xìn, mín diào cháng cháng bù zhǔn."
+  },
+  "reason": "民調 (poll, 調查) is mín diào"
+ },
+ {
+  "hanzi": "鼓舞",
+  "set": {
+   "answerPinyin": "wǒ nǎi nai de gù shì yì zhí gǔ wǔ zhe wǒ."
+  },
+  "reason": "鼓舞著: particle 著 is zhe"
+ },
+ {
+  "hanzi": "木樁",
+  "set": {
+   "examplePinyin": "nóng fū zài tián biān dìng le yì pái mù zhuāng."
+  },
+  "reason": "釘 (to nail) is dìng"
+ },
+ {
+  "hanzi": "人質",
+  "set": {
+   "pinyin": "rén zhì",
+   "examplePinyin": "jǐng chá jiù chū le suǒ yǒu de rén zhì.",
+   "question": "電影裡的人質最後通常怎麼樣？",
+   "questionPinyin": "diàn yǐng lǐ de rén zhì zuì hòu tōng cháng zěn me yàng?",
+   "questionEnglish": "In films, what usually happens to the hostages in the end?",
+   "answer": "電影裡的人質最後通常都會被救出來。",
+   "answerPinyin": "diàn yǐng lǐ de rén zhì zuì hòu tōng cháng dōu huì bèi jiù chū lái.",
+   "answerEnglish": "In films, the hostages are usually rescued in the end."
+  },
+  "reason": "人質 is rén zhì; sensitive: question asked the learner's own taste in hostage films; made general"
+ },
+ {
+  "hanzi": "脈絡",
+  "set": {
+   "answerPinyin": "huì, liǎo jiě mài luò cái kàn de dǒng xīn wén."
+  },
+  "reason": "看得懂: potential 得 is de"
+ },
+ {
+  "hanzi": "任命",
+  "set": {
+   "examplePinyin": "tā bèi rèn mìng wéi xīn de fēn gōng sī jīng lǐ."
+  },
+  "reason": "任命為 is wéi"
+ },
+ {
+  "hanzi": "曲棍球",
+  "set": {
+   "pinyin": "qū gùn qiú",
+   "examplePinyin": "tā měi gè zhōu mò dōu qù dǎ qū gùn qiú.",
+   "questionPinyin": "nǐ dǎ guò qū gùn qiú ma?",
+   "answerPinyin": "méi dǎ guò, dàn wǒ hěn xǐ huan kàn qū gùn qiú bǐ sài."
+  },
+  "reason": "曲棍球 is qū gùn qiú"
+ },
+ {
+  "hanzi": "膽固醇",
+  "set": {
+   "examplePinyin": "zhá de dōng xī dǎn gù chún hěn gāo, bú yào chī tài duō."
+  },
+  "reason": "炸 (deep-fry) is zhá"
+ },
+ {
+  "hanzi": "特質",
+  "set": {
+   "example": "他有很多領導者的特質。",
+   "examplePinyin": "tā yǒu hěn duō lǐng dǎo zhě de tè zhí."
+  },
+  "reason": "example: 當領導 is Mainland wording; Taiwan says 領導者"
+ },
+ {
+  "hanzi": "謀殺案",
+  "set": {
+   "question": "推理劇裡的謀殺案通常是誰破的？",
+   "questionPinyin": "tuī lǐ jù lǐ de móu shā àn tōng cháng shì shéi pò de?",
+   "questionEnglish": "In mystery dramas, who usually solves the murder case?",
+   "answer": "推理劇裡的謀殺案通常是警察或偵探破的。",
+   "answerPinyin": "tuī lǐ jù lǐ de móu shā àn tōng cháng shì jǐng chá huò zhēn tàn pò de.",
+   "answerEnglish": "In mystery dramas, the murder is usually solved by the police or a detective."
+  },
+  "reason": "sensitive: question asked the learner's own taste in murder stories; made general"
+ },
+ {
+  "hanzi": "虐待",
+  "set": {
+   "question": "在台灣，虐待動物會被處罰嗎？",
+   "questionPinyin": "zài tái wān, nüè dài dòng wù huì bèi chǔ fá ma?",
+   "questionEnglish": "In Taiwan, is abusing animals punished?",
+   "answer": "會，虐待動物可能會被罰款或關進監獄。",
+   "answerPinyin": "huì, nüè dài dòng wù kě néng huì bèi fá kuǎn huò guān jìn jiān yù.",
+   "answerEnglish": "Yes, abusing animals can lead to a fine or prison."
+  },
+  "reason": "sensitive: question asked the learner's views on punishment; made impersonal"
+ },
+ {
+  "hanzi": "罪犯",
+  "set": {
+   "question": "罪犯被抓到以後會怎麼樣？",
+   "questionPinyin": "zuì fàn bèi zhuā dào yǐ hòu huì zěn me yàng?",
+   "questionEnglish": "What happens to criminals after they are caught?",
+   "answer": "罪犯被抓到以後，可能會被關進監獄。",
+   "answerPinyin": "zuì fàn bèi zhuā dào yǐ hòu, kě néng huì bèi guān jìn jiān yù.",
+   "answerEnglish": "After criminals are caught, they may be sent to prison."
+  },
+  "reason": "sensitive: question asked the learner's views on crime; made impersonal"
+ },
+ {
+  "hanzi": "嫌疑犯",
+  "set": {
+   "question": "嫌疑犯一定是真正的犯人嗎？",
+   "questionPinyin": "xián yí fàn yí dìng shì zhēn zhèng de fàn rén ma?",
+   "questionEnglish": "Is a suspect always the real culprit?",
+   "answer": "不一定，嫌疑犯也可能是無辜的。",
+   "answerPinyin": "bù yí dìng, xián yí fàn yě kě néng shì wú gū de.",
+   "answerEnglish": "Not necessarily; a suspect may also be innocent."
+  },
+  "reason": "sensitive: question asked the learner's own taste in crime shows; made general"
+ },
+ {
+  "hanzi": "囚犯",
+  "set": {
+   "question": "囚犯在監獄裡每天要做什麼？",
+   "questionPinyin": "qiú fàn zài jiān yù lǐ měi tiān yào zuò shén me?",
+   "questionEnglish": "What do prisoners have to do every day in prison?",
+   "answer": "很多囚犯每天要在監獄裡工作。",
+   "answerPinyin": "hěn duō qiú fàn měi tiān yào zài jiān yù lǐ gōng zuò.",
+   "answerEnglish": "Many prisoners have to work in the prison every day."
+  },
+  "reason": "sensitive: question asked the learner's own taste in prison films; made general"
+ },
+ {
+  "hanzi": "轉介",
+  "set": {
+   "question": "診所醫生什麼時候會轉介病人？",
+   "questionPinyin": "zhěn suǒ yī shēng shén me shí hòu huì zhuǎn jiè bìng rén?",
+   "questionEnglish": "When does a clinic doctor refer a patient?",
+   "answer": "病比較嚴重的時候，醫生會把病人轉介到大醫院。",
+   "answerPinyin": "bìng bǐ jiào yán zhòng de shí hòu, yī shēng huì bǎ bìng rén zhuǎn jiè dào dà yī yuàn.",
+   "answerEnglish": "When the illness is more serious, the doctor refers the patient to a big hospital."
+  },
+  "reason": "sensitive: question asked about the learner's own medical care; made general"
+ },
+ {
+  "hanzi": "可選",
+  "drop": true,
+  "reason": "可選 is not the Taiwan word for \"optional\" (選擇性的/自由參加); its sentences are unnatural"
+ }
+]

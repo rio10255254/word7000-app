@@ -67,7 +67,6 @@ enum L {
     static var nextSession: String { t("再一組", "Another set") }
     static var nothingToStudy: String { t("目前沒有要學的字", "Nothing to study") }
     static var nothingToStudyText: String { t("這個字庫都學完了，可以換一個字庫。", "You have finished this bank. Pick another one.") }
-    static var englishWord: String { t("英文", "English") }
 
     // Quiz
     static var noQuizWords: String { t("這個字庫還沒有單字", "This bank has no words yet") }
@@ -89,7 +88,8 @@ enum L {
 
     // Words
     static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search English, Chinese, pinyin or examples") }
-    static var coreBankName: String { t("7000 單字", "7000 Words") }
+    // Not through t(): its English side would load the Chinese course for learners of English.
+    static var coreBankName: String { zh ? "7000 單字" : (ChineseCourse.isAvailable ? "Chinese words" : "7000 Words") }
     static func bankWordCount(_ count: Int) -> String { t("\(count) 個", "\(count)") }
     static var scanSheet: String { t("掃描單字表", "Scan a word list") }
     static var newBank: String { t("新字庫", "New bank") }
@@ -109,7 +109,7 @@ enum L {
     static var filterLevel: String { t("分級", "Level") }
     static var filterSort: String { t("排序", "Sort") }
     static var sortDefault: String { t("原本順序", "Original order") }
-    static var sortAlphabetical: String { t("A 到 Z", "English A to Z") }
+    static var sortAlphabetical: String { t("A 到 Z", ChineseCourse.isAvailable ? "Pinyin A to Z" : "English A to Z") }
     static var allLevels: String { t("全部分級", "All levels") }
     static var favoriteWord: String { t("收藏", "Save") }
     static var unfavoriteWord: String { t("取消收藏", "Unsave") }

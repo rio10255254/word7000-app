@@ -321,28 +321,37 @@ final class SpeakingCoachTests: XCTestCase {
     }
 
     func testEditorialNotesAreReachableInBothLanguages() {
-        for englishUI in [false, true] {
-            let app = launch(dark: englishUI, englishUI: englishUI)
-            app.tabBars.buttons.element(boundBy: 1).tap()
-            let search = app.searchFields.firstMatch
-            XCTAssertTrue(search.waitForExistence(timeout: 5))
-            search.tap()
-            search.typeText("advice")
-            let word = app.staticTexts["advice"].firstMatch
-            XCTAssertTrue(word.waitForExistence(timeout: 5))
-            word.tap()
-            if englishUI {
-                let example = app.staticTexts["word-note-chinese-example"]
-                reveal(example, in: app)
-                XCTAssertEqual(example.label, "我請老師給我一些選大學的建議。")
-            } else {
-                reveal(app.staticTexts["advice / advise"], in: app)
-                let explanation = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "advice 是不可數名詞")).firstMatch
-                reveal(explanation, in: app)
-            }
-            snapshot(app, englishUI ? "editorial-dark-en" : "editorial-light-zh")
-            app.terminate()
-        }
+        // Learning English: the editorial note on an English word.
+        var app = launch()
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        search("advice", in: app)
+        let word = app.staticTexts["advice"].firstMatch
+        XCTAssertTrue(word.waitForExistence(timeout: 5))
+        word.tap()
+        reveal(app.staticTexts["advice / advise"], in: app)
+        let explanation = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "advice 是不可數名詞")).firstMatch
+        reveal(explanation, in: app)
+        snapshot(app, "editorial-light-zh")
+        app.terminate()
+
+        // Learning Chinese, in English: the course word, found by its pinyin,
+        // with its own example.
+        app = launch(dark: true, englishUI: true)
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        search("jianyi", in: app)
+        let course = app.staticTexts["建議"].firstMatch
+        XCTAssertTrue(course.waitForExistence(timeout: 5))
+        course.tap()
+        reveal(app.staticTexts["醫生建議我多喝水。"], in: app)
+        snapshot(app, "editorial-dark-en")
+        app.terminate()
+    }
+
+    private func search(_ text: String, in app: XCUIApplication) {
+        let field = app.searchFields.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText(text)
     }
 
     private func openSpeaking(_ app: XCUIApplication) {

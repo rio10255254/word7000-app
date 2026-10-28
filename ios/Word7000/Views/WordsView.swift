@@ -233,7 +233,7 @@ struct BankShelf: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                card(id: WordBanks.coreBankId, name: L.coreBankName, count: model.vocabularyWords.count, icon: "character.book.closed.fill", color: Palette.accent)
+                card(id: WordBanks.coreBankId, name: L.coreBankName, count: model.coreBankWords.count, icon: "character.book.closed.fill", color: Palette.accent)
                 ForEach(model.customSets.sets) { set in
                     let scanned = set.wordIds.contains(where: WordBanks.isScannedWordId)
                     card(id: set.id, name: set.name, count: WordBanks.words(of: set, in: model.allWords).count,
@@ -472,7 +472,9 @@ struct WordDetailView: View {
                     .padding(.vertical, 4)
                 }
             }
-            if let note = WordNotes.note(for: word.word) {
+            // Notes are about English words; a course word's gloss can match
+            // one by chance (收養 "adopt").
+            if !ChineseCourse.isCourseWordId(word.id), let note = WordNotes.note(for: word.word) {
                 Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
                         : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
             }

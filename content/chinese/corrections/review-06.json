@@ -1,0 +1,792 @@
+[
+ {
+  "hanzi": "走道",
+  "set": {
+   "examplePinyin": "wǒ xiǎng yào kào zǒu dào de wèi zi."
+  },
+  "reason": "pinyin: 位子 wèi zi"
+ },
+ {
+  "hanzi": "說不出話",
+  "set": {
+   "examplePinyin": "wǒ gǎn dòng de shuō bù chū huà.",
+   "questionPinyin": "shén me shì ràng nǐ jīng yà de shuō bù chū huà?",
+   "answerPinyin": "dì yī cì kàn dào tài lǔ gé, wǒ jīng yà de shuō bù chū huà."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "鯊魚",
+  "set": {
+   "answerPinyin": "méi yǒu, wǒ zhǐ zài shuǐ zú guǎn kàn guò shā yú."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "概念",
+  "set": {
+   "answerPinyin": "wǒ jué de “le” zhè ge gài niàn zuì nán."
+  },
+  "reason": "pinyin: grammar particle 了 le"
+ },
+ {
+  "hanzi": "隨意",
+  "set": {
+   "examplePinyin": "nǐ kě yǐ suí yì xuǎn yí gè wèi zi."
+  },
+  "reason": "pinyin: 位子 wèi zi"
+ },
+ {
+  "hanzi": "聯絡人",
+  "set": {
+   "examplePinyin": "wǒ shì zhè ge àn zi de lián luò rén."
+  },
+  "reason": "pinyin: 案子 àn zi"
+ },
+ {
+  "hanzi": "山坡",
+  "set": {
+   "examplePinyin": "shān pō shàng zhòng le hěn duō chá shù."
+  },
+  "reason": "pinyin: 種 (plant) zhòng"
+ },
+ {
+  "hanzi": "模仿",
+  "set": {
+   "answerPinyin": "huì, wǒ cháng mó fǎng tái wān rén shuō “hǎo ō”."
+  },
+  "reason": "pinyin: 喔 ō (Taiwan)"
+ },
+ {
+  "hanzi": "感激",
+  "set": {
+   "questionPinyin": "nǐ zuì gǎn jī shéi?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "畢業典禮",
+  "set": {
+   "questionPinyin": "nǐ de bì yè diǎn lǐ shéi yǒu lái?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "閒逛",
+  "set": {
+   "answerPinyin": "wǒ xǐ huan qù xī mén dīng xián guàng."
+  },
+  "reason": "pinyin: 西門町 dīng"
+ },
+ {
+  "hanzi": "芥末",
+  "set": {
+   "pinyin": "jiè mò",
+   "examplePinyin": "rè gǒu yào jiā yì diǎn jiè mò.",
+   "questionPinyin": "nǐ chī rè gǒu huì jiā jiè mò ma?",
+   "answerPinyin": "huì, wǒ xǐ huan jiā hěn duō jiè mò."
+  },
+  "reason": "pinyin: 芥末 jiè mò (教育部)"
+ },
+ {
+  "hanzi": "果園",
+  "set": {
+   "examplePinyin": "zhōu mò wǒ men qù guǒ yuán cǎi jú zi.",
+   "answerPinyin": "qù guò, wǒ zài xīn zhú de guǒ yuán cǎi guò jú zi."
+  },
+  "reason": "pinyin: 橘子 jú zi"
+ },
+ {
+  "hanzi": "具體",
+  "set": {
+   "examplePinyin": "nǐ kě yǐ shuō de jù tǐ yì diǎn ma?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "彩券",
+  "set": {
+   "answerPinyin": "mǎi guò, kě shì wǒ de cǎi quàn cóng lái méi zhòng guò."
+  },
+  "reason": "pinyin: 中 (win) zhòng"
+ },
+ {
+  "hanzi": "擠進",
+  "set": {
+   "questionPinyin": "shàng xià bān shí jiān, nǐ dā de shàng jié yùn ma?"
+  },
+  "reason": "pinyin: potential 得 de"
+ },
+ {
+  "hanzi": "木偶",
+  "set": {
+   "answerPinyin": "kàn guò, bù dài xì de mù ǒu zuò de hěn jīng zhì."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "充實",
+  "set": {
+   "examplePinyin": "zhè ge zhōu mò guò de hěn chōng shí."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "推動",
+  "set": {
+   "answerPinyin": "wǒ xiǎng zài gōng sī tuī dòng tán xìng shàng bān."
+  },
+  "reason": "pinyin: 彈性 tán xìng"
+ },
+ {
+  "hanzi": "簡化",
+  "set": {
+   "answerPinyin": "wǒ xiǎng jiǎn huà wǒ de yī guì, zhǐ liú cháng chuān de yī fu."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "消防員",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng xiāo fáng yuán xīn kǔ ma?"
+  },
+  "reason": "pinyin: 覺得 jué de, 當 (serve as) dāng"
+ },
+ {
+  "hanzi": "髒兮兮",
+  "set": {
+   "examplePinyin": "xiǎo hái zài gōng yuán wán de zāng xī xī de.",
+   "questionPinyin": "nǐ zuì jìn shén me shí hòu nòng de zāng xī xī de?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "看清",
+  "set": {
+   "questionPinyin": "bú dài yǎn jìng, nǐ kàn de qīng chǔ ma?"
+  },
+  "reason": "pinyin: potential 得 de"
+ },
+ {
+  "hanzi": "明確",
+  "set": {
+   "examplePinyin": "lǎo bǎn míng què de shuō jīn nián bù jiā xīn.",
+   "questionPinyin": "jù jué bié rén shí, nǐ huì shuō de hěn míng què ma?",
+   "answerPinyin": "huì, wǒ huì hěn míng què de shuō “bú yào”."
+  },
+  "reason": "pinyin: adverbial 地 de, complement 得 de"
+ },
+ {
+  "hanzi": "栗子",
+  "set": {
+   "pinyin": "lì zi",
+   "examplePinyin": "dōng tiān lù biān yǒu rén zài mài táng chǎo lì zi.",
+   "questionPinyin": "nǐ chī guò táng chǎo lì zi ma?",
+   "answerPinyin": "chī guò, dōng tiān de lì zi yòu xiāng yòu tián."
+  },
+  "reason": "pinyin: 栗子 lì zi"
+ },
+ {
+  "hanzi": "冒煙",
+  "set": {
+   "questionPinyin": "nǐ zhǔ fàn shí guō zi mào yān guò ma?",
+   "answerPinyin": "yǒu, wǒ jiān niú pái shí guō zi mào yān le."
+  },
+  "reason": "pinyin: 鍋子 guō zi"
+ },
+ {
+  "hanzi": "公事包",
+  "set": {
+   "answerPinyin": "bú huì, wǒ bú dài gōng shì bāo, dōu bēi hòu bēi bāo."
+  },
+  "reason": "pinyin: 背 (carry on back) bēi"
+ },
+ {
+  "hanzi": "鏟子",
+  "set": {
+   "pinyin": "chǎn zi",
+   "examplePinyin": "tā ná chǎn zi zài yuàn zi lǐ wā dòng.",
+   "questionPinyin": "nǐ zhòng huā de shí hòu huì yòng chǎn zi ma?",
+   "answerPinyin": "huì, wǒ yòng yì bǎ xiǎo chǎn zi zhòng huā."
+  },
+  "reason": "pinyin: 鏟子 chǎn zi, 種 (plant) zhòng"
+ },
+ {
+  "hanzi": "打字機",
+  "set": {
+   "examplePinyin": "wǒ ā gōng hái liú zhe yì tái jiù dǎ zì jī."
+  },
+  "reason": "pinyin: aspect particle 著 zhe"
+ },
+ {
+  "hanzi": "新郎",
+  "set": {
+   "examplePinyin": "xīn láng jīn tiān chuān de hěn shuài."
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "方言",
+  "set": {
+   "examplePinyin": "wǒ nǎi nai zhǐ huì shuō jiā xiāng de fāng yán."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "旋轉",
+  "set": {
+   "examplePinyin": "xiǎo nǚ hái zài cǎo dì shàng kāi xīn de xuán zhuǎn."
+  },
+  "reason": "pinyin: adverbial 地 de"
+ },
+ {
+  "hanzi": "精確",
+  "set": {
+   "answerPinyin": "dà bù fèn hěn jīng què, dàn yǒu shí hòu huì cuò."
+  },
+  "reason": "pinyin: 部分 bù fèn (教育部)"
+ },
+ {
+  "hanzi": "可用",
+  "set": {
+   "answerPinyin": "bù duō le, kě yòng kōng jiān zhǐ shèng yì diǎn diǎn."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "上漲",
+  "set": {
+   "questionPinyin": "nǐ jué de tái běi de fáng zū shàng zhǎng de kuài ma?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "單一",
+  "set": {
+   "examplePinyin": "zhè jiā diàn zhǐ mài dān yī kǒu wèi de bīng qí lín.",
+   "questionPinyin": "nǐ jué de zhǐ kào dān yī shōu rù ān quán ma?"
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "尋求",
+  "set": {
+   "questionPinyin": "nǐ gōng zuò yǒu yā lì shí, huì xiàng shéi xún qiú bāng zhù?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "財務",
+  "set": {
+   "questionPinyin": "nǐ jiā de cái wù shì shéi guǎn?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "攻擊",
+  "set": {
+   "question": "山上的猴子為什麼會攻擊遊客？",
+   "questionPinyin": "shān shàng de hóu zi wèi shén me huì gōng jí yóu kè?",
+   "questionEnglish": "Why do monkeys in the mountains attack tourists?",
+   "answer": "牠們想搶遊客的食物，所以會攻擊人。",
+   "answerPinyin": "tā men xiǎng qiǎng yóu kè de shí wù, suǒ yǐ huì gōng jí rén.",
+   "answerEnglish": "They want to grab tourists' food, so they attack people.",
+   "pinyin": "gōng jí",
+   "examplePinyin": "nà zhī gǒu tú rán gōng jí le yí gè lù rén."
+  },
+  "reason": "sensitive: question asked about the learner being attacked; made general; pinyin: 擊 jí, 突 tú (教育部)"
+ },
+ {
+  "hanzi": "相配",
+  "set": {
+   "examplePinyin": "zhè jiàn chèn shān hé nǐ de kù zi hěn xiāng pèi."
+  },
+  "reason": "pinyin: 褲子 kù zi"
+ },
+ {
+  "hanzi": "運轉",
+  "set": {
+   "examplePinyin": "lěng qì yùn zhuǎn de shēng yīn tài dà, wǒ shuì bù zháo."
+  },
+  "reason": "pinyin: 睡不著 shuì bù zháo"
+ },
+ {
+  "hanzi": "協議",
+  "set": {
+   "answerPinyin": "wǒ men yǒu xié yì, měi gè rén lún liú dào lè sè."
+  },
+  "reason": "pinyin: 倒垃圾 dào"
+ },
+ {
+  "hanzi": "供應",
+  "set": {
+   "answerPinyin": "méi yǒu, gōng sī zhǐ gōng yìng kā fēi hé chá."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "特定",
+  "set": {
+   "questionPinyin": "nǐ zhǐ hē tè dìng pái zi de kā fēi ma?"
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "塗",
+  "set": {
+   "examplePinyin": "wǒ zài wén zi yǎo de dì fāng tú le yì diǎn yào."
+  },
+  "reason": "pinyin: 蚊子 wén zi"
+ },
+ {
+  "hanzi": "發射",
+  "set": {
+   "answerPinyin": "wǒ zhǐ zài diàn shì shàng kàn guò huǒ jiàn fā shè."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "犯罪",
+  "set": {
+   "question": "台灣的犯罪率高嗎？",
+   "questionPinyin": "tái wān de fàn zuì lǜ gāo ma?",
+   "questionEnglish": "Is the crime rate in Taiwan high?",
+   "answer": "不高，台灣的犯罪率很低。",
+   "answerPinyin": "bù gāo, tái wān de fàn zuì lǜ hěn dī.",
+   "answerEnglish": "No, Taiwan's crime rate is low."
+  },
+  "reason": "sensitive: question asked the learner's views on crime; made impersonal"
+ },
+ {
+  "hanzi": "防止",
+  "set": {
+   "questionPinyin": "xià tiān nǐ zěn me fáng zhǐ bèi wén zi yǎo?"
+  },
+  "reason": "pinyin: 蚊子 wén zi"
+ },
+ {
+  "hanzi": "疼痛",
+  "set": {
+   "question": "長時間用電腦，哪裡容易疼痛？",
+   "questionPinyin": "cháng shí jiān yòng diàn nǎo, nǎ lǐ róng yì téng tòng?",
+   "questionEnglish": "After using a computer for a long time, where do people tend to ache?",
+   "answer": "長時間用電腦，肩膀和脖子容易疼痛。",
+   "answerPinyin": "cháng shí jiān yòng diàn nǎo, jiān bǎng hé bó zi róng yì téng tòng.",
+   "answerEnglish": "Using a computer for a long time tends to make your shoulders and neck ache."
+  },
+  "reason": "sensitive: question asked about the learner's own pain; made general"
+ },
+ {
+  "hanzi": "主席",
+  "set": {
+   "questionPinyin": "nǐ men gōng sī kāi huì shí, shéi dāng zhǔ xí?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "改為",
+  "set": {
+   "questionPinyin": "rú guǒ xià dà yǔ, nǐ de zhōu mò jì huà huì gǎi wéi shén me?"
+  },
+  "reason": "pinyin: 改為 gǎi wéi"
+ },
+ {
+  "hanzi": "武器",
+  "set": {
+   "question": "機場為什麼要檢查行李裡有沒有武器？",
+   "questionPinyin": "jī chǎng wèi shén me yào jiǎn chá xíng li lǐ yǒu méi yǒu wǔ qì?",
+   "questionEnglish": "Why do airports check luggage for weapons?",
+   "answer": "為了安全，機場不讓旅客帶武器上飛機。",
+   "answerPinyin": "wèi le ān quán, jī chǎng bú ràng lǚ kè dài wǔ qì shàng fēi jī.",
+   "answerEnglish": "For safety, airports don't let passengers take weapons on planes."
+  },
+  "reason": "sensitive: question asked the learner's views on owning weapons; made impersonal"
+ },
+ {
+  "hanzi": "租期",
+  "set": {
+   "english": "lease term; rental period"
+  },
+  "reason": "meaning: 租期 is a lease term, not tenure"
+ },
+ {
+  "hanzi": "受害者",
+  "set": {
+   "question": "詐騙電話的受害者常常是什麼人？",
+   "questionPinyin": "zhà piàn diàn huà de shòu hài zhě cháng cháng shì shén me rén?",
+   "questionEnglish": "What kind of people often fall victim to scam calls?",
+   "answer": "很多受害者是老人。",
+   "answerPinyin": "hěn duō shòu hài zhě shì lǎo rén.",
+   "answerEnglish": "Many of the victims are elderly people."
+  },
+  "reason": "sensitive: question asked the learner's views on crime victims; made impersonal"
+ },
+ {
+  "hanzi": "功勞",
+  "set": {
+   "questionPinyin": "gōng zuò shùn lì de shí hòu, nǐ jué de shì shéi de gōng láo?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "法官",
+  "set": {
+   "questionPinyin": "nǐ jué de dāng fǎ guān nán ma?"
+  },
+  "reason": "pinyin: 覺得 jué de, 當 (serve as) dāng"
+ },
+ {
+  "hanzi": "依靠",
+  "set": {
+   "questionPinyin": "nǐ zài tái wān yù dào wèn tí shí, yī kào shéi?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "高溫",
+  "set": {
+   "answerPinyin": "gāo wēn de shí hòu, wǒ jìn liàng bù chū mén."
+  },
+  "reason": "pinyin: 盡量 jìn liàng"
+ },
+ {
+  "hanzi": "士兵",
+  "set": {
+   "examplePinyin": "huǒ chē shàng yǒu hěn duō fàng jià de shì bīng.",
+   "answerPinyin": "bú yòng, wǒ men de shì bīng dōu shì zhì yuàn de."
+  },
+  "reason": "pinyin: particle 的 de"
+ },
+ {
+  "hanzi": "暴力",
+  "set": {
+   "question": "為什麼有些電影不適合小孩看？",
+   "questionPinyin": "wèi shén me yǒu xiē diàn yǐng bú shì hé xiǎo hái kàn?",
+   "questionEnglish": "Why are some movies not suitable for children?",
+   "answer": "因為有些電影有太多暴力畫面。",
+   "answerPinyin": "yīn wèi yǒu xiē diàn yǐng yǒu tài duō bào lì huà miàn.",
+   "answerEnglish": "Because some movies have too many violent scenes."
+  },
+  "reason": "sensitive: question asked the learner's own taste in violence; made general"
+ },
+ {
+  "hanzi": "冒出",
+  "set": {
+   "examplePinyin": "shuǐ gǔn le, guō zi mào chū hěn duō bái yān.",
+   "answerPinyin": "yǒu, wǒ tú rán mào chū xiǎng xué chōng làng de xiǎng fǎ."
+  },
+  "reason": "pinyin: 鍋子 guō zi; pinyin: 鍋子 guō zi, 突 tú (教育部)"
+ },
+ {
+  "hanzi": "監獄",
+  "set": {
+   "question": "在台灣，酒駕可能會被關進監獄嗎？",
+   "questionPinyin": "zài tái wān, jiǔ jià kě néng huì bèi guān jìn jiān yù ma?",
+   "questionEnglish": "In Taiwan, can drunk drivers be sent to prison?",
+   "answer": "會，嚴重的酒駕會被關進監獄。",
+   "answerPinyin": "huì, yán zhòng de jiǔ jià huì bèi guān jìn jiān yù.",
+   "answerEnglish": "Yes, serious drunk-driving cases can lead to prison."
+  },
+  "reason": "sensitive: question asked the learner's views on punishment; made impersonal"
+ },
+ {
+  "hanzi": "癌症",
+  "set": {
+   "question": "怎麼做可以預防癌症？",
+   "questionPinyin": "zěn me zuò kě yǐ yù fáng ái zhèng?",
+   "questionEnglish": "What can people do to help prevent cancer?"
+  },
+  "reason": "sensitive: made the illness question impersonal"
+ },
+ {
+  "hanzi": "額外",
+  "set": {
+   "questionPinyin": "nǐ chū guó lǚ xíng huì é wài mǎi bǎo xiǎn ma?"
+  },
+  "reason": "pinyin: 旅行 lǚ xíng"
+ },
+ {
+  "hanzi": "公道",
+  "set": {
+   "answerPinyin": "dà bù fèn hěn gōng dào, bú huì tài guì."
+  },
+  "reason": "pinyin: 部分 bù fèn (教育部)"
+ },
+ {
+  "hanzi": "傳開",
+  "set": {
+   "questionPinyin": "nǐ gōng sī lǐ de bā guà chuán de kuài ma?",
+   "answerPinyin": "hěn kuài, bā guà yí xià zi jiù chuán kāi le."
+  },
+  "reason": "pinyin: complement 得 de, 一下子 yí xià zi"
+ },
+ {
+  "hanzi": "承諾",
+  "set": {
+   "examplePinyin": "tā chéng nuò míng tiān huì huán qián."
+  },
+  "reason": "pinyin: 還錢 huán qián"
+ },
+ {
+  "hanzi": "引擎",
+  "set": {
+   "answerPinyin": "bú huì, yǐn qíng yǒu wèn tí wǒ dōu qù jī chē háng."
+  },
+  "reason": "pinyin: 機車行 háng"
+ },
+ {
+  "hanzi": "關節",
+  "set": {
+   "question": "什麼運動對膝蓋關節比較好？",
+   "questionPinyin": "shén me yùn dòng duì xī gài guān jié bǐ jiào hǎo?",
+   "questionEnglish": "What kind of exercise is better for your knee joints?",
+   "answer": "游泳對膝蓋關節比較好。",
+   "answerPinyin": "yóu yǒng duì xī gài guān jié bǐ jiào hǎo.",
+   "answerEnglish": "Swimming is better for your knee joints."
+  },
+  "reason": "sensitive: question asked about the learner's own joint pain; made general"
+ },
+ {
+  "hanzi": "政治人物",
+  "set": {
+   "answerPinyin": "bú tài xǐ huan, hěn duō zhèng zhì rén wù zhǐ huì shuō bú huì zuò."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "時尚",
+  "set": {
+   "examplePinyin": "tā chuān de hěn shí shàng.",
+   "questionPinyin": "nǐ jué de tái běi rén chuān de shí shàng ma?"
+  },
+  "reason": "pinyin: complement 得 de"
+ },
+ {
+  "hanzi": "陳列",
+  "set": {
+   "examplePinyin": "diàn lǐ chén liè zhe hěn duō shǒu gōng yì pǐn.",
+   "answerPinyin": "yǒu, wǒ de shū jià shàng chén liè zhe hěn duō gōng zǎi."
+  },
+  "reason": "pinyin: aspect particle 著 zhe"
+ },
+ {
+  "hanzi": "油脂",
+  "set": {
+   "answerPinyin": "huì, wǒ jìn liàng shǎo chī yóu zhī duō de dōng xī."
+  },
+  "reason": "pinyin: 盡量 jìn liàng"
+ },
+ {
+  "hanzi": "前景",
+  "set": {
+   "answerPinyin": "bú cuò, wǒ jué de zhè háng de qián jǐng hěn hǎo."
+  },
+  "reason": "pinyin: 這行 (line of work) háng"
+ },
+ {
+  "hanzi": "炸彈",
+  "set": {
+   "question": "動作片裡常有什麼場面？",
+   "questionPinyin": "dòng zuò piàn lǐ cháng yǒu shén me chǎng miàn?",
+   "questionEnglish": "What kind of scenes do action films often have?",
+   "answer": "動作片裡常有炸彈爆炸的場面。",
+   "answerPinyin": "dòng zuò piàn lǐ cháng yǒu zhà dàn bào zhà de chǎng miàn.",
+   "answerEnglish": "Action films often have scenes of bombs exploding."
+  },
+  "reason": "sensitive: question asked the learner's own taste in bomb scenes; made general"
+ },
+ {
+  "hanzi": "佔據",
+  "set": {
+   "answerPinyin": "gōng zuò zhàn jù le wǒ dà bù fèn de shí jiān."
+  },
+  "reason": "pinyin: 部分 bù fèn (教育部)"
+ },
+ {
+  "hanzi": "確切",
+  "set": {
+   "answerPinyin": "bù zhī dào què qiè de shí jiān, zhǐ zhī dào shì zǎo shàng."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "行政",
+  "set": {
+   "questionPinyin": "nǐ de gōng zuò yǒu hěn duō xíng zhèng de shì ma?"
+  },
+  "reason": "pinyin: 行政 xíng zhèng"
+ },
+ {
+  "hanzi": "分析師",
+  "set": {
+   "examplePinyin": "tā zài yín háng dāng fēn xī shī."
+  },
+  "reason": "pinyin: 當 dāng (missing tone)"
+ },
+ {
+  "hanzi": "製作者",
+  "set": {
+   "questionPinyin": "nǐ zhī dào nǐ zuì xǐ huan de yóu xì de zhì zuò zhě shì shéi ma?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "管道",
+  "set": {
+   "answerPinyin": "wǒ kàn xīn wén de guǎn dào zhǔ yào shì wǎng lù."
+  },
+  "reason": "pinyin: 是 shì"
+ },
+ {
+  "hanzi": "盯",
+  "set": {
+   "examplePinyin": "tā yì zhí dīng zhe shǒu jī kàn.",
+   "questionPinyin": "nǐ zài jié yùn shàng cháng dīng zhe shǒu jī ma?",
+   "answerPinyin": "duì, wǒ cháng cháng dīng zhe shǒu jī kàn xīn wén."
+  },
+  "reason": "pinyin: aspect particle 著 zhe"
+ },
+ {
+  "hanzi": "默契",
+  "set": {
+   "questionPinyin": "nǐ hé shéi zuì yǒu mò qì?"
+  },
+  "reason": "pinyin: 誰 shéi"
+ },
+ {
+  "hanzi": "陰性",
+  "set": {
+   "question": "快篩結果是陰性，代表什麼？",
+   "questionPinyin": "kuài shāi jié guǒ shì yīn xìng, dài biǎo shén me?",
+   "questionEnglish": "What does a negative rapid test result mean?",
+   "answer": "陰性代表沒有被感染。",
+   "answerPinyin": "yīn xìng dài biǎo méi yǒu bèi gǎn rǎn.",
+   "answerEnglish": "Negative means you're not infected."
+  },
+  "reason": "sensitive: question asked about the learner's own medical test; made general"
+ },
+ {
+  "hanzi": "最初",
+  "set": {
+   "examplePinyin": "wǒ zuì chū lái tái wān zhǐ xiǎng zhù yì nián."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "平凡",
+  "set": {
+   "examplePinyin": "wǒ zhǐ xiǎng guò píng fán de shēng huó."
+  },
+  "reason": "pinyin: 只 zhǐ"
+ },
+ {
+  "hanzi": "負擔得起",
+  "set": {
+   "pinyin": "fù dān de qǐ",
+   "examplePinyin": "tái běi de fáng zū wǒ hái fù dān de qǐ.",
+   "questionPinyin": "nǐ fù dān de qǐ tái běi de fáng zū ma?",
+   "answerPinyin": "hái kě yǐ, wǒ fù dān de qǐ xiǎo tào fáng."
+  },
+  "reason": "pinyin: potential 得 de"
+ },
+ {
+  "hanzi": "分配",
+  "set": {
+   "examplePinyin": "lǎo bǎn bǎ gōng zuò fēn pèi gěi dà jiā.",
+   "answerPinyin": "wǒ bǎ yí bàn de xīn shuǐ fēn pèi gěi fáng zū."
+  },
+  "reason": "pinyin: 給 gěi, 分 fēn"
+ },
+ {
+  "hanzi": "變回",
+  "set": {
+   "examplePinyin": "fàng wán jià, wǒ yòu biàn huí shàng bān zú le."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "空房",
+  "set": {
+   "answerPinyin": "yù guò, lián jià de shí hòu cháng cháng méi yǒu kōng fáng."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "勞動",
+  "set": {
+   "answerPinyin": "yǒu, láo dòng jié wǒ men fàng yì tiān jià."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "即將",
+  "set": {
+   "examplePinyin": "tái fēng jí jiāng lái tái wān, míng tiān kě néng fàng tái fēng jià."
+  },
+  "reason": "pinyin: 假 (holiday) jià"
+ },
+ {
+  "hanzi": "解鎖",
+  "set": {
+   "answerPinyin": "wǒ yòng liǎn bù biàn shì jiě suǒ shǒu jī."
+  },
+  "reason": "pinyin: 識 shì (教育部)"
+ },
+ {
+  "hanzi": "顯微鏡",
+  "set": {
+   "examplePinyin": "yòng xiǎn wéi jìng kě yǐ kàn dào xì jùn."
+  },
+  "reason": "pinyin: 菌 jùn (教育部)"
+ },
+ {
+  "hanzi": "打擊",
+  "set": {
+   "pinyin": "dǎ jí",
+   "examplePinyin": "shī yè duì tā shì hěn dà de dǎ jí.",
+   "questionPinyin": "nǐ yù guò hěn dà de dǎ jí ma?",
+   "answerPinyin": "yǒu, bèi cái yuán duì wǒ shì hěn dà de dǎ jí."
+  },
+  "reason": "pinyin: 擊 jí (教育部)"
+ },
+ {
+  "hanzi": "衝突",
+  "set": {
+   "pinyin": "chōng tú",
+   "examplePinyin": "tā men liǎng gè rén cháng cháng yǒu chōng tú.",
+   "questionPinyin": "nǐ gēn shì yǒu yǒu guò chōng tú ma?",
+   "answerPinyin": "yǒu guò xiǎo chōng tú, yīn wèi tā tài chǎo le."
+  },
+  "reason": "pinyin: 突 tú (教育部)"
+ },
+ {
+  "hanzi": "失靈",
+  "set": {
+   "examplePinyin": "jī chē de shā chē tú rán shī líng le.",
+   "questionPinyin": "nǐ de shǒu jī céng jīng tú rán shī líng ma?",
+   "answerPinyin": "yǒu, wǒ de shǒu jī shàng gè yuè tú rán shī líng le."
+  },
+  "reason": "pinyin: 突 tú (教育部)"
+ },
+ {
+  "hanzi": "來源",
+  "set": {
+   "answerPinyin": "wǒ de shōu rù lái yuán shì jiāo yīng wén."
+  },
+  "reason": "pinyin: 教 (teach) jiāo"
+ },
+ {
+  "hanzi": "機構",
+  "set": {
+   "answerPinyin": "wǒ zài yì jiā jiào yù jī gòu jiāo yīng wén."
+  },
+  "reason": "pinyin: 教 (teach) jiāo"
+ },
+ {
+  "hanzi": "學院",
+  "set": {
+   "examplePinyin": "tā zài yì jiā yīn yuè xué yuàn jiāo gāng qín."
+  },
+  "reason": "pinyin: 教 (teach) jiāo"
+ }
+]

@@ -68,7 +68,8 @@ struct SpellingSessionView: View {
 
     private func question(_ word: WordEntry) -> some View {
         let target = pinyin ? PinyinPractice.target(for: word) : nil
-        return ScrollView {
+        return ScrollViewReader { proxy in
+          ScrollView {
             VStack(spacing: 18) {
                 SessionBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)))
                     .padding(.top, 4)
@@ -78,6 +79,10 @@ struct SpellingSessionView: View {
                         Text("\(word.word)\(word.partOfSpeech.isEmpty ? "" : "  ·  \(word.partOfSpeech)")")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Palette.accent)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                            // Clear of the speak button in the corner.
+                            .padding(.horizontal, 44)
                         Text(target.characters)
                             .font(.roundedSize(52, weight: .bold))
                             .minimumScaleFactor(0.5)
@@ -118,7 +123,7 @@ struct SpellingSessionView: View {
                     .overlay(alignment: .topTrailing) { SpeakButton(text: word.word, language: "en-US") }
                 }
 
-                TextField(target == nil ? L.t("輸入英文單字", "Type the English word") : "Type the pinyin (tones optional)", text: Binding(
+                TextField(target == nil ? L.t("輸入英文單字", "Type the English word") : "Pinyin (tones optional)", text: Binding(
                     get: { input },
                     set: { if result == nil { input = $0 } }
                 ))
@@ -141,33 +146,51 @@ struct SpellingSessionView: View {
 
                 if let result, let target {
                     pinyinFeedback(result, word: word, target: target)
+                        .id("feedback")
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                 } else if let result {
                     feedback(result, word: word)
+                        .id("feedback")
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                 }
             }
             .padding(.bottom, 16)
         }
-        .scrollDismissesKeyboard(.never)
+          .scrollDismissesKeyboard(.never)
+          // With the keyboard up a small iPhone has room for little more than
+          // the field, so the answer is brought into view once checked.
+          .onChange(of: result) { _, new in
+              guard new != nil else { return }
+              // After the feedback has been laid out.
+              Task { @MainActor in
+                  try? await Task.sleep(for: .milliseconds(80))
+                  withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("feedback", anchor: .top) }
+              }
+          }
+        }
         .safeAreaInset(edge: .bottom) { actions(word) }
     }
 
     private func pinyinFeedback(_ result: Spelling.Result, word: WordEntry, target: PinyinPractice.Target) -> some View {
         VStack(alignment: .leading, spacing: 12) {
+            // The reading sits on the first line, so it shows even when the
+            // keyboard leaves room for little else on a small iPhone.
             HStack(alignment: .firstTextBaseline) {
-                Label(title(result), systemImage: symbol(result))
+                Image(systemName: symbol(result))
                     .font(.headline)
                     .foregroundStyle(color(result))
+                    .accessibilityLabel(title(result))
                     .accessibilityIdentifier("spelling-result")
+                Text(target.reading)
+                    .font(.rounded(.title2, weight: .bold))
+                    .accessibilityIdentifier("spelling-answer")
                 Spacer()
                 SpeakButton(text: target.characters, language: "zh-TW")
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(target.reading)
-                    .font(.rounded(.title, weight: .bold))
-                    .accessibilityIdentifier("spelling-answer")
-                Text("\(target.characters)  ·  \(word.word)").foregroundStyle(.secondary)
+                Text("\(title(result))  ·  \(target.characters)  ·  \(word.word)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 if result != .correct {
                     Text("You typed: \(input.trimmed)")
                         .font(.subheadline)
@@ -190,21 +213,24 @@ struct SpellingSessionView: View {
 
     private func feedback(_ result: Spelling.Result, word: WordEntry) -> some View {
         VStack(alignment: .leading, spacing: 12) {
+            // The word sits on the first line, as the pinyin reading does: with
+            // the keyboard up an SE or the wide iPhone Duo shows little more.
             HStack(alignment: .firstTextBaseline) {
-                Label(title(result), systemImage: symbol(result))
+                Image(systemName: symbol(result))
                     .font(.headline)
                     .foregroundStyle(color(result))
+                    .accessibilityLabel(title(result))
                     .accessibilityIdentifier("spelling-result")
+                Text(word.word)
+                    .font(.rounded(.title2, weight: .bold))
+                    .accessibilityIdentifier("spelling-answer")
                 Spacer()
                 SpeakButton(text: word.word, language: "en-US")
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(word.word)
-                    .font(.rounded(.title, weight: .bold))
-                    .accessibilityIdentifier("spelling-answer")
-                if !word.pronunciation.isEmpty {
-                    Text(word.pronunciation).foregroundStyle(.secondary)
-                }
+                Text(word.pronunciation.isEmpty ? title(result) : "\(title(result))  ·  \(word.pronunciation)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                 if result != .correct {
                     Text(L.t("你的答案：\(input.trimmed)", "You typed: \(input.trimmed)"))
                         .font(.subheadline)

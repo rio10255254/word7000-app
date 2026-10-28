@@ -27,23 +27,35 @@ final class ScanPickerTests: XCTestCase {
     func testPhotosAreReadAndSavedAcrossInputFormats() {
         for index in 0..<5 {
             let app = openScanner()
-            func pickPhoto() {
-                app.buttons["scan-choose-photo"].tap()
-                XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
-                snapshot(app, name: "scan-photo-library-\(index)")
-                // iOS 18 and later name the grid's photos PXGGridLayout-Info;
-                // iOS 17 leaves them unnamed, labelled "Photo, <date>".
+            // iOS 18 and later name the grid's photos PXGGridLayout-Info;
+            // iOS 17 leaves them unnamed, labelled "Photo, <date>".
+            func photoGrid(within seconds: TimeInterval) -> XCUIElementQuery? {
                 let named = app.images.matching(identifier: "PXGGridLayout-Info")
                 let labelled = app.images.matching(NSPredicate(format: "label BEGINSWITH 'Photo, '"))
                 // Resolve the last required photo instead of repeatedly enumerating
                 // the remote Photos accessibility tree inside a predicate callback.
-                var photos = named
-                let deadline = Date().addingTimeInterval(60)
+                let deadline = Date().addingTimeInterval(seconds)
                 while Date() < deadline {
-                    if named.element(boundBy: 4).waitForExistence(timeout: 2) { photos = named; break }
-                    if labelled.element(boundBy: 4).exists { photos = labelled; break }
+                    if named.element(boundBy: 4).waitForExistence(timeout: 2) { return named }
+                    if labelled.element(boundBy: 4).exists { return labelled }
                 }
-                XCTAssertTrue(photos.element(boundBy: 4).exists, app.debugDescription)
+                return nil
+            }
+            func pickPhoto() {
+                app.buttons["scan-choose-photo"].tap()
+                XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
+                snapshot(app, name: "scan-photo-library-\(index)")
+                var grid = photoGrid(within: 45)
+                if grid == nil {
+                    // A just-booted simulator's picker can sit on "Loading..."
+                    // for minutes; close and reopen it, as a learner would.
+                    snapshot(app, name: "scan-photo-library-\(index)-still-loading")
+                    dismissPhotoPicker(in: app)
+                    app.buttons["scan-choose-photo"].tap()
+                    XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
+                    grid = photoGrid(within: 90)
+                }
+                guard let photos = grid else { return XCTFail(app.debugDescription) }
                 snapshot(app, name: "scan-photo-library-\(index)-ready")
                 photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
                 let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch

@@ -14,6 +14,8 @@ export interface Entitlement {
   productId: string;
   expiresAt: number;
   environment: string;
+  /** The same for every renewal of one subscription; claims are bound to it. */
+  originalTransactionId: string;
 }
 
 export interface EntitlementRules {
@@ -39,8 +41,12 @@ function validAt(cert: X509Certificate, time: number): boolean {
   return cert.notBefore.getTime() <= time && time <= cert.notAfter.getTime();
 }
 
-/** The active Plus subscription in a signed transaction, or null for anything else. */
-export async function verifyEntitlement(jws: unknown, rules: EntitlementRules): Promise<Entitlement | null> {
+/**
+ * The payload of a JWS that Apple signed (a StoreKit transaction or an App
+ * Store server notification), or null when the chain, the signature or the
+ * signing date does not hold up.
+ */
+export async function verifyAppleSigned(jws: unknown, options: { roots?: string[]; now?: number } = {}): Promise<Record<string, unknown> | null> {
   try {
     if (typeof jws !== 'string' || jws.length > 20_000) return null;
     const parts = jws.split('.');
@@ -48,10 +54,10 @@ export async function verifyEntitlement(jws: unknown, rules: EntitlementRules): 
     const header = JSON.parse(new TextDecoder().decode(base64ToBytes(parts[0])));
     if (header.alg !== 'ES256' || !Array.isArray(header.x5c) || header.x5c.length !== 3) return null;
     const ders = header.x5c.map((value: string) => base64ToBytes(value));
-    const roots = (rules.roots ?? [APPLE_ROOT_CA_G3]).map(base64ToBytes);
+    const roots = (options.roots ?? [APPLE_ROOT_CA_G3]).map(base64ToBytes);
     if (!roots.some((root) => sameBytes(root, ders[2]))) return null;
     const [leaf, intermediate, root] = ders.map((der: Uint8Array<ArrayBuffer>) => new X509Certificate(der));
-    const now = rules.now ?? Date.now();
+    const now = options.now ?? Date.now();
 
     if (!leaf.getExtension(LEAF_MARKER_OID) || !intermediate.getExtension(INTERMEDIATE_MARKER_OID)) return null;
     if (!validAt(intermediate, now) || !validAt(root, now)) return null;
@@ -64,12 +70,56 @@ export async function verifyEntitlement(jws: unknown, rules: EntitlementRules): 
     if (!signatureOK) return null;
 
     const payload = JSON.parse(new TextDecoder().decode(base64ToBytes(parts[1])));
-    // Apple's certificates rotate; a transaction is judged by the leaf that was valid when it was signed.
+    // Apple's certificates rotate; a payload is judged by the leaf that was valid when it was signed.
     if (typeof payload.signedDate !== 'number' || !validAt(leaf, payload.signedDate)) return null;
-    if (payload.bundleId !== rules.bundleId || !rules.productIds.includes(payload.productId)) return null;
-    if (payload.revocationDate || typeof payload.expiresDate !== 'number' || payload.expiresDate <= now) return null;
-    return { productId: payload.productId, expiresAt: payload.expiresDate, environment: String(payload.environment ?? '') };
+    return payload;
   } catch {
     return null;
   }
+}
+
+/** The active Plus subscription in a signed transaction, or null for anything else. */
+export async function verifyEntitlement(jws: unknown, rules: EntitlementRules): Promise<Entitlement | null> {
+  const payload = await verifyAppleSigned(jws, { roots: rules.roots, now: rules.now });
+  if (!payload) return null;
+  const now = rules.now ?? Date.now();
+  if (payload.bundleId !== rules.bundleId || !rules.productIds.includes(String(payload.productId))) return null;
+  if (payload.revocationDate || typeof payload.expiresDate !== 'number' || payload.expiresDate <= now) return null;
+  const original = String(payload.originalTransactionId ?? payload.transactionId ?? '');
+  if (!/^[0-9]{1,32}$/.test(original)) return null;
+  return {
+    productId: String(payload.productId),
+    expiresAt: payload.expiresDate,
+    environment: String(payload.environment ?? ''),
+    originalTransactionId: original,
+  };
+}
+
+/** What an App Store server notification says about a Plus subscription. */
+export interface SubscriptionNotice {
+  type: string;
+  /** Null for notices about no transaction, such as Apple's TEST notice. */
+  originalTransactionId: string | null;
+  /** True once Apple refunded or revoked it; false when a refund was reversed. */
+  revoked: boolean | null;
+}
+
+/**
+ * Reads an App Store Server Notification (version 2). Only refunds, revocations
+ * and reversed refunds change anything here; other notices verify but return
+ * `revoked: null`.
+ */
+export async function verifyNotification(signedPayload: unknown, rules: EntitlementRules): Promise<SubscriptionNotice | null> {
+  const notice = await verifyAppleSigned(signedPayload, { roots: rules.roots, now: rules.now });
+  if (!notice || typeof notice.notificationType !== 'string') return null;
+  const data = (notice.data ?? {}) as Record<string, unknown>;
+  if (data.bundleId !== rules.bundleId) return null;
+  if (data.signedTransactionInfo === undefined) return { type: notice.notificationType, originalTransactionId: null, revoked: null };
+  const transaction = await verifyAppleSigned(data.signedTransactionInfo, { roots: rules.roots, now: rules.now });
+  if (!transaction || transaction.bundleId !== rules.bundleId || !rules.productIds.includes(String(transaction.productId))) return null;
+  const original = String(transaction.originalTransactionId ?? '');
+  if (!/^[0-9]{1,32}$/.test(original)) return null;
+  const type = notice.notificationType;
+  const revoked = type === 'REFUND' || type === 'REVOKE' ? true : type === 'REFUND_REVERSED' ? false : null;
+  return { type, originalTransactionId: original, revoked };
 }

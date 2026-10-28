@@ -17,6 +17,11 @@ type LiveActivityDevice = {
 
 type ReminderKind = 'noon' | 'streak';
 
+// APNs takes many requests on one connection, but a run with thousands of
+// reminders should not open thousands of requests at once.
+const APNS_CONCURRENCY = 20;
+const APNS_TOKEN = /^[0-9a-fA-F]{32,512}$/;
+
 const requiredEnvironment = [
   'SUPABASE_URL',
   'SUPABASE_SERVICE_ROLE_KEY',
@@ -47,10 +52,8 @@ Deno.serve(async (request) => {
     supabase.rpc('claim_due_noon_live_activities'),
   ]);
   if (streakClaim.error || noonClaim.error) {
-    return Response.json(
-      { error: streakClaim.error?.message ?? noonClaim.error?.message ?? 'Unable to claim reminders' },
-      { status: 500 },
-    );
+    console.error(streakClaim.error ?? noonClaim.error);
+    return Response.json({ error: 'Unable to claim reminders' }, { status: 500 });
   }
 
   const reminders = [
@@ -62,38 +65,41 @@ Deno.serve(async (request) => {
   }
 
   const authorization = `bearer ${await createApnsJwt()}`;
-  const results = await Promise.all(
-    reminders.map(async ({ device, kind }) => {
-      const response = await sendStartRequest(device, authorization, kind);
-      if (response.ok) {
-        return { kind, sent: true };
-      }
+  const results = await inBatches(reminders, APNS_CONCURRENCY, async ({ device, kind }) => {
+    const response = await sendStartRequest(device, authorization, kind);
+    if (response.ok) {
+      return { kind, sent: true };
+    }
 
-      const errorText = (await response.text()).slice(0, 500);
-      const reset = kind === 'streak'
-        ? {
-            activity_started_for_expires_at: null,
-            last_push_error: `${response.status} ${errorText}`.trim(),
-            updated_at: new Date().toISOString(),
-          }
-        : {
-            last_push_error: `${response.status} ${errorText}`.trim(),
-            noon_activity_expires_at: null,
-            noon_activity_started_for_local_date: null,
-            updated_at: new Date().toISOString(),
-          };
-      let resetQuery = supabase
-        .from('live_activity_devices')
-        .update(reset)
-        .eq('user_id', device.user_id)
-        .eq('device_id', device.device_id);
-      resetQuery = kind === 'streak'
-        ? resetQuery.eq('activity_started_for_expires_at', device.streak_expires_at!)
-        : resetQuery.eq('noon_activity_started_for_local_date', device.noon_activity_started_for_local_date!);
-      await resetQuery;
-      return { kind, sent: false };
-    }),
-  );
+    const errorText = (await response.text()).slice(0, 500);
+    // APNs says the token will never work again: stop sending to it rather
+    // than retrying every run.
+    const dead = response.status === 410 || (response.status === 400 && /BadDeviceToken|DeviceTokenNotForTopic/.test(errorText));
+    const reset = kind === 'streak'
+      ? {
+          activity_started_for_expires_at: null,
+          last_push_error: `${response.status} ${errorText}`.trim(),
+          updated_at: new Date().toISOString(),
+          ...(dead ? { enabled: false } : {}),
+        }
+      : {
+          last_push_error: `${response.status} ${errorText}`.trim(),
+          noon_activity_expires_at: null,
+          noon_activity_started_for_local_date: null,
+          updated_at: new Date().toISOString(),
+          ...(dead ? { enabled: false } : {}),
+        };
+    let resetQuery = supabase
+      .from('live_activity_devices')
+      .update(reset)
+      .eq('user_id', device.user_id)
+      .eq('device_id', device.device_id);
+    resetQuery = kind === 'streak'
+      ? resetQuery.eq('activity_started_for_expires_at', device.streak_expires_at!)
+      : resetQuery.eq('noon_activity_started_for_local_date', device.noon_activity_started_for_local_date!);
+    await resetQuery;
+    return { kind, sent: false };
+  });
   const sent = results.filter((result) => result.sent).length;
   return Response.json({
     claimed: reminders.length,
@@ -179,6 +185,10 @@ async function sendStartRequest(
   const production = Deno.env.get('APNS_ENVIRONMENT') !== 'sandbox';
   const host = production ? 'https://api.push.apple.com' : 'https://api.sandbox.push.apple.com';
   const bundleId = Deno.env.get('APNS_BUNDLE_ID') || 'com.rio.word7000';
+  // The token goes into the URL path, so only an APNs-shaped one is used.
+  if (!APNS_TOKEN.test(device.push_to_start_token)) {
+    return new Response('BadDeviceToken', { status: 400 });
+  }
 
   return fetch(`${host}/3/device/${device.push_to_start_token}`, {
     body: JSON.stringify(payload),
@@ -192,6 +202,14 @@ async function sendStartRequest(
     },
     method: 'POST',
   });
+}
+
+async function inBatches<T, R>(items: T[], size: number, work: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = [];
+  for (let start = 0; start < items.length; start += size) {
+    results.push(...await Promise.all(items.slice(start, start + size).map(work)));
+  }
+  return results;
 }
 
 async function createApnsJwt(): Promise<string> {

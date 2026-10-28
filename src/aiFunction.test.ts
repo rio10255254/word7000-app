@@ -231,7 +231,7 @@ describe('AI answer checks', () => {
     const plan = planTask('explain', explainInput);
     expect(plan.review?.(explanation(['I study after school.', 'We studied math.', 'He studies hard.']))).toBeNull();
     expect(plan.review?.(explanation(['I study after school.']))).toContain('three example sentences');
-    expect(plan.review?.(explanation(['I read a book.', 'We like math.', 'He is smart.']))).toContain('"study"');
+    expect(plan.review?.(explanation(['I read a book.', 'We like math.', 'He is smart.']))).toContain('use the word in the learner data');
   });
 
   it('keeps only the examples and combinations that use the word', () => {
@@ -258,7 +258,9 @@ describe('AI answer checks', () => {
       reply(explanation(['I study after school.', 'We like math.', 'He studies hard.'])),
     ]);
     const result = await complete(plan, { apiKey: 'k', fetch: calls.fetch });
-    expect(calls.systems[1].startsWith('Your previous reply did not give three example sentences that use "study"')).toBe(true);
+    expect(calls.systems[1].startsWith('Your previous reply did not give three example sentences that use the word in the learner data')).toBe(true);
+    // The learner's word never reaches the instructions, even when asking again.
+    expect(calls.systems[1]).not.toContain('"study"');
     expect((result.content as { examples: unknown[] }).examples).toHaveLength(2);
     // Both attempts are billed: each test reply reports 10 input and 10 output tokens.
     expect(result.usage).toEqual({ inputTokens: 20, outputTokens: 20 });

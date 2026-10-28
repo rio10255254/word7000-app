@@ -297,7 +297,8 @@ function explain(input: Record<string, unknown>): TaskPlan {
   const examplesOf = (content: unknown) => (Array.isArray(record(content).examples) ? record(content).examples as unknown[] : [])
     .map((example) => String(record(example).sentence ?? ''));
   const examplesNote = english
-    ? `Your previous reply did not give three example sentences that use "${data.word}". Write exactly three short everyday sentences, each using "${data.word}" (or one of its forms) in the meaning supplied.`
+    // The word itself stays in the learner data, never in these instructions.
+    ? 'Your previous reply did not give three example sentences that use the word in the learner data. Write exactly three short everyday sentences, each using that word (or one of its forms) in the meaning supplied.'
     : 'Your previous reply did not give three example sentences. Write exactly three short everyday sentences in Traditional Chinese.';
   const languages = practice === 'english'
     ? `The learner is a Taiwanese student learning ENGLISH. Write summary, usage, pitfall, memoryTip and every translation in ${TAIWAN}; English appears there only to quote words. Write collocations and every example sentence in natural English. 語言規則：summary、usage、pitfall、memoryTip 與每個 translation 一律用繁體中文撰寫。`

@@ -34,7 +34,9 @@ Deno.serve(async (request) => {
   const adminClient = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
   const { error: deleteError } = await adminClient.auth.admin.deleteUser(data.user.id);
   if (deleteError) {
-    return response({ error: deleteError.message }, 500);
+    // The details stay in the function logs, not in the app.
+    console.error(deleteError);
+    return response({ error: 'Unable to delete the account' }, 500);
   }
 
   return response({ deleted: true });

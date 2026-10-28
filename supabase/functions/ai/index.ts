@@ -4,7 +4,9 @@ import { AIFailure, complete } from './claude.ts';
 import { dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
 
 // The Anthropic key lives only here, as the ANTHROPIC_API_KEY function secret.
-// The app signs in (a guest account is enough) and sends task data with that session.
+// The app sends task data with the learner's session. Guest sessions are
+// refused: anyone can make guests by the thousand, so online AI needs an
+// account signed in with Apple, Google or email.
 
 const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
@@ -31,15 +33,24 @@ Deno.serve(async (request) => {
   const authorization = request.headers.get('Authorization');
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const publishableKey = Deno.env.get('SUPABASE_ANON_KEY');
-  if (!authorization?.startsWith('Bearer ') || !supabaseUrl || !publishableKey) {
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  if (!authorization?.startsWith('Bearer ') || !supabaseUrl || !publishableKey || !serviceKey) {
     return reply({ error: 'unauthorized' }, 401);
   }
+  // Refuse an oversized body before reading it.
+  const declared = Number(request.headers.get('content-length') ?? '0');
+  if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
   const userClient = createClient(supabaseUrl, publishableKey, {
     auth: { persistSession: false },
     global: { headers: { Authorization: authorization } },
   });
   const { data: userData, error: userError } = await userClient.auth.getUser();
   if (userError || !userData.user) return reply({ error: 'unauthorized' }, 401);
+  if (userData.user.is_anonymous) return reply({ error: 'sign_in_required' }, 403);
+  const user = userData.user.id;
+  // Quota and Plus claims are written only with the service role; the app
+  // itself cannot call those functions.
+  const service = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
 
   const raw = await request.text();
   if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
@@ -55,19 +66,34 @@ Deno.serve(async (request) => {
     throw error;
   }
 
-  // Plus only from a transaction Apple signed; the trial from the server's own
-  // record of the learner's first AI request.
+  // Plus only from a transaction Apple signed, not refunded, and used by at
+  // most three accounts a month; the trial from the server's own record of
+  // the learner's first AI request.
   const entitlement = await verifyEntitlement(body.entitlement, { bundleId: BUNDLE_ID, productIds: PLUS_PRODUCTS });
+  let subscribed = false;
+  if (entitlement) {
+    const { data: claimed, error: claimError } = await service.rpc('claim_plus_for', {
+      p_user: user, p_original_transaction_id: entitlement.originalTransactionId,
+    });
+    if (claimError) return reply({ error: 'unavailable' }, 503);
+    subscribed = claimed === true;
+    if (!subscribed) console.log(JSON.stringify({ plus: 'refused', transaction: entitlement.originalTransactionId }));
+  }
   // Counted before the call so a burst cannot outrun the limit.
-  const { data: quota, error: quotaError } = await userClient.rpc('consume_ai_quota');
+  const { data: quota, error: quotaError } = await service.rpc('consume_ai_quota_for', { p_user: user });
   if (quotaError || !quota) return reply({ error: 'unavailable' }, 503);
-  const tier = tierFor(entitlement !== null, quota.first_seen);
+  // A ceiling on the whole service's day, whatever happens to the per-learner limits.
+  if (Number(quota.total) > envLimit('AI_GLOBAL_DAILY_LIMIT', 20_000)) {
+    console.error(JSON.stringify({ budget: 'exhausted', total: quota.total }));
+    return reply({ error: 'unavailable' }, 503);
+  }
+  const tier = tierFor(subscribed, quota.first_seen);
   const limit = dailyLimit(tier, {
-    free: Number(Deno.env.get('AI_FREE_LIMIT') ?? '20'),
-    plus: Number(Deno.env.get('AI_PLUS_LIMIT') ?? '100'),
+    free: envLimit('AI_FREE_LIMIT', 20),
+    plus: envLimit('AI_PLUS_LIMIT', 100),
   });
   const used = Number(quota.requests);
-  if (used > limit) return reply({ error: 'quota', tier, limit, remaining: 0 }, 429);
+  if (!(used <= limit)) return reply({ error: 'quota', tier, limit, remaining: 0 }, 429);
   const plan = planTask(task, body.input, tier);
 
   try {
@@ -85,6 +111,13 @@ Deno.serve(async (request) => {
     return reply({ error: 'unavailable' }, 503);
   }
 });
+
+/** A whole-number limit from a function secret; a missing or malformed one falls back rather than lifting the limit. */
+function envLimit(name: string, fallback: number): number {
+  const text = Deno.env.get(name)?.trim();
+  const value = text ? Number(text) : NaN;
+  return Number.isInteger(value) && value >= 0 ? value : fallback;
+}
 
 function reply(body: Record<string, unknown>, status = 200): Response {
   return Response.json(body, { headers: corsHeaders, status });

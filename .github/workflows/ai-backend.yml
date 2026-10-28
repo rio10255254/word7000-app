@@ -1,13 +1,15 @@
-# Deploys the Claude-backed AI service (supabase/functions/ai) and its daily
-# quota table, and hands the Anthropic key to Supabase as a function secret.
+# Deploys the Supabase backend: the database migrations and the edge functions
+# (the Claude-backed AI service, account deletion, App Store notices and the
+# Live Activity reminders), and hands the Anthropic key to Supabase as a
+# function secret.
 #
 # The key never ships inside the iOS app: anyone can unpack an app and copy a
-# key out of it. The app calls this function with its Supabase session instead.
+# key out of it. The app calls the AI function with its Supabase session instead.
 #
 # Repository secrets (Settings > Secrets and variables > Actions):
 #   ANTHROPIC_API_KEY      the Anthropic API key for this app (console.anthropic.com)
 #   SUPABASE_ACCESS_TOKEN  a Supabase personal access token (supabase.com/dashboard/account/tokens)
-#   SUPABASE_DB_PASSWORD   the project's database password, to apply the quota migration
+#   SUPABASE_DB_PASSWORD   the project's database password, to apply the migrations
 name: AI backend
 
 on:
@@ -21,11 +23,16 @@ on:
         description: 'Daily AI requests for Plus and the 7-day trial (more reasoning on writing tasks)'
         type: string
         default: '100'
+      global_limit:
+        description: 'Daily AI requests for the whole service, a hard ceiling on what Claude can cost in a day'
+        type: string
+        default: '20000'
   push:
     branches: ['master', 'native/**']
     paths:
-      - 'supabase/functions/ai/**'
+      - 'supabase/functions/**'
       - 'supabase/migrations/**'
+      - 'supabase/config.toml'
       - '.github/workflows/ai-backend.yml'
 
 permissions:
@@ -42,14 +49,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Each secret is handed only to the steps that use it, never to npm ci or
+    # the tests.
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       FREE_LIMIT: ${{ inputs.free_limit || '20' }}
       PLUS_LIMIT: ${{ inputs.plus_limit || '100' }}
+      GLOBAL_LIMIT: ${{ inputs.global_limit || '20000' }}
     steps:
       - name: Check the secrets
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           missing=""
           [ -n "$ANTHROPIC_API_KEY" ] || missing="$missing ANTHROPIC_API_KEY"
@@ -59,7 +70,9 @@ jobs:
             echo "::error::Add these repository secrets, then run this workflow again:$missing"
             exit 1
           fi
-          [[ "$FREE_LIMIT" =~ ^[0-9]+$ && "$PLUS_LIMIT" =~ ^[0-9]+$ ]] || { echo "::error::Limits must be whole numbers"; exit 1; }
+          [[ "$FREE_LIMIT" =~ ^[0-9]+$ && "$PLUS_LIMIT" =~ ^[0-9]+$ && "$GLOBAL_LIMIT" =~ ^[0-9]+$ ]] || {
+            echo "::error::Limits must be whole numbers"; exit 1;
+          }
 
       - uses: actions/checkout@v4
 
@@ -67,51 +80,107 @@ jobs:
         with:
           node-version: 22
 
-      - name: Test the AI routing
+      - name: Test the AI routing and Apple's signatures
         run: |
           npm ci
-          npx vitest run src/aiFunction.test.ts src/aiEntitlement.test.ts
+          npx vitest run src/aiFunction.test.ts src/aiEntitlement.test.ts src/liveActivityBackend.test.ts
 
       - uses: supabase/setup-cli@v1
         with:
           version: latest
 
-      - name: Apply the quota migration
+      - name: Apply the migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           supabase link --project-ref "$PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
           supabase db push --password "$SUPABASE_DB_PASSWORD"
 
-      - name: Store the Anthropic key as a function secret
+      - name: Store the function secrets
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          supabase secrets set --project-ref "$PROJECT_REF" ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" AI_FREE_LIMIT="$FREE_LIMIT" AI_PLUS_LIMIT="$PLUS_LIMIT"
+          supabase secrets set --project-ref "$PROJECT_REF" ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
+            AI_FREE_LIMIT="$FREE_LIMIT" AI_PLUS_LIMIT="$PLUS_LIMIT" AI_GLOBAL_DAILY_LIMIT="$GLOBAL_LIMIT"
           # The Groq key is no longer used; drop it if an earlier deploy stored it.
           if supabase secrets list --project-ref "$PROJECT_REF" | grep -q GROQ_API_KEY; then
             supabase secrets unset --project-ref "$PROJECT_REF" GROQ_API_KEY
           fi
 
-      - name: Deploy the AI function
-        run: supabase functions deploy ai --project-ref "$PROJECT_REF" --use-api
-
-      - name: Check the function answers
+      - name: Deploy the functions
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
-          # No session: the function must refuse, which proves it is deployed
-          # and that it does not answer anonymous callers.
-          status=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/functions/v1/ai" \
-            -H 'Content-Type: application/json' -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}')
-          echo "Unauthenticated request returned $status"
-          [ "$status" = "401" ] || { echo "::error::Expected 401 from the deployed function, got $status"; exit 1; }
+          supabase functions deploy ai --project-ref "$PROJECT_REF" --use-api
+          supabase functions deploy delete-account --project-ref "$PROJECT_REF" --use-api
+          # Apple and the reminder cron carry no Supabase session; each
+          # function checks its caller itself (Apple's signature, the cron secret).
+          supabase functions deploy app-store-notifications --project-ref "$PROJECT_REF" --use-api --no-verify-jwt
+          supabase functions deploy send-streak-live-activities --project-ref "$PROJECT_REF" --use-api --no-verify-jwt
+
+      - name: Check the functions refuse strangers
+        run: |
+          set -euo pipefail
+          url="https://$PROJECT_REF.supabase.co/functions/v1"
+          expect() {
+            local want=$1 got=$2 what=$3
+            echo "$what returned $got"
+            [ "$got" = "$want" ] || { echo "::error::Expected $want from $what, got $got"; exit 1; }
+          }
+          expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/ai" -H 'Content-Type: application/json' \
+            -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}')" "the AI function without a session"
+          expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/delete-account" -d '{}')" "account deletion without a session"
+          expect 400 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/app-store-notifications" -H 'Content-Type: application/json' \
+            -d '{"signedPayload":"a.b.c"}')" "an App Store notice Apple did not sign"
+          expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/send-streak-live-activities")" "the reminder cron without its secret"
 
       - name: Ask Claude one real question through the function
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
           set -euo pipefail
           url="https://$PROJECT_REF.supabase.co"
-          # The app's public key; a guest session is what the app itself uses.
-          key=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json | jq -r '[.[] | select(.name == "anon" or .type == "publishable")][0].api_key')
-          [ -n "$key" ] && [ "$key" != "null" ] || { echo "::error::Could not read the project's public API key"; exit 1; }
-          token=$(curl -sf -X POST "$url/auth/v1/signup" -H "apikey: $key" -H 'Content-Type: application/json' -d '{"data":{}}' | jq -r '.access_token')
-          [ -n "$token" ] && [ "$token" != "null" ] || { echo "::error::Guest sign-in failed; is anonymous sign-in enabled?"; exit 1; }
-          reply=$(curl -s -w '\n%{http_code}' -X POST "$url/functions/v1/ai" -H "apikey: $key" -H "Authorization: Bearer $token" \
-            -H 'Content-Type: application/json' -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}')
+          keys=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json)
+          key=$(echo "$keys" | jq -r '[.[] | select(.name == "anon" or .type == "publishable")][0].api_key')
+          service=$(echo "$keys" | jq -r '[.[] | select(.name == "service_role")][0].api_key')
+          [ -n "$key" ] && [ "$key" != "null" ] && [ -n "$service" ] && [ "$service" != "null" ] || {
+            echo "::error::Could not read the project's API keys"; exit 1;
+          }
+          echo "::add-mask::$service"
+          ask() {
+            curl -s -w '\n%{http_code}' -X POST "$url/functions/v1/ai" -H "apikey: $key" -H "Authorization: Bearer $1" \
+              -H 'Content-Type: application/json' -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}'
+          }
+
+          # Guests are refused: anyone can make them by the thousand.
+          guest=$(curl -sf -X POST "$url/auth/v1/signup" -H "apikey: $key" -H 'Content-Type: application/json' -d '{"data":{}}' | jq -r '.access_token')
+          [ -n "$guest" ] && [ "$guest" != "null" ] || { echo "::error::Guest sign-in failed; is anonymous sign-in enabled?"; exit 1; }
+          reply=$(ask "$guest")
+          echo "Guest: $(echo "$reply" | tr '\n' ' ')"
+          [ "$(echo "$reply" | tail -1)" = "403" ] && [ "$(echo "$reply" | sed '$d' | jq -r '.error')" = "sign_in_required" ] || {
+            echo "::error::The AI function must refuse guests with 403 sign_in_required"; exit 1;
+          }
+          guest_id=$(curl -sf "$url/auth/v1/user" -H "apikey: $key" -H "Authorization: Bearer $guest" | jq -r '.id' || true)
+
+          # A short-lived confirmed account stands in for a signed-in learner.
+          email="ai-check-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT@example.com"
+          password=$(openssl rand -hex 24)
+          user_id=$(curl -sf -X POST "$url/auth/v1/admin/users" -H "apikey: $service" -H "Authorization: Bearer $service" \
+            -H 'Content-Type: application/json' -d "{\"email\":\"$email\",\"password\":\"$password\",\"email_confirm\":true}" | jq -r '.id')
+          cleanup() {
+            for id in "$user_id" "$guest_id"; do
+              [ -n "$id" ] && [ "$id" != "null" ] && curl -s -o /dev/null -X DELETE "$url/auth/v1/admin/users/$id" \
+                -H "apikey: $service" -H "Authorization: Bearer $service" || true
+            done
+          }
+          trap cleanup EXIT
+          [ -n "$user_id" ] && [ "$user_id" != "null" ] || { echo "::error::Could not create the check account"; exit 1; }
+          token=$(curl -sf -X POST "$url/auth/v1/token?grant_type=password" -H "apikey: $key" -H 'Content-Type: application/json' \
+            -d "{\"email\":\"$email\",\"password\":\"$password\"}" | jq -r '.access_token')
+          [ -n "$token" ] && [ "$token" != "null" ] || { echo "::error::Could not sign in to the check account"; exit 1; }
+          reply=$(ask "$token")
           status=$(echo "$reply" | tail -1)
           body=$(echo "$reply" | sed '$d')
           echo "Status $status: $(echo "$body" | jq -c '{model, effort, tier, remaining, meaning: .result.meaning, error}')"

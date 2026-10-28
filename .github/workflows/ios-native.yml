@@ -132,7 +132,9 @@ jobs:
           sys.exit(0 if any(r.get("isAvailable") and r.get("platform", "iOS") == "iOS" and r["version"].startswith(major)
                             for r in json.load(sys.stdin)["runtimes"]) else 1)'; }
           if ! has_runtime; then
-            BUILD=$(case "$IOS_MAJOR" in 17) echo 17.5 ;; *) echo "$IOS_MAJOR.0" ;; esac)
+            # macOS bash 3.2 cannot parse a case statement inside $( ).
+            BUILD="$IOS_MAJOR.0"
+            if [ "$IOS_MAJOR" = 17 ]; then BUILD=17.5; fi
             xcodebuild -downloadPlatform iOS -buildVersion "$BUILD"
           fi
           RUNTIME=$(xcrun simctl list runtimes -j | python3 -c '

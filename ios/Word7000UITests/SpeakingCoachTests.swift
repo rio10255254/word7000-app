@@ -390,10 +390,11 @@ final class SpeakingCoachTests: XCTestCase {
         answer.tap()
         answer.typeText(text)
         // The accessibility value can lag the final keyboard event on older
-        // simulators. Keep the exact-text assertion; never retry the keystroke.
+        // simulators, past five seconds on a busy iOS 18 runner (run 181).
+        // Keep the exact-text assertion; never retry the keystroke.
         let committed = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", text), object: answer)
-        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 5), .completed)
+        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 15), .completed)
         XCTAssertEqual(answer.value as? String, text)
     }
 

@@ -26,11 +26,6 @@ enum WordAudioSession {
     }
 }
 
-private struct VoiceCatalog: Sendable {
-    var options: [SpeechVoiceOption]
-    var systemDefaultIDs: [String: String]
-}
-
 /// Reads a word aloud with the system voice; works offline.
 @MainActor
 @Observable
@@ -39,11 +34,12 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     private(set) var activeText: String?
     private(set) var activeLanguage: String?
     private(set) var voices: [SpeechVoiceOption] = []
-    /// The system's default voice for each app language, looked up with the
-    /// voice list: on a cold start that lookup can block for many seconds,
-    /// so it never runs while a view is drawn.
+    /// The system's default voice for each app language, looked up once when
+    /// the voice list arrives. Asking on every redraw kept the main thread busy
+    /// for many seconds on a cold start; asking off the main thread never
+    /// returned on iOS 27.
     @ObservationIgnored private var systemDefaultIDs: [String: String] = [:]
-    @ObservationIgnored private var voicesTask: Task<VoiceCatalog, Never>?
+    @ObservationIgnored private var voicesTask: Task<[SpeechVoiceOption], Never>?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
     @ObservationIgnored private var speechID: UUID?
     @ObservationIgnored private let audioQueue = WordAudioSession.queue
@@ -57,7 +53,7 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
 
     func refreshVoices() async {
         if let task = voicesTask { apply(await task.value); return }
-        let task = Task.detached(priority: .utility) { () -> VoiceCatalog in
+        let task = Task.detached(priority: .utility) { () -> [SpeechVoiceOption] in
             var options: [SpeechVoiceOption] = []
             for voice in AVSpeechSynthesisVoice.speechVoices() {
                 guard !voice.voiceTraits.contains(.isNoveltyVoice),
@@ -69,20 +65,20 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
                 if a.name == b.name { return a.id < b.id }
                 return a.name < b.name
             }
-            var defaults: [String: String] = [:]
-            for language in ["en-US", "zh-TW"] {
-                defaults[language] = AVSpeechSynthesisVoice(language: language)?.identifier
-            }
-            return VoiceCatalog(options: options, systemDefaultIDs: defaults)
+            return options
         }
         voicesTask = task
         apply(await task.value)
         voicesTask = nil
     }
 
-    private func apply(_ catalog: VoiceCatalog) {
-        systemDefaultIDs = catalog.systemDefaultIDs
-        voices = catalog.options
+    private func apply(_ options: [SpeechVoiceOption]) {
+        if systemDefaultIDs.isEmpty {
+            for language in ["en-US", "zh-TW"] {
+                systemDefaultIDs[language] = AVSpeechSynthesisVoice(language: language)?.identifier
+            }
+        }
+        voices = options
     }
 
     func selectedVoice(language: String, preferences: SpeechPreferences) -> SpeechVoiceOption? {

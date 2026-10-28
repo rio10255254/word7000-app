@@ -8,6 +8,8 @@
 -- 3. Live Activity registrations are bounded per learner and must carry an
 --    APNs-shaped token, so a script cannot fill the reminder queue.
 -- 4. Synced progress has a size ceiling, and activity days stay near today.
+-- 5. Sign in with Apple refresh tokens are kept where only the service role
+--    reads them, so deleting an account can revoke them at Apple.
 
 -- 1. AI quota -----------------------------------------------------------------
 
@@ -225,3 +227,39 @@ create policy "Users can update their own daily activity"
   for update
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id and activity_date between current_date - 1 and current_date + 1);
+
+-- 5. Sign in with Apple ---------------------------------------------------------
+
+create table if not exists word7000_private.apple_tokens (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  refresh_token text not null check (length(refresh_token) between 1 and 2048),
+  updated_at timestamptz not null default now()
+);
+
+revoke all on word7000_private.apple_tokens from public, anon, authenticated;
+
+create or replace function public.save_apple_token_for(p_user uuid, p_refresh_token text)
+returns void
+language sql
+security definer
+set search_path = word7000_private, pg_catalog
+as $$
+  insert into word7000_private.apple_tokens (user_id, refresh_token)
+  values (p_user, p_refresh_token)
+  on conflict (user_id) do update set refresh_token = excluded.refresh_token, updated_at = now();
+$$;
+
+create or replace function public.apple_token_for(p_user uuid)
+returns text
+language sql
+stable
+security definer
+set search_path = word7000_private, pg_catalog
+as $$
+  select refresh_token from word7000_private.apple_tokens where user_id = p_user;
+$$;
+
+revoke all on function public.save_apple_token_for(uuid, text) from public, anon, authenticated;
+revoke all on function public.apple_token_for(uuid) from public, anon, authenticated;
+grant execute on function public.save_apple_token_for(uuid, text) to service_role;
+grant execute on function public.apple_token_for(uuid) to service_role;

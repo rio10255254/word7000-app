@@ -328,6 +328,12 @@ public struct SupabaseClient: Sendable {
                               headers: ["Prefer": "resolution=merge-duplicates,return=minimal"])
     }
 
+    /// Hands the one-time Sign in with Apple code to the server, which keeps
+    /// Apple's refresh token so deleting the account can revoke it.
+    public func saveAppleSignIn(code: String, session: AuthSession) async throws {
+        _ = try await request("POST", "functions/v1/apple-token", body: .object(["code": .string(code)]), session: session)
+    }
+
     public func deleteAccount(session: AuthSession) async throws {
         let data = try await request("POST", "functions/v1/delete-account", body: .object([:]), session: session)
         if let object = try? JSONDecoder().decode([String: JSONValue].self, from: data), case let .string(message)? = object["error"] {

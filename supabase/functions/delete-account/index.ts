@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
+import { appleKeyFrom, revokeAppleToken } from '../_shared/appleSignIn.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
@@ -32,6 +33,16 @@ Deno.serve(async (request) => {
   }
 
   const adminClient = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
+  // Sign in with Apple: revoke the app's access to the Apple ID too. A failure
+  // is logged but never keeps the account from being deleted.
+  const appleKey = appleKeyFrom((name) => Deno.env.get(name));
+  if (appleKey) {
+    const { data: token } = await adminClient.rpc('apple_token_for', { p_user: data.user.id });
+    if (typeof token === 'string' && token) {
+      const revoked = await revokeAppleToken(token, appleKey).catch(() => false);
+      if (!revoked) console.error(JSON.stringify({ apple: 'revoke_failed', user: data.user.id }));
+    }
+  }
   const { error: deleteError } = await adminClient.auth.admin.deleteUser(data.user.id);
   if (deleteError) {
     // The details stay in the function logs, not in the app.

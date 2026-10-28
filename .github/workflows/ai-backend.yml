@@ -10,6 +10,9 @@
 #   ANTHROPIC_API_KEY      the Anthropic API key for this app (console.anthropic.com)
 #   SUPABASE_ACCESS_TOKEN  a Supabase personal access token (supabase.com/dashboard/account/tokens)
 #   SUPABASE_DB_PASSWORD   the project's database password, to apply the migrations
+# Optional, so deleting an account also revokes Sign in with Apple (App Review 5.1.1(v)):
+#   APPLE_TEAM_ID, APPLE_SIWA_KEY_ID, APPLE_SIWA_PRIVATE_KEY  a Sign in with Apple key (.p8)
+#                          from developer.apple.com > Keys, enabled for Sign in with Apple
 name: AI backend
 
 on:
@@ -83,7 +86,7 @@ jobs:
       - name: Test the AI routing and Apple's signatures
         run: |
           npm ci
-          npx vitest run src/aiFunction.test.ts src/aiEntitlement.test.ts src/liveActivityBackend.test.ts
+          npx vitest run src/aiFunction.test.ts src/aiEntitlement.test.ts src/liveActivityBackend.test.ts src/appleSignIn.test.ts
 
       - uses: supabase/setup-cli@v1
         with:
@@ -101,9 +104,18 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_SIWA_KEY_ID: ${{ secrets.APPLE_SIWA_KEY_ID }}
+          APPLE_SIWA_PRIVATE_KEY: ${{ secrets.APPLE_SIWA_PRIVATE_KEY }}
         run: |
           supabase secrets set --project-ref "$PROJECT_REF" ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
             AI_FREE_LIMIT="$FREE_LIMIT" AI_PLUS_LIMIT="$PLUS_LIMIT" AI_GLOBAL_DAILY_LIMIT="$GLOBAL_LIMIT"
+          if [ -n "$APPLE_TEAM_ID" ] && [ -n "$APPLE_SIWA_KEY_ID" ] && [ -n "$APPLE_SIWA_PRIVATE_KEY" ]; then
+            supabase secrets set --project-ref "$PROJECT_REF" APPLE_TEAM_ID="$APPLE_TEAM_ID" \
+              APPLE_SIWA_KEY_ID="$APPLE_SIWA_KEY_ID" APPLE_SIWA_PRIVATE_KEY="$APPLE_SIWA_PRIVATE_KEY"
+          else
+            echo "::warning::No Sign in with Apple key: deleting an account will not revoke Apple sign-in. Add APPLE_TEAM_ID, APPLE_SIWA_KEY_ID and APPLE_SIWA_PRIVATE_KEY."
+          fi
           # The Groq key is no longer used; drop it if an earlier deploy stored it.
           if supabase secrets list --project-ref "$PROJECT_REF" | grep -q GROQ_API_KEY; then
             supabase secrets unset --project-ref "$PROJECT_REF" GROQ_API_KEY
@@ -115,6 +127,7 @@ jobs:
         run: |
           supabase functions deploy ai --project-ref "$PROJECT_REF" --use-api
           supabase functions deploy delete-account --project-ref "$PROJECT_REF" --use-api
+          supabase functions deploy apple-token --project-ref "$PROJECT_REF" --use-api
           # Apple and the reminder cron carry no Supabase session; each
           # function checks its caller itself (Apple's signature, the cron secret).
           supabase functions deploy app-store-notifications --project-ref "$PROJECT_REF" --use-api --no-verify-jwt
@@ -132,6 +145,7 @@ jobs:
           expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/ai" -H 'Content-Type: application/json' \
             -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}')" "the AI function without a session"
           expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/delete-account" -d '{}')" "account deletion without a session"
+          expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/apple-token" -d '{}')" "the Apple token store without a session"
           expect 400 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/app-store-notifications" -H 'Content-Type: application/json' \
             -d '{"signedPayload":"a.b.c"}')" "an App Store notice Apple did not sign"
           expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/send-streak-live-activities")" "the reminder cron without its secret"

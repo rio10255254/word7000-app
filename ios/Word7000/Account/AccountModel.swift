@@ -400,6 +400,9 @@ final class AccountModel {
             if let email, !email.isEmpty { metadata["email"] = .string(email) }
             if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
             await activate(newSession, fallbackEmail: email)
+            if let authorizationCode, let signedIn = session, !signedIn.user.anonymous {
+                Task { try? await client.saveAppleSignIn(code: authorizationCode, session: signedIn) }
+            }
         } catch {
             fail(error, fallback: A.appleFailed)
         }

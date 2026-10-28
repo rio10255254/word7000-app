@@ -89,5 +89,16 @@ assert.equal((await one(`select count(*)::int as n from live_activity_devices wh
 // Synced data ceiling.
 await db.query(`insert into profiles (id) values ($1)`, [users[0]]);
 await assert.rejects(db.query(`update profiles set progress = jsonb_build_object('x', repeat(md5(random()::text), 300000)) where id = $1`, [users[0]]), /payload_size/);
+// Apple tokens: stored and read only by the service role, gone with the account.
+await db.query(`select public.save_apple_token_for($1, 'r1')`, [users[5]]);
+await db.query(`select public.save_apple_token_for($1, 'r2')`, [users[5]]);
+assert.equal((await one(`select public.apple_token_for($1) as t`, [users[5]])).t, 'r2');
+for (const fn of ['save_apple_token_for(uuid, text)', 'apple_token_for(uuid)']) {
+  for (const role of ['anon', 'authenticated']) {
+    assert.equal((await one(`select has_function_privilege($1, 'public.${fn}', 'execute') as ok`, [role])).ok, false, `${role} on ${fn}`);
+  }
+}
+await db.query(`delete from auth.users where id = $1`, [users[5]]);
+assert.equal((await one(`select count(*)::int as n from word7000_private.apple_tokens`)).n, 0);
 console.log('migration checks passed');
 await db.close();

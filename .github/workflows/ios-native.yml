@@ -205,8 +205,8 @@ jobs:
           swift run --package-path ios/Packages/Word7000Core CoachEvaluation --probe
 
       - name: Speaking history account isolation
-        if: matrix.slug != 'ios-27-b'
         run: node scripts/test-native-speaking-recency.mjs
+        if: matrix.slug != 'ios-27-b'
 
       # Runner images ship only recent iOS runtimes; fetch the oldest supported
       # one when it is missing and give it an iPhone to test on.

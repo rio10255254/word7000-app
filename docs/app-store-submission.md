@@ -5,7 +5,7 @@
 ## App 基本資料
 
 - App 名稱：Word7000
-- 副標題：Daily vocabulary practice
+- 副標題（Subtitle）：Daily vocabulary practice
 - 類別：教育（Education）
 - Bundle ID：com.rio.word7000
 - 最低系統：iOS 17.0（CI 在 iOS 17、18、26、27 上測試）
@@ -24,7 +24,7 @@ Privacy Policy: https://word7000-app.rio10255254.workers.dev/privacy.html
 
 > 訂閱制 App 的描述（或 App Store Connect 的 EULA 欄位）必須有使用條款連結，上面最後兩行請保留。
 
-## 關鍵字
+## 關鍵字（Keywords）
 
 vocabulary, english, chinese, flashcards, quiz, word list, language learning, study, review, TOEIC, exam
 
@@ -34,9 +34,9 @@ Build a daily word habit with study cards, quizzes, review lists, and custom voc
 
 ## 網址與聯絡方式
 
-- 隱私權政策：https://word7000-app.rio10255254.workers.dev/privacy.html
-- 支援網址：https://word7000-app.rio10255254.workers.dev/support.html
-- 支援信箱：rio10255254@gmail.com
+- 隱私權政策（Privacy Policy URL）：https://word7000-app.rio10255254.workers.dev/privacy.html
+- 支援網址（Support URL）：https://word7000-app.rio10255254.workers.dev/support.html
+- 支援信箱（Support Email）：rio10255254@gmail.com
 
 ## 訂閱（App 內購買）
 
@@ -52,7 +52,7 @@ Word7000 works without an account: every learner starts as a guest.
 Signing in (Sign in with Apple, Google, or email) is required for scanning
 word lists and for the online AI features.
 
-Demo account (email sign-in): <fill in before submission>
+Demo Account (email sign-in): <fill in before submission>
 Password: <fill in before submission>
 In the app: Me > Settings > Sign in or create an account > Use email.
 
@@ -74,7 +74,7 @@ revokes the app's Apple ID token.
 
 - 需手動：在 Supabase 後台（Authentication > Users > Add user）建立一個已確認的 Email 帳號給審查用，把帳密填進上面的 Review Notes。不要用個人帳號。
 
-## 帳號刪除
+## 帳號刪除（Account Deletion）
 
 我的 > 設定 > 刪除帳號與資料。確認後刪除伺服器上的帳號、學習進度、字庫、每日紀錄、AI 使用次數、Plus 綁定與鎖定畫面提醒；若用 Apple 登入，同時向 Apple 撤銷授權（需完成下方「Sign in with Apple 金鑰」設定）。確認訊息會提醒刪除帳號不會取消 App Store 訂閱。
 
@@ -106,7 +106,7 @@ revokes the app's Apple ID token.
    - 暫時不要開 CAPTCHA：iPhone App 的訪客登入沒有送 CAPTCHA，開了會讓新使用者無法建立訪客帳號。
 5. **後端部署**：PR 合併到 `native/**` 後「AI backend」工作流程會自動套用資料庫 migration、部署全部 edge function，並實際驗證：沒登入被拒、訪客被拒（403 sign_in_required）、未簽章的 App Store 通知被拒、用臨時帳號實際問一次 Claude。
 
-## 截圖清單
+## 截圖清單（Screenshot Checklist）
 
 - 首頁：今日進度與英文／中文模式切換
 - 學習卡：例句與 AI 解說入口

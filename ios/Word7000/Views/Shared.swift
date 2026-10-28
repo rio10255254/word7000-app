@@ -26,6 +26,11 @@ enum WordAudioSession {
     }
 }
 
+private struct VoiceCatalog: Sendable {
+    var options: [SpeechVoiceOption]
+    var systemDefaultIDs: [String: String]
+}
+
 /// Reads a word aloud with the system voice; works offline.
 @MainActor
 @Observable
@@ -34,7 +39,11 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     private(set) var activeText: String?
     private(set) var activeLanguage: String?
     private(set) var voices: [SpeechVoiceOption] = []
-    @ObservationIgnored private var voicesTask: Task<[SpeechVoiceOption], Never>?
+    /// The system's default voice for each app language, looked up with the
+    /// voice list: on a cold start that lookup can block for many seconds,
+    /// so it never runs while a view is drawn.
+    @ObservationIgnored private var systemDefaultIDs: [String: String] = [:]
+    @ObservationIgnored private var voicesTask: Task<VoiceCatalog, Never>?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
     @ObservationIgnored private var speechID: UUID?
     @ObservationIgnored private let audioQueue = WordAudioSession.queue
@@ -47,8 +56,8 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func refreshVoices() async {
-        if let task = voicesTask { voices = await task.value; return }
-        let task = Task.detached(priority: .utility) { () -> [SpeechVoiceOption] in
+        if let task = voicesTask { apply(await task.value); return }
+        let task = Task.detached(priority: .utility) { () -> VoiceCatalog in
             var options: [SpeechVoiceOption] = []
             for voice in AVSpeechSynthesisVoice.speechVoices() {
                 guard !voice.voiceTraits.contains(.isNoveltyVoice),
@@ -60,16 +69,25 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
                 if a.name == b.name { return a.id < b.id }
                 return a.name < b.name
             }
-            return options
+            var defaults: [String: String] = [:]
+            for language in ["en-US", "zh-TW"] {
+                defaults[language] = AVSpeechSynthesisVoice(language: language)?.identifier
+            }
+            return VoiceCatalog(options: options, systemDefaultIDs: defaults)
         }
         voicesTask = task
-        voices = await task.value
+        apply(await task.value)
         voicesTask = nil
+    }
+
+    private func apply(_ catalog: VoiceCatalog) {
+        systemDefaultIDs = catalog.systemDefaultIDs
+        voices = catalog.options
     }
 
     func selectedVoice(language: String, preferences: SpeechPreferences) -> SpeechVoiceOption? {
         SpeechVoiceSelection.preferred(voices, language: language, selectedID: preferences.voiceID(for: language),
-                                       systemDefaultID: AVSpeechSynthesisVoice(language: language)?.identifier)
+                                       systemDefaultID: systemDefaultIDs[language])
     }
 
     func speak(_ text: String, language: String = "en-US", preferences: SpeechPreferences = SpeechPreferences()) {

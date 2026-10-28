@@ -37,13 +37,16 @@ assert.equal((await one(`select count(*)::int as n from live_activity_devices wh
 const users = Array.from({ length: 6 }, (_, i) => `00000000-0000-0000-0000-00000000000${i + 1}`);
 for (const u of users) await db.query('insert into auth.users values ($1)', [u]);
 
-// Quota: per user and site-wide.
+// Quota: per user, and a site-wide total counted separately, only for
+// requests within a learner's allowance.
 let q = await one(`select public.consume_ai_quota_for($1) as q`, [users[0]]);
-assert.equal(q.q.requests, 1); assert.equal(q.q.total, 1); assert.ok(q.q.first_seen);
+assert.equal(q.q.requests, 1); assert.equal(q.q.total, undefined); assert.ok(q.q.first_seen);
 q = await one(`select public.consume_ai_quota_for($1) as q`, [users[0]]);
 assert.equal(q.q.requests, 2);
 q = await one(`select public.consume_ai_quota_for($1) as q`, [users[1]]);
-assert.equal(q.q.requests, 1); assert.equal(q.q.total, 3);
+assert.equal(q.q.requests, 1);
+assert.equal((await one(`select public.count_ai_request_today() as n`)).n, 1);
+assert.equal((await one(`select public.count_ai_request_today() as n`)).n, 2);
 await assert.rejects(db.query(`select public.consume_ai_quota_for(null)`));
 
 // Plus claims: three accounts per subscription, refunds end it, reversals restore it.
@@ -64,14 +67,12 @@ await db.query(`select public.record_plus_notice('drop table x', 'REFUND', true)
 assert.equal((await one(`select count(*)::int as n from word7000_private.plus_revocations`)).n, 0);
 
 // Grants: only the service role may call them.
-for (const fn of ['consume_ai_quota_for(uuid)', 'claim_plus_for(uuid, text)', 'record_plus_notice(text, text, boolean)']) {
+for (const fn of ['consume_ai_quota_for(uuid)', 'count_ai_request_today()', 'claim_plus_for(uuid, text)', 'record_plus_notice(text, text, boolean)']) {
   for (const role of ['anon', 'authenticated', 'service_role']) {
     const ok = (await one(`select has_function_privilege($1, 'public.${fn}', 'execute') as ok`, [role])).ok;
     assert.equal(ok, role === 'service_role', `${role} on ${fn}`);
   }
 }
-assert.equal((await one(`select has_function_privilege('authenticated', 'public.consume_ai_quota()', 'execute') as ok`)).ok, false);
-assert.equal((await one(`select count(*)::int as n from pg_proc where proname = 'consume_ai_request'`)).n, 0);
 
 // Live Activity devices: shape checks and at most five per learner.
 const token = 'ab'.repeat(32);

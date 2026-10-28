@@ -257,8 +257,18 @@ public struct SupabaseClient: Sendable {
 
     /// Emails a link that brings the learner back to the app to choose a new
     /// password. Supabase answers the same whether or not the address exists.
-    public func requestPasswordReset(email: String, redirectTo: String) async throws {
-        _ = try await request("POST", "auth/v1/recover", query: ["redirect_to": redirectTo], body: .object(["email": .string(email)]))
+    /// The link carries only a code, which `exchangeCode` turns into a session
+    /// with the verifier behind `codeChallenge` (PKCE): a link made for any
+    /// other request, or by anyone else, cannot sign this device in.
+    public func requestPasswordReset(email: String, redirectTo: String, codeChallenge: String) async throws {
+        _ = try await request("POST", "auth/v1/recover", query: ["redirect_to": redirectTo], body: .object([
+            "email": .string(email), "code_challenge": .string(codeChallenge), "code_challenge_method": .string("s256"),
+        ]))
+    }
+
+    public func exchangeCode(_ code: String, verifier: String) async throws -> AuthSession {
+        try await decode(AuthSession.self, request("POST", "auth/v1/token", query: ["grant_type": "pkce"],
+                                                    body: .object(["auth_code": .string(code), "code_verifier": .string(verifier)])))
     }
 
     /// Sets a new password with the session from a reset link; returns that user.
@@ -386,8 +396,6 @@ public struct AuthCallback: Equatable, Sendable {
     public var code: String?
     public var error: String?
     public var errorCode: String?
-    /// "recovery" when the link came from a password reset email.
-    public var type: String?
 
     public init(url: URL) {
         var values: [String: String] = [:]
@@ -403,11 +411,7 @@ public struct AuthCallback: Equatable, Sendable {
         code = values["code"]
         error = values["error_description"] ?? values["error"]
         errorCode = values["error_code"]
-        type = values["type"]
     }
-
-    /// A password reset link, carrying a session to set the new password with.
-    public var isPasswordRecovery: Bool { type == "recovery" && accessToken != nil && refreshToken != nil }
 
     public var isIdentityAlreadyLinked: Bool {
         errorCode == "identity_already_exists"

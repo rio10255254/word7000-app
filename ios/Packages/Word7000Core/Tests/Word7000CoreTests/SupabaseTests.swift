@@ -122,16 +122,16 @@ final class SupabaseTests: XCTestCase {
         XCTAssertEqual(parsed.error, "Nope here")
     }
 
-    func testPasswordResetLinkAndRequests() async throws {
-        let link = AuthCallback(url: URL(string: "word7000://auth/callback#access_token=a&refresh_token=r&expires_in=3600&type=recovery")!)
-        XCTAssertTrue(link.isPasswordRecovery)
-        XCTAssertFalse(AuthCallback(url: URL(string: "word7000://auth/callback#access_token=a&refresh_token=r")!).isPasswordRecovery)
-        XCTAssertFalse(AuthCallback(url: URL(string: "word7000://auth/callback#type=recovery")!).isPasswordRecovery)
+    func testPasswordResetUsesACodeAndTheVerifierKeptHere() async throws {
+        XCTAssertEqual(AuthCallback(url: URL(string: "word7000://auth/callback?code=c-123")!).code, "c-123")
+        let expired = AuthCallback(url: URL(string: "word7000://auth/callback#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid")!)
+        XCTAssertEqual(expired.errorCode, "otp_expired")
 
-        let transport = FakeTransport([("{}", 200), (#"{"id":"u2","email":"a@example.com"}"#, 200)])
+        let transport = FakeTransport([("{}", 200), (sessionJSON, 200), (#"{"id":"u2","email":"a@example.com"}"#, 200)])
         let client = SupabaseClient(config: config, transport: transport)
-        try await client.requestPasswordReset(email: "a@example.com", redirectTo: "https://example.com/auth-native.html")
-        let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
+        try await client.requestPasswordReset(email: "a@example.com", redirectTo: "https://example.com/auth-native.html", codeChallenge: "chal")
+        let session = try await client.exchangeCode("c-123", verifier: "verif")
+        XCTAssertEqual(session.accessToken, "a1")
         let user = try await client.updatePassword("new secret", session: session)
         XCTAssertEqual(user.id, "u2")
         let reset = transport.requests[0]
@@ -139,8 +139,14 @@ final class SupabaseTests: XCTestCase {
         XCTAssertEqual(reset.url?.path, "/auth/v1/recover")
         XCTAssertEqual(URLComponents(url: reset.url!, resolvingAgainstBaseURL: false)?.queryItems?.first?.value,
                        "https://example.com/auth-native.html")
-        XCTAssertEqual(try JSONDecoder().decode([String: String].self, from: reset.httpBody ?? Data()), ["email": "a@example.com"])
-        let update = transport.requests[1]
+        XCTAssertEqual(try JSONDecoder().decode([String: String].self, from: reset.httpBody ?? Data()),
+                       ["email": "a@example.com", "code_challenge": "chal", "code_challenge_method": "s256"])
+        let exchange = transport.requests[1]
+        XCTAssertEqual(exchange.url?.path, "/auth/v1/token")
+        XCTAssertEqual(URLComponents(url: exchange.url!, resolvingAgainstBaseURL: false)?.queryItems?.first?.value, "pkce")
+        XCTAssertEqual(try JSONDecoder().decode([String: String].self, from: exchange.httpBody ?? Data()),
+                       ["auth_code": "c-123", "code_verifier": "verif"])
+        let update = transport.requests[2]
         XCTAssertEqual(update.httpMethod, "PUT")
         XCTAssertEqual(update.url?.path, "/auth/v1/user")
         XCTAssertEqual(update.value(forHTTPHeaderField: "Authorization"), "Bearer a1")

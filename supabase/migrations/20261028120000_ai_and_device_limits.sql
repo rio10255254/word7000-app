@@ -12,6 +12,9 @@
 --    reads them, so deleting an account can revoke them at Apple.
 
 -- 1. AI quota -----------------------------------------------------------------
+-- Two steps: the learner's own count first, and the site-wide total only for
+-- a request within the learner's allowance, so one account sending requests
+-- past its limit cannot use up the whole service's day.
 
 create table if not exists word7000_private.ai_daily_totals (
   usage_date date primary key,
@@ -29,7 +32,6 @@ as $$
 declare
   today date := (timezone('utc', now()))::date;
   used integer;
-  total integer;
   started timestamptz;
 begin
   if p_user is null then
@@ -45,22 +47,30 @@ begin
   returning usage.requests into used;
   delete from word7000_private.ai_usage where user_id = p_user and usage_date < today - 7;
 
-  insert into word7000_private.ai_daily_totals as totals (usage_date, requests)
-  values (today, 1)
-  on conflict (usage_date) do update set requests = totals.requests + 1
-  returning totals.requests into total;
-
-  return jsonb_build_object('requests', used, 'first_seen', started, 'total', total);
+  return jsonb_build_object('requests', used, 'first_seen', started);
 end;
+$$;
+
+create or replace function public.count_ai_request_today()
+returns integer
+language sql
+security definer
+set search_path = word7000_private, pg_catalog
+as $$
+  insert into word7000_private.ai_daily_totals as totals (usage_date, requests)
+  values ((timezone('utc', now()))::date, 1)
+  on conflict (usage_date) do update set requests = totals.requests + 1
+  returning totals.requests;
 $$;
 
 revoke all on function public.consume_ai_quota_for(uuid) from public, anon, authenticated;
 grant execute on function public.consume_ai_quota_for(uuid) to service_role;
+revoke all on function public.count_ai_request_today() from public, anon, authenticated;
+grant execute on function public.count_ai_request_today() to service_role;
 
--- The app never called these itself; only the edge function did, with the
--- learner's session. Nothing outside the service role may count requests now.
-revoke all on function public.consume_ai_quota() from public, anon, authenticated;
-drop function if exists public.consume_ai_request();
+-- The earlier consume_ai_quota() stays callable until the new ai function is
+-- deployed (the workflow migrates first); it only counts against the caller's
+-- own allowance. A later migration retires it.
 
 -- 2. Plus subscriptions ---------------------------------------------------------
 

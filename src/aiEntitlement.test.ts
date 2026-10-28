@@ -134,6 +134,16 @@ describe('App Store server notifications', () => {
     }
   });
 
+  it('accepts a notice as large as a real one, with its renewal info alongside', async () => {
+    const signedRenewalInfo = await sign(chain, { signedDate: now, autoRenewProductId: 'com.rio.word7000.plus.monthly', padding: 'x'.repeat(9000) });
+    const big = await sign(chain, {
+      notificationType: 'REFUND', signedDate: now - 1000,
+      data: { bundleId: 'com.rio.word7000', signedTransactionInfo: await sign(chain, subscription), signedRenewalInfo },
+    });
+    expect(big.length).toBeGreaterThan(20_000);
+    await expect(verifyNotification(big, rules(chain))).resolves.toMatchObject({ type: 'REFUND', revoked: true });
+  });
+
   it('accepts Apple’s test notice, which names no transaction', async () => {
     await expect(verifyNotification(await notice('TEST', undefined), rules(chain))).resolves.toEqual({
       type: 'TEST', originalTransactionId: null, revoked: null,

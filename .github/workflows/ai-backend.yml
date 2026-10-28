@@ -156,43 +156,54 @@ jobs:
         run: |
           set -euo pipefail
           url="https://$PROJECT_REF.supabase.co"
-          keys=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json)
+          # Newer CLIs mask secret keys unless asked to reveal them.
+          keys=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json --reveal 2>/dev/null \
+            || supabase projects api-keys --project-ref "$PROJECT_REF" -o json)
           key=$(echo "$keys" | jq -r '[.[] | select(.name == "anon" or .type == "publishable")][0].api_key')
-          service=$(echo "$keys" | jq -r '[.[] | select(.name == "service_role")][0].api_key')
+          # The legacy service_role key, or a secret key where legacy keys are off.
+          service=$(echo "$keys" | jq -r '([.[] | select(.name == "service_role")] + [.[] | select(.type == "secret")])[0].api_key')
           [ -n "$key" ] && [ "$key" != "null" ] && [ -n "$service" ] && [ "$service" != "null" ] || {
             echo "::error::Could not read the project's API keys"; exit 1;
           }
           echo "::add-mask::$service"
+          # A legacy key is a JWT and also goes in Authorization; a secret key
+          # goes only in apikey, which the gateway turns into a service session.
+          admin=(-H "apikey: $service")
+          case "$service" in eyJ*) admin+=(-H "Authorization: Bearer $service") ;; esac
+          user_id=""
+          guest_id=""
+          cleanup() {
+            for id in "$user_id" "$guest_id"; do
+              if [ -n "$id" ] && [ "$id" != "null" ]; then
+                curl -s -o /dev/null -X DELETE "$url/auth/v1/admin/users/$id" "${admin[@]}" || true
+              fi
+            done
+          }
+          trap cleanup EXIT
           ask() {
             curl -s -w '\n%{http_code}' -X POST "$url/functions/v1/ai" -H "apikey: $key" -H "Authorization: Bearer $1" \
               -H 'Content-Type: application/json' -d '{"task":"fillWord","consent":"anthropic","input":{"word":"apple"}}'
           }
 
           # Guests are refused: anyone can make them by the thousand.
-          guest=$(curl -sf -X POST "$url/auth/v1/signup" -H "apikey: $key" -H 'Content-Type: application/json' -d '{"data":{}}' | jq -r '.access_token')
+          guest=$( (curl -sf -X POST "$url/auth/v1/signup" -H "apikey: $key" -H 'Content-Type: application/json' -d '{"data":{}}' \
+            | jq -r '.access_token') || true)
           [ -n "$guest" ] && [ "$guest" != "null" ] || { echo "::error::Guest sign-in failed; is anonymous sign-in enabled?"; exit 1; }
+          guest_id=$( (curl -sf "$url/auth/v1/user" -H "apikey: $key" -H "Authorization: Bearer $guest" | jq -r '.id') || true)
           reply=$(ask "$guest")
           echo "Guest: $(echo "$reply" | tr '\n' ' ')"
           [ "$(echo "$reply" | tail -1)" = "403" ] && [ "$(echo "$reply" | sed '$d' | jq -r '.error')" = "sign_in_required" ] || {
             echo "::error::The AI function must refuse guests with 403 sign_in_required"; exit 1;
           }
-          guest_id=$(curl -sf "$url/auth/v1/user" -H "apikey: $key" -H "Authorization: Bearer $guest" | jq -r '.id' || true)
 
           # A short-lived confirmed account stands in for a signed-in learner.
           email="ai-check-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT@example.com"
           password=$(openssl rand -hex 24)
-          user_id=$(curl -sf -X POST "$url/auth/v1/admin/users" -H "apikey: $service" -H "Authorization: Bearer $service" \
-            -H 'Content-Type: application/json' -d "{\"email\":\"$email\",\"password\":\"$password\",\"email_confirm\":true}" | jq -r '.id')
-          cleanup() {
-            for id in "$user_id" "$guest_id"; do
-              [ -n "$id" ] && [ "$id" != "null" ] && curl -s -o /dev/null -X DELETE "$url/auth/v1/admin/users/$id" \
-                -H "apikey: $service" -H "Authorization: Bearer $service" || true
-            done
-          }
-          trap cleanup EXIT
+          user_id=$( (curl -sf -X POST "$url/auth/v1/admin/users" "${admin[@]}" -H 'Content-Type: application/json' \
+            -d "{\"email\":\"$email\",\"password\":\"$password\",\"email_confirm\":true}" | jq -r '.id') || true)
           [ -n "$user_id" ] && [ "$user_id" != "null" ] || { echo "::error::Could not create the check account"; exit 1; }
-          token=$(curl -sf -X POST "$url/auth/v1/token?grant_type=password" -H "apikey: $key" -H 'Content-Type: application/json' \
-            -d "{\"email\":\"$email\",\"password\":\"$password\"}" | jq -r '.access_token')
+          token=$( (curl -sf -X POST "$url/auth/v1/token?grant_type=password" -H "apikey: $key" -H 'Content-Type: application/json' \
+            -d "{\"email\":\"$email\",\"password\":\"$password\"}" | jq -r '.access_token') || true)
           [ -n "$token" ] && [ "$token" != "null" ] || { echo "::error::Could not sign in to the check account"; exit 1; }
           reply=$(ask "$token")
           status=$(echo "$reply" | tail -1)

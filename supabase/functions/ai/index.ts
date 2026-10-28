@@ -82,11 +82,6 @@ Deno.serve(async (request) => {
   // Counted before the call so a burst cannot outrun the limit.
   const { data: quota, error: quotaError } = await service.rpc('consume_ai_quota_for', { p_user: user });
   if (quotaError || !quota) return reply({ error: 'unavailable' }, 503);
-  // A ceiling on the whole service's day, whatever happens to the per-learner limits.
-  if (Number(quota.total) > envLimit('AI_GLOBAL_DAILY_LIMIT', 20_000)) {
-    console.error(JSON.stringify({ budget: 'exhausted', total: quota.total }));
-    return reply({ error: 'unavailable' }, 503);
-  }
   const tier = tierFor(subscribed, quota.first_seen);
   const limit = dailyLimit(tier, {
     free: envLimit('AI_FREE_LIMIT', 20),
@@ -94,6 +89,14 @@ Deno.serve(async (request) => {
   });
   const used = Number(quota.requests);
   if (!(used <= limit)) return reply({ error: 'quota', tier, limit, remaining: 0 }, 429);
+  // A ceiling on the whole service's day, whatever happens to the per-learner
+  // limits; only requests within a learner's allowance count towards it.
+  const { data: total, error: totalError } = await service.rpc('count_ai_request_today');
+  if (totalError || total == null) return reply({ error: 'unavailable' }, 503);
+  if (Number(total) > envLimit('AI_GLOBAL_DAILY_LIMIT', 20_000)) {
+    console.error(JSON.stringify({ budget: 'exhausted', total }));
+    return reply({ error: 'unavailable' }, 503);
+  }
   const plan = planTask(task, body.input, tier);
 
   try {

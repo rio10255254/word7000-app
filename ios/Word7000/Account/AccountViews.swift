@@ -44,6 +44,7 @@ struct SignInSheet: View {
     @State private var showEmail = false
     @State private var email = ""
     @State private var password = ""
+    @State private var finished = false
 
     var body: some View {
         NavigationStack {
@@ -135,9 +136,8 @@ struct SignInSheet: View {
             }
         }
         .interactiveDismissDisabled(account.busy)
-        // A reset link opened while this sheet is up: ask for the new password over it.
-        .sheet(isPresented: Binding(get: { account.recovery != nil }, set: { if !$0 { account.cancelRecovery() } }),
-               onDismiss: finishIfSignedIn) { NewPasswordSheet() }
+        // Signed in another way meanwhile, such as a new password from a reset link.
+        .onChange(of: account.isPermanent) { _, signedIn in if signedIn { finishIfSignedIn() } }
     }
 
     private func handleApple(_ result: Result<ASAuthorization, Error>) {
@@ -168,7 +168,9 @@ struct SignInSheet: View {
     }
 
     private func finishIfSignedIn() {
-        guard account.isPermanent else { return }
+        // Both the sign-in task and the change to a permanent account land here.
+        guard account.isPermanent, !finished else { return }
+        finished = true
         dismiss()
         onSignedIn()
     }
@@ -201,6 +203,9 @@ struct NewPasswordSheet: View {
         NavigationStack {
             Form {
                 Section {
+                    if let email = account.recovery?.user.email {
+                        LabeledContent(L.t("帳號", "Account"), value: email)
+                    }
                     SecureField(L.t("新密碼", "New password"), text: $password)
                         .textContentType(.newPassword)
                         .accessibilityIdentifier("new-password")
@@ -235,6 +240,30 @@ struct NewPasswordSheet: View {
             }
         }
         .interactiveDismissDisabled(account.busy)
+    }
+}
+
+/// Shows the new-password form in a window of its own, above whatever the app
+/// has on screen (a study session, a sheet), since a reset link can arrive at
+/// any moment and a sheet cannot open over another.
+@MainActor
+final class RecoveryPresenter {
+    static let shared = RecoveryPresenter()
+    private var window: UIWindow?
+
+    func update(_ account: AccountModel) {
+        guard account.recovery != nil else {
+            window?.isHidden = true
+            window = nil
+            return
+        }
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        guard window == nil, let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first else { return }
+        let window = UIWindow(windowScene: scene)
+        window.windowLevel = .alert
+        window.rootViewController = UIHostingController(rootView: NewPasswordSheet().environment(account))
+        window.makeKeyAndVisible()
+        self.window = window
     }
 }
 

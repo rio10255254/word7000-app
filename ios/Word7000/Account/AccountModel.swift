@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import Observation
 import UIKit
@@ -84,6 +85,9 @@ final class AccountModel {
             Keychain.delete(Self.sessionKey)
         }
         status = .loading
+        // A sign-in that finishes meanwhile (a reset link, Apple) wins over
+        // the guest this would otherwise start.
+        let generation = identityGeneration
         do {
             var restored = storedSession() ?? legacySession()
             if let current = restored, current.needsRefresh() {
@@ -101,8 +105,10 @@ final class AccountModel {
             } else {
                 session = try await client.signInAnonymously()
             }
+            guard generation == identityGeneration else { return }
             await activate(session)
         } catch {
+            guard generation == identityGeneration else { return }
             status = .error(A.offline)
             message = A.offline
         }
@@ -478,25 +484,58 @@ final class AccountModel {
         }
     }
 
+    /// A reset this iPhone asked for: the PKCE verifier its link must match.
+    private struct PendingReset: Codable {
+        let verifier: String
+        let requested: Date
+    }
+    private static let resetKey = "password-reset"
+
     /// Emails a link that opens this app to choose a new password.
     func sendPasswordReset(email: String) async {
         guard let client else { return }
         guard email.contains("@") else { message = A.enterEmail; return }
         busy = true
         defer { busy = false }
+        let verifier = SignInSheet.makeNonce(length: 64)
+        let challenge = Data(SHA256.hash(data: Data(verifier.utf8))).base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-").replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
         do {
-            try await client.requestPasswordReset(email: email, redirectTo: Self.redirectURL)
+            try await client.requestPasswordReset(email: email, redirectTo: Self.redirectURL, codeChallenge: challenge)
+            if let data = try? JSONEncoder().encode(PendingReset(verifier: verifier, requested: Date())) {
+                Keychain.write(data, for: Self.resetKey)
+            }
             message = A.resetSent
         } catch {
             fail(error, fallback: A.resetFailed)
         }
     }
 
-    /// The reset email's link, back through auth-native.html.
-    func openRecoveryLink(_ url: URL) {
+    /// The reset email's link, back through auth-native.html. Only a reset
+    /// this iPhone asked for in the last hour counts, and its code is
+    /// exchanged with the verifier kept here, so a link someone else made
+    /// can never sign this iPhone into their account.
+    func openRecoveryLink(_ url: URL) async {
+        guard let client else { return }
         let link = AuthCallback(url: url)
-        guard configured, link.isPasswordRecovery, let access = link.accessToken, let refresh = link.refreshToken else { return }
-        recovery = AuthSession(accessToken: access, refreshToken: refresh, expiresAt: Date().timeIntervalSince1970 + 3000, user: AuthUser(id: ""))
+        guard link.code != nil || link.error != nil,
+              let data = Keychain.read(Self.resetKey),
+              let pending = try? JSONDecoder().decode(PendingReset.self, from: data) else { return }
+        Keychain.delete(Self.resetKey)
+        // An expired link, or one a mail scanner opened first.
+        guard let code = link.code, link.error == nil, Date().timeIntervalSince(pending.requested) < 3600 else {
+            status = .error(A.resetLinkExpired)
+            message = A.resetLinkExpired
+            return
+        }
+        busy = true
+        defer { busy = false }
+        do {
+            recovery = try await client.exchangeCode(code, verifier: pending.verifier)
+        } catch {
+            fail(error, fallback: A.resetLinkExpired)
+        }
     }
 
     func cancelRecovery() { recovery = nil }

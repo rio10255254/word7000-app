@@ -46,9 +46,11 @@ function validAt(cert: X509Certificate, time: number): boolean {
  * Store server notification), or null when the chain, the signature or the
  * signing date does not hold up.
  */
-export async function verifyAppleSigned(jws: unknown, options: { roots?: string[]; now?: number } = {}): Promise<Record<string, unknown> | null> {
+export async function verifyAppleSigned(
+  jws: unknown, options: { roots?: string[]; now?: number; maxLength?: number } = {},
+): Promise<Record<string, unknown> | null> {
   try {
-    if (typeof jws !== 'string' || jws.length > 20_000) return null;
+    if (typeof jws !== 'string' || jws.length > (options.maxLength ?? 20_000)) return null;
     const parts = jws.split('.');
     if (parts.length !== 3) return null;
     const header = JSON.parse(new TextDecoder().decode(base64ToBytes(parts[0])));
@@ -110,7 +112,9 @@ export interface SubscriptionNotice {
  * `revoked: null`.
  */
 export async function verifyNotification(signedPayload: unknown, rules: EntitlementRules): Promise<SubscriptionNotice | null> {
-  const notice = await verifyAppleSigned(signedPayload, { roots: rules.roots, now: rules.now });
+  // A notice carries the transaction and the renewal info, each a signed
+  // token with its own certificate chain, encoded once more: about 19 KB.
+  const notice = await verifyAppleSigned(signedPayload, { roots: rules.roots, now: rules.now, maxLength: 60_000 });
   if (!notice || typeof notice.notificationType !== 'string') return null;
   const data = (notice.data ?? {}) as Record<string, unknown>;
   if (data.bundleId !== rules.bundleId) return null;

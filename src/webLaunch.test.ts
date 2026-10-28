@@ -67,6 +67,11 @@ describe('free web launch configuration', () => {
     expect(scripts).toHaveLength(1);
     const hash = createHash('sha256').update(scripts[0]).digest('base64');
     expect(headers).toContain(`script-src 'sha256-${hash}'`);
+    // The page is served at /auth-native too; both paths carry the policy.
+    for (const page of ['/auth-native', '/privacy', '/support']) {
+      expect(headers).toMatch(new RegExp(`^${page}\\n(  .+\\n)*  Content-Security-Policy: default-src 'none'`, 'm'));
+      expect(headers).toMatch(new RegExp(`^${page}\\.html\\n(  .+\\n)*  Content-Security-Policy: default-src 'none'`, 'm'));
+    }
   });
 
   test('provides offline cache support for the web app shell', () => {

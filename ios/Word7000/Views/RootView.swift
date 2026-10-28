@@ -129,12 +129,11 @@ struct RootView: View {
         .task { await IntelligenceSettings.shared.refreshPolicy() }
         .onOpenURL { url in
             guard url.scheme == "word7000" else { return }
-            if url.host == "auth" { account.openRecoveryLink(url); return }
+            if url.host == "auth" { Task { await account.openRecoveryLink(url) }; return }
             guard url.host == "study", !welcomeOpen else { return }
             if activity == nil { activity = .study }
         }
-        .sheet(isPresented: Binding(get: { account.recovery != nil && !signInForScan },
-                                    set: { if !$0 { account.cancelRecovery() } })) { NewPasswordSheet() }
+        .onChange(of: account.recovery != nil) { _, _ in RecoveryPresenter.shared.update(account) }
         .sensoryFeedback(.selection, trigger: tab) { _, _ in model.settings.hapticsEnabled ?? true }
         .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in model.settings.hapticsEnabled ?? true }
         .safeAreaInset(edge: .top) {

@@ -31,10 +31,19 @@ final class ScanPickerTests: XCTestCase {
                 app.buttons["scan-choose-photo"].tap()
                 XCTAssertTrue(cancelButton(in: app).waitForExistence(timeout: 10))
                 snapshot(app, name: "scan-photo-library-\(index)")
-                let photos = app.images.matching(identifier: "PXGGridLayout-Info")
+                // iOS 18 and later name the grid's photos PXGGridLayout-Info;
+                // iOS 17 leaves them unnamed, labelled "Photo, <date>".
+                let named = app.images.matching(identifier: "PXGGridLayout-Info")
+                let labelled = app.images.matching(NSPredicate(format: "label BEGINSWITH 'Photo, '"))
                 // Resolve the last required photo instead of repeatedly enumerating
                 // the remote Photos accessibility tree inside a predicate callback.
-                XCTAssertTrue(photos.element(boundBy: 4).waitForExistence(timeout: 60), app.debugDescription)
+                var photos = named
+                let deadline = Date().addingTimeInterval(60)
+                while Date() < deadline {
+                    if named.element(boundBy: 4).waitForExistence(timeout: 2) { photos = named; break }
+                    if labelled.element(boundBy: 4).exists { photos = labelled; break }
+                }
+                XCTAssertTrue(photos.element(boundBy: 4).exists, app.debugDescription)
                 snapshot(app, name: "scan-photo-library-\(index)-ready")
                 photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
                 let add = app.buttons.matching(NSPredicate(format: "label IN %@", ["Add", "加入", "Done", "完成"])).firstMatch

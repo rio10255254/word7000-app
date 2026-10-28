@@ -4,11 +4,11 @@
 #   2. a simulator build plus a UI walk-through that screenshots every main
 #      screen in light and dark mode on iOS 17, 18, 26, and 27,
 #   3. with all checks, the main screens on every iPhone shape (the devices
-#      check alone runs only those).
+#      check alone runs only those). Each iOS version's suite is split over
+#      two jobs, one simulator each, and GitHub runs five jobs at a time.
 # Pushes and the default manual run are quick checks (builds and one walk of
 # the main screens, about ten minutes). The full check (all) runs before a
 # release: ios-release.yml starts it when the source has not passed one.
-# A full check fits in five Mac jobs, so it never waits for a free runner.
 # Screenshots are uploaded as an artifact and pushed to the
 # `native-screenshots` branch so they can be viewed from a phone.
 name: Native iOS
@@ -115,27 +115,33 @@ jobs:
           mac = {"xcode": 26, "runner": "macos-15", "concurrent": 2}
           xc27 = {"ios": 27, "xcode": 27, "runner": "xcode-27", "concurrent": 1}
           if mode == "all":
-              jobs = [
-                  {"ios": 17, "slug": "ios-17", "shards": f"{a};{b}", "shapes": small, **mac},
-                  {"ios": 18, "slug": "ios-18", "shards": f"{a};{b}", "shapes": large, **mac},
-                  {"ios": 26, "slug": "ios-26", "shards": f"{a};{b}",
-                   "shapes": "26=iPhone 16e,iPhone 17,iPhone Air,iPhone 17 Pro Max", **mac},
-                  # Several simulators at once lose CoreSimulator on these
-                  # runners, so iOS 27 takes two jobs, one simulator each.
-                  {"slug": "ios-27-a", "shards": a, "shapes": "27=iPhone 17e,iPhone 18 Pro", **xc27},
-                  {"slug": "ios-27-b", "shards": b, "shapes": "27=iPhone 18 Pro Max,iPhone Duo", **xc27},
-              ]
+              # One simulator a job: two at once on these three-core runners
+              # slowed iOS 26 past the coach tests' timeouts. Short jobs
+              # instead, which GitHub runs five at a time.
+              jobs = []
+              for v, cfg in ((17, mac), (18, mac), (26, mac), (27, xc27)):
+                  base = {**cfg, "ios": v}
+                  jobs.append({**base, "slug": f"ios-{v}-a", "label": f"iOS {v}, part 1", "shards": a, "shapes": "", "engine": True})
+                  jobs.append({**base, "slug": f"ios-{v}-b", "label": f"iOS {v}, part 2", "shards": b, "shapes": "", "engine": False})
+              for label, slug, shapes, cfg in (
+                  ("iOS 18 small iPhones", "shapes-18-small", small, mac),
+                  ("iOS 18 large iPhones", "shapes-18-large", large, mac),
+                  ("iOS 26 iPhones", "shapes-26", "26=iPhone 16e,iPhone 17,iPhone Air,iPhone 17 Pro Max", mac),
+                  ("iOS 27 iPhones", "shapes-27", "27=iPhone 17e,iPhone 18 Pro,iPhone 18 Pro Max,iPhone Duo", xc27),
+              ):
+                  ios = int(shapes.split("=")[0])
+                  jobs.append({**cfg, "ios": ios, "slug": slug, "label": label, "shards": "", "shapes": shapes, "engine": False})
           elif mode == "quick":
               # Every day: the oldest and newest toolchains build, and iOS 26
               # walks the main screens once. Minutes, not an hour.
-              jobs = [{"ios": 17, "slug": "ios-17", "shards": "", "shapes": "", "smoke": False, **mac},
-                      {"ios": 26, "slug": "ios-26", "shards": "", "shapes": "", "smoke": True, **mac},
-                      {"slug": "ios-27", "shards": "", "shapes": "", "smoke": False, **xc27}]
+              jobs = [{"ios": 17, "slug": "ios-17", "shards": "", "shapes": "", "smoke": False, "engine": True, **mac},
+                      {"ios": 26, "slug": "ios-26", "shards": "", "shapes": "", "smoke": True, "engine": True, **mac},
+                      {"slug": "ios-27", "shards": "", "shapes": "", "smoke": False, "engine": True, **xc27}]
           else:
-              jobs = [{"ios": v, "slug": f"ios-{v}", "shards": "", "shapes": "", **mac} for v in (17, 18, 26)]
-              jobs.append({"slug": "ios-27", "shards": "", "shapes": "", **xc27})
+              jobs = [{"ios": v, "slug": f"ios-{v}", "shards": "", "shapes": "", "engine": True, **mac} for v in (17, 18, 26)]
+              jobs.append({"slug": "ios-27", "shards": "", "shapes": "", "engine": True, **xc27})
           for job in jobs:
-              job["label"] = job["slug"].replace("ios-", "iOS ").replace("-a", ", part 1").replace("-b", ", part 2")
+              job.setdefault("label", job["slug"].replace("ios-", "iOS "))
           print(json.dumps({"include": jobs}))
           PY
           {
@@ -186,28 +192,28 @@ jobs:
           ls -la "$RUNNER_TEMP/screenshots"
 
       - name: Word list matches the app data
-        # Once per iOS version: part 2 of iOS 27 runs only UI tests.
-        if: matrix.slug != 'ios-27-b'
+        # Once per iOS version: the other jobs of a full check run only UI tests.
+        if: matrix.engine
         run: node scripts/export-native-words.mjs --check
 
       - name: Speaking questions match their editorial sources
-        if: matrix.slug != 'ios-27-b'
+        if: matrix.engine
         run: node scripts/build-native-speaking-library.mjs --check
 
       - name: Every Chinese text has pinyin
-        if: matrix.slug != 'ios-27-b'
+        if: matrix.engine
         run: node scripts/build-pinyin-readings.mjs --check
 
       - name: Coaching evaluation cases match their authored sources
-        if: matrix.slug != 'ios-27-b'
+        if: matrix.engine
         run: node scripts/build-coach-evaluation.mjs --check
 
       - name: Release archive checks
-        if: matrix.slug != 'ios-27-b'
+        if: matrix.engine
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
       - name: Learning engine tests
-        if: matrix.slug != 'ios-27-b'
+        if: matrix.engine
         run: |
           xcodebuild -version
           swift test --package-path ios/Packages/Word7000Core
@@ -216,7 +222,7 @@ jobs:
 
       - name: Speaking history account isolation
         run: node scripts/test-native-speaking-recency.mjs
-        if: matrix.slug != 'ios-27-b'
+        if: matrix.engine
 
       # Runner images ship only recent iOS runtimes; fetch the oldest supported
       # one when it is missing and give it an iPhone to test on.
@@ -345,7 +351,9 @@ jobs:
           }
 
           status=0
-          if [ -z "$SHARDS" ]; then
+          if [ -z "$SHARDS" ] && [ -n "$WANTED" ]; then
+            : # An iPhone-shapes job: only the layout walk below.
+          elif [ -z "$SHARDS" ]; then
             prepare "$SIMULATOR_UDID"
             run_tests "$SIMULATOR_UDID" walk "${TEST_SELECTION[@]}" || status=1
           else

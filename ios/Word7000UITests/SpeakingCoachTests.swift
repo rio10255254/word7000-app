@@ -224,9 +224,19 @@ final class SpeakingCoachTests: XCTestCase {
         assertNoFeedback(app)
         XCTAssertFalse(app.buttons["coach-submit"].isEnabled)
         snapshot(app, "coach-follow-up-question")
-        tap(app.buttons["coach-original-question"], in: app)
+        // iOS 26 can drop a tap that lands right after the sheet re-renders
+        // (run 183): the follow-up stays shown. The button exists only while a
+        // follow-up does, so tapping it again can only go back.
+        let original = app.buttons["coach-original-question"]
+        tap(original, in: app)
+        func backToOriginal(within seconds: TimeInterval) -> Bool {
+            let back = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", question),
+                                                 object: app.staticTexts["coach-question"])
+            return XCTWaiter.wait(for: [back], timeout: seconds) == .completed
+        }
+        if !backToOriginal(within: 5), original.exists, original.isHittable { original.tap() }
         reveal(app.staticTexts["coach-question"], in: app)
-        XCTAssertEqual(app.staticTexts["coach-question"].label, question)
+        XCTAssertTrue(backToOriginal(within: 10), "Still showing: \(app.staticTexts["coach-question"].label)")
         closeCoach(app)
     }
 

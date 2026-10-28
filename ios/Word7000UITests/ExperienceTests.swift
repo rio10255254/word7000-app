@@ -19,9 +19,11 @@ final class ExperienceTests: XCTestCase {
 
     private func waitForReadyCard(_ app: XCUIApplication) {
         let button = app.buttons["study-show-answer"]
-        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        // Fifteen seconds: a busy iOS 27 runner took longer than five to
+        // enable the next card (run 183).
+        XCTAssertTrue(button.waitForExistence(timeout: 15))
         let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: button)
-        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 15), .completed)
     }
 
     func testRapidGradeAndBothSwipeDirections() {

@@ -441,8 +441,10 @@ final class SpeakingCoachTests: XCTestCase {
 
     private func wait(_ element: XCUIElement, matching predicate: String,
                       file: StaticString = #filePath, line: UInt = #line) {
+        // Fifteen seconds: on a busy runner the keyboard alone took over five
+        // to go away (iOS 27, run 182).
         let expected = XCTNSPredicateExpectation(predicate: NSPredicate(format: predicate), object: element)
-        XCTAssertEqual(XCTWaiter.wait(for: [expected], timeout: 5), .completed, predicate, file: file, line: line)
+        XCTAssertEqual(XCTWaiter.wait(for: [expected], timeout: 15), .completed, predicate, file: file, line: line)
     }
 
     private func reveal(_ element: XCUIElement, in app: XCUIApplication, scrollingUp: Bool = true,

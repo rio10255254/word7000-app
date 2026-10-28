@@ -9,7 +9,8 @@ import Word7000Core
 @MainActor
 @Observable
 final class PlusModel {
-    static let productIDs = ["com.rio.word7000.plus.monthly", "com.rio.word7000.plus.yearly"]
+    // A constant: read from anywhere, not only the main actor.
+    nonisolated static let productIDs = ["com.rio.word7000.plus.monthly", "com.rio.word7000.plus.yearly"]
 
     private(set) var subscribed = false
     /// Apple's signed copy of the active subscription. The AI server checks it

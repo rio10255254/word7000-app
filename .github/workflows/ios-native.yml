@@ -472,7 +472,8 @@ jobs:
 
   publish-screenshots:
     needs: native
-    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all') && needs.native.result != 'skipped'
+    # After the tests ran, passed or not; a cancelled run has nothing to show.
+    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all') && (needs.native.result == 'success' || needs.native.result == 'failure')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -485,6 +486,11 @@ jobs:
       - name: Publish screenshots to the native-screenshots branch
         run: |
           set -euo pipefail
+          # Never replace the published screenshots with nothing.
+          if [ -z "$(ls -A "$GITHUB_WORKSPACE/screenshots" 2>/dev/null)" ]; then
+            echo "No screenshots to publish."
+            exit 0
+          fi
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
@@ -643,7 +649,7 @@ jobs:
 
   publish-device-screenshots:
     needs: [plan, native, devices]
-    if: always() && (needs.devices.result != 'skipped' || (needs.plan.outputs.mode == 'all' && needs.native.result != 'skipped'))
+    if: always() && (needs.devices.result == 'success' || needs.devices.result == 'failure' || (needs.plan.outputs.mode == 'all' && (needs.native.result == 'success' || needs.native.result == 'failure')))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -656,6 +662,11 @@ jobs:
       - name: Publish to the native-device-screenshots branch
         run: |
           set -euo pipefail
+          # Never replace the published screenshots with nothing.
+          if [ -z "$(ls -A "$GITHUB_WORKSPACE/screenshots" 2>/dev/null)" ]; then
+            echo "No screenshots to publish."
+            exit 0
+          fi
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q

@@ -28,7 +28,7 @@ final class CloudAssistant {
     }
 
     /// A guest, who gets online AI by signing in.
-    var needsSignIn: Bool { account?.cloudAIneedsSignIn == true }
+    var needsSignIn: Bool { account?.cloudAINeedsSignIn == true }
 
     /// The online AI could be used once the learner agrees.
     var offered: Bool { reachable && IntelligenceSettings.shared.cloudOffered }

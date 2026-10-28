@@ -58,7 +58,7 @@ enum CloudAnswerCache {
     static let explanations = SavedAnswers<CloudAI.Explanation>(file: "explanations-v\(version).json", limit: 300)
     static let quiz = SavedAnswers<CloudAI.QuizExplanation>(file: "quiz-v\(version).json", limit: 300)
     static let questions = SavedAnswers<[AskedQuestion]>(file: "questions-v1.json", limit: 200)
-    static let insightsKey = "word7000.aiInsights"
+    nonisolated static let insightsKey = "word7000.aiInsights"
 
     /// On sign-out or account deletion: the next learner on this iPhone does
     /// not see the questions and analysis of the last one.

@@ -335,7 +335,7 @@ final class AccountModel {
     /// thousand, so the server refuses them.
     var canUseCloudAI: Bool { client != nil && isPermanent }
     /// A guest who could use online AI after signing in.
-    var cloudAIneedsSignIn: Bool { client != nil && session != nil && !isPermanent }
+    var cloudAINeedsSignIn: Bool { client != nil && session != nil && !isPermanent }
 
     /// Runs one online AI task with this learner's signed-in session.
     func runAI<Value: Decodable>(_ kind: CloudAI.Kind, input: [String: JSONValue], entitlement: String?,

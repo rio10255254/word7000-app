@@ -104,6 +104,12 @@ jobs:
           same_source() {
             git diff --quiet "$1" "$GITHUB_SHA" -- . "${OUTSIDE_APP[@]}"
           }
+          # A push whose source had already passed skips its test jobs; only a
+          # run whose UI test jobs really ran and passed counts.
+          tests_ran() {
+            [ "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$1/jobs?per_page=50" \
+              --jq '[.jobs[] | select(.name | startswith("Native iOS")) | .conclusion] | (length >= 4 and all(. == "success"))')" = "true" ]
+          }
           RUN_ID="$REQUESTED_RUN"
           if [ -z "$RUN_ID" ]; then
             # A full run that already passed on identical source, usually on the
@@ -112,7 +118,7 @@ jobs:
               --jq '.workflow_runs[] | select(.event == "push" or (.event == "workflow_dispatch" and .display_title == "Native iOS: all checks")) | "\(.id) \(.head_sha)"' \
               > "$RUNNER_TEMP/passed-native-runs.txt"
             while read -r id sha; do
-              if git cat-file -e "$sha^{commit}" 2>/dev/null && same_source "$sha"; then
+              if git cat-file -e "$sha^{commit}" 2>/dev/null && same_source "$sha" && tests_ran "$id"; then
                 RUN_ID="$id"
                 echo "Reusing full native validation $id from $sha: the source is identical."
                 break
@@ -127,6 +133,7 @@ jobs:
           # A push run is always the full suite; a manual run counts only with checks=all.
           TESTED_SHA=$(node -e 'const r=require(process.argv[1]); const full = r.event==="push" || (r.event==="workflow_dispatch" && r.display_title==="Native iOS: all checks"); if(r.path!==".github/workflows/ios-native.yml" || !full || !/^[a-f0-9]{40}$/.test(r.head_sha)) throw new Error("Not a full native run"); if(r.status==="completed" && r.conclusion!=="success") throw new Error("Native validation failed"); process.stdout.write(r.head_sha);' "$RUNNER_TEMP/native-validation.json")
           git diff --exit-code "$TESTED_SHA" "$GITHUB_SHA" -- . "${OUTSIDE_APP[@]}"
+          tests_ran "$RUN_ID" || { echo "::error::Run $RUN_ID did not run every native UI test job."; exit 1; }
           echo "NATIVE_VALIDATION_RUN=$RUN_ID" >> "$GITHUB_ENV"
 
       - uses: expo/expo-github-action@v8

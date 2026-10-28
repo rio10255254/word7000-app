@@ -360,7 +360,9 @@ final class ExperienceTests: XCTestCase {
         speech.tap()
         XCTAssertTrue(app.segmentedControls["speech-speed"].waitForExistence(timeout: 10))
         let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != nil AND value != '' AND value != 'Loading' AND value != '載入中'"), object: app.buttons["speech-voice-en-US"])
-        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 10), .completed)
+        // The voice list loads in the background; a cold iOS 27 simulator
+        // takes over ten seconds to list its voices.
+        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 60), .completed)
     }
 
     private func snapshot(_ app: XCUIApplication, _ name: String) {

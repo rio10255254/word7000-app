@@ -64,13 +64,15 @@ final class ScanPickerTests: XCTestCase {
             pickPhoto()
             let save = app.buttons["scan-save"]
             // The iOS 18 simulator's Photos service sometimes never delivers the
-            // photo; after ScanPhotoLoader.transferTimeout the app says so and
-            // offers the photo picker again. Pick it once more, as a learner would.
+            // photo, at times twice running; after ScanPhotoLoader.transferTimeout
+            // the app says so and offers the photo picker again. Pick it again, as
+            // a learner would, up to twice.
             let loadFailed = app.descendants(matching: .any)["scan-message"]
-            let deadline = Date().addingTimeInterval(80)
-            while !save.exists, !loadFailed.exists, Date() < deadline { _ = save.waitForExistence(timeout: 2) }
-            if !save.exists, loadFailed.exists {
-                snapshot(app, name: "scan-photo-\(index)-load-failed")
+            for attempt in 1...2 {
+                let deadline = Date().addingTimeInterval(80)
+                while !save.exists, !loadFailed.exists, Date() < deadline { _ = save.waitForExistence(timeout: 2) }
+                guard !save.exists, loadFailed.exists else { break }
+                snapshot(app, name: "scan-photo-\(index)-load-failed-\(attempt)")
                 pickPhoto()
             }
             XCTAssertTrue(save.waitForExistence(timeout: 80), app.debugDescription)

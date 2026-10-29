@@ -1,3 +1,4 @@
+import AVFoundation
 import SwiftUI
 import UIKit
 import VisionKit
@@ -38,14 +39,13 @@ struct ScanView: View {
 
     @State private var phase: Phase = .choose
     @State private var rows: [Row] = []
-    @State private var pasted = (ProcessInfo.processInfo.arguments.contains("-uiTestingReset")
-        || ProcessInfo.processInfo.arguments.contains("-uiTestingScanText"))
-        ? ProcessInfo.processInfo.environment["WORD7000_SCAN_TEST_TEXT"] ?? "" : ""
+    @State private var pasted = UITesting.scanText
     @State private var photoLibraryOpen = false
     @State private var pendingPhotos: [NSItemProvider] = []
     @State private var scanTask: Task<Void, Never>?
     @State private var cameraOpen = false
     @State private var documentScannerOpen = false
+    @State private var cameraDenied = false
     @State private var suggester: WordSuggester?
     @State private var message: String?
     @State private var sourcePreviews: [UIImage] = []
@@ -141,6 +141,14 @@ struct ScanView: View {
             }
                 .ignoresSafeArea()
         }
+        .alert(S.cameraOffTitle, isPresented: $cameraDenied) {
+            Button(S.openSettings) {
+                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+            }
+            Button(L.cancel, role: .cancel) {}
+        } message: {
+            Text(S.cameraOffMessage)
+        }
         .onDisappear { scanTask?.cancel() }
         .onChange(of: model.customSets.sets.map(\.id)) { _, ids in
             if case let .existing(id) = target, !ids.contains(id) { target = .new }
@@ -176,12 +184,12 @@ struct ScanView: View {
                 .padding(.vertical, 6)
 
                 if DocumentScanner.isAvailable {
-                    Button { allowScan { documentScannerOpen = true } } label: {
+                    Button { allowScan { withCamera { documentScannerOpen = true } } } label: {
                         Label(S.scanDocument, systemImage: "doc.viewfinder.fill")
                     }
                     .accessibilityIdentifier("scan-document")
                 } else if CameraPicker.isAvailable {
-                    Button { allowScan { cameraOpen = true } } label: {
+                    Button { allowScan { withCamera { cameraOpen = true } } } label: {
                         Label(S.takePhoto, systemImage: "camera.fill")
                     }
                 }
@@ -220,6 +228,19 @@ struct ScanView: View {
     }
 
     /// Every read counts against the trial allowance, so check before each one.
+    /// Opens the camera, or explains how to allow it: a scanner opened without
+    /// camera access only shows a black screen.
+    private func withCamera(_ open: @escaping () -> Void) {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized: open()
+        case .notDetermined:
+            Task {
+                if await AVCaptureDevice.requestAccess(for: .video) { open() } else { cameraDenied = true }
+            }
+        default: cameraDenied = true
+        }
+    }
+
     private func allowScan(_ action: @escaping () -> Void) {
         switch plus.decide(.scan) {
         case .allowed:
@@ -538,6 +559,9 @@ struct ScanView: View {
 /// Scan screen copy (English-word mode).
 private enum S {
     static var title: String { L.t("掃描單字表", "Scan a word list") }
+    static var cameraOffTitle: String { L.t("相機權限已關閉", "Camera access is off") }
+    static var cameraOffMessage: String { L.t("到「設定」> Word7000 打開「相機」，就能掃描單字表。也可以改從相簿選照片。", "Turn on Camera in Settings > Word7000 to scan word lists, or choose a photo instead.") }
+    static var openSettings: String { L.t("開啟設定", "Open Settings") }
     static var intro: String { L.t("掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。", "Scan or pick a photo of a word list. The app reads each English word and the Chinese meaning written on the page, printed or handwritten. Photos never leave your iPhone.") }
     static var takePhoto: String { L.t("拍照", "Take Photo") }
     static var scanDocument: String { L.t("掃描單字表（可多頁、手寫也行）", "Scan a word list (several pages, handwriting OK)") }

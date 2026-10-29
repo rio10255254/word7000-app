@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import Observation
 import UIKit
@@ -26,6 +27,8 @@ final class AccountModel {
     private(set) var session: AuthSession?
     private(set) var supportsCustomReminderTime = false
     private(set) var busy = false
+    /// A password reset link opened the app: the session to set the new password with.
+    private(set) var recovery: AuthSession?
     /// A short line for the account section.
     private(set) var message: String
 
@@ -78,10 +81,13 @@ final class AccountModel {
 
     func bootstrap() async {
         guard let client else { return }
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") {
+        if UITesting.on(.reset) {
             Keychain.delete(Self.sessionKey)
         }
         status = .loading
+        // A sign-in that finishes meanwhile (a reset link, Apple) wins over
+        // the guest this would otherwise start.
+        let generation = identityGeneration
         do {
             var restored = storedSession() ?? legacySession()
             if let current = restored, current.needsRefresh() {
@@ -99,11 +105,20 @@ final class AccountModel {
             } else {
                 session = try await client.signInAnonymously()
             }
+            guard generation == identityGeneration else { return }
             await activate(session)
         } catch {
+            guard generation == identityGeneration else { return }
             status = .error(A.offline)
             message = A.offline
         }
+    }
+
+    /// A launch without a connection leaves no session (not even a guest);
+    /// try again whenever the app comes back.
+    func bootstrapIfNeeded() async {
+        guard client != nil, session == nil, status != .loading, !busy else { return }
+        await bootstrap()
     }
 
     private func storedSession() -> AuthSession? {
@@ -322,10 +337,13 @@ final class AccountModel {
         supportsCustomReminderTime = supported
     }
 
-    /// Whether the online AI service can be reached with a session.
-    var canUseCloudAI: Bool { client != nil && session != nil }
+    /// Online AI needs a signed-in account: anyone can make guests by the
+    /// thousand, so the server refuses them.
+    var canUseCloudAI: Bool { client != nil && isPermanent }
+    /// A guest who could use online AI after signing in.
+    var cloudAINeedsSignIn: Bool { client != nil && session != nil && !isPermanent }
 
-    /// Runs one online AI task with this learner's session; guests count too.
+    /// Runs one online AI task with this learner's signed-in session.
     func runAI<Value: Decodable>(_ kind: CloudAI.Kind, input: [String: JSONValue], entitlement: String?,
                                  as type: Value.Type = Value.self) async throws -> (value: Value, usage: CloudAI.Usage?) {
         guard let client, let current = session else { throw CloudAI.Failure.unavailable }
@@ -388,6 +406,9 @@ final class AccountModel {
             if let email, !email.isEmpty { metadata["email"] = .string(email) }
             if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
             await activate(newSession, fallbackEmail: email)
+            if let authorizationCode, let signedIn = session, !signedIn.user.anonymous {
+                Task { try? await client.saveAppleSignIn(code: authorizationCode, session: signedIn) }
+            }
         } catch {
             fail(error, fallback: A.appleFailed)
         }
@@ -426,6 +447,8 @@ final class AccountModel {
             }
             if newSession.user.anonymous { throw SupabaseError(status: 0, code: nil, message: A.googleFailed) }
             await activate(newSession)
+        } catch is CancellationError {
+            noteCancelled()
         } catch {
             fail(error, fallback: A.googleFailed)
         }
@@ -446,7 +469,7 @@ final class AccountModel {
 
     func signUp(email: String, password: String) async {
         guard let client else { return }
-        guard !email.isEmpty, password.count >= 6 else { message = A.passwordTooShort; return }
+        guard !email.isEmpty, password.count >= 8 else { message = A.passwordTooShort; return }
         busy = true
         defer { busy = false }
         message = A.creatingAccount
@@ -461,14 +484,93 @@ final class AccountModel {
         }
     }
 
+    /// A reset this iPhone asked for: the PKCE verifier its link must match.
+    private struct PendingReset: Codable {
+        let verifier: String
+        let requested: Date
+    }
+    private static let resetKey = "password-reset"
+
+    /// Emails a link that opens this app to choose a new password.
+    func sendPasswordReset(email: String) async {
+        guard let client else { return }
+        guard email.contains("@") else { message = A.enterEmail; return }
+        busy = true
+        defer { busy = false }
+        let verifier = SignInSheet.makeNonce(length: 64)
+        let challenge = Data(SHA256.hash(data: Data(verifier.utf8))).base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-").replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
+        do {
+            try await client.requestPasswordReset(email: email, redirectTo: Self.redirectURL, codeChallenge: challenge)
+            if let data = try? JSONEncoder().encode(PendingReset(verifier: verifier, requested: Date())) {
+                Keychain.write(data, for: Self.resetKey)
+            }
+            message = A.resetSent
+        } catch {
+            fail(error, fallback: A.resetFailed)
+        }
+    }
+
+    /// The reset email's link, back through auth-native.html. Only a reset
+    /// this iPhone asked for in the last hour counts, and its code is
+    /// exchanged with the verifier kept here, so a link someone else made
+    /// can never sign this iPhone into their account.
+    func openRecoveryLink(_ url: URL) async {
+        guard let client else { return }
+        let link = AuthCallback(url: url)
+        guard link.code != nil || link.error != nil,
+              let data = Keychain.read(Self.resetKey),
+              let pending = try? JSONDecoder().decode(PendingReset.self, from: data) else { return }
+        Keychain.delete(Self.resetKey)
+        // An expired link, or one a mail scanner opened first.
+        guard let code = link.code, link.error == nil, Date().timeIntervalSince(pending.requested) < 3600 else {
+            status = .error(A.resetLinkExpired)
+            message = A.resetLinkExpired
+            return
+        }
+        busy = true
+        defer { busy = false }
+        do {
+            recovery = try await client.exchangeCode(code, verifier: pending.verifier)
+        } catch {
+            fail(error, fallback: A.resetLinkExpired)
+        }
+    }
+
+    func cancelRecovery() { recovery = nil }
+
+    /// Sets the new password, then signs in with it.
+    func setNewPassword(_ password: String) async -> Bool {
+        guard let client, var link = recovery else { return false }
+        guard password.count >= 8 else { message = A.passwordTooShort; return false }
+        busy = true
+        defer { busy = false }
+        do {
+            link.user = try await client.updatePassword(password, session: link)
+            recovery = nil
+            await activate(link)
+            message = A.passwordChanged
+            return true
+        } catch {
+            fail(error, fallback: A.resetLinkExpired)
+            return false
+        }
+    }
+
     private func fail(_ error: Error, fallback: String) {
-        let text = (error as? SupabaseError)?.message ?? fallback
+        let text = A.describe(error, fallback: fallback)
         status = .error(text)
         message = text
     }
 
     func noteCancelled() {
         message = A.cancelled
+    }
+
+    func noteAppleFailed() {
+        status = .error(A.appleFailed)
+        message = A.appleFailed
     }
 
     // MARK: Sign out and delete
@@ -488,8 +590,11 @@ final class AccountModel {
         dirty = SyncDirty(progress: true, customSets: true)
         await flush()
         guard generation == identityGeneration else { return }
-        try? await client.signOut(session: current)
+        // The flush may have refreshed the session; end the current one on the server.
+        let latest = session ?? current
+        try? await client.signOut(session: (try? await validSession(client: client, latest)) ?? latest)
         guard generation == identityGeneration else { return }
+        CloudAnswerCache.removeAll()
         flushTask?.cancel()
         store(nil)
         dirty = SyncDirty()
@@ -510,6 +615,7 @@ final class AccountModel {
             try await client.deleteAccount(session: try await validSession(client: client, current))
             Outbox.clear(userId: current.user.id)
             app.forgetSpeakingHistory(ownerId: current.user.id, anonymous: current.user.anonymous)
+            CloudAnswerCache.removeAll()
             store(nil)
             app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
             app.setLocalOwner(nil, anonymous: true)
@@ -574,7 +680,18 @@ enum A {
     static var creatingAccount: String { L.t("建立帳號中…", "Creating account…") }
     static var confirmEmail: String { L.t("請到信箱確認後再登入", "Check your email to confirm, then sign in") }
     static var enterEmailPassword: String { L.t("請輸入 Email 和密碼", "Enter your email and password") }
-    static var passwordTooShort: String { L.t("密碼至少 6 個字元", "Password must be at least 6 characters") }
+    static var passwordTooShort: String { L.t("密碼至少 8 個字元", "Password must be at least 8 characters") }
+    static var enterEmail: String { L.t("請先輸入 Email", "Enter your email first") }
+    static var resetSent: String { L.t("如果這個 Email 有帳號，重設密碼的信已寄出。請在 iPhone 上開啟信中的連結。", "If this email has an account, a reset link is on its way. Open it on this iPhone.") }
+    static var resetFailed: String { L.t("無法寄出重設密碼信，請稍後再試", "Could not send the reset email. Please try again later.") }
+    static var resetLinkExpired: String { L.t("重設連結已失效，請重新寄一次", "This reset link has expired. Send a new one.") }
+    static var passwordChanged: String { L.t("密碼已更新", "Password updated") }
+    static var wrongPassword: String { L.t("Email 或密碼不正確", "Wrong email or password") }
+    static var emailTaken: String { L.t("這個 Email 已經註冊，請直接登入", "This email already has an account. Sign in instead.") }
+    static var weakPassword: String { L.t("密碼太容易猜到，請換一組更長的密碼", "That password is too easy to guess. Choose a longer one.") }
+    static var emailInvalid: String { L.t("Email 格式不正確", "That email address doesn't look right") }
+    static var tooManyTries: String { L.t("嘗試次數太多，請稍後再試", "Too many tries. Please wait a moment.") }
+    static var noConnection: String { L.t("無法連線，請確認網路後再試", "Can't connect. Check your connection and try again.") }
     static var signInFailed: String { L.t("登入失敗，請再試一次", "Sign-in failed. Please try again.") }
     static var appleFailed: String { L.t("Apple 登入失敗，請再試一次", "Sign in with Apple failed. Please try again.") }
     static var googleFailed: String { L.t("Google 登入沒有完成", "Google sign-in did not finish") }
@@ -584,4 +701,19 @@ enum A {
     static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
     static var deleted: String { L.t("帳號已刪除", "Account deleted") }
     static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }
+
+    /// What the learner should read for a sign-in error, never the server's raw English.
+    static func describe(_ error: Error, fallback: String) -> String {
+        if error is URLError { return noConnection }
+        guard let error = error as? SupabaseError else { return fallback }
+        let code = error.code ?? ""
+        let text = error.message.lowercased()
+        if code == "invalid_credentials" || text.contains("invalid login credentials") { return wrongPassword }
+        if code == "email_not_confirmed" || text.contains("email not confirmed") { return confirmEmail }
+        if code == "user_already_exists" || code == "email_exists" || text.contains("already registered") { return emailTaken }
+        if code == "weak_password" || text.contains("password should") { return weakPassword }
+        if code == "email_address_invalid" || text.contains("unable to validate email") { return emailInvalid }
+        if error.status == 429 || code.hasPrefix("over_") { return tooManyTries }
+        return fallback
+    }
 }

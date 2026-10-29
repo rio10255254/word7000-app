@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, test } from 'vitest';
@@ -52,6 +53,24 @@ describe('free web launch configuration', () => {
     expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
     for (const icon of manifest.icons) {
       expect(fs.existsSync(path.join(process.cwd(), 'public', icon.src.replace(/^\//, '')))).toBe(true);
+    }
+  });
+
+  test('refuses framing and pins the auth relay script', () => {
+    const headers = fs.readFileSync(headersPath, 'utf8');
+    expect(headers).toContain('X-Frame-Options: DENY');
+    expect(headers).toContain("frame-ancestors 'none'");
+    // The relay page's only script is allowed by hash; editing it without
+    // updating _headers would break Google sign-in and password resets.
+    const relay = fs.readFileSync(path.join(process.cwd(), 'public', 'auth-native.html'), 'utf8');
+    const scripts = [...relay.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]);
+    expect(scripts).toHaveLength(1);
+    const hash = createHash('sha256').update(scripts[0]).digest('base64');
+    expect(headers).toContain(`script-src 'sha256-${hash}'`);
+    // The page is served at /auth-native too; both paths carry the policy.
+    for (const page of ['/auth-native', '/privacy', '/support']) {
+      expect(headers).toMatch(new RegExp(`^${page}\\n(  .+\\n)*  Content-Security-Policy: default-src 'none'`, 'm'));
+      expect(headers).toMatch(new RegExp(`^${page}\\.html\\n(  .+\\n)*  Content-Security-Policy: default-src 'none'`, 'm'));
     }
   });
 

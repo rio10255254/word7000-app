@@ -19,9 +19,11 @@ final class ExperienceTests: XCTestCase {
 
     private func waitForReadyCard(_ app: XCUIApplication) {
         let button = app.buttons["study-show-answer"]
-        XCTAssertTrue(button.waitForExistence(timeout: 5))
+        // Fifteen seconds: a busy iOS 27 runner took longer than five to
+        // enable the next card (run 183).
+        XCTAssertTrue(button.waitForExistence(timeout: 15))
         let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: button)
-        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 15), .completed)
     }
 
     func testRapidGradeAndBothSwipeDirections() {
@@ -360,7 +362,9 @@ final class ExperienceTests: XCTestCase {
         speech.tap()
         XCTAssertTrue(app.segmentedControls["speech-speed"].waitForExistence(timeout: 10))
         let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != nil AND value != '' AND value != 'Loading' AND value != '載入中'"), object: app.buttons["speech-voice-en-US"])
-        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 10), .completed)
+        // The voice list loads in the background; a cold iOS 27 simulator
+        // takes over ten seconds to list its voices.
+        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 60), .completed)
     }
 
     private func snapshot(_ app: XCUIApplication, _ name: String) {

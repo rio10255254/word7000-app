@@ -152,7 +152,9 @@ struct WordsView: View {
                 }
                 bankNamePrompt = false
             }
-            .disabled(newName.trimmed.isEmpty)
+            // No .disabled here: on iOS 17 a Save that starts disabled never
+            // runs its action once enabled. An empty name creates the default
+            // name or keeps the current one.
         }
     }
 

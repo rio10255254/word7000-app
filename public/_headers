@@ -1,6 +1,9 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; object-src 'none'
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=(), usb=(), browsing-topics=()
 
 /index.html
   Cache-Control: no-cache
@@ -17,9 +20,35 @@
 /ios-update.json
   Cache-Control: no-store
 
+# Static assets serve /page.html as /page (a redirect), and a rule matches
+# the path asked for, so each page has both forms.
 /auth-native.html
   Cache-Control: no-store
   Referrer-Policy: no-referrer
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'none'; script-src 'sha256-DmUxjGk5o7Kcsg4QSsQhPru03bqd+rNB5WQmL7E0F2U='; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+
+/auth-native
+  Cache-Control: no-store
+  Referrer-Policy: no-referrer
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'none'; script-src 'sha256-DmUxjGk5o7Kcsg4QSsQhPru03bqd+rNB5WQmL7E0F2U='; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+
+/privacy.html
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+
+/privacy
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+
+/support.html
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+
+/support
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable

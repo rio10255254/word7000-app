@@ -6,12 +6,13 @@ import Word7000Core
 /// Sign in with Apple first, Google second, email tucked away.
 struct SignInSheet: View {
     enum Reason {
-        case general, scan
+        case general, scan, onlineAI
 
         var title: String {
             switch self {
             case .general: L.t("登入 Word7000", "Sign in to Word7000")
             case .scan: L.t("登入後就能掃描單字表", "Sign in to scan word lists")
+            case .onlineAI: L.t("登入後就能用線上 AI", "Sign in to use online AI")
             }
         }
 
@@ -19,6 +20,7 @@ struct SignInSheet: View {
             switch self {
             case .general: L.t("保留這支手機上的學習紀錄。Plus 與試用期間可同步到其他裝置。", "Keep your learning records on this iPhone. Plus and the trial include sync across devices.")
             case .scan: L.t("將掃描字庫與你的帳號連結。Plus 與試用期間會提供雲端同步。", "Link scanned banks to your account. Cloud sync is included with Plus and during the trial.")
+            case .onlineAI: L.t("線上 AI（Claude）的單字解說、提問與口說教練需要帳號。沒有登入時，會改用 iPhone 上的 AI。", "Online AI (Claude) word explanations, questions and the speaking coach need an account. Without one, the AI on your iPhone is used.")
             }
         }
 
@@ -26,6 +28,7 @@ struct SignInSheet: View {
             switch self {
             case .general: "icloud.fill"
             case .scan: "doc.text.viewfinder"
+            case .onlineAI: "sparkles"
             }
         }
     }
@@ -41,6 +44,7 @@ struct SignInSheet: View {
     @State private var showEmail = false
     @State private var email = ""
     @State private var password = ""
+    @State private var finished = false
 
     var body: some View {
         NavigationStack {
@@ -100,6 +104,9 @@ struct SignInSheet: View {
                                     Button(L.t("登入", "Sign in")) { Task { await account.signIn(email: email.trimmed, password: password); finishIfSignedIn() } }
                                         .prominentAction()
                                 }
+                                Button(L.t("忘記密碼？", "Forgot password?")) { Task { await account.sendPasswordReset(email: email.trimmed) } }
+                                    .font(.footnote.weight(.semibold))
+                                    .accessibilityIdentifier("sign-in-forgot-password")
                             }
                             .textFieldStyle(.roundedBorder)
                             .transition(.opacity.combined(with: .move(edge: .top)))
@@ -111,7 +118,7 @@ struct SignInSheet: View {
                         ProgressView()
                     } else if case .error = account.status {
                         Text(account.message).font(.footnote).foregroundStyle(Palette.miss)
-                    } else if account.message == A.confirmEmail || account.message == A.cancelled {
+                    } else if [A.confirmEmail, A.cancelled, A.enterEmail, A.enterEmailPassword, A.passwordTooShort, A.resetSent].contains(account.message) {
                         Text(account.message).font(.footnote).foregroundStyle(.secondary)
                     }
 
@@ -129,6 +136,8 @@ struct SignInSheet: View {
             }
         }
         .interactiveDismissDisabled(account.busy)
+        // Signed in another way meanwhile, such as a new password from a reset link.
+        .onChange(of: account.isPermanent) { _, signedIn in if signedIn { finishIfSignedIn() } }
     }
 
     private func handleApple(_ result: Result<ASAuthorization, Error>) {
@@ -136,14 +145,14 @@ struct SignInSheet: View {
         case let .success(authorization):
             guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
                   let tokenData = credential.identityToken, let idToken = String(data: tokenData, encoding: .utf8)
-            else { return }
+            else { account.noteAppleFailed(); return }
             let code = credential.authorizationCode.flatMap { String(data: $0, encoding: .utf8) }
             Task {
                 await account.signInWithApple(idToken: idToken, rawNonce: rawNonce, authorizationCode: code, fullName: credential.fullName, email: credential.email)
                 finishIfSignedIn()
             }
         case let .failure(error):
-            if (error as? ASAuthorizationError)?.code == .canceled { account.noteCancelled() }
+            if (error as? ASAuthorizationError)?.code == .canceled { account.noteCancelled() } else { account.noteAppleFailed() }
         }
     }
 
@@ -152,23 +161,28 @@ struct SignInSheet: View {
             do {
                 return try await webAuthenticationSession.authenticate(using: url, callbackURLScheme: "word7000", preferredBrowserSession: .ephemeral)
             } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
-                await MainActor.run { account.noteCancelled() }
-                throw error
+                throw CancellationError()
             }
         }
         finishIfSignedIn()
     }
 
     private func finishIfSignedIn() {
-        guard account.isPermanent else { return }
+        // Both the sign-in task and the change to a permanent account land here.
+        guard account.isPermanent, !finished else { return }
+        finished = true
         dismiss()
         onSignedIn()
     }
 
     static func makeNonce(length: Int = 32) -> String {
-        let characters = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-._")
+        // 64 characters, so every random byte maps to one without bias.
+        let characters = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_")
         var bytes = [UInt8](repeating: 0, count: length)
-        _ = SecRandomCopyBytes(kSecRandomDefault, length, &bytes)
+        if SecRandomCopyBytes(kSecRandomDefault, length, &bytes) != errSecSuccess {
+            var generator = SystemRandomNumberGenerator()
+            bytes = bytes.map { _ in UInt8.random(in: .min ... .max, using: &generator) }
+        }
         return String(bytes.map { characters[Int($0) % characters.count] })
     }
 
@@ -178,6 +192,81 @@ struct SignInSheet: View {
 }
 
 /// The account rows in "我".
+/// Opened from a password reset email: choose a new password, then sign in with it.
+struct NewPasswordSheet: View {
+    @Environment(AccountModel.self) private var account
+    @State private var password = ""
+    @State private var confirmation = ""
+    @State private var mismatch = false
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    if let email = account.recovery?.user.email {
+                        LabeledContent(L.t("帳號", "Account"), value: email)
+                    }
+                    SecureField(L.t("新密碼", "New password"), text: $password)
+                        .textContentType(.newPassword)
+                        .accessibilityIdentifier("new-password")
+                    SecureField(L.t("再輸入一次", "Enter it again"), text: $confirmation)
+                        .textContentType(.newPassword)
+                } footer: {
+                    if mismatch {
+                        Text(L.t("兩次輸入的密碼不一樣。", "The passwords don't match.")).foregroundStyle(Palette.miss)
+                    } else if case .error = account.status {
+                        Text(account.message).foregroundStyle(Palette.miss)
+                    } else {
+                        Text(A.passwordTooShort)
+                    }
+                }
+                if account.busy { ProgressView() }
+            }
+            .navigationTitle(L.t("設定新密碼", "Set a new password"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L.cancel) { account.cancelRecovery() }
+                        .disabled(account.busy)
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L.t("儲存", "Save")) {
+                        mismatch = password != confirmation
+                        guard !mismatch else { return }
+                        Task { _ = await account.setNewPassword(password) }
+                    }
+                    .disabled(account.busy || password.count < 8)
+                }
+            }
+        }
+        .interactiveDismissDisabled(account.busy)
+    }
+}
+
+/// Shows the new-password form in a window of its own, above whatever the app
+/// has on screen (a study session, a sheet), since a reset link can arrive at
+/// any moment and a sheet cannot open over another.
+@MainActor
+final class RecoveryPresenter {
+    static let shared = RecoveryPresenter()
+    private var window: UIWindow?
+
+    func update(_ account: AccountModel) {
+        guard account.recovery != nil else {
+            window?.isHidden = true
+            window = nil
+            return
+        }
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        guard window == nil, let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first else { return }
+        let window = UIWindow(windowScene: scene)
+        window.windowLevel = .alert
+        window.rootViewController = UIHostingController(rootView: NewPasswordSheet().environment(account))
+        window.makeKeyAndVisible()
+        self.window = window
+    }
+}
+
 struct AccountSection: View {
     var includeDeletion = false
     @Environment(AccountModel.self) private var account
@@ -232,7 +321,8 @@ struct AccountSection: View {
             Button(L.cancel, role: .cancel) {}
             Button(L.t("刪除", "Delete"), role: .destructive) { Task { await account.deleteAccount() } }
         } message: {
-            Text(L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
+            Text(L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。刪除帳號不會取消 App Store 訂閱，請到「設定」的 Apple 帳號 > 訂閱項目取消。",
+                     "Progress, banks and daily records are deleted for good. This cannot be undone. Deleting your account does not cancel an App Store subscription; cancel it in Settings > your Apple Account > Subscriptions."))
         }
 
         if includeDeletion, account.configured, account.session != nil {
@@ -240,7 +330,7 @@ struct AccountSection: View {
                 Button(L.t("刪除帳號與資料", "Delete account and data"), role: .destructive) { confirmDelete = true }
                     .disabled(account.busy)
             } footer: {
-                Text(L.t("會永久刪除這個帳號的學習進度和字庫，無法復原。", "Permanently deletes this account's progress and banks. This cannot be undone."))
+                Text(L.t("會永久刪除這個帳號的學習進度和字庫，無法復原。Plus 訂閱要另外在 App Store 取消。", "Permanently deletes this account's progress and banks. This cannot be undone. Cancel a Plus subscription separately in the App Store."))
             }
         }
     }

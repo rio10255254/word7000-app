@@ -224,9 +224,19 @@ final class SpeakingCoachTests: XCTestCase {
         assertNoFeedback(app)
         XCTAssertFalse(app.buttons["coach-submit"].isEnabled)
         snapshot(app, "coach-follow-up-question")
-        tap(app.buttons["coach-original-question"], in: app)
+        // iOS 26 can drop a tap that lands right after the sheet re-renders
+        // (run 183): the follow-up stays shown. The button exists only while a
+        // follow-up does, so tapping it again can only go back.
+        let original = app.buttons["coach-original-question"]
+        tap(original, in: app)
+        func backToOriginal(within seconds: TimeInterval) -> Bool {
+            let back = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", question),
+                                                 object: app.staticTexts["coach-question"])
+            return XCTWaiter.wait(for: [back], timeout: seconds) == .completed
+        }
+        if !backToOriginal(within: 5), original.exists, original.isHittable { original.tap() }
         reveal(app.staticTexts["coach-question"], in: app)
-        XCTAssertEqual(app.staticTexts["coach-question"].label, question)
+        XCTAssertTrue(backToOriginal(within: 10), "Still showing: \(app.staticTexts["coach-question"].label)")
         closeCoach(app)
     }
 
@@ -390,10 +400,11 @@ final class SpeakingCoachTests: XCTestCase {
         answer.tap()
         answer.typeText(text)
         // The accessibility value can lag the final keyboard event on older
-        // simulators. Keep the exact-text assertion; never retry the keystroke.
+        // simulators, past five seconds on a busy iOS 18 runner (run 181).
+        // Keep the exact-text assertion; never retry the keystroke.
         let committed = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", text), object: answer)
-        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 5), .completed)
+        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 15), .completed)
         XCTAssertEqual(answer.value as? String, text)
     }
 
@@ -440,8 +451,10 @@ final class SpeakingCoachTests: XCTestCase {
 
     private func wait(_ element: XCUIElement, matching predicate: String,
                       file: StaticString = #filePath, line: UInt = #line) {
+        // Fifteen seconds: on a busy runner the keyboard alone took over five
+        // to go away (iOS 27, run 182).
         let expected = XCTNSPredicateExpectation(predicate: NSPredicate(format: predicate), object: element)
-        XCTAssertEqual(XCTWaiter.wait(for: [expected], timeout: 5), .completed, predicate, file: file, line: line)
+        XCTAssertEqual(XCTWaiter.wait(for: [expected], timeout: 15), .completed, predicate, file: file, line: line)
     }
 
     private func reveal(_ element: XCUIElement, in app: XCUIApplication, scrollingUp: Bool = true,

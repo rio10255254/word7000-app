@@ -90,6 +90,7 @@ struct Word7000App: App {
                 plus.refreshAccessState()
                 account.heartbeat()
                 Task {
+                    await account.bootstrapIfNeeded()
                     await plus.refreshEntitlements()
                     // Picks up what other devices saved while this one was away.
                     await account.flush(pullingCloud: true)

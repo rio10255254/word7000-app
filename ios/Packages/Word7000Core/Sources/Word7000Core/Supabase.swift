@@ -255,6 +255,27 @@ public struct SupabaseClient: Sendable {
         _ = try await request("PUT", "auth/v1/user", body: .object(["data": .object(data)]), session: session)
     }
 
+    /// Emails a link that brings the learner back to the app to choose a new
+    /// password. Supabase answers the same whether or not the address exists.
+    /// The link carries only a code, which `exchangeCode` turns into a session
+    /// with the verifier behind `codeChallenge` (PKCE): a link made for any
+    /// other request, or by anyone else, cannot sign this device in.
+    public func requestPasswordReset(email: String, redirectTo: String, codeChallenge: String) async throws {
+        _ = try await request("POST", "auth/v1/recover", query: ["redirect_to": redirectTo], body: .object([
+            "email": .string(email), "code_challenge": .string(codeChallenge), "code_challenge_method": .string("s256"),
+        ]))
+    }
+
+    public func exchangeCode(_ code: String, verifier: String) async throws -> AuthSession {
+        try await decode(AuthSession.self, request("POST", "auth/v1/token", query: ["grant_type": "pkce"],
+                                                    body: .object(["auth_code": .string(code), "code_verifier": .string(verifier)])))
+    }
+
+    /// Sets a new password with the session from a reset link; returns that user.
+    public func updatePassword(_ password: String, session: AuthSession) async throws -> AuthUser {
+        try await decode(AuthUser.self, request("PUT", "auth/v1/user", body: .object(["password": .string(password)]), session: session))
+    }
+
     public func signOut(session: AuthSession) async throws {
         _ = try await request("POST", "auth/v1/logout", query: ["scope": "local"], session: session)
     }
@@ -315,6 +336,12 @@ public struct SupabaseClient: Sendable {
         let row: [String: JSONValue] = ["user_id": .string(session.user.id), "activity_date": .string(date), "last_seen_at": .string(DayMath.timestamp(now))]
         _ = try await request("POST", "rest/v1/daily_active_users", query: ["on_conflict": "user_id,activity_date"], body: .array([.object(row)]), session: session,
                               headers: ["Prefer": "resolution=merge-duplicates,return=minimal"])
+    }
+
+    /// Hands the one-time Sign in with Apple code to the server, which keeps
+    /// Apple's refresh token so deleting the account can revoke it.
+    public func saveAppleSignIn(code: String, session: AuthSession) async throws {
+        _ = try await request("POST", "functions/v1/apple-token", body: .object(["code": .string(code)]), session: session)
     }
 
     public func deleteAccount(session: AuthSession) async throws {

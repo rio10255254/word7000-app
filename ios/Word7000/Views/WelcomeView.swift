@@ -11,7 +11,7 @@ struct WelcomeView: View {
     /// A phone set to Chinese most likely belongs to a learner of English;
     /// any other language, to a learner of Chinese. UI tests keep English.
     static var suggestedMode: StudyMode {
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingOnboarding") { return .english }
+        if UITesting.on(.onboarding) { return .english }
         return Locale.preferredLanguages.first?.lowercased().hasPrefix("zh") == false ? .chinese : .english
     }
 

@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import * as x509 from '@peculiar/x509';
-import { APPLE_ROOT_CA_G3, verifyEntitlement } from '../supabase/functions/ai/entitlement';
+import { APPLE_ROOT_CA_G3, verifyEntitlement, verifyNotification } from '../supabase/functions/ai/entitlement';
 
 // A stand-in for Apple's chain: same shape (root → intermediate → leaf, P-256,
 // Apple's marker extensions), signed with keys made here.
@@ -52,6 +52,7 @@ const subscription = {
   expiresDate: now + 20 * day,
   environment: 'Sandbox',
   type: 'Auto-Renewable Subscription',
+  originalTransactionId: '2000000123456789',
 };
 const rules = (chain: Chain) => ({
   bundleId: 'com.rio.word7000',
@@ -67,6 +68,7 @@ describe('Plus entitlement', () => {
   it('accepts an active subscription signed through the trusted root', async () => {
     await expect(verifyEntitlement(await sign(chain, subscription), rules(chain))).resolves.toEqual({
       productId: 'com.rio.word7000.plus.monthly', expiresAt: subscription.expiresDate, environment: 'Sandbox',
+      originalTransactionId: '2000000123456789',
     });
   });
 
@@ -111,5 +113,51 @@ describe('Plus entitlement', () => {
     for (const value of [undefined, 42, '', 'a.b', 'x'.repeat(30_000), `${b64url('{"alg":"none"}')}.e30.`]) {
       expect(await verifyEntitlement(value, rules(chain))).toBeNull();
     }
+  });
+});
+
+describe('App Store server notifications', () => {
+  let chain: Chain;
+  beforeAll(async () => { chain = await makeChain(); });
+
+  const notice = async (type: string, transaction: Record<string, unknown> | undefined, bundleId = 'com.rio.word7000') =>
+    sign(chain, {
+      notificationType: type, signedDate: now - 1000,
+      data: { bundleId, ...(transaction ? { signedTransactionInfo: await sign(chain, transaction) } : {}) },
+    });
+
+  it('reports refunds and revocations as revoked, and a reversed refund as restored', async () => {
+    for (const [type, revoked] of [['REFUND', true], ['REVOKE', true], ['REFUND_REVERSED', false], ['DID_RENEW', null]] as const) {
+      await expect(verifyNotification(await notice(type, subscription), rules(chain))).resolves.toEqual({
+        type, originalTransactionId: '2000000123456789', revoked,
+      });
+    }
+  });
+
+  it('accepts a notice as large as a real one, with its renewal info alongside', async () => {
+    const signedRenewalInfo = await sign(chain, { signedDate: now, autoRenewProductId: 'com.rio.word7000.plus.monthly', padding: 'x'.repeat(9000) });
+    const big = await sign(chain, {
+      notificationType: 'REFUND', signedDate: now - 1000,
+      data: { bundleId: 'com.rio.word7000', signedTransactionInfo: await sign(chain, subscription), signedRenewalInfo },
+    });
+    expect(big.length).toBeGreaterThan(20_000);
+    await expect(verifyNotification(big, rules(chain))).resolves.toMatchObject({ type: 'REFUND', revoked: true });
+  });
+
+  it('accepts Apple’s test notice, which names no transaction', async () => {
+    await expect(verifyNotification(await notice('TEST', undefined), rules(chain))).resolves.toEqual({
+      type: 'TEST', originalTransactionId: null, revoked: null,
+    });
+  });
+
+  it('rejects notices for another app, another product, an unsigned transaction or another root', async () => {
+    expect(await verifyNotification(await notice('REFUND', subscription, 'com.example.other'), rules(chain))).toBeNull();
+    expect(await verifyNotification(await notice('REFUND', { ...subscription, productId: 'com.rio.word7000.coins' }), rules(chain))).toBeNull();
+    expect(await verifyNotification(await notice('REFUND', { ...subscription, originalTransactionId: 'abc' }), rules(chain))).toBeNull();
+    const outer = await sign(chain, { notificationType: 'REFUND', signedDate: now, data: { bundleId: 'com.rio.word7000', signedTransactionInfo: 'a.b.c' } });
+    expect(await verifyNotification(outer, rules(chain))).toBeNull();
+    const other = await makeChain();
+    expect(await verifyNotification(await notice('REFUND', subscription), rules(other))).toBeNull();
+    expect(await verifyNotification('not a token', rules(chain))).toBeNull();
   });
 });

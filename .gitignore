@@ -36,6 +36,7 @@ exports/speaking-prompt-gpt/
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript

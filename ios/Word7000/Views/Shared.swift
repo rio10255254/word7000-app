@@ -34,6 +34,11 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     private(set) var activeText: String?
     private(set) var activeLanguage: String?
     private(set) var voices: [SpeechVoiceOption] = []
+    /// The system's default voice for each app language, looked up once when
+    /// the voice list arrives. Asking on every redraw kept the main thread busy
+    /// for many seconds on a cold start; asking off the main thread never
+    /// returned on iOS 27.
+    @ObservationIgnored private var systemDefaultIDs: [String: String] = [:]
     @ObservationIgnored private var voicesTask: Task<[SpeechVoiceOption], Never>?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
     @ObservationIgnored private var speechID: UUID?
@@ -47,7 +52,7 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func refreshVoices() async {
-        if let task = voicesTask { voices = await task.value; return }
+        if let task = voicesTask { apply(await task.value); return }
         let task = Task.detached(priority: .utility) { () -> [SpeechVoiceOption] in
             var options: [SpeechVoiceOption] = []
             for voice in AVSpeechSynthesisVoice.speechVoices() {
@@ -63,13 +68,22 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
             return options
         }
         voicesTask = task
-        voices = await task.value
+        apply(await task.value)
         voicesTask = nil
+    }
+
+    private func apply(_ options: [SpeechVoiceOption]) {
+        if systemDefaultIDs.isEmpty {
+            for language in ["en-US", "zh-TW"] {
+                systemDefaultIDs[language] = AVSpeechSynthesisVoice(language: language)?.identifier
+            }
+        }
+        voices = options
     }
 
     func selectedVoice(language: String, preferences: SpeechPreferences) -> SpeechVoiceOption? {
         SpeechVoiceSelection.preferred(voices, language: language, selectedID: preferences.voiceID(for: language),
-                                       systemDefaultID: AVSpeechSynthesisVoice(language: language)?.identifier)
+                                       systemDefaultID: systemDefaultIDs[language])
     }
 
     func speak(_ text: String, language: String = "en-US", preferences: SpeechPreferences = SpeechPreferences()) {

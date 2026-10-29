@@ -70,8 +70,7 @@ final class AppModel {
     static func launch() -> AppModel {
         let persistence = Persistence.live
         let words = loadBundledWords()
-        let arguments = ProcessInfo.processInfo.arguments
-        if arguments.contains("-uiTestingReset") {
+        if UITesting.on(.reset) {
             try? FileManager.default.removeItem(at: persistence.directory)
         }
         let snapshot = persistence.load(AppSnapshot.self, from: "snapshot.json")
@@ -101,10 +100,10 @@ final class AppModel {
             }
             settings.migratedLegacyData = true
         }
-        if arguments.contains("-uiTestingSampleProgress") {
+        if UITesting.on(.sampleProgress) {
             progress = SampleData.progress(words: words, today: DayMath.today())
         }
-        if arguments.contains("-uiTestingHistoryData") {
+        if UITesting.on(.historyData) {
             var analytics = LearningAnalyticsState()
             for back in 0..<90 {
                 guard let date = DayMath.addDays(DayMath.today(), -back) else { continue }
@@ -119,17 +118,17 @@ final class AppModel {
             }
             progress.analytics = analytics
         }
-        if arguments.contains("-uiTestingDark") { settings.theme = .dark }
-        if arguments.contains("-uiTestingChineseMode") {
+        if UITesting.on(.dark) { settings.theme = .dark }
+        if UITesting.on(.chineseMode) {
             // As the switch on Today leaves it: the course in its own order.
             settings.studyMode = .chinese
             settings.libraryFilter.sort = .default
         }
-        if arguments.contains("-uiTestingLight") { settings.theme = .light }
+        if UITesting.on(.light) { settings.theme = .light }
         if settings.onboardingComplete == nil {
             settings.onboardingComplete = snapshot != nil || !progress.words.isEmpty || !sets.sets.isEmpty
         }
-        if arguments.contains("-uiTestingReset"), !arguments.contains("-uiTestingOnboarding") {
+        if UITesting.on(.reset), !UITesting.on(.onboarding) {
             settings.onboardingComplete = true
         }
 

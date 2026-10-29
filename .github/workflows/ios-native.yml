@@ -2,7 +2,13 @@
 #   1. the learning engine's tests, including the golden results shared with
 #      the React Native app (parity.json),
 #   2. a simulator build plus a UI walk-through that screenshots every main
-#      screen in light and dark mode on iOS 18, 26, and 27.
+#      screen in light and dark mode on iOS 17, 18, 26, and 27,
+#   3. with all checks, the main screens on every iPhone shape (the devices
+#      check alone runs only those). Each iOS version's suite is split over
+#      two jobs, one simulator each, and GitHub runs five jobs at a time.
+# Pushes and the default manual run are quick checks (builds and one walk of
+# the main screens, about ten minutes). The full check (all) runs before a
+# release: ios-release.yml starts it when the source has not passed one.
 # Screenshots are uploaded as an artifact and pushed to the
 # `native-screenshots` branch so they can be viewed from a phone.
 name: Native iOS
@@ -34,40 +40,136 @@ on:
       checks:
         description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy', 'coach', 'compile', 'polish', 'devices']
-        default: 'all'
+        options: ['quick', 'all', 'copy', 'coach', 'compile', 'polish', 'devices']
+        default: 'quick'
 
 permissions:
   contents: read
 
 concurrency:
-  group: ios-native-${{ github.ref }}-${{ inputs.checks || 'all' }}
+  group: ios-native-${{ github.ref }}-${{ inputs.checks || 'quick' }}
   cancel-in-progress: true
 
 jobs:
+  # Decides what runs. A full check ("all", and every push) fits in five Mac
+  # jobs, the most GitHub runs at once, so nothing waits in a queue: each iOS
+  # version runs the whole suite split over two simulators side by side, then
+  # walks its share of the iPhone shapes. A push whose source already passed
+  # a full check (the pull request it merges, usually) is not tested again.
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      mode: ${{ steps.plan.outputs.mode }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+      skip: ${{ steps.plan.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Plan the checks
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECKS: ${{ inputs.checks || 'quick' }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          SKIP=false
+          if [ "$EVENT" = "push" ]; then
+            # The same rule as the release: everything shipped in the app and
+            # its tests must match; the release workflow, the AI server and
+            # its tests ship separately.
+            OUTSIDE_APP=(':(exclude).github/workflows/ios-release.yml' ':(exclude)ios/Tests/SpeakingRecencyChecks.swift'
+              ':(exclude)ios/Release/README.md' ':(exclude)supabase' ':(exclude).github/workflows/ai-backend.yml'
+              ':(exclude)src/aiFunction.test.ts')
+            gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ios-native.yml/runs?status=success&per_page=40" \
+              --jq '.workflow_runs[] | select(.event == "workflow_dispatch" and .display_title == "Native iOS: all checks") | "\(.id) \(.head_sha)"' \
+              > "$RUNNER_TEMP/passed.txt" || true
+            while read -r id sha; do
+              [ "$id" != "$GITHUB_RUN_ID" ] || continue
+              git cat-file -e "$sha^{commit}" 2>/dev/null || continue
+              git diff --quiet "$sha" "$GITHUB_SHA" -- . "${OUTSIDE_APP[@]}" || continue
+              # Only a run whose test jobs really ran counts, never a skipped one.
+              ran=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs?per_page=50" \
+                --jq '[.jobs[] | select(.name | startswith("Native iOS")) | .conclusion] | (length >= 4 and all(. == "success"))')
+              if [ "$ran" = "true" ]; then
+                echo "::notice::Run $id already passed every check on identical source ($sha); not testing again."
+                SKIP=true
+                break
+              fi
+            done < "$RUNNER_TEMP/passed.txt"
+          fi
+          python3 - "$CHECKS" > "$RUNNER_TEMP/matrix.json" <<'PY'
+          import json, sys
+          mode = sys.argv[1]
+          # Split by how long each class takes (about 46 minutes in all on one
+          # simulator): the coach, then scanning, the main flows and screens.
+          a = "SpeakingCoachTests DeviceLayoutTests"
+          b = "ScanPickerTests ExperienceTests ScreenshotTests"
+          small = "18=iPhone SE (3rd generation),iPhone Xs,iPhone 11,iPhone 12 mini"
+          large = "18=iPhone 13 mini,iPhone 14,iPhone 14 Plus,iPhone 15 Pro Max"
+          mac = {"xcode": 26, "runner": "macos-15", "concurrent": 2}
+          xc27 = {"ios": 27, "xcode": 27, "runner": "xcode-27", "concurrent": 1}
+          if mode == "all":
+              # One simulator a job: two at once on these three-core runners
+              # slowed iOS 26 past the coach tests' timeouts. Short jobs
+              # instead, which GitHub runs five at a time.
+              jobs = []
+              for v, cfg in ((17, mac), (18, mac), (26, mac), (27, xc27)):
+                  base = {**cfg, "ios": v}
+                  jobs.append({**base, "slug": f"ios-{v}-a", "label": f"iOS {v}, part 1", "shards": a, "shapes": "", "engine": True})
+                  jobs.append({**base, "slug": f"ios-{v}-b", "label": f"iOS {v}, part 2", "shards": b, "shapes": "", "engine": False})
+              for label, slug, shapes, cfg in (
+                  ("iOS 18 small iPhones", "shapes-18-small", small, mac),
+                  ("iOS 18 large iPhones", "shapes-18-large", large, mac),
+                  ("iOS 26 iPhones", "shapes-26", "26=iPhone 16e,iPhone 17,iPhone Air,iPhone 17 Pro Max", mac),
+                  ("iOS 27 iPhones", "shapes-27", "27=iPhone 17e,iPhone 18 Pro,iPhone 18 Pro Max,iPhone Duo", xc27),
+              ):
+                  ios = int(shapes.split("=")[0])
+                  # One iPhone at a time too: two booting together lost
+                  # launchd_sim on iOS 18 (run 181).
+                  jobs.append({**cfg, "ios": ios, "slug": slug, "label": label, "shards": "", "shapes": shapes,
+                               "engine": False, "concurrent": 1})
+          elif mode == "quick":
+              # Every day: the oldest and newest toolchains build, and iOS 26
+              # walks the main screens once. Minutes, not an hour.
+              jobs = [{"ios": 17, "slug": "ios-17", "shards": "", "shapes": "", "smoke": False, "engine": True, **mac},
+                      {"ios": 26, "slug": "ios-26", "shards": "", "shapes": "", "smoke": True, "engine": True, **mac},
+                      {"slug": "ios-27", "shards": "", "shapes": "", "smoke": False, "engine": True, **xc27}]
+          else:
+              jobs = [{"ios": v, "slug": f"ios-{v}", "shards": "", "shapes": "", "engine": True, **mac} for v in (17, 18, 26)]
+              jobs.append({"slug": "ios-27", "shards": "", "shapes": "", "engine": True, **xc27})
+          for job in jobs:
+              job.setdefault("label", job["slug"].replace("ios-", "iOS "))
+          print(json.dumps({"include": jobs}))
+          PY
+          {
+            echo "mode=$CHECKS"
+            echo "skip=$SKIP"
+            echo "matrix=$(cat "$RUNNER_TEMP/matrix.json")"
+          } >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/matrix.json"
+
   native:
-    name: Native iOS ${{ matrix.ios }}
-    if: inputs.checks != 'devices'
+    name: Native ${{ matrix.label }}
+    needs: plan
+    if: needs.plan.outputs.mode != 'devices' && needs.plan.outputs.skip != 'true'
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - ios: 18
-            xcode: 26
-            runner: macos-15
-          - ios: 26
-            xcode: 26
-            runner: macos-15
-          - ios: 27
-            xcode: 27
-            runner: xcode-27
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     runs-on: ${{ matrix.runner }}
-    # The full iOS 27 walk-through on the xcode-27 runners takes 50-55 minutes,
-    # too close to an hour once the simulator is slow to boot.
-    timeout-minutes: 90
+    timeout-minutes: 110  # four iPhones one after another can pass an hour
     env:
       IOS_MAJOR: ${{ matrix.ios }}
       XCODE_MAJOR: ${{ matrix.xcode }}
+      SHARDS: ${{ matrix.shards }}
+      WANTED: ${{ matrix.shapes }}
+      CONCURRENT: ${{ matrix.concurrent }}
+      SMOKE: ${{ matrix.smoke }}
     steps:
       - uses: actions/checkout@v4
 
@@ -93,21 +195,28 @@ jobs:
           ls -la "$RUNNER_TEMP/screenshots"
 
       - name: Word list matches the app data
+        # Once per iOS version: the other jobs of a full check run only UI tests.
+        if: matrix.engine
         run: node scripts/export-native-words.mjs --check
 
       - name: Speaking questions match their editorial sources
+        if: matrix.engine
         run: node scripts/build-native-speaking-library.mjs --check
 
       - name: Every Chinese text has pinyin
+        if: matrix.engine
         run: node scripts/build-pinyin-readings.mjs --check
 
       - name: Coaching evaluation cases match their authored sources
+        if: matrix.engine
         run: node scripts/build-coach-evaluation.mjs --check
 
       - name: Release archive checks
+        if: matrix.engine
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
       - name: Learning engine tests
+        if: matrix.engine
         run: |
           xcodebuild -version
           swift test --package-path ios/Packages/Word7000Core
@@ -116,6 +225,36 @@ jobs:
 
       - name: Speaking history account isolation
         run: node scripts/test-native-speaking-recency.mjs
+        if: matrix.engine
+
+      # Runner images ship only recent iOS runtimes; fetch the oldest supported
+      # one when it is missing and give it an iPhone to test on.
+      - name: Install the iOS ${{ matrix.ios }} simulator if missing
+        run: |
+          set -euo pipefail
+          has_runtime() { xcrun simctl list runtimes -j | python3 -c '
+          import json, os, sys
+          major = os.environ["IOS_MAJOR"] + "."
+          sys.exit(0 if any(r.get("isAvailable") and r.get("platform", "iOS") == "iOS" and r["version"].startswith(major)
+                            for r in json.load(sys.stdin)["runtimes"]) else 1)'; }
+          if ! has_runtime; then
+            # macOS bash 3.2 cannot parse a case statement inside $( ).
+            BUILD="$IOS_MAJOR.0"
+            if [ "$IOS_MAJOR" = 17 ]; then BUILD=17.5; fi
+            xcodebuild -downloadPlatform iOS -buildVersion "$BUILD"
+          fi
+          RUNTIME=$(xcrun simctl list runtimes -j | python3 -c '
+          import json, os, re, sys
+          major = os.environ["IOS_MAJOR"] + "."
+          fits = [r for r in json.load(sys.stdin)["runtimes"] if r.get("isAvailable") and r.get("platform", "iOS") == "iOS" and r["version"].startswith(major)]
+          print(max(fits, key=lambda r: tuple(int(x) for x in re.findall(r"\d+", r["version"])))["identifier"])')
+          if ! xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          rt = sys.argv[1]
+          sys.exit(0 if any(d["name"].startswith("iPhone") for d in json.load(sys.stdin)["devices"].get(rt, [])) else 1)' "$RUNTIME"; then
+            xcrun simctl create "iPhone 15 Pro" com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro "$RUNTIME"
+          fi
+          xcrun simctl list devices available | grep -A6 "iOS $IOS_MAJOR" || true
 
       - name: Pick an iPhone simulator
         run: |
@@ -151,9 +290,9 @@ jobs:
 
       - name: Build and run the UI walk-through
         env:
-          CHECKS: ${{ inputs.checks }}
+          CHECKS: ${{ needs.plan.outputs.mode }}
         run: |
-          if [ "$CHECKS" = "compile" ]; then
+          if [ "$CHECKS" = "compile" ] || { [ "$CHECKS" = "quick" ] && [ "$SMOKE" != "true" ]; }; then
             set +e
             xcodebuild build -project ios/Word7000.xcodeproj -scheme Word7000 \
               -destination "id=$SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/xcodebuild.log" 2>&1
@@ -161,21 +300,18 @@ jobs:
             grep -E "error:|warning:|\*\* BUILD" "$RUNNER_TEMP/xcodebuild.log" | tail -100
             exit $status
           fi
-          xcrun simctl boot "$SIMULATOR_UDID" || true
-          xcrun simctl bootstatus "$SIMULATOR_UDID" -b
-          xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
-          swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
-          xcrun simctl launch "$SIMULATOR_UDID" com.apple.mobileslideshow || true
-          xcrun simctl addmedia "$SIMULATOR_UDID" "$RUNNER_TEMP"/scan-fixtures/*
           set +e
           TEST_SELECTION=()
-          if [ "$CHECKS" = "copy" ]; then
+          if [ "$CHECKS" = "quick" ]; then
+            TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testLightScreens -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ExperienceTests/testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated -only-testing:Word7000UITests/DeviceLayoutTests/testEnglishModeFitsThisIPhone)
+          elif [ "$CHECKS" = "copy" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
           elif [ "$CHECKS" = "coach" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
           elif [ "$CHECKS" = "polish" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testMockAIDisabledStillExplainsStatusAndAllowsPractice -only-testing:Word7000UITests/SpeakingCoachTests/testRecordingReviewPlaybackAndDeletionWithExplicitFixture -only-testing:Word7000UITests/SpeakingCoachTests/testNativeRecorderPermissionTimerPlaybackAndCleanup -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
           fi
+          # One build serves every simulator in this job.
           DERIVED="$RUNNER_TEMP/DerivedData"
           xcodebuild build-for-testing \
             -project ios/Word7000.xcodeproj \
@@ -188,28 +324,117 @@ jobs:
             grep -E "error:|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -100
             exit $status
           fi
-          # The first launch after installing on a freshly booted simulator can
-          # outlast XCTest's launch window ("Timed out while acquiring background
-          # assertion", seen on iOS 27), failing whichever test happens to run
-          # first. Launch the app once here so the tests start warm.
+          XCTESTRUN=$(find "$DERIVED/Build/Products" -maxdepth 1 -name '*.xctestrun' | head -1)
           APP=$(find "$DERIVED/Build/Products" -maxdepth 2 -type d -name Word7000.app -path '*iphonesimulator*' | head -1)
-          if [ -n "$APP" ]; then
-            xcrun simctl install "$SIMULATOR_UDID" "$APP" \
-              && xcrun simctl launch "$SIMULATOR_UDID" com.rio.word7000 -uiTestingReset -uiTestingLight \
+          [ -n "$XCTESTRUN" ] && [ -n "$APP" ] || { echo "::error::The test build left no .xctestrun or app"; exit 1; }
+          swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
+
+          # A simulator ready for the walk: booted, a fixed status bar, the
+          # scan photos in its library, and the app launched once. The first
+          # launch after installing on a freshly booted simulator can outlast
+          # XCTest's launch window ("Timed out while acquiring background
+          # assertion", seen on iOS 27), failing whichever test runs first.
+          prepare() {
+            xcrun simctl boot "$1" || true
+            xcrun simctl bootstatus "$1" -b > /dev/null
+            xcrun simctl status_bar "$1" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
+            xcrun simctl launch "$1" com.apple.mobileslideshow || true
+            xcrun simctl addmedia "$1" "$RUNNER_TEMP"/scan-fixtures/*
+            xcrun simctl install "$1" "$APP" \
+              && xcrun simctl launch "$1" com.rio.word7000 -uiTestingReset -uiTestingLight \
               && sleep 10
-            xcrun simctl terminate "$SIMULATOR_UDID" com.rio.word7000 || true
+            xcrun simctl terminate "$1" com.rio.word7000 || true
+          }
+          run_tests() {
+            local udid=$1 name=$2
+            shift 2
+            xcodebuild test-without-building -xctestrun "$XCTESTRUN" -destination "id=$udid" \
+              -parallel-testing-enabled NO "$@" -resultBundlePath "$RUNNER_TEMP/$name.xcresult" \
+              > "$RUNNER_TEMP/xcodebuild-$name.log" 2>&1
+          }
+
+          status=0
+          if [ -z "$SHARDS" ] && [ -n "$WANTED" ]; then
+            : # An iPhone-shapes job: only the layout walk below.
+          elif [ -z "$SHARDS" ]; then
+            prepare "$SIMULATOR_UDID"
+            run_tests "$SIMULATOR_UDID" walk "${TEST_SELECTION[@]}" || status=1
+          else
+            # The suite split over simulators side by side: the chosen iPhone
+            # and copies of it, each with its own share of the test classes.
+            IFS=';' read -r -a PARTS <<< "$SHARDS"
+            xcrun simctl shutdown "$SIMULATOR_UDID" > /dev/null 2>&1 || true
+            UDIDS=("$SIMULATOR_UDID")
+            index=1
+            while [ $index -lt ${#PARTS[@]} ]; do
+              UDIDS+=("$(xcrun simctl clone "$SIMULATOR_UDID" "Walk $((index + 1))")")
+              index=$((index + 1))
+            done
+            for udid in "${UDIDS[@]}"; do prepare "$udid"; done
+            PIDS=()
+            for index in "${!PARTS[@]}"; do
+              SELECTION=()
+              for test_class in ${PARTS[$index]}; do SELECTION+=("-only-testing:Word7000UITests/$test_class"); done
+              echo "Part $((index + 1)) on ${UDIDS[$index]}: ${PARTS[$index]}"
+              run_tests "${UDIDS[$index]}" "part-$((index + 1))" "${SELECTION[@]}" &
+              PIDS+=($!)
+            done
+            for pid in "${PIDS[@]}"; do wait "$pid" || status=1; done
+            for udid in "${UDIDS[@]}"; do xcrun simctl shutdown "$udid" > /dev/null 2>&1 || true; done
           fi
-          xcodebuild test-without-building \
-            -project ios/Word7000.xcodeproj \
-            -scheme Word7000 \
-            -destination "id=$SIMULATOR_UDID" \
-            -derivedDataPath "$DERIVED" \
-            -parallel-testing-enabled NO \
-            "${TEST_SELECTION[@]}" \
-            -resultBundlePath "$RUNNER_TEMP/Word7000.xcresult" \
-            CODE_SIGNING_ALLOWED=NO >> "$RUNNER_TEMP/xcodebuild.log" 2>&1
-          status=$?
-          grep -E "error:|Test Case|\*\* (BUILD|TEST)" "$RUNNER_TEMP/xcodebuild.log" | tail -200
+          grep -h -E "error:|Test Case .* (passed|failed)|\*\* TEST" "$RUNNER_TEMP"/xcodebuild-*.log | tail -300
+
+          # This job's share of the iPhone shapes: the main screens in both
+          # study modes on each, checking nothing a learner needs is off screen.
+          if [ -n "$WANTED" ]; then
+            xcrun simctl list devicetypes -j > "$RUNNER_TEMP/types.json"
+            xcrun simctl list runtimes -j > "$RUNNER_TEMP/runtimes.json"
+            python3 - "$RUNNER_TEMP/types.json" "$RUNNER_TEMP/runtimes.json" > "$RUNNER_TEMP/devices.txt" <<'PY'
+          import json, os, re, subprocess, sys
+          types = {t["name"]: t["identifier"] for t in json.load(open(sys.argv[1]))["devicetypes"]}
+          runtimes = [r for r in json.load(open(sys.argv[2]))["runtimes"] if r.get("isAvailable") and r.get("platform", "iOS") == "iOS"]
+          def version(r): return tuple(int(x) for x in re.findall(r"\d+", r["version"]))
+          for group in os.environ["WANTED"].split(";"):
+              major, names = group.split("=")
+              for name in names.split(","):
+                  if name not in types:
+                      print(f"skip {name}: no such device type", file=sys.stderr); continue
+                  fits = [r for r in runtimes if version(r)[0] == int(major)
+                          and any(t.get("identifier") == types[name] for t in r.get("supportedDeviceTypes", []))]
+                  if not fits:
+                      print(f"skip {name}: no iOS {major} runtime runs it", file=sys.stderr); continue
+                  runtime = max(fits, key=version)
+                  udid = subprocess.run(["xcrun", "simctl", "create", f"{name} layout", types[name], runtime["identifier"]],
+                                        capture_output=True, text=True, check=True).stdout.strip()
+                  print(f"{udid}\t{name}\tiOS {runtime['version']}")
+          PY
+            cat "$RUNNER_TEMP/devices.txt"
+            [ -s "$RUNNER_TEMP/devices.txt" ] || { echo "::error::No iPhone shape could be created."; exit 1; }
+            # A new simulator's first boot sets itself up for minutes, and an
+            # app launched meanwhile can time out; boot each once, one at a time.
+            DESTINATIONS=()
+            while IFS=$'\t' read -r udid name os; do
+              xcrun simctl boot "$udid" < /dev/null || true
+              xcrun simctl bootstatus "$udid" -b < /dev/null > /dev/null || true
+              xcrun simctl shutdown "$udid" < /dev/null || true
+              DESTINATIONS+=(-destination "id=$udid")
+            done < "$RUNNER_TEMP/devices.txt"
+            xcodebuild test-without-building -xctestrun "$XCTESTRUN" "${DESTINATIONS[@]}" \
+              -maximum-concurrent-test-simulator-destinations "$CONCURRENT" -parallel-testing-enabled NO \
+              -only-testing:Word7000UITests/DeviceLayoutTests \
+              -resultBundlePath "$RUNNER_TEMP/Devices.xcresult" \
+              > "$RUNNER_TEMP/xcodebuild-shapes.log" 2>&1 || status=1
+            # With several destinations xcodebuild writes "Test case '…' passed on '<device>'".
+            grep -iE "error:|test case .* (passed|failed)|\*\* TEST" "$RUNNER_TEMP/xcodebuild-shapes.log" | tail -100
+            if [ -d "$RUNNER_TEMP/Devices.xcresult" ]; then
+              xcrun xcresulttool get test-results summary --path "$RUNNER_TEMP/Devices.xcresult" > "$RUNNER_TEMP/shape-failures.json" 2>&1 || true
+              python3 - "$RUNNER_TEMP/shape-failures.json" <<'PY' || true
+          import json, sys
+          for failure in json.load(open(sys.argv[1])).get("testFailures", [])[:200]:
+              print(f"{failure.get('testName')}: {failure.get('failureText')}")
+          PY
+            fi
+          fi
           exit $status
 
       - name: Coach Release build excludes debug responses
@@ -225,8 +450,8 @@ jobs:
           from pathlib import Path
           binary = Path(sys.argv[1])
           assert binary.is_file(), 'Release app executable is missing'
-          assert b'-uiTestingCoach' not in binary.read_bytes(), 'Release app contains coach test fixtures'
-          assert b'-uiTestingRecording' not in binary.read_bytes(), 'Release app contains recording test fixtures'
+          for marker in (b'-uiTesting', b'WORD7000_SCAN_TEST_TEXT'):
+              assert marker not in binary.read_bytes(), f'Release app contains test hooks ({marker.decode()})'
           Path(sys.argv[2]).write_text(json.dumps({'commit': os.environ['GITHUB_SHA'], 'coachTestFixturesExcluded': True}))
           print('Release app built successfully without coach test fixtures')
           PY
@@ -237,27 +462,41 @@ jobs:
           mkdir -p "$RUNNER_TEMP/screenshots"
           cp "$HOME"/word7000-screenshots/*.png "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           cp "$HOME"/word7000-screenshots/*-hierarchy.txt "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
-          cp "$RUNNER_TEMP/xcodebuild.log" "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
+          cat "$RUNNER_TEMP"/xcodebuild*.log > "$RUNNER_TEMP/screenshots/xcodebuild.log" 2>/dev/null || true
+          if [ -d "$HOME/word7000-device-screenshots" ]; then
+            mkdir -p "$RUNNER_TEMP/devices"
+            cp "$HOME"/word7000-device-screenshots/* "$RUNNER_TEMP/devices/" 2>/dev/null || true
+            cp "$RUNNER_TEMP/devices.txt" "$RUNNER_TEMP/devices/" 2>/dev/null || true
+          fi
           cp "$RUNNER_TEMP/coach-release.log" "$RUNNER_TEMP/screenshots/" 2>/dev/null || true
           xcrun simctl spawn "$SIMULATOR_UDID" log show --last 10m --style compact \
             --predicate 'process CONTAINS "Photos" OR process CONTAINS "photolibrary"' \
             > "$RUNNER_TEMP/screenshots/photos-system.log" 2>/dev/null || true
           ls -la "$RUNNER_TEMP/screenshots"
-          tail -n 80 "$RUNNER_TEMP/xcodebuild.log" > "$RUNNER_TEMP/screenshots/xcodebuild-tail.txt" 2>/dev/null || true
-          grep -E "error:" "$RUNNER_TEMP/xcodebuild.log" | head -100 > "$RUNNER_TEMP/screenshots/errors.txt" 2>/dev/null || true
+          tail -n 80 "$RUNNER_TEMP/screenshots/xcodebuild.log" > "$RUNNER_TEMP/screenshots/xcodebuild-tail.txt" 2>/dev/null || true
+          grep -E "error:" "$RUNNER_TEMP/screenshots/xcodebuild.log" | head -100 > "$RUNNER_TEMP/screenshots/errors.txt" 2>/dev/null || true
           xcodebuild -version > "$RUNNER_TEMP/screenshots/environment.txt"
           xcrun simctl list devices available >> "$RUNNER_TEMP/screenshots/environment.txt"
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: native-screenshots-${{ github.run_number }}-ios-${{ matrix.ios }}
+          name: native-screenshots-${{ github.run_number }}-${{ matrix.slug }}
           path: ${{ runner.temp }}/screenshots
+          retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.shapes != ''
+        with:
+          name: device-screenshots-${{ github.run_number }}-${{ matrix.slug }}
+          path: ${{ runner.temp }}/devices
+          if-no-files-found: ignore
           retention-days: 14
 
   publish-screenshots:
     needs: native
-    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all') && needs.native.result != 'skipped'
+    # After the tests ran, passed or not; a cancelled run has nothing to show.
+    if: always() && github.event_name != 'pull_request' && inputs.checks == 'all' && (needs.native.result == 'success' || needs.native.result == 'failure')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -270,6 +509,11 @@ jobs:
       - name: Publish screenshots to the native-screenshots branch
         run: |
           set -euo pipefail
+          # Never replace the published screenshots with nothing.
+          if [ -z "$(ls -A "$GITHUB_WORKSPACE/screenshots" 2>/dev/null)" ]; then
+            echo "No screenshots to publish."
+            exit 0
+          fi
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
@@ -288,7 +532,8 @@ jobs:
   # native-device-screenshots branch.
   devices:
     name: iPhone shapes, ${{ matrix.label }}
-    if: inputs.checks == 'devices'
+    needs: plan
+    if: needs.plan.outputs.mode == 'devices'
     strategy:
       fail-fast: false
       matrix:
@@ -426,8 +671,8 @@ jobs:
           retention-days: 14
 
   publish-device-screenshots:
-    needs: devices
-    if: always() && needs.devices.result != 'skipped'
+    needs: [plan, native, devices]
+    if: always() && (needs.devices.result == 'success' || needs.devices.result == 'failure' || (needs.plan.outputs.mode == 'all' && (needs.native.result == 'success' || needs.native.result == 'failure')))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -440,6 +685,11 @@ jobs:
       - name: Publish to the native-device-screenshots branch
         run: |
           set -euo pipefail
+          # Never replace the published screenshots with nothing.
+          if [ -z "$(ls -A "$GITHUB_WORKSPACE/screenshots" 2>/dev/null)" ]; then
+            echo "No screenshots to publish."
+            exit 0
+          fi
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q

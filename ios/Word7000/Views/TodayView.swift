@@ -7,6 +7,8 @@ struct TodayView: View {
     @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var studySettingsOpen = false
+    /// Bumped to bounce the streak flame: on arrival and when the streak grows.
+    @State private var flameBounce = 0
 
     var start: (Activity) -> Void
 
@@ -23,7 +25,7 @@ struct TodayView: View {
                             Text("\(progress.studiedToday)")
                                 .font(.rounded(.largeTitle, weight: .bold))
                                 .monospacedDigit()
-                                .contentTransition(.numericText())
+                                .contentTransition(.numericText(value: Double(progress.studiedToday)))
                             Text(L.ofTarget(progress.dailyTarget))
                                 .font(.rounded(.subheadline, weight: .semibold))
                                 .foregroundStyle(.secondary)
@@ -34,11 +36,24 @@ struct TodayView: View {
                         .padding(.horizontal, 20)
                     }
                     .frame(width: 142, height: 142)
+                    .overlay(alignment: .topTrailing) {
+                        // A seal pops onto the ring once today's goal is met.
+                        if model.goalDone {
+                            Image(systemName: "checkmark.seal.fill")
+                                .font(.system(size: 30, weight: .semibold))
+                                .foregroundStyle(Palette.known)
+                                .background(Circle().fill(Palette.background).padding(-3))
+                                .offset(x: 8, y: -4)
+                                .popIn(delay: 0.5)
+                                .accessibilityHidden(true)
+                        }
+                    }
                     .padding(.top, 8)
 
                     VStack(spacing: 6) {
                         Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
                             .font(.rounded(.title2, weight: .bold))
+                            .contentTransition(.opacity)
                         Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -63,6 +78,7 @@ struct TodayView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
+                .animation(reduceMotion ? nil : Motion.reveal, value: model.goalDone)
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 8, trailing: 4))
             }
@@ -132,6 +148,14 @@ struct TodayView: View {
             }
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
+        .task {
+            // A little hello from the flame each time Today comes into view.
+            try? await Task.sleep(for: .milliseconds(500))
+            if !reduceMotion, model.progress.streak > 0 { flameBounce += 1 }
+        }
+        .onChange(of: progress.streak) { old, new in
+            if new > old, !reduceMotion { flameBounce += 1 }
+        }
         .navigationTitle(L.tabToday)
         .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet() }
         .toolbar {
@@ -143,7 +167,13 @@ struct TodayView: View {
                 .accessibilityIdentifier("today-study-filter")
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Label(L.streakDays(progress.streak), systemImage: "flame.fill")
+                Label {
+                    Text(L.streakDays(progress.streak))
+                        .contentTransition(.numericText(value: Double(progress.streak)))
+                } icon: {
+                    Image(systemName: "flame.fill")
+                        .symbolEffect(.bounce, value: flameBounce)
+                }
                     .labelStyle(.titleAndIcon)
                     .font(.rounded(.subheadline, weight: .bold))
                     .foregroundStyle(progress.streak > 0 ? Palette.review : .secondary)

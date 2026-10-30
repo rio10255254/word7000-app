@@ -1,42 +1,60 @@
 import SwiftUI
 
-/// Today's progress as a ring, with the count in the middle.
+/// Today's progress as a ring, with the count in the middle. It fills up from
+/// empty the first time it appears and glows softly once the goal is met.
 struct ProgressRing<Label: View>: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var fraction: Double
     var color: Color
     var lineWidth: CGFloat = 12
     @ViewBuilder var label: () -> Label
+    /// What the ring draws right now; nil until it has appeared.
+    @State private var shown: Double? = nil
 
     var body: some View {
+        let drawn = min(1, max(0, reduceMotion ? fraction : shown ?? 0))
+        let complete = fraction >= 1
         ZStack {
             Circle()
                 .stroke(Palette.fill, lineWidth: lineWidth)
             Circle()
-                .trim(from: 0, to: max(0.001, fraction))
-                .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                .trim(from: 0, to: max(0.001, drawn))
+                .stroke(AngularGradient(colors: [color.opacity(0.6), color], center: .center, startAngle: .degrees(0), endAngle: .degrees(360)),
+                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                 .rotationEffect(.degrees(-90))
-                .animation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 0.85), value: fraction)
+                .shadow(color: color.opacity(complete ? 0.45 : 0), radius: complete ? lineWidth * 0.7 : 0)
+                .animation(reduceMotion ? nil : Motion.reveal, value: complete)
             label()
+        }
+        .onAppear {
+            guard shown == nil else { return }
+            withAnimation(Motion.fill.delay(0.12)) { shown = fraction }
+        }
+        .onChange(of: fraction) { _, value in
+            withAnimation(Motion.fill) { shown = value }
         }
         .accessibilityElement(children: .combine)
         .accessibilityValue("\(Int((fraction * 100).rounded()))%")
     }
 }
 
-/// A big rounded number over a small caption.
+/// A big rounded number over a small caption. The number rolls up from zero
+/// the first time it appears.
 struct StatTile: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var value: Int?
     var label: String
     var color: Color = .primary
+    @State private var rolled = false
 
     var body: some View {
+        let shown = rolled || reduceMotion ? value : value.map { _ in 0 }
         VStack(spacing: 2) {
-            Text(value.map { String($0) } ?? "–")
+            Text(shown.map { String($0) } ?? "–")
                 .font(.roundedSize(26, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(color)
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(value: Double(shown ?? 0)))
                 .accessibilityLabel(value.map { String($0) } ?? L.t("尚無資料", "No data"))
             Text(label)
                 .font(.caption)
@@ -44,6 +62,10 @@ struct StatTile: View {
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .combine)
+        .onAppear {
+            guard !rolled else { return }
+            withAnimation(Motion.entrance(2)) { rolled = true }
+        }
     }
 }
 
@@ -96,18 +118,22 @@ struct Tag: View {
     }
 }
 
-/// Thin linear progress for a session.
+/// Thin linear progress for a session, with a soft glow on the filled part.
 struct SessionBar: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var fraction: Double
+    var tint: Color = Palette.accent
 
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
                 Capsule().fill(Palette.fill)
-                Capsule().fill(Palette.accent)
-                    .frame(width: max(6, proxy.size.width * fraction))
-                    .animation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.9), value: fraction)
+                Capsule()
+                    .fill(LinearGradient(colors: [tint.opacity(0.65), tint], startPoint: .leading, endPoint: .trailing))
+                    .frame(width: max(6, proxy.size.width * min(1, fraction)))
+                    .shadow(color: tint.opacity(0.35), radius: 4)
+                    .animation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.78), value: fraction)
+                    .animation(reduceMotion ? nil : Motion.reveal, value: tint)
             }
         }
         .frame(height: 6)

@@ -140,16 +140,22 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
 
 struct SpeakButton: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var text: String
     var language: String = "en-US"
 
     var body: some View {
         let playing = Speaker.shared.activeText == text && Speaker.shared.activeLanguage == language
         Button { Speaker.shared.speak(text, language: language, preferences: model.settings.speech ?? SpeechPreferences()) } label: {
-            Image(systemName: playing ? "stop.fill" : "speaker.wave.2.fill")
+            // The waves ripple while the word is read; tapping again stops it.
+            Image(systemName: playing ? "speaker.wave.3.fill" : "speaker.wave.2.fill")
                 .font(.title3)
                 .foregroundStyle(Palette.accent)
+                .contentTransition(.symbolEffect(.replace))
+                .symbolEffect(.variableColor.iterative.dimInactiveLayers, options: .repeating, isActive: playing && !reduceMotion)
                 .frame(width: 44, height: 44)
+                .background(Palette.accent.opacity(playing ? 0.14 : 0), in: Circle())
+                .animation(reduceMotion ? nil : Motion.pop, value: playing)
         }
         .buttonStyle(SoftPressStyle())
         .accessibilityLabel(playing ? L.t("停止播放", "Stop audio") : L.pronounce)

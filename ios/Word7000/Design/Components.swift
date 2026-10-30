@@ -7,6 +7,8 @@ struct ProgressRing<Label: View>: View {
     var fraction: Double
     var color: Color
     var lineWidth: CGFloat = 12
+    /// The unfilled part of the ring.
+    var track: Color = Palette.fill
     @ViewBuilder var label: () -> Label
     /// What the ring draws right now; nil until it has appeared.
     @State private var shown: Double? = nil
@@ -16,7 +18,7 @@ struct ProgressRing<Label: View>: View {
         let complete = fraction >= 1
         ZStack {
             Circle()
-                .stroke(Palette.fill, lineWidth: lineWidth)
+                .stroke(track, lineWidth: lineWidth)
             Circle()
                 .trim(from: 0, to: max(0.001, drawn))
                 .stroke(AngularGradient(colors: [color.opacity(0.6), color], center: .center, startAngle: .degrees(0), endAngle: .degrees(360)),

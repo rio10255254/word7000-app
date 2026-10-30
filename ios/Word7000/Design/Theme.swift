@@ -84,7 +84,7 @@ struct Entrance: ViewModifier {
     }
 }
 
-/// A borderless grouped card, the building block of every screen.
+/// A grouped card raised off the page, the building block of every screen.
 struct CardBackground: ViewModifier {
     var radius: CGFloat = Metrics.cardRadius
     var padding: CGFloat = 16
@@ -93,7 +93,74 @@ struct CardBackground: ViewModifier {
         content
             .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Palette.surface, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .background { PremiumSurface(radius: radius) }
+    }
+}
+
+/// A raised surface: the card colour with a hairline edge that catches the
+/// light at the top, and a soft two-layer shadow beneath.
+struct PremiumSurface: View {
+    @Environment(\.colorScheme) private var colorScheme
+    var radius: CGFloat
+    var fill: Color = Palette.surface
+
+    var body: some View {
+        let dark = colorScheme == .dark
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+        shape
+            .fill(fill)
+            .overlay {
+                shape.strokeBorder(
+                    LinearGradient(colors: dark ? [.white.opacity(0.16), .white.opacity(0.03)] : [.white.opacity(0.9), .black.opacity(0.06)],
+                                   startPoint: .top, endPoint: .bottom),
+                    lineWidth: 1)
+            }
+            .shadow(color: .black.opacity(dark ? 0.3 : 0.04), radius: 1, y: 1)
+            .shadow(color: .black.opacity(dark ? 0.25 : 0.07), radius: 14, y: 8)
+    }
+}
+
+/// A quiet wash of colour behind a screen: two soft glows over the grouped
+/// background that drift very slowly. They hold still under Reduce Motion.
+struct AmbientBackground: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+    var tint: Color = Palette.accent
+    var secondTint: Color = Palette.chinese
+
+    var body: some View {
+        let dark = colorScheme == .dark
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            let glows = ZStack {
+                Circle()
+                    .fill(tint.opacity(dark ? 0.3 : 0.16))
+                    .frame(width: width * 1.1, height: width * 1.1)
+                    .blur(radius: 70)
+                    .offset(x: -width * 0.38, y: -width * 0.55)
+                Circle()
+                    .fill(secondTint.opacity(dark ? 0.24 : 0.12))
+                    .frame(width: width, height: width)
+                    .blur(radius: 70)
+                    .offset(x: width * 0.45, y: -width * 0.15)
+            }
+            .frame(width: width, height: proxy.size.height, alignment: .top)
+            if reduceMotion {
+                glows
+            } else {
+                glows.phaseAnimator([false, true]) { content, drifted in
+                    content
+                        .offset(x: drifted ? 24 : -18, y: drifted ? 16 : -10)
+                        .scaleEffect(drifted ? 1.06 : 1)
+                } animation: { _ in
+                    Animation.easeInOut(duration: 9)
+                }
+            }
+        }
+        .background(Palette.background)
+        .ignoresSafeArea()
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
 

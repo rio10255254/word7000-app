@@ -24,6 +24,8 @@ struct WordNoteView: View {
                 }
                 Text(note.translation).font(.subheadline).foregroundStyle(.secondary)
             }
-        }.fixedSize(horizontal: false, vertical: true)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .entrance(3, distance: 10)
     }
 }

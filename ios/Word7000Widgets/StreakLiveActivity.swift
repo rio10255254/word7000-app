@@ -87,6 +87,7 @@ struct Badge: View {
                 Image(systemName: props.finished ? "checkmark" : "book.closed.fill")
                     .font(.system(size: size * (compact ? 0.42 : 0.38), weight: .bold))
                     .foregroundStyle(props.accent)
+                    .contentTransition(.symbolEffect(.replace))
             }
             .frame(width: size, height: size)
         } else if minimal || compact {
@@ -96,6 +97,7 @@ struct Badge: View {
                     Text("\(props.value.streak)")
                         .font(.system(size: 13, weight: .bold, design: .rounded))
                         .monospacedDigit()
+                        .contentTransition(.numericText(value: Double(props.value.streak)))
                 }
             }
             .font(.system(size: 14))
@@ -107,6 +109,7 @@ struct Badge: View {
                 Text("\(props.value.streak)")
                     .font(.system(size: size * 0.3, weight: .heavy, design: .rounded))
                     .monospacedDigit()
+                    .contentTransition(.numericText(value: Double(props.value.streak)))
             }
             .frame(width: size, height: size)
         }
@@ -148,10 +151,12 @@ struct Metric: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: size))
                     .foregroundStyle(props.accent)
+                    .transition(.scale.combined(with: .opacity))
             } else if props.value.isNoon {
                 Text("\(Int(props.current))/\(Int(props.target))")
                     .font(.system(size: size, weight: .bold, design: .rounded))
                     .monospacedDigit()
+                    .contentTransition(.numericText(value: props.current))
             } else {
                 Text(timerInterval: props.value.startDate...props.value.endDate, countsDown: true)
                     .font(.system(size: size, weight: .bold, design: .rounded))

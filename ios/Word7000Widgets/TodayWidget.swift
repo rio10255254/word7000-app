@@ -173,6 +173,7 @@ struct TodayWidgetView: View {
                 Text("\(display.studied)")
                     .font(.system(size: size * 0.32, weight: .bold, design: .rounded))
                     .monospacedDigit()
+                    .contentTransition(.numericText(value: Double(display.studied)))
                 Text("/ \(display.target)")
                     .font(.system(size: size * 0.15, weight: .semibold, design: .rounded))
                     .foregroundStyle(.secondary)
@@ -185,6 +186,7 @@ struct TodayWidgetView: View {
         HStack(spacing: 2) {
             Image(systemName: "flame.fill")
             Text("\(display.streak)").monospacedDigit()
+                .contentTransition(.numericText(value: Double(display.streak)))
         }
         .font(.system(size: 14, weight: .bold, design: .rounded))
         .foregroundStyle(display.streak > 0 ? WidgetPalette.streak : .secondary)
@@ -198,6 +200,7 @@ struct TodayWidgetView: View {
             Image(systemName: "book.closed.fill")
         } currentValueLabel: {
             Text("\(display.studied)").monospacedDigit()
+                .contentTransition(.numericText(value: Double(display.studied)))
         }
         .gaugeStyle(.accessoryCircularCapacity)
         .widgetAccentable()

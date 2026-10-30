@@ -23,6 +23,7 @@ struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
     @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var tab: AppTab = .today
     @State private var activity: Activity?
     @State private var signInForScan = false
@@ -135,13 +136,22 @@ struct RootView: View {
         .safeAreaInset(edge: .top) {
             if model.storageFailed {
                 HStack {
-                    Label(A.saveFailed, systemImage: "exclamationmark.triangle.fill").font(.footnote)
+                    Label {
+                        Text(A.saveFailed)
+                    } icon: {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(Palette.review)
+                            .symbolEffect(.bounce, value: model.storageFailed)
+                    }
+                    .font(.footnote)
                     Button(L.t("重試", "Retry")) { model.saveNow() }
                 }
                 .padding(12)
                 .background(Palette.surface)
+                .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
             }
         }
+        .animation(Motion.reveal, value: model.storageFailed)
     }
 
     /// Scanned banks live in the learner's account, so scanning asks a guest

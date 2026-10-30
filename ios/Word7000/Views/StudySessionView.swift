@@ -38,7 +38,7 @@ struct StudySessionView: View {
             VStack(spacing: 16) {
                 if let session = model.studySession {
                     if session.total == 0 {
-                        ContentUnavailableView(L.nothingToStudy, systemImage: "checkmark.seal", description: Text(L.nothingToStudyText))
+                        MascotMessage(mood: .cheer, title: L.nothingToStudy, text: L.nothingToStudyText)
                     } else if session.isComplete {
                         SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
                                        again: { model.startStudySession() }, startQuiz: startQuiz)
@@ -74,7 +74,7 @@ struct StudySessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
             .overlay(alignment: .top) {
                 if goalBanner {
                     Label {
@@ -233,7 +233,7 @@ struct StudySessionView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
+        .background { PremiumSurface(radius: Metrics.wordCardRadius) }
         .overlay {
             // The verdict colours the card as it is dragged toward it.
             RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
@@ -482,10 +482,9 @@ struct SessionSummary: View {
         ScrollView {
           VStack(spacing: 18) {
             ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
-                Image(systemName: model.goalDone ? "checkmark" : "flame.fill")
-                    .font(.system(size: 40, weight: .bold))
-                    .foregroundStyle(model.goalDone ? Palette.known : Palette.review)
-                    .symbolEffect(.bounce, value: appeared && !reduceMotion)
+                // The companion sits in the ring, cheering when the goal is met.
+                Mascot(mood: reachedGoal || model.goalDone ? .cheer : .happy, size: 78, hop: appeared ? 1 : 0)
+                    .offset(y: 4)
             }
             .frame(width: 130, height: 130)
             .entrance(0)

@@ -326,3 +326,33 @@ private struct MascotBubbleTail: Shape {
         return path
     }
 }
+
+extension Mascot.Mood {
+    /// How the companion feels about a result, from 0 (none right) to 1 (all right).
+    init(score: Double) {
+        self = score >= 0.999 ? .cheer : score >= 0.6 ? .happy : .encourage
+    }
+}
+
+/// The companion with a short title and line, for empty and finished states.
+struct MascotMessage: View {
+    var mood: Mascot.Mood
+    var title: String
+    var text: String
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Mascot(mood: mood, size: 110)
+                .popIn()
+            Text(title)
+                .font(.rounded(.title2, weight: .bold))
+                .entrance(1)
+            Text(text)
+                .foregroundStyle(.secondary)
+                .entrance(2)
+        }
+        .multilineTextAlignment(.center)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(24)
+    }
+}

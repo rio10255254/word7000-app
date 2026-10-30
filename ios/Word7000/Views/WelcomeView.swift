@@ -16,14 +16,8 @@ struct WelcomeView: View {
             Form {
                 Section {
                     VStack(alignment: .leading, spacing: 12) {
-                        Image(systemName: "books.vertical.fill")
-                            .font(.system(size: 30, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 64, height: 64)
-                            .background(LinearGradient(colors: [Palette.accent, Palette.chinese], startPoint: .topLeading, endPoint: .bottomTrailing),
-                                        in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                            .shadow(color: Palette.accent.opacity(0.35), radius: 10, y: 6)
-                            .symbolEffect(.bounce, value: waved)
+                        // The companion says hello with a hop.
+                        Mascot(mood: .happy, size: 96, hop: waved ? 1 : 0)
                             .popIn()
                         Text("Word7000").font(.largeTitle.bold())
                             .entrance(1)
@@ -69,7 +63,7 @@ struct WelcomeView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(Palette.background)
+            .background { AmbientBackground() }
         }
         .sensoryFeedback(.selection, trigger: mode)
         .sensoryFeedback(.selection, trigger: target)

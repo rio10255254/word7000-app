@@ -56,6 +56,10 @@ struct MeView: View {
                 }
             }
 
+            Section {
+                LevelCard(mastered: stats.mastered)
+            }
+
             AIInsightsSection()
 
             PlusSection(compact: true)
@@ -67,6 +71,8 @@ struct MeView: View {
                 .accessibilityIdentifier("me-settings")
             }
         }
+        .scrollContentBackground(.hidden)
+        .background { AmbientBackground(tint: Palette.chinese, secondTint: Palette.accent) }
         .navigationTitle(L.tabMe)
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
     }
@@ -283,6 +289,56 @@ struct SettingsLabel: View {
                 Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
+        }
+    }
+}
+
+/// The learner's level, earned by the words they know well, with the
+/// companion beside it and how far it is to the next level.
+private struct LevelCard: View {
+    var mastered: Int
+    static let wordsPerLevel = 50
+
+    var body: some View {
+        let level = mastered / Self.wordsPerLevel + 1
+        let into = mastered % Self.wordsPerLevel
+        HStack(spacing: 14) {
+            Mascot(mood: mastered > 0 ? .happy : .idle, size: 64)
+            VStack(alignment: .leading, spacing: 7) {
+                HStack(spacing: 8) {
+                    Text("Lv.\(level)")
+                        .font(.rounded(.subheadline, weight: .heavy))
+                        .monospacedDigit()
+                        .foregroundStyle(.white)
+                        .contentTransition(.numericText(value: Double(level)))
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 3)
+                        .background(LinearGradient(colors: [Palette.accent, Palette.chinese], startPoint: .leading, endPoint: .trailing), in: Capsule())
+                    Text(Self.title(for: level))
+                        .font(.rounded(.headline, weight: .bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
+                SessionBar(fraction: Double(into) / Double(Self.wordsPerLevel), tint: Palette.chinese)
+                Text(L.t("再熟記 \(Self.wordsPerLevel - into) 個字升到 Lv.\(level + 1)",
+                         "\(Self.wordsPerLevel - into) more known words to Lv.\(level + 1)"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 6)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("me-level")
+    }
+
+    static func title(for level: Int) -> String {
+        switch level {
+        case ..<3: L.t("單字新手", "Word rookie")
+        case 3..<6: L.t("單字學徒", "Word apprentice")
+        case 6..<11: L.t("單字達人", "Word achiever")
+        case 11..<21: L.t("單字專家", "Word expert")
+        case 21..<41: L.t("單字大師", "Word master")
+        default: L.t("單字傳奇", "Word legend")
         }
     }
 }

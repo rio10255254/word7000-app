@@ -270,6 +270,11 @@ struct ExamView: View {
                     }
                 }
                 .frame(width: 140, height: 140)
+                .overlay(alignment: .topTrailing) {
+                    Mascot(mood: Mascot.Mood(score: Double(score) / 100), size: 64)
+                        .offset(x: 44, y: -22)
+                        .popIn(delay: 0.5)
+                }
                 .padding(.top, 12)
                 .entrance(0)
                 Label(badge.text, systemImage: badge.icon)

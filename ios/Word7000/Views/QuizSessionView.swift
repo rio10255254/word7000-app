@@ -42,7 +42,7 @@ struct QuizSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground() }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -207,16 +207,28 @@ struct QuizSessionView: View {
                         .foregroundStyle(highlight)
                         .transition(.scale.combined(with: .opacity))
                         .symbolEffect(.bounce, value: reduceMotion ? false : answered)
+                        // A right pick throws a little burst of light.
+                        .overlay {
+                            if isChosen, option.correct, !reduceMotion { SparkleBurst(color: Palette.known) }
+                        }
                 }
             }
             .foregroundStyle(answered && highlight == nil ? Color.secondary : Color.primary)
             .padding(.horizontal, 18)
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                (highlight ?? Palette.surface).opacity(highlight == nil ? 1 : 0.16),
-                in: RoundedRectangle(cornerRadius: 18, style: .continuous)
-            )
+            .background {
+                if let highlight {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(highlight.opacity(0.16))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .strokeBorder(highlight.opacity(0.45), lineWidth: 1.5)
+                        }
+                } else {
+                    PremiumSurface(radius: 18)
+                }
+            }
         }
         .buttonStyle(SoftPressStyle())
         // A wrong pick gives a small shake; the right answer swells a little either way.
@@ -262,6 +274,11 @@ struct QuizSessionView: View {
                     .accessibilityLabel("\(correctCount)/\(questions.count)")
             }
             .frame(width: 130, height: 130)
+            .overlay(alignment: .topTrailing) {
+                Mascot(mood: Mascot.Mood(score: fraction), size: 64)
+                    .offset(x: 44, y: -22)
+                    .popIn(delay: 0.5)
+            }
             .entrance(0)
             Text(L.quizFinished).font(.rounded(.title, weight: .bold))
                 .entrance(1)

@@ -388,10 +388,7 @@ struct SpeakingSessionView: View {
     private var finished: some View {
         VStack(spacing: 18) {
             Spacer()
-            Image(systemName: "bubble.left.and.text.bubble.right.fill")
-                .font(.system(size: 44))
-                .foregroundStyle(Palette.known)
-                .symbolEffect(.bounce, value: finishedBounce)
+            Mascot(mood: answered > 0 ? .cheer : .encourage, size: 104, hop: finishedBounce)
                 .popIn()
             Text(L.speakingFinished).font(.rounded(.title, weight: .bold))
                 .entrance(1)

@@ -142,3 +142,28 @@ struct SessionBar: View {
         .accessibilityHidden(true)
     }
 }
+
+/// A small burst of sparks flying out from a point and fading, e.g. from the
+/// check mark of a right answer. Purely decorative.
+struct SparkleBurst: View {
+    var color: Color = Palette.known
+    var radius: CGFloat = 34
+    @State private var spread = false
+
+    var body: some View {
+        ZStack {
+            ForEach(0..<8, id: \.self) { index in
+                let angle = Double(index) / 8 * 2 * Double.pi
+                Image(systemName: index % 2 == 0 ? "sparkle" : "circle.fill")
+                    .font(.system(size: index % 2 == 0 ? 12 : 5, weight: .bold))
+                    .foregroundStyle(color)
+                    .offset(x: spread ? CGFloat(cos(angle)) * radius : 0, y: spread ? CGFloat(sin(angle)) * radius : 0)
+                    .scaleEffect(spread ? 0.4 : 1)
+                    .opacity(spread ? 0 : 1)
+            }
+        }
+        .onAppear { withAnimation(.easeOut(duration: 0.7)) { spread = true } }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}

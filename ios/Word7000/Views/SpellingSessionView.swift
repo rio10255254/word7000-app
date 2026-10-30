@@ -38,7 +38,7 @@ struct SpellingSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground() }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -292,6 +292,11 @@ struct SpellingSessionView: View {
                     .accessibilityLabel("\(correctCount)/\(words.count)")
             }
             .frame(width: 130, height: 130)
+            .overlay(alignment: .topTrailing) {
+                Mascot(mood: Mascot.Mood(score: Double(correctCount) / Double(max(1, words.count))), size: 64)
+                    .offset(x: 44, y: -22)
+                    .popIn(delay: 0.5)
+            }
             .entrance(0)
             Text(L.t("拼字練習完成", "Spelling complete")).font(.rounded(.title, weight: .bold))
                 .entrance(1)

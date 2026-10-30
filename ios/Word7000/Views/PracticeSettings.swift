@@ -39,6 +39,7 @@ struct FilterControls: View {
 struct StudySettingsSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         NavigationStack {
@@ -47,9 +48,17 @@ struct StudySettingsSheet: View {
                     FilterControls(selection: Binding(get: { model.settings.studyFilter }, set: { model.settings.studyFilter = $0 }))
                 } header: { Text(model.bankName) }
                 Section {
-                    LabeledContent(L.t("符合條件", "Matching words"), value: L.bankWordCount(model.studyCandidates.count))
+                    let count = model.studyCandidates.count
+                    LabeledContent(L.t("符合條件", "Matching words")) {
+                        Text(L.bankWordCount(count))
+                            .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(count)))
+                    }
                 }
             }
+            // The count rolls to its new value as the filters change.
+            .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.studyFilter)
+            .sensoryFeedback(.selection, trigger: model.settings.studyFilter) { _, _ in model.settings.hapticsEnabled ?? true }
             .navigationTitle(L.t("學習範圍", "Study scope"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { dismiss() } } }
@@ -59,6 +68,7 @@ struct StudySettingsSheet: View {
 
 struct QuizConfiguration: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var start: () -> Void
 
     private var selection: Binding<FilterSelection> {
@@ -78,7 +88,12 @@ struct QuizConfiguration: View {
             } header: { Text(L.t("這次想練習幾題？", "How many questions?")) }
             Section { FilterControls(selection: selection) } header: { Text(model.bankName) }
             Section {
-                LabeledContent(L.t("本輪題數", "This round"), value: "\(min(count, model.settings.quizQuestionCount))")
+                let roundSize = min(count, model.settings.quizQuestionCount)
+                LabeledContent(L.t("本輪題數", "This round")) {
+                    Text("\(roundSize)")
+                        .monospacedDigit()
+                        .contentTransition(.numericText(value: Double(roundSize)))
+                }
                 Button(action: start) {
                     Text(L.t("開始測驗", "Start quiz")).font(.headline).frame(maxWidth: .infinity)
                 }
@@ -88,5 +103,9 @@ struct QuizConfiguration: View {
             }
         }
         .navigationTitle(L.quickQuiz)
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizQuestionCount)
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizFilter)
+        .sensoryFeedback(.selection, trigger: model.settings.quizQuestionCount) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.selection, trigger: model.settings.quizFilter) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 }

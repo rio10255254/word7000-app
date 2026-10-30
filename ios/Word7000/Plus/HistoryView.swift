@@ -5,6 +5,7 @@ import Word7000Core
 struct HistoryView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var range = 7
 
     var body: some View {
@@ -32,6 +33,7 @@ struct HistoryView: View {
         }
         .background(Palette.background)
         .animation(.smooth, value: locked)
+        .sensoryFeedback(.selection, trigger: range) { _, _ in model.settings.hapticsEnabled ?? true }
         .navigationTitle(L.t("學習紀錄", "History"))
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: WordEntry.self) { word in WordDetailView(word: word) }
@@ -55,6 +57,8 @@ struct HistoryView: View {
                     StatTile(value: summary.accuracy, label: L.t("答對率 %", "Accuracy %"), color: Palette.known)
                 }
                 .padding(.vertical, 6)
+                // The totals roll to the new range instead of jumping.
+                .animation(reduceMotion ? nil : Motion.reveal, value: range)
                 LabeledContent(L.t("完成口說練習", "Speaking practice completed"),
                                value: L.t("\(summary.speakingCompleted) 次", "\(summary.speakingCompleted) sessions"))
             }

@@ -25,8 +25,12 @@ struct MeView: View {
             } footer: {
                 // One short line, so the history row stays on screen on small iPhones.
                 if model.progress.streak > 0 {
-                    Label(streakProtectionText, systemImage: "shield.lefthalf.filled")
-                        .accessibilityIdentifier("me-streak-protection")
+                    Label {
+                        Text(streakProtectionText)
+                    } icon: {
+                        ShieldIcon(ready: model.streakProtectionReadyOn == nil)
+                    }
+                    .accessibilityIdentifier("me-streak-protection")
                 }
             }
 
@@ -84,6 +88,7 @@ struct MeView: View {
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
@@ -97,7 +102,8 @@ struct SettingsView: View {
                         Text(L.studyModeLabel(mode)).tag(mode)
                     }
                 } label: {
-                    SettingsLabel(L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent)
+                    SettingsLabel(L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent,
+                                  trigger: model.studyMode)
                 }
                 Picker(selection: Binding(
                     get: { model.progress.dailyTarget },
@@ -107,13 +113,13 @@ struct SettingsView: View {
                         Text(L.wordsPerDay(value)).tag(value)
                     }
                 } label: {
-                    SettingsLabel(L.dailyTargetTitle, icon: "target", tint: .orange)
+                    SettingsLabel(L.dailyTargetTitle, icon: "target", tint: .orange, trigger: model.progress.dailyTarget)
                 }
                 Toggle(isOn: Binding(
                     get: { model.settings.studyAutoReveal ?? false },
                     set: { model.settings.studyAutoReveal = $0 }
                 )) {
-                    SettingsLabel(L.autoReveal, icon: "eye.fill", tint: .teal)
+                    SettingsLabel(L.autoReveal, icon: (model.settings.studyAutoReveal ?? false) ? "eye.fill" : "eye.slash.fill", tint: .teal)
                 }
                 .accessibilityIdentifier("settings-auto-reveal")
             } header: {
@@ -127,7 +133,7 @@ struct SettingsView: View {
                     get: { model.reminderEnabled },
                     set: { model.setReminderEnabled($0) }
                 )) {
-                    SettingsLabel(L.reminder, icon: "bell.badge.fill", tint: .red)
+                    SettingsLabel(L.reminder, icon: model.reminderEnabled ? "bell.badge.fill" : "bell.slash.fill", tint: .red)
                 }
                 .accessibilityIdentifier("settings-reminder")
                 if model.reminderEnabled && account.supportsCustomReminderTime {
@@ -174,13 +180,14 @@ struct SettingsView: View {
                         Text(option.label).tag(option)
                     }
                 } label: {
-                    SettingsLabel(L.appearance, icon: "circle.lefthalf.filled", tint: .indigo)
+                    SettingsLabel(L.appearance, icon: appearanceIcon, tint: .indigo)
                 }
                 Toggle(isOn: Binding(
                     get: { model.settings.hapticsEnabled ?? true },
                     set: { model.settings.hapticsEnabled = $0 }
                 )) {
-                    SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: .green)
+                    SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: .green,
+                                  trigger: model.settings.hapticsEnabled ?? true)
                 }
             } header: {
                 Text(L.t("顯示與操作", "Display and feel"))
@@ -208,6 +215,22 @@ struct SettingsView: View {
         .navigationTitle(L.settings)
         .navigationBarTitleDisplayMode(.inline)
         .task { await account.checkReminderSupport() }
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.reminderEnabled)
+        .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in haptics }
+        .sensoryFeedback(.selection, trigger: model.progress.dailyTarget) { _, _ in haptics }
+        .sensoryFeedback(.selection, trigger: model.settings.theme) { _, _ in haptics }
+        // Turning haptics on answers with a tap, so the choice can be felt.
+        .sensoryFeedback(.impact(weight: .medium), trigger: model.settings.hapticsEnabled ?? true) { _, new in new }
+    }
+
+    private var haptics: Bool { model.settings.hapticsEnabled ?? true }
+
+    private var appearanceIcon: String {
+        switch model.settings.theme {
+        case .system: "circle.lefthalf.filled"
+        case .light: "sun.max.fill"
+        case .dark: "moon.fill"
+        }
     }
 
     private var speedLabel: String {
@@ -220,19 +243,24 @@ struct SettingsView: View {
 }
 
 /// A settings row title with a small coloured icon, like the iPhone's Settings app.
+/// The icon morphs when it changes and bounces when the row's value does.
 struct SettingsLabel: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let title: String
     let icon: String
     let tint: Color
     var value: String? = nil
     var external = false
+    /// What the row controls; the icon bounces each time it changes.
+    var trigger: AnyHashable? = nil
 
-    init(_ title: String, icon: String, tint: Color, value: String? = nil, external: Bool = false) {
+    init(_ title: String, icon: String, tint: Color, value: String? = nil, external: Bool = false, trigger: AnyHashable? = nil) {
         self.title = title
         self.icon = icon
         self.tint = tint
         self.value = value
         self.external = external
+        self.trigger = trigger
     }
 
     var body: some View {
@@ -240,6 +268,8 @@ struct SettingsLabel: View {
             Image(systemName: icon)
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(.white)
+                .contentTransition(.symbolEffect(.replace))
+                .symbolEffect(.bounce, value: reduceMotion ? nil : (trigger ?? value.map { AnyHashable($0) }))
                 .frame(width: 29, height: 29)
                 .background(tint.gradient, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
                 .accessibilityHidden(true)
@@ -247,12 +277,32 @@ struct SettingsLabel: View {
             if value != nil || external { Spacer(minLength: 8) }
             if let value {
                 Text(value).foregroundStyle(.secondary).lineLimit(1)
+                    .contentTransition(.opacity)
             }
             if external {
                 Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
         }
+    }
+}
+
+/// The streak shield in "我": it settles with a bounce when the page opens
+/// while protection is ready, and stays quiet while it recharges.
+private struct ShieldIcon: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var ready: Bool
+    @State private var bounced = false
+
+    var body: some View {
+        Image(systemName: "shield.lefthalf.filled")
+            .foregroundStyle(ready ? Palette.known : Palette.secondaryLabel)
+            .symbolEffect(.bounce, value: bounced)
+            .task {
+                guard ready, !reduceMotion, !bounced else { return }
+                try? await Task.sleep(for: .milliseconds(600))
+                bounced = true
+            }
     }
 }
 

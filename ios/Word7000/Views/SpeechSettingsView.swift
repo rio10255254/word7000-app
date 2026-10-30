@@ -5,6 +5,7 @@ import Word7000Core
 struct SpeechSettingsView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var loading = true
 
     private var preferences: SpeechPreferences { model.settings.speech ?? SpeechPreferences() }
@@ -54,11 +55,12 @@ struct SpeechSettingsView: View {
             Task { await reload() }
         }
         .onDisappear { Speaker.shared.stop() }
+        .sensoryFeedback(.selection, trigger: preferences.speed) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 
     private func reload() async {
         await Speaker.shared.refreshVoices()
-        loading = false
+        withAnimation(reduceMotion ? nil : Motion.reveal) { loading = false }
     }
 
     private func voiceRow(language: String, title: String) -> some View {
@@ -73,6 +75,7 @@ struct SpeechSettingsView: View {
                 else {
                     Text(selectedName)
                         .foregroundStyle(.secondary).multilineTextAlignment(.trailing)
+                        .transition(.opacity)
                 }
             }
         }
@@ -86,8 +89,15 @@ struct SpeechSettingsView: View {
         return Button {
             Speaker.shared.speak(text, language: language, preferences: preferences)
         } label: {
-            Label(playing ? L.t("停止試聽", "Stop preview") : title, systemImage: playing ? "stop.fill" : "play.fill")
-                .frame(minHeight: 44)
+            Label {
+                Text(playing ? L.t("停止試聽", "Stop preview") : title)
+            } icon: {
+                // The play symbol turns into rippling waves while the sample is read.
+                Image(systemName: playing ? "speaker.wave.3.fill" : "play.fill")
+                    .contentTransition(.symbolEffect(.replace))
+                    .symbolEffect(.variableColor.iterative.dimInactiveLayers, options: .repeating, isActive: playing && !reduceMotion)
+            }
+            .frame(minHeight: 44)
         }
         .accessibilityIdentifier("speech-preview-\(language)")
     }
@@ -107,7 +117,7 @@ private struct SpeechVoicePicker: View {
                     HStack {
                         Text(L.t("自動選擇高品質聲音", "Automatic voice selection")).foregroundStyle(.primary)
                         Spacer()
-                        if preferences.voiceID(for: language) == nil { Image(systemName: "checkmark") }
+                        if preferences.voiceID(for: language) == nil { Image(systemName: "checkmark").popIn() }
                     }
                 }
             }
@@ -121,7 +131,7 @@ private struct SpeechVoicePicker: View {
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                             Spacer()
-                            if preferences.voiceID(for: language) == voice.id { Image(systemName: "checkmark") }
+                            if preferences.voiceID(for: language) == voice.id { Image(systemName: "checkmark").popIn() }
                         }
                         .frame(minHeight: 44)
                     }

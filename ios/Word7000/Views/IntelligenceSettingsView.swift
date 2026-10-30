@@ -4,7 +4,9 @@ import Speech
 import Word7000Core
 
 struct IntelligenceSettingsView: View {
+    @Environment(AppModel.self) private var model
     @Environment(\.scenePhase) private var phase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var speech = SpeakingRecorder()
     @State private var permissionsRevision = 0
     @State private var askCloud = false
@@ -40,7 +42,11 @@ struct IntelligenceSettingsView: View {
                 LabeledContent(L.t("麥克風", "Microphone"), value: microphoneStatus)
                 LabeledContent(L.t("離線語音辨識", "Offline transcription"), value: speechStatus)
                 Button { Task { await settings.refreshPolicy(force: true); await refresh() } } label: {
-                    Label(L.t("重新檢查", "Check again"), systemImage: "arrow.clockwise")
+                    Label {
+                        Text(L.t("重新檢查", "Check again"))
+                    } icon: {
+                        RefreshIcon(spinning: settings.checking && !reduceMotion)
+                    }
                 }
                 .disabled(settings.checking)
                 if settings.checking { ProgressView() }
@@ -62,6 +68,9 @@ struct IntelligenceSettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task { await refresh() }
         .onChange(of: phase) { _, value in if value == .active { Task { await refresh() } } }
+        .animation(reduceMotion ? nil : Motion.reveal, value: settings.checking)
+        .sensoryFeedback(.selection, trigger: settings.enabled) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.selection, trigger: settings.cloudEnabled) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 
     /// Free and Plus side by side, with the learner's own plan marked.
@@ -130,6 +139,21 @@ struct IntelligenceSettingsView: View {
     }
 }
 
+/// "Check again"'s arrow turns while the check runs (it pulses before iOS 18).
+private struct RefreshIcon: View {
+    var spinning: Bool
+
+    var body: some View {
+        if #available(iOS 18.0, *) {
+            Image(systemName: "arrow.clockwise")
+                .symbolEffect(.rotate, options: .repeating, isActive: spinning)
+        } else {
+            Image(systemName: "arrow.clockwise")
+                .symbolEffect(.pulse, options: .repeating, isActive: spinning)
+        }
+    }
+}
+
 private struct PlanRow: View {
     let title: String
     let model: String
@@ -149,6 +173,7 @@ private struct PlanRow: View {
                     .padding(.horizontal, 8).padding(.vertical, 3)
                     .background(Palette.accent.opacity(0.15), in: Capsule())
                     .foregroundStyle(Palette.accent)
+                    .popIn(delay: 0.2)
             }
         }
         .accessibilityElement(children: .combine)

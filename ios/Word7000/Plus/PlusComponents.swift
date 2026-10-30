@@ -120,8 +120,9 @@ struct PlusSection: View {
     }
 }
 
-/// A thin capsule meter in any tint.
+/// A thin capsule meter in any tint, with a soft glow on the filled part.
 struct SessionBarTinted: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var fraction: Double
     var tint: Color
 
@@ -129,9 +130,11 @@ struct SessionBarTinted: View {
         GeometryReader { proxy in
             ZStack(alignment: .leading) {
                 Capsule().fill(Palette.fill)
-                Capsule().fill(tint)
+                Capsule()
+                    .fill(LinearGradient(colors: [tint.opacity(0.65), tint], startPoint: .leading, endPoint: .trailing))
                     .frame(width: max(6, proxy.size.width * min(1, max(0, fraction))))
-                    .animation(.spring(response: 0.5, dampingFraction: 0.9), value: fraction)
+                    .shadow(color: tint.opacity(0.3), radius: 3)
+                    .animation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 0.82), value: fraction)
             }
         }
         .frame(height: 6)
@@ -142,7 +145,10 @@ struct SessionBarTinted: View {
 /// A reminder on Today when the trial is nearly over or the scans run out.
 struct PlusNudgeBanner: View {
     @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var nudge: PlusPolicy.Nudge
+    /// Bumped once the banner has settled, so its icon gives a small nod.
+    @State private var nod = 0
 
     var body: some View {
         HStack(spacing: 12) {
@@ -155,6 +161,7 @@ struct PlusNudgeBanner: View {
                         .foregroundStyle(.white)
                         .frame(width: 38, height: 38)
                         .background(nudge == .trialEnded ? AnyShapeStyle(PlusStyle.gradient) : AnyShapeStyle(Palette.review.gradient), in: Circle())
+                        .symbolEffect(.bounce, value: nod)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(P.nudgeTitle(nudge)).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
                         Text(P.nudgeText(nudge)).font(.footnote).foregroundStyle(.secondary)
@@ -164,7 +171,7 @@ struct PlusNudgeBanner: View {
                 }
                 .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(SoftPressStyle())
             .accessibilityIdentifier("plus-nudge")
             Button {
                 withAnimation(.snappy) { plus.dismissNudge() }
@@ -175,8 +182,12 @@ struct PlusNudgeBanner: View {
                     .frame(width: 44, height: 44)
                     .background(Palette.fill, in: Circle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(SoftPressStyle())
             .accessibilityLabel(L.close)
+        }
+        .task {
+            try? await Task.sleep(for: .milliseconds(600))
+            if !reduceMotion { nod += 1 }
         }
     }
 }
@@ -184,15 +195,21 @@ struct PlusNudgeBanner: View {
 /// Covers a Plus screen with a blurred preview and one way to unlock it.
 struct PlusLockedOverlay: View {
     @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var feature: PlusFeature
+    /// Bumped once the card has risen, so the lock gives a little jiggle.
+    @State private var jiggle = 0
 
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "lock.fill")
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundStyle(.white)
+                .symbolEffect(.bounce, value: jiggle)
                 .frame(width: 52, height: 52)
                 .background(PlusStyle.gradient, in: Circle())
+                .shadow(color: Palette.accent.opacity(0.35), radius: 10, y: 4)
+                .popIn(delay: 0.15)
             Text(P.lockedTitle(feature)).font(.rounded(.title3, weight: .bold)).multilineTextAlignment(.center)
             Text(P.lockedText(feature)).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
             Button { plus.paywallReason = .locked(feature) } label: {
@@ -205,6 +222,11 @@ struct PlusLockedOverlay: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
         .shadow(color: .black.opacity(0.12), radius: 24, y: 10)
         .padding(.horizontal, 28)
+        .entrance(0, distance: 24)
+        .task {
+            try? await Task.sleep(for: .milliseconds(700))
+            if !reduceMotion { jiggle += 1 }
+        }
     }
 }
 
@@ -225,6 +247,7 @@ struct TrialRecapView: View {
                     .font(.system(size: 40, weight: .semibold))
                     .foregroundStyle(PlusStyle.gradient)
                     .symbolEffect(.bounce, value: shown)
+                    .popIn()
                     .padding(.top, 28)
                 let hasWeek = week.studied + week.activeDays + plus.trialScansUsed > 0
                 VStack(spacing: 8) {
@@ -233,6 +256,7 @@ struct TrialRecapView: View {
                         Text(P.recapText).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     }
                 }
+                .entrance(1)
                 if hasWeek {
                 HStack(spacing: 0) {
                     StatTile(value: week.studied, label: P.recapCards, color: Palette.accent)
@@ -242,6 +266,7 @@ struct TrialRecapView: View {
                     StatTile(value: plus.trialScansUsed, label: P.recapScans, color: Palette.known)
                 }
                 .card(padding: 14)
+                .entrance(2)
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
@@ -260,6 +285,7 @@ struct TrialRecapView: View {
                     }
                 }
                 .card()
+                .entrance(3)
             }
             .padding(.horizontal, 20)
         }

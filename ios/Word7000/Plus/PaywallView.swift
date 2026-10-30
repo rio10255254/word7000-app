@@ -18,6 +18,8 @@ struct PaywallView: View {
     @State private var purchased = false
     @State private var notice: String?
     @State private var appeared = false
+    /// Bumped when a purchase or restore fails, so the button gives a small shake.
+    @State private var failures = 0
 
     private var selected: PlusPlan? { plus.plans.first { $0.id == selectedID } ?? plus.plans.first }
 
@@ -33,6 +35,7 @@ struct PaywallView: View {
         }
         .animation(.smooth(duration: 0.45), value: purchased)
         .sensoryFeedback(.success, trigger: purchased)
+        .sensoryFeedback(.error, trigger: failures) { _, _ in model.settings.hapticsEnabled ?? true }
         .interactiveDismissDisabled(busy)
         .task {
             if plus.plansState != .loaded { await plus.loadPlans() }
@@ -91,10 +94,11 @@ struct PaywallView: View {
 
     private var hero: some View {
         VStack(spacing: 10) {
-            PlusIcon(size: 56)
+            PlusIcon(size: 56, shimmer: true)
                 .symbolEffect(.bounce, options: .nonRepeating, value: appeared)
                 .scaleEffect(appeared || reduceMotion ? 1 : 0.6)
                 .opacity(appeared ? 1 : 0)
+                .modifier(GentleFloat(active: !reduceMotion))
             Text("Word7000 Plus")
                 .font(.rounded(.title, weight: .heavy))
             Text(P.headline(reason))
@@ -109,6 +113,7 @@ struct PaywallView: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(Palette.review.opacity(0.12), in: Capsule())
+                    .popIn(delay: 0.35)
             }
         }
     }
@@ -132,10 +137,11 @@ struct PaywallView: View {
         switch plus.plansState {
         case .loaded:
             VStack(spacing: 10) {
-                ForEach(plus.plans) { plan in
+                ForEach(Array(plus.plans.enumerated()), id: \.element.id) { offset, plan in
                     PlanCard(plan: plan, selected: plan.id == selected?.id) {
-                        withAnimation(.snappy) { selectedID = plan.id }
+                        withAnimation(reduceMotion ? nil : Motion.pop) { selectedID = plan.id }
                     }
+                    .entrance(offset + 1, distance: 12)
                 }
             }
             .sensoryFeedback(.selection, trigger: selectedID)
@@ -180,6 +186,7 @@ struct PaywallView: View {
             }
             .prominentAction()
             .disabled(selected == nil || busy)
+            .shake(trigger: failures, enabled: !reduceMotion)
             .accessibilityIdentifier("paywall-subscribe")
             Text(P.renewalTerms(selected))
                 .font(.caption2)
@@ -210,7 +217,7 @@ struct PaywallView: View {
             switch outcome {
             case .purchased: purchased = true
             case .pending: notice = P.pending
-            case .failed: notice = P.failed
+            case .failed: notice = P.failed; failures += 1
             case .cancelled: break
             }
         }
@@ -225,7 +232,7 @@ struct PaywallView: View {
             switch result {
             case .restored: purchased = true
             case .noneFound: notice = P.nothingToRestore
-            case .failed: notice = P.restoreFailed
+            case .failed: notice = P.restoreFailed; failures += 1
             case .cancelled: break
             }
         }
@@ -236,15 +243,58 @@ struct PaywallView: View {
 
 /// The Plus mark: sparkles on the accent gradient.
 struct PlusIcon: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var size: CGFloat = 30
+    /// A slow band of light passes over the icon now and then (the paywall's hero).
+    var shimmer = false
 
     var body: some View {
+        let shape = RoundedRectangle(cornerRadius: size * 0.27, style: .continuous)
         Image(systemName: "sparkles")
             .font(.system(size: size * 0.48, weight: .semibold))
             .foregroundStyle(.white)
             .frame(width: size, height: size)
-            .background(PlusStyle.gradient, in: RoundedRectangle(cornerRadius: size * 0.27, style: .continuous))
+            .background(PlusStyle.gradient, in: shape)
+            .overlay {
+                if shimmer && !reduceMotion {
+                    ShimmerBand().clipShape(shape).allowsHitTesting(false)
+                }
+            }
             .shadow(color: Palette.accent.opacity(size > 40 ? 0.35 : 0), radius: 16, y: 8)
+    }
+}
+
+/// A diagonal glint that sweeps across, rests, and sweeps again.
+private struct ShimmerBand: View {
+    var body: some View {
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            LinearGradient(colors: [.white.opacity(0), .white.opacity(0.55), .white.opacity(0)],
+                           startPoint: .leading, endPoint: .trailing)
+                .frame(width: width * 0.45)
+                .rotationEffect(.degrees(20))
+                .phaseAnimator([false, true]) { content, across in
+                    content.offset(x: across ? width * 1.3 : -width * 0.8)
+                } animation: { across in
+                    across ? Animation.easeInOut(duration: 0.9).delay(1.6) : Animation.linear(duration: 0.01).delay(0.2)
+                }
+        }
+    }
+}
+
+/// Bobs gently up and down, for a hero mark that should feel alive.
+private struct GentleFloat: ViewModifier {
+    var active: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if active {
+            content.phaseAnimator([false, true]) { view, up in
+                view.offset(y: up ? -4 : 2)
+            } animation: { _ in Animation.easeInOut(duration: 2.2) }
+        } else {
+            content
+        }
     }
 }
 
@@ -322,6 +372,7 @@ struct PlusBenefitRow: View {
 
 /// One plan: radio, name, what it comes to per month, and the price.
 struct PlanCard: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var plan: PlusPlan
     var selected: Bool
     var choose: () -> Void
@@ -333,6 +384,7 @@ struct PlanCard: View {
                     .font(.title2)
                     .foregroundStyle(selected ? Palette.accent : Palette.tertiaryLabel)
                     .contentTransition(.symbolEffect(.replace))
+                    .symbolEffect(.bounce, value: reduceMotion ? false : selected)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(plan.yearly ? P.yearly : P.monthly).font(.headline)
                     Text(plan.perMonth.map(P.perMonth) ?? P.monthlyDetail)
@@ -359,12 +411,15 @@ struct PlanCard: View {
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Palette.review, in: Capsule())
+                        .shadow(color: Palette.review.opacity(0.35), radius: 4, y: 2)
                         .offset(x: -14, y: -10)
                 }
             }
+            .shadow(color: Palette.accent.opacity(selected ? 0.22 : 0), radius: 12, y: 6)
             .scaleEffect(selected ? 1 : 0.98)
+            .animation(reduceMotion ? nil : Motion.pop, value: selected)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SoftPressStyle())
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier(plan.yearly ? "plan-yearly" : "plan-monthly")
     }
@@ -372,6 +427,7 @@ struct PlanCard: View {
 
 /// After a purchase: a short celebration and what is now unlocked.
 struct PlusWelcomeView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var done: () -> Void
     @State private var shown = false
 
@@ -384,16 +440,20 @@ struct PlusWelcomeView: View {
                     .font(.system(size: 84))
                     .foregroundStyle(PlusStyle.gradient)
                     .symbolEffect(.bounce, value: shown)
+                    .popIn()
             }
             VStack(spacing: 8) {
                 Text(P.welcomeTitle).font(.rounded(.largeTitle, weight: .heavy))
                 Text(P.welcomeText).foregroundStyle(.secondary).multilineTextAlignment(.center)
             }
+            .entrance(2)
             VStack(alignment: .leading, spacing: 12) {
-                ForEach(PlusBenefit.all, id: \.feature) { benefit in
+                // Each unlocked feature ticks in, one after another.
+                ForEach(Array(PlusBenefit.all.enumerated()), id: \.element.feature) { offset, benefit in
                     Label(benefit.title, systemImage: "checkmark.circle.fill")
                         .symbolRenderingMode(.multicolor)
                         .font(.body.weight(.medium))
+                        .entrance(offset + 4, distance: 10)
                 }
             }
             .padding(.top, 4)
@@ -407,6 +467,9 @@ struct PlusWelcomeView: View {
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Palette.background)
+        .overlay(alignment: .top) {
+            if !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
+        }
         .onAppear { shown = true }
     }
 }

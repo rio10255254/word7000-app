@@ -72,8 +72,9 @@ struct Entrance: ViewModifier {
 
     func body(content: Content) -> some View {
         let settled = shown || reduceMotion
+        // Never fully transparent, so VoiceOver and UI tests can reach it mid-flight.
         return content
-            .opacity(settled ? 1 : 0)
+            .opacity(settled ? 1 : 0.01)
             .offset(y: settled ? 0 : distance)
             .scaleEffect(settled ? 1 : 0.97)
             .onAppear {
@@ -107,7 +108,7 @@ struct PopIn: ViewModifier {
         let settled = shown || reduceMotion
         return content
             .scaleEffect(settled ? 1 : 0.3)
-            .opacity(settled ? 1 : 0)
+            .opacity(settled ? 1 : 0.01)
             .onAppear {
                 guard !shown, !reduceMotion else { return }
                 withAnimation(Motion.pop.delay(delay)) { shown = true }

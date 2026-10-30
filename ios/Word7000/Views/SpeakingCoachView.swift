@@ -379,9 +379,18 @@ struct SpeakingCoachView: View {
                         .font(.footnote).foregroundStyle(Palette.review)
                         .accessibilityIdentifier("coach-echo")
                 } else {
-                    Label(answerSummary(reflection),
-                          systemImage: reflection.containsTarget ? "checkmark.circle" : "circle.dashed")
+                    Label {
+                        Text(answerSummary(reflection))
+                    } icon: {
+                        Image(systemName: reflection.containsTarget ? "checkmark.circle.fill" : "circle.dashed")
+                            .contentTransition(.symbolEffect(.replace))
+                            .symbolEffect(.bounce, value: reduceMotion ? false : reflection.containsTarget)
+                    }
                         .font(.footnote).foregroundStyle(reflection.containsTarget ? Palette.known : Color.secondary)
+                        .animation(reduceMotion ? nil : Motion.pop, value: reflection.containsTarget)
+                        .sensoryFeedback(.selection, trigger: reflection.containsTarget) { _, used in
+                            used && (model.settings.hapticsEnabled ?? true)
+                        }
                         .accessibilityIdentifier("coach-answer-check")
                 }
             }
@@ -409,34 +418,71 @@ struct SpeakingCoachView: View {
                 else if recording.hasRecording { retakeOpen = true }
                 else { beginRecording() }
             } label: {
-                Label(recording.state == .recording ? L.t("停止", "Stop")
-                      : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄音", "Record"),
-                      systemImage: recording.state == .recording ? "stop.circle.fill" : "mic.circle.fill")
+                Label {
+                    Text(recording.state == .recording ? L.t("停止", "Stop")
+                         : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄音", "Record"))
+                } icon: {
+                    recordIcon
+                }
                     .font(.headline)
                     .foregroundStyle(recording.state == .recording ? Palette.miss : Palette.accent)
             }
             .disabled(recording.busy && recording.state != .recording || session.isBusy)
             .accessibilityIdentifier("coach-record")
             if recording.state == .recording || recording.hasRecording {
+                // The seconds tick over like a counter.
                 Text("\(Int(recording.seconds)) / 60 \(L.t("秒", "s"))").font(.subheadline).monospacedDigit()
                     .foregroundStyle(recording.state == .recording ? Palette.miss : Color.secondary)
+                    .contentTransition(.numericText(value: recording.seconds))
+                    .animation(reduceMotion ? nil : .snappy, value: Int(recording.seconds))
+                    .transition(.opacity)
                     .accessibilityIdentifier("coach-recording-duration")
             }
             Spacer()
             if recording.hasRecording {
                 Button { recording.togglePlayback() } label: {
-                    Label(recording.state == .playing ? L.t("停止回放", "Stop playback") : L.t("回放", "Play"),
-                          systemImage: recording.state == .playing ? "stop.fill" : "play.fill")
-                        .labelStyle(.iconOnly)
+                    Label {
+                        Text(recording.state == .playing ? L.t("停止回放", "Stop playback") : L.t("回放", "Play"))
+                    } icon: {
+                        Image(systemName: recording.state == .playing ? "stop.fill" : "play.fill")
+                            .contentTransition(.symbolEffect(.replace))
+                    }
+                    .labelStyle(.iconOnly)
                 }
                 .disabled(recording.busy && recording.state != .playing)
                 .accessibilityIdentifier("coach-play-recording")
+                .transition(reduceMotion ? .opacity : .scale(scale: 0.5).combined(with: .opacity))
                 Button { recording.clear() } label: { Image(systemName: "trash") }
                     .disabled(recording.busy)
                     .accessibilityLabel(L.t("刪除錄音", "Delete recording"))
+                    .transition(reduceMotion ? .opacity : .scale(scale: 0.5).combined(with: .opacity))
             }
         }
         .buttonStyle(.borderless)
+        .animation(reduceMotion ? nil : Motion.pop, value: recording.hasRecording)
+        .animation(reduceMotion ? nil : Motion.reveal, value: recording.state)
+        // A firm tap when the microphone opens, a lighter one when it closes.
+        .sensoryFeedback(trigger: recording.state) { old, new in
+            guard model.settings.hapticsEnabled ?? true else { return nil }
+            if new == .recording { return .impact(weight: .medium) }
+            if old == .recording { return .impact(weight: .light) }
+            return nil
+        }
+    }
+
+    /// The microphone, which glows in time with the voice while recording.
+    private var recordIcon: some View {
+        let live = recording.state == .recording
+        return Image(systemName: live ? "stop.circle.fill" : "mic.circle.fill")
+            .contentTransition(.symbolEffect(.replace))
+            .background {
+                if live && !reduceMotion {
+                    Circle()
+                        .fill(Palette.miss.opacity(0.22))
+                        .scaleEffect(1.2 + CGFloat(recording.level) * 0.9)
+                        .animation(.spring(response: 0.2, dampingFraction: 0.6), value: recording.level)
+                }
+            }
     }
 
     /// Only what needs the learner: a level while recording, progress, a
@@ -444,8 +490,10 @@ struct SpeakingCoachView: View {
     @ViewBuilder
     private var recorderStatus: some View {
         if recording.state == .recording {
-            ProgressView(value: Double(recording.level)).tint(Palette.miss)
+            CoachLevelMeter(level: Double(recording.level), reduceMotion: reduceMotion)
+                .accessibilityElement()
                 .accessibilityLabel(L.t("麥克風音量", "Microphone level"))
+                .accessibilityValue("\(Int((recording.level * 100).rounded()))%")
         }
         if recording.state == .transcribing || recording.state == .downloading || recording.state == .requesting {
             HStack {
@@ -498,17 +546,27 @@ struct SpeakingCoachView: View {
                     Text(correction.reason).font(.subheadline).foregroundStyle(.secondary)
                 }
                 .textSelection(.enabled)
+                .modifier(CoachArrival(order: offset))
                 // Scroll targets are rows; a Section's own id is not reliably one.
                 .id(offset == 0 ? Self.feedbackAnchor : "coach-correction-\(offset)")
             }
             rewriteRow(feedback, id: feedback.corrections.isEmpty ? Self.feedbackAnchor : "coach-rewrite")
+                .modifier(CoachArrival(order: feedback.corrections.count))
             HStack(alignment: .firstTextBaseline, spacing: 10) {
-                Image(systemName: "lightbulb").foregroundStyle(Palette.review).accessibilityHidden(true)
+                Image(systemName: "lightbulb.fill").foregroundStyle(Palette.review).accessibilityHidden(true)
+                    .popIn(delay: 0.2 + Double(feedback.corrections.count + 1) * 0.07)
                 Text(feedback.tip).font(.subheadline).textSelection(.enabled)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("coach-tip")
             }
-        } header: { Label(L.t("AI 建議", "AI suggestions"), systemImage: "sparkles") }
+            .modifier(CoachArrival(order: feedback.corrections.count + 1))
+        } header: {
+            Label {
+                Text(L.t("AI 建議", "AI suggestions"))
+            } icon: {
+                Image(systemName: "sparkles").popIn()
+            }
+        }
         Section {
             HStack(alignment: .top) {
                 Text(feedback.followUp).font(.headline).textSelection(.enabled)
@@ -518,10 +576,12 @@ struct SpeakingCoachView: View {
                 SpeakButton(text: feedback.followUp, language: answerLanguage)
                     .disabled(recording.busy)
             }
+            .modifier(CoachArrival(order: feedback.corrections.count + 2))
             Button { answerFollowUp(feedback.followUp) } label: {
                 Label(L.t("回答這題", "Answer this"), systemImage: "arrowshape.turn.up.left")
             }
             .disabled(recording.busy || session.isBusy)
+            .modifier(CoachArrival(order: feedback.corrections.count + 3))
             .accessibilityIdentifier("coach-answer-follow-up")
         } header: { Text(L.t("接著練", "Keep going")) }
     }
@@ -541,7 +601,14 @@ struct SpeakingCoachView: View {
         VStack(spacing: 8) {
             if session.isWorking || pendingSubmission {
                 HStack(spacing: 8) {
-                    ProgressView()
+                    if pendingSubmission || reduceMotion {
+                        ProgressView()
+                    } else {
+                        Image(systemName: "sparkles")
+                            .foregroundStyle(Palette.accent)
+                            .symbolEffect(.variableColor.iterative.reversing, options: .repeating)
+                            .accessibilityHidden(true)
+                    }
                     Text(pendingSubmission ? L.t("正在完成輸入…", "Finishing input…")
                          : L.t("正在整理建議…", "Preparing suggestions…")).font(.subheadline)
                 }
@@ -575,6 +642,10 @@ struct SpeakingCoachView: View {
         .padding(.horizontal, Metrics.gutter)
         .padding(.vertical, 10)
         .background(.bar)
+        .animation(reduceMotion ? nil : Motion.reveal, value: session.isWorking || pendingSubmission)
+        .sensoryFeedback(.warning, trigger: visibleFailure) { _, failure in
+            failure != nil && (model.settings.hapticsEnabled ?? true)
+        }
     }
 
     /// Most learners' iPhones cannot run Apple Intelligence at all, and some
@@ -707,5 +778,44 @@ struct SpeakingCoachView: View {
         // TextEditor as first responder during a toolbar/layout update.
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                        to: nil, from: nil, for: nil)
+    }
+}
+
+/// A row of bars that rise and fall with the microphone level.
+private struct CoachLevelMeter: View {
+    var level: Double
+    var reduceMotion: Bool
+    /// Fixed per-bar heights so the row reads as a waveform, not a block.
+    private static let weights: [Double] = (0..<28).map { 0.35 + 0.65 * abs(sin(Double($0) * 0.83)) }
+
+    var body: some View {
+        HStack(spacing: 3) {
+            ForEach(Self.weights.indices, id: \.self) { index in
+                Capsule()
+                    .fill(Palette.miss.opacity(0.35 + 0.65 * min(1, level * 1.3)))
+                    .frame(width: 3, height: 4 + 20 * CGFloat(min(1, level * 1.4 * Self.weights[index])))
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: 24, alignment: .leading)
+        .animation(reduceMotion ? nil : .spring(response: 0.18, dampingFraction: 0.62), value: level)
+    }
+}
+
+/// Settles a suggestion row into place a beat after the one above it. It
+/// never starts fully transparent, so it stays readable while it moves.
+private struct CoachArrival: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var order: Int
+    @State private var arrived = false
+
+    func body(content: Content) -> some View {
+        let settled = arrived || reduceMotion
+        return content
+            .opacity(settled ? 1 : 0.3)
+            .offset(y: settled ? 0 : 10)
+            .onAppear {
+                guard !arrived, !reduceMotion else { return }
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.82).delay(0.1 + Double(order) * 0.07)) { arrived = true }
+            }
     }
 }

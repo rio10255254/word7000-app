@@ -15,6 +15,7 @@ struct SpeakingSessionView: View {
     @State private var started = false
     @State private var availableCount = 0
     @State private var completedCurrent = false
+    @State private var finishedBounce = 0
     @State private var filtersOpen = false
     @State private var previousFilter = FilterSelection()
     @State private var historyOwnerKey = ""
@@ -248,6 +249,13 @@ struct SpeakingSessionView: View {
                             }
                         }
                         Spacer()
+                        if completedCurrent {
+                            Image(systemName: "checkmark.seal.fill")
+                                .font(.title3)
+                                .foregroundStyle(Palette.known)
+                                .transition(reduceMotion ? .opacity : .scale(scale: 0.3).combined(with: .opacity))
+                                .accessibilityLabel(L.t("已練習", "Practised"))
+                        }
                         SpeakButton(text: card.keyword, language: face.speakLanguage)
                     }
                     if examplesOnly, !card.referenceAnswer.isEmpty {
@@ -280,7 +288,12 @@ struct SpeakingSessionView: View {
                     }
                 }
                 .card(radius: Metrics.wordCardRadius, padding: 20)
+                // Each new question slides in from the side.
+                .modifier(PromptArrival())
+                .id(index)
                 coachEntry
+                    .modifier(PromptArrival(delay: 0.08))
+                    .id("coach-\(index)")
               }
             }
             if revealed {
@@ -330,6 +343,7 @@ struct SpeakingSessionView: View {
                 Image(systemName: "mic.circle.fill")
                     .font(.system(size: 36))
                     .foregroundStyle(Palette.accent)
+                    .symbolEffect(.bounce, value: reduceMotion ? 0 : index)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(L.t("錄下你的回答", "Record your answer")).font(.headline)
@@ -345,7 +359,7 @@ struct SpeakingSessionView: View {
             .contentShape(Rectangle())
             .card(radius: Metrics.wordCardRadius, padding: 16)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SoftPressStyle())
         .accessibilityIdentifier("speaking-coach-open")
     }
 
@@ -354,7 +368,7 @@ struct SpeakingSessionView: View {
         if completed, !completedCurrent {
             model.recordSpeaking(completed: true)
             answered += 1
-            completedCurrent = true
+            withAnimation(reduceMotion ? nil : Motion.pop) { completedCurrent = true }
         }
         withAnimation(reduceMotion ? nil : Motion.reveal) { revealed = true }
     }
@@ -377,8 +391,12 @@ struct SpeakingSessionView: View {
             Image(systemName: "bubble.left.and.text.bubble.right.fill")
                 .font(.system(size: 44))
                 .foregroundStyle(Palette.known)
+                .symbolEffect(.bounce, value: finishedBounce)
+                .popIn()
             Text(L.speakingFinished).font(.rounded(.title, weight: .bold))
+                .entrance(1)
             Text(L.speakingScore(answered)).foregroundStyle(.secondary)
+                .entrance(2)
             Spacer()
             VStack(spacing: 12) {
                 Button { dismiss() } label: {
@@ -392,5 +410,32 @@ struct SpeakingSessionView: View {
                 .accessibilityIdentifier("speaking-again")
             }
         }
+        .overlay(alignment: .top) {
+            // Every question answered out loud earns a shower of paper.
+            if !reduceMotion, !words.isEmpty, answered == words.count { ConfettiBurst().allowsHitTesting(false) }
+        }
+        .task {
+            try? await Task.sleep(for: .milliseconds(450))
+            if !reduceMotion { finishedBounce += 1 }
+        }
+    }
+}
+
+/// Slides a question's card in from the side. It never starts fully
+/// transparent, so it stays readable to VoiceOver while it moves.
+private struct PromptArrival: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var delay: Double = 0
+    @State private var arrived = false
+
+    func body(content: Content) -> some View {
+        let settled = arrived || reduceMotion
+        return content
+            .opacity(settled ? 1 : 0.3)
+            .offset(x: settled ? 0 : 28)
+            .onAppear {
+                guard !arrived, !reduceMotion else { return }
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.85).delay(delay)) { arrived = true }
+            }
     }
 }

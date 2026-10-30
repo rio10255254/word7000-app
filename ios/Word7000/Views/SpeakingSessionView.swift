@@ -58,7 +58,7 @@ struct SpeakingSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground(tint: Palette.known) }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -69,7 +69,7 @@ struct SpeakingSessionView: View {
                 ToolbarItem(placement: .principal) {
                     if index < words.count {
                         Text("\(index + 1) / \(words.count)")
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
                             .accessibilityIdentifier("speaking-position")
                             .accessibilityValue(L.t("已完成 \(answered) 題", "Completed: \(answered)"))
@@ -131,10 +131,14 @@ struct SpeakingSessionView: View {
         }) {
             NavigationStack {
                 Form {
-                    Section {
-                        FilterControls(selection: Binding(get: { model.settings.speakingFilter ?? FilterSelection() }, set: { model.settings.speakingFilter = $0 }))
+                    Group {
+                        Section {
+                            FilterControls(selection: Binding(get: { model.settings.speakingFilter ?? FilterSelection() }, set: { model.settings.speakingFilter = $0 }))
+                        }
                     }
+                    .listRowBackground(Palette.surface)
                 }
+                .warmList()
                 .navigationTitle(L.t("練習範圍", "Practice scope"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
@@ -243,7 +247,7 @@ struct SpeakingSessionView: View {
                     // The practice type is already chosen right above the card.
                     HStack(alignment: .firstTextBaseline) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(card.keyword).font(.rounded(.title3, weight: .bold)).foregroundStyle(Palette.accent)
+                            Text(card.keyword).font(.display(.title3, weight: .bold)).foregroundStyle(Palette.accent)
                             if !card.keywordPronunciation.isEmpty {
                                 Text(card.keywordPronunciation).foregroundStyle(.secondary)
                             }
@@ -390,7 +394,7 @@ struct SpeakingSessionView: View {
             Spacer()
             Mascot(mood: answered > 0 ? .cheer : .encourage, size: 104, hop: finishedBounce)
                 .popIn()
-            Text(L.speakingFinished).font(.rounded(.title, weight: .bold))
+            Text(L.speakingFinished).font(.display(.title, weight: .bold))
                 .entrance(1)
             Text(L.speakingScore(answered)).foregroundStyle(.secondary)
                 .entrance(2)

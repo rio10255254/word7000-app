@@ -44,18 +44,22 @@ struct StudySettingsSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    FilterControls(selection: Binding(get: { model.settings.studyFilter }, set: { model.settings.studyFilter = $0 }))
-                } header: { Text(model.bankName) }
-                Section {
-                    let count = model.studyCandidates.count
-                    LabeledContent(L.t("符合條件", "Matching words")) {
-                        Text(L.bankWordCount(count))
-                            .monospacedDigit()
-                            .contentTransition(.numericText(value: Double(count)))
+                Group {
+                    Section {
+                        FilterControls(selection: Binding(get: { model.settings.studyFilter }, set: { model.settings.studyFilter = $0 }))
+                    } header: { Text(model.bankName) }
+                    Section {
+                        let count = model.studyCandidates.count
+                        LabeledContent(L.t("符合條件", "Matching words")) {
+                            Text(L.bankWordCount(count))
+                                .monospacedDigit()
+                                .contentTransition(.numericText(value: Double(count)))
+                        }
                     }
                 }
+                .listRowBackground(Palette.surface)
             }
+            .warmList()
             // The count rolls to its new value as the filters change.
             .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.studyFilter)
             .sensoryFeedback(.selection, trigger: model.settings.studyFilter) { _, _ in model.settings.hapticsEnabled ?? true }
@@ -79,29 +83,33 @@ struct QuizConfiguration: View {
         let filter = model.settings.quizFilter
         let count = model.bank.filter(state: model.progress, query: "", filter: filter.status, options: filter.options).count
         Form {
-            Section {
-                Picker(L.t("題數", "Questions"), selection: Binding(get: { model.settings.quizQuestionCount }, set: { model.settings.quizQuestionCount = $0 })) {
-                    ForEach(QuizBuilder.questionCounts, id: \.self) { Text("\($0)").tag($0) }
+            Group {
+                Section {
+                    Picker(L.t("題數", "Questions"), selection: Binding(get: { model.settings.quizQuestionCount }, set: { model.settings.quizQuestionCount = $0 })) {
+                        ForEach(QuizBuilder.questionCounts, id: \.self) { Text("\($0)").tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("quiz-question-count")
+                } header: { Text(L.t("這次想練習幾題？", "How many questions?")) }
+                Section { FilterControls(selection: selection) } header: { Text(model.bankName) }
+                Section {
+                    let roundSize = min(count, model.settings.quizQuestionCount)
+                    LabeledContent(L.t("本輪題數", "This round")) {
+                        Text("\(roundSize)")
+                            .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(roundSize)))
+                    }
+                    Button(action: start) {
+                        Text(L.t("開始測驗", "Start quiz")).font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .prominentAction()
+                    .disabled(count == 0)
+                    .accessibilityIdentifier("quiz-start")
                 }
-                .pickerStyle(.segmented)
-                .accessibilityIdentifier("quiz-question-count")
-            } header: { Text(L.t("這次想練習幾題？", "How many questions?")) }
-            Section { FilterControls(selection: selection) } header: { Text(model.bankName) }
-            Section {
-                let roundSize = min(count, model.settings.quizQuestionCount)
-                LabeledContent(L.t("本輪題數", "This round")) {
-                    Text("\(roundSize)")
-                        .monospacedDigit()
-                        .contentTransition(.numericText(value: Double(roundSize)))
-                }
-                Button(action: start) {
-                    Text(L.t("開始測驗", "Start quiz")).font(.headline).frame(maxWidth: .infinity)
-                }
-                .prominentAction()
-                .disabled(count == 0)
-                .accessibilityIdentifier("quiz-start")
             }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(L.quickQuiz)
         .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizQuestionCount)
         .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizFilter)

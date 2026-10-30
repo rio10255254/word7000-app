@@ -1,31 +1,72 @@
 import SwiftUI
 import UIKit
 
-/// Semantic colors. Blue is the one accent; green means known, orange means
-/// review and streaks, red a miss. Surfaces are the system grouped colors so
-/// light and dark mode always match the rest of iOS.
+/// Warm paper and leather, in the spirit of a well-made notebook. Terracotta is
+/// the one accent; sage means known, ochre review and streaks, brick a miss.
+/// Every colour has a light and a dark tone, so both modes stay warm.
 enum Palette {
     static let accent = Color.accentColor
-    static let known = Color(uiColor: .systemGreen)
-    static let review = Color(uiColor: .systemOrange)
-    static let miss = Color(uiColor: .systemRed)
-    static let chinese = Color(uiColor: .systemIndigo)
-    static let background = Color(uiColor: .systemGroupedBackground)
-    static let surface = Color(uiColor: .secondarySystemGroupedBackground)
-    static let fill = Color(uiColor: .tertiarySystemFill)
-    static let secondaryLabel = Color(uiColor: .secondaryLabel)
-    static let tertiaryLabel = Color(uiColor: .tertiaryLabel)
-    static let separator = Color(uiColor: .separator)
+    static let known = Color(uiColor: WarmTone.sage)
+    static let review = Color(uiColor: WarmTone.ochre)
+    static let miss = Color(uiColor: WarmTone.brick)
+    static let chinese = Color(uiColor: WarmTone.slate)
+    static let background = Color(uiColor: WarmTone.paper)
+    static let surface = Color(uiColor: WarmTone.ivory)
+    static let fill = Color(uiColor: WarmTone.khakiFill)
+    static let khaki = Color(uiColor: WarmTone.khaki)
+    static let ink = Color(uiColor: WarmTone.ink)
+    static let secondaryLabel = Color(uiColor: WarmTone.inkSoft)
+    static let tertiaryLabel = Color(uiColor: WarmTone.inkFaint)
+    static let separator = Color(uiColor: WarmTone.khaki)
 }
 
-/// SF Rounded for headings and numbers, the regular system face for reading.
-extension Font {
-    static func rounded(_ style: Font.TextStyle, weight: Font.Weight = .bold) -> Font {
-        .system(style, design: .rounded, weight: weight)
+/// The palette's tones as UIKit colours, for places SwiftUI does not reach
+/// (navigation bar titles) and as the source of `Palette`.
+enum WarmTone {
+    static let paper = tone(0xF3EEE4, 0x22201C)
+    static let ivory = tone(0xFBF8F2, 0x2E2B26)
+    static let khaki = tone(0xE2D8C6, 0x443F37)
+    static let khakiFill = tone(0xE9E1D2, 0x3A362F)
+    static let ink = tone(0x2B2620, 0xEDE6DA)
+    static let inkSoft = tone(0x7A6F62, 0xA89F91)
+    static let inkFaint = tone(0xB0A595, 0x6E665B)
+    static let sage = tone(0x6E8F5E, 0x8FAE7E)
+    static let ochre = tone(0xC98A2E, 0xDDA552)
+    static let brick = tone(0xB4483A, 0xD46A5A)
+    static let slate = tone(0x5B6B8C, 0x93A3C6)
+
+    private static func tone(_ light: UInt32, _ dark: UInt32) -> UIColor {
+        UIColor { traits in rgb(traits.userInterfaceStyle == .dark ? dark : light) }
     }
 
-    static func roundedSize(_ size: CGFloat, weight: Font.Weight = .bold) -> Font {
-        .system(size: size, weight: weight, design: .rounded)
+    private static func rgb(_ value: UInt32) -> UIColor {
+        UIColor(red: CGFloat((value >> 16) & 0xFF) / 255, green: CGFloat((value >> 8) & 0xFF) / 255,
+                blue: CGFloat(value & 0xFF) / 255, alpha: 1)
+    }
+
+    /// Serif navigation titles in warm ink, matching the display face.
+    static func styleNavigationBars() {
+        let appearance = UINavigationBar.appearance()
+        appearance.largeTitleTextAttributes = [.font: serif(.largeTitle), .foregroundColor: ink]
+        appearance.titleTextAttributes = [.font: serif(.headline), .foregroundColor: ink]
+    }
+
+    private static func serif(_ style: UIFont.TextStyle) -> UIFont {
+        let base = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+        let bold = base.withSymbolicTraits(.traitBold) ?? base
+        return UIFont(descriptor: bold.withDesign(.serif) ?? bold, size: 0)
+    }
+}
+
+/// The serif display face (New York) for headings, numbers and the word on a
+/// card; the regular system face stays for reading.
+extension Font {
+    static func display(_ style: Font.TextStyle, weight: Font.Weight = .bold) -> Font {
+        .system(style, design: .serif, weight: weight)
+    }
+
+    static func displaySize(_ size: CGFloat, weight: Font.Weight = .bold) -> Font {
+        .system(size: size, weight: weight, design: .serif)
     }
 }
 
@@ -97,8 +138,8 @@ struct CardBackground: ViewModifier {
     }
 }
 
-/// A raised surface: the card colour with a hairline edge that catches the
-/// light at the top, and a soft two-layer shadow beneath.
+/// A raised sheet of good paper: ivory with a faint grain, a khaki hairline
+/// that catches the light along the top, and a soft warm shadow.
 struct PremiumSurface: View {
     @Environment(\.colorScheme) private var colorScheme
     var radius: CGFloat
@@ -109,24 +150,41 @@ struct PremiumSurface: View {
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         shape
             .fill(fill)
+            .overlay { PaperGrain(opacity: 0.6).clipShape(shape) }
+            .overlay { shape.strokeBorder(Palette.khaki, lineWidth: 1) }
             .overlay {
-                shape.strokeBorder(
-                    LinearGradient(colors: dark ? [.white.opacity(0.16), .white.opacity(0.03)] : [.white.opacity(0.9), .black.opacity(0.06)],
-                                   startPoint: .top, endPoint: .bottom),
-                    lineWidth: 1)
+                shape.strokeBorder(LinearGradient(colors: [.white.opacity(dark ? 0.08 : 0.85), .white.opacity(0)], startPoint: .top, endPoint: .center),
+                                   lineWidth: 1)
+                    .padding(1)
             }
-            .shadow(color: .black.opacity(dark ? 0.3 : 0.04), radius: 1, y: 1)
-            .shadow(color: .black.opacity(dark ? 0.25 : 0.07), radius: 14, y: 8)
+            .shadow(color: Self.umber.opacity(dark ? 0.35 : 0.06), radius: 1, y: 1)
+            .shadow(color: Self.umber.opacity(dark ? 0.3 : 0.09), radius: 12, y: 6)
+    }
+
+    /// The warm brown the shadows are cast in.
+    static let umber = Color(red: 0.35, green: 0.24, blue: 0.12)
+}
+
+/// A faint paper texture, tiled. Decoration only.
+struct PaperGrain: View {
+    var opacity: Double = 1
+
+    var body: some View {
+        Image("PaperGrain")
+            .resizable(resizingMode: .tile)
+            .opacity(opacity)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
     }
 }
 
-/// A quiet wash of colour behind a screen: two soft glows over the grouped
-/// background that drift very slowly. They hold still under Reduce Motion.
+/// The page behind a screen: warm paper with its grain, and two soft glows of
+/// colour that drift very slowly. They hold still under Reduce Motion.
 struct AmbientBackground: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var colorScheme
     var tint: Color = Palette.accent
-    var secondTint: Color = Palette.chinese
+    var secondTint: Color = Palette.review
 
     var body: some View {
         let dark = colorScheme == .dark
@@ -134,12 +192,12 @@ struct AmbientBackground: View {
             let width = proxy.size.width
             let glows = ZStack {
                 Circle()
-                    .fill(tint.opacity(dark ? 0.3 : 0.16))
+                    .fill(tint.opacity(dark ? 0.16 : 0.1))
                     .frame(width: width * 1.1, height: width * 1.1)
                     .blur(radius: 70)
                     .offset(x: -width * 0.38, y: -width * 0.55)
                 Circle()
-                    .fill(secondTint.opacity(dark ? 0.24 : 0.12))
+                    .fill(secondTint.opacity(dark ? 0.12 : 0.1))
                     .frame(width: width, height: width)
                     .blur(radius: 70)
                     .offset(x: width * 0.45, y: -width * 0.15)
@@ -158,6 +216,7 @@ struct AmbientBackground: View {
             }
         }
         .background(Palette.background)
+        .overlay { PaperGrain() }
         .ignoresSafeArea()
         .allowsHitTesting(false)
         .accessibilityHidden(true)
@@ -180,6 +239,14 @@ struct PopIn: ViewModifier {
                 guard !shown, !reduceMotion else { return }
                 withAnimation(Motion.pop.delay(delay)) { shown = true }
             }
+    }
+}
+
+extension View {
+    /// A list or form on warm paper, its rows on ivory.
+    func warmList(tint: Color = Palette.accent) -> some View {
+        scrollContentBackground(.hidden)
+            .background { AmbientBackground(tint: tint) }
     }
 }
 

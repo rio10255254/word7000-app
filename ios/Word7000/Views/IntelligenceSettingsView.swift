@@ -15,53 +15,57 @@ struct IntelligenceSettingsView: View {
 
     var body: some View {
         Form {
-            Section {
-                Toggle(L.t("AI 建議", "AI suggestions"), isOn: Binding(
-                    get: { settings.enabled }, set: { settings.enabled = $0; AppleSpeakingCoach.shared.refreshAvailability() }))
-                    .accessibilityIdentifier("settings-ai-toggle")
-                Toggle(L.t("線上 AI（Claude）", "Online AI (Claude)"), isOn: Binding(
-                    get: { settings.cloudEnabled && settings.cloudConsent != false },
-                    set: { on in
-                        if on, settings.cloudConsent != true { settings.cloudEnabled = true; askCloud = true }
-                        else { settings.cloudEnabled = on }
-                        AppleSpeakingCoach.shared.refreshAvailability()
-                    }))
-                    .disabled(!settings.enabled)
-                    .accessibilityIdentifier("settings-cloud-ai-toggle")
-                LabeledContent(L.t("線上 AI", "Online AI"), value: CloudAssistant.shared.statusText)
-                    .accessibilityIdentifier("settings-cloud-ai-status")
-                LabeledContent(L.t("口說教練", "Speaking coach"), value: coachStatus)
-                    .accessibilityIdentifier("settings-ai-status")
-                LabeledContent(L.t("掃描整理", "Scan assistance"), value: SmartScan.canOrganize ? L.t("可使用", "Available") : L.t("未啟用", "Unavailable"))
-            } footer: {
-                Text(L.t("線上 AI 由 Anthropic 的 Claude 回答，忙碌或無法連線時改用裝置內 AI。關閉 AI 不影響原本的單字、測驗、錄音與口說練習。",
-                         "Online AI answers with Anthropic's Claude and falls back to on-device AI when it is busy or unreachable. Turning AI off does not change your words, quizzes, recordings or regular speaking practice."))
-            }
-            if CloudAssistant.shared.offered { plan }
-            Section {
-                LabeledContent(L.t("麥克風", "Microphone"), value: microphoneStatus)
-                LabeledContent(L.t("離線語音辨識", "Offline transcription"), value: speechStatus)
-                Button { Task { await settings.refreshPolicy(force: true); await refresh() } } label: {
-                    Label {
-                        Text(L.t("重新檢查", "Check again"))
-                    } icon: {
-                        RefreshIcon(spinning: settings.checking && !reduceMotion)
+            Group {
+                Section {
+                    Toggle(L.t("AI 建議", "AI suggestions"), isOn: Binding(
+                        get: { settings.enabled }, set: { settings.enabled = $0; AppleSpeakingCoach.shared.refreshAvailability() }))
+                        .accessibilityIdentifier("settings-ai-toggle")
+                    Toggle(L.t("線上 AI（Claude）", "Online AI (Claude)"), isOn: Binding(
+                        get: { settings.cloudEnabled && settings.cloudConsent != false },
+                        set: { on in
+                            if on, settings.cloudConsent != true { settings.cloudEnabled = true; askCloud = true }
+                            else { settings.cloudEnabled = on }
+                            AppleSpeakingCoach.shared.refreshAvailability()
+                        }))
+                        .disabled(!settings.enabled)
+                        .accessibilityIdentifier("settings-cloud-ai-toggle")
+                    LabeledContent(L.t("線上 AI", "Online AI"), value: CloudAssistant.shared.statusText)
+                        .accessibilityIdentifier("settings-cloud-ai-status")
+                    LabeledContent(L.t("口說教練", "Speaking coach"), value: coachStatus)
+                        .accessibilityIdentifier("settings-ai-status")
+                    LabeledContent(L.t("掃描整理", "Scan assistance"), value: SmartScan.canOrganize ? L.t("可使用", "Available") : L.t("未啟用", "Unavailable"))
+                } footer: {
+                    Text(L.t("線上 AI 由 Anthropic 的 Claude 回答，忙碌或無法連線時改用裝置內 AI。關閉 AI 不影響原本的單字、測驗、錄音與口說練習。",
+                             "Online AI answers with Anthropic's Claude and falls back to on-device AI when it is busy or unreachable. Turning AI off does not change your words, quizzes, recordings or regular speaking practice."))
+                }
+                if CloudAssistant.shared.offered { plan }
+                Section {
+                    LabeledContent(L.t("麥克風", "Microphone"), value: microphoneStatus)
+                    LabeledContent(L.t("離線語音辨識", "Offline transcription"), value: speechStatus)
+                    Button { Task { await settings.refreshPolicy(force: true); await refresh() } } label: {
+                        Label {
+                            Text(L.t("重新檢查", "Check again"))
+                        } icon: {
+                            RefreshIcon(spinning: settings.checking && !reduceMotion)
+                        }
+                    }
+                    .disabled(settings.checking)
+                    if settings.checking { ProgressView() }
+                    Button(L.t("開啟系統設定", "Open System Settings")) {
+                        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                     }
                 }
-                .disabled(settings.checking)
-                if settings.checking { ProgressView() }
-                Button(L.t("開啟系統設定", "Open System Settings")) {
-                    if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
-                }
+                Section {
+                    Text(L.t("錄音不會上傳，離開練習頁即刪除。口說回答和 AI 建議不會存入帳號，回答在離開這題後清除。", "Recordings are never uploaded and are deleted when you leave the practice sheet. Speaking answers and AI suggestions are not saved to your account; answers are cleared when you leave the question."))
+                    Text(L.t("使用線上 AI 時，你的文字回答、掃描到的文字、查詢的單字與你對它的提問，或你要求分析時的學習次數與常忘記的字，會傳送到 Anthropic（美國）產生建議，不包含錄音、帳號名稱或 Email。只用裝置內 AI 時，這些內容都留在 iPhone 上。", "With online AI, your typed or spoken answer text, scanned text, the word you look up and any question you ask about it, or, when you ask for an analysis, your practice counts and most-forgotten words are sent to Anthropic (USA) to produce suggestions, without recordings, your account name or email. With on-device AI only, all of it stays on this iPhone."))
+                    Text(L.t("AI 的單字解說、提問回答和測驗講解會保存在這支 iPhone 上，再看時不必重新產生，也不會上傳到帳號。", "AI word explanations, answers to your questions and quiz explanations are kept on this iPhone so they open again without being regenerated; they are not uploaded to your account."))
+                    Text(L.t("為了公平分配線上 AI，伺服器只記錄每個帳號每天的使用次數，不記錄內容。", "To share online AI fairly, the server counts requests per account per day, without their content."))
+                    Text(L.t("登入與學習同步仍依原本的隱私權政策處理。", "Sign-in and learning sync still follow the existing privacy policy."))
+                } header: { Text(L.t("隱私", "Privacy")) }
             }
-            Section {
-                Text(L.t("錄音不會上傳，離開練習頁即刪除。口說回答和 AI 建議不會存入帳號，回答在離開這題後清除。", "Recordings are never uploaded and are deleted when you leave the practice sheet. Speaking answers and AI suggestions are not saved to your account; answers are cleared when you leave the question."))
-                Text(L.t("使用線上 AI 時，你的文字回答、掃描到的文字、查詢的單字與你對它的提問，或你要求分析時的學習次數與常忘記的字，會傳送到 Anthropic（美國）產生建議，不包含錄音、帳號名稱或 Email。只用裝置內 AI 時，這些內容都留在 iPhone 上。", "With online AI, your typed or spoken answer text, scanned text, the word you look up and any question you ask about it, or, when you ask for an analysis, your practice counts and most-forgotten words are sent to Anthropic (USA) to produce suggestions, without recordings, your account name or email. With on-device AI only, all of it stays on this iPhone."))
-                Text(L.t("AI 的單字解說、提問回答和測驗講解會保存在這支 iPhone 上，再看時不必重新產生，也不會上傳到帳號。", "AI word explanations, answers to your questions and quiz explanations are kept on this iPhone so they open again without being regenerated; they are not uploaded to your account."))
-                Text(L.t("為了公平分配線上 AI，伺服器只記錄每個帳號每天的使用次數，不記錄內容。", "To share online AI fairly, the server counts requests per account per day, without their content."))
-                Text(L.t("登入與學習同步仍依原本的隱私權政策處理。", "Sign-in and learning sync still follow the existing privacy policy."))
-            } header: { Text(L.t("隱私", "Privacy")) }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .cloudConsentAlert(isPresented: $askCloud) { AppleSpeakingCoach.shared.refreshAvailability() }
         .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         .navigationTitle(L.t("AI 與錄音", "AI and recording"))

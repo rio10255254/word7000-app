@@ -68,7 +68,7 @@ struct PaywallView: View {
         }
         .scrollIndicators(.hidden)
         .background(alignment: .top) { PlusGlow().frame(height: 360).ignoresSafeArea() }
-        .background(Palette.background)
+        .background { AmbientBackground(tint: Palette.review) }
         .safeAreaInset(edge: .bottom, spacing: 0) { purchaseBar }
         .safeAreaInset(edge: .top, spacing: 0) {
             HStack {
@@ -100,7 +100,7 @@ struct PaywallView: View {
                 .opacity(appeared ? 1 : 0)
                 .modifier(GentleFloat(active: !reduceMotion))
             Text("Word7000 Plus")
-                .font(.rounded(.title, weight: .heavy))
+                .font(.display(.title, weight: .heavy))
             Text(P.headline(reason))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -299,7 +299,8 @@ private struct GentleFloat: ViewModifier {
 }
 
 enum PlusStyle {
-    static let gradient = LinearGradient(colors: [Palette.accent, Palette.chinese], startPoint: .topLeading, endPoint: .bottomTrailing)
+    /// Ochre warming into terracotta, like polished copper.
+    static let gradient = LinearGradient(colors: [Palette.review, Palette.accent], startPoint: .topLeading, endPoint: .bottomTrailing)
 }
 
 /// A soft, slowly drifting wash of the Plus colors behind the header.
@@ -393,7 +394,7 @@ struct PlanCard: View {
                 }
                 Spacer(minLength: 8)
                 VStack(alignment: .trailing, spacing: 3) {
-                    Text(plan.displayPrice).font(.rounded(.title3, weight: .bold)).monospacedDigit()
+                    Text(plan.displayPrice).font(.display(.title3, weight: .bold)).monospacedDigit()
                     Text(plan.yearly ? P.perYear : P.perMonthUnit).font(.caption).foregroundStyle(.secondary)
                 }
             }
@@ -443,7 +444,7 @@ struct PlusWelcomeView: View {
                     .popIn()
             }
             VStack(spacing: 8) {
-                Text(P.welcomeTitle).font(.rounded(.largeTitle, weight: .heavy))
+                Text(P.welcomeTitle).font(.display(.largeTitle, weight: .heavy))
                 Text(P.welcomeText).foregroundStyle(.secondary).multilineTextAlignment(.center)
             }
             .entrance(2)
@@ -466,7 +467,7 @@ struct PlusWelcomeView: View {
         }
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Palette.background)
+        .background { AmbientBackground(tint: Palette.review) }
         .overlay(alignment: .top) {
             if !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
         }

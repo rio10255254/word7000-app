@@ -19,68 +19,72 @@ struct BankManagementView: View {
 
     var body: some View {
         List {
-            Section(L.bankName) {
-                TextField(L.bankName, text: $name)
-                    .accessibilityIdentifier("bank-name")
-            }
-            Section {
-                HStack {
-                    Text(L.bankWordCount(words.count))
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                        .contentTransition(.numericText(value: Double(words.count)))
-                    Spacer()
-                    Button(selected.count == words.count && !words.isEmpty ? L.t("取消全選", "Deselect all") : L.t("全選", "Select all")) {
-                        withAnimation(reduceMotion ? nil : Motion.pop) {
-                            selected = selected.count == words.count ? [] : Set(words.map(\.id))
-                        }
-                    }
-                    .disabled(words.isEmpty)
+            Group {
+                Section(L.bankName) {
+                    TextField(L.bankName, text: $name)
+                        .accessibilityIdentifier("bank-name")
                 }
-                if let notice {
-                    Label {
-                        Text(notice)
-                    } icon: {
-                        Image(systemName: "checkmark.circle.fill").popIn(delay: 0.1)
-                    }
-                    .font(.footnote)
-                    .foregroundStyle(Palette.known)
-                    .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
-                }
-                ForEach(words) { word in
-                    HStack(spacing: 8) {
-                        Button {
+                Section {
+                    HStack {
+                        Text(L.bankWordCount(words.count))
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(words.count)))
+                        Spacer()
+                        Button(selected.count == words.count && !words.isEmpty ? L.t("取消全選", "Deselect all") : L.t("全選", "Select all")) {
                             withAnimation(reduceMotion ? nil : Motion.pop) {
-                                if !selected.insert(word.id).inserted { selected.remove(word.id) }
+                                selected = selected.count == words.count ? [] : Set(words.map(\.id))
                             }
-                        } label: {
-                            HStack(spacing: 12) {
-                                Image(systemName: selected.contains(word.id) ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(selected.contains(word.id) ? Palette.accent : Palette.secondaryLabel)
-                                    .contentTransition(.symbolEffect(.replace))
-                                    .symbolEffect(.bounce, value: reduceMotion ? false : selected.contains(word.id))
-                                    .frame(width: 28)
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(model.face(word).prompt).font(.body.weight(.semibold)).foregroundStyle(.primary)
-                                    Text(model.face(word).answer).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
-                                }
-                                Spacer(minLength: 4)
-                            }
-                            .frame(minHeight: 44)
-                            .contentShape(Rectangle())
                         }
-                        .buttonStyle(.borderless)
-                        .accessibilityAddTraits(selected.contains(word.id) ? .isSelected : [])
-                        if model.customSets.customWords.contains(where: { $0.id == word.id }) {
-                            Button { editingWord = word } label: { Image(systemName: "pencil").frame(width: 44, height: 44) }
-                                .buttonStyle(.borderless)
-                                .accessibilityLabel(L.t("編輯 \(word.word)", "Edit \(word.word)"))
+                        .disabled(words.isEmpty)
+                    }
+                    if let notice {
+                        Label {
+                            Text(notice)
+                        } icon: {
+                            Image(systemName: "checkmark.circle.fill").popIn(delay: 0.1)
+                        }
+                        .font(.footnote)
+                        .foregroundStyle(Palette.known)
+                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
+                    }
+                    ForEach(words) { word in
+                        HStack(spacing: 8) {
+                            Button {
+                                withAnimation(reduceMotion ? nil : Motion.pop) {
+                                    if !selected.insert(word.id).inserted { selected.remove(word.id) }
+                                }
+                            } label: {
+                                HStack(spacing: 12) {
+                                    Image(systemName: selected.contains(word.id) ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(selected.contains(word.id) ? Palette.accent : Palette.secondaryLabel)
+                                        .contentTransition(.symbolEffect(.replace))
+                                        .symbolEffect(.bounce, value: reduceMotion ? false : selected.contains(word.id))
+                                        .frame(width: 28)
+                                    VStack(alignment: .leading, spacing: 3) {
+                                        Text(model.face(word).prompt).font(.body.weight(.semibold)).foregroundStyle(.primary)
+                                        Text(model.face(word).answer).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
+                                    }
+                                    Spacer(minLength: 4)
+                                }
+                                .frame(minHeight: 44)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.borderless)
+                            .accessibilityAddTraits(selected.contains(word.id) ? .isSelected : [])
+                            if model.customSets.customWords.contains(where: { $0.id == word.id }) {
+                                Button { editingWord = word } label: { Image(systemName: "pencil").frame(width: 44, height: 44) }
+                                    .buttonStyle(.borderless)
+                                    .accessibilityLabel(L.t("編輯 \(word.word)", "Edit \(word.word)"))
+                            }
                         }
                     }
+                    if words.isEmpty { Text(L.t("還沒有單字", "No words yet")).foregroundStyle(.secondary) }
                 }
-                if words.isEmpty { Text(L.t("還沒有單字", "No words yet")).foregroundStyle(.secondary) }
             }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(L.t("管理單字集", "Manage bank"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -179,37 +183,41 @@ struct WordEditorSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    TextField("English", text: $english).textInputAutocapitalization(.never).autocorrectionDisabled()
-                    TextField(L.t("主要意思", "Main meaning"), text: $meaning, axis: .vertical)
-                    TextField(L.t("詞性", "Part of speech"), text: $part).textInputAutocapitalization(.never)
-                    TextField(L.t("補充意思", "Other meanings"), text: $supplemental, axis: .vertical)
-                    if CloudAssistant.shared.offered {
-                        Button(action: fill) {
-                            HStack {
-                                Label {
-                                    Text(L.t("AI 幫我填意思、詞性和例句", "AI fill-in: meaning, part of speech and example"))
-                                } icon: {
-                                    Image(systemName: "sparkles")
-                                        .symbolEffect(.pulse, options: .repeating, isActive: filling && !reduceMotion)
+                Group {
+                    Section {
+                        TextField("English", text: $english).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        TextField(L.t("主要意思", "Main meaning"), text: $meaning, axis: .vertical)
+                        TextField(L.t("詞性", "Part of speech"), text: $part).textInputAutocapitalization(.never)
+                        TextField(L.t("補充意思", "Other meanings"), text: $supplemental, axis: .vertical)
+                        if CloudAssistant.shared.offered {
+                            Button(action: fill) {
+                                HStack {
+                                    Label {
+                                        Text(L.t("AI 幫我填意思、詞性和例句", "AI fill-in: meaning, part of speech and example"))
+                                    } icon: {
+                                        Image(systemName: "sparkles")
+                                            .symbolEffect(.pulse, options: .repeating, isActive: filling && !reduceMotion)
+                                    }
+                                    if filling { Spacer(); ProgressView() }
                                 }
-                                if filling { Spacer(); ProgressView() }
                             }
+                            .disabled(english.trimmed.isEmpty || filling)
+                            .accessibilityIdentifier("word-editor-ai-fill")
+                            if let fillFailure { Text(fillFailure.message).font(.footnote).foregroundStyle(.secondary) }
                         }
-                        .disabled(english.trimmed.isEmpty || filling)
-                        .accessibilityIdentifier("word-editor-ai-fill")
-                        if let fillFailure { Text(fillFailure.message).font(.footnote).foregroundStyle(.secondary) }
+                    } footer: {
+                        if CloudAssistant.shared.offered {
+                            Text(L.t("AI 只會填入空白的欄位，存入前請再確認。", "AI fills only empty fields; check them before saving."))
+                        }
                     }
-                } footer: {
-                    if CloudAssistant.shared.offered {
-                        Text(L.t("AI 只會填入空白的欄位，存入前請再確認。", "AI fills only empty fields; check them before saving."))
+                    Section(L.t("例句（選填）", "Example (optional)")) {
+                        TextField(L.t("英文例句", "English example"), text: $example, axis: .vertical).lineLimit(2...6)
+                        TextField(L.t("中文翻譯", "Chinese translation"), text: $translation, axis: .vertical).lineLimit(2...6)
                     }
                 }
-                Section(L.t("例句（選填）", "Example (optional)")) {
-                    TextField(L.t("英文例句", "English example"), text: $example, axis: .vertical).lineLimit(2...6)
-                    TextField(L.t("中文翻譯", "Chinese translation"), text: $translation, axis: .vertical).lineLimit(2...6)
-                }
+                .listRowBackground(Palette.surface)
             }
+            .warmList()
             .scrollDismissesKeyboard(.interactively)
             .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { fill() } }
             .sensoryFeedback(.success, trigger: filled) { _, _ in model.settings.hapticsEnabled ?? true }

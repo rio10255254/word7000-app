@@ -40,6 +40,7 @@ struct WelcomeView: View {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("welcome-language")
                 }
+                .listRowBackground(Palette.surface)
                 Section(text("每日目標", "Daily goal")) {
                     Picker(text("單字數量", "Words"), selection: $target) {
                         ForEach([10, 20, 30, 50], id: \.self) { value in
@@ -48,6 +49,7 @@ struct WelcomeView: View {
                     }
                     .pickerStyle(.segmented)
                 }
+                .listRowBackground(Palette.surface)
                 Section {
                     Button { finish(mode, target, true) } label: {
                         Label(text("開始 5 字練習", "Try 5 words"), systemImage: "arrow.right")
@@ -62,8 +64,7 @@ struct WelcomeView: View {
                         .listRowBackground(Color.clear)
                 }
             }
-            .scrollContentBackground(.hidden)
-            .background { AmbientBackground() }
+            .warmList()
         }
         .sensoryFeedback(.selection, trigger: mode)
         .sensoryFeedback(.selection, trigger: target)
@@ -91,7 +92,7 @@ private struct FloatingWords: View {
             ForEach(Self.words.indices, id: \.self) { index in
                 let word = Self.words[index]
                 let chip = Text(learningEnglish ? word.english : word.chinese)
-                    .font(.rounded(.subheadline, weight: .semibold))
+                    .font(.display(.subheadline, weight: .semibold))
                     .foregroundStyle(word.tint)
                     .contentTransition(.opacity)
                     .padding(.horizontal, 12)

@@ -210,7 +210,7 @@ struct PlusLockedOverlay: View {
                 .background(PlusStyle.gradient, in: Circle())
                 .shadow(color: Palette.accent.opacity(0.35), radius: 10, y: 4)
                 .popIn(delay: 0.15)
-            Text(P.lockedTitle(feature)).font(.rounded(.title3, weight: .bold)).multilineTextAlignment(.center)
+            Text(P.lockedTitle(feature)).font(.display(.title3, weight: .bold)).multilineTextAlignment(.center)
             Text(P.lockedText(feature)).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.center)
             Button { plus.paywallReason = .locked(feature) } label: {
                 Text(P.unlockPlus).font(.headline).frame(maxWidth: .infinity)
@@ -251,7 +251,7 @@ struct TrialRecapView: View {
                     .padding(.top, 28)
                 let hasWeek = week.studied + week.activeDays + plus.trialScansUsed > 0
                 VStack(spacing: 8) {
-                    Text(P.recapTitle).font(.rounded(.title, weight: .heavy))
+                    Text(P.recapTitle).font(.display(.title, weight: .heavy))
                     if hasWeek {
                         Text(P.recapText).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     }
@@ -309,7 +309,7 @@ struct TrialRecapView: View {
             .padding(.top, 10)
             .background(.bar)
         }
-        .background(Palette.background)
+        .background { AmbientBackground(tint: Palette.review) }
         .onAppear {
             shown = true
             plus.noteTrialRecapSeen()

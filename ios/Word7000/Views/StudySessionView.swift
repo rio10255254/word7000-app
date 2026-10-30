@@ -104,7 +104,7 @@ struct StudySessionView: View {
                 ToolbarItem(placement: .principal) {
                     if let session = model.studySession, !session.isComplete, session.total > 0 {
                         Text(L.cardCount(done: session.done, total: session.total))
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
                             .accessibilityIdentifier("study-position")
                     }
@@ -189,7 +189,7 @@ struct StudySessionView: View {
                     VStack(spacing: 28) {
                         VStack(spacing: 10) {
                             Text(face.prompt)
-                                .font(.roundedSize(promptSize, weight: .bold))
+                                .font(.displaySize(promptSize, weight: .bold))
                                 .minimumScaleFactor(0.6)
                                 .lineLimit(4)
                                 .multilineTextAlignment(.center)
@@ -397,7 +397,7 @@ struct WordAnswer: View {
                         .foregroundStyle(Palette.accent)
                 }
                 Text(face.answer)
-                    .font(.rounded(.title2, weight: .bold))
+                    .font(.display(.title2, weight: .bold))
                 if !face.answerDetail.isEmpty {
                     Text(face.answerDetail)
                         .font(.subheadline)
@@ -489,7 +489,7 @@ struct SessionSummary: View {
             .frame(width: 130, height: 130)
             .entrance(0)
             Text(reachedGoal ? L.goalReachedTitle : L.sessionCompleteTitle)
-                .font(.rounded(.title, weight: .bold))
+                .font(.display(.title, weight: .bold))
                 .entrance(1)
             Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
                 .foregroundStyle(.secondary)
@@ -564,7 +564,7 @@ private struct SummaryChip: View {
         let shown = rolled || reduceMotion ? value : 0
         VStack(spacing: 4) {
             Label("\(shown)", systemImage: icon)
-                .font(.rounded(.title3, weight: .bold))
+                .font(.display(.title3, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(tint)
                 .contentTransition(.numericText(value: Double(shown)))

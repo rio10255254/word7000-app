@@ -48,7 +48,7 @@ struct TodayView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text(L.practice)
-                        .font(.rounded(.title3, weight: .bold))
+                        .font(.display(.title3, weight: .bold))
                         .padding(.leading, 4)
                     if model.stats.review > 0 {
                         tile(PracticeTileItem(id: "today-review", icon: "arrow.counterclockwise", tint: Palette.miss,
@@ -110,15 +110,15 @@ struct TodayView: View {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(greeting)
-                        .font(.rounded(.subheadline, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.78))
+                        .font(.display(.subheadline, weight: .semibold))
+                        .foregroundStyle(Self.cream.opacity(0.78))
                     Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
-                        .font(.rounded(.title, weight: .bold))
-                        .foregroundStyle(.white)
+                        .font(.display(.title, weight: .bold))
+                        .foregroundStyle(Self.cream)
                         .contentTransition(.opacity)
                     Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.85))
+                        .foregroundStyle(Self.cream.opacity(0.85))
                 }
                 Spacer(minLength: 0)
                 // At the largest text sizes the words need the room more than the mascot does.
@@ -126,17 +126,17 @@ struct TodayView: View {
             }
 
             statsLayout {
-                ProgressRing(fraction: model.dailyFraction, color: .white, lineWidth: 11, track: .white.opacity(0.22)) {
+                ProgressRing(fraction: model.dailyFraction, color: Self.cream, lineWidth: 11, track: Self.cream.opacity(0.22)) {
                     VStack(spacing: 0) {
                         Text("\(progress.studiedToday)")
-                            .font(.rounded(.title, weight: .bold))
+                            .font(.display(.title, weight: .bold))
                             .monospacedDigit()
                             .contentTransition(.numericText(value: Double(progress.studiedToday)))
                         Text(L.ofTarget(progress.dailyTarget))
-                            .font(.rounded(.caption, weight: .semibold))
+                            .font(.display(.caption, weight: .semibold))
                             .opacity(0.8)
                     }
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Self.cream)
                     .lineLimit(1)
                     .minimumScaleFactor(0.4)
                     .padding(.horizontal, 14)
@@ -180,8 +180,8 @@ struct TodayView: View {
                 .foregroundStyle(model.goalDone ? Self.doneDeep : Self.deep)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 15)
-                .background(.white, in: Capsule())
-                .shadow(color: .black.opacity(0.15), radius: 10, y: 5)
+                .background(Self.cream, in: Capsule())
+                .shadow(color: PremiumSurface.umber.opacity(0.3), radius: 10, y: 5)
             }
             .buttonStyle(SoftPressStyle())
             .disabled(plan.total == 0)
@@ -191,7 +191,7 @@ struct TodayView: View {
             if model.settings.studyFilter.isActive {
                 Button(L.t("調整學習範圍", "Adjust study scope")) { studySettingsOpen = true }
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.9))
+                    .foregroundStyle(Self.cream.opacity(0.9))
                     .frame(maxWidth: .infinity)
             }
         }
@@ -216,12 +216,12 @@ struct TodayView: View {
 
     private func heroChip<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
         content()
-            .font(.rounded(.subheadline, weight: .semibold))
-            .foregroundStyle(.white)
+            .font(.display(.subheadline, weight: .semibold))
+            .foregroundStyle(Self.cream)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
-            .background(.white.opacity(0.18), in: Capsule())
-            .overlay(Capsule().strokeBorder(.white.opacity(0.25), lineWidth: 1))
+            .background(Self.cream.opacity(0.16), in: Capsule())
+            .overlay(Capsule().strokeBorder(Self.cream.opacity(0.28), lineWidth: 1))
     }
 
     private var mascotMood: Mascot.Mood {
@@ -305,8 +305,10 @@ struct TodayView: View {
         .accessibilityIdentifier(item.id)
     }
 
-    private static let deep = Color(red: 0.27, green: 0.36, blue: 0.92)
-    private static let doneDeep = Color(red: 0.05, green: 0.5, blue: 0.5)
+    private static let deep = Color(red: 0.45, green: 0.27, blue: 0.16)
+    private static let doneDeep = Color(red: 0.3, green: 0.38, blue: 0.22)
+    /// Text and the button on the leather card.
+    private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
 }
 
 /// One way to practise, as a tile.
@@ -343,7 +345,7 @@ private struct PracticeTile: View {
                     PlusBadge()
                 } else if let badge = item.badge {
                     Text(badge)
-                        .font(.rounded(.subheadline, weight: .bold))
+                        .font(.display(.subheadline, weight: .bold))
                         .monospacedDigit()
                         .foregroundStyle(.white)
                         .padding(.horizontal, 10)
@@ -357,7 +359,7 @@ private struct PracticeTile: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title)
-                    .font(.rounded(.headline, weight: .bold))
+                    .font(.display(.headline, weight: .bold))
                     .foregroundStyle(.primary)
                 Text(item.detail)
                     .font(.footnote)
@@ -372,9 +374,10 @@ private struct PracticeTile: View {
     }
 }
 
-/// The hero card's face: a deep gradient with light pooling in one corner, a
-/// glint that sweeps across now and then, and a hairline catching the light.
-/// It turns green once today's goal is met.
+/// The hero card's face: caramel leather darkening to brown, with a fine
+/// grain, light pooling in one corner, a glint that sweeps across now and
+/// then, and a hairline catching the light. It turns olive once today's goal
+/// is met.
 private struct HeroBackground: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var done: Bool
@@ -382,8 +385,8 @@ private struct HeroBackground: View {
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 30, style: .continuous)
         let colors = done
-            ? [Color(red: 0.18, green: 0.76, blue: 0.58), Color(red: 0.05, green: 0.5, blue: 0.62)]
-            : [Color(red: 0.38, green: 0.57, blue: 1.0), Color(red: 0.33, green: 0.29, blue: 0.9)]
+            ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]
+            : [Color(red: 0.77, green: 0.55, blue: 0.36), Color(red: 0.45, green: 0.29, blue: 0.19)]
         shape
             .fill(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing))
             .overlay {
@@ -391,7 +394,7 @@ private struct HeroBackground: View {
                     let width = proxy.size.width
                     ZStack(alignment: .topLeading) {
                         Circle()
-                            .fill(.white.opacity(0.3))
+                            .fill(Color(red: 1, green: 0.9, blue: 0.75).opacity(0.35))
                             .frame(width: width * 0.8, height: width * 0.8)
                             .blur(radius: 40)
                             .offset(x: width * 0.45, y: -width * 0.45)
@@ -404,6 +407,7 @@ private struct HeroBackground: View {
                 }
                 .clipShape(shape)
             }
+            .overlay { PaperGrain(opacity: 1).blendMode(.overlay).clipShape(shape) }
             .overlay {
                 if !reduceMotion { HeroGlint().clipShape(shape) }
             }
@@ -411,7 +415,7 @@ private struct HeroBackground: View {
                 shape.strokeBorder(LinearGradient(colors: [.white.opacity(0.55), .white.opacity(0.05)], startPoint: .top, endPoint: .bottom),
                                    lineWidth: 1)
             }
-            .shadow(color: colors[1].opacity(0.4), radius: 22, y: 12)
+            .shadow(color: colors[1].opacity(0.35), radius: 20, y: 12)
     }
 }
 

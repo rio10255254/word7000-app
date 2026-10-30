@@ -53,7 +53,7 @@ struct StatTile: View {
         let shown = rolled || reduceMotion ? value : value.map { _ in 0 }
         VStack(spacing: 2) {
             Text(shown.map { String($0) } ?? "–")
-                .font(.roundedSize(26, weight: .bold))
+                .font(.displaySize(26, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(color)
                 .contentTransition(.numericText(value: Double(shown ?? 0)))

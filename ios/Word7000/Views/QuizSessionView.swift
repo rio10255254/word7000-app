@@ -53,7 +53,7 @@ struct QuizSessionView: View {
                 ToolbarItem(placement: .principal) {
                     if !finished, !questions.isEmpty {
                         Text("\(min(index + 1, questions.count)) / \(questions.count)")
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
                     }
                 }
@@ -117,7 +117,7 @@ struct QuizSessionView: View {
 
             VStack(spacing: 6) {
                 Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
-                    .font(.roundedSize(42, weight: .bold))
+                    .font(.displaySize(42, weight: .bold))
                     .minimumScaleFactor(0.4)
                     .lineLimit(3)
             }
@@ -167,7 +167,7 @@ struct QuizSessionView: View {
                 .prominentAction(tint: chosen.correct ? Palette.known : Palette.accent)
                 .accessibilityIdentifier("quiz-next")
                 .padding(.vertical, 8)
-                .background(Palette.background)
+                .background { Palette.background.overlay { PaperGrain() } }
                 .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
@@ -182,7 +182,7 @@ struct QuizSessionView: View {
             Image(systemName: "flame.fill")
                 .symbolEffect(.bounce, value: reduceMotion ? 0 : combo)
         }
-        .font(.rounded(.caption, weight: .bold))
+        .font(.display(.caption, weight: .bold))
         .foregroundStyle(.white)
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
@@ -268,7 +268,7 @@ struct QuizSessionView: View {
             Spacer()
             ProgressRing(fraction: fraction, color: Palette.known, lineWidth: 14) {
                 Text("\(reduceMotion ? correctCount : shownScore)/\(questions.count)")
-                    .font(.roundedSize(30, weight: .bold))
+                    .font(.displaySize(30, weight: .bold))
                     .monospacedDigit()
                     .contentTransition(.numericText(value: Double(shownScore)))
                     .accessibilityLabel("\(correctCount)/\(questions.count)")
@@ -280,7 +280,7 @@ struct QuizSessionView: View {
                     .popIn(delay: 0.5)
             }
             .entrance(0)
-            Text(L.quizFinished).font(.rounded(.title, weight: .bold))
+            Text(L.quizFinished).font(.display(.title, weight: .bold))
                 .entrance(1)
             Text(missedIds.isEmpty ? L.quizPerfect : L.quizMissedHint(missedIds.count))
                 .foregroundStyle(.secondary)

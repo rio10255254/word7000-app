@@ -49,7 +49,7 @@ struct SpellingSessionView: View {
                 ToolbarItem(placement: .principal) {
                     if started, index < words.count {
                         Text("\(index + 1) / \(words.count)")
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
                             .accessibilityIdentifier("spelling-position")
                     }
@@ -80,7 +80,7 @@ struct SpellingSessionView: View {
                             .foregroundStyle(Palette.accent)
                     }
                     Text(ChineseDisplay.conciseMeaning(word.meaningZh))
-                        .font(.rounded(.title, weight: .bold))
+                        .font(.display(.title, weight: .bold))
                         .multilineTextAlignment(.center)
                         .accessibilityIdentifier("spelling-meaning")
                     if result == nil {
@@ -153,7 +153,7 @@ struct SpellingSessionView: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(word.word)
-                    .font(.rounded(.title, weight: .bold))
+                    .font(.display(.title, weight: .bold))
                     .accessibilityIdentifier("spelling-answer")
                 if !word.pronunciation.isEmpty {
                     Text(word.pronunciation).foregroundStyle(.secondary)
@@ -213,7 +213,7 @@ struct SpellingSessionView: View {
             }
         }
         .padding(.vertical, 8)
-        .background(Palette.background)
+        .background { Palette.background.overlay { PaperGrain() } }
     }
 
     private func title(_ result: Spelling.Result) -> String {
@@ -286,7 +286,7 @@ struct SpellingSessionView: View {
             Spacer()
             ProgressRing(fraction: Double(correctCount) / Double(max(1, words.count)), color: Palette.known, lineWidth: 14) {
                 Text("\(reduceMotion ? correctCount : shownScore)/\(words.count)")
-                    .font(.roundedSize(30, weight: .bold))
+                    .font(.displaySize(30, weight: .bold))
                     .monospacedDigit()
                     .contentTransition(.numericText(value: Double(shownScore)))
                     .accessibilityLabel("\(correctCount)/\(words.count)")
@@ -298,7 +298,7 @@ struct SpellingSessionView: View {
                     .popIn(delay: 0.5)
             }
             .entrance(0)
-            Text(L.t("拼字練習完成", "Spelling complete")).font(.rounded(.title, weight: .bold))
+            Text(L.t("拼字練習完成", "Spelling complete")).font(.display(.title, weight: .bold))
                 .entrance(1)
             Text(missedIds.isEmpty ? L.quizPerfect : L.quizMissedHint(missedIds.count))
                 .foregroundStyle(.secondary)

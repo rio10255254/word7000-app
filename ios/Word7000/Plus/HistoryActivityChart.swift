@@ -112,7 +112,7 @@ struct HistoryActivityChart: View {
         let total = activity.reduce(0) { $0 + $1.total }
         return VStack(alignment: .leading, spacing: 8) {
             Text(L.t("共 \(total) 次", "\(total) actions"))
-                .font(.rounded(.title3, weight: .bold))
+                .font(.display(.title3, weight: .bold))
                 .monospacedDigit()
                 .contentTransition(.numericText(value: Double(total)))
             legend { kind in activity.reduce(0) { $0 + kind.count(in: $1) } }
@@ -129,7 +129,7 @@ struct HistoryActivityChart: View {
                     .accessibilityIdentifier("history-selected-date")
                 Spacer(minLength: 8)
                 Text(L.t("\(detail.total) 次", "\(detail.total) actions"))
-                    .font(.rounded(.title3, weight: .bold))
+                    .font(.display(.title3, weight: .bold))
                     .monospacedDigit()
                     .contentTransition(.numericText(value: Double(detail.total)))
                     .accessibilityIdentifier("history-selected-count")

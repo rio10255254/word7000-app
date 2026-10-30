@@ -164,44 +164,48 @@ struct SpeakingCoachView: View {
     /// The form on its own keeps the body's modifier chain short enough to type-check.
     private var coachForm: some View {
         Form {
-            questionSection
-            answerSection
-            if provider.availability == .ready {
-                if let message = visibleFailure {
-                    Section {
-                        HStack(alignment: .top) {
-                            Image(systemName: "exclamationmark.circle").accessibilityHidden(true)
-                            Text(message)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .accessibilityIdentifier("coach-error")
+            Group {
+                questionSection
+                answerSection
+                if provider.availability == .ready {
+                    if let message = visibleFailure {
+                        Section {
+                            HStack(alignment: .top) {
+                                Image(systemName: "exclamationmark.circle").accessibilityHidden(true)
+                                Text(message)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .accessibilityIdentifier("coach-error")
+                            }
+                            .foregroundStyle(Palette.miss)
                         }
-                        .foregroundStyle(Palette.miss)
                     }
+                    if let feedback = session.feedback {
+                        feedbackSections(feedback)
+                    }
+                } else {
+                    unavailableSection
                 }
-                if let feedback = session.feedback {
-                    feedbackSections(feedback)
+                // After the learner's own attempt and the coach, not before: a model
+                // answer read first gets repeated instead of answered. The card's
+                // answer does not fit a follow-up.
+                if !referenceAnswer.isEmpty && followUpQuestion == nil {
+                    Section {
+                        DisclosureGroup(L.t("參考回答", "Reference answer")) {
+                            HStack(alignment: .top) {
+                                Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 8)
+                                SpeakButton(text: referenceAnswer, language: answerLanguage).disabled(recording.busy)
+                            }
+                            Text(referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
+                        }.accessibilityIdentifier("coach-reference")
+                    } footer: { Text(privacyNote) }
+                } else {
+                    Section {} footer: { Text(privacyNote) }
                 }
-            } else {
-                unavailableSection
             }
-            // After the learner's own attempt and the coach, not before: a model
-            // answer read first gets repeated instead of answered. The card's
-            // answer does not fit a follow-up.
-            if !referenceAnswer.isEmpty && followUpQuestion == nil {
-                Section {
-                    DisclosureGroup(L.t("參考回答", "Reference answer")) {
-                        HStack(alignment: .top) {
-                            Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
-                            Spacer(minLength: 8)
-                            SpeakButton(text: referenceAnswer, language: answerLanguage).disabled(recording.busy)
-                        }
-                        Text(referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
-                    }.accessibilityIdentifier("coach-reference")
-                } footer: { Text(privacyNote) }
-            } else {
-                Section {} footer: { Text(privacyNote) }
-            }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .accessibilityIdentifier("coach-form")
         .scrollDismissesKeyboard(.interactively)
         .background(Palette.background)
@@ -232,7 +236,7 @@ struct SpeakingCoachView: View {
         Section {
             HStack {
                 Text(request.keyword)
-                    .font(.rounded(.headline)).foregroundStyle(Palette.accent)
+                    .font(.display(.headline)).foregroundStyle(Palette.accent)
                 if followUpQuestion != nil {
                     Spacer()
                     Text(L.t("接續提問", "Follow-up")).font(.caption.weight(.semibold)).foregroundStyle(.secondary)

@@ -42,7 +42,7 @@ struct ExamView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground(tint: Palette.review) }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -60,7 +60,7 @@ struct ExamView: View {
                                 .symbolEffect(.pulse, options: .repeating, isActive: hurry && !reduceMotion)
                         }
                         .labelStyle(.titleAndIcon)
-                        .font(.rounded(.subheadline, weight: .semibold))
+                        .font(.display(.subheadline, weight: .semibold))
                         .foregroundStyle(hurry ? Palette.miss : Color.primary)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 4)
@@ -117,7 +117,7 @@ struct ExamView: View {
             SessionBar(fraction: Double(answers.count) / Double(max(1, questions.count)))
                 .padding(.top, 4)
             Text("\(index + 1) / \(questions.count)")
-                .font(.rounded(.footnote, weight: .semibold))
+                .font(.display(.footnote, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .contentTransition(.numericText(value: Double(index)))
                 .accessibilityIdentifier("exam-position")
@@ -126,7 +126,7 @@ struct ExamView: View {
             ZStack(alignment: .top) {
             VStack(spacing: 16) {
                 Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
-                    .font(.roundedSize(38, weight: .bold))
+                    .font(.displaySize(38, weight: .bold))
                     .minimumScaleFactor(0.4)
                     .lineLimit(3)
                     .multilineTextAlignment(.center)
@@ -262,7 +262,7 @@ struct ExamView: View {
                 ProgressRing(fraction: Double(score) / 100, color: scoreColor(score), lineWidth: 14) {
                     VStack(spacing: 0) {
                         Text("\(reduceMotion ? score : shownScore)")
-                            .font(.roundedSize(40, weight: .bold))
+                            .font(.displaySize(40, weight: .bold))
                             .monospacedDigit()
                             .contentTransition(.numericText(value: Double(shownScore)))
                             .accessibilityLabel("\(score)")
@@ -278,7 +278,7 @@ struct ExamView: View {
                 .padding(.top, 12)
                 .entrance(0)
                 Label(badge.text, systemImage: badge.icon)
-                    .font(.rounded(.subheadline, weight: .bold))
+                    .font(.display(.subheadline, weight: .bold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)

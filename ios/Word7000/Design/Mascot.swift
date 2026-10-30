@@ -243,13 +243,14 @@ struct Mascot: View {
         return cycle > 0.3 && cycle < 0.42 && Int(t / 4.6) % 3 == 0
     }
 
-    private static let top = Color(red: 0.63, green: 0.79, blue: 1.0)
-    private static let bottom = Color(red: 0.31, green: 0.5, blue: 0.98)
-    private static let shade = Color(red: 0.16, green: 0.25, blue: 0.7)
-    private static let ink = Color(red: 0.09, green: 0.11, blue: 0.24)
-    private static let blush = Color(red: 1.0, green: 0.55, blue: 0.62)
-    private static let leafLight = Color(red: 0.56, green: 0.87, blue: 0.56)
-    private static let leafDark = Color(red: 0.24, green: 0.66, blue: 0.42)
+    // Apricot and terracotta, like warm clay; the eyes a deep brown.
+    private static let top = Color(red: 0.97, green: 0.74, blue: 0.58)
+    private static let bottom = Color(red: 0.85, green: 0.47, blue: 0.33)
+    private static let shade = Color(red: 0.58, green: 0.27, blue: 0.16)
+    private static let ink = Color(red: 0.23, green: 0.15, blue: 0.11)
+    private static let blush = Color(red: 0.95, green: 0.5, blue: 0.45)
+    private static let leafLight = Color(red: 0.66, green: 0.78, blue: 0.5)
+    private static let leafDark = Color(red: 0.39, green: 0.55, blue: 0.32)
     private static let gold = Color(red: 1.0, green: 0.86, blue: 0.4)
     private static let amber = Color(red: 1.0, green: 0.6, blue: 0.3)
     private static let sparkleSpots = [CGSize(width: -0.48, height: -0.3), CGSize(width: 0.46, height: -0.4), CGSize(width: 0.44, height: 0.08)]
@@ -294,19 +295,20 @@ private struct MascotOpenMouth: Shape {
 /// A short line from the mascot in a rounded bubble, pointing down at it.
 struct MascotBubble: View {
     var text: String
+    static let cream = Color(red: 1.0, green: 0.98, blue: 0.94)
 
     var body: some View {
         Text(text)
-            .font(.rounded(.footnote, weight: .semibold))
-            .foregroundStyle(Color(red: 0.09, green: 0.11, blue: 0.24))
+            .font(.display(.footnote, weight: .semibold))
+            .foregroundStyle(Color(red: 0.23, green: 0.15, blue: 0.11))
             .lineLimit(2)
             .multilineTextAlignment(.center)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
-            .background(.white, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .background(Self.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay(alignment: .bottom) {
                 MascotBubbleTail()
-                    .fill(.white)
+                    .fill(Self.cream)
                     .frame(width: 14, height: 8)
                     .offset(y: 7)
             }
@@ -345,7 +347,7 @@ struct MascotMessage: View {
             Mascot(mood: mood, size: 110)
                 .popIn()
             Text(title)
-                .font(.rounded(.title2, weight: .bold))
+                .font(.display(.title2, weight: .bold))
                 .entrance(1)
             Text(text)
                 .foregroundStyle(.secondary)

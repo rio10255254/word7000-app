@@ -86,7 +86,9 @@ struct WordsView: View {
                         .animation(reduceMotion ? nil : Motion.reveal, value: results.count)
                 }
             }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(L.tabWords)
         .navigationDestination(for: WordEntry.self) { word in
             WordDetailView(word: word)
@@ -122,10 +124,14 @@ struct WordsView: View {
         .sheet(isPresented: $filtersOpen) {
             NavigationStack {
                 Form {
-                    Section {
-                        FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
+                    Group {
+                        Section {
+                            FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
+                        }
                     }
+                    .listRowBackground(Palette.surface)
                 }
+                .warmList()
                 .navigationTitle(L.filters)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
@@ -293,7 +299,7 @@ struct BankShelf: View {
                         }
                         Spacer(minLength: 0)
                         Text(L.scanSheet)
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .foregroundStyle(Palette.accent)
                     }
                     .padding(14)
@@ -356,7 +362,7 @@ struct BankShelf: View {
                 }
                 Spacer(minLength: 0)
                 Text(name)
-                    .font(.rounded(.subheadline, weight: .bold))
+                    .font(.display(.subheadline, weight: .bold))
                     .lineLimit(2)
                     .foregroundStyle(active ? .white : .primary)
                 HStack {
@@ -393,7 +399,7 @@ struct WordRow: View {
                 .accessibilityLabel(L.statusLabel(progress.status))
             VStack(alignment: .leading, spacing: 2) {
                 let face = model.face(word)
-                SearchHighlightedText(text: face.prompt, query: query).font(.rounded(.body, weight: .semibold))
+                SearchHighlightedText(text: face.prompt, query: query).font(.display(.body, weight: .semibold))
                 SearchHighlightedText(text: face.answer, query: query)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -448,7 +454,7 @@ struct WordDetailView: View {
             Section {
                 VStack(spacing: 6) {
                     Text(face.prompt)
-                        .font(.roundedSize(titleSize, weight: .bold))
+                        .font(.displaySize(titleSize, weight: .bold))
                         .lineLimit(4)
                         .minimumScaleFactor(0.6)
                         .multilineTextAlignment(.center)
@@ -462,46 +468,50 @@ struct WordDetailView: View {
                 .entrance(0)
                 .listRowBackground(Color.clear)
             }
-            Section {
-                VStack(alignment: .leading, spacing: 4) {
-                    if !face.answerLabel.isEmpty {
-                        Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
-                    }
-                    Text(face.answer).font(.rounded(.title3, weight: .bold))
-                    if !face.answerDetail.isEmpty {
-                        Text(face.answerDetail).foregroundStyle(.secondary)
-                    }
-                    if !face.supplemental.isEmpty {
-                        Text(face.supplemental).foregroundStyle(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
-                .entrance(1, distance: 10)
-            } header: {
-                Text(L.meaning)
-            }
-            if !face.examplePrimary.isEmpty {
-                Section(L.example) {
+            Group {
+                Section {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(face.examplePrimary)
-                        if !face.exampleSecondary.isEmpty {
-                            Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
+                        if !face.answerLabel.isEmpty {
+                            Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
+                        }
+                        Text(face.answer).font(.display(.title3, weight: .bold))
+                        if !face.answerDetail.isEmpty {
+                            Text(face.answerDetail).foregroundStyle(.secondary)
+                        }
+                        if !face.supplemental.isEmpty {
+                            Text(face.supplemental).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
-                    .entrance(2, distance: 10)
+                    .entrance(1, distance: 10)
+                } header: {
+                    Text(L.meaning)
+                }
+                if !face.examplePrimary.isEmpty {
+                    Section(L.example) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(face.examplePrimary)
+                            if !face.exampleSecondary.isEmpty {
+                                Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                        .entrance(2, distance: 10)
+                    }
+                }
+                if let note = WordNotes.note(for: word.word) {
+                    Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
+                            : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
+                }
+                AIExplanationSection(word: word)
+                AskAISection(word: word)
+                Section(L.t("學習進度", "Progress")) {
+                    WordProgressCard(progress: progress, level: word.group)
                 }
             }
-            if let note = WordNotes.note(for: word.word) {
-                Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
-                        : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
-            }
-            AIExplanationSection(word: word)
-            AskAISection(word: word)
-            Section(L.t("學習進度", "Progress")) {
-                WordProgressCard(progress: progress, level: word.group)
-            }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(face.prompt)
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.impact(weight: .light), trigger: progress.favorite) { _, _ in model.settings.hapticsEnabled ?? true }

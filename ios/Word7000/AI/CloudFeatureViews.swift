@@ -71,9 +71,13 @@ struct AIWordSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                AIExplanationSection(word: word)
-                AskAISection(word: word)
+                Group {
+                    AIExplanationSection(word: word)
+                    AskAISection(word: word)
+                }
+                .listRowBackground(Palette.surface)
             }
+            .warmList()
             .navigationTitle(model.face(word).prompt)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

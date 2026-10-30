@@ -60,7 +60,7 @@ struct SignInSheet: View {
                         .popIn()
                         .padding(.top, 12)
                     VStack(spacing: 8) {
-                        Text(reason.title).font(.rounded(.title2, weight: .bold))
+                        Text(reason.title).font(.display(.title2, weight: .bold))
                         Text(reason.body).foregroundStyle(.secondary)
                     }
                     .multilineTextAlignment(.center)

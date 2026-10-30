@@ -16,7 +16,7 @@ struct Word7000App: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
-        WarmTone.styleNavigationBars()
+        WarmTone.styleSystemBars()
         SpeakingRecorder.removeAbandonedTakes()
         let model = AppModel.launch()
         _model = State(initialValue: model)
@@ -40,8 +40,6 @@ struct Word7000App: App {
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)
                 .tint(Palette.accent)
-                // Text defaults to warm ink; `.secondary` follows as a softer ink.
-                .foregroundStyle(Palette.ink)
                 .task {
                     account.beforeSignOut = { [weak account, registrations] owner, deviceId in
                         await registrations.revoke(owner: owner, deviceId: deviceId) { [weak account] row in

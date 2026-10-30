@@ -247,7 +247,8 @@ final class ScreenshotTests: XCTestCase {
             return
         }
         var pixels = [UInt8](repeating: 0, count: image.width * image.height * 4)
-        let colors = pixels.withUnsafeMutableBytes { bytes -> (blue: Int, green: Int, indigo: Int) in
+        // The bars use the warm palette: terracotta words, sage speaking, slate quizzes.
+        let colors = pixels.withUnsafeMutableBytes { bytes -> (terracotta: Int, sage: Int, slate: Int) in
             guard let context = CGContext(data: bytes.baseAddress, width: image.width, height: image.height,
                                           bitsPerComponent: 8, bytesPerRow: image.width * 4,
                                           space: CGColorSpaceCreateDeviceRGB(),
@@ -256,17 +257,17 @@ final class ScreenshotTests: XCTestCase {
             }
             context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
             let data = bytes.bindMemory(to: UInt8.self)
-            var blue = 0, green = 0, indigo = 0
+            var terracotta = 0, sage = 0, slate = 0
             for offset in stride(from: 0, to: data.count, by: 4) {
                 let r = Int(data[offset]), g = Int(data[offset + 1]), b = Int(data[offset + 2])
-                if b > 150, b > g + 40, g > 60, r < 100 { blue += 1 }
-                if g > 130, g > r + 50, g > b + 50 { green += 1 }
-                if r > 70, abs(r - g) < 30, b > r + 90 { indigo += 1 }
+                if r > 150, r > g + 60, g > b + 10 { terracotta += 1 }
+                if g > 100, g > r + 20, g > b + 30 { sage += 1 }
+                if b > 110, b > r + 35, b > g + 20 { slate += 1 }
             }
-            return (blue, green, indigo)
+            return (terracotta, sage, slate)
         }
-        XCTAssertGreaterThan(colors.blue, 500, "Vocabulary bars are missing", file: file, line: line)
-        XCTAssertGreaterThan(colors.green, 500, "Speaking bars are missing", file: file, line: line)
-        XCTAssertGreaterThan(colors.indigo, 300, "Quiz bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.terracotta, 500, "Vocabulary bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.sage, 500, "Speaking bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.slate, 300, "Quiz bars are missing", file: file, line: line)
     }
 }

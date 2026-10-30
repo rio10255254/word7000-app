@@ -109,9 +109,11 @@ struct TodayView: View {
         return VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(greeting)
-                        .font(.display(.subheadline, weight: .semibold))
-                        .foregroundStyle(Self.cream.opacity(0.78))
+                    if !large {
+                        Text(greeting)
+                            .font(.display(.subheadline, weight: .semibold))
+                            .foregroundStyle(Self.cream.opacity(0.78))
+                    }
                     Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
                         .font(.display(.title, weight: .bold))
                         .foregroundStyle(Self.cream)
@@ -124,6 +126,9 @@ struct TodayView: View {
                 // At the largest text sizes the words need the room more than the mascot does.
                 if !large { mascot }
             }
+
+            // With very large text the way in comes first, before it scrolls out of reach.
+            if large { startActions }
 
             statsLayout {
                 ProgressRing(fraction: model.dailyFraction, color: Self.cream, lineWidth: 11, track: Self.cream.opacity(0.22)) {
@@ -168,36 +173,42 @@ struct TodayView: View {
                 Spacer(minLength: 0)
             }
 
-            Button {
-                model.ensureStudySession()
-                start(.study)
-            } label: {
-                HStack(spacing: 8) {
-                    Text(model.primaryActionTitle)
-                    Image(systemName: "arrow.right")
-                }
-                .font(.headline)
-                .foregroundStyle(model.goalDone ? Self.doneDeep : Self.deep)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 15)
-                .background(Self.cream, in: Capsule())
-                .shadow(color: PremiumSurface.umber.opacity(0.3), radius: 10, y: 5)
-            }
-            .buttonStyle(SoftPressStyle())
-            .disabled(plan.total == 0)
-            .opacity(plan.total == 0 ? 0.55 : 1)
-            .accessibilityIdentifier("today-start")
-
-            if model.settings.studyFilter.isActive {
-                Button(L.t("調整學習範圍", "Adjust study scope")) { studySettingsOpen = true }
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Self.cream.opacity(0.9))
-                    .frame(maxWidth: .infinity)
-            }
+            if !large { startActions }
         }
         .padding(20)
         .background { HeroBackground(done: model.goalDone) }
         .animation(reduceMotion ? nil : Motion.reveal, value: model.goalDone)
+    }
+
+    @ViewBuilder
+    private var startActions: some View {
+        let plan = model.studyPlan
+        Button {
+            model.ensureStudySession()
+            start(.study)
+        } label: {
+            HStack(spacing: 8) {
+                Text(model.primaryActionTitle)
+                Image(systemName: "arrow.right")
+            }
+            .font(.headline)
+            .foregroundStyle(model.goalDone ? Self.doneDeep : Self.deep)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 15)
+            .background(Self.cream, in: Capsule())
+            .shadow(color: PremiumSurface.umber.opacity(0.3), radius: 10, y: 5)
+        }
+        .buttonStyle(SoftPressStyle())
+        .disabled(plan.total == 0)
+        .opacity(plan.total == 0 ? 0.55 : 1)
+        .accessibilityIdentifier("today-start")
+
+        if model.settings.studyFilter.isActive {
+            Button(L.t("調整學習範圍", "Adjust study scope")) { studySettingsOpen = true }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Self.cream.opacity(0.9))
+                .frame(maxWidth: .infinity)
+        }
     }
 
     private var mascot: some View {

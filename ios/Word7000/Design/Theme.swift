@@ -5,7 +5,7 @@ import UIKit
 /// the one accent; sage means known, ochre review and streaks, brick a miss.
 /// Every colour has a light and a dark tone, so both modes stay warm.
 enum Palette {
-    static let accent = Color.accentColor
+    static let accent = Color(uiColor: WarmTone.clay)
     static let known = Color(uiColor: WarmTone.sage)
     static let review = Color(uiColor: WarmTone.ochre)
     static let miss = Color(uiColor: WarmTone.brick)
@@ -23,6 +23,7 @@ enum Palette {
 /// The palette's tones as UIKit colours, for places SwiftUI does not reach
 /// (navigation bar titles) and as the source of `Palette`.
 enum WarmTone {
+    static let clay = tone(0xC96442, 0xD97757)
     static let paper = tone(0xF3EEE4, 0x22201C)
     static let ivory = tone(0xFBF8F2, 0x2E2B26)
     static let khaki = tone(0xE2D8C6, 0x443F37)
@@ -44,11 +45,14 @@ enum WarmTone {
                 blue: CGFloat(value & 0xFF) / 255, alpha: 1)
     }
 
-    /// Serif navigation titles in warm ink, matching the display face.
-    static func styleNavigationBars() {
-        let appearance = UINavigationBar.appearance()
-        appearance.largeTitleTextAttributes = [.font: serif(.largeTitle), .foregroundColor: ink]
-        appearance.titleTextAttributes = [.font: serif(.headline), .foregroundColor: ink]
+    /// Serif navigation titles in warm ink, matching the display face, and
+    /// terracotta for the bars' buttons and the selected tab.
+    static func styleSystemBars() {
+        let navigation = UINavigationBar.appearance()
+        navigation.largeTitleTextAttributes = [.font: serif(.largeTitle), .foregroundColor: ink]
+        navigation.titleTextAttributes = [.font: serif(.headline), .foregroundColor: ink]
+        navigation.tintColor = clay
+        UITabBar.appearance().tintColor = clay
     }
 
     private static func serif(_ style: UIFont.TextStyle) -> UIFont {
@@ -150,7 +154,7 @@ struct PremiumSurface: View {
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         shape
             .fill(fill)
-            .overlay { PaperGrain(opacity: 0.6).clipShape(shape) }
+            .overlay { PaperGrain(opacity: 0.35).clipShape(shape) }
             .overlay { shape.strokeBorder(Palette.khaki, lineWidth: 1) }
             .overlay {
                 shape.strokeBorder(LinearGradient(colors: [.white.opacity(dark ? 0.08 : 0.85), .white.opacity(0)], startPoint: .top, endPoint: .center),
@@ -216,7 +220,7 @@ struct AmbientBackground: View {
             }
         }
         .background(Palette.background)
-        .overlay { PaperGrain() }
+        .overlay { PaperGrain(opacity: 0.55) }
         .ignoresSafeArea()
         .allowsHitTesting(false)
         .accessibilityHidden(true)

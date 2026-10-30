@@ -253,15 +253,18 @@ final class ScanPickerTests: XCTestCase {
     /// The system photo picker animates away on its own schedule, and on a slow
     /// simulator the scanner underneath is not tappable until it has gone.
     /// A Cancel tap made while the picker is still loading can be dropped too,
-    /// so tap it again while it is still there. Mid-animation, Cancel can have
-    /// an empty frame, and reading `isHittable` then fails the test outright, so
-    /// it is read only once Cancel has a frame. (A `hittable` predicate did not
-    /// come true for the picker's out-of-process Cancel on iOS 18.)
+    /// so tap it again while it is still there. Mid-animation, reading
+    /// `isHittable` on the picker's out-of-process Cancel can fail the test
+    /// outright ("Activation point invalid", iOS 27), even with a frame, and a
+    /// `hittable` predicate never came true for it on iOS 18. So Cancel is
+    /// tapped by position once its centre is on screen.
     private func dismissPhotoPicker(in app: XCUIApplication) {
         let choose = app.buttons["scan-choose-photo"]
         for _ in 0..<3 {
             let cancel = cancelButton(in: app)
-            if cancel.exists, !cancel.frame.isEmpty, cancel.isHittable { cancel.tap() }
+            if cancel.exists, !cancel.frame.isEmpty, app.frame.contains(CGPoint(x: cancel.frame.midX, y: cancel.frame.midY)) {
+                cancel.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+            }
             let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: choose)
             if XCTWaiter.wait(for: [ready], timeout: 8) == .completed { return }
         }

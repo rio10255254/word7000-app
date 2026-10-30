@@ -183,9 +183,9 @@ struct PaperGrain: View {
 }
 
 /// The page behind a screen: warm paper with its grain, and two soft glows of
-/// colour that drift very slowly. They hold still under Reduce Motion.
+/// colour. They stay still: an animation that never ends would keep the
+/// screen busy (and the battery working) for no real gain.
 struct AmbientBackground: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var colorScheme
     var tint: Color = Palette.accent
     var secondTint: Color = Palette.review
@@ -194,7 +194,7 @@ struct AmbientBackground: View {
         let dark = colorScheme == .dark
         GeometryReader { proxy in
             let width = proxy.size.width
-            let glows = ZStack {
+            ZStack {
                 Circle()
                     .fill(tint.opacity(dark ? 0.16 : 0.1))
                     .frame(width: width * 1.1, height: width * 1.1)
@@ -207,17 +207,6 @@ struct AmbientBackground: View {
                     .offset(x: width * 0.45, y: -width * 0.15)
             }
             .frame(width: width, height: proxy.size.height, alignment: .top)
-            if reduceMotion {
-                glows
-            } else {
-                glows.phaseAnimator([false, true]) { content, drifted in
-                    content
-                        .offset(x: drifted ? 24 : -18, y: drifted ? 16 : -10)
-                        .scaleEffect(drifted ? 1.06 : 1)
-                } animation: { _ in
-                    Animation.easeInOut(duration: 9)
-                }
-            }
         }
         .background(Palette.background)
         .overlay { PaperGrain(opacity: 0.55) }

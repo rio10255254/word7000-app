@@ -681,8 +681,10 @@ export type StudyQueueOptions = {
 /**
  * Picks the cards for one study session. Words that are due for review come
  * first (oldest due date first), then words never seen before picked at
- * random from the whole pool, and only when both run out does it pull known
- * words ahead of their schedule. New words used to come in library order, so
+ * random from the whole pool. Due words already studied today (a word missed
+ * earlier today stays due) wait until after the new words, so the next
+ * session does not open with the cards just practised. Only when all of those
+ * run out does it pull known words ahead of their schedule. New words used to come in library order, so
  * with "all levels" every session was Core 1. The chosen cards are then
  * shuffled so reviews and new words mix.
  */
@@ -699,6 +701,7 @@ export function buildStudyQueue(
 
   const due: Array<{ date: string; word: WordEntry; struggling: boolean }> = [];
   const fresh: WordEntry[] = [];
+  const seenToday: Array<{ date: string; word: WordEntry; struggling: boolean }> = [];
   const ahead: Array<{ date: string; word: WordEntry }> = [];
   for (const word of words) {
     const progress = state.words[word.id];
@@ -706,17 +709,22 @@ export function buildStudyQueue(
     if (dueDate === null) {
       fresh.push(word);
     } else if (dueDate <= today) {
-      due.push({ date: dueDate, struggling: progress?.status === 'review', word });
+      (progress?.lastStudied === today ? seenToday : due)
+        .push({ date: dueDate, struggling: progress?.status === 'review', word });
     } else {
       ahead.push({ date: dueDate, word });
     }
   }
 
-  due.sort((left, right) => left.date.localeCompare(right.date) || Number(right.struggling) - Number(left.struggling));
+  const byDue = (left: { date: string; struggling: boolean }, right: { date: string; struggling: boolean }) =>
+    left.date.localeCompare(right.date) || Number(right.struggling) - Number(left.struggling);
+  due.sort(byDue);
+  seenToday.sort(byDue);
   ahead.sort((left, right) => left.date.localeCompare(right.date));
   const chosen = [
     ...due.map((entry) => entry.word),
     ...shuffleWithSeed(fresh, `${seed}:fresh`),
+    ...seenToday.map((entry) => entry.word),
     ...ahead.map((entry) => entry.word),
   ].slice(0, size);
 

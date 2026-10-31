@@ -84,6 +84,37 @@ final class LearningScheduleTests: XCTestCase {
         }
     }
 
+    func testWordsStudiedTodayWaitUntilAfterTheNewOnes() {
+        let words = (0..<10).map { word("w\($0)") }
+        var state = ProgressState.empty
+        state = LearningEngine.markReview(state, wordId: "w0", today: "2026-10-20", changedAt: "2026-10-20T08:00:00.000Z")
+        state = LearningEngine.markReview(state, wordId: "w1", today: "2026-10-28", changedAt: "2026-10-28T08:00:00.000Z")
+        let queue = LearningEngine.buildStudyQueue(words: words, state: state, today: "2026-10-28", limit: 4, seed: "q").map(\.id)
+        XCTAssertTrue(queue.contains("w0"))
+        XCTAssertFalse(queue.contains("w1"))
+        let counts = LearningEngine.studyQueueCounts(words: words, state: state, today: "2026-10-28", limit: 4)
+        XCTAssertEqual([counts.fresh, counts.review, counts.total], [3, 1, 4])
+        // When nothing else is left they still come.
+        let onlyThem = LearningEngine.buildStudyQueue(words: Array(words.prefix(2)), state: state, today: "2026-10-28", limit: 4, seed: "q")
+        XCTAssertEqual(Set(onlyThem.map(\.id)), ["w0", "w1"])
+    }
+
+    func testAMissedCardComesBackOnceAndNeverStraightAway() {
+        var session = StudySession(cardIds: ["a", "b", "c"], sourceKey: "k")
+        session = session.grading("a", as: .review)
+        session = session.grading("b", as: .known)
+        session = session.grading("c", as: .known)
+        session = session.grading("a", as: .review)
+        XCTAssertTrue(session.isComplete)
+        XCTAssertEqual(session.cardIds, ["a", "b", "c", "a"])
+
+        var last = StudySession(cardIds: ["a", "b"], sourceKey: "k")
+        last = last.grading("a", as: .known)
+        last = last.grading("b", as: .review)
+        XCTAssertTrue(last.isComplete)
+        XCTAssertEqual(last.reviewIds, ["b"])
+    }
+
     // MARK: Merging the daily count
 
     func testMergingTheSameDayCountsEveryWordStudiedOnEitherDevice() {

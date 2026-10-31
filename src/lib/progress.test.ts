@@ -546,6 +546,18 @@ describe('study queue', () => {
     expect(queue).not.toContain('w02');
   });
 
+  test('saves words already studied today until after the new ones', () => {
+    let state = emptyProgress();
+    state = markReview(state, 'w00', '2026-06-20');
+    state = markReview(state, 'w01', today);
+
+    const queue = buildStudyQueue(words, state, today, { limit: 4, seed: 'queue' }).map((entry) => entry.id);
+
+    expect(queue).toContain('w00');
+    expect(queue).not.toContain('w01');
+    expect(buildStudyQueue(words.slice(0, 2), state, today, { limit: 4 }).map((entry) => entry.id).sort()).toEqual(['w00', 'w01']);
+  });
+
   test('draws new words from the whole pool instead of the start of the library', () => {
     const levels = new Set<number>();
     for (let run = 0; run < 20; run += 1) {

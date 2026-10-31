@@ -1962,8 +1962,7 @@
    "a",
    "f",
    "c",
-   "g",
-   "a"
+   "g"
   ],
   "index": 7,
   "initialCount": 7,
@@ -1978,7 +1977,7 @@
    "a"
   ],
   "requeued": {
-   "a": 2,
+   "a": 1,
    "c": 1
   },
   "sourceKey": "k"

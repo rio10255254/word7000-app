@@ -378,6 +378,10 @@ public enum LearningEngine {
 
         var due: [(date: String, word: WordEntry, struggling: Bool, order: Int)] = []
         var fresh: [WordEntry] = []
+        // Due words already studied today (a word missed earlier today stays
+        // due) wait until after the new ones, so the next session does not
+        // open with the cards just practised.
+        var seenToday: [(date: String, word: WordEntry, struggling: Bool, order: Int)] = []
         var ahead: [(date: String, word: WordEntry, order: Int)] = []
         for (order, word) in words.enumerated() {
             let progress = state.words[word.id]
@@ -386,19 +390,26 @@ public enum LearningEngine {
                 continue
             }
             if dueDate <= today {
-                due.append((dueDate, word, progress?.status == .review, order))
+                if progress?.lastStudied == today {
+                    seenToday.append((dueDate, word, progress?.status == .review, order))
+                } else {
+                    due.append((dueDate, word, progress?.status == .review, order))
+                }
             } else {
                 ahead.append((dueDate, word, order))
             }
         }
-        due.sort {
+        let byDue: ((date: String, word: WordEntry, struggling: Bool, order: Int), (date: String, word: WordEntry, struggling: Bool, order: Int)) -> Bool = {
             if $0.date != $1.date { return $0.date < $1.date }
             if $0.struggling != $1.struggling { return $0.struggling }
             return $0.order < $1.order
         }
+        due.sort(by: byDue)
+        seenToday.sort(by: byDue)
         ahead.sort { $0.date != $1.date ? $0.date < $1.date : $0.order < $1.order }
 
-        let chosen = Array((due.map(\.word) + SeededRandom.shuffle(fresh, seed: "\(seed):fresh") + ahead.map(\.word)).prefix(size))
+        let chosen = Array((due.map(\.word) + SeededRandom.shuffle(fresh, seed: "\(seed):fresh")
+            + seenToday.map(\.word) + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
     }
 
@@ -407,16 +418,18 @@ public enum LearningEngine {
     public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int) -> (fresh: Int, review: Int, total: Int) {
         let size = max(0, limit)
         guard size > 0 else { return (0, 0, 0) }
-        var due = 0, fresh = 0, ahead = 0
+        var due = 0, fresh = 0, later = 0
         for word in words {
-            guard let dueDate = reviewDueDate(state.words[word.id]) else {
+            let progress = state.words[word.id]
+            guard let dueDate = reviewDueDate(progress) else {
                 fresh += 1
                 continue
             }
-            if dueDate <= today { due += 1 } else { ahead += 1 }
+            if dueDate <= today, progress?.lastStudied != today { due += 1 } else { later += 1 }
         }
-        // Due words fill the queue first, then new ones, then words ahead of schedule.
-        let total = min(size, due + fresh + ahead)
+        // Due words fill the queue first, then new ones, then due words already
+        // studied today and words ahead of schedule.
+        let total = min(size, due + fresh + later)
         let chosenFresh = min(fresh, max(0, size - due))
         return (chosenFresh, total - chosenFresh, total)
     }

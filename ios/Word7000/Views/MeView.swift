@@ -309,7 +309,7 @@ private struct ProfileCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
-                MascotBuddy(mood: mastered > 0 ? .happy : .idle, size: 56, lines: buddyLines,
+                MascotBuddy(mood: model.progress.studiedToday > 0 ? .happy : .smug, size: 56, lines: buddyLines,
                             greeting: insightHeadline, tip: buddyTip, fidgets: true, speech: $spoken)
                     .accessibilityIdentifier("me-mascot")
                 ZStack(alignment: .leading) {
@@ -381,16 +381,16 @@ private struct ProfileCard: View {
             return MascotTip(text: insightHeadline) { chatOpen = true }
         }
         guard CloudAssistant.shared.offered else { return nil }
-        return MascotTip(text: L.t("要我幫你看看最近學得怎樣嗎？", "Shall I look at how you're doing?")) { chatOpen = true }
+        return MascotTip(text: L.t("要我看看你最近到底有沒有認真？", "Want me to check if you've actually been trying?")) { chatOpen = true }
     }
 
     /// What the companion says when tapped here: how far you have come.
     private var buddyLines: [String] {
         let streak = model.progress.streak
-        var lines = [L.t("已經熟記 \(mastered) 個字了！", "\(mastered) words mastered!")]
-        if streak > 0 { lines.append(L.t("連續 \(streak) 天，好厲害！", "\(streak) days in a row!")) }
-        if reviewing > 0 { lines.append(L.t("還有 \(reviewing) 個字等你複習", "\(reviewing) words to review")) }
-        lines.append(L.t("我們一起慢慢變強～", "Let's keep growing together"))
+        var lines = [L.t("熟記 \(mastered) 個字。離 7000 還很遠喔。", "\(mastered) words down. Only a few thousand to go.")]
+        if streak > 0 { lines.append(L.t("連續 \(streak) 天。斷掉的話，我會記得。", "\(streak) days in a row. If it breaks, I'll remember.")) }
+        if reviewing > 0 { lines.append(L.t("\(reviewing) 個字等你複習，它們很寂寞。", "\(reviewing) words waiting for review. They're lonely.")) }
+        lines.append(L.t("我會一直盯著你的進度。", "I'll be keeping an eye on your progress."))
         return lines
     }
 

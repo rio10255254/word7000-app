@@ -1,4 +1,4 @@
-// Draws the native app icon: the companion, a fluffy ginger kitten, with the
+// Draws the native app icon: the companion, a flat abstract cat, with the
 // same shapes and proportions as `ios/Word7000/Design/Mascot.swift`, in the
 // three iOS home-screen appearances (light, dark and tinted). Writes opaque
 // 1024 px PNGs (the App Store refuses an icon with an alpha channel).
@@ -13,15 +13,9 @@ const SIZE = 1024;
 const OUT = 'ios/Word7000/Assets.xcassets/AppIcon.appiconset';
 
 const warm = {
-  furTop: '#FAC48F',
-  furBottom: '#E38A57',
-  shade: '#944929',
-  stripe: '#C26638',
-  cream: '#FFF2DB',
-  innerEar: '#FAB3A8',
-  nose: '#ED8585',
-  ink: '#3B2619',
-  blush: '#F28073',
+  fur: '#EE7F4E',
+  shade: '#D2603A',
+  ink: '#2B1A12',
 };
 
 const variants = [
@@ -31,7 +25,7 @@ const variants = [
     background: `<radialGradient id="bg" cx="0.3" cy="0.2" r="1">
         <stop offset="0" stop-color="#FFF8EE"/><stop offset="0.6" stop-color="#F8E4CC"/><stop offset="1" stop-color="#EDC9A3"/>
       </radialGradient>`,
-    shadow: 'rgba(150, 80, 40, 0.3)',
+    shadow: 'rgba(170, 80, 40, 0.28)',
   },
   {
     file: 'icon-1024-dark.png',
@@ -45,15 +39,9 @@ const variants = [
     // Tinted icons are grayscale; the system colours them by brightness.
     file: 'icon-1024-tinted.png',
     palette: {
-      furTop: '#F4F4F4',
-      furBottom: '#BDBDBD',
-      shade: '#5A5A5A',
-      stripe: '#8A8A8A',
-      cream: '#FFFFFF',
-      innerEar: '#D6D6D6',
-      nose: '#9A9A9A',
-      ink: '#2E2E2E',
-      blush: '#CFCFCF',
+      fur: '#E6E6E6',
+      shade: '#B4B4B4',
+      ink: '#262626',
     },
     background: `<radialGradient id="bg" cx="0.5" cy="0.5" r="0.7">
         <stop offset="0" stop-color="#1C1C1C"/><stop offset="1" stop-color="#000000"/>
@@ -95,132 +83,88 @@ try {
   await browser.close();
 }
 
-/** The whole icon: background, a soft ground shadow and the kitten. */
+/** The whole icon: background, a soft ground shadow and the cat. */
 function iconSvg({ palette, background, shadow }) {
-  const s = SIZE * 0.7;
-  // The tail reaches out to the right, so the body sits a little left of centre.
-  const ox = (SIZE - s) / 2 - s * 0.05;
-  const oy = (SIZE - s) / 2 + s * 0.03;
+  const s = SIZE * 0.74;
+  // The tail rises on the right, so the body sits a little left of centre.
+  const ox = (SIZE - s) / 2 - s * 0.06;
+  const oy = (SIZE - s) / 2 + s * 0.02;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}">
   <defs>
     ${background}
-    <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="${palette.furTop}"/><stop offset="1" stop-color="${palette.furBottom}"/>
-    </linearGradient>
-    <linearGradient id="shade" x1="0" y1="0.5" x2="0" y2="1">
-      <stop offset="0" stop-color="${palette.shade}" stop-opacity="0"/><stop offset="1" stop-color="${palette.shade}" stop-opacity="0.3"/>
-    </linearGradient>
-    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="0.5">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.6"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s * 0.025}"/></filter>
-    <filter id="sheen" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s * 0.03}"/></filter>
     <filter id="ground" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s * 0.03}"/></filter>
   </defs>
   <rect width="${SIZE}" height="${SIZE}" fill="url(#bg)"/>
-  <ellipse cx="${ox + s * 0.5}" cy="${oy + s * 0.94}" rx="${s * 0.34}" ry="${s * 0.05}" fill="${shadow}" filter="url(#ground)"/>
-  ${kitten(s, ox, oy, palette)}
+  <ellipse cx="${ox + s * 0.5}" cy="${oy + s * 0.97}" rx="${s * 0.36}" ry="${s * 0.045}" fill="${shadow}" filter="url(#ground)"/>
+  ${cat(s, ox, oy, palette)}
 </svg>`;
 }
 
-/** The kitten in an s × s square at (ox, oy), as Mascot.swift draws it at rest. */
-function kitten(s, ox, oy, p) {
+/** The cat in an s × s square at (ox, oy), as Mascot.swift draws it at rest:
+ * flat colour, triangle ears, a long hooked tail and its unimpressed face. */
+function cat(s, ox, oy, p) {
   const at = (fx, fy) => [ox + s / 2 + fx * s, oy + s / 2 + fy * s];
   const frame = (fx, fy) => [ox + fx * s, oy + fy * s];
   const parts = [];
 
-  // Tail, curling up behind on the right, with a cream tip.
-  const [bx, by] = frame(0.74, 0.84);
-  const [c1x, c1y] = frame(1.1, 0.8);
-  const [mx, my] = frame(1.06, 0.48);
-  const [c2x, c2y] = frame(1.04, 0.3);
-  const [tx, ty] = frame(0.95, 0.3);
-  parts.push(`<path d="M${bx},${by} Q${c1x},${c1y} ${mx},${my} Q${c2x},${c2y} ${tx},${ty}" fill="none" stroke="url(#fur)" stroke-width="${s * 0.13}" stroke-linecap="round"/>`);
-  parts.push(`<circle cx="${tx}" cy="${ty}" r="${s * 0.065}" fill="${p.cream}"/>`);
+  // Tail (MascotTail).
+  const [bx, by] = frame(0.8, 0.78);
+  const [c1x, c1y] = frame(1.06, 0.74);
+  const [mx, my] = frame(1.02, 0.42);
+  const [c2x, c2y] = frame(0.98, 0.14);
+  const [tx, ty] = frame(1.1, 0.12);
+  parts.push(`<path d="M${bx},${by} Q${c1x},${c1y} ${mx},${my} Q${c2x},${c2y} ${tx},${ty}" fill="none" stroke="${p.fur}" stroke-width="${s * 0.1}" stroke-linecap="round"/>`);
 
-  // Ears, tilted out, pink inside.
+  // Ears (MascotEar), tipped slightly outward.
   for (const side of [-1, 1]) {
-    const w = s * 0.25;
-    const h = s * 0.25;
-    const [cx, cy] = at(side * 0.24, -0.395);
-    const iw = s * 0.13;
-    const ih = s * 0.15;
-    parts.push(`<g transform="rotate(${side * 20} ${cx} ${cy + h / 2})">
-      <path d="${earPath(cx - w / 2, cy - h / 2, w, h)}" fill="url(#fur)"/>
-      <path d="${earPath(cx - iw / 2, cy + h / 2 - s * 0.04 - ih, iw, ih)}" fill="${p.innerEar}"/>
-    </g>`);
+    const w = s * 0.24;
+    const h = s * 0.22;
+    const [cx, base] = at(side * 0.24, -0.25);
+    const apex = cx + side * 0.08 * w;
+    parts.push(`<path d="M${cx - w / 2},${base} L${apex},${base - h} L${cx + w / 2},${base}Z" fill="${p.fur}" stroke="${p.fur}" stroke-width="${s * 0.03}" stroke-linejoin="round" transform="rotate(${side * 8} ${cx} ${base})"/>`);
   }
 
-  // The fluffy body, cream chest, brow stripes, sheen and rim light.
-  const [bodyX, bodyY] = at(0, 0.04);
-  const fluff = fluffPath(bodyX, bodyY, s * 0.86, s * 0.78);
-  parts.push(`<path d="${fluff}" fill="url(#fur)"/>`);
-  parts.push(`<path d="${fluff}" fill="url(#shade)"/>`);
-  const [chestX, chestY] = at(0, 0.21);
-  parts.push(`<ellipse cx="${chestX}" cy="${chestY}" rx="${s * 0.22}" ry="${s * 0.15}" fill="${p.cream}" fill-opacity="0.95" filter="url(#soft)"/>`);
-  for (const [dx, length, angle] of [[-0.065, 0.08, -12], [0, 0.11, 0], [0.065, 0.08, 12]]) {
-    const [x, y] = at(dx, -0.315);
-    parts.push(`<rect x="${x - s * 0.015}" y="${y}" width="${s * 0.03}" height="${s * length}" rx="${s * 0.015}" fill="${p.stripe}" fill-opacity="0.55" transform="rotate(${angle} ${x} ${y + (s * length) / 2})"/>`);
-  }
-  const [sheenX, sheenY] = at(-0.2, -0.19);
-  parts.push(`<ellipse cx="${sheenX}" cy="${sheenY}" rx="${s * 0.13}" ry="${s * 0.06}" fill="#FFFFFF" fill-opacity="0.4" transform="rotate(-24 ${sheenX} ${sheenY})" filter="url(#sheen)"/>`);
-  parts.push(`<path d="${fluff}" fill="none" stroke="url(#rim)" stroke-width="${Math.max(1, s * 0.012)}"/>`);
-
-  // Front paws.
+  // Feet, then the body (MascotLoaf) with its darker bottom band.
   for (const side of [-1, 1]) {
-    const [x, y] = at(side * 0.155, 0.4);
-    parts.push(`<ellipse cx="${x}" cy="${y}" rx="${s * 0.085}" ry="${s * 0.045}" fill="${p.cream}" stroke="${p.shade}" stroke-opacity="0.35" stroke-width="${s * 0.01}"/>`);
+    const [x, y] = at(side * 0.17, 0.44);
+    parts.push(`<rect x="${x - s * 0.07}" y="${y - s * 0.03}" width="${s * 0.14}" height="${s * 0.06}" rx="${s * 0.03}" fill="${p.shade}"/>`);
   }
+  const [bodyX, bodyY] = at(0, 0.08);
+  const loaf = loafPath(bodyX, bodyY, s * 0.82, s * 0.7);
+  const [, bandTop] = at(0, 0.33);
+  parts.push(`<clipPath id="body"><path d="${loaf}"/></clipPath>`);
+  parts.push(`<path d="${loaf}" fill="${p.fur}"/>`);
+  parts.push(`<rect x="${ox - s}" y="${bandTop}" width="${s * 3}" height="${s}" fill="${p.shade}" clip-path="url(#body)"/>`);
 
-  // Face: eyes with a highlight, cheeks, whiskers, nose and a ω mouth.
+  // Heavy-lidded eyes and a small ω.
+  const d = s * 0.12;
+  const lid = 0.35;
   for (const side of [-1, 1]) {
-    const [ex, ey] = at(side * 0.1325, -0.02);
-    parts.push(`<rect x="${ex - s * 0.0475}" y="${ey - s * 0.065}" width="${s * 0.095}" height="${s * 0.13}" rx="${s * 0.0475}" fill="${p.ink}"/>`);
-    parts.push(`<circle cx="${ex + s * 0.018}" cy="${ey - s * 0.0275}" r="${s * 0.0175}" fill="#FFFFFF"/>`);
-    const [kx, ky] = at(side * 0.235, 0.08);
-    parts.push(`<ellipse cx="${kx}" cy="${ky}" rx="${s * 0.055}" ry="${s * 0.03}" fill="${p.blush}" fill-opacity="0.55"/>`);
-    [-11, 0, 11].forEach((angle, row) => {
-      const [wx, wy] = at(side * 0.33, 0.09 + (row - 1) * 0.033);
-      parts.push(`<rect x="${wx - s * 0.08}" y="${wy - s * 0.0055}" width="${s * 0.16}" height="${s * 0.011}" rx="${s * 0.0055}" fill="${p.ink}" fill-opacity="0.4" transform="rotate(${side * angle} ${wx} ${wy})"/>`);
-    });
+    const [ex, ey] = at(side * 0.15, 0);
+    const top = ey - d / 2 + d * lid;
+    parts.push(`<clipPath id="eye${side}"><rect x="${ex - d}" y="${top}" width="${d * 2}" height="${d}"/></clipPath>`);
+    parts.push(`<circle cx="${ex}" cy="${ey}" r="${d / 2}" fill="${p.ink}" clip-path="url(#eye${side})"/>`);
+    parts.push(`<rect x="${ex - d * 0.65}" y="${top - s * 0.012}" width="${d * 1.3}" height="${s * 0.024}" rx="${s * 0.012}" fill="${p.ink}"/>`);
   }
-  const [nx, ny] = at(0, 0.07);
-  const nw = s * 0.055;
-  const nh = s * 0.035;
-  parts.push(`<path d="M${nx - nw / 2},${ny - nh / 2} L${nx + nw / 2},${ny - nh / 2} L${nx},${ny + nh / 2}Z" fill="${p.nose}" stroke="${p.nose}" stroke-width="${s * 0.014}" stroke-linejoin="round"/>`);
-  const [mouthX, mouthY] = at(0, 0.12);
-  const mw = s * 0.11;
+  const [mouthX, mouthY] = at(0, 0.13);
+  const mw = s * 0.1;
   const mh = s * 0.03;
   const top = mouthY - mh / 2;
-  parts.push(`<path d="M${mouthX},${top - 0.9 * mh} L${mouthX},${top} M${mouthX - mw / 2},${top} Q${mouthX - mw / 4},${top + 2 * mh} ${mouthX},${top} Q${mouthX + mw / 4},${top + 2 * mh} ${mouthX + mw / 2},${top}" fill="none" stroke="${p.ink}" stroke-width="${s * 0.022}" stroke-linecap="round" stroke-linejoin="round"/>`);
+  parts.push(`<path d="M${mouthX - mw / 2},${top} Q${mouthX - mw / 4},${top + 2 * mh} ${mouthX},${top} Q${mouthX + mw / 4},${top + 2 * mh} ${mouthX + mw / 2},${top}" fill="none" stroke="${p.ink}" stroke-width="${s * 0.02}" stroke-linecap="round" stroke-linejoin="round"/>`);
 
   return parts.join('\n  ');
 }
 
-/** MascotFluff: a rounded squircle edged with little tufts of fur. */
-function fluffPath(cx, cy, width, height, tufts = 26, puff = 0.045) {
-  const rx = width / 2;
-  const ry = height / 2;
-  const point = (angle, scale) => {
+/** MascotLoaf: a squircle, between a circle and a rounded square. */
+function loafPath(cx, cy, width, height, steps = 96) {
+  const points = [];
+  for (let i = 0; i < steps; i += 1) {
+    const angle = (2 * Math.PI * i) / steps;
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return [cx + Math.sign(c) * Math.abs(c) ** 0.8 * rx * scale, cy + Math.sign(s) * Math.abs(s) ** 0.8 * ry * scale];
-  };
-  const step = (2 * Math.PI) / tufts;
-  const [x0, y0] = point(0, 1 - puff);
-  let d = `M${x0},${y0}`;
-  for (let i = 0; i < tufts; i += 1) {
-    const from = i * step;
-    const [qx, qy] = point(from + step / 2, 1 + puff);
-    const [ex, ey] = point(from + step, 1 - puff);
-    d += ` Q${qx},${qy} ${ex},${ey}`;
+    points.push(`${cx + Math.sign(c) * Math.abs(c) ** 0.6 * (width / 2)},${cy + Math.sign(s) * Math.abs(s) ** 0.6 * (height / 2)}`);
   }
-  return `${d}Z`;
-}
-
-/** MascotEar: a pointed ear with a softly rounded tip. */
-function earPath(x, y, w, h) {
-  return `M${x},${y + h} L${x + w * 0.38},${y + h * 0.1} Q${x + w / 2},${y - h * 0.06} ${x + w * 0.62},${y + h * 0.1} L${x + w},${y + h}Z`;
+  return `M${points.join(' L')}Z`;
 }
 
 /** An 8-bit RGB PNG, no alpha channel. */

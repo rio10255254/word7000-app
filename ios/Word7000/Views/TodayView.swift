@@ -413,19 +413,27 @@ struct TodayView: View {
 
     // MARK: Companion
 
+    /// Unimpressed until you practise, and openly smug about it from noon on.
     private var mascotMood: Mascot.Mood {
         if model.goalDone { return .cheer }
         if model.progress.studiedToday > 0 { return .happy }
         let hour = Calendar.current.component(.hour, from: Date())
-        return hour >= 23 || hour < 5 ? .sleepy : .idle
+        if hour >= 23 || hour < 5 { return .sleepy }
+        return hour >= 12 ? .smug : .idle
     }
 
-    /// What it says on arrival: where today stands.
+    /// What it says on arrival: where today stands, and what it thinks of that.
     private var mascotGreeting: String {
         let progress = model.progress
-        if model.goalDone { return L.t("今天的目標完成了！", "Today's goal is done!") }
-        if progress.studiedToday == 0 { return L.t("今天一起學 \(progress.dailyTarget) 個字！", "\(progress.dailyTarget) words today?") }
-        return L.t("再 \(max(0, progress.dailyTarget - progress.studiedToday)) 個就達標！", "\(max(0, progress.dailyTarget - progress.studiedToday)) more to go!")
+        let left = max(0, progress.dailyTarget - progress.studiedToday)
+        let hour = Calendar.current.component(.hour, from: Date())
+        if model.goalDone { return L.t("嗯，還行。明天也這樣，我就不吵你。", "Fine. Not bad. Do it again tomorrow and I'll leave you alone.") }
+        if progress.studiedToday == 0 {
+            if hour >= 21 { return L.t("都幾點了，今天的字呢？", "It's this late and not one word?") }
+            if hour >= 12 { return L.t("今天的 \(progress.dailyTarget) 個字不會自己背好喔。", "Those \(progress.dailyTarget) words won't learn themselves.") }
+            return L.t("早。\(progress.dailyTarget) 個字，我看著你。", "Morning. \(progress.dailyTarget) words. I'm watching.")
+        }
+        return L.t("才 \(progress.studiedToday) 個？還差 \(left) 個，我數著呢。", "Only \(progress.studiedToday)? \(left) to go. I'm counting.")
     }
 
     /// Its AI note: today's insight headline once worked out (tap for the
@@ -435,15 +443,23 @@ struct TodayView: View {
             return MascotTip(text: insightHeadline) { mascotChatOpen = true }
         }
         guard CloudAssistant.shared.offered else { return nil }
-        return MascotTip(text: L.t("要我幫你看看最近學得怎樣嗎？", "Shall I look at how you're doing?")) { mascotChatOpen = true }
+        return MascotTip(text: L.t("要我看看你最近到底有沒有認真？", "Want me to check if you've actually been trying?")) { mascotChatOpen = true }
     }
 
-    /// What it says when tapped.
+    /// What it says when tapped: grudging praise once the goal is met,
+    /// otherwise a gentle stream of guilt.
     private var mascotLines: [String] {
         model.goalDone
-            ? [L.t("你超棒的！", "You're amazing!"), L.t("要不要再測驗一下？", "Fancy a quick quiz?"), L.t("明天也要來喔！", "See you tomorrow!")]
-            : [L.t("今天也一起加油！", "Let's do this!"), L.t("再背幾個字吧～", "A few more words?"), L.t("你做得很好喔！", "You're doing great!"),
-               L.t("戳我不會變聰明喔", "Poking me won't make you smarter!"), L.t("學完記得休息一下", "Take a break after this one")]
+            ? [L.t("好啦，你很棒。滿意了吧？", "Fine, you're great. Happy now?"),
+               L.t("要不要順便測驗？還是怕了？", "Quick quiz? Or are you scared?"),
+               L.t("明天同一時間，我會來找你。", "Same time tomorrow. I'll find you."),
+               L.t("今天表現……勉強及格。", "Today was… acceptable.")]
+            : [L.t("戳我也不會幫你背單字。", "Poking me won't learn the words for you."),
+               L.t("你滑手機的時間夠背十個字了。", "That scrolling time? Ten words, easily."),
+               L.t("我沒有在催你，我只是一直看著你。", "I'm not rushing you. I'm just… watching."),
+               L.t("再戳，我就去跟你的連續天數聊聊。", "Poke me again and I'll have a word with your streak."),
+               L.t("背完再來摸我。", "Practise first. Pets later."),
+               L.t("單字們都在等你，好可憐喔。", "Your words are waiting. Poor things.")]
     }
 
     private var daySymbol: String {

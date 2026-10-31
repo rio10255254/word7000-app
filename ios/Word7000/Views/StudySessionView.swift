@@ -244,6 +244,8 @@ struct StudySessionView: View {
             }
         }
         .padding(20)
+        // Collage: keep the words clear of the index card's red margin.
+        .padding(.leading, appStyle == .collage ? 16 : 0)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background {
             if appStyle == .collage {

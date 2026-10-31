@@ -166,7 +166,7 @@ jobs:
           set +e
           TEST_SELECTION=()
           if [ "$CHECKS" = "copy" ]; then
-            TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
+            TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ScreenshotTests/testLightScreens -only-testing:Word7000UITests/ScreenshotTests/testCollageScreens -only-testing:Word7000UITests/ScreenshotTests/testCollageDarkScreens -only-testing:Word7000UITests/ScreenshotTests/testStyleChooserAppearsOnceAndApplies)
           elif [ "$CHECKS" = "coach" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
           elif [ "$CHECKS" = "polish" ]; then

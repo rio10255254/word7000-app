@@ -14,6 +14,34 @@ final class ScreenshotTests: XCTestCase {
 
     func testLightScreens() { walkThrough(theme: "Light") }
     func testDarkScreens() { walkThrough(theme: "Dark") }
+    /// The paper collage style, through the same screens.
+    func testCollageScreens() { walkThrough(theme: "Light", style: "collage") }
+    func testCollageDarkScreens() { walkThrough(theme: "Dark", style: "collage") }
+
+    /// After some practice the cat asks once which style to use; choosing
+    /// the collage closes the sheet and Today redraws in it.
+    func testStyleChooserAppearsOnceAndApplies() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingStyleChooser"]
+        app.launch()
+        XCTAssertTrue(app.buttons["style-choose"].waitForExistence(timeout: 10), "The style chooser did not appear")
+        snap(app, "style-chooser")
+        app.buttons["style-collage"].tap()
+        app.buttons["style-choose"].tap()
+        XCTAssertTrue(app.buttons["style-choose"].waitForNonExistence(timeout: 5), "The style chooser did not close")
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "style-chosen-collage-today")
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        XCTAssertTrue(app.buttons["me-settings"].waitForExistence(timeout: 5))
+        for _ in 0..<4 where !app.buttons["me-settings"].isHittable { app.swipeUp() }
+        app.buttons["me-settings"].tap()
+        XCTAssertTrue(app.buttons["settings-style"].waitForExistence(timeout: 5))
+        for _ in 0..<4 where !app.buttons["settings-style"].isHittable { app.swipeUp() }
+        app.buttons["settings-style"].tap()
+        XCTAssertTrue(app.buttons["style-leather"].waitForExistence(timeout: 5))
+        snap(app, "style-settings")
+    }
 
     /// The English interface for learning Chinese.
     func testChineseModeScreens() {
@@ -158,11 +186,12 @@ final class ScreenshotTests: XCTestCase {
         }
     }
 
-    private func walkThrough(theme: String) {
+    private func walkThrough(theme: String, style: String? = nil) {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTesting\(theme)", "-uiTestingFakePlans"]
+        if style == "collage" { app.launchArguments.append("-uiTestingCollage") }
         app.launch()
-        let prefix = theme.lowercased()
+        let prefix = [style, theme.lowercased()].compactMap { $0 }.joined(separator: "-")
 
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         snap(app, "\(prefix)-1-today")

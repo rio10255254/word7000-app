@@ -141,10 +141,18 @@ struct TrialRecapView: View {
         let week = model.history(days: PlusPolicy.trialDays)
         ScrollView {
             VStack(spacing: 22) {
-                Image(systemName: "hourglass")
-                    .font(.system(size: 40, weight: .semibold))
-                    .foregroundStyle(PlusStyle.gradient)
-                    .symbolEffect(.bounce, value: shown)
+                // The companion holding up the trial's hourglass.
+                Mascot(mood: .happy, size: 84, hop: shown ? 1 : 0)
+                    .overlay(alignment: .bottomTrailing) {
+                        Image(systemName: "hourglass")
+                            .font(.system(size: 22, weight: .semibold))
+                            .foregroundStyle(PlusStyle.gradient)
+                            .symbolEffect(.bounce, value: shown)
+                            .padding(7)
+                            .background(Palette.surface, in: Circle())
+                            .shadow(color: .black.opacity(0.12), radius: 4, y: 2)
+                            .offset(x: 10, y: 4)
+                    }
                     .popIn()
                     .padding(.top, 28)
                 let hasWeek = week.studied + week.activeDays + plus.trialScansUsed > 0

@@ -89,7 +89,7 @@ struct HistoryActivityChart: View {
                 histogram
             } else {
                 ContentUnavailableView {
-                    Label(L.t("還沒有學習紀錄", "No activity yet"), systemImage: "chart.bar")
+                    MascotLabel(mood: .sleepy, title: L.t("還沒有學習紀錄", "No activity yet"), size: compact ? 48 : 72)
                 } description: {
                     Text(L.t("背單字、做測驗或口說練習後，這裡就會出現長條圖。", "Study, take a quiz or practice speaking and your bars appear here."))
                 }

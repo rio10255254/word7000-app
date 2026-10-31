@@ -28,7 +28,7 @@ struct SpellingSessionView: View {
                 if !started {
                     ProgressView()
                 } else if words.isEmpty {
-                    ContentUnavailableView(L.noQuizWords, systemImage: "character.cursor.ibeam")
+                    ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
                 } else if index >= words.count {
                     results
                 } else {
@@ -70,8 +70,9 @@ struct SpellingSessionView: View {
     private func question(_ word: WordEntry) -> some View {
         ScrollView {
             VStack(spacing: 18) {
-                SessionBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)))
-                    .padding(.top, 4)
+                BuddyProgressBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)),
+                                 mood: result.map { outcome -> Mascot.Mood in outcome == .correct ? .happy : .encourage } ?? .thinking,
+                                 hop: correctCount + misses)
 
                 VStack(spacing: 8) {
                     if !word.partOfSpeech.isEmpty {

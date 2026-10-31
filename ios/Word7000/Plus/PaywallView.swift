@@ -99,6 +99,12 @@ struct PaywallView: View {
                 .scaleEffect(appeared || reduceMotion ? 1 : 0.6)
                 .opacity(appeared ? 1 : 0)
                 .modifier(GentleFloat(active: !reduceMotion))
+                // The companion cheering beside the Plus mark.
+                .overlay(alignment: .bottomTrailing) {
+                    Mascot(mood: .cheer, size: 42, hop: appeared ? 1 : 0)
+                        .offset(x: 40, y: 10)
+                        .opacity(appeared ? 1 : 0)
+                }
             Text("Word7000 Plus")
                 .font(.display(.title, weight: .heavy))
             Text(P.headline(reason))

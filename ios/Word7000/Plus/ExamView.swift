@@ -32,7 +32,7 @@ struct ExamView: View {
         NavigationStack {
             Group {
                 if questions.isEmpty {
-                    ContentUnavailableView(L.noQuizWords, systemImage: "timer")
+                    ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
                 } else if finished {
                     results
                 } else {
@@ -114,8 +114,8 @@ struct ExamView: View {
         return VStack(spacing: 16) {
           ScrollView {
            VStack(spacing: 16) {
-            SessionBar(fraction: Double(answers.count) / Double(max(1, questions.count)))
-                .padding(.top, 4)
+            BuddyProgressBar(fraction: Double(answers.count) / Double(max(1, questions.count)),
+                             tint: Palette.review, mood: .thinking)
             Text("\(index + 1) / \(questions.count)")
                 .font(.display(.footnote, weight: .semibold))
                 .foregroundStyle(.secondary)

@@ -32,7 +32,7 @@ struct QuizSessionView: View {
                 if !configured {
                     QuizConfiguration(start: { start(); configured = true })
                 } else if questions.isEmpty {
-                    ContentUnavailableView(L.noQuizWords, systemImage: "checklist")
+                    ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
                 } else if finished {
                     results
                 } else if questions.indices.contains(index) {
@@ -103,13 +103,16 @@ struct QuizSessionView: View {
         let face = model.face(word)
         return ScrollView {
           VStack(spacing: 16) {
-            SessionBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)),
-                       tint: combo >= 3 ? Palette.review : Palette.accent)
+            BuddyProgressBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)),
+                             tint: combo >= 3 ? Palette.review : Palette.accent,
+                             mood: chosen.map { option -> Mascot.Mood in option.correct ? (combo >= 3 ? .cheer : .happy) : .encourage } ?? .thinking,
+                             hop: correctCount + missedIds.count)
                 // The run's badge floats just under the bar, clear of the question.
                 .overlay(alignment: .topLeading) {
                     if combo >= 3 {
                         comboBadge
-                            .offset(y: 12)
+                            // Below the bar and the companion riding it.
+                            .offset(y: 34)
                             .transition(reduceMotion ? .opacity : .scale(scale: 0.5, anchor: .leading).combined(with: .opacity))
                     }
                 }

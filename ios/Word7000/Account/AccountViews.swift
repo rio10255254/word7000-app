@@ -57,6 +57,11 @@ struct SignInSheet: View {
                         .symbolEffect(.bounce, value: waved)
                         .frame(width: 76, height: 76)
                         .background(Palette.accent.opacity(0.14), in: Circle())
+                        // The companion peeking round the badge.
+                        .overlay(alignment: .bottomTrailing) {
+                            Mascot(mood: .happy, size: 40)
+                                .offset(x: 26, y: 6)
+                        }
                         .popIn()
                         .padding(.top, 12)
                     VStack(spacing: 8) {

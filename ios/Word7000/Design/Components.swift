@@ -143,6 +143,36 @@ struct SessionBar: View {
     }
 }
 
+/// A session's progress bar with the companion riding along the filled end:
+/// pondering while you think, a happy hop for a right answer, a wobble of
+/// encouragement for a miss. Decorative: it takes no touches and VoiceOver
+/// skips it, like the bar itself.
+struct BuddyProgressBar: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var fraction: Double
+    var tint: Color = Palette.accent
+    var mood: Mascot.Mood = .idle
+    var hop = 0
+    var size: CGFloat = 28
+
+    var body: some View {
+        SessionBar(fraction: fraction, tint: tint)
+            .overlay(alignment: .leading) {
+                GeometryReader { proxy in
+                    let x = proxy.size.width * min(1, max(0, fraction))
+                    Mascot(mood: mood, size: size, hop: hop)
+                        // Its feet on the bar, just behind the filled end.
+                        .position(x: min(max(size / 2, x - size * 0.2), proxy.size.width - size / 2),
+                                  y: proxy.size.height / 2 - size * 0.42)
+                        .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.68), value: fraction)
+                }
+            }
+            .padding(.top, size * 0.8)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+}
+
 /// A small burst of sparks flying out from a point and fading, e.g. from the
 /// check mark of a right answer. Purely decorative.
 struct SparkleBurst: View {

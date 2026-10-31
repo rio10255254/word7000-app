@@ -26,6 +26,9 @@ struct StudySessionView: View {
     /// The daily goal was reached during this visit, not before it.
     @State private var reachedGoalHere = false
     @State private var goalBanner = false
+    /// How the companion on the progress bar feels about the last card.
+    @State private var buddyMood: Mascot.Mood = .thinking
+    @State private var buddyHop = 0
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
@@ -43,8 +46,8 @@ struct StudySessionView: View {
                         SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
                                        again: { model.startStudySession() }, startQuiz: startQuiz)
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
-                        SessionBar(fraction: Double(session.done) / Double(max(1, session.total)))
-                            .padding(.top, 4)
+                        BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
+                                         mood: buddyMood, hop: buddyHop)
                         GeometryReader { proxy in
                             ZStack {
                                 // The next card peeking out underneath, while there is one.
@@ -337,6 +340,8 @@ struct StudySessionView: View {
         let token = lifetime
         let source = model.studySession?.sourceKey
         if !armed { feedback += 1 }
+        buddyMood = grade == .known ? .happy : .encourage
+        buddyHop += 1
         phase = .leaving
         Speaker.shared.stop()
         withAnimation(reduceMotion ? .easeOut(duration: 0.12) : .easeIn(duration: 0.25), completionCriteria: .removed) {

@@ -182,8 +182,7 @@ struct SpeakingSessionView: View {
 
     private var emptyScope: some View {
         ContentUnavailableView {
-            Label(examplesOnly ? L.noQuizWords : L.t("此範圍沒有情境題目", "No questions in this scope"),
-                  systemImage: "bubble.left.and.text.bubble.right")
+            MascotLabel(mood: .encourage, title: examplesOnly ? L.noQuizWords : L.t("此範圍沒有情境題目", "No questions in this scope"))
         } description: {
             Text(examplesOnly ? model.bankName : L.t("這個字庫或篩選範圍尚未有配對完成的情境問答。", "No reviewed conversation questions match this bank and its filters."))
         } actions: {
@@ -239,8 +238,8 @@ struct SpeakingSessionView: View {
         let card = practiceCard(word)
         let face = model.face(word)
         return VStack(spacing: 16) {
-            SessionBar(fraction: Double(index + (revealed ? 1 : 0)) / Double(max(1, words.count)))
-                .padding(.top, 4)
+            BuddyProgressBar(fraction: Double(index + (revealed ? 1 : 0)) / Double(max(1, words.count)),
+                             tint: Palette.known, mood: revealed ? .happy : .thinking, hop: index)
             ScrollView {
               VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 16) {

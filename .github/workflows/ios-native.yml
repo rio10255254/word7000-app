@@ -33,7 +33,7 @@ on:
       checks:
         description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy', 'coach', 'compile', 'polish']
+        options: ['all', 'copy', 'coach', 'compile', 'polish', 'layout']
         default: 'all'
 
 permissions:
@@ -46,6 +46,7 @@ concurrency:
 jobs:
   native:
     name: Native iOS ${{ matrix.ios }}
+    if: inputs.checks != 'layout'
     strategy:
       fail-fast: false
       matrix:
@@ -274,3 +275,115 @@ jobs:
           git add -A
           git commit -q -m "Screenshots for ${{ github.sha }}"
           git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" native-screenshots
+
+  # Today must fit every iPhone. Runs the layout checks on phones of each
+  # size (SE, mini, standard, Pro, Air, Pro Max) and pushes the screenshots to
+  # the `native-layout-screenshots` branch.
+  layout:
+    name: Today layout on each iPhone size
+    if: inputs.checks == 'layout'
+    runs-on: macos-15
+    timeout-minutes: 75
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 26
+        run: |
+          set -euo pipefail
+          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1 || true)
+          [ -n "$XCODE" ] || { echo "::error::Xcode 26 is not installed on this runner."; exit 1; }
+          echo "DEVELOPER_DIR=$XCODE/Contents/Developer" >> "$GITHUB_ENV"
+
+      - name: Build for testing
+        run: |
+          set +e
+          xcodebuild build-for-testing -project ios/Word7000.xcodeproj -scheme Word7000 \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            CODE_SIGNING_ALLOWED=NO > "$RUNNER_TEMP/build.log" 2>&1
+          status=$?
+          grep -E "error:|\*\* (BUILD|TEST)" "$RUNNER_TEMP/build.log" | tail -60
+          exit $status
+
+      - name: Run the layout checks on each phone
+        run: |
+          set +e
+          OUT="$RUNNER_TEMP/screenshots"
+          mkdir -p "$OUT"
+          xcrun simctl list runtimes > "$OUT/runtimes.txt"
+          xcrun simctl list devicetypes > "$OUT/devicetypes.txt"
+          failed=0
+          tested=0
+          # The phones are read on descriptor 3 so nothing in the loop can swallow them from stdin.
+          while IFS='|' read -r MAJOR TYPE <&3; do
+            ids=$(python3 - "$MAJOR" "$TYPE" <<'PY'
+          import json, re, subprocess, sys
+          major, name = int(sys.argv[1]), sys.argv[2]
+          runtimes = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "runtimes", "-j"]))["runtimes"]
+          def version(r): return tuple(int(x) for x in r["version"].split("."))
+          matching = [r for r in runtimes if r.get("isAvailable") and r["platform"] == "iOS" and version(r)[0] == major]
+          if not matching: sys.exit(0)
+          runtime = max(matching, key=version)
+          supported = {t["name"]: t["identifier"] for t in runtime.get("supportedDeviceTypes", [])}
+          if name in supported: print(runtime["identifier"], supported[name])
+          PY
+          )
+            if [ -z "$ids" ]; then echo "Skipping $TYPE on iOS $MAJOR: not available here"; continue; fi
+            RUNTIME=${ids%% *}
+            TYPE_ID=${ids##* }
+            SLUG=$(echo "ios$MAJOR-$TYPE" | tr ' ()' '-__' | tr -s '-' | tr -d '_')
+            UDID=$(xcrun simctl create "layout-$SLUG" "$TYPE_ID" "$RUNTIME")
+            if [ -z "$UDID" ]; then echo "Could not create $TYPE"; continue; fi
+            echo "::group::$TYPE on iOS $MAJOR"
+            xcrun simctl boot "$UDID"
+            xcrun simctl bootstatus "$UDID" -b > /dev/null
+            xcrun simctl status_bar "$UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
+            rm -rf "$HOME/word7000-screenshots"
+            xcodebuild test-without-building -project ios/Word7000.xcodeproj -scheme Word7000 \
+              -destination "id=$UDID" -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+              -parallel-testing-enabled NO -only-testing:Word7000UITests/LayoutTests \
+              CODE_SIGNING_ALLOWED=NO > "$OUT/$SLUG.log" 2>&1
+            status=$?
+            grep -E "LAYOUT|error:|Test Case .*(passed|failed)|\*\* TEST" "$OUT/$SLUG.log" | tail -80
+            echo "::endgroup::"
+            if [ $status -ne 0 ]; then failed=1; echo "::error::Layout checks failed on $TYPE (iOS $MAJOR)"; fi
+            tested=$((tested + 1))
+            for f in "$HOME"/word7000-screenshots/*; do [ -e "$f" ] && mv "$f" "$OUT/$SLUG-$(basename "$f")"; done
+            xcrun simctl shutdown "$UDID" || true
+            xcrun simctl delete "$UDID" || true
+          done 3<<'PHONES'
+          18|iPhone SE (3rd generation)
+          26|iPhone SE (3rd generation)
+          26|iPhone 13 mini
+          26|iPhone 16e
+          26|iPhone 17
+          26|iPhone 17 Pro
+          26|iPhone Air
+          26|iPhone 17 Pro Max
+          26|iPhone 16 Pro Max
+          PHONES
+          echo "Tested $tested phones"
+          [ $tested -gt 0 ] || exit 1
+          exit $failed
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-layout-${{ github.run_number }}
+          path: ${{ runner.temp }}/screenshots
+          retention-days: 14
+
+      - name: Publish the screenshots to the native-layout-screenshots branch
+        if: always()
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/screenshots"
+          echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
+          git init -q
+          git checkout -q -b native-layout-screenshots
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Layout screenshots for ${{ github.sha }}"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" native-layout-screenshots

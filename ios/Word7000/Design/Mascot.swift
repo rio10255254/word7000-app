@@ -524,3 +524,18 @@ struct MascotMessage: View {
         .padding(24)
     }
 }
+
+/// The label of an empty state, with the companion in place of a symbol.
+struct MascotLabel: View {
+    var mood: Mascot.Mood
+    var title: String
+    var size: CGFloat = 72
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Mascot(mood: mood, size: size)
+                .popIn()
+            Text(title)
+        }
+    }
+}

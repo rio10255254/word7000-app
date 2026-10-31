@@ -49,8 +49,11 @@ struct WordsView: View {
                     if searching {
                         HStack { Spacer(); ProgressView(); Spacer() }.padding(.vertical, 30)
                     } else {
-                        ContentUnavailableView(L.noLibraryWords, systemImage: "text.magnifyingglass",
-                                               description: Text(query.isEmpty ? model.bankName : query))
+                        ContentUnavailableView {
+                            MascotLabel(mood: .thinking, title: L.noLibraryWords)
+                        } description: {
+                            Text(query.isEmpty ? model.bankName : query)
+                        }
                             .entrance(0, distance: 10)
                         if filter.isActive {
                             Button(L.t("清除篩選", "Clear filters")) { clearFilters() }

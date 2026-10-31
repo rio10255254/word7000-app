@@ -11,8 +11,12 @@ private struct TodayMetrics {
     /// Accessibility text sizes: one column, nothing peeking over the card.
     var large: Bool
 
+    /// The room between the status bar and the tab bar.
+    var height: CGFloat
+
     init(height: CGFloat, large: Bool) {
         self.large = large
+        self.height = height
         tier = height < 630 ? .compact : height < 750 ? .regular : .tall
     }
 
@@ -26,22 +30,26 @@ private struct TodayMetrics {
     var peek: CGFloat { (mascot * 0.42).rounded() }
     /// Room above the card so the companion stays clear of the header.
     var heroTop: CGFloat { large ? 0 : max(0, peek + 6 - spacing) }
-    /// Practice tiles: tall cards on the big phones, short rows elsewhere.
-    var tallTiles: Bool { tall && !large }
+    /// Practice tiles: tall cards (icon up top, words along the bottom, a
+    /// faint watermark of the icon in the corner) wherever two rows of them
+    /// fit, which is every phone from the 6.1" up; short rows on the SE and mini.
+    var tallCards: Bool { !large && height >= 700 }
     var tileSpacing: CGFloat { compact ? 8 : tall ? 12 : 10 }
-    /// The shortest and tallest a tile may be. When everything fits, the tiles
-    /// grow from the shortest toward the tallest to use the room left over.
-    /// The tiles' type and icon grow with the room they have, so a big tile
-    /// is never a small label in a lot of empty space.
+    /// Type and icon sizes. A tile fills its room through its composition
+    /// (the icon and the words at opposite ends, the watermark, a big count)
+    /// rather than through ever larger text.
     func tileStyle(tallCard: Bool) -> PracticeTileStyle {
         if compact { return PracticeTileStyle(icon: 36, title: .subheadline, detail: .caption) }
-        if tallCard { return PracticeTileStyle(icon: 54, title: .title2, detail: .subheadline) }
-        return PracticeTileStyle(icon: tall ? 52 : 48, title: .title3, detail: .subheadline)
+        if tallCard { return PracticeTileStyle(icon: tall ? 50 : 46, title: .title3, detail: .footnote) }
+        return PracticeTileStyle(icon: tall ? 48 : 44, title: .headline, detail: .footnote)
     }
 
+    /// The shortest and tallest a tile may be. When everything fits, the tiles
+    /// grow from the shortest toward the tallest to use the room left over.
     func tileHeight(tallCard: Bool) -> (min: CGFloat, max: CGFloat) {
-        if tallCard { return (112, 172) }
-        return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
+        if tallCard { return tall ? (112, 176) : (104, 156) }
+        if compact { return (54, 92) }
+        return tallCards ? (64, 96) : (62, 112)
     }
 }
 
@@ -457,7 +465,7 @@ struct TodayView: View {
                 HStack(spacing: m.tileSpacing) {
                     ForEach(Array(rows[row].enumerated()), id: \.element.id) { offset, item in
                         // A tile alone on its row spans it as a short row.
-                        tile(item, tallCard: m.tallTiles && rows[row].count == columns, m, fill: fill,
+                        tile(item, tallCard: m.tallCards && rows[row].count == columns, m, fill: fill,
                              order: 2 + row * columns + offset)
                     }
                 }
@@ -513,17 +521,17 @@ private struct TilePressStyle: ButtonStyle {
     }
 }
 
-/// A practice tile. On the big phones a tall card: the icon up top, the title
-/// and detail along the bottom, and a large faint copy of the icon in the
-/// corner. Elsewhere a short row: icon, title and detail side by side. Either
-/// grows between its shortest and tallest to fill the page.
-/// The icon and type sizes of a practice tile.
-struct PracticeTileStyle {
-    var icon: CGFloat
-    var title: Font.TextStyle
-    var detail: Font
-}
-
+/// A practice tile, in one of two compositions.
+///
+/// A tall card puts the icon at the top and the title and detail along the
+/// bottom, with a small arrow (or the Plus mark) opposite the icon and a big,
+/// faint copy of the icon tilted into the corner as a watermark; however tall
+/// the card grows, the space between reads as intended.
+///
+/// A short row sets the icon, title and detail side by side, with the
+/// watermark peeking in at the far end. When the tile carries a count (the
+/// words to review), the count is set large in the serif face at the end of
+/// the row, where it balances the title, instead of in a small pill.
 private struct PracticeTile: View {
     var item: PracticeTileItem
     var tallCard = false
@@ -532,14 +540,18 @@ private struct PracticeTile: View {
     var maxHeight: CGFloat?
     var bounce = 0
 
+    private var radius: CGFloat { tallCard ? 22 : 18 }
+    private var roomy: Bool { style.icon > 40 }
+
     var body: some View {
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         Group {
             if tallCard {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(alignment: .top) {
                         icon(size: style.icon)
                         Spacer(minLength: 4)
-                        trailing
+                        corner
                     }
                     Spacer(minLength: 10)
                     Text(item.title)
@@ -552,10 +564,11 @@ private struct PracticeTile: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
+                        .padding(.top, 2)
                 }
                 .padding(14)
             } else {
-                HStack(spacing: style.icon > 40 ? 14 : 10) {
+                HStack(spacing: roomy ? 14 : 10) {
                     icon(size: style.icon)
                     VStack(alignment: .leading, spacing: 2) {
                         // Two lines when a long title ("Speaking practice") meets a narrow tile.
@@ -571,38 +584,45 @@ private struct PracticeTile: View {
                             .minimumScaleFactor(0.8)
                     }
                     Spacer(minLength: 2)
-                    trailing
+                    rowEnd
                 }
-                .padding(.horizontal, style.icon > 40 ? 14 : 12)
-                .padding(.vertical, style.icon > 40 ? 10 : 8)
+                .padding(.horizontal, roomy ? 16 : 12)
+                .padding(.vertical, roomy ? 10 : 8)
             }
         }
         .multilineTextAlignment(.leading)
         .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: tallCard ? .topLeading : .leading)
         .background {
-            PremiumSurface(radius: tallCard ? 22 : 18)
-                .overlay(alignment: .bottomTrailing) {
-                    if tallCard {
-                        // A large, faint copy of the icon tucked into the corner.
-                        Image(systemName: item.icon)
-                            .font(.system(size: 64, weight: .bold))
-                            .foregroundStyle(item.tint.opacity(0.08))
-                            .rotationEffect(.degrees(-12))
-                            .offset(x: 10, y: 12)
-                            .clipped()
-                    }
-                }
-                .clipShape(RoundedRectangle(cornerRadius: tallCard ? 22 : 18, style: .continuous))
+            PremiumSurface(radius: radius)
+                .overlay { watermark }
+                .clipShape(shape)
         }
         .overlay {
             // A soft ring of the tile's colour spreads from the icon when it is tapped.
             if bounce > 0 {
                 TileRipple(color: item.tint, tallCard: tallCard, iconSize: style.icon)
                     .id(bounce)
-                    .clipShape(RoundedRectangle(cornerRadius: tallCard ? 22 : 18, style: .continuous))
+                    .clipShape(shape)
             }
         }
-        .contentShape(RoundedRectangle(cornerRadius: tallCard ? 22 : 18, style: .continuous))
+        .contentShape(shape)
+    }
+
+    /// A big, faint copy of the icon, tilted and cropped by the tile's edge.
+    /// It scales with the tile, so a taller tile carries a bigger mark.
+    private var watermark: some View {
+        GeometryReader { proxy in
+            let h = proxy.size.height
+            let size = tallCard ? h * 0.62 : h * 0.95
+            Image(systemName: item.icon)
+                .font(.system(size: size, weight: .bold))
+                .foregroundStyle(item.tint.opacity(tallCard ? 0.09 : 0.07))
+                .rotationEffect(.degrees(-12))
+                .position(x: proxy.size.width - size * (tallCard ? 0.32 : 0.28),
+                          y: tallCard ? h - size * 0.3 : h * 0.62)
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 
     private func icon(size: CGFloat) -> some View {
@@ -620,19 +640,57 @@ private struct PracticeTile: View {
             .shadow(color: item.tint.opacity(0.3), radius: 5, y: 2)
     }
 
+    /// The tall card's top corner: the Plus mark when locked, else a small arrow.
     @ViewBuilder
-    private var trailing: some View {
+    private var corner: some View {
         if item.locked {
             PlusBadge()
         } else if let badge = item.badge {
-            Text(badge)
-                .font(.display(.caption, weight: .bold))
-                .monospacedDigit()
-                .foregroundStyle(.white)
-                .padding(.horizontal, 7)
-                .padding(.vertical, 3)
-                .background(item.tint, in: Capsule())
+            pill(badge)
+        } else {
+            Image(systemName: "arrow.up.right")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(item.tint)
+                .frame(width: 26, height: 26)
+                .background(item.tint.opacity(0.12), in: Circle())
+                .accessibilityHidden(true)
         }
+    }
+
+    /// The short row's far end: the Plus mark, a count, or nothing.
+    @ViewBuilder
+    private var rowEnd: some View {
+        if item.locked {
+            PlusBadge()
+        } else if let badge = item.badge {
+            if roomy {
+                // The count, set large: it carries the row's right side.
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text(badge)
+                        .font(.displaySize(style.icon * 0.7, weight: .bold))
+                        .monospacedDigit()
+                        .foregroundStyle(item.tint)
+                        .contentTransition(.numericText())
+                    Text(L.t("個字", "words"))
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            } else {
+                pill(badge)
+            }
+        }
+    }
+
+    private func pill(_ text: String) -> some View {
+        Text(text)
+            .font(.display(.caption, weight: .bold))
+            .monospacedDigit()
+            .foregroundStyle(.white)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(item.tint, in: Capsule())
     }
 }
 

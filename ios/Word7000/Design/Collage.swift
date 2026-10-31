@@ -219,6 +219,32 @@ struct InkLoops: Shape {
     }
 }
 
+/// A patch of printed halftone dots.
+struct Halftone: View {
+    var color: Color = Collage.ink.opacity(0.2)
+    var spacing: CGFloat = 6
+
+    var body: some View {
+        Canvas { context, size in
+            var dots = Path()
+            var y: CGFloat = spacing / 2
+            var row = 0
+            while y < size.height {
+                var x: CGFloat = row % 2 == 0 ? spacing / 2 : spacing
+                while x < size.width {
+                    dots.addEllipse(in: CGRect(x: x - 1.1, y: y - 1.1, width: 2.2, height: 2.2))
+                    x += spacing
+                }
+                y += spacing * 0.87
+                row += 1
+            }
+            context.fill(dots, with: .color(color))
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
 /// A rubber stamp: two rings round a short text, pressed on at an angle.
 struct StampMark<Content: View>: View {
     var color: Color = Collage.clay

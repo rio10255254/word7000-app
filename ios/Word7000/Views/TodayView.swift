@@ -772,6 +772,7 @@ struct PracticeTileStyle {
 /// words to review), the count is set large in the serif face at the end of
 /// the row, where it balances the title, instead of in a small pill.
 private struct PracticeTile: View {
+    @Environment(\.appStyle) private var appStyle
     var item: PracticeTileItem
     var tallCard = false
     var style: PracticeTileStyle
@@ -779,7 +780,29 @@ private struct PracticeTile: View {
     var maxHeight: CGFloat?
     var bounce = 0
 
-    private var radius: CGFloat { tallCard ? 22 : 18 }
+    private var radius: CGFloat { appStyle == .collage ? 0 : tallCard ? 22 : 18 }
+
+    /// In the collage each way of practising is cut from its own paper.
+    private var paper: PaperKind {
+        switch item.id {
+        case "today-review": .ruled
+        case "today-quiz": .graph
+        case "today-speaking": .peach
+        case "today-spelling": .sage
+        default: .mustard
+        }
+    }
+
+    /// A slight, fixed tilt per tile, so the papers look laid down by hand.
+    private var tilt: Double {
+        switch item.id {
+        case "today-review": -0.5
+        case "today-quiz": 0.6
+        case "today-speaking": -0.7
+        case "today-spelling": 0.5
+        default: -0.3
+        }
+    }
     private var roomy: Bool { style.icon > 40 }
 
     var body: some View {
@@ -833,9 +856,21 @@ private struct PracticeTile: View {
         .multilineTextAlignment(.leading)
         .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: tallCard ? .topLeading : .leading)
         .background {
-            PremiumSurface(radius: radius)
-                .overlay { watermark }
-                .clipShape(shape)
+            if appStyle == .collage {
+                PaperSurface(kind: paper)
+                    .overlay(alignment: .topTrailing) {
+                        // A little halftone in a corner of the plainer papers.
+                        if paper == .mustard || paper == .peach { Halftone().frame(width: 70, height: 50) }
+                    }
+                    .clipShape(TornEdgeShape(edges: paper == .peach ? [.bottom] : [], depth: 4, seed: item.id.count))
+            } else {
+                PremiumSurface(radius: radius)
+                    .overlay { watermark }
+                    .clipShape(shape)
+            }
+        }
+        .overlay(alignment: .top) {
+            if appStyle == .collage, item.id == "today-review" { TapeStrip(width: 58, angle: -4).offset(y: -9) }
         }
         .overlay {
             // A soft ring of the tile's colour spreads from the icon when it is tapped.
@@ -846,6 +881,7 @@ private struct PracticeTile: View {
             }
         }
         .contentShape(shape)
+        .rotationEffect(.degrees(appStyle == .collage ? tilt : 0))
     }
 
     /// A big, faint copy of the icon, tilted and cropped by the tile's edge.
@@ -866,7 +902,22 @@ private struct PracticeTile: View {
         .accessibilityHidden(true)
     }
 
+    @ViewBuilder
     private func icon(size: CGFloat) -> some View {
+        if appStyle == .collage {
+            // A plain cut-paper disc.
+            Image(systemName: item.icon)
+                .font(.system(size: size * 0.42, weight: .semibold))
+                .foregroundStyle(.white)
+                .symbolEffect(.bounce, value: bounce)
+                .frame(width: size, height: size)
+                .background(item.tint, in: Circle())
+        } else {
+            leatherIcon(size: size)
+        }
+    }
+
+    private func leatherIcon(size: CGFloat) -> some View {
         Image(systemName: item.icon)
             .font(.system(size: size * 0.42, weight: .semibold))
             .foregroundStyle(.white)
@@ -968,11 +1019,58 @@ private struct TileRipple: View {
 /// grain, light pooling in one corner, a glint that sweeps across now and
 /// then, and a hairline catching the light. It turns olive once today's goal
 /// is met.
-private struct HeroBackground: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+/// The hero card as a collage: a cut of leather (sage once the goal is met)
+/// torn along its bottom, a strip of graph paper peeking out behind its right
+/// edge, a piece of tape, a patch of halftone and a loose charcoal loop.
+/// No shadow: the overlapping papers give the depth.
+private struct CollageHeroBackground: View {
     var done: Bool
 
     var body: some View {
+        let colors = done
+            ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.36, green: 0.45, blue: 0.27)]
+            : [Color(red: 0.79, green: 0.55, blue: 0.37), Color(red: 0.6, green: 0.37, blue: 0.23)]
+        ZStack {
+            PaperSurface(kind: .graph)
+                .frame(width: 96)
+                .rotationEffect(.degrees(3))
+                .offset(x: 12, y: 8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+            Rectangle()
+                .fill(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay { PaperGrain(opacity: 1).blendMode(.overlay) }
+                .overlay(alignment: .bottomLeading) { Halftone(color: .black.opacity(0.18)).frame(width: 110, height: 60) }
+                .overlay(alignment: .topTrailing) {
+                    InkLoops(count: 3)
+                        .stroke(Color(red: 1, green: 0.94, blue: 0.86).opacity(0.55), style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
+                        .frame(width: 70, height: 16)
+                        .padding(.top, 14)
+                        .padding(.trailing, 18)
+                }
+                .clipShape(TornEdgeShape(edges: [.bottom], depth: 5, seed: 3))
+            TapeStrip(width: 62, angle: -7)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .offset(x: 18, y: -10)
+        }
+        .animation(Motion.reveal, value: done)
+    }
+}
+
+private struct HeroBackground: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
+    var done: Bool
+
+    @ViewBuilder
+    var body: some View {
+        if appStyle == .collage {
+            CollageHeroBackground(done: done)
+        } else {
+            leather
+        }
+    }
+
+    private var leather: some View {
         let shape = RoundedRectangle(cornerRadius: 30, style: .continuous)
         let colors = done
             ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]

@@ -146,10 +146,24 @@ struct CardBackground: ViewModifier {
 /// that catches the light along the top, and a soft warm shadow.
 struct PremiumSurface: View {
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.appStyle) private var appStyle
     var radius: CGFloat
     var fill: Color = Palette.surface
 
+    @ViewBuilder
     var body: some View {
+        if appStyle == .collage {
+            // Collage: a plain cut of paper with a hairline edge; no light, no shadow.
+            Rectangle()
+                .fill(fill)
+                .overlay { PaperGrain(opacity: 0.5) }
+                .overlay { Rectangle().strokeBorder(Collage.ink.opacity(0.16), lineWidth: 1) }
+        } else {
+            leather
+        }
+    }
+
+    private var leather: some View {
         let dark = colorScheme == .dark
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         shape
@@ -187,10 +201,25 @@ struct PaperGrain: View {
 /// screen busy (and the battery working) for no real gain.
 struct AmbientBackground: View {
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.appStyle) private var appStyle
     var tint: Color = Palette.accent
     var secondTint: Color = Palette.review
 
+    @ViewBuilder
     var body: some View {
+        if appStyle == .collage {
+            // Collage: the bare desk paper, no glows.
+            Palette.background
+                .overlay { PaperGrain(opacity: 0.8) }
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        } else {
+            glowing
+        }
+    }
+
+    private var glowing: some View {
         let dark = colorScheme == .dark
         GeometryReader { proxy in
             let width = proxy.size.width

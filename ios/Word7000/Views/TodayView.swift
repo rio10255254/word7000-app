@@ -1070,6 +1070,7 @@ private struct HeroBackground: View {
         }
     }
 
+    @ViewBuilder
     private var leather: some View {
         let shape = RoundedRectangle(cornerRadius: 30, style: .continuous)
         let colors = done

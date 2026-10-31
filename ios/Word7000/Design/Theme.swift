@@ -163,6 +163,7 @@ struct PremiumSurface: View {
         }
     }
 
+    @ViewBuilder
     private var leather: some View {
         let dark = colorScheme == .dark
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
@@ -219,6 +220,7 @@ struct AmbientBackground: View {
         }
     }
 
+    @ViewBuilder
     private var glowing: some View {
         let dark = colorScheme == .dark
         GeometryReader { proxy in

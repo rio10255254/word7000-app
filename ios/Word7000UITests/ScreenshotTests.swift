@@ -38,9 +38,20 @@ final class ScreenshotTests: XCTestCase {
         for _ in 0..<6 where !(app.buttons["me-settings"].exists && app.buttons["me-settings"].isHittable) { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-settings"].waitForExistence(timeout: 5))
         app.buttons["me-settings"].tap()
+        // For comparison: another row of the same section opens and comes back.
+        XCTAssertTrue(app.buttons["settings-intelligence"].waitForExistence(timeout: 5))
+        for _ in 0..<4 where !app.buttons["settings-intelligence"].isHittable { app.swipeUp() }
+        app.buttons["settings-intelligence"].tap()
+        sleep(1)
+        snap(app, "style-settings-intelligence")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.buttons["settings-style"].waitForExistence(timeout: 5))
         for _ in 0..<4 where !app.buttons["settings-style"].isHittable { app.swipeUp() }
+        snap(app, "style-settings-before-tap")
+        print("STYLE-DEBUG settings-style frame: \(app.buttons["settings-style"].frame) window: \(app.windows.firstMatch.frame)")
         app.buttons["settings-style"].tap()
+        sleep(1)
+        print("STYLE-DEBUG after tap:\n\(app.debugDescription)")
         XCTAssertTrue(app.buttons["style-leather"].waitForExistence(timeout: 5))
         snap(app, "style-settings")
     }

@@ -1,4 +1,5 @@
-// Draws the native app icon: the companion, a fluffy, unimpressed ginger kitten, with the
+// Draws the native app icon: the companion, a cheeky ginger cat, peeking over
+// the app's notebook, with the
 // same shapes and proportions as `ios/Word7000/Design/Mascot.swift`, in the
 // three iOS home-screen appearances (light, dark and tinted). Writes opaque
 // 1024 px PNGs (the App Store refuses an icon with an alpha channel).
@@ -24,22 +25,33 @@ const warm = {
   blush: '#F28073',
 };
 
+// The notebook the app has always had for an icon, in the app's paper,
+// terracotta and ink.
+const book = {
+  coverTop: '#FCF6EC',
+  coverBottom: '#EADCC6',
+  edge: '#D8C6AA',
+  spine: '#C96442',
+  line: '#CDB496',
+};
+
 const variants = [
   {
     file: 'icon-1024.png',
     palette: warm,
-    background: `<radialGradient id="bg" cx="0.3" cy="0.2" r="1">
-        <stop offset="0" stop-color="#FFF8EE"/><stop offset="0.6" stop-color="#F8E4CC"/><stop offset="1" stop-color="#EDC9A3"/>
-      </radialGradient>`,
-    shadow: 'rgba(150, 80, 40, 0.3)',
+    book,
+    // Caramel leather, as on Today's hero card, lit from the top right.
+    background: ['#C98F5E', '#8A5636', '#6B4128'],
+    glow: 'rgba(255, 228, 190, 0.45)',
+    grain: 0.1,
   },
   {
     file: 'icon-1024-dark.png',
     palette: warm,
-    background: `<radialGradient id="bg" cx="0.5" cy="0.48" r="0.75">
-        <stop offset="0" stop-color="#4A3427"/><stop offset="0.6" stop-color="#2A1E17"/><stop offset="1" stop-color="#15100C"/>
-      </radialGradient>`,
-    shadow: 'rgba(0, 0, 0, 0.45)',
+    book: { ...book, coverTop: '#EFE4D2', coverBottom: '#D6C4A8', edge: '#B9A486' },
+    background: ['#4A3427', '#2A1E17', '#15100C'],
+    glow: 'rgba(255, 200, 150, 0.16)',
+    grain: 0.08,
   },
   {
     // Tinted icons are grayscale; the system colours them by brightness.
@@ -55,10 +67,10 @@ const variants = [
       ink: '#2E2E2E',
       blush: '#CFCFCF',
     },
-    background: `<radialGradient id="bg" cx="0.5" cy="0.5" r="0.7">
-        <stop offset="0" stop-color="#1C1C1C"/><stop offset="1" stop-color="#000000"/>
-      </radialGradient>`,
-    shadow: 'rgba(0, 0, 0, 0.5)',
+    book: { coverTop: '#E8E8E8', coverBottom: '#C8C8C8', edge: '#9C9C9C', spine: '#6E6E6E', line: '#9A9A9A' },
+    background: ['#202020', '#0C0C0C', '#000000'],
+    glow: 'rgba(255, 255, 255, 0.06)',
+    grain: 0,
   },
 ];
 
@@ -95,37 +107,68 @@ try {
   await browser.close();
 }
 
-/** The whole icon: background, a soft ground shadow and the kitten. */
-function iconSvg({ palette, background, shadow }) {
-  const s = SIZE * 0.78;
-  // The tail reaches out to the right, so the body sits a little left of centre.
-  const ox = (SIZE - s) / 2 - s * 0.05;
-  const oy = (SIZE - s) / 2 + s * 0.03;
+/** The whole icon: textured leather, the notebook, and the cat peeking up
+ * from behind it with its paws over the top edge and its tail curling out. */
+function iconSvg({ palette, book: b, background, glow, grain }) {
+  const s = SIZE * 0.6;
+  const faceY = SIZE * 0.38;
+  const ox = SIZE / 2 - s / 2;
+  const oy = faceY - s / 2;
+  const bookW = SIZE * 0.6;
+  const bookH = SIZE * 0.36;
+  const bookX = (SIZE - bookW) / 2;
+  const bookY = faceY + s * 0.215;
+  const radius = SIZE * 0.05;
+  const lineH = SIZE * 0.03;
+  const lines = [[0.34, 0.36], [0.52, 0.27], [0.7, 0.33]]
+    .map(([y, w]) => `<rect x="${bookX + bookW * 0.34}" y="${bookY + bookH * y - lineH / 2}" width="${bookW * w}" height="${lineH}" rx="${lineH / 2}" fill="${b.line}"/>`)
+    .join('');
+  const paws = [-1, 1].map((side) => {
+    const x = SIZE / 2 + side * s * 0.15;
+    const y = bookY + s * 0.01;
+    const toe = (dx) => `<path d="M${x + dx * s},${y + s * 0.012} L${x + dx * s},${y + s * 0.04}" stroke="${palette.shade}" stroke-opacity="0.35" stroke-width="${s * 0.008}" stroke-linecap="round"/>`;
+    return `<ellipse cx="${x}" cy="${y}" rx="${s * 0.075}" ry="${s * 0.045}" fill="${palette.cream}"/>${toe(-0.025)}${toe(0.025)}`;
+  }).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}">
   <defs>
-    ${background}
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${background[0]}"/><stop offset="0.6" stop-color="${background[1]}"/><stop offset="1" stop-color="${background[2]}"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.1" r="0.6">
+      <stop offset="0" stop-color="${glow}"/><stop offset="1" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
     <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${palette.furTop}"/><stop offset="1" stop-color="${palette.furBottom}"/>
     </linearGradient>
-    <linearGradient id="shade" x1="0" y1="0.5" x2="0" y2="1">
-      <stop offset="0" stop-color="${palette.shade}" stop-opacity="0"/><stop offset="1" stop-color="${palette.shade}" stop-opacity="0.3"/>
+    <linearGradient id="cover" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${b.coverTop}"/><stop offset="1" stop-color="${b.coverBottom}"/>
     </linearGradient>
-    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="0.5">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.6"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s * 0.025}"/></filter>
-    <filter id="sheen" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s * 0.03}"/></filter>
-    <filter id="ground" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s * 0.03}"/></filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <filter id="drop" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="${SIZE * 0.012}" stdDeviation="${SIZE * 0.018}" flood-color="#2A1408" flood-opacity="0.35"/>
+    </filter>
   </defs>
   <rect width="${SIZE}" height="${SIZE}" fill="url(#bg)"/>
-  <ellipse cx="${ox + s * 0.5}" cy="${oy + s * 0.94}" rx="${s * 0.34}" ry="${s * 0.05}" fill="${shadow}" filter="url(#ground)"/>
-  ${kitten(s, ox, oy, palette)}
+  <rect width="${SIZE}" height="${SIZE}" fill="url(#glow)"/>
+  ${grain > 0 ? `<rect width="${SIZE}" height="${SIZE}" filter="url(#grain)" opacity="${grain}" style="mix-blend-mode:overlay"/>` : ''}
+  <g filter="url(#drop)">${kitten(s, ox, oy, palette, { paws: false })}</g>
+  <g filter="url(#drop)">
+    <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" rx="${radius}" fill="url(#cover)"/>
+    <rect x="${bookX}" y="${bookY + bookH - SIZE * 0.022}" width="${bookW}" height="${SIZE * 0.022}" fill="${b.edge}" opacity="0.6" clip-path="url(#coverClip)"/>
+    <clipPath id="coverClip"><rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" rx="${radius}"/></clipPath>
+    <rect x="${bookX + bookW * 0.17}" y="${bookY}" width="${bookW * 0.065}" height="${bookH}" fill="${b.spine}" clip-path="url(#coverClip)"/>
+    ${lines}
+  </g>
+  ${paws}
 </svg>`;
 }
 
 /** The cat in an s × s square at (ox, oy), as Mascot.swift draws it at rest:
  * a round lump with a tuft at each cheek and on top, and its unimpressed face. */
-function kitten(s, ox, oy, p) {
+function kitten(s, ox, oy, p, { paws = true } = {}) {
   const at = (fx, fy) => [ox + s / 2 + fx * s, oy + s / 2 + fy * s];
   const frame = (fx, fy) => [ox + fx * s, oy + fy * s];
   const parts = [];
@@ -174,7 +217,7 @@ function kitten(s, ox, oy, p) {
   const zTop = chestY - s * 0.1 - zh + s * 0.012;
   parts.push(`<path d="M${chestX - zw / 2},${zTop + zh} L${chestX - zw / 4},${zTop} L${chestX},${zTop + zh} L${chestX + zw / 4},${zTop} L${chestX + zw / 2},${zTop + zh}Z" fill="${p.cream}"/>`);
   // Paws.
-  for (const side of [-1, 1]) {
+  for (const side of paws ? [-1, 1] : []) {
     const [x, y] = at(side * 0.15, 0.42);
     parts.push(`<ellipse cx="${x}" cy="${y}" rx="${s * 0.07}" ry="${s * 0.035}" fill="${p.cream}"/>`);
   }

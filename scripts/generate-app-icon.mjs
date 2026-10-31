@@ -25,14 +25,10 @@ const warm = {
   blush: '#F28073',
 };
 
-// The notebook the app has always had for an icon, in the app's paper,
-// terracotta and ink.
+// The notebook the app has always had for an icon, now in warm paper.
 const book = {
   coverTop: '#FCF6EC',
   coverBottom: '#EADCC6',
-  edge: '#D8C6AA',
-  spine: '#C96442',
-  line: '#CDB496',
 };
 
 const variants = [
@@ -48,7 +44,7 @@ const variants = [
   {
     file: 'icon-1024-dark.png',
     palette: warm,
-    book: { ...book, coverTop: '#EFE4D2', coverBottom: '#D6C4A8', edge: '#B9A486' },
+    book: { ...book, coverTop: '#EFE4D2', coverBottom: '#D6C4A8' },
     background: ['#4A3427', '#2A1E17', '#15100C'],
     glow: 'rgba(255, 200, 150, 0.16)',
     grain: 0.08,
@@ -67,7 +63,7 @@ const variants = [
       ink: '#2E2E2E',
       blush: '#CFCFCF',
     },
-    book: { coverTop: '#E8E8E8', coverBottom: '#C8C8C8', edge: '#9C9C9C', spine: '#6E6E6E', line: '#9A9A9A' },
+    book: { coverTop: '#EDEDED', coverBottom: '#D0D0D0' },
     background: ['#202020', '#0C0C0C', '#000000'],
     glow: 'rgba(255, 255, 255, 0.06)',
     grain: 0,
@@ -110,19 +106,23 @@ try {
 /** The whole icon: textured leather, the notebook, and the cat peeking up
  * from behind it with its paws over the top edge and its tail curling out. */
 function iconSvg({ palette, book: b, background, glow, grain }) {
-  const s = SIZE * 0.6;
-  const faceY = SIZE * 0.38;
+  // The notebook keeps the old icon's proportions and cut-outs: an upright
+  // cover with the spine and three lines cut through to the leather behind.
+  const bookW = SIZE * 0.47;
+  const bookH = bookW * (0.58 / 0.54);
+  const bookX = (SIZE - bookW) / 2;
+  const bookY = SIZE * 0.95 - bookH;
+  const radius = bookW * 0.1;
+  const lineH = bookW * 0.059;
+  const s = SIZE * 0.5;
+  const faceY = bookY - s * 0.215;
   const ox = SIZE / 2 - s / 2;
   const oy = faceY - s / 2;
-  const bookW = SIZE * 0.6;
-  const bookH = SIZE * 0.36;
-  const bookX = (SIZE - bookW) / 2;
-  const bookY = faceY + s * 0.215;
-  const radius = SIZE * 0.05;
-  const lineH = SIZE * 0.03;
-  const lines = [[0.34, 0.36], [0.52, 0.27], [0.7, 0.33]]
-    .map(([y, w]) => `<rect x="${bookX + bookW * 0.34}" y="${bookY + bookH * y - lineH / 2}" width="${bookW * w}" height="${lineH}" rx="${lineH / 2}" fill="${b.line}"/>`)
-    .join('');
+  const cutouts = [
+    `<rect x="${bookX + bookW * 0.18}" y="${bookY - 1}" width="${bookW * 0.065}" height="${bookH + 2}" fill="black"/>`,
+    ...[[0.29, 0.36], [0.45, 0.27], [0.61, 0.33]].map(([y, w]) =>
+      `<rect x="${bookX + bookW * 0.36}" y="${bookY + bookH * y}" width="${bookW * w}" height="${lineH}" rx="${lineH / 2}" fill="black"/>`),
+  ].join('');
   const paws = [-1, 1].map((side) => {
     const x = SIZE / 2 + side * s * 0.15;
     const y = bookY + s * 0.01;
@@ -143,6 +143,10 @@ function iconSvg({ palette, book: b, background, glow, grain }) {
     <linearGradient id="cover" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${b.coverTop}"/><stop offset="1" stop-color="${b.coverBottom}"/>
     </linearGradient>
+    <mask id="cuts" maskUnits="userSpaceOnUse" x="0" y="0" width="${SIZE}" height="${SIZE}">
+      <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" rx="${radius}" fill="white"/>
+      ${cutouts}
+    </mask>
     <filter id="grain" x="0" y="0" width="100%" height="100%">
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7"/>
       <feColorMatrix type="saturate" values="0"/>
@@ -156,11 +160,7 @@ function iconSvg({ palette, book: b, background, glow, grain }) {
   ${grain > 0 ? `<rect width="${SIZE}" height="${SIZE}" filter="url(#grain)" opacity="${grain}" style="mix-blend-mode:overlay"/>` : ''}
   <g filter="url(#drop)">${kitten(s, ox, oy, palette, { paws: false })}</g>
   <g filter="url(#drop)">
-    <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" rx="${radius}" fill="url(#cover)"/>
-    <rect x="${bookX}" y="${bookY + bookH - SIZE * 0.022}" width="${bookW}" height="${SIZE * 0.022}" fill="${b.edge}" opacity="0.6" clip-path="url(#coverClip)"/>
-    <clipPath id="coverClip"><rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" rx="${radius}"/></clipPath>
-    <rect x="${bookX + bookW * 0.17}" y="${bookY}" width="${bookW * 0.065}" height="${bookH}" fill="${b.spine}" clip-path="url(#coverClip)"/>
-    ${lines}
+    <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#cover)" mask="url(#cuts)"/>
   </g>
   ${paws}
 </svg>`;

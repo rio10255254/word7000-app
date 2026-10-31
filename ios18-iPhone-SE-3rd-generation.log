@@ -1,0 +1,310 @@
+Command line invocation:
+    /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project ios/Word7000.xcodeproj -scheme Word7000 -destination id=21F39E50-14CB-49AD-AE7F-7FDD8FC96877 -derivedDataPath /Users/runner/work/_temp/DerivedData -parallel-testing-enabled NO "-only-testing:Word7000UITests/LayoutTests" CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Word7000Core: /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core @ local
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:21F39E50-14CB-49AD-AE7F-7FDD8FC96877, OS:18.6, name:layout-ios18-iPhone-SE-3rd-generation }
+{ platform:iOS Simulator, arch:x86_64, id:21F39E50-14CB-49AD-AE7F-7FDD8FC96877, OS:18.6, name:layout-ios18-iPhone-SE-3rd-generation }
+2026-10-31 06:18:23.824113+0000 Word7000UITests-Runner[48629:136283] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-31 06:18:33.265.
+Test Suite 'Word7000UITests.xctest' started at 2026-10-31 06:18:33.266.
+Test Suite 'LayoutTests' started at 2026-10-31 06:18:33.267.
+Test Case '-[Word7000UITests.LayoutTests testCompanionCanBePlayedWith]' started.
+    t =     0.00s Start Test at 2026-10-31 06:18:33.268
+    t =     0.64s Set Up
+    t =     0.69s Open com.rio.word7000
+    t =     0.69s     Launch com.rio.word7000
+    t =     6.10s         Setting up automation session
+    t =     7.93s         Wait for com.rio.word7000 to idle
+    t =    11.06s Waiting 10.0s for "today-start" Button to exist
+    t =    12.12s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =    12.12s         Checking existence of `"today-start" Button`
+    t =    14.58s Checking existence of `"today-mascot" Button`
+    t =    14.71s Tap "today-mascot" Button
+    t =    14.71s     Wait for com.rio.word7000 to idle
+    t =    14.72s     Find the "today-mascot" Button
+    t =    14.91s     Check for interrupting elements affecting "today-mascot" Button
+    t =    15.13s     Synthesize event
+    t =    15.61s     Wait for com.rio.word7000 to idle
+    t =    15.62s Press "today-mascot" Button for 0.8 seconds
+    t =    15.62s     Wait for com.rio.word7000 to idle
+    t =    15.67s     Find the "today-mascot" Button
+    t =    15.86s     Check for interrupting elements affecting "today-mascot" Button
+    t =    16.00s     Synthesize event
+    t =    17.11s     Wait for com.rio.word7000 to idle
+    t =    17.15s Press "today-mascot" Button[0.50, 0.50] for 0.1 seconds, then drag to "today-mascot" Button[0.50, 0.50] -> (-60.0, 30.0) with velocity of 500.00 pixels per second, and then hold for 0.0 seconds 
+    t =    17.15s     Wait for com.rio.word7000 to idle
+    t =    17.19s     Find the "today-mascot" Button
+    t =    17.40s     Check for interrupting elements affecting "today-mascot" Button
+    t =    17.53s     Synthesize event
+    t =    17.53s         Find the "today-mascot" Button
+    t =    17.90s         Find the "today-mascot" Button
+    t =    18.02s         Find the "today-mascot" Button
+    t =    18.17s         Find the "today-mascot" Button
+    t =    18.37s         Find the "today-mascot" Button
+    t =    19.04s     Wait for com.rio.word7000 to idle
+    t =    20.06s Find the Target Application 'com.rio.word7000'
+    t =    20.42s Added attachment named 'layout-companion'
+    t =    20.42s Requesting snapshot of accessibility hierarchy for app with pid 49129
+    t =    20.64s Requesting snapshot of accessibility hierarchy for app with pid 49129
+    t =    20.72s Find the "today-start" Button
+    t =    20.93s Tap "today-start" Button
+    t =    20.93s     Wait for com.rio.word7000 to idle
+    t =    20.94s     Find the "today-start" Button
+    t =    21.07s     Check for interrupting elements affecting "today-start" Button
+    t =    21.23s     Synthesize event
+    t =    21.56s     Wait for com.rio.word7000 to idle
+    t =    21.91s Waiting 5.0s for "study-show-answer" Button to exist
+    t =    22.98s     Checking `Expect predicate `existsNoRetry == 1` for object "study-show-answer" Button`
+    t =    22.98s         Checking existence of `"study-show-answer" Button`
+    t =    23.41s Tear Down
+Test Case '-[Word7000UITests.LayoutTests testCompanionCanBePlayedWith]' passed (24.332 seconds).
+Test Case '-[Word7000UITests.LayoutTests testHeaderButtonsAnswerTaps]' started.
+    t =     0.00s Start Test at 2026-10-31 06:18:57.602
+    t =     0.07s Set Up
+    t =     0.07s Open com.rio.word7000
+    t =     0.07s     Launch com.rio.word7000
+    t =     0.07s         Terminate com.rio.word7000:49129
+    t =     1.58s         Setting up automation session
+    t =     3.61s         Wait for com.rio.word7000 to idle
+    t =     5.93s Waiting 10.0s for "today-start" Button to exist
+    t =     6.97s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =     6.97s         Checking existence of `"today-start" Button`
+    t =     9.16s Checking existence of `"today-mascot" Button`
+    t =     9.25s Tap "today-mascot" Button
+    t =     9.25s     Wait for com.rio.word7000 to idle
+    t =     9.26s     Find the "today-mascot" Button
+    t =     9.36s     Check for interrupting elements affecting "today-mascot" Button
+    t =     9.41s     Synthesize event
+    t =     9.74s     Wait for com.rio.word7000 to idle
+    t =     9.74s Find the "today-study-filter" Button
+    t =     9.86s Tap "today-study-filter" Button
+    t =     9.86s     Wait for com.rio.word7000 to idle
+    t =     9.86s     Find the "today-study-filter" Button
+    t =     9.95s     Check for interrupting elements affecting "today-study-filter" Button
+    t =    10.00s     Synthesize event
+    t =    10.34s     Wait for com.rio.word7000 to idle
+    t =    10.98s Waiting 5.0s for "學習範圍" NavigationBar to exist
+    t =    12.02s     Checking `Expect predicate `existsNoRetry == 1` for object "學習範圍" NavigationBar`
+    t =    12.02s         Checking existence of `"學習範圍" NavigationBar`
+    t =    12.23s Find the Target Application 'com.rio.word7000'
+    t =    12.66s Added attachment named 'layout-scope-sheet'
+    t =    12.66s Requesting snapshot of accessibility hierarchy for app with pid 49799
+    t =    13.41s Requesting snapshot of accessibility hierarchy for app with pid 49799
+    t =    13.55s Tap "完成" Button
+    t =    13.55s     Wait for com.rio.word7000 to idle
+    t =    13.56s     Find the "完成" Button
+    t =    13.71s     Check for interrupting elements affecting "完成" Button
+    t =    13.85s     Synthesize event
+    t =    14.18s     Wait for com.rio.word7000 to idle
+    t =    14.70s Waiting 5.0s for "學習範圍" NavigationBar to not exist
+    t =    15.73s     Checking `Expect predicate `existsNoRetry == 0` for object "學習範圍" NavigationBar`
+    t =    15.74s         Checking existence of `"學習範圍" NavigationBar`
+    t =    15.88s Tap "today-mascot" Button
+    t =    15.88s     Wait for com.rio.word7000 to idle
+    t =    15.90s     Find the "today-mascot" Button
+    t =    16.02s     Check for interrupting elements affecting "today-mascot" Button
+    t =    16.12s     Synthesize event
+    t =    16.45s     Wait for com.rio.word7000 to idle
+    t =    16.46s Find the "today-language-zh" Button
+    t =    16.71s Tap "today-language-zh" Button
+    t =    16.71s     Wait for com.rio.word7000 to idle
+    t =    16.73s     Find the "today-language-zh" Button
+    t =    16.85s     Check for interrupting elements affecting "today-language-zh" Button
+    t =    16.93s     Synthesize event
+    t =    17.28s     Wait for com.rio.word7000 to idle
+    t =    18.93s Checking `Expect predicate `isSelected == 1` for object "today-language-zh" Button`
+    t =    18.93s     Find the "today-language-zh" Button
+    t =    19.11s Checking existence of `"today-spelling" Button`
+    t =    19.21s Find the Target Application 'com.rio.word7000'
+    t =    19.47s Added attachment named 'layout-switched-to-chinese'
+    t =    19.47s Requesting snapshot of accessibility hierarchy for app with pid 49799
+    t =    19.96s Requesting snapshot of accessibility hierarchy for app with pid 49799
+    t =    20.05s Tap "today-language-en" Button
+    t =    20.05s     Wait for com.rio.word7000 to idle
+    t =    20.05s     Find the "today-language-en" Button
+    t =    20.13s     Check for interrupting elements affecting "today-language-en" Button
+    t =    20.21s     Synthesize event
+    t =    20.54s     Wait for com.rio.word7000 to idle
+    t =    21.69s Checking `Expect predicate `isSelected == 1` for object "today-language-en" Button`
+    t =    21.69s     Find the "today-language-en" Button
+    t =    21.82s Waiting 5.0s for "today-spelling" Button to exist
+    t =    22.87s     Checking `Expect predicate `existsNoRetry == 1` for object "today-spelling" Button`
+    t =    22.87s         Checking existence of `"today-spelling" Button`
+    t =    22.97s Tear Down
+Test Case '-[Word7000UITests.LayoutTests testHeaderButtonsAnswerTaps]' passed (23.236 seconds).
+Test Case '-[Word7000UITests.LayoutTests testTodayFitsInChineseMode]' started.
+    t =     0.00s Start Test at 2026-10-31 06:19:20.840
+    t =     0.07s Set Up
+    t =     0.07s Open com.rio.word7000
+    t =     0.07s     Launch com.rio.word7000
+    t =     0.07s         Terminate com.rio.word7000:49799
+    t =     1.57s         Setting up automation session
+    t =     3.47s         Wait for com.rio.word7000 to idle
+    t =     5.88s Waiting 10.0s for "today-start" Button to exist
+    t =     6.95s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =     6.95s         Checking existence of `"today-start" Button`
+    t =     9.19s Find the Target Application 'com.rio.word7000'
+    t =     9.44s Added attachment named 'layout-chinese'
+    t =     9.46s Requesting snapshot of accessibility hierarchy for app with pid 50873
+    t =     9.87s Requesting snapshot of accessibility hierarchy for app with pid 50873
+    t =     9.98s Find the Window (First Match)
+    t =    10.02s Checking existence of `TabBar (First Match)`
+    t =    10.05s Find the TabBar (First Match)
+    t =    10.10s Checking existence of `"today-review" Button`
+    t =    10.18s Checking existence of `"today-language-en" Button`
+    t =    10.23s Find the "today-language-en" Button
+    t =    10.35s Find the "today-language-en" Button
+    t =    10.42s Checking existence of `"today-language-zh" Button`
+    t =    10.46s Find the "today-language-zh" Button
+    t =    10.54s Find the "today-language-zh" Button
+    t =    10.63s Checking existence of `"today-study-filter" Button`
+    t =    10.67s Find the "today-study-filter" Button
+    t =    10.73s Find the "today-study-filter" Button
+    t =    10.80s Checking existence of `"today-start" Button`
+    t =    10.86s Find the "today-start" Button
+    t =    10.93s Find the "today-start" Button
+    t =    11.03s Checking existence of `"today-review" Button`
+    t =    11.07s Find the "today-review" Button
+    t =    11.12s Find the "today-review" Button
+    t =    11.18s Checking existence of `"today-quiz" Button`
+    t =    11.25s Find the "today-quiz" Button
+    t =    11.30s Find the "today-quiz" Button
+    t =    11.36s Checking existence of `"today-speaking" Button`
+    t =    11.43s Find the "today-speaking" Button
+    t =    11.48s Find the "today-speaking" Button
+    t =    11.60s Checking existence of `"today-exam" Button`
+    t =    11.64s Find the "today-exam" Button
+    t =    11.68s Find the "today-exam" Button
+    t =    11.76s Checking existence of `"today-mascot" Button`
+    t =    11.83s Find the "today-mascot" Button
+LAYOUT layout-chinese: window (0.0, 0.0, 375.0, 667.0), tab bar top 618.0, last tile ends 605.0, gap 13.0
+    t =    11.89s Tear Down
+Test Case '-[Word7000UITests.LayoutTests testTodayFitsInChineseMode]' passed (12.162 seconds).
+Test Case '-[Word7000UITests.LayoutTests testTodayFitsInDarkMode]' started.
+    t =     0.00s Start Test at 2026-10-31 06:19:33.002
+    t =     0.04s Set Up
+    t =     0.05s Open com.rio.word7000
+    t =     0.05s     Launch com.rio.word7000
+    t =     0.05s         Terminate com.rio.word7000:50873
+    t =     1.48s         Setting up automation session
+    t =     2.86s         Wait for com.rio.word7000 to idle
+    t =     5.17s Waiting 10.0s for "today-start" Button to exist
+    t =     6.22s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =     6.22s         Checking existence of `"today-start" Button`
+    t =     8.64s Find the Target Application 'com.rio.word7000'
+    t =     8.94s Added attachment named 'layout-dark'
+    t =     8.94s Requesting snapshot of accessibility hierarchy for app with pid 51324
+    t =     9.59s Requesting snapshot of accessibility hierarchy for app with pid 51324
+    t =     9.68s Find the Window (First Match)
+    t =     9.70s Checking existence of `TabBar (First Match)`
+    t =     9.73s Find the TabBar (First Match)
+    t =     9.77s Checking existence of `"today-review" Button`
+    t =     9.83s Checking existence of `"today-language-en" Button`
+    t =    10.22s Find the "today-language-en" Button
+    t =    10.69s Find the "today-language-en" Button
+    t =    10.92s Checking existence of `"today-language-zh" Button`
+    t =    11.02s Find the "today-language-zh" Button
+    t =    11.09s Find the "today-language-zh" Button
+    t =    11.19s Checking existence of `"today-study-filter" Button`
+    t =    11.24s Find the "today-study-filter" Button
+    t =    11.31s Find the "today-study-filter" Button
+    t =    11.38s Checking existence of `"today-start" Button`
+    t =    11.42s Find the "today-start" Button
+    t =    11.53s Find the "today-start" Button
+    t =    11.61s Checking existence of `"today-review" Button`
+    t =    11.75s Find the "today-review" Button
+    t =    11.85s Find the "today-review" Button
+    t =    11.99s Checking existence of `"today-quiz" Button`
+    t =    12.06s Find the "today-quiz" Button
+    t =    12.15s Find the "today-quiz" Button
+    t =    12.25s Checking existence of `"today-speaking" Button`
+    t =    12.46s Find the "today-speaking" Button
+    t =    12.58s Find the "today-speaking" Button
+    t =    12.69s Checking existence of `"today-spelling" Button`
+    t =    12.76s Find the "today-spelling" Button
+    t =    12.88s Find the "today-spelling" Button
+    t =    12.98s Checking existence of `"today-exam" Button`
+    t =    13.03s Find the "today-exam" Button
+    t =    13.14s Find the "today-exam" Button
+    t =    13.20s Checking existence of `"today-mascot" Button`
+    t =    13.27s Find the "today-mascot" Button
+LAYOUT layout-dark: window (0.0, 0.0, 375.0, 667.0), tab bar top 618.0, last tile ends 606.0, gap 12.0
+    t =    13.37s Tear Down
+Test Case '-[Word7000UITests.LayoutTests testTodayFitsInDarkMode]' passed (13.599 seconds).
+Test Case '-[Word7000UITests.LayoutTests testTodayFitsInEnglishMode]' started.
+    t =     0.00s Start Test at 2026-10-31 06:19:46.601
+    t =     0.04s Set Up
+    t =     0.04s Open com.rio.word7000
+    t =     0.04s     Launch com.rio.word7000
+    t =     0.04s         Terminate com.rio.word7000:51324
+    t =     1.50s         Setting up automation session
+    t =     3.11s         Wait for com.rio.word7000 to idle
+    t =     5.33s Waiting 10.0s for "today-start" Button to exist
+    t =     6.35s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =     6.35s         Checking existence of `"today-start" Button`
+    t =     8.62s Find the Target Application 'com.rio.word7000'
+    t =     8.97s Added attachment named 'layout-english'
+    t =     8.97s Requesting snapshot of accessibility hierarchy for app with pid 51705
+    t =     9.67s Requesting snapshot of accessibility hierarchy for app with pid 51705
+    t =     9.73s Find the Window (First Match)
+    t =     9.74s Checking existence of `TabBar (First Match)`
+    t =     9.76s Find the TabBar (First Match)
+    t =     9.78s Checking existence of `"today-review" Button`
+    t =     9.86s Checking existence of `"today-language-en" Button`
+    t =     9.92s Find the "today-language-en" Button
+    t =     9.98s Find the "today-language-en" Button
+    t =    10.05s Checking existence of `"today-language-zh" Button`
+    t =    10.09s Find the "today-language-zh" Button
+    t =    10.19s Find the "today-language-zh" Button
+    t =    10.29s Checking existence of `"today-study-filter" Button`
+    t =    10.34s Find the "today-study-filter" Button
+    t =    10.43s Find the "today-study-filter" Button
+    t =    10.52s Checking existence of `"today-start" Button`
+    t =    10.62s Find the "today-start" Button
+    t =    10.72s Find the "today-start" Button
+    t =    10.86s Checking existence of `"today-review" Button`
+    t =    10.94s Find the "today-review" Button
+    t =    11.01s Find the "today-review" Button
+    t =    11.12s Checking existence of `"today-quiz" Button`
+    t =    11.19s Find the "today-quiz" Button
+    t =    11.29s Find the "today-quiz" Button
+    t =    11.36s Checking existence of `"today-speaking" Button`
+    t =    11.41s Find the "today-speaking" Button
+    t =    11.48s Find the "today-speaking" Button
+    t =    11.55s Checking existence of `"today-spelling" Button`
+    t =    11.61s Find the "today-spelling" Button
+    t =    11.66s Find the "today-spelling" Button
+    t =    11.71s Checking existence of `"today-exam" Button`
+    t =    11.76s Find the "today-exam" Button
+    t =    11.81s Find the "today-exam" Button
+    t =    11.87s Checking existence of `"today-mascot" Button`
+    t =    11.92s Find the "today-mascot" Button
+LAYOUT layout-english: window (0.0, 0.0, 375.0, 667.0), tab bar top 618.0, last tile ends 606.0, gap 12.0
+    t =    11.98s Tear Down
+Test Case '-[Word7000UITests.LayoutTests testTodayFitsInEnglishMode]' passed (12.207 seconds).
+Test Suite 'LayoutTests' passed at 2026-10-31 06:19:58.808.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 85.536 (85.542) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-10-31 06:19:58.810.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 85.536 (85.544) seconds
+Test Suite 'Selected tests' passed at 2026-10-31 06:19:58.810.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 85.536 (85.545) seconds
+2026-10-31 06:19:59.365 xcodebuild[46807:131538] [MT] IDETestOperationsObserverDebug: 116.891 elapsed -- Testing started completed.
+2026-10-31 06:19:59.365 xcodebuild[46807:131538] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-31 06:19:59.365 xcodebuild[46807:131538] [MT] IDETestOperationsObserverDebug: 116.891 sec, +116.891 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/DerivedData/Logs/Test/Test-Word7000-2026.10.31_06-17-51-+0000.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

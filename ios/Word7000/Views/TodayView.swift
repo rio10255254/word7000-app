@@ -518,6 +518,13 @@ private struct TilePressStyle: ButtonStyle {
     }
 }
 
+/// The icon and type sizes of a practice tile.
+struct PracticeTileStyle {
+    var icon: CGFloat
+    var title: Font.TextStyle
+    var detail: Font
+}
+
 /// A practice tile, in one of two compositions.
 ///
 /// A tall card puts the icon at the top and the title and detail along the

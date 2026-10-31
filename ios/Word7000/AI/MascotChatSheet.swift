@@ -263,7 +263,7 @@ private struct TypingDots: View {
                     Circle()
                         .fill(Color.secondary.opacity(0.6))
                         .frame(width: 7, height: 7)
-                        .offset(y: reduceMotion ? 0 : -abs(sin(t * 6 - Double(index) * 0.7)) * 4)
+                        .offset(y: reduceMotion ? 0 : -CGFloat(abs(sin(t * 6 - Double(index) * 0.7))) * 4)
                 }
             }
         }

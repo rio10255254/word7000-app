@@ -81,8 +81,8 @@ struct Mascot: View {
             ZStack {
                 // Two little feet, tucked under the body; they step in turn while it walks.
                 HStack(spacing: s * 0.2) {
-                    foot(s, lift: walking ? max(0, sin(step)) * s * 0.06 : 0)
-                    foot(s, lift: walking ? max(0, -sin(step)) * s * 0.06 : 0)
+                    foot(s, lift: walking ? CGFloat(max(0, sin(step))) * s * 0.06 : 0)
+                    foot(s, lift: walking ? CGFloat(max(0, -sin(step))) * s * 0.06 : 0)
                 }
                 .offset(y: s * 0.42)
                 sprout(s, sway: sin(t * (walking ? 4.5 : 1.6)) * (walking ? 14 : 8))

@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 import Word7000Core
 
@@ -962,6 +963,7 @@ struct MascotBuddy: View {
     @State private var smarting = false
     @State private var seeingStars = false
     @State private var smartTask: Task<Void, Never>?
+    @State private var shakes = 0
 
     var body: some View {
         let pull = CGSize(width: max(-1, min(1, drag.width / 80)), height: max(-1, min(1, drag.height / 80)))
@@ -1031,6 +1033,8 @@ struct MascotBuddy: View {
             .onChange(of: cue) { _, new in
                 if let new { play(new.antic) }
             }
+            // Shake the phone and it gets dizzy, and lets you know about it.
+            .onReceive(NotificationCenter.default.publisher(for: .deviceDidShake)) { _ in shaken() }
             .onChange(of: bubble) { _, new in
                 speech?.wrappedValue = new
             }
@@ -1044,6 +1048,7 @@ struct MascotBuddy: View {
             }
             .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.4), trigger: anticStart) { _, _ in haptics && antic == .flip }
             .sensoryFeedback(.impact(weight: .heavy, intensity: 0.9), trigger: slaps) { _, _ in haptics }
+            .sensoryFeedback(.warning, trigger: shakes) { _, _ in haptics }
             .sensoryFeedback(.success, trigger: hearts) { _, new in new > 0 && haptics }
             .task(id: greeting) {
                 // Once per appearance, except that a tip arriving later (today's
@@ -1156,6 +1161,21 @@ struct MascotBuddy: View {
         ]
         let pool = combo >= 4 ? cross : indignant
         return pool.filter { $0 != last }.randomElement() ?? pool[0]
+    }
+
+    private func shaken() {
+        onInteract?()
+        shakes += 1
+        smartTask?.cancel()
+        seeingStars = true
+        smartTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            seeingStars = false
+        }
+        say([L.t("幹嘛搖我！頭好暈……", "Stop shaking me! I'm dizzy…"),
+             L.t("地震嗎？喔，是你。", "Earthquake? Oh. It's you."),
+             L.t("搖我也不會掉出單字。", "Shaking me won't make words fall out.")].randomElement() ?? "", for: 2.4)
     }
 
     private func play(_ trick: MascotAntic) {

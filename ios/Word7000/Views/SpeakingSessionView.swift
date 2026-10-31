@@ -398,6 +398,9 @@ struct SpeakingSessionView: View {
                 .entrance(1)
             Text(L.speakingScore(answered)).foregroundStyle(.secondary)
                 .entrance(2)
+            CatVerdict(text: CatQuips.speakingDone(answered: answered), mood: answered > 0 ? .happy : .smug)
+                .padding(.horizontal, Metrics.gutter)
+                .entrance(3)
             Spacer()
             VStack(spacing: 12) {
                 Button { dismiss() } label: {

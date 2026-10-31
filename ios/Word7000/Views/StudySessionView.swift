@@ -29,6 +29,7 @@ struct StudySessionView: View {
     /// How the companion on the progress bar feels about the last card.
     @State private var buddyMood: Mascot.Mood = .thinking
     @State private var buddyHop = 0
+    @State private var buddyRemark: String?
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
@@ -47,7 +48,7 @@ struct StudySessionView: View {
                                        again: { model.startStudySession() }, startQuiz: startQuiz)
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
                         BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
-                                         mood: buddyMood, hop: buddyHop)
+                                         mood: buddyMood, hop: buddyHop, remark: buddyRemark)
                         GeometryReader { proxy in
                             ZStack {
                                 // The next card peeking out underneath, while there is one.
@@ -341,6 +342,7 @@ struct StudySessionView: View {
         let source = model.studySession?.sourceKey
         if !armed { feedback += 1 }
         buddyMood = grade == .known ? .happy : .encourage
+        buddyRemark = CatQuips.studied(buddyHop, known: grade == .known)
         buddyHop += 1
         phase = .leaving
         Speaker.shared.stop()
@@ -499,6 +501,8 @@ struct SessionSummary: View {
             Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
                 .foregroundStyle(.secondary)
                 .entrance(2)
+            CatVerdict(text: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone), mood: reachedGoal || model.goalDone ? .happy : .smug)
+                .entrance(3)
             HStack(spacing: 10) {
                 SummaryChip(value: session.knownIds.count, label: L.knowIt, icon: "checkmark", tint: Palette.known)
                     .entrance(3)

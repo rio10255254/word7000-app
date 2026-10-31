@@ -112,7 +112,8 @@ struct QuizSessionView: View {
             BuddyProgressBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)),
                              tint: combo >= 3 ? Palette.review : Palette.accent,
                              mood: chosen.map { option -> Mascot.Mood in option.correct ? (combo >= 3 ? .cheer : .happy) : .encourage } ?? .thinking,
-                             hop: correctCount + missedIds.count)
+                             hop: correctCount + missedIds.count,
+                             remark: chosen.map { $0.correct ? CatQuips.right(index, combo: combo) : CatQuips.wrong(index) })
                 // The run's badge floats just under the bar, clear of the question.
                 .overlay(alignment: .topLeading) {
                     if combo >= 3 {
@@ -295,6 +296,11 @@ struct QuizSessionView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .entrance(2)
+            // Only when the missed words' AI list is not taking the room.
+            if !(CloudAssistant.shared.offered && !missedIds.isEmpty) {
+                CatVerdict(text: CatQuips.verdict(fraction), mood: Mascot.Mood(score: fraction) == .encourage ? .smug : .happy)
+                    .entrance(3)
+            }
             if CloudAssistant.shared.offered, !missedIds.isEmpty {
                 missedWordsForAI
                     .entrance(3)

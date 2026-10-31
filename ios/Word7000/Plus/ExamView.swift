@@ -288,6 +288,7 @@ struct ExamView: View {
                 Text(L.t("答對 \(correctCount) / \(total) 題", "\(correctCount) of \(total) correct"))
                     .foregroundStyle(.secondary)
                     .accessibilityIdentifier("exam-summary")
+                CatVerdict(text: CatQuips.verdict(Double(score) / 100), mood: score >= 60 ? .happy : .smug)
                 VStack(spacing: 8) {
                     ForEach(Array(byLevel.enumerated()), id: \.offset) { _, row in
                         let ratio = Double(row.correct) / Double(max(1, row.total))

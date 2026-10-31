@@ -14,6 +14,10 @@ struct Mascot: View {
     var size: CGFloat = 96
     /// Bump to make it hop, e.g. when it is tapped.
     var hop = 0
+    /// Where it looks, from -1 to 1 on each axis: toward a finger dragging it.
+    var gaze: CGSize = .zero
+    /// Rosy cheeks, e.g. while it is being held.
+    var blush = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var colorScheme
@@ -115,7 +119,8 @@ struct Mascot: View {
     private func face(_ s: CGFloat, time t: Double) -> some View {
         let opensEyes = mood == .idle || mood == .encourage || mood == .thinking
         let blink = !reduceMotion && opensEyes && Self.blinking(t)
-        let look = mood == .thinking ? CGSize(width: s * 0.03, height: -s * 0.03) : .zero
+        let thinking = mood == .thinking ? CGSize(width: s * 0.03, height: -s * 0.03) : .zero
+        let look = CGSize(width: thinking.width + gaze.width * s * 0.035, height: thinking.height + gaze.height * s * 0.03)
         return ZStack {
             HStack(spacing: s * 0.17) {
                 eye(s, blink: blink)
@@ -126,9 +131,9 @@ struct Mascot: View {
                 cheek(s)
                 cheek(s)
             }
-            .offset(y: s * 0.08)
+            .offset(x: look.width * 0.5, y: s * 0.08)
             mouth(s)
-                .offset(y: s * 0.11)
+                .offset(x: look.width * 0.6, y: s * 0.11)
         }
     }
 
@@ -159,9 +164,11 @@ struct Mascot: View {
 
     private func cheek(_ s: CGFloat) -> some View {
         Ellipse()
-            .fill(Self.blush.opacity(mood == .sleepy ? 0.3 : 0.55))
+            .fill(Self.blush.opacity(blush ? 0.95 : mood == .sleepy ? 0.3 : 0.55))
             .frame(width: s * 0.11, height: s * 0.06)
+            .scaleEffect(blush ? 1.35 : 1)
             .blur(radius: s * 0.01)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: blush)
     }
 
     @ViewBuilder
@@ -292,9 +299,11 @@ private struct MascotOpenMouth: Shape {
     }
 }
 
-/// A short line from the mascot in a rounded bubble, pointing down at it.
+/// A short line from the mascot in a rounded bubble, pointing at it: down when
+/// the bubble sits above, right when it sits to its left, left when to its right.
 struct MascotBubble: View {
     var text: String
+    var pointing: Edge = .bottom
     static let cream = Color(red: 1.0, green: 0.98, blue: 0.94)
 
     var body: some View {
@@ -306,14 +315,23 @@ struct MascotBubble: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
             .background(Self.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .overlay(alignment: .bottom) {
+            .overlay(alignment: tailAlignment) {
                 MascotBubbleTail()
                     .fill(Self.cream)
                     .frame(width: 14, height: 8)
-                    .offset(y: 7)
+                    .rotationEffect(.degrees(pointing == .trailing ? -90 : pointing == .leading ? 90 : 0))
+                    .offset(x: pointing == .trailing ? 10 : pointing == .leading ? -10 : 0, y: pointing == .bottom ? 7 : 0)
             }
             .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
             .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var tailAlignment: Alignment {
+        switch pointing {
+        case .trailing: .trailing
+        case .leading: .leading
+        default: .bottom
+        }
     }
 }
 
@@ -326,6 +344,154 @@ private struct MascotBubbleTail: Shape {
         path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
         path.closeSubpath()
         return path
+    }
+}
+
+/// The companion you can play with. Tap it and it hops and says one of its
+/// lines; drag it and it leans and stretches after your finger, eyes following,
+/// then springs back; press and hold and it blushes as little hearts float up.
+/// Its speech bubble never takes touches, so it can't cover a button.
+struct MascotBuddy: View {
+    var mood: Mascot.Mood = .idle
+    var size: CGFloat = 64
+    /// What it may say when tapped; silent when empty.
+    var lines: [String] = []
+    /// Said once when it first appears, if anything.
+    var greeting: String? = nil
+    /// Where the bubble shows: above it (.top), to its left (.leading) or right (.trailing).
+    var bubbleSide: Edge = .top
+    /// Hops from outside, e.g. a greeting or a right answer.
+    var hop = 0
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(AppModel.self) private var model
+    @State private var pokes = 0
+    @State private var bubble: String?
+    @State private var bubbleTask: Task<Void, Never>?
+    @State private var drag: CGSize = .zero
+    @State private var held = false
+    @State private var hearts = 0
+    @State private var greeted = false
+
+    var body: some View {
+        let pull = CGSize(width: max(-1, min(1, drag.width / 80)), height: max(-1, min(1, drag.height / 80)))
+        Mascot(mood: held ? .happy : mood, size: size, hop: hop + pokes, gaze: pull, blush: held)
+            // Leans after the finger and stretches toward it, like soft clay.
+            .scaleEffect(x: 1 + abs(pull.width) * 0.12 - abs(pull.height) * 0.05,
+                         y: 1 + abs(pull.height) * 0.1 - abs(pull.width) * 0.06, anchor: .bottom)
+            .rotationEffect(.degrees(Double(pull.width) * 12), anchor: .bottom)
+            .offset(x: pull.width * size * 0.12, y: min(0, pull.height) * size * 0.1)
+            .overlay {
+                if hearts > 0 { MascotHearts(size: size).id(hearts) }
+            }
+            .overlay(alignment: bubbleAnchor) {
+                if let bubble {
+                    MascotBubble(text: bubble, pointing: bubblePointing)
+                        .frame(width: 180, alignment: bubbleAnchor)
+                        .offset(x: bubbleSide == .leading ? -size - 6 : bubbleSide == .trailing ? size + 6 : 0,
+                                y: bubbleSide == .top ? -size * 0.62 : -size * 0.05)
+                        .transition(.scale(scale: 0.6, anchor: bubbleSide == .top ? .bottom : bubbleSide == .leading ? .trailing : .leading)
+                            .combined(with: .opacity))
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
+                }
+            }
+            .contentShape(Circle().inset(by: -size * 0.04))
+            .onTapGesture { poke() }
+            .onLongPressGesture(minimumDuration: 0.4, maximumDistance: 12) {
+                love()
+            } onPressingChanged: { pressing in
+                withAnimation(Motion.pop) { held = pressing && !reduceMotion }
+            }
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 8)
+                    .onChanged { value in
+                        guard !reduceMotion else { return }
+                        withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.7)) { drag = value.translation }
+                    }
+                    .onEnded { _ in
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.45)) { drag = .zero }
+                    }
+            )
+            .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.7), trigger: pokes) { _, _ in haptics }
+            .sensoryFeedback(.success, trigger: hearts) { _, new in new > 0 && haptics }
+            .task {
+                guard let greeting, !greeted else { return }
+                greeted = true
+                try? await Task.sleep(for: .milliseconds(900))
+                say(greeting, for: 3.2)
+            }
+            // For VoiceOver a button that says hello, so it can be played with too.
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(L.t("小字團", "Wordling"))
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction { poke() }
+    }
+
+    private var haptics: Bool { model.settings.hapticsEnabled ?? true }
+
+    /// The side of the companion the bubble is pinned to, and so where it grows from.
+    private var bubbleAnchor: Alignment {
+        switch bubbleSide {
+        case .leading: .trailing
+        case .trailing: .leading
+        default: .top
+        }
+    }
+
+    private var bubblePointing: Edge {
+        switch bubbleSide {
+        case .leading: .trailing
+        case .trailing: .leading
+        default: .bottom
+        }
+    }
+
+    private func poke() {
+        pokes += 1
+        guard !lines.isEmpty else { return }
+        var next = lines.randomElement() ?? lines[0]
+        if next == bubble, let other = lines.first(where: { $0 != bubble }) { next = other }
+        say(next, for: 2.4)
+    }
+
+    private func love() {
+        hearts += 1
+        say(L.t("嘿嘿，好癢～", "Hehe, that tickles!"), for: 1.8)
+    }
+
+    private func say(_ text: String, for seconds: Double) {
+        withAnimation(reduceMotion ? nil : Motion.pop) { bubble = text }
+        bubbleTask?.cancel()
+        bubbleTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(seconds))
+            guard !Task.isCancelled else { return }
+            withAnimation(reduceMotion ? nil : Motion.reveal) { bubble = nil }
+        }
+    }
+}
+
+/// A few small hearts floating up from the companion and fading.
+private struct MascotHearts: View {
+    var size: CGFloat
+    @State private var risen = false
+
+    var body: some View {
+        ZStack {
+            ForEach(0..<4, id: \.self) { index in
+                let spread = CGFloat(index) - 1.5
+                Image(systemName: "heart.fill")
+                    .font(.system(size: size * (index % 2 == 0 ? 0.16 : 0.12)))
+                    .foregroundStyle(Color(red: 0.93, green: 0.45, blue: 0.42))
+                    .offset(x: spread * size * (risen ? 0.22 : 0.08), y: risen ? -size * (0.75 + 0.1 * CGFloat(index % 2)) : -size * 0.1)
+                    .opacity(risen ? 0 : 1)
+                    .scaleEffect(risen ? 1.1 : 0.4)
+            }
+        }
+        .allowsHitTesting(false)
+        .onAppear {
+            withAnimation(.easeOut(duration: 1.1)) { risen = true }
+        }
     }
 }
 

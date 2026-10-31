@@ -302,7 +302,8 @@ private struct ProfileCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
-                Mascot(mood: mastered > 0 ? .happy : .idle, size: 56)
+                MascotBuddy(mood: mastered > 0 ? .happy : .idle, size: 56, lines: buddyLines, bubbleSide: .trailing)
+                    .accessibilityIdentifier("me-mascot")
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 6) {
                         Text(name)
@@ -332,6 +333,16 @@ private struct ProfileCard: View {
         .padding(.vertical, 8)
         .sheet(isPresented: $signInOpen) { SignInSheet() }
         .manageSubscriptionsSheet(isPresented: $manageOpen)
+    }
+
+    /// What the companion says when tapped here: how far you have come.
+    private var buddyLines: [String] {
+        let streak = model.progress.streak
+        var lines = [L.t("已經熟記 \(mastered) 個字了！", "\(mastered) words mastered!")]
+        if streak > 0 { lines.append(L.t("連續 \(streak) 天，好厲害！", "\(streak) days in a row!")) }
+        if reviewing > 0 { lines.append(L.t("還有 \(reviewing) 個字等你複習", "\(reviewing) words to review")) }
+        lines.append(L.t("我們一起慢慢變強～", "Let's keep growing together"))
+        return lines
     }
 
     private var name: String {

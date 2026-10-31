@@ -133,6 +133,8 @@ struct RootView: View {
             if activity == nil { activity = .study }
         }
         .sensoryFeedback(.selection, trigger: tab) { _, _ in model.settings.hapticsEnabled ?? true }
+        // The tabs are rebuilt when the study mode changes, so the switch's tick is felt here.
+        .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in model.settings.hapticsEnabled ?? true }
         .safeAreaInset(edge: .top) {
             if model.storageFailed {
                 HStack {

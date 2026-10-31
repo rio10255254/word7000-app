@@ -286,7 +286,7 @@ struct SpellingSessionView: View {
     private var results: some View {
         VStack(spacing: 18) {
             Spacer()
-            ProgressRing(fraction: Double(correctCount) / Double(max(1, words.count)), color: Palette.known, lineWidth: 14) {
+            ResultRing(fraction: Double(correctCount) / Double(max(1, words.count)), color: Palette.known, lineWidth: 14) {
                 Text("\(reduceMotion ? correctCount : shownScore)/\(words.count)")
                     .font(.displaySize(30, weight: .bold))
                     .monospacedDigit()

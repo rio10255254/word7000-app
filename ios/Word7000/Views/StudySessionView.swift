@@ -6,6 +6,7 @@ import Word7000Core
 /// toolbar skips the tap and opens every card with its answer showing.
 struct StudySessionView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.appStyle) private var appStyle
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -54,11 +55,18 @@ struct StudySessionView: View {
                                 // The next card peeking out underneath, while there is one.
                                 // It rises toward the top as the card above is swiped away.
                                 if session.total - session.done > 1 {
-                                    RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
-                                        .fill(Palette.surface.opacity(0.55 + 0.3 * dragProgress))
-                                        .scaleEffect(x: 0.92 + 0.05 * dragProgress, y: 1, anchor: .bottom)
-                                        .offset(y: 9 - 5 * dragProgress)
-                                        .accessibilityHidden(true)
+                                    Group {
+                                        if appStyle == .collage {
+                                            // Collage: a sheet of graph paper under the index card.
+                                            PaperSurface(kind: .graph).rotationEffect(.degrees(2.2 - 1.5 * dragProgress))
+                                        } else {
+                                            RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
+                                                .fill(Palette.surface.opacity(0.55 + 0.3 * dragProgress))
+                                        }
+                                    }
+                                    .scaleEffect(x: 0.92 + 0.05 * dragProgress, y: 1, anchor: .bottom)
+                                    .offset(y: 9 - 5 * dragProgress)
+                                    .accessibilityHidden(true)
                                 }
                                 card(word: word)
                                     .onAppear {
@@ -237,15 +245,28 @@ struct StudySessionView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background { PremiumSurface(radius: Metrics.wordCardRadius) }
+        .background {
+            if appStyle == .collage {
+                // Collage: a ruled index card with a red margin, taped on.
+                PaperSurface(kind: .ruled)
+                    .overlay { Rectangle().strokeBorder(Collage.ink.opacity(0.12), lineWidth: 1) }
+            } else {
+                PremiumSurface(radius: Metrics.wordCardRadius)
+            }
+        }
+        .overlay(alignment: .top) {
+            if appStyle == .collage { TapeStrip(width: 74, angle: 3).offset(y: -10) }
+        }
         .overlay {
             // The verdict colours the card as it is dragged toward it.
-            RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: appStyle == .collage ? 0 : Metrics.wordCardRadius, style: .continuous)
                 .fill((dragOffset > 0 ? Palette.known : Palette.miss).opacity(swipeTint))
                 .allowsHitTesting(false)
         }
         // Picked up: the shadow deepens the further the card travels.
-        .shadow(color: .black.opacity(0.06 + 0.06 * dragProgress), radius: 12 + 10 * dragProgress, y: 4 + 6 * dragProgress)
+        .shadow(color: .black.opacity(appStyle == .collage ? 0.08 * dragProgress : 0.06 + 0.06 * dragProgress),
+                radius: 12 + 10 * dragProgress, y: 4 + 6 * dragProgress)
+        .rotationEffect(.degrees(appStyle == .collage ? -0.8 : 0))
         .overlay(alignment: .top) { swipeBadge }
         .scaleEffect(cardScale)
         .rotationEffect(.degrees(reduceMotion ? 0 : Double(dragOffset / max(cardWidth, 1)) * 8), anchor: .bottom)

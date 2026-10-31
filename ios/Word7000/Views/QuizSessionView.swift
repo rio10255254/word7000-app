@@ -6,6 +6,7 @@ struct QuizSessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
     var studyMissed: ([String]) -> Void
 
     static let length = 10
@@ -134,12 +135,22 @@ struct QuizSessionView: View {
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
+            .background {
+                // Collage: the question written on a torn scrap of graph paper.
+                if appStyle == .collage {
+                    PaperSurface(kind: .graph)
+                        .clipShape(TornEdgeShape(edges: [.bottom], depth: 5, seed: index))
+                        .rotationEffect(.degrees(-0.6))
+                }
+            }
             .entrance(0, distance: 10)
             .overlay(alignment: .topTrailing) { SpeakButton(text: face.speakText, language: face.speakLanguage) }
 
             VStack(spacing: 10) {
                 ForEach(Array(options.enumerated()), id: \.element) { offset, option in
                     optionButton(option)
+                        // Collage: the strips lie a little askew, each its own way.
+                        .rotationEffect(.degrees(appStyle == .collage ? [-0.7, 0.5, -0.4, 0.8][offset % 4] : 0))
                         .entrance(offset + 1, distance: 14)
                         .accessibilityIdentifier("quiz-option-\(offset)")
                 }
@@ -184,7 +195,25 @@ struct QuizSessionView: View {
     }
 
     /// "3 in a row", growing with each right answer while the run lasts.
+    @ViewBuilder
     private var comboBadge: some View {
+        if appStyle == .collage {
+            // Collage: a rubber stamp that grows a number with the run.
+            StampMark(size: 58, angle: -12) {
+                VStack(spacing: 0) {
+                    Text(L.t("連對", "Streak")).font(.caption2.weight(.heavy))
+                    Text("\(combo)").font(.display(.headline, weight: .heavy)).contentTransition(.numericText(value: Double(combo)))
+                }
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(L.t("連對 \(combo) 題", "\(combo) in a row"))
+            .accessibilityIdentifier("quiz-combo")
+        } else {
+            leatherComboBadge
+        }
+    }
+
+    private var leatherComboBadge: some View {
         Label {
             Text(L.t("連對 \(combo) 題", "\(combo) in a row"))
                 .contentTransition(.numericText(value: Double(combo)))
@@ -228,7 +257,13 @@ struct QuizSessionView: View {
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background {
-                if let highlight {
+                if appStyle == .collage {
+                    // Collage: a strip of paper with an ink edge, tinted once answered.
+                    Rectangle()
+                        .fill(highlight.map { $0.opacity(0.18) } ?? Palette.surface)
+                        .overlay { PaperGrain(opacity: 0.5) }
+                        .overlay { Rectangle().strokeBorder(Collage.ink.opacity(highlight == nil ? 0.55 : 0.8), lineWidth: 1.5) }
+                } else if let highlight {
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .fill(highlight.opacity(0.16))
                         .overlay {
@@ -276,7 +311,7 @@ struct QuizSessionView: View {
         let fraction = Double(correctCount) / Double(max(1, questions.count))
         return VStack(spacing: 18) {
             Spacer()
-            ProgressRing(fraction: fraction, color: Palette.known, lineWidth: 14) {
+            ResultRing(fraction: fraction, color: Palette.known, lineWidth: 14) {
                 Text("\(reduceMotion ? correctCount : shownScore)/\(questions.count)")
                     .font(.displaySize(30, weight: .bold))
                     .monospacedDigit()

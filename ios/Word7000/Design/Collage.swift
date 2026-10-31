@@ -267,6 +267,20 @@ struct StampMark<Content: View>: View {
     }
 }
 
+/// A list row's background: the surface colour, or in the collage a paper.
+struct StyledRowBackground: View {
+    @Environment(\.appStyle) private var appStyle
+    var paper: PaperKind = .ivory
+
+    var body: some View {
+        if appStyle == .collage {
+            PaperSurface(kind: paper)
+        } else {
+            Palette.surface
+        }
+    }
+}
+
 extension View {
     /// Mounts the content on a piece of paper, the collage way: torn on some
     /// edges, set at a slight angle, with an optional strip of tape on top.

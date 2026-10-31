@@ -16,6 +16,7 @@ struct MeView: View {
                 // Who you are and how far you have come, in one card.
                 Section {
                     ProfileCard(mastered: stats.mastered, reviewing: stats.review)
+                        .listRowBackground(StyledRowBackground(paper: .ruled))
                 } footer: {
                     if model.progress.streak > 0 {
                         Label {
@@ -29,6 +30,7 @@ struct MeView: View {
 
                 Section {
                     HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
+                        .listRowBackground(StyledRowBackground(paper: .graph))
                     let summary = LearningWeekSummary(days: model.activity(days: 7))
                     if summary.activeDays > 0 {
                         Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
@@ -58,7 +60,7 @@ struct MeView: View {
                     .accessibilityIdentifier("me-settings")
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(L.tabMe)

@@ -158,6 +158,26 @@ struct SessionBar: View {
     }
 }
 
+/// A result's score: a filling ring in the leather style, a rubber stamp
+/// pressed on at an angle in the collage.
+struct ResultRing<Label: View>: View {
+    @Environment(\.appStyle) private var appStyle
+    var fraction: Double
+    var color: Color
+    var lineWidth: CGFloat = 14
+    @ViewBuilder var label: () -> Label
+
+    var body: some View {
+        if appStyle == .collage {
+            GeometryReader { proxy in
+                StampMark(color: Palette.accent, size: min(proxy.size.width, proxy.size.height), angle: -8) { label() }
+            }
+        } else {
+            ProgressRing(fraction: fraction, color: color, lineWidth: lineWidth) { label() }
+        }
+    }
+}
+
 /// A session's progress bar with the companion riding along the filled end:
 /// pondering while you think, a happy hop for a right answer, a wobble of
 /// encouragement for a miss. Decorative: it takes no touches and VoiceOver

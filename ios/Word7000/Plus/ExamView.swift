@@ -259,7 +259,7 @@ struct ExamView: View {
         let badge = grade(score)
         return ScrollView {
             VStack(spacing: 18) {
-                ProgressRing(fraction: Double(score) / 100, color: scoreColor(score), lineWidth: 14) {
+                ResultRing(fraction: Double(score) / 100, color: scoreColor(score), lineWidth: 14) {
                     VStack(spacing: 0) {
                         Text("\(reduceMotion ? score : shownScore)")
                             .font(.displaySize(40, weight: .bold))

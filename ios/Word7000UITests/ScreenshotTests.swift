@@ -33,8 +33,10 @@ final class ScreenshotTests: XCTestCase {
         sleep(1)
         snap(app, "style-chosen-collage-today")
         app.tabBars.buttons.element(boundBy: 2).tap()
+        // Settings is the last row of Me: it only exists once scrolled to.
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
+        for _ in 0..<6 where !(app.buttons["me-settings"].exists && app.buttons["me-settings"].isHittable) { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-settings"].waitForExistence(timeout: 5))
-        for _ in 0..<4 where !app.buttons["me-settings"].isHittable { app.swipeUp() }
         app.buttons["me-settings"].tap()
         XCTAssertTrue(app.buttons["settings-style"].waitForExistence(timeout: 5))
         for _ in 0..<4 where !app.buttons["settings-style"].isHittable { app.swipeUp() }

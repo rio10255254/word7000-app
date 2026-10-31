@@ -10,7 +10,8 @@ final class LayoutTests: XCTestCase {
 
     private func launch(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans"] + extra
+        let theme = extra.contains("-uiTestingDark") ? [] : ["-uiTestingLight"]
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingFakePlans"] + theme + extra
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         // Let the entrance animations settle before measuring.
@@ -47,9 +48,8 @@ final class LayoutTests: XCTestCase {
         let sheet = app.navigationBars["學習範圍"]
         XCTAssertTrue(sheet.waitForExistence(timeout: 5), "The study scope did not open from the header chip")
         snap(app, "layout-scope-sheet")
-        sheet.swipeDown(velocity: .fast)
-        XCTAssertTrue(chip.waitForExistence(timeout: 5))
-        sleep(1)
+        sheet.buttons["完成"].tap()
+        XCTAssertTrue(sheet.waitForNonExistence(timeout: 5), "The study scope did not close")
 
         mascot.tap()
         let chinese = app.buttons["today-language-zh"]

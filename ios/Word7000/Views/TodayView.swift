@@ -33,7 +33,7 @@ private struct TodayMetrics {
     /// grow from the shortest toward the tallest to use the room left over.
     func tileHeight(tallCard: Bool) -> (min: CGFloat, max: CGFloat) {
         if tallCard { return (112, 172) }
-        return compact ? (54, 76) : tall ? (70, 104) : (62, 96)
+        return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
     }
 }
 
@@ -199,6 +199,8 @@ struct TodayView: View {
         let summary = VStack(alignment: .leading, spacing: m.compact ? 6 : 8) {
             Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
                 .font(.display(m.compact ? .title3 : .title2, weight: .bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
                 .foregroundStyle(Self.cream)
                 .contentTransition(.opacity)
             Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
@@ -255,8 +257,7 @@ struct TodayView: View {
                 HStack(alignment: .center, spacing: m.compact ? 14 : 18) {
                     ring
                     summary
-                    // Keeps the summary clear of the companion's corner.
-                    Spacer(minLength: m.mascot * 0.25)
+                    Spacer(minLength: 0)
                 }
                 startButton(m)
             }
@@ -304,6 +305,7 @@ struct TodayView: View {
             .font(.display(.footnote, weight: .semibold))
             .foregroundStyle(Self.cream)
             .lineLimit(1)
+            .minimumScaleFactor(0.75)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(Self.cream.opacity(0.16), in: Capsule())
@@ -359,9 +361,10 @@ struct TodayView: View {
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case 5..<12: return L.t("早安！", "Good morning!")
-        case 12..<18: return L.t("午安！", "Good afternoon!")
-        default: return L.t("晚安！", "Good evening!")
+        // Short in English too, so it fits beside the controls on a small phone.
+        case 5..<12: return L.t("早安！", "Morning!")
+        case 12..<18: return L.t("午安！", "Afternoon!")
+        default: return L.t("晚安！", "Evening!")
         }
     }
 
@@ -504,11 +507,12 @@ private struct PracticeTile: View {
                 HStack(spacing: 10) {
                     icon(size: compact ? 34 : 40)
                     VStack(alignment: .leading, spacing: 1) {
+                        // Two lines when a long title ("Speaking practice") meets a narrow tile.
                         Text(item.title)
                             .font(.display(.subheadline, weight: .bold))
                             .foregroundStyle(.primary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.85)
                         Text(item.detail)
                             .font(.caption)
                             .foregroundStyle(.secondary)

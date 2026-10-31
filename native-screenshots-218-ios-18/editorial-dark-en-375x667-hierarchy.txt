@@ -1,0 +1,117 @@
+Attributes: Application, 0x1123fbf20, pid: 82063, label: 'Word7000'
+Element subtree:
+ →Application, 0x1123fbf20, pid: 82063, label: 'Word7000'
+    Window (Main), 0x1123fb6e0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1123f9a00, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1123f95e0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1123fa240, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1123f9e20, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x1123ff640, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1123ff760, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1123ff880, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1123ff9a0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1123ffac0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1123ffbe0, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x1123ffd00, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x1123ffe20, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '建議'
+                              Button, 0x1123edac0, {{0.0, 20.0}, {80.0, 44.0}}, label: 'Words'
+                              StaticText, 0x1123edbe0, {{170.5, 32.0}, {34.0, 20.5}}, label: '建議'
+                              Other, 0x1123edd00, {{269.5, 25.5}, {45.5, 33.5}}, label: 'Add to bank'
+                                Other, 0x1123ede20, {{269.5, 25.5}, {45.5, 33.5}}
+                                  Button, 0x1123edf40, {{269.5, 25.5}, {45.5, 33.5}}, label: 'Add to bank'
+                                    Button, 0x1123ee060, {{269.5, 25.5}, {45.5, 33.5}}
+                                      Other, 0x1123ee180, {{269.5, 25.5}, {45.5, 33.5}}
+                                        Image, 0x1123ee2a0, {{269.5, 25.5}, {45.5, 33.5}}, identifier: 'folder.badge.plus', label: 'New Folder'
+                              Other, 0x1123ee3c0, {{323.0, 24.5}, {36.0, 35.0}}, identifier: 'star', label: 'Save'
+                                Other, 0x1123ee4e0, {{323.0, 24.5}, {36.0, 35.0}}
+                                  Button, 0x1123ee600, {{323.0, 24.5}, {36.0, 35.0}}, identifier: 'star', label: 'Save'
+                            Other, 0x1123ee720, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x1123ee840, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x1123ee960, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x1123eea80, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x1123eeba0, {{-161.5, -206.5}, {705.5, 873.5}}, label: 'PaperGrain'
+                                    CollectionView, 0x1123eecc0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x1123eede0, {{-16.0, -71.5}, {407.0, 157.0}}
+                                      Cell, 0x1123eef00, {{16.0, -32.5}, {343.0, 100.5}}
+                                        Other, 0x1123ef020, {{16.0, -32.5}, {343.0, 100.5}}
+                                          Other, 0x1123ef140, {{16.0, -32.5}, {343.0, 100.5}}
+                                            Other, 0x1123e82f0, {{16.0, -32.5}, {343.0, 100.5}}
+                                        Other, 0x1123e8410, {{16.0, -32.5}, {343.0, 100.5}}
+                                          Other, 0x1123e8530, {{16.0, -32.5}, {343.0, 100.5}}
+                                            Other, 0x1123e8650, {{16.0, -32.5}, {343.0, 100.5}}
+                                              StaticText, 0x1123e8770, {{32.0, -17.5}, {52.0, 18.0}}, label: 'English'
+                                              StaticText, 0x1123e8890, {{32.0, 4.5}, {64.0, 24.0}}, label: 'advice'
+                                              StaticText, 0x1123e89b0, {{32.0, 32.5}, {81.5, 20.5}}, label: 'n  /әd'vais/'
+                                      Other, 0x1123e8ad0, {{-16.0, 85.5}, {407.0, 171.0}}
+                                      Cell, 0x1123e8bf0, {{16.0, 85.5}, {343.0, 39.0}}
+                                        Other, 0x1123e8d10, {{16.0, 85.5}, {343.0, 39.0}}
+                                        Other, 0x111a94310, {{16.0, 85.5}, {343.0, 39.0}}
+                                          Other, 0x111a909a0, {{16.0, 85.5}, {343.0, 39.0}}
+                                            Other, 0x111a90580, {{16.0, 85.5}, {343.0, 39.0}}
+                                              StaticText, 0x111a90160, {{16.0, 85.5}, {343.0, 39.0}}, label: 'Example'
+                                      Cell, 0x111a90dc0, {{16.0, 124.5}, {343.0, 114.5}}
+                                        Other, 0x111a911e0, {{16.0, 124.5}, {343.0, 114.5}}
+                                          Other, 0x111a8f920, {{16.0, 124.5}, {343.0, 114.5}}
+                                            Other, 0x111a97be0, {{16.0, 124.5}, {343.0, 114.5}}
+                                        Other, 0x111a97d00, {{16.0, 124.5}, {343.0, 114.5}}
+                                          Other, 0x111a97e20, {{16.0, 124.5}, {343.0, 114.5}}
+                                            Other, 0x111a97f40, {{16.0, 124.5}, {343.0, 114.5}}
+                                              StaticText, 0x111a98060, {{32.0, 139.5}, {286.5, 42.5}}, label: '多虧她的建議，我才沒有買下那只裂掉的花瓶。'
+                                              StaticText, 0x111a98180, {{32.0, 186.0}, {259.5, 38.0}}, label: 'Her advice saved me from buying the cracked vase.'
+                                      Other, 0x111a982a0, {{-16.0, 256.5}, {407.0, 170.5}}
+                                      Cell, 0x111a983c0, {{16.0, 256.5}, {343.0, 39.0}}
+                                        Other, 0x111a984e0, {{16.0, 256.5}, {343.0, 39.0}}
+                                        Other, 0x111a98600, {{16.0, 256.5}, {343.0, 39.0}}
+                                          Other, 0x111a98720, {{16.0, 256.5}, {343.0, 39.0}}
+                                            Other, 0x111a98840, {{16.0, 256.5}, {343.0, 39.0}}
+                                              StaticText, 0x111a98960, {{16.0, 256.5}, {343.0, 39.0}}, label: 'More examples'
+                                      Cell, 0x111a98a80, {{16.0, 295.5}, {343.0, 114.0}}
+                                        Other, 0x111a98ba0, {{16.0, 295.5}, {343.0, 114.0}}
+                                          Other, 0x111a98cc0, {{16.0, 295.5}, {343.0, 114.0}}
+                                            Other, 0x111a98de0, {{16.0, 295.5}, {343.0, 114.0}}
+                                        Other, 0x111a98f00, {{16.0, 295.5}, {343.0, 114.0}}
+                                          Other, 0x111a99020, {{16.0, 295.5}, {343.0, 114.0}}
+                                            Other, 0x111a99140, {{16.0, 295.5}, {343.0, 114.0}}
+                                              StaticText, 0x111a99260, {{32.0, 306.5}, {253.0, 20.5}}, identifier: 'word-note-chinese-example', label: '我請老師給我一些選大學的建議。'
+                                              Button, 0x111a99380, {{310.0, 320.0}, {22.0, 17.5}}, identifier: 'speaker.wave.2.fill', label: 'Pronounce'
+                                              StaticText, 0x111a994a0, {{32.0, 360.5}, {311.0, 38.0}}, label: 'I asked my teacher for advice about choosing a university.'
+                                      Other, 0x111a995c0, {{-16.0, 427.0}, {407.0, 1525.0}}
+                                      Cell, 0x111a996e0, {{16.0, 427.0}, {343.0, 39.0}}
+                                        Other, 0x111a99800, {{16.0, 427.0}, {343.0, 39.0}}
+                                        Other, 0x111a99920, {{16.0, 427.0}, {343.0, 39.0}}
+                                          Other, 0x111a99a40, {{16.0, 427.0}, {343.0, 39.0}}
+                                            Other, 0x111a99b60, {{16.0, 427.0}, {343.0, 39.0}}
+                                              StaticText, 0x111a99c80, {{16.0, 427.0}, {343.0, 39.0}}, label: 'Progress'
+                                      Cell, 0x111a99da0, {{16.0, 466.0}, {343.0, 132.0}}
+                                        Other, 0x111a99ec0, {{16.0, 466.0}, {343.0, 132.0}}
+                                          Other, 0x111a99fe0, {{16.0, 466.0}, {343.0, 132.0}}
+                                            Other, 0x111a9a100, {{16.0, 466.0}, {343.0, 132.0}}
+                                        Other, 0x111a9a220, {{16.0, 466.0}, {343.0, 132.0}}
+                                          Other, 0x111a9a340, {{16.0, 466.0}, {343.0, 132.0}}
+                                            Other, 0x111a9a460, {{16.0, 466.0}, {343.0, 132.0}}
+                                              StaticText, 0x111a9a580, {{16.0, 466.0}, {343.0, 132.0}}, identifier: 'word-progress', label: 'New, Core 3, Not studied yet. Reviews are scheduled after you first meet it in a study session.'
+                                                StaticText, 0x111a9a6a0, {{42.0, 490.8}, {26.0, 14.5}}, label: 'New'
+                                                Other, 0x111a9a7c0, {{88.0, 485.1}, {31.6, 27.4}}
+                                                StaticText, 0x111a9a8e0, {{297.0, 489.0}, {46.0, 18.0}}, label: 'Core 3'
+                                                Other, 0x111a9aa00, {{32.0, 526.2}, {311.0, 3.6}}
+                                                StaticText, 0x111a9ab20, {{32.0, 543.0}, {310.0, 38.0}}, label: 'Not studied yet. Reviews are scheduled after you first meet it in a study session.'
+                                      Other, 0x111a9ac40, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 2 pages', value: 100%
+                                        Other, 0x111a9ad60, {{369.0, 250.5}, {3.0, 364.5}}
+                                      Other, 0x111a9ae80, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 2 pages', value: 100%
+                                        Other, 0x111a9afa0, {{369.0, 250.5}, {3.0, 364.5}}
+                TabBar, 0x111a9b0c0, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x111a9b1e0, {{2.0, 619.0}, {121.0, 48.0}}, identifier: 'sun.max.fill', label: 'Today'
+                  Button, 0x111a9b300, {{127.0, 619.0}, {121.0, 48.0}}, identifier: 'books.vertical.fill', label: 'Words', Selected
+                    Image, 0x111a9b420, {{170.5, 621.5}, {33.5, 29.5}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                  Button, 0x111a9b540, {{252.0, 619.0}, {121.0, 48.0}}, identifier: 'person.crop.circle.fill', label: 'Me'
+    Window, 0x111a9b660, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x111a9b780, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x111a9b8a0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x111a9b9c0, {{0.0, 667.0}, {375.0, 216.0}}
+Path to element:
+ →Application, 0x1123fbf20, pid: 82063, label: 'Word7000'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x111a95a00, pid: 82063, label: 'Word7000'
+  }

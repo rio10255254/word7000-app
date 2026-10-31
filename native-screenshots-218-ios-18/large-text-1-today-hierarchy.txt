@@ -1,0 +1,84 @@
+Attributes: Application, 0x101ed8f50, pid: 38085, label: 'Word7000'
+Element subtree:
+ →Application, 0x101ed8f50, pid: 38085, label: 'Word7000'
+    Window (Main), 0x101ed8840, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x101eda070, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x101eda400, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x101ed9d00, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x101f607d0, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x101f60ea0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x101f7b070, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x101fd2350, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x101fe7070, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x101fe7190, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x101fd33d0, {{-161.5, -206.5}, {705.5, 873.5}}
+                          Image, 0x101fd34f0, {{-161.5, -206.5}, {705.5, 873.5}}, label: 'PaperGrain'
+                          ScrollView, 0x101f06e00, {{0.0, 0.0}, {375.0, 667.0}}
+                            Other, 0x101f06f20, {{0.0, 20.0}, {375.0, 1150.5}}
+                              StaticText, 0x101fe9110, {{16.0, 26.0}, {125.0, 53.0}}, label: '早安！'
+                              Image, 0x101fe9230, {{19.0, 82.5}, {35.0, 35.0}}, identifier: 'sun.max.fill', label: '調高亮度'
+                              StaticText, 0x101fe8090, {{61.0, 80.2}, {234.0, 39.5}}, label: '10月31日 星期六'
+                              Other, 0x101fe81b0, {{16.0, 130.0}, {85.5, 45.5}}, identifier: 'today-language', label: '學習語言'
+                                Image, 0x101fee2d0, {{16.0, 130.0}, {85.5, 45.5}}, label: 'PaperGrain'
+                                Button, 0x101fee3f0, {{19.0, 133.0}, {43.5, 39.5}}, identifier: 'today-language-en', label: '學英文', Selected
+                                Button, 0x101fcc6e0, {{64.5, 133.0}, {34.0, 39.5}}, identifier: 'today-language-zh', label: '學中文'
+                              Button, 0x101fcc800, {{109.5, 131.5}, {233.0, 42.5}}, identifier: 'today-study-filter', label: '學習範圍：7000 單字'
+                                Image, 0x101ed92d0, {{109.5, 131.5}, {233.0, 42.5}}, label: 'PaperGrain'
+                                Image, 0x101eda770, {{125.5, 134.5}, {41.5, 36.5}}, identifier: 'books.vertical.fill', label: '書架'
+                                StaticText, 0x101edb180, {{177.0, 133.0}, {114.5, 39.5}}, label: '7000 單字'
+                                Image, 0x101edb510, {{301.0, 145.0}, {26.0, 15.5}}, identifier: 'chevron.down', label: '往下'
+                              StaticText, 0x101edb880, {{32.0, 203.5}, {203.5, 51.5}}, label: '今天的單字'
+                              StaticText, 0x101edbbd0, {{32.0, 261.0}, {295.0, 39.5}}, label: '8 個待複習 · 5 個新字'
+                              StaticText, 0x101edbf60, {{32.0, 306.5}, {117.5, 52.5}}, label: '連續 2 天'
+                              StaticText, 0x101edc2b0, {{155.5, 307.5}, {177.5, 50.0}}, label: '還差 13 個'
+                              Button, 0x101edc640, {{32.0, 373.0}, {311.0, 74.0}}, identifier: 'today-start', label: '繼續學習'
+                                StaticText, 0x101edc9b0, {{84.0, 386.0}, {151.5, 48.0}}, label: '繼續學習'
+                                Image, 0x101edcd00, {{248.5, 394.5}, {37.5, 31.0}}, identifier: 'arrow.right', label: '向右'
+                              StaticText, 0x101edd090, {{15.3, 444.3}, {117.3, 117.3}}, label: '7、/ 20 個', value: 35%
+                                Other, 0x101edd400, {{15.3, 444.3}, {117.3, 117.3}}
+                                StaticText, 0x101eee400, {{60.8, 464.1}, {26.5, 53.0}}, label: '7'
+                                StaticText, 0x101eeec60, {{44.0, 517.1}, {60.0, 24.5}}, label: '/ 20 個'
+                              StaticText, 0x101eeed80, {{20.0, 572.9}, {76.0, 48.0}}, label: '練習'
+                              Button, 0x101eeeea0, {{16.0, 629.0}, {343.0, 99.5}}, identifier: 'today-review', label: '複習不熟的字、練到熟為止、8'
+                                Image, 0x101eeefc0, {{16.0, 629.0}, {343.0, 99.5}}, label: 'PaperGrain'
+                                Image, 0x101eef0e0, {{282.8, 632.7}, {98.4, 111.5}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                                Image, 0x101eef200, {{39.5, 670.5}, {13.5, 16.5}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                                StaticText, 0x101eef320, {{74.0, 637.0}, {205.0, 43.0}}, label: '複習不熟的字'
+                                StaticText, 0x101eef440, {{74.0, 682.0}, {152.0, 38.5}}, label: '練到熟為止'
+                                StaticText, 0x101eef560, {{320.5, 659.5}, {19.5, 38.5}}, label: '8'
+                              Button, 0x101eef680, {{16.0, 736.5}, {343.0, 99.5}}, identifier: 'today-quiz', label: '小測驗、10 題'
+                                Image, 0x101eef7a0, {{16.0, 736.5}, {343.0, 99.5}}, label: 'PaperGrain'
+                                Image, 0x101eef8c0, {{271.7, 740.6}, {121.1, 110.7}}, identifier: 'checklist', label: 'checklist'
+                                Image, 0x101eef9e0, {{37.5, 778.5}, {17.5, 15.5}}, identifier: 'checklist', label: 'checklist'
+                                StaticText, 0x101eefb00, {{74.0, 744.5}, {102.5, 43.0}}, label: '小測驗'
+                                StaticText, 0x101eefc20, {{74.0, 789.5}, {72.0, 38.5}}, label: '10 題'
+                              Button, 0x101eefd40, {{16.0, 844.0}, {343.0, 99.5}}, identifier: 'today-speaking', label: '口說練習、開口說說看'
+                                Image, 0x101eefe60, {{16.0, 844.0}, {343.0, 99.5}}, label: 'PaperGrain'
+                                Image, 0x101eeff80, {{255.5, 834.4}, {159.9, 137.2}}, identifier: 'bubble.left.and.text.bubble.right.fill', label: 'bubble.left.and.text.bubble.right.fill'
+                                Image, 0x101ef00a0, {{35.0, 884.5}, {23.5, 18.5}}, identifier: 'bubble.left.and.text.bubble.right.fill', label: 'bubble.left.and.text.bubble.right.fill'
+                                StaticText, 0x101ef01c0, {{74.0, 852.0}, {136.5, 43.0}}, label: '口說練習'
+                                StaticText, 0x101ef02e0, {{74.0, 897.0}, {152.0, 38.5}}, label: '開口說說看'
+                              Button, 0x101ef0400, {{16.0, 951.5}, {343.0, 99.5}}, identifier: 'today-spelling', label: '拼字練習、10 題'
+                                Image, 0x101ef0520, {{16.0, 951.5}, {343.0, 99.5}}, label: 'PaperGrain'
+                                Image, 0x101ef0640, {{268.7, 952.7}, {126.7, 117.1}}, identifier: 'character.cursor.ibeam', label: '插入文字'
+                                Image, 0x101ef0760, {{37.0, 993.5}, {18.0, 16.0}}, identifier: 'character.cursor.ibeam', label: '插入文字'
+                                StaticText, 0x101ef0880, {{74.0, 959.5}, {136.5, 43.0}}, label: '拼字練習'
+                                StaticText, 0x101ef09a0, {{74.0, 1004.5}, {72.0, 38.5}}, label: '10 題'
+                              Button, 0x101ef0ac0, {{16.0, 1059.0}, {343.0, 99.5}}, identifier: 'today-exam', label: '模擬考、限時 15 分鐘'
+                                Image, 0x101ef0be0, {{16.0, 1059.0}, {343.0, 99.5}}, label: 'PaperGrain'
+                                Image, 0x101ef0d00, {{277.4, 1063.9}, {109.7, 109.7}}, identifier: 'timer', label: '計時器'
+                                Image, 0x101ef0e20, {{38.5, 1101.0}, {15.5, 15.5}}, identifier: 'timer', label: '計時器'
+                                StaticText, 0x101ef0f40, {{74.0, 1067.0}, {102.5, 43.0}}, label: '模擬考'
+                                StaticText, 0x101efe8e0, {{74.0, 1112.0}, {169.5, 38.5}}, label: '限時 15 分鐘'
+                TabBar, 0x101efea00, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x101efeb20, {{2.0, 619.0}, {121.0, 48.0}}, label: '今天', Selected
+                    Image, 0x101efec40, {{48.0, 621.5}, {29.0, 29.5}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                  Button, 0x101efed60, {{127.0, 619.0}, {121.0, 48.0}}, label: '單字'
+                  Button, 0x101efee80, {{252.0, 619.0}, {121.0, 48.0}}, label: '我'
+Path to element:
+ →Application, 0x101ed8f50, pid: 38085, label: 'Word7000'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x101ef1d80, pid: 38085, label: 'Word7000'
+  }

@@ -1,0 +1,19 @@
+Timestamp               Ty Process[PID:TID]
+2026-10-31 08:52:41.736 Df Photos[6634:33ee2] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-10-31 08:53:05.389 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003520630> Received PXDataSourceManagerChangedDataSource
+2026-10-31 08:53:05.409 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003520630> Re-Prepare Counts
+2026-10-31 08:53:05.420 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003520630> ⎡ Will Prepare Asset Type Counts
+2026-10-31 08:53:05.421 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003520630> Is Prepared:1 (preparing:1 || usable:0)
+2026-10-31 08:53:05.421 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x6000035311e0> Received PXDataSourceManagerChangedDataSource
+2026-10-31 08:53:05.422 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x6000035311e0> Re-Prepare Counts
+2026-10-31 08:53:05.424 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x6000035311e0> ⎡ Will Prepare Asset Type Counts
+2026-10-31 08:53:05.425 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x6000035311e0> Is Prepared:1 (preparing:1 || usable:0)
+2026-10-31 08:53:05.433 Df Photos[6634:33ee2] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x6000035311e0> ⎜ Prepare Asset Type Counts success:YES
+2026-10-31 08:53:05.437 Df Photos[6634:3b4d9] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003520630> ⎜ Prepare Asset Type Counts success:YES
+2026-10-31 08:53:05.959 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x6000035311e0> ⎣ Did Prepare Asset Type Counts
+2026-10-31 08:53:05.967 Df Photos[6634:63b0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003520630> ⎣ Did Prepare Asset Type Counts
+2026-10-31 08:55:06.666 Df Photos[6634:3b4d9] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-10-31 08:56:10.335 Df Photos[6634:3b541] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-10-31 08:58:15.754 Df Photos[6634:3b541] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-10-31 09:00:34.202 Df Photos[6634:446fb] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-10-31 09:01:48.660 Df Photos[6634:44706] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new

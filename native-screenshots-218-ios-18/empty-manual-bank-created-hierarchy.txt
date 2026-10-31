@@ -1,0 +1,105 @@
+Attributes: Application, 0x1112cbba0, pid: 65624, label: 'Word7000'
+Element subtree:
+ →Application, 0x1112cbba0, pid: 65624, label: 'Word7000'
+    Window (Main), 0x1112671a0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1112fedf0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1112fef10, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1112e4bd0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x101d61510, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x101d61630, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1112ff620, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1112ff740, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1112eb940, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1112eba60, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1112fe010, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x1112fe130, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x101d5ddc0, {{0.0, 20.0}, {375.0, 148.0}}, identifier: '單字'
+                              Other, 0x101d5dee0, {{278.5, 25.0}, {42.0, 34.0}}, identifier: 'words-filter', label: '篩選'
+                                Other, 0x1112e5c70, {{278.5, 25.0}, {42.0, 34.0}}
+                                  Button, 0x1112e5d90, {{278.5, 25.0}, {42.0, 34.0}}, identifier: 'words-filter', label: '篩選'
+                              Other, 0x1112dd490, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'words-add', label: '加號'
+                                Other, 0x1112dd5b0, {{328.5, 27.5}, {30.5, 29.5}}
+                                  Button, 0x111247a90, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'words-add', label: '加號'
+                                    Button, 0x111247bb0, {{328.5, 27.5}, {30.5, 29.5}}
+                                      Other, 0x11129cc60, {{328.5, 27.5}, {30.5, 29.5}}
+                                        Image, 0x11129cd80, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'plus', label: '加號'
+                              StaticText, 0x1112855b0, {{16.0, 67.5}, {64.5, 41.0}}, label: '單字'
+                              SearchField, 0x1112856d0, {{16.0, 117.0}, {343.0, 36.0}}, label: '搜尋英文、中文或例句', placeholderValue: '搜尋英文、中文或例句'
+                                Image, 0x1112e8830, {{22.0, 125.5}, {20.5, 18.5}}, identifier: 'magnifyingglass', label: 'Search'
+                            Other, 0x1112e8950, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x1112de530, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x1112de650, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x1112d4cc0, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x1112d4de0, {{-161.5, -206.5}, {705.5, 873.5}}, label: 'PaperGrain'
+                                    CollectionView, 0x1112dd8b0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x1112dd9d0, {{-16.0, -1063.7}, {407.0, 1381.2}}
+                                      Cell, 0x1112e8410, {{16.0, 168.0}, {343.0, 132.0}}
+                                        Other, 0x1112e8530, {{16.0, 168.0}, {343.0, 132.0}}
+                                          Other, 0x11120d160, {{16.0, 168.0}, {343.0, 132.0}}
+                                            Other, 0x11120d280, {{16.0, 168.0}, {343.0, 132.0}}
+                                        Other, 0x101d5b3d0, {{16.0, 168.0}, {343.0, 132.0}}
+                                          Other, 0x101d5b4f0, {{16.0, 168.0}, {343.0, 132.0}}
+                                            Other, 0x101d5b610, {{16.0, 168.0}, {343.0, 132.0}}
+                                              ScrollView, 0x101d5b730, {{16.0, 168.0}, {343.0, 132.0}}
+                                                Other, 0x1112c9b40, {{16.0, 168.0}, {444.0, 132.0}}
+                                                  Button, 0x1112c9c60, {{16.0, 172.0}, {140.0, 124.0}}, identifier: 'bank-core', label: '7000 單字、7000 個'
+                                                    Image, 0x1112c9d80, {{32.5, 187.5}, {17.5, 21.5}}, identifier: 'character.book.closed.fill', label: 'character.book.closed.fill'
+                                                    StaticText, 0x1112c9ea0, {{30.0, 249.5}, {72.0, 18.0}}, label: '7000 單字'
+                                                    StaticText, 0x1112c9fc0, {{30.0, 267.5}, {45.0, 14.5}}, label: '7000 個'
+                                                  Button, 0x1112ca0e0, {{277.5, 185.5}, {17.5, 17.5}}, identifier: 'ellipsis.circle', label: '管理 Lesson'
+                                                  Button, 0x1112ca200, {{168.0, 172.0}, {140.0, 124.0}}, identifier: 'bank-set-Lesson-1793435689721', label: 'Lesson、0 個', Selected
+                                                    Image, 0x1112ca320, {{184.5, 187.5}, {23.0, 18.5}}, identifier: 'folder.fill', label: '搬移'
+                                                    StaticText, 0x1112ca440, {{182.0, 245.0}, {53.0, 18.0}}, label: 'Lesson'
+                                                    StaticText, 0x1112ca560, {{182.0, 265.2}, {23.0, 14.5}}, label: '0 個'
+                                                    Image, 0x1112ca680, {{275.5, 264.0}, {17.0, 17.0}}, identifier: 'checkmark.circle.fill', label: '已選取', Selected
+                                                  Button, 0x1112ca7a0, {{320.0, 172.0}, {140.0, 124.0}}, identifier: 'words-scan', label: '試用還能掃描 5 次、掃描單字表'
+                                                    Image, 0x1112ca8c0, {{336.5, 188.0}, {21.5, 21.5}}, identifier: 'plus.viewfinder', label: 'plus.viewfinder'
+                                                    StaticText, 0x1112ca9e0, {{424.0, 186.0}, {22.0, 22.0}}, label: '試用還能掃描 5 次'
+                                                    StaticText, 0x1112cab00, {{334.0, 264.0}, {74.5, 18.0}}, label: '掃描單字表'
+                                      Other, 0x1112cac20, {{-16.0, 317.5}, {407.0, 1538.2}}
+                                      Cell, 0x1112cad40, {{16.0, 317.5}, {343.0, 39.0}}
+                                        Other, 0x1112cae60, {{16.0, 317.5}, {343.0, 39.0}}
+                                        Other, 0x1112caf80, {{16.0, 317.5}, {343.0, 39.0}}
+                                          Other, 0x1112cb0a0, {{16.0, 317.5}, {343.0, 39.0}}
+                                            Other, 0x1112cb1c0, {{16.0, 317.5}, {343.0, 39.0}}
+                                              StaticText, 0x1112cb2e0, {{32.0, 334.5}, {51.0, 16.0}}, label: 'Lesson'
+                                              StaticText, 0x1112cb400, {{318.0, 334.5}, {25.0, 16.0}}, label: '0 個'
+                                      Cell, 0x1112cb520, {{16.0, 356.5}, {343.0, 203.5}}
+                                        Other, 0x1112cb640, {{16.0, 356.5}, {343.0, 203.5}}
+                                          Other, 0x1112cb760, {{16.0, 356.5}, {343.0, 203.5}}
+                                            Other, 0x11125a060, {{16.0, 356.5}, {343.0, 203.5}}
+                                        Other, 0x11125a180, {{16.0, 356.5}, {343.0, 203.5}}
+                                          Other, 0x11125a2a0, {{16.0, 356.5}, {343.0, 203.5}}
+                                            Other, 0x11125a3c0, {{16.0, 356.5}, {343.0, 203.5}}
+                                              Other, 0x1112c8ee0, {{157.0, 386.9}, {69.3, 67.1}}
+                                              StaticText, 0x1112c9000, {{114.0, 465.5}, {147.0, 26.5}}, label: '沒有符合的單字'
+                                              StaticText, 0x1112c9120, {{163.2, 495.0}, {48.5, 18.0}}, label: 'Lesson'
+                                      Cell, 0x1112c9240, {{16.0, 560.0}, {343.0, 44.0}}
+                                        Other, 0x1112c9360, {{16.0, 560.0}, {343.0, 44.0}}
+                                          Other, 0x1112c9480, {{16.0, 560.0}, {343.0, 44.0}}
+                                            Other, 0x1112c95a0, {{16.0, 560.0}, {343.0, 44.0}}
+                                        Other, 0x1112c96c0, {{16.0, 560.0}, {343.0, 44.0}}
+                                          Other, 0x1112c97e0, {{16.0, 560.0}, {343.0, 44.0}}
+                                            Other, 0x111255d30, {{16.0, 560.0}, {343.0, 44.0}}
+                                              Button, 0x111255e50, {{16.0, 560.0}, {343.0, 44.0}}, label: '新增單字'
+                                      Other, 0x111255f70, {{114.0, 559.5}, {245.0, 0.5}}
+                                      Other, 0x111256090, {{342.0, 116.0}, {30.0, 502.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x11125a6a0, {{369.0, 119.0}, {3.0, 36.0}}
+                                      Other, 0x11125a7c0, {{342.0, 116.0}, {30.0, 502.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x11125a8e0, {{369.0, 119.0}, {3.0, 36.0}}
+                TabBar, 0x11125aa00, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x11125ab20, {{2.0, 619.0}, {121.0, 48.0}}, identifier: 'sun.max.fill', label: '今天'
+                  Button, 0x11125ac40, {{127.0, 619.0}, {121.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字', Selected
+                    Image, 0x11125ad60, {{170.5, 621.5}, {33.5, 29.5}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                  Button, 0x11125ae80, {{252.0, 619.0}, {121.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我'
+    Window, 0x11125afa0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x11125b0c0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11125b1e0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11125b300, {{0.0, 667.0}, {375.0, 216.0}}
+Path to element:
+ →Application, 0x1112cbba0, pid: 65624, label: 'Word7000'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x11129d920, pid: 65624, label: 'Word7000'
+  }

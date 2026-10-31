@@ -1,0 +1,71 @@
+Attributes: Application, 0x101d76770, pid: 38085, label: 'Word7000'
+Element subtree:
+ →Application, 0x101d76770, pid: 38085, label: 'Word7000'
+    Window (Main), 0x101de0df0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x101de40f0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x101de6190, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x101d8ae50, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x101d79c00, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x101de7cd0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x101de7490, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x101dcfdf0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x101decf50, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x101ded070, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x101ded190, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x101ded2b0, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x101ded3d0, {{0.0, 20.0}, {375.0, 109.5}}, identifier: '我'
+                              StaticText, 0x101ded4f0, {{16.0, 64.0}, {49.5, 62.5}}, label: '我'
+                            Other, 0x101ded610, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x101ded730, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x101ded850, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x101ded970, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x101deda90, {{-161.5, -206.5}, {705.5, 873.5}}, label: 'PaperGrain'
+                                    CollectionView, 0x101dedbb0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x101fd2350, {{-16.0, -1204.5}, {407.0, 1955.0}}
+                                      Cell, 0x101fbb740, {{16.0, 129.5}, {343.0, 603.5}}
+                                        Other, 0x101fadaf0, {{16.0, 129.5}, {343.0, 603.5}}
+                                          Other, 0x101fcc820, {{16.0, 129.5}, {343.0, 603.5}}
+                                            Other, 0x101fb6510, {{16.0, 129.5}, {343.0, 603.5}}
+                                        Other, 0x101fb60d0, {{16.0, 129.5}, {343.0, 603.5}}
+                                          Other, 0x101fc5620, {{16.0, 129.5}, {343.0, 603.5}}
+                                            Other, 0x101fb44f0, {{16.0, 129.5}, {343.0, 603.5}}
+                                              Button, 0x101fae4d0, {{29.8, 197.3}, {60.5, 60.5}}, identifier: 'me-mascot', label: '小字團'
+                                                Other, 0x101fae0b0, {{29.8, 197.3}, {60.5, 60.5}}
+                                              StaticText, 0x101fb4d30, {{100.0, 161.0}, {161.0, 51.0}}, label: '我的學習'
+                                              StaticText, 0x101fb4910, {{274.0, 151.5}, {61.5, 70.0}}, label: '試用 7 天'
+                                              Image, 0x101fb81c0, {{115.0, 235.5}, {31.5, 22.0}}, identifier: 'checkmark.icloud', label: 'checkmark.icloud', Selected
+                                              StaticText, 0x101fb82e0, {{115.0, 228.5}, {214.0, 77.5}}, label: '進度保存在這支 iPhone'
+                                              StaticText, 0x101fb8400, {{32.0, 320.0}, {311.0, 90.5}}, identifier: 'me-level', label: 'Lv.1、單字新手、再 3 字升級'
+                                                StaticText, 0x101fb8520, {{41.0, 337.2}, {69.5, 43.0}}, label: 'Lv.1'
+                                                StaticText, 0x101fb8640, {{127.5, 339.5}, {91.5, 38.5}}, label: '單字新手'
+                                                StaticText, 0x101fb8760, {{251.5, 320.0}, {91.5, 77.5}}, label: '再 3 字升級'
+                                                Other, 0x101fb8880, {{32.0, 404.5}, {311.0, 6.0}}
+                                              StaticText, 0x101fb89a0, {{53.0, 424.5}, {61.0, 111.0}}, label: '2、連續天數'
+                                                StaticText, 0x101fb8ac0, {{75.5, 424.5}, {16.0, 31.5}}, label: '2'
+                                                StaticText, 0x101fb8be0, {{53.0, 458.0}, {61.0, 77.5}}, label: '連續天數'
+                                              StaticText, 0x101fb8d00, {{157.0, 444.0}, {61.0, 72.0}}, label: '47、已會'
+                                                StaticText, 0x101fb8e20, {{171.8, 444.0}, {31.5, 31.5}}, label: '47'
+                                                StaticText, 0x101fb8f40, {{157.0, 477.5}, {61.0, 38.5}}, label: '已會'
+                                              StaticText, 0x101dedcd0, {{245.8, 444.0}, {91.5, 72.0}}, label: '8、複習中'
+                                                StaticText, 0x101deddf0, {{283.5, 444.0}, {16.0, 31.5}}, label: '8'
+                                                StaticText, 0x101dedf10, {{245.8, 477.5}, {91.5, 38.5}}, label: '複習中'
+                                              Button, 0x101dee030, {{32.0, 549.5}, {311.0, 73.0}}, identifier: 'me-plus', label: '升級 Plus'
+                                                Image, 0x101dee150, {{93.5, 569.0}, {26.5, 32.0}}, identifier: 'sparkles', label: '閃光'
+                                                StaticText, 0x101dee270, {{32.0, 549.5}, {311.0, 73.0}}, label: '升級 Plus'
+                                              StaticText, 0x101dee390, {{32.0, 636.5}, {296.0, 77.5}}, label: '試用剩 7 天 · 試用還能掃描 5 次'
+                                      Other, 0x101dee4b0, {{342.0, 129.5}, {30.0, 488.5}}, label: 'Vertical scroll bar, 3 pages', value: 0%
+                                        Other, 0x101dee5d0, {{369.0, 608.0}, {3.0, 7.0}}
+                                      Other, 0x101dee6f0, {{342.0, 129.5}, {30.0, 488.5}}, label: 'Vertical scroll bar, 3 pages', value: 0%
+                                        Other, 0x101dee810, {{369.0, 608.0}, {3.0, 7.0}}
+                TabBar, 0x101dee930, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x101deea50, {{2.0, 619.0}, {121.0, 48.0}}, identifier: 'sun.max.fill', label: '今天'
+                  Button, 0x101deeb70, {{127.0, 619.0}, {121.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字'
+                  Button, 0x101deec90, {{252.0, 619.0}, {121.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我', Selected
+                    Image, 0x101deedb0, {{298.5, 622.5}, {27.5, 27.5}}, identifier: 'person.crop.circle.fill', label: 'account'
+Path to element:
+ →Application, 0x101d76770, pid: 38085, label: 'Word7000'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x111016310, pid: 38085, label: 'Word7000'
+  }

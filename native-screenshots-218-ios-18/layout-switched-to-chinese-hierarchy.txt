@@ -1,0 +1,82 @@
+Attributes: Application, 0x111050970, pid: 47993, label: 'Word7000'
+Element subtree:
+ →Application, 0x111050970, pid: 47993, label: 'Word7000'
+    Window (Main), 0x111051d70, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1110546b0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1110529d0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x111054290, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x111051310, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x1110304c0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x111050550, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x111052190, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x111052df0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x111053210, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x111053e70, {{-161.5, -206.5}, {795.6, 873.5}}
+                          Image, 0x111053630, {{-161.5, -206.5}, {705.5, 873.5}}, label: 'PaperGrain'
+                          Image, 0x111053a50, {{16.0, 96.0}, {343.0, 176.5}}, label: 'PaperGrain'
+                          StaticText, 0x1110525b0, {{15.3, 95.3}, {117.3, 117.3}}, label: '7, of 20', value: 35%
+                            Other, 0x11104e210, {{15.3, 95.3}, {117.3, 117.3}}
+                            StaticText, 0x11104e330, {{67.2, 134.0}, {13.5, 26.5}}, label: '7'
+                            StaticText, 0x11104e450, {{60.2, 160.5}, {27.5, 13.5}}, label: 'of 20'
+                          StaticText, 0x11104e570, {{130.0, 117.8}, {108.0, 18.0}}, label: 'Today's words'
+                          StaticText, 0x11104e690, {{130.0, 141.8}, {114.5, 16.0}}, label: '8 to review · 5 new'
+                          Image, 0x11104e7b0, {{141.0, 170.0}, {11.0, 14.5}}, identifier: 'flame.fill', label: '2-day streak'
+                          StaticText, 0x11104e8d0, {{130.0, 164.0}, {53.0, 26.5}}, label: '2-day streak'
+                          Image, 0x11104e9f0, {{200.0, 170.5}, {13.5, 13.5}}, identifier: 'target', label: '13 to go'
+                          StaticText, 0x11104eb10, {{189.0, 164.5}, {81.0, 25.5}}, label: '13 to go'
+                          Button, 0x11104ec30, {{32.0, 210.0}, {311.0, 46.5}}, identifier: 'today-start', label: 'Continue'
+                            StaticText, 0x11104ed50, {{137.5, 223.0}, {72.0, 20.5}}, label: 'Continue'
+                            Image, 0x11104ee70, {{219.5, 226.5}, {16.0, 13.5}}, identifier: 'arrow.right', label: 'Right'
+                          Button, 0x11108bd70, {{286.7, 69.7}, {62.6, 62.6}}, identifier: 'today-mascot', label: 'Wordling'
+                            Other, 0x11108be90, {{290.8, 77.5}, {63.1, 51.5}}
+                            StaticText, 0x11108bfb0, {{125.0, 83.0}, {165.0, 30.0}}, label: 'Only 7? LOL. 13 to go.'
+                          StaticText, 0x11108c0d0, {{20.0, 284.5}, {70.5, 20.5}}, label: 'Practice'
+                          Button, 0x11108c1f0, {{16.0, 313.0}, {343.0, 92.0}}, identifier: 'today-review', label: 'Review tricky words, Until they stick, 8'
+                            Image, 0x11108c310, {{16.0, 313.0}, {343.0, 92.0}}, label: 'PaperGrain'
+                            Image, 0x11108c430, {{288.5, 316.3}, {91.1, 103.4}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                            Image, 0x11108c550, {{39.5, 351.0}, {13.5, 16.5}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                            StaticText, 0x11108c670, {{74.0, 341.8}, {153.0, 18.0}}, label: 'Review tricky words'
+                            StaticText, 0x11108c790, {{74.0, 361.8}, {84.5, 14.5}}, label: 'Until they stick'
+                            StaticText, 0x11108c8b0, {{332.0, 351.8}, {8.0, 14.5}}, label: '8'
+                          Button, 0x11108c9d0, {{16.0, 413.0}, {167.5, 92.0}}, identifier: 'today-quiz', label: 'Quick quiz, 10 questions'
+                            Image, 0x11108caf0, {{16.0, 413.0}, {167.5, 92.0}}, label: 'PaperGrain'
+                            Image, 0x11108cc10, {{102.8, 416.9}, {111.9, 102.2}}, identifier: 'checklist', label: 'checklist'
+                            Image, 0x11108cd30, {{37.5, 451.5}, {17.5, 15.5}}, identifier: 'checklist', label: 'checklist'
+                            StaticText, 0x11108ce50, {{74.0, 441.8}, {82.0, 18.0}}, label: 'Quick quiz'
+                            StaticText, 0x11108cf70, {{74.0, 461.8}, {72.0, 14.5}}, label: '10 questions'
+                          Button, 0x11108d090, {{191.5, 413.0}, {167.5, 92.0}}, identifier: 'today-speaking', label: 'Speaking practice, Say it out loud'
+                            Image, 0x11108d1b0, {{191.5, 413.0}, {167.5, 92.0}}, label: 'PaperGrain'
+                            Image, 0x11108d2d0, {{263.2, 404.0}, {148.0, 127.2}}, identifier: 'bubble.left.and.text.bubble.right.fill', label: 'bubble.left.and.text.bubble.right.fill'
+                            Image, 0x11108d3f0, {{210.5, 450.0}, {23.5, 18.5}}, identifier: 'bubble.left.and.text.bubble.right.fill', label: 'bubble.left.and.text.bubble.right.fill'
+                            StaticText, 0x11108d510, {{249.5, 431.8}, {74.5, 38.0}}, label: 'Speaking practice'
+                            StaticText, 0x11108d630, {{249.5, 471.8}, {81.0, 14.5}}, label: 'Say it out loud'
+                          Button, 0x11108d750, {{16.0, 513.0}, {343.0, 92.0}}, identifier: 'today-exam', label: 'Exam, 15 min timed'
+                            Image, 0x11108d870, {{16.0, 513.0}, {343.0, 92.0}}, label: 'PaperGrain'
+                            Image, 0x11108d990, {{283.5, 517.5}, {101.4, 101.4}}, identifier: 'timer', label: 'Timer'
+                            Image, 0x11108dab0, {{38.5, 551.5}, {15.5, 15.5}}, identifier: 'timer', label: 'Timer'
+                            StaticText, 0x11108dbd0, {{74.0, 541.8}, {43.0, 18.0}}, label: 'Exam'
+                            StaticText, 0x11108dcf0, {{74.0, 561.8}, {72.5, 14.5}}, label: '15 min timed'
+                          StaticText, 0x11108de10, {{16.0, 26.0}, {89.0, 23.0}}, label: 'Morning!'
+                          Image, 0x111032000, {{17.0, 51.0}, {14.0, 14.0}}, identifier: 'sun.max.fill', label: 'Brightness Higher'
+                          StaticText, 0x111032120, {{36.0, 51.5}, {67.0, 13.0}}, label: 'Saturday, Oct 31'
+                          Other, 0x111032240, {{129.5, 28.0}, {76.0, 36.0}}, identifier: 'today-language', label: 'Learning language'
+                            Image, 0x111032360, {{129.5, 28.0}, {76.0, 36.0}}, label: 'PaperGrain'
+                            Button, 0x111032480, {{132.5, 31.0}, {34.0, 30.0}}, identifier: 'today-language-en', label: 'Learn English'
+                            Button, 0x1110325a0, {{168.5, 31.0}, {34.0, 30.0}}, identifier: 'today-language-zh', label: 'Learn Chinese', Selected
+                          Button, 0x1110326c0, {{213.5, 28.0}, {145.5, 36.0}}, identifier: 'today-study-filter', label: 'Study scope: 7000 Words'
+                            Image, 0x1110327e0, {{213.5, 28.0}, {145.5, 36.0}}, label: 'PaperGrain'
+                            Image, 0x111032900, {{227.0, 39.0}, {16.5, 14.5}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                            StaticText, 0x111032a20, {{251.0, 38.0}, {77.0, 16.0}}, label: '7000 Words'
+                            Image, 0x111032b40, {{335.5, 43.0}, {10.0, 6.0}}, identifier: 'chevron.down', label: 'Go Down'
+                TabBar, 0x11108e150, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x11108e270, {{2.0, 619.0}, {121.0, 48.0}}, identifier: 'sun.max.fill', label: 'Today', Selected
+                    Image, 0x11108e390, {{47.5, 621.5}, {29.0, 29.5}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                  Button, 0x11108e4b0, {{127.0, 619.0}, {121.0, 48.0}}, identifier: 'books.vertical.fill', label: 'Words'
+                  Button, 0x11108e5d0, {{252.0, 619.0}, {121.0, 48.0}}, identifier: 'person.crop.circle.fill', label: 'Me'
+Path to element:
+ →Application, 0x111050970, pid: 47993, label: 'Word7000'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x101dae4e0, pid: 47993, label: 'Word7000'
+  }

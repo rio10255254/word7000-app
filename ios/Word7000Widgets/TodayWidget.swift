@@ -10,7 +10,7 @@ struct TodayWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: HomeWidgetStore.kind, provider: TodayProvider()) { entry in
             TodayWidgetView(entry: entry)
-                .containerBackground(.background, for: .widget)
+                .containerBackground(for: .widget) { WidgetBackground() }
                 .widgetURL(URL(string: "word7000://study"))
         }
         .configurationDisplayName("Word7000")
@@ -56,10 +56,23 @@ struct TodayProvider: TimelineProvider {
     }
 }
 
+/// The app's warm palette: terracotta, sage for a goal met, ochre for streaks.
 private enum WidgetPalette {
-    static let accent = Color(red: 0.145, green: 0.388, blue: 0.922)
-    static let known = Color(red: 0.188, green: 0.78, blue: 0.345)
-    static let streak = Color(red: 1, green: 0.584, blue: 0)
+    static let accent = Color(red: 0.81, green: 0.42, blue: 0.28)
+    static let known = Color(red: 0.45, green: 0.6, blue: 0.38)
+    static let streak = Color(red: 0.83, green: 0.58, blue: 0.2)
+}
+
+/// Warm paper, or warm charcoal in dark mode, like the app's pages.
+private struct WidgetBackground: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        LinearGradient(colors: colorScheme == .dark
+                       ? [Color(red: 0.18, green: 0.165, blue: 0.145), Color(red: 0.12, green: 0.11, blue: 0.1)]
+                       : [Color(red: 0.97, green: 0.95, blue: 0.91), Color(red: 0.93, green: 0.89, blue: 0.83)],
+                       startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
 }
 
 struct TodayWidgetView: View {
@@ -95,7 +108,7 @@ struct TodayWidgetView: View {
     private func small(_ display: HomeWidgetSnapshot.Display) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(entry.t("今天", "Today")).font(.system(size: 15, weight: .bold, design: .rounded))
+                Text(entry.t("今天", "Today")).font(.system(size: 15, weight: .bold, design: .serif))
                 Spacer()
                 streak(display)
             }
@@ -115,7 +128,7 @@ struct TodayWidgetView: View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(entry.t("今天", "Today")).font(.system(size: 15, weight: .bold, design: .rounded))
+                    Text(entry.t("今天", "Today")).font(.system(size: 15, weight: .bold, design: .serif))
                     Spacer()
                     streak(display)
                 }
@@ -146,7 +159,7 @@ struct TodayWidgetView: View {
                 Spacer(minLength: 0)
                 // Learners of Chinese see the meaning first, like on their cards.
                 Text(entry.chinese ? word.word : word.meaning)
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .font(.system(size: 26, weight: .bold, design: .serif))
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if entry.chinese, !word.pronunciation.isEmpty {
@@ -171,11 +184,11 @@ struct TodayWidgetView: View {
                 .rotationEffect(.degrees(-90))
             VStack(spacing: 0) {
                 Text("\(display.studied)")
-                    .font(.system(size: size * 0.32, weight: .bold, design: .rounded))
+                    .font(.system(size: size * 0.32, weight: .bold, design: .serif))
                     .monospacedDigit()
                     .contentTransition(.numericText(value: Double(display.studied)))
                 Text("/ \(display.target)")
-                    .font(.system(size: size * 0.15, weight: .semibold, design: .rounded))
+                    .font(.system(size: size * 0.15, weight: .semibold, design: .serif))
                     .foregroundStyle(.secondary)
             }
         }
@@ -188,7 +201,7 @@ struct TodayWidgetView: View {
             Text("\(display.streak)").monospacedDigit()
                 .contentTransition(.numericText(value: Double(display.streak)))
         }
-        .font(.system(size: 14, weight: .bold, design: .rounded))
+        .font(.system(size: 14, weight: .bold, design: .serif))
         .foregroundStyle(display.streak > 0 ? WidgetPalette.streak : .secondary)
         .accessibilityLabel(entry.t("連續 \(display.streak) 天", "\(display.streak)-day streak"))
     }

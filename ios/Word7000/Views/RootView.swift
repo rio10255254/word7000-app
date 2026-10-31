@@ -35,15 +35,15 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $tab) {
-            NavigationStack {
-                TodayView(start: { next in
-                    if next == .exam {
-                        plus.require(.examPractice) { activity = .exam }
-                    } else {
-                        activity = next
-                    }
-                })
-            }
+            // Today has no navigation bar: its own header takes that place, and
+            // a hidden bar would still sit over it and swallow taps.
+            TodayView(start: { next in
+                if next == .exam {
+                    plus.require(.examPractice) { activity = .exam }
+                } else {
+                    activity = next
+                }
+            })
             .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
             .tag(AppTab.today)
 

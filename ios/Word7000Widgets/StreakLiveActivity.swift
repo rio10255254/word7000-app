@@ -31,7 +31,7 @@ struct StreakLiveActivityWidget: Widget {
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
                         Text(props.value.streakLabel)
-                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .font(.system(size: 12, weight: .semibold, design: .serif))
                             .foregroundStyle(props.accent)
                             .lineLimit(1)
                     }
@@ -61,11 +61,13 @@ struct StreakLiveActivityWidget: Widget {
 }
 
 enum LiveColors {
-    static let background = Color(red: 0.055, green: 0.067, blue: 0.11)
-    static let backgroundTop = Color(red: 0.09, green: 0.13, blue: 0.27)
-    static let blue = Color(red: 0.251, green: 0.663, blue: 1)
-    static let green = Color(red: 0.188, green: 0.82, blue: 0.345)
-    static let orange = Color(red: 1, green: 0.624, blue: 0.039)
+    // Warm leather browns with terracotta, sage and ochre, bright enough to
+    // read on the dark card.
+    static let background = Color(red: 0.13, green: 0.1, blue: 0.08)
+    static let backgroundTop = Color(red: 0.3, green: 0.2, blue: 0.13)
+    static let clay = Color(red: 0.89, green: 0.52, blue: 0.38)
+    static let green = Color(red: 0.62, green: 0.76, blue: 0.53)
+    static let orange = Color(red: 0.9, green: 0.67, blue: 0.3)
 }
 
 /// The left-hand mark: a progress ring around a book for the study nudge, a
@@ -95,7 +97,7 @@ struct Badge: View {
                 Image(systemName: "flame.fill").foregroundStyle(props.accent)
                 if !minimal {
                     Text("\(props.value.streak)")
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .font(.system(size: 13, weight: .bold, design: .serif))
                         .monospacedDigit()
                         .contentTransition(.numericText(value: Double(props.value.streak)))
                 }
@@ -107,7 +109,7 @@ struct Badge: View {
                     .font(.system(size: size * 0.46))
                     .foregroundStyle(props.accent)
                 Text("\(props.value.streak)")
-                    .font(.system(size: size * 0.3, weight: .heavy, design: .rounded))
+                    .font(.system(size: size * 0.3, weight: .heavy, design: .serif))
                     .monospacedDigit()
                     .contentTransition(.numericText(value: Double(props.value.streak)))
             }
@@ -136,7 +138,7 @@ struct Props {
 
     var accent: Color {
         if finished { return LiveColors.green }
-        return value.isNoon ? LiveColors.blue : LiveColors.orange
+        return value.isNoon ? LiveColors.clay : LiveColors.orange
     }
 }
 
@@ -154,12 +156,12 @@ struct Metric: View {
                     .transition(.scale.combined(with: .opacity))
             } else if props.value.isNoon {
                 Text("\(Int(props.current))/\(Int(props.target))")
-                    .font(.system(size: size, weight: .bold, design: .rounded))
+                    .font(.system(size: size, weight: .bold, design: .serif))
                     .monospacedDigit()
                     .contentTransition(.numericText(value: props.current))
             } else {
                 Text(timerInterval: props.value.startDate...props.value.endDate, countsDown: true)
-                    .font(.system(size: size, weight: .bold, design: .rounded))
+                    .font(.system(size: size, weight: .bold, design: .serif))
                     .monospacedDigit()
                     .multilineTextAlignment(.trailing)
                     .foregroundStyle(props.accent)
@@ -208,7 +210,7 @@ struct LockScreenCard: View {
                 if !props.finished { ProgressLine(props: props) }
                 HStack {
                     Text(props.value.streakLabel)
-                        .font(.system(size: 11, weight: .semibold, design: .rounded))
+                        .font(.system(size: 11, weight: .semibold, design: .serif))
                         .foregroundStyle(props.accent)
                     Spacer()
                     Text("Word7000")

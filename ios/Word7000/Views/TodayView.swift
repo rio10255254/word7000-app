@@ -12,6 +12,7 @@ struct TodayView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var studySettingsOpen = false
+    @Namespace private var languageSwitchSpace
     /// Bumped to bounce the streak flame: on arrival and when the streak grows.
     @State private var flameBounce = 0
     /// Taps on the mascot; each one makes it hop and say something.
@@ -28,14 +29,15 @@ struct TodayView: View {
         GeometryReader { proxy in
             // iPhone SE, mini and the like: tighter spacing and smaller pieces.
             let compact = proxy.size.height < 700
+            // Pro Max, Plus and the like: taller tiles use the extra room.
+            let roomy = proxy.size.height > 780
             ScrollView {
                 VStack(alignment: .leading, spacing: compact ? 12 : 16) {
                     header
                     hero(compact: compact)
                         .entrance(0, distance: 10)
                     notices
-                    Spacer(minLength: 0)
-                    practice(compact: compact)
+                    practice(compact: compact, roomy: roomy)
                 }
                 .padding(.horizontal, Metrics.gutter)
                 .padding(.top, compact ? 6 : 12)
@@ -46,7 +48,6 @@ struct TodayView: View {
             .scrollBounceBehavior(.basedOnSize)
         }
         .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
-        .toolbar(.hidden, for: .navigationBar)
         .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
         .task {
             // A little hello from the flame and the mascot each time Today comes into view.
@@ -67,37 +68,84 @@ struct TodayView: View {
     /// The greeting and date, with the bank being studied as a chip that opens
     /// the study scope (it replaces the toolbar filter and the footer line).
     private var header: some View {
-        HStack(alignment: .center, spacing: 12) {
+        // At accessibility text sizes the controls drop below the greeting.
+        let large = dynamicTypeSize.isAccessibilitySize
+        let layout = large ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+                           : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
+        return layout {
             VStack(alignment: .leading, spacing: 1) {
                 Text(greeting)
                     .font(.display(.title2, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                 // Formatted in the interface language, which follows the study mode.
                 Text(Date.now, format: .dateTime.month().day().weekday(.wide))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-            Spacer(minLength: 8)
-            Button { studySettingsOpen = true } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: model.settings.studyFilter.isActive ? "line.3.horizontal.decrease.circle.fill" : "books.vertical.fill")
-                        .contentTransition(.symbolEffect(.replace))
-                        .foregroundStyle(Palette.accent)
-                    Text(model.bankName)
-                        .lineLimit(1)
-                    Image(systemName: "chevron.down")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(.secondary)
+            if !large { Spacer(minLength: 8) }
+            HStack(spacing: 8) {
+                languageSwitch
+                Button { studySettingsOpen = true } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: model.settings.studyFilter.isActive ? "line.3.horizontal.decrease.circle.fill" : "books.vertical.fill")
+                            .contentTransition(.symbolEffect(.replace))
+                            .foregroundStyle(Palette.accent)
+                        Text(model.bankName)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                        Image(systemName: "chevron.down")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background { PremiumSurface(radius: 18) }
                 }
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.primary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background { PremiumSurface(radius: 18) }
+                .buttonStyle(SoftPressStyle())
+                .accessibilityLabel(L.t("學習範圍：\(model.bankName)", "Study scope: \(model.bankName)"))
+                .accessibilityIdentifier("today-study-filter")
             }
-            .buttonStyle(SoftPressStyle())
-            .accessibilityLabel(L.t("學習範圍：\(model.bankName)", "Study scope: \(model.bankName)"))
-            .accessibilityIdentifier("today-study-filter")
         }
+    }
+
+    /// Which language is being learned, switched in one tap: EN for English
+    /// (with a Chinese interface), 中 for Chinese (with an English one).
+    private var languageSwitch: some View {
+        HStack(spacing: 2) {
+            ForEach([StudyMode.english, StudyMode.chinese], id: \.self) { mode in
+                let selected = model.studyMode == mode
+                Button {
+                    guard !selected else { return }
+                    withAnimation(Motion.pop) { model.setStudyMode(mode) }
+                } label: {
+                    Text(mode == .english ? "EN" : "中")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(selected ? Color.white : Color.secondary)
+                        .frame(minWidth: 32, minHeight: 28)
+                        .background {
+                            // The filled capsule slides across to the chosen side.
+                            if selected {
+                                Capsule()
+                                    .fill(Palette.accent)
+                                    .matchedGeometryEffect(id: "language", in: languageSwitchSpace)
+                            }
+                        }
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(SoftPressStyle())
+                .accessibilityLabel(mode == .english ? L.t("學英文", "Learn English") : L.t("學中文", "Learn Chinese"))
+                .accessibilityAddTraits(selected ? .isSelected : [])
+            }
+        }
+        .padding(3)
+        .background { PremiumSurface(radius: 18) }
+        .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in model.settings.hapticsEnabled ?? true }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L.t("學習語言", "Learning language"))
+        .accessibilityIdentifier("today-language")
     }
 
     // MARK: Hero
@@ -286,16 +334,19 @@ struct TodayView: View {
 
     // MARK: Practice
 
+    /// The words still shaky, as a full-width tile above the others.
+    private var reviewTile: PracticeTileItem? {
+        guard model.stats.review > 0 else { return nil }
+        return PracticeTileItem(id: "today-review", icon: "arrow.counterclockwise", tint: Palette.miss,
+                                title: L.practiceStruggling, detail: L.t("練到熟為止", "Until they stick"),
+                                badge: "\(model.stats.review)") {
+            model.startStudySession(onlyIds: model.reviewWordIds)
+            start(.study)
+        }
+    }
+
     private var tiles: [PracticeTileItem] {
         var items: [PracticeTileItem] = []
-        if model.stats.review > 0 {
-            items.append(PracticeTileItem(id: "today-review", icon: "arrow.counterclockwise", tint: Palette.miss,
-                                          title: L.t("不熟的字", "Shaky words"), detail: L.t("練到熟為止", "Make them stick"),
-                                          badge: "\(model.stats.review)") {
-                model.startStudySession(onlyIds: model.reviewWordIds)
-                start(.study)
-            })
-        }
         items.append(PracticeTileItem(id: "today-quiz", icon: "checklist", tint: Palette.chinese, title: L.quickQuiz,
                                       detail: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions")) { start(.quiz) })
         items.append(PracticeTileItem(id: "today-speaking", icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking,
@@ -311,7 +362,7 @@ struct TodayView: View {
         return items
     }
 
-    private func practice(compact: Bool) -> some View {
+    private func practice(compact: Bool, roomy: Bool) -> some View {
         let items = tiles
         let columns = dynamicTypeSize.isAccessibilitySize ? 1 : 2
         let rows = stride(from: 0, to: items.count, by: columns).map { Array(items[$0..<min($0 + columns, items.count)]) }
@@ -319,22 +370,26 @@ struct TodayView: View {
             Text(L.practice)
                 .font(.display(.headline, weight: .bold))
                 .padding(.leading, 4)
+            if let review = reviewTile {
+                tile(review, compact: compact, roomy: roomy, order: 1)
+            }
             ForEach(rows.indices, id: \.self) { row in
                 HStack(spacing: compact ? 8 : 10) {
                     ForEach(Array(rows[row].enumerated()), id: \.element.id) { offset, item in
-                        tile(item, compact: compact, order: 1 + row * columns + offset)
+                        tile(item, compact: compact, roomy: roomy, order: 2 + row * columns + offset)
                     }
                     if rows[row].count < columns {
-                        Color.clear.frame(maxWidth: .infinity)
+                        // Holds the lone tile to half the width without growing the row.
+                        Color.clear.frame(maxWidth: .infinity, maxHeight: 0)
                     }
                 }
             }
         }
     }
 
-    private func tile(_ item: PracticeTileItem, compact: Bool, order: Int) -> some View {
+    private func tile(_ item: PracticeTileItem, compact: Bool, roomy: Bool, order: Int) -> some View {
         Button(action: item.action) {
-            PracticeTile(item: item, compact: compact)
+            PracticeTile(item: item, compact: compact, roomy: roomy)
         }
         .buttonStyle(SoftPressStyle())
         .entrance(order, distance: 12)
@@ -364,9 +419,10 @@ struct PracticeTileItem: Identifiable {
 private struct PracticeTile: View {
     var item: PracticeTileItem
     var compact = false
+    var roomy = false
 
     var body: some View {
-        let iconSize: CGFloat = compact ? 34 : 40
+        let iconSize: CGFloat = compact ? 34 : roomy ? 44 : 40
         HStack(spacing: 10) {
             Image(systemName: item.icon)
                 .font(.system(size: compact ? 15 : 17, weight: .semibold))
@@ -406,7 +462,7 @@ private struct PracticeTile: View {
         }
         .multilineTextAlignment(.leading)
         .padding(.horizontal, 12)
-        .padding(.vertical, compact ? 10 : 13)
+        .padding(.vertical, compact ? 10 : roomy ? 17 : 13)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background { PremiumSurface(radius: 18) }
         .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))

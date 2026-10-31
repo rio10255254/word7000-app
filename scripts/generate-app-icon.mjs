@@ -108,16 +108,25 @@ try {
 function iconSvg({ palette, book: b, background, glow, grain }) {
   // The notebook keeps the old icon's proportions and cut-outs: an upright
   // cover with the spine and three lines cut through to the leather behind.
-  const bookW = SIZE * 0.47;
-  const bookH = bookW * (0.58 / 0.54);
+  // The cat is sized to the book, and the two together (ear tips to the
+  // book's foot) are centred in the icon with a touch more room below than
+  // above, where the shadow falls, so the pair sits up rather than sinks.
+  const marginTop = SIZE * 0.1;
+  const marginBottom = SIZE * 0.125;
+  const bookAspect = 0.58 / 0.54;
+  const catScale = 1.06; // cat square / book width
+  const earsAboveFace = 0.43; // ear tips above the eyes, in cat squares
+  const faceAboveBook = 0.215; // eyes above the book's top edge, in cat squares
+  const bookW = (SIZE - marginTop - marginBottom) / (catScale * (earsAboveFace + faceAboveBook) + bookAspect);
+  const bookH = bookW * bookAspect;
+  const s = bookW * catScale;
   const bookX = (SIZE - bookW) / 2;
-  const bookY = SIZE * 0.95 - bookH;
-  const radius = bookW * 0.1;
-  const lineH = bookW * 0.059;
-  const s = SIZE * 0.5;
-  const faceY = bookY - s * 0.215;
+  const bookY = SIZE - marginBottom - bookH;
+  const faceY = bookY - s * faceAboveBook;
   const ox = SIZE / 2 - s / 2;
   const oy = faceY - s / 2;
+  const radius = bookW * 0.1;
+  const lineH = bookW * 0.059;
   const cutouts = [
     `<rect x="${bookX + bookW * 0.18}" y="${bookY - 1}" width="${bookW * 0.065}" height="${bookH + 2}" fill="black"/>`,
     ...[[0.29, 0.36], [0.45, 0.27], [0.61, 0.33]].map(([y, w]) =>
@@ -125,23 +134,32 @@ function iconSvg({ palette, book: b, background, glow, grain }) {
   ].join('');
   const paws = [-1, 1].map((side) => {
     const x = SIZE / 2 + side * s * 0.15;
-    const y = bookY + s * 0.01;
-    const toe = (dx) => `<path d="M${x + dx * s},${y + s * 0.012} L${x + dx * s},${y + s * 0.04}" stroke="${palette.shade}" stroke-opacity="0.35" stroke-width="${s * 0.008}" stroke-linecap="round"/>`;
-    return `<ellipse cx="${x}" cy="${y}" rx="${s * 0.075}" ry="${s * 0.045}" fill="${palette.cream}"/>${toe(-0.025)}${toe(0.025)}`;
+    const y = bookY + s * 0.012;
+    const toe = (dx) => `<path d="M${x + dx * s},${y + s * 0.012} L${x + dx * s},${y + s * 0.038}" stroke="${palette.shade}" stroke-opacity="0.35" stroke-width="${s * 0.008}" stroke-linecap="round"/>`;
+    // A soft shadow on the cover under each paw, then the paw.
+    return `<ellipse cx="${x}" cy="${y + s * 0.03}" rx="${s * 0.07}" ry="${s * 0.03}" fill="#5A3418" opacity="0.18" filter="url(#soft)"/>
+    <ellipse cx="${x}" cy="${y}" rx="${s * 0.075}" ry="${s * 0.045}" fill="${palette.cream}"/>${toe(-0.025)}${toe(0.025)}`;
   }).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="${background[0]}"/><stop offset="0.6" stop-color="${background[1]}"/><stop offset="1" stop-color="${background[2]}"/>
     </linearGradient>
-    <radialGradient id="glow" cx="0.85" cy="0.1" r="0.6">
+    <radialGradient id="glow" cx="0.82" cy="0.08" r="0.65">
       <stop offset="0" stop-color="${glow}"/><stop offset="1" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="0.5" cy="0.45" r="0.75">
+      <stop offset="0.6" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(20,8,2,0.28)"/>
     </radialGradient>
     <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${palette.furTop}"/><stop offset="1" stop-color="${palette.furBottom}"/>
     </linearGradient>
     <linearGradient id="cover" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${b.coverTop}"/><stop offset="1" stop-color="${b.coverBottom}"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.55"/><stop offset="0.12" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="0.93" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#3A2010" stop-opacity="0.16"/>
     </linearGradient>
     <mask id="cuts" maskUnits="userSpaceOnUse" x="0" y="0" width="${SIZE}" height="${SIZE}">
       <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" rx="${radius}" fill="white"/>
@@ -152,15 +170,22 @@ function iconSvg({ palette, book: b, background, glow, grain }) {
       <feColorMatrix type="saturate" values="0"/>
     </filter>
     <filter id="drop" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="${SIZE * 0.012}" stdDeviation="${SIZE * 0.018}" flood-color="#2A1408" flood-opacity="0.35"/>
+      <feDropShadow dx="0" dy="${SIZE * 0.014}" stdDeviation="${SIZE * 0.02}" flood-color="#2A1408" flood-opacity="0.38"/>
     </filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${SIZE * 0.006}"/></filter>
+    <filter id="ground" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${SIZE * 0.02}"/></filter>
   </defs>
   <rect width="${SIZE}" height="${SIZE}" fill="url(#bg)"/>
   <rect width="${SIZE}" height="${SIZE}" fill="url(#glow)"/>
+  <rect width="${SIZE}" height="${SIZE}" fill="url(#vignette)"/>
   ${grain > 0 ? `<rect width="${SIZE}" height="${SIZE}" filter="url(#grain)" opacity="${grain}" style="mix-blend-mode:overlay"/>` : ''}
+  <ellipse cx="${SIZE / 2}" cy="${bookY + bookH + SIZE * 0.02}" rx="${bookW * 0.46}" ry="${SIZE * 0.022}" fill="#1E0E05" opacity="0.35" filter="url(#ground)"/>
   <g filter="url(#drop)">${kitten(s, ox, oy, palette, { paws: false })}</g>
   <g filter="url(#drop)">
-    <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#cover)" mask="url(#cuts)"/>
+    <g mask="url(#cuts)">
+      <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#cover)"/>
+      <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#sheen)"/>
+    </g>
   </g>
   ${paws}
 </svg>`;

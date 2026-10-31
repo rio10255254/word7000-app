@@ -132,7 +132,7 @@ async function sendStartRequest(
         startedAt,
         streak: device.streak,
         streakLabel: chinese ? `連勝 ${device.streak} 天` : `${device.streak}-day streak`,
-        title: chinese ? '你的連勝快中斷了' : 'Your streak needs you',
+        title: chinese ? '連勝要斷了，我就看著' : "Your streak is slipping. I'm watching.",
       }
     : {
         activityKind: 'noon',
@@ -156,7 +156,7 @@ async function sendStartRequest(
           : chinese
             ? '今天開始連勝'
             : 'Start your streak today',
-        title: chinese ? '今天的學習時間' : "Time for today's practice",
+        title: chinese ? '單字不會自己背好喔' : "Those words won't learn themselves",
       };
   const payload = {
     aps: {

@@ -109,6 +109,11 @@ struct RootView: View {
                 ScanView(onStudy: { switchTo(.study) })
             }
         }
+        .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan
+                                           && plus.paywallReason == nil && !plus.trialRecapPending },
+                                    set: { if !$0 { model.settings.stylePicked = true } })) {
+            StyleChoiceSheet()
+        }
         .fullScreenCover(isPresented: $welcomeOpen, onDismiss: {
             if studyAfterWelcome {
                 studyAfterWelcome = false

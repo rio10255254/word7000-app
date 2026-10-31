@@ -413,19 +413,27 @@ struct TodayView: View {
 
     // MARK: Companion
 
+    /// Unimpressed until you practise, and openly smug about it from noon on.
     private var mascotMood: Mascot.Mood {
         if model.goalDone { return .cheer }
         if model.progress.studiedToday > 0 { return .happy }
         let hour = Calendar.current.component(.hour, from: Date())
-        return hour >= 23 || hour < 5 ? .sleepy : .idle
+        if hour >= 23 || hour < 5 { return .sleepy }
+        return hour >= 12 ? .smug : .idle
     }
 
-    /// What it says on arrival: where today stands.
+    /// What it says on arrival: where today stands, and what it thinks of that.
     private var mascotGreeting: String {
         let progress = model.progress
-        if model.goalDone { return L.t("今天的目標完成了！", "Today's goal is done!") }
-        if progress.studiedToday == 0 { return L.t("今天一起學 \(progress.dailyTarget) 個字！", "\(progress.dailyTarget) words today?") }
-        return L.t("再 \(max(0, progress.dailyTarget - progress.studiedToday)) 個就達標！", "\(max(0, progress.dailyTarget - progress.studiedToday)) more to go!")
+        let left = max(0, progress.dailyTarget - progress.studiedToday)
+        let hour = Calendar.current.component(.hour, from: Date())
+        if model.goalDone { return L.t("嗯，勉強及格。不要得意。", "Fine. You passed. Don't get cocky.") }
+        if progress.studiedToday == 0 {
+            if hour >= 21 { return L.t("都幾點了？今天的字要留給明天的你喔？", "This late? Saving today's words for future you?") }
+            if hour >= 12 { return L.t("下午了欸。\(progress.dailyTarget) 個字還在等，我也在等。", "It's afternoon. \(progress.dailyTarget) words are waiting. So am I.") }
+            return L.t("早。\(progress.dailyTarget) 個字，別讓我失望。雖然你常常。", "Morning. \(progress.dailyTarget) words. Don't let me down. Again.")
+        }
+        return L.t("才 \(progress.studiedToday) 個？笑死。還差 \(left) 個。", "Only \(progress.studiedToday)? LOL. \(left) to go.")
     }
 
     /// Its AI note: today's insight headline once worked out (tap for the
@@ -435,15 +443,23 @@ struct TodayView: View {
             return MascotTip(text: insightHeadline) { mascotChatOpen = true }
         }
         guard CloudAssistant.shared.offered else { return nil }
-        return MascotTip(text: L.t("要我幫你看看最近學得怎樣嗎？", "Shall I look at how you're doing?")) { mascotChatOpen = true }
+        return MascotTip(text: L.t("要我看看你最近到底有多混嗎？", "Want to know how much you've been slacking?")) { mascotChatOpen = true }
     }
 
-    /// What it says when tapped.
+    /// What it says when tapped: grudging praise once the goal is met,
+    /// otherwise a gentle stream of guilt.
     private var mascotLines: [String] {
         model.goalDone
-            ? [L.t("你超棒的！", "You're amazing!"), L.t("要不要再測驗一下？", "Fancy a quick quiz?"), L.t("明天也要來喔！", "See you tomorrow!")]
-            : [L.t("今天也一起加油！", "Let's do this!"), L.t("再背幾個字吧～", "A few more words?"), L.t("你做得很好喔！", "You're doing great!"),
-               L.t("戳我不會變聰明喔", "Poking me won't make you smarter!"), L.t("學完記得休息一下", "Take a break after this one")]
+            ? [L.t("好啦，你很棒。滿意了吧？", "Fine, you're great. Happy now?"),
+               L.t("要不要順便測驗？還是怕了？", "Quick quiz? Or are you scared?"),
+               L.t("明天同一時間，我會來找你。", "Same time tomorrow. I'll find you."),
+               L.t("今天表現……還可以啦。不要跟別人說我誇你。", "Today was… okay. Don't tell anyone I said that.")]
+            : [L.t("我阿嬤背得都比你快。", "My grandma learns faster than you."),
+               L.t("你滑手機的時間夠背十個字了。", "That scrolling time? Ten words, easily."),
+               L.t("我沒有在催你，我只是一直盯著你。", "I'm not rushing you. I'm just staring."),
+               L.t("單字們在哭，你有聽到嗎？", "Hear that? Your words are crying."),
+               L.t("蛤？你還沒開始？", "Wait. You haven't even started?"),
+               L.t("你是來讀書的，還是來看我的？", "Are you here to study or just to look at me?")]
     }
 
     private var daySymbol: String {
@@ -539,12 +555,15 @@ struct TodayView: View {
     private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
 }
 
-/// The companion on Today, free to wander. Every so often it waddles a little
-/// way along the top edge of the hero card (body bobbing, feet stepping, eyes
-/// on where it is going), stops to look around, and later wanders back home
-/// to the right corner. A tap, a hold, a drag or a tapped practice tile keeps
-/// it still for a while, so it never walks off just as you reach for it.
-/// It stays put with Reduce Motion, on the small phones, and under UI tests.
+/// The companion on Today, free to wander. Every so often it waddles (or
+/// runs, kicking up dust) along the top edge of the hero card, eyes on where
+/// it is going, stops to look around, shows off a trick (a spin, a flip, a
+/// little dance, a big stretch) and later wanders back home to the right
+/// corner. Flick it and it slides along the edge, seeing stars if it hits the
+/// end; leave it alone long enough and it dozes off until poked. A tap, a
+/// hold, a drag or a tapped practice tile keeps it still for a while, so it
+/// never walks off just as you reach for it. It stays put with Reduce Motion,
+/// on the small phones, and under UI tests.
 private struct StrollingCompanion: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var mood: Mascot.Mood
@@ -560,57 +579,149 @@ private struct StrollingCompanion: View {
 
     @State private var x: CGFloat = 0
     @State private var walking = false
+    @State private var pace: Double = 1
     @State private var facing: CGFloat = 0
     @State private var restUntil = Date.distantPast
+    @State private var lastTouch = Date()
+    @State private var cue: MascotCue?
+    /// Dizzy after a fling, or asleep after being left alone.
+    @State private var dazed = false
+    @State private var asleep = false
+    @State private var dazeTask: Task<Void, Never>?
 
     private var roams: Bool { range > 40 && !reduceMotion && !AppRuntime.uiTesting }
 
     var body: some View {
-        MascotBuddy(mood: mood, size: size, lines: lines, greeting: greeting,
+        MascotBuddy(mood: dazed ? .dizzy : asleep ? .sleepy : mood, size: size, lines: lines, greeting: greeting,
                     // The bubble opens toward the room: left of it at home, right of it out on the left.
                     bubbleSide: x < -range / 2 ? .trailing : .leading,
-                    hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest)
+                    hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest,
+                    pace: pace, cue: cue, onFling: fling, onBeatenUp: stormOff)
             .offset(x: x)
             .task(id: roams) { await wander() }
             .onChange(of: pause) { _, _ in rest() }
             .onChange(of: range) { _, value in
                 if -x > value { x = -value }
             }
+            .onDisappear { dazeTask?.cancel() }
     }
 
     private func rest() {
         restUntil = Date().addingTimeInterval(8)
+        lastTouch = Date()
+        if asleep {
+            // Woken up: a big stretch first.
+            asleep = false
+            perform(.stretch)
+        }
+    }
+
+    private func perform(_ antic: MascotAntic) {
+        cue = MascotCue(antic: antic, id: (cue?.id ?? 0) + 1)
+    }
+
+    /// Sent sliding along the edge by a flick, as far as the flick would carry
+    /// it; flung hard into either end, it bumps and sees stars for a moment.
+    private func fling(_ distance: CGFloat) {
+        guard roams else { return }
+        let wanted = x + distance * 0.8
+        let target = min(0, max(-range, wanted))
+        let travelled = abs(target - x)
+        let bumped = abs(wanted - target) > 40
+        guard travelled > 20 || bumped else { return }
+        walking = false
+        facing = distance < 0 ? -1 : 1
+        withAnimation(.spring(response: 0.6, dampingFraction: bumped ? 0.5 : 0.85)) { x = target }
+        dazeTask?.cancel()
+        dazeTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            guard !Task.isCancelled else { return }
+            if bumped || travelled > 120 {
+                dazed = true
+                try? await Task.sleep(for: .seconds(1.8))
+                guard !Task.isCancelled else { return }
+                dazed = false
+                perform(.spin)
+            }
+            withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+        }
+    }
+
+    /// Smacked once too often: it sees stars for a moment, then runs off to
+    /// the far end of the card and sulks there, facing away, for a while.
+    private func stormOff() {
+        guard roams else { return }
+        dazeTask?.cancel()
+        dazeTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.6))
+            guard !Task.isCancelled else { return }
+            let target: CGFloat = x < -range / 2 ? 0 : -range
+            let duration = Double(abs(target - x) / 130)
+            facing = target < x ? -1 : 1
+            pace = 2
+            walking = true
+            withAnimation(.linear(duration: duration)) { x = target }
+            try? await Task.sleep(for: .seconds(duration))
+            walking = false
+            pace = 1
+            restUntil = Date().addingTimeInterval(12)
+        }
     }
 
     private func wander() async {
         guard roams else {
             x = 0
             walking = false
+            pace = 1
             return
         }
         try? await Task.sleep(for: .seconds(7))
         while !Task.isCancelled {
-            if Date() < restUntil {
+            if Date() < restUntil || dazed || asleep {
                 try? await Task.sleep(for: .seconds(1))
                 continue
             }
-            // Mostly short strolls; every so often all the way home.
-            let home = x < -10 && Int.random(in: 0..<3) == 0
-            let target: CGFloat = home ? 0 : -CGFloat.random(in: 0...range)
-            let distance = abs(target - x)
-            if distance > 24 {
-                facing = target < x ? -1 : 1
-                let duration = Double(distance / 46)
-                walking = true
-                withAnimation(.linear(duration: duration)) { x = target }
-                try? await Task.sleep(for: .seconds(duration))
-                guard !Task.isCancelled else { return }
-                walking = false
-                // A look at the way it came, then back to the front.
-                try? await Task.sleep(for: .seconds(1.4))
-                withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+            // Left alone for a good while, it nods off where it is.
+            if Date().timeIntervalSince(lastTouch) > 90 {
+                asleep = true
+                continue
             }
+            switch Int.random(in: 0..<10) {
+            case 0..<6: await stroll()
+            case 6..<9: perform(MascotAntic.allCases.randomElement() ?? .dance)
+            default: await lookAround()
+            }
+            guard !Task.isCancelled else { return }
             try? await Task.sleep(for: .seconds(Double.random(in: 5...10)))
+        }
+    }
+
+    /// Mostly short walks, now and then a run; every so often all the way home.
+    private func stroll() async {
+        let home = x < -10 && Int.random(in: 0..<3) == 0
+        let target: CGFloat = home ? 0 : -CGFloat.random(in: 0...range)
+        let distance = abs(target - x)
+        guard distance > 24 else { return }
+        let runs = distance > 90 && Int.random(in: 0..<3) == 0
+        facing = target < x ? -1 : 1
+        pace = runs ? 2 : 1
+        let duration = Double(distance / (runs ? 130 : 46))
+        walking = true
+        withAnimation(.linear(duration: duration)) { x = target }
+        try? await Task.sleep(for: .seconds(duration))
+        walking = false
+        pace = 1
+        guard !Task.isCancelled else { return }
+        // A look at the way it came, then back to the front.
+        try? await Task.sleep(for: .seconds(1.4))
+        withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+    }
+
+    private func lookAround() async {
+        for side: CGFloat in [-1, 1, 0] {
+            withAnimation(.easeInOut(duration: 0.25)) { facing = side }
+            try? await Task.sleep(for: .seconds(0.8))
+            guard !Task.isCancelled else { return }
         }
     }
 }
@@ -661,6 +772,7 @@ struct PracticeTileStyle {
 /// words to review), the count is set large in the serif face at the end of
 /// the row, where it balances the title, instead of in a small pill.
 private struct PracticeTile: View {
+    @Environment(\.appStyle) private var appStyle
     var item: PracticeTileItem
     var tallCard = false
     var style: PracticeTileStyle
@@ -668,7 +780,29 @@ private struct PracticeTile: View {
     var maxHeight: CGFloat?
     var bounce = 0
 
-    private var radius: CGFloat { tallCard ? 22 : 18 }
+    private var radius: CGFloat { appStyle == .collage ? 0 : tallCard ? 22 : 18 }
+
+    /// In the collage each way of practising is cut from its own paper.
+    private var paper: PaperKind {
+        switch item.id {
+        case "today-review": .ruled
+        case "today-quiz": .graph
+        case "today-speaking": .peach
+        case "today-spelling": .sage
+        default: .mustard
+        }
+    }
+
+    /// A slight, fixed tilt per tile, so the papers look laid down by hand.
+    private var tilt: Double {
+        switch item.id {
+        case "today-review": -0.5
+        case "today-quiz": 0.6
+        case "today-speaking": -0.7
+        case "today-spelling": 0.5
+        default: -0.3
+        }
+    }
     private var roomy: Bool { style.icon > 40 }
 
     var body: some View {
@@ -722,9 +856,21 @@ private struct PracticeTile: View {
         .multilineTextAlignment(.leading)
         .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: tallCard ? .topLeading : .leading)
         .background {
-            PremiumSurface(radius: radius)
-                .overlay { watermark }
-                .clipShape(shape)
+            if appStyle == .collage {
+                PaperSurface(kind: paper)
+                    .overlay(alignment: .topTrailing) {
+                        // A little halftone in a corner of the plainer papers.
+                        if paper == .mustard || paper == .peach { Halftone().frame(width: 70, height: 50) }
+                    }
+                    .clipShape(TornEdgeShape(edges: paper == .peach ? [.bottom] : [], depth: 4, seed: item.id.count))
+            } else {
+                PremiumSurface(radius: radius)
+                    .overlay { watermark }
+                    .clipShape(shape)
+            }
+        }
+        .overlay(alignment: .top) {
+            if appStyle == .collage, item.id == "today-review" { TapeStrip(width: 58, angle: -4).offset(y: -9) }
         }
         .overlay {
             // A soft ring of the tile's colour spreads from the icon when it is tapped.
@@ -735,6 +881,7 @@ private struct PracticeTile: View {
             }
         }
         .contentShape(shape)
+        .rotationEffect(.degrees(appStyle == .collage ? tilt : 0))
     }
 
     /// A big, faint copy of the icon, tilted and cropped by the tile's edge.
@@ -755,7 +902,22 @@ private struct PracticeTile: View {
         .accessibilityHidden(true)
     }
 
+    @ViewBuilder
     private func icon(size: CGFloat) -> some View {
+        if appStyle == .collage {
+            // A plain cut-paper disc.
+            Image(systemName: item.icon)
+                .font(.system(size: size * 0.42, weight: .semibold))
+                .foregroundStyle(.white)
+                .symbolEffect(.bounce, value: bounce)
+                .frame(width: size, height: size)
+                .background(item.tint, in: Circle())
+        } else {
+            leatherIcon(size: size)
+        }
+    }
+
+    private func leatherIcon(size: CGFloat) -> some View {
         Image(systemName: item.icon)
             .font(.system(size: size * 0.42, weight: .semibold))
             .foregroundStyle(.white)
@@ -857,11 +1019,59 @@ private struct TileRipple: View {
 /// grain, light pooling in one corner, a glint that sweeps across now and
 /// then, and a hairline catching the light. It turns olive once today's goal
 /// is met.
-private struct HeroBackground: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+/// The hero card as a collage: a cut of leather (sage once the goal is met)
+/// torn along its bottom, a strip of graph paper peeking out behind its right
+/// edge, a piece of tape, a patch of halftone and a loose charcoal loop.
+/// No shadow: the overlapping papers give the depth.
+private struct CollageHeroBackground: View {
     var done: Bool
 
     var body: some View {
+        let colors = done
+            ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.36, green: 0.45, blue: 0.27)]
+            : [Color(red: 0.79, green: 0.55, blue: 0.37), Color(red: 0.6, green: 0.37, blue: 0.23)]
+        ZStack {
+            PaperSurface(kind: .graph)
+                .frame(width: 96)
+                .rotationEffect(.degrees(3))
+                .offset(x: 12, y: 8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+            Rectangle()
+                .fill(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay { PaperGrain(opacity: 1).blendMode(.overlay) }
+                .overlay(alignment: .bottomLeading) { Halftone(color: .black.opacity(0.18)).frame(width: 110, height: 60) }
+                .overlay(alignment: .topTrailing) {
+                    InkLoops(count: 3)
+                        .stroke(Color(red: 1, green: 0.94, blue: 0.86).opacity(0.55), style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
+                        .frame(width: 70, height: 16)
+                        .padding(.top, 14)
+                        .padding(.trailing, 18)
+                }
+                .clipShape(TornEdgeShape(edges: [.bottom], depth: 5, seed: 3))
+            TapeStrip(width: 62, angle: -7)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .offset(x: 18, y: -10)
+        }
+        .animation(Motion.reveal, value: done)
+    }
+}
+
+private struct HeroBackground: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
+    var done: Bool
+
+    @ViewBuilder
+    var body: some View {
+        if appStyle == .collage {
+            CollageHeroBackground(done: done)
+        } else {
+            leather
+        }
+    }
+
+    @ViewBuilder
+    private var leather: some View {
         let shape = RoundedRectangle(cornerRadius: 30, style: .continuous)
         let colors = done
             ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]

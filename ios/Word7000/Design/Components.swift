@@ -158,6 +158,26 @@ struct SessionBar: View {
     }
 }
 
+/// A result's score: a filling ring in the leather style, a rubber stamp
+/// pressed on at an angle in the collage.
+struct ResultRing<Label: View>: View {
+    @Environment(\.appStyle) private var appStyle
+    var fraction: Double
+    var color: Color
+    var lineWidth: CGFloat = 14
+    @ViewBuilder var label: () -> Label
+
+    var body: some View {
+        if appStyle == .collage {
+            GeometryReader { proxy in
+                StampMark(color: Palette.accent, size: min(proxy.size.width, proxy.size.height), angle: -8) { label() }
+            }
+        } else {
+            ProgressRing(fraction: fraction, color: color, lineWidth: lineWidth) { label() }
+        }
+    }
+}
+
 /// A session's progress bar with the companion riding along the filled end:
 /// pondering while you think, a happy hop for a right answer, a wobble of
 /// encouragement for a miss. Decorative: it takes no touches and VoiceOver
@@ -169,18 +189,40 @@ struct BuddyProgressBar: View {
     var mood: Mascot.Mood = .idle
     var hop = 0
     var size: CGFloat = 28
+    /// A quip about the answer just given, said beside it for a moment each
+    /// time `hop` changes.
+    var remark: String? = nil
+
+    @State private var saying: String?
 
     var body: some View {
         SessionBar(fraction: fraction, tint: tint)
             .overlay(alignment: .leading) {
                 GeometryReader { proxy in
                     let x = proxy.size.width * min(1, max(0, fraction))
+                    // The bubble opens toward the room: right of it early on, left of it near the end.
+                    let opensRight = x < proxy.size.width * 0.55
                     Mascot(mood: mood, size: size, hop: hop)
+                        .overlay(alignment: opensRight ? .leading : .trailing) {
+                            if let saying {
+                                MascotBubble(text: saying, pointing: opensRight ? .leading : .trailing)
+                                    .fixedSize()
+                                    .offset(x: opensRight ? size + 6 : -(size + 6))
+                                    .transition(.scale(scale: 0.6, anchor: opensRight ? .leading : .trailing).combined(with: .opacity))
+                            }
+                        }
                         // Its feet on the bar, just behind the filled end.
                         .position(x: min(max(size / 2, x - size * 0.2), proxy.size.width - size / 2),
                                   y: proxy.size.height / 2 - size * 0.42)
                         .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.68), value: fraction)
                 }
+            }
+            .task(id: hop) {
+                guard hop > 0, let remark else { return }
+                withAnimation(reduceMotion ? nil : Motion.pop) { saying = remark }
+                try? await Task.sleep(for: .seconds(1.8))
+                guard !Task.isCancelled else { return }
+                withAnimation(reduceMotion ? nil : Motion.reveal) { saying = nil }
             }
             .padding(.top, size * 0.8)
             .allowsHitTesting(false)

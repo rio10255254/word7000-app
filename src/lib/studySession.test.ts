@@ -33,22 +33,34 @@ describe('study session', () => {
     expect(session.reviewIds).toEqual(['a']);
   });
 
-  test('re-queues a stubborn card at most twice', () => {
-    let session = createStudySession(['a'], 'key');
+  test('re-queues a stubborn card only once', () => {
+    let session = createStudySession(['a', 'b', 'c'], 'key');
     session = gradeStudyCard(session, 'a', 'review');
-    session = gradeStudyCard(session, 'a', 'review');
+    session = gradeStudyCard(session, 'b', 'known');
+    session = gradeStudyCard(session, 'c', 'known');
     session = gradeStudyCard(session, 'a', 'review');
 
     expect(isStudySessionComplete(session)).toBe(true);
-    expect(session.cardIds).toEqual(['a', 'a', 'a']);
+    expect(session.cardIds).toEqual(['a', 'b', 'c', 'a']);
+  });
+
+  test('never shows a missed card again straight away', () => {
+    let session = createStudySession(['a', 'b'], 'key');
+    session = gradeStudyCard(session, 'a', 'known');
+    session = gradeStudyCard(session, 'b', 'review');
+
+    expect(isStudySessionComplete(session)).toBe(true);
+    expect(session.cardIds).toEqual(['a', 'b']);
+    expect(session.reviewIds).toEqual(['b']);
   });
 
   test('reports a word by its final answer', () => {
-    let session = createStudySession(['a'], 'key');
+    let session = createStudySession(['a', 'b'], 'key');
     session = gradeStudyCard(session, 'a', 'review');
+    session = gradeStudyCard(session, 'b', 'known');
     session = gradeStudyCard(session, 'a', 'known');
 
-    expect(session.knownIds).toEqual(['a']);
+    expect(session.knownIds).toEqual(['b', 'a']);
     expect(session.reviewIds).toEqual([]);
   });
 

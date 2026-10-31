@@ -32,6 +32,7 @@ let package = Package(
   writeFileSync(path.join(directory, 'Preferences.swift'), `
 enum AppearancePreference: String, Codable, Sendable { case system, light, dark }
 enum StudyMode: String, Codable, Sendable { case english, chinese }
+enum AppStyle: String, Codable, Sendable { case leather, collage }
 `);
   const result = spawnSync(swift, ['run', '--package-path', directory, 'SpeakingRecencyChecks'], { stdio: 'inherit' });
   if (result.error) throw result.error;

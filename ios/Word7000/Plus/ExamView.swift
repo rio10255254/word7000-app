@@ -259,7 +259,7 @@ struct ExamView: View {
         let badge = grade(score)
         return ScrollView {
             VStack(spacing: 18) {
-                ProgressRing(fraction: Double(score) / 100, color: scoreColor(score), lineWidth: 14) {
+                ResultRing(fraction: Double(score) / 100, color: scoreColor(score), lineWidth: 14) {
                     VStack(spacing: 0) {
                         Text("\(reduceMotion ? score : shownScore)")
                             .font(.displaySize(40, weight: .bold))
@@ -288,6 +288,7 @@ struct ExamView: View {
                 Text(L.t("答對 \(correctCount) / \(total) 題", "\(correctCount) of \(total) correct"))
                     .foregroundStyle(.secondary)
                     .accessibilityIdentifier("exam-summary")
+                CatVerdict(text: CatQuips.verdict(Double(score) / 100), mood: score >= 60 ? .happy : .smug)
                 VStack(spacing: 8) {
                     ForEach(Array(byLevel.enumerated()), id: \.offset) { _, row in
                         let ratio = Double(row.correct) / Double(max(1, row.total))

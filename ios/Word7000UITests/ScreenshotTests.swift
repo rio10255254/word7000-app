@@ -14,6 +14,39 @@ final class ScreenshotTests: XCTestCase {
 
     func testLightScreens() { walkThrough(theme: "Light") }
     func testDarkScreens() { walkThrough(theme: "Dark") }
+    /// The paper collage style, through the same screens.
+    func testCollageScreens() { walkThrough(theme: "Light", style: "collage") }
+    func testCollageDarkScreens() { walkThrough(theme: "Dark", style: "collage") }
+
+    /// After some practice the cat asks once which style to use; choosing
+    /// the collage closes the sheet and Today redraws in it.
+    func testStyleChooserAppearsOnceAndApplies() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingStyleChooser"]
+        app.launch()
+        XCTAssertTrue(app.buttons["style-choose"].waitForExistence(timeout: 10), "The style chooser did not appear")
+        snap(app, "style-chooser")
+        app.buttons["style-collage"].tap()
+        app.buttons["style-choose"].tap()
+        XCTAssertTrue(app.buttons["style-choose"].waitForNonExistence(timeout: 5), "The style chooser did not close")
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "style-chosen-collage-today")
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        // Settings is the last row of Me: it only exists once scrolled to.
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
+        for _ in 0..<6 where !app.buttons["me-settings"].exists { app.swipeUp() }
+        XCTAssertTrue(app.buttons["me-settings"].waitForExistence(timeout: 5))
+        scrollClearOfTabBar(app, app.buttons["me-settings"])
+        app.buttons["me-settings"].tap()
+        XCTAssertTrue(app.buttons["settings-style"].waitForExistence(timeout: 5))
+        // On a small screen the row can sit behind the tab bar while still
+        // counting as hittable, and the tap would land on the tab bar.
+        scrollClearOfTabBar(app, app.buttons["settings-style"])
+        app.buttons["settings-style"].tap()
+        XCTAssertTrue(app.buttons["style-leather"].waitForExistence(timeout: 5))
+        snap(app, "style-settings")
+    }
 
     /// The English interface for learning Chinese.
     func testChineseModeScreens() {
@@ -158,11 +191,12 @@ final class ScreenshotTests: XCTestCase {
         }
     }
 
-    private func walkThrough(theme: String) {
+    private func walkThrough(theme: String, style: String? = nil) {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTesting\(theme)", "-uiTestingFakePlans"]
+        if style == "collage" { app.launchArguments.append("-uiTestingCollage") }
         app.launch()
-        let prefix = theme.lowercased()
+        let prefix = [style, theme.lowercased()].compactMap { $0 }.joined(separator: "-")
 
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         snap(app, "\(prefix)-1-today")
@@ -224,6 +258,14 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["today-speaking"].tap()
         sleep(1)
         snap(app, "\(prefix)-10-speaking")
+    }
+
+    /// Swipes up until the element is fully above the tab bar.
+    private func scrollClearOfTabBar(_ app: XCUIApplication, _ element: XCUIElement) {
+        let tabBarTop = app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : app.frame.maxY
+        for _ in 0..<6 where !(element.isHittable && element.frame.maxY <= tabBarTop - 4) {
+            app.swipeUp()
+        }
     }
 
     private func snap(_ app: XCUIApplication, _ name: String) {

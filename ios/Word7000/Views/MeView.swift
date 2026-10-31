@@ -16,6 +16,7 @@ struct MeView: View {
                 // Who you are and how far you have come, in one card.
                 Section {
                     ProfileCard(mastered: stats.mastered, reviewing: stats.review)
+                        .listRowBackground(StyledRowBackground(paper: .ruled))
                 } footer: {
                     if model.progress.streak > 0 {
                         Label {
@@ -29,6 +30,7 @@ struct MeView: View {
 
                 Section {
                     HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
+                        .listRowBackground(StyledRowBackground(paper: .graph))
                     let summary = LearningWeekSummary(days: model.activity(days: 7))
                     if summary.activeDays > 0 {
                         Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
@@ -58,7 +60,7 @@ struct MeView: View {
                     .accessibilityIdentifier("me-settings")
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(L.tabMe)
@@ -177,6 +179,11 @@ struct SettingsView: View {
                     } label: {
                         SettingsLabel(L.appearance, icon: appearanceIcon, tint: .indigo)
                     }
+                    NavigationLink { StyleSettingsView() } label: {
+                        SettingsLabel(L.t("App 風格", "App style"), icon: "paintpalette.fill", tint: .purple,
+                                      value: (model.settings.appStyle ?? .leather).label)
+                    }
+                    .accessibilityIdentifier("settings-style")
                     Toggle(isOn: Binding(
                         get: { model.settings.hapticsEnabled ?? true },
                         set: { model.settings.hapticsEnabled = $0 }
@@ -296,29 +303,37 @@ private struct ProfileCard: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var mastered: Int
     var reviewing: Int
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var signInOpen = false
     @State private var manageOpen = false
+    /// What the companion is saying: shown in place of the name, never over it.
+    @State private var spoken: String?
+    /// Today's AI insight headline, once worked out; the companion says it.
+    @State private var insightHeadline: String?
+    @State private var chatOpen = false
+    @State private var focusPractice: [String]?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
-                MascotBuddy(mood: mastered > 0 ? .happy : .idle, size: 56, lines: buddyLines, bubbleSide: .trailing)
+                MascotBuddy(mood: model.progress.studiedToday > 0 ? .happy : .smug, size: 56, lines: buddyLines,
+                            greeting: insightHeadline, tip: buddyTip, fidgets: true, speech: $spoken)
                     .accessibilityIdentifier("me-mascot")
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 6) {
-                        Text(name)
-                            .font(.display(.title3, weight: .bold))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                        membershipBadge
+                ZStack(alignment: .leading) {
+                    identity
+                        .opacity(spoken == nil ? 1 : 0)
+                        .accessibilityHidden(spoken != nil)
+                    if let spoken {
+                        let actionable = spoken == buddyTip?.text
+                        MascotBubble(text: spoken, pointing: .leading, actionable: actionable)
+                            .padding(.leading, 6)
+                            .transition(.scale(scale: 0.6, anchor: .leading).combined(with: .opacity))
+                            .onTapGesture { if actionable { buddyTip?.action() } }
+                            .accessibilityHidden(true)
                     }
-                    Label(account.message, systemImage: syncSymbol)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                        .contentTransition(.opacity)
                 }
-                Spacer(minLength: 0)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .animation(reduceMotion ? nil : Motion.pop, value: spoken)
             }
             LevelProgress(mastered: mastered)
             HStack(spacing: 0) {
@@ -333,15 +348,58 @@ private struct ProfileCard: View {
         .padding(.vertical, 8)
         .sheet(isPresented: $signInOpen) { SignInSheet() }
         .manageSubscriptionsSheet(isPresented: $manageOpen)
+        .sheet(isPresented: $chatOpen, onDismiss: {
+            insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
+            guard let ids = focusPractice else { return }
+            focusPractice = nil
+            model.startStudySession(onlyIds: ids)
+            PracticeLaunch.shared.requested = .study
+        }) {
+            MascotChatSheet(practise: { ids in
+                focusPractice = ids
+                chatOpen = false
+            })
+        }
+        .onAppear { insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline }
+    }
+
+    /// Name, membership and sync state.
+    private var identity: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 6) {
+                Text(name)
+                    .font(.display(.title3, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                membershipBadge
+            }
+            Label(account.message, systemImage: syncSymbol)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .contentTransition(.opacity)
+        }
+    }
+
+    /// Its AI note, as on Today: the day's insight headline (tap for the chat),
+    /// or an offer to work it out. Nothing when online AI is off.
+    private var buddyTip: MascotTip? {
+        if let insightHeadline {
+            return MascotTip(text: insightHeadline) { chatOpen = true }
+        }
+        guard CloudAssistant.shared.offered else { return nil }
+        return MascotTip(text: L.t("要我看看你最近到底有多混嗎？", "Want to know how much you've been slacking?")) { chatOpen = true }
     }
 
     /// What the companion says when tapped here: how far you have come.
     private var buddyLines: [String] {
         let streak = model.progress.streak
-        var lines = [L.t("已經熟記 \(mastered) 個字了！", "\(mastered) words mastered!")]
-        if streak > 0 { lines.append(L.t("連續 \(streak) 天，好厲害！", "\(streak) days in a row!")) }
-        if reviewing > 0 { lines.append(L.t("還有 \(reviewing) 個字等你複習", "\(reviewing) words to review")) }
-        lines.append(L.t("我們一起慢慢變強～", "Let's keep growing together"))
+        var lines = [L.t("熟記 \(mastered) 個。離 7000 還很遠，加油喔（棒讀）。", "\(mastered) mastered. Only \(max(0, 7000 - mastered)) to go. Yay. (Flatly.)")]
+        if streak > 0 { lines.append(L.t("連續 \(streak) 天。斷掉的話，我會記一輩子。", "\(streak)-day streak. Break it and I'll never let it go.")) }
+        if reviewing > 0 { lines.append(L.t("\(reviewing) 個字等你複習，它們開始懷疑人生了。", "\(reviewing) words waiting for review. They're questioning their existence.")) }
+        lines.append(L.t("我會一直盯著你的進度。一直。", "I'll be watching your progress. Always."))
+        let smacks = MascotGrudge.today
+        if smacks > 0 { lines.append(L.t("今天被你扁了 \(smacks) 下，我記住了。", "You've hit me \(smacks) times today. I remember.")) }
         return lines
     }
 

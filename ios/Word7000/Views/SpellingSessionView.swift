@@ -72,7 +72,8 @@ struct SpellingSessionView: View {
             VStack(spacing: 18) {
                 BuddyProgressBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)),
                                  mood: result.map { outcome -> Mascot.Mood in outcome == .correct ? .happy : .encourage } ?? .thinking,
-                                 hop: correctCount + misses)
+                                 hop: correctCount + misses,
+                                 remark: result.map { $0 == .correct ? CatQuips.right(index, combo: 0) : CatQuips.wrong(index) })
 
                 VStack(spacing: 8) {
                     if !word.partOfSpeech.isEmpty {
@@ -285,7 +286,7 @@ struct SpellingSessionView: View {
     private var results: some View {
         VStack(spacing: 18) {
             Spacer()
-            ProgressRing(fraction: Double(correctCount) / Double(max(1, words.count)), color: Palette.known, lineWidth: 14) {
+            ResultRing(fraction: Double(correctCount) / Double(max(1, words.count)), color: Palette.known, lineWidth: 14) {
                 Text("\(reduceMotion ? correctCount : shownScore)/\(words.count)")
                     .font(.displaySize(30, weight: .bold))
                     .monospacedDigit()
@@ -305,6 +306,8 @@ struct SpellingSessionView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .entrance(2)
+            CatVerdict(text: CatQuips.verdict(Double(correctCount) / Double(max(1, words.count))))
+                .entrance(3)
             Spacer()
             VStack(spacing: 12) {
                 if missedIds.isEmpty {

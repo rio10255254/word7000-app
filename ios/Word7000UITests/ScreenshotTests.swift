@@ -35,23 +35,15 @@ final class ScreenshotTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 2).tap()
         // Settings is the last row of Me: it only exists once scrolled to.
         XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
-        for _ in 0..<6 where !(app.buttons["me-settings"].exists && app.buttons["me-settings"].isHittable) { app.swipeUp() }
+        for _ in 0..<6 where !app.buttons["me-settings"].exists { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-settings"].waitForExistence(timeout: 5))
+        scrollClearOfTabBar(app, app.buttons["me-settings"])
         app.buttons["me-settings"].tap()
-        // For comparison: another row of the same section opens and comes back.
-        XCTAssertTrue(app.buttons["settings-intelligence"].waitForExistence(timeout: 5))
-        for _ in 0..<4 where !app.buttons["settings-intelligence"].isHittable { app.swipeUp() }
-        app.buttons["settings-intelligence"].tap()
-        sleep(1)
-        snap(app, "style-settings-intelligence")
-        app.navigationBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.buttons["settings-style"].waitForExistence(timeout: 5))
-        for _ in 0..<4 where !app.buttons["settings-style"].isHittable { app.swipeUp() }
-        snap(app, "style-settings-before-tap")
-        print("STYLE-DEBUG settings-style frame: \(app.buttons["settings-style"].frame) window: \(app.windows.firstMatch.frame)")
+        // On a small screen the row can sit behind the tab bar while still
+        // counting as hittable, and the tap would land on the tab bar.
+        scrollClearOfTabBar(app, app.buttons["settings-style"])
         app.buttons["settings-style"].tap()
-        sleep(1)
-        print("STYLE-DEBUG after tap:\n\(app.debugDescription)")
         XCTAssertTrue(app.buttons["style-leather"].waitForExistence(timeout: 5))
         snap(app, "style-settings")
     }
@@ -266,6 +258,14 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["today-speaking"].tap()
         sleep(1)
         snap(app, "\(prefix)-10-speaking")
+    }
+
+    /// Swipes up until the element is fully above the tab bar.
+    private func scrollClearOfTabBar(_ app: XCUIApplication, _ element: XCUIElement) {
+        let tabBarTop = app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : app.frame.maxY
+        for _ in 0..<6 where !(element.isHittable && element.frame.maxY <= tabBarTop - 4) {
+            app.swipeUp()
+        }
     }
 
     private func snap(_ app: XCUIApplication, _ name: String) {

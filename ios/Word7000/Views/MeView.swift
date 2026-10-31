@@ -13,18 +13,10 @@ struct MeView: View {
 
         List {
             Group {
-                AccountSection()
+                // Who you are and how far you have come, in one card.
                 Section {
-                    HStack(spacing: 0) {
-                        StatTile(value: model.progress.streak, label: L.streak, color: Palette.review)
-                        Divider().frame(height: 36)
-                        StatTile(value: stats.mastered, label: L.mastered, color: Palette.known)
-                        Divider().frame(height: 36)
-                        StatTile(value: stats.review, label: L.reviewing, color: Palette.review)
-                    }
-                    .padding(.vertical, 6)
+                    ProfileCard(mastered: stats.mastered, reviewing: stats.review)
                 } footer: {
-                    // One short line, so the history row stays on screen on small iPhones.
                     if model.progress.streak > 0 {
                         Label {
                             Text(streakProtectionText)
@@ -34,7 +26,7 @@ struct MeView: View {
                         .accessibilityIdentifier("me-streak-protection")
                     }
                 }
-    
+
                 Section {
                     HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
                     let summary = LearningWeekSummary(days: model.activity(days: 7))
@@ -57,13 +49,7 @@ struct MeView: View {
                     }
                 }
     
-                Section {
-                    LevelCard(mastered: stats.mastered)
-                }
-    
                 AIInsightsSection()
-    
-                PlusSection(compact: true)
     
                 Section {
                     NavigationLink { SettingsView() } label: {
@@ -299,40 +285,159 @@ struct SettingsLabel: View {
     }
 }
 
-/// The learner's level, earned by the words they know well, with the
-/// companion beside it and how far it is to the next level.
-private struct LevelCard: View {
+/// Who you are and how far you have come, in one card: the companion beside
+/// your account and Plus membership, your level, three headline numbers, and
+/// the one or two things to do next (signing in, Plus). Signing out and
+/// deleting the account stay in Settings.
+private struct ProfileCard: View {
+    @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
+    @Environment(PlusModel.self) private var plus
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    var mastered: Int
+    var reviewing: Int
+    @State private var signInOpen = false
+    @State private var manageOpen = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                Mascot(mood: mastered > 0 ? .happy : .idle, size: 56)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 6) {
+                        Text(name)
+                            .font(.display(.title3, weight: .bold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        membershipBadge
+                    }
+                    Label(account.message, systemImage: syncSymbol)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .contentTransition(.opacity)
+                }
+                Spacer(minLength: 0)
+            }
+            LevelProgress(mastered: mastered)
+            HStack(spacing: 0) {
+                StatTile(value: model.progress.streak, label: L.streak, color: Palette.review)
+                Divider().frame(height: 32)
+                StatTile(value: mastered, label: L.mastered, color: Palette.known)
+                Divider().frame(height: 32)
+                StatTile(value: reviewing, label: L.reviewing, color: Palette.review)
+            }
+            actions
+        }
+        .padding(.vertical, 8)
+        .sheet(isPresented: $signInOpen) { SignInSheet() }
+        .manageSubscriptionsSheet(isPresented: $manageOpen)
+    }
+
+    private var name: String {
+        if !account.configured { return L.t("我的學習", "My learning") }
+        if account.isPermanent { return account.displayName ?? L.t("已登入", "Signed in") }
+        return L.t("訪客", "Guest")
+    }
+
+    private var syncSymbol: String {
+        if case .error = account.status { return "exclamationmark.icloud" }
+        return account.cloudSyncEnabled ? "checkmark.icloud" : "iphone"
+    }
+
+    /// The Plus membership, worn next to the name.
+    @ViewBuilder
+    private var membershipBadge: some View {
+        switch plus.access {
+        case .subscribed:
+            Text("PLUS")
+                .font(.caption2.weight(.heavy))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(PlusStyle.gradient, in: Capsule())
+                .accessibilityLabel(P.memberTitle)
+        case .trial(let daysLeft):
+            Text(L.t("試用 \(daysLeft) 天", "Trial · \(daysLeft)d"))
+                .font(.caption2.weight(.bold))
+                .foregroundStyle(Palette.review)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(Palette.review.opacity(0.15), in: Capsule())
+        case .expired:
+            EmptyView()
+        }
+    }
+
+    @ViewBuilder
+    private var actions: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 8)) : AnyLayout(HStackLayout(spacing: 8))
+        layout {
+            if account.configured, !account.isPermanent {
+                Button { signInOpen = true } label: {
+                    Label(L.t("登入保留紀錄", "Sign in"), systemImage: "person.crop.circle.badge.plus")
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .secondaryAction()
+                .accessibilityIdentifier("me-sign-in")
+            }
+            plusButton
+        }
+        if case let .trial(daysLeft) = plus.access {
+            Text("\(P.trialDaysMeter(daysLeft)) · \(P.scansLeft(plus.policy.trialScansLeft))")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private var plusButton: some View {
+        let button = Button {
+            if plus.subscribed { manageOpen = true } else { plus.paywallReason = .general }
+        } label: {
+            Label(plus.subscribed ? P.manage : plus.access == .expired ? P.unlockPlus : P.upgradePlus, systemImage: "sparkles")
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+        }
+        if plus.subscribed {
+            button.secondaryAction().accessibilityIdentifier("me-plus")
+        } else {
+            button.prominentAction(tint: Palette.review).accessibilityIdentifier("me-plus")
+        }
+    }
+}
+
+/// The learner's level, earned by the words they know well, and how far it is
+/// to the next one.
+private struct LevelProgress: View {
     var mastered: Int
     static let wordsPerLevel = 50
 
     var body: some View {
         let level = mastered / Self.wordsPerLevel + 1
         let into = mastered % Self.wordsPerLevel
-        HStack(spacing: 14) {
-            Mascot(mood: mastered > 0 ? .happy : .idle, size: 64)
-            VStack(alignment: .leading, spacing: 7) {
-                HStack(spacing: 8) {
-                    Text("Lv.\(level)")
-                        .font(.display(.subheadline, weight: .heavy))
-                        .monospacedDigit()
-                        .foregroundStyle(.white)
-                        .contentTransition(.numericText(value: Double(level)))
-                        .padding(.horizontal, 9)
-                        .padding(.vertical, 3)
-                        .background(LinearGradient(colors: [Palette.accent, Palette.chinese], startPoint: .leading, endPoint: .trailing), in: Capsule())
-                    Text(Self.title(for: level))
-                        .font(.display(.headline, weight: .bold))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                }
-                SessionBar(fraction: Double(into) / Double(Self.wordsPerLevel), tint: Palette.chinese)
-                Text(L.t("再熟記 \(Self.wordsPerLevel - into) 個字升到 Lv.\(level + 1)",
-                         "\(Self.wordsPerLevel - into) more known words to Lv.\(level + 1)"))
+        VStack(alignment: .leading, spacing: 7) {
+            HStack(spacing: 8) {
+                Text("Lv.\(level)")
+                    .font(.display(.subheadline, weight: .heavy))
+                    .monospacedDigit()
+                    .foregroundStyle(.white)
+                    .contentTransition(.numericText(value: Double(level)))
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 3)
+                    .background(LinearGradient(colors: [Palette.accent, Palette.review], startPoint: .leading, endPoint: .trailing), in: Capsule())
+                Text(Self.title(for: level))
+                    .font(.display(.headline, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Spacer(minLength: 4)
+                Text(L.t("再 \(Self.wordsPerLevel - into) 字升級", "\(Self.wordsPerLevel - into) to go"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            SessionBar(fraction: Double(into) / Double(Self.wordsPerLevel), tint: Palette.accent)
         }
-        .padding(.vertical, 6)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("me-level")
     }

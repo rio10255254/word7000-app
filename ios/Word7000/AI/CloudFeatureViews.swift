@@ -439,13 +439,6 @@ struct AIInsightsSection: View {
     @State private var failure: CloudAI.Failure?
     @State private var askCloud = false
 
-    private struct Saved: Codable {
-        var day: String
-        var mode: String
-        var insights: CloudAI.Insights
-    }
-    private static let storageKey = "word7000.aiInsights"
-
     var body: some View {
         if CloudAssistant.shared.offered || insights != nil {
             Section {
@@ -549,11 +542,8 @@ struct AIInsightsSection: View {
     }
 
     private func restore() {
-        guard insights == nil,
-              let data = UserDefaults.standard.data(forKey: Self.storageKey),
-              let saved = try? JSONDecoder().decode(Saved.self, from: data),
-              saved.day == DayMath.today(), saved.mode == model.studyMode.rawValue else { return }
-        insights = saved.insights
+        guard insights == nil, let saved = InsightsStore.today(mode: model.studyMode) else { return }
+        insights = saved
     }
 
     private func start() {
@@ -567,9 +557,7 @@ struct AIInsightsSection: View {
             defer { loading = false }
             do {
                 let value = try await CloudAssistant.shared.run(.insights, input, as: CloudAI.Insights.self).cleaned()
-                if let data = try? JSONEncoder().encode(Saved(day: DayMath.today(), mode: mode, insights: value)) {
-                    UserDefaults.standard.set(data, forKey: Self.storageKey)
-                }
+                InsightsStore.save(value, mode: mode)
                 if mode == model.studyMode.rawValue {
                     withAnimation(Motion.reveal) { insights = value }
                 }
@@ -660,7 +648,7 @@ private struct ThinkingDots: View {
 }
 
 /// Why the AI could not answer, with its warning icon popping in.
-private struct AIFailureNote: View {
+struct AIFailureNote: View {
     var failure: CloudAI.Failure
 
     var body: some View {

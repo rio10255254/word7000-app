@@ -18,6 +18,8 @@ struct Mascot: View {
     var gaze: CGSize = .zero
     /// Rosy cheeks, e.g. while it is being held.
     var blush = false
+    /// Waddling along: the body bobs and sways, and the little feet take turns.
+    var walking = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var colorScheme
@@ -65,8 +67,10 @@ struct Mascot: View {
     private func figure(time t: Double) -> some View {
         let s = size
         let breathe = sin(t * 2.1) * 0.022
-        let bounce: CGFloat = mood == .cheer ? CGFloat(abs(sin(t * 5.5))) * s * 0.06 : 0
-        let tilt: Double = mood == .encourage ? -6 : mood == .thinking ? 5 : 0
+        let step = walking ? t * 9 : 0
+        let bounce: CGFloat = mood == .cheer ? CGFloat(abs(sin(t * 5.5))) * s * 0.06
+            : walking ? CGFloat(abs(sin(step))) * s * 0.05 : 0
+        let tilt: Double = walking ? sin(step) * 6 : mood == .encourage ? -6 : mood == .thinking ? 5 : 0
         return ZStack {
             // The shadow on the ground shrinks while the body is up.
             Ellipse()
@@ -75,7 +79,13 @@ struct Mascot: View {
                 .blur(radius: s * 0.025)
                 .offset(y: s * 0.44)
             ZStack {
-                sprout(s, sway: sin(t * 1.6) * 8)
+                // Two little feet, tucked under the body; they step in turn while it walks.
+                HStack(spacing: s * 0.2) {
+                    foot(s, lift: walking ? max(0, sin(step)) * s * 0.06 : 0)
+                    foot(s, lift: walking ? max(0, -sin(step)) * s * 0.06 : 0)
+                }
+                .offset(y: s * 0.42)
+                sprout(s, sway: sin(t * (walking ? 4.5 : 1.6)) * (walking ? 14 : 8))
                     .frame(height: s * 0.16, alignment: .bottom)
                     .offset(y: -s * 0.42)
                 shell(s)
@@ -88,6 +98,13 @@ struct Mascot: View {
             if mood == .cheer { sparkles(s, time: t) }
             if mood == .sleepy { snores(s, time: t) }
         }
+    }
+
+    private func foot(_ s: CGFloat, lift: CGFloat) -> some View {
+        Capsule()
+            .fill(Self.shade.opacity(0.85))
+            .frame(width: s * 0.15, height: s * 0.08)
+            .offset(y: -lift)
     }
 
     private func shell(_ s: CGFloat) -> some View {
@@ -317,10 +334,25 @@ private struct MascotOpenMouth: Shape {
 struct MascotBubble: View {
     var text: String
     var pointing: Edge = .bottom
+    /// Tapping it opens more (the companion's AI note): a sparkle and a chevron say so.
+    var actionable = false
     static let cream = Color(red: 1.0, green: 0.98, blue: 0.94)
 
     var body: some View {
-        Text(text)
+        HStack(spacing: 5) {
+            if actionable {
+                Image(systemName: "sparkles")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Palette.accent)
+                    .symbolEffect(.pulse, options: .repeat(2))
+            }
+            Text(text)
+            if actionable {
+                Image(systemName: "chevron.right")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Palette.accent)
+            }
+        }
             .font(.display(.footnote, weight: .semibold))
             .foregroundStyle(Color(red: 0.23, green: 0.15, blue: 0.11))
             .lineLimit(2)
@@ -360,10 +392,18 @@ private struct MascotBubbleTail: Shape {
     }
 }
 
+/// Something the companion can tell you more about: a line for its bubble,
+/// and what tapping that bubble opens.
+struct MascotTip {
+    var text: String
+    var action: () -> Void
+}
+
 /// The companion you can play with. Tap it and it hops and says one of its
 /// lines; drag it and it leans and stretches after your finger, eyes following,
 /// then springs back; press and hold and it blushes as little hearts float up.
-/// Its speech bubble never takes touches, so it can't cover a button.
+/// Its speech bubble takes no touches unless it carries the companion's tip,
+/// and then only where it floats over nothing tappable.
 struct MascotBuddy: View {
     var mood: Mascot.Mood = .idle
     var size: CGFloat = 64
@@ -375,6 +415,14 @@ struct MascotBuddy: View {
     var bubbleSide: Edge = .top
     /// Hops from outside, e.g. a greeting or a right answer.
     var hop = 0
+    /// Out for a stroll (see `StrollingCompanion`), and which way it faces: -1 left, 1 right.
+    var walking = false
+    var facing: CGFloat = 0
+    /// Something it can tell you more about (its AI note). Said on the first
+    /// tap and now and then after; tapping that bubble runs the action.
+    var tip: MascotTip? = nil
+    /// Told whenever someone taps, holds or drags it, e.g. to stop wandering for a while.
+    var onInteract: (() -> Void)? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppModel.self) private var model
@@ -388,7 +436,10 @@ struct MascotBuddy: View {
 
     var body: some View {
         let pull = CGSize(width: max(-1, min(1, drag.width / 80)), height: max(-1, min(1, drag.height / 80)))
-        Mascot(mood: held ? .happy : mood, size: size, hop: hop + pokes, gaze: pull, blush: held)
+        // Eyes on the finger while dragged, else where it is heading.
+        let look = drag == .zero ? CGSize(width: facing * 0.8, height: 0) : pull
+        let actionable = tip != nil && bubble == tip?.text
+        Mascot(mood: held ? .happy : mood, size: size, hop: hop + pokes, gaze: look, blush: held, walking: walking && drag == .zero)
             // Leans after the finger and stretches toward it, like soft clay.
             .scaleEffect(x: 1 + abs(pull.width) * 0.12 - abs(pull.height) * 0.05,
                          y: 1 + abs(pull.height) * 0.1 - abs(pull.width) * 0.06, anchor: .bottom)
@@ -399,13 +450,14 @@ struct MascotBuddy: View {
             }
             .overlay(alignment: bubbleAnchor) {
                 if let bubble {
-                    MascotBubble(text: bubble, pointing: bubblePointing)
-                        .frame(width: 180, alignment: bubbleAnchor)
+                    MascotBubble(text: bubble, pointing: bubblePointing, actionable: actionable)
+                        .frame(width: actionable ? 200 : 180, alignment: bubbleAnchor)
                         .offset(x: bubbleSide == .leading ? -size - 6 : bubbleSide == .trailing ? size + 6 : 0,
                                 y: bubbleSide == .top ? -size * 0.62 : -size * 0.05)
                         .transition(.scale(scale: 0.6, anchor: bubbleSide == .top ? .bottom : bubbleSide == .leading ? .trailing : .leading)
                             .combined(with: .opacity))
-                        .allowsHitTesting(false)
+                        .onTapGesture { if actionable { tip?.action() } }
+                        .allowsHitTesting(actionable)
                         .accessibilityHidden(true)
                 }
             }
@@ -414,11 +466,13 @@ struct MascotBuddy: View {
             .onLongPressGesture(minimumDuration: 0.4, maximumDistance: 12) {
                 love()
             } onPressingChanged: { pressing in
+                if pressing { onInteract?() }
                 withAnimation(Motion.pop) { held = pressing && !reduceMotion }
             }
             .simultaneousGesture(
                 DragGesture(minimumDistance: 8)
                     .onChanged { value in
+                        onInteract?()
                         guard !reduceMotion else { return }
                         withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.7)) { drag = value.translation }
                     }
@@ -428,17 +482,24 @@ struct MascotBuddy: View {
             )
             .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.7), trigger: pokes) { _, _ in haptics }
             .sensoryFeedback(.success, trigger: hearts) { _, new in new > 0 && haptics }
-            .task {
-                guard let greeting, !greeted else { return }
+            .task(id: greeting) {
+                // Once per appearance, except that a tip arriving later (today's
+                // AI note, once worked out) is always said.
+                guard let greeting, !greeted || greeting == tip?.text else { return }
                 greeted = true
                 try? await Task.sleep(for: .milliseconds(900))
-                say(greeting, for: 3.2)
+                guard !Task.isCancelled else { return }
+                // A tip stays up longer, so there is time to tap it.
+                say(greeting, for: greeting == tip?.text ? 6 : 3.2)
             }
             // For VoiceOver a button that says hello, so it can be played with too.
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(L.t("小字團", "Wordling"))
             .accessibilityAddTraits(.isButton)
             .accessibilityAction { poke() }
+            .accessibilityActions {
+                if let tip { Button(tip.text) { tip.action() } }
+            }
     }
 
     private var haptics: Bool { model.settings.hapticsEnabled ?? true }
@@ -461,7 +522,13 @@ struct MascotBuddy: View {
     }
 
     private func poke() {
+        onInteract?()
         pokes += 1
+        // The tip first, then every third tap.
+        if let tip, pokes == 1 || pokes % 3 == 0 {
+            say(tip.text, for: 6)
+            return
+        }
         guard !lines.isEmpty else { return }
         var next = lines.randomElement() ?? lines[0]
         if next == bubble, let other = lines.first(where: { $0 != bubble }) { next = other }

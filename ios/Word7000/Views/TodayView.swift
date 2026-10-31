@@ -26,10 +26,14 @@ private struct TodayMetrics {
     var ring: CGFloat { compact ? 84 : tall ? 116 : 100 }
     var heroPadding: CGFloat { compact ? 16 : tall ? 22 : 20 }
     var mascot: CGFloat { compact ? 58 : tall ? 80 : 70 }
+    /// Where there is room, the companion stands on the hero card's top edge
+    /// (its feet in the card's top padding) and can stroll along it; on the
+    /// SE-sized phones it peeks over the corner and stays put.
+    var standsOnCard: Bool { !compact && !large }
     /// How far the companion rises above the hero card's top edge.
-    var peek: CGFloat { (mascot * 0.42).rounded() }
+    var peek: CGFloat { standsOnCard ? (mascot * 0.94 - 12).rounded() : (mascot * 0.42).rounded() }
     /// Room above the card so the companion stays clear of the header.
-    var heroTop: CGFloat { large ? 0 : max(0, peek + 6 - spacing) }
+    var heroTop: CGFloat { large ? 0 : max(0, peek + (standsOnCard ? 10 : 6) - spacing) }
     /// Practice tiles: tall cards (icon up top, words along the bottom) on the
     /// big phones, short rows elsewhere. Both carry a faint, tilted watermark
     /// of their icon, which fills the open side of the tile.
@@ -73,6 +77,13 @@ struct TodayView: View {
     @State private var greetingHops = 0
     /// Taps on each practice tile, to bounce its icon.
     @State private var tileTaps: [String: Int] = [:]
+    /// The hero card's width: how far the companion can stroll.
+    @State private var heroWidth: CGFloat = 0
+    /// Today's AI insight headline, once worked out; the companion says it.
+    @State private var insightHeadline: String?
+    @State private var mascotChatOpen = false
+    /// Focus words to practise once the companion's chat has closed.
+    @State private var focusPractice: [String]?
 
     var start: (Activity) -> Void
 
@@ -107,6 +118,19 @@ struct TodayView: View {
         }
         .sensoryFeedback(.impact(weight: .light), trigger: tileTaps) { _, _ in model.settings.hapticsEnabled ?? true }
         .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet().compactSheet() }
+        .sheet(isPresented: $mascotChatOpen, onDismiss: {
+            insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
+            guard let ids = focusPractice else { return }
+            focusPractice = nil
+            model.startStudySession(onlyIds: ids)
+            start(.study)
+        }) {
+            MascotChatSheet(practise: { ids in
+                focusPractice = ids
+                mascotChatOpen = false
+            })
+        }
+        .task { insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline }
         .sheet(isPresented: $quizSetupOpen, onDismiss: {
             guard quizQueued else { return }
             quizQueued = false
@@ -307,11 +331,22 @@ struct TodayView: View {
         }
         .padding(m.heroPadding)
         .background { HeroBackground(done: model.goalDone) }
-        // The companion peeks over the card's top edge, its bubble to its left.
+        .background {
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear { heroWidth = proxy.size.width }
+                    .onChange(of: proxy.size.width) { _, width in heroWidth = width }
+            }
+        }
+        // The companion stands on (or peeks over) the card's top edge, at home
+        // in the right corner, and now and then strolls along it.
         .overlay(alignment: .topTrailing) {
             if !m.large {
-                MascotBuddy(mood: mascotMood, size: m.mascot, lines: mascotLines, greeting: mascotGreeting,
-                            bubbleSide: .leading, hop: greetingHops + tileTaps.values.reduce(0, +))
+                StrollingCompanion(mood: mascotMood, size: m.mascot, lines: mascotLines,
+                                   greeting: insightHeadline ?? mascotGreeting, tip: mascotTip,
+                                   hop: greetingHops + tileTaps.values.reduce(0, +),
+                                   range: m.standsOnCard ? max(0, heroWidth - m.mascot - 28) : 0,
+                                   pause: tileTaps.values.reduce(0, +))
                     .offset(x: -12, y: -m.peek)
                     .accessibilityIdentifier("today-mascot")
             }
@@ -391,6 +426,16 @@ struct TodayView: View {
         if model.goalDone { return L.t("今天的目標完成了！", "Today's goal is done!") }
         if progress.studiedToday == 0 { return L.t("今天一起學 \(progress.dailyTarget) 個字！", "\(progress.dailyTarget) words today?") }
         return L.t("再 \(max(0, progress.dailyTarget - progress.studiedToday)) 個就達標！", "\(max(0, progress.dailyTarget - progress.studiedToday)) more to go!")
+    }
+
+    /// Its AI note: today's insight headline once worked out (tap for the
+    /// whole chat), or an offer to work it out. Nothing when online AI is off.
+    private var mascotTip: MascotTip? {
+        if let insightHeadline {
+            return MascotTip(text: insightHeadline) { mascotChatOpen = true }
+        }
+        guard CloudAssistant.shared.offered else { return nil }
+        return MascotTip(text: L.t("要我幫你看看最近學得怎樣嗎？", "Shall I look at how you're doing?")) { mascotChatOpen = true }
     }
 
     /// What it says when tapped.
@@ -492,6 +537,82 @@ struct TodayView: View {
     private static let doneDeep = Color(red: 0.3, green: 0.38, blue: 0.22)
     /// Text and the button on the leather card.
     private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
+}
+
+/// The companion on Today, free to wander. Every so often it waddles a little
+/// way along the top edge of the hero card (body bobbing, feet stepping, eyes
+/// on where it is going), stops to look around, and later wanders back home
+/// to the right corner. A tap, a hold, a drag or a tapped practice tile keeps
+/// it still for a while, so it never walks off just as you reach for it.
+/// It stays put with Reduce Motion, on the small phones, and under UI tests.
+private struct StrollingCompanion: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var mood: Mascot.Mood
+    var size: CGFloat
+    var lines: [String]
+    var greeting: String
+    var tip: MascotTip?
+    var hop: Int
+    /// How far left of home it may go; 0 keeps it home.
+    var range: CGFloat
+    /// Bumped by the page (a tile tapped) to keep it still for a while.
+    var pause: Int
+
+    @State private var x: CGFloat = 0
+    @State private var walking = false
+    @State private var facing: CGFloat = 0
+    @State private var restUntil = Date.distantPast
+
+    private var roams: Bool { range > 40 && !reduceMotion && !AppRuntime.uiTesting }
+
+    var body: some View {
+        MascotBuddy(mood: mood, size: size, lines: lines, greeting: greeting,
+                    // The bubble opens toward the room: left of it at home, right of it out on the left.
+                    bubbleSide: x < -range / 2 ? .trailing : .leading,
+                    hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest)
+            .offset(x: x)
+            .task(id: roams) { await wander() }
+            .onChange(of: pause) { _, _ in rest() }
+            .onChange(of: range) { _, value in
+                if -x > value { x = -value }
+            }
+    }
+
+    private func rest() {
+        restUntil = Date().addingTimeInterval(8)
+    }
+
+    private func wander() async {
+        guard roams else {
+            x = 0
+            walking = false
+            return
+        }
+        try? await Task.sleep(for: .seconds(7))
+        while !Task.isCancelled {
+            if Date() < restUntil {
+                try? await Task.sleep(for: .seconds(1))
+                continue
+            }
+            // Mostly short strolls; every so often all the way home.
+            let home = x < -10 && Int.random(in: 0..<3) == 0
+            let target: CGFloat = home ? 0 : -CGFloat.random(in: 0...range)
+            let distance = abs(target - x)
+            if distance > 24 {
+                facing = target < x ? -1 : 1
+                let duration = Double(distance / 46)
+                walking = true
+                withAnimation(.linear(duration: duration)) { x = target }
+                try? await Task.sleep(for: .seconds(duration))
+                guard !Task.isCancelled else { return }
+                walking = false
+                // A look at the way it came, then back to the front.
+                try? await Task.sleep(for: .seconds(1.4))
+                withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+            }
+            try? await Task.sleep(for: .seconds(Double.random(in: 5...10)))
+        }
+    }
 }
 
 /// One way to practise, as a tile.

@@ -326,6 +326,12 @@ enum AppearancePreference: String, Codable, CaseIterable, Identifiable, Sendable
     }
 }
 
+/// How the app was launched.
+enum AppRuntime {
+    /// Under UI tests: ambient wandering stays put, so elements hold still to be measured and tapped.
+    static let uiTesting = ProcessInfo.processInfo.arguments.contains { $0.hasPrefix("-uiTesting") }
+}
+
 extension View {
     /// A short sheet for a few settings or a note: opens at half height with a
     /// grabber, and can be pulled up to full height when there is more to see.

@@ -600,6 +600,8 @@ struct WordProgressCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 CardStatusChip(status: progress.status)
+                // The companion's take on this word: curious, rooting for it, or pleased.
+                Mascot(mood: progress.status == .new ? .thinking : progress.status == .review ? .encourage : .happy, size: 30)
                 Spacer()
                 if !level.isEmpty {
                     Text(level).font(.subheadline).foregroundStyle(.secondary)

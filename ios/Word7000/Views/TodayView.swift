@@ -30,26 +30,23 @@ private struct TodayMetrics {
     var peek: CGFloat { (mascot * 0.42).rounded() }
     /// Room above the card so the companion stays clear of the header.
     var heroTop: CGFloat { large ? 0 : max(0, peek + 6 - spacing) }
-    /// Practice tiles: tall cards (icon up top, words along the bottom, a
-    /// faint watermark of the icon in the corner) wherever two rows of them
-    /// fit, which is every phone from the 6.1" up; short rows on the SE and mini.
-    var tallCards: Bool { !large && height >= 700 }
+    /// Practice tiles: tall cards (icon up top, words along the bottom) on the
+    /// big phones, short rows elsewhere. Both carry a faint, tilted watermark
+    /// of their icon, which fills the open side of the tile.
+    var tallCards: Bool { tall && !large }
     var tileSpacing: CGFloat { compact ? 8 : tall ? 12 : 10 }
-    /// Type and icon sizes. A tile fills its room through its composition
-    /// (the icon and the words at opposite ends, the watermark, a big count)
-    /// rather than through ever larger text.
+    /// Type and icon sizes, which grow with the room the tiles have.
     func tileStyle(tallCard: Bool) -> PracticeTileStyle {
         if compact { return PracticeTileStyle(icon: 36, title: .subheadline, detail: .caption) }
-        if tallCard { return PracticeTileStyle(icon: tall ? 50 : 46, title: .title3, detail: .footnote) }
-        return PracticeTileStyle(icon: tall ? 48 : 44, title: .headline, detail: .footnote)
+        if tallCard { return PracticeTileStyle(icon: 54, title: .title2, detail: .subheadline) }
+        return PracticeTileStyle(icon: tall ? 52 : 48, title: .title3, detail: .subheadline)
     }
 
     /// The shortest and tallest a tile may be. When everything fits, the tiles
     /// grow from the shortest toward the tallest to use the room left over.
     func tileHeight(tallCard: Bool) -> (min: CGFloat, max: CGFloat) {
-        if tallCard { return tall ? (112, 176) : (104, 156) }
-        if compact { return (54, 92) }
-        return tallCards ? (64, 96) : (62, 112)
+        if tallCard { return (112, 172) }
+        return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
     }
 }
 
@@ -613,13 +610,14 @@ private struct PracticeTile: View {
     private var watermark: some View {
         GeometryReader { proxy in
             let h = proxy.size.height
-            let size = tallCard ? h * 0.62 : h * 0.95
+            let size = tallCard ? h * 0.62 : h * 0.9
             Image(systemName: item.icon)
                 .font(.system(size: size, weight: .bold))
-                .foregroundStyle(item.tint.opacity(tallCard ? 0.09 : 0.07))
+                .foregroundStyle(item.tint.opacity(0.09))
                 .rotationEffect(.degrees(-12))
-                .position(x: proxy.size.width - size * (tallCard ? 0.32 : 0.28),
-                          y: tallCard ? h - size * 0.3 : h * 0.62)
+                // Cropped by the tile's right (and, for tall cards, bottom) edge.
+                .position(x: proxy.size.width - size * (tallCard ? 0.32 : 0.3),
+                          y: tallCard ? h - size * 0.3 : h * 0.6)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)

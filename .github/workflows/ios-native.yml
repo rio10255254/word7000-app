@@ -277,7 +277,7 @@ jobs:
           git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" native-screenshots
 
   # Today must fit every iPhone. Runs the layout checks on phones of each
-  # size (Pro Max, SE, mini, standard, Air) and pushes the screenshots to
+  # size (standard, Pro Max, SE, mini, Air) and pushes the screenshots to
   # the `native-layout-screenshots` branch.
   layout:
     name: Today layout on each iPhone size
@@ -353,11 +353,11 @@ jobs:
             xcrun simctl shutdown "$UDID" || true
             xcrun simctl delete "$UDID" || true
           done 3<<'PHONES'
+          26|iPhone 17
           26|iPhone 17 Pro Max
           18|iPhone SE (3rd generation)
           26|iPhone SE (3rd generation)
           26|iPhone 13 mini
-          26|iPhone 17
           26|iPhone Air
           PHONES
           echo "Tested $tested phones"

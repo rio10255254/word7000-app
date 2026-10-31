@@ -28,7 +28,9 @@ struct Mascot: View {
     var gaze: CGSize = .zero
     /// Rosy cheeks, e.g. while it is being held.
     var blush = false
-    /// Waddling along: the body bobs and sways, the paws take turns, the tail swishes.
+    /// Out for a walk: it rises up on two stubby legs that pop out from
+    /// underneath, bobs and sways along as they step in turn, tail swishing,
+    /// and plops back down into a lump when it stops.
     var walking = false
     /// How fast the feet go while walking: 1 a waddle, about 2 a run (with dust).
     var pace: Double = 1
@@ -41,6 +43,8 @@ struct Mascot: View {
     @Environment(\.colorScheme) private var colorScheme
     /// Hops of its own, when it turns happy or starts cheering.
     @State private var moodHops = 0
+    /// When it last started or stopped walking, to pop its legs out or tuck them in.
+    @State private var legsChangedAt: Double = 0
 
     var body: some View {
         let s = size
@@ -75,6 +79,9 @@ struct Mascot: View {
         .onChange(of: mood) { _, new in
             if new == .happy || new == .cheer { moodHops += 1 }
         }
+        .onChange(of: walking) { _, _ in
+            legsChangedAt = Date().timeIntervalSinceReferenceDate
+        }
         .accessibilityHidden(true)
     }
 
@@ -88,12 +95,21 @@ struct Mascot: View {
         let bounce: CGFloat = mood == .cheer ? CGFloat(abs(sin(t * 5.5))) * s * 0.06
             : walking ? CGFloat(abs(sin(step))) * s * (pace > 1.4 ? 0.08 : 0.05) : 0
         let tilt = tiltAngle(time: t, step: step)
-        let lift = bounce + pose.lift * s
+        // Legs out: the body rises on them (and bobs on them as it walks, so
+        // the feet stay on the ground); tucking them in, it plops down a
+        // little past sitting and squashes before settling.
+        let legs = legsOut(t)
+        let stand = s * 0.11 * legs
+        let plop = min(0, legs)
+        let walkBob = walking ? bounce : 0
+        let lift = bounce + pose.lift * s + stand
+        let leftStep = walking ? CGFloat(max(0, sin(step))) * s * 0.06 : 0
+        let rightStep = walking ? CGFloat(max(0, -sin(step))) * s * 0.06 : 0
         return ZStack {
             // The shadow on the ground shrinks while the body is up.
             Ellipse()
                 .fill(Color.black.opacity(colorScheme == .dark ? 0.4 : 0.14))
-                .frame(width: max(s * 0.2, s * 0.58 - lift * 0.8), height: s * 0.08)
+                .frame(width: max(s * 0.2, s * 0.58 - (lift - stand) * 0.8), height: s * 0.08)
                 .blur(radius: s * 0.025)
                 .offset(y: s * 0.44)
             if walking && pace > 1.4 { dust(s, time: t) }
@@ -102,16 +118,23 @@ struct Mascot: View {
                 // on the move, wagging when it is pleased.
                 tail(s, sway: tailSway(time: t))
                 ears(s, time: t)
+                // Stubby legs, only while it stands: from inside the body down to the ground.
+                if legs > 0.02 {
+                    leg(s, side: -1, length: max(0, stand + walkBob - leftStep))
+                    leg(s, side: 1, length: max(0, stand + walkBob - rightStep))
+                }
                 furBody(s)
-                // Two little front paws peeking out under the chest; they step in turn while it walks.
+                // Its paws: tucked under the chest while it sits, at the end of its
+                // legs while it walks, stepping in turn.
                 HStack(spacing: s * 0.16) {
-                    paw(s, lift: walking ? CGFloat(max(0, sin(step))) * s * 0.06 : 0)
-                    paw(s, lift: walking ? CGFloat(max(0, -sin(step))) * s * 0.06 : 0)
+                    paw(s, lift: legs > 0.02 ? -max(0, stand + walkBob - leftStep) : leftStep)
+                    paw(s, lift: legs > 0.02 ? -max(0, stand + walkBob - rightStep) : rightStep)
                 }
                 .offset(y: s * 0.42)
                 face(s, time: t, yawning: pose.yawning)
             }
-            .scaleEffect(x: 1 - breathe * 0.6 - pose.stretch * 0.45, y: 1 + breathe + pose.stretch, anchor: .bottom)
+            .scaleEffect(x: 1 - breathe * 0.6 - pose.stretch * 0.45 - plop * 0.5,
+                         y: 1 + breathe + pose.stretch + plop * 0.7, anchor: .bottom)
             .rotationEffect(.degrees(tilt + pose.sway), anchor: .bottom)
             .rotation3DEffect(.degrees(pose.spin), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
             .rotationEffect(.degrees(pose.roll))
@@ -133,6 +156,34 @@ struct Mascot: View {
         case .dizzy: return sin(t * 3.2) * 8
         default: return 0
         }
+    }
+
+    /// How far its legs are out, from 0 (tucked in, a lump) to 1 (standing):
+    /// they pop out quickly when it sets off, and tuck in with a little plop,
+    /// dipping below 0, when it stops.
+    private func legsOut(_ t: Double) -> CGFloat {
+        guard !reduceMotion, legsChangedAt > 0 else { return walking ? 1 : 0 }
+        let elapsed = t - legsChangedAt
+        if walking {
+            let p = min(1, max(0, elapsed / 0.16))
+            return CGFloat(1 - pow(1 - p, 2))
+        }
+        let p = min(1, max(0, elapsed / 0.4))
+        // 1 minus an ease-out-back: overshoots past tucked in, then settles.
+        let c1 = 1.70158
+        let back = 1 + (c1 + 1) * pow(p - 1, 3) + c1 * pow(p - 1, 2)
+        return CGFloat(1 - back)
+    }
+
+    /// One stubby leg, from inside the body down `length` below where the
+    /// paw sits when it is tucked in.
+    private func leg(_ s: CGFloat, side: CGFloat, length: CGFloat) -> some View {
+        let top = s * 0.33
+        let bottom = s * 0.42 + length
+        return Capsule()
+            .fill(LinearGradient(colors: [Self.bottom, Self.shade.opacity(0.85)], startPoint: .top, endPoint: .bottom))
+            .frame(width: s * 0.085, height: bottom - top)
+            .offset(x: side * s * 0.15, y: (top + bottom) / 2)
     }
 
     /// Where the current trick has the body: up in the air, turning, rolling,

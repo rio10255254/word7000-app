@@ -42,6 +42,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var appStyle: AppStyle?
     /// The learner has chosen a style (in the one-time chooser or Settings).
     var stylePicked: Bool?
+    /// The home-screen icon follows the style; nil means yes.
+    var iconFollowsStyle: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

@@ -299,6 +299,19 @@ extension View {
 
 // MARK: - Choosing a style
 
+/// Puts the home-screen icon that goes with a style (iOS shows its own
+/// notice when it changes). Never under UI tests, where that notice would
+/// get in the way.
+@MainActor
+enum AppIconSwitcher {
+    static func apply(_ style: AppStyle) {
+        guard !AppRuntime.uiTesting else { return }
+        let app = UIApplication.shared
+        guard app.supportsAlternateIcons, app.alternateIconName != style.iconName else { return }
+        app.setAlternateIconName(style.iconName) { _ in }
+    }
+}
+
 /// A small picture of Today in a style, drawn from the same pieces the app uses.
 struct StyleThumbnail: View {
     var style: AppStyle
@@ -415,8 +428,18 @@ struct StyleSettingsView: View {
                     get: { model.settings.appStyle ?? .leather },
                     set: { model.setAppStyle($0) }
                 ))
-                Text(L.t("換風格只改變外觀，功能、學習紀錄和小字團都一樣。",
-                         "Changing the style only changes the look; your progress, every feature and Wordling stay the same."))
+                Toggle(isOn: Binding(
+                    get: { model.settings.iconFollowsStyle ?? true },
+                    set: { model.setIconFollowsStyle($0) }
+                )) {
+                    SettingsLabel(L.t("圖示跟著換", "Icon follows the style"), icon: "app.badge.fill", tint: Palette.accent)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(Palette.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .accessibilityIdentifier("style-icon-follows")
+                Text(L.t("換風格只改變外觀，功能、學習紀錄和小字團都一樣。換主畫面圖示時，iOS 會跳出一次系統提示。",
+                         "Changing the style only changes the look; your progress, every feature and Wordling stay the same. iOS shows a notice when the home-screen icon changes."))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

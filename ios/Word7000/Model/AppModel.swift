@@ -171,6 +171,12 @@ final class AppModel {
     func setAppStyle(_ style: AppStyle) {
         settings.appStyle = style
         settings.stylePicked = true
+        if settings.iconFollowsStyle ?? true { AppIconSwitcher.apply(style) }
+    }
+
+    func setIconFollowsStyle(_ follows: Bool) {
+        settings.iconFollowsStyle = follows
+        AppIconSwitcher.apply(follows ? settings.appStyle ?? .leather : .leather)
     }
 
     /// The one-time style chooser is due: after some practice, once.

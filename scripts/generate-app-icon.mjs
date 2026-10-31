@@ -11,7 +11,7 @@ import zlib from 'node:zlib';
 import { chromium } from 'playwright';
 
 const SIZE = 1024;
-const OUT = 'ios/Word7000/Assets.xcassets/AppIcon.appiconset';
+const ASSETS = 'ios/Word7000/Assets.xcassets';
 
 const warm = {
   furTop: '#FAC48F',
@@ -33,6 +33,7 @@ const book = {
 
 const variants = [
   {
+    folder: 'AppIcon.appiconset',
     file: 'icon-1024.png',
     palette: warm,
     book,
@@ -42,6 +43,7 @@ const variants = [
     grain: 0.1,
   },
   {
+    folder: 'AppIcon.appiconset',
     file: 'icon-1024-dark.png',
     palette: warm,
     book: { ...book, coverTop: '#EFE4D2', coverBottom: '#D6C4A8' },
@@ -51,6 +53,7 @@ const variants = [
   },
   {
     // Tinted icons are grayscale; the system colours them by brightness.
+    folder: 'AppIcon.appiconset',
     file: 'icon-1024-tinted.png',
     palette: {
       furTop: '#F4F4F4',
@@ -69,6 +72,34 @@ const variants = [
     grain: 0,
   },
 ];
+
+// The paper collage style's icon (chosen in Settings > App style): the same
+// cat and notebook on plain graph paper, the notebook in terracotta. Nothing
+// else, so it stays clear at home-screen size.
+const grayPalette = variants[2].palette;
+variants.push(
+  {
+    folder: 'AppIcon-Collage.appiconset',
+    file: 'icon-1024.png',
+    palette: warm,
+    book: { fill: '#C96442' },
+    graph: { paper: '#F1F2EA', line: '#C6D6CF' },
+  },
+  {
+    folder: 'AppIcon-Collage.appiconset',
+    file: 'icon-1024-dark.png',
+    palette: warm,
+    book: { fill: '#D97757' },
+    graph: { paper: '#22231F', line: '#38443F' },
+  },
+  {
+    folder: 'AppIcon-Collage.appiconset',
+    file: 'icon-1024-tinted.png',
+    palette: grayPalette,
+    book: { fill: '#CFCFCF' },
+    graph: { paper: '#000000', line: '#262626' },
+  },
+);
 
 const browser = await chromium.launch();
 try {
@@ -95,7 +126,7 @@ try {
       for (let i = 0; i < out.length; i += 0x8000) binary += String.fromCharCode(...out.subarray(i, i + 0x8000));
       return btoa(binary);
     }, { svg, size: SIZE });
-    const target = path.join(OUT, variant.file);
+    const target = path.join(ASSETS, variant.folder, variant.file);
     fs.writeFileSync(target, encodeRgbPng(Buffer.from(rgb, 'base64'), SIZE, SIZE));
     console.log(`Wrote ${target}`);
   }
@@ -105,7 +136,7 @@ try {
 
 /** The whole icon: textured leather, the notebook, and the cat peeking up
  * from behind it with its paws over the top edge and its tail curling out. */
-function iconSvg({ palette, book: b, background, glow, grain }) {
+function iconSvg({ palette, book: b, background = ['#000', '#000', '#000'], glow = 'rgba(0,0,0,0)', grain = 0, graph }) {
   // The notebook keeps the old icon's proportions and cut-outs: an upright
   // cover with the spine and three lines cut through to the leather behind.
   // The cat is sized to the book, and the two together (ear tips to the
@@ -175,20 +206,29 @@ function iconSvg({ palette, book: b, background, glow, grain }) {
     <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${SIZE * 0.006}"/></filter>
     <filter id="ground" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${SIZE * 0.02}"/></filter>
   </defs>
-  <rect width="${SIZE}" height="${SIZE}" fill="url(#bg)"/>
+  ${graph ? graphPaper(graph) : `<rect width="${SIZE}" height="${SIZE}" fill="url(#bg)"/>
   <rect width="${SIZE}" height="${SIZE}" fill="url(#glow)"/>
   <rect width="${SIZE}" height="${SIZE}" fill="url(#vignette)"/>
   ${grain > 0 ? `<rect width="${SIZE}" height="${SIZE}" filter="url(#grain)" opacity="${grain}" style="mix-blend-mode:overlay"/>` : ''}
-  <ellipse cx="${SIZE / 2}" cy="${bookY + bookH + SIZE * 0.02}" rx="${bookW * 0.46}" ry="${SIZE * 0.022}" fill="#1E0E05" opacity="0.35" filter="url(#ground)"/>
+  <ellipse cx="${SIZE / 2}" cy="${bookY + bookH + SIZE * 0.02}" rx="${bookW * 0.46}" ry="${SIZE * 0.022}" fill="#1E0E05" opacity="0.35" filter="url(#ground)"/>`}
   <g filter="url(#drop)">${kitten(s, ox, oy, palette, { paws: false })}</g>
   <g filter="url(#drop)">
     <g mask="url(#cuts)">
-      <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#cover)"/>
-      <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#sheen)"/>
+      ${b.fill ? `<rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="${b.fill}"/>`
+        : `<rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#cover)"/>
+      <rect x="${bookX}" y="${bookY}" width="${bookW}" height="${bookH}" fill="url(#sheen)"/>`}
     </g>
   </g>
   ${paws}
 </svg>`;
+}
+
+/** A sheet of graph paper filling the icon. */
+function graphPaper({ paper, line }) {
+  const step = SIZE / 22;
+  const lines = Array.from({ length: 23 }, (_, i) =>
+    `<line x1="${i * step}" y1="0" x2="${i * step}" y2="${SIZE}" stroke="${line}" stroke-width="3"/><line x1="0" y1="${i * step}" x2="${SIZE}" y2="${i * step}" stroke="${line}" stroke-width="3"/>`).join('');
+  return `<rect width="${SIZE}" height="${SIZE}" fill="${paper}"/>${lines}`;
 }
 
 /** The cat in an s × s square at (ox, oy), as Mascot.swift draws it at rest:

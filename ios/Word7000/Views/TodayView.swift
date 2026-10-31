@@ -539,12 +539,15 @@ struct TodayView: View {
     private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
 }
 
-/// The companion on Today, free to wander. Every so often it waddles a little
-/// way along the top edge of the hero card (body bobbing, feet stepping, eyes
-/// on where it is going), stops to look around, and later wanders back home
-/// to the right corner. A tap, a hold, a drag or a tapped practice tile keeps
-/// it still for a while, so it never walks off just as you reach for it.
-/// It stays put with Reduce Motion, on the small phones, and under UI tests.
+/// The companion on Today, free to wander. Every so often it waddles (or
+/// runs, kicking up dust) along the top edge of the hero card, eyes on where
+/// it is going, stops to look around, shows off a trick (a spin, a flip, a
+/// little dance, a big stretch) and later wanders back home to the right
+/// corner. Flick it and it slides along the edge, seeing stars if it hits the
+/// end; leave it alone long enough and it dozes off until poked. A tap, a
+/// hold, a drag or a tapped practice tile keeps it still for a while, so it
+/// never walks off just as you reach for it. It stays put with Reduce Motion,
+/// on the small phones, and under UI tests.
 private struct StrollingCompanion: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var mood: Mascot.Mood
@@ -560,57 +563,128 @@ private struct StrollingCompanion: View {
 
     @State private var x: CGFloat = 0
     @State private var walking = false
+    @State private var pace: Double = 1
     @State private var facing: CGFloat = 0
     @State private var restUntil = Date.distantPast
+    @State private var lastTouch = Date()
+    @State private var cue: MascotCue?
+    /// Dizzy after a fling, or asleep after being left alone.
+    @State private var dazed = false
+    @State private var asleep = false
+    @State private var dazeTask: Task<Void, Never>?
 
     private var roams: Bool { range > 40 && !reduceMotion && !AppRuntime.uiTesting }
 
     var body: some View {
-        MascotBuddy(mood: mood, size: size, lines: lines, greeting: greeting,
+        MascotBuddy(mood: dazed ? .dizzy : asleep ? .sleepy : mood, size: size, lines: lines, greeting: greeting,
                     // The bubble opens toward the room: left of it at home, right of it out on the left.
                     bubbleSide: x < -range / 2 ? .trailing : .leading,
-                    hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest)
+                    hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest,
+                    pace: pace, cue: cue, onFling: fling)
             .offset(x: x)
             .task(id: roams) { await wander() }
             .onChange(of: pause) { _, _ in rest() }
             .onChange(of: range) { _, value in
                 if -x > value { x = -value }
             }
+            .onDisappear { dazeTask?.cancel() }
     }
 
     private func rest() {
         restUntil = Date().addingTimeInterval(8)
+        lastTouch = Date()
+        if asleep {
+            // Woken up: a big stretch first.
+            asleep = false
+            perform(.stretch)
+        }
+    }
+
+    private func perform(_ antic: MascotAntic) {
+        cue = MascotCue(antic: antic, id: (cue?.id ?? 0) + 1)
+    }
+
+    /// Sent sliding along the edge by a flick, as far as the flick would carry
+    /// it; flung hard into either end, it bumps and sees stars for a moment.
+    private func fling(_ distance: CGFloat) {
+        guard roams else { return }
+        let wanted = x + distance * 0.8
+        let target = min(0, max(-range, wanted))
+        let travelled = abs(target - x)
+        let bumped = abs(wanted - target) > 40
+        guard travelled > 20 || bumped else { return }
+        walking = false
+        facing = distance < 0 ? -1 : 1
+        withAnimation(.spring(response: 0.6, dampingFraction: bumped ? 0.5 : 0.85)) { x = target }
+        dazeTask?.cancel()
+        dazeTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            guard !Task.isCancelled else { return }
+            if bumped || travelled > 120 {
+                dazed = true
+                try? await Task.sleep(for: .seconds(1.8))
+                guard !Task.isCancelled else { return }
+                dazed = false
+                perform(.spin)
+            }
+            withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+        }
     }
 
     private func wander() async {
         guard roams else {
             x = 0
             walking = false
+            pace = 1
             return
         }
         try? await Task.sleep(for: .seconds(7))
         while !Task.isCancelled {
-            if Date() < restUntil {
+            if Date() < restUntil || dazed || asleep {
                 try? await Task.sleep(for: .seconds(1))
                 continue
             }
-            // Mostly short strolls; every so often all the way home.
-            let home = x < -10 && Int.random(in: 0..<3) == 0
-            let target: CGFloat = home ? 0 : -CGFloat.random(in: 0...range)
-            let distance = abs(target - x)
-            if distance > 24 {
-                facing = target < x ? -1 : 1
-                let duration = Double(distance / 46)
-                walking = true
-                withAnimation(.linear(duration: duration)) { x = target }
-                try? await Task.sleep(for: .seconds(duration))
-                guard !Task.isCancelled else { return }
-                walking = false
-                // A look at the way it came, then back to the front.
-                try? await Task.sleep(for: .seconds(1.4))
-                withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+            // Left alone for a good while, it nods off where it is.
+            if Date().timeIntervalSince(lastTouch) > 90 {
+                asleep = true
+                continue
             }
+            switch Int.random(in: 0..<10) {
+            case 0..<6: await stroll()
+            case 6..<9: perform(MascotAntic.allCases.randomElement() ?? .dance)
+            default: await lookAround()
+            }
+            guard !Task.isCancelled else { return }
             try? await Task.sleep(for: .seconds(Double.random(in: 5...10)))
+        }
+    }
+
+    /// Mostly short walks, now and then a run; every so often all the way home.
+    private func stroll() async {
+        let home = x < -10 && Int.random(in: 0..<3) == 0
+        let target: CGFloat = home ? 0 : -CGFloat.random(in: 0...range)
+        let distance = abs(target - x)
+        guard distance > 24 else { return }
+        let runs = distance > 90 && Int.random(in: 0..<3) == 0
+        facing = target < x ? -1 : 1
+        pace = runs ? 2 : 1
+        let duration = Double(distance / (runs ? 130 : 46))
+        walking = true
+        withAnimation(.linear(duration: duration)) { x = target }
+        try? await Task.sleep(for: .seconds(duration))
+        walking = false
+        pace = 1
+        guard !Task.isCancelled else { return }
+        // A look at the way it came, then back to the front.
+        try? await Task.sleep(for: .seconds(1.4))
+        withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+    }
+
+    private func lookAround() async {
+        for side: CGFloat in [-1, 1, 0] {
+            withAnimation(.easeInOut(duration: 0.25)) { facing = side }
+            try? await Task.sleep(for: .seconds(0.8))
+            guard !Task.isCancelled else { return }
         }
     }
 }

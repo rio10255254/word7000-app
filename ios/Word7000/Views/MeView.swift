@@ -296,29 +296,37 @@ private struct ProfileCard: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var mastered: Int
     var reviewing: Int
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var signInOpen = false
     @State private var manageOpen = false
+    /// What the companion is saying: shown in place of the name, never over it.
+    @State private var spoken: String?
+    /// Today's AI insight headline, once worked out; the companion says it.
+    @State private var insightHeadline: String?
+    @State private var chatOpen = false
+    @State private var focusPractice: [String]?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
-                MascotBuddy(mood: mastered > 0 ? .happy : .idle, size: 56, lines: buddyLines, bubbleSide: .trailing)
+                MascotBuddy(mood: mastered > 0 ? .happy : .idle, size: 56, lines: buddyLines,
+                            greeting: insightHeadline, tip: buddyTip, fidgets: true, speech: $spoken)
                     .accessibilityIdentifier("me-mascot")
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 6) {
-                        Text(name)
-                            .font(.display(.title3, weight: .bold))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                        membershipBadge
+                ZStack(alignment: .leading) {
+                    identity
+                        .opacity(spoken == nil ? 1 : 0)
+                        .accessibilityHidden(spoken != nil)
+                    if let spoken {
+                        let actionable = spoken == buddyTip?.text
+                        MascotBubble(text: spoken, pointing: .leading, actionable: actionable)
+                            .padding(.leading, 6)
+                            .transition(.scale(scale: 0.6, anchor: .leading).combined(with: .opacity))
+                            .onTapGesture { if actionable { buddyTip?.action() } }
+                            .accessibilityHidden(true)
                     }
-                    Label(account.message, systemImage: syncSymbol)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                        .contentTransition(.opacity)
                 }
-                Spacer(minLength: 0)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .animation(reduceMotion ? nil : Motion.pop, value: spoken)
             }
             LevelProgress(mastered: mastered)
             HStack(spacing: 0) {
@@ -333,6 +341,47 @@ private struct ProfileCard: View {
         .padding(.vertical, 8)
         .sheet(isPresented: $signInOpen) { SignInSheet() }
         .manageSubscriptionsSheet(isPresented: $manageOpen)
+        .sheet(isPresented: $chatOpen, onDismiss: {
+            insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
+            guard let ids = focusPractice else { return }
+            focusPractice = nil
+            model.startStudySession(onlyIds: ids)
+            PracticeLaunch.shared.requested = .study
+        }) {
+            MascotChatSheet(practise: { ids in
+                focusPractice = ids
+                chatOpen = false
+            })
+        }
+        .onAppear { insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline }
+    }
+
+    /// Name, membership and sync state.
+    private var identity: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 6) {
+                Text(name)
+                    .font(.display(.title3, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                membershipBadge
+            }
+            Label(account.message, systemImage: syncSymbol)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .contentTransition(.opacity)
+        }
+    }
+
+    /// Its AI note, as on Today: the day's insight headline (tap for the chat),
+    /// or an offer to work it out. Nothing when online AI is off.
+    private var buddyTip: MascotTip? {
+        if let insightHeadline {
+            return MascotTip(text: insightHeadline) { chatOpen = true }
+        }
+        guard CloudAssistant.shared.offered else { return nil }
+        return MascotTip(text: L.t("要我幫你看看最近學得怎樣嗎？", "Shall I look at how you're doing?")) { chatOpen = true }
     }
 
     /// What the companion says when tapped here: how far you have come.

@@ -8,6 +8,8 @@ import SwiftUI
 struct Mascot: View {
     enum Mood: Equatable {
         case idle, happy, cheer, encourage, sleepy, thinking
+        /// Seeing stars, e.g. after being flung into the end of the card.
+        case dizzy
     }
 
     var mood: Mood = .idle
@@ -20,6 +22,12 @@ struct Mascot: View {
     var blush = false
     /// Waddling along: the body bobs and sways, and the little feet take turns.
     var walking = false
+    /// How fast the feet go while walking: 1 a waddle, about 2 a run (with dust).
+    var pace: Double = 1
+    /// A little trick it is doing (a spin, a flip, a dance, a stretch), and
+    /// when it began, in `timeIntervalSinceReferenceDate` seconds.
+    var antic: MascotAntic? = nil
+    var anticStart: Double = 0
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var colorScheme
@@ -67,17 +75,20 @@ struct Mascot: View {
     private func figure(time t: Double) -> some View {
         let s = size
         let breathe = sin(t * 2.1) * 0.022
-        let step = walking ? t * 9 : 0
+        let step = walking ? t * 9 * pace : 0
+        let pose = anticPose(t)
         let bounce: CGFloat = mood == .cheer ? CGFloat(abs(sin(t * 5.5))) * s * 0.06
-            : walking ? CGFloat(abs(sin(step))) * s * 0.05 : 0
-        let tilt: Double = walking ? sin(step) * 6 : mood == .encourage ? -6 : mood == .thinking ? 5 : 0
+            : walking ? CGFloat(abs(sin(step))) * s * (pace > 1.4 ? 0.08 : 0.05) : 0
+        let tilt = tiltAngle(time: t, step: step)
+        let lift = bounce + pose.lift * s
         return ZStack {
             // The shadow on the ground shrinks while the body is up.
             Ellipse()
                 .fill(Color.black.opacity(colorScheme == .dark ? 0.4 : 0.14))
-                .frame(width: s * 0.58 - bounce, height: s * 0.08)
+                .frame(width: max(s * 0.2, s * 0.58 - lift * 0.8), height: s * 0.08)
                 .blur(radius: s * 0.025)
                 .offset(y: s * 0.44)
+            if walking && pace > 1.4 { dust(s, time: t) }
             ZStack {
                 // Two little feet, tucked under the body; they step in turn while it walks.
                 HStack(spacing: s * 0.2) {
@@ -89,15 +100,91 @@ struct Mascot: View {
                     .frame(height: s * 0.16, alignment: .bottom)
                     .offset(y: -s * 0.42)
                 shell(s)
-                face(s, time: t)
+                face(s, time: t, yawning: pose.yawning)
             }
-            .scaleEffect(x: 1 - breathe * 0.6, y: 1 + breathe, anchor: .bottom)
-            .rotationEffect(.degrees(tilt), anchor: .bottom)
-            .offset(y: -bounce)
+            .scaleEffect(x: 1 - breathe * 0.6 - pose.stretch * 0.45, y: 1 + breathe + pose.stretch, anchor: .bottom)
+            .rotationEffect(.degrees(tilt + pose.sway), anchor: .bottom)
+            .rotation3DEffect(.degrees(pose.spin), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
+            .rotationEffect(.degrees(pose.roll))
+            .offset(y: -lift)
             .animation(.spring(response: 0.45, dampingFraction: 0.7), value: mood)
             if mood == .cheer { sparkles(s, time: t) }
             if mood == .sleepy { snores(s, time: t) }
+            if mood == .dizzy { stars(s, time: t) }
         }
+    }
+
+    /// How far it leans: side to side while walking (more when running) or
+    /// woozy, and a little one way or the other for some moods.
+    private func tiltAngle(time t: Double, step: Double) -> Double {
+        if walking { return sin(step) * (pace > 1.4 ? 9 : 6) }
+        switch mood {
+        case .encourage: return -6
+        case .thinking: return 5
+        case .dizzy: return sin(t * 3.2) * 8
+        default: return 0
+        }
+    }
+
+    /// Where the current trick has the body: up in the air, turning, rolling,
+    /// swaying or stretched tall. Nothing outside a trick, or with Reduce Motion.
+    private func anticPose(_ t: Double) -> AnticPose {
+        guard let antic, !reduceMotion else { return AnticPose() }
+        let p = (t - anticStart) / antic.duration
+        guard p > 0, p < 1 else { return AnticPose() }
+        var pose = AnticPose()
+        switch antic {
+        case .spin:
+            // Once round on the spot, with a little hop.
+            let eased = p < 0.5 ? 2 * p * p : 1 - pow(-2 * p + 2, 2) / 2
+            pose.spin = eased * 360
+            pose.lift = CGFloat(sin(p * .pi)) * 0.12
+        case .flip:
+            // Crouch, leap, a somersault in the air, and a soft landing.
+            let air = max(0, min(1, (p - 0.18) / 0.64))
+            pose.lift = CGFloat(sin(air * .pi)) * 0.5
+            pose.roll = -air * 360
+            if p < 0.18 { pose.stretch = -CGFloat(sin(p / 0.18 * .pi)) * 0.14 }
+            if p > 0.82 { pose.stretch = -CGFloat(sin((p - 0.82) / 0.18 * .pi)) * 0.12 }
+        case .dance:
+            // A little side-to-side jig, bouncing on each beat.
+            pose.sway = sin(p * .pi * 6) * 13
+            pose.lift = CGFloat(abs(sin(p * .pi * 6))) * 0.07
+        case .stretch:
+            // Up on tiptoe, eyes shut, a big yawn.
+            pose.stretch = CGFloat(sin(p * .pi)) * 0.16
+            pose.yawning = p > 0.12 && p < 0.88
+        }
+        return pose
+    }
+
+    /// Puffs of dust kicked up behind it while it runs.
+    private func dust(_ s: CGFloat, time t: Double) -> some View {
+        let behind: CGFloat = gaze.width < 0 ? 1 : -1
+        return ZStack {
+            ForEach(0..<3, id: \.self) { index in
+                let age = CGFloat((t * 2.4 + Double(index) / 3).truncatingRemainder(dividingBy: 1))
+                Circle()
+                    .fill(Self.dustTint.opacity(0.55 * Double(1 - age)))
+                    .frame(width: s * (0.06 + 0.1 * age), height: s * (0.06 + 0.1 * age))
+                    .offset(x: behind * s * (0.24 + 0.26 * age), y: s * (0.42 - 0.1 * age))
+            }
+        }
+    }
+
+    /// Little stars circling its head while it is dizzy.
+    private func stars(_ s: CGFloat, time t: Double) -> some View {
+        ZStack {
+            ForEach(0..<3, id: \.self) { index in
+                let angle = t * 3.4 + Double(index) * 2.094
+                Image(systemName: "star.fill")
+                    .font(.system(size: s * 0.1, weight: .bold))
+                    .foregroundStyle(Self.gold)
+                    .scaleEffect(0.75 + 0.25 * CGFloat(sin(angle)))
+                    .offset(x: CGFloat(cos(angle)) * s * 0.3, y: -s * 0.48 + CGFloat(sin(angle)) * s * 0.07)
+            }
+        }
+        .transition(.opacity)
     }
 
     private func foot(_ s: CGFloat, lift: CGFloat) -> some View {
@@ -133,8 +220,8 @@ struct Mascot: View {
             .shadow(color: Self.bottom.opacity(0.35), radius: s * 0.08, y: s * 0.05)
     }
 
-    private func face(_ s: CGFloat, time t: Double) -> some View {
-        let opensEyes = mood == .idle || mood == .encourage || mood == .thinking
+    private func face(_ s: CGFloat, time t: Double, yawning: Bool) -> some View {
+        let opensEyes = !yawning && (mood == .idle || mood == .encourage || mood == .thinking)
         let blink = !reduceMotion && opensEyes && Self.blinking(t)
         let thinking = mood == .thinking ? CGSize(width: s * 0.03, height: -s * 0.03) : .zero
         // While nobody is touching it, it glances to one side and back every few seconds.
@@ -142,8 +229,8 @@ struct Mascot: View {
         let look = CGSize(width: thinking.width + (gaze.width + glance) * s * 0.035, height: thinking.height + gaze.height * s * 0.03)
         return ZStack {
             HStack(spacing: s * 0.17) {
-                eye(s, blink: blink)
-                eye(s, blink: blink)
+                eye(s, blink: blink, yawning: yawning, time: t)
+                eye(s, blink: blink, yawning: yawning, time: t)
             }
             .offset(x: look.width, y: -s * 0.02 + look.height)
             HStack(spacing: s * 0.36) {
@@ -151,14 +238,32 @@ struct Mascot: View {
                 cheek(s)
             }
             .offset(x: look.width * 0.5, y: s * 0.08)
-            mouth(s)
+            mouth(s, yawning: yawning)
                 .offset(x: look.width * 0.6, y: s * 0.11)
         }
     }
 
     @ViewBuilder
-    private func eye(_ s: CGFloat, blink: Bool) -> some View {
+    private func eye(_ s: CGFloat, blink: Bool, yawning: Bool, time t: Double) -> some View {
+        if yawning {
+            MascotArc(bulgesUp: false)
+                .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.03, lineCap: .round))
+                .frame(width: s * 0.11, height: s * 0.035)
+        } else {
+            moodEye(s, blink: blink, time: t)
+        }
+    }
+
+    @ViewBuilder
+    private func moodEye(_ s: CGFloat, blink: Bool, time t: Double) -> some View {
         switch mood {
+        case .dizzy:
+            // Swirly eyes, turning.
+            Circle()
+                .trim(from: 0, to: 0.78)
+                .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.026, lineCap: .round))
+                .frame(width: s * 0.1, height: s * 0.1)
+                .rotationEffect(.degrees(reduceMotion ? 0 : t * 420))
         case .happy, .cheer:
             MascotArc(bulgesUp: true)
                 .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.035, lineCap: .round))
@@ -191,7 +296,18 @@ struct Mascot: View {
     }
 
     @ViewBuilder
-    private func mouth(_ s: CGFloat) -> some View {
+    private func mouth(_ s: CGFloat, yawning: Bool) -> some View {
+        if yawning {
+            Ellipse()
+                .fill(Self.ink)
+                .frame(width: s * 0.09, height: s * 0.1)
+        } else {
+            moodMouth(s)
+        }
+    }
+
+    @ViewBuilder
+    private func moodMouth(_ s: CGFloat) -> some View {
         switch mood {
         case .happy, .cheer:
             MascotOpenMouth()
@@ -213,6 +329,11 @@ struct Mascot: View {
                 .fill(Self.ink)
                 .frame(width: s * 0.07, height: s * 0.022)
                 .rotationEffect(.degrees(-8))
+        case .dizzy:
+            MascotArc(bulgesUp: true)
+                .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.024, lineCap: .round))
+                .frame(width: s * 0.08, height: s * 0.025)
+                .rotationEffect(.degrees(-10))
         case .idle, .encourage:
             MascotArc(bulgesUp: false)
                 .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.028, lineCap: .round))
@@ -290,7 +411,38 @@ struct Mascot: View {
     private static let leafDark = Color(red: 0.39, green: 0.55, blue: 0.32)
     private static let gold = Color(red: 1.0, green: 0.86, blue: 0.4)
     private static let amber = Color(red: 1.0, green: 0.6, blue: 0.3)
+    private static let dustTint = Color(red: 0.8, green: 0.68, blue: 0.55)
     private static let sparkleSpots = [CGSize(width: -0.48, height: -0.3), CGSize(width: 0.46, height: -0.4), CGSize(width: 0.44, height: 0.08)]
+}
+
+/// The little tricks the companion does now and then, or when played with.
+enum MascotAntic: CaseIterable, Equatable {
+    case spin, flip, dance, stretch
+
+    var duration: Double {
+        switch self {
+        case .spin: 0.8
+        case .flip: 1.0
+        case .dance: 1.6
+        case .stretch: 1.6
+        }
+    }
+}
+
+/// How a trick has the body at one moment.
+private struct AnticPose {
+    var lift: CGFloat = 0
+    var spin: Double = 0
+    var roll: Double = 0
+    var sway: Double = 0
+    var stretch: CGFloat = 0
+    var yawning = false
+}
+
+/// A trick asked of the companion from outside; a new id plays it again.
+struct MascotCue: Equatable {
+    var antic: MascotAntic
+    var id: Int
 }
 
 /// One squash-and-stretch hop.
@@ -423,6 +575,17 @@ struct MascotBuddy: View {
     var tip: MascotTip? = nil
     /// Told whenever someone taps, holds or drags it, e.g. to stop wandering for a while.
     var onInteract: (() -> Void)? = nil
+    /// How fast it walks (see `Mascot.pace`).
+    var pace: Double = 1
+    /// A trick asked of it from outside, e.g. while it wanders.
+    var cue: MascotCue? = nil
+    /// Does a little trick of its own every so often while it waits.
+    var fidgets = false
+    /// Told how far a quick flick would throw it sideways, e.g. to send it sliding.
+    var onFling: ((CGFloat) -> Void)? = nil
+    /// When given, what it says goes here for the page to show in its own
+    /// layout, instead of a bubble floating over whatever is next to it.
+    var speech: Binding<String?>? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppModel.self) private var model
@@ -433,13 +596,16 @@ struct MascotBuddy: View {
     @State private var held = false
     @State private var hearts = 0
     @State private var greeted = false
+    @State private var antic: MascotAntic?
+    @State private var anticStart: Double = 0
 
     var body: some View {
         let pull = CGSize(width: max(-1, min(1, drag.width / 80)), height: max(-1, min(1, drag.height / 80)))
         // Eyes on the finger while dragged, else where it is heading.
         let look = drag == .zero ? CGSize(width: facing * 0.8, height: 0) : pull
         let actionable = tip != nil && bubble == tip?.text
-        Mascot(mood: held ? .happy : mood, size: size, hop: hop + pokes, gaze: look, blush: held, walking: walking && drag == .zero)
+        Mascot(mood: held ? .happy : mood, size: size, hop: hop + pokes, gaze: look, blush: held, walking: walking && drag == .zero,
+               pace: pace, antic: antic, anticStart: anticStart)
             // Leans after the finger and stretches toward it, like soft clay.
             .scaleEffect(x: 1 + abs(pull.width) * 0.12 - abs(pull.height) * 0.05,
                          y: 1 + abs(pull.height) * 0.1 - abs(pull.width) * 0.06, anchor: .bottom)
@@ -449,7 +615,7 @@ struct MascotBuddy: View {
                 if hearts > 0 { MascotHearts(size: size).id(hearts) }
             }
             .overlay(alignment: bubbleAnchor) {
-                if let bubble {
+                if let bubble, speech == nil {
                     MascotBubble(text: bubble, pointing: bubblePointing, actionable: actionable)
                         .frame(width: actionable ? 200 : 180, alignment: bubbleAnchor)
                         .offset(x: bubbleSide == .leading ? -size - 6 : bubbleSide == .trailing ? size + 6 : 0,
@@ -476,10 +642,28 @@ struct MascotBuddy: View {
                         guard !reduceMotion else { return }
                         withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.7)) { drag = value.translation }
                     }
-                    .onEnded { _ in
+                    .onEnded { value in
                         withAnimation(.spring(response: 0.45, dampingFraction: 0.45)) { drag = .zero }
+                        // A quick sideways flick: the throw goes further than the finger did.
+                        let flick = value.predictedEndTranslation.width - value.translation.width
+                        if abs(flick) > 60, !reduceMotion { onFling?(value.predictedEndTranslation.width) }
                     }
             )
+            .onChange(of: cue) { _, new in
+                if let new { play(new.antic) }
+            }
+            .onChange(of: bubble) { _, new in
+                speech?.wrappedValue = new
+            }
+            .task(id: fidgets) {
+                guard fidgets, !reduceMotion, !AppRuntime.uiTesting else { return }
+                while !Task.isCancelled {
+                    try? await Task.sleep(for: .seconds(Double.random(in: 10...20)))
+                    guard !Task.isCancelled else { return }
+                    if drag == .zero, !held { play(MascotAntic.allCases.randomElement() ?? .spin) }
+                }
+            }
+            .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.4), trigger: anticStart) { _, _ in haptics && antic == .flip }
             .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.7), trigger: pokes) { _, _ in haptics }
             .sensoryFeedback(.success, trigger: hearts) { _, new in new > 0 && haptics }
             .task(id: greeting) {
@@ -524,6 +708,12 @@ struct MascotBuddy: View {
     private func poke() {
         onInteract?()
         pokes += 1
+        // Every fourth tap it shows off a trick.
+        if pokes % 4 == 0, !reduceMotion, let trick = MascotAntic.allCases.randomElement() {
+            play(trick)
+            say(Self.trickLine(trick), for: 2)
+            return
+        }
         // The tip first, then every third tap.
         if let tip, pokes == 1 || pokes % 3 == 0 {
             say(tip.text, for: 6)
@@ -533,6 +723,21 @@ struct MascotBuddy: View {
         var next = lines.randomElement() ?? lines[0]
         if next == bubble, let other = lines.first(where: { $0 != bubble }) { next = other }
         say(next, for: 2.4)
+    }
+
+    private func play(_ trick: MascotAntic) {
+        guard !reduceMotion else { return }
+        antic = trick
+        anticStart = Date().timeIntervalSinceReferenceDate
+    }
+
+    private static func trickLine(_ trick: MascotAntic) -> String {
+        switch trick {
+        case .spin: L.t("轉個圈圈～", "Wheee!")
+        case .flip: L.t("看我後空翻！", "Watch this flip!")
+        case .dance: L.t("跳支舞給你看♪", "A little dance for you ♪")
+        case .stretch: L.t("呼啊～伸個懶腰", "Big stretch!")
+        }
     }
 
     private func love() {

@@ -97,6 +97,7 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["2 / 20"].waitForExistence(timeout: 5))
         app.buttons["quiz-close"].tap()
         app.buttons["today-quiz"].tap()
+        XCTAssertTrue(app.segmentedControls["quiz-question-count"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
     }
 

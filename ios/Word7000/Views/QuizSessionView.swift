@@ -23,6 +23,8 @@ struct QuizSessionView: View {
     @State private var finished = false
     @State private var seed = SeededRandom.runtimeSeed()
     @State private var configured = false
+    /// Set up already (in the sheet on Today): skip straight to the questions.
+    var skipSetup = false
     /// A missed word opened for its AI explanation from the results.
     @State private var aiWord: WordEntry?
 
@@ -30,7 +32,11 @@ struct QuizSessionView: View {
         NavigationStack {
             Group {
                 if !configured {
-                    QuizConfiguration(start: { start(); configured = true })
+                    if skipSetup {
+                        Color.clear.onAppear { start(); configured = true }
+                    } else {
+                        QuizConfiguration(start: { start(); configured = true })
+                    }
                 } else if questions.isEmpty {
                     ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
                 } else if finished {
@@ -322,7 +328,7 @@ struct QuizSessionView: View {
             try? await Task.sleep(for: .milliseconds(350))
             withAnimation(.spring(response: 0.8, dampingFraction: 0.85)) { shownScore = correctCount }
         }
-        .sheet(item: $aiWord) { word in AIWordSheet(word: word) }
+        .sheet(item: $aiWord) { word in AIWordSheet(word: word).compactSheet() }
     }
 
     /// The words missed in this quiz, each opening its AI explanation.

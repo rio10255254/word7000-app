@@ -120,7 +120,9 @@ struct Mascot: View {
         let opensEyes = mood == .idle || mood == .encourage || mood == .thinking
         let blink = !reduceMotion && opensEyes && Self.blinking(t)
         let thinking = mood == .thinking ? CGSize(width: s * 0.03, height: -s * 0.03) : .zero
-        let look = CGSize(width: thinking.width + gaze.width * s * 0.035, height: thinking.height + gaze.height * s * 0.03)
+        // While nobody is touching it, it glances to one side and back every few seconds.
+        let glance = gaze == .zero && !reduceMotion && opensEyes ? Self.glance(t) : 0
+        let look = CGSize(width: thinking.width + (gaze.width + glance) * s * 0.035, height: thinking.height + gaze.height * s * 0.03)
         return ZStack {
             HStack(spacing: s * 0.17) {
                 eye(s, blink: blink)
@@ -241,6 +243,17 @@ struct Mascot: View {
                     .offset(x: s * (0.32 + 0.1 * CGFloat(rise)), y: -s * (0.28 + 0.24 * CGFloat(rise)))
             }
         }
+    }
+
+    /// A look to the side, from -1 (left) to 1 (right): held about a second,
+    /// eased in and out, once every 7 seconds, alternating sides.
+    private static func glance(_ t: Double) -> CGFloat {
+        let cycle = t.truncatingRemainder(dividingBy: 7)
+        guard cycle > 4.6, cycle < 6.2 else { return 0 }
+        let phase = (cycle - 4.6) / 1.6
+        let ease = sin(phase * .pi)
+        let side: Double = Int(t / 7) % 2 == 0 ? 1 : -1
+        return CGFloat(min(1, ease * 1.6) * side)
     }
 
     /// A blink every few seconds, now and then a double one.

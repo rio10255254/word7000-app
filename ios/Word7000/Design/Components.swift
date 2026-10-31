@@ -26,6 +26,21 @@ struct ProgressRing<Label: View>: View {
                 .rotationEffect(.degrees(-90))
                 .shadow(color: color.opacity(complete ? 0.45 : 0), radius: complete ? lineWidth * 0.7 : 0)
                 .animation(reduceMotion ? nil : Motion.reveal, value: complete)
+            // A small glowing head riding the end of the fill, like a bead of light.
+            if drawn > 0.03, !complete {
+                Color.clear
+                    .overlay(alignment: .top) {
+                        Circle()
+                            .fill(Color.white.opacity(0.95))
+                            .frame(width: lineWidth * 0.62, height: lineWidth * 0.62)
+                            .shadow(color: color, radius: lineWidth * 0.5)
+                            .shadow(color: .white.opacity(0.7), radius: lineWidth * 0.25)
+                            .offset(y: -lineWidth * 0.31)
+                    }
+                    .rotationEffect(.degrees(360 * drawn))
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
             label()
         }
         .onAppear {

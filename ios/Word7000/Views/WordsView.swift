@@ -138,6 +138,7 @@ struct WordsView: View {
                 .navigationTitle(L.filters)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
+                .compactSheet()
             }
         }
         .toolbar {

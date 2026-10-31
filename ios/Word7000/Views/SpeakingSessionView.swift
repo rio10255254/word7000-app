@@ -142,6 +142,7 @@ struct SpeakingSessionView: View {
                 .navigationTitle(L.t("練習範圍", "Practice scope"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
+                .compactSheet()
             }
         }
     }

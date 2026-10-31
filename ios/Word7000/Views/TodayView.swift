@@ -31,6 +31,14 @@ private struct TodayMetrics {
     var tileSpacing: CGFloat { compact ? 8 : tall ? 12 : 10 }
     /// The shortest and tallest a tile may be. When everything fits, the tiles
     /// grow from the shortest toward the tallest to use the room left over.
+    /// The tiles' type and icon grow with the room they have, so a big tile
+    /// is never a small label in a lot of empty space.
+    func tileStyle(tallCard: Bool) -> PracticeTileStyle {
+        if compact { return PracticeTileStyle(icon: 36, title: .subheadline, detail: .caption) }
+        if tallCard { return PracticeTileStyle(icon: 54, title: .title2, detail: .subheadline) }
+        return PracticeTileStyle(icon: tall ? 52 : 48, title: .title3, detail: .subheadline)
+    }
+
     func tileHeight(tallCard: Bool) -> (min: CGFloat, max: CGFloat) {
         if tallCard { return (112, 172) }
         return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
@@ -49,6 +57,9 @@ struct TodayView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var studySettingsOpen = false
+    /// The quiz's few settings, in a half-height sheet before it starts.
+    @State private var quizSetupOpen = false
+    @State private var quizQueued = false
     /// Bumped to bounce the streak flame: on arrival and when the streak grows.
     @State private var flameBounce = 0
     @State private var greetingHops = 0
@@ -87,7 +98,26 @@ struct TodayView: View {
             if new > old, !reduceMotion { flameBounce += 1 }
         }
         .sensoryFeedback(.impact(weight: .light), trigger: tileTaps) { _, _ in model.settings.hapticsEnabled ?? true }
-        .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet() }
+        .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet().compactSheet() }
+        .sheet(isPresented: $quizSetupOpen, onDismiss: {
+            guard quizQueued else { return }
+            quizQueued = false
+            start(.quizReady)
+        }) {
+            NavigationStack {
+                QuizConfiguration(start: {
+                    quizQueued = true
+                    quizSetupOpen = false
+                })
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(L.close) { quizSetupOpen = false }
+                    }
+                }
+            }
+            .compactSheet()
+        }
     }
 
     private func page(_ m: TodayMetrics, fill: Bool) -> some View {
@@ -120,11 +150,16 @@ struct TodayView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                 // Formatted in the interface language, which follows the study mode.
-                Text(Date.now, format: .dateTime.month().day().weekday(.wide))
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                HStack(spacing: 4) {
+                    Image(systemName: daySymbol)
+                        .symbolRenderingMode(.multicolor)
+                        .symbolEffect(.bounce, value: greetingHops)
+                    Text(Date.now, format: .dateTime.month().day().weekday(.wide))
+                }
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             }
             if !m.large { Spacer(minLength: 4) }
             HStack(spacing: 8) {
@@ -268,7 +303,7 @@ struct TodayView: View {
         .overlay(alignment: .topTrailing) {
             if !m.large {
                 MascotBuddy(mood: mascotMood, size: m.mascot, lines: mascotLines, greeting: mascotGreeting,
-                            bubbleSide: .leading, hop: greetingHops)
+                            bubbleSide: .leading, hop: greetingHops + tileTaps.values.reduce(0, +))
                     .offset(x: -12, y: -m.peek)
                     .accessibilityIdentifier("today-mascot")
             }
@@ -358,6 +393,15 @@ struct TodayView: View {
                L.t("戳我不會變聰明喔", "Poking me won't make you smarter!"), L.t("學完記得休息一下", "Take a break after this one")]
     }
 
+    private var daySymbol: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<17: return "sun.max.fill"
+        case 17..<19: return "sunset.fill"
+        default: return "moon.stars.fill"
+        }
+    }
+
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
@@ -384,7 +428,7 @@ struct TodayView: View {
     private var tiles: [PracticeTileItem] {
         var items: [PracticeTileItem] = []
         items.append(PracticeTileItem(id: "today-quiz", icon: "checklist", tint: Palette.chinese, title: L.quickQuiz,
-                                      detail: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions")) { start(.quiz) })
+                                      detail: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions")) { quizSetupOpen = true })
         items.append(PracticeTileItem(id: "today-speaking", icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking,
                                       detail: L.t("開口說說看", "Say it out loud")) { start(.speaking) })
         // Typing the word only makes sense when English is what is learned.
@@ -404,7 +448,7 @@ struct TodayView: View {
         let rows = stride(from: 0, to: items.count, by: columns).map { Array(items[$0..<min($0 + columns, items.count)]) }
         return VStack(alignment: .leading, spacing: m.tileSpacing) {
             Text(L.practice)
-                .font(.display(m.tall ? .title3 : .headline, weight: .bold))
+                .font(.display(m.compact ? .headline : .title3, weight: .bold))
                 .padding(.leading, 4)
             if let review = reviewTile {
                 tile(review, tallCard: false, m, fill: fill, order: 1)
@@ -427,7 +471,7 @@ struct TodayView: View {
             tileTaps[item.id, default: 0] += 1
             item.action()
         } label: {
-            PracticeTile(item: item, tallCard: tallCard, compact: m.compact,
+            PracticeTile(item: item, tallCard: tallCard, style: m.tileStyle(tallCard: tallCard),
                          minHeight: height.min, maxHeight: fill ? height.max : nil,
                          bounce: tileTaps[item.id, default: 0])
         }
@@ -473,10 +517,17 @@ private struct TilePressStyle: ButtonStyle {
 /// and detail along the bottom, and a large faint copy of the icon in the
 /// corner. Elsewhere a short row: icon, title and detail side by side. Either
 /// grows between its shortest and tallest to fill the page.
+/// The icon and type sizes of a practice tile.
+struct PracticeTileStyle {
+    var icon: CGFloat
+    var title: Font.TextStyle
+    var detail: Font
+}
+
 private struct PracticeTile: View {
     var item: PracticeTileItem
     var tallCard = false
-    var compact = false
+    var style: PracticeTileStyle
     var minHeight: CGFloat
     var maxHeight: CGFloat?
     var bounce = 0
@@ -486,35 +537,35 @@ private struct PracticeTile: View {
             if tallCard {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(alignment: .top) {
-                        icon(size: 46)
+                        icon(size: style.icon)
                         Spacer(minLength: 4)
                         trailing
                     }
                     Spacer(minLength: 10)
                     Text(item.title)
-                        .font(.display(.headline, weight: .bold))
+                        .font(.display(style.title, weight: .bold))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.8)
+                        .minimumScaleFactor(0.75)
                     Text(item.detail)
-                        .font(.footnote)
+                        .font(style.detail)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                 }
                 .padding(14)
             } else {
-                HStack(spacing: 10) {
-                    icon(size: compact ? 34 : 40)
-                    VStack(alignment: .leading, spacing: 1) {
+                HStack(spacing: style.icon > 40 ? 14 : 10) {
+                    icon(size: style.icon)
+                    VStack(alignment: .leading, spacing: 2) {
                         // Two lines when a long title ("Speaking practice") meets a narrow tile.
                         Text(item.title)
-                            .font(.display(.subheadline, weight: .bold))
+                            .font(.display(style.title, weight: .bold))
                             .foregroundStyle(.primary)
                             .lineLimit(2)
-                            .minimumScaleFactor(0.85)
+                            .minimumScaleFactor(0.75)
                         Text(item.detail)
-                            .font(.caption)
+                            .font(style.detail)
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
@@ -522,8 +573,8 @@ private struct PracticeTile: View {
                     Spacer(minLength: 2)
                     trailing
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, compact ? 8 : 10)
+                .padding(.horizontal, style.icon > 40 ? 14 : 12)
+                .padding(.vertical, style.icon > 40 ? 10 : 8)
             }
         }
         .multilineTextAlignment(.leading)
@@ -542,6 +593,14 @@ private struct PracticeTile: View {
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: tallCard ? 22 : 18, style: .continuous))
+        }
+        .overlay {
+            // A soft ring of the tile's colour spreads from the icon when it is tapped.
+            if bounce > 0 {
+                TileRipple(color: item.tint, tallCard: tallCard, iconSize: style.icon)
+                    .id(bounce)
+                    .clipShape(RoundedRectangle(cornerRadius: tallCard ? 22 : 18, style: .continuous))
+            }
         }
         .contentShape(RoundedRectangle(cornerRadius: tallCard ? 22 : 18, style: .continuous))
     }
@@ -573,6 +632,35 @@ private struct PracticeTile: View {
                 .padding(.horizontal, 7)
                 .padding(.vertical, 3)
                 .background(item.tint, in: Capsule())
+        }
+    }
+}
+
+/// One ripple from a tile's icon: a ring of its colour growing and fading.
+private struct TileRipple: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var color: Color
+    var tallCard: Bool
+    var iconSize: CGFloat
+    @State private var spread = false
+
+    var body: some View {
+        GeometryReader { proxy in
+            let origin = tallCard ? CGPoint(x: 14 + iconSize / 2, y: 14 + iconSize / 2)
+                                  : CGPoint(x: 14 + iconSize / 2, y: proxy.size.height / 2)
+            Circle()
+                .fill(RadialGradient(colors: [color.opacity(0.28), color.opacity(0)], center: .center, startRadius: 0, endRadius: iconSize / 2))
+                .overlay(Circle().strokeBorder(color.opacity(0.35), lineWidth: 1.5))
+                .frame(width: iconSize, height: iconSize)
+                .scaleEffect(spread ? proxy.size.width * 2.2 / iconSize : 1)
+                .opacity(spread ? 0 : 1)
+                .position(origin)
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeOut(duration: 0.55)) { spread = true }
         }
     }
 }

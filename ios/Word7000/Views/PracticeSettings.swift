@@ -99,17 +99,24 @@ struct QuizConfiguration: View {
                             .monospacedDigit()
                             .contentTransition(.numericText(value: Double(roundSize)))
                     }
-                    Button(action: start) {
-                        Text(L.t("開始測驗", "Start quiz")).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction()
-                    .disabled(count == 0)
-                    .accessibilityIdentifier("quiz-start")
                 }
             }
             .listRowBackground(Palette.surface)
         }
         .warmList()
+        // Always in reach at the bottom, even when the sheet is at half height.
+        .safeAreaInset(edge: .bottom) {
+            Button(action: start) {
+                Text(L.t("開始測驗", "Start quiz")).font(.headline).frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .disabled(count == 0)
+            .accessibilityIdentifier("quiz-start")
+            .padding(.horizontal, Metrics.gutter)
+            .padding(.top, 10)
+            .padding(.bottom, 8)
+            .background(.bar)
+        }
         .navigationTitle(L.quickQuiz)
         .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizQuestionCount)
         .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizFilter)

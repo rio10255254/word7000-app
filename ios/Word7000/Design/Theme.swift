@@ -325,3 +325,13 @@ enum AppearancePreference: String, Codable, CaseIterable, Identifiable, Sendable
         }
     }
 }
+
+extension View {
+    /// A short sheet for a few settings or a note: opens at half height with a
+    /// grabber, and can be pulled up to full height when there is more to see.
+    func compactSheet() -> some View {
+        presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(28)
+    }
+}

@@ -9,6 +9,8 @@ enum AppTab: Hashable {
 enum Activity: Identifiable, Hashable {
     case study
     case quiz
+    /// A quiz already set up in the sheet on Today.
+    case quizReady
     case speaking
     case spelling
     case exam
@@ -86,11 +88,11 @@ struct RootView: View {
             switch activity {
             case .study:
                 StudySessionView(startQuiz: { switchTo(.quiz) })
-            case .quiz:
+            case .quiz, .quizReady:
                 QuizSessionView(studyMissed: { ids in
                     model.startStudySession(onlyIds: ids)
                     switchTo(.study)
-                })
+                }, skipSetup: activity == .quizReady)
             case .speaking:
                 SpeakingSessionView()
             case .spelling:

@@ -444,7 +444,7 @@ struct WordAnswer: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .sheet(isPresented: $aiOpen) { AIWordSheet(word: word) }
+        .sheet(isPresented: $aiOpen) { AIWordSheet(word: word).compactSheet() }
     }
 }
 

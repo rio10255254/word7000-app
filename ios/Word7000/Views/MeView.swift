@@ -177,6 +177,11 @@ struct SettingsView: View {
                     } label: {
                         SettingsLabel(L.appearance, icon: appearanceIcon, tint: .indigo)
                     }
+                    NavigationLink { StyleSettingsView() } label: {
+                        SettingsLabel(L.t("App 風格", "App style"), icon: "paintpalette.fill", tint: .purple,
+                                      value: (model.settings.appStyle ?? .leather).label)
+                    }
+                    .accessibilityIdentifier("settings-style")
                     Toggle(isOn: Binding(
                         get: { model.settings.hapticsEnabled ?? true },
                         set: { model.settings.hapticsEnabled = $0 }

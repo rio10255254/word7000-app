@@ -121,6 +121,9 @@ final class AppModel {
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
         if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
+        if arguments.contains("-uiTestingCollage") { settings.appStyle = .collage }
+        // UI tests never meet the one-time style chooser unless they ask for it.
+        if arguments.contains("-uiTestingReset"), !arguments.contains("-uiTestingStyleChooser") { settings.stylePicked = true }
         if settings.onboardingComplete == nil {
             settings.onboardingComplete = snapshot != nil || !progress.words.isEmpty || !sets.sets.isEmpty
         }
@@ -163,6 +166,17 @@ final class AppModel {
     }
 
     // MARK: Reminders
+
+    /// Chooses the app's look; the home-screen icon is switched to match.
+    func setAppStyle(_ style: AppStyle) {
+        settings.appStyle = style
+        settings.stylePicked = true
+    }
+
+    /// The one-time style chooser is due: after some practice, once.
+    var styleChoiceDue: Bool {
+        settings.stylePicked != true && settings.onboardingComplete == true && !progress.words.isEmpty
+    }
 
     var reminderEnabled: Bool { settings.streakReminder ?? true }
 

@@ -33,13 +33,16 @@ private struct TodayMetrics {
     /// Practice tiles: tall cards (icon up top, words along the bottom) on the
     /// big phones, short rows elsewhere. Both carry a faint, tilted watermark
     /// of their icon, which fills the open side of the tile.
-    var tallCards: Bool { tall && !large }
+    /// (The iPhone Air, a little shorter than a Pro Max, keeps the short rows:
+    /// two rows of tall cards would run under its tab bar.)
+    var tallCards: Bool { tall && !large && height >= 785 }
     var tileSpacing: CGFloat { compact ? 8 : tall ? 12 : 10 }
     /// Type and icon sizes, which grow with the room the tiles have.
     func tileStyle(tallCard: Bool) -> PracticeTileStyle {
         if compact { return PracticeTileStyle(icon: 36, title: .subheadline, detail: .caption) }
-        if tallCard { return PracticeTileStyle(icon: 54, title: .title2, detail: .subheadline) }
-        return PracticeTileStyle(icon: tall ? 52 : 48, title: .title3, detail: .subheadline)
+        if tallCard { return PracticeTileStyle(icon: 52, title: .title2, detail: .subheadline) }
+        // Small enough beside the icon that a four-character title stays on one line.
+        return PracticeTileStyle(icon: tall ? 48 : 44, title: .title3, detail: .subheadline)
     }
 
     /// The shortest and tallest a tile may be. When everything fits, the tiles
@@ -572,15 +575,16 @@ private struct PracticeTile: View {
                 }
                 .padding(14)
             } else {
-                HStack(spacing: roomy ? 14 : 10) {
+                HStack(spacing: roomy ? 12 : 10) {
                     icon(size: style.icon)
                     VStack(alignment: .leading, spacing: 2) {
-                        // Two lines when a long title ("Speaking practice") meets a narrow tile.
+                        // A Chinese title stays on one line (shrinking a little if it
+                        // must); an English one may take two ("Speaking practice").
                         Text(item.title)
                             .font(.display(style.title, weight: .bold))
                             .foregroundStyle(.primary)
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.75)
+                            .lineLimit(item.title.contains(" ") ? 2 : 1)
+                            .minimumScaleFactor(0.7)
                         Text(item.detail)
                             .font(style.detail)
                             .foregroundStyle(.secondary)
@@ -590,7 +594,7 @@ private struct PracticeTile: View {
                     Spacer(minLength: 2)
                     rowEnd
                 }
-                .padding(.horizontal, roomy ? 16 : 12)
+                .padding(.horizontal, roomy ? 14 : 12)
                 .padding(.vertical, roomy ? 10 : 8)
             }
         }

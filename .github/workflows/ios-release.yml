@@ -24,8 +24,12 @@ on:
         description: 'Short note shown for an OTA update'
         type: string
         default: ''
+      full_validation:
+        description: 'native-testflight only: wait for a passed full Native iOS run of this source before uploading. Off by default; turn it on when a full test is wanted.'
+        type: boolean
+        default: false
       native_validation_run:
-        description: 'Optional full Native iOS run ID (push, or manual with all checks) for identical source; otherwise a passed run of identical source, then this commit'
+        description: 'With full_validation: optional full Native iOS run ID (push, or manual with all checks) for identical source; otherwise a passed run of identical source, then this commit'
         type: string
         default: ''
 
@@ -86,8 +90,11 @@ jobs:
         if: inputs.operation == 'native-testflight'
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
+      # Only when asked for: by default a TestFlight build is uploaded once it
+      # builds and passes the checks above, without waiting hours for the
+      # full simulator walk-through.
       - name: Pin full native validation to the release source
-        if: inputs.operation == 'native-testflight'
+        if: inputs.operation == 'native-testflight' && inputs.full_validation
         env:
           REQUESTED_RUN: ${{ inputs.native_validation_run }}
         run: |
@@ -151,6 +158,7 @@ jobs:
         env:
           # App Store Connect API key for uploading straight to Apple. Without
           # all three, the upload falls back to Expo's submit service.
+          FULL_VALIDATION: ${{ inputs.full_validation }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
@@ -196,7 +204,12 @@ jobs:
           PY
           cat "$RUNNER_TEMP/native-verification.json"
           PASSED=false
+          if [ "$FULL_VALIDATION" != true ]; then
+            echo "Full native validation not requested; uploading this build."
+            PASSED=true
+          fi
           for attempt in $(seq 1 60); do
+            [ "$PASSED" = true ] && break
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$NATIVE_VALIDATION_RUN" > "$RUNNER_TEMP/native-validation.json"
             STATE=$(node -e 'const r=require(process.argv[1]); process.stdout.write(r.status==="completed" ? r.conclusion : r.status);' "$RUNNER_TEMP/native-validation.json")
             if [ "$STATE" = success ]; then PASSED=true; break; fi

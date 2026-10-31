@@ -1,8 +1,9 @@
 import SwiftUI
+import Word7000Core
 
-/// The app's little companion: a round, fluffy ginger kitten with twitching
-/// ears, whiskers and a swishing tail, and a resting face of deep, heavy-lidded
-/// disinterest. It has opinions about your practice and shares them. It
+/// The app's little companion: a round lump of a ginger cat, a little fluffy
+/// at the cheeks, with a resting face of deep, heavy-lidded disinterest. It
+/// has opinions about your practice and shares them, and it can be smacked. It
 /// breathes, blinks and flicks its ears and tail while it waits, and its face
 /// follows the moment: smug when you haven't practised,
 /// happy after a right answer, cheering when the goal is met, encouraging after
@@ -15,6 +16,8 @@ struct Mascot: View {
         case dizzy
         /// Lids lowered, smirking: it has noticed you haven't practised.
         case smug
+        /// Squeezed-shut >< eyes and a wobbly mouth: it has just been smacked.
+        case annoyed
     }
 
     var mood: Mood = .idle
@@ -101,11 +104,11 @@ struct Mascot: View {
                 ears(s, time: t)
                 furBody(s)
                 // Two little front paws peeking out under the chest; they step in turn while it walks.
-                HStack(spacing: s * 0.14) {
+                HStack(spacing: s * 0.16) {
                     paw(s, lift: walking ? CGFloat(max(0, sin(step))) * s * 0.06 : 0)
                     paw(s, lift: walking ? CGFloat(max(0, -sin(step))) * s * 0.06 : 0)
                 }
-                .offset(y: s * 0.4)
+                .offset(y: s * 0.42)
                 face(s, time: t, yawning: pose.yawning)
             }
             .scaleEffect(x: 1 - breathe * 0.6 - pose.stretch * 0.45, y: 1 + breathe + pose.stretch, anchor: .bottom)
@@ -193,88 +196,73 @@ struct Mascot: View {
         .transition(.opacity)
     }
 
-    /// A soft cream paw.
+    /// A little cream paw.
     private func paw(_ s: CGFloat, lift: CGFloat) -> some View {
         Ellipse()
             .fill(Self.cream)
-            .overlay { Ellipse().strokeBorder(Self.shade.opacity(0.35), lineWidth: max(0.5, s * 0.01)) }
-            .frame(width: s * 0.17, height: s * 0.09)
+            .frame(width: s * 0.14, height: s * 0.07)
             .offset(y: -lift)
     }
 
-    /// The round, fluffy body (and head: a kitten is mostly head): a cloud-edged
-    /// outline of fur tufts, a fluffy cream chest, tabby stripes on the brow, a
-    /// little tuft sticking up on top and a soft sheen on the fur.
+    /// The body (and head: it is all one lump): round on top and settled
+    /// flat underneath, with a barely ruffled edge, a tuft of fur at each
+    /// cheek and on top, and a small cream chest with a tuft of its own.
+    /// Deliberately vague, so the face does the talking.
     private func furBody(_ s: CGFloat) -> some View {
-        let fluff = MascotFluff(tufts: 26, puff: 0.06)
-        return fluff
+        MascotFluff(tufts: 20, puff: 0.015, roundness: 0.9, settle: 0.92)
             .fill(LinearGradient(colors: [Self.top, Self.bottom], startPoint: .top, endPoint: .bottom))
-            .overlay {
-                // A little shade low on the body gives it weight.
-                fluff.fill(LinearGradient(colors: [.clear, Self.shade.opacity(0.28)], startPoint: .center, endPoint: .bottom))
-            }
             .overlay(alignment: .bottom) {
-                // The fluffy cream chest.
-                MascotFluff(tufts: 16, puff: 0.07)
-                    .fill(Self.cream)
-                    .frame(width: s * 0.42, height: s * 0.26)
-                    .offset(y: -s * 0.04)
-            }
-            .overlay(alignment: .top) {
-                // Tabby stripes on the brow.
-                HStack(alignment: .top, spacing: s * 0.035) {
-                    stripe(s, length: 0.08).rotationEffect(.degrees(-12))
-                    stripe(s, length: 0.11)
-                    stripe(s, length: 0.08).rotationEffect(.degrees(12))
+                // The cream chest, with a little tuft on top.
+                VStack(spacing: -s * 0.012) {
+                    MascotZigzag(points: 2)
+                        .fill(Self.cream)
+                        .frame(width: s * 0.09, height: s * 0.04)
+                    Ellipse()
+                        .fill(Self.cream)
+                        .frame(width: s * 0.34, height: s * 0.2)
                 }
-                .offset(y: s * 0.05)
+                .offset(y: -s * 0.05)
             }
             .overlay(alignment: .top) {
                 // A tuft of fur sticking up on top.
                 MascotTuft()
                     .fill(Self.top)
-                    .frame(width: s * 0.1, height: s * 0.1)
-                    .offset(y: -s * 0.05)
+                    .frame(width: s * 0.08, height: s * 0.09)
+                    .offset(y: -s * 0.06)
             }
-            .overlay(alignment: .topLeading) {
-                // A soft sheen on the fur.
-                Ellipse()
-                    .fill(Color.white.opacity(0.35))
-                    .frame(width: s * 0.24, height: s * 0.1)
-                    .rotationEffect(.degrees(-24))
-                    .blur(radius: s * 0.03)
-                    .offset(x: s * 0.1, y: s * 0.12)
+            .overlay {
+                // A tuft at each cheek, sticking out past the outline.
+                HStack(spacing: s * 0.8) {
+                    MascotCheekTuft().fill(Self.top).frame(width: s * 0.065, height: s * 0.105).scaleEffect(x: -1)
+                    MascotCheekTuft().fill(Self.top).frame(width: s * 0.065, height: s * 0.105)
+                }
+                .offset(y: s * 0.06)
             }
-            .frame(width: s * 0.86, height: s * 0.78)
-            .offset(y: s * 0.04)
-            .shadow(color: Self.bottom.opacity(0.35), radius: s * 0.08, y: s * 0.05)
+            .frame(width: s * 0.9, height: s * 0.74)
+            .offset(y: s * 0.07)
+            .shadow(color: Self.bottom.opacity(0.3), radius: s * 0.07, y: s * 0.04)
     }
 
-    private func stripe(_ s: CGFloat, length: CGFloat) -> some View {
-        Capsule()
-            .fill(Self.stripeTint.opacity(0.5))
-            .frame(width: s * 0.03, height: s * length)
-    }
-
-    /// Two pointed ears, pink inside with a few wisps of fur. They prick up
-    /// when it is pleased, droop when it is sleepy, sad or dizzy, flatten back
-    /// when it is being smug, and each flicks now and then.
+    /// Two small rounded ears, pink inside. They prick up when it is pleased,
+    /// droop when it is sleepy, sad or dizzy, flatten back when it is smug or
+    /// has just been smacked, and each flicks now and then.
     private func ears(_ s: CGFloat, time t: Double) -> some View {
         let droop: Double = switch mood {
         case .happy, .cheer: -4
         case .sleepy, .encourage: 12
         case .smug: 8
+        case .annoyed: 14
         case .dizzy: 20
         default: 0
         }
         let twitchLeft = reduceMotion ? 0 : Self.twitch(t, every: 6.1, offset: 0)
         let twitchRight = reduceMotion ? 0 : Self.twitch(t, every: 7.3, offset: 2.4)
         return ZStack {
-            ear(s).rotationEffect(.degrees(-20 - droop - twitchLeft), anchor: .bottom).offset(x: -s * 0.24)
-            ear(s).rotationEffect(.degrees(20 + droop + twitchRight), anchor: .bottom).offset(x: s * 0.24)
+            ear(s).rotationEffect(.degrees(-18 - droop - twitchLeft), anchor: .bottom).offset(x: -s * 0.23)
+            ear(s).rotationEffect(.degrees(18 + droop + twitchRight), anchor: .bottom).offset(x: s * 0.23)
         }
-        .offset(y: -s * 0.31)
-        .animation(.spring(response: 0.4, dampingFraction: 0.6), value: mood)
+        .offset(y: -s * 0.33)
+        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: mood)
     }
 
     private func ear(_ s: CGFloat) -> some View {
@@ -283,37 +271,19 @@ struct Mascot: View {
             .overlay(alignment: .bottom) {
                 MascotEar()
                     .fill(Self.innerEar)
-                    .overlay(alignment: .bottom) {
-                        // Wisps of fur inside the ear.
-                        HStack(alignment: .bottom, spacing: s * 0.008) {
-                            ForEach([-1.0, 0, 1], id: \.self) { lean in
-                                Capsule()
-                                    .fill(Self.cream)
-                                    .frame(width: s * 0.012, height: s * 0.06)
-                                    .rotationEffect(.degrees(lean * 12), anchor: .bottom)
-                            }
-                        }
-                    }
-                    .frame(width: s * 0.13, height: s * 0.15)
-                    .offset(y: -s * 0.04)
+                    .frame(width: s * 0.11, height: s * 0.12)
+                    .offset(y: -s * 0.035)
             }
-            .frame(width: s * 0.25, height: s * 0.25)
-            .offset(y: -s * 0.085)
+            .frame(width: s * 0.22, height: s * 0.2)
     }
 
-    /// A fluffy tail curling up behind the right side, with a tufted cream tip.
+    /// A short, plain tail curling up behind the right side.
     private func tail(_ s: CGFloat, sway: Double) -> some View {
-        ZStack(alignment: .topLeading) {
-            MascotTail()
-                .stroke(LinearGradient(colors: [Self.top, Self.bottom], startPoint: .top, endPoint: .bottom),
-                        style: StrokeStyle(lineWidth: s * 0.13, lineCap: .round, lineJoin: .round))
-            MascotFluff(tufts: 9, puff: 0.12)
-                .fill(Self.cream)
-                .frame(width: s * 0.15, height: s * 0.15)
-                .offset(x: s * (MascotTail.tip.x - 0.075), y: s * (MascotTail.tip.y - 0.075))
-        }
-        .frame(width: s, height: s)
-        .rotationEffect(.degrees(sway), anchor: UnitPoint(x: MascotTail.base.x, y: MascotTail.base.y))
+        MascotTail()
+            .stroke(LinearGradient(colors: [Self.top, Self.bottom], startPoint: .top, endPoint: .bottom),
+                    style: StrokeStyle(lineWidth: s * 0.12, lineCap: .round, lineJoin: .round))
+            .frame(width: s, height: s)
+            .rotationEffect(.degrees(sway), anchor: UnitPoint(x: MascotTail.base.x, y: MascotTail.base.y))
     }
 
     private func tailSway(time t: Double) -> Double {
@@ -342,48 +312,43 @@ struct Mascot: View {
         let glance = gaze == .zero && !reduceMotion && opensEyes ? Self.glance(t) : 0
         let look = CGSize(width: thinking.width + (gaze.width + glance) * s * 0.035, height: thinking.height + gaze.height * s * 0.03)
         return ZStack {
-            HStack(spacing: s * 0.16) {
+            HStack(spacing: s * 0.17) {
                 eye(s, side: -1, blink: blink, yawning: yawning, time: t)
                 eye(s, side: 1, blink: blink, yawning: yawning, time: t)
             }
-            .offset(x: look.width, y: -s * 0.02 + look.height)
+            .offset(x: look.width, y: look.height)
             HStack(spacing: s * 0.36) {
                 cheek(s)
                 cheek(s)
             }
             .offset(x: look.width * 0.5, y: s * 0.08)
             whiskers(s, time: t)
-                .offset(x: look.width * 0.5, y: s * 0.09)
+                .offset(x: look.width * 0.5, y: s * 0.1)
             MascotNose()
                 .fill(Self.nose)
-                .overlay { MascotNose().stroke(Self.nose, style: StrokeStyle(lineWidth: s * 0.014, lineJoin: .round)) }
-                .frame(width: s * 0.055, height: s * 0.035)
-                .offset(x: look.width * 0.6, y: s * 0.07)
-            // The little line from the nose down to the mouth.
-            Capsule()
-                .fill(Self.ink)
-                .frame(width: s * 0.02, height: s * 0.03)
-                .offset(x: look.width * 0.6, y: s * 0.095)
+                .overlay { MascotNose().stroke(Self.nose, style: StrokeStyle(lineWidth: s * 0.012, lineJoin: .round)) }
+                .frame(width: s * 0.045, height: s * 0.028)
+                .offset(x: look.width * 0.6, y: s * 0.075)
             mouth(s, yawning: yawning)
-                .offset(x: look.width * 0.6, y: s * 0.12)
+                .offset(x: look.width * 0.6, y: s * 0.125)
         }
     }
 
-    /// Three whiskers a side, twitching a touch as it breathes.
+    /// Two short whiskers a side, twitching a touch as it breathes.
     private func whiskers(_ s: CGFloat, time t: Double) -> some View {
         let quiver = reduceMotion ? 0 : sin(t * 2.1) * 2
-        return HStack(spacing: s * 0.35) {
+        return HStack(spacing: s * 0.42) {
             whiskerSet(s, side: -1, quiver: quiver)
             whiskerSet(s, side: 1, quiver: quiver)
         }
     }
 
     private func whiskerSet(_ s: CGFloat, side: Double, quiver: Double) -> some View {
-        VStack(spacing: s * 0.022) {
-            ForEach([-11.0, 0, 11], id: \.self) { angle in
+        VStack(spacing: s * 0.025) {
+            ForEach([-8.0, 8], id: \.self) { angle in
                 Capsule()
-                    .fill(Self.ink.opacity(0.4))
-                    .frame(width: s * 0.16, height: max(0.6, s * 0.011))
+                    .fill(Self.ink.opacity(0.35))
+                    .frame(width: s * 0.12, height: max(0.6, s * 0.01))
                     .rotationEffect(.degrees(side * (angle - quiver)))
             }
         }
@@ -405,10 +370,16 @@ struct Mascot: View {
         switch mood {
         case .idle:
             // Its resting face: heavy-lidded and thoroughly unimpressed.
-            lidEye(s, lid: 0.35, tilt: 0, blink: blink)
+            lidEye(s, lid: 0.4, tilt: 0, blink: blink)
         case .smug:
             // Lids lower and slanting in: a knowing, judging look.
-            lidEye(s, lid: 0.55, tilt: side * -7, blink: blink)
+            lidEye(s, lid: 0.58, tilt: side * -8, blink: blink)
+        case .annoyed:
+            // Squeezed shut: > <.
+            MascotChevron()
+                .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.026, lineCap: .round, lineJoin: .round))
+                .frame(width: s * 0.085, height: s * 0.09)
+                .scaleEffect(x: side < 0 ? 1 : -1)
         case .dizzy:
             // Swirly eyes, turning.
             Circle()
@@ -442,7 +413,7 @@ struct Mascot: View {
     /// A round eye with a flat lid across its top: `lid` is how much of it the
     /// lid covers, `tilt` how the lid slants.
     private func lidEye(_ s: CGFloat, lid: CGFloat, tilt: Double, blink: Bool) -> some View {
-        let d = s * 0.12
+        let d = s * 0.11
         return Circle()
             .fill(Self.ink)
             .overlay(alignment: .topTrailing) {
@@ -493,6 +464,10 @@ struct Mascot: View {
             MascotOpenMouth()
                 .fill(Self.ink)
                 .frame(width: s * 0.12, height: s * 0.06)
+        case .annoyed:
+            MascotZigzag(points: 2)
+                .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.02, lineCap: .round, lineJoin: .round))
+                .frame(width: s * 0.09, height: s * 0.026)
         case .smug:
             MascotSmirk()
                 .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.022, lineCap: .round))
@@ -514,7 +489,7 @@ struct Mascot: View {
         case .idle, .encourage:
             MascotCatMouth()
                 .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.02, lineCap: .round, lineJoin: .round))
-                .frame(width: s * 0.1, height: s * 0.03)
+                .frame(width: s * 0.09, height: s * 0.026)
         }
     }
 
@@ -569,7 +544,6 @@ struct Mascot: View {
     private static let top = Color(red: 0.98, green: 0.77, blue: 0.56)
     private static let bottom = Color(red: 0.89, green: 0.54, blue: 0.34)
     private static let shade = Color(red: 0.58, green: 0.29, blue: 0.16)
-    private static let stripeTint = Color(red: 0.76, green: 0.4, blue: 0.22)
     private static let cream = Color(red: 1.0, green: 0.95, blue: 0.86)
     private static let innerEar = Color(red: 0.98, green: 0.7, blue: 0.66)
     private static let nose = Color(red: 0.93, green: 0.52, blue: 0.52)
@@ -639,6 +613,10 @@ private struct MascotArc: Shape {
 private struct MascotFluff: Shape {
     var tufts = 26
     var puff: CGFloat = 0.06
+    /// 1 an ellipse; lower is squarer.
+    var roundness: Double = 0.8
+    /// Below 1 flattens the bottom half, so it sits like a lump.
+    var settle: CGFloat = 1
 
     func path(in rect: CGRect) -> Path {
         let center = CGPoint(x: rect.midX, y: rect.midY)
@@ -647,8 +625,9 @@ private struct MascotFluff: Shape {
         func point(_ angle: Double, _ scale: CGFloat) -> CGPoint {
             let c = cos(angle)
             let s = sin(angle)
-            let x = CGFloat((c < 0 ? -1 : 1) * pow(abs(c), 0.8))
-            let y = CGFloat((s < 0 ? -1 : 1) * pow(abs(s), 0.8))
+            let x = CGFloat((c < 0 ? -1 : 1) * pow(abs(c), roundness))
+            var y = CGFloat((s < 0 ? -1 : 1) * pow(abs(s), roundness))
+            if y > 0 { y *= settle }
             return CGPoint(x: center.x + x * rx * scale, y: center.y + y * ry * scale)
         }
         let step = 2 * Double.pi / Double(tufts)
@@ -679,14 +658,14 @@ private struct MascotTuft: Shape {
     }
 }
 
-/// A pointed ear with a softly rounded tip.
+/// An ear with a softly rounded tip.
 private struct MascotEar: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
         path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.minX + rect.width * 0.38, y: rect.minY + rect.height * 0.1))
-        path.addQuadCurve(to: CGPoint(x: rect.minX + rect.width * 0.62, y: rect.minY + rect.height * 0.1),
-                          control: CGPoint(x: rect.midX, y: rect.minY - rect.height * 0.06))
+        path.addLine(to: CGPoint(x: rect.minX + rect.width * 0.36, y: rect.minY + rect.height * 0.14))
+        path.addQuadCurve(to: CGPoint(x: rect.minX + rect.width * 0.64, y: rect.minY + rect.height * 0.14),
+                          control: CGPoint(x: rect.midX, y: rect.minY - rect.height * 0.04))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
         path.closeSubpath()
         return path
@@ -694,10 +673,9 @@ private struct MascotEar: Shape {
 }
 
 /// The tail's curve, in fractions of the figure's square: from behind the body
-/// low on the right, out and up, curling back in at the tip.
+/// low on the right, curling up.
 private struct MascotTail: Shape {
-    static let base = CGPoint(x: 0.74, y: 0.84)
-    static let tip = CGPoint(x: 0.95, y: 0.3)
+    static let base = CGPoint(x: 0.74, y: 0.86)
 
     func path(in rect: CGRect) -> Path {
         func at(_ x: CGFloat, _ y: CGFloat) -> CGPoint {
@@ -705,8 +683,51 @@ private struct MascotTail: Shape {
         }
         var path = Path()
         path.move(to: at(Self.base.x, Self.base.y))
-        path.addQuadCurve(to: at(1.06, 0.48), control: at(1.1, 0.8))
-        path.addQuadCurve(to: at(Self.tip.x, Self.tip.y), control: at(1.04, 0.3))
+        path.addQuadCurve(to: at(0.98, 0.52), control: at(1.04, 0.84))
+        return path
+    }
+}
+
+/// A tuft of fur sticking out sideways (to the right; mirror it for the left).
+private struct MascotCheekTuft: Shape {
+    func path(in rect: CGRect) -> Path {
+        func at(_ x: CGFloat, _ y: CGFloat) -> CGPoint {
+            CGPoint(x: rect.minX + x * rect.width, y: rect.minY + y * rect.height)
+        }
+        var path = Path()
+        path.move(to: at(0, 0))
+        path.addLine(to: at(1, 0.28))
+        path.addLine(to: at(0.3, 0.52))
+        path.addLine(to: at(0.95, 0.78))
+        path.addLine(to: at(0, 1))
+        path.closeSubpath()
+        return path
+    }
+}
+
+/// A row of little peaks along the top: a tuft (filled) or a wobbly mouth (stroked).
+private struct MascotZigzag: Shape {
+    var points = 2
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let steps = points * 2
+        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+        for index in 1...steps {
+            let x = rect.minX + rect.width * CGFloat(index) / CGFloat(steps)
+            path.addLine(to: CGPoint(x: x, y: index % 2 == 1 ? rect.minY : rect.maxY))
+        }
+        return path
+    }
+}
+
+/// A > shape: one squeezed-shut eye (mirror it for the other).
+private struct MascotChevron: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
         return path
     }
 }
@@ -828,9 +849,13 @@ struct MascotTip {
     var action: () -> Void
 }
 
-/// The companion you can play with. Tap it and it hops and says one of its
-/// lines; drag it and it leans and stretches after your finger, eyes following,
-/// then springs back; press and hold and it blushes as little hearts float up.
+/// The companion you can play with, or smack. Tap it and it takes the hit:
+/// knocked sideways away from your finger with a little burst, eyes squeezed
+/// shut, and a comeback; keep at it and it gets crosser, until a sixth quick
+/// smack leaves it seeing stars (and, on Today, storming off). It keeps count
+/// of the day's smacks. Drag it and it leans and stretches after your finger,
+/// eyes following, then springs back; press and hold and it blushes as
+/// little hearts float up, grudgingly.
 /// Its speech bubble takes no touches unless it carries the companion's tip,
 /// and then only where it floats over nothing tappable.
 struct MascotBuddy: View {
@@ -863,10 +888,11 @@ struct MascotBuddy: View {
     /// When given, what it says goes here for the page to show in its own
     /// layout, instead of a bubble floating over whatever is next to it.
     var speech: Binding<String?>? = nil
+    /// Told when a run of smacks has been too much, e.g. to storm off.
+    var onBeatenUp: (() -> Void)? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppModel.self) private var model
-    @State private var pokes = 0
     @State private var bubble: String?
     @State private var bubbleTask: Task<Void, Never>?
     @State private var drag: CGSize = .zero
@@ -875,14 +901,29 @@ struct MascotBuddy: View {
     @State private var greeted = false
     @State private var antic: MascotAntic?
     @State private var anticStart: Double = 0
+    /// Smacks: how many so far, the current run of quick ones, which way the
+    /// last one knocked it (-1 left, 1 right; 0 upright), and how it feels.
+    @State private var slaps = 0
+    @State private var combo = 0
+    @State private var lastSlap = Date.distantPast
+    @State private var knock: CGFloat = 0
+    @State private var burstSide: CGFloat = 0
+    @State private var smarting = false
+    @State private var seeingStars = false
+    @State private var smartTask: Task<Void, Never>?
 
     var body: some View {
         let pull = CGSize(width: max(-1, min(1, drag.width / 80)), height: max(-1, min(1, drag.height / 80)))
         // Eyes on the finger while dragged, else where it is heading.
         let look = drag == .zero ? CGSize(width: facing * 0.8, height: 0) : pull
         let actionable = tip != nil && bubble == tip?.text
-        Mascot(mood: held ? .happy : mood, size: size, hop: hop + pokes, gaze: look, blush: held, walking: walking && drag == .zero,
+        Mascot(mood: held ? .happy : seeingStars ? .dizzy : smarting ? .annoyed : mood,
+               size: size, hop: hop, gaze: look, blush: held, walking: walking && drag == .zero,
                pace: pace, antic: antic, anticStart: anticStart)
+            // Knocked sideways by a smack, squashed a little, then wobbling back upright.
+            .scaleEffect(x: 1 + abs(knock) * 0.1, y: 1 - abs(knock) * 0.1, anchor: .bottom)
+            .rotationEffect(.degrees(Double(knock) * 18), anchor: .bottom)
+            .offset(x: knock * size * 0.16)
             // Leans after the finger and stretches toward it, like soft clay.
             .scaleEffect(x: 1 + abs(pull.width) * 0.12 - abs(pull.height) * 0.05,
                          y: 1 + abs(pull.height) * 0.1 - abs(pull.width) * 0.06, anchor: .bottom)
@@ -890,6 +931,13 @@ struct MascotBuddy: View {
             .offset(x: pull.width * size * 0.12, y: min(0, pull.height) * size * 0.1)
             .overlay {
                 if hearts > 0 { MascotHearts(size: size).id(hearts) }
+            }
+            .overlay {
+                if slaps > 0, !reduceMotion {
+                    MascotSmack(size: size)
+                        .offset(x: burstSide * size * 0.42, y: -size * 0.12)
+                        .id(slaps)
+                }
             }
             .overlay(alignment: bubbleAnchor) {
                 if let bubble, speech == nil {
@@ -905,7 +953,10 @@ struct MascotBuddy: View {
                 }
             }
             .contentShape(Circle().inset(by: -size * 0.04))
-            .onTapGesture { poke() }
+            .onTapGesture(coordinateSpace: .local) { location in
+                // Hit on its left, it flies right, and the other way round.
+                smack(from: location.x < size / 2 ? -1 : 1)
+            }
             .onLongPressGesture(minimumDuration: 0.4, maximumDistance: 12) {
                 love()
             } onPressingChanged: { pressing in
@@ -941,7 +992,7 @@ struct MascotBuddy: View {
                 }
             }
             .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.4), trigger: anticStart) { _, _ in haptics && antic == .flip }
-            .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.7), trigger: pokes) { _, _ in haptics }
+            .sensoryFeedback(.impact(weight: .heavy, intensity: 0.9), trigger: slaps) { _, _ in haptics }
             .sensoryFeedback(.success, trigger: hearts) { _, new in new > 0 && haptics }
             .task(id: greeting) {
                 // Once per appearance, except that a tip arriving later (today's
@@ -958,6 +1009,7 @@ struct MascotBuddy: View {
             .accessibilityLabel(L.t("小字團", "Wordling"))
             .accessibilityAddTraits(.isButton)
             .accessibilityAction { poke() }
+            .accessibilityHint(L.t("點一下扁它", "Tap to smack it"))
             .accessibilityActions {
                 if let tip { Button(tip.text) { tip.action() } }
             }
@@ -982,24 +1034,77 @@ struct MascotBuddy: View {
         }
     }
 
+    /// VoiceOver's way to play with it.
     private func poke() {
+        smack(from: -1)
+    }
+
+    /// Takes a smack from one side (-1 its left, 1 its right): it is knocked
+    /// the other way, winces and answers back. The first answer is its tip,
+    /// if it has one, or one of its lines; quick smacks after that make it
+    /// crosser, and a sixth in a row leaves it seeing stars.
+    private func smack(from side: CGFloat) {
         onInteract?()
-        pokes += 1
-        // Every fourth tap it shows off a trick.
-        if pokes % 4 == 0, !reduceMotion, let trick = MascotAntic.allCases.randomElement() {
-            play(trick)
-            say(Self.trickLine(trick), for: 2)
-            return
+        let now = Date()
+        combo = now.timeIntervalSince(lastSlap) < 2.5 ? combo + 1 : 1
+        lastSlap = now
+        slaps += 1
+        burstSide = side
+        let today = MascotGrudge.record()
+        if !reduceMotion {
+            withAnimation(.spring(response: 0.12, dampingFraction: 0.9)) { knock = -side }
         }
-        // The tip first, then every third tap.
-        if let tip, pokes == 1 || pokes % 3 == 0 {
+        smartTask?.cancel()
+        smarting = true
+        let beaten = combo >= 6
+        if beaten {
+            combo = 0
+            seeingStars = true
+            onBeatenUp?()
+        }
+        smartTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(140))
+            guard !Task.isCancelled else { return }
+            withAnimation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.35)) { knock = 0 }
+            try? await Task.sleep(for: .seconds(beaten ? 1.8 : 1.1))
+            guard !Task.isCancelled else { return }
+            smarting = false
+            seeingStars = false
+        }
+
+        if beaten {
+            say(L.t("夠了喔！我走！", "That's it. I'm leaving."), for: 2.4)
+        } else if MascotGrudge.milestones.contains(today) {
+            say(L.t("今天第 \(today) 下了。我都記在小本本上。", "That's \(today) today. I'm keeping a list."), for: 2.6)
+        } else if let tip, slaps == 1 || slaps % 5 == 0 {
             say(tip.text, for: 6)
-            return
+        } else if combo == 1, !lines.isEmpty {
+            var next = lines.randomElement() ?? lines[0]
+            if next == bubble, let other = lines.first(where: { $0 != bubble }) { next = other }
+            say(next, for: 2.4)
+        } else {
+            say(Self.comeback(combo: combo, avoiding: bubble), for: 2.2)
         }
-        guard !lines.isEmpty else { return }
-        var next = lines.randomElement() ?? lines[0]
-        if next == bubble, let other = lines.first(where: { $0 != bubble }) { next = other }
-        say(next, for: 2.4)
+    }
+
+    /// What it says back to a run of smacks: indignant, then cross.
+    private static func comeback(combo: Int, avoiding last: String?) -> String {
+        let indignant = [
+            L.t("你打我？", "Did you just hit me?"),
+            L.t("很痛欸。你背單字有這麼認真就好了。", "Ow. Wish you hit the books this hard."),
+            L.t("打我不會加分喔。", "Hitting me isn't worth any points."),
+            L.t("有種去背單字啊。", "Hit the books, not me."),
+            L.t("蛤？你是來亂的嗎？", "Excuse me? Are you here to study or to fight?"),
+        ]
+        let cross = [
+            L.t("再打我就把你的連續天數吃掉。", "One more and I eat your streak."),
+            L.t("好喔，記住了。永遠。", "Noted. Remembered. Forever."),
+            L.t("你是不是對我有什麼意見？", "Got a problem with me?"),
+            L.t("我要報警了。單字警察。", "I'm calling the vocab police."),
+            L.t("你打得這麼爽，單字背了幾個？", "Having fun? How many words have you learned today?"),
+        ]
+        let pool = combo >= 4 ? cross : indignant
+        return pool.filter { $0 != last }.randomElement() ?? pool[0]
     }
 
     private func play(_ trick: MascotAntic) {
@@ -1008,18 +1113,9 @@ struct MascotBuddy: View {
         anticStart = Date().timeIntervalSinceReferenceDate
     }
 
-    private static func trickLine(_ trick: MascotAntic) -> String {
-        switch trick {
-        case .spin: L.t("看什麼看，轉圈而已。", "What? It's just a spin.")
-        case .flip: L.t("後空翻。你會嗎？不會就去背單字。", "A backflip. Can you? No? Go study.")
-        case .dance: L.t("跳完了，換你去練習。", "Dance done. Your turn: practice.")
-        case .stretch: L.t("伸懶腰中，不要吵。", "Stretching. Don't.")
-        }
-    }
-
     private func love() {
         hearts += 1
-        say(L.t("……好啦，可以再摸一下。", "…Fine. You may continue."), for: 1.8)
+        say(L.t("……好啦，可以再摸一下。不要跟別人說。", "…Fine. Keep going. Tell no one."), for: 2)
     }
 
     private func say(_ text: String, for seconds: Double) {
@@ -1030,6 +1126,64 @@ struct MascotBuddy: View {
             guard !Task.isCancelled else { return }
             withAnimation(reduceMotion ? nil : Motion.reveal) { bubble = nil }
         }
+    }
+}
+
+/// The burst of a smack: a yellow star that pops and fades.
+private struct MascotSmack: View {
+    var size: CGFloat
+    @State private var shown = false
+
+    var body: some View {
+        MascotStar()
+            .fill(Color(red: 1.0, green: 0.85, blue: 0.35))
+            .overlay { MascotStar().stroke(Color(red: 0.95, green: 0.55, blue: 0.25), lineWidth: max(1, size * 0.015)) }
+            .frame(width: size * 0.32, height: size * 0.32)
+            .scaleEffect(shown ? 1.1 : 0.3)
+            .opacity(shown ? 0 : 1)
+            .allowsHitTesting(false)
+            .onAppear {
+                withAnimation(.easeOut(duration: 0.4)) { shown = true }
+            }
+    }
+}
+
+/// A spiky eight-pointed star.
+private struct MascotStar: Shape {
+    func path(in rect: CGRect) -> Path {
+        let center = CGPoint(x: rect.midX, y: rect.midY)
+        let outer = min(rect.width, rect.height) / 2
+        var path = Path()
+        for index in 0..<16 {
+            let angle = Double(index) * .pi / 8
+            let radius = index % 2 == 0 ? outer : outer * 0.48
+            let point = CGPoint(x: center.x + CGFloat(cos(angle)) * radius, y: center.y + CGFloat(sin(angle)) * radius)
+            if index == 0 { path.move(to: point) } else { path.addLine(to: point) }
+        }
+        path.closeSubpath()
+        return path
+    }
+}
+
+/// The companion keeps count of how often it has been smacked today.
+enum MascotGrudge {
+    private static let dayKey = "word7000.mascot.smackDay"
+    private static let countKey = "word7000.mascot.smacks"
+    /// Counts it remarks on.
+    static let milestones: Set<Int> = [10, 25, 50, 100, 200]
+
+    /// Smacks so far today.
+    static var today: Int {
+        UserDefaults.standard.string(forKey: dayKey) == DayMath.today() ? UserDefaults.standard.integer(forKey: countKey) : 0
+    }
+
+    /// Counts one more smack and returns today's total.
+    @discardableResult
+    static func record() -> Int {
+        let count = today + 1
+        UserDefaults.standard.set(DayMath.today(), forKey: dayKey)
+        UserDefaults.standard.set(count, forKey: countKey)
+        return count
     }
 }
 

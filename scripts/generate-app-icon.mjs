@@ -97,7 +97,7 @@ try {
 
 /** The whole icon: background, a soft ground shadow and the kitten. */
 function iconSvg({ palette, background, shadow }) {
-  const s = SIZE * 0.7;
+  const s = SIZE * 0.78;
   // The tail reaches out to the right, so the body sits a little left of centre.
   const ox = (SIZE - s) / 2 - s * 0.05;
   const oy = (SIZE - s) / 2 + s * 0.03;
@@ -123,101 +123,99 @@ function iconSvg({ palette, background, shadow }) {
 </svg>`;
 }
 
-/** The kitten in an s × s square at (ox, oy), as Mascot.swift draws it at rest. */
+/** The cat in an s × s square at (ox, oy), as Mascot.swift draws it at rest:
+ * a round lump with a tuft at each cheek and on top, and its unimpressed face. */
 function kitten(s, ox, oy, p) {
   const at = (fx, fy) => [ox + s / 2 + fx * s, oy + s / 2 + fy * s];
   const frame = (fx, fy) => [ox + fx * s, oy + fy * s];
   const parts = [];
 
-  // Tail, curling up behind on the right, with a cream tip.
-  const [bx, by] = frame(0.74, 0.84);
-  const [c1x, c1y] = frame(1.1, 0.8);
-  const [mx, my] = frame(1.06, 0.48);
-  const [c2x, c2y] = frame(1.04, 0.3);
-  const [tx, ty] = frame(0.95, 0.3);
-  parts.push(`<path d="M${bx},${by} Q${c1x},${c1y} ${mx},${my} Q${c2x},${c2y} ${tx},${ty}" fill="none" stroke="url(#fur)" stroke-width="${s * 0.13}" stroke-linecap="round"/>`);
-  parts.push(`<path d="${fluffPath(tx, ty, s * 0.15, s * 0.15, 9, 0.12)}" fill="${p.cream}"/>`);
+  // Tail (MascotTail).
+  const [bx, by] = frame(0.74, 0.86);
+  const [cx1, cy1] = frame(1.04, 0.84);
+  const [tx, ty] = frame(0.98, 0.52);
+  parts.push(`<path d="M${bx},${by} Q${cx1},${cy1} ${tx},${ty}" fill="none" stroke="url(#fur)" stroke-width="${s * 0.12}" stroke-linecap="round"/>`);
 
-  // Ears, tilted out, pink inside.
+  // Ears (MascotEar), pink inside.
   for (const side of [-1, 1]) {
-    const w = s * 0.25;
-    const h = s * 0.25;
-    const [cx, cy] = at(side * 0.24, -0.395);
-    const iw = s * 0.13;
-    const ih = s * 0.15;
-    parts.push(`<g transform="rotate(${side * 20} ${cx} ${cy + h / 2})">
+    const w = s * 0.22;
+    const h = s * 0.2;
+    const [cx, cy] = at(side * 0.23, -0.33);
+    const iw = s * 0.11;
+    const ih = s * 0.12;
+    parts.push(`<g transform="rotate(${side * 18} ${cx} ${cy + h / 2})">
       <path d="${earPath(cx - w / 2, cy - h / 2, w, h)}" fill="url(#fur)"/>
-      <path d="${earPath(cx - iw / 2, cy + h / 2 - s * 0.04 - ih, iw, ih)}" fill="${p.innerEar}"/>
-      ${[-1, 0, 1].map((lean) => {
-        const x = cx + lean * s * 0.02;
-        const y = cy + h / 2 - s * 0.04;
-        return `<path d="M${x},${y} L${x + lean * s * 0.012},${y - s * 0.058}" stroke="${p.cream}" stroke-width="${s * 0.012}" stroke-linecap="round"/>`;
-      }).join('')}
+      <path d="${earPath(cx - iw / 2, cy + h / 2 - s * 0.035 - ih, iw, ih)}" fill="${p.innerEar}"/>
     </g>`);
   }
 
-  // The fluffy body, cream chest, brow stripes, sheen and rim light.
-  const [bodyX, bodyY] = at(0, 0.04);
-  const fluff = fluffPath(bodyX, bodyY, s * 0.86, s * 0.78);
-  parts.push(`<path d="${fluff}" fill="url(#fur)"/>`);
-  parts.push(`<path d="${fluff}" fill="url(#shade)"/>`);
-  const [chestX, chestY] = at(0, 0.26);
-  parts.push(`<path d="${fluffPath(chestX, chestY, s * 0.42, s * 0.26, 16, 0.07)}" fill="${p.cream}"/>`);
-  for (const [dx, length, angle] of [[-0.065, 0.08, -12], [0, 0.11, 0], [0.065, 0.08, 12]]) {
-    const [x, y] = at(dx, -0.3);
-    parts.push(`<rect x="${x - s * 0.015}" y="${y}" width="${s * 0.03}" height="${s * length}" rx="${s * 0.015}" fill="${p.stripe}" fill-opacity="0.5" transform="rotate(${angle} ${x} ${y + (s * length) / 2})"/>`);
+  // The lump (MascotFluff, barely ruffled, settled flat underneath).
+  const [bodyX, bodyY] = at(0, 0.07);
+  parts.push(`<path d="${fluffPath(bodyX, bodyY, s * 0.9, s * 0.74, 20, 0.015, 0.9, 0.92)}" fill="url(#fur)"/>`);
+  for (const side of [-1, 1]) {
+    // Cheek tufts (MascotCheekTuft).
+    const w = s * 0.065;
+    const h = s * 0.105;
+    const [cx, cy] = at(side * 0.4325, 0.13);
+    const pt = (fx, fy) => `${cx + side * (fx - 0.5) * w},${cy + (fy - 0.5) * h}`;
+    parts.push(`<path d="M${pt(0, 0)} L${pt(1, 0.28)} L${pt(0.3, 0.52)} L${pt(0.95, 0.78)} L${pt(0, 1)}Z" fill="${p.furTop}"/>`);
   }
-  // The tuft on top (MascotTuft).
-  const tuftW = s * 0.1;
-  const tuftH = s * 0.1;
-  const [tuftCX, tuftTop] = at(0, -0.4);
+  // Top tuft (MascotTuft).
+  const tuftW = s * 0.08;
+  const tuftH = s * 0.09;
+  const [tuftCX, tuftTop] = at(0, -0.36);
   const tuft = (fx, fy) => `${tuftCX - tuftW / 2 + fx * tuftW},${tuftTop + fy * tuftH}`;
   parts.push(`<path d="M${tuft(0, 1)} Q${tuft(0.2, 0.1)} ${tuft(0.5, 0)} Q${tuft(0.45, 0.5)} ${tuft(0.7, 0.3)} Q${tuft(0.8, 0.7)} ${tuft(1, 1)}Z" fill="${p.furTop}"/>`);
-  const [sheenX, sheenY] = at(-0.2, -0.19);
-  parts.push(`<ellipse cx="${sheenX}" cy="${sheenY}" rx="${s * 0.13}" ry="${s * 0.06}" fill="#FFFFFF" fill-opacity="0.4" transform="rotate(-24 ${sheenX} ${sheenY})" filter="url(#sheen)"/>`);
-  parts.push(`<path d="${fluff}" fill="none" stroke="url(#rim)" stroke-width="${Math.max(1, s * 0.012)}"/>`);
-
-  // Front paws.
+  // Cream chest with its tuft.
+  const [chestX, chestY] = at(0, 0.29);
+  parts.push(`<ellipse cx="${chestX}" cy="${chestY}" rx="${s * 0.17}" ry="${s * 0.1}" fill="${p.cream}"/>`);
+  const zw = s * 0.09;
+  const zh = s * 0.04;
+  const zTop = chestY - s * 0.1 - zh + s * 0.012;
+  parts.push(`<path d="M${chestX - zw / 2},${zTop + zh} L${chestX - zw / 4},${zTop} L${chestX},${zTop + zh} L${chestX + zw / 4},${zTop} L${chestX + zw / 2},${zTop + zh}Z" fill="${p.cream}"/>`);
+  // Paws.
   for (const side of [-1, 1]) {
-    const [x, y] = at(side * 0.155, 0.4);
-    parts.push(`<ellipse cx="${x}" cy="${y}" rx="${s * 0.085}" ry="${s * 0.045}" fill="${p.cream}" stroke="${p.shade}" stroke-opacity="0.35" stroke-width="${s * 0.01}"/>`);
+    const [x, y] = at(side * 0.15, 0.42);
+    parts.push(`<ellipse cx="${x}" cy="${y}" rx="${s * 0.07}" ry="${s * 0.035}" fill="${p.cream}"/>`);
   }
 
-  // Face: heavy-lidded, unimpressed eyes, whiskers, nose and a ω mouth.
-  const d = s * 0.12;
-  const lid = 0.35;
+  // Face: heavy-lidded eyes with a glint, two whiskers a side, nose, ω.
+  const d = s * 0.11;
+  const lid = 0.4;
   for (const side of [-1, 1]) {
-    const [ex, ey] = at(side * 0.14, -0.02);
+    const [ex, ey] = at(side * 0.14, 0);
     const top = ey - d / 2 + d * lid;
     parts.push(`<clipPath id="eye${side}"><rect x="${ex - d}" y="${top}" width="${d * 2}" height="${d}"/></clipPath>`);
     parts.push(`<g clip-path="url(#eye${side})"><circle cx="${ex}" cy="${ey}" r="${d / 2}" fill="${p.ink}"/><circle cx="${ex + d * 0.21}" cy="${top + d * 0.19}" r="${d * 0.13}" fill="#FFFFFF"/></g>`);
     parts.push(`<rect x="${ex - d * 0.65}" y="${top - s * 0.012}" width="${d * 1.3}" height="${s * 0.024}" rx="${s * 0.012}" fill="${p.ink}"/>`);
-    [-11, 0, 11].forEach((angle, row) => {
-      const [wx, wy] = at(side * 0.335, 0.09 + (row - 1) * 0.033);
-      parts.push(`<rect x="${wx - s * 0.08}" y="${wy - s * 0.0055}" width="${s * 0.16}" height="${s * 0.011}" rx="${s * 0.0055}" fill="${p.ink}" fill-opacity="0.4" transform="rotate(${side * angle} ${wx} ${wy})"/>`);
+    [-8, 8].forEach((angle, row) => {
+      const [wx, wy] = at(side * 0.33, 0.1 + (row - 0.5) * 0.035);
+      parts.push(`<rect x="${wx - s * 0.06}" y="${wy - s * 0.005}" width="${s * 0.12}" height="${s * 0.01}" rx="${s * 0.005}" fill="${p.ink}" fill-opacity="0.35" transform="rotate(${side * angle} ${wx} ${wy})"/>`);
     });
   }
-  const [nx, ny] = at(0, 0.07);
-  const nw = s * 0.055;
-  const nh = s * 0.035;
-  parts.push(`<path d="M${nx - nw / 2},${ny - nh / 2} L${nx + nw / 2},${ny - nh / 2} L${nx},${ny + nh / 2}Z" fill="${p.nose}" stroke="${p.nose}" stroke-width="${s * 0.014}" stroke-linejoin="round"/>`);
-  const [mouthX, mouthY] = at(0, 0.12);
-  const mw = s * 0.1;
-  const mh = s * 0.03;
+  const [nx, ny] = at(0, 0.075);
+  const nw = s * 0.045;
+  const nh = s * 0.028;
+  parts.push(`<path d="M${nx - nw / 2},${ny - nh / 2} L${nx + nw / 2},${ny - nh / 2} L${nx},${ny + nh / 2}Z" fill="${p.nose}" stroke="${p.nose}" stroke-width="${s * 0.012}" stroke-linejoin="round"/>`);
+  const [mouthX, mouthY] = at(0, 0.125);
+  const mw = s * 0.09;
+  const mh = s * 0.026;
   const top = mouthY - mh / 2;
-  parts.push(`<path d="M${mouthX},${top - 0.03 * s} L${mouthX},${top} M${mouthX - mw / 2},${top} Q${mouthX - mw / 4},${top + 2 * mh} ${mouthX},${top} Q${mouthX + mw / 4},${top + 2 * mh} ${mouthX + mw / 2},${top}" fill="none" stroke="${p.ink}" stroke-width="${s * 0.02}" stroke-linecap="round" stroke-linejoin="round"/>`);
+  parts.push(`<path d="M${mouthX - mw / 2},${top} Q${mouthX - mw / 4},${top + 2 * mh} ${mouthX},${top} Q${mouthX + mw / 4},${top + 2 * mh} ${mouthX + mw / 2},${top}" fill="none" stroke="${p.ink}" stroke-width="${s * 0.02}" stroke-linecap="round" stroke-linejoin="round"/>`);
 
   return parts.join('\n  ');
 }
 
-/** MascotFluff: a rounded squircle edged with little tufts of fur. */
-function fluffPath(cx, cy, width, height, tufts = 26, puff = 0.06) {
+/** MascotFluff: a squircle edged with little tufts, optionally settled flat underneath. */
+function fluffPath(cx, cy, width, height, tufts = 26, puff = 0.06, roundness = 0.8, settle = 1) {
   const rx = width / 2;
   const ry = height / 2;
   const point = (angle, scale) => {
     const c = Math.cos(angle);
     const s = Math.sin(angle);
-    return [cx + Math.sign(c) * Math.abs(c) ** 0.8 * rx * scale, cy + Math.sign(s) * Math.abs(s) ** 0.8 * ry * scale];
+    let y = Math.sign(s) * Math.abs(s) ** roundness;
+    if (y > 0) y *= settle;
+    return [cx + Math.sign(c) * Math.abs(c) ** roundness * rx * scale, cy + y * ry * scale];
   };
   const step = (2 * Math.PI) / tufts;
   const [x0, y0] = point(0, 1 - puff);
@@ -231,9 +229,9 @@ function fluffPath(cx, cy, width, height, tufts = 26, puff = 0.06) {
   return `${d}Z`;
 }
 
-/** MascotEar: a pointed ear with a softly rounded tip. */
+/** MascotEar: an ear with a softly rounded tip. */
 function earPath(x, y, w, h) {
-  return `M${x},${y + h} L${x + w * 0.38},${y + h * 0.1} Q${x + w / 2},${y - h * 0.06} ${x + w * 0.62},${y + h * 0.1} L${x + w},${y + h}Z`;
+  return `M${x},${y + h} L${x + w * 0.36},${y + h * 0.14} Q${x + w / 2},${y - h * 0.04} ${x + w * 0.64},${y + h * 0.14} L${x + w},${y + h}Z`;
 }
 
 /** An 8-bit RGB PNG, no alpha channel. */

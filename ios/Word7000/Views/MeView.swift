@@ -381,16 +381,18 @@ private struct ProfileCard: View {
             return MascotTip(text: insightHeadline) { chatOpen = true }
         }
         guard CloudAssistant.shared.offered else { return nil }
-        return MascotTip(text: L.t("要我看看你最近到底有沒有認真？", "Want me to check if you've actually been trying?")) { chatOpen = true }
+        return MascotTip(text: L.t("要我看看你最近到底有多混嗎？", "Want to know how much you've been slacking?")) { chatOpen = true }
     }
 
     /// What the companion says when tapped here: how far you have come.
     private var buddyLines: [String] {
         let streak = model.progress.streak
-        var lines = [L.t("熟記 \(mastered) 個字。離 7000 還很遠喔。", "\(mastered) words down. Only a few thousand to go.")]
-        if streak > 0 { lines.append(L.t("連續 \(streak) 天。斷掉的話，我會記得。", "\(streak) days in a row. If it breaks, I'll remember.")) }
-        if reviewing > 0 { lines.append(L.t("\(reviewing) 個字等你複習，它們很寂寞。", "\(reviewing) words waiting for review. They're lonely.")) }
-        lines.append(L.t("我會一直盯著你的進度。", "I'll be keeping an eye on your progress."))
+        var lines = [L.t("熟記 \(mastered) 個。離 7000 還很遠，加油喔（棒讀）。", "\(mastered) mastered. Only \(max(0, 7000 - mastered)) to go. Yay. (Flatly.)")]
+        if streak > 0 { lines.append(L.t("連續 \(streak) 天。斷掉的話，我會記一輩子。", "\(streak)-day streak. Break it and I'll never let it go.")) }
+        if reviewing > 0 { lines.append(L.t("\(reviewing) 個字等你複習，它們開始懷疑人生了。", "\(reviewing) words waiting for review. They're questioning their existence.")) }
+        lines.append(L.t("我會一直盯著你的進度。一直。", "I'll be watching your progress. Always."))
+        let smacks = MascotGrudge.today
+        if smacks > 0 { lines.append(L.t("今天被你扁了 \(smacks) 下，我記住了。", "You've hit me \(smacks) times today. I remember.")) }
         return lines
     }
 

@@ -51,8 +51,8 @@ struct MascotChatSheet: View {
                     HStack(alignment: .bottom, spacing: 10) {
                         Mascot(mood: mood, size: 60, hop: shown)
                         ChatLine(text: insights == nil
-                                 ? L.t("讓我看看你最近有多認真……", "Let's see how hard you've really been working…")
-                                 : L.t("看完了。嗯，我有一些話要說。", "Done. Right. I have some thoughts."))
+                                 ? L.t("讓我看看你最近有多混……", "Let's see how much you've been slacking…")
+                                 : L.t("看完了。嗯……我們需要談談。", "Done. Hmm… we need to talk."))
                     }
                     .padding(.bottom, 4)
 

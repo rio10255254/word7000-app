@@ -427,13 +427,13 @@ struct TodayView: View {
         let progress = model.progress
         let left = max(0, progress.dailyTarget - progress.studiedToday)
         let hour = Calendar.current.component(.hour, from: Date())
-        if model.goalDone { return L.t("嗯，還行。明天也這樣，我就不吵你。", "Fine. Not bad. Do it again tomorrow and I'll leave you alone.") }
+        if model.goalDone { return L.t("嗯，勉強及格。不要得意。", "Fine. You passed. Don't get cocky.") }
         if progress.studiedToday == 0 {
-            if hour >= 21 { return L.t("都幾點了，今天的字呢？", "It's this late and not one word?") }
-            if hour >= 12 { return L.t("今天的 \(progress.dailyTarget) 個字不會自己背好喔。", "Those \(progress.dailyTarget) words won't learn themselves.") }
-            return L.t("早。\(progress.dailyTarget) 個字，我看著你。", "Morning. \(progress.dailyTarget) words. I'm watching.")
+            if hour >= 21 { return L.t("都幾點了？今天的字要留給明天的你喔？", "This late? Saving today's words for future you?") }
+            if hour >= 12 { return L.t("下午了欸。\(progress.dailyTarget) 個字還在等，我也在等。", "It's afternoon. \(progress.dailyTarget) words are waiting. So am I.") }
+            return L.t("早。\(progress.dailyTarget) 個字，別讓我失望。雖然你常常。", "Morning. \(progress.dailyTarget) words. Don't let me down. Again.")
         }
-        return L.t("才 \(progress.studiedToday) 個？還差 \(left) 個，我數著呢。", "Only \(progress.studiedToday)? \(left) to go. I'm counting.")
+        return L.t("才 \(progress.studiedToday) 個？笑死。還差 \(left) 個。", "Only \(progress.studiedToday)? LOL. \(left) to go.")
     }
 
     /// Its AI note: today's insight headline once worked out (tap for the
@@ -443,7 +443,7 @@ struct TodayView: View {
             return MascotTip(text: insightHeadline) { mascotChatOpen = true }
         }
         guard CloudAssistant.shared.offered else { return nil }
-        return MascotTip(text: L.t("要我看看你最近到底有沒有認真？", "Want me to check if you've actually been trying?")) { mascotChatOpen = true }
+        return MascotTip(text: L.t("要我看看你最近到底有多混嗎？", "Want to know how much you've been slacking?")) { mascotChatOpen = true }
     }
 
     /// What it says when tapped: grudging praise once the goal is met,
@@ -453,13 +453,13 @@ struct TodayView: View {
             ? [L.t("好啦，你很棒。滿意了吧？", "Fine, you're great. Happy now?"),
                L.t("要不要順便測驗？還是怕了？", "Quick quiz? Or are you scared?"),
                L.t("明天同一時間，我會來找你。", "Same time tomorrow. I'll find you."),
-               L.t("今天表現……勉強及格。", "Today was… acceptable.")]
-            : [L.t("戳我也不會幫你背單字。", "Poking me won't learn the words for you."),
+               L.t("今天表現……還可以啦。不要跟別人說我誇你。", "Today was… okay. Don't tell anyone I said that.")]
+            : [L.t("我阿嬤背得都比你快。", "My grandma learns faster than you."),
                L.t("你滑手機的時間夠背十個字了。", "That scrolling time? Ten words, easily."),
-               L.t("我沒有在催你，我只是一直看著你。", "I'm not rushing you. I'm just… watching."),
-               L.t("再戳，我就去跟你的連續天數聊聊。", "Poke me again and I'll have a word with your streak."),
-               L.t("背完再來摸我。", "Practise first. Pets later."),
-               L.t("單字們都在等你，好可憐喔。", "Your words are waiting. Poor things.")]
+               L.t("我沒有在催你，我只是一直盯著你。", "I'm not rushing you. I'm just staring."),
+               L.t("單字們在哭，你有聽到嗎？", "Hear that? Your words are crying."),
+               L.t("蛤？你還沒開始？", "Wait. You haven't even started?"),
+               L.t("你是來讀書的，還是來看我的？", "Are you here to study or just to look at me?")]
     }
 
     private var daySymbol: String {
@@ -596,7 +596,7 @@ private struct StrollingCompanion: View {
                     // The bubble opens toward the room: left of it at home, right of it out on the left.
                     bubbleSide: x < -range / 2 ? .trailing : .leading,
                     hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest,
-                    pace: pace, cue: cue, onFling: fling)
+                    pace: pace, cue: cue, onFling: fling, onBeatenUp: stormOff)
             .offset(x: x)
             .task(id: roams) { await wander() }
             .onChange(of: pause) { _, _ in rest() }
@@ -644,6 +644,27 @@ private struct StrollingCompanion: View {
                 perform(.spin)
             }
             withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+        }
+    }
+
+    /// Smacked once too often: it sees stars for a moment, then runs off to
+    /// the far end of the card and sulks there, facing away, for a while.
+    private func stormOff() {
+        guard roams else { return }
+        dazeTask?.cancel()
+        dazeTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.6))
+            guard !Task.isCancelled else { return }
+            let target: CGFloat = x < -range / 2 ? 0 : -range
+            let duration = Double(abs(target - x) / 130)
+            facing = target < x ? -1 : 1
+            pace = 2
+            walking = true
+            withAnimation(.linear(duration: duration)) { x = target }
+            try? await Task.sleep(for: .seconds(duration))
+            walking = false
+            pace = 1
+            restUntil = Date().addingTimeInterval(12)
         }
     }
 

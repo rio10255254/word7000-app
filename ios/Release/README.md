@@ -40,9 +40,16 @@ Create the key in App Store Connect > Users and Access > Integrations >
 App Store Connect API > Team Keys, with the App Manager role. Apple lets you
 download the `.p8` only once.
 
+### Full tests are optional
+
+By default a TestFlight release uploads as soon as the build and the
+release checks pass; it does not wait for the full simulator walk-through.
+Tick `full_validation` when starting the release to require a passed full
+Native iOS run of identical source first.
+
 ### Reusing a passed run
 
-A release reuses a passed full Native iOS run of identical source, usually
+With `full_validation`, a release reuses a passed full Native iOS run of identical source, usually
 the pull request's run before merging, instead of waiting for the merge
 commit's own run. Start one from Actions > Native iOS > Run workflow with
 `all` checks.

@@ -12,57 +12,55 @@ struct MeView: View {
         let stats = LearningEngine.stats(words: model.allWords, state: model.progress, today: model.today)
 
         List {
-            AccountSection()
-            Section {
-                HStack(spacing: 0) {
-                    StatTile(value: model.progress.streak, label: L.streak, color: Palette.review)
-                    Divider().frame(height: 36)
-                    StatTile(value: stats.mastered, label: L.mastered, color: Palette.known)
-                    Divider().frame(height: 36)
-                    StatTile(value: stats.review, label: L.reviewing, color: Palette.review)
-                }
-                .padding(.vertical, 6)
-            } footer: {
-                // One short line, so the history row stays on screen on small iPhones.
-                if model.progress.streak > 0 {
-                    Label(streakProtectionText, systemImage: "shield.lefthalf.filled")
+            Group {
+                // Who you are and how far you have come, in one card.
+                Section {
+                    ProfileCard(mastered: stats.mastered, reviewing: stats.review)
+                } footer: {
+                    if model.progress.streak > 0 {
+                        Label {
+                            Text(streakProtectionText)
+                        } icon: {
+                            ShieldIcon(ready: model.streakProtectionReadyOn == nil)
+                        }
                         .accessibilityIdentifier("me-streak-protection")
+                    }
+                }
+
+                Section {
+                    HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
+                    let summary = LearningWeekSummary(days: model.activity(days: 7))
+                    if summary.activeDays > 0 {
+                        Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
+                                 "In the last 7 days: \(summary.activeDays) active days, \(summary.words) word practices and \(summary.speaking) speaking practices."))
+                            .font(.subheadline).foregroundStyle(.secondary)
+                            .accessibilityIdentifier("me-week-summary")
+                    }
+                    Button { historyOpen = true } label: {
+                        ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
+                    }
+                    .tint(.primary)
+                    .accessibilityIdentifier("me-history")
+                } header: {
+                    Text(L.thisWeek)
+                } footer: {
+                    if let accuracy = model.quizAccuracy {
+                        Text(L.quizAccuracy(accuracy.percent, correct: accuracy.correct, total: accuracy.total))
+                    }
+                }
+    
+                AIInsightsSection()
+    
+                Section {
+                    NavigationLink { SettingsView() } label: {
+                        Label(L.settings, systemImage: "gearshape")
+                    }
+                    .accessibilityIdentifier("me-settings")
                 }
             }
-
-            Section {
-                HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
-                let summary = LearningWeekSummary(days: model.activity(days: 7))
-                if summary.activeDays > 0 {
-                    Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
-                             "In the last 7 days: \(summary.activeDays) active days, \(summary.words) word practices and \(summary.speaking) speaking practices."))
-                        .font(.subheadline).foregroundStyle(.secondary)
-                        .accessibilityIdentifier("me-week-summary")
-                }
-                Button { historyOpen = true } label: {
-                    ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
-                }
-                .tint(.primary)
-                .accessibilityIdentifier("me-history")
-            } header: {
-                Text(L.thisWeek)
-            } footer: {
-                if let accuracy = model.quizAccuracy {
-                    Text(L.quizAccuracy(accuracy.percent, correct: accuracy.correct, total: accuracy.total))
-                }
-            }
-
-            AIInsightsSection()
-
-            PlusSection(compact: true)
-
-            Section {
-                NavigationLink { SettingsView() } label: {
-                    Label(L.settings, systemImage: "gearshape")
-                }
-                .accessibilityIdentifier("me-settings")
-            }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(L.tabMe)
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
     }
@@ -84,130 +82,153 @@ struct MeView: View {
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
         Form {
-            Section {
-                Picker(selection: Binding(
-                    get: { model.studyMode },
-                    set: { model.setStudyMode($0) }
-                )) {
-                    ForEach(StudyMode.allCases) { mode in
-                        Text(L.studyModeLabel(mode)).tag(mode)
-                    }
-                } label: {
-                    SettingsLabel(L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent)
-                }
-                Picker(selection: Binding(
-                    get: { model.progress.dailyTarget },
-                    set: { model.setDailyTarget($0) }
-                )) {
-                    ForEach(dailyTargetOptions, id: \.self) { value in
-                        Text(L.wordsPerDay(value)).tag(value)
-                    }
-                } label: {
-                    SettingsLabel(L.dailyTargetTitle, icon: "target", tint: .orange)
-                }
-                Toggle(isOn: Binding(
-                    get: { model.settings.studyAutoReveal ?? false },
-                    set: { model.settings.studyAutoReveal = $0 }
-                )) {
-                    SettingsLabel(L.autoReveal, icon: "eye.fill", tint: .teal)
-                }
-                .accessibilityIdentifier("settings-auto-reveal")
-            } header: {
-                Text(L.t("學習", "Learning"))
-            } footer: {
-                Text(L.dailyTargetText)
-            }
-
-            Section {
-                Toggle(isOn: Binding(
-                    get: { model.reminderEnabled },
-                    set: { model.setReminderEnabled($0) }
-                )) {
-                    SettingsLabel(L.reminder, icon: "bell.badge.fill", tint: .red)
-                }
-                .accessibilityIdentifier("settings-reminder")
-                if model.reminderEnabled && account.supportsCustomReminderTime {
-                    DatePicker(selection: Binding(
-                        get: {
-                            let minute = model.settings.reminderMinute ?? 720
-                            return Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: Date()) ?? Date()
-                        },
-                        set: { date in
-                            let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
-                            model.settings.reminderMinute = (parts.hour ?? 12) * 60 + (parts.minute ?? 0)
+            Group {
+                Section {
+                    Picker(selection: Binding(
+                        get: { model.studyMode },
+                        set: { model.setStudyMode($0) }
+                    )) {
+                        ForEach(StudyMode.allCases) { mode in
+                            Text(L.studyModeLabel(mode)).tag(mode)
                         }
-                    ), displayedComponents: .hourAndMinute) {
-                        SettingsLabel(L.t("每日學習時間", "Daily practice time"), icon: "clock.fill", tint: .red)
+                    } label: {
+                        SettingsLabel(L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent,
+                                      trigger: model.studyMode)
                     }
-                }
-            } header: {
-                Text(L.t("提醒", "Reminders"))
-            } footer: {
-                Text(L.reminderText)
-            }
-
-            Section {
-                NavigationLink { IntelligenceSettingsView() } label: {
-                    SettingsLabel(L.t("AI 與錄音", "AI and recording"), icon: "sparkles", tint: .purple,
-                                  value: CloudAssistant.shared.statusText)
-                }
-                .accessibilityIdentifier("settings-intelligence")
-                NavigationLink { SpeechSettingsView() } label: {
-                    SettingsLabel(L.t("朗讀聲音", "Reading voice"), icon: "speaker.wave.2.fill", tint: .pink,
-                                  value: speedLabel)
-                }
-                .accessibilityIdentifier("settings-speech")
-            } header: {
-                Text(L.t("AI 與聲音", "AI and voice"))
-            }
-
-            Section {
-                Picker(selection: Binding(
-                    get: { model.settings.theme },
-                    set: { model.settings.theme = $0 }
-                )) {
-                    ForEach(AppearancePreference.allCases) { option in
-                        Text(option.label).tag(option)
+                    Picker(selection: Binding(
+                        get: { model.progress.dailyTarget },
+                        set: { model.setDailyTarget($0) }
+                    )) {
+                        ForEach(dailyTargetOptions, id: \.self) { value in
+                            Text(L.wordsPerDay(value)).tag(value)
+                        }
+                    } label: {
+                        SettingsLabel(L.dailyTargetTitle, icon: "target", tint: .orange, trigger: model.progress.dailyTarget)
                     }
-                } label: {
-                    SettingsLabel(L.appearance, icon: "circle.lefthalf.filled", tint: .indigo)
+                    Toggle(isOn: Binding(
+                        get: { model.settings.studyAutoReveal ?? false },
+                        set: { model.settings.studyAutoReveal = $0 }
+                    )) {
+                        SettingsLabel(L.autoReveal, icon: (model.settings.studyAutoReveal ?? false) ? "eye.fill" : "eye.slash.fill", tint: .teal)
+                    }
+                    .accessibilityIdentifier("settings-auto-reveal")
+                } header: {
+                    Text(L.t("學習", "Learning"))
+                } footer: {
+                    Text(L.dailyTargetText)
                 }
-                Toggle(isOn: Binding(
-                    get: { model.settings.hapticsEnabled ?? true },
-                    set: { model.settings.hapticsEnabled = $0 }
-                )) {
-                    SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: .green)
+    
+                Section {
+                    Toggle(isOn: Binding(
+                        get: { model.reminderEnabled },
+                        set: { model.setReminderEnabled($0) }
+                    )) {
+                        SettingsLabel(L.reminder, icon: model.reminderEnabled ? "bell.badge.fill" : "bell.slash.fill", tint: .red)
+                    }
+                    .accessibilityIdentifier("settings-reminder")
+                    if model.reminderEnabled && account.supportsCustomReminderTime {
+                        DatePicker(selection: Binding(
+                            get: {
+                                let minute = model.settings.reminderMinute ?? 720
+                                return Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: Date()) ?? Date()
+                            },
+                            set: { date in
+                                let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
+                                model.settings.reminderMinute = (parts.hour ?? 12) * 60 + (parts.minute ?? 0)
+                            }
+                        ), displayedComponents: .hourAndMinute) {
+                            SettingsLabel(L.t("每日學習時間", "Daily practice time"), icon: "clock.fill", tint: .red)
+                        }
+                    }
+                } header: {
+                    Text(L.t("提醒", "Reminders"))
+                } footer: {
+                    Text(L.reminderText)
                 }
-            } header: {
-                Text(L.t("顯示與操作", "Display and feel"))
+    
+                Section {
+                    NavigationLink { IntelligenceSettingsView() } label: {
+                        SettingsLabel(L.t("AI 與錄音", "AI and recording"), icon: "sparkles", tint: .purple,
+                                      value: CloudAssistant.shared.statusText)
+                    }
+                    .accessibilityIdentifier("settings-intelligence")
+                    NavigationLink { SpeechSettingsView() } label: {
+                        SettingsLabel(L.t("朗讀聲音", "Reading voice"), icon: "speaker.wave.2.fill", tint: .pink,
+                                      value: speedLabel)
+                    }
+                    .accessibilityIdentifier("settings-speech")
+                } header: {
+                    Text(L.t("AI 與聲音", "AI and voice"))
+                }
+    
+                Section {
+                    Picker(selection: Binding(
+                        get: { model.settings.theme },
+                        set: { model.settings.theme = $0 }
+                    )) {
+                        ForEach(AppearancePreference.allCases) { option in
+                            Text(option.label).tag(option)
+                        }
+                    } label: {
+                        SettingsLabel(L.appearance, icon: appearanceIcon, tint: .indigo)
+                    }
+                    Toggle(isOn: Binding(
+                        get: { model.settings.hapticsEnabled ?? true },
+                        set: { model.settings.hapticsEnabled = $0 }
+                    )) {
+                        SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: .green,
+                                      trigger: model.settings.hapticsEnabled ?? true)
+                    }
+                } header: {
+                    Text(L.t("顯示與操作", "Display and feel"))
+                }
+    
+                AccountSection(includeDeletion: true)
+    
+                Section {
+                    Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
+                        SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: .blue, external: true)
+                    }
+                    Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/support.html")!) {
+                        SettingsLabel(L.supportPage, icon: "questionmark.circle.fill", tint: .gray, external: true)
+                    }
+                    HStack {
+                        SettingsLabel(L.version, icon: "info.circle.fill", tint: .gray)
+                        Spacer()
+                        Text(Bundle.main.versionLabel).foregroundStyle(.secondary).monospacedDigit()
+                    }
+                    .accessibilityElement(children: .combine)
+                } header: {
+                    Text(L.t("關於", "About"))
+                }
             }
-
-            AccountSection(includeDeletion: true)
-
-            Section {
-                Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
-                    SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: .blue, external: true)
-                }
-                Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/support.html")!) {
-                    SettingsLabel(L.supportPage, icon: "questionmark.circle.fill", tint: .gray, external: true)
-                }
-                HStack {
-                    SettingsLabel(L.version, icon: "info.circle.fill", tint: .gray)
-                    Spacer()
-                    Text(Bundle.main.versionLabel).foregroundStyle(.secondary).monospacedDigit()
-                }
-                .accessibilityElement(children: .combine)
-            } header: {
-                Text(L.t("關於", "About"))
-            }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(L.settings)
         .navigationBarTitleDisplayMode(.inline)
         .task { await account.checkReminderSupport() }
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.reminderEnabled)
+        .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in haptics }
+        .sensoryFeedback(.selection, trigger: model.progress.dailyTarget) { _, _ in haptics }
+        .sensoryFeedback(.selection, trigger: model.settings.theme) { _, _ in haptics }
+        // Turning haptics on answers with a tap, so the choice can be felt.
+        .sensoryFeedback(.impact(weight: .medium), trigger: model.settings.hapticsEnabled ?? true) { _, new in new }
+    }
+
+    private var haptics: Bool { model.settings.hapticsEnabled ?? true }
+
+    private var appearanceIcon: String {
+        switch model.settings.theme {
+        case .system: "circle.lefthalf.filled"
+        case .light: "sun.max.fill"
+        case .dark: "moon.fill"
+        }
     }
 
     private var speedLabel: String {
@@ -220,19 +241,24 @@ struct SettingsView: View {
 }
 
 /// A settings row title with a small coloured icon, like the iPhone's Settings app.
+/// The icon morphs when it changes and bounces when the row's value does.
 struct SettingsLabel: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let title: String
     let icon: String
     let tint: Color
     var value: String? = nil
     var external = false
+    /// What the row controls; the icon bounces each time it changes.
+    var trigger: AnyHashable? = nil
 
-    init(_ title: String, icon: String, tint: Color, value: String? = nil, external: Bool = false) {
+    init(_ title: String, icon: String, tint: Color, value: String? = nil, external: Bool = false, trigger: AnyHashable? = nil) {
         self.title = title
         self.icon = icon
         self.tint = tint
         self.value = value
         self.external = external
+        self.trigger = trigger
     }
 
     var body: some View {
@@ -240,6 +266,8 @@ struct SettingsLabel: View {
             Image(systemName: icon)
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(.white)
+                .contentTransition(.symbolEffect(.replace))
+                .symbolEffect(.bounce, value: reduceMotion ? nil : (trigger ?? value.map { AnyHashable($0) }))
                 .frame(width: 29, height: 29)
                 .background(tint.gradient, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
                 .accessibilityHidden(true)
@@ -247,12 +275,212 @@ struct SettingsLabel: View {
             if value != nil || external { Spacer(minLength: 8) }
             if let value {
                 Text(value).foregroundStyle(.secondary).lineLimit(1)
+                    .contentTransition(.opacity)
             }
             if external {
                 Image(systemName: "arrow.up.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
         }
+    }
+}
+
+/// Who you are and how far you have come, in one card: the companion beside
+/// your account and Plus membership, your level, three headline numbers, and
+/// the one or two things to do next (signing in, Plus). Signing out and
+/// deleting the account stay in Settings.
+private struct ProfileCard: View {
+    @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
+    @Environment(PlusModel.self) private var plus
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    var mastered: Int
+    var reviewing: Int
+    @State private var signInOpen = false
+    @State private var manageOpen = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                MascotBuddy(mood: mastered > 0 ? .happy : .idle, size: 56, lines: buddyLines, bubbleSide: .trailing)
+                    .accessibilityIdentifier("me-mascot")
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 6) {
+                        Text(name)
+                            .font(.display(.title3, weight: .bold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        membershipBadge
+                    }
+                    Label(account.message, systemImage: syncSymbol)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .contentTransition(.opacity)
+                }
+                Spacer(minLength: 0)
+            }
+            LevelProgress(mastered: mastered)
+            HStack(spacing: 0) {
+                StatTile(value: model.progress.streak, label: L.streak, color: Palette.review)
+                Divider().frame(height: 32)
+                StatTile(value: mastered, label: L.mastered, color: Palette.known)
+                Divider().frame(height: 32)
+                StatTile(value: reviewing, label: L.reviewing, color: Palette.review)
+            }
+            actions
+        }
+        .padding(.vertical, 8)
+        .sheet(isPresented: $signInOpen) { SignInSheet() }
+        .manageSubscriptionsSheet(isPresented: $manageOpen)
+    }
+
+    /// What the companion says when tapped here: how far you have come.
+    private var buddyLines: [String] {
+        let streak = model.progress.streak
+        var lines = [L.t("已經熟記 \(mastered) 個字了！", "\(mastered) words mastered!")]
+        if streak > 0 { lines.append(L.t("連續 \(streak) 天，好厲害！", "\(streak) days in a row!")) }
+        if reviewing > 0 { lines.append(L.t("還有 \(reviewing) 個字等你複習", "\(reviewing) words to review")) }
+        lines.append(L.t("我們一起慢慢變強～", "Let's keep growing together"))
+        return lines
+    }
+
+    private var name: String {
+        if !account.configured { return L.t("我的學習", "My learning") }
+        if account.isPermanent { return account.displayName ?? L.t("已登入", "Signed in") }
+        return L.t("訪客", "Guest")
+    }
+
+    private var syncSymbol: String {
+        if case .error = account.status { return "exclamationmark.icloud" }
+        return account.cloudSyncEnabled ? "checkmark.icloud" : "iphone"
+    }
+
+    /// The Plus membership, worn next to the name.
+    @ViewBuilder
+    private var membershipBadge: some View {
+        switch plus.access {
+        case .subscribed:
+            Text("PLUS")
+                .font(.caption2.weight(.heavy))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(PlusStyle.gradient, in: Capsule())
+                .accessibilityLabel(P.memberTitle)
+        case .trial(let daysLeft):
+            Text(L.t("試用 \(daysLeft) 天", "Trial · \(daysLeft)d"))
+                .font(.caption2.weight(.bold))
+                .foregroundStyle(Palette.review)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(Palette.review.opacity(0.15), in: Capsule())
+        case .expired:
+            EmptyView()
+        }
+    }
+
+    @ViewBuilder
+    private var actions: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 8)) : AnyLayout(HStackLayout(spacing: 8))
+        layout {
+            if account.configured, !account.isPermanent {
+                Button { signInOpen = true } label: {
+                    Label(L.t("登入保留紀錄", "Sign in"), systemImage: "person.crop.circle.badge.plus")
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .secondaryAction()
+                .accessibilityIdentifier("me-sign-in")
+            }
+            plusButton
+        }
+        if case let .trial(daysLeft) = plus.access {
+            Text("\(P.trialDaysMeter(daysLeft)) · \(P.scansLeft(plus.policy.trialScansLeft))")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private var plusButton: some View {
+        let button = Button {
+            if plus.subscribed { manageOpen = true } else { plus.paywallReason = .general }
+        } label: {
+            Label(plus.subscribed ? P.manage : plus.access == .expired ? P.unlockPlus : P.upgradePlus, systemImage: "sparkles")
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+        }
+        if plus.subscribed {
+            button.secondaryAction().accessibilityIdentifier("me-plus")
+        } else {
+            button.prominentAction(tint: Palette.review).accessibilityIdentifier("me-plus")
+        }
+    }
+}
+
+/// The learner's level, earned by the words they know well, and how far it is
+/// to the next one.
+private struct LevelProgress: View {
+    var mastered: Int
+    static let wordsPerLevel = 50
+
+    var body: some View {
+        let level = mastered / Self.wordsPerLevel + 1
+        let into = mastered % Self.wordsPerLevel
+        VStack(alignment: .leading, spacing: 7) {
+            HStack(spacing: 8) {
+                Text("Lv.\(level)")
+                    .font(.display(.subheadline, weight: .heavy))
+                    .monospacedDigit()
+                    .foregroundStyle(.white)
+                    .contentTransition(.numericText(value: Double(level)))
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 3)
+                    .background(LinearGradient(colors: [Palette.accent, Palette.review], startPoint: .leading, endPoint: .trailing), in: Capsule())
+                Text(Self.title(for: level))
+                    .font(.display(.headline, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Spacer(minLength: 4)
+                Text(L.t("再 \(Self.wordsPerLevel - into) 字升級", "\(Self.wordsPerLevel - into) to go"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            SessionBar(fraction: Double(into) / Double(Self.wordsPerLevel), tint: Palette.accent)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("me-level")
+    }
+
+    static func title(for level: Int) -> String {
+        switch level {
+        case ..<3: L.t("單字新手", "Word rookie")
+        case 3..<6: L.t("單字學徒", "Word apprentice")
+        case 6..<11: L.t("單字達人", "Word achiever")
+        case 11..<21: L.t("單字專家", "Word expert")
+        case 21..<41: L.t("單字大師", "Word master")
+        default: L.t("單字傳奇", "Word legend")
+        }
+    }
+}
+
+/// The streak shield in "我": it settles with a bounce when the page opens
+/// while protection is ready, and stays quiet while it recharges.
+private struct ShieldIcon: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var ready: Bool
+    @State private var bounced = false
+
+    var body: some View {
+        Image(systemName: "shield.lefthalf.filled")
+            .foregroundStyle(ready ? Palette.known : Palette.secondaryLabel)
+            .symbolEffect(.bounce, value: bounced)
+            .task {
+                guard ready, !reduceMotion, !bounced else { return }
+                try? await Task.sleep(for: .milliseconds(600))
+                bounced = true
+            }
     }
 }
 

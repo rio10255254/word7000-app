@@ -13,6 +13,11 @@ struct HistoryActivityChart: View {
     var compact = false
     @State private var selection: String?
     @State private var inspectedDay: String?
+    /// On "我" the bars rise from the baseline the first time they appear.
+    /// History keeps them still so a range switch reads instantly.
+    @State private var grown = false
+
+    private var barsGrow: Bool { compact && !reduceMotion }
 
     enum Kind: String, CaseIterable, Identifiable {
         case words, quiz, speaking
@@ -84,7 +89,7 @@ struct HistoryActivityChart: View {
                 histogram
             } else {
                 ContentUnavailableView {
-                    Label(L.t("還沒有學習紀錄", "No activity yet"), systemImage: "chart.bar")
+                    MascotLabel(mood: .sleepy, title: L.t("還沒有學習紀錄", "No activity yet"), size: compact ? 48 : 72)
                 } description: {
                     Text(L.t("背單字、做測驗或口說練習後，這裡就會出現長條圖。", "Study, take a quiz or practice speaking and your bars appear here."))
                 }
@@ -107,9 +112,9 @@ struct HistoryActivityChart: View {
         let total = activity.reduce(0) { $0 + $1.total }
         return VStack(alignment: .leading, spacing: 8) {
             Text(L.t("共 \(total) 次", "\(total) actions"))
-                .font(.rounded(.title3, weight: .bold))
+                .font(.display(.title3, weight: .bold))
                 .monospacedDigit()
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(value: Double(total)))
             legend { kind in activity.reduce(0) { $0 + kind.count(in: $1) } }
         }
     }
@@ -120,12 +125,13 @@ struct HistoryActivityChart: View {
                 Text(title(for: detail))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
+                    .contentTransition(.opacity)
                     .accessibilityIdentifier("history-selected-date")
                 Spacer(minLength: 8)
                 Text(L.t("\(detail.total) 次", "\(detail.total) actions"))
-                    .font(.rounded(.title3, weight: .bold))
+                    .font(.display(.title3, weight: .bold))
                     .monospacedDigit()
-                    .contentTransition(.numericText())
+                    .contentTransition(.numericText(value: Double(detail.total)))
                     .accessibilityIdentifier("history-selected-count")
             }
             legend { $0.count(in: detail) }
@@ -149,7 +155,7 @@ struct HistoryActivityChart: View {
                     Circle().fill(kind.color).frame(width: 7, height: 7)
                     Text(kind.label).foregroundStyle(.secondary)
                     Text("\(count(kind))").fontWeight(.semibold).monospacedDigit()
-                        .contentTransition(.numericText())
+                        .contentTransition(.numericText(value: Double(count(kind))))
                 }
                 .fixedSize()
                 .accessibilityElement(children: .ignore)
@@ -164,12 +170,12 @@ struct HistoryActivityChart: View {
     /// A quiet first week: one dot per day instead of a mostly empty chart.
     private var weekStrip: some View {
         HStack(spacing: 0) {
-            ForEach(activity) { day in
+            ForEach(Array(activity.enumerated()), id: \.element.id) { order, day in
                 let today = day.date == activity.last?.date
                 VStack(spacing: 8) {
                     ZStack {
                         Circle()
-                            .fill(day.total > 0 ? Palette.accent : Palette.fill)
+                            .fill(day.total > 0 ? Palette.accent.gradient : Palette.fill.gradient)
                         if day.total > 0 {
                             Image(systemName: "checkmark")
                                 .font(.caption.weight(.bold))
@@ -177,8 +183,10 @@ struct HistoryActivityChart: View {
                         }
                     }
                     .frame(width: 30, height: 30)
+                    // The days pop in left to right, ending on today.
+                    .popIn(delay: 0.1 + Double(order) * 0.05)
                     .overlay {
-                        if today { Circle().stroke(Palette.accent, lineWidth: 2).padding(-4) }
+                        if today { TodayHalo(waiting: day.total == 0) }
                     }
                     Text(axisLabel(day.date))
                         .font(.caption2.weight(today ? .bold : .regular))
@@ -197,9 +205,10 @@ struct HistoryActivityChart: View {
 
     private var histogram: some View {
         let selectedDate = selectedIndex.map { bars[$0].date }
+        let risen = grown || !barsGrow
         let chart = Chart {
             ForEach(segments) { segment in
-                BarMark(x: .value("Day", segment.day.date), y: .value("Actions", segment.count),
+                BarMark(x: .value("Day", segment.day.date), y: .value("Actions", risen ? segment.count : 0),
                         width: .ratio(bars.count <= 14 ? 0.6 : 0.8), stacking: .standard)
                     .foregroundStyle(by: .value("Practice", segment.kind.rawValue))
                     .opacity(selectedDate == nil || selectedDate == segment.day.date ? 1 : 0.35)
@@ -232,6 +241,11 @@ struct HistoryActivityChart: View {
             }
         }
         .frame(height: chartHeight)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.18), value: selectedDate)
+        .onAppear {
+            guard barsGrow, !grown else { return }
+            withAnimation(.spring(response: 0.7, dampingFraction: 0.82).delay(0.15)) { grown = true }
+        }
         .accessibilityLabel(L.t("每日學習次數", "Daily learning actions"))
         .accessibilityIdentifier(compact ? "me-week-chart" : "history-chart")
         // Recreate the categorical axis when its date range changes.
@@ -271,5 +285,27 @@ struct HistoryActivityChart: View {
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         formatter.dateFormat = pattern
         return formatter.string(from: Date(timeIntervalSince1970: Double(number) * 86_400))
+    }
+}
+
+/// The ring around today in the week strip. While today is still empty it
+/// breathes gently, inviting the first practice of the day.
+private struct TodayHalo: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var waiting: Bool
+
+    var body: some View {
+        let ring = Circle().stroke(Palette.accent, lineWidth: 2).padding(-4)
+        if waiting && !reduceMotion {
+            ring.phaseAnimator([false, true]) { content, out in
+                content
+                    .scaleEffect(out ? 1.12 : 1)
+                    .opacity(out ? 0.35 : 1)
+            } animation: { _ in
+                .easeInOut(duration: 1.3)
+            }
+        } else {
+            ring
+        }
     }
 }

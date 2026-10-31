@@ -4,6 +4,7 @@ import Word7000Core
 /// The word banks as a shelf, and the words of the chosen bank below.
 struct WordsView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var scan: () -> Void
     var study: () -> Void
 
@@ -17,6 +18,8 @@ struct WordsView: View {
     @State private var searching = true
     @State private var newName = ""
     @State private var addingWord = false
+    /// Bumped by the swipe action so starring a word gives a light tap.
+    @State private var favoriteToggles = 0
 
     var body: some View {
         let filter = model.settings.libraryFilter
@@ -46,8 +49,12 @@ struct WordsView: View {
                     if searching {
                         HStack { Spacer(); ProgressView(); Spacer() }.padding(.vertical, 30)
                     } else {
-                        ContentUnavailableView(L.noLibraryWords, systemImage: "text.magnifyingglass",
-                                               description: Text(query.isEmpty ? model.bankName : query))
+                        ContentUnavailableView {
+                            MascotLabel(mood: .thinking, title: L.noLibraryWords)
+                        } description: {
+                            Text(query.isEmpty ? model.bankName : query)
+                        }
+                            .entrance(0, distance: 10)
                         if filter.isActive {
                             Button(L.t("清除篩選", "Clear filters")) { clearFilters() }
                         } else if model.activeSet != nil, query.isEmpty {
@@ -61,7 +68,11 @@ struct WordsView: View {
                     }
                     .swipeActions(edge: .trailing) {
                         let favorite = model.progress(for: word.id).favorite
-                        Button { model.toggleFavorite(word.id) } label: {
+                        Button {
+                            // Only this row changes, so animating it stays cheap.
+                            withAnimation(reduceMotion ? nil : Motion.pop) { model.toggleFavorite(word.id) }
+                            favoriteToggles += 1
+                        } label: {
                             Label(favorite ? L.unfavoriteWord : L.favoriteWord, systemImage: favorite ? "star.slash" : "star.fill")
                         }
                         .tint(Palette.review)
@@ -71,10 +82,16 @@ struct WordsView: View {
                 HStack {
                     Text(filter.status == .all ? model.bankName : "\(model.bankName) · \(L.filterLabel(filter.status))")
                     Spacer()
-                    Text(L.bankWordCount(results.count)).monospacedDigit()
+                    // Only the count animates; the 7000-row list itself updates without animation.
+                    Text(L.bankWordCount(results.count))
+                        .monospacedDigit()
+                        .contentTransition(.numericText(value: Double(results.count)))
+                        .animation(reduceMotion ? nil : Motion.reveal, value: results.count)
                 }
             }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(L.tabWords)
         .navigationDestination(for: WordEntry.self) { word in
             WordDetailView(word: word)
@@ -89,6 +106,7 @@ struct WordsView: View {
             await refreshResults()
         }
         .safeAreaInset(edge: .bottom) {
+          VStack(spacing: 0) {
             if let deleted = model.deletedSetUndo {
                 HStack {
                     Text(L.t("已刪除「\(deleted.name)」", "Deleted \(deleted.name)")).font(.subheadline).lineLimit(2)
@@ -100,18 +118,27 @@ struct WordsView: View {
                 }
                 .padding(.horizontal, 16)
                 .background(.regularMaterial)
+                .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
+          }
+          .animation(reduceMotion ? nil : Motion.card, value: model.deletedSetUndo?.id)
         }
+        .sensoryFeedback(.impact(weight: .light), trigger: favoriteToggles) { _, _ in model.settings.hapticsEnabled ?? true }
         .sheet(isPresented: $filtersOpen) {
             NavigationStack {
                 Form {
-                    Section {
-                        FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
+                    Group {
+                        Section {
+                            FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
+                        }
                     }
+                    .listRowBackground(Palette.surface)
                 }
+                .warmList()
                 .navigationTitle(L.filters)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
+                .compactSheet()
             }
         }
         .toolbar {
@@ -168,6 +195,7 @@ struct WordsView: View {
             Image(systemName: model.settings.libraryFilter.isActive
                   ? "line.3.horizontal.decrease.circle.fill"
                   : "line.3.horizontal.decrease.circle")
+                .contentTransition(.symbolEffect(.replace))
         }
         .accessibilityLabel(L.filters)
         .accessibilityIdentifier("words-filter")
@@ -275,7 +303,7 @@ struct BankShelf: View {
                         }
                         Spacer(minLength: 0)
                         Text(L.scanSheet)
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .foregroundStyle(Palette.accent)
                     }
                     .padding(14)
@@ -288,6 +316,9 @@ struct BankShelf: View {
             .padding(.horizontal, 0)
             .padding(.vertical, 4)
         }
+        // Lets the chosen card's coloured shadow show above and below the shelf.
+        .scrollClipDisabled()
+        .sensoryFeedback(.selection, trigger: model.settings.activeBankId) { _, _ in model.settings.hapticsEnabled ?? true }
         .confirmationDialog(L.t("刪除「\(deleting?.name ?? "")」？", "Delete \u{201C}\(deleting?.name ?? "")\u{201D}?"),
                             isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }), titleVisibility: .visible) {
             Button(L.deleteBank, role: .destructive) {
@@ -330,23 +361,25 @@ struct BankShelf: View {
                     Image(systemName: icon)
                         .font(.title3.weight(.semibold))
                         .foregroundStyle(active ? .white : color)
+                        .symbolEffect(.bounce, value: reduceMotion ? false : active)
                     Spacer()
                 }
                 Spacer(minLength: 0)
                 Text(name)
-                    .font(.rounded(.subheadline, weight: .bold))
+                    .font(.display(.subheadline, weight: .bold))
                     .lineLimit(2)
                     .foregroundStyle(active ? .white : .primary)
                 HStack {
                     Text(L.bankWordCount(count)).font(.caption)
                         .foregroundStyle(active ? .white.opacity(0.9) : .secondary)
                     Spacer(minLength: 4)
-                    if active { Image(systemName: "checkmark.circle.fill").foregroundStyle(.white) }
+                    if active { Image(systemName: "checkmark.circle.fill").foregroundStyle(.white).popIn(delay: 0.05) }
                 }
             }
             .padding(14)
             .frame(width: shelfWidth, height: shelfHeight, alignment: .leading)
             .background(active ? color : Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .shadow(color: active ? color.opacity(0.35) : .clear, radius: 8, y: 4)
         }
         .buttonStyle(SoftPressStyle())
         .accessibilityAddTraits(active ? .isSelected : [])
@@ -364,12 +397,13 @@ struct WordRow: View {
         HStack(spacing: 12) {
             Image(systemName: progress.status == .mastered ? "checkmark.circle.fill" : progress.status == .review ? "arrow.counterclockwise" : "circle")
                 .font(.caption.weight(.semibold))
+                .contentTransition(.symbolEffect(.replace))
                 .foregroundStyle(progress.status == .new ? Palette.tertiaryLabel : color)
                 .frame(width: 16)
                 .accessibilityLabel(L.statusLabel(progress.status))
             VStack(alignment: .leading, spacing: 2) {
                 let face = model.face(word)
-                SearchHighlightedText(text: face.prompt, query: query).font(.rounded(.body, weight: .semibold))
+                SearchHighlightedText(text: face.prompt, query: query).font(.display(.body, weight: .semibold))
                 SearchHighlightedText(text: face.answer, query: query)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -378,6 +412,7 @@ struct WordRow: View {
             Spacer(minLength: 4)
             if progress.favorite {
                 Image(systemName: "star.fill").font(.caption).foregroundStyle(Palette.review)
+                    .transition(.scale(scale: 0.3).combined(with: .opacity))
             }
         }
     }
@@ -408,8 +443,11 @@ struct SearchHighlightedText: View {
 
 struct WordDetailView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var word: WordEntry
     @State private var editing = false
+    /// Bumped when the word joins a bank, for a short success tap.
+    @State private var addedToBank = 0
     @ScaledMetric(relativeTo: .largeTitle) private var titleSize = 38.0
 
     var body: some View {
@@ -420,7 +458,7 @@ struct WordDetailView: View {
             Section {
                 VStack(spacing: 6) {
                     Text(face.prompt)
-                        .font(.roundedSize(titleSize, weight: .bold))
+                        .font(.displaySize(titleSize, weight: .bold))
                         .lineLimit(4)
                         .minimumScaleFactor(0.6)
                         .multilineTextAlignment(.center)
@@ -431,48 +469,57 @@ struct WordDetailView: View {
                     SpeakButton(text: face.speakText, language: face.speakLanguage)
                 }
                 .frame(maxWidth: .infinity)
+                .entrance(0)
                 .listRowBackground(Color.clear)
             }
-            Section {
-                VStack(alignment: .leading, spacing: 4) {
-                    if !face.answerLabel.isEmpty {
-                        Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
-                    }
-                    Text(face.answer).font(.rounded(.title3, weight: .bold))
-                    if !face.answerDetail.isEmpty {
-                        Text(face.answerDetail).foregroundStyle(.secondary)
-                    }
-                    if !face.supplemental.isEmpty {
-                        Text(face.supplemental).foregroundStyle(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
-            } header: {
-                Text(L.meaning)
-            }
-            if !face.examplePrimary.isEmpty {
-                Section(L.example) {
+            Group {
+                Section {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(face.examplePrimary)
-                        if !face.exampleSecondary.isEmpty {
-                            Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
+                        if !face.answerLabel.isEmpty {
+                            Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
+                        }
+                        Text(face.answer).font(.display(.title3, weight: .bold))
+                        if !face.answerDetail.isEmpty {
+                            Text(face.answerDetail).foregroundStyle(.secondary)
+                        }
+                        if !face.supplemental.isEmpty {
+                            Text(face.supplemental).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
+                    .entrance(1, distance: 10)
+                } header: {
+                    Text(L.meaning)
+                }
+                if !face.examplePrimary.isEmpty {
+                    Section(L.example) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(face.examplePrimary)
+                            if !face.exampleSecondary.isEmpty {
+                                Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                        .entrance(2, distance: 10)
+                    }
+                }
+                if let note = WordNotes.note(for: word.word) {
+                    Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
+                            : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
+                }
+                AIExplanationSection(word: word)
+                AskAISection(word: word)
+                Section(L.t("學習進度", "Progress")) {
+                    WordProgressCard(progress: progress, level: word.group)
                 }
             }
-            if let note = WordNotes.note(for: word.word) {
-                Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
-                        : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
-            }
-            AIExplanationSection(word: word)
-            AskAISection(word: word)
-            Section(L.t("學習進度", "Progress")) {
-                WordProgressCard(progress: progress, level: word.group)
-            }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .navigationTitle(face.prompt)
         .navigationBarTitleDisplayMode(.inline)
+        .sensoryFeedback(.impact(weight: .light), trigger: progress.favorite) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.success, trigger: addedToBank) { _, _ in model.settings.hapticsEnabled ?? true }
         .onDisappear { Speaker.shared.stop() }
         .sheet(isPresented: $editing) {
             WordEditorSheet(word: word, setId: model.customSets.sets.first { $0.wordIds.contains(word.id) }?.id ?? model.settings.activeBankId)
@@ -489,6 +536,7 @@ struct WordDetailView: View {
                     ForEach(model.customSets.sets) { set in
                         Button {
                             model.addWord(word.id, toSet: set.id)
+                            addedToBank += 1
                         } label: {
                             Label(set.name, systemImage: set.wordIds.contains(word.id) ? "checkmark" : "folder")
                         }
@@ -497,6 +545,7 @@ struct WordDetailView: View {
                     Button {
                         let id = model.createSet(named: L.newBankDefault)
                         model.addWord(word.id, toSet: id)
+                        addedToBank += 1
                     } label: {
                         Label(L.newBank, systemImage: "folder.badge.plus")
                     }
@@ -516,6 +565,8 @@ struct WordDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button { model.toggleFavorite(word.id) } label: {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.bounce, value: reduceMotion ? false : progress.favorite)
                 }
                 .tint(Palette.review)
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
@@ -536,8 +587,11 @@ struct AddWordSheet: View {
 /// Where a word stands in the review schedule: a short track that fills one
 /// step per successful review, and when it comes back.
 struct WordProgressCard: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var progress: WordProgress
     var level: String
+    /// Steps drawn so far; they light up one by one when the card appears.
+    @State private var lit = 0
 
     private var steps: Int { LearningEngine.reviewIntervalDays.count }
     private var filled: Int { progress.status == .new ? 0 : LearningEngine.reviewStage(progress) + 1 }
@@ -547,6 +601,8 @@ struct WordProgressCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 CardStatusChip(status: progress.status)
+                // The companion's take on this word: curious, rooting for it, or pleased.
+                Mascot(mood: progress.status == .new ? .thinking : progress.status == .review ? .encourage : .happy, size: 30)
                 Spacer()
                 if !level.isEmpty {
                     Text(level).font(.subheadline).foregroundStyle(.secondary)
@@ -554,12 +610,17 @@ struct WordProgressCard: View {
             }
             HStack(spacing: 4) {
                 ForEach(0..<steps, id: \.self) { step in
+                    let on = step < (reduceMotion ? filled : lit)
                     Capsule()
-                        .fill(step < filled ? tint : Palette.fill)
+                        .fill(on ? tint : Palette.fill)
                         .frame(height: 6)
+                        .scaleEffect(y: on || reduceMotion ? 1 : 0.6)
+                        .animation(reduceMotion ? nil : Motion.pop.delay(0.15 + Double(step) * 0.08), value: lit)
                 }
             }
             .accessibilityHidden(true)
+            .onAppear { lit = filled }
+            .onChange(of: filled) { _, value in lit = value }
             Text(caption)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)

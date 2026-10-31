@@ -16,9 +16,15 @@ struct QuizSessionView: View {
     @State private var chosen: QuizOption?
     @State private var correctCount = 0
     @State private var missedIds: [String] = []
+    /// Right answers in a row; from three on the quiz cheers the run on.
+    @State private var combo = 0
+    /// The score on the results screen, counted up once it is shown.
+    @State private var shownScore = 0
     @State private var finished = false
     @State private var seed = SeededRandom.runtimeSeed()
     @State private var configured = false
+    /// Set up already (in the sheet on Today): skip straight to the questions.
+    var skipSetup = false
     /// A missed word opened for its AI explanation from the results.
     @State private var aiWord: WordEntry?
 
@@ -26,9 +32,13 @@ struct QuizSessionView: View {
         NavigationStack {
             Group {
                 if !configured {
-                    QuizConfiguration(start: { start(); configured = true })
+                    if skipSetup {
+                        Color.clear.onAppear { start(); configured = true }
+                    } else {
+                        QuizConfiguration(start: { start(); configured = true })
+                    }
                 } else if questions.isEmpty {
-                    ContentUnavailableView(L.noQuizWords, systemImage: "checklist")
+                    ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
                 } else if finished {
                     results
                 } else if questions.indices.contains(index) {
@@ -38,7 +48,7 @@ struct QuizSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground() }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -49,7 +59,7 @@ struct QuizSessionView: View {
                 ToolbarItem(placement: .principal) {
                     if !finished, !questions.isEmpty {
                         Text("\(min(index + 1, questions.count)) / \(questions.count)")
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
                     }
                 }
@@ -70,6 +80,9 @@ struct QuizSessionView: View {
             guard let new, model.settings.hapticsEnabled ?? true else { return nil }
             return new.correct ? .success : .error
         }
+        .sensoryFeedback(.success, trigger: finished) { _, new in
+            new && missedIds.isEmpty && (model.settings.hapticsEnabled ?? true)
+        }
     }
 
     private func start() {
@@ -78,6 +91,8 @@ struct QuizSessionView: View {
         index = 0
         correctCount = 0
         missedIds = []
+        combo = 0
+        shownScore = 0
         finished = false
         loadOptions()
     }
@@ -94,23 +109,37 @@ struct QuizSessionView: View {
         let face = model.face(word)
         return ScrollView {
           VStack(spacing: 16) {
-            SessionBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)))
+            BuddyProgressBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, questions.count)),
+                             tint: combo >= 3 ? Palette.review : Palette.accent,
+                             mood: chosen.map { option -> Mascot.Mood in option.correct ? (combo >= 3 ? .cheer : .happy) : .encourage } ?? .thinking,
+                             hop: correctCount + missedIds.count)
+                // The run's badge floats just under the bar, clear of the question.
+                .overlay(alignment: .topLeading) {
+                    if combo >= 3 {
+                        comboBadge
+                            // Below the bar and the companion riding it.
+                            .offset(y: 34)
+                            .transition(reduceMotion ? .opacity : .scale(scale: 0.5, anchor: .leading).combined(with: .opacity))
+                    }
+                }
                 .padding(.top, 4)
 
             VStack(spacing: 6) {
                 Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
-                    .font(.roundedSize(42, weight: .bold))
+                    .font(.displaySize(42, weight: .bold))
                     .minimumScaleFactor(0.4)
                     .lineLimit(3)
             }
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
+            .entrance(0, distance: 10)
             .overlay(alignment: .topTrailing) { SpeakButton(text: face.speakText, language: face.speakLanguage) }
 
             VStack(spacing: 10) {
                 ForEach(Array(options.enumerated()), id: \.element) { offset, option in
                     optionButton(option)
+                        .entrance(offset + 1, distance: 14)
                         .accessibilityIdentifier("quiz-option-\(offset)")
                 }
             }
@@ -120,6 +149,7 @@ struct QuizSessionView: View {
                     QuizWhyView(word: word,
                                 question: model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt,
                                 correctAnswer: correct.text, chosenAnswer: chosen.text)
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                 }
                 if !face.examplePrimary.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
@@ -129,6 +159,7 @@ struct QuizSessionView: View {
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Palette.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                 }
             }
           }
@@ -145,9 +176,29 @@ struct QuizSessionView: View {
                 .prominentAction(tint: chosen.correct ? Palette.known : Palette.accent)
                 .accessibilityIdentifier("quiz-next")
                 .padding(.vertical, 8)
-                .background(Palette.background)
+                .background { Palette.background.overlay { PaperGrain() } }
+                .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
+    }
+
+    /// "3 in a row", growing with each right answer while the run lasts.
+    private var comboBadge: some View {
+        Label {
+            Text(L.t("連對 \(combo) 題", "\(combo) in a row"))
+                .contentTransition(.numericText(value: Double(combo)))
+        } icon: {
+            Image(systemName: "flame.fill")
+                .symbolEffect(.bounce, value: reduceMotion ? 0 : combo)
+        }
+        .font(.display(.caption, weight: .bold))
+        .foregroundStyle(.white)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(LinearGradient(colors: [Palette.review, Palette.miss], startPoint: .leading, endPoint: .trailing), in: Capsule())
+        .shadow(color: Palette.review.opacity(0.4), radius: 6, y: 2)
+        .fixedSize()
+        .accessibilityIdentifier("quiz-combo")
     }
 
     private func optionButton(_ option: QuizOption) -> some View {
@@ -165,36 +216,43 @@ struct QuizSessionView: View {
                         .foregroundStyle(highlight)
                         .transition(.scale.combined(with: .opacity))
                         .symbolEffect(.bounce, value: reduceMotion ? false : answered)
+                        // A right pick throws a little burst of light.
+                        .overlay {
+                            if isChosen, option.correct, !reduceMotion { SparkleBurst(color: Palette.known) }
+                        }
                 }
             }
             .foregroundStyle(answered && highlight == nil ? Color.secondary : Color.primary)
             .padding(.horizontal, 18)
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                (highlight ?? Palette.surface).opacity(highlight == nil ? 1 : 0.16),
-                in: RoundedRectangle(cornerRadius: 18, style: .continuous)
-            )
-        }
-        .buttonStyle(SoftPressStyle())
-        // A wrong pick gives a small shake; the right answer is marked either way.
-        .keyframeAnimator(initialValue: 0.0, trigger: !reduceMotion && isChosen && !option.correct) { content, x in
-            content.offset(x: x)
-        } keyframes: { _ in
-            KeyframeTrack {
-                CubicKeyframe(-7, duration: 0.07)
-                CubicKeyframe(6, duration: 0.08)
-                CubicKeyframe(-4, duration: 0.08)
-                CubicKeyframe(0, duration: 0.1)
+            .background {
+                if let highlight {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(highlight.opacity(0.16))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .strokeBorder(highlight.opacity(0.45), lineWidth: 1.5)
+                        }
+                } else {
+                    PremiumSurface(radius: 18)
+                }
             }
         }
+        .buttonStyle(SoftPressStyle())
+        // A wrong pick gives a small shake; the right answer swells a little either way.
+        .shake(trigger: isChosen && !option.correct, enabled: !reduceMotion)
+        .pulse(trigger: answered && option.correct, scale: 1.03, enabled: !reduceMotion)
         .allowsHitTesting(!answered)
         .accessibilityAddTraits(isChosen ? .isSelected : [])
     }
 
     private func answer(_ option: QuizOption) {
         guard chosen == nil, questions.indices.contains(index) else { return }
-        withAnimation(reduceMotion ? nil : Motion.reveal) { chosen = option }
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            chosen = option
+            combo = option.correct ? combo + 1 : 0
+        }
         let wordId = questions[index].id
         model.recordQuizAnswer(wordId: wordId, correct: option.correct)
         if option.correct { correctCount += 1 } else { missedIds.append(wordId) }
@@ -218,17 +276,28 @@ struct QuizSessionView: View {
         return VStack(spacing: 18) {
             Spacer()
             ProgressRing(fraction: fraction, color: Palette.known, lineWidth: 14) {
-                Text("\(correctCount)/\(questions.count)")
-                    .font(.roundedSize(30, weight: .bold))
+                Text("\(reduceMotion ? correctCount : shownScore)/\(questions.count)")
+                    .font(.displaySize(30, weight: .bold))
                     .monospacedDigit()
+                    .contentTransition(.numericText(value: Double(shownScore)))
+                    .accessibilityLabel("\(correctCount)/\(questions.count)")
             }
             .frame(width: 130, height: 130)
-            Text(L.quizFinished).font(.rounded(.title, weight: .bold))
+            .overlay(alignment: .topTrailing) {
+                Mascot(mood: Mascot.Mood(score: fraction), size: 64)
+                    .offset(x: 44, y: -22)
+                    .popIn(delay: 0.5)
+            }
+            .entrance(0)
+            Text(L.quizFinished).font(.display(.title, weight: .bold))
+                .entrance(1)
             Text(missedIds.isEmpty ? L.quizPerfect : L.quizMissedHint(missedIds.count))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+                .entrance(2)
             if CloudAssistant.shared.offered, !missedIds.isEmpty {
                 missedWordsForAI
+                    .entrance(3)
             }
             Spacer()
             VStack(spacing: 12) {
@@ -251,7 +320,15 @@ struct QuizSessionView: View {
             }
         }
         .accessibilityIdentifier("quiz-results")
-        .sheet(item: $aiWord) { word in AIWordSheet(word: word) }
+        .overlay(alignment: .top) {
+            // A clean sheet earns a shower of paper.
+            if missedIds.isEmpty, !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
+        }
+        .task {
+            try? await Task.sleep(for: .milliseconds(350))
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.85)) { shownScore = correctCount }
+        }
+        .sheet(item: $aiWord) { word in AIWordSheet(word: word).compactSheet() }
     }
 
     /// The words missed in this quiz, each opening its AI explanation.

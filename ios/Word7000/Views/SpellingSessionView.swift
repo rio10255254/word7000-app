@@ -17,6 +17,9 @@ struct SpellingSessionView: View {
     @State private var correctCount = 0
     @State private var missedIds: [String] = []
     @State private var started = false
+    /// Counts misses so the answer field shakes on each one.
+    @State private var misses = 0
+    @State private var shownScore = 0
     @FocusState private var focused: Bool
 
     var body: some View {
@@ -25,7 +28,7 @@ struct SpellingSessionView: View {
                 if !started {
                     ProgressView()
                 } else if words.isEmpty {
-                    ContentUnavailableView(L.noQuizWords, systemImage: "character.cursor.ibeam")
+                    ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
                 } else if index >= words.count {
                     results
                 } else {
@@ -35,7 +38,7 @@ struct SpellingSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground() }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -46,7 +49,7 @@ struct SpellingSessionView: View {
                 ToolbarItem(placement: .principal) {
                     if started, index < words.count {
                         Text("\(index + 1) / \(words.count)")
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
                             .accessibilityIdentifier("spelling-position")
                     }
@@ -59,6 +62,7 @@ struct SpellingSessionView: View {
             guard let new, model.settings.hapticsEnabled ?? true else { return nil }
             return new == .correct ? .success : .error
         }
+        .sensoryFeedback(.selection, trigger: hints) { _, new in new > 0 && (model.settings.hapticsEnabled ?? true) }
     }
 
     // MARK: Question
@@ -66,8 +70,9 @@ struct SpellingSessionView: View {
     private func question(_ word: WordEntry) -> some View {
         ScrollView {
             VStack(spacing: 18) {
-                SessionBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)))
-                    .padding(.top, 4)
+                BuddyProgressBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)),
+                                 mood: result.map { outcome -> Mascot.Mood in outcome == .correct ? .happy : .encourage } ?? .thinking,
+                                 hop: correctCount + misses)
 
                 VStack(spacing: 8) {
                     if !word.partOfSpeech.isEmpty {
@@ -76,19 +81,23 @@ struct SpellingSessionView: View {
                             .foregroundStyle(Palette.accent)
                     }
                     Text(ChineseDisplay.conciseMeaning(word.meaningZh))
-                        .font(.rounded(.title, weight: .bold))
+                        .font(.display(.title, weight: .bold))
                         .multilineTextAlignment(.center)
                         .accessibilityIdentifier("spelling-meaning")
                     if result == nil {
+                        // Each hint flips the next letter into place.
                         Text(Spelling.pattern(word.word, revealed: hints))
                             .font(.system(.title3, design: .monospaced).weight(.semibold))
                             .foregroundStyle(.secondary)
+                            .contentTransition(.numericText())
                             .accessibilityLabel(L.t("\(word.word.count) 個字母", "\(word.word.count) letters"))
                             .accessibilityIdentifier("spelling-pattern")
                     }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
+                .entrance(0, distance: 10)
+                .id(index)
                 .overlay(alignment: .topTrailing) { SpeakButton(text: word.word, language: "en-US") }
 
                 TextField(L.t("輸入英文單字", "Type the English word"), text: Binding(
@@ -108,8 +117,13 @@ struct SpellingSessionView: View {
                 .background(Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(result.map(color) ?? .clear, lineWidth: 2)
+                        .stroke(result.map(color) ?? (focused ? Palette.accent.opacity(0.45) : .clear), lineWidth: 2)
                 )
+                .shadow(color: (result.map(color) ?? .clear).opacity(0.35), radius: 10)
+                .animation(reduceMotion ? nil : Motion.reveal, value: focused)
+                // A miss shakes the field; getting it right makes it swell.
+                .shake(trigger: misses, enabled: !reduceMotion)
+                .pulse(trigger: correctCount, scale: 1.03, enabled: !reduceMotion)
                 .accessibilityIdentifier("spelling-input")
 
                 if let result {
@@ -126,7 +140,12 @@ struct SpellingSessionView: View {
     private func feedback(_ result: Spelling.Result, word: WordEntry) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
-                Label(title(result), systemImage: symbol(result))
+                Label {
+                    Text(title(result))
+                } icon: {
+                    Image(systemName: symbol(result))
+                        .popIn(delay: 0.1)
+                }
                     .font(.headline)
                     .foregroundStyle(color(result))
                     .accessibilityIdentifier("spelling-result")
@@ -135,7 +154,7 @@ struct SpellingSessionView: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(word.word)
-                    .font(.rounded(.title, weight: .bold))
+                    .font(.display(.title, weight: .bold))
                     .accessibilityIdentifier("spelling-answer")
                 if !word.pronunciation.isEmpty {
                     Text(word.pronunciation).foregroundStyle(.secondary)
@@ -165,8 +184,17 @@ struct SpellingSessionView: View {
     private func actions(_ word: WordEntry) -> some View {
         HStack(spacing: 12) {
             if result == nil {
-                Button { hints += 1 } label: {
-                    Label(L.t("提示", "Hint"), systemImage: "lightbulb").font(.headline).frame(maxWidth: .infinity)
+                Button {
+                    withAnimation(reduceMotion ? nil : Motion.pop) { hints += 1 }
+                } label: {
+                    Label {
+                        Text(L.t("提示", "Hint"))
+                    } icon: {
+                        Image(systemName: hints > 0 ? "lightbulb.fill" : "lightbulb")
+                            .contentTransition(.symbolEffect(.replace))
+                            .symbolEffect(.bounce, value: reduceMotion ? 0 : hints)
+                    }
+                    .font(.headline).frame(maxWidth: .infinity)
                 }
                 .secondaryAction()
                 .disabled(hints >= Spelling.maxHints(word.word))
@@ -186,7 +214,7 @@ struct SpellingSessionView: View {
             }
         }
         .padding(.vertical, 8)
-        .background(Palette.background)
+        .background { Palette.background.overlay { PaperGrain() } }
     }
 
     private func title(_ result: Spelling.Result) -> String {
@@ -224,6 +252,7 @@ struct SpellingSessionView: View {
         result = nil
         correctCount = 0
         missedIds = []
+        shownScore = 0
         started = true
         Task {
             // The cover must finish presenting before the keyboard can rise.
@@ -238,7 +267,7 @@ struct SpellingSessionView: View {
         let outcome = Spelling.check(input, word: word.word)
         withAnimation(reduceMotion ? nil : Motion.reveal) { result = outcome }
         model.recordSpellingAnswer(wordId: word.id, result: outcome, hints: hints)
-        if outcome == .correct { correctCount += 1 } else { missedIds.append(word.id) }
+        if outcome == .correct { correctCount += 1 } else { missedIds.append(word.id); misses += 1 }
     }
 
     private func next() {
@@ -257,15 +286,25 @@ struct SpellingSessionView: View {
         VStack(spacing: 18) {
             Spacer()
             ProgressRing(fraction: Double(correctCount) / Double(max(1, words.count)), color: Palette.known, lineWidth: 14) {
-                Text("\(correctCount)/\(words.count)")
-                    .font(.roundedSize(30, weight: .bold))
+                Text("\(reduceMotion ? correctCount : shownScore)/\(words.count)")
+                    .font(.displaySize(30, weight: .bold))
                     .monospacedDigit()
+                    .contentTransition(.numericText(value: Double(shownScore)))
+                    .accessibilityLabel("\(correctCount)/\(words.count)")
             }
             .frame(width: 130, height: 130)
-            Text(L.t("拼字練習完成", "Spelling complete")).font(.rounded(.title, weight: .bold))
+            .overlay(alignment: .topTrailing) {
+                Mascot(mood: Mascot.Mood(score: Double(correctCount) / Double(max(1, words.count))), size: 64)
+                    .offset(x: 44, y: -22)
+                    .popIn(delay: 0.5)
+            }
+            .entrance(0)
+            Text(L.t("拼字練習完成", "Spelling complete")).font(.display(.title, weight: .bold))
+                .entrance(1)
             Text(missedIds.isEmpty ? L.quizPerfect : L.quizMissedHint(missedIds.count))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+                .entrance(2)
             Spacer()
             VStack(spacing: 12) {
                 if missedIds.isEmpty {
@@ -288,5 +327,12 @@ struct SpellingSessionView: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("spelling-results")
+        .overlay(alignment: .top) {
+            if missedIds.isEmpty, !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
+        }
+        .task {
+            try? await Task.sleep(for: .milliseconds(350))
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.85)) { shownScore = correctCount }
+        }
     }
 }

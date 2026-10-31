@@ -30,10 +30,12 @@ struct SignInSheet: View {
         }
     }
 
+    @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
     @Environment(\.dismiss) private var dismiss
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var reason: Reason = .general
     var onSignedIn: () -> Void = {}
 
@@ -41,6 +43,9 @@ struct SignInSheet: View {
     @State private var showEmail = false
     @State private var email = ""
     @State private var password = ""
+    /// Counts failed sign-ins so the message shakes on each one.
+    @State private var failures = 0
+    @State private var waved = false
 
     var body: some View {
         NavigationStack {
@@ -49,14 +54,22 @@ struct SignInSheet: View {
                     Image(systemName: reason.icon)
                         .font(.system(size: 34, weight: .semibold))
                         .foregroundStyle(Palette.accent)
+                        .symbolEffect(.bounce, value: waved)
                         .frame(width: 76, height: 76)
                         .background(Palette.accent.opacity(0.14), in: Circle())
+                        // The companion peeking round the badge.
+                        .overlay(alignment: .bottomTrailing) {
+                            Mascot(mood: .happy, size: 40)
+                                .offset(x: 26, y: 6)
+                        }
+                        .popIn()
                         .padding(.top, 12)
                     VStack(spacing: 8) {
-                        Text(reason.title).font(.rounded(.title2, weight: .bold))
+                        Text(reason.title).font(.display(.title2, weight: .bold))
                         Text(reason.body).foregroundStyle(.secondary)
                     }
                     .multilineTextAlignment(.center)
+                    .entrance(1)
 
                     VStack(spacing: 12) {
                         SignInWithAppleButton(.continue) { request in
@@ -79,8 +92,17 @@ struct SignInSheet: View {
                         }
                         .secondaryAction()
 
-                        Button(showEmail ? L.t("收起 Email 登入", "Hide email sign-in") : L.t("使用 Email", "Use email")) {
-                            withAnimation(.snappy) { showEmail.toggle() }
+                        Button {
+                            withAnimation(reduceMotion ? nil : .snappy) { showEmail.toggle() }
+                        } label: {
+                            Label {
+                                Text(showEmail ? L.t("收起 Email 登入", "Hide email sign-in") : L.t("使用 Email", "Use email"))
+                            } icon: {
+                                Image(systemName: "chevron.down")
+                                    .rotationEffect(.degrees(showEmail ? 180 : 0))
+                                    .accessibilityHidden(true)
+                            }
+                            .labelStyle(TrailingIconLabelStyle())
                         }
                         .font(.subheadline.weight(.semibold))
                         .padding(.top, 4)
@@ -106,14 +128,29 @@ struct SignInSheet: View {
                         }
                     }
                     .disabled(account.busy || !account.configured)
+                    .entrance(2)
 
-                    if account.busy {
-                        ProgressView()
-                    } else if case .error = account.status {
-                        Text(account.message).font(.footnote).foregroundStyle(Palette.miss)
-                    } else if account.message == A.confirmEmail || account.message == A.cancelled {
-                        Text(account.message).font(.footnote).foregroundStyle(.secondary)
+                    Group {
+                        if account.busy {
+                            ProgressView()
+                                .transition(.opacity)
+                        } else if case .error = account.status {
+                            Label {
+                                Text(account.message)
+                            } icon: {
+                                Image(systemName: "exclamationmark.circle.fill")
+                            }
+                            .font(.footnote)
+                            .foregroundStyle(Palette.miss)
+                            .shake(trigger: failures, enabled: !reduceMotion)
+                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                        } else if account.message == A.confirmEmail || account.message == A.cancelled {
+                            Text(account.message).font(.footnote).foregroundStyle(.secondary)
+                                .transition(.opacity)
+                        }
                     }
+                    .animation(reduceMotion ? nil : Motion.reveal, value: account.busy)
+                    .animation(reduceMotion ? nil : Motion.reveal, value: account.status)
 
                     Text(L.t("登入後，目前的進度會一起保留。", "Your current progress is kept when you sign in."))
                         .font(.footnote)
@@ -129,6 +166,15 @@ struct SignInSheet: View {
             }
         }
         .interactiveDismissDisabled(account.busy)
+        .onChange(of: account.status) { _, status in
+            if case .error = status { failures += 1 }
+        }
+        .sensoryFeedback(.error, trigger: failures) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.success, trigger: account.isPermanent) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .task {
+            try? await Task.sleep(for: .milliseconds(450))
+            if !reduceMotion { waved = true }
+        }
     }
 
     private func handleApple(_ result: Result<ASAuthorization, Error>) {
@@ -181,6 +227,7 @@ struct SignInSheet: View {
 struct AccountSection: View {
     var includeDeletion = false
     @Environment(AccountModel.self) private var account
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var signInOpen = false
     @State private var confirmSignOut = false
     @State private var confirmDelete = false
@@ -195,6 +242,7 @@ struct AccountSection: View {
                     Image(systemName: "person.crop.circle.fill")
                         .font(.system(size: 36))
                         .foregroundStyle(Palette.accent)
+                        .popIn()
                     VStack(alignment: .leading, spacing: 2) {
                         Text(account.displayName ?? L.t("已登入", "Signed in")).font(.headline).lineLimit(2)
                         statusLine
@@ -222,6 +270,7 @@ struct AccountSection: View {
         } header: {
             Text(L.account)
         }
+        .animation(reduceMotion ? nil : Motion.reveal, value: account.isPermanent)
         .sheet(isPresented: $signInOpen) { SignInSheet() }
         .confirmationDialog(L.t("要登出嗎？", "Sign out?"), isPresented: $confirmSignOut, titleVisibility: .visible) {
             Button(L.t("登出", "Sign out"), role: .destructive) { Task { await account.signOut() } }
@@ -252,13 +301,29 @@ struct AccountSection: View {
                 ProgressView().controlSize(.mini)
             case .error:
                 Image(systemName: "exclamationmark.icloud").foregroundStyle(Palette.review)
+                    .popIn()
             default:
+                // A finished sync lands with a small bounce of the cloud.
                 Image(systemName: account.cloudSyncEnabled ? "checkmark.icloud" : "iphone")
                     .foregroundStyle(account.cloudSyncEnabled ? Palette.known : .secondary)
+                    .contentTransition(.symbolEffect(.replace))
+                    .popIn()
             }
             Text(account.message)
+                .contentTransition(.opacity)
         }
         .font(.footnote)
         .foregroundStyle(.secondary)
+        .animation(reduceMotion ? nil : Motion.reveal, value: account.status)
+    }
+}
+
+/// Title first, icon after, e.g. "Use email ⌄".
+private struct TrailingIconLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 4) {
+            configuration.title
+            configuration.icon.font(.caption.weight(.bold))
+        }
     }
 }

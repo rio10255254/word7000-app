@@ -9,6 +9,7 @@ struct ScanView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var onStudy: () -> Void
 
     enum Phase: Equatable {
@@ -57,6 +58,8 @@ struct ScanView: View {
     @State private var askCloud = false
     @State private var afterCloudAnswer: (() -> Void)?
     @State private var newBankName = WordBanks.defaultScanBankName(chineseMode: L.mode == .chinese)
+    /// Bumped when the chooser appears, so its icon gives a small hello.
+    @State private var introBounce = 0
 
     private var destinationBanks: [CustomVocabSet] { model.customSets.sets }
 
@@ -78,17 +81,22 @@ struct ScanView: View {
                 switch phase {
                 case .choose: chooser
                 case .loadingPhoto:
-                    ProgressView(S.loadingPhoto)
+                    ScanWorkingView(symbol: "photo.on.rectangle", text: S.loadingPhoto, sweeps: false)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .accessibilityIdentifier("scan-loading-photo")
                 case .reading:
-                    ProgressView(SmartScan.canOrganize ? S.readingSmart : S.reading)
+                    ScanWorkingView(symbol: "doc.text.viewfinder", text: SmartScan.canOrganize ? S.readingSmart : S.reading, sweeps: true)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 case .review: review
                 case let .saved(count, name): saved(count: count, name: name)
                 }
             }
-            .background(Palette.background)
+            .background { AmbientBackground() }
+            .sensoryFeedback(.success, trigger: phase) { _, new in
+                if case .saved = new { return model.settings.hapticsEnabled ?? true }
+                return false
+            }
+            .sensoryFeedback(.error, trigger: message) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
             .navigationTitle(S.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -151,71 +159,84 @@ struct ScanView: View {
 
     private var chooser: some View {
         Form {
-            Section {
-                VStack(spacing: 12) {
-                    Image(systemName: "doc.text.viewfinder")
-                        .font(.system(size: 30, weight: .semibold))
-                        .foregroundStyle(Palette.accent)
-                        .frame(width: 64, height: 64)
-                        .background(Palette.accent.opacity(0.14), in: Circle())
-                    Text(S.intro)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                    if case .trial = plus.access {
-                        Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background((plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent).opacity(0.12), in: Capsule())
-                            .contentTransition(.numericText())
+            Group {
+                Section {
+                    VStack(spacing: 12) {
+                        Image(systemName: "doc.text.viewfinder")
+                            .font(.system(size: 30, weight: .semibold))
+                            .foregroundStyle(Palette.accent)
+                            .symbolEffect(.bounce, value: reduceMotion ? 0 : introBounce)
+                            .frame(width: 64, height: 64)
+                            .background(Palette.accent.opacity(0.14), in: Circle())
+                            .task {
+                                try? await Task.sleep(for: .milliseconds(400))
+                                introBounce += 1
+                            }
+                        Text(S.intro)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                        if case .trial = plus.access {
+                            Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .background((plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent).opacity(0.12), in: Capsule())
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+    
+                    if DocumentScanner.isAvailable {
+                        Button { allowScan { documentScannerOpen = true } } label: {
+                            Label(S.scanDocument, systemImage: "doc.viewfinder.fill")
+                        }
+                        .accessibilityIdentifier("scan-document")
+                    } else if CameraPicker.isAvailable {
+                        Button { allowScan { cameraOpen = true } } label: {
+                            Label(S.takePhoto, systemImage: "camera.fill")
+                        }
+                    }
+                    Button { allowScan { photoLibraryOpen = true } } label: {
+                        Label(S.choosePhoto, systemImage: "photo.on.rectangle")
+                    }
+                    .accessibilityIdentifier("scan-choose-photo")
+                    if let message {
+                        Label {
+                            Text(message)
+                        } icon: {
+                            Image(systemName: "exclamationmark.triangle.fill").popIn(delay: 0.1)
+                        }
+                            .font(.footnote)
+                            .foregroundStyle(Palette.review)
+                            .accessibilityIdentifier("scan-message")
                     }
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-
-                if DocumentScanner.isAvailable {
-                    Button { allowScan { documentScannerOpen = true } } label: {
-                        Label(S.scanDocument, systemImage: "doc.viewfinder.fill")
+    
+                Section {
+                    TextField(S.pastePlaceholder, text: $pasted, axis: .vertical)
+                        .lineLimit(4...10)
+                        .font(.body.monospaced())
+                        .accessibilityIdentifier("scan-pasted-text")
+                    Button(S.readPasted) {
+                        sourcePreviews = []
+                        pageCount = 0
+                        let found = ScanParser.parse(ScanParser.lines(fromPlainText: pasted))
+                        showReview(found)
                     }
-                    .accessibilityIdentifier("scan-document")
-                } else if CameraPicker.isAvailable {
-                    Button { allowScan { cameraOpen = true } } label: {
-                        Label(S.takePhoto, systemImage: "camera.fill")
-                    }
-                }
-                Button { allowScan { photoLibraryOpen = true } } label: {
-                    Label(S.choosePhoto, systemImage: "photo.on.rectangle")
-                }
-                .accessibilityIdentifier("scan-choose-photo")
-                if let message {
-                    Label(message, systemImage: "exclamationmark.triangle.fill")
-                        .font(.footnote)
-                        .foregroundStyle(Palette.review)
-                        .accessibilityIdentifier("scan-message")
+                    .accessibilityIdentifier("scan-read-pasted")
+                    .disabled(pasted.trimmed.isEmpty)
+                } header: {
+                    Text(S.pasteTitle)
+                } footer: {
+                    Text(S.pasteHint)
                 }
             }
-
-            Section {
-                TextField(S.pastePlaceholder, text: $pasted, axis: .vertical)
-                    .lineLimit(4...10)
-                    .font(.body.monospaced())
-                    .accessibilityIdentifier("scan-pasted-text")
-                Button(S.readPasted) {
-                    sourcePreviews = []
-                    pageCount = 0
-                    let found = ScanParser.parse(ScanParser.lines(fromPlainText: pasted))
-                    showReview(found)
-                }
-                .accessibilityIdentifier("scan-read-pasted")
-                .disabled(pasted.trimmed.isEmpty)
-            } header: {
-                Text(S.pasteTitle)
-            } footer: {
-                Text(S.pasteHint)
-            }
+            .listRowBackground(Palette.surface)
         }
+        .warmList()
         .scrollDismissesKeyboard(.interactively)
     }
 
@@ -352,12 +373,17 @@ struct ScanView: View {
                 }
                 ForEach($rows) { $row in
                     HStack(alignment: .top, spacing: 12) {
-                        Button { row.include.toggle() } label: {
+                        Button {
+                            withAnimation(reduceMotion ? nil : Motion.pop) { row.include.toggle() }
+                        } label: {
                             Image(systemName: row.include ? "checkmark.circle.fill" : "circle")
                                 .font(.title3)
                                 .foregroundStyle(row.include ? Palette.accent : Palette.tertiaryLabel)
+                                .contentTransition(.symbolEffect(.replace))
+                                .symbolEffect(.bounce, value: reduceMotion ? false : row.include)
                         }
                         .buttonStyle(.plain)
+                        .sensoryFeedback(.selection, trigger: row.include) { _, _ in model.settings.hapticsEnabled ?? true }
                         .padding(.top, 4)
                         VStack(alignment: .leading, spacing: 6) {
                             if let decision = decisions[row.id] { importStatus(decision, id: row.id) }
@@ -367,7 +393,7 @@ struct ScanView: View {
                             }
                             HStack {
                                 TextField(S.word, text: $row.word)
-                                    .font(.rounded(.headline))
+                                    .font(.display(.headline))
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
                                     .accessibilityIdentifier("scan-word-\(row.id)")
@@ -413,6 +439,7 @@ struct ScanView: View {
                         }
                     }
                     .opacity(row.include ? 1 : 0.5)
+                    .animation(reduceMotion ? nil : Motion.reveal, value: row.include)
                 }
                 .onDelete { rows.remove(atOffsets: $0) }
                 Button {
@@ -422,6 +449,7 @@ struct ScanView: View {
                 }
             } header: {
                 Text(S.found(rows.count))
+                    .contentTransition(.numericText(value: Double(rows.count)))
             } footer: {
                 Text(S.reviewHint)
             }
@@ -452,6 +480,7 @@ struct ScanView: View {
                 } label: {
                     Text(S.save(count))
                         .font(.headline)
+                        .contentTransition(.numericText(value: Double(count)))
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
@@ -461,6 +490,7 @@ struct ScanView: View {
                 .listRowInsets(EdgeInsets())
             }
         }
+        .warmList()
         .scrollDismissesKeyboard(.interactively)
     }
 
@@ -502,11 +532,14 @@ struct ScanView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 54))
                 .foregroundStyle(Palette.known)
-            Text(S.savedTitle).font(.rounded(.title2, weight: .bold))
+                .shadow(color: Palette.known.opacity(0.35), radius: 12, y: 4)
+                .popIn(delay: 0.1)
+            Text(S.savedTitle).font(.display(.title2, weight: .bold))
                 .accessibilityIdentifier("scan-saved")
             Text(S.savedText(count, name))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
+                .entrance(1, distance: 8)
             if case .trial = plus.access {
                 Button { paywall = .general } label: {
                     Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
@@ -532,6 +565,72 @@ struct ScanView: View {
         .card(radius: Metrics.wordCardRadius, padding: 24)
         .padding(Metrics.gutter)
         .frame(maxHeight: .infinity, alignment: .top)
+        .overlay(alignment: .top) {
+            if count > 0, !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
+        }
+    }
+}
+
+/// While a photo loads or a page is read: the source icon with a scan line
+/// sweeping over it, and three dots that keep time.
+private struct ScanWorkingView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var symbol: String
+    var text: String
+    var sweeps: Bool
+
+    var body: some View {
+        VStack(spacing: 18) {
+            ZStack {
+                Circle()
+                    .fill(Palette.accent.opacity(0.12))
+                    .frame(width: 96, height: 96)
+                Image(systemName: symbol)
+                    .font(.system(size: 40, weight: .semibold))
+                    .foregroundStyle(Palette.accent)
+                    .symbolEffect(.pulse, options: .repeating, isActive: !sweeps && !reduceMotion)
+                if sweeps && !reduceMotion {
+                    Capsule()
+                        .fill(LinearGradient(colors: [Palette.accent.opacity(0), Palette.accent, Palette.accent.opacity(0)],
+                                             startPoint: .leading, endPoint: .trailing))
+                        .frame(width: 64, height: 3)
+                        .shadow(color: Palette.accent.opacity(0.6), radius: 4)
+                        .phaseAnimator([false, true]) { line, down in
+                            line.offset(y: down ? 22 : -22)
+                        } animation: { _ in Animation.easeInOut(duration: 1.1) }
+                }
+            }
+            .popIn()
+            HStack(spacing: 6) {
+                Text(text)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                ScanDots()
+            }
+            .entrance(1, distance: 8)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct ScanDots: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
+            let t = reduceMotion ? 0 : context.date.timeIntervalSinceReferenceDate
+            HStack(spacing: 3) {
+                ForEach(0..<3, id: \.self) { index in
+                    let wave = max(0, sin(t * 5 - Double(index) * 0.8))
+                    Circle()
+                        .fill(Palette.accent)
+                        .frame(width: 5, height: 5)
+                        .opacity(reduceMotion ? 0.6 : 0.3 + 0.7 * wave)
+                        .offset(y: reduceMotion ? 0 : -3 * wave)
+                }
+            }
+        }
+        .accessibilityHidden(true)
     }
 }
 

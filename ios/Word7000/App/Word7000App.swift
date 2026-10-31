@@ -16,6 +16,7 @@ struct Word7000App: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        WarmTone.styleSystemBars()
         SpeakingRecorder.removeAbandonedTakes()
         let model = AppModel.launch()
         _model = State(initialValue: model)

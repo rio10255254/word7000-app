@@ -17,6 +17,8 @@ struct StudySessionView: View {
     @State private var feedback = 0
     @State private var phase: CardPhase = .idle
     @State private var cardOpacity = 1.0
+    /// The next card grows to full size as it takes the top of the stack.
+    @State private var cardScale = 1.0
     @State private var armed = false
     @State private var cardWidth: CGFloat = 340
     @State private var lifetime = UUID()
@@ -24,6 +26,9 @@ struct StudySessionView: View {
     /// The daily goal was reached during this visit, not before it.
     @State private var reachedGoalHere = false
     @State private var goalBanner = false
+    /// How the companion on the progress bar feels about the last card.
+    @State private var buddyMood: Mascot.Mood = .thinking
+    @State private var buddyHop = 0
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
@@ -36,21 +41,22 @@ struct StudySessionView: View {
             VStack(spacing: 16) {
                 if let session = model.studySession {
                     if session.total == 0 {
-                        ContentUnavailableView(L.nothingToStudy, systemImage: "checkmark.seal", description: Text(L.nothingToStudyText))
+                        MascotMessage(mood: .cheer, title: L.nothingToStudy, text: L.nothingToStudyText)
                     } else if session.isComplete {
                         SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
                                        again: { model.startStudySession() }, startQuiz: startQuiz)
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
-                        SessionBar(fraction: Double(session.done) / Double(max(1, session.total)))
-                            .padding(.top, 4)
+                        BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
+                                         mood: buddyMood, hop: buddyHop)
                         GeometryReader { proxy in
                             ZStack {
                                 // The next card peeking out underneath, while there is one.
+                                // It rises toward the top as the card above is swiped away.
                                 if session.total - session.done > 1 {
                                     RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
-                                        .fill(Palette.surface.opacity(0.55))
-                                        .scaleEffect(x: 0.92, y: 1, anchor: .bottom)
-                                        .offset(y: 9)
+                                        .fill(Palette.surface.opacity(0.55 + 0.3 * dragProgress))
+                                        .scaleEffect(x: 0.92 + 0.05 * dragProgress, y: 1, anchor: .bottom)
+                                        .offset(y: 9 - 5 * dragProgress)
                                         .accessibilityHidden(true)
                                 }
                                 card(word: word)
@@ -71,17 +77,23 @@ struct StudySessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
             .overlay(alignment: .top) {
                 if goalBanner {
-                    Label(L.goalReachedBanner, systemImage: "checkmark.seal.fill")
+                    Label {
+                        Text(L.goalReachedBanner)
+                    } icon: {
+                        Image(systemName: "checkmark.seal.fill")
+                            .symbolEffect(.bounce, value: goalBanner)
+                    }
                         .font(.headline)
                         .foregroundStyle(.white)
                         .padding(.horizontal, 18)
                         .padding(.vertical, 10)
                         .background(Palette.known, in: Capsule())
                         .padding(.top, 8)
-                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
+                        .shadow(color: Palette.known.opacity(0.35), radius: 10, y: 4)
+                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .scale(scale: 0.8)).combined(with: .opacity))
                         .accessibilityIdentifier("study-goal-banner")
                 }
             }
@@ -95,7 +107,7 @@ struct StudySessionView: View {
                 ToolbarItem(placement: .principal) {
                     if let session = model.studySession, !session.isComplete, session.total > 0 {
                         Text(L.cardCount(done: session.done, total: session.total))
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
                             .accessibilityIdentifier("study-position")
                     }
@@ -129,7 +141,7 @@ struct StudySessionView: View {
             reachedGoalHere = true
             // The summary celebrates on its own when the set ends here.
             guard model.studySession?.isComplete == false else { return }
-            withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = true }
+            withAnimation(reduceMotion ? nil : Motion.pop) { goalBanner = true }
             Task {
                 try? await Task.sleep(for: .seconds(2.4))
                 withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = false }
@@ -138,6 +150,13 @@ struct StudySessionView: View {
         .sensoryFeedback(.success, trigger: reachedGoalHere) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }
         .sensoryFeedback(.impact(weight: .light), trigger: armed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.55), trigger: revealed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+    }
+
+    /// How far the card has been dragged toward a verdict, 0 to 1.
+    private var dragProgress: Double {
+        guard phase == .dragging || phase == .leaving else { return 0 }
+        return min(1, Double(abs(dragOffset) / max(threshold, 1)))
     }
 
     private func card(word: WordEntry) -> some View {
@@ -158,9 +177,12 @@ struct StudySessionView: View {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
                         .font(.title3)
                         .foregroundStyle(progress.favorite ? Palette.review : Palette.tertiaryLabel)
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.bounce, value: reduceMotion ? false : progress.favorite)
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(SoftPressStyle())
+                .sensoryFeedback(.impact(weight: .light), trigger: progress.favorite) { _, _ in model.settings.hapticsEnabled ?? true }
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
                 SpeakButton(text: face.speakText, language: face.speakLanguage)
             }
@@ -170,7 +192,7 @@ struct StudySessionView: View {
                     VStack(spacing: 28) {
                         VStack(spacing: 10) {
                             Text(face.prompt)
-                                .font(.roundedSize(promptSize, weight: .bold))
+                                .font(.displaySize(promptSize, weight: .bold))
                                 .minimumScaleFactor(0.6)
                                 .lineLimit(4)
                                 .multilineTextAlignment(.center)
@@ -197,7 +219,12 @@ struct StudySessionView: View {
                 .scrollDisabled(phase == .dragging || committing)
                 .overlay(alignment: .bottom) {
                     if !showsAnswer {
-                        Label(L.tapToReveal, systemImage: "hand.tap")
+                        Label {
+                            Text(L.tapToReveal)
+                        } icon: {
+                            Image(systemName: "hand.tap")
+                                .symbolEffect(.pulse, options: .repeating, isActive: !reduceMotion)
+                        }
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .padding(.bottom, 6)
@@ -209,15 +236,17 @@ struct StudySessionView: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
+        .background { PremiumSurface(radius: Metrics.wordCardRadius) }
         .overlay {
             // The verdict colours the card as it is dragged toward it.
             RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
                 .fill((dragOffset > 0 ? Palette.known : Palette.miss).opacity(swipeTint))
                 .allowsHitTesting(false)
         }
-        .shadow(color: .black.opacity(0.06), radius: 12, y: 4)
+        // Picked up: the shadow deepens the further the card travels.
+        .shadow(color: .black.opacity(0.06 + 0.06 * dragProgress), radius: 12 + 10 * dragProgress, y: 4 + 6 * dragProgress)
         .overlay(alignment: .top) { swipeBadge }
+        .scaleEffect(cardScale)
         .rotationEffect(.degrees(reduceMotion ? 0 : Double(dragOffset / max(cardWidth, 1)) * 8), anchor: .bottom)
         .offset(x: dragOffset)
         .opacity(cardOpacity)
@@ -257,14 +286,22 @@ struct StudySessionView: View {
     private var swipeBadge: some View {
         if abs(dragOffset) > 30 {
             let known = dragOffset > 0
-            Label(known ? L.knowIt : L.dontKnow, systemImage: known ? "checkmark" : "xmark")
+            let appear = Double(min(1, (abs(dragOffset) - 30) / 60))
+            Label {
+                Text(known ? L.knowIt : L.dontKnow)
+            } icon: {
+                Image(systemName: known ? "checkmark" : "xmark")
+                    .symbolEffect(.bounce, value: reduceMotion ? false : armed)
+            }
                 .font(.headline)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .background(known ? Palette.known : Palette.miss, in: Capsule())
+                .scaleEffect(reduceMotion ? 1 : 0.8 + 0.2 * appear + (armed ? 0.06 : 0))
+                .animation(reduceMotion ? nil : Motion.pop, value: armed)
                 .padding(.top, 18)
-                .opacity(Double(min(1, (abs(dragOffset) - 30) / 60)))
+                .opacity(appear)
         }
     }
 
@@ -303,6 +340,8 @@ struct StudySessionView: View {
         let token = lifetime
         let source = model.studySession?.sourceKey
         if !armed { feedback += 1 }
+        buddyMood = grade == .known ? .happy : .encourage
+        buddyHop += 1
         phase = .leaving
         Speaker.shared.stop()
         withAnimation(reduceMotion ? .easeOut(duration: 0.12) : .easeIn(duration: 0.25), completionCriteria: .removed) {
@@ -315,12 +354,13 @@ struct StudySessionView: View {
             withTransaction(transaction) {
                 phase = .arriving
                 dragOffset = reduceMotion ? 0 : 18
+                cardScale = reduceMotion ? 1 : 0.94
                 cardOpacity = 0
                 revealed = false
                 armed = false
                 model.gradeCurrentCard(grade, expectedWordId: wordId)
             }
-            if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; dragOffset = 0 }
+            if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; cardScale = 1; dragOffset = 0 }
         }
     }
 
@@ -337,6 +377,7 @@ struct StudySessionView: View {
         guard phase == .arriving else { return }
         withAnimation(reduceMotion ? .easeOut(duration: 0.15) : Motion.card, completionCriteria: .logicallyComplete) {
             cardOpacity = 1
+            cardScale = 1
             dragOffset = 0
         } completion: {
             if visible { phase = .idle }
@@ -361,7 +402,7 @@ struct WordAnswer: View {
                         .foregroundStyle(Palette.accent)
                 }
                 Text(face.answer)
-                    .font(.rounded(.title2, weight: .bold))
+                    .font(.display(.title2, weight: .bold))
                 if !face.answerDetail.isEmpty {
                     Text(face.answerDetail)
                         .font(.subheadline)
@@ -373,6 +414,7 @@ struct WordAnswer: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .entrance(0, distance: 8)
             if !face.examplePrimary.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
@@ -389,6 +431,7 @@ struct WordAnswer: View {
                 }
                 .padding(.top, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .entrance(1, distance: 8)
             }
             if CloudAssistant.shared.offered {
                 Button { aiOpen = true } label: {
@@ -396,11 +439,12 @@ struct WordAnswer: View {
                         .font(.subheadline.weight(.semibold))
                 }
                 .padding(.top, 4)
+                .entrance(2, distance: 8)
                 .accessibilityIdentifier("study-ai")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .sheet(isPresented: $aiOpen) { AIWordSheet(word: word) }
+        .sheet(isPresented: $aiOpen) { AIWordSheet(word: word).compactSheet() }
     }
 }
 
@@ -431,7 +475,6 @@ struct SessionSummary: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
-    @State private var ringFraction = 0.0
     var session: StudySession
     /// The daily goal was reached during this set.
     var reachedGoal = false
@@ -443,25 +486,31 @@ struct SessionSummary: View {
         let left = max(0, model.progress.dailyTarget - model.progress.studiedToday)
         ScrollView {
           VStack(spacing: 18) {
-            ProgressRing(fraction: reduceMotion ? model.dailyFraction : ringFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
-                Image(systemName: model.goalDone ? "checkmark" : "flame.fill")
-                    .font(.system(size: 40, weight: .bold))
-                    .foregroundStyle(model.goalDone ? Palette.known : Palette.review)
-                    .symbolEffect(.bounce, value: reachedGoal && appeared && !reduceMotion)
+            ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
+                // The companion sits in the ring, cheering when the goal is met.
+                Mascot(mood: reachedGoal || model.goalDone ? .cheer : .happy, size: 78, hop: appeared ? 1 : 0)
+                    .offset(y: 4)
             }
             .frame(width: 130, height: 130)
+            .entrance(0)
             Text(reachedGoal ? L.goalReachedTitle : L.sessionCompleteTitle)
-                .font(.rounded(.title, weight: .bold))
+                .font(.display(.title, weight: .bold))
+                .entrance(1)
             Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
                 .foregroundStyle(.secondary)
+                .entrance(2)
             HStack(spacing: 10) {
                 SummaryChip(value: session.knownIds.count, label: L.knowIt, icon: "checkmark", tint: Palette.known)
+                    .entrance(3)
                 SummaryChip(value: session.reviewIds.count, label: L.dontKnow, icon: "arrow.counterclockwise", tint: Palette.review)
+                    .entrance(4)
                 SummaryChip(value: model.progress.streak, label: L.streak, icon: "flame.fill", tint: Palette.review)
+                    .entrance(5)
             }
             .accessibilityElement(children: .contain)
             Text(reachedGoal ? L.quizTodaysWordsHint : left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
                 .font(.subheadline.weight(.semibold))
+                .entrance(6)
             VStack(spacing: 12) {
                 if reachedGoal {
                     Button {
@@ -501,33 +550,29 @@ struct SessionSummary: View {
         .overlay(alignment: .top) {
             if reachedGoal && appeared && !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
         }
-        .onAppear {
-            appeared = true
-            // Fill the ring in front of the learner instead of showing it already full.
-            Task { @MainActor in
-                try? await Task.sleep(for: .milliseconds(150))
-                ringFraction = model.dailyFraction
-            }
-        }
-        .onChange(of: model.dailyFraction) { _, value in ringFraction = value }
+        .onAppear { appeared = true }
         .accessibilityIdentifier("study-summary")
     }
 }
 
 /// A number with its label, e.g. "12 · Know it", on the end-of-set screen.
 private struct SummaryChip: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var value: Int
     var label: String
     var icon: String
     var tint: Color
+    /// The number rolls up from zero once the chip is on screen.
+    @State private var rolled = false
 
     var body: some View {
+        let shown = rolled || reduceMotion ? value : 0
         VStack(spacing: 4) {
-            Label("\(value)", systemImage: icon)
-                .font(.rounded(.title3, weight: .bold))
+            Label("\(shown)", systemImage: icon)
+                .font(.display(.title3, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(tint)
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(value: Double(shown)))
             Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -538,6 +583,11 @@ private struct SummaryChip: View {
         .padding(.vertical, 12)
         .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityElement(children: .combine)
+        .task {
+            guard !rolled else { return }
+            try? await Task.sleep(for: .milliseconds(450))
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) { rolled = true }
+        }
     }
 }
 

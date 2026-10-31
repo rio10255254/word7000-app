@@ -9,6 +9,8 @@ enum AppTab: Hashable {
 enum Activity: Identifiable, Hashable {
     case study
     case quiz
+    /// A quiz already set up in the sheet on Today.
+    case quizReady
     case speaking
     case spelling
     case exam
@@ -23,6 +25,7 @@ struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
     @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var tab: AppTab = .today
     @State private var activity: Activity?
     @State private var signInForScan = false
@@ -34,15 +37,15 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $tab) {
-            NavigationStack {
-                TodayView(start: { next in
-                    if next == .exam {
-                        plus.require(.examPractice) { activity = .exam }
-                    } else {
-                        activity = next
-                    }
-                })
-            }
+            // Today has no navigation bar: its own header takes that place, and
+            // a hidden bar would still sit over it and swallow taps.
+            TodayView(start: { next in
+                if next == .exam {
+                    plus.require(.examPractice) { activity = .exam }
+                } else {
+                    activity = next
+                }
+            })
             .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
             .tag(AppTab.today)
 
@@ -85,11 +88,11 @@ struct RootView: View {
             switch activity {
             case .study:
                 StudySessionView(startQuiz: { switchTo(.quiz) })
-            case .quiz:
+            case .quiz, .quizReady:
                 QuizSessionView(studyMissed: { ids in
                     model.startStudySession(onlyIds: ids)
                     switchTo(.study)
-                })
+                }, skipSetup: activity == .quizReady)
             case .speaking:
                 SpeakingSessionView()
             case .spelling:
@@ -132,16 +135,27 @@ struct RootView: View {
             if activity == nil { activity = .study }
         }
         .sensoryFeedback(.selection, trigger: tab) { _, _ in model.settings.hapticsEnabled ?? true }
+        // The tabs are rebuilt when the study mode changes, so the switch's tick is felt here.
+        .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in model.settings.hapticsEnabled ?? true }
         .safeAreaInset(edge: .top) {
             if model.storageFailed {
                 HStack {
-                    Label(A.saveFailed, systemImage: "exclamationmark.triangle.fill").font(.footnote)
+                    Label {
+                        Text(A.saveFailed)
+                    } icon: {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(Palette.review)
+                            .symbolEffect(.bounce, value: model.storageFailed)
+                    }
+                    .font(.footnote)
                     Button(L.t("重試", "Retry")) { model.saveNow() }
                 }
                 .padding(12)
                 .background(Palette.surface)
+                .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
             }
         }
+        .animation(Motion.reveal, value: model.storageFailed)
     }
 
     /// Scanned banks live in the learner's account, so scanning asks a guest

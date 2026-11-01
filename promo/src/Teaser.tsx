@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
-import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile } from 'remotion';
+import { AbsoluteFill, Easing, Html5Audio, Img, interpolate, spring, staticFile } from 'remotion';
 import { AUTHORED_FPS, useFrame } from './time';
-import { Track, blurDissolve, circle, push, trackFrames, zoomThrough } from './transitions';
+import { Track, blurDissolve, circle, push, timed, trackFrames, zoomThrough } from './transitions';
+import timeline from './timeline.json';
 import type { Step } from './transitions';
 import { COLLAGE, Desk, Halftone, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, SERIF } from './fonts';
@@ -570,13 +571,15 @@ export const EndScene = ({ footnote }: { footnote?: string }) => {
   );
 };
 
+const T = timeline.teaser;
+
 const STEPS: Step[] = [
-  { id: 'hook', duration: 60, render: HookScene },
-  { id: 'meet', duration: 36, render: () => <MeetScene />, enter: circle(540, 1430) },
-  { id: 'card', duration: 60, render: CardScene, enter: push('left') },
-  { id: 'quiz', duration: 54, render: QuizScene, enter: push('left') },
-  { id: 'today', duration: 48, render: TodayScene, enter: zoomThrough() },
-  { id: 'end', duration: 42, render: () => <EndScene />, enter: blurDissolve(), turn: 20 },
+  { id: 'hook', ...timed(T, 'hook'), render: HookScene },
+  { id: 'meet', ...timed(T, 'meet'), render: () => <MeetScene />, enter: circle(540, 1430) },
+  { id: 'card', ...timed(T, 'card'), render: CardScene, enter: push('left') },
+  { id: 'quiz', ...timed(T, 'quiz'), render: QuizScene, enter: push('left') },
+  { id: 'today', ...timed(T, 'today'), render: TodayScene, enter: zoomThrough() },
+  { id: 'end', ...timed(T, 'end'), render: () => <EndScene />, enter: blurDissolve() },
 ];
 
 export const TEASER_DURATION = trackFrames(STEPS);
@@ -584,5 +587,7 @@ export const TEASER_DURATION = trackFrames(STEPS);
 export const Teaser = () => (
   <AbsoluteFill style={{ background: '#F3EEE4' }}>
     <Track steps={STEPS} />
+    {/* Composed from timeline.json by scripts/make-music.py, so every scene change is on a beat. */}
+    <Html5Audio src={staticFile('audio/teaser.mp3')} />
   </AbsoluteFill>
 );

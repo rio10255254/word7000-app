@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactElement, ReactNode } from 'react';
-import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile } from 'remotion';
-import { AUTHORED_FPS, useFrame } from './time';
-import { Track, blurDissolve, circle, pullDown, push, stepStarts, trackFrames, zoomThrough } from './transitions';
+import { AbsoluteFill, Easing, Html5Audio, Img, interpolate, spring, staticFile } from 'remotion';
+import { AUTHORED_FPS, FRAME_SCALE, useFrame } from './time';
+import timeline from './timeline.json';
+import { Track, blurDissolve, circle, pullDown, push, stepStarts, timed, trackFrames, zoomThrough } from './transitions';
 import type { Step } from './transitions';
 import { Desk, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, HAND, SERIF } from './fonts';
@@ -952,12 +953,15 @@ const ReminderScene = () => {
  * Snap.": 小笨貓會 stays put while the line under it swaps in place, and the
  * five AI beats push through underneath on the same desk.
  */
+const FULL = timeline.full;
+const AI = FULL.find((e) => e.id === 'ai')?.steps ?? [];
+
 const AI_BEATS: Step[] = [
-  { id: 'explain', duration: 105, render: ExplainScene },
-  { id: 'ask', duration: 90, render: AskScene, enter: push('left') },
-  { id: 'why', duration: 80, render: WhyScene, enter: push('left') },
-  { id: 'coach', duration: 93, render: CoachScene, enter: push('left') },
-  { id: 'analysis', duration: 78, render: AnalysisScene, enter: push('left') },
+  { id: 'explain', ...timed(AI, 'explain'), render: ExplainScene },
+  { id: 'ask', ...timed(AI, 'ask'), render: AskScene, enter: push('left') },
+  { id: 'why', ...timed(AI, 'why'), render: WhyScene, enter: push('left') },
+  { id: 'coach', ...timed(AI, 'coach'), render: CoachScene, enter: push('left') },
+  { id: 'analysis', ...timed(AI, 'analysis'), render: AnalysisScene, enter: push('left') },
 ];
 const AI_LINES = ['講到你懂。', '有問必答。', '抓出錯在哪。', '幫你改口說。', '抓你的弱點。'];
 
@@ -965,7 +969,7 @@ const AISection = () => {
   const frame = useFrame();
   const starts = stepStarts(AI_BEATS);
   // Each line swaps a little into the push that brings its beat in.
-  const swapAt = starts.map((s, i) => (i === 0 ? 6 : s + 5));
+  const swapAt = starts.map((s, i) => (i === 0 ? 6 : s / FRAME_SCALE + 5));
   const ease = Easing.bezier(0.16, 1, 0.3, 1);
   return (
     <AbsoluteFill style={{ fontFamily: FONT, overflow: 'hidden' }}>
@@ -1010,16 +1014,16 @@ const AISection = () => {
 /* ───────────────────────── The cut ───────────────────────── */
 
 const STEPS: Step[] = [
-  { id: 'hook', duration: 60, render: HookScene },
+  { id: 'hook', ...timed(FULL, 'hook'), render: HookScene },
   // The page grows out of the cat, where it sits on the hook scene.
-  { id: 'meet', duration: 42, render: () => <MeetScene stampText={['AI', '家教']} caption="嘴有點壞的 AI 單字家教" />, enter: circle(540, 1430) },
+  { id: 'meet', ...timed(FULL, 'meet'), render: () => <MeetScene stampText={['AI', '家教']} caption="嘴有點壞的 AI 單字家教" />, enter: circle(540, 1430) },
   { id: 'ai', frames: trackFrames(AI_BEATS), render: AISection, enter: push('left') },
-  { id: 'scan', duration: 90, render: ScanScene, enter: zoomThrough() },
+  { id: 'scan', ...timed(FULL, 'scan'), render: ScanScene, enter: zoomThrough() },
   // Out of the 存入字庫 button.
-  { id: 'style', duration: 78, render: StyleScene, enter: circle(540, 1265) },
-  { id: 'settings', duration: 72, render: SettingsScene, enter: push('up') },
-  { id: 'reminder', duration: 64, render: ReminderScene, enter: pullDown() },
-  { id: 'end', duration: 48, render: () => <EndScene footnote="線上 AI 每日可用次數依方案而定。" />, enter: blurDissolve(), turn: 20 },
+  { id: 'style', ...timed(FULL, 'style'), render: StyleScene, enter: circle(540, 1265) },
+  { id: 'settings', ...timed(FULL, 'settings'), render: SettingsScene, enter: push('up') },
+  { id: 'reminder', ...timed(FULL, 'reminder'), render: ReminderScene, enter: pullDown() },
+  { id: 'end', ...timed(FULL, 'end'), render: () => <EndScene footnote="線上 AI 每日可用次數依方案而定。" />, enter: blurDissolve() },
 ];
 
 export const FULL_DURATION = trackFrames(STEPS);
@@ -1027,5 +1031,7 @@ export const FULL_DURATION = trackFrames(STEPS);
 export const Full = () => (
   <AbsoluteFill style={{ background: '#F3EEE4' }}>
     <Track steps={STEPS} />
+    {/* Composed from timeline.json by scripts/make-music.py, so every scene change is on a beat. */}
+    <Html5Audio src={staticFile('audio/full.mp3')} />
   </AbsoluteFill>
 );

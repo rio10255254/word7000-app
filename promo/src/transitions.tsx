@@ -2,7 +2,8 @@ import type { ReactElement } from 'react';
 import { AbsoluteFill, Easing } from 'remotion';
 import { TransitionSeries, linearTiming } from '@remotion/transitions';
 import type { TransitionPresentation, TransitionPresentationComponentProps } from '@remotion/transitions';
-import { scaledLength } from './time';
+import { BEAT_FRAMES, scaledLength } from './time';
+import timeline from './timeline.json';
 
 /**
  * Transitions in the manner of app ads: no hard cuts, and the move fits
@@ -13,9 +14,7 @@ import { scaledLength } from './time';
  */
 
 /** Extra authored frames each scene stays on screen after its own animation. */
-export const HOLD = 24;
-/** Authored frames a transition takes; the two scenes overlap for this long. */
-export const TURN = 16;
+export const HOLD = timeline.hold;
 
 type P<T extends Record<string, unknown>> = TransitionPresentationComponentProps<T>;
 const W = 1080;
@@ -91,7 +90,14 @@ export const blurDissolve = () => move(BlurDissolve, {});
 
 /* ── The track ── */
 
-const timing = (turn = TURN) => linearTiming({ durationInFrames: scaledLength(turn), easing: Easing.bezier(0.7, 0, 0.3, 1) });
+/**
+ * Everything lands on the soundtrack's beat: a scene lasts a whole number of
+ * beats (its animation plus HOLD, rounded up) and a transition is a whole
+ * number of beats, so every change of scene starts and ends on a beat.
+ */
+const onBeat = (frames: number) => Math.ceil(frames / BEAT_FRAMES) * BEAT_FRAMES;
+const turnFrames = (s: Step) => (s.turnBeats ?? 1) * BEAT_FRAMES;
+const timing = (s: Step) => linearTiming({ durationInFrames: turnFrames(s), easing: Easing.bezier(0.7, 0, 0.3, 1) });
 
 export type Step = {
   id: string;
@@ -102,25 +108,33 @@ export type Step = {
   render: () => ReactElement;
   /** How this scene comes in; ignored on the first. */
   enter?: Move;
-  /** Authored length of that transition. */
-  turn?: number;
+  /** How many beats that transition takes (1 unless set). */
+  turnBeats?: number;
 };
 
-const stepFrames = (s: Step) => s.frames ?? scaledLength((s.duration ?? 0) + HOLD);
+const stepFrames = (s: Step) => s.frames ?? onBeat(scaledLength((s.duration ?? 0) + HOLD));
 
 /** Total output frames for a list of steps played with their transitions. */
 export const trackFrames = (steps: readonly Step[]) =>
-  steps.reduce((sum, s, i) => sum + stepFrames(s) - (i > 0 ? scaledLength(s.turn ?? TURN) : 0), 0);
+  steps.reduce((sum, s, i) => sum + stepFrames(s) - (i > 0 ? turnFrames(s) : 0), 0);
 
-/** Where each step starts on the authored timeline (for things that span steps). */
+/** Where each step starts, in output frames (for things that span steps). */
 export const stepStarts = (steps: readonly Step[]) => {
   let t = 0;
   return steps.map((s, i) => {
-    if (i > 0) t -= s.turn ?? TURN;
+    if (i > 0) t -= turnFrames(s);
     const start = t;
-    t += (s.duration ?? 0) + HOLD;
+    t += stepFrames(s);
     return start;
   });
+};
+
+type Entry = { id: string; duration?: number; turnBeats?: number };
+/** A scene's timing from timeline.json, which the soundtrack is built from too. */
+export const timed = (entries: readonly Entry[], id: string) => {
+  const entry = entries.find((e) => e.id === id);
+  if (!entry) throw new Error(`No timeline entry for ${id}`);
+  return { duration: entry.duration, turnBeats: entry.turnBeats };
 };
 
 export const Track = ({ steps }: { steps: readonly Step[] }) => (
@@ -134,7 +148,7 @@ export const Track = ({ steps }: { steps: readonly Step[] }) => (
       );
       if (i === 0) return [sequence];
       return [
-        <TransitionSeries.Transition key={`into-${step.id}`} presentation={step.enter ?? blurDissolve()} timing={timing(step.turn)} />,
+        <TransitionSeries.Transition key={`into-${step.id}`} presentation={step.enter ?? blurDissolve()} timing={timing(step)} />,
         sequence,
       ];
     })}

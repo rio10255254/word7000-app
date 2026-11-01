@@ -84,7 +84,7 @@ export const HookScene = () => {
   );
 };
 
-/* ───────────────────────── 2. 認識一下，小字團。 ───────────────────────── */
+/* ───────────────────────── 2. 認識一下，小笨貓。 ───────────────────────── */
 
 export const MeetScene = ({ stampText = ['毒舌', '陪讀'], caption }: { stampText?: [string, string]; caption?: string }) => {
   const slap = useSlap(0);
@@ -124,7 +124,7 @@ export const MeetScene = ({ stampText = ['毒舌', '陪讀'], caption }: { stamp
         </BlurIn>
         <br />
         <BlurIn delay={10} style={{ fontSize: 176 }}>
-          小字團。
+          小笨貓。
         </BlurIn>
         {caption ? (
           <>
@@ -556,7 +556,7 @@ export const EndScene = ({ footnote }: { footnote?: string }) => {
         </div>
         <div style={{ fontWeight: 700, fontSize: 52, marginTop: 16, color: C.inkSoft }}>
           <BlurIn delay={10} rise={16}>
-            和小字團一起背 7000 單字。
+            和小笨貓一起背 7000 單字。
           </BlurIn>
         </div>
       </AbsoluteFill>

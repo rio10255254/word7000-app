@@ -30,7 +30,7 @@ import { Bubble, Mascot } from './Mascot';
 import { EndScene, HookScene, MeetScene } from './Teaser';
 
 /**
- * The 30-second cut. Most of it is the AI — 小字團 is the face of every
+ * The 30-second cut. Most of it is the AI — 小笨貓 is the face of every
  * online AI answer in the app — then scanning, making the app your own,
  * and the daily reminder. Every line the cat says, every label and every
  * button is copy from the beta (claude/friendly-darwin-obc3r1).
@@ -62,7 +62,7 @@ const Label = ({ children, color = C.inkSoft, style }: { children: ReactNode; co
   <div style={{ fontSize: 32, fontWeight: 700, color, ...style }}>{children}</div>
 );
 
-/* ───────────────────────── AI 1. 小字團解說 ───────────────────────── */
+/* ───────────────────────── AI 1. 小笨貓解說 ───────────────────────── */
 
 const ExplainScene = () => {
   const frame = useCurrentFrame();
@@ -93,7 +93,7 @@ const ExplainScene = () => {
       <div style={{ opacity: fadeIn(frame, 8) * fadeOut(frame, 22) }}>
         <PaperButton pressAt={17} style={{ left: L, top: 1000, width: W, height: 130 }}>
           <SparkleIcon />
-          叫小字團解說：用法、搭配與例句
+          叫小笨貓解說：用法、搭配與例句
         </PaperButton>
       </div>
 
@@ -102,7 +102,7 @@ const ExplainScene = () => {
           <CatSays mood={frame < answerAt ? 'idle' : 'smug'} size={130}>
             {frame < answerAt ? (
               <span style={{ color: C.inkSoft }}>
-                小字團翻一下筆記……別催。 <TypingDots />
+                小笨貓翻一下筆記……別催。 <TypingDots />
               </span>
             ) : (
               <>
@@ -145,7 +145,7 @@ const ExplainScene = () => {
   );
 };
 
-/* ───────────────────────── AI 2. 問小字團 ───────────────────────── */
+/* ───────────────────────── AI 2. 問小笨貓 ───────────────────────── */
 
 const PRESETS = ['常見的錯誤用法是什麼？', '跟意思相近的字有什麼不同？', '口語和正式場合都能用嗎？'];
 
@@ -163,7 +163,7 @@ const AskScene = () => {
           <span style={{ fontFamily: SERIF, fontWeight: 800, fontSize: 96, color: C.ink }}>attend</span>
         </BlurIn>
         <BlurIn delay={6}>
-          <span style={{ fontSize: 44, fontWeight: 900, color: C.clay }}>問小字團</span>
+          <span style={{ fontSize: 44, fontWeight: 900, color: C.clay }}>問小笨貓</span>
         </BlurIn>
       </div>
 
@@ -217,7 +217,7 @@ const AskScene = () => {
       <div style={{ opacity: fadeIn(frame, 30) }}>
         <Paper kind="ivory" grain={0.5} style={{ left: L, top: 1700, width: W, height: 120, boxShadow: `inset 0 0 0 ${1.5 * K}px rgba(43,38,32,0.45)` }}>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', padding: '0 40px', fontSize: 38, color: C.inkFaint }}>
-            問小字團關於這個字的問題
+            問小笨貓關於這個字的問題
             <div style={{ flex: 1 }} />
             <div style={{ width: 76, height: 76, borderRadius: '50%', background: C.clay, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
@@ -231,7 +231,7 @@ const AskScene = () => {
   );
 };
 
-/* ───────────────────────── AI 3. 小字團，我為什麼錯？ ───────────────────────── */
+/* ───────────────────────── AI 3. 小笨貓，我為什麼錯？ ───────────────────────── */
 
 const WhyScene = () => {
   const frame = useCurrentFrame();
@@ -269,7 +269,7 @@ const WhyScene = () => {
       <div style={{ opacity: fadeIn(frame, 12) * fadeOut(frame, 24) }}>
         <PaperButton pressAt={20} style={{ left: L, top: 1060, width: W, height: 130 }}>
           <SparkleIcon />
-          小字團，我為什麼錯？
+          小笨貓，我為什麼錯？
         </PaperButton>
       </div>
 
@@ -282,7 +282,7 @@ const WhyScene = () => {
               </span>
             ) : (
               <>
-                <div style={{ fontWeight: 900, color: C.clay, marginBottom: 6 }}>小字團說你錯在這：</div>
+                <div style={{ fontWeight: 900, color: C.clay, marginBottom: 6 }}>小笨貓說你錯在這：</div>
                 <Typewriter start={answerAt + 2} cps={52} text="which 是「哪一個」，用在幾個選項裡挑一個。你選的「說法」比較像 saying，意思差很遠。" />
               </>
             )}
@@ -409,7 +409,7 @@ const AnalysisScene = () => {
       <div style={{ opacity: fadeIn(frame, 2) * fadeOut(frame, 13) }}>
         <PaperButton pressAt={9} style={{ left: L, top: 490, width: W, height: 130 }}>
           <SparkleIcon />
-          讓小字團評評我最近學得怎樣
+          讓小笨貓評評我最近學得怎樣
         </PaperButton>
       </div>
 
@@ -772,7 +772,7 @@ const StyleScene = () => {
               <div style={{ position: 'absolute', right: 6, top: 6, width: 60, height: 60, borderRadius: '50%', background: '#fff' }} />
             </div>
           </div>
-          <div style={{ fontSize: 32, color: C.inkSoft, marginTop: 10, lineHeight: 1.4 }}>換風格只改外觀，學習紀錄和小字團都一樣。</div>
+          <div style={{ fontSize: 32, color: C.inkSoft, marginTop: 10, lineHeight: 1.4 }}>換風格只改外觀，學習紀錄和小笨貓都一樣。</div>
         </div>
       </div>
     </Scene>

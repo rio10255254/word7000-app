@@ -3,7 +3,7 @@ import { useId } from 'react';
 import { useCurrentFrame, useVideoConfig } from 'remotion';
 
 /**
- * 小字團 — the app's ginger cat, ported shape-for-shape from
+ * 小笨貓 — the app's ginger cat, ported shape-for-shape from
  * ios/Word7000/Design/Mascot.swift (claude/friendly-darwin-obc3r1).
  * Drawn on a 100×100 square; `size` scales it.
  */

@@ -1,19 +1,25 @@
 import '@fontsource/noto-sans-tc/500.css';
 import '@fontsource/noto-sans-tc/700.css';
 import '@fontsource/noto-sans-tc/900.css';
+import '@fontsource/noto-serif/400.css';
+import '@fontsource/noto-serif/800.css';
 import { continueRender, delayRender } from 'remotion';
 
+/** Chinese and UI text: the app shows Chinese in the system sans. */
 export const FONT = '"Noto Sans TC", "PingFang TC", sans-serif';
+/** English words and numbers: stands in for the app's serif display face (New York). */
+export const SERIF = '"Noto Serif", "New York", Georgia, serif';
 
-// Every glyph that appears on screen, so the matching unicode-range
-// subsets are fetched before the first frame is captured.
-const GLYPHS =
-  '0123456789 7000個單字。背了又忘？這次，不一樣每都有例句考一下就記住會念才算答對！高中天點口說練習發音出席濃郁的抱怨允許是什麼意思我幾乎所有同學週五晚上學校音樂Word attend v. Nearly all my classmates will the school concert on Friday evening';
+// Every glyph on screen, so the matching unicode-range subsets are fetched
+// before the first frame is captured. Regenerate when the copy changes.
+const LATIN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,/?!→';
+const CJK = '→。・一上下不中乎亂了五今住你來例個備價出前十卡又句同吐和哪喔單嗎團在夠天好字學小差席幾度張待我所手才文新是時晚景會有校格案槽樂機死每永法準滑熟牠的盯看笑答繼續習背著蛤被複記認說識起週進遠還都錯間音點，？';
 
-const handle = delayRender('Loading Noto Sans TC');
-Promise.all(
-  ['500', '700', '900'].map((weight) => document.fonts.load(`${weight} 64px "Noto Sans TC"`, GLYPHS)),
-)
+const handle = delayRender('Loading fonts');
+Promise.all([
+  ...['500', '700', '900'].map((weight) => document.fonts.load(`${weight} 64px "Noto Sans TC"`, CJK + LATIN)),
+  ...['400', '800'].map((weight) => document.fonts.load(`${weight} 64px "Noto Serif"`, LATIN + 'əˈ')),
+])
   .then(() => continueRender(handle))
   .catch((error) => {
     console.error(error);

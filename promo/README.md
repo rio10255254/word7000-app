@@ -1,6 +1,9 @@
 # Word7000 宣傳短片
 
-用 [Remotion](https://www.remotion.dev/) 寫成的直式（1080×1920、9:16）宣傳片，目前是 10 秒試作版。
+用 [Remotion](https://www.remotion.dev/) 寫成的直式（1080×1920、9:16）宣傳片，有兩個版本：
+
+- `Full`：30 秒完整版，重點放在 AI 與客製化
+- `Teaser`：10 秒試作版
 
 ## 使用方式
 
@@ -8,18 +11,21 @@
 cd promo
 npm install
 npm run studio   # 在瀏覽器即時預覽、拖時間軸
-npm run render   # 輸出 out/word7000-teaser.mp4
+npm run render           # 輸出 out/word7000-full-30s.mp4
+npm run render:teaser    # 輸出 out/word7000-teaser.mp4
+npm run typecheck
 ```
 
 在雲端容器或沒有下載 Chrome 的環境，可改用現有的 Chromium：
 
 ```bash
-npx remotion render Teaser out/word7000-teaser.mp4 --browser-executable=/opt/pw-browsers/chromium
+npx remotion render Full out/word7000-full-30s.mp4 --browser-executable=/opt/pw-browsers/chromium
 ```
 
 ## 結構
 
-- `src/Teaser.tsx`：所有場景。上方的 `SCENES` 控制每一幕的起點與長度（30 fps）。
+- `src/Full.tsx`：30 秒版的場景；`src/Teaser.tsx`：10 秒版的場景，開場、認識小字團和片尾兩版共用。兩個檔案上方的 `SCENES` 都控制每一幕的起點與長度（30 fps）。
+- `src/kit.tsx`：共用的動態效果（模糊浮現、紙片貼上、蓋章、打字機）和元件，例如小字團對話泡泡 `CatSays`、紙條按鈕。
 - `src/collage.tsx`：App「紙張拼貼」風格的素材，從 `ios/Word7000/Design/Collage.swift`（`claude/friendly-darwin-obc3r1` 分支）移植而來，包括方格紙、橫線索引卡（含紅色邊線）、紙膠帶、撕邊、網點、炭筆線圈和橡皮章。這個風格沒有陰影，靠紙張彼此重疊做出層次。
 - `src/Mascot.tsx`：吉祥物「小字團」，從 `Mascot.swift` 逐個形狀移植成 SVG。有 idle、smug、happy、annoyed 四種表情，也會呼吸、眨眼、甩尾巴。
 - `src/fonts.ts`：中文用 Noto Sans TC，英文單字用 Noto Serif（代替 App 裡的 New York 襯線字）。文案有改時要更新裡面的字表。
@@ -27,7 +33,28 @@ npx remotion render Teaser out/word7000-teaser.mp4 --browser-executable=/opt/pw-
 
 尺寸換算是「App 的 pt × 1080/402」，也就是把 402pt 寬的 iPhone 放大到 1080px。小字團的台詞都是 App 裡實際會出現的句子。
 
-## 分鏡（10 秒）
+## 分鏡（30 秒，Full）
+
+小字團就是 App 裡所有線上 AI 回答的化身，所以 AI 的段落都由牠來說。文案、按鈕和台詞都取自測試版。
+
+| 時間 | 段落 | 畫面 |
+| --- | --- | --- |
+| 0.0–2.0s | 開場 | 「又在滑手機？」小字團：「你滑手機的時間夠背十個字了。」 |
+| 2.0–3.4s | 開場 | 「認識一下，小字團。」嘴有點壞的 AI 單字家教，蓋「AI 家教」印章 |
+| 3.4–6.9s | AI | 「不懂？叫牠講到懂。」點「叫小字團解說」，小字團說明 attend 的用法和常見搭配 |
+| 6.9–9.9s | AI | 「想問什麼，直接問。」點預設問題「常見的錯誤用法是什麼？」：✗ attend to the meeting／✓ attend the meeting |
+| 9.9–12.6s | AI | 「答錯了，牠說你錯在哪。」點「小字團，我為什麼錯？」 |
+| 12.6–15.7s | AI | 「開口說，AI 幫你改。」口說教練：錄音後顯示文字，AI 給出更自然的說法和提示 |
+| 15.7–18.3s | AI | 「每天一次，牠幫你抓弱點。」學習分析：做得好的地方、要加油的字、接下來幾天 |
+| 18.3–21.3s | 掃描 | 「課本單字表，拍一下就好。」手寫單字表掃描後，由 Apple Intelligence 整理並存入字庫 |
+| 21.3–23.9s | 客製化 | 「你的 App，你的樣子。」皮革經典切換成紙張拼貼，圖示跟著換 |
+| 23.9–26.3s | 客製化 | 「每個設定，都照你的。」每日目標、學習語言、朗讀語速、單字集、學習提醒 |
+| 26.3–28.4s | 提醒 | 鎖定畫面中午 12:00 的即時動態：「單字不會自己背好喔」。小字團：「明天同一時間，我會來找你。」 |
+| 28.4–30.0s | 片尾 | 拼貼版 icon、Word7000、「7000 單字」印章 |
+
+AI 的回答內容（解說、錯誤用法、分析結果、口說建議）是為影片寫的示範，App 實際會由 Claude 依當下的字和紀錄產生。
+
+## 分鏡（10 秒，Teaser）
 
 | 時間 | 畫面 |
 | --- | --- |

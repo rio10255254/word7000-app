@@ -1,31 +1,31 @@
-import type { CSSProperties, ReactElement, ReactNode } from 'react';
-import {
-  AbsoluteFill,
-  Easing,
-  Img,
-  Sequence,
-  interpolate,
-  spring,
-  staticFile,
-  useCurrentFrame,
-  useVideoConfig,
-} from 'remotion';
+import type { ReactElement } from 'react';
+import { AbsoluteFill, Easing, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { COLLAGE, Desk, Halftone, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, SERIF } from './fonts';
 import { Bubble, Mascot } from './Mascot';
+import {
+  BlurIn,
+  C,
+  Check,
+  Cross,
+  Flame,
+  Headline,
+  Hopping,
+  PopBubble,
+  QuizIcon,
+  ReviewIcon,
+  Scene,
+  Speaker,
+  Star,
+  Target,
+  clamp,
+  easeOut,
+  headline,
+  usePop,
+  useSlap,
+  useStampPress,
+} from './kit';
 
-// The beta's warm palette (Theme.swift, WarmTone) — the collage style shares it.
-const C = {
-  ink: '#2B2620',
-  inkSoft: '#7A6F62',
-  inkFaint: '#B0A595',
-  clay: '#C96442',
-  sage: '#6E8F5E',
-  brick: '#B4483A',
-  slate: '#5B6B8C',
-  ivory: '#FBF8F2',
-  cream: '#FFF4E6',
-};
 
 // Scene timing in frames (30 fps). Total = 300 frames = 10 seconds.
 const SCENES = [
@@ -39,147 +39,10 @@ const SCENES = [
 
 export const TEASER_DURATION = SCENES[SCENES.length - 1].from + SCENES[SCENES.length - 1].duration;
 
-const easeOut = Easing.bezier(0.16, 1, 0.3, 1);
-const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
-
-/* ───────────────────────── Motion helpers ───────────────────────── */
-
-/** Text that sharpens out of a blur while rising — the core motion of the piece. */
-const BlurIn = ({
-  children,
-  delay = 0,
-  duration = 14,
-  rise = 36,
-  style,
-}: {
-  children: ReactNode;
-  delay?: number;
-  duration?: number;
-  rise?: number;
-  style?: CSSProperties;
-}) => {
-  const frame = useCurrentFrame();
-  const t = interpolate(frame, [delay, delay + duration], [0, 1], { ...clamp, easing: easeOut });
-  return (
-    <span
-      style={{
-        display: 'inline-block',
-        opacity: t,
-        filter: `blur(${(1 - t) * 22}px)`,
-        transform: `translateY(${(1 - t) * rise}px)`,
-        ...style,
-      }}
-    >
-      {children}
-    </span>
-  );
-};
-
-const usePop = (delay: number, damping = 13, stiffness = 170) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  return spring({ frame: frame - delay, fps, config: { damping, stiffness, mass: 0.8 } });
-};
-
-/** A piece of paper slapped down onto the desk: drops from a little above, slightly more tilted. */
-const useSlap = (delay: number) => {
-  const frame = useCurrentFrame();
-  const t = interpolate(frame, [delay, delay + 7], [0, 1], { ...clamp, easing: Easing.in(Easing.quad) });
-  return { opacity: Math.min(1, t * 3), scale: 1.12 - 0.12 * t, extraTilt: (1 - t) * 4 };
-};
-
-/** A rubber stamp pressed on: big and faint, then down hard. */
-const useStampPress = (delay: number) => {
-  const frame = useCurrentFrame();
-  const t = interpolate(frame, [delay, delay + 5], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
-  const settle = interpolate(frame, [delay + 5, delay + 9], [0.94, 1], clamp);
-  return { opacity: t, scale: frame < delay + 5 ? 1.8 - 0.86 * t : settle };
-};
-
-/** Gentle push-in so every hard cut lands with a little energy. */
-const Scene = ({ background, children }: { background: ReactNode; children: ReactNode }) => {
-  const frame = useCurrentFrame();
-  const scale = interpolate(frame, [0, 18], [1.05, 1], { extrapolateRight: 'clamp', easing: easeOut });
-  return (
-    <AbsoluteFill style={{ fontFamily: FONT, overflow: 'hidden' }}>
-      <AbsoluteFill style={{ transform: `scale(${scale})` }}>
-        {background}
-        {children}
-      </AbsoluteFill>
-    </AbsoluteFill>
-  );
-};
-
-const headline: CSSProperties = {
-  fontWeight: 900,
-  fontSize: 128,
-  lineHeight: 1.14,
-  letterSpacing: '-0.01em',
-  color: C.ink,
-};
-
-const Headline = ({ lines, top = 170 }: { lines: string[]; top?: number }) => (
-  <div style={{ position: 'absolute', top, left: 96, right: 96, ...headline }}>
-    {lines.map((line, i) => (
-      <div key={line}>
-        <BlurIn delay={i * 6}>{line}</BlurIn>
-      </div>
-    ))}
-  </div>
-);
-
-/** A bubble that pops out of the cat. */
-const PopBubble = ({ delay, origin, children, style }: { delay: number; origin: string; children: ReactNode; style?: CSSProperties }) => {
-  const pop = usePop(delay, 11, 220);
-  return (
-    <div style={{ position: 'absolute', transform: `scale(${pop})`, transformOrigin: origin, opacity: Math.min(1, pop * 2), ...style }}>
-      {children}
-    </div>
-  );
-};
-
-/** A squash-and-stretch hop, as the app's Mascot does when it is tapped. */
-const Hopping = ({ at, size, children }: { at: number[]; size: number; children: ReactNode }) => {
-  const frame = useCurrentFrame();
-  const current = [...at].reverse().find((a) => frame >= a) ?? -100;
-  const f = frame - current;
-  const active = f >= 0 && f <= 22;
-  const sy = active ? interpolate(f, [0, 3, 8, 12, 22], [1, 0.86, 1.08, 0.9, 1], clamp) : 1;
-  const sx = active ? interpolate(f, [0, 3, 8, 12, 22], [1, 1.1, 0.94, 1.08, 1], clamp) : 1;
-  const lift = active ? interpolate(f, [0, 3, 8, 12], [0, 0, -0.22, 0], clamp) : 0;
-  return <div style={{ transform: `translateY(${lift * size}px) scale(${sx}, ${sy})`, transformOrigin: '50% 100%' }}>{children}</div>;
-};
-
-/* ───────────────────────── Small icons ───────────────────────── */
-
-const Speaker = ({ color = C.clay, size = 60 }: { color?: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z" fill={color} />
-    <path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" stroke={color} strokeWidth="1.9" strokeLinecap="round" />
-  </svg>
-);
-
-const Star = ({ size = 56 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.5z" stroke={C.inkFaint} strokeWidth="1.6" strokeLinejoin="round" />
-  </svg>
-);
-
-const Check = ({ color, size = 46, draw = 1 }: { color: string; size?: number; draw?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24">
-    <path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke={color} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" strokeDasharray={24} strokeDashoffset={24 * (1 - draw)} />
-  </svg>
-);
-
-const Cross = ({ color, size = 46 }: { color: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24">
-    <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
-  </svg>
-);
 
 /* ───────────────────────── 1. 又在滑手機？ ───────────────────────── */
 
-const HookScene = () => {
+export const HookScene = () => {
   const frame = useCurrentFrame();
   const rise = usePop(8, 14, 120);
   const draw = interpolate(frame, [10, 22], [0, 1], { ...clamp, easing: easeOut });
@@ -223,7 +86,7 @@ const HookScene = () => {
 
 /* ───────────────────────── 2. 認識一下，小字團。 ───────────────────────── */
 
-const MeetScene = () => {
+export const MeetScene = ({ stampText = ['毒舌', '陪讀'], caption }: { stampText?: [string, string]; caption?: string }) => {
   const slap = useSlap(0);
   const pop = usePop(4, 10, 200);
   const stamp = useStampPress(16);
@@ -263,6 +126,14 @@ const MeetScene = () => {
         <BlurIn delay={10} style={{ fontSize: 176 }}>
           小字團。
         </BlurIn>
+        {caption ? (
+          <>
+            <br />
+            <BlurIn delay={16} rise={16} style={{ fontSize: 50, fontWeight: 700, color: C.clay, marginTop: 8 }}>
+              {caption}
+            </BlurIn>
+          </>
+        ) : null}
       </div>
       <Stamp
         size={250}
@@ -270,9 +141,9 @@ const MeetScene = () => {
         style={{ right: 80, top: 1480, opacity: stamp.opacity, transform: `rotate(-12deg) scale(${stamp.scale})` }}
       >
         <div style={{ fontWeight: 900, fontSize: 54, lineHeight: 1.15 }}>
-          毒舌
+          {stampText[0]}
           <br />
-          陪讀
+          {stampText[1]}
         </div>
       </Stamp>
     </Scene>
@@ -530,32 +401,6 @@ const QuizScene = () => {
 
 /* ───────────────────────── 5. 今天：拼貼主卡 + 練習 ───────────────────────── */
 
-const Flame = ({ size = 34 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24">
-    <path d="M12 2.5c1 3.5 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-2.6 1.4-4.2 2.6-5.4.2 1.6.9 2.6 1.9 3C11 8.5 10.5 5.5 12 2.5z" fill="#FFB347" />
-  </svg>
-);
-
-const Target = ({ size = 34 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={C.cream} strokeWidth="2">
-    <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="12" r="5" />
-    <circle cx="12" cy="12" r="1.4" fill={C.cream} />
-  </svg>
-);
-
-const ReviewIcon = () => (
-  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" />
-    <path d="M4.5 4.5v4h4" />
-  </svg>
-);
-
-const QuizIcon = () => (
-  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 7l1.5 1.5L8 6M4 15l1.5 1.5L8 14M11 7.5h9M11 15.5h9" />
-  </svg>
-);
 
 const TodayScene = () => {
   const frame = useCurrentFrame();
@@ -695,7 +540,7 @@ const TodayScene = () => {
 
 /* ───────────────────────── 6. 片尾 ───────────────────────── */
 
-const EndScene = () => {
+export const EndScene = ({ footnote }: { footnote?: string }) => {
   const slap = useSlap(0);
   const stamp = useStampPress(14);
   return (
@@ -721,17 +566,24 @@ const EndScene = () => {
           <div style={{ fontWeight: 900, fontSize: 34 }}>單字</div>
         </div>
       </Stamp>
+      {footnote ? (
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 120, textAlign: 'center', fontSize: 30, fontWeight: 500, color: C.inkFaint }}>
+          <BlurIn delay={16} rise={10}>
+            {footnote}
+          </BlurIn>
+        </div>
+      ) : null}
     </Scene>
   );
 };
 
 const COMPONENTS: Record<(typeof SCENES)[number]['id'], () => ReactElement> = {
   hook: HookScene,
-  meet: MeetScene,
+  meet: () => <MeetScene />,
   card: CardScene,
   quiz: QuizScene,
   today: TodayScene,
-  end: EndScene,
+  end: () => <EndScene />,
 };
 
 export const Teaser = () => (

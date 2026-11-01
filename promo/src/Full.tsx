@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactElement, ReactNode } from 'react';
-import { AbsoluteFill, Img, Sequence, interpolate, spring, staticFile } from 'remotion';
-import { AUTHORED_FPS, scaleScenes, scaledLength, useFrame } from './time';
+import { AbsoluteFill, Img, interpolate, spring, staticFile } from 'remotion';
+import { AUTHORED_FPS, useFrame } from './time';
+import { SceneTrack, trackLength } from './transitions';
 import { Desk, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, HAND, SERIF } from './fonts';
 import {
@@ -51,7 +52,7 @@ const SCENES = [
   { id: 'end', from: 852, duration: 48 },
 ] as const;
 
-export const FULL_DURATION = scaledLength(SCENES[SCENES.length - 1].from + SCENES[SCENES.length - 1].duration);
+export const FULL_DURATION = trackLength(SCENES);
 
 const L = 64; // page gutter
 const W = 1080 - L * 2;
@@ -972,13 +973,6 @@ const COMPONENTS: Record<(typeof SCENES)[number]['id'], () => ReactElement> = {
 
 export const Full = () => (
   <AbsoluteFill style={{ background: '#F3EEE4' }}>
-    {scaleScenes(SCENES).map(({ id, from, duration }) => {
-      const Component = COMPONENTS[id];
-      return (
-        <Sequence key={id} from={from} durationInFrames={duration} name={id}>
-          <Component />
-        </Sequence>
-      );
-    })}
+    <SceneTrack scenes={SCENES} components={COMPONENTS} />
   </AbsoluteFill>
 );

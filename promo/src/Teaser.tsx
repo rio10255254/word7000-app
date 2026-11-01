@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
-import { AbsoluteFill, Easing, Img, Sequence, interpolate, spring, staticFile } from 'remotion';
-import { AUTHORED_FPS, scaleScenes, scaledLength, useFrame } from './time';
+import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile } from 'remotion';
+import { AUTHORED_FPS, useFrame } from './time';
+import { SceneTrack, trackLength } from './transitions';
 import { COLLAGE, Desk, Halftone, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, SERIF } from './fonts';
 import { Bubble, Mascot } from './Mascot';
@@ -38,7 +39,7 @@ const SCENES = [
   { id: 'end', from: 258, duration: 42 },
 ] as const;
 
-export const TEASER_DURATION = scaledLength(SCENES[SCENES.length - 1].from + SCENES[SCENES.length - 1].duration);
+export const TEASER_DURATION = trackLength(SCENES);
 
 
 /* ───────────────────────── 1. 又在滑手機？ ───────────────────────── */
@@ -588,14 +589,7 @@ const COMPONENTS: Record<(typeof SCENES)[number]['id'], () => ReactElement> = {
 };
 
 export const Teaser = () => (
-  <AbsoluteFill style={{ background: COLLAGE.desk }}>
-    {scaleScenes(SCENES).map(({ id, from, duration }) => {
-      const Component = COMPONENTS[id];
-      return (
-        <Sequence key={id} from={from} durationInFrames={duration} name={id}>
-          <Component />
-        </Sequence>
-      );
-    })}
+  <AbsoluteFill style={{ background: '#F3EEE4' }}>
+    <SceneTrack scenes={SCENES} components={COMPONENTS} />
   </AbsoluteFill>
 );

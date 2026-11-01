@@ -13,7 +13,7 @@ export const SERIF = '"Noto Serif", "New York", Georgia, serif';
 // Every glyph on screen, so the matching unicode-range subsets are fetched
 // before the first frame is captured. Regenerate when the copy changes.
 const LATIN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,/?!→';
-const CJK = '→。・一上下不中乎亂了五今住你來例個備價出前十卡又句同吐和哪喔單嗎團在夠天好字學小差席幾度張待我所手才文新是時晚景會有校格案槽樂機死每永法準滑熟牠的盯看笑答繼續習背著蛤被複記認說識起週進遠還都錯間音點，？';
+const CJK = '→。・一上下不中乎亂了五今住你來例個備價出到前十卡又句同吐和哪喔單嗎團在夠天好字學小差席幾度張待我所手才文新是時晚景會有校格案槽樂機止死每毒永法測準滑為熟牠的盯看笑答練繼續習背舌著蛤被複記認說識讀起週進遠還都錯間陪音題驗點，？';
 
 const handle = delayRender('Loading fonts');
 Promise.all([

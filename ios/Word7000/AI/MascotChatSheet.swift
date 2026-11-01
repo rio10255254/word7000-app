@@ -84,7 +84,7 @@ struct MascotChatSheet: View {
                 .animation(reduceMotion ? nil : Motion.reveal, value: shown)
             }
             .background { AmbientBackground() }
-            .navigationTitle(L.t("小字團說", "Wordling says"))
+            .navigationTitle(L.t("小笨貓說", "Silly Cat says"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button(L.done) { dismiss() } }
@@ -270,6 +270,6 @@ private struct TypingDots: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 13)
         .background(MascotBubble.cream, in: Capsule())
-        .accessibilityLabel(L.t("小字團正在想", "Wordling is thinking"))
+        .accessibilityLabel(L.t("小笨貓正在想", "Silly Cat is thinking"))
     }
 }

@@ -20,13 +20,13 @@ struct WelcomeView: View {
                         HStack(spacing: 10) {
                             Mascot(mood: .smug, size: 96, hop: waved ? 1 : 0)
                                 .popIn()
-                            MascotBubble(text: text("我是小字團。從今天起，我會盯著你背單字。", "I'm Wordling. From today, I'm watching you study."),
+                            MascotBubble(text: text("我是小笨貓。從今天起，我會盯著你背單字。", "I'm Silly Cat. From today, I'm watching you study."),
                                          pointing: .leading)
                                 .padding(.leading, 6)
                                 .contentTransition(.opacity)
                                 .entrance(1)
                         }
-                        Text("Word7000").font(.largeTitle.bold())
+                        Text(text("單字貓", "WordCat")).font(.largeTitle.bold())
                             .entrance(1)
                         Text(text("先從 5 個單字開始", "Start with 5 words"))
                             .font(.title2.bold())

@@ -13,7 +13,7 @@ struct TodayWidget: Widget {
                 .containerBackground(for: .widget) { WidgetBackground() }
                 .widgetURL(URL(string: "word7000://study"))
         }
-        .configurationDisplayName("Word7000")
+        .configurationDisplayName("單字貓")
         .description("今天的學習進度、連續天數與每日一字。")
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular, .accessoryInline])
     }
@@ -242,7 +242,7 @@ struct TodayWidgetView: View {
     private var empty: some View {
         VStack(spacing: 6) {
             Image(systemName: "book.closed.fill").font(.title2).foregroundStyle(WidgetPalette.accent)
-            Text(entry.t("打開 Word7000 開始今天的學習", "Open Word7000 to start today"))
+            Text(entry.t("打開單字貓開始今天的學習", "Open WordCat to start today"))
                 .font(.system(size: 12, weight: .semibold))
                 .multilineTextAlignment(.center)
         }

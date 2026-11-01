@@ -125,11 +125,14 @@ struct Props {
     init(_ state: LiveActivityAttributes.ContentState) {
         value = StreakActivityProps.decode(state.props) ?? StreakActivityProps(
             activityKind: "streak", countdownLabel: "", expiresAt: Date().timeIntervalSince1970 * 1000, keepStreakLabel: "",
-            progressCurrent: nil, progressTarget: nil, startedAt: Date().timeIntervalSince1970 * 1000, streak: 0, streakLabel: "", title: "Word7000"
+            progressCurrent: nil, progressTarget: nil, startedAt: Date().timeIntervalSince1970 * 1000, streak: 0, streakLabel: "", title: "單字貓"
         )
     }
 
     var target: Double { max(1, value.progressTarget ?? 1) }
+    /// The app's name in the card's language: the app writes the title in
+    /// the interface language, so a title in Chinese means a Chinese card.
+    var appName: String { value.title.unicodeScalars.contains { $0.properties.isIdeographic } ? "單字貓" : "WordCat" }
     var current: Double { min(max(0, value.progressCurrent ?? 0), target) }
     var fraction: Double { current / target }
     /// Today's goal reached (noon card) or the streak kept (last-hour card).
@@ -213,7 +216,7 @@ struct LockScreenCard: View {
                         .font(.system(size: 11, weight: .semibold, design: .serif))
                         .foregroundStyle(props.accent)
                     Spacer()
-                    Text("Word7000")
+                    Text(props.appName)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(.white.opacity(0.45))
                 }

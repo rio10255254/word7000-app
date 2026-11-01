@@ -10,7 +10,7 @@ struct SignInSheet: View {
 
         var title: String {
             switch self {
-            case .general: L.t("登入 Word7000", "Sign in to Word7000")
+            case .general: L.t("登入單字貓", "Sign in to WordCat")
             case .scan: L.t("登入後就能掃描單字表", "Sign in to scan word lists")
             }
         }

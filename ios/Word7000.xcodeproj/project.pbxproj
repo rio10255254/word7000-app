@@ -358,7 +358,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Word7000-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Word7000;
+				INFOPLIST_KEY_CFBundleDisplayName = "單字貓";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Word7000 需要使用相機拍下單字表，在手機上辨識英文與中文意思。照片不會上傳。";
@@ -393,7 +393,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Word7000-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Word7000;
+				INFOPLIST_KEY_CFBundleDisplayName = "單字貓";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Word7000 需要使用相機拍下單字表，在手機上辨識英文與中文意思。照片不會上傳。";
@@ -456,7 +456,7 @@
 				CURRENT_PROJECT_VERSION = 26;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Word7000Widgets-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Word7000;
+				INFOPLIST_KEY_CFBundleDisplayName = "單字貓";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -481,7 +481,7 @@
 				CURRENT_PROJECT_VERSION = 26;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Word7000Widgets-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Word7000;
+				INFOPLIST_KEY_CFBundleDisplayName = "單字貓";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

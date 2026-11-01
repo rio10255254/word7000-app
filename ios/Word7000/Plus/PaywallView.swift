@@ -105,7 +105,7 @@ struct PaywallView: View {
                         .offset(x: 40, y: 10)
                         .opacity(appeared ? 1 : 0)
                 }
-            Text("Word7000 Plus")
+            Text(L.t("單字貓 Plus", "WordCat Plus"))
                 .font(.display(.title, weight: .heavy))
             Text(P.headline(reason))
                 .font(.subheadline)

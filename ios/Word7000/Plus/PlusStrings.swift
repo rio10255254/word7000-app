@@ -73,7 +73,7 @@ enum P {
 
     // Welcome
     static var welcomeTitle: String { L.t("歡迎加入 Plus", "Welcome to Plus") }
-    static var welcomeText: String { L.t("所有功能都解鎖了，謝謝你支持 Word7000。", "Everything is unlocked. Thank you for supporting Word7000.") }
+    static var welcomeText: String { L.t("所有功能都解鎖了，謝謝你支持單字貓。", "Everything is unlocked. Thank you for supporting WordCat.") }
     static var welcomeStart: String { L.t("開始使用", "Get started") }
 
     // Me
@@ -112,7 +112,7 @@ enum P {
         case .scansUsedUp: L.t("試用掃描次數用完了", "Trial scans used up")
         case .lastScan: L.t("試用掃描只剩 1 次", "1 trial scan left")
         case let .trialEnding(days): L.t("Plus 試用剩 \(days) 天", "\(days) Plus trial days left")
-        case .trialEnded: L.t("解鎖 Word7000 Plus", "Unlock Word7000 Plus")
+        case .trialEnded: L.t("解鎖單字貓 Plus", "Unlock WordCat Plus")
         }
     }
     static func nudgeText(_ nudge: PlusPolicy.Nudge) -> String {

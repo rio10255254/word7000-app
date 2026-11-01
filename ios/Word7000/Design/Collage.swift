@@ -438,8 +438,8 @@ struct StyleSettingsView: View {
                 .padding(.vertical, 10)
                 .background(Palette.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .accessibilityIdentifier("style-icon-follows")
-                Text(L.t("換風格只改變外觀，功能、學習紀錄和小字團都一樣。換主畫面圖示時，iOS 會跳出一次系統提示。",
-                         "Changing the style only changes the look; your progress, every feature and Wordling stay the same. iOS shows a notice when the home-screen icon changes."))
+                Text(L.t("換風格只改變外觀，功能、學習紀錄和小笨貓都一樣。換主畫面圖示時，iOS 會跳出一次系統提示。",
+                         "Changing the style only changes the look; your progress, every feature and Silly Cat stay the same. iOS shows a notice when the home-screen icon changes."))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

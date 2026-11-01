@@ -1062,7 +1062,7 @@ struct MascotBuddy: View {
             }
             // For VoiceOver a button that says hello, so it can be played with too.
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(L.t("小字團", "Wordling"))
+            .accessibilityLabel(L.t("小笨貓", "Silly Cat"))
             .accessibilityAddTraits(.isButton)
             .accessibilityAction { poke() }
             .accessibilityHint(L.t("點一下扁它", "Tap to smack it"))

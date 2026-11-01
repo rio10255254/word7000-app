@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { AbsoluteFill, Easing, interpolate, spring, useVideoConfig } from 'remotion';
-import { useFrame } from './time';
+import { AbsoluteFill, Easing, interpolate, spring } from 'remotion';
+import { AUTHORED_FPS, useFrame } from './time';
 import { FONT } from './fonts';
 import { Mascot, type Mood } from './Mascot';
 import { K, Paper } from './collage';
@@ -56,7 +56,7 @@ export const BlurIn = ({
 
 export const usePop = (delay: number, damping = 13, stiffness = 170) => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   return spring({ frame: frame - delay, fps, config: { damping, stiffness, mass: 0.8 } });
 };
 
@@ -189,7 +189,7 @@ export const QuizIcon = () => (
 /** Reveals `text` a few characters per frame from `start`, with a caret while typing. */
 export const Typewriter = ({ text, start, cps = 40, style }: { text: string; start: number; cps?: number; style?: CSSProperties }) => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const chars = Array.from(text);
   const shown = Math.max(0, Math.min(chars.length, Math.floor(((frame - start) * cps) / fps)));
   const typing = shown > 0 && shown < chars.length;

@@ -5,7 +5,7 @@
 - `Full`：36 秒完整版，重點放在 AI 與客製化
 - `Teaser`：12 秒試作版
 
-兩支都以 1.2 倍慢速播放（`src/time.ts` 的 `SPEED`），讓觀眾來得及看完文字。場景仍以 30 fps 的格數撰寫，`useFrame()` 會換算成放慢後的時間軸，所以剪接點、打字和動畫一起等比例變慢，輸出依然是順暢的 30 fps。
+兩支都以 1.2 倍慢速播放，輸出 60 fps，設定都在 `src/time.ts`：`SPEED` 控制速度，`OUTPUT_FPS` 控制輸出幀率。場景以 30 fps 的格數撰寫，`useFrame()` 會換算成放慢後、60 fps 的時間軸。剪接點、打字和動畫一起等比例變慢，同時多出中間格，所以動作更順。要改速度或幀率，只要改這兩個數字。
 
 ## 使用方式
 
@@ -13,15 +13,15 @@
 cd promo
 npm install
 npm run studio   # 在瀏覽器即時預覽、拖時間軸
-npm run render           # 輸出 out/word7000-full-36s.mp4
-npm run render:teaser    # 輸出 out/word7000-teaser-12s.mp4
+npm run render           # 輸出 out/word7000-full-36s-60fps.mp4
+npm run render:teaser    # 輸出 out/word7000-teaser-12s-60fps.mp4
 npm run typecheck
 ```
 
 在雲端容器或沒有下載 Chrome 的環境，可改用現有的 Chromium：
 
 ```bash
-npx remotion render Full out/word7000-full-36s.mp4 --browser-executable=/opt/pw-browsers/chromium
+npx remotion render Full out/word7000-full-36s-60fps.mp4 --browser-executable=/opt/pw-browsers/chromium
 ```
 
 ## 結構

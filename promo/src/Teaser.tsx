@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
-import { AbsoluteFill, Easing, Img, Sequence, interpolate, spring, staticFile, useVideoConfig } from 'remotion';
-import { scaleScenes, scaledLength, useFrame } from './time';
+import { AbsoluteFill, Easing, Img, Sequence, interpolate, spring, staticFile } from 'remotion';
+import { AUTHORED_FPS, scaleScenes, scaledLength, useFrame } from './time';
 import { COLLAGE, Desk, Halftone, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, SERIF } from './fonts';
 import { Bubble, Mascot } from './Mascot';
@@ -28,7 +28,7 @@ import {
 } from './kit';
 
 
-// Scene timing in frames (30 fps). Total = 300 frames = 10 seconds.
+// Scene timing in authored frames (30 fps); time.ts slows and resamples it. 300 frames = 10 s as written, 12 s on screen.
 const SCENES = [
   { id: 'hook', from: 0, duration: 60 },
   { id: 'meet', from: 60, duration: 36 },
@@ -321,7 +321,7 @@ const TAP_AT = 22;
 
 const QuizScene = () => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const answered = frame >= TAP_AT;
   const shake = answered ? Math.sin((frame - TAP_AT) * 2.2) * interpolate(frame, [TAP_AT, TAP_AT + 10], [16, 0], clamp) : 0;
   const draw = interpolate(frame, [TAP_AT + 2, TAP_AT + 10], [0, 1], clamp);

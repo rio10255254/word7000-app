@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactElement, ReactNode } from 'react';
-import { AbsoluteFill, Img, Sequence, interpolate, spring, staticFile, useVideoConfig } from 'remotion';
-import { scaleScenes, scaledLength, useFrame } from './time';
+import { AbsoluteFill, Img, Sequence, interpolate, spring, staticFile } from 'remotion';
+import { AUTHORED_FPS, scaleScenes, scaledLength, useFrame } from './time';
 import { Desk, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, HAND, SERIF } from './fonts';
 import {
@@ -152,7 +152,7 @@ const PRESETS = ['常見的錯誤用法是什麼？', '跟意思相近的字有�
 
 const AskScene = () => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const answerAt = 40;
   const asked = frame >= 22;
   return (
@@ -497,7 +497,7 @@ const SCANNED = [
 
 const ScanScene = () => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const review = frame >= 44;
   const sweep = interpolate(frame, [8, 34], [0, 1], clamp);
   const photo = { left: 110, top: 520, w: 860, h: 620 };
@@ -784,7 +784,7 @@ const StyleScene = () => {
 
 const Segmented = ({ options, selected, from, at }: { options: string[]; selected: number; from?: number; at?: number }) => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const t = at === undefined || from === undefined ? 1 : spring({ frame: frame - at, fps, config: { damping: 16, stiffness: 220 } });
   const index = from === undefined ? selected : from + (selected - from) * t;
   const cell = 100 / options.length;
@@ -816,7 +816,7 @@ const Segmented = ({ options, selected, from, at }: { options: string[]; selecte
 
 const SettingsScene = () => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const remindOn = spring({ frame: frame - 50, fps, config: { damping: 16, stiffness: 220 } });
   const rows: { label: string; control: ReactNode }[] = [
     { label: '每日目標', control: <Segmented options={['10', '20', '30', '50']} from={1} selected={2} at={16} /> },
@@ -888,7 +888,7 @@ const SettingsScene = () => {
 
 const ReminderScene = () => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const card = spring({ frame: frame - 8, fps, config: { damping: 15, stiffness: 150 } });
   const left = Math.max(0, 11 * 3600 + 59 * 60 + 59 - Math.floor(frame / fps));
   const hh = Math.floor(left / 3600);

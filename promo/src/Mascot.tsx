@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'react';
 import { useId } from 'react';
-import { useVideoConfig } from 'remotion';
-import { useFrame } from './time';
+import { AUTHORED_FPS, useFrame } from './time';
 
 /**
  * 小笨貓 — the app's ginger cat, ported shape-for-shape from
@@ -157,7 +156,7 @@ export const Mascot = ({
   phase?: number;
 }) => {
   const frame = useFrame();
-  const { fps } = useVideoConfig();
+  const fps = AUTHORED_FPS;
   const t = frame / fps + phase + 1;
   const uid = useId().replace(/:/g, '');
 

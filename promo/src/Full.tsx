@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactElement, ReactNode } from 'react';
-import { AbsoluteFill, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Img, Sequence, interpolate, spring, staticFile, useVideoConfig } from 'remotion';
+import { scaleScenes, scaledLength, useFrame } from './time';
 import { Desk, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, HAND, SERIF } from './fonts';
 import {
@@ -50,7 +51,7 @@ const SCENES = [
   { id: 'end', from: 852, duration: 48 },
 ] as const;
 
-export const FULL_DURATION = SCENES[SCENES.length - 1].from + SCENES[SCENES.length - 1].duration;
+export const FULL_DURATION = scaledLength(SCENES[SCENES.length - 1].from + SCENES[SCENES.length - 1].duration);
 
 const L = 64; // page gutter
 const W = 1080 - L * 2;
@@ -65,7 +66,7 @@ const Label = ({ children, color = C.inkSoft, style }: { children: ReactNode; co
 /* ───────────────────────── AI 1. 小笨貓解說 ───────────────────────── */
 
 const ExplainScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const slap = useSlap(2);
   const pad = 44 * K;
   const answerAt = 34;
@@ -150,7 +151,7 @@ const ExplainScene = () => {
 const PRESETS = ['常見的錯誤用法是什麼？', '跟意思相近的字有什麼不同？', '口語和正式場合都能用嗎？'];
 
 const AskScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   const answerAt = 40;
   const asked = frame >= 22;
@@ -234,7 +235,7 @@ const AskScene = () => {
 /* ───────────────────────── AI 3. 小笨貓，我為什麼錯？ ───────────────────────── */
 
 const WhyScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const scrap = useSlap(2);
   const answered = frame >= 8;
   const answerAt = 36;
@@ -302,7 +303,7 @@ const WhyScene = () => {
 /* ───────────────────────── AI 4. 口說教練 ───────────────────────── */
 
 const CoachScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const prompt = useSlap(2);
   const recording = frame >= 12 && frame < 40;
   const typed = frame >= 40;
@@ -398,7 +399,7 @@ const CoachScene = () => {
 /* ───────────────────────── AI 5. 學習分析 ───────────────────────── */
 
 const AnalysisScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const verdictAt = 26;
   const papers = [useSlap(34), useSlap(41), useSlap(48)];
   const go = usePop(56, 14);
@@ -495,7 +496,7 @@ const SCANNED = [
 ];
 
 const ScanScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   const review = frame >= 44;
   const sweep = interpolate(frame, [8, 34], [0, 1], clamp);
@@ -701,7 +702,7 @@ const CollageThumb = ({ w }: { w: number }) => {
 };
 
 const StyleScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const chooseAt = 30;
   const collage = frame >= chooseAt;
   const flip = interpolate(frame, [chooseAt + 6, chooseAt + 11, chooseAt + 16], [1, 0, 1], clamp);
@@ -782,7 +783,7 @@ const StyleScene = () => {
 /* ───────────────────────── 客製化 2. 設定 ───────────────────────── */
 
 const Segmented = ({ options, selected, from, at }: { options: string[]; selected: number; from?: number; at?: number }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   const t = at === undefined || from === undefined ? 1 : spring({ frame: frame - at, fps, config: { damping: 16, stiffness: 220 } });
   const index = from === undefined ? selected : from + (selected - from) * t;
@@ -814,7 +815,7 @@ const Segmented = ({ options, selected, from, at }: { options: string[]; selecte
 };
 
 const SettingsScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   const remindOn = spring({ frame: frame - 50, fps, config: { damping: 16, stiffness: 220 } });
   const rows: { label: string; control: ReactNode }[] = [
@@ -886,7 +887,7 @@ const SettingsScene = () => {
 /* ───────────────────────── 每日提醒：鎖定畫面 ───────────────────────── */
 
 const ReminderScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   const card = spring({ frame: frame - 8, fps, config: { damping: 15, stiffness: 150 } });
   const left = Math.max(0, 11 * 3600 + 59 * 60 + 59 - Math.floor(frame / fps));
@@ -971,7 +972,7 @@ const COMPONENTS: Record<(typeof SCENES)[number]['id'], () => ReactElement> = {
 
 export const Full = () => (
   <AbsoluteFill style={{ background: '#F3EEE4' }}>
-    {SCENES.map(({ id, from, duration }) => {
+    {scaleScenes(SCENES).map(({ id, from, duration }) => {
       const Component = COMPONENTS[id];
       return (
         <Sequence key={id} from={from} durationInFrames={duration} name={id}>

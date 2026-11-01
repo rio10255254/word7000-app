@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Easing, interpolate, spring, useVideoConfig } from 'remotion';
+import { useFrame } from './time';
 import { FONT } from './fonts';
 import { Mascot, type Mood } from './Mascot';
 import { K, Paper } from './collage';
@@ -36,7 +37,7 @@ export const BlurIn = ({
   rise?: number;
   style?: CSSProperties;
 }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const t = interpolate(frame, [delay, delay + duration], [0, 1], { ...clamp, easing: easeOut });
   return (
     <span
@@ -54,21 +55,21 @@ export const BlurIn = ({
 };
 
 export const usePop = (delay: number, damping = 13, stiffness = 170) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   return spring({ frame: frame - delay, fps, config: { damping, stiffness, mass: 0.8 } });
 };
 
 /** A piece of paper slapped down onto the desk: drops from a little above, slightly more tilted. */
 export const useSlap = (delay: number) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const t = interpolate(frame, [delay, delay + 7], [0, 1], { ...clamp, easing: Easing.in(Easing.quad) });
   return { opacity: Math.min(1, t * 3), scale: 1.12 - 0.12 * t, extraTilt: (1 - t) * 4 };
 };
 
 /** A rubber stamp pressed on: big and faint, then down hard. */
 export const useStampPress = (delay: number) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const t = interpolate(frame, [delay, delay + 5], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
   const settle = interpolate(frame, [delay + 5, delay + 9], [0.94, 1], clamp);
   return { opacity: t, scale: frame < delay + 5 ? 1.8 - 0.86 * t : settle };
@@ -76,7 +77,7 @@ export const useStampPress = (delay: number) => {
 
 /** Gentle push-in so every hard cut lands with a little energy. */
 export const Scene = ({ background, children }: { background: ReactNode; children: ReactNode }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const scale = interpolate(frame, [0, 18], [1.05, 1], { extrapolateRight: 'clamp', easing: easeOut });
   return (
     <AbsoluteFill style={{ fontFamily: FONT, overflow: 'hidden' }}>
@@ -118,7 +119,7 @@ export const PopBubble = ({ delay, origin, children, style }: { delay: number; o
 
 /** A squash-and-stretch hop, as the app's Mascot does when it is tapped. */
 export const Hopping = ({ at, size, children }: { at: number[]; size: number; children: ReactNode }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const current = [...at].reverse().find((a) => frame >= a) ?? -100;
   const f = frame - current;
   const active = f >= 0 && f <= 22;
@@ -187,7 +188,7 @@ export const QuizIcon = () => (
 
 /** Reveals `text` a few characters per frame from `start`, with a caret while typing. */
 export const Typewriter = ({ text, start, cps = 40, style }: { text: string; start: number; cps?: number; style?: CSSProperties }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   const chars = Array.from(text);
   const shown = Math.max(0, Math.min(chars.length, Math.floor(((frame - start) * cps) / fps)));
@@ -202,7 +203,7 @@ export const Typewriter = ({ text, start, cps = 40, style }: { text: string; sta
 
 /** Three dots bouncing while the cat thinks. */
 export const TypingDots = ({ color = C.inkSoft }: { color?: string }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   return (
     <span style={{ display: 'inline-flex', gap: 10, alignItems: 'center', height: 40 }}>
       {[0, 1, 2].map((i) => (
@@ -314,7 +315,7 @@ export const PaperButton = ({
   color?: string;
   style?: CSSProperties;
 }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const press = interpolate(frame, [pressAt - 3, pressAt, pressAt + 4], [1, 0.95, 1], clamp);
   const flash = interpolate(frame, [pressAt, pressAt + 10], [0.25, 0], clamp);
   return (

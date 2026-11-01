@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "studio": "remotion studio",
-    "render": "remotion render Full out/word7000-full-30s.mp4",
-    "render:teaser": "remotion render Teaser out/word7000-teaser.mp4",
+    "render": "remotion render Full out/word7000-full-36s.mp4",
+    "render:teaser": "remotion render Teaser out/word7000-teaser-12s.mp4",
     "still": "remotion still Full out/still.png",
     "typecheck": "tsc --noEmit"
   },

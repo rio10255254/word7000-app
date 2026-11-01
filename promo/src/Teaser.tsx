@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
-import { AbsoluteFill, Easing, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, Easing, Img, Sequence, interpolate, spring, staticFile, useVideoConfig } from 'remotion';
+import { scaleScenes, scaledLength, useFrame } from './time';
 import { COLLAGE, Desk, Halftone, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, SERIF } from './fonts';
 import { Bubble, Mascot } from './Mascot';
@@ -37,13 +38,13 @@ const SCENES = [
   { id: 'end', from: 258, duration: 42 },
 ] as const;
 
-export const TEASER_DURATION = SCENES[SCENES.length - 1].from + SCENES[SCENES.length - 1].duration;
+export const TEASER_DURATION = scaledLength(SCENES[SCENES.length - 1].from + SCENES[SCENES.length - 1].duration);
 
 
 /* ───────────────────────── 1. 又在滑手機？ ───────────────────────── */
 
 export const HookScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const rise = usePop(8, 14, 120);
   const draw = interpolate(frame, [10, 22], [0, 1], { ...clamp, easing: easeOut });
   const scrap = useSlap(22);
@@ -156,7 +157,7 @@ const FLIP_AT = 22;
 const KNOW_AT = 40;
 
 const CardScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const rise = usePop(2, 16);
   const flip = interpolate(frame, [FLIP_AT, FLIP_AT + 5, FLIP_AT + 10], [1, 0, 1], { ...clamp, easing: Easing.inOut(Easing.quad) });
   const back = frame >= FLIP_AT + 5;
@@ -319,7 +320,7 @@ const RIGHT = 3;
 const TAP_AT = 22;
 
 const QuizScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { fps } = useVideoConfig();
   const answered = frame >= TAP_AT;
   const shake = answered ? Math.sin((frame - TAP_AT) * 2.2) * interpolate(frame, [TAP_AT, TAP_AT + 10], [16, 0], clamp) : 0;
@@ -403,7 +404,7 @@ const QuizScene = () => {
 
 
 const TodayScene = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const slap = useSlap(2);
   const ring = interpolate(frame, [8, 28], [0, 7 / 20], { ...clamp, easing: easeOut });
   const count = Math.round(ring * 20);
@@ -551,8 +552,8 @@ export const EndScene = ({ footnote }: { footnote?: string }) => {
           <Tape width={60} angle={-38} style={{ left: -50, top: 20 }} />
           <Tape width={60} angle={38} style={{ right: -50, bottom: 22 }} />
         </div>
-        <div style={{ fontFamily: SERIF, fontWeight: 800, fontSize: 140, marginTop: 80 }}>
-          <BlurIn delay={5}>Word7000</BlurIn>
+        <div style={{ fontWeight: 900, fontSize: 150, letterSpacing: '0.04em', marginTop: 72 }}>
+          <BlurIn delay={5}>單字貓</BlurIn>
         </div>
         <div style={{ fontWeight: 700, fontSize: 52, marginTop: 16, color: C.inkSoft }}>
           <BlurIn delay={10} rise={16}>
@@ -588,7 +589,7 @@ const COMPONENTS: Record<(typeof SCENES)[number]['id'], () => ReactElement> = {
 
 export const Teaser = () => (
   <AbsoluteFill style={{ background: COLLAGE.desk }}>
-    {SCENES.map(({ id, from, duration }) => {
+    {scaleScenes(SCENES).map(({ id, from, duration }) => {
       const Component = COMPONENTS[id];
       return (
         <Sequence key={id} from={from} durationInFrames={duration} name={id}>

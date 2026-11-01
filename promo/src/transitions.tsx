@@ -5,72 +5,138 @@ import type { TransitionPresentation, TransitionPresentationComponentProps } fro
 import { scaledLength } from './time';
 
 /**
- * Between scenes the next page is laid over the last one, like turning to
- * a fresh sheet in the collage notebook: it slides in from one side with a
- * slight tilt and a soft shadow while the page underneath sinks back and
- * dims. Nothing cuts hard, and each scene holds a beat before it goes.
+ * Transitions in the manner of app ads: no hard cuts, and the move fits
+ * the moment — a circle growing out of the cat, a whip push with motion
+ * blur, a zoom through the frame, a lock screen pulled down from the top,
+ * a soft blur dissolve to the end card. Each scene also holds a beat
+ * after its own animation before the next one comes in.
  */
 
 /** Extra authored frames each scene stays on screen after its own animation. */
 export const HOLD = 24;
-/** Authored frames the page turn takes; the two scenes overlap for this long. */
+/** Authored frames a transition takes; the two scenes overlap for this long. */
 export const TURN = 16;
 
-type From = 'bottom' | 'right' | 'left';
-type PaperProps = { from: From };
+type P<T extends Record<string, unknown>> = TransitionPresentationComponentProps<T>;
+const W = 1080;
+const H = 1920;
+/** A presentation with its props bound; the track takes any of them. */
+export type Move = TransitionPresentation<Record<string, unknown>>;
+const move = <T extends Record<string, unknown>>(component: (props: P<T>) => ReactElement, props: T) =>
+  ({ component, props }) as unknown as Move;
 
-const PaperTurn = ({ presentationProgress: p, presentationDirection, children, passedProps }: TransitionPresentationComponentProps<PaperProps>) => {
+/** 0 at both ends of a move, 1 at its fastest: for motion blur. */
+const speed = (p: number) => Math.sin(Math.PI * p);
+
+/* ── Circle: the next scene grows out of a point, like the reference's orange disc. ── */
+type CircleProps = { x: number; y: number };
+const Circle = ({ presentationProgress: p, presentationDirection, children, passedProps: { x, y } }: P<CircleProps>) => {
   if (presentationDirection === 'exiting') {
-    // The page underneath sinks back a little and dims as it is covered.
+    return <AbsoluteFill style={{ transform: `scale(${1 + 0.04 * p})` }}>{children}</AbsoluteFill>;
+  }
+  const reach = Math.hypot(Math.max(x, W - x), Math.max(y, H - y));
+  return <AbsoluteFill style={{ clipPath: `circle(${reach * p}px at ${x}px ${y}px)` }}>{children}</AbsoluteFill>;
+};
+export const circle = (x: number, y: number) => move(Circle, { x, y });
+
+/* ── Push: both scenes move together, blurred along the move at full speed. ── */
+type PushProps = { to: 'left' | 'up' };
+const Push = ({ presentationProgress: p, presentationDirection, children, passedProps: { to } }: P<PushProps>) => {
+  const offset = presentationDirection === 'exiting' ? -100 * p : 100 * (1 - p);
+  const blur = 14 * speed(p);
+  const transform = to === 'left' ? `translateX(${offset}%)` : `translateY(${offset}%)`;
+  return (
+    <AbsoluteFill style={{ transform, filter: blur > 0.3 ? `blur(${blur}px)` : undefined }}>{children}</AbsoluteFill>
+  );
+};
+export const push = (to: 'left' | 'up' = 'left') => move(Push, { to });
+
+/* ── Zoom through: the old scene rushes past the camera, the new one settles in. ── */
+type NoProps = Record<string, never>;
+const ZoomThrough = ({ presentationProgress: p, presentationDirection, children }: P<NoProps>) => {
+  if (presentationDirection === 'exiting') {
     return (
-      <AbsoluteFill style={{ transform: `scale(${1 - 0.06 * p})`, filter: `brightness(${1 - 0.18 * p})` }}>
-        {children}
-      </AbsoluteFill>
+      <AbsoluteFill style={{ transform: `scale(${1 + 0.5 * p})`, opacity: 1 - p, filter: `blur(${16 * p}px)` }}>{children}</AbsoluteFill>
     );
   }
-  const rest = 1 - p;
-  const { from } = passedProps;
-  const x = from === 'right' ? 105 * rest : from === 'left' ? -105 * rest : 0;
-  const y = from === 'bottom' ? 105 * rest : 6 * rest;
-  const tilt = (from === 'left' ? -1 : 1) * 5 * rest;
   return (
-    <AbsoluteFill
-      style={{
-        transform: `translate(${x}%, ${y}%) rotate(${tilt}deg)`,
-        transformOrigin: from === 'bottom' ? '50% 100%' : from === 'right' ? '100% 50%' : '0% 50%',
-        boxShadow: `0 0 ${60 + 40 * rest}px rgba(43,38,32,${0.35 * Math.min(1, rest * 3)})`,
-      }}
-    >
+    <AbsoluteFill style={{ transform: `scale(${0.88 + 0.12 * p})`, opacity: Math.min(1, p * 1.6), filter: `blur(${12 * (1 - p)}px)` }}>
       {children}
     </AbsoluteFill>
   );
 };
+export const zoomThrough = () => move(ZoomThrough, {});
 
-const paperTurn = (from: From): TransitionPresentation<PaperProps> => ({ component: PaperTurn, props: { from } });
+/* ── Pull down: the next scene drops from the top, like pulling down the lock screen. ── */
+const PullDown = ({ presentationProgress: p, presentationDirection, children }: P<NoProps>) => {
+  if (presentationDirection === 'exiting') {
+    return <AbsoluteFill style={{ transform: `scale(${1 - 0.05 * p})`, filter: `brightness(${1 - 0.35 * p})` }}>{children}</AbsoluteFill>;
+  }
+  return (
+    <AbsoluteFill style={{ transform: `translateY(${-100 * (1 - p)}%)`, boxShadow: `0 30px 80px rgba(0,0,0,${0.45 * (1 - p)})` }}>
+      {children}
+    </AbsoluteFill>
+  );
+};
+export const pullDown = () => move(PullDown, {});
 
-const ORDER: From[] = ['bottom', 'right', 'left'];
-const turnTiming = () => linearTiming({ durationInFrames: scaledLength(TURN), easing: Easing.bezier(0.65, 0, 0.35, 1) });
+/* ── Blur dissolve: a soft cross-fade through blur, for a calm landing. ── */
+const BlurDissolve = ({ presentationProgress: p, presentationDirection, children }: P<NoProps>) => {
+  const t = presentationDirection === 'exiting' ? p : 1 - p;
+  return (
+    <AbsoluteFill style={{ opacity: presentationDirection === 'exiting' ? 1 : p, filter: `blur(${18 * t}px)` }}>{children}</AbsoluteFill>
+  );
+};
+export const blurDissolve = () => move(BlurDissolve, {});
 
-type SceneDef = { id: string; duration: number };
+/* ── The track ── */
 
-/** Total output frames for a scene list played with holds and page turns. */
-export const trackLength = (scenes: readonly SceneDef[]) =>
-  scenes.reduce((sum, s) => sum + scaledLength(s.duration + HOLD), 0) - (scenes.length - 1) * scaledLength(TURN);
+const timing = (turn = TURN) => linearTiming({ durationInFrames: scaledLength(turn), easing: Easing.bezier(0.7, 0, 0.3, 1) });
 
-/** Plays the scenes in order, each held a beat longer and joined by page turns. */
-export const SceneTrack = ({ scenes, components }: { scenes: readonly SceneDef[]; components: Record<string, () => ReactElement> }) => (
+export type Step = {
+  id: string;
+  /** Authored length of the scene's own animation (HOLD is added). */
+  duration?: number;
+  /** Or its exact length in output frames, holds included (a nested section). */
+  frames?: number;
+  render: () => ReactElement;
+  /** How this scene comes in; ignored on the first. */
+  enter?: Move;
+  /** Authored length of that transition. */
+  turn?: number;
+};
+
+const stepFrames = (s: Step) => s.frames ?? scaledLength((s.duration ?? 0) + HOLD);
+
+/** Total output frames for a list of steps played with their transitions. */
+export const trackFrames = (steps: readonly Step[]) =>
+  steps.reduce((sum, s, i) => sum + stepFrames(s) - (i > 0 ? scaledLength(s.turn ?? TURN) : 0), 0);
+
+/** Where each step starts on the authored timeline (for things that span steps). */
+export const stepStarts = (steps: readonly Step[]) => {
+  let t = 0;
+  return steps.map((s, i) => {
+    if (i > 0) t -= s.turn ?? TURN;
+    const start = t;
+    t += (s.duration ?? 0) + HOLD;
+    return start;
+  });
+};
+
+export const Track = ({ steps }: { steps: readonly Step[] }) => (
   <TransitionSeries>
-    {scenes.flatMap((scene, i) => {
-      const Component = components[scene.id];
-      const items = [
-        <TransitionSeries.Sequence key={scene.id} durationInFrames={scaledLength(scene.duration + HOLD)} name={scene.id}>
-          <Component />
-        </TransitionSeries.Sequence>,
+    {steps.flatMap((step, i) => {
+      const Render = step.render;
+      const sequence = (
+        <TransitionSeries.Sequence key={step.id} durationInFrames={stepFrames(step)} name={step.id}>
+          <Render />
+        </TransitionSeries.Sequence>
+      );
+      if (i === 0) return [sequence];
+      return [
+        <TransitionSeries.Transition key={`into-${step.id}`} presentation={step.enter ?? blurDissolve()} timing={timing(step.turn)} />,
+        sequence,
       ];
-      if (i > 0) {
-        items.unshift(<TransitionSeries.Transition key={`turn-${scene.id}`} presentation={paperTurn(ORDER[(i - 1) % ORDER.length])} timing={turnTiming()} />);
-      }
-      return items;
     })}
   </TransitionSeries>
 );

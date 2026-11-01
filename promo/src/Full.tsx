@@ -1,10 +1,12 @@
 import type { CSSProperties, ReactElement, ReactNode } from 'react';
-import { AbsoluteFill, Img, interpolate, spring, staticFile } from 'remotion';
+import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile } from 'remotion';
 import { AUTHORED_FPS, useFrame } from './time';
-import { SceneTrack, trackLength } from './transitions';
+import { Track, blurDissolve, circle, pullDown, push, stepStarts, trackFrames, zoomThrough } from './transitions';
+import type { Step } from './transitions';
 import { Desk, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, HAND, SERIF } from './fonts';
 import {
+  BareScene,
   BlurIn,
   BulbIcon,
   C,
@@ -24,6 +26,7 @@ import {
   TypingDots,
   clamp,
   easeOut,
+  headline,
   usePop,
   useSlap,
   useStampPress,
@@ -37,22 +40,8 @@ import { EndScene, HookScene, MeetScene } from './Teaser';
  * and the daily reminder. Every line the cat says, every label and every
  * button is copy from the beta (claude/friendly-darwin-obc3r1).
  */
-const SCENES = [
-  { id: 'hook', from: 0, duration: 60 },
-  { id: 'meet', from: 60, duration: 42 },
-  { id: 'explain', from: 102, duration: 105 },
-  { id: 'ask', from: 207, duration: 90 },
-  { id: 'why', from: 297, duration: 80 },
-  { id: 'coach', from: 377, duration: 93 },
-  { id: 'analysis', from: 470, duration: 78 },
-  { id: 'scan', from: 548, duration: 90 },
-  { id: 'style', from: 638, duration: 78 },
-  { id: 'settings', from: 716, duration: 72 },
-  { id: 'reminder', from: 788, duration: 64 },
-  { id: 'end', from: 852, duration: 48 },
-] as const;
-
-export const FULL_DURATION = trackLength(SCENES);
+// Scene lengths are in authored frames (30 fps); time.ts slows and resamples them,
+// and transitions.tsx adds a hold after each and the move into the next.
 
 const L = 64; // page gutter
 const W = 1080 - L * 2;
@@ -956,23 +945,87 @@ const ReminderScene = () => {
   );
 };
 
-const COMPONENTS: Record<(typeof SCENES)[number]['id'], () => ReactElement> = {
-  hook: HookScene,
-  meet: () => <MeetScene stampText={['AI', '家教']} caption="嘴有點壞的 AI 單字家教" />,
-  explain: ExplainScene,
-  ask: AskScene,
-  why: WhyScene,
-  coach: CoachScene,
-  analysis: AnalysisScene,
-  scan: ScanScene,
-  style: StyleScene,
-  settings: SettingsScene,
-  reminder: ReminderScene,
-  end: () => <EndScene footnote="線上 AI 每日可用次數依方案而定。" />,
+/* ───────────────────────── The AI run: one page, the line under 小笨貓會 changes ───────────────────────── */
+
+/**
+ * Like the reference's "It won't stop until you move. Squat. / Punch. /
+ * Snap.": 小笨貓會 stays put while the line under it swaps in place, and the
+ * five AI beats push through underneath on the same desk.
+ */
+const AI_BEATS: Step[] = [
+  { id: 'explain', duration: 105, render: ExplainScene },
+  { id: 'ask', duration: 90, render: AskScene, enter: push('left') },
+  { id: 'why', duration: 80, render: WhyScene, enter: push('left') },
+  { id: 'coach', duration: 93, render: CoachScene, enter: push('left') },
+  { id: 'analysis', duration: 78, render: AnalysisScene, enter: push('left') },
+];
+const AI_LINES = ['講到你懂。', '有問必答。', '抓出錯在哪。', '幫你改口說。', '抓你的弱點。'];
+
+const AISection = () => {
+  const frame = useFrame();
+  const starts = stepStarts(AI_BEATS);
+  // Each line swaps a little into the push that brings its beat in.
+  const swapAt = starts.map((s, i) => (i === 0 ? 6 : s + 5));
+  const ease = Easing.bezier(0.16, 1, 0.3, 1);
+  return (
+    <AbsoluteFill style={{ fontFamily: FONT, overflow: 'hidden' }}>
+      <Desk kind="desk" />
+      <BareScene.Provider value>
+        <Track steps={AI_BEATS} />
+      </BareScene.Provider>
+      <div style={{ position: 'absolute', top: 140, left: 96, right: 96, ...headline }}>
+        <div>
+          <BlurIn delay={0}>小笨貓會</BlurIn>
+        </div>
+        <div style={{ position: 'relative', height: 146 }}>
+          {AI_LINES.map((line, i) => {
+            const enter = interpolate(frame, [swapAt[i], swapAt[i] + 10], [0, 1], { ...clamp, easing: ease });
+            const leave = i < AI_LINES.length - 1 ? interpolate(frame, [swapAt[i + 1] - 2, swapAt[i + 1] + 6], [0, 1], clamp) : 0;
+            const shown = enter * (1 - leave);
+            if (shown <= 0) return null;
+            return (
+              <div
+                key={line}
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  color: C.clay,
+                  opacity: shown,
+                  filter: `blur(${(1 - enter) * 20 + leave * 20}px)`,
+                  transform: `translateY(${(1 - enter) * 44 - leave * 44}px)`,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {line}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
 };
+
+/* ───────────────────────── The cut ───────────────────────── */
+
+const STEPS: Step[] = [
+  { id: 'hook', duration: 60, render: HookScene },
+  // The page grows out of the cat, where it sits on the hook scene.
+  { id: 'meet', duration: 42, render: () => <MeetScene stampText={['AI', '家教']} caption="嘴有點壞的 AI 單字家教" />, enter: circle(540, 1430) },
+  { id: 'ai', frames: trackFrames(AI_BEATS), render: AISection, enter: push('left') },
+  { id: 'scan', duration: 90, render: ScanScene, enter: zoomThrough() },
+  // Out of the 存入字庫 button.
+  { id: 'style', duration: 78, render: StyleScene, enter: circle(540, 1265) },
+  { id: 'settings', duration: 72, render: SettingsScene, enter: push('up') },
+  { id: 'reminder', duration: 64, render: ReminderScene, enter: pullDown() },
+  { id: 'end', duration: 48, render: () => <EndScene footnote="線上 AI 每日可用次數依方案而定。" />, enter: blurDissolve(), turn: 20 },
+];
+
+export const FULL_DURATION = trackFrames(STEPS);
 
 export const Full = () => (
   <AbsoluteFill style={{ background: '#F3EEE4' }}>
-    <SceneTrack scenes={SCENES} components={COMPONENTS} />
+    <Track steps={STEPS} />
   </AbsoluteFill>
 );

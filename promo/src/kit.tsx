@@ -1,3 +1,4 @@
+import { createContext, useContext } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { AbsoluteFill, Easing, interpolate, spring } from 'remotion';
 import { AUTHORED_FPS, useFrame } from './time';
@@ -76,13 +77,21 @@ export const useStampPress = (delay: number) => {
 };
 
 /** Gentle push-in so every hard cut lands with a little energy. */
+/**
+ * Set inside a section that shares one page across several beats (the AI
+ * run): scenes then draw no page of their own and no headline, because the
+ * section holds both still while only the content changes.
+ */
+export const BareScene = createContext(false);
+
 export const Scene = ({ background, children }: { background: ReactNode; children: ReactNode }) => {
   const frame = useFrame();
-  const scale = interpolate(frame, [0, 18], [1.05, 1], { extrapolateRight: 'clamp', easing: easeOut });
+  const bare = useContext(BareScene);
+  const scale = bare ? 1 : interpolate(frame, [0, 18], [1.05, 1], { extrapolateRight: 'clamp', easing: easeOut });
   return (
     <AbsoluteFill style={{ fontFamily: FONT, overflow: 'hidden' }}>
       <AbsoluteFill style={{ transform: `scale(${scale})` }}>
-        {background}
+        {bare ? null : background}
         {children}
       </AbsoluteFill>
     </AbsoluteFill>
@@ -97,15 +106,16 @@ export const headline: CSSProperties = {
   color: C.ink,
 };
 
-export const Headline = ({ lines, top = 170 }: { lines: string[]; top?: number }) => (
-  <div style={{ position: 'absolute', top, left: 96, right: 96, ...headline }}>
-    {lines.map((line, i) => (
-      <div key={line}>
-        <BlurIn delay={i * 6}>{line}</BlurIn>
-      </div>
-    ))}
-  </div>
-);
+export const Headline = ({ lines, top = 170 }: { lines: string[]; top?: number }) =>
+  useContext(BareScene) ? null : (
+    <div style={{ position: 'absolute', top, left: 96, right: 96, ...headline }}>
+      {lines.map((line, i) => (
+        <div key={line}>
+          <BlurIn delay={i * 6}>{line}</BlurIn>
+        </div>
+      ))}
+    </div>
+  );
 
 /** A bubble that pops out of the cat. */
 export const PopBubble = ({ delay, origin, children, style }: { delay: number; origin: string; children: ReactNode; style?: CSSProperties }) => {

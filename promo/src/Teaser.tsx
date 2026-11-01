@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { AbsoluteFill, Easing, Img, interpolate, spring, staticFile } from 'remotion';
 import { AUTHORED_FPS, useFrame } from './time';
-import { SceneTrack, trackLength } from './transitions';
+import { Track, blurDissolve, circle, push, trackFrames, zoomThrough } from './transitions';
+import type { Step } from './transitions';
 import { COLLAGE, Desk, Halftone, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, SERIF } from './fonts';
 import { Bubble, Mascot } from './Mascot';
@@ -29,17 +30,7 @@ import {
 } from './kit';
 
 
-// Scene timing in authored frames (30 fps); time.ts slows and resamples it. 300 frames = 10 s as written, 12 s on screen.
-const SCENES = [
-  { id: 'hook', from: 0, duration: 60 },
-  { id: 'meet', from: 60, duration: 36 },
-  { id: 'card', from: 96, duration: 60 },
-  { id: 'quiz', from: 156, duration: 54 },
-  { id: 'today', from: 210, duration: 48 },
-  { id: 'end', from: 258, duration: 42 },
-] as const;
-
-export const TEASER_DURATION = trackLength(SCENES);
+// Scene lengths are in authored frames (30 fps); see time.ts and transitions.tsx.
 
 
 /* ───────────────────────── 1. 又在滑手機？ ───────────────────────── */
@@ -579,17 +570,19 @@ export const EndScene = ({ footnote }: { footnote?: string }) => {
   );
 };
 
-const COMPONENTS: Record<(typeof SCENES)[number]['id'], () => ReactElement> = {
-  hook: HookScene,
-  meet: () => <MeetScene />,
-  card: CardScene,
-  quiz: QuizScene,
-  today: TodayScene,
-  end: () => <EndScene />,
-};
+const STEPS: Step[] = [
+  { id: 'hook', duration: 60, render: HookScene },
+  { id: 'meet', duration: 36, render: () => <MeetScene />, enter: circle(540, 1430) },
+  { id: 'card', duration: 60, render: CardScene, enter: push('left') },
+  { id: 'quiz', duration: 54, render: QuizScene, enter: push('left') },
+  { id: 'today', duration: 48, render: TodayScene, enter: zoomThrough() },
+  { id: 'end', duration: 42, render: () => <EndScene />, enter: blurDissolve(), turn: 20 },
+];
+
+export const TEASER_DURATION = trackFrames(STEPS);
 
 export const Teaser = () => (
   <AbsoluteFill style={{ background: '#F3EEE4' }}>
-    <SceneTrack scenes={SCENES} components={COMPONENTS} />
+    <Track steps={STEPS} />
   </AbsoluteFill>
 );

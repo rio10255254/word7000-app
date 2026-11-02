@@ -9,12 +9,16 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
         public var pronunciation: String
         public var meaning: String
         public var partOfSpeech: String
+        /// Toned pinyin for the meaning, for learners of Chinese (older
+        /// snapshots have none).
+        public var meaningPinyin: String?
 
-        public init(word: String, pronunciation: String, meaning: String, partOfSpeech: String) {
+        public init(word: String, pronunciation: String, meaning: String, partOfSpeech: String, meaningPinyin: String? = nil) {
             self.word = word
             self.pronunciation = pronunciation
             self.meaning = meaning
             self.partOfSpeech = partOfSpeech
+            self.meaningPinyin = meaningPinyin
         }
     }
 
@@ -81,8 +85,9 @@ public struct HomeWidgetSnapshot: Codable, Equatable, Sendable {
     }
 
     private static func widgetWord(_ entry: WordEntry) -> Word {
-        Word(word: entry.word, pronunciation: entry.pronunciation,
-             meaning: ChineseDisplay.conciseMeaning(entry.meaningZh), partOfSpeech: entry.partOfSpeech)
+        let meaning = ChineseDisplay.conciseMeaning(entry.meaningZh)
+        return Word(word: entry.word, pronunciation: entry.pronunciation, meaning: meaning,
+                    partOfSpeech: entry.partOfSpeech, meaningPinyin: ChineseDisplay.pronunciationWithTones(meaning))
     }
 
     private var rotationPool: [Word] {

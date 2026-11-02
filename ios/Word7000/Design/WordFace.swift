@@ -14,6 +14,8 @@ struct WordFace {
     var answerDetail: String
     var supplemental: String
     var examplePrimary: String
+    /// Pinyin for the example a learner of Chinese reads; empty otherwise.
+    var examplePinyin = ""
     var exampleSecondary: String
     var speakText: String
     var speakLanguage: String
@@ -45,6 +47,7 @@ struct WordFace {
                 }
                 .joined(separator: " · ")
             examplePrimary = word.exampleZh
+            examplePinyin = ChineseDisplay.sentencePinyin(word.exampleZh)
             exampleSecondary = word.example
             speakText = concise
             speakLanguage = "zh-TW"

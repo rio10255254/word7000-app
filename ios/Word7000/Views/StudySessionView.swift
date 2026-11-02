@@ -482,6 +482,9 @@ struct WordAnswer: View {
                         SpeakButton(text: face.examplePrimary, language: face.speakLanguage)
                     }
                     Text(face.examplePrimary).lineSpacing(4)
+                    if !face.examplePinyin.isEmpty {
+                        Text(face.examplePinyin).font(.footnote).foregroundStyle(.secondary)
+                    }
                     if !face.exampleSecondary.isEmpty {
                         Text(face.exampleSecondary)
                             .font(.subheadline)

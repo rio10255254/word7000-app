@@ -587,6 +587,9 @@ struct WordDetailView: View {
                     Section(L.example) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(face.examplePrimary)
+                            if !face.examplePinyin.isEmpty {
+                                Text(face.examplePinyin).font(.footnote).foregroundStyle(.secondary)
+                            }
                             if !face.exampleSecondary.isEmpty {
                                 Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
                             }

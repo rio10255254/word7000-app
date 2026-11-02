@@ -164,6 +164,8 @@ struct TodayWidgetView: View {
                     .minimumScaleFactor(0.5)
                 if entry.chinese, !word.pronunciation.isEmpty {
                     Text(word.pronunciation).font(.system(size: 13)).foregroundStyle(.secondary).lineLimit(1)
+                } else if !entry.chinese, let pinyin = word.meaningPinyin, !pinyin.isEmpty {
+                    Text(pinyin).font(.system(size: 13)).foregroundStyle(.secondary).lineLimit(1)
                 }
                 Text([word.partOfSpeech, entry.chinese ? word.meaning : word.word].filter { !$0.isEmpty }.joined(separator: "  "))
                     .font(.system(size: 14, weight: .medium))

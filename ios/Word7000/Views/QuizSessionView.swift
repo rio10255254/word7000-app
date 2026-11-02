@@ -187,6 +187,9 @@ struct QuizSessionView: View {
                 if !face.examplePrimary.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(face.examplePrimary)
+                        if !face.examplePinyin.isEmpty {
+                            Text(face.examplePinyin).font(.footnote).foregroundStyle(.secondary)
+                        }
                         Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
                     }
                     .padding(14)

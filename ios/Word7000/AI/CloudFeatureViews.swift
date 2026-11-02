@@ -306,6 +306,10 @@ struct AIExplanationSection: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(L.t("常見搭配", "Common combinations")).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
                 Text(explanation.collocations.joined(separator: " · "))
+                if model.studyMode == .chinese {
+                    let pinyin = explanation.collocations.map(ChineseDisplay.sentencePinyin).filter { !$0.isEmpty }.joined(separator: " · ")
+                    if !pinyin.isEmpty { Text(pinyin).font(.footnote).foregroundStyle(.secondary) }
+                }
             }
             .padding(.vertical, 2)
             .entrance(1, distance: 8)
@@ -314,6 +318,10 @@ struct AIExplanationSection: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(example.sentence)
+                    if model.studyMode == .chinese {
+                        let pinyin = ChineseDisplay.sentencePinyin(example.sentence)
+                        if !pinyin.isEmpty { Text(pinyin).font(.footnote).foregroundStyle(.secondary) }
+                    }
                     if !example.translation.isEmpty {
                         Text(example.translation).font(.subheadline).foregroundStyle(.secondary)
                     }

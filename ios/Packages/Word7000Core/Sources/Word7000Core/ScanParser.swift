@@ -63,7 +63,7 @@ public enum ScanParser {
     enum Kind { case latin, cjk }
     struct Segment { var kind: Kind; var text: String }
 
-    static let posTokens: Set<String> = [
+    public static let posTokens: Set<String> = [
         "n", "v", "vt", "vi", "a", "adj", "ad", "adv", "prep", "conj", "pron", "phr", "num", "int", "interj", "art", "aux",
     ]
     static let maxHeadwordTokens = 4

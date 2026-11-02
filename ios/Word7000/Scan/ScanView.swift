@@ -10,6 +10,7 @@ struct ScanView: View {
     @Environment(PlusModel.self) private var plus
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var onStudy: () -> Void
 
     enum Phase: Equatable {
@@ -58,8 +59,6 @@ struct ScanView: View {
     @State private var askCloud = false
     @State private var afterCloudAnswer: (() -> Void)?
     @State private var newBankName = WordBanks.defaultScanBankName(chineseMode: L.mode == .chinese)
-    /// Bumped when the chooser appears, so its icon gives a small hello.
-    @State private var introBounce = 0
 
     private var destinationBanks: [CustomVocabSet] { model.customSets.sets }
 
@@ -158,86 +157,80 @@ struct ScanView: View {
     // MARK: Choose a source
 
     private var chooser: some View {
-        Form {
-            Group {
-                Section {
-                    VStack(spacing: 12) {
-                        Image(systemName: "doc.text.viewfinder")
-                            .font(.system(size: 30, weight: .semibold))
-                            .foregroundStyle(Palette.accent)
-                            .symbolEffect(.bounce, value: reduceMotion ? 0 : introBounce)
-                            .frame(width: 64, height: 64)
-                            .background(Palette.accent.opacity(0.14), in: Circle())
-                            .task {
-                                try? await Task.sleep(for: .milliseconds(400))
-                                introBounce += 1
-                            }
-                        Text(S.intro)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                        if case .trial = plus.access {
-                            Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 4)
-                                .background((plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent).opacity(0.12), in: Capsule())
-                                .contentTransition(.numericText())
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-    
-                    if DocumentScanner.isAvailable {
-                        Button { allowScan { documentScannerOpen = true } } label: {
-                            Label(S.scanDocument, systemImage: "doc.viewfinder.fill")
-                        }
-                        .accessibilityIdentifier("scan-document")
-                    } else if CameraPicker.isAvailable {
-                        Button { allowScan { cameraOpen = true } } label: {
-                            Label(S.takePhoto, systemImage: "camera.fill")
-                        }
-                    }
-                    Button { allowScan { photoLibraryOpen = true } } label: {
-                        Label(S.choosePhoto, systemImage: "photo.on.rectangle")
-                    }
-                    .accessibilityIdentifier("scan-choose-photo")
-                    if let message {
-                        Label {
-                            Text(message)
-                        } icon: {
-                            Image(systemName: "exclamationmark.triangle.fill").popIn(delay: 0.1)
-                        }
-                            .font(.footnote)
-                            .foregroundStyle(Palette.review)
-                            .accessibilityIdentifier("scan-message")
-                    }
+        ScrollView {
+            VStack(spacing: 20) {
+                HStack(alignment: .center, spacing: 10) {
+                    Mascot(mood: .idle, size: 46)
+                    Text(S.intro)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-    
-                Section {
-                    TextField(S.pastePlaceholder, text: $pasted, axis: .vertical)
-                        .lineLimit(4...10)
-                        .font(.body.monospaced())
-                        .accessibilityIdentifier("scan-pasted-text")
-                    Button(S.readPasted) {
-                        sourcePreviews = []
-                        pageCount = 0
-                        let found = ScanParser.parse(ScanParser.lines(fromPlainText: pasted))
-                        showReview(found)
+                tools
+                if case .trial = plus.access {
+                    Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background((plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent).opacity(0.12), in: Capsule())
+                        .contentTransition(.numericText())
+                }
+                if let message {
+                    Label {
+                        Text(message)
+                    } icon: {
+                        Image(systemName: "exclamationmark.triangle.fill").popIn(delay: 0.1)
                     }
-                    .accessibilityIdentifier("scan-read-pasted")
-                    .disabled(pasted.trimmed.isEmpty)
-                } header: {
-                    Text(S.pasteTitle)
-                } footer: {
-                    Text(S.pasteHint)
+                    .font(.footnote)
+                    .foregroundStyle(Palette.review)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityIdentifier("scan-message")
+                }
+                ScanNotepad(text: $pasted, askCloud: {
+                    afterCloudAnswer = nil
+                    askCloud = true
+                }, read: { text in
+                    pasted = text
+                    sourcePreviews = []
+                    pageCount = 0
+                    showReview(ScanParser.parse(ScanParser.lines(fromPlainText: text)))
+                })
+                .padding(.top, 4)
+                Text(S.pasteHint)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(Metrics.gutter)
+            .padding(.bottom, 12)
+        }
+        .scrollDismissesKeyboard(.interactively)
+    }
+
+    /// The scanner and the photo pile, side by side (stacked at large text).
+    @ViewBuilder
+    private var tools: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 14)) : AnyLayout(HStackLayout(spacing: 14))
+        layout {
+            if DocumentScanner.isAvailable {
+                ScanToolCard(title: S.scanTitle, subtitle: S.scanSubtitle, paper: .graph, tilt: -0.8,
+                             identifier: "scan-document", action: { allowScan { documentScannerOpen = true } }) {
+                    ScannerArt()
+                }
+            } else if CameraPicker.isAvailable {
+                ScanToolCard(title: S.takePhoto, subtitle: S.scanSubtitle, paper: .graph, tilt: -0.8,
+                             identifier: "scan-camera", action: { allowScan { cameraOpen = true } }) {
+                    ScannerArt()
                 }
             }
-            .listRowBackground(Palette.surface)
+            ScanToolCard(title: S.choosePhoto, subtitle: S.photoSubtitle, paper: .peach, tilt: 0.7,
+                         identifier: "scan-choose-photo", action: { allowScan { photoLibraryOpen = true } }) {
+                PhotoPileArt()
+            }
         }
-        .warmList()
-        .scrollDismissesKeyboard(.interactively)
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     /// Every read counts against the trial allowance, so check before each one.
@@ -637,16 +630,15 @@ private struct ScanDots: View {
 /// Scan screen copy (English-word mode).
 private enum S {
     static var title: String { L.t("掃描單字表", "Scan a word list") }
-    static var intro: String { L.t("掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。", "Scan or pick a photo of a word list. The app reads each English word and the Chinese meaning written on the page, printed or handwritten. Photos never leave your iPhone.") }
+    static var intro: String { L.t("印刷的、手寫的單字表我都讀得懂。照片只留在你的 iPhone。", "Printed or handwritten, I can read it. Photos stay on your iPhone.") }
+    static var scanTitle: String { L.t("掃描單字表", "Scan a list") }
+    static var scanSubtitle: String { L.t("可多頁，手寫也行", "Several pages, handwriting OK") }
+    static var photoSubtitle: String { L.t("挑一張單字表照片", "Pick a photo of a list") }
     static var takePhoto: String { L.t("拍照", "Take Photo") }
-    static var scanDocument: String { L.t("掃描單字表（可多頁、手寫也行）", "Scan a word list (several pages, handwriting OK)") }
     static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organized from the page by Apple Intelligence; please check") }
     static func corrected(_ original: String) -> String { L.t("還原為「\(original)」", "Restore \u{201C}\(original)\u{201D}") }
     static var choosePhoto: String { L.t("從相簿選擇", "Choose Photo") }
-    static var pasteTitle: String { L.t("或貼上文字", "Or paste text") }
-    static var pasteHint: String { L.t("在「照片」App 長按文字即可拷貝（原況文字），再貼到這裡", "In Photos, touch and hold text to copy it (Live Text), then paste it here") }
-    static var pastePlaceholder: String { L.t("abandon v. 放棄\nbenefit n. 好處", "abandon v. 放棄\nbenefit n. 好處") }
-    static var readPasted: String { L.t("讀取貼上的文字", "Read pasted text") }
+    static var pasteHint: String { L.t("也可以在「照片」App 長按文字拷貝（原況文字），再貼到筆記本上。", "Or in Photos, touch and hold text to copy it (Live Text) and paste it onto the notepad.") }
     static var reading: String { L.t("正在手機上辨識…", "Reading on your iPhone…") }
     static var loadingPhoto: String { L.t("正在載入照片…", "Loading your photo…") }
     static var photoLoadFailed: String { L.t("無法載入這張照片。若照片在 iCloud，請確認網路連線後再試一次，或改選另一張照片。", "Could not load this photo. If it is in iCloud, check your connection and try again, or choose another photo.") }

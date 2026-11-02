@@ -449,27 +449,46 @@ function quizWhy(input: Record<string, unknown>): TaskPlan {
   };
 }
 
-/** Suggests the fields of a word the learner is adding to their own bank. */
+/**
+ * Suggests the fields of a word the learner is adding to their own bank. They
+ * may type the English word, or only its Chinese meaning: then the English
+ * word that meaning is usually learned as comes back in `word`.
+ */
 function fillWord(input: Record<string, unknown>): TaskPlan {
   const word = text(input, 'word', 80);
+  const fromChinese = /\p{Script=Han}/u.test(word) && !/[A-Za-z]/.test(word);
   return {
     effort: SHORT,
     maxTokens: 900,
     system: [
-      'A Taiwanese student is adding an English word or phrase to their own vocabulary list. Suggest the dictionary fields.',
+      fromChinese
+        ? 'A Taiwanese student wrote a Chinese meaning and wants the English word for it on their own vocabulary list. Suggest the dictionary fields.'
+        : 'A Taiwanese student is adding an English word or phrase to their own vocabulary list. Suggest the dictionary fields.',
       UNTRUSTED,
-      `meaning: the most common meaning in ${TAIWAN}, concise like a word list (max 40 characters).`,
+      fromChinese
+        ? 'word: the English word or phrase a high-school learner in Taiwan would usually learn for this meaning, lowercase unless it is a proper noun.'
+        : 'word: the English word or phrase exactly as given.',
+      fromChinese
+        ? `meaning: the given Chinese meaning, tidied to ${TAIWAN} if needed (max 40 characters).`
+        : `meaning: the most common meaning in ${TAIWAN}, concise like a word list (max 40 characters).`,
       'partOfSpeech: an abbreviation such as n., v., adj., adv., prep., phr.',
       `otherMeanings: up to two other common meanings in ${TAIWAN}, separated by "；", or an empty string.`,
       `example: one short everyday English sentence using the word; exampleTranslation: its ${TAIWAN} translation.`,
-      'If the text is not a real English word or phrase, return empty strings for every field.',
+      fromChinese
+        ? 'If the text is not a meaning an English word could have, return empty strings for every field.'
+        : 'If the text is not a real English word or phrase, return empty strings for every field.',
     ].join(' '),
     user: JSON.stringify({ word }),
-    schema: strictObject({ meaning: string, partOfSpeech: string, otherMeanings: string, example: string, exampleTranslation: string }),
+    schema: strictObject({ word: string, meaning: string, partOfSpeech: string, otherMeanings: string, example: string, exampleTranslation: string }),
     // An example that never uses the word would teach something else; leave it blank for the learner.
     refine: (content) => {
       const reply = record(content);
-      return usesWord(String(reply.example ?? ''), word) ? reply : { ...reply, example: '', exampleTranslation: '' };
+      const english = fromChinese ? String(reply.word ?? '').trim() : word;
+      if (fromChinese && !/^[A-Za-z][A-Za-z '’-]{0,79}$/.test(english)) {
+        return { word: '', meaning: '', partOfSpeech: '', otherMeanings: '', example: '', exampleTranslation: '' };
+      }
+      const fixed = { ...reply, word: english };
+      return usesWord(String(reply.example ?? ''), english) ? fixed : { ...fixed, example: '', exampleTranslation: '' };
     },
   };
 }

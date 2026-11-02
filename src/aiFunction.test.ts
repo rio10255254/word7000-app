@@ -270,9 +270,20 @@ describe('AI answer checks', () => {
 
   it('leaves out a suggested example that does not use the new word', () => {
     const plan = planTask('fillWord', { word: 'serendipity' });
-    const good = { meaning: '意外的好運', partOfSpeech: 'n.', otherMeanings: '', example: 'Meeting her was pure serendipity.', exampleTranslation: '遇見她純屬意外的好運。' };
+    const good = { word: 'serendipity', meaning: '意外的好運', partOfSpeech: 'n.', otherMeanings: '', example: 'Meeting her was pure serendipity.', exampleTranslation: '遇見她純屬意外的好運。' };
     expect(plan.refine?.(good)).toEqual(good);
     expect(plan.refine?.({ ...good, example: 'It was lucky.', exampleTranslation: '真幸運。' })).toEqual({ ...good, example: '', exampleTranslation: '' });
+    // The English word stays as typed, whatever the model put in `word`.
+    expect(plan.refine?.({ ...good, word: 'luck' })).toEqual(good);
+  });
+
+  it('finds the English word for a Chinese meaning', () => {
+    const plan = planTask('fillWord', { word: '放棄' });
+    expect(plan.system).toContain('wants the English word');
+    const reply = { word: 'abandon', meaning: '放棄', partOfSpeech: 'v.', otherMeanings: '拋棄', example: 'They had to abandon the car.', exampleTranslation: '他們只好棄車。' };
+    expect(plan.refine?.(reply)).toEqual(reply);
+    expect(plan.refine?.({ ...reply, word: '放棄' })).toEqual({ word: '', meaning: '', partOfSpeech: '', otherMeanings: '', example: '', exampleTranslation: '' });
+    expect(planTask('fillWord', { word: 'serendipity' }).system).not.toContain('wants the English word');
   });
 });
 

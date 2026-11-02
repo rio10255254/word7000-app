@@ -221,18 +221,22 @@ public enum CloudAI {
 
     /// Suggested fields for a word the learner is adding.
     public struct WordSuggestion: Codable, Equatable, Sendable {
+        /// The English word: as typed, or the one found for a Chinese meaning.
+        /// Older replies have none.
+        public let word: String?
         public let meaning: String
         public let partOfSpeech: String
         public let otherMeanings: String
         public let example: String
         public let exampleTranslation: String
-        public init(meaning: String, partOfSpeech: String, otherMeanings: String, example: String, exampleTranslation: String) {
+        public init(word: String? = nil, meaning: String, partOfSpeech: String, otherMeanings: String, example: String, exampleTranslation: String) {
+            self.word = word
             self.meaning = meaning; self.partOfSpeech = partOfSpeech; self.otherMeanings = otherMeanings
             self.example = example; self.exampleTranslation = exampleTranslation
         }
 
         public func cleaned() -> WordSuggestion {
-            WordSuggestion(meaning: CloudAI.clip(meaning, 60), partOfSpeech: CloudAI.clip(partOfSpeech, 20),
+            WordSuggestion(word: word.map { CloudAI.clip($0, 80) }, meaning: CloudAI.clip(meaning, 60), partOfSpeech: CloudAI.clip(partOfSpeech, 20),
                            otherMeanings: CloudAI.clip(otherMeanings, 120), example: CloudAI.clip(example, 240),
                            exampleTranslation: CloudAI.clip(exampleTranslation, 240))
         }

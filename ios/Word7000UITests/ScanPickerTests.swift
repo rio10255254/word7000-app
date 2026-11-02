@@ -106,6 +106,29 @@ final class ScanPickerTests: XCTestCase {
         snapshot(app, name: "scan-explicit-spelling-choice")
     }
 
+    /// A line with only the English word, or only the Chinese meaning, gets
+    /// the rest from the word list, offered under the notepad; Fill all writes
+    /// them out, and the list reads like a full one.
+    func testNotepadFillsInHalfWrittenLines() {
+        let app = openScanner(pastedText: "abandon\n好處")
+        let suggestions = app.buttons.matching(identifier: "scan-note-suggestion")
+        XCTAssertTrue(suggestions.firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertEqual(suggestions.count, 2)
+        snapshot(app, name: "scan-notepad-suggestions")
+        let fillAll = app.buttons["scan-note-fill-all"]
+        fillAll.scrollIntoView(in: app, swipes: 4)
+        fillAll.tap()
+        let pad = app.descendants(matching: .any)["scan-pasted-text"]
+        let filled = NSPredicate(format: "value CONTAINS 'abandon vt./n. 遺棄'")
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: filled, object: pad)], timeout: 5), .completed,
+                       String(describing: pad.value))
+        XCTAssertFalse(app.buttons["scan-note-suggestion"].exists)
+        readPasted(app)
+        XCTAssertTrue(app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-' AND value == 'abandon'")).firstMatch.exists)
+        XCTAssertTrue(app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-' AND value == 'benefit'")).firstMatch.exists
+                      || app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).count == 2)
+    }
+
     func testRepeatedScanKeepsDifferentMeaningsAndSkipsExactDuplicates() {
         var app = openScanner(pastedText: "bank n. 銀行")
         let bankName = savePastedBank(app)

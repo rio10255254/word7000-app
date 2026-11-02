@@ -112,6 +112,16 @@ function fillCheck(word: string, real: boolean): Check {
   };
 }
 
+function fillFromChineseCheck(accepted: string[]): Check {
+  return (content) => {
+    const word = String(content.word ?? '').toLowerCase().trim();
+    const problems = accepted.includes(word) ? [] : [`word is "${word}", expected one of ${accepted.join(', ')}`];
+    problems.push(...filled(content.partOfSpeech, 'partOfSpeech'), ...chinese(content.meaning, 'meaning'));
+    if (content.example && !usesWord(String(content.example), word)) problems.push('example does not use the word');
+    return problems;
+  };
+}
+
 function scanCheck(expected: [string, string][]): Check {
   return (content) => {
     const entries = list(content.entries).map((entry) => `${String(entry.word).toLowerCase()}=${entry.meaning}`);
@@ -256,6 +266,7 @@ const cases: Case[] = [
   { task: 'fillWord', name: 'fill procrastinate', input: { word: 'procrastinate' }, check: fillCheck('procrastinate', true) },
   { task: 'fillWord', name: 'fill take part in', input: { word: 'take part in' }, check: fillCheck('take part in', true) },
   { task: 'fillWord', name: 'fill a made-up word', input: { word: 'flombrix' }, check: fillCheck('flombrix', false) },
+  { task: 'fillWord', name: 'fill from Chinese 拖延', input: { word: '拖延' }, check: fillFromChineseCheck(['procrastinate', 'delay', 'put off', 'postpone', 'stall']) },
   {
     task: 'scan', name: 'scan a messy two-column list',
     input: { text: 'Unit 3 Vocabulary\n1. apple n. 蘋果   2. borrow v. 借入\n3. careful adj. 小心的\nEx: Be careful!\n4. decide v. 決定' },

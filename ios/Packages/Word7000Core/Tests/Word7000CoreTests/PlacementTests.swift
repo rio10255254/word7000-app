@@ -30,9 +30,10 @@ final class PlacementTests: XCTestCase {
         XCTAssertEqual(placed.words["met"], before.words["met"])
         XCTAssertEqual(placed.studiedToday, before.studiedToday)
         XCTAssertEqual(placed.streak, before.streak)
-        // Known on sight lifts the estimate when the words are hard.
+        // Knowing the easier half of the check lifts the estimate above the
+        // starting point, so new words start higher.
         let words = (1...14).map { word("w\($0)", "w\($0)", level: $0) }
-        let hard = Placement.apply(knownIds: ["w12", "w13", "w14"], to: ProgressState(), today: "2026-11-02")
-        XCTAssertGreaterThan(LearningEngine.abilityEstimate(words: words, state: hard).ability, LearningEngine.abilityPrior)
+        let placedWell = Placement.apply(knownIds: ["w1", "w3", "w5", "w6", "w8"], to: ProgressState(), today: "2026-11-02")
+        XCTAssertGreaterThan(LearningEngine.abilityEstimate(words: words, state: placedWell).ability, LearningEngine.abilityPrior)
     }
 }

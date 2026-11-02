@@ -122,6 +122,12 @@ final class AppModel {
         if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
         if arguments.contains("-uiTestingCollage") { settings.appStyle = .collage }
+        // The screenshot and layout tests were written against the leather
+        // look; they keep it unless they ask for the collage (or for what a
+        // new learner sees, with -uiTestingDefaultStyle).
+        if arguments.contains("-uiTestingReset"), !arguments.contains("-uiTestingDefaultStyle"), settings.appStyle == nil {
+            settings.appStyle = .leather
+        }
         // UI tests never meet the one-time style chooser unless they ask for it.
         if arguments.contains("-uiTestingReset"), !arguments.contains("-uiTestingStyleChooser") { settings.stylePicked = true }
         if settings.onboardingComplete == nil {
@@ -176,7 +182,7 @@ final class AppModel {
 
     func setIconFollowsStyle(_ follows: Bool) {
         settings.iconFollowsStyle = follows
-        AppIconSwitcher.apply(follows ? settings.appStyle ?? .leather : .leather)
+        AppIconSwitcher.apply(follows ? settings.appStyle ?? .standard : .leather)
     }
 
     /// The one-time style chooser is due: after some practice, once.

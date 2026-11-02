@@ -264,7 +264,7 @@ struct SettingsView: View {
                     }
                     NavigationLink { StyleSettingsView() } label: {
                         SettingsLabel(L.t("App 風格", "App style"), icon: "paintpalette.fill", tint: .purple,
-                                      value: (model.settings.appStyle ?? .leather).label)
+                                      value: (model.settings.appStyle ?? .standard).label)
                     }
                     .accessibilityIdentifier("settings-style")
                     Toggle(isOn: Binding(

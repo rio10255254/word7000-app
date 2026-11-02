@@ -12,6 +12,9 @@ enum AppStyle: String, Codable, CaseIterable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
+    /// The look for anyone who has not chosen one: the paper collage.
+    static let standard: AppStyle = .collage
+
     var label: String {
         switch self {
         case .leather: L.t("皮革經典", "Leather classic")
@@ -32,7 +35,7 @@ enum AppStyle: String, Codable, CaseIterable, Identifiable, Sendable {
 }
 
 private struct AppStyleKey: EnvironmentKey {
-    static let defaultValue: AppStyle = .leather
+    static let defaultValue: AppStyle = .standard
 }
 
 extension EnvironmentValues {
@@ -466,7 +469,7 @@ struct StyleSettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 StyleChoices(selection: Binding(
-                    get: { model.settings.appStyle ?? .leather },
+                    get: { model.settings.appStyle ?? .standard },
                     set: { model.setAppStyle($0) }
                 ))
                 Toggle(isOn: Binding(
@@ -496,7 +499,7 @@ struct StyleSettingsView: View {
 struct StyleChoiceSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
-    @State private var selection: AppStyle = .leather
+    @State private var selection: AppStyle = .standard
 
     var body: some View {
         NavigationStack {
@@ -526,6 +529,6 @@ struct StyleChoiceSheet: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .interactiveDismissDisabled()
-        .onAppear { selection = model.settings.appStyle ?? .leather }
+        .onAppear { selection = model.settings.appStyle ?? .standard }
     }
 }

@@ -29,6 +29,12 @@ final class LayoutTests: XCTestCase {
         checkToday(app, name: "layout-chinese", tiles: ["today-quiz", "today-speaking", "today-exam"])
     }
 
+    /// What a new learner sees: the paper collage, the default look.
+    func testTodayFitsInDefaultStyle() {
+        let app = launch(["-uiTestingDefaultStyle"])
+        checkToday(app, name: "layout-default-collage", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+    }
+
     func testTodayFitsInDarkMode() {
         let app = launch(["-uiTestingDark"])
         checkToday(app, name: "layout-dark", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])

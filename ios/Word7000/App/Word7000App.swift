@@ -39,7 +39,7 @@ struct Word7000App: App {
                 .task { await Speaker.shared.refreshVoices() }
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)
-                .environment(\.appStyle, model.settings.appStyle ?? .leather)
+                .environment(\.appStyle, model.settings.appStyle ?? .standard)
                 .tint(Palette.accent)
                 .task {
                     account.beforeSignOut = { [weak account, registrations] owner, deviceId in

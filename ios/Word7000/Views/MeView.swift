@@ -430,7 +430,7 @@ private struct ProfileCard: View {
         }
         .padding(.vertical, 8)
         .sheet(isPresented: $signInOpen) { SignInSheet() }
-        .manageSubscriptionsSheet(isPresented: $manageOpen)
+        .modifier(PlusManageSheet(isPresented: $manageOpen, groupID: plus.subscriptionGroupID))
         .sheet(isPresented: $chatOpen, onDismiss: {
             insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
             guard let ids = focusPractice else { return }
@@ -626,5 +626,20 @@ extension Bundle {
         let version = infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
         let build = infoDictionary?["CFBundleVersion"] as? String ?? "?"
         return "\(version) (\(build))"
+    }
+}
+
+/// The App Store's Manage subscription sheet, opened on Plus's own group so
+/// it does not list the learner's other apps' subscriptions too.
+private struct PlusManageSheet: ViewModifier {
+    @Binding var isPresented: Bool
+    var groupID: String?
+
+    func body(content: Content) -> some View {
+        if let groupID {
+            content.manageSubscriptionsSheet(isPresented: $isPresented, subscriptionGroupID: groupID)
+        } else {
+            content.manageSubscriptionsSheet(isPresented: $isPresented)
+        }
     }
 }

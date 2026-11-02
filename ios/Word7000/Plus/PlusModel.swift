@@ -22,6 +22,10 @@ final class PlusModel {
     /// The plan and the end of the current period while subscribed.
     private(set) var activePlanID: String?
     private(set) var periodEndsAt: Date?
+    /// The App Store's id for Plus's subscription group, from the active
+    /// subscription or the loaded plans, so Manage subscription opens on Plus
+    /// alone instead of every subscription on the Apple ID.
+    private(set) var subscriptionGroupID: String?
     private(set) var referenceDate = Date()
 
     enum PlansState: Equatable { case loading, loaded, unavailable }
@@ -176,6 +180,7 @@ final class PlusModel {
         plansState = .loading
         let products = (try? await Product.products(for: Self.productIDs)) ?? []
         let monthly = products.first { $0.id == Self.productIDs[0] }
+        if let group = products.compactMap({ $0.subscription?.subscriptionGroupID }).first { subscriptionGroupID = group }
         plans = products
             .sorted { $0.price > $1.price }
             .map { PlusPlan(product: $0, monthlyPrice: monthly?.price) }
@@ -242,6 +247,7 @@ final class PlusModel {
         subscribed = active != nil
         entitlementJWS = activeJWS
         activePlanID = active?.productID
+        if let group = active?.subscriptionGroupID { subscriptionGroupID = group }
         periodEndsAt = active?.expirationDate
         entitlementsLoaded = true
         refreshAccessState()

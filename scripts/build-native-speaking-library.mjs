@@ -7,7 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const destination = 'ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json';
 // The web app reads the same reviewed cards, without the provenance fields.
 const webDestination = 'src/data/speaking-cards.json';
-const fields = ['id', 'word', 'keywordZh', 'question', 'questionZh', 'answerEn', 'answerZh'];
+const fields = ['id', 'word', 'keywordZh', 'question', 'answerEn', 'answerZh'];
 const tokens = text => text.toLowerCase().match(/[a-z]+/g) ?? [];
 
 export function validateRecords(records, vocabulary, expectedCount = 600) {
@@ -22,6 +22,8 @@ export function validateRecords(records, vocabulary, expectedCount = 600) {
     const word = words.get(record.word);
     if (!word || record.id !== `${word.id}-reviewed-1`) throw new Error(`Vocabulary identity mismatch: ${record.word}`);
     for (const [field, values] of seen) {
+      // The Chinese question is added by the build (cards under review have none yet).
+      if (field === 'questionZh' && record.questionZh === undefined) continue;
       const value = record[field].toLowerCase().replace(/\s+/g, ' ');
       if (values.has(value)) throw new Error(`Duplicate ${field}: ${record.word}`);
       values.add(value);
@@ -29,7 +31,8 @@ export function validateRecords(records, vocabulary, expectedCount = 600) {
     if (/\p{Script=Han}/u.test(record.question + record.answerEn)) throw new Error(`Mixed English text: ${record.word}`);
     // The question learners of Chinese read: Traditional Chinese, one sentence.
     const zh = record.questionZh;
-    if (!/\p{Script=Han}/u.test(zh) || /[A-Za-z]/.test(zh) || !/[？。]$/.test(zh) || [...zh].length < 8 || [...zh].length > 48) {
+    if (zh !== undefined && typeof zh !== 'string') throw new Error(`Chinese question: ${record.word}`);
+    if (zh !== undefined && (!/\p{Script=Han}/u.test(zh) || /[A-Za-z]/.test(zh) || !/[？。]$/.test(zh) || [...zh].length < 8 || [...zh].length > 48)) {
       throw new Error(`Chinese question: ${record.word}`);
     }
     if (!/[?]$/.test(record.question) && !/^(Describe|Imagine|Explain|Discuss|Tell)\b/.test(record.question)) throw new Error(`Incomplete question: ${record.word}`);
@@ -77,7 +80,7 @@ export function buildLibrary() {
   if (Object.keys(questionsZh).length !== records.length) throw new Error('Every question needs exactly one Chinese question');
   for (const [index, record] of records.entries()) {
     const questionZh = questionsZh[record.id];
-    if (typeof questionZh !== 'string') throw new Error(`Missing Chinese question: ${record.id}`);
+    if (typeof questionZh !== 'string' || !questionZh.trim()) throw new Error(`Missing Chinese question: ${record.id}`);
     // Keep the field order stable: the Chinese question follows the English.
     const { id, word, keywordZh, question, answerEn, answerZh } = record;
     records[index] = { id, word, keywordZh, question, questionZh, answerEn, answerZh };

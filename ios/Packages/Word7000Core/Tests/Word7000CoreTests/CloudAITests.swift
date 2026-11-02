@@ -60,6 +60,22 @@ final class CloudAITests: XCTestCase {
         XCTAssertFalse(CloudAI.Tier.free.usesDeeperReasoning)
     }
 
+    func testTheCatsChatKeepsOnlyOfferedWordsAndRealDates() throws {
+        let reply = CloudAI.ChatReply(
+            reply: "  好啦考你。 ", practiceWordIds: ["w1", "w9", "w1", "w2"],
+            memory: .init(examDate: "2027/01/16", goal: "學測 15 級分", nickname: "", note: ""))
+        let cleaned = try reply.cleaned(allowedIds: ["w1", "w2"])
+        XCTAssertEqual(cleaned.reply, "好啦考你。")
+        XCTAssertEqual(cleaned.practiceWordIds, ["w1", "w2"])
+        XCTAssertEqual(cleaned.memory.examDate, "")
+        XCTAssertEqual(cleaned.memory.goal, "學測 15 級分")
+        XCTAssertEqual(try CloudAI.ChatReply(reply: "x", practiceWordIds: [], memory: .init(examDate: "2027-01-16"))
+            .cleaned(allowedIds: []).memory.examDate, "2027-01-16")
+        XCTAssertThrowsError(try CloudAI.ChatReply(reply: " ", practiceWordIds: [], memory: .init()).cleaned(allowedIds: []))
+        XCTAssertEqual(CloudAI.LinePack(greeting: ["", "嗨"], right: [], wrong: [], done: [], nudge: []).cleaned().greeting, ["嗨"])
+        XCTAssertThrowsError(try CloudAI.Verdict(verdict: "", tip: "x").cleaned())
+    }
+
     func testMapsServerErrorsToFallbackDecisions() async {
         let cases: [(String, Int, CloudAI.Failure)] = [
             (#"{"error":"quota"}"#, 429, .quota),

@@ -4,7 +4,7 @@
 //
 //   ANTHROPIC_API_KEY=… node --experimental-transform-types scripts/ai-eval.ts [out-dir] [--tiers free,plus] [--only explain,coach]
 //
-//   --only takes task names: coach, scan, explain, quizWhy, fillWord, insights, ask.
+//   --only takes task names: coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict.
 // Run by .github/workflows/ai-eval.yml. A failed check is printed as a GitHub
 // warning; the exit code is 1 only when Claude gave no answer at all.
 import fs from 'node:fs';
@@ -173,6 +173,50 @@ const insightsActive = {
   ],
 };
 
+const learnerProfile = {
+  today: '2026-11-02', level: 'Core 6', streak: 5, studiedToday: 8, dailyGoal: 20, due: 14, mastered: 300, reviewing: 40,
+  examDate: '2027-01-16', daysToExam: 75, goal: '學測英文 15 級分', nickname: '', notes: [],
+};
+const chatWords = [
+  { id: 'w0101', word: 'abandon', meaning: '拋棄', misses: 4 }, { id: 'w0102', word: 'accompany', meaning: '陪伴', misses: 3 },
+  { id: 'w0103', word: 'anxious', meaning: '焦慮的', misses: 3 },
+];
+
+function chatCheck(mode: 'english' | 'chinese', expect: { practice?: boolean; examDate?: string }): Check {
+  return (content) => {
+    const problems = mode === 'english' ? chinese(content.reply, 'reply') : english(content.reply, 'reply');
+    const ids = Array.isArray(content.practiceWordIds) ? content.practiceWordIds as string[] : [];
+    if (expect.practice && !ids.length) problems.push('no practice words suggested');
+    if (ids.some((id) => !chatWords.some((word) => word.id === id))) problems.push(`invented ids ${ids.join(', ')}`);
+    const memory = (content.memory ?? {}) as Content;
+    if (expect.examDate && memory.examDate !== expect.examDate) problems.push(`examDate ${String(memory.examDate)} instead of ${expect.examDate}`);
+    return problems;
+  };
+}
+
+function linesCheck(mode: 'english' | 'chinese'): Check {
+  return (content) => {
+    const problems: string[] = [];
+    for (const key of ['greeting', 'right', 'wrong', 'done', 'nudge']) {
+      const items = Array.isArray(content[key]) ? content[key] as string[] : [];
+      if (items.length < 2) problems.push(`only ${items.length} ${key} lines`);
+      problems.push(...(mode === 'english' ? chinese(items.join(' '), key) : english(items.join(' '), key)));
+    }
+    return problems;
+  };
+}
+
+function verdictCheck(mode: 'english' | 'chinese', missed: string[]): Check {
+  return (content) => {
+    const problems = [
+      ...(mode === 'english' ? chinese(content.verdict, 'verdict') : english(content.verdict, 'verdict')),
+      ...(mode === 'english' ? chinese(content.tip, 'tip') : english(content.tip, 'tip')),
+    ];
+    if (missed.length && !missed.some((word) => `${content.verdict} ${content.tip}`.toLowerCase().includes(word))) problems.push('names no missed word');
+    return problems;
+  };
+}
+
 const cases: Case[] = [
   ...explainCases.map(([word, partOfSpeech, meaning, example]): Case => ({
     task: 'explain', name: `explain ${word} (${meaning})`,
@@ -242,6 +286,33 @@ const cases: Case[] = [
     task: 'insights', name: 'insights for a new learner',
     input: { ...insightsActive, streak: 0, mastered: 0, reviewing: 0, due: 0, quizCorrect: 0, quizTotal: 0, days: [], struggling: [] },
     check: insightsCheck('english', []),
+  },
+  {
+    task: 'chat', name: 'chat: what to practise today',
+    input: { mode: 'english', profile: learnerProfile, words: chatWords, messages: [{ role: 'learner', text: '今天要練什麼？考我幾個字' }] },
+    check: chatCheck('english', { practice: true }),
+  },
+  {
+    task: 'chat', name: 'chat: remembers the exam date',
+    input: { mode: 'english', profile: { ...learnerProfile, examDate: '', daysToExam: 0 }, words: chatWords, messages: [{ role: 'learner', text: '幫我記住，我 2027 年 1 月 16 號考學測' }] },
+    check: chatCheck('english', { examDate: '2027-01-16' }),
+  },
+  {
+    task: 'chat', name: 'chat: grammar question gets a correct answer',
+    input: { mode: 'english', profile: learnerProfile, words: chatWords, messages: [{ role: 'learner', text: 'look forward to 後面要接原形還是 Ving？' }] },
+    check: (content) => [...chinese(content.reply, 'reply'), ...(/ing/i.test(String(content.reply)) ? [] : ['does not say -ing'])],
+  },
+  {
+    task: 'chat', name: 'chat for a learner of Chinese',
+    input: { mode: 'chinese', profile: { ...learnerProfile, goal: '', examDate: '', daysToExam: 0 }, words: [], messages: [{ role: 'learner', text: 'I keep forgetting my words. Help?' }] },
+    check: chatCheck('chinese', {}),
+  },
+  { task: 'lines', name: 'lines for today', input: { mode: 'english', profile: learnerProfile, words: ['abandon', 'anxious'] }, check: linesCheck('english') },
+  { task: 'lines', name: 'lines for a learner of Chinese', input: { mode: 'chinese', profile: learnerProfile }, check: linesCheck('chinese') },
+  {
+    task: 'verdict', name: 'verdict on a quiz with misses',
+    input: { mode: 'english', profile: learnerProfile, kind: 'quiz', total: 10, correct: 6, missed: [{ word: 'abandon', meaning: '拋棄' }, { word: 'anxious', meaning: '焦慮的' }] },
+    check: verdictCheck('english', ['abandon', 'anxious']),
   },
 ];
 

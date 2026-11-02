@@ -24,6 +24,41 @@ enum InsightsStore {
     }
 }
 
+/// One turn of a chat with the cat, kept for the day.
+struct ChatTurn: Codable, Equatable, Identifiable {
+    enum Role: String, Codable { case learner, cat }
+    var id = UUID()
+    var role: Role
+    var text: String
+    /// Words the cat suggested practising (ids the app sent it).
+    var practiceIds: [String] = []
+    /// What it noted down from this turn, to show.
+    var remembered: [String] = []
+}
+
+/// Today's chat with the cat, per study mode, so closing the sheet keeps it.
+enum ChatStore {
+    private struct Saved: Codable {
+        var day: String
+        var mode: String
+        var turns: [ChatTurn]
+    }
+    private static let key = "word7000.catChat"
+    static let maxTurns = 40
+
+    static func today(mode: StudyMode) -> [ChatTurn] {
+        guard let data = UserDefaults.standard.data(forKey: key),
+              let saved = try? JSONDecoder().decode(Saved.self, from: data),
+              saved.day == DayMath.today(), saved.mode == mode.rawValue else { return [] }
+        return saved.turns
+    }
+
+    static func save(_ turns: [ChatTurn], mode: StudyMode) {
+        let saved = Saved(day: DayMath.today(), mode: mode.rawValue, turns: Array(turns.suffix(maxTurns)))
+        if let data = try? JSONEncoder().encode(saved) { UserDefaults.standard.set(data, forKey: key) }
+    }
+}
+
 /// The companion telling you, in its own words, how your learning is going:
 /// the day's AI insights as a short chat. It thinks for a moment (or reads
 /// what it worked out earlier today), then its messages type in one by one:
@@ -43,6 +78,14 @@ struct MascotChatSheet: View {
     /// How many of the messages have typed in so far.
     @State private var shown = 0
     @State private var revealTask: Task<Void, Never>?
+    /// The conversation after the analysis.
+    @State private var turns: [ChatTurn] = []
+    @State private var draft = ""
+    @State private var replying = false
+    @State private var chatFailure: CloudAI.Failure?
+    /// A message waiting for the learner to agree to the online AI.
+    @State private var pendingMessage: String?
+    @FocusState private var inputFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -79,9 +122,15 @@ struct MascotChatSheet: View {
                         Button(L.t("再試一次", "Try again"), action: start)
                             .secondaryAction()
                     }
+                    if chatReady { conversation }
                 }
                 .padding(Metrics.gutter)
                 .animation(reduceMotion ? nil : Motion.reveal, value: shown)
+            }
+            .defaultScrollAnchor(.bottom)
+            .scrollDismissesKeyboard(.interactively)
+            .safeAreaInset(edge: .bottom) {
+                if chatReady && CloudAssistant.shared.offered { inputBar }
             }
             .background { AmbientBackground() }
             .navigationTitle(L.t("小笨貓說", "Silly Cat says"))
@@ -92,6 +141,7 @@ struct MascotChatSheet: View {
         }
         .compactSheet()
         .task {
+            turns = ChatStore.today(mode: model.studyMode)
             if let saved = InsightsStore.today(mode: model.studyMode) {
                 present(saved)
             } else {
@@ -100,7 +150,12 @@ struct MascotChatSheet: View {
         }
         .onDisappear { revealTask?.cancel() }
         .cloudConsentAlert(isPresented: $askCloud) {
-            if IntelligenceSettings.shared.cloudConsent == true { start() } else { dismiss() }
+            if IntelligenceSettings.shared.cloudConsent == true {
+                if let pendingMessage { self.pendingMessage = nil; send(pendingMessage) } else { start() }
+            } else {
+                pendingMessage = nil
+                dismiss()
+            }
         }
         .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.5), trigger: shown) { _, new in
             new > 0 && (model.settings.hapticsEnabled ?? true)
@@ -108,7 +163,7 @@ struct MascotChatSheet: View {
     }
 
     private var mood: Mascot.Mood {
-        if loading { return .thinking }
+        if loading || replying { return .thinking }
         if failure != nil { return .encourage }
         return insights == nil ? .idle : .happy
     }
@@ -186,6 +241,147 @@ struct MascotChatSheet: View {
             })))
         }
         return list
+    }
+
+    // MARK: Chat
+
+    /// The chat opens once the analysis has typed in, failed, or is not coming.
+    private var chatReady: Bool {
+        if let insights { return shown >= messages(insights).count }
+        return !loading
+    }
+
+    private static var starters: [String] {
+        [L.t("今天練什麼？", "What should I practise today?"),
+         L.t("考我幾個字", "Test me on a few words"),
+         L.t("幫我排這週", "Plan my week"),
+         L.t("罵我一下", "Give me a scolding"),
+         L.t("我好累不想讀", "I'm tired, I don't want to study")]
+    }
+
+    @ViewBuilder
+    private var conversation: some View {
+        ForEach(turns) { turn in
+            switch turn.role {
+            case .learner:
+                LearnerSays(text: turn.text)
+            case .cat:
+                VStack(alignment: .leading, spacing: 6) {
+                    ChatLine(text: turn.text)
+                    if !turn.remembered.isEmpty {
+                        Label(L.t("記住了：\(turn.remembered.joined(separator: "、"))", "Noted: \(turn.remembered.joined(separator: ", "))"),
+                              systemImage: "pin.fill")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    if !turn.practiceIds.isEmpty {
+                        Button { practise(turn.practiceIds) } label: {
+                            Label(L.t("開始練這 \(turn.practiceIds.count) 個字", "Practise these \(turn.practiceIds.count) words"), systemImage: "play.fill")
+                                .font(.subheadline.weight(.semibold))
+                        }
+                        .secondaryAction()
+                        .accessibilityIdentifier("mascot-chat-turn-practice")
+                    }
+                }
+            }
+        }
+        if replying { TypingDots() }
+        if let chatFailure { AIFailureNote(failure: chatFailure) }
+        if chatFailure == .quota { PlusAIUpsell() }
+        if !CloudAssistant.shared.offered, turns.isEmpty {
+            ChatLine(text: L.t("我現在連不上線上 AI，聊天要等一下。你可以先去背字，我等你。一直等。",
+                               "I can't reach the online AI right now, so no chatting. Go study; I'll wait. Forever."))
+        }
+    }
+
+    private var inputBar: some View {
+        VStack(spacing: 8) {
+            if turns.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(Array(Self.starters.enumerated()), id: \.offset) { index, starter in
+                            Button { send(starter) } label: {
+                                Text(starter).font(.subheadline.weight(.semibold))
+                                    .padding(.horizontal, 12).padding(.vertical, 8)
+                                    .background(Palette.accent.opacity(0.12), in: Capsule())
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(Palette.accent)
+                            .disabled(replying)
+                            .accessibilityIdentifier("mascot-chat-chip-\(index)")
+                        }
+                    }
+                    .padding(.horizontal, Metrics.gutter)
+                }
+            }
+            HStack(spacing: 8) {
+                TextField(L.t("跟小笨貓說…", "Say something to Silly Cat…"), text: $draft, axis: .vertical)
+                    .lineLimit(1...4)
+                    .focused($inputFocused)
+                    .submitLabel(.send)
+                    .onSubmit { send(draft) }
+                    .padding(.horizontal, 14).padding(.vertical, 10)
+                    .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .accessibilityIdentifier("mascot-chat-input")
+                Button { send(draft) } label: {
+                    Image(systemName: "arrow.up.circle.fill").font(.title)
+                }
+                .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || replying)
+                .accessibilityLabel(L.t("送出", "Send"))
+                .accessibilityIdentifier("mascot-chat-send")
+            }
+            .padding(.horizontal, Metrics.gutter)
+        }
+        .padding(.vertical, 8)
+        .background(.bar)
+    }
+
+    private func send(_ raw: String) {
+        let text = String(raw.trimmingCharacters(in: .whitespacesAndNewlines).prefix(400))
+        guard !text.isEmpty, !replying else { return }
+        if CloudAssistant.shared.needsConsent { pendingMessage = text; askCloud = true; return }
+        draft = ""
+        chatFailure = nil
+        let mode = model.studyMode
+        withAnimation(reduceMotion ? nil : Motion.reveal) { turns.append(ChatTurn(role: .learner, text: text)) }
+        ChatStore.save(turns, mode: mode)
+        // The cat sees the last few turns, with its analysis as context when there is one.
+        var history: [JSONValue] = []
+        if let insights {
+            history.append(.object(["role": .string("cat"), "text": .string(String("\(insights.headline) \(insights.summary)".prefix(400)))]))
+        }
+        history += turns.suffix(11).map { turn in
+            .object(["role": .string(turn.role.rawValue), "text": .string(String(turn.text.prefix(400)))])
+        }
+        let words = model.catWordsInput(limit: 20)
+        let allowed: Set<String> = {
+            guard case let .array(items) = words else { return [] }
+            return Set(items.compactMap { item -> String? in
+                guard case let .object(fields) = item, case let .string(id)? = fields["id"] else { return nil }
+                return id
+            })
+        }()
+        let input: [String: JSONValue] = [
+            "mode": .string(mode.rawValue),
+            "profile": model.catProfile(),
+            "words": words,
+            "messages": .array(Array(history.suffix(12))),
+        ]
+        replying = true
+        Task {
+            defer { replying = false }
+            do {
+                let reply = try await CloudAssistant.shared.run(.chat, input, as: CloudAI.ChatReply.self).cleaned(allowedIds: allowed)
+                let remembered = CatMemory.shared.apply(reply.memory)
+                withAnimation(reduceMotion ? nil : Motion.reveal) {
+                    turns.append(ChatTurn(role: .cat, text: reply.reply, practiceIds: reply.practiceWordIds, remembered: remembered))
+                }
+                ChatStore.save(turns, mode: mode)
+            } catch is CancellationError {
+            } catch {
+                chatFailure = (error as? CloudAI.Failure) ?? .unavailable
+            }
+        }
     }
 
     @ViewBuilder

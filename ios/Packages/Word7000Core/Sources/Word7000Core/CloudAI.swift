@@ -13,7 +13,7 @@ public enum CloudAI {
     public static let provider = "anthropic"
 
     public enum Kind: String, Codable, Sendable {
-        case coach, scan, explain, quizWhy, fillWord, insights, ask
+        case coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict
     }
 
     public enum Failure: Error, Equatable, Sendable {
@@ -148,6 +148,73 @@ public enum CloudAI {
                 plan: lines(plan, 4)
             )
             guard !result.headline.isEmpty, !result.summary.isEmpty else { throw Failure.unavailable }
+            return result
+        }
+    }
+
+    /// The cat's reply in a chat: what it says, words it suggests practising
+    /// (ids the app sent), and anything the learner asked it to remember.
+    public struct ChatReply: Codable, Equatable, Sendable {
+        public struct Memory: Codable, Equatable, Sendable {
+            public let examDate: String
+            public let goal: String
+            public let nickname: String
+            public let note: String
+            public init(examDate: String = "", goal: String = "", nickname: String = "", note: String = "") {
+                self.examDate = examDate; self.goal = goal; self.nickname = nickname; self.note = note
+            }
+            public var isEmpty: Bool { examDate.isEmpty && goal.isEmpty && nickname.isEmpty && note.isEmpty }
+        }
+        public let reply: String
+        public let practiceWordIds: [String]
+        public let memory: Memory
+
+        public init(reply: String, practiceWordIds: [String], memory: Memory) {
+            self.reply = reply; self.practiceWordIds = practiceWordIds; self.memory = memory
+        }
+
+        /// Keeps only words the app offered and dates that are dates.
+        public func cleaned(allowedIds: Set<String>) throws -> ChatReply {
+            let date = memory.examDate.trimmingCharacters(in: .whitespaces)
+            let validDate = date.count == 10 && DayMath.dayNumber(date) != nil ? date : ""
+            var seen = Set<String>()
+            let result = ChatReply(
+                reply: CloudAI.clip(reply, 600),
+                practiceWordIds: practiceWordIds.filter { allowedIds.contains($0) && seen.insert($0).inserted }.prefix(8).map { $0 },
+                memory: Memory(examDate: validDate, goal: CloudAI.clip(memory.goal, 80),
+                               nickname: CloudAI.clip(memory.nickname, 20), note: CloudAI.clip(memory.note, 80)))
+            guard !result.reply.isEmpty else { throw Failure.unavailable }
+            return result
+        }
+    }
+
+    /// Today's one-liners for the cat, written for this learner.
+    public struct LinePack: Codable, Equatable, Sendable {
+        public let greeting: [String]
+        public let right: [String]
+        public let wrong: [String]
+        public let done: [String]
+        public let nudge: [String]
+
+        public init(greeting: [String], right: [String], wrong: [String], done: [String], nudge: [String]) {
+            self.greeting = greeting; self.right = right; self.wrong = wrong; self.done = done; self.nudge = nudge
+        }
+
+        public func cleaned() -> LinePack {
+            let keep = { (items: [String]) in items.map { CloudAI.clip($0, 90) }.filter { !$0.isEmpty }.prefix(8).map { $0 } }
+            return LinePack(greeting: keep(greeting), right: keep(right), wrong: keep(wrong), done: keep(done), nudge: keep(nudge))
+        }
+    }
+
+    /// The cat's verdict on a finished practice session.
+    public struct Verdict: Codable, Equatable, Sendable {
+        public let verdict: String
+        public let tip: String
+        public init(verdict: String, tip: String) { self.verdict = verdict; self.tip = tip }
+
+        public func cleaned() throws -> Verdict {
+            let result = Verdict(verdict: CloudAI.clip(verdict, 160), tip: CloudAI.clip(tip, 180))
+            guard !result.verdict.isEmpty else { throw Failure.unavailable }
             return result
         }
     }

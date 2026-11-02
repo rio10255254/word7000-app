@@ -49,6 +49,10 @@ struct MeView: View {
                 AIInsightsSection()
     
                 Section {
+                    NavigationLink { CatMemoryView() } label: {
+                        Label(L.t("小笨貓記得的事", "What Silly Cat remembers"), systemImage: "pawprint")
+                    }
+                    .accessibilityIdentifier("me-cat-memory")
                     NavigationLink { SettingsView() } label: {
                         Label(L.settings, systemImage: "gearshape")
                     }
@@ -77,9 +81,8 @@ struct MeView: View {
 /// that picks new words for study (`LearningEngine.estimateAbility`).
 struct LevelEstimateSection: View {
     @Environment(AppModel.self) private var model
-    /// Fewer Core words met than this and the estimate is mostly a guess.
-    private static let wordsNeeded = 10
-    private static let topLevel = 14
+    private static let wordsNeeded = CatLevel.wordsNeeded
+    private static let topLevel = CatLevel.top
 
     var body: some View {
         let estimate = LearningEngine.abilityEstimate(words: model.vocabularyWords, state: model.progress)
@@ -108,13 +111,7 @@ struct LevelEstimateSection: View {
         .accessibilityIdentifier("me-level-estimate")
     }
 
-    /// "Core 6" or "Core 6–7", from an ability in half-levels.
-    private func levelName(_ ability: Int) -> String {
-        let level = ability / 2
-        if level < 1 { return "Core 1" }
-        if level >= Self.topLevel { return "Core \(Self.topLevel)" }
-        return ability % 2 == 0 ? "Core \(level)" : "Core \(level)–\(level + 1)"
-    }
+    private func levelName(_ ability: Int) -> String { CatLevel.name(ability) }
 
     private func line(ability: Int, favoured: ClosedRange<Int>) -> String {
         let band = favoured.count > 1 ? "Core \(favoured.lowerBound)–\(favoured.upperBound)" : "Core \(favoured.lowerBound)"

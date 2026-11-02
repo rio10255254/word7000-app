@@ -49,7 +49,7 @@ final class SavedAnswers<Value: Codable> {
 @MainActor
 enum CloudAnswerCache {
     /// Raise when the prompts change enough that saved answers should be asked for again.
-    private static let version = 2
+    private static let version = 3
     static let explanations = SavedAnswers<CloudAI.Explanation>(file: "explanations-v\(version).json", limit: 300)
     static let quiz = SavedAnswers<CloudAI.QuizExplanation>(file: "quiz-v\(version).json", limit: 300)
     static let questions = SavedAnswers<[AskedQuestion]>(file: "questions-v1.json", limit: 200)

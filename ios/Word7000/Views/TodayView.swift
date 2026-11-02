@@ -75,6 +75,8 @@ struct TodayView: View {
     /// Bumped to bounce the streak flame: on arrival and when the streak grows.
     @State private var flameBounce = 0
     @State private var greetingHops = 0
+    /// What the cat knows and today's AI lines, gathered on arrival.
+    @State private var catLines = CatLineSource.none
     /// Taps on each practice tile, to bounce its icon.
     @State private var tileTaps: [String: Int] = [:]
     /// The hero card's width: how far the companion can stroll.
@@ -130,7 +132,14 @@ struct TodayView: View {
                 mascotChatOpen = false
             })
         }
-        .task { insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline }
+        .task {
+            insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
+            catLines = model.catLines
+            // Today's lines, written for this learner, once a day in the background.
+            await CatLinePackStore.refreshIfNeeded(model)
+            catLines = model.catLines
+        }
+        .onChange(of: progress.studiedToday) { _, _ in catLines = model.catLines }
         .sheet(isPresented: $quizSetupOpen, onDismiss: {
             guard quizQueued else { return }
             quizQueued = false
@@ -427,7 +436,18 @@ struct TodayView: View {
         let progress = model.progress
         let left = max(0, progress.dailyTarget - progress.studiedToday)
         let hour = Calendar.current.component(.hour, from: Date())
-        if model.goalDone { return L.t("嗯，勉強及格。不要得意。", "Fine. You passed. Don't get cocky.") }
+        let call = catLines.context?.callout ?? ""
+        let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
+        if model.goalDone { return L.t("\(call)嗯，勉強及格。不要得意。", "\(call)fine. You passed. Don't get cocky.") }
+        // Every other day, a line written for today; the exam countdown when there is one.
+        if day % 2 == 0, let line = (progress.studiedToday == 0 ? catLines.pack?.nudge : catLines.pack?.greeting)?.first {
+            return line
+        }
+        if let days = catLines.context?.daysToExam, days <= 120 {
+            return progress.studiedToday == 0
+                ? L.t("\(call)學測剩 \(days) 天，你今天一個字都還沒背。我不說話，我就看著。", "\(call)\(days) days to the exam and not one word today. I'm not saying anything. Just watching.")
+                : L.t("學測剩 \(days) 天，才 \(progress.studiedToday) 個？還差 \(left) 個。", "\(days) days to the exam. Only \(progress.studiedToday)? \(left) to go.")
+        }
         if progress.studiedToday == 0 {
             if hour >= 21 { return L.t("都幾點了？今天的字要留給明天的你喔？", "This late? Saving today's words for future you?") }
             if hour >= 12 { return L.t("下午了欸。\(progress.dailyTarget) 個字還在等，我也在等。", "It's afternoon. \(progress.dailyTarget) words are waiting. So am I.") }
@@ -454,7 +474,7 @@ struct TodayView: View {
                L.t("要不要順便測驗？還是怕了？", "Quick quiz? Or are you scared?"),
                L.t("明天同一時間，我會來找你。", "Same time tomorrow. I'll find you."),
                L.t("今天表現……還可以啦。不要跟別人說我誇你。", "Today was… okay. Don't tell anyone I said that.")]
-            : [L.t("我阿嬤背得都比你快。", "My grandma learns faster than you."),
+            : catLines.contextLines + (catLines.pack?.nudge ?? []) + [L.t("我阿嬤背得都比你快。", "My grandma learns faster than you."),
                L.t("你滑手機的時間夠背十個字了。", "That scrolling time? Ten words, easily."),
                L.t("我沒有在催你，我只是一直盯著你。", "I'm not rushing you. I'm just staring."),
                L.t("單字們在哭，你有聽到嗎？", "Hear that? Your words are crying."),

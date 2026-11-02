@@ -31,6 +31,10 @@ struct StudySessionView: View {
     @State private var buddyMood: Mascot.Mood = .thinking
     @State private var buddyHop = 0
     @State private var buddyRemark: String?
+    /// Where the cat's lines come from this session (gathered once).
+    @State private var catLines = CatLineSource.none
+    /// A word that has now slipped three times or more, with how to remember it.
+    @State private var stuck: (word: WordEntry, misses: Int)?
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
@@ -77,6 +81,12 @@ struct StudySessionView: View {
                                     .onChange(of: proxy.size.width) { _, value in cardWidth = value }
                                     .id("\(word.id)-\(session.index)")
                             }
+                        }
+                        if let stuck {
+                            StuckWordTip(word: stuck.word, misses: stuck.misses) {
+                                withAnimation(reduceMotion ? nil : Motion.reveal) { self.stuck = nil }
+                            }
+                            .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
                         }
                         controls
                             .disabled(committing)
@@ -138,7 +148,7 @@ struct StudySessionView: View {
                 }
             }
         }
-        .onAppear { visible = true; model.ensureStudySession() }
+        .onAppear { visible = true; model.ensureStudySession(); catLines = model.catLines }
         .onDisappear { visible = false; lifetime = UUID(); Speaker.shared.stop(); model.saveNow() }
         .onChange(of: model.studySession?.index) { _, index in
             if !committing { revealed = false; dragOffset = 0; armed = false }
@@ -365,7 +375,13 @@ struct StudySessionView: View {
         let source = model.studySession?.sourceKey
         if !armed { feedback += 1 }
         buddyMood = grade == .known ? .happy : .encourage
-        buddyRemark = CatQuips.studied(buddyHop, known: grade == .known)
+        let entry = model.word(id: wordId)
+        let misses = model.progress(for: wordId).reviewCount + (grade == .review ? 1 : 0)
+        buddyRemark = CatQuips.studied(buddyHop, known: grade == .known, word: entry.map { model.face($0).prompt },
+                                       misses: misses, source: catLines)
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            stuck = grade == .review && misses >= 3 ? entry.map { ($0, misses) } : nil
+        }
         buddyHop += 1
         phase = .leaving
         Speaker.shared.stop()
@@ -524,7 +540,10 @@ struct SessionSummary: View {
             Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
                 .foregroundStyle(.secondary)
                 .entrance(2)
-            CatVerdict(text: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone), mood: reachedGoal || model.goalDone ? .happy : .smug)
+            SessionVerdict(fallback: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
+                           mood: reachedGoal || model.goalDone ? .happy : .smug, kind: "study",
+                           total: session.knownIds.count + session.reviewIds.count, correct: session.knownIds.count,
+                           missedIds: session.reviewIds)
                 .entrance(3)
             HStack(spacing: 10) {
                 SummaryChip(value: session.knownIds.count, label: L.knowIt, icon: "checkmark", tint: Palette.known)

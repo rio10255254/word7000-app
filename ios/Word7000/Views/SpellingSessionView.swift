@@ -11,6 +11,8 @@ struct SpellingSessionView: View {
 
     @State private var words: [WordEntry] = []
     @State private var index = 0
+    /// Where the cat's lines come from this round (gathered once).
+    @State private var catLines = CatLineSource.none
     @State private var input = ""
     @State private var hints = 0
     @State private var result: Spelling.Result?
@@ -56,7 +58,7 @@ struct SpellingSessionView: View {
                 }
             }
         }
-        .onAppear { if !started { start() } }
+        .onAppear { if !started { start() }; catLines = model.catLines }
         .onDisappear { Speaker.shared.stop() }
         .sensoryFeedback(trigger: result) { _, new in
             guard let new, model.settings.hapticsEnabled ?? true else { return nil }
@@ -73,7 +75,11 @@ struct SpellingSessionView: View {
                 BuddyProgressBar(fraction: Double(index + (result == nil ? 0 : 1)) / Double(max(1, words.count)),
                                  mood: result.map { outcome -> Mascot.Mood in outcome == .correct ? .happy : .encourage } ?? .thinking,
                                  hop: correctCount + misses,
-                                 remark: result.map { $0 == .correct ? CatQuips.right(index, combo: 0) : CatQuips.wrong(index) })
+                                 remark: result.map {
+                                     $0 == .correct
+                                         ? CatQuips.right(index, combo: 0, word: word.word, source: catLines)
+                                         : CatQuips.wrong(index, word: word.word, misses: model.progress(for: word.id).reviewCount, source: catLines)
+                                 })
 
                 VStack(spacing: 8) {
                     if !word.partOfSpeech.isEmpty {
@@ -306,7 +312,8 @@ struct SpellingSessionView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .entrance(2)
-            CatVerdict(text: CatQuips.verdict(Double(correctCount) / Double(max(1, words.count))))
+            SessionVerdict(fallback: CatQuips.verdict(Double(correctCount) / Double(max(1, words.count)), source: catLines),
+                           kind: "spelling", total: words.count, correct: correctCount, missedIds: missedIds)
                 .entrance(3)
             Spacer()
             VStack(spacing: 12) {

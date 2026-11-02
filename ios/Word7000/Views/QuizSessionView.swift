@@ -15,6 +15,8 @@ struct QuizSessionView: View {
     @State private var options: [QuizOption] = []
     @State private var index = 0
     @State private var chosen: QuizOption?
+    /// Where the cat's lines come from this quiz (gathered once).
+    @State private var catLines = CatLineSource.none
     @State private var correctCount = 0
     @State private var missedIds: [String] = []
     /// Right answers in a row; from three on the quiz cheers the run on.
@@ -34,7 +36,7 @@ struct QuizSessionView: View {
             Group {
                 if !configured {
                     if skipSetup {
-                        Color.clear.onAppear { start(); configured = true }
+                        Color.clear.onAppear { start(); configured = true; catLines = model.catLines }
                     } else {
                         QuizConfiguration(start: { start(); configured = true })
                     }
@@ -114,7 +116,11 @@ struct QuizSessionView: View {
                              tint: combo >= 3 ? Palette.review : Palette.accent,
                              mood: chosen.map { option -> Mascot.Mood in option.correct ? (combo >= 3 ? .cheer : .happy) : .encourage } ?? .thinking,
                              hop: correctCount + missedIds.count,
-                             remark: chosen.map { $0.correct ? CatQuips.right(index, combo: combo) : CatQuips.wrong(index) })
+                             remark: chosen.map {
+                                 $0.correct
+                                     ? CatQuips.right(index, combo: combo, word: face.prompt, source: catLines)
+                                     : CatQuips.wrong(index, word: face.prompt, misses: model.progress(for: word.id).reviewCount, source: catLines)
+                             })
                 // The run's badge floats just under the bar, clear of the question.
                 .overlay(alignment: .topLeading) {
                     if combo >= 3 {
@@ -158,6 +164,9 @@ struct QuizSessionView: View {
 
             if let chosen {
                 if !chosen.correct, let correct = options.first(where: \.correct) {
+                    QuizContrast(word: word, chosen: chosen.text, correct: correct.text)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                     QuizWhyView(word: word,
                                 question: model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt,
                                 correctAnswer: correct.text, chosenAnswer: chosen.text)
@@ -333,7 +342,9 @@ struct QuizSessionView: View {
                 .entrance(2)
             // Only when the missed words' AI list is not taking the room.
             if !(CloudAssistant.shared.offered && !missedIds.isEmpty) {
-                CatVerdict(text: CatQuips.verdict(fraction), mood: Mascot.Mood(score: fraction) == .encourage ? .smug : .happy)
+                SessionVerdict(fallback: CatQuips.verdict(fraction, source: catLines),
+                               mood: Mascot.Mood(score: fraction) == .encourage ? .smug : .happy, kind: "quiz",
+                               total: correctCount + missedIds.count, correct: correctCount, missedIds: missedIds)
                     .entrance(3)
             }
             if CloudAssistant.shared.offered, !missedIds.isEmpty {

@@ -157,3 +157,20 @@ final class SpeakingPracticeTests: XCTestCase {
         XCTAssertNil(decoded.autoSpeak)
     }
 }
+
+final class TaiwanSpeakingTests: XCTestCase {
+    func testTaiwanMandarinWordsGetTheirOwnChineseQuestion() throws {
+        let question = try XCTUnwrap(SpeakingPractice.taiwanQuestions.values.sorted { $0.id < $1.id }.first)
+        let word = WordEntry(id: question.id, word: "gloss", partOfSpeech: "n.", pronunciation: "", meaningZh: question.word,
+                             example: "", exampleZh: "", group: "Core 6")
+        let card = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .chinese))
+        XCTAssertEqual(card.question, question.questionZh)
+        XCTAssertEqual(card.questionGloss, question.questionEn)
+        XCTAssertEqual(card.keyword, question.word)
+        XCTAssertTrue(card.referenceAnswer.contains(question.word))
+        // A word whose Chinese no longer matches does not borrow the question.
+        var changed = word
+        changed.meaningZh = "別的詞"
+        XCTAssertNil(SpeakingPractice.entry(for: changed).flatMap { $0.id.hasSuffix("-tw") ? $0 : nil })
+    }
+}

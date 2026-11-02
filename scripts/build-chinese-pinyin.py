@@ -102,6 +102,20 @@ def main() -> None:
                     start = example.find(head, start + len(head))
                 sentence = render(example, syllables)
             lexicon[example] = sentence
+    taiwan_speaking = ROOT / 'ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-zh.json'
+    if taiwan_speaking.exists():
+        heads = {e['meaningZh']: e['pronunciation'] for e in json.loads(TAIWAN_WORDS.read_text())}
+        for record in json.loads(taiwan_speaking.read_text())['records']:
+            for text in (record['questionZh'], record['answerZh']):
+                syllables = lazy_pinyin(to_simplified.convert(text), style=Style.TONE, errors=lambda chars: list(chars))
+                if len(syllables) != len(text):
+                    continue
+                head = record['word']
+                start = text.find(head)
+                while start != -1 and head in heads:
+                    syllables[start:start + len(head)] = heads[head].split(' ')
+                    start = text.find(head, start + len(head))
+                lexicon[text] = render(text, syllables)
     lexicon = dict(sorted(lexicon.items()))
     OUT.write_text(json.dumps(lexicon, ensure_ascii=False, separators=(',', ':'), sort_keys=True) + '\n')
     print(json.dumps({'entries': len(lexicon), 'bytes': OUT.stat().st_size}))

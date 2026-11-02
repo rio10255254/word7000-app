@@ -33,6 +33,29 @@ public enum SpeakingPractice {
 
     private static let byWord = Dictionary(entries.map { ($0.word.lowercased(), $0) }, uniquingKeysWith: { first, _ in first })
 
+    /// Conversation questions for the Taiwan Mandarin bank (learners of
+    /// Chinese), by word id: speaking-zh.json.
+    struct TaiwanQuestion: Decodable {
+        let id: String
+        let word: String
+        let questionZh: String
+        let questionEn: String
+        let answerZh: String
+        let answerEn: String
+    }
+
+    private struct TaiwanDocument: Decodable {
+        let schemaVersion: Int
+        let records: [TaiwanQuestion]
+    }
+
+    static let taiwanQuestions: [String: TaiwanQuestion] = {
+        guard let url = Bundle.module.url(forResource: "speaking-zh", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let document = try? JSONDecoder().decode(TaiwanDocument.self, from: data), document.schemaVersion == 1 else { return [:] }
+        return Dictionary(document.records.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+    }()
+
     /// How many recently practised words are remembered, so the next
     /// sessions ask about other words first.
     public static let recentLimit = 300
@@ -84,6 +107,11 @@ public enum SpeakingPractice {
     }
 
     public static func entry(for word: WordEntry) -> Entry? {
+        // A Taiwan Mandarin word has its own question, about the Chinese.
+        if let taiwan = taiwanQuestions[word.id], taiwan.word == word.meaningZh {
+            return Entry(id: word.id + "-tw", word: word.word, keywordZh: taiwan.word, question: taiwan.questionEn,
+                         questionZh: taiwan.questionZh, answerEn: taiwan.answerEn, answerZh: taiwan.answerZh)
+        }
         guard let entry = byWord[word.word.lowercased()] else { return nil }
         if entry.id.hasPrefix(word.id + "-") { return entry }
         let senses = ChineseDisplay.meaningParts(word.meaningZh)

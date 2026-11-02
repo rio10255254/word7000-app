@@ -587,7 +587,14 @@ final class AppModel {
     }
 
     /// Spelling draws from the same words as a quiz.
-    func spellingQuestions(seed: String) -> [WordEntry] { seenWordsFirst(count: Spelling.sessionLength, seed: seed) }
+    func spellingQuestions(seed: String) -> [WordEntry] {
+        guard studyMode == .chinese else { return seenWordsFirst(count: Spelling.sessionLength, seed: seed) }
+        // Learners of Chinese write the meaning, so it must be in Chinese.
+        let filter = settings.quizFilter
+        let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+            .filter { !ChineseSpelling.targets($0.meaningZh).isEmpty }
+        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: Spelling.sessionLength, seed: seed)
+    }
 
     private func seenWordsFirst(count: Int, seed: String) -> [WordEntry] {
         let filter = settings.quizFilter

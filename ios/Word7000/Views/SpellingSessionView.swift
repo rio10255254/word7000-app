@@ -1,8 +1,10 @@
 import SwiftUI
 import Word7000Core
 
-/// Ten meanings to type the English word for. Return checks the answer and
-/// return again moves on, so the keyboard stays up the whole session.
+/// Ten meanings to type the English word for (or, for learners of Chinese,
+/// ten English words to write in Chinese: characters or pinyin). Return
+/// checks the answer and return again moves on, so the keyboard stays up the
+/// whole session.
 struct SpellingSessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -23,6 +25,18 @@ struct SpellingSessionView: View {
     @State private var misses = 0
     @State private var shownScore = 0
     @FocusState private var focused: Bool
+
+    private var chinese: Bool { model.studyMode == .chinese }
+
+    /// The sense a learner of Chinese writes, and its syllables.
+    private func target(_ word: WordEntry) -> (text: String, syllables: [String]) {
+        let text = ChineseSpelling.targets(word.meaningZh).first ?? ChineseDisplay.conciseMeaning(word.meaningZh)
+        return (text, ChineseSpelling.syllables(text))
+    }
+
+    private func maxHints(_ word: WordEntry) -> Int {
+        chinese ? ChineseSpelling.maxHints(target(word).syllables) : Spelling.maxHints(word.word)
+    }
 
     var body: some View {
         NavigationStack {
@@ -88,11 +102,20 @@ struct SpellingSessionView: View {
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Palette.accent)
                     }
-                    Text(ChineseDisplay.conciseMeaning(word.meaningZh))
+                    Text(chinese ? word.word : ChineseDisplay.conciseMeaning(word.meaningZh))
                         .font(.display(.title, weight: .bold))
                         .multilineTextAlignment(.center)
                         .accessibilityIdentifier("spelling-meaning")
-                    if result == nil {
+                    if chinese, result == nil {
+                        // One blank per syllable; each hint fills in the next.
+                        let syllables = target(word).syllables
+                        Text(ChineseSpelling.pattern(syllables, revealed: hints))
+                            .font(.system(.title3, design: .rounded).weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .contentTransition(.numericText())
+                            .accessibilityLabel("\(syllables.count) syllables")
+                            .accessibilityIdentifier("spelling-pattern")
+                    } else if result == nil {
                         // Each hint flips the next letter into place.
                         Text(Spelling.pattern(word.word, revealed: hints))
                             .font(.system(.title3, design: .monospaced).weight(.semibold))
@@ -108,7 +131,7 @@ struct SpellingSessionView: View {
                 .id(index)
                 .overlay(alignment: .topTrailing) { SpeakButton(text: word.word, language: "en-US") }
 
-                TextField(L.t("輸入英文單字", "Type the English word"), text: Binding(
+                TextField(L.t("輸入英文單字", "Characters or pinyin"), text: Binding(
                     get: { input },
                     set: { if result == nil { input = $0 } }
                 ))
@@ -116,7 +139,8 @@ struct SpellingSessionView: View {
                 .multilineTextAlignment(.center)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
-                .keyboardType(.asciiCapable)
+                // Learners of Chinese may switch to a Chinese keyboard.
+                .keyboardType(chinese ? .default : .asciiCapable)
                 .submitLabel(result == nil ? .done : .next)
                 .focused($focused)
                 .onSubmit { result == nil ? check() : next() }
@@ -158,13 +182,19 @@ struct SpellingSessionView: View {
                     .foregroundStyle(color(result))
                     .accessibilityIdentifier("spelling-result")
                 Spacer()
-                SpeakButton(text: word.word, language: "en-US")
+                SpeakButton(text: chinese ? target(word).text : word.word, language: chinese ? "zh-TW" : "en-US")
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(word.word)
+                Text(chinese ? target(word).text : word.word)
                     .font(.display(.title, weight: .bold))
                     .accessibilityIdentifier("spelling-answer")
-                if !word.pronunciation.isEmpty {
+                if chinese {
+                    Text(target(word).syllables.joined(separator: " ")).foregroundStyle(.secondary)
+                    let others = ChineseSpelling.targets(word.meaningZh).dropFirst()
+                    if !others.isEmpty {
+                        Text("Also accepted: \(others.joined(separator: "、"))").font(.footnote).foregroundStyle(.secondary)
+                    }
+                } else if !word.pronunciation.isEmpty {
                     Text(word.pronunciation).foregroundStyle(.secondary)
                 }
                 if result != .correct {
@@ -172,12 +202,20 @@ struct SpellingSessionView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .padding(.top, 4)
-                    if let note = WordNotes.note(for: word.word) {
+                    if !chinese, let note = WordNotes.note(for: word.word) {
                         Text(L.t(note.explanationZh, note.explanationEn)).font(.subheadline)
                     }
                 }
             }
-            if !word.example.isEmpty {
+            if chinese, !word.exampleZh.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(word.exampleZh)
+                    let pinyin = ChineseDisplay.sentencePinyin(word.exampleZh)
+                    if !pinyin.isEmpty { Text(pinyin).font(.footnote).foregroundStyle(.secondary) }
+                    Text(word.example).font(.subheadline).foregroundStyle(.secondary)
+                }
+                .padding(.top, 4)
+            } else if !word.example.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(word.example)
                     Text(word.exampleZh).font(.subheadline).foregroundStyle(.secondary)
@@ -205,7 +243,7 @@ struct SpellingSessionView: View {
                     .font(.headline).frame(maxWidth: .infinity)
                 }
                 .secondaryAction()
-                .disabled(hints >= Spelling.maxHints(word.word))
+                .disabled(hints >= maxHints(word))
                 .accessibilityIdentifier("spelling-hint")
                 Button(action: check) {
                     Text(L.t("檢查", "Check")).font(.headline).frame(maxWidth: .infinity)
@@ -228,8 +266,10 @@ struct SpellingSessionView: View {
     private func title(_ result: Spelling.Result) -> String {
         switch result {
         case .correct: hints >= 2 ? L.t("拼對了（用了提示）", "Correct, with hints") : L.t("拼對了！", "Correct!")
-        case .almost: L.t("差一個字母", "One letter off")
-        case .wrong: L.t("正確拼法", "The spelling is")
+        case .almost: chinese && words.indices.contains(index) && ChineseSpelling.tonesOnlyWrong(input, meaning: words[index].meaningZh)
+            ? "Right syllables, check the tones"
+            : L.t("差一個字母", "Almost there")
+        case .wrong: L.t("正確拼法", "It's written")
         }
     }
 
@@ -272,7 +312,7 @@ struct SpellingSessionView: View {
     private func check() {
         guard result == nil, words.indices.contains(index), !input.trimmed.isEmpty else { return }
         let word = words[index]
-        let outcome = Spelling.check(input, word: word.word)
+        let outcome = chinese ? ChineseSpelling.check(input, meaning: word.meaningZh) : Spelling.check(input, word: word.word)
         withAnimation(reduceMotion ? nil : Motion.reveal) { result = outcome }
         model.recordSpellingAnswer(wordId: word.id, result: outcome, hints: hints)
         if outcome == .correct { correctCount += 1 } else { missedIds.append(word.id); misses += 1 }
@@ -307,7 +347,7 @@ struct SpellingSessionView: View {
                     .popIn(delay: 0.5)
             }
             .entrance(0)
-            Text(L.t("拼字練習完成", "Spelling complete")).font(.display(.title, weight: .bold))
+            Text(L.t("拼字練習完成", "Writing complete")).font(.display(.title, weight: .bold))
                 .entrance(1)
             Text(missedIds.isEmpty ? L.quizPerfect : L.quizMissedHint(missedIds.count))
                 .foregroundStyle(.secondary)

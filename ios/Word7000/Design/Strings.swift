@@ -40,7 +40,7 @@ enum L {
     static var quizLength: String { t("10 題", "10 questions") }
     static var practiceStruggling: String { t("複習不熟的字", "Review tricky words") }
     static var speaking: String { t("口說練習", "Speaking practice") }
-    static var spelling: String { t("拼字練習", "Spelling") }
+    static var spelling: String { t("拼字練習", "Writing") }
     static func studyingBank(_ name: String) -> String { t("字庫：\(name)", "Word bank: \(name)") }
 
     // Study

@@ -578,11 +578,11 @@ struct TodayView: View {
                                       detail: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions")) { quizSetupOpen = true })
         items.append(PracticeTileItem(id: "today-speaking", icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking,
                                       detail: L.t("開口說說看", "Say it out loud")) { start(.speaking) })
-        // Typing the word only makes sense when English is what is learned.
-        if model.studyMode == .english {
-            items.append(PracticeTileItem(id: "today-spelling", icon: "character.cursor.ibeam", tint: Palette.accent, title: L.spelling,
-                                          detail: L.t("\(Spelling.sessionLength) 題", "\(Spelling.sessionLength) words")) { start(.spelling) })
-        }
+        // Learners of English spell the word; learners of Chinese write it
+        // in characters or pinyin.
+        items.append(PracticeTileItem(id: "today-spelling", icon: model.studyMode == .english ? "character.cursor.ibeam" : "pencil.and.scribble",
+                                      tint: Palette.accent, title: L.spelling,
+                                      detail: L.t("\(Spelling.sessionLength) 題", "\(Spelling.sessionLength) words")) { start(.spelling) })
         items.append(PracticeTileItem(id: "today-exam", icon: "timer", tint: Palette.review, title: L.t("模擬考", "Exam"),
                                       detail: L.t("限時 \(ExamView.minutes) 分鐘", "\(ExamView.minutes) min timed"),
                                       locked: plus.decide(.examPractice) != .allowed) { start(.exam) })

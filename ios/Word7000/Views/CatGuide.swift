@@ -27,7 +27,7 @@ enum GuideStep: String, CaseIterable, Sendable {
         switch self {
         case .quiz: L.t("背完了？來個小測驗，看你是真記得還是假記得。", "Done? Quick quiz: let's see if it actually stuck.")
         case .speaking: L.t("光認得不夠，開口說說看。點這裡，我聽著。", "Recognizing isn't enough. Say it out loud; tap here, I'm listening.")
-        case .spelling: L.t("拼得出來才算真的會。來拼拼看？", "Spell it and you really know it. Give it a go?")
+        case .spelling: L.t("拼得出來才算真的會。來拼拼看？", "Write it in Chinese and you really know it. Characters or pinyin, give it a go?")
         case .exam: plus
             ? L.t("來場 15 分鐘模擬考，看看哪一級還不熟。", "Try a 15-minute mock exam and see which words still need work.")
             : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一級還不熟。點這裡看看。", "Premium has a 15-minute mock exam that shows which words need work. Tap to see.")
@@ -59,7 +59,7 @@ enum GuideStep: String, CaseIterable, Sendable {
         switch self {
         case .quiz: L.t("小測驗", "Quiz")
         case .speaking: L.t("開口說", "Speak")
-        case .spelling: L.t("拼字", "Spell")
+        case .spelling: L.t("拼字", "Write")
         case .exam: L.t("模擬考", "Mock exam")
         case .scan: L.t("掃描", "Scan")
         case .chat: L.t("問小笨貓", "Ask the cat")
@@ -105,7 +105,7 @@ enum CatTip: String, CaseIterable, Sendable {
                             "Read the prompt and answer out loud, then tap when you're done. Premium's AI coach rewrites your answer and asks a follow-up.")
         case .quiz: L.t("選錯也沒關係，我會告訴你選到的那個是什麼意思。", "Wrong is fine: I'll tell you what the option you picked really means.")
         case .spelling: L.t("聽發音、看意思，把單字拼出來。卡住就按提示，一次多給一個字母。",
-                            "Listen, read the meaning, and spell the word. Stuck? Each hint gives one more letter.")
+                            "Write the Chinese for the English word, in characters or pinyin; tones are optional, but if you add them they must be right. Each hint shows one more syllable.")
         case .me: L.t("這裡有我估的程度、每週紀錄和設定，紙張或皮革風格也在設定裡換。",
                       "Here is the level I estimate, your week and Settings, where you can switch between paper and leather.")
         case .scan: L.t("拍單字表，或在筆記本上一行寫一個字，只寫英文或中文我都會幫你補。",
@@ -122,7 +122,6 @@ extension AppModel {
         let offered = settings.guideOffered ?? [:]
         return GuideStep.allCases.first { step in
             guard !tried.contains(step.rawValue) else { return false }
-            if step == .spelling, studyMode != .english { return false }
             if let first = offered[step.rawValue], let end = DayMath.addDays(first, GuideStep.patienceDays), today >= end { return false }
             return true
         }
@@ -138,7 +137,7 @@ extension AppModel {
         let tried = Set(settings.guideTried ?? [])
         var stops = [GuideStop(id: "study", title: L.t("背一組", "Learn a set"), icon: "rectangle.on.rectangle.angled",
                                done: progress.lastStudyDate != nil, step: nil)]
-        for step in GuideStep.allCases where step != .spelling || studyMode == .english {
+        for step in GuideStep.allCases {
             stops.append(GuideStop(id: step.rawValue, title: step.title, icon: step.icon, done: tried.contains(step.rawValue), step: step))
         }
         return stops.allSatisfy(\.done) ? nil : stops

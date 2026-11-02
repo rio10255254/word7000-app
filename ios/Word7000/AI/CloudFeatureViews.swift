@@ -183,8 +183,8 @@ struct AskAISection: View {
             } header: {
                 Text(L.t("問小笨貓", "Ask Silly Cat"))
             } footer: {
-                Text(L.t("牠只回答和這個字有關的問題，每問一次算一次線上 AI。背後是 Claude 線上 AI，可能有誤。",
-                         "It only answers questions about this word; each one counts as one online AI request. Powered by Anthropic's Claude, and may contain mistakes."))
+                Text(L.t("只聊這個字 · Claude 線上 AI，可能有誤",
+                         "About this word only · Claude online AI, may be wrong"))
             }
             .onAppear { asked = CloudAnswerCache.questions[cacheKey] ?? [] }
             .sensoryFeedback(.impact(weight: .light), trigger: loading) { _, new in new && (model.settings.hapticsEnabled ?? true) }
@@ -463,11 +463,8 @@ struct AIInsightsSection: View {
                 Text(L.t("小笨貓的學習分析", "Silly Cat's verdict"))
             } footer: {
                 if insights != nil {
-                    Text(L.t("根據最近 14 天的紀錄，背後是 Claude 線上 AI，可能有誤。明天會再更新。",
-                             "Based on the last 14 days, powered by Anthropic's Claude, and may contain mistakes. Refreshes tomorrow."))
-                } else {
-                    Text(L.t("小笨貓會看你的練習次數、測驗正確率和最常忘記的字，然後毫不客氣地告訴你接下來怎麼練。",
-                             "Silly Cat reads your practice, quiz accuracy and most-forgotten words, then tells you, bluntly, what to do next."))
+                    Text(L.t("近 14 天紀錄 · Claude 線上 AI，可能有誤",
+                             "Last 14 days · Claude online AI, may be wrong"))
                 }
             }
             .onAppear(perform: restore)

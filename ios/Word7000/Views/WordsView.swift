@@ -717,8 +717,7 @@ struct WordProgressCard: View {
 
     private var caption: String {
         guard progress.status != .new else {
-            return L.t("還沒學過，在學習卡第一次見到它後就會開始安排複習。",
-                       "Not studied yet. Reviews are scheduled after you first meet it in a study session.")
+            return L.t("還沒學過", "Not studied yet")
         }
         guard let due = LearningEngine.reviewDueDate(progress),
               let dueDay = DayMath.dayNumber(due), let today = DayMath.dayNumber(DayMath.today()) else {

@@ -17,7 +17,7 @@ struct SpeechSettingsView: View {
                     voiceRow(language: "en-US", title: L.t("英文聲音", "English voice"))
                     voiceRow(language: "zh-TW", title: L.t("中文聲音", "Chinese voice"))
                 } footer: {
-                    Text(L.t("自動選擇會優先使用已下載的高品質聲音。可在 iPhone 的「設定 → 輔助使用」中下載更多朗讀聲音，再回到這裡選擇。", "Automatic uses the best downloaded voice for the language. You can download more reading voices in iPhone Settings under Accessibility, then return here to choose one."))
+                    Text(L.t("更多聲音可在 iPhone「設定 → 輔助使用」下載。", "Download more voices in iPhone Settings → Accessibility."))
                 }
                 Section(L.t("語速", "Reading speed")) {
                     Picker(L.t("語速", "Reading speed"), selection: Binding(get: { preferences.speed }, set: { value in

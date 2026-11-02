@@ -33,13 +33,6 @@ struct MeView: View {
                 Section {
                     HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
                         .listRowBackground(StyledRowBackground(paper: .graph))
-                    let summary = LearningWeekSummary(days: model.activity(days: 7))
-                    if summary.activeDays > 0 {
-                        Text(L.t("近 7 天練習 \(summary.activeDays) 天，完成 \(summary.words) 次單字練習、\(summary.speaking) 次口說。",
-                                 "In the last 7 days: \(summary.activeDays) active days, \(summary.words) word practices and \(summary.speaking) speaking practices."))
-                            .font(.subheadline).foregroundStyle(.secondary)
-                            .accessibilityIdentifier("me-week-summary")
-                    }
                     Button { historyOpen = true } label: {
                         ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
                     }
@@ -93,8 +86,8 @@ struct LevelEstimateSection: View {
         Section {
             if estimate.seen < Self.wordsNeeded {
                 CatSays(mood: .thinking, size: 28) {
-                    Text(L.t("再多學幾個字，我就看得出你大概在哪個程度。",
-                             "Learn a few more words and I'll tell you roughly what level you're at."))
+                    Text(L.t("再多學幾個字，我就看得出你的程度。",
+                             "Learn a few more words and I'll tell you your level."))
                         .font(.subheadline)
                 }
                 .padding(.vertical, 4)
@@ -111,11 +104,6 @@ struct LevelEstimateSection: View {
             }
         } header: {
             Text(L.t("\(Cat.name)估你的程度", "Your level, by \(Cat.name)"))
-        } footer: {
-            if estimate.seen >= Self.wordsNeeded {
-                Text(L.t("依你第一次看到就認得、或不認得的字推估，每答一題都會更新。",
-                         "Estimated from which words you knew the first time you saw them; it updates with every answer."))
-            }
         }
         .accessibilityIdentifier("me-level-estimate")
     }
@@ -131,11 +119,11 @@ struct LevelEstimateSection: View {
     private func line(ability: Int, favoured: ClosedRange<Int>) -> String {
         let band = favoured.count > 1 ? "Core \(favoured.lowerBound)–\(favoured.upperBound)" : "Core \(favoured.lowerBound)"
         if ability / 2 >= Self.topLevel {
-            return L.t("你大概在 \(levelName(ability)) 以上了……好啦，算你厲害。新字我就從最難的挑。",
-                       "You're at \(levelName(ability)) or beyond… fine, I'm impressed. New words come from the hardest levels.")
+            return L.t("你在 \(levelName(ability)) 以上了……算你厲害。",
+                       "\(levelName(ability)) or beyond… fine, I'm impressed.")
         }
-        return L.t("照你答的，我看你大概在 \(levelName(ability)) 左右。新字我多從 \(band) 挑，太簡單的少給，偶爾丟幾個難的嚇你。",
-                   "From your answers you're around \(levelName(ability)). I'll pull new words mostly from \(band), go easy on the easy ones, and throw in the odd hard one.")
+        return L.t("你大概在 \(levelName(ability))。新字多從 \(band) 挑，偶爾丟難的。",
+                   "You're around \(levelName(ability)). New words mostly from \(band), plus the odd hard one.")
     }
 }
 
@@ -551,11 +539,8 @@ private struct ProfileCard: View {
             }
             plusButton
         }
-        if case let .trial(daysLeft) = plus.access {
-            Text("\(P.trialDaysMeter(daysLeft)) · \(P.scansLeft(plus.policy.trialScansLeft))")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
+        // The trial days are on the badge by the name and the scans left on
+        // the scan card in Words, so no extra line of small print here.
     }
 
     @ViewBuilder

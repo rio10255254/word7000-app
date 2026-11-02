@@ -35,8 +35,8 @@ struct IntelligenceSettingsView: View {
                         .accessibilityIdentifier("settings-ai-status")
                     LabeledContent(L.t("掃描整理", "Scan assistance"), value: SmartScan.canOrganize ? L.t("可使用", "Available") : L.t("未啟用", "Unavailable"))
                 } footer: {
-                    Text(L.t("線上 AI 由 Anthropic 的 Claude 回答，忙碌或無法連線時改用裝置內 AI。關閉 AI 不影響原本的單字、測驗、錄音與口說練習。",
-                             "Online AI answers with Anthropic's Claude and falls back to on-device AI when it is busy or unreachable. Turning AI off does not change your words, quizzes, recordings or regular speaking practice."))
+                    Text(L.t("線上 AI 由 Anthropic 的 Claude 回答，連不上時改用裝置內 AI。關掉也不影響單字與練習。",
+                             "Online AI is Anthropic's Claude, with on-device AI as a fallback. Turning it off leaves words and practice as they are."))
                 }
                 if CloudAssistant.shared.offered { plan }
                 Section {
@@ -100,8 +100,8 @@ struct IntelligenceSettingsView: View {
         } header: {
             Text(L.t("AI 方案", "AI plan"))
         } footer: {
-            Text(L.t("新用戶前 7 天可免費體驗 Plus 等級的 AI。次數每天重置。",
-                     "New learners get Plus-level AI free for their first 7 days. The allowance resets daily."))
+            Text(L.t("前 7 天免費用 Plus 等級 AI，次數每天重置。",
+                     "Plus-level AI free for your first 7 days; resets daily."))
         }
     }
 

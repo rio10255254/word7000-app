@@ -131,32 +131,22 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["study-position"].label.hasSuffix("/ 4"))
     }
 
+    /// A scanned word with no reviewed conversation question is still
+    /// practised, by building on its example: speaking is one mixed practice.
     func testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord() {
         let app = openScanner(pastedText: "objectively adv. 客觀地")
         _ = savePastedBank(app)
         app.buttons["scan-close"].tap()
         app.tabBars.buttons.element(boundBy: 0).tap()
         app.buttons["today-speaking"].tap()
-        let modes = app.segmentedControls["speaking-activity"]
-        XCTAssertTrue(modes.waitForExistence(timeout: 10))
-        XCTAssertTrue(modes.buttons.element(boundBy: 0).isSelected)
-        XCTAssertTrue(app.buttons["speaking-use-core"].waitForExistence(timeout: 5), app.debugDescription)
-        snapshot(app, name: "speaking-empty-bank-choices")
-        modes.buttons.element(boundBy: 1).tap()
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
-        modes.buttons.element(boundBy: 0).tap()
-        XCTAssertTrue(app.buttons["speaking-use-core"].waitForExistence(timeout: 5))
-        app.buttons["speaking-use-core"].tap()
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
-        XCTAssertEqual(app.staticTexts["speaking-available-count"].label, "600 題")
-        app.buttons["speaking-show-reference"].tap()
-        XCTAssertTrue(app.staticTexts["speaking-reference-answer"].waitForExistence(timeout: 5))
-        app.buttons["speaking-complete-after-reference"].tap()
-        XCTAssertTrue(app.staticTexts["speaking-position"].label.hasPrefix("2 /"))
-        modes.buttons.element(boundBy: 1).tap()
-        app.buttons["speaking-close"].tap()
-        app.buttons["today-speaking"].tap()
-        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons.element(boundBy: 1).isSelected)
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
+        XCTAssertFalse(app.buttons["speaking-use-core"].exists)
+        XCTAssertEqual(app.staticTexts["speaking-available-count"].label, "1 個單字")
+        snapshot(app, name: "speaking-scanned-word-example")
+        // A scanned word may have no example sentence; it can still be practised.
+        app.buttons["speaking-complete"].tap()
+        XCTAssertTrue(app.buttons["speaking-next"].waitForExistence(timeout: 5))
         snapshot(app, name: "speaking-visible-practice-types")
     }
 

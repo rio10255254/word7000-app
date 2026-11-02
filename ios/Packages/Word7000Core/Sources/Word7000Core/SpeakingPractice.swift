@@ -48,6 +48,28 @@ public enum SpeakingPractice {
         return SeededRandom.shuffle(fresh + oldestFirst.prefix(max(0, count - fresh.count)), seed: seed)
     }
 
+    /// One speaking practice mixing both kinds of prompt: about three in five
+    /// are reviewed conversation questions (for words that have one), the rest
+    /// build on a word's example sentence, which every word has. A question
+    /// comes first, then they alternate. Each word appears once.
+    public static func mixedSession(from candidates: [WordEntry], recent: [String], count: Int,
+                                    seed: String = SeededRandom.runtimeSeed()) -> [(word: WordEntry, activity: Activity)] {
+        let size = max(0, count)
+        let withQuestions = candidates.filter { entry(for: $0) != nil }
+        let questionCount = min(withQuestions.count, (size * 3 + 4) / 5)
+        let questions = session(from: withQuestions, recent: recent, count: questionCount, seed: "\(seed):questions")
+        let taken = Set(questions.map(\.id))
+        let examples = session(from: candidates.filter { !taken.contains($0.id) }, recent: recent,
+                               count: size - questions.count, seed: "\(seed):examples")
+        var result: [(word: WordEntry, activity: Activity)] = []
+        var nextQuestion = questions[...], nextExample = examples[...]
+        while !nextQuestion.isEmpty || !nextExample.isEmpty {
+            if let word = nextQuestion.popFirst() { result.append((word, .questions)) }
+            if let word = nextExample.popFirst() { result.append((word, .examples)) }
+        }
+        return result
+    }
+
     /// `recent` with `wordId` moved to the end, keeping the latest `recentLimit`.
     public static func remembering(_ wordId: String, in recent: [String]) -> [String] {
         var next = recent.filter { $0 != wordId }

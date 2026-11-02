@@ -27,22 +27,19 @@ struct SpeakingSessionView: View {
         try await AppleSpeakingCoach.shared.generate(request)
     }
 
-    private var activity: SpeakingPractice.Activity { model.settings.speakingActivity ?? .questions }
-    private var examplesOnly: Bool { activity == .examples }
+    /// Which kind of prompt each word of this practice gets: a reviewed
+    /// conversation question, or building on its example sentence.
+    @State private var kinds: [String: SpeakingPractice.Activity] = [:]
+
+    private func isExample(_ word: WordEntry) -> Bool {
+        kinds[word.id] == .examples || SpeakingPractice.entry(for: word) == nil
+    }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                Picker(L.t("練習方式", "Practice type"), selection: Binding(
-                    get: { activity }, set: { model.settings.speakingActivity = $0 }
-                )) {
-                    Text(L.t("情境問答", "Questions")).tag(SpeakingPractice.Activity.questions)
-                    Text(L.t("例句延伸", "Examples")).tag(SpeakingPractice.Activity.examples)
-                }
-                .pickerStyle(.segmented)
-                .accessibilityIdentifier("speaking-activity")
-                .padding(.top, 4)
                 scopePicker
+                    .padding(.top, 4)
                 Group {
                     if !started {
                         ProgressView()
@@ -89,7 +86,6 @@ struct SpeakingSessionView: View {
             AppleSpeakingCoach.shared.refreshAvailability()
             if !started { start() }
         }
-        .onChange(of: activity) { _, _ in start() }
         .onChange(of: model.settings.activeBankId) { _, _ in start() }
         .onChange(of: model.studyMode) { _, _ in start() }
         .onChange(of: model.settings.speakingFilter) { _, _ in clearCoach() }
@@ -103,6 +99,7 @@ struct SpeakingSessionView: View {
             if index < words.count {
                 let word = words[index]
                 let card = practiceCard(word)
+                let examplesOnly = isExample(word)
                 let meaning = examplesOnly ? ChineseDisplay.conciseMeaning(word.meaningZh)
                     : (SpeakingPractice.entry(for: word)?.keywordZh ?? ChineseDisplay.conciseMeaning(word.meaningZh))
                 let contextID = coachContextID
@@ -168,9 +165,7 @@ struct SpeakingSessionView: View {
             }
             .accessibilityIdentifier("speaking-bank")
             Spacer(minLength: 8)
-            Text(examplesOnly
-                 ? L.t("\(availableCount) 個單字", "\(availableCount) \(availableCount == 1 ? "word" : "words")")
-                 : L.t("\(availableCount) 題", "\(availableCount) \(availableCount == 1 ? "question" : "questions")"))
+            Text(L.t("\(availableCount) 個單字", "\(availableCount) \(availableCount == 1 ? "word" : "words")"))
                 .font(.caption).foregroundStyle(.secondary).monospacedDigit()
                 .accessibilityIdentifier("speaking-available-count")
             if (model.settings.speakingFilter ?? FilterSelection()).isActive {
@@ -183,9 +178,9 @@ struct SpeakingSessionView: View {
 
     private var emptyScope: some View {
         ContentUnavailableView {
-            MascotLabel(mood: .encourage, title: examplesOnly ? L.noQuizWords : L.t("此範圍沒有情境題目", "No questions in this scope"))
+            MascotLabel(mood: .encourage, title: L.noQuizWords)
         } description: {
-            Text(examplesOnly ? model.bankName : L.t("這個字庫或篩選範圍尚未有配對完成的情境問答。", "No reviewed conversation questions match this bank and its filters."))
+            Text(model.bankName)
         } actions: {
             if model.activeSet != nil {
                 Button(L.coreBankName) {
@@ -198,10 +193,6 @@ struct SpeakingSessionView: View {
                 Button(L.t("清除篩選", "Clear filters")) { model.settings.speakingFilter = FilterSelection(); start() }
                     .accessibilityIdentifier("speaking-clear-filters")
             }
-            if !examplesOnly {
-                Button(L.t("例句延伸", "Build on examples")) { model.settings.speakingActivity = .examples }
-                    .accessibilityIdentifier("speaking-use-examples")
-            }
         }
     }
 
@@ -210,9 +201,11 @@ struct SpeakingSessionView: View {
         Speaker.shared.stop()
         historyOwnerKey = model.speakingHistoryOwnerKey
         let candidates = model.speakingCandidates
-        let available = SpeakingPractice.candidates(from: candidates, activity: activity)
-        availableCount = available.count
-        words = SpeakingPractice.session(from: available, recent: model.recentSpeakingIds, count: 10)
+        // One practice: conversation questions and example sentences, mixed.
+        availableCount = candidates.count
+        let mixed = SpeakingPractice.mixedSession(from: candidates, recent: model.recentSpeakingIds, count: 10)
+        words = mixed.map(\.word)
+        kinds = Dictionary(mixed.map { ($0.word.id, $0.activity) }, uniquingKeysWith: { first, _ in first })
         index = 0
         answered = 0
         revealed = false
@@ -231,12 +224,13 @@ struct SpeakingSessionView: View {
 
     private func practiceCard(_ word: WordEntry) -> ConversationPromptCard {
         let mode: ConversationPromptMode = model.studyMode == .english ? .english : .chinese
-        return examplesOnly ? SpeakingPractice.exampleExercise(for: word, mode: mode)
+        return isExample(word) ? SpeakingPractice.exampleExercise(for: word, mode: mode)
             : (SpeakingPractice.card(for: word, mode: mode) ?? SpeakingPractice.exampleExercise(for: word, mode: mode))
     }
 
     private func prompt(_ word: WordEntry) -> some View {
         let card = practiceCard(word)
+        let examplesOnly = isExample(word)
         let face = model.face(word)
         return VStack(spacing: 16) {
             BuddyProgressBar(fraction: Double(index + (revealed ? 1 : 0)) / Double(max(1, words.count)),
@@ -277,6 +271,7 @@ struct SpeakingSessionView: View {
                         // build on it, so it has to be understood first.
                         VStack(alignment: .leading, spacing: 4) {
                             Text(card.referenceAnswer).font(.title3).lineSpacing(4)
+                                .accessibilityIdentifier("speaking-reference-answer")
                             if !card.referenceTranslation.isEmpty {
                                 Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
                                     .accessibilityIdentifier("speaking-example-translation")

@@ -132,8 +132,9 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["study-close"].tap()
         XCTAssertTrue(app.buttons["today-speaking"].waitForExistence(timeout: 5))
         app.buttons["today-speaking"].tap()
-        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons["Questions"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons["Examples"].exists)
+        // One practice, questions and examples mixed: no mode picker.
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
         sleep(1)
         snap(app, "zh-4-speaking")
     }

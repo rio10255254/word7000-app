@@ -47,7 +47,6 @@ final class SpeakingCoachTests: XCTestCase {
         let completedBefore = weeklySpeakingCount(app)
         app.tabBars.buttons.element(boundBy: 0).tap()
         openSpeaking(app)
-        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons["Questions"].isSelected)
         let question = app.staticTexts["speaking-question"].label
         let position = app.staticTexts["speaking-position"].label
         let completed = completionValue(app)

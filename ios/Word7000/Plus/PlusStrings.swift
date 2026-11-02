@@ -42,7 +42,7 @@ enum P {
         L.t("Claude 先深入思考再回答，更精準，每天 \(PlusAI.plusDaily) 次（免費版為快速回答、每天 \(PlusAI.freeDaily) 次）",
             "Claude thinks deeper for sharper answers, \(PlusAI.plusDaily) a day (free: quick answers, \(PlusAI.freeDaily) a day)")
     }
-    static var freeForever: String { L.t("背 7000 單字、複習、小測驗和口說練習永遠免費，每天也有 \(PlusAI.freeDaily) 次 AI 建議。", "Studying the 7000 words, reviews, quizzes and speaking stay free, with \(PlusAI.freeDaily) AI suggestions a day.") }
+    static var freeForever: String { L.t("背 7000 單字、複習、小測驗和口說練習永遠免費，每天也有 \(PlusAI.freeDaily) 次 AI 建議。", "Studying the core words, reviews, quizzes and speaking stay free, with \(PlusAI.freeDaily) AI suggestions a day.") }
 
     // Plans
     static var yearly: String { L.t("年費方案", "Yearly") }

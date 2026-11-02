@@ -53,6 +53,21 @@ final class SpeakingPracticeTests: XCTestCase {
         XCTAssertTrue((first + second).contains { (Int($0.id.dropFirst()) ?? 0) > 100 })
     }
 
+    func testOnePracticeMixesQuestionsAndExamples() {
+        let mixed = SpeakingPractice.mixedSession(from: ParityTests.words, recent: [], count: 10, seed: "mixed")
+        XCTAssertEqual(mixed.count, 10)
+        XCTAssertEqual(Set(mixed.map(\.word.id)).count, 10)
+        XCTAssertEqual(mixed.first?.activity, .questions)
+        XCTAssertEqual(mixed.filter { $0.activity == .questions }.count, 6)
+        XCTAssertTrue(mixed.filter { $0.activity == .questions }.allSatisfy { SpeakingPractice.entry(for: $0.word) != nil })
+        // A bank with no reviewed questions still gets example prompts.
+        let noQuestions = ParityTests.words.filter { SpeakingPractice.entry(for: $0) == nil }.prefix(3)
+        let examplesOnly = SpeakingPractice.mixedSession(from: Array(noQuestions), recent: [], count: 10, seed: "mixed")
+        XCTAssertEqual(examplesOnly.count, 3)
+        XCTAssertTrue(examplesOnly.allSatisfy { $0.activity == .examples })
+        XCTAssertTrue(SpeakingPractice.mixedSession(from: [], recent: [], count: 10).isEmpty)
+    }
+
     func testAboutQuestionAndBothLanguagesUseReviewedAnswers() throws {
         let word = try XCTUnwrap(ParityTests.words.first { $0.word == "about" })
         let english = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .english))

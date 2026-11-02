@@ -82,37 +82,50 @@ struct StuckWordTip: View {
 
     var body: some View {
         let face = model.face(word)
-        HStack(alignment: .top, spacing: 8) {
-            CatSays(mood: .encourage, size: 30) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(L.t("\(face.prompt) 第 \(misses) 次了。我不是生氣，我是失望。來，這樣記：",
-                             "\(face.prompt), \(misses) times now. I'm not angry, just disappointed. Here's how to remember it:"))
-                        .font(.subheadline.weight(.semibold))
+        HStack(alignment: .top, spacing: 12) {
+            Mascot(mood: .encourage, size: 40)
+                .padding(.top, 2)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(L.t("\(face.prompt)，第 \(misses) 次了", "\(face.prompt), \(misses) times now"))
+                    .font(.display(.headline, weight: .bold))
+                    .foregroundStyle(Palette.accent)
+                Text(L.t("我不是生氣，我是失望。來，這樣記：", "I'm not angry, just disappointed. Here's how to remember it:"))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Group {
                     if let explanation {
                         if !explanation.memoryTip.isEmpty {
-                            Label { Text(explanation.memoryTip) } icon: { Image(systemName: "lightbulb").foregroundStyle(Palette.known) }
+                            Label { Text(explanation.memoryTip) } icon: { Image(systemName: "lightbulb.fill").foregroundStyle(Palette.known) }
                         }
                         if !explanation.pitfall.isEmpty {
-                            Text(explanation.pitfall).foregroundStyle(.secondary)
+                            Label { Text(explanation.pitfall).foregroundStyle(.secondary) } icon: { Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Palette.review) }
                         }
                     } else if loading {
-                        Text(Cat.thinking(.explain)).foregroundStyle(.secondary)
+                        Label { Text(Cat.thinking(.explain)).foregroundStyle(.secondary) } icon: { ProgressView().controlSize(.small) }
                     } else {
-                        Text("\(face.prompt) = \(face.answer)")
+                        Text("\(face.prompt)  =  \(face.answer)").fontWeight(.semibold)
                         if !face.examplePrimary.isEmpty {
                             Text(face.examplePrimary).foregroundStyle(.secondary)
                         }
                     }
                 }
                 .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             Button(action: dismiss) {
-                Image(systemName: "xmark").font(.caption.weight(.bold)).frame(width: 32, height: 32)
+                Image(systemName: "xmark")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 30, height: 30)
+                    .background(Palette.fill, in: Circle())
             }
+            .buttonStyle(.plain)
             .accessibilityLabel(L.close)
         }
-        .padding(12)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .padding(14)
+        .modifier(TipSurface())
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("study-stuck-tip")
         .task(id: word.id) { await load() }
     }
@@ -134,6 +147,22 @@ struct StuckWordTip: View {
         if let value = try? await CloudAssistant.shared.run(.explain, input, as: CloudAI.Explanation.self).cleaned() {
             CloudAnswerCache.explanations[cacheKey] = value
             explanation = value
+        }
+    }
+}
+
+/// A small card for the cat's tips: the surface with a soft shadow, or in the
+/// collage a scrap of peach paper taped on at a slight angle.
+private struct TipSurface: ViewModifier {
+    @Environment(\.appStyle) private var appStyle
+
+    func body(content: Content) -> some View {
+        if appStyle == .collage {
+            content.paperCard(.peach, tilt: -0.6, torn: [.bottom], tape: true, seed: 5)
+        } else {
+            content
+                .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .shadow(color: .black.opacity(0.08), radius: 12, y: 4)
         }
     }
 }

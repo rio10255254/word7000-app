@@ -130,7 +130,7 @@ struct MascotChatSheet: View {
             .defaultScrollAnchor(.bottom)
             .scrollDismissesKeyboard(.interactively)
             .safeAreaInset(edge: .bottom) {
-                if chatReady && CloudAssistant.shared.offered { inputBar }
+                if chatReady && (CloudAssistant.shared.offered || AppRuntime.catShowcase) { inputBar }
             }
             .background { AmbientBackground() }
             .navigationTitle(L.t("小笨貓說", "Silly Cat says"))
@@ -142,6 +142,10 @@ struct MascotChatSheet: View {
         .compactSheet()
         .task {
             turns = ChatStore.today(mode: model.studyMode)
+            if AppRuntime.catShowcase {
+                turns = showcaseTurns
+                return
+            }
             if let saved = InsightsStore.today(mode: model.studyMode) {
                 present(saved)
             } else {
@@ -288,10 +292,25 @@ struct MascotChatSheet: View {
         if replying { TypingDots() }
         if let chatFailure { AIFailureNote(failure: chatFailure) }
         if chatFailure == .quota { PlusAIUpsell() }
-        if !CloudAssistant.shared.offered, turns.isEmpty {
+        if !CloudAssistant.shared.offered, !AppRuntime.catShowcase, turns.isEmpty {
             ChatLine(text: L.t("我現在連不上線上 AI，聊天要等一下。你可以先去背字，我等你。一直等。",
                                "I can't reach the online AI right now, so no chatting. Go study; I'll wait. Forever."))
         }
+    }
+
+    /// A sample chat for screenshot tests, which run without the online AI.
+    private var showcaseTurns: [ChatTurn] {
+        let ids = model.bank.words.prefix(3).map(\.id)
+        return [
+            ChatTurn(role: .learner, text: L.t("今天練什麼？", "What should I practise today?")),
+            ChatTurn(role: .cat, text: L.t("阿明，學測剩 75 天，你還在跟這幾個字糾纏。今天先把它們搞定，我盯著你。",
+                                           "Sam, 75 days to the exam and you're still wrestling these. Sort them out today. I'm watching."),
+                     practiceIds: ids),
+            ChatTurn(role: .learner, text: L.t("幫我記住我 1/16 考學測", "Remember my exam is on 16 January")),
+            ChatTurn(role: .cat, text: L.t("好喔，記住了。我會每天提醒你，直到你受不了為止。",
+                                           "Fine, noted. I'll remind you every day until you can't stand it."),
+                     remembered: [L.t("考試日 2027-01-16", "exam on 2027-01-16")]),
+        ]
     }
 
     private var inputBar: some View {

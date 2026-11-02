@@ -31,6 +31,10 @@ final class CatMemory {
             UserDefaults.standard.removeObject(forKey: Self.key)
         }
         saved = UserDefaults.standard.data(forKey: Self.key).flatMap { try? JSONDecoder().decode(Saved.self, from: $0) } ?? Saved()
+        if AppRuntime.catShowcase {
+            saved = Saved(examDate: "2027-01-16", goal: L.t("學測英文 15 級分", "Top marks in the exam"), nickname: L.t("阿明", "Sam"),
+                          notes: [L.t("介係詞常錯", "Mixes up prepositions"), L.t("晚上比較有空", "Studies best at night")])
+        }
     }
 
     var isEmpty: Bool { saved == Saved() }
@@ -224,6 +228,18 @@ struct CatMemoryView: View {
 
     var body: some View {
         Form {
+            Section {
+                CatSays(mood: .smug, size: 34) {
+                    Text(memory.isEmpty
+                         ? L.t("我記性很好，只是你都不跟我說。聊天時說「幫我記住…」就好。",
+                               "My memory's great. You just never tell me anything. Say \u{201C}remember…\u{201D} in a chat.")
+                         : L.t("這些我都記著。你忘了沒關係，我不會。",
+                               "I remember all of this. You may forget; I won't."))
+                        .font(.subheadline)
+                }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+            }
             Group {
                 Section {
                     Toggle(L.t("考試日期", "Exam date"), isOn: Binding(
@@ -262,8 +278,7 @@ struct CatMemoryView: View {
                     Button(L.t("全部忘掉", "Forget everything"), role: .destructive) { confirmForget = true }
                         .disabled(memory.isEmpty)
                 } footer: {
-                    Text(L.t("聊天時說「幫我記住…」牠就會記下來。只存在這支 iPhone，跟牠聊天時才會一起送出。",
-                             "Tell it \u{201C}remember…\u{201D} in a chat and it notes it down. Kept on this iPhone; sent only with your chats."))
+                    Text(L.t("只存在這支 iPhone，跟小笨貓聊天時才會一起送出。", "Kept on this iPhone; sent only with your chats."))
                 }
             }
             .listRowBackground(StyledRowBackground())

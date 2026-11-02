@@ -48,6 +48,44 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "style-settings")
     }
 
+    /// The cat's chat, the tip on a word's third slip, and what it remembers,
+    /// with sample content in place of the online AI.
+    func testCatShowcase() { catShowcase(style: nil) }
+    func testCatShowcaseCollage() { catShowcase(style: "collage") }
+
+    private func catShowcase(style: String?) {
+        let app = XCUIApplication()
+        let prefix = style == nil ? "cat" : "collage-cat"
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingCatShowcase"]
+            + (style == "collage" ? ["-uiTestingCollage"] : [])
+        app.launch()
+        let input = app.descendants(matching: .any)["mascot-chat-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 10), "The cat's chat did not open")
+        sleep(1)
+        snap(app, "\(prefix)-chat")
+        XCTAssertTrue(app.buttons["mascot-chat-turn-practice"].exists, "The cat's suggestion has no practise button")
+        app.buttons["完成"].firstMatch.tap()
+        XCTAssertTrue(input.waitForNonExistence(timeout: 5))
+
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        app.buttons["today-start"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["study-stuck-tip"].waitForExistence(timeout: 5), "No tip on the third slip")
+        sleep(1)
+        snap(app, "\(prefix)-stuck")
+        app.buttons["study-close"].tap()
+
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
+        for _ in 0..<6 where !app.buttons["me-cat-memory"].exists { app.swipeUp() }
+        XCTAssertTrue(app.buttons["me-cat-memory"].waitForExistence(timeout: 5))
+        scrollClearOfTabBar(app, app.buttons["me-cat-memory"])
+        app.buttons["me-cat-memory"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["cat-memory-goal"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "\(prefix)-memory")
+    }
+
     /// The English interface for learning Chinese.
     func testChineseModeScreens() {
         let app = XCUIApplication()

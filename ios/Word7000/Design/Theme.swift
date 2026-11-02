@@ -361,6 +361,9 @@ enum AppearancePreference: String, Codable, CaseIterable, Identifiable, Sendable
 enum AppRuntime {
     /// Under UI tests: ambient wandering stays put, so elements hold still to be measured and tapped.
     static let uiTesting = ProcessInfo.processInfo.arguments.contains { $0.hasPrefix("-uiTesting") }
+    /// Screenshot tests of the cat's chat, memory and study tip, which need
+    /// the online AI: sample content stands in for it.
+    static let catShowcase = ProcessInfo.processInfo.arguments.contains("-uiTestingCatShowcase")
 }
 
 extension View {

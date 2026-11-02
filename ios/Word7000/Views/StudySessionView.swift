@@ -148,7 +148,15 @@ struct StudySessionView: View {
                 }
             }
         }
-        .onAppear { visible = true; model.ensureStudySession(); catLines = model.catLines }
+        .onAppear {
+            visible = true
+            model.ensureStudySession()
+            catLines = model.catLines
+            // Screenshot tests: the tip that turns up on a word's third slip.
+            if AppRuntime.catShowcase, stuck == nil, let id = model.studySession?.currentCardId, let word = model.word(id: id) {
+                stuck = (word, 3)
+            }
+        }
         .onDisappear { visible = false; lifetime = UUID(); Speaker.shared.stop(); model.saveNow() }
         .onChange(of: model.studySession?.index) { _, index in
             if !committing { revealed = false; dragOffset = 0; armed = false }

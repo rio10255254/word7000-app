@@ -77,6 +77,8 @@ struct TodayView: View {
     @State private var greetingHops = 0
     /// What the cat knows and today's AI lines, gathered on arrival.
     @State private var catLines = CatLineSource.none
+    /// The screenshot tests open the cat's chat once, on first arrival.
+    @MainActor private static var showcasedChat = false
     /// Taps on each practice tile, to bounce its icon.
     @State private var tileTaps: [String: Int] = [:]
     /// The hero card's width: how far the companion can stroll.
@@ -135,6 +137,11 @@ struct TodayView: View {
         .task {
             insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
             catLines = model.catLines
+            if AppRuntime.catShowcase, !Self.showcasedChat {
+                Self.showcasedChat = true
+                try? await Task.sleep(for: .milliseconds(600))
+                mascotChatOpen = true
+            }
             // Today's lines, written for this learner, once a day in the background.
             await CatLinePackStore.refreshIfNeeded(model)
             catLines = model.catLines

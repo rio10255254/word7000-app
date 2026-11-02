@@ -20,6 +20,8 @@ struct SpeakingCoachView: View {
     @State private var reflection: SpeakingReflection?
     /// The coach's follow-up, once the learner chose to answer it here.
     @State private var followUpQuestion: String?
+    /// The follow-up in the learner's own language, when the coach gave one.
+    @State private var followUpTranslation: String?
     @State private var scrollToTop = 0
 
     let request: SpeakingCoach.Request
@@ -244,8 +246,14 @@ struct SpeakingCoachView: View {
             }
             .id(Self.topAnchor)
             HStack(alignment: .top) {
-                Text(question).font(.headline).fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("coach-question")
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(question).font(.headline).fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("coach-question")
+                    if followUpQuestion != nil, let followUpTranslation {
+                        Text(followUpTranslation).font(.subheadline).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
                 Spacer(minLength: 8)
                 // A follow-up comes from the coach in the practiced language.
                 SpeakButton(text: question, language: followUpQuestion == nil ? "en-US" : answerLanguage)
@@ -321,7 +329,7 @@ struct SpeakingCoachView: View {
 
     /// Answering the follow-up turns one reply into a short conversation. Nil
     /// returns to the card's own question.
-    private func answerFollowUp(_ followUp: String?) {
+    private func answerFollowUp(_ followUp: String?, translation: String? = nil) {
         pendingSubmission = false
         dismissKeyboard()
         Speaker.shared.stop()
@@ -332,6 +340,7 @@ struct SpeakingCoachView: View {
         inputCommitFailed = false
         answer = ""
         followUpQuestion = followUp
+        followUpTranslation = followUp == nil ? nil : translation
         scrollToTop += 1
     }
 
@@ -573,15 +582,22 @@ struct SpeakingCoachView: View {
         }
         Section {
             HStack(alignment: .top) {
-                Text(feedback.followUp).font(.headline).textSelection(.enabled)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("coach-follow-up")
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(feedback.followUp).font(.headline).textSelection(.enabled)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("coach-follow-up")
+                    if let translation = feedback.followUpTranslation {
+                        Text(translation).font(.subheadline).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("coach-follow-up-translation")
+                    }
+                }
                 Spacer(minLength: 8)
                 SpeakButton(text: feedback.followUp, language: answerLanguage)
                     .disabled(recording.busy)
             }
             .modifier(CoachArrival(order: feedback.corrections.count + 2))
-            Button { answerFollowUp(feedback.followUp) } label: {
+            Button { answerFollowUp(feedback.followUp, translation: feedback.followUpTranslation) } label: {
                 Label(L.t("回答這題", "Answer this"), systemImage: "arrowshape.turn.up.left")
             }
             .disabled(recording.busy || session.isBusy)

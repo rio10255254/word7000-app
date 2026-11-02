@@ -272,6 +272,7 @@ function coach(input: Record<string, unknown>): TaskPlan {
       'Preserve the learner\'s intent; do not invent facts or experiences. Use keyword in its supplied meaning when it fits their intent; otherwise explain its usage in tip.',
       'Context is background, not facts about the learner. No scores, mastery judgments or pronunciation comments.',
       'tip: one specific, actionable point, with your sass but ending on what to do (max 300 characters). followUp: one brief related question (max 200 characters). rewrite max 600 characters.',
+      `followUpTranslation: followUp translated into ${practice === 'english' ? TAIWAN : 'English'}, plain and faithful, so the learner understands the question (max 240 characters).`,
       'corrections: zero to two clear errors only, each quoting exact text from the answer (original), the fix (replacement) and a short reason. Return none if the answer is correct or you are unsure. Never correct transcription guesses or style.',
     ].join(' '),
     user: JSON.stringify(data),
@@ -279,6 +280,7 @@ function coach(input: Record<string, unknown>): TaskPlan {
       rewrite: string,
       tip: string,
       followUp: string,
+      followUpTranslation: string,
       corrections: { type: 'array', items: strictObject({ original: string, replacement: string, reason: string }) },
     }),
   };

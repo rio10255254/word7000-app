@@ -86,6 +86,36 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "\(prefix)-memory")
     }
 
+    /// A tester could not tap a bank card's "…" in the collage. It is a menu
+    /// now, and deleting from it works (and can be undone).
+    func testBankMenuDeletesInCollage() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingCollage"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.buttons["words-add"].tap()
+        app.buttons["words-new-bank"].tap()
+        let alert = app.alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        let name = alert.textFields.firstMatch
+        name.tap()
+        name.typeText("Lesson")
+        app.alerts.buttons["儲存"].tap()
+        let menu = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-menu-'")).firstMatch
+        XCTAssertTrue(menu.waitForExistence(timeout: 5), app.debugDescription)
+        snap(app, "collage-bank-menu-button")
+        menu.tap()
+        let delete = app.buttons["刪除字庫"].firstMatch
+        XCTAssertTrue(delete.waitForExistence(timeout: 5), "The bank menu did not open")
+        snap(app, "collage-bank-menu-open")
+        delete.tap()
+        let confirm = app.buttons["bank-delete-confirm"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(app.buttons["bank-undo-delete"].waitForExistence(timeout: 5), "The bank was not deleted")
+    }
+
     /// The English interface for learning Chinese.
     func testChineseModeScreens() {
         let app = XCUIApplication()

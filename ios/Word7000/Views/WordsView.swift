@@ -269,14 +269,24 @@ struct BankShelf: View {
                     card(id: set.id, name: set.name, count: WordBanks.words(of: set, in: model.allWords).count,
                          icon: scanned ? "doc.text.viewfinder" : "folder.fill", color: Color(hex: set.color) ?? Palette.accent)
                         .overlay(alignment: .topTrailing) {
-                            Button { manage(set) } label: {
+                            // Everything to do with a bank, in one place: manage its words,
+                            // rename it or delete it (long press offers the same).
+                            Menu {
+                                Button { manage(set) } label: { Label(L.t("管理單字", "Manage words"), systemImage: "slider.horizontal.3") }
+                                Button { rename(set) } label: { Label(L.renameBank, systemImage: "pencil") }
+                                Divider()
+                                Button(role: .destructive) { deleting = set } label: { Label(L.deleteBank, systemImage: "trash") }
+                            } label: {
                                 Image(systemName: "ellipsis.circle")
                                     .font(.body.weight(.semibold))
                                     .foregroundStyle(model.settings.activeBankId == set.id && appStyle != .collage ? .white : Palette.accent)
                                     .frame(width: 44, height: 44)
+                                    .contentShape(Rectangle())
                             }
-                            .buttonStyle(SoftPressStyle())
+                            // Its own tap target inside the list row, apart from the card under it.
+                            .buttonStyle(.borderless)
                             .accessibilityLabel(L.t("管理 \(set.name)", "Manage \(set.name)"))
+                            .accessibilityIdentifier("bank-menu-\(set.id)")
                         }
                         .contextMenu {
                             Button { manage(set) } label: { Label(L.t("管理", "Manage"), systemImage: "slider.horizontal.3") }

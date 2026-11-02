@@ -251,6 +251,16 @@ struct SpeakingSessionView: View {
                             if !card.keywordPronunciation.isEmpty {
                                 Text(card.keywordPronunciation).foregroundStyle(.secondary)
                             }
+                            // Part of speech and meaning, so the word can be used right.
+                            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                if !face.answerLabel.isEmpty {
+                                    Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent.opacity(0.85))
+                                }
+                                Text(face.answer).font(.subheadline).foregroundStyle(.secondary)
+                            }
+                            .padding(.top, 2)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityIdentifier("speaking-keyword-meaning")
                         }
                         Spacer()
                         if completedCurrent {

@@ -12,6 +12,7 @@ struct BankManagementView: View {
     @State private var editingWord: WordEntry?
     @State private var addingWord = false
     @State private var removing = false
+    @State private var deletingBank = false
     @State private var notice: String?
 
     private var bank: CustomVocabSet? { model.customSets.sets.first { $0.id == setId } }
@@ -81,6 +82,12 @@ struct BankManagementView: View {
                     }
                     if words.isEmpty { Text(L.t("還沒有單字", "No words yet")).foregroundStyle(.secondary) }
                 }
+                Section {
+                    Button(role: .destructive) { deletingBank = true } label: {
+                        Label(L.deleteBank, systemImage: "trash")
+                    }
+                    .accessibilityIdentifier("bank-manage-delete")
+                }
             }
             .listRowBackground(Palette.surface)
         }
@@ -123,6 +130,16 @@ struct BankManagementView: View {
         .sensoryFeedback(.success, trigger: notice) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
         .sheet(item: $editingWord) { WordEditorSheet(word: $0, setId: setId) }
         .sheet(isPresented: $addingWord) { WordEditorSheet(setId: setId) }
+        .confirmationDialog(L.t("刪除「\(bank?.name ?? "")」？", "Delete \u{201C}\(bank?.name ?? "")\u{201D}?"), isPresented: $deletingBank, titleVisibility: .visible) {
+            Button(L.deleteBank, role: .destructive) {
+                model.deleteSet(setId)
+                dismiss()
+            }
+            .accessibilityIdentifier("bank-manage-delete-confirm")
+            Button(L.cancel, role: .cancel) {}
+        } message: {
+            Text(L.t("學習紀錄會保留，刪除後可在單字頁按「復原」找回。", "Learning records are kept. You can undo this in Words."))
+        }
         .confirmationDialog(L.t("移出 \(selected.count) 個單字？", "Remove \(selected.count) words from this bank?"), isPresented: $removing, titleVisibility: .visible) {
             Button(L.removeFromBank, role: .destructive) {
                 withAnimation(reduceMotion ? nil : Motion.card) {

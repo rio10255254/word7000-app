@@ -94,12 +94,15 @@ public enum SpeakingCoach {
         public let rewrite: String
         public let tip: String
         public let followUp: String
+        /// The follow-up in the learner's own language (the online coach only).
+        public let followUpTranslation: String?
         public let corrections: [Correction]
 
-        public init(rewrite: String, tip: String, followUp: String, corrections: [Correction] = []) {
+        public init(rewrite: String, tip: String, followUp: String, followUpTranslation: String? = nil, corrections: [Correction] = []) {
             self.rewrite = rewrite
             self.tip = tip
             self.followUp = followUp
+            self.followUpTranslation = followUpTranslation
             self.corrections = corrections
         }
 
@@ -116,8 +119,10 @@ public enum SpeakingCoach {
                     + corrections.reduce(0, { $0 + $1.original.utf8.count + $1.replacement.utf8.count + $1.reason.utf8.count }) <= 3600 else {
                 throw Failure.invalidFeedback
             }
+            let translation = followUpTranslation.map { String(SpeakingCoach.trim($0).prefix(240)) }
             return Feedback(rewrite: SpeakingCoach.trim(rewrite), tip: SpeakingCoach.trim(tip),
-                            followUp: SpeakingCoach.trim(followUp), corrections: corrections)
+                            followUp: SpeakingCoach.trim(followUp),
+                            followUpTranslation: translation?.isEmpty == false ? translation : nil, corrections: corrections)
         }
 
         public func validated(answer: String) throws -> Feedback {

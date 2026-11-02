@@ -281,6 +281,29 @@ struct StyledRowBackground: View {
     }
 }
 
+/// A row of a long list in the collage: one line of a notebook page, ivory
+/// with a blue rule along the bottom and the red margin running down past
+/// the row's leading symbol. Plain colours and one tiled image, so thousands
+/// of rows stay cheap. In leather, the usual surface.
+struct NotebookRowBackground: View {
+    @Environment(\.appStyle) private var appStyle
+    /// Where the margin runs, from the row's leading edge.
+    var margin: CGFloat = 42
+
+    var body: some View {
+        if appStyle == .collage {
+            PaperKind.ivory.color
+                .overlay(alignment: .bottom) { Rectangle().fill(Collage.ruleLine).frame(height: 0.8) }
+                .overlay(alignment: .leading) {
+                    Rectangle().fill(Collage.margin.opacity(0.7)).frame(width: 1.2).padding(.leading, margin)
+                }
+                .overlay { PaperGrain(opacity: 0.6).blendMode(.multiply) }
+        } else {
+            Palette.surface
+        }
+    }
+}
+
 extension View {
     /// Mounts the content on a piece of paper, the collage way: torn on some
     /// edges, set at a slight angle, with an optional strip of tape on top.
@@ -295,6 +318,24 @@ extension View {
         }
         .rotationEffect(.degrees(tilt))
     }
+}
+
+extension View {
+    /// `paperCard` in the collage, and the view untouched otherwise.
+    @ViewBuilder
+    func collagePaper(_ style: AppStyle, _ kind: PaperKind, tilt: Double = 0, torn: Edge.Set = [], tape: Bool = false, seed: Int = 1) -> some View {
+        if style == .collage {
+            paperCard(kind, tilt: tilt, torn: torn, tape: tape, seed: seed)
+        } else {
+            self
+        }
+    }
+}
+
+/// A stable small number for an id, to pick a paper or a tilt that stays the
+/// same from launch to launch (`hashValue` changes every launch).
+func collageSeed(_ id: String) -> Int {
+    id.unicodeScalars.reduce(0) { ($0 &* 31 &+ Int($1.value)) & 0xFFFF }
 }
 
 // MARK: - Choosing a style

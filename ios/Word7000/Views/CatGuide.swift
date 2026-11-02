@@ -30,13 +30,13 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .spelling: L.t("拼得出來才算真的會。來拼拼看？", "Spell it and you really know it. Give it a go?")
         case .exam: plus
             ? L.t("來場 15 分鐘模擬考，看看哪一級還不熟。", "Try a 15-minute mock exam and see which level still needs work.")
-            : L.t("Plus 有 15 分鐘模擬考，交卷就知道哪一級還不熟。點這裡看看。", "Plus has a 15-minute mock exam that shows which level needs work. Tap to see.")
+            : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一級還不熟。點這裡看看。", "Premium has a 15-minute mock exam that shows which level needs work. Tap to see.")
         case .scan: plus
             ? L.t("有自己的單字表？拍下來，手寫的也行，我幫你變成卡片。點這裡。", "Got your own word list? Snap it, handwriting too, and I'll make cards. Tap here.")
-            : L.t("課本、講義的單字表拍一下就變成字庫，手寫也讀得懂。這是 Plus 的。點這裡看看。", "Snap a word list from a textbook or handout and it becomes a bank, handwriting too. That's Plus. Tap to see.")
+            : L.t("課本、講義的單字表拍一下就變成字庫，手寫也讀得懂。這是 Premium 的。點這裡看看。", "Snap a word list from a textbook or handout and it becomes a bank, handwriting too. That's Premium. Tap to see.")
         case .chat: plus
             ? L.t("哪個字搞不懂就問我：用法、例句、跟別的字差在哪。點這裡跟我聊。", "Stuck on a word? Ask me: usage, examples, how it differs. Tap here to chat.")
-            : L.t("我還會講解單字、改你的口說、陪你聊天，那是 Plus 的我。點這裡認識一下。", "I can also explain words, fix your speaking and chat with you: that's the Plus me. Tap to meet it.")
+            : L.t("我還會講解單字、改你的口說、陪你聊天，那是 Premium 的我。點這裡認識一下。", "I can also explain words, fix your speaking and chat with you: that's the Premium me. Tap to meet it.")
         }
     }
 
@@ -67,10 +67,10 @@ enum CatTip: String, CaseIterable, Sendable {
                          "Tap the card for the answer. Swipe right if you knew it, left if not; undo is top right, and the eye shows answers straight away.")
         case .words: L.t("中文、英文、例句都能搜。上面可以換字庫和篩選，長按字庫可以改名、管理單字。",
                          "Search Chinese, English or examples. Switch banks and filter up top; press and hold a bank to rename or manage it.")
-        case .wordDetail: L.t("點喇叭聽發音，星星收藏。Plus 可以請我講解用法、例句和常見陷阱。",
-                              "Tap the speaker to hear it, the star to save it. With Plus I explain usage, examples and common traps.")
-        case .speaking: L.t("看題目開口說，說完按「我說完了」。Plus 的 AI 口說教練會幫你改句子、再追問一題。",
-                            "Read the prompt and answer out loud, then tap when you're done. Plus's AI coach rewrites your answer and asks a follow-up.")
+        case .wordDetail: L.t("點喇叭聽發音，星星收藏。Premium 可以請我講解用法、例句和常見陷阱。",
+                              "Tap the speaker to hear it, the star to save it. With Premium I explain usage, examples and common traps.")
+        case .speaking: L.t("看題目開口說，說完按「我說完了」。Premium 的 AI 口說教練會幫你改句子、再追問一題。",
+                            "Read the prompt and answer out loud, then tap when you're done. Premium's AI coach rewrites your answer and asks a follow-up.")
         case .quiz: L.t("選錯也沒關係，我會告訴你選到的那個是什麼意思。", "Wrong is fine: I'll tell you what the option you picked really means.")
         case .spelling: L.t("聽發音、看意思，把單字拼出來。卡住就按提示，一次多給一個字母。",
                             "Listen, read the meaning, and spell the word. Stuck? Each hint gives one more letter.")

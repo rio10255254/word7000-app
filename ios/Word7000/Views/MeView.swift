@@ -503,7 +503,7 @@ private struct ProfileCard: View {
     private var membershipBadge: some View {
         switch plus.access {
         case .subscribed:
-            Text("PLUS")
+            Text("PREMIUM")
                 .font(.caption2.weight(.heavy))
                 .foregroundStyle(.white)
                 .padding(.horizontal, 7)

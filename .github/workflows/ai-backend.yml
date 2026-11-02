@@ -132,6 +132,8 @@ jobs:
           # function checks its caller itself (Apple's signature, the cron secret).
           supabase functions deploy app-store-notifications --project-ref "$PROJECT_REF" --use-api --no-verify-jwt
           supabase functions deploy send-streak-live-activities --project-ref "$PROJECT_REF" --use-api --no-verify-jwt
+          # Sends one announcement that asked for it, once; anyone calling it again sends nothing.
+          supabase functions deploy broadcast-push --project-ref "$PROJECT_REF" --use-api --no-verify-jwt
 
       - name: Check the functions refuse strangers
         run: |

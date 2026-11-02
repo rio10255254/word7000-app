@@ -321,6 +321,18 @@ final class AccountModel {
         supportsCustomReminderTime = supported
     }
 
+    /// Ties this iPhone's push token to whoever is signed in (a guest too).
+    func registerPushDevice(token: String, audience: String, language: String) async -> Bool {
+        guard let client, let current = session else { return false }
+        do {
+            try await client.registerPushDevice(token: token, audience: audience, language: language,
+                                                session: try await validSession(client: client, current))
+            return true
+        } catch {
+            return false
+        }
+    }
+
     /// The developer's live messages; none without an account service or a
     /// connection.
     func fetchAnnouncements() async -> [Announcement] {

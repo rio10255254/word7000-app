@@ -297,10 +297,10 @@ struct MascotChatSheet: View {
         if !CloudAssistant.shared.offered, !AppRuntime.catShowcase, turns.isEmpty {
             if account.configured, CloudAssistant.shared.plus?.subscribed != true {
                 // The online AI is a Plus feature; the paywall signs a guest in first.
-                ChatLine(text: L.t("我的 AI 腦袋只為 Plus 開機。訂閱之後，每天陪你聊 \(PlusAI.plusDaily) 次，解說、口說教練也一起打開。",
-                                   "My AI brain only boots for Plus. Subscribe and I'll chat \(PlusAI.plusDaily) times a day, with explanations and the speaking coach too."))
+                ChatLine(text: L.t("我的 AI 腦袋只為 Premium 開機。訂閱之後，每天陪你聊 \(PlusAI.plusDaily) 次，解說、口說教練也一起打開。",
+                                   "My AI brain only boots for Premium. Subscribe and I'll chat \(PlusAI.plusDaily) times a day, with explanations and the speaking coach too."))
                 Button { paywallOpen = true } label: {
-                    Label(L.t("看看 Plus", "See Plus"), systemImage: "sparkles")
+                    Label(L.t("看看 Premium", "See Premium"), systemImage: "sparkles")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }

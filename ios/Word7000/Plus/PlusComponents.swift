@@ -1,7 +1,7 @@
 import SwiftUI
 import Word7000Core
 
-/// "Plus" with a small lock, next to features that are locked right now.
+/// "Premium" with a small lock, next to features that are locked right now.
 struct PlusBadge: View {
     var locked = true
 
@@ -252,7 +252,7 @@ struct PlusUpsellCard: View {
                                 .font(.subheadline.weight(.bold))
                                 .foregroundStyle(Palette.ink)
                                 .fixedSize(horizontal: false, vertical: true)
-                            Text("PLUS")
+                            Text("PREMIUM")
                                 .font(.caption2.weight(.heavy))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 6)
@@ -289,7 +289,7 @@ struct PlusUpsellCard: View {
         if let days = plus.plans.compactMap(\.freeTrialDays).first {
             return L.t("免費試用 \(days) 天，隨時取消 →", "Try free for \(days) days, cancel anytime →")
         }
-        return L.t("看看 Plus →", "See Plus →")
+        return L.t("看看 Premium →", "See Premium →")
     }
 
     @ViewBuilder
@@ -330,7 +330,7 @@ struct PlusComparison: View {
             HStack {
                 Spacer()
                 Text(L.t("免費", "Free")).frame(width: 52)
-                Text("Plus").frame(width: 52)
+                Text("Premium").frame(width: 52)
             }
             .font(.caption.weight(.bold))
             .foregroundStyle(.secondary)

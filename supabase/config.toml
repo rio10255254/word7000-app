@@ -41,3 +41,7 @@ verify_jwt = true
 # Called by Apple, which signs each notice itself; the function verifies it.
 [functions.app-store-notifications]
 verify_jwt = false
+
+# Sends one announcement that asked for a push, once; it checks that itself.
+[functions.broadcast-push]
+verify_jwt = false

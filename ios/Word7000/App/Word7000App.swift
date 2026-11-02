@@ -4,6 +4,7 @@ import Word7000Core
 
 @main
 struct Word7000App: App {
+    @UIApplicationDelegateAdaptor(PushAppDelegate.self) private var pushDelegate
     @State private var model: AppModel
     @State private var account: AccountModel
     @State private var liveActivities = LiveActivityManager()
@@ -25,6 +26,8 @@ struct Word7000App: App {
         account.plus = plus
         CloudAssistant.shared.account = account
         CloudAssistant.shared.plus = plus
+        PushRegistration.shared.account = account
+        PushRegistration.shared.plus = plus
         _account = State(initialValue: account)
         _plus = State(initialValue: plus)
     }
@@ -37,6 +40,9 @@ struct Word7000App: App {
                 .environment(plus)
                 .task { await plus.start() }
                 .task { await Speaker.shared.refreshVoices() }
+                .task { await PushRegistration.shared.refreshIfAllowed() }
+                // Who the learner is decides which messages reach them.
+                .task(id: "\(account.isPermanent)|\(plus.subscribed)|\(model.studyMode)") { await PushRegistration.shared.upload() }
                 .task { model.syncAppIcon() }
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)

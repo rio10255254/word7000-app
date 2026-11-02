@@ -594,11 +594,11 @@ struct PlusAIUpsell: View {
                     Image(systemName: "sparkles").foregroundStyle(Palette.accent)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(assistant.lastFailure == .quota
-                             ? L.t("Plus 每天可問 \(PlusAI.plusDaily) 次", "Plus gets \(PlusAI.plusDaily) AI answers a day")
+                             ? L.t("Premium 每天可問 \(PlusAI.plusDaily) 次", "Premium gets \(PlusAI.plusDaily) AI answers a day")
                              : L.t("想要更聰明的回答？", "Want sharper answers?"))
                             .font(.footnote.weight(.semibold))
-                        Text(L.t("免費版是快速回答。Plus 會讓 AI 先深入思考，再回答口說、單字解說和學習分析，每天 \(PlusAI.plusDaily) 次。",
-                                 "Free gives quick answers. With Plus the AI thinks deeper before coaching, explaining words and analyzing your progress, \(PlusAI.plusDaily) times a day."))
+                        Text(L.t("免費版是快速回答。Premium 會讓 AI 先深入思考，再回答口說、單字解說和學習分析，每天 \(PlusAI.plusDaily) 次。",
+                                 "Free gives quick answers. With Premium the AI thinks deeper before coaching, explaining words and analyzing your progress, \(PlusAI.plusDaily) times a day."))
                             .font(.caption).foregroundStyle(.secondary)
                             .multilineTextAlignment(.leading)
                         if let remaining = assistant.remainingText {

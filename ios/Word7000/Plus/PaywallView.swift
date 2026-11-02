@@ -119,7 +119,7 @@ struct PaywallView: View {
                         .offset(x: 40, y: 10)
                         .opacity(appeared ? 1 : 0)
                 }
-            Text(L.t("單字貓 Plus", "WordCat Plus"))
+            Text(L.t("單字貓 Premium", "WordCat Premium"))
                 .font(.display(.title, weight: .heavy))
             Text(P.headline(reason))
                 .font(.subheadline)

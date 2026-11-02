@@ -628,6 +628,11 @@ struct SessionSummary: View {
         }
         .onAppear { appeared = true }
         .accessibilityIdentifier("study-summary")
+        // After a first round, a good moment to ask about notifications.
+        .task {
+            try? await Task.sleep(for: .seconds(1.5))
+            await PushRegistration.shared.askOnce(model)
+        }
     }
 }
 

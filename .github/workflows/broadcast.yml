@@ -29,7 +29,7 @@ on:
         type: string
         default: ''
       audience:
-        description: 'Who sees it'
+        description: 'Who sees it (free = signed in without Premium; plus = Premium)'
         type: choice
         options: ['all', 'guest', 'free', 'plus']
         default: 'all'
@@ -38,7 +38,7 @@ on:
         type: string
         default: '7'
       link:
-        description: 'Optional: an https:// link, or "plus" to open the Plus offer'
+        description: 'Optional: an https:// link, or "plus" to open the Premium offer'
         type: string
         default: ''
       link_label_zh:
@@ -49,6 +49,10 @@ on:
         description: 'Optional: the link button in English'
         type: string
         default: ''
+      push:
+        description: 'Also send it as a push notification (to iPhones that allowed them)'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -76,6 +80,7 @@ jobs:
           LINK: ${{ inputs.link }}
           LINK_ZH: ${{ inputs.link_label_zh }}
           LINK_EN: ${{ inputs.link_label_en }}
+          PUSH: ${{ inputs.push }}
         run: |
           set -euo pipefail
           [[ "$DAYS" =~ ^[0-9]+$ ]] || { echo "::error::days must be a whole number"; exit 1; }
@@ -93,10 +98,18 @@ jobs:
           if [ "$DAYS" != "0" ]; then ends="\"$(date -u -d "+$DAYS days" +%Y-%m-%dT%H:%M:%SZ)\""; fi
           body=$(jq -n --arg tz "$TITLE_ZH" --arg bz "$BODY_ZH" --arg te "$TITLE_EN" --arg be "$BODY_EN" \
             --arg aud "$AUDIENCE" --arg link "$LINK" --arg lz "$LINK_ZH" --arg le "$LINK_EN" --argjson ends "$ends" \
-            '{title_zh: $tz, body_zh: $bz, title_en: $te, body_en: $be, audience: $aud, ends_at: $ends,
+            --argjson push "$PUSH" \
+            '{title_zh: $tz, body_zh: $bz, title_en: $te, body_en: $be, audience: $aud, ends_at: $ends, push: $push,
               link: (if $link == "" then null else $link end), link_label_zh: $lz, link_label_en: $le}')
           reply=$(curl -sS -w '\n%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/rest/v1/announcements" "${headers[@]}" -d "$body")
           status=$(echo "$reply" | tail -1)
-          echo "$reply" | sed '$d' | jq -c '.[0] | {id, audience, title_zh, ends_at}' || true
+          echo "$reply" | sed '$d' | jq -c '.[0] | {id, audience, title_zh, ends_at, push}' || true
           [ "$status" = "201" ] || { echo "::error::Posting failed with HTTP $status"; exit 1; }
           echo "Posted. The app shows it once, the next time each learner opens it or comes back."
+          if [ "$PUSH" = "true" ]; then
+            id=$(echo "$reply" | sed '$d' | jq -r '.[0].id')
+            pushed=$(curl -sS -w '\n%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/functions/v1/broadcast-push" \
+              -H 'Content-Type: application/json' -d "{\"id\":\"$id\"}")
+            echo "Push: $(echo "$pushed" | sed '$d')"
+            [ "$(echo "$pushed" | tail -1)" = "200" ] || { echo "::error::The push was not sent; the in-app message is posted"; exit 1; }
+          fi

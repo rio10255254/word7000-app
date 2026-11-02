@@ -48,7 +48,7 @@ struct AnnouncementSheet: View {
     private var linkLabel: String {
         let label = L.zh || message.linkLabelEn.isEmpty ? message.linkLabelZh : message.linkLabelEn
         if !label.isEmpty { return label }
-        return message.link == "plus" ? L.t("看看 Plus", "See Plus") : L.t("看更多", "Read more")
+        return message.link == "plus" ? L.t("看看 Premium", "See Premium") : L.t("看更多", "Read more")
     }
 
     var body: some View {

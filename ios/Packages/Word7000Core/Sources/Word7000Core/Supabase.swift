@@ -277,6 +277,14 @@ public struct SupabaseClient: Sendable {
         }
     }
 
+    /// Registers this iPhone's push token for the signed-in learner (see the
+    /// register_push_device function).
+    public func registerPushDevice(token: String, audience: String, language: String, session: AuthSession) async throws {
+        _ = try await request("POST", "rest/v1/rpc/register_push_device", body: .object([
+            "p_token": .string(token), "p_audience": .string(audience), "p_language": .string(language),
+        ]), session: session)
+    }
+
     /// The developer's live messages to everyone, newest first.
     public func announcements(session: AuthSession?) async throws -> [Announcement] {
         let data = try await request("GET", "rest/v1/announcements",

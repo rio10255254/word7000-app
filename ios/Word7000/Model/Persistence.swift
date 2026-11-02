@@ -51,6 +51,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var guideOffered: [String: String]?
     /// The screens whose one-time tip the cat has given.
     var seenTips: [String]?
+    /// Whether the cat has asked to send notifications (once).
+    var pushAsked: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

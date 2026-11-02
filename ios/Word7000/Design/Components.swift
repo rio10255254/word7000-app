@@ -92,7 +92,7 @@ struct ActionRow: View {
     var tint: Color
     var title: String
     var value: String? = nil
-    /// A "Plus" badge for features locked right now.
+    /// A "Premium" badge for features locked right now.
     var locked = false
 
     var body: some View {

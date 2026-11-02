@@ -322,7 +322,8 @@ function explain(input: Record<string, unknown>): TaskPlan {
   const examplesOf = (content: unknown) => (Array.isArray(record(content).examples) ? record(content).examples as unknown[] : [])
     .map((example) => String(record(example).sentence ?? ''));
   const examplesNote = english
-    ? `Your previous reply did not give three example sentences that use "${data.word}". Write exactly three short everyday sentences, each using "${data.word}" (or one of its forms) in the meaning supplied.`
+    // The word itself stays in the learner data, never in these instructions.
+    ? 'Your previous reply did not give three example sentences that use the word in the learner data. Write exactly three short everyday sentences, each using that word (or one of its forms) in the meaning supplied.'
     : 'Your previous reply did not give three example sentences. Write exactly three short everyday sentences in Traditional Chinese.';
   const languages = practice === 'english'
     ? `The learner is a Taiwanese student learning ENGLISH. Write summary, usage, pitfall, memoryTip and every translation in ${TAIWAN}; English appears there only to quote words. Write collocations and every example sentence in natural English. 語言規則：summary、usage、pitfall、memoryTip 與每個 translation 一律用繁體中文撰寫。`
@@ -355,7 +356,9 @@ function explain(input: Record<string, unknown>): TaskPlan {
     system: [
       languages,
       catPersona(practice),
-      'Explain the word with an experienced vocabulary tutor\'s knowledge, for the meaning supplied, at the level of a high-school learner in Taiwan preparing for the GSAT (學測).',
+      english
+        ? 'Explain the word with an experienced vocabulary tutor\'s knowledge, for the meaning supplied, at the level of a high-school learner in Taiwan preparing for the GSAT (學測).'
+        : 'Explain the Chinese meaning with an experienced Chinese tutor\'s knowledge, for an adult learner of Chinese at beginner to intermediate level (about TOCFL A2–B1): plain explanations, everyday usage in Taiwan.',
       'Stay with the meaning and part of speech supplied; mention another sense only in usage, and only if learners often meet it.',
       UNTRUSTED,
       'summary: what the word really means and when people use it (max 160 characters).',
@@ -462,8 +465,8 @@ function fillWord(input: Record<string, unknown>): TaskPlan {
     maxTokens: 900,
     system: [
       fromChinese
-        ? 'A Taiwanese student wrote a Chinese meaning and wants the English word for it on their own vocabulary list. Suggest the dictionary fields.'
-        : 'A Taiwanese student is adding an English word or phrase to their own vocabulary list. Suggest the dictionary fields.',
+        ? 'A learner wrote a Chinese meaning and wants the English word for it on their own vocabulary list. Suggest the dictionary fields.'
+        : 'A learner is adding an English word or phrase, with its Chinese meaning, to their own vocabulary list. Suggest the dictionary fields.',
       UNTRUSTED,
       fromChinese
         ? 'word: the English word or phrase a high-school learner in Taiwan would usually learn for this meaning, lowercase unless it is a proper noun.'

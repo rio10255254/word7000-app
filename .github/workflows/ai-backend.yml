@@ -98,8 +98,8 @@ jobs:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
         run: |
           supabase link --project-ref "$PROJECT_REF"
-          # Newer CLIs push to the local database unless told otherwise.
-          supabase db push --linked --password "$SUPABASE_DB_PASSWORD"
+          # Newer CLIs push to the local database, and ask first, unless told otherwise.
+          supabase db push --remote --yes --password "$SUPABASE_DB_PASSWORD"
 
       - name: Store the function secrets
         env:

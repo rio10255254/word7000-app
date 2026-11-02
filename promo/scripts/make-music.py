@@ -22,7 +22,7 @@ strong beat, and at each one:
   - a reversed strum swells into it,
   - the kick and a low hit land on it, and the guitar moves to a new chord.
 
-Writes public/audio/full.mp3 and public/audio/teaser.mp3.
+Writes public/audio/full.mp3.
 Needs numpy, scipy and ffmpeg.
 """
 import json
@@ -130,6 +130,7 @@ def bandpass(x, lo, hi, order=2):
 # ── Sampled instruments ──────────────────────────────────────────────────────
 # Acoustic guitar: University of Iowa Musical Instrument Samples (free for any use).
 # Xylophone: Versilian Studios VSCO 2 Community Edition (CC0).
+# Soprano recorder (the lead) and glockenspiel: VCSL, Versatile Community Sample Library (CC0).
 
 NAMES = {"C": 0, "Cs": 1, "D": 2, "Ds": 3, "E": 4, "F": 5, "Fs": 6, "G": 7, "Gs": 8, "A": 9, "As": 10, "B": 11}
 _banks = {}
@@ -182,19 +183,18 @@ def xylo(note, velocity=0.6):
     return lowpass(out, 3000 + 6000 * velocity) * (0.25 + 0.8 * velocity)
 
 
-def whistle(note, length, velocity=0.7, slide_from=None):
-    """A whistled note: nearly a pure tone, a breathy edge, a slide in and a late vibrato."""
-    n = int((length + 0.12) * SR)
-    t = np.arange(n) / SR
-    f = midi(note)
-    start = midi(slide_from) if slide_from is not None else f * 2 ** (-0.6 / 12)
-    glide = f + (start - f) * np.exp(-t / 0.035)
-    vibrato = 1 + 0.007 * np.sin(2 * np.pi * 5.6 * t) * np.clip((t - 0.18) / 0.25, 0, 1)
-    phase = 2 * np.pi * np.cumsum(glide * vibrato) / SR
-    tone = np.sin(phase) + 0.05 * np.sin(2 * phase)
-    breath = bandpass(rng.normal(0, 1, n), f * 0.8, min(f * 1.6, SR / 2 - 200)) * 0.05
-    env_ = np.clip(t / 0.03, 0, 1) * np.clip((length + 0.1 - t) / 0.09, 0, 1)
-    return (tone + breath) * env_ * velocity
+def lead(note, length, velocity=0.7):
+    """The tune on a real soprano recorder: airy and bright, like a clear whistle."""
+    out = sampled("vcsl-recorder", note, length + 0.12)
+    t = np.arange(len(out)) / SR
+    shape = np.clip(t / 0.012, 0, 1) * np.clip((length + 0.1 - t) / 0.08, 0, 1)
+    return highpass(out * shape, 350) * velocity
+
+
+def glock(note, velocity=0.6):
+    """A real glockenspiel note: the sparkle on top."""
+    out = sampled("vcsl-glockenspiel", note, 2.0)
+    return out * (0.2 + 0.8 * velocity)
 
 
 def strum(notes, length, velocity, up=False):
@@ -421,7 +421,7 @@ ANSWERS = [
 ]
 CLIMB = [(0, 0, 1), (1, 1, 1), (2, 2, 1), (3, 3, 0.5), (3.5, 4, 0.5)]  # pre-chorus: one step up each beat
 PEAK = [(0, 4, 0.5), (0.5, 5, 0.5), (1, 7, 1.5), (2.5, 5, 0.5), (3, 4, 1)]  # the chorus' high point (Icon Collective)
-HOME = {"intro": 2, "verseA": 2, "verseB": 3, "pre": 2, "chorus": 5, "dip": 2, "end": 0}  # home scale index above B-flat 5
+HOME = {"intro": 2, "verseA": 2, "verseB": 3, "pre": 2, "chorus": 4, "dip": 2, "end": 0}  # home scale index above B-flat 5
 
 
 def scale_note(index):
@@ -439,7 +439,7 @@ def compose(name):
     scenes, total_frames = flatten(TIMELINE[name])
     seconds = total_frames / OUTPUT_FPS
     n = int(seconds * SR) + 3 * SR
-    gtr, lead, bells, low, drums, fx = (np.zeros(n) for _ in range(6))
+    gtr, tune, bells, low, drums, fx = (np.zeros(n) for _ in range(6))
     sec = lambda frames: frames / OUTPUT_FPS
 
     top = [s for s in scenes if not s["nested"]]
@@ -530,7 +530,7 @@ def compose(name):
         elif part == "dip":
             place(low, ebass(bass_note, length), start, 0.35)
 
-    # ── The tune: whistled, call and response, with a climb and a peak ──
+    # ── The tune: soprano recorder, call and response, with a climb and a peak ──
     answer_i = 0
     previous = None
     for k, bar_start in enumerate(bar_lines):
@@ -553,14 +553,17 @@ def compose(name):
             at = bar_start + beat * BEAT
             if at >= end or near_change(at, BEAT * 0.5):
                 continue
-            note = scale_note(home + steps - 7)  # whistle sits around B-flat 4 to G6
+            note = scale_note(home + steps - 2)  # the recorder's bright range, about F5 to D7
             # Strong beats (1 and 3) land on a chord tone, unless that would stall the line.
             if beat in (0, 2):
                 snapped = snap(note, chord_at(at)[2])
                 if snapped != previous:
                     note = snapped
-            vel = {"verseA": 0.5, "verseB": 0.56, "pre": 0.58, "chorus": 0.66, "dip": 0.36}[part]
-            place(lead, whistle(note, beats * BEAT * 0.92, vel, slide_from=previous if beats < 1 else None), at)
+            vel = {"verseA": 0.5, "verseB": 0.56, "pre": 0.6, "chorus": 0.68, "dip": 0.38}[part]
+            place(tune, lead(note, beats * BEAT * 0.92, vel), at)
+            # The chorus' tune is doubled on glockenspiel an octave up, for shine.
+            if part == "chorus":
+                place(bells, glock(note + 12, 0.42), at, 0.45)
             previous = note
         # Xylophone counter-line: fills the gaps in the answers, moving the other way (Medium).
         if part in ("verseB", "chorus") and bar_no % 2 == 1:
@@ -571,10 +574,10 @@ def compose(name):
                 if at < end and not near_change(at, BEAT * 0.5):
                     place(bells, xylo(snap(line[i], set(tones)), 0.55), at, 0.8)
         # Sparkle: a xylophone chord-tone on the downbeat of every chorus bar.
-        if part == "chorus" and not near_change(bar_start, BEAT * 0.5):
-            place(bells, xylo(snap(scale_note(HOME[part] + 7), chord_at(bar_start)[2]), 0.45), bar_start, 0.6)
+        if part in ("verseB", "chorus") and not near_change(bar_start, BEAT * 0.5):
+            place(bells, glock(snap(scale_note(HOME[part] + 7), chord_at(bar_start)[2]), 0.4), bar_start, 0.5)
 
-    # Intro: a hint of the tune on xylophone, so the whistle has something to answer.
+    # Intro: a hint of the tune on xylophone, so the recorder has something to answer.
     for beat, steps, beats in CALL:
         at = max(0.0, drop - BAR) + beat * BEAT
         if 0 <= at < drop - BEAT * 0.5:
@@ -654,15 +657,15 @@ def compose(name):
                 when = sec(s["start"]) + sec(js_round(accent["at"] * FRAME_SCALE))
                 place(fx, {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]](), when, 0.3)
 
-    # ── The end: a slow ringing B♭, the whistle's last note, a xylophone sparkle ──
+    # ── The end: a slow ringing B♭, the recorder's last note, a glockenspiel sparkle ──
     if end < seconds:
         ring = np.zeros(int(3.5 * SR))
         for i, note in enumerate([46, 53, 58, 62, 65, 72]):
             place(ring, guitar(note, 3.0, 0.6), i * 0.03)
         place(gtr, ring, end, 1.2)
-        place(lead, whistle(scale_note(0), 1.6, 0.55, slide_from=scale_note(2)), end + BEAT, 1.0)
-        for i, steps in enumerate((7, 9, 11, 14)):
-            place(bells, xylo(scale_note(steps - 7), 0.45), end + 2 * BEAT + i * eighth, 0.55)
+        place(tune, lead(scale_note(0), 1.6, 0.55), end + BEAT, 1.0)
+        for i, steps in enumerate((0, 2, 4, 7)):
+            place(bells, glock(scale_note(steps), 0.45), end + 2 * BEAT + i * eighth, 0.55)
         place(low, ebass(34, min(3.0, seconds - end + 0.5)), end, 0.5)
 
     # Levels follow the arc: soft intro, a verse that grows, a lift into the chorus, a dip, a warm landing.
@@ -679,13 +682,13 @@ def compose(name):
             duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.18 * np.exp(-np.arange(m) / SR / 0.08))
 
     ir = room(1.4)
-    music = gtr * 0.9 + lead * 0.55 + bells * 0.5
-    wet = fftconvolve(gtr * 0.15 + lead * 0.35 + bells * 0.3, ir)[:n]
+    music = gtr * 0.9 + tune * 0.75 + bells * 0.5
+    wet = fftconvolve(gtr * 0.15 + tune * 0.25 + bells * 0.3, ir)[:n]
     mix = ((music + wet) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.06) * gain + fx
     if drop > 0:
         i = int(drop * SR)
         mix[:i] = lowpass(mix[:i], 5000)
-    mix = lowpass(mix, 9500)
+    mix = lowpass(mix, 12000)  # let the recorder and bells shine
 
     mix = mix[: int(seconds * SR)]
     t = np.arange(len(mix)) / SR
@@ -707,7 +710,7 @@ def write_mp3(stereo, path):
 
 
 def main():
-    for name in sys.argv[1:] or ["full", "teaser"]:
+    for name in sys.argv[1:] or ["full"]:
         stereo, scenes, seconds = compose(name)
         out = ROOT / "public" / "audio" / f"{name}.mp3"
         write_mp3(stereo, out)

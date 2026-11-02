@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactElement, ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { AbsoluteFill, Easing, Html5Audio, Img, interpolate, spring, staticFile } from 'remotion';
 import { AUTHORED_FPS, FRAME_SCALE, useFrame } from './time';
 import timeline from './timeline.json';
@@ -26,14 +26,13 @@ import {
   Typewriter,
   TypingDots,
   clamp,
-  easeOut,
   headline,
   usePop,
   useSlap,
   useStampPress,
 } from './kit';
 import { Bubble, Mascot } from './Mascot';
-import { EndScene, HookScene, MeetScene } from './Teaser';
+import { EndScene, HookScene, MeetScene } from './scenes';
 
 /**
  * The 30-second cut. Most of it is the AI — 小笨貓 is the face of every

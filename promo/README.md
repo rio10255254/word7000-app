@@ -1,9 +1,6 @@
 # 單字貓（Word7000）宣傳短片
 
-用 [Remotion](https://www.remotion.dev/) 寫成的直式（1080×1920、9:16）宣傳片，有兩個版本：
-
-- `Full`：48 秒完整版，重點放在 AI 與客製化
-- `Teaser`：16 秒試作版
+用 [Remotion](https://www.remotion.dev/) 寫成的直式（1080×1920、9:16、60 fps）宣傳片 `Full`，長 48 秒，重點放在 AI 與客製化。
 
 兩支都以 1.2 倍慢速播放，輸出 60 fps，設定都在 `src/time.ts`：`SPEED` 控制速度，`OUTPUT_FPS` 控制輸出幀率。場景以 30 fps 的格數撰寫，`useFrame()` 會換算成放慢後、60 fps 的時間軸。剪接點、打字和動畫一起等比例變慢，同時多出中間格，所以動作更順。要改速度或幀率，只要改這兩個數字。
 
@@ -22,19 +19,21 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 
 ## 配樂
 
-`scripts/make-music.py` 會照 `src/timeline.json` 作出一首原創的流行曲，輸出到 `public/audio/full.mp3` 和 `teaser.mp3`。
+`scripts/make-music.py` 會照 `src/timeline.json` 作出一首原創的流行曲，輸出到 `public/audio/full.mp3`。
 
 **風格參考**：曲風參考了指定的歌曲（愛情喜劇韓劇 OST 的甜蜜流行風），但只取它分析出來的特徵：約 118 BPM、降 B 大調、鼓很輕、聲音溫暖、直的八分音符脈動，以及「輕柔前奏 → 主歌 → 副歌拉高 → 明顯收小」的起伏。旋律、和弦和編曲都是原創的，沒有使用原曲的任何錄音或旋律。
 
-**編曲**：參考常見的編曲原則（[Avid](https://www.avid.com/resource-center/arranging-music-guide)、[Beatkitchen](https://beatkitchen.io/guides/electronic-music/06-arrangement-and-energy/)、[Orphiq](https://orphiq.com/resources/how-to-arrange-a-song)、[EDMProd](https://www.edmprod.com/using-call-and-response/)），以及明亮廣告配樂常見的樂器組合（原聲吉他、口哨、木琴、拍手）。
+**編曲**：參考常見的編曲原則（[Avid](https://www.avid.com/resource-center/arranging-music-guide)、[Beatkitchen](https://beatkitchen.io/guides/electronic-music/06-arrangement-and-energy/)、[Orphiq](https://orphiq.com/resources/how-to-arrange-a-song)、[EDMProd](https://www.edmprod.com/using-call-and-response/)），以及明亮廣告配樂常見的樂器組合（原聲吉他、口哨般的清亮主旋律、木琴、鐵琴、拍手）。
 
 - **速度與和聲**：每分鐘 120 拍，降 B 大調。和弦是 Ebmaj7 → F → Gm7 → B♭，照真實吉他按法排把位。
 - **吉他**：原聲吉他取樣，來自 [University of Iowa Musical Instrument Samples](https://theremin.music.uiowa.edu/MIS.html)，可用於任何專案、沒有限制，檔案在 `assets/iowa-guitar/`。主歌和副歌用流行刷法，下一刷進來時上一刷立刻止住，所以聲音緊實。前奏和鎖定畫面改成分解和弦。
-- **口哨主旋律**：程式合成的口哨（近乎純音，加上氣音、滑音和延遲的抖音）。
+- **主旋律（高音直笛）**：真實的巴洛克高音直笛錄音，取樣來自 [VCSL](https://github.com/sgossner/VCSL)，CC0 授權，檔案在 `assets/vcsl-recorder/`。直笛和口哨都是氣流吹過邊緣發聲，音色清亮帶氣音，聽起來接近口哨。旋律放在約 G5～D7 的明亮音域。
+  - 免費又授權乾淨、而且每個音都錄好的人聲口哨取樣，目前找不到。現有的都是付費的 Kontakt 音源，授權只限購買者使用。
   - 旋律用「一問一答」：問句固定，讓人記得；答句每次換一種走法，有時落回主音、有時往上打開、有時轉折上揚、有時用四分音符穩住。
   - 主歌 B 的問句晚半拍進來，換一種律動。
   - 副歌前一拍一級往上爬，副歌唱到全曲最高音。
   - 旋律寫成音階的起伏，在第 1、3 拍落在當下和弦的和弦音上，所以換場改變和弦時也不會走音。
+- **鐵琴**：真實鐵琴錄音，取樣來自 VCSL，CC0 授權，檔案在 `assets/vcsl-glockenspiel/`。副歌在主旋律高八度的地方再疊一層，主歌 B 和副歌的每小節第一拍也加一點亮音。
 - **木琴**：取樣來自 [VSCO 2 Community Edition](http://vis.versilstudios.net/vsco-community.html)，CC0 授權，檔案在 `assets/vsco-xylophone/`。前奏先預告主題，主歌 B 和副歌在答句的空檔用反向的副旋律補上，副歌每小節第一拍再加一點亮音。
 - **低音與鼓**：圓潤的電貝斯，柔和的大鼓、拍手、沙鈴和鈴鼓。
 
@@ -43,12 +42,12 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 | 段落 | 吉他 | 口哨與木琴 | 貝斯 | 鼓 |
 | --- | --- | --- | --- | --- |
 | 前奏（開場） | 分解和弦 | 木琴預告主題 | — | — |
-| 主歌 A（小笨貓登場起） | 稀疏刷奏 | 問句 + 答句 | 長音 | 大鼓、拍手、反拍沙鈴 |
-| 主歌 B（8 小節後） | 完整刷奏 | 晚半拍的問句，加木琴副旋律 | 彈跳的節奏 | 再加八分音符沙鈴、鈴鼓 |
+| 主歌 A（小笨貓登場起） | 稀疏刷奏 | 直笛的問句 + 答句 | 長音 | 大鼓、拍手、反拍沙鈴 |
+| 主歌 B（8 小節後） | 完整刷奏 | 晚半拍的問句，加木琴副旋律和鐵琴亮音 | 彈跳的節奏 | 再加八分音符沙鈴、鈴鼓 |
 | 推升（副歌前 2 小節） | 一直下刷 | 一拍一級往上爬 | 彈跳的節奏 | 抽掉大鼓，拍手由四分音符加密到十六分音符，加上漸強的掃頻 |
-| 副歌（掃描起） | 最密的刷奏 | 最高音的旋律、木琴亮音 | 八度跳音 | 最滿：鈴鼓改十六分音符 |
-| 收小（鎖定畫面） | 分解和弦 | 只剩問句，輕聲 | 長音 | 只剩一點沙鈴 |
-| 片尾 | 一記慢慢掃過的 B♭ | 口哨最後一個音、木琴往上的琶音 | 長音 | — |
+| 副歌（掃描起） | 最密的刷奏 | 最高音的旋律，鐵琴高八度疊奏 | 八度跳音 | 最滿：鈴鼓改十六分音符 |
+| 收小（鎖定畫面） | 分解和弦 | 只剩直笛的問句，輕聲 | 長音 | 只剩一點沙鈴 |
+| 片尾 | 一記慢慢掃過的 B♭ | 直笛最後一個音、鐵琴往上的琶音 | 長音 | — |
 
 **換場就是節奏點**：影片和配樂用同一套規則排時間，每次換場都從強拍開始，而且每次換場都會：
 1. 換場前半拍，鼓全部停住。
@@ -57,13 +56,13 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 
 推移、圓形擴散、蓋章、點按鈕和通知的音效都壓得很輕。
 
-**取樣出處**：兩個取樣庫都不要求標示出處（吉他沒有限制，木琴是 CC0），但片尾畫面底部仍有一行小字致謝吉他取樣的來源。詳見 `assets/iowa-guitar/CREDITS.md` 和 `assets/vsco-xylophone/CREDITS.md`。
+**取樣出處**：所有取樣庫都不要求標示出處（吉他沒有限制，木琴、直笛、鐵琴都是 CC0），但片尾畫面底部仍有一行小字致謝吉他取樣的來源。詳見 `assets/` 裡各資料夾的 `CREDITS.md`。
 
 改了 `timeline.json` 裡的場景長度或轉場，就重新產生配樂，再輸出影片：
 
 ```bash
 npm run music    # 需要 python3、numpy、scipy、ffmpeg
-npm run render
+npm run render   # 只輸出完整版
 ```
 
 ## 使用方式
@@ -73,7 +72,6 @@ cd promo
 npm install
 npm run studio   # 在瀏覽器即時預覽、拖時間軸
 npm run render           # 輸出 out/word7000-full-60fps.mp4
-npm run render:teaser    # 輸出 out/word7000-teaser-60fps.mp4
 npm run typecheck
 ```
 
@@ -85,7 +83,7 @@ npx remotion render Full out/word7000-full-60fps.mp4 --browser-executable=/opt/p
 
 ## 結構
 
-- `src/Full.tsx`：30 秒版的場景；`src/Teaser.tsx`：10 秒版的場景，開場、認識小笨貓和片尾兩版共用。兩個檔案上方的 `SCENES` 都控制每一幕的起點與長度（30 fps）。
+- `src/Full.tsx`：影片的場景與段落；`src/scenes.tsx`：開場、認識小笨貓和片尾三幕。每一幕的長度寫在 `src/timeline.json`（以 30 fps 的格數計）。
 - `src/kit.tsx`：共用的動態效果（模糊浮現、紙片貼上、蓋章、打字機）和元件，例如小笨貓對話泡泡 `CatSays`、紙條按鈕。
 - `src/collage.tsx`：App「紙張拼貼」風格的素材，從 `ios/Word7000/Design/Collage.swift`（`claude/friendly-darwin-obc3r1` 分支）移植而來，包括方格紙、橫線索引卡（含紅色邊線）、紙膠帶、撕邊、網點、炭筆線圈和橡皮章。這個風格沒有陰影，靠紙張彼此重疊做出層次。
 - `src/Mascot.tsx`：吉祥物「小笨貓」，從 `Mascot.swift` 逐個形狀移植成 SVG。有 idle、smug、happy、annoyed 四種表情，也會呼吸、眨眼、甩尾巴。
@@ -114,17 +112,6 @@ npx remotion render Full out/word7000-full-60fps.mp4 --browser-executable=/opt/p
 | 45.0–48.0s | 片尾 | 拼貼版 icon、「單字貓」、「7000 單字」印章 |
 
 AI 的回答內容（解說、錯誤用法、分析結果、口說建議）是為影片寫的示範，App 實際會由 Claude 依當下的字和紀錄產生。
-
-## 分鏡（16 秒、32 拍，Teaser）
-
-| 時間 | 畫面 |
-| --- | --- |
-| 0.0–3.5s | 「又在滑手機？」標題下畫出炭筆線，橫線紙片啪一聲貼上：「你滑手機的時間夠背十個字了。」小笨貓擺臭臉冒出來 |
-| 3.0–5.5s | 方格紙背景，撕邊的蜜桃色紙片貼上，小笨貓開心跳起來：「認識一下，小笨貓。」接著蓋上「毒舌陪讀」印章 |
-| 5.0–8.5s | 貼著膠帶的橫線索引卡（下面墊方格紙）：attend 看答案 → 翻面 → 點「認識」，小笨貓：「好喔，記住了。永遠。」 |
-| 8.0–11.5s | 題目寫在撕邊方格紙上，選項是紙條：選錯「說法」，小笨貓：「蛤？你是來亂的嗎？」 |
-| 11.0–14.0s | 拼貼版主卡（撕邊皮革、膠帶、網點），進度環 7／20，加上兩張練習方塊。小笨貓：「才 7 個？笑死。還差 13 個。」 |
-| 13.0–16.0s | 拼貼版 icon 用膠帶貼上，出現「單字貓」，最後蓋上「7000 單字」印章 |
 
 ## 授權
 

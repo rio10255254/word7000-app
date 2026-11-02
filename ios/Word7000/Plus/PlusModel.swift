@@ -6,6 +6,12 @@ import Word7000Core
 
 /// Word7000 Plus: the subscription (StoreKit 2), the free trial and what is
 /// unlocked right now.
+///
+/// Plus belongs to the Apple ID that bought it, and the learner's account is
+/// that same Apple ID (Sign in with Apple; guests have no account). The 7-day
+/// trial starts when an account first signs in and is kept in the account, so
+/// a reinstall or a new iPhone continues it rather than starting another.
+/// Guests have no trial: signing in starts it.
 @MainActor
 @Observable
 final class PlusModel {
@@ -15,7 +21,16 @@ final class PlusModel {
     /// Apple's signed copy of the active subscription. The AI server checks it
     /// itself before giving the Plus model, so it cannot be faked by the app.
     private(set) var entitlementJWS: String?
+    /// This iPhone's own trial start, used only by UI tests (which run
+    /// without an account); a learner's trial is `accountTrialStart`.
     private(set) var trialStartedAt: Date
+    /// Signed in with Apple (not a guest).
+    private(set) var signedIn = false
+    /// When the account's trial began; nil for guests.
+    private(set) var accountTrialStart: Date?
+    /// The signed-in account's id, tied to purchases so a subscription is
+    /// recorded against the Apple ID's own account.
+    private(set) var accountId: String?
     private(set) var trialScansUsed: Int
     private(set) var plans: [PlusPlan] = []
     private(set) var plansState: PlansState = .loading
@@ -68,7 +83,23 @@ final class PlusModel {
     }
 
     var policy: PlusPolicy {
-        PlusPolicy(trialStartedAt: trialStartedAt, subscribed: subscribed, trialScansUsed: trialScansUsed)
+        PlusPolicy(trialStartedAt: effectiveTrialStart, subscribed: subscribed, trialScansUsed: trialScansUsed)
+    }
+
+    private var effectiveTrialStart: Date {
+        if AppRuntime.uiTesting { return trialStartedAt }
+        return accountTrialStart ?? .distantPast
+    }
+
+    /// A guest who signs in gets the 7-day trial; the paywall says so.
+    var signInStartsTrial: Bool { !subscribed && !signedIn && !AppRuntime.uiTesting }
+
+    /// Called by the account whenever who is signed in changes.
+    func setAccount(id: String?, trialStart: Date?) {
+        signedIn = id != nil
+        accountId = id
+        accountTrialStart = id == nil ? nil : trialStart
+        refreshAccessState()
     }
 
     var access: PlusAccess { policy.access(now: referenceDate) }
@@ -119,21 +150,11 @@ final class PlusModel {
         Self.write(Double(trialScansUsed), Self.scansKey, integer: true)
     }
 
-    /// The account may remember an earlier trial (another iPhone, a
-    /// reinstall); the earliest start wins.
-    func mergeAccountTrialStart(_ date: Date?) {
-        let earliest = PlusPolicy.trialStart([trialStartedAt, date])
-        guard earliest != trialStartedAt else { return }
-        trialStartedAt = earliest
-        Self.write(earliest.timeIntervalSince1970, Self.trialKey)
-        refreshAccessState()
-    }
-
     func refreshAccessState() {
         referenceDate = Date()
         if access.isActive {
             trialRecapPending = false
-        } else if entitlementsLoaded, !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
+        } else if entitlementsLoaded, signedIn || AppRuntime.uiTesting, !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
             trialRecapPending = true
         }
         suspendTimeUpdates()
@@ -191,8 +212,12 @@ final class PlusModel {
 
     func purchase(_ plan: PlusPlan, with action: PurchaseAction) async -> PurchaseOutcome {
         guard let product = plan.product else { return .failed }
+        // The purchase carries the account's id, so the App Store's record of
+        // it (and its renewals) points back to this learner's account.
+        var options: Set<Product.PurchaseOption> = []
+        if let accountId, let token = UUID(uuidString: accountId) { options.insert(.appAccountToken(token)) }
         do {
-            switch try await action(product) {
+            switch try await action(product, options: options) {
             case let .success(.verified(transaction)):
                 await transaction.finish()
                 await refreshEntitlements()
@@ -290,8 +315,8 @@ struct PlusPlan: Identifiable {
 
     /// Display-only plans for screenshots, where the App Store has no products.
     static let samples = [
-        PlusPlan(id: PlusModel.productIDs[1], yearly: true, displayPrice: "NT$490", perMonth: "NT$40.83", monthsSaved: 2),
-        PlusPlan(id: PlusModel.productIDs[0], yearly: false, displayPrice: "NT$49", perMonth: nil, monthsSaved: 0),
+        PlusPlan(id: PlusModel.productIDs[1], yearly: true, displayPrice: "NT$790", perMonth: "NT$65.83", monthsSaved: 2),
+        PlusPlan(id: PlusModel.productIDs[0], yearly: false, displayPrice: "NT$79", perMonth: nil, monthsSaved: 0),
     ]
 }
 

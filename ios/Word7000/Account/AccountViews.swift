@@ -3,22 +3,27 @@ import CryptoKit
 import SwiftUI
 import Word7000Core
 
-/// Sign in with Apple first, Google second, email tucked away.
+/// Sign in with Apple: the only kind of account. Without one the learner is
+/// a guest, with everything for studying on this iPhone but no online AI.
 struct SignInSheet: View {
     enum Reason {
-        case general, scan
+        case general, scan, plus, ai
 
         var title: String {
             switch self {
-            case .general: L.t("登入單字貓", "Sign in to WordCat")
+            case .general: L.t("用 Apple 登入", "Sign in with Apple")
             case .scan: L.t("登入後就能掃描單字表", "Sign in to scan word lists")
+            case .plus: L.t("先用 Apple 登入", "Sign in with Apple first")
+            case .ai: L.t("登入後就能用 AI", "Sign in to use the AI")
             }
         }
 
         var body: String {
             switch self {
-            case .general: L.t("保留這支手機上的學習紀錄。Plus 與試用期間可同步到其他裝置。", "Keep your learning records on this iPhone. Plus and the trial include sync across devices.")
-            case .scan: L.t("將掃描字庫與你的帳號連結。Plus 與試用期間會提供雲端同步。", "Link scanned banks to your account. Cloud sync is included with Plus and during the trial.")
+            case .general: L.t("進度會同步到你的每一台裝置，還有 7 天 Plus 免費試用和每天 \(PlusAI.freeDaily) 次 AI。", "Your progress syncs to every device, with a 7-day Plus trial and \(PlusAI.freeDaily) AI answers a day.")
+            case .scan: L.t("登入就有 7 天 Plus 免費試用，掃描的字庫也會跟著帳號走。", "Signing in starts a 7-day Plus trial, and scanned banks go with your account.")
+            case .plus: L.t("Plus 綁定你的 Apple ID，換手機登入就會回來，進度也會同步。", "Plus belongs to your Apple ID: sign in on a new iPhone and it is there, with your progress.")
+            case .ai: L.t("小笨貓的 AI 要登入才能用，每天 \(PlusAI.freeDaily) 次，Plus 每天 \(PlusAI.plusDaily) 次。", "Silly Cat's AI needs an account: \(PlusAI.freeDaily) answers a day, \(PlusAI.plusDaily) with Plus.")
             }
         }
 
@@ -26,6 +31,8 @@ struct SignInSheet: View {
             switch self {
             case .general: "icloud.fill"
             case .scan: "doc.text.viewfinder"
+            case .plus: "sparkles"
+            case .ai: "bubble.left.and.text.bubble.right.fill"
             }
         }
     }
@@ -33,16 +40,12 @@ struct SignInSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.webAuthenticationSession) private var webAuthenticationSession
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var reason: Reason = .general
     var onSignedIn: () -> Void = {}
 
     @State private var rawNonce = ""
-    @State private var showEmail = false
-    @State private var email = ""
-    @State private var password = ""
     /// Counts failed sign-ins so the message shakes on each one.
     @State private var failures = 0
     @State private var waved = false
@@ -83,49 +86,6 @@ struct SignInSheet: View {
                         .frame(height: 52)
                         .clipShape(Capsule())
 
-                        Button {
-                            Task { await google() }
-                        } label: {
-                            Label(L.t("使用 Google 繼續", "Continue with Google"), systemImage: "globe")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                        }
-                        .secondaryAction()
-
-                        Button {
-                            withAnimation(reduceMotion ? nil : .snappy) { showEmail.toggle() }
-                        } label: {
-                            Label {
-                                Text(showEmail ? L.t("收起 Email 登入", "Hide email sign-in") : L.t("使用 Email", "Use email"))
-                            } icon: {
-                                Image(systemName: "chevron.down")
-                                    .rotationEffect(.degrees(showEmail ? 180 : 0))
-                                    .accessibilityHidden(true)
-                            }
-                            .labelStyle(TrailingIconLabelStyle())
-                        }
-                        .font(.subheadline.weight(.semibold))
-                        .padding(.top, 4)
-
-                        if showEmail {
-                            VStack(spacing: 10) {
-                                TextField("Email", text: $email)
-                                    .textContentType(.username)
-                                    .keyboardType(.emailAddress)
-                                    .textInputAutocapitalization(.never)
-                                    .autocorrectionDisabled()
-                                SecureField(L.t("密碼", "Password"), text: $password)
-                                    .textContentType(.password)
-                                HStack(spacing: 10) {
-                                    Button(L.t("註冊", "Sign up")) { Task { await account.signUp(email: email.trimmed, password: password); finishIfSignedIn() } }
-                                        .secondaryAction()
-                                    Button(L.t("登入", "Sign in")) { Task { await account.signIn(email: email.trimmed, password: password); finishIfSignedIn() } }
-                                        .prominentAction()
-                                }
-                            }
-                            .textFieldStyle(.roundedBorder)
-                            .transition(.opacity.combined(with: .move(edge: .top)))
-                        }
                     }
                     .disabled(account.busy || !account.configured)
                     .entrance(2)
@@ -144,7 +104,7 @@ struct SignInSheet: View {
                             .foregroundStyle(Palette.miss)
                             .shake(trigger: failures, enabled: !reduceMotion)
                             .transition(.opacity.combined(with: .scale(scale: 0.95)))
-                        } else if account.message == A.confirmEmail || account.message == A.cancelled {
+                        } else if account.message == A.cancelled {
                             Text(account.message).font(.footnote).foregroundStyle(.secondary)
                                 .transition(.opacity)
                         }
@@ -191,18 +151,6 @@ struct SignInSheet: View {
         case let .failure(error):
             if (error as? ASAuthorizationError)?.code == .canceled { account.noteCancelled() }
         }
-    }
-
-    private func google() async {
-        await account.signInWithGoogle { url in
-            do {
-                return try await webAuthenticationSession.authenticate(using: url, callbackURLScheme: "word7000", preferredBrowserSession: .ephemeral)
-            } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
-                await MainActor.run { account.noteCancelled() }
-                throw error
-            }
-        }
-        finishIfSignedIn()
     }
 
     private func finishIfSignedIn() {
@@ -258,8 +206,8 @@ struct AccountSection: View {
                             .font(.system(size: 30))
                             .foregroundStyle(Palette.accent)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(L.t("登入或建立帳號", "Sign in or create an account")).font(.headline).foregroundStyle(.primary)
-                            Text(L.t("保留紀錄與管理備份", "Keep records and manage backup")).font(.subheadline).foregroundStyle(.secondary)
+                            Text(L.t("用 Apple 登入", "Sign in with Apple")).font(.headline).foregroundStyle(.primary)
+                            Text(L.t("同步進度、7 天 Plus 試用、每天 AI", "Sync, a 7-day Plus trial, daily AI")).font(.subheadline).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
@@ -318,12 +266,3 @@ struct AccountSection: View {
     }
 }
 
-/// Title first, icon after, e.g. "Use email ⌄".
-private struct TrailingIconLabelStyle: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 4) {
-            configuration.title
-            configuration.icon.font(.caption.weight(.bold))
-        }
-    }
-}

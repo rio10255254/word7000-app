@@ -13,7 +13,7 @@ export type Mode = 'english' | 'chinese';
 export type Tier = 'free' | 'trial' | 'plus';
 
 export interface TierLimits { free: number; plus: number }
-export const DEFAULT_LIMITS: TierLimits = { free: 20, plus: 100 };
+export const DEFAULT_LIMITS: TierLimits = { free: 5, plus: 60 };
 
 export function dailyLimit(tier: Tier, limits: TierLimits = DEFAULT_LIMITS): number {
   return tier === 'free' ? limits.free : limits.plus;

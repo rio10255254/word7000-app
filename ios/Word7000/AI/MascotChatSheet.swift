@@ -66,7 +66,9 @@ enum ChatStore {
 /// tip for each, and the next few days. The words can be practised at once.
 struct MascotChatSheet: View {
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
     @Environment(\.dismiss) private var dismiss
+    @State private var signInOpen = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Called with the focus words' ids when the learner wants to practise them.
     var practise: ([String]) -> Void
@@ -293,8 +295,22 @@ struct MascotChatSheet: View {
         if let chatFailure { AIFailureNote(failure: chatFailure) }
         if chatFailure == .quota { PlusAIUpsell() }
         if !CloudAssistant.shared.offered, !AppRuntime.catShowcase, turns.isEmpty {
-            ChatLine(text: L.t("我現在連不上線上 AI，聊天要等一下。你可以先去背字，我等你。一直等。",
-                               "I can't reach the online AI right now, so no chatting. Go study; I'll wait. Forever."))
+            if account.configured, !account.isPermanent {
+                // Guests have no online AI: signing in with Apple turns it on.
+                ChatLine(text: L.t("我的 AI 腦袋要你登入才肯開機。用 Apple 登入，每天陪你聊 \(PlusAI.freeDaily) 次，進度也不會不見。",
+                                   "My AI brain only boots for signed-in learners. Sign in with Apple: \(PlusAI.freeDaily) chats a day, and your progress is safe."))
+                Button { signInOpen = true } label: {
+                    Label(L.t("用 Apple 登入", "Sign in with Apple"), systemImage: "apple.logo")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                }
+                .prominentAction()
+                .accessibilityIdentifier("chat-sign-in")
+                .sheet(isPresented: $signInOpen) { SignInSheet(reason: .ai) }
+            } else {
+                ChatLine(text: L.t("我現在連不上線上 AI，聊天要等一下。你可以先去背字，我等你。一直等。",
+                                   "I can't reach the online AI right now, so no chatting. Go study; I'll wait. Forever."))
+            }
         }
     }
 

@@ -526,7 +526,7 @@ private struct ProfileCard: View {
         ButtonRow(spacing: 8) {
             if account.configured, !account.isPermanent {
                 Button { signInOpen = true } label: {
-                    Label(L.t("登入保留紀錄", "Sign in"), systemImage: "person.crop.circle.badge.plus")
+                    Label(L.t("Apple 登入", "Sign in"), systemImage: "apple.logo")
                         .font(.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity)
                 }

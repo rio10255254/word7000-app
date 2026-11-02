@@ -84,8 +84,8 @@ Deno.serve(async (request) => {
   if (quotaError || !quota) return reply({ error: 'unavailable' }, 503);
   const tier = tierFor(subscribed, quota.first_seen);
   const limit = dailyLimit(tier, {
-    free: envLimit('AI_FREE_LIMIT', 20),
-    plus: envLimit('AI_PLUS_LIMIT', 100),
+    free: envLimit('AI_FREE_LIMIT', 5),
+    plus: envLimit('AI_PLUS_LIMIT', 60),
   });
   const used = Number(quota.requests);
   if (!(used <= limit)) return reply({ error: 'quota', tier, limit, remaining: 0 }, 429);

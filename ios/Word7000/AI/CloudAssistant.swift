@@ -110,9 +110,11 @@ final class CloudAssistant {
 }
 
 /// Must match AI_FREE_LIMIT / AI_PLUS_LIMIT on the server (supabase/functions/ai).
+/// Daily online AI answers (the server's AI_FREE_LIMIT and AI_PLUS_LIMIT).
+/// Guests have none; signing in with Apple gives the free allowance.
 enum PlusAI {
-    static let freeDaily = 20
-    static let plusDaily = 100
+    static let freeDaily = 5
+    static let plusDaily = 60
 }
 
 extension L {

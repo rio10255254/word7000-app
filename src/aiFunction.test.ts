@@ -128,9 +128,9 @@ describe('AI tiers', () => {
   });
 
   it('allows 20 requests a day free and 100 with Plus or the trial', () => {
-    expect(dailyLimit('free')).toBe(20);
-    expect(dailyLimit('trial')).toBe(100);
-    expect(dailyLimit('plus')).toBe(100);
+    expect(dailyLimit('free')).toBe(5);
+    expect(dailyLimit('trial')).toBe(60);
+    expect(dailyLimit('plus')).toBe(60);
     expect(dailyLimit('free', { free: 5, plus: 50 })).toBe(5);
   });
 });

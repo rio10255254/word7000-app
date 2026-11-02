@@ -21,11 +21,11 @@ on:
       free_limit:
         description: 'Daily AI requests for free learners (low reasoning)'
         type: string
-        default: '20'
+        default: '5'
       plus_limit:
         description: 'Daily AI requests for Plus and the 7-day trial (more reasoning on writing tasks)'
         type: string
-        default: '100'
+        default: '60'
       global_limit:
         description: 'Daily AI requests for the whole service, a hard ceiling on what Claude can cost in a day'
         type: string
@@ -55,8 +55,8 @@ jobs:
     # Each secret is handed only to the steps that use it, never to npm ci or
     # the tests.
     env:
-      FREE_LIMIT: ${{ inputs.free_limit || '20' }}
-      PLUS_LIMIT: ${{ inputs.plus_limit || '100' }}
+      FREE_LIMIT: ${{ inputs.free_limit || '5' }}
+      PLUS_LIMIT: ${{ inputs.plus_limit || '60' }}
       GLOBAL_LIMIT: ${{ inputs.global_limit || '20000' }}
     steps:
       - name: Check the secrets

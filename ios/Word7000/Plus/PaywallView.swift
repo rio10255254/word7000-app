@@ -8,6 +8,7 @@ import Word7000Core
 struct PaywallView: View {
     @Environment(PlusModel.self) private var plus
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
     @Environment(\.dismiss) private var dismiss
     @Environment(\.purchase) private var purchase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -16,6 +17,9 @@ struct PaywallView: View {
     @State private var selectedID: String?
     @State private var busy = false
     @State private var purchased = false
+    /// Plus belongs to an Apple ID: a guest signs in first.
+    @State private var signInOpen = false
+    @State private var afterSignIn: (() -> Void)?
     @State private var notice: String?
     @State private var appeared = false
     /// Bumped when a purchase or restore fails, so the button gives a small shake.
@@ -70,6 +74,13 @@ struct PaywallView: View {
         .background(alignment: .top) { PlusGlow().frame(height: 360).ignoresSafeArea() }
         .background { AmbientBackground(tint: Palette.review) }
         .safeAreaInset(edge: .bottom, spacing: 0) { purchaseBar }
+        .sheet(isPresented: $signInOpen, onDismiss: {
+            let action = afterSignIn
+            afterSignIn = nil
+            if account.isPermanent { action?() }
+        }) {
+            SignInSheet(reason: .plus)
+        }
         .safeAreaInset(edge: .top, spacing: 0) {
             HStack {
                 Spacer()
@@ -183,15 +194,21 @@ struct PaywallView: View {
                     .multilineTextAlignment(.center)
                     .transition(.opacity)
             }
+            if plus.signInStartsTrial {
+                Text(P.signInForTrialNote)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
             Button { buy() } label: {
                 ZStack {
-                    Text(P.cta(selected)).font(.headline).opacity(busy ? 0 : 1)
+                    Text(plus.signInStartsTrial ? P.signInForTrial : P.cta(selected)).font(.headline).opacity(busy ? 0 : 1)
                     if busy { ProgressView().tint(.white) }
                 }
                 .frame(maxWidth: .infinity)
             }
             .prominentAction()
-            .disabled(selected == nil || busy)
+            .disabled((selected == nil && !plus.signInStartsTrial) || busy)
             .shake(trigger: failures, enabled: !reduceMotion)
             .accessibilityIdentifier("paywall-subscribe")
             Text(P.renewalTerms(selected))
@@ -213,7 +230,23 @@ struct PaywallView: View {
         .animation(.smooth, value: notice)
     }
 
+    /// A guest signs in with Apple first. Signing in starts the trial, so
+    /// the paywall closes if it did; an account whose trial is used stays on
+    /// it to subscribe.
+    private func withAccount(_ action: @escaping () -> Void) {
+        guard plus.signInStartsTrial, account.configured else { action(); return }
+        afterSignIn = action
+        signInOpen = true
+    }
+
     private func buy() {
+        withAccount {
+            if plus.access.isActive, !plus.subscribed { dismiss(); return }
+            purchaseSelected()
+        }
+    }
+
+    private func purchaseSelected() {
         guard let plan = selected else { return }
         notice = nil
         busy = true
@@ -230,6 +263,10 @@ struct PaywallView: View {
     }
 
     private func restore() {
+        withAccount { restoreNow() }
+    }
+
+    private func restoreNow() {
         notice = nil
         busy = true
         Task {
@@ -340,7 +377,6 @@ struct PlusBenefit {
         [
             PlusBenefit(feature: .smartAI, icon: "sparkles", title: P.benefitSmartAI, detail: P.benefitSmartAIDetail),
             PlusBenefit(feature: .scan, icon: "doc.text.viewfinder", title: P.benefitScan, detail: P.benefitScanDetail),
-            PlusBenefit(feature: .sync, icon: "icloud.fill", title: P.benefitSync, detail: P.benefitSyncDetail),
             PlusBenefit(feature: .history, icon: "chart.line.uptrend.xyaxis", title: P.benefitHistory, detail: P.benefitHistoryDetail),
             PlusBenefit(feature: .examPractice, icon: "timer", title: P.benefitExam, detail: P.benefitExamDetail),
         ]

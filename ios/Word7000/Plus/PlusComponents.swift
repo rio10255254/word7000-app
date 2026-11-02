@@ -60,9 +60,11 @@ struct PlusNudgeBanner: View {
                         .frame(width: 38, height: 38)
                         .background(nudge == .trialEnded ? AnyShapeStyle(PlusStyle.gradient) : AnyShapeStyle(Palette.review.gradient), in: Circle())
                         .symbolEffect(.bounce, value: nod)
+                    // A guest has had no trial: signing in starts it.
+                    let guest = plus.signInStartsTrial && nudge == .trialEnded
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(P.nudgeTitle(nudge)).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
-                        Text(P.nudgeText(nudge)).font(.footnote).foregroundStyle(.secondary)
+                        Text(guest ? P.signInForTrial : P.nudgeTitle(nudge)).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                        Text(guest ? P.guestNudgeText : P.nudgeText(nudge)).font(.footnote).foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     Spacer(minLength: 0)

@@ -247,8 +247,10 @@ struct SpeakingSessionView: View {
                             }
                             // Part of speech and meaning, so the word can be used right.
                             HStack(alignment: .firstTextBaseline, spacing: 6) {
-                                if !face.answerLabel.isEmpty {
-                                    Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent.opacity(0.85))
+                                // The word's own part of speech (the face's label names the
+                                // answer's language when learning Chinese).
+                                if !word.partOfSpeech.isEmpty {
+                                    Text(word.partOfSpeech).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent.opacity(0.85))
                                 }
                                 Text(face.answer).font(.subheadline).foregroundStyle(.secondary)
                             }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AIFailure, complete, requestBody, THINKING_ROOM, type Fetch } from '../supabase/functions/ai/claude';
-import { dailyLimit, hanShare, InputError, isTaskName, MODEL, planTask, tierFor, usesWord, wordStem } from '../supabase/functions/ai/tasks';
+import { dailyLimit, fullWidth, hanShare, InputError, isTaskName, MODEL, planTask, tierFor, usesWord, wordStem } from '../supabase/functions/ai/tasks';
 
 const coachInput = {
   keyword: 'practice',
@@ -524,5 +524,12 @@ describe('Silly Cat', () => {
     const plan = planTask('verdict', { mode: 'english', kind: 'quiz', total: 10, correct: 6, missed: [{ word: 'abandon', meaning: '遺棄' }] });
     expect(JSON.parse(plan.user).session).toEqual({ kind: 'quiz', answered: 10, right: 6, missed: [{ word: 'abandon', meaning: '遺棄' }] });
     expect(() => planTask('verdict', { mode: 'english', kind: 'quiz', total: -1, correct: 0 })).toThrow(InputError);
+  });
+});
+
+describe('full-width punctuation in Chinese', () => {
+  it('commas and question marks after Chinese become full-width; English is left alone', () => {
+    expect(fullWidth('因為很方便,晚上也可以買。你呢?')).toBe('因為很方便，晚上也可以買。你呢？');
+    expect(fullWidth('Yes, I do? 好')).toBe('Yes, I do? 好');
   });
 });

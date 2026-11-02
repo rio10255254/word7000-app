@@ -1,7 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
 import { verifyEntitlement } from './entitlement.ts';
 import { AIFailure, complete } from './claude.ts';
-import { dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
+import { COACH_MODEL, COACH_MODEL_DAILY, dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
 
 // The Anthropic key lives only here, as the ANTHROPIC_API_KEY function secret.
 // The app sends task data with the learner's session. Guest sessions are
@@ -101,10 +101,22 @@ Deno.serve(async (request) => {
   }
   const plan = planTask(task, body.input, tier);
 
+  // The speaking coach gets the stronger model for the day's first answers.
+  let model: string | undefined;
+  if (task === 'coach') {
+    const { data: coachUsed, error: coachError } = await service.rpc('consume_coach_answer_for', { p_user: user });
+    if (!coachError && Number(coachUsed) <= envLimit('AI_COACH_MODEL_DAILY', COACH_MODEL_DAILY)) model = COACH_MODEL;
+  }
+
   try {
-    const result = await complete(plan, { apiKey });
+    // If the stronger model is busy, the quick one answers instead.
+    // Both together stay under the app's 30-second wait.
+    const result = await complete(plan, { apiKey, model, totalTimeoutMs: model ? 16_000 : undefined }).catch((error) => {
+      if (model && error instanceof AIFailure && error.kind !== 'misconfigured') return complete(plan, { apiKey, totalTimeoutMs: 12_000 });
+      throw error;
+    });
     // One line per answer, so the function logs show what each task really costs.
-    console.log(JSON.stringify({ task, tier, effort: result.effort, ...result.usage }));
+    console.log(JSON.stringify({ task, tier, model: result.model, effort: result.effort, ...result.usage }));
     return reply({ result: result.content, model: result.model, effort: result.effort, tier, limit, remaining: Math.max(0, limit - used) });
   } catch (error) {
     if (error instanceof AIFailure) {

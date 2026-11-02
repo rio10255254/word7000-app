@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { AIFailure, complete } from '../supabase/functions/ai/claude.ts';
-import { hanShare, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
+import { COACH_MODEL, hanShare, MODEL, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
 
 type Content = Record<string, unknown>;
 type Check = (content: Content) => string[];
@@ -346,12 +346,12 @@ const PRICES: Record<string, { input: number; output: number }> = {
   'claude-sonnet-5-5': { input: 2, output: 10 },
   'claude-opus-5-5': { input: 4, output: 20 },
 };
-const PRICE = PRICES[model ?? 'claude-haiku-5-5'] ?? PRICES['claude-haiku-5-5'];
-const dollars = (usage?: { inputTokens: number; outputTokens: number }) =>
-  usage ? (usage.inputTokens * PRICE.input + usage.outputTokens * PRICE.output) / 1_000_000 : 0;
+const priceOf = (name?: string) => PRICES[name ?? MODEL] ?? PRICES['claude-haiku-5-5'];
+const dollars = (usage?: { inputTokens: number; outputTokens: number }, used?: string) =>
+  usage ? (usage.inputTokens * priceOf(used).input + usage.outputTokens * priceOf(used).output) / 1_000_000 : 0;
 
 interface Result {
-  name: string; task: TaskName; tier: Tier; effort?: string; ms: number; problems: string[]; content?: unknown; error?: string;
+  name: string; task: TaskName; tier: Tier; model?: string; effort?: string; ms: number; problems: string[]; content?: unknown; error?: string;
   usage?: { inputTokens: number; outputTokens: number };
 }
 const results: Result[] = [];
@@ -362,9 +362,11 @@ for (const tier of tiers) {
     const plan = planTask(item.task, item.input, tier);
     const started = Date.now();
     try {
-      const reply = await complete(plan, { apiKey, model, totalTimeoutMs: model ? 60_000 : undefined });
+      // As in the service: the coach uses its own model unless one is being compared.
+      const used = model ?? (item.task === 'coach' ? COACH_MODEL : undefined);
+      const reply = await complete(plan, { apiKey, model: used, totalTimeoutMs: used ? 60_000 : undefined });
       const content = reply.content as Content;
-      results.push({ name: item.name, task: item.task, tier, effort: reply.effort, ms: Date.now() - started,
+      results.push({ name: item.name, task: item.task, tier, model: reply.model, effort: reply.effort, ms: Date.now() - started,
         problems: [...common(content), ...item.check(content)], content, usage: reply.usage });
     } catch (error) {
       const message = error instanceof AIFailure ? `${error.kind}: ${error.message}` : String(error);
@@ -385,7 +387,7 @@ const lines = [
   '',
   `${results.length - failed.length} of ${results.length} answers passed every check.`,
   '',
-  `Total cost of this run: US$${results.reduce((sum, result) => sum + dollars(result.usage), 0).toFixed(4)}.`,
+  `Total cost of this run: US$${results.reduce((sum, result) => sum + dollars(result.usage, result.model), 0).toFixed(4)}.`,
   '',
   '| Task | Tier | Passed | Median time | Avg input tokens | Avg output tokens (incl. thinking) | Avg cost per answer |',
   '| --- | --- | --- | --- | --- | --- | --- |',
@@ -394,14 +396,14 @@ const lines = [
     const group = results.filter((result) => result.task === task && result.tier === tier);
     const answered = group.filter((result) => result.usage);
     const average = (pick: (result: Result) => number) => (answered.length ? answered.reduce((sum, result) => sum + pick(result), 0) / answered.length : 0);
-    return `| ${task} | ${tier} | ${group.filter((result) => !result.problems.length).length} / ${group.length} | ${(median(group.map((result) => result.ms)) / 1000).toFixed(1)} s | ${Math.round(average((result) => result.usage!.inputTokens))} | ${Math.round(average((result) => result.usage!.outputTokens))} | US$${average((result) => dollars(result.usage)).toFixed(5)} |`;
+    return `| ${task} | ${tier} | ${group.filter((result) => !result.problems.length).length} / ${group.length} | ${(median(group.map((result) => result.ms)) / 1000).toFixed(1)} s | ${Math.round(average((result) => result.usage!.inputTokens))} | ${Math.round(average((result) => result.usage!.outputTokens))} | US$${average((result) => dollars(result.usage, result.model)).toFixed(5)} |`;
   }),
   '',
   ...(failed.length ? ['## Problems', '', ...failed.map((result) => `- **${result.name}** (${result.tier}): ${result.problems.join('; ')}`), ''] : []),
   '## Answers',
   '',
   ...results.flatMap((result) => [
-    `### ${result.problems.length ? '❌' : '✅'} ${result.name} · ${result.tier}${result.effort ? ` · ${result.effort}` : ''} · ${(result.ms / 1000).toFixed(1)} s${result.usage ? ` · ${result.usage.inputTokens}+${result.usage.outputTokens} tokens · US$${dollars(result.usage).toFixed(5)}` : ''}`,
+    `### ${result.problems.length ? '❌' : '✅'} ${result.name} · ${result.tier}${result.effort ? ` · ${result.effort}` : ''} · ${(result.ms / 1000).toFixed(1)} s${result.usage ? ` · ${result.usage.inputTokens}+${result.usage.outputTokens} tokens · US$${dollars(result.usage, result.model).toFixed(5)}` : ''}`,
     '',
     '```json',
     JSON.stringify(result.content ?? { error: result.error }, null, 2),

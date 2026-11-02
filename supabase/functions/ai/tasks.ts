@@ -4,6 +4,11 @@
 
 /** Every tier uses the same model; tiers differ in how much it thinks first. */
 export const MODEL = 'claude-haiku-5-5';
+/** The speaking coach's model for a learner's first answers each day: it
+ *  catches mistakes the quick model lets through (e.g. Chinese word order). */
+export const COACH_MODEL = 'claude-sonnet-5-5';
+/** Coach answers a day on COACH_MODEL before the quick model takes over. */
+export const COACH_MODEL_DAILY = 20;
 
 /** How much Claude reasons before answering: more is sharper but slower. */
 export type Effort = 'low' | 'medium';
@@ -224,6 +229,12 @@ const string = { type: 'string' };
 const strings = { type: 'array', items: string };
 
 /** Mirrors SpeakingCoach.Request on the iOS side. */
+/** ASCII , ? ! : ; right after a Chinese character become their full-width forms. */
+export function fullWidth(text: string): string {
+  const marks: Record<string, string> = { ',': '，', '?': '？', '!': '！', ':': '：', ';': '；' };
+  return text.replace(/(\p{Script=Han})([,?!:;])(?!\d)/gu, (_, han: string, mark: string) => han + marks[mark]);
+}
+
 function coach(input: Record<string, unknown>): TaskPlan {
   const practice = mode(input);
   const data = {
@@ -260,8 +271,12 @@ function coach(input: Record<string, unknown>): TaskPlan {
           && answer.includes(original) && !seen.has(original);
         if (fits) seen.add(original);
         return fits;
-      }).slice(0, 2);
-      return { ...reply, corrections };
+      }).slice(0, 2).map((item) => ({ ...record(item), replacement: fullWidth(String(record(item).replacement ?? '')),
+        reason: fullWidth(String(record(item).reason ?? '')) }));
+      // Chinese text takes full-width punctuation; the learner's own words stay as typed.
+      return { ...reply, rewrite: fullWidth(String(reply.rewrite ?? '')), tip: fullWidth(String(reply.tip ?? '')),
+        followUp: fullWidth(String(reply.followUp ?? '')), followUpTranslation: fullWidth(String(reply.followUpTranslation ?? '')),
+        corrections };
     },
     system: [
       languages,

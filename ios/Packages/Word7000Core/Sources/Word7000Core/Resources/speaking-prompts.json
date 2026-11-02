@@ -8,15 +8,15 @@
     },
     {
       "file": "content/speaking/topics/home.json",
-      "sha256": "5bc10fc63d51c2b2ee9b13eb4313164f54964d1b3ae458042f7c53e2b3cb0532"
+      "sha256": "2c046f6217f974ce78fc017845ffdb6659d846a90ab11fc2cb6ac7c0cbf17df8"
     },
     {
       "file": "content/speaking/topics/food.json",
-      "sha256": "3a97dc44b075b0cde1d89c286f665b03ba9c12ee8ff6b3b3ed853492656cf19f"
+      "sha256": "2e57fc08665e58db2785a8625d153325afa5fb5ef9ca304c202113d0cff67adb"
     },
     {
       "file": "content/speaking/topics/travel.json",
-      "sha256": "ea28eef7f494282941b0e0fbc5b8e8c7d86a3f4d696fd0c08a0a03e821b941a2"
+      "sha256": "98eeabe4a9a47186011ad9e6b1ad1142152bc0dc230e2a4006899e41052ff90f"
     },
     {
       "file": "content/speaking/topics/work.json",
@@ -24,7 +24,7 @@
     },
     {
       "file": "content/speaking/topics/learning.json",
-      "sha256": "3b5ea4d09751c9a83fa6e150c94a3fac84b4869940ae1bc04c58990a437c55db"
+      "sha256": "5a0326928bf5a8c54b12a375fc47b13dacc523f84f3c8a688a5538250291858c"
     },
     {
       "file": "content/speaking/topics/health.json",
@@ -36,19 +36,19 @@
     },
     {
       "file": "content/speaking/topics/money.json",
-      "sha256": "0736456b0443d492a273d400b8b152d9985ff1c1ec64e7680efd7dc1f3f2d91f"
+      "sha256": "614f10433ebe5d939de8d77003d3b36f1dc61466be2cf4b9d634312f24994bb4"
     },
     {
       "file": "content/speaking/topics/nature.json",
-      "sha256": "efc4e61a1f66a8277b9e5e793cde35f0bece9810d7d28f1a7dc10101899e1996"
+      "sha256": "55fd04f5872f6cd969c24e012407401a6d4e8e7c0afe9b30a0e5981df26efbee"
     },
     {
       "file": "content/speaking/topics/civic.json",
-      "sha256": "8524425d2ddc93828cfc109535e4209cd08a5c3f54c78c32a02bfb9595d30799"
+      "sha256": "4afb0f6277f1aa1d1e5fb2318498d1015f9400989e2b24834a63ee1a1dbcb4c7"
     },
     {
       "file": "content/speaking/topics/communication.json",
-      "sha256": "41ec1f16725a25e55e00bae60dd5d378d9f7b58bcb672a23d167d4e5b77e1f0a"
+      "sha256": "a1e9a13ecbc7d47cabe195bc699c60d3b9355af8c5a4c4a1736326313bb3be96"
     },
     {
       "file": "content/speaking/topics/digital.json",
@@ -56,35 +56,35 @@
     },
     {
       "file": "content/speaking/topics/emotions.json",
-      "sha256": "f03329205ce9b6a0643bacbe649e8a6242fdc7b85ed88cb1b70639b79426ef32"
+      "sha256": "7af57512fae59221ec592633fbbd8c6bd90c0b652780d6580849ee8f6c569160"
     },
     {
       "file": "content/speaking/topics/choices.json",
-      "sha256": "f628d6f42e10f15bf7e8f7a8aa2f95c2bb45eb3dfef4fae0fde3a11eb760deb7"
+      "sha256": "a9c3c458a9ec94a9a88e55e161f52dca5e07aef03c805863e62bc6e6602c73fe"
     },
     {
       "file": "content/speaking/topics/arts.json",
-      "sha256": "e32a65416a064beb777c11192ff7d056e3c758631d4c266c7aced52d34a8b24b"
+      "sha256": "a42e2addb1fba7448120d685264042ae5ee7502368725a821da62b6c76538f13"
     },
     {
       "file": "content/speaking/topics/science.json",
-      "sha256": "0c85c2158894e44721d324b8e1d2cb69ccf93e1b21c53f5d9882a794e721b2bf"
+      "sha256": "506dd5001613dd6fa81e3e6ded3999f02c7d7fc8825a42416f071afcc621a46a"
     },
     {
       "file": "content/speaking/topics/leisure.json",
-      "sha256": "ffc112b3af757988418391f06b740af3e2e2cc35226a8764adad710102cb7c89"
+      "sha256": "8b27b9323e8e6837e90b707d8655d5be1e90cbd67e402e1ab7a665bb3b09726f"
     },
     {
       "file": "content/speaking/topics/risks.json",
-      "sha256": "6d3c09ea53258efc78919b22651cae6a4a1925ad20307f5d4a0683cfba67ff08"
+      "sha256": "3172db48ec5c33452bc48da20a3b201be4a343745d5c8b912612482d63133272"
     },
     {
       "file": "content/speaking/topics/ethics.json",
-      "sha256": "ef4f70f00117ef74b31a67e9714f16722608e82959bf32597295af571af978f8"
+      "sha256": "60df0c7c727eb596b84c53a2300fe4a43c6caa68fd965a3908dccca6d5022111"
     },
     {
       "file": "content/speaking/topics/planning.json",
-      "sha256": "31b891fa05d3772c078d0703038cb99d12ecf7f1ce89d8ffe2e0532966c36146"
+      "sha256": "3d25de73fc67d9519a37e856db160bcaab343a7b776b90b9b1c677794cfaaf04"
     }
   ],
   "coverage": {
@@ -1041,7 +1041,7 @@
       "word": "lose",
       "keywordZh": "輸",
       "question": "How would you respond when a beginner felt upset after losing a match?",
-      "answerEn": "I would explain that we all lose while learning. We could pick one useful thing from the match to practise next time.",
+      "answerEn": "I would explain that we all lose while learning. We could pick one useful thing from the match to practice next time.",
       "answerZh": "我會說學習時大家都會輸。再從這場比賽挑一個下次能練的地方。"
     },
     {
@@ -1248,7 +1248,7 @@
       "id": "w0344-reviewed-1",
       "word": "plan",
       "keywordZh": "計畫",
-      "question": "Your class trip might be cancelled because of rain. What backup plan would you make?",
+      "question": "Your class trip might be canceled because of rain. What backup plan would you make?",
       "answerEn": "Our backup plan would be visiting the science museum near the station. We would tell everyone the new meeting time in advance, so the change is easy to remember.",
       "answerZh": "我們的備用計畫是去車站附近的科學博物館。事先告訴大家新的集合時間，臨時改行程也容易記住。"
     },
@@ -1448,8 +1448,8 @@
       "id": "w0485-reviewed-1",
       "word": "pressure",
       "keywordZh": "氣壓",
-      "question": "How do you check whether your bike tyres have enough pressure?",
-      "answerEn": "I use a pump with a gauge to check the pressure. Squeezing the tyre with my fingers is not very reliable, so I prefer seeing the actual number.",
+      "question": "How do you check whether your bike tires have enough pressure?",
+      "answerEn": "I use a pump with a gauge to check the pressure. Squeezing the tire with my fingers is not very reliable, so I prefer seeing the actual number.",
       "answerZh": "我會用有氣壓表的打氣筒檢查輪胎氣壓。用手指捏輪胎不太準，所以我比較想看到實際數字。"
     },
     {
@@ -1502,10 +1502,10 @@
     },
     {
       "id": "w0549-reviewed-1",
-      "word": "colour",
+      "word": "color",
       "keywordZh": "顏色",
-      "question": "Which colour would you choose for a place where you want to feel calm?",
-      "answerEn": "I would choose a soft green colour for a reading corner. I would test it in daylight before painting the whole wall.",
+      "question": "Which color would you choose for a place where you want to feel calm?",
+      "answerEn": "I would choose a soft green color for a reading corner. I would test it in daylight before painting the whole wall.",
       "answerZh": "閱讀角落我會選柔和的綠色。先在日光下試試顏色，再決定要不要整面刷。"
     },
     {
@@ -1672,7 +1672,7 @@
       "id": "w0673-reviewed-1",
       "word": "nature",
       "keywordZh": "大自然",
-      "question": "Where could you enjoy nature without travelling far from home?",
+      "question": "Where could you enjoy nature without traveling far from home?",
       "answerEn": "I could enjoy nature along the stream near my apartment. Watching birds there would make a short walk feel like a real break.",
       "answerZh": "我家附近的溪邊，就能親近大自然。在那裡看看鳥，短短散步也像真正休息了一下。"
     },
@@ -1889,14 +1889,14 @@
       "word": "goal",
       "keywordZh": "目標",
       "question": "What makes a learning goal realistic rather than discouraging?",
-      "answerEn": "A realistic goal describes something I can practise regularly. I would start with one short conversation rather than promise instant fluency.",
+      "answerEn": "A realistic goal describes something I can practice regularly. I would start with one short conversation rather than promise instant fluency.",
       "answerZh": "實際的目標，要是我能固定練習的事情。我會先求能聊一小段，不要求自己立刻流利。"
     },
     {
       "id": "w0757-reviewed-1",
       "word": "resource",
       "keywordZh": "資源",
-      "question": "Which shared resource should your neighbourhood look after more carefully?",
+      "question": "Which shared resource should your neighborhood look after more carefully?",
       "answerEn": "The local water supply is a shared resource worth protecting. I would report leaks instead of assuming someone else had noticed them.",
       "answerZh": "自來水是值得一起珍惜的資源。看到漏水，我會通報，不假設已經有人處理。"
     },
@@ -2016,8 +2016,8 @@
       "id": "w0811-reviewed-1",
       "word": "scene",
       "keywordZh": "場景",
-      "question": "Describe a scene you would use to open a short film about your neighbourhood.",
-      "answerEn": "The opening scene would show the market before sunrise. Shopkeepers preparing their stalls would reveal how the neighbourhood wakes up.",
+      "question": "Describe a scene you would use to open a short film about your neighborhood.",
+      "answerEn": "The opening scene would show the market before sunrise. Shopkeepers preparing their stalls would reveal how the neighborhood wakes up.",
       "answerZh": "開頭場景會是日出前的市場。攤商忙著準備，就能看出這個街區怎麼慢慢醒來。"
     },
     {
@@ -2153,7 +2153,7 @@
       "word": "traditional",
       "keywordZh": "傳統",
       "question": "Would you change a traditional family dish or keep it exactly the same?",
-      "answerEn": "I would keep the traditional seasoning but adjust the portion size. That would preserve the familiar flavour without leaving too much food.",
+      "answerEn": "I would keep the traditional seasoning but adjust the portion size. That would preserve the familiar flavor without leaving too much food.",
       "answerZh": "我會保留傳統的調味，但調整份量。這樣既有熟悉的味道，也不會剩下太多。"
     },
     {
@@ -2344,7 +2344,7 @@
       "id": "w1010-reviewed-1",
       "word": "facility",
       "keywordZh": "設施",
-      "question": "Which shared facility would make your neighbourhood more welcoming?",
+      "question": "Which shared facility would make your neighborhood more welcoming?",
       "answerEn": "A small community facility with toilets and seating would help. People could meet there without needing to buy something first.",
       "answerZh": "有廁所和座位的小型公共設施，會很有幫助。大家能在那裡碰面，不必先買東西。"
     },
@@ -2361,7 +2361,7 @@
       "word": "competition",
       "keywordZh": "比賽",
       "question": "Would entering a competition motivate you or reduce your enjoyment of a hobby?",
-      "answerEn": "A friendly competition could motivate me to practise regularly. I would avoid one that made every session feel like an assessment.",
+      "answerEn": "A friendly competition could motivate me to practice regularly. I would avoid one that made every session feel like an assessment.",
       "answerZh": "友善的比賽，能鼓勵我固定練習。但如果每次活動都像考核，我就不太想參加。"
     },
     {
@@ -2472,7 +2472,7 @@
       "id": "w1092-reviewed-1",
       "word": "freedom",
       "keywordZh": "自由",
-      "question": "How should people balance freedom with consideration for neighbours?",
+      "question": "How should people balance freedom with consideration for neighbors?",
       "answerEn": "Freedom to enjoy my home does not mean ignoring nearby residents. I can play music while keeping the volume reasonable at night.",
       "answerZh": "在家享受自由，不代表不用顧慮鄰居。我可以聽音樂，但晚上會把音量調低。"
     },
@@ -2576,7 +2576,7 @@
       "id": "w1152-reviewed-1",
       "word": "flight",
       "keywordZh": "班機",
-      "question": "Your flight is cancelled. What would you check first?",
+      "question": "Your flight is canceled. What would you check first?",
       "answerEn": "I would ask the airline about the next available flight. Before booking elsewhere, I would check what assistance my ticket includes.",
       "answerZh": "我會先問航空公司下一班可搭的班機。改買別家的票前，也會確認原票能獲得哪些協助。"
     },
@@ -2809,7 +2809,7 @@
       "word": "weather",
       "keywordZh": "天氣",
       "question": "Your outdoor plans depend on the weather. How would you keep the day enjoyable?",
-      "answerEn": "I would check the weather and prepare an indoor alternative. We could change the activity without cancelling the chance to meet.",
+      "answerEn": "I would check the weather and prepare an indoor alternative. We could change the activity without canceling the chance to meet.",
       "answerZh": "我會先看天氣，也準備室內備案。活動能調整，不必連見面的機會都取消。"
     },
     {
@@ -2833,7 +2833,7 @@
       "word": "recommend",
       "keywordZh": "推薦",
       "question": "What would you ask before you recommend a book or film to someone?",
-      "answerEn": "I would ask what they usually enjoy before I recommend anything. My favourite film might not fit their mood or interests.",
+      "answerEn": "I would ask what they usually enjoy before I recommend anything. My favorite film might not fit their mood or interests.",
       "answerZh": "推薦之前，我會先問對方平常喜歡什麼。我最愛的電影，未必適合他的心情或興趣。"
     },
     {
@@ -2888,7 +2888,7 @@
       "id": "w1327-reviewed-1",
       "word": "housing",
       "keywordZh": "住宅",
-      "question": "If many new apartments were built near your home, what would your neighbourhood need?",
+      "question": "If many new apartments were built near your home, what would your neighborhood need?",
       "answerEn": "New housing would bring more families, so we would need more parks and a bigger school. Without them, the area could feel crowded and stressful.",
       "answerZh": "新住宅會帶來更多家庭，所以需要更多公園和更大的學校。不然這一帶可能會變得擁擠又讓人煩躁。"
     },
@@ -3113,7 +3113,7 @@
       "word": "procedure",
       "keywordZh": "流程",
       "question": "What would help you follow an unfamiliar emergency procedure?",
-      "answerEn": "A short procedure with clear steps would help most. Practising it beforehand would be more useful than reading a long document once.",
+      "answerEn": "A short procedure with clear steps would help most. Practicing it beforehand would be more useful than reading a long document once.",
       "answerZh": "簡短、步驟清楚的流程最有幫助。事先練過，比只讀一次長篇文件更實用。"
     },
     {
@@ -3152,7 +3152,7 @@
       "id": "w1663-reviewed-1",
       "word": "consequence",
       "keywordZh": "後果",
-      "question": "What possible consequence would you think about before cancelling a shared booking?",
+      "question": "What possible consequence would you think about before canceling a shared booking?",
       "answerEn": "One consequence could be leaving friends with a larger bill. I would check the cancellation terms and discuss the change before acting.",
       "answerZh": "可能的後果，是朋友得多分攤費用。我會先看取消條款，也先和大家商量。"
     },
@@ -3208,7 +3208,7 @@
       "id": "w1699-reviewed-1",
       "word": "belong",
       "keywordZh": "屬於",
-      "question": "What helps you feel that you belong in a new neighbourhood?",
+      "question": "What helps you feel that you belong in a new neighborhood?",
       "answerEn": "I feel I belong when local shopkeepers recognize me. Joining a regular community activity would help me meet more people too.",
       "answerZh": "附近店家認得我時，我就會有屬於這裡的感覺。固定參加社區活動，也能多認識一些人。"
     },
@@ -3305,7 +3305,7 @@
       "word": "explore",
       "keywordZh": "探索",
       "question": "How would you explore an unfamiliar city during a free afternoon?",
-      "answerEn": "I would explore one walkable neighbourhood rather than rush across the city. A market and a small park would be good starting points.",
+      "answerEn": "I would explore one walkable neighborhood rather than rush across the city. A market and a small park would be good starting points.",
       "answerZh": "我會選一個適合步行的街區慢慢探索，不急著跑遍整座城。市場和小公園就是不錯的起點。"
     },
     {
@@ -3377,7 +3377,7 @@
       "word": "noise",
       "keywordZh": "噪音",
       "question": "How would you handle noise from an apartment upstairs?",
-      "answerEn": "I would record when the noise usually happens. Then I would politely ask my neighbour whether we could find a solution.",
+      "answerEn": "I would record when the noise usually happens. Then I would politely ask my neighbor whether we could find a solution.",
       "answerZh": "我會記下噪音通常出現的時間。再客氣地問樓上鄰居，能不能一起想辦法。"
     },
     {
@@ -3489,7 +3489,7 @@
       "word": "expense",
       "keywordZh": "開支",
       "question": "Which recurring expense would you reconsider if your budget became tighter?",
-      "answerEn": "I would review an expense such as an unused subscription. Cancelling something I rarely use would affect my life less than cutting essentials.",
+      "answerEn": "I would review an expense such as an unused subscription. Canceling something I rarely use would affect my life less than cutting essentials.",
       "answerZh": "我會先檢查不常用的訂閱這類開支。取消很少用的服務，比刪掉生活必需品影響小。"
     },
     {
@@ -3521,7 +3521,7 @@
       "word": "celebrate",
       "keywordZh": "慶祝",
       "question": "How would you celebrate a small achievement without organizing a large event?",
-      "answerEn": "I would celebrate with a favourite meal and one close friend. Taking a moment to recognize the achievement would be enough.",
+      "answerEn": "I would celebrate with a favorite meal and one close friend. Taking a moment to recognize the achievement would be enough.",
       "answerZh": "我會和一位好友吃頓喜歡的飯來慶祝。花一點時間肯定成果，就已經足夠。"
     },
     {
@@ -3672,7 +3672,7 @@
       "id": "w2135-reviewed-1",
       "word": "pollution",
       "keywordZh": "污染",
-      "question": "What sign of pollution would you report in your neighbourhood?",
+      "question": "What sign of pollution would you report in your neighborhood?",
       "answerEn": "If a stream near my home suddenly changed color, I would report the pollution to the local environmental office. I would include the location, the time, and a photo if possible.",
       "answerZh": "如果家附近的溪水突然變色，我會向環保局通報污染。也會附上地點、時間，可以的話再拍張照片。"
     },
@@ -3817,7 +3817,7 @@
       "word": "ingredient",
       "keywordZh": "食材",
       "question": "An ingredient in your recipe is unavailable. What would you do?",
-      "answerEn": "I would look for an ingredient with a similar texture or flavour. If the substitution seemed risky, I would choose another dish.",
+      "answerEn": "I would look for an ingredient with a similar texture or flavor. If the substitution seemed risky, I would choose another dish.",
       "answerZh": "我會找口感或味道接近的食材替代。如果不確定換了會不會失敗，就改做別道菜。"
     },
     {
@@ -3950,10 +3950,10 @@
     },
     {
       "id": "w2467-reviewed-1",
-      "word": "neighbour",
+      "word": "neighbor",
       "keywordZh": "鄰居",
-      "question": "How would you introduce yourself to a new neighbour?",
-      "answerEn": "I would greet my new neighbour in the hallway. I could mention which apartment I live in and offer a friendly welcome.",
+      "question": "How would you introduce yourself to a new neighbor?",
+      "answerEn": "I would greet my new neighbor in the hallway. I could mention which apartment I live in and offer a friendly welcome.",
       "answerZh": "我會在走廊主動向新鄰居打招呼。告訴他我住哪一戶，也歡迎他搬來。"
     },
     {
@@ -3982,17 +3982,17 @@
     },
     {
       "id": "w2518-reviewed-1",
-      "word": "flavour",
+      "word": "flavor",
       "keywordZh": "風味",
-      "question": "What flavour reminds you of a particular place or person?",
-      "answerEn": "The flavour of roasted sesame reminds me of my grandmother's kitchen. She used it in noodles we ate after school.",
+      "question": "What flavor reminds you of a particular place or person?",
+      "answerEn": "The flavor of roasted sesame reminds me of my grandmother's kitchen. She used it in noodles we ate after school.",
       "answerZh": "烤芝麻的風味讓我想起奶奶的廚房。以前放學後吃的麵，她都會加一點。"
     },
     {
       "id": "w2534-reviewed-1",
       "word": "disappointed",
       "keywordZh": "失望",
-      "question": "You are disappointed after an event is cancelled. How would you handle the evening?",
+      "question": "You are disappointed after an event is canceled. How would you handle the evening?",
       "answerEn": "I would admit I was disappointed rather than pretend it did not matter. Then I would choose a smaller activity I could still enjoy.",
       "answerZh": "我會承認自己失望，不假裝沒關係。再找一件今晚仍然能享受的小活動。"
     },
@@ -4089,7 +4089,7 @@
       "word": "tournament",
       "keywordZh": "錦標賽",
       "question": "What would you prepare before entering your first tournament?",
-      "answerEn": "I would read the tournament rules and check the schedule. Practising the actual format would help me feel less surprised on the day.",
+      "answerEn": "I would read the tournament rules and check the schedule. Practicing the actual format would help me feel less surprised on the day.",
       "answerZh": "第一次參加錦標賽，我會先讀規則、確認賽程。照正式形式練過，當天比較不會慌。"
     },
     {
@@ -4313,7 +4313,7 @@
       "word": "exam",
       "keywordZh": "考試",
       "question": "How would you prepare for an exam with both essays and short questions?",
-      "answerEn": "I would practise both formats before the exam. Knowing the material would not be enough if I could not organize an answer.",
+      "answerEn": "I would practice both formats before the exam. Knowing the material would not be enough if I could not organize an answer.",
       "answerZh": "考試前，我會練習兩種題型。光懂內容還不夠，也要能把答案整理清楚。"
     },
     {
@@ -4328,7 +4328,7 @@
       "id": "w3273-reviewed-1",
       "word": "loyal",
       "keywordZh": "忠誠",
-      "question": "Can you be loyal to a friend while disagreeing with their behaviour?",
+      "question": "Can you be loyal to a friend while disagreeing with their behavior?",
       "answerEn": "I can be loyal without defending every action. Speaking privately about a serious concern may help my friend more than automatic agreement.",
       "answerZh": "忠誠不代表要替朋友每個行為辯護。私下說明嚴重的顧慮，可能比一味附和更有幫助。"
     },
@@ -4384,7 +4384,7 @@
       "id": "w3371-reviewed-1",
       "word": "passport",
       "keywordZh": "護照",
-      "question": "What precautions would you take with your passport while travelling?",
+      "question": "What precautions would you take with your passport while traveling?",
       "answerEn": "I would keep my passport in a secure place. I would also store a separate copy in case I needed its details.",
       "answerZh": "我會把護照放在安全的地方。另外分開存一份影本，臨時需要資料時比較方便。"
     },
@@ -4496,7 +4496,7 @@
       "id": "w3600-reviewed-1",
       "word": "diversity",
       "keywordZh": "多樣性",
-      "question": "How could a neighbourhood event reflect the diversity of its residents?",
+      "question": "How could a neighborhood event reflect the diversity of its residents?",
       "answerEn": "The event could reflect diversity through different foods, languages, and activities. Residents should help shape it rather than only be invited to watch.",
       "answerZh": "活動可以透過食物、語言和活動呈現多樣性。居民也應該一起規劃，不只是受邀來看。"
     },
@@ -4873,7 +4873,7 @@
       "word": "subjective",
       "keywordZh": "主觀",
       "question": "How would you handle subjective feedback when several people preferred different designs?",
-      "answerEn": "I would separate subjective preferences from practical requirements. We could test readability even if we disagreed about which colour looked nicest.",
+      "answerEn": "I would separate subjective preferences from practical requirements. We could test readability even if we disagreed about which color looked nicest.",
       "answerZh": "我會把主觀喜好和實際需求分開。就算喜歡的顏色不同，仍能測試字好不好讀。"
     },
     {

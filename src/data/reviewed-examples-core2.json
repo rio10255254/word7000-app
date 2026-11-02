@@ -162,7 +162,7 @@
   },
   {
     "word": "blue",
-    "example": "Her blue scarf stood out against the grey station wall.",
+    "example": "Her blue scarf stood out against the gray station wall.",
     "exampleZh": "她的藍圍巾在灰色車站牆前很顯眼。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
@@ -336,8 +336,8 @@
     "batch": "full-content-audit-2026-08-09-core02"
   },
   {
-    "word": "colour",
-    "example": "What colour did the wall look under morning light?",
+    "word": "color",
+    "example": "What color did the wall look under morning light?",
     "exampleZh": "牆在晨光下看起來是什麼顏色？",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
@@ -350,8 +350,8 @@
     "batch": "full-content-audit-2026-08-09-core02"
   },
   {
-    "word": "labour",
-    "example": "Years of quiet labour turned the abandoned lot into gardens.",
+    "word": "labor",
+    "example": "Years of quiet labor turned the abandoned lot into gardens.",
     "exampleZh": "多年默默耕耘，終於把荒地變成一座座花園。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"
@@ -399,8 +399,8 @@
     "batch": "full-content-audit-2026-08-09-core02"
   },
   {
-    "word": "grey",
-    "example": "Grey clouds covered Alishan before the afternoon train arrived.",
+    "word": "gray",
+    "example": "Gray clouds covered Alishan before the afternoon train arrived.",
     "exampleZh": "下午火車抵達前灰雲籠罩阿里山。",
     "status": "approved",
     "batch": "full-content-audit-2026-08-09-core02"

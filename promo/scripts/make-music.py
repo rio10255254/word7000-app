@@ -4,10 +4,12 @@
 A sweet, bouncy pop piece in the manner of a rom-com drama OST, written to
 the feel of the reference the owner chose (about 118 bpm, B-flat major,
 warm and soft-drummed, straight eighths), with its own original tune and
-chords: a real grand piano (Salamander Grand Piano V3 samples by Alexander
-Holm, CC BY 3.0; see assets/salamander/CREDITS.md) comping in eighths on
-Ebmaj7 → F → Gm7 → B♭, a round electric bass, a soft kick, claps and a
-shaker, and a light room.
+chords: a strummed acoustic guitar (University of Iowa samples, free for any
+use; see assets/iowa-guitar/CREDITS.md) on Ebmaj7 → F → Gm7 → B♭ in real
+guitar shapes, tight pop strumming with muted chucks on 2 and 4 and each
+strum damped as the next comes in, fingerpicking in the soft parts, the tune
+on single strings, a round electric bass, a soft kick, claps and a shaker,
+and a small room.
 
 The energy follows the reference's arc: a gentle intro, a verse from the
 cat's introduction, a fuller chorus with a counter-melody from the
@@ -17,8 +19,8 @@ Scene changes are the rhythm of the piece. The scenes are laid out exactly
 as src/transitions.tsx lays them out, so every transition starts on a
 strong beat, and at each one:
   - the drums drop out for the half beat before it,
-  - a reversed piano chord swells into it,
-  - the kick and a low hit land on it, and the piano moves to a new chord.
+  - a reversed strum swells into it,
+  - the kick and a low hit land on it, and the guitar moves to a new chord.
 
 Writes public/audio/full.mp3 and public/audio/teaser.mp3.
 Needs numpy, scipy and ffmpeg.
@@ -125,10 +127,10 @@ def bandpass(x, lo, hi, order=2):
     return sosfilt(butter(order, [lo, hi], "band", fs=SR, output="sos"), x)
 
 
-# ── Piano: Salamander Grand Piano V3 samples (Alexander Holm, CC BY 3.0) ─────
+# ── Guitar: University of Iowa acoustic guitar samples (free for any use) ────
 
-SAMPLES = ROOT / "assets" / "salamander"
-NAMES = {"C": 0, "Ds": 3, "Fs": 6, "A": 9}
+SAMPLES = ROOT / "assets" / "iowa-guitar"
+NAMES = {"C": 0, "Cs": 1, "D": 2, "Ds": 3, "E": 4, "F": 5, "Fs": 6, "G": 7, "Gs": 8, "A": 9, "As": 10, "B": 11}
 _sample_cache = {}
 
 
@@ -144,46 +146,60 @@ def _decode(path):
 def _samples():
     if not _sample_cache:
         for f in SAMPLES.glob("*.mp3"):
-            name, octave = f.stem.rstrip("0123456789"), int(f.stem.lstrip("ACDFGs"))
+            name, octave = f.stem.rstrip("0123456789"), int(f.stem[len(f.stem.rstrip("0123456789")) :])
             note = 12 * (octave + 1) + NAMES[name]
             audio = _decode(f)
-            onset = int(np.argmax(np.abs(audio) > 0.01 * np.max(np.abs(audio))))
-            _sample_cache[note] = audio[max(0, onset - 32) :]
+            onset = int(np.argmax(np.abs(audio) > 0.02 * np.max(np.abs(audio))))
+            audio = audio[max(0, onset - 16) :]
+            _sample_cache[note] = audio / (np.max(np.abs(audio)) + 1e-9)
     return _sample_cache
 
 
-def piano(note, length=3.0, velocity=0.6):
-    """The nearest recorded note, repitched, with a damper at the end and a lo-fi tone."""
+def guitar(note, length=1.0, velocity=0.6):
+    """One string: the nearest recorded note, repitched, stopped cleanly at `length`."""
     bank = _samples()
     source = min(bank, key=lambda k: abs(k - note))
     ratio = 2 ** ((note - source) / 12)
     src = bank[source]
     n = min(int(length * SR), int(len(src) / ratio) - 1)
     t = np.arange(n) / SR
-    pos = np.arange(n) * ratio
-    out = np.interp(pos, np.arange(len(src)), src)
-    release = np.clip((length - t) / 0.3, 0, 1)
-    # Softer playing is quieter and darker, like a lighter touch on the keys.
-    tone = lowpass(out * release, 1800 + 4200 * velocity)
-    return tone * (0.35 + 0.9 * velocity) * 3.0
+    out = np.interp(np.arange(n) * ratio, np.arange(len(src)), src)
+    # The string is damped quickly when the next strum comes: that keeps it tight.
+    release = np.clip((length - t) / 0.035, 0, 1)
+    return lowpass(out * release, 1700 + 3300 * velocity) * (0.3 + 0.9 * velocity)
 
 
-def chord(notes, length, velocity, roll=0.018):
-    """A rolled chord: the notes come in one after another, bottom up."""
-    n = int((length + roll * len(notes)) * SR)
-    out = np.zeros(n)
-    for i, note in enumerate(sorted(notes)):
-        v = velocity * (0.85 if i == 0 else 0.7)
-        place(out, piano(note, length, v), i * roll)
+def strum(notes, length, velocity, up=False):
+    """A strum across the strings: down from the low string, or up across the top ones."""
+    order = sorted(notes)
+    if up:
+        order = order[-4:][::-1]
+    gap = (0.007 if up else 0.011) * (1.25 - velocity * 0.5)
+    out = np.zeros(int((length + gap * len(order)) * SR) + 1)
+    for i, note in enumerate(order):
+        v = velocity * (0.8 if up else 1.0) * (0.9 + 0.1 * rng.random())
+        place(out, guitar(note, max(0.02, length - i * gap), v), i * gap)
     return out
 
 
+def chuck(notes):
+    """A muted strum: the strings slapped and stopped at once, a percussive "chk"."""
+    n = int(0.06 * SR)
+    t = np.arange(n) / SR
+    body = np.zeros(n)
+    for i, note in enumerate(sorted(notes)):
+        place(body, guitar(note, 0.045, 0.5), i * 0.004, 0.35)
+    slap = bandpass(rng.uniform(-1, 1, n), 700, 3500) * np.exp(-t / 0.012)
+    return lowpass(body + 0.5 * slap, 3500)
+
+
 def reverse_swell(notes, length):
-    """The next chord played backwards: it swells up into the downbeat."""
-    tail = chord(notes, length * 1.6, 0.55, roll=0.0)
-    tail = tail[: int(length * SR)]
-    swell = tail[::-1] * np.linspace(0, 1, len(tail)) ** 1.5
-    return swell
+    """The next chord strummed backwards: it swells up into the downbeat."""
+    ring = np.zeros(int(length * 1.6 * SR))
+    for note in sorted(notes):
+        place(ring, guitar(note, length * 1.6, 0.55), 0)
+    ring = ring[: int(length * SR)]
+    return ring[::-1] * np.linspace(0, 1, len(ring)) ** 1.5
 
 
 # ── Drums and texture ────────────────────────────────────────────────────────
@@ -268,7 +284,10 @@ def stamp():
 
 
 def ding():
-    return piano(96, 2.0, 0.5) + piano(91, 2.0, 0.4)
+    out = np.zeros(int(1.6 * SR))
+    place(out, guitar(74, 1.5, 0.6), 0)
+    place(out, guitar(81, 1.4, 0.5), 0.1)
+    return out
 
 
 def crackle(n):
@@ -321,22 +340,26 @@ def ebass(note, length):
 
 # ── Song ─────────────────────────────────────────────────────────────────────
 
-# Ebmaj7 → F → Gm7 → B♭ (IV–V–vi–I in B-flat): (bass note, piano voicing).
+# Ebmaj7 → F → Gm7 → B♭ (IV–V–vi–I in B-flat), voiced as real guitar shapes:
+# (bass note, strings low to high).
 CHORDS = [
-    (39, [51, 62, 65, 67, 70]),  # Ebmaj7: Eb3 D4 F4 G4 Bb4
-    (41, [53, 60, 65, 69, 72]),  # F: F3 C4 F4 A4 C5
-    (43, [55, 62, 65, 70, 74]),  # Gm7: G3 D4 F4 Bb4 D5
-    (46, [58, 62, 65, 70, 72]),  # B♭(add9): Bb3 D4 F4 Bb4 C5
+    (39, [51, 58, 62, 67, 70]),  # Ebmaj7, x-6-8-7-8-6
+    (41, [41, 48, 53, 57, 60, 65]),  # F, barre at 1
+    (43, [43, 50, 53, 58, 62, 67]),  # Gm7, barre at 3
+    (46, [46, 53, 58, 62, 65]),  # B♭, A-shape barre at 1
 ]
-# An original, bouncy four-bar tune in B-flat: (bar, beat, note, beats).
+# Strumming on the eighths of a bar: D down, U up, C muted chuck, - rest.
+VERSE = "D-CU-UCU"
+CHORUS = "D-CUDUCU"
+# Fingerpicked eighths for the intro and the lock-screen dip (string indices).
+PICK = [0, 2, 3, 4, 2, 3, 4, 3]
+# An original, bouncy four-bar tune in B-flat, played on single strings: (bar, beat, note, beats).
 TUNE = [
-    (0, 0, 79, 0.5), (0, 0.5, 77, 0.5), (0, 1, 75, 1), (0, 2.5, 74, 0.5), (0, 3, 75, 1),
-    (1, 0, 77, 1.5), (1, 1.5, 72, 0.5), (1, 2, 77, 1), (1, 3, 81, 1),
-    (2, 0, 82, 0.5), (2, 0.5, 81, 0.5), (2, 1, 77, 1), (2, 2.5, 74, 0.5), (2, 3, 77, 1),
-    (3, 0, 79, 2), (3, 2.5, 82, 0.5), (3, 3, 84, 1),
+    (0, 0, 67, 0.5), (0, 0.5, 65, 0.5), (0, 1, 63, 1), (0, 2.5, 62, 0.5), (0, 3, 63, 1),
+    (1, 0, 65, 1.5), (1, 1.5, 60, 0.5), (1, 2, 65, 1), (1, 3, 69, 1),
+    (2, 0, 70, 0.5), (2, 0.5, 69, 0.5), (2, 1, 65, 1), (2, 2.5, 62, 0.5), (2, 3, 65, 1),
+    (3, 0, 67, 2), (3, 2.5, 70, 0.5), (3, 3, 72, 1),
 ]
-# A chorus counter-line, an octave up, sparse: (bar, beat, note, beats).
-COUNTER = [(0, 1.5, 87, 1), (1, 1.5, 89, 1), (2, 1.5, 89, 1), (3, 1.5, 91, 1.5)]
 
 
 def compose(name):
@@ -352,7 +375,6 @@ def compose(name):
     chorus = sec(find("chorus")["start"]) if find("chorus") else None
     breakdown = sec(find("breakdown")["start"]) if find("breakdown") else None
     end = sec(find("end")["start"]) if find("end") else seconds
-    groove_end = breakdown if breakdown is not None else end
     changes = sorted(sec(s["start"]) for s in scenes if s["turn"])
 
     def section(t):
@@ -377,22 +399,38 @@ def compose(name):
         if stop - start > 0.05:
             segments.append((start, stop, i % len(CHORDS)))
 
+    eighth = BEAT / 2
     for start, stop, ci in segments:
-        bass_note, voicing = CHORDS[ci]
+        bass_note, shape = CHORDS[ci]
         part = section(start)
         length = stop - start
-        # Piano: a rolled chord on the change, then bouncy eighth-note comping.
-        place(keys, chord(voicing, min(length, BAR) + 0.4, 0.55 if part == "intro" else 0.62), start)
+        # Eighth-note slots on the bar grid inside this chord.
+        slots = []
+        k = math.ceil(round((start - phase) / eighth, 6))
+        while phase + k * eighth < stop - 0.02:
+            slots.append((phase + k * eighth, k % 8))
+            k += 1
         if part in ("verse", "chorus"):
-            # Off-beat stabs in the verse; fuller, busier comping in the chorus.
-            hits = (1.5, 2.5, 3.5) if part == "verse" else (1, 1.5, 2.5, 3, 3.5)
-            for bar_offset in np.arange(0, length, BAR):
-                for beat in hits:
-                    at = start + bar_offset + beat * BEAT
-                    if at < stop - 0.05:
-                        place(keys, chord(voicing[1:], BEAT / 2 + 0.2, 0.5 if beat % 1 else 0.42, roll=0.004), at, 0.75)
-        elif part == "dip":
-            place(keys, chord(voicing[-3:], length, 0.4, roll=0.03), start + BEAT, 0.6)
+            pattern = VERSE if part == "verse" else CHORUS
+            hits = [(at, pattern[idx]) for at, idx in slots if pattern[idx] != "-"]
+            # A chord always starts with a down-strum on its first slot.
+            if slots and (not hits or hits[0][0] > slots[0][0]):
+                hits.insert(0, (slots[0][0], "D"))
+            elif hits:
+                hits[0] = (hits[0][0], "D")
+            loud = 0.75 if part == "chorus" else 0.62
+            for j, (at, kind) in enumerate(hits):
+                nxt = hits[j + 1][0] if j + 1 < len(hits) else stop
+                if kind == "C":
+                    place(keys, chuck(shape), at, 0.9)
+                else:
+                    accent = loud * (1.0 if kind == "D" else 0.78)
+                    place(keys, strum(shape, nxt - at + 0.01, accent, up=kind == "U"), at, 1.0)
+        else:
+            # Intro and dip: fingerpicked, each note ringing to the next.
+            for j, (at, idx) in enumerate(slots):
+                note = shape[PICK[idx] % len(shape)]
+                place(keys, guitar(note, eighth * 2.2, 0.48), at, 0.9 if part == "intro" else 0.7)
         # Bass: root on 1, a skip on the "and" of 2, the fifth on 3, a pickup on 4-and.
         if part in ("verse", "chorus"):
             for beat, step, beats in ((0, 0, 1.2), (1.5, 0, 0.4), (2, 7, 0.9), (3.5, 12, 0.4)):
@@ -402,7 +440,7 @@ def compose(name):
         elif part == "dip":
             place(low, ebass(bass_note, length), start, 0.4)
 
-    # The tune in verse and chorus; the counter-line joins in the chorus.
+    # The tune on single strings, in verse, chorus and dip.
     for k, bar_start in enumerate(bar_lines):
         part = section(bar_start)
         if part not in ("verse", "chorus", "dip"):
@@ -411,14 +449,9 @@ def compose(name):
         for b, beat, note, beats in TUNE:
             at = bar_start + beat * BEAT
             if b == phrase_bar and at < end and not any(abs(at - c) < BEAT * 0.5 for c in changes):
-                place(keys, piano(note, 0.4 + beats * BEAT, 0.5), at, 1.05 if part != "dip" else 0.7)
-        if part == "chorus":
-            for b, beat, note, beats in COUNTER:
-                at = bar_start + beat * BEAT
-                if b == phrase_bar and at < end:
-                    place(keys, piano(note, 0.5 + beats * BEAT, 0.38), at, 0.7)
+                place(keys, guitar(note, beats * BEAT + 0.08, 0.7), at, 1.25 if part != "dip" else 0.85)
 
-    # Drums: soft kick on 1 and 3, claps on 2 and 4, a shaker in eighths (sixteenths in the chorus).
+    # Drums: soft kick on 1 and 3, claps on 2 and 4, a steady eighth-note shaker.
     kicks = []
     for k, bar_start in enumerate(bar_lines):
         for step in range(16):
@@ -436,19 +469,19 @@ def compose(name):
                     kicks.append(at)
                 if step in (4, 12):
                     place(drums, clap(), at, 0.58 if part == "chorus" else 0.46)
-                if step % 2 == 0:  # a steady eighth-note pulse, like the reference
+                if step % 2 == 0:
                     place(drums, shaker(), at, 0.15 if step % 4 == 2 else 0.1)
             elif part == "dip" and step % 4 == 0:
                 place(drums, shaker(), at, 0.05)
 
-    # Every scene change: a reversed chord swells in, then the kick and a low hit land.
+    # Every scene change: a reversed strum swells in, then the kick and a low hit land.
     for s in scenes:
         if not s["turn"]:
             continue
         at = sec(s["start"])
         nxt = next((ci for a, _, ci in segments if abs(a - at) < 0.01), 0)
         place(keys, reverse_swell(CHORDS[nxt][1], BEAT), at - BEAT, 0.35)
-        place(drums, kick(), at, 0.85)
+        place(drums, kick(), at, 0.9)
         kicks.append(at)
         place(fx, low_hit(1.4), at, 0.4 if s.get("music") in ("drop", "chorus", "end") else 0.26)
         kind = s.get("enter")
@@ -459,7 +492,7 @@ def compose(name):
         for accent in s.get("accents", []):
             when = at + sec(js_round(accent["at"] * FRAME_SCALE))
             sound = {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]]()
-            place(fx, sound, when, {"stamp": 0.4, "tap": 0.14, "ding": 0.15}[accent["sfx"]])
+            place(fx, sound, when, {"stamp": 0.4, "tap": 0.14, "ding": 0.25}[accent["sfx"]])
     for s in scenes:
         if not s["turn"] and not s["nested"]:
             for accent in s.get("accents", []):
@@ -473,14 +506,16 @@ def compose(name):
     gain = np.array([level[section(x)] for x in np.arange(0, n / SR, 0.01)])
     gain = np.interp(times, np.arange(len(gain)) * 0.01, np.convolve(gain, np.ones(25) / 25, mode="same"))
 
-    # The end: a bright Bb add9 left to ring, with a little answer up high.
+    # The end: one slow, ringing B♭ strum, and a last high note.
     if end < seconds:
-        place(keys, chord([46, 58, 62, 65, 69, 72, 74], 4.0, 0.62, roll=0.03), end, 1.3)
-        place(keys, piano(82, 2.5, 0.45), end + BEAT, 0.8)
-        place(keys, piano(86, 2.5, 0.42), end + 1.5 * BEAT, 0.7)
+        ring = np.zeros(int(3.5 * SR))
+        for i, note in enumerate([46, 53, 58, 62, 65, 72]):
+            place(ring, guitar(note, 3.0, 0.6), i * 0.03)
+        place(keys, ring, end, 1.2)
+        place(keys, guitar(74, 2.0, 0.55), end + BEAT, 1.0)
         place(low, ebass(34, min(3.0, seconds - end + 0.5)), end, 0.5)
 
-    # Keys and bass ease under each kick: a light pump.
+    # Guitar and bass ease under each kick: a light pump.
     duck = np.ones(n)
     for k in kicks:
         i = int(k * SR)
@@ -488,14 +523,13 @@ def compose(name):
         if m > 0:
             duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.18 * np.exp(-np.arange(m) / SR / 0.08))
 
-    ir = room(1.6)
+    ir = room(1.2)
     keys_wet = fftconvolve(keys, ir)[:n]
-    mix = ((keys * 0.85 + keys_wet * 0.3) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.08) * gain + fx
-    # Intro: the piano alone, a touch softer.
+    mix = ((keys * 0.9 + keys_wet * 0.16) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.06) * gain + fx
     if drop > 0:
         i = int(drop * SR)
-        mix[:i] = lowpass(mix[:i], 3500)
-    mix = lowpass(mix, 8000)  # warm, like the reference: little air on top
+        mix[:i] = lowpass(mix[:i], 4500)
+    mix = lowpass(mix, 7000)  # warm, like the reference: little air on top
 
     mix = mix[: int(seconds * SR)]
     t = np.arange(len(mix)) / SR

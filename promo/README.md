@@ -28,25 +28,27 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 
 **編曲**
 - 速度與調性：每分鐘 120 拍，降 B 大調。
-- 和弦：Ebmaj7 → F → Gm7 → B♭（IV–V–vi–I）。
-- 鋼琴：真實鋼琴取樣，來自 [Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3)（Alexander Holm，[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)），檔案在 `assets/salamander/`。主歌在反拍點綴，副歌伴奏加密，再加一段輕快的旋律，副歌多一條高音對位。
+- 和弦：Ebmaj7 → F → Gm7 → B♭（IV–V–vi–I），照真實吉他按法排把位。
+- 吉他：原聲吉他取樣，來自 [University of Iowa Musical Instrument Samples](https://theremin.music.uiowa.edu/MIS.html)（Lawrence Fritts，Electronic Music Studios）。該取樣庫可用於任何專案、沒有限制。檔案在 `assets/iowa-guitar/`，已裁成 3 秒單聲道。
+- 刷奏：流行刷法，用直的八分音符刷「下、悶、上、上、悶、上」，第 2、4 拍是悶音的「恰」。下一刷進來時上一刷立刻止住，聲音才緊實、不會糊在一起。下刷從低音弦掃到高音弦，上刷只掃高音的四條弦。
+- 前奏和鎖定畫面改成分解和弦，旋律用吉他單音彈。
 - 其他樂器：圓潤的電貝斯，柔和的大鼓、拍手和沙鈴。大鼓和換場重擊的音高都調在曲子的調內。
 
 **段落起伏**
-- 開場：只有鋼琴。
+- 開場：只有吉他分解和弦。
 - 小笨貓登場：進主歌。
 - 掃描開始（`timeline.json` 裡標 `chorus` 的那一幕）：進副歌，最飽滿。
 - 鎖定畫面：明顯收小。
-- 片尾：用一個 B♭add9 和弦收尾。
+- 片尾：一記慢慢掃過的 B♭ 和弦收尾。
 
 **換場就是節奏點**：影片和配樂用同一套規則排時間，每次換場都從強拍開始，而且每次換場都會：
 1. 換場前半拍，鼓全部停住。
-2. 下一個和弦反轉過來往上湧，帶進換場。
-3. 換場那一拍，大鼓加低頻重擊一起落下，鋼琴同時換成新和弦。
+2. 下一個和弦的刷奏反轉過來往上湧，帶進換場。
+3. 換場那一拍，大鼓加低頻重擊一起落下，吉他同時換成新和弦。
 
 推移、圓形擴散、蓋章、點按鈕和通知的音效都壓得很輕。
 
-**鋼琴出處**：CC BY 3.0 要求註明出處，所以兩支影片的片尾畫面底部都有一行小字「Piano: Salamander Grand Piano V3 by Alexander Holm (CC BY 3.0)」。發布時建議在貼文說明裡也附上同一行。詳見 `assets/salamander/CREDITS.md`。
+**吉他出處**：取樣庫不要求標示出處，但兩支影片的片尾畫面底部仍有一行小字致謝：「Guitar samples: University of Iowa Electronic Music Studios」。詳見 `assets/iowa-guitar/CREDITS.md`。
 
 改了 `timeline.json` 裡的場景長度或轉場，就重新產生配樂，再輸出影片：
 

@@ -1,5 +1,5 @@
 {
-  "bpm": 90,
+  "bpm": 120,
   "quantizeBeats": 2,
   "hold": 24,
   "full": [
@@ -96,7 +96,8 @@
           "at": 74,
           "sfx": "stamp"
         }
-      ]
+      ],
+      "music": "chorus"
     },
     {
       "id": "style",
@@ -181,7 +182,8 @@
           "at": 22,
           "sfx": "tap"
         }
-      ]
+      ],
+      "music": "chorus"
     },
     {
       "id": "today",

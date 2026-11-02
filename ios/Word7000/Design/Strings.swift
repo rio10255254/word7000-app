@@ -93,7 +93,17 @@ enum L {
     static var coreBankName: String { t("7000 單字", "Taiwan Mandarin") }
     /// The word list files its levels as "Core 1"…"Core 14"; on screen they
     /// are 第 N 級 or Level N. Other groups (a scanned bank's) show as they are.
-    static func level(_ number: Int) -> String { t("第 \(number) 級", "Level \(number)") }
+    static func level(_ number: Int) -> String { t("第 \(number) 級", "Level \(number) · \(tocflBand(number))") }
+    /// Learners of Chinese study the Taiwan Mandarin bank, whose fourteen
+    /// levels spread over TOCFL's bands (see scripts/build-taiwan-words.py).
+    static func tocflBand(_ level: Int) -> String {
+        switch level {
+        case ...5: "Novice"
+        case 6...7: "A1"
+        case 8...10: "A2"
+        default: "B1"
+        }
+    }
     static func levelRange(_ low: Int, _ high: Int) -> String {
         low == high ? level(low) : t("第 \(low)–\(high) 級", "Levels \(low)–\(high)")
     }

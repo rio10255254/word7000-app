@@ -120,9 +120,18 @@ final class LearningScheduleTests: XCTestCase {
         XCTAssertEqual(LearningEngine.newWordSlots(size: 15, due: 20, fresh: 10), 6)
         XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 2, fresh: 10), 8)
         XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 20, fresh: 1), 1)
-        XCTAssertEqual(LearningEngine.newWordLevelWeight(seen: 0, knew: 0), 8)
-        XCTAssertEqual(LearningEngine.newWordLevelWeight(seen: 20, knew: 20), 1)
-        XCTAssertEqual(LearningEngine.newWordLevelWeight(seen: 20, knew: 0), 3)
+        // Ability in half-levels: a level or two above it is drawn most.
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 8, ability: 12), 10)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 6, ability: 12), 6)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 1, ability: 12), 1)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 14, ability: 12), 1)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: nil, ability: 12), 6)
+        XCTAssertEqual(LearningEngine.estimateAbility([]), 8)
+        XCTAssertEqual(LearningEngine.estimateAbility([(1, 5, 5), (14, 0, 0)]), 8)
+        let middling = (1...14).map { (level: $0, seen: 10, knew: $0 <= 6 ? 10 : $0 <= 8 ? 5 : 0) }
+        XCTAssertEqual(LearningEngine.estimateAbility(middling), 15)
+        XCTAssertEqual(LearningEngine.coreLevel("Core 12"), 12)
+        XCTAssertNil(LearningEngine.coreLevel("Custom"))
 
         var session = StudySession(cardIds: ["a", "b", "c", "d", "e", "f", "g", "h"], sourceKey: "k")
         while let id = session.currentCardId { session = session.grading(id, as: .review) }

@@ -4,6 +4,9 @@ import {
   addDays,
   buildQuizOptions,
   buildStudyQueue,
+  ABILITY_PRIOR,
+  coreLevel,
+  estimateAbility,
   newWordLevelWeight,
   newWordSlots,
   isWordDue,
@@ -598,12 +601,31 @@ describe('study queue', () => {
     expect(fromEasy * 4).toBeLessThan(fromRight);
   });
 
-  test('weights levels by how many of their words were known on sight', () => {
-    expect(newWordLevelWeight(0, 0)).toBe(8);
-    expect(newWordLevelWeight(20, 20)).toBe(1);
-    expect(newWordLevelWeight(5, 4)).toBe(5);
-    expect(newWordLevelWeight(10, 5)).toBe(8);
-    expect(newWordLevelWeight(20, 0)).toBe(3);
+  test('draws most from just above the learner, less from easier levels, now and then from hard ones', () => {
+    // Ability in half-levels: 12 is Core 6.
+    expect(newWordLevelWeight(8, 12)).toBe(10);
+    expect(newWordLevelWeight(7, 12)).toBe(10);
+    expect(newWordLevelWeight(6, 12)).toBe(6);
+    expect(newWordLevelWeight(5, 12)).toBe(4);
+    expect(newWordLevelWeight(4, 12)).toBe(2);
+    expect(newWordLevelWeight(1, 12)).toBe(1);
+    expect(newWordLevelWeight(9, 12)).toBe(3);
+    expect(newWordLevelWeight(14, 12)).toBe(1);
+    expect(newWordLevelWeight(null, 12)).toBe(6);
+    expect(coreLevel('Core 12')).toBe(12);
+    expect(coreLevel('Custom')).toBeNull();
+  });
+
+  test('estimates the learner from which words they knew on sight', () => {
+    const levelsWith = (knew: (level: number) => number) =>
+      Array.from({ length: 14 }, (_, index) => ({ level: index + 1, seen: 10, knew: knew(index + 1) }));
+
+    expect(estimateAbility([])).toBe(ABILITY_PRIOR);
+    // Knowing a few Core 1 words says little: it stays near the start.
+    expect(estimateAbility([{ level: 1, seen: 5, knew: 5 }, { level: 14, seen: 0, knew: 0 }])).toBe(ABILITY_PRIOR);
+    expect(estimateAbility(levelsWith((level) => (level <= 6 ? 10 : level <= 8 ? 5 : 0)))).toBe(15);
+    expect(estimateAbility(levelsWith((level) => (level <= 1 ? 6 : level <= 2 ? 4 : 1)))).toBeLessThan(6);
+    expect(estimateAbility(levelsWith((level) => (level <= 10 ? 10 : 7)))).toBeGreaterThan(22);
   });
 
   test('draws new words from the whole pool instead of the start of the library', () => {

@@ -379,23 +379,63 @@ public enum LearningEngine {
     /// Two in five, rounded up; whole numbers so no rounding error decides it.
     public static let newWordShare = (numerator: 2, denominator: 5)
 
-    /// How strongly to draw new words from a level, from what the learner did
-    /// with the words of it they have met: knowing nearly all of them on sight
-    /// means it is too easy (Core 1 for most learners), so its words only turn
-    /// up now and then; about half is just right; missing nearly all means it
-    /// is too hard for now. A level not met yet counts as half known, so new
-    /// learners get words from every level until their answers say where they
-    /// stand. Whole numbers only, so every device draws the same words.
-    public static func newWordLevelWeight(seen: Int, knew: Int) -> Int {
-        // Known share in percent, as if two more words had been met and one known.
-        let estimate = (100 * knew + 100) / (seen + 2)
-        switch estimate {
-        case 90...: return 1
-        case 80...: return 2
-        case 65...: return 5
-        case 35...: return 8
-        case 20...: return 5
-        default: return 3
+    /// The level a group stands for ("Core 7" is 7), or nil for other groups.
+    public static func coreLevel(_ group: String) -> Int? {
+        guard group.hasPrefix("Core "), let level = Int(group.dropFirst(5)), level >= 0 else { return nil }
+        return level
+    }
+
+    // For a word `d` half-levels above the learner (-6 to 6), the chance in
+    // percent that it is known on sight is 95 92 88 82 73 62 50 38 27 18 12 8 5.
+    // These are the natural logs of that chance and of its complement, times
+    // 1000 and rounded, so the estimate is the same whole-number sum everywhere.
+    static let knownLog = [-51, -83, -128, -198, -315, -478, -693, -968, -1309, -1715, -2120, -2526, -2996]
+    static let missedLog = [-2996, -2526, -2120, -1715, -1309, -968, -693, -478, -315, -198, -128, -83, -51]
+    /// Where the estimate starts before any answers, in half-levels: Core 4.
+    public static let abilityPrior = 8
+
+    /// The learner's level, in half-levels (14 means Core 7), from the words
+    /// they have met: the level that best explains which ones they knew on
+    /// sight and which they did not, pulled gently towards Core 4 while there
+    /// is little to go on. It moves with every answer, so it follows the
+    /// learner as they grow.
+    public static func estimateAbility(_ levels: [(level: Int, seen: Int, knew: Int)]) -> Int {
+        let top = levels.map { $0.level }.max() ?? 0
+        guard top > 0 else { return abilityPrior }
+        var best = abilityPrior
+        var bestScore = Int.min
+        for ability in 0...max(2 * top + 2, 2 * abilityPrior) {
+            var score = -30 * (ability - abilityPrior) * (ability - abilityPrior)
+            for entry in levels where entry.seen > 0 {
+                let index = min(6, max(-6, 2 * entry.level - ability)) + 6
+                score += entry.knew * knownLog[index] + (entry.seen - entry.knew) * missedLog[index]
+            }
+            if score > bestScore {
+                bestScore = score
+                best = ability
+            }
+        }
+        return best
+    }
+
+    /// How strongly to draw new words from a level, by how far it is from the
+    /// learner (`ability` in half-levels): a level or two above is drawn most,
+    /// where words are new but within reach; the learner's own level less;
+    /// easier levels less and less the further below they are, even for words
+    /// the learner does not know yet; much harder levels only now and then.
+    /// Groups that are not Core levels (a scanned bank, your own words) all
+    /// count the same.
+    public static func newWordLevelWeight(level: Int?, ability: Int) -> Int {
+        guard let level else { return 6 }
+        let distance = 2 * level - ability
+        switch distance {
+        case ...(-6): return 1
+        case ...(-4): return 2
+        case ...(-2): return 4
+        case ...0: return 6
+        case ...4: return 10
+        case ...6: return 3
+        default: return 1
         }
     }
 
@@ -407,11 +447,12 @@ public enum LearningEngine {
         guard count > 0, !fresh.isEmpty else { return [] }
         var buckets: [String: [WordEntry]] = [:]
         for word in SeededRandom.shuffle(fresh, seed: "\(seed):fresh") { buckets[word.group, default: []].append(word) }
+        let ability = estimateAbility(levelOrder.compactMap { group -> (level: Int, seen: Int, knew: Int)? in
+            guard let level = coreLevel(group), let counts = levels[group] else { return nil }
+            return (level, counts.seen, counts.knew)
+        })
         let order = levelOrder.filter { buckets[$0] != nil }
-        let weights = order.map { group -> Int in
-            let level = levels[group] ?? (0, 0)
-            return newWordLevelWeight(seen: level.seen, knew: level.knew)
-        }
+        let weights = order.map { newWordLevelWeight(level: coreLevel($0), ability: ability) }
         var taken = Array(repeating: 0, count: order.count)
         var picked: [WordEntry] = []
         var state = SeededRandom.hash("\(seed):levels")

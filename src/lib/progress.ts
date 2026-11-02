@@ -694,8 +694,8 @@ export const STUDY_NEW_WORD_SHARE = { numerator: 2, denominator: 5 };
  * next session. Due words already studied today (a word missed earlier today
  * stays due) come after those, so the next session does not open with the
  * cards just practised, and known words ahead of their schedule come last.
- * New words lean towards the levels that suit the learner (see
- * `newWordLevelWeight`). The chosen cards are then shuffled so reviews and
+ * New words lean towards the levels just above the learner's (see
+ * `estimateAbility` and `newWordLevelWeight`). The chosen cards are then shuffled so reviews and
  * new words mix.
  */
 export function buildStudyQueue(
@@ -756,24 +756,67 @@ export function buildStudyQueue(
   return shuffleWithSeed(chosen, `${seed}:queue`);
 }
 
+/** The level a group stands for ("Core 7" is 7), or null for other groups. */
+export function coreLevel(group: string): number | null {
+  const match = /^Core (\d+)$/.exec(group);
+  return match ? Number(match[1]) : null;
+}
+
+// For a word `d` half-levels above the learner (-6 to 6), the chance in
+// percent that it is known on sight is 95 92 88 82 73 62 50 38 27 18 12 8 5.
+// These are the natural logs of that chance and of its complement, times
+// 1000 and rounded, so the estimate is the same whole-number sum everywhere.
+const KNOWN_LOG = [-51, -83, -128, -198, -315, -478, -693, -968, -1309, -1715, -2120, -2526, -2996];
+const MISSED_LOG = [-2996, -2526, -2120, -1715, -1309, -968, -693, -478, -315, -198, -128, -83, -51];
+/** Where the estimate starts before any answers, in half-levels: Core 4. */
+export const ABILITY_PRIOR = 8;
+
 /**
- * How strongly to draw new words from a level, from what the learner did with
- * the words of it they have met: knowing nearly all of them on sight means it
- * is too easy (Core 1 for most learners), so its words only turn up now and
- * then; about half is just right; missing nearly all means it is too hard for
- * now. A level not met yet counts as half known, so new learners get words
- * from every level until their answers say where they stand. Whole numbers
- * only, so every device draws the same words from the same seed.
+ * The learner's level, in half-levels (14 means Core 7), from the words they
+ * have met: the level that best explains which ones they knew on sight and
+ * which they did not, pulled gently towards Core 4 while there is little to
+ * go on. It moves with every answer, so it follows the learner as they grow.
  */
-export function newWordLevelWeight(seen: number, knew: number): number {
-  // Known share in percent, as if two more words had been met and one known.
-  const estimate = Math.floor((100 * knew + 100) / (seen + 2));
-  if (estimate >= 90) return 1;
-  if (estimate >= 80) return 2;
-  if (estimate >= 65) return 5;
-  if (estimate >= 35) return 8;
-  if (estimate >= 20) return 5;
-  return 3;
+export function estimateAbility(levels: Array<{ level: number; seen: number; knew: number }>): number {
+  const top = levels.reduce((highest, entry) => Math.max(highest, entry.level), 0);
+  if (top === 0) {
+    return ABILITY_PRIOR;
+  }
+  let best = ABILITY_PRIOR;
+  let bestScore = -Infinity;
+  for (let ability = 0; ability <= Math.max(2 * top + 2, 2 * ABILITY_PRIOR); ability += 1) {
+    let score = -30 * (ability - ABILITY_PRIOR) ** 2;
+    for (const { level, seen, knew } of levels) {
+      if (seen === 0) continue;
+      const index = Math.min(6, Math.max(-6, 2 * level - ability)) + 6;
+      score += knew * KNOWN_LOG[index] + (seen - knew) * MISSED_LOG[index];
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      best = ability;
+    }
+  }
+  return best;
+}
+
+/**
+ * How strongly to draw new words from a level, by how far it is from the
+ * learner (`ability` in half-levels): a level or two above is drawn most,
+ * where words are new but within reach; the learner's own level less; easier
+ * levels less and less the further below they are, even for words the learner
+ * does not know yet; much harder levels only now and then. Groups that are
+ * not Core levels (a scanned bank, your own words) all count the same.
+ */
+export function newWordLevelWeight(level: number | null, ability: number): number {
+  if (level === null) return 6;
+  const distance = 2 * level - ability;
+  if (distance <= -6) return 1;
+  if (distance <= -4) return 2;
+  if (distance <= -2) return 4;
+  if (distance <= 0) return 6;
+  if (distance <= 4) return 10;
+  if (distance <= 6) return 3;
+  return 1;
 }
 
 /**
@@ -799,11 +842,12 @@ function pickNewWords(
       buckets.set(word.group, [word]);
     }
   }
+  const ability = estimateAbility([...levels].flatMap(([group, counts]) => {
+    const level = coreLevel(group);
+    return level === null ? [] : [{ level, ...counts }];
+  }));
   const order = [...levels.keys()].filter((group) => buckets.has(group));
-  const weights = order.map((group) => {
-    const level = levels.get(group)!;
-    return newWordLevelWeight(level.seen, level.knew);
-  });
+  const weights = order.map((group) => newWordLevelWeight(coreLevel(group), ability));
   const taken = order.map(() => 0);
   const picked: WordEntry[] = [];
   let randomState = hashText(`${seed}:levels`);

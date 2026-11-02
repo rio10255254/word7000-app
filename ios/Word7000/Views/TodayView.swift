@@ -394,6 +394,13 @@ struct TodayView: View {
         .buttonStyle(SoftPressStyle())
         .disabled(model.studyPlan.total == 0)
         .opacity(model.studyPlan.total == 0 ? 0.55 : 1)
+        // A new learner who hasn't finished a round yet: this is where to start.
+        .overlay(alignment: .topTrailing) {
+            if model.settings.guideActive == true, model.progress.lastStudyDate == nil, !AppRuntime.catShowcase {
+                StartHereSticker()
+                    .offset(x: -8, y: -16)
+            }
+        }
         .accessibilityIdentifier("today-start")
     }
 
@@ -1206,5 +1213,32 @@ private struct HeroGlint: View {
                 }
         }
         .allowsHitTesting(false)
+    }
+}
+
+/// "Start here!", bobbing on the main button until a new learner's first
+/// round is done.
+private struct StartHereSticker: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var bob = false
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "hand.point.down.fill")
+            Text(L.t("從這裡開始！", "Start here!"))
+        }
+        .font(.caption.weight(.heavy))
+        .foregroundStyle(.white)
+        .padding(.horizontal, 9)
+        .padding(.vertical, 4)
+        .background(Palette.miss, in: Capsule())
+        .rotationEffect(.degrees(4))
+        .offset(y: bob ? -3 : 0)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) { bob = true }
+        }
     }
 }

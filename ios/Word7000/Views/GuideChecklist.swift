@@ -46,29 +46,33 @@ struct GuideChecklist: View {
                 }
             }
             if let current {
-                HStack(alignment: .center, spacing: 10) {
-                    if let line {
-                        Text(line)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    Button(action: go) {
-                        HStack(spacing: 4) {
-                            Text(L.t("去\(current.title)", "Go: \(current.title)"))
-                            Image(systemName: "arrow.right")
-                        }
-                        .font(.subheadline.weight(.bold))
-                        .lineLimit(1)
-                        .fixedSize()
-                    }
-                    .prominentAction()
-                    .accessibilityIdentifier("guide-checklist-go")
+                // What the cat suggests, in its words, then one clear button.
+                if let line {
+                    Text(line)
+                        .font(.subheadline)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                Button(action: go) {
+                    HStack(spacing: 6) {
+                        Image(systemName: current.icon)
+                        Text(L.t("下一步：\(current.title)", "Next: \(current.title)"))
+                        Image(systemName: "arrow.right")
+                            .offset(x: pulse ? 3 : 0)
+                    }
+                    .font(.headline)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .frame(maxWidth: .infinity)
+                }
+                .prominentAction()
+                .accessibilityIdentifier("guide-checklist-go")
             }
         }
         .card(padding: 14)
+        // Edged in the accent so it stands out from the practice tiles.
+        .overlay(RoundedRectangle(cornerRadius: appStyle == .collage ? 2 : Metrics.cardRadius, style: .continuous)
+            .strokeBorder(Palette.accent.opacity(0.55), lineWidth: 1.5))
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("guide-checklist")
         .onAppear {

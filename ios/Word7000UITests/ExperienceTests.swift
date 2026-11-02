@@ -139,12 +139,32 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "spelling-results")
     }
 
+    /// The three welcome scenes: learn English, the default goal, then the
+    /// placement words, where one is marked known.
+    private func passWelcome(_ app: XCUIApplication, snap: Bool = false) {
+        let english = app.buttons["welcome-learn-english"]
+        XCTAssertTrue(english.waitForExistence(timeout: 10), app.debugDescription)
+        if snap { snapshot(app, "welcome-1-language") }
+        english.tap()
+        let next = app.buttons["welcome-next"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        app.buttons["welcome-goal-30"].tap()
+        if snap { snapshot(app, "welcome-2-goal") }
+        next.tap()
+        let start = app.buttons["welcome-start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        let word = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'welcome-word-'")).firstMatch
+        XCTAssertTrue(word.exists)
+        word.tap()
+        XCTAssertTrue(word.isSelected)
+        if snap { snapshot(app, "welcome-3-words") }
+    }
+
     func testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
-        XCTAssertTrue(app.buttons["welcome-start"].waitForExistence(timeout: 10))
-        snapshot(app, "welcome-first-practice")
+        passWelcome(app, snap: true)
         app.buttons["welcome-start"].tap()
         waitForReadyCard(app)
         XCTAssertEqual(app.staticTexts["study-position"].label, "1 / 5")
@@ -161,7 +181,7 @@ final class ExperienceTests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
-        XCTAssertTrue(app.buttons["welcome-start"].waitForExistence(timeout: 10))
+        passWelcome(app)
         app.buttons["welcome-start"].tap()
         waitForReadyCard(app)
         snapshot(app, "polish-study-front")
@@ -177,6 +197,16 @@ final class ExperienceTests: XCTestCase {
         sleep(1)
         snapshot(app, "polish-session-summary")
         app.buttons["study-done"].tap()
+
+        // After a new learner's first round, the cat suggests the quiz next
+        // and circles its tile.
+        let quiz = app.buttons["today-quiz"]
+        XCTAssertTrue(quiz.waitForExistence(timeout: 10))
+        let suggested = NSPredicate(format: "value == '小笨貓推薦'")
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: quiz)], timeout: 5), .completed,
+                       String(describing: quiz.value))
+        sleep(2)
+        snapshot(app, "guide-quiz-next")
 
         app.tabBars.buttons.element(boundBy: 1).tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))

@@ -38,12 +38,17 @@ struct AppSettings: Codable, Equatable, Sendable {
     var recentSpeakingIds: [String]?
     /// Local account copies, oldest first; guests never share an account's copy.
     var speakingHistoryByOwner: [String: [String]]?
-    /// The look of the whole app; nil means leather, the original.
+    /// The look of the whole app; nil means the default, the paper collage.
     var appStyle: AppStyle?
     /// The learner has chosen a style (in the one-time chooser or Settings).
     var stylePicked: Bool?
     /// The home-screen icon follows the style; nil means yes.
     var iconFollowsStyle: Bool?
+    /// The cat suggests features one at a time (learners who started after it
+    /// was added); what they have tried, and when each was first suggested.
+    var guideActive: Bool?
+    var guideTried: [String]?
+    var guideOffered: [String: String]?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

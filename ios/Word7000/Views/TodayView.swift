@@ -147,6 +147,8 @@ struct TodayView: View {
             catLines = model.catLines
         }
         .onChange(of: progress.studiedToday) { _, _ in catLines = model.catLines }
+        .onChange(of: mascotChatOpen) { _, open in if open { model.noteTried(.chat) } }
+        .task(id: model.guideStep) { if let step = model.guideStep { model.noteGuideShown(step) } }
         .sheet(isPresented: $quizSetupOpen, onDismiss: {
             guard quizQueued else { return }
             quizQueued = false
@@ -359,7 +361,7 @@ struct TodayView: View {
         .overlay(alignment: .topTrailing) {
             if !m.large {
                 StrollingCompanion(mood: mascotMood, size: m.mascot, lines: mascotLines,
-                                   greeting: insightHeadline ?? mascotGreeting, tip: mascotTip,
+                                   greeting: guideTip?.text ?? insightHeadline ?? mascotGreeting, tip: guideTip ?? mascotTip,
                                    hop: greetingHops + tileTaps.values.reduce(0, +),
                                    range: m.standsOnCard ? max(0, heroWidth - m.mascot - 28) : 0,
                                    pause: tileTaps.values.reduce(0, +))
@@ -452,8 +454,8 @@ struct TodayView: View {
         }
         if let days = catLines.context?.daysToExam, days <= 120 {
             return progress.studiedToday == 0
-                ? L.t("\(call)學測剩 \(days) 天，你今天一個字都還沒背。我不說話，我就看著。", "\(call)\(days) days to the exam and not one word today. I'm not saying anything. Just watching.")
-                : L.t("學測剩 \(days) 天，才 \(progress.studiedToday) 個？還差 \(left) 個。", "\(days) days to the exam. Only \(progress.studiedToday)? \(left) to go.")
+                ? L.t("\(call)考試剩 \(days) 天，你今天一個字都還沒背。我不說話，我就看著。", "\(call)\(days) days to the exam and not one word today. I'm not saying anything. Just watching.")
+                : L.t("考試剩 \(days) 天，才 \(progress.studiedToday) 個？還差 \(left) 個。", "\(days) days to the exam. Only \(progress.studiedToday)? \(left) to go.")
         }
         if progress.studiedToday == 0 {
             if hour >= 21 { return L.t("都幾點了？今天的字要留給明天的你喔？", "This late? Saving today's words for future you?") }
@@ -461,6 +463,23 @@ struct TodayView: View {
             return L.t("早。\(progress.dailyTarget) 個字，別讓我失望。雖然你常常。", "Morning. \(progress.dailyTarget) words. Don't let me down. Again.")
         }
         return L.t("才 \(progress.studiedToday) 個？笑死。還差 \(left) 個。", "Only \(progress.studiedToday)? LOL. \(left) to go.")
+    }
+
+    /// For a new learner, the next thing to try, said by the cat; tapping its
+    /// bubble opens it.
+    private var guideTip: MascotTip? {
+        guard let step = model.guideStep else { return nil }
+        return MascotTip(text: step.line) { openGuide(step) }
+    }
+
+    private func openGuide(_ step: GuideStep) {
+        switch step {
+        case .quiz: quizSetupOpen = true
+        case .speaking: start(.speaking)
+        case .spelling: start(.spelling)
+        case .scan: start(.scan)
+        case .chat: mascotChatOpen = true
+        }
     }
 
     /// Its AI note: today's insight headline once worked out (tap for the
@@ -572,8 +591,12 @@ struct TodayView: View {
                          bounce: tileTaps[item.id, default: 0])
         }
         .buttonStyle(TilePressStyle())
+        .overlay {
+            if model.guideStep?.tileId == item.id { GuideRing().transition(.opacity) }
+        }
         .entrance(order, distance: 12)
         .accessibilityIdentifier(item.id)
+        .accessibilityValue(model.guideStep?.tileId == item.id ? L.t("小笨貓推薦", "Silly Cat suggests") : "")
     }
 
     private static let deep = Color(red: 0.45, green: 0.27, blue: 0.16)

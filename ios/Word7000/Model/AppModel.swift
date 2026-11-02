@@ -192,9 +192,12 @@ final class AppModel {
         AppIconSwitcher.apply(settings.appStyle ?? .standard)
     }
 
-    /// The one-time style chooser is due: after some practice, once.
+    /// The one-time style chooser is due: once, on a day after the first
+    /// practice, so the first day is only about learning.
     var styleChoiceDue: Bool {
-        settings.stylePicked != true && settings.onboardingComplete == true && !progress.words.isEmpty
+        guard settings.stylePicked != true, settings.onboardingComplete == true, !progress.words.isEmpty else { return false }
+        if AppRuntime.uiTesting { return true }
+        return progress.analytics?.days.keys.contains { $0 < today } ?? false
     }
 
     var reminderEnabled: Bool { settings.streakReminder ?? true }
@@ -451,6 +454,15 @@ final class AppModel {
         today = now
         progress = LearningEngine.normalizeForDate(progress, today: now)
         studyUndoStack = []
+        scheduleSave()
+    }
+
+    /// The words the learner said they know on the first launch count as
+    /// known on sight, so new words start near their level.
+    func applyPlacement(knownIds: [String]) {
+        guard !knownIds.isEmpty else { return }
+        refreshToday()
+        progress = Placement.apply(knownIds: knownIds, to: progress, today: today)
         scheduleSave()
     }
 

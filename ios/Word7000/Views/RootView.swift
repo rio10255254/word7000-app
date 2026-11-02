@@ -80,6 +80,9 @@ struct RootView: View {
                 scanAfterSignIn = true
             })
         }
+        .onChange(of: activity) { _, new in
+            if let new, let step = GuideStep(activity: new) { model.noteTried(step) }
+        }
         .fullScreenCover(item: $activity, onDismiss: {
             guard let next = pendingActivity else { openRequestedPractice(); return }
             pendingActivity = nil
@@ -121,10 +124,12 @@ struct RootView: View {
                 activity = .study
             } else { openRequestedPractice() }
         }) {
-            WelcomeView { mode, target, practice in
+            WelcomeView { mode, target, knownIds, practice in
                 model.settings.onboardingComplete = true
+                model.settings.guideActive = true
                 model.setStudyMode(mode)
                 model.setDailyTarget(target)
+                model.applyPlacement(knownIds: knownIds)
                 if practice { model.startStudySession(limit: 5) }
                 studyAfterWelcome = practice
                 if !practice { tab = .words }

@@ -91,7 +91,7 @@ extension CatLineSource {
             lines.append(L.t("\(nickname)，我叫你叫得很親，你背字背得很遠。", "\(nickname), I call you so sweetly and you study so little."))
         }
         if let days = context.daysToExam {
-            lines.append(L.t("學測剩 \(days) 天。我沒有要給你壓力，我只是一直數。", "\(days) days to the exam. No pressure. I'm just counting. Constantly."))
+            lines.append(L.t("考試剩 \(days) 天。我沒有要給你壓力，我只是一直數。", "\(days) days to the exam. No pressure. I'm just counting. Constantly."))
         }
         if let level = context.level {
             lines.append(L.t("你在\(level)欸，不往上爬嗎？我幫你挑好字了。", "You're at \(level). Not climbing? I already picked your words."))
@@ -126,7 +126,7 @@ enum CatQuips {
                      L.t("好啦，今天狀態不錯。", "Okay, you're on a roll."),
                      L.t("繼續啊，我看你能撐多久。", "Keep going. Let's see how long this lasts.")]
             if let days = source.context?.daysToExam {
-                lines.append(L.t("連對 \(combo)。學測剩 \(days) 天，保持這樣我就不碎念。", "\(combo) straight. \(days) days to the exam. Keep this up and I'll stop nagging."))
+                lines.append(L.t("連對 \(combo)。考試剩 \(days) 天，保持這樣我就不碎念。", "\(combo) straight. \(days) days to the exam. Keep this up and I'll stop nagging."))
             }
         } else {
             lines = [L.t("\(call)還可以嘛。", "\(call)not bad."),
@@ -161,7 +161,7 @@ enum CatQuips {
                      L.t("\(call)再錯我要哭給你看。", "\(call)one more and I'll cry. Really."),
                      L.t("你是認真的嗎？", "Are you serious?")]
         if let days = source.context?.daysToExam {
-            lines.append(L.t("學測剩 \(days) 天，你還在這裡錯。我好擔心。", "\(days) days to the exam and you're missing this. I'm worried."))
+            lines.append(L.t("考試剩 \(days) 天，你還在這裡錯。我好擔心。", "\(days) days to the exam and you're missing this. I'm worried."))
         }
         return lines.picked(index)
     }
@@ -188,7 +188,7 @@ enum CatQuips {
         if score >= 0.8 { return L.t("還不錯，但不要以為我會誇你。", "Not bad. Don't expect praise.") }
         if score >= 0.5 {
             if let days = source.context?.daysToExam {
-                return L.t("及格邊緣。學測剩 \(days) 天，你自己心裡有數。", "Borderline. \(days) days to the exam. You know it.")
+                return L.t("及格邊緣。考試剩 \(days) 天，你自己心裡有數。", "Borderline. \(days) days to the exam. You know it.")
             }
             return L.t("及格邊緣，你自己心裡有數。", "Borderline. You know it.")
         }

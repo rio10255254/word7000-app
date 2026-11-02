@@ -32,7 +32,7 @@ final class CatMemory {
         }
         saved = UserDefaults.standard.data(forKey: Self.key).flatMap { try? JSONDecoder().decode(Saved.self, from: $0) } ?? Saved()
         if AppRuntime.catShowcase {
-            saved = Saved(examDate: "2027-01-16", goal: L.t("學測英文 15 級分", "Top marks in the exam"), nickname: L.t("阿明", "Sam"),
+            saved = Saved(examDate: "2027-01-16", goal: L.t("年底前看懂英文影集", "Watch shows without subtitles by December"), nickname: L.t("阿明", "Sam"),
                           notes: [L.t("介係詞常錯", "Mixes up prepositions"), L.t("晚上比較有空", "Studies best at night")])
         }
     }
@@ -257,7 +257,7 @@ struct CatMemoryView: View {
                     if let days = memory.daysToExam { Text(L.t("還有 \(days) 天", "\(days) days to go")) }
                 }
                 Section(L.t("目標", "Goal")) {
-                    TextField(L.t("例如：學測英文 15 級分", "e.g. pass the exam with top marks"), text: Binding(
+                    TextField(L.t("例如：年底前看懂英文影集", "e.g. watch shows without subtitles by December"), text: Binding(
                         get: { memory.goal ?? "" }, set: { memory.goal = $0 }))
                         .accessibilityIdentifier("cat-memory-goal")
                 }

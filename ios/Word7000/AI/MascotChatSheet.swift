@@ -303,10 +303,10 @@ struct MascotChatSheet: View {
         let ids = model.bank.words.prefix(3).map(\.id)
         return [
             ChatTurn(role: .learner, text: L.t("今天練什麼？", "What should I practice today?")),
-            ChatTurn(role: .cat, text: L.t("阿明，學測剩 75 天，你還在跟這幾個字糾纏。今天先把它們搞定，我盯著你。",
+            ChatTurn(role: .cat, text: L.t("阿明，考試剩 75 天，你還在跟這幾個字糾纏。今天先把它們搞定，我盯著你。",
                                            "Sam, 75 days to the exam and you're still wrestling these. Sort them out today. I'm watching."),
                      practiceIds: ids),
-            ChatTurn(role: .learner, text: L.t("幫我記住我 1/16 考學測", "Remember my exam is on 16 January")),
+            ChatTurn(role: .learner, text: L.t("幫我記住我 1/16 要考試", "Remember my exam is on 16 January")),
             ChatTurn(role: .cat, text: L.t("好喔，記住了。我會每天提醒你，直到你受不了為止。",
                                            "Fine, noted. I'll remind you every day until you can't stand it."),
                      remembered: [L.t("考試日 2027-01-16", "exam on 2027-01-16")]),

@@ -182,7 +182,14 @@ final class AppModel {
 
     func setIconFollowsStyle(_ follows: Bool) {
         settings.iconFollowsStyle = follows
-        AppIconSwitcher.apply(follows ? settings.appStyle ?? .standard : .leather)
+        AppIconSwitcher.apply(follows ? settings.appStyle ?? .standard : .standard)
+    }
+
+    /// The main icon is now the collage's: a learner who chose the leather
+    /// look (with the icon following it) gets its icon back, once.
+    func syncAppIcon() {
+        guard settings.stylePicked == true, settings.iconFollowsStyle ?? true else { return }
+        AppIconSwitcher.apply(settings.appStyle ?? .standard)
     }
 
     /// The one-time style chooser is due: after some practice, once.

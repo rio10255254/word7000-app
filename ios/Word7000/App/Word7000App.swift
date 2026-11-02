@@ -37,6 +37,7 @@ struct Word7000App: App {
                 .environment(plus)
                 .task { await plus.start() }
                 .task { await Speaker.shared.refreshVoices() }
+                .task { model.syncAppIcon() }
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)
                 .environment(\.appStyle, model.settings.appStyle ?? .standard)

@@ -33,7 +33,7 @@ const book = {
 
 const variants = [
   {
-    folder: 'AppIcon.appiconset',
+    folder: 'AppIcon-Leather.appiconset',
     file: 'icon-1024.png',
     palette: warm,
     book,
@@ -43,7 +43,7 @@ const variants = [
     grain: 0.1,
   },
   {
-    folder: 'AppIcon.appiconset',
+    folder: 'AppIcon-Leather.appiconset',
     file: 'icon-1024-dark.png',
     palette: warm,
     book: { ...book, coverTop: '#EFE4D2', coverBottom: '#D6C4A8' },
@@ -53,7 +53,7 @@ const variants = [
   },
   {
     // Tinted icons are grayscale; the system colours them by brightness.
-    folder: 'AppIcon.appiconset',
+    folder: 'AppIcon-Leather.appiconset',
     file: 'icon-1024-tinted.png',
     palette: {
       furTop: '#F4F4F4',
@@ -73,27 +73,27 @@ const variants = [
   },
 ];
 
-// The paper collage style's icon (chosen in Settings > App style): the same
-// cat and notebook on plain graph paper, the notebook in terracotta. Nothing
-// else, so it stays clear at home-screen size.
+// The main icon, the paper collage's (the default look): the same cat and
+// notebook on plain graph paper, the notebook in terracotta. Nothing else, so
+// it stays clear at home-screen size. The leather one above is the alternate.
 const grayPalette = variants[2].palette;
 variants.push(
   {
-    folder: 'AppIcon-Collage.appiconset',
+    folder: 'AppIcon.appiconset',
     file: 'icon-1024.png',
     palette: warm,
     book: { fill: '#C96442' },
     graph: { paper: '#F1F2EA', line: '#C6D6CF' },
   },
   {
-    folder: 'AppIcon-Collage.appiconset',
+    folder: 'AppIcon.appiconset',
     file: 'icon-1024-dark.png',
     palette: warm,
     book: { fill: '#D97757' },
     graph: { paper: '#22231F', line: '#38443F' },
   },
   {
-    folder: 'AppIcon-Collage.appiconset',
+    folder: 'AppIcon.appiconset',
     file: 'icon-1024-tinted.png',
     palette: grayPalette,
     book: { fill: '#CFCFCF' },

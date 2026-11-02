@@ -30,8 +30,9 @@ enum AppStyle: String, Codable, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    /// The home-screen icon that goes with it (nil: the main icon).
-    var iconName: String? { self == .collage ? "AppIcon-Collage" : nil }
+    /// The home-screen icon that goes with it (nil: the main icon, the
+    /// collage's, as the collage is the default look).
+    var iconName: String? { self == .leather ? "AppIcon-Leather" : nil }
 }
 
 private struct AppStyleKey: EnvironmentKey {

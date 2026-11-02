@@ -2,13 +2,13 @@
 """Compose the promo soundtrack from src/timeline.json.
 
 A sunset tropical-house piece, after the owner's picture for it: sunshine,
-palm trees, a purple sunset, wine, a beach. Laid-back at 112.5 bpm in
+palm trees, a purple sunset, wine, a beach. Light and bouncy at 120 bpm in
 B-flat, on warm, slightly nostalgic seventh chords (Ebmaj7 → Dm7 → Cm7 → F):
 
 - sunshine: the tune high on a real soprano recorder, with glockenspiel glints
 - palm trees: marimba on the off-beats, congas and bongos
 - purple sunset: a soft, warm synth pad under everything
-- wine: an easy groove, and an echo on the tune that floats
+- wine: an echo on the tune that floats, over a bouncy groove
 - the beach: real waves (an ocean drum) under the intro, the dip and the end
 
 It still follows the reference's arc and its layers: a soft intro, a verse
@@ -35,7 +35,7 @@ import wave
 from pathlib import Path
 
 import numpy as np
-from scipy.signal import butter, fftconvolve, sosfilt
+from scipy.signal import butter, fftconvolve, lfilter, sosfilt
 
 ROOT = Path(__file__).resolve().parent.parent
 TIMELINE = json.loads((ROOT / "src" / "timeline.json").read_text())
@@ -209,6 +209,58 @@ def pad(notes, length):
     out = lowpass(out / (3 * len(notes)), 1400, 2)
     shape = np.clip(t / 0.35, 0, 1) * np.clip((length - t) / 0.4, 0, 1)
     return out * shape
+
+
+def peaking(x, hz, gain_db, q=1.0):
+    """A bell EQ (RBJ cookbook): cut or boost around `hz`."""
+    a = 10 ** (gain_db / 40)
+    w = 2 * np.pi * hz / SR
+    alpha = np.sin(w) / (2 * q)
+    b = [1 + alpha * a, -2 * np.cos(w), 1 - alpha * a]
+    den = [1 + alpha / a, -2 * np.cos(w), 1 - alpha / a]
+    return lfilter(np.array(b) / den[0], np.array(den) / den[0], x)
+
+
+def high_shelf(x, hz, gain_db):
+    """Lift (or lower) everything above `hz`: the "air" on top."""
+    a = 10 ** (gain_db / 40)
+    w = 2 * np.pi * hz / SR
+    alpha = np.sin(w) / 2 * np.sqrt(2)
+    cw = np.cos(w)
+    b = [a * ((a + 1) + (a - 1) * cw + 2 * np.sqrt(a) * alpha), -2 * a * ((a - 1) + (a + 1) * cw), a * ((a + 1) + (a - 1) * cw - 2 * np.sqrt(a) * alpha)]
+    den = [(a + 1) - (a - 1) * cw + 2 * np.sqrt(a) * alpha, 2 * ((a - 1) - (a + 1) * cw), (a + 1) - (a - 1) * cw - 2 * np.sqrt(a) * alpha]
+    return lfilter(np.array(b) / den[0], np.array(den) / den[0], x)
+
+
+def tame(x, lo, hi, threshold, ratio=3.0):
+    """A resonance tamer: only when the band lo–hi rings loud is it pulled down."""
+    band = bandpass(x, lo, hi, 2)
+    env_ = lowpass(np.abs(band), 30, 1)
+    over = np.maximum(env_ / threshold, 1.0)
+    reduce = over ** (1 / ratio - 1)  # gain < 1 only above the threshold
+    return x - band + band * reduce
+
+
+def widen(x, depth=0.004, rate=0.9):
+    """Two slightly delayed, slowly wavering copies: wider and softer than one point of sound."""
+    n = len(x)
+    t = np.arange(n) / SR
+    out = x.copy()
+    for i, base in enumerate((0.011, 0.017)):
+        d = (base + depth * np.sin(2 * np.pi * rate * t + i * 2.1)) * SR
+        out += 0.45 * np.interp(np.arange(n) - d, np.arange(n), x, left=0)
+    return out / 1.6
+
+
+def bright_not_harsh(x):
+    """Bright from harmonics and air, not from the 2–5 kHz the ear is sharpest to."""
+    warm = np.tanh(2.2 * x) / np.tanh(2.2)  # gentle saturation: richer overtones
+    y = 0.6 * x + 0.4 * warm
+    y = tame(y, 900, 1700, threshold=0.05)  # hold back the ringing of long high notes
+    y = peaking(y, 2800, -5, q=1.4)  # the ear's most sensitive band
+    y = peaking(y, 4000, -3, q=1.2)
+    y = high_shelf(y, 7500, 5)  # air: sparkle without bite
+    return y
 
 
 def echo(x, delay, feedback=0.35, repeats=3, tone=4500):
@@ -475,7 +527,7 @@ HOOK = [
 DIP = [HOOK[0], [(0, 81, 3.5)]]  # the hook once more, softly
 
 # Guitar on the eighths of a bar: D down, U up, C muted chuck, - rest.
-STRUM = {"verseA": "D--U--U-", "verseB": "D-UU-UU-", "pre": "D-D-D-DU", "chorus": "D-CU-UCU"}
+STRUM = {"verseA": "D-UU-U-U", "verseB": "D-UU-UCU", "pre": "D-D-D-DU", "chorus": "D-CU-UCU"}
 PICK = [0, 2, 3, 4, 2, 3, 4, 3]
 MARIMBA = {"verseA": (0, 3), "verseB": (0, 3, 6), "pre": (0, 2, 4, 6), "chorus": (0, 3, 6)}
 
@@ -498,6 +550,9 @@ def compose(name):
     bar_of = lambda t: math.floor((t - drop) / BAR + 1e-6)  # bar 0 is the verse's first bar
     chorus_bar, dip_bar, end_bar = bar_of(chorus), bar_of(breakdown), bar_of(end)
     pre_bar = chorus_bar - 4
+    # The verse is sung over its last eight bars; any bar before that is the
+    # band alone, under the cat's introduction.
+    verse_bar = max(0, pre_bar - 8)
 
     def section_of(b):
         if b < 0:
@@ -510,7 +565,7 @@ def compose(name):
             return "chorus"
         if b >= pre_bar:
             return "pre"
-        return "verseA" if b < 4 else "verseB"
+        return "verseA" if b < verse_bar + 4 else "verseB"
 
     section = lambda t: section_of(bar_of(t))
 
@@ -519,12 +574,14 @@ def compose(name):
         if part == "intro":
             return EB
         if part == "chorus":
-            return CHORUS_CHORDS[(b - chorus_bar) % len(CHORUS_CHORDS)]
+            i = b - chorus_bar
+            # Past the written chorus, stay home on B♭ until the next section.
+            return CHORUS_CHORDS[i] if i < len(CHORUS_CHORDS) else BB
         if part == "dip":
             return LOOP[(b - dip_bar) % 2]
         if part == "end":
             return BB
-        return LOOP[b % 4]
+        return LOOP[(b - verse_bar) % 4]
 
     # The chord grid: one chord a bar (two in a split bar), whatever the scenes do.
     first_bar = bar_of(0.0) - 1
@@ -579,7 +636,9 @@ def compose(name):
             for at, idx in slots:
                 place(gtr, guitar(shape[PICK[idx] % len(shape)], eighth * 2.2, 0.45), at, 0.75 if part == "intro" else 0.6)
         if part == "verseA":
-            place(low, ebass(bass_note, min(length, BAR)), start, 0.7)
+            for beat, step, beats in ((0, 0, 1.2), (2, 0, 0.9), (3.5, 12, 0.4)):
+                if start + beat * BEAT < stop - 0.05:
+                    place(low, ebass(bass_note + step, beats * BEAT), start + beat * BEAT, 0.72)
         elif part in ("verseB", "pre"):
             for beat, step, beats in ((0, 0, 1.2), (1.5, 0, 0.4), (2, 7, 0.9), (3.5, 12, 0.4)):
                 if start + beat * BEAT < stop - 0.05:
@@ -595,12 +654,15 @@ def compose(name):
     def tune_of(b):
         part = section_of(b)
         if part in ("verseA", "verseB"):
-            i = b % 4
-            return VERSE_LAST if (i == 3 and b == pre_bar - 1) else VERSE[i]
+            v = b - verse_bar
+            if v < 0:
+                return []  # the band alone, under the cat's introduction
+            return VERSE_LAST if v == 7 else VERSE[v % 4]
         if part == "pre":
             return PRE[(b - pre_bar) % 4]
         if part == "chorus":
-            return HOOK[(b - chorus_bar) % len(HOOK)]
+            i = b - chorus_bar
+            return HOOK[i] if i < len(HOOK) else []  # the last B♭ rings on
         if part == "dip":
             return DIP[(b - dip_bar) % len(DIP)]
         return []
@@ -611,14 +673,19 @@ def compose(name):
         bar_start = drop + b * BAR
         for beat, note, beats in tune_of(b):
             at = bar_start + beat * BEAT
-            place(tune, lead(note, beats * BEAT * 0.92, vel[part]), at)
-            if part == "chorus":
-                place(bells, glock(note + 12, 0.4), at, 0.35)
+            # Short notes are played short and bouncy; long notes sing.
+            hold = beats * BEAT * (0.62 if beats <= 0.5 else 0.92)
+            place(tune, lead(note, hold, vel[part]), at)
         # Sunshine: a glockenspiel glint on each chorus downbeat.
         if part == "chorus":
-            place(bells, glock(chord_at(bar_start)[3][-1] + 12, 0.4), bar_start, 0.35)
+            place(bells, glock(chord_at(bar_start)[3][-1], 0.35), bar_start, 0.3)
+        # A quick marimba run up at the end of every four bars: a little lift.
+        if part in ("verseB", "chorus", "pre") and ((b - verse_bar) % 4 == 3 or (part == "chorus" and b - chorus_bar >= len(HOOK))):
+            tones = sorted(chord_at(bar_start + 3 * BEAT)[3])
+            for i, note in enumerate(tones):
+                place(mar, marimba(note - 12, 0.55), bar_start + (3 + i / 4) * BEAT, 0.6)
         # Marimba answers the hook where it holds its long note.
-        if part == "chorus" and (b - chorus_bar) % len(HOOK) in (1, 3):
+        if part == "chorus" and (b - chorus_bar) in (1, 3):
             tones = chord_at(bar_start + 2.5 * BEAT)[3]
             for i, at_beat in enumerate((2.5, 3, 3.5)):
                 place(mar, marimba(tones[-1 - i], 0.6), bar_start + at_beat * BEAT, 0.7)
@@ -674,6 +741,8 @@ def compose(name):
                     place(drums, bongo_lo, at, 0.18)
                 if part == "chorus" and step % 2 == 1:
                     place(drums, tambourine(), at, 0.05)
+                if step % 4 == 2:  # the off-beat "tss" that makes it skip along
+                    place(drums, hat(True), at, 0.06 if part == "verseB" else 0.08)
             elif part == "pre":
                 last_bar = at >= chorus - BAR
                 every = 1 if last_bar and at >= chorus - BAR / 2 else (2 if last_bar else 4)
@@ -748,7 +817,9 @@ def compose(name):
             duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.38 * np.exp(-np.arange(m) / SR / 0.1))
 
     ir = room(2.2)
-    tune_echo = echo(tune, 0.75 * BEAT, feedback=0.25, repeats=2)
+    tune = widen(bright_not_harsh(tune))
+    bells = peaking(lowpass(bells, 6500), 2800, -6, q=1.2)
+    tune_echo = echo(tune, 0.75 * BEAT, feedback=0.22, repeats=2, tone=3200)
     sources = gtr * 0.7 + mar * 0.65 + pads * 0.42 + tune_echo * 0.95 + bells * 0.4
     wet = fftconvolve(gtr * 0.12 + mar * 0.25 + pads * 0.3 + tune_echo * 0.3 + bells * 0.35, ir)[:n]
     # The tune is the backbone: it is not pumped by the kick, it sits on top.

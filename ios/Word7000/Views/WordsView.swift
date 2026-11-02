@@ -218,8 +218,9 @@ struct WordsView: View {
             do { try await Task.sleep(for: .milliseconds(120)) } catch { return }
         }
         let vocabulary = model.bank, state = model.progress, filter = model.settings.libraryFilter, text = query
+        let pinyin = model.studyMode == .chinese
         let matches = await Task.detached(priority: .userInitiated) {
-            vocabulary.filter(state: state, query: text, filter: filter.status, options: filter.options, rankedSearch: true)
+            vocabulary.filter(state: state, query: text, filter: filter.status, options: filter.options, rankedSearch: true, pinyinSearch: pinyin)
         }.value
         guard !Task.isCancelled else { return }
         if results != matches { results = matches }

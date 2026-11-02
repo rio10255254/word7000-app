@@ -87,7 +87,7 @@ enum L {
     static func speakingScore(_ count: Int) -> String { t("完成 \(count) 張口說卡", "\(count) prompts answered") }
 
     // Words
-    static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search English, Chinese or examples") }
+    static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search Chinese, pinyin, English or examples") }
     /// Taiwanese learners know the GSAT's 7000 words by that name; learners of
     /// Chinese do not, and the bank may grow, so their interface says Core Words.
     static var coreBankName: String { t("7000 單字", "Core Words") }

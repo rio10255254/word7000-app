@@ -39,7 +39,7 @@ export interface CompleteOptions {
  * Thinking counts toward max_tokens, so each level gets room to think on top
  * of the answer; without it a long think could stop before any answer.
  */
-export const THINKING_ROOM: Record<Effort, number> = { low: 2_000, medium: 6_000 };
+export const THINKING_ROOM: Record<Effort, number> = { low: 2_000, medium: 6_000, high: 12_000 };
 
 /** `note` asks the model to fix what was wrong with its previous reply. */
 type Attempt = { effort: Effort; note?: string };

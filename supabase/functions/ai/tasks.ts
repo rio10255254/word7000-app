@@ -11,7 +11,7 @@ export const COACH_MODEL = 'claude-sonnet-5-5';
 export const COACH_MODEL_DAILY = 20;
 
 /** How much Claude reasons before answering: more is sharper but slower. */
-export type Effort = 'low' | 'medium';
+export type Effort = 'low' | 'medium' | 'high';
 
 export type Mode = 'english' | 'chinese';
 /** Free learners get quick answers; Plus subscribers and the 7-day trial get more reasoning on writing tasks. */

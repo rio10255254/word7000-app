@@ -4,6 +4,7 @@
 //
 //   ANTHROPIC_API_KEY=… node --experimental-transform-types scripts/ai-eval.ts [out-dir] [--tiers free,plus] [--only explain,coach]
 //
+//   --effort tries another thinking depth (low, medium, high) on every case.
 //   --model compares another Claude model on the same cases (the service itself always uses MODEL).
 //   --only takes task names: coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict.
 // Run by .github/workflows/ai-eval.yml. A failed check is printed as a GitHub
@@ -11,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { AIFailure, complete } from '../supabase/functions/ai/claude.ts';
-import { COACH_MODEL, hanShare, MODEL, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
+import { COACH_MODEL, type Effort, hanShare, MODEL, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
 
 type Content = Record<string, unknown>;
 type Check = (content: Content) => string[];
@@ -340,6 +341,7 @@ const apiKey = process.env.ANTHROPIC_API_KEY;
 if (!apiKey) { console.error('Set ANTHROPIC_API_KEY.'); process.exit(2); }
 
 const model = option('--model')?.[0];
+const effort = option('--effort')?.[0] as Effort | undefined;
 /** List prices per million tokens (Haiku: prompts under 100K); thinking bills as output. */
 const PRICES: Record<string, { input: number; output: number }> = {
   'claude-haiku-5-5': { input: 0.10, output: 0.50 },
@@ -359,7 +361,8 @@ const selected = cases.filter((item) => !only || only.includes(item.task));
 
 for (const tier of tiers) {
   for (const item of selected) {
-    const plan = planTask(item.task, item.input, tier);
+    const planned = planTask(item.task, item.input, tier);
+    const plan = effort ? { ...planned, effort } : planned;
     const started = Date.now();
     try {
       // As in the service: the coach uses its own model unless one is being compared.

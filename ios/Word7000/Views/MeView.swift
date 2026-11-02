@@ -518,7 +518,15 @@ private struct ProfileCard: View {
                 .padding(.vertical, 3)
                 .background(Palette.review.opacity(0.15), in: Capsule())
         case .expired:
-            EmptyView()
+            if plus.subscriptionAwaitsSignIn {
+                Text(L.t("PREMIUM・待登入", "PREMIUM · sign in"))
+                    .font(.caption2.weight(.heavy))
+                    .foregroundStyle(Palette.review)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(Palette.review.opacity(0.15), in: Capsule())
+                    .accessibilityIdentifier("me-premium-awaits-sign-in")
+            }
         }
     }
 
@@ -536,20 +544,29 @@ private struct ProfileCard: View {
             }
             plusButton
         }
+        if plus.subscriptionAwaitsSignIn {
+            Text(L.t("這個 Apple ID 還有 Premium 訂閱：用 Apple 登入就能使用。不想續訂，請按「管理訂閱」取消。",
+                     "This Apple ID still has Premium: sign in with Apple to use it. To stop renewing, cancel it in Manage subscription."))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
         // The trial days are on the badge by the name and the scans left on
         // the scan card in Words, so no extra line of small print here.
     }
 
     @ViewBuilder
     private var plusButton: some View {
+        // Someone still paying can always reach the subscription to cancel it.
+        let paying = plus.subscribed || plus.subscriptionAwaitsSignIn
         let button = Button {
-            if plus.subscribed { manageOpen = true } else { plus.paywallReason = .general }
+            if paying { manageOpen = true } else { plus.paywallReason = .general }
         } label: {
-            Label(plus.subscribed ? P.manage : plus.access == .expired ? P.unlockPlus : P.upgradePlus, systemImage: "sparkles")
+            Label(paying ? P.manage : plus.access == .expired ? P.unlockPlus : P.upgradePlus, systemImage: "sparkles")
                 .font(.subheadline.weight(.semibold))
                 .frame(maxWidth: .infinity)
         }
-        if plus.subscribed {
+        if paying {
             button.secondaryAction().accessibilityIdentifier("me-plus")
         } else {
             button.prominentAction(tint: Palette.review).accessibilityIdentifier("me-plus")

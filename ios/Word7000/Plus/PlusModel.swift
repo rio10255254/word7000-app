@@ -16,7 +16,15 @@ import Word7000Core
 final class PlusModel {
     static let productIDs = ["com.rio.word7000.plus.monthly", "com.rio.word7000.plus.yearly"]
 
-    private(set) var subscribed = false
+    /// The App Store's subscription on this iPhone's Apple ID. It outlives
+    /// the app's account (deleting the account doesn't cancel it), so
+    /// Premium only opens once that Apple ID is signed in again.
+    private(set) var storeSubscribed = false
+    /// Premium is unlocked: subscribed, and signed in with Apple.
+    var subscribed: Bool { storeSubscribed && (signedIn || AppRuntime.uiTesting) }
+    /// Subscribed on this Apple ID, but nobody is signed in to use it (for
+    /// instance after deleting the account): it still renews until cancelled.
+    var subscriptionAwaitsSignIn: Bool { storeSubscribed && !signedIn && !AppRuntime.uiTesting }
     /// Apple's signed copy of the active subscription. The AI server checks it
     /// itself before giving the Plus model, so it cannot be faked by the app.
     private(set) var entitlementJWS: String?
@@ -75,7 +83,7 @@ final class PlusModel {
         }
         trialScansUsed = Keychain.read(Self.scansKey).flatMap { String(data: $0, encoding: .utf8) }.flatMap(Int.init) ?? 0
         if stored == nil { Self.write(start.timeIntervalSince1970, Self.trialKey) }
-        if arguments.contains("-uiTestingPlus") { subscribed = true }
+        if arguments.contains("-uiTestingPlus") { storeSubscribed = true }
         if arguments.contains("-uiTestingFakePlans") { entitlementsLoaded = true }
     }
 
@@ -89,7 +97,7 @@ final class PlusModel {
 
     /// A guest signs in with Apple before subscribing, so Plus is tied to an
     /// account that keeps their progress.
-    var needsSignIn: Bool { !subscribed && !signedIn && !AppRuntime.uiTesting }
+    var needsSignIn: Bool { !signedIn && !AppRuntime.uiTesting }
 
     /// Called by the account whenever who is signed in changes.
     func setAccount(id: String?) {
@@ -247,7 +255,7 @@ final class PlusModel {
             return .failed
         }
         await refreshEntitlements()
-        return subscribed ? .restored : .noneFound
+        return storeSubscribed ? .restored : .noneFound
     }
 
     func refreshEntitlements() async {
@@ -267,7 +275,7 @@ final class PlusModel {
                 activeJWS = entitlement.jwsRepresentation
             }
         }
-        subscribed = active != nil
+        storeSubscribed = active != nil
         entitlementJWS = activeJWS
         activePlanID = active?.productID
         if let group = active?.subscriptionGroupID { subscriptionGroupID = group }

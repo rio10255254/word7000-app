@@ -175,6 +175,7 @@ struct SignInSheet: View {
 struct AccountSection: View {
     var includeDeletion = false
     @Environment(AccountModel.self) private var account
+    @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var signInOpen = false
     @State private var confirmSignOut = false
@@ -229,7 +230,10 @@ struct AccountSection: View {
             Button(L.cancel, role: .cancel) {}
             Button(L.t("刪除", "Delete"), role: .destructive) { Task { await account.deleteAccount() } }
         } message: {
-            Text(L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
+            Text(plus.storeSubscribed
+                 ? L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。刪除帳號不會取消 App Store 的 Premium 訂閱，請到「管理訂閱」取消。",
+                       "Progress, banks and daily records are deleted for good. This cannot be undone. Deleting the account doesn't cancel your App Store Premium subscription; cancel it in Manage subscription.")
+                 : L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
         }
 
         if includeDeletion, account.configured, account.session != nil {

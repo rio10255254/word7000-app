@@ -133,11 +133,22 @@ struct QuizSessionView: View {
                 }
                 .padding(.top, 4)
 
+            let prompt = model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt
             VStack(spacing: 6) {
-                Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
+                Text(prompt)
                     .font(.displaySize(42, weight: .bold))
                     .minimumScaleFactor(0.4)
                     .lineLimit(3)
+                // Learners of Chinese read the pinyin under the characters.
+                if model.studyMode == .chinese {
+                    let pinyin = ChineseDisplay.pronunciationWithTones(prompt)
+                    if !pinyin.isEmpty {
+                        Text(pinyin)
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("quiz-pinyin")
+                    }
+                }
             }
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
@@ -151,7 +162,7 @@ struct QuizSessionView: View {
                 }
             }
             .entrance(0, distance: 10)
-            .overlay(alignment: .topTrailing) { SpeakButton(text: face.speakText, language: face.speakLanguage) }
+            .overlay(alignment: .topTrailing) { SpeakButton(text: model.studyMode == .chinese ? prompt : face.speakText, language: face.speakLanguage) }
 
             VStack(spacing: 10) {
                 ForEach(Array(options.enumerated()), id: \.element) { offset, option in

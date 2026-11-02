@@ -222,6 +222,11 @@ final class AppModel {
     // MARK: Study mode
 
     var studyMode: StudyMode { settings.studyMode ?? .english }
+    /// What a word means, for the AI: the Chinese for a learner of English,
+    /// the English word for a learner of Chinese (whose prompt is already the Chinese).
+    func aiGloss(_ word: WordEntry) -> String {
+        studyMode == .chinese ? word.word : ChineseDisplay.conciseMeaning(word.meaningZh)
+    }
 
     /// Switching what is learned rebuilds the study session (the cards face
     /// the other way) but keeps all progress.
@@ -625,7 +630,7 @@ final class AppModel {
                 let face = self.face(word)
                 return .object([
                     "word": .string(String(face.prompt.prefix(80))),
-                    "meaning": .string(String(ChineseDisplay.conciseMeaning(word.meaningZh).prefix(120))),
+                    "meaning": .string(String(self.aiGloss(word).prefix(120))),
                     "misses": .number(Double(min(999, max(progress.lapses ?? 0, progress.status == .review ? 1 : 0)))),
                 ])
             }),

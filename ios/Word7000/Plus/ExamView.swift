@@ -125,13 +125,22 @@ struct ExamView: View {
             // heading; the ZStack lets the outgoing question overlap instead of stacking below.
             ZStack(alignment: .top) {
             VStack(spacing: 16) {
-                Text(model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt)
-                    .font(.displaySize(38, weight: .bold))
-                    .minimumScaleFactor(0.4)
-                    .lineLimit(3)
-                    .multilineTextAlignment(.center)
-                    .padding(.vertical, 16)
-                    .accessibilityIdentifier("exam-prompt")
+                let prompt = model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt
+                VStack(spacing: 4) {
+                    Text(prompt)
+                        .font(.displaySize(38, weight: .bold))
+                        .minimumScaleFactor(0.4)
+                        .lineLimit(3)
+                        .accessibilityIdentifier("exam-prompt")
+                    if model.studyMode == .chinese {
+                        let pinyin = ChineseDisplay.pronunciationWithTones(prompt)
+                        if !pinyin.isEmpty {
+                            Text(pinyin).font(.title3).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .multilineTextAlignment(.center)
+                .padding(.vertical, 16)
                 VStack(spacing: 10) {
                     ForEach(Array(options[index].enumerated()), id: \.element) { offset, option in
                         let chosen = answers[index] == option

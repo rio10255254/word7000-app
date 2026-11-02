@@ -29,8 +29,8 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .speaking: L.t("光認得不夠，開口說說看。點這裡，我聽著。", "Recognizing isn't enough. Say it out loud; tap here, I'm listening.")
         case .spelling: L.t("拼得出來才算真的會。來拼拼看？", "Spell it and you really know it. Give it a go?")
         case .exam: plus
-            ? L.t("來場 15 分鐘模擬考，看看哪一級還不熟。", "Try a 15-minute mock exam and see which level still needs work.")
-            : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一級還不熟。點這裡看看。", "Premium has a 15-minute mock exam that shows which level needs work. Tap to see.")
+            ? L.t("來場 15 分鐘模擬考，看看哪一級還不熟。", "Try a 15-minute mock exam and see which words still need work.")
+            : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一級還不熟。點這裡看看。", "Premium has a 15-minute mock exam that shows which words need work. Tap to see.")
         case .scan: plus
             ? L.t("有自己的單字表？拍下來，手寫的也行，我幫你變成卡片。點這裡。", "Got your own word list? Snap it, handwriting too, and I'll make cards. Tap here.")
             : L.t("課本、講義的單字表拍一下就變成字庫，手寫也讀得懂。這是 Premium 的。點這裡看看。", "Snap a word list from a textbook or handout and it becomes a bank, handwriting too. That's Premium. Tap to see.")

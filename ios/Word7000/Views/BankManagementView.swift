@@ -265,6 +265,13 @@ struct WordEditorSheet: View {
                 guard english.trimmed == text else { return }
                 guard !suggestion.meaning.isEmpty else { fillFailure = .invalidInput; return }
                 withAnimation(reduceMotion ? nil : Motion.reveal) {
+                    // Chinese typed in the English field: the English word
+                    // comes back, and the Chinese becomes the meaning.
+                    if text.unicodeScalars.contains(where: { (0x4E00...0x9FFF).contains($0.value) }),
+                       let found = suggestion.word?.trimmed, !found.isEmpty,
+                       !found.unicodeScalars.contains(where: { (0x4E00...0x9FFF).contains($0.value) }) {
+                        english = found
+                    }
                     if meaning.trimmed.isEmpty { meaning = suggestion.meaning }
                     if part.trimmed.isEmpty { part = suggestion.partOfSpeech }
                     if supplemental.trimmed.isEmpty { supplemental = suggestion.otherMeanings }

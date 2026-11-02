@@ -49,7 +49,7 @@ struct SessionVerdict: View {
         let missed: [JSONValue] = missedIds.prefix(10).compactMap { model.word(id: $0) }.map { word in
             .object([
                 "word": .string(String(model.face(word).prompt.prefix(80))),
-                "meaning": .string(String(ChineseDisplay.conciseMeaning(word.meaningZh).prefix(120))),
+                "meaning": .string(String(model.aiGloss(word).prefix(120))),
             ])
         }
         let input: [String: JSONValue] = [

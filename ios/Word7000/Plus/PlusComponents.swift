@@ -316,7 +316,7 @@ struct PlusComparison: View {
 
     private var lines: [Line] {
         [
-            Line(name: L.t("背 7000 單字、複習、測驗、拼字、口說", "Core words, reviews, quizzes, spelling, speaking"), free: true),
+            Line(name: L.t("背 7000 單字、複習、測驗、拼字、口說", "Core words, reviews, quizzes, speaking"), free: true),
             Line(name: L.t("登入後保存與同步進度", "Keeping and syncing progress (signed in)"), free: true),
             Line(name: L.t("小笨貓 AI：聊天、解說、口說教練", "Silly Cat's AI: chat, explanations, speaking coach"), free: false),
             Line(name: L.t("掃描單字表與手寫筆記", "Scanning word lists and handwriting"), free: false),

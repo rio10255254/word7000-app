@@ -173,7 +173,7 @@ extension AppModel {
             .object([
                 "id": .string(entry.word.id),
                 "word": .string(String(face(entry.word).prompt.prefix(80))),
-                "meaning": .string(String(ChineseDisplay.conciseMeaning(entry.word.meaningZh).prefix(120))),
+                "meaning": .string(String(aiGloss(entry.word).prefix(120))),
                 "misses": .number(Double(min(999, entry.misses))),
             ])
         })

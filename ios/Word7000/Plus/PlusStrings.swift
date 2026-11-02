@@ -16,7 +16,7 @@ enum P {
             case .scan: return L.t("掃描單字表和手寫筆記是 Premium 功能。", "Scanning word lists and handwriting is part of Premium.")
             case .sync: return L.t("用 Apple 登入就能同步進度。", "Sign in with Apple to sync your progress.")
             case .history: return L.t("看清楚自己這幾個月怎麼進步，哪些字一直忘。", "See how you have improved over months, and which words keep slipping.")
-            case .examPractice: return L.t("考前用限時模擬測驗，找出還不熟的級別。", "Timed mock exams show which levels still need work.")
+            case .examPractice: return L.t("考前用限時模擬測驗，找出還不熟的級別。", "Timed mock exams show which words still need work.")
             case .smartAI: return L.t("口說教練、單字解說和學習分析，AI 都會先深入思考再回答，每天 \(PlusAI.plusDaily) 次。", "The AI thinks deeper before the speaking coach, word explanations and learning insights answer, \(PlusAI.plusDaily) times a day.")
             }
         }
@@ -36,7 +36,7 @@ enum P {
     static var benefitHistory: String { L.t("完整學習紀錄", "Full learning history") }
     static var benefitHistoryDetail: String { L.t("30、90 天的學習趨勢和最常忘記的字", "30- and 90-day trends and the words you forget most") }
     static var benefitExam: String { L.t("考前衝刺模擬", "Exam practice") }
-    static var benefitExamDetail: String { L.t("50 題限時 15 分鐘，交卷看各級分數", "50 questions in 15 minutes, scored by level") }
+    static var benefitExamDetail: String { L.t("50 題限時 15 分鐘，交卷看各級分數", "50 questions in 15 minutes, scored by difficulty") }
     static var benefitSmartAI: String { L.t("深度思考 AI 老師", "A more thoughtful AI tutor") }
     static var benefitSmartAIDetail: String {
         L.t("聊天、單字解說、口說教練和學習分析，Claude 先深入思考再回答，每天 \(PlusAI.plusDaily) 次",
@@ -144,7 +144,7 @@ enum P {
             (L.t("AI 口說教練幫你改句子", "An AI coach for your speaking"),
              L.t("說完一題，它幫你改得更自然，再追問一題讓你多練。", "Answer a prompt and it makes it sound natural, then asks a follow-up.")),
             (L.t("考前來場 15 分鐘模擬考", "A 15-minute mock exam"),
-             L.t("交卷就知道哪一級還不熟，對症下藥。", "Hand it in and see which level still needs work.")),
+             L.t("交卷就知道哪一級還不熟，對症下藥。", "Hand it in and see which words still need work.")),
             (L.t("看清楚自己進步多少", "See how far you've come"),
              L.t("30、90 天趨勢和一直忘的字，Premium 都幫你記著。", "30- and 90-day trends and the words you keep forgetting.")),
         ]

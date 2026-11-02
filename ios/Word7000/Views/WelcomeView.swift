@@ -52,7 +52,7 @@ struct WelcomeView: View {
         .sensoryFeedback(.selection, trigger: known)
         .sensoryFeedback(.impact(weight: .light), trigger: step)
         .onAppear {
-            if placement.isEmpty { placement = Placement.words(from: model.coreWords, seed: model.settings.deviceSourceId) }
+            if placement.isEmpty { placement = placementWords(for: mode) }
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))
@@ -131,8 +131,16 @@ struct WelcomeView: View {
         }
     }
 
+    /// The check words come from the bank of what is being learned.
+    private func placementWords(for language: StudyMode) -> [WordEntry] {
+        let chinese = language == .chinese && !model.chineseCoreWords.isEmpty
+        return Placement.words(from: chinese ? model.chineseCoreWords : model.englishCoreWords,
+                               seed: model.settings.deviceSourceId, chinese: chinese)
+    }
+
     private func choose(_ language: StudyMode) {
         mode = language
+        placement = placementWords(for: language)
         known = []
         go(.goal)
     }

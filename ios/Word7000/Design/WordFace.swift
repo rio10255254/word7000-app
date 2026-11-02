@@ -39,7 +39,10 @@ struct WordFace {
             promptDetail = ChineseDisplay.pronunciationWithTones(concise)
             answer = word.word
             answerLabel = L.englishWord
-            answerDetail = [word.partOfSpeech, word.pronunciation].filter { !$0.isEmpty }.joined(separator: "  ")
+            // The Taiwan Mandarin bank keeps the pinyin in `pronunciation`,
+            // already shown with the prompt; the English bank keeps IPA there.
+            answerDetail = [word.partOfSpeech, word.pronunciation.hasPrefix("/") ? word.pronunciation : ""]
+                .filter { !$0.isEmpty }.joined(separator: "  ")
             supplemental = Self.supplementalParts(word)
                 .map { part in
                     let pinyin = ChineseDisplay.pronunciationWithTones(part)

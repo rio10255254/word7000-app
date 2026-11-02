@@ -32,6 +32,9 @@ TAIWAN = {'垃圾': ['lè', 'sè'], '星期': ['xīng', 'qí'], '期間': ['qí'
 to_simplified = OpenCC('t2s')
 
 
+TAIWAN_WORDS = ROOT / 'ios/Word7000/Resources/words-zh.json'
+
+
 def read(text: str) -> str:
     """Toned pinyin, one syllable per character, punctuation kept in ASCII."""
     simplified = to_simplified.convert(text)
@@ -45,6 +48,11 @@ def read(text: str) -> str:
         while start != -1:
             syllables[start:start + len(phrase)] = reading
             start = text.find(phrase, start + len(phrase))
+    return render(text, syllables)
+
+
+def render(text: str, syllables: list) -> str:
+    """One syllable per character, punctuation kept in ASCII."""
     out = ''
     for ch, syllable in zip(text, syllables):
         if HAN.match(ch):
@@ -76,6 +84,25 @@ def main() -> None:
                 texts.add(value)
                 texts.update(part for part in value.split('…') if HAN.search(part))
     lexicon = {text: reading for text in sorted(texts) if (reading := read(text))}
+    # The Taiwan Mandarin bank brings its own reviewed readings; its examples
+    # take the headword's reading wherever the headword appears.
+    if TAIWAN_WORDS.exists():
+        for entry in json.loads(TAIWAN_WORDS.read_text()):
+            head, reading = entry['meaningZh'], entry['pronunciation']
+            lexicon[head] = reading
+            example = entry['exampleZh']
+            sentence = read(example)
+            if not sentence:
+                continue
+            syllables = lazy_pinyin(to_simplified.convert(example), style=Style.TONE, errors=lambda chars: list(chars))
+            if len(syllables) == len(example):
+                start = example.find(head)
+                while start != -1:
+                    syllables[start:start + len(head)] = reading.split(' ')
+                    start = example.find(head, start + len(head))
+                sentence = render(example, syllables)
+            lexicon[example] = sentence
+    lexicon = dict(sorted(lexicon.items()))
     OUT.write_text(json.dumps(lexicon, ensure_ascii=False, separators=(',', ':'), sort_keys=True) + '\n')
     print(json.dumps({'entries': len(lexicon), 'bytes': OUT.stat().st_size}))
 

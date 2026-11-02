@@ -94,7 +94,8 @@ public enum ChineseSpelling {
     /// Letters only, lowercase, tone marks and numbers dropped, ü as v.
     static func toneless(_ text: String) -> String {
         var out = ""
-        for character in text.lowercased() {
+        // "u:" is how some keyboards type ü.
+        for character in text.lowercased().replacingOccurrences(of: "u:", with: "v") {
             if let (base, _) = marks[character] { out.append(base); continue }
             switch character {
             case "ü": out.append("v")
@@ -102,7 +103,7 @@ public enum ChineseSpelling {
             default: continue
             }
         }
-        return out.replacingOccurrences(of: "u:", with: "v")
+        return out
     }
 
     /// The tones given, in order: from marks (ā = 1) or digits 1–4; the

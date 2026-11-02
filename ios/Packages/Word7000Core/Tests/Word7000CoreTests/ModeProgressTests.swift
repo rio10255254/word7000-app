@@ -16,7 +16,7 @@ final class ModeProgressTests: XCTestCase {
         let state = stored()
         XCTAssertEqual(Set(ModeProgress.view(state, chinese: false).words.keys), ["w0001", "w0002"])
         XCTAssertEqual(Set(ModeProgress.view(state, chinese: true).words.keys), ["w0003"])
-        XCTAssertEqual(ModeProgress.view(state, chinese: true).streak, 4)
+        XCTAssertEqual(ModeProgress.view(state, chinese: true).streak, state.streak)
         XCTAssertEqual(ModeProgress.view(state, chinese: true).dailyTarget, 15)
     }
 

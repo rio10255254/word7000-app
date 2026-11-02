@@ -256,7 +256,7 @@ struct MascotChatSheet: View {
     }
 
     private static var starters: [String] {
-        [L.t("今天練什麼？", "What should I practise today?"),
+        [L.t("今天練什麼？", "What should I practice today?"),
          L.t("考我幾個字", "Test me on a few words"),
          L.t("幫我排這週", "Plan my week"),
          L.t("罵我一下", "Give me a scolding"),
@@ -280,7 +280,7 @@ struct MascotChatSheet: View {
                     }
                     if !turn.practiceIds.isEmpty {
                         Button { practise(turn.practiceIds) } label: {
-                            Label(L.t("開始練這 \(turn.practiceIds.count) 個字", "Practise these \(turn.practiceIds.count) words"), systemImage: "play.fill")
+                            Label(L.t("開始練這 \(turn.practiceIds.count) 個字", "Practice these \(turn.practiceIds.count) words"), systemImage: "play.fill")
                                 .font(.subheadline.weight(.semibold))
                         }
                         .secondaryAction()
@@ -302,7 +302,7 @@ struct MascotChatSheet: View {
     private var showcaseTurns: [ChatTurn] {
         let ids = model.bank.words.prefix(3).map(\.id)
         return [
-            ChatTurn(role: .learner, text: L.t("今天練什麼？", "What should I practise today?")),
+            ChatTurn(role: .learner, text: L.t("今天練什麼？", "What should I practice today?")),
             ChatTurn(role: .cat, text: L.t("阿明，學測剩 75 天，你還在跟這幾個字糾纏。今天先把它們搞定，我盯著你。",
                                            "Sam, 75 days to the exam and you're still wrestling these. Sort them out today. I'm watching."),
                      practiceIds: ids),
@@ -408,7 +408,7 @@ struct MascotChatSheet: View {
         let ids = model.wordIds(forPrompts: insights.focusWords.map(\.word))
         if !ids.isEmpty {
             Button { practise(ids) } label: {
-                Label(L.t("現在練習這 \(ids.count) 個字", "Practise these \(ids.count) words now"), systemImage: "play.fill")
+                Label(L.t("現在練習這 \(ids.count) 個字", "Practice these \(ids.count) words now"), systemImage: "play.fill")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
             }

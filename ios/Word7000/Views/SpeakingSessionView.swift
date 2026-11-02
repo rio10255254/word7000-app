@@ -268,12 +268,20 @@ struct SpeakingSessionView: View {
                                 .font(.title3)
                                 .foregroundStyle(Palette.known)
                                 .transition(reduceMotion ? .opacity : .scale(scale: 0.3).combined(with: .opacity))
-                                .accessibilityLabel(L.t("已練習", "Practised"))
+                                .accessibilityLabel(L.t("已練習", "Practiced"))
                         }
                         SpeakButton(text: card.keyword, language: face.speakLanguage)
                     }
                     if examplesOnly, !card.referenceAnswer.isEmpty {
-                        Text(card.referenceAnswer).font(.title3).lineSpacing(4)
+                        // The example with its translation at once: the task is to
+                        // build on it, so it has to be understood first.
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(card.referenceAnswer).font(.title3).lineSpacing(4)
+                            if !card.referenceTranslation.isEmpty {
+                                Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
+                                    .accessibilityIdentifier("speaking-example-translation")
+                            }
+                        }
                     }
                     HStack(alignment: .top, spacing: 8) {
                         Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
@@ -287,15 +295,15 @@ struct SpeakingSessionView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Divider().padding(.bottom, 6)
                             HStack {
-                                Text(examplesOnly ? L.t("例句與翻譯", "Example and translation") : L.sampleAnswer)
+                                Text(examplesOnly ? L.t("聽例句", "Listen to the example") : L.sampleAnswer)
                                     .font(.caption.weight(.semibold)).foregroundStyle(Palette.accent)
                                 Spacer()
                                 SpeakButton(text: card.referenceAnswer, language: face.speakLanguage)
                             }
                             if !examplesOnly {
                                 Text(card.referenceAnswer).lineSpacing(4).accessibilityIdentifier("speaking-reference-answer")
+                                Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
                             }
-                            Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
@@ -329,7 +337,7 @@ struct SpeakingSessionView: View {
             } else {
                 HStack(spacing: 12) {
                     Button { reveal(completed: false) } label: {
-                        Text(examplesOnly ? L.t("看翻譯", "Translation") : L.showSample).font(.headline).frame(maxWidth: .infinity)
+                        Text(examplesOnly ? L.t("聽例句", "Hear it") : L.showSample).font(.headline).frame(maxWidth: .infinity)
                     }
                     .secondaryAction()
                     .disabled(card.referenceAnswer.isEmpty)

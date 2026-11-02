@@ -640,7 +640,7 @@ private enum S {
     static var intro: String { L.t("掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。", "Scan or pick a photo of a word list. The app reads each English word and the Chinese meaning written on the page, printed or handwritten. Photos never leave your iPhone.") }
     static var takePhoto: String { L.t("拍照", "Take Photo") }
     static var scanDocument: String { L.t("掃描單字表（可多頁、手寫也行）", "Scan a word list (several pages, handwriting OK)") }
-    static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organised from the page by Apple Intelligence; please check") }
+    static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organized from the page by Apple Intelligence; please check") }
     static func corrected(_ original: String) -> String { L.t("還原為「\(original)」", "Restore \u{201C}\(original)\u{201D}") }
     static var choosePhoto: String { L.t("從相簿選擇", "Choose Photo") }
     static var pasteTitle: String { L.t("或貼上文字", "Or paste text") }
@@ -650,7 +650,7 @@ private enum S {
     static var reading: String { L.t("正在手機上辨識…", "Reading on your iPhone…") }
     static var loadingPhoto: String { L.t("正在載入照片…", "Loading your photo…") }
     static var photoLoadFailed: String { L.t("無法載入這張照片。若照片在 iCloud，請確認網路連線後再試一次，或改選另一張照片。", "Could not load this photo. If it is in iCloud, check your connection and try again, or choose another photo.") }
-    static var readingSmart: String { L.t("正在手機上辨識並整理…", "Reading and organising on your iPhone…") }
+    static var readingSmart: String { L.t("正在手機上辨識並整理…", "Reading and organizing on your iPhone…") }
     static var readFailed: String { L.t("辨識失敗，請換一張更清楚的照片再試一次。", "Could not read that photo. Try a clearer one.") }
     static func found(_ count: Int) -> String { L.t("找到 \(count) 個單字", "\(count) words found") }
     static var reviewHint: String { L.t("儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。", "Fix any word or meaning before saving. Unchecked rows are skipped; swipe left to delete.") }

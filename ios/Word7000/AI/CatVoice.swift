@@ -192,7 +192,7 @@ enum CatQuips {
             }
             return L.t("及格邊緣，你自己心裡有數。", "Borderline. You know it.")
         }
-        return L.t("……我們假裝這次沒發生。我會一直陪你練，誰叫我心軟。", "…Let's pretend this never happened. I'll keep practising with you. I'm too soft.")
+        return L.t("……我們假裝這次沒發生。我會一直陪你練，誰叫我心軟。", "…Let's pretend this never happened. I'll keep practicing with you. I'm too soft.")
     }
 
     static func studyDone(reachedGoal: Bool, source: CatLineSource = .none) -> String {

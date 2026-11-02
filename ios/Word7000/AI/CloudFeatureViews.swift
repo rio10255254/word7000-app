@@ -517,7 +517,7 @@ struct AIInsightsSection: View {
                 PracticeLaunch.shared.requested = .study
             } label: {
                 ActionRow(icon: "play.circle.fill", tint: Palette.review,
-                          title: L.t("現在練習這 \(focusIds.count) 個字", "Practise these \(focusIds.count) words now"))
+                          title: L.t("現在練習這 \(focusIds.count) 個字", "Practice these \(focusIds.count) words now"))
             }
             .tint(.primary)
             .accessibilityIdentifier("ai-insights-practice")
@@ -588,7 +588,7 @@ struct PlusAIUpsell: View {
                              : L.t("想要更聰明的回答？", "Want sharper answers?"))
                             .font(.footnote.weight(.semibold))
                         Text(L.t("免費版是快速回答。Plus 會讓 AI 先深入思考，再回答口說、單字解說和學習分析，每天 \(PlusAI.plusDaily) 次。",
-                                 "Free gives quick answers. With Plus the AI thinks deeper before coaching, explaining words and analysing your progress, \(PlusAI.plusDaily) times a day."))
+                                 "Free gives quick answers. With Plus the AI thinks deeper before coaching, explaining words and analyzing your progress, \(PlusAI.plusDaily) times a day."))
                             .font(.caption).foregroundStyle(.secondary)
                             .multilineTextAlignment(.leading)
                         if let remaining = assistant.remainingText {

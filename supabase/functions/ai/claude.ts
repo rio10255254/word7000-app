@@ -31,6 +31,8 @@ export interface CompleteOptions {
   /** Below the app's own 30 second wait. */
   totalTimeoutMs?: number;
   now?: () => number;
+  /** Another model, for comparing in the AI eval; the service always uses MODEL. */
+  model?: string;
 }
 
 /**
@@ -72,7 +74,7 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), Math.min(options.attemptTimeoutMs ?? 18_000, remaining));
     try {
-      const message = await client.messages.create(requestBody(plan, attempt.effort, attempt.note), { signal: controller.signal });
+      const message = await client.messages.create(requestBody(plan, attempt.effort, attempt.note, options.model), { signal: controller.signal });
       usage.inputTokens += message.usage?.input_tokens ?? 0;
       usage.outputTokens += message.usage?.output_tokens ?? 0;
       if (message.stop_reason === 'refusal') {
@@ -91,7 +93,7 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
         }
         continue;
       }
-      return { model: MODEL, effort: attempt.effort, content: plan.refine ? plan.refine(content) : content, usage };
+      return { model: options.model ?? MODEL, effort: attempt.effort, content: plan.refine ? plan.refine(content) : content, usage };
     } catch (error) {
       if (error instanceof AIFailure) throw error;
       if (error instanceof Anthropic.AuthenticationError || error instanceof Anthropic.PermissionDeniedError) {
@@ -128,10 +130,10 @@ export async function complete(plan: TaskPlan, options: CompleteOptions): Promis
   throw new AIFailure(lastKind, lastKind === 'busy' ? 'Claude is overloaded' : 'Claude did not answer');
 }
 
-export function requestBody(plan: TaskPlan, effort: Effort, note?: string): Anthropic.MessageCreateParamsNonStreaming {
+export function requestBody(plan: TaskPlan, effort: Effort, note?: string, model: string = MODEL): Anthropic.MessageCreateParamsNonStreaming {
   const system = note ? `${note}\n\n${plan.system}` : plan.system;
   return {
-    model: MODEL,
+    model,
     max_tokens: plan.maxTokens + THINKING_ROOM[effort],
     system,
     messages: [{ role: 'user', content: plan.user }],

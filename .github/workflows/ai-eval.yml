@@ -23,6 +23,10 @@ on:
         description: 'Tiers to test: free (low reasoning), plus (medium on writing tasks)'
         type: string
         default: 'free,plus'
+      model:
+        description: 'Compare another model on the same cases (e.g. claude-sonnet-5-5); empty = the service model'
+        type: string
+        default: ''
       only:
         description: 'Only these tasks (coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict); empty = all'
         type: string
@@ -39,6 +43,7 @@ jobs:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       TIERS: ${{ inputs.tiers || 'free,plus' }}
       ONLY: ${{ inputs.only || '' }}
+      MODEL: ${{ inputs.model || '' }}
     steps:
       - name: Check the key
         run: '[ -n "$ANTHROPIC_API_KEY" ] || { echo "::error::Add the ANTHROPIC_API_KEY repository secret first."; exit 1; }'
@@ -56,6 +61,7 @@ jobs:
         run: |
           args=(exports/ai-eval --tiers "${TIERS:-free,plus}")
           [ -z "$ONLY" ] || args+=(--only "$ONLY")
+          [ -z "$MODEL" ] || args+=(--model "$MODEL")
           node --experimental-transform-types --no-warnings scripts/ai-eval.ts "${args[@]}"
 
       - name: Show the report

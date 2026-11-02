@@ -4,6 +4,7 @@
 //
 //   ANTHROPIC_API_KEY=… node --experimental-transform-types scripts/ai-eval.ts [out-dir] [--tiers free,plus] [--only explain,coach]
 //
+//   --model compares another Claude model on the same cases (the service itself always uses MODEL).
 //   --only takes task names: coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict.
 // Run by .github/workflows/ai-eval.yml. A failed check is printed as a GitHub
 // warning; the exit code is 1 only when Claude gave no answer at all.
@@ -338,8 +339,14 @@ const only = option('--only');
 const apiKey = process.env.ANTHROPIC_API_KEY;
 if (!apiKey) { console.error('Set ANTHROPIC_API_KEY.'); process.exit(2); }
 
-/** Claude Haiku 5.5 list prices per million tokens (prompts under 100K); thinking bills as output. */
-const PRICE = { input: 0.10, output: 0.50 };
+const model = option('--model')?.[0];
+/** List prices per million tokens (Haiku: prompts under 100K); thinking bills as output. */
+const PRICES: Record<string, { input: number; output: number }> = {
+  'claude-haiku-5-5': { input: 0.10, output: 0.50 },
+  'claude-sonnet-5-5': { input: 2, output: 10 },
+  'claude-opus-5-5': { input: 4, output: 20 },
+};
+const PRICE = PRICES[model ?? 'claude-haiku-5-5'] ?? PRICES['claude-haiku-5-5'];
 const dollars = (usage?: { inputTokens: number; outputTokens: number }) =>
   usage ? (usage.inputTokens * PRICE.input + usage.outputTokens * PRICE.output) / 1_000_000 : 0;
 
@@ -355,7 +362,7 @@ for (const tier of tiers) {
     const plan = planTask(item.task, item.input, tier);
     const started = Date.now();
     try {
-      const reply = await complete(plan, { apiKey });
+      const reply = await complete(plan, { apiKey, model, totalTimeoutMs: model ? 60_000 : undefined });
       const content = reply.content as Content;
       results.push({ name: item.name, task: item.task, tier, effort: reply.effort, ms: Date.now() - started,
         problems: [...common(content), ...item.check(content)], content, usage: reply.usage });
@@ -373,6 +380,8 @@ const failed = results.filter((result) => result.problems.length);
 const median = (values: number[]) => values.sort((a, b) => a - b)[Math.floor(values.length / 2)] ?? 0;
 const lines = [
   '# AI quality evaluation',
+  '',
+  `Model: ${model ?? 'the service model'}.`,
   '',
   `${results.length - failed.length} of ${results.length} answers passed every check.`,
   '',

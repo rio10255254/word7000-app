@@ -1,4 +1,5 @@
 import SwiftUI
+import Word7000Core
 
 /// The companion saying something in a list or a card: its face beside a
 /// rounded speech bubble whose corner points at it. Wherever the online AI

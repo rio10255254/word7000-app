@@ -27,29 +27,36 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 | --- | --- |
 | 陽光 | 真實高音直笛在高音域吹主旋律，副歌疊上鐵琴，副歌和主歌 B 每小節第一拍加一點鐵琴亮音 |
 | 棕櫚樹 | 馬林巴用 3-3-2 的島嶼節奏彈和弦，主歌 B 起加入康加鼓和邦哥鼓 |
-| 紫色晚霞 | 溫暖的合成器長音鋪底；和弦是 Ebmaj7 → Dm7 → Cm7 → F（IV–iii–ii–V），柔和、帶點懷舊 |
+| 紫色晚霞 | 溫暖的合成器長音鋪底；和弦是 Gm7 → Ebmaj7 → B♭ → F（vi–IV–I–V），溫暖、帶點懷舊 |
 | 美酒 | 旋律帶附點八分音符的回音，有微醺的飄浮感；熱帶浩室特有的「抽吸感」（大鼓一下，其他聲音就退一下） |
 | 沙灘 | 前奏、鎖定畫面和片尾底下有真實的海浪聲（海洋鼓的錄音） |
 
 **先寫一首歌，再讓畫面配合**：旋律和和聲是先寫好的一首流行歌，不是隨畫面拼湊出來的。
 
-- **固定的和聲骨架**：每小節一個和弦，Ebmaj7 → Dm7 → Cm7 → F（IV–iii–ii–V）一直循環，換場不會打斷它。副歌最後兩小節走 Eb → F → B♭，回到主和弦收住。
+- **固定的和聲骨架**：每小節一個和弦，Gm7 → Ebmaj7 → B♭ → F（vi–IV–I–V，浩室和熱帶流行最常見的進行之一）一直循環，換場不會打斷它。導歌改走 Eb → F → Gm → F 往上推；副歌把循環走兩次，最後停在 B♭ 主和弦收住。
 - **逐音寫好的旋律**，以四小節為一句：
   - 每一句都**由高往下走**：聽起來放鬆、有落地和解決的感覺，適合陽光、晚霞的氛圍。往上走會累積張力，所以只留給導歌。
-  - 主歌：前三小節用同一個節奏動機，一句唱兩次。第一次停在 F，像在提問；第二次落在 C A F，接著進導歌。主歌前若多出小節（小笨貓登場那一刻），那一小節只有伴奏、沒有旋律。
-  - 導歌：像一段往上的階梯，每小節的起點都比前一小節高（B♭、C、E♭、F），但小節裡面一樣往下走。整體還是往上推，耳朵聽到的卻是一句句落下的旋律。
-  - 副歌：hook 的節奏是「噠噠－噹、噠噠－噹」，音往下落（D C B♭、D C B♭），接著往上一跳再落下。同一個 hook 唱兩次，第二次高一級，最後回到 B♭；副歌若比 6 小節長，就停在 B♭ 讓尾音延續，加一段馬林巴過門。
+  - 主歌：一個五聲音階的三音小動機「G F D」，問一句、答一句，一句唱兩次。第一次停在 C，像在提問；第二次落在 C A F，接著進導歌。主歌前若多出小節（小笨貓登場那一刻），那一小節只有伴奏、沒有旋律。
+  - 導歌：用半速**預告副歌的 hook**（D — C — B♭），最後一小節 F E♭ D C 帶進副歌。
+  - 副歌：hook 是三個音的小動機「D C B♭」，切分節奏，一小節重複兩次，第二次只改最後一個音；接著往上大跳到 F 再落下。兩小節一句，整句再唱一次，最後回到 B♭。**馬林巴在副歌裡和直笛一起唱 hook**（低八度），鋪底退到後面，這是熱帶浩室 drop 的典型做法。
   - 前奏：先由馬林巴彈出 hook，到副歌出現時，耳朵會覺得「是這個」。
+- **為什麼這樣寫**：參考了流行 hook 好記的共通特徵和熱帶浩室的編曲做法，旋律全部是原創的：
+  - 2～5 個音的小動機在短時間內重複，並做小變化（[Lost Stories Academy](https://loststoriesacademy.com/blogs-and-tutorials/why-some-melodies-stay-in-your-head-theory-behind-catchy-hooks)、[Samplesound](https://www.samplesoundmusic.com/blogs/news/melody-writing-tips-craft-memorable-and-catchy-tunes)）。
+  - 音程小、輪廓簡單、多用級進（[ZME Science](https://zmescience.com/feature-post/culture/art/what-makes-a-song-catchy)）；旋律九成以上是五聲音階，和弦用完整音階。
+  - 切分節奏，hook 早出現、一再回來（[Musician Wave](https://www.musicianwave.com/what-makes-a-song-catchy/)）。
+  - 導歌半速預告 hook（[MusicRadar](https://www.musicradar.com/how-to/how-to-tease-a-melody-for-maximum-musical-impact)）。
+  - drop 不靠爆發，而是讓馬林巴主奏 hook、重點放在律動上，偶爾一個大跳（[Native Instruments](https://blog.native-instruments.com/tropical-house/)、[jamburgr](https://jamburgr-web.pages.dev/library/tropical-house)）。
+  - vi–IV–I–V 進行（[Unison](https://unison.audio/house-chord-progressions/)）。
 - **段落對齊小節**：開啟副歌（掃描）、收小（鎖定畫面）和片尾的那三幕，會等到小節線才換場（`timeline.json` 的 `onBar`）。所以歌的段落和影片的段落會同時開始，旋律也不會在換場時被挖掉。
 - **層次**：主歌唱第二次時加入一層；導歌把大鼓抽掉、拍手越拍越密；副歌最滿。這個做法參考了常見的編曲原則，例如 [Avid](https://www.avid.com/resource-center/arranging-music-guide)、[Orphiq](https://orphiq.com/resources/how-to-arrange-a-song)。
 
 | 小節 | 段落 | 和弦 | 旋律 |
 | --- | --- | --- | --- |
-| 1–4 | 主歌 A | Ebmaj7 Dm7 Cm7 F | B♭ G F E♭ D／A F D C A／C G E♭ D C／A G F |
+| 1–4 | 主歌 A | Gm7 Ebmaj7 B♭ F | G F D F G／G F D／B♭ G F D F／G F C |
 | 5–8 | 主歌 B | 同上 | 同一句再唱一次，最後一小節改成 C A F |
-| 9–12 | 導歌 | 同上 | B♭ G F／C A F／E♭ C G／F E♭ D C |
-| 13–19 | 副歌 | Ebmaj7 Dm7 Cm7 F Eb→F B♭ B♭ | D C B♭ D C B♭／F D C A／E♭ D C E♭ D C／F E♭ D C／D C B♭ C A F／D C B♭ |
-| 20–21 | 收小 | Ebmaj7 Dm7 | 輕聲再唱一次 hook 的第一小節 |
+| 9–12 | 導歌 | Ebmaj7 F Gm7 F | D — C — B♭／C — A — F／D — C — B♭／F E♭ D C |
+| 13–19 | 副歌 | Gm7 Ebmaj7 B♭ F Gm7 Ebmaj7 B♭ | D C B♭ D C G／B♭ ↑F E♭ D／D C B♭ D C B♭／C A F A／（前兩小節再一次）／D C B♭ |
+| 20–21 | 收小 | Gm7 Ebmaj7 | 輕聲再唱一次 hook 的第一小節，停在 B♭ |
 
 **明亮但不刺耳**：人耳對 2～5 kHz 最敏感，直笛在高音區拉長音時，又會在 1～1.7 kHz 嗡嗡共振。所以旋律聲部的明亮感改從泛音和高頻空氣感來，不從刺耳的頻段來：
 
@@ -80,8 +87,8 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 | 前奏（開場） | 吉他分解和弦，馬林巴預告主題 | — | 鋪底 + 海浪 | — |
 | 主歌 A（小笨貓登場起，4 小節） | 反拍輕刷，馬林巴稀疏點綴 | 直笛主歌 | 長音 | 大鼓 1、3 拍，拍手，偶爾康加 |
 | 主歌 B（再 4 小節） | 刷得更滿，馬林巴 3-3-2 | 主歌再唱一次 | 彈跳的節奏 | 四拍都有大鼓，康加、低音康加、邦哥 |
-| 導歌（4 小節） | 一直下刷，馬林巴加密 | 長音往上爬 | 彈跳的節奏 | 抽掉大鼓，拍手越拍越密，加上漸強的掃頻 |
-| 副歌（掃描起，6 小節） | 最密的刷奏，馬林巴 3-3-2，hook 拉長音時馬林巴接話 | hook 唱兩次再回家，鐵琴高八度疊奏 | 八度跳音 | 最滿：再加高音康加和鈴鼓 |
+| 導歌（4 小節） | 一直下刷，馬林巴加密 | 半速預告 hook | 彈跳的節奏 | 抽掉大鼓，拍手越拍越密，加上漸強的掃頻 |
+| 副歌（掃描起，7 小節） | 最密的刷奏，馬林巴和直笛一起唱 hook | hook 一句唱兩次再回家，鐵琴點綴每小節第一拍 | 八度跳音 | 最滿：再加高音康加和鈴鼓 |
 | 收小（鎖定畫面） | 分解和弦 | 輕聲的 hook | 長音、鋪底 + 海浪 | 只剩一點沙鈴 |
 | 片尾 | 一記慢慢掃過的 B♭ | hook 的最後一句落在 B♭，鐵琴往上的琶音 | 鋪底 + 海浪 | — |
 

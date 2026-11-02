@@ -3,7 +3,8 @@
 
 A sunset tropical-house piece, after the owner's picture for it: sunshine,
 palm trees, a purple sunset, wine, a beach. Light and bouncy at 120 bpm in
-B-flat, on warm, slightly nostalgic seventh chords (Ebmaj7 → Dm7 → Cm7 → F):
+B-flat, on the warm vi–IV–I–V loop of house and tropical pop
+(Gm7 → Ebmaj7 → B♭ → F):
 
 - sunshine: the tune high on a real soprano recorder, with glockenspiel glints
 - palm trees: marimba on the off-beats, congas and bongos
@@ -13,7 +14,11 @@ B-flat, on warm, slightly nostalgic seventh chords (Ebmaj7 → Dm7 → Cm7 → F
 
 It still follows the reference's arc and its layers: a soft intro, a verse
 that grows, a pre-chorus climb, the fullest chorus, a quiet dip, a warm end;
-the tune is call and response, highest at the chorus. Instruments are real
+the tune is call and response, highest at the chorus, and its phrases fall.
+The tune follows what research and producers say makes pop hooks stick: a
+two-to-five-note cell repeated with small changes, mostly pentatonic and
+stepwise, syncopated, stated early and often, teased at half speed before
+the chorus, and carried by the marimba in the chorus as tropical drops are. Instruments are real
 samples — acoustic guitar (University of Iowa, free for any use), soprano
 recorder, glockenspiel, marimba, hand drums and ocean drum (VCSL, CC0); see
 assets/*/CREDITS.md — with a synthesised pad, bass and kick.
@@ -490,44 +495,50 @@ def riser(length):
 
 # (bass note, guitar shape low to high, chord tones, pad voicing)
 EB = (39, [51, 58, 62, 67, 70], {3, 7, 10, 2}, [63, 67, 70, 74])  # Ebmaj7, x-6-8-7-8-6
-DM = (38, [50, 57, 60, 65, 69], {2, 5, 9, 0}, [62, 65, 69, 72])  # Dm7, x-5-7-5-6-5
-CM = (36, [48, 55, 58, 63, 67], {0, 3, 7, 10}, [60, 63, 67, 70])  # Cm7, x-3-5-3-4-3
 F_ = (41, [41, 48, 53, 57, 60, 65], {5, 9, 0}, [60, 65, 69, 72])  # F, barre at 1
-BB = (34, [46, 53, 58, 62, 65], {10, 2, 5}, [62, 65, 70, 74])  # B♭, A-shape barre at 1
+BB = (46, [46, 53, 58, 62, 65], {10, 2, 5}, [62, 65, 70, 74])  # B♭, A-shape barre at 1
+GM = (43, [43, 50, 53, 58, 62, 67], {7, 10, 2, 5}, [62, 65, 70, 74])  # Gm7, barre at 3
 
-LOOP = [EB, DM, CM, F_]  # IV–iii–ii–V: the backbone, one chord a bar
-CHORUS_CHORDS = [EB, DM, CM, F_, (EB, F_), BB]  # … and home to I at the end of the chorus
+# vi–IV–I–V, the most familiar backbone of house and tropical pop, one chord a bar.
+LOOP = [GM, EB, BB, F_]
+PRE_CHORDS = [EB, F_, GM, F_]  # IV–V–vi–V: the lift into the chorus
+CHORUS_CHORDS = [GM, EB, BB, F_, GM, EB, BB]  # the loop twice, home on I
 
 # The tune, note by note: (beat, MIDI note, beats long), one list per bar.
-# Phrases fall from high to low: they settle and resolve, the laid-back
-# feel of the picture; only the pre-chorus builds, and even it is a
-# staircase of falling phrases, each starting higher than the last.
-# Verse: a four-bar phrase, its first three bars sharing one rhythm, sung twice.
+# Written to what makes pop tunes stick: a cell of two to five notes repeated
+# close together with a small change, small steps and a simple outline, the
+# major pentatonic (B♭ C D F G) for the tune over full chords, syncopation,
+# the hook stated early and often, and a tropical leap now and then. Phrases
+# fall from high to low.
+#
+# Verse: a pentatonic cell, "G F D", answered and repeated; sung twice.
 VERSE = [
-    [(0.5, 82, 0.5), (1, 79, 0.5), (1.5, 77, 0.5), (2, 75, 1), (3, 74, 1)],  # B♭ G F E♭ D
-    [(0.5, 81, 0.5), (1, 77, 0.5), (1.5, 74, 0.5), (2, 72, 1), (3, 69, 1)],  # A F D C A
-    [(0.5, 84, 0.5), (1, 79, 0.5), (1.5, 75, 0.5), (2, 74, 1), (3, 72, 1)],  # C G E♭ D C
-    [(0, 81, 1.5), (1.5, 79, 0.5), (2, 77, 2)],  # A G F: a question
+    [(0.5, 79, 0.5), (1, 77, 0.5), (1.5, 74, 1), (3, 77, 0.5), (3.5, 79, 0.5)],  # G F D … F G
+    [(0, 79, 1), (1, 77, 0.5), (1.5, 74, 1.5)],  # G F D
+    [(0.5, 82, 0.5), (1, 79, 0.5), (1.5, 77, 1), (3, 74, 0.5), (3.5, 77, 0.5)],  # B♭ G F … D F
+    [(0, 79, 1), (1, 77, 1), (2, 72, 2)],  # G F C: a question
 ]
-VERSE_LAST = [(0, 84, 1), (1, 81, 1), (2, 77, 2)]  # C A F, then the pre-chorus begins
-# Pre-chorus: each bar falls, each starts higher — B♭, C, E♭, F — so it still lifts.
+VERSE_LAST = [(0, 84, 1), (1, 81, 1), (2, 77, 2)]  # C A F, into the pre-chorus
+# Pre-chorus: the hook's cell at half speed, a tease of what is coming.
 PRE = [
-    [(0, 82, 1), (1, 79, 1), (2, 77, 2)],  # B♭ G F
-    [(0, 84, 1), (1, 81, 1), (2, 77, 2)],  # C A F
-    [(0, 87, 1), (1, 84, 1), (2, 79, 2)],  # E♭ C G
+    [(0, 86, 1), (1, 84, 2), (3, 82, 1)],  # D — C — B♭
+    [(0, 84, 1), (1, 81, 2), (3, 77, 1)],  # C — A — F
+    [(0, 86, 1), (1, 84, 2), (3, 82, 1)],  # D — C — B♭
     [(0, 89, 1), (1, 87, 1), (2, 86, 1), (3, 84, 1)],  # F E♭ D C: into the chorus
 ]
-# Chorus: the hook — "da-da DUM, da-da DUM" falling, then a leap and a fall —
-# sung twice (the second time a step higher), then brought home to B♭.
+# Chorus: the hook cell "D–C–B♭", syncopated, twice in a bar (the second time
+# its last note changes), a leap up and a fall, the cell again home to B♭ —
+# then the whole two-bar phrase once more, and home.
 HOOK = [
-    [(0, 86, 0.5), (0.5, 84, 0.5), (1, 82, 1), (2, 86, 0.5), (2.5, 84, 0.5), (3, 82, 1)],  # D C B♭, D C B♭
-    [(0, 89, 1), (1, 86, 0.5), (1.5, 84, 0.5), (2, 81, 2)],  # F D C A
-    [(0, 87, 0.5), (0.5, 86, 0.5), (1, 84, 1), (2, 87, 0.5), (2.5, 86, 0.5), (3, 84, 1)],  # E♭ D C, E♭ D C
-    [(0, 89, 1), (1, 87, 0.5), (1.5, 86, 0.5), (2, 84, 2)],  # F E♭ D C
-    [(0, 86, 0.5), (0.5, 84, 0.5), (1, 82, 1), (2, 84, 0.5), (2.5, 81, 0.5), (3, 77, 1)],  # D C B♭, C A F
-    [(0, 86, 0.5), (0.5, 84, 0.5), (1, 82, 3)],  # D C B♭: home
+    [(0, 86, 0.5), (0.5, 84, 1), (1.5, 82, 0.5), (2, 86, 0.5), (2.5, 84, 1), (3.5, 79, 0.5)],  # D C B♭, D C G
+    [(0, 82, 0.5), (0.5, 89, 1), (1.5, 87, 0.5), (2, 86, 2)],  # B♭ ↑F E♭ D
+    [(0, 86, 0.5), (0.5, 84, 1), (1.5, 82, 0.5), (2, 86, 0.5), (2.5, 84, 1), (3.5, 82, 0.5)],  # D C B♭, D C B♭
+    [(0, 84, 0.5), (0.5, 81, 1), (1.5, 77, 0.5), (2, 81, 2)],  # C A F A
+    [(0, 86, 0.5), (0.5, 84, 1), (1.5, 82, 0.5), (2, 86, 0.5), (2.5, 84, 1), (3.5, 79, 0.5)],  # D C B♭, D C G
+    [(0, 82, 0.5), (0.5, 89, 1), (1.5, 87, 0.5), (2, 86, 2)],  # B♭ ↑F E♭ D
+    [(0, 86, 0.5), (0.5, 84, 1), (1.5, 82, 2.5)],  # D C B♭: home
 ]
-DIP = [HOOK[0], [(0, 81, 3.5)]]  # the hook once more, softly
+DIP = [HOOK[0], [(0, 82, 3.5)]]  # the hook once more, softly
 
 # Guitar on the eighths of a bar: D down, U up, C muted chuck, - rest.
 STRUM = {"verseA": "D-UU-U-U", "verseB": "D-UU-UCU", "pre": "D-D-D-DU", "chorus": "D-CU-UCU"}
@@ -582,6 +593,8 @@ def compose(name):
             return CHORUS_CHORDS[i] if i < len(CHORUS_CHORDS) else BB
         if part == "dip":
             return LOOP[(b - dip_bar) % 2]
+        if part == "pre":
+            return PRE_CHORDS[(b - pre_bar) % 4]
         if part == "end":
             return BB
         return LOOP[(b - verse_bar) % 4]
@@ -618,7 +631,7 @@ def compose(name):
         while drop + k * eighth < stop - 0.02:
             slots.append((drop + k * eighth + (SWING * BEAT if k % 2 else 0), k % 8))
             k += 1
-        place(pads, pad(voicing, length + 0.3), start, {"intro": 0.5, "dip": 0.6, "chorus": 0.35}.get(part, 0.42))
+        place(pads, pad(voicing, length + 0.3), start, {"intro": 0.5, "dip": 0.6, "chorus": 0.12}.get(part, 0.42))
         if part in STRUM:
             pattern = STRUM[part]
             hits = [(at, pattern[idx]) for at, idx in slots if pattern[idx] != "-"]
@@ -632,7 +645,7 @@ def compose(name):
                 else:
                     place(gtr, strum(shape, min(nxt - at, BEAT) + 0.01, loud * (1.0 if kind == "D" else 0.75), up=kind == "U"), at)
             for at, idx in slots:
-                if idx in MARIMBA[part]:
+                if idx in MARIMBA[part] and part != "chorus":  # in the chorus the marimba plays the hook
                     for note in voicing[1:]:
                         place(mar, marimba(note, 0.5), at, 0.5)
         elif part != "end":
@@ -679,6 +692,8 @@ def compose(name):
             # Short notes are played short and bouncy; long notes sing.
             hold = beats * BEAT * (0.62 if beats <= 0.5 else 0.92)
             place(tune, lead(note, hold, vel[part]), at)
+            if part == "chorus":  # the marimba takes the hook too, an octave down
+                place(mar, marimba(note - 12, 0.62), at, 0.8)
         # Sunshine: a glockenspiel glint on each chorus downbeat.
         if part == "chorus":
             place(bells, glock(chord_at(bar_start)[3][-1], 0.35), bar_start, 0.3)

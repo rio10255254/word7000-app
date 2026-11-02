@@ -127,11 +127,12 @@ def bandpass(x, lo, hi, order=2):
     return sosfilt(butter(order, [lo, hi], "band", fs=SR, output="sos"), x)
 
 
-# ── Guitar: University of Iowa acoustic guitar samples (free for any use) ────
+# ── Sampled instruments ──────────────────────────────────────────────────────
+# Acoustic guitar: University of Iowa Musical Instrument Samples (free for any use).
+# Xylophone: Versilian Studios VSCO 2 Community Edition (CC0).
 
-SAMPLES = ROOT / "assets" / "iowa-guitar"
 NAMES = {"C": 0, "Cs": 1, "D": 2, "Ds": 3, "E": 4, "F": 5, "Fs": 6, "G": 7, "Gs": 8, "A": 9, "As": 10, "B": 11}
-_sample_cache = {}
+_banks = {}
 
 
 def _decode(path):
@@ -143,30 +144,57 @@ def _decode(path):
     return np.frombuffer(raw, dtype="<i2").astype(np.float64) / 32768
 
 
-def _samples():
-    if not _sample_cache:
-        for f in SAMPLES.glob("*.mp3"):
-            name, octave = f.stem.rstrip("0123456789"), int(f.stem[len(f.stem.rstrip("0123456789")) :])
-            note = 12 * (octave + 1) + NAMES[name]
+def bank(folder):
+    """note number → recording, trimmed to its onset and normalised."""
+    if folder not in _banks:
+        notes = {}
+        for f in (ROOT / "assets" / folder).glob("*.mp3"):
+            name = f.stem.rstrip("0123456789")
+            note = 12 * (int(f.stem[len(name) :]) + 1) + NAMES[name]
             audio = _decode(f)
             onset = int(np.argmax(np.abs(audio) > 0.02 * np.max(np.abs(audio))))
             audio = audio[max(0, onset - 16) :]
-            _sample_cache[note] = audio / (np.max(np.abs(audio)) + 1e-9)
-    return _sample_cache
+            notes[note] = audio / (np.max(np.abs(audio)) + 1e-9)
+        _banks[folder] = notes
+    return _banks[folder]
+
+
+def sampled(folder, note, length):
+    notes = bank(folder)
+    source = min(notes, key=lambda k: abs(k - note))
+    ratio = 2 ** ((note - source) / 12)
+    src = notes[source]
+    n = max(1, min(int(length * SR), int(len(src) / ratio) - 1))
+    return np.interp(np.arange(n) * ratio, np.arange(len(src)), src)
 
 
 def guitar(note, length=1.0, velocity=0.6):
-    """One string: the nearest recorded note, repitched, stopped cleanly at `length`."""
-    bank = _samples()
-    source = min(bank, key=lambda k: abs(k - note))
-    ratio = 2 ** ((note - source) / 12)
-    src = bank[source]
-    n = min(int(length * SR), int(len(src) / ratio) - 1)
-    t = np.arange(n) / SR
-    out = np.interp(np.arange(n) * ratio, np.arange(len(src)), src)
-    # The string is damped quickly when the next strum comes: that keeps it tight.
+    """One string, stopped cleanly at `length` (damped when the next strum lands)."""
+    out = sampled("iowa-guitar", note, length)
+    t = np.arange(len(out)) / SR
     release = np.clip((length - t) / 0.035, 0, 1)
     return lowpass(out * release, 1700 + 3300 * velocity) * (0.3 + 0.9 * velocity)
+
+
+def xylo(note, velocity=0.6):
+    """A soft-mallet xylophone note: bright, short, sparkling."""
+    out = sampled("vsco-xylophone", note, 1.4)
+    return lowpass(out, 3000 + 6000 * velocity) * (0.25 + 0.8 * velocity)
+
+
+def whistle(note, length, velocity=0.7, slide_from=None):
+    """A whistled note: nearly a pure tone, a breathy edge, a slide in and a late vibrato."""
+    n = int((length + 0.12) * SR)
+    t = np.arange(n) / SR
+    f = midi(note)
+    start = midi(slide_from) if slide_from is not None else f * 2 ** (-0.6 / 12)
+    glide = f + (start - f) * np.exp(-t / 0.035)
+    vibrato = 1 + 0.007 * np.sin(2 * np.pi * 5.6 * t) * np.clip((t - 0.18) / 0.25, 0, 1)
+    phase = 2 * np.pi * np.cumsum(glide * vibrato) / SR
+    tone = np.sin(phase) + 0.05 * np.sin(2 * phase)
+    breath = bandpass(rng.normal(0, 1, n), f * 0.8, min(f * 1.6, SR / 2 - 200)) * 0.05
+    env_ = np.clip(t / 0.03, 0, 1) * np.clip((length + 0.1 - t) / 0.09, 0, 1)
+    return (tone + breath) * env_ * velocity
 
 
 def strum(notes, length, velocity, up=False):
@@ -338,58 +366,111 @@ def ebass(note, length):
     return lowpass(body * pluck_env * np.clip((length - t) / 0.05, 0, 1), 1600)
 
 
+def tambourine():
+    n = int(0.16 * SR)
+    t = np.arange(n) / SR
+    jingle = bandpass(rng.uniform(-1, 1, n), 5000, 11000) * (np.exp(-t / 0.05) + 0.4 * np.exp(-t / 0.012))
+    return jingle
+
+
+def riser(length):
+    """Filtered noise sweeping up into a downbeat."""
+    n = int(length * SR)
+    noise = rng.uniform(-1, 1, n)
+    out = np.zeros(n)
+    hop = 1024
+    for i in range(0, n, hop):
+        centre = 500 * (12 ** (i / n))
+        seg = noise[max(0, i - 4096) : i + hop]
+        out[i : i + hop] = bandpass(seg, centre * 0.7, min(centre * 1.5, SR / 2 - 100))[-len(out[i : i + hop]) :]
+    return out * (np.arange(n) / n) ** 2
+
+
 # ── Song ─────────────────────────────────────────────────────────────────────
 
 # Ebmaj7 → F → Gm7 → B♭ (IV–V–vi–I in B-flat), voiced as real guitar shapes:
-# (bass note, strings low to high).
+# (bass note, strings low to high, chord tones as pitch classes).
 CHORDS = [
-    (39, [51, 58, 62, 67, 70]),  # Ebmaj7, x-6-8-7-8-6
-    (41, [41, 48, 53, 57, 60, 65]),  # F, barre at 1
-    (43, [43, 50, 53, 58, 62, 67]),  # Gm7, barre at 3
-    (46, [46, 53, 58, 62, 65]),  # B♭, A-shape barre at 1
+    (39, [51, 58, 62, 67, 70], {3, 7, 10, 2}),  # Ebmaj7, x-6-8-7-8-6
+    (41, [41, 48, 53, 57, 60, 65], {5, 9, 0}),  # F, barre at 1
+    (43, [43, 50, 53, 58, 62, 67], {7, 10, 2, 5}),  # Gm7, barre at 3
+    (46, [46, 53, 58, 62, 65], {10, 2, 5}),  # B♭, A-shape barre at 1
 ]
+SCALE = [10, 0, 2, 3, 5, 7, 9]  # B-flat major
+
 # Strumming on the eighths of a bar: D down, U up, C muted chuck, - rest.
-VERSE = "D-CU-UCU"
-CHORUS = "D-CUDUCU"
-# Fingerpicked eighths for the intro and the lock-screen dip (string indices).
-PICK = [0, 2, 3, 4, 2, 3, 4, 3]
-# An original, bouncy four-bar tune in B-flat, played on single strings: (bar, beat, note, beats).
-TUNE = [
-    (0, 0, 67, 0.5), (0, 0.5, 65, 0.5), (0, 1, 63, 1), (0, 2.5, 62, 0.5), (0, 3, 63, 1),
-    (1, 0, 65, 1.5), (1, 1.5, 60, 0.5), (1, 2, 65, 1), (1, 3, 69, 1),
-    (2, 0, 70, 0.5), (2, 0.5, 69, 0.5), (2, 1, 65, 1), (2, 2.5, 62, 0.5), (2, 3, 65, 1),
-    (3, 0, 67, 2), (3, 2.5, 70, 0.5), (3, 3, 72, 1),
+STRUM = {
+    "verseA": "D---D-C-",  # sparse: room for the tune
+    "verseB": "D-CU-UCU",
+    "pre": "D-D-D-DU",  # driving straight into the chorus
+    "chorus": "D-CUDUCU",
+}
+PICK = [0, 2, 3, 4, 2, 3, 4, 3]  # fingerpicked eighths (string indices)
+
+# The tune is written as contours in scale steps from a home note, so it can
+# follow whatever chord is playing: notes on the beat snap to a chord tone.
+# Call and response (EDMProd, Soundfly): the call stays, the answers change.
+# (beat, scale steps, beats long)
+CALL = [(0, 2, 0.5), (0.5, 1, 0.5), (1, 0, 1.5), (2.5, -1, 0.5), (3, 0, 1)]
+CALL_SYNC = [(0.5, 2, 0.5), (1, 1, 0.5), (1.5, 0, 1.5), (3, -1, 0.5), (3.5, 0, 0.5)]  # pushed an eighth: same idea, new swing
+ANSWERS = [
+    [(0, -1, 1), (1, -2, 0.5), (1.5, -3, 0.5), (2, -2, 2)],  # falls back home
+    [(0, 1, 0.5), (0.5, 2, 0.5), (1, 4, 1.5), (2.5, 3, 0.5), (3, 2, 1)],  # opens upward
+    [(0, 3, 0.5), (0.5, 2, 0.5), (1, 1, 0.5), (1.5, 2, 0.5), (2, 4, 2)],  # turns and lifts
+    [(0, 2, 1), (1, 1, 1), (2, -1, 1), (3, 0, 1)],  # settles in quarters
 ]
+CLIMB = [(0, 0, 1), (1, 1, 1), (2, 2, 1), (3, 3, 0.5), (3.5, 4, 0.5)]  # pre-chorus: one step up each beat
+PEAK = [(0, 4, 0.5), (0.5, 5, 0.5), (1, 7, 1.5), (2.5, 5, 0.5), (3, 4, 1)]  # the chorus' high point (Icon Collective)
+HOME = {"intro": 2, "verseA": 2, "verseB": 3, "pre": 2, "chorus": 5, "dip": 2, "end": 0}  # home scale index above B-flat 5
+
+
+def scale_note(index):
+    """Scale index (0 = B-flat 5) → MIDI note."""
+    octave, step = divmod(index, 7)
+    return 82 + 12 * octave + (SCALE[step] - SCALE[0]) % 12
+
+
+def snap(note, tones):
+    """The nearest chord tone to a note."""
+    return min((note + d for d in range(-2, 3) if (note + d) % 12 in tones), key=lambda m: abs(m - note), default=note)
 
 
 def compose(name):
     scenes, total_frames = flatten(TIMELINE[name])
     seconds = total_frames / OUTPUT_FPS
     n = int(seconds * SR) + 3 * SR
-    keys, low, drums, fx = np.zeros(n), np.zeros(n), np.zeros(n), np.zeros(n)
+    gtr, lead, bells, low, drums, fx = (np.zeros(n) for _ in range(6))
     sec = lambda frames: frames / OUTPUT_FPS
 
     top = [s for s in scenes if not s["nested"]]
     find = lambda tag: next((s for s in top if s.get("music") == tag), None)
     drop = sec(find("drop")["start"]) if find("drop") else 0.0
-    chorus = sec(find("chorus")["start"]) if find("chorus") else None
-    breakdown = sec(find("breakdown")["start"]) if find("breakdown") else None
     end = sec(find("end")["start"]) if find("end") else seconds
+    chorus = sec(find("chorus")["start"]) if find("chorus") else end
+    breakdown = sec(find("breakdown")["start"]) if find("breakdown") else end
     changes = sorted(sec(s["start"]) for s in scenes if s["turn"])
+
+    # Sections, laid on the scene timing: something is added or taken away at
+    # every boundary, about every eight bars (Avid, Beatkitchen, Orphiq).
+    pre = max(drop, chorus - 2 * BAR)
+    verse_b = min(pre, drop + 8 * BAR)
 
     def section(t):
         if t < drop:
             return "intro"
         if t >= end:
             return "end"
-        if breakdown is not None and t >= breakdown:
+        if t >= breakdown:
             return "dip"
-        if chorus is not None and t >= chorus:
+        if t >= chorus:
             return "chorus"
-        return "verse"
+        if t >= pre:
+            return "pre"
+        if t >= verse_b:
+            return "verseB"
+        return "verseA"
 
-    # The harmony moves at every bar line and at every scene change, so each
-    # new scene arrives on a new chord. Bar lines put the drop on a downbeat.
+    # Harmony moves at every bar line and every scene change.
     phase = drop % BAR
     bar_lines = [phase + k * BAR for k in range(-1, int(seconds / BAR) + 2)]
     marks = sorted({round(x, 4) for x in [0.0] + [b for b in bar_lines if 0 < b < end] + [c for c in changes if c < end]})
@@ -399,88 +480,162 @@ def compose(name):
         if stop - start > 0.05:
             segments.append((start, stop, i % len(CHORDS)))
 
+    def chord_at(t):
+        for a, b, ci in segments:
+            if a - 1e-6 <= t < b:
+                return CHORDS[ci]
+        return CHORDS[3]
+
+    near_change = lambda t, width: any(-width <= t - c < 0.05 for c in changes)
     eighth = BEAT / 2
+
+    # ── Guitar and bass, section by section ──
     for start, stop, ci in segments:
-        bass_note, shape = CHORDS[ci]
+        bass_note, shape, _ = CHORDS[ci]
         part = section(start)
         length = stop - start
-        # Eighth-note slots on the bar grid inside this chord.
         slots = []
         k = math.ceil(round((start - phase) / eighth, 6))
         while phase + k * eighth < stop - 0.02:
             slots.append((phase + k * eighth, k % 8))
             k += 1
-        if part in ("verse", "chorus"):
-            pattern = VERSE if part == "verse" else CHORUS
+        if part in STRUM:
+            pattern = STRUM[part]
             hits = [(at, pattern[idx]) for at, idx in slots if pattern[idx] != "-"]
-            # A chord always starts with a down-strum on its first slot.
             if slots and (not hits or hits[0][0] > slots[0][0]):
                 hits.insert(0, (slots[0][0], "D"))
             elif hits:
                 hits[0] = (hits[0][0], "D")
-            loud = 0.75 if part == "chorus" else 0.62
+            loud = {"verseA": 0.55, "verseB": 0.62, "pre": 0.66, "chorus": 0.74}[part]
             for j, (at, kind) in enumerate(hits):
                 nxt = hits[j + 1][0] if j + 1 < len(hits) else stop
                 if kind == "C":
-                    place(keys, chuck(shape), at, 0.9)
+                    place(gtr, chuck(shape), at, 0.9)
                 else:
-                    accent = loud * (1.0 if kind == "D" else 0.78)
-                    place(keys, strum(shape, nxt - at + 0.01, accent, up=kind == "U"), at, 1.0)
+                    place(gtr, strum(shape, nxt - at + 0.01, loud * (1.0 if kind == "D" else 0.78), up=kind == "U"), at)
         else:
-            # Intro and dip: fingerpicked, each note ringing to the next.
-            for j, (at, idx) in enumerate(slots):
-                note = shape[PICK[idx] % len(shape)]
-                place(keys, guitar(note, eighth * 2.2, 0.48), at, 0.9 if part == "intro" else 0.7)
-        # Bass: root on 1, a skip on the "and" of 2, the fifth on 3, a pickup on 4-and.
-        if part in ("verse", "chorus"):
+            for at, idx in slots:
+                place(gtr, guitar(shape[PICK[idx] % len(shape)], eighth * 2.2, 0.48), at, 0.85 if part == "intro" else 0.65)
+        # Bass grows with the song: held roots, then a bounce, then octave pops.
+        if part == "verseA":
+            place(low, ebass(bass_note, min(length, BAR)), start, 0.7)
+        elif part in ("verseB", "pre"):
             for beat, step, beats in ((0, 0, 1.2), (1.5, 0, 0.4), (2, 7, 0.9), (3.5, 12, 0.4)):
-                at = start + beat * BEAT
-                if at < stop - 0.05:
-                    place(low, ebass(bass_note + step, beats * BEAT), at, 0.8)
+                if start + beat * BEAT < stop - 0.05:
+                    place(low, ebass(bass_note + step, beats * BEAT), start + beat * BEAT, 0.8)
+        elif part == "chorus":
+            for beat, step, beats in ((0, 0, 0.9), (1, 12, 0.4), (1.5, 0, 0.4), (2, 7, 0.9), (3, 12, 0.4), (3.5, 10, 0.4)):
+                if start + beat * BEAT < stop - 0.05:
+                    place(low, ebass(bass_note + step, beats * BEAT), start + beat * BEAT, 0.8)
         elif part == "dip":
-            place(low, ebass(bass_note, length), start, 0.4)
+            place(low, ebass(bass_note, length), start, 0.35)
 
-    # The tune on single strings, in verse, chorus and dip.
+    # ── The tune: whistled, call and response, with a climb and a peak ──
+    answer_i = 0
+    previous = None
     for k, bar_start in enumerate(bar_lines):
-        part = section(bar_start)
-        if part not in ("verse", "chorus", "dip"):
+        part = section(bar_start + 0.01)
+        if part in ("intro", "end") or bar_start >= end:
             continue
-        phrase_bar = (k - 1) % 4
-        for b, beat, note, beats in TUNE:
+        bar_no = round((bar_start - drop) / BAR)
+        if part == "pre":
+            phrase = CLIMB
+        elif part == "chorus":
+            phrase = PEAK if bar_no % 2 == 0 else ANSWERS[answer_i % len(ANSWERS)]
+        elif part == "dip":
+            phrase = CALL if bar_no % 2 == 0 else []
+        else:
+            phrase = (CALL if part == "verseA" else CALL_SYNC) if bar_no % 2 == 0 else ANSWERS[answer_i % len(ANSWERS)]
+        if bar_no % 2 == 1:
+            answer_i += 1
+        home = HOME[part]
+        for beat, steps, beats in phrase:
             at = bar_start + beat * BEAT
-            if b == phrase_bar and at < end and not any(abs(at - c) < BEAT * 0.5 for c in changes):
-                place(keys, guitar(note, beats * BEAT + 0.08, 0.7), at, 1.25 if part != "dip" else 0.85)
+            if at >= end or near_change(at, BEAT * 0.5):
+                continue
+            note = scale_note(home + steps - 7)  # whistle sits around B-flat 4 to G6
+            # Strong beats (1 and 3) land on a chord tone, unless that would stall the line.
+            if beat in (0, 2):
+                snapped = snap(note, chord_at(at)[2])
+                if snapped != previous:
+                    note = snapped
+            vel = {"verseA": 0.5, "verseB": 0.56, "pre": 0.58, "chorus": 0.66, "dip": 0.36}[part]
+            place(lead, whistle(note, beats * BEAT * 0.92, vel, slide_from=previous if beats < 1 else None), at)
+            previous = note
+        # Xylophone counter-line: fills the gaps in the answers, moving the other way (Medium).
+        if part in ("verseB", "chorus") and bar_no % 2 == 1:
+            tones = sorted(t for t in chord_at(bar_start + 2.5 * BEAT)[2])
+            line = [scale_note(HOME[part] + 4), scale_note(HOME[part] + 2), scale_note(HOME[part])]
+            for i, at_beat in enumerate((2.5, 3, 3.5)):
+                at = bar_start + at_beat * BEAT
+                if at < end and not near_change(at, BEAT * 0.5):
+                    place(bells, xylo(snap(line[i], set(tones)), 0.55), at, 0.8)
+        # Sparkle: a xylophone chord-tone on the downbeat of every chorus bar.
+        if part == "chorus" and not near_change(bar_start, BEAT * 0.5):
+            place(bells, xylo(snap(scale_note(HOME[part] + 7), chord_at(bar_start)[2]), 0.45), bar_start, 0.6)
 
-    # Drums: soft kick on 1 and 3, claps on 2 and 4, a steady eighth-note shaker.
+    # Intro: a hint of the tune on xylophone, so the whistle has something to answer.
+    for beat, steps, beats in CALL:
+        at = max(0.0, drop - BAR) + beat * BEAT
+        if 0 <= at < drop - BEAT * 0.5:
+            place(bells, xylo(snap(scale_note(2 + steps), chord_at(at)[2]), 0.45), at, 0.6)
+
+    # ── Drums: they also grow, and pull back before the chorus ──
     kicks = []
-    for k, bar_start in enumerate(bar_lines):
+    for bar_start in bar_lines:
         for step in range(16):
-            beat = step / 4
-            at = bar_start + beat * BEAT
+            at = bar_start + step / 4 * BEAT
             if at < 0 or at >= end:
                 continue
             part = section(at)
-            # Drop out for the half beat before every scene change.
             if any(c - BEAT * 0.5 - 0.01 <= at < c - 0.01 for c in changes):
-                continue
-            if part in ("verse", "chorus"):
-                if step in (0, 8) or (part == "chorus" and step == 14):
+                continue  # drop out for the half beat before every scene change
+            if part == "verseA":
+                if step in (0, 8):
+                    place(drums, kick(), at, 0.8)
+                    kicks.append(at)
+                if step in (4, 12):
+                    place(drums, clap(), at, 0.3)
+                if step % 4 == 2:
+                    place(drums, shaker(), at, 0.12)
+            elif part == "verseB":
+                if step in (0, 8, 10):
+                    place(drums, kick(), at, 0.85)
+                    kicks.append(at)
+                if step in (4, 12):
+                    place(drums, clap(), at, 0.42)
+                if step % 2 == 0:
+                    place(drums, shaker(), at, 0.13 if step % 4 == 2 else 0.08)
+                if step % 4 == 2:
+                    place(drums, tambourine(), at, 0.07)
+            elif part == "pre":
+                # No kick: claps tighten from quarters to eighths to sixteenths.
+                last_bar = at >= chorus - BAR
+                every = 1 if last_bar and at >= chorus - BAR / 2 else (2 if last_bar else 4)
+                if step % every == 0:
+                    place(drums, clap(), at, 0.22 + 0.25 * (at - pre) / max(0.1, chorus - pre))
+                if step % 2 == 0:
+                    place(drums, shaker(), at, 0.1)
+            elif part == "chorus":
+                if step in (0, 6, 8, 14):
                     place(drums, kick(), at, 0.95)
                     kicks.append(at)
                 if step in (4, 12):
-                    place(drums, clap(), at, 0.58 if part == "chorus" else 0.46)
+                    place(drums, clap(), at, 0.55)
                 if step % 2 == 0:
                     place(drums, shaker(), at, 0.15 if step % 4 == 2 else 0.1)
+                place(drums, tambourine(), at, 0.08 if step % 2 else 0.05)
             elif part == "dip" and step % 4 == 0:
                 place(drums, shaker(), at, 0.05)
+    if pre < chorus:
+        place(fx, riser(chorus - pre), pre, 0.22)
 
-    # Every scene change: a reversed strum swells in, then the kick and a low hit land.
+    # ── Every scene change: reversed strum in, kick and low hit on the beat ──
     for s in scenes:
         if not s["turn"]:
             continue
         at = sec(s["start"])
-        nxt = next((ci for a, _, ci in segments if abs(a - at) < 0.01), 0)
-        place(keys, reverse_swell(CHORDS[nxt][1], BEAT), at - BEAT, 0.35)
+        place(gtr, reverse_swell(chord_at(at + 0.01)[1], BEAT), at - BEAT, 0.35)
         place(drums, kick(), at, 0.9)
         kicks.append(at)
         place(fx, low_hit(1.4), at, 0.4 if s.get("music") in ("drop", "chorus", "end") else 0.26)
@@ -499,23 +654,23 @@ def compose(name):
                 when = sec(s["start"]) + sec(js_round(accent["at"] * FRAME_SCALE))
                 place(fx, {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]](), when, 0.3)
 
-    # The energy arc of the reference: soft intro, steady verse, a lift in the
-    # chorus, a clear dip at the lock screen, and a warm landing.
-    level = {"intro": 0.62, "verse": 0.8, "chorus": 1.0, "dip": 0.42, "end": 0.85}
-    times = np.arange(n) / SR
-    gain = np.array([level[section(x)] for x in np.arange(0, n / SR, 0.01)])
-    gain = np.interp(times, np.arange(len(gain)) * 0.01, np.convolve(gain, np.ones(25) / 25, mode="same"))
-
-    # The end: one slow, ringing B♭ strum, and a last high note.
+    # ── The end: a slow ringing B♭, the whistle's last note, a xylophone sparkle ──
     if end < seconds:
         ring = np.zeros(int(3.5 * SR))
         for i, note in enumerate([46, 53, 58, 62, 65, 72]):
             place(ring, guitar(note, 3.0, 0.6), i * 0.03)
-        place(keys, ring, end, 1.2)
-        place(keys, guitar(74, 2.0, 0.55), end + BEAT, 1.0)
+        place(gtr, ring, end, 1.2)
+        place(lead, whistle(scale_note(0), 1.6, 0.55, slide_from=scale_note(2)), end + BEAT, 1.0)
+        for i, steps in enumerate((7, 9, 11, 14)):
+            place(bells, xylo(scale_note(steps - 7), 0.45), end + 2 * BEAT + i * eighth, 0.55)
         place(low, ebass(34, min(3.0, seconds - end + 0.5)), end, 0.5)
 
-    # Guitar and bass ease under each kick: a light pump.
+    # Levels follow the arc: soft intro, a verse that grows, a lift into the chorus, a dip, a warm landing.
+    level = {"intro": 0.62, "verseA": 0.74, "verseB": 0.82, "pre": 0.86, "chorus": 1.0, "dip": 0.42, "end": 0.85}
+    times = np.arange(n) / SR
+    gain = np.array([level[section(x)] for x in np.arange(0, n / SR, 0.01)])
+    gain = np.interp(times, np.arange(len(gain)) * 0.01, np.convolve(gain, np.ones(25) / 25, mode="same"))
+
     duck = np.ones(n)
     for k in kicks:
         i = int(k * SR)
@@ -523,13 +678,14 @@ def compose(name):
         if m > 0:
             duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.18 * np.exp(-np.arange(m) / SR / 0.08))
 
-    ir = room(1.2)
-    keys_wet = fftconvolve(keys, ir)[:n]
-    mix = ((keys * 0.9 + keys_wet * 0.16) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.06) * gain + fx
+    ir = room(1.4)
+    music = gtr * 0.9 + lead * 0.55 + bells * 0.5
+    wet = fftconvolve(gtr * 0.15 + lead * 0.35 + bells * 0.3, ir)[:n]
+    mix = ((music + wet) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.06) * gain + fx
     if drop > 0:
         i = int(drop * SR)
-        mix[:i] = lowpass(mix[:i], 4500)
-    mix = lowpass(mix, 7000)  # warm, like the reference: little air on top
+        mix[:i] = lowpass(mix[:i], 5000)
+    mix = lowpass(mix, 9500)
 
     mix = mix[: int(seconds * SR)]
     t = np.arange(len(mix)) / SR

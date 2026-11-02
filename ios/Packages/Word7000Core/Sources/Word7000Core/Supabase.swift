@@ -277,6 +277,13 @@ public struct SupabaseClient: Sendable {
         }
     }
 
+    /// The developer's live messages to everyone, newest first.
+    public func announcements(session: AuthSession?) async throws -> [Announcement] {
+        let data = try await request("GET", "rest/v1/announcements",
+                                     query: ["select": "*", "order": "starts_at.desc", "limit": "5"], session: session)
+        return (try? JSONDecoder().decode([Announcement].self, from: data)) ?? []
+    }
+
     public func loadProfile(session: AuthSession) async throws -> Profile {
         let data = try await request("GET", "rest/v1/profiles", query: ["id": "eq.\(session.user.id)", "select": "progress,custom_sets,updated_at"], session: session)
         let rows = (try? JSONDecoder().decode([[String: JSONValue]].self, from: data)) ?? []
@@ -466,5 +473,42 @@ extension SupabaseClient {
         if let date = formatter.date(from: text) { return date }
         formatter.formatOptions = [.withInternetDateTime]
         return formatter.date(from: text)
+    }
+}
+
+/// A message from the developer, shown once in the app.
+public struct Announcement: Codable, Equatable, Identifiable, Sendable {
+    public var id: String
+    public var audience: String
+    public var titleZh: String
+    public var bodyZh: String
+    public var titleEn: String
+    public var bodyEn: String
+    public var link: String?
+    public var linkLabelZh: String
+    public var linkLabelEn: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, audience, link
+        case titleZh = "title_zh", bodyZh = "body_zh", titleEn = "title_en", bodyEn = "body_en"
+        case linkLabelZh = "link_label_zh", linkLabelEn = "link_label_en"
+    }
+
+    public init(id: String, audience: String = "all", titleZh: String = "", bodyZh: String = "", titleEn: String = "",
+                bodyEn: String = "", link: String? = nil, linkLabelZh: String = "", linkLabelEn: String = "") {
+        self.id = id; self.audience = audience
+        self.titleZh = titleZh; self.bodyZh = bodyZh; self.titleEn = titleEn; self.bodyEn = bodyEn
+        self.link = link; self.linkLabelZh = linkLabelZh; self.linkLabelEn = linkLabelEn
+    }
+
+    /// Whether this learner is in the audience: a guest, signed in without
+    /// Plus, or with Plus.
+    public func reaches(signedIn: Bool, plus: Bool) -> Bool {
+        switch audience {
+        case "guest": return !signedIn
+        case "free": return signedIn && !plus
+        case "plus": return plus
+        default: return true
+        }
     }
 }

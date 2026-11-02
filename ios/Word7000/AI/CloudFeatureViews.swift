@@ -277,6 +277,16 @@ struct AIExplanationSection: View {
             }
             .onAppear { explanation = CloudAnswerCache.explanations[cacheKey] }
             .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { start() } }
+        } else if !AppRuntime.uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingUpsell") {
+            // Without Plus: what the explanation would give, and the way to it.
+            Section {
+                PlusUpsellCard(feature: .smartAI,
+                               title: L.t("叫小笨貓解說這個字", "Have Silly Cat explain this word"),
+                               detail: L.t("用法、搭配、例句和常見陷阱，還能追問。", "Usage, collocations, examples and common traps, and you can ask more."),
+                               compact: true)
+            } header: {
+                Text(L.t("小笨貓解說", "Silly Cat explains"))
+            }
         }
     }
 

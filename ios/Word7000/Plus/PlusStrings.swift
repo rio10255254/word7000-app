@@ -122,15 +122,34 @@ enum P {
         case .scansUsedUp: L.t("試用掃描次數用完了", "Trial scans used up")
         case .lastScan: L.t("試用掃描只剩 1 次", "1 trial scan left")
         case let .trialEnding(days): L.t("Plus 試用剩 \(days) 天", "\(days) Plus trial days left")
-        case .trialEnded: L.t("解鎖單字貓 Plus", "Unlock WordCat Plus")
+        case .trialEnded: plusPitch.title
         }
     }
     static func nudgeText(_ nudge: PlusPolicy.Nudge) -> String {
         switch nudge {
         case .scansUsedUp, .lastScan: L.t("訂閱 Plus 就能無限掃描單字表和手寫筆記。", "Plus scans word lists and handwriting without limits.")
         case .trialEnding: L.t("到期後 AI、掃描和考前衝刺會鎖起來。", "When it ends, the AI, scanning and exam practice lock.")
-        case .trialEnded: L.t("繼續使用深度思考 AI 老師、掃描、完整紀錄和考前衝刺。", "Keep the thoughtful AI tutor, scanning, your full history and exam practice.")
+        case .trialEnded: plusPitch.text
         }
+    }
+
+    /// Today's reason to try Plus: one benefit a day, in turn, so the
+    /// reminder says something new each time.
+    static var plusPitch: (title: String, text: String) {
+        let pitches: [(String, String)] = [
+            (L.t("讓小笨貓當你的 AI 老師", "Make Silly Cat your AI tutor"),
+             L.t("卡住的字直接問：用法、例句、跟哪個字搞混，Plus 每天 \(PlusAI.plusDaily) 次。", "Ask about any word: usage, examples, what it gets mixed up with. \(PlusAI.plusDaily) a day with Plus.")),
+            (L.t("課本單字表，拍一下就變字庫", "Snap a word list into a bank"),
+             L.t("講義、手寫筆記都讀得懂，還幫你補詞性和翻譯。", "Handouts and handwriting too, with parts of speech and meanings filled in.")),
+            (L.t("AI 口說教練幫你改句子", "An AI coach for your speaking"),
+             L.t("說完一題，它幫你改得更自然，再追問一題讓你多練。", "Answer a prompt and it makes it sound natural, then asks a follow-up.")),
+            (L.t("考前來場 15 分鐘模擬考", "A 15-minute mock exam"),
+             L.t("交卷就知道哪一級還不熟，對症下藥。", "Hand it in and see which level still needs work.")),
+            (L.t("看清楚自己進步多少", "See how far you've come"),
+             L.t("30、90 天趨勢和一直忘的字，Plus 都幫你記著。", "30- and 90-day trends and the words you keep forgetting.")),
+        ]
+        let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
+        return pitches[day % pitches.count]
     }
 
     // Locked previews

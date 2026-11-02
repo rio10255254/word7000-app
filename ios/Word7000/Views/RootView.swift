@@ -26,6 +26,9 @@ struct RootView: View {
     @Environment(AccountModel.self) private var account
     @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var announcements = AnnouncementStore.shared
+    @State private var plusAfterAnnouncement = false
     @State private var tab: AppTab = .today
     @State private var activity: Activity?
     @State private var signInForScan = false
@@ -142,6 +145,23 @@ struct RootView: View {
         .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
         .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }
         .task { await IntelligenceSettings.shared.refreshPolicy() }
+        // The developer's messages to everyone: checked on launch and on
+        // coming back, each shown once when nothing else is on screen.
+        .task {
+            try? await Task.sleep(for: .seconds(2))
+            await announcements.refresh(account: account, plus: plus)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await announcements.refresh(account: account, plus: plus) } }
+        }
+        .sheet(item: Binding(get: { (activity == nil && !welcomeOpen && plus.paywallReason == nil && !plus.trialRecapPending
+                                     && !model.styleChoiceDue && !signInForScan) ? announcements.current : nil },
+                             set: { if $0 == nil, let shown = announcements.current { announcements.markSeen(shown) } }),
+               onDismiss: {
+            if plusAfterAnnouncement { plusAfterAnnouncement = false; plus.paywallReason = .general }
+        }) { message in
+            AnnouncementSheet(message: message, openPlus: { plusAfterAnnouncement = true })
+        }
         .onOpenURL { url in
             guard url.scheme == "word7000", url.host == "study", !welcomeOpen else { return }
             if activity == nil { activity = .study }

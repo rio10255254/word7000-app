@@ -351,6 +351,11 @@ struct QuizSessionView: View {
             if CloudAssistant.shared.offered, !missedIds.isEmpty {
                 missedWordsForAI
                     .entrance(3)
+            } else if !missedIds.isEmpty, !AppRuntime.uiTesting {
+                PlusUpsellCard(feature: .smartAI,
+                               title: L.t("為什麼會選錯？", "Why the wrong answer?"),
+                               detail: L.t("Plus 的小笨貓會解釋每個錯的選項，幫你記住它們的差別。", "With Plus, Silly Cat explains each wrong choice so you remember the difference."))
+                    .entrance(3)
             }
             Spacer()
             VStack(spacing: 12) {

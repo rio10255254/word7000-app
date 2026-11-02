@@ -224,3 +224,139 @@ struct TrialRecapView: View {
         }
     }
 }
+
+/// An invitation to Plus right where it would help: what it would do here,
+/// and the App Store's free trial when the plans have one. Hidden for
+/// subscribers. `compact` drops the card for use inside a list row.
+struct PlusUpsellCard: View {
+    @Environment(PlusModel.self) private var plus
+    @Environment(\.appStyle) private var appStyle
+    var feature: PlusFeature
+    var title: String
+    var detail: String
+    var compact = false
+    @State private var paywall: PaywallReason?
+
+    var body: some View {
+        if !plus.subscribed {
+            Button { paywall = .locked(feature) } label: {
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 34, height: 34)
+                        .background(PlusStyle.gradient, in: Circle())
+                    VStack(alignment: .leading, spacing: 3) {
+                        HStack(spacing: 6) {
+                            Text(title)
+                                .font(.subheadline.weight(.bold))
+                                .foregroundStyle(Palette.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text("PLUS")
+                                .font(.caption2.weight(.heavy))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(PlusStyle.gradient, in: Capsule())
+                        }
+                        Text(detail)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text(offer)
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Palette.review)
+                    }
+                    .multilineTextAlignment(.leading)
+                    Spacer(minLength: 0)
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(.tertiary)
+                        .padding(.top, 10)
+                }
+                .padding(compact ? 0 : 14)
+                .background { if !compact { surface } }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(SoftPressStyle())
+            .accessibilityIdentifier("plus-upsell-\(feature.rawValue)")
+            .sheet(item: $paywall) { PaywallView(reason: $0) }
+            .task { if plus.plansState != .loaded { await plus.loadPlans() } }
+        }
+    }
+
+    private var offer: String {
+        if let days = plus.plans.compactMap(\.freeTrialDays).first {
+            return L.t("免費試用 \(days) 天，隨時取消 →", "Try free for \(days) days, cancel anytime →")
+        }
+        return L.t("看看 Plus →", "See Plus →")
+    }
+
+    @ViewBuilder
+    private var surface: some View {
+        if appStyle == .collage {
+            PaperSurface(kind: .mustard)
+                .opacity(0.55)
+                .background(PaperKind.ivory.color)
+                .clipShape(TornEdgeShape(edges: [.bottom], depth: 3, seed: 13))
+                .overlay(alignment: .topTrailing) { TapeStrip(width: 40, angle: 8).offset(x: -18, y: -10) }
+        } else {
+            PremiumSurface(radius: 20)
+        }
+    }
+}
+
+/// Free and Plus side by side, so the difference is plain.
+struct PlusComparison: View {
+    private struct Line: Identifiable {
+        var id: String { name }
+        var name: String
+        var free: Bool
+    }
+
+    private var lines: [Line] {
+        [
+            Line(name: L.t("背 7000 單字、複習、測驗、拼字、口說", "Core words, reviews, quizzes, spelling, speaking"), free: true),
+            Line(name: L.t("登入後保存與同步進度", "Keeping and syncing progress (signed in)"), free: true),
+            Line(name: L.t("小笨貓 AI：聊天、解說、口說教練", "Silly Cat's AI: chat, explanations, speaking coach"), free: false),
+            Line(name: L.t("掃描單字表與手寫筆記", "Scanning word lists and handwriting"), free: false),
+            Line(name: L.t("15 分鐘模擬考", "15-minute mock exams"), free: false),
+            Line(name: L.t("完整學習紀錄與弱點單字", "Full history and weak words"), free: false),
+        ]
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Text(L.t("免費", "Free")).frame(width: 52)
+                Text("Plus").frame(width: 52)
+            }
+            .font(.caption.weight(.bold))
+            .foregroundStyle(.secondary)
+            .padding(.bottom, 6)
+            ForEach(lines) { line in
+                HStack(spacing: 8) {
+                    Text(line.name)
+                        .font(.footnote)
+                        .foregroundStyle(Palette.ink)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                    mark(line.free).frame(width: 52)
+                    mark(true).frame(width: 52)
+                }
+                .padding(.vertical, 8)
+                .overlay(alignment: .bottom) { Rectangle().fill(Palette.fill).frame(height: 1) }
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plus-comparison")
+    }
+
+    private func mark(_ on: Bool) -> some View {
+        Image(systemName: on ? "checkmark.circle.fill" : "minus")
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(on ? Palette.known : Color.secondary.opacity(0.5))
+            .accessibilityLabel(on ? L.t("有", "Yes") : L.t("沒有", "No"))
+    }
+}

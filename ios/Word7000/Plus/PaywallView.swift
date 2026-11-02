@@ -60,6 +60,9 @@ struct PaywallView: View {
                 plans
                     .disabled(busy)
                 benefits
+                PlusComparison()
+                    .padding(14)
+                    .card()
                 Text(P.freeForever)
                     .font(.footnote)
                     .foregroundStyle(.secondary)

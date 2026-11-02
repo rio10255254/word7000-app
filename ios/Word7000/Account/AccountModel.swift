@@ -321,6 +321,13 @@ final class AccountModel {
         supportsCustomReminderTime = supported
     }
 
+    /// The developer's live messages; none without an account service or a
+    /// connection.
+    func fetchAnnouncements() async -> [Announcement] {
+        guard let client else { return [] }
+        return (try? await client.announcements(session: session)) ?? []
+    }
+
     /// The online AI is for learners signed in with Apple; guests have none
     /// (the server refuses them too).
     var canUseCloudAI: Bool { client != nil && isPermanent }

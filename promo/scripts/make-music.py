@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Compose the promo soundtracks from src/timeline.json.
 
-A chill lo-fi piano piece: a soft felt piano on jazzy seventh chords
+A chill lo-fi piano piece: a real grand piano (Salamander Grand Piano V3
+samples by Alexander Holm, CC BY 3.0; see assets/salamander/CREDITS.md),
+played softly on jazzy seventh chords
 (Fmaj9 → Em7 → Dm9 → Cmaj9) with a sparse melody, a round sub bass,
 laid-back boom-bap drums with swung hats, room reverb, vinyl crackle and a
 touch of tape wobble.
@@ -118,36 +120,48 @@ def bandpass(x, lo, hi, order=2):
     return sosfilt(butter(order, [lo, hi], "band", fs=SR, output="sos"), x)
 
 
-# ── Felt piano (additive: stretched partials, three detuned strings, soft hammer) ──
+# ── Piano: Salamander Grand Piano V3 samples (Alexander Holm, CC BY 3.0) ─────
+
+SAMPLES = ROOT / "assets" / "salamander"
+NAMES = {"C": 0, "Ds": 3, "Fs": 6, "A": 9}
+_sample_cache = {}
+
+
+def _decode(path):
+    raw = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(path), "-f", "s16le", "-ac", "1", "-ar", str(SR), "-"],
+        capture_output=True,
+        check=True,
+    ).stdout
+    return np.frombuffer(raw, dtype="<i2").astype(np.float64) / 32768
+
+
+def _samples():
+    if not _sample_cache:
+        for f in SAMPLES.glob("*.mp3"):
+            name, octave = f.stem.rstrip("0123456789"), int(f.stem.lstrip("ACDFGs"))
+            note = 12 * (octave + 1) + NAMES[name]
+            audio = _decode(f)
+            onset = int(np.argmax(np.abs(audio) > 0.01 * np.max(np.abs(audio))))
+            _sample_cache[note] = audio[max(0, onset - 32) :]
+    return _sample_cache
 
 
 def piano(note, length=3.0, velocity=0.6):
-    f0 = midi(note)
-    n = int(length * SR)
+    """The nearest recorded note, repitched, with a damper at the end and a lo-fi tone."""
+    bank = _samples()
+    source = min(bank, key=lambda k: abs(k - note))
+    ratio = 2 ** ((note - source) / 12)
+    src = bank[source]
+    n = min(int(length * SR), int(len(src) / ratio) - 1)
     t = np.arange(n) / SR
-    out = np.zeros(n)
-    stiffness = 0.0004  # inharmonicity: upper partials sit a little sharp
-    bright = 0.35 + 0.65 * velocity
-    wobble = 1 + 0.0018 * np.sin(2 * np.pi * 0.45 * t + note)  # tape flutter
-    for k in range(1, 14):
-        fk = f0 * k * math.sqrt(1 + stiffness * k * k)
-        if fk > 9000:
-            break
-        amp = (1 / k**1.35) * math.exp(-(k - 1) * (1.1 - bright) * 0.55)
-        # Higher partials and higher notes fade sooner; two-stage decay like a real string.
-        fast = 0.25 + 1.4 / (1 + k * 0.6) * (440 / f0) ** 0.35
-        slow = fast * 4.5
-        decay = 0.65 * np.exp(-t / fast) + 0.35 * np.exp(-t / slow)
-        for detune in (-0.9, 0.0, 0.8):  # three strings, cents apart: slow beating
-            ff = fk * 2 ** (detune / 1200)
-            out += amp * decay * np.sin(2 * np.pi * ff * np.cumsum(wobble) / SR + detune)
-    out /= 3
-    # The felt hammer: a soft, short thump.
-    m = min(n, int(0.03 * SR))
-    out[:m] += lowpass(rng.uniform(-1, 1, m), 900) * np.exp(-np.arange(m) / SR / 0.006) * 0.25 * velocity
-    attack = np.clip(t / 0.004, 0, 1)
-    release = np.clip((length - t) / 0.25, 0, 1)
-    return lowpass(out * attack * release, 2400 + 3000 * velocity) * velocity
+    # Tape flutter: the read position drifts a hair ahead and behind.
+    pos = (np.arange(n) * ratio) * (1 + 0.0016 * np.sin(2 * np.pi * 0.45 * t + note))
+    out = np.interp(pos, np.arange(len(src)), src)
+    release = np.clip((length - t) / 0.3, 0, 1)
+    # Softer playing is quieter and darker, like a lighter touch on the keys.
+    tone = lowpass(out * release, 1800 + 4200 * velocity)
+    return tone * (0.35 + 0.9 * velocity) * 3.0
 
 
 def chord(notes, length, velocity, roll=0.018):
@@ -341,7 +355,7 @@ def compose(name):
         for b, beat, note, beats in TUNE:
             at = bar_start + beat * BEAT
             if b == phrase_bar and at < end and not any(abs(at - c) < BEAT * 0.6 for c in changes):
-                place(keys, piano(note + 12, 0.6 + beats * BEAT, 0.42), at, 0.55)
+                place(keys, piano(note + 12, 0.6 + beats * BEAT, 0.45), at, 1.0)
 
     # Drums: kick on 1 and the "and" of 2, snare on 2 and 4, swung hats.
     kicks = []
@@ -356,7 +370,7 @@ def compose(name):
                 continue
             if in_groove(at):
                 if beat8 in (0, 3) or (beat8 == 5 and k % 2):
-                    place(drums, kick(), at, 0.9)
+                    place(drums, kick(), at, 0.75)
                     kicks.append(at)
                 if beat8 in (2, 6):
                     place(drums, snare(), at, 0.38)
@@ -371,8 +385,8 @@ def compose(name):
         at = sec(s["start"])
         nxt = next((ci for a, _, ci in segments if abs(a - at) < 0.01), 0)
         swell = reverse_swell(CHORDS[nxt][1], BEAT)
-        place(keys, swell, at - BEAT, 0.5)
-        place(drums, kick(), at, 1.0)
+        place(keys, swell, at - BEAT, 0.3)
+        place(drums, kick(), at, 0.9)
         kicks.append(at)
         place(fx, low_hit(), at, 0.45 if s.get("music") in ("drop", "end") else 0.3)
         kind = s.get("enter")
@@ -383,7 +397,7 @@ def compose(name):
         for accent in s.get("accents", []):
             when = at + sec(js_round(accent["at"] * FRAME_SCALE))
             sound = {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]]()
-            place(fx, sound, when, {"stamp": 0.4, "tap": 0.14, "ding": 0.3}[accent["sfx"]])
+            place(fx, sound, when, {"stamp": 0.4, "tap": 0.14, "ding": 0.15}[accent["sfx"]])
     # The first scene's accents (it has no transition in).
     for s in scenes:
         if not s["turn"] and not s["nested"]:

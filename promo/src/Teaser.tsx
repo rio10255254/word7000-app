@@ -567,6 +567,12 @@ export const EndScene = ({ footnote }: { footnote?: string }) => {
           </BlurIn>
         </div>
       ) : null}
+      {/* The soundtrack's piano is CC BY 3.0: the credit travels with the video. */}
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 64, textAlign: 'center', fontSize: 22, fontWeight: 500, color: C.inkFaint, opacity: 0.85 }}>
+        <BlurIn delay={18} rise={6}>
+          Piano: Salamander Grand Piano V3 by Alexander Holm (CC BY 3.0)
+        </BlurIn>
+      </div>
     </Scene>
   );
 };

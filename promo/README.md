@@ -25,7 +25,7 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 `scripts/make-music.py` 會照 `src/timeline.json` 作出一首原創的 lo-fi 鋼琴曲，輸出到 `public/audio/full.mp3` 和 `teaser.mp3`。
 
 - **速度與和聲**：每分鐘 90 拍，和弦是 Fmaj9 → Em7 → Dm9 → Cmaj9。
-- **樂器**：柔和的毛氈鋼琴，聲音是程式合成的（每個音有略偏高的泛音、三條微微失準的弦、軟槌聲），彈和弦加上稀疏的旋律。
+- **樂器**：真實演奏鋼琴的取樣，取自 [Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3)（作者 Alexander Holm，[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)），檔案放在 `assets/salamander/`。程式會把取樣變調成需要的音高，輕彈時會比較柔、比較暗，彈和弦加上稀疏的旋律。
 - **伴奏與質感**：圓潤的低音、放鬆的 boom-bap 鼓、搖擺的 hi-hat，再加上殘響、黑膠底噪和一點錄音帶晃動。
 
 **換場就是節奏點。** 影片和配樂用同一套規則排時間，每次換場都從強拍開始，而且每次換場都會：
@@ -40,6 +40,8 @@ AI 五段共用同一張桌面。「小笨貓會」固定不動，下一行在�
 - 片尾：一個慢慢分解開來的 Cmaj9 和弦，最後淡出。
 
 推移、圓形擴散、蓋章、點按鈕和通知的音效都壓得很輕。
+
+**鋼琴出處**：CC BY 3.0 要求註明出處，所以兩支影片的片尾畫面底部都有一行小字「Piano: Salamander Grand Piano V3 by Alexander Holm (CC BY 3.0)」。發布時建議在貼文說明裡也附上同一行。詳見 `assets/salamander/CREDITS.md`。
 
 改了 `timeline.json` 裡的場景長度或轉場，就重新產生配樂，再輸出影片：
 

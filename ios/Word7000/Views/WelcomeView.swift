@@ -25,23 +25,27 @@ struct WelcomeView: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            ScrollView {
-                Group {
-                    switch step {
-                    case .hello: hello
-                    case .goal: goal
-                    case .words: words
+            GeometryReader { proxy in
+                ScrollView {
+                    Group {
+                        switch step {
+                        case .hello: hello
+                        case .goal: goal
+                        case .words: words
+                        }
                     }
+                    .id(step)
+                    .transition(transition)
+                    .padding(.horizontal, Metrics.gutter)
+                    .padding(.top, 8)
+                    .padding(.bottom, 24)
+                    .frame(maxWidth: 560)
+                    // Each scene sits a little above the middle of the screen
+                    // rather than leaving the bottom half empty.
+                    .frame(maxWidth: .infinity, minHeight: proxy.size.height * 0.88)
                 }
-                .id(step)
-                .transition(transition)
-                .padding(.horizontal, Metrics.gutter)
-                .padding(.top, 8)
-                .padding(.bottom, 24)
-                .frame(maxWidth: 560)
-                .frame(maxWidth: .infinity)
+                .scrollBounceBehavior(.basedOnSize)
             }
-            .scrollBounceBehavior(.basedOnSize)
         }
         .background { AmbientBackground() }
         .sensoryFeedback(.selection, trigger: target)

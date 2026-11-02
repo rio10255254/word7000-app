@@ -124,7 +124,9 @@ private struct Polaroid: View {
             }
             .frame(width: 54, height: 50)
             .clipped()
-            Color.clear.frame(height: 12)
+            // The wider strip at the bottom of the print; a fixed width, as
+            // a bare Color.clear would take the whole row.
+            Color.clear.frame(width: 54, height: 12)
         }
         .padding(4)
         .background(Color.white, in: RoundedRectangle(cornerRadius: 3, style: .continuous))

@@ -193,8 +193,8 @@
   "pinyin": "yǒu",
   "pos": "v.",
   "gloss": "to have; there is",
-  "example": "你有悠遊卡嗎？",
-  "exampleEn": "Do you have an EasyCard?",
+  "example": "你有哥哥嗎？",
+  "exampleEn": "Do you have an older brother?",
   "band": "準備級"
  },
  {
@@ -688,8 +688,8 @@
   "pinyin": "zhī",
   "pos": "m.w.",
   "gloss": "m.w. for animals",
-  "example": "我想養一隻小狗。",
-  "exampleEn": "I want to have a puppy.",
+  "example": "我家有一隻小狗。",
+  "exampleEn": "We have a little dog at home.",
   "band": "準備級"
  },
  {
@@ -1426,8 +1426,8 @@
   "pinyin": "xué xiào",
   "pos": "n.",
   "gloss": "school",
-  "example": "這所學校離捷運站很近。",
-  "exampleEn": "This school is close to the MRT station.",
+  "example": "我的學校在台北。",
+  "exampleEn": "My school is in Taipei.",
   "band": "準備級"
  },
  {
@@ -1831,8 +1831,8 @@
   "pinyin": "shí hòu",
   "pos": "n.",
   "gloss": "time; moment",
-  "example": "你有空的時候來我家。",
-  "exampleEn": "Come to my place when you're free.",
+  "example": "有空的時候來我家玩吧！",
+  "exampleEn": "Come over to my place when you're free!",
   "band": "準備級"
  },
  {
@@ -1876,7 +1876,7 @@
   "pinyin": "qù nián",
   "pos": "n.",
   "gloss": "last year",
-  "example": "我去年來台灣。",
+  "example": "我是去年來台灣的。",
   "exampleEn": "I came to Taiwan last year.",
   "band": "準備級"
  },
@@ -2065,8 +2065,8 @@
   "pinyin": "yú",
   "pos": "n.",
   "gloss": "fish",
-  "example": "這條魚很新鮮。",
-  "exampleEn": "This fish is very fresh.",
+  "example": "我很喜歡吃魚。",
+  "exampleEn": "I really like eating fish.",
   "band": "準備級"
  },
  {
@@ -2218,8 +2218,8 @@
   "pinyin": "cài dān",
   "pos": "n.",
   "gloss": "menu",
-  "example": "請給我們看一下菜單。",
-  "exampleEn": "Please let us see the menu.",
+  "example": "可以給我們菜單嗎？",
+  "exampleEn": "Could we have the menu?",
   "band": "準備級"
  },
  {
@@ -2362,8 +2362,8 @@
   "pinyin": "xué xí",
   "pos": "v.",
   "gloss": "to study; to learn",
-  "example": "我們一起學習中文吧。",
-  "exampleEn": "Let's study Chinese together.",
+  "example": "我很喜歡在台灣學習。",
+  "exampleEn": "I really enjoy studying in Taiwan.",
   "band": "準備級"
  },
  {
@@ -2453,7 +2453,7 @@
   "pos": "v.",
   "gloss": "to stand",
   "example": "捷運上人很多，我只能站著。",
-  "exampleEn": "The MRT was crowded, so I had to stand.",
+  "exampleEn": "The MRT is crowded, so I can only stand.",
   "band": "準備級"
  },
  {
@@ -2803,8 +2803,8 @@
   "pinyin": "shì",
   "pos": "v.",
   "gloss": "to try",
-  "example": "我可以試穿這件衣服嗎？",
-  "exampleEn": "Can I try on this outfit?",
+  "example": "這個很好吃，你試試看！",
+  "exampleEn": "This is really good, give it a try!",
   "band": "準備級"
  },
  {
@@ -2920,8 +2920,8 @@
   "pinyin": "wàng jì",
   "pos": "v.",
   "gloss": "to forget",
-  "example": "我忘記帶悠遊卡了。",
-  "exampleEn": "I forgot to bring my EasyCard.",
+  "example": "我忘記他的名字了。",
+  "exampleEn": "I forgot his name.",
   "band": "準備級"
  },
  {
@@ -2992,8 +2992,8 @@
   "pinyin": "chū",
   "pos": "v.",
   "gloss": "to go out; to exit",
-  "example": "我出門的時候在下雨。",
-  "exampleEn": "It was raining when I went out.",
+  "example": "我出門的時候，外面在下雨。",
+  "exampleEn": "It was raining outside when I went out.",
   "band": "準備級"
  },
  {
@@ -3235,8 +3235,8 @@
   "pinyin": "yī zhí",
   "pos": "adv.",
   "gloss": "continuously; all along",
-  "example": "雨一直下個不停。",
-  "exampleEn": "The rain just keeps falling.",
+  "example": "雨一直下，我們不能出去。",
+  "exampleEn": "It keeps raining, so we can't go out.",
   "band": "準備級"
  },
  {
@@ -3434,7 +3434,7 @@
   "pos": "prep.",
   "gloss": "from (distance); away from",
   "example": "這裡離夜市很近。",
-  "exampleEn": "It's close to the night market from here.",
+  "exampleEn": "This place is very close to the night market.",
   "band": "準備級"
  },
  {
@@ -3514,8 +3514,8 @@
   "pinyin": "zěn me bàn",
   "pos": "phr.",
   "gloss": "what to do?",
-  "example": "我的悠遊卡不見了，怎麼辦？",
-  "exampleEn": "I lost my EasyCard, what should I do?",
+  "example": "我的手機不見了，怎麼辦？",
+  "exampleEn": "My phone is gone, what should I do?",
   "band": "準備級"
  },
  {
@@ -3811,8 +3811,8 @@
   "pinyin": "dà xué",
   "pos": "n.",
   "gloss": "university",
-  "example": "我哥哥是大學生。",
-  "exampleEn": "My older brother is a university student.",
+  "example": "我哥哥在台北讀大學。",
+  "exampleEn": "My older brother goes to university in Taipei.",
   "band": "準備級"
  },
  {
@@ -3865,7 +3865,7 @@
   "pinyin": "yǐ zi",
   "pos": "n.",
   "gloss": "chair",
-  "example": "這把椅子很舒服。",
+  "example": "這張椅子很舒服。",
   "exampleEn": "This chair is very comfortable.",
   "band": "準備級"
  },
@@ -3982,8 +3982,8 @@
   "pinyin": "xié zi",
   "pos": "n.",
   "gloss": "shoes",
-  "example": "進房間要脫鞋子。",
-  "exampleEn": "Take off your shoes before entering the room.",
+  "example": "我的鞋子在門口。",
+  "exampleEn": "My shoes are by the door.",
   "band": "準備級"
  },
  {
@@ -3991,7 +3991,7 @@
   "pinyin": "mào zi",
   "pos": "n.",
   "gloss": "hat; cap",
-  "example": "這頂帽子是我的。",
+  "example": "這個帽子是我的。",
   "exampleEn": "This hat is mine.",
   "band": "準備級"
  },
@@ -4091,7 +4091,7 @@
   "pos": "n.",
   "gloss": "belly; stomach",
   "example": "我肚子好餓。",
-  "exampleEn": "My stomach is so hungry.",
+  "exampleEn": "I'm so hungry.",
   "band": "準備級"
  },
  {
@@ -4369,7 +4369,7 @@
   "pinyin": "duǎn",
   "pos": "adj.",
   "gloss": "short (in length)",
-  "example": "這件褲子太短了。",
+  "example": "這條褲子太短了。",
   "exampleEn": "These pants are too short.",
   "band": "準備級"
  },
@@ -4621,8 +4621,8 @@
   "pinyin": "shū fú",
   "pos": "adj.",
   "gloss": "comfortable; feeling well",
-  "example": "這張沙發很舒服。",
-  "exampleEn": "This sofa is very comfortable.",
+  "example": "這張床很舒服。",
+  "exampleEn": "This bed is very comfortable.",
   "band": "準備級"
  },
  {
@@ -4630,8 +4630,8 @@
   "pinyin": "yǒu míng",
   "pos": "adj.",
   "gloss": "famous; well-known",
-  "example": "這家店的小籠包很有名。",
-  "exampleEn": "This shop's soup dumplings are famous.",
+  "example": "這家店的牛肉麵很有名。",
+  "exampleEn": "This shop's beef noodles are famous.",
   "band": "準備級"
  },
  {
@@ -4675,8 +4675,8 @@
   "pinyin": "yī yàng",
   "pos": "adj.",
   "gloss": "same; alike",
-  "example": "我們的手機一樣。",
-  "exampleEn": "Our phones are the same.",
+  "example": "我的手機跟你的一樣。",
+  "exampleEn": "My phone is the same as yours.",
   "band": "準備級"
  },
  {
@@ -4702,8 +4702,8 @@
   "pinyin": "jiǎn dān",
   "pos": "adj.",
   "gloss": "simple; easy",
-  "example": "這道菜很簡單。",
-  "exampleEn": "This dish is simple.",
+  "example": "這個問題很簡單。",
+  "exampleEn": "This question is simple.",
   "band": "準備級"
  },
  {
@@ -4981,8 +4981,8 @@
   "pinyin": "chú le",
   "pos": "prep.",
   "gloss": "besides; except",
-  "example": "除了星期一，每天都有開。",
-  "exampleEn": "It's open every day except Monday.",
+  "example": "這家店除了星期一，每天都有開。",
+  "exampleEn": "This shop is open every day except Monday.",
   "band": "入門級"
  },
  {
@@ -5161,7 +5161,7 @@
   "pinyin": "yǐng piàn",
   "pos": "n.",
   "gloss": "video; film clip",
-  "example": "這部影片好好笑！",
+  "example": "這支影片好好笑！",
   "exampleEn": "This video is so funny!",
   "band": "入門級"
  },
@@ -5927,7 +5927,7 @@
   "pos": "v.",
   "gloss": "to go shopping; to stroll the streets",
   "example": "週末我跟朋友去逛街。",
-  "exampleEn": "I went shopping with friends on the weekend.",
+  "exampleEn": "On weekends I go shopping with friends.",
   "band": "入門級"
  },
  {
@@ -6214,8 +6214,8 @@
   "pinyin": "xīn",
   "pos": "n.",
   "gloss": "heart; mind",
-  "example": "她的心很好，常常幫助別人。",
-  "exampleEn": "She has a kind heart and often helps others.",
+  "example": "我的心跳得好快。",
+  "exampleEn": "My heart is beating so fast.",
   "band": "入門級"
  },
  {
@@ -6538,8 +6538,8 @@
   "pinyin": "xīn tái bì",
   "pos": "n.",
   "gloss": "New Taiwan dollar (NT$)",
-  "example": "一杯珍奶大概新台幣五十塊。",
-  "exampleEn": "A bubble tea costs about 50 NT dollars.",
+  "example": "一杯珍奶大概新台幣五十元。",
+  "exampleEn": "A bubble tea costs about NT$50.",
   "band": "入門級"
  },
  {
@@ -6714,15 +6714,6 @@
   "band": "入門級"
  },
  {
-  "word": "復習",
-  "pinyin": "fù xí",
-  "pos": "v.",
-  "gloss": "to review (lessons)",
-  "example": "考試前要好好復習。",
-  "exampleEn": "Review well before the exam.",
-  "band": "入門級"
- },
- {
   "word": "句子",
   "pinyin": "jù zi",
   "pos": "n.",
@@ -6880,8 +6871,8 @@
   "pinyin": "fú wù shēng",
   "pos": "n.",
   "gloss": "waiter; waitress",
-  "example": "服務生，請給我菜單。",
-  "exampleEn": "Excuse me, could I have the menu, please?",
+  "example": "這家餐廳的服務生很親切。",
+  "exampleEn": "The servers at this restaurant are very friendly.",
   "band": "入門級"
  },
  {
@@ -7375,8 +7366,8 @@
   "pinyin": "chéng wéi",
   "pos": "v.",
   "gloss": "to become",
-  "example": "她想成為一名醫生。",
-  "exampleEn": "She wants to become a doctor.",
+  "example": "她以後想成為醫生。",
+  "exampleEn": "She wants to become a doctor someday.",
   "band": "入門級"
  },
  {
@@ -7384,7 +7375,7 @@
   "pinyin": "zhào gù",
   "pos": "v.",
   "gloss": "to take care of; to look after",
-  "example": "姐姐在家照顧媽媽。",
+  "example": "姊姊在家照顧媽媽。",
   "exampleEn": "My older sister is at home looking after Mom.",
   "band": "入門級"
  },
@@ -7726,7 +7717,7 @@
   "pinyin": "zhù",
   "pos": "v.",
   "gloss": "to wish (someone well)",
-  "example": "祝你一路順風！",
+  "example": "祝你一路平安！",
   "exampleEn": "Have a safe trip!",
   "band": "入門級"
  },
@@ -7734,7 +7725,7 @@
   "word": "恭喜",
   "pinyin": "gōng xǐ",
   "pos": "v.",
-  "gloss": "congratulations",
+  "gloss": "to congratulate; congratulations",
   "example": "恭喜你找到新工作！",
   "exampleEn": "Congratulations on finding a new job!",
   "band": "入門級"
@@ -9847,7 +9838,7 @@
  },
  {
   "word": "傍晚",
-  "pinyin": "bàng wǎn",
+  "pinyin": "bāng wǎn",
   "pos": "n.",
   "gloss": "dusk; early evening",
   "example": "夏天傍晚常常下大雨。",
@@ -10220,7 +10211,7 @@
   "pos": "v.",
   "gloss": "to have diarrhea",
   "example": "吃太多冰會拉肚子。",
-  "exampleEn": "Eating too much ice will upset your stomach.",
+  "exampleEn": "Eating too much cold stuff can give you diarrhea.",
   "band": "基礎級"
  },
  {
@@ -11223,15 +11214,6 @@
   "band": "基礎級"
  },
  {
-  "word": "污染",
-  "pinyin": "wū rǎn",
-  "pos": "n.",
-  "gloss": "pollution",
-  "example": "這條河的污染很嚴重。",
-  "exampleEn": "This river is badly polluted.",
-  "band": "基礎級"
- },
- {
   "word": "環保",
   "pinyin": "huán bǎo",
   "pos": "n.",
@@ -11461,8 +11443,8 @@
   "pinyin": "jiǎn shǎo",
   "pos": "v.",
   "gloss": "to reduce; to decrease",
-  "example": "為了健康，我減少吃炸的東西。",
-  "exampleEn": "For my health, I've cut back on fried food.",
+  "example": "最近店裡的客人減少了很多。",
+  "exampleEn": "There have been a lot fewer customers in the shop lately.",
   "band": "基礎級"
  },
  {
@@ -11605,8 +11587,8 @@
   "pinyin": "tíng zhǐ",
   "pos": "v.",
   "gloss": "to stop; to cease",
-  "example": "比賽因為下雨停止了。",
-  "exampleEn": "The game was stopped because of the rain.",
+  "example": "那家店已經停止營業了。",
+  "exampleEn": "That shop has already closed down.",
   "band": "基礎級"
  },
  {
@@ -11632,8 +11614,8 @@
   "pinyin": "shī qù",
   "pos": "v.",
   "gloss": "to lose",
-  "example": "他上個月失去了工作。",
-  "exampleEn": "He lost his job last month.",
+  "example": "他因為這件事失去了很多朋友。",
+  "exampleEn": "He lost a lot of friends because of this.",
   "band": "基礎級"
  },
  {
@@ -12303,15 +12285,6 @@
   "band": "基礎級"
  },
  {
-  "word": "挺",
-  "pinyin": "tǐng",
-  "pos": "adv.",
-  "gloss": "quite; rather; pretty",
-  "example": "這家店的東西挺好吃的。",
-  "exampleEn": "The food at this place is pretty good.",
-  "band": "基礎級"
- },
- {
   "word": "順便",
   "pinyin": "shùn biàn",
   "pos": "adv.",
@@ -12516,15 +12489,6 @@
   "gloss": "all at once; in a short while",
   "example": "天氣一下子變冷了。",
   "exampleEn": "The weather turned cold all of a sudden.",
-  "band": "基礎級"
- },
- {
-  "word": "一會兒",
-  "pinyin": "yī huǐ er",
-  "pos": "adv.",
-  "gloss": "a moment; a little while",
-  "example": "請你等一會兒。",
-  "exampleEn": "Please wait a moment.",
   "band": "基礎級"
  },
  {
@@ -12777,15 +12741,6 @@
   "gloss": "the other party or person",
   "example": "打電話的時候，對方都沒說話。",
   "exampleEn": "When I called, the other person didn't say a word.",
-  "band": "基礎級"
- },
- {
-  "word": "咱們",
-  "pinyin": "zán men",
-  "pos": "pron.",
-  "gloss": "we; us (including the listener)",
-  "example": "咱們一起去吧！",
-  "exampleEn": "Let's go together!",
   "band": "基礎級"
  },
  {
@@ -13972,8 +13927,8 @@
   "pinyin": "tǐ zhòng",
   "pos": "n.",
   "gloss": "body weight",
-  "example": "過年吃太多，體重變重了。",
-  "exampleEn": "I ate too much over New Year and gained weight.",
+  "example": "過年吃太多，體重增加了三公斤。",
+  "exampleEn": "I ate too much over New Year and put on three kilos.",
   "band": "基礎級"
  },
  {
@@ -15061,8 +15016,8 @@
   "pinyin": "dà bù fèn",
   "pos": "n.",
   "gloss": "most; the majority",
-  "example": "大部分的學生都騎機車上學。",
-  "exampleEn": "Most of the students ride scooters to school.",
+  "example": "大部分的學生都搭公車上學。",
+  "exampleEn": "Most of the students take the bus to school.",
   "band": "基礎級"
  },
  {
@@ -15285,7 +15240,7 @@
   "word": "標準",
   "pinyin": "biāo zhǔn",
   "pos": "n.",
-  "gloss": "standard; criterion; standard (correct)",
+  "gloss": "standard; criterion; (of speech) standard, correct",
   "example": "他的中文發音很標準。",
   "exampleEn": "His Chinese pronunciation is very standard.",
   "band": "基礎級"
@@ -15403,8 +15358,8 @@
   "pinyin": "jiàng dī",
   "pos": "v.",
   "gloss": "to lower; to reduce; to drop",
-  "example": "下雨以後氣溫降低了。",
-  "exampleEn": "The temperature dropped after the rain.",
+  "example": "為了吸引客人，這家店降低了價格。",
+  "exampleEn": "To attract customers, this shop lowered its prices.",
   "band": "基礎級"
  },
  {
@@ -15672,7 +15627,7 @@
   "word": "罰款",
   "pinyin": "fá kuǎn",
   "pos": "n.",
-  "gloss": "fine; penalty",
+  "gloss": "fine; penalty; to fine",
   "example": "亂丟垃圾會被罰款。",
   "exampleEn": "Littering can get you fined.",
   "band": "基礎級"
@@ -15835,8 +15790,8 @@
   "pinyin": "shèn zhì",
   "pos": "adv.",
   "gloss": "even; so much as",
-  "example": "他忙到甚至沒時間吃飯。",
-  "exampleEn": "He's so busy he doesn't even have time to eat.",
+  "example": "他很忙，有時候甚至忘了吃飯。",
+  "exampleEn": "He's so busy that sometimes he even forgets to eat.",
   "band": "基礎級"
  },
  {
@@ -17374,8 +17329,8 @@
   "pinyin": "shǔ",
   "pos": "v.",
   "gloss": "to be born in the year of",
-  "example": "我弟弟屬狗，今年剛好二十四歲。",
-  "exampleEn": "My younger brother was born in the Year of the Dog; he's 24 this year.",
+  "example": "我弟弟屬狗，跟我差了十二歲。",
+  "exampleEn": "My younger brother was born in the Year of the Dog; he's twelve years younger than me.",
   "band": "進階級"
  },
  {
@@ -17419,8 +17374,8 @@
   "pinyin": "gēng xīn",
   "pos": "v.",
   "gloss": "to update; to renew",
-  "example": "手機要更新了，先幫我充電一下。",
-  "exampleEn": "My phone needs to update; please charge it for me first.",
+  "example": "手機要更新了，記得先充好電。",
+  "exampleEn": "Your phone needs to update, so remember to charge it first.",
   "band": "進階級"
  },
  {
@@ -17428,8 +17383,8 @@
   "pinyin": "yǐn sī",
   "pos": "n.",
   "gloss": "privacy",
-  "example": "不要隨便看別人的手機，這是隱私。",
-  "exampleEn": "Don't look at other people's phones; that's private.",
+  "example": "不要隨便看別人的手機，要尊重隱私。",
+  "exampleEn": "Don't look at other people's phones; respect their privacy.",
   "band": "進階級"
  },
  {
@@ -17626,8 +17581,8 @@
   "pinyin": "ǒu tù",
   "pos": "v.",
   "gloss": "to vomit; to throw up",
-  "example": "他坐船坐到一直想嘔吐。",
-  "exampleEn": "The boat ride made him feel like throwing up the whole time.",
+  "example": "他吃壞肚子，晚上一直嘔吐。",
+  "exampleEn": "He ate something bad and kept throwing up all night.",
   "band": "進階級"
  },
  {
@@ -17806,8 +17761,8 @@
   "pinyin": "hé liú",
   "pos": "n.",
   "gloss": "river",
-  "example": "這條河流以前很髒，現在乾淨多了。",
-  "exampleEn": "This river used to be dirty, but it's much cleaner now.",
+  "example": "台灣的河流又短又急。",
+  "exampleEn": "Rivers in Taiwan are short and fast-flowing.",
   "band": "進階級"
  },
  {
@@ -18166,8 +18121,8 @@
   "pinyin": "cóng cǐ",
   "pos": "adv.",
   "gloss": "from then on; since then",
-  "example": "他戒菸以後，從此身體越來越好。",
-  "exampleEn": "After he quit smoking, his health kept getting better from then on.",
+  "example": "他戒了菸，從此身體越來越好。",
+  "exampleEn": "He quit smoking, and from then on his health kept getting better.",
   "band": "進階級"
  },
  {
@@ -18274,8 +18229,8 @@
   "pinyin": "chuàn",
   "pos": "m.w.",
   "gloss": "m.w. for strings, bunches, skewers",
-  "example": "我在夜市買了一串烤香腸。",
-  "exampleEn": "I bought a skewer of grilled sausage at the night market.",
+  "example": "我在市場買了一串香蕉。",
+  "exampleEn": "I bought a bunch of bananas at the market.",
   "band": "進階級"
  },
  {
@@ -18310,8 +18265,8 @@
   "pinyin": "chǎn shēng",
   "pos": "v.",
   "gloss": "to produce; to give rise to",
-  "example": "長時間用手機，容易產生壓力。",
-  "exampleEn": "Using your phone for long hours can easily cause stress.",
+  "example": "他們之間產生了一些誤會。",
+  "exampleEn": "Some misunderstandings arose between them.",
   "band": "進階級"
  },
  {
@@ -18337,8 +18292,8 @@
   "pinyin": "shǔ yú",
   "pos": "v.",
   "gloss": "to belong to; to be part of",
-  "example": "這台機車屬於我哥哥。",
-  "exampleEn": "This scooter belongs to my older brother.",
+  "example": "台灣北部屬於亞熱帶氣候。",
+  "exampleEn": "Northern Taiwan has a subtropical climate.",
   "band": "進階級"
  },
  {
@@ -18769,8 +18724,8 @@
   "pinyin": "quē shǎo",
   "pos": "v.",
   "gloss": "to lack; to be short of",
-  "example": "這道菜好像缺少了一點鹽。",
-  "exampleEn": "This dish seems to be missing a bit of salt.",
+  "example": "這個社區缺少讓小孩玩的地方。",
+  "exampleEn": "This neighborhood lacks places for kids to play.",
   "band": "進階級"
  },
  {
@@ -18859,8 +18814,8 @@
   "pinyin": "cū",
   "pos": "adj.",
   "gloss": "thick; coarse; rough",
-  "example": "這條繩子太粗了，綁不起來。",
-  "exampleEn": "This rope is too thick to tie.",
+  "example": "他的手臂很粗，看起來很有力。",
+  "exampleEn": "His arms are thick; he looks really strong.",
   "band": "進階級"
  },
  {
@@ -18895,8 +18850,8 @@
   "pinyin": "píng",
   "pos": "adj.",
   "gloss": "flat; level; even",
-  "example": "這條路不太平，騎車要小心。",
-  "exampleEn": "This road is pretty uneven, so be careful riding.",
+  "example": "這條路不平，騎車要小心。",
+  "exampleEn": "This road is uneven, so be careful riding.",
   "band": "進階級"
  },
  {
@@ -19480,8 +19435,8 @@
   "pinyin": "fā pí qì",
   "pos": "v.",
   "gloss": "to lose one's temper; to get angry",
-  "example": "爸爸很少發脾氣，今天卻很生氣。",
-  "exampleEn": "Dad rarely loses his temper, but today he was really angry.",
+  "example": "爸爸平常很少發脾氣，今天怎麼了？",
+  "exampleEn": "Dad hardly ever loses his temper. What's going on today?",
   "band": "進階級"
  },
  {
@@ -19804,7 +19759,7 @@
   "pinyin": "jiāo ào",
   "pos": "adj.",
   "gloss": "proud; arrogant",
-  "example": "爸媽很為你感到驕傲。",
+  "example": "爸媽都為你感到很驕傲。",
   "exampleEn": "Your parents are very proud of you.",
   "band": "進階級"
  },
@@ -19939,8 +19894,8 @@
   "pinyin": "sī niàn",
   "pos": "v.",
   "gloss": "to miss; to long for",
-  "example": "在國外的時候，我很思念家鄉的食物。",
-  "exampleEn": "When I was abroad, I really missed the food from home.",
+  "example": "在國外的時候，我常常思念家人。",
+  "exampleEn": "When I was abroad, I often missed my family.",
   "band": "進階級"
  },
  {
@@ -20371,8 +20326,8 @@
   "pinyin": "chéng jiù",
   "pos": "n.",
   "gloss": "achievement; accomplishment",
-  "example": "自己做出一張桌子，很有成就感。",
-  "exampleEn": "Building a table myself gave me a real sense of achievement.",
+  "example": "她年紀輕輕就有這麼大的成就。",
+  "exampleEn": "She's achieved so much at such a young age.",
   "band": "進階級"
  },
  {
@@ -20380,8 +20335,8 @@
   "pinyin": "guò láo",
   "pos": "v.",
   "gloss": "to overwork; overwork",
-  "example": "他每天加班到半夜，小心過勞。",
-  "exampleEn": "He works overtime until midnight every day; he should watch out for overwork.",
+  "example": "你每天加班到半夜，小心過勞！",
+  "exampleEn": "You work overtime until midnight every day. Watch out for overwork!",
   "band": "進階級"
  },
  {
@@ -20570,7 +20525,7 @@
   "pos": "v.",
   "gloss": "to go out of business; to close down",
   "example": "巷口那家餐廳上個月倒閉了。",
-  "exampleEn": "The restaurant at the end of the lane went out of business last month.",
+  "exampleEn": "The restaurant at the entrance to our lane went out of business last month.",
   "band": "進階級"
  },
  {
@@ -20767,7 +20722,7 @@
   "pinyin": "zhí chēng",
   "pos": "n.",
   "gloss": "job title",
-  "example": "你的名片上的職稱是什麼？",
+  "example": "你名片上的職稱是什麼？",
   "exampleEn": "What's the job title on your business card?",
   "band": "進階級"
  },
@@ -20794,8 +20749,8 @@
   "pinyin": "dǒng shì zhǎng",
   "pos": "n.",
   "gloss": "chairman (of a board)",
-  "example": "董事長在年會上宣布了好消息。",
-  "exampleEn": "The chairman announced good news at the annual meeting.",
+  "example": "董事長在股東會上宣布了好消息。",
+  "exampleEn": "The chairman announced good news at the shareholders' meeting.",
   "band": "進階級"
  },
  {
@@ -21127,8 +21082,8 @@
   "pinyin": "fàn zuì",
   "pos": "v.",
   "gloss": "to commit a crime; crime",
-  "example": "這一帶的犯罪率很低。",
-  "exampleEn": "The crime rate in this area is very low.",
+  "example": "犯罪的人應該受到處罰。",
+  "exampleEn": "People who commit crimes should be punished.",
   "band": "進階級"
  },
  {
@@ -21146,7 +21101,7 @@
   "pos": "v.",
   "gloss": "to rob; to grab; to snatch",
   "example": "他在路上被搶了皮包。",
-  "exampleEn": "He had his purse snatched on the street.",
+  "exampleEn": "He had his bag snatched on the street.",
   "band": "進階級"
  },
  {
@@ -21225,7 +21180,7 @@
   "word": "義務",
   "pinyin": "yì wù",
   "pos": "n.",
-  "gloss": "duty; obligation; volunteer",
+  "gloss": "duty; obligation; voluntary (unpaid)",
   "example": "繳稅是每個國民的義務。",
   "exampleEn": "Paying taxes is every citizen's duty.",
   "band": "進階級"
@@ -21478,8 +21433,8 @@
   "pinyin": "xià dié",
   "pos": "v.",
   "gloss": "to fall; to drop (prices)",
-  "example": "今天股票下跌，他心情很不好。",
-  "exampleEn": "Stocks fell today, and he's in a bad mood.",
+  "example": "今天股價下跌，他心情很不好。",
+  "exampleEn": "Stock prices fell today, and he's in a bad mood.",
   "band": "進階級"
  },
  {
@@ -21523,8 +21478,8 @@
   "pinyin": "quán qiú",
   "pos": "n.",
   "gloss": "global; worldwide",
-  "example": "全球的天氣越來越熱了。",
-  "exampleEn": "The weather is getting hotter worldwide.",
+  "example": "全球的氣溫越來越高了。",
+  "exampleEn": "Temperatures around the world keep rising.",
   "band": "進階級"
  },
  {
@@ -21613,7 +21568,7 @@
   "pinyin": "tóng xìng hūn yīn",
   "pos": "n.",
   "gloss": "same-sex marriage",
-  "example": "台灣在二〇一九年通過同性婚姻。",
+  "example": "台灣在二〇一九年讓同性婚姻合法化。",
   "exampleEn": "Taiwan legalized same-sex marriage in 2019.",
   "band": "進階級"
  },
@@ -22727,8 +22682,8 @@
  {
   "word": "疼",
   "pinyin": "téng",
-  "pos": "adj.",
-  "gloss": "painful; to ache; to dote on",
+  "pos": "v.",
+  "gloss": "to dote on; to love dearly; to ache",
   "example": "阿嬤最疼這個小孫子了。",
   "exampleEn": "Grandma dotes on this little grandson the most.",
   "band": "進階級"
@@ -23466,9 +23421,9 @@
   "word": "流量",
   "pinyin": "liú liàng",
   "pos": "n.",
-  "gloss": "data usage; (web) traffic; flow",
-  "example": "這個月的手機流量快用完了。",
-  "exampleEn": "I've almost used up my mobile data this month.",
+  "gloss": "(web) traffic; views; flow",
+  "example": "這支影片的流量很高。",
+  "exampleEn": "This video gets a lot of traffic.",
   "band": "進階級"
  },
  {
@@ -24251,7 +24206,7 @@
   "pos": "adv.",
   "gloss": "all along; from start to finish",
   "example": "他始終不肯說出真相。",
-  "exampleEn": "He refused to tell the truth from start to finish.",
+  "exampleEn": "He has refused all along to tell the truth.",
   "band": "進階級"
  },
  {
@@ -24340,7 +24295,7 @@
   "pinyin": "yǐ lái",
   "pos": "n.",
   "gloss": "since (a time)",
-  "example": "搬到台北以來，我很少回家。",
+  "example": "自從搬到台北以來，我很少回家。",
   "exampleEn": "Since moving to Taipei, I've rarely gone home.",
   "band": "進階級"
  },
@@ -24412,7 +24367,7 @@
   "pinyin": "lìng yī fāng miàn",
   "pos": "phr.",
   "gloss": "on the other hand",
-  "example": "這份工作薪水高，另一方面也很累。",
+  "example": "這份工作薪水高，但另一方面也很累。",
   "exampleEn": "This job pays well; on the other hand, it's exhausting.",
   "band": "進階級"
  },
@@ -24772,8 +24727,8 @@
   "pinyin": "fú hé",
   "pos": "v.",
   "gloss": "to meet; to fit; to conform to",
-  "example": "你的條件很符合這個工作。",
-  "exampleEn": "Your qualifications are a great fit for this job.",
+  "example": "你的條件很符合這份工作的要求。",
+  "exampleEn": "Your qualifications fit this job's requirements well.",
   "band": "進階級"
  },
  {
@@ -25501,8 +25456,8 @@
   "pinyin": "jì yì",
   "pos": "n.",
   "gloss": "memory; recollection",
-  "example": "這首歌讓我想起很多記憶。",
-  "exampleEn": "This song brings back a lot of memories.",
+  "example": "這首歌帶給我很多美好的記憶。",
+  "exampleEn": "This song holds a lot of happy memories for me.",
   "band": "進階級"
  },
  {
@@ -25546,7 +25501,7 @@
   "pinyin": "miàn jī",
   "pos": "n.",
   "gloss": "area (size)",
-  "example": "這間房子的面積大概三十坪。",
+  "example": "這間房子的面積大概有三十坪。",
   "exampleEn": "This home is about thirty ping in area.",
   "band": "進階級"
  },
@@ -25555,7 +25510,7 @@
   "pinyin": "bèi jǐng",
   "pos": "n.",
   "gloss": "background; setting",
-  "example": "這部電影的背景在台南。",
+  "example": "這部電影的故事背景在台南。",
   "exampleEn": "This film is set in Tainan.",
   "band": "進階級"
  },
@@ -25834,8 +25789,8 @@
   "pinyin": "hé fǎ",
   "pos": "adj.",
   "gloss": "legal; lawful",
-  "example": "在台灣，這樣做是合法的。",
-  "exampleEn": "In Taiwan, doing this is legal.",
+  "example": "在台灣，滿十八歲才能合法考駕照。",
+  "exampleEn": "In Taiwan, you must be eighteen to legally take a driver's license test.",
   "band": "進階級"
  },
  {
@@ -26157,7 +26112,7 @@
   "word": "失戀",
   "pinyin": "shī liàn",
   "pos": "v.",
-  "gloss": "to be dumped; to suffer a breakup",
+  "gloss": "to go through a breakup; to be heartbroken",
   "example": "她失戀了，心情很差。",
   "exampleEn": "She just went through a breakup and is feeling down.",
   "band": "進階級"
@@ -26213,7 +26168,7 @@
   "pos": "v.",
   "gloss": "to advocate; to hold (a view)",
   "example": "他主張每個人都應該學第二外語。",
-  "exampleEn": "He believes everyone should learn a second foreign language.",
+  "exampleEn": "He advocates that everyone should learn a second foreign language.",
   "band": "進階級"
  },
  {

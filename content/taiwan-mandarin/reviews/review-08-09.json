@@ -1,0 +1,223 @@
+[
+ {
+  "word": "屬",
+  "fix": {
+   "example": "我弟弟屬狗，跟我差了十二歲。",
+   "exampleEn": "My younger brother was born in the Year of the Dog; he's twelve years younger than me."
+  },
+  "drop": false,
+  "reason": "屬狗與二十四歲年份矛盾，改為不會過時的說法"
+ },
+ {
+  "word": "更新",
+  "fix": {
+   "example": "手機要更新了，記得先充好電。",
+   "exampleEn": "Your phone needs to update, so remember to charge it first."
+  },
+  "drop": false,
+  "reason": "「先幫我充電一下」因果不自然"
+ },
+ {
+  "word": "隱私",
+  "fix": {
+   "example": "不要隨便看別人的手機，要尊重隱私。",
+   "exampleEn": "Don't look at other people's phones; respect their privacy."
+  },
+  "drop": false,
+  "reason": "「這是隱私」語意不完整，不自然"
+ },
+ {
+  "word": "嘔吐",
+  "fix": {
+   "example": "他吃壞肚子，晚上一直嘔吐。",
+   "exampleEn": "He ate something bad and kept throwing up all night."
+  },
+  "drop": false,
+  "reason": "「想嘔吐」口語與書面混搭，口語說「想吐」；改用嘔吐較自然的語境"
+ },
+ {
+  "word": "河流",
+  "fix": {
+   "example": "台灣的河流又短又急。",
+   "exampleEn": "Rivers in Taiwan are short and fast-flowing."
+  },
+  "drop": false,
+  "reason": "「這條河流」偏生硬，口語說「這條河」"
+ },
+ {
+  "word": "從此",
+  "fix": {
+   "example": "他戒了菸，從此身體越來越好。",
+   "exampleEn": "He quit smoking, and from then on his health kept getting better."
+  },
+  "drop": false,
+  "reason": "「以後」與「從此」語意重複"
+ },
+ {
+  "word": "串",
+  "fix": {
+   "example": "我在市場買了一串香蕉。",
+   "exampleEn": "I bought a bunch of bananas at the market."
+  },
+  "drop": false,
+  "reason": "烤香腸台灣說「一根／一支」，不用「一串」"
+ },
+ {
+  "word": "產生",
+  "fix": {
+   "example": "他們之間產生了一些誤會。",
+   "exampleEn": "Some misunderstandings arose between them."
+  },
+  "drop": false,
+  "reason": "「產生壓力」搭配較弱，改用常見搭配"
+ },
+ {
+  "word": "屬於",
+  "fix": {
+   "example": "台灣北部屬於亞熱帶氣候。",
+   "exampleEn": "Northern Taiwan has a subtropical climate."
+  },
+  "drop": false,
+  "reason": "「機車屬於我哥哥」是翻譯腔，台灣會說「是我哥哥的」"
+ },
+ {
+  "word": "缺少",
+  "fix": {
+   "example": "這個社區缺少讓小孩玩的地方。",
+   "exampleEn": "This neighborhood lacks places for kids to play."
+  },
+  "drop": false,
+  "reason": "「這道菜缺少一點鹽」不自然，口語說「少了一點鹽」"
+ },
+ {
+  "word": "粗",
+  "fix": {
+   "example": "他的手臂很粗，看起來很有力。",
+   "exampleEn": "His arms are thick; he looks really strong."
+  },
+  "drop": false,
+  "reason": "繩子太粗「綁不起來」邏輯不順"
+ },
+ {
+  "word": "平",
+  "fix": {
+   "example": "這條路不平，騎車要小心。",
+   "exampleEn": "This road is uneven, so be careful riding."
+  },
+  "drop": false,
+  "reason": "「不太平」易與「太平」混淆"
+ },
+ {
+  "word": "發脾氣",
+  "fix": {
+   "example": "爸爸平常很少發脾氣，今天怎麼了？",
+   "exampleEn": "Dad hardly ever loses his temper. What's going on today?"
+  },
+  "drop": false,
+  "reason": "「很少發脾氣，今天卻很生氣」語意重複"
+ },
+ {
+  "word": "驕傲",
+  "fix": {
+   "example": "爸媽都為你感到很驕傲。",
+   "exampleEn": "Your parents are very proud of you."
+  },
+  "drop": false,
+  "reason": "語序不自然，應為「為你感到很驕傲」"
+ },
+ {
+  "word": "思念",
+  "fix": {
+   "example": "在國外的時候，我常常思念家人。",
+   "exampleEn": "When I was abroad, I often missed my family."
+  },
+  "drop": false,
+  "reason": "「思念食物」搭配不當，思念多用於人或家鄉"
+ },
+ {
+  "word": "成就",
+  "fix": {
+   "example": "她年紀輕輕就有這麼大的成就。",
+   "exampleEn": "She's achieved so much at such a young age."
+  },
+  "drop": false,
+  "reason": "例句用的是「成就感」，非詞目本義"
+ },
+ {
+  "word": "過勞",
+  "fix": {
+   "example": "你每天加班到半夜，小心過勞！",
+   "exampleEn": "You work overtime until midnight every day. Watch out for overwork!"
+  },
+  "drop": false,
+  "reason": "對第三人稱說「小心過勞」不自然"
+ },
+ {
+  "word": "倒閉",
+  "fix": {
+   "exampleEn": "The restaurant at the entrance to our lane went out of business last month."
+  },
+  "drop": false,
+  "reason": "「巷口」英譯錯成 end of the lane"
+ },
+ {
+  "word": "職稱",
+  "fix": {
+   "example": "你名片上的職稱是什麼？"
+  },
+  "drop": false,
+  "reason": "「你的名片上的」雙「的」累贅"
+ },
+ {
+  "word": "董事長",
+  "fix": {
+   "example": "董事長在股東會上宣布了好消息。",
+   "exampleEn": "The chairman announced good news at the shareholders' meeting."
+  },
+  "drop": false,
+  "reason": "台灣公司少說「年會」，改用「股東會」"
+ },
+ {
+  "word": "犯罪",
+  "fix": {
+   "example": "犯罪的人應該受到處罰。",
+   "exampleEn": "People who commit crimes should be punished."
+  },
+  "drop": false,
+  "reason": "例句用的是「犯罪率」，非詞目本義"
+ },
+ {
+  "word": "搶",
+  "fix": {
+   "exampleEn": "He had his bag snatched on the street."
+  },
+  "drop": false,
+  "reason": "主詞是「他」，英譯 purse 不妥"
+ },
+ {
+  "word": "義務",
+  "fix": {
+   "gloss": "duty; obligation; voluntary (unpaid)"
+  },
+  "drop": false,
+  "reason": "釋義 volunteer 不準確，應為「義務的（無償的）」"
+ },
+ {
+  "word": "下跌",
+  "fix": {
+   "example": "今天股價下跌，他心情很不好。",
+   "exampleEn": "Stock prices fell today, and he's in a bad mood."
+  },
+  "drop": false,
+  "reason": "「股票下跌」不自然，應說「股價下跌」"
+ },
+ {
+  "word": "全球",
+  "fix": {
+   "example": "全球的氣溫越來越高了。",
+   "exampleEn": "Temperatures around the world keep rising."
+  },
+  "drop": false,
+  "reason": "「全球的天氣越來越熱」不自然，應說氣溫"
+ }
+]

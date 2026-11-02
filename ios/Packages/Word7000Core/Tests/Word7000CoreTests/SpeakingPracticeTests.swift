@@ -25,7 +25,10 @@ final class SpeakingPracticeTests: XCTestCase {
             let english = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .english), entry.word)
             let chinese = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .chinese), entry.word)
             XCTAssertEqual(english.question, entry.question)
-            XCTAssertEqual(chinese.question, entry.question)
+            // Learners of Chinese read the question in Chinese, with the English to hand.
+            XCTAssertEqual(chinese.question, try XCTUnwrap(entry.questionZh, entry.word))
+            XCTAssertEqual(chinese.questionGloss, entry.question)
+            XCTAssertNil(english.questionGloss)
             XCTAssertEqual(english.referenceAnswer, entry.answerEn)
             XCTAssertEqual(chinese.referenceAnswer, entry.answerZh)
             XCTAssertEqual(chinese.referenceTranslation, english.referenceAnswer)

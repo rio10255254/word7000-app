@@ -282,9 +282,24 @@ struct SpeakingSessionView: View {
                         }
                     }
                     HStack(alignment: .top, spacing: 8) {
-                        Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
-                            .accessibilityIdentifier("speaking-question")
-                        SpeakButton(text: card.question, language: "en-US")
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
+                                .accessibilityIdentifier("speaking-question")
+                            // Learners of Chinese get the pinyin, and the English to check.
+                            if model.studyMode == .chinese {
+                                let pinyin = ChineseDisplay.sentencePinyin(card.question)
+                                if !pinyin.isEmpty {
+                                    Text(pinyin).font(.footnote).foregroundStyle(.secondary)
+                                        .accessibilityIdentifier("speaking-question-pinyin")
+                                }
+                                if let gloss = card.questionGloss {
+                                    Text(gloss).font(.footnote).foregroundStyle(.tertiary)
+                                        .accessibilityIdentifier("speaking-question-gloss")
+                                }
+                            }
+                        }
+                        Spacer(minLength: 0)
+                        SpeakButton(text: card.question, language: card.questionGloss == nil ? "en-US" : "zh-TW")
                     }
                     Text(card.questionSupport)
                         .font(.subheadline)

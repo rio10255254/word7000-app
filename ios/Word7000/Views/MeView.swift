@@ -523,8 +523,7 @@ private struct ProfileCard: View {
 
     @ViewBuilder
     private var actions: some View {
-        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 8)) : AnyLayout(HStackLayout(spacing: 8))
-        layout {
+        ButtonRow(spacing: 8) {
             if account.configured, !account.isPermanent {
                 Button { signInOpen = true } label: {
                     Label(L.t("登入保留紀錄", "Sign in"), systemImage: "person.crop.circle.badge.plus")

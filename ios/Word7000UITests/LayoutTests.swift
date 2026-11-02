@@ -34,6 +34,35 @@ final class LayoutTests: XCTestCase {
         checkToday(app, name: "layout-dark", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
     }
 
+    /// The Me page's capsule buttons keep their labels on one line in the
+    /// English interface at the largest standard text size: side by side
+    /// when they fit, else one above the other, never "subscriptio / n".
+    func testMeButtonsKeepLabelsWhole() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingFakePlans", "-uiTestingLight",
+                               "-uiTestingChineseMode", "-uiTestingPlus",
+                               "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        let plus = app.buttons["me-plus"]
+        XCTAssertTrue(plus.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "layout-me-large-text")
+        let window = app.windows.firstMatch.frame
+        var frames = [plus.frame]
+        let signIn = app.buttons["me-sign-in"]
+        if signIn.exists { frames.append(signIn.frame) }
+        for frame in frames {
+            // One line of text in a large capsule is well under 72 points tall.
+            XCTAssertLessThan(frame.height, 72, "a button label wrapped: \(frame)")
+            XCTAssertTrue(window.contains(frame), "\(frame) runs off the screen \(window)")
+        }
+        if frames.count == 2 {
+            XCTAssertFalse(frames[0].intersects(frames[1]), "the buttons overlap: \(frames)")
+        }
+    }
+
     /// The header's buttons work, even right after the companion is tapped
     /// and is showing its speech bubble.
     func testHeaderButtonsAnswerTaps() {

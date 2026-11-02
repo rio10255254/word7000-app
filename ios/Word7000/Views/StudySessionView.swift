@@ -348,8 +348,7 @@ struct StudySessionView: View {
     }
 
     private var controls: some View {
-        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 12))
-        return layout {
+        ButtonRow {
             if showsAnswer {
                 Button { grade(.review) } label: {
                     Label(L.dontKnow, systemImage: "xmark").font(.headline).frame(maxWidth: .infinity)
@@ -584,8 +583,7 @@ struct SessionSummary: View {
                 } else {
                     doneButton.prominentAction().accessibilityIdentifier("study-done")
                 }
-                let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
-                layout {
+                ButtonRow {
                     Button(action: again) {
                         Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
                     }

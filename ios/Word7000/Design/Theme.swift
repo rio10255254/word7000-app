@@ -318,9 +318,9 @@ extension View {
     @ViewBuilder
     func prominentAction(tint: Color = Palette.accent) -> some View {
         if #available(iOS 26.0, *) {
-            self.buttonStyle(.glassProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+            self.modifier(OneLineLabel()).buttonStyle(.glassProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
         } else {
-            self.buttonStyle(.borderedProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+            self.modifier(OneLineLabel()).buttonStyle(.borderedProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
         }
     }
 
@@ -328,9 +328,87 @@ extension View {
     @ViewBuilder
     func secondaryAction(tint: Color = Palette.accent) -> some View {
         if #available(iOS 26.0, *) {
-            self.buttonStyle(.glass).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+            self.modifier(OneLineLabel()).buttonStyle(.glass).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
         } else {
-            self.buttonStyle(.bordered).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+            self.modifier(OneLineLabel()).buttonStyle(.bordered).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+        }
+    }
+}
+
+/// A capsule button's label stays on one line, a little smaller if it must,
+/// so a word is never split across lines ("subscriptio / n"). At the
+/// accessibility text sizes it may wrap instead: there the rows stack.
+private struct OneLineLabel: ViewModifier {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    func body(content: Content) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            content
+        } else {
+            content.lineLimit(1).minimumScaleFactor(0.8)
+        }
+    }
+}
+
+/// Buttons of equal width side by side, or one above the other when the
+/// widest label would not fit in its share of the row (a long translation, a
+/// small phone, a larger text size). Always stacked at the accessibility sizes.
+struct ButtonRow<Content: View>: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    var spacing: CGFloat = 12
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        ButtonRowLayout(spacing: spacing, stacked: dynamicTypeSize.isAccessibilitySize) { content }
+    }
+}
+
+private struct ButtonRowLayout: Layout {
+    var spacing: CGFloat
+    var stacked: Bool
+
+    private func ideal(_ subviews: Subviews) -> CGFloat {
+        subviews.map { $0.sizeThatFits(.unspecified).width }.max() ?? 0
+    }
+
+    private func sideBySide(_ width: CGFloat?, _ subviews: Subviews) -> Bool {
+        guard !stacked else { return false }
+        guard subviews.count > 1, let width, width.isFinite else { return true }
+        let count = CGFloat(subviews.count)
+        return ideal(subviews) * count + spacing * (count - 1) <= width
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let count = CGFloat(max(1, subviews.count))
+        if sideBySide(proposal.width, subviews) {
+            let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? ideal(subviews) * count + spacing * (count - 1)
+            let share = (width - spacing * (count - 1)) / count
+            let height = subviews.map { $0.sizeThatFits(ProposedViewSize(width: share, height: nil)).height }.max() ?? 0
+            return CGSize(width: width, height: height)
+        }
+        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? ideal(subviews)
+        let heights = subviews.map { $0.sizeThatFits(ProposedViewSize(width: width, height: nil)).height }
+        return CGSize(width: width, height: heights.reduce(0, +) + spacing * CGFloat(max(0, subviews.count - 1)))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let count = CGFloat(max(1, subviews.count))
+        if sideBySide(bounds.width, subviews) {
+            let share = (bounds.width - spacing * (count - 1)) / count
+            var x = bounds.minX
+            for subview in subviews {
+                subview.place(at: CGPoint(x: x, y: bounds.midY), anchor: .leading,
+                              proposal: ProposedViewSize(width: share, height: bounds.height))
+                x += share + spacing
+            }
+        } else {
+            var y = bounds.minY
+            for subview in subviews {
+                let height = subview.sizeThatFits(ProposedViewSize(width: bounds.width, height: nil)).height
+                subview.place(at: CGPoint(x: bounds.minX, y: y), anchor: .topLeading,
+                              proposal: ProposedViewSize(width: bounds.width, height: height))
+                y += height + spacing
+            }
         }
     }
 }

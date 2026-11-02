@@ -316,7 +316,7 @@ struct SpeakingSessionView: View {
               }
             }
             if revealed {
-              HStack(spacing: 12) {
+              ButtonRow {
                 Button(action: next) {
                     Text(completedCurrent ? (index + 1 >= words.count ? L.seeResults : L.nextQuestion) : L.t("略過", "Skip"))
                         .font(.headline).frame(maxWidth: .infinity)
@@ -332,7 +332,7 @@ struct SpeakingSessionView: View {
                 }
               }
             } else {
-                HStack(spacing: 12) {
+                ButtonRow {
                     Button { reveal(completed: false) } label: {
                         Text(examplesOnly ? L.t("聽例句", "Hear it") : L.showSample).font(.headline).frame(maxWidth: .infinity)
                     }

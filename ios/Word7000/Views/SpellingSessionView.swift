@@ -189,7 +189,7 @@ struct SpellingSessionView: View {
     }
 
     private func actions(_ word: WordEntry) -> some View {
-        HStack(spacing: 12) {
+        ButtonRow {
             if result == nil {
                 Button {
                     withAnimation(reduceMotion ? nil : Motion.pop) { hints += 1 }

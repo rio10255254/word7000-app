@@ -178,6 +178,7 @@ struct TodayView: View {
             hero(m)
                 .entrance(0, distance: 10)
             notices
+            checklist
             practice(m, fill: fill)
         }
         .padding(.horizontal, Metrics.gutter)
@@ -406,6 +407,29 @@ struct TodayView: View {
             .padding(.vertical, 5)
             .background(Self.cream.opacity(0.16), in: Capsule())
             .overlay(Capsule().strokeBorder(Self.cream.opacity(0.28), lineWidth: 1))
+    }
+
+    /// For a new learner: every stop the cat will show them, and the next one.
+    @ViewBuilder
+    private var checklist: some View {
+        if let stops = model.guideStops {
+            let firstRound = model.progress.lastStudyDate == nil
+            let current = firstRound ? stops.first : stops.first { $0.step == model.guideStep && $0.step != nil }
+            GuideChecklist(stops: stops, current: current,
+                           line: firstRound
+                               ? L.t("先背第一組，背完我再帶你玩別的。", "Learn your first set; then I'll show you the rest.")
+                               : model.guideStep.map { $0.line(plus: plus.subscribed || AppRuntime.uiTesting) },
+                           go: {
+                               if firstRound {
+                                   model.ensureStudySession()
+                                   start(.study)
+                               } else if let step = model.guideStep {
+                                   openGuide(step)
+                               }
+                           },
+                           hide: { withAnimation(reduceMotion ? nil : Motion.reveal) { model.hideGuideChecklist() } })
+                .transition(.move(edge: .top).combined(with: .opacity))
+        }
     }
 
     /// The rare one-off notes: streak protection used, or a Plus reminder.

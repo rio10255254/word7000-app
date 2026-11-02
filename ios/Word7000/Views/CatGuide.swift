@@ -54,6 +54,38 @@ enum GuideStep: String, CaseIterable, Sendable {
 
     /// Days a suggestion stays before the cat moves on.
     static let patienceDays = 3
+
+    var title: String {
+        switch self {
+        case .quiz: L.t("小測驗", "Quiz")
+        case .speaking: L.t("開口說", "Speak")
+        case .spelling: L.t("拼字", "Spell")
+        case .exam: L.t("模擬考", "Mock exam")
+        case .scan: L.t("掃描", "Scan")
+        case .chat: L.t("問小笨貓", "Ask the cat")
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .quiz: "checklist"
+        case .speaking: "mic.fill"
+        case .spelling: "character.cursor.ibeam"
+        case .exam: "timer"
+        case .scan: "doc.text.viewfinder"
+        case .chat: "bubble.left.and.bubble.right.fill"
+        }
+    }
+}
+
+/// One stop on the new learner's checklist: the first round, then each step.
+struct GuideStop: Identifiable, Equatable {
+    let id: String
+    let title: String
+    let icon: String
+    let done: Bool
+    /// nil for the first round.
+    let step: GuideStep?
 }
 
 /// Little things about one screen, said once by the cat the first time a new
@@ -94,6 +126,27 @@ extension AppModel {
             if let first = offered[step.rawValue], let end = DayMath.addDays(first, GuideStep.patienceDays), today >= end { return false }
             return true
         }
+    }
+
+    /// The new learner's checklist on Today: the first round, then everything
+    /// the cat introduces, ticked off as they are tried. Hidden once all are
+    /// done or the learner closes it.
+    var guideStops: [GuideStop]? {
+        let testing = ProcessInfo.processInfo.arguments.contains("-uiTestingChecklist")
+        guard settings.guideActive == true, settings.guideHidden != true, !AppRuntime.catShowcase,
+              !AppRuntime.uiTesting || testing else { return nil }
+        let tried = Set(settings.guideTried ?? [])
+        var stops = [GuideStop(id: "study", title: L.t("背一組", "Learn a set"), icon: "rectangle.on.rectangle.angled",
+                               done: progress.lastStudyDate != nil, step: nil)]
+        for step in GuideStep.allCases where step != .spelling || studyMode == .english {
+            stops.append(GuideStop(id: step.rawValue, title: step.title, icon: step.icon, done: tried.contains(step.rawValue), step: step))
+        }
+        return stops.allSatisfy(\.done) ? nil : stops
+    }
+
+    func hideGuideChecklist() {
+        settings.guideHidden = true
+        scheduleSave()
     }
 
     /// Notes the day a suggestion was first shown, so it can give way later.
@@ -142,6 +195,16 @@ struct GuideRing: View {
                 .stroke(color, style: StrokeStyle(lineWidth: appStyle == .collage ? 2.2 : 2.6, lineCap: .round, lineJoin: .round))
                 .padding(-7)
                 .scaleEffect(breathe ? 1.015 : 1)
+            Text(L.t("試試這個", "Try this"))
+                .font(.caption.weight(.heavy))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(Palette.accent, in: Capsule())
+                .rotationEffect(.degrees(-6))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .offset(x: -6, y: -14)
+                .opacity(reduceMotion || drawn >= 1 ? 1 : 0)
             Image(systemName: "hand.point.up.left.fill")
                 .font(.title3)
                 .foregroundStyle(Palette.accent)

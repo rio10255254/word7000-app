@@ -53,6 +53,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var seenTips: [String]?
     /// Whether the cat has asked to send notifications (once).
     var pushAsked: Bool?
+    /// The learner closed the new-learner checklist on Today.
+    var guideHidden: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

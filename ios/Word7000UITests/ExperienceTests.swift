@@ -179,7 +179,7 @@ final class ExperienceTests: XCTestCase {
 
     func testFinishingASetShowsTheSummaryAndWordProgress() {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
+        app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans", "-uiTestingChecklist"]
         app.launch()
         passWelcome(app)
         app.buttons["welcome-start"].tap()
@@ -205,6 +205,9 @@ final class ExperienceTests: XCTestCase {
         let suggested = NSPredicate(format: "value == '小笨貓推薦'")
         XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: quiz)], timeout: 5), .completed,
                        String(describing: quiz.value))
+        // The starter checklist shows the first round ticked and the quiz next.
+        XCTAssertTrue(app.descendants(matching: .any)["guide-checklist"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["guide-checklist-go"].exists)
         sleep(2)
         snapshot(app, "guide-quiz-next")
 

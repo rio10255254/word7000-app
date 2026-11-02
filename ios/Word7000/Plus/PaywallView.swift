@@ -194,7 +194,7 @@ struct PaywallView: View {
                     .multilineTextAlignment(.center)
                     .transition(.opacity)
             }
-            if plus.signInStartsTrial {
+            if plus.needsSignIn {
                 Text(P.signInForTrialNote)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -202,13 +202,13 @@ struct PaywallView: View {
             }
             Button { buy() } label: {
                 ZStack {
-                    Text(plus.signInStartsTrial ? P.signInForTrial : P.cta(selected)).font(.headline).opacity(busy ? 0 : 1)
+                    Text(plus.needsSignIn ? P.signInForTrial : P.cta(selected)).font(.headline).opacity(busy ? 0 : 1)
                     if busy { ProgressView().tint(.white) }
                 }
                 .frame(maxWidth: .infinity)
             }
             .prominentAction()
-            .disabled((selected == nil && !plus.signInStartsTrial) || busy)
+            .disabled((selected == nil && !plus.needsSignIn) || busy)
             .shake(trigger: failures, enabled: !reduceMotion)
             .accessibilityIdentifier("paywall-subscribe")
             Text(P.renewalTerms(selected))
@@ -230,18 +230,17 @@ struct PaywallView: View {
         .animation(.smooth, value: notice)
     }
 
-    /// A guest signs in with Apple first. Signing in starts the trial, so
-    /// the paywall closes if it did; an account whose trial is used stays on
-    /// it to subscribe.
+    /// A guest signs in with Apple first, so the subscription belongs to an
+    /// account that keeps their progress; then the purchase goes on.
     private func withAccount(_ action: @escaping () -> Void) {
-        guard plus.signInStartsTrial, account.configured else { action(); return }
+        guard plus.needsSignIn, account.configured else { action(); return }
         afterSignIn = action
         signInOpen = true
     }
 
     private func buy() {
         withAccount {
-            if plus.access.isActive, !plus.subscribed { dismiss(); return }
+            if plus.subscribed { purchased = true; return }
             purchaseSelected()
         }
     }

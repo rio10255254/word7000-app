@@ -82,9 +82,9 @@ struct IntelligenceSettingsView: View {
         let tier = CloudAssistant.shared.tier
         let known = CloudAssistant.shared.tierKnown
         return Section {
-            PlanRow(title: L.t("免費版", "Free"), model: L.t("Claude・快速回答", "Claude · Quick answers"),
-                    daily: PlusAI.freeDaily, current: known && tier == .free)
-            PlanRow(title: tier == .trial ? L.t("Plus（試用中）", "Plus (trial)") : "Plus",
+            // The online AI is a Plus feature; without it the app uses what
+            // the iPhone itself can do.
+            PlanRow(title: "Plus",
                     model: L.t("Claude・口說、解說與分析深度思考", "Claude · Deeper reasoning for coaching, explanations and insights"),
                     daily: PlusAI.plusDaily, current: known && tier != .free)
             if let remaining = CloudAssistant.shared.remainingText {
@@ -93,7 +93,7 @@ struct IntelligenceSettingsView: View {
             }
             if tier != .plus {
                 Button { paywall = .locked(.smartAI) } label: {
-                    Label(L.t("升級 Plus，讓 AI 老師深度思考", "Upgrade to Plus for deeper AI reasoning"), systemImage: "sparkles")
+                    Label(L.t("訂閱 Plus，打開小笨貓的 AI 老師", "Subscribe to Plus for Silly Cat's AI tutor"), systemImage: "sparkles")
                 }
                 .accessibilityIdentifier("settings-ai-upgrade")
             }

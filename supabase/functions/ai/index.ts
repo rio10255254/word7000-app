@@ -67,8 +67,7 @@ Deno.serve(async (request) => {
   }
 
   // Plus only from a transaction Apple signed, not refunded, and used by at
-  // most three accounts a month; the trial from the server's own record of
-  // the learner's first AI request.
+  // most three accounts a month.
   const entitlement = await verifyEntitlement(body.entitlement, { bundleId: BUNDLE_ID, productIds: PLUS_PRODUCTS });
   let subscribed = false;
   if (entitlement) {
@@ -79,6 +78,9 @@ Deno.serve(async (request) => {
     subscribed = claimed === true;
     if (!subscribed) console.log(JSON.stringify({ plus: 'refused', transaction: entitlement.originalTransactionId }));
   }
+  // The online AI is a Plus feature: without a subscription Apple signed
+  // (its free trial included), nothing is counted and nothing is asked.
+  if (!subscribed) return reply({ error: 'plus_required' }, 403);
   // Counted before the call so a burst cannot outrun the limit.
   const { data: quota, error: quotaError } = await service.rpc('consume_ai_quota_for', { p_user: user });
   if (quotaError || !quota) return reply({ error: 'unavailable' }, 503);

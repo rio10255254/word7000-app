@@ -19,11 +19,11 @@ on:
   workflow_dispatch:
     inputs:
       free_limit:
-        description: 'Daily AI requests for free learners (low reasoning)'
+        description: 'Daily AI requests for learners without Plus (the app has no AI for them; kept at 0)'
         type: string
-        default: '5'
+        default: '0'
       plus_limit:
-        description: 'Daily AI requests for Plus and the 7-day trial (more reasoning on writing tasks)'
+        description: 'Daily AI requests for Plus (its App Store free trial included)'
         type: string
         default: '60'
       global_limit:
@@ -55,7 +55,7 @@ jobs:
     # Each secret is handed only to the steps that use it, never to npm ci or
     # the tests.
     env:
-      FREE_LIMIT: ${{ inputs.free_limit || '5' }}
+      FREE_LIMIT: ${{ inputs.free_limit || '0' }}
       PLUS_LIMIT: ${{ inputs.plus_limit || '60' }}
       GLOBAL_LIMIT: ${{ inputs.global_limit || '20000' }}
     steps:
@@ -150,7 +150,7 @@ jobs:
             -d '{"signedPayload":"a.b.c"}')" "an App Store notice Apple did not sign"
           expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/send-streak-live-activities")" "the reminder cron without its secret"
 
-      - name: Ask Claude one real question through the function
+      - name: Check who the function answers
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
@@ -205,11 +205,10 @@ jobs:
           token=$( (curl -sf -X POST "$url/auth/v1/token?grant_type=password" -H "apikey: $key" -H 'Content-Type: application/json' \
             -d "{\"email\":\"$email\",\"password\":\"$password\"}" | jq -r '.access_token') || true)
           [ -n "$token" ] && [ "$token" != "null" ] || { echo "::error::Could not sign in to the check account"; exit 1; }
+          # Without Plus (a subscription Apple signed) the AI is refused too;
+          # the AI eval workflow checks Claude's answers with the key itself.
           reply=$(ask "$token")
-          status=$(echo "$reply" | tail -1)
-          body=$(echo "$reply" | sed '$d')
-          echo "Status $status: $(echo "$body" | jq -c '{model, effort, tier, remaining, meaning: .result.meaning, error}')"
-          [ "$status" = "200" ] && [ -n "$(echo "$body" | jq -r '.result.meaning // empty')" ] || {
-            echo "::error::The AI function did not answer. 503 usually means the Anthropic key is wrong; check the function logs in Supabase."
-            exit 1
+          echo "Signed in without Plus: $(echo "$reply" | tr '\n' ' ')"
+          [ "$(echo "$reply" | tail -1)" = "403" ] && [ "$(echo "$reply" | sed '$d' | jq -r '.error')" = "plus_required" ] || {
+            echo "::error::The AI function must refuse accounts without Plus with 403 plus_required"; exit 1;
           }

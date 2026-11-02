@@ -54,6 +54,8 @@ extension AppModel {
             guard !tried.contains(step.rawValue) else { return false }
             if step == .spelling, studyMode != .english { return false }
             if step == .chat, !CloudAssistant.shared.offered { return false }
+            // Scanning is part of Plus: suggested only to subscribers.
+            if step == .scan, CloudAssistant.shared.plus?.subscribed != true, !AppRuntime.uiTesting { return false }
             if let first = offered[step.rawValue], let end = DayMath.addDays(first, GuideStep.patienceDays), today >= end { return false }
             return true
         }

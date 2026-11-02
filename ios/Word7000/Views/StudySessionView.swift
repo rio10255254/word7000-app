@@ -6,6 +6,7 @@ import Word7000Core
 /// toolbar skips the tap and opens every card with its answer showing.
 struct StudySessionView: View {
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
     @Environment(\.appStyle) private var appStyle
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -125,10 +126,19 @@ struct StudySessionView: View {
                 }
                 ToolbarItem(placement: .principal) {
                     if let session = model.studySession, !session.isComplete, session.total > 0 {
-                        Text(L.cardCount(done: session.done, total: session.total))
-                            .font(.display(.subheadline, weight: .semibold))
-                            .monospacedDigit()
-                            .accessibilityIdentifier("study-position")
+                        VStack(spacing: 0) {
+                            Text(L.cardCount(done: session.done, total: session.total))
+                                .font(.display(.subheadline, weight: .semibold))
+                                .monospacedDigit()
+                                .accessibilityIdentifier("study-position")
+                            // A guest is reminded, quietly, that none of this is kept.
+                            if account.configured, !account.isPermanent {
+                                Text(L.t("訪客・不會保存", "Guest · not kept"))
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(Palette.review)
+                                    .accessibilityIdentifier("study-guest")
+                            }
+                        }
                     }
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
@@ -520,6 +530,8 @@ struct CardStatusChip: View {
 
 struct SessionSummary: View {
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
+    @State private var signInOpen = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
@@ -552,6 +564,11 @@ struct SessionSummary: View {
                            total: session.knownIds.count + session.reviewIds.count, correct: session.knownIds.count,
                            missedIds: session.reviewIds)
                 .entrance(3)
+            if account.configured, !account.isPermanent {
+                GuestKeepCard(count: session.knownIds.count + session.reviewIds.count) { signInOpen = true }
+                    .entrance(3)
+                    .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
+            }
             HStack(spacing: 10) {
                 SummaryChip(value: session.knownIds.count, label: L.knowIt, icon: "checkmark", tint: Palette.known)
                     .entrance(3)
@@ -694,5 +711,32 @@ struct ConfettiBurst: View {
             finished = true
         }
         .accessibilityHidden(true)
+    }
+}
+
+/// After a guest's round: what they just did is not kept unless they sign in.
+private struct GuestKeepCard: View {
+    var count: Int
+    var signIn: () -> Void
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Label {
+                Text(L.t("訪客模式不會保存這 \(count) 個字的進度。用 Apple 登入，現在的進度就會留下來。",
+                         "As a guest, these \(count) words won't be kept. Sign in with Apple and today's progress stays."))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: "exclamationmark.icloud.fill").foregroundStyle(Palette.review)
+            }
+            Button(action: signIn) {
+                Label(L.t("用 Apple 登入保存", "Sign in with Apple to keep it"), systemImage: "apple.logo")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .accessibilityIdentifier("summary-sign-in")
+        }
+        .card(radius: 18, padding: 14)
     }
 }

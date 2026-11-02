@@ -58,13 +58,25 @@ final class AppModel {
         var settings = settings
         settings.migrateSpeakingHistory()
         self.coreWords = coreWords
-        self.progress = LearningEngine.normalizeForDate(progress, today: today)
+        let normalized = LearningEngine.normalizeForDate(progress, today: today)
+        self.progress = normalized
         self.customSets = customSets
+        savedLearning = (normalized, customSets)
         self.settings = settings
         L.mode = settings.studyMode ?? .english
         self.persistence = persistence
         self.today = today
     }
+
+    /// Whether this learner's progress and banks are saved. Guests' are not
+    /// (signing in with Apple keeps them); set by the account. Without an
+    /// account service (UI tests, local builds) everything is saved.
+    @ObservationIgnored var keepsLearningRecords = true {
+        didSet { if keepsLearningRecords != oldValue { scheduleSave() } }
+    }
+    /// What is on disk: for a guest it stays as it was when they became one,
+    /// so what they study now is not kept.
+    @ObservationIgnored private var savedLearning: (progress: ProgressState, customSets: CustomSetState)
 
     static func launch() -> AppModel {
         let persistence = Persistence.live
@@ -770,8 +782,11 @@ final class AppModel {
 
     func saveNow() {
         saveTask?.cancel()
-        let snapshot = AppSnapshot(progress: progress, customSets: customSets, settings: settings,
-                                   studySession: studySession, sessionDay: today)
+        let keep = keepsLearningRecords
+        if keep { savedLearning = (progress, customSets) }
+        let snapshot = AppSnapshot(progress: keep ? progress : savedLearning.progress,
+                                   customSets: keep ? customSets : savedLearning.customSets,
+                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: today)
         persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in
             Task { @MainActor in self?.storageFailed = !saved }
         }

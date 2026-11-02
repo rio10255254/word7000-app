@@ -8,10 +8,9 @@ import Word7000Core
 /// unlocked right now.
 ///
 /// Plus belongs to the Apple ID that bought it, and the learner's account is
-/// that same Apple ID (Sign in with Apple; guests have no account). The 7-day
-/// trial starts when an account first signs in and is kept in the account, so
-/// a reinstall or a new iPhone continues it rather than starting another.
-/// Guests have no trial: signing in starts it.
+/// that same Apple ID (Sign in with Apple; guests have no account). Only a
+/// subscription unlocks Plus; the free week is the App Store's own trial
+/// offer on the subscription, not something the app grants.
 @MainActor
 @Observable
 final class PlusModel {
@@ -21,13 +20,11 @@ final class PlusModel {
     /// Apple's signed copy of the active subscription. The AI server checks it
     /// itself before giving the Plus model, so it cannot be faked by the app.
     private(set) var entitlementJWS: String?
-    /// This iPhone's own trial start, used only by UI tests (which run
-    /// without an account); a learner's trial is `accountTrialStart`.
+    /// A trial start the UI tests use to see each state of the old in-app
+    /// trial; learners have none (the App Store's trial is a subscription).
     private(set) var trialStartedAt: Date
     /// Signed in with Apple (not a guest).
     private(set) var signedIn = false
-    /// When the account's trial began; nil for guests.
-    private(set) var accountTrialStart: Date?
     /// The signed-in account's id, tied to purchases so a subscription is
     /// recorded against the Apple ID's own account.
     private(set) var accountId: String?
@@ -87,18 +84,17 @@ final class PlusModel {
     }
 
     private var effectiveTrialStart: Date {
-        if AppRuntime.uiTesting { return trialStartedAt }
-        return accountTrialStart ?? .distantPast
+        AppRuntime.uiTesting ? trialStartedAt : .distantPast
     }
 
-    /// A guest who signs in gets the 7-day trial; the paywall says so.
-    var signInStartsTrial: Bool { !subscribed && !signedIn && !AppRuntime.uiTesting }
+    /// A guest signs in with Apple before subscribing, so Plus is tied to an
+    /// account that keeps their progress.
+    var needsSignIn: Bool { !subscribed && !signedIn && !AppRuntime.uiTesting }
 
     /// Called by the account whenever who is signed in changes.
-    func setAccount(id: String?, trialStart: Date?) {
+    func setAccount(id: String?) {
         signedIn = id != nil
         accountId = id
-        accountTrialStart = id == nil ? nil : trialStart
         refreshAccessState()
     }
 
@@ -154,7 +150,7 @@ final class PlusModel {
         referenceDate = Date()
         if access.isActive {
             trialRecapPending = false
-        } else if entitlementsLoaded, signedIn || AppRuntime.uiTesting, !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
+        } else if entitlementsLoaded, AppRuntime.uiTesting, !UserDefaults.standard.bool(forKey: Self.recapShownKey) {
             trialRecapPending = true
         }
         suspendTimeUpdates()
@@ -201,10 +197,12 @@ final class PlusModel {
         plansState = .loading
         let products = (try? await Product.products(for: Self.productIDs)) ?? []
         let monthly = products.first { $0.id == Self.productIDs[0] }
+        // The App Store's free trial, for an Apple ID that has not had one.
+        let trialEligible = await products.first?.subscription?.isEligibleForIntroOffer ?? false
         if let group = products.compactMap({ $0.subscription?.subscriptionGroupID }).first { subscriptionGroupID = group }
         plans = products
             .sorted { $0.price > $1.price }
-            .map { PlusPlan(product: $0, monthlyPrice: monthly?.price) }
+            .map { PlusPlan(product: $0, monthlyPrice: monthly?.price, trialEligible: trialEligible) }
         plansState = plans.isEmpty ? .unavailable : .loaded
     }
 
@@ -293,9 +291,23 @@ struct PlusPlan: Identifiable {
     /// it saves against paying monthly.
     let perMonth: String?
     let monthsSaved: Int
+    /// The App Store's free trial on this plan, in days, when this Apple ID
+    /// can still have it (set up in App Store Connect as an introductory offer).
+    var freeTrialDays: Int?
     let product: Product?
 
-    init(product: Product, monthlyPrice: Decimal?) {
+    init(product: Product, monthlyPrice: Decimal?, trialEligible: Bool = false) {
+        if trialEligible, let offer = product.subscription?.introductoryOffer, offer.paymentMode == .freeTrial {
+            let unitDays: Int
+            switch offer.period.unit {
+            case .day: unitDays = 1
+            case .week: unitDays = 7
+            case .month: unitDays = 30
+            case .year: unitDays = 365
+            @unknown default: unitDays = 1
+            }
+            freeTrialDays = offer.period.value * unitDays * max(1, offer.periodCount)
+        }
         id = product.id
         yearly = product.subscription?.subscriptionPeriod.unit == .year
         displayPrice = product.displayPrice

@@ -181,25 +181,12 @@ final class AccountModel {
         heartbeat()
     }
 
-    /// Tells Plus who is signed in. The trial belongs to the account: its
-    /// start is kept in the account, and an account signing in for the first
-    /// time starts it now. Guests have none.
+    /// Tells Plus and the app who is signed in: Plus is tied to the account,
+    /// and a guest's progress is not saved.
     private func syncTrialStart(session: AuthSession) {
-        guard let plus else { return }
-        guard !session.user.anonymous else {
-            plus.setAccount(id: nil, trialStart: nil)
-            return
-        }
-        if case let .number(seconds)? = session.user.userMetadata?["plus_trial_started_at"] {
-            plus.setAccount(id: session.user.id, trialStart: Date(timeIntervalSince1970: seconds))
-            return
-        }
-        let start = Date()
-        plus.setAccount(id: session.user.id, trialStart: start)
-        guard let client else { return }
-        Task {
-            try? await client.updateUserMetadata(["plus_trial_started_at": .number(start.timeIntervalSince1970)], session: session)
-        }
+        let permanent = !session.user.anonymous
+        app.keepsLearningRecords = permanent
+        plus?.setAccount(id: permanent ? session.user.id : nil)
     }
 
     // MARK: Background sync
@@ -223,7 +210,7 @@ final class AccountModel {
     /// delays (3 s … 5 min).
     func flush(pullingCloud: Bool = false) async {
         guard let client, let current = session, !flushing, dirty.any || pullingCloud else { return }
-        if dirty.any {
+        if dirty.any, isPermanent {
             // Written in the background: this runs after every few graded cards,
             // and encoding the whole history on the main thread stalls the cards.
             Outbox(progress: app.progress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
@@ -236,7 +223,7 @@ final class AccountModel {
         }
         if !isPermanent {
             guard dirty.any else { return }
-            // A guest's data stays on this iPhone; it goes up once they sign in.
+            // A guest's progress is not kept anywhere; signing in keeps it.
             status = .ready
             message = P.syncLocked
             return
@@ -509,7 +496,7 @@ struct SyncDirty: Equatable {
 enum A {
     static var localOnly: String { L.t("進度保存在這支 iPhone", "Progress is saved on this iPhone") }
     static var preparing: String { L.t("正在準備…", "Getting ready…") }
-    static var guestSaved: String { L.t("訪客：進度只存在這支 iPhone", "Guest: progress is kept on this iPhone only") }
+    static var guestSaved: String { L.t("訪客：進度不會保存，登入就能保存", "Guest: progress isn't kept; sign in to keep it") }
     static var signedIn: String { L.t("已登入，正在確認備份", "Signed in; checking backup") }
     static var saveFailed: String { L.t("目前無法儲存，請確認手機空間後重試。", "Unable to save. Check your iPhone storage and try again.") }
     static var synced: String { L.t("已同步", "Synced") }

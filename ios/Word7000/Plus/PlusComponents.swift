@@ -60,10 +60,10 @@ struct PlusNudgeBanner: View {
                         .frame(width: 38, height: 38)
                         .background(nudge == .trialEnded ? AnyShapeStyle(PlusStyle.gradient) : AnyShapeStyle(Palette.review.gradient), in: Circle())
                         .symbolEffect(.bounce, value: nod)
-                    // A guest has had no trial: signing in starts it.
-                    let guest = plus.signInStartsTrial && nudge == .trialEnded
+                    // A guest's first step is signing in, so their progress is kept.
+                    let guest = plus.needsSignIn && nudge == .trialEnded
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(guest ? P.signInForTrial : P.nudgeTitle(nudge)).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                        Text(guest ? L.t("用 Apple 登入，保存你的進度", "Sign in with Apple to keep your progress") : P.nudgeTitle(nudge)).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
                         Text(guest ? P.guestNudgeText : P.nudgeText(nudge)).font(.footnote).foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }

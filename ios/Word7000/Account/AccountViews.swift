@@ -20,10 +20,10 @@ struct SignInSheet: View {
 
         var body: String {
             switch self {
-            case .general: L.t("進度會同步到你的每一台裝置，還有 7 天 Plus 免費試用和每天 \(PlusAI.freeDaily) 次 AI。", "Your progress syncs to every device, with a 7-day Plus trial and \(PlusAI.freeDaily) AI answers a day.")
-            case .scan: L.t("登入就有 7 天 Plus 免費試用，掃描的字庫也會跟著帳號走。", "Signing in starts a 7-day Plus trial, and scanned banks go with your account.")
+            case .general: L.t("訪客的進度不會保存。登入後會保存，並同步到你的每一台裝置。", "A guest's progress isn't kept. Signed in, it is kept and synced to every device.")
+            case .scan: L.t("掃描是 Plus 功能，掃描的字庫會跟著你的帳號走。先用 Apple 登入。", "Scanning is part of Plus, and scanned banks go with your account. Sign in with Apple first.")
             case .plus: L.t("Plus 綁定你的 Apple ID，換手機登入就會回來，進度也會同步。", "Plus belongs to your Apple ID: sign in on a new iPhone and it is there, with your progress.")
-            case .ai: L.t("小笨貓的 AI 要登入才能用，每天 \(PlusAI.freeDaily) 次，Plus 每天 \(PlusAI.plusDaily) 次。", "Silly Cat's AI needs an account: \(PlusAI.freeDaily) answers a day, \(PlusAI.plusDaily) with Plus.")
+            case .ai: L.t("小笨貓的 AI 是 Plus 功能，每天 \(PlusAI.plusDaily) 次。先用 Apple 登入。", "Silly Cat's AI is part of Plus, \(PlusAI.plusDaily) answers a day. Sign in with Apple first.")
             }
         }
 
@@ -207,7 +207,7 @@ struct AccountSection: View {
                             .foregroundStyle(Palette.accent)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(L.t("用 Apple 登入", "Sign in with Apple")).font(.headline).foregroundStyle(.primary)
-                            Text(L.t("同步進度、7 天 Plus 試用、每天 AI", "Sync, a 7-day Plus trial, daily AI")).font(.subheadline).foregroundStyle(.secondary)
+                            Text(L.t("訪客的進度不會保存，登入就能保存並同步", "A guest's progress isn't kept; sign in to keep and sync it")).font(.subheadline).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)

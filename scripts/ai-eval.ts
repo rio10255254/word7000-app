@@ -12,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { AIFailure, complete } from '../supabase/functions/ai/claude.ts';
-import { COACH_MODEL, type Effort, hanShare, MODEL, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
+import { COACH_MODEL, coachUsesStrongModel, type Effort, hanShare, MODEL, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
 
 type Content = Record<string, unknown>;
 type Check = (content: Content) => string[];
@@ -260,6 +260,26 @@ const cases: Case[] = [
     input: { keyword, meaning: '', question, context: '', answer, mode: 'english' },
     check: coachCheck(answer, 'english'),
   })),
+  // Harder mistakes Taiwanese learners of English make: each must be pointed
+  // out in a correction (not only fixed quietly in the rewrite).
+  ...([
+    ['experience', 'What is a useful experience you had at school?', 'I think it is very good experience because I learned how to work with other people.', 'good experience', 'a very good experience'],
+    ['decide', 'What is something you decided to do last year?', 'Last year I decide to join the basketball team and I practice every day after school.', 'decide', 'decided'],
+    ['mistake', 'What happens when you make a mistake in class?', 'When I do a mistake in class, my teacher always helps me to correct it.', 'do a mistake', 'make a mistake'],
+    ['convenient', 'What is convenient about where you live?', 'In my city there have many convenient stores near my house.', 'there have', 'there are'],
+    ['although', 'Tell me about a time you kept going when you were tired.', 'Although I was tired, but I still finished my homework.', 'but', 'Although I was tired, I still'],
+    ['turn', 'What do you usually do when you get home?', 'When I get home, I always open the light and turn on the TV.', 'open the light', 'turn on the light'],
+  ] as const).map(([keyword, question, answer, mistake, fixed]) => ({
+    task: 'coach' as TaskName, name: `coach hard ${keyword}`,
+    input: { keyword, meaning: '', question, context: '', answer, mode: 'english' },
+    check: (content: Content) => {
+      const problems = coachCheck(answer, 'english')(content);
+      const flagged = list(content.corrections).some((item) => String(item.original).includes(mistake));
+      if (!flagged) problems.push(`mistake not pointed out: ${mistake}`);
+      if (!String(content.rewrite ?? '').toLowerCase().includes(fixed.toLowerCase())) problems.push(`rewrite lacks: ${fixed}`);
+      return problems;
+    },
+  })),
   {
     task: 'coach', name: 'coach a learner of Chinese',
     input: { keyword: '方便', meaning: 'convenient', question: '你為什麼喜歡便利商店？', context: '', answer: '因為很方便，我可以買很多東西在晚上。', mode: 'chinese' },
@@ -366,7 +386,7 @@ for (const tier of tiers) {
     const started = Date.now();
     try {
       // As in the service: the coach uses its own model unless one is being compared.
-      const used = model ?? (item.task === 'coach' ? COACH_MODEL : undefined);
+      const used = model ?? (item.task === 'coach' && coachUsesStrongModel(item.input) ? COACH_MODEL : undefined);
       const reply = await complete(plan, { apiKey, model: used, totalTimeoutMs: used ? 60_000 : undefined });
       const content = reply.content as Content;
       results.push({ name: item.name, task: item.task, tier, model: reply.model, effort: reply.effort, ms: Date.now() - started,

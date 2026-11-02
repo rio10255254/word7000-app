@@ -1,7 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
 import { verifyEntitlement } from './entitlement.ts';
 import { AIFailure, complete } from './claude.ts';
-import { COACH_MODEL, COACH_MODEL_DAILY, dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
+import { COACH_MODEL, COACH_MODEL_DAILY, coachUsesStrongModel, dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
 
 // The Anthropic key lives only here, as the ANTHROPIC_API_KEY function secret.
 // The app sends task data with the learner's session. Guest sessions are
@@ -101,9 +101,11 @@ Deno.serve(async (request) => {
   }
   const plan = planTask(task, body.input, tier);
 
-  // The speaking coach gets the stronger model for the day's first answers.
+  // The speaking coach for learners of Chinese gets the stronger model for the
+  // day's first answers: the quick one misses Chinese word-order mistakes.
+  // Learners of English stay on the quick model, which catches theirs.
   let model: string | undefined;
-  if (task === 'coach') {
+  if (task === 'coach' && coachUsesStrongModel(body.input)) {
     const { data: coachUsed, error: coachError } = await service.rpc('consume_coach_answer_for', { p_user: user });
     if (!coachError && Number(coachUsed) <= envLimit('AI_COACH_MODEL_DAILY', COACH_MODEL_DAILY)) model = COACH_MODEL;
   }

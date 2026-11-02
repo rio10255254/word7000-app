@@ -533,3 +533,13 @@ describe('full-width punctuation in Chinese', () => {
     expect(fullWidth('Yes, I do? 好')).toBe('Yes, I do? 好');
   });
 });
+
+describe('which coach model', () => {
+  it('only learners of Chinese get the stronger coach', async () => {
+    const { coachUsesStrongModel } = await import('../supabase/functions/ai/tasks');
+    expect(coachUsesStrongModel({ mode: 'chinese' })).toBe(true);
+    expect(coachUsesStrongModel({ mode: 'english' })).toBe(false);
+    expect(coachUsesStrongModel({})).toBe(false);
+    expect(coachUsesStrongModel(null)).toBe(false);
+  });
+});

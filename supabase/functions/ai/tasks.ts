@@ -10,6 +10,11 @@ export const COACH_MODEL = 'claude-sonnet-5-5';
 /** Coach answers a day on COACH_MODEL before the quick model takes over. */
 export const COACH_MODEL_DAILY = 20;
 
+/** Only learners of Chinese need the stronger coach (see COACH_MODEL). */
+export function coachUsesStrongModel(input: unknown): boolean {
+  return Boolean(input) && typeof input === 'object' && (input as Record<string, unknown>).mode === 'chinese';
+}
+
 /** How much Claude reasons before answering: more is sharper but slower. */
 export type Effort = 'low' | 'medium' | 'high';
 

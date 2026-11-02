@@ -2,7 +2,7 @@ import type { CSSProperties, ReactElement, ReactNode } from 'react';
 import { AbsoluteFill, Easing, Html5Audio, Img, interpolate, spring, staticFile } from 'remotion';
 import { AUTHORED_FPS, FRAME_SCALE, useFrame } from './time';
 import timeline from './timeline.json';
-import { Track, blurDissolve, circle, pullDown, push, stepStarts, timed, trackFrames, zoomThrough } from './transitions';
+import { Track, blurDissolve, circle, pullDown, push, stepStarts, timed, trackFrames, trackLayout, zoomThrough } from './transitions';
 import type { Step } from './transitions';
 import { Desk, InkLoops, K, Paper, Stamp, Tape, torn } from './collage';
 import { FONT, HAND, SERIF } from './fonts';
@@ -975,7 +975,7 @@ const AISection = () => {
     <AbsoluteFill style={{ fontFamily: FONT, overflow: 'hidden' }}>
       <Desk kind="desk" />
       <BareScene.Provider value>
-        <Track steps={AI_BEATS} />
+        <Track steps={AI_BEATS} fill={aiSlot()} />
       </BareScene.Provider>
       <div style={{ position: 'absolute', top: 140, left: 96, right: 96, ...headline }}>
         <div>
@@ -1027,6 +1027,9 @@ const STEPS: Step[] = [
 ];
 
 export const FULL_DURATION = trackFrames(STEPS);
+
+/** The slot the cut gives the AI run (held to the next strong beat); its last beat fills it. */
+const aiSlot = () => trackLayout(STEPS).lengths[STEPS.findIndex((s) => s.id === 'ai')];
 
 export const Full = () => (
   <AbsoluteFill style={{ background: '#F3EEE4' }}>

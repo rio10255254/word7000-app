@@ -91,11 +91,14 @@ export const blurDissolve = () => move(BlurDissolve, {});
 /* ── The track ── */
 
 /**
- * Everything lands on the soundtrack's beat: a scene lasts a whole number of
- * beats (its animation plus HOLD, rounded up) and a transition is a whole
- * number of beats, so every change of scene starts and ends on a beat.
+ * Everything lands on the soundtrack's strong beats. A transition is a whole
+ * number of beats, and each scene is held until the next transition can
+ * start on a multiple of `quantizeBeats` (2: beat 1 or 3 of a bar). The
+ * music is laid out by the same rule (scripts/make-music.py), so every
+ * change of scene starts on a strong beat, where the music hits.
  */
-const onBeat = (frames: number) => Math.ceil(frames / BEAT_FRAMES) * BEAT_FRAMES;
+const GRID = (timeline.quantizeBeats ?? 1) * BEAT_FRAMES;
+const ceilTo = (frames: number, unit: number) => Math.ceil(frames / unit) * unit;
 const turnFrames = (s: Step) => (s.turnBeats ?? 1) * BEAT_FRAMES;
 const timing = (s: Step) => linearTiming({ durationInFrames: turnFrames(s), easing: Easing.bezier(0.7, 0, 0.3, 1) });
 
@@ -112,22 +115,36 @@ export type Step = {
   turnBeats?: number;
 };
 
-const stepFrames = (s: Step) => s.frames ?? onBeat(scaledLength((s.duration ?? 0) + HOLD));
+const rawFrames = (s: Step) => s.frames ?? scaledLength((s.duration ?? 0) + HOLD);
+
+/**
+ * Starts and lengths of each step in output frames. `fill` stretches the
+ * last step so the track lasts at least that long (a nested section filling
+ * the slot its parent track gave it).
+ */
+export const trackLayout = (steps: readonly Step[], fill = 0) => {
+  const starts: number[] = [];
+  const lengths: number[] = [];
+  let t = 0;
+  steps.forEach((step, i) => {
+    starts.push(t);
+    const next = steps[i + 1];
+    if (next) {
+      const advance = ceilTo(rawFrames(step) - turnFrames(next), GRID);
+      lengths.push(advance + turnFrames(next));
+      t += advance;
+    } else {
+      lengths.push(Math.max(ceilTo(rawFrames(step), BEAT_FRAMES), fill - t));
+    }
+  });
+  return { starts, lengths, total: t + lengths[lengths.length - 1] };
+};
 
 /** Total output frames for a list of steps played with their transitions. */
-export const trackFrames = (steps: readonly Step[]) =>
-  steps.reduce((sum, s, i) => sum + stepFrames(s) - (i > 0 ? turnFrames(s) : 0), 0);
+export const trackFrames = (steps: readonly Step[]) => trackLayout(steps).total;
 
 /** Where each step starts, in output frames (for things that span steps). */
-export const stepStarts = (steps: readonly Step[]) => {
-  let t = 0;
-  return steps.map((s, i) => {
-    if (i > 0) t -= turnFrames(s);
-    const start = t;
-    t += stepFrames(s);
-    return start;
-  });
-};
+export const stepStarts = (steps: readonly Step[]) => trackLayout(steps).starts;
 
 type Entry = { id: string; duration?: number; turnBeats?: number };
 /** A scene's timing from timeline.json, which the soundtrack is built from too. */
@@ -137,20 +154,23 @@ export const timed = (entries: readonly Entry[], id: string) => {
   return { duration: entry.duration, turnBeats: entry.turnBeats };
 };
 
-export const Track = ({ steps }: { steps: readonly Step[] }) => (
-  <TransitionSeries>
-    {steps.flatMap((step, i) => {
-      const Render = step.render;
-      const sequence = (
-        <TransitionSeries.Sequence key={step.id} durationInFrames={stepFrames(step)} name={step.id}>
-          <Render />
-        </TransitionSeries.Sequence>
-      );
-      if (i === 0) return [sequence];
-      return [
-        <TransitionSeries.Transition key={`into-${step.id}`} presentation={step.enter ?? blurDissolve()} timing={timing(step)} />,
-        sequence,
-      ];
-    })}
-  </TransitionSeries>
-);
+export const Track = ({ steps, fill = 0 }: { steps: readonly Step[]; fill?: number }) => {
+  const { lengths } = trackLayout(steps, fill);
+  return (
+    <TransitionSeries>
+      {steps.flatMap((step, i) => {
+        const Render = step.render;
+        const sequence = (
+          <TransitionSeries.Sequence key={step.id} durationInFrames={lengths[i]} name={step.id}>
+            <Render />
+          </TransitionSeries.Sequence>
+        );
+        if (i === 0) return [sequence];
+        return [
+          <TransitionSeries.Transition key={`into-${step.id}`} presentation={step.enter ?? blurDissolve()} timing={timing(step)} />,
+          sequence,
+        ];
+      })}
+    </TransitionSeries>
+  );
+};

@@ -14,6 +14,13 @@ public struct StudySession: Codable, Equatable, Sendable {
     public static let requeueGap = 4
     static let maxRequeuesPerCard = 1
 
+    /// At most one card in four comes back for a second look: with every
+    /// missed card repeated, a hard session ran half as long again with the
+    /// same words. The rest of the missed words are due again next time anyway.
+    public static func maxRequeues(initialCount: Int) -> Int {
+        max(1, (initialCount + 3) / 4)
+    }
+
     /// Card ids in the order they will be shown, including re-queued misses.
     public private(set) var cardIds: [String]
     public private(set) var index: Int
@@ -51,7 +58,9 @@ public struct StudySession: Codable, Equatable, Sendable {
         let insertAt = min(cardIds.count, index + 1 + Self.requeueGap)
         // Near the end there may be no card left to put between them; showing
         // the same card again straight away is not a second look, so skip it.
-        if grade == .review, timesRequeued < Self.maxRequeuesPerCard, insertAt > index + 1 {
+        let requeuedSoFar = requeued.values.reduce(0, +)
+        if grade == .review, timesRequeued < Self.maxRequeuesPerCard, insertAt > index + 1,
+           requeuedSoFar < Self.maxRequeues(initialCount: initialCount) {
             next.cardIds.insert(cardId, at: insertAt)
             next.requeued[cardId] = timesRequeued + 1
         }

@@ -4,6 +4,7 @@ import {
   currentStudyCardId,
   gradeStudyCard,
   isStudySessionComplete,
+  maxStudyRequeues,
   STUDY_REQUEUE_GAP,
   studySessionProgress,
   upcomingStudyCardId,
@@ -42,6 +43,18 @@ describe('study session', () => {
 
     expect(isStudySessionComplete(session)).toBe(true);
     expect(session.cardIds).toEqual(['a', 'b', 'c', 'a']);
+  });
+
+  test('brings back at most a quarter of the session', () => {
+    let session = createStudySession(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'], 'key');
+    while (!isStudySessionComplete(session)) {
+      session = gradeStudyCard(session, currentStudyCardId(session)!, 'review');
+    }
+
+    expect(session.cardIds).toHaveLength(10);
+    expect(maxStudyRequeues(8)).toBe(2);
+    expect(maxStudyRequeues(20)).toBe(5);
+    expect(maxStudyRequeues(1)).toBe(1);
   });
 
   test('never shows a missed card again straight away', () => {

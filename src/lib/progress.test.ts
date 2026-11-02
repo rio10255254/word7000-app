@@ -4,6 +4,8 @@ import {
   addDays,
   buildQuizOptions,
   buildStudyQueue,
+  newWordLevelWeight,
+  newWordSlots,
   isWordDue,
   markQuizCorrect,
   reviewDueDate,
@@ -556,6 +558,52 @@ describe('study queue', () => {
     expect(queue).toContain('w00');
     expect(queue).not.toContain('w01');
     expect(buildStudyQueue(words.slice(0, 2), state, today, { limit: 4 }).map((entry) => entry.id).sort()).toEqual(['w00', 'w01']);
+  });
+
+  test('keeps room for new words when reviews pile up', () => {
+    let state = emptyProgress();
+    for (const entry of words.slice(0, 20)) {
+      state = markReview(state, entry.id, '2026-06-20');
+    }
+
+    const queue = buildStudyQueue(words, state, today, { limit: 10, seed: 'room' });
+    const fresh = queue.filter((entry) => !state.words[entry.id]);
+
+    expect(queue).toHaveLength(10);
+    expect(fresh).toHaveLength(4);
+    expect(newWordSlots(10, 20, 10)).toBe(4);
+    expect(newWordSlots(15, 20, 10)).toBe(6);
+    expect(newWordSlots(10, 2, 10)).toBe(8);
+    expect(newWordSlots(10, 20, 1)).toBe(1);
+  });
+
+  test('draws few new words from a level the learner already knows', () => {
+    const easy = Array.from({ length: 40 }, (_, index) => wordFixture(`e${index}`, { group: 'Core 1' }));
+    const right = Array.from({ length: 40 }, (_, index) => wordFixture(`r${index}`, { group: 'Core 5' }));
+    let state = emptyProgress();
+    for (const entry of easy.slice(0, 20)) {
+      state = markKnown(state, entry.id, '2026-06-01');
+    }
+    let fromEasy = 0;
+    let fromRight = 0;
+    for (let run = 0; run < 30; run += 1) {
+      for (const entry of buildStudyQueue([...easy, ...right], state, today, { limit: 10, seed: `level-${run}` })) {
+        if (state.words[entry.id]) continue;
+        if (entry.group === 'Core 1') fromEasy += 1;
+        else fromRight += 1;
+      }
+    }
+
+    expect(fromEasy).toBeGreaterThan(0);
+    expect(fromEasy * 4).toBeLessThan(fromRight);
+  });
+
+  test('weights levels by how many of their words were known on sight', () => {
+    expect(newWordLevelWeight(0, 0)).toBe(8);
+    expect(newWordLevelWeight(20, 20)).toBe(1);
+    expect(newWordLevelWeight(5, 4)).toBe(5);
+    expect(newWordLevelWeight(10, 5)).toBe(8);
+    expect(newWordLevelWeight(20, 0)).toBe(3);
   });
 
   test('draws new words from the whole pool instead of the start of the library', () => {

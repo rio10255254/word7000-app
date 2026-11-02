@@ -115,6 +115,20 @@ final class LearningScheduleTests: XCTestCase {
         XCTAssertEqual(last.reviewIds, ["b"])
     }
 
+    func testReviewsLeaveRoomForNewWordsAndRetriesAreCapped() {
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 20, fresh: 10), 4)
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 15, due: 20, fresh: 10), 6)
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 2, fresh: 10), 8)
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 20, fresh: 1), 1)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(seen: 0, knew: 0), 8)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(seen: 20, knew: 20), 1)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(seen: 20, knew: 0), 3)
+
+        var session = StudySession(cardIds: ["a", "b", "c", "d", "e", "f", "g", "h"], sourceKey: "k")
+        while let id = session.currentCardId { session = session.grading(id, as: .review) }
+        XCTAssertEqual(session.cardIds.count, 10)
+    }
+
     // MARK: Merging the daily count
 
     func testMergingTheSameDayCountsEveryWordStudiedOnEitherDevice() {

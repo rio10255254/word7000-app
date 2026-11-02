@@ -679,14 +679,24 @@ export type StudyQueueOptions = {
 };
 
 /**
- * Picks the cards for one study session. Words that are due for review come
- * first (oldest due date first), then words never seen before picked at
- * random from the whole pool. Due words already studied today (a word missed
- * earlier today stays due) wait until after the new words, so the next
- * session does not open with the cards just practised. Only when all of those
- * run out does it pull known words ahead of their schedule. New words used to come in library order, so
- * with "all levels" every session was Core 1. The chosen cards are then
- * shuffled so reviews and new words mix.
+ * Share of a session kept for new words while any are left. Without it, a
+ * learner whose reviews pile up stops meeting new words at all: after a week
+ * of 20 a day every session was all reviews, and for anyone who started when
+ * new words came in library order, all of them Core 1.
+ */
+export const STUDY_NEW_WORD_SHARE = { numerator: 2, denominator: 5 };
+
+/**
+ * Picks the cards for one study session. Words due for review come first
+ * (oldest due date first) and words never seen before, picked at random from
+ * the whole pool, take the rest, but always at least STUDY_NEW_WORD_SHARE of
+ * the session while any are left; reviews that do not fit stay due for the
+ * next session. Due words already studied today (a word missed earlier today
+ * stays due) come after those, so the next session does not open with the
+ * cards just practised, and known words ahead of their schedule come last.
+ * New words lean towards the levels that suit the learner (see
+ * `newWordLevelWeight`). The chosen cards are then shuffled so reviews and
+ * new words mix.
  */
 export function buildStudyQueue(
   words: WordEntry[],
@@ -703,8 +713,22 @@ export function buildStudyQueue(
   const fresh: WordEntry[] = [];
   const seenToday: Array<{ date: string; word: WordEntry; struggling: boolean }> = [];
   const ahead: Array<{ date: string; word: WordEntry }> = [];
+  // Per level, in the order levels first appear: words seen, and words known
+  // the first time they were met (never missed since).
+  const levels = new Map<string, { seen: number; knew: number }>();
   for (const word of words) {
     const progress = state.words[word.id];
+    let level = levels.get(word.group);
+    if (!level) {
+      level = { seen: 0, knew: 0 };
+      levels.set(word.group, level);
+    }
+    if (progress && progress.status !== 'new') {
+      level.seen += 1;
+      if (progress.status === 'mastered' && progress.reviewCount === 0) {
+        level.knew += 1;
+      }
+    }
     const dueDate = reviewDueDate(progress);
     if (dueDate === null) {
       fresh.push(word);
@@ -721,14 +745,102 @@ export function buildStudyQueue(
   due.sort(byDue);
   seenToday.sort(byDue);
   ahead.sort((left, right) => left.date.localeCompare(right.date));
+  const newCount = newWordSlots(size, due.length, fresh.length);
   const chosen = [
-    ...due.map((entry) => entry.word),
-    ...shuffleWithSeed(fresh, `${seed}:fresh`),
+    ...due.slice(0, size - newCount).map((entry) => entry.word),
+    ...pickNewWords(fresh, newCount, levels, seed),
     ...seenToday.map((entry) => entry.word),
     ...ahead.map((entry) => entry.word),
   ].slice(0, size);
 
   return shuffleWithSeed(chosen, `${seed}:queue`);
+}
+
+/**
+ * How strongly to draw new words from a level, from what the learner did with
+ * the words of it they have met: knowing nearly all of them on sight means it
+ * is too easy (Core 1 for most learners), so its words only turn up now and
+ * then; about half is just right; missing nearly all means it is too hard for
+ * now. A level not met yet counts as half known, so new learners get words
+ * from every level until their answers say where they stand. Whole numbers
+ * only, so every device draws the same words from the same seed.
+ */
+export function newWordLevelWeight(seen: number, knew: number): number {
+  // Known share in percent, as if two more words had been met and one known.
+  const estimate = Math.floor((100 * knew + 100) / (seen + 2));
+  if (estimate >= 90) return 1;
+  if (estimate >= 80) return 2;
+  if (estimate >= 65) return 5;
+  if (estimate >= 35) return 8;
+  if (estimate >= 20) return 5;
+  return 3;
+}
+
+/**
+ * Draws `count` new words: each pick chooses a level by its weight among the
+ * levels with new words left, then that level's next word in a seeded random
+ * order. With a single level this is simply the shuffled order.
+ */
+function pickNewWords(
+  fresh: WordEntry[],
+  count: number,
+  levels: Map<string, { seen: number; knew: number }>,
+  seed: string,
+): WordEntry[] {
+  if (count <= 0 || fresh.length === 0) {
+    return [];
+  }
+  const buckets = new Map<string, WordEntry[]>();
+  for (const word of shuffleWithSeed(fresh, `${seed}:fresh`)) {
+    const bucket = buckets.get(word.group);
+    if (bucket) {
+      bucket.push(word);
+    } else {
+      buckets.set(word.group, [word]);
+    }
+  }
+  const order = [...levels.keys()].filter((group) => buckets.has(group));
+  const weights = order.map((group) => {
+    const level = levels.get(group)!;
+    return newWordLevelWeight(level.seen, level.knew);
+  });
+  const taken = order.map(() => 0);
+  const picked: WordEntry[] = [];
+  let randomState = hashText(`${seed}:levels`);
+  while (picked.length < count) {
+    let total = 0;
+    order.forEach((group, index) => {
+      if (taken[index] < buckets.get(group)!.length) {
+        total += weights[index];
+      }
+    });
+    if (total === 0) {
+      break;
+    }
+    randomState = nextRandomState(randomState);
+    let roll = scrambleRandomState(randomState) % total;
+    for (let index = 0; index < order.length; index += 1) {
+      const bucket = buckets.get(order[index])!;
+      if (taken[index] >= bucket.length) {
+        continue;
+      }
+      if (roll < weights[index]) {
+        picked.push(bucket[taken[index]]);
+        taken[index] += 1;
+        break;
+      }
+      roll -= weights[index];
+    }
+  }
+  return picked;
+}
+
+/** How many of a session's `size` cards go to new words. */
+export function newWordSlots(size: number, due: number, fresh: number): number {
+  // Two in five, rounded up, in whole numbers so no rounding error decides it.
+  const { numerator, denominator } = STUDY_NEW_WORD_SHARE;
+  const share = Math.floor((size * numerator + denominator - 1) / denominator);
+  return Math.min(fresh, Math.max(size - due, share));
 }
 
 export function countDueWords(words: WordEntry[], state: ProgressState, today: string): number {

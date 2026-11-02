@@ -55,6 +55,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var pushAsked: Bool?
     /// The learner closed the new-learner checklist on Today.
     var guideHidden: Bool?
+    /// Progress has been split between learning English and Chinese.
+    var splitModeProgress: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

@@ -3,8 +3,8 @@ import Word7000Core
 
 /// What the learner is learning. `english` (the default) is the Chinese
 /// interface for learning English words; `chinese` flips it: an English
-/// interface for learning the Chinese meanings. One progress record serves
-/// both, so knowing a word in either direction counts.
+/// interface for learning the Chinese meanings. Each keeps its own word
+/// progress (`ModeProgress`); the streak and daily goal are shared.
 enum StudyMode: String, Codable, CaseIterable, Identifiable {
     case english, chinese
 

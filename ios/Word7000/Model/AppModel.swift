@@ -48,6 +48,15 @@ final class AppModel {
     private var studyUndoStack: [(progress: ProgressState, session: StudySession)] = []
     var canUndoStudy: Bool { !studyUndoStack.isEmpty }
 
+    /// The other study mode's words, as stored (see `ModeProgress`):
+    /// `progress` holds only the current mode's.
+    @ObservationIgnored private var otherModeWords: [String: WordProgress] = [:]
+
+    /// Both modes' progress in one record, as it is saved and synced.
+    var syncedProgress: ProgressState {
+        ModeProgress.store(progress, chinese: studyMode == .chinese, otherWords: otherModeWords)
+    }
+
     @ObservationIgnored private let persistence: Persistence
     @ObservationIgnored private var saveTask: Task<Void, Never>?
     @ObservationIgnored private var preparedCache: (key: String, vocabulary: PreparedVocabulary)?
@@ -59,7 +68,9 @@ final class AppModel {
         settings.migrateSpeakingHistory()
         self.coreWords = coreWords
         let normalized = LearningEngine.normalizeForDate(progress, today: today)
-        self.progress = normalized
+        let chinese = settings.studyMode == .chinese
+        self.progress = ModeProgress.view(normalized, chinese: chinese)
+        otherModeWords = ModeProgress.storedWords(of: normalized, excluding: chinese)
         self.customSets = customSets
         savedLearning = (normalized, customSets)
         self.settings = settings
@@ -112,6 +123,12 @@ final class AppModel {
             }
             settings.migratedLegacyData = true
         }
+        // Learning English and learning Chinese now keep their own progress;
+        // someone already learning Chinese keeps what they had there too.
+        if settings.splitModeProgress != true {
+            if settings.studyMode == .chinese { progress = ModeProgress.seedChinese(progress) }
+            settings.splitModeProgress = true
+        }
         if arguments.contains("-uiTestingSampleProgress") {
             progress = SampleData.progress(words: words, today: DayMath.today())
         }
@@ -131,7 +148,11 @@ final class AppModel {
             progress.analytics = analytics
         }
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
-        if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
+        if arguments.contains("-uiTestingChineseMode") {
+            settings.studyMode = .chinese
+            // The sample progress shows on the Chinese side too.
+            if arguments.contains("-uiTestingSampleProgress") { progress = ModeProgress.seedChinese(progress) }
+        }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
         if arguments.contains("-uiTestingCollage") { settings.appStyle = .collage }
         // UI tests see the default look, the paper collage, unless they ask
@@ -167,7 +188,9 @@ final class AppModel {
     func replaceData(progress newProgress: ProgressState, customSets newSets: CustomSetState, preserveSession: Bool = false) {
         let previousSession = preserveSession ? studySession : nil
         replacing = true
-        progress = LearningEngine.normalizeForDate(newProgress, today: today)
+        let normalized = LearningEngine.normalizeForDate(newProgress, today: today)
+        otherModeWords = ModeProgress.storedWords(of: normalized, excluding: studyMode == .chinese)
+        progress = ModeProgress.view(normalized, chinese: studyMode == .chinese)
         customSets = newSets
         replacing = false
         if settings.activeBankId != WordBanks.coreBankId, !newSets.sets.contains(where: { $0.id == settings.activeBankId }) {
@@ -229,10 +252,16 @@ final class AppModel {
     }
 
     /// Switching what is learned rebuilds the study session (the cards face
-    /// the other way) but keeps all progress.
+    /// the other way) and brings up that mode's own word progress; the
+    /// streak and daily goal carry over.
     func setStudyMode(_ mode: StudyMode) {
         guard mode != studyMode else { return }
+        let stored = syncedProgress
         settings.studyMode = mode
+        replacing = true
+        otherModeWords = ModeProgress.storedWords(of: stored, excluding: mode == .chinese)
+        progress = ModeProgress.view(stored, chinese: mode == .chinese)
+        replacing = false
         studySession = nil
         studyUndoStack = []
     }
@@ -792,8 +821,8 @@ final class AppModel {
     func saveNow() {
         saveTask?.cancel()
         let keep = keepsLearningRecords
-        if keep { savedLearning = (progress, customSets) }
-        let snapshot = AppSnapshot(progress: keep ? progress : savedLearning.progress,
+        if keep { savedLearning = (syncedProgress, customSets) }
+        let snapshot = AppSnapshot(progress: keep ? syncedProgress : savedLearning.progress,
                                    customSets: keep ? customSets : savedLearning.customSets,
                                    settings: settings, studySession: keep ? studySession : nil, sessionDay: today)
         persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in

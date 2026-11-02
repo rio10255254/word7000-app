@@ -148,7 +148,7 @@ final class AccountModel {
     private func activate(_ newSession: AuthSession, fallbackEmail: String? = nil) async {
         guard let client else { return }
         if let owner = app.settings.localOwnerId, owner != newSession.user.id {
-            guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: owner) else {
+            guard Outbox(progress: app.syncedProgress, customSets: app.customSets).save(userId: owner) else {
                 status = .error(A.saveFailed)
                 message = A.saveFailed
                 return
@@ -166,7 +166,7 @@ final class AccountModel {
         let cloud = try? await client.loadProfile(session: activeSession)
         guard generation == identityGeneration else { return }
 
-        let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.progress : nil, outbox?.progress])
+        let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.syncedProgress : nil, outbox?.progress])
         let sets = CustomSetState.merge([cloud?.customSets, carryLocal ? app.customSets : nil, outbox?.customSets])
         app.replaceData(progress: progress, customSets: sets, preserveSession: carryLocal)
         cloudVersion = cloud?.version
@@ -213,7 +213,7 @@ final class AccountModel {
         if dirty.any, isPermanent {
             // Written in the background: this runs after every few graded cards,
             // and encoding the whole history on the main thread stalls the cards.
-            Outbox(progress: app.progress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
+            Outbox(progress: app.syncedProgress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
                 guard !saved else { return }
                 Task { @MainActor in
                     self?.status = .error(A.saveFailed)
@@ -245,7 +245,7 @@ final class AccountModel {
             if try await client.profileVersion(session: valid) != cloudVersion {
                 let cloud = try await client.loadProfile(session: valid)
                 guard generation == identityGeneration else { return }
-                let merged = CloudSync.merge(localProgress: app.progress, localSets: app.customSets, cloud: cloud, today: app.today)
+                let merged = CloudSync.merge(localProgress: app.syncedProgress, localSets: app.customSets, cloud: cloud, today: app.today)
                 if merged.changedLocal {
                     app.replaceData(progress: merged.progress, customSets: merged.customSets, preserveSession: true)
                 }
@@ -254,7 +254,7 @@ final class AccountModel {
                 if merged.uploadCustomSets { sending.customSets = true }
             }
             if sending.any {
-                let version = try await client.saveProfile(progress: sending.progress ? app.progress : nil,
+                let version = try await client.saveProfile(progress: sending.progress ? app.syncedProgress : nil,
                                                            customSets: sending.customSets ? app.customSets : nil, session: valid)
                 guard generation == identityGeneration else { return }
                 cloudVersion = version
@@ -428,7 +428,7 @@ final class AccountModel {
         guard let client, let current = session, !busy else { return }
         busy = true
         defer { busy = false }
-        guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: current.user.id) else {
+        guard Outbox(progress: app.syncedProgress, customSets: app.customSets).save(userId: current.user.id) else {
             status = .error(A.saveFailed)
             message = A.saveFailed
             return

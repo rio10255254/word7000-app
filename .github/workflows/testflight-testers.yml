@@ -1,0 +1,33 @@
+# Reports why a TestFlight tester can or cannot install the app: beta groups,
+# their testers and invitation states, the builds in each group, and Beta App
+# Review status. Read-only. Tester emails are masked in the log.
+#
+# Uses the same App Store Connect API key as the iOS release workflow:
+#   ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY
+name: TestFlight testers
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/testflight-testers.mjs'
+      - '.github/workflows/testflight-testers.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  testers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Report TestFlight testers and builds
+        run: node scripts/testflight-testers.mjs

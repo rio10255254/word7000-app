@@ -89,8 +89,8 @@ enum L {
     // Words
     static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search Chinese, pinyin, English or examples") }
     /// Taiwanese learners know the GSAT's 7000 words by that name; learners of
-    /// Chinese do not, and the bank may grow, so their interface says Core Words.
-    static var coreBankName: String { t("7000 單字", "Core Words") }
+    /// Chinese study their own bank of everyday Taiwan Mandarin.
+    static var coreBankName: String { t("7000 單字", "Taiwan Mandarin") }
     /// The word list files its levels as "Core 1"…"Core 14"; on screen they
     /// are 第 N 級 or Level N. Other groups (a scanned bank's) show as they are.
     static func level(_ number: Int) -> String { t("第 \(number) 級", "Level \(number)") }

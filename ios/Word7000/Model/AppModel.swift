@@ -9,7 +9,15 @@ import Word7000Core
 @MainActor
 @Observable
 final class AppModel {
-    let coreWords: [WordEntry]
+    /// The 7000 English words learners of English study.
+    let englishCoreWords: [WordEntry]
+    /// Everyday Taiwan Mandarin, in TOCFL-style bands, for learners of
+    /// Chinese (`words-zh.json`).
+    let chineseCoreWords: [WordEntry]
+    /// The built-in words for the current study mode.
+    var coreWords: [WordEntry] {
+        studyMode == .chinese && !chineseCoreWords.isEmpty ? chineseCoreWords : englishCoreWords
+    }
     private(set) var progress: ProgressState {
         didSet {
             libraryRevision &+= 1
@@ -63,10 +71,11 @@ final class AppModel {
     @ObservationIgnored private var mergedWordsCache: [WordEntry]?
     @ObservationIgnored private var vocabularyCache: [WordEntry]?
 
-    init(coreWords: [WordEntry], progress: ProgressState, customSets: CustomSetState, settings: AppSettings, persistence: Persistence, today: String = DayMath.today()) {
+    init(coreWords: [WordEntry], chineseWords: [WordEntry] = [], progress: ProgressState, customSets: CustomSetState, settings: AppSettings, persistence: Persistence, today: String = DayMath.today()) {
         var settings = settings
         settings.migrateSpeakingHistory()
-        self.coreWords = coreWords
+        self.englishCoreWords = coreWords
+        self.chineseCoreWords = chineseWords
         let normalized = LearningEngine.normalizeForDate(progress, today: today)
         let chinese = settings.studyMode == .chinese
         self.progress = ModeProgress.view(normalized, chinese: chinese)
@@ -167,7 +176,8 @@ final class AppModel {
             settings.onboardingComplete = true
         }
 
-        let model = AppModel(coreWords: words, progress: progress, customSets: sets, settings: settings, persistence: persistence)
+        let model = AppModel(coreWords: words, chineseWords: loadBundledWords(named: "words-zh"), progress: progress, customSets: sets,
+                             settings: settings, persistence: persistence)
         if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
             model.restoreStudySession(saved)
         }
@@ -175,8 +185,8 @@ final class AppModel {
         return model
     }
 
-    static func loadBundledWords() -> [WordEntry] {
-        guard let url = Bundle.main.url(forResource: "words", withExtension: "json"),
+    static func loadBundledWords(named name: String = "words") -> [WordEntry] {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let words = try? WordData.decode(data)
         else { return [] }
@@ -262,6 +272,11 @@ final class AppModel {
         otherModeWords = ModeProgress.storedWords(of: stored, excluding: mode == .chinese)
         progress = ModeProgress.view(stored, chinese: mode == .chinese)
         replacing = false
+        // Each mode has its own built-in words.
+        mergedWordsCache = nil
+        vocabularyCache = nil
+        preparedCache = nil
+        libraryRevision &+= 1
         studySession = nil
         studyUndoStack = []
     }
@@ -297,7 +312,7 @@ final class AppModel {
     }
 
     var bank: PreparedVocabulary {
-        let key = "\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
+        let key = "\(studyMode.rawValue)|\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
         if let cached = preparedCache, cached.key == key { return cached.vocabulary }
         let prepared = PreparedVocabulary(bankWords)
         preparedCache = (key, prepared)

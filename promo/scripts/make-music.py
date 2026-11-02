@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
-"""Compose the promo soundtracks from src/timeline.json.
+"""Compose the promo soundtrack from src/timeline.json.
 
-A sweet, bouncy pop piece in the manner of a rom-com drama OST, written to
-the feel of the reference the owner chose (about 118 bpm, B-flat major,
-warm and soft-drummed, straight eighths), with its own original tune and
-chords: a strummed acoustic guitar (University of Iowa samples, free for any
-use; see assets/iowa-guitar/CREDITS.md) on Ebmaj7 → F → Gm7 → B♭ in real
-guitar shapes, tight pop strumming with muted chucks on 2 and 4 and each
-strum damped as the next comes in, fingerpicking in the soft parts, the tune
-on single strings, a round electric bass, a soft kick, claps and a shaker,
-and a small room.
+A sunset tropical-house piece, after the owner's picture for it: sunshine,
+palm trees, a purple sunset, wine, a beach. Laid-back at 112.5 bpm in
+B-flat, on warm, slightly nostalgic seventh chords (Ebmaj7 → Dm7 → Cm7 → F):
 
-The energy follows the reference's arc: a gentle intro, a verse from the
-cat's introduction, a fuller chorus with a counter-melody from the
-`chorus` scene, a quiet dip at the lock screen, and a warm ending.
+- sunshine: the tune high on a real soprano recorder, with glockenspiel glints
+- palm trees: marimba on the off-beats, congas and bongos
+- purple sunset: a soft, warm synth pad under everything
+- wine: an easy groove, and an echo on the tune that floats
+- the beach: real waves (an ocean drum) under the intro, the dip and the end
+
+It still follows the reference's arc and its layers: a soft intro, a verse
+that grows, a pre-chorus climb, the fullest chorus, a quiet dip, a warm end;
+the tune is call and response, highest at the chorus. Instruments are real
+samples — acoustic guitar (University of Iowa, free for any use), soprano
+recorder, glockenspiel, marimba, hand drums and ocean drum (VCSL, CC0); see
+assets/*/CREDITS.md — with a synthesised pad, bass and kick.
 
 Scene changes are the rhythm of the piece. The scenes are laid out exactly
 as src/transitions.tsx lays them out, so every transition starts on a
-strong beat, and at each one:
-  - the drums drop out for the half beat before it,
-  - a reversed strum swells into it,
-  - the kick and a low hit land on it, and the guitar moves to a new chord.
+strong beat, and at each one the drums drop out for the half beat before
+it, a reversed strum swells into it, and the kick and a low hit land on it
+as the chords move on.
 
-Writes public/audio/full.mp3.
-Needs numpy, scipy and ffmpeg.
+Writes public/audio/full.mp3. Needs numpy, scipy and ffmpeg.
 """
 import json
 import math
@@ -48,7 +49,7 @@ BEAT_FRAMES = round(OUTPUT_FPS * 60 / BPM)
 GRID = TIMELINE.get("quantizeBeats", 1) * BEAT_FRAMES
 BEAT = BEAT_FRAMES / OUTPUT_FPS  # seconds
 BAR = BEAT * 4
-SWING = 0.0  # straight eighths, like the reference
+SWING = 0.04  # a touch of lilt on the off-beats
 rng = np.random.default_rng(7000)
 
 
@@ -129,8 +130,7 @@ def bandpass(x, lo, hi, order=2):
 
 # ── Sampled instruments ──────────────────────────────────────────────────────
 # Acoustic guitar: University of Iowa Musical Instrument Samples (free for any use).
-# Xylophone: Versilian Studios VSCO 2 Community Edition (CC0).
-# Soprano recorder (the lead) and glockenspiel: VCSL, Versatile Community Sample Library (CC0).
+# Soprano recorder, glockenspiel, marimba, hand drums, ocean drum: VCSL (CC0).
 
 NAMES = {"C": 0, "Cs": 1, "D": 2, "Ds": 3, "E": 4, "F": 5, "Fs": 6, "G": 7, "Gs": 8, "A": 9, "As": 10, "B": 11}
 _banks = {}
@@ -177,10 +177,47 @@ def guitar(note, length=1.0, velocity=0.6):
     return lowpass(out * release, 1700 + 3300 * velocity) * (0.3 + 0.9 * velocity)
 
 
-def xylo(note, velocity=0.6):
-    """A soft-mallet xylophone note: bright, short, sparkling."""
-    out = sampled("vsco-xylophone", note, 1.4)
-    return lowpass(out, 3000 + 6000 * velocity) * (0.25 + 0.8 * velocity)
+def marimba(note, velocity=0.6):
+    """A marimba note: warm wood, the island colour."""
+    out = sampled("vcsl-marimba", note, 1.2)
+    return lowpass(out, 2500 + 5000 * velocity) * (0.25 + 0.8 * velocity)
+
+
+_one_shots = {}
+
+
+def one_shot(name):
+    """A single recorded hit (hand drums) or the ocean bed, from assets/vcsl-percussion."""
+    if name not in _one_shots:
+        _one_shots[name] = _decode(ROOT / "assets" / "vcsl-percussion" / f"{name}.mp3")
+    return _one_shots[name]
+
+
+def pad(notes, length):
+    """A warm, slow synth pad: detuned saws, softly filtered, breathing in and out."""
+    n = int(length * SR)
+    t = np.arange(n) / SR
+    out = np.zeros(n)
+    for note in notes:
+        for detune in (-0.08, 0.0, 0.09):
+            f = midi(note) * 2 ** (detune / 12)
+            out += 2 * ((t * f + rng.random()) % 1.0) - 1
+    out = lowpass(out / (3 * len(notes)), 1400, 2)
+    shape = np.clip(t / 0.35, 0, 1) * np.clip((length - t) / 0.4, 0, 1)
+    return out * shape
+
+
+def echo(x, delay, feedback=0.35, repeats=3, tone=4500):
+    """A soft echo: each repeat quieter and a little darker."""
+    out = x.copy()
+    step = int(delay * SR)
+    tap = x
+    for r in range(1, repeats + 1):
+        tap = lowpass(tap, tone) * feedback
+        shifted = np.zeros_like(x)
+        shifted[step * r :] = tap[: len(x) - step * r]
+        out += shifted
+    return out
 
 
 def lead(note, length, velocity=0.7):
@@ -388,40 +425,42 @@ def riser(length):
 
 # ── Song ─────────────────────────────────────────────────────────────────────
 
-# Ebmaj7 → F → Gm7 → B♭ (IV–V–vi–I in B-flat), voiced as real guitar shapes:
-# (bass note, strings low to high, chord tones as pitch classes).
+# Ebmaj7 → Dm7 → Cm7 → F (IV–iii–ii–V in B-flat): warm, a little nostalgic,
+# a sunset progression. (bass note, guitar shape low to high, chord tones, pad voicing)
 CHORDS = [
-    (39, [51, 58, 62, 67, 70], {3, 7, 10, 2}),  # Ebmaj7, x-6-8-7-8-6
-    (41, [41, 48, 53, 57, 60, 65], {5, 9, 0}),  # F, barre at 1
-    (43, [43, 50, 53, 58, 62, 67], {7, 10, 2, 5}),  # Gm7, barre at 3
-    (46, [46, 53, 58, 62, 65], {10, 2, 5}),  # B♭, A-shape barre at 1
+    (39, [51, 58, 62, 67, 70], {3, 7, 10, 2}, [63, 67, 70, 74]),  # Ebmaj7, x-6-8-7-8-6
+    (38, [50, 57, 60, 65, 69], {2, 5, 9, 0}, [62, 65, 69, 72]),  # Dm7, x-5-7-5-6-5
+    (36, [48, 55, 58, 63, 67], {0, 3, 7, 10}, [60, 63, 67, 70]),  # Cm7, x-3-5-3-4-3
+    (41, [41, 48, 53, 57, 60, 65], {5, 9, 0}, [60, 65, 69, 72]),  # F, barre at 1
 ]
 SCALE = [10, 0, 2, 3, 5, 7, 9]  # B-flat major
 
-# Strumming on the eighths of a bar: D down, U up, C muted chuck, - rest.
+# Guitar on the eighths of a bar: D down, U up, C muted chuck, - rest.
+# Tropical: light off-beat up-strums, a down-strum to open the bar.
 STRUM = {
-    "verseA": "D---D-C-",  # sparse: room for the tune
-    "verseB": "D-CU-UCU",
+    "verseA": "D--U--U-",
+    "verseB": "D-UU-UU-",
     "pre": "D-D-D-DU",  # driving straight into the chorus
-    "chorus": "D-CUDUCU",
+    "chorus": "D-CU-UCU",
 }
 PICK = [0, 2, 3, 4, 2, 3, 4, 3]  # fingerpicked eighths (string indices)
+# Marimba plays the chord in the island 3-3-2 rhythm (eighth slots 0, 3, 6).
+MARIMBA = {"verseA": (0, 3), "verseB": (0, 3, 6), "pre": (0, 2, 4, 6), "chorus": (0, 3, 6)}
 
 # The tune is written as contours in scale steps from a home note, so it can
-# follow whatever chord is playing: notes on the beat snap to a chord tone.
-# Call and response (EDMProd, Soundfly): the call stays, the answers change.
-# (beat, scale steps, beats long)
+# follow whatever chord is playing: notes on beats 1 and 3 land on a chord tone.
+# Call and response: the call stays, the answers change. (beat, scale steps, beats long)
 CALL = [(0, 2, 0.5), (0.5, 1, 0.5), (1, 0, 1.5), (2.5, -1, 0.5), (3, 0, 1)]
-CALL_SYNC = [(0.5, 2, 0.5), (1, 1, 0.5), (1.5, 0, 1.5), (3, -1, 0.5), (3.5, 0, 0.5)]  # pushed an eighth: same idea, new swing
+CALL_SYNC = [(0.5, 2, 0.5), (1, 1, 0.5), (1.5, 0, 1.5), (3, -1, 0.5), (3.5, 0, 0.5)]
 ANSWERS = [
     [(0, -1, 1), (1, -2, 0.5), (1.5, -3, 0.5), (2, -2, 2)],  # falls back home
     [(0, 1, 0.5), (0.5, 2, 0.5), (1, 4, 1.5), (2.5, 3, 0.5), (3, 2, 1)],  # opens upward
     [(0, 3, 0.5), (0.5, 2, 0.5), (1, 1, 0.5), (1.5, 2, 0.5), (2, 4, 2)],  # turns and lifts
     [(0, 2, 1), (1, 1, 1), (2, -1, 1), (3, 0, 1)],  # settles in quarters
 ]
-CLIMB = [(0, 0, 1), (1, 1, 1), (2, 2, 1), (3, 3, 0.5), (3.5, 4, 0.5)]  # pre-chorus: one step up each beat
-PEAK = [(0, 4, 0.5), (0.5, 5, 0.5), (1, 7, 1.5), (2.5, 5, 0.5), (3, 4, 1)]  # the chorus' high point (Icon Collective)
-HOME = {"intro": 2, "verseA": 2, "verseB": 3, "pre": 2, "chorus": 4, "dip": 2, "end": 0}  # home scale index above B-flat 5
+CLIMB = [(0, 0, 1), (1, 1, 1), (2, 2, 1), (3, 3, 0.5), (3.5, 4, 0.5)]
+PEAK = [(0, 4, 0.5), (0.5, 5, 0.5), (1, 7, 1.5), (2.5, 5, 0.5), (3, 4, 1)]
+HOME = {"intro": 2, "verseA": 2, "verseB": 3, "pre": 2, "chorus": 4, "dip": 2, "end": 0}
 
 
 def scale_note(index):
@@ -439,7 +478,7 @@ def compose(name):
     scenes, total_frames = flatten(TIMELINE[name])
     seconds = total_frames / OUTPUT_FPS
     n = int(seconds * SR) + 3 * SR
-    gtr, tune, bells, low, drums, fx = (np.zeros(n) for _ in range(6))
+    gtr, tune, bells, mar, pads, low, drums, fx = (np.zeros(n) for _ in range(8))
     sec = lambda frames: frames / OUTPUT_FPS
 
     top = [s for s in scenes if not s["nested"]]
@@ -451,7 +490,7 @@ def compose(name):
     changes = sorted(sec(s["start"]) for s in scenes if s["turn"])
 
     # Sections, laid on the scene timing: something is added or taken away at
-    # every boundary, about every eight bars (Avid, Beatkitchen, Orphiq).
+    # every boundary, about every eight bars.
     pre = max(drop, chorus - 2 * BAR)
     verse_b = min(pre, drop + 8 * BAR)
 
@@ -489,16 +528,18 @@ def compose(name):
     near_change = lambda t, width: any(-width <= t - c < 0.05 for c in changes)
     eighth = BEAT / 2
 
-    # ── Guitar and bass, section by section ──
+    # ── Guitar, marimba, pad and bass, chord by chord ──
     for start, stop, ci in segments:
-        bass_note, shape, _ = CHORDS[ci]
+        bass_note, shape, tones, voicing = CHORDS[ci]
         part = section(start)
         length = stop - start
         slots = []
         k = math.ceil(round((start - phase) / eighth, 6))
         while phase + k * eighth < stop - 0.02:
-            slots.append((phase + k * eighth, k % 8))
+            slots.append((phase + k * eighth + (SWING * BEAT if k % 2 else 0), k % 8))
             k += 1
+        # The purple-sunset pad, under everything but the busiest moments.
+        place(pads, pad(voicing, length + 0.3), start, {"intro": 0.5, "dip": 0.6, "chorus": 0.35}.get(part, 0.42))
         if part in STRUM:
             pattern = STRUM[part]
             hits = [(at, pattern[idx]) for at, idx in slots if pattern[idx] != "-"]
@@ -506,17 +547,21 @@ def compose(name):
                 hits.insert(0, (slots[0][0], "D"))
             elif hits:
                 hits[0] = (hits[0][0], "D")
-            loud = {"verseA": 0.55, "verseB": 0.62, "pre": 0.66, "chorus": 0.74}[part]
+            loud = {"verseA": 0.5, "verseB": 0.56, "pre": 0.62, "chorus": 0.66}[part]
             for j, (at, kind) in enumerate(hits):
                 nxt = hits[j + 1][0] if j + 1 < len(hits) else stop
                 if kind == "C":
-                    place(gtr, chuck(shape), at, 0.9)
+                    place(gtr, chuck(shape), at, 0.8)
                 else:
-                    place(gtr, strum(shape, nxt - at + 0.01, loud * (1.0 if kind == "D" else 0.78), up=kind == "U"), at)
+                    place(gtr, strum(shape, min(nxt - at, BEAT) + 0.01, loud * (1.0 if kind == "D" else 0.75), up=kind == "U"), at)
+            for at, idx in slots:
+                if idx in MARIMBA[part]:
+                    for note in voicing[1:]:
+                        place(mar, marimba(note, 0.5), at, 0.55)
         else:
             for at, idx in slots:
-                place(gtr, guitar(shape[PICK[idx] % len(shape)], eighth * 2.2, 0.48), at, 0.85 if part == "intro" else 0.65)
-        # Bass grows with the song: held roots, then a bounce, then octave pops.
+                place(gtr, guitar(shape[PICK[idx] % len(shape)], eighth * 2.2, 0.45), at, 0.75 if part == "intro" else 0.6)
+        # Bass: held roots, then a bounce, then octave pops.
         if part == "verseA":
             place(low, ebass(bass_note, min(length, BAR)), start, 0.7)
         elif part in ("verseB", "pre"):
@@ -553,41 +598,41 @@ def compose(name):
             at = bar_start + beat * BEAT
             if at >= end or near_change(at, BEAT * 0.5):
                 continue
-            note = scale_note(home + steps - 2)  # the recorder's bright range, about F5 to D7
-            # Strong beats (1 and 3) land on a chord tone, unless that would stall the line.
+            note = scale_note(home + steps - 2)  # the recorder's bright range, about G5 to D7
             if beat in (0, 2):
                 snapped = snap(note, chord_at(at)[2])
                 if snapped != previous:
                     note = snapped
             vel = {"verseA": 0.5, "verseB": 0.56, "pre": 0.6, "chorus": 0.68, "dip": 0.38}[part]
             place(tune, lead(note, beats * BEAT * 0.92, vel), at)
-            # The chorus' tune is doubled on glockenspiel an octave up, for shine.
             if part == "chorus":
-                place(bells, glock(note + 12, 0.42), at, 0.45)
+                place(bells, glock(note + 12, 0.42), at, 0.4)
             previous = note
-        # Xylophone counter-line: fills the gaps in the answers, moving the other way (Medium).
+        # Marimba counter-line: fills the gaps in the answers, moving the other way.
         if part in ("verseB", "chorus") and bar_no % 2 == 1:
-            tones = sorted(t for t in chord_at(bar_start + 2.5 * BEAT)[2])
-            line = [scale_note(HOME[part] + 4), scale_note(HOME[part] + 2), scale_note(HOME[part])]
+            tones = chord_at(bar_start + 2.5 * BEAT)[2]
+            line = [scale_note(HOME[part] + 2), scale_note(HOME[part]), scale_note(HOME[part] - 2)]
             for i, at_beat in enumerate((2.5, 3, 3.5)):
                 at = bar_start + at_beat * BEAT
                 if at < end and not near_change(at, BEAT * 0.5):
-                    place(bells, xylo(snap(line[i], set(tones)), 0.55), at, 0.8)
-        # Sparkle: a xylophone chord-tone on the downbeat of every chorus bar.
+                    place(mar, marimba(snap(line[i] - 12, tones), 0.6), at, 0.75)
+        # Sunshine: a glockenspiel glint on the downbeat of verse B and chorus bars.
         if part in ("verseB", "chorus") and not near_change(bar_start, BEAT * 0.5):
-            place(bells, glock(snap(scale_note(HOME[part] + 7), chord_at(bar_start)[2]), 0.4), bar_start, 0.5)
+            place(bells, glock(snap(scale_note(HOME[part] + 7), chord_at(bar_start)[2]), 0.4), bar_start, 0.45)
 
-    # Intro: a hint of the tune on xylophone, so the recorder has something to answer.
+    # Intro: the theme hinted on marimba over the waves.
     for beat, steps, beats in CALL:
         at = max(0.0, drop - BAR) + beat * BEAT
         if 0 <= at < drop - BEAT * 0.5:
-            place(bells, xylo(snap(scale_note(2 + steps), chord_at(at)[2]), 0.45), at, 0.6)
+            place(mar, marimba(snap(scale_note(steps) - 12, chord_at(at)[2]), 0.5), at, 0.7)
 
-    # ── Drums: they also grow, and pull back before the chorus ──
+    # ── Drums and hand drums ──
     kicks = []
+    conga, quinto, tumba = one_shot("conga"), one_shot("quinto"), one_shot("tumba")
+    bongo_hi, bongo_lo = one_shot("bongo-high"), one_shot("bongo-low")
     for bar_start in bar_lines:
         for step in range(16):
-            at = bar_start + step / 4 * BEAT
+            at = bar_start + step / 4 * BEAT + (SWING * BEAT if step % 4 == 2 else 0)
             if at < 0 or at >= end:
                 continue
             part = section(at)
@@ -595,43 +640,57 @@ def compose(name):
                 continue  # drop out for the half beat before every scene change
             if part == "verseA":
                 if step in (0, 8):
-                    place(drums, kick(), at, 0.8)
+                    place(drums, kick(), at, 0.75)
                     kicks.append(at)
                 if step in (4, 12):
-                    place(drums, clap(), at, 0.3)
+                    place(drums, clap(), at, 0.28)
                 if step % 4 == 2:
-                    place(drums, shaker(), at, 0.12)
-            elif part == "verseB":
-                if step in (0, 8, 10):
-                    place(drums, kick(), at, 0.85)
+                    place(drums, shaker(), at, 0.11)
+                if step == 14:
+                    place(drums, conga, at, 0.3)
+            elif part in ("verseB", "chorus"):
+                # The soft four-on-the-floor of tropical house.
+                if step % 4 == 0:
+                    place(drums, kick(), at, 0.8 if part == "verseB" else 0.9)
                     kicks.append(at)
                 if step in (4, 12):
-                    place(drums, clap(), at, 0.42)
+                    place(drums, clap(), at, 0.4 if part == "verseB" else 0.5)
                 if step % 2 == 0:
-                    place(drums, shaker(), at, 0.13 if step % 4 == 2 else 0.08)
-                if step % 4 == 2:
-                    place(drums, tambourine(), at, 0.07)
+                    place(drums, shaker(), at, 0.12 if step % 4 == 2 else 0.07)
+                # Congas and bongos, a loose island pattern.
+                if step in (6, 14):
+                    place(drums, conga, at, 0.32)
+                if step == 10:
+                    place(drums, tumba, at, 0.35)
+                if step in (3, 11) and part == "chorus":
+                    place(drums, quinto, at, 0.22)
+                if step in (1, 5, 9, 13):
+                    place(drums, bongo_hi, at, 0.1 if part == "verseB" else 0.14)
+                if step == 15 and part == "chorus":
+                    place(drums, bongo_lo, at, 0.18)
+                if part == "chorus" and step % 2 == 1:
+                    place(drums, tambourine(), at, 0.05)
             elif part == "pre":
-                # No kick: claps tighten from quarters to eighths to sixteenths.
                 last_bar = at >= chorus - BAR
                 every = 1 if last_bar and at >= chorus - BAR / 2 else (2 if last_bar else 4)
                 if step % every == 0:
-                    place(drums, clap(), at, 0.22 + 0.25 * (at - pre) / max(0.1, chorus - pre))
+                    place(drums, clap(), at, 0.2 + 0.25 * (at - pre) / max(0.1, chorus - pre))
                 if step % 2 == 0:
                     place(drums, shaker(), at, 0.1)
-            elif part == "chorus":
-                if step in (0, 6, 8, 14):
-                    place(drums, kick(), at, 0.95)
-                    kicks.append(at)
-                if step in (4, 12):
-                    place(drums, clap(), at, 0.55)
-                if step % 2 == 0:
-                    place(drums, shaker(), at, 0.15 if step % 4 == 2 else 0.1)
-                place(drums, tambourine(), at, 0.08 if step % 2 else 0.05)
-            elif part == "dip" and step % 4 == 0:
+                if step in (6, 14):
+                    place(drums, conga, at, 0.3)
+            elif part == "dip" and step % 4 == 2:
                 place(drums, shaker(), at, 0.05)
     if pre < chorus:
-        place(fx, riser(chorus - pre), pre, 0.22)
+        place(fx, riser(chorus - pre), pre, 0.2)
+
+    # ── The beach: waves under the intro, the dip and the end ──
+    ocean = one_shot("ocean")
+    for a, b in ((0.0, drop + BAR), (breakdown, seconds)):
+        if b > a:
+            m = int((b - a) * SR)
+            bed = np.resize(ocean, m) * np.clip(np.arange(m) / SR / 1.5, 0, 1) * np.clip((m / SR - np.arange(m) / SR) / 1.5, 0, 1)
+            place(fx, lowpass(bed, 5000), a, 0.35)
 
     # ── Every scene change: reversed strum in, kick and low hit on the beat ──
     for s in scenes:
@@ -641,12 +700,12 @@ def compose(name):
         place(gtr, reverse_swell(chord_at(at + 0.01)[1], BEAT), at - BEAT, 0.35)
         place(drums, kick(), at, 0.9)
         kicks.append(at)
-        place(fx, low_hit(1.4), at, 0.4 if s.get("music") in ("drop", "chorus", "end") else 0.26)
+        place(fx, low_hit(1.4), at, 0.38 if s.get("music") in ("drop", "chorus", "end") else 0.24)
         kind = s.get("enter")
         if kind in ("push", "zoom", "pull"):
-            place(fx, whoosh(sec(s["turn"]) * 1.2), at - 0.05, 0.12)
+            place(fx, whoosh(sec(s["turn"]) * 1.2), at - 0.05, 0.11)
         elif kind == "circle":
-            place(fx, pop(), at, 0.22)
+            place(fx, pop(), at, 0.2)
         for accent in s.get("accents", []):
             when = at + sec(js_round(accent["at"] * FRAME_SCALE))
             sound = {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]]()
@@ -657,44 +716,47 @@ def compose(name):
                 when = sec(s["start"]) + sec(js_round(accent["at"] * FRAME_SCALE))
                 place(fx, {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]](), when, 0.3)
 
-    # ── The end: a slow ringing B♭, the recorder's last note, a glockenspiel sparkle ──
+    # ── The end: a slow ringing Ebmaj7 → B♭ (IV to I, a sunset cadence) ──
     if end < seconds:
         ring = np.zeros(int(3.5 * SR))
         for i, note in enumerate([46, 53, 58, 62, 65, 72]):
-            place(ring, guitar(note, 3.0, 0.6), i * 0.03)
+            place(ring, guitar(note, 3.0, 0.6), i * 0.035)
         place(gtr, ring, end, 1.2)
+        place(pads, pad([58, 62, 65, 69], seconds - end + 0.5), end, 0.5)
         place(tune, lead(scale_note(0), 1.6, 0.55), end + BEAT, 1.0)
         for i, steps in enumerate((0, 2, 4, 7)):
-            place(bells, glock(scale_note(steps), 0.45), end + 2 * BEAT + i * eighth, 0.55)
+            place(bells, glock(scale_note(steps), 0.45), end + 2 * BEAT + i * eighth, 0.5)
         place(low, ebass(34, min(3.0, seconds - end + 0.5)), end, 0.5)
 
-    # Levels follow the arc: soft intro, a verse that grows, a lift into the chorus, a dip, a warm landing.
-    level = {"intro": 0.62, "verseA": 0.74, "verseB": 0.82, "pre": 0.86, "chorus": 1.0, "dip": 0.42, "end": 0.85}
+    # Levels follow the arc.
+    level = {"intro": 0.62, "verseA": 0.74, "verseB": 0.82, "pre": 0.86, "chorus": 1.0, "dip": 0.45, "end": 0.85}
     times = np.arange(n) / SR
     gain = np.array([level[section(x)] for x in np.arange(0, n / SR, 0.01)])
     gain = np.interp(times, np.arange(len(gain)) * 0.01, np.convolve(gain, np.ones(25) / 25, mode="same"))
 
+    # The tropical pump: pad, marimba, guitar and bass breathe with the kick.
     duck = np.ones(n)
     for k in kicks:
         i = int(k * SR)
-        m = min(n - i, int(0.25 * SR))
+        m = min(n - i, int(0.32 * SR))
         if m > 0:
-            duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.18 * np.exp(-np.arange(m) / SR / 0.08))
+            duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.38 * np.exp(-np.arange(m) / SR / 0.1))
 
-    ir = room(1.4)
-    music = gtr * 0.9 + tune * 0.75 + bells * 0.5
-    wet = fftconvolve(gtr * 0.15 + tune * 0.25 + bells * 0.3, ir)[:n]
-    mix = ((music + wet) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.06) * gain + fx
+    ir = room(2.2)
+    tune_echo = echo(tune, 0.75 * BEAT, feedback=0.3, repeats=3)  # a dotted-eighth echo that floats
+    sources = gtr * 0.75 + mar * 0.7 + pads * 0.45 + tune_echo * 0.75 + bells * 0.45
+    wet = fftconvolve(gtr * 0.12 + mar * 0.25 + pads * 0.3 + tune_echo * 0.35 + bells * 0.35, ir)[:n]
+    mix = ((sources + wet) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.08) * gain + fx
     if drop > 0:
         i = int(drop * SR)
         mix[:i] = lowpass(mix[:i], 5000)
-    mix = lowpass(mix, 12000)  # let the recorder and bells shine
+    mix = lowpass(mix, 12000)
 
     mix = mix[: int(seconds * SR)]
     t = np.arange(len(mix)) / SR
-    mix *= np.clip((seconds - t) / 1.2, 0, 1)
+    mix *= np.clip((seconds - t) / 1.5, 0, 1)
     mix = np.tanh(1.2 * mix / (np.max(np.abs(mix)) + 1e-9)) * 0.89 / np.tanh(1.2)
-    right = 0.82 * mix + 0.18 * np.roll(lowpass(mix, 6000), int(0.012 * SR))
+    right = 0.8 * mix + 0.2 * np.roll(lowpass(mix, 6000), int(0.013 * SR))
     return np.stack([mix, right], axis=1), scenes, seconds
 
 

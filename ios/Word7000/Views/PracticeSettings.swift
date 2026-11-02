@@ -57,7 +57,7 @@ struct StudySettingsSheet: View {
                         }
                     }
                 }
-                .listRowBackground(Palette.surface)
+                .listRowBackground(StyledRowBackground())
             }
             .warmList()
             // The count rolls to its new value as the filters change.
@@ -101,7 +101,7 @@ struct QuizConfiguration: View {
                     }
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         // Always in reach at the bottom, even when the sheet is at half height.

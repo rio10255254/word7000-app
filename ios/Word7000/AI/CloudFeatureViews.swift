@@ -75,7 +75,7 @@ struct AIWordSheet: View {
                     AIExplanationSection(word: word)
                     AskAISection(word: word)
                 }
-                .listRowBackground(Palette.surface)
+                .listRowBackground(StyledRowBackground())
             }
             .warmList()
             .navigationTitle(model.face(word).prompt)

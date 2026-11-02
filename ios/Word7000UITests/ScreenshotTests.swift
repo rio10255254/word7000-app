@@ -57,7 +57,7 @@ final class ScreenshotTests: XCTestCase {
         let app = XCUIApplication()
         let prefix = style == nil ? "cat" : "collage-cat"
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingCatShowcase"]
-            + (style == "collage" ? ["-uiTestingCollage"] : [])
+            + (style == "collage" ? ["-uiTestingCollage"] : ["-uiTestingLeather"])
         app.launch()
         let input = app.descendants(matching: .any)["mascot-chat-input"]
         XCTAssertTrue(input.waitForExistence(timeout: 10), "The cat's chat did not open")
@@ -263,7 +263,8 @@ final class ScreenshotTests: XCTestCase {
     private func walkThrough(theme: String, style: String? = nil) {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTesting\(theme)", "-uiTestingFakePlans"]
-        if style == "collage" { app.launchArguments.append("-uiTestingCollage") }
+        // The default look is the collage; the plain light and dark walks show leather.
+        app.launchArguments.append(style == "collage" ? "-uiTestingCollage" : "-uiTestingLeather")
         app.launch()
         let prefix = [style, theme.lowercased()].compactMap { $0 }.joined(separator: "-")
 

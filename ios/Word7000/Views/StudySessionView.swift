@@ -188,6 +188,7 @@ struct StudySessionView: View {
         .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }
         .sensoryFeedback(.impact(weight: .light), trigger: armed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.55), trigger: revealed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .catTip(.study, at: .top, inset: 60)
     }
 
     /// How far the card has been dragged toward a verdict, 0 to 1.

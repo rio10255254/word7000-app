@@ -314,24 +314,86 @@ extension View {
         }
     }
 
-    /// The main call to action: a full-width capsule, Liquid Glass on iOS 26.
-    @ViewBuilder
+    /// The main call to action: a full-width capsule, Liquid Glass on iOS 26;
+    /// in the collage, a slip of coloured paper with an ink edge.
     func prominentAction(tint: Color = Palette.accent) -> some View {
-        if #available(iOS 26.0, *) {
-            self.modifier(OneLineLabel()).buttonStyle(.glassProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
-        } else {
-            self.modifier(OneLineLabel()).buttonStyle(.borderedProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
-        }
+        modifier(ActionButton(prominent: true, tint: tint))
     }
 
     /// A secondary action next to a prominent one.
-    @ViewBuilder
     func secondaryAction(tint: Color = Palette.accent) -> some View {
-        if #available(iOS 26.0, *) {
-            self.modifier(OneLineLabel()).buttonStyle(.glass).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+        modifier(ActionButton(prominent: false, tint: tint))
+    }
+}
+
+/// The two kinds of action button in each look.
+private struct ActionButton: ViewModifier {
+    @Environment(\.appStyle) private var appStyle
+    var prominent: Bool
+    var tint: Color
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        let labelled = content.modifier(OneLineLabel())
+        if appStyle == .collage {
+            labelled.buttonStyle(CollageButtonStyle(prominent: prominent, tint: tint)).tint(tint)
+        } else if #available(iOS 26.0, *) {
+            if prominent {
+                labelled.buttonStyle(.glassProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+            } else {
+                labelled.buttonStyle(.glass).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+            }
+        } else if prominent {
+            labelled.buttonStyle(.borderedProminent).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
         } else {
-            self.modifier(OneLineLabel()).buttonStyle(.bordered).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
+            labelled.buttonStyle(.bordered).buttonBorderShape(.capsule).controlSize(.large).tint(tint)
         }
+    }
+}
+
+/// A button cut from paper: the main one coloured, the other ivory, both
+/// with an ink edge and a hard shadow underneath, as if laid on the desk.
+/// Pressing it pushes it down onto its shadow.
+struct CollageButtonStyle: ButtonStyle {
+    var prominent: Bool
+    var tint: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        CollageButtonBody(configuration: configuration, prominent: prominent, tint: tint)
+    }
+}
+
+private struct CollageButtonBody: View {
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let configuration: ButtonStyleConfiguration
+    var prominent: Bool
+    var tint: Color
+
+    var body: some View {
+        let pressed = configuration.isPressed
+        let shape = RoundedRectangle(cornerRadius: 7, style: .continuous)
+        configuration.label
+            .font(.headline)
+            .foregroundStyle(prominent ? Color.white : tint)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
+            .frame(minHeight: 50)
+            .background {
+                shape
+                    .fill(prominent ? AnyShapeStyle(tint) : AnyShapeStyle(PaperKind.ivory.color))
+                    .overlay { PaperGrain(opacity: prominent ? 0.9 : 0.6).blendMode(prominent ? .overlay : .multiply).clipShape(shape) }
+                    .overlay { shape.strokeBorder(Collage.ink.opacity(0.85), lineWidth: 1.5) }
+            }
+            .background {
+                shape
+                    .fill(Collage.ink.opacity(0.8))
+                    .offset(x: pressed ? 0 : 3, y: pressed ? 0 : 3)
+            }
+            .offset(x: pressed ? 3 : 0, y: pressed ? 3 : 0)
+            .opacity(isEnabled ? 1 : 0.45)
+            .animation(reduceMotion ? nil : .snappy(duration: 0.15), value: pressed)
+            .contentShape(shape)
     }
 }
 

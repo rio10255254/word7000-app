@@ -205,7 +205,7 @@ struct SpeakingCoachView: View {
                     Section {} footer: { Text(privacyNote) }
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .accessibilityIdentifier("coach-form")

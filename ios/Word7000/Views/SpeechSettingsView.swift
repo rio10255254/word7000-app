@@ -47,7 +47,7 @@ struct SpeechSettingsView: View {
                     Text(L.t("每翻到新的一張學習卡，就自動唸出卡片正面。", "Each new study card is read aloud as it appears."))
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(L.t("朗讀聲音", "Reading voice"))
@@ -144,7 +144,7 @@ private struct SpeechVoicePicker: View {
                     }
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(title)

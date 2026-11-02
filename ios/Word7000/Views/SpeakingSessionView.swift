@@ -133,7 +133,7 @@ struct SpeakingSessionView: View {
                             FilterControls(selection: Binding(get: { model.settings.speakingFilter ?? FilterSelection() }, set: { model.settings.speakingFilter = $0 }))
                         }
                     }
-                    .listRowBackground(Palette.surface)
+                    .listRowBackground(StyledRowBackground())
                 }
                 .warmList()
                 .navigationTitle(L.t("練習範圍", "Practice scope"))
@@ -142,6 +142,7 @@ struct SpeakingSessionView: View {
                 .compactSheet()
             }
         }
+        .catTip(.speaking, at: .top, inset: 60)
     }
 
     private var scopePicker: some View {

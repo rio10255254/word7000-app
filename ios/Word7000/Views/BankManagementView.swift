@@ -89,7 +89,7 @@ struct BankManagementView: View {
                     .accessibilityIdentifier("bank-manage-delete")
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(L.t("管理單字集", "Manage bank"))
@@ -232,7 +232,7 @@ struct WordEditorSheet: View {
                         TextField(L.t("中文翻譯", "Chinese translation"), text: $translation, axis: .vertical).lineLimit(2...6)
                     }
                 }
-                .listRowBackground(Palette.surface)
+                .listRowBackground(StyledRowBackground())
             }
             .warmList()
             .scrollDismissesKeyboard(.interactively)

@@ -63,7 +63,7 @@ struct IntelligenceSettingsView: View {
                     Text(L.t("登入與學習同步仍依原本的隱私權政策處理。", "Sign-in and learning sync still follow the existing privacy policy."))
                 } header: { Text(L.t("隱私", "Privacy")) }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .cloudConsentAlert(isPresented: $askCloud) { AppleSpeakingCoach.shared.refreshAvailability() }

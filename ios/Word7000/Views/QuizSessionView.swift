@@ -86,6 +86,7 @@ struct QuizSessionView: View {
         .sensoryFeedback(.success, trigger: finished) { _, new in
             new && missedIds.isEmpty && (model.settings.hapticsEnabled ?? true)
         }
+        .catTip(.quiz, at: .top, inset: 60)
     }
 
     private func start() {

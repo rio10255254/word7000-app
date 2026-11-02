@@ -42,6 +42,8 @@ struct RootView: View {
             TodayView(start: { next in
                 if next == .exam {
                     plus.require(.examPractice) { activity = .exam }
+                } else if next == .scan {
+                    openScan()
                 } else {
                     activity = next
                 }

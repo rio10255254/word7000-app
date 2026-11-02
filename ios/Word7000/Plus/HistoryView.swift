@@ -81,7 +81,7 @@ struct HistoryView: View {
                     }
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .scrollContentBackground(.hidden)
     }

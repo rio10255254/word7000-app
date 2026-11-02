@@ -135,7 +135,7 @@ struct WordsView: View {
                             FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
                         }
                     }
-                    .listRowBackground(Palette.surface)
+                    .listRowBackground(StyledRowBackground())
                 }
                 .warmList()
                 .navigationTitle(L.filters)
@@ -184,6 +184,7 @@ struct WordsView: View {
             }
             .disabled(newName.trimmed.isEmpty)
         }
+        .catTip(.words)
     }
 
     private var bankNameTitle: String {
@@ -667,6 +668,7 @@ struct WordDetailView: View {
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
             }
         }
+        .catTip(.wordDetail)
     }
 }
 

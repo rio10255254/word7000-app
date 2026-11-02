@@ -469,7 +469,7 @@ struct TodayView: View {
     /// bubble opens it.
     private var guideTip: MascotTip? {
         guard let step = model.guideStep else { return nil }
-        return MascotTip(text: step.line) { openGuide(step) }
+        return MascotTip(text: step.line(plus: plus.subscribed || AppRuntime.uiTesting)) { openGuide(step) }
     }
 
     private func openGuide(_ step: GuideStep) {
@@ -477,7 +477,15 @@ struct TodayView: View {
         case .quiz: quizSetupOpen = true
         case .speaking: start(.speaking)
         case .spelling: start(.spelling)
-        case .scan: start(.scan)
+        // Opening a Plus feature without Plus shows what it is and the offer;
+        // either way the cat has introduced it and moves on.
+        case .exam:
+            model.noteTried(.exam)
+            start(.exam)
+        case .scan:
+            model.noteTried(.scan)
+            start(.scan)
+        // Without Plus the chat introduces the AI and offers Plus.
         case .chat: mascotChatOpen = true
         }
     }

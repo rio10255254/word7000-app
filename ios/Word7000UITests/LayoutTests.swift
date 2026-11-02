@@ -29,10 +29,10 @@ final class LayoutTests: XCTestCase {
         checkToday(app, name: "layout-chinese", tiles: ["today-quiz", "today-speaking", "today-exam"])
     }
 
-    /// What a new learner sees: the paper collage, the default look.
-    func testTodayFitsInDefaultStyle() {
-        let app = launch(["-uiTestingDefaultStyle"])
-        checkToday(app, name: "layout-default-collage", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+    /// The other look, leather (the others run in the default, the collage).
+    func testTodayFitsInLeather() {
+        let app = launch(["-uiTestingLeather"])
+        checkToday(app, name: "layout-leather", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
     }
 
     func testTodayFitsInDarkMode() {

@@ -64,6 +64,7 @@ struct MeView: View {
         .warmList()
         .navigationTitle(L.tabMe)
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
+        .catTip(.me)
     }
 
     private var streakProtectionText: String {
@@ -297,7 +298,7 @@ struct SettingsView: View {
                     Text(L.t("關於", "About"))
                 }
             }
-            .listRowBackground(Palette.surface)
+            .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(L.settings)

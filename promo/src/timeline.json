@@ -1,6 +1,7 @@
 {
   "bpm": 112.5,
   "quantizeBeats": 2,
+  "barPhaseBeats": 2,
   "hold": 24,
   "full": [
     {
@@ -97,7 +98,8 @@
           "sfx": "stamp"
         }
       ],
-      "music": "chorus"
+      "music": "chorus",
+      "onBar": true
     },
     {
       "id": "style",
@@ -125,7 +127,8 @@
           "at": 8,
           "sfx": "ding"
         }
-      ]
+      ],
+      "onBar": true
     },
     {
       "id": "end",
@@ -138,7 +141,8 @@
           "at": 14,
           "sfx": "stamp"
         }
-      ]
+      ],
+      "onBar": true
     }
   ]
 }

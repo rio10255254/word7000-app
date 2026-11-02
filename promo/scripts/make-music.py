@@ -47,6 +47,7 @@ BPM = TIMELINE["bpm"]
 HOLD = TIMELINE["hold"]
 BEAT_FRAMES = round(OUTPUT_FPS * 60 / BPM)
 GRID = TIMELINE.get("quantizeBeats", 1) * BEAT_FRAMES
+BAR_PHASE = TIMELINE.get("barPhaseBeats", 0) * BEAT_FRAMES
 BEAT = BEAT_FRAMES / OUTPUT_FPS  # seconds
 BAR = BEAT * 4
 SWING = 0.04  # a touch of lilt on the off-beats
@@ -81,6 +82,9 @@ def track_layout(entries):
         if i + 1 < len(entries):
             nxt = entries[i + 1]
             advance = ceil_to(raw_frames(e) - turn_frames(nxt), GRID)
+            # A scene that opens a new section of the song waits for the next bar line.
+            while nxt.get("onBar") and (t + advance - BAR_PHASE) % (4 * BEAT_FRAMES) != 0:
+                advance += GRID
             lengths.append(advance + turn_frames(nxt))
             t += advance
         else:
@@ -424,54 +428,56 @@ def riser(length):
 
 
 # ── Song ─────────────────────────────────────────────────────────────────────
+#
+# A pop song first, the video second. The harmony is a fixed loop, one chord
+# a bar, that scene changes never interrupt; the tune is written out note by
+# note in four-bar phrases; the chorus is one short, rhythmic hook sung twice
+# and brought home. The scenes that open the chorus, the dip and the end are
+# placed on bar lines (timeline.json `onBar`), so the song's sections and the
+# video's line up.
 
-# Ebmaj7 → Dm7 → Cm7 → F (IV–iii–ii–V in B-flat): warm, a little nostalgic,
-# a sunset progression. (bass note, guitar shape low to high, chord tones, pad voicing)
-CHORDS = [
-    (39, [51, 58, 62, 67, 70], {3, 7, 10, 2}, [63, 67, 70, 74]),  # Ebmaj7, x-6-8-7-8-6
-    (38, [50, 57, 60, 65, 69], {2, 5, 9, 0}, [62, 65, 69, 72]),  # Dm7, x-5-7-5-6-5
-    (36, [48, 55, 58, 63, 67], {0, 3, 7, 10}, [60, 63, 67, 70]),  # Cm7, x-3-5-3-4-3
-    (41, [41, 48, 53, 57, 60, 65], {5, 9, 0}, [60, 65, 69, 72]),  # F, barre at 1
+# (bass note, guitar shape low to high, chord tones, pad voicing)
+EB = (39, [51, 58, 62, 67, 70], {3, 7, 10, 2}, [63, 67, 70, 74])  # Ebmaj7, x-6-8-7-8-6
+DM = (38, [50, 57, 60, 65, 69], {2, 5, 9, 0}, [62, 65, 69, 72])  # Dm7, x-5-7-5-6-5
+CM = (36, [48, 55, 58, 63, 67], {0, 3, 7, 10}, [60, 63, 67, 70])  # Cm7, x-3-5-3-4-3
+F_ = (41, [41, 48, 53, 57, 60, 65], {5, 9, 0}, [60, 65, 69, 72])  # F, barre at 1
+BB = (34, [46, 53, 58, 62, 65], {10, 2, 5}, [62, 65, 70, 74])  # B♭, A-shape barre at 1
+
+LOOP = [EB, DM, CM, F_]  # IV–iii–ii–V: the backbone, one chord a bar
+CHORUS_CHORDS = [EB, DM, CM, F_, (EB, F_), BB]  # … and home to I at the end of the chorus
+
+# The tune, note by note: (beat, MIDI note, beats long), one list per bar.
+# Verse: a four-bar phrase, its first three bars sharing one rhythm, sung twice.
+VERSE = [
+    [(0.5, 79, 0.5), (1, 82, 0.5), (1.5, 79, 0.5), (2, 77, 1), (3, 79, 1)],  # G B♭ G F G
+    [(0.5, 77, 0.5), (1, 81, 0.5), (1.5, 77, 0.5), (2, 74, 1), (3, 77, 1)],  # F A F D F
+    [(0.5, 79, 0.5), (1, 82, 0.5), (1.5, 79, 0.5), (2, 79, 1), (3, 82, 1)],  # G B♭ G G B♭
+    [(0, 81, 1.5), (1.5, 79, 0.5), (2, 77, 2)],  # A G F: a question
 ]
-SCALE = [10, 0, 2, 3, 5, 7, 9]  # B-flat major
+VERSE_LAST = [(0, 81, 1), (1, 84, 1), (2, 86, 2)]  # A C D: lifting into the pre-chorus
+# Pre-chorus: long notes climbing.
+PRE = [
+    [(0, 82, 2), (2, 84, 2)],  # B♭ C
+    [(0, 86, 2), (2, 84, 2)],  # D C
+    [(0, 87, 2), (2, 86, 2)],  # E♭ D
+    [(0, 84, 1), (1, 86, 1), (2, 87, 1), (3, 89, 1)],  # C D E♭ F: into the chorus
+]
+# Chorus: the hook — "da-da DUM, da-da DUM", then a leap and a fall — sung
+# twice (the second time a step higher), then brought home to B♭.
+HOOK = [
+    [(0, 82, 0.5), (0.5, 84, 0.5), (1, 86, 1), (2, 82, 0.5), (2.5, 84, 0.5), (3, 86, 1)],  # B♭ C D, B♭ C D
+    [(0, 89, 1), (1, 86, 0.5), (1.5, 84, 0.5), (2, 81, 2)],  # F D C A
+    [(0, 82, 0.5), (0.5, 84, 0.5), (1, 87, 1), (2, 82, 0.5), (2.5, 84, 0.5), (3, 87, 1)],  # B♭ C E♭, B♭ C E♭
+    [(0, 89, 1), (1, 87, 0.5), (1.5, 86, 0.5), (2, 84, 2)],  # F E♭ D C
+    [(0, 82, 0.5), (0.5, 84, 0.5), (1, 86, 1), (2, 89, 0.5), (2.5, 86, 0.5), (3, 84, 1)],  # B♭ C D, F D C
+    [(0, 82, 3.5)],  # B♭: home
+]
+DIP = [HOOK[0], [(0, 81, 3.5)]]  # the hook once more, softly
 
 # Guitar on the eighths of a bar: D down, U up, C muted chuck, - rest.
-# Tropical: light off-beat up-strums, a down-strum to open the bar.
-STRUM = {
-    "verseA": "D--U--U-",
-    "verseB": "D-UU-UU-",
-    "pre": "D-D-D-DU",  # driving straight into the chorus
-    "chorus": "D-CU-UCU",
-}
-PICK = [0, 2, 3, 4, 2, 3, 4, 3]  # fingerpicked eighths (string indices)
-# Marimba plays the chord in the island 3-3-2 rhythm (eighth slots 0, 3, 6).
+STRUM = {"verseA": "D--U--U-", "verseB": "D-UU-UU-", "pre": "D-D-D-DU", "chorus": "D-CU-UCU"}
+PICK = [0, 2, 3, 4, 2, 3, 4, 3]
 MARIMBA = {"verseA": (0, 3), "verseB": (0, 3, 6), "pre": (0, 2, 4, 6), "chorus": (0, 3, 6)}
-
-# The tune is written as contours in scale steps from a home note, so it can
-# follow whatever chord is playing: notes on beats 1 and 3 land on a chord tone.
-# Call and response: the call stays, the answers change. (beat, scale steps, beats long)
-CALL = [(0, 2, 0.5), (0.5, 1, 0.5), (1, 0, 1.5), (2.5, -1, 0.5), (3, 0, 1)]
-CALL_SYNC = [(0.5, 2, 0.5), (1, 1, 0.5), (1.5, 0, 1.5), (3, -1, 0.5), (3.5, 0, 0.5)]
-ANSWERS = [
-    [(0, -1, 1), (1, -2, 0.5), (1.5, -3, 0.5), (2, -2, 2)],  # falls back home
-    [(0, 1, 0.5), (0.5, 2, 0.5), (1, 4, 1.5), (2.5, 3, 0.5), (3, 2, 1)],  # opens upward
-    [(0, 3, 0.5), (0.5, 2, 0.5), (1, 1, 0.5), (1.5, 2, 0.5), (2, 4, 2)],  # turns and lifts
-    [(0, 2, 1), (1, 1, 1), (2, -1, 1), (3, 0, 1)],  # settles in quarters
-]
-CLIMB = [(0, 0, 1), (1, 1, 1), (2, 2, 1), (3, 3, 0.5), (3.5, 4, 0.5)]
-PEAK = [(0, 4, 0.5), (0.5, 5, 0.5), (1, 7, 1.5), (2.5, 5, 0.5), (3, 4, 1)]
-HOME = {"intro": 2, "verseA": 2, "verseB": 3, "pre": 2, "chorus": 4, "dip": 2, "end": 0}
-
-
-def scale_note(index):
-    """Scale index (0 = B-flat 5) → MIDI note."""
-    octave, step = divmod(index, 7)
-    return 82 + 12 * octave + (SCALE[step] - SCALE[0]) % 12
-
-
-def snap(note, tones):
-    """The nearest chord tone to a note."""
-    return min((note + d for d in range(-2, 3) if (note + d) % 12 in tones), key=lambda m: abs(m - note), default=note)
 
 
 def compose(name):
@@ -489,64 +495,75 @@ def compose(name):
     breakdown = sec(find("breakdown")["start"]) if find("breakdown") else end
     changes = sorted(sec(s["start"]) for s in scenes if s["turn"])
 
-    # Sections, laid on the scene timing: something is added or taken away at
-    # every boundary, about every eight bars.
-    pre = max(drop, chorus - 2 * BAR)
-    verse_b = min(pre, drop + 8 * BAR)
+    bar_of = lambda t: math.floor((t - drop) / BAR + 1e-6)  # bar 0 is the verse's first bar
+    chorus_bar, dip_bar, end_bar = bar_of(chorus), bar_of(breakdown), bar_of(end)
+    pre_bar = chorus_bar - 4
 
-    def section(t):
-        if t < drop:
+    def section_of(b):
+        if b < 0:
             return "intro"
-        if t >= end:
+        if b >= end_bar:
             return "end"
-        if t >= breakdown:
+        if b >= dip_bar:
             return "dip"
-        if t >= chorus:
+        if b >= chorus_bar:
             return "chorus"
-        if t >= pre:
+        if b >= pre_bar:
             return "pre"
-        if t >= verse_b:
-            return "verseB"
-        return "verseA"
+        return "verseA" if b < 4 else "verseB"
 
-    # Harmony moves at every bar line and every scene change.
-    phase = drop % BAR
-    bar_lines = [phase + k * BAR for k in range(-1, int(seconds / BAR) + 2)]
-    marks = sorted({round(x, 4) for x in [0.0] + [b for b in bar_lines if 0 < b < end] + [c for c in changes if c < end]})
+    section = lambda t: section_of(bar_of(t))
+
+    def chords_of(b):
+        part = section_of(b)
+        if part == "intro":
+            return EB
+        if part == "chorus":
+            return CHORUS_CHORDS[(b - chorus_bar) % len(CHORUS_CHORDS)]
+        if part == "dip":
+            return LOOP[(b - dip_bar) % 2]
+        if part == "end":
+            return BB
+        return LOOP[b % 4]
+
+    # The chord grid: one chord a bar (two in a split bar), whatever the scenes do.
+    first_bar = bar_of(0.0) - 1
     segments = []
-    for i, start in enumerate(marks):
-        stop = marks[i + 1] if i + 1 < len(marks) else end
-        if stop - start > 0.05:
-            segments.append((start, stop, i % len(CHORDS)))
+    for b in range(first_bar, end_bar + 1):
+        start, stop = drop + b * BAR, drop + (b + 1) * BAR
+        if stop <= 0 or start >= end:
+            continue
+        chords = chords_of(b)
+        if isinstance(chords[0], tuple):
+            segments.append((max(0.0, start), start + BAR / 2, chords[0]))
+            segments.append((start + BAR / 2, min(stop, end), chords[1]))
+        else:
+            segments.append((max(0.0, start), min(stop, end), chords))
 
     def chord_at(t):
-        for a, b, ci in segments:
-            if a - 1e-6 <= t < b:
-                return CHORDS[ci]
-        return CHORDS[3]
+        for a_, b_, ch in segments:
+            if a_ - 1e-6 <= t < b_:
+                return ch
+        return BB
 
-    near_change = lambda t, width: any(-width <= t - c < 0.05 for c in changes)
     eighth = BEAT / 2
 
-    # ── Guitar, marimba, pad and bass, chord by chord ──
-    for start, stop, ci in segments:
-        bass_note, shape, tones, voicing = CHORDS[ci]
-        part = section(start)
+    # ── Guitar, marimba, pad and bass, bar by bar ──
+    for start, stop, chord in segments:
+        bass_note, shape, tones, voicing = chord
+        part = section(start + 0.01)
         length = stop - start
         slots = []
-        k = math.ceil(round((start - phase) / eighth, 6))
-        while phase + k * eighth < stop - 0.02:
-            slots.append((phase + k * eighth + (SWING * BEAT if k % 2 else 0), k % 8))
+        k = math.ceil(round((start - drop) / eighth, 6))
+        while drop + k * eighth < stop - 0.02:
+            slots.append((drop + k * eighth + (SWING * BEAT if k % 2 else 0), k % 8))
             k += 1
-        # The purple-sunset pad, under everything but the busiest moments.
         place(pads, pad(voicing, length + 0.3), start, {"intro": 0.5, "dip": 0.6, "chorus": 0.35}.get(part, 0.42))
         if part in STRUM:
             pattern = STRUM[part]
             hits = [(at, pattern[idx]) for at, idx in slots if pattern[idx] != "-"]
             if slots and (not hits or hits[0][0] > slots[0][0]):
                 hits.insert(0, (slots[0][0], "D"))
-            elif hits:
-                hits[0] = (hits[0][0], "D")
             loud = {"verseA": 0.5, "verseB": 0.56, "pre": 0.62, "chorus": 0.66}[part]
             for j, (at, kind) in enumerate(hits):
                 nxt = hits[j + 1][0] if j + 1 < len(hits) else stop
@@ -557,11 +574,10 @@ def compose(name):
             for at, idx in slots:
                 if idx in MARIMBA[part]:
                     for note in voicing[1:]:
-                        place(mar, marimba(note, 0.5), at, 0.55)
-        else:
+                        place(mar, marimba(note, 0.5), at, 0.5)
+        elif part != "end":
             for at, idx in slots:
                 place(gtr, guitar(shape[PICK[idx] % len(shape)], eighth * 2.2, 0.45), at, 0.75 if part == "intro" else 0.6)
-        # Bass: held roots, then a bounce, then octave pops.
         if part == "verseA":
             place(low, ebass(bass_note, min(length, BAR)), start, 0.7)
         elif part in ("verseB", "pre"):
@@ -575,69 +591,59 @@ def compose(name):
         elif part == "dip":
             place(low, ebass(bass_note, length), start, 0.35)
 
-    # ── The tune: soprano recorder, call and response, with a climb and a peak ──
-    answer_i = 0
-    previous = None
-    for k, bar_start in enumerate(bar_lines):
-        part = section(bar_start + 0.01)
-        if part in ("intro", "end") or bar_start >= end:
-            continue
-        bar_no = round((bar_start - drop) / BAR)
+    # ── The tune, bar by bar ──
+    def tune_of(b):
+        part = section_of(b)
+        if part in ("verseA", "verseB"):
+            i = b % 4
+            return VERSE_LAST if (i == 3 and b == pre_bar - 1) else VERSE[i]
         if part == "pre":
-            phrase = CLIMB
-        elif part == "chorus":
-            phrase = PEAK if bar_no % 2 == 0 else ANSWERS[answer_i % len(ANSWERS)]
-        elif part == "dip":
-            phrase = CALL if bar_no % 2 == 0 else []
-        else:
-            phrase = (CALL if part == "verseA" else CALL_SYNC) if bar_no % 2 == 0 else ANSWERS[answer_i % len(ANSWERS)]
-        if bar_no % 2 == 1:
-            answer_i += 1
-        home = HOME[part]
-        for beat, steps, beats in phrase:
-            at = bar_start + beat * BEAT
-            if at >= end or near_change(at, BEAT * 0.5):
-                continue
-            note = scale_note(home + steps - 2)  # the recorder's bright range, about G5 to D7
-            if beat in (0, 2):
-                snapped = snap(note, chord_at(at)[2])
-                if snapped != previous:
-                    note = snapped
-            vel = {"verseA": 0.5, "verseB": 0.56, "pre": 0.6, "chorus": 0.68, "dip": 0.38}[part]
-            place(tune, lead(note, beats * BEAT * 0.92, vel), at)
-            if part == "chorus":
-                place(bells, glock(note + 12, 0.42), at, 0.4)
-            previous = note
-        # Marimba counter-line: fills the gaps in the answers, moving the other way.
-        if part in ("verseB", "chorus") and bar_no % 2 == 1:
-            tones = chord_at(bar_start + 2.5 * BEAT)[2]
-            line = [scale_note(HOME[part] + 2), scale_note(HOME[part]), scale_note(HOME[part] - 2)]
-            for i, at_beat in enumerate((2.5, 3, 3.5)):
-                at = bar_start + at_beat * BEAT
-                if at < end and not near_change(at, BEAT * 0.5):
-                    place(mar, marimba(snap(line[i] - 12, tones), 0.6), at, 0.75)
-        # Sunshine: a glockenspiel glint on the downbeat of verse B and chorus bars.
-        if part in ("verseB", "chorus") and not near_change(bar_start, BEAT * 0.5):
-            place(bells, glock(snap(scale_note(HOME[part] + 7), chord_at(bar_start)[2]), 0.4), bar_start, 0.45)
+            return PRE[(b - pre_bar) % 4]
+        if part == "chorus":
+            return HOOK[(b - chorus_bar) % len(HOOK)]
+        if part == "dip":
+            return DIP[(b - dip_bar) % len(DIP)]
+        return []
 
-    # Intro: the theme hinted on marimba over the waves.
-    for beat, steps, beats in CALL:
-        at = max(0.0, drop - BAR) + beat * BEAT
-        if 0 <= at < drop - BEAT * 0.5:
-            place(mar, marimba(snap(scale_note(steps) - 12, chord_at(at)[2]), 0.5), at, 0.7)
+    vel = {"verseA": 0.55, "verseB": 0.58, "pre": 0.62, "chorus": 0.7, "dip": 0.42}
+    for b in range(0, end_bar):
+        part = section_of(b)
+        bar_start = drop + b * BAR
+        for beat, note, beats in tune_of(b):
+            at = bar_start + beat * BEAT
+            place(tune, lead(note, beats * BEAT * 0.92, vel[part]), at)
+            if part == "chorus":
+                place(bells, glock(note + 12, 0.4), at, 0.35)
+        # Sunshine: a glockenspiel glint on each chorus downbeat.
+        if part == "chorus":
+            place(bells, glock(chord_at(bar_start)[3][-1] + 12, 0.4), bar_start, 0.35)
+        # Marimba answers the hook where it holds its long note.
+        if part == "chorus" and (b - chorus_bar) % len(HOOK) in (1, 3):
+            tones = chord_at(bar_start + 2.5 * BEAT)[3]
+            for i, at_beat in enumerate((2.5, 3, 3.5)):
+                place(mar, marimba(tones[-1 - i], 0.6), bar_start + at_beat * BEAT, 0.7)
+
+    # Intro: the hook first heard on marimba, so the chorus feels like coming home.
+    intro_bar = drop - BAR
+    for beat, note, beats in HOOK[0]:
+        at = intro_bar + beat * BEAT
+        if at >= 0:
+            place(mar, marimba(note - 12, 0.55), at, 0.85)
 
     # ── Drums and hand drums ──
     kicks = []
     conga, quinto, tumba = one_shot("conga"), one_shot("quinto"), one_shot("tumba")
     bongo_hi, bongo_lo = one_shot("bongo-high"), one_shot("bongo-low")
-    for bar_start in bar_lines:
+    pre_start = drop + pre_bar * BAR
+    for b in range(first_bar, end_bar):
+        bar_start = drop + b * BAR
         for step in range(16):
             at = bar_start + step / 4 * BEAT + (SWING * BEAT if step % 4 == 2 else 0)
             if at < 0 or at >= end:
                 continue
             part = section(at)
             if any(c - BEAT * 0.5 - 0.01 <= at < c - 0.01 for c in changes):
-                continue  # drop out for the half beat before every scene change
+                continue  # the drums drop out for the half beat before every scene change
             if part == "verseA":
                 if step in (0, 8):
                     place(drums, kick(), at, 0.75)
@@ -649,7 +655,6 @@ def compose(name):
                 if step == 14:
                     place(drums, conga, at, 0.3)
             elif part in ("verseB", "chorus"):
-                # The soft four-on-the-floor of tropical house.
                 if step % 4 == 0:
                     place(drums, kick(), at, 0.8 if part == "verseB" else 0.9)
                     kicks.append(at)
@@ -657,7 +662,6 @@ def compose(name):
                     place(drums, clap(), at, 0.4 if part == "verseB" else 0.5)
                 if step % 2 == 0:
                     place(drums, shaker(), at, 0.12 if step % 4 == 2 else 0.07)
-                # Congas and bongos, a loose island pattern.
                 if step in (6, 14):
                     place(drums, conga, at, 0.32)
                 if step == 10:
@@ -674,67 +678,68 @@ def compose(name):
                 last_bar = at >= chorus - BAR
                 every = 1 if last_bar and at >= chorus - BAR / 2 else (2 if last_bar else 4)
                 if step % every == 0:
-                    place(drums, clap(), at, 0.2 + 0.25 * (at - pre) / max(0.1, chorus - pre))
+                    place(drums, clap(), at, 0.2 + 0.25 * (at - pre_start) / max(0.1, chorus - pre_start))
                 if step % 2 == 0:
                     place(drums, shaker(), at, 0.1)
                 if step in (6, 14):
                     place(drums, conga, at, 0.3)
             elif part == "dip" and step % 4 == 2:
                 place(drums, shaker(), at, 0.05)
-    if pre < chorus:
-        place(fx, riser(chorus - pre), pre, 0.2)
+    if pre_start < chorus:
+        place(fx, riser(chorus - pre_start), pre_start, 0.2)
 
     # ── The beach: waves under the intro, the dip and the end ──
     ocean = one_shot("ocean")
-    for a, b in ((0.0, drop + BAR), (breakdown, seconds)):
-        if b > a:
-            m = int((b - a) * SR)
-            bed = np.resize(ocean, m) * np.clip(np.arange(m) / SR / 1.5, 0, 1) * np.clip((m / SR - np.arange(m) / SR) / 1.5, 0, 1)
-            place(fx, lowpass(bed, 5000), a, 0.35)
+    for a_, b_ in ((0.0, drop + BAR), (breakdown, seconds)):
+        if b_ > a_:
+            m = int((b_ - a_) * SR)
+            ramp = np.arange(m) / SR
+            bed = np.resize(ocean, m) * np.clip(ramp / 1.5, 0, 1) * np.clip((m / SR - ramp) / 1.5, 0, 1)
+            place(fx, lowpass(bed, 5000), a_, 0.35)
 
-    # ── Every scene change: reversed strum in, kick and low hit on the beat ──
+    # ── Every scene change: a reversed strum swells in, the kick and a low hit land ──
     for s in scenes:
         if not s["turn"]:
             continue
         at = sec(s["start"])
-        place(gtr, reverse_swell(chord_at(at + 0.01)[1], BEAT), at - BEAT, 0.35)
+        place(gtr, reverse_swell(chord_at(at + 0.01)[1], BEAT), at - BEAT, 0.3)
         place(drums, kick(), at, 0.9)
         kicks.append(at)
-        place(fx, low_hit(1.4), at, 0.38 if s.get("music") in ("drop", "chorus", "end") else 0.24)
+        place(fx, low_hit(1.4), at, 0.38 if s.get("music") in ("drop", "chorus", "end") else 0.22)
         kind = s.get("enter")
         if kind in ("push", "zoom", "pull"):
-            place(fx, whoosh(sec(s["turn"]) * 1.2), at - 0.05, 0.11)
+            place(fx, whoosh(sec(s["turn"]) * 1.2), at - 0.05, 0.1)
         elif kind == "circle":
             place(fx, pop(), at, 0.2)
         for accent in s.get("accents", []):
             when = at + sec(js_round(accent["at"] * FRAME_SCALE))
             sound = {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]]()
-            place(fx, sound, when, {"stamp": 0.4, "tap": 0.14, "ding": 0.25}[accent["sfx"]])
+            place(fx, sound, when, {"stamp": 0.4, "tap": 0.14, "ding": 0.2}[accent["sfx"]])
     for s in scenes:
         if not s["turn"] and not s["nested"]:
             for accent in s.get("accents", []):
                 when = sec(s["start"]) + sec(js_round(accent["at"] * FRAME_SCALE))
                 place(fx, {"stamp": stamp, "tap": tap, "ding": ding}[accent["sfx"]](), when, 0.3)
 
-    # ── The end: a slow ringing Ebmaj7 → B♭ (IV to I, a sunset cadence) ──
+    # ── The end: the hook's last phrase, home on B♭, ringing out ──
     if end < seconds:
         ring = np.zeros(int(3.5 * SR))
-        for i, note in enumerate([46, 53, 58, 62, 65, 72]):
+        for i, note in enumerate([46, 53, 58, 62, 65, 70]):
             place(ring, guitar(note, 3.0, 0.6), i * 0.035)
         place(gtr, ring, end, 1.2)
-        place(pads, pad([58, 62, 65, 69], seconds - end + 0.5), end, 0.5)
-        place(tune, lead(scale_note(0), 1.6, 0.55), end + BEAT, 1.0)
-        for i, steps in enumerate((0, 2, 4, 7)):
-            place(bells, glock(scale_note(steps), 0.45), end + 2 * BEAT + i * eighth, 0.5)
+        place(pads, pad(BB[3], seconds - end + 0.5), end, 0.5)
+        for beat, note, beats in HOOK[4][:3]:
+            place(tune, lead(note, beats * BEAT * 0.92, 0.55), end + beat * BEAT, 0.9)
+        place(tune, lead(82, 2.0, 0.55), end + 2 * BEAT, 0.9)
+        for i, note in enumerate((82, 86, 89, 94)):
+            place(bells, glock(note, 0.45), end + 2 * BEAT + i * eighth, 0.45)
         place(low, ebass(34, min(3.0, seconds - end + 0.5)), end, 0.5)
 
-    # Levels follow the arc.
     level = {"intro": 0.62, "verseA": 0.74, "verseB": 0.82, "pre": 0.86, "chorus": 1.0, "dip": 0.45, "end": 0.85}
     times = np.arange(n) / SR
     gain = np.array([level[section(x)] for x in np.arange(0, n / SR, 0.01)])
     gain = np.interp(times, np.arange(len(gain)) * 0.01, np.convolve(gain, np.ones(25) / 25, mode="same"))
 
-    # The tropical pump: pad, marimba, guitar and bass breathe with the kick.
     duck = np.ones(n)
     for k in kicks:
         i = int(k * SR)
@@ -743,10 +748,11 @@ def compose(name):
             duck[i : i + m] = np.minimum(duck[i : i + m], 1 - 0.38 * np.exp(-np.arange(m) / SR / 0.1))
 
     ir = room(2.2)
-    tune_echo = echo(tune, 0.75 * BEAT, feedback=0.3, repeats=3)  # a dotted-eighth echo that floats
-    sources = gtr * 0.75 + mar * 0.7 + pads * 0.45 + tune_echo * 0.75 + bells * 0.45
-    wet = fftconvolve(gtr * 0.12 + mar * 0.25 + pads * 0.3 + tune_echo * 0.35 + bells * 0.35, ir)[:n]
-    mix = ((sources + wet) * duck + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.08) * gain + fx
+    tune_echo = echo(tune, 0.75 * BEAT, feedback=0.25, repeats=2)
+    sources = gtr * 0.7 + mar * 0.65 + pads * 0.42 + tune_echo * 0.95 + bells * 0.4
+    wet = fftconvolve(gtr * 0.12 + mar * 0.25 + pads * 0.3 + tune_echo * 0.3 + bells * 0.35, ir)[:n]
+    # The tune is the backbone: it is not pumped by the kick, it sits on top.
+    mix = ((sources - tune_echo * 0.95 + wet) * duck + tune_echo * 0.95 + low * duck + drums + fftconvolve(drums, ir)[:n] * 0.08) * gain + fx
     if drop > 0:
         i = int(drop * SR)
         mix[:i] = lowpass(mix[:i], 5000)

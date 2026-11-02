@@ -98,6 +98,9 @@ export const blurDissolve = () => move(BlurDissolve, {});
  * change of scene starts on a strong beat, where the music hits.
  */
 const GRID = (timeline.quantizeBeats ?? 1) * BEAT_FRAMES;
+/** A bar of the soundtrack, and where bar lines fall (the song's first downbeat). */
+const BAR = 4 * BEAT_FRAMES;
+const BAR_PHASE = (timeline.barPhaseBeats ?? 0) * BEAT_FRAMES;
 const ceilTo = (frames: number, unit: number) => Math.ceil(frames / unit) * unit;
 const turnFrames = (s: Step) => (s.turnBeats ?? 1) * BEAT_FRAMES;
 const timing = (s: Step) => linearTiming({ durationInFrames: turnFrames(s), easing: Easing.bezier(0.7, 0, 0.3, 1) });
@@ -113,6 +116,8 @@ export type Step = {
   enter?: Move;
   /** How many beats that transition takes (1 unless set). */
   turnBeats?: number;
+  /** Start on a bar line, where the song begins a new section (the chorus, the dip, the end). */
+  onBar?: boolean;
 };
 
 const rawFrames = (s: Step) => s.frames ?? scaledLength((s.duration ?? 0) + HOLD);
@@ -130,7 +135,9 @@ export const trackLayout = (steps: readonly Step[], fill = 0) => {
     starts.push(t);
     const next = steps[i + 1];
     if (next) {
-      const advance = ceilTo(rawFrames(step) - turnFrames(next), GRID);
+      let advance = ceilTo(rawFrames(step) - turnFrames(next), GRID);
+      // A scene that opens a new section of the song waits for the next bar line.
+      while (next.onBar && (((t + advance - BAR_PHASE) % BAR) + BAR) % BAR !== 0) advance += GRID;
       lengths.push(advance + turnFrames(next));
       t += advance;
     } else {
@@ -146,12 +153,12 @@ export const trackFrames = (steps: readonly Step[]) => trackLayout(steps).total;
 /** Where each step starts, in output frames (for things that span steps). */
 export const stepStarts = (steps: readonly Step[]) => trackLayout(steps).starts;
 
-type Entry = { id: string; duration?: number; turnBeats?: number };
+type Entry = { id: string; duration?: number; turnBeats?: number; onBar?: boolean };
 /** A scene's timing from timeline.json, which the soundtrack is built from too. */
 export const timed = (entries: readonly Entry[], id: string) => {
   const entry = entries.find((e) => e.id === id);
   if (!entry) throw new Error(`No timeline entry for ${id}`);
-  return { duration: entry.duration, turnBeats: entry.turnBeats };
+  return { duration: entry.duration, turnBeats: entry.turnBeats, onBar: entry.onBar };
 };
 
 export const Track = ({ steps, fill = 0 }: { steps: readonly Step[]; fill?: number }) => {

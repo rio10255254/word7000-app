@@ -130,6 +130,14 @@ final class LearningScheduleTests: XCTestCase {
         XCTAssertEqual(LearningEngine.estimateAbility([(1, 5, 5), (14, 0, 0)]), 8)
         let middling = (1...14).map { (level: $0, seen: 10, knew: $0 <= 6 ? 10 : $0 <= 8 ? 5 : 0) }
         XCTAssertEqual(LearningEngine.estimateAbility(middling), 15)
+        XCTAssertEqual(LearningEngine.favouredLevels(ability: 12), 7...8)
+        XCTAssertEqual(LearningEngine.favouredLevels(ability: 15), 8...9)
+        XCTAssertEqual(LearningEngine.favouredLevels(ability: 28), 14...14)
+        var custom = word("b")
+        custom.group = "Custom"
+        let listed = [word("a"), custom]
+        let met = LearningEngine.markKnown(.empty, wordId: "a", today: "2026-10-01", changedAt: "2026-10-01T08:00:00.000Z")
+        XCTAssertEqual(LearningEngine.abilityEstimate(words: listed, state: met).seen, 1)
         XCTAssertEqual(LearningEngine.coreLevel("Core 12"), 12)
         XCTAssertNil(LearningEngine.coreLevel("Custom"))
 

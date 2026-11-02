@@ -28,6 +28,8 @@ struct MeView: View {
                     }
                 }
 
+                LevelEstimateSection()
+
                 Section {
                     HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
                         .listRowBackground(StyledRowBackground(paper: .graph))
@@ -74,6 +76,102 @@ struct MeView: View {
         let parts = ready.split(separator: "-").compactMap { Int($0) }
         let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
         return L.t("連勝保護 \(date) 起可再使用", "Streak protection returns on \(date)")
+    }
+}
+
+/// The cat's estimate of the learner's level, from which words they knew on
+/// sight, and where it is taking their new words from. The same estimate
+/// that picks new words for study (`LearningEngine.estimateAbility`).
+struct LevelEstimateSection: View {
+    @Environment(AppModel.self) private var model
+    /// Fewer Core words met than this and the estimate is mostly a guess.
+    private static let wordsNeeded = 10
+    private static let topLevel = 14
+
+    var body: some View {
+        let estimate = LearningEngine.abilityEstimate(words: model.vocabularyWords, state: model.progress)
+        Section {
+            if estimate.seen < Self.wordsNeeded {
+                CatSays(mood: .thinking, size: 28) {
+                    Text(L.t("再多學幾個字，我就看得出你大概在哪個程度。",
+                             "Learn a few more words and I'll tell you roughly what level you're at."))
+                        .font(.subheadline)
+                }
+                .padding(.vertical, 4)
+            } else {
+                let favoured = LearningEngine.favouredLevels(ability: estimate.ability, top: Self.topLevel)
+                VStack(alignment: .leading, spacing: 12) {
+                    CatSays(mood: .smug, size: 28) {
+                        Text(line(ability: estimate.ability, favoured: favoured))
+                            .font(.subheadline)
+                    }
+                    LevelTrack(ability: estimate.ability, favoured: favoured, top: Self.topLevel)
+                }
+                .padding(.vertical, 4)
+            }
+        } header: {
+            Text(L.t("\(Cat.name)估你的程度", "Your level, by \(Cat.name)"))
+        } footer: {
+            if estimate.seen >= Self.wordsNeeded {
+                Text(L.t("依你第一次看到就認得、或不認得的字推估，每答一題都會更新。",
+                         "Estimated from which words you knew the first time you saw them; it updates with every answer."))
+            }
+        }
+        .accessibilityIdentifier("me-level-estimate")
+    }
+
+    /// "Core 6" or "Core 6–7", from an ability in half-levels.
+    private func levelName(_ ability: Int) -> String {
+        let level = ability / 2
+        if level < 1 { return "Core 1" }
+        if level >= Self.topLevel { return "Core \(Self.topLevel)" }
+        return ability % 2 == 0 ? "Core \(level)" : "Core \(level)–\(level + 1)"
+    }
+
+    private func line(ability: Int, favoured: ClosedRange<Int>) -> String {
+        let band = favoured.count > 1 ? "Core \(favoured.lowerBound)–\(favoured.upperBound)" : "Core \(favoured.lowerBound)"
+        if ability / 2 >= Self.topLevel {
+            return L.t("你大概在 \(levelName(ability)) 以上了……好啦，算你厲害。新字我就從最難的挑。",
+                       "You're at \(levelName(ability)) or beyond… fine, I'm impressed. New words come from the hardest levels.")
+        }
+        return L.t("照你答的，我看你大概在 \(levelName(ability)) 左右。新字我多從 \(band) 挑，太簡單的少給，偶爾丟幾個難的嚇你。",
+                   "From your answers you're around \(levelName(ability)). I'll pull new words mostly from \(band), go easy on the easy ones, and throw in the odd hard one.")
+    }
+}
+
+/// Core 1 to 14 as a row of segments: the levels at or below the learner
+/// filled, the ones new words mostly come from marked, the rest empty.
+private struct LevelTrack: View {
+    var ability: Int
+    var favoured: ClosedRange<Int>
+    var top: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 3) {
+                ForEach(1...top, id: \.self) { level in
+                    Capsule()
+                        .fill(color(for: level))
+                        .frame(height: 8)
+                }
+            }
+            HStack {
+                Text("Core 1")
+                Spacer()
+                Text("Core \(top)")
+            }
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L.t("程度約 Core \(max(1, ability / 2))，新字多來自 Core \(favoured.lowerBound) 到 \(favoured.upperBound)",
+                                "About Core \(max(1, ability / 2)); new words mostly from Core \(favoured.lowerBound) to \(favoured.upperBound)"))
+    }
+
+    private func color(for level: Int) -> Color {
+        if favoured.contains(level) { return Palette.review }
+        if 2 * level <= ability { return Palette.accent }
+        return Palette.fill
     }
 }
 

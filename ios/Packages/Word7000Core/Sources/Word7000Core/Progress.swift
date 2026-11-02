@@ -418,6 +418,31 @@ public enum LearningEngine {
         return best
     }
 
+    /// The learner's estimated level over a word list (see `estimateAbility`),
+    /// and how many of its Core words they have met, which says how much the
+    /// estimate rests on.
+    public static func abilityEstimate(words: [WordEntry], state: ProgressState) -> (ability: Int, seen: Int) {
+        var counts: [Int: (seen: Int, knew: Int)] = [:]
+        for word in words {
+            guard let level = coreLevel(word.group) else { continue }
+            var count = counts[level] ?? (0, 0)
+            if let progress = state.words[word.id], progress.status != .new {
+                count.seen += 1
+                if progress.status == .mastered, progress.reviewCount == 0 { count.knew += 1 }
+            }
+            counts[level] = count
+        }
+        let levels = counts.keys.sorted().map { (level: $0, seen: counts[$0]!.seen, knew: counts[$0]!.knew) }
+        return (estimateAbility(levels), levels.reduce(0) { $0 + $1.seen })
+    }
+
+    /// The Core levels new words are drawn from most for this ability.
+    public static func favouredLevels(ability: Int, top: Int = 14) -> ClosedRange<Int> {
+        let low = min(top, max(1, (ability + 2) / 2))
+        let high = min(top, max(low, (ability + 4) / 2))
+        return low...high
+    }
+
     /// How strongly to draw new words from a level, by how far it is from the
     /// learner (`ability` in half-levels): a level or two above is drawn most,
     /// where words are new but within reach; the learner's own level less;

@@ -499,30 +499,33 @@ LOOP = [EB, DM, CM, F_]  # IV–iii–ii–V: the backbone, one chord a bar
 CHORUS_CHORDS = [EB, DM, CM, F_, (EB, F_), BB]  # … and home to I at the end of the chorus
 
 # The tune, note by note: (beat, MIDI note, beats long), one list per bar.
+# Phrases fall from high to low: they settle and resolve, the laid-back
+# feel of the picture; only the pre-chorus builds, and even it is a
+# staircase of falling phrases, each starting higher than the last.
 # Verse: a four-bar phrase, its first three bars sharing one rhythm, sung twice.
 VERSE = [
-    [(0.5, 79, 0.5), (1, 82, 0.5), (1.5, 79, 0.5), (2, 77, 1), (3, 79, 1)],  # G B♭ G F G
-    [(0.5, 77, 0.5), (1, 81, 0.5), (1.5, 77, 0.5), (2, 74, 1), (3, 77, 1)],  # F A F D F
-    [(0.5, 79, 0.5), (1, 82, 0.5), (1.5, 79, 0.5), (2, 79, 1), (3, 82, 1)],  # G B♭ G G B♭
+    [(0.5, 82, 0.5), (1, 79, 0.5), (1.5, 77, 0.5), (2, 75, 1), (3, 74, 1)],  # B♭ G F E♭ D
+    [(0.5, 81, 0.5), (1, 77, 0.5), (1.5, 74, 0.5), (2, 72, 1), (3, 69, 1)],  # A F D C A
+    [(0.5, 84, 0.5), (1, 79, 0.5), (1.5, 75, 0.5), (2, 74, 1), (3, 72, 1)],  # C G E♭ D C
     [(0, 81, 1.5), (1.5, 79, 0.5), (2, 77, 2)],  # A G F: a question
 ]
-VERSE_LAST = [(0, 81, 1), (1, 84, 1), (2, 86, 2)]  # A C D: lifting into the pre-chorus
-# Pre-chorus: long notes climbing.
+VERSE_LAST = [(0, 84, 1), (1, 81, 1), (2, 77, 2)]  # C A F, then the pre-chorus begins
+# Pre-chorus: each bar falls, each starts higher — B♭, C, E♭, F — so it still lifts.
 PRE = [
-    [(0, 82, 2), (2, 84, 2)],  # B♭ C
-    [(0, 86, 2), (2, 84, 2)],  # D C
-    [(0, 87, 2), (2, 86, 2)],  # E♭ D
-    [(0, 84, 1), (1, 86, 1), (2, 87, 1), (3, 89, 1)],  # C D E♭ F: into the chorus
+    [(0, 82, 1), (1, 79, 1), (2, 77, 2)],  # B♭ G F
+    [(0, 84, 1), (1, 81, 1), (2, 77, 2)],  # C A F
+    [(0, 87, 1), (1, 84, 1), (2, 79, 2)],  # E♭ C G
+    [(0, 89, 1), (1, 87, 1), (2, 86, 1), (3, 84, 1)],  # F E♭ D C: into the chorus
 ]
-# Chorus: the hook — "da-da DUM, da-da DUM", then a leap and a fall — sung
-# twice (the second time a step higher), then brought home to B♭.
+# Chorus: the hook — "da-da DUM, da-da DUM" falling, then a leap and a fall —
+# sung twice (the second time a step higher), then brought home to B♭.
 HOOK = [
-    [(0, 82, 0.5), (0.5, 84, 0.5), (1, 86, 1), (2, 82, 0.5), (2.5, 84, 0.5), (3, 86, 1)],  # B♭ C D, B♭ C D
+    [(0, 86, 0.5), (0.5, 84, 0.5), (1, 82, 1), (2, 86, 0.5), (2.5, 84, 0.5), (3, 82, 1)],  # D C B♭, D C B♭
     [(0, 89, 1), (1, 86, 0.5), (1.5, 84, 0.5), (2, 81, 2)],  # F D C A
-    [(0, 82, 0.5), (0.5, 84, 0.5), (1, 87, 1), (2, 82, 0.5), (2.5, 84, 0.5), (3, 87, 1)],  # B♭ C E♭, B♭ C E♭
+    [(0, 87, 0.5), (0.5, 86, 0.5), (1, 84, 1), (2, 87, 0.5), (2.5, 86, 0.5), (3, 84, 1)],  # E♭ D C, E♭ D C
     [(0, 89, 1), (1, 87, 0.5), (1.5, 86, 0.5), (2, 84, 2)],  # F E♭ D C
-    [(0, 82, 0.5), (0.5, 84, 0.5), (1, 86, 1), (2, 89, 0.5), (2.5, 86, 0.5), (3, 84, 1)],  # B♭ C D, F D C
-    [(0, 82, 3.5)],  # B♭: home
+    [(0, 86, 0.5), (0.5, 84, 0.5), (1, 82, 1), (2, 84, 0.5), (2.5, 81, 0.5), (3, 77, 1)],  # D C B♭, C A F
+    [(0, 86, 0.5), (0.5, 84, 0.5), (1, 82, 3)],  # D C B♭: home
 ]
 DIP = [HOOK[0], [(0, 81, 3.5)]]  # the hook once more, softly
 

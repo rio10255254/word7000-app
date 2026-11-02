@@ -93,7 +93,7 @@ extension String {
     fileprivate var nilIfEmpty: String? { isEmpty ? nil : self }
 }
 
-/// "Core 6" or "Core 6–7", from an ability in half-levels.
+/// "Level 6" or "Levels 6–7" (第 6 級, 第 6–7 級), from an ability in half-levels.
 enum CatLevel {
     static let top = 14
     /// Fewer Core words met than this and the estimate is mostly a guess.
@@ -101,9 +101,9 @@ enum CatLevel {
 
     static func name(_ ability: Int) -> String {
         let level = ability / 2
-        if level < 1 { return "Core 1" }
-        if level >= top { return "Core \(top)" }
-        return ability % 2 == 0 ? "Core \(level)" : "Core \(level)–\(level + 1)"
+        if level < 1 { return L.level(1) }
+        if level >= top { return L.level(top) }
+        return ability % 2 == 0 ? L.level(level) : L.levelRange(level, level + 1)
     }
 }
 

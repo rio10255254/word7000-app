@@ -114,12 +114,12 @@ struct LevelEstimateSection: View {
     private func levelName(_ ability: Int) -> String { CatLevel.name(ability) }
 
     private func line(ability: Int, favoured: ClosedRange<Int>) -> String {
-        let band = favoured.count > 1 ? "Core \(favoured.lowerBound)–\(favoured.upperBound)" : "Core \(favoured.lowerBound)"
+        let band = L.levelRange(favoured.lowerBound, favoured.upperBound)
         if ability / 2 >= Self.topLevel {
-            return L.t("你在 \(levelName(ability)) 以上了……算你厲害。",
+            return L.t("你在\(levelName(ability))以上了……算你厲害。",
                        "\(levelName(ability)) or beyond… fine, I'm impressed.")
         }
-        return L.t("你大概在 \(levelName(ability))。新字多從 \(band) 挑，偶爾丟難的。",
+        return L.t("你大概在\(levelName(ability))。新字多從\(band)挑，偶爾丟難的。",
                    "You're around \(levelName(ability)). New words mostly from \(band), plus the odd hard one.")
     }
 }
@@ -141,16 +141,16 @@ private struct LevelTrack: View {
                 }
             }
             HStack {
-                Text("Core 1")
+                Text(L.level(1))
                 Spacer()
-                Text("Core \(top)")
+                Text(L.level(top))
             }
             .font(.caption2)
             .foregroundStyle(.secondary)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(L.t("程度約 Core \(max(1, ability / 2))，新字多來自 Core \(favoured.lowerBound) 到 \(favoured.upperBound)",
-                                "About Core \(max(1, ability / 2)); new words mostly from Core \(favoured.lowerBound) to \(favoured.upperBound)"))
+        .accessibilityLabel(L.t("程度約\(L.level(max(1, ability / 2)))，新字多來自\(L.levelRange(favoured.lowerBound, favoured.upperBound))",
+                                "About \(L.level(max(1, ability / 2))); new words mostly from \(L.levelRange(favoured.lowerBound, favoured.upperBound))"))
     }
 
     private func color(for level: Int) -> Color {

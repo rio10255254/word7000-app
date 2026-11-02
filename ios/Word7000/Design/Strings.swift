@@ -91,6 +91,16 @@ enum L {
     /// Taiwanese learners know the GSAT's 7000 words by that name; learners of
     /// Chinese do not, and the bank may grow, so their interface says Core Words.
     static var coreBankName: String { t("7000 單字", "Core Words") }
+    /// The word list files its levels as "Core 1"…"Core 14"; on screen they
+    /// are 第 N 級 or Level N. Other groups (a scanned bank's) show as they are.
+    static func level(_ number: Int) -> String { t("第 \(number) 級", "Level \(number)") }
+    static func levelRange(_ low: Int, _ high: Int) -> String {
+        low == high ? level(low) : t("第 \(low)–\(high) 級", "Levels \(low)–\(high)")
+    }
+    static func levelName(_ group: String) -> String {
+        guard group.hasPrefix("Core "), let number = Int(group.dropFirst(5)) else { return group }
+        return level(number)
+    }
     static func bankWordCount(_ count: Int) -> String { t("\(count) 個", "\(count)") }
     static var scanSheet: String { t("掃描單字表", "Scan a word list") }
     static var newBank: String { t("新字庫", "New bank") }

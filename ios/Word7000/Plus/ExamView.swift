@@ -293,7 +293,7 @@ struct ExamView: View {
                     ForEach(Array(byLevel.enumerated()), id: \.offset) { _, row in
                         let ratio = Double(row.correct) / Double(max(1, row.total))
                         HStack {
-                            Text(row.level).font(.subheadline.weight(.semibold))
+                            Text(L.levelName(row.level)).font(.subheadline.weight(.semibold))
                             Spacer()
                             Text("\(row.correct) / \(row.total)").monospacedDigit().foregroundStyle(.secondary)
                         }

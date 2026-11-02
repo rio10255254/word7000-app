@@ -94,7 +94,7 @@ extension CatLineSource {
             lines.append(L.t("學測剩 \(days) 天。我沒有要給你壓力，我只是一直數。", "\(days) days to the exam. No pressure. I'm just counting. Constantly."))
         }
         if let level = context.level {
-            lines.append(L.t("你在 \(level) 欸，不往上爬嗎？我幫你挑好字了。", "You're at \(level). Not climbing? I already picked your words."))
+            lines.append(L.t("你在\(level)欸，不往上爬嗎？我幫你挑好字了。", "You're at \(level). Not climbing? I already picked your words."))
         }
         if context.streak >= 3 {
             lines.append(L.t("連續 \(context.streak) 天了，斷掉的話我會傷心一整年。", "\(context.streak) days in a row. Break it and I'll be sad for a year."))
@@ -137,7 +137,7 @@ enum CatQuips {
                 lines.append(L.t("\(word) 對了。我就說你可以，雖然我沒說過。", "\(word), right. I always said you could. I never said that."))
             }
             if let level = source.context?.level {
-                lines.append(L.t("\(level) 的人答對這題，剛好而已。", "Someone at \(level) should get that. Just saying."))
+                lines.append(L.t("\(level)的人答對這題，剛好而已。", "Someone at \(level) should get that. Just saying."))
             }
         }
         return lines.picked(index)

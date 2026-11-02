@@ -14,7 +14,7 @@ struct FilterControls: View {
         }
         Picker(L.filterLevel, selection: $selection.level) {
             Text(L.allLevels).tag("all")
-            ForEach(model.levels, id: \.self) { Text($0).tag($0) }
+            ForEach(model.levels, id: \.self) { Text(L.levelName($0)).tag($0) }
         }
         Picker(L.t("英文字首", "First letter"), selection: $selection.initial) {
             Text(L.t("全部字首", "All letters")).tag("all")

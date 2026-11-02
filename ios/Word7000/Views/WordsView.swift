@@ -228,7 +228,7 @@ struct WordsView: View {
     private var filterSummary: String {
         let filter = model.settings.libraryFilter
         return [filter.status == .all ? nil : L.filterLabel(filter.status),
-                filter.level == "all" ? nil : filter.level,
+                filter.level == "all" ? nil : L.levelName(filter.level),
                 filter.initial == "all" ? nil : "\(L.t("字首", "Letter")) \(filter.initial)"]
             .compactMap { $0 }.joined(separator: " · ")
     }
@@ -606,7 +606,7 @@ struct WordDetailView: View {
             }
             .listRowBackground(StyledRowBackground())
             Section(L.t("學習進度", "Progress")) {
-                WordProgressCard(progress: progress, level: word.group)
+                WordProgressCard(progress: progress, level: L.levelName(word.group))
             }
             .listRowBackground(StyledRowBackground(paper: .graph))
         }

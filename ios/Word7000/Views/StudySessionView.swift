@@ -194,7 +194,7 @@ struct StudySessionView: View {
                 CardStatusChip(status: progress.status)
                 // At accessibility text sizes the level would crowd the buttons.
                 if !word.group.isEmpty, !dynamicTypeSize.isAccessibilitySize {
-                    Text(word.group)
+                    Text(L.levelName(word.group))
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)

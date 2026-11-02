@@ -216,7 +216,7 @@ final class NotepadHelper {
             for part in Self.meaningParts(ChineseDisplay.conciseMeaning(word.meaningZh)) where byMeaning[part] == nil {
                 byMeaning[part] = word
             }
-            for part in Self.meaningParts(word.meaningZh) + Self.meaningParts(word.supplementalMeaningZh) where extra[part] == nil {
+            for part in Self.meaningParts(word.meaningZh) + Self.meaningParts(word.supplementalMeaningZh ?? "") where extra[part] == nil {
                 extra[part] = word
             }
         }
@@ -297,15 +297,22 @@ final class NotepadHelper {
             if let usage = CloudAssistant.shared.usage, usage.remaining < 4 { return }
             asked += 1
             asking.append(line)
-            let reply = try? await CloudAssistant.shared.run(.fillWord, ["word": .string(String(line.prefix(80)))],
-                                                            as: CloudAI.WordSuggestion.self).cleaned()
+            var reply: CloudAI.WordSuggestion?
+            do {
+                let answer: CloudAI.WordSuggestion = try await CloudAssistant.shared.run(
+                    .fillWord, ["word": .string(String(line.prefix(80)))], as: CloudAI.WordSuggestion.self)
+                reply = answer.cleaned()
+            } catch {
+                reply = nil
+            }
             asking.removeAll { $0 == line }
             if Task.isCancelled, reply == nil { return }
-            let suggestion = reply.flatMap { suggestion(for: line, from: $0) }
-            answers[line] = suggestion
+            var found: NoteSuggestion?
+            if let reply { found = suggestion(for: line, from: reply) }
+            answers[line] = found
             unmatched.removeAll { $0 == line }
-            if let suggestion, !suggestions.contains(where: { $0.line == line }) {
-                suggestions.append(suggestion)
+            if let found, !suggestions.contains(where: { $0.line == line }) {
+                suggestions.append(found)
             }
         }
     }

@@ -7,7 +7,10 @@
     "render": "remotion render Full out/word7000-full-60fps.mp4",
     "still": "remotion still Full out/still.png",
     "typecheck": "tsc --noEmit",
-    "music": "python3 scripts/make-music.py"
+    "music": "python3 scripts/make-music.py",
+    "voice": ".venv-voice/bin/python scripts/make-voice.py",
+    "reels": "python3 scripts/make-reels.py",
+    "render:reels": "for e in ep01 ep02 ep03; do remotion render Reel-$e out/reel-$e.mp4; done"
   },
   "dependencies": {
     "@fontsource/caveat": "^5.3.0",

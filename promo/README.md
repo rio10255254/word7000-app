@@ -156,6 +156,34 @@ npx remotion render Full out/word7000-full-60fps.mp4 --browser-executable=/opt/p
 
 AI 的回答內容（解說、錯誤用法、分析結果、口說建議）是為影片寫的示範，App 實際會由 Claude 依當下的字和紀錄產生。
 
+## IG 日更短片（小笨貓日記）
+
+每天一支 9:16、約 15 秒的短片，一支只講一件事。主角是小笨貓：牠用自己的聲音說話，App 的真實畫面一張張貼上桌面，最後一律停在同一張片尾，配上副歌 hook 的前三個音「D–C–B♭」當聲音 logo。
+
+| 集 | 主題 | 開場標題 | 台詞 |
+| --- | --- | --- | --- |
+| #1 | 小笨貓登場 | 這隻貓／會罵你背單字 | 嗨，我是小笨貓。／我的工作，就是盯著你背單字。／你偷懶，我都看得到。／明天見。不來的話……我也會知道。 |
+| #2 | 每日目標 | 一天只背 7 個／就想睡？ | 才 7 個？笑死。／每天背幾個，是你自己訂的。／說好 20 個，還差 13 個。／別看我。去按「繼續學習」。 |
+| #3 | 答錯的時候 | all 是什麼意思？／答錯會被貓念 | 考你一題：all 是什麼意思？／你選了「金屬的」？／那是 metallic 的意思。／all 是「所有的」。記好，我不想說第二次。 |
+
+- **腳本**：`src/reels/episodes.json`。`text` 是字幕，`say` 是給語音念的寫法（數字寫成國字、「著」寫成「着」才會念 zhe）；`shot` 和 `crop` 指定要貼哪張 App 截圖的哪一塊（截圖的像素座標），`tap` 是點擊位置。
+- **截圖**：`public/shots/`，取自 CI 自動拍的 `native-screenshots` 分支（iOS 26、紙張拼貼、淺色）。App 改版後換新截圖即可。
+- **配音**：`scripts/make-voice.py`，用 [Kokoro-82M v1.1-zh](https://huggingface.co/hexgrad/Kokoro-82M-v1.1-zh)（Apache-2.0，可商用，CPU 就能跑）的 `zf_017` 聲音。每句都用 Whisper 語音辨識檢查過。
+- **配樂與混音**：`scripts/make-reels.py` 依每句話的長度把台詞排到拍點上（120 bpm），用主題曲的樂器（吉他、馬林巴、貝斯、手鼓）做一段輕快的伴奏，小笨貓說話時伴奏自動退後，片尾響起聲音 logo。同時寫出 `src/reels/timing.json` 給影片用。
+- **畫面**：`src/reels/Reel.tsx`。重要內容都避開 Instagram 上方約 220px、下方約 380px 和右側按鈕列。第一格就是封面：標題和小笨貓都已經在畫面上。
+
+```bash
+# 只有改台詞時才需要重新配音（Kokoro 需要 Python 3.10–3.12）
+uv venv -p 3.12 .venv-voice
+uv pip install --python .venv-voice/bin/python torch "kokoro>=0.9.4" "misaki[zh]" soundfile \
+  "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"
+npm run voice
+npm run reels          # 排時間、配樂、混音
+npm run render:reels   # 輸出 out/reel-ep01.mp4 …
+```
+
 ## 授權
+
+小笨貓的配音由 Kokoro-82M（Apache-2.0）合成，不需標示。
 
 Remotion 對個人與 3 人以下公司免費，規模更大需購買 Company License。

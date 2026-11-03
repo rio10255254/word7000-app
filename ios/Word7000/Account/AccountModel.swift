@@ -322,15 +322,17 @@ final class AccountModel {
     }
 
     /// Ties this iPhone's push token to whoever is signed in (a guest too).
-    func registerPushDevice(token: String, audience: String, language: String) async -> Bool {
-        guard let client, let current = session else { return false }
+    /// nil when registered; otherwise what went wrong, for the push status row.
+    func registerPushDevice(token: String, audience: String, language: String) async -> String? {
+        guard let client else { return "no account service" }
+        guard let current = session else { return "no session yet" }
         do {
             try await client.registerPushDevice(token: token, audience: audience, language: language,
                                                 version: UpdateGate.version, build: UpdateGate.build,
                                                 session: try await validSession(client: client, current))
-            return true
+            return nil
         } catch {
-            return false
+            return String(describing: error).prefix(160).description
         }
     }
 

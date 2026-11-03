@@ -326,14 +326,16 @@ final class SpeakingCoachTests: XCTestCase {
             let search = app.searchFields.firstMatch
             XCTAssertTrue(search.waitForExistence(timeout: 5))
             search.tap()
-            search.typeText("advice")
-            let word = app.staticTexts["advice"].firstMatch
+            // Learners of Chinese study the Taiwan Mandarin bank and can search
+            // it by pinyin; learners of English get the editorial note.
+            search.typeText(englishUI ? "jianyi" : "advice")
+            let word = app.staticTexts[englishUI ? "建議" : "advice"].firstMatch
             XCTAssertTrue(word.waitForExistence(timeout: 5))
             word.tap()
             if englishUI {
-                let example = app.staticTexts["word-note-chinese-example"]
+                let example = app.staticTexts["我建議你早點出門。"].firstMatch
                 reveal(example, in: app)
-                XCTAssertEqual(example.label, "我請老師給我一些選大學的建議。")
+                XCTAssertTrue(example.exists)
             } else {
                 reveal(app.staticTexts["advice / advise"], in: app)
                 let explanation = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "advice 是不可數名詞")).firstMatch

@@ -447,8 +447,21 @@ final class SpeakingCoachTests: XCTestCase {
         for _ in 0..<6 where !element.isHittable {
             scrollForm(in: app, up: !scrollingUp)
         }
+        // The sheet's action bar floats over the bottom of the form: a row
+        // scrolled under it reads as hittable, but a tap there lands on the bar.
+        for _ in 0..<4 where element.exists && element.isHittable && underActionBar(element, in: app) {
+            scrollForm(in: app, up: true)
+        }
         XCTAssertTrue(element.waitForExistence(timeout: 5), file: file, line: line)
         XCTAssertTrue(element.isHittable, "Control must remain reachable on small screens", file: file, line: line)
+        XCTAssertFalse(underActionBar(element, in: app), "Control must not sit under the action bar", file: file, line: line)
+    }
+
+    private func underActionBar(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        let bar = ["coach-submit", "coach-confirm-transcript", "coach-cancel"].map { app.buttons[$0] }.first { $0.exists }
+        guard let bar, bar != element else { return false }
+        // The bar's background reaches a little above its button.
+        return element.frame.maxY > bar.frame.minY - 10
     }
 
     private func scrollForm(in app: XCUIApplication, up: Bool) {

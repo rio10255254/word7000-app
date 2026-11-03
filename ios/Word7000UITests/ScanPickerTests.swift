@@ -223,6 +223,8 @@ final class ScanPickerTests: XCTestCase {
         let destination = app.buttons["scan-destination"]
         destination.scrollIntoView(in: app, swipes: 5)
         destination.tap()
+        // A menu can miss the first tap while the screen is still settling.
+        if !app.buttons["Lesson"].waitForExistence(timeout: 3) { destination.tap() }
         XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5), app.debugDescription)
         app.buttons["Lesson"].tap()
         let save = app.buttons["scan-save"]

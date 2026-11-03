@@ -1,10 +1,9 @@
 {
   "cli": {
-    "appVersionSource": "remote"
+    "appVersionSource": "local"
   },
   "build": {
     "production": {
-      "autoIncrement": true,
       "ios": {
         "image": "latest",
         "scheme": "Word7000",

@@ -185,8 +185,14 @@ jobs:
           cp ios/Release/app.json ios/Release/eas.json ios/Release/package.json ios/Release/package-lock.json "$STAGE/"
           cp ios/Release/Podfile "$STAGE/ios/Podfile"
           cd "$STAGE"
-          EAS_NO_VCS=1 eas build:version:get --platform ios --profile production --json > "$RUNNER_TEMP/native-version.json"
-          NEXT_BUILD=$(node -e 'const fs = require("fs"); const version = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); const current = Number(version.buildNumber); if (!Number.isSafeInteger(current) || current < 1) throw new Error("Invalid remote build number"); process.stdout.write(String(current + 1));' "$RUNNER_TEMP/native-version.json")
+          # Build numbers count per version: a new version starts again at 1.
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_PRIVATE_KEY" ]; then
+            echo "::error::The App Store Connect API key is needed to number the build."
+            exit 1
+          fi
+          NEXT_BUILD=$(node "$GITHUB_WORKSPACE/scripts/next-build-number.mjs" --bundle com.rio.word7000 \
+            --version "$(node -p 'require("./app.json").expo.version')")
+          echo "Building $(node -p 'require("./app.json").expo.version') ($NEXT_BUILD)."
           node "$GITHUB_WORKSPACE/scripts/prepare-native-release.mjs" "$STAGE" "$NEXT_BUILD"
           # EAS manages the existing signing credentials; Xcode runs on this Mac.
           # No EAS cloud-build allocation or new paid subscription is required.

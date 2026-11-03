@@ -1167,7 +1167,7 @@ private struct CoachDisc: View {
             configuration.label
                 .font(.headline)
                 .foregroundStyle(tint)
-                .frame(width: 42, height: 42)
+                .frame(width: 44, height: 44)
                 .background { Circle().fill(PaperKind.ivory.color).overlay { Circle().strokeBorder(Collage.ink.opacity(0.85), lineWidth: 1.5) } }
                 .background { Circle().fill(Collage.ink.opacity(0.8)).offset(x: pressed ? 0 : 2.5, y: pressed ? 0 : 2.5) }
                 .offset(x: pressed ? 2.5 : 0, y: pressed ? 2.5 : 0)

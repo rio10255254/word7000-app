@@ -37,6 +37,7 @@ struct SpeakingCoachView: View {
     private var provider: AppleSpeakingCoach { .shared }
     private static let feedbackAnchor = "coach-feedback"
     private static let topAnchor = "coach-top"
+    private static let answerAnchor = "coach-answer-pad"
     /// The question being answered: the card's, or the coach's follow-up.
     private var question: String { followUpQuestion ?? request.question }
     private var answerLanguage: String { request.mode == .english ? "en-US" : "zh-TW" }
@@ -106,6 +107,16 @@ struct SpeakingCoachView: View {
                     }
                     .onChange(of: scrollToTop) { _, _ in
                         withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo(Self.topAnchor, anchor: .top) }
+                    }
+                    // The notepad is a tall row, which the form does not lift
+                    // above the keyboard on its own: bring it up to write on.
+                    .onChange(of: answerFocused) { _, focused in
+                        guard focused else { return }
+                        Task { @MainActor in
+                            try? await Task.sleep(for: .milliseconds(300))
+                            guard answerFocused else { return }
+                            withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo(Self.answerAnchor, anchor: .top) }
+                        }
                     }
             }
         }
@@ -405,6 +416,7 @@ struct SpeakingCoachView: View {
                 answerNotes
             }
             .modifier(CoachPaper(kind: .sage, seed: 5))
+            .id(Self.answerAnchor)
         } header: {
             HStack {
                 CoachHeader(title: L.t("你的回答", "Your answer"), icon: "pencil.line")

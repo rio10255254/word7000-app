@@ -96,6 +96,14 @@ jobs:
           query "select left(last_push_error, 120) as reason, count(*) from live_activity_devices where last_push_error is not null group by 1 order by 2 desc limit 5" | jq -c '.' || true
           echo "Devices registered for announcements:"
           query "select count(*) as devices from push_devices" | jq -c '.' || true
+          echo "The registration function exists:"
+          query "select proname from pg_proc where proname in ('register_push_device', 'save_apple_token_for')" | jq -c '.' || true
+          echo "Calls to register a push device in the last 3 days (status codes only):"
+          start=$(date -u -d '3 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          sql="select timestamp, r.method, res.status_code from edge_logs cross join unnest(metadata) as m cross join unnest(m.request) as r cross join unnest(m.response) as res where r.path like '%register_push_device%' order by timestamp desc limit 10"
+          curl -s -G "https://api.supabase.com/v1/projects/$PROJECT_REF/analytics/endpoints/logs.all" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" --data-urlencode "sql=$sql" \
+            --data-urlencode "iso_timestamp_start=$start" | jq -c '.result // .' || true
           echo "Recent HTTP responses from pg_net:"
           query "select status_code, left(coalesce(content::text, error_msg, ''), 160) as body, created from net._http_response order by created desc limit 5" | jq -c '.' || true
 

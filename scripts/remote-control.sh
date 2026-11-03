@@ -61,7 +61,7 @@ post)
     echo "::error::link must start with https://, or be plus or update"; exit 1
   fi
   if [ -z "$TITLE_EN" ] || [ -z "$BODY_EN" ]; then
-    echo "::warning::No English title or body: English-interface learners will see the Chinese text."
+    echo "::warning::沒有填英文標題或內容：英文介面的使用者會看到中文。"
   fi
   below_version=""; below_build=""
   if [ -n "$BELOW" ]; then parse "$BELOW"; below_version="$VERSION"; below_build="$BUILD"; fi
@@ -72,7 +72,14 @@ post)
     say "- 📣 標題：**$TITLE_ZH**${TITLE_EN:+ ／ $TITLE_EN}"
     say "- 內容：$BODY_ZH"
     [ -n "$BODY_EN" ] && say "- English：$BODY_EN"
-    say "- 對象：$AUDIENCE${below_version:+，只給 $BELOW 以前的版本}；${LINK:+按鈕 $LINK；}推播：$PUSH；留 $DAYS 天（0 = 直到下架）"
+    case "$AUDIENCE" in guest) who="沒登入的訪客" ;; free) who="登入但沒訂閱" ;; plus) who="Premium 訂閱者" ;; *) who="所有人" ;; esac
+    case "$LINK" in "") button="沒有按鈕" ;; update) button="請大家更新" ;; plus) button="打開訂閱頁" ;; *) button="打開 $LINK" ;; esac
+    say "- 👥 給誰看：$who${below_version:+（只給 $BELOW 以前的版本）}"
+    say "- 🔘 按鈕：$button"
+    say "- 🔔 推播：$([ "$PUSH" = true ] && echo 會推播 || echo 不推播)"
+    say "- ⏳ 留：$([ "$DAYS" = 0 ] && echo 直到手動下架 || echo "$DAYS 天")"
+    say ""
+    say "確認沒問題：再按一次 Run workflow，**取消勾選「👀 只預覽」**，就會真的發出。"
     exit 0
   fi
   if [ -n "$REQUIRE" ]; then

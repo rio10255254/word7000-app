@@ -554,6 +554,8 @@ struct SpeakingCoachView: View {
             }
                 .font(.headline)
                 .lineLimit(1)
+                // On a narrow row the word shrinks a little before the timer beside it wraps.
+                .minimumScaleFactor(0.75)
                 .foregroundStyle(collage ? (live ? Color.white : Palette.accent) : (live ? Palette.miss : Palette.accent))
         }
         .disabled(recording.busy && recording.state != .recording || session.isBusy)
@@ -562,7 +564,7 @@ struct SpeakingCoachView: View {
             if collage {
                 // A paper key: ivory until it records, then red and pressed in.
                 button.buttonStyle(CollageButtonStyle(prominent: live, tint: live ? Palette.miss : Palette.accent))
-                    .fixedSize()
+                    .fixedSize(horizontal: false, vertical: true)
             } else {
                 button
             }
@@ -570,11 +572,14 @@ struct SpeakingCoachView: View {
     }
 
     private var recorderControls: some View {
-        HStack(spacing: collage ? 12 : 16) {
+        HStack(spacing: collage ? 8 : 16) {
             recordButton
             if recording.state == .recording || recording.hasRecording {
                 // The seconds tick over like a counter.
                 Text("\(Int(recording.seconds)) / 60 \(L.t("秒", "s"))").font(.subheadline).monospacedDigit()
+                    // The timer reads on one line, never "2 / 60 / s" down the row.
+                    .lineLimit(1)
+                    .fixedSize()
                     .foregroundStyle(recording.state == .recording ? Palette.miss : Color.secondary)
                     .contentTransition(.numericText(value: recording.seconds))
                     .animation(reduceMotion ? nil : .snappy, value: Int(recording.seconds))
@@ -1162,7 +1167,7 @@ private struct CoachDisc: View {
             configuration.label
                 .font(.headline)
                 .foregroundStyle(tint)
-                .frame(width: 44, height: 44)
+                .frame(width: 42, height: 42)
                 .background { Circle().fill(PaperKind.ivory.color).overlay { Circle().strokeBorder(Collage.ink.opacity(0.85), lineWidth: 1.5) } }
                 .background { Circle().fill(Collage.ink.opacity(0.8)).offset(x: pressed ? 0 : 2.5, y: pressed ? 0 : 2.5) }
                 .offset(x: pressed ? 2.5 : 0, y: pressed ? 2.5 : 0)

@@ -398,7 +398,8 @@ private struct CollageButtonBody: View {
 }
 
 /// A capsule button's label stays on one line, a little smaller if it must,
-/// so a word is never split across lines ("subscriptio / n"). At the
+/// so a word is never split across lines ("subscriptio / n") or cut short
+/// ("Unlock Premi…"): rows that cannot hold it whole stack instead. At the
 /// accessibility text sizes it may wrap instead: there the rows stack.
 private struct OneLineLabel: ViewModifier {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -412,9 +413,12 @@ private struct OneLineLabel: ViewModifier {
     }
 }
 
-/// Buttons of equal width side by side, or one above the other when the
-/// widest label would not fit in its share of the row (a long translation, a
-/// small phone, a larger text size). Always stacked at the accessibility sizes.
+/// Buttons side by side, or one above the other when their labels would
+/// not fit whole (a long translation, a small phone, a larger text size).
+/// Side by side they share the row equally when the widest fits its share,
+/// else each gets its own label's width plus an even share of what is left
+/// ("Sign in" beside "Unlock Premium"). Always stacked at the accessibility
+/// sizes.
 struct ButtonRow<Content: View>: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var spacing: CGFloat = 12
@@ -429,39 +433,49 @@ private struct ButtonRowLayout: Layout {
     var spacing: CGFloat
     var stacked: Bool
 
-    private func ideal(_ subviews: Subviews) -> CGFloat {
-        subviews.map { $0.sizeThatFits(.unspecified).width }.max() ?? 0
+    /// Room kept beyond each label's measured width. A label measured to
+    /// fit exactly can still be cut by a point once drawn, so a near miss
+    /// counts as a miss.
+    private static let slack: CGFloat = 10
+
+    private func ideals(_ subviews: Subviews) -> [CGFloat] {
+        subviews.map { $0.sizeThatFits(.unspecified).width + Self.slack }
     }
 
-    private func sideBySide(_ width: CGFloat?, _ subviews: Subviews) -> Bool {
-        guard !stacked else { return false }
-        guard subviews.count > 1, let width, width.isFinite else { return true }
+    /// The width of each button side by side, or nil to stack them.
+    private func widths(_ width: CGFloat?, _ subviews: Subviews) -> [CGFloat]? {
+        guard !stacked else { return nil }
+        let ideal = ideals(subviews)
         let count = CGFloat(subviews.count)
-        return ideal(subviews) * count + spacing * (count - 1) <= width
+        guard subviews.count > 1 else { return [width.flatMap { $0.isFinite ? $0 : nil } ?? (ideal.first ?? 0)] }
+        let gaps = spacing * (count - 1)
+        guard let width, width.isFinite else { return ideal }
+        let share = (width - gaps) / count
+        if (ideal.max() ?? 0) <= share { return Array(repeating: share, count: subviews.count) }
+        let total = ideal.reduce(0, +)
+        guard total + gaps <= width else { return nil }
+        let extra = (width - gaps - total) / count
+        return ideal.map { $0 + extra }
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let count = CGFloat(max(1, subviews.count))
-        if sideBySide(proposal.width, subviews) {
-            let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? ideal(subviews) * count + spacing * (count - 1)
-            let share = (width - spacing * (count - 1)) / count
-            let height = subviews.map { $0.sizeThatFits(ProposedViewSize(width: share, height: nil)).height }.max() ?? 0
+        if let widths = widths(proposal.width, subviews) {
+            let width = widths.reduce(0, +) + spacing * CGFloat(max(0, subviews.count - 1))
+            let height = zip(subviews, widths).map { $0.sizeThatFits(ProposedViewSize(width: $1, height: nil)).height }.max() ?? 0
             return CGSize(width: width, height: height)
         }
-        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? ideal(subviews)
+        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? (ideals(subviews).max() ?? 0)
         let heights = subviews.map { $0.sizeThatFits(ProposedViewSize(width: width, height: nil)).height }
         return CGSize(width: width, height: heights.reduce(0, +) + spacing * CGFloat(max(0, subviews.count - 1)))
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let count = CGFloat(max(1, subviews.count))
-        if sideBySide(bounds.width, subviews) {
-            let share = (bounds.width - spacing * (count - 1)) / count
+        if let widths = widths(bounds.width, subviews) {
             var x = bounds.minX
-            for subview in subviews {
+            for (subview, width) in zip(subviews, widths) {
                 subview.place(at: CGPoint(x: x, y: bounds.midY), anchor: .leading,
-                              proposal: ProposedViewSize(width: share, height: bounds.height))
-                x += share + spacing
+                              proposal: ProposedViewSize(width: width, height: bounds.height))
+                x += width + spacing
             }
         } else {
             var y = bounds.minY

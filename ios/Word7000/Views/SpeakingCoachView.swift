@@ -9,6 +9,7 @@ struct SpeakingCoachView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
     @State private var answerFocused = false
     @State private var pendingSubmission = false
     @State private var askCloud = false
@@ -29,6 +30,9 @@ struct SpeakingCoachView: View {
     let referenceTranslation: String
     @Binding var answer: String
     let session: SpeakingCoachSession
+    /// The card's question in the learner's own language, when it is asked
+    /// in the language they are learning.
+    var questionGloss: String? = nil
 
     private var provider: AppleSpeakingCoach { .shared }
     private static let feedbackAnchor = "coach-feedback"
@@ -36,6 +40,14 @@ struct SpeakingCoachView: View {
     /// The question being answered: the card's, or the coach's follow-up.
     private var question: String { followUpQuestion ?? request.question }
     private var answerLanguage: String { request.mode == .english ? "en-US" : "zh-TW" }
+    private var collage: Bool { appStyle == .collage }
+    /// Learners of Chinese are asked in Chinese, and hear it read in Chinese.
+    private var questionIsChinese: Bool {
+        question.unicodeScalars.contains { (0x4E00...0x9FFF).contains($0.value) || (0x3400...0x4DBF).contains($0.value) }
+    }
+    private var questionLanguage: String { questionIsChinese ? "zh-TW" : "en-US" }
+    /// The question in the learner's own language, under it.
+    private var questionHelp: String? { followUpQuestion == nil ? questionGloss : followUpTranslation }
     /// Ready to send, apart from confirming a transcript, which sending does.
     private var canSubmitAnswer: Bool {
         !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -179,6 +191,7 @@ struct SpeakingCoachView: View {
                                     .accessibilityIdentifier("coach-error")
                             }
                             .foregroundStyle(Palette.miss)
+                            .modifier(CoachPaper(kind: .peach, torn: [.bottom], seed: 4))
                         }
                     }
                     if let feedback = session.feedback {
@@ -192,14 +205,23 @@ struct SpeakingCoachView: View {
                 // answer does not fit a follow-up.
                 if !referenceAnswer.isEmpty && followUpQuestion == nil {
                     Section {
-                        DisclosureGroup(L.t("參考回答", "Reference answer")) {
+                        DisclosureGroup {
                             HStack(alignment: .top) {
                                 Text(referenceAnswer).fixedSize(horizontal: false, vertical: true)
                                 Spacer(minLength: 8)
                                 SpeakButton(text: referenceAnswer, language: answerLanguage).disabled(recording.busy)
                             }
                             Text(referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
-                        }.accessibilityIdentifier("coach-reference")
+                        } label: {
+                            // In the collage, a note folded shut until it is wanted.
+                            Label(L.t("參考回答", "Reference answer"), systemImage: collage ? "envelope.open" : "text.quote")
+                                .labelStyle(.titleAndIcon)
+                                .font(collage ? .display(.headline, weight: .bold) : .body)
+                                .foregroundStyle(collage ? Collage.ink : Color.primary)
+                        }
+                        .tint(collage ? Collage.ink : Palette.accent)
+                        .accessibilityIdentifier("coach-reference")
+                        .modifier(CoachPaper(kind: .mustard, tilt: 0.5, fold: true, seed: 7))
                     } footer: { Text(privacyNote) }
                 } else {
                     Section {} footer: { Text(privacyNote) }
@@ -234,38 +256,67 @@ struct SpeakingCoachView: View {
         }
     }
 
+    /// The question on an index card: the word to use stamped at the top,
+    /// a red rule under it, and the question written below.
     private var questionSection: some View {
         Section {
-            HStack {
-                Text(request.keyword)
-                    .font(.display(.headline)).foregroundStyle(Palette.accent)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(request.keyword)
+                        .font(.display(collage ? .title3 : .headline, weight: collage ? .bold : .regular))
+                        .foregroundStyle(Palette.accent)
+                    Spacer(minLength: 8)
+                    if followUpQuestion != nil {
+                        if collage {
+                            Text(L.t("接續提問", "Follow-up"))
+                                .font(.caption.weight(.heavy))
+                                .foregroundStyle(Collage.clay)
+                                .padding(.horizontal, 7).padding(.vertical, 3)
+                                .overlay { RoundedRectangle(cornerRadius: 3).strokeBorder(Collage.clay, lineWidth: 1.5) }
+                                .rotationEffect(.degrees(-6))
+                        } else {
+                            Text(L.t("接續提問", "Follow-up")).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                if collage {
+                    Rectangle().fill(Collage.margin).frame(height: 1.2).accessibilityHidden(true)
+                }
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(question).font(collage ? .title3.weight(.semibold) : .headline)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("coach-question")
+                        // Learners of Chinese read the question with its pinyin.
+                        if request.mode == .chinese, questionIsChinese {
+                            let pinyin = ChineseDisplay.sentencePinyin(question)
+                            if !pinyin.isEmpty {
+                                Text(pinyin).font(.footnote).foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .accessibilityIdentifier("coach-question-pinyin")
+                            }
+                        }
+                        if let help = questionHelp, !help.isEmpty {
+                            Text(help).font(.subheadline).foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    Spacer(minLength: 8)
+                    SpeakButton(text: question, language: questionLanguage)
+                        .disabled(recording.busy)
+                }
                 if followUpQuestion != nil {
-                    Spacer()
-                    Text(L.t("接續提問", "Follow-up")).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                    Button { answerFollowUp(nil) } label: {
+                        Label(L.t("回到原來的題目", "Back to the original question"), systemImage: "arrow.uturn.backward")
+                            .font(.subheadline.weight(.semibold))
+                    }
+                    .buttonStyle(.borderless)
+                    .disabled(recording.busy || session.isBusy)
+                    .accessibilityIdentifier("coach-original-question")
                 }
             }
             .id(Self.topAnchor)
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(question).font(.headline).fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("coach-question")
-                    if followUpQuestion != nil, let followUpTranslation {
-                        Text(followUpTranslation).font(.subheadline).foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                Spacer(minLength: 8)
-                // A follow-up comes from the coach in the practiced language.
-                SpeakButton(text: question, language: followUpQuestion == nil ? "en-US" : answerLanguage)
-                    .disabled(recording.busy)
-            }
-            if followUpQuestion != nil {
-                Button { answerFollowUp(nil) } label: {
-                    Label(L.t("回到原來的題目", "Back to the original question"), systemImage: "arrow.uturn.backward")
-                }
-                .disabled(recording.busy || session.isBusy)
-                .accessibilityIdentifier("coach-original-question")
-            }
+            .modifier(CoachPaper(kind: .ivory, tilt: -0.6, tape: true, seed: 3))
         }
     }
 
@@ -284,7 +335,7 @@ struct SpeakingCoachView: View {
     /// words below with what it replaced struck through, so the lesson is
     /// visible without comparing two sentences by eye.
     @ViewBuilder
-    private func rewriteRow(_ feedback: SpeakingCoach.Feedback, id: String) -> some View {
+    private func rewriteRow(_ feedback: SpeakingCoach.Feedback) -> some View {
         let comparison = SpeakingCoach.comparison(answer: submittedAnswer ?? answer, rewrite: feedback.rewrite)
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
@@ -298,7 +349,6 @@ struct SpeakingCoachView: View {
             SpeakButton(text: feedback.rewrite, language: answerLanguage)
                 .disabled(recording.busy)
         }
-        .id(id)
         if let comparison, comparison.answer.contains(where: \.changed) || comparison.rewrite.contains(where: \.changed) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(L.t("你的說法", "You said")).font(.caption).foregroundStyle(.secondary)
@@ -348,8 +398,40 @@ struct SpeakingCoachView: View {
     /// replay and edit happen in the same place.
     private var answerSection: some View {
         Section {
-            PracticeAnswerEditor(text: $answer, focused: $answerFocused,
+            VStack(alignment: .leading, spacing: 12) {
+                answerPad
+                recorderControls
+                recorderStatus
+                answerNotes
+            }
+            .modifier(CoachPaper(kind: .sage, seed: 5))
+        } header: {
+            HStack {
+                CoachHeader(title: L.t("你的回答", "Your answer"), icon: "pencil.line")
+                Spacer()
+                // Only worth a glance near the limit.
+                if answer.count > SpeakingCoach.maximumAnswerCharacters - 100 {
+                    Text("\(answer.count) / \(SpeakingCoach.maximumAnswerCharacters)").monospacedDigit()
+                        .foregroundStyle(answer.count > SpeakingCoach.maximumAnswerCharacters ? Palette.miss : Palette.secondaryLabel)
+                }
+            }
+        }
+    }
+
+    private var answerPlaceholder: String {
+        request.mode == .english
+            ? L.t("按錄音說出你的回答，或直接用英文輸入", "Tap Record and say your answer, or type it in English")
+            : L.t("按錄音說出你的回答，或直接用中文輸入", "Tap Record and say your answer, or type it in Chinese")
+    }
+
+    /// Where the answer is written: in the collage a ruled notepad with a
+    /// glued top, each line on its rule.
+    @ViewBuilder
+    private var answerPad: some View {
+        let font = UIFont.preferredFont(forTextStyle: .body)
+        let editor = PracticeAnswerEditor(text: $answer, focused: $answerFocused,
                                  editable: recording.state != .recording && recording.state != .transcribing,
+                                 ruled: collage,
                                  onEdit: { text in
                                      if text != submittedAnswer { session.reset() }
                                      inputCommitFailed = false
@@ -362,86 +444,122 @@ struct SpeakingCoachView: View {
                                      return nil
                                      #endif
                                  })
+            .accessibilityLabel(L.t("你的回答", "Your answer"))
+            .accessibilityIdentifier("coach-answer")
+        if collage {
+            VStack(spacing: 0) {
+                // The glued top of the pad, with its row of punched holes.
+                Rectangle()
+                    .fill(Palette.accent)
+                    .frame(height: 12)
+                    .overlay {
+                        HStack(spacing: 14) {
+                            ForEach(0..<9, id: \.self) { _ in Circle().fill(Collage.ink.opacity(0.45)).frame(width: 4, height: 4) }
+                        }
+                    }
+                    .accessibilityHidden(true)
+                editor
+                    .frame(minHeight: 124, maxHeight: 220)
+                    .overlay(alignment: .topLeading) {
+                        if answer.isEmpty {
+                            Text(answerPlaceholder)
+                                .foregroundStyle(.tertiary)
+                                .padding(.top, RuledTextView.firstLineTop(for: font))
+                                .padding(.leading, RuledTextView.textLeft)
+                                .padding(.trailing, 10)
+                                .allowsHitTesting(false)
+                                .accessibilityHidden(true)
+                        }
+                    }
+                    .background(PaperKind.ivory.color)
+            }
+            .overlay { Rectangle().strokeBorder(Collage.ink.opacity(0.55), lineWidth: 1) }
+        } else {
+            editor
                 .frame(minHeight: 96, maxHeight: 200)
                 .overlay(alignment: .topLeading) {
                     if answer.isEmpty {
                         // UITextView has no placeholder; match its default text insets.
-                        Text(request.mode == .english
-                             ? L.t("按錄音說出你的回答，或直接用英文輸入", "Tap Record and say your answer, or type it in English")
-                             : L.t("按錄音說出你的回答，或直接用中文輸入", "Tap Record and say your answer, or type it in Chinese"))
+                        Text(answerPlaceholder)
                             .foregroundStyle(.tertiary)
                             .padding(.top, 8).padding(.leading, 5)
                             .allowsHitTesting(false)
                             .accessibilityHidden(true)
                     }
                 }
-                .accessibilityLabel(L.t("你的回答", "Your answer"))
-                .accessibilityIdentifier("coach-answer")
-            recorderControls
-            recorderStatus
-            if needsTranscriptReview {
-                Label(L.t("這是語音辨識的文字，送出前看看有沒有聽錯的字。", "This is a transcript. Check for misheard words before sending."),
-                      systemImage: "text.magnifyingglass")
-                    .font(.footnote).foregroundStyle(.secondary)
-            }
-            if let reflection, !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                if answerEchoesQuestion {
-                    // The keyword is in the question, so finding it here proves nothing.
-                    Label(L.t("這段和題目幾乎一樣，像是把題目念了一遍", "This is almost the same as the question"),
-                          systemImage: "exclamationmark.circle")
-                        .font(.footnote).foregroundStyle(Palette.review)
-                        .accessibilityIdentifier("coach-echo")
-                } else {
-                    Label {
-                        Text(answerSummary(reflection))
-                    } icon: {
-                        Image(systemName: reflection.containsTarget ? "checkmark.circle.fill" : "circle.dashed")
-                            .contentTransition(.symbolEffect(.replace))
-                            .symbolEffect(.bounce, value: reduceMotion ? false : reflection.containsTarget)
+        }
+    }
+
+    /// What the answer looks like so far, and what to check before sending.
+    @ViewBuilder
+    private var answerNotes: some View {
+        if needsTranscriptReview {
+            Label(L.t("這是語音辨識的文字，送出前看看有沒有聽錯的字。", "This is a transcript. Check for misheard words before sending."),
+                  systemImage: "text.magnifyingglass")
+                .font(.footnote).foregroundStyle(.secondary)
+        }
+        if let reflection, !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            if answerEchoesQuestion {
+                // The keyword is in the question, so finding it here proves nothing.
+                Label(L.t("這段和題目幾乎一樣，像是把題目念了一遍", "This is almost the same as the question"),
+                      systemImage: "exclamationmark.circle")
+                    .font(.footnote).foregroundStyle(Palette.review)
+                    .accessibilityIdentifier("coach-echo")
+            } else {
+                Label {
+                    Text(answerSummary(reflection))
+                } icon: {
+                    Image(systemName: reflection.containsTarget ? "checkmark.circle.fill" : "circle.dashed")
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.bounce, value: reduceMotion ? false : reflection.containsTarget)
+                }
+                    .font(.footnote).foregroundStyle(reflection.containsTarget ? Palette.known : Color.secondary)
+                    .animation(reduceMotion ? nil : Motion.pop, value: reflection.containsTarget)
+                    .sensoryFeedback(.selection, trigger: reflection.containsTarget) { _, used in
+                        used && (model.settings.hapticsEnabled ?? true)
                     }
-                        .font(.footnote).foregroundStyle(reflection.containsTarget ? Palette.known : Color.secondary)
-                        .animation(reduceMotion ? nil : Motion.pop, value: reflection.containsTarget)
-                        .sensoryFeedback(.selection, trigger: reflection.containsTarget) { _, used in
-                            used && (model.settings.hapticsEnabled ?? true)
-                        }
-                        .accessibilityIdentifier("coach-answer-check")
-                }
+                    .accessibilityIdentifier("coach-answer-check")
             }
-            if answer.count > SpeakingCoach.maximumAnswerCharacters {
-                Text(L.t("請將回答精簡至 600 字以內再取得建議。", "Shorten your answer to 600 characters before requesting suggestions."))
-                    .font(.footnote).foregroundStyle(Palette.miss)
+        }
+        if answer.count > SpeakingCoach.maximumAnswerCharacters {
+            Text(L.t("請將回答精簡至 600 字以內再取得建議。", "Shorten your answer to 600 characters before requesting suggestions."))
+                .font(.footnote).foregroundStyle(Palette.miss)
+        }
+    }
+
+    private var recordButton: some View {
+        let live = recording.state == .recording
+        let button = Button {
+            if recording.state == .recording { recording.stop() }
+            else if recording.hasRecording { retakeOpen = true }
+            else { beginRecording() }
+        } label: {
+            Label {
+                Text(live ? L.t("停止", "Stop")
+                     : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄音", "Record"))
+            } icon: {
+                recordIcon
             }
-        } header: {
-            HStack {
-                Text(L.t("你的回答", "Your answer"))
-                Spacer()
-                // Only worth a glance near the limit.
-                if answer.count > SpeakingCoach.maximumAnswerCharacters - 100 {
-                    Text("\(answer.count) / \(SpeakingCoach.maximumAnswerCharacters)").monospacedDigit()
-                        .foregroundStyle(answer.count > SpeakingCoach.maximumAnswerCharacters ? Palette.miss : Palette.secondaryLabel)
-                }
+                .font(.headline)
+                .lineLimit(1)
+                .foregroundStyle(collage ? (live ? Color.white : Palette.accent) : (live ? Palette.miss : Palette.accent))
+        }
+        .disabled(recording.busy && recording.state != .recording || session.isBusy)
+        .accessibilityIdentifier("coach-record")
+        return Group {
+            if collage {
+                // A paper key: ivory until it records, then red and pressed in.
+                button.buttonStyle(CollageButtonStyle(prominent: live, tint: live ? Palette.miss : Palette.accent))
+                    .fixedSize()
+            } else {
+                button
             }
         }
     }
 
     private var recorderControls: some View {
-        HStack(spacing: 16) {
-            Button {
-                if recording.state == .recording { recording.stop() }
-                else if recording.hasRecording { retakeOpen = true }
-                else { beginRecording() }
-            } label: {
-                Label {
-                    Text(recording.state == .recording ? L.t("停止", "Stop")
-                         : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄音", "Record"))
-                } icon: {
-                    recordIcon
-                }
-                    .font(.headline)
-                    .foregroundStyle(recording.state == .recording ? Palette.miss : Palette.accent)
-            }
-            .disabled(recording.busy && recording.state != .recording || session.isBusy)
-            .accessibilityIdentifier("coach-record")
+        HStack(spacing: collage ? 12 : 16) {
+            recordButton
             if recording.state == .recording || recording.hasRecording {
                 // The seconds tick over like a counter.
                 Text("\(Int(recording.seconds)) / 60 \(L.t("秒", "s"))").font(.subheadline).monospacedDigit()
@@ -462,10 +580,12 @@ struct SpeakingCoachView: View {
                     }
                     .labelStyle(.iconOnly)
                 }
+                .buttonStyle(CoachDiscStyle(tint: Palette.accent))
                 .disabled(recording.busy && recording.state != .playing)
                 .accessibilityIdentifier("coach-play-recording")
                 .transition(reduceMotion ? .opacity : .scale(scale: 0.5).combined(with: .opacity))
                 Button { recording.clear() } label: { Image(systemName: "trash") }
+                    .buttonStyle(CoachDiscStyle(tint: Palette.miss))
                     .disabled(recording.busy)
                     .accessibilityLabel(L.t("刪除錄音", "Delete recording"))
                     .transition(reduceMotion ? .opacity : .scale(scale: 0.5).combined(with: .opacity))
@@ -549,61 +669,117 @@ struct SpeakingCoachView: View {
     }
 
     /// One card of suggestions, then one way to keep going. The corrections,
-    /// the rewrite and the tip are a single lesson, so they share a card.
+    /// the rewrite and the tip are a single lesson, so they share a card: in
+    /// the collage a page marked up in red pen, the tip on a sticky note.
     @ViewBuilder
     private func feedbackSections(_ feedback: SpeakingCoach.Feedback) -> some View {
         Section {
-            ForEach(Array(feedback.corrections.enumerated()), id: \.offset) { offset, correction in
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(correctionLine(correction))
-                    Text(correction.reason).font(.subheadline).foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(Array(feedback.corrections.enumerated()), id: \.offset) { offset, correction in
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        if collage {
+                            Image(systemName: "pencil.tip")
+                                .font(.footnote.weight(.bold))
+                                .foregroundStyle(Palette.miss)
+                                .accessibilityHidden(true)
+                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(correctionLine(correction))
+                            Text(correction.reason).font(.subheadline).foregroundStyle(.secondary)
+                        }
+                    }
+                    .textSelection(.enabled)
+                    .modifier(CoachArrival(order: offset))
+                    feedbackRule(seed: offset)
                 }
-                .textSelection(.enabled)
-                .modifier(CoachArrival(order: offset))
-                // Scroll targets are rows; a Section's own id is not reliably one.
-                .id(offset == 0 ? Self.feedbackAnchor : "coach-correction-\(offset)")
-            }
-            rewriteRow(feedback, id: feedback.corrections.isEmpty ? Self.feedbackAnchor : "coach-rewrite")
-                .modifier(CoachArrival(order: feedback.corrections.count))
-            HStack(alignment: .firstTextBaseline, spacing: 10) {
-                Image(systemName: "lightbulb.fill").foregroundStyle(Palette.review).accessibilityHidden(true)
-                    .popIn(delay: 0.2 + Double(feedback.corrections.count + 1) * 0.07)
-                Text(feedback.tip).font(.subheadline).textSelection(.enabled)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("coach-tip")
-            }
-            .modifier(CoachArrival(order: feedback.corrections.count + 1))
-        } header: {
-            Label {
-                Text(L.t("AI 建議", "AI suggestions"))
-            } icon: {
-                Image(systemName: "sparkles").popIn()
-            }
-        }
-        Section {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(feedback.followUp).font(.headline).textSelection(.enabled)
+                rewriteRow(feedback)
+                    .modifier(CoachArrival(order: feedback.corrections.count))
+                feedbackRule(seed: 9)
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    Image(systemName: "lightbulb.fill").foregroundStyle(collage ? Collage.ink : Palette.review).accessibilityHidden(true)
+                        .popIn(delay: 0.2 + Double(feedback.corrections.count + 1) * 0.07)
+                    Text(feedback.tip).font(.subheadline).textSelection(.enabled)
+                        .foregroundStyle(collage ? Collage.ink : Color.primary)
                         .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("coach-follow-up")
-                    if let translation = feedback.followUpTranslation {
-                        Text(translation).font(.subheadline).foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .accessibilityIdentifier("coach-follow-up-translation")
+                        .accessibilityIdentifier("coach-tip")
+                }
+                .padding(collage ? 12 : 0)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background {
+                    if collage {
+                        // A sticky note pressed on at the bottom of the page.
+                        PaperSurface(kind: .mustard)
+                            .overlay(alignment: .top) { Rectangle().fill(Collage.ink.opacity(0.08)).frame(height: 8) }
                     }
                 }
-                Spacer(minLength: 8)
-                SpeakButton(text: feedback.followUp, language: answerLanguage)
-                    .disabled(recording.busy)
+                .rotationEffect(.degrees(collage ? -0.8 : 0))
+                .modifier(CoachArrival(order: feedback.corrections.count + 1))
             }
-            .modifier(CoachArrival(order: feedback.corrections.count + 2))
-            Button { answerFollowUp(feedback.followUp, translation: feedback.followUpTranslation) } label: {
-                Label(L.t("回答這題", "Answer this"), systemImage: "arrowshape.turn.up.left")
+            // Scroll targets are rows; a Section's own id is not reliably one.
+            .id(Self.feedbackAnchor)
+            .modifier(CoachPaper(kind: .ivory, tilt: 0.4, torn: [.top], seed: 6))
+        } header: {
+            CoachHeader(title: L.t("AI 建議", "AI suggestions"), icon: "sparkles", popIcon: true)
+        }
+        Section {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(feedback.followUp).font(.headline).textSelection(.enabled)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityIdentifier("coach-follow-up")
+                        if request.mode == .chinese {
+                            let pinyin = ChineseDisplay.sentencePinyin(feedback.followUp)
+                            if !pinyin.isEmpty {
+                                Text(pinyin).font(.footnote).foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                        if let translation = feedback.followUpTranslation {
+                            Text(translation).font(.subheadline).foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("coach-follow-up-translation")
+                        }
+                    }
+                    Spacer(minLength: 8)
+                    SpeakButton(text: feedback.followUp, language: answerLanguage)
+                        .disabled(recording.busy)
+                }
+                .modifier(CoachArrival(order: feedback.corrections.count + 2))
+                answerFollowUpButton(feedback)
+                    .modifier(CoachArrival(order: feedback.corrections.count + 3))
             }
-            .disabled(recording.busy || session.isBusy)
-            .modifier(CoachArrival(order: feedback.corrections.count + 3))
-            .accessibilityIdentifier("coach-answer-follow-up")
-        } header: { Text(L.t("接著練", "Keep going")) }
+            .modifier(CoachPaper(kind: .peach, tilt: -0.5, torn: [.bottom], tape: true, seed: 8))
+        } header: { CoachHeader(title: L.t("接著練", "Keep going"), icon: "arrowshape.turn.up.left") }
+    }
+
+    @ViewBuilder
+    private func answerFollowUpButton(_ feedback: SpeakingCoach.Feedback) -> some View {
+        let button = Button { answerFollowUp(feedback.followUp, translation: feedback.followUpTranslation) } label: {
+            Label(L.t("回答這題", "Answer this"), systemImage: "arrowshape.turn.up.left")
+                .font(.subheadline.weight(.semibold))
+        }
+        .disabled(recording.busy || session.isBusy)
+        .accessibilityIdentifier("coach-answer-follow-up")
+        if collage {
+            button.buttonStyle(CollageButtonStyle(prominent: false, tint: Palette.accent)).fixedSize()
+        } else {
+            button.buttonStyle(.borderless)
+        }
+    }
+
+    /// Between the marked-up lines: a loose pencil line in the collage, a
+    /// hairline otherwise.
+    @ViewBuilder
+    private func feedbackRule(seed: Int) -> some View {
+        if collage {
+            InkLine(seed: seed, wobble: 1.2)
+                .stroke(Collage.ink.opacity(0.25), style: StrokeStyle(lineWidth: 1, lineCap: .round))
+                .frame(height: 4)
+                .accessibilityHidden(true)
+        } else {
+            Divider()
+        }
     }
 
     /// "original → replacement", the original struck through.
@@ -661,7 +837,16 @@ struct SpeakingCoachView: View {
         }
         .padding(.horizontal, Metrics.gutter)
         .padding(.vertical, 10)
-        .background(.bar)
+        .background {
+            if collage {
+                // A strip of paper along the bottom, ruled off in ink.
+                PaperSurface(kind: .graph)
+                    .overlay(alignment: .top) { Rectangle().fill(Collage.ink.opacity(0.85)).frame(height: 1.5) }
+                    .ignoresSafeArea()
+            } else {
+                Rectangle().fill(.bar).ignoresSafeArea()
+            }
+        }
         .animation(reduceMotion ? nil : Motion.reveal, value: session.isWorking || pendingSubmission)
         .sensoryFeedback(.warning, trigger: visibleFailure) { _, failure in
             failure != nil && (model.settings.hapticsEnabled ?? true)
@@ -677,15 +862,21 @@ struct SpeakingCoachView: View {
 
     private var unavailableSection: some View {
         Section {
-            HStack(alignment: .top) {
-                Image(systemName: "info.circle").accessibilityHidden(true)
-                Text(unavailableMessage)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("coach-unavailable")
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top) {
+                    Image(systemName: "info.circle").accessibilityHidden(true)
+                    Text(unavailableMessage)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("coach-unavailable")
+                }
+                if !unavailableIsSettled {
+                    HStack { checkAgainButton }.buttonStyle(.borderless)
+                }
             }
-            if !unavailableIsSettled { checkAgainButton }
+            .modifier(CoachPaper(kind: .ivory, torn: [.bottom], seed: 2))
         } header: {
-            Text(unavailableIsSettled ? L.t("AI 建議", "AI suggestions") : L.t("暫時無法提供建議", "Suggestions unavailable"))
+            CoachHeader(title: unavailableIsSettled ? L.t("AI 建議", "AI suggestions") : L.t("暫時無法提供建議", "Suggestions unavailable"),
+                        icon: "sparkles")
         }
     }
 
@@ -837,5 +1028,140 @@ private struct CoachArrival: ViewModifier {
                 guard !arrived, !reduceMotion else { return }
                 withAnimation(.spring(response: 0.5, dampingFraction: 0.82).delay(0.1 + Double(order) * 0.07)) { arrived = true }
             }
+    }
+}
+
+/// One section of the coach as one piece of paper in the collage: cut from
+/// its own stock, a little askew, sometimes torn, taped down or folded at a
+/// corner. In leather the row is left as it is.
+private struct CoachPaper: ViewModifier {
+    @Environment(\.appStyle) private var appStyle
+    var kind: PaperKind
+    var tilt: Double = 0
+    var torn: Edge.Set = []
+    var tape = false
+    var fold = false
+    var seed = 1
+
+    func body(content: Content) -> some View {
+        if appStyle == .collage {
+            let shape = TornEdgeShape(edges: torn, depth: torn.isEmpty ? 0 : 4, seed: seed)
+            content
+                .padding(.horizontal, 16)
+                .padding(.top, torn.contains(.top) ? 18 : 14)
+                .padding(.bottom, torn.contains(.bottom) ? 18 : 14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background {
+                    PaperSurface(kind: kind)
+                        .overlay(alignment: .topTrailing) {
+                            if fold {
+                                // The corner turned down, showing the paper's back.
+                                FoldedCorner()
+                                    .fill(Collage.ink.opacity(0.18))
+                                    .frame(width: 22, height: 22)
+                            }
+                        }
+                        .clipShape(shape)
+                        .overlay { shape.stroke(Collage.ink.opacity(0.35), lineWidth: 0.8) }
+                }
+                .overlay(alignment: .top) {
+                    if tape { TapeStrip(width: 64, angle: seed % 2 == 0 ? 4 : -4).offset(y: -10) }
+                }
+                .rotationEffect(.degrees(tilt))
+                .padding(.top, tape ? 12 : 4)
+                .padding(.bottom, 4)
+                .padding(.horizontal, 2)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+        } else {
+            content
+        }
+    }
+}
+
+/// The triangle of a corner folded over.
+private struct FoldedCorner: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        return path
+    }
+}
+
+/// A section's title: in the collage a strip of label tape stuck on at an
+/// angle, otherwise the usual small heading.
+private struct CoachHeader: View {
+    @Environment(\.appStyle) private var appStyle
+    var title: String
+    var icon: String?
+    var popIcon = false
+
+    var body: some View {
+        if appStyle == .collage {
+            HStack(spacing: 5) {
+                if let icon { iconView(icon) }
+                Text(title)
+            }
+            .font(.display(.subheadline, weight: .bold))
+            .foregroundStyle(Collage.ink)
+            .textCase(nil)
+            .lineLimit(1)
+            .padding(.horizontal, 9)
+            .padding(.vertical, 4)
+            .background { PaperSurface(kind: .mustard) }
+            .rotationEffect(.degrees(-1.5))
+            .padding(.bottom, 2)
+        } else if let icon {
+            Label { Text(title) } icon: { iconView(icon) }
+        } else {
+            Text(title)
+        }
+    }
+
+    @ViewBuilder
+    private func iconView(_ name: String) -> some View {
+        if popIcon { Image(systemName: name).popIn() } else { Image(systemName: name) }
+    }
+}
+
+/// A round paper key for the recording's small controls in the collage,
+/// with a hard ink shadow it is pressed onto; a plain icon in leather.
+private struct CoachDiscStyle: ButtonStyle {
+    var tint: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        CoachDisc(configuration: configuration, tint: tint)
+    }
+}
+
+private struct CoachDisc: View {
+    @Environment(\.appStyle) private var appStyle
+    @Environment(\.isEnabled) private var isEnabled
+    let configuration: ButtonStyleConfiguration
+    var tint: Color
+
+    var body: some View {
+        let pressed = configuration.isPressed
+        if appStyle == .collage {
+            configuration.label
+                .font(.headline)
+                .foregroundStyle(tint)
+                .frame(width: 44, height: 44)
+                .background { Circle().fill(PaperKind.ivory.color).overlay { Circle().strokeBorder(Collage.ink.opacity(0.85), lineWidth: 1.5) } }
+                .background { Circle().fill(Collage.ink.opacity(0.8)).offset(x: pressed ? 0 : 2.5, y: pressed ? 0 : 2.5) }
+                .offset(x: pressed ? 2.5 : 0, y: pressed ? 2.5 : 0)
+                .opacity(isEnabled ? 1 : 0.45)
+                .contentShape(Circle())
+        } else {
+            configuration.label
+                .foregroundStyle(tint)
+                .frame(minWidth: 44, minHeight: 44)
+                .opacity(isEnabled ? (pressed ? 0.5 : 1) : 0.45)
+                .contentShape(Rectangle())
+        }
     }
 }

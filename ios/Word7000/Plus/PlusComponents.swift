@@ -4,17 +4,33 @@ import Word7000Core
 /// "Premium" with a small lock, next to features that are locked right now.
 struct PlusBadge: View {
     var locked = true
+    /// Only the lock, for a spot too narrow for the word: "Premium" is never
+    /// squeezed into a column of single letters.
+    var compact = false
 
     var body: some View {
         HStack(spacing: 3) {
-            if locked { Image(systemName: "lock.fill").font(.system(size: 9, weight: .bold)) }
-            Text(P.plusBadge).font(.caption.weight(.bold))
+            if locked || compact { Image(systemName: "lock.fill").font(.system(size: compact ? 10 : 9, weight: .bold)) }
+            if !compact { Text(P.plusBadge).font(.caption.weight(.bold)) }
         }
+        .lineLimit(1)
         .foregroundStyle(.white)
-        .padding(.horizontal, 7)
-        .padding(.vertical, 3)
+        .padding(.horizontal, compact ? 6 : 7)
+        .padding(.vertical, compact ? 5 : 3)
         .background(PlusStyle.gradient, in: Capsule())
+        .fixedSize()
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(locked ? P.lockedLabel : P.plusBadge)
+    }
+}
+
+/// The Premium badge where it fits whole, else just its lock.
+struct PlusBadgeFitting: View {
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            PlusBadge()
+            PlusBadge(compact: true)
+        }
     }
 }
 
@@ -325,14 +341,19 @@ struct PlusComparison: View {
         ]
     }
 
+    /// Wide enough for "Premium" on one line, growing with the text size.
+    @ScaledMetric(relativeTo: .caption) private var column: CGFloat = 64
+
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Spacer()
-                Text(L.t("免費", "Free")).frame(width: 52)
-                Text("Premium").frame(width: 52)
+            HStack(spacing: 8) {
+                Spacer(minLength: 0)
+                Text(L.t("免費", "Free")).frame(width: column)
+                Text("Premium").frame(width: column)
             }
             .font(.caption.weight(.bold))
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
             .foregroundStyle(.secondary)
             .padding(.bottom, 6)
             ForEach(lines) { line in
@@ -342,8 +363,8 @@ struct PlusComparison: View {
                         .foregroundStyle(Palette.ink)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
-                    mark(line.free).frame(width: 52)
-                    mark(true).frame(width: 52)
+                    mark(line.free).frame(width: column)
+                    mark(true).frame(width: column)
                 }
                 .padding(.vertical, 8)
                 .overlay(alignment: .bottom) { Rectangle().fill(Palette.fill).frame(height: 1) }

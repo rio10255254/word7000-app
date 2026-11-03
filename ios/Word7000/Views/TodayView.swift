@@ -935,6 +935,9 @@ private struct PracticeTile: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
                     }
+                    // The words come before the badge: a narrow tile keeps
+                    // "Exam" whole and shows only the lock.
+                    .layoutPriority(1)
                     Spacer(minLength: 2)
                     rowEnd
                 }
@@ -1025,7 +1028,7 @@ private struct PracticeTile: View {
     @ViewBuilder
     private var corner: some View {
         if item.locked {
-            PlusBadge()
+            PlusBadgeFitting()
         } else if let badge = item.badge {
             pill(badge)
         } else {
@@ -1042,7 +1045,7 @@ private struct PracticeTile: View {
     @ViewBuilder
     private var rowEnd: some View {
         if item.locked {
-            PlusBadge()
+            PlusBadgeFitting()
         } else if let badge = item.badge {
             if roomy {
                 // The count, set large: it carries the row's right side.

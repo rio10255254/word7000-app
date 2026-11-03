@@ -26,7 +26,7 @@ final class LayoutTests: XCTestCase {
 
     func testTodayFitsInChineseMode() {
         let app = launch(["-uiTestingChineseMode"])
-        checkToday(app, name: "layout-chinese", tiles: ["today-quiz", "today-speaking", "today-exam"])
+        checkToday(app, name: "layout-chinese", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
     }
 
     /// The other look, leather (the others run in the default, the collage).
@@ -90,11 +90,12 @@ final class LayoutTests: XCTestCase {
         let chinese = app.buttons["today-language-zh"]
         XCTAssertTrue(chinese.isHittable)
         chinese.tap()
-        // Learning Chinese: the interface turns English and spelling goes away.
+        // Learning Chinese: the interface turns English, and spelling becomes
+        // writing the Chinese (characters or pinyin), so the tile stays.
         let selected = NSPredicate(format: "isSelected == true")
         expectation(for: selected, evaluatedWith: app.buttons["today-language-zh"])
         waitForExpectations(timeout: 5)
-        XCTAssertFalse(app.buttons["today-spelling"].exists, "Spelling should go away when learning Chinese")
+        XCTAssertTrue(app.buttons["today-spelling"].waitForExistence(timeout: 5), "Writing practice should stay when learning Chinese")
         snap(app, "layout-switched-to-chinese")
 
         app.buttons["today-language-en"].tap()

@@ -4,8 +4,9 @@ import XCTest
 final class ModeProgressTests: XCTestCase {
     private func stored() -> ProgressState {
         var state = ProgressState(dailyTarget: 15, streak: 4)
-        state = LearningEngine.markKnown(state, wordId: "w0001", today: "2026-11-01")
-        state = LearningEngine.markReview(state, wordId: "w0002", today: "2026-11-01")
+        // A fixed time, so two calls build exactly the same state.
+        state = LearningEngine.markKnown(state, wordId: "w0001", today: "2026-11-01", changedAt: "2026-11-01T09:00:00.000Z")
+        state = LearningEngine.markReview(state, wordId: "w0002", today: "2026-11-01", changedAt: "2026-11-01T09:00:00.000Z")
         var chinese = WordProgress.fresh
         chinese.status = .review
         state.words["zh:w0003"] = chinese
@@ -44,6 +45,7 @@ final class ModeProgressTests: XCTestCase {
         let seeded = ModeProgress.seedChinese(state)
         XCTAssertEqual(Set(ModeProgress.view(seeded, chinese: true).words.keys), ["w0001", "w0002"])
         XCTAssertEqual(ModeProgress.view(seeded, chinese: false).words, state.words)
-        XCTAssertEqual(ModeProgress.seedChinese(stored()), stored())
+        let alreadySplit = stored()
+        XCTAssertEqual(ModeProgress.seedChinese(alreadySplit), alreadySplit)
     }
 }

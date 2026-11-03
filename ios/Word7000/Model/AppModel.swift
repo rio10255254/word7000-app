@@ -159,8 +159,12 @@ final class AppModel {
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
         if arguments.contains("-uiTestingChineseMode") {
             settings.studyMode = .chinese
-            // The sample progress shows on the Chinese side too.
-            if arguments.contains("-uiTestingSampleProgress") { progress = ModeProgress.seedChinese(progress) }
+            // Sample progress on the Chinese side too, over the Taiwan Mandarin words.
+            if arguments.contains("-uiTestingSampleProgress") {
+                let taiwan = loadBundledWords(named: "words-zh")
+                let sample = SampleData.progress(words: taiwan.isEmpty ? words : taiwan, today: DayMath.today())
+                for (id, entry) in sample.words { progress.words[ModeProgress.chinesePrefix + id] = entry }
+            }
         }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
         if arguments.contains("-uiTestingCollage") { settings.appStyle = .collage }

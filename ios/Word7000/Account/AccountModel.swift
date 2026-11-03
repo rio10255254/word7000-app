@@ -336,6 +336,12 @@ final class AccountModel {
         }
     }
 
+    func setPushTester(token: String, on: Bool) async -> Bool {
+        guard let client, let current = session,
+              let valid = try? await validSession(client: client, current) else { return false }
+        return (try? await client.setPushTester(token: token, on: on, session: valid)) ?? false
+    }
+
     /// Reports which app version this account runs; quietly skipped offline.
     func reportAppVersion() async {
         guard let client, let current = session, !AppRuntime.uiTesting else { return }

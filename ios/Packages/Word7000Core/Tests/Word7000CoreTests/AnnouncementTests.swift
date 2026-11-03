@@ -14,6 +14,8 @@ final class AnnouncementTests: XCTestCase {
         XCTAssertTrue(Announcement(id: "b").reaches(signedIn: false, plus: false))
         XCTAssertTrue(Announcement(id: "c", audience: "plus").reaches(signedIn: true, plus: true))
         XCTAssertFalse(Announcement(id: "d", audience: "guest").reaches(signedIn: true, plus: false))
+        XCTAssertFalse(Announcement(id: "e", audience: "tester").reaches(signedIn: true, plus: true))
+        XCTAssertTrue(Announcement(id: "f", audience: "tester").reaches(signedIn: false, plus: false, tester: true))
     }
 
     func testUpdateRequirementBlocksOnlyOlderVersionsAndBuilds() throws {

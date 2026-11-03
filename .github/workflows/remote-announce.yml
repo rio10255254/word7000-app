@@ -33,9 +33,9 @@ on:
         type: boolean
         default: false
       audience:
-        description: '👥 給誰看'
+        description: '👥 給誰看（測試公告請選「只給測試手機」：只有在 App 裡長按「公告推播」設成測試機的手機會收到）'
         type: choice
-        options: ['所有人', '沒登入的訪客', '登入但沒訂閱', 'Premium 訂閱者']
+        options: ['所有人', '只給測試手機', '沒登入的訪客', '登入但沒訂閱', 'Premium 訂閱者']
         default: '所有人'
       button:
         description: '🔘 公告下方的按鈕'
@@ -87,6 +87,7 @@ jobs:
           DAYS: ${{ inputs.days }}
         run: |
           case "$AUDIENCE_LABEL" in
+            只給測試手機) export AUDIENCE=tester ;;
             沒登入的訪客) export AUDIENCE=guest ;;
             登入但沒訂閱) export AUDIENCE=free ;;
             "Premium 訂閱者") export AUDIENCE=plus ;;

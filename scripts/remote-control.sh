@@ -72,7 +72,7 @@ post)
     say "- 📣 標題：**$TITLE_ZH**${TITLE_EN:+ ／ $TITLE_EN}"
     say "- 內容：$BODY_ZH"
     [ -n "$BODY_EN" ] && say "- English：$BODY_EN"
-    case "$AUDIENCE" in guest) who="沒登入的訪客" ;; free) who="登入但沒訂閱" ;; plus) who="Premium 訂閱者" ;; *) who="所有人" ;; esac
+    case "$AUDIENCE" in tester) who="只給測試手機" ;; guest) who="沒登入的訪客" ;; free) who="登入但沒訂閱" ;; plus) who="Premium 訂閱者" ;; *) who="所有人" ;; esac
     case "$LINK" in "") button="沒有按鈕" ;; update) button="請大家更新" ;; plus) button="打開訂閱頁" ;; *) button="打開 $LINK" ;; esac
     say "- 👥 給誰看：$who${below_version:+（只給 $BELOW 以前的版本）}"
     say "- 🔘 按鈕：$button"

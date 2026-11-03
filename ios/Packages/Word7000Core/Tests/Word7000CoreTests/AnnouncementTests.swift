@@ -31,4 +31,14 @@ final class AnnouncementTests: XCTestCase {
         XCTAssertTrue(anyBuild.blocks(version: "2.0", build: 1))
         XCTAssertFalse(UpdateRequirement(minVersion: "2.0.2", minBuild: 4).blocks(version: "2.0.2", build: nil))
     }
+
+    func testAnnouncementCanBeLimitedToOlderVersions() throws {
+        let json = #"[{"id":"a2","audience":"all","title_zh":"請更新","body_zh":"","title_en":"","body_en":"","link":"update","link_label_zh":"","link_label_en":"","below_version":"2.0.3","below_build":null}]"#
+        let old = try XCTUnwrap(JSONDecoder().decode([Announcement].self, from: Data(json.utf8)).first)
+        XCTAssertTrue(old.shows(toVersion: "2.0.2", build: 9))
+        XCTAssertFalse(old.shows(toVersion: "2.0.3", build: 1))
+        XCTAssertTrue(Announcement(id: "everyone").shows(toVersion: "9.9", build: 1))
+        let legacy = #"[{"id":"a3","audience":"all","title_zh":"","body_zh":"","title_en":"","body_en":"","link":null,"link_label_zh":"","link_label_en":""}]"#
+        XCTAssertNil(try JSONDecoder().decode([Announcement].self, from: Data(legacy.utf8)).first?.belowVersion)
+    }
 }

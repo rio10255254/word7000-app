@@ -279,9 +279,20 @@ public struct SupabaseClient: Sendable {
 
     /// Registers this iPhone's push token for the signed-in learner (see the
     /// register_push_device function).
-    public func registerPushDevice(token: String, audience: String, language: String, session: AuthSession) async throws {
+    public func registerPushDevice(token: String, audience: String, language: String,
+                                   version: String, build: Int?, session: AuthSession) async throws {
         _ = try await request("POST", "rest/v1/rpc/register_push_device", body: .object([
             "p_token": .string(token), "p_audience": .string(audience), "p_language": .string(language),
+            "p_version": .string(version), "p_build": build.map { .number(Double($0)) } ?? .null,
+        ]), session: session)
+    }
+
+    /// Tells the developer which app version this account runs (one row per
+    /// account, overwritten), so old versions can be counted and reached.
+    public func reportAppVersion(_ version: String, build: Int?, os: String, language: String, session: AuthSession) async throws {
+        _ = try await request("POST", "rest/v1/rpc/report_app_version", body: .object([
+            "p_version": .string(version), "p_build": build.map { .number(Double($0)) } ?? .null,
+            "p_os": .string(os), "p_language": .string(language),
         ]), session: session)
     }
 
@@ -513,11 +524,21 @@ public struct Announcement: Codable, Equatable, Identifiable, Sendable {
     public var link: String?
     public var linkLabelZh: String
     public var linkLabelEn: String
+    /// Only versions older than this see it (nil: everyone).
+    public var belowVersion: String?
+    public var belowBuild: Int?
 
     enum CodingKeys: String, CodingKey {
         case id, audience, link
         case titleZh = "title_zh", bodyZh = "body_zh", titleEn = "title_en", bodyEn = "body_en"
         case linkLabelZh = "link_label_zh", linkLabelEn = "link_label_en"
+        case belowVersion = "below_version", belowBuild = "below_build"
+    }
+
+    /// Whether an app of this version and build is old enough to be meant.
+    public func shows(toVersion version: String, build: Int?) -> Bool {
+        guard let belowVersion else { return true }
+        return UpdateRequirement(minVersion: belowVersion, minBuild: belowBuild).blocks(version: version, build: build)
     }
 
     public init(id: String, audience: String = "all", titleZh: String = "", bodyZh: String = "", titleEn: String = "",

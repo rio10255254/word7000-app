@@ -6,7 +6,20 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
 // marked pushed before anything is sent, so a second call, by anyone, sends
 // nothing. Called by the "Broadcast a message" workflow.
 
-type Device = { token: string; language: 'zh' | 'en' };
+type Device = { token: string; language: 'zh' | 'en'; app_version: string | null; app_build: number | null };
+
+/** Whether a phone's app is older than the message's limit (no limit: all;
+ * a phone that never said its version is from before versions were kept). */
+export function isBelow(device: Pick<Device, 'app_version' | 'app_build'>, version: string | null, build: number | null) {
+  if (!version) return true;
+  if (!device.app_version) return true;
+  const a = device.app_version.split('.').map(Number), b = version.split('.').map(Number);
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const x = a[i] ?? 0, y = b[i] ?? 0;
+    if (x !== y) return x < y;
+  }
+  return build != null && device.app_build != null && device.app_build < build;
+}
 
 const APNS_CONCURRENCY = 20;
 const APNS_TOKEN = /^[0-9a-f]{32,512}$/;
@@ -27,7 +40,7 @@ Deno.serve(async (request) => {
   const { data: message, error } = await supabase.from('announcements')
     .update({ pushed_at: new Date().toISOString() })
     .eq('id', id).eq('push', true).eq('active', true).is('pushed_at', null)
-    .select('id, audience, title_zh, body_zh, title_en, body_en')
+    .select('id, audience, title_zh, body_zh, title_en, body_en, below_version, below_build')
     .maybeSingle();
   if (error) {
     console.error(error);
@@ -35,7 +48,7 @@ Deno.serve(async (request) => {
   }
   if (!message) return Response.json({ error: 'nothing_to_push' }, { status: 409 });
 
-  let query = supabase.from('push_devices').select('token, language');
+  let query = supabase.from('push_devices').select('token, language, app_version, app_build');
   if (message.audience !== 'all') query = query.eq('audience', message.audience);
   const { data: devices, error: devicesError } = await query.limit(100_000);
   if (devicesError) {
@@ -47,7 +60,7 @@ Deno.serve(async (request) => {
   const gone: string[] = [];
   let sent = 0;
   let failed = 0;
-  const list = (devices ?? []) as Device[];
+  const list = ((devices ?? []) as Device[]).filter((device) => isBelow(device, message.below_version, message.below_build));
   for (let start = 0; start < list.length; start += APNS_CONCURRENCY) {
     await Promise.all(list.slice(start, start + APNS_CONCURRENCY).map(async (device) => {
       const english = device.language === 'en';

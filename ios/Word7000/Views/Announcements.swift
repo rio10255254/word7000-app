@@ -33,7 +33,10 @@ final class AnnouncementStore {
         lastCheck = Date()
         let seen = Set(seen)
         let messages = await account.fetchAnnouncements()
-        current = messages.first { !seen.contains($0.id) && $0.reaches(signedIn: account.isPermanent, plus: plus.subscribed) }
+        current = messages.first {
+            !seen.contains($0.id) && $0.reaches(signedIn: account.isPermanent, plus: plus.subscribed)
+                && $0.shows(toVersion: UpdateGate.version, build: UpdateGate.build)
+        }
     }
 
     func markSeen(_ message: Announcement) {

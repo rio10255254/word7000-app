@@ -1,0 +1,34 @@
+# 🧹 Take messages down, or lift a forced update.
+name: 🧹 下架公告／解除強制更新
+
+on:
+  workflow_dispatch:
+    inputs:
+      what:
+        description: '要做什麼'
+        type: choice
+        options: ['下架所有公告', '解除強制更新', '兩個都做']
+        default: '下架所有公告'
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_REF: byyaepkhxexppjrdhcaw
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: 下架／解除
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          WHAT: ${{ inputs.what }}
+        run: |
+          if [ "$WHAT" != "解除強制更新" ]; then ACTION=take-down scripts/remote-control.sh; fi
+          if [ "$WHAT" != "下架所有公告" ]; then ACTION=lift-update scripts/remote-control.sh; fi

@@ -326,11 +326,20 @@ final class AccountModel {
         guard let client, let current = session else { return false }
         do {
             try await client.registerPushDevice(token: token, audience: audience, language: language,
+                                                version: UpdateGate.version, build: UpdateGate.build,
                                                 session: try await validSession(client: client, current))
             return true
         } catch {
             return false
         }
+    }
+
+    /// Reports which app version this account runs; quietly skipped offline.
+    func reportAppVersion() async {
+        guard let client, let current = session, !AppRuntime.uiTesting else { return }
+        guard let valid = try? await validSession(client: client, current) else { return }
+        try? await client.reportAppVersion(UpdateGate.version, build: UpdateGate.build,
+                                           os: UIDevice.current.systemVersion, language: L.zh ? "zh" : "en", session: valid)
     }
 
     /// The developer's live messages; none without an account service or a

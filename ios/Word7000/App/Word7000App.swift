@@ -49,6 +49,9 @@ struct Word7000App: App {
                     await PushRegistration.shared.upload()
                 }
                 .task { model.syncAppIcon() }
+                // Which version this account runs, for the developer's status
+                // check and version-limited messages.
+                .task(id: account.session?.user.id) { await account.reportAppVersion() }
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)
                 .environment(\.appStyle, model.settings.appStyle ?? .standard)

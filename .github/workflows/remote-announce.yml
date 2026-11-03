@@ -1,0 +1,87 @@
+# 📣 Send a message to the installed apps: full screen the next time each
+# learner opens the app, optionally as a push. Run from Actions, or ask Claude.
+name: 📣 發公告
+
+on:
+  workflow_dispatch:
+    inputs:
+      title_zh:
+        description: '中文標題（例：新版口說練習上線了）'
+        type: string
+        required: true
+      body_zh:
+        description: '中文內容（最多 600 字）'
+        type: string
+        required: true
+      title_en:
+        description: '英文標題（英文介面的人看到；建議填）'
+        type: string
+        default: ''
+      body_en:
+        description: '英文內容（建議填）'
+        type: string
+        default: ''
+      push:
+        description: '同時發推播通知到大家的手機'
+        type: boolean
+        default: false
+      audience:
+        description: '給誰看：all 所有人／guest 沒登入／free 登入沒訂閱／plus 訂閱者'
+        type: choice
+        options: ['all', 'guest', 'free', 'plus']
+        default: 'all'
+      button:
+        description: '下方按鈕：無／請大家更新／打開訂閱頁／打開網址（網址填在下一格）'
+        type: choice
+        options: ['無', '請大家更新', '打開訂閱頁', '打開網址']
+        default: '無'
+      url:
+        description: '按鈕選「打開網址」時：https:// 開頭的網址'
+        type: string
+        default: ''
+      only_below_version:
+        description: '只給舊版本看（選填）：例 2.0.3，或 2.0.2 (4)'
+        type: string
+        default: ''
+      days:
+        description: '公告留幾天（0 = 直到下架）'
+        type: string
+        default: '7'
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_REF: byyaepkhxexppjrdhcaw
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: 發公告
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ACTION: post
+          TITLE_ZH: ${{ inputs.title_zh }}
+          BODY_ZH: ${{ inputs.body_zh }}
+          TITLE_EN: ${{ inputs.title_en }}
+          BODY_EN: ${{ inputs.body_en }}
+          PUSH: ${{ inputs.push }}
+          AUDIENCE: ${{ inputs.audience }}
+          BUTTON: ${{ inputs.button }}
+          URL: ${{ inputs.url }}
+          BELOW: ${{ inputs.only_below_version }}
+          DAYS: ${{ inputs.days }}
+        run: |
+          case "$BUTTON" in
+            請大家更新) export LINK=update ;;
+            打開訂閱頁) export LINK=plus ;;
+            打開網址) export LINK="$URL" ;;
+            *) export LINK= ;;
+          esac
+          scripts/remote-control.sh

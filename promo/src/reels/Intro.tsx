@@ -99,30 +99,86 @@ const Ripple = ({ at, t, x, y, cam }: { at: number; t: number; x: number; y: num
   );
 };
 
-/** What the cat says: always in the same place, one line at a time. */
+/** `**word**` in a line is the word to lean on. */
+const parse = (text: string) =>
+  text.split(/(\*\*[^*]+\*\*)/).flatMap((part) => {
+    const strong = part.startsWith('**');
+    return Array.from(strong ? part.slice(2, -2) : part).map((c) => ({ c, strong }));
+  });
+
+/**
+ * What the cat says: always in the same place, low in the frame, one line
+ * at a time. A small "SillyCat" tab says who is talking; the characters
+ * come in one after another, and the word to lean on is marked like a
+ * highlighter on paper.
+ */
 const Caption = ({ text, start, length, t, first }: { text: string; start: number; length: number; t: number; first: boolean }) => {
-  const enter = first ? 1 : interpolate(t, [start, start + 0.22], [0, 1], { ...clamp, easing: out });
-  const leave = interpolate(t, [start + length - 0.14, start + length], [1, 0], clamp);
   if (t < start || t > start + length) return null;
+  const age = first ? 10 : t - start;
+  const enter = interpolate(age, [0, 0.24], [0, 1], { ...clamp, easing: out });
+  const leave = interpolate(t, [start + length - 0.16, start + length], [1, 0], clamp);
+  const chars = parse(text);
+  const stagger = Math.min(0.03, 0.34 / chars.length);
   return (
-    <div style={{ position: 'absolute', left: 60, right: 60, top: 1405, display: 'flex', justifyContent: 'center' }}>
+    <div style={{ position: 'absolute', left: 70, right: 70, top: 1478, display: 'flex', justifyContent: 'center' }}>
       <div
         style={{
-          background: '#FFFAF0',
+          position: 'relative',
+          background: '#FFFCF6',
           color: C.ink,
           fontWeight: 900,
-          fontSize: 60,
-          lineHeight: 1.3,
-          padding: '22px 40px',
-          borderRadius: 28,
-          boxShadow: '0 12px 30px rgba(59,38,25,0.16)',
+          fontSize: 52,
+          lineHeight: 1.32,
+          letterSpacing: '0.02em',
+          padding: '22px 36px 20px',
+          borderRadius: 24,
+          border: '2px solid rgba(43,38,32,0.07)',
+          boxShadow: '0 10px 26px rgba(59,38,25,0.13)',
           textAlign: 'center',
           textWrap: 'balance',
           opacity: enter * leave,
-          transform: `translateY(${(1 - enter) * 24}px)`,
+          transform: `translateY(${(1 - enter) * 18}px) scale(${0.97 + 0.03 * enter})`,
         }}
       >
-        {text}
+        <div
+          style={{
+            position: 'absolute',
+            left: 26,
+            top: -24,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 16px 4px 6px',
+            borderRadius: 999,
+            background: COLLAGE.clay,
+            color: '#FFF8EE',
+            fontSize: 24,
+            fontWeight: 800,
+            letterSpacing: '0.04em',
+            lineHeight: 1,
+          }}
+        >
+          <Mascot mood="smug" size={38} />
+          SillyCat
+        </div>
+        {chars.map(({ c, strong }, i) => {
+          const p = interpolate(age, [i * stagger, i * stagger + 0.14], [0, 1], { ...clamp, easing: out });
+          return (
+            <span
+              key={i}
+              style={{
+                display: 'inline-block',
+                opacity: p,
+                transform: `translateY(${(1 - p) * 10}px)`,
+                color: strong ? COLLAGE.clay : undefined,
+                backgroundImage: strong ? 'linear-gradient(transparent 62%, rgba(242,205,176,0.9) 62%)' : undefined,
+                whiteSpace: 'pre',
+              }}
+            >
+              {c}
+            </span>
+          );
+        })}
       </div>
     </div>
   );

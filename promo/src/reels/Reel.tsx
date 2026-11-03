@@ -44,7 +44,7 @@ const CARD = { top: 575, maxWidth: 960, maxHeight: 690 };
 const TALK_TOP = 1300;
 
 /** A piece of paper slapped onto the desk at `at` seconds. */
-const slap = (t: number, at: number) => {
+export const slap = (t: number, at: number) => {
   const p = interpolate(t, [at, at + 0.2], [0, 1], { ...clamp, easing: Easing.in(Easing.quad) });
   return { opacity: Math.min(1, p * 3), scale: 1.12 - 0.12 * p, tilt: (1 - p) * 4 };
 };
@@ -238,7 +238,7 @@ const Talk = ({ line, slot, t, big }: { line: Line; slot: Slot; t: number; big: 
 };
 
 /** Every episode ends here, on the same three notes. */
-const EndCard = ({ start, t, series }: { start: number; t: number; series: string }) => {
+export const EndCard = ({ start, t, series }: { start: number; t: number; series: string }) => {
   const s = slap(t, start);
   const line = interpolate(t, [start + 0.5, start + 0.8], [0, 1], { ...clamp, easing: ease });
   if (t < start) return null;

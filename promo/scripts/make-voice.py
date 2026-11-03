@@ -35,7 +35,7 @@ def main():
     # English words in a line ("all", "metallic") are read with English phonemes.
     chinese = KPipeline(lang_code="z", repo_id=REPO, model=model, en_callable=lambda t: next(english(t)).phonemes)
     for episode in SCRIPT["episodes"]:
-        if wanted and episode["id"] not in wanted:
+        if (wanted and episode["id"] not in wanted) or episode.get("voice") is False:
             continue
         for n, line in enumerate(episode["lines"]):
             text = line.get("say", line["text"])

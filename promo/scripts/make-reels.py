@@ -64,6 +64,11 @@ def layout(episode):
     """Slots on the beat grid: (start, length, voice) per line, then the end card."""
     slots, t = [], 0.0
     for n, line in enumerate(episode["lines"]):
+        if "beats" in line:  # a silent shot, as long as written
+            length = line["beats"] * BEAT
+            slots.append({"start": t, "length": length, "voiceStart": t, "voiceLength": 0.0, "audio": np.zeros(1)})
+            t += length
+            continue
         voice = load_voice(VOICE / f"{episode['id']}-{n}.wav")
         length = math.ceil((LEAD_IN + len(voice) / SR + BREATH) / BEAT) * BEAT
         slots.append({"start": t, "length": length, "voiceStart": t + LEAD_IN, "voiceLength": len(voice) / SR, "audio": voice})
@@ -143,8 +148,14 @@ def mix(episode):
     fade[a:b] = np.linspace(1, 0, b - a)
     fade[b:] = 0
     music *= fade
+    sounds = {"pop": (m.pop, 0.4), "tap": (m.tap, 0.9), "whoosh": (lambda: m.whoosh(BEAT), 0.45), "ding": (m.ding, 0.5), "stamp": (m.stamp, 0.5), "wrong": (wrong, 0.7)}
     for slot, line in zip(slots, episode["lines"]):
         m.place(voice, slot["audio"], slot["voiceStart"])
+        for beat, name in line.get("cues", []):
+            make, gain = sounds[name]
+            m.place(sfx, make(), slot["start"] + beat * BEAT, gain)
+        if "cues" in line:
+            continue
         m.place(sfx, m.pop(), slot["start"], 0.35)
         if line.get("tap"):
             m.place(sfx, m.tap(), slot["start"] + 0.05, 0.9)
@@ -154,9 +165,11 @@ def mix(episode):
     logo(body, band, tune)
 
     # Duck the music under the voice (about −10 dB while the cat talks).
-    env = m.lowpass(np.abs(voice), 8)
-    duck = 1 - 0.68 * np.clip(env / (env.max() * 0.25), 0, 1)
-    music *= duck
+    if np.abs(voice).max() > 0:
+        env = m.lowpass(np.abs(voice), 8)
+        music *= 1 - 0.68 * np.clip(env / (env.max() * 0.25), 0, 1)
+    else:
+        music *= 1.5  # no voice: the music carries the reel
     tune = m.echo(m.bright_not_harsh(tune), BEAT * 0.75, 0.25, 2)
 
     def stereo(x, width=0.0):

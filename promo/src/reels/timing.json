@@ -1,31 +1,37 @@
 {
   "ep01": {
-    "total": 14.5,
-    "end": 11.5,
+    "total": 16.0,
+    "end": 13.0,
     "slots": [
       {
         "start": 0.0,
         "length": 2.0,
-        "voiceStart": 0.12,
-        "voiceLength": 1.492
+        "voiceStart": 0.0,
+        "voiceLength": 0.0
       },
       {
         "start": 2.0,
-        "length": 3.5,
-        "voiceStart": 2.12,
-        "voiceLength": 2.659
+        "length": 3.0,
+        "voiceStart": 2.0,
+        "voiceLength": 0.0
       },
       {
-        "start": 5.5,
+        "start": 5.0,
         "length": 2.5,
-        "voiceStart": 5.62,
-        "voiceLength": 1.887
+        "voiceStart": 5.0,
+        "voiceLength": 0.0
       },
       {
-        "start": 8.0,
-        "length": 3.5,
-        "voiceStart": 8.12,
-        "voiceLength": 2.89
+        "start": 7.5,
+        "length": 3.0,
+        "voiceStart": 7.5,
+        "voiceLength": 0.0
+      },
+      {
+        "start": 10.5,
+        "length": 2.5,
+        "voiceStart": 10.5,
+        "voiceLength": 0.0
       }
     ]
   },

@@ -1,154 +1,1247 @@
 import SwiftUI
 import Word7000Core
 
-/// One goal, one button. Everything else on this screen is optional.
+/// How much room Today has on the phone it runs on, and the sizes that follow.
+/// Three heights cover every iPhone: SE-sized (about 600 points between the
+/// status bar and the tab bar), the usual 6.1" to 6.3" phones, and the big Plus
+/// and Pro Max ones (about 750 and up).
+private struct TodayMetrics {
+    enum Tier { case compact, regular, tall }
+    var tier: Tier
+    /// Accessibility text sizes: one column, nothing peeking over the card.
+    var large: Bool
+
+    /// The room between the status bar and the tab bar.
+    var height: CGFloat
+
+    init(height: CGFloat, large: Bool) {
+        self.large = large
+        self.height = height
+        tier = height < 630 ? .compact : height < 750 ? .regular : .tall
+    }
+
+    var compact: Bool { tier == .compact }
+    var tall: Bool { tier == .tall }
+    var spacing: CGFloat { compact ? 12 : tall ? 20 : 16 }
+    var ring: CGFloat { compact ? 84 : tall ? 116 : 100 }
+    var heroPadding: CGFloat { compact ? 16 : tall ? 22 : 20 }
+    var mascot: CGFloat { compact ? 58 : tall ? 80 : 70 }
+    /// Where there is room, the companion stands on the hero card's top edge
+    /// (its feet in the card's top padding) and can stroll along it; on the
+    /// SE-sized phones it peeks over the corner and stays put.
+    var standsOnCard: Bool { !compact && !large }
+    /// How far the companion rises above the hero card's top edge.
+    var peek: CGFloat { standsOnCard ? (mascot * 0.94 - 12).rounded() : (mascot * 0.42).rounded() }
+    /// Room above the card so the companion stays clear of the header.
+    var heroTop: CGFloat { large ? 0 : max(0, peek + (standsOnCard ? 10 : 6) - spacing) }
+    /// Practice tiles: tall cards (icon up top, words along the bottom) on the
+    /// big phones, short rows elsewhere. Both carry a faint, tilted watermark
+    /// of their icon, which fills the open side of the tile.
+    /// (The iPhone Air, a little shorter than a Pro Max, keeps the short rows:
+    /// two rows of tall cards would run under its tab bar.)
+    var tallCards: Bool { tall && !large && height >= 785 }
+    var tileSpacing: CGFloat { compact ? 8 : tall ? 12 : 10 }
+    /// Type and icon sizes, which grow with the room the tiles have.
+    func tileStyle(tallCard: Bool) -> PracticeTileStyle {
+        if compact { return PracticeTileStyle(icon: 36, title: .subheadline, detail: .caption) }
+        if tallCard { return PracticeTileStyle(icon: 52, title: .title2, detail: .subheadline) }
+        // Small enough beside the icon that a four-character title stays on one line.
+        return PracticeTileStyle(icon: tall ? 48 : 44, title: .title3, detail: .subheadline)
+    }
+
+    /// The shortest and tallest a tile may be. When everything fits, the tiles
+    /// grow from the shortest toward the tallest to use the room left over.
+    func tileHeight(tallCard: Bool) -> (min: CGFloat, max: CGFloat) {
+        if tallCard { return (112, 172) }
+        return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
+    }
+}
+
+/// One goal, one button, and the little companion cheering you on. The page
+/// is fitted to the phone: when it all fits, it does not scroll and the
+/// practice tiles grow into whatever room is left (tall cards on the big
+/// phones, short rows on the rest); only when it does not fit, as with very
+/// large text, does it scroll. The companion peeks over the hero card, always
+/// clear of the buttons, and its speech bubble never takes a touch.
 struct TodayView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var studySettingsOpen = false
+    /// The quiz's few settings, in a half-height sheet before it starts.
+    @State private var quizSetupOpen = false
+    @State private var quizQueued = false
+    /// Bumped to bounce the streak flame: on arrival and when the streak grows.
+    @State private var flameBounce = 0
+    @State private var greetingHops = 0
+    /// What the cat knows and today's AI lines, gathered on arrival.
+    @State private var catLines = CatLineSource.none
+    /// The screenshot tests open the cat's chat once, on first arrival.
+    @MainActor private static var showcasedChat = false
+    /// Taps on each practice tile, to bounce its icon.
+    @State private var tileTaps: [String: Int] = [:]
+    /// The hero card's width: how far the companion can stroll.
+    @State private var heroWidth: CGFloat = 0
+    /// Today's AI insight headline, once worked out; the companion says it.
+    @State private var insightHeadline: String?
+    @State private var mascotChatOpen = false
+    /// Focus words to practise once the companion's chat has closed.
+    @State private var focusPractice: [String]?
 
     var start: (Activity) -> Void
 
     var body: some View {
-        let stats = model.stats
         let progress = model.progress
-        let plan = model.studyPlan
 
-        List {
-            Section {
-                VStack(spacing: 16) {
-                    ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 16) {
-                        VStack(spacing: 0) {
-                            Text("\(progress.studiedToday)")
-                                .font(.rounded(.largeTitle, weight: .bold))
-                                .monospacedDigit()
-                                .contentTransition(.numericText())
-                            Text(L.ofTarget(progress.dailyTarget))
-                                .font(.rounded(.subheadline, weight: .semibold))
-                                .foregroundStyle(.secondary)
-                        }
-                        // Large text shrinks to stay inside the ring.
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.4)
-                        .padding(.horizontal, 20)
-                    }
-                    .frame(width: 142, height: 142)
-                    .padding(.top, 8)
-
-                    VStack(spacing: 6) {
-                        Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
-                            .font(.rounded(.title2, weight: .bold))
-                        Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    .multilineTextAlignment(.center)
-
-                    Button {
-                        model.ensureStudySession()
-                        start(.study)
-                    } label: {
-                        Text(model.primaryActionTitle)
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .prominentAction()
-                    .disabled(plan.total == 0)
-                    .accessibilityIdentifier("today-start")
-                    if model.settings.studyFilter.isActive {
-                        Button(L.t("調整學習範圍", "Adjust study scope")) { studySettingsOpen = true }
-                            .font(.subheadline)
-                    }
+        GeometryReader { proxy in
+            let metrics = TodayMetrics(height: proxy.size.height, large: dynamicTypeSize.isAccessibilitySize)
+            ViewThatFits(in: .vertical) {
+                // It all fits: no scrolling, and the tiles take up the slack.
+                page(metrics, fill: true)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                // It doesn't (very large text, or several notices on a small phone).
+                ScrollView {
+                    page(metrics, fill: false)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 8, trailing: 4))
-            }
-
-            if model.streakProtectionJustUsed {
-                Section {
-                    Label {
-                        Text(L.t("昨天沒有學習，連勝保護幫你保住了 \(progress.streak) 天連勝。今天學 1 個字就能延續。",
-                                 "You missed yesterday, so streak protection kept your \(progress.streak)-day streak. Study one word today to keep it going."))
-                            .font(.subheadline)
-                    } icon: {
-                        Image(systemName: "shield.lefthalf.filled").foregroundStyle(Palette.review)
-                    }
-                    .accessibilityIdentifier("today-streak-protected")
-                }
-            }
-
-            if let nudge = plus.nudge {
-                Section {
-                    PlusNudgeBanner(nudge: nudge)
-                        .padding(.vertical, 4)
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
-            }
-
-            Section {
-                Button { start(.quiz) } label: {
-                    ActionRow(icon: "checklist", tint: Palette.chinese, title: L.quickQuiz,
-                              value: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions"))
-                }
-                .tint(.primary)
-                .accessibilityIdentifier("today-quiz")
-                Button { start(.speaking) } label: {
-                    ActionRow(icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking)
-                }
-                .tint(.primary)
-                .accessibilityIdentifier("today-speaking")
-                // Typing the word only makes sense when English is what is learned.
-                if model.studyMode == .english {
-                    Button { start(.spelling) } label: {
-                        ActionRow(icon: "character.cursor.ibeam", tint: Palette.accent, title: L.spelling,
-                                  value: L.t("\(Spelling.sessionLength) 題", "\(Spelling.sessionLength) words"))
-                    }
-                    .tint(.primary)
-                    .accessibilityIdentifier("today-spelling")
-                }
-                Button { start(.exam) } label: {
-                    ActionRow(icon: "timer", tint: Palette.review, title: L.t("考前衝刺模擬", "Exam practice"),
-                              locked: plus.decide(.examPractice) != .allowed)
-                }
-                .tint(.primary)
-                .accessibilityIdentifier("today-exam")
-                if stats.review > 0 {
-                    Button {
-                        model.startStudySession(onlyIds: model.reviewWordIds)
-                        start(.study)
-                    } label: {
-                        ActionRow(icon: "arrow.counterclockwise", tint: Palette.review, title: L.practiceStruggling, value: "\(stats.review)")
-                    }
-                    .tint(.primary)
-                    .accessibilityIdentifier("today-review")
-                }
-            } header: {
-                Text(L.practice)
-            } footer: {
-                Text(L.studyingBank(model.bankName))
+                .scrollIndicators(.hidden)
+                .scrollBounceBehavior(.basedOnSize)
             }
         }
+        .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
         .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
-        .navigationTitle(L.tabToday)
-        .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet() }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button { studySettingsOpen = true } label: {
-                    Image(systemName: model.settings.studyFilter.isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+        .task {
+            // A little hello from the flame and the mascot each time Today comes into view.
+            try? await Task.sleep(for: .milliseconds(500))
+            guard !reduceMotion else { return }
+            if model.progress.streak > 0 { flameBounce += 1 }
+            greetingHops += 1
+        }
+        .onChange(of: progress.streak) { old, new in
+            if new > old, !reduceMotion { flameBounce += 1 }
+        }
+        .sensoryFeedback(.impact(weight: .light), trigger: tileTaps) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet().compactSheet() }
+        .sheet(isPresented: $mascotChatOpen, onDismiss: {
+            insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
+            guard let ids = focusPractice else { return }
+            focusPractice = nil
+            model.startStudySession(onlyIds: ids)
+            start(.study)
+        }) {
+            MascotChatSheet(practise: { ids in
+                focusPractice = ids
+                mascotChatOpen = false
+            })
+        }
+        .task {
+            insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
+            catLines = model.catLines
+            if AppRuntime.catShowcase, !Self.showcasedChat {
+                Self.showcasedChat = true
+                try? await Task.sleep(for: .milliseconds(600))
+                mascotChatOpen = true
+            }
+            // Today's lines, written for this learner, once a day in the background.
+            await CatLinePackStore.refreshIfNeeded(model)
+            catLines = model.catLines
+        }
+        .onChange(of: progress.studiedToday) { _, _ in catLines = model.catLines }
+        .onChange(of: mascotChatOpen) { _, open in if open { model.noteTried(.chat) } }
+        .task(id: model.guideStep) { if let step = model.guideStep { model.noteGuideShown(step) } }
+        .sheet(isPresented: $quizSetupOpen, onDismiss: {
+            guard quizQueued else { return }
+            quizQueued = false
+            start(.quizReady)
+        }) {
+            NavigationStack {
+                QuizConfiguration(start: {
+                    quizQueued = true
+                    quizSetupOpen = false
+                })
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(L.close) { quizSetupOpen = false }
+                    }
                 }
-                .accessibilityLabel(L.t("學習範圍", "Study scope"))
-                .accessibilityIdentifier("today-study-filter")
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Label(L.streakDays(progress.streak), systemImage: "flame.fill")
-                    .labelStyle(.titleAndIcon)
-                    .font(.rounded(.subheadline, weight: .bold))
-                    .foregroundStyle(progress.streak > 0 ? Palette.review : .secondary)
-                    .accessibilityLabel("\(L.streak) \(progress.streak)")
+            .compactSheet()
+        }
+    }
+
+    private func page(_ m: TodayMetrics, fill: Bool) -> some View {
+        VStack(alignment: .leading, spacing: m.spacing) {
+            header(m)
+                // Drawn above the card, so its buttons always win the tap.
+                .zIndex(1)
+            hero(m)
+                .entrance(0, distance: 10)
+            notices
+            checklist
+            practice(m, fill: fill)
+        }
+        .padding(.horizontal, Metrics.gutter)
+        .padding(.top, m.compact ? 6 : 12)
+        .padding(.bottom, m.compact ? 12 : 20)
+    }
+
+    // MARK: Header
+
+    /// The greeting and date, with the language switch and the bank being
+    /// studied (a chip that opens the study scope).
+    private func header(_ m: TodayMetrics) -> some View {
+        // At accessibility text sizes the controls drop below the greeting.
+        let layout = m.large ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+                             : AnyLayout(HStackLayout(alignment: .center, spacing: 10))
+        return layout {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(greeting)
+                    .font(.display(m.tall ? .title : .title2, weight: .bold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                // Formatted in the interface language, which follows the study mode.
+                HStack(spacing: 4) {
+                    Image(systemName: daySymbol)
+                        .symbolRenderingMode(.multicolor)
+                        .symbolEffect(.bounce, value: greetingHops)
+                    Text(Date.now, format: .dateTime.month(.abbreviated).day().weekday(.abbreviated))
+                }
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             }
+            if !m.large { Spacer(minLength: 4) }
+            HStack(spacing: 8) {
+                languageSwitch
+                scopeChip
+            }
+            .layoutPriority(1)
+        }
+    }
+
+    private var scopeChip: some View {
+        Button { studySettingsOpen = true } label: {
+            HStack(spacing: 6) {
+                Image(systemName: model.settings.studyFilter.isActive ? "line.3.horizontal.decrease.circle.fill" : "books.vertical.fill")
+                    .contentTransition(.symbolEffect(.replace))
+                    .foregroundStyle(Palette.accent)
+                Text(model.bankName)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                Image(systemName: "chevron.down")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(.secondary)
+            }
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(.primary)
+            .padding(.horizontal, 12)
+            .frame(minHeight: 36)
+            .background { PremiumSurface(radius: 18) }
+            .contentShape(Capsule())
+        }
+        .buttonStyle(SoftPressStyle())
+        .accessibilityLabel(L.t("學習範圍：\(model.bankName)", "Study scope: \(model.bankName)"))
+        .accessibilityIdentifier("today-study-filter")
+    }
+
+    /// Which language is being learned, switched in one tap: EN for English
+    /// (with a Chinese interface), 中 for Chinese (with an English one).
+    private var languageSwitch: some View {
+        HStack(spacing: 2) {
+            ForEach([StudyMode.english, StudyMode.chinese], id: \.self) { mode in
+                let selected = model.studyMode == mode
+                Button {
+                    guard !selected else { return }
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { model.setStudyMode(mode) }
+                } label: {
+                    Text(mode == .english ? "EN" : "中")
+                        .font(.footnote.weight(.bold))
+                        .foregroundStyle(selected ? Color.white : Color.secondary)
+                        .frame(minWidth: 34, minHeight: 30)
+                        .background(selected ? Palette.accent : Color.clear, in: Capsule())
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(SoftPressStyle())
+                .accessibilityLabel(mode == .english ? L.t("學英文", "Learn English") : L.t("學中文", "Learn Chinese"))
+                .accessibilityAddTraits(selected ? .isSelected : [])
+                .accessibilityIdentifier(mode == .english ? "today-language-en" : "today-language-zh")
+            }
+        }
+        .padding(3)
+        .background { PremiumSurface(radius: 18) }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(L.t("學習語言", "Learning language"))
+        .accessibilityIdentifier("today-language")
+    }
+
+    // MARK: Hero
+
+    private func hero(_ m: TodayMetrics) -> some View {
+        let progress = model.progress
+        let plan = model.studyPlan
+        let left = max(0, progress.dailyTarget - progress.studiedToday)
+        let summary = VStack(alignment: .leading, spacing: m.compact ? 6 : 8) {
+            Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
+                .font(.display(m.compact ? .title3 : .title2, weight: .bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+                .foregroundStyle(Self.cream)
+                .contentTransition(.opacity)
+            Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
+                .font(m.tall ? .subheadline : .footnote)
+                .foregroundStyle(Self.cream.opacity(0.85))
+            HStack(spacing: 6) {
+                heroChip {
+                    Label {
+                        Text(L.t("\(progress.streak) 天", "\(progress.streak)d"))
+                            .contentTransition(.numericText(value: Double(progress.streak)))
+                    } icon: {
+                        Image(systemName: "flame.fill")
+                            .foregroundStyle(LinearGradient(colors: [Color(red: 1, green: 0.85, blue: 0.35), Color(red: 1, green: 0.55, blue: 0.25)],
+                                                            startPoint: .top, endPoint: .bottom))
+                            .symbolEffect(.bounce, value: flameBounce)
+                    }
+                }
+                .accessibilityLabel(L.t("連續 \(progress.streak) 天", "\(progress.streak)-day streak"))
+                heroChip {
+                    if model.goalDone {
+                        Label(L.t("達成", "Done"), systemImage: "checkmark.seal.fill")
+                    } else {
+                        Label(L.t("差 \(left) 個", "\(left) to go"), systemImage: "target")
+                            .contentTransition(.numericText(value: Double(left)))
+                    }
+                }
+                .accessibilityLabel(model.goalDone ? L.t("目標達成", "Goal reached") : L.t("還差 \(left) 個", "\(left) to go"))
+            }
+        }
+        let ring = ProgressRing(fraction: model.dailyFraction, color: Self.cream, lineWidth: m.compact ? 9 : m.tall ? 12 : 11, track: Self.cream.opacity(0.22)) {
+            VStack(spacing: 0) {
+                Text("\(progress.studiedToday)")
+                    .font(.display(m.compact ? .title2 : m.tall ? .largeTitle : .title, weight: .bold))
+                    .monospacedDigit()
+                    .contentTransition(.numericText(value: Double(progress.studiedToday)))
+                Text(L.ofTarget(progress.dailyTarget))
+                    .font(.display(.caption2, weight: .semibold))
+                    .opacity(0.8)
+            }
+            .foregroundStyle(Self.cream)
+            .lineLimit(1)
+            .minimumScaleFactor(0.4)
+            .padding(.horizontal, 12)
+        }
+        .frame(width: m.ring, height: m.ring)
+
+        return VStack(alignment: .leading, spacing: m.compact ? 14 : 18) {
+            if m.large {
+                // With very large text the way in comes first, before it scrolls out of reach.
+                summary
+                startButton(m)
+                ring
+            } else {
+                HStack(alignment: .center, spacing: m.compact ? 14 : 18) {
+                    ring
+                    summary
+                    Spacer(minLength: 0)
+                }
+                startButton(m)
+            }
+        }
+        .padding(m.heroPadding)
+        .background { HeroBackground(done: model.goalDone) }
+        .background {
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear { heroWidth = proxy.size.width }
+                    .onChange(of: proxy.size.width) { _, width in heroWidth = width }
+            }
+        }
+        // The companion stands on (or peeks over) the card's top edge, at home
+        // in the right corner, and now and then strolls along it.
+        .overlay(alignment: .topTrailing) {
+            if !m.large {
+                StrollingCompanion(mood: mascotMood, size: m.mascot, lines: mascotLines,
+                                   greeting: guideTip?.text ?? insightHeadline ?? mascotGreeting, tip: guideTip ?? mascotTip,
+                                   hop: greetingHops + tileTaps.values.reduce(0, +),
+                                   range: m.standsOnCard ? max(0, heroWidth - m.mascot - 28) : 0,
+                                   pause: tileTaps.values.reduce(0, +))
+                    .offset(x: -12, y: -m.peek)
+                    .accessibilityIdentifier("today-mascot")
+            }
+        }
+        .padding(.top, m.heroTop)
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.goalDone)
+    }
+
+    private func startButton(_ m: TodayMetrics) -> some View {
+        Button {
+            model.ensureStudySession()
+            start(.study)
+        } label: {
+            HStack(spacing: 8) {
+                Text(model.primaryActionTitle)
+                Image(systemName: "arrow.right")
+                    .symbolEffect(.bounce, value: greetingHops)
+            }
+            .font(.headline)
+            .foregroundStyle(model.goalDone ? Self.doneDeep : Self.deep)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, m.compact ? 13 : m.tall ? 17 : 15)
+            .background(Self.cream, in: Capsule())
+            .shadow(color: PremiumSurface.umber.opacity(0.3), radius: 10, y: 5)
+        }
+        .buttonStyle(SoftPressStyle())
+        .disabled(model.studyPlan.total == 0)
+        .opacity(model.studyPlan.total == 0 ? 0.55 : 1)
+        // A new learner who hasn't finished a round yet: this is where to start.
+        .overlay(alignment: .topTrailing) {
+            if model.settings.guideActive == true, model.progress.lastStudyDate == nil, !AppRuntime.catShowcase {
+                StartHereSticker()
+                    .offset(x: -8, y: -16)
+            }
+        }
+        .accessibilityIdentifier("today-start")
+    }
+
+    private func heroChip<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        content()
+            .font(.display(.footnote, weight: .semibold))
+            .foregroundStyle(Self.cream)
+            .lineLimit(1)
+            .minimumScaleFactor(0.75)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(Self.cream.opacity(0.16), in: Capsule())
+            .overlay(Capsule().strokeBorder(Self.cream.opacity(0.28), lineWidth: 1))
+    }
+
+    /// For a new learner: every stop the cat will show them, and the next one.
+    @ViewBuilder
+    private var checklist: some View {
+        if let stops = model.guideStops {
+            let firstRound = model.progress.lastStudyDate == nil
+            let current = firstRound ? stops.first : stops.first { $0.step == model.guideStep && $0.step != nil }
+            GuideChecklist(stops: stops, current: current,
+                           line: firstRound
+                               ? L.t("先背第一組，背完我再帶你玩別的。", "Learn your first set; then I'll show you the rest.")
+                               : model.guideStep.map { $0.line(plus: plus.subscribed || AppRuntime.uiTesting) },
+                           go: {
+                               if firstRound {
+                                   model.ensureStudySession()
+                                   start(.study)
+                               } else if let step = model.guideStep {
+                                   openGuide(step)
+                               }
+                           },
+                           hide: { withAnimation(reduceMotion ? nil : Motion.reveal) { model.hideGuideChecklist() } })
+                .transition(.move(edge: .top).combined(with: .opacity))
+        }
+    }
+
+    /// The rare one-off notes: streak protection used, or a Plus reminder.
+    @ViewBuilder
+    private var notices: some View {
+        if model.streakProtectionJustUsed {
+            Label {
+                Text(L.t("連勝保護幫你保住了 \(model.progress.streak) 天連勝，今天學 1 個字就能延續。",
+                         "Streak protection kept your \(model.progress.streak)-day streak. One word today keeps it going."))
+                    .font(.footnote)
+            } icon: {
+                Image(systemName: "shield.lefthalf.filled").foregroundStyle(Palette.review)
+            }
+            .card(padding: 12)
+            .accessibilityIdentifier("today-streak-protected")
+        }
+        if let nudge = plus.nudge {
+            PlusNudgeBanner(nudge: nudge)
+                .card(padding: 10)
+                .transition(.move(edge: .top).combined(with: .opacity))
+        }
+    }
+
+    // MARK: Companion
+
+    /// Unimpressed until you practise, and openly smug about it from noon on.
+    private var mascotMood: Mascot.Mood {
+        if model.goalDone { return .cheer }
+        if model.progress.studiedToday > 0 { return .happy }
+        let hour = Calendar.current.component(.hour, from: Date())
+        if hour >= 23 || hour < 5 { return .sleepy }
+        return hour >= 12 ? .smug : .idle
+    }
+
+    /// What it says on arrival: where today stands, and what it thinks of that.
+    private var mascotGreeting: String {
+        let progress = model.progress
+        let left = max(0, progress.dailyTarget - progress.studiedToday)
+        let hour = Calendar.current.component(.hour, from: Date())
+        let call = catLines.context?.callout ?? ""
+        let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
+        if model.goalDone { return L.t("\(call)嗯，勉強及格。不要得意。", "\(call)fine. You passed. Don't get cocky.") }
+        // Every other day, a line written for today; the exam countdown when there is one.
+        if day % 2 == 0, let line = (progress.studiedToday == 0 ? catLines.pack?.nudge : catLines.pack?.greeting)?.first {
+            return line
+        }
+        if let days = catLines.context?.daysToExam, days <= 120 {
+            return progress.studiedToday == 0
+                ? L.t("\(call)考試剩 \(days) 天，你今天一個字都還沒背。我不說話，我就看著。", "\(call)\(days) days to the exam and not one word today. I'm not saying anything. Just watching.")
+                : L.t("考試剩 \(days) 天，才 \(progress.studiedToday) 個？還差 \(left) 個。", "\(days) days to the exam. Only \(progress.studiedToday)? \(left) to go.")
+        }
+        if progress.studiedToday == 0 {
+            if hour >= 21 { return L.t("都幾點了？今天的字要留給明天的你喔？", "This late? Saving today's words for future you?") }
+            if hour >= 12 { return L.t("下午了欸。\(progress.dailyTarget) 個字還在等，我也在等。", "It's afternoon. \(progress.dailyTarget) words are waiting. So am I.") }
+            return L.t("早。\(progress.dailyTarget) 個字，別讓我失望。雖然你常常。", "Morning. \(progress.dailyTarget) words. Don't let me down. Again.")
+        }
+        return L.t("才 \(progress.studiedToday) 個？笑死。還差 \(left) 個。", "Only \(progress.studiedToday)? LOL. \(left) to go.")
+    }
+
+    /// For a new learner, the next thing to try, said by the cat; tapping its
+    /// bubble opens it.
+    private var guideTip: MascotTip? {
+        guard let step = model.guideStep else { return nil }
+        return MascotTip(text: step.line(plus: plus.subscribed || AppRuntime.uiTesting)) { openGuide(step) }
+    }
+
+    private func openGuide(_ step: GuideStep) {
+        switch step {
+        case .quiz: quizSetupOpen = true
+        case .speaking: start(.speaking)
+        case .spelling: start(.spelling)
+        // Opening a Plus feature without Plus shows what it is and the offer;
+        // either way the cat has introduced it and moves on.
+        case .exam:
+            model.noteTried(.exam)
+            start(.exam)
+        case .scan:
+            model.noteTried(.scan)
+            start(.scan)
+        // Without Plus the chat introduces the AI and offers Plus.
+        case .chat: mascotChatOpen = true
+        }
+    }
+
+    /// Its AI note: today's insight headline once worked out (tap for the
+    /// whole chat), or an offer to work it out. Nothing when online AI is off.
+    private var mascotTip: MascotTip? {
+        if let insightHeadline {
+            return MascotTip(text: insightHeadline) { mascotChatOpen = true }
+        }
+        guard CloudAssistant.shared.offered else { return nil }
+        return MascotTip(text: L.t("要我看看你最近到底有多混嗎？", "Want to know how much you've been slacking?")) { mascotChatOpen = true }
+    }
+
+    /// What it says when tapped: grudging praise once the goal is met,
+    /// otherwise a gentle stream of guilt.
+    private var mascotLines: [String] {
+        model.goalDone
+            ? [L.t("好啦，你很棒。滿意了吧？", "Fine, you're great. Happy now?"),
+               L.t("要不要順便測驗？還是怕了？", "Quick quiz? Or are you scared?"),
+               L.t("明天同一時間，我會來找你。", "Same time tomorrow. I'll find you."),
+               L.t("今天表現……還可以啦。不要跟別人說我誇你。", "Today was… okay. Don't tell anyone I said that.")]
+            : catLines.contextLines + (catLines.pack?.nudge ?? []) + [L.t("我阿嬤背得都比你快。", "My grandma learns faster than you."),
+               L.t("你滑手機的時間夠背十個字了。", "That scrolling time? Ten words, easily."),
+               L.t("我沒有在催你，我只是一直盯著你。", "I'm not rushing you. I'm just staring."),
+               L.t("單字們在哭，你有聽到嗎？", "Hear that? Your words are crying."),
+               L.t("蛤？你還沒開始？", "Wait. You haven't even started?"),
+               L.t("你是來讀書的，還是來看我的？", "Are you here to study or just to look at me?")]
+    }
+
+    private var daySymbol: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<17: return "sun.max.fill"
+        case 17..<19: return "sunset.fill"
+        default: return "moon.stars.fill"
+        }
+    }
+
+    private var greeting: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        // Short in English too, so it fits beside the controls on a small phone.
+        case 5..<12: return L.t("早安！", "Morning!")
+        case 12..<18: return L.t("午安！", "Afternoon!")
+        default: return L.t("晚安！", "Evening!")
+        }
+    }
+
+    // MARK: Practice
+
+    /// The words still shaky, as a full-width tile above the others.
+    private var reviewTile: PracticeTileItem? {
+        guard model.stats.review > 0 else { return nil }
+        return PracticeTileItem(id: "today-review", icon: "arrow.counterclockwise", tint: Palette.miss,
+                                title: L.practiceStruggling, detail: L.t("練到熟為止", "Until they stick"),
+                                badge: "\(model.stats.review)") {
+            model.startStudySession(onlyIds: model.reviewWordIds)
+            start(.study)
+        }
+    }
+
+    private var tiles: [PracticeTileItem] {
+        var items: [PracticeTileItem] = []
+        items.append(PracticeTileItem(id: "today-quiz", icon: "checklist", tint: Palette.chinese, title: L.quickQuiz,
+                                      detail: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions")) { quizSetupOpen = true })
+        items.append(PracticeTileItem(id: "today-speaking", icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking,
+                                      detail: L.t("開口說說看", "Say it out loud")) { start(.speaking) })
+        // Learners of English spell the word; learners of Chinese write it
+        // in characters or pinyin.
+        items.append(PracticeTileItem(id: "today-spelling", icon: model.studyMode == .english ? "character.cursor.ibeam" : "pencil.and.scribble",
+                                      tint: Palette.accent, title: L.spelling,
+                                      detail: L.t("\(Spelling.sessionLength) 題", "\(Spelling.sessionLength) words")) { start(.spelling) })
+        items.append(PracticeTileItem(id: "today-exam", icon: "timer", tint: Palette.review, title: L.t("模擬考", "Exam"),
+                                      detail: L.t("限時 \(ExamView.minutes) 分鐘", "\(ExamView.minutes) min timed"),
+                                      locked: plus.decide(.examPractice) != .allowed) { start(.exam) })
+        return items
+    }
+
+    private func practice(_ m: TodayMetrics, fill: Bool) -> some View {
+        let items = tiles
+        let columns = m.large ? 1 : 2
+        let rows = stride(from: 0, to: items.count, by: columns).map { Array(items[$0..<min($0 + columns, items.count)]) }
+        return VStack(alignment: .leading, spacing: m.tileSpacing) {
+            Text(L.practice)
+                .font(.display(m.compact ? .headline : .title3, weight: .bold))
+                .padding(.leading, 4)
+            if let review = reviewTile {
+                tile(review, tallCard: false, m, fill: fill, order: 1)
+            }
+            ForEach(rows.indices, id: \.self) { row in
+                HStack(spacing: m.tileSpacing) {
+                    ForEach(Array(rows[row].enumerated()), id: \.element.id) { offset, item in
+                        // A tile alone on its row spans it as a short row.
+                        tile(item, tallCard: m.tallCards && rows[row].count == columns, m, fill: fill,
+                             order: 2 + row * columns + offset)
+                    }
+                }
+            }
+        }
+    }
+
+    private func tile(_ item: PracticeTileItem, tallCard: Bool, _ m: TodayMetrics, fill: Bool, order: Int) -> some View {
+        let height = m.tileHeight(tallCard: tallCard)
+        return Button {
+            tileTaps[item.id, default: 0] += 1
+            item.action()
+        } label: {
+            PracticeTile(item: item, tallCard: tallCard, style: m.tileStyle(tallCard: tallCard),
+                         minHeight: height.min, maxHeight: fill ? height.max : nil,
+                         bounce: tileTaps[item.id, default: 0])
+        }
+        .buttonStyle(TilePressStyle())
+        .overlay {
+            if model.guideStep?.tileId == item.id { GuideRing().transition(.opacity) }
+        }
+        .entrance(order, distance: 12)
+        .accessibilityIdentifier(item.id)
+        .accessibilityValue(model.guideStep?.tileId == item.id ? L.t("小笨貓推薦", "Silly Cat suggests") : "")
+    }
+
+    private static let deep = Color(red: 0.45, green: 0.27, blue: 0.16)
+    private static let doneDeep = Color(red: 0.3, green: 0.38, blue: 0.22)
+    /// Text and the button on the leather card.
+    private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
+}
+
+/// The companion on Today, free to wander. Every so often it waddles (or
+/// runs, kicking up dust) along the top edge of the hero card, eyes on where
+/// it is going, stops to look around, shows off a trick (a spin, a flip, a
+/// little dance, a big stretch) and later wanders back home to the right
+/// corner. Flick it and it slides along the edge, seeing stars if it hits the
+/// end; leave it alone long enough and it dozes off until poked. A tap, a
+/// hold, a drag or a tapped practice tile keeps it still for a while, so it
+/// never walks off just as you reach for it. It stays put with Reduce Motion,
+/// on the small phones, and under UI tests.
+private struct StrollingCompanion: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var mood: Mascot.Mood
+    var size: CGFloat
+    var lines: [String]
+    var greeting: String
+    var tip: MascotTip?
+    var hop: Int
+    /// How far left of home it may go; 0 keeps it home.
+    var range: CGFloat
+    /// Bumped by the page (a tile tapped) to keep it still for a while.
+    var pause: Int
+
+    @State private var x: CGFloat = 0
+    @State private var walking = false
+    @State private var pace: Double = 1
+    @State private var facing: CGFloat = 0
+    @State private var restUntil = Date.distantPast
+    @State private var lastTouch = Date()
+    @State private var cue: MascotCue?
+    /// Dizzy after a fling, or asleep after being left alone.
+    @State private var dazed = false
+    @State private var asleep = false
+    @State private var dazeTask: Task<Void, Never>?
+
+    private var roams: Bool { range > 40 && !reduceMotion && !AppRuntime.uiTesting }
+
+    var body: some View {
+        MascotBuddy(mood: dazed ? .dizzy : asleep ? .sleepy : mood, size: size, lines: lines, greeting: greeting,
+                    // The bubble opens toward the room: left of it at home, right of it out on the left.
+                    bubbleSide: x < -range / 2 ? .trailing : .leading,
+                    hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest,
+                    pace: pace, cue: cue, onFling: fling, onBeatenUp: stormOff)
+            .offset(x: x)
+            .task(id: roams) { await wander() }
+            .onChange(of: pause) { _, _ in rest() }
+            .onChange(of: range) { _, value in
+                if -x > value { x = -value }
+            }
+            .onDisappear { dazeTask?.cancel() }
+    }
+
+    private func rest() {
+        restUntil = Date().addingTimeInterval(8)
+        lastTouch = Date()
+        if asleep {
+            // Woken up: a big stretch first.
+            asleep = false
+            perform(.stretch)
+        }
+    }
+
+    private func perform(_ antic: MascotAntic) {
+        cue = MascotCue(antic: antic, id: (cue?.id ?? 0) + 1)
+    }
+
+    /// Sent sliding along the edge by a flick, as far as the flick would carry
+    /// it; flung hard into either end, it bumps and sees stars for a moment.
+    private func fling(_ distance: CGFloat) {
+        guard roams else { return }
+        let wanted = x + distance * 0.8
+        let target = min(0, max(-range, wanted))
+        let travelled = abs(target - x)
+        let bumped = abs(wanted - target) > 40
+        guard travelled > 20 || bumped else { return }
+        walking = false
+        facing = distance < 0 ? -1 : 1
+        withAnimation(.spring(response: 0.6, dampingFraction: bumped ? 0.5 : 0.85)) { x = target }
+        dazeTask?.cancel()
+        dazeTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            guard !Task.isCancelled else { return }
+            if bumped || travelled > 120 {
+                dazed = true
+                try? await Task.sleep(for: .seconds(1.8))
+                guard !Task.isCancelled else { return }
+                dazed = false
+                perform(.spin)
+            }
+            withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+        }
+    }
+
+    /// Smacked once too often: it sees stars for a moment, then runs off to
+    /// the far end of the card and sulks there, facing away, for a while.
+    private func stormOff() {
+        guard roams else { return }
+        dazeTask?.cancel()
+        dazeTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.6))
+            guard !Task.isCancelled else { return }
+            let target: CGFloat = x < -range / 2 ? 0 : -range
+            let duration = Double(abs(target - x) / 130)
+            facing = target < x ? -1 : 1
+            pace = 2
+            walking = true
+            withAnimation(.linear(duration: duration)) { x = target }
+            try? await Task.sleep(for: .seconds(duration))
+            walking = false
+            pace = 1
+            restUntil = Date().addingTimeInterval(12)
+        }
+    }
+
+    private func wander() async {
+        guard roams else {
+            x = 0
+            walking = false
+            pace = 1
+            return
+        }
+        try? await Task.sleep(for: .seconds(7))
+        while !Task.isCancelled {
+            if Date() < restUntil || dazed || asleep {
+                try? await Task.sleep(for: .seconds(1))
+                continue
+            }
+            // Left alone for a good while, it nods off where it is.
+            if Date().timeIntervalSince(lastTouch) > 90 {
+                asleep = true
+                continue
+            }
+            switch Int.random(in: 0..<10) {
+            case 0..<6: await stroll()
+            case 6..<9: perform(MascotAntic.allCases.randomElement() ?? .dance)
+            default: await lookAround()
+            }
+            guard !Task.isCancelled else { return }
+            try? await Task.sleep(for: .seconds(Double.random(in: 5...10)))
+        }
+    }
+
+    /// Mostly short walks, now and then a run; every so often all the way home.
+    private func stroll() async {
+        let home = x < -10 && Int.random(in: 0..<3) == 0
+        let target: CGFloat = home ? 0 : -CGFloat.random(in: 0...range)
+        let distance = abs(target - x)
+        guard distance > 24 else { return }
+        let runs = distance > 90 && Int.random(in: 0..<3) == 0
+        facing = target < x ? -1 : 1
+        pace = runs ? 2 : 1
+        let duration = Double(distance / (runs ? 130 : 46))
+        walking = true
+        withAnimation(.linear(duration: duration)) { x = target }
+        try? await Task.sleep(for: .seconds(duration))
+        walking = false
+        pace = 1
+        guard !Task.isCancelled else { return }
+        // A look at the way it came, then back to the front.
+        try? await Task.sleep(for: .seconds(1.4))
+        withAnimation(.easeInOut(duration: 0.3)) { facing = 0 }
+    }
+
+    private func lookAround() async {
+        for side: CGFloat in [-1, 1, 0] {
+            withAnimation(.easeInOut(duration: 0.25)) { facing = side }
+            try? await Task.sleep(for: .seconds(0.8))
+            guard !Task.isCancelled else { return }
+        }
+    }
+}
+
+/// One way to practise, as a tile.
+struct PracticeTileItem: Identifiable {
+    var id: String
+    var icon: String
+    var tint: Color
+    var title: String
+    var detail: String
+    var locked = false
+    var badge: String? = nil
+    var action: () -> Void
+}
+
+/// Pressing a tile sinks it a little and tips it toward the finger's side,
+/// like pressing into soft leather.
+private struct TilePressStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeBody(configuration: Configuration) -> some View {
+        let pressed = configuration.isPressed && !reduceMotion
+        configuration.label
+            .scaleEffect(pressed ? 0.96 : 1)
+            .brightness(configuration.isPressed ? -0.03 : 0)
+            .rotation3DEffect(.degrees(pressed ? 4 : 0), axis: (x: 1, y: 0, z: 0), perspective: 0.6)
+            .animation(reduceMotion ? nil : configuration.isPressed ? Motion.press : Motion.pop, value: configuration.isPressed)
+    }
+}
+
+/// The icon and type sizes of a practice tile.
+struct PracticeTileStyle {
+    var icon: CGFloat
+    var title: Font.TextStyle
+    var detail: Font
+}
+
+/// A practice tile, in one of two compositions.
+///
+/// A tall card puts the icon at the top and the title and detail along the
+/// bottom, with a small arrow (or the Plus mark) opposite the icon and a big,
+/// faint copy of the icon tilted into the corner as a watermark; however tall
+/// the card grows, the space between reads as intended.
+///
+/// A short row sets the icon, title and detail side by side, with the
+/// watermark peeking in at the far end. When the tile carries a count (the
+/// words to review), the count is set large in the serif face at the end of
+/// the row, where it balances the title, instead of in a small pill.
+private struct PracticeTile: View {
+    @Environment(\.appStyle) private var appStyle
+    var item: PracticeTileItem
+    var tallCard = false
+    var style: PracticeTileStyle
+    var minHeight: CGFloat
+    var maxHeight: CGFloat?
+    var bounce = 0
+
+    private var radius: CGFloat { appStyle == .collage ? 0 : tallCard ? 22 : 18 }
+
+    /// In the collage each way of practising is cut from its own paper.
+    private var paper: PaperKind {
+        switch item.id {
+        case "today-review": .ruled
+        case "today-quiz": .graph
+        case "today-speaking": .peach
+        case "today-spelling": .sage
+        default: .mustard
+        }
+    }
+
+    /// A slight, fixed tilt per tile, so the papers look laid down by hand.
+    private var tilt: Double {
+        switch item.id {
+        case "today-review": -0.5
+        case "today-quiz": 0.6
+        case "today-speaking": -0.7
+        case "today-spelling": 0.5
+        default: -0.3
+        }
+    }
+    private var roomy: Bool { style.icon > 40 }
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+        Group {
+            if tallCard {
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(alignment: .top) {
+                        icon(size: style.icon)
+                        Spacer(minLength: 4)
+                        corner
+                    }
+                    Spacer(minLength: 10)
+                    Text(item.title)
+                        .font(.display(style.title, weight: .bold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                    Text(item.detail)
+                        .font(style.detail)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .padding(.top, 2)
+                }
+                .padding(14)
+            } else {
+                HStack(spacing: roomy ? 12 : 10) {
+                    icon(size: style.icon)
+                    VStack(alignment: .leading, spacing: 2) {
+                        // A Chinese title stays on one line (shrinking a little if it
+                        // must); an English one may take two ("Speaking practice").
+                        Text(item.title)
+                            .font(.display(style.title, weight: .bold))
+                            .foregroundStyle(.primary)
+                            .lineLimit(item.title.contains(" ") ? 2 : 1)
+                            .minimumScaleFactor(0.7)
+                        Text(item.detail)
+                            .font(style.detail)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                    }
+                    // The words come before the badge: a narrow tile keeps
+                    // "Exam" whole and shows only the lock.
+                    .layoutPriority(1)
+                    Spacer(minLength: 2)
+                    rowEnd
+                }
+                .padding(.horizontal, roomy ? 14 : 12)
+                .padding(.vertical, roomy ? 10 : 8)
+            }
+        }
+        .multilineTextAlignment(.leading)
+        .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: tallCard ? .topLeading : .leading)
+        .background {
+            if appStyle == .collage {
+                PaperSurface(kind: paper)
+                    .overlay(alignment: .topTrailing) {
+                        // A little halftone in a corner of the plainer papers.
+                        if paper == .mustard || paper == .peach { Halftone().frame(width: 70, height: 50) }
+                    }
+                    .clipShape(TornEdgeShape(edges: paper == .peach ? [.bottom] : [], depth: 4, seed: item.id.count))
+            } else {
+                PremiumSurface(radius: radius)
+                    .overlay { watermark }
+                    .clipShape(shape)
+            }
+        }
+        .overlay(alignment: .top) {
+            if appStyle == .collage, item.id == "today-review" { TapeStrip(width: 58, angle: -4).offset(y: -9) }
+        }
+        .overlay {
+            // A soft ring of the tile's colour spreads from the icon when it is tapped.
+            if bounce > 0 {
+                TileRipple(color: item.tint, tallCard: tallCard, iconSize: style.icon)
+                    .id(bounce)
+                    .clipShape(shape)
+            }
+        }
+        .contentShape(shape)
+        .rotationEffect(.degrees(appStyle == .collage ? tilt : 0))
+    }
+
+    /// A big, faint copy of the icon, tilted and cropped by the tile's edge.
+    /// It scales with the tile, so a taller tile carries a bigger mark.
+    private var watermark: some View {
+        GeometryReader { proxy in
+            let h = proxy.size.height
+            let size = tallCard ? h * 0.62 : h * 0.9
+            Image(systemName: item.icon)
+                .font(.system(size: size, weight: .bold))
+                .foregroundStyle(item.tint.opacity(0.09))
+                .rotationEffect(.degrees(-12))
+                // Cropped by the tile's right (and, for tall cards, bottom) edge.
+                .position(x: proxy.size.width - size * (tallCard ? 0.32 : 0.3),
+                          y: tallCard ? h - size * 0.3 : h * 0.6)
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private func icon(size: CGFloat) -> some View {
+        if appStyle == .collage {
+            // A plain cut-paper disc.
+            Image(systemName: item.icon)
+                .font(.system(size: size * 0.42, weight: .semibold))
+                .foregroundStyle(.white)
+                .symbolEffect(.bounce, value: bounce)
+                .frame(width: size, height: size)
+                .background(item.tint, in: Circle())
+        } else {
+            leatherIcon(size: size)
+        }
+    }
+
+    private func leatherIcon(size: CGFloat) -> some View {
+        Image(systemName: item.icon)
+            .font(.system(size: size * 0.42, weight: .semibold))
+            .foregroundStyle(.white)
+            .symbolEffect(.bounce, value: bounce)
+            .frame(width: size, height: size)
+            .background(LinearGradient(colors: [item.tint.opacity(0.7), item.tint], startPoint: .topLeading, endPoint: .bottomTrailing),
+                        in: RoundedRectangle(cornerRadius: size * 0.3, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: size * 0.3, style: .continuous)
+                    .strokeBorder(LinearGradient(colors: [.white.opacity(0.5), .clear], startPoint: .top, endPoint: .center), lineWidth: 1)
+            }
+            .shadow(color: item.tint.opacity(0.3), radius: 5, y: 2)
+    }
+
+    /// The tall card's top corner: the Plus mark when locked, else a small arrow.
+    @ViewBuilder
+    private var corner: some View {
+        if item.locked {
+            PlusBadgeFitting()
+        } else if let badge = item.badge {
+            pill(badge)
+        } else {
+            Image(systemName: "arrow.up.right")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(item.tint)
+                .frame(width: 26, height: 26)
+                .background(item.tint.opacity(0.12), in: Circle())
+                .accessibilityHidden(true)
+        }
+    }
+
+    /// The short row's far end: the Plus mark, a count, or nothing.
+    @ViewBuilder
+    private var rowEnd: some View {
+        if item.locked {
+            PlusBadgeFitting()
+        } else if let badge = item.badge {
+            if roomy {
+                // The count, set large: it carries the row's right side.
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text(badge)
+                        .font(.displaySize(style.icon * 0.7, weight: .bold))
+                        .monospacedDigit()
+                        .foregroundStyle(item.tint)
+                        .contentTransition(.numericText())
+                    Text(L.t("個字", "words"))
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            } else {
+                pill(badge)
+            }
+        }
+    }
+
+    private func pill(_ text: String) -> some View {
+        Text(text)
+            .font(.display(.caption, weight: .bold))
+            .monospacedDigit()
+            .foregroundStyle(.white)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(item.tint, in: Capsule())
+    }
+}
+
+/// One ripple from a tile's icon: a ring of its colour growing and fading.
+private struct TileRipple: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var color: Color
+    var tallCard: Bool
+    var iconSize: CGFloat
+    @State private var spread = false
+
+    var body: some View {
+        GeometryReader { proxy in
+            let origin = tallCard ? CGPoint(x: 14 + iconSize / 2, y: 14 + iconSize / 2)
+                                  : CGPoint(x: 14 + iconSize / 2, y: proxy.size.height / 2)
+            Circle()
+                .fill(RadialGradient(colors: [color.opacity(0.28), color.opacity(0)], center: .center, startRadius: 0, endRadius: iconSize / 2))
+                .overlay(Circle().strokeBorder(color.opacity(0.35), lineWidth: 1.5))
+                .frame(width: iconSize, height: iconSize)
+                .scaleEffect(spread ? proxy.size.width * 2.2 / iconSize : 1)
+                .opacity(spread ? 0 : 1)
+                .position(origin)
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeOut(duration: 0.55)) { spread = true }
+        }
+    }
+}
+
+/// The hero card's face: caramel leather darkening to brown, with a fine
+/// grain, light pooling in one corner, a glint that sweeps across now and
+/// then, and a hairline catching the light. It turns olive once today's goal
+/// is met.
+/// The hero card as a collage: a cut of leather (sage once the goal is met)
+/// torn along its bottom, a strip of graph paper peeking out behind its right
+/// edge, a piece of tape, a patch of halftone and a loose charcoal loop.
+/// No shadow: the overlapping papers give the depth.
+private struct CollageHeroBackground: View {
+    var done: Bool
+
+    var body: some View {
+        let colors = done
+            ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.36, green: 0.45, blue: 0.27)]
+            : [Color(red: 0.79, green: 0.55, blue: 0.37), Color(red: 0.6, green: 0.37, blue: 0.23)]
+        ZStack {
+            PaperSurface(kind: .graph)
+                .frame(width: 96)
+                .rotationEffect(.degrees(3))
+                .offset(x: 12, y: 8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+            Rectangle()
+                .fill(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay { PaperGrain(opacity: 1).blendMode(.overlay) }
+                .overlay(alignment: .bottomLeading) { Halftone(color: .black.opacity(0.18)).frame(width: 110, height: 60) }
+                .overlay(alignment: .topTrailing) {
+                    InkLoops(count: 3)
+                        .stroke(Color(red: 1, green: 0.94, blue: 0.86).opacity(0.55), style: StrokeStyle(lineWidth: 1.6, lineCap: .round))
+                        .frame(width: 70, height: 16)
+                        .padding(.top, 14)
+                        .padding(.trailing, 18)
+                }
+                .clipShape(TornEdgeShape(edges: [.bottom], depth: 5, seed: 3))
+            TapeStrip(width: 62, angle: -7)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .offset(x: 18, y: -10)
+        }
+        .animation(Motion.reveal, value: done)
+    }
+}
+
+private struct HeroBackground: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
+    var done: Bool
+
+    @ViewBuilder
+    var body: some View {
+        if appStyle == .collage {
+            CollageHeroBackground(done: done)
+        } else {
+            leather
+        }
+    }
+
+    @ViewBuilder
+    private var leather: some View {
+        let shape = RoundedRectangle(cornerRadius: 30, style: .continuous)
+        let colors = done
+            ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]
+            : [Color(red: 0.77, green: 0.55, blue: 0.36), Color(red: 0.45, green: 0.29, blue: 0.19)]
+        shape
+            .fill(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing))
+            .overlay {
+                GeometryReader { proxy in
+                    let width = proxy.size.width
+                    ZStack(alignment: .topLeading) {
+                        Circle()
+                            .fill(Color(red: 1, green: 0.9, blue: 0.75).opacity(0.35))
+                            .frame(width: width * 0.8, height: width * 0.8)
+                            .blur(radius: 40)
+                            .offset(x: width * 0.45, y: -width * 0.45)
+                        Circle()
+                            .fill(colors[1].opacity(0.7))
+                            .frame(width: width * 0.7, height: width * 0.7)
+                            .blur(radius: 50)
+                            .offset(x: -width * 0.3, y: proxy.size.height * 0.45)
+                    }
+                }
+                .clipShape(shape)
+            }
+            .overlay { PaperGrain(opacity: 1).blendMode(.overlay).clipShape(shape) }
+            .overlay {
+                if !reduceMotion { HeroGlint().clipShape(shape) }
+            }
+            .overlay {
+                shape.strokeBorder(LinearGradient(colors: [.white.opacity(0.55), .white.opacity(0.05)], startPoint: .top, endPoint: .bottom),
+                                   lineWidth: 1)
+            }
+            .shadow(color: colors[1].opacity(0.35), radius: 20, y: 12)
+    }
+}
+
+/// A soft band of light that crosses the hero card every few seconds.
+private struct HeroGlint: View {
+    var body: some View {
+        GeometryReader { proxy in
+            let width = proxy.size.width
+            let height = proxy.size.height
+            LinearGradient(colors: [.white.opacity(0), .white.opacity(0.2), .white.opacity(0)], startPoint: .leading, endPoint: .trailing)
+                .frame(width: width * 0.35, height: height * 2)
+                .rotationEffect(.degrees(18))
+                .phaseAnimator([false, true]) { content, across in
+                    content.offset(x: across ? width * 1.3 : -width * 0.6, y: -height * 0.5)
+                } animation: { across in
+                    across ? Animation.easeInOut(duration: 1.4).delay(4) : Animation.linear(duration: 0.01)
+                }
+        }
+        .allowsHitTesting(false)
+    }
+}
+
+/// "Start here!", bobbing on the main button until a new learner's first
+/// round is done.
+private struct StartHereSticker: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var bob = false
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "hand.point.down.fill")
+            Text(L.t("從這裡開始！", "Start here!"))
+        }
+        .font(.caption.weight(.heavy))
+        .foregroundStyle(.white)
+        .padding(.horizontal, 9)
+        .padding(.vertical, 4)
+        .background(Palette.miss, in: Capsule())
+        .rotationEffect(.degrees(4))
+        .offset(y: bob ? -3 : 0)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) { bob = true }
         }
     }
 }

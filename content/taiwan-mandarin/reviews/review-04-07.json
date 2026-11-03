@@ -1,0 +1,14 @@
+[
+{"word":"傍晚","fix":{"pinyin":"bāng wǎn"},"drop":false,"reason":"教育部讀音：傍晚 ㄅㄤ ㄨㄢˇ"},
+{"word":"拉肚子","fix":{"exampleEn":"Eating too much cold stuff can give you diarrhea."},"drop":false,"reason":"英譯不精確，拉肚子是腹瀉"},
+{"word":"減少","fix":{"example":"最近店裡的客人減少了很多。","exampleEn":"There have been a lot fewer customers in the shop lately."},"drop":false,"reason":"「減少吃炸的東西」不自然，口語會說「少吃」"},
+{"word":"停止","fix":{"example":"那家店已經停止營業了。","exampleEn":"That shop has already closed down."},"drop":false,"reason":"比賽因雨多說「暫停／取消」，改用常見搭配「停止營業」"},
+{"word":"失去","fix":{"example":"他因為這件事失去了很多朋友。","exampleEn":"He lost a lot of friends because of this."},"drop":false,"reason":"「失去工作」偏書面，台灣口語多說「丟了工作／失業」"},
+{"word":"咱們","fix":{},"drop":true,"reason":"北方用語，台灣口語幾乎不用，說「我們」"},
+{"word":"體重","fix":{"example":"過年吃太多，體重增加了三公斤。","exampleEn":"I ate too much over New Year and put on three kilos."},"drop":false,"reason":"「體重變重」語意重複，不自然"},
+{"word":"大部分","fix":{"example":"大部分的學生都搭公車上學。","exampleEn":"Most of the students take the bus to school."},"drop":false,"reason":"學生騎機車上學易誤解（未滿18歲不能騎），改較自然情境"},
+{"word":"標準","fix":{"gloss":"standard; criterion; (of speech) standard, correct"},"drop":false,"reason":"釋義重複，需說明例句中的「發音標準」義"},
+{"word":"降低","fix":{"example":"為了吸引客人，這家店降低了價格。","exampleEn":"To attract customers, this shop lowered its prices."},"drop":false,"reason":"氣溫台灣多說「下降」，改用自然搭配「降低價格」"},
+{"word":"罰款","fix":{"gloss":"fine; penalty; to fine"},"drop":false,"reason":"例句為動詞用法「被罰款」，釋義補上動詞義"},
+{"word":"甚至","fix":{"example":"他很忙，有時候甚至忘了吃飯。","exampleEn":"He's so busy that sometimes he even forgets to eat."},"drop":false,"reason":"「忙到甚至沒時間吃飯」語序不自然"}
+]

@@ -1,0 +1,159 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-tc@5.0.18/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-tc@5.0.18/700.css">
+<style>
+@font-face{font-family:Fraunces;font-weight:700;src:url(https://cdn.jsdelivr.net/npm/@fontsource/fraunces@5.0.0/files/fraunces-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:Fraunces;font-weight:600;font-style:italic;src:url(https://cdn.jsdelivr.net/npm/@fontsource/fraunces@5.0.0/files/fraunces-latin-600-italic.woff2) format('woff2')}
+:root{--ink:#2B2620;--clay:#C9623F;--clayd:#A84A2C;--ivory:#FBF8F2;--sage:#DCE5D0;--peach:#F2CDB0;--mustard:#DDB04E;--rule:#BCD0DE;--margin:#E39787;--known:#5E8B4E;--miss:#C0473A;--sec:#7A7065}
+*{box-sizing:border-box}
+body{margin:0;background:#E9E2D6;font-family:'Noto Sans TC',system-ui,sans-serif;color:var(--ink);padding:40px 36px 30px;width:1440px}
+h1{font-family:Fraunces;font-size:34px;margin:0 0 6px}
+.sub{color:var(--sec);font-size:16px;margin-bottom:26px}
+.row{display:flex;gap:34px;align-items:flex-start}
+.col{width:440px}
+.step{font-weight:700;font-size:19px;margin:0 0 4px}
+.stepnote{font-size:14px;color:var(--sec);margin-bottom:12px;min-height:40px}
+.phone{width:402px;height:874px;border-radius:54px;background:#1d1a17;padding:10px;box-shadow:0 20px 40px rgba(60,35,15,.25)}
+.screen{position:relative;width:382px;height:854px;border-radius:44px;overflow:hidden;background:#F4EFE5;
+ background-image:linear-gradient(#e3e7dc 1px,transparent 1px),linear-gradient(90deg,#e3e7dc 1px,transparent 1px);background-size:18px 18px}
+.status{height:46px;display:flex;justify-content:space-between;align-items:center;padding:6px 28px 0 34px;font-weight:700;font-size:15px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:4px 18px}
+.circle{width:38px;height:38px;border-radius:50%;background:var(--ivory);border:1.5px solid rgba(43,38,32,.6);display:flex;align-items:center;justify-content:center;color:var(--clay);font-size:18px}
+.count{font-family:Fraunces;font-size:18px}
+.bar{margin:8px 18px 0;height:7px;border-radius:4px;background:rgba(43,38,32,.12);position:relative}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--known)}
+.card{position:relative;margin:16px 16px 0;background:var(--ivory);padding:16px 18px;border:1px solid rgba(43,38,32,.25);transform:rotate(-.5deg)}
+.tape{position:absolute;top:-11px;left:50%;width:66px;height:20px;margin-left:-33px;background:rgba(236,224,196,.9);transform:rotate(-4deg)}
+.kw{font-family:Fraunces;font-size:26px;color:var(--clay);display:flex;align-items:baseline;gap:10px}
+.kw small{font-family:'Noto Sans TC';font-size:13px;color:var(--sec);font-weight:400}
+.redrule{height:1.5px;background:var(--margin);margin:8px 0 10px}
+.q{font-size:20px;font-weight:700;line-height:1.35;display:flex;gap:10px}
+.q .spk{color:var(--clay);font-size:19px;flex:none}
+.gloss{font-size:14px;color:var(--sec);margin-top:4px}
+.hint{font-size:13px;color:var(--sec);margin-top:8px;padding-top:8px;border-top:1px dashed rgba(43,38,32,.2)}
+.mic{margin:46px auto 0;width:132px;height:132px;border-radius:50%;background:var(--clay);box-shadow:4px 5px 0 rgba(43,38,32,.85);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.mic svg{width:52px;height:52px;fill:#fff}
+.micl{text-align:center;font-weight:700;font-size:17px;margin-top:16px}
+.micsub{text-align:center;font-size:13px;color:var(--sec);margin-top:4px}
+.link{color:var(--clay);font-weight:700}
+.bottom{position:absolute;left:0;right:0;bottom:0;padding:12px 16px 30px;background:#F1F2EA;border-top:1.5px solid rgba(43,38,32,.85);display:flex;gap:10px}
+.btn{flex:1;height:52px;border-radius:7px;border:1.5px solid rgba(43,38,32,.85);box-shadow:3px 3px 0 rgba(43,38,32,.8);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;background:var(--ivory);color:var(--clay)}
+.btn.p{background:var(--clay);color:#fff}
+.btn.g{background:var(--known);color:#fff}
+.rec{background:var(--miss)}
+.ring{position:absolute;border-radius:50%;border:3px solid rgba(192,71,58,.35)}
+.wave{display:flex;gap:4px;justify-content:center;align-items:center;height:38px;margin-top:22px}
+.wave i{width:4px;border-radius:2px;background:var(--miss)}
+.timer{text-align:center;font-family:Fraunces;font-size:30px;color:var(--miss);margin-top:6px}
+.mini{margin:12px 16px 0;background:var(--ivory);border:1px solid rgba(43,38,32,.25);padding:10px 14px;font-size:14px}
+.mini b{font-family:Fraunces;color:var(--clay);font-size:17px;margin-right:6px}
+.pad{margin:12px 16px 0;background:var(--sage);padding:12px;border:1px solid rgba(43,38,32,.25)}
+.lbl{display:inline-block;background:var(--mustard);font-family:Fraunces;font-weight:700;font-size:13px;padding:2px 8px;transform:rotate(-1.5deg);margin-bottom:8px}
+.note{background:var(--ivory);border:1px solid rgba(43,38,32,.45);border-top:8px solid var(--clay);padding:8px 12px 10px 38px;position:relative;font-size:16px;line-height:30px;
+ background-image:linear-gradient(transparent 29px,var(--rule) 29px);background-size:100% 30px}
+.note:before{content:'';position:absolute;left:28px;top:0;bottom:0;width:1.5px;background:var(--margin)}
+.tools{display:flex;gap:8px;margin-top:9px;align-items:center;font-size:13px}
+.chip{border:1.5px solid rgba(43,38,32,.7);background:var(--ivory);border-radius:16px;padding:4px 10px;font-weight:700;color:var(--clay)}
+.ok{color:var(--known);font-weight:700;margin-left:auto}
+.ai{margin:12px 16px 0;background:var(--ivory);border:1px solid rgba(43,38,32,.3);padding:12px 14px;transform:rotate(.3deg)}
+.cap{font-size:12px;color:var(--sec);font-weight:700}
+.better{font-size:16px;line-height:1.45;margin:3px 0 8px}
+.better em{font-style:normal;color:var(--clay);font-weight:700;background:rgba(201,98,63,.1)}
+.fix{font-size:13px;line-height:1.5}
+.fix s{color:var(--sec)}
+.fix b{color:var(--clay)}
+.sticky{margin-top:10px;background:#E7C46E;padding:8px 10px;font-size:13px;transform:rotate(-.8deg)}
+.fu{margin:12px 16px 0;background:var(--peach);padding:11px 14px;border:1px solid rgba(43,38,32,.25);font-size:14px}
+.fu .t{font-weight:700;font-size:15px}
+.tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--known);border-radius:10px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.callouts{margin-top:14px;font-size:14px;line-height:1.6}
+.callouts div{display:flex;gap:8px}
+.callouts span{flex:none;width:20px;height:20px;border-radius:50%;background:var(--clay);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.auto{display:inline-block;background:#fff4dc;border:1px solid #e3c98c;border-radius:6px;padding:0 6px;font-size:12px;color:#8a5a12;font-weight:700}
+</style></head><body>
+<h1>口說練習 改版示意</h1>
+<div class="sub">一題一個畫面、不再進第二層。錄音、轉文字、AI 批改、標記完成都自動接上，使用者只要「按一下開始說 → 再按一下結束 → 下一題」。</div>
+<div class="row">
+
+<div class="col">
+<div class="step">① 看題目，按一下開始說</div>
+<div class="stepnote">一進來就是題目和大錄音鍵。題目會自動唸一次（可在設定關掉）。</div>
+<div class="phone"><div class="screen">
+ <div class="status"><span>9:41</span><span>● ● ●</span></div>
+ <div class="top"><div class="circle">✕</div><div class="count">3 / 10</div><div class="circle">☰</div></div>
+ <div class="bar"><i style="width:24%"></i></div>
+ <div class="card"><div class="tape"></div>
+  <div class="kw">volunteer <small>/ˌvɑːlənˈtɪr/ · v. 自願做；當志工</small></div>
+  <div class="redrule"></div>
+  <div class="q"><span>What kind of volunteer work would you like to try?</span><span class="spk">🔊</span></div>
+  <div class="gloss">你想嘗試哪一種志工服務？</div>
+  <div class="hint">用 <b>volunteer</b> 回答，說兩句以上。</div>
+ </div>
+ <div class="mic"><svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11z"/></svg></div>
+ <div class="micl">按一下開始說</div>
+ <div class="micsub">不想說出來？<span class="link">改用打字</span></div>
+ <div class="bottom"><div class="btn">看參考回答</div><div class="btn">跳過</div></div>
+</div></div>
+</div>
+
+<div class="col">
+<div class="step">② 說完，再按一下</div>
+<div class="stepnote">錄音中鍵變紅、跟著聲音跳動。不用另外按「轉文字」或「送出」。</div>
+<div class="phone"><div class="screen">
+ <div class="status"><span>9:41</span><span>● ● ●</span></div>
+ <div class="top"><div class="circle">✕</div><div class="count">3 / 10</div><div class="circle">☰</div></div>
+ <div class="bar"><i style="width:24%"></i></div>
+ <div class="card"><div class="tape"></div>
+  <div class="kw">volunteer <small>/ˌvɑːlənˈtɪr/ · v. 自願做；當志工</small></div>
+  <div class="redrule"></div>
+  <div class="q"><span>What kind of volunteer work would you like to try?</span><span class="spk">🔊</span></div>
+  <div class="gloss">你想嘗試哪一種志工服務？</div>
+ </div>
+ <div style="position:relative;width:132px;height:132px;margin:56px auto 0">
+  <div class="ring" style="inset:-22px"></div><div class="ring" style="inset:-42px;opacity:.5"></div>
+  <div class="mic rec" style="margin:0"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg></div>
+ </div>
+ <div class="wave">
+  <i style="height:10px"></i><i style="height:22px"></i><i style="height:34px"></i><i style="height:18px"></i><i style="height:28px"></i><i style="height:36px"></i><i style="height:14px"></i><i style="height:26px"></i><i style="height:32px"></i><i style="height:12px"></i><i style="height:24px"></i><i style="height:30px"></i><i style="height:16px"></i><i style="height:8px"></i>
+ </div>
+ <div class="timer">0:08</div>
+ <div class="micl" style="margin-top:4px">說完再按一下</div>
+ <div class="micsub">結束後會自動轉成文字、自動請小笨貓批改</div>
+ <div class="bottom"><div class="btn">取消這次錄音</div></div>
+</div></div>
+</div>
+
+<div class="col">
+<div class="step">③ 結果自動出現，直接下一題</div>
+<div class="stepnote">文字、批改、追問一次到位；這題自動記為完成。想改字點文字就能改，改完會自動重新批改。</div>
+<div class="phone"><div class="screen">
+ <div class="status"><span>9:41</span><span>● ● ●</span></div>
+ <div class="top"><div class="circle">✕</div><div class="count">3 / 10</div><div class="circle">☰</div></div>
+ <div class="bar"><i style="width:30%"></i></div>
+ <div class="mini"><b>volunteer</b>What kind of volunteer work would you like to try?</div>
+ <div class="pad">
+  <div class="lbl">你說的</div>
+  <div class="note">I would like volunteer at animal shelter because I love dogs.</div>
+  <div class="tools"><span class="chip">▶ 0:08</span><span class="chip">↻ 重錄</span><span class="ok">✓ 用到 volunteer</span></div>
+ </div>
+ <div class="ai">
+  <div class="cap">更自然的說法 <span class="auto">自動批改</span></div>
+  <div class="better">I'd like <em>to</em> volunteer at <em>an</em> animal shelter because I love dogs. <span style="color:var(--clay)">🔊</span></div>
+  <div class="fix"><s>like volunteer</s> → <b>like to volunteer</b>：would like 後面接 to + 動詞</div>
+  <div class="sticky">💡 再多說一句你想在那裡做什麼，答案會更完整。</div>
+ </div>
+ <div class="fu"><div class="t">What would you do there on your first day? 🔊</div>
+  <div style="color:var(--sec);margin:2px 0 8px">你第一天在那裡會做什麼？</div>
+  <span class="chip" style="background:#fff">🎤 回答這個追問</span></div>
+ <div class="bottom"><div class="btn">↻ 再說一次</div><div class="btn g">下一題 →</div></div>
+</div></div>
+</div>
+</div>
+
+<div class="callouts" style="margin-top:22px">
+ <div><span>1</span>錄音不再進第二層，題目頁就是錄音頁；參考回答收成一顆鍵，免得先偷看。</div>
+ <div><span>2</span>按停止後自動：轉成文字 → 送 AI 批改 → 捲到結果。訂閱 Premium 才有 AI；沒有的人一樣看得到文字和「✓ 用到目標字」。</div>
+ <div><span>3</span>有錄或有打字，這題就自動記為完成；「練習完成／我答了」兩顆鍵合併成「下一題」。</div>
+ <div><span>4</span>隱私說明只在第一次出現，之後收進設定；字數、句數等統計拿掉，只留「✓ 用到目標字」。</div>
+</div>
+</body></html>

@@ -12,9 +12,26 @@ struct FilterControls: View {
                 Text(L.filterLabel(value)).tag(value)
             }
         }
-        Picker(L.filterLevel, selection: $selection.level) {
-            Text(L.allLevels).tag("all")
-            ForEach(model.levels, id: \.self) { Text($0).tag($0) }
+        // Several levels at once (say 3 to 5): the menu stays open while
+        // they are ticked.
+        LabeledContent(L.filterLevel) {
+            Menu {
+                Button { selection.level = "all" } label: {
+                    if selection.levels.isEmpty { Label(L.allLevels, systemImage: "checkmark") } else { Text(L.allLevels) }
+                }
+                Divider()
+                ForEach(model.levels, id: \.self) { group in
+                    Button { selection.toggleLevel(group, order: model.levels) } label: {
+                        if selection.levels.contains(group) { Label(L.levelName(group), systemImage: "checkmark") } else { Text(L.levelName(group)) }
+                    }
+                }
+            } label: {
+                Text(L.levelSummary(selection.levels))
+                    .lineLimit(1)
+                    .foregroundStyle(Palette.accent)
+            }
+            .menuActionDismissBehavior(.disabled)
+            .accessibilityIdentifier("filter-level")
         }
         Picker(L.t("英文字首", "First letter"), selection: $selection.initial) {
             Text(L.t("全部字首", "All letters")).tag("all")
@@ -39,17 +56,30 @@ struct FilterControls: View {
 struct StudySettingsSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    FilterControls(selection: Binding(get: { model.settings.studyFilter }, set: { model.settings.studyFilter = $0 }))
-                } header: { Text(model.bankName) }
-                Section {
-                    LabeledContent(L.t("符合條件", "Matching words"), value: L.bankWordCount(model.studyCandidates.count))
+                Group {
+                    Section {
+                        FilterControls(selection: Binding(get: { model.settings.studyFilter }, set: { model.settings.studyFilter = $0 }))
+                    } header: { Text(model.bankName) }
+                    Section {
+                        let count = model.studyCandidates.count
+                        LabeledContent(L.t("符合條件", "Matching words")) {
+                            Text(L.bankWordCount(count))
+                                .monospacedDigit()
+                                .contentTransition(.numericText(value: Double(count)))
+                        }
+                    }
                 }
+                .listRowBackground(StyledRowBackground())
             }
+            .warmList()
+            // The count rolls to its new value as the filters change.
+            .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.studyFilter)
+            .sensoryFeedback(.selection, trigger: model.settings.studyFilter) { _, _ in model.settings.hapticsEnabled ?? true }
             .navigationTitle(L.t("學習範圍", "Study scope"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { dismiss() } } }
@@ -59,6 +89,7 @@ struct StudySettingsSheet: View {
 
 struct QuizConfiguration: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var start: () -> Void
 
     private var selection: Binding<FilterSelection> {
@@ -69,24 +100,44 @@ struct QuizConfiguration: View {
         let filter = model.settings.quizFilter
         let count = model.bank.filter(state: model.progress, query: "", filter: filter.status, options: filter.options).count
         Form {
-            Section {
-                Picker(L.t("題數", "Questions"), selection: Binding(get: { model.settings.quizQuestionCount }, set: { model.settings.quizQuestionCount = $0 })) {
-                    ForEach(QuizBuilder.questionCounts, id: \.self) { Text("\($0)").tag($0) }
+            Group {
+                Section {
+                    Picker(L.t("題數", "Questions"), selection: Binding(get: { model.settings.quizQuestionCount }, set: { model.settings.quizQuestionCount = $0 })) {
+                        ForEach(QuizBuilder.questionCounts, id: \.self) { Text("\($0)").tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("quiz-question-count")
+                } header: { Text(L.t("這次想練習幾題？", "How many questions?")) }
+                Section { FilterControls(selection: selection) } header: { Text(model.bankName) }
+                Section {
+                    let roundSize = min(count, model.settings.quizQuestionCount)
+                    LabeledContent(L.t("本輪題數", "This round")) {
+                        Text("\(roundSize)")
+                            .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(roundSize)))
+                    }
                 }
-                .pickerStyle(.segmented)
-                .accessibilityIdentifier("quiz-question-count")
-            } header: { Text(L.t("這次想練習幾題？", "How many questions?")) }
-            Section { FilterControls(selection: selection) } header: { Text(model.bankName) }
-            Section {
-                LabeledContent(L.t("本輪題數", "This round"), value: "\(min(count, model.settings.quizQuestionCount))")
-                Button(action: start) {
-                    Text(L.t("開始測驗", "Start quiz")).font(.headline).frame(maxWidth: .infinity)
-                }
-                .prominentAction()
-                .disabled(count == 0)
-                .accessibilityIdentifier("quiz-start")
             }
+            .listRowBackground(StyledRowBackground())
+        }
+        .warmList()
+        // Always in reach at the bottom, even when the sheet is at half height.
+        .safeAreaInset(edge: .bottom) {
+            Button(action: start) {
+                Text(L.t("開始測驗", "Start quiz")).font(.headline).frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .disabled(count == 0)
+            .accessibilityIdentifier("quiz-start")
+            .padding(.horizontal, Metrics.gutter)
+            .padding(.top, 10)
+            .padding(.bottom, 8)
+            .background(.bar)
         }
         .navigationTitle(L.quickQuiz)
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizQuestionCount)
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizFilter)
+        .sensoryFeedback(.selection, trigger: model.settings.quizQuestionCount) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.selection, trigger: model.settings.quizFilter) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 }

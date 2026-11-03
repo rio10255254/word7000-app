@@ -6,6 +6,8 @@ import Word7000Core
 /// toolbar skips the tap and opens every card with its answer showing.
 struct StudySessionView: View {
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
+    @Environment(\.appStyle) private var appStyle
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -17,6 +19,8 @@ struct StudySessionView: View {
     @State private var feedback = 0
     @State private var phase: CardPhase = .idle
     @State private var cardOpacity = 1.0
+    /// The next card grows to full size as it takes the top of the stack.
+    @State private var cardScale = 1.0
     @State private var armed = false
     @State private var cardWidth: CGFloat = 340
     @State private var lifetime = UUID()
@@ -24,11 +28,22 @@ struct StudySessionView: View {
     /// The daily goal was reached during this visit, not before it.
     @State private var reachedGoalHere = false
     @State private var goalBanner = false
+    /// How the companion on the progress bar feels about the last card.
+    @State private var buddyMood: Mascot.Mood = .thinking
+    @State private var buddyHop = 0
+    @State private var buddyRemark: String?
+    /// Where the cat's lines come from this session (gathered once).
+    @State private var catLines = CatLineSource.none
+    /// A word that has now slipped three times or more, with how to remember it.
+    @State private var stuck: (word: WordEntry, misses: Int)?
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
     private var threshold: CGFloat { min(110, cardWidth * 0.28) }
     private var autoReveal: Bool { model.settings.studyAutoReveal ?? false }
+    /// Learning Chinese, the pinyin can wait for the answer, to practise
+    /// reading the characters; learning English, the pronunciation always shows.
+    private var pinyinFirst: Bool { model.studyMode != .chinese || (model.settings.studyShowPinyin ?? true) }
     private var showsAnswer: Bool { revealed || autoReveal }
 
     var body: some View {
@@ -36,22 +51,30 @@ struct StudySessionView: View {
             VStack(spacing: 16) {
                 if let session = model.studySession {
                     if session.total == 0 {
-                        ContentUnavailableView(L.nothingToStudy, systemImage: "checkmark.seal", description: Text(L.nothingToStudyText))
+                        MascotMessage(mood: .cheer, title: L.nothingToStudy, text: L.nothingToStudyText)
                     } else if session.isComplete {
                         SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
                                        again: { model.startStudySession() }, startQuiz: startQuiz)
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
-                        SessionBar(fraction: Double(session.done) / Double(max(1, session.total)))
-                            .padding(.top, 4)
+                        BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
+                                         mood: buddyMood, hop: buddyHop, remark: buddyRemark)
                         GeometryReader { proxy in
                             ZStack {
                                 // The next card peeking out underneath, while there is one.
+                                // It rises toward the top as the card above is swiped away.
                                 if session.total - session.done > 1 {
-                                    RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
-                                        .fill(Palette.surface.opacity(0.55))
-                                        .scaleEffect(x: 0.92, y: 1, anchor: .bottom)
-                                        .offset(y: 9)
-                                        .accessibilityHidden(true)
+                                    Group {
+                                        if appStyle == .collage {
+                                            // Collage: a sheet of graph paper under the index card.
+                                            PaperSurface(kind: .graph).rotationEffect(.degrees(2.2 - 1.5 * dragProgress))
+                                        } else {
+                                            RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
+                                                .fill(Palette.surface.opacity(0.55 + 0.3 * dragProgress))
+                                        }
+                                    }
+                                    .scaleEffect(x: 0.92 + 0.05 * dragProgress, y: 1, anchor: .bottom)
+                                    .offset(y: 9 - 5 * dragProgress)
+                                    .accessibilityHidden(true)
                                 }
                                 card(word: word)
                                     .onAppear {
@@ -63,6 +86,12 @@ struct StudySessionView: View {
                                     .id("\(word.id)-\(session.index)")
                             }
                         }
+                        if let stuck {
+                            StuckWordTip(word: stuck.word, misses: stuck.misses) {
+                                withAnimation(reduceMotion ? nil : Motion.reveal) { self.stuck = nil }
+                            }
+                            .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+                        }
                         controls
                             .disabled(committing)
                     }
@@ -71,17 +100,23 @@ struct StudySessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Palette.background)
+            .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
             .overlay(alignment: .top) {
                 if goalBanner {
-                    Label(L.goalReachedBanner, systemImage: "checkmark.seal.fill")
+                    Label {
+                        Text(L.goalReachedBanner)
+                    } icon: {
+                        Image(systemName: "checkmark.seal.fill")
+                            .symbolEffect(.bounce, value: goalBanner)
+                    }
                         .font(.headline)
                         .foregroundStyle(.white)
                         .padding(.horizontal, 18)
                         .padding(.vertical, 10)
                         .background(Palette.known, in: Capsule())
                         .padding(.top, 8)
-                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .opacity))
+                        .shadow(color: Palette.known.opacity(0.35), radius: 10, y: 4)
+                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .scale(scale: 0.8)).combined(with: .opacity))
                         .accessibilityIdentifier("study-goal-banner")
                 }
             }
@@ -94,13 +129,35 @@ struct StudySessionView: View {
                 }
                 ToolbarItem(placement: .principal) {
                     if let session = model.studySession, !session.isComplete, session.total > 0 {
-                        Text(L.cardCount(done: session.done, total: session.total))
-                            .font(.rounded(.subheadline, weight: .semibold))
-                            .monospacedDigit()
-                            .accessibilityIdentifier("study-position")
+                        VStack(spacing: 0) {
+                            Text(L.cardCount(done: session.done, total: session.total))
+                                .font(.display(.subheadline, weight: .semibold))
+                                .monospacedDigit()
+                                .accessibilityIdentifier("study-position")
+                            // A guest is reminded, quietly, that none of this is kept.
+                            if account.configured, !account.isPermanent {
+                                Text(L.t("訪客・不會保存", "Guest · not kept"))
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(Palette.review)
+                                    .accessibilityIdentifier("study-guest")
+                            }
+                        }
                     }
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                    if model.studyMode == .chinese {
+                        // Three small icons fit beside the count on every
+                        // iPhone; the labels stay for VoiceOver.
+                        Toggle(isOn: Binding(
+                            get: { pinyinFirst },
+                            set: { on in withAnimation(reduceMotion ? nil : Motion.reveal) { model.settings.studyShowPinyin = on } }
+                        )) {
+                            Label(L.showPinyin, systemImage: "character.phonetic")
+                        }
+                        .toggleStyle(.button)
+                        .accessibilityHint(L.showPinyinHint)
+                        .accessibilityIdentifier("study-pinyin")
+                    }
                     Toggle(isOn: Binding(
                         get: { autoReveal },
                         set: { on in withAnimation(reduceMotion ? nil : Motion.reveal) { model.settings.studyAutoReveal = on } }
@@ -117,7 +174,15 @@ struct StudySessionView: View {
                 }
             }
         }
-        .onAppear { visible = true; model.ensureStudySession() }
+        .onAppear {
+            visible = true
+            model.ensureStudySession()
+            catLines = model.catLines
+            // Screenshot tests: the tip that turns up on a word's third slip.
+            if AppRuntime.catShowcase, stuck == nil, let id = model.studySession?.currentCardId, let word = model.word(id: id) {
+                stuck = (word, 3)
+            }
+        }
         .onDisappear { visible = false; lifetime = UUID(); Speaker.shared.stop(); model.saveNow() }
         .onChange(of: model.studySession?.index) { _, index in
             if !committing { revealed = false; dragOffset = 0; armed = false }
@@ -129,7 +194,7 @@ struct StudySessionView: View {
             reachedGoalHere = true
             // The summary celebrates on its own when the set ends here.
             guard model.studySession?.isComplete == false else { return }
-            withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = true }
+            withAnimation(reduceMotion ? nil : Motion.pop) { goalBanner = true }
             Task {
                 try? await Task.sleep(for: .seconds(2.4))
                 withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = false }
@@ -138,6 +203,14 @@ struct StudySessionView: View {
         .sensoryFeedback(.success, trigger: reachedGoalHere) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }
         .sensoryFeedback(.impact(weight: .light), trigger: armed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.55), trigger: revealed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .catTip(.study, at: .top, inset: 60)
+    }
+
+    /// How far the card has been dragged toward a verdict, 0 to 1.
+    private var dragProgress: Double {
+        guard phase == .dragging || phase == .leaving else { return 0 }
+        return min(1, Double(abs(dragOffset) / max(threshold, 1)))
     }
 
     private func card(word: WordEntry) -> some View {
@@ -148,7 +221,7 @@ struct StudySessionView: View {
                 CardStatusChip(status: progress.status)
                 // At accessibility text sizes the level would crowd the buttons.
                 if !word.group.isEmpty, !dynamicTypeSize.isAccessibilitySize {
-                    Text(word.group)
+                    Text(L.levelName(word.group))
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -158,9 +231,12 @@ struct StudySessionView: View {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
                         .font(.title3)
                         .foregroundStyle(progress.favorite ? Palette.review : Palette.tertiaryLabel)
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.bounce, value: reduceMotion ? false : progress.favorite)
                         .frame(width: 44, height: 44)
                 }
                 .buttonStyle(SoftPressStyle())
+                .sensoryFeedback(.impact(weight: .light), trigger: progress.favorite) { _, _ in model.settings.hapticsEnabled ?? true }
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
                 SpeakButton(text: face.speakText, language: face.speakLanguage)
             }
@@ -170,13 +246,15 @@ struct StudySessionView: View {
                     VStack(spacing: 28) {
                         VStack(spacing: 10) {
                             Text(face.prompt)
-                                .font(.roundedSize(promptSize, weight: .bold))
+                                .font(.displaySize(promptSize, weight: .bold))
                                 .minimumScaleFactor(0.6)
                                 .lineLimit(4)
                                 .multilineTextAlignment(.center)
                                 .accessibilityIdentifier("study-prompt")
-                            if !face.promptDetail.isEmpty {
+                            if !face.promptDetail.isEmpty, pinyinFirst || showsAnswer {
                                 Text(face.promptDetail).font(.title3).foregroundStyle(.secondary)
+                                    .transition(.opacity)
+                                    .accessibilityIdentifier("study-pinyin-text")
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -197,7 +275,12 @@ struct StudySessionView: View {
                 .scrollDisabled(phase == .dragging || committing)
                 .overlay(alignment: .bottom) {
                     if !showsAnswer {
-                        Label(L.tapToReveal, systemImage: "hand.tap")
+                        Label {
+                            Text(L.tapToReveal)
+                        } icon: {
+                            Image(systemName: "hand.tap")
+                                .symbolEffect(.pulse, options: .repeating, isActive: !reduceMotion)
+                        }
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .padding(.bottom, 6)
@@ -208,16 +291,33 @@ struct StudySessionView: View {
             }
         }
         .padding(20)
+        // Collage: keep the words clear of the index card's red margin.
+        .padding(.leading, appStyle == .collage ? 16 : 0)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
+        .background {
+            if appStyle == .collage {
+                // Collage: a ruled index card with a red margin, taped on.
+                PaperSurface(kind: .ruled)
+                    .overlay { Rectangle().strokeBorder(Collage.ink.opacity(0.12), lineWidth: 1) }
+            } else {
+                PremiumSurface(radius: Metrics.wordCardRadius)
+            }
+        }
+        .overlay(alignment: .top) {
+            if appStyle == .collage { TapeStrip(width: 74, angle: 3).offset(y: -10) }
+        }
         .overlay {
             // The verdict colours the card as it is dragged toward it.
-            RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
+            RoundedRectangle(cornerRadius: appStyle == .collage ? 0 : Metrics.wordCardRadius, style: .continuous)
                 .fill((dragOffset > 0 ? Palette.known : Palette.miss).opacity(swipeTint))
                 .allowsHitTesting(false)
         }
-        .shadow(color: .black.opacity(0.06), radius: 12, y: 4)
+        // Picked up: the shadow deepens the further the card travels.
+        .shadow(color: .black.opacity(appStyle == .collage ? 0.08 * dragProgress : 0.06 + 0.06 * dragProgress),
+                radius: 12 + 10 * dragProgress, y: 4 + 6 * dragProgress)
+        .rotationEffect(.degrees(appStyle == .collage ? -0.8 : 0))
         .overlay(alignment: .top) { swipeBadge }
+        .scaleEffect(cardScale)
         .rotationEffect(.degrees(reduceMotion ? 0 : Double(dragOffset / max(cardWidth, 1)) * 8), anchor: .bottom)
         .offset(x: dragOffset)
         .opacity(cardOpacity)
@@ -257,20 +357,27 @@ struct StudySessionView: View {
     private var swipeBadge: some View {
         if abs(dragOffset) > 30 {
             let known = dragOffset > 0
-            Label(known ? L.knowIt : L.dontKnow, systemImage: known ? "checkmark" : "xmark")
+            let appear = Double(min(1, (abs(dragOffset) - 30) / 60))
+            Label {
+                Text(known ? L.knowIt : L.dontKnow)
+            } icon: {
+                Image(systemName: known ? "checkmark" : "xmark")
+                    .symbolEffect(.bounce, value: reduceMotion ? false : armed)
+            }
                 .font(.headline)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .background(known ? Palette.known : Palette.miss, in: Capsule())
+                .scaleEffect(reduceMotion ? 1 : 0.8 + 0.2 * appear + (armed ? 0.06 : 0))
+                .animation(reduceMotion ? nil : Motion.pop, value: armed)
                 .padding(.top, 18)
-                .opacity(Double(min(1, (abs(dragOffset) - 30) / 60)))
+                .opacity(appear)
         }
     }
 
     private var controls: some View {
-        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 12))
-        return layout {
+        ButtonRow {
             if showsAnswer {
                 Button { grade(.review) } label: {
                     Label(L.dontKnow, systemImage: "xmark").font(.headline).frame(maxWidth: .infinity)
@@ -303,6 +410,15 @@ struct StudySessionView: View {
         let token = lifetime
         let source = model.studySession?.sourceKey
         if !armed { feedback += 1 }
+        buddyMood = grade == .known ? .happy : .encourage
+        let entry = model.word(id: wordId)
+        let misses = model.progress(for: wordId).reviewCount + (grade == .review ? 1 : 0)
+        buddyRemark = CatQuips.studied(buddyHop, known: grade == .known, word: entry.map { model.face($0).prompt },
+                                       misses: misses, source: catLines)
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            stuck = grade == .review && misses >= 3 ? entry.map { ($0, misses) } : nil
+        }
+        buddyHop += 1
         phase = .leaving
         Speaker.shared.stop()
         withAnimation(reduceMotion ? .easeOut(duration: 0.12) : .easeIn(duration: 0.25), completionCriteria: .removed) {
@@ -315,12 +431,13 @@ struct StudySessionView: View {
             withTransaction(transaction) {
                 phase = .arriving
                 dragOffset = reduceMotion ? 0 : 18
+                cardScale = reduceMotion ? 1 : 0.94
                 cardOpacity = 0
                 revealed = false
                 armed = false
                 model.gradeCurrentCard(grade, expectedWordId: wordId)
             }
-            if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; dragOffset = 0 }
+            if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; cardScale = 1; dragOffset = 0 }
         }
     }
 
@@ -337,6 +454,7 @@ struct StudySessionView: View {
         guard phase == .arriving else { return }
         withAnimation(reduceMotion ? .easeOut(duration: 0.15) : Motion.card, completionCriteria: .logicallyComplete) {
             cardOpacity = 1
+            cardScale = 1
             dragOffset = 0
         } completion: {
             if visible { phase = .idle }
@@ -361,7 +479,7 @@ struct WordAnswer: View {
                         .foregroundStyle(Palette.accent)
                 }
                 Text(face.answer)
-                    .font(.rounded(.title2, weight: .bold))
+                    .font(.display(.title2, weight: .bold))
                 if !face.answerDetail.isEmpty {
                     Text(face.answerDetail)
                         .font(.subheadline)
@@ -373,6 +491,7 @@ struct WordAnswer: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .entrance(0, distance: 8)
             if !face.examplePrimary.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
@@ -381,6 +500,9 @@ struct WordAnswer: View {
                         SpeakButton(text: face.examplePrimary, language: face.speakLanguage)
                     }
                     Text(face.examplePrimary).lineSpacing(4)
+                    if !face.examplePinyin.isEmpty {
+                        Text(face.examplePinyin).font(.footnote).foregroundStyle(.secondary)
+                    }
                     if !face.exampleSecondary.isEmpty {
                         Text(face.exampleSecondary)
                             .font(.subheadline)
@@ -389,6 +511,7 @@ struct WordAnswer: View {
                 }
                 .padding(.top, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .entrance(1, distance: 8)
             }
             if CloudAssistant.shared.offered {
                 Button { aiOpen = true } label: {
@@ -396,11 +519,12 @@ struct WordAnswer: View {
                         .font(.subheadline.weight(.semibold))
                 }
                 .padding(.top, 4)
+                .entrance(2, distance: 8)
                 .accessibilityIdentifier("study-ai")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .sheet(isPresented: $aiOpen) { AIWordSheet(word: word) }
+        .sheet(isPresented: $aiOpen) { AIWordSheet(word: word).compactSheet() }
     }
 }
 
@@ -428,10 +552,11 @@ struct CardStatusChip: View {
 
 struct SessionSummary: View {
     @Environment(AppModel.self) private var model
+    @Environment(AccountModel.self) private var account
+    @State private var signInOpen = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
-    @State private var ringFraction = 0.0
     var session: StudySession
     /// The daily goal was reached during this set.
     var reachedGoal = false
@@ -443,25 +568,47 @@ struct SessionSummary: View {
         let left = max(0, model.progress.dailyTarget - model.progress.studiedToday)
         ScrollView {
           VStack(spacing: 18) {
-            ProgressRing(fraction: reduceMotion ? model.dailyFraction : ringFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
-                Image(systemName: model.goalDone ? "checkmark" : "flame.fill")
-                    .font(.system(size: 40, weight: .bold))
-                    .foregroundStyle(model.goalDone ? Palette.known : Palette.review)
-                    .symbolEffect(.bounce, value: reachedGoal && appeared && !reduceMotion)
+            ProgressRing(fraction: model.dailyFraction, color: model.goalDone ? Palette.known : Palette.accent, lineWidth: 14) {
+                // The companion sits in the ring, cheering when the goal is met.
+                Mascot(mood: reachedGoal || model.goalDone ? .cheer : .happy, size: 78, hop: appeared ? 1 : 0)
+                    .offset(y: 4)
             }
             .frame(width: 130, height: 130)
+            .entrance(0)
             Text(reachedGoal ? L.goalReachedTitle : L.sessionCompleteTitle)
-                .font(.rounded(.title, weight: .bold))
+                .font(.display(.title, weight: .bold))
+                .entrance(1)
             Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
                 .foregroundStyle(.secondary)
+                .entrance(2)
+            SessionVerdict(fallback: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
+                           mood: reachedGoal || model.goalDone ? .happy : .smug, kind: "study",
+                           total: session.knownIds.count + session.reviewIds.count, correct: session.knownIds.count,
+                           missedIds: session.reviewIds)
+                .entrance(3)
+            if account.configured, !account.isPermanent {
+                GuestKeepCard(count: session.knownIds.count + session.reviewIds.count) { signInOpen = true }
+                    .entrance(3)
+                    .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
+            }
+            if !session.reviewIds.isEmpty, !AppRuntime.uiTesting {
+                PlusUpsellCard(feature: .smartAI,
+                               title: L.t("這 \(session.reviewIds.count) 個字，讓小笨貓講給你聽", "Let Silly Cat explain these \(session.reviewIds.count) words"),
+                               detail: L.t("用法、例句、跟哪個字容易搞混，一個一個說清楚，下次就記得。", "Usage, examples and what they get mixed up with, one by one, so they stick."))
+                    .entrance(4)
+            }
             HStack(spacing: 10) {
                 SummaryChip(value: session.knownIds.count, label: L.knowIt, icon: "checkmark", tint: Palette.known)
+                    .entrance(3)
                 SummaryChip(value: session.reviewIds.count, label: L.dontKnow, icon: "arrow.counterclockwise", tint: Palette.review)
+                    .entrance(4)
                 SummaryChip(value: model.progress.streak, label: L.streak, icon: "flame.fill", tint: Palette.review)
+                    .entrance(5)
             }
             .accessibilityElement(children: .contain)
             Text(reachedGoal ? L.quizTodaysWordsHint : left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
                 .font(.subheadline.weight(.semibold))
+                .entrance(6)
             VStack(spacing: 12) {
                 if reachedGoal {
                     Button {
@@ -481,8 +628,7 @@ struct SessionSummary: View {
                 } else {
                     doneButton.prominentAction().accessibilityIdentifier("study-done")
                 }
-                let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
-                layout {
+                ButtonRow {
                     Button(action: again) {
                         Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
                     }
@@ -501,33 +647,34 @@ struct SessionSummary: View {
         .overlay(alignment: .top) {
             if reachedGoal && appeared && !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
         }
-        .onAppear {
-            appeared = true
-            // Fill the ring in front of the learner instead of showing it already full.
-            Task { @MainActor in
-                try? await Task.sleep(for: .milliseconds(150))
-                ringFraction = model.dailyFraction
-            }
-        }
-        .onChange(of: model.dailyFraction) { _, value in ringFraction = value }
+        .onAppear { appeared = true }
         .accessibilityIdentifier("study-summary")
+        // After a first round, a good moment to ask about notifications.
+        .task {
+            try? await Task.sleep(for: .seconds(1.5))
+            await PushRegistration.shared.askOnce(model)
+        }
     }
 }
 
 /// A number with its label, e.g. "12 · Know it", on the end-of-set screen.
 private struct SummaryChip: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var value: Int
     var label: String
     var icon: String
     var tint: Color
+    /// The number rolls up from zero once the chip is on screen.
+    @State private var rolled = false
 
     var body: some View {
+        let shown = rolled || reduceMotion ? value : 0
         VStack(spacing: 4) {
-            Label("\(value)", systemImage: icon)
-                .font(.rounded(.title3, weight: .bold))
+            Label("\(shown)", systemImage: icon)
+                .font(.display(.title3, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(tint)
-                .contentTransition(.numericText())
+                .contentTransition(.numericText(value: Double(shown)))
             Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -538,6 +685,11 @@ private struct SummaryChip: View {
         .padding(.vertical, 12)
         .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityElement(children: .combine)
+        .task {
+            guard !rolled else { return }
+            try? await Task.sleep(for: .milliseconds(450))
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) { rolled = true }
+        }
     }
 }
 
@@ -592,5 +744,32 @@ struct ConfettiBurst: View {
             finished = true
         }
         .accessibilityHidden(true)
+    }
+}
+
+/// After a guest's round: what they just did is not kept unless they sign in.
+private struct GuestKeepCard: View {
+    var count: Int
+    var signIn: () -> Void
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Label {
+                Text(L.t("訪客模式不會保存這 \(count) 個字的進度。用 Apple 登入，現在的進度就會留下來。",
+                         "As a guest, these \(count) words won't be kept. Sign in with Apple and today's progress stays."))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+            } icon: {
+                Image(systemName: "exclamationmark.icloud.fill").foregroundStyle(Palette.review)
+            }
+            Button(action: signIn) {
+                Label(L.t("用 Apple 登入保存", "Sign in with Apple to keep it"), systemImage: "apple.logo")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .accessibilityIdentifier("summary-sign-in")
+        }
+        .card(radius: 18, padding: 14)
     }
 }

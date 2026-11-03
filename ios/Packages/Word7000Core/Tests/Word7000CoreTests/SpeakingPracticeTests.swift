@@ -25,7 +25,10 @@ final class SpeakingPracticeTests: XCTestCase {
             let english = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .english), entry.word)
             let chinese = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .chinese), entry.word)
             XCTAssertEqual(english.question, entry.question)
-            XCTAssertEqual(chinese.question, entry.question)
+            // Learners of Chinese read the question in Chinese, with the English to hand.
+            XCTAssertEqual(chinese.question, try XCTUnwrap(entry.questionZh, entry.word))
+            XCTAssertEqual(chinese.questionGloss, entry.question)
+            XCTAssertNil(english.questionGloss)
             XCTAssertEqual(english.referenceAnswer, entry.answerEn)
             XCTAssertEqual(chinese.referenceAnswer, entry.answerZh)
             XCTAssertEqual(chinese.referenceTranslation, english.referenceAnswer)
@@ -51,6 +54,21 @@ final class SpeakingPracticeTests: XCTestCase {
         let second = QuizBuilder.session(words: candidates, count: 10, seed: "speaking-expanded-second")
         XCTAssertNotEqual(first.map(\.id), second.map(\.id))
         XCTAssertTrue((first + second).contains { (Int($0.id.dropFirst()) ?? 0) > 100 })
+    }
+
+    func testOnePracticeMixesQuestionsAndExamples() {
+        let mixed = SpeakingPractice.mixedSession(from: ParityTests.words, recent: [], count: 10, seed: "mixed")
+        XCTAssertEqual(mixed.count, 10)
+        XCTAssertEqual(Set(mixed.map(\.word.id)).count, 10)
+        XCTAssertEqual(mixed.first?.activity, .questions)
+        XCTAssertEqual(mixed.filter { $0.activity == .questions }.count, 6)
+        XCTAssertTrue(mixed.filter { $0.activity == .questions }.allSatisfy { SpeakingPractice.entry(for: $0.word) != nil })
+        // A bank with no reviewed questions still gets example prompts.
+        let noQuestions = ParityTests.words.filter { SpeakingPractice.entry(for: $0) == nil }.prefix(3)
+        let examplesOnly = SpeakingPractice.mixedSession(from: Array(noQuestions), recent: [], count: 10, seed: "mixed")
+        XCTAssertEqual(examplesOnly.count, 3)
+        XCTAssertTrue(examplesOnly.allSatisfy { $0.activity == .examples })
+        XCTAssertTrue(SpeakingPractice.mixedSession(from: [], recent: [], count: 10).isEmpty)
     }
 
     func testAboutQuestionAndBothLanguagesUseReviewedAnswers() throws {
@@ -137,5 +155,22 @@ final class SpeakingPracticeTests: XCTestCase {
         let decoded = try JSONDecoder().decode(SpeechPreferences.self, from: Data(old.utf8))
         XCTAssertEqual(decoded, SpeechPreferences(englishVoiceID: "voice", speed: .slow))
         XCTAssertNil(decoded.autoSpeak)
+    }
+}
+
+final class TaiwanSpeakingTests: XCTestCase {
+    func testTaiwanMandarinWordsGetTheirOwnChineseQuestion() throws {
+        let question = try XCTUnwrap(SpeakingPractice.taiwanQuestions.values.sorted { $0.id < $1.id }.first)
+        let word = WordEntry(id: question.id, word: "gloss", partOfSpeech: "n.", pronunciation: "", meaningZh: question.word,
+                             example: "", exampleZh: "", group: "Core 6")
+        let card = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .chinese))
+        XCTAssertEqual(card.question, question.questionZh)
+        XCTAssertEqual(card.questionGloss, question.questionEn)
+        XCTAssertEqual(card.keyword, question.word)
+        XCTAssertTrue(card.referenceAnswer.contains(question.word))
+        // A word whose Chinese no longer matches does not borrow the question.
+        var changed = word
+        changed.meaningZh = "別的詞"
+        XCTAssertNil(SpeakingPractice.entry(for: changed).flatMap { $0.id.hasSuffix("-tw") ? $0 : nil })
     }
 }

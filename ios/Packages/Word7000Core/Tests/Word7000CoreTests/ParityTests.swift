@@ -41,6 +41,7 @@ final class ParityTests: XCTestCase {
         let quizSessionLarge: [String]
         let quizOptions: [QuizCase]
         let studyQueue: [String]
+        let adaptiveQueue: [String]
         let libraryState: ProgressState
         let library: [LibraryCase]
         let scans: [ScanCase]
@@ -133,6 +134,11 @@ final class ParityTests: XCTestCase {
         XCTAssertEqual(QuizBuilder.session(words: words, count: 20, seed: "seed-3").map(\.id), f.quizSessionLarge)
         let queue = LearningEngine.buildStudyQueue(words: Array(words.prefix(40)), state: f.history.last!, today: "2026-06-06", limit: 12, seed: "seed-5")
         XCTAssertEqual(queue.map(\.id), f.studyQueue)
+        let knownCore1 = words.prefix(30).reduce(ProgressState.empty) {
+            LearningEngine.markKnown($0, wordId: $1.id, today: "2026-06-01", changedAt: "2026-06-01T08:00:00.000Z")
+        }
+        let adaptive = LearningEngine.buildStudyQueue(words: words, state: knownCore1, today: "2026-06-06", limit: 20, seed: "seed-6")
+        XCTAssertEqual(adaptive.map(\.id), f.adaptiveQueue)
     }
 
     func testQuizOptions() {

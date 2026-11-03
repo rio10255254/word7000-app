@@ -84,6 +84,68 @@ final class LearningScheduleTests: XCTestCase {
         }
     }
 
+    func testWordsStudiedTodayWaitUntilAfterTheNewOnes() {
+        let words = (0..<10).map { word("w\($0)") }
+        var state = ProgressState.empty
+        state = LearningEngine.markReview(state, wordId: "w0", today: "2026-10-20", changedAt: "2026-10-20T08:00:00.000Z")
+        state = LearningEngine.markReview(state, wordId: "w1", today: "2026-10-28", changedAt: "2026-10-28T08:00:00.000Z")
+        let queue = LearningEngine.buildStudyQueue(words: words, state: state, today: "2026-10-28", limit: 4, seed: "q").map(\.id)
+        XCTAssertTrue(queue.contains("w0"))
+        XCTAssertFalse(queue.contains("w1"))
+        let counts = LearningEngine.studyQueueCounts(words: words, state: state, today: "2026-10-28", limit: 4)
+        XCTAssertEqual([counts.fresh, counts.review, counts.total], [3, 1, 4])
+        // When nothing else is left they still come.
+        let onlyThem = LearningEngine.buildStudyQueue(words: Array(words.prefix(2)), state: state, today: "2026-10-28", limit: 4, seed: "q")
+        XCTAssertEqual(Set(onlyThem.map(\.id)), ["w0", "w1"])
+    }
+
+    func testAMissedCardComesBackOnceAndNeverStraightAway() {
+        var session = StudySession(cardIds: ["a", "b", "c"], sourceKey: "k")
+        session = session.grading("a", as: .review)
+        session = session.grading("b", as: .known)
+        session = session.grading("c", as: .known)
+        session = session.grading("a", as: .review)
+        XCTAssertTrue(session.isComplete)
+        XCTAssertEqual(session.cardIds, ["a", "b", "c", "a"])
+
+        var last = StudySession(cardIds: ["a", "b"], sourceKey: "k")
+        last = last.grading("a", as: .known)
+        last = last.grading("b", as: .review)
+        XCTAssertTrue(last.isComplete)
+        XCTAssertEqual(last.reviewIds, ["b"])
+    }
+
+    func testReviewsLeaveRoomForNewWordsAndRetriesAreCapped() {
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 20, fresh: 10), 4)
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 15, due: 20, fresh: 10), 6)
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 2, fresh: 10), 8)
+        XCTAssertEqual(LearningEngine.newWordSlots(size: 10, due: 20, fresh: 1), 1)
+        // Ability in half-levels: a level or two above it is drawn most.
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 8, ability: 12), 10)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 6, ability: 12), 6)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 1, ability: 12), 1)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: 14, ability: 12), 1)
+        XCTAssertEqual(LearningEngine.newWordLevelWeight(level: nil, ability: 12), 6)
+        XCTAssertEqual(LearningEngine.estimateAbility([]), 8)
+        XCTAssertEqual(LearningEngine.estimateAbility([(1, 5, 5), (14, 0, 0)]), 8)
+        let middling = (1...14).map { (level: $0, seen: 10, knew: $0 <= 6 ? 10 : $0 <= 8 ? 5 : 0) }
+        XCTAssertEqual(LearningEngine.estimateAbility(middling), 15)
+        XCTAssertEqual(LearningEngine.favouredLevels(ability: 12), 7...8)
+        XCTAssertEqual(LearningEngine.favouredLevels(ability: 15), 8...9)
+        XCTAssertEqual(LearningEngine.favouredLevels(ability: 28), 14...14)
+        var custom = word("b")
+        custom.group = "Custom"
+        let listed = [word("a"), custom]
+        let met = LearningEngine.markKnown(.empty, wordId: "a", today: "2026-10-01", changedAt: "2026-10-01T08:00:00.000Z")
+        XCTAssertEqual(LearningEngine.abilityEstimate(words: listed, state: met).seen, 1)
+        XCTAssertEqual(LearningEngine.coreLevel("Core 12"), 12)
+        XCTAssertNil(LearningEngine.coreLevel("Custom"))
+
+        var session = StudySession(cardIds: ["a", "b", "c", "d", "e", "f", "g", "h"], sourceKey: "k")
+        while let id = session.currentCardId { session = session.grading(id, as: .review) }
+        XCTAssertEqual(session.cardIds.count, 10)
+    }
+
     // MARK: Merging the daily count
 
     func testMergingTheSameDayCountsEveryWordStudiedOnEitherDevice() {

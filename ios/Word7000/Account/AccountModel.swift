@@ -37,9 +37,11 @@ final class AccountModel {
         if let name = session?.user.displayName, !name.isEmpty, !name.contains("@") { return name }
         return L.t("我的學習帳號", "My learning account")
     }
-    var cloudSyncEnabled: Bool { plus?.decide(.sync) == .allowed }
+    /// Progress syncs for anyone signed in with Apple; a guest's stays on
+    /// this iPhone.
+    var cloudSyncEnabled: Bool { isPermanent }
 
-    /// Uploading to the cloud is a Plus feature after the trial.
+    /// Told who is signed in, for the trial and for tying purchases to the account.
     @ObservationIgnored weak var plus: PlusModel?
     @ObservationIgnored var beforeSignOut: (@MainActor (String, String) async -> Bool)?
     private let client: SupabaseClient?
@@ -84,6 +86,9 @@ final class AccountModel {
         status = .loading
         do {
             var restored = storedSession() ?? legacySession()
+            // Plus and the trial follow the saved account straight away, not
+            // only once the network has answered.
+            if let restored { syncTrialStart(session: restored) }
             if let current = restored, current.needsRefresh() {
                 do {
                     restored = try await client.refresh(refreshToken: current.refreshToken)
@@ -143,7 +148,7 @@ final class AccountModel {
     private func activate(_ newSession: AuthSession, fallbackEmail: String? = nil) async {
         guard let client else { return }
         if let owner = app.settings.localOwnerId, owner != newSession.user.id {
-            guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: owner) else {
+            guard Outbox(progress: app.syncedProgress, customSets: app.customSets).save(userId: owner) else {
                 status = .error(A.saveFailed)
                 message = A.saveFailed
                 return
@@ -161,7 +166,7 @@ final class AccountModel {
         let cloud = try? await client.loadProfile(session: activeSession)
         guard generation == identityGeneration else { return }
 
-        let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.progress : nil, outbox?.progress])
+        let progress = LearningEngine.merge([cloud?.progress, carryLocal ? app.syncedProgress : nil, outbox?.progress])
         let sets = CustomSetState.merge([cloud?.customSets, carryLocal ? app.customSets : nil, outbox?.customSets])
         app.replaceData(progress: progress, customSets: sets, preserveSession: carryLocal)
         cloudVersion = cloud?.version
@@ -176,18 +181,12 @@ final class AccountModel {
         heartbeat()
     }
 
-    /// The trial start is kept in the account as well, so a new iPhone or a
-    /// reinstall continues the same trial instead of starting a new one.
+    /// Tells Plus and the app who is signed in: Plus is tied to the account,
+    /// and a guest's progress is not saved.
     private func syncTrialStart(session: AuthSession) {
-        guard let client, let plus else { return }
-        if case let .number(seconds)? = session.user.userMetadata?["plus_trial_started_at"] {
-            plus.mergeAccountTrialStart(Date(timeIntervalSince1970: seconds))
-        }
-        let start = plus.trialStartedAt.timeIntervalSince1970
-        if case let .number(stored)? = session.user.userMetadata?["plus_trial_started_at"], stored <= start { return }
-        Task {
-            try? await client.updateUserMetadata(["plus_trial_started_at": .number(start)], session: session)
-        }
+        let permanent = !session.user.anonymous
+        app.keepsLearningRecords = permanent
+        plus?.setAccount(id: permanent ? session.user.id : nil)
     }
 
     // MARK: Background sync
@@ -211,10 +210,10 @@ final class AccountModel {
     /// delays (3 s … 5 min).
     func flush(pullingCloud: Bool = false) async {
         guard let client, let current = session, !flushing, dirty.any || pullingCloud else { return }
-        if dirty.any {
+        if dirty.any, isPermanent {
             // Written in the background: this runs after every few graded cards,
             // and encoding the whole history on the main thread stalls the cards.
-            Outbox(progress: app.progress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
+            Outbox(progress: app.syncedProgress, customSets: app.customSets).saveInBackground(userId: current.user.id) { [weak self] saved in
                 guard !saved else { return }
                 Task { @MainActor in
                     self?.status = .error(A.saveFailed)
@@ -222,9 +221,9 @@ final class AccountModel {
                 }
             }
         }
-        if let plus, plus.decide(.sync) != .allowed {
+        if !isPermanent {
             guard dirty.any else { return }
-            // Local data is untouched; the changes wait and go up after subscribing.
+            // A guest's progress is not kept anywhere; signing in keeps it.
             status = .ready
             message = P.syncLocked
             return
@@ -246,7 +245,7 @@ final class AccountModel {
             if try await client.profileVersion(session: valid) != cloudVersion {
                 let cloud = try await client.loadProfile(session: valid)
                 guard generation == identityGeneration else { return }
-                let merged = CloudSync.merge(localProgress: app.progress, localSets: app.customSets, cloud: cloud, today: app.today)
+                let merged = CloudSync.merge(localProgress: app.syncedProgress, localSets: app.customSets, cloud: cloud, today: app.today)
                 if merged.changedLocal {
                     app.replaceData(progress: merged.progress, customSets: merged.customSets, preserveSession: true)
                 }
@@ -255,7 +254,7 @@ final class AccountModel {
                 if merged.uploadCustomSets { sending.customSets = true }
             }
             if sending.any {
-                let version = try await client.saveProfile(progress: sending.progress ? app.progress : nil,
+                let version = try await client.saveProfile(progress: sending.progress ? app.syncedProgress : nil,
                                                            customSets: sending.customSets ? app.customSets : nil, session: valid)
                 guard generation == identityGeneration else { return }
                 cloudVersion = version
@@ -322,8 +321,43 @@ final class AccountModel {
         supportsCustomReminderTime = supported
     }
 
-    /// Whether the online AI service can be reached with a session.
-    var canUseCloudAI: Bool { client != nil && session != nil }
+    /// Ties this iPhone's push token to whoever is signed in (a guest too).
+    func registerPushDevice(token: String, audience: String, language: String) async -> Bool {
+        guard let client, let current = session else { return false }
+        do {
+            try await client.registerPushDevice(token: token, audience: audience, language: language,
+                                                version: UpdateGate.version, build: UpdateGate.build,
+                                                session: try await validSession(client: client, current))
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    /// Reports which app version this account runs; quietly skipped offline.
+    func reportAppVersion() async {
+        guard let client, let current = session, !AppRuntime.uiTesting else { return }
+        guard let valid = try? await validSession(client: client, current) else { return }
+        try? await client.reportAppVersion(UpdateGate.version, build: UpdateGate.build,
+                                           os: UIDevice.current.systemVersion, language: L.zh ? "zh" : "en", session: valid)
+    }
+
+    /// The developer's live messages; none without an account service or a
+    /// connection.
+    /// nil when the check could not be made; .some(nil) when no rule is live.
+    func fetchUpdateRequirement() async -> UpdateRequirement?? {
+        guard let client else { return nil }
+        do { return .some(try await client.updateRequirement(session: session)) } catch { return nil }
+    }
+
+    func fetchAnnouncements() async -> [Announcement] {
+        guard let client else { return [] }
+        return (try? await client.announcements(session: session)) ?? []
+    }
+
+    /// The online AI is for learners signed in with Apple; guests have none
+    /// (the server refuses them too).
+    var canUseCloudAI: Bool { client != nil && isPermanent }
 
     /// Runs one online AI task with this learner's session; guests count too.
     func runAI<Value: Decodable>(_ kind: CloudAI.Kind, input: [String: JSONValue], entitlement: String?,
@@ -388,76 +422,13 @@ final class AccountModel {
             if let email, !email.isEmpty { metadata["email"] = .string(email) }
             if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
             await activate(newSession, fallbackEmail: email)
+            // So that deleting the account later also revokes this app's
+            // access to the Apple ID. Signing in never waits on or fails for it.
+            if let authorizationCode, !authorizationCode.isEmpty {
+                _ = try? await client.storeAppleAuthorizationCode(authorizationCode, session: newSession)
+            }
         } catch {
             fail(error, fallback: A.appleFailed)
-        }
-    }
-
-    /// Google sign-in through the web. `authenticate` opens the page and
-    /// returns the redirect back into the app.
-    func signInWithGoogle(authenticate: (URL) async throws -> URL) async {
-        guard let client else { return }
-        busy = true
-        defer { busy = false }
-        message = A.signingIn
-        do {
-            var linking = false
-            var url = client.oauthURL(provider: "google", redirectTo: Self.redirectURL)
-            if let current = session, current.user.anonymous, !(app.settings.permanentAccountUsed ?? false) {
-                if let linkURL = try? await client.linkIdentityURL(provider: "google", redirectTo: Self.redirectURL, session: try await validSession(client: client, current)) {
-                    url = linkURL
-                    linking = true
-                }
-            }
-            var callback = AuthCallback(url: try await authenticate(url))
-            if linking, callback.isIdentityAlreadyLinked {
-                linking = false
-                callback = AuthCallback(url: try await authenticate(client.oauthURL(provider: "google", redirectTo: Self.redirectURL)))
-            }
-            if let error = callback.error { throw SupabaseError(status: 0, code: callback.errorCode, message: error) }
-            var newSession: AuthSession
-            if let access = callback.accessToken, let refresh = callback.refreshToken {
-                let user = try await client.user(session: AuthSession(accessToken: access, refreshToken: refresh, expiresAt: nil, user: AuthUser(id: "")))
-                newSession = AuthSession(accessToken: access, refreshToken: refresh, expiresAt: Date().timeIntervalSince1970 + 3000, user: user)
-            } else if linking, let current = session {
-                newSession = try await client.refresh(refreshToken: current.refreshToken)
-            } else {
-                throw SupabaseError(status: 0, code: nil, message: A.googleFailed)
-            }
-            if newSession.user.anonymous { throw SupabaseError(status: 0, code: nil, message: A.googleFailed) }
-            await activate(newSession)
-        } catch {
-            fail(error, fallback: A.googleFailed)
-        }
-    }
-
-    func signIn(email: String, password: String) async {
-        guard let client else { return }
-        guard !email.isEmpty, !password.isEmpty else { message = A.enterEmailPassword; return }
-        busy = true
-        defer { busy = false }
-        message = A.signingIn
-        do {
-            await activate(try await client.signIn(email: email, password: password))
-        } catch {
-            fail(error, fallback: A.signInFailed)
-        }
-    }
-
-    func signUp(email: String, password: String) async {
-        guard let client else { return }
-        guard !email.isEmpty, password.count >= 6 else { message = A.passwordTooShort; return }
-        busy = true
-        defer { busy = false }
-        message = A.creatingAccount
-        do {
-            if let newSession = try await client.signUp(email: email, password: password) {
-                await activate(newSession)
-            } else {
-                message = A.confirmEmail
-            }
-        } catch {
-            fail(error, fallback: A.signInFailed)
         }
     }
 
@@ -477,7 +448,7 @@ final class AccountModel {
         guard let client, let current = session, !busy else { return }
         busy = true
         defer { busy = false }
-        guard Outbox(progress: app.progress, customSets: app.customSets).save(userId: current.user.id) else {
+        guard Outbox(progress: app.syncedProgress, customSets: app.customSets).save(userId: current.user.id) else {
             status = .error(A.saveFailed)
             message = A.saveFailed
             return
@@ -564,20 +535,15 @@ struct SyncDirty: Equatable {
 enum A {
     static var localOnly: String { L.t("進度保存在這支 iPhone", "Progress is saved on this iPhone") }
     static var preparing: String { L.t("正在準備…", "Getting ready…") }
-    static var guestSaved: String { L.t("進度已自動備份", "Progress backed up automatically") }
+    static var guestSaved: String { L.t("訪客：進度不會保存，登入就能保存", "Guest: progress isn't kept; sign in to keep it") }
     static var signedIn: String { L.t("已登入，正在確認備份", "Signed in; checking backup") }
     static var saveFailed: String { L.t("目前無法儲存，請確認手機空間後重試。", "Unable to save. Check your iPhone storage and try again.") }
     static var synced: String { L.t("已同步", "Synced") }
     static var savedLocally: String { L.t("進度已存在手機，稍後自動同步", "Saved on this iPhone; will sync shortly") }
     static var offline: String { L.t("目前離線，進度先存在手機", "Offline; progress is saved on this iPhone") }
     static var signingIn: String { L.t("登入中…", "Signing in…") }
-    static var creatingAccount: String { L.t("建立帳號中…", "Creating account…") }
-    static var confirmEmail: String { L.t("請到信箱確認後再登入", "Check your email to confirm, then sign in") }
-    static var enterEmailPassword: String { L.t("請輸入 Email 和密碼", "Enter your email and password") }
-    static var passwordTooShort: String { L.t("密碼至少 6 個字元", "Password must be at least 6 characters") }
     static var signInFailed: String { L.t("登入失敗，請再試一次", "Sign-in failed. Please try again.") }
     static var appleFailed: String { L.t("Apple 登入失敗，請再試一次", "Sign in with Apple failed. Please try again.") }
-    static var googleFailed: String { L.t("Google 登入沒有完成", "Google sign-in did not finish") }
     static var cancelled: String { L.t("已取消登入", "Sign-in cancelled") }
     static var signedOut: String { L.t("已登出", "Signed out") }
     static var signedOutReminderUnconfirmed: String { L.t("已登出，但尚未確認停用這支手機的舊帳號提醒。", "Signed out, but reminders for the previous account on this iPhone could not be confirmed off.") }

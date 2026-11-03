@@ -15,8 +15,13 @@ public struct ConversationPromptCard: Codable, Equatable, Hashable, Sendable {
     public var questionSupport: String
     public var referenceAnswer: String
     public var referenceTranslation: String
+    /// The question in the learner's own language, when it is asked in the
+    /// language they are learning (learners of Chinese read it in Chinese).
+    public var questionGloss: String?
 
-    public init(keyword: String, keywordPronunciation: String, question: String, questionSupport: String, referenceAnswer: String, referenceTranslation: String) {
+    public init(keyword: String, keywordPronunciation: String, question: String, questionSupport: String, referenceAnswer: String, referenceTranslation: String,
+                questionGloss: String? = nil) {
+        self.questionGloss = questionGloss
         self.keyword = keyword
         self.keywordPronunciation = keywordPronunciation
         self.question = question

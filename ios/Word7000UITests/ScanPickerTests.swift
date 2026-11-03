@@ -106,6 +106,29 @@ final class ScanPickerTests: XCTestCase {
         snapshot(app, name: "scan-explicit-spelling-choice")
     }
 
+    /// A line with only the English word, or only the Chinese meaning, gets
+    /// the rest from the word list, offered under the notepad; Fill all writes
+    /// them out, and the list reads like a full one.
+    func testNotepadFillsInHalfWrittenLines() {
+        let app = openScanner(pastedText: "abandon\n好處")
+        let suggestions = app.buttons.matching(identifier: "scan-note-suggestion")
+        XCTAssertTrue(suggestions.firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertEqual(suggestions.count, 2)
+        snapshot(app, name: "scan-notepad-suggestions")
+        let fillAll = app.buttons["scan-note-fill-all"]
+        fillAll.scrollIntoView(in: app, swipes: 4)
+        fillAll.tap()
+        let pad = app.descendants(matching: .any)["scan-pasted-text"]
+        let filled = NSPredicate(format: "value CONTAINS 'abandon vt./n. 遺棄'")
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: filled, object: pad)], timeout: 5), .completed,
+                       String(describing: pad.value))
+        XCTAssertFalse(app.buttons["scan-note-suggestion"].exists)
+        readPasted(app)
+        XCTAssertTrue(app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-' AND value == 'abandon'")).firstMatch.exists)
+        XCTAssertTrue(app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-' AND value == 'benefit'")).firstMatch.exists
+                      || app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).count == 2)
+    }
+
     func testRepeatedScanKeepsDifferentMeaningsAndSkipsExactDuplicates() {
         var app = openScanner(pastedText: "bank n. 銀行")
         let bankName = savePastedBank(app)
@@ -131,32 +154,28 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["study-position"].label.hasSuffix("/ 4"))
     }
 
+    /// A scanned word with no reviewed conversation question is still
+    /// practised, by building on its example: speaking is one mixed practice.
     func testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord() {
         let app = openScanner(pastedText: "objectively adv. 客觀地")
         _ = savePastedBank(app)
         app.buttons["scan-close"].tap()
         app.tabBars.buttons.element(boundBy: 0).tap()
         app.buttons["today-speaking"].tap()
-        let modes = app.segmentedControls["speaking-activity"]
-        XCTAssertTrue(modes.waitForExistence(timeout: 10))
-        XCTAssertTrue(modes.buttons.element(boundBy: 0).isSelected)
-        XCTAssertTrue(app.buttons["speaking-use-core"].waitForExistence(timeout: 5), app.debugDescription)
-        snapshot(app, name: "speaking-empty-bank-choices")
-        modes.buttons.element(boundBy: 1).tap()
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
+        XCTAssertFalse(app.buttons["speaking-use-core"].exists)
+        snapshot(app, name: "speaking-scanned-word-example")
+        // The word list and its size live under the scope button, not above the question.
+        app.buttons["speaking-filters"].tap()
+        let count = app.staticTexts["speaking-available-count"]
+        XCTAssertTrue(count.waitForExistence(timeout: 5))
+        XCTAssertEqual(count.label, "可練習 1 個單字")
+        app.buttons["speaking-filters-done"].tap()
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
-        modes.buttons.element(boundBy: 0).tap()
-        XCTAssertTrue(app.buttons["speaking-use-core"].waitForExistence(timeout: 5))
-        app.buttons["speaking-use-core"].tap()
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
-        XCTAssertEqual(app.staticTexts["speaking-available-count"].label, "600 題")
-        app.buttons["speaking-show-reference"].tap()
-        XCTAssertTrue(app.staticTexts["speaking-reference-answer"].waitForExistence(timeout: 5))
-        app.buttons["speaking-complete-after-reference"].tap()
-        XCTAssertTrue(app.staticTexts["speaking-position"].label.hasPrefix("2 /"))
-        modes.buttons.element(boundBy: 1).tap()
-        app.buttons["speaking-close"].tap()
-        app.buttons["today-speaking"].tap()
-        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons.element(boundBy: 1).isSelected)
+        // A scanned word may have no example sentence; it can still be practised.
+        XCTAssertTrue(app.buttons["coach-record"].exists)
+        XCTAssertTrue(app.buttons["speaking-next"].waitForExistence(timeout: 5))
         snapshot(app, name: "speaking-visible-practice-types")
     }
 
@@ -210,6 +229,8 @@ final class ScanPickerTests: XCTestCase {
         let destination = app.buttons["scan-destination"]
         destination.scrollIntoView(in: app, swipes: 5)
         destination.tap()
+        // A menu can miss the first tap while the screen is still settling.
+        if !app.buttons["Lesson"].waitForExistence(timeout: 3) { destination.tap() }
         XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5), app.debugDescription)
         app.buttons["Lesson"].tap()
         let save = app.buttons["scan-save"]
@@ -253,15 +274,24 @@ final class ScanPickerTests: XCTestCase {
     /// The system photo picker animates away on its own schedule, and on a slow
     /// simulator the scanner underneath is not tappable until it has gone.
     /// A Cancel tap made while the picker is still loading can be dropped too,
-    /// so tap it again while it is still there. Mid-animation, Cancel can have
-    /// an empty frame, and reading `isHittable` then fails the test outright, so
-    /// it is read only once Cancel has a frame. (A `hittable` predicate did not
-    /// come true for the picker's out-of-process Cancel on iOS 18.)
+    /// so tap it again while it is still there. Mid-animation, reading
+    /// `isHittable` on the picker's out-of-process Cancel can fail the test
+    /// outright ("Activation point invalid", iOS 27), even with a frame, and a
+    /// `hittable` predicate never came true for it on iOS 18. Tapping through
+    /// the element's own coordinate re-reads its frame at tap time, which is
+    /// infinite once the picker is leaving. So Cancel's centre is read once and
+    /// tapped as a point on the screen.
     private func dismissPhotoPicker(in app: XCUIApplication) {
         let choose = app.buttons["scan-choose-photo"]
         for _ in 0..<3 {
             let cancel = cancelButton(in: app)
-            if cancel.exists, !cancel.frame.isEmpty, cancel.isHittable { cancel.tap() }
+            if cancel.exists {
+                let frame = cancel.frame
+                let centre = CGPoint(x: frame.midX, y: frame.midY)
+                if !frame.isEmpty, centre.x.isFinite, centre.y.isFinite, app.frame.contains(centre) {
+                    app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: centre.x, dy: centre.y)).tap()
+                }
+            }
             let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: choose)
             if XCTWaiter.wait(for: [ready], timeout: 8) == .completed { return }
         }

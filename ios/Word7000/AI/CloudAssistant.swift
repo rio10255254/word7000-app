@@ -26,7 +26,8 @@ final class CloudAssistant {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { return false }
         #endif
-        return account?.canUseCloudAI == true
+        // The online AI is a Plus feature: signed in with Apple and subscribed.
+        return account?.canUseCloudAI == true && plus?.subscribed == true
     }
 
     /// The online AI could be used once the learner agrees.
@@ -93,7 +94,7 @@ final class CloudAssistant {
 
     var planLabel: String {
         switch tier {
-        case .plus: L.t("Plus・深度思考", "Plus · Deeper reasoning")
+        case .plus: L.t("Premium・深度思考", "Premium · Deeper reasoning")
         case .trial: L.t("試用・深度思考", "Trial · Deeper reasoning")
         case .free: L.t("免費版・快速回答", "Free · Quick answers")
         }
@@ -109,10 +110,10 @@ final class CloudAssistant {
     var showsUpgrade: Bool { offered && tierKnown && tier == .free }
 }
 
-/// Must match AI_FREE_LIMIT / AI_PLUS_LIMIT on the server (supabase/functions/ai).
+/// Daily online AI answers for Plus (the server's AI_PLUS_LIMIT). Only
+/// subscribers have the online AI.
 enum PlusAI {
-    static let freeDaily = 20
-    static let plusDaily = 100
+    static let plusDaily = 60
 }
 
 extension L {

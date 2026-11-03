@@ -24,6 +24,20 @@ final class SpeechTests: XCTestCase {
         XCTAssertNil(SpeechVoiceSelection.preferred([], language: "en-US", selectedID: "us-basic", systemDefaultID: nil))
     }
 
+    func testPrefersANaturalVoiceAndNeverPicksARoboticOneByItself() {
+        let compact = [
+            SpeechVoiceOption(id: "com.apple.eloquence.en-US.Eddy", name: "Eddy", language: "en-US", quality: 1),
+            SpeechVoiceOption(id: "com.apple.voice.compact.en-US.Fred", name: "Fred", language: "en-US", quality: 1),
+            SpeechVoiceOption(id: "com.apple.voice.compact.en-US.Samantha", name: "Samantha", language: "en-US", quality: 1),
+        ]
+        XCTAssertEqual(SpeechVoiceSelection.preferred(compact, language: "en-US", selectedID: nil, systemDefaultID: nil)?.name, "Samantha")
+        XCTAssertEqual(SpeechVoiceSelection.preferred(compact, language: "en-US", selectedID: "com.apple.eloquence.en-US.Eddy", systemDefaultID: nil)?.name, "Eddy")
+        XCTAssertTrue(SpeechVoiceSelection.canSoundBetter(compact, language: "en-US", enhancedQuality: 2))
+        let withAva = compact + [SpeechVoiceOption(id: "com.apple.voice.premium.en-US.Ava", name: "Ava (Premium)", language: "en-US", quality: 3)]
+        XCTAssertEqual(SpeechVoiceSelection.preferred(withAva, language: "en-US", selectedID: nil, systemDefaultID: nil)?.name, "Ava (Premium)")
+        XCTAssertFalse(SpeechVoiceSelection.canSoundBetter(withAva, language: "en-US", enhancedQuality: 2))
+    }
+
     func testDoesNotSubstituteCantoneseForMandarin() {
         let unavailableTaiwan = voices.filter { $0.id != "tw-basic" }
         XCTAssertEqual(SpeechVoiceSelection.preferred(unavailableTaiwan, language: "zh-TW", selectedID: "hk-premium", systemDefaultID: nil)?.id, "cn-premium")

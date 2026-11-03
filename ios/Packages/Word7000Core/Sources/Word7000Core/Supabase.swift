@@ -277,6 +277,39 @@ public struct SupabaseClient: Sendable {
         }
     }
 
+    /// Registers this iPhone's push token for the signed-in learner (see the
+    /// register_push_device function).
+    public func registerPushDevice(token: String, audience: String, language: String,
+                                   version: String, build: Int?, session: AuthSession) async throws {
+        _ = try await request("POST", "rest/v1/rpc/register_push_device", body: .object([
+            "p_token": .string(token), "p_audience": .string(audience), "p_language": .string(language),
+            "p_version": .string(version), "p_build": build.map { .number(Double($0)) } ?? .null,
+        ]), session: session)
+    }
+
+    /// Tells the developer which app version this account runs (one row per
+    /// account, overwritten), so old versions can be counted and reached.
+    public func reportAppVersion(_ version: String, build: Int?, os: String, language: String, session: AuthSession) async throws {
+        _ = try await request("POST", "rest/v1/rpc/report_app_version", body: .object([
+            "p_version": .string(version), "p_build": build.map { .number(Double($0)) } ?? .null,
+            "p_os": .string(os), "p_language": .string(language),
+        ]), session: session)
+    }
+
+    /// The developer's live messages to everyone, newest first.
+    public func announcements(session: AuthSession?) async throws -> [Announcement] {
+        let data = try await request("GET", "rest/v1/announcements",
+                                     query: ["select": "*", "order": "starts_at.desc", "limit": "5"], session: session)
+        return (try? JSONDecoder().decode([Announcement].self, from: data)) ?? []
+    }
+
+    /// The newest live requirement for the oldest app version allowed to run.
+    public func updateRequirement(session: AuthSession?) async throws -> UpdateRequirement? {
+        let data = try await request("GET", "rest/v1/update_requirements",
+                                     query: ["select": "*", "order": "created_at.desc", "limit": "1"], session: session)
+        return (try? JSONDecoder().decode([UpdateRequirement].self, from: data))?.first
+    }
+
     public func loadProfile(session: AuthSession) async throws -> Profile {
         let data = try await request("GET", "rest/v1/profiles", query: ["id": "eq.\(session.user.id)", "select": "progress,custom_sets,updated_at"], session: session)
         let rows = (try? JSONDecoder().decode([[String: JSONValue]].self, from: data)) ?? []
@@ -315,6 +348,17 @@ public struct SupabaseClient: Sendable {
         let row: [String: JSONValue] = ["user_id": .string(session.user.id), "activity_date": .string(date), "last_seen_at": .string(DayMath.timestamp(now))]
         _ = try await request("POST", "rest/v1/daily_active_users", query: ["on_conflict": "user_id,activity_date"], body: .array([.object(row)]), session: session,
                               headers: ["Prefer": "resolution=merge-duplicates,return=minimal"])
+    }
+
+    /// Hands the one-time authorization code from a Sign in with Apple to
+    /// the backend, which trades it with Apple for a refresh token and keeps
+    /// it out of the app's reach, so deleting the account can revoke the
+    /// app's access to the Apple ID (App Review 5.1.1(v)). True when kept.
+    @discardableResult
+    public func storeAppleAuthorizationCode(_ code: String, session: AuthSession) async throws -> Bool {
+        let data = try await request("POST", "functions/v1/apple-token", body: .object(["code": .string(code)]), session: session)
+        let object = try? JSONDecoder().decode([String: JSONValue].self, from: data)
+        return object?["stored"] == .bool(true)
     }
 
     public func deleteAccount(session: AuthSession) async throws {
@@ -466,5 +510,86 @@ extension SupabaseClient {
         if let date = formatter.date(from: text) { return date }
         formatter.formatOptions = [.withInternetDateTime]
         return formatter.date(from: text)
+    }
+}
+
+/// A message from the developer, shown once in the app.
+public struct Announcement: Codable, Equatable, Identifiable, Sendable {
+    public var id: String
+    public var audience: String
+    public var titleZh: String
+    public var bodyZh: String
+    public var titleEn: String
+    public var bodyEn: String
+    public var link: String?
+    public var linkLabelZh: String
+    public var linkLabelEn: String
+    /// Only versions older than this see it (nil: everyone).
+    public var belowVersion: String?
+    public var belowBuild: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case id, audience, link
+        case titleZh = "title_zh", bodyZh = "body_zh", titleEn = "title_en", bodyEn = "body_en"
+        case linkLabelZh = "link_label_zh", linkLabelEn = "link_label_en"
+        case belowVersion = "below_version", belowBuild = "below_build"
+    }
+
+    /// Whether an app of this version and build is old enough to be meant.
+    public func shows(toVersion version: String, build: Int?) -> Bool {
+        guard let belowVersion else { return true }
+        return UpdateRequirement(minVersion: belowVersion, minBuild: belowBuild).blocks(version: version, build: build)
+    }
+
+    public init(id: String, audience: String = "all", titleZh: String = "", bodyZh: String = "", titleEn: String = "",
+                bodyEn: String = "", link: String? = nil, linkLabelZh: String = "", linkLabelEn: String = "") {
+        self.id = id; self.audience = audience
+        self.titleZh = titleZh; self.bodyZh = bodyZh; self.titleEn = titleEn; self.bodyEn = bodyEn
+        self.link = link; self.linkLabelZh = linkLabelZh; self.linkLabelEn = linkLabelEn
+    }
+
+    /// Whether this learner is in the audience: a guest, signed in without
+    /// Plus, or with Plus.
+    public func reaches(signedIn: Bool, plus: Bool) -> Bool {
+        switch audience {
+        case "guest": return !signedIn
+        case "free": return signedIn && !plus
+        case "plus": return plus
+        default: return true
+        }
+    }
+}
+
+/// The oldest app version still allowed to run.
+public struct UpdateRequirement: Codable, Equatable, Sendable {
+    public var minVersion: String
+    public var minBuild: Int?
+    public var messageZh: String
+    public var messageEn: String
+
+    enum CodingKeys: String, CodingKey {
+        case minVersion = "min_version", minBuild = "min_build", messageZh = "message_zh", messageEn = "message_en"
+    }
+
+    public init(minVersion: String, minBuild: Int? = nil, messageZh: String = "", messageEn: String = "") {
+        self.minVersion = minVersion; self.minBuild = minBuild; self.messageZh = messageZh; self.messageEn = messageEn
+    }
+
+    /// Whether an app of this version and build must update first: an older
+    /// version, or the same version below `minBuild`.
+    public func blocks(version: String, build: Int?) -> Bool {
+        let order = Self.compare(version, minVersion)
+        if order != .orderedSame { return order == .orderedAscending }
+        guard let minBuild, let build else { return false }
+        return build < minBuild
+    }
+
+    static func compare(_ a: String, _ b: String) -> ComparisonResult {
+        let left = a.split(separator: ".").map { Int($0) ?? 0 }, right = b.split(separator: ".").map { Int($0) ?? 0 }
+        for index in 0..<max(left.count, right.count) {
+            let x = index < left.count ? left[index] : 0, y = index < right.count ? right[index] : 0
+            if x != y { return x < y ? .orderedAscending : .orderedDescending }
+        }
+        return .orderedSame
     }
 }

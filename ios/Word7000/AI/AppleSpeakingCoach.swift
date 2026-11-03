@@ -203,13 +203,14 @@ final class AppleSpeakingCoach {
             didFailFixture = true
             throw SpeakingCoach.Failure.generationFailed
         }
-        let delay: Duration = fixture == .slow ? .seconds(4) : (fixture == .timeout ? .seconds(2) : .milliseconds(150))
+        let delay: Duration = fixture == .slow ? .seconds(10) : (fixture == .timeout ? .seconds(2) : .milliseconds(150))
         try await Task.sleep(for: delay)
         try Task.checkCancellation()
         return try SpeakingCoach.Feedback(
             rewrite: request.mode == .english ? "I enjoy learning something new with my friends." : "我喜歡和朋友一起學習新事物。",
             tip: request.mode == .english ? "已收到：\(request.answer.prefix(200))" : "Received: \(request.answer.prefix(200))",
-            followUp: request.mode == .english ? "What would you like to try next?" : "你接下來想嘗試什麼？"
+            followUp: request.mode == .english ? "What would you like to try next?" : "你接下來想嘗試什麼？",
+            followUpTranslation: request.mode == .english ? "你接下來想嘗試什麼？" : "What would you like to try next?"
         ).validated()
     }
     #endif
@@ -232,6 +233,8 @@ private struct EnglishPracticeReply {
     var tip: String
     @Guide(description: "One brief related follow-up question, in English.")
     var followUp: String
+    @Guide(description: "The follow-up question translated into Traditional Chinese as used in Taiwan, plain and faithful.")
+    var followUpTranslation: String
     @Guide(description: "Zero to two clear errors, not stylistic preferences. Empty if the answer is correct or you are uncertain.")
     var corrections: [EnglishCorrection]
 }
@@ -256,6 +259,8 @@ private struct ChinesePracticeReply {
     var tip: String
     @Guide(description: "One brief related follow-up question, in Traditional Chinese as used in Taiwan.")
     var followUp: String
+    @Guide(description: "The follow-up question translated into English, plain and faithful, so the learner understands it.")
+    var followUpTranslation: String
     @Guide(description: "Zero to two clear errors, not stylistic preferences. Empty if the answer is correct or you are uncertain.")
     var corrections: [ChineseCorrection]
 }
@@ -274,7 +279,7 @@ private struct ChineseCorrection {
 @available(iOS 26.0, *)
 extension EnglishPracticeReply: CoachReply {
     var feedback: SpeakingCoach.Feedback {
-        SpeakingCoach.Feedback(rewrite: rewrite, tip: tip, followUp: followUp, corrections: corrections.map {
+        SpeakingCoach.Feedback(rewrite: rewrite, tip: tip, followUp: followUp, followUpTranslation: followUpTranslation, corrections: corrections.map {
             .init(original: $0.original, replacement: $0.replacement, reason: $0.reason)
         })
     }
@@ -283,7 +288,7 @@ extension EnglishPracticeReply: CoachReply {
 @available(iOS 26.0, *)
 extension ChinesePracticeReply: CoachReply {
     var feedback: SpeakingCoach.Feedback {
-        SpeakingCoach.Feedback(rewrite: rewrite, tip: tip, followUp: followUp, corrections: corrections.map {
+        SpeakingCoach.Feedback(rewrite: rewrite, tip: tip, followUp: followUp, followUpTranslation: followUpTranslation, corrections: corrections.map {
             .init(original: $0.original, replacement: $0.replacement, reason: $0.reason)
         })
     }

@@ -9,7 +9,15 @@ import Word7000Core
 @MainActor
 @Observable
 final class AppModel {
-    let coreWords: [WordEntry]
+    /// The 7000 English words learners of English study.
+    let englishCoreWords: [WordEntry]
+    /// Everyday Taiwan Mandarin, in TOCFL-style bands, for learners of
+    /// Chinese (`words-zh.json`).
+    let chineseCoreWords: [WordEntry]
+    /// The built-in words for the current study mode.
+    var coreWords: [WordEntry] {
+        studyMode == .chinese && !chineseCoreWords.isEmpty ? chineseCoreWords : englishCoreWords
+    }
     private(set) var progress: ProgressState {
         didSet {
             libraryRevision &+= 1
@@ -48,23 +56,47 @@ final class AppModel {
     private var studyUndoStack: [(progress: ProgressState, session: StudySession)] = []
     var canUndoStudy: Bool { !studyUndoStack.isEmpty }
 
+    /// The other study mode's words, as stored (see `ModeProgress`):
+    /// `progress` holds only the current mode's.
+    @ObservationIgnored private var otherModeWords: [String: WordProgress] = [:]
+
+    /// Both modes' progress in one record, as it is saved and synced.
+    var syncedProgress: ProgressState {
+        ModeProgress.store(progress, chinese: studyMode == .chinese, otherWords: otherModeWords)
+    }
+
     @ObservationIgnored private let persistence: Persistence
     @ObservationIgnored private var saveTask: Task<Void, Never>?
     @ObservationIgnored private var preparedCache: (key: String, vocabulary: PreparedVocabulary)?
     @ObservationIgnored private var mergedWordsCache: [WordEntry]?
     @ObservationIgnored private var vocabularyCache: [WordEntry]?
 
-    init(coreWords: [WordEntry], progress: ProgressState, customSets: CustomSetState, settings: AppSettings, persistence: Persistence, today: String = DayMath.today()) {
+    init(coreWords: [WordEntry], chineseWords: [WordEntry] = [], progress: ProgressState, customSets: CustomSetState, settings: AppSettings, persistence: Persistence, today: String = DayMath.today()) {
         var settings = settings
         settings.migrateSpeakingHistory()
-        self.coreWords = coreWords
-        self.progress = LearningEngine.normalizeForDate(progress, today: today)
+        self.englishCoreWords = coreWords
+        self.chineseCoreWords = chineseWords
+        let normalized = LearningEngine.normalizeForDate(progress, today: today)
+        let chinese = settings.studyMode == .chinese
+        self.progress = ModeProgress.view(normalized, chinese: chinese)
+        otherModeWords = ModeProgress.storedWords(of: normalized, excluding: chinese)
         self.customSets = customSets
+        savedLearning = (normalized, customSets)
         self.settings = settings
         L.mode = settings.studyMode ?? .english
         self.persistence = persistence
         self.today = today
     }
+
+    /// Whether this learner's progress and banks are saved. Guests' are not
+    /// (signing in with Apple keeps them); set by the account. Without an
+    /// account service (UI tests, local builds) everything is saved.
+    @ObservationIgnored var keepsLearningRecords = true {
+        didSet { if keepsLearningRecords != oldValue { scheduleSave() } }
+    }
+    /// What is on disk: for a guest it stays as it was when they became one,
+    /// so what they study now is not kept.
+    @ObservationIgnored private var savedLearning: (progress: ProgressState, customSets: CustomSetState)
 
     static func launch() -> AppModel {
         let persistence = Persistence.live
@@ -100,6 +132,12 @@ final class AppModel {
             }
             settings.migratedLegacyData = true
         }
+        // Learning English and learning Chinese now keep their own progress;
+        // someone already learning Chinese keeps what they had there too.
+        if settings.splitModeProgress != true {
+            if settings.studyMode == .chinese { progress = ModeProgress.seedChinese(progress) }
+            settings.splitModeProgress = true
+        }
         if arguments.contains("-uiTestingSampleProgress") {
             progress = SampleData.progress(words: words, today: DayMath.today())
         }
@@ -119,8 +157,22 @@ final class AppModel {
             progress.analytics = analytics
         }
         if arguments.contains("-uiTestingDark") { settings.theme = .dark }
-        if arguments.contains("-uiTestingChineseMode") { settings.studyMode = .chinese }
+        if arguments.contains("-uiTestingChineseMode") {
+            settings.studyMode = .chinese
+            // Sample progress on the Chinese side too, over the Taiwan Mandarin words.
+            if arguments.contains("-uiTestingSampleProgress") {
+                let taiwan = loadBundledWords(named: "words-zh")
+                let sample = SampleData.progress(words: taiwan.isEmpty ? words : taiwan, today: DayMath.today())
+                for (id, entry) in sample.words { progress.words[ModeProgress.chinesePrefix + id] = entry }
+            }
+        }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
+        if arguments.contains("-uiTestingCollage") { settings.appStyle = .collage }
+        // UI tests see the default look, the paper collage, unless they ask
+        // for leather.
+        if arguments.contains("-uiTestingLeather") { settings.appStyle = .leather }
+        // UI tests never meet the one-time style chooser unless they ask for it.
+        if arguments.contains("-uiTestingReset"), !arguments.contains("-uiTestingStyleChooser") { settings.stylePicked = true }
         if settings.onboardingComplete == nil {
             settings.onboardingComplete = snapshot != nil || !progress.words.isEmpty || !sets.sets.isEmpty
         }
@@ -128,7 +180,8 @@ final class AppModel {
             settings.onboardingComplete = true
         }
 
-        let model = AppModel(coreWords: words, progress: progress, customSets: sets, settings: settings, persistence: persistence)
+        let model = AppModel(coreWords: words, chineseWords: loadBundledWords(named: "words-zh"), progress: progress, customSets: sets,
+                             settings: settings, persistence: persistence)
         if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
             model.restoreStudySession(saved)
         }
@@ -136,8 +189,8 @@ final class AppModel {
         return model
     }
 
-    static func loadBundledWords() -> [WordEntry] {
-        guard let url = Bundle.main.url(forResource: "words", withExtension: "json"),
+    static func loadBundledWords(named name: String = "words") -> [WordEntry] {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let words = try? WordData.decode(data)
         else { return [] }
@@ -149,7 +202,9 @@ final class AppModel {
     func replaceData(progress newProgress: ProgressState, customSets newSets: CustomSetState, preserveSession: Bool = false) {
         let previousSession = preserveSession ? studySession : nil
         replacing = true
-        progress = LearningEngine.normalizeForDate(newProgress, today: today)
+        let normalized = LearningEngine.normalizeForDate(newProgress, today: today)
+        otherModeWords = ModeProgress.storedWords(of: normalized, excluding: studyMode == .chinese)
+        progress = ModeProgress.view(normalized, chinese: studyMode == .chinese)
         customSets = newSets
         replacing = false
         if settings.activeBankId != WordBanks.coreBankId, !newSets.sets.contains(where: { $0.id == settings.activeBankId }) {
@@ -164,6 +219,33 @@ final class AppModel {
 
     // MARK: Reminders
 
+    /// Chooses the app's look; the home-screen icon is switched to match.
+    func setAppStyle(_ style: AppStyle) {
+        settings.appStyle = style
+        settings.stylePicked = true
+        if settings.iconFollowsStyle ?? true { AppIconSwitcher.apply(style) }
+    }
+
+    func setIconFollowsStyle(_ follows: Bool) {
+        settings.iconFollowsStyle = follows
+        AppIconSwitcher.apply(follows ? settings.appStyle ?? .standard : .standard)
+    }
+
+    /// The main icon is now the collage's: a learner who chose the leather
+    /// look (with the icon following it) gets its icon back, once.
+    func syncAppIcon() {
+        guard settings.stylePicked == true, settings.iconFollowsStyle ?? true else { return }
+        AppIconSwitcher.apply(settings.appStyle ?? .standard)
+    }
+
+    /// The one-time style chooser is due: once, on a day after the first
+    /// practice, so the first day is only about learning.
+    var styleChoiceDue: Bool {
+        guard settings.stylePicked != true, settings.onboardingComplete == true, !progress.words.isEmpty else { return false }
+        if AppRuntime.uiTesting { return true }
+        return progress.analytics?.days.keys.contains { $0 < today } ?? false
+    }
+
     var reminderEnabled: Bool { settings.streakReminder ?? true }
 
     func setReminderEnabled(_ enabled: Bool) {
@@ -177,12 +259,28 @@ final class AppModel {
     // MARK: Study mode
 
     var studyMode: StudyMode { settings.studyMode ?? .english }
+    /// What a word means, for the AI: the Chinese for a learner of English,
+    /// the English word for a learner of Chinese (whose prompt is already the Chinese).
+    func aiGloss(_ word: WordEntry) -> String {
+        studyMode == .chinese ? word.word : ChineseDisplay.conciseMeaning(word.meaningZh)
+    }
 
     /// Switching what is learned rebuilds the study session (the cards face
-    /// the other way) but keeps all progress.
+    /// the other way) and brings up that mode's own word progress; the
+    /// streak and daily goal carry over.
     func setStudyMode(_ mode: StudyMode) {
         guard mode != studyMode else { return }
+        let stored = syncedProgress
         settings.studyMode = mode
+        replacing = true
+        otherModeWords = ModeProgress.storedWords(of: stored, excluding: mode == .chinese)
+        progress = ModeProgress.view(stored, chinese: mode == .chinese)
+        replacing = false
+        // Each mode has its own built-in words.
+        mergedWordsCache = nil
+        vocabularyCache = nil
+        preparedCache = nil
+        libraryRevision &+= 1
         studySession = nil
         studyUndoStack = []
     }
@@ -218,7 +316,7 @@ final class AppModel {
     }
 
     var bank: PreparedVocabulary {
-        let key = "\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
+        let key = "\(studyMode.rawValue)|\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
         if let cached = preparedCache, cached.key == key { return cached.vocabulary }
         let prepared = PreparedVocabulary(bankWords)
         preparedCache = (key, prepared)
@@ -421,6 +519,15 @@ final class AppModel {
         scheduleSave()
     }
 
+    /// The words the learner said they know on the first launch count as
+    /// known on sight, so new words start near their level.
+    func applyPlacement(knownIds: [String]) {
+        guard !knownIds.isEmpty else { return }
+        refreshToday()
+        progress = Placement.apply(knownIds: knownIds, to: progress, today: today)
+        scheduleSave()
+    }
+
     func setDailyTarget(_ target: Int) {
         progress.dailyTarget = target
         scheduleSave()
@@ -528,7 +635,14 @@ final class AppModel {
     }
 
     /// Spelling draws from the same words as a quiz.
-    func spellingQuestions(seed: String) -> [WordEntry] { seenWordsFirst(count: Spelling.sessionLength, seed: seed) }
+    func spellingQuestions(seed: String) -> [WordEntry] {
+        guard studyMode == .chinese else { return seenWordsFirst(count: Spelling.sessionLength, seed: seed) }
+        // Learners of Chinese write the meaning, so it must be in Chinese.
+        let filter = settings.quizFilter
+        let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
+            .filter { !ChineseSpelling.targets($0.meaningZh).isEmpty }
+        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: Spelling.sessionLength, seed: seed)
+    }
 
     private func seenWordsFirst(count: Int, seed: String) -> [WordEntry] {
         let filter = settings.quizFilter
@@ -571,7 +685,7 @@ final class AppModel {
                 let face = self.face(word)
                 return .object([
                     "word": .string(String(face.prompt.prefix(80))),
-                    "meaning": .string(String(ChineseDisplay.conciseMeaning(word.meaningZh).prefix(120))),
+                    "meaning": .string(String(self.aiGloss(word).prefix(120))),
                     "misses": .number(Double(min(999, max(progress.lapses ?? 0, progress.status == .review ? 1 : 0)))),
                 ])
             }),
@@ -725,8 +839,11 @@ final class AppModel {
 
     func saveNow() {
         saveTask?.cancel()
-        let snapshot = AppSnapshot(progress: progress, customSets: customSets, settings: settings,
-                                   studySession: studySession, sessionDay: today)
+        let keep = keepsLearningRecords
+        if keep { savedLearning = (syncedProgress, customSets) }
+        let snapshot = AppSnapshot(progress: keep ? syncedProgress : savedLearning.progress,
+                                   customSets: keep ? customSets : savedLearning.customSets,
+                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: today)
         persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in
             Task { @MainActor in self?.storageFailed = !saved }
         }

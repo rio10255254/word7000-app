@@ -1,0 +1,4802 @@
+[
+ {
+  "id": "t0108",
+  "word": "早上",
+  "questionZh": "你一天中什麼時候喝咖啡？",
+  "questionEn": "When during the day do you drink coffee?",
+  "answerZh": "我每天早上都喝一杯咖啡。沒喝的話，上班會很想睡覺。",
+  "answerEn": "I drink a cup of coffee every morning. If I don't, I get really sleepy at work."
+ },
+ {
+  "id": "t0111",
+  "word": "下午",
+  "questionZh": "你週末什麼時候最常出去玩？",
+  "questionEn": "When do you usually go out on the weekend?",
+  "answerZh": "我週末下午最常出去走走。早上我都在家睡覺。",
+  "answerEn": "I usually go out in the afternoon on weekends. In the morning I sleep in at home."
+ },
+ {
+  "id": "t0117",
+  "word": "吃飯",
+  "questionZh": "你中午都跟誰一起吃東西？",
+  "questionEn": "Who do you usually eat with at noon?",
+  "answerZh": "我中午常常跟同事一起吃飯。我們都去公司附近的便當店。",
+  "answerEn": "I often eat with my coworkers at lunchtime. We always go to the bento shop near the office."
+ },
+ {
+  "id": "t0137",
+  "word": "認識",
+  "questionZh": "你來台灣以後，交到新朋友了嗎？",
+  "questionEn": "Have you made new friends since coming to Taiwan?",
+  "answerZh": "我在華語課認識了很多新朋友。他們來自不同的國家。",
+  "answerEn": "I've met a lot of new friends in my Mandarin class. They come from different countries."
+ },
+ {
+  "id": "t0153",
+  "word": "華語",
+  "questionZh": "你現在在學什麼語言？學多久了？",
+  "questionEn": "What language are you learning now? How long have you been learning it?",
+  "answerZh": "我現在在學華語，學了快一年了。我覺得聲調最難。",
+  "answerEn": "I'm learning Mandarin now, almost a year already. I think the tones are the hardest."
+ },
+ {
+  "id": "t0157",
+  "word": "外國人",
+  "questionZh": "你住的地方有很多從別的國家來的人嗎？",
+  "questionEn": "Are there many people from other countries where you live?",
+  "answerZh": "我住的地方有很多外國人。附近的老闆都會說一點英文。",
+  "answerEn": "There are lots of foreigners where I live. The shop owners nearby all speak a little English."
+ },
+ {
+  "id": "t0160",
+  "word": "公司",
+  "questionZh": "你現在在什麼地方工作？",
+  "questionEn": "Where are you working now?",
+  "answerZh": "我在一家小公司工作。公司就在捷運站旁邊，很方便。",
+  "answerEn": "I work at a small company. The office is right next to the MRT station, so it's very convenient."
+ },
+ {
+  "id": "t0164",
+  "word": "房間",
+  "questionZh": "你住的地方大不大？可以介紹一下嗎？",
+  "questionEn": "Is your place big? Can you describe it a little?",
+  "answerZh": "我的房間不大，可是很乾淨。窗戶外面可以看到山。",
+  "answerEn": "My room isn't big, but it's very clean. I can see the mountains outside the window."
+ },
+ {
+  "id": "t0175",
+  "word": "前面",
+  "questionZh": "你家附近有什麼商店？",
+  "questionEn": "What shops are near your home?",
+  "answerZh": "我家前面就有一家便利商店。晚上肚子餓的時候很方便。",
+  "answerEn": "There's a convenience store right in front of my home. It's very handy when I get hungry at night."
+ },
+ {
+  "id": "t0178",
+  "word": "下面",
+  "questionZh": "你睡覺的時候，手機放在哪裡？",
+  "questionEn": "Where do you put your phone when you sleep?",
+  "answerZh": "我睡覺的時候把手機放在枕頭下面。我知道這樣不好，可是習慣了。",
+  "answerEn": "When I sleep, I put my phone under my pillow. I know it's not good, but I'm used to it."
+ },
+ {
+  "id": "t0182",
+  "word": "右邊",
+  "questionZh": "你們公司附近哪裡可以買咖啡？",
+  "questionEn": "Where can you buy coffee near your office?",
+  "answerZh": "出了捷運站往前走，右邊就有一家咖啡店。那裡的拿鐵很好喝。",
+  "answerEn": "When you leave the MRT station and walk ahead, there's a coffee shop on the right. Their lattes are really good."
+ },
+ {
+  "id": "t0185",
+  "word": "對面",
+  "questionZh": "你家附近有什麼好吃的店？",
+  "questionEn": "Are there any good places to eat near your home?",
+  "answerZh": "我家對面有一家很好吃的麵店。我常常下班以後去那裡吃晚餐。",
+  "answerEn": "There's a really good noodle shop across from my home. I often go there for dinner after work."
+ },
+ {
+  "id": "t0203",
+  "word": "鐘頭",
+  "questionZh": "你每天花多少時間坐車上班？",
+  "questionEn": "How much time do you spend commuting to work every day?",
+  "answerZh": "我每天坐捷運上班要一個鐘頭。我都在車上聽音樂。",
+  "answerEn": "It takes me an hour to get to work by MRT every day. I always listen to music on the train."
+ },
+ {
+  "id": "t0206",
+  "word": "週末",
+  "questionZh": "星期六、星期天你通常做什麼？",
+  "questionEn": "What do you usually do on Saturdays and Sundays?",
+  "answerZh": "我週末通常會去爬山或是逛夜市。如果下雨就在家看電影。",
+  "answerEn": "On weekends I usually go hiking or visit a night market. If it rains, I watch movies at home."
+ },
+ {
+  "id": "t0210",
+  "word": "後天",
+  "questionZh": "你這幾天有什麼計畫嗎？",
+  "questionEn": "Do you have any plans for the next few days?",
+  "answerZh": "後天我要跟朋友去台中玩。我們打算坐高鐵去。",
+  "answerEn": "The day after tomorrow I'm going to Taichung with friends. We plan to take the high-speed rail."
+ },
+ {
+  "id": "t0213",
+  "word": "生日",
+  "questionZh": "你是幾月幾號出生的？那天你會做什麼？",
+  "questionEn": "What date were you born? What do you do on that day?",
+  "answerZh": "我的生日是七月十號。那天我會請朋友一起去吃火鍋。",
+  "answerEn": "My birthday is July 10th. On that day I treat my friends to hot pot."
+ },
+ {
+  "id": "t0216",
+  "word": "剛才",
+  "questionZh": "你來這裡之前在做什麼？",
+  "questionEn": "What were you doing before you came here?",
+  "answerZh": "我剛才在便利商店買東西。我買了一個便當當午餐。",
+  "answerEn": "Just now I was buying things at a convenience store. I bought a bento for lunch."
+ },
+ {
+  "id": "t0220",
+  "word": "奶茶",
+  "questionZh": "你在台灣最喜歡喝什麼飲料？",
+  "questionEn": "What's your favorite drink in Taiwan?",
+  "answerZh": "我最喜歡喝珍珠奶茶。我每次都點半糖少冰，不會太甜。",
+  "answerEn": "I like bubble milk tea the most. I always order it half sugar, light ice, so it's not too sweet."
+ },
+ {
+  "id": "t0227",
+  "word": "牛肉",
+  "questionZh": "你喜歡吃什麼肉？",
+  "questionEn": "What kind of meat do you like to eat?",
+  "answerZh": "我最喜歡吃牛肉。我常常去吃牛肉麵，又熱又好吃。",
+  "answerEn": "I like beef the most. I often go eat beef noodle soup; it's hot and delicious."
+ },
+ {
+  "id": "t0233",
+  "word": "水果",
+  "questionZh": "你喜歡吃香蕉和西瓜嗎？",
+  "questionEn": "Do you like eating bananas and watermelon?",
+  "answerZh": "我很喜歡吃水果，尤其是西瓜。台灣的水果又便宜又甜。",
+  "answerEn": "I really like fruit, especially watermelon. Fruit in Taiwan is cheap and sweet."
+ },
+ {
+  "id": "t0236",
+  "word": "麵包",
+  "questionZh": "你早上都吃什麼？",
+  "questionEn": "What do you usually eat in the morning?",
+  "answerZh": "我早上常常吃麵包，配一杯咖啡。家附近的麵包店很好吃。",
+  "answerEn": "I often have bread in the morning with a cup of coffee. The bakery near my home is really good."
+ },
+ {
+  "id": "t0241",
+  "word": "早餐",
+  "questionZh": "你每天起床以後都會先吃東西嗎？",
+  "questionEn": "Do you always eat something first after you get up?",
+  "answerZh": "對，我每天都一定要吃早餐。不吃的話，上班的時候會沒有精神。",
+  "answerEn": "Yes, I have to eat breakfast every day. If I don't, I have no energy at work."
+ },
+ {
+  "id": "t0244",
+  "word": "早飯",
+  "questionZh": "你今天起床以後吃東西了嗎？",
+  "questionEn": "Have you eaten anything since you got up today?",
+  "answerZh": "我今天起得太晚，沒時間吃早飯。我等一下要去買個飯糰。",
+  "answerEn": "I got up too late today and didn't have time for breakfast. I'm going to buy a rice ball in a bit."
+ },
+ {
+  "id": "t0248",
+  "word": "杯子",
+  "questionZh": "你去買飲料的時候會自己帶東西裝嗎？",
+  "questionEn": "When you buy a drink, do you bring something of your own to put it in?",
+  "answerZh": "我都會帶自己的杯子去買飲料。有的店還可以便宜五塊錢。",
+  "answerEn": "I always bring my own cup when I buy drinks. Some shops even give you five dollars off."
+ },
+ {
+  "id": "t0251",
+  "word": "好吃",
+  "questionZh": "你覺得台灣的小吃怎麼樣？",
+  "questionEn": "What do you think of Taiwanese street food?",
+  "answerZh": "我覺得台灣的小吃都很好吃。我最喜歡蚵仔煎和滷肉飯。",
+  "answerEn": "I think Taiwanese street food is all really tasty. My favorites are oyster omelet and braised pork rice."
+ },
+ {
+  "id": "t0265",
+  "word": "睡覺",
+  "questionZh": "你晚上通常幾點上床？",
+  "questionEn": "What time do you usually go to bed at night?",
+  "answerZh": "我通常十二點左右睡覺。睡前我常常滑手機，所以睡得有點晚。",
+  "answerEn": "I usually go to sleep around midnight. I often scroll on my phone before bed, so I sleep a bit late."
+ },
+ {
+  "id": "t0283",
+  "word": "幫忙",
+  "questionZh": "你剛來台灣的時候，誰對你最好？",
+  "questionEn": "When you first came to Taiwan, who was the nicest to you?",
+  "answerZh": "我的房東很熱心，常常來幫忙。她還帶我去辦健保卡。",
+  "answerEn": "My landlady was really warm-hearted and often came to help. She even took me to get my health insurance card."
+ },
+ {
+  "id": "t0287",
+  "word": "覺得",
+  "questionZh": "你對台灣的天氣有什麼看法？",
+  "questionEn": "What's your view of Taiwan's weather?",
+  "answerZh": "我覺得台灣的夏天太熱了。可是冬天很舒服，不會下雪。",
+  "answerEn": "I think summer in Taiwan is too hot. But winter is comfortable, and it doesn't snow."
+ },
+ {
+  "id": "t0294",
+  "word": "唱歌",
+  "questionZh": "你跟朋友出去的時候，喜歡做什麼？",
+  "questionEn": "What do you like to do when you go out with friends?",
+  "answerZh": "我很喜歡跟朋友去唱歌。我們常常一唱就唱到半夜。",
+  "answerEn": "I love going singing with friends. Once we start, we often sing until midnight."
+ },
+ {
+  "id": "t0297",
+  "word": "下課",
+  "questionZh": "你今天的華語課幾點結束？",
+  "questionEn": "What time does your Mandarin class end today?",
+  "answerZh": "我今天十二點下課。下課以後我要跟同學去吃午餐。",
+  "answerEn": "I finish class at twelve today. After class I'm going to have lunch with my classmates."
+ },
+ {
+  "id": "t0301",
+  "word": "進來",
+  "questionZh": "有人敲你的門，你會說什麼？",
+  "questionEn": "If someone knocks on your door, what do you say?",
+  "answerZh": "我會說「請進來」。如果是不認識的人，我會先問是誰。",
+  "answerEn": "I say \"Please come in.\" If it's someone I don't know, I ask who it is first."
+ },
+ {
+  "id": "t0304",
+  "word": "回來",
+  "questionZh": "你今天晚上幾點會到家？",
+  "questionEn": "What time will you get home tonight?",
+  "answerZh": "我今天大概九點才會回來。你們先吃飯，不用等我。",
+  "answerEn": "I probably won't be back until nine tonight. You all go ahead and eat; don't wait for me."
+ },
+ {
+  "id": "t0314",
+  "word": "見面",
+  "questionZh": "你常常跟朋友出去嗎？",
+  "questionEn": "Do you often go out with friends?",
+  "answerZh": "我跟朋友差不多每個星期見面一次。我們通常約在捷運站。",
+  "answerEn": "I meet up with my friends about once a week. We usually meet at the MRT station."
+ },
+ {
+  "id": "t0318",
+  "word": "旅行",
+  "questionZh": "你放假的時候喜歡做什麼？",
+  "questionEn": "What do you like to do when you have time off?",
+  "answerZh": "我放假的時候很喜歡去旅行。上次我去了花蓮，風景很漂亮。",
+  "answerEn": "I love to travel when I have time off. Last time I went to Hualien, and the scenery was beautiful."
+ },
+ {
+  "id": "t0321",
+  "word": "需要",
+  "questionZh": "你搬家的時候，要買哪些東西？",
+  "questionEn": "When you move, what things do you have to buy?",
+  "answerZh": "我搬家的時候需要買很多東西。像是床、桌子和電風扇。",
+  "answerEn": "When I move, I need to buy lots of things, like a bed, a table, and an electric fan."
+ },
+ {
+  "id": "t0327",
+  "word": "開始",
+  "questionZh": "你什麼時候來台灣學中文的？",
+  "questionEn": "When did you come to Taiwan to study Chinese?",
+  "answerZh": "我去年九月開始學華語。一開始覺得很難，現在好多了。",
+  "answerEn": "I started learning Mandarin last September. At first I found it hard, but now it's much better."
+ },
+ {
+  "id": "t0331",
+  "word": "歡迎",
+  "questionZh": "如果朋友來你家，你會跟他說什麼？",
+  "questionEn": "If a friend comes to your home, what do you say to them?",
+  "answerZh": "我會先說「歡迎你來！」然後泡一杯茶請他喝。",
+  "answerEn": "First I say \"Welcome!\" Then I make a cup of tea for them."
+ },
+ {
+  "id": "t0337",
+  "word": "付錢",
+  "questionZh": "你在夜市買東西怎麼結帳？",
+  "questionEn": "How do you pay when you buy things at a night market?",
+  "answerZh": "在夜市我都用現金付錢。很多小攤子不能刷卡。",
+  "answerEn": "At night markets I always pay with cash. A lot of the little stalls don't take cards."
+ },
+ {
+  "id": "t0404",
+  "word": "奶奶",
+  "questionZh": "你家裡誰最會做菜？",
+  "questionEn": "Who in your family is the best cook?",
+  "answerZh": "我奶奶最會做菜。她煮的雞湯比餐廳的還好喝。",
+  "answerEn": "My grandma is the best cook. Her chicken soup is even better than a restaurant's."
+ },
+ {
+  "id": "t0407",
+  "word": "阿姨",
+  "questionZh": "你常去的早餐店，老闆是什麼樣的人？",
+  "questionEn": "What is the owner of your usual breakfast shop like?",
+  "answerZh": "早餐店的阿姨人很好。她都記得我要點什麼。",
+  "answerEn": "The auntie at the breakfast shop is really nice. She always remembers what I order."
+ },
+ {
+  "id": "t0411",
+  "word": "女兒",
+  "questionZh": "你有小孩嗎？是男生還是女生？",
+  "questionEn": "Do you have kids? Boy or girl?",
+  "answerZh": "我有一個女兒，今年五歲。她很喜歡畫畫和唱歌。",
+  "answerEn": "I have a daughter who is five this year. She loves drawing and singing."
+ },
+ {
+  "id": "t0416",
+  "word": "男生",
+  "questionZh": "你們班上的同學多嗎？",
+  "questionEn": "Are there many students in your class?",
+  "answerZh": "我們班有十個人，男生只有三個。大部分都是女生。",
+  "answerEn": "There are ten people in our class, and only three are guys. Most are girls."
+ },
+ {
+  "id": "t0420",
+  "word": "小孩",
+  "questionZh": "你覺得台灣的公園怎麼樣？",
+  "questionEn": "What do you think of the parks in Taiwan?",
+  "answerZh": "台灣的公園有很多小孩在玩。晚上也常看到阿公阿嬤在散步。",
+  "answerEn": "There are lots of kids playing in Taiwan's parks. In the evening you often see grandpas and grandmas taking walks too."
+ },
+ {
+  "id": "t0423",
+  "word": "房子",
+  "questionZh": "你以後想住在什麼樣的地方？",
+  "questionEn": "What kind of place do you want to live in in the future?",
+  "answerZh": "我以後想買一間有院子的房子。可是台北的房子太貴了。",
+  "answerEn": "In the future I want to buy a house with a yard. But houses in Taipei are too expensive."
+ },
+ {
+  "id": "t0427",
+  "word": "醫院",
+  "questionZh": "你生病的時候會去哪裡看醫生？",
+  "questionEn": "Where do you go to see a doctor when you're sick?",
+  "answerZh": "小感冒我會去診所。如果很嚴重，我才會去大醫院。",
+  "answerEn": "For a small cold I go to a clinic. Only if it's serious do I go to a big hospital."
+ },
+ {
+  "id": "t0430",
+  "word": "椅子",
+  "questionZh": "你在家工作的時候，坐得舒服嗎？",
+  "questionEn": "When you work from home, are you comfortable sitting?",
+  "answerZh": "我家的椅子太硬了，坐久了腰會痛。我想買一張新的。",
+  "answerEn": "The chair at home is too hard; my back hurts if I sit too long. I want to buy a new one."
+ },
+ {
+  "id": "t0442",
+  "word": "褲子",
+  "questionZh": "你上班的時候都穿什麼？",
+  "questionEn": "What do you usually wear to work?",
+  "answerZh": "我上班都穿襯衫和黑色的褲子。夏天太熱的時候會換短一點的。",
+  "answerEn": "I wear a shirt and black pants to work. When summer gets too hot, I switch to shorter ones."
+ },
+ {
+  "id": "t0445",
+  "word": "包包",
+  "questionZh": "你出門的時候，東西都放在哪裡？",
+  "questionEn": "When you go out, where do you put your things?",
+  "answerZh": "我出門一定會帶一個包包。裡面有錢包、雨傘和行動電源。",
+  "answerEn": "I always take a bag when I go out. Inside there's my wallet, an umbrella, and a power bank."
+ },
+ {
+  "id": "t0451",
+  "word": "眼睛",
+  "questionZh": "你每天看手機很久，身體會不舒服嗎？",
+  "questionEn": "You look at your phone a lot every day. Does your body feel uncomfortable?",
+  "answerZh": "我每天看手機太久，眼睛常常很累。所以我晚上盡量不看螢幕。",
+  "answerEn": "I look at my phone too long every day, so my eyes are often tired. So at night I try not to look at screens."
+ },
+ {
+  "id": "t0455",
+  "word": "肚子",
+  "questionZh": "你中午沒吃東西的話，下午會怎麼樣？",
+  "questionEn": "If you don't eat at noon, what happens in the afternoon?",
+  "answerZh": "我中午沒吃的話，下午肚子會很餓。上課的時候肚子還會叫。",
+  "answerEn": "If I don't eat lunch, my stomach gets really hungry in the afternoon. It even growls during class."
+ },
+ {
+  "id": "t0458",
+  "word": "意思",
+  "questionZh": "聽到不懂的中文詞，你會怎麼辦？",
+  "questionEn": "What do you do when you hear a Chinese word you don't understand?",
+  "answerZh": "我會問台灣朋友這是什麼意思。他們通常會用簡單的話解釋。",
+  "answerEn": "I ask my Taiwanese friends what it means. They usually explain it in simple words."
+ },
+ {
+  "id": "t0464",
+  "word": "夏天",
+  "questionZh": "台灣一年裡你最怕哪個季節？",
+  "questionEn": "Which season in Taiwan do you dread the most?",
+  "answerZh": "我最怕夏天，因為又熱又潮濕。出門走五分鐘就全身是汗。",
+  "answerEn": "I dread summer the most because it's hot and humid. After five minutes outside I'm covered in sweat."
+ },
+ {
+  "id": "t0470",
+  "word": "電視",
+  "questionZh": "你晚上在家都做什麼？",
+  "questionEn": "What do you usually do at home in the evening?",
+  "answerZh": "我晚上常常在家看電視。我最喜歡看美食節目。",
+  "answerEn": "I often watch TV at home in the evening. I like food shows the most."
+ },
+ {
+  "id": "t0474",
+  "word": "號碼",
+  "questionZh": "認識新朋友的時候，你們怎麼保持聯絡？",
+  "questionEn": "When you meet new friends, how do you keep in touch?",
+  "answerZh": "我們通常會交換電話號碼。不過現在大家都用通訊軟體聊天。",
+  "answerEn": "We usually exchange phone numbers. But nowadays everyone chats on messaging apps."
+ },
+ {
+  "id": "t0479",
+  "word": "顏色",
+  "questionZh": "你喜歡穿紅的、藍的還是黑的衣服？",
+  "questionEn": "Do you like wearing red, blue, or black clothes?",
+  "answerZh": "我最喜歡的顏色是藍色。我的衣服大部分都是藍的。",
+  "answerEn": "My favorite color is blue. Most of my clothes are blue."
+ },
+ {
+  "id": "t0494",
+  "word": "好看",
+  "questionZh": "最近有什麼你推薦的電視劇嗎？",
+  "questionEn": "Are there any TV dramas you'd recommend lately?",
+  "answerZh": "我最近在看一部台劇，非常好看。故事很感人，演員也演得很好。",
+  "answerEn": "I'm watching a Taiwanese drama lately; it's really good. The story is touching and the actors are great."
+ },
+ {
+  "id": "t0500",
+  "word": "快樂",
+  "questionZh": "什麼事情會讓你覺得心情很好？",
+  "questionEn": "What makes you feel really good?",
+  "answerZh": "跟家人一起吃飯的時候，我覺得最快樂。大家聊天聊得很開心。",
+  "answerEn": "I feel happiest when I'm eating with my family. Everyone has a great time chatting."
+ },
+ {
+  "id": "t0513",
+  "word": "年輕",
+  "questionZh": "你覺得自己跟十年前比，有什麼不一樣？",
+  "questionEn": "How are you different compared to ten years ago?",
+  "answerZh": "十年前我比較年輕，精神也比較好。現在晚上十點就想睡了。",
+  "answerEn": "Ten years ago I was younger and had more energy. Now I want to sleep at ten p.m."
+ },
+ {
+  "id": "t0517",
+  "word": "好玩",
+  "questionZh": "你去過台灣哪些地方？你最喜歡哪裡？",
+  "questionEn": "Where in Taiwan have you been? Where did you like best?",
+  "answerZh": "我覺得墾丁最好玩。可以去海邊游泳，晚上還可以逛大街。",
+  "answerEn": "I think Kenting is the most fun. You can swim at the beach and stroll the main street at night."
+ },
+ {
+  "id": "t0521",
+  "word": "重要",
+  "questionZh": "你覺得找工作的時候，什麼事最需要注意？",
+  "questionEn": "When looking for a job, what do you think deserves the most attention?",
+  "answerZh": "我覺得同事很重要。如果同事人好，工作再累也不怕。",
+  "answerEn": "I think coworkers are important. If your coworkers are nice, you don't mind how tiring the work is."
+ },
+ {
+  "id": "t0525",
+  "word": "熱鬧",
+  "questionZh": "你喜歡住在安靜的地方，還是人多的地方？",
+  "questionEn": "Do you prefer living somewhere quiet or somewhere with lots of people?",
+  "answerZh": "我比較喜歡熱鬧的地方。家樓下就有夜市，晚上很方便。",
+  "answerEn": "I prefer lively places. There's a night market right downstairs from my home, so evenings are convenient."
+ },
+ {
+  "id": "t0535",
+  "word": "網路",
+  "questionZh": "你在家上班的時候，最怕發生什麼事？",
+  "questionEn": "When you work from home, what are you most afraid will happen?",
+  "answerZh": "我最怕網路突然斷掉。這樣就不能開視訊會議了。",
+  "answerEn": "I'm most afraid the internet will suddenly cut out. Then I can't join video meetings."
+ },
+ {
+  "id": "t0538",
+  "word": "公車",
+  "questionZh": "你平常怎麼去上班或上課？",
+  "questionEn": "How do you usually get to work or class?",
+  "answerZh": "我平常坐公車去上班，大概二十分鐘。下雨天公車上人特別多。",
+  "answerEn": "I usually take the bus to work; it's about twenty minutes. On rainy days the bus is especially crowded."
+ },
+ {
+  "id": "t0542",
+  "word": "夜市",
+  "questionZh": "你晚上肚子餓的時候喜歡去哪裡逛？",
+  "questionEn": "When you're hungry at night, where do you like to go wander around?",
+  "answerZh": "我最喜歡去夜市。可以一邊逛一邊吃，東西也很便宜。",
+  "answerEn": "I like going to the night market the most. You can eat while you walk around, and things are cheap."
+ },
+ {
+  "id": "t0558",
+  "word": "打算",
+  "questionZh": "這次過年放假，你有什麼計畫？",
+  "questionEn": "What are your plans for this Lunar New Year break?",
+  "answerZh": "我打算回國看家人。如果有時間，也想去日本玩幾天。",
+  "answerEn": "I plan to go back to my home country to see my family. If I have time, I'd also like to spend a few days in Japan."
+ },
+ {
+  "id": "t0562",
+  "word": "生活",
+  "questionZh": "你在台灣過得習慣嗎？",
+  "questionEn": "Have you gotten used to living in Taiwan?",
+  "answerZh": "我覺得在台灣生活很方便。到處都有便利商店，交通也很好。",
+  "answerEn": "I find life in Taiwan very convenient. There are convenience stores everywhere, and transportation is great."
+ },
+ {
+  "id": "t0565",
+  "word": "生氣",
+  "questionZh": "什麼事情會讓你很不高興？",
+  "questionEn": "What makes you really unhappy?",
+  "answerZh": "有人在捷運上大聲講電話，我會很生氣。我覺得這樣很沒禮貌。",
+  "answerEn": "When people talk loudly on the phone on the MRT, I get angry. I think it's really rude."
+ },
+ {
+  "id": "t0572",
+  "word": "健康",
+  "questionZh": "你平常怎麼照顧自己的身體？",
+  "questionEn": "How do you usually take care of your body?",
+  "answerZh": "為了健康，我每天都走路一萬步。我也盡量少喝含糖飲料。",
+  "answerEn": "For my health, I walk ten thousand steps every day. I also try to drink fewer sugary drinks."
+ },
+ {
+  "id": "t0575",
+  "word": "密碼",
+  "questionZh": "你的手機會鎖起來嗎？怕別人看嗎？",
+  "questionEn": "Do you lock your phone? Are you worried others will look at it?",
+  "answerZh": "我的手機有設密碼，別人打不開。但是我自己有時候也會忘記。",
+  "answerEn": "My phone has a password, so others can't open it. But sometimes I forget it myself."
+ },
+ {
+  "id": "t0579",
+  "word": "高鐵",
+  "questionZh": "你從台北去高雄，都怎麼去？",
+  "questionEn": "How do you get from Taipei to Kaohsiung?",
+  "answerZh": "我都坐高鐵去，只要一個半小時。雖然比較貴，但是很快。",
+  "answerEn": "I always take the high-speed rail; it only takes an hour and a half. It's more expensive, but it's fast."
+ },
+ {
+  "id": "t0582",
+  "word": "捷運站",
+  "questionZh": "你家附近交通方便嗎？",
+  "questionEn": "Is transportation convenient near your home?",
+  "answerZh": "很方便，我家走路五分鐘就到捷運站。去哪裡都很快。",
+  "answerEn": "Very convenient. It's a five-minute walk from my home to the MRT station. I can get anywhere fast."
+ },
+ {
+  "id": "t0586",
+  "word": "車票",
+  "questionZh": "過年回家的時候，你會提早準備什麼？",
+  "questionEn": "When going home for Lunar New Year, what do you prepare in advance?",
+  "answerZh": "我一定會提早上網買車票。不然過年的時候很快就賣完了。",
+  "answerEn": "I always buy my train tickets online early. Otherwise they sell out fast around New Year."
+ },
+ {
+  "id": "t0592",
+  "word": "塑膠袋",
+  "questionZh": "你去超市買東西會自己帶袋子嗎？",
+  "questionEn": "Do you bring your own bag when you shop at the supermarket?",
+  "answerZh": "我都會自己帶購物袋。因為在台灣，塑膠袋要另外付錢。",
+  "answerEn": "I always bring my own shopping bag, because in Taiwan you have to pay extra for plastic bags."
+ },
+ {
+  "id": "t0595",
+  "word": "現金",
+  "questionZh": "你買東西習慣刷卡還是用手機付款？",
+  "questionEn": "When you buy things, do you usually pay by card or by phone?",
+  "answerZh": "我還是比較常用現金。很多小吃店只收現金，不能刷卡。",
+  "answerEn": "I still use cash more often. A lot of small eateries only take cash, not cards."
+ },
+ {
+  "id": "t0599",
+  "word": "價錢",
+  "questionZh": "你覺得台北的東西貴不貴？",
+  "questionEn": "Do you think things in Taipei are expensive?",
+  "answerZh": "我覺得台北房子的價錢很高。不過小吃的價錢還算便宜。",
+  "answerEn": "I think housing prices in Taipei are very high. But prices for street food are still pretty cheap."
+ },
+ {
+  "id": "t0602",
+  "word": "內用",
+  "questionZh": "去早餐店的時候，你通常帶走還是在店裡吃？",
+  "questionEn": "At a breakfast shop, do you usually take it to go or eat in the shop?",
+  "answerZh": "如果有時間，我會內用。可是上班的時候，我通常都外帶。",
+  "answerEn": "If I have time, I eat in. But on workdays I usually get it to go."
+ },
+ {
+  "id": "t0606",
+  "word": "下載",
+  "questionZh": "你剛來台灣的時候，手機裝了哪些程式？",
+  "questionEn": "When you first came to Taiwan, what apps did you install on your phone?",
+  "answerZh": "我下載了地圖和公車的應用程式。這樣出門就不會迷路了。",
+  "answerEn": "I downloaded map and bus apps. That way I don't get lost when I go out."
+ },
+ {
+  "id": "t0610",
+  "word": "拍照",
+  "questionZh": "你出去玩的時候，手機都拿來做什麼？",
+  "questionEn": "When you go out and have fun, what do you use your phone for?",
+  "answerZh": "我出去玩的時候很喜歡拍照。每次都拍好幾百張。",
+  "answerEn": "I love taking photos when I go out. Every time I take hundreds of them."
+ },
+ {
+  "id": "t0613",
+  "word": "留言",
+  "questionZh": "你在網路上看到喜歡的文章，會做什麼？",
+  "questionEn": "When you see a post you like online, what do you do?",
+  "answerZh": "我會按讚，有時候也會留言。如果作者回我，我會很開心。",
+  "answerEn": "I give it a like, and sometimes I leave a comment too. If the author replies, I'm really happy."
+ },
+ {
+  "id": "t0617",
+  "word": "資料",
+  "questionZh": "你去辦居留證的時候，需要帶什麼？",
+  "questionEn": "What do you need to bring when applying for a residence permit?",
+  "answerZh": "我要準備很多資料，像是護照和照片。少帶一樣就要再跑一趟。",
+  "answerEn": "I have to prepare a lot of documents, like my passport and photos. If I forget one, I have to make another trip."
+ },
+ {
+  "id": "t0620",
+  "word": "颱風",
+  "questionZh": "台灣夏天常有什麼天氣讓你緊張？",
+  "questionEn": "What kind of summer weather in Taiwan makes you nervous?",
+  "answerZh": "我最怕颱風。風雨很大的時候，我都不敢出門。",
+  "answerEn": "I'm most afraid of typhoons. When the wind and rain are strong, I don't dare go out."
+ },
+ {
+  "id": "t0628",
+  "word": "暖和",
+  "questionZh": "你喜歡台灣的冬天嗎？",
+  "questionEn": "Do you like winter in Taiwan?",
+  "answerZh": "我很喜歡，因為台灣的冬天很暖和。在我的國家冬天會下大雪。",
+  "answerEn": "I like it a lot, because winter in Taiwan is nice and warm. In my country it snows heavily in winter."
+ },
+ {
+  "id": "t0633",
+  "word": "害怕",
+  "questionZh": "你最怕什麼動物？",
+  "questionEn": "What animal are you most afraid of?",
+  "answerZh": "我很害怕蟑螂。看到牠的時候我會一直尖叫。",
+  "answerEn": "I'm really scared of cockroaches. When I see one, I can't stop screaming."
+ },
+ {
+  "id": "t0637",
+  "word": "興趣",
+  "questionZh": "你下班以後最喜歡做什麼？",
+  "questionEn": "What do you like to do most after work?",
+  "answerZh": "我的興趣是做菜和看電影。下班以後我常常自己煮晚餐。",
+  "answerEn": "My hobbies are cooking and watching movies. After work I often make dinner myself."
+ },
+ {
+  "id": "t0640",
+  "word": "失望",
+  "questionZh": "你去過一個地方，結果跟你想的不一樣嗎？",
+  "questionEn": "Have you ever gone somewhere and it turned out different from what you expected?",
+  "answerZh": "有一次去一家很有名的餐廳，我很失望。排了很久，東西卻不好吃。",
+  "answerEn": "Once I went to a really famous restaurant and was very disappointed. I waited in line a long time, but the food wasn't good."
+ },
+ {
+  "id": "t0643",
+  "word": "期待",
+  "questionZh": "這個月有什麼讓你很開心、等不及的事？",
+  "questionEn": "Is there anything this month you're excited about and can't wait for?",
+  "answerZh": "我很期待下個月的連假。我要跟朋友去台東玩。",
+  "answerEn": "I'm really looking forward to next month's long weekend. I'm going to Taitung with friends."
+ },
+ {
+  "id": "t0647",
+  "word": "辛苦",
+  "questionZh": "你覺得哪一種工作最累？",
+  "questionEn": "What kind of job do you think is the most tiring?",
+  "answerZh": "我覺得外送員的工作很辛苦。不管天氣多熱，他們都要騎機車送餐。",
+  "answerEn": "I think delivery riders have a really hard job. No matter how hot it is, they have to deliver food on scooters."
+ },
+ {
+  "id": "t0651",
+  "word": "爬山",
+  "questionZh": "你週末喜歡做什麼運動？",
+  "questionEn": "What exercise do you like to do on weekends?",
+  "answerZh": "我週末喜歡去爬山。台北附近有很多步道，很方便。",
+  "answerEn": "On weekends I like to go hiking. There are lots of trails near Taipei, so it's convenient."
+ },
+ {
+  "id": "t0655",
+  "word": "足球",
+  "questionZh": "你喜歡看什麼球賽？",
+  "questionEn": "What ball games do you like to watch?",
+  "answerZh": "我最喜歡看足球。可惜台灣比較多人看棒球。",
+  "answerEn": "I like watching soccer the most. Too bad more people in Taiwan watch baseball."
+ },
+ {
+  "id": "t0658",
+  "word": "散步",
+  "questionZh": "你吃完晚飯以後，通常做什麼？",
+  "questionEn": "What do you usually do after dinner?",
+  "answerZh": "我吃完晚飯常常去公園散步。走一走比較好消化。",
+  "answerEn": "After dinner I often take a walk in the park. Walking a bit helps digestion."
+ },
+ {
+  "id": "t0664",
+  "word": "遊戲",
+  "questionZh": "你坐捷運的時候，都用手機做什麼？",
+  "questionEn": "What do you do on your phone when you ride the MRT?",
+  "answerZh": "我坐捷運的時候常常玩手機遊戲。不小心就會坐過站。",
+  "answerEn": "I often play phone games on the MRT. Sometimes I accidentally miss my stop."
+ },
+ {
+  "id": "t0667",
+  "word": "旅遊",
+  "questionZh": "你覺得台灣最適合觀光的地方是哪裡？",
+  "questionEn": "Where do you think is the best place for sightseeing in Taiwan?",
+  "answerZh": "我覺得台南很適合去旅遊。那裡有很多老房子和好吃的小吃。",
+  "answerEn": "I think Tainan is great for a trip. It has lots of old buildings and tasty street food."
+ },
+ {
+  "id": "t0671",
+  "word": "旅館",
+  "questionZh": "你去外地玩的時候，都住在哪裡？",
+  "questionEn": "Where do you stay when you travel out of town?",
+  "answerZh": "我通常住小旅館，比較便宜。有時候也會住民宿。",
+  "answerEn": "I usually stay in small hotels because they're cheaper. Sometimes I stay at a B&B too."
+ },
+ {
+  "id": "t0674",
+  "word": "海邊",
+  "questionZh": "夏天的時候你最想去哪裡？",
+  "questionEn": "Where do you most want to go in summer?",
+  "answerZh": "夏天我最想去海邊。可以游泳，也可以看夕陽。",
+  "answerEn": "In summer I most want to go to the beach. I can swim and watch the sunset."
+ },
+ {
+  "id": "t0677",
+  "word": "動物園",
+  "questionZh": "你小時候最喜歡去哪裡看動物？",
+  "questionEn": "As a kid, where did you most like to go see animals?",
+  "answerZh": "我小時候最喜歡去動物園。我特別喜歡看大象和猴子。",
+  "answerEn": "As a kid I loved going to the zoo. I especially liked watching the elephants and monkeys."
+ },
+ {
+  "id": "t0682",
+  "word": "發燒",
+  "questionZh": "你上次生病是什麼時候？怎麼了？",
+  "questionEn": "When were you last sick? What happened?",
+  "answerZh": "我上個月發燒了，燒到三十九度。所以請了兩天假在家休息。",
+  "answerEn": "I had a fever last month that went up to thirty-nine degrees. So I took two days off to rest at home."
+ },
+ {
+  "id": "t0685",
+  "word": "藥局",
+  "questionZh": "頭痛的時候，你會去哪裡買藥？",
+  "questionEn": "When you have a headache, where do you go to buy medicine?",
+  "answerZh": "我會去家附近的藥局買藥。藥師人很好，會跟我說怎麼吃。",
+  "answerEn": "I go to the pharmacy near my home. The pharmacist is really nice and tells me how to take it."
+ },
+ {
+  "id": "t0689",
+  "word": "牙齒",
+  "questionZh": "你吃很冰的東西會不舒服嗎？",
+  "questionEn": "Do you feel discomfort when you eat very cold things?",
+  "answerZh": "會，我的牙齒很敏感。吃剉冰的時候常常覺得很痠。",
+  "answerEn": "Yes, my teeth are very sensitive. When I eat shaved ice, they often ache."
+ },
+ {
+  "id": "t0697",
+  "word": "小心",
+  "questionZh": "騎機車的時候，你要注意什麼？",
+  "questionEn": "What do you need to pay attention to when riding a scooter?",
+  "answerZh": "騎機車的時候一定要很小心。尤其下雨天路很滑。",
+  "answerEn": "You really have to be careful when riding a scooter, especially on rainy days when the roads are slippery."
+ },
+ {
+  "id": "t0702",
+  "word": "停車場",
+  "questionZh": "你開車去百貨公司的時候，車子停哪裡？",
+  "questionEn": "When you drive to a department store, where do you park?",
+  "answerZh": "我都停在百貨公司的地下停車場。不過假日常常要排隊。",
+  "answerEn": "I always park in the department store's underground parking lot. But on holidays I often have to wait in line."
+ },
+ {
+  "id": "t0706",
+  "word": "路口",
+  "questionZh": "你可以告訴我去你家怎麼走嗎？",
+  "questionEn": "Can you tell me how to get to your place?",
+  "answerZh": "從捷運站出來，走到第二個路口左轉。我家就在一家藥局旁邊。",
+  "answerEn": "Come out of the MRT station and turn left at the second intersection. My home is right next to a pharmacy."
+ },
+ {
+  "id": "t0710",
+  "word": "地圖",
+  "questionZh": "你去一個不熟的地方，怎麼找路？",
+  "questionEn": "How do you find your way when you go somewhere unfamiliar?",
+  "answerZh": "我都用手機看地圖。不過有時候還是會走錯路。",
+  "answerEn": "I always check the map on my phone. But sometimes I still go the wrong way."
+ },
+ {
+  "id": "t0714",
+  "word": "右轉",
+  "questionZh": "坐計程車的時候，你會怎麼跟司機說路？",
+  "questionEn": "When you take a taxi, how do you give the driver directions?",
+  "answerZh": "我會說「前面路口右轉」。到了就跟他說「這裡停就好」。",
+  "answerEn": "I say \"Turn right at the next intersection.\" When we arrive, I tell him \"Just stop here.\""
+ },
+ {
+  "id": "t0717",
+  "word": "司機",
+  "questionZh": "你覺得台灣的公車怎麼樣？",
+  "questionEn": "What do you think of the buses in Taiwan?",
+  "answerZh": "我覺得公車司機開得有點快。上車以後要趕快抓好扶手。",
+  "answerEn": "I think bus drivers drive a bit fast. After you get on, you need to grab a handrail quickly."
+ },
+ {
+  "id": "t0722",
+  "word": "老闆",
+  "questionZh": "你常去的小吃店，有什麼特別的地方嗎？",
+  "questionEn": "Is there anything special about the small eatery you often go to?",
+  "answerZh": "那家店的老闆很熱情。他每次都多給我一點湯。",
+  "answerEn": "The owner of that shop is really friendly. He gives me a little extra soup every time."
+ },
+ {
+  "id": "t0725",
+  "word": "大小",
+  "questionZh": "你在網路上買衣服會遇到什麼問題？",
+  "questionEn": "What problems do you run into when buying clothes online?",
+  "answerZh": "我常常不知道衣服的大小對不對。所以我都會先看尺寸表。",
+  "answerEn": "I often don't know if the size of the clothes is right. So I always check the size chart first."
+ },
+ {
+  "id": "t0729",
+  "word": "免費",
+  "questionZh": "你在台灣知道哪些不用花錢的好玩地方？",
+  "questionEn": "Do you know any fun places in Taiwan that don't cost money?",
+  "answerZh": "很多公園的活動都是免費的。週末還會有音樂表演可以看。",
+  "answerEn": "Many park events are free. On weekends there are music performances to watch too."
+ },
+ {
+  "id": "t0733",
+  "word": "牙刷",
+  "questionZh": "你出門旅行一定會帶哪些東西？",
+  "questionEn": "What things do you always bring when you travel?",
+  "answerZh": "我一定會帶自己的牙刷。很多旅館現在都不提供了。",
+  "answerEn": "I always bring my own toothbrush. A lot of hotels don't provide them anymore."
+ },
+ {
+  "id": "t0736",
+  "word": "雨傘",
+  "questionZh": "台灣常常突然下雨，你出門會準備什麼？",
+  "questionEn": "It often rains suddenly in Taiwan. What do you prepare when you go out?",
+  "answerZh": "我的包包裡一定有一把雨傘。就算是晴天，我也會帶著。",
+  "answerEn": "There's always an umbrella in my bag. Even on sunny days I carry it."
+ },
+ {
+  "id": "t0740",
+  "word": "小學",
+  "questionZh": "你小時候在哪裡上學？",
+  "questionEn": "Where did you go to school as a child?",
+  "answerZh": "我在家鄉的小學念了六年。學校很小，一個班只有二十個人。",
+  "answerEn": "I went to elementary school in my hometown for six years. The school was small, with only twenty people per class."
+ },
+ {
+  "id": "t0743",
+  "word": "作業",
+  "questionZh": "你上華語課以後，回家還要做什麼？",
+  "questionEn": "After Mandarin class, what else do you have to do at home?",
+  "answerZh": "回家以後我要寫作業。老師每天都給我們很多練習。",
+  "answerEn": "After I get home, I have to do homework. The teacher gives us lots of practice every day."
+ },
+ {
+  "id": "t0748",
+  "word": "生詞",
+  "questionZh": "你都怎麼記新學的中文詞？",
+  "questionEn": "How do you memorize the new Chinese words you learn?",
+  "answerZh": "我會把生詞寫在小本子上。坐捷運的時候拿出來複習。",
+  "answerEn": "I write the new words in a little notebook. I take it out to review on the MRT."
+ },
+ {
+  "id": "t0752",
+  "word": "語言",
+  "questionZh": "除了中文，你還會說什麼？",
+  "questionEn": "Besides Chinese, what else can you speak?",
+  "answerZh": "我會說三種語言，英文、法文和中文。中文是最難的一個。",
+  "answerEn": "I speak three languages: English, French, and Chinese. Chinese is the hardest one."
+ },
+ {
+  "id": "t0756",
+  "word": "開會",
+  "questionZh": "你上班的時候，最不喜歡做什麼？",
+  "questionEn": "What do you dislike doing most at work?",
+  "answerZh": "我最不喜歡開會。有時候一開就是兩個小時。",
+  "answerEn": "I dislike meetings the most. Sometimes one goes on for two hours."
+ },
+ {
+  "id": "t0759",
+  "word": "打工",
+  "questionZh": "你學生的時候有沒有做過兼職？",
+  "questionEn": "Did you ever have a part-time job as a student?",
+  "answerZh": "我以前在咖啡店打工。雖然很累，但是學到很多東西。",
+  "answerEn": "I used to work part-time at a café. It was tiring, but I learned a lot."
+ },
+ {
+  "id": "t0763",
+  "word": "護士",
+  "questionZh": "你去醫院的時候，誰最常照顧你？",
+  "questionEn": "When you go to the hospital, who takes care of you the most?",
+  "answerZh": "醫院的護士都很親切。她們會很仔細地告訴我要注意什麼。",
+  "answerEn": "The nurses at the hospital are all very kind. They carefully tell me what to watch out for."
+ },
+ {
+  "id": "t0766",
+  "word": "放假",
+  "questionZh": "你這個星期有休息的日子嗎？",
+  "questionEn": "Do you have any days off this week?",
+  "answerZh": "我們公司這個星期五放假。我打算睡到中午再起來。",
+  "answerEn": "Our company has this Friday off. I plan to sleep until noon before getting up."
+ },
+ {
+  "id": "t0769",
+  "word": "字典",
+  "questionZh": "看到不認識的中文字，你會怎麼辦？",
+  "questionEn": "What do you do when you see a Chinese character you don't know?",
+  "answerZh": "我會用手機查字典。現在的字典還可以聽發音，很方便。",
+  "answerEn": "I look it up in a dictionary on my phone. Dictionaries now even let you hear the pronunciation, which is very convenient."
+ },
+ {
+  "id": "t0773",
+  "word": "筆記",
+  "questionZh": "上課的時候，你怎麼記住老師說的話？",
+  "questionEn": "In class, how do you remember what the teacher says?",
+  "answerZh": "我上課都會寫筆記。回家以後再看一次，比較記得住。",
+  "answerEn": "I always take notes in class. I read them again at home, so I remember better."
+ },
+ {
+  "id": "t0776",
+  "word": "廚房",
+  "questionZh": "你住的地方可以自己煮東西嗎？",
+  "questionEn": "Can you cook for yourself where you live?",
+  "answerZh": "可以，我們家有一個小廚房。週末我常常自己煮義大利麵。",
+  "answerEn": "Yes, our place has a small kitchen. On weekends I often make spaghetti myself."
+ },
+ {
+  "id": "t0781",
+  "word": "電梯",
+  "questionZh": "你住幾樓？每天怎麼上下樓？",
+  "questionEn": "What floor do you live on? How do you go up and down every day?",
+  "answerZh": "我住在十二樓，每天都坐電梯。有時候人太多，要等很久。",
+  "answerEn": "I live on the twelfth floor and take the elevator every day. Sometimes there are too many people and I have to wait a long time."
+ },
+ {
+  "id": "t0784",
+  "word": "冰箱",
+  "questionZh": "你買太多菜的時候，都放在哪裡？",
+  "questionEn": "When you buy too many groceries, where do you put them?",
+  "answerZh": "我都放在冰箱裡。不過冰箱太小，常常放不下。",
+  "answerEn": "I put them in the fridge. But the fridge is too small, so things often don't fit."
+ },
+ {
+  "id": "t0789",
+  "word": "房租",
+  "questionZh": "在台北租房子，每個月要花多少錢？",
+  "questionEn": "How much does it cost each month to rent a place in Taipei?",
+  "answerZh": "我每個月的房租是一萬兩千塊。水電費要另外算。",
+  "answerEn": "My rent is twelve thousand dollars a month. Water and electricity are extra."
+ },
+ {
+  "id": "t0793",
+  "word": "打掃",
+  "questionZh": "你多久整理一次家裡？",
+  "questionEn": "How often do you tidy up your home?",
+  "answerZh": "我每個週末都會打掃家裡。我覺得乾淨的房間讓人心情很好。",
+  "answerEn": "I clean my home every weekend. I think a clean room puts people in a good mood."
+ },
+ {
+  "id": "t0796",
+  "word": "回收",
+  "questionZh": "你喝完的寶特瓶都怎麼處理？",
+  "questionEn": "What do you do with your plastic bottles after you finish drinking?",
+  "answerZh": "我都會拿去回收。台灣的垃圾分類做得很好。",
+  "answerEn": "I always take them to be recycled. Taiwan does a great job sorting garbage."
+ },
+ {
+  "id": "t0800",
+  "word": "做飯",
+  "questionZh": "你晚上都自己煮還是在外面吃？",
+  "questionEn": "In the evening, do you cook yourself or eat out?",
+  "answerZh": "我很少自己做飯，因為下班太累了。我通常買便當回家吃。",
+  "answerEn": "I rarely cook for myself because I'm too tired after work. I usually buy a bento to eat at home."
+ },
+ {
+  "id": "t0805",
+  "word": "郵局",
+  "questionZh": "你要寄東西回國的時候，會去哪裡寄？",
+  "questionEn": "When you want to send something back home, where do you go to send it?",
+  "answerZh": "我會去郵局寄。郵局的人很親切，會教我怎麼填單子。",
+  "answerEn": "I go to the post office. The staff there are very kind and show me how to fill out the forms."
+ },
+ {
+  "id": "t0812",
+  "word": "邀請",
+  "questionZh": "你在台灣有去過朋友家作客嗎？",
+  "questionEn": "Have you ever been a guest at a friend's home in Taiwan?",
+  "answerZh": "有，上個月同事邀請我去他家吃飯。他媽媽做了一大桌菜。",
+  "answerEn": "Yes, last month a coworker invited me to his home for dinner. His mom made a whole table of dishes."
+ },
+ {
+  "id": "t0815",
+  "word": "發現",
+  "questionZh": "你來台灣以後，有沒有注意到什麼有趣的事？",
+  "questionEn": "Since coming to Taiwan, have you noticed anything interesting?",
+  "answerZh": "我發現台灣人很喜歡排隊。只要有人排隊，就會有更多人來排。",
+  "answerEn": "I've found that Taiwanese people really like lining up. As soon as someone lines up, more people join."
+ },
+ {
+  "id": "t0821",
+  "word": "關心",
+  "questionZh": "你生病的時候，誰會照顧你、問你好不好？",
+  "questionEn": "When you're sick, who takes care of you and asks how you are?",
+  "answerZh": "我的室友很關心我。她每天都會問我好一點了沒。",
+  "answerEn": "My roommate really cares about me. Every day she asks if I'm feeling better."
+ },
+ {
+  "id": "t0828",
+  "word": "遲到",
+  "questionZh": "你上班或上課曾經晚到過嗎？為什麼？",
+  "questionEn": "Have you ever arrived late to work or class? Why?",
+  "answerZh": "我上個禮拜遲到了一次。因為公車一直沒來，等了二十分鐘。",
+  "answerEn": "I was late once last week, because the bus never came and I waited twenty minutes."
+ },
+ {
+  "id": "t0831",
+  "word": "起來",
+  "questionZh": "你週末早上通常睡到幾點？",
+  "questionEn": "On weekend mornings, until what time do you usually sleep?",
+  "answerZh": "我週末都睡到十點才起來。起來以後去吃早午餐。",
+  "answerEn": "On weekends I sleep until ten before getting up. After I get up, I go have brunch."
+ },
+ {
+  "id": "t0854",
+  "word": "點菜",
+  "questionZh": "你跟台灣朋友去餐廳吃飯，通常誰決定吃什麼？",
+  "questionEn": "When you eat out with Taiwanese friends, who usually decides what to eat?",
+  "answerZh": "通常是台灣朋友幫我點菜。他們知道哪些菜比較好吃。",
+  "answerEn": "Usually my Taiwanese friends order for me. They know which dishes are better."
+ },
+ {
+  "id": "t0859",
+  "word": "恭喜",
+  "questionZh": "朋友告訴你他找到新工作了，你會說什麼？",
+  "questionEn": "If a friend tells you they found a new job, what would you say?",
+  "answerZh": "我會跟他說「恭喜你！」然後說要請他吃飯慶祝。",
+  "answerEn": "I'd tell him \"Congratulations!\" Then I'd offer to treat him to a meal to celebrate."
+ },
+ {
+  "id": "t0863",
+  "word": "結婚",
+  "questionZh": "你參加過台灣的婚禮嗎？",
+  "questionEn": "Have you ever been to a Taiwanese wedding?",
+  "answerZh": "去年我的同事結婚，我去喝了他的喜酒。菜很多，大家都吃得很飽。",
+  "answerEn": "Last year my coworker got married, and I went to his wedding banquet. There was lots of food, and everyone ate their fill."
+ },
+ {
+  "id": "t0869",
+  "word": "得到",
+  "questionZh": "你參加過什麼比賽或抽獎嗎？",
+  "questionEn": "Have you ever entered a contest or a prize draw?",
+  "answerZh": "我去年參加公司尾牙的抽獎。我得到了一台吸塵器，很開心。",
+  "answerEn": "Last year I joined the prize draw at my company's year-end party. I got a vacuum cleaner and was really happy."
+ },
+ {
+  "id": "t0873",
+  "word": "清楚",
+  "questionZh": "你聽得懂捷運上的廣播嗎？",
+  "questionEn": "Can you understand the announcements on the MRT?",
+  "answerZh": "有時候聽不太清楚，因為講得很快。我會看螢幕上的字。",
+  "answerEn": "Sometimes I can't hear them clearly because they talk fast. I read the words on the screen."
+ },
+ {
+  "id": "t0879",
+  "word": "使用",
+  "questionZh": "你常常去圖書館嗎？在那裡做什麼？",
+  "questionEn": "Do you often go to the library? What do you do there?",
+  "answerZh": "我常常去圖書館使用電腦。那裡又安靜又有冷氣。",
+  "answerEn": "I often go to the library to use the computers. It's quiet and air-conditioned there."
+ },
+ {
+  "id": "t0883",
+  "word": "參觀",
+  "questionZh": "有朋友從國外來台灣，你會帶他們去哪裡？",
+  "questionEn": "If friends come to Taiwan from abroad, where would you take them?",
+  "answerZh": "我會帶他們去參觀故宮博物院。那裡有很多古代的東西。",
+  "answerEn": "I'd take them to visit the National Palace Museum. It has lots of ancient things."
+ },
+ {
+  "id": "t0886",
+  "word": "紅包",
+  "questionZh": "台灣過年的時候，大人會給小孩什麼？",
+  "questionEn": "During Lunar New Year in Taiwan, what do adults give children?",
+  "answerZh": "大人會給小孩紅包。我去年也收到房東給的紅包。",
+  "answerEn": "Adults give children red envelopes. Last year I got a red envelope from my landlord too."
+ },
+ {
+  "id": "t0889",
+  "word": "熱情",
+  "questionZh": "你覺得台灣人對外國人怎麼樣？",
+  "questionEn": "How do you think Taiwanese people treat foreigners?",
+  "answerZh": "我覺得台灣人很熱情。我迷路的時候，常常有人主動幫我。",
+  "answerEn": "I think Taiwanese people are very warm. When I get lost, people often offer to help me."
+ },
+ {
+  "id": "t0893",
+  "word": "麻煩",
+  "questionZh": "你覺得在台灣辦居留證容易嗎？",
+  "questionEn": "Do you think it's easy to get a residence permit in Taiwan?",
+  "answerZh": "我覺得有一點麻煩。要準備很多資料，還要排很久的隊。",
+  "answerEn": "I think it's a bit of a hassle. You have to prepare lots of documents and wait in line a long time."
+ },
+ {
+  "id": "t0896",
+  "word": "有用",
+  "questionZh": "你覺得學中文對你的工作有幫助嗎？",
+  "questionEn": "Do you think learning Chinese helps with your job?",
+  "answerZh": "學中文非常有用。我現在可以直接跟台灣客戶聊天。",
+  "answerEn": "Learning Chinese is really useful. Now I can talk directly with Taiwanese clients."
+ },
+ {
+  "id": "t0907",
+  "word": "有空",
+  "questionZh": "這個週末你可以一起去看電影嗎？",
+  "questionEn": "Can you go see a movie together this weekend?",
+  "answerZh": "我星期六有空，星期天要上班。我們星期六下午去好不好？",
+  "answerEn": "I'm free on Saturday, but I work on Sunday. How about we go Saturday afternoon?"
+ },
+ {
+  "id": "t0912",
+  "word": "努力",
+  "questionZh": "你學中文的時候，都怎麼練習？",
+  "questionEn": "How do you practice when you study Chinese?",
+  "answerZh": "我每天都很努力練習說中文。我會跟早餐店的阿姨聊天。",
+  "answerEn": "I work hard at practicing speaking Chinese every day. I chat with the auntie at the breakfast shop."
+ },
+ {
+  "id": "t0947",
+  "word": "之後",
+  "questionZh": "你上完華語課以後，有什麼打算？",
+  "questionEn": "What are your plans after you finish your Mandarin course?",
+  "answerZh": "上完華語課之後，我想在台灣找工作。我很喜歡這裡的生活。",
+  "answerEn": "After I finish my Mandarin course, I want to find a job in Taiwan. I really like life here."
+ },
+ {
+  "id": "t0950",
+  "word": "新聞",
+  "questionZh": "你平常怎麼知道台灣最近發生的事？",
+  "questionEn": "How do you usually find out what's been happening in Taiwan?",
+  "answerZh": "我每天早上都會看新聞。看不懂的地方就查字典。",
+  "answerEn": "I watch the news every morning. When I don't understand something, I look it up in a dictionary."
+ },
+ {
+  "id": "t0953",
+  "word": "經驗",
+  "questionZh": "你以前做過什麼工作？",
+  "questionEn": "What jobs have you done before?",
+  "answerZh": "我有三年當英文老師的經驗。我覺得教小孩很有意思。",
+  "answerEn": "I have three years of experience as an English teacher. I find teaching kids really interesting."
+ },
+ {
+  "id": "t0957",
+  "word": "城市",
+  "questionZh": "你最喜歡台灣哪個地方？為什麼？",
+  "questionEn": "Which place in Taiwan do you like best? Why?",
+  "answerZh": "我最喜歡台中這個城市。天氣好，生活也很方便。",
+  "answerEn": "I like the city of Taichung best. The weather is nice and life is convenient."
+ },
+ {
+  "id": "t0960",
+  "word": "辦法",
+  "questionZh": "你晚上睡不著的時候怎麼辦？",
+  "questionEn": "What do you do when you can't sleep at night?",
+  "answerZh": "我試過很多辦法，像是喝熱牛奶。最有用的是不要看手機。",
+  "answerEn": "I've tried lots of ways, like drinking hot milk. The most effective is not looking at my phone."
+ },
+ {
+  "id": "t0964",
+  "word": "手錶",
+  "questionZh": "你平常怎麼看時間？",
+  "questionEn": "How do you usually check the time?",
+  "answerZh": "我習慣戴手錶看時間。這樣不用一直拿出手機。",
+  "answerEn": "I'm used to wearing a watch to check the time. That way I don't have to keep taking out my phone."
+ },
+ {
+  "id": "t0967",
+  "word": "裙子",
+  "questionZh": "夏天的時候，你喜歡穿什麼衣服？",
+  "questionEn": "What do you like to wear in summer?",
+  "answerZh": "夏天我最喜歡穿裙子，比較涼快。可是騎機車的時候不太方便。",
+  "answerEn": "In summer I like wearing skirts best because they're cooler. But they're not very convenient when riding a scooter."
+ },
+ {
+  "id": "t0971",
+  "word": "炒飯",
+  "questionZh": "你最會煮哪一道菜？",
+  "questionEn": "What dish are you best at cooking?",
+  "answerZh": "我最會做蛋炒飯。用前一天的白飯炒，最好吃。",
+  "answerEn": "I'm best at egg fried rice. It's tastiest when you fry it with rice from the day before."
+ },
+ {
+  "id": "t0974",
+  "word": "小籠包",
+  "questionZh": "你帶外國朋友去吃台灣美食，會點什麼？",
+  "questionEn": "When you take foreign friends to eat Taiwanese food, what do you order?",
+  "answerZh": "我一定會點小籠包。咬的時候要小心，裡面的湯很燙。",
+  "answerEn": "I always order soup dumplings. You have to be careful when you bite in, because the soup inside is very hot."
+ },
+ {
+  "id": "t0977",
+  "word": "臭豆腐",
+  "questionZh": "台灣有什麼你一開始不敢吃的東西？",
+  "questionEn": "Is there any food in Taiwan you didn't dare eat at first?",
+  "answerZh": "我一開始不敢吃臭豆腐，因為味道太重了。吃了以後發現很好吃。",
+  "answerEn": "At first I didn't dare eat stinky tofu because the smell was too strong. After trying it, I found it delicious."
+ },
+ {
+  "id": "t0981",
+  "word": "馬鈴薯",
+  "questionZh": "你最喜歡用什麼蔬菜做菜？",
+  "questionEn": "What vegetable do you most like to cook with?",
+  "answerZh": "我最喜歡用馬鈴薯做菜。可以煮咖哩，也可以做薯條。",
+  "answerEn": "I like cooking with potatoes the most. You can make curry or French fries."
+ },
+ {
+  "id": "t0984",
+  "word": "芒果",
+  "questionZh": "台灣夏天你最喜歡吃什麼水果？",
+  "questionEn": "What fruit do you like most in Taiwan's summer?",
+  "answerZh": "我最喜歡吃芒果。夏天一定要吃一碗芒果冰。",
+  "answerEn": "I like mangoes the most. In summer I have to have a bowl of mango shaved ice."
+ },
+ {
+  "id": "t0988",
+  "word": "蛋糕",
+  "questionZh": "你生日的時候會吃什麼甜的東西？",
+  "questionEn": "What sweet things do you eat on your birthday?",
+  "answerZh": "我生日的時候一定會吃蛋糕。我最喜歡巧克力口味的。",
+  "answerEn": "I always eat cake on my birthday. My favorite is chocolate flavor."
+ },
+ {
+  "id": "t0994",
+  "word": "雞排",
+  "questionZh": "你去夜市最常買什麼？",
+  "questionEn": "What do you buy most often at the night market?",
+  "answerZh": "我去夜市最常買雞排。又大又香，一個人吃不完。",
+  "answerEn": "At the night market I most often buy a fried chicken cutlet. It's big and fragrant; one person can't finish it."
+ },
+ {
+  "id": "t0998",
+  "word": "可樂",
+  "questionZh": "吃炸雞的時候，你喜歡配什麼飲料？",
+  "questionEn": "What drink do you like to have with fried chicken?",
+  "answerZh": "吃炸雞一定要配可樂。不過我現在都改喝無糖的。",
+  "answerEn": "Fried chicken has to go with cola. But now I've switched to sugar-free."
+ },
+ {
+  "id": "t1001",
+  "word": "吸管",
+  "questionZh": "你買飲料的時候，會自己帶環保餐具嗎？",
+  "questionEn": "When you buy drinks, do you bring your own reusable utensils?",
+  "answerZh": "我會帶自己的吸管和杯子。這樣比較環保，也可以少用塑膠。",
+  "answerEn": "I bring my own straw and cup. It's better for the environment, and I use less plastic."
+ },
+ {
+  "id": "t1011",
+  "word": "天空",
+  "questionZh": "你今天出門的時候，天氣怎麼樣？",
+  "questionEn": "What was the weather like when you went out today?",
+  "answerZh": "今天天空很藍，一朵雲都沒有。可是太陽很大，很熱。",
+  "answerEn": "The sky was really blue today, without a single cloud. But the sun was strong and it was hot."
+ },
+ {
+  "id": "t1014",
+  "word": "空氣",
+  "questionZh": "你覺得你住的城市環境怎麼樣？",
+  "questionEn": "What do you think of the environment in the city where you live?",
+  "answerZh": "我住的地方車很多，空氣不太好。所以我常常去山上走走。",
+  "answerEn": "There are lots of cars where I live, so the air isn't very good. That's why I often go walk in the mountains."
+ },
+ {
+  "id": "t1017",
+  "word": "最近",
+  "questionZh": "你這陣子在忙什麼？",
+  "questionEn": "What have you been busy with these days?",
+  "answerZh": "我最近在準備華語考試。每天下班都要念兩個小時。",
+  "answerEn": "Recently I've been preparing for a Mandarin exam. I study two hours every day after work."
+ },
+ {
+  "id": "t1021",
+  "word": "年紀",
+  "questionZh": "你覺得幾歲結婚比較好？",
+  "questionEn": "At what age do you think it's best to get married?",
+  "answerZh": "我覺得年紀不是最重要的。找到對的人比較重要。",
+  "answerEn": "I don't think age is the most important thing. Finding the right person matters more."
+ },
+ {
+  "id": "t1024",
+  "word": "父親",
+  "questionZh": "你家裡誰對你影響最大？",
+  "questionEn": "Who in your family has influenced you the most?",
+  "answerZh": "我的父親對我影響最大。他教我做事一定要認真。",
+  "answerEn": "My father has influenced me the most. He taught me to always be serious about what I do."
+ },
+ {
+  "id": "t1028",
+  "word": "親戚",
+  "questionZh": "過年的時候，你們家會做什麼？",
+  "questionEn": "What does your family do over Lunar New Year?",
+  "answerZh": "過年的時候，很多親戚會來我們家。大家一起吃年夜飯，很熱鬧。",
+  "answerEn": "Over New Year, lots of relatives come to our house. Everyone eats the New Year's Eve dinner together, and it's very lively."
+ },
+ {
+  "id": "t1031",
+  "word": "加油站",
+  "questionZh": "你的機車沒油了，你會去哪裡？",
+  "questionEn": "If your scooter runs out of gas, where do you go?",
+  "answerZh": "我會去最近的加油站加油。台灣的加油站很多，很方便。",
+  "answerEn": "I go to the nearest gas station to fill up. There are lots of gas stations in Taiwan, so it's convenient."
+ },
+ {
+  "id": "t1035",
+  "word": "早餐店",
+  "questionZh": "你上班前都在哪裡買吃的？",
+  "questionEn": "Where do you buy food before work?",
+  "answerZh": "我都在家附近的早餐店買。我常點蛋餅和大冰奶。",
+  "answerEn": "I always buy it at the breakfast shop near my home. I often order an egg crepe and a large iced milk tea."
+ },
+ {
+  "id": "t1038",
+  "word": "門口",
+  "questionZh": "你跟朋友約在捷運站的時候，都在哪裡等？",
+  "questionEn": "When you meet a friend at an MRT station, where do you wait?",
+  "answerZh": "我們通常約在便利商店門口等。這樣比較好找。",
+  "answerEn": "We usually wait at the entrance of the convenience store. That way it's easier to find each other."
+ },
+ {
+  "id": "t1055",
+  "word": "帳戶",
+  "questionZh": "你在台灣的薪水怎麼拿？",
+  "questionEn": "How do you get paid in Taiwan?",
+  "answerZh": "公司會把薪水匯到我的銀行帳戶。每個月五號就會收到。",
+  "answerEn": "My company transfers my salary to my bank account. I get it on the fifth of every month."
+ },
+ {
+  "id": "t1059",
+  "word": "統一發票",
+  "questionZh": "你買東西拿到的收據，都怎麼處理？",
+  "questionEn": "What do you do with the receipts you get when you buy things?",
+  "answerZh": "我會把統一發票留起來對獎。有一次我中了兩百塊！",
+  "answerEn": "I keep my uniform invoices to check the lottery numbers. Once I won two hundred dollars!"
+ },
+ {
+  "id": "t1062",
+  "word": "水費",
+  "questionZh": "你住的地方每個月要付哪些錢？",
+  "questionEn": "What bills do you have to pay for your place?",
+  "answerZh": "我要付房租、電費和水費。水費很便宜，兩個月才一百多塊。",
+  "answerEn": "I have to pay rent, electricity, and the water bill. The water bill is cheap, just over a hundred dollars every two months."
+ },
+ {
+  "id": "t1066",
+  "word": "郵票",
+  "questionZh": "你寄明信片回國的時候，要準備什麼？",
+  "questionEn": "What do you need to prepare when you send a postcard home?",
+  "answerZh": "我要先去郵局買郵票。貼好以後再丟進郵筒。",
+  "answerEn": "First I go to the post office to buy stamps. After sticking them on, I drop it in the mailbox."
+ },
+ {
+  "id": "t1069",
+  "word": "申請",
+  "questionZh": "你來台灣的時候，需要辦哪些手續？",
+  "questionEn": "What paperwork did you need to do when you came to Taiwan?",
+  "answerZh": "我要申請居留證和健保卡。花了好幾個星期才辦好。",
+  "answerEn": "I had to apply for a residence permit and a health insurance card. It took several weeks to get it all done."
+ },
+ {
+  "id": "t1076",
+  "word": "房東",
+  "questionZh": "你住的地方，房子的主人人好不好？",
+  "questionEn": "Is the owner of the place you live in nice?",
+  "answerZh": "我的房東人很好。東西壞了，他都會馬上來修。",
+  "answerEn": "My landlord is very nice. When something breaks, he comes to fix it right away."
+ },
+ {
+  "id": "t1079",
+  "word": "臥室",
+  "questionZh": "你家裡你最喜歡哪個空間？",
+  "questionEn": "Which space in your home do you like best?",
+  "answerZh": "我最喜歡我的臥室。裡面有一張很舒服的床，我常在那裡看書。",
+  "answerEn": "I like my bedroom best. There's a really comfortable bed in it, and I often read there."
+ },
+ {
+  "id": "t1082",
+  "word": "微波爐",
+  "questionZh": "你中午帶便當去公司，怎麼把它弄熱？",
+  "questionEn": "When you bring a lunchbox to work, how do you heat it up?",
+  "answerZh": "我都用公司的微波爐熱便當。中午的時候要排隊才能用。",
+  "answerEn": "I always heat my lunch in the office microwave. At noon you have to wait in line to use it."
+ },
+ {
+  "id": "t1086",
+  "word": "資源回收",
+  "questionZh": "在台灣倒垃圾的時候，你要注意什麼？",
+  "questionEn": "What do you need to pay attention to when taking out the trash in Taiwan?",
+  "answerZh": "要先做好資源回收。紙類、塑膠和鐵罐都要分開放。",
+  "answerEn": "You have to sort the recycling first. Paper, plastic, and cans all go separately."
+ },
+ {
+  "id": "t1089",
+  "word": "菜市場",
+  "questionZh": "你都去哪裡買新鮮的菜和肉？",
+  "questionEn": "Where do you buy fresh vegetables and meat?",
+  "answerZh": "我週末會去家附近的菜市場。那裡的菜很新鮮，老闆還會送蔥。",
+  "answerEn": "On weekends I go to the traditional market near my home. The vegetables are fresh, and the vendors even throw in free green onions."
+ },
+ {
+  "id": "t1093",
+  "word": "牛仔褲",
+  "questionZh": "你最常穿什麼樣的褲子？",
+  "questionEn": "What kind of pants do you wear most often?",
+  "answerZh": "我最常穿牛仔褲，因為很耐穿。不過夏天穿有點熱。",
+  "answerEn": "I wear jeans most often because they're durable. But they're a bit hot in summer."
+ },
+ {
+  "id": "t1096",
+  "word": "鬧鐘",
+  "questionZh": "你早上都怎麼叫自己起床？",
+  "questionEn": "How do you get yourself up in the morning?",
+  "answerZh": "我每天都會設三個鬧鐘。不然我一定起不來。",
+  "answerEn": "I set three alarm clocks every day. Otherwise I definitely can't get up."
+ },
+ {
+  "id": "t1100",
+  "word": "冰塊",
+  "questionZh": "你點飲料的時候，冰的部分怎麼選？",
+  "questionEn": "When you order a drink, how do you choose the ice level?",
+  "answerZh": "我通常點少冰，因為冰塊太多會沖淡味道。冬天我會點去冰。",
+  "answerEn": "I usually order light ice, because too many ice cubes water down the flavor. In winter I order no ice."
+ },
+ {
+  "id": "t1104",
+  "word": "辣椒",
+  "questionZh": "你吃得了很辣的東西嗎？",
+  "questionEn": "Can you handle really spicy food?",
+  "answerZh": "我很能吃辣。吃麵的時候我一定會加很多辣椒。",
+  "answerEn": "I can eat really spicy food. When I eat noodles, I always add lots of chili peppers."
+ },
+ {
+  "id": "t1108",
+  "word": "甜點",
+  "questionZh": "吃完飯以後，你喜歡再吃點甜的嗎？",
+  "questionEn": "After a meal, do you like to eat something sweet?",
+  "answerZh": "我很喜歡吃甜點。我最喜歡的是豆花加花生。",
+  "answerEn": "I really like desserts. My favorite is tofu pudding with peanuts."
+ },
+ {
+  "id": "t1113",
+  "word": "外送",
+  "questionZh": "你下雨天不想出門的時候，怎麼吃晚餐？",
+  "questionEn": "On rainy days when you don't want to go out, how do you get dinner?",
+  "answerZh": "我會叫外送。雖然比較貴，但是不用出門很方便。",
+  "answerEn": "I order delivery. It's more expensive, but it's convenient not having to go out."
+ },
+ {
+  "id": "t1117",
+  "word": "訂票",
+  "questionZh": "你要去看演唱會，會怎麼準備？",
+  "questionEn": "If you want to go to a concert, how do you prepare?",
+  "answerZh": "我會在開賣那天準時上網訂票。熱門的演唱會幾分鐘就賣完了。",
+  "answerEn": "I go online right on time the day tickets go on sale to book them. Popular concerts sell out in minutes."
+ },
+ {
+  "id": "t1121",
+  "word": "行李箱",
+  "questionZh": "你搬來台灣的時候帶了多少東西？",
+  "questionEn": "How much stuff did you bring when you moved to Taiwan?",
+  "answerZh": "我只帶了兩個大行李箱。其他的東西都是來台灣以後才買的。",
+  "answerEn": "I only brought two big suitcases. Everything else I bought after coming to Taiwan."
+ },
+ {
+  "id": "t1124",
+  "word": "景點",
+  "questionZh": "你會推薦朋友去台北附近哪些地方玩？",
+  "questionEn": "What places around Taipei would you recommend to friends?",
+  "answerZh": "我會推薦九份和淡水，這兩個景點都很漂亮。晚上去淡水還可以看夕陽。",
+  "answerEn": "I'd recommend Jiufen and Tamsui; both sights are beautiful. In Tamsui you can watch the sunset in the evening too."
+ },
+ {
+  "id": "t1131",
+  "word": "紀念品",
+  "questionZh": "你回國的時候，會買什麼送給家人？",
+  "questionEn": "When you go back home, what do you buy for your family?",
+  "answerZh": "我會買鳳梨酥當紀念品。家人和朋友都說很好吃。",
+  "answerEn": "I buy pineapple cakes as souvenirs. My family and friends all say they're delicious."
+ },
+ {
+  "id": "t1134",
+  "word": "喉嚨",
+  "questionZh": "你感冒的時候，哪裡最不舒服？",
+  "questionEn": "When you have a cold, where do you feel worst?",
+  "answerZh": "我感冒的時候喉嚨會很痛。說話跟吞東西都很難過。",
+  "answerEn": "When I have a cold, my throat really hurts. Talking and swallowing are both painful."
+ },
+ {
+  "id": "t1139",
+  "word": "牙醫",
+  "questionZh": "你牙齒痛的時候怎麼辦？",
+  "questionEn": "What do you do when you have a toothache?",
+  "answerZh": "我會馬上去看牙醫。用健保卡看牙齒，不會很貴。",
+  "answerEn": "I go see a dentist right away. With my health insurance card, dental care isn't very expensive."
+ },
+ {
+  "id": "t1143",
+  "word": "手指",
+  "questionZh": "你切菜的時候受過傷嗎？",
+  "questionEn": "Have you ever hurt yourself while cutting vegetables?",
+  "answerZh": "有一次我切菜切到手指，流了很多血。從那時候開始我都很小心。",
+  "answerEn": "Once I cut my finger while chopping vegetables and bled a lot. Since then I've always been careful."
+ },
+ {
+  "id": "t1147",
+  "word": "抽菸",
+  "questionZh": "你覺得在公共場所應該禁止什麼？",
+  "questionEn": "What do you think should be banned in public places?",
+  "answerZh": "我覺得不應該在公園抽菸。小孩子在旁邊玩，對他們不好。",
+  "answerEn": "I don't think people should smoke in parks. Kids are playing nearby, and it's bad for them."
+ },
+ {
+  "id": "t1151",
+  "word": "面試",
+  "questionZh": "你找工作的時候，最緊張的是什麼？",
+  "questionEn": "What makes you most nervous when looking for a job?",
+  "answerZh": "我最緊張的是面試。我怕說錯話，所以會先在家練習。",
+  "answerEn": "The interview makes me most nervous. I'm afraid of saying the wrong thing, so I practice at home first."
+ },
+ {
+  "id": "t1154",
+  "word": "聯絡",
+  "questionZh": "你常常跟家鄉的家人說話嗎？",
+  "questionEn": "Do you often talk with your family back home?",
+  "answerZh": "我每個星期都會跟家人聯絡。我們通常用視訊聊天。",
+  "answerEn": "I get in touch with my family every week. We usually chat over video call."
+ },
+ {
+  "id": "t1158",
+  "word": "處理",
+  "questionZh": "如果你的手機在路上壞了，你會怎麼辦？",
+  "questionEn": "If your phone breaks while you're out, what would you do?",
+  "answerZh": "我會先拿去手機行請他們處理。如果修不好，就只好買新的。",
+  "answerEn": "First I'd take it to a phone shop and have them deal with it. If they can't fix it, I'll have to buy a new one."
+ },
+ {
+  "id": "t1162",
+  "word": "意見",
+  "questionZh": "你要買新電腦的時候，會問誰？",
+  "questionEn": "Who do you ask when you want to buy a new computer?",
+  "answerZh": "我會問懂電腦的朋友的意見。他們的建議通常都很有用。",
+  "answerEn": "I ask for the opinion of friends who know computers. Their advice is usually very useful."
+ },
+ {
+  "id": "t1166",
+  "word": "期中考",
+  "questionZh": "這學期你最緊張的考試是什麼時候？",
+  "questionEn": "When is the exam you're most nervous about this semester?",
+  "answerZh": "下個星期就是期中考了。我每天都在圖書館念書。",
+  "answerEn": "Midterms are next week. I study at the library every day."
+ },
+ {
+  "id": "t1169",
+  "word": "分數",
+  "questionZh": "你上次考試考得怎麼樣？",
+  "questionEn": "How did you do on your last test?",
+  "answerZh": "我上次考試的分數不太好。下次我要更認真準備。",
+  "answerEn": "My score on the last test wasn't very good. Next time I'll prepare more seriously."
+ },
+ {
+  "id": "t1173",
+  "word": "留學生",
+  "questionZh": "你身邊有沒有從國外來台灣讀書的朋友？",
+  "questionEn": "Do you have any friends who came to Taiwan from abroad to study?",
+  "answerZh": "我在台灣認識很多留學生，大部分是從日本和越南來的。我們常常一起去夜市吃東西。",
+  "answerEn": "I know a lot of international students in Taiwan; most of them are from Japan and Vietnam. We often go to the night market together to eat."
+ },
+ {
+  "id": "t1176",
+  "word": "社團",
+  "questionZh": "你上大學的時候，有參加什麼課外活動嗎？",
+  "questionEn": "When you were in college, did you join any extracurricular activities?",
+  "answerZh": "我大學的時候參加了好幾個社團，最喜歡的是登山社。每個月都會跟社員一起去爬山。",
+  "answerEn": "In college I joined several clubs, and my favorite was the hiking club. Every month I went hiking with the other members."
+ },
+ {
+  "id": "t1179",
+  "word": "興奮",
+  "questionZh": "最近有什麼事讓你很期待、心情特別好嗎？",
+  "questionEn": "Is there anything recently that you're really looking forward to and that puts you in a great mood?",
+  "answerZh": "下個月我要去花蓮玩，我現在就覺得好興奮。我已經開始查要去哪裡吃東西了。",
+  "answerEn": "Next month I'm going on a trip to Hualien, and I'm already so excited. I've started looking up where to eat."
+ },
+ {
+  "id": "t1183",
+  "word": "羨慕",
+  "questionZh": "你有沒有哪個朋友的生活，是你很想要的？",
+  "questionEn": "Is there a friend whose life you'd really like to have?",
+  "answerZh": "我很羨慕我的室友，她每天都可以在家上班。我每天都要擠捷運，真的好累。",
+  "answerEn": "I really envy my roommate; she gets to work from home every day. I have to squeeze onto the MRT every day, and it's exhausting."
+ },
+ {
+  "id": "t1188",
+  "word": "抱歉",
+  "questionZh": "如果你跟朋友見面遲到了，你會跟他說什麼？",
+  "questionEn": "If you're late meeting a friend, what would you say to them?",
+  "answerZh": "我會先說「真抱歉，我坐錯捷運了」。然後請他喝一杯飲料當作道歉。",
+  "answerEn": "I'd first say, Sorry, I took the wrong MRT line. Then I'd buy them a drink as an apology."
+ },
+ {
+  "id": "t1193",
+  "word": "活潑",
+  "questionZh": "你小時候是安靜的孩子，還是很愛說話、跑來跑去的孩子？",
+  "questionEn": "As a child, were you quiet, or did you love talking and running around?",
+  "answerZh": "我小時候很活潑，在家裡一直跑來跑去。我媽媽常說我一分鐘都坐不住。",
+  "answerEn": "I was very lively as a kid and ran around the house all the time. My mom often said I couldn't sit still for even a minute."
+ },
+ {
+  "id": "t1197",
+  "word": "幽默",
+  "questionZh": "你喜歡跟什麼樣的人當朋友？",
+  "questionEn": "What kind of people do you like to be friends with?",
+  "answerZh": "我喜歡跟幽默的人當朋友，跟他們聊天很輕鬆。我有一個同事很會講笑話，大家都很喜歡他。",
+  "answerEn": "I like being friends with humorous people; chatting with them is relaxing. I have a coworker who's great at telling jokes, and everyone likes him."
+ },
+ {
+  "id": "t1202",
+  "word": "適合",
+  "questionZh": "你覺得自己做什麼工作會做得最好？",
+  "questionEn": "What kind of job do you think you'd be best at?",
+  "answerZh": "我覺得我很適合當老師，因為我很有耐心。而且我很喜歡跟小朋友聊天。",
+  "answerEn": "I think I'm well suited to being a teacher because I'm very patient. And I really like talking with kids."
+ },
+ {
+  "id": "t1205",
+  "word": "划算",
+  "questionZh": "你最近買過什麼東西，覺得買得很值得？",
+  "questionEn": "What have you bought recently that you felt was really worth it?",
+  "answerZh": "我上個月在網路上買了一雙球鞋，打了五折，真的很划算。穿起來也很舒服。",
+  "answerEn": "Last month I bought a pair of sneakers online at half price, which was a really good deal. They're comfortable too."
+ },
+ {
+  "id": "t1208",
+  "word": "目的",
+  "questionZh": "你當初來台灣，主要是為了什麼？",
+  "questionEn": "When you first came to Taiwan, what was your main reason?",
+  "answerZh": "我來台灣的目的是學中文。我希望一年以後可以用中文跟台灣朋友聊天。",
+  "answerEn": "My purpose in coming to Taiwan was to learn Chinese. I hope that in a year I can chat with Taiwanese friends in Chinese."
+ },
+ {
+  "id": "t1212",
+  "word": "春節",
+  "questionZh": "農曆新年的時候，你通常都在做什麼？",
+  "questionEn": "What do you usually do during Lunar New Year?",
+  "answerZh": "春節的時候我會跟台灣朋友回他家過年。他媽媽每次都煮一大桌菜。",
+  "answerEn": "During the Spring Festival I go back to my Taiwanese friend's home to celebrate the New Year. His mom always cooks a huge table of food."
+ },
+ {
+  "id": "t1215",
+  "word": "月餅",
+  "questionZh": "中秋節的時候，你都吃什麼？",
+  "questionEn": "What do you eat during the Mid-Autumn Festival?",
+  "answerZh": "中秋節我會跟朋友在外面烤肉，也會吃月餅。我最喜歡蛋黃口味的。",
+  "answerEn": "At Mid-Autumn Festival I barbecue outside with friends and also eat mooncakes. My favorite is the egg yolk kind."
+ },
+ {
+  "id": "t1219",
+  "word": "相同",
+  "questionZh": "你跟你最好的朋友有什麼一樣的興趣嗎？",
+  "questionEn": "Do you and your best friend share any interests?",
+  "answerZh": "我跟我最好的朋友有相同的興趣，我們都很喜歡爬山。放假的時候我們常常一起去陽明山。",
+  "answerEn": "My best friend and I have the same interests; we both love hiking. On days off we often go to Yangmingshan together."
+ },
+ {
+  "id": "t1222",
+  "word": "缺點",
+  "questionZh": "你覺得自己個性上有什麼地方需要改？",
+  "questionEn": "What do you think you need to change about your personality?",
+  "answerZh": "我最大的缺點是常常遲到。我已經開始提早十分鐘出門了。",
+  "answerEn": "My biggest flaw is that I'm often late. I've already started leaving home ten minutes earlier."
+ },
+ {
+  "id": "t1226",
+  "word": "內容",
+  "questionZh": "你最近看了什麼好看的書或影集？在講什麼？",
+  "questionEn": "What good book or series have you read or watched recently? What's it about?",
+  "answerZh": "我最近在看一部台灣的影集，內容是在講夜市一家人的故事。很好笑，也很感人。",
+  "answerEn": "I've recently been watching a Taiwanese series; its content is the story of a family at a night market. It's funny and touching."
+ },
+ {
+  "id": "t1229",
+  "word": "看法",
+  "questionZh": "你覺得在台灣騎機車安全嗎？為什麼？",
+  "questionEn": "Do you think riding a scooter in Taiwan is safe? Why?",
+  "answerZh": "我對這件事的看法是，騎機車很方便，可是要很小心。台灣的路上車子很多，我每次騎都很緊張。",
+  "answerEn": "My view on this is that riding a scooter is convenient, but you have to be careful. There are lots of vehicles on Taiwan's roads, and I'm nervous every time I ride."
+ },
+ {
+  "id": "t1232",
+  "word": "目前",
+  "questionZh": "你現在住在哪裡？在做什麼工作？",
+  "questionEn": "Where do you live now, and what work do you do?",
+  "answerZh": "我目前住在台北，在一家貿易公司上班。每天都坐捷運上下班。",
+  "answerEn": "I currently live in Taipei and work at a trading company. I take the MRT to and from work every day."
+ },
+ {
+  "id": "t1236",
+  "word": "位置",
+  "questionZh": "搭火車或看電影的時候，你喜歡坐哪裡？",
+  "questionEn": "When you take the train or watch a movie, where do you like to sit?",
+  "answerZh": "我喜歡坐靠窗的位置，可以看外面的風景。看電影的話，我喜歡坐中間。",
+  "answerEn": "I like a window seat so I can see the scenery outside. At the movies, I like to sit in the middle."
+ },
+ {
+  "id": "t1239",
+  "word": "廣告",
+  "questionZh": "你看影片的時候，最受不了什麼？",
+  "questionEn": "What can you least stand when watching videos?",
+  "answerZh": "我最受不了一直跳出來的廣告。有時候一部影片要看三、四個廣告，真的很煩。",
+  "answerEn": "What I can least stand is ads that keep popping up. Sometimes one video makes you watch three or four ads, which is really annoying."
+ },
+ {
+  "id": "t1243",
+  "word": "表演",
+  "questionZh": "你有沒有上台唱歌或跳舞的經驗？",
+  "questionEn": "Have you ever sung or danced on stage?",
+  "answerZh": "我去年在公司的尾牙上台表演唱歌。我很緊張，可是大家都很捧場。",
+  "answerEn": "Last year I got on stage and performed a song at my company's year-end party. I was nervous, but everyone was really supportive."
+ },
+ {
+  "id": "t1246",
+  "word": "運氣",
+  "questionZh": "你覺得自己是一個常常中獎的人嗎？",
+  "questionEn": "Do you think you're someone who often wins prizes?",
+  "answerZh": "我的運氣不太好，從來沒中過發票。可是我朋友上個月中了兩百塊。",
+  "answerEn": "My luck isn't great; I've never won the receipt lottery. But my friend won two hundred dollars last month."
+ },
+ {
+  "id": "t1251",
+  "word": "祕密",
+  "questionZh": "有沒有什麼事，你只跟最好的朋友說過？",
+  "questionEn": "Is there anything you've only told your best friend?",
+  "answerZh": "有啊，可是這是我的祕密，不能告訴你。我只能說跟我喜歡的人有關。",
+  "answerEn": "Yes, but it's my secret, so I can't tell you. All I can say is that it has to do with someone I like."
+ },
+ {
+  "id": "t1254",
+  "word": "產品",
+  "questionZh": "你最喜歡台灣的哪些東西，常常買來送朋友？",
+  "questionEn": "Which Taiwanese things do you like most and often buy as gifts for friends?",
+  "answerZh": "我常常買台灣的茶葉和鳳梨酥送朋友。這些產品包裝很漂亮，大家都很喜歡。",
+  "answerEn": "I often buy Taiwanese tea and pineapple cakes for friends. These products are nicely packaged, and everyone loves them."
+ },
+ {
+  "id": "t1258",
+  "word": "精神",
+  "questionZh": "你早上起床的時候通常覺得怎麼樣？",
+  "questionEn": "How do you usually feel when you wake up in the morning?",
+  "answerZh": "我早上常常沒什麼精神，一定要先喝一杯咖啡。喝完以後才比較清醒。",
+  "answerEn": "I often don't have much energy in the morning, so I have to drink a cup of coffee first. Only after that do I feel more awake."
+ },
+ {
+  "id": "t1261",
+  "word": "母語",
+  "questionZh": "你從小在家裡都說什麼話？",
+  "questionEn": "What language did you speak at home growing up?",
+  "answerZh": "我的母語是英文，從小在家都說英文。不過我奶奶會跟我說一點西班牙文。",
+  "answerEn": "My native language is English, and I've spoken English at home since I was little. But my grandma speaks a little Spanish with me."
+ },
+ {
+  "id": "t1264",
+  "word": "兒童",
+  "questionZh": "你覺得台北有很多適合小朋友玩的地方嗎？",
+  "questionEn": "Do you think Taipei has a lot of places for kids to play?",
+  "answerZh": "我覺得滿多的，很多公園都有兒童遊樂區。週末常常看到爸媽帶小孩去玩。",
+  "answerEn": "I think there are quite a few; many parks have children's play areas. On weekends you often see parents taking their kids there."
+ },
+ {
+  "id": "t1268",
+  "word": "適應",
+  "questionZh": "你剛來台灣的時候，有什麼不習慣的地方？",
+  "questionEn": "When you first came to Taiwan, what weren't you used to?",
+  "answerZh": "我剛來的時候不太適應這裡的天氣，夏天真的太熱了。現在我出門一定會帶水和雨傘。",
+  "answerEn": "When I first came, I couldn't really adapt to the weather here; summer is way too hot. Now I always bring water and an umbrella when I go out."
+ },
+ {
+  "id": "t1271",
+  "word": "增加",
+  "questionZh": "你來台灣以後，體重有改變嗎？",
+  "questionEn": "Has your weight changed since you came to Taiwan?",
+  "answerZh": "我來台灣以後體重增加了五公斤。因為夜市的東西太好吃了！",
+  "answerEn": "My weight has increased by five kilos since I came to Taiwan. The night market food is just too good!"
+ },
+ {
+  "id": "t1275",
+  "word": "想起",
+  "questionZh": "聽到哪一首歌或吃到什麼東西，會讓你想家？",
+  "questionEn": "What song or food makes you homesick?",
+  "answerZh": "每次聽到我們國家的老歌，我就會想起家人。我常常在睡覺前聽。",
+  "answerEn": "Every time I hear old songs from my country, I think of my family. I often listen to them before bed."
+ },
+ {
+  "id": "t1278",
+  "word": "說明",
+  "questionZh": "第一次用自動售票機的時候，你知道怎麼操作嗎？",
+  "questionEn": "The first time you used a ticket machine, did you know how to operate it?",
+  "answerZh": "我一開始不會用，後來看了旁邊的說明才知道。現在我都直接刷卡進站了。",
+  "answerEn": "At first I didn't know how, but then I read the instructions next to it and figured it out. Now I just tap my card to enter the station."
+ },
+ {
+  "id": "t1282",
+  "word": "拒絕",
+  "questionZh": "如果同事請你週末幫忙加班，你會答應嗎？",
+  "questionEn": "If a coworker asked you to help with overtime on the weekend, would you agree?",
+  "answerZh": "我通常會拒絕，因為週末是我休息的時間。不過如果真的很急，我還是會幫忙。",
+  "answerEn": "I usually say no, because weekends are my time to rest. But if it's really urgent, I'll still help."
+ },
+ {
+  "id": "t1286",
+  "word": "提供",
+  "questionZh": "你住的地方附近，有什麼方便的服務？",
+  "questionEn": "What convenient services are there near where you live?",
+  "answerZh": "我家樓下的便利商店提供很多服務，可以繳費、印東西，也可以拿包裹。真的很方便。",
+  "answerEn": "The convenience store downstairs offers lots of services: you can pay bills, print things, and pick up packages. It's really convenient."
+ },
+ {
+  "id": "t1289",
+  "word": "放棄",
+  "questionZh": "學中文的時候，你有沒有想過不學了？",
+  "questionEn": "While learning Chinese, have you ever thought about quitting?",
+  "answerZh": "有啊，剛開始學聲調的時候，我差點就放棄了。還好我的老師一直鼓勵我。",
+  "answerEn": "Yes, when I first started learning tones, I almost gave up. Luckily my teacher kept encouraging me."
+ },
+ {
+  "id": "t1297",
+  "word": "收拾",
+  "questionZh": "你多久整理一次房間？",
+  "questionEn": "How often do you tidy your room?",
+  "answerZh": "我大概每個週末收拾一次房間。平常太忙了，東西常常亂放。",
+  "answerEn": "I tidy my room about once every weekend. I'm too busy during the week, so things often get left lying around."
+ },
+ {
+  "id": "t1307",
+  "word": "拜訪",
+  "questionZh": "你去過台灣朋友的家嗎？去之前你會準備什麼？",
+  "questionEn": "Have you been to a Taiwanese friend's home? What would you prepare before going?",
+  "answerZh": "我上次去拜訪朋友的爸媽，帶了一盒水果過去。他們很高興，還留我吃晚飯。",
+  "answerEn": "Last time I visited my friend's parents, I brought a box of fruit. They were very happy and even had me stay for dinner."
+ },
+ {
+  "id": "t1312",
+  "word": "省錢",
+  "questionZh": "你平常會用什麼方法讓自己少花一點錢？",
+  "questionEn": "What do you usually do to spend a bit less money?",
+  "answerZh": "為了省錢，我中午都自己帶便當。週末也比較少出去吃大餐。",
+  "answerEn": "To save money, I bring my own lunch box every day. I also go out for big meals less often on weekends."
+ },
+ {
+  "id": "t1318",
+  "word": "確定",
+  "questionZh": "這個週末你有什麼計畫嗎？",
+  "questionEn": "Do you have any plans this weekend?",
+  "answerZh": "我還不確定，可能會去淡水走走。如果下雨的話，我就在家看電影。",
+  "answerEn": "I'm not sure yet; I might go walk around Tamsui. If it rains, I'll stay home and watch movies."
+ },
+ {
+  "id": "t1322",
+  "word": "交換",
+  "questionZh": "你有沒有跟台灣人互相教對方語言的經驗？",
+  "questionEn": "Have you ever taught languages to each other with a Taiwanese person?",
+  "answerZh": "有，我每個禮拜跟一個台灣朋友語言交換。我教她英文，她教我中文。",
+  "answerEn": "Yes, every week I do a language exchange with a Taiwanese friend. I teach her English, and she teaches me Chinese."
+ },
+ {
+  "id": "t1327",
+  "word": "商量",
+  "questionZh": "要做重要決定的時候，你會先問誰的意見？",
+  "questionEn": "When you have to make an important decision, whose opinion do you ask first?",
+  "answerZh": "我通常會先跟我太太商量。她想得比我仔細，常常給我很好的建議。",
+  "answerEn": "I usually talk it over with my wife first. She thinks things through more carefully than I do and often gives me great advice."
+ },
+ {
+  "id": "t1332",
+  "word": "遇到",
+  "questionZh": "你在台灣有沒有碰過什麼有趣或奇怪的事？",
+  "questionEn": "Have you come across anything interesting or strange in Taiwan?",
+  "answerZh": "有一次我在捷運上遇到一個阿伯，他一直用台語跟我聊天。我聽不懂，可是他還是很開心。",
+  "answerEn": "Once on the MRT I ran into an older man who kept chatting with me in Taiwanese. I couldn't understand, but he was still very happy."
+ },
+ {
+  "id": "t1337",
+  "word": "欣賞",
+  "questionZh": "你最喜歡台灣人的哪一點？",
+  "questionEn": "What do you like most about Taiwanese people?",
+  "answerZh": "我很欣賞台灣人的熱情，問路的時候大家都很願意幫忙。有時候還會直接帶我過去。",
+  "answerEn": "I really appreciate how warm Taiwanese people are; when I ask for directions, everyone is happy to help. Sometimes they even take me there."
+ },
+ {
+  "id": "t1340",
+  "word": "慢跑",
+  "questionZh": "你平常都做什麼運動？",
+  "questionEn": "What exercise do you usually do?",
+  "answerZh": "我每天早上都去河濱公園慢跑。跑完再去早餐店吃蛋餅，感覺很棒。",
+  "answerEn": "I jog at the riverside park every morning. Afterward I go to a breakfast shop for an egg crepe, and it feels great."
+ },
+ {
+  "id": "t1391",
+  "word": "以內",
+  "questionZh": "你家走路到捷運站要多久？",
+  "questionEn": "How long does it take to walk from your home to the MRT station?",
+  "answerZh": "很近，走路五分鐘以內就到了。所以我每天都可以睡晚一點。",
+  "answerEn": "It's very close, within a five-minute walk. So I get to sleep in a bit every day."
+ },
+ {
+  "id": "t1394",
+  "word": "隔壁",
+  "questionZh": "你跟你的鄰居熟嗎？",
+  "questionEn": "Do you know your neighbors well?",
+  "answerZh": "我跟隔壁的阿姨很熟。她常常煮太多菜，就拿一點來給我吃。",
+  "answerEn": "I'm close with the lady next door. She often cooks too much and brings some over for me."
+ },
+ {
+  "id": "t1425",
+  "word": "匯款",
+  "questionZh": "你常常需要寄錢回你的國家嗎？",
+  "questionEn": "Do you often need to send money back to your country?",
+  "answerZh": "我每個月都會匯款給我爸媽。我都在網路銀行上弄，很方便。",
+  "answerEn": "I wire money to my parents every month. I do it through online banking, which is very convenient."
+ },
+ {
+  "id": "t1428",
+  "word": "收據",
+  "questionZh": "買比較貴的東西時，你付完錢會記得拿什麼？",
+  "questionEn": "When you buy something expensive, what do you remember to take after paying?",
+  "answerZh": "我會跟店家要收據，然後好好收起來。如果東西壞了，拿收據去修比較方便。",
+  "answerEn": "I ask the shop for a receipt and keep it somewhere safe. If the item breaks, it's easier to get it repaired with the receipt."
+ },
+ {
+  "id": "t1432",
+  "word": "掛號信",
+  "questionZh": "你有收過一定要本人簽名才能拿的信嗎？",
+  "questionEn": "Have you ever received a letter you had to sign for in person?",
+  "answerZh": "有，我上個月收到一封掛號信，是從銀行寄來的。郵差說要我本人簽名才能拿。",
+  "answerEn": "Yes, last month I got a registered letter from the bank. The mail carrier said I had to sign for it myself."
+ },
+ {
+  "id": "t1435",
+  "word": "號碼牌",
+  "questionZh": "你去銀行或郵局辦事的時候，第一件事做什麼？",
+  "questionEn": "When you go to the bank or post office, what's the first thing you do?",
+  "answerZh": "我一進去就先抽號碼牌。然後坐在椅子上等，順便滑手機。",
+  "answerEn": "As soon as I walk in, I take a queue number ticket. Then I sit and wait while scrolling on my phone."
+ },
+ {
+  "id": "t1438",
+  "word": "居留證",
+  "questionZh": "在台灣辦電話門號或開銀行帳戶，需要帶什麼證件？",
+  "questionEn": "What ID do you need to bring to get a phone number or open a bank account in Taiwan?",
+  "answerZh": "我需要帶居留證和護照。第一次辦的時候我忘了帶，只好再跑一趟。",
+  "answerEn": "I need to bring my residence permit and passport. The first time, I forgot to bring them and had to make another trip."
+ },
+ {
+  "id": "t1442",
+  "word": "大樓",
+  "questionZh": "你現在住在什麼樣的房子裡？",
+  "questionEn": "What kind of place do you live in now?",
+  "answerZh": "我住在一棟二十幾層的大樓，我家在十八樓。晚上從陽台可以看到很漂亮的夜景。",
+  "answerEn": "I live in a high-rise with over twenty floors, and my place is on the eighteenth. At night I can see a beautiful night view from the balcony."
+ },
+ {
+  "id": "t1445",
+  "word": "衣櫃",
+  "questionZh": "你的衣服多嗎？都放在哪裡？",
+  "questionEn": "Do you have a lot of clothes? Where do you keep them?",
+  "answerZh": "我的衣服太多了，衣櫃都快關不起來了。我想把一些不穿的送給朋友。",
+  "answerEn": "I have way too many clothes; my wardrobe barely closes. I want to give some I don't wear to friends."
+ },
+ {
+  "id": "t1450",
+  "word": "分類",
+  "questionZh": "你的書或檔案多嗎？你怎麼整理？",
+  "questionEn": "Do you have a lot of books or files? How do you organize them?",
+  "answerZh": "我的書很多，所以我會按照語言分類。中文書放一邊，英文書放另一邊。",
+  "answerEn": "I have a lot of books, so I sort them by language. Chinese books go on one side and English books on the other."
+ },
+ {
+  "id": "t1453",
+  "word": "漏水",
+  "questionZh": "你住的地方有沒有出過什麼問題？",
+  "questionEn": "Has your place ever had any problems?",
+  "answerZh": "有，去年颱風的時候，我家天花板漏水。房東馬上找人來修，還好不太嚴重。",
+  "answerEn": "Yes, during a typhoon last year, my ceiling leaked. The landlord got someone to fix it right away, and luckily it wasn't too serious."
+ },
+ {
+  "id": "t1458",
+  "word": "傳統市場",
+  "questionZh": "你平常都去哪裡買菜？超市還是別的地方？",
+  "questionEn": "Where do you usually buy groceries? The supermarket or somewhere else?",
+  "answerZh": "我比較喜歡去傳統市場買菜，又新鮮又便宜。老闆有時候還會多送我一把蔥。",
+  "answerEn": "I prefer buying groceries at the traditional market; it's fresh and cheap. The vendors sometimes even throw in an extra bunch of green onions."
+ },
+ {
+  "id": "t1461",
+  "word": "會員",
+  "questionZh": "你常去的店，有沒有辦什麼卡可以打折？",
+  "questionEn": "Do you have any cards for discounts at the stores you often go to?",
+  "answerZh": "我有辦藥妝店的會員，買東西可以累積點數。每次都可以省一點錢。",
+  "answerEn": "I signed up for membership at a drugstore, so I collect points when I shop. I save a little money every time."
+ },
+ {
+  "id": "t1464",
+  "word": "退貨",
+  "questionZh": "如果你網路上買的衣服不合身，你會怎麼辦？",
+  "questionEn": "If clothes you bought online don't fit, what do you do?",
+  "answerZh": "我會直接退貨，大部分網站七天內都可以退。如果只是尺寸不對，我就會換一件。",
+  "answerEn": "I just return them; most websites let you return within seven days. If it's only the wrong size, I'll exchange it."
+ },
+ {
+  "id": "t1468",
+  "word": "皮夾",
+  "questionZh": "你有沒有掉過東西？後來找回來了嗎？",
+  "questionEn": "Have you ever lost something? Did you get it back?",
+  "answerZh": "有，我曾經把皮夾掉在公車上。後來去失物招領中心，真的找回來了！",
+  "answerEn": "Yes, I once lost my wallet on a bus. Later I went to the lost and found center and actually got it back!"
+ },
+ {
+  "id": "t1471",
+  "word": "枕頭",
+  "questionZh": "你睡覺的時候有什麼習慣？",
+  "questionEn": "What habits do you have when you sleep?",
+  "answerZh": "我一定要用自己的枕頭才睡得著。所以出國旅行的時候，我常常睡不好。",
+  "answerEn": "I can only fall asleep with my own pillow. So when I travel abroad, I often sleep badly."
+ },
+ {
+  "id": "t1475",
+  "word": "連假",
+  "questionZh": "下次放好幾天假的時候，你想去哪裡玩？",
+  "questionEn": "Next time you have several days off, where do you want to go?",
+  "answerZh": "下次連假我想去台東，看看海邊的風景。不過連假人很多，要早一點訂房。",
+  "answerEn": "On the next long weekend I want to go to Taitung to see the seaside scenery. But it's crowded on long weekends, so I need to book a room early."
+ },
+ {
+  "id": "t1478",
+  "word": "隔天",
+  "questionZh": "你喝酒或熬夜以後，第二天通常會怎麼樣？",
+  "questionEn": "After drinking or staying up late, how are you usually the next day?",
+  "answerZh": "我只要熬夜，隔天上班就一直打哈欠。所以我現在盡量十二點以前睡覺。",
+  "answerEn": "Whenever I stay up late, I keep yawning at work the next day. So now I try to go to bed before midnight."
+ },
+ {
+  "id": "t1483",
+  "word": "服務費",
+  "questionZh": "在台灣的餐廳吃飯，帳單上常有什麼額外的費用？",
+  "questionEn": "When eating at restaurants in Taiwan, what extra charges often appear on the bill?",
+  "answerZh": "比較高級的餐廳通常會收一成服務費。所以在台灣吃飯不用另外給小費。",
+  "answerEn": "Fancier restaurants usually add a ten percent service charge. So in Taiwan you don't need to leave a separate tip."
+ },
+ {
+  "id": "t1486",
+  "word": "鹹酥雞",
+  "questionZh": "晚上肚子餓的時候，你最喜歡買什麼宵夜？",
+  "questionEn": "When you're hungry at night, what late-night snack do you like to buy most?",
+  "answerZh": "我最喜歡買鹹酥雞，再加一點九層塔和辣椒。配一杯冰紅茶真的很過癮。",
+  "answerEn": "My favorite is Taiwanese popcorn chicken with some basil and chili. With a cup of iced black tea, it's so satisfying."
+ },
+ {
+  "id": "t1489",
+  "word": "手搖飲",
+  "questionZh": "你一個禮拜喝幾杯飲料店的飲料？",
+  "questionEn": "How many drinks from drink stands do you have a week?",
+  "answerZh": "我幾乎每天都喝一杯手搖飲，最愛珍珠奶茶。我都點半糖少冰，比較健康一點。",
+  "answerEn": "I have a shaken drink almost every day, and my favorite is bubble milk tea. I always order half sugar and less ice to be a bit healthier."
+ },
+ {
+  "id": "t1494",
+  "word": "油膩",
+  "questionZh": "你覺得台灣哪一種食物吃太多會不舒服？",
+  "questionEn": "Which Taiwanese food makes you feel bad if you eat too much?",
+  "answerZh": "我覺得炸的東西太油膩了，像炸雞排。吃完我常常要喝很多綠茶。",
+  "answerEn": "I think fried food is too greasy, like fried chicken cutlets. After eating it I often need to drink a lot of green tea."
+ },
+ {
+  "id": "t1497",
+  "word": "吃素",
+  "questionZh": "你身邊有朋友不吃肉嗎？他們都吃什麼？",
+  "questionEn": "Do you have friends who don't eat meat? What do they eat?",
+  "answerZh": "我有一個同事吃素，她常常帶我去素食自助餐。我發現素食也可以很好吃。",
+  "answerEn": "I have a coworker who's vegetarian, and she often takes me to a vegetarian buffet. I've found that vegetarian food can be really tasty too."
+ },
+ {
+  "id": "t1501",
+  "word": "車廂",
+  "questionZh": "坐捷運的時候，你通常站在哪裡等車？",
+  "questionEn": "When you take the MRT, where do you usually stand to wait for the train?",
+  "answerZh": "我通常會走到最後一節車廂，因為人比較少。有時候還找得到位子坐。",
+  "answerEn": "I usually walk to the last car because there are fewer people. Sometimes I can even find a seat."
+ },
+ {
+  "id": "t1504",
+  "word": "旅客",
+  "questionZh": "連假的時候，火車站或機場人多嗎？",
+  "questionEn": "Are train stations and airports crowded during long weekends?",
+  "answerZh": "人超多的，到處都是拉著行李的旅客。所以我連假都盡量不出遠門。",
+  "answerEn": "Super crowded, with travelers pulling luggage everywhere. So I try not to travel far on long weekends."
+ },
+ {
+  "id": "t1508",
+  "word": "班機",
+  "questionZh": "你上次坐飛機有遇到什麼問題嗎？",
+  "questionEn": "Did you run into any problems the last time you flew?",
+  "answerZh": "上次因為颱風，我的班機延誤了五個小時。我只好在機場吃東西、看書等。",
+  "answerEn": "Last time my flight was delayed five hours because of a typhoon. I had no choice but to eat and read at the airport while I waited."
+ },
+ {
+  "id": "t1511",
+  "word": "海關",
+  "questionZh": "你每次入境台灣的時候，會很緊張嗎？",
+  "questionEn": "Do you get nervous every time you enter Taiwan?",
+  "answerZh": "不會，海關的人員都很客氣。只要證件準備好，很快就可以出去了。",
+  "answerEn": "No, the customs officers are very polite. As long as your documents are ready, you can get out quickly."
+ },
+ {
+  "id": "t1515",
+  "word": "夜景",
+  "questionZh": "你覺得晚上去哪裡看城市最漂亮？",
+  "questionEn": "Where do you think is the most beautiful place to see the city at night?",
+  "answerZh": "我覺得象山的夜景最漂亮，可以看到整個台北。爬上去有點累，可是很值得。",
+  "answerEn": "I think the night view from Elephant Mountain is the most beautiful; you can see all of Taipei. Climbing up is a bit tiring, but it's worth it."
+ },
+ {
+  "id": "t1518",
+  "word": "登山",
+  "questionZh": "放假的時候，你喜歡去戶外走走嗎？",
+  "questionEn": "Do you like getting outdoors on your days off?",
+  "answerZh": "我很喜歡登山，台灣的山真的很漂亮。不過每次都要先看天氣，才不會遇到下雨。",
+  "answerEn": "I love hiking in the mountains; Taiwan's mountains are really beautiful. But I always have to check the weather first so I don't get caught in the rain."
+ },
+ {
+  "id": "t1521",
+  "word": "導航",
+  "questionZh": "開車或騎車去不熟的地方，你怎麼找路？",
+  "questionEn": "When you drive or ride to an unfamiliar place, how do you find your way?",
+  "answerZh": "我都用手機導航，非常方便。不過有一次它帶我走到一條很小的路，我差點迷路。",
+  "answerEn": "I always use navigation on my phone; it's very convenient. But once it took me down a really narrow road, and I almost got lost."
+ },
+ {
+  "id": "t1525",
+  "word": "駕照",
+  "questionZh": "你在台灣有騎機車或開車嗎？",
+  "questionEn": "Do you ride a scooter or drive in Taiwan?",
+  "answerZh": "我有騎機車，去年考到台灣的駕照。我考了兩次才過，路考的時候太緊張了。",
+  "answerEn": "I ride a scooter; I got my Taiwanese driver's license last year. It took me two tries to pass because I was too nervous during the road test."
+ },
+ {
+  "id": "t1529",
+  "word": "行程",
+  "questionZh": "出去旅行的時候，你喜歡先計畫好，還是隨便走走？",
+  "questionEn": "When you travel, do you like to plan ahead or just wander around?",
+  "answerZh": "我喜歡先把行程排好，這樣比較不會浪費時間。不過我也會留一天自由活動。",
+  "answerEn": "I like to plan my itinerary first so I don't waste time. But I also leave one day free."
+ },
+ {
+  "id": "t1533",
+  "word": "遊客",
+  "questionZh": "你覺得九份或淡水這種地方，什麼時候去最好？",
+  "questionEn": "When do you think is the best time to go to places like Jiufen or Tamsui?",
+  "answerZh": "我覺得平日去最好，因為週末遊客太多了。走在老街上連拍照都很難。",
+  "answerEn": "I think weekdays are best because there are too many visitors on weekends. Walking down the old street, it's hard to even take photos."
+ },
+ {
+  "id": "t1536",
+  "word": "淋雨",
+  "questionZh": "你出門的時候，常常忘記帶傘嗎？",
+  "questionEn": "Do you often forget to bring an umbrella when you go out?",
+  "answerZh": "常常忘記，所以我常淋雨回家。上禮拜還因為這樣感冒了。",
+  "answerEn": "I forget all the time, so I often get caught in the rain on my way home. Last week I even caught a cold because of it."
+ },
+ {
+  "id": "t1541",
+  "word": "傷口",
+  "questionZh": "你有沒有不小心受過傷？怎麼處理的？",
+  "questionEn": "Have you ever hurt yourself by accident? How did you deal with it?",
+  "answerZh": "我上次切菜不小心切到手，傷口流了很多血。我馬上去藥局買藥來擦。",
+  "answerEn": "Last time I accidentally cut my hand while chopping vegetables, and the cut bled a lot. I went right to the pharmacy to buy some ointment."
+ },
+ {
+  "id": "t1544",
+  "word": "保險",
+  "questionZh": "你覺得在台灣看醫生貴嗎？",
+  "questionEn": "Do you think seeing a doctor in Taiwan is expensive?",
+  "answerZh": "不貴，因為我有健保，掛號費只要一點點錢。我另外也買了意外保險，比較安心。",
+  "answerEn": "Not expensive, because I have national health insurance and the registration fee is very low. I also bought accident insurance, which gives me peace of mind."
+ },
+ {
+  "id": "t1547",
+  "word": "體溫",
+  "questionZh": "如果你覺得自己好像發燒了，你會怎麼做？",
+  "questionEn": "If you feel like you might have a fever, what do you do?",
+  "answerZh": "我會先量一下體溫，如果超過三十八度，就去看醫生。然後多喝水、好好休息。",
+  "answerEn": "I first take my temperature, and if it's over thirty-eight degrees, I go see a doctor. Then I drink lots of water and get good rest."
+ },
+ {
+  "id": "t1551",
+  "word": "開刀",
+  "questionZh": "你有沒有住過醫院？是為了什麼？",
+  "questionEn": "Have you ever been in the hospital? What for?",
+  "answerZh": "我小時候因為盲腸炎開刀，住了一個禮拜的醫院。那是我唯一一次住院。",
+  "answerEn": "When I was little I had surgery for appendicitis and stayed in the hospital for a week. That's the only time I've been hospitalized."
+ },
+ {
+  "id": "t1555",
+  "word": "頭暈",
+  "questionZh": "太久沒吃東西或太熱的時候，你會覺得怎麼樣？",
+  "questionEn": "How do you feel when you haven't eaten for too long or it's too hot?",
+  "answerZh": "我會覺得頭暈，有時候還會想吐。所以夏天出門我一定會帶水和一點餅乾。",
+  "answerEn": "I feel dizzy, and sometimes I even feel like throwing up. So in summer I always bring water and some crackers when I go out."
+ },
+ {
+  "id": "t1559",
+  "word": "皮膚",
+  "questionZh": "台灣的天氣對你的身體有什麼影響？",
+  "questionEn": "How does Taiwan's weather affect your body?",
+  "answerZh": "台灣很潮濕，我的皮膚變得比較好。可是夏天太陽很大，不擦防曬很容易曬傷。",
+  "answerEn": "Taiwan is humid, so my skin has gotten better. But the summer sun is strong, and without sunscreen it's easy to get sunburned."
+ },
+ {
+  "id": "t1562",
+  "word": "預防",
+  "questionZh": "天氣變冷的時候，你怎麼讓自己不要感冒？",
+  "questionEn": "When the weather turns cold, how do you keep from catching a cold?",
+  "answerZh": "為了預防感冒，我每天都會多喝熱水。出門也一定穿外套、戴口罩。",
+  "answerEn": "To prevent colds, I drink lots of hot water every day. I also always wear a jacket and a mask when I go out."
+ },
+ {
+  "id": "t1566",
+  "word": "失眠",
+  "questionZh": "你晚上睡得好嗎？",
+  "questionEn": "Do you sleep well at night?",
+  "answerZh": "最近工作壓力很大，我常常失眠。躺在床上兩三個小時都睡不著。",
+  "answerEn": "Work has been really stressful lately, and I often can't sleep. I lie in bed for two or three hours without falling asleep."
+ },
+ {
+  "id": "t1569",
+  "word": "職業",
+  "questionZh": "你現在做什麼工作？你喜歡嗎？",
+  "questionEn": "What do you do for work now? Do you like it?",
+  "answerZh": "我的職業是工程師，在一家科技公司上班。工作很忙，可是我學到很多東西。",
+  "answerEn": "I'm an engineer by profession and work at a tech company. The work is busy, but I've learned a lot."
+ },
+ {
+  "id": "t1572",
+  "word": "應徵",
+  "questionZh": "你是怎麼找到現在這份工作的？",
+  "questionEn": "How did you find your current job?",
+  "answerZh": "我在網路上看到這家公司在找人，就去應徵了。面試了兩次才錄取。",
+  "answerEn": "I saw online that this company was hiring, so I applied. I had two interviews before they hired me."
+ },
+ {
+  "id": "t1576",
+  "word": "實習",
+  "questionZh": "你大學畢業以前，有在公司工作過嗎？",
+  "questionEn": "Did you work at a company before you graduated from college?",
+  "answerZh": "有，我大四的時候在一家旅行社實習三個月。我學到怎麼跟客人溝通。",
+  "answerEn": "Yes, in my senior year I interned at a travel agency for three months. I learned how to communicate with customers."
+ },
+ {
+  "id": "t1579",
+  "word": "任務",
+  "questionZh": "你第一天上班的時候，主管讓你做什麼？",
+  "questionEn": "On your first day at work, what did your supervisor have you do?",
+  "answerZh": "主管給我的第一個任務是整理客人的資料。雖然很簡單，可是我做得很認真。",
+  "answerEn": "The first task my supervisor gave me was organizing customer information. It was simple, but I did it very carefully."
+ },
+ {
+  "id": "t1583",
+  "word": "檔案",
+  "questionZh": "你的電腦裡最多的是什麼東西？",
+  "questionEn": "What is there most of on your computer?",
+  "answerZh": "我的電腦裡最多的是照片和工作的檔案。我每個月都會備份一次，怕電腦壞掉。",
+  "answerEn": "What I have most on my computer is photos and work files. I back them up once a month in case my computer breaks."
+ },
+ {
+  "id": "t1586",
+  "word": "簡報",
+  "questionZh": "開會的時候，你需要上台報告嗎？",
+  "questionEn": "Do you need to give presentations in meetings?",
+  "answerZh": "需要，我每個月都要做一次簡報。前一天晚上我都會在家練習好幾次。",
+  "answerEn": "Yes, I have to give a presentation once a month. The night before, I always practice several times at home."
+ },
+ {
+  "id": "t1590",
+  "word": "營業",
+  "questionZh": "你家附近的店，晚上大概開到幾點？",
+  "questionEn": "Until about what time are the shops near your home open at night?",
+  "answerZh": "便利商店是二十四小時營業的。其他的小吃店大部分九點就關了。",
+  "answerEn": "The convenience stores are open twenty-four hours. Most of the other small eateries close at nine."
+ },
+ {
+  "id": "t1593",
+  "word": "獎學金",
+  "questionZh": "你念書的時候，學費是自己付的嗎？",
+  "questionEn": "When you were studying, did you pay your own tuition?",
+  "answerZh": "不是，我拿到學校的獎學金，學費和生活費都不用擔心。所以我很認真念書。",
+  "answerEn": "No, I got a scholarship from the school, so I didn't have to worry about tuition or living expenses. So I studied really hard."
+ },
+ {
+  "id": "t1597",
+  "word": "補習",
+  "questionZh": "你小時候放學以後，還要去上別的課嗎？",
+  "questionEn": "When you were a kid, did you have to take other classes after school?",
+  "answerZh": "我國中的時候每天都去補習班補數學。常常晚上九點才回家，好累。",
+  "answerEn": "In junior high I went to cram school for math every day. I often didn't get home until nine at night, which was exhausting."
+ },
+ {
+  "id": "t1600",
+  "word": "技術",
+  "questionZh": "你覺得現在找工作，最重要的是什麼能力？",
+  "questionEn": "What do you think is the most important ability for finding a job these days?",
+  "answerZh": "我覺得要有一種專業的技術，像是寫程式或設計。會說好幾種語言也很有幫助。",
+  "answerEn": "I think you need a professional skill, like programming or design. Speaking several languages also helps a lot."
+ },
+ {
+  "id": "t1603",
+  "word": "驚訝",
+  "questionZh": "你剛來台灣時，有什麼事讓你覺得很意外？",
+  "questionEn": "When you first came to Taiwan, what surprised you?",
+  "answerZh": "我很驚訝垃圾車會放音樂。大家聽到音樂就拿著垃圾出來等。",
+  "answerEn": "I was amazed that garbage trucks play music. When people hear the music, they come out with their trash and wait."
+ },
+ {
+  "id": "t1607",
+  "word": "安心",
+  "questionZh": "你覺得一個人晚上在台灣走路安全嗎？",
+  "questionEn": "Do you think it's safe to walk alone at night in Taiwan?",
+  "answerZh": "我覺得很安全，晚上一個人走路也很安心。到處都有便利商店，有問題可以進去。",
+  "answerEn": "I think it's very safe, and I feel at ease walking alone at night. There are convenience stores everywhere, so you can go in if there's a problem."
+ },
+ {
+  "id": "t1610",
+  "word": "原諒",
+  "questionZh": "如果好朋友對你說謊，你會怎麼做？",
+  "questionEn": "If a good friend lied to you, what would you do?",
+  "answerZh": "我會很生氣，可是如果他真心道歉，我還是會原諒他。朋友之間難免會犯錯。",
+  "answerEn": "I'd be angry, but if he sincerely apologized, I'd still forgive him. Mistakes are bound to happen between friends."
+ },
+ {
+  "id": "t1614",
+  "word": "內向",
+  "questionZh": "在人多的聚會上，你通常會主動跟別人聊天嗎？",
+  "questionEn": "At crowded gatherings, do you usually start conversations with people?",
+  "answerZh": "不太會，我比較內向，常常一個人在旁邊吃東西。熟了以後我就很愛說話了。",
+  "answerEn": "Not really; I'm rather introverted and often eat by myself off to the side. Once I get to know people, I love to talk."
+ },
+ {
+  "id": "t1617",
+  "word": "體貼",
+  "questionZh": "你的另一半或好朋友，有什麼讓你很感動的地方？",
+  "questionEn": "What about your partner or a close friend really touches you?",
+  "answerZh": "我男朋友很體貼，下雨天會騎車來接我下班。我生病的時候，他還會煮粥給我吃。",
+  "answerEn": "My boyfriend is very considerate; on rainy days he rides over to pick me up from work. When I'm sick, he even makes me porridge."
+ },
+ {
+  "id": "t1621",
+  "word": "自私",
+  "questionZh": "你最不喜歡跟什麼樣的人一起工作？",
+  "questionEn": "What kind of people do you least like working with?",
+  "answerZh": "我最不喜歡自私的人，他們只想到自己。團體報告的時候，他們常常什麼都不做。",
+  "answerEn": "I least like selfish people; they only think of themselves. On group projects, they often do nothing at all."
+ },
+ {
+  "id": "t1624",
+  "word": "耐心",
+  "questionZh": "你覺得當老師最需要什麼？",
+  "questionEn": "What do you think a teacher needs most?",
+  "answerZh": "我覺得最需要耐心，因為學生常常問一樣的問題。我的中文老師就很有耐心。",
+  "answerEn": "I think they need patience most, because students often ask the same questions. My Chinese teacher is very patient."
+ },
+ {
+  "id": "t1627",
+  "word": "好奇",
+  "questionZh": "你第一次去夜市的時候，最想試什麼？",
+  "questionEn": "The first time you went to a night market, what did you most want to try?",
+  "answerZh": "我對臭豆腐很好奇，因為聞起來好臭。吃了以後才發現其實很好吃！",
+  "answerEn": "I was curious about stinky tofu because it smelled so bad. After eating it, I found out it's actually delicious!"
+ },
+ {
+  "id": "t1631",
+  "word": "信任",
+  "questionZh": "你會把家裡的鑰匙交給誰？",
+  "questionEn": "Who would you give your house keys to?",
+  "answerZh": "我只會交給我最信任的朋友。我們認識十年了，她從來沒讓我失望過。",
+  "answerEn": "Only to the friend I trust most. We've known each other for ten years, and she's never let me down."
+ },
+ {
+  "id": "t1634",
+  "word": "微笑",
+  "questionZh": "你覺得台灣的店員對客人怎麼樣？",
+  "questionEn": "How do you think shop clerks in Taiwan treat customers?",
+  "answerZh": "我覺得他們很親切，總是帶著微笑說「歡迎光臨」。讓人覺得很舒服。",
+  "answerEn": "I think they're very friendly and always say welcome with a smile. It makes you feel comfortable."
+ },
+ {
+  "id": "t1638",
+  "word": "交往",
+  "questionZh": "你跟你的另一半在一起多久了？",
+  "questionEn": "How long have you been with your partner?",
+  "answerZh": "我們交往三年了，是在語言交換的時候認識的。我們打算明年結婚。",
+  "answerEn": "We've been dating for three years; we met through a language exchange. We plan to get married next year."
+ },
+ {
+  "id": "t1641",
+  "word": "珍惜",
+  "questionZh": "你覺得生活中最重要的是什麼？",
+  "questionEn": "What do you think is most important in life?",
+  "answerZh": "我覺得最重要的是家人和朋友，要好好珍惜。因為住在國外，我更懂得這一點。",
+  "answerEn": "I think the most important things are family and friends, and you should cherish them. Living abroad, I understand this even better."
+ },
+ {
+  "id": "t1645",
+  "word": "必要",
+  "questionZh": "你覺得學中文一定要學寫字嗎？",
+  "questionEn": "Do you think you have to learn to write characters when learning Chinese?",
+  "answerZh": "我覺得有必要，因為會寫字比較容易記住。不過我覺得會打字也很重要。",
+  "answerEn": "I think it's necessary, because writing characters makes them easier to remember. But I think being able to type is important too."
+ },
+ {
+  "id": "t1648",
+  "word": "合適",
+  "questionZh": "你覺得去面試的時候應該穿什麼？",
+  "questionEn": "What do you think you should wear to a job interview?",
+  "answerZh": "我覺得穿襯衫和西裝褲比較合適。穿得太隨便，會讓人覺得你不認真。",
+  "answerEn": "I think a shirt and dress pants are more appropriate. If you dress too casually, people will think you're not serious."
+ },
+ {
+  "id": "t1651",
+  "word": "豐富",
+  "questionZh": "你覺得台灣的早餐店怎麼樣？",
+  "questionEn": "What do you think of Taiwan's breakfast shops?",
+  "answerZh": "台灣的早餐很豐富，有蛋餅、三明治、蘿蔔糕。我每天都吃不一樣的。",
+  "answerEn": "Breakfast in Taiwan is so plentiful: egg crepes, sandwiches, turnip cakes. I eat something different every day."
+ },
+ {
+  "id": "t1655",
+  "word": "優秀",
+  "questionZh": "你的同學或同事當中，有讓你很佩服的人嗎？",
+  "questionEn": "Among your classmates or coworkers, is there anyone you really admire?",
+  "answerZh": "有，我的同事小林非常優秀，會說四種語言。工作上遇到問題，大家都會去問他。",
+  "answerEn": "Yes, my coworker Xiao Lin is outstanding and speaks four languages. When anyone has a problem at work, they go ask him."
+ },
+ {
+  "id": "t1658",
+  "word": "自由",
+  "questionZh": "你喜歡一個人住，還是跟家人一起住？",
+  "questionEn": "Do you prefer living alone or with your family?",
+  "answerZh": "我喜歡一個人住，因為比較自由。想幾點回家都可以，也不用跟別人搶浴室。",
+  "answerEn": "I like living alone because I have more freedom. I can come home whenever I want and don't have to fight anyone for the bathroom."
+ },
+ {
+  "id": "t1662",
+  "word": "詳細",
+  "questionZh": "朋友第一次來你家，你怎麼跟他說怎麼走？",
+  "questionEn": "When a friend visits your home for the first time, how do you tell them how to get there?",
+  "answerZh": "我會傳一張很詳細的地圖給他，告訴他從哪個出口出來。這樣他就不會迷路了。",
+  "answerEn": "I send them a very detailed map and tell them which exit to take. That way they won't get lost."
+ },
+ {
+  "id": "t1665",
+  "word": "值得",
+  "questionZh": "你覺得台灣哪個地方一定要去看看？",
+  "questionEn": "Which place in Taiwan do you think is a must-see?",
+  "answerZh": "我覺得阿里山很值得去，可以看日出。雖然要很早起床，可是真的很美。",
+  "answerEn": "I think Alishan is really worth going to; you can watch the sunrise. You have to get up really early, but it's truly beautiful."
+ },
+ {
+  "id": "t1669",
+  "word": "大部分",
+  "questionZh": "你週末都在做什麼？",
+  "questionEn": "What do you do on weekends?",
+  "answerZh": "我大部分的週末都待在家裡休息。偶爾會跟朋友去咖啡廳聊天。",
+  "answerEn": "Most weekends I stay home and rest. Once in a while I go chat with friends at a café."
+ },
+ {
+  "id": "t1672",
+  "word": "過程",
+  "questionZh": "你辦簽證的時候順利嗎？",
+  "questionEn": "Did getting your visa go smoothly?",
+  "answerZh": "過程有一點麻煩，要準備很多文件。不過辦事的人很有耐心，一步一步教我。",
+  "answerEn": "The process was a bit of a hassle, and I had to prepare a lot of documents. But the staff were very patient and walked me through it step by step."
+ },
+ {
+  "id": "t1676",
+  "word": "法律",
+  "questionZh": "你覺得台灣和你的國家，規定上有什麼不一樣？",
+  "questionEn": "What differences in rules are there between Taiwan and your country?",
+  "answerZh": "台灣的法律規定騎機車一定要戴安全帽。在我的國家，很多人騎車都不戴。",
+  "answerEn": "Taiwan's law requires you to wear a helmet when riding a scooter. In my country, a lot of people don't wear one."
+ },
+ {
+  "id": "t1679",
+  "word": "習俗",
+  "questionZh": "台灣有什麼過節的方式讓你覺得很特別？",
+  "questionEn": "What way of celebrating holidays in Taiwan do you find special?",
+  "answerZh": "我覺得過年發紅包的習俗很有意思。結婚以後，就要開始給家裡的小朋友紅包了。",
+  "answerEn": "I find the custom of giving red envelopes at New Year really interesting. After you get married, you have to start giving red envelopes to the kids in the family."
+ },
+ {
+  "id": "t1682",
+  "word": "價格",
+  "questionZh": "你覺得台灣的東西貴不貴？",
+  "questionEn": "Do you think things in Taiwan are expensive?",
+  "answerZh": "我覺得吃的東西價格不貴，可是房租很貴。在台北租房子真的不容易。",
+  "answerEn": "I think food prices aren't high, but rent is expensive. Renting a place in Taipei really isn't easy."
+ },
+ {
+  "id": "t1686",
+  "word": "差別",
+  "questionZh": "你覺得台北和台南的生活有什麼不一樣？",
+  "questionEn": "How do you think life in Taipei and Tainan differs?",
+  "answerZh": "我覺得差別很大，台北比較忙，台南比較悠閒。台南的小吃也比台北便宜。",
+  "answerEn": "I think there's a big difference: Taipei is busier and Tainan is more relaxed. Street food in Tainan is also cheaper than in Taipei."
+ },
+ {
+  "id": "t1689",
+  "word": "理想",
+  "questionZh": "你小時候想當什麼？現在呢？",
+  "questionEn": "What did you want to be as a kid? And now?",
+  "answerZh": "我小時候的理想是當太空人。現在我只希望可以開一家小咖啡廳。",
+  "answerEn": "As a kid, my dream was to be an astronaut. Now I just hope I can open a small café."
+ },
+ {
+  "id": "t1693",
+  "word": "數量",
+  "questionZh": "你在網路上買東西，有遇過什麼問題嗎？",
+  "questionEn": "Have you ever had any problems shopping online?",
+  "answerZh": "有一次我買了十個杯子，可是數量不對，只寄來八個。我馬上聯絡賣家，他們很快就補寄了。",
+  "answerEn": "Once I bought ten cups, but the quantity was wrong and only eight arrived. I contacted the seller right away, and they quickly sent the rest."
+ },
+ {
+  "id": "t1696",
+  "word": "廣播",
+  "questionZh": "坐捷運或火車的時候，你怎麼知道快到站了？",
+  "questionEn": "When you're on the MRT or train, how do you know your stop is coming up?",
+  "answerZh": "我會注意聽車上的廣播，有中文、台語和英文。可是車上太吵的話，我還是會坐過站。",
+  "answerEn": "I listen carefully to the announcements on board, which are in Mandarin, Taiwanese, and English. But if it's too noisy, I still miss my stop."
+ },
+ {
+  "id": "t1700",
+  "word": "效果",
+  "questionZh": "你試過哪些學中文的方法？哪個最有用？",
+  "questionEn": "What methods of learning Chinese have you tried? Which was most useful?",
+  "answerZh": "我試過看影集和用單字卡。我覺得跟台灣朋友聊天的效果最好。",
+  "answerEn": "I've tried watching series and using flashcards. I think chatting with Taiwanese friends gives the best results."
+ },
+ {
+  "id": "t1703",
+  "word": "身材",
+  "questionZh": "你有在健身或控制飲食嗎？為什麼？",
+  "questionEn": "Do you work out or watch your diet? Why?",
+  "answerZh": "有，我每週去健身房三次，想保持好身材。可是晚上看到鹹酥雞還是忍不住。",
+  "answerEn": "Yes, I go to the gym three times a week because I want to stay in good shape. But when I see popcorn chicken at night, I still can't resist."
+ },
+ {
+  "id": "t1706",
+  "word": "提高",
+  "questionZh": "你覺得怎麼樣能讓中文進步得更快？",
+  "questionEn": "How do you think you can make your Chinese improve faster?",
+  "answerZh": "我覺得要多說多聽，才能提高中文程度。所以我常常去早餐店跟老闆聊天。",
+  "answerEn": "I think you have to speak and listen a lot to raise your Chinese level. So I often chat with the owner at the breakfast shop."
+ },
+ {
+  "id": "t1710",
+  "word": "估計",
+  "questionZh": "你覺得自己還要多久才能用中文看新聞？",
+  "questionEn": "How much longer do you think it'll be before you can read the news in Chinese?",
+  "answerZh": "我估計還要兩三年吧。新聞裡有很多難的字，我現在只看得懂標題。",
+  "answerEn": "I'd estimate another two or three years. The news has a lot of difficult words, and right now I can only understand the headlines."
+ },
+ {
+  "id": "t1713",
+  "word": "提到",
+  "questionZh": "你跟家人視訊的時候，都聊些什麼？",
+  "questionEn": "What do you talk about when you video-call your family?",
+  "answerZh": "我常常提到台灣的食物，他們聽了都很羨慕。我媽媽說明年一定要來台灣玩。",
+  "answerEn": "I often mention Taiwanese food, and they're all envious when they hear about it. My mom says she's definitely coming to Taiwan next year."
+ },
+ {
+  "id": "t1717",
+  "word": "進行",
+  "questionZh": "你們公司最近在忙什麼大事嗎？",
+  "questionEn": "Is your company busy with anything big lately?",
+  "answerZh": "我們公司正在進行一個新的計畫，要開發一個新產品。所以最近大家都在加班。",
+  "answerEn": "My company is carrying out a new project to develop a new product. So everyone's been working overtime lately."
+ },
+ {
+  "id": "t1720",
+  "word": "握手",
+  "questionZh": "在你的國家，第一次見面時大家怎麼打招呼？",
+  "questionEn": "In your country, how do people greet each other when they first meet?",
+  "answerZh": "在我的國家，第一次見面通常會握手。熟一點的朋友就會擁抱。",
+  "answerEn": "In my country, people usually shake hands when they first meet. Closer friends will hug."
+ },
+ {
+  "id": "t1724",
+  "word": "等待",
+  "questionZh": "你最不喜歡在哪裡排隊？",
+  "questionEn": "Where do you least like waiting in line?",
+  "answerZh": "我最不喜歡在醫院排隊，等待的時間常常超過一個小時。所以我都先上網掛號。",
+  "answerEn": "I least like waiting in line at the hospital; the wait is often more than an hour. So I always register online first."
+ },
+ {
+  "id": "t1727",
+  "word": "教育",
+  "questionZh": "你覺得台灣的學生跟你國家的學生有什麼不一樣？",
+  "questionEn": "How do you think Taiwanese students differ from students in your country?",
+  "answerZh": "我覺得台灣的教育很重視考試，學生壓力很大。很多小朋友放學以後還要去補習。",
+  "answerEn": "I think education in Taiwan puts a lot of emphasis on exams, and students are under a lot of pressure. Many kids still go to cram school after school."
+ },
+ {
+  "id": "t1730",
+  "word": "猶豫",
+  "questionZh": "你在做決定的時候，是很快就決定的人嗎？",
+  "questionEn": "When making decisions, are you someone who decides quickly?",
+  "answerZh": "不是，我常常很猶豫。連在飲料店點飲料都要想好久，後面的人都在等我。",
+  "answerEn": "No, I often hesitate a lot. Even ordering at a drink stand takes me forever, and the people behind me are all waiting."
+ },
+ {
+  "id": "t1734",
+  "word": "缺席",
+  "questionZh": "你上課或上班的時候，常常請假嗎？",
+  "questionEn": "Do you often take time off from class or work?",
+  "answerZh": "很少，我上學期只缺席過一次，因為發燒了。老師還傳訊息關心我。",
+  "answerEn": "Rarely. Last semester I was absent only once, because I had a fever. My teacher even sent me a message to check on me."
+ },
+ {
+  "id": "t1737",
+  "word": "罰款",
+  "questionZh": "你知道在台灣做哪些事會被罰錢嗎？",
+  "questionEn": "Do you know what things you can get fined for in Taiwan?",
+  "answerZh": "我知道在捷運上吃東西會被罰款。還有亂丟垃圾也會被罰錢。",
+  "answerEn": "I know you'll get fined for eating on the MRT. Littering will also get you fined."
+ },
+ {
+  "id": "t1742",
+  "word": "休閒",
+  "questionZh": "你下班以後都做什麼放鬆？",
+  "questionEn": "What do you do to relax after work?",
+  "answerZh": "我的休閒活動是打籃球和看電影。週末有時候也會去河邊騎腳踏車。",
+  "answerEn": "My leisure activities are playing basketball and watching movies. On weekends I sometimes go biking along the river too."
+ },
+ {
+  "id": "t1800",
+  "word": "當中",
+  "questionZh": "你學過的中文字裡，哪一個最難寫？",
+  "questionEn": "Of the Chinese characters you've learned, which is the hardest to write?",
+  "answerZh": "我學過的字當中，「鬱」最難寫。我練習了很多次，還是常常寫錯。",
+  "answerEn": "Among the characters I've learned, the one for melancholy is the hardest to write. I've practiced it many times and still often get it wrong."
+ },
+ {
+  "id": "t1823",
+  "word": "報警",
+  "questionZh": "如果你在路上看到有人發生車禍，你會怎麼做？",
+  "questionEn": "If you saw someone in a traffic accident on the street, what would you do?",
+  "answerZh": "我會馬上報警，也會叫救護車。然後看看有沒有人需要幫忙。",
+  "answerEn": "I'd call the police right away and also call an ambulance. Then I'd check whether anyone needed help."
+ },
+ {
+  "id": "t1828",
+  "word": "火災",
+  "questionZh": "你家有沒有準備滅火器？為什麼？",
+  "questionEn": "Do you have a fire extinguisher at home? Why?",
+  "answerZh": "有，我們大樓每層都有滅火器。房東說這樣發生火災的時候才能馬上處理。",
+  "answerEn": "Yes, every floor of our building has a fire extinguisher. The landlord says that way we can deal with it right away if there's a fire."
+ },
+ {
+  "id": "t1833",
+  "word": "贊成",
+  "questionZh": "你覺得學校應該讓學生帶手機嗎？",
+  "questionEn": "Do you think schools should let students bring phones?",
+  "answerZh": "我贊成讓學生帶手機，有事情可以聯絡家人。可是上課的時候應該要收起來。",
+  "answerEn": "I'm in favor of letting students bring phones so they can contact family if something comes up. But they should put them away during class."
+ },
+ {
+  "id": "t1836",
+  "word": "方面",
+  "questionZh": "你覺得住在台灣，哪些地方最好？",
+  "questionEn": "What do you think is best about living in Taiwan?",
+  "answerZh": "在交通方面，台灣非常方便，捷運和公車很多。在吃的方面，選擇也很多。",
+  "answerEn": "In terms of transportation, Taiwan is very convenient, with lots of MRT lines and buses. In terms of food, there are lots of choices too."
+ },
+ {
+  "id": "t1839",
+  "word": "合理",
+  "questionZh": "你覺得你現在的房租貴不貴？",
+  "questionEn": "Do you think your current rent is expensive?",
+  "answerZh": "我覺得還算合理，一個月一萬兩千塊，離捷運站也很近。房東人也很好。",
+  "answerEn": "I think it's fairly reasonable: twelve thousand a month, and it's close to the MRT station. The landlord is nice too."
+ },
+ {
+  "id": "t1844",
+  "word": "安慰",
+  "questionZh": "朋友心情不好的時候，你會做什麼？",
+  "questionEn": "What do you do when a friend is feeling down?",
+  "answerZh": "我會請他吃東西，聽他說話，好好安慰他。有時候陪著他就夠了。",
+  "answerEn": "I treat them to some food, listen to them, and comfort them. Sometimes just being there with them is enough."
+ },
+ {
+  "id": "t1847",
+  "word": "積極",
+  "questionZh": "你覺得在工作上，什麼樣的態度最重要？",
+  "questionEn": "What attitude do you think matters most at work?",
+  "answerZh": "我覺得要很積極，遇到問題要主動想辦法。老闆比較喜歡這樣的員工。",
+  "answerEn": "I think you need to be proactive and find solutions on your own when problems come up. Bosses prefer employees like that."
+ },
+ {
+  "id": "t1851",
+  "word": "職位",
+  "questionZh": "你在公司裡負責什麼工作？",
+  "questionEn": "What are you responsible for at your company?",
+  "answerZh": "我的職位是業務經理，負責跟國外的客戶聯絡。常常要出差，有點辛苦。",
+  "answerEn": "My position is sales manager, and I'm in charge of contacting overseas clients. I often have to travel for work, which is a bit tiring."
+ },
+ {
+  "id": "t1854",
+  "word": "加薪",
+  "questionZh": "你覺得什麼時候可以跟老闆談薪水的事？",
+  "questionEn": "When do you think it's okay to talk to your boss about salary?",
+  "answerZh": "我覺得做滿一年，表現也不錯的話，就可以要求加薪。不過要先準備好自己的成績。",
+  "answerEn": "I think once you've worked a full year and performed well, you can ask for a raise. But you should have your results ready first."
+ },
+ {
+  "id": "t1858",
+  "word": "挑戰",
+  "questionZh": "你在台灣生活，覺得最困難的是什麼？",
+  "questionEn": "What do you find hardest about living in Taiwan?",
+  "answerZh": "對我來說，最大的挑戰是看懂中文的信件和合約。我常常要請台灣朋友幫我看。",
+  "answerEn": "For me, the biggest challenge is understanding letters and contracts in Chinese. I often have to ask Taiwanese friends to read them for me."
+ },
+ {
+  "id": "t1861",
+  "word": "噪音",
+  "questionZh": "你住的地方安靜嗎？",
+  "questionEn": "Is where you live quiet?",
+  "answerZh": "不太安靜，樓下就是大馬路，噪音很大。晚上機車的聲音常常吵得我睡不著。",
+  "answerEn": "Not really; there's a big road right downstairs and the noise is loud. At night the sound of scooters often keeps me awake."
+ },
+ {
+  "id": "t1864",
+  "word": "家電",
+  "questionZh": "你搬家的時候，最需要買什麼東西？",
+  "questionEn": "When you moved, what did you most need to buy?",
+  "answerZh": "我最需要買家電，像是冰箱和洗衣機。我後來在網路上買二手的，省了不少錢。",
+  "answerEn": "I most needed to buy home appliances, like a fridge and a washing machine. I ended up buying secondhand ones online and saved a lot of money."
+ },
+ {
+  "id": "t1868",
+  "word": "插座",
+  "questionZh": "你的手機沒電的時候，你會去哪裡充電？",
+  "questionEn": "When your phone runs out of battery, where do you go to charge it?",
+  "answerZh": "我會去咖啡廳，找有插座的位置坐。有些咖啡廳每個座位旁邊都有。",
+  "answerEn": "I go to a café and find a seat with an outlet. Some cafés have one next to every seat."
+ },
+ {
+  "id": "t1871",
+  "word": "蟑螂",
+  "questionZh": "台灣夏天的時候，你家最常出現什麼討厭的東西？",
+  "questionEn": "During Taiwan's summer, what annoying thing shows up most often in your home?",
+  "answerZh": "最常出現的就是蟑螂，有時候還會飛！我每次看到都會大叫。",
+  "answerEn": "Cockroaches show up the most, and sometimes they even fly! I scream every time I see one."
+ },
+ {
+  "id": "t1875",
+  "word": "罰單",
+  "questionZh": "你騎車或開車有被警察攔下來過嗎？",
+  "questionEn": "Have you ever been pulled over by the police while riding or driving?",
+  "answerZh": "有，我曾經因為違規左轉被開了一張罰單。罰了六百塊，我現在都乖乖兩段式左轉。",
+  "answerEn": "Yes, I once got a ticket for an illegal left turn. It was a six-hundred-dollar fine, so now I always do the two-stage left turn like I'm supposed to."
+ },
+ {
+  "id": "t1878",
+  "word": "人口",
+  "questionZh": "你的家鄉是大城市還是小地方？",
+  "questionEn": "Is your hometown a big city or a small place?",
+  "answerZh": "我的家鄉是一個小鎮，人口只有五千多人。跟台北比起來，安靜多了。",
+  "answerEn": "My hometown is a small town with a population of just over five thousand. Compared to Taipei, it's much quieter."
+ },
+ {
+  "id": "t1882",
+  "word": "選舉",
+  "questionZh": "台灣投票的時候，你注意到什麼特別的事？",
+  "questionEn": "What special things have you noticed when Taiwan holds a vote?",
+  "answerZh": "選舉前街上到處都是宣傳車，聲音很大。很多人還會特地回家鄉投票。",
+  "answerEn": "Before an election there are campaign vans all over the streets, and they're really loud. Many people even make a special trip back to their hometowns to vote."
+ },
+ {
+  "id": "t1885",
+  "word": "市長",
+  "questionZh": "你覺得一個城市的領導人最重要的工作是什麼？",
+  "questionEn": "What do you think is the most important job of a city's leader?",
+  "answerZh": "我覺得市長最重要的工作是把交通弄好。還要多蓋一些公園，讓大家有地方運動。",
+  "answerEn": "I think a mayor's most important job is getting traffic sorted out. They should also build more parks so people have places to exercise."
+ },
+ {
+  "id": "t1889",
+  "word": "房價",
+  "questionZh": "你以後想在台灣買房子嗎？",
+  "questionEn": "Would you like to buy a home in Taiwan someday?",
+  "answerZh": "我很想，可是台北的房價太高了。我可能會考慮住在台北附近的城市。",
+  "answerEn": "I'd love to, but housing prices in Taipei are too high. I might consider living in a city near Taipei."
+ },
+ {
+  "id": "t1893",
+  "word": "存款",
+  "questionZh": "你每個月會把一部分薪水存起來嗎？",
+  "questionEn": "Do you save part of your salary every month?",
+  "answerZh": "會，我每個月存三分之一的薪水。我希望存款夠了以後，可以去歐洲旅行。",
+  "answerEn": "Yes, I save a third of my salary every month. Once I have enough savings, I hope to travel to Europe."
+ },
+ {
+  "id": "t1896",
+  "word": "和平",
+  "questionZh": "如果可以許一個願望給全世界，你會許什麼？",
+  "questionEn": "If you could make one wish for the whole world, what would it be?",
+  "answerZh": "我希望世界和平，大家都不要再打仗了。每個人都能平平安安地過日子。",
+  "answerEn": "I'd wish for world peace, with no more wars. Everyone could live their lives safe and sound."
+ },
+ {
+  "id": "t1901",
+  "word": "治安",
+  "questionZh": "你覺得你住的地區安全嗎？",
+  "questionEn": "Do you think the area you live in is safe?",
+  "answerZh": "我覺得這裡的治安很好，晚上出門也不用擔心。就算把手機忘在咖啡廳，常常也找得回來。",
+  "answerEn": "I think public security here is very good, and I don't worry going out at night. Even if you leave your phone at a café, you can often get it back."
+ },
+ {
+  "id": "t1904",
+  "word": "年夜飯",
+  "questionZh": "除夕晚上，你通常跟誰一起吃飯？",
+  "questionEn": "Who do you usually eat with on Lunar New Year's Eve?",
+  "answerZh": "去年我在朋友家吃年夜飯，菜多得吃不完。他們家一定會有一整條魚，代表年年有餘。",
+  "answerEn": "Last year I had New Year's Eve dinner at a friend's home, and there was more food than we could finish. Their family always has a whole fish, which stands for abundance every year."
+ },
+ {
+  "id": "t1908",
+  "word": "湯圓",
+  "questionZh": "冬至或元宵節的時候，台灣人會吃什麼？",
+  "questionEn": "What do Taiwanese people eat on the Winter Solstice or the Lantern Festival?",
+  "answerZh": "台灣人會吃湯圓，我最喜歡芝麻口味的。冬天吃一碗熱熱的，很溫暖。",
+  "answerEn": "Taiwanese people eat sweet rice balls, and my favorite is the sesame kind. Eating a hot bowl in winter is so warming."
+ },
+ {
+  "id": "t1911",
+  "word": "划龍舟",
+  "questionZh": "端午節的時候，你通常會做什麼？",
+  "questionEn": "What do you usually do during the Dragon Boat Festival?",
+  "answerZh": "我會去河邊看比賽，今年還跟同事一起划龍舟。雖然很累，可是非常好玩。",
+  "answerEn": "I go to the riverside to watch the races, and this year I even rowed a dragon boat with my coworkers. It was tiring, but so much fun."
+ },
+ {
+  "id": "t1915",
+  "word": "廟會",
+  "questionZh": "你在台灣看過什麼熱鬧的傳統活動？",
+  "questionEn": "What lively traditional events have you seen in Taiwan?",
+  "answerZh": "我看過一次廟會，有很多人在表演，還放了好多鞭炮。整條街都好熱鬧。",
+  "answerEn": "I once saw a temple fair with lots of performers, and they set off tons of firecrackers. The whole street was so lively."
+ },
+ {
+  "id": "t1918",
+  "word": "祖先",
+  "questionZh": "過年的時候，你的台灣朋友家會拜拜嗎？",
+  "questionEn": "Does your Taiwanese friend's family make offerings during Lunar New Year?",
+  "answerZh": "會，他們家過年會準備很多菜拜祖先。拜完以後，大家再一起吃。",
+  "answerEn": "Yes, at New Year their family prepares lots of dishes as offerings to their ancestors. Afterward, everyone eats together."
+ },
+ {
+  "id": "t1921",
+  "word": "春聯",
+  "questionZh": "過年前，台灣人會在門上貼什麼？",
+  "questionEn": "Before Lunar New Year, what do Taiwanese people put up on their doors?",
+  "answerZh": "他們會在門上貼紅色的春聯。我今年也買了一副，貼在我家門口。",
+  "answerEn": "They put up red Spring Festival couplets on their doors. This year I bought a set too and put it up at my front door."
+ },
+ {
+  "id": "t1927",
+  "word": "農曆",
+  "questionZh": "你知道今年的中秋節是幾月幾號嗎？",
+  "questionEn": "Do you know what date the Mid-Autumn Festival is this year?",
+  "answerZh": "我不太確定，因為中秋節是看農曆的。每年的日期都不一樣，我都要查手機。",
+  "answerEn": "I'm not sure, because the Mid-Autumn Festival follows the lunar calendar. The date is different every year, so I always have to check my phone."
+ },
+ {
+  "id": "t1930",
+  "word": "應用程式",
+  "questionZh": "你手機裡最常用的是什麼？",
+  "questionEn": "What do you use most on your phone?",
+  "answerZh": "我最常用的應用程式是地圖和外送的。下雨天不想出門，我就直接叫外送。",
+  "answerEn": "The apps I use most are maps and food delivery. On rainy days when I don't want to go out, I just order delivery."
+ },
+ {
+  "id": "t1934",
+  "word": "註冊",
+  "questionZh": "你第一次用新的網站買東西，要先做什麼？",
+  "questionEn": "The first time you shop on a new website, what do you have to do first?",
+  "answerZh": "通常要先註冊一個帳號，填姓名和電話。有些網站註冊還可以拿到折價券。",
+  "answerEn": "Usually you have to register an account first and fill in your name and phone number. Some websites even give you a coupon for signing up."
+ },
+ {
+  "id": "t1937",
+  "word": "按讚",
+  "questionZh": "你看到朋友在網路上分享照片，通常會怎麼做？",
+  "questionEn": "When you see friends share photos online, what do you usually do?",
+  "answerZh": "我通常會按讚，有時候也會留言。如果照片很好笑，我還會分享給別人。",
+  "answerEn": "I usually give it a like, and sometimes I leave a comment. If the photo is funny, I'll share it with others too."
+ },
+ {
+  "id": "t1941",
+  "word": "直播",
+  "questionZh": "你有沒有在網路上看過即時的比賽或表演？",
+  "questionEn": "Have you ever watched a game or performance online in real time?",
+  "answerZh": "有，我常常在網路上看籃球比賽的直播。有時候還會跟朋友一邊看一邊聊天。",
+  "answerEn": "Yes, I often watch livestreams of basketball games online. Sometimes I chat with friends while watching."
+ },
+ {
+  "id": "t1944",
+  "word": "平板",
+  "questionZh": "你在家看影片的時候，通常用什麼看？",
+  "questionEn": "What do you usually use to watch videos at home?",
+  "answerZh": "我通常用平板看，因為螢幕比手機大。晚上躺在床上看很舒服。",
+  "answerEn": "I usually watch on my tablet because the screen is bigger than my phone's. It's comfortable to watch lying in bed at night."
+ },
+ {
+  "id": "t1947",
+  "word": "連結",
+  "questionZh": "你找到一個很好笑的影片，會怎麼分享給朋友？",
+  "questionEn": "If you find a really funny video, how do you share it with friends?",
+  "answerZh": "我會直接把連結傳給他們。如果他們也覺得好笑，我會很開心。",
+  "answerEn": "I just send them the link. If they think it's funny too, I'm really happy."
+ },
+ {
+  "id": "t1951",
+  "word": "群組",
+  "questionZh": "你跟同事或朋友平常怎麼約時間見面？",
+  "questionEn": "How do you usually set up a time to meet with coworkers or friends?",
+  "answerZh": "我們有一個聊天群組，大家都在裡面討論時間。不過常常聊了很久都決定不了。",
+  "answerEn": "We have a group chat where everyone discusses times. But we often talk for ages and still can't decide."
+ },
+ {
+  "id": "t1954",
+  "word": "嘔吐",
+  "questionZh": "你有沒有暈車或吃壞肚子的經驗？",
+  "questionEn": "Have you ever gotten carsick or had an upset stomach from bad food?",
+  "answerZh": "有，我上次坐車去山上，山路太彎了，下車就嘔吐了。從那以後我坐車都先吃暈車藥。",
+  "answerEn": "Yes, last time I rode up into the mountains, the road was so winding that I threw up as soon as I got out. Since then I always take motion sickness medicine before a ride."
+ },
+ {
+  "id": "t1959",
+  "word": "疲勞",
+  "questionZh": "你每天下班以後覺得怎麼樣？",
+  "questionEn": "How do you feel after work every day?",
+  "answerZh": "我常常覺得很疲勞，回家只想躺在沙發上。週末我一定要睡飽才有精神。",
+  "answerEn": "I often feel really worn out and just want to lie on the sofa when I get home. On weekends I have to get plenty of sleep to have any energy."
+ },
+ {
+  "id": "t1962",
+  "word": "骨頭",
+  "questionZh": "你有沒有受過很嚴重的傷？",
+  "questionEn": "Have you ever had a serious injury?",
+  "answerZh": "有，我小時候從腳踏車上摔下來，手的骨頭斷了。打了兩個月的石膏。",
+  "answerEn": "Yes, when I was little I fell off my bike and broke a bone in my arm. I had a cast on for two months."
+ },
+ {
+  "id": "t1966",
+  "word": "睡眠",
+  "questionZh": "你覺得自己每天睡得夠嗎？",
+  "questionEn": "Do you think you get enough sleep every day?",
+  "answerZh": "不太夠，我每天的睡眠大概只有六個小時。醫生說我應該要睡七、八個小時。",
+  "answerEn": "Not really; I only get about six hours of sleep a day. The doctor says I should sleep seven or eight hours."
+ },
+ {
+  "id": "t1969",
+  "word": "氣候",
+  "questionZh": "你比較喜歡台灣的天氣，還是你家鄉的天氣？",
+  "questionEn": "Do you prefer Taiwan's weather or your hometown's weather?",
+  "answerZh": "我比較喜歡台灣的氣候，冬天不會太冷。不過夏天又熱又濕，有時候真的受不了。",
+  "answerEn": "I prefer Taiwan's climate; winters aren't too cold. But summers are hot and humid, and sometimes I really can't stand it."
+ },
+ {
+  "id": "t1972",
+  "word": "淹水",
+  "questionZh": "颱風或下大雨的時候，你住的地方會有什麼問題？",
+  "questionEn": "During typhoons or heavy rain, what problems happen where you live?",
+  "answerZh": "我家附近的路常常淹水，機車都騎不過去。所以颱風天我都盡量不出門。",
+  "answerEn": "The roads near my home often flood, so scooters can't get through. So on typhoon days I try not to go out."
+ },
+ {
+  "id": "t1976",
+  "word": "垃圾分類",
+  "questionZh": "你覺得台灣丟垃圾的方式跟你的國家一樣嗎？",
+  "questionEn": "Do you think the way people throw out trash in Taiwan is the same as in your country?",
+  "answerZh": "不一樣，台灣的垃圾分類很仔細。紙類、塑膠和廚餘都要分開，剛開始我常常搞錯。",
+  "answerEn": "No, garbage sorting in Taiwan is very detailed. Paper, plastic, and food waste all have to be separated, and at first I often got it wrong."
+ },
+ {
+  "id": "t1993",
+  "word": "難免",
+  "questionZh": "你剛開始用中文跟人聊天時，有說錯話嗎？",
+  "questionEn": "When you first started chatting with people in Chinese, did you say things wrong?",
+  "answerZh": "當然有，剛開始學難免會說錯。有一次我把「水餃」說成「睡覺」，大家都笑了。",
+  "answerEn": "Of course. When you're just starting, mistakes are bound to happen. Once I said sleep instead of dumplings, and everyone laughed."
+ },
+ {
+  "id": "t2017",
+  "word": "唯一",
+  "questionZh": "你家裡有兄弟姐妹嗎？",
+  "questionEn": "Do you have any brothers or sisters?",
+  "answerZh": "沒有，我是家裡唯一的孩子。所以小時候常常覺得有點寂寞。",
+  "answerEn": "No, I'm the only child in my family. So I often felt a bit lonely as a kid."
+ },
+ {
+  "id": "t2031",
+  "word": "造成",
+  "questionZh": "你覺得台北交通最大的問題是什麼？",
+  "questionEn": "What do you think is the biggest problem with Taipei's traffic?",
+  "answerZh": "我覺得機車太多了，常常造成塞車。上下班的時候，路上真的很亂。",
+  "answerEn": "I think there are too many scooters, which often causes traffic jams. During rush hour, the roads are really chaotic."
+ },
+ {
+  "id": "t2035",
+  "word": "爭取",
+  "questionZh": "你現在最想努力得到的是什麼？",
+  "questionEn": "What do you most want to work hard to get right now?",
+  "answerZh": "我想爭取到公司派我去日本工作的機會。所以我最近每天晚上都在學日文。",
+  "answerEn": "I want to win the chance for my company to send me to work in Japan. So lately I've been studying Japanese every night."
+ },
+ {
+  "id": "t2038",
+  "word": "限制",
+  "questionZh": "你覺得小孩每天可以玩多久手機？",
+  "questionEn": "How long do you think kids should be allowed to use phones each day?",
+  "answerZh": "我覺得要限制在一個小時以內。玩太久對眼睛不好，也會影響睡眠。",
+  "answerEn": "I think it should be limited to under an hour. Using them too long is bad for their eyes and affects their sleep."
+ },
+ {
+  "id": "t2042",
+  "word": "登記",
+  "questionZh": "你去診所看病的時候，第一步要做什麼？",
+  "questionEn": "When you go to a clinic to see a doctor, what's the first step?",
+  "answerZh": "我會先到櫃台拿健保卡登記。然後坐著等護士叫我的名字。",
+  "answerEn": "First I go to the counter and check in with my health insurance card. Then I sit and wait for the nurse to call my name."
+ },
+ {
+  "id": "t2045",
+  "word": "體驗",
+  "questionZh": "你在台灣有參加過什麼特別的活動嗎？",
+  "questionEn": "Have you taken part in any special activities in Taiwan?",
+  "answerZh": "我去年去鶯歌體驗做陶藝，自己做了一個杯子。雖然很醜，可是我很喜歡。",
+  "answerEn": "Last year I went to Yingge to try making pottery and made a cup myself. It's ugly, but I love it."
+ },
+ {
+  "id": "t2048",
+  "word": "訓練",
+  "questionZh": "你剛進公司的時候，有人教你怎麼做事嗎？",
+  "questionEn": "When you first joined your company, did anyone teach you how to do things?",
+  "answerZh": "有，公司先給我們兩個禮拜的訓練。主管一步一步教我們怎麼用系統。",
+  "answerEn": "Yes, the company first gave us two weeks of training. Our supervisor taught us how to use the system step by step."
+ },
+ {
+  "id": "t2052",
+  "word": "記錄",
+  "questionZh": "你會用什麼方法記得每天花了多少錢？",
+  "questionEn": "How do you keep track of how much you spend each day?",
+  "answerZh": "我每天都會用手機記錄自己花了多少錢。月底看一下，就知道錢花到哪裡去了。",
+  "answerEn": "Every day I record how much I spend on my phone. When I look at it at the end of the month, I know where my money went."
+ },
+ {
+  "id": "t2055",
+  "word": "吸引",
+  "questionZh": "你當初為什麼會對中文有興趣？",
+  "questionEn": "Why did you become interested in Chinese in the first place?",
+  "answerZh": "我被中文字吸引，覺得每個字都像一幅畫。後來越學越有興趣。",
+  "answerEn": "I was drawn to Chinese characters; each one seemed like a picture to me. Then the more I learned, the more interested I got."
+ },
+ {
+  "id": "t2069",
+  "word": "付款",
+  "questionZh": "你在台灣買東西，通常用現金還是刷卡？",
+  "questionEn": "When you shop in Taiwan, do you usually use cash or a card?",
+  "answerZh": "我通常用手機付款，很快又方便。不過去夜市還是要帶現金。",
+  "answerEn": "I usually pay with my phone; it's fast and convenient. But I still need to bring cash to the night market."
+ },
+ {
+  "id": "t2072",
+  "word": "可靠",
+  "questionZh": "你覺得什麼樣的朋友最值得交？",
+  "questionEn": "What kind of friends do you think are most worth having?",
+  "answerZh": "我覺得可靠的朋友最重要，有困難的時候會幫你。說好的事情也一定會做到。",
+  "answerEn": "I think reliable friends matter most; they help you when you're in trouble. And they always do what they say they will."
+ },
+ {
+  "id": "t2076",
+  "word": "正式",
+  "questionZh": "參加朋友的婚禮，你會穿什麼？",
+  "questionEn": "What would you wear to a friend's wedding?",
+  "answerZh": "我會穿得正式一點，穿襯衫和西裝外套。不過台灣的婚禮其實不用太正式。",
+  "answerEn": "I'd dress a bit formally, in a shirt and a blazer. But Taiwanese weddings actually don't need to be too formal."
+ },
+ {
+  "id": "t2079",
+  "word": "舒適",
+  "questionZh": "你理想中的家是什麼樣子？",
+  "questionEn": "What does your ideal home look like?",
+  "answerZh": "我希望我的家又安靜又舒適，有一個大沙發。下班回家可以躺著看電影。",
+  "answerEn": "I hope my home is quiet and cozy, with a big sofa. After work I could lie down and watch movies."
+ },
+ {
+  "id": "t2082",
+  "word": "有效",
+  "questionZh": "你感冒的時候，有什麼好方法讓自己快點好？",
+  "questionEn": "When you have a cold, what's a good way to get better quickly?",
+  "answerZh": "我覺得多喝熱水、多睡覺最有效。如果還是不舒服，我就去看醫生。",
+  "answerEn": "I think drinking lots of hot water and sleeping a lot works best. If I still feel bad, I go see a doctor."
+ },
+ {
+  "id": "t2086",
+  "word": "糊塗",
+  "questionZh": "你有沒有做過什麼很迷糊的事？",
+  "questionEn": "Have you ever done something really scatterbrained?",
+  "answerZh": "有，我很糊塗，有一次穿兩隻不一樣的鞋子去上班。同事看到都笑翻了。",
+  "answerEn": "Yes, I'm really scatterbrained. Once I went to work wearing two different shoes, and my coworkers cracked up when they saw."
+ },
+ {
+  "id": "t2090",
+  "word": "直接",
+  "questionZh": "你覺得台灣人說話的方式跟你的國家一樣嗎？",
+  "questionEn": "Do you think the way Taiwanese people talk is the same as in your country?",
+  "answerZh": "不太一樣，我的國家說話比較直接。台灣人常常說得很客氣，我有時候聽不出來真正的意思。",
+  "answerEn": "Not quite. In my country people speak more directly. Taiwanese people often speak very politely, and sometimes I can't tell what they really mean."
+ },
+ {
+  "id": "t2101",
+  "word": "獨立",
+  "questionZh": "你幾歲開始一個人在外面生活？",
+  "questionEn": "At what age did you start living on your own?",
+  "answerZh": "我十八歲就搬出去住，從那時候開始學習獨立。現在煮飯、洗衣服都難不倒我。",
+  "answerEn": "I moved out at eighteen and started learning to be independent then. Now cooking and doing laundry are no problem for me."
+ },
+ {
+  "id": "t2104",
+  "word": "個人",
+  "questionZh": "你覺得工作上，團隊比較重要還是自己的表現比較重要？",
+  "questionEn": "At work, do you think the team matters more or your own performance?",
+  "answerZh": "我個人覺得團隊比較重要。一個人再厲害，也沒辦法把所有事情做完。",
+  "answerEn": "Personally, I think the team matters more. No matter how capable one person is, they can't get everything done alone."
+ },
+ {
+  "id": "t2110",
+  "word": "不得了",
+  "questionZh": "台灣的夏天熱到什麼程度？",
+  "questionEn": "Just how hot does summer in Taiwan get?",
+  "answerZh": "台灣的夏天熱得不得了，走在路上一下子就流汗。我一天要洗兩次澡。",
+  "answerEn": "Summer in Taiwan is extremely hot; you start sweating the moment you walk outside. I have to shower twice a day."
+ },
+ {
+  "id": "t2113",
+  "word": "幸運",
+  "questionZh": "你覺得自己在台灣認識的人好不好？",
+  "questionEn": "Do you think the people you've met in Taiwan are good people?",
+  "answerZh": "我覺得自己很幸運，在台灣認識了很多好朋友。他們常常帶我去吃好吃的東西。",
+  "answerEn": "I think I'm very lucky to have made lots of good friends in Taiwan. They often take me out for good food."
+ },
+ {
+  "id": "t2117",
+  "word": "娛樂",
+  "questionZh": "你週末通常做什麼放鬆？",
+  "questionEn": "What do you usually do to relax on weekends?",
+  "answerZh": "我週末最主要的娛樂就是去夜市逛逛。有時候也會在家看電影。",
+  "answerEn": "My main entertainment on weekends is strolling around the night market. Sometimes I also watch movies at home."
+ },
+ {
+  "id": "t2120",
+  "word": "時差",
+  "questionZh": "你剛來台灣的時候，晚上睡得好嗎？",
+  "questionEn": "When you first came to Taiwan, did you sleep well at night?",
+  "answerZh": "剛來的時候時差很嚴重，半夜三點都睡不著。大概過了一個禮拜才調回來。",
+  "answerEn": "When I first arrived, my jet lag was terrible, and I couldn't sleep even at 3 a.m. It took about a week to adjust."
+ },
+ {
+  "id": "t2123",
+  "word": "作品",
+  "questionZh": "你參觀展覽的時候，最喜歡看哪一種藝術？",
+  "questionEn": "When you visit exhibitions, what kind of art do you like most?",
+  "answerZh": "我很喜歡看攝影作品。上個月在美術館看到一個展覽，每張照片都很有感覺。",
+  "answerEn": "I really like looking at photography works. Last month I saw an exhibition at an art museum, and every photo was really moving."
+ },
+ {
+  "id": "t2127",
+  "word": "頻道",
+  "questionZh": "你平常在網路上都看什麼樣的影片？",
+  "questionEn": "What kinds of videos do you usually watch online?",
+  "answerZh": "我訂閱了好幾個美食頻道。晚上吃飯的時候常常一邊吃一邊看。",
+  "answerEn": "I've subscribed to several food channels. At dinner I often watch while I eat."
+ },
+ {
+  "id": "t2130",
+  "word": "主題",
+  "questionZh": "如果你要辦一個生日派對，你想辦成什麼樣子？",
+  "questionEn": "If you were throwing a birthday party, what would you want it to be like?",
+  "answerZh": "我想辦一個復古的主題派對。大家都要穿八零年代的衣服來。",
+  "answerEn": "I'd like to throw a retro theme party. Everyone would have to come dressed in clothes from the eighties."
+ },
+ {
+  "id": "t2134",
+  "word": "外表",
+  "questionZh": "交朋友的時候，你覺得長相重要嗎？",
+  "questionEn": "When making friends, do you think looks matter?",
+  "answerZh": "我覺得外表沒那麼重要，個性比較重要。不過第一次見面還是會注意一下啦。",
+  "answerEn": "I don't think appearance matters that much; personality is more important. But I still notice it a bit when meeting someone for the first time."
+ },
+ {
+  "id": "t2137",
+  "word": "回憶",
+  "questionZh": "你小時候有什麼讓你難忘的事？",
+  "questionEn": "What's something unforgettable from your childhood?",
+  "answerZh": "我最美好的回憶是跟爺爺去釣魚。現在想起來還是覺得很溫暖。",
+  "answerEn": "My best memory is going fishing with my grandpa. Thinking about it now still feels very warm."
+ },
+ {
+  "id": "t2141",
+  "word": "八卦",
+  "questionZh": "你跟同事聊天時，常聊什麼話題？",
+  "questionEn": "What topics do you often talk about with your coworkers?",
+  "answerZh": "我們午休的時候很愛聊八卦。不過我只是聽，不太會亂講。",
+  "answerEn": "We love to gossip during our lunch break. But I just listen; I don't really spread things around."
+ },
+ {
+  "id": "t2144",
+  "word": "演講",
+  "questionZh": "你曾經在很多人面前說話過嗎？感覺怎麼樣？",
+  "questionEn": "Have you ever spoken in front of a lot of people? How did it feel?",
+  "answerZh": "我大學的時候上台演講過一次。緊張到手一直在抖，講完才鬆一口氣。",
+  "answerEn": "I gave a speech on stage once in college. I was so nervous my hands kept shaking, and I only relaxed after I finished."
+ },
+ {
+  "id": "t2147",
+  "word": "成語",
+  "questionZh": "你學中文的時候，覺得四個字的固定說法難不難？",
+  "questionEn": "When learning Chinese, do you find the fixed four-character expressions hard?",
+  "answerZh": "我覺得成語很難，因為每個背後都有故事。不過用對了，台灣朋友都會很驚訝。",
+  "answerEn": "I think idioms are hard, because each one has a story behind it. But when I use one correctly, my Taiwanese friends are really surprised."
+ },
+ {
+  "id": "t2151",
+  "word": "繁體字",
+  "questionZh": "你覺得學中文寫字最難的是什麼？",
+  "questionEn": "What do you think is the hardest part of writing Chinese?",
+  "answerZh": "對我來說繁體字筆畫太多了。不過寫久了會覺得很漂亮。",
+  "answerEn": "For me, traditional characters have too many strokes. But after writing them for a while, I find them really beautiful."
+ },
+ {
+  "id": "t2154",
+  "word": "吸塵器",
+  "questionZh": "你在家打掃地板通常用什麼？",
+  "questionEn": "What do you usually use to clean the floor at home?",
+  "answerZh": "我都用吸塵器，比掃地快很多。家裡有養貓，所以幾乎每天都要吸一次。",
+  "answerEn": "I always use a vacuum cleaner; it's much faster than sweeping. I have a cat, so I have to vacuum almost every day."
+ },
+ {
+  "id": "t2160",
+  "word": "發脾氣",
+  "questionZh": "你遇到不開心的事情，會怎麼處理情緒？",
+  "questionEn": "When something upsets you, how do you deal with your emotions?",
+  "answerZh": "我以前很容易發脾氣，常常對家人大聲說話。現在會先出去走一走再說。",
+  "answerEn": "I used to lose my temper easily and often raised my voice at my family. Now I go out for a walk first."
+ },
+ {
+  "id": "t2165",
+  "word": "觀點",
+  "questionZh": "你跟朋友意見不一樣的時候，會怎麼做？",
+  "questionEn": "What do you do when you and a friend disagree?",
+  "answerZh": "我會先聽聽他的觀點，再說我自己的想法。不一定要吵架啊。",
+  "answerEn": "I listen to his point of view first, then share my own thoughts. There's no need to argue."
+ },
+ {
+  "id": "t2169",
+  "word": "一致",
+  "questionZh": "你們家決定去哪裡旅行的時候，大家意見都一樣嗎？",
+  "questionEn": "When your family decides where to travel, does everyone agree?",
+  "answerZh": "我們家意見很難一致，爸爸想去山上，媽媽想去海邊。最後通常都是猜拳決定。",
+  "answerEn": "It's hard for my family to agree; Dad wants the mountains and Mom wants the beach. In the end we usually decide with rock-paper-scissors."
+ },
+ {
+  "id": "t2172",
+  "word": "判斷",
+  "questionZh": "你怎麼知道一家餐廳好不好吃？",
+  "questionEn": "How do you tell whether a restaurant is good?",
+  "answerZh": "我通常看排隊的人多不多來判斷。人越多，通常就越好吃。",
+  "answerEn": "I usually judge by how many people are lined up. The more people, the better the food usually is."
+ },
+ {
+  "id": "t2175",
+  "word": "可能性",
+  "questionZh": "你覺得自己以後會一直住在台灣嗎？",
+  "questionEn": "Do you think you'll stay in Taiwan for good?",
+  "answerZh": "我覺得一直住在台灣的可能性很高。我已經習慣這裡的生活了。",
+  "answerEn": "I think the possibility that I'll stay in Taiwan for good is pretty high. I'm already used to life here."
+ },
+ {
+  "id": "t2179",
+  "word": "角度",
+  "questionZh": "你跟家人吵架以後，會試著站在對方那邊想嗎？",
+  "questionEn": "After arguing with family, do you try to see things from their side?",
+  "answerZh": "我會試著從不同的角度去想。這樣比較能理解他為什麼生氣。",
+  "answerEn": "I try to think about it from a different perspective. That way I can better understand why he's angry."
+ },
+ {
+  "id": "t2182",
+  "word": "否認",
+  "questionZh": "你小時候做錯事被抓到，會不會承認？",
+  "questionEn": "As a kid, when you were caught doing something wrong, would you admit it?",
+  "answerZh": "我小時候打破花瓶，一直否認是我做的。結果媽媽看到地上的腳印，就知道了。",
+  "answerEn": "When I was little I broke a vase and kept denying I did it. But my mom saw the footprints on the floor and knew."
+ },
+ {
+  "id": "t2186",
+  "word": "總結",
+  "questionZh": "如果用一句話說你今年的生活，你會怎麼說？",
+  "questionEn": "If you described your life this year in one sentence, what would you say?",
+  "answerZh": "總結來說，今年雖然很忙，但是很充實。我學會了很多新東西。",
+  "answerEn": "To sum up, this year was busy but fulfilling. I learned a lot of new things."
+ },
+ {
+  "id": "t2189",
+  "word": "客觀",
+  "questionZh": "你覺得自己評價朋友的時候公平嗎？",
+  "questionEn": "Do you think you're fair when you judge your friends?",
+  "answerZh": "我盡量保持客觀，不會只看他好的地方。不過對好朋友，有時候還是會偏心。",
+  "answerEn": "I try to stay objective and not only look at their good points. But with close friends, I'm sometimes still biased."
+ },
+ {
+  "id": "t2194",
+  "word": "吃醋",
+  "questionZh": "你的另一半跟異性朋友出去，你會不高興嗎？",
+  "questionEn": "Would you be upset if your partner went out with a friend of the opposite sex?",
+  "answerZh": "老實說我會有一點吃醋。不過我知道要相信對方，所以不會說什麼。",
+  "answerEn": "Honestly, I'd be a little jealous. But I know I should trust them, so I wouldn't say anything."
+ },
+ {
+  "id": "t2197",
+  "word": "得意",
+  "questionZh": "你最近做了什麼讓自己很驕傲的事？",
+  "questionEn": "What have you done recently that made you proud?",
+  "answerZh": "我上禮拜第一次用中文跟房東講電話。講完以後我真的很得意。",
+  "answerEn": "Last week I talked to my landlord on the phone in Chinese for the first time. Afterward I was really pleased with myself."
+ },
+ {
+  "id": "t2201",
+  "word": "委屈",
+  "questionZh": "你有沒有被別人誤會的經驗？那時候感覺怎樣？",
+  "questionEn": "Have you ever been misunderstood by someone? How did you feel?",
+  "answerZh": "有一次同事以為是我弄壞印表機，我覺得很委屈。後來查清楚了，他才跟我道歉。",
+  "answerEn": "Once a coworker thought I broke the printer, and I felt really wronged. After it was cleared up, he apologized to me."
+ },
+ {
+  "id": "t2204",
+  "word": "冷淡",
+  "questionZh": "你覺得台北人對陌生人的態度怎麼樣？",
+  "questionEn": "What do you think of how people in Taipei treat strangers?",
+  "answerZh": "我覺得大部分的人一點都不冷淡。我問路的時候，他們都很熱心幫忙。",
+  "answerEn": "I think most people aren't cold at all. When I ask for directions, they're always eager to help."
+ },
+ {
+  "id": "t2207",
+  "word": "另一半",
+  "questionZh": "你理想的伴侶是什麼樣的人？",
+  "questionEn": "What is your ideal partner like?",
+  "answerZh": "我希望我的另一半有幽默感。兩個人在一起要常常笑才好。",
+  "answerEn": "I hope my other half has a sense of humor. Two people together should laugh a lot."
+ },
+ {
+  "id": "t2211",
+  "word": "思念",
+  "questionZh": "住在國外的時候，你最想念家鄉的什麼？",
+  "questionEn": "When living abroad, what do you miss most about home?",
+  "answerZh": "我最思念的是媽媽做的菜。在台灣怎麼找都找不到一樣的味道。",
+  "answerEn": "What I long for most is my mom's cooking. No matter where I look in Taiwan, I can't find the same taste."
+ },
+ {
+  "id": "t2214",
+  "word": "求職",
+  "questionZh": "你找工作的時候，通常用什麼方法？",
+  "questionEn": "When you look for work, what methods do you usually use?",
+  "answerZh": "我都上求職網站看工作機會。也會請朋友幫我介紹。",
+  "answerEn": "I always check job openings on job-hunting websites. I also ask friends to refer me."
+ },
+ {
+  "id": "t2218",
+  "word": "資格",
+  "questionZh": "你有沒有想申請什麼，但是條件不夠的經驗？",
+  "questionEn": "Have you ever wanted to apply for something but didn't meet the requirements?",
+  "answerZh": "我想申請一個獎學金，可是成績不夠，沒有資格。只好明年再試試看。",
+  "answerEn": "I wanted to apply for a scholarship, but my grades weren't good enough, so I wasn't eligible. I'll just have to try again next year."
+ },
+ {
+  "id": "t2221",
+  "word": "上司",
+  "questionZh": "你跟你的主管相處得怎麼樣？",
+  "questionEn": "How do you get along with your supervisor?",
+  "answerZh": "我的上司人很好，從來不會亂罵人。有問題我都可以直接找他談。",
+  "answerEn": "My boss is really nice and never scolds people for no reason. If I have a problem, I can talk to him directly."
+ },
+ {
+  "id": "t2225",
+  "word": "截止",
+  "questionZh": "你做報告或工作的時候，都會提早完成嗎？",
+  "questionEn": "Do you finish your reports or work early?",
+  "answerZh": "我常常拖到截止前一天才開始做。每次都熬夜，真的不是好習慣。",
+  "answerEn": "I often put it off until the day before the deadline to start. I stay up late every time; it's really not a good habit."
+ },
+ {
+  "id": "t2228",
+  "word": "業績",
+  "questionZh": "你們公司怎麼決定年終獎金？",
+  "questionEn": "How does your company decide year-end bonuses?",
+  "answerZh": "我們公司是看業績來決定的。今年業績不錯，所以大家都很期待。",
+  "answerEn": "My company decides based on sales results. Results were good this year, so everyone is looking forward to it."
+ },
+ {
+  "id": "t2231",
+  "word": "減薪",
+  "questionZh": "如果公司生意不好，你會怎麼辦？",
+  "questionEn": "What would you do if your company's business was bad?",
+  "answerZh": "如果公司要減薪，我可能會開始找別的工作。房租那麼貴，薪水少了會很難過日子。",
+  "answerEn": "If the company cut our pay, I might start looking for another job. Rent is so expensive that a smaller salary would make life hard."
+ },
+ {
+  "id": "t2235",
+  "word": "產業",
+  "questionZh": "你覺得台灣哪一種工作最有發展？",
+  "questionEn": "Which kind of work do you think has the most potential in Taiwan?",
+  "answerZh": "我覺得科技產業最有發展。很多年輕人畢業後都想進去。",
+  "answerEn": "I think the tech industry has the most potential. Lots of young people want to get into it after graduating."
+ },
+ {
+  "id": "t2238",
+  "word": "利潤",
+  "questionZh": "如果你開一家小店，你最擔心什麼？",
+  "questionEn": "If you opened a small shop, what would you worry about most?",
+  "answerZh": "我最擔心利潤太低。台北的店租很貴，賺的錢可能都拿去付房租了。",
+  "answerEn": "I'd worry most about profits being too low. Shop rent in Taipei is expensive, so the money I make might all go to rent."
+ },
+ {
+  "id": "t2242",
+  "word": "同仁",
+  "questionZh": "如果你是主管，你會怎麼在會議上開場？",
+  "questionEn": "If you were a manager, how would you open a meeting?",
+  "answerZh": "我會先說「各位同仁辛苦了」。然後再簡單說明今天要討論的事。",
+  "answerEn": "I'd start by saying, \"Thank you for your hard work, colleagues.\" Then I'd briefly explain what we're discussing today."
+ },
+ {
+  "id": "t2245",
+  "word": "業務員",
+  "questionZh": "你以後想做需要常常拜訪客人的工作嗎？",
+  "questionEn": "Would you want a job that requires visiting clients often?",
+  "answerZh": "我不想當業務員，因為要一直跑客戶。我比較喜歡坐在辦公室裡做事。",
+  "answerEn": "I don't want to be a salesperson, because you have to visit clients constantly. I prefer working in an office."
+ },
+ {
+  "id": "t2249",
+  "word": "報表",
+  "questionZh": "你上班的時候，最不喜歡做哪一種工作？",
+  "questionEn": "What kind of task do you dislike most at work?",
+  "answerZh": "我最不喜歡做每個月的報表。數字一大堆，眼睛看得好累。",
+  "answerEn": "I dislike doing the monthly reports the most. There are tons of numbers, and my eyes get so tired."
+ },
+ {
+  "id": "t2252",
+  "word": "達到",
+  "questionZh": "你今年有給自己定什麼目標嗎？",
+  "questionEn": "Have you set any goals for yourself this year?",
+  "answerZh": "我希望今年中文能達到中級的程度。所以每天都會練習半個小時。",
+  "answerEn": "I hope my Chinese reaches an intermediate level this year. So I practice for half an hour every day."
+ },
+ {
+  "id": "t2255",
+  "word": "改進",
+  "questionZh": "你覺得自己學中文的方法有什麼地方要改？",
+  "questionEn": "Is there anything you think you should change about how you learn Chinese?",
+  "answerZh": "我覺得我的發音還需要改進。我打算每天跟著新聞唸十分鐘。",
+  "answerEn": "I think my pronunciation still needs improving. I plan to read along with the news for ten minutes every day."
+ },
+ {
+  "id": "t2259",
+  "word": "成就",
+  "questionZh": "到目前為止，你最驕傲的事是什麼？",
+  "questionEn": "What are you proudest of so far?",
+  "answerZh": "我最大的成就是一個人搬來台灣生活。一切都從零開始，真的不容易。",
+  "answerEn": "My biggest achievement is moving to Taiwan on my own. I started everything from zero; it really wasn't easy."
+ },
+ {
+  "id": "t2262",
+  "word": "協調",
+  "questionZh": "你們辦公室的人意見不同時，誰來處理？",
+  "questionEn": "When people in your office disagree, who handles it?",
+  "answerZh": "通常是我們組長來協調。他很會溝通，大家最後都能接受。",
+  "answerEn": "Usually our team leader mediates. He's great at communicating, and everyone ends up accepting the outcome."
+ },
+ {
+  "id": "t2266",
+  "word": "交貨",
+  "questionZh": "你工作上有遇過廠商東西送太晚的事嗎？",
+  "questionEn": "At work, have you ever had a supplier deliver things too late?",
+  "answerZh": "上個月廠商延遲交貨，客人一直打電話來罵。我只好一直跟他們道歉。",
+  "answerEn": "Last month a supplier delivered the goods late, and customers kept calling to complain. I had no choice but to keep apologizing."
+ },
+ {
+  "id": "t2269",
+  "word": "議程",
+  "questionZh": "開會之前，你都會先準備什麼？",
+  "questionEn": "What do you prepare before a meeting?",
+  "answerZh": "我會先看一下會議的議程。這樣才知道要準備哪些資料。",
+  "answerEn": "I look over the meeting agenda first. That way I know what materials to prepare."
+ },
+ {
+  "id": "t2273",
+  "word": "行銷",
+  "questionZh": "如果你開一家咖啡店，你會怎麼讓更多人知道？",
+  "questionEn": "If you opened a café, how would you let more people know about it?",
+  "answerZh": "我會在網路上做行銷，拍一些好看的照片。再請朋友幫忙分享。",
+  "answerEn": "I'd do marketing online and take some nice photos. Then I'd ask friends to help share them."
+ },
+ {
+  "id": "t2276",
+  "word": "客服",
+  "questionZh": "你買的東西壞了，你會怎麼處理？",
+  "questionEn": "What do you do when something you bought breaks?",
+  "answerZh": "我會先打電話給客服問問看。如果還在保固期，通常可以免費修。",
+  "answerEn": "I first call customer service to ask. If it's still under warranty, it can usually be fixed for free."
+ },
+ {
+  "id": "t2280",
+  "word": "半導體",
+  "questionZh": "你覺得台灣最重要的產業是什麼？",
+  "questionEn": "What do you think is Taiwan's most important industry?",
+  "answerZh": "我覺得是半導體產業。我有好幾個朋友都在新竹工作。",
+  "answerEn": "I think it's the semiconductor industry. Several of my friends work in Hsinchu."
+ },
+ {
+  "id": "t2283",
+  "word": "裁員",
+  "questionZh": "你會擔心公司突然請很多人離開嗎？",
+  "questionEn": "Do you worry your company might suddenly let a lot of people go?",
+  "answerZh": "我有點擔心，因為最近很多公司都在裁員。我只好多存一點錢，以防萬一。",
+  "answerEn": "I'm a bit worried, because lots of companies have been laying people off lately. I'm saving a bit more money just in case."
+ },
+ {
+  "id": "t2286",
+  "word": "人力資源",
+  "questionZh": "你們公司誰負責找新人和處理薪水？",
+  "questionEn": "Who at your company is in charge of hiring and handling salaries?",
+  "answerZh": "我們公司是人力資源部門負責的。有什麼問題都可以去找他們。",
+  "answerEn": "At my company, the human resources department is in charge. You can go to them with any questions."
+ },
+ {
+  "id": "t2290",
+  "word": "年薪",
+  "questionZh": "你覺得在台北一年要賺多少錢才夠用？",
+  "questionEn": "How much do you think you need to earn per year to get by in Taipei?",
+  "answerZh": "我覺得年薪至少要七十萬才夠。房租和吃飯就花掉一大半了。",
+  "answerEn": "I think you need an annual salary of at least 700,000 NT dollars. Rent and food take up more than half of it."
+ },
+ {
+  "id": "t2294",
+  "word": "值班",
+  "questionZh": "你的工作需要在假日或晚上上班嗎？",
+  "questionEn": "Does your job require you to work on holidays or at night?",
+  "answerZh": "我們每個月要輪流在週末值班。值班的時候不能出去玩，有點無聊。",
+  "answerEn": "Every month we take turns being on duty on weekends. When I'm on duty I can't go out, so it's a bit boring."
+ },
+ {
+  "id": "t2298",
+  "word": "前輩",
+  "questionZh": "你剛開始工作的時候，誰幫你最多？",
+  "questionEn": "When you first started working, who helped you the most?",
+  "answerZh": "我們公司有一位前輩很照顧我。我有不懂的地方都會問她。",
+  "answerEn": "A senior colleague at my company really looked after me. Whenever I didn't understand something, I'd ask her."
+ },
+ {
+  "id": "t2301",
+  "word": "人脈",
+  "questionZh": "你覺得在台灣找工作，認識很多人重要嗎？",
+  "questionEn": "Do you think knowing lots of people matters when job hunting in Taiwan?",
+  "answerZh": "我覺得人脈很重要。我現在的工作就是朋友介紹的。",
+  "answerEn": "I think connections are really important. My current job came through a friend's referral."
+ },
+ {
+  "id": "t2305",
+  "word": "總經理",
+  "questionZh": "你見過你們公司最大的老闆嗎？",
+  "questionEn": "Have you met the top boss at your company?",
+  "answerZh": "我只在尾牙的時候看過總經理一次。他上台講話，大家都很安靜。",
+  "answerEn": "I've only seen the general manager once, at the year-end party. When he spoke on stage, everyone was very quiet."
+ },
+ {
+  "id": "t2308",
+  "word": "助理",
+  "questionZh": "如果有人幫你處理工作上的小事，你希望他做什麼？",
+  "questionEn": "If someone handled small tasks for you at work, what would you want them to do?",
+  "answerZh": "如果我有助理，我希望他幫我安排行程。這樣我就不會忘記開會了。",
+  "answerEn": "If I had an assistant, I'd want them to arrange my schedule. That way I wouldn't forget meetings."
+ },
+ {
+  "id": "t2311",
+  "word": "住戶",
+  "questionZh": "你住的大樓裡大概住了多少家人？",
+  "questionEn": "About how many families live in your building?",
+  "answerZh": "我們大樓的住戶大概有五十戶。大家在電梯裡都會互相打招呼。",
+  "answerEn": "Our building has about fifty households. Everyone says hello to each other in the elevator."
+ },
+ {
+  "id": "t2316",
+  "word": "走廊",
+  "questionZh": "你家門外的空間乾淨嗎？",
+  "questionEn": "Is the space outside your front door clean?",
+  "answerZh": "我們家門外的走廊有點窄。鄰居還會把鞋子放在那裡。",
+  "answerEn": "The hallway outside my place is a bit narrow. The neighbors even leave their shoes there."
+ },
+ {
+  "id": "t2319",
+  "word": "水管",
+  "questionZh": "你住的地方有沒有遇過漏水的問題？",
+  "questionEn": "Has your place ever had a leak?",
+  "answerZh": "上個月浴室的水管破了，地上都是水。我趕快打電話叫房東找人來修。",
+  "answerEn": "Last month a water pipe in the bathroom burst and there was water all over the floor. I quickly called my landlord to get someone to fix it."
+ },
+ {
+  "id": "t2323",
+  "word": "拖吊",
+  "questionZh": "你在台灣騎車或開車，有沒有被罰過錢？",
+  "questionEn": "Have you ever been fined while riding or driving in Taiwan?",
+  "answerZh": "有一次我把機車停在紅線上，結果被拖吊了。花了一千多塊才領回來。",
+  "answerEn": "Once I parked my scooter on a red line and it got towed. It cost me over a thousand NT dollars to get it back."
+ },
+ {
+  "id": "t2326",
+  "word": "設施",
+  "questionZh": "你覺得你家附近的公園怎麼樣？",
+  "questionEn": "What do you think of the park near your home?",
+  "answerZh": "我家附近的公園設施很齊全，有溜滑梯也有運動器材。晚上很多人在那裡散步。",
+  "answerEn": "The park near my home has complete facilities, with slides and exercise equipment. Lots of people walk there in the evening."
+ },
+ {
+  "id": "t2330",
+  "word": "公共場所",
+  "questionZh": "你覺得在捷運上大聲講電話可以嗎？",
+  "questionEn": "Do you think it's okay to talk loudly on the phone on the MRT?",
+  "answerZh": "我覺得在公共場所應該小聲一點。大聲講電話會吵到別人。",
+  "answerEn": "I think you should keep your voice down in public places. Talking loudly on the phone bothers other people."
+ },
+ {
+  "id": "t2333",
+  "word": "少子化",
+  "questionZh": "你覺得為什麼現在年輕人不太想生小孩？",
+  "questionEn": "Why do you think young people today don't really want kids?",
+  "answerZh": "我覺得是房價太高、薪水太低，所以少子化越來越嚴重。很多朋友都說養不起小孩。",
+  "answerEn": "I think it's because housing is too expensive and salaries are too low, so the declining birth rate keeps getting worse. Many friends say they can't afford to raise kids."
+ },
+ {
+  "id": "t2336",
+  "word": "立委",
+  "questionZh": "你知道你住的這一區，是誰代表你們去立法院嗎？",
+  "questionEn": "Do you know who represents your district in the Legislative Yuan?",
+  "answerZh": "我不太清楚我們這區的立委是誰。不過選舉的時候，街上都有很多旗子。",
+  "answerEn": "I'm not really sure who the legislator for our district is. But during elections there are lots of flags on the streets."
+ },
+ {
+  "id": "t2340",
+  "word": "民主",
+  "questionZh": "你覺得每個人都可以投票決定事情，重要嗎？",
+  "questionEn": "Do you think it's important that everyone can vote to decide things?",
+  "answerZh": "我覺得很重要，這就是民主的意思。每個人的聲音都應該被聽到。",
+  "answerEn": "I think it's very important; that's what democracy means. Everyone's voice should be heard."
+ },
+ {
+  "id": "t2343",
+  "word": "犯罪",
+  "questionZh": "你覺得台灣的治安怎麼樣？",
+  "questionEn": "What do you think of public safety in Taiwan?",
+  "answerZh": "我覺得台灣的犯罪率不高。半夜一個人走在路上也不太會害怕。",
+  "answerEn": "I think the crime rate in Taiwan isn't high. Even walking alone at midnight, I'm not really scared."
+ },
+ {
+  "id": "t2349",
+  "word": "報導",
+  "questionZh": "你最近有看到什麼有趣的新聞嗎？",
+  "questionEn": "Have you seen any interesting news lately?",
+  "answerZh": "我最近看到一篇報導，說台灣人一年喝掉很多杯珍珠奶茶。我覺得一點都不意外。",
+  "answerEn": "I recently saw a news report saying Taiwanese people drink a huge number of bubble teas each year. I wasn't surprised at all."
+ },
+ {
+  "id": "t2352",
+  "word": "公民",
+  "questionZh": "你覺得一個好的社會成員應該做哪些事？",
+  "questionEn": "What do you think a good member of society should do?",
+  "answerZh": "我覺得好公民應該遵守法律，也要關心社會。像垃圾分類這種小事也很重要。",
+  "answerEn": "I think a good citizen should obey the law and care about society. Even small things like sorting trash matter."
+ },
+ {
+  "id": "t2356",
+  "word": "繳稅",
+  "questionZh": "每年五月你最忙的事是什麼？",
+  "questionEn": "What keeps you busiest every May?",
+  "answerZh": "每年五月我都要上網繳稅。第一次弄的時候，還請同事幫我看。",
+  "answerEn": "Every May I have to pay my taxes online. The first time, I even asked a coworker to check it for me."
+ },
+ {
+  "id": "t2359",
+  "word": "景氣",
+  "questionZh": "你覺得最近大家的生意好做嗎？",
+  "questionEn": "Do you think business is easy for people lately?",
+  "answerZh": "我覺得最近景氣不太好。夜市很多攤子客人都變少了。",
+  "answerEn": "I think the economy isn't doing great lately. Many night market stalls have fewer customers."
+ },
+ {
+  "id": "t2363",
+  "word": "高齡化",
+  "questionZh": "你覺得台灣的老人越來越多，會帶來什麼問題？",
+  "questionEn": "With more and more elderly people in Taiwan, what problems might that bring?",
+  "answerZh": "我覺得高齡化會讓年輕人壓力變大。以後照顧老人的人可能會不夠。",
+  "answerEn": "I think an aging society will put more pressure on young people. In the future there may not be enough people to care for the elderly."
+ },
+ {
+  "id": "t2366",
+  "word": "津貼",
+  "questionZh": "你的公司除了薪水，還有給什麼補助嗎？",
+  "questionEn": "Besides salary, does your company give you any other benefits?",
+  "answerZh": "我們公司每個月有交通津貼。我拿來付捷運的錢剛好夠用。",
+  "answerEn": "My company gives a monthly transportation allowance. It's just enough to cover my MRT fares."
+ },
+ {
+  "id": "t2369",
+  "word": "貧窮",
+  "questionZh": "你覺得政府應該怎麼幫助沒有錢的家庭？",
+  "questionEn": "How do you think the government should help families without money?",
+  "answerZh": "我覺得要讓貧窮家庭的小孩有機會好好讀書。教育可以改變他們的未來。",
+  "answerEn": "I think kids from poor families should get the chance to study properly. Education can change their future."
+ },
+ {
+  "id": "t2373",
+  "word": "宣布",
+  "questionZh": "颱風來的時候，你怎麼知道明天要不要上班？",
+  "questionEn": "When a typhoon comes, how do you know whether you have to work tomorrow?",
+  "answerZh": "我都會看新聞，等市政府宣布放不放颱風假。宣布以前，大家都一直在滑手機。",
+  "answerEn": "I watch the news and wait for the city government to announce whether there's a typhoon day off. Before the announcement, everyone keeps checking their phones."
+ },
+ {
+  "id": "t2376",
+  "word": "統計",
+  "questionZh": "你會記錄自己每個月花了多少錢嗎？",
+  "questionEn": "Do you keep track of how much you spend each month?",
+  "answerZh": "我每個月都會統計一下自己的花費。發現大部分的錢都花在吃上面。",
+  "answerEn": "Every month I add up my spending. I've found that most of my money goes to food."
+ },
+ {
+  "id": "t2380",
+  "word": "下降",
+  "questionZh": "你覺得你最近的睡眠狀況怎麼樣？",
+  "questionEn": "How has your sleep been lately?",
+  "answerZh": "最近工作太忙，我的睡眠品質一直下降。白天上班常常打瞌睡。",
+  "answerEn": "Work has been so busy that my sleep quality keeps declining. I often doze off at work during the day."
+ },
+ {
+  "id": "t2383",
+  "word": "股市",
+  "questionZh": "你有投資嗎？你會買股票嗎？",
+  "questionEn": "Do you invest? Do you buy stocks?",
+  "answerZh": "我有買一點股票，但是不太敢放太多錢。股市上上下下，看了心臟會受不了。",
+  "answerEn": "I've bought a few stocks, but I don't dare put in too much money. The stock market goes up and down so much my heart can't take it."
+ },
+ {
+  "id": "t2387",
+  "word": "全球",
+  "questionZh": "你覺得哪一種問題是每個國家都要面對的？",
+  "questionEn": "What kind of problem do you think every country has to face?",
+  "answerZh": "我覺得全球暖化是大家都要面對的問題。夏天真的一年比一年熱。",
+  "answerEn": "I think global warming is a problem everyone has to face. Summers really get hotter every year."
+ },
+ {
+  "id": "t2390",
+  "word": "新住民",
+  "questionZh": "你在台灣有認識從別的國家搬來定居的人嗎？",
+  "questionEn": "Do you know anyone in Taiwan who moved here from another country to settle?",
+  "answerZh": "我有一個鄰居是新住民，她是從越南來的。她煮的河粉超好吃。",
+  "answerEn": "One of my neighbors is a new immigrant; she came from Vietnam. The pho she makes is super delicious."
+ },
+ {
+  "id": "t2393",
+  "word": "學歷",
+  "questionZh": "你覺得在台灣找工作，讀到大學很重要嗎？",
+  "questionEn": "Do you think having a university degree matters for finding work in Taiwan?",
+  "answerZh": "我覺得學歷還是滿重要的，很多公司都要看。不過能力和經驗也很重要。",
+  "answerEn": "I think educational background still matters quite a bit; many companies look at it. But ability and experience are also important."
+ },
+ {
+  "id": "t2397",
+  "word": "同性婚姻",
+  "questionZh": "你知道台灣從哪一年開始，兩個男生或兩個女生可以結婚嗎？",
+  "questionEn": "Do you know in what year Taiwan began allowing two men or two women to marry?",
+  "answerZh": "台灣在二〇一九年讓同性婚姻合法。我有一對朋友去年也結婚了。",
+  "answerEn": "Taiwan legalized same-sex marriage in 2019. A couple I'm friends with got married last year too."
+ },
+ {
+  "id": "t2400",
+  "word": "慈善",
+  "questionZh": "你有沒有參加過幫助別人的活動？",
+  "questionEn": "Have you ever taken part in an activity to help others?",
+  "answerZh": "我去年參加過一個慈善義賣。賣的錢全部捐給育幼院。",
+  "answerEn": "Last year I took part in a charity sale. All the money raised was donated to an orphanage."
+ },
+ {
+  "id": "t2404",
+  "word": "救災",
+  "questionZh": "颱風或地震過後，你會想怎麼幫忙？",
+  "questionEn": "After a typhoon or earthquake, how would you want to help?",
+  "answerZh": "我會捐錢或物資給救災團體。如果有時間，也想去當志工。",
+  "answerEn": "I'd donate money or supplies to disaster relief groups. If I had time, I'd also want to volunteer."
+ },
+ {
+  "id": "t2408",
+  "word": "法案",
+  "questionZh": "你最近有注意到什麼新的法律嗎？",
+  "questionEn": "Have you noticed any new laws recently?",
+  "answerZh": "我有看到新聞說，有一個跟外國人工作有關的法案正在討論。我覺得跟我很有關係。",
+  "answerEn": "I saw on the news that a bill related to foreigners working here is being discussed. I think it really concerns me."
+ },
+ {
+  "id": "t2412",
+  "word": "推動",
+  "questionZh": "如果你可以改變你住的城市，你想做什麼？",
+  "questionEn": "If you could change the city you live in, what would you do?",
+  "answerZh": "我想推動在城市裡蓋更多腳踏車道。這樣騎車上班會比較安全。",
+  "answerEn": "I'd want to push for more bike lanes in the city. That way biking to work would be safer."
+ },
+ {
+  "id": "t2415",
+  "word": "建設",
+  "questionZh": "你覺得你住的地方交通方便嗎？",
+  "questionEn": "Do you think transportation is convenient where you live?",
+  "answerZh": "我覺得這幾年的交通建設進步很多。以前要坐公車，現在有捷運了。",
+  "answerEn": "I think transportation infrastructure has improved a lot in recent years. I used to have to take the bus, but now there's the MRT."
+ },
+ {
+  "id": "t2418",
+  "word": "海外",
+  "questionZh": "你有想過去別的國家工作嗎？",
+  "questionEn": "Have you ever thought about working in another country?",
+  "answerZh": "我有想過去海外工作幾年。可以多看看不同的世界。",
+  "answerEn": "I've thought about working overseas for a few years. I could see more of the world."
+ },
+ {
+  "id": "t2422",
+  "word": "部長",
+  "questionZh": "新聞上常看到哪些政府官員出來說話？",
+  "questionEn": "Which government officials do you often see speaking on the news?",
+  "answerZh": "颱風的時候常看到部長出來說明情況。不過我記不太住他們的名字。",
+  "answerEn": "During typhoons I often see ministers come out to explain the situation. But I can't really remember their names."
+ },
+ {
+  "id": "t2425",
+  "word": "代表",
+  "questionZh": "你有沒有被選出來替大家去參加什麼活動？",
+  "questionEn": "Have you ever been chosen to take part in an event on behalf of everyone?",
+  "answerZh": "我高中的時候是班上的代表，去參加演講比賽。雖然沒有得獎，但很好玩。",
+  "answerEn": "In high school I was my class's representative in a speech contest. I didn't win, but it was fun."
+ },
+ {
+  "id": "t2429",
+  "word": "落選",
+  "questionZh": "你有沒有參加過比賽或選舉，結果沒選上？",
+  "questionEn": "Have you ever entered a contest or election and not been chosen?",
+  "answerZh": "我國中的時候參加班長選舉，結果落選了。難過了好幾天。",
+  "answerEn": "In junior high I ran for class president and lost the election. I was sad for days."
+ },
+ {
+  "id": "t2432",
+  "word": "罷工",
+  "questionZh": "如果員工對公司不滿，他們可以怎麼做？",
+  "questionEn": "If employees are unhappy with their company, what can they do?",
+  "answerZh": "他們可以先跟公司談，談不攏可能就會罷工。不過最好還是先好好溝通。",
+  "answerEn": "They can talk with the company first, and if that fails, they might go on strike. But it's best to communicate properly first."
+ },
+ {
+  "id": "t2437",
+  "word": "法官",
+  "questionZh": "小時候你想做什麼工作？",
+  "questionEn": "What job did you want when you were little?",
+  "answerZh": "我小時候想當法官，覺得很帥。後來發現要讀很多書，就放棄了。",
+  "answerEn": "When I was little I wanted to be a judge; I thought it was cool. Later I found out you have to study a lot, so I gave up."
+ },
+ {
+  "id": "t2440",
+  "word": "嫌犯",
+  "questionZh": "你看新聞的時候，常看到警察抓到什麼人？",
+  "questionEn": "When you watch the news, who do you often see the police catching?",
+  "answerZh": "新聞常說警察抓到嫌犯了。不過在判決之前，還不能說他一定有罪。",
+  "answerEn": "The news often says the police caught a suspect. But before the verdict, you can't say he's definitely guilty."
+ },
+ {
+  "id": "t2444",
+  "word": "酒駕",
+  "questionZh": "你跟朋友喝完酒以後，怎麼回家？",
+  "questionEn": "How do you get home after drinking with friends?",
+  "answerZh": "我們一定叫計程車回家，絕對不酒駕。被抓到罰很重，也很危險。",
+  "answerEn": "We always take a taxi home and never drive drunk. The fines are heavy if you're caught, and it's dangerous."
+ },
+ {
+  "id": "t2447",
+  "word": "疫情",
+  "questionZh": "前幾年大家都戴口罩的時候，你的生活有什麼改變？",
+  "questionEn": "A few years ago when everyone wore masks, how did your life change?",
+  "answerZh": "疫情的時候我都在家上班。一開始很開心，後來覺得好悶。",
+  "answerEn": "During the pandemic I worked from home. At first I was happy, but later I felt really cooped up."
+ },
+ {
+  "id": "t2450",
+  "word": "食安",
+  "questionZh": "你在外面吃東西，會擔心衛生問題嗎？",
+  "questionEn": "When you eat out, do you worry about hygiene?",
+  "answerZh": "我有一點擔心食安問題。所以我比較常去自己熟的店吃。",
+  "answerEn": "I'm a bit worried about food safety. So I tend to eat at places I know well."
+ },
+ {
+  "id": "t2454",
+  "word": "加班費",
+  "questionZh": "你常常留在公司做到很晚嗎？有多拿錢嗎？",
+  "questionEn": "Do you often stay late at work? Do you get paid extra?",
+  "answerZh": "我常常加班，可是公司不給加班費。我覺得很不公平。",
+  "answerEn": "I often work overtime, but the company doesn't give overtime pay. I think it's really unfair."
+ },
+ {
+  "id": "t2457",
+  "word": "產假",
+  "questionZh": "在台灣，女生生小孩以後可以休息多久？",
+  "questionEn": "In Taiwan, how long can women take off after having a baby?",
+  "answerZh": "在台灣產假大概是八個禮拜。我姊姊覺得太短了，小孩還那麼小。",
+  "answerEn": "In Taiwan, maternity leave is about eight weeks. My older sister thinks it's too short since the baby is still so small."
+ },
+ {
+  "id": "t2461",
+  "word": "養老院",
+  "questionZh": "你以後老了，想住在哪裡？",
+  "questionEn": "When you get old, where do you want to live?",
+  "answerZh": "我不排斥住養老院，那裡有人照顧。而且可以交很多朋友。",
+  "answerEn": "I'm not against living in a retirement home; there are people to look after you. And you can make lots of friends."
+ },
+ {
+  "id": "t2464",
+  "word": "弱勢",
+  "questionZh": "你覺得社會應該怎麼照顧需要幫助的人？",
+  "questionEn": "How do you think society should take care of people who need help?",
+  "answerZh": "我覺得政府應該多照顧弱勢的人。像身心障礙者和獨居老人。",
+  "answerEn": "I think the government should take better care of the disadvantaged, like people with disabilities and seniors living alone."
+ },
+ {
+  "id": "t2468",
+  "word": "家暴",
+  "questionZh": "如果你常聽到鄰居家有人在哭叫，你會怎麼做？",
+  "questionEn": "If you often heard someone crying and screaming at your neighbor's, what would you do?",
+  "answerZh": "如果懷疑是家暴，我會打一一三專線。我覺得不能假裝沒聽到。",
+  "answerEn": "If I suspected domestic violence, I'd call the 113 hotline. I don't think you can pretend you didn't hear it."
+ },
+ {
+  "id": "t2471",
+  "word": "國民",
+  "questionZh": "在台灣生活，看病為什麼那麼便宜？",
+  "questionEn": "Why is seeing a doctor so cheap when living in Taiwan?",
+  "answerZh": "因為台灣的國民都有全民健保。我是外國人，在這裡工作也有健保卡。",
+  "answerEn": "Because Taiwanese nationals all have national health insurance. I'm a foreigner, but working here I have a health insurance card too."
+ },
+ {
+  "id": "t2474",
+  "word": "普渡",
+  "questionZh": "農曆七月的時候，你有看過大家在門口拜拜嗎？",
+  "questionEn": "During the seventh lunar month, have you seen people making offerings outside their doors?",
+  "answerZh": "有啊，農曆七月很多店家都會辦普渡。門口會擺很多零食和飲料。",
+  "answerEn": "Yes, in the seventh lunar month many shops make offerings to the wandering spirits. They set out lots of snacks and drinks outside."
+ },
+ {
+  "id": "t2478",
+  "word": "求籤",
+  "questionZh": "你去過台灣的廟嗎？在裡面做了什麼？",
+  "questionEn": "Have you been to a temple in Taiwan? What did you do there?",
+  "answerZh": "我去過一次，還跟朋友一起求籤。籤上寫的話很難懂，還要請廟裡的人解釋。",
+  "answerEn": "I went once and drew fortune sticks with a friend. The words on the slip were hard to understand, so we had to ask someone at the temple to explain."
+ },
+ {
+  "id": "t2481",
+  "word": "節慶",
+  "questionZh": "你最喜歡台灣的哪一個節日？為什麼？",
+  "questionEn": "Which Taiwanese holiday do you like best? Why?",
+  "answerZh": "我最喜歡元宵節，因為可以去看燈會。台灣的節慶都很熱鬧。",
+  "answerEn": "I like the Lantern Festival best, because I can go see the lantern fair. Festivals in Taiwan are always lively."
+ },
+ {
+  "id": "t2485",
+  "word": "喜宴",
+  "questionZh": "你參加過台灣人的婚禮嗎？感覺怎麼樣？",
+  "questionEn": "Have you been to a Taiwanese wedding? What was it like?",
+  "answerZh": "我參加過一次喜宴，菜一道一道上，吃都吃不完。新郎新娘還會一桌一桌來敬酒。",
+  "answerEn": "I went to a wedding banquet once; the dishes kept coming and I couldn't finish them. The bride and groom also came round table by table to toast."
+ },
+ {
+  "id": "t2488",
+  "word": "告別式",
+  "questionZh": "你有參加過台灣的喪禮嗎？",
+  "questionEn": "Have you ever attended a funeral in Taiwan?",
+  "answerZh": "我參加過同事爸爸的告別式。大家都穿黑色或白色的衣服，很安靜。",
+  "answerEn": "I attended the memorial service for a coworker's father. Everyone wore black or white, and it was very quiet."
+ },
+ {
+  "id": "t2492",
+  "word": "布袋戲",
+  "questionZh": "你看過台灣傳統的偶戲表演嗎？",
+  "questionEn": "Have you seen a traditional Taiwanese puppet show?",
+  "answerZh": "我在廟口看過布袋戲。表演的人用手讓小人偶打架，好厲害。",
+  "answerEn": "I saw a glove puppet show in front of a temple. The performers made the little puppets fight with their hands; it was amazing."
+ },
+ {
+  "id": "t2495",
+  "word": "文創",
+  "questionZh": "你在台灣旅行時，喜歡買什麼紀念品？",
+  "questionEn": "When traveling in Taiwan, what souvenirs do you like to buy?",
+  "answerZh": "我喜歡去文創園區買手作的小東西。很有台灣的特色。",
+  "answerEn": "I like going to cultural and creative parks to buy little handmade things. They have a very Taiwanese character."
+ },
+ {
+  "id": "t2498",
+  "word": "社群",
+  "questionZh": "你平常用什麼方式跟朋友分享生活？",
+  "questionEn": "How do you usually share your life with friends?",
+  "answerZh": "我常在社群網站上發照片。朋友按讚的時候我會很開心。",
+  "answerEn": "I often post photos on social media. I'm happy when my friends like them."
+ },
+ {
+  "id": "t2502",
+  "word": "電子",
+  "questionZh": "你家裡有哪些東西是要充電的？",
+  "questionEn": "What things in your home need charging?",
+  "answerZh": "我家裡的電子產品很多，像手機、電腦和平板。每天晚上都要排隊充電。",
+  "answerEn": "I have lots of electronic devices at home, like my phone, computer, and tablet. Every night they have to take turns charging."
+ },
+ {
+  "id": "t2505",
+  "word": "機器人",
+  "questionZh": "你希望以後有什麼東西幫你做家事？",
+  "questionEn": "What would you like to have help you with housework in the future?",
+  "answerZh": "我希望有一個機器人幫我洗碗和摺衣服。這樣我就有更多時間休息了。",
+  "answerEn": "I'd like a robot to wash dishes and fold clothes for me. That way I'd have more time to rest."
+ },
+ {
+  "id": "t2509",
+  "word": "貼上",
+  "questionZh": "你寫報告的時候，會從網路上找資料嗎？",
+  "questionEn": "When you write a report, do you look for information online?",
+  "answerZh": "我會先把重要的資料複製貼上，存在筆記裡。最後再用自己的話重寫。",
+  "answerEn": "I copy and paste the important information into my notes first. Then I rewrite it in my own words at the end."
+ },
+ {
+  "id": "t2512",
+  "word": "個資",
+  "questionZh": "你在網路上填表格的時候，會擔心什麼？",
+  "questionEn": "What do you worry about when filling out forms online?",
+  "answerZh": "我很怕個資外洩，所以不會亂填電話和地址。不明的網站我都不敢用。",
+  "answerEn": "I'm really afraid of my personal data leaking, so I don't carelessly fill in my phone number and address. I don't dare use unknown websites."
+ },
+ {
+  "id": "t2516",
+  "word": "版本",
+  "questionZh": "你的手機系統常常更新嗎？",
+  "questionEn": "Do you update your phone's system often?",
+  "answerZh": "我的手機一直跳出新版本的通知。可是我怕更新後變慢，所以一直沒更新。",
+  "answerEn": "My phone keeps showing notifications about a new version. But I'm afraid it'll get slower after updating, so I haven't updated."
+ },
+ {
+  "id": "t2519",
+  "word": "便祕",
+  "questionZh": "你剛來台灣的時候，身體有不舒服嗎？",
+  "questionEn": "When you first came to Taiwan, did you have any health issues?",
+  "answerZh": "剛來的時候因為飲食改變，我有一點便祕。後來多吃青菜水果就好了。",
+  "answerEn": "When I first arrived, my diet changed and I was a bit constipated. Later, eating more vegetables and fruit fixed it."
+ },
+ {
+  "id": "t2529",
+  "word": "肌肉",
+  "questionZh": "你去健身房都練什麼？",
+  "questionEn": "What do you train when you go to the gym?",
+  "answerZh": "我主要練腿部的肌肉。練完隔天走路都很痠。",
+  "answerEn": "I mainly train my leg muscles. The next day, my legs are sore when I walk."
+ },
+ {
+  "id": "t2532",
+  "word": "神經",
+  "questionZh": "你朋友做過最瘋狂的事情是什麼？",
+  "questionEn": "What's the craziest thing a friend of yours has done?",
+  "answerZh": "我朋友半夜兩點說要開車去海邊看日出，真的很神經。不過我後來也跟去了。",
+  "answerEn": "My friend said at 2 a.m. that he wanted to drive to the beach to watch the sunrise; he's really crazy. But I ended up going too."
+ },
+ {
+  "id": "t2535",
+  "word": "眉毛",
+  "questionZh": "你覺得臉上哪個地方最能看出一個人的心情？",
+  "questionEn": "Which part of the face do you think shows a person's mood the most?",
+  "answerZh": "我覺得是眉毛。我生氣的時候眉毛會皺在一起，朋友馬上就知道。",
+  "answerEn": "I think it's the eyebrows. When I'm angry my eyebrows knit together, and my friends know right away."
+ },
+ {
+  "id": "t2539",
+  "word": "病人",
+  "questionZh": "你去醫院看病的時候，通常要等很久嗎？",
+  "questionEn": "When you go to the hospital, do you usually have to wait a long time?",
+  "answerZh": "大醫院的病人很多，我常常要等一個多小時。所以小感冒我都去附近的診所。",
+  "answerEn": "Big hospitals have lots of patients, and I often wait over an hour. So for a small cold I go to a nearby clinic."
+ },
+ {
+  "id": "t2542",
+  "word": "糖尿病",
+  "questionZh": "你覺得台灣人喝含糖飲料太多嗎？",
+  "questionEn": "Do you think Taiwanese people drink too many sugary drinks?",
+  "answerZh": "我覺得太多了，很多人每天都喝手搖飲。喝太多甜的，以後容易得糖尿病。",
+  "answerEn": "I think it's too many; lots of people drink handmade tea drinks every day. Drinking too much sugar makes it easy to get diabetes later."
+ },
+ {
+  "id": "t2546",
+  "word": "細菌",
+  "questionZh": "你回家以後第一件事是做什麼？",
+  "questionEn": "What's the first thing you do when you get home?",
+  "answerZh": "我回家第一件事就是洗手。外面摸過的東西都有很多細菌。",
+  "answerEn": "The first thing I do when I get home is wash my hands. Things you touch outside have lots of germs."
+ },
+ {
+  "id": "t2549",
+  "word": "手術",
+  "questionZh": "你有住過院嗎？是為了什麼？",
+  "questionEn": "Have you ever been hospitalized? What for?",
+  "answerZh": "我前年因為盲腸炎住院，動了一個小手術。住了三天就出院了。",
+  "answerEn": "The year before last I was hospitalized for appendicitis and had a minor surgery. I was discharged after three days."
+ },
+ {
+  "id": "t2553",
+  "word": "復健",
+  "questionZh": "你受傷以後，都怎麼讓身體恢復？",
+  "questionEn": "After you get injured, how do you help your body recover?",
+  "answerZh": "我去年膝蓋受傷，每個禮拜都要去做復健。做了三個月才慢慢好起來。",
+  "answerEn": "Last year I hurt my knee and had to go to physical therapy every week. It took three months before it slowly got better."
+ },
+ {
+  "id": "t2556",
+  "word": "憂鬱",
+  "questionZh": "下雨下很久的時候，你的心情會受影響嗎？",
+  "questionEn": "When it rains for a long time, does it affect your mood?",
+  "answerZh": "會啊，連續下雨好幾天，我就覺得有點憂鬱。這時候我會去咖啡廳坐坐。",
+  "answerEn": "Yes, when it rains for several days in a row, I feel a bit gloomy. Then I go sit in a café for a while."
+ },
+ {
+  "id": "t2559",
+  "word": "戒菸",
+  "questionZh": "你或你身邊的人有沒有想改掉什麼壞習慣？",
+  "questionEn": "Have you or someone close to you wanted to break a bad habit?",
+  "answerZh": "我爸爸試著戒菸好幾次了。這次他說是真的，大家都在幫他加油。",
+  "answerEn": "My dad has tried to quit smoking several times. This time he says he means it, and everyone is cheering him on."
+ },
+ {
+  "id": "t2563",
+  "word": "空汙",
+  "questionZh": "冬天的時候，你覺得台灣的空氣怎麼樣？",
+  "questionEn": "What do you think of Taiwan's air in winter?",
+  "answerZh": "冬天空汙比較嚴重，天空常常灰灰的。出門我都會戴口罩。",
+  "answerEn": "Air pollution is worse in winter, and the sky is often gray. I always wear a mask when I go out."
+ },
+ {
+  "id": "t2566",
+  "word": "氣候變遷",
+  "questionZh": "你覺得最近的天氣跟以前比有什麼不一樣？",
+  "questionEn": "How do you think the weather lately is different from before?",
+  "answerZh": "我覺得因為氣候變遷，夏天越來越熱。颱風好像也變得更強了。",
+  "answerEn": "I think because of climate change, summers are getting hotter and hotter. Typhoons seem to be getting stronger too."
+ },
+ {
+  "id": "t2570",
+  "word": "閃電",
+  "questionZh": "夏天下午的大雷雨，你會怕嗎？",
+  "questionEn": "Are you scared of the big summer afternoon thunderstorms?",
+  "answerZh": "我有點怕閃電，尤其是在外面騎車的時候。所以下大雨我都會先找地方躲。",
+  "answerEn": "I'm a bit scared of lightning, especially when I'm riding outside. So when it pours I find somewhere to take shelter."
+ },
+ {
+  "id": "t2573",
+  "word": "缺水",
+  "questionZh": "你住的地方有沒有限水過？",
+  "questionEn": "Has there ever been water rationing where you live?",
+  "answerZh": "有一年春天缺水，我們家每週停水兩天。我只好先用水桶裝水。",
+  "answerEn": "One spring there was a water shortage, and our water was cut off two days a week. I had to store water in buckets beforehand."
+ },
+ {
+  "id": "t2578",
+  "word": "保育",
+  "questionZh": "你覺得人應該怎麼保護野生動物？",
+  "questionEn": "How do you think people should protect wild animals?",
+  "answerZh": "我覺得要做好保育，不要買野生動物做的東西。也不要隨便去打擾牠們。",
+  "answerEn": "I think we need to do conservation well and not buy things made from wild animals. We also shouldn't disturb them."
+ },
+ {
+  "id": "t2581",
+  "word": "核能",
+  "questionZh": "你覺得台灣應該用什麼方式發電？",
+  "questionEn": "How do you think Taiwan should generate electricity?",
+  "answerZh": "這個問題很難，核能和綠能各有好處和缺點。我覺得大家應該多了解再決定。",
+  "answerEn": "It's a tough question; nuclear power and green energy each have pros and cons. I think people should learn more before deciding."
+ },
+ {
+  "id": "t2584",
+  "word": "塑膠",
+  "questionZh": "你去買飲料的時候，會自己帶杯子嗎？",
+  "questionEn": "Do you bring your own cup when you buy drinks?",
+  "answerZh": "我會自己帶環保杯，少用塑膠杯。店家還會便宜五塊錢。",
+  "answerEn": "I bring my own reusable cup and use fewer plastic cups. The shop even gives me five NT dollars off."
+ },
+ {
+  "id": "t2588",
+  "word": "排放",
+  "questionZh": "你覺得城市裡空氣不好，最主要是什麼原因？",
+  "questionEn": "What do you think is the main reason for bad air in the city?",
+  "answerZh": "我覺得是機車和工廠排放的廢氣太多。如果大家多搭捷運，應該會好一點。",
+  "answerEn": "I think scooters and factories emit too much exhaust. If people took the MRT more, it should be a bit better."
+ },
+ {
+  "id": "t2591",
+  "word": "破壞",
+  "questionZh": "你去爬山或去海邊玩的時候，會注意什麼？",
+  "questionEn": "What do you pay attention to when hiking or going to the beach?",
+  "answerZh": "我會把垃圾帶走，不要破壞環境。也不會隨便摘花或撿珊瑚。",
+  "answerEn": "I take my trash with me so I don't damage the environment. I also don't pick flowers or take coral."
+ },
+ {
+  "id": "t2597",
+  "word": "網友",
+  "questionZh": "你有沒有跟在網路上認識的人見過面？",
+  "questionEn": "Have you ever met in person someone you got to know online?",
+  "answerZh": "我跟一個網友見過面，我們都喜歡打電動。現在變成很好的朋友了。",
+  "answerEn": "I've met an online friend in person; we both love video games. Now we've become good friends."
+ },
+ {
+  "id": "t2600",
+  "word": "濾鏡",
+  "questionZh": "你拍照上傳以前，都會修圖嗎？",
+  "questionEn": "Do you edit your photos before posting them?",
+  "answerZh": "我都會加一點濾鏡，讓顏色好看一點。不過不會修到不像自己。",
+  "answerEn": "I always add a bit of a filter to make the colors look nicer. But I don't edit until I don't look like myself."
+ },
+ {
+  "id": "t2604",
+  "word": "演算法",
+  "questionZh": "你覺得手機上推給你的影片準不準？",
+  "questionEn": "Do you think the videos recommended to you on your phone are accurate?",
+  "answerZh": "很準，演算法好像比我還了解我。我看了一次貓的影片，現在一直推貓給我。",
+  "answerEn": "Very accurate; the algorithm seems to know me better than I do. I watched one cat video, and now it keeps recommending cats."
+ },
+ {
+  "id": "t2607",
+  "word": "跳槽",
+  "questionZh": "如果別的公司給你更高的薪水，你會換工作嗎？",
+  "questionEn": "If another company offered you a higher salary, would you change jobs?",
+  "answerZh": "如果薪水高很多，我可能會跳槽。不過我也會看工作環境和同事。",
+  "answerEn": "If the salary were much higher, I might switch companies. But I'd also consider the work environment and coworkers."
+ },
+ {
+  "id": "t2611",
+  "word": "考核",
+  "questionZh": "你們公司怎麼看員工表現好不好？",
+  "questionEn": "How does your company assess whether employees are performing well?",
+  "answerZh": "我們公司每半年有一次考核。主管會跟我們一個一個談。",
+  "answerEn": "My company has a performance review every six months. The supervisor talks with us one by one."
+ },
+ {
+  "id": "t2614",
+  "word": "仲介",
+  "questionZh": "你在台灣找房子的時候，是怎麼找到的？",
+  "questionEn": "How did you find a place to live in Taiwan?",
+  "answerZh": "我是透過仲介找到的，比較省時間。不過要多付半個月的房租當服務費。",
+  "answerEn": "I found it through an agent, which saved time. But I had to pay an extra half month's rent as a service fee."
+ },
+ {
+  "id": "t2618",
+  "word": "格局",
+  "questionZh": "你喜歡什麼樣的房子？",
+  "questionEn": "What kind of home do you like?",
+  "answerZh": "我喜歡格局方正的房子，不要有太多走道。客廳最好大一點，可以請朋友來玩。",
+  "answerEn": "I like homes with a square layout, without too many hallways. The living room should ideally be big so I can invite friends over."
+ },
+ {
+  "id": "t2622",
+  "word": "保健",
+  "questionZh": "你平常會吃什麼東西讓身體更健康嗎？",
+  "questionEn": "Do you take anything regularly to stay healthier?",
+  "answerZh": "我會吃一些保健食品，像魚油和維他命。不過我覺得睡飽還是最重要。",
+  "answerEn": "I take some health supplements, like fish oil and vitamins. But I think getting enough sleep is still the most important."
+ },
+ {
+  "id": "t2625",
+  "word": "針灸",
+  "questionZh": "你有試過中醫的治療方式嗎？",
+  "questionEn": "Have you tried traditional Chinese medicine treatments?",
+  "answerZh": "我有一次肩膀很痛，去中醫診所做針灸。一開始很怕，但是其實不太痛。",
+  "answerEn": "Once my shoulder hurt a lot, so I went to a Chinese medicine clinic for acupuncture. I was scared at first, but it actually didn't hurt much."
+ },
+ {
+  "id": "t2629",
+  "word": "中暑",
+  "questionZh": "台灣的夏天那麼熱，你出門會注意什麼？",
+  "questionEn": "Taiwan's summers are so hot; what do you watch out for when you go out?",
+  "answerZh": "我出門一定會帶水，怕中暑。中午太陽太大，我盡量不出門。",
+  "answerEn": "I always bring water when I go out because I'm afraid of getting heatstroke. At noon the sun is too strong, so I try not to go out."
+ },
+ {
+  "id": "t2632",
+  "word": "不安",
+  "questionZh": "搬到一個新的地方，你一開始會覺得怎麼樣？",
+  "questionEn": "When you move somewhere new, how do you feel at first?",
+  "answerZh": "我一開始會有點不安，因為什麼都不熟。不過認識鄰居以後就好多了。",
+  "answerEn": "At first I feel a bit uneasy, because nothing is familiar. But once I get to know the neighbors it's much better."
+ },
+ {
+  "id": "t2636",
+  "word": "土石流",
+  "questionZh": "颱風天的時候，住在山區的人要小心什麼？",
+  "questionEn": "During a typhoon, what should people living in the mountains be careful of?",
+  "answerZh": "住在山區的人要小心土石流。雨太大的時候最好早點離開。",
+  "answerEn": "People living in the mountains should watch out for mudslides. When the rain is too heavy, it's best to leave early."
+ },
+ {
+  "id": "t2685",
+  "word": "並非",
+  "questionZh": "你覺得學中文只要背單字就好了嗎？",
+  "questionEn": "Do you think learning Chinese is just about memorizing vocabulary?",
+  "answerZh": "學中文並非只要背單字就好。還要多聽多說，才能真的用出來。",
+  "answerEn": "Learning Chinese is by no means just memorizing words. You have to listen and speak a lot to really use it."
+ },
+ {
+  "id": "t2709",
+  "word": "像是",
+  "questionZh": "你在台灣最喜歡吃哪些小吃？",
+  "questionEn": "Which snacks do you like most in Taiwan?",
+  "answerZh": "我喜歡很多小吃，像是滷肉飯和臭豆腐。每次去夜市都吃到很飽。",
+  "answerEn": "I like lots of snacks, such as braised pork rice and stinky tofu. Every time I go to the night market I eat until I'm stuffed."
+ },
+ {
+  "id": "t2722",
+  "word": "古代",
+  "questionZh": "如果可以回到很久很久以前，你想去看看嗎？",
+  "questionEn": "If you could go back to the distant past, would you want to take a look?",
+  "answerZh": "我想去古代看看，但是只待一天就好。沒有冷氣和手機，我應該受不了。",
+  "answerEn": "I'd like to visit ancient times, but only for a day. Without air conditioning and a phone, I don't think I could stand it."
+ },
+ {
+  "id": "t2727",
+  "word": "多數",
+  "questionZh": "你身邊的朋友大部分都是台灣人嗎？",
+  "questionEn": "Are most of your friends Taiwanese?",
+  "answerZh": "我的朋友多數是台灣人，只有少數是外國人。所以我中文進步得很快。",
+  "answerEn": "Most of my friends are Taiwanese; only a few are foreigners. So my Chinese has improved quickly."
+ },
+ {
+  "id": "t2733",
+  "word": "具有",
+  "questionZh": "你覺得一個好老師應該要有什麼特質？",
+  "questionEn": "What qualities do you think a good teacher should have?",
+  "answerZh": "我覺得好老師要具有耐心。學生問很多次，也不會生氣。",
+  "answerEn": "I think a good teacher should have patience. Even if students ask many times, they don't get angry."
+ },
+ {
+  "id": "t2738",
+  "word": "面臨",
+  "questionZh": "你在台灣生活遇過最大的困難是什麼？",
+  "questionEn": "What's the biggest difficulty you've had living in Taiwan?",
+  "answerZh": "我剛來的時候，面臨最大的問題是語言。去銀行辦事都聽不懂。",
+  "answerEn": "When I first came, the biggest problem I faced was the language. I couldn't understand anything when doing things at the bank."
+ },
+ {
+  "id": "t2742",
+  "word": "形成",
+  "questionZh": "你來台灣以後，有什麼新的生活習慣？",
+  "questionEn": "What new daily habits have you picked up since coming to Taiwan?",
+  "answerZh": "我來台灣以後形成了一個習慣，每天早上都去早餐店。我最喜歡吃蛋餅。",
+  "answerEn": "Since coming to Taiwan I've formed a habit of going to a breakfast shop every morning. My favorite is the egg crepe."
+ },
+ {
+  "id": "t2745",
+  "word": "減輕",
+  "questionZh": "你壓力很大的時候，會做什麼讓自己舒服一點？",
+  "questionEn": "When you're very stressed, what do you do to feel better?",
+  "answerZh": "我會去跑步來減輕壓力。流完汗心情就會好很多。",
+  "answerEn": "I go running to ease the stress. After sweating, I feel much better."
+ },
+ {
+  "id": "t2748",
+  "word": "符合",
+  "questionZh": "你找房子的時候，最在意什麼條件？",
+  "questionEn": "When looking for a place to live, what conditions do you care about most?",
+  "answerZh": "房子一定要符合我的預算，還要離捷運站近。可是這樣的房子很難找。",
+  "answerEn": "The place has to fit my budget and be close to an MRT station. But places like that are hard to find."
+ },
+ {
+  "id": "t2752",
+  "word": "象徵",
+  "questionZh": "你知道台灣過年為什麼喜歡用紅色嗎？",
+  "questionEn": "Do you know why people in Taiwan like to use red at Lunar New Year?",
+  "answerZh": "我聽說紅色象徵好運和喜氣。所以過年的時候到處都是紅色的春聯。",
+  "answerEn": "I heard red symbolizes good luck and joy. So at New Year there are red couplets everywhere."
+ },
+ {
+  "id": "t2756",
+  "word": "給予",
+  "questionZh": "你覺得主管應該怎麼對待新進員工？",
+  "questionEn": "How do you think managers should treat new employees?",
+  "answerZh": "我覺得主管應該給予新人多一點時間學習。不要一開始就給太大的壓力。",
+  "answerEn": "I think managers should give new hires more time to learn. They shouldn't put too much pressure on them right away."
+ },
+ {
+  "id": "t2760",
+  "word": "付出",
+  "questionZh": "你覺得你的父母為你做了什麼？",
+  "questionEn": "What do you think your parents have done for you?",
+  "answerZh": "我爸媽為我付出了很多時間和金錢。我很希望以後能好好報答他們。",
+  "answerEn": "My parents put a lot of time and money into me. I really hope I can repay them well in the future."
+ },
+ {
+  "id": "t2763",
+  "word": "影響力",
+  "questionZh": "誰是對你的人生改變最大的人？",
+  "questionEn": "Who is the person who has changed your life the most?",
+  "answerZh": "我的高中老師對我很有影響力。是她讓我開始對語言有興趣的。",
+  "answerEn": "My high school teacher has had a lot of influence on me. She's the one who got me interested in languages."
+ },
+ {
+  "id": "t2767",
+  "word": "財產",
+  "questionZh": "你覺得結婚以後，兩個人的錢應該要分開嗎？",
+  "questionEn": "After marriage, do you think a couple should keep their money separate?",
+  "answerZh": "我覺得財產可以分開，但是生活費一起出。這樣比較不會吵架。",
+  "answerEn": "I think assets can be kept separate, but living expenses should be shared. That way there are fewer arguments."
+ },
+ {
+  "id": "t2770",
+  "word": "資金",
+  "questionZh": "如果你想自己開店，你最需要準備什麼？",
+  "questionEn": "If you wanted to open your own shop, what would you most need to prepare?",
+  "answerZh": "我最需要的是資金，開店要花很多錢。我打算先存三年再說。",
+  "answerEn": "What I need most is capital; opening a shop costs a lot of money. I plan to save for three years first."
+ },
+ {
+  "id": "t2774",
+  "word": "機器",
+  "questionZh": "你在便利商店除了買東西，還會做什麼？",
+  "questionEn": "Besides shopping, what else do you do at convenience stores?",
+  "answerZh": "我常用店裡的機器印文件和繳費。很方便，不用跑去郵局。",
+  "answerEn": "I often use the machine in the store to print documents and pay bills. It's convenient; I don't have to go to the post office."
+ },
+ {
+  "id": "t2777",
+  "word": "包含",
+  "questionZh": "你在台灣租房子，房租裡面還有什麼費用？",
+  "questionEn": "When you rent in Taiwan, what other fees are in your rent?",
+  "answerZh": "我的房租有包含管理費和網路費。可是電費要另外算。",
+  "answerEn": "My rent includes the building management fee and the internet fee. But electricity is charged separately."
+ },
+ {
+  "id": "t2780",
+  "word": "縮小",
+  "questionZh": "你要傳很大的照片給朋友的時候，會怎麼做？",
+  "questionEn": "What do you do when you need to send a big photo to a friend?",
+  "answerZh": "我會先把照片縮小一點再傳。不然手機網路很慢，要等很久。",
+  "answerEn": "I shrink the photo a little before sending it. Otherwise my phone's internet is slow and it takes forever."
+ },
+ {
+  "id": "t2784",
+  "word": "決心",
+  "questionZh": "你今年有什麼一定要做到的事嗎？",
+  "questionEn": "Is there something you're set on accomplishing this year?",
+  "answerZh": "我下定決心今年要考過中文檢定。每天都會念書一個小時。",
+  "answerEn": "I've made up my mind to pass the Chinese proficiency test this year. I study for an hour every day."
+ },
+ {
+  "id": "t2787",
+  "word": "阻止",
+  "questionZh": "你朋友要做一件很危險的事，你會怎麼做？",
+  "questionEn": "If a friend was about to do something very dangerous, what would you do?",
+  "answerZh": "我一定會阻止他，就算他會生氣。朋友的安全比較重要。",
+  "answerEn": "I'd definitely stop him, even if he got angry. My friend's safety is more important."
+ },
+ {
+  "id": "t2791",
+  "word": "供應",
+  "questionZh": "你住飯店的時候，會在意早餐幾點結束嗎？",
+  "questionEn": "When you stay at a hotel, do you care what time breakfast ends?",
+  "answerZh": "我喜歡早餐供應到十點的飯店。這樣假日可以睡晚一點。",
+  "answerEn": "I like hotels that serve breakfast until ten. That way I can sleep in a bit on holidays."
+ },
+ {
+  "id": "t2794",
+  "word": "體會",
+  "questionZh": "你一個人住以後，對家人有什麼新的想法？",
+  "questionEn": "Since living on your own, what new thoughts do you have about your family?",
+  "answerZh": "我一個人住以後，才體會到媽媽做家事有多辛苦。現在每次回家都會幫忙洗碗。",
+  "answerEn": "Only after living alone did I come to understand how hard my mom works on housework. Now every time I go home, I help wash the dishes."
+ },
+ {
+  "id": "t2798",
+  "word": "關注",
+  "questionZh": "你平常會特別注意哪一類的新聞？",
+  "questionEn": "What kind of news do you pay special attention to?",
+  "answerZh": "我最近很關注房價的新聞。因為我在考慮要不要買房子。",
+  "answerEn": "Lately I've been following news about housing prices closely. That's because I'm considering whether to buy a home."
+ },
+ {
+  "id": "t2801",
+  "word": "指導",
+  "questionZh": "你學新東西的時候，喜歡自己學還是有人教？",
+  "questionEn": "When you learn something new, do you prefer learning alone or being taught?",
+  "answerZh": "我喜歡有老師指導，學得比較快。自己學常常不知道哪裡做錯。",
+  "answerEn": "I like having a teacher to guide me; I learn faster. When I learn alone, I often don't know what I'm doing wrong."
+ },
+ {
+  "id": "t2804",
+  "word": "測試",
+  "questionZh": "你買新手機以後，第一件事會做什麼？",
+  "questionEn": "What's the first thing you do after buying a new phone?",
+  "answerZh": "我會先測試一下相機拍起來怎麼樣。我很常拍食物照片，所以很重要。",
+  "answerEn": "I first test how the camera takes pictures. I take a lot of food photos, so it's important."
+ },
+ {
+  "id": "t2808",
+  "word": "宣傳",
+  "questionZh": "如果你們社區要辦活動，你會怎麼讓大家知道？",
+  "questionEn": "If your neighborhood was holding an event, how would you let everyone know?",
+  "answerZh": "我會在社區群組宣傳，再貼海報在電梯裡。這樣大家應該都看得到。",
+  "answerEn": "I'd promote it in the neighborhood group chat and put a poster in the elevator. That way everyone should see it."
+ },
+ {
+  "id": "t2811",
+  "word": "退步",
+  "questionZh": "你學過的外語，很久沒用會怎麼樣？",
+  "questionEn": "What happens to a foreign language you've learned when you don't use it for a long time?",
+  "answerZh": "我高中學過日文，很久沒用就退步很多了。現在只記得怎麼打招呼。",
+  "answerEn": "I learned Japanese in high school, but it's gotten much worse since I haven't used it in a long time. Now I only remember how to say hello."
+ },
+ {
+  "id": "t2815",
+  "word": "損失",
+  "questionZh": "你有沒有遇過被騙錢的經驗？",
+  "questionEn": "Have you ever been scammed out of money?",
+  "answerZh": "我有一次在網路上買東西被騙，損失了三千塊。從那次以後我都選貨到付款。",
+  "answerEn": "Once I got scammed buying something online and lost three thousand NT dollars. Since then I always choose cash on delivery."
+ },
+ {
+  "id": "t2818",
+  "word": "謠言",
+  "questionZh": "你在網路上看到奇怪的消息，會馬上相信嗎？",
+  "questionEn": "When you see strange news online, do you believe it right away?",
+  "answerZh": "我不會馬上相信，因為很多都是謠言。我會先查查看有沒有正式的新聞。",
+  "answerEn": "I don't believe it right away, because a lot of it is rumors. I first check whether there's official news about it."
+ },
+ {
+  "id": "t2822",
+  "word": "觀念",
+  "questionZh": "你覺得你和你父母那一代的想法有什麼不同？",
+  "questionEn": "How do you think your thinking differs from your parents' generation?",
+  "answerZh": "我爸媽的觀念比較傳統，覺得一定要買房子。我覺得租房子也沒什麼不好。",
+  "answerEn": "My parents' way of thinking is more traditional; they think you must buy a home. I think renting isn't bad at all."
+ },
+ {
+  "id": "t2825",
+  "word": "秩序",
+  "questionZh": "你覺得台灣人搭捷運的時候怎麼樣？",
+  "questionEn": "What do you think of how Taiwanese people behave on the MRT?",
+  "answerZh": "我覺得大家很守秩序，都會排隊上車。搭電扶梯也會靠右站。",
+  "answerEn": "I think everyone is very orderly and lines up to board. On escalators they also stand on the right."
+ },
+ {
+  "id": "t2828",
+  "word": "氣質",
+  "questionZh": "你覺得什麼樣的人看起來很有魅力？",
+  "questionEn": "What kind of person do you think seems really attractive?",
+  "answerZh": "我覺得有氣質的人很有魅力。說話溫柔、穿著乾淨，就很吸引人。",
+  "answerEn": "I think people with poise are very attractive. Speaking gently and dressing neatly is really appealing."
+ },
+ {
+  "id": "t2832",
+  "word": "區域",
+  "questionZh": "你住的城市裡，哪裡最熱鬧？",
+  "questionEn": "Where is the liveliest part of the city you live in?",
+  "answerZh": "我覺得車站附近的區域最熱鬧。百貨公司、餐廳和補習班都在那裡。",
+  "answerEn": "I think the area around the train station is the liveliest. Department stores, restaurants, and cram schools are all there."
+ },
+ {
+  "id": "t2835",
+  "word": "背景",
+  "questionZh": "你拍照的時候，最喜歡在哪裡拍？",
+  "questionEn": "Where do you most like to take photos?",
+  "answerZh": "我喜歡用山或海當背景。這樣照片看起來會比較漂亮。",
+  "answerEn": "I like using mountains or the sea as the background. That way the photos look nicer."
+ },
+ {
+  "id": "t2839",
+  "word": "執照",
+  "questionZh": "你在台灣可以騎機車嗎？要先辦什麼？",
+  "questionEn": "Can you ride a scooter in Taiwan? What do you need to get first?",
+  "answerZh": "我去年考到機車的駕駛執照了。現在去哪裡都很方便。",
+  "answerEn": "Last year I passed the test and got my scooter driver's license. Now it's convenient to go anywhere."
+ },
+ {
+  "id": "t2842",
+  "word": "消費",
+  "questionZh": "你覺得住在台北，什麼最花錢？",
+  "questionEn": "What do you think costs the most when living in Taipei?",
+  "answerZh": "我覺得台北的消費很高，尤其是房租。吃飯倒是還好，有很多便宜的小吃。",
+  "answerEn": "I think spending in Taipei is high, especially rent. Food is okay, though; there are lots of cheap snacks."
+ },
+ {
+  "id": "t2846",
+  "word": "有限",
+  "questionZh": "你週末都會出去玩嗎？",
+  "questionEn": "Do you go out and have fun every weekend?",
+  "answerZh": "我的時間很有限，週末常常要去上中文課。只能偶爾去附近走走。",
+  "answerEn": "My time is very limited; on weekends I often have Chinese classes. I can only occasionally go somewhere nearby."
+ },
+ {
+  "id": "t2849",
+  "word": "著名",
+  "questionZh": "朋友來台灣玩，你會帶他們去哪裡？",
+  "questionEn": "When friends visit Taiwan, where do you take them?",
+  "answerZh": "我會帶他們去九份，那裡是很著名的觀光景點。晚上的風景特別漂亮。",
+  "answerEn": "I take them to Jiufen; it's a very famous tourist spot. The view at night is especially beautiful."
+ },
+ {
+  "id": "t2853",
+  "word": "悠閒",
+  "questionZh": "你理想中的星期天是什麼樣子？",
+  "questionEn": "What does your ideal Sunday look like?",
+  "answerZh": "我想睡到自然醒，再去吃個早午餐。過一個悠閒的下午。",
+  "answerEn": "I'd like to sleep until I wake up naturally, then go have brunch. And spend a leisurely afternoon."
+ },
+ {
+  "id": "t2856",
+  "word": "具體",
+  "questionZh": "你說想學好中文，有什麼計畫嗎？",
+  "questionEn": "You say you want to get good at Chinese; do you have a plan?",
+  "answerZh": "我有一個具體的計畫，每天背十個單字。週末再跟語言交換的朋友練習。",
+  "answerEn": "I have a specific plan: memorize ten words every day. Then on weekends I practice with my language exchange partner."
+ },
+ {
+  "id": "t2859",
+  "word": "巨大",
+  "questionZh": "你在台灣有看過什麼讓你嚇一跳的大東西嗎？",
+  "questionEn": "Have you seen anything big in Taiwan that startled you?",
+  "answerZh": "我在台南看過一隻巨大的蟑螂，還會飛。我嚇到尖叫。",
+  "answerEn": "In Tainan I saw a huge cockroach, and it could fly. I was so scared I screamed."
+ },
+ {
+  "id": "t2863",
+  "word": "被動",
+  "questionZh": "認識新朋友的時候，你會主動去聊天嗎？",
+  "questionEn": "When meeting new people, do you take the initiative to chat?",
+  "answerZh": "我比較被動，通常等別人先來跟我說話。不過聊開了以後我很愛講。",
+  "answerEn": "I'm more passive; I usually wait for others to talk to me first. But once we get talking, I love to chat."
+ },
+ {
+  "id": "t2867",
+  "word": "違法",
+  "questionZh": "在台灣有什麼事是你以前不知道不能做的？",
+  "questionEn": "What's something you didn't know you weren't allowed to do in Taiwan?",
+  "answerZh": "我不知道在捷運上吃東西是違法的。第一次被提醒的時候很不好意思。",
+  "answerEn": "I didn't know eating on the MRT was against the law. The first time someone reminded me, I was really embarrassed."
+ },
+ {
+  "id": "t2871",
+  "word": "粗魯",
+  "questionZh": "你有遇過很沒禮貌的人嗎？",
+  "questionEn": "Have you ever met a really impolite person?",
+  "answerZh": "有一次有人在排隊時直接插隊，還推我一下。我覺得他很粗魯。",
+  "answerEn": "Once someone cut right in line and even pushed me. I thought he was really rude."
+ },
+ {
+  "id": "t2875",
+  "word": "用心",
+  "questionZh": "你收過最讓你感動的禮物是什麼？",
+  "questionEn": "What's the most touching gift you've ever received?",
+  "answerZh": "我朋友親手做了一本相簿給我。我覺得她真的很用心。",
+  "answerEn": "My friend made me a photo album by hand. I think she really put her heart into it."
+ },
+ {
+  "id": "t2879",
+  "word": "敏感",
+  "questionZh": "跟台灣朋友聊天時，有什麼話題你會避開？",
+  "questionEn": "When chatting with Taiwanese friends, are there topics you avoid?",
+  "answerZh": "我會避開收入和年紀，這些比較敏感。除非很熟才會聊。",
+  "answerEn": "I avoid income and age; those are more sensitive. I only talk about them with people I'm close to."
+ },
+ {
+  "id": "t2884",
+  "word": "承受",
+  "questionZh": "你覺得工作的壓力大嗎？",
+  "questionEn": "Do you think your work stress is high?",
+  "answerZh": "有時候壓力大到我快承受不了。這時候我會跟朋友出去吃宵夜聊聊。",
+  "answerEn": "Sometimes the pressure is so great I can barely bear it. Then I go out for a late-night snack and chat with friends."
+ },
+ {
+  "id": "t2887",
+  "word": "改正",
+  "questionZh": "你說中文的時候，希望別人直接說你哪裡錯嗎？",
+  "questionEn": "When you speak Chinese, do you want people to point out your mistakes directly?",
+  "answerZh": "我希望大家直接幫我改正錯誤。這樣我才會進步。",
+  "answerEn": "I hope people will correct my mistakes directly. That's the only way I'll improve."
+ },
+ {
+  "id": "t2891",
+  "word": "風險",
+  "questionZh": "你會想自己創業嗎？",
+  "questionEn": "Would you want to start your own business?",
+  "answerZh": "我有想過，但是風險太大了。我還是先存錢比較實在。",
+  "answerEn": "I've thought about it, but the risk is too big. I think saving money first is more realistic."
+ },
+ {
+  "id": "t2894",
+  "word": "遺憾",
+  "questionZh": "你有沒有什麼後悔沒做的事？",
+  "questionEn": "Is there anything you regret not doing?",
+  "answerZh": "我很遺憾小時候沒有好好學鋼琴。現在想學，手指都不靈活了。",
+  "answerEn": "I really regret not learning piano properly as a kid. Now that I want to learn, my fingers aren't nimble anymore."
+ },
+ {
+  "id": "t2899",
+  "word": "告白",
+  "questionZh": "你有沒有跟喜歡的人說出自己的心意過？",
+  "questionEn": "Have you ever told someone you liked how you felt?",
+  "answerZh": "我高中的時候跟一個女生告白過。結果她說只想當朋友。",
+  "answerEn": "In high school I confessed my feelings to a girl. She said she only wanted to be friends."
+ },
+ {
+  "id": "t2902",
+  "word": "失戀",
+  "questionZh": "跟另一半分手以後，你通常怎麼讓自己好起來？",
+  "questionEn": "After breaking up with a partner, how do you usually make yourself feel better?",
+  "answerZh": "我失戀的時候會找朋友去吃火鍋聊天。大哭一場以後就會好很多。",
+  "answerEn": "When I'm heartbroken, I go eat hot pot and chat with friends. After a good cry I feel much better."
+ },
+ {
+  "id": "t2906",
+  "word": "傷害",
+  "questionZh": "你覺得說話直接一點好嗎？",
+  "questionEn": "Do you think being a bit more direct when talking is good?",
+  "answerZh": "說話直接沒關係，但是不要傷害別人。有些話換個方式說會比較好。",
+  "answerEn": "Being direct is fine, but don't hurt other people. Some things are better said a different way."
+ },
+ {
+  "id": "t2909",
+  "word": "結構",
+  "questionZh": "你覺得台灣的房子跟你國家的有什麼不一樣？",
+  "questionEn": "How do you think houses in Taiwan differ from those in your country?",
+  "answerZh": "台灣很多房子是鋼筋水泥的結構，比較耐地震。我家鄉的房子大多是木頭的。",
+  "answerEn": "Many houses in Taiwan have a reinforced concrete structure, which holds up better in earthquakes. Houses in my hometown are mostly wooden."
+ }
+]

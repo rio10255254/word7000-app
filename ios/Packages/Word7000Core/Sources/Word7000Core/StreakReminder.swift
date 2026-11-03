@@ -59,7 +59,7 @@ public struct StreakActivityProps: Codable, Equatable, Hashable, Sendable {
             startedAt: startsAt.timeIntervalSince1970 * 1000,
             streak: plan.streak,
             streakLabel: chineseInterface ? "連勝 \(plan.streak) 天" : "\(plan.streak)-day streak",
-            title: chineseInterface ? "你的連勝快中斷了" : "Your streak needs you"
+            title: chineseInterface ? "連勝要斷了，我就看著" : "Your streak is slipping. I'm watching."
         )
     }
 }

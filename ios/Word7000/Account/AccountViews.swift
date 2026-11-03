@@ -3,22 +3,27 @@ import CryptoKit
 import SwiftUI
 import Word7000Core
 
-/// Sign in with Apple first, Google second, email tucked away.
+/// Sign in with Apple: the only kind of account. Without one the learner is
+/// a guest, with everything for studying on this iPhone but no online AI.
 struct SignInSheet: View {
     enum Reason {
-        case general, scan
+        case general, scan, plus, ai
 
         var title: String {
             switch self {
-            case .general: L.t("登入 Word7000", "Sign in to Word7000")
+            case .general: L.t("用 Apple 登入", "Sign in with Apple")
             case .scan: L.t("登入後就能掃描單字表", "Sign in to scan word lists")
+            case .plus: L.t("先用 Apple 登入", "Sign in with Apple first")
+            case .ai: L.t("登入後就能用 AI", "Sign in to use the AI")
             }
         }
 
         var body: String {
             switch self {
-            case .general: L.t("保留這支手機上的學習紀錄。Plus 與試用期間可同步到其他裝置。", "Keep your learning records on this iPhone. Plus and the trial include sync across devices.")
-            case .scan: L.t("將掃描字庫與你的帳號連結。Plus 與試用期間會提供雲端同步。", "Link scanned banks to your account. Cloud sync is included with Plus and during the trial.")
+            case .general: L.t("訪客的進度不會保存。登入後會保存，並同步到你的每一台裝置。", "A guest's progress isn't kept. Signed in, it is kept and synced to every device.")
+            case .scan: L.t("掃描是 Premium 功能，掃描的字庫會跟著你的帳號走。先用 Apple 登入。", "Scanning is part of Premium, and scanned banks go with your account. Sign in with Apple first.")
+            case .plus: L.t("Premium 綁定你的 Apple ID，換手機登入就會回來，進度也會同步。", "Premium belongs to your Apple ID: sign in on a new iPhone and it is there, with your progress.")
+            case .ai: L.t("小笨貓的 AI 是 Premium 功能，每天 \(PlusAI.plusDaily) 次。先用 Apple 登入。", "Silly Cat's AI is part of Premium, \(PlusAI.plusDaily) answers a day. Sign in with Apple first.")
             }
         }
 
@@ -26,21 +31,24 @@ struct SignInSheet: View {
             switch self {
             case .general: "icloud.fill"
             case .scan: "doc.text.viewfinder"
+            case .plus: "sparkles"
+            case .ai: "bubble.left.and.text.bubble.right.fill"
             }
         }
     }
 
+    @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.webAuthenticationSession) private var webAuthenticationSession
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var reason: Reason = .general
     var onSignedIn: () -> Void = {}
 
     @State private var rawNonce = ""
-    @State private var showEmail = false
-    @State private var email = ""
-    @State private var password = ""
+    /// Counts failed sign-ins so the message shakes on each one.
+    @State private var failures = 0
+    @State private var waved = false
 
     var body: some View {
         NavigationStack {
@@ -49,14 +57,22 @@ struct SignInSheet: View {
                     Image(systemName: reason.icon)
                         .font(.system(size: 34, weight: .semibold))
                         .foregroundStyle(Palette.accent)
+                        .symbolEffect(.bounce, value: waved)
                         .frame(width: 76, height: 76)
                         .background(Palette.accent.opacity(0.14), in: Circle())
+                        // The companion peeking round the badge.
+                        .overlay(alignment: .bottomTrailing) {
+                            Mascot(mood: .happy, size: 40)
+                                .offset(x: 26, y: 6)
+                        }
+                        .popIn()
                         .padding(.top, 12)
                     VStack(spacing: 8) {
-                        Text(reason.title).font(.rounded(.title2, weight: .bold))
+                        Text(reason.title).font(.display(.title2, weight: .bold))
                         Text(reason.body).foregroundStyle(.secondary)
                     }
                     .multilineTextAlignment(.center)
+                    .entrance(1)
 
                     VStack(spacing: 12) {
                         SignInWithAppleButton(.continue) { request in
@@ -70,50 +86,31 @@ struct SignInSheet: View {
                         .frame(height: 52)
                         .clipShape(Capsule())
 
-                        Button {
-                            Task { await google() }
-                        } label: {
-                            Label(L.t("使用 Google 繼續", "Continue with Google"), systemImage: "globe")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                        }
-                        .secondaryAction()
-
-                        Button(showEmail ? L.t("收起 Email 登入", "Hide email sign-in") : L.t("使用 Email", "Use email")) {
-                            withAnimation(.snappy) { showEmail.toggle() }
-                        }
-                        .font(.subheadline.weight(.semibold))
-                        .padding(.top, 4)
-
-                        if showEmail {
-                            VStack(spacing: 10) {
-                                TextField("Email", text: $email)
-                                    .textContentType(.username)
-                                    .keyboardType(.emailAddress)
-                                    .textInputAutocapitalization(.never)
-                                    .autocorrectionDisabled()
-                                SecureField(L.t("密碼", "Password"), text: $password)
-                                    .textContentType(.password)
-                                HStack(spacing: 10) {
-                                    Button(L.t("註冊", "Sign up")) { Task { await account.signUp(email: email.trimmed, password: password); finishIfSignedIn() } }
-                                        .secondaryAction()
-                                    Button(L.t("登入", "Sign in")) { Task { await account.signIn(email: email.trimmed, password: password); finishIfSignedIn() } }
-                                        .prominentAction()
-                                }
-                            }
-                            .textFieldStyle(.roundedBorder)
-                            .transition(.opacity.combined(with: .move(edge: .top)))
-                        }
                     }
                     .disabled(account.busy || !account.configured)
+                    .entrance(2)
 
-                    if account.busy {
-                        ProgressView()
-                    } else if case .error = account.status {
-                        Text(account.message).font(.footnote).foregroundStyle(Palette.miss)
-                    } else if account.message == A.confirmEmail || account.message == A.cancelled {
-                        Text(account.message).font(.footnote).foregroundStyle(.secondary)
+                    Group {
+                        if account.busy {
+                            ProgressView()
+                                .transition(.opacity)
+                        } else if case .error = account.status {
+                            Label {
+                                Text(account.message)
+                            } icon: {
+                                Image(systemName: "exclamationmark.circle.fill")
+                            }
+                            .font(.footnote)
+                            .foregroundStyle(Palette.miss)
+                            .shake(trigger: failures, enabled: !reduceMotion)
+                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                        } else if account.message == A.cancelled {
+                            Text(account.message).font(.footnote).foregroundStyle(.secondary)
+                                .transition(.opacity)
+                        }
                     }
+                    .animation(reduceMotion ? nil : Motion.reveal, value: account.busy)
+                    .animation(reduceMotion ? nil : Motion.reveal, value: account.status)
 
                     Text(L.t("登入後，目前的進度會一起保留。", "Your current progress is kept when you sign in."))
                         .font(.footnote)
@@ -129,6 +126,15 @@ struct SignInSheet: View {
             }
         }
         .interactiveDismissDisabled(account.busy)
+        .onChange(of: account.status) { _, status in
+            if case .error = status { failures += 1 }
+        }
+        .sensoryFeedback(.error, trigger: failures) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.success, trigger: account.isPermanent) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .task {
+            try? await Task.sleep(for: .milliseconds(450))
+            if !reduceMotion { waved = true }
+        }
     }
 
     private func handleApple(_ result: Result<ASAuthorization, Error>) {
@@ -145,18 +151,6 @@ struct SignInSheet: View {
         case let .failure(error):
             if (error as? ASAuthorizationError)?.code == .canceled { account.noteCancelled() }
         }
-    }
-
-    private func google() async {
-        await account.signInWithGoogle { url in
-            do {
-                return try await webAuthenticationSession.authenticate(using: url, callbackURLScheme: "word7000", preferredBrowserSession: .ephemeral)
-            } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
-                await MainActor.run { account.noteCancelled() }
-                throw error
-            }
-        }
-        finishIfSignedIn()
     }
 
     private func finishIfSignedIn() {
@@ -181,6 +175,8 @@ struct SignInSheet: View {
 struct AccountSection: View {
     var includeDeletion = false
     @Environment(AccountModel.self) private var account
+    @Environment(PlusModel.self) private var plus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var signInOpen = false
     @State private var confirmSignOut = false
     @State private var confirmDelete = false
@@ -195,6 +191,7 @@ struct AccountSection: View {
                     Image(systemName: "person.crop.circle.fill")
                         .font(.system(size: 36))
                         .foregroundStyle(Palette.accent)
+                        .popIn()
                     VStack(alignment: .leading, spacing: 2) {
                         Text(account.displayName ?? L.t("已登入", "Signed in")).font(.headline).lineLimit(2)
                         statusLine
@@ -210,8 +207,8 @@ struct AccountSection: View {
                             .font(.system(size: 30))
                             .foregroundStyle(Palette.accent)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(L.t("登入或建立帳號", "Sign in or create an account")).font(.headline).foregroundStyle(.primary)
-                            Text(L.t("保留紀錄與管理備份", "Keep records and manage backup")).font(.subheadline).foregroundStyle(.secondary)
+                            Text(L.t("用 Apple 登入", "Sign in with Apple")).font(.headline).foregroundStyle(.primary)
+                            Text(L.t("訪客的進度不會保存，登入就能保存並同步", "A guest's progress isn't kept; sign in to keep and sync it")).font(.subheadline).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
@@ -222,6 +219,7 @@ struct AccountSection: View {
         } header: {
             Text(L.account)
         }
+        .animation(reduceMotion ? nil : Motion.reveal, value: account.isPermanent)
         .sheet(isPresented: $signInOpen) { SignInSheet() }
         .confirmationDialog(L.t("要登出嗎？", "Sign out?"), isPresented: $confirmSignOut, titleVisibility: .visible) {
             Button(L.t("登出", "Sign out"), role: .destructive) { Task { await account.signOut() } }
@@ -232,7 +230,10 @@ struct AccountSection: View {
             Button(L.cancel, role: .cancel) {}
             Button(L.t("刪除", "Delete"), role: .destructive) { Task { await account.deleteAccount() } }
         } message: {
-            Text(L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
+            Text(plus.storeSubscribed
+                 ? L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。刪除帳號不會取消 App Store 的 Premium 訂閱，請到「管理訂閱」取消。",
+                       "Progress, banks and daily records are deleted for good. This cannot be undone. Deleting the account doesn't cancel your App Store Premium subscription; cancel it in Manage subscription.")
+                 : L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
         }
 
         if includeDeletion, account.configured, account.session != nil {
@@ -252,13 +253,20 @@ struct AccountSection: View {
                 ProgressView().controlSize(.mini)
             case .error:
                 Image(systemName: "exclamationmark.icloud").foregroundStyle(Palette.review)
+                    .popIn()
             default:
+                // A finished sync lands with a small bounce of the cloud.
                 Image(systemName: account.cloudSyncEnabled ? "checkmark.icloud" : "iphone")
                     .foregroundStyle(account.cloudSyncEnabled ? Palette.known : .secondary)
+                    .contentTransition(.symbolEffect(.replace))
+                    .popIn()
             }
             Text(account.message)
+                .contentTransition(.opacity)
         }
         .font(.footnote)
         .foregroundStyle(.secondary)
+        .animation(reduceMotion ? nil : Motion.reveal, value: account.status)
     }
 }
+

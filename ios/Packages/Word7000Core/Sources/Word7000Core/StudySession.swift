@@ -6,11 +6,20 @@ public enum StudyGrade: String, Codable, Sendable {
 
 /// One run through a stack of cards, ported from `src/lib/studySession.ts`.
 public struct StudySession: Codable, Equatable, Sendable {
-    /// A missed card comes back a few cards later, while the answer is still
-    /// fresh enough to be worth a second look but not so soon that it is just
-    /// recalled from the screen a moment ago.
+    /// A missed card comes back once, a few cards later, while the answer is
+    /// still fresh enough to be worth a second look but not so soon that it
+    /// is just recalled from the screen a moment ago. Only once: more than
+    /// that made a session feel like the same few words over and over, and a
+    /// missed word is due again anyway.
     public static let requeueGap = 4
-    static let maxRequeuesPerCard = 2
+    static let maxRequeuesPerCard = 1
+
+    /// At most one card in four comes back for a second look: with every
+    /// missed card repeated, a hard session ran half as long again with the
+    /// same words. The rest of the missed words are due again next time anyway.
+    public static func maxRequeues(initialCount: Int) -> Int {
+        max(1, (initialCount + 3) / 4)
+    }
 
     /// Card ids in the order they will be shown, including re-queued misses.
     public private(set) var cardIds: [String]
@@ -46,8 +55,12 @@ public struct StudySession: Codable, Equatable, Sendable {
         guard currentCardId == cardId else { return self }
         var next = self
         let timesRequeued = requeued[cardId] ?? 0
-        if grade == .review, timesRequeued < Self.maxRequeuesPerCard {
-            let insertAt = min(cardIds.count, index + 1 + Self.requeueGap)
+        let insertAt = min(cardIds.count, index + 1 + Self.requeueGap)
+        // Near the end there may be no card left to put between them; showing
+        // the same card again straight away is not a second look, so skip it.
+        let requeuedSoFar = requeued.values.reduce(0, +)
+        if grade == .review, timesRequeued < Self.maxRequeuesPerCard, insertAt > index + 1,
+           requeuedSoFar < Self.maxRequeues(initialCount: initialCount) {
             next.cardIds.insert(cardId, at: insertAt)
             next.requeued[cardId] = timesRequeued + 1
         }

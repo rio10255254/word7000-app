@@ -18,14 +18,34 @@ on:
       operation:
         description: 'build-testflight: React Native build to TestFlight. ota-update: push JS/UI changes to installed RN builds. native-testflight: native SwiftUI build to TestFlight.'
         type: choice
-        options: ['build-testflight', 'ota-update', 'native-testflight']
+        options: ['build-testflight', 'ota-update', 'native-testflight', 'testflight-submit', 'subscriptions-status']
         default: 'build-testflight'
       message:
         description: 'Short note shown for an OTA update'
         type: string
         default: ''
+      full_validation:
+        description: 'native-testflight only: wait for a passed full Native iOS run of this source before uploading. Off by default; turn it on when a full test is wanted.'
+        type: boolean
+        default: false
+      testflight_group:
+        description: 'native-testflight only: TestFlight group the build is added to once Apple has processed it (empty: none)'
+        type: string
+        default: 'Wordcat Public Testing 1'
+      what_to_test:
+        description: 'native-testflight only: "What to Test" for testers (Traditional Chinese; optional)'
+        type: string
+        default: ''
+      what_to_test_en:
+        description: 'native-testflight only: "What to Test" in English (optional)'
+        type: string
+        default: ''
+      submit_build:
+        description: 'testflight-submit only: build number already uploaded to add to the group and submit for Beta App Review (e.g. when an earlier build of the version was still in review)'
+        type: string
+        default: ''
       native_validation_run:
-        description: 'Optional full Native iOS run ID (push, or manual with all checks) for identical source; otherwise a passed run of identical source, then this commit'
+        description: 'With full_validation: optional full Native iOS run ID (push, or manual with all checks) for identical source; otherwise a passed run of identical source, then this commit'
         type: string
         default: ''
 
@@ -39,7 +59,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # An uploaded build into the TestFlight group and Beta App Review, for a
+  # release run that could not submit it while another build was in review.
+  testflight-submit:
+    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Subscriptions and free trial in App Store Connect (read-only)
+        if: inputs.operation == 'subscriptions-status'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: node scripts/asc-subscriptions-status.mjs --bundle com.rio.word7000
+      - name: Add to the group and submit for Beta App Review
+        if: inputs.operation == 'testflight-submit'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          BUILD: ${{ inputs.submit_build }}
+          GROUP: ${{ inputs.testflight_group }}
+        run: |
+          set -euo pipefail
+          test -n "$BUILD" || { echo "::error::submit_build is required"; exit 1; }
+          VERSION="$(node -p 'require("./ios/Release/app.json").expo.version')"
+          node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
+            --group "${GROUP:-Wordcat Public Testing 1}" --wait-minutes 2
+
   release:
+    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status'
     runs-on: ${{ inputs.operation == 'native-testflight' && 'macos-15' || 'ubuntu-latest' }}
     timeout-minutes: 120
     env:
@@ -86,8 +140,11 @@ jobs:
         if: inputs.operation == 'native-testflight'
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
+      # Only when asked for: by default a TestFlight build is uploaded once it
+      # builds and passes the checks above, without waiting hours for the
+      # full simulator walk-through.
       - name: Pin full native validation to the release source
-        if: inputs.operation == 'native-testflight'
+        if: inputs.operation == 'native-testflight' && inputs.full_validation
         env:
           REQUESTED_RUN: ${{ inputs.native_validation_run }}
         run: |
@@ -151,6 +208,7 @@ jobs:
         env:
           # App Store Connect API key for uploading straight to Apple. Without
           # all three, the upload falls back to Expo's submit service.
+          FULL_VALIDATION: ${{ inputs.full_validation }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
@@ -165,8 +223,14 @@ jobs:
           cp ios/Release/app.json ios/Release/eas.json ios/Release/package.json ios/Release/package-lock.json "$STAGE/"
           cp ios/Release/Podfile "$STAGE/ios/Podfile"
           cd "$STAGE"
-          EAS_NO_VCS=1 eas build:version:get --platform ios --profile production --json > "$RUNNER_TEMP/native-version.json"
-          NEXT_BUILD=$(node -e 'const fs = require("fs"); const version = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); const current = Number(version.buildNumber); if (!Number.isSafeInteger(current) || current < 1) throw new Error("Invalid remote build number"); process.stdout.write(String(current + 1));' "$RUNNER_TEMP/native-version.json")
+          # Build numbers count per version: a new version starts again at 1.
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_PRIVATE_KEY" ]; then
+            echo "::error::The App Store Connect API key is needed to number the build."
+            exit 1
+          fi
+          NEXT_BUILD=$(node "$GITHUB_WORKSPACE/scripts/next-build-number.mjs" --bundle com.rio.word7000 \
+            --version "$(node -p 'require("./app.json").expo.version')")
+          echo "Building $(node -p 'require("./app.json").expo.version') ($NEXT_BUILD)."
           node "$GITHUB_WORKSPACE/scripts/prepare-native-release.mjs" "$STAGE" "$NEXT_BUILD"
           # EAS manages the existing signing credentials; Xcode runs on this Mac.
           # No EAS cloud-build allocation or new paid subscription is required.
@@ -196,7 +260,12 @@ jobs:
           PY
           cat "$RUNNER_TEMP/native-verification.json"
           PASSED=false
+          if [ "$FULL_VALIDATION" != true ]; then
+            echo "Full native validation not requested; uploading this build."
+            PASSED=true
+          fi
           for attempt in $(seq 1 60); do
+            [ "$PASSED" = true ] && break
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$NATIVE_VALIDATION_RUN" > "$RUNNER_TEMP/native-validation.json"
             STATE=$(node -e 'const r=require(process.argv[1]); process.stdout.write(r.status==="completed" ? r.conclusion : r.status);' "$RUNNER_TEMP/native-validation.json")
             if [ "$STATE" = success ]; then PASSED=true; break; fi
@@ -224,6 +293,27 @@ jobs:
             echo "::notice::Uploading through Expo: repository secret(s) not available to this run:$MISSING"
             EAS_NO_VCS=1 eas submit --platform ios --profile production --path "$RUNNER_TEMP/native.ipa" --non-interactive --wait
           fi
+
+      # The public testers get each build without anyone adding it by hand.
+      - name: Add the build to the TestFlight group
+        if: inputs.operation == 'native-testflight' && inputs.testflight_group != ''
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          GROUP: ${{ inputs.testflight_group }}
+          NOTES_ZH: ${{ inputs.what_to_test }}
+          NOTES_EN: ${{ inputs.what_to_test_en }}
+        run: |
+          set -euo pipefail
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_PRIVATE_KEY" ]; then
+            echo "::warning::No App Store Connect API key; add the build to \"$GROUP\" by hand."
+            exit 0
+          fi
+          VERSION=$(node -p 'require("./ios/Release/app.json").expo.version')
+          BUILD=$(node -p 'require(process.argv[1])[0].appBuildVersion' "$RUNNER_TEMP/native-build.json")
+          node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
+            --group "$GROUP" --notes-zh "$NOTES_ZH" --notes-en "$NOTES_EN" --wait-minutes 45
 
       - name: Save the native release verification receipt
         if: always() && inputs.operation == 'native-testflight'

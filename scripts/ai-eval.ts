@@ -4,13 +4,15 @@
 //
 //   ANTHROPIC_API_KEY=… node --experimental-transform-types scripts/ai-eval.ts [out-dir] [--tiers free,plus] [--only explain,coach]
 //
-//   --only takes task names: coach, scan, explain, quizWhy, fillWord, insights, ask.
+//   --effort tries another thinking depth (low, medium, high) on every case.
+//   --model compares another Claude model on the same cases (the service itself always uses MODEL).
+//   --only takes task names: coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict.
 // Run by .github/workflows/ai-eval.yml. A failed check is printed as a GitHub
 // warning; the exit code is 1 only when Claude gave no answer at all.
 import fs from 'node:fs';
 import path from 'node:path';
 import { AIFailure, complete } from '../supabase/functions/ai/claude.ts';
-import { hanShare, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
+import { COACH_MODEL, coachUsesStrongModel, type Effort, hanShare, MODEL, planTask, SIMPLIFIED_ONLY, type TaskName, type Tier, usesWord } from '../supabase/functions/ai/tasks.ts';
 
 type Content = Record<string, unknown>;
 type Check = (content: Content) => string[];
@@ -112,6 +114,16 @@ function fillCheck(word: string, real: boolean): Check {
   };
 }
 
+function fillFromChineseCheck(accepted: string[]): Check {
+  return (content) => {
+    const word = String(content.word ?? '').toLowerCase().trim();
+    const problems = accepted.includes(word) ? [] : [`word is "${word}", expected one of ${accepted.join(', ')}`];
+    problems.push(...filled(content.partOfSpeech, 'partOfSpeech'), ...chinese(content.meaning, 'meaning'));
+    if (content.example && !usesWord(String(content.example), word)) problems.push('example does not use the word');
+    return problems;
+  };
+}
+
 function scanCheck(expected: [string, string][]): Check {
   return (content) => {
     const entries = list(content.entries).map((entry) => `${String(entry.word).toLowerCase()}=${entry.meaning}`);
@@ -173,6 +185,50 @@ const insightsActive = {
   ],
 };
 
+const learnerProfile = {
+  today: '2026-11-02', level: 'Core 6', streak: 5, studiedToday: 8, dailyGoal: 20, due: 14, mastered: 300, reviewing: 40,
+  examDate: '2027-01-16', daysToExam: 75, goal: '學測英文 15 級分', nickname: '', notes: [],
+};
+const chatWords = [
+  { id: 'w0101', word: 'abandon', meaning: '拋棄', misses: 4 }, { id: 'w0102', word: 'accompany', meaning: '陪伴', misses: 3 },
+  { id: 'w0103', word: 'anxious', meaning: '焦慮的', misses: 3 },
+];
+
+function chatCheck(mode: 'english' | 'chinese', expect: { practice?: boolean; examDate?: string }): Check {
+  return (content) => {
+    const problems = mode === 'english' ? chinese(content.reply, 'reply') : english(content.reply, 'reply');
+    const ids = Array.isArray(content.practiceWordIds) ? content.practiceWordIds as string[] : [];
+    if (expect.practice && !ids.length) problems.push('no practice words suggested');
+    if (ids.some((id) => !chatWords.some((word) => word.id === id))) problems.push(`invented ids ${ids.join(', ')}`);
+    const memory = (content.memory ?? {}) as Content;
+    if (expect.examDate && memory.examDate !== expect.examDate) problems.push(`examDate ${String(memory.examDate)} instead of ${expect.examDate}`);
+    return problems;
+  };
+}
+
+function linesCheck(mode: 'english' | 'chinese'): Check {
+  return (content) => {
+    const problems: string[] = [];
+    for (const key of ['greeting', 'right', 'wrong', 'done', 'nudge']) {
+      const items = Array.isArray(content[key]) ? content[key] as string[] : [];
+      if (items.length < 2) problems.push(`only ${items.length} ${key} lines`);
+      problems.push(...(mode === 'english' ? chinese(items.join(' '), key) : english(items.join(' '), key)));
+    }
+    return problems;
+  };
+}
+
+function verdictCheck(mode: 'english' | 'chinese', missed: string[]): Check {
+  return (content) => {
+    const problems = [
+      ...(mode === 'english' ? chinese(content.verdict, 'verdict') : english(content.verdict, 'verdict')),
+      ...(mode === 'english' ? chinese(content.tip, 'tip') : english(content.tip, 'tip')),
+    ];
+    if (missed.length && !missed.some((word) => `${content.verdict} ${content.tip}`.toLowerCase().includes(word))) problems.push('names no missed word');
+    return problems;
+  };
+}
+
 const cases: Case[] = [
   ...explainCases.map(([word, partOfSpeech, meaning, example]): Case => ({
     task: 'explain', name: `explain ${word} (${meaning})`,
@@ -204,6 +260,26 @@ const cases: Case[] = [
     input: { keyword, meaning: '', question, context: '', answer, mode: 'english' },
     check: coachCheck(answer, 'english'),
   })),
+  // Harder mistakes Taiwanese learners of English make: each must be pointed
+  // out in a correction (not only fixed quietly in the rewrite).
+  ...([
+    ['experience', 'What is a useful experience you had at school?', 'I think it is very good experience because I learned how to work with other people.', 'good experience', 'a very good experience'],
+    ['decide', 'What is something you decided to do last year?', 'Last year I decide to join the basketball team and I practice every day after school.', 'decide', 'decided'],
+    ['mistake', 'What happens when you make a mistake in class?', 'When I do a mistake in class, my teacher always helps me to correct it.', 'do a mistake', 'make a mistake'],
+    ['convenient', 'What is convenient about where you live?', 'In my city there have many convenient stores near my house.', 'there have', 'there are'],
+    ['although', 'Tell me about a time you kept going when you were tired.', 'Although I was tired, but I still finished my homework.', 'but', 'Although I was tired, I still'],
+    ['turn', 'What do you usually do when you get home?', 'When I get home, I always open the light and turn on the TV.', 'open the light', 'turn on the light'],
+  ] as const).map(([keyword, question, answer, mistake, fixed]) => ({
+    task: 'coach' as TaskName, name: `coach hard ${keyword}`,
+    input: { keyword, meaning: '', question, context: '', answer, mode: 'english' },
+    check: (content: Content) => {
+      const problems = coachCheck(answer, 'english')(content);
+      const flagged = list(content.corrections).some((item) => String(item.original).includes(mistake));
+      if (!flagged) problems.push(`mistake not pointed out: ${mistake}`);
+      if (!String(content.rewrite ?? '').toLowerCase().includes(fixed.toLowerCase())) problems.push(`rewrite lacks: ${fixed}`);
+      return problems;
+    },
+  })),
   {
     task: 'coach', name: 'coach a learner of Chinese',
     input: { keyword: '方便', meaning: 'convenient', question: '你為什麼喜歡便利商店？', context: '', answer: '因為很方便，我可以買很多東西在晚上。', mode: 'chinese' },
@@ -212,6 +288,7 @@ const cases: Case[] = [
   { task: 'fillWord', name: 'fill procrastinate', input: { word: 'procrastinate' }, check: fillCheck('procrastinate', true) },
   { task: 'fillWord', name: 'fill take part in', input: { word: 'take part in' }, check: fillCheck('take part in', true) },
   { task: 'fillWord', name: 'fill a made-up word', input: { word: 'flombrix' }, check: fillCheck('flombrix', false) },
+  { task: 'fillWord', name: 'fill from Chinese 拖延', input: { word: '拖延' }, check: fillFromChineseCheck(['procrastinate', 'delay', 'put off', 'postpone', 'stall']) },
   {
     task: 'scan', name: 'scan a messy two-column list',
     input: { text: 'Unit 3 Vocabulary\n1. apple n. 蘋果   2. borrow v. 借入\n3. careful adj. 小心的\nEx: Be careful!\n4. decide v. 決定' },
@@ -243,6 +320,33 @@ const cases: Case[] = [
     input: { ...insightsActive, streak: 0, mastered: 0, reviewing: 0, due: 0, quizCorrect: 0, quizTotal: 0, days: [], struggling: [] },
     check: insightsCheck('english', []),
   },
+  {
+    task: 'chat', name: 'chat: what to practise today',
+    input: { mode: 'english', profile: learnerProfile, words: chatWords, messages: [{ role: 'learner', text: '今天要練什麼？考我幾個字' }] },
+    check: chatCheck('english', { practice: true }),
+  },
+  {
+    task: 'chat', name: 'chat: remembers the exam date',
+    input: { mode: 'english', profile: { ...learnerProfile, examDate: '', daysToExam: 0 }, words: chatWords, messages: [{ role: 'learner', text: '幫我記住，我 2027 年 1 月 16 號考學測' }] },
+    check: chatCheck('english', { examDate: '2027-01-16' }),
+  },
+  {
+    task: 'chat', name: 'chat: grammar question gets a correct answer',
+    input: { mode: 'english', profile: learnerProfile, words: chatWords, messages: [{ role: 'learner', text: 'look forward to 後面要接原形還是 Ving？' }] },
+    check: (content) => [...chinese(content.reply, 'reply'), ...(/ing/i.test(String(content.reply)) ? [] : ['does not say -ing'])],
+  },
+  {
+    task: 'chat', name: 'chat for a learner of Chinese',
+    input: { mode: 'chinese', profile: { ...learnerProfile, goal: '', examDate: '', daysToExam: 0 }, words: [], messages: [{ role: 'learner', text: 'I keep forgetting my words. Help?' }] },
+    check: chatCheck('chinese', {}),
+  },
+  { task: 'lines', name: 'lines for today', input: { mode: 'english', profile: learnerProfile, words: ['abandon', 'anxious'] }, check: linesCheck('english') },
+  { task: 'lines', name: 'lines for a learner of Chinese', input: { mode: 'chinese', profile: learnerProfile }, check: linesCheck('chinese') },
+  {
+    task: 'verdict', name: 'verdict on a quiz with misses',
+    input: { mode: 'english', profile: learnerProfile, kind: 'quiz', total: 10, correct: 6, missed: [{ word: 'abandon', meaning: '拋棄' }, { word: 'anxious', meaning: '焦慮的' }] },
+    check: verdictCheck('english', ['abandon', 'anxious']),
+  },
 ];
 
 const args = process.argv.slice(2);
@@ -256,13 +360,20 @@ const only = option('--only');
 const apiKey = process.env.ANTHROPIC_API_KEY;
 if (!apiKey) { console.error('Set ANTHROPIC_API_KEY.'); process.exit(2); }
 
-/** Claude Haiku 5.5 list prices per million tokens (prompts under 100K); thinking bills as output. */
-const PRICE = { input: 0.10, output: 0.50 };
-const dollars = (usage?: { inputTokens: number; outputTokens: number }) =>
-  usage ? (usage.inputTokens * PRICE.input + usage.outputTokens * PRICE.output) / 1_000_000 : 0;
+const model = option('--model')?.[0];
+const effort = option('--effort')?.[0] as Effort | undefined;
+/** List prices per million tokens (Haiku: prompts under 100K); thinking bills as output. */
+const PRICES: Record<string, { input: number; output: number }> = {
+  'claude-haiku-5-5': { input: 0.10, output: 0.50 },
+  'claude-sonnet-5-5': { input: 2, output: 10 },
+  'claude-opus-5-5': { input: 4, output: 20 },
+};
+const priceOf = (name?: string) => PRICES[name ?? MODEL] ?? PRICES['claude-haiku-5-5'];
+const dollars = (usage?: { inputTokens: number; outputTokens: number }, used?: string) =>
+  usage ? (usage.inputTokens * priceOf(used).input + usage.outputTokens * priceOf(used).output) / 1_000_000 : 0;
 
 interface Result {
-  name: string; task: TaskName; tier: Tier; effort?: string; ms: number; problems: string[]; content?: unknown; error?: string;
+  name: string; task: TaskName; tier: Tier; model?: string; effort?: string; ms: number; problems: string[]; content?: unknown; error?: string;
   usage?: { inputTokens: number; outputTokens: number };
 }
 const results: Result[] = [];
@@ -270,12 +381,15 @@ const selected = cases.filter((item) => !only || only.includes(item.task));
 
 for (const tier of tiers) {
   for (const item of selected) {
-    const plan = planTask(item.task, item.input, tier);
+    const planned = planTask(item.task, item.input, tier);
+    const plan = effort ? { ...planned, effort } : planned;
     const started = Date.now();
     try {
-      const reply = await complete(plan, { apiKey });
+      // As in the service: the coach uses its own model unless one is being compared.
+      const used = model ?? (item.task === 'coach' && coachUsesStrongModel(item.input) ? COACH_MODEL : undefined);
+      const reply = await complete(plan, { apiKey, model: used, totalTimeoutMs: used ? 60_000 : undefined });
       const content = reply.content as Content;
-      results.push({ name: item.name, task: item.task, tier, effort: reply.effort, ms: Date.now() - started,
+      results.push({ name: item.name, task: item.task, tier, model: reply.model, effort: reply.effort, ms: Date.now() - started,
         problems: [...common(content), ...item.check(content)], content, usage: reply.usage });
     } catch (error) {
       const message = error instanceof AIFailure ? `${error.kind}: ${error.message}` : String(error);
@@ -292,9 +406,11 @@ const median = (values: number[]) => values.sort((a, b) => a - b)[Math.floor(val
 const lines = [
   '# AI quality evaluation',
   '',
+  `Model: ${model ?? 'the service model'}.`,
+  '',
   `${results.length - failed.length} of ${results.length} answers passed every check.`,
   '',
-  `Total cost of this run: US$${results.reduce((sum, result) => sum + dollars(result.usage), 0).toFixed(4)}.`,
+  `Total cost of this run: US$${results.reduce((sum, result) => sum + dollars(result.usage, result.model), 0).toFixed(4)}.`,
   '',
   '| Task | Tier | Passed | Median time | Avg input tokens | Avg output tokens (incl. thinking) | Avg cost per answer |',
   '| --- | --- | --- | --- | --- | --- | --- |',
@@ -303,14 +419,14 @@ const lines = [
     const group = results.filter((result) => result.task === task && result.tier === tier);
     const answered = group.filter((result) => result.usage);
     const average = (pick: (result: Result) => number) => (answered.length ? answered.reduce((sum, result) => sum + pick(result), 0) / answered.length : 0);
-    return `| ${task} | ${tier} | ${group.filter((result) => !result.problems.length).length} / ${group.length} | ${(median(group.map((result) => result.ms)) / 1000).toFixed(1)} s | ${Math.round(average((result) => result.usage!.inputTokens))} | ${Math.round(average((result) => result.usage!.outputTokens))} | US$${average((result) => dollars(result.usage)).toFixed(5)} |`;
+    return `| ${task} | ${tier} | ${group.filter((result) => !result.problems.length).length} / ${group.length} | ${(median(group.map((result) => result.ms)) / 1000).toFixed(1)} s | ${Math.round(average((result) => result.usage!.inputTokens))} | ${Math.round(average((result) => result.usage!.outputTokens))} | US$${average((result) => dollars(result.usage, result.model)).toFixed(5)} |`;
   }),
   '',
   ...(failed.length ? ['## Problems', '', ...failed.map((result) => `- **${result.name}** (${result.tier}): ${result.problems.join('; ')}`), ''] : []),
   '## Answers',
   '',
   ...results.flatMap((result) => [
-    `### ${result.problems.length ? '❌' : '✅'} ${result.name} · ${result.tier}${result.effort ? ` · ${result.effort}` : ''} · ${(result.ms / 1000).toFixed(1)} s${result.usage ? ` · ${result.usage.inputTokens}+${result.usage.outputTokens} tokens · US$${dollars(result.usage).toFixed(5)}` : ''}`,
+    `### ${result.problems.length ? '❌' : '✅'} ${result.name} · ${result.tier}${result.effort ? ` · ${result.effort}` : ''} · ${(result.ms / 1000).toFixed(1)} s${result.usage ? ` · ${result.usage.inputTokens}+${result.usage.outputTokens} tokens · US$${dollars(result.usage, result.model).toFixed(5)}` : ''}`,
     '',
     '```json',
     JSON.stringify(result.content ?? { error: result.error }, null, 2),

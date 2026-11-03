@@ -176,7 +176,8 @@ final class HomeWidgetTests: XCTestCase {
         entry.pronunciation = "/learn/"
         entry.meaningZh = "\u{5B78}\u{7FD2}; \u{5B78}\u{6703}; extra sense"
         let expected = HomeWidgetSnapshot.Word(word: "learn", pronunciation: "/learn/",
-                                               meaning: "\u{5B78}\u{7FD2}\u{FF1B}\u{5B78}\u{6703}", partOfSpeech: entry.partOfSpeech)
+                                               meaning: "\u{5B78}\u{7FD2}\u{FF1B}\u{5B78}\u{6703}", partOfSpeech: entry.partOfSpeech,
+                                               meaningPinyin: ChineseDisplay.pronunciationWithTones("\u{5B78}\u{7FD2}\u{FF1B}\u{5B78}\u{6703}"))
         for chineseInterface in [true, false] {
             let snapshot = HomeWidgetSnapshot.make(progress: .empty, today: "2026-10-20",
                                                    chineseInterface: chineseInterface, words: [entry])

@@ -7,7 +7,7 @@ import Word7000Core
 /// A single temporary take. No upload, persistent transcript, or background audio.
 @MainActor @Observable
 final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
-    enum State { case idle, requesting, recording, ready, playing, transcribing, downloading }
+    enum State { case idle, requesting, recording, ready, playing, transcribing }
     enum TranscriptionSupport { case checking, modern, download, legacy, unavailable }
     private(set) var state: State = .idle
     private(set) var support: TranscriptionSupport = .checking
@@ -21,7 +21,13 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     private(set) var transcript: String?
     private(set) var hasRecording = false
     var ownsAudio: Bool { state == .recording || state == .playing || state == .requesting }
-    var busy: Bool { ownsAudio || state == .transcribing || state == .downloading }
+    var busy: Bool { ownsAudio || state == .transcribing }
+    /// The language's speech model is being fetched in the background.
+    /// Recording works meanwhile; the take becomes text once it lands.
+    private(set) var preparing = false
+    /// The last background fetch failed (usually no network); it is tried
+    /// again the next time support is checked.
+    private(set) var preparationFailed = false
     @ObservationIgnored private var recorder: AVAudioRecorder?
     @ObservationIgnored private var player: AVAudioPlayer?
     @ObservationIgnored private var file: URL?
@@ -53,6 +59,42 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
         }
         guard self.language == expected else { return }
         support = result
+        if result == .download, #available(iOS 26.0, *) { await prepare(language: expected) }
+    }
+
+    /// One fetch per language for the whole app, started without asking:
+    /// nobody should have to find a download button before speaking.
+    private static var installs: [String: Task<Bool, Never>] = [:]
+
+    @available(iOS 26.0, *)
+    private func prepare(language: String) async {
+        let task: Task<Bool, Never>
+        if let running = Self.installs[language] {
+            task = running
+        } else {
+            task = Task<Bool, Never> {
+                guard let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)) else { return false }
+                let module = SpeechTranscriber(locale: locale, preset: .transcription)
+                do {
+                    if let request = try await AssetInventory.assetInstallationRequest(supporting: [module]) {
+                        try await request.downloadAndInstall()
+                    }
+                    return await AssetInventory.status(forModules: [module]) == .installed
+                } catch {
+                    return false
+                }
+            }
+            Self.installs[language] = task
+        }
+        preparing = true
+        preparationFailed = false
+        let installed = await task.value
+        // A failed fetch is forgotten so the next check starts a new one.
+        if !installed, Self.installs[language] == task { Self.installs[language] = nil }
+        guard self.language == language else { return }
+        preparing = false
+        preparationFailed = !installed
+        if installed { support = .modern }
     }
 
     func start() {
@@ -264,31 +306,6 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
         continuation?.resume(with: result)
     }
 
-    func downloadLanguage() {
-        guard !busy, support == .download else { return }
-        state = .downloading; message = nil
-        let id = generation
-        let language = language
-        operation = Task { [weak self] in
-            guard let self else { return }
-            do {
-                if #available(iOS 26.0, *), let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)) {
-                    let module = SpeechTranscriber(locale: locale, preset: .transcription)
-                    if let request = try await AssetInventory.assetInstallationRequest(supporting: [module]) {
-                        try await request.downloadAndInstall()
-                    }
-                }
-                guard generation == id, !Task.isCancelled else { return }
-                state = hasRecording ? .ready : .idle
-                await refresh(language: language)
-            } catch {
-                guard generation == id, !Task.isCancelled else { return }
-                state = hasRecording ? .ready : .idle
-                message = L.t("語言下載尚未完成，請稍後再試。", "The language download did not finish. Try again later.")
-            }
-        }
-    }
-
     func cancelProcessing() {
         let wasRequestingAudio = state == .requesting
         generation = UUID()
@@ -302,7 +319,7 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     func interrupt() {
         if state == .recording { stop() }
         if state == .playing { stopPlayback() }
-        if state == .transcribing || state == .downloading || state == .requesting { cancelProcessing() }
+        if state == .transcribing || state == .requesting { cancelProcessing() }
     }
 
     func clear() {

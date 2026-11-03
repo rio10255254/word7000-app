@@ -1,0 +1,15 @@
+[
+{"word":"同性婚姻","fix":{"example":"台灣在二〇一九年讓同性婚姻合法化。"},"drop":false,"reason":"「通過同性婚姻」語意不精確（通過的是法案），改為「合法化」更正確中立"},
+{"word":"疼","fix":{"pos":"v.","gloss":"to dote on; to love dearly; to ache"},"drop":false,"reason":"例句為「疼愛」義，詞性與釋義順序改為配合例句"},
+{"word":"流量","fix":{"gloss":"(web) traffic; views; flow","example":"這支影片的流量很高。","exampleEn":"This video gets a lot of traffic."},"drop":false,"reason":"「手機流量」指行動數據偏中國用法，台灣多說網路／行動數據；改用網路流量義"},
+{"word":"始終","fix":{"exampleEn":"He has refused all along to tell the truth."},"drop":false,"reason":"英譯 from start to finish 不自然"},
+{"word":"以來","fix":{"example":"自從搬到台北以來，我很少回家。"},"drop":false,"reason":"「以來」常與「自從」搭配，單用較生硬"},
+{"word":"另一方面","fix":{"example":"這份工作薪水高，但另一方面也很累。"},"drop":false,"reason":"未搭配「一方面」時需加「但」才自然"},
+{"word":"符合","fix":{"example":"你的條件很符合這份工作的要求。","exampleEn":"Your qualifications fit this job's requirements well."},"drop":false,"reason":"「符合這個工作」搭配不當，應為「符合…的要求」；量詞改「份」"},
+{"word":"記憶","fix":{"example":"這首歌帶給我很多美好的記憶。","exampleEn":"This song holds a lot of happy memories for me."},"drop":false,"reason":"「想起很多記憶」語意重複不自然"},
+{"word":"面積","fix":{"example":"這間房子的面積大概有三十坪。"},"drop":false,"reason":"缺「有」，口語不順"},
+{"word":"背景","fix":{"example":"這部電影的故事背景在台南。"},"drop":false,"reason":"「電影的背景在台南」搭配不完整，應為「故事背景」"},
+{"word":"合法","fix":{"example":"在台灣，滿十八歲才能合法考駕照。","exampleEn":"In Taiwan, you must be eighteen to legally take a driver's license test."},"drop":false,"reason":"原句「這樣做」內容空泛，學習者無法理解語境"},
+{"word":"主張","fix":{"exampleEn":"He advocates that everyone should learn a second foreign language."},"drop":false,"reason":"英譯 believes 未表達「主張」義"},
+{"word":"失戀","fix":{"gloss":"to go through a breakup; to be heartbroken"},"drop":false,"reason":"失戀不限於被甩，釋義過窄"}
+]

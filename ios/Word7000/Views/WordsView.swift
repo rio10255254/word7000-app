@@ -4,6 +4,8 @@ import Word7000Core
 /// The word banks as a shelf, and the words of the chosen bank below.
 struct WordsView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
     var scan: () -> Void
     var study: () -> Void
 
@@ -17,6 +19,8 @@ struct WordsView: View {
     @State private var searching = true
     @State private var newName = ""
     @State private var addingWord = false
+    /// Bumped by the swipe action so starring a word gives a light tap.
+    @State private var favoriteToggles = 0
 
     var body: some View {
         let filter = model.settings.libraryFilter
@@ -46,8 +50,12 @@ struct WordsView: View {
                     if searching {
                         HStack { Spacer(); ProgressView(); Spacer() }.padding(.vertical, 30)
                     } else {
-                        ContentUnavailableView(L.noLibraryWords, systemImage: "text.magnifyingglass",
-                                               description: Text(query.isEmpty ? model.bankName : query))
+                        ContentUnavailableView {
+                            MascotLabel(mood: .thinking, title: L.noLibraryWords)
+                        } description: {
+                            Text(query.isEmpty ? model.bankName : query)
+                        }
+                            .entrance(0, distance: 10)
                         if filter.isActive {
                             Button(L.t("清除篩選", "Clear filters")) { clearFilters() }
                         } else if model.activeSet != nil, query.isEmpty {
@@ -61,20 +69,32 @@ struct WordsView: View {
                     }
                     .swipeActions(edge: .trailing) {
                         let favorite = model.progress(for: word.id).favorite
-                        Button { model.toggleFavorite(word.id) } label: {
+                        Button {
+                            // Only this row changes, so animating it stays cheap.
+                            withAnimation(reduceMotion ? nil : Motion.pop) { model.toggleFavorite(word.id) }
+                            favoriteToggles += 1
+                        } label: {
                             Label(favorite ? L.unfavoriteWord : L.favoriteWord, systemImage: favorite ? "star.slash" : "star.fill")
                         }
                         .tint(Palette.review)
                     }
+                    // The notebook page draws its own rule under each word.
+                    .listRowSeparator(appStyle == .collage ? .hidden : .automatic)
                 }
             } header: {
                 HStack {
                     Text(filter.status == .all ? model.bankName : "\(model.bankName) · \(L.filterLabel(filter.status))")
                     Spacer()
-                    Text(L.bankWordCount(results.count)).monospacedDigit()
+                    // Only the count animates; the 7000-row list itself updates without animation.
+                    Text(L.bankWordCount(results.count))
+                        .monospacedDigit()
+                        .contentTransition(.numericText(value: Double(results.count)))
+                        .animation(reduceMotion ? nil : Motion.reveal, value: results.count)
                 }
             }
+            .listRowBackground(NotebookRowBackground())
         }
+        .warmList()
         .navigationTitle(L.tabWords)
         .navigationDestination(for: WordEntry.self) { word in
             WordDetailView(word: word)
@@ -89,6 +109,7 @@ struct WordsView: View {
             await refreshResults()
         }
         .safeAreaInset(edge: .bottom) {
+          VStack(spacing: 0) {
             if let deleted = model.deletedSetUndo {
                 HStack {
                     Text(L.t("已刪除「\(deleted.name)」", "Deleted \(deleted.name)")).font(.subheadline).lineLimit(2)
@@ -100,18 +121,27 @@ struct WordsView: View {
                 }
                 .padding(.horizontal, 16)
                 .background(.regularMaterial)
+                .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
+          }
+          .animation(reduceMotion ? nil : Motion.card, value: model.deletedSetUndo?.id)
         }
+        .sensoryFeedback(.impact(weight: .light), trigger: favoriteToggles) { _, _ in model.settings.hapticsEnabled ?? true }
         .sheet(isPresented: $filtersOpen) {
             NavigationStack {
                 Form {
-                    Section {
-                        FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
+                    Group {
+                        Section {
+                            FilterControls(selection: Binding(get: { model.settings.libraryFilter }, set: { model.settings.libraryFilter = $0 }), includesSort: true)
+                        }
                     }
+                    .listRowBackground(StyledRowBackground())
                 }
+                .warmList()
                 .navigationTitle(L.filters)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
+                .compactSheet()
             }
         }
         .toolbar {
@@ -154,6 +184,7 @@ struct WordsView: View {
             }
             .disabled(newName.trimmed.isEmpty)
         }
+        .catTip(.words)
     }
 
     private var bankNameTitle: String {
@@ -168,6 +199,7 @@ struct WordsView: View {
             Image(systemName: model.settings.libraryFilter.isActive
                   ? "line.3.horizontal.decrease.circle.fill"
                   : "line.3.horizontal.decrease.circle")
+                .contentTransition(.symbolEffect(.replace))
         }
         .accessibilityLabel(L.filters)
         .accessibilityIdentifier("words-filter")
@@ -186,8 +218,9 @@ struct WordsView: View {
             do { try await Task.sleep(for: .milliseconds(120)) } catch { return }
         }
         let vocabulary = model.bank, state = model.progress, filter = model.settings.libraryFilter, text = query
+        let pinyin = model.studyMode == .chinese
         let matches = await Task.detached(priority: .userInitiated) {
-            vocabulary.filter(state: state, query: text, filter: filter.status, options: filter.options, rankedSearch: true)
+            vocabulary.filter(state: state, query: text, filter: filter.status, options: filter.options, rankedSearch: true, pinyinSearch: pinyin)
         }.value
         guard !Task.isCancelled else { return }
         if results != matches { results = matches }
@@ -197,7 +230,7 @@ struct WordsView: View {
     private var filterSummary: String {
         let filter = model.settings.libraryFilter
         return [filter.status == .all ? nil : L.filterLabel(filter.status),
-                filter.level == "all" ? nil : filter.level,
+                filter.level == "all" ? nil : L.levelSummary(filter.levels),
                 filter.initial == "all" ? nil : "\(L.t("字首", "Letter")) \(filter.initial)"]
             .compactMap { $0 }.joined(separator: " · ")
     }
@@ -221,6 +254,7 @@ struct BankShelf: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
     var scan: () -> Void
     var manage: (CustomVocabSet) -> Void
     var rename: (CustomVocabSet) -> Void
@@ -237,14 +271,24 @@ struct BankShelf: View {
                     card(id: set.id, name: set.name, count: WordBanks.words(of: set, in: model.allWords).count,
                          icon: scanned ? "doc.text.viewfinder" : "folder.fill", color: Color(hex: set.color) ?? Palette.accent)
                         .overlay(alignment: .topTrailing) {
-                            Button { manage(set) } label: {
+                            // Everything to do with a bank, in one place: manage its words,
+                            // rename it or delete it (long press offers the same).
+                            Menu {
+                                Button { manage(set) } label: { Label(L.t("管理單字", "Manage words"), systemImage: "slider.horizontal.3") }
+                                Button { rename(set) } label: { Label(L.renameBank, systemImage: "pencil") }
+                                Divider()
+                                Button(role: .destructive) { deleting = set } label: { Label(L.deleteBank, systemImage: "trash") }
+                            } label: {
                                 Image(systemName: "ellipsis.circle")
                                     .font(.body.weight(.semibold))
-                                    .foregroundStyle(model.settings.activeBankId == set.id ? .white : Palette.accent)
+                                    .foregroundStyle(model.settings.activeBankId == set.id && appStyle != .collage ? .white : Palette.accent)
                                     .frame(width: 44, height: 44)
+                                    .contentShape(Rectangle())
                             }
-                            .buttonStyle(SoftPressStyle())
+                            // Its own tap target inside the list row, apart from the card under it.
+                            .buttonStyle(.borderless)
                             .accessibilityLabel(L.t("管理 \(set.name)", "Manage \(set.name)"))
+                            .accessibilityIdentifier("bank-menu-\(set.id)")
                         }
                         .contextMenu {
                             Button { manage(set) } label: { Label(L.t("管理", "Manage"), systemImage: "slider.horizontal.3") }
@@ -275,12 +319,23 @@ struct BankShelf: View {
                         }
                         Spacer(minLength: 0)
                         Text(L.scanSheet)
-                            .font(.rounded(.subheadline, weight: .semibold))
+                            .font(.display(.subheadline, weight: .semibold))
                             .foregroundStyle(Palette.accent)
                     }
                     .padding(14)
                     .frame(width: shelfWidth, height: shelfHeight, alignment: .leading)
-                    .background(Palette.accent.opacity(0.1), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .background {
+                        if appStyle == .collage {
+                            // A scrap of graph paper waiting to be filled, edged with a dashed cut line.
+                            PaperSurface(kind: .graph)
+                                .overlay {
+                                    Rectangle().strokeBorder(Palette.accent.opacity(0.55), style: StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+                                }
+                                .rotationEffect(.degrees(1.2))
+                        } else {
+                            RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Palette.accent.opacity(0.1))
+                        }
+                    }
                 }
                 .buttonStyle(SoftPressStyle())
                 .accessibilityIdentifier("words-scan")
@@ -288,6 +343,9 @@ struct BankShelf: View {
             .padding(.horizontal, 0)
             .padding(.vertical, 4)
         }
+        // Lets the chosen card's coloured shadow show above and below the shelf.
+        .scrollClipDisabled()
+        .sensoryFeedback(.selection, trigger: model.settings.activeBankId) { _, _ in model.settings.hapticsEnabled ?? true }
         .confirmationDialog(L.t("刪除「\(deleting?.name ?? "")」？", "Delete \u{201C}\(deleting?.name ?? "")\u{201D}?"),
                             isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }), titleVisibility: .visible) {
             Button(L.deleteBank, role: .destructive) {
@@ -322,6 +380,9 @@ struct BankShelf: View {
 
     private func card(id: String, name: String, count: Int, icon: String, color: Color) -> some View {
         let active = model.settings.activeBankId == id
+        let collage = appStyle == .collage
+        // Leather fills the chosen card with its colour; the collage tapes it down and stamps it.
+        let filled = active && !collage
         return Button {
             withAnimation(reduceMotion ? nil : Motion.reveal) { model.selectBank(id) }
         } label: {
@@ -329,28 +390,73 @@ struct BankShelf: View {
                 HStack {
                     Image(systemName: icon)
                         .font(.title3.weight(.semibold))
-                        .foregroundStyle(active ? .white : color)
+                        .foregroundStyle(filled ? .white : color)
+                        .symbolEffect(.bounce, value: reduceMotion ? false : active)
                     Spacer()
                 }
                 Spacer(minLength: 0)
                 Text(name)
-                    .font(.rounded(.subheadline, weight: .bold))
+                    .font(.display(.subheadline, weight: .bold))
                     .lineLimit(2)
-                    .foregroundStyle(active ? .white : .primary)
+                    .foregroundStyle(filled ? .white : collage ? Collage.ink : .primary)
                 HStack {
                     Text(L.bankWordCount(count)).font(.caption)
-                        .foregroundStyle(active ? .white.opacity(0.9) : .secondary)
+                        .foregroundStyle(filled ? .white.opacity(0.9) : .secondary)
                     Spacer(minLength: 4)
-                    if active { Image(systemName: "checkmark.circle.fill").foregroundStyle(.white) }
+                    if filled { Image(systemName: "checkmark.circle.fill").foregroundStyle(.white).popIn(delay: 0.05) }
                 }
             }
             .padding(14)
             .frame(width: shelfWidth, height: shelfHeight, alignment: .leading)
-            .background(active ? color : Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .modifier(BankCardSurface(collage: collage, active: active, color: color, core: id == WordBanks.coreBankId, seed: collageSeed(id)))
         }
         .buttonStyle(SoftPressStyle())
         .accessibilityAddTraits(active ? .isSelected : [])
         .accessibilityIdentifier("bank-\(id)")
+    }
+}
+
+/// A bank card's backing: rounded and filled with the bank's colour when
+/// chosen (leather), or a scrap of paper with a torn foot, taped down and
+/// stamped when chosen (collage).
+private struct BankCardSurface: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var collage: Bool
+    var active: Bool
+    var color: Color
+    /// The built-in bank is always on mustard paper.
+    var core: Bool
+    var seed: Int
+
+    private static let papers: [PaperKind] = [.sage, .peach, .ivory, .graph]
+    private static let tilts: [Double] = [-1.4, 1.1, -0.6, 1.6]
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if collage {
+            let paper = core ? PaperKind.mustard : Self.papers[seed % Self.papers.count]
+            content
+                .overlay(alignment: .leading) {
+                    // The bank's colour as a marker stripe down the edge.
+                    Rectangle().fill(color.opacity(0.85)).frame(width: 4).padding(.vertical, 10)
+                }
+                .paperCard(paper, tilt: Self.tilts[seed % Self.tilts.count], torn: [.bottom], tape: active, seed: seed)
+                .overlay(alignment: .bottomTrailing) {
+                    if active {
+                        StampMark(size: 36, angle: -14) {
+                            Image(systemName: "checkmark").font(.system(size: 13, weight: .heavy))
+                        }
+                        .offset(x: 6, y: 6)
+                        .popIn(delay: 0.05)
+                        .accessibilityHidden(true)
+                    }
+                }
+                .animation(reduceMotion ? nil : Motion.pop, value: active)
+        } else {
+            content
+                .background(active ? color : Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .shadow(color: active ? color.opacity(0.35) : .clear, radius: 8, y: 4)
+        }
     }
 }
 
@@ -364,12 +470,13 @@ struct WordRow: View {
         HStack(spacing: 12) {
             Image(systemName: progress.status == .mastered ? "checkmark.circle.fill" : progress.status == .review ? "arrow.counterclockwise" : "circle")
                 .font(.caption.weight(.semibold))
+                .contentTransition(.symbolEffect(.replace))
                 .foregroundStyle(progress.status == .new ? Palette.tertiaryLabel : color)
                 .frame(width: 16)
                 .accessibilityLabel(L.statusLabel(progress.status))
             VStack(alignment: .leading, spacing: 2) {
                 let face = model.face(word)
-                SearchHighlightedText(text: face.prompt, query: query).font(.rounded(.body, weight: .semibold))
+                SearchHighlightedText(text: face.prompt, query: query).font(.display(.body, weight: .semibold))
                 SearchHighlightedText(text: face.answer, query: query)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -378,6 +485,7 @@ struct WordRow: View {
             Spacer(minLength: 4)
             if progress.favorite {
                 Image(systemName: "star.fill").font(.caption).foregroundStyle(Palette.review)
+                    .transition(.scale(scale: 0.3).combined(with: .opacity))
             }
         }
     }
@@ -408,8 +516,12 @@ struct SearchHighlightedText: View {
 
 struct WordDetailView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
     var word: WordEntry
     @State private var editing = false
+    /// Bumped when the word joins a bank, for a short success tap.
+    @State private var addedToBank = 0
     @ScaledMetric(relativeTo: .largeTitle) private var titleSize = 38.0
 
     var body: some View {
@@ -420,7 +532,7 @@ struct WordDetailView: View {
             Section {
                 VStack(spacing: 6) {
                     Text(face.prompt)
-                        .font(.roundedSize(titleSize, weight: .bold))
+                        .font(.displaySize(titleSize, weight: .bold))
                         .lineLimit(4)
                         .minimumScaleFactor(0.6)
                         .multilineTextAlignment(.center)
@@ -431,48 +543,83 @@ struct WordDetailView: View {
                     SpeakButton(text: face.speakText, language: face.speakLanguage)
                 }
                 .frame(maxWidth: .infinity)
-                .listRowBackground(Color.clear)
-            }
-            Section {
-                VStack(alignment: .leading, spacing: 4) {
-                    if !face.answerLabel.isEmpty {
-                        Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
-                    }
-                    Text(face.answer).font(.rounded(.title3, weight: .bold))
-                    if !face.answerDetail.isEmpty {
-                        Text(face.answerDetail).foregroundStyle(.secondary)
-                    }
-                    if !face.supplemental.isEmpty {
-                        Text(face.supplemental).foregroundStyle(.secondary)
+                // In the collage the word sits on an index card taped to the page.
+                .padding(.vertical, appStyle == .collage ? 22 : 0)
+                // Clear of the card's red margin on the left.
+                .padding(.leading, appStyle == .collage ? 36 : 0)
+                .padding(.trailing, appStyle == .collage ? 18 : 0)
+                .collagePaper(appStyle, .ruled, tilt: -0.8, tape: true, seed: 3)
+                .overlay(alignment: .topTrailing) {
+                    if appStyle == .collage, progress.status == .mastered {
+                        StampMark(size: 50, angle: 12) {
+                            Text(L.t("熟", "GOT IT")).font(.system(size: 13, weight: .heavy, design: .rounded))
+                        }
+                        .offset(x: 4, y: -4)
+                        .accessibilityHidden(true)
                     }
                 }
-                .padding(.vertical, 4)
-            } header: {
-                Text(L.meaning)
+                .padding(.top, appStyle == .collage ? 12 : 0)
+                .entrance(0)
+                .listRowBackground(Color.clear)
             }
-            if !face.examplePrimary.isEmpty {
-                Section(L.example) {
+            Group {
+                Section {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(face.examplePrimary)
-                        if !face.exampleSecondary.isEmpty {
-                            Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
+                        if !face.answerLabel.isEmpty {
+                            Text(face.answerLabel).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
+                        }
+                        Text(face.answer).font(.display(.title3, weight: .bold))
+                        if !face.answerDetail.isEmpty {
+                            Text(face.answerDetail).foregroundStyle(.secondary)
+                        }
+                        if !face.supplemental.isEmpty {
+                            Text(face.supplemental).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 4)
+                    .entrance(1, distance: 10)
+                } header: {
+                    Text(L.meaning)
                 }
             }
-            if let note = WordNotes.note(for: word.word) {
-                Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
-                        : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
+            .listRowBackground(StyledRowBackground())
+            if !face.examplePrimary.isEmpty {
+                Group {
+                    Section(L.example) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(face.examplePrimary)
+                            if !face.examplePinyin.isEmpty {
+                                Text(face.examplePinyin).font(.footnote).foregroundStyle(.secondary)
+                            }
+                            if !face.exampleSecondary.isEmpty {
+                                Text(face.exampleSecondary).font(.subheadline).foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                        .entrance(2, distance: 10)
+                    }
+                }
+                .listRowBackground(StyledRowBackground(paper: .sage))
             }
-            AIExplanationSection(word: word)
-            AskAISection(word: word)
+            Group {
+                if let note = WordNotes.note(for: word.word) {
+                    Section(model.studyMode == .english ? L.t("易混字與搭配", "Usage and commonly confused words")
+                            : L.t("補充例句", "More examples")) { WordNoteView(note: note) }
+                }
+                AIExplanationSection(word: word)
+                AskAISection(word: word)
+            }
+            .listRowBackground(StyledRowBackground())
             Section(L.t("學習進度", "Progress")) {
-                WordProgressCard(progress: progress, level: word.group)
+                WordProgressCard(progress: progress, level: L.levelName(word.group))
             }
+            .listRowBackground(StyledRowBackground(paper: .graph))
         }
+        .warmList()
         .navigationTitle(face.prompt)
         .navigationBarTitleDisplayMode(.inline)
+        .sensoryFeedback(.impact(weight: .light), trigger: progress.favorite) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.success, trigger: addedToBank) { _, _ in model.settings.hapticsEnabled ?? true }
         .onDisappear { Speaker.shared.stop() }
         .sheet(isPresented: $editing) {
             WordEditorSheet(word: word, setId: model.customSets.sets.first { $0.wordIds.contains(word.id) }?.id ?? model.settings.activeBankId)
@@ -489,6 +636,7 @@ struct WordDetailView: View {
                     ForEach(model.customSets.sets) { set in
                         Button {
                             model.addWord(word.id, toSet: set.id)
+                            addedToBank += 1
                         } label: {
                             Label(set.name, systemImage: set.wordIds.contains(word.id) ? "checkmark" : "folder")
                         }
@@ -497,6 +645,7 @@ struct WordDetailView: View {
                     Button {
                         let id = model.createSet(named: L.newBankDefault)
                         model.addWord(word.id, toSet: id)
+                        addedToBank += 1
                     } label: {
                         Label(L.newBank, systemImage: "folder.badge.plus")
                     }
@@ -516,11 +665,14 @@ struct WordDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button { model.toggleFavorite(word.id) } label: {
                     Image(systemName: progress.favorite ? "star.fill" : "star")
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.bounce, value: reduceMotion ? false : progress.favorite)
                 }
                 .tint(Palette.review)
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
             }
         }
+        .catTip(.wordDetail)
     }
 }
 
@@ -536,8 +688,11 @@ struct AddWordSheet: View {
 /// Where a word stands in the review schedule: a short track that fills one
 /// step per successful review, and when it comes back.
 struct WordProgressCard: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var progress: WordProgress
     var level: String
+    /// Steps drawn so far; they light up one by one when the card appears.
+    @State private var lit = 0
 
     private var steps: Int { LearningEngine.reviewIntervalDays.count }
     private var filled: Int { progress.status == .new ? 0 : LearningEngine.reviewStage(progress) + 1 }
@@ -547,6 +702,8 @@ struct WordProgressCard: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 CardStatusChip(status: progress.status)
+                // The companion's take on this word: curious, rooting for it, or pleased.
+                Mascot(mood: progress.status == .new ? .thinking : progress.status == .review ? .encourage : .happy, size: 30)
                 Spacer()
                 if !level.isEmpty {
                     Text(level).font(.subheadline).foregroundStyle(.secondary)
@@ -554,12 +711,17 @@ struct WordProgressCard: View {
             }
             HStack(spacing: 4) {
                 ForEach(0..<steps, id: \.self) { step in
+                    let on = step < (reduceMotion ? filled : lit)
                     Capsule()
-                        .fill(step < filled ? tint : Palette.fill)
+                        .fill(on ? tint : Palette.fill)
                         .frame(height: 6)
+                        .scaleEffect(y: on || reduceMotion ? 1 : 0.6)
+                        .animation(reduceMotion ? nil : Motion.pop.delay(0.15 + Double(step) * 0.08), value: lit)
                 }
             }
             .accessibilityHidden(true)
+            .onAppear { lit = filled }
+            .onChange(of: filled) { _, value in lit = value }
             Text(caption)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -571,8 +733,7 @@ struct WordProgressCard: View {
 
     private var caption: String {
         guard progress.status != .new else {
-            return L.t("還沒學過，在學習卡第一次見到它後就會開始安排複習。",
-                       "Not studied yet. Reviews are scheduled after you first meet it in a study session.")
+            return L.t("還沒學過", "Not studied yet")
         }
         guard let due = LearningEngine.reviewDueDate(progress),
               let dueDay = DayMath.dayNumber(due), let today = DayMath.dayNumber(DayMath.today()) else {

@@ -1,0 +1,40 @@
+# Downloads the feedback testers sent from TestFlight (screenshots with their
+# comments, and crash reports) through the App Store Connect API, and keeps it
+# as an artifact for a week. Read-only. Tester emails and names are left out.
+#
+# Uses the same App Store Connect API key as the iOS release workflow:
+#   ASC_KEY_ID, ASC_ISSUER_ID, ASC_PRIVATE_KEY
+name: TestFlight feedback
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/testflight-feedback.mjs'
+      - '.github/workflows/testflight-feedback.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  feedback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Download TestFlight feedback
+        run: node scripts/testflight-feedback.mjs "$RUNNER_TEMP/feedback"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: testflight-feedback-${{ github.run_id }}
+          path: ${{ runner.temp }}/feedback
+          retention-days: 7
+          if-no-files-found: warn

@@ -14,6 +14,140 @@ final class ScreenshotTests: XCTestCase {
 
     func testLightScreens() { walkThrough(theme: "Light") }
     func testDarkScreens() { walkThrough(theme: "Dark") }
+    /// The paper collage style, through the same screens.
+    func testCollageScreens() { walkThrough(theme: "Light", style: "collage") }
+    func testCollageDarkScreens() { walkThrough(theme: "Dark", style: "collage") }
+
+    /// After some practice the cat asks once which style to use; choosing
+    /// the collage closes the sheet and Today redraws in it.
+    func testStyleChooserAppearsOnceAndApplies() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingStyleChooser"]
+        app.launch()
+        XCTAssertTrue(app.buttons["style-choose"].waitForExistence(timeout: 10), "The style chooser did not appear")
+        snap(app, "style-chooser")
+        app.buttons["style-collage"].tap()
+        app.buttons["style-choose"].tap()
+        XCTAssertTrue(app.buttons["style-choose"].waitForNonExistence(timeout: 5), "The style chooser did not close")
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "style-chosen-collage-today")
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        // Settings is the last row of Me: it only exists once scrolled to.
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
+        for _ in 0..<6 where !app.buttons["me-settings"].exists { app.swipeUp() }
+        XCTAssertTrue(app.buttons["me-settings"].waitForExistence(timeout: 5))
+        scrollClearOfTabBar(app, app.buttons["me-settings"])
+        app.buttons["me-settings"].tap()
+        XCTAssertTrue(app.buttons["settings-style"].waitForExistence(timeout: 5))
+        // On a small screen the row can sit behind the tab bar while still
+        // counting as hittable, and the tap would land on the tab bar.
+        scrollClearOfTabBar(app, app.buttons["settings-style"])
+        app.buttons["settings-style"].tap()
+        XCTAssertTrue(app.buttons["style-leather"].waitForExistence(timeout: 5))
+        snap(app, "style-settings")
+    }
+
+    /// The cat's chat, the tip on a word's third slip, and what it remembers,
+    /// with sample content in place of the online AI.
+    func testCatShowcase() { catShowcase(style: nil) }
+    func testCatShowcaseCollage() { catShowcase(style: "collage") }
+
+    private func catShowcase(style: String?) {
+        let app = XCUIApplication()
+        let prefix = style == nil ? "cat" : "collage-cat"
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingCatShowcase"]
+            + (style == "collage" ? ["-uiTestingCollage"] : ["-uiTestingLeather"])
+        app.launch()
+        let input = app.descendants(matching: .any)["mascot-chat-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 10), "The cat's chat did not open")
+        sleep(1)
+        snap(app, "\(prefix)-chat")
+        XCTAssertTrue(app.buttons["mascot-chat-turn-practice"].exists, "The cat's suggestion has no practise button")
+        app.buttons["完成"].firstMatch.tap()
+        XCTAssertTrue(input.waitForNonExistence(timeout: 5))
+
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        app.buttons["today-start"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["study-stuck-tip"].waitForExistence(timeout: 5), "No tip on the third slip")
+        sleep(1)
+        snap(app, "\(prefix)-stuck")
+        app.buttons["study-close"].tap()
+
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        app.tabBars.buttons.element(boundBy: 2).tap()
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
+        for _ in 0..<6 where !app.buttons["me-cat-memory"].exists { app.swipeUp() }
+        XCTAssertTrue(app.buttons["me-cat-memory"].waitForExistence(timeout: 5))
+        scrollClearOfTabBar(app, app.buttons["me-cat-memory"])
+        app.buttons["me-cat-memory"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["cat-memory-goal"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "\(prefix)-memory")
+    }
+
+    /// A tester could not tap a bank card's "…" in the collage. It is a menu
+    /// now, and deleting from it works (and can be undone).
+    func testBankMenuDeletesInCollage() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingCollage"]
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.buttons["words-add"].tap()
+        app.buttons["words-new-bank"].tap()
+        let alert = app.alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        let name = alert.textFields.firstMatch
+        name.tap()
+        name.typeText("Lesson")
+        app.alerts.buttons["儲存"].tap()
+        let menu = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-menu-'")).firstMatch
+        XCTAssertTrue(menu.waitForExistence(timeout: 5), app.debugDescription)
+        snap(app, "collage-bank-menu-button")
+        menu.tap()
+        let delete = app.buttons["刪除字庫"].firstMatch
+        XCTAssertTrue(delete.waitForExistence(timeout: 5), "The bank menu did not open")
+        snap(app, "collage-bank-menu-open")
+        delete.tap()
+        let confirm = app.buttons["bank-delete-confirm"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(app.buttons["bank-undo-delete"].waitForExistence(timeout: 5), "The bank was not deleted")
+    }
+
+    /// A message from the developer takes the whole screen and stays until
+    /// Got it; a retired version shows only the way to update, in each style.
+    func testAnnouncementAndUpdateRequiredScreens() {
+        for style in ["-uiTestingCollage", "-uiTestingLeather"] {
+            let app = XCUIApplication()
+            app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", style, "-uiTestingAnnouncement"]
+            app.launch()
+            let tag = app.descendants(matching: .any)["notice-tag"].firstMatch
+            XCTAssertTrue(tag.waitForExistence(timeout: 12), app.debugDescription)
+            XCTAssertTrue(app.buttons["announcement-close"].isHittable)
+            XCTAssertTrue(app.buttons["announcement-link"].isHittable)
+            sleep(1)
+            snap(app, "notice-announcement\(style == "-uiTestingCollage" ? "-collage" : "-leather")")
+            // A swipe down does not wave it away; only a key does.
+            app.swipeDown()
+            XCTAssertTrue(tag.exists)
+            app.buttons["announcement-close"].tap()
+            XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+            app.terminate()
+
+            let blocked = XCUIApplication()
+            blocked.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingDark", style, "-uiTestingUpdateRequired"]
+            blocked.launch()
+            let open = blocked.buttons["update-required-open"]
+            XCTAssertTrue(open.waitForExistence(timeout: 12), blocked.debugDescription)
+            XCTAssertTrue(open.isHittable)
+            XCTAssertFalse(blocked.buttons["today-start"].isHittable, "Nothing behind the update screen can be used")
+            sleep(1)
+            snap(blocked, "notice-update-required\(style == "-uiTestingCollage" ? "-collage" : "-leather")-dark")
+            blocked.terminate()
+        }
+    }
 
     /// The English interface for learning Chinese.
     func testChineseModeScreens() {
@@ -31,8 +165,9 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["study-close"].tap()
         XCTAssertTrue(app.buttons["today-speaking"].waitForExistence(timeout: 5))
         app.buttons["today-speaking"].tap()
-        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons["Questions"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.segmentedControls["speaking-activity"].buttons["Examples"].exists)
+        // One practice, questions and examples mixed: no mode picker.
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
         sleep(1)
         snap(app, "zh-4-speaking")
     }
@@ -158,11 +293,13 @@ final class ScreenshotTests: XCTestCase {
         }
     }
 
-    private func walkThrough(theme: String) {
+    private func walkThrough(theme: String, style: String? = nil) {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTesting\(theme)", "-uiTestingFakePlans"]
+        // The default look is the collage; the plain light and dark walks show leather.
+        app.launchArguments.append(style == "collage" ? "-uiTestingCollage" : "-uiTestingLeather")
         app.launch()
-        let prefix = theme.lowercased()
+        let prefix = [style, theme.lowercased()].compactMap { $0 }.joined(separator: "-")
 
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         snap(app, "\(prefix)-1-today")
@@ -226,6 +363,14 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "\(prefix)-10-speaking")
     }
 
+    /// Swipes up until the element is fully above the tab bar.
+    private func scrollClearOfTabBar(_ app: XCUIApplication, _ element: XCUIElement) {
+        let tabBarTop = app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : app.frame.maxY
+        for _ in 0..<6 where !(element.isHittable && element.frame.maxY <= tabBarTop - 4) {
+            app.swipeUp()
+        }
+    }
+
     private func snap(_ app: XCUIApplication, _ name: String) {
         let screenshot = app.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)
@@ -247,7 +392,8 @@ final class ScreenshotTests: XCTestCase {
             return
         }
         var pixels = [UInt8](repeating: 0, count: image.width * image.height * 4)
-        let colors = pixels.withUnsafeMutableBytes { bytes -> (blue: Int, green: Int, indigo: Int) in
+        // The bars use the warm palette: terracotta words, sage speaking, slate quizzes.
+        let colors = pixels.withUnsafeMutableBytes { bytes -> (terracotta: Int, sage: Int, slate: Int) in
             guard let context = CGContext(data: bytes.baseAddress, width: image.width, height: image.height,
                                           bitsPerComponent: 8, bytesPerRow: image.width * 4,
                                           space: CGColorSpaceCreateDeviceRGB(),
@@ -256,17 +402,17 @@ final class ScreenshotTests: XCTestCase {
             }
             context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
             let data = bytes.bindMemory(to: UInt8.self)
-            var blue = 0, green = 0, indigo = 0
+            var terracotta = 0, sage = 0, slate = 0
             for offset in stride(from: 0, to: data.count, by: 4) {
                 let r = Int(data[offset]), g = Int(data[offset + 1]), b = Int(data[offset + 2])
-                if b > 150, b > g + 40, g > 60, r < 100 { blue += 1 }
-                if g > 130, g > r + 50, g > b + 50 { green += 1 }
-                if r > 70, abs(r - g) < 30, b > r + 90 { indigo += 1 }
+                if r > 150, r > g + 60, g > b + 10 { terracotta += 1 }
+                if g > 100, g > r + 20, g > b + 30 { sage += 1 }
+                if b > 110, b > r + 35, b > g + 20 { slate += 1 }
             }
-            return (blue, green, indigo)
+            return (terracotta, sage, slate)
         }
-        XCTAssertGreaterThan(colors.blue, 500, "Vocabulary bars are missing", file: file, line: line)
-        XCTAssertGreaterThan(colors.green, 500, "Speaking bars are missing", file: file, line: line)
-        XCTAssertGreaterThan(colors.indigo, 300, "Quiz bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.terracotta, 500, "Vocabulary bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.sage, 500, "Speaking bars are missing", file: file, line: line)
+        XCTAssertGreaterThan(colors.slate, 300, "Quiz bars are missing", file: file, line: line)
     }
 }

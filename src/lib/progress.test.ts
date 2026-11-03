@@ -4,6 +4,11 @@ import {
   addDays,
   buildQuizOptions,
   buildStudyQueue,
+  ABILITY_PRIOR,
+  coreLevel,
+  estimateAbility,
+  newWordLevelWeight,
+  newWordSlots,
   isWordDue,
   markQuizCorrect,
   reviewDueDate,
@@ -544,6 +549,83 @@ describe('study queue', () => {
     expect(queue).toHaveLength(4);
     expect(queue).toEqual(expect.arrayContaining(['w00', 'w01']));
     expect(queue).not.toContain('w02');
+  });
+
+  test('saves words already studied today until after the new ones', () => {
+    let state = emptyProgress();
+    state = markReview(state, 'w00', '2026-06-20');
+    state = markReview(state, 'w01', today);
+
+    const queue = buildStudyQueue(words, state, today, { limit: 4, seed: 'queue' }).map((entry) => entry.id);
+
+    expect(queue).toContain('w00');
+    expect(queue).not.toContain('w01');
+    expect(buildStudyQueue(words.slice(0, 2), state, today, { limit: 4 }).map((entry) => entry.id).sort()).toEqual(['w00', 'w01']);
+  });
+
+  test('keeps room for new words when reviews pile up', () => {
+    let state = emptyProgress();
+    for (const entry of words.slice(0, 20)) {
+      state = markReview(state, entry.id, '2026-06-20');
+    }
+
+    const queue = buildStudyQueue(words, state, today, { limit: 10, seed: 'room' });
+    const fresh = queue.filter((entry) => !state.words[entry.id]);
+
+    expect(queue).toHaveLength(10);
+    expect(fresh).toHaveLength(4);
+    expect(newWordSlots(10, 20, 10)).toBe(4);
+    expect(newWordSlots(15, 20, 10)).toBe(6);
+    expect(newWordSlots(10, 2, 10)).toBe(8);
+    expect(newWordSlots(10, 20, 1)).toBe(1);
+  });
+
+  test('draws few new words from a level the learner already knows', () => {
+    const easy = Array.from({ length: 40 }, (_, index) => wordFixture(`e${index}`, { group: 'Core 1' }));
+    const right = Array.from({ length: 40 }, (_, index) => wordFixture(`r${index}`, { group: 'Core 5' }));
+    let state = emptyProgress();
+    for (const entry of easy.slice(0, 20)) {
+      state = markKnown(state, entry.id, '2026-06-01');
+    }
+    let fromEasy = 0;
+    let fromRight = 0;
+    for (let run = 0; run < 30; run += 1) {
+      for (const entry of buildStudyQueue([...easy, ...right], state, today, { limit: 10, seed: `level-${run}` })) {
+        if (state.words[entry.id]) continue;
+        if (entry.group === 'Core 1') fromEasy += 1;
+        else fromRight += 1;
+      }
+    }
+
+    expect(fromEasy).toBeGreaterThan(0);
+    expect(fromEasy * 4).toBeLessThan(fromRight);
+  });
+
+  test('draws most from just above the learner, less from easier levels, now and then from hard ones', () => {
+    // Ability in half-levels: 12 is Core 6.
+    expect(newWordLevelWeight(8, 12)).toBe(10);
+    expect(newWordLevelWeight(7, 12)).toBe(10);
+    expect(newWordLevelWeight(6, 12)).toBe(6);
+    expect(newWordLevelWeight(5, 12)).toBe(4);
+    expect(newWordLevelWeight(4, 12)).toBe(2);
+    expect(newWordLevelWeight(1, 12)).toBe(1);
+    expect(newWordLevelWeight(9, 12)).toBe(3);
+    expect(newWordLevelWeight(14, 12)).toBe(1);
+    expect(newWordLevelWeight(null, 12)).toBe(6);
+    expect(coreLevel('Core 12')).toBe(12);
+    expect(coreLevel('Custom')).toBeNull();
+  });
+
+  test('estimates the learner from which words they knew on sight', () => {
+    const levelsWith = (knew: (level: number) => number) =>
+      Array.from({ length: 14 }, (_, index) => ({ level: index + 1, seen: 10, knew: knew(index + 1) }));
+
+    expect(estimateAbility([])).toBe(ABILITY_PRIOR);
+    // Knowing a few Core 1 words says little: it stays near the start.
+    expect(estimateAbility([{ level: 1, seen: 5, knew: 5 }, { level: 14, seen: 0, knew: 0 }])).toBe(ABILITY_PRIOR);
+    expect(estimateAbility(levelsWith((level) => (level <= 6 ? 10 : level <= 8 ? 5 : 0)))).toBe(15);
+    expect(estimateAbility(levelsWith((level) => (level <= 1 ? 6 : level <= 2 ? 4 : 1)))).toBeLessThan(6);
+    expect(estimateAbility(levelsWith((level) => (level <= 10 ? 10 : 7)))).toBeGreaterThan(22);
   });
 
   test('draws new words from the whole pool instead of the start of the library', () => {

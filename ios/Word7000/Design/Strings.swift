@@ -3,8 +3,8 @@ import Word7000Core
 
 /// What the learner is learning. `english` (the default) is the Chinese
 /// interface for learning English words; `chinese` flips it: an English
-/// interface for learning the Chinese meanings. One progress record serves
-/// both, so knowing a word in either direction counts.
+/// interface for learning the Chinese meanings. Each keeps its own word
+/// progress (`ModeProgress`); the streak and daily goal are shared.
 enum StudyMode: String, Codable, CaseIterable, Identifiable {
     case english, chinese
 
@@ -40,7 +40,7 @@ enum L {
     static var quizLength: String { t("10 題", "10 questions") }
     static var practiceStruggling: String { t("複習不熟的字", "Review tricky words") }
     static var speaking: String { t("口說練習", "Speaking practice") }
-    static var spelling: String { t("拼字練習", "Spelling") }
+    static var spelling: String { t("拼字練習", "Writing") }
     static func studyingBank(_ name: String) -> String { t("字庫：\(name)", "Word bank: \(name)") }
 
     // Study
@@ -50,6 +50,8 @@ enum L {
     static var tapToReveal: String { t("點一下看答案", "Tap to see the answer") }
     // The answer is Chinese when learning English and English when learning Chinese.
     static var autoReveal: String { t("直接顯示中文", "Show English right away") }
+    static var showPinyin: String { t("顯示拼音", "Show pinyin") }
+    static var showPinyinHint: String { t("關掉後，拼音跟答案一起出現，先練認字", "When off, the pinyin comes with the answer, so you read the characters first") }
     static var autoRevealHint: String { t("卡片直接顯示中文，不用先點一下", "Cards show the English without a tap first") }
     static var dontKnow: String { t("不熟", "Not yet") }
     static var knowIt: String { t("認識", "Know it") }
@@ -87,8 +89,43 @@ enum L {
     static func speakingScore(_ count: Int) -> String { t("完成 \(count) 張口說卡", "\(count) prompts answered") }
 
     // Words
-    static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search English, Chinese or examples") }
-    static var coreBankName: String { t("7000 單字", "7000 Words") }
+    static var searchPlaceholder: String { t("搜尋英文、中文或例句", "Search Chinese, pinyin, English or examples") }
+    /// Taiwanese learners know the GSAT's 7000 words by that name; learners of
+    /// Chinese study their own bank of everyday Taiwan Mandarin.
+    static var coreBankName: String { t("7000 單字", "Taiwan Mandarin") }
+    /// The word list files its levels as "Core 1"…"Core 14"; on screen they
+    /// are 第 N 級 or Level N. Other groups (a scanned bank's) show as they are.
+    static func level(_ number: Int) -> String { t("第 \(number) 級", "Level \(number) · \(tocflBand(number))") }
+    /// Learners of Chinese study the Taiwan Mandarin bank, whose fourteen
+    /// levels spread over TOCFL's bands (see scripts/build-taiwan-words.py).
+    static func tocflBand(_ level: Int) -> String {
+        switch level {
+        case ...5: "Novice"
+        case 6...7: "A1"
+        case 8...10: "A2"
+        default: "B1"
+        }
+    }
+    static func levelRange(_ low: Int, _ high: Int) -> String {
+        low == high ? level(low) : t("第 \(low)–\(high) 級", "Levels \(low)–\(high)")
+    }
+    /// The level filter in a few words: all, one level, a run, or a short list.
+    static func levelSummary(_ groups: [String]) -> String {
+        guard !groups.isEmpty else { return allLevels }
+        if groups.count == 1 { return levelName(groups[0]) }
+        let numbers = groups.compactMap(LearningEngine.coreLevel)
+        if numbers.count == groups.count, let low = numbers.min(), let high = numbers.max(), high - low + 1 == numbers.count {
+            return levelRange(low, high)
+        }
+        if numbers.count == groups.count, numbers.count <= 4 {
+            return t("第 \(numbers.map(String.init).joined(separator: "、")) 級", "Levels \(numbers.map(String.init).joined(separator: ", "))")
+        }
+        return t("\(groups.count) 個分級", "\(groups.count) levels")
+    }
+    static func levelName(_ group: String) -> String {
+        guard group.hasPrefix("Core "), let number = Int(group.dropFirst(5)) else { return group }
+        return level(number)
+    }
     static func bankWordCount(_ count: Int) -> String { t("\(count) 個", "\(count)") }
     static var scanSheet: String { t("掃描單字表", "Scan a word list") }
     static var newBank: String { t("新字庫", "New bank") }
@@ -136,10 +173,10 @@ enum L {
         }
     }
     static var dailyTargetTitle: String { t("每日目標", "Daily goal") }
-    static var dailyTargetText: String { t("每天想學幾個字，也是每組學習卡的張數。", "How many words a day; also the size of each set.") }
+    static var dailyTargetText: String { t("也是每組學習卡的張數。", "Also the size of each set.") }
     static func wordsPerDay(_ count: Int) -> String { t("\(count) 個", "\(count) words") }
     static var reminder: String { t("學習提醒", "Study reminder") }
-    static var reminderText: String { t("每天中午提醒；連續天數快中斷時，鎖定畫面會倒數。", "A reminder at noon, and a lock screen countdown before a streak ends.") }
+    static var reminderText: String { t("中午提醒；連勝快斷時鎖定畫面倒數。", "Noon reminder; lock screen countdown before a streak ends.") }
     static var appearance: String { t("外觀", "Appearance") }
     static var themeSystem: String { t("自動", "Automatic") }
     static var themeLight: String { t("淺色", "Light") }

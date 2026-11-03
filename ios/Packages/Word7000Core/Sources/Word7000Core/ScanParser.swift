@@ -63,7 +63,7 @@ public enum ScanParser {
     enum Kind { case latin, cjk }
     struct Segment { var kind: Kind; var text: String }
 
-    static let posTokens: Set<String> = [
+    public static let posTokens: Set<String> = [
         "n", "v", "vt", "vi", "a", "adj", "ad", "adv", "prep", "conj", "pron", "phr", "num", "int", "interj", "art", "aux",
     ]
     static let maxHeadwordTokens = 4
@@ -209,6 +209,26 @@ public enum ScanParser {
         var pairs: [Pair] = []
         var pending: Headword?
 
+        // Lists written Chinese first ("學校 xuéxiào school", often for
+        // learners of Chinese): each Chinese run pairs with the English after
+        // it, any pinyin in between left out.
+        if segments.count >= 2, segments[0].kind == .cjk {
+            var chineseFirst: [Pair] = []
+            var index = 0
+            while index + 1 < segments.count {
+                defer { index += 1 }
+                guard segments[index].kind == .cjk, segments[index + 1].kind == .latin,
+                      let headword = parseHeadword(removingPinyin(segments[index + 1].text)) else { continue }
+                let meaning = cleanMeaning(segments[index].text)
+                guard !meaning.isEmpty else { continue }
+                chineseFirst.append(Pair(meaningZh: meaning, partOfSpeech: headword.partOfSpeech, word: headword.word))
+                index += 1
+            }
+            if !chineseFirst.isEmpty {
+                return ParsedLine(line: line, pairs: chineseFirst, pendingWord: nil, meaningOnly: nil)
+            }
+        }
+
         var index = 0
         while index < segments.count {
             defer { index += 1 }
@@ -257,6 +277,14 @@ public enum ScanParser {
     static func endsWithOpeningBracket(_ text: String) -> Bool {
         let trimmed = String(text.reversed().drop(while: { $0.isWhitespace }).reversed())
         return trimmed.hasSuffix("（") || trimmed.hasSuffix("(")
+    }
+
+    /// Drops pinyin with tone marks ("xuéxiào", "lǜ") from a Latin run.
+    static func removingPinyin(_ text: String) -> String {
+        let toned = Set("āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü")
+        return text.split(whereSeparator: { $0.isWhitespace })
+            .filter { token in !token.contains(where: { toned.contains(Character($0.lowercased())) }) }
+            .joined(separator: " ")
     }
 
     static func parseHeadword(_ text: String) -> Headword? {

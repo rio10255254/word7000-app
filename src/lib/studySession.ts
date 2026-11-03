@@ -13,11 +13,22 @@ export type StudySession = {
   requeued: Record<string, number>;
 };
 
-// A missed card comes back a few cards later, while the answer is still fresh
-// enough to be worth a second look but not so soon that it is just recalled
-// from the screen a moment ago.
+// A missed card comes back once, a few cards later, while the answer is still
+// fresh enough to be worth a second look but not so soon that it is just
+// recalled from the screen a moment ago. Only once: more than that made a
+// session feel like the same few words over and over, and a missed word is
+// due again anyway.
 export const STUDY_REQUEUE_GAP = 4;
-const MAX_REQUEUES_PER_CARD = 2;
+const MAX_REQUEUES_PER_CARD = 1;
+
+/**
+ * At most one card in four comes back for a second look: with every missed
+ * card repeated, a hard session ran half as long again with the same words.
+ * The rest of the missed words are due again next time anyway.
+ */
+export function maxStudyRequeues(initialCount: number): number {
+  return Math.max(1, Math.floor((initialCount + 3) / 4));
+}
 
 export function createStudySession(cardIds: string[], sourceKey: string): StudySession {
   const unique = Array.from(new Set(cardIds));
@@ -58,8 +69,12 @@ export function gradeStudyCard(session: StudySession, cardId: string, grade: Stu
   let cardIds = session.cardIds;
   let requeued = session.requeued;
   const timesRequeued = session.requeued[cardId] ?? 0;
-  if (grade === 'review' && timesRequeued < MAX_REQUEUES_PER_CARD) {
-    const insertAt = Math.min(cardIds.length, session.index + 1 + STUDY_REQUEUE_GAP);
+  const insertAt = Math.min(cardIds.length, session.index + 1 + STUDY_REQUEUE_GAP);
+  // Near the end there may be no card left to put between them; showing the
+  // same card again straight away is not a second look, so skip it then.
+  const requeuedSoFar = Object.values(session.requeued).reduce((sum, count) => sum + count, 0);
+  if (grade === 'review' && timesRequeued < MAX_REQUEUES_PER_CARD && insertAt > session.index + 1
+    && requeuedSoFar < maxStudyRequeues(session.initialCount)) {
     cardIds = [...cardIds.slice(0, insertAt), cardId, ...cardIds.slice(insertAt)];
     requeued = { ...requeued, [cardId]: timesRequeued + 1 };
   }

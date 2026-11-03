@@ -157,6 +157,13 @@ function buildFixtures() {
       word: buildQuizOptions(words, wordId, 'seed-4', 'word'),
     })),
     studyQueue: buildStudyQueue(words.slice(0, 40), queueState, '2026-06-06', { limit: 12, seed: 'seed-5' }).map((word) => word.id),
+    // New words drawn by level: the first 30 (Core 1) were known on sight.
+    adaptiveQueue: buildStudyQueue(
+      words,
+      words.slice(0, 30).reduce((state, word) => markKnown(state, word.id, '2026-06-01', '2026-06-01T08:00:00.000Z'), empty),
+      '2026-06-06',
+      { limit: 20, seed: 'seed-6' },
+    ).map((word) => word.id),
     libraryState,
     library: queries.map((query) => ({
       ...query,

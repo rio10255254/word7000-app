@@ -372,33 +372,195 @@ public enum LearningEngine {
     /// from the whole pool, and only when both run out does it pull known
     /// words ahead of their schedule. The chosen cards are then shuffled so reviews and new
     /// words mix.
+    /// Share of a session kept for new words while any are left. Without it,
+    /// a learner whose reviews pile up stops meeting new words at all: after
+    /// a week of 20 a day every session was all reviews, and for anyone who
+    /// started when new words came in library order, all of them Core 1.
+    /// Two in five, rounded up; whole numbers so no rounding error decides it.
+    public static let newWordShare = (numerator: 2, denominator: 5)
+
+    /// The level a group stands for ("Core 7" is 7), or nil for other groups.
+    public static func coreLevel(_ group: String) -> Int? {
+        guard group.hasPrefix("Core "), let level = Int(group.dropFirst(5)), level >= 0 else { return nil }
+        return level
+    }
+
+    // For a word `d` half-levels above the learner (-6 to 6), the chance in
+    // percent that it is known on sight is 95 92 88 82 73 62 50 38 27 18 12 8 5.
+    // These are the natural logs of that chance and of its complement, times
+    // 1000 and rounded, so the estimate is the same whole-number sum everywhere.
+    static let knownLog = [-51, -83, -128, -198, -315, -478, -693, -968, -1309, -1715, -2120, -2526, -2996]
+    static let missedLog = [-2996, -2526, -2120, -1715, -1309, -968, -693, -478, -315, -198, -128, -83, -51]
+    /// Where the estimate starts before any answers, in half-levels: Core 4.
+    public static let abilityPrior = 8
+
+    /// The learner's level, in half-levels (14 means Core 7), from the words
+    /// they have met: the level that best explains which ones they knew on
+    /// sight and which they did not, pulled gently towards Core 4 while there
+    /// is little to go on. It moves with every answer, so it follows the
+    /// learner as they grow.
+    public static func estimateAbility(_ levels: [(level: Int, seen: Int, knew: Int)]) -> Int {
+        let top = levels.map { $0.level }.max() ?? 0
+        guard top > 0 else { return abilityPrior }
+        var best = abilityPrior
+        var bestScore = Int.min
+        for ability in 0...max(2 * top + 2, 2 * abilityPrior) {
+            var score = -30 * (ability - abilityPrior) * (ability - abilityPrior)
+            for entry in levels where entry.seen > 0 {
+                let index = min(6, max(-6, 2 * entry.level - ability)) + 6
+                score += entry.knew * knownLog[index] + (entry.seen - entry.knew) * missedLog[index]
+            }
+            if score > bestScore {
+                bestScore = score
+                best = ability
+            }
+        }
+        return best
+    }
+
+    /// The learner's estimated level over a word list (see `estimateAbility`),
+    /// and how many of its Core words they have met, which says how much the
+    /// estimate rests on.
+    public static func abilityEstimate(words: [WordEntry], state: ProgressState) -> (ability: Int, seen: Int) {
+        var counts: [Int: (seen: Int, knew: Int)] = [:]
+        for word in words {
+            guard let level = coreLevel(word.group) else { continue }
+            var count = counts[level] ?? (0, 0)
+            if let progress = state.words[word.id], progress.status != .new {
+                count.seen += 1
+                if progress.status == .mastered, progress.reviewCount == 0 { count.knew += 1 }
+            }
+            counts[level] = count
+        }
+        let levels = counts.keys.sorted().map { (level: $0, seen: counts[$0]!.seen, knew: counts[$0]!.knew) }
+        return (estimateAbility(levels), levels.reduce(0) { $0 + $1.seen })
+    }
+
+    /// The Core levels new words are drawn from most for this ability.
+    public static func favouredLevels(ability: Int, top: Int = 14) -> ClosedRange<Int> {
+        let low = min(top, max(1, (ability + 2) / 2))
+        let high = min(top, max(low, (ability + 4) / 2))
+        return low...high
+    }
+
+    /// How strongly to draw new words from a level, by how far it is from the
+    /// learner (`ability` in half-levels): a level or two above is drawn most,
+    /// where words are new but within reach; the learner's own level less;
+    /// easier levels less and less the further below they are, even for words
+    /// the learner does not know yet; much harder levels only now and then.
+    /// Groups that are not Core levels (a scanned bank, your own words) all
+    /// count the same.
+    public static func newWordLevelWeight(level: Int?, ability: Int) -> Int {
+        guard let level else { return 6 }
+        let distance = 2 * level - ability
+        switch distance {
+        case ...(-6): return 1
+        case ...(-4): return 2
+        case ...(-2): return 4
+        case ...0: return 6
+        case ...4: return 10
+        case ...6: return 3
+        default: return 1
+        }
+    }
+
+    /// Draws `count` new words: each pick chooses a level by its weight among
+    /// the levels with new words left, then that level's next word in a seeded
+    /// random order. With a single level this is simply the shuffled order.
+    static func pickNewWords(_ fresh: [WordEntry], count: Int, levelOrder: [String],
+                             levels: [String: (seen: Int, knew: Int)], seed: String) -> [WordEntry] {
+        guard count > 0, !fresh.isEmpty else { return [] }
+        var buckets: [String: [WordEntry]] = [:]
+        for word in SeededRandom.shuffle(fresh, seed: "\(seed):fresh") { buckets[word.group, default: []].append(word) }
+        let ability = estimateAbility(levelOrder.compactMap { group -> (level: Int, seen: Int, knew: Int)? in
+            guard let level = coreLevel(group), let counts = levels[group] else { return nil }
+            return (level, counts.seen, counts.knew)
+        })
+        let order = levelOrder.filter { buckets[$0] != nil }
+        let weights = order.map { newWordLevelWeight(level: coreLevel($0), ability: ability) }
+        var taken = Array(repeating: 0, count: order.count)
+        var picked: [WordEntry] = []
+        var state = SeededRandom.hash("\(seed):levels")
+        while picked.count < count {
+            var total = 0
+            for (index, group) in order.enumerated() where taken[index] < buckets[group]!.count { total += weights[index] }
+            guard total > 0 else { break }
+            state = SeededRandom.next(state)
+            var roll = Int(SeededRandom.scramble(state) % UInt32(total))
+            for (index, group) in order.enumerated() {
+                let bucket = buckets[group]!
+                guard taken[index] < bucket.count else { continue }
+                if roll < weights[index] {
+                    picked.append(bucket[taken[index]])
+                    taken[index] += 1
+                    break
+                }
+                roll -= weights[index]
+            }
+        }
+        return picked
+    }
+
+    /// How many of a session's `size` cards go to new words: whatever the
+    /// due reviews leave, but at least `newWordShare` of it while any are left.
+    /// Reviews that do not fit stay due for the next session.
+    static func newWordSlots(size: Int, due: Int, fresh: Int) -> Int {
+        let share = (size * newWordShare.numerator + newWordShare.denominator - 1) / newWordShare.denominator
+        return min(fresh, max(size - due, share))
+    }
+
     public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
         let size = max(0, limit)
         guard size > 0, !words.isEmpty else { return [] }
 
         var due: [(date: String, word: WordEntry, struggling: Bool, order: Int)] = []
         var fresh: [WordEntry] = []
+        // Due words already studied today (a word missed earlier today stays
+        // due) wait until after the new ones, so the next session does not
+        // open with the cards just practised.
+        var seenToday: [(date: String, word: WordEntry, struggling: Bool, order: Int)] = []
         var ahead: [(date: String, word: WordEntry, order: Int)] = []
+        // Per level, in the order levels first appear: words seen, and words
+        // known the first time they were met (never missed since).
+        var levelOrder: [String] = []
+        var levels: [String: (seen: Int, knew: Int)] = [:]
         for (order, word) in words.enumerated() {
             let progress = state.words[word.id]
+            if levels[word.group] == nil {
+                levelOrder.append(word.group)
+                levels[word.group] = (0, 0)
+            }
+            if let progress, progress.status != .new {
+                levels[word.group]!.seen += 1
+                if progress.status == .mastered, progress.reviewCount == 0 { levels[word.group]!.knew += 1 }
+            }
             guard let dueDate = reviewDueDate(progress) else {
                 fresh.append(word)
                 continue
             }
             if dueDate <= today {
-                due.append((dueDate, word, progress?.status == .review, order))
+                if progress?.lastStudied == today {
+                    seenToday.append((dueDate, word, progress?.status == .review, order))
+                } else {
+                    due.append((dueDate, word, progress?.status == .review, order))
+                }
             } else {
                 ahead.append((dueDate, word, order))
             }
         }
-        due.sort {
+        let byDue: ((date: String, word: WordEntry, struggling: Bool, order: Int), (date: String, word: WordEntry, struggling: Bool, order: Int)) -> Bool = {
             if $0.date != $1.date { return $0.date < $1.date }
             if $0.struggling != $1.struggling { return $0.struggling }
             return $0.order < $1.order
         }
+        due.sort(by: byDue)
+        seenToday.sort(by: byDue)
         ahead.sort { $0.date != $1.date ? $0.date < $1.date : $0.order < $1.order }
 
-        let chosen = Array((due.map(\.word) + SeededRandom.shuffle(fresh, seed: "\(seed):fresh") + ahead.map(\.word)).prefix(size))
+        let newCount = newWordSlots(size: size, due: due.count, fresh: fresh.count)
+        let chosen = Array((due.prefix(size - newCount).map(\.word)
+            + pickNewWords(fresh, count: newCount, levelOrder: levelOrder, levels: levels, seed: seed)
+            + seenToday.map(\.word) + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
     }
 
@@ -407,17 +569,19 @@ public enum LearningEngine {
     public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int) -> (fresh: Int, review: Int, total: Int) {
         let size = max(0, limit)
         guard size > 0 else { return (0, 0, 0) }
-        var due = 0, fresh = 0, ahead = 0
+        var due = 0, fresh = 0, later = 0
         for word in words {
-            guard let dueDate = reviewDueDate(state.words[word.id]) else {
+            let progress = state.words[word.id]
+            guard let dueDate = reviewDueDate(progress) else {
                 fresh += 1
                 continue
             }
-            if dueDate <= today { due += 1 } else { ahead += 1 }
+            if dueDate <= today, progress?.lastStudied != today { due += 1 } else { later += 1 }
         }
-        // Due words fill the queue first, then new ones, then words ahead of schedule.
-        let total = min(size, due + fresh + ahead)
-        let chosenFresh = min(fresh, max(0, size - due))
+        // Due words and new ones (at least their share) fill the queue first,
+        // then due words already studied today and words ahead of schedule.
+        let total = min(size, due + fresh + later)
+        let chosenFresh = newWordSlots(size: size, due: due, fresh: fresh)
         return (chosenFresh, total - chosenFresh, total)
     }
 }

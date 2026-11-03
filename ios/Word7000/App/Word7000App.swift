@@ -4,6 +4,7 @@ import Word7000Core
 
 @main
 struct Word7000App: App {
+    @UIApplicationDelegateAdaptor(PushAppDelegate.self) private var pushDelegate
     @State private var model: AppModel
     @State private var account: AccountModel
     @State private var liveActivities = LiveActivityManager()
@@ -16,6 +17,7 @@ struct Word7000App: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        WarmTone.styleSystemBars()
         SpeakingRecorder.removeAbandonedTakes()
         let model = AppModel.launch()
         _model = State(initialValue: model)
@@ -24,6 +26,8 @@ struct Word7000App: App {
         account.plus = plus
         CloudAssistant.shared.account = account
         CloudAssistant.shared.plus = plus
+        PushRegistration.shared.account = account
+        PushRegistration.shared.plus = plus
         _account = State(initialValue: account)
         _plus = State(initialValue: plus)
     }
@@ -36,8 +40,21 @@ struct Word7000App: App {
                 .environment(plus)
                 .task { await plus.start() }
                 .task { await Speaker.shared.refreshVoices() }
+                .task { await PushRegistration.shared.refreshIfAllowed() }
+                // Who the learner is decides which messages reach them. The
+                // account itself is part of it: a new guest after deleting an
+                // account, or a session restored after the token arrived,
+                // registers the iPhone again.
+                .task(id: "\(account.session?.user.id ?? "")|\(account.isPermanent)|\(plus.subscribed)|\(model.studyMode)") {
+                    await PushRegistration.shared.upload()
+                }
+                .task { model.syncAppIcon() }
+                // Which version this account runs, for the developer's status
+                // check and version-limited messages.
+                .task(id: account.session?.user.id) { await account.reportAppVersion() }
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)
+                .environment(\.appStyle, model.settings.appStyle ?? .standard)
                 .tint(Palette.accent)
                 .task {
                     account.beforeSignOut = { [weak account, registrations] owner, deviceId in

@@ -49,7 +49,7 @@ final class SavedAnswers<Value: Codable> {
 @MainActor
 enum CloudAnswerCache {
     /// Raise when the prompts change enough that saved answers should be asked for again.
-    private static let version = 2
+    private static let version = 3
     static let explanations = SavedAnswers<CloudAI.Explanation>(file: "explanations-v\(version).json", limit: 300)
     static let quiz = SavedAnswers<CloudAI.QuizExplanation>(file: "quiz-v\(version).json", limit: 300)
     static let questions = SavedAnswers<[AskedQuestion]>(file: "questions-v1.json", limit: 200)
@@ -71,9 +71,13 @@ struct AIWordSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                AIExplanationSection(word: word)
-                AskAISection(word: word)
+                Group {
+                    AIExplanationSection(word: word)
+                    AskAISection(word: word)
+                }
+                .listRowBackground(StyledRowBackground())
             }
+            .warmList()
             .navigationTitle(model.face(word).prompt)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -97,6 +101,9 @@ struct AskAISection: View {
     @State private var loading = false
     @State private var failure: CloudAI.Failure?
     @State private var askCloud = false
+    /// Bumped when a question fails, so the field gives a small shake.
+    @State private var failures = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @FocusState private var focused: Bool
 
     private var cacheKey: String { "\(model.studyMode.rawValue):\(word.id):\(word.meaningZh)" }
@@ -111,13 +118,12 @@ struct AskAISection: View {
         if CloudAssistant.shared.offered || !asked.isEmpty {
             Section {
                 ForEach(Array(asked.enumerated()), id: \.offset) { _, item in
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(item.question)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Palette.accent)
-                        Text(item.reply.answer)
+                    VStack(alignment: .leading, spacing: 8) {
+                        LearnerSays(text: item.question)
+                        CatSays(mood: .happy) { Text(item.reply.answer) }
                     }
                     .padding(.vertical, 4)
+                    .entrance(0, distance: 8)
                     .accessibilityElement(children: .combine)
                     .accessibilityIdentifier("ai-ask-answer")
                     ForEach(Array(item.reply.examples.enumerated()), id: \.offset) { _, example in
@@ -134,15 +140,12 @@ struct AskAISection: View {
                     }
                 }
                 if loading {
-                    HStack(spacing: 10) {
-                        ProgressView()
-                        Text(L.t("AI 正在回答…", "AI is answering…")).foregroundStyle(.secondary)
-                    }
-                    .accessibilityIdentifier("ai-ask-loading")
+                    AIThinkingRow(text: Cat.thinking(.answer))
+                        .accessibilityIdentifier("ai-ask-loading")
                 } else if asked.isEmpty {
                     ScrollView(.horizontal) {
                         HStack(spacing: 8) {
-                            ForEach(suggestions, id: \.self) { suggestion in
+                            ForEach(Array(suggestions.enumerated()), id: \.element) { offset, suggestion in
                                 Button { send(suggestion) } label: {
                                     Text(suggestion)
                                         .font(.footnote)
@@ -150,36 +153,42 @@ struct AskAISection: View {
                                         .padding(.vertical, 7)
                                         .background(Palette.accent.opacity(0.12), in: Capsule())
                                 }
-                                .buttonStyle(.borderless)
+                                .buttonStyle(SoftPressStyle())
+                                .entrance(offset, distance: 8)
                             }
                         }
                     }
                     .scrollIndicators(.hidden)
                 }
                 HStack(spacing: 8) {
-                    TextField(L.t("問 AI 關於這個字的問題", "Ask AI about this word"), text: $question)
+                    TextField(L.t("問小笨貓關於這個字的問題", "Ask Silly Cat about this word"), text: $question)
                         .submitLabel(.send)
                         .focused($focused)
                         .onSubmit { send() }
                         .accessibilityIdentifier("ai-ask-field")
                     Button { send() } label: {
-                        Image(systemName: "arrow.up.circle.fill").font(.title2)
+                        Image(systemName: "arrow.up.circle.fill")
+                            .font(.title2)
+                            .symbolEffect(.bounce, value: reduceMotion ? 0 : asked.count)
                     }
                     .buttonStyle(.borderless)
                     .disabled(question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || loading)
                     .accessibilityLabel(L.t("送出問題", "Send question"))
                     .accessibilityIdentifier("ai-ask-send")
                 }
-                if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                .shake(trigger: failures, enabled: !reduceMotion)
+                if let failure { AIFailureNote(failure: failure) }
                 // The explanation above already carries the Plus note; repeat it only when today's allowance ran out here.
                 if failure == .quota { PlusAIUpsell() }
             } header: {
-                Text(L.t("問 AI", "Ask AI"))
+                Text(L.t("問小笨貓", "Ask Silly Cat"))
             } footer: {
-                Text(L.t("只回答和這個字有關的問題，每問一次算一次線上 AI。由 Claude 產生，可能有誤。",
-                         "Answers questions about this word; each one counts as one online AI request. By Anthropic's Claude, and may contain mistakes."))
+                Text(L.t("只聊這個字 · Claude 線上 AI，可能有誤",
+                         "About this word only · Claude online AI, may be wrong"))
             }
             .onAppear { asked = CloudAnswerCache.questions[cacheKey] ?? [] }
+            .sensoryFeedback(.impact(weight: .light), trigger: loading) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+            .sensoryFeedback(.error, trigger: failures) { _, _ in model.settings.hapticsEnabled ?? true }
             .cloudConsentAlert(isPresented: $askCloud) {
                 if IntelligenceSettings.shared.cloudConsent == true, let pending { send(pending) }
                 pending = nil
@@ -213,6 +222,7 @@ struct AskAISection: View {
             } catch is CancellationError {
             } catch {
                 failure = (error as? CloudAI.Failure) ?? .unavailable
+                failures += 1
                 // Give the learner their question back to try again.
                 if question.isEmpty { question = asking }
             }
@@ -237,64 +247,81 @@ struct AIExplanationSection: View {
                 if let explanation {
                     content(explanation)
                 } else if loading {
-                    HStack(spacing: 10) {
-                        ProgressView()
-                        Text(L.t("AI 正在整理這個字…", "AI is explaining this word…")).foregroundStyle(.secondary)
-                    }
-                    .accessibilityIdentifier("ai-explain-loading")
+                    AIThinkingRow(text: Cat.thinking(.explain))
+                        .accessibilityIdentifier("ai-explain-loading")
                 } else {
                     Button(action: start) {
-                        Label(L.t("AI 解說：用法、搭配與例句", "AI explains: usage, collocations and examples"), systemImage: "sparkles")
+                        Label(L.t("叫小笨貓解說：用法、搭配與例句", "Have Silly Cat explain: usage, collocations, examples"), systemImage: "sparkles")
                     }
                     .accessibilityIdentifier("ai-explain")
-                    if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                    if let failure { AIFailureNote(failure: failure) }
                 }
                 if explanation != nil {
                     if loading {
-                        HStack(spacing: 8) {
-                            ProgressView()
-                            Text(L.t("AI 正在換個方式解說…", "AI is explaining it another way…")).font(.footnote).foregroundStyle(.secondary)
-                        }
+                        AIThinkingRow(text: Cat.thinking(.explainAgain), compact: true)
                     } else {
                         // Spends one more request; the current explanation stays until the new one arrives.
                         Button(action: start) {
-                            Label(L.t("換一個解說", "Explain it differently"), systemImage: "arrow.clockwise")
+                            Label(L.t("聽不懂，換個講法", "Didn't get it. Explain it differently"), systemImage: "arrow.clockwise")
                                 .font(.footnote)
                         }
                         .accessibilityIdentifier("ai-explain-again")
                     }
-                    if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                    if let failure { AIFailureNote(failure: failure) }
                 }
                 if explanation != nil || failure == .quota { PlusAIUpsell() }
             } header: {
-                Text(L.t("AI 解說", "AI explanation"))
+                Text(L.t("小笨貓解說", "Silly Cat explains"))
             } footer: {
-                if explanation != nil { Text(L.t("由 Claude 線上 AI 產生，可能有誤。", "Generated by Claude, Anthropic's online AI, and may contain mistakes.")) }
+                if explanation != nil { Text(L.t("背後是 Claude 線上 AI，可能有誤。", "Powered by Claude, Anthropic's online AI, and may contain mistakes.")) }
             }
             .onAppear { explanation = CloudAnswerCache.explanations[cacheKey] }
             .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { start() } }
+        } else if !AppRuntime.uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingUpsell") {
+            // Without Plus: what the explanation would give, and the way to it.
+            Section {
+                PlusUpsellCard(feature: .smartAI,
+                               title: L.t("叫小笨貓解說這個字", "Have Silly Cat explain this word"),
+                               detail: L.t("用法、搭配、例句和常見陷阱，還能追問。", "Usage, collocations, examples and common traps, and you can ask more."),
+                               compact: true)
+            } header: {
+                Text(L.t("小笨貓解說", "Silly Cat explains"))
+            }
         }
     }
 
+    // Each part of the answer settles in a beat after the one above it.
     @ViewBuilder
     private func content(_ explanation: CloudAI.Explanation) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(explanation.summary).font(.body.weight(.semibold))
-            if !explanation.usage.isEmpty { Text(explanation.usage) }
+        CatSays(mood: .happy) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(explanation.summary).font(.body.weight(.semibold))
+                if !explanation.usage.isEmpty { Text(explanation.usage) }
+            }
         }
         .padding(.vertical, 4)
+        .entrance(0, distance: 8)
         .accessibilityIdentifier("ai-explain-summary")
         if !explanation.collocations.isEmpty {
             VStack(alignment: .leading, spacing: 4) {
                 Text(L.t("常見搭配", "Common combinations")).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
                 Text(explanation.collocations.joined(separator: " · "))
+                if model.studyMode == .chinese {
+                    let pinyin = explanation.collocations.map(ChineseDisplay.sentencePinyin).filter { !$0.isEmpty }.joined(separator: " · ")
+                    if !pinyin.isEmpty { Text(pinyin).font(.footnote).foregroundStyle(.secondary) }
+                }
             }
             .padding(.vertical, 2)
+            .entrance(1, distance: 8)
         }
-        ForEach(Array(explanation.examples.enumerated()), id: \.offset) { _, example in
+        ForEach(Array(explanation.examples.enumerated()), id: \.offset) { offset, example in
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(example.sentence)
+                    if model.studyMode == .chinese {
+                        let pinyin = ChineseDisplay.sentencePinyin(example.sentence)
+                        if !pinyin.isEmpty { Text(pinyin).font(.footnote).foregroundStyle(.secondary) }
+                    }
                     if !example.translation.isEmpty {
                         Text(example.translation).font(.subheadline).foregroundStyle(.secondary)
                     }
@@ -303,12 +330,15 @@ struct AIExplanationSection: View {
                 SpeakButton(text: example.sentence, language: model.studyMode == .english ? "en-US" : "zh-TW")
             }
             .padding(.vertical, 2)
+            .entrance(2 + offset, distance: 8)
         }
         if !explanation.pitfall.isEmpty {
             Label { Text(explanation.pitfall) } icon: { Image(systemName: "exclamationmark.triangle").foregroundStyle(Palette.review) }
+                .entrance(5, distance: 8)
         }
         if !explanation.memoryTip.isEmpty {
             Label { Text(explanation.memoryTip) } icon: { Image(systemName: "lightbulb").foregroundStyle(Palette.known) }
+                .entrance(6, distance: 8)
         }
     }
 
@@ -359,23 +389,30 @@ struct QuizWhyView: View {
         if CloudAssistant.shared.offered || reply != nil {
             VStack(alignment: .leading, spacing: 8) {
                 if let reply {
-                    Label(L.t("為什麼錯", "Why it's wrong"), systemImage: "sparkles")
-                        .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
-                    Text(reply.explanation).accessibilityIdentifier("quiz-why-text")
+                    CatSays(mood: .smug, size: 32) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(L.t("小笨貓說你錯在這：", "Here's where you went wrong:"))
+                                .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
+                            Text(reply.explanation)
+                                .accessibilityIdentifier("quiz-why-text")
+                        }
+                    }
+                    .entrance(0, distance: 8)
                     if !reply.memoryTip.isEmpty {
                         Label { Text(reply.memoryTip) } icon: { Image(systemName: "lightbulb").foregroundStyle(Palette.known) }
                             .font(.subheadline)
+                            .entrance(2, distance: 8)
                     }
                     PlusAIUpsell()
                 } else if loading {
-                    HStack(spacing: 10) { ProgressView(); Text(L.t("AI 解釋中…", "AI is explaining…")).foregroundStyle(.secondary) }
+                    AIThinkingRow(text: Cat.thinking(.why))
                 } else {
                     Button(action: start) {
-                        Label(L.t("AI 告訴我為什麼錯", "Ask AI why this is wrong"), systemImage: "sparkles")
+                        Label(L.t("小笨貓，我為什麼錯？", "Silly Cat, why was that wrong?"), systemImage: "sparkles")
                             .font(.subheadline.weight(.semibold))
                     }
                     .accessibilityIdentifier("quiz-why")
-                    if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                    if let failure { AIFailureNote(failure: failure) }
                     if failure == .quota { PlusAIUpsell() }
                 }
             }
@@ -405,7 +442,7 @@ struct QuizWhyView: View {
             do {
                 let value = try await CloudAssistant.shared.run(.quizWhy, input, as: CloudAI.QuizExplanation.self).cleaned()
                 CloudAnswerCache.quiz[key] = value
-                if key == cacheKey { reply = value }
+                if key == cacheKey { withAnimation(Motion.reveal) { reply = value } }
             } catch is CancellationError {
             } catch {
                 failure = (error as? CloudAI.Failure) ?? .unavailable
@@ -423,42 +460,29 @@ struct AIInsightsSection: View {
     @State private var failure: CloudAI.Failure?
     @State private var askCloud = false
 
-    private struct Saved: Codable {
-        var day: String
-        var mode: String
-        var insights: CloudAI.Insights
-    }
-    private static let storageKey = "word7000.aiInsights"
-
     var body: some View {
         if CloudAssistant.shared.offered || insights != nil {
             Section {
                 if let insights {
                     content(insights)
                 } else if loading {
-                    HStack(spacing: 10) {
-                        ProgressView()
-                        Text(L.t("AI 正在讀你的學習紀錄…", "AI is reading your progress…")).foregroundStyle(.secondary)
-                    }
-                    .accessibilityIdentifier("ai-insights-loading")
+                    AIThinkingRow(text: Cat.thinking(.insights))
+                        .accessibilityIdentifier("ai-insights-loading")
                 } else {
                     Button(action: start) {
-                        ActionRow(icon: "sparkles", tint: Palette.chinese, title: L.t("分析我的學習", "Analyse my learning"),
+                        ActionRow(icon: "sparkles", tint: Palette.chinese, title: L.t("讓小笨貓評評我最近學得怎樣", "Let Silly Cat judge my recent practice"),
                                   value: L.t("每天一次", "Once a day"))
                     }
                     .tint(.primary)
                     .accessibilityIdentifier("ai-insights-run")
-                    if let failure { Text(failure.message).font(.footnote).foregroundStyle(.secondary) }
+                    if let failure { AIFailureNote(failure: failure) }
                 }
             } header: {
-                Text(L.t("AI 學習分析", "AI learning insights"))
+                Text(L.t("小笨貓的學習分析", "Silly Cat's verdict"))
             } footer: {
                 if insights != nil {
-                    Text(L.t("根據最近 14 天的紀錄，由 Claude 線上 AI 產生，可能有誤。明天會再更新。",
-                             "Based on the last 14 days, by Anthropic's Claude, and may contain mistakes. Refreshes tomorrow."))
-                } else {
-                    Text(L.t("AI 會讀你的練習次數、測驗正確率和最常忘記的字，告訴你接下來怎麼練。",
-                             "AI reads your practice, quiz accuracy and most-forgotten words, and suggests what to do next."))
+                    Text(L.t("近 14 天紀錄 · Claude 線上 AI，可能有誤",
+                             "Last 14 days · Claude online AI, may be wrong"))
                 }
             }
             .onAppear(perform: restore)
@@ -469,14 +493,17 @@ struct AIInsightsSection: View {
 
     @ViewBuilder
     private func content(_ insights: CloudAI.Insights) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label(insights.headline, systemImage: "sparkles")
-                .font(.headline)
-                .foregroundStyle(Palette.chinese)
-                .accessibilityIdentifier("ai-insights-headline")
-            Text(insights.summary)
+        CatSays(mood: .smug, size: 32) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(insights.headline)
+                    .font(.headline)
+                    .foregroundStyle(Palette.chinese)
+                    .accessibilityIdentifier("ai-insights-headline")
+                Text(insights.summary)
+            }
         }
         .padding(.vertical, 4)
+        .entrance(0, distance: 8)
         if !insights.strengths.isEmpty {
             VStack(alignment: .leading, spacing: 6) {
                 Text(L.t("做得好的地方", "Going well")).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.known)
@@ -486,6 +513,7 @@ struct AIInsightsSection: View {
                 }
             }
             .padding(.vertical, 2)
+            .entrance(1, distance: 8)
         }
         if !insights.focusWords.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
@@ -498,6 +526,7 @@ struct AIInsightsSection: View {
                 }
             }
             .padding(.vertical, 2)
+            .entrance(2, distance: 8)
         }
         let focusIds = model.wordIds(forPrompts: insights.focusWords.map(\.word))
         if !focusIds.isEmpty {
@@ -506,7 +535,7 @@ struct AIInsightsSection: View {
                 PracticeLaunch.shared.requested = .study
             } label: {
                 ActionRow(icon: "play.circle.fill", tint: Palette.review,
-                          title: L.t("現在練習這 \(focusIds.count) 個字", "Practise these \(focusIds.count) words now"))
+                          title: L.t("現在練習這 \(focusIds.count) 個字", "Practice these \(focusIds.count) words now"))
             }
             .tint(.primary)
             .accessibilityIdentifier("ai-insights-practice")
@@ -521,21 +550,20 @@ struct AIInsightsSection: View {
                             .foregroundStyle(.white)
                             .frame(width: 20, height: 20)
                             .background(Palette.accent, in: Circle())
+                            .popIn(delay: 0.3 + Double(index) * 0.1)
                         Text(step).font(.subheadline)
                     }
                 }
             }
             .padding(.vertical, 2)
+            .entrance(3, distance: 8)
         }
         PlusAIUpsell()
     }
 
     private func restore() {
-        guard insights == nil,
-              let data = UserDefaults.standard.data(forKey: Self.storageKey),
-              let saved = try? JSONDecoder().decode(Saved.self, from: data),
-              saved.day == DayMath.today(), saved.mode == model.studyMode.rawValue else { return }
-        insights = saved.insights
+        guard insights == nil, let saved = InsightsStore.today(mode: model.studyMode) else { return }
+        insights = saved
     }
 
     private func start() {
@@ -549,9 +577,7 @@ struct AIInsightsSection: View {
             defer { loading = false }
             do {
                 let value = try await CloudAssistant.shared.run(.insights, input, as: CloudAI.Insights.self).cleaned()
-                if let data = try? JSONEncoder().encode(Saved(day: DayMath.today(), mode: mode, insights: value)) {
-                    UserDefaults.standard.set(data, forKey: Self.storageKey)
-                }
+                InsightsStore.save(value, mode: mode)
                 if mode == model.studyMode.rawValue {
                     withAnimation(Motion.reveal) { insights = value }
                 }
@@ -576,11 +602,11 @@ struct PlusAIUpsell: View {
                     Image(systemName: "sparkles").foregroundStyle(Palette.accent)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(assistant.lastFailure == .quota
-                             ? L.t("Plus 每天可問 \(PlusAI.plusDaily) 次", "Plus gets \(PlusAI.plusDaily) AI answers a day")
+                             ? L.t("Premium 每天可問 \(PlusAI.plusDaily) 次", "Premium gets \(PlusAI.plusDaily) AI answers a day")
                              : L.t("想要更聰明的回答？", "Want sharper answers?"))
                             .font(.footnote.weight(.semibold))
-                        Text(L.t("免費版是快速回答。Plus 會讓 AI 先深入思考，再回答口說、單字解說和學習分析，每天 \(PlusAI.plusDaily) 次。",
-                                 "Free gives quick answers. With Plus the AI thinks deeper before coaching, explaining words and analysing your progress, \(PlusAI.plusDaily) times a day."))
+                        Text(L.t("免費版是快速回答。Premium 會讓 AI 先深入思考，再回答口說、單字解說和學習分析，每天 \(PlusAI.plusDaily) 次。",
+                                 "Free gives quick answers. With Premium the AI thinks deeper before coaching, explaining words and analyzing your progress, \(PlusAI.plusDaily) times a day."))
                             .font(.caption).foregroundStyle(.secondary)
                             .multilineTextAlignment(.leading)
                         if let remaining = assistant.remainingText {
@@ -599,13 +625,69 @@ struct PlusAIUpsell: View {
     }
 }
 
+/// The cat thinking it over: its puzzled face, what it is up to, and three
+/// dots that keep time.
+private struct AIThinkingRow: View {
+    var text: String
+    var compact = false
+
+    var body: some View {
+        HStack(spacing: compact ? 8 : 10) {
+            Mascot(mood: .thinking, size: compact ? 24 : 32)
+            Text(text)
+                .font(compact ? .footnote : .body)
+                .foregroundStyle(.secondary)
+            ThinkingDots()
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct ThinkingDots: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
+            let t = reduceMotion ? 0 : context.date.timeIntervalSinceReferenceDate
+            HStack(spacing: 3) {
+                ForEach(0..<3, id: \.self) { index in
+                    let wave = max(0, sin(t * 5 - Double(index) * 0.8))
+                    Circle()
+                        .fill(Palette.accent)
+                        .frame(width: 4, height: 4)
+                        .opacity(reduceMotion ? 0.6 : 0.3 + 0.7 * wave)
+                        .offset(y: reduceMotion ? 0 : -2.5 * wave)
+                }
+            }
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+/// Why the cat could not answer, in its own words: sleepy when today's
+/// allowance is spent, apologetic (by its standards) otherwise.
+struct AIFailureNote: View {
+    var failure: CloudAI.Failure
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Mascot(mood: failure == .quota ? .sleepy : .encourage, size: 26)
+                .popIn(delay: 0.05)
+            Text(failure.message)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 extension CloudAI.Failure {
     var message: String {
         switch self {
-        case .quota: L.t("今天的線上 AI 次數已用完，明天會再恢復。", "Today's online AI allowance is used up. It resets tomorrow.")
-        case .busy: L.t("線上 AI 使用人數較多，請稍後再試。", "Online AI is busy right now. Try again shortly.")
-        case .invalidInput: L.t("這個內容無法交給 AI 處理。", "This can't be sent to the AI.")
-        case .unavailable, .signInRequired: L.t("線上 AI 暫時無法使用，請確認網路後再試。", "Online AI is unavailable. Check your connection and try again.")
+        case .quota: L.t("今天講太多話了，嘴巴好痠。線上 AI 次數用完，明天再來。", "I've talked enough for today. Online AI allowance used up; back tomorrow.")
+        case .busy: L.t("一堆人同時在問我，等一下再試啦。", "Everyone's asking me things at once. Try again in a bit.")
+        case .invalidInput: L.t("這個我不回答，換個問法。", "Not answering that. Try asking differently.")
+        case .unavailable, .signInRequired: L.t("我連不上網路……你檢查一下網路再試？", "I can't get online… check your connection and try again?")
         }
     }
 }

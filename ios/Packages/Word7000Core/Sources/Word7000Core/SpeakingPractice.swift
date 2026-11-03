@@ -13,6 +13,8 @@ public enum SpeakingPractice {
         public let word: String
         public let keywordZh: String
         public let question: String
+        /// The question in Traditional Chinese, for learners of Chinese.
+        public let questionZh: String?
         public let answerEn: String
         public let answerZh: String
     }
@@ -31,6 +33,29 @@ public enum SpeakingPractice {
 
     private static let byWord = Dictionary(entries.map { ($0.word.lowercased(), $0) }, uniquingKeysWith: { first, _ in first })
 
+    /// Conversation questions for the Taiwan Mandarin bank (learners of
+    /// Chinese), by word id: speaking-zh.json.
+    struct TaiwanQuestion: Decodable {
+        let id: String
+        let word: String
+        let questionZh: String
+        let questionEn: String
+        let answerZh: String
+        let answerEn: String
+    }
+
+    private struct TaiwanDocument: Decodable {
+        let schemaVersion: Int
+        let records: [TaiwanQuestion]
+    }
+
+    static let taiwanQuestions: [String: TaiwanQuestion] = {
+        guard let url = Bundle.module.url(forResource: "speaking-zh", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let document = try? JSONDecoder().decode(TaiwanDocument.self, from: data), document.schemaVersion == 1 else { return [:] }
+        return Dictionary(document.records.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+    }()
+
     /// How many recently practised words are remembered, so the next
     /// sessions ask about other words first.
     public static let recentLimit = 300
@@ -48,6 +73,28 @@ public enum SpeakingPractice {
         return SeededRandom.shuffle(fresh + oldestFirst.prefix(max(0, count - fresh.count)), seed: seed)
     }
 
+    /// One speaking practice mixing both kinds of prompt: about three in five
+    /// are reviewed conversation questions (for words that have one), the rest
+    /// build on a word's example sentence, which every word has. A question
+    /// comes first, then they alternate. Each word appears once.
+    public static func mixedSession(from candidates: [WordEntry], recent: [String], count: Int,
+                                    seed: String = SeededRandom.runtimeSeed()) -> [(word: WordEntry, activity: Activity)] {
+        let size = max(0, count)
+        let withQuestions = candidates.filter { entry(for: $0) != nil }
+        let questionCount = min(withQuestions.count, (size * 3 + 4) / 5)
+        let questions = session(from: withQuestions, recent: recent, count: questionCount, seed: "\(seed):questions")
+        let taken = Set(questions.map(\.id))
+        let examples = session(from: candidates.filter { !taken.contains($0.id) }, recent: recent,
+                               count: size - questions.count, seed: "\(seed):examples")
+        var result: [(word: WordEntry, activity: Activity)] = []
+        var nextQuestion = questions[...], nextExample = examples[...]
+        while !nextQuestion.isEmpty || !nextExample.isEmpty {
+            if let word = nextQuestion.popFirst() { result.append((word, .questions)) }
+            if let word = nextExample.popFirst() { result.append((word, .examples)) }
+        }
+        return result
+    }
+
     /// `recent` with `wordId` moved to the end, keeping the latest `recentLimit`.
     public static func remembering(_ wordId: String, in recent: [String]) -> [String] {
         var next = recent.filter { $0 != wordId }
@@ -60,6 +107,11 @@ public enum SpeakingPractice {
     }
 
     public static func entry(for word: WordEntry) -> Entry? {
+        // A Taiwan Mandarin word has its own question, about the Chinese.
+        if let taiwan = taiwanQuestions[word.id], taiwan.word == word.meaningZh {
+            return Entry(id: word.id + "-tw", word: word.word, keywordZh: taiwan.word, question: taiwan.questionEn,
+                         questionZh: taiwan.questionZh, answerEn: taiwan.answerEn, answerZh: taiwan.answerZh)
+        }
         guard let entry = byWord[word.word.lowercased()] else { return nil }
         if entry.id.hasPrefix(word.id + "-") { return entry }
         let senses = ChineseDisplay.meaningParts(word.meaningZh)
@@ -72,10 +124,11 @@ public enum SpeakingPractice {
         return ConversationPromptCard(
             keyword: chinese ? entry.keywordZh : entry.word,
             keywordPronunciation: chinese ? ChineseDisplay.pronunciationWithTones(entry.keywordZh) : "",
-            question: entry.question,
+            question: chinese ? (entry.questionZh ?? entry.question) : entry.question,
             questionSupport: chinese ? "Answer in Chinese and try to use \u{201C}\(entry.keywordZh)\u{201D}." : "試著用 \(entry.word) 回答兩到三句，說出自己的經驗或想法。",
             referenceAnswer: chinese ? entry.answerZh : entry.answerEn,
-            referenceTranslation: chinese ? entry.answerEn : entry.answerZh
+            referenceTranslation: chinese ? entry.answerEn : entry.answerZh,
+            questionGloss: chinese && entry.questionZh != nil ? entry.question : nil
         )
     }
 
@@ -86,12 +139,17 @@ public enum SpeakingPractice {
         return ConversationPromptCard(
             keyword: keyword,
             keywordPronunciation: chinese ? ChineseDisplay.pronunciationWithTones(keyword) : "",
-            question: example.isEmpty
-                ? "Describe a situation in which you could use \u{201C}\(keyword)\u{201D}."
-                : "Add a detail to this example. What could happen next?",
+            question: chinese
+                ? (example.isEmpty ? "說說看，你在什麼情況下會用到「\(keyword)」。" : "幫這個例句多加一個細節：接下來可能發生什麼事？")
+                : (example.isEmpty
+                    ? "Describe a situation in which you could use \u{201C}\(keyword)\u{201D}."
+                    : "Add a detail to this example. What could happen next?"),
             questionSupport: chinese ? "Try two sentences in Chinese, using the word above." : "以這個字或例句為起點，多說一個人物、地點或原因。",
             referenceAnswer: example,
-            referenceTranslation: chinese ? word.example : word.exampleZh
+            referenceTranslation: chinese ? word.example : word.exampleZh,
+            questionGloss: chinese
+                ? (example.isEmpty ? "Describe a situation in which you could use \u{201C}\(keyword)\u{201D}." : "Add a detail to this example. What could happen next?")
+                : nil
         )
     }
 }

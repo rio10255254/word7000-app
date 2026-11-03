@@ -11,7 +11,7 @@ describe('native speaking editorial sources', () => {
     expect(library.records).toHaveLength(600);
     expect(new Set(library.records.map(row => row.word)).size).toBe(600);
     expect(Object.keys(library.coverage.levels)).toHaveLength(14);
-    expect(library.sources).toHaveLength(21);
+    expect(library.sources).toHaveLength(22);
   });
   it('rejects missing reference translations', () => {
     expect(() => check({ ...first, answerZh: '' })).toThrow('Missing answerZh');

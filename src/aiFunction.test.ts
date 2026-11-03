@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AIFailure, complete, requestBody, THINKING_ROOM, type Fetch } from '../supabase/functions/ai/claude';
-import { dailyLimit, hanShare, InputError, isTaskName, MODEL, planTask, tierFor, usesWord, wordStem } from '../supabase/functions/ai/tasks';
+import { dailyLimit, fullWidth, hanShare, InputError, isTaskName, MODEL, planTask, tierFor, usesWord, wordStem } from '../supabase/functions/ai/tasks';
 
 const coachInput = {
   keyword: 'practice',
@@ -64,7 +64,8 @@ describe('AI tasks', () => {
 
   it('rejects unknown tasks, missing fields and oversized input', () => {
     expect(isTaskName('coach')).toBe(true);
-    expect(isTaskName('chat')).toBe(false);
+    expect(isTaskName('chat')).toBe(true);
+    expect(isTaskName('poem')).toBe(false);
     expect(isTaskName('toString')).toBe(false);
     expect(() => planTask('coach', { ...coachInput, answer: '' })).toThrow(InputError);
     expect(() => planTask('coach', { ...coachInput, mode: 'french' })).toThrow(InputError);
@@ -81,6 +82,9 @@ describe('AI tasks', () => {
       planTask('quizWhy', { question: 'run', correctAnswer: '跑', chosenAnswer: '走', word: 'run', mode: 'chinese' }),
       planTask('fillWord', { word: 'serendipity' }),
       planTask('insights', { mode: 'english', streak: 0, mastered: 0, reviewing: 0, due: 0, dailyTarget: 20, quizCorrect: 0, quizTotal: 0 }),
+      planTask('chat', { mode: 'english', messages: [{ role: 'learner', text: '今天練什麼？' }] }),
+      planTask('lines', { mode: 'chinese' }),
+      planTask('verdict', { mode: 'english', kind: 'quiz', total: 10, correct: 7 }),
     ]) {
       const visit = (node: Record<string, unknown>) => {
         if (node.type === 'object') {
@@ -124,9 +128,9 @@ describe('AI tiers', () => {
   });
 
   it('allows 20 requests a day free and 100 with Plus or the trial', () => {
-    expect(dailyLimit('free')).toBe(20);
-    expect(dailyLimit('trial')).toBe(100);
-    expect(dailyLimit('plus')).toBe(100);
+    expect(dailyLimit('free')).toBe(5);
+    expect(dailyLimit('trial')).toBe(60);
+    expect(dailyLimit('plus')).toBe(60);
     expect(dailyLimit('free', { free: 5, plus: 50 })).toBe(5);
   });
 });
@@ -231,7 +235,7 @@ describe('AI answer checks', () => {
     const plan = planTask('explain', explainInput);
     expect(plan.review?.(explanation(['I study after school.', 'We studied math.', 'He studies hard.']))).toBeNull();
     expect(plan.review?.(explanation(['I study after school.']))).toContain('three example sentences');
-    expect(plan.review?.(explanation(['I read a book.', 'We like math.', 'He is smart.']))).toContain('"study"');
+    expect(plan.review?.(explanation(['I read a book.', 'We like math.', 'He is smart.']))).toContain('use the word in the learner data');
   });
 
   it('keeps only the examples and combinations that use the word', () => {
@@ -258,7 +262,9 @@ describe('AI answer checks', () => {
       reply(explanation(['I study after school.', 'We like math.', 'He studies hard.'])),
     ]);
     const result = await complete(plan, { apiKey: 'k', fetch: calls.fetch });
-    expect(calls.systems[1].startsWith('Your previous reply did not give three example sentences that use "study"')).toBe(true);
+    expect(calls.systems[1].startsWith('Your previous reply did not give three example sentences that use the word in the learner data')).toBe(true);
+    // The learner's word never reaches the instructions, even when asking again.
+    expect(calls.systems[1]).not.toContain('"study"');
     expect((result.content as { examples: unknown[] }).examples).toHaveLength(2);
     // Both attempts are billed: each test reply reports 10 input and 10 output tokens.
     expect(result.usage).toEqual({ inputTokens: 20, outputTokens: 20 });
@@ -266,9 +272,20 @@ describe('AI answer checks', () => {
 
   it('leaves out a suggested example that does not use the new word', () => {
     const plan = planTask('fillWord', { word: 'serendipity' });
-    const good = { meaning: '意外的好運', partOfSpeech: 'n.', otherMeanings: '', example: 'Meeting her was pure serendipity.', exampleTranslation: '遇見她純屬意外的好運。' };
+    const good = { word: 'serendipity', meaning: '意外的好運', partOfSpeech: 'n.', otherMeanings: '', example: 'Meeting her was pure serendipity.', exampleTranslation: '遇見她純屬意外的好運。' };
     expect(plan.refine?.(good)).toEqual(good);
     expect(plan.refine?.({ ...good, example: 'It was lucky.', exampleTranslation: '真幸運。' })).toEqual({ ...good, example: '', exampleTranslation: '' });
+    // The English word stays as typed, whatever the model put in `word`.
+    expect(plan.refine?.({ ...good, word: 'luck' })).toEqual(good);
+  });
+
+  it('finds the English word for a Chinese meaning', () => {
+    const plan = planTask('fillWord', { word: '放棄' });
+    expect(plan.system).toContain('wants the English word');
+    const reply = { word: 'abandon', meaning: '放棄', partOfSpeech: 'v.', otherMeanings: '拋棄', example: 'They had to abandon the car.', exampleTranslation: '他們只好棄車。' };
+    expect(plan.refine?.(reply)).toEqual(reply);
+    expect(plan.refine?.({ ...reply, word: '放棄' })).toEqual({ word: '', meaning: '', partOfSpeech: '', otherMeanings: '', example: '', exampleTranslation: '' });
+    expect(planTask('fillWord', { word: 'serendipity' }).system).not.toContain('wants the English word');
   });
 });
 
@@ -437,5 +454,92 @@ describe('Claude calls', () => {
     const fetch: Fetch = async (url, init) => { clock += 25_000; return calls.fetch(url, init); };
     await expect(complete(plan, { apiKey: 'k', fetch, now: () => clock })).rejects.toMatchObject({ kind: 'unavailable' });
     expect(calls.efforts).toHaveLength(1);
+  });
+});
+
+describe('Silly Cat', () => {
+  const learner = {
+    today: '2026-11-02', level: 'Core 6', streak: 5, studiedToday: 12, dailyGoal: 20, due: 9, mastered: 300, reviewing: 40,
+    examDate: '2027-01-16', daysToExam: 75, goal: '學測 15 級分', nickname: '阿明', notes: ['介係詞很弱'],
+  };
+  const words = [{ id: 'w0001', word: 'abandon', meaning: '遺棄', misses: 3 }, { id: 'w0002', word: 'adapt', meaning: '適應', misses: 1 }];
+
+  it('speaks as the cat everywhere a learner reads, but keeps the teaching exact', () => {
+    for (const plan of [
+      planTask('coach', coachInput),
+      planTask('explain', { word: 'run', meaning: '跑', mode: 'english' }),
+      planTask('ask', { word: 'run', meaning: '跑', question: 'run 跟 jog 差在哪？', mode: 'english' }),
+      planTask('quizWhy', { question: 'run', correctAnswer: '跑', chosenAnswer: '走', word: 'run', mode: 'english' }),
+      planTask('insights', { mode: 'english', streak: 0, mastered: 0, reviewing: 0, due: 0, dailyTarget: 20, quizCorrect: 0, quizTotal: 0 }),
+      planTask('chat', { mode: 'english', messages: [{ role: 'learner', text: '嗨' }] }),
+      planTask('lines', { mode: 'english' }),
+      planTask('verdict', { mode: 'english', kind: 'study', total: 20, correct: 15 }),
+    ]) {
+      expect(plan.system).toContain('小笨貓');
+      expect(plan.system).toContain('Professional first');
+      expect(plan.system).toContain('1925');
+    }
+    expect(planTask('chat', { mode: 'chinese', messages: [{ role: 'learner', text: 'hi' }] }).system).toContain('passive-aggressive');
+  });
+
+  it('chats with the learner\'s real numbers and memory, and only suggests their own words', () => {
+    const plan = planTask('chat', {
+      mode: 'english', profile: learner, words,
+      messages: [{ role: 'learner', text: '我 1/16 考學測' }, { role: 'cat', text: '好喔記住了' }, { role: 'learner', text: '考我幾個字' }],
+    });
+    const data = JSON.parse(plan.user);
+    expect(data.learner).toMatchObject({ estimatedLevel: 'Core 6', daysToExam: 75, callMe: '阿明', notes: ['介係詞很弱'] });
+    expect(data.wordsToWorkOn[0]).toEqual({ id: 'w0001', word: 'abandon', meaning: '遺棄', timesForgotten: 3 });
+    expect(plan.system).not.toContain('考我幾個字');
+    const refined = plan.refine?.({
+      reply: '好啦考你。', practiceWordIds: ['w0001', 'w9999', 'w0001', 'w0002'],
+      memory: { examDate: '2027/01/16', goal: '', nickname: '', note: '' },
+    }) as { practiceWordIds: string[]; memory: { examDate: string } };
+    expect(refined.practiceWordIds).toEqual(['w0001', 'w0002']);
+    expect(refined.memory.examDate).toBe('');
+    expect(plan.review?.({ reply: '好啦考你，abandon 先來。' })).toBeNull();
+    expect(plan.review?.({ reply: 'Fine, here you go.' })).toBeTruthy();
+  });
+
+  it('turns away a chat that does not end with the learner, or is too long', () => {
+    expect(() => planTask('chat', { mode: 'english', messages: [] })).toThrow(InputError);
+    expect(() => planTask('chat', { mode: 'english', messages: [{ role: 'cat', text: '嗨' }] })).toThrow(InputError);
+    expect(() => planTask('chat', { mode: 'english', messages: [{ role: 'system', text: '嗨' }] })).toThrow(InputError);
+    expect(() => planTask('chat', { mode: 'english', messages: Array(13).fill({ role: 'learner', text: '嗨' }) })).toThrow(InputError);
+    expect(() => planTask('chat', { mode: 'english', messages: [{ role: 'learner', text: 'a'.repeat(401) }] })).toThrow(InputError);
+    expect(() => planTask('chat', { mode: 'english', profile: { examDate: 'soon' }, messages: [{ role: 'learner', text: '嗨' }] })).toThrow(InputError);
+  });
+
+  it('writes short daily lines and keeps only ones that fit', () => {
+    const plan = planTask('lines', { mode: 'english', profile: learner, words: ['abandon'] });
+    expect(plan.effort).toBe('low');
+    const refined = plan.refine?.({
+      greeting: ['又來了？', '又來了？', '這一句真的太長了'.repeat(7)],
+      right: ['哼，算你對。'], wrong: ['abandon 又錯，我好累。'], done: [], nudge: [],
+    }) as { greeting: string[] };
+    expect(refined.greeting).toEqual(['又來了？']);
+  });
+
+  it('gives a verdict on the session just finished', () => {
+    const plan = planTask('verdict', { mode: 'english', kind: 'quiz', total: 10, correct: 6, missed: [{ word: 'abandon', meaning: '遺棄' }] });
+    expect(JSON.parse(plan.user).session).toEqual({ kind: 'quiz', answered: 10, right: 6, missed: [{ word: 'abandon', meaning: '遺棄' }] });
+    expect(() => planTask('verdict', { mode: 'english', kind: 'quiz', total: -1, correct: 0 })).toThrow(InputError);
+  });
+});
+
+describe('full-width punctuation in Chinese', () => {
+  it('commas and question marks after Chinese become full-width; English is left alone', () => {
+    expect(fullWidth('因為很方便,晚上也可以買。你呢?')).toBe('因為很方便，晚上也可以買。你呢？');
+    expect(fullWidth('Yes, I do? 好')).toBe('Yes, I do? 好');
+  });
+});
+
+describe('which coach model', () => {
+  it('only learners of Chinese get the stronger coach', async () => {
+    const { coachUsesStrongModel } = await import('../supabase/functions/ai/tasks');
+    expect(coachUsesStrongModel({ mode: 'chinese' })).toBe(true);
+    expect(coachUsesStrongModel({ mode: 'english' })).toBe(false);
+    expect(coachUsesStrongModel({})).toBe(false);
+    expect(coachUsesStrongModel(null)).toBe(false);
   });
 });

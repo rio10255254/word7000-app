@@ -87,6 +87,30 @@ public enum ChineseDisplay {
         )
     }
 
+    /// Readings worked out with phrase context for every built-in meaning,
+    /// example and speaking text (`scripts/build-chinese-pinyin.py`), so words
+    /// with more than one reading come out right. Loaded on first use.
+    static let lexicon: [String: String] = {
+        guard let url = Bundle.module.url(forResource: "pinyin-lexicon", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let table = try? JSONDecoder().decode([String: String].self, from: data) else { return [:] }
+        return table
+    }()
+
+    /// Toned pinyin for a sentence or phrase: the reviewed reading when there
+    /// is one, otherwise the system's, one syllable per character.
+    public static func sentencePinyin(_ text: String) -> String {
+        let trimmed = jsTrim(text)
+        guard trimmed.contains(where: isHan) else { return "" }
+        if let known = lexicon[trimmed] { return known }
+        #if canImport(Darwin) || os(Linux)
+        return trimmed.applyingTransform(.mandarinToLatin, reverse: false)?
+            .split(whereSeparator: { $0.isWhitespace }).joined(separator: " ").lowercased() ?? ""
+        #else
+        return ""
+        #endif
+    }
+
     /// Native reading support keeps tone marks and the separator between senses.
     public static func pronunciationWithTones(_ meaning: String) -> String {
         let key = "tones:\(meaning)"
@@ -95,6 +119,7 @@ public enum ChineseDisplay {
         cacheLock.unlock()
         if let cached { return cached }
         let value = meaningParts(meaning).compactMap { part -> String? in
+            if let known = lexicon[part] { return known }
             let corrected = part.replacingOccurrences(of: "調整", with: "tiáo zhěng")
                 .replacingOccurrences(of: "敢於", with: "gǎn yú")
                 .replacingOccurrences(of: "為了", with: "wèi le")

@@ -34,7 +34,7 @@ final class LiveActivityManager {
                 props.progressTarget = Double(progress.dailyTarget)
                 let remaining = max(0, progress.dailyTarget - progress.studiedToday)
                 props.keepStreakLabel = chineseInterface ? "再學 \(remaining) 個單字，完成今天目標" : "\(remaining) more words to reach your goal"
-                props.title = chineseInterface ? "今天的學習時間" : "Time for today's practice"
+                props.title = chineseInterface ? "單字不會自己背好喔" : "Those words won't learn themselves"
                 props.countdownLabel = chineseInterface ? "今日進度" : "Today's progress"
                 await activity.update(ActivityContent(state: LiveActivityAttributes.ContentState(props: props.json), staleDate: props.endDate))
             }

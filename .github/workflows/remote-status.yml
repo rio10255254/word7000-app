@@ -1,0 +1,27 @@
+# 📊 Read-only: which versions people run, live messages and forced updates.
+# The answer is on the run's summary page.
+name: 📊 版本與公告狀況
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_REF: byyaepkhxexppjrdhcaw
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: 查看狀況
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ACTION: status
+        run: scripts/remote-control.sh

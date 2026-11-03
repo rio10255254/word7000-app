@@ -1,0 +1,46 @@
+# Adds an already-uploaded build to a TestFlight group and submits it for
+# Beta App Review, e.g. when the release run could not submit it because an
+# earlier build of the same version was still in review.
+name: TestFlight submit
+
+on:
+  workflow_dispatch:
+    inputs:
+      build:
+        description: 'Build number, e.g. 83'
+        type: string
+        required: true
+      version:
+        description: 'Version (empty: the app version in ios/Release/app.json)'
+        type: string
+        default: ''
+      group:
+        description: 'TestFlight group'
+        type: string
+        default: 'Wordcat Public Testing 1'
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Add to the group and submit for Beta App Review
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          BUILD: ${{ inputs.build }}
+          VERSION: ${{ inputs.version }}
+          GROUP: ${{ inputs.group }}
+        run: |
+          set -euo pipefail
+          VERSION="${VERSION:-$(node -p 'require("./ios/Release/app.json").expo.version')}"
+          node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
+            --group "$GROUP" --wait-minutes 2

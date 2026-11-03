@@ -30,6 +30,10 @@ struct AppSettings: Codable, Equatable, Sendable {
     var hapticsEnabled: Bool?
     /// Study cards open with the answer already showing; nil means off.
     var studyAutoReveal: Bool?
+    /// Learning Chinese: the pinyin shows on a card before its answer; nil means on.
+    var studyShowPinyin: Bool?
+    /// The note on where speaking answers go has been shown once.
+    var coachPrivacySeen: Bool?
     var speakingFilter: FilterSelection?
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?
@@ -38,6 +42,25 @@ struct AppSettings: Codable, Equatable, Sendable {
     var recentSpeakingIds: [String]?
     /// Local account copies, oldest first; guests never share an account's copy.
     var speakingHistoryByOwner: [String: [String]]?
+    /// The look of the whole app; nil means the default, the paper collage.
+    var appStyle: AppStyle?
+    /// The learner has chosen a style (in the one-time chooser or Settings).
+    var stylePicked: Bool?
+    /// The home-screen icon follows the style; nil means yes.
+    var iconFollowsStyle: Bool?
+    /// The cat suggests features one at a time (learners who started after it
+    /// was added); what they have tried, and when each was first suggested.
+    var guideActive: Bool?
+    var guideTried: [String]?
+    var guideOffered: [String: String]?
+    /// The screens whose one-time tip the cat has given.
+    var seenTips: [String]?
+    /// Whether the cat has asked to send notifications (once).
+    var pushAsked: Bool?
+    /// The learner closed the new-learner checklist on Today.
+    var guideHidden: Bool?
+    /// Progress has been split between learning English and Chinese.
+    var splitModeProgress: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)
@@ -116,6 +139,20 @@ struct FilterSelection: Codable, Equatable, Hashable, Sendable {
     var sort: LibrarySort = .alphabetical
 
     var isActive: Bool { status != .all || level != "all" || initial != "all" }
+
+    /// The chosen levels, in the bank's order; empty for all of them.
+    var levels: [String] {
+        guard level != "all" else { return [] }
+        return level.split(separator: ",").map(String.init)
+    }
+
+    /// Ticks or unticks a level; none left means every level.
+    mutating func toggleLevel(_ group: String, order: [String]) {
+        var chosen = Set(levels)
+        if chosen.contains(group) { chosen.remove(group) } else { chosen.insert(group) }
+        let sorted = order.filter(chosen.contains) + chosen.subtracting(order).sorted()
+        level = sorted.isEmpty || sorted.count == order.count ? "all" : sorted.joined(separator: ",")
+    }
 
     var options: LibraryFilterOptions {
         LibraryFilterOptions(initial: initial, level: level, sort: sort)

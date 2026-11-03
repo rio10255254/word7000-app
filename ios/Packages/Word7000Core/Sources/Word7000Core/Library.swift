@@ -2,6 +2,8 @@ import Foundation
 
 public struct LibraryFilterOptions: Equatable, Sendable {
     public var initial: String?
+    /// One level ("Core 3"), several separated by commas ("Core 3,Core 5"),
+    /// or nil / "all" for every level.
     public var level: String?
     public var sort: LibrarySort
 
@@ -21,6 +23,9 @@ public final class PreparedVocabulary: @unchecked Sendable {
         let index: Int
         let meaning: String
         let normalizedWord: String
+        /// Toneless pinyin of each Chinese sense, run together ("shiying
+        /// tiaozheng"), so learners of Chinese can search by sound.
+        let pinyin: String
         let word: WordEntry
     }
 
@@ -44,6 +49,7 @@ public final class PreparedVocabulary: @unchecked Sendable {
                 index: index,
                 meaning: "\(word.meaningZh) \(word.supplementalMeaningZh ?? "")".trimmingCharacters(in: .whitespaces).lowercased(),
                 normalizedWord: word.word.lowercased(),
+                pinyin: Self.searchPinyin(word),
                 word: word
             )
         }
@@ -58,13 +64,29 @@ public final class PreparedVocabulary: @unchecked Sendable {
 
     public func index(of wordId: String) -> Int? { indexById[wordId] }
 
-    public func filter(state: ProgressState, query: String, filter: LibraryFilter, options: LibraryFilterOptions = .init(), rankedSearch: Bool = false) -> [WordEntry] {
+    /// The levels a filter keeps, or nil for all of them.
+    public static func levels(_ value: String?) -> Set<String>? {
+        guard let value, value != "all" else { return nil }
+        let levels = Set(value.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty })
+        return levels.isEmpty ? nil : levels
+    }
+
+    static func searchPinyin(_ word: WordEntry) -> String {
+        let senses = ChineseDisplay.meaningParts(word.meaningZh) + ChineseDisplay.meaningParts(word.supplementalMeaningZh ?? "")
+        return senses.filter { $0.contains(where: ChineseDisplay.isHan) }
+            .map { ChineseSpelling.toneless(ChineseDisplay.pronunciationWithTones($0)) }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+    }
+
+    public func filter(state: ProgressState, query: String, filter: LibraryFilter, options: LibraryFilterOptions = .init(), rankedSearch: Bool = false,
+                       pinyinSearch: Bool = false) -> [WordEntry] {
         let terms = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
             .split(whereSeparator: { $0.isWhitespace }).map(String.init)
-        let level = options.level.flatMap { $0 == "all" ? nil : $0 }
+        let levels = Self.levels(options.level)
         let initial = options.initial.flatMap { $0 == "all" ? nil : $0.uppercased() }
 
-        if terms.isEmpty, filter == .all, level == nil, initial == nil {
+        if terms.isEmpty, filter == .all, levels == nil, initial == nil {
             return options.sort == .alphabetical ? alphabeticalWords : words
         }
 
@@ -73,9 +95,9 @@ public final class PreparedVocabulary: @unchecked Sendable {
         let usesRecency = options.sort != .alphabetical && (filter == .favorites || filter == .review || filter == .mastered)
         var matches: [(record: Record, recency: Double, score: Int)] = []
         for record in source {
-            if let level, record.word.group != level { continue }
+            if let levels, !levels.contains(record.word.group) { continue }
             if let initial, !record.normalizedWord.uppercased().hasPrefix(initial) { continue }
-            let score = Self.searchScore(record, terms: terms)
+            let score = Self.searchScore(record, terms: terms, pinyin: pinyinSearch)
             if !terms.isEmpty, score == 0 { continue }
             let progress = state.progress(for: record.word.id)
             switch filter {
@@ -101,7 +123,7 @@ public final class PreparedVocabulary: @unchecked Sendable {
         return matches.map(\.record.word)
     }
 
-    static func searchScore(_ record: Record, terms: [String]) -> Int {
+    static func searchScore(_ record: Record, terms: [String], pinyin: Bool = false) -> Int {
         guard !terms.isEmpty else { return 0 }
         var total = 0
         for term in terms {
@@ -112,6 +134,9 @@ public final class PreparedVocabulary: @unchecked Sendable {
             else if record.meaning.contains(term) { score = 680 }
             else if record.example.contains(term) { score = 540 }
             else if record.exampleZh.contains(term) { score = 520 }
+            // By sound, for learners of Chinese: "shiying" or "shi4ying4" finds 適應.
+            else if pinyin, term.count >= 2, !record.pinyin.isEmpty, term.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber) }),
+                    record.pinyin.contains(ChineseSpelling.toneless(term)) { score = 500 }
             else { return 0 }
             total += score
         }

@@ -37,7 +37,7 @@ describe('Lock Screen learning reminder backend', () => {
     expect(registration).toContain('progress_date: registration.progressDate');
     expect(appSource).toContain('dailyTarget: progress.dailyTarget');
     expect(appSource).toContain('studiedToday: progress.studiedToday');
-    expect(edgeFunction).toContain(`title: chinese ? '今天的學習時間' : "Time for today's practice"`);
+    expect(edgeFunction).toContain(`title: chinese ? '單字不會自己背好喔' : "Those words won't learn themselves"`);
     expect(edgeFunction).toContain('noon_activity_expires_at');
     expect(edgeFunction).toContain("activityKind: 'noon'");
     expect(edgeFunction).toContain('progressCurrent: studiedToday');

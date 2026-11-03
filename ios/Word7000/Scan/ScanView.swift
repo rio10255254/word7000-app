@@ -9,6 +9,8 @@ struct ScanView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var onStudy: () -> Void
 
     enum Phase: Equatable {
@@ -78,17 +80,22 @@ struct ScanView: View {
                 switch phase {
                 case .choose: chooser
                 case .loadingPhoto:
-                    ProgressView(S.loadingPhoto)
+                    ScanWorkingView(symbol: "photo.on.rectangle", text: S.loadingPhoto, sweeps: false)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .accessibilityIdentifier("scan-loading-photo")
                 case .reading:
-                    ProgressView(SmartScan.canOrganize ? S.readingSmart : S.reading)
+                    ScanWorkingView(symbol: "doc.text.viewfinder", text: SmartScan.canOrganize ? S.readingSmart : S.reading, sweeps: true)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 case .review: review
                 case let .saved(count, name): saved(count: count, name: name)
                 }
             }
-            .background(Palette.background)
+            .background { AmbientBackground() }
+            .sensoryFeedback(.success, trigger: phase) { _, new in
+                if case .saved = new { return model.settings.hapticsEnabled ?? true }
+                return false
+            }
+            .sensoryFeedback(.error, trigger: message) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
             .navigationTitle(S.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -145,78 +152,86 @@ struct ScanView: View {
         .onChange(of: model.customSets.sets.map(\.id)) { _, ids in
             if case let .existing(id) = target, !ids.contains(id) { target = .new }
         }
+        .catTip(.scan, at: .top, inset: 60)
     }
 
     // MARK: Choose a source
 
     private var chooser: some View {
-        Form {
-            Section {
-                VStack(spacing: 12) {
-                    Image(systemName: "doc.text.viewfinder")
-                        .font(.system(size: 30, weight: .semibold))
-                        .foregroundStyle(Palette.accent)
-                        .frame(width: 64, height: 64)
-                        .background(Palette.accent.opacity(0.14), in: Circle())
+        ScrollView {
+            VStack(spacing: 20) {
+                HStack(alignment: .center, spacing: 10) {
+                    Mascot(mood: .idle, size: 46)
                     Text(S.intro)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                    if case .trial = plus.access {
-                        Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background((plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent).opacity(0.12), in: Capsule())
-                            .contentTransition(.numericText())
-                    }
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-
-                if DocumentScanner.isAvailable {
-                    Button { allowScan { documentScannerOpen = true } } label: {
-                        Label(S.scanDocument, systemImage: "doc.viewfinder.fill")
-                    }
-                    .accessibilityIdentifier("scan-document")
-                } else if CameraPicker.isAvailable {
-                    Button { allowScan { cameraOpen = true } } label: {
-                        Label(S.takePhoto, systemImage: "camera.fill")
-                    }
+                tools
+                if case .trial = plus.access {
+                    Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background((plus.policy.trialScansLeft <= 1 ? Palette.review : Palette.accent).opacity(0.12), in: Capsule())
+                        .contentTransition(.numericText())
                 }
-                Button { allowScan { photoLibraryOpen = true } } label: {
-                    Label(S.choosePhoto, systemImage: "photo.on.rectangle")
-                }
-                .accessibilityIdentifier("scan-choose-photo")
                 if let message {
-                    Label(message, systemImage: "exclamationmark.triangle.fill")
-                        .font(.footnote)
-                        .foregroundStyle(Palette.review)
-                        .accessibilityIdentifier("scan-message")
+                    Label {
+                        Text(message)
+                    } icon: {
+                        Image(systemName: "exclamationmark.triangle.fill").popIn(delay: 0.1)
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(Palette.review)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityIdentifier("scan-message")
                 }
-            }
-
-            Section {
-                TextField(S.pastePlaceholder, text: $pasted, axis: .vertical)
-                    .lineLimit(4...10)
-                    .font(.body.monospaced())
-                    .accessibilityIdentifier("scan-pasted-text")
-                Button(S.readPasted) {
+                ScanNotepad(text: $pasted, askCloud: {
+                    afterCloudAnswer = nil
+                    askCloud = true
+                }, read: { text in
+                    pasted = text
                     sourcePreviews = []
                     pageCount = 0
-                    let found = ScanParser.parse(ScanParser.lines(fromPlainText: pasted))
-                    showReview(found)
-                }
-                .accessibilityIdentifier("scan-read-pasted")
-                .disabled(pasted.trimmed.isEmpty)
-            } header: {
-                Text(S.pasteTitle)
-            } footer: {
+                    showReview(ScanParser.parse(ScanParser.lines(fromPlainText: text)))
+                })
+                .padding(.top, 4)
                 Text(S.pasteHint)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .padding(Metrics.gutter)
+            .padding(.bottom, 12)
         }
         .scrollDismissesKeyboard(.interactively)
+    }
+
+    /// The scanner and the photo pile, side by side (stacked at large text).
+    @ViewBuilder
+    private var tools: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 14)) : AnyLayout(HStackLayout(spacing: 14))
+        layout {
+            if DocumentScanner.isAvailable {
+                ScanToolCard(title: S.scanTitle, subtitle: S.scanSubtitle, paper: .graph, tilt: -0.8,
+                             identifier: "scan-document", action: { allowScan { documentScannerOpen = true } }) {
+                    ScannerArt()
+                }
+            } else if CameraPicker.isAvailable {
+                ScanToolCard(title: S.takePhoto, subtitle: S.scanSubtitle, paper: .graph, tilt: -0.8,
+                             identifier: "scan-camera", action: { allowScan { cameraOpen = true } }) {
+                    ScannerArt()
+                }
+            }
+            ScanToolCard(title: S.choosePhoto, subtitle: S.photoSubtitle, paper: .peach, tilt: 0.7,
+                         identifier: "scan-choose-photo", action: { allowScan { photoLibraryOpen = true } }) {
+                PhotoPileArt()
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     /// Every read counts against the trial allowance, so check before each one.
@@ -352,12 +367,17 @@ struct ScanView: View {
                 }
                 ForEach($rows) { $row in
                     HStack(alignment: .top, spacing: 12) {
-                        Button { row.include.toggle() } label: {
+                        Button {
+                            withAnimation(reduceMotion ? nil : Motion.pop) { row.include.toggle() }
+                        } label: {
                             Image(systemName: row.include ? "checkmark.circle.fill" : "circle")
                                 .font(.title3)
                                 .foregroundStyle(row.include ? Palette.accent : Palette.tertiaryLabel)
+                                .contentTransition(.symbolEffect(.replace))
+                                .symbolEffect(.bounce, value: reduceMotion ? false : row.include)
                         }
                         .buttonStyle(.plain)
+                        .sensoryFeedback(.selection, trigger: row.include) { _, _ in model.settings.hapticsEnabled ?? true }
                         .padding(.top, 4)
                         VStack(alignment: .leading, spacing: 6) {
                             if let decision = decisions[row.id] { importStatus(decision, id: row.id) }
@@ -367,7 +387,7 @@ struct ScanView: View {
                             }
                             HStack {
                                 TextField(S.word, text: $row.word)
-                                    .font(.rounded(.headline))
+                                    .font(.display(.headline))
                                     .textInputAutocapitalization(.never)
                                     .autocorrectionDisabled()
                                     .accessibilityIdentifier("scan-word-\(row.id)")
@@ -413,6 +433,7 @@ struct ScanView: View {
                         }
                     }
                     .opacity(row.include ? 1 : 0.5)
+                    .animation(reduceMotion ? nil : Motion.reveal, value: row.include)
                 }
                 .onDelete { rows.remove(atOffsets: $0) }
                 Button {
@@ -422,6 +443,7 @@ struct ScanView: View {
                 }
             } header: {
                 Text(S.found(rows.count))
+                    .contentTransition(.numericText(value: Double(rows.count)))
             } footer: {
                 Text(S.reviewHint)
             }
@@ -452,6 +474,7 @@ struct ScanView: View {
                 } label: {
                     Text(S.save(count))
                         .font(.headline)
+                        .contentTransition(.numericText(value: Double(count)))
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
@@ -461,6 +484,7 @@ struct ScanView: View {
                 .listRowInsets(EdgeInsets())
             }
         }
+        .warmList()
         .scrollDismissesKeyboard(.interactively)
     }
 
@@ -502,11 +526,14 @@ struct ScanView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 54))
                 .foregroundStyle(Palette.known)
-            Text(S.savedTitle).font(.rounded(.title2, weight: .bold))
+                .shadow(color: Palette.known.opacity(0.35), radius: 12, y: 4)
+                .popIn(delay: 0.1)
+            Text(S.savedTitle).font(.display(.title2, weight: .bold))
                 .accessibilityIdentifier("scan-saved")
             Text(S.savedText(count, name))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
+                .entrance(1, distance: 8)
             if case .trial = plus.access {
                 Button { paywall = .general } label: {
                     Label(P.scansLeft(plus.policy.trialScansLeft), systemImage: "sparkles")
@@ -532,26 +559,91 @@ struct ScanView: View {
         .card(radius: Metrics.wordCardRadius, padding: 24)
         .padding(Metrics.gutter)
         .frame(maxHeight: .infinity, alignment: .top)
+        .overlay(alignment: .top) {
+            if count > 0, !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
+        }
+    }
+}
+
+/// While a photo loads or a page is read: the source icon with a scan line
+/// sweeping over it, and three dots that keep time.
+private struct ScanWorkingView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var symbol: String
+    var text: String
+    var sweeps: Bool
+
+    var body: some View {
+        VStack(spacing: 18) {
+            ZStack {
+                Circle()
+                    .fill(Palette.accent.opacity(0.12))
+                    .frame(width: 96, height: 96)
+                Image(systemName: symbol)
+                    .font(.system(size: 40, weight: .semibold))
+                    .foregroundStyle(Palette.accent)
+                    .symbolEffect(.pulse, options: .repeating, isActive: !sweeps && !reduceMotion)
+                if sweeps && !reduceMotion {
+                    Capsule()
+                        .fill(LinearGradient(colors: [Palette.accent.opacity(0), Palette.accent, Palette.accent.opacity(0)],
+                                             startPoint: .leading, endPoint: .trailing))
+                        .frame(width: 64, height: 3)
+                        .shadow(color: Palette.accent.opacity(0.6), radius: 4)
+                        .phaseAnimator([false, true]) { line, down in
+                            line.offset(y: down ? 22 : -22)
+                        } animation: { _ in Animation.easeInOut(duration: 1.1) }
+                }
+            }
+            .popIn()
+            HStack(spacing: 6) {
+                Text(text)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                ScanDots()
+            }
+            .entrance(1, distance: 8)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct ScanDots: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
+            let t = reduceMotion ? 0 : context.date.timeIntervalSinceReferenceDate
+            HStack(spacing: 3) {
+                ForEach(0..<3, id: \.self) { index in
+                    let wave = max(0, sin(t * 5 - Double(index) * 0.8))
+                    Circle()
+                        .fill(Palette.accent)
+                        .frame(width: 5, height: 5)
+                        .opacity(reduceMotion ? 0.6 : 0.3 + 0.7 * wave)
+                        .offset(y: reduceMotion ? 0 : -3 * wave)
+                }
+            }
+        }
+        .accessibilityHidden(true)
     }
 }
 
 /// Scan screen copy (English-word mode).
 private enum S {
     static var title: String { L.t("掃描單字表", "Scan a word list") }
-    static var intro: String { L.t("掃描或選一張單字表照片，App 會在手機上讀出英文單字和紙上寫的中文意思，印刷或手寫都可以。照片不會上傳。", "Scan or pick a photo of a word list. The app reads each English word and the Chinese meaning written on the page, printed or handwritten. Photos never leave your iPhone.") }
+    static var intro: String { L.t("印刷的、手寫的單字表我都讀得懂。照片只留在你的 iPhone。", "Printed or handwritten, I can read it. Photos stay on your iPhone.") }
+    static var scanTitle: String { L.t("掃描單字表", "Scan a list") }
+    static var scanSubtitle: String { L.t("可多頁，手寫也行", "Several pages, handwriting OK") }
+    static var photoSubtitle: String { L.t("挑一張單字表照片", "Pick a photo of a list") }
     static var takePhoto: String { L.t("拍照", "Take Photo") }
-    static var scanDocument: String { L.t("掃描單字表（可多頁、手寫也行）", "Scan a word list (several pages, handwriting OK)") }
-    static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organised from the page by Apple Intelligence; please check") }
+    static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organized from the page by Apple Intelligence; please check") }
     static func corrected(_ original: String) -> String { L.t("還原為「\(original)」", "Restore \u{201C}\(original)\u{201D}") }
     static var choosePhoto: String { L.t("從相簿選擇", "Choose Photo") }
-    static var pasteTitle: String { L.t("或貼上文字", "Or paste text") }
-    static var pasteHint: String { L.t("在「照片」App 長按文字即可拷貝（原況文字），再貼到這裡", "In Photos, touch and hold text to copy it (Live Text), then paste it here") }
-    static var pastePlaceholder: String { L.t("abandon v. 放棄\nbenefit n. 好處", "abandon v. 放棄\nbenefit n. 好處") }
-    static var readPasted: String { L.t("讀取貼上的文字", "Read pasted text") }
+    static var pasteHint: String { L.t("也可以在「照片」App 長按文字拷貝（原況文字），再貼到筆記本上。", "Or in Photos, touch and hold text to copy it (Live Text) and paste it onto the notepad.") }
     static var reading: String { L.t("正在手機上辨識…", "Reading on your iPhone…") }
     static var loadingPhoto: String { L.t("正在載入照片…", "Loading your photo…") }
     static var photoLoadFailed: String { L.t("無法載入這張照片。若照片在 iCloud，請確認網路連線後再試一次，或改選另一張照片。", "Could not load this photo. If it is in iCloud, check your connection and try again, or choose another photo.") }
-    static var readingSmart: String { L.t("正在手機上辨識並整理…", "Reading and organising on your iPhone…") }
+    static var readingSmart: String { L.t("正在手機上辨識並整理…", "Reading and organizing on your iPhone…") }
     static var readFailed: String { L.t("辨識失敗，請換一張更清楚的照片再試一次。", "Could not read that photo. Try a clearer one.") }
     static func found(_ count: Int) -> String { L.t("找到 \(count) 個單字", "\(count) words found") }
     static var reviewHint: String { L.t("儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。", "Fix any word or meaning before saving. Unchecked rows are skipped; swipe left to delete.") }

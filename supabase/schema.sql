@@ -224,14 +224,14 @@ drop policy if exists "Users can insert their own daily activity" on public.dail
 create policy "Users can insert their own daily activity"
   on public.daily_active_users
   for insert
-  with check (auth.uid() = user_id);
+  with check (auth.uid() = user_id and activity_date between current_date - 1 and current_date + 1);
 
 drop policy if exists "Users can update their own daily activity" on public.daily_active_users;
 create policy "Users can update their own daily activity"
   on public.daily_active_users
   for update
   using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  with check (auth.uid() = user_id and activity_date between current_date - 1 and current_date + 1);
 
 drop policy if exists "Users can delete their own daily activity" on public.daily_active_users;
 create policy "Users can delete their own daily activity"

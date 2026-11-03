@@ -168,7 +168,7 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertEqual(app.staticTexts["speaking-available-count"].label, "1 個單字")
         snapshot(app, name: "speaking-scanned-word-example")
         // A scanned word may have no example sentence; it can still be practised.
-        app.buttons["speaking-complete"].tap()
+        XCTAssertTrue(app.buttons["coach-record"].exists)
         XCTAssertTrue(app.buttons["speaking-next"].waitForExistence(timeout: 5))
         snapshot(app, name: "speaking-visible-practice-types")
     }

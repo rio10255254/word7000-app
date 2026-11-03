@@ -294,8 +294,23 @@ struct SpeakingAnswerPanel: View {
                 CoachHeader(title: followUpQuestion == nil ? L.t("你的回答", "Your answer") : L.t("回答追問", "Your reply"), icon: "pencil.line")
                 Spacer()
                 if answerFocused {
+                    // The keyboard hides the Check key below; it moves up here.
+                    if provider.availability == .ready, hasText, !session.isWorking, !pendingSubmission {
+                        Button {
+                            guard canSubmitAnswer else { return }
+                            needsTranscriptReview = false
+                            submit()
+                        } label: {
+                            Label(L.t("批改", "Check"), systemImage: "sparkles")
+                                .font(.subheadline.weight(.bold))
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(!canSubmitAnswer)
+                        .accessibilityIdentifier("coach-submit")
+                    }
                     Button { dismissKeyboard() } label: { Image(systemName: "keyboard.chevron.compact.down") }
                         .buttonStyle(.borderless)
+                        .frame(minWidth: 44, minHeight: 44)
                         .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
                         .accessibilityIdentifier("coach-keyboard-done")
                 }
@@ -479,7 +494,7 @@ struct SpeakingAnswerPanel: View {
                         .accessibilityIdentifier("coach-cancel")
                 }
                 .frame(minHeight: 44)
-            } else if hasText {
+            } else if hasText, !answerFocused {
                 Button {
                     guard canSubmitAnswer else { return }
                     needsTranscriptReview = false

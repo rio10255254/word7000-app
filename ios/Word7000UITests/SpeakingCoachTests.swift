@@ -16,15 +16,15 @@ final class SpeakingCoachTests: XCTestCase {
         super.tearDown()
     }
 
-    func testOriginalPracticeWithoutCoachOverride() {
+    func testSkipAndSampleWithoutAnswering() {
         let app = launch()
         XCTAssertFalse(app.launchArguments.contains("-uiTestingCoach"))
         openSpeaking(app)
         let question = app.staticTexts["speaking-question"].label
         XCTAssertFalse(question.isEmpty)
+        let completed = completionValue(app)
+        XCTAssertTrue(app.buttons["coach-record"].exists, "Recording is right under the question")
         XCTAssertTrue(app.buttons["speaking-show-reference"].isEnabled)
-        XCTAssertTrue(app.buttons["speaking-complete"].isEnabled)
-        XCTAssertTrue(app.buttons["speaking-coach-open"].exists, "Recording and reflection remain available without AI")
 
         app.buttons["speaking-show-reference"].tap()
         let reference = app.staticTexts["speaking-reference-answer"]
@@ -32,100 +32,72 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertFalse(reference.label.isEmpty)
         XCTAssertEqual(app.staticTexts["speaking-question"].label, question)
         snapshot(app, "coach-real-no-override-reference")
-        tap(app.buttons["speaking-complete-after-reference"], in: app)
+        // Nothing said or written: Next is a skip and does not count.
+        tap(app.buttons["speaking-next"], in: app)
         wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
-
-        // Exercise the original direct completion path as well as reference-first.
-        tap(app.buttons["speaking-complete"], in: app)
-        XCTAssertTrue(app.buttons["speaking-next"].waitForExistence(timeout: 5))
-        app.buttons["speaking-next"].tap()
-        wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '3 /'")
+        XCTAssertEqual(completionValue(app), completed)
     }
 
-    func testMockSuccessEditingDraftAndProgressInLightEnglishUI() {
+    func testMockSuccessTypingCheckAndProgressInLightEnglishUI() {
         let app = launch(coach: "commitCorrection", englishUI: true)
         let completedBefore = weeklySpeakingCount(app)
         app.tabBars.buttons.element(boundBy: 0).tap()
         openSpeaking(app)
         let question = app.staticTexts["speaking-question"].label
-        let position = app.staticTexts["speaking-position"].label
-        let completed = completionValue(app)
-        XCTAssertEqual(openCoach(app), question)
-        XCTAssertTrue(app.navigationBars["Speaking coach"].exists)
-        XCTAssertFalse(app.buttons["coach-submit"].isEnabled)
+        XCTAssertFalse(app.buttons["coach-submit"].exists, "Nothing to check before an answer")
 
+        tap(app.buttons["coach-type-instead"], in: app)
         let answer = app.textViews["coach-answer"]
-        answer.tap()
+        XCTAssertTrue(answer.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "Type instead puts the cursor on the notepad")
         answer.typeText("I practice with my x")
-        XCTAssertTrue(app.keyboards.firstMatch.exists)
         answer.typeText(XCUIKeyboardKey.delete.rawValue)
         answer.typeText("freind")
         XCTAssertTrue(app.keyboards.firstMatch.exists, "Editing must not recreate the editor or dismiss its keyboard")
         assertNoFeedback(app)
         snapshot(app, "coach-mock-light-en-keyboard")
-        // Leave the final word pending: the CTA must commit keyboard edits itself.
-        let submitButton = app.buttons["coach-submit"]
-        XCTAssertTrue(submitButton.isEnabled)
-        XCTAssertTrue(submitButton.isHittable)
-        XCTAssertTrue(app.keyboards.firstMatch.exists)
+        // Leave the final word pending: the Check key must commit keyboard edits itself.
+        let check = app.buttons["coach-submit"]
+        XCTAssertTrue(check.waitForExistence(timeout: 5))
+        XCTAssertTrue(check.isEnabled)
+        XCTAssertTrue(check.isHittable, "Check stays reachable above the keyboard")
         let pendingAnswer = answer.value as? String ?? ""
-        submitButton.tap()
+        check.tap()
         wait(app.keyboards.firstMatch, matching: "exists == false")
-        // The form scrolls to the suggestions when they arrive; come back to the answer.
         XCTAssertTrue(app.staticTexts["coach-rewrite"].waitForExistence(timeout: 5))
         reveal(answer, in: app)
         let finalAnswer = answer.value as? String ?? ""
         XCTAssertEqual(finalAnswer, "I practice with my friend every day.")
         XCTAssertNotEqual(finalAnswer, pendingAnswer, "Ending native editing must really change the submitted text")
-        XCTAssertFalse(finalAnswer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         assertFeedback(app, snapshotPrefix: "coach-mock-light-en")
         let tip = app.staticTexts["coach-tip"]
         reveal(tip, in: app, scrollingUp: false)
         XCTAssertEqual(tip.label, "Received: " + finalAnswer.trimmingCharacters(in: .whitespacesAndNewlines))
         XCTAssertFalse(app.descendants(matching: .any)["coach-error"].firstMatch.exists)
-        wait(submitButton, matching: "exists == true AND enabled == true")
-
-        closeCoach(app)
         XCTAssertEqual(app.staticTexts["speaking-question"].label, question)
-        XCTAssertEqual(app.staticTexts["speaking-position"].label, position)
-        XCTAssertEqual(completionValue(app), completed)
-        XCTAssertTrue(app.buttons["speaking-complete"].isEnabled)
-        XCTAssertEqual(openCoach(app), question)
-        XCTAssertEqual(app.textViews["coach-answer"].value as? String, finalAnswer)
-        closeCoach(app)
 
-        app.buttons["speaking-show-reference"].tap()
+        // Something was written: Next counts the question.
         tap(app.buttons["speaking-next"], in: app)
         wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
-        let nextQuestion = app.staticTexts["speaking-question"].label
-        XCTAssertNotEqual(nextQuestion, question)
-        XCTAssertEqual(completionValue(app), completed)
-        XCTAssertEqual(openCoach(app), nextQuestion)
-        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "")
-        XCTAssertFalse(app.buttons["coach-submit"].isEnabled)
+        XCTAssertNotEqual(app.staticTexts["speaking-question"].label, question)
+        XCTAssertFalse(app.textViews["coach-answer"].exists, "A new question starts without an answer")
         assertNoFeedback(app)
-        closeCoach(app)
         app.buttons["speaking-close"].tap()
-        XCTAssertEqual(weeklySpeakingCount(app), completedBefore,
-                       "Coach suggestions and skipping a question must not count as completed practice")
+        XCTAssertNotEqual(weeklySpeakingCount(app), completedBefore, "An answered question counts as practice")
     }
 
     func testMockRetryDarkEnglishAndCancellationRecovery() {
         let app = launch(coach: "errorOnce", dark: true, englishUI: true)
         openSpeaking(app)
-        openCoach(app)
-        XCTAssertTrue(app.navigationBars["Speaking coach"].exists)
         enterAnswer("I practice daily.", in: app)
         submit(app)
         let error = app.descendants(matching: .any)["coach-error"].firstMatch
         reveal(error, in: app)
         XCTAssertEqual(error.label, "No suitable suggestions were produced. Edit your answer or try again.")
         assertNoFeedback(app)
-        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
         XCTAssertEqual(app.textViews["coach-answer"].value as? String, "I practice daily.")
         submit(app)
         assertFeedback(app, snapshotPrefix: "coach-mock-dark-en-retry")
-        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
         XCTAssertFalse(error.exists)
         app.terminate()
 
@@ -134,7 +106,6 @@ final class SpeakingCoachTests: XCTestCase {
         for mode in ["slow", "timeout"] {
             let recovery = launch(coach: mode)
             openSpeaking(recovery)
-            openCoach(recovery)
             enterAnswer("I practice daily.", in: recovery)
             submit(recovery)
             if mode == "slow" {
@@ -153,10 +124,7 @@ final class SpeakingCoachTests: XCTestCase {
             if mode == "slow" {
                 XCTAssertFalse(recovery.descendants(matching: .any)["coach-error"].firstMatch.exists)
             }
-            reveal(recovery.textViews["coach-answer"], in: recovery, scrollingUp: false)
             XCTAssertEqual(recovery.textViews["coach-answer"].value as? String, "I practice daily.")
-            closeCoach(recovery)
-            XCTAssertTrue(recovery.buttons["speaking-complete"].isEnabled)
             recovery.terminate()
         }
     }
@@ -164,32 +132,23 @@ final class SpeakingCoachTests: XCTestCase {
     func testMockAIDisabledStillExplainsStatusAndAllowsPractice() {
         let app = launch(coach: "unavailable")
         openSpeaking(app)
-        let question = app.staticTexts["speaking-question"].label
         let completed = completionValue(app)
-        openCoach(app, expectsAnswer: false)
+        enterAnswer("I practice daily.", in: app)
+        dismissKeyboard(app)
         let unavailable = app.descendants(matching: .any)["coach-unavailable"].firstMatch
         reveal(unavailable, in: app)
         // The fixture means AI is turned off, not an unsupported device.
         XCTAssertTrue(unavailable.label.contains("\u{958B}\u{555F} Apple Intelligence"))
-        XCTAssertTrue(app.navigationBars["\u{53E3}\u{8AAA}\u{6559}\u{7DF4}"].exists)
-        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
         XCTAssertFalse(app.buttons["coach-submit"].exists)
         XCTAssertFalse(app.buttons["coach-cancel"].exists)
         assertNoFeedback(app)
         tap(app.buttons["coach-check-again"], in: app)
         XCTAssertTrue(unavailable.exists)
-        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
         XCTAssertFalse(app.buttons["coach-submit"].exists)
         snapshot(app, "coach-mock-light-zh-ai-off")
-        closeCoach(app)
-        XCTAssertEqual(app.staticTexts["speaking-question"].label, question)
-        XCTAssertEqual(completionValue(app), completed)
-        XCTAssertTrue(app.buttons["speaking-show-reference"].isEnabled)
-        XCTAssertTrue(app.buttons["speaking-complete"].isEnabled)
-        app.buttons["speaking-show-reference"].tap()
-        reveal(app.staticTexts["speaking-reference-answer"], in: app)
-        tap(app.buttons["speaking-complete-after-reference"], in: app)
+        tap(app.buttons["speaking-next"], in: app)
         wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
+        XCTAssertNotEqual(completionValue(app), completed, "A written answer counts without AI")
     }
 
     private func launch(coach: String? = nil, dark: Bool = false, englishUI: Bool = false, recording: Bool = false) -> XCUIApplication {
@@ -207,65 +166,55 @@ final class SpeakingCoachTests: XCTestCase {
     func testFollowUpCanBeAnsweredThenLeftForTheOriginalQuestion() {
         let app = launch(coach: "success", englishUI: true)
         openSpeaking(app)
-        let question = openCoach(app)
+        let question = app.staticTexts["speaking-question"].label
         enterAnswer("I practice daily.", in: app)
         submit(app)
         let followUp = app.staticTexts["coach-follow-up"]
         reveal(followUp, in: app, scrollingUp: false)
         let followUpText = followUp.label
         XCTAssertFalse(followUpText.isEmpty)
+        XCTAssertTrue(app.staticTexts["coach-follow-up-translation"].exists, "The follow-up comes translated")
         tap(app.buttons["coach-answer-follow-up"], in: app)
         let shown = app.staticTexts["coach-question"]
         reveal(shown, in: app)
         XCTAssertEqual(shown.label, followUpText)
-        reveal(app.textViews["coach-answer"], in: app, scrollingUp: false)
-        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "", "A new question starts a new answer")
+        XCTAssertFalse(app.textViews["coach-answer"].exists, "A follow-up starts a new answer")
         assertNoFeedback(app)
-        XCTAssertFalse(app.buttons["coach-submit"].isEnabled)
+        XCTAssertFalse(app.buttons["coach-submit"].exists)
         snapshot(app, "coach-follow-up-question")
         tap(app.buttons["coach-original-question"], in: app)
-        reveal(app.staticTexts["coach-question"], in: app)
-        XCTAssertEqual(app.staticTexts["coach-question"].label, question)
-        closeCoach(app)
+        XCTAssertFalse(app.staticTexts["coach-question"].exists)
+        XCTAssertEqual(app.staticTexts["speaking-question"].label, question)
     }
 
-    func testRecordingReviewPlaybackAndDeletionWithExplicitFixture() {
+    func testRecordingTurnsIntoTextThenChecksWithExplicitFixture() {
         let app = launch(coach: "success", englishUI: true, recording: true)
         openSpeaking(app)
-        openCoach(app)
-        reveal(app.buttons["coach-record"], in: app, scrollingUp: false)
         tap(app.buttons["coach-record"], in: app)
         app.buttons["coach-record"].tap()
         let playback = app.buttons["coach-play-recording"]
         tap(playback, in: app)
         XCTAssertTrue(playback.label.contains("Stop"))
         playback.tap()
-        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "I practice with my friend every day.",
-                       "Stopping a take transcribes it without another tap")
+        let answer = app.textViews["coach-answer"]
+        reveal(answer, in: app)
+        XCTAssertEqual(answer.value as? String, "I practice with my friend every day.",
+                       "Stopping a take turns it into text without another tap")
         XCTAssertFalse(app.buttons["coach-transcribe"].exists, "A transcribed take needs no second transcription")
-        XCTAssertFalse(app.buttons["coach-submit"].exists, "Never coach an unconfirmed transcript")
-        XCTAssertTrue(app.buttons["coach-confirm-transcript"].exists)
-        closeCoach(app)
-        openCoach(app)
-        XCTAssertFalse(app.buttons["coach-submit"].exists, "Reopening must not silently confirm the transcript")
-        // Confirming the transcript is the request itself.
-        tap(app.buttons["coach-confirm-transcript"], in: app)
+        XCTAssertFalse(app.staticTexts["coach-rewrite"].exists, "Checking waits for the learner")
+        // Checking is one tap, and confirms the transcript.
+        tap(app.buttons["coach-submit"], in: app)
         XCTAssertTrue(app.staticTexts["coach-rewrite"].waitForExistence(timeout: 5))
-        wait(app.buttons["coach-submit"], matching: "exists == true AND enabled == true")
         snapshot(app, "studio-confirmed-transcript")
-        closeCoach(app)
-        openCoach(app)
-        XCTAssertFalse(app.buttons["coach-play-recording"].exists, "Leaving deletes the recording")
-        XCTAssertEqual(app.textViews["coach-answer"].value as? String, "I practice with my friend every day.")
-        closeCoach(app)
+        tap(app.buttons["speaking-next"], in: app)
+        wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
+        XCTAssertFalse(app.buttons["coach-play-recording"].exists, "A new question starts without the old take")
     }
 
     func testNativeRecorderPermissionTimerPlaybackAndCleanup() {
         let app = launch(englishUI: true)
         openSpeaking(app)
-        openCoach(app)
-        reveal(app.buttons["coach-record"], in: app, scrollingUp: false)
-        app.buttons["coach-record"].tap()
+        tap(app.buttons["coach-record"], in: app)
         let system = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allow = system.buttons["Allow"]
         if allow.waitForExistence(timeout: 5) {
@@ -288,13 +237,11 @@ final class SpeakingCoachTests: XCTestCase {
         app.buttons["coach-record"].tap()
         XCTAssertTrue(app.buttons["coach-play-recording"].waitForExistence(timeout: 5))
         snapshot(app, "studio-native-recording")
-        tap(app.buttons["coach-reference"], in: app)
-        reveal(app.buttons["coach-play-recording"], in: app, scrollingUp: false)
-        app.buttons["coach-play-recording"].tap()
-        closeCoach(app)
-        openCoach(app)
+        tap(app.buttons["speaking-show-reference"], in: app)
+        tap(app.buttons["coach-play-recording"], in: app)
+        tap(app.buttons["speaking-next"], in: app)
+        wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
         XCTAssertFalse(app.buttons["coach-play-recording"].exists)
-        closeCoach(app)
     }
 
     func testAISettingsDisableSuggestionsButKeepRecordingAndText() {
@@ -312,11 +259,12 @@ final class SpeakingCoachTests: XCTestCase {
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.tabBars.buttons.element(boundBy: 0).tap()
         openSpeaking(app)
-        openCoach(app)
-        XCTAssertFalse(app.buttons["coach-submit"].exists)
-        reveal(app.buttons["coach-record"], in: app, scrollingUp: false)
         XCTAssertTrue(app.buttons["coach-record"].isEnabled)
-        closeCoach(app)
+        enterAnswer("I practice daily.", in: app)
+        dismissKeyboard(app)
+        XCTAssertFalse(app.buttons["coach-submit"].exists)
+        reveal(app.buttons["coach-retake"], in: app)
+        XCTAssertTrue(app.buttons["coach-retake"].isEnabled)
     }
 
     func testEditorialNotesAreReachableInBothLanguages() {
@@ -351,35 +299,11 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
     }
 
-    @discardableResult
-    private func openCoach(_ app: XCUIApplication, expectsAnswer: Bool = true) -> String {
-        tap(app.buttons["speaking-coach-open"], in: app)
-        XCTAssertTrue(app.buttons["coach-close"].waitForExistence(timeout: 5))
-        let question = app.staticTexts["coach-question"]
-        XCTAssertTrue(question.waitForExistence(timeout: 5))
-        let text = question.label
-        XCTAssertFalse(text.isEmpty)
-        if expectsAnswer { reveal(app.textViews["coach-answer"], in: app) }
-        return text
-    }
-
-    /// On iOS 26 a tap on Close right after the sheet re-renders (such as after
-    /// "Check again") can be dropped, leaving the sheet exactly as it was.
-    /// A Close button still on screen means the tap never arrived; try once more.
-    private func closeCoach(_ app: XCUIApplication) {
-        let close = app.buttons["coach-close"]
-        tap(close, in: app)
-        let gone = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: close)
-        if XCTWaiter.wait(for: [gone], timeout: 5) != .completed, close.exists, close.isHittable {
-            close.tap()
-        }
-        wait(close, matching: "exists == false")
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
-    }
-
     private func enterAnswer(_ text: String, in app: XCUIApplication) {
         let answer = app.textViews["coach-answer"]
-        answer.tap()
+        if !answer.exists { tap(app.buttons["coach-type-instead"], in: app) }
+        XCTAssertTrue(answer.waitForExistence(timeout: 5))
+        if !app.keyboards.firstMatch.waitForExistence(timeout: 2) { answer.tap() }
         answer.typeText(text)
         // The accessibility value can lag the final keyboard event on older
         // simulators. Keep the exact-text assertion; never retry the keystroke.
@@ -389,11 +313,13 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertEqual(answer.value as? String, text)
     }
 
+    private func dismissKeyboard(_ app: XCUIApplication) {
+        guard app.keyboards.firstMatch.exists else { return }
+        app.buttons["coach-keyboard-done"].tap()
+        wait(app.keyboards.firstMatch, matching: "exists == false")
+    }
+
     private func submit(_ app: XCUIApplication) {
-        if app.keyboards.firstMatch.exists {
-            tap(app.buttons["coach-keyboard-done"], in: app)
-            wait(app.keyboards.firstMatch, matching: "exists == false")
-        }
         let submit = app.buttons["coach-submit"]
         wait(submit, matching: "exists == true AND enabled == true")
         tap(submit, in: app)
@@ -402,12 +328,12 @@ final class SpeakingCoachTests: XCTestCase {
     private func assertFeedback(_ app: XCUIApplication, snapshotPrefix: String) {
         for (index, identifier) in ["coach-rewrite", "coach-tip", "coach-follow-up"].enumerated() {
             let field = app.staticTexts[identifier]
-            reveal(field, in: app)
+            reveal(field, in: app, scrollingUp: true)
             XCTAssertFalse(field.label.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             if index == 0 { snapshot(app, snapshotPrefix + "-rewrite") }
         }
         snapshot(app, snapshotPrefix + "-tip-follow-up")
-        XCTAssertTrue(app.buttons["coach-close"].isHittable)
+        XCTAssertTrue(app.buttons["speaking-next"].isHittable)
     }
 
     private func assertNoFeedback(_ app: XCUIApplication) {
@@ -436,43 +362,35 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [expected], timeout: 5), .completed, predicate, file: file, line: line)
     }
 
+    /// Scrolls the page until the element can be tapped and is clear of the
+    /// keys pinned at the bottom.
     private func reveal(_ element: XCUIElement, in app: XCUIApplication, scrollingUp: Bool = true,
                         file: StaticString = #filePath, line: UInt = #line) {
-        // Forms can omit offscreen rows from the accessibility tree on small phones.
         _ = element.waitForExistence(timeout: 1)
-        for _ in 0..<5 where !element.isHittable {
-            scrollForm(in: app, up: scrollingUp)
+        for _ in 0..<5 where !element.isHittable || underBottomKeys(element, in: app) {
+            scroll(app, up: scrollingUp)
         }
-        // Reopened forms can restore an offset beyond the target row.
-        for _ in 0..<6 where !element.isHittable {
-            scrollForm(in: app, up: !scrollingUp)
-        }
-        // The sheet's action bar floats over the bottom of the form: a row
-        // scrolled under it reads as hittable, but a tap there lands on the bar.
-        for _ in 0..<4 where element.exists && element.isHittable && underActionBar(element, in: app) {
-            scrollForm(in: app, up: true)
+        for _ in 0..<6 where !element.isHittable || underBottomKeys(element, in: app) {
+            scroll(app, up: !scrollingUp)
         }
         XCTAssertTrue(element.waitForExistence(timeout: 5), file: file, line: line)
         XCTAssertTrue(element.isHittable, "Control must remain reachable on small screens", file: file, line: line)
-        XCTAssertFalse(underActionBar(element, in: app), "Control must not sit under the action bar", file: file, line: line)
     }
 
-    private func underActionBar(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
-        let barButtons = ["coach-submit", "coach-confirm-transcript", "coach-cancel"]
-        guard element.exists, !barButtons.contains(element.identifier) else { return false }
-        guard let bar = barButtons.map({ app.buttons[$0] }).first(where: { $0.exists }) else { return false }
-        // The bar's background reaches a little above its button.
-        return element.frame.maxY > bar.frame.minY - 10
+    private func underBottomKeys(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        let keys = ["speaking-next", "speaking-show-reference"]
+        guard element.exists, !keys.contains(element.identifier) else { return false }
+        let next = app.buttons["speaking-next"]
+        guard next.exists else { return false }
+        return element.frame.maxY > next.frame.minY - 8
     }
 
-    private func scrollForm(in app: XCUIApplication, up: Bool) {
-        let form = app.collectionViews["coach-form"]
-        if form.exists {
-            // Use the form margin so the gesture doesn't scroll the editor itself.
-            let upper = form.coordinate(withNormalizedOffset: CGVector(dx: 0.025, dy: 0.3))
-            let lower = form.coordinate(withNormalizedOffset: CGVector(dx: 0.025, dy: 0.75))
-            (up ? lower : upper).press(forDuration: 0.01, thenDragTo: up ? upper : lower)
-        } else if up { app.swipeUp() } else { app.swipeDown() }
+    /// Swipes on the page's margin, clear of the notepad, which scrolls itself.
+    private func scroll(_ app: XCUIApplication, up: Bool) {
+        let window = app.windows.firstMatch
+        let upper = window.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.3))
+        let lower = window.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.65))
+        (up ? lower : upper).press(forDuration: 0.01, thenDragTo: up ? upper : lower)
     }
 
     private func tap(_ element: XCUIElement, in app: XCUIApplication,

@@ -546,11 +546,11 @@ struct SpeakingCoachView: View {
             else if recording.hasRecording { retakeOpen = true }
             else { beginRecording() }
         } label: {
-            Label {
+            // An icon and its word side by side, never the icon alone.
+            HStack(spacing: 8) {
+                recordIcon.accessibilityHidden(true)
                 Text(live ? L.t("停止", "Stop")
                      : recording.hasRecording ? L.t("重錄", "Record again") : L.t("錄音", "Record"))
-            } icon: {
-                recordIcon
             }
                 .font(.headline)
                 .lineLimit(1)

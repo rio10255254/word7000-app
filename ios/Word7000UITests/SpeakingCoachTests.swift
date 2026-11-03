@@ -458,8 +458,9 @@ final class SpeakingCoachTests: XCTestCase {
     }
 
     private func underActionBar(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
-        let bar = ["coach-submit", "coach-confirm-transcript", "coach-cancel"].map { app.buttons[$0] }.first { $0.exists }
-        guard let bar, bar != element else { return false }
+        let barButtons = ["coach-submit", "coach-confirm-transcript", "coach-cancel"]
+        guard element.exists, !barButtons.contains(element.identifier) else { return false }
+        guard let bar = barButtons.map({ app.buttons[$0] }).first(where: { $0.exists }) else { return false }
         // The bar's background reaches a little above its button.
         return element.frame.maxY > bar.frame.minY - 10
     }

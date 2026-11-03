@@ -217,6 +217,7 @@ struct SettingsView: View {
                         SettingsLabel(L.reminder, icon: model.reminderEnabled ? "bell.badge.fill" : "bell.slash.fill", tint: .red)
                     }
                     .accessibilityIdentifier("settings-reminder")
+                    PushStatusRow()
                     if model.reminderEnabled && account.supportsCustomReminderTime {
                         DatePicker(selection: Binding(
                             get: {

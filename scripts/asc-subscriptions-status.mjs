@@ -39,9 +39,17 @@ for (const group of groups) {
     for (const offer of offers.data) {
       const o = offer.attributes;
       const key = `${o.offerMode} ${o.duration} ×${o.numberOfPeriods} from ${o.startDate ?? 'now'} to ${o.endDate ?? 'no end'}`;
-      kinds.set(key, (kinds.get(key) ?? 0) + 1);
+      const territory = offer.relationships?.territory?.data?.id ?? '?';
+      kinds.set(key, [...(kinds.get(key) ?? []), territory]);
     }
     if (kinds.size === 0) console.log('    No introductory offer (no free trial)');
-    for (const [key, count] of kinds) console.log(`    Intro offer: ${key} in ${count} territories`);
+    for (const [key, territories] of kinds) console.log(`    Intro offer: ${key} in ${territories.length} territories: ${territories.sort().join(' ')}`);
+    try {
+      const availability = await api(`/v1/subscriptions/${sub.id}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=200`);
+      const sold = (availability.data?.relationships?.availableTerritories?.data ?? []).map(t => t.id).sort();
+      console.log(`    Sold in ${sold.length} territories${sold.length <= 20 ? ': ' + sold.join(' ') : ''}; new territories automatically: ${availability.data?.attributes?.availableInNewTerritories}`);
+    } catch (error) { console.log(`    Availability: ${error.message}`); }
+    const prices = await api(`/v1/subscriptions/${sub.id}/prices?include=territory&limit=200`).catch(() => null);
+    if (prices) console.log(`    Priced in ${new Set(prices.data.map(p => p.relationships?.territory?.data?.id)).size} territories`);
   }
 }

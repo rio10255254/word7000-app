@@ -91,6 +91,11 @@ jobs:
           query "select jobid, jobname, schedule, active, command like '%send-streak-live-activities%' as calls_reminders from cron.job" | jq -c '.' || true
           echo "Last runs of the reminder job:"
           query "select d.status, d.start_time, left(coalesce(d.return_message, ''), 120) as message from cron.job_run_details d join cron.job j using (jobid) where j.command like '%send-streak-live-activities%' order by d.start_time desc limit 5" | jq -c '.' || true
+          echo "Reminder devices and Apple's latest refusals (reasons only, no tokens):"
+          query "select count(*) as devices, count(*) filter (where last_push_error is not null) as with_error from live_activity_devices" | jq -c '.' || true
+          query "select left(last_push_error, 120) as reason, count(*) from live_activity_devices where last_push_error is not null group by 1 order by 2 desc limit 5" | jq -c '.' || true
+          echo "Devices registered for announcements:"
+          query "select count(*) as devices from push_devices" | jq -c '.' || true
           echo "Recent HTTP responses from pg_net:"
           query "select status_code, left(coalesce(content::text, error_msg, ''), 160) as body, created from net._http_response order by created desc limit 5" | jq -c '.' || true
 

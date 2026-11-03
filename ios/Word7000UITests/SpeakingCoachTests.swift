@@ -389,11 +389,17 @@ final class SpeakingCoachTests: XCTestCase {
         return element.frame.maxY > next.frame.minY - 8
     }
 
-    /// Swipes on the page's margin, clear of the notepad, which scrolls itself.
+    /// Swipes just inside the page's left edge: within the scroll view (the
+    /// window's margin outside it does not scroll), clear of the notepad,
+    /// which scrolls itself.
     private func scroll(_ app: XCUIApplication, up: Bool) {
         let window = app.windows.firstMatch
-        let upper = window.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.3))
-        let lower = window.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.65))
+        let page = app.scrollViews.firstMatch
+        let frame = page.exists ? page.frame : window.frame
+        let origin = window.coordinate(withNormalizedOffset: .zero)
+        let x = frame.minX + 6
+        let upper = origin.withOffset(CGVector(dx: x, dy: frame.minY + frame.height * 0.2))
+        let lower = origin.withOffset(CGVector(dx: x, dy: frame.minY + frame.height * 0.8))
         (up ? lower : upper).press(forDuration: 0.01, thenDragTo: up ? upper : lower)
     }
 

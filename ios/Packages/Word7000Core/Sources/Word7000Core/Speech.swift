@@ -59,15 +59,37 @@ public enum SpeechVoiceSelection {
         }
     }
 
+    /// The warmest-sounding voices iOS lets apps use, best first. Among voices
+    /// of the same quality one of these wins over the rest.
+    static let natural = ["Ava", "Zoe", "Evan", "Nathan", "Noelle", "Joelle", "Allison", "Tom", "Susan", "Samantha", "Meijia"]
+
+    /// Robotic voices (the Eloquence set, for screen readers) are never the
+    /// automatic choice; a learner can still pick one by hand.
+    static func isRobotic(_ voice: SpeechVoiceOption) -> Bool {
+        voice.id.lowercased().contains("eloquence")
+    }
+
     public static func preferred(_ voices: [SpeechVoiceOption], language: String, selectedID: String?, systemDefaultID: String?) -> SpeechVoiceOption? {
         let candidates = matching(voices, language: language)
         if let selectedID, let explicit = candidates.first(where: { $0.id == selectedID }) { return explicit }
         let requested = language.lowercased().replacingOccurrences(of: "_", with: "-")
-        let exact = candidates.filter { $0.language.lowercased().replacingOccurrences(of: "_", with: "-") == requested }
-        return (exact.isEmpty ? candidates : exact).sorted { a, b in
+        let human = candidates.filter { !isRobotic($0) }
+        let pool = human.isEmpty ? candidates : human
+        let exact = pool.filter { $0.language.lowercased().replacingOccurrences(of: "_", with: "-") == requested }
+        func rank(_ voice: SpeechVoiceOption) -> Int {
+            natural.firstIndex { voice.name.hasPrefix($0) } ?? natural.count
+        }
+        return (exact.isEmpty ? pool : exact).sorted { a, b in
             if a.quality != b.quality { return a.quality > b.quality }
+            if rank(a) != rank(b) { return rank(a) < rank(b) }
             if (a.id == systemDefaultID) != (b.id == systemDefaultID) { return a.id == systemDefaultID }
             return a.id < b.id
         }.first
+    }
+
+    /// True when only standard (compact) voices are installed for a language,
+    /// so a far more natural one is a free download away.
+    public static func canSoundBetter(_ voices: [SpeechVoiceOption], language: String, enhancedQuality: Int) -> Bool {
+        !matching(voices, language: language).contains { $0.quality >= enhancedQuality && !isRobotic($0) }
     }
 }

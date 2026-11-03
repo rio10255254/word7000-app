@@ -13,6 +13,23 @@ struct SpeechSettingsView: View {
     var body: some View {
         Form {
             Group {
+                if !loading, Self.canSoundBetter {
+                    // Apps cannot download voices; the learner can, for free.
+                    Section {
+                        Label {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(L.t("下載更自然的聲音", "Get a more natural voice")).font(.headline)
+                                Text(L.t("iPhone 內建的標準聲音比較生硬。到 iPhone「設定 → 輔助使用 → 朗讀內容 → 聲音」，下載英文的 Ava（優質）和中文（台灣）的美佳（增強），單字貓會自動改用。",
+                                         "The built-in standard voices sound flat. In iPhone Settings → Accessibility → Spoken Content → Voices, download English › Ava (Premium) and Chinese (Taiwan) › Meijia (Enhanced). WordCat switches to them automatically."))
+                                    .font(.subheadline).foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        } icon: {
+                            Image(systemName: "waveform.badge.plus").foregroundStyle(Palette.accent)
+                        }
+                        .accessibilityIdentifier("speech-better-voice")
+                    }
+                }
                 Section {
                     voiceRow(language: "en-US", title: L.t("英文聲音", "English voice"))
                     voiceRow(language: "zh-TW", title: L.t("中文聲音", "Chinese voice"))
@@ -60,6 +77,14 @@ struct SpeechSettingsView: View {
         }
         .onDisappear { Speaker.shared.stop() }
         .sensoryFeedback(.selection, trigger: preferences.speed) { _, _ in model.settings.hapticsEnabled ?? true }
+    }
+
+    /// Only standard voices installed for English or Taiwan Mandarin.
+    private static var canSoundBetter: Bool {
+        ["en-US", "zh-TW"].contains {
+            SpeechVoiceSelection.canSoundBetter(Speaker.shared.voices, language: $0,
+                                                enhancedQuality: AVSpeechSynthesisVoiceQuality.enhanced.rawValue)
+        }
     }
 
     private func reload() async {

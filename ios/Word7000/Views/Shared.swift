@@ -102,7 +102,8 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
                 let rate = AVSpeechUtteranceDefaultSpeechRate * Float(preferences.speed.multiplier) * (isolatedWord ? 0.94 : 1)
                 utterance.rate = min(AVSpeechUtteranceMaximumSpeechRate, max(AVSpeechUtteranceMinimumSpeechRate, rate))
                 utterance.pitchMultiplier = 1
-                utterance.prefersAssistiveTechnologySettings = true
+                // Not the Spoken Content settings: those can swap in a
+                // robotic screen-reader voice and its fast pace.
                 self.activeUtterance = utterance
                 self.synthesizer.speak(utterance)
             }

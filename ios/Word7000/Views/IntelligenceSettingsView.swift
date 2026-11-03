@@ -126,7 +126,9 @@ struct IntelligenceSettingsView: View {
             SFSpeechRecognizer.authorizationStatus() == .denied || SFSpeechRecognizer.authorizationStatus() == .restricted
                 ? L.t("尚未允許辨識", "Recognition not allowed")
                 : L.t("此語言可使用", "Available for this language")
-        case .download: L.t("需先下載語言", "Language download needed")
+        case .download:
+            speech.preparing ? L.t("正在自動下載", "Downloading automatically")
+                : L.t("連上網路後會自動下載", "Downloads automatically when online")
         case .unavailable: L.t("此裝置或語言未支援", "Device or language unsupported")
         }
     }

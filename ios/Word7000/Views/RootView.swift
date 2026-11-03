@@ -145,6 +145,11 @@ struct RootView: View {
         .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
         .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }
         .task { await IntelligenceSettings.shared.refreshPolicy() }
+        // The speech model for spoken answers arrives before the first take.
+        .task(id: model.studyMode) {
+            guard !AppRuntime.uiTesting else { return }
+            await SpeakingRecorder().refresh(language: model.studyMode == .chinese ? "zh-TW" : "en-US")
+        }
         // The developer's messages to everyone: checked on launch and on
         // coming back, each shown once when nothing else is on screen.
         .task {

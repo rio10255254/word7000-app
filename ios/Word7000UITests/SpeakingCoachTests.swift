@@ -129,23 +129,27 @@ final class SpeakingCoachTests: XCTestCase {
         }
     }
 
-    func testMockAIDisabledStillExplainsStatusAndAllowsPractice() {
+    func testWithoutDeviceAICheckingLeadsToPremiumAndPracticeContinues() {
         let app = launch(coach: "unavailable")
         openSpeaking(app)
         let completed = completionValue(app)
         enterAnswer("I practice daily.", in: app)
         dismissKeyboard(app)
-        let unavailable = app.descendants(matching: .any)["coach-unavailable"].firstMatch
-        reveal(unavailable, in: app)
-        // The fixture means AI is turned off, not an unsupported device.
-        XCTAssertTrue(unavailable.label.contains("\u{958B}\u{555F} Apple Intelligence"))
+        // Without the on-device AI, checking leads straight to Premium,
+        // and still says the free way is to turn Apple Intelligence on.
+        let premium = app.buttons["coach-premium-check"]
+        reveal(premium, in: app)
+        XCTAssertTrue(app.staticTexts["coach-premium-note"].label.contains("Apple Intelligence"))
         XCTAssertFalse(app.buttons["coach-submit"].exists)
-        XCTAssertFalse(app.buttons["coach-cancel"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["coach-unavailable"].firstMatch.exists)
         assertNoFeedback(app)
-        tap(app.buttons["coach-check-again"], in: app)
-        XCTAssertTrue(unavailable.exists)
-        XCTAssertFalse(app.buttons["coach-submit"].exists)
-        snapshot(app, "coach-mock-light-zh-ai-off")
+        snapshot(app, "coach-mock-light-zh-premium")
+        tap(premium, in: app)
+        let close = app.buttons["paywall-close"]
+        XCTAssertTrue(close.waitForExistence(timeout: 5), "Check leads to the paywall")
+        close.tap()
+        XCTAssertTrue(premium.waitForExistence(timeout: 5))
+        assertNoFeedback(app)
         tap(app.buttons["speaking-next"], in: app)
         wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
         XCTAssertNotEqual(completionValue(app), completed, "A written answer counts without AI")

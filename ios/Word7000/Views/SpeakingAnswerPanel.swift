@@ -11,6 +11,7 @@ import Word7000Core
 @MainActor
 struct SpeakingAnswerPanel: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.appStyle) private var appStyle
@@ -36,6 +37,8 @@ struct SpeakingAnswerPanel: View {
     @State private var followUpQuestion: String?
     @State private var followUpTranslation: String?
     @State private var showsPrivacy = false
+    @State private var checkAfterSubscribing = false
+    @State private var paywall: PaywallReason?
 
     static let padAnchor = "answer-pad"
     static let feedbackAnchor = "answer-feedback"
@@ -52,7 +55,7 @@ struct SpeakingAnswerPanel: View {
     /// The notepad shows once there is something to show or to write on.
     private var showsPad: Bool {
         typing || hasText || recording.hasRecording
-            || recording.state == .transcribing || recording.state == .downloading
+            || recording.state == .transcribing
     }
 
     private var canSubmitAnswer: Bool {
@@ -152,6 +155,24 @@ struct SpeakingAnswerPanel: View {
                 }
             }
         }
+        .onChange(of: recording.support) { _, support in
+            // A take recorded while speech recognition was still arriving.
+            if support == .modern, recording.state == .ready, recording.hasRecording, recording.transcript == nil, !hasText {
+                recording.transcribe(hints: transcriptionHints)
+            }
+        }
+        .onChange(of: plus.subscribed) { _, subscribed in
+            provider.refreshAvailability()
+            // Back from subscribing: the answer they wanted checked is checked.
+            if subscribed, checkAfterSubscribing {
+                checkAfterSubscribing = false
+                if hasText, !answerFocused { submit() }
+            }
+        }
+        // The page is a full-screen cover, so the paywall is presented from here.
+        .sheet(item: $paywall, onDismiss: {
+            if !plus.subscribed { checkAfterSubscribing = false }
+        }) { reason in PaywallView(reason: reason) }
         .onChange(of: answerFocused) { _, focused in
             guard focused else { return }
             // The notepad comes up above the keyboard to write on.
@@ -184,7 +205,10 @@ struct SpeakingAnswerPanel: View {
             inputCommitFailed = true
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { provider.refreshAvailability() }
+            if phase == .active {
+                provider.refreshAvailability()
+                if recording.preparationFailed { Task { await recording.refresh(language: answerLanguage) } }
+            }
             else if phase == .background { pendingSubmission = false; session.cancel(); recording.interrupt(); Speaker.shared.stop() }
         }
         .onChange(of: provider.availability) { _, availability in
@@ -434,20 +458,25 @@ struct SpeakingAnswerPanel: View {
     /// Progress and the rare manual step under the notepad.
     @ViewBuilder
     private var padStatus: some View {
-        if recording.state == .transcribing || recording.state == .downloading || recording.state == .requesting {
+        if recording.state == .transcribing || recording.state == .requesting {
             HStack {
                 ProgressView()
-                Text(recording.state == .downloading ? L.t("下載語言中…", "Downloading language…")
-                     : recording.state == .transcribing ? L.t("轉成文字中…", "Turning it into text…") : L.t("處理中…", "Processing…"))
+                Text(recording.state == .transcribing ? L.t("轉成文字中…", "Turning it into text…") : L.t("處理中…", "Processing…"))
                     .font(.subheadline)
                 Spacer()
                 Button(L.t("取消", "Cancel")) { recording.interrupt() }.buttonStyle(.borderless)
             }
         } else if recording.support == .download && recording.hasRecording {
-            Button { recording.downloadLanguage() } label: {
-                Label(L.t("下載離線辨識，把錄音轉成文字", "Download offline transcription"), systemImage: "arrow.down.circle")
+            // The speech model is fetched on its own; the take waits for it.
+            HStack(spacing: 8) {
+                if recording.preparing { ProgressView() }
+                Text(recording.preparing
+                     ? L.t("第一次使用，正在準備語音辨識，好了會自動轉成文字…", "Getting speech recognition ready for the first time. Your take turns into text as soon as it's done…")
+                     : L.t("語音辨識要連上網路下載一次，連線後會自動完成；也可以回放後自己輸入。", "Speech recognition downloads once over the internet and finishes on its own when you're online. You can also replay and type."))
+                    .font(.footnote).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .buttonStyle(.borderless)
+            .accessibilityIdentifier("coach-preparing-speech")
         } else if recording.hasRecording, recording.transcript == nil, recording.support == .modern || recording.support == .legacy {
             Button { recording.transcribe(hints: transcriptionHints) } label: {
                 Label(hasText ? L.t("轉成文字（取代目前的回答）", "Turn into text (replaces your answer)") : L.t("轉成文字", "Turn into text"),
@@ -509,6 +538,8 @@ struct SpeakingAnswerPanel: View {
                 .disabled(!canSubmitAnswer)
                 .accessibilityIdentifier("coach-submit")
             }
+        } else if premiumUnlocksChecking {
+            if hasText, !answerFocused { premiumCheckKey }
         } else if hasText || recording.hasRecording {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .top) {
@@ -533,6 +564,58 @@ struct SpeakingAnswerPanel: View {
                     .accessibilityIdentifier("coach-check-again")
                 }
             }
+        }
+    }
+
+    /// Without Apple Intelligence on this iPhone, Premium's online AI checks
+    /// the answer instead, so the Check key leads straight to subscribing
+    /// rather than to a message about what the phone cannot do.
+    private var premiumUnlocksChecking: Bool {
+        provider.availability != .paused && !plus.subscribed
+            && IntelligenceSettings.shared.coachAllowed && IntelligenceSettings.shared.cloudOffered
+    }
+
+    private var premiumCheckKey: some View {
+        VStack(spacing: 8) {
+            Button {
+                needsTranscriptReview = false
+                checkAfterSubscribing = true
+                Speaker.shared.stop()
+                paywall = .speakingCoach
+            } label: {
+                HStack(spacing: 8) {
+                    Label(L.t("批改", "Check my answer"), systemImage: "sparkles")
+                    Text("Premium")
+                        .font(.caption.weight(.heavy))
+                        .padding(.horizontal, 7).padding(.vertical, 2)
+                        .background(.white.opacity(0.25), in: Capsule())
+                }
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .disabled(answer.count > SpeakingCoach.maximumAnswerCharacters)
+            .accessibilityIdentifier("coach-premium-check")
+            Text(premiumNote)
+                .font(.footnote).foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("coach-premium-note")
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private var premiumNote: String {
+        switch provider.availability {
+        case .disabled:
+            L.t("訂閱 Premium，小笨貓就幫你改成更自然的說法、再追問一題。或在 iPhone 設定開啟 Apple Intelligence，免費在手機上批改。",
+                "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Or turn on Apple Intelligence in Settings to check for free on this iPhone.")
+        case .preparing:
+            L.t("訂閱 Premium 現在就能批改。Apple Intelligence 準備好之後，也能免費在手機上批改。",
+                "Premium checks it right now. Once Apple Intelligence is ready, checking on this iPhone is free too.")
+        default:
+            L.t("訂閱 Premium，小笨貓就幫你改成更自然的說法、再追問一題。任何 iPhone 都能用。",
+                "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Works on any iPhone.")
         }
     }
 

@@ -39,8 +39,6 @@ struct SpeakingSessionView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                scopePicker
-                    .padding(.top, 4)
                 Group {
                     if !started {
                         ProgressView()
@@ -77,8 +75,17 @@ struct SpeakingSessionView: View {
                     Button {
                         previousFilter = model.settings.speakingFilter ?? FilterSelection()
                         filtersOpen = true
-                    } label: { Image(systemName: "slider.horizontal.3") }
+                    } label: {
+                        // A dot shows the practice is narrowed to a word list or a filter.
+                        Image(systemName: "slider.horizontal.3")
+                            .overlay(alignment: .topTrailing) {
+                                if scopeNarrowed {
+                                    Circle().fill(Palette.accent).frame(width: 8, height: 8).offset(x: 4, y: -3)
+                                }
+                            }
+                    }
                     .accessibilityLabel(L.filters)
+                    .accessibilityValue(scopeNarrowed ? model.bankName : "")
                     .accessibilityIdentifier("speaking-filters")
                 }
             }
@@ -108,6 +115,14 @@ struct SpeakingSessionView: View {
             NavigationStack {
                 Form {
                     Group {
+                        // Which word list, kept here rather than above every question.
+                        Section {
+                            scopePicker
+                        } footer: {
+                            Text(L.t("可練習 \(availableCount) 個單字", "\(availableCount) \(availableCount == 1 ? "word" : "words") to practise"))
+                                .monospacedDigit()
+                                .accessibilityIdentifier("speaking-available-count")
+                        }
                         Section {
                             FilterControls(selection: Binding(get: { model.settings.speakingFilter ?? FilterSelection() }, set: { model.settings.speakingFilter = $0 }))
                         }
@@ -117,43 +132,37 @@ struct SpeakingSessionView: View {
                 .warmList()
                 .navigationTitle(L.t("練習範圍", "Practice scope"))
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false } } }
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L.done) { filtersOpen = false }.accessibilityIdentifier("speaking-filters-done") } }
                 .compactSheet()
             }
         }
         .catTip(.speaking, at: .top, inset: 60)
     }
 
+    private var scopeNarrowed: Bool {
+        model.activeSet != nil || (model.settings.speakingFilter ?? FilterSelection()).isActive
+    }
+
     private var scopePicker: some View {
-        HStack {
-            Menu {
-                Button { model.selectBank(WordBanks.coreBankId) } label: {
-                    Label(L.coreBankName, systemImage: model.activeSet == nil ? "checkmark" : "character.book.closed")
-                }
-                ForEach(model.customSets.sets) { set in
-                    Button { model.selectBank(set.id) } label: {
-                        Label(set.name, systemImage: model.settings.activeBankId == set.id ? "checkmark" : "folder")
-                    }
-                }
-            } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "books.vertical")
-                    Text(model.bankName).lineLimit(1)
-                    Image(systemName: "chevron.down").font(.caption2.weight(.semibold))
-                }
-                .font(.subheadline.weight(.medium))
+        Menu {
+            Button { model.selectBank(WordBanks.coreBankId) } label: {
+                Label(L.coreBankName, systemImage: model.activeSet == nil ? "checkmark" : "character.book.closed")
             }
-            .accessibilityIdentifier("speaking-bank")
-            Spacer(minLength: 8)
-            Text(L.t("\(availableCount) 個單字", "\(availableCount) \(availableCount == 1 ? "word" : "words")"))
-                .font(.caption).foregroundStyle(.secondary).monospacedDigit()
-                .accessibilityIdentifier("speaking-available-count")
-            if (model.settings.speakingFilter ?? FilterSelection()).isActive {
-                Image(systemName: "line.3.horizontal.decrease.circle.fill").foregroundStyle(Palette.accent)
-                    .accessibilityLabel(L.filters)
+            ForEach(model.customSets.sets) { set in
+                Button { model.selectBank(set.id) } label: {
+                    Label(set.name, systemImage: model.settings.activeBankId == set.id ? "checkmark" : "folder")
+                }
             }
+        } label: {
+            HStack(spacing: 8) {
+                Label(L.t("詞庫", "Word list"), systemImage: "books.vertical").foregroundStyle(.primary)
+                Spacer(minLength: 8)
+                Text(model.bankName).lineLimit(1).foregroundStyle(.secondary)
+                Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.semibold)).foregroundStyle(.secondary)
+            }
+            .frame(minHeight: 44)
         }
-        .frame(minHeight: 32)
+        .accessibilityIdentifier("speaking-bank")
     }
 
     private var emptyScope: some View {

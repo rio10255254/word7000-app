@@ -165,8 +165,14 @@ final class ScanPickerTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), app.debugDescription)
         XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
         XCTAssertFalse(app.buttons["speaking-use-core"].exists)
-        XCTAssertEqual(app.staticTexts["speaking-available-count"].label, "1 個單字")
         snapshot(app, name: "speaking-scanned-word-example")
+        // The word list and its size live under the scope button, not above the question.
+        app.buttons["speaking-filters"].tap()
+        let count = app.staticTexts["speaking-available-count"]
+        XCTAssertTrue(count.waitForExistence(timeout: 5))
+        XCTAssertEqual(count.label, "可練習 1 個單字")
+        app.buttons["speaking-filters-done"].tap()
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
         // A scanned word may have no example sentence; it can still be practised.
         XCTAssertTrue(app.buttons["coach-record"].exists)
         XCTAssertTrue(app.buttons["speaking-next"].waitForExistence(timeout: 5))

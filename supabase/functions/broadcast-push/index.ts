@@ -49,7 +49,8 @@ Deno.serve(async (request) => {
   if (!message) return Response.json({ error: 'nothing_to_push' }, { status: 409 });
 
   let query = supabase.from('push_devices').select('token, language, app_version, app_build');
-  if (message.audience !== 'all') query = query.eq('audience', message.audience);
+  if (message.audience === 'tester') query = query.eq('tester', true);
+  else if (message.audience !== 'all') query = query.eq('audience', message.audience);
   const { data: devices, error: devicesError } = await query.limit(100_000);
   if (devicesError) {
     console.error(devicesError);

@@ -18,6 +18,8 @@ final class PushRegistration {
         case checking, notAsked, denied, waitingForToken, tokenFailed(String), uploading, failed(String), registered
     }
     private(set) var status: Status = .checking
+    /// This iPhone receives messages meant only for test phones.
+    private(set) var isTester = UserDefaults.standard.bool(forKey: "push.tester")
     @ObservationIgnored weak var account: AccountModel?
     @ObservationIgnored weak var plus: PlusModel?
     @ObservationIgnored private var token: String?
@@ -46,6 +48,17 @@ final class PushRegistration {
             lastUploaded = key
             status = .registered
         }
+    }
+
+    /// Long press on the Settings row: this iPhone becomes (or stops being)
+    /// a test phone, which alone receives messages sent to test phones.
+    func toggleTester() async -> Bool {
+        guard let token, let account else { return false }
+        let next = !isTester
+        guard await account.setPushTester(token: token, on: next) else { return false }
+        isTester = next
+        UserDefaults.standard.set(next, forKey: "push.tester")
+        return true
     }
 
     /// From the Settings row: ask for permission if never asked, then fetch a
@@ -112,6 +125,7 @@ final class PushAppDelegate: NSObject, UIApplicationDelegate, UNUserNotification
 /// what is in the way when they cannot; tapping it tries again.
 struct PushStatusRow: View {
     @Environment(\.openURL) private var openURL
+    @State private var testerNote: String?
     private var push: PushRegistration { .shared }
 
     var body: some View {
@@ -122,8 +136,22 @@ struct PushStatusRow: View {
             HStack {
                 SettingsLabel(L.t("公告推播", "Announcement pushes"), icon: icon, tint: tint)
                 Spacer(minLength: 8)
-                Text(summary).font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.trailing).lineLimit(3)
+                Text(summary + (push.isTester ? L.t("・測試機", " · test phone") : ""))
+                    .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.trailing).lineLimit(3)
             }
+        }
+        // For the developer: a long press makes this iPhone a test phone.
+        .simultaneousGesture(LongPressGesture(minimumDuration: 1.2).onEnded { _ in
+            Task {
+                let done = await push.toggleTester()
+                testerNote = done
+                    ? (push.isTester ? L.t("這支手機已設為測試機：「只給測試手機」的公告與推播只會送到這裡。", "This iPhone is now a test phone: messages for test phones come only here.")
+                                     : L.t("已取消測試機。", "No longer a test phone."))
+                    : L.t("要先登記成功（顯示「已登記」）才能設為測試機。", "Register first (it must say Registered).")
+            }
+        })
+        .alert(testerNote ?? "", isPresented: Binding(get: { testerNote != nil }, set: { if !$0 { testerNote = nil } })) {
+            Button(L.t("好", "OK")) { testerNote = nil }
         }
         .accessibilityIdentifier("settings-push-status")
         .task { await push.refreshIfAllowed() }

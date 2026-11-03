@@ -287,6 +287,14 @@ public struct SupabaseClient: Sendable {
         ]), session: session)
     }
 
+    /// Marks (or unmarks) this account's own push token as a test phone.
+    public func setPushTester(token: String, on: Bool, session: AuthSession) async throws -> Bool {
+        let data = try await request("POST", "rest/v1/rpc/set_push_tester", body: .object([
+            "p_token": .string(token), "p_tester": .bool(on),
+        ]), session: session)
+        return (try? JSONDecoder().decode(Bool.self, from: data)) ?? false
+    }
+
     /// Tells the developer which app version this account runs (one row per
     /// account, overwritten), so old versions can be counted and reached.
     public func reportAppVersion(_ version: String, build: Int?, os: String, language: String, session: AuthSession) async throws {
@@ -550,8 +558,9 @@ public struct Announcement: Codable, Equatable, Identifiable, Sendable {
 
     /// Whether this learner is in the audience: a guest, signed in without
     /// Plus, or with Plus.
-    public func reaches(signedIn: Bool, plus: Bool) -> Bool {
+    public func reaches(signedIn: Bool, plus: Bool, tester: Bool = false) -> Bool {
         switch audience {
+        case "tester": return tester
         case "guest": return !signedIn
         case "free": return signedIn && !plus
         case "plus": return plus

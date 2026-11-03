@@ -34,7 +34,8 @@ final class AnnouncementStore {
         let seen = Set(seen)
         let messages = await account.fetchAnnouncements()
         current = messages.first {
-            !seen.contains($0.id) && $0.reaches(signedIn: account.isPermanent, plus: plus.subscribed)
+            !seen.contains($0.id) && $0.reaches(signedIn: account.isPermanent, plus: plus.subscribed,
+                                                tester: PushRegistration.shared.isTester)
                 && $0.shows(toVersion: UpdateGate.version, build: UpdateGate.build)
         }
     }

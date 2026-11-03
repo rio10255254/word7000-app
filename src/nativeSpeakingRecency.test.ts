@@ -45,7 +45,13 @@ describe('native speaking recency integration', () => {
   it('restarts open practice on identity change and rejects stale question actions', () => {
     expect(view).toContain('.onChange(of: model.speakingHistoryOwnerKey) { _, _ in start() }');
     expect(view).toContain('historyOwnerKey = model.speakingHistoryOwnerKey');
-    expect(view.match(/guard historyOwnerKey == model\.speakingHistoryOwnerKey else \{ start\(\); return \}/g)).toHaveLength(2);
+    // Moving on is the only question action that writes history (showing the
+    // sample answer no longer does), and it is guarded.
+    expect(view.match(/guard historyOwnerKey == model\.speakingHistoryOwnerKey else \{ start\(\); return \}/g)).toHaveLength(1);
+    const next = view.slice(view.indexOf('private func next()'), view.indexOf('private var finished:'));
+    expect(next.indexOf('guard historyOwnerKey == model.speakingHistoryOwnerKey')).toBeGreaterThan(-1);
+    expect(next.indexOf('guard historyOwnerKey == model.speakingHistoryOwnerKey')).toBeLessThan(next.indexOf('model.recordSpeaking('));
+    expect(view.match(/model\.recordSpeaking\(/g)).toHaveLength(1);
   });
 
   it('requires executable Swift checks in native CI, without an optional skip', () => {

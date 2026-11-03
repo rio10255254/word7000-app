@@ -18,7 +18,7 @@ on:
       operation:
         description: 'build-testflight: React Native build to TestFlight. ota-update: push JS/UI changes to installed RN builds. native-testflight: native SwiftUI build to TestFlight.'
         type: choice
-        options: ['build-testflight', 'ota-update', 'native-testflight', 'testflight-submit']
+        options: ['build-testflight', 'ota-update', 'native-testflight', 'testflight-submit', 'subscriptions-status']
         default: 'build-testflight'
       message:
         description: 'Short note shown for an OTA update'
@@ -62,7 +62,7 @@ jobs:
   # An uploaded build into the TestFlight group and Beta App Review, for a
   # release run that could not submit it while another build was in review.
   testflight-submit:
-    if: inputs.operation == 'testflight-submit'
+    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -70,7 +70,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Subscriptions and free trial in App Store Connect (read-only)
+        if: inputs.operation == 'subscriptions-status'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: node scripts/asc-subscriptions-status.mjs --bundle com.rio.word7000
       - name: Add to the group and submit for Beta App Review
+        if: inputs.operation == 'testflight-submit'
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -85,7 +93,7 @@ jobs:
             --group "${GROUP:-Wordcat Public Testing 1}" --wait-minutes 2
 
   release:
-    if: inputs.operation != 'testflight-submit'
+    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status'
     runs-on: ${{ inputs.operation == 'native-testflight' && 'macos-15' || 'ubuntu-latest' }}
     timeout-minutes: 120
     env:

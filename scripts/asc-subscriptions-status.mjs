@@ -45,7 +45,7 @@ for (const group of groups) {
     if (kinds.size === 0) console.log('    No introductory offer (no free trial)');
     for (const [key, territories] of kinds) console.log(`    Intro offer: ${key} in ${territories.length} territories: ${territories.sort().join(' ')}`);
     try {
-      const availability = await api(`/v1/subscriptions/${sub.id}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=200`);
+      const availability = await api(`/v1/subscriptions/${sub.id}/subscriptionAvailability?include=availableTerritories&limit[availableTerritories]=50`);
       const sold = (availability.data?.relationships?.availableTerritories?.data ?? []).map(t => t.id).sort();
       console.log(`    Sold in ${sold.length} territories${sold.length <= 20 ? ': ' + sold.join(' ') : ''}; new territories automatically: ${availability.data?.attributes?.availableInNewTerritories}`);
     } catch (error) { console.log(`    Availability: ${error.message}`); }

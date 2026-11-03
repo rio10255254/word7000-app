@@ -26,7 +26,7 @@ const H = 2622;
 
 const FULL: Cam = { x: 603, y: 1311, z: 0.41 };
 /** The whole phone, a little lower, so the app's name fits above it. */
-const MEET: Cam = { x: 603, y: 975, z: 0.41 };
+const MEET: Cam = { x: 603, y: 1033, z: 0.39 };
 /** The study card and its buttons. */
 const STUDY: Cam = { x: 603, y: 1420, z: 0.5 };
 /** The cat in the corner of Today's word card, as the app draws it. */
@@ -108,9 +108,9 @@ const parse = (text: string) =>
 
 /**
  * What the cat says: always in the same place, low in the frame, one line
- * at a time. A small "SillyCat" tab says who is talking; the characters
- * come in one after another, and the word to lean on is marked like a
- * highlighter on paper.
+ * at a time, dark so it stands apart from the light app screens behind it.
+ * A small "SillyCat" tab says who is talking; the characters come in one
+ * after another, and the word to lean on is in peach.
  */
 const Caption = ({ text, start, length, t, first }: { text: string; start: number; length: number; t: number; first: boolean }) => {
   if (t < start || t > start + length) return null;
@@ -124,16 +124,15 @@ const Caption = ({ text, start, length, t, first }: { text: string; start: numbe
       <div
         style={{
           position: 'relative',
-          background: '#FFFCF6',
-          color: C.ink,
+          background: 'rgba(43,38,32,0.94)',
+          color: '#FFF8EE',
           fontWeight: 900,
-          fontSize: 52,
+          fontSize: 56,
           lineHeight: 1.32,
           letterSpacing: '0.02em',
           padding: '22px 36px 20px',
           borderRadius: 24,
-          border: '2px solid rgba(43,38,32,0.07)',
-          boxShadow: '0 10px 26px rgba(59,38,25,0.13)',
+          boxShadow: '0 14px 34px rgba(43,38,32,0.28)',
           textAlign: 'center',
           textWrap: 'balance',
           opacity: enter * leave,
@@ -170,8 +169,7 @@ const Caption = ({ text, start, length, t, first }: { text: string; start: numbe
                 display: 'inline-block',
                 opacity: p,
                 transform: `translateY(${(1 - p) * 10}px)`,
-                color: strong ? COLLAGE.clay : undefined,
-                backgroundImage: strong ? 'linear-gradient(transparent 62%, rgba(242,205,176,0.9) 62%)' : undefined,
+                color: strong ? '#F7B98F' : undefined,
                 whiteSpace: 'pre',
               }}
             >
@@ -230,7 +228,7 @@ export const Intro = ({ id }: { id: string }) => {
       [0, CAT],
       [meet - 0.05, { ...CAT, z: 2.95 }],
       [meet + 1.1, MEET],
-      [roast, { ...MEET, z: 0.43 }],
+      [roast, { ...MEET, y: 1000, z: 0.4 }],
       [roast + 0.75, BUBBLE],
       [study - 0.05, { ...BUBBLE, z: 1.36 }],
       [tapContinue - 0.05, BUTTON],

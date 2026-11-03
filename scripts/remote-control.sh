@@ -65,6 +65,16 @@ post)
   fi
   below_version=""; below_build=""
   if [ -n "$BELOW" ]; then parse "$BELOW"; below_version="$VERSION"; below_build="$BUILD"; fi
+  if [ -n "$REQUIRE" ]; then parse "$REQUIRE"; fi
+  if [ "${DRY_RUN:-false}" = "true" ]; then
+    say "## 👀 試跑：以下內容不會真的發出"
+    [ -n "$REQUIRE" ] && say "- ⛔ 強制更新：低於 **$REQUIRE** 的 App 只會看到更新畫面"
+    say "- 📣 標題：**$TITLE_ZH**${TITLE_EN:+ ／ $TITLE_EN}"
+    say "- 內容：$BODY_ZH"
+    [ -n "$BODY_EN" ] && say "- English：$BODY_EN"
+    say "- 對象：$AUDIENCE${below_version:+，只給 $BELOW 以前的版本}；${LINK:+按鈕 $LINK；}推播：$PUSH；留 $DAYS 天（0 = 直到下架）"
+    exit 0
+  fi
   if [ -n "$REQUIRE" ]; then
     parse "$REQUIRE"
     requirement=$(jq -n --arg v "$VERSION" --arg b "$BUILD" --arg mz "${BODY_ZH:0:300}" --arg me "${BODY_EN:0:300}" \

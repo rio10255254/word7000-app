@@ -82,7 +82,9 @@ if (Object.values(notes).some(Boolean)) {
 // 3. Into the group.
 const group = (await api('GET', `/v1/betaGroups?filter[app]=${app.id}&filter[name]=${q(args.group)}&limit=1`)).data[0];
 if (!group) throw new Error(`No TestFlight group named "${args.group}"`);
-await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] });
+// Adding a build the group already has is fine.
+await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
+  .catch((error) => { if (error.status !== 409) throw error; });
 console.log(`Added to "${args.group}".`);
 
 // 4. External groups need Beta App Review; later builds of an approved
@@ -93,7 +95,11 @@ if (!group.attributes.isInternalGroup) {
       relationships: { build: { data: { type: 'builds', id: build.id } } } } });
     console.log('Submitted for Beta App Review.');
   } catch (error) {
-    if (error.status === 409 || error.status === 422) console.log(`Beta App Review: ${error.message}`);
+    if (error.status === 409 || error.status === 422) {
+      console.log(`Beta App Review: ${error.message}`);
+      // Say so where it is seen: the build is in the group but waits for review.
+      if (process.env.GITHUB_ACTIONS) console.log(`::warning::Build ${args.build} is in "${args.group}" but was not submitted for Beta App Review: ${error.message} Run the "TestFlight submit" workflow once the earlier build is reviewed.`);
+    }
     else throw error;
   }
 }

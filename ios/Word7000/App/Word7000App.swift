@@ -41,8 +41,13 @@ struct Word7000App: App {
                 .task { await plus.start() }
                 .task { await Speaker.shared.refreshVoices() }
                 .task { await PushRegistration.shared.refreshIfAllowed() }
-                // Who the learner is decides which messages reach them.
-                .task(id: "\(account.isPermanent)|\(plus.subscribed)|\(model.studyMode)") { await PushRegistration.shared.upload() }
+                // Who the learner is decides which messages reach them. The
+                // account itself is part of it: a new guest after deleting an
+                // account, or a session restored after the token arrived,
+                // registers the iPhone again.
+                .task(id: "\(account.session?.user.id ?? "")|\(account.isPermanent)|\(plus.subscribed)|\(model.studyMode)") {
+                    await PushRegistration.shared.upload()
+                }
                 .task { model.syncAppIcon() }
                 .onChange(of: plus.subscribed) { _, _ in Task { await account.flush() } }
                 .preferredColorScheme(model.settings.theme.colorScheme)

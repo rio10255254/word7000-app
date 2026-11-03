@@ -317,9 +317,10 @@ final class SpeakingCoachTests: XCTestCase {
         answer.typeText(text)
         // The accessibility value can lag the final keyboard event on older
         // simulators. Keep the exact-text assertion; never retry the keystroke.
-        let committed = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", text), object: answer)
-        XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 5), .completed)
+        // Read the value itself until it matches: a predicate expectation on
+        // the element can miss an update that a fresh read sees.
+        let deadline = Date().addingTimeInterval(6)
+        while answer.value as? String != text, Date() < deadline { Thread.sleep(forTimeInterval: 0.25) }
         XCTAssertEqual(answer.value as? String, text)
     }
 

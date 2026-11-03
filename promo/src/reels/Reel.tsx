@@ -238,7 +238,21 @@ const Talk = ({ line, slot, t, big }: { line: Line; slot: Slot; t: number; big: 
 };
 
 /** Every episode ends here, on the same three notes. */
-export const EndCard = ({ start, t, series }: { start: number; t: number; series: string }) => {
+export const EndCard = ({
+  start,
+  t,
+  series,
+  name = '單字貓',
+  outro = script.outro,
+  note = script.outroNote,
+}: {
+  start: number;
+  t: number;
+  series: string;
+  name?: string;
+  outro?: string;
+  note?: string;
+}) => {
   const s = slap(t, start);
   const line = interpolate(t, [start + 0.5, start + 0.8], [0, 1], { ...clamp, easing: ease });
   if (t < start) return null;
@@ -250,11 +264,11 @@ export const EndCard = ({ start, t, series }: { start: number; t: number; series
           <Img src={staticFile('icon-collage.png')} style={{ width: 400, height: 400, display: 'block', borderRadius: 88, boxShadow: '0 22px 50px rgba(43,38,32,0.25)' }} />
           <Tape width={56} angle={-38} style={{ left: -46, top: 14 }} />
         </div>
-        <div style={{ fontWeight: 900, fontSize: 150, letterSpacing: '0.05em', marginTop: 50 }}>單字貓</div>
+        <div style={{ fontWeight: 900, fontSize: 150, letterSpacing: '0.05em', marginTop: 50 }}>{name}</div>
         <div style={{ fontWeight: 900, fontSize: 56, marginTop: 24, color: COLLAGE.clay, opacity: line, transform: `translateY(${(1 - line) * 16}px)` }}>
-          {script.outro}
+          {outro}
         </div>
-        <div style={{ fontWeight: 700, fontSize: 40, marginTop: 22, color: C.inkSoft, opacity: line }}>{script.outroNote}</div>
+        <div style={{ fontWeight: 700, fontSize: 40, marginTop: 22, color: C.inkSoft, opacity: line }}>{note}</div>
       </AbsoluteFill>
       <div style={{ position: 'absolute', left: 0, right: 0, top: 250, textAlign: 'center', fontWeight: 700, fontSize: 30, letterSpacing: '0.12em', color: C.inkSoft }}>
         {series}

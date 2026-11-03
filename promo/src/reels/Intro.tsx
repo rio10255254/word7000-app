@@ -99,12 +99,22 @@ const Ripple = ({ at, t, x, y, cam }: { at: number; t: number; x: number; y: num
   );
 };
 
-/** `**word**` in a line is the word to lean on. */
-const parse = (text: string) =>
-  text.split(/(\*\*[^*]+\*\*)/).flatMap((part) => {
+/**
+ * A line as words of characters; `**word**` is the word to lean on. Each
+ * Latin word stays whole on one line; Chinese may break between any two
+ * characters, as it does in print.
+ */
+const parse = (text: string) => {
+  const words: { c: string; strong: boolean }[][] = [];
+  text.split(/(\*\*[^*]+\*\*)/).forEach((part) => {
     const strong = part.startsWith('**');
-    return Array.from(strong ? part.slice(2, -2) : part).map((c) => ({ c, strong }));
+    const body = strong ? part.slice(2, -2) : part;
+    for (const piece of body.match(/[A-Za-z0-9'’.,!?:;-]+|\s+|./gu) ?? []) {
+      words.push(Array.from(piece).map((c) => ({ c, strong })));
+    }
   });
+  return words;
+};
 
 /**
  * What the cat says: always in the same place, low in the frame, one line
@@ -117,8 +127,10 @@ const Caption = ({ text, start, length, t, first }: { text: string; start: numbe
   const age = first ? 10 : t - start;
   const enter = interpolate(age, [0, 0.24], [0, 1], { ...clamp, easing: out });
   const leave = interpolate(t, [start + length - 0.16, start + length], [1, 0], clamp);
-  const chars = parse(text);
-  const stagger = Math.min(0.03, 0.34 / chars.length);
+  const words = parse(text);
+  const starts = words.map((_, w) => words.slice(0, w).reduce((n, word) => n + word.length, 0));
+  const count = words.reduce((n, word) => n + word.length, 0);
+  const stagger = Math.min(0.03, 0.34 / count);
   return (
     <div style={{ position: 'absolute', left: 70, right: 70, top: 1478, display: 'flex', justifyContent: 'center' }}>
       <div
@@ -160,34 +172,39 @@ const Caption = ({ text, start, length, t, first }: { text: string; start: numbe
           <Mascot mood="smug" size={38} />
           SillyCat
         </div>
-        {chars.map(({ c, strong }, i) => {
-          const p = interpolate(age, [i * stagger, i * stagger + 0.14], [0, 1], { ...clamp, easing: out });
-          return (
-            <span
-              key={i}
-              style={{
-                display: 'inline-block',
-                opacity: p,
-                transform: `translateY(${(1 - p) * 10}px)`,
-                color: strong ? '#F7B98F' : undefined,
-                whiteSpace: 'pre',
-              }}
-            >
-              {c}
-            </span>
-          );
-        })}
+        {words.map((word, w) => (
+          <span key={w} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
+            {word.map(({ c, strong }, k) => {
+              const i = starts[w] + k;
+              const p = interpolate(age, [i * stagger, i * stagger + 0.14], [0, 1], { ...clamp, easing: out });
+              return (
+                <span
+                  key={k}
+                  style={{
+                    display: 'inline-block',
+                    opacity: p,
+                    transform: `translateY(${(1 - p) * 10}px)`,
+                    color: strong ? '#F7B98F' : undefined,
+                    whiteSpace: 'pre',
+                  }}
+                >
+                  {c}
+                </span>
+              );
+            })}
+          </span>
+        ))}
       </div>
     </div>
   );
 };
 
 /** The app's name, stamped on once the camera has shown where the cat lives. */
-const NameTag = ({ at, until, t }: { at: number; until: number; t: number }) => {
+const NameTag = ({ at, until, t, name, tagline }: { at: number; until: number; t: number; name: string; tagline: string }) => {
   const press = interpolate(t, [at, at + 0.12], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
   const leave = interpolate(t, [until - 0.25, until], [1, 0], clamp);
   if (t < at || t > until) return null;
-  const width = 700;
+  const width = 900;
   const height = 150;
   return (
     <div
@@ -204,8 +221,8 @@ const NameTag = ({ at, until, t }: { at: number; until: number; t: number }) => 
       <Paper kind="peach" style={{ inset: 0, clipPath: torn(width, height, ['top', 'bottom'], 5, 4) }} />
       <Tape width={56} angle={-10} style={{ left: 18, top: -16 }} />
       <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 26, color: C.ink }}>
-        <span style={{ fontWeight: 900, fontSize: 76, letterSpacing: '0.04em' }}>單字貓</span>
-        <span style={{ fontWeight: 700, fontSize: 40, color: COLLAGE.clay }}>背 7000 單字的 App</span>
+        <span style={{ fontWeight: 900, fontSize: 76, letterSpacing: '0.04em' }}>{name}</span>
+        <span style={{ fontWeight: 700, fontSize: 38, color: COLLAGE.clay, whiteSpace: 'nowrap' }}>{tagline}</span>
       </div>
     </div>
   );
@@ -213,7 +230,15 @@ const NameTag = ({ at, until, t }: { at: number; until: number; t: number }) => 
 
 export const Intro = ({ id }: { id: string }) => {
   const t = useCurrentFrame() / REEL_FPS;
-  const episode = script.episodes.find((e) => e.id === id)!;
+  const episode = script.episodes.find((e) => e.id === id)! as (typeof script.episodes)[number] & {
+    app?: string;
+    tagline?: string;
+    outro?: string;
+    outroNote?: string;
+    catTop?: number;
+    shots?: { today: string; study: string; answer: string };
+  };
+  const shots = episode.shots ?? { today: 'today', study: 'study', answer: 'study-answer' };
   const timing = (timings as Record<string, { total: number; end: number; slots: { start: number; length: number }[] }>)[id];
   const [hook, meet, roast, study, bye] = timing.slots.map((s) => s.start);
   const BEAT = 0.5;
@@ -255,7 +280,7 @@ export const Intro = ({ id }: { id: string }) => {
   // The cat in the app's corner: drawn crisp over the screenshot so it can
   // move, and carried along when the screen pushes away.
   const todayShift = -0.3 * W * nav;
-  const catStage = toStage(cam, CAT_BOX.left + todayShift, CAT_BOX.top);
+  const catStage = toStage(cam, CAT_BOX.left + todayShift, episode.catTop ?? CAT_BOX.top);
   const catSize = CAT_BOX.size * cam.z;
   const greet = interpolate(t, [0.05, 0.3], [0, 1], { ...clamp, easing: Easing.out(Easing.back(2.2)) });
   const catMood: Mood = t < 0.25 ? 'idle' : t < meet ? 'smug' : t < roast + 0.6 ? 'happy' : 'smug';
@@ -291,12 +316,12 @@ export const Intro = ({ id }: { id: string }) => {
         />
         <div style={{ position: 'absolute', inset: 0, borderRadius: 165 * cam.z, overflow: 'hidden', filter: blur > 0.2 ? `blur(${blur}px)` : undefined, background: COLLAGE.desk }}>
           <div style={{ position: 'absolute', inset: 0, transform: `translateX(${todayShift * cam.z}px)`, filter: `brightness(${1 - 0.25 * nav})` }}>
-            <Img src={staticFile('shots/today.jpg')} style={{ width: '100%', height: '100%' }} />
+            <Img src={staticFile(`shots/${shots.today}.jpg`)} style={{ width: '100%', height: '100%' }} />
           </div>
           {nav > 0 ? (
             <div style={{ position: 'absolute', inset: 0, transform: `translateX(${(1 - nav) * W * cam.z}px)`, boxShadow: '-20px 0 40px rgba(0,0,0,0.12)' }}>
-              <Img src={staticFile('shots/study.jpg')} style={{ position: 'absolute', width: '100%', height: '100%' }} />
-              <Img src={staticFile('shots/study-answer.jpg')} style={{ position: 'absolute', width: '100%', height: '100%', opacity: answer }} />
+              <Img src={staticFile(`shots/${shots.study}.jpg`)} style={{ position: 'absolute', width: '100%', height: '100%' }} />
+              <Img src={staticFile(`shots/${shots.answer}.jpg`)} style={{ position: 'absolute', width: '100%', height: '100%', opacity: answer }} />
               <div style={{ position: 'absolute', inset: 0, background: '#6E8F5E', opacity: knowFlash * 0.22 }} />
               {/* Where the little cat was, once it has jumped out. */}
               {jp > 0 ? (
@@ -345,14 +370,14 @@ export const Intro = ({ id }: { id: string }) => {
         </div>
       ) : null}
 
-      <NameTag at={meet + 2 * BEAT} until={roast} t={t} />
+      <NameTag at={meet + 2 * BEAT} until={roast} t={t} name={episode.app ?? '單字貓'} tagline={episode.tagline ?? ''} />
       {lines.map((line, i) => (
         <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} />
       ))}
 
       {reveal > 0 ? (
         <AbsoluteFill style={{ clipPath: `circle(${reveal * 1250}px at 540px 930px)` }}>
-          <EndCard start={timing.end - 0.2} t={t} series={episode.series} />
+          <EndCard start={timing.end - 0.2} t={t} series={episode.series} name={episode.app} outro={episode.outro} note={episode.outroNote} />
         </AbsoluteFill>
       ) : null}
     </AbsoluteFill>

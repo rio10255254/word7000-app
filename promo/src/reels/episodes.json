@@ -86,7 +86,109 @@
             ]
           ]
         }
-      ]
+      ],
+      "app": "單字貓",
+      "tagline": "背 7000 單字的 App",
+      "shots": {
+        "today": "today",
+        "study": "study",
+        "answer": "study-answer"
+      }
+    },
+    {
+      "id": "ep01-en",
+      "series": "SillyCat Diaries #1",
+      "voice": false,
+      "hook": [
+        "Hey. Scrolling again?"
+      ],
+      "lines": [
+        {
+          "text": "Hey. **Scrolling** again?",
+          "beats": 4,
+          "cues": [
+            [
+              0,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "I'm **SillyCat**. I make sure you study.",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "Yep. The app really **roasts** you.",
+          "beats": 5,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ]
+          ]
+        },
+        {
+          "text": "**Taiwan Mandarin**, one word at a time.",
+          "beats": 6,
+          "cues": [
+            [
+              0.8,
+              "tap"
+            ],
+            [
+              1,
+              "whoosh"
+            ],
+            [
+              3,
+              "tap"
+            ],
+            [
+              4.4,
+              "tap"
+            ],
+            [
+              4.5,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "See you tomorrow. Don't you dare **ghost** me.",
+          "beats": 5,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "pop"
+            ]
+          ]
+        }
+      ],
+      "app": "WordCat",
+      "tagline": "Learn Taiwan Mandarin",
+      "shots": {
+        "today": "today-en",
+        "study": "study-en",
+        "answer": "study-answer-en"
+      },
+      "lang": "en",
+      "outro": "Follow SillyCat. Get roasted daily.",
+      "outroNote": "Download link in bio",
+      "catTop": 365
     },
     {
       "id": "ep02",

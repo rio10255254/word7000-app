@@ -38,7 +38,7 @@ on:
         type: string
         default: '7'
       link:
-        description: 'Optional: an https:// link, or "plus" to open the Premium offer'
+        description: 'Optional: an https:// link, "plus" to open the Premium offer, or "update" to open TestFlight / the App Store'
         type: string
         default: ''
       link_label_zh:
@@ -89,8 +89,8 @@ jobs:
         run: |
           set -euo pipefail
           [[ "$DAYS" =~ ^[0-9]+$ ]] || { echo "::error::days must be a whole number"; exit 1; }
-          if [ -n "$LINK" ] && [ "$LINK" != "plus" ] && [[ "$LINK" != https://* ]]; then
-            echo "::error::link must start with https:// or be plus"; exit 1
+          if [ -n "$LINK" ] && [ "$LINK" != "plus" ] && [ "$LINK" != "update" ] && [[ "$LINK" != https://* ]]; then
+            echo "::error::link must start with https://, or be plus or update"; exit 1
           fi
           keys=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json --reveal 2>/dev/null \
             || supabase projects api-keys --project-ref "$PROJECT_REF" -o json)

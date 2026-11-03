@@ -21,3 +21,9 @@ create policy "Live update requirements are public" on public.update_requirement
 
 revoke all on public.update_requirements from anon, authenticated;
 grant select on public.update_requirements to anon, authenticated;
+
+-- An announcement's link can also be "update": a key that opens TestFlight
+-- or the App Store, to ask for an update without forcing it.
+alter table public.announcements drop constraint if exists announcements_link_check;
+alter table public.announcements add constraint announcements_link_check
+  check (link is null or link in ('plus', 'update') or link ~ '^https://');

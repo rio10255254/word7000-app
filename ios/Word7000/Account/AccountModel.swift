@@ -335,9 +335,10 @@ final class AccountModel {
 
     /// The developer's live messages; none without an account service or a
     /// connection.
-    func fetchUpdateRequirement() async -> UpdateRequirement? {
+    /// nil when the check could not be made; .some(nil) when no rule is live.
+    func fetchUpdateRequirement() async -> UpdateRequirement?? {
         guard let client else { return nil }
-        return try? await client.updateRequirement(session: session)
+        do { return .some(try await client.updateRequirement(session: session)) } catch { return nil }
     }
 
     func fetchAnnouncements() async -> [Announcement] {

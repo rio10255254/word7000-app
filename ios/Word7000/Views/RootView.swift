@@ -168,20 +168,16 @@ struct RootView: View {
         }
         // A retired version shows only the way to update, over everything:
         // whatever was open is closed first so nothing sits above it.
-        .onChange(of: updateGate.required) { _, required in
-            guard required != nil else { return }
+        // A retired version shows only the way to update, in a window above
+        // everything; practice in progress is closed behind it.
+        .onChange(of: updateGate.required, initial: true) { _, required in
+            guard let required else { UpdateWindow.shared.hide(); return }
             activity = nil
             plus.paywallReason = nil
-            welcomeOpen = false
-            signInForScan = false
+            UpdateWindow.shared.show(required, style: model.settings.appStyle ?? .standard,
+                                     scheme: model.settings.theme.colorScheme)
         }
-        .overlay {
-            if let required = updateGate.required {
-                UpdateRequiredView(requirement: required)
-                    .transition(.opacity)
-            }
-        }
-        .sheet(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && plus.paywallReason == nil && !plus.trialRecapPending
+        .fullScreenCover(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && plus.paywallReason == nil && !plus.trialRecapPending
                                      && !model.styleChoiceDue && !signInForScan) ? announcements.current : nil },
                              set: { if $0 == nil, let shown = announcements.current { announcements.markSeen(shown) } }),
                onDismiss: {

@@ -116,6 +116,39 @@ final class ScreenshotTests: XCTestCase {
         XCTAssertTrue(app.buttons["bank-undo-delete"].waitForExistence(timeout: 5), "The bank was not deleted")
     }
 
+    /// A message from the developer takes the whole screen and stays until
+    /// Got it; a retired version shows only the way to update, in each style.
+    func testAnnouncementAndUpdateRequiredScreens() {
+        for style in ["-uiTestingCollage", "-uiTestingLeather"] {
+            let app = XCUIApplication()
+            app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", style, "-uiTestingAnnouncement"]
+            app.launch()
+            let tag = app.descendants(matching: .any)["notice-tag"].firstMatch
+            XCTAssertTrue(tag.waitForExistence(timeout: 12), app.debugDescription)
+            XCTAssertTrue(app.buttons["announcement-close"].isHittable)
+            XCTAssertTrue(app.buttons["announcement-link"].isHittable)
+            sleep(1)
+            snap(app, "notice-announcement\(style == "-uiTestingCollage" ? "-collage" : "-leather")")
+            // A swipe down does not wave it away; only a key does.
+            app.swipeDown()
+            XCTAssertTrue(tag.exists)
+            app.buttons["announcement-close"].tap()
+            XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+            app.terminate()
+
+            let blocked = XCUIApplication()
+            blocked.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingDark", style, "-uiTestingUpdateRequired"]
+            blocked.launch()
+            let open = blocked.buttons["update-required-open"]
+            XCTAssertTrue(open.waitForExistence(timeout: 12), blocked.debugDescription)
+            XCTAssertTrue(open.isHittable)
+            XCTAssertFalse(blocked.buttons["today-start"].isHittable, "Nothing behind the update screen can be used")
+            sleep(1)
+            snap(blocked, "notice-update-required\(style == "-uiTestingCollage" ? "-collage" : "-leather")-dark")
+            blocked.terminate()
+        }
+    }
+
     /// The English interface for learning Chinese.
     func testChineseModeScreens() {
         let app = XCUIApplication()

@@ -18,7 +18,7 @@ on:
       operation:
         description: 'build-testflight: React Native build to TestFlight. ota-update: push JS/UI changes to installed RN builds. native-testflight: native SwiftUI build to TestFlight.'
         type: choice
-        options: ['build-testflight', 'ota-update', 'native-testflight']
+        options: ['build-testflight', 'ota-update', 'native-testflight', 'testflight-submit']
         default: 'build-testflight'
       message:
         description: 'Short note shown for an OTA update'
@@ -40,6 +40,10 @@ on:
         description: 'native-testflight only: "What to Test" in English (optional)'
         type: string
         default: ''
+      submit_build:
+        description: 'testflight-submit only: build number already uploaded to add to the group and submit for Beta App Review (e.g. when an earlier build of the version was still in review)'
+        type: string
+        default: ''
       native_validation_run:
         description: 'With full_validation: optional full Native iOS run ID (push, or manual with all checks) for identical source; otherwise a passed run of identical source, then this commit'
         type: string
@@ -55,7 +59,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # An uploaded build into the TestFlight group and Beta App Review, for a
+  # release run that could not submit it while another build was in review.
+  testflight-submit:
+    if: inputs.operation == 'testflight-submit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Add to the group and submit for Beta App Review
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          BUILD: ${{ inputs.submit_build }}
+          GROUP: ${{ inputs.testflight_group }}
+        run: |
+          set -euo pipefail
+          test -n "$BUILD" || { echo "::error::submit_build is required"; exit 1; }
+          VERSION="$(node -p 'require("./ios/Release/app.json").expo.version')"
+          node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
+            --group "${GROUP:-Wordcat Public Testing 1}" --wait-minutes 2
+
   release:
+    if: inputs.operation != 'testflight-submit'
     runs-on: ${{ inputs.operation == 'native-testflight' && 'macos-15' || 'ubuntu-latest' }}
     timeout-minutes: 120
     env:

@@ -35,11 +35,24 @@ grant execute on function public.set_push_tester(text, boolean) to authenticated
 
 -- Older apps do not know the "tester" audience and would show such a message
 -- to everyone, so the server only hands it to accounts with a test phone.
+-- (A definer function: learners cannot read push_devices themselves.)
+create or replace function public.is_push_tester()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public, pg_catalog
+as $$
+  select exists (select 1 from public.push_devices d where d.user_id = auth.uid() and d.tester);
+$$;
+
+revoke all on function public.is_push_tester() from public;
+grant execute on function public.is_push_tester() to anon, authenticated;
+
 drop policy if exists "Live announcements are public" on public.announcements;
 create policy "Live announcements are public" on public.announcements
   for select to anon, authenticated
   using (
     active and starts_at <= now() and (ends_at is null or ends_at > now())
-    and (audience <> 'tester'
-         or exists (select 1 from public.push_devices d where d.user_id = auth.uid() and d.tester))
+    and (audience <> 'tester' or public.is_push_tester())
   );

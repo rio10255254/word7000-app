@@ -50,6 +50,8 @@ enum L {
     static var tapToReveal: String { t("點一下看答案", "Tap to see the answer") }
     // The answer is Chinese when learning English and English when learning Chinese.
     static var autoReveal: String { t("直接顯示中文", "Show English right away") }
+    static var showPinyin: String { t("顯示拼音", "Show pinyin") }
+    static var showPinyinHint: String { t("關掉後，拼音跟答案一起出現，先練認字", "When off, the pinyin comes with the answer, so you read the characters first") }
     static var autoRevealHint: String { t("卡片直接顯示中文，不用先點一下", "Cards show the English without a tap first") }
     static var dontKnow: String { t("不熟", "Not yet") }
     static var knowIt: String { t("認識", "Know it") }
@@ -106,6 +108,19 @@ enum L {
     }
     static func levelRange(_ low: Int, _ high: Int) -> String {
         low == high ? level(low) : t("第 \(low)–\(high) 級", "Levels \(low)–\(high)")
+    }
+    /// The level filter in a few words: all, one level, a run, or a short list.
+    static func levelSummary(_ groups: [String]) -> String {
+        guard !groups.isEmpty else { return allLevels }
+        if groups.count == 1 { return levelName(groups[0]) }
+        let numbers = groups.compactMap(LearningEngine.coreLevel)
+        if numbers.count == groups.count, let low = numbers.min(), let high = numbers.max(), high - low + 1 == numbers.count {
+            return levelRange(low, high)
+        }
+        if numbers.count == groups.count, numbers.count <= 4 {
+            return t("第 \(numbers.map(String.init).joined(separator: "、")) 級", "Levels \(numbers.map(String.init).joined(separator: ", "))")
+        }
+        return t("\(groups.count) 個分級", "\(groups.count) levels")
     }
     static func levelName(_ group: String) -> String {
         guard group.hasPrefix("Core "), let number = Int(group.dropFirst(5)) else { return group }

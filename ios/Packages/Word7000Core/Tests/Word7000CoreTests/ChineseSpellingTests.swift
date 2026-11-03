@@ -35,8 +35,9 @@ final class ChineseSpellingTests: XCTestCase {
         let syllables = ["shì", "yìng"]
         XCTAssertEqual(ChineseSpelling.pattern(syllables, revealed: 0), "_ _")
         XCTAssertEqual(ChineseSpelling.pattern(syllables, revealed: 1), "shì _")
-        XCTAssertEqual(ChineseSpelling.maxHints(syllables), 1)
-        XCTAssertEqual(ChineseSpelling.maxHints(["chī"]), 0)
+        XCTAssertEqual(ChineseSpelling.pattern(syllables, revealed: 2), "shì yìng")
+        XCTAssertEqual(ChineseSpelling.maxHints(syllables), 2)
+        XCTAssertEqual(ChineseSpelling.maxHints(["chī"]), 1)
     }
 }
 

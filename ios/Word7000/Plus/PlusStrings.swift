@@ -42,6 +42,11 @@ enum P {
         L.t("聊天、單字解說、口說教練和學習分析，Claude 先深入思考再回答，每天 \(PlusAI.plusDaily) 次",
             "Chat, word explanations, the speaking coach and insights: Claude thinks before it answers, \(PlusAI.plusDaily) a day")
     }
+    static var whyTitle: String { L.t("為什麼 Premium 要收費？", "Why does Premium cost money?") }
+    static var whyBody: String {
+        L.t("單字貓是獨立開發的小 App。背單字、複習、測驗都免費，也沒有廣告；但小笨貓的 AI 老師每回答一次，都要付費給 AI 服務商。Premium 的費用就是用來支付這些成本，讓單字貓能一直更新下去。謝謝你的支持！",
+            "WordCat is a small, independent app. Studying, reviews and quizzes are free, with no ads. But every answer from Silly Cat's AI tutor costs real money with the AI provider. Premium pays for that, and keeps WordCat improving. Thank you for your support!")
+    }
     static var freeForever: String { L.t("背 7000 單字、複習、小測驗和口說練習永遠免費。用 Apple 登入就能保存並同步進度。", "Studying the core words, reviews, quizzes and speaking stay free. Sign in with Apple to keep and sync your progress.") }
     /// The paywall's button for a guest: signing in starts the trial.
     static var signInForTrial: String { L.t("用 Apple 登入並訂閱", "Sign in with Apple to subscribe") }

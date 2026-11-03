@@ -2,6 +2,8 @@ import Foundation
 
 public struct LibraryFilterOptions: Equatable, Sendable {
     public var initial: String?
+    /// One level ("Core 3"), several separated by commas ("Core 3,Core 5"),
+    /// or nil / "all" for every level.
     public var level: String?
     public var sort: LibrarySort
 
@@ -62,6 +64,13 @@ public final class PreparedVocabulary: @unchecked Sendable {
 
     public func index(of wordId: String) -> Int? { indexById[wordId] }
 
+    /// The levels a filter keeps, or nil for all of them.
+    public static func levels(_ value: String?) -> Set<String>? {
+        guard let value, value != "all" else { return nil }
+        let levels = Set(value.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty })
+        return levels.isEmpty ? nil : levels
+    }
+
     static func searchPinyin(_ word: WordEntry) -> String {
         let senses = ChineseDisplay.meaningParts(word.meaningZh) + ChineseDisplay.meaningParts(word.supplementalMeaningZh ?? "")
         return senses.filter { $0.contains(where: ChineseDisplay.isHan) }
@@ -74,10 +83,10 @@ public final class PreparedVocabulary: @unchecked Sendable {
                        pinyinSearch: Bool = false) -> [WordEntry] {
         let terms = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
             .split(whereSeparator: { $0.isWhitespace }).map(String.init)
-        let level = options.level.flatMap { $0 == "all" ? nil : $0 }
+        let levels = Self.levels(options.level)
         let initial = options.initial.flatMap { $0 == "all" ? nil : $0.uppercased() }
 
-        if terms.isEmpty, filter == .all, level == nil, initial == nil {
+        if terms.isEmpty, filter == .all, levels == nil, initial == nil {
             return options.sort == .alphabetical ? alphabeticalWords : words
         }
 
@@ -86,7 +95,7 @@ public final class PreparedVocabulary: @unchecked Sendable {
         let usesRecency = options.sort != .alphabetical && (filter == .favorites || filter == .review || filter == .mastered)
         var matches: [(record: Record, recency: Double, score: Int)] = []
         for record in source {
-            if let level, record.word.group != level { continue }
+            if let levels, !levels.contains(record.word.group) { continue }
             if let initial, !record.normalizedWord.uppercased().hasPrefix(initial) { continue }
             let score = Self.searchScore(record, terms: terms, pinyin: pinyinSearch)
             if !terms.isEmpty, score == 0 { continue }

@@ -63,6 +63,21 @@ struct PaywallView: View {
                 PlusComparison()
                     .padding(14)
                     .card()
+                // Testers asked why an app about words charges at all: the AI does.
+                VStack(alignment: .leading, spacing: 6) {
+                    Label(P.whyTitle, systemImage: "heart.text.square")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(Palette.review)
+                    Text(P.whyBody)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(14)
+                .card()
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("paywall-why")
                 Text(P.freeForever)
                     .font(.footnote)
                     .foregroundStyle(.secondary)

@@ -30,6 +30,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var hapticsEnabled: Bool?
     /// Study cards open with the answer already showing; nil means off.
     var studyAutoReveal: Bool?
+    /// Learning Chinese: the pinyin shows on a card before its answer; nil means on.
+    var studyShowPinyin: Bool?
     var speakingFilter: FilterSelection?
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?
@@ -135,6 +137,20 @@ struct FilterSelection: Codable, Equatable, Hashable, Sendable {
     var sort: LibrarySort = .alphabetical
 
     var isActive: Bool { status != .all || level != "all" || initial != "all" }
+
+    /// The chosen levels, in the bank's order; empty for all of them.
+    var levels: [String] {
+        guard level != "all" else { return [] }
+        return level.split(separator: ",").map(String.init)
+    }
+
+    /// Ticks or unticks a level; none left means every level.
+    mutating func toggleLevel(_ group: String, order: [String]) {
+        var chosen = Set(levels)
+        if chosen.contains(group) { chosen.remove(group) } else { chosen.insert(group) }
+        let sorted = order.filter(chosen.contains) + chosen.subtracting(order).sorted()
+        level = sorted.isEmpty || sorted.count == order.count ? "all" : sorted.joined(separator: ",")
+    }
 
     var options: LibraryFilterOptions {
         LibraryFilterOptions(initial: initial, level: level, sort: sort)

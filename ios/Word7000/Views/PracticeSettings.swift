@@ -12,9 +12,26 @@ struct FilterControls: View {
                 Text(L.filterLabel(value)).tag(value)
             }
         }
-        Picker(L.filterLevel, selection: $selection.level) {
-            Text(L.allLevels).tag("all")
-            ForEach(model.levels, id: \.self) { Text(L.levelName($0)).tag($0) }
+        // Several levels at once (say 3 to 5): the menu stays open while
+        // they are ticked.
+        LabeledContent(L.filterLevel) {
+            Menu {
+                Button { selection.level = "all" } label: {
+                    if selection.levels.isEmpty { Label(L.allLevels, systemImage: "checkmark") } else { Text(L.allLevels) }
+                }
+                Divider()
+                ForEach(model.levels, id: \.self) { group in
+                    Button { selection.toggleLevel(group, order: model.levels) } label: {
+                        if selection.levels.contains(group) { Label(L.levelName(group), systemImage: "checkmark") } else { Text(L.levelName(group)) }
+                    }
+                }
+            } label: {
+                Text(L.levelSummary(selection.levels))
+                    .lineLimit(1)
+                    .foregroundStyle(Palette.accent)
+            }
+            .menuActionDismissBehavior(.disabled)
+            .accessibilityIdentifier("filter-level")
         }
         Picker(L.t("英文字首", "First letter"), selection: $selection.initial) {
             Text(L.t("全部字首", "All letters")).tag("all")

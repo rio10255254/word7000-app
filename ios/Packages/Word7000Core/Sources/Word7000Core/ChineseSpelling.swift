@@ -63,9 +63,10 @@ public enum ChineseSpelling {
         syllables.enumerated().map { $0.offset < revealed ? $0.element : "_" }.joined(separator: " ")
     }
 
-    /// Hints stop one syllable short (a one-character answer gets none).
+    /// One hint per syllable, the last included: the pinyin helps a learner
+    /// find each character, and writing it is still theirs to do.
     public static func maxHints(_ syllables: [String]) -> Int {
-        max(0, syllables.count - 1)
+        syllables.count
     }
 
     // MARK: - Normalising

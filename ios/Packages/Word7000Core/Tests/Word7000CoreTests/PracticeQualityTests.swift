@@ -35,6 +35,19 @@ final class PracticeQualityTests: XCTestCase {
         XCTAssertEqual(found.map(\.word), ["cat", "catalog", "aardvark"])
     }
 
+    func testSeveralLevelsCanBeChosenAtOnce() {
+        func inLevel(_ id: String, _ level: Int) -> WordEntry {
+            WordEntry(id: id, word: "w\(id)", partOfSpeech: "n", pronunciation: "", meaningZh: "字",
+                      example: "", exampleZh: "", group: "Core \(level)")
+        }
+        let vocabulary = PreparedVocabulary([inLevel("1", 1), inLevel("2", 3), inLevel("3", 5), inLevel("4", 7)])
+        let some = vocabulary.filter(state: .empty, query: "", filter: .all, options: .init(level: "Core 3,Core 7"))
+        XCTAssertEqual(some.map(\.id), ["2", "4"])
+        XCTAssertEqual(vocabulary.filter(state: .empty, query: "", filter: .all, options: .init(level: "Core 5")).map(\.id), ["3"])
+        XCTAssertEqual(vocabulary.filter(state: .empty, query: "", filter: .all, options: .init(level: "all")).count, 4)
+        XCTAssertNil(PreparedVocabulary.levels(" , "))
+    }
+
     func testPracticeAfterMidnightStartsANewDailyCountAndKeepsTheStreak() {
         let yesterday = LearningEngine.markKnown(.empty, wordId: "first", today: "2026-10-19")
         let today = LearningEngine.normalizeForDate(yesterday, today: "2026-10-20")

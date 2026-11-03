@@ -230,7 +230,7 @@ struct WordsView: View {
     private var filterSummary: String {
         let filter = model.settings.libraryFilter
         return [filter.status == .all ? nil : L.filterLabel(filter.status),
-                filter.level == "all" ? nil : L.levelName(filter.level),
+                filter.level == "all" ? nil : L.levelSummary(filter.levels),
                 filter.initial == "all" ? nil : "\(L.t("字首", "Letter")) \(filter.initial)"]
             .compactMap { $0 }.joined(separator: " · ")
     }

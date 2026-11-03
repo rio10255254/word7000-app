@@ -41,6 +41,9 @@ struct StudySessionView: View {
     private var committing: Bool { phase == .leaving || phase == .arriving }
     private var threshold: CGFloat { min(110, cardWidth * 0.28) }
     private var autoReveal: Bool { model.settings.studyAutoReveal ?? false }
+    /// Learning Chinese, the pinyin can wait for the answer, to practise
+    /// reading the characters; learning English, the pronunciation always shows.
+    private var pinyinFirst: Bool { model.studyMode != .chinese || (model.settings.studyShowPinyin ?? true) }
     private var showsAnswer: Bool { revealed || autoReveal }
 
     var body: some View {
@@ -142,6 +145,19 @@ struct StudySessionView: View {
                     }
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                    if model.studyMode == .chinese {
+                        // Three small icons fit beside the count on every
+                        // iPhone; the labels stay for VoiceOver.
+                        Toggle(isOn: Binding(
+                            get: { pinyinFirst },
+                            set: { on in withAnimation(reduceMotion ? nil : Motion.reveal) { model.settings.studyShowPinyin = on } }
+                        )) {
+                            Label(L.showPinyin, systemImage: "character.phonetic")
+                        }
+                        .toggleStyle(.button)
+                        .accessibilityHint(L.showPinyinHint)
+                        .accessibilityIdentifier("study-pinyin")
+                    }
                     Toggle(isOn: Binding(
                         get: { autoReveal },
                         set: { on in withAnimation(reduceMotion ? nil : Motion.reveal) { model.settings.studyAutoReveal = on } }
@@ -235,8 +251,10 @@ struct StudySessionView: View {
                                 .lineLimit(4)
                                 .multilineTextAlignment(.center)
                                 .accessibilityIdentifier("study-prompt")
-                            if !face.promptDetail.isEmpty {
+                            if !face.promptDetail.isEmpty, pinyinFirst || showsAnswer {
                                 Text(face.promptDetail).font(.title3).foregroundStyle(.secondary)
+                                    .transition(.opacity)
+                                    .accessibilityIdentifier("study-pinyin-text")
                             }
                         }
                         .frame(maxWidth: .infinity)

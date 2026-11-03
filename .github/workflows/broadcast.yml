@@ -53,6 +53,10 @@ on:
         description: 'Also send it as a push notification (to iPhones that allowed them)'
         type: boolean
         default: false
+      require_version:
+        description: 'Optional: force everyone below this version to update, e.g. 2.0.3, or 2.0.2 (4) for a build. The body becomes the update screen message.'
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -81,6 +85,7 @@ jobs:
           LINK_ZH: ${{ inputs.link_label_zh }}
           LINK_EN: ${{ inputs.link_label_en }}
           PUSH: ${{ inputs.push }}
+          REQUIRE: ${{ inputs.require_version }}
         run: |
           set -euo pipefail
           [[ "$DAYS" =~ ^[0-9]+$ ]] || { echo "::error::days must be a whole number"; exit 1; }
@@ -94,6 +99,17 @@ jobs:
           echo "::add-mask::$service"
           headers=(-H "apikey: $service" -H 'Content-Type: application/json' -H 'Prefer: return=representation')
           case "$service" in eyJ*) headers+=(-H "Authorization: Bearer $service") ;; esac
+          if [ -n "$REQUIRE" ]; then
+            [[ "$REQUIRE" =~ ^([0-9]+(\.[0-9]+){0,2})(\ \(([0-9]+)\))?$ ]] \
+              || { echo "::error::require_version must look like 2.0.3 or 2.0.2 (4)"; exit 1; }
+            min_version="${BASH_REMATCH[1]}"; min_build="${BASH_REMATCH[4]:-}"
+            requirement=$(jq -n --arg v "$min_version" --arg b "$min_build" --arg mz "${BODY_ZH:0:300}" --arg me "${BODY_EN:0:300}" \
+              '{min_version: $v, min_build: (if $b == "" then null else ($b | tonumber) end), message_zh: $mz, message_en: $me}')
+            required=$(curl -sS -w '\n%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/rest/v1/update_requirements" "${headers[@]}" -d "$requirement")
+            [ "$(echo "$required" | tail -1)" = "201" ] || { echo "::error::The update requirement failed: $(echo "$required" | sed '$d')"; exit 1; }
+            echo "Everyone below $REQUIRE now sees only the update screen (next open or return, within ten minutes)."
+            echo "To lift it: set active to false on the newest row of update_requirements in the Supabase dashboard."
+          fi
           ends=null
           if [ "$DAYS" != "0" ]; then ends="\"$(date -u -d "+$DAYS days" +%Y-%m-%dT%H:%M:%SZ)\""; fi
           body=$(jq -n --arg tz "$TITLE_ZH" --arg bz "$BODY_ZH" --arg te "$TITLE_EN" --arg be "$BODY_EN" \

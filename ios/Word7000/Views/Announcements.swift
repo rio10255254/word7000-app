@@ -112,3 +112,77 @@ struct AnnouncementSheet: View {
         }
     }
 }
+
+/// The oldest version still allowed to run (posted with the "Broadcast a
+/// message" workflow's require_version). An older app shows only a way to
+/// update, so everyone moves off a broken or retired build.
+@MainActor @Observable
+final class UpdateGate {
+    static let shared = UpdateGate()
+    private(set) var required: UpdateRequirement?
+    @ObservationIgnored private var lastCheck: Date?
+
+    static var version: String { Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0" }
+    static var build: Int? { (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String).flatMap(Int.init) }
+
+    /// At most every ten minutes; a failed check never blocks anyone.
+    func refresh(account: AccountModel) async {
+        guard !AppRuntime.uiTesting else { return }
+        if let lastCheck, Date().timeIntervalSince(lastCheck) < 600, required == nil { return }
+        lastCheck = Date()
+        guard let requirement = await account.fetchUpdateRequirement() else { return }
+        required = requirement.blocks(version: Self.version, build: Self.build) ? requirement : nil
+    }
+}
+
+/// Full screen, with no way past it but updating: TestFlight for testers,
+/// the App Store for everyone else.
+struct UpdateRequiredView: View {
+    @Environment(\.openURL) private var openURL
+    var requirement: UpdateRequirement
+
+    private static var fromTestFlight: Bool { Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt" }
+    private var message: String {
+        let custom = L.zh || requirement.messageEn.isEmpty ? requirement.messageZh : requirement.messageEn
+        return custom.isEmpty
+            ? L.t("這個版本已經不能使用了，更新到最新版就能繼續學習，你的進度都還在。",
+                  "This version can no longer be used. Update to the latest one to keep learning; your progress is safe.")
+            : custom
+    }
+
+    var body: some View {
+        VStack(spacing: 22) {
+            Spacer()
+            Mascot(mood: .encourage, size: 110).popIn()
+            VStack(spacing: 10) {
+                Text(L.t("請更新單字貓", "Please update WordCat"))
+                    .font(.display(.title2, weight: .bold))
+                    .foregroundStyle(Palette.ink)
+                Text(message)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("update-required-message")
+            }
+            Spacer()
+            Button {
+                let link = Self.fromTestFlight ? "itms-beta://" : "itms-apps://apps.apple.com/app/id6786934889"
+                if let url = URL(string: link) { openURL(url) }
+            } label: {
+                Text(Self.fromTestFlight ? L.t("到 TestFlight 更新", "Update in TestFlight") : L.t("到 App Store 更新", "Update in the App Store"))
+                    .font(.headline).frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .accessibilityIdentifier("update-required-open")
+            Text(L.t("目前版本 \(UpdateGate.version) (\(UpdateGate.build.map(String.init) ?? "?"))",
+                     "This version: \(UpdateGate.version) (\(UpdateGate.build.map(String.init) ?? "?"))"))
+                .font(.caption).foregroundStyle(.tertiary)
+        }
+        .padding(.horizontal, Metrics.gutter)
+        .padding(.bottom, 24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background { AmbientBackground() }
+        .interactiveDismissDisabled()
+    }
+}

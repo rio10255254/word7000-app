@@ -28,6 +28,7 @@ struct RootView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @State private var announcements = AnnouncementStore.shared
+    @State private var updateGate = UpdateGate.shared
     @State private var plusAfterAnnouncement = false
     @State private var tab: AppTab = .today
     @State private var activity: Activity?
@@ -153,13 +154,34 @@ struct RootView: View {
         // The developer's messages to everyone: checked on launch and on
         // coming back, each shown once when nothing else is on screen.
         .task {
+            await updateGate.refresh(account: account)
             try? await Task.sleep(for: .seconds(2))
             await announcements.refresh(account: account, plus: plus)
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { Task { await announcements.refresh(account: account, plus: plus) } }
+            if phase == .active {
+                Task {
+                    await updateGate.refresh(account: account)
+                    await announcements.refresh(account: account, plus: plus)
+                }
+            }
         }
-        .sheet(item: Binding(get: { (activity == nil && !welcomeOpen && plus.paywallReason == nil && !plus.trialRecapPending
+        // A retired version shows only the way to update, over everything:
+        // whatever was open is closed first so nothing sits above it.
+        .onChange(of: updateGate.required) { _, required in
+            guard required != nil else { return }
+            activity = nil
+            plus.paywallReason = nil
+            welcomeOpen = false
+            signInForScan = false
+        }
+        .overlay {
+            if let required = updateGate.required {
+                UpdateRequiredView(requirement: required)
+                    .transition(.opacity)
+            }
+        }
+        .sheet(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && plus.paywallReason == nil && !plus.trialRecapPending
                                      && !model.styleChoiceDue && !signInForScan) ? announcements.current : nil },
                              set: { if $0 == nil, let shown = announcements.current { announcements.markSeen(shown) } }),
                onDismiss: {

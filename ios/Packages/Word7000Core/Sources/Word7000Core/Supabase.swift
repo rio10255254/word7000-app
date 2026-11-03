@@ -292,6 +292,13 @@ public struct SupabaseClient: Sendable {
         return (try? JSONDecoder().decode([Announcement].self, from: data)) ?? []
     }
 
+    /// The newest live requirement for the oldest app version allowed to run.
+    public func updateRequirement(session: AuthSession?) async throws -> UpdateRequirement? {
+        let data = try await request("GET", "rest/v1/update_requirements",
+                                     query: ["select": "*", "order": "created_at.desc", "limit": "1"], session: session)
+        return (try? JSONDecoder().decode([UpdateRequirement].self, from: data))?.first
+    }
+
     public func loadProfile(session: AuthSession) async throws -> Profile {
         let data = try await request("GET", "rest/v1/profiles", query: ["id": "eq.\(session.user.id)", "select": "progress,custom_sets,updated_at"], session: session)
         let rows = (try? JSONDecoder().decode([[String: JSONValue]].self, from: data)) ?? []
@@ -529,5 +536,39 @@ public struct Announcement: Codable, Equatable, Identifiable, Sendable {
         case "plus": return plus
         default: return true
         }
+    }
+}
+
+/// The oldest app version still allowed to run.
+public struct UpdateRequirement: Codable, Equatable, Sendable {
+    public var minVersion: String
+    public var minBuild: Int?
+    public var messageZh: String
+    public var messageEn: String
+
+    enum CodingKeys: String, CodingKey {
+        case minVersion = "min_version", minBuild = "min_build", messageZh = "message_zh", messageEn = "message_en"
+    }
+
+    public init(minVersion: String, minBuild: Int? = nil, messageZh: String = "", messageEn: String = "") {
+        self.minVersion = minVersion; self.minBuild = minBuild; self.messageZh = messageZh; self.messageEn = messageEn
+    }
+
+    /// Whether an app of this version and build must update first: an older
+    /// version, or the same version below `minBuild`.
+    public func blocks(version: String, build: Int?) -> Bool {
+        let order = Self.compare(version, minVersion)
+        if order != .orderedSame { return order == .orderedAscending }
+        guard let minBuild, let build else { return false }
+        return build < minBuild
+    }
+
+    static func compare(_ a: String, _ b: String) -> ComparisonResult {
+        let left = a.split(separator: ".").map { Int($0) ?? 0 }, right = b.split(separator: ".").map { Int($0) ?? 0 }
+        for index in 0..<max(left.count, right.count) {
+            let x = index < left.count ? left[index] : 0, y = index < right.count ? right[index] : 0
+            if x != y { return x < y ? .orderedAscending : .orderedDescending }
+        }
+        return .orderedSame
     }
 }

@@ -203,7 +203,7 @@ final class AppleSpeakingCoach {
             didFailFixture = true
             throw SpeakingCoach.Failure.generationFailed
         }
-        let delay: Duration = fixture == .slow ? .seconds(4) : (fixture == .timeout ? .seconds(2) : .milliseconds(150))
+        let delay: Duration = fixture == .slow ? .seconds(10) : (fixture == .timeout ? .seconds(2) : .milliseconds(150))
         try await Task.sleep(for: delay)
         try Task.checkCancellation()
         return try SpeakingCoach.Feedback(

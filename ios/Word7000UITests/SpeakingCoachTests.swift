@@ -49,7 +49,12 @@ final class SpeakingCoachTests: XCTestCase {
         tap(app.buttons["coach-type-instead"], in: app)
         let answer = app.textViews["coach-answer"]
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "Type instead puts the cursor on the notepad")
+        // The cursor lands on the notepad (a simulator with a hardware
+        // keyboard attached shows no on-screen keyboard, but still focuses).
+        let focused = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            app.keyboards.firstMatch.exists || (answer.value(forKey: "hasKeyboardFocus") as? Bool ?? false)
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [focused], timeout: 5), .completed, "Type instead puts the cursor on the notepad")
         answer.typeText("I practice with my x")
         answer.typeText(XCUIKeyboardKey.delete.rawValue)
         answer.typeText("freind")
@@ -110,7 +115,7 @@ final class SpeakingCoachTests: XCTestCase {
             submit(recovery)
             if mode == "slow" {
                 let cancel = recovery.buttons["coach-cancel"]
-                XCTAssertTrue(cancel.waitForExistence(timeout: 3))
+                XCTAssertTrue(cancel.waitForExistence(timeout: 6))
                 cancel.tap()
             } else {
                 let timeout = recovery.descendants(matching: .any)["coach-error"].firstMatch

@@ -46,8 +46,11 @@ struct PracticeAnswerEditor: UIViewRepresentable {
         }
         view.isEditable = editable
         view.accessibilityLabel = L.t("你的回答", "Your answer")
-        // "Type instead" puts the cursor straight on the notepad.
-        if focused, editable, !view.isFirstResponder {
+        // "Type instead" puts the cursor straight on the notepad, also when
+        // the notepad has only just been created and is not on screen yet.
+        let wantsFocus = focused && editable
+        (view as? RuledTextView)?.wantsFocus = wantsFocus
+        if wantsFocus, !view.isFirstResponder {
             DispatchQueue.main.async {
                 if view.window != nil, !view.isFirstResponder { view.becomeFirstResponder() }
             }
@@ -79,6 +82,20 @@ struct PracticeAnswerEditor: UIViewRepresentable {
 /// much is written, and they scroll with it.
 final class RuledTextView: UITextView {
     var ruled = false
+    /// Take the keyboard as soon as the view reaches a window.
+    var wantsFocus = false {
+        didSet { if wantsFocus, window != nil, !isFirstResponder { DispatchQueue.main.async { [weak self] in self?.focusIfWanted() } } }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if wantsFocus { DispatchQueue.main.async { [weak self] in self?.focusIfWanted() } }
+    }
+
+    private func focusIfWanted() {
+        guard wantsFocus, window != nil, isEditable, !isFirstResponder else { return }
+        becomeFirstResponder()
+    }
     private let rules = CAShapeLayer()
     private let margin = CAShapeLayer()
 

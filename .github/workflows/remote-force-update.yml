@@ -1,31 +1,34 @@
 # ⛔ Make every app below a version show only the update screen. It also
+# 使用說明：docs/遠端控制說明.md
 # posts the same words as a message (with an update button) for older apps
 # that have no update screen yet, and can push them.
 name: ⛔ 強制更新
 
+run-name: "${{ inputs.dry_run && '👀 預覽' || '⛔ 已設定' }}：低於 ${{ inputs.version }} 都要更新"
+
 on:
   workflow_dispatch:
     inputs:
+      dry_run:
+        description: '👀 只預覽（勾著＝不會真的設定；確認後取消勾選再按一次才會生效）'
+        type: boolean
+        default: true
       version:
-        description: '最低版本：低於這版的都要更新。例 2.0.3，或 2.0.2 (5)（括號裡是建置號）'
+        description: '① 最低版本：低於這版的都要更新。例 2.0.3，或 2.0.2 (5)（括號裡是建置號）'
         type: string
         required: true
       message_zh:
-        description: '更新頁的中文說明（例：這版修正了錄音問題，請更新後繼續使用）'
+        description: '② 更新頁的中文說明'
         type: string
         default: '這個版本已經停止使用。更新到最新版就能繼續學習，你的進度都還在。'
       message_en:
-        description: '更新頁的英文說明'
+        description: '③ 更新頁的英文說明'
         type: string
         default: 'This version is no longer supported. Update to the latest one to keep learning; your progress is safe.'
       push:
-        description: '同時推播通知舊版的人'
+        description: '🔔 同時推播通知舊版的人'
         type: boolean
         default: true
-      dry_run:
-        description: '試跑：只顯示會發出什麼，不會真的發出'
-        type: boolean
-        default: false
 
 permissions:
   contents: read

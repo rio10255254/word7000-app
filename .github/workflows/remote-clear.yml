@@ -1,11 +1,13 @@
 # 🧹 Take messages down, or lift a forced update.
+# 使用說明：docs/遠端控制說明.md
 name: 🧹 下架公告／解除強制更新
+run-name: "🧹 ${{ inputs.what }}"
 
 on:
   workflow_dispatch:
     inputs:
       what:
-        description: '要做什麼'
+        description: '要做什麼（立即生效）'
         type: choice
         options: ['下架所有公告', '解除強制更新', '兩個都做']
         default: '下架所有公告'

@@ -1,56 +1,59 @@
 # 📣 Send a message to the installed apps: full screen the next time each
+# 使用說明：docs/遠端控制說明.md
 # learner opens the app, optionally as a push. Run from Actions, or ask Claude.
 name: 📣 發公告
+
+run-name: "${{ inputs.dry_run && '👀 預覽' || '📣 已發出' }}：${{ inputs.title_zh }}"
 
 on:
   workflow_dispatch:
     inputs:
+      dry_run:
+        description: '👀 只預覽（勾著＝不會真的發出；確認內容後取消勾選再按一次才會發出）'
+        type: boolean
+        default: true
       title_zh:
-        description: '中文標題（例：新版口說練習上線了）'
+        description: '① 中文標題（例：新版口說練習上線了）'
         type: string
         required: true
       body_zh:
-        description: '中文內容（最多 600 字）'
+        description: '② 中文內容（最多 600 字）'
         type: string
         required: true
       title_en:
-        description: '英文標題（英文介面的人看到；建議填）'
+        description: '③ 英文標題（英文介面的人看到；不填就顯示中文）'
         type: string
         default: ''
       body_en:
-        description: '英文內容（建議填）'
+        description: '④ 英文內容（不填就顯示中文）'
         type: string
         default: ''
       push:
-        description: '同時發推播通知到大家的手機'
+        description: '🔔 同時推播到手機鎖定畫面（重要的才勾）'
         type: boolean
         default: false
       audience:
-        description: '給誰看：all 所有人／guest 沒登入／free 登入沒訂閱／plus 訂閱者'
+        description: '👥 給誰看'
         type: choice
-        options: ['all', 'guest', 'free', 'plus']
-        default: 'all'
+        options: ['所有人', '沒登入的訪客', '登入但沒訂閱', 'Premium 訂閱者']
+        default: '所有人'
       button:
-        description: '下方按鈕：無／請大家更新／打開訂閱頁／打開網址（網址填在下一格）'
+        description: '🔘 公告下方的按鈕'
         type: choice
-        options: ['無', '請大家更新', '打開訂閱頁', '打開網址']
-        default: '無'
+        options: ['沒有按鈕', '請大家更新', '打開訂閱頁', '打開網址']
+        default: '沒有按鈕'
       url:
-        description: '按鈕選「打開網址」時：https:// 開頭的網址'
+        description: '🔗 按鈕選「打開網址」才要填：https:// 開頭'
         type: string
         default: ''
       only_below_version:
-        description: '只給舊版本看（選填）：例 2.0.3，或 2.0.2 (4)'
+        description: '📱 只給舊版本看（選填，例 2.0.3 或 2.0.2 (4)）；留空＝所有版本'
         type: string
         default: ''
       days:
-        description: '公告留幾天（0 = 直到下架）'
+        description: '⏳ 公告留幾天（0 = 直到手動下架）'
         type: string
         default: '7'
-      dry_run:
-        description: '試跑：只顯示會發出什麼，不會真的發出'
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -77,12 +80,18 @@ jobs:
           TITLE_EN: ${{ inputs.title_en }}
           BODY_EN: ${{ inputs.body_en }}
           PUSH: ${{ inputs.push }}
-          AUDIENCE: ${{ inputs.audience }}
+          AUDIENCE_LABEL: ${{ inputs.audience }}
           BUTTON: ${{ inputs.button }}
           URL: ${{ inputs.url }}
           BELOW: ${{ inputs.only_below_version }}
           DAYS: ${{ inputs.days }}
         run: |
+          case "$AUDIENCE_LABEL" in
+            沒登入的訪客) export AUDIENCE=guest ;;
+            登入但沒訂閱) export AUDIENCE=free ;;
+            "Premium 訂閱者") export AUDIENCE=plus ;;
+            *) export AUDIENCE=all ;;
+          esac
           case "$BUTTON" in
             請大家更新) export LINK=update ;;
             打開訂閱頁) export LINK=plus ;;

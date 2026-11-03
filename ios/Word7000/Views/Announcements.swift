@@ -97,6 +97,7 @@ struct NoticeStage<Keys: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            GeometryReader { proxy in
             ScrollView {
                 VStack(spacing: 18) {
                     Label(tag, systemImage: tagIcon)
@@ -107,7 +108,7 @@ struct NoticeStage<Keys: View>: View {
                         .overlay { if appStyle == .collage { Capsule().strokeBorder(Collage.ink.opacity(0.8), lineWidth: 1.5) } }
                         .rotationEffect(.degrees(appStyle == .collage ? -2 : 0))
                         .popIn()
-                        .padding(.top, 32)
+                        .padding(.top, 16)
                         .accessibilityIdentifier("notice-tag")
                     Mascot(mood: mood, size: 128)
                         .offset(y: bob ? -6 : 0)
@@ -136,8 +137,11 @@ struct NoticeStage<Keys: View>: View {
                 }
                 .padding(.horizontal, Metrics.gutter)
                 .padding(.bottom, 16)
+                // A short message sits in the middle of the screen, not at its top.
+                .frame(minHeight: proxy.size.height, alignment: .center)
             }
             .scrollBounceBehavior(.basedOnSize)
+            }
             VStack(spacing: 10) { keys }
                 .padding(.horizontal, Metrics.gutter)
                 .padding(.top, 10)

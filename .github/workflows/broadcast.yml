@@ -13,19 +13,19 @@ on:
   workflow_dispatch:
     inputs:
       title_zh:
-        description: '標題（中文介面，最多 80 字）'
+        description: '中文標題（中文介面看到的，最多 80 字）'
         type: string
         required: true
       body_zh:
-        description: '內容（中文介面，最多 600 字）'
+        description: '中文內容（公告、推播、強制更新頁都用這段，最多 600 字）'
         type: string
         required: true
       title_en:
-        description: 'Title for the English interface (optional; falls back to Chinese)'
+        description: 'English title: the English interface, push and update screen (recommended; empty shows the Chinese)'
         type: string
         default: ''
       body_en:
-        description: 'Body for the English interface (optional)'
+        description: 'English body: the announcement, push and update screen in English (recommended)'
         type: string
         default: ''
       audience:
@@ -46,7 +46,7 @@ on:
         type: string
         default: ''
       link_label_en:
-        description: 'Optional: the link button in English'
+        description: 'Optional: the link button in English, e.g. Update now'
         type: string
         default: ''
       push:
@@ -109,6 +109,9 @@ jobs:
             [ "$(echo "$required" | tail -1)" = "201" ] || { echo "::error::The update requirement failed: $(echo "$required" | sed '$d')"; exit 1; }
             echo "Everyone below $REQUIRE now sees only the update screen (next open or return, within ten minutes)."
             echo "To lift it: set active to false on the newest row of update_requirements in the Supabase dashboard."
+          fi
+          if [ -z "$TITLE_EN" ] || [ -z "$BODY_EN" ]; then
+            echo "::warning::No English title or body: English-interface learners will see the Chinese text."
           fi
           ends=null
           if [ "$DAYS" != "0" ]; then ends="\"$(date -u -d "+$DAYS days" +%Y-%m-%dT%H:%M:%SZ)\""; fi

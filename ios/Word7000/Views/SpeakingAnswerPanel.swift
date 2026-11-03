@@ -32,7 +32,6 @@ struct SpeakingAnswerPanel: View {
     @State private var askCloud = false
     @State private var inputCommitFailed = false
     @State private var submittedAnswer: String?
-    @State private var retakeOpen = false
     @State private var reflection: SpeakingReflection?
     @State private var followUpQuestion: String?
     @State private var followUpTranslation: String?
@@ -148,16 +147,16 @@ struct SpeakingAnswerPanel: View {
         .onChange(of: recording.state) { old, new in
             if old == .recording, new == .ready {
                 onAttempt()
-                // Stopping a take is when it becomes text; a typed or edited
-                // answer is never replaced without asking.
-                if recording.support == .modern || recording.support == .legacy, !hasText || answer == recording.transcript {
+                // Stopping a take is when it becomes text. A new take is a new
+                // answer, so its words replace whatever was on the notepad.
+                if recording.support == .modern || recording.support == .legacy {
                     recording.transcribe(hints: transcriptionHints)
                 }
             }
         }
         .onChange(of: recording.support) { _, support in
             // A take recorded while speech recognition was still arriving.
-            if support == .modern, recording.state == .ready, recording.hasRecording, recording.transcript == nil, !hasText {
+            if support == .modern, recording.state == .ready, recording.hasRecording, recording.transcript == nil {
                 recording.transcribe(hints: transcriptionHints)
             }
         }
@@ -193,9 +192,6 @@ struct SpeakingAnswerPanel: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)) { _ in
             finishInput(committedText: nil)
-        }
-        .confirmationDialog(L.t("重新錄製會刪除上一段錄音", "A new take replaces the previous recording"), isPresented: $retakeOpen) {
-            Button(L.t("重新錄製", "Record again"), role: .destructive) { beginRecording() }
         }
         .task(id: pendingSubmission) {
             guard pendingSubmission else { return }
@@ -416,7 +412,6 @@ struct SpeakingAnswerPanel: View {
             }
             Button {
                 if live { recording.stop() }
-                else if recording.hasRecording { retakeOpen = true }
                 else { beginRecording() }
             } label: {
                 Image(systemName: live ? "stop.fill" : (recording.hasRecording ? "arrow.counterclockwise" : "mic.fill"))
@@ -477,10 +472,11 @@ struct SpeakingAnswerPanel: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .accessibilityIdentifier("coach-preparing-speech")
-        } else if recording.hasRecording, recording.transcript == nil, recording.support == .modern || recording.support == .legacy {
+        } else if recording.hasRecording, recording.transcript == nil, recording.message != nil,
+                  recording.state == .ready, recording.support == .modern || recording.support == .legacy {
+            // Only when turning the take into text failed: try it again.
             Button { recording.transcribe(hints: transcriptionHints) } label: {
-                Label(hasText ? L.t("轉成文字（取代目前的回答）", "Turn into text (replaces your answer)") : L.t("轉成文字", "Turn into text"),
-                      systemImage: "text.bubble")
+                Label(L.t("再轉一次文字", "Try turning it into text again"), systemImage: "arrow.clockwise")
             }
             .buttonStyle(.borderless)
             .disabled(recording.busy || session.isBusy)

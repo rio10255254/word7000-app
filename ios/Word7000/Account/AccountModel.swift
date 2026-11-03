@@ -407,6 +407,11 @@ final class AccountModel {
             if let email, !email.isEmpty { metadata["email"] = .string(email) }
             if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
             await activate(newSession, fallbackEmail: email)
+            // So that deleting the account later also revokes this app's
+            // access to the Apple ID. Signing in never waits on or fails for it.
+            if let authorizationCode, !authorizationCode.isEmpty {
+                _ = try? await client.storeAppleAuthorizationCode(authorizationCode, session: newSession)
+            }
         } catch {
             fail(error, fallback: A.appleFailed)
         }

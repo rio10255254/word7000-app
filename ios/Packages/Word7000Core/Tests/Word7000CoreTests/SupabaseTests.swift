@@ -54,6 +54,23 @@ final class SupabaseTests: XCTestCase {
         XCTAssertEqual(body["nonce"], .string("n"))
     }
 
+    func testAppleAuthorizationCodeGoesToTheTokenStoreWithTheSession() async throws {
+        let transport = FakeTransport([(#"{"stored":true}"#, 200), (#"{"stored":false}"#, 200)])
+        let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))
+        let client = SupabaseClient(config: config, transport: transport)
+        let stored = try await client.storeAppleAuthorizationCode("c0de.from-apple_1", session: session)
+        XCTAssertTrue(stored)
+        let request = try XCTUnwrap(transport.requests.first)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertEqual(request.url?.absoluteString, "https://abcdefgh.supabase.co/functions/v1/apple-token")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer a1")
+        let body = try JSONDecoder().decode([String: JSONValue].self, from: XCTUnwrap(request.httpBody))
+        XCTAssertEqual(body, ["code": .string("c0de.from-apple_1")])
+        // Without a Sign in with Apple key the backend keeps nothing, and says so.
+        let notStored = try await client.storeAppleAuthorizationCode("c0de.from-apple_2", session: session)
+        XCTAssertFalse(notStored)
+    }
+
     func testProfileWithEmptyDocumentsLoadsAsFoundButEmpty() async throws {
         let transport = FakeTransport([(#"[{"progress":{},"custom_sets":{"sets":[],"customWords":[]}}]"#, 200)])
         let session = try JSONDecoder().decode(AuthSession.self, from: Data(sessionJSON.utf8))

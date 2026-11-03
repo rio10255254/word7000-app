@@ -332,6 +332,17 @@ public struct SupabaseClient: Sendable {
                               headers: ["Prefer": "resolution=merge-duplicates,return=minimal"])
     }
 
+    /// Hands the one-time authorization code from a Sign in with Apple to
+    /// the backend, which trades it with Apple for a refresh token and keeps
+    /// it out of the app's reach, so deleting the account can revoke the
+    /// app's access to the Apple ID (App Review 5.1.1(v)). True when kept.
+    @discardableResult
+    public func storeAppleAuthorizationCode(_ code: String, session: AuthSession) async throws -> Bool {
+        let data = try await request("POST", "functions/v1/apple-token", body: .object(["code": .string(code)]), session: session)
+        let object = try? JSONDecoder().decode([String: JSONValue].self, from: data)
+        return object?["stored"] == .bool(true)
+    }
+
     public func deleteAccount(session: AuthSession) async throws {
         let data = try await request("POST", "functions/v1/delete-account", body: .object([:]), session: session)
         if let object = try? JSONDecoder().decode([String: JSONValue].self, from: data), case let .string(message)? = object["error"] {

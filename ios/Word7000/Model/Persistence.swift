@@ -32,6 +32,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var studyAutoReveal: Bool?
     /// Learning Chinese: the pinyin shows on a card before its answer; nil means on.
     var studyShowPinyin: Bool?
+    /// The note on where speaking answers go has been shown once.
+    var coachPrivacySeen: Bool?
     var speakingFilter: FilterSelection?
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?

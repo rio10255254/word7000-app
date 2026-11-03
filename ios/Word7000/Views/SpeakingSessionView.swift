@@ -1,8 +1,9 @@
 import SwiftUI
 import Word7000Core
 
-/// Ten short questions to answer out loud, each built around one word.
-/// Recording and text reflection are optional; the original practice stays available.
+/// Ten short questions to answer out loud, each built around one word. Each
+/// question is one page: read it (it is read aloud too), tap the big key and
+/// say the answer, see it as text, have it checked, go on.
 struct SpeakingSessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -14,12 +15,12 @@ struct SpeakingSessionView: View {
     @State private var answered = 0
     @State private var started = false
     @State private var availableCount = 0
-    @State private var completedCurrent = false
     @State private var finishedBounce = 0
     @State private var filtersOpen = false
     @State private var previousFilter = FilterSelection()
     @State private var historyOwnerKey = ""
-    @State private var coachOpen = false
+    /// Something was said or written for this question: Next counts it.
+    @State private var attempted = false
     @State private var coachAnswer = ""
     @State private var coachTranscriptNeedsReview = false
     @State private var coachContextID = UUID()
@@ -91,37 +92,15 @@ struct SpeakingSessionView: View {
         .onChange(of: model.settings.speakingFilter) { _, _ in clearCoach() }
         .onChange(of: model.speakingHistoryOwnerKey) { _, _ in start() }
         .onDisappear { coachSession.cancel(); Speaker.shared.stop() }
-        .sensoryFeedback(.success, trigger: completedCurrent) { _, new in new && (model.settings.hapticsEnabled ?? true) }
-        .sheet(isPresented: $coachOpen, onDismiss: {
-            coachSession.cancel()
-            Speaker.shared.stop()
-        }) {
-            if index < words.count {
-                let word = words[index]
-                let card = practiceCard(word)
-                let examplesOnly = isExample(word)
-                let meaning = examplesOnly ? ChineseDisplay.conciseMeaning(word.meaningZh)
-                    : (SpeakingPractice.entry(for: word)?.keywordZh ?? ChineseDisplay.conciseMeaning(word.meaningZh))
-                let contextID = coachContextID
-                // Ignore a late keyboard commit from a dismissed account/card.
-                let draft = Binding<String>(
-                    get: { contextID == coachContextID ? coachAnswer : "" },
-                    set: { if contextID == coachContextID { coachAnswer = $0 } }
-                )
-                SpeakingCoachView(needsTranscriptReview: Binding(
-                    get: { contextID == coachContextID && coachTranscriptNeedsReview },
-                    set: { if contextID == coachContextID { coachTranscriptNeedsReview = $0 } }
-                ), request: SpeakingCoach.Request(
-                    keyword: card.keyword,
-                    meaning: model.studyMode == .english ? meaning : word.word,
-                    question: card.question,
-                    context: examplesOnly ? card.referenceAnswer : "",
-                    answer: "",
-                    mode: model.studyMode == .english ? .english : .chinese
-                ), referenceAnswer: card.referenceAnswer, referenceTranslation: card.referenceTranslation,
-                    answer: draft, session: coachSession, questionGloss: card.questionGloss)
-                .id(contextID)
-            }
+        .sensoryFeedback(.success, trigger: attempted) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        // Each new question is read aloud once (Settings → Reading voice).
+        .task(id: "\(started)-\(index)-\(words.count)") {
+            guard started, index < words.count, !AppRuntime.uiTesting,
+                  model.settings.speech?.autoReadQuestions ?? true else { return }
+            do { try await Task.sleep(for: .milliseconds(450)) } catch { return }
+            let card = practiceCard(words[index])
+            Speaker.shared.speak(card.question, language: card.questionGloss == nil ? "en-US" : "zh-TW",
+                                 preferences: model.settings.speech ?? SpeechPreferences())
         }
         .sheet(isPresented: $filtersOpen, onDismiss: {
             if previousFilter != (model.settings.speakingFilter ?? FilterSelection()) { start() }
@@ -210,7 +189,7 @@ struct SpeakingSessionView: View {
         index = 0
         answered = 0
         revealed = false
-        completedCurrent = false
+        attempted = false
         started = true
     }
 
@@ -219,7 +198,6 @@ struct SpeakingSessionView: View {
         coachSession.reset()
         coachAnswer = ""
         coachTranscriptNeedsReview = false
-        coachOpen = false
         Speaker.shared.stop()
     }
 
@@ -234,8 +212,9 @@ struct SpeakingSessionView: View {
         let examplesOnly = isExample(word)
         let face = model.face(word)
         return VStack(spacing: 16) {
-            BuddyProgressBar(fraction: Double(index + (revealed ? 1 : 0)) / Double(max(1, words.count)),
-                             tint: Palette.known, mood: revealed ? .happy : .thinking, hop: index)
+            BuddyProgressBar(fraction: Double(index + (attempted ? 1 : 0)) / Double(max(1, words.count)),
+                             tint: Palette.known, mood: attempted ? .happy : .thinking, hop: index)
+            ScrollViewReader { proxy in
             ScrollView {
               VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 16) {
@@ -260,7 +239,7 @@ struct SpeakingSessionView: View {
                             .accessibilityIdentifier("speaking-keyword-meaning")
                         }
                         Spacer()
-                        if completedCurrent {
+                        if attempted {
                             Image(systemName: "checkmark.seal.fill")
                                 .font(.title3)
                                 .foregroundStyle(Palette.known)
@@ -326,96 +305,80 @@ struct SpeakingSessionView: View {
                 // Each new question slides in from the side.
                 .modifier(PromptArrival())
                 .id(index)
-                coachEntry
+                answerPanel(word, card: card, examplesOnly: examplesOnly, proxy: proxy)
                     .modifier(PromptArrival(delay: 0.08))
-                    .id("coach-\(index)")
+                    .id(coachContextID)
               }
+              .padding(.bottom, 12)
             }
-            if revealed {
-              ButtonRow {
-                Button(action: next) {
-                    Text(completedCurrent ? (index + 1 >= words.count ? L.seeResults : L.nextQuestion) : L.t("略過", "Skip"))
+            .scrollDismissesKeyboard(.interactively)
+            }
+            // Two keys only: the sample answer, and on to the next question
+            // (which counts this one once something was said or written).
+            ButtonRow {
+                Button {
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { revealed.toggle() }
+                } label: {
+                    Text(revealed ? L.t("收起參考", "Hide sample")
+                         : examplesOnly ? L.t("聽例句", "Hear it") : L.showSample)
                         .font(.headline).frame(maxWidth: .infinity)
                 }
-                .prominentAction()
+                .secondaryAction()
+                .disabled(card.referenceAnswer.isEmpty)
+                .accessibilityIdentifier("speaking-show-reference")
+                Button(action: next) {
+                    Text(attempted ? (index + 1 >= words.count ? L.seeResults : L.nextQuestion) : L.t("跳過", "Skip"))
+                        .font(.headline).frame(maxWidth: .infinity)
+                }
+                .modifier(NextKey(attempted: attempted))
                 .accessibilityIdentifier("speaking-next")
-                if !completedCurrent {
-                    Button { reveal(completed: true); next() } label: {
-                        Text(L.t("練習完成", "Done")).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.known)
-                    .accessibilityIdentifier("speaking-complete-after-reference")
-                }
-              }
-            } else {
-                ButtonRow {
-                    Button { reveal(completed: false) } label: {
-                        Text(examplesOnly ? L.t("聽例句", "Hear it") : L.showSample).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                    .disabled(card.referenceAnswer.isEmpty)
-                    .accessibilityIdentifier("speaking-show-reference")
-                    Button { reveal(completed: true) } label: {
-                        Text(L.spokeIt).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.known)
-                    .accessibilityIdentifier("speaking-complete")
-                }
             }
         }
     }
 
-    /// Recording is part of answering, so it reads as the next step under the
-    /// question rather than one more equal-weight button.
-    private var coachEntry: some View {
-        let suggests = AppleSpeakingCoach.shared.availability == .ready
-        return Button {
-            Speaker.shared.stop()
-            AppleSpeakingCoach.shared.refreshAvailability()
-            coachOpen = true
-        } label: {
-            HStack(spacing: 14) {
-                Image(systemName: "mic.circle.fill")
-                    .font(.system(size: 36))
-                    .foregroundStyle(Palette.accent)
-                    .symbolEffect(.bounce, value: reduceMotion ? 0 : index)
-                    .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(L.t("錄下你的回答", "Record your answer")).font(.headline)
-                    Text(suggests ? L.t("回放、轉成文字，並取得 AI 建議", "Replay it, see it as text, and get AI suggestions")
-                         : L.t("回放、轉成文字，自己檢查一遍", "Replay it and check it as text"))
-                        .font(.subheadline).foregroundStyle(.secondary)
-                        .multilineTextAlignment(.leading)
-                }
-                Spacer(minLength: 8)
-                Image(systemName: "chevron.right").font(.footnote.weight(.semibold)).foregroundStyle(.tertiary)
-                    .accessibilityHidden(true)
+    /// Recording, the notepad, checking and the follow-up, under the question.
+    private func answerPanel(_ word: WordEntry, card: ConversationPromptCard, examplesOnly: Bool, proxy: ScrollViewProxy) -> some View {
+        let meaning = examplesOnly ? ChineseDisplay.conciseMeaning(word.meaningZh)
+            : (SpeakingPractice.entry(for: word)?.keywordZh ?? ChineseDisplay.conciseMeaning(word.meaningZh))
+        let contextID = coachContextID
+        // Ignore a late keyboard commit from a question already left.
+        let draft = Binding<String>(
+            get: { contextID == coachContextID ? coachAnswer : "" },
+            set: { if contextID == coachContextID { coachAnswer = $0 } }
+        )
+        return SpeakingAnswerPanel(
+            request: SpeakingCoach.Request(
+                keyword: card.keyword,
+                meaning: model.studyMode == .english ? meaning : word.word,
+                question: card.question,
+                context: examplesOnly ? card.referenceAnswer : "",
+                answer: "",
+                mode: model.studyMode == .english ? .english : .chinese
+            ),
+            answer: draft,
+            needsTranscriptReview: Binding(
+                get: { contextID == coachContextID && coachTranscriptNeedsReview },
+                set: { if contextID == coachContextID { coachTranscriptNeedsReview = $0 } }
+            ),
+            session: coachSession,
+            scrollTo: { id in withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo(id, anchor: .top) } },
+            onAttempt: {
+                guard contextID == coachContextID, !attempted else { return }
+                withAnimation(reduceMotion ? nil : Motion.pop) { attempted = true }
             }
-            .contentShape(Rectangle())
-            .card(radius: Metrics.wordCardRadius, padding: 16)
-        }
-        .buttonStyle(SoftPressStyle())
-        .accessibilityIdentifier("speaking-coach-open")
-    }
-
-    private func reveal(completed: Bool) {
-        guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(); return }
-        if completed, !completedCurrent {
-            model.recordSpeaking(completed: true)
-            answered += 1
-            withAnimation(reduceMotion ? nil : Motion.pop) { completedCurrent = true }
-        }
-        withAnimation(reduceMotion ? nil : Motion.reveal) { revealed = true }
+        )
     }
 
     private func next() {
         guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(); return }
         guard index < words.count else { return }
+        // Saying or writing an answer is the practice; skipping is not.
+        model.recordSpeaking(completed: attempted)
+        if attempted { answered += 1 }
         clearCoach()
-        if !completedCurrent { model.recordSpeaking(completed: false) }
         model.noteSpeakingPractised(words[index].id)
         Speaker.shared.stop()
-        completedCurrent = false
+        attempted = false
         revealed = false
         index += 1
     }
@@ -453,6 +416,15 @@ struct SpeakingSessionView: View {
             try? await Task.sleep(for: .milliseconds(450))
             if !reduceMotion { finishedBounce += 1 }
         }
+    }
+}
+
+/// Next is the main key once the question was answered, a quiet Skip before.
+private struct NextKey: ViewModifier {
+    var attempted: Bool
+
+    func body(content: Content) -> some View {
+        if attempted { content.prominentAction(tint: Palette.known) } else { content.secondaryAction() }
     }
 }
 

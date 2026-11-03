@@ -46,6 +46,12 @@ struct PracticeAnswerEditor: UIViewRepresentable {
         }
         view.isEditable = editable
         view.accessibilityLabel = L.t("你的回答", "Your answer")
+        // "Type instead" puts the cursor straight on the notepad.
+        if focused, editable, !view.isFirstResponder {
+            DispatchQueue.main.async {
+                if view.window != nil, !view.isFirstResponder { view.becomeFirstResponder() }
+            }
+        }
     }
 
     final class Coordinator: NSObject, UITextViewDelegate {

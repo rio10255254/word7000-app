@@ -60,8 +60,14 @@ struct SpeechSettingsView: View {
                         model.settings.speech = next
                     }))
                     .accessibilityIdentifier("speech-auto-speak")
+                    Toggle(L.t("口說題目自動朗讀", "Read speaking questions aloud"), isOn: Binding(get: { preferences.autoReadQuestions ?? true }, set: { value in
+                        var next = preferences
+                        next.autoReadQuestions = value
+                        model.settings.speech = next
+                    }))
+                    .accessibilityIdentifier("speech-auto-read-questions")
                 } footer: {
-                    Text(L.t("每翻到新的一張學習卡，就自動唸出卡片正面。", "Each new study card is read aloud as it appears."))
+                    Text(L.t("每翻到新的一張學習卡，就自動唸出卡片正面；口說練習換到新題目時，也會先唸一次題目。", "Each new study card is read aloud as it appears, and each new speaking question is read once."))
                 }
             }
             .listRowBackground(StyledRowBackground())

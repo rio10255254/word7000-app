@@ -313,6 +313,7 @@ final class SpeakingCoachTests: XCTestCase {
         if !answer.exists { tap(app.buttons["coach-type-instead"], in: app) }
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
         if !app.keyboards.firstMatch.waitForExistence(timeout: 2) { answer.tap() }
+        settle(answer)
         answer.typeText(text)
         // The accessibility value can lag the final keyboard event on older
         // simulators. Keep the exact-text assertion; never retry the keystroke.
@@ -320,6 +321,18 @@ final class SpeakingCoachTests: XCTestCase {
             predicate: NSPredicate(format: "value == %@", text), object: answer)
         XCTAssertEqual(XCTWaiter.wait(for: [committed], timeout: 5), .completed)
         XCTAssertEqual(answer.value as? String, text)
+    }
+
+    /// Waits for the notepad to stop moving (the page scrolls it above the
+    /// keyboard), since keystrokes sent mid-scroll can be dropped.
+    private func settle(_ element: XCUIElement) {
+        var last = element.frame
+        for _ in 0..<20 {
+            Thread.sleep(forTimeInterval: 0.15)
+            let now = element.frame
+            if now == last { return }
+            last = now
+        }
     }
 
     private func dismissKeyboard(_ app: XCUIApplication) {

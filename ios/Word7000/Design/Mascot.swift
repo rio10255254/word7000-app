@@ -857,7 +857,9 @@ struct MascotBubble: View {
         }
             .font(.display(.footnote, weight: .semibold))
             .foregroundStyle(Color(red: 0.23, green: 0.15, blue: 0.11))
-            .lineLimit(2)
+            // Room for a whole line from the cat: it is never cut off mid-sentence.
+            .lineLimit(5)
+            .minimumScaleFactor(0.85)
             .multilineTextAlignment(.center)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
@@ -995,7 +997,7 @@ struct MascotBuddy: View {
             .overlay(alignment: bubbleAnchor) {
                 if let bubble, speech == nil {
                     MascotBubble(text: bubble, pointing: bubblePointing, actionable: actionable)
-                        .frame(width: actionable ? 200 : 180, alignment: bubbleAnchor)
+                        .frame(width: actionable ? 230 : 210, alignment: bubbleAnchor)
                         .offset(x: bubbleSide == .leading ? -size - 6 : bubbleSide == .trailing ? size + 6 : 0,
                                 y: bubbleSide == .top ? -size * 0.62 : -size * 0.05)
                         .transition(.scale(scale: 0.6, anchor: bubbleSide == .top ? .bottom : bubbleSide == .leading ? .trailing : .leading)

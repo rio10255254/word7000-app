@@ -205,7 +205,7 @@ struct TodayView: View {
                     Image(systemName: daySymbol)
                         .symbolRenderingMode(.multicolor)
                         .symbolEffect(.bounce, value: greetingHops)
-                    Text(Date.now, format: .dateTime.month().day().weekday(.wide))
+                    Text(Date.now, format: .dateTime.month(.abbreviated).day().weekday(.abbreviated))
                 }
                 .font(.footnote)
                 .foregroundStyle(.secondary)

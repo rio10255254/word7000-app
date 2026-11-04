@@ -690,7 +690,14 @@ private struct SummaryChip: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        // A card of its own on the paper: the ivory surface tinted by the
+        // stat's colour and edged in it, so it reads at a glance.
+        .background {
+            let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+            shape.fill(Palette.surface)
+                .overlay(shape.fill(tint.opacity(0.14)))
+                .overlay(shape.strokeBorder(tint.opacity(0.28), lineWidth: 1))
+        }
         .accessibilityElement(children: .combine)
         .task {
             guard !rolled else { return }

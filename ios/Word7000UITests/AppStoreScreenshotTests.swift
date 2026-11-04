@@ -69,6 +69,14 @@ final class AppStoreScreenshotTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5), app.debugDescription)
         sleep(1)
         snap(app, "\(prefix)-4-speaking-question")
+        // The coach's sample answer fits a word question, so check it under Words.
+        let track = app.segmentedControls["speaking-track"]
+        if track.waitForExistence(timeout: 3) {
+            track.buttons.element(boundBy: 1).tap()
+            if skip.waitForExistence(timeout: 5) { skip.tap() }
+            XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5), app.debugDescription)
+            sleep(1)
+        }
         let typeInstead = app.buttons["coach-type-instead"]
         typeInstead.scrollIntoView(in: app, swipes: 4)
         typeInstead.tap()

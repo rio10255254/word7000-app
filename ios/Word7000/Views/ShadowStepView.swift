@@ -502,6 +502,10 @@ private struct ShadowUnitView: View {
                     ToneCurve(syllable: tone, color: color)
                         .frame(width: 28, height: 12)
                         .opacity(tone == nil ? 0 : 1)
+                } else {
+                    // Punctuation keeps the same rows as a character, so it sits
+                    // on the line instead of dropping below it.
+                    Color.clear.frame(width: 1, height: 12)
                 }
             }
             .frame(minWidth: unit.scored ? 34 : 0)

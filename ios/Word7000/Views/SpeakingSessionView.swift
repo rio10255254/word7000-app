@@ -519,6 +519,7 @@ struct SpeakingSessionView: View {
               .padding(.bottom, 12)
             }
             .scrollDismissesKeyboard(.interactively)
+            .softTopScrollEdge()
             }
             // Two keys only: the sample answer, and on to the next question
             // (which counts this one once something was said or written).

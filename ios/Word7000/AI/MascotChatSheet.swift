@@ -131,6 +131,7 @@ struct MascotChatSheet: View {
             }
             .defaultScrollAnchor(.bottom)
             .scrollDismissesKeyboard(.interactively)
+            .softTopScrollEdge()
             .safeAreaInset(edge: .bottom) {
                 if chatReady && (CloudAssistant.shared.offered || AppRuntime.catShowcase) { inputBar }
             }

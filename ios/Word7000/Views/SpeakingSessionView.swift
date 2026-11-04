@@ -21,6 +21,9 @@ struct SpeakingSessionView: View {
     @State private var historyOwnerKey = ""
     /// Something was said or written for this question: Next counts it.
     @State private var attempted = false
+    /// The question was tapped for its translation in this practice, so the
+    /// hint showing how is put away until the next practice.
+    @State private var translationTried = false
     @State private var coachAnswer = ""
     @State private var coachTranscriptNeedsReview = false
     @State private var coachContextID = UUID()
@@ -106,7 +109,7 @@ struct SpeakingSessionView: View {
                   model.settings.speech?.autoReadQuestions ?? true else { return }
             do { try await Task.sleep(for: .milliseconds(450)) } catch { return }
             let card = practiceCard(words[index])
-            Speaker.shared.speak(card.question, language: card.questionGloss == nil ? "en-US" : "zh-TW",
+            Speaker.shared.speak(card.question, language: model.face(words[index]).speakLanguage,
                                  preferences: model.settings.speech ?? SpeechPreferences())
         }
         .sheet(isPresented: $filtersOpen, onDismiss: {
@@ -199,6 +202,7 @@ struct SpeakingSessionView: View {
         answered = 0
         revealed = false
         attempted = false
+        translationTried = false
         started = true
     }
 
@@ -270,24 +274,17 @@ struct SpeakingSessionView: View {
                         }
                     }
                     HStack(alignment: .top, spacing: 8) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(card.question).font(.title2.weight(.semibold)).lineSpacing(4)
-                                .accessibilityIdentifier("speaking-question")
-                            // Learners of Chinese get the pinyin, and the English to check.
-                            if model.studyMode == .chinese {
-                                let pinyin = ChineseDisplay.sentencePinyin(card.question)
-                                if !pinyin.isEmpty {
-                                    Text(pinyin).font(.footnote).foregroundStyle(.secondary)
-                                        .accessibilityIdentifier("speaking-question-pinyin")
-                                }
-                                if let gloss = card.questionGloss {
-                                    Text(gloss).font(.footnote).foregroundStyle(.tertiary)
-                                        .accessibilityIdentifier("speaking-question-gloss")
-                                }
-                            }
-                        }
+                        // Tapping the question turns it into the learner's own
+                        // language and back; the first questions show how.
+                        TranslatableQuestion(
+                            question: card.question,
+                            pinyin: model.studyMode == .chinese ? ChineseDisplay.sentencePinyin(card.question) : "",
+                            translation: card.questionGloss,
+                            showsHint: !translationTried,
+                            onTranslate: { translationTried = true }
+                        )
                         Spacer(minLength: 0)
-                        SpeakButton(text: card.question, language: card.questionGloss == nil ? "en-US" : "zh-TW")
+                        SpeakButton(text: card.question, language: face.speakLanguage)
                     }
                     Text(card.questionSupport)
                         .font(.subheadline)
@@ -453,5 +450,129 @@ private struct PromptArrival: ViewModifier {
                 guard !arrived, !reduceMotion else { return }
                 withAnimation(.spring(response: 0.45, dampingFraction: 0.85).delay(delay)) { arrived = true }
             }
+    }
+}
+
+/// The question, which turns over into the learner's own language when
+/// tapped (and back on a second tap). Until the learner has tried it once in
+/// a practice, a small tapping hand under the question shows how.
+private struct TranslatableQuestion: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let question: String
+    /// Shown under the question for learners of Chinese.
+    let pinyin: String
+    let translation: String?
+    let showsHint: Bool
+    let onTranslate: () -> Void
+
+    @State private var translated = false
+
+    private var canTranslate: Bool { !(translation ?? "").isEmpty }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ZStack(alignment: .topLeading) {
+                if translated, let translation {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L.t("中文翻譯", "In English"))
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Palette.accent)
+                        Text(translation).font(.title2.weight(.semibold)).lineSpacing(4)
+                            .accessibilityIdentifier("speaking-question-gloss")
+                            .accessibilityAction(named: L.t("看原文", "Show the original")) { toggle() }
+                        Text(L.t("再點一下看英文原文", "Tap again for the Chinese"))
+                            .font(.footnote).foregroundStyle(.tertiary)
+                            .accessibilityHidden(true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .transition(flip(from: -90))
+                } else {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(question).font(.title2.weight(.semibold)).lineSpacing(4)
+                            .accessibilityIdentifier("speaking-question")
+                            .accessibilityAction(named: L.t("看中文翻譯", "Show in English")) { toggle() }
+                        if !pinyin.isEmpty {
+                            Text(pinyin).font(.footnote).foregroundStyle(.secondary)
+                                .accessibilityIdentifier("speaking-question-pinyin")
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .transition(flip(from: -90))
+                }
+            }
+            .background {
+                // A soft glow behind the question while the hint is showing.
+                if hintVisible {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Palette.accent)
+                        .padding(-6)
+                        .phaseAnimator(reduceMotion ? [0.06] : [0.0, 0.1]) { glow, opacity in
+                            glow.opacity(opacity)
+                        } animation: { _ in .easeInOut(duration: 1.1) }
+                        .accessibilityHidden(true)
+                }
+            }
+            if hintVisible {
+                hint.transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .leading)))
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { toggle() }
+        .sensoryFeedback(.selection, trigger: translated) { _, _ in model.settings.hapticsEnabled ?? true }
+    }
+
+    private var hintVisible: Bool { showsHint && canTranslate && !translated }
+
+    /// A hand tapping, with what the tap does.
+    private var hint: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "hand.tap.fill")
+                .phaseAnimator(reduceMotion ? [false] : [false, true, false]) { hand, pressed in
+                    hand.scaleEffect(pressed ? 0.8 : 1).offset(y: pressed ? 2 : 0)
+                } animation: { pressed in pressed ? .easeIn(duration: 0.18) : .spring(duration: 0.5) }
+            Text(L.t("點一下題目，看中文翻譯", "Tap the question to read it in English"))
+        }
+        .font(.footnote.weight(.semibold))
+        .foregroundStyle(Palette.accent)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(Palette.accent.opacity(0.12), in: Capsule())
+        .accessibilityHidden(true)
+    }
+
+    private func toggle() {
+        guard canTranslate else { return }
+        withAnimation(reduceMotion ? .easeInOut(duration: 0.2) : .spring(duration: 0.45, bounce: 0.2)) {
+            translated.toggle()
+        }
+        if translated { onTranslate() }
+    }
+
+    /// The face turns over like a card, both ways in the same direction; a
+    /// plain fade with Reduce Motion.
+    private func flip(from angle: Double) -> AnyTransition {
+        guard !reduceMotion else { return .opacity }
+        return .asymmetric(
+            insertion: .modifier(active: QuestionFlip(angle: angle), identity: QuestionFlip(angle: 0))
+                .animation(.easeOut(duration: 0.2).delay(0.16)),
+            removal: .modifier(active: QuestionFlip(angle: -angle), identity: QuestionFlip(angle: 0))
+                .animation(.easeIn(duration: 0.16))
+        )
+    }
+}
+
+/// Turns a face about the horizontal axis, fading it as it goes edge-on.
+private struct QuestionFlip: ViewModifier, Animatable {
+    var angle: Double
+    var animatableData: Double {
+        get { angle }
+        set { angle = newValue }
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .rotation3DEffect(.degrees(angle), axis: (x: 1, y: 0, z: 0), perspective: 0.4)
+            .opacity(max(0, 1 - abs(angle) / 90))
     }
 }

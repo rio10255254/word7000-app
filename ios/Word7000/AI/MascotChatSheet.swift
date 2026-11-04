@@ -369,7 +369,7 @@ struct MascotChatSheet: View {
             .padding(.horizontal, Metrics.gutter)
         }
         .padding(.vertical, 8)
-        .background(.bar)
+        .background { PaperBarBackground() }
     }
 
     private func send(_ raw: String) {

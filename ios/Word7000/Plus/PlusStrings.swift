@@ -6,11 +6,11 @@ enum P {
     static func headline(_ reason: PaywallReason) -> String {
         switch reason {
         case .general:
-            return L.t("背單字永遠免費。Premium 打開小笨貓的 AI 老師、掃描和考前衝刺。", "Studying words is always free. Premium opens Silly Cat's AI tutor, scanning and exam practice.")
+            return L.t("背單字永遠免費。Premium 打開傻貓的 AI 老師、掃描和考前衝刺。", "Studying words is always free. Premium opens Silly Cat's AI tutor, scanning and exam practice.")
         case .trialScansUsed:
             return L.t("試用期的 \(PlusPolicy.trialScanLimit) 次掃描已經用完，訂閱後就能無限掃描。", "You have used the \(PlusPolicy.trialScanLimit) trial scans. Subscribe for unlimited scanning.")
         case .speakingCoach:
-            return L.t("訂閱 Premium，小笨貓就能批改你的口說：改成更自然的說法、指出錯誤，再追問一題。不需要 Apple Intelligence，任何 iPhone 都能用。",
+            return L.t("訂閱 Premium，傻貓就能批改你的口說：改成更自然的說法、指出錯誤，再追問一題。不需要 Apple Intelligence，任何 iPhone 都能用。",
                        "With Premium, Silly Cat checks your speaking: a more natural version, what to fix, and a follow-up question. No Apple Intelligence needed; it works on any iPhone.")
         case let .officialBank(name):
             return L.t("「\(name)」是 Premium 字庫。訂閱後所有官方字庫都能學，之後上架的新字庫也一樣。",
@@ -50,7 +50,7 @@ enum P {
     }
     static var whyTitle: String { L.t("為什麼 Premium 要收費？", "Why does Premium cost money?") }
     static var whyBody: String {
-        L.t("單字貓是獨立開發的小 App。背單字、複習、測驗都免費，也沒有廣告；但小笨貓的 AI 老師每回答一次，都要付費給 AI 服務商。Premium 的費用就是用來支付這些成本，讓單字貓能一直更新下去。謝謝你的支持！",
+        L.t("單字貓是獨立開發的小 App。背單字、複習、測驗都免費，也沒有廣告；但傻貓的 AI 老師每回答一次，都要付費給 AI 服務商。Premium 的費用就是用來支付這些成本，讓單字貓能一直更新下去。謝謝你的支持！",
             "WordCat is a small, independent app. Studying, reviews and quizzes are free, with no ads. But every answer from Silly Cat's AI tutor costs real money with the AI provider. Premium pays for that, and keeps WordCat improving. Thank you for your support!")
     }
     static var freeForever: String { L.t("背 7000 單字、複習、小測驗和口說練習永遠免費。用 Apple 登入就能保存並同步進度。", "Studying the core words, reviews, quizzes and speaking stay free. Sign in with Apple to keep and sync your progress.") }
@@ -148,7 +148,7 @@ enum P {
     /// reminder says something new each time.
     static var plusPitch: (title: String, text: String) {
         let pitches: [(String, String)] = [
-            (L.t("讓小笨貓當你的 AI 老師", "Make Silly Cat your AI tutor"),
+            (L.t("讓傻貓當你的 AI 老師", "Make Silly Cat your AI tutor"),
              L.t("卡住的字直接問：用法、例句、跟哪個字搞混，Premium 每天 \(PlusAI.plusDaily) 次。", "Ask about any word: usage, examples, what it gets mixed up with. \(PlusAI.plusDaily) a day with Premium.")),
             (L.t("課本單字表，拍一下就變字庫", "Snap a word list into a bank"),
              L.t("講義、手寫筆記都讀得懂，還幫你補詞性和翻譯。", "Handouts and handwriting too, with parts of speech and meanings filled in.")),

@@ -112,7 +112,7 @@ struct WelcomeView: View {
             VStack(spacing: 4) {
                 Mascot(mood: .smug, size: 112, hop: hop)
                     .popIn()
-                MascotBubble(text: "嗨，我是小笨貓。\nHi, I'm Silly Cat.", pointing: .top)
+                MascotBubble(text: "嗨，我是傻貓。\nHi, I'm Silly Cat.", pointing: .top)
                     .entrance(1)
             }
             Text("你想學什麼？\nWhat do you want to learn?")

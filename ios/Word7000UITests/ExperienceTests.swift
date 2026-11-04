@@ -202,7 +202,7 @@ final class ExperienceTests: XCTestCase {
         // and circles its tile.
         let quiz = app.buttons["today-quiz"]
         XCTAssertTrue(quiz.waitForExistence(timeout: 10))
-        let suggested = NSPredicate(format: "value == '小笨貓推薦'")
+        let suggested = NSPredicate(format: "value == '傻貓推薦'")
         XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: quiz)], timeout: 5), .completed,
                        String(describing: quiz.value))
         // The starter checklist shows the first round ticked and the quiz next.

@@ -334,7 +334,7 @@ struct PlusComparison: View {
         [
             Line(name: L.t("背 7000 單字、複習、測驗、拼字、口說", "Taiwan Mandarin words, reviews, quizzes, writing, speaking"), free: true),
             Line(name: L.t("登入後保存與同步進度", "Keeping and syncing progress (signed in)"), free: true),
-            Line(name: L.t("小笨貓 AI：聊天、解說、口說教練", "Silly Cat's AI: chat, explanations, speaking coach"), free: false),
+            Line(name: L.t("傻貓 AI：聊天、解說、口說教練", "Silly Cat's AI: chat, explanations, speaking coach"), free: false),
             Line(name: L.t("掃描單字表與手寫筆記", "Scanning word lists and handwriting"), free: false),
             Line(name: L.t("15 分鐘模擬考", "15-minute mock exams"), free: false),
             Line(name: L.t("完整學習紀錄與弱點單字", "Full history and weak words"), free: false),

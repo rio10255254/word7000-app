@@ -161,7 +161,7 @@ struct AskAISection: View {
                     .scrollIndicators(.hidden)
                 }
                 HStack(spacing: 8) {
-                    TextField(L.t("問小笨貓關於這個字的問題", "Ask Silly Cat about this word"), text: $question)
+                    TextField(L.t("問傻貓關於這個字的問題", "Ask Silly Cat about this word"), text: $question)
                         .submitLabel(.send)
                         .focused($focused)
                         .onSubmit { send() }
@@ -181,7 +181,7 @@ struct AskAISection: View {
                 // The explanation above already carries the Plus note; repeat it only when today's allowance ran out here.
                 if failure == .quota { PlusAIUpsell() }
             } header: {
-                Text(L.t("問小笨貓", "Ask Silly Cat"))
+                Text(L.t("問傻貓", "Ask Silly Cat"))
             } footer: {
                 Text(L.t("只聊這個字 · Claude 線上 AI，可能有誤",
                          "About this word only · Claude online AI, may be wrong"))
@@ -251,7 +251,7 @@ struct AIExplanationSection: View {
                         .accessibilityIdentifier("ai-explain-loading")
                 } else {
                     Button(action: start) {
-                        Label(L.t("叫小笨貓解說：用法、搭配與例句", "Have Silly Cat explain: usage, collocations, examples"), systemImage: "sparkles")
+                        Label(L.t("叫傻貓解說：用法、搭配與例句", "Have Silly Cat explain: usage, collocations, examples"), systemImage: "sparkles")
                     }
                     .accessibilityIdentifier("ai-explain")
                     if let failure { AIFailureNote(failure: failure) }
@@ -271,7 +271,7 @@ struct AIExplanationSection: View {
                 }
                 if explanation != nil || failure == .quota { PlusAIUpsell() }
             } header: {
-                Text(L.t("小笨貓解說", "Silly Cat explains"))
+                Text(L.t("傻貓解說", "Silly Cat explains"))
             } footer: {
                 if explanation != nil { Text(L.t("背後是 Claude 線上 AI，可能有誤。", "Powered by Claude, Anthropic's online AI, and may contain mistakes.")) }
             }
@@ -281,11 +281,11 @@ struct AIExplanationSection: View {
             // Without Plus: what the explanation would give, and the way to it.
             Section {
                 PlusUpsellCard(feature: .smartAI,
-                               title: L.t("叫小笨貓解說這個字", "Have Silly Cat explain this word"),
+                               title: L.t("叫傻貓解說這個字", "Have Silly Cat explain this word"),
                                detail: L.t("用法、搭配、例句和常見陷阱，還能追問。", "Usage, collocations, examples and common traps, and you can ask more."),
                                compact: true)
             } header: {
-                Text(L.t("小笨貓解說", "Silly Cat explains"))
+                Text(L.t("傻貓解說", "Silly Cat explains"))
             }
         }
     }
@@ -391,7 +391,7 @@ struct QuizWhyView: View {
                 if let reply {
                     CatSays(mood: .smug, size: 32) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(L.t("小笨貓說你錯在這：", "Here's where you went wrong:"))
+                            Text(L.t("傻貓說你錯在這：", "Here's where you went wrong:"))
                                 .font(.subheadline.weight(.semibold)).foregroundStyle(Palette.accent)
                             Text(reply.explanation)
                                 .accessibilityIdentifier("quiz-why-text")
@@ -408,7 +408,7 @@ struct QuizWhyView: View {
                     AIThinkingRow(text: Cat.thinking(.why))
                 } else {
                     Button(action: start) {
-                        Label(L.t("小笨貓，我為什麼錯？", "Silly Cat, why was that wrong?"), systemImage: "sparkles")
+                        Label(L.t("傻貓，我為什麼錯？", "Silly Cat, why was that wrong?"), systemImage: "sparkles")
                             .font(.subheadline.weight(.semibold))
                     }
                     .accessibilityIdentifier("quiz-why")
@@ -470,7 +470,7 @@ struct AIInsightsSection: View {
                         .accessibilityIdentifier("ai-insights-loading")
                 } else {
                     Button(action: start) {
-                        ActionRow(icon: "sparkles", tint: Palette.chinese, title: L.t("讓小笨貓評評我最近學得怎樣", "Let Silly Cat judge my recent practice"),
+                        ActionRow(icon: "sparkles", tint: Palette.chinese, title: L.t("讓傻貓評評我最近學得怎樣", "Let Silly Cat judge my recent practice"),
                                   value: L.t("每天一次", "Once a day"))
                     }
                     .tint(.primary)
@@ -478,7 +478,7 @@ struct AIInsightsSection: View {
                     if let failure { AIFailureNote(failure: failure) }
                 }
             } header: {
-                Text(L.t("小笨貓的學習分析", "Silly Cat's verdict"))
+                Text(L.t("傻貓的學習分析", "Silly Cat's verdict"))
             } footer: {
                 if insights != nil {
                     Text(L.t("近 14 天紀錄 · Claude 線上 AI，可能有誤",

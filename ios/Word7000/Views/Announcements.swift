@@ -22,7 +22,7 @@ final class AnnouncementStore {
     func refresh(account: AccountModel, plus: PlusModel) async {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-uiTestingAnnouncement") {
-            current = Announcement(id: "ui-test", titleZh: "新版口說練習上線了", bodyZh: "每題一頁，按一下就能錄音，錄完自動變成文字，再請小笨貓幫你批改。有任何問題，歡迎在 TestFlight 回報給我們！",
+            current = Announcement(id: "ui-test", titleZh: "新版口說練習上線了", bodyZh: "每題一頁，按一下就能錄音，錄完自動變成文字，再請傻貓幫你批改。有任何問題，歡迎在 TestFlight 回報給我們！",
                                    titleEn: "Speaking practice, rebuilt", bodyEn: "One page per question: tap once to record, see it as text, then let Silly Cat check it. Tell us what you think in TestFlight!",
                                    link: "update", linkLabelZh: "更新到最新版", linkLabelEn: "Get the latest version")
             return
@@ -193,7 +193,7 @@ struct AnnouncementSheet: View {
     }
 
     var body: some View {
-        NoticeStage(tag: L.t("小笨貓公告", "From Silly Cat"), tagIcon: "megaphone.fill", tint: Palette.accent,
+        NoticeStage(tag: L.t("傻貓公告", "From Silly Cat"), tagIcon: "megaphone.fill", tint: Palette.accent,
                     mood: .happy, title: title, message: bodyText) {
             if let link = message.link {
                 Button {

@@ -135,7 +135,7 @@ struct MascotChatSheet: View {
                 if chatReady && (CloudAssistant.shared.offered || AppRuntime.catShowcase) { inputBar }
             }
             .background { AmbientBackground() }
-            .navigationTitle(L.t("小笨貓說", "Silly Cat says"))
+            .navigationTitle(L.t("傻貓說", "Silly Cat says"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button(L.done) { dismiss() } }
@@ -350,7 +350,7 @@ struct MascotChatSheet: View {
                 }
             }
             HStack(spacing: 8) {
-                TextField(L.t("跟小笨貓說…", "Say something to Silly Cat…"), text: $draft, axis: .vertical)
+                TextField(L.t("跟傻貓說…", "Say something to Silly Cat…"), text: $draft, axis: .vertical)
                     .lineLimit(1...4)
                     .focused($inputFocused)
                     .submitLabel(.send)
@@ -501,6 +501,6 @@ private struct TypingDots: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 13)
         .background(MascotBubble.cream, in: Capsule())
-        .accessibilityLabel(L.t("小笨貓正在想", "Silly Cat is thinking"))
+        .accessibilityLabel(L.t("傻貓正在想", "Silly Cat is thinking"))
     }
 }

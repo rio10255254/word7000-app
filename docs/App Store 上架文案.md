@@ -6,29 +6,29 @@
 ## 繁體中文（台灣）
 
 **名稱**（30 字內）
-單字貓：英文 7000 單字
+WordCat：英文 7000 單字
 
 **副標題**（30 字內）
-AI 口說批改，會吐槽的背單字貓
+背單字、練口說，有隻嘴賤的貓
 
 **宣傳文字**（170 字內，隨時可改、不用送審）
-全新口說介面上線！開口回答，小笨貓幫你改成更道地的英文，再追問你一題。背單字永遠免費。
+口說練習改版了：講出來，傻貓跟你說怎麼講比較順。背單字一直都免費。
 
 **關鍵字**（100 字內，逗號分隔、不加空格）
 7000單字,英文單字,背單字,學測,單字卡,英文口說,AI英文,英文會話,詞彙,拼字,測驗,記憶,掃描講義,高中英文
 
 **描述**
 
-高中 7000 單字，每天背一點，小笨貓陪你背到考完。
+高中 7000 單字，一天一點點。有隻嘴有點賤的貓陪你背到考完。
 
 【每天背一點就好】
-・小笨貓幫你排好今天要背的字，新字、複習一起安排
+・傻貓幫你排好今天要背的字，新字、複習一起安排
 ・每張卡都有音標、發音和例句
 ・不熟的字隔幾天會再出現，直到真的記住
 
 【錯了，馬上知道錯在哪】
 ・快速測驗、拼字練習、限時模擬考
-・選錯時小笨貓直接告訴你跟哪個字搞混了
+・選錯時傻貓直接告訴你跟哪個字搞混了
 ・同一個字錯第三次，送你一個記憶法
 
 【開口說英文】
@@ -65,7 +65,7 @@ WordCat: Learn Chinese Words
 Taiwan Mandarin, a bit a day
 
 **Promotional text** (170)
-New: practice speaking. Answer out loud and the AI tutor shows you a more natural way to say it, then asks a follow-up. Studying words is always free.
+New: say your answers out loud and the cat shows you a smoother way to say it. Studying words is still free.
 
 **Keywords** (100)
 mandarin,traditional,taiwan,pinyin,flashcards,vocabulary,tocfl,speaking,characters,hanzi,words

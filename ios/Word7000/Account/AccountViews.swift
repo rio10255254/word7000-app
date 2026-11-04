@@ -23,7 +23,7 @@ struct SignInSheet: View {
             case .general: L.t("訪客的進度不會保存。登入後會保存，並同步到你的每一台裝置。", "A guest's progress isn't kept. Signed in, it is kept and synced to every device.")
             case .scan: L.t("掃描是 Premium 功能，掃描的字庫會跟著你的帳號走。先用 Apple 登入。", "Scanning is part of Premium, and scanned banks go with your account. Sign in with Apple first.")
             case .plus: L.t("Premium 綁定你的 Apple ID，換手機登入就會回來，進度也會同步。", "Premium belongs to your Apple ID: sign in on a new iPhone and it is there, with your progress.")
-            case .ai: L.t("小笨貓的 AI 是 Premium 功能，每天 \(PlusAI.plusDaily) 次。先用 Apple 登入。", "Silly Cat's AI is part of Premium, \(PlusAI.plusDaily) answers a day. Sign in with Apple first.")
+            case .ai: L.t("傻貓的 AI 是 Premium 功能，每天 \(PlusAI.plusDaily) 次。先用 Apple 登入。", "Silly Cat's AI is part of Premium, \(PlusAI.plusDaily) answers a day. Sign in with Apple first.")
             }
         }
 

@@ -475,7 +475,7 @@ describe('Silly Cat', () => {
       planTask('lines', { mode: 'english' }),
       planTask('verdict', { mode: 'english', kind: 'study', total: 20, correct: 15 }),
     ]) {
-      expect(plan.system).toContain('小笨貓');
+      expect(plan.system).toContain('傻貓');
       expect(plan.system).toContain('Professional first');
       expect(plan.system).toContain('1925');
     }

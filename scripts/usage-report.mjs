@@ -16,7 +16,7 @@ const labels = {
 };
 const aiKinds = {
   coach: '口說批改', scan: '掃描辨識', explain: '單字解說', quizWhy: '測驗為什麼錯', fillWord: '填空',
-  insights: '學習分析', ask: '問小笨貓', chat: '小笨貓聊天', lines: '每日台詞', verdict: '結算評語',
+  insights: '學習分析', ask: '問傻貓', chat: '傻貓聊天', lines: '每日台詞', verdict: '結算評語',
 };
 const sources = {
   general: '一般入口', 'speaking-coach': '口說批改', scans: '掃描次數用完', ending: '試用快結束',

@@ -48,13 +48,13 @@ struct LearnerSays: View {
 
 /// The cat's name, as it is shown in headings and buttons.
 enum Cat {
-    static var name: String { L.t("小笨貓", "Silly Cat") }
+    static var name: String { L.t("傻貓", "Silly Cat") }
 
     /// What it says while the online AI works, one picked per wait.
     static func thinking(_ job: Job) -> String {
         switch job {
         case .explain:
-            [L.t("小笨貓翻一下筆記……別催。", "Silly Cat's checking its notes… don't rush me."),
+            [L.t("傻貓翻一下筆記……別催。", "Silly Cat's checking its notes… don't rush me."),
              L.t("等等，我在想怎麼講你才聽得懂。", "Hang on. Working out how to say it so you'll get it.")].pickedForNow
         case .explainAgain:
             L.t("好啦，換個講法……", "Fine, another way…")
@@ -65,7 +65,7 @@ enum Cat {
             [L.t("讓我看看你錯在哪……", "Let's see where you went wrong…"),
              L.t("蛤，選這個？我來解釋。", "You picked that? Let me explain.")].pickedForNow
         case .insights:
-            L.t("小笨貓在翻你的學習紀錄……", "Silly Cat is going through your records…")
+            L.t("傻貓在翻你的學習紀錄……", "Silly Cat is going through your records…")
         }
     }
 

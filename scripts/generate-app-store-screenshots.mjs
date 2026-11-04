@@ -7,7 +7,8 @@
 // `store`), published to the native-store-screenshots branch:
 //   git fetch origin native-store-screenshots
 //   node scripts/generate-app-store-screenshots.mjs        # zh-Hant and en-US
-// Writes exports/app-store/<locale>/NN-name.png. The copy is in COPY below.
+// Writes exports/app-store/<locale>/NN-name.jpg (high-quality JPEG: the paper grain
+// makes PNGs about five times bigger for no visible gain). The copy is in COPY below.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -32,13 +33,13 @@ const COPY = {
       { file: '01-7000', screen: 'store-zh-1-today', brand: true, title: '7000 單字<br>一天<mark>一點點</mark>',
         text: '打開就背，今天的進度傻貓排好了。' },
       { file: '02-scenes', screen: 'store-zh-4-speaking-shadow', kicker: '口說練習', title: '點餐、問路<br>先在這<mark>練一遍</mark>',
-        text: '餐廳、問路、看醫生……10 個生活情境，輪到你就開口說。' },
+        text: '餐廳、問路、看醫生……10 個生活情境，<br>輪到你就開口說。' },
       { file: '03-shadowing', screen: 'store-zh-4-speaking-shadow-result', kicker: '口說練習', title: '念到哪<br><mark>亮到哪</mark>',
-        text: '跟著示範念一遍，念對的字會變綠，整句念完自動往下。', zoom: 'sentence' },
+        text: '跟著示範念一遍，念對的字會變綠，<br>念完自動跳下一步。', zoom: 'sentence' },
       { file: '04-feedback', screen: 'store-zh-5-coach', kicker: '口說練習', title: '講錯沒差<br>傻貓幫你<mark>改順</mark>',
         text: '用說的或打的回答，看看怎麼講比較自然。', note: '線上 AI 批改要 Premium' },
       { file: '05-map', screen: 'store-zh-4-speaking-map', kicker: '口說練習', title: '十個場景<br><mark>挑一個</mark>開始',
-        text: '餐廳、便利商店、飯店、看醫生……每個場景兩關，想練哪個點哪個。' },
+        text: '餐廳、便利商店、飯店、看醫生……<br>每個場景兩關，想練哪個點哪個。' },
       { file: '06-cards', screen: 'store-zh-2-card', title: '背了又忘？<br><mark>正常啦</mark>',
         text: '不熟的字過幾天會再跑出來，背到記住為止。' },
       { file: '07-quiz', screen: 'store-zh-3-quiz', title: '又選錯？<br>看哪裡<mark>搞混</mark>',
@@ -81,9 +82,19 @@ const COPY = {
   },
 };
 
-/** Close-ups drawn over the phone: a region of the screen, in screenshot pixels. */
+/**
+ * Close-ups drawn over the phone, per interface language: a region of the screen
+ * (x, y, w, h in screenshot pixels), enlarged on a taped card. The card sits over
+ * the region itself, or with `below`, its top edge goes at that screen y, so what
+ * is above stays whole (here: the whole conversation card, then the close-up over
+ * the record button).
+ */
 const ZOOMS = JSON.parse(process.env.ZOOMS ?? 'null') ?? {
-  sentence: { x: 40, y: 560, w: 1126, h: 560 },
+  // The line just said, lit up word by word (for Chinese, with its tones), and the score under it.
+  sentence: {
+    zh: { x: 70, y: 950, w: 1066, h: 355, below: 1340 },
+    en: { x: 70, y: 1004, w: 1066, h: 466, below: 1548 },
+  },
 };
 
 const C = { bg: '#F5EFE6', ink: '#24170F', soft: '#6E5444', accent: '#C9623F', cream: '#FFF4E4' };
@@ -127,7 +138,7 @@ const css = `
   h1 mark { color: inherit; background: none; position: relative; z-index: 0; white-space: nowrap; }
   h1 mark::before { content: ''; position: absolute; z-index: -1; left: -0.08em; right: -0.1em; bottom: 0.06em; height: 0.36em;
     background: rgba(229,172,76,.62); border-radius: 0.12em 0.2em 0.16em 0.1em; transform: rotate(-1.2deg) skewX(-8deg); }
-  .text { margin-top: 42px; font-weight: 500; font-size: 46px; line-height: 1.45; color: ${C.soft}; max-width: 1100px; }
+  .text { margin-top: 42px; font-weight: 500; font-size: 46px; line-height: 1.45; color: ${C.soft}; max-width: 1100px; text-wrap: pretty; }
   .note { margin-top: 26px; display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 34px; color: ${C.accent}; }
   .note::before { content: ''; width: 16px; height: 16px; border-radius: 4px; background: ${C.accent}; transform: rotate(45deg); }
 
@@ -189,7 +200,7 @@ function feature(p, lang) {
       <h1>${p.title}</h1><p class="text">${p.text}</p>${p.note ? `<p class="note">${p.note}</p>` : ''}
     </div>
     ${phone(screen, PHONE_TOP)}
-    ${p.zoom ? zoom(screen, ZOOMS[p.zoom], PHONE_TOP) : ''}
+    ${p.zoom ? zoom(screen, ZOOMS[p.zoom][lang], PHONE_TOP) : ''}
   `, { lang });
 }
 
@@ -201,8 +212,8 @@ function zoom(screen, r, phoneTop, phoneWidth = 920) {
   const inner = width - 28;
   const factor = inner / (r.w * scale);                 // how much bigger than on the phone
   const height = Math.round(r.h * scale * factor) + 28;
-  const centre = phoneTop + d.edge + d.bezel + (r.y + r.h / 2) * scale;
-  const y = Math.round(centre - height / 2);
+  const screenTop = phoneTop + d.edge + d.bezel;
+  const y = Math.round(r.below != null ? screenTop + r.below * scale : screenTop + (r.y + r.h / 2) * scale - height / 2);
   return `<div class="zoom" style="left:64px;top:${y}px;width:${width}px;height:${height}px">
       <div class="shot" style="background-image:url(${screen});background-size:${Math.round(1206 * scale * factor)}px auto;
         background-position:-${Math.round(r.x * scale * factor)}px -${Math.round(r.y * scale * factor)}px"></div>
@@ -233,7 +244,7 @@ function finale(p, lang, name) {
       <div style="margin-top:80px;display:flex;gap:20px;flex-wrap:wrap">
         ${chips.map((c) => `<span style="padding:16px 34px;border-radius:999px;border:3px solid rgba(255,244,228,.85);font-weight:700;font-size:40px">✓ ${c}</span>`).join('')}
       </div>
-      <p style="margin-top:56px;font-weight:500;font-size:46px;line-height:1.5;opacity:.9">${p.text}</p>
+      <p style="margin-top:56px;font-weight:500;font-size:46px;line-height:1.5;opacity:.9;text-wrap:pretty">${p.text}</p>
     </div>
   `, { lang, finale: true });
 }
@@ -250,8 +261,8 @@ try {
     for (const p of pages) {
       await tab.setContent(p.finale ? finale(p, lang, name) : feature(p, lang), { waitUntil: 'networkidle' });
       await tab.evaluate(() => document.fonts.ready);
-      const target = path.join(dir, `${p.file}.png`);
-      await tab.screenshot({ path: target, type: 'png' });
+      const target = path.join(dir, `${p.file}.jpg`);
+      await tab.screenshot({ path: target, type: 'jpeg', quality: 95 });
       console.log(`Wrote ${target}`);
     }
   }

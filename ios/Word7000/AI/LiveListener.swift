@@ -10,7 +10,10 @@ import Word7000Core
 @MainActor @Observable
 final class LiveListener: NSObject, AVAudioPlayerDelegate {
     enum State { case idle, requesting, listening, finishing, ready, playing }
-    enum Support { case checking, live, recordOnly }
+    /// `live`: text while speaking. `afterwards`: this iPhone recognizes the
+    /// language only with Apple's newer recognizer, so the take becomes text
+    /// once it ends, as before live listening. `recordOnly`: no recognition.
+    enum Support { case checking, live, afterwards, recordOnly }
 
     private(set) var state: State = .idle
     private(set) var support: Support = .checking
@@ -67,8 +70,17 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         #if DEBUG
         if simulated { support = .live; return }
         #endif
-        let recognizer = SFSpeechRecognizer(locale: Locale(identifier: language))
-        support = recognizer?.supportsOnDeviceRecognition == true ? .live : .recordOnly
+        let expected = language
+        var result: Support = .recordOnly
+        if SFSpeechRecognizer(locale: Locale(identifier: language))?.supportsOnDeviceRecognition == true {
+            result = .live
+        } else if #available(iOS 26.0, *), SpeechTranscriber.isAvailable,
+                  let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)),
+                  await AssetInventory.status(forModules: [SpeechTranscriber(locale: locale, preset: .transcription)]) == .installed {
+            result = .afterwards
+        }
+        guard self.language == expected else { return }
+        support = result
     }
 
     /// Starts a take. `hints` only bias recognition (none when the exact
@@ -189,6 +201,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         #endif
         stopEngine()
         hasRecording = file != nil && store.count > 0
+        if request == nil, support == .afterwards, hasRecording, let file {
+            transcribeAfterwards(file)
+            return
+        }
         guard request != nil else { complete(); return }
         state = .finishing
         request?.endAudio()
@@ -198,6 +214,39 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             try? await Task.sleep(for: .seconds(2.5))
             guard let self, self.generation == id, self.state == .finishing else { return }
             self.complete()
+        }
+    }
+
+    /// The take as text once it has ended, with Apple's newer recognizer.
+    private func transcribeAfterwards(_ file: URL) {
+        state = .finishing
+        let id = generation
+        let language = language
+        finishing = Task { [weak self] in
+            var text = ""
+            if #available(iOS 26.0, *) { text = (try? await Self.transcribe(file: file, language: language)) ?? "" }
+            guard let self, self.generation == id, self.state == .finishing else { return }
+            if !text.isEmpty { self.text = text }
+            self.complete()
+        }
+    }
+
+    @available(iOS 26.0, *)
+    private static func transcribe(file: URL, language: String) async throws -> String {
+        guard let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)) else { return "" }
+        let transcriber = SpeechTranscriber(locale: locale, preset: .transcription)
+        let analyzer = SpeechAnalyzer(modules: [transcriber])
+        do {
+            try await analyzer.start(inputAudioFile: AVAudioFile(forReading: file), finishAfterFile: true)
+            var parts: [String] = []
+            for try await result in transcriber.results where result.isFinal {
+                parts.append(String(result.text.characters))
+            }
+            await analyzer.cancelAndFinishNow()
+            return parts.joined(separator: language.hasPrefix("zh") ? "" : " ")
+        } catch {
+            await analyzer.cancelAndFinishNow()
+            throw error
         }
     }
 

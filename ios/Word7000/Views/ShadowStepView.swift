@@ -102,7 +102,7 @@ struct ShadowStepView: View {
                 withAnimation(reduceMotion ? nil : .spring(duration: 0.5, bounce: 0.3)) {
                     check = ShadowingCheck(target: sentence, heard: listener.text, chinese: chinese)
                 }
-            } else if listener.support == .live {
+            } else if listener.support != .recordOnly {
                 withAnimation { check = ShadowingCheck(target: sentence, heard: "", chinese: chinese) }
             }
             Task {
@@ -112,7 +112,8 @@ struct ShadowStepView: View {
         }
         // Stops by itself: everything heard, or a pause after speaking.
         .task(id: live) {
-            guard live else { return }
+            // Without text while speaking, the learner ends the take.
+            guard live, listener.support == .live else { return }
             while !Task.isCancelled, listener.listening {
                 do { try await Task.sleep(for: .milliseconds(200)) } catch { return }
                 let complete = check.map { $0.heardCount == $0.scoredCount && $0.scoredCount > 0 } ?? false
@@ -348,7 +349,8 @@ struct ShadowStepView: View {
             }
             Group {
                 if live {
-                    Text(listener.text.isEmpty ? L.t("請說…", "Go ahead…") : L.t("繼續說，說完會自動停", "Keep going; it stops when you're done"))
+                    Text(listener.support != .live ? L.t("說完再按一下", "Tap again when you're done")
+                         : listener.text.isEmpty ? L.t("請說…", "Go ahead…") : L.t("繼續說，說完會自動停", "Keep going; it stops when you're done"))
                 } else if listener.state == .finishing {
                     HStack(spacing: 6) { ProgressView(); Text(L.t("聽聽看你說了什麼…", "Listening back…")) }
                 } else if advancing {

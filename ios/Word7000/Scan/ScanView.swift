@@ -636,7 +636,7 @@ private enum S {
     static var scanSubtitle: String { L.t("可多頁，手寫也行", "Several pages, handwriting OK") }
     static var photoSubtitle: String { L.t("挑一張單字表照片", "Pick a photo of a list") }
     static var takePhoto: String { L.t("拍照", "Take Photo") }
-    static var organizedByAI: String { L.t("由 AI 從頁面整理，請確認", "Organized from the page by AI; please check") }
+    static var organizedByAI: String { L.t("由 Apple Intelligence 從頁面整理，請確認", "Organized from the page by Apple Intelligence; please check") }
     static func corrected(_ original: String) -> String { L.t("還原為「\(original)」", "Restore \u{201C}\(original)\u{201D}") }
     static var choosePhoto: String { L.t("從相簿選擇", "Choose Photo") }
     static var pasteHint: String { L.t("也可以在「照片」App 長按文字拷貝（原況文字），再貼到筆記本上。", "Or in Photos, touch and hold text to copy it (Live Text) and paste it onto the notepad.") }

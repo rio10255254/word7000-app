@@ -35,8 +35,8 @@ struct IntelligenceSettingsView: View {
                         .accessibilityIdentifier("settings-ai-status")
                     LabeledContent(L.t("掃描整理", "Scan assistance"), value: SmartScan.canOrganize ? L.t("可使用", "Available") : L.t("未啟用", "Unavailable"))
                 } footer: {
-                    Text(L.t("AI 是 Premium 功能，由 Anthropic 的 Claude 線上回答。關掉也不影響單字與練習。",
-                             "AI is a Premium feature, answered online by Anthropic's Claude. Turning it off leaves words and practice as they are."))
+                    Text(L.t("線上 AI 由 Anthropic 的 Claude 回答（Premium）。掃描整理連不上時改用裝置內 AI。關掉也不影響單字與練習。",
+                             "Online AI is Anthropic's Claude (Premium). Scan assistance uses on-device AI when it can't connect. Turning it off leaves words and practice as they are."))
                 }
                 if CloudAssistant.shared.offered { plan }
                 Section {

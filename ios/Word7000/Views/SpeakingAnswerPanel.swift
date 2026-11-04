@@ -175,9 +175,10 @@ struct SpeakingAnswerPanel: View {
             while !Task.isCancelled, recording.listening {
                 do { try await Task.sleep(for: .milliseconds(300)) } catch { return }
                 let text = recording.text
+                let liveText = recording.support == .live
                 if recording.seconds >= 60
-                    || (!text.isEmpty && recording.quietFor > 5)
-                    || (text.isEmpty && recording.quietFor > 15) {
+                    || (liveText && !text.isEmpty && recording.quietFor > 5)
+                    || (liveText && text.isEmpty && recording.quietFor > 15) {
                     recording.stop(); return
                 }
                 if !text.isEmpty, recording.quietFor > 1.4, text != asked {

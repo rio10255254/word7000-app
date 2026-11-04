@@ -121,7 +121,6 @@ jobs:
           swift run --package-path ios/Packages/Word7000Core CoachEvaluation --probe
 
       - name: Speaking history account isolation
-        if: matrix.shard != 2
         run: node scripts/test-native-speaking-recency.mjs
 
       - name: Pick an iPhone simulator

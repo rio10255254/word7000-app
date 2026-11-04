@@ -8,6 +8,13 @@ import Word7000Core
 /// where the sentence just said is something to build on.
 @MainActor
 struct ShadowStepView: View {
+    struct Partner {
+        let role: String
+        let line: String
+        /// The line in the learner's own language.
+        let gloss: String
+    }
+
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
@@ -17,6 +24,8 @@ struct ShadowStepView: View {
     let translation: String
     /// The sentence is Chinese (learning Chinese).
     let chinese: Bool
+    /// In a role-play, who speaks first and what they say; the sentence is the reply.
+    var partner: Partner? = nil
     /// Called with whether the sentence was said well enough (or said at
     /// all, where this phone cannot turn speech into text).
     let onDone: (_ said: Bool) -> Void
@@ -97,10 +106,38 @@ struct ShadowStepView: View {
 
     // MARK: The sentence
 
+    /// What the other person says, as a speech bubble above the reply.
+    private func partnerBubble(_ partner: Partner) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label(partner.role, systemImage: "person.wave.2.fill")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            HStack(alignment: .top, spacing: 8) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(partner.line).font(.headline)
+                        .accessibilityIdentifier("shadow-partner-line")
+                    if chinese {
+                        let pinyin = ChineseDisplay.sentencePinyin(partner.line)
+                        if !pinyin.isEmpty { Text(pinyin).font(.caption).foregroundStyle(.secondary) }
+                    }
+                    if showsTranslation, !partner.gloss.isEmpty {
+                        Text(partner.gloss).font(.footnote).foregroundStyle(.secondary)
+                    }
+                }
+                Spacer(minLength: 0)
+                SpeakButton(text: partner.line, language: language)
+            }
+            .padding(12)
+            .background(Palette.fill.opacity(0.7), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        }
+    }
+
     private var sentenceCard: some View {
         VStack(alignment: .leading, spacing: 14) {
+            if let partner { partnerBubble(partner) }
             HStack(alignment: .center) {
-                Label(L.t("先跟著說", "Say it after me"), systemImage: "ear")
+                Label(partner == nil ? L.t("先跟著說", "Say it after me") : L.t("你可以這樣回，跟著說", "Reply like this: say it after me"),
+                      systemImage: partner == nil ? "ear" : "arrowshape.turn.up.left.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Palette.accent)
                 Spacer()

@@ -74,6 +74,25 @@ final class SpeakingCoachTests: XCTestCase {
         }
     }
 
+    func testAnyScenarioCanBePickedFromTheList() {
+        let app = launch(englishUI: true)
+        tap(app.buttons["today-speaking"], in: app)
+        XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["speaking-stage"].label.contains("Restaurant"), "The path starts at the restaurant")
+        XCTAssertTrue(app.staticTexts["shadow-partner-line"].waitForExistence(timeout: 5), "A role-play opens on what the server says")
+        tap(app.buttons["speaking-scenarios"], in: app)
+        let shopping = app.buttons["speaking-stage-shopping-1"]
+        for _ in 0..<6 where !shopping.isHittable { app.swipeUp() }
+        snapshot(app, "speaking-scenario-list-en")
+        shopping.tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Department'")
+        XCTAssertTrue(app.staticTexts["speaking-position"].label.hasPrefix("1 /"))
+        skipShadowing(app)
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["speaking-role"].firstMatch.exists)
+        snapshot(app, "speaking-scenario-question-en")
+    }
+
     func testMockSuccessTypingCheckAndProgressInLightEnglishUI() {
         let app = launch(coach: "commitCorrection", englishUI: true)
         let completedBefore = weeklySpeakingCount(app)

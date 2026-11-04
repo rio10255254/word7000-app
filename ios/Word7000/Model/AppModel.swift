@@ -768,11 +768,12 @@ final class AppModel {
     /// This learner's speaking path in the current study mode.
     var speakingPath: SpeakingPath.Progress { settings.currentSpeakingPath }
 
-    /// Records a played stage; one with nothing said is not cleared.
-    func finishSpeakingStage(_ result: SpeakingPath.Result) {
+    /// Records a played stage (`stage` is its key; nil for word practice);
+    /// one with nothing said is not cleared.
+    func finishSpeakingStage(_ stage: String?, result: SpeakingPath.Result) {
         guard result.cleared else { return }
         refreshToday()
-        settings.clearSpeakingStage(stars: result.stars, today: today)
+        settings.clearSpeakingStage(stage, stars: result.stars, today: today)
     }
 
     var speakingCandidates: [WordEntry] {

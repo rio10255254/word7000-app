@@ -19,6 +19,14 @@ final class ShadowingCheckTests: XCTestCase {
         XCTAssertTrue(check.units.allSatisfy { $0.mark == .heard })
     }
 
+    func testWordsWrittenAsOneAreHeardAsTwo() {
+        let check = ShadowingCheck(target: "What's the Wi-Fi password at 7:30?", heard: "what's the wi fi password at 7 30", chinese: false)
+        XCTAssertEqual(check.score, 1)
+        let half = ShadowingCheck(target: "The Wi-Fi works.", heard: "the wi works", chinese: false)
+        XCTAssertEqual(half.units.first { $0.text == "Wi-Fi" }?.mark, .missed)
+        XCTAssertEqual(half.score, 0.75, accuracy: 0.001)
+    }
+
     func testNothingHeardFailsWithEveryWordMissed() {
         let check = ShadowingCheck(target: "I like tea.", heard: "", chinese: false)
         XCTAssertEqual(check.score, 0)
@@ -83,27 +91,89 @@ final class SpeakingPathTests: XCTestCase {
 
     func testOneStageADayBuildsAStreak() {
         var path = SpeakingPath.Progress()
-        XCTAssertEqual(path.nextStage, 1)
-        path = path.clearing(stars: 2, today: "2026-11-04")
-        XCTAssertEqual(path.nextStage, 2)
+        path = path.clearing("restaurant-1", stars: 2, today: "2026-11-04")
+        XCTAssertEqual(path.stars("restaurant-1"), 2)
         XCTAssertTrue(path.clearedToday("2026-11-04"))
         XCTAssertEqual(path.currentStreak(today: "2026-11-04"), 1)
         // A second stage the same day moves along the path but not the streak.
-        path = path.clearing(stars: 3, today: "2026-11-04")
-        XCTAssertEqual(path.stars, [2, 3])
+        path = path.clearing("restaurant-2", stars: 3, today: "2026-11-04")
+        XCTAssertEqual(path.cleared, 2)
         XCTAssertEqual(path.currentStreak(today: "2026-11-04"), 1)
         XCTAssertEqual(path.currentStreak(today: "2026-11-05"), 1, "Kept until the day is over")
-        path = path.clearing(stars: 1, today: "2026-11-05")
+        // Word practice has no stage of its own but keeps the streak.
+        path = path.clearing(nil, stars: 1, today: "2026-11-05")
         XCTAssertEqual(path.currentStreak(today: "2026-11-05"), 2)
+        XCTAssertEqual(path.cleared, 2)
         XCTAssertEqual(path.currentStreak(today: "2026-11-07"), 0, "A missed day ends it")
-        path = path.clearing(stars: 9, today: "2026-11-08")
+        // Replaying keeps the best stars.
+        path = path.clearing("restaurant-1", stars: 1, today: "2026-11-08")
+        XCTAssertEqual(path.stars("restaurant-1"), 2)
         XCTAssertEqual(path.streak, 1)
-        XCTAssertEqual(path.stars.last, 3)
+        path = path.clearing("restaurant-1", stars: 9, today: "2026-11-08")
+        XCTAssertEqual(path.stars("restaurant-1"), 3)
     }
 
     func testProgressDecodesAndEncodes() throws {
-        let path = SpeakingPath.Progress(stars: [1, 3], lastDay: "2026-11-04", streak: 4)
+        let path = SpeakingPath.Progress(best: ["cafe-1": 3], lastDay: "2026-11-04", streak: 4)
         let decoded = try JSONDecoder().decode(SpeakingPath.Progress.self, from: JSONEncoder().encode(path))
         XCTAssertEqual(decoded, path)
+    }
+}
+
+final class SpeakingScenarioTests: XCTestCase {
+    func testScenariosAreComplete() {
+        XCTAssertEqual(SpeakingScenarios.all.count, 10)
+        XCTAssertEqual(SpeakingScenarios.all.first?.id, "restaurant")
+        XCTAssertEqual(SpeakingScenarios.path.count, 20)
+        XCTAssertEqual(Set(SpeakingScenarios.path.map(SpeakingScenarios.key)).count, 20)
+        for scenario in SpeakingScenarios.all {
+            for stage in scenario.stages {
+                XCTAssertEqual(stage.turns.count, SpeakingPath.wordsPerStage, scenario.id)
+                for turn in stage.turns {
+                    XCTAssertTrue(turn.reply.zh.contains(turn.key.zh), turn.reply.zh)
+                    XCTAssertTrue(turn.reply.en.lowercased().contains(turn.key.en.lowercased()), turn.reply.en)
+                    // Every reply can be said back and checked.
+                    for chinese in [false, true] {
+                        let reply = chinese ? turn.reply.zh : turn.reply.en
+                        let sentence = ShadowingCheck.sentence(from: reply, chinese: chinese)
+                        XCTAssertFalse(sentence.isEmpty, reply)
+                        XCTAssertEqual(ShadowingCheck(target: sentence, heard: sentence, chinese: chinese).score, 1, reply)
+                    }
+                }
+            }
+        }
+    }
+
+    func testTurnsBecomeCardsInBothDirections() throws {
+        let turn = try XCTUnwrap(SpeakingScenarios.all.first?.stages.first?.turns.first)
+        let english = SpeakingScenarios.card(turn, mode: .english)
+        XCTAssertEqual(english.question, turn.partner.en)
+        XCTAssertEqual(english.questionGloss, turn.partner.zh)
+        XCTAssertEqual(english.questionSupport, turn.task.zh)
+        XCTAssertEqual(english.referenceAnswer, turn.reply.en)
+        XCTAssertEqual(english.referenceTranslation, turn.reply.zh)
+        let chinese = SpeakingScenarios.card(turn, mode: .chinese)
+        XCTAssertEqual(chinese.question, turn.partner.zh)
+        XCTAssertEqual(chinese.questionGloss, turn.partner.en)
+        XCTAssertEqual(chinese.questionSupport, turn.task.en)
+        XCTAssertEqual(chinese.referenceAnswer, turn.reply.zh)
+        XCTAssertEqual(chinese.keyword, turn.key.zh)
+        XCTAssertFalse(chinese.keywordPronunciation.isEmpty)
+    }
+
+    func testThePathPlaysEachStageInOrderThenTheWeakestAgain() {
+        var progress = SpeakingPath.Progress()
+        XCTAssertEqual(SpeakingScenarios.next(after: progress), SpeakingScenarios.path.first)
+        XCTAssertEqual(SpeakingScenarios.number(SpeakingScenarios.path[0]), 1)
+        progress = progress.clearing(SpeakingScenarios.key(SpeakingScenarios.path[0]), stars: 3, today: "2026-11-04")
+        XCTAssertEqual(SpeakingScenarios.next(after: progress), SpeakingScenarios.path[1])
+        // A stage played out of order is skipped when the path reaches it.
+        progress = progress.clearing(SpeakingScenarios.key(SpeakingScenarios.path[2]), stars: 1, today: "2026-11-04")
+        progress = progress.clearing(SpeakingScenarios.key(SpeakingScenarios.path[1]), stars: 3, today: "2026-11-04")
+        XCTAssertEqual(SpeakingScenarios.next(after: progress), SpeakingScenarios.path[3])
+        for ref in SpeakingScenarios.path.dropFirst(3) {
+            progress = progress.clearing(SpeakingScenarios.key(ref), stars: 3, today: "2026-11-05")
+        }
+        XCTAssertEqual(SpeakingScenarios.next(after: progress), SpeakingScenarios.path[2], "The one without three stars")
     }
 }

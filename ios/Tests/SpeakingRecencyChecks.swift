@@ -202,4 +202,24 @@ check(persistence.save(snapshot, to: "snapshot.json"), "Saving the actual app sn
 let loaded = persistence.load(AppSnapshot.self, from: "snapshot.json")
 check(loaded?.settings.currentRecentSpeakingIds == ["b-only"], "The actual persistence layer restores the current account history")
 check(loaded?.settings.speakingHistoryByOwner == settings.speakingHistoryByOwner, "All account histories survive disk persistence")
+
+// The speaking path follows the same owners, separately per study mode.
+var path = AppSettings()
+path.studyMode = .chinese
+path.clearSpeakingStage("restaurant-1", stars: 2, today: "2026-11-04")
+check(path.currentSpeakingPath.stars("restaurant-1") == 2, "A guest's path is kept")
+path.studyMode = .english
+check(path.currentSpeakingPath.cleared == 0, "Each study mode has its own path")
+path.studyMode = .chinese
+path.setLocalOwner("path-guest", anonymous: true)
+check(path.currentSpeakingPath.stars("restaurant-1") == 2, "Identifying the guest keeps the path")
+path.setLocalOwner("path-guest", anonymous: false)
+check(path.currentSpeakingPath.stars("restaurant-1") == 2, "Linking the guest to an account keeps the path")
+path.setLocalOwner("path-other", anonymous: false)
+check(path.currentSpeakingPath.cleared == 0, "Another account starts its own path")
+path.setLocalOwner("path-guest", anonymous: false)
+path = try roundTrip(path)
+check(path.currentSpeakingPath.stars("restaurant-1") == 2, "The path survives a restart")
+path.forgetSpeakingHistory(ownerId: "path-guest", anonymous: false)
+check(path.currentSpeakingPath.cleared == 0, "Deleting the account deletes its path")
 print("Speaking recency: \(checks) checks passed")

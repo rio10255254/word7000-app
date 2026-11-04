@@ -1,8 +1,8 @@
 import Foundation
 
-/// Speaking practice as a path of short stages, one a day: each stage is a
-/// few words, and each word is said after the model first, then answered in
-/// the learner's own words.
+/// Speaking practice as a path of short stages, one a day (the everyday
+/// scenarios, in order), each item said after a model first and then in the
+/// learner's own words. Word practice clears stages too, for the streak.
 public enum SpeakingPath {
     public static let wordsPerStage = 5
 
@@ -33,22 +33,21 @@ public enum SpeakingPath {
 
     /// One learner's path in one study mode.
     public struct Progress: Codable, Equatable, Sendable {
-        /// Stars of each cleared stage, first stage first.
-        public var stars: [Int]
+        /// The best stars of each played stage, by stage key.
+        public var best: [String: Int]
         /// The day the latest stage was cleared.
         public var lastDay: String?
         /// Days in a row with a cleared stage, up to `lastDay`.
         public var streak: Int
 
-        public init(stars: [Int] = [], lastDay: String? = nil, streak: Int = 0) {
-            self.stars = stars
+        public init(best: [String: Int] = [:], lastDay: String? = nil, streak: Int = 0) {
+            self.best = best
             self.lastDay = lastDay
             self.streak = streak
         }
 
-        public var cleared: Int { stars.count }
-        /// The stage being played next.
-        public var nextStage: Int { cleared + 1 }
+        public func stars(_ key: String) -> Int { best[key] ?? 0 }
+        public var cleared: Int { best.values.filter { $0 > 0 }.count }
 
         public func clearedToday(_ today: String) -> Bool { lastDay == today }
 
@@ -58,10 +57,13 @@ public enum SpeakingPath {
             return lastDay == today || DayMath.isPreviousDay(lastDay, of: today) ? streak : 0
         }
 
-        /// After clearing the next stage today.
-        public func clearing(stars earned: Int, today: String) -> Progress {
+        /// After clearing a stage today: its best stars (when it is a stage
+        /// of the path; word practice has none) and the day's streak.
+        public func clearing(_ key: String?, stars earned: Int, today: String) -> Progress {
             var next = self
-            next.stars.append(max(1, min(3, earned)))
+            if let key, !key.isEmpty {
+                next.best[key] = max(stars(key), max(1, min(3, earned)))
+            }
             if lastDay != today {
                 next.streak = currentStreak(today: today) + 1
                 next.lastDay = today

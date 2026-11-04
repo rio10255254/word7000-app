@@ -128,7 +128,7 @@ struct AppSettings: Codable, Equatable, Sendable {
         migrateSpeakingHistory()
         let owner = Self.speakingHistoryKey(ownerId: ownerId, anonymous: anonymous)
         speakingHistoryByOwner?.removeValue(forKey: owner)
-        for mode in StudyMode.allCases { speakingPathByOwner?.removeValue(forKey: Self.speakingPathKey(owner: owner, mode: mode)) }
+        for mode in [StudyMode.english, .chinese] { speakingPathByOwner?.removeValue(forKey: Self.speakingPathKey(owner: owner, mode: mode)) }
     }
 
     static func speakingPathKey(owner: String, mode: StudyMode) -> String { "\(owner)|\(mode.rawValue)" }
@@ -137,17 +137,18 @@ struct AppSettings: Codable, Equatable, Sendable {
         speakingPathByOwner?[Self.speakingPathKey(owner: speakingHistoryOwnerKey, mode: studyMode ?? .english)] ?? SpeakingPath.Progress()
     }
 
-    mutating func clearSpeakingStage(stars: Int, today: String) {
+    /// `stage` is the path stage's key; nil for word practice.
+    mutating func clearSpeakingStage(_ stage: String?, stars: Int, today: String) {
         let key = Self.speakingPathKey(owner: speakingHistoryOwnerKey, mode: studyMode ?? .english)
         var paths = speakingPathByOwner ?? [:]
-        paths[key] = currentSpeakingPath.clearing(stars: stars, today: today)
+        paths[key] = currentSpeakingPath.clearing(stage, stars: stars, today: today)
         speakingPathByOwner = paths
     }
 
     /// The same learner under a new owner key keeps the path walked further,
     /// in each study mode; a path is never copied to another learner.
     private mutating func moveSpeakingPath(from old: String, to new: String) {
-        for mode in StudyMode.allCases {
+        for mode in [StudyMode.english, .chinese] {
             guard let moved = speakingPathByOwner?.removeValue(forKey: Self.speakingPathKey(owner: old, mode: mode)) else { continue }
             let key = Self.speakingPathKey(owner: new, mode: mode)
             if (speakingPathByOwner?[key]?.cleared ?? -1) < moved.cleared { speakingPathByOwner?[key] = moved }

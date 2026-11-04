@@ -585,7 +585,11 @@ struct TodayView: View {
         if path.clearedToday(model.today) {
             return L.t("今日已過關 ✓ 連續 \(path.currentStreak(today: model.today)) 天", "Done today ✓ \(path.currentStreak(today: model.today))-day streak")
         }
-        return L.t("第 \(path.nextStage) 關", "Stage \(path.nextStage)")
+        guard let next = SpeakingScenarios.next(after: path), let scenario = SpeakingScenarios.scenario(next) else {
+            return L.t("開口說說看", "Say it out loud")
+        }
+        let number = SpeakingScenarios.number(next)
+        return L.t("第 \(number) 關 · \(scenario.title.zh)", "Stage \(number) · \(scenario.title.en)")
     }
 
     private var tiles: [PracticeTileItem] {

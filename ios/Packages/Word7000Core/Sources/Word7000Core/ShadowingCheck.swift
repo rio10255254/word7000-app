@@ -45,13 +45,20 @@ public struct ShadowingCheck: Equatable, Sendable {
 
     public init(target: String, heard: String, chinese: Bool) {
         var units = Self.split(target, chinese: chinese)
-        let scored = units.indices.filter { units[$0].scored }
-        let expected = scored.map { Self.key(units[$0].text, chinese: chinese) }
+        // What is compared: each Chinese character, or each word of an
+        // English unit ("Wi-Fi" and "7:30" are two words, said as two).
+        var expected: [String] = [], owner: [Int] = []
+        for index in units.indices where units[index].scored {
+            for token in chinese ? [units[index].text] : SpeakingReflection.tokens(units[index].text) {
+                expected.append(token)
+                owner.append(index)
+            }
+        }
         let said: [String] = chinese
             ? heard.filter(ChineseDisplay.isHan).map(String.init)
             : SpeakingReflection.tokens(heard)
         let saidPinyin = chinese ? said.map(Self.characterPinyin) : []
-        let expectedPinyin = scored.map { units[$0].pinyin }
+        let expectedPinyin = owner.map { chinese ? units[$0].pinyin : "" }
 
         func same(_ i: Int, _ j: Int) -> Bool {
             if expected[i] == said[j] { return true }
@@ -99,7 +106,10 @@ public struct ShadowingCheck: Equatable, Sendable {
         gapSaid.append(contentsOf: j..<m)
         closeGap()
 
-        for (position, index) in scored.enumerated() { units[index].mark = marks[position] }
+        // A unit came across when all of its words did.
+        for (position, index) in owner.enumerated() {
+            if units[index].mark == nil || marks[position] != .heard { units[index].mark = marks[position] }
+        }
         self.units = units
         let points = marks.reduce(0.0) { total, mark in
             switch mark {
@@ -165,13 +175,10 @@ public struct ShadowingCheck: Equatable, Sendable {
         }
         return target.split(whereSeparator: { $0.isWhitespace }).enumerated().map { index, word in
             let text = String(word)
-            return Unit(id: index, text: text, pinyin: "", scored: !key(text, chinese: false).isEmpty)
+            return Unit(id: index, text: text, pinyin: "", scored: !SpeakingReflection.tokens(text).isEmpty)
         }
     }
 
-    private static func key(_ text: String, chinese: Bool) -> String {
-        chinese ? text : SpeakingReflection.tokens(text).joined()
-    }
 
     static func characterPinyin(_ character: String) -> String {
         #if canImport(Darwin) || os(Linux)

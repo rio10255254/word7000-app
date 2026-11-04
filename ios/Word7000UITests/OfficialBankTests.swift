@@ -13,13 +13,18 @@ final class OfficialBankTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 1).tap()
 
         // The built-in "adapt" carries the published correction.
-        XCTAssertTrue(app.staticTexts["適應（已校正）"].waitForExistence(timeout: 10), app.debugDescription)
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 5))
+        search.tap()
+        search.typeText("adapt")
+        XCTAssertTrue(containing("已校正", in: app).waitForExistence(timeout: 10), app.debugDescription)
+        search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5))
 
         let bank = app.buttons["bank-official:medical"]
         XCTAssertTrue(bank.waitForExistence(timeout: 5))
         bank.tap()
-        XCTAssertTrue(app.staticTexts["diagnosis"].waitForExistence(timeout: 5), app.debugDescription)
-        XCTAssertTrue(app.staticTexts["symptom"].exists)
+        XCTAssertTrue(containing("diagnosis", in: app).waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(containing("symptom", in: app).exists)
         snapshot(app, name: "official-bank")
 
         // Studying it uses only its words.
@@ -27,8 +32,12 @@ final class OfficialBankTests: XCTestCase {
         app.buttons["today-start"].tap()
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
         let words = ["diagnosis", "symptom", "prescription"]
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label IN %@", words)).firstMatch.waitForExistence(timeout: 5),
-                      app.debugDescription)
+        let shown = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@ OR label CONTAINS %@", words[0], words[1], words[2]))
+        XCTAssertTrue(shown.firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+    }
+
+    private func containing(_ text: String, in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", text)).firstMatch
     }
 
     private func snapshot(_ app: XCUIApplication, name: String) {

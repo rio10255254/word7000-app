@@ -1,0 +1,80 @@
+    t =    33.34s Find the Target Application 'com.rio.word7000'
+    t =    33.98s Added attachment named 'promo-5-word-detail-more'
+    t =    34.13s Tear Down
+Test Case '-[Word7000UITests.ScreenshotTests testPromoStudyAndWords]' passed (34.886 seconds).
+Test Case '-[Word7000UITests.ScreenshotTests testPromoWriting]' started.
+    t =     0.00s Start Test at 2026-11-04 02:43:29.454
+    t =     0.04s Set Up
+    t =     0.04s Open com.rio.word7000
+    t =     0.04s     Launch com.rio.word7000
+    t =     0.04s         Terminate com.rio.word7000:26977
+2026-11-04 02:43:30.568 xcodebuild[23382:68735] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-04 02:43:30.568 xcodebuild[23382:68735] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.44s         Setting up automation session
+    t =     5.76s         Wait for com.rio.word7000 to idle
+    t =     8.44s Waiting 10.0s for "today-start" Button to exist
+    t =     9.49s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =     9.49s         Checking existence of `"today-start" Button`
+    t =    11.06s Find the "today-spelling" Button
+    t =    11.32s Find the "today-spelling" Button
+    t =    11.47s Find the "today-spelling" Button
+    t =    11.69s Find the "today-spelling" Button
+    t =    11.84s Checking existence of `"today-spelling" Button`
+    t =    11.92s Find the "today-spelling" Button
+    t =    12.20s Find the "today-spelling" Button
+    t =    12.37s Tap "today-spelling" Button
+    t =    12.37s     Wait for com.rio.word7000 to idle
+    t =    12.38s     Find the "today-spelling" Button
+    t =    12.54s     Check for interrupting elements affecting "today-spelling" Button
+    t =    12.67s     Synthesize event
+    t =    13.05s     Wait for com.rio.word7000 to idle
+    t =    13.54s Waiting 10.0s for "spelling-input" TextField to exist
+    t =    14.66s     Checking `Expect predicate `existsNoRetry == 1` for object "spelling-input" TextField`
+    t =    14.66s         Checking existence of `"spelling-input" TextField`
+    t =    17.56s Find the Target Application 'com.rio.word7000'
+    t =    18.15s Added attachment named 'promo-9-writing'
+    t =    18.15s Find the "spelling-hint" Button
+    t =    18.35s Tap "spelling-hint" Button
+    t =    18.35s     Wait for com.rio.word7000 to idle
+    t =    18.36s     Find the "spelling-hint" Button
+    t =    18.51s     Check for interrupting elements affecting "spelling-hint" Button
+    t =    18.65s     Synthesize event
+    t =    19.06s     Wait for com.rio.word7000 to idle
+    t =    20.08s Find the Target Application 'com.rio.word7000'
+    t =    20.47s Added attachment named 'promo-10-writing-hint'
+    t =    20.47s Tap "spelling-input" TextField
+    t =    20.47s     Wait for com.rio.word7000 to idle
+    t =    20.48s     Find the "spelling-input" TextField
+    t =    20.60s     Check for interrupting elements affecting "spelling-input" TextField
+    t =    20.71s     Synthesize event
+    t =    21.02s     Wait for com.rio.word7000 to idle
+    t =    21.03s Type 'qqqq
+' into "spelling-input" TextField
+    t =    21.03s     Wait for com.rio.word7000 to idle
+    t =    21.03s     Find the "spelling-input" TextField
+    t =    21.34s     Check for interrupting elements affecting "spelling-input" TextField
+    t =    21.52s     Synthesize event
+    t =    21.90s     Wait for com.rio.word7000 to idle
+    t =    22.48s Waiting 5.0s for "spelling-answer" StaticText to exist
+    t =    23.51s     Checking `Expect predicate `existsNoRetry == 1` for object "spelling-answer" StaticText`
+    t =    23.51s         Checking existence of `"spelling-answer" StaticText`
+    t =    24.67s Find the Target Application 'com.rio.word7000'
+    t =    25.15s Added attachment named 'promo-11-writing-answer'
+    t =    25.16s Tear Down
+Test Case '-[Word7000UITests.ScreenshotTests testPromoWriting]' passed (26.455 seconds).
+Test Suite 'ScreenshotTests' passed at 2026-11-04 02:43:55.910.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 173.717 (173.751) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-11-04 02:43:55.913.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 173.717 (173.754) seconds
+Test Suite 'Selected tests' passed at 2026-11-04 02:43:55.914.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 173.717 (173.756) seconds
+2026-11-04 02:43:56.903 xcodebuild[23382:68735] [MT] IDETestOperationsObserverDebug: 192.797 elapsed -- Testing started completed.
+2026-11-04 02:43:56.904 xcodebuild[23382:68735] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-04 02:43:56.904 xcodebuild[23382:68735] [MT] IDETestOperationsObserverDebug: 192.797 sec, +192.797 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

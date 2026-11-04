@@ -83,7 +83,10 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["shadow-partner-line"].waitForExistence(timeout: 5), "A role-play opens on what the server says")
         tap(app.buttons["speaking-scenarios"], in: app)
         let shopping = app.buttons["speaking-stage-shopping-1"]
-        for _ in 0..<6 where !shopping.isHittable { app.swipeUp() }
+        // Gentle swipes: on the iPhone SE a full flick carried the list past the
+        // stage to the bottom (run 376). If it still overshoots, come back up.
+        for _ in 0..<10 where !shopping.isHittable { app.swipeUp(velocity: .slow) }
+        for _ in 0..<10 where !shopping.isHittable { app.swipeDown(velocity: .slow) }
         snapshot(app, "speaking-scenario-list-en")
         shopping.tap()
         wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Department'")

@@ -18,11 +18,12 @@
     "audit:examples": "node scripts/audit-example-quality.mjs",
     "audit:examples:zh-tw": "node scripts/audit-taiwan-chinese-examples.mjs",
     "audit:meanings": "node scripts/audit-meaning-quality.mjs",
+    "build:web": "node scripts/check-static-site.mjs",
     "validate:meanings": "node scripts/validate-reviewed-meanings.mjs",
     "generate:words": "node scripts/generate-word-data.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "verify": "npm test && npm run audit:examples && npm run audit:examples:zh-tw && npm run validate:meanings && npm run audit:meanings && npm run typecheck"
+    "verify": "npm test && npm run audit:examples && npm run audit:examples:zh-tw && npm run validate:meanings && npm run audit:meanings && npm run typecheck && npm run build:web"
   },
   "private": true,
   "overrides": {

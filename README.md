@@ -26,8 +26,10 @@ web version have been removed.
   - `/ios-update.json`: update prompt read by old React Native builds.
 
   Do not delete the Worker: the shipping app depends on these URLs under
-  `https://word7000-app.rio10255254.workers.dev/`. Deploy changes with
-  `npx wrangler deploy` (no build step).
+  `https://word7000-app.rio10255254.workers.dev/`, and keep the Worker's Git
+  connection: each push to `master` redeploys `public/`. `npm run build:web`
+  only checks these files (there is nothing to build), then
+  `npx wrangler deploy` uploads them.
 
 ## Checks
 

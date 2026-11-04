@@ -5,7 +5,8 @@
 //   /support.html      support page (Me, App Store listing)
 //   /ai-features.json  remote switch for the AI features (IntelligenceSettings)
 //   /ios-update.json   update prompt read by old React Native builds
-// No build step is needed: deploy with `npx wrangler deploy`.
+// Nothing to build: `npm run build:web` only checks these files, then
+// `npx wrangler deploy` uploads them.
 {
   "name": "word7000-app",
   "compatibility_date": "2026-06-30",

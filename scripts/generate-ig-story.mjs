@@ -1,6 +1,6 @@
 // Draws four Instagram story frames (1080 × 1920) for WordCat's launch:
 //   1. what WordCat does, with real screens from the native UI tests,
-//   2. the AI tutor (the speaking coach's real screen, called out step by step),
+//   2. the AI tutor: a speaking question from the app and the coach's three-part reply,
 //   3. a shout-out to WordCat's own Instagram account,
 //   4. the App Store release date.
 // Same paper desk, cat and terracotta card as the Premium promo art. The
@@ -175,6 +175,7 @@ const css = `
   @font-face { font-family: Fraunces; font-weight: 700; src: url(${FS}/fraunces@5.0.0/files/fraunces-latin-700-normal.woff2) format('woff2'); }
   @font-face { font-family: Fraunces; font-weight: 600; font-style: italic; src: url(${FS}/fraunces@5.0.0/files/fraunces-latin-600-italic.woff2) format('woff2'); }
   @font-face { font-family: Inter; font-weight: 500; src: url(${FS}/inter@5.0.0/files/inter-latin-500-normal.woff2) format('woff2'); }
+  @font-face { font-family: Inter; font-weight: 500; src: url(${FS}/inter@5.0.0/files/inter-latin-ext-500-normal.woff2) format('woff2'); unicode-range: U+0100-024F, U+1E00-1EFF; }
   @font-face { font-family: Inter; font-weight: 600; src: url(${FS}/inter@5.0.0/files/inter-latin-600-normal.woff2) format('woff2'); }
   @font-face { font-family: Inter; font-weight: 700; src: url(${FS}/inter@5.0.0/files/inter-latin-700-normal.woff2) format('woff2'); }
   @font-face { font-family: Caveat; font-weight: 700; src: url(${FS}/caveat@5.0.0/files/caveat-latin-700-normal.woff2) format('woff2'); }
@@ -212,12 +213,27 @@ const css = `
   .chip { display: inline-flex; align-items: center; padding: 14px 22px; border-radius: 40px; background: rgba(251,248,242,.95);
     font: 600 26px Inter; color: ${C.ink}; box-shadow: 0 6px 14px rgba(58,36,16,.12); }
   .chip b { color: ${C.terra}; margin-right: 10px; }
+  .zh { font-family: 'Noto Sans TC', sans-serif; }
+  .qcard { z-index: 4; background: #FBF8F2; border-radius: 28px; padding: 30px 36px 32px; box-shadow: 0 14px 30px rgba(58,36,16,.16); }
+  .said { z-index: 4; background: #FFFDF8; border-radius: 34px 34px 8px 34px; padding: 24px 32px 28px; box-shadow: 0 12px 26px rgba(58,36,16,.16); transform: rotate(1deg); }
+  .reply { position: relative; border-radius: 26px; padding: 22px 30px 26px 30px; box-shadow: 0 10px 22px rgba(58,36,16,.14); }
+  .rnum { position: absolute; left: -20px; top: 20px; width: 40px; height: 40px; border-radius: 20px; background: #C9623F; color: #FFF1DA; font: 700 22px/40px Inter; text-align: center; box-shadow: 0 3px 6px rgba(58,36,16,.2); }
+  .clabel { font: 700 21px Inter; letter-spacing: 3px; margin-bottom: 10px; }
+  .cpy { font: 500 24px Inter; color: #7A5A46; margin-top: 8px; }
+  .cen { font: 500 24px Inter; color: #9A8070; margin-top: 4px; }
+  .oops { text-decoration: underline wavy #D0452B; text-decoration-thickness: 3px; text-underline-offset: 8px; }
+  .good { background: linear-gradient(transparent 58%, rgba(120,160,95,.45) 58%); }
   .guide { position: absolute; z-index: 8; border: 4px dashed rgba(164,68,42,.55); border-radius: 30px;
     display: flex; align-items: center; justify-content: center; text-align: center;
     font: 700 26px Inter; color: rgba(164,68,42,.75); letter-spacing: 2px; background: rgba(255,250,240,.35); }
 `;
 
-const page = (body) => `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${body}</body></html>`;
+// Only the Chinese characters a frame uses are fetched from Noto Sans TC.
+const page = (body) => {
+  const han = [...new Set(body.replace(/<[^>]*>/g, '').match(/[\u3000-\u303f\u4e00-\u9fff\uff00-\uffef]/g) ?? [])].join('');
+  const cjk = han ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&text=${encodeURIComponent(han)}">` : '';
+  return `<!doctype html><html><head><meta charset="utf-8">${cjk}<style>${css}</style></head><body>${body}</body></html>`;
+};
 
 // ---------------------------------------------------------------- frames
 
@@ -232,9 +248,9 @@ function frameApp() {
     ${phone(shot('zh-1-today'), { x: 350, y: 650, w: 380, z: 3 })}
     ${cat(150, { x: 600, y: 540, z: 4 })}
     ${bubble(735, 566, '“Only 7? LOL.”', 4)}
-    ${stamp({ x: 150, y: 640, r: 92, rot: -14, top: 'FREE TO STUDY', big: 'NO', bottom: 'ADS · EVER' })}
+    ${stamp({ x: 150, y: 640, r: 92, rot: -14, top: 'STUDY FOR', big: 'FREE', bottom: 'NO ADS' })}
 
-    ${note({ x: 48, y: 1510, w: 320, rot: -2, num: 1, title: 'Flashcards', text: 'pinyin + Taiwan readings' })}
+    ${note({ x: 48, y: 1510, w: 320, rot: -2, num: 1, title: 'Flashcards', text: 'traditional characters + pinyin' })}
     ${note({ x: 382, y: 1500, w: 320, rot: 1.5, num: 2, title: 'Speaking', text: 'answer out loud, in Chinese' })}
     ${note({ x: 716, y: 1512, w: 320, rot: -1.2, num: 3, title: 'AI tutor ✦', text: 'fixes what you say (next →)' })}
     ${tape(150, 1490, 120, -6, { h: 36 })}
@@ -243,35 +259,51 @@ function frameApp() {
   `);
 }
 
-// 2. The AI tutor, on the speaking coach's real screen.
+// 2. The AI tutor. The question is the app's own speaking question for 貼上;
+// the answer and the coach's reply are a sample written to the coach's rules
+// (supabase/functions/ai/tasks.ts): a natural rewrite and a follow-up in
+// Taiwan Mandarin, one actionable tip in English.
 function frameAI() {
-  const px = 70;
-  const py = 640;
-  const pw = 390;
-  // Where the coach's cards sit on that screen, as fractions of its height.
-  const at = (f) => py + pw * 0.028 + pw * (1 - 0.056) * (2622 / 1206) * f;
+  const label = (text, color) => `<div class="clabel" style="color:${color}">${text}</div>`;
+  const py = (text) => `<div class="cpy">${text}</div>`;
+  const en = (text) => `<div class="cen">${text}</div>`;
   return page(`
-    ${kicker('MEET YOUR AI TUTOR')}
+    ${kicker('WORDCAT · AI TUTOR')}
     <div class="abs h1" style="left:84px;top:306px">Say it wrong.<br><em>The cat fixes it.</em></div>
 
-    ${phone(shot('coach-mock-light-en-tip-follow-up-402x874'), { x: px, y: py, w: pw, rot: -3, z: 3 })}
-    ${cat(150, { x: 350, y: 532, z: 4 })}
-    ${bubble(530, 560, '“Close. Again.”', 4)}
-
-    ${note({ x: 560, y: 760, w: 470, rot: 1.5, num: 1, title: 'Sounds more natural', text: 'your answer, rewritten the way people actually say it' })}
-    ${note({ x: 580, y: 1000, w: 450, rot: -1.5, num: 2, title: 'What to fix', text: 'the one thing worth fixing, explained simply' })}
-    ${note({ x: 560, y: 1230, w: 470, rot: 1, num: 3, title: 'A follow-up', text: 'a new question, so you keep talking' })}
-    ${arrow(570, 840, 430, at(0.41), -30)}
-    ${arrow(588, 1075, 430, at(0.53), 10)}
-    ${arrow(570, 1300, 430, at(0.64), 30)}
-    ${sparkle(1010, 745, 26)}
-
-    <div class="abs" style="left:60px;top:1505px;width:960px;z-index:6;display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
-      <span class="chip"><b>✦</b>explains any word</span>
-      <span class="chip"><b>✦</b>remembers your exam date</span>
-      <span class="chip"><b>✦</b>helps with words you keep forgetting</span>
+    <div class="abs qcard" style="left:60px;top:556px;width:960px;transform:rotate(-1deg)">
+      ${label('THE QUESTION · use <span class="zh" style="color:#C9623F">貼上</span> (to paste)', C.deep)}
+      <div class="zh" style="font-size:44px;font-weight:700;line-height:1.3">你寫報告的時候，會從網路上找資料嗎？</div>
+      ${py('nǐ xiě bào gào de shí hòu, huì cóng wǎng lù shàng zhǎo zī liào ma?')}
+      ${en('When you write a report, do you look for information online?')}
     </div>
-    ${hand(1648, 'AI tutor comes with Premium', { size: 40, rot: 0 })}
+    ${tape(470, 540, 140, 3, { h: 38 })}
+
+    <div class="abs said" style="right:60px;top:842px;width:760px">
+      ${label('YOU SAID', '#8A6A56')}
+      <div class="zh" style="font-size:38px;font-weight:500;line-height:1.35">會，我常常從網路上找資料，然後<span class="oops">貼上到</span>我的報告。</div>
+    </div>
+
+    ${cat(128, { x: 34, y: 1066, z: 6 })}
+    <div class="abs" style="left:196px;top:1056px;width:824px;z-index:5;display:flex;flex-direction:column;gap:16px">
+      <div class="reply" style="background:#E4EBD6;transform:rotate(.6deg)">
+        <span class="rnum">1</span>${label('MORE NATURAL', '#4F6B45')}
+        <div class="zh" style="font-size:38px;font-weight:700;line-height:1.35">會啊，我常常上網找資料，再<span class="good">貼到報告裡</span>。</div>
+      </div>
+      <div class="reply" style="background:#F2E2AE;transform:rotate(-.5deg)">
+        <span class="rnum">2</span>${label('WHAT TO FIX', '#8A6414')}
+        <div style="font-size:28px;font-weight:600;line-height:1.38">Almost. <span class="zh">貼上</span> already means “paste,” so <span class="zh">貼上到</span> says it twice. Try <span class="zh">貼到報告裡</span>: paste it into the report.</div>
+      </div>
+      <div class="reply" style="background:#F5D6C2;transform:rotate(.4deg)">
+        <span class="rnum">3</span>${label('FOLLOW-UP', C.deep)}
+        <div class="zh" style="font-size:36px;font-weight:700;line-height:1.35">你怎麼確定網路上的資料是對的？</div>
+        ${py('nǐ zěn me què dìng wǎng lù shàng de zī liào shì duì de?')}
+        ${en('How do you make sure what you find online is right?')}
+      </div>
+    </div>
+    ${sparkle(1006, 1046, 22)}
+
+    ${hand(1612, 'the full AI tutor comes with Premium', { size: 42, rot: -1 })}
   `);
 }
 
@@ -332,7 +364,7 @@ function frameDate() {
 
     ${guide(240, 1380, 600, 170, 'COUNTDOWN STICKER')}
     ${hand(1572, 'search “WordCat” on the App Store', { size: 46, rot: -1.5 })}
-    ${hand(1630, 'tap the countdown so the cat can remind you', { size: 38, rot: -1.5, color: C.deep })}
+    ${hand(1622, 'tap the countdown so the cat can remind you', { size: 38, rot: -1.5, color: C.deep })}
   `);
 }
 

@@ -304,6 +304,12 @@ public struct SupabaseClient: Sendable {
         ]), session: session)
     }
 
+    /// Sends usage counts (see UsageCounter); the server skips malformed rows.
+    public func logUsage(_ rows: [JSONValue], session: AuthSession) async throws {
+        guard !rows.isEmpty else { return }
+        _ = try await request("POST", "rest/v1/rpc/log_usage", body: .object(["p_events": .array(rows)]), session: session)
+    }
+
     /// The developer's live messages to everyone, newest first.
     public func announcements(session: AuthSession?) async throws -> [Announcement] {
         let data = try await request("GET", "rest/v1/announcements",

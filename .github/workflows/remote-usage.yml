@@ -1,0 +1,37 @@
+# 📈 Read-only: how many people use WordCat and which features.
+# 使用說明：docs/遠端控制說明.md
+# The answer is on the run's summary page.
+name: 📈 使用數據
+
+run-name: "📈 使用數據：最近 ${{ inputs.days }} 天"
+
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: '看最近幾天'
+        type: choice
+        options: ['7', '30', '90']
+        default: '7'
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_REF: byyaepkhxexppjrdhcaw
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: 整理數據
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ACTION: usage
+          DAYS: ${{ inputs.days }}
+        run: scripts/remote-control.sh

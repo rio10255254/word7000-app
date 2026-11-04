@@ -645,6 +645,7 @@ struct SpeakingAnswerPanel: View {
         #if DEBUG
         if let timeout = provider.testingTimeout { session.submit(submitted, timeout: timeout); return }
         #endif
+        Usage.log("coach_check", provider.usesOnline ? "online" : "device")
         // Room for both online models and then the on-device one.
         session.submit(submitted, timeout: provider.usesOnline ? .seconds(50) : .seconds(30))
     }

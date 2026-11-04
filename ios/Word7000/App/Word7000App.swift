@@ -91,7 +91,7 @@ struct Word7000App: App {
                     while !Task.isCancelled {
                         try? await Task.sleep(for: .seconds(300))
                         guard !Task.isCancelled else { break }
-                        if scenePhase == .active { model.refreshToday(); account.heartbeat(); await refreshReminders() }
+                        if scenePhase == .active { model.refreshToday(); account.heartbeat(); await refreshReminders(); await account.sendUsage() }
                     }
                 }
         }
@@ -106,7 +106,9 @@ struct Word7000App: App {
                 Task { await Speaker.shared.refreshVoices() }
                 plus.refreshAccessState()
                 account.heartbeat()
+                Usage.log("app_open", model.studyMode.rawValue)
                 Task {
+                    await account.sendUsage()
                     await plus.refreshEntitlements()
                     // Picks up what other devices saved while this one was away.
                     await account.flush(pullingCloud: true)
@@ -116,6 +118,7 @@ struct Word7000App: App {
                 plus.suspendTimeUpdates()
                 model.saveNow()
                 account.flushBeforeBackground()
+                account.sendUsageBeforeBackground()
                 uploadRegistrationBeforeBackground()
             case .inactive:
                 model.saveNow()

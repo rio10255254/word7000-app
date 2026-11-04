@@ -270,6 +270,7 @@ final class AppModel {
     /// streak and daily goal carry over.
     func setStudyMode(_ mode: StudyMode) {
         guard mode != studyMode else { return }
+        Usage.log("mode_switch", mode.rawValue)
         let stored = syncedProgress
         settings.studyMode = mode
         replacing = true
@@ -367,6 +368,8 @@ final class AppModel {
         studySession = nil
         studyUndoStack = []
         scheduleSave()
+        Usage.log("scan_saved", studyMode.rawValue)
+        Usage.log("scan_words", "", count: words.count)
         return (setId, words.count, set.name)
     }
 
@@ -526,6 +529,7 @@ final class AppModel {
         refreshToday()
         progress = Placement.apply(knownIds: knownIds, to: progress, today: today)
         scheduleSave()
+        Usage.log("placement", studyMode.rawValue)
     }
 
     func setDailyTarget(_ target: Int) {
@@ -575,6 +579,16 @@ final class AppModel {
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studyUndoStack = []
         scheduleSave()
+        Usage.log("study_session", usageScope)
+    }
+
+    /// Which word bank and levels are in use, for the usage report:
+    /// "english.core:Level1,Level2", "chinese.core:all", "english.custom".
+    var usageScope: String {
+        let bankKind = settings.activeBankId == WordBanks.coreBankId ? "core" : "custom"
+        guard bankKind == "core" else { return "\(studyMode.rawValue).custom" }
+        let levels = settings.studyFilter.levels
+        return "\(studyMode.rawValue).core:" + (levels.isEmpty ? "all" : levels.joined(separator: ","))
     }
 
     func word(id: String) -> WordEntry? {
@@ -600,6 +614,7 @@ final class AppModel {
         gradingStudyCard = false
         studySession = session.grading(cardId, as: grade)
         scheduleSave()
+        Usage.log("study_card", studyMode.rawValue)
     }
 
     func undoStudyGrade() {
@@ -713,12 +728,14 @@ final class AppModel {
             if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
         }
         scheduleSave()
+        Usage.log("quiz_answer", studyMode.rawValue)
     }
 
     /// A typed answer. Right with at most the first letter given counts as a
     /// right quiz answer; with more help it is practice that leaves the
     /// schedule alone; anything else sends the word back to review.
     func recordSpellingAnswer(wordId: String, result: Spelling.Result, hints: Int) {
+        Usage.log("spelling_answer", studyMode.rawValue)
         guard result == .correct, hints >= 2 else {
             recordQuizAnswer(wordId: wordId, correct: result == .correct)
             return
@@ -742,6 +759,7 @@ final class AppModel {
             }
         }
         scheduleSave()
+        Usage.log("speaking", "\(studyMode.rawValue).\(completed ? "completed" : "skipped")")
     }
 
     var quizMode: QuizAnswerMode { studyMode == .english ? .meaning : .word }

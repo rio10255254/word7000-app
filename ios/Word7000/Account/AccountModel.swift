@@ -299,6 +299,15 @@ final class AccountModel {
         }
     }
 
+    func sendUsageBeforeBackground() {
+        guard session != nil, !AppRuntime.uiTesting else { return }
+        let identifier = UIApplication.shared.beginBackgroundTask(withName: "word7000-usage")
+        Task {
+            await sendUsage()
+            UIApplication.shared.endBackgroundTask(identifier)
+        }
+    }
+
     /// Counts the learner as active today (guest or signed in).
     func heartbeat() {
         guard let client, let current = session else { return }
@@ -350,6 +359,18 @@ final class AccountModel {
                                            os: UIDevice.current.systemVersion, language: L.zh ? "zh" : "en", session: valid)
     }
 
+    /// Sends the usage counts gathered since the last send (see Usage).
+    func sendUsage() async {
+        guard let client, let current = session, !AppRuntime.uiTesting else { return }
+        let batch = Usage.take()
+        guard !batch.isEmpty else { return }
+        do {
+            try await client.logUsage(batch.rows, session: try await validSession(client: client, current))
+        } catch {
+            Usage.restore(batch)
+        }
+    }
+
     /// The developer's live messages; none without an account service or a
     /// connection.
     /// nil when the check could not be made; .some(nil) when no rule is live.
@@ -375,7 +396,14 @@ final class AccountModel {
         do { valid = try await validSession(client: client, current) }
         catch is CancellationError { throw CancellationError() }
         catch { throw CloudAI.Failure.unavailable }
-        return try await client.runAI(kind, input: input, session: valid, entitlement: entitlement, as: type)
+        do {
+            let result = try await client.runAI(kind, input: input, session: valid, entitlement: entitlement, as: type)
+            Usage.log("ai", "\(kind.rawValue):\(result.usage?.tier.rawValue ?? "unknown")")
+            return result
+        } catch let failure as CloudAI.Failure {
+            Usage.log("ai_failed", "\(kind.rawValue):\(failure)")
+            throw failure
+        }
     }
 
     func saveLiveActivityDevice(_ row: [String: JSONValue]) async -> Bool {
@@ -430,6 +458,7 @@ final class AccountModel {
             if let email, !email.isEmpty { metadata["email"] = .string(email) }
             if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
             await activate(newSession, fallbackEmail: email)
+            Usage.log("sign_in", "apple")
             // So that deleting the account later also revokes this app's
             // access to the Apple ID. Signing in never waits on or fails for it.
             if let authorizationCode, !authorizationCode.isEmpty {
@@ -507,6 +536,7 @@ final class AccountModel {
             app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
             app.setLocalOwner(nil, anonymous: true)
             message = A.deleted
+            Usage.log("account_deleted", current.user.anonymous ? "guest" : revoked ? "apple_revoked" : "apple_listed")
             await bootstrap()
             if !current.user.anonymous && !revoked { message = A.deletedAppleStillListed }
         } catch {

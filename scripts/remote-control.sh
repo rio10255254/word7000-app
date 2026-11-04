@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The remote control behind the broadcast workflows (see .github/workflows/remote-*.yml).
-# ACTION: post | status | take-down | lift-update. Needs SUPABASE_ACCESS_TOKEN and PROJECT_REF.
+# ACTION: post | status | usage | take-down | lift-update. Needs SUPABASE_ACCESS_TOKEN and PROJECT_REF.
 set -euo pipefail
 : "${TITLE_ZH:=}" "${BODY_ZH:=}" "${TITLE_EN:=}" "${BODY_EN:=}" "${AUDIENCE:=all}" "${BELOW:=}" "${DAYS:=7}"
 : "${LINK:=}" "${LINK_ZH:=}" "${LINK_EN:=}" "${PUSH:=false}" "${REQUIRE:=}"
@@ -43,6 +43,13 @@ status)
   say "## ⛔ 強制更新"
   reply=$(call "$rest/update_requirements?select=created_at,min_version,min_build&active=eq.true&order=created_at.desc&limit=1")
   body_of "$reply" | jq -r 'if length == 0 then "- 沒有" else .[] | "- 低於 **\(.min_version)\(if .min_build then " (\(.min_build))" else "" end)** 的都要更新（從 \(.created_at[0:16]) UTC 起）" end' | while read -r line; do say "$line"; done
+  ;;
+usage)
+  days="${DAYS:-7}"
+  [[ "$days" =~ ^[0-9]+$ ]] || { echo "::error::days must be a whole number"; exit 1; }
+  reply=$(call -X POST "$rest/rpc/usage_report" -d "{\"p_days\":$days}")
+  [ "$(code_of "$reply")" = "200" ] || { echo "::error::$(body_of "$reply")"; exit 1; }
+  body_of "$reply" | node scripts/usage-report.mjs
   ;;
 take-down)
   reply=$(call -X PATCH "$rest/announcements?active=eq.true" -d '{"active":false}')

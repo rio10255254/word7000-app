@@ -59,7 +59,7 @@ AI 老師（口說批改、單字解說、學習分析）、掃描講義、限�
 ## English (U.S.)
 
 **Name** (30)
-WordCat: Learn Chinese Words
+WordCat: Ur Chinese Tutor
 
 **Subtitle** (30)
 Taiwan Mandarin, a bit a day

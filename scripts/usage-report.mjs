@@ -11,7 +11,7 @@ const labels = {
   app_open: '打開 App', study_session: '開始一輪學習', study_card: '學習卡片', quiz_answer: '測驗作答',
   spelling_answer: '拼字作答', speaking: '口說練習', coach_check: '口說批改', scan_saved: '掃描存入字庫',
   scan_words: '掃描加入的單字', ai: 'AI 使用成功', ai_failed: 'AI 失敗', paywall_view: '看到付費頁',
-  purchase: '購買', restore: '恢復購買', sign_in: 'Apple 登入', account_deleted: '刪除帳號',
+  purchase: '購買', restore: '恢復購買', sign_in: 'Apple 登入', sign_in_failed: 'Apple 登入失敗', account_deleted: '刪除帳號',
   placement: '完成程度測驗', mode_switch: '切換學習模式',
 };
 const aiKinds = {
@@ -110,7 +110,7 @@ section('💰 付費', ['paywall_view', 'purchase', 'restore']);
 const eu = report.event_users;
 say(`付費漏斗（人數）：看到付費頁 ${eu.paywall_view ?? 0} → 按下購買 ${events.filter((e) => e.event === 'purchase' && e.detail.endsWith(':started')).reduce((n, e) => n + e.users, 0)} → 購買成功 ${events.filter((e) => e.event === 'purchase' && e.detail.endsWith(':purchased')).reduce((n, e) => n + e.users, 0)}`);
 say('');
-section('🙋 帳號', ['sign_in', 'account_deleted']);
+section('🙋 帳號', ['sign_in', 'sign_in_failed', 'account_deleted']);
 say('> 只統計 2.0.2 (6) 以後的 App。訂閱收入、試用轉換、下載量請看 App Store Connect 的「分析」與「銷售和趨勢」。');
 
 const text = out.join('\n') + '\n';

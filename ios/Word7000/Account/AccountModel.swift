@@ -485,6 +485,12 @@ final class AccountModel {
         message = text
     }
 
+    /// Sign in with Apple itself failed (before our server was reached).
+    func noteAppleFailure() {
+        status = .error(A.appleUnavailable)
+        message = A.appleUnavailable
+    }
+
     func noteCancelled() {
         message = A.cancelled
     }
@@ -647,6 +653,7 @@ enum A {
     static var signingIn: String { L.t("登入中…", "Signing in…") }
     static var signInFailed: String { L.t("登入失敗，請再試一次", "Sign-in failed. Please try again.") }
     static var appleFailed: String { L.t("Apple 登入失敗，請再試一次", "Sign in with Apple failed. Please try again.") }
+    static var appleUnavailable: String { L.t("Apple 登入沒有完成，請再按一次。一直不行的話，到「設定」確認已登入 Apple 帳號並連上網路。", "Sign in with Apple didn't finish. Try again; if it keeps failing, check you're signed in to your Apple Account in Settings and online.") }
     static var cancelled: String { L.t("已取消登入", "Sign-in cancelled") }
     static var signedOut: String { L.t("已登出", "Signed out") }
     static var signedOutReminderUnconfirmed: String { L.t("已登出，但尚未確認停用這支手機的舊帳號提醒。", "Signed out, but reminders for the previous account on this iPhone could not be confirmed off.") }

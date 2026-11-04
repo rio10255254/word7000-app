@@ -142,14 +142,26 @@ struct SignInSheet: View {
         case let .success(authorization):
             guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
                   let tokenData = credential.identityToken, let idToken = String(data: tokenData, encoding: .utf8)
-            else { return }
+            else {
+                Usage.log("sign_in_failed", "no_token")
+                account.noteAppleFailure()
+                return
+            }
             let code = credential.authorizationCode.flatMap { String(data: $0, encoding: .utf8) }
             Task {
                 await account.signInWithApple(idToken: idToken, rawNonce: rawNonce, authorizationCode: code, fullName: credential.fullName, email: credential.email)
                 finishIfSignedIn()
             }
         case let .failure(error):
-            if (error as? ASAuthorizationError)?.code == .canceled { account.noteCancelled() }
+            // Apple can fail before WordCat's server is reached (seen on iOS 18:
+            // several tries before one works). Say so instead of doing nothing.
+            let code = (error as? ASAuthorizationError)?.code
+            if code == .canceled {
+                account.noteCancelled()
+            } else {
+                Usage.log("sign_in_failed", "apple_\((error as NSError).code)")
+                account.noteAppleFailure()
+            }
         }
     }
 

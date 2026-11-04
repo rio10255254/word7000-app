@@ -1,8 +1,8 @@
 # Word7000 Google Login Setup
 
-這份文件是把 Word7000 的「使用 Google 快速登入」真正啟用到線上版的後台設定清單。
+這份文件是 Word7000（單字貓）iOS App 用 Supabase 做帳號登入時，Supabase 和 Google Cloud 後台的設定清單。網頁版已經移除，不需要再設定 Cloudflare Pages。
 
-App 端已經會用 Supabase 開啟 Google 登入，並把每個使用者的學習進度和自訂單字集存到自己的帳號資料。你需要在自己的 Supabase、Google Cloud、Cloudflare Pages 後台完成下面設定。
+目前 SwiftUI App 的登入入口是「使用 Apple 登入」。`Word7000Core` 已經有 Google 登入用的 Supabase OAuth 網址函式（`oauthURL`、`linkIdentityURL`），但 App 畫面還沒有使用；要開放 Google 登入時，照下面設定 Supabase 和 Google Cloud 即可。登入後，每個使用者的學習進度和自訂單字集會存到自己的帳號資料。
 
 ## 1. 建立 Supabase 專案
 
@@ -15,39 +15,27 @@ App 端已經會用 Supabase 開啟 Google 登入，並把每個使用者的學�
 
 在 Supabase 後台進入 Authentication settings。
 
-Site URL 填你的正式網址，例如：
+Site URL 填 Cloudflare Worker 的網址：
 
 ```text
-https://your-word7000-domain.pages.dev
+https://word7000-app.rio10255254.workers.dev
 ```
 
-Redirect URLs 至少加入：
+Redirect URLs 加入：
 
 ```text
-https://your-word7000-domain.pages.dev/*
-https://your-custom-domain.com/*
+https://word7000-app.rio10255254.workers.dev/**
 word7000://auth/callback
-http://localhost:8083/*
-http://localhost:19006/*
 ```
 
-如果你只用 Cloudflare Pages 網址，第二行自訂網域可以先不填。
-正式網站會提供 `/auth-native.html` 作為 iPhone 登入中繼頁，收到登入結果後立刻開啟 `word7000://auth/callback` 回到 App。正式網址的萬用路徑必須保留；自訂 callback 則建議保留作為備援。
+這個 Worker 現在只放 `public/` 裡的幾個靜態檔（見 `README.md`），由 GitHub 推到 `master` 時自動部署，不再是網頁版 App。其中 `/auth-native.html` 是 iPhone 登入中繼頁（`AccountModel.redirectURL`），收到登入結果後立刻開啟 `word7000://auth/callback` 回到 App。Worker 網址的萬用路徑必須保留；`word7000://auth/callback` 建議保留作為備援。舊的 `*.pages.dev` 和 `localhost` 網址都是網頁版用的，可以從清單移除。
 
 ## 3. 建立 Google OAuth
 
 1. 到 Google Cloud Console 建立或選擇一個專案。
 2. 設定 OAuth consent screen。
-3. 建立 OAuth Client ID，類型選 Web application。
-4. Authorized JavaScript origins 加入：
-
-```text
-https://your-word7000-domain.pages.dev
-https://your-custom-domain.com
-http://localhost:8083
-http://localhost:19006
-```
-
+3. 建立 OAuth Client ID，類型選 Web application（Google 會回到 Supabase，不是直接回到 App）。
+4. Authorized JavaScript origins 不需要填；網頁版移除後，舊的 `*.pages.dev` 和 `localhost` 來源可以刪掉。
 5. Authorized redirect URIs 填 Supabase 給你的 callback URL，格式通常是：
 
 ```text
@@ -64,9 +52,9 @@ https://YOUR_SUPABASE_PROJECT_REF.supabase.co/auth/v1/callback
 4. 貼上 Google Client ID 和 Client Secret。
 5. 儲存。
 
-## 5. 在 Cloudflare Pages 放環境設定
+## 5. 在 EAS 放 App 的 Supabase 設定
 
-在 Cloudflare Pages 專案設定中加入 Production 和 Preview 環境變數：
+iOS App 在建置時從 Expo EAS 專案的 `production` 環境變數讀取 Supabase 設定，寫進 `ios/Word7000-Info.plist`（`AccountModel.bundledConfig()` 讀取）。在 expo.dev 的專案 > Environment variables > production 加入：
 
 ```text
 EXPO_PUBLIC_SUPABASE_URL=https://YOUR_SUPABASE_PROJECT_REF.supabase.co
@@ -76,15 +64,15 @@ EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
 這兩個值可以在 Supabase Project Settings > API 找到。
 如果你的 Supabase 後台顯示的是舊名稱 `anon public key`，也可以改用 `EXPO_PUBLIC_SUPABASE_ANON_KEY`。
 
-設定完後重新部署 Cloudflare Pages。
+設定完後，用 `ios-release.yml` 的 `native-testflight` 重新建置一次 App。Cloudflare 不需要任何環境變數。
 
 ## 6. 測試
 
-1. 用手機 Safari 開啟正式網址。
+1. 在 iPhone 安裝 TestFlight 上的最新版 App。
 2. 進入「我的」頁面。
-3. 點「使用 Google 快速登入」。
+3. 用帳號登入（目前是「使用 Apple 登入」；開放 Google 登入後再測 Google）。
 4. 登入完成後收藏幾個單字、做一題測驗。
-5. 換另一台手機或另一個瀏覽器，用同一個 Google 帳號登入。
+5. 換另一台 iPhone，用同一個帳號登入。
 6. 確認收藏、複習、連續天數、自訂單字集會同步。
 
 ## 7. 自訂單字集同步
@@ -133,5 +121,5 @@ order by activity_date desc;
 ## 10. 官方文件
 
 - Supabase Google login: https://supabase.com/docs/guides/auth/social-login/auth-google
-- Supabase JavaScript OAuth: https://supabase.com/docs/reference/javascript/auth-signinwithoauth
+- Supabase redirect URLs: https://supabase.com/docs/guides/auth/redirect-urls
 - Google OAuth Client ID: https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid

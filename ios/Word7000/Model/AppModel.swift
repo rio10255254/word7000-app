@@ -616,8 +616,10 @@ final class AppModel {
     }
 
     private func restoreStudySession(_ saved: StudySession) {
-        guard !saved.isComplete, saved.sourceKey == studySourceKey,
-              saved.cardIds.allSatisfy({ bank.index(of: $0) != nil }) else { return }
+        // A finished set is kept too: signing in from its summary must not
+        // leave the summary with nothing to show.
+        guard saved.sourceKey == studySourceKey,
+              saved.isComplete || saved.cardIds.allSatisfy({ bank.index(of: $0) != nil }) else { return }
         studySession = saved
     }
 

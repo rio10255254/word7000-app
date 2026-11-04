@@ -519,6 +519,46 @@ final class AccountModel {
         if !remindersDisabled { message = A.signedOutReminderUnconfirmed }
     }
 
+    /// Whether the signed-in account still exists: it may have been deleted
+    /// on another iPhone with the same Apple ID. Checked when the app comes
+    /// back; offline or server trouble changes nothing.
+    func confirmAccountExists() async {
+        guard let client, let current = session, !current.user.anonymous, !AppRuntime.uiTesting, !busy else { return }
+        do {
+            _ = try await client.user(session: current)
+        } catch let error as SupabaseError where error.isUserGone {
+            await accountRemovedElsewhere(current)
+        } catch let error as SupabaseError where [401, 403, 404].contains(error.status) {
+            // An expired access token also answers 401; only a refresh that is
+            // refused too means the account is gone.
+            do {
+                let refreshed = try await client.refresh(refreshToken: current.refreshToken)
+                if session?.user.id == current.user.id { store(refreshed) }
+            } catch let refused as SupabaseError where (400..<500).contains(refused.status) {
+                await accountRemovedElsewhere(current)
+            } catch {}
+        } catch {}
+    }
+
+    /// The account was deleted elsewhere: drop its data from this iPhone
+    /// and carry on as a fresh guest.
+    private func accountRemovedElsewhere(_ gone: AuthSession) async {
+        guard session?.user.id == gone.user.id else { return }
+        forgetLocalAccount(gone)
+        await bootstrap()
+        message = A.deletedElsewhere
+    }
+
+    private func forgetLocalAccount(_ gone: AuthSession) {
+        flushTask?.cancel()
+        Outbox.clear(userId: gone.user.id)
+        app.forgetSpeakingHistory(ownerId: gone.user.id, anonymous: false)
+        store(nil)
+        dirty = SyncDirty()
+        app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
+        app.setLocalOwner(nil, anonymous: true)
+    }
+
     func deleteAccount() async {
         guard let client, let current = session else { return }
         // A signed-in account comes from Sign in with Apple. Confirming with
@@ -612,6 +652,7 @@ enum A {
     static var signedOutReminderUnconfirmed: String { L.t("已登出，但尚未確認停用這支手機的舊帳號提醒。", "Signed out, but reminders for the previous account on this iPhone could not be confirmed off.") }
     static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
     static var deleted: String { L.t("帳號已刪除", "Account deleted") }
+    static var deletedElsewhere: String { L.t("這個帳號已經在另一支手機刪除，這支 iPhone 改回訪客。", "This account was deleted on another iPhone, so this one is back to a guest.") }
     static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }
     static var deleteCancelled: String { L.t("沒有刪除：需要用 Apple 確認才能刪除帳號", "Not deleted: confirm with Apple to delete the account") }
     static var deletedAppleStillListed: String { L.t("帳號已刪除。若「設定 → Apple 帳號 → 使用 Apple 登入」還看得到單字貓，可以在那裡按「刪除」。", "Account deleted. If WordCat still shows in Settings > Apple Account > Sign in with Apple, you can remove it there.") }

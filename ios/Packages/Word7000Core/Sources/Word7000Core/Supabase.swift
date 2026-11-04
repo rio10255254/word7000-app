@@ -147,6 +147,12 @@ public struct SupabaseError: Error, Equatable, Sendable {
         self.message = message
     }
 
+    /// The signed-in account no longer exists (deleted, e.g. on another iPhone).
+    public var isUserGone: Bool {
+        if code == "user_not_found" { return true }
+        return (status == 403 || status == 404) && message.lowercased().contains("does not exist")
+    }
+
     /// "This Google or Apple account already belongs to someone else."
     public var isIdentityAlreadyLinked: Bool {
         if code == "identity_already_exists" { return true }

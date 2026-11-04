@@ -101,6 +101,13 @@ struct StudySessionView: View {
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
+            // No set to show (the data was swapped underneath, e.g. a sign-in):
+            // close instead of leaving an empty page.
+            .task(id: model.studySession == nil) {
+                guard model.studySession == nil else { return }
+                try? await Task.sleep(for: .milliseconds(400))
+                if model.studySession == nil { dismiss() }
+            }
             .overlay(alignment: .top) {
                 if goalBanner {
                     Label {
@@ -589,7 +596,6 @@ struct SessionSummary: View {
             if account.configured, !account.isPermanent {
                 GuestKeepCard(count: session.knownIds.count + session.reviewIds.count) { signInOpen = true }
                     .entrance(3)
-                    .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
             }
             if !session.reviewIds.isEmpty, !AppRuntime.uiTesting {
                 PlusUpsellCard(feature: .smartAI,
@@ -647,6 +653,7 @@ struct SessionSummary: View {
         .overlay(alignment: .top) {
             if reachedGoal && appeared && !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
         }
+        .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .onAppear { appeared = true }
         .accessibilityIdentifier("study-summary")
         // After a first round, a good moment to ask about notifications.

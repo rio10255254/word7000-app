@@ -51,18 +51,19 @@ concurrency:
 
 jobs:
   native:
-    name: Native iOS ${{ matrix.ios }}
+    name: Native iOS ${{ matrix.ios }}${{ matrix.shard > 0 && format(' · part {0} of 2', matrix.shard) || '' }}
     if: inputs.checks != 'layout'
     strategy:
       fail-fast: false
       matrix:
         # Small fixes can check the newest iOS alone; releases and pushes run all three.
-        include: ${{ fromJSON(inputs.ios == '27' && '[{"ios":27,"xcode":27,"runner":"xcode-27"}]' || '[{"ios":18,"xcode":26,"runner":"macos-15"},{"ios":26,"xcode":26,"runner":"macos-15"},{"ios":27,"xcode":27,"runner":"xcode-27"}]') }}
+        # The full check (pushes and `all`) runs each iOS in two halves at once
+        # (shard 1 and 2), about 35 minutes of UI tests each instead of 70 in a row;
+        # other checks run whole (shard 0).
+        include: ${{ fromJSON(inputs.ios == '27' && ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]') || ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":18,"xcode":26,"runner":"macos-15","shard":1},{"ios":18,"xcode":26,"runner":"macos-15","shard":2},{"ios":26,"xcode":26,"runner":"macos-15","shard":1},{"ios":26,"xcode":26,"runner":"macos-15","shard":2},{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":0},{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]')) }}
     runs-on: ${{ matrix.runner }}
-    # The full iOS 27 walk-through on the xcode-27 runners now takes 85-95
-    # minutes with build and setup: its UI tests alone ran 70 minutes once the
-    # App Store screens and the every-screen layout walk joined it (run 369 was
-    # stopped at the old 90-minute limit with tests still to go).
+    # One half of the full check takes about 55 minutes with build and setup;
+    # the whole walk-through in one job ran past 90 (run 369), so the limit stays generous.
     timeout-minutes: 120
     env:
       IOS_MAJOR: ${{ matrix.ios }}
@@ -92,21 +93,27 @@ jobs:
           ls -la "$RUNNER_TEMP/screenshots"
 
       - name: Word list matches the app data
+        if: matrix.shard != 2
         run: node scripts/export-native-words.mjs --check
 
       - name: Speaking questions match their editorial sources
+        if: matrix.shard != 2
         run: node scripts/build-native-speaking-library.mjs --check
 
       - name: Speaking scenarios match their editorial source
+        if: matrix.shard != 2
         run: node scripts/build-speaking-scenarios.mjs --check
 
       - name: Coaching evaluation cases match their authored sources
+        if: matrix.shard != 2
         run: node scripts/build-coach-evaluation.mjs --check
 
       - name: Release archive checks
+        if: matrix.shard != 2
         run: python3 -m unittest discover -s scripts -p 'test_verify_native_release.py'
 
       - name: Learning engine tests
+        if: matrix.shard != 2
         run: |
           xcodebuild -version
           swift test --package-path ios/Packages/Word7000Core
@@ -114,6 +121,7 @@ jobs:
           swift run --package-path ios/Packages/Word7000Core CoachEvaluation --probe
 
       - name: Speaking history account isolation
+        if: matrix.shard != 2
         run: node scripts/test-native-speaking-recency.mjs
 
       - name: Pick an iPhone simulator
@@ -151,6 +159,7 @@ jobs:
       - name: Build and run the UI walk-through
         env:
           CHECKS: ${{ inputs.checks }}
+          SHARD: ${{ matrix.shard }}
         run: |
           if [ "$CHECKS" = "compile" ]; then
             set +e
@@ -176,6 +185,14 @@ jobs:
             TEST_SELECTION=(-only-testing:Word7000UITests/AppStoreScreenshotTests)
           elif [ "$CHECKS" = "polish" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testWithoutDeviceAICheckingLeadsToPremiumAndPracticeContinues -only-testing:Word7000UITests/SpeakingCoachTests/testRecordingTurnsIntoTextThenChecksWithExplicitFixture -only-testing:Word7000UITests/SpeakingCoachTests/testNativeRecorderPermissionTimerPlaybackAndCleanup -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
+          fi
+          # The two halves of the full check: the first names its test classes, the
+          # second runs everything else, so a new test class is never left out.
+          FIRST_HALF=(SpeakingCoachTests ScreenshotTests OfficialBankTests)
+          if [ "${#TEST_SELECTION[@]}" -eq 0 ] && [ "$SHARD" = "1" ]; then
+            for c in "${FIRST_HALF[@]}"; do TEST_SELECTION+=(-only-testing:Word7000UITests/$c); done
+          elif [ "${#TEST_SELECTION[@]}" -eq 0 ] && [ "$SHARD" = "2" ]; then
+            for c in "${FIRST_HALF[@]}"; do TEST_SELECTION+=(-skip-testing:Word7000UITests/$c); done
           fi
           DERIVED="$RUNNER_TEMP/DerivedData"
           xcodebuild build-for-testing \
@@ -252,7 +269,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: native-screenshots-${{ github.run_number }}-ios-${{ matrix.ios }}
+          name: native-screenshots-${{ github.run_number }}-ios-${{ matrix.ios }}${{ matrix.shard == 2 && '-part-2' || '' }}
           path: ${{ runner.temp }}/screenshots
           retention-days: 14
 

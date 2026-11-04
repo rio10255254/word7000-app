@@ -271,6 +271,10 @@ struct TodayView: View {
         }
         .padding(3)
         .background { PremiumSurface(radius: 18) }
+        // A small control: with the largest text it would be squeezed and
+        // cut "EN" in half, so it keeps its size and stops growing at a point.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .fixedSize()
         .accessibilityElement(children: .contain)
         .accessibilityLabel(L.t("學習語言", "Learning language"))
         .accessibilityIdentifier("today-language")

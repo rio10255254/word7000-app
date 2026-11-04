@@ -44,7 +44,7 @@ if (SUPABASE_ACCESS_TOKEN && PROJECT_REF) {
   const end = new Date();
   const start = new Date(end.getTime() - 24 * 3600 * 1000);
   const query = async (sql) => {
-    const url = new URL(`https://api.supabase.com/v1/projects/${PROJECT_REF}/analytics/endpoints/logs.all`);
+    const url = new URL(`https://api.supabase.com/v1/projects/${PROJECT_REF}/analytics/endpoints/logs`);
     url.searchParams.set('sql', sql);
     url.searchParams.set('iso_timestamp_start', start.toISOString());
     url.searchParams.set('iso_timestamp_end', end.toISOString());

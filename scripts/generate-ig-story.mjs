@@ -1,7 +1,7 @@
-// Draws four Instagram story frames (1080 × 1920) for a partner shout-out:
+// Draws four Instagram story frames (1080 × 1920) for WordCat's launch:
 //   1. what WordCat does, with real screens from the native UI tests,
 //   2. the AI tutor (the speaking coach's real screen, called out step by step),
-//   3. a shout-out to the partner's account,
+//   3. a shout-out to WordCat's own Instagram account,
 //   4. the App Store release date.
 // Same paper desk, cat and terracotta card as the Premium promo art. The
 // screens come from the `native-screenshots` branch (pushed by ios-native.yml),
@@ -10,7 +10,7 @@
 // (mention and countdown stickers must be added in Instagram to be tappable).
 //
 //   git fetch origin native-screenshots
-//   node scripts/generate-ig-story.mjs --handle=@partner --month=NOV --day=16 --weekday=MONDAY [--own=@wordcat.app]
+//   node scripts/generate-ig-story.mjs --month=NOV --day=16 --weekday=MONDAY [--handle=@wordcat.app]
 //   node scripts/generate-ig-story.mjs ... --clean   # without the sticker guides
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,11 +29,10 @@ const arg = (name, fallback) => {
   return hit ? hit.slice(name.length + 3) : fallback;
 };
 const opts = {
-  handle: arg('handle', '@your.handle'),
+  handle: arg('handle', '@wordcat.app'),
   month: arg('month', 'NOV'),
   day: arg('day', '??'),
   weekday: arg('weekday', 'RELEASE DAY'),
-  own: arg('own', '@wordcat.app'),
   clean: process.argv.includes('--clean'),
 };
 
@@ -282,17 +281,17 @@ function frameShout() {
   const size = handle.length > 14 ? Math.max(64, Math.round(1450 / handle.length)) : 104;
   const card = { x: 100, y: 830, w: 880, h: 420 };
   return page(`
-    ${kicker('A LITTLE COLLAB', true)}
-    <div class="abs h1" style="left:0;width:${W}px;text-align:center;top:306px">WordCat <em>×</em></div>
-    ${sparkle(250, 340, 22)}${sparkle(840, 420, 14, C.deep)}
+    ${kicker('THE CAT HAS AN INSTAGRAM', true)}
+    <div class="abs h1" style="left:0;width:${W}px;text-align:center;top:306px">Come <em>hang out.</em></div>
+    ${sparkle(150, 350, 22)}${sparkle(950, 330, 14, C.deep)}
 
     <div class="abs" style="left:0;top:0;width:${W}px;height:${H}px;transform:rotate(-2.5deg);transform-origin:${W / 2}px ${card.y + card.h / 2}px;z-index:3">
       ${cat(440, { x: W / 2 - 220, y: card.y - 300, z: 1, paws: false })}
       <div class="card" style="left:${card.x}px;top:${card.y}px;width:${card.w}px;height:${card.h}px;z-index:2">
         <div class="dots"></div>
-        <div class="abs" style="left:66px;top:78px;font:700 26px Inter;letter-spacing:9px;opacity:.85">SAY HI TO</div>
+        <div class="abs" style="left:66px;top:78px;font:700 26px Inter;letter-spacing:9px;opacity:.85">FOLLOW US</div>
         <div class="abs" style="left:60px;top:150px;width:760px;font-family:Fraunces;font-weight:600;font-style:italic;font-size:${size}px;line-height:1.1;color:#FFE6BD;word-break:break-all">${handle}</div>
-        <div class="abs" style="left:66px;bottom:62px;font:600 24px Inter;letter-spacing:3px;opacity:.8">WORDCAT · OFFICIAL FRIENDS</div>
+        <div class="abs" style="left:66px;bottom:62px;font:600 24px Inter;letter-spacing:3px;opacity:.8">WORDCAT · OFFICIAL</div>
       </div>
       ${[-1, 1].map((s) => `<div class="abs" style="left:${W / 2 + s * 66 - 33}px;top:${card.y - 18}px;width:66px;height:40px;border-radius:50%;background:${palette.cream};z-index:3;box-shadow:0 3px 4px rgba(90,52,24,.25)"></div>`).join('')}
       ${tape(card.x - 40, card.y + 26, 160, -38)}
@@ -300,11 +299,11 @@ function frameShout() {
       ${sparkle(card.x + card.w - 150, card.y + 110, 46, '#FFE6BD', 3)}
       ${sparkle(card.x + card.w - 80, card.y + 60, 18, '#FFE6BD', 3)}
     </div>
-    ${bubble(650, 540, '“Fine. They’re cool.”', 5)}
-    ${stamp({ x: 905, y: 1265, r: 92, rot: -12, top: 'WORDCAT', big: '✓', bottom: 'CAT APPROVED', z: 6 })}
+    ${bubble(640, 540, '“Fine. Follow me.”', 5)}
+    ${stamp({ x: 905, y: 1265, r: 92, rot: -12, top: 'WORDCAT', big: '✓', bottom: 'THE REAL ONE', z: 6 })}
 
     ${guide(240, 1360, 600, 150, 'MENTION STICKER')}
-    ${hand(1550, 'go follow them. the cat insists.', { size: 50 })}
+    ${hand(1550, 'new words, cat sass &amp; launch news', { size: 50 })}
   `);
 }
 
@@ -333,7 +332,7 @@ function frameDate() {
 
     ${guide(240, 1380, 600, 170, 'COUNTDOWN STICKER')}
     ${hand(1572, 'search “WordCat” on the App Store', { size: 46, rot: -1.5 })}
-    ${hand(1630, `&amp; follow ${esc(opts.own)} for the cat’s daily sass`, { size: 38, rot: -1.5, color: C.deep })}
+    ${hand(1630, 'tap the countdown so the cat can remind you', { size: 38, rot: -1.5, color: C.deep })}
   `);
 }
 

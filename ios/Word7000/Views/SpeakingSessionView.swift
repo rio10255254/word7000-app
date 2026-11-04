@@ -158,12 +158,12 @@ struct SpeakingSessionView: View {
         }
         .onAppear {
             AppleSpeakingCoach.shared.refreshAvailability()
-            if !started { start(nil) }
+            if !started { start() }
         }
         .onChange(of: model.settings.activeBankId) { _, _ in if scenarioRef == nil { start(.words) } }
         .onChange(of: model.studyMode) { _, _ in start(source) }
         .onChange(of: model.settings.speakingFilter) { _, _ in clearCoach() }
-        .onChange(of: model.speakingHistoryOwnerKey) { _, _ in start(nil) }
+        .onChange(of: model.speakingHistoryOwnerKey) { _, _ in start() }
         .onDisappear { coachSession.cancel(); Speaker.shared.stop() }
         .sensoryFeedback(.success, trigger: attempted) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         // Each new item is read aloud once (Settings → Reading voice): in a
@@ -274,7 +274,7 @@ struct SpeakingSessionView: View {
     }
 
     /// Starts a stage: the one given, or the path's next.
-    private func start(_ requested: Source?) {
+    private func start(_ requested: Source? = nil) {
         clearCoach()
         Speaker.shared.stop()
         historyOwnerKey = model.speakingHistoryOwnerKey
@@ -570,7 +570,7 @@ struct SpeakingSessionView: View {
     }
 
     private func next() {
-        guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(nil); return }
+        guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(); return }
         guard index < count else { return }
         // Saying the model or answering is the practice; skipping is not.
         model.recordSpeaking(completed: attempted || shadowedThisWord)

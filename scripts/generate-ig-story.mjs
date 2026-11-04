@@ -10,7 +10,7 @@
 // (mention and countdown stickers must be added in Instagram to be tappable).
 //
 //   git fetch origin native-screenshots
-//   node scripts/generate-ig-story.mjs --handle=@name --month=NOV --day=20 --weekday=THURSDAY
+//   node scripts/generate-ig-story.mjs --handle=@partner --month=NOV --day=16 --weekday=MONDAY [--own=@wordcat.app]
 //   node scripts/generate-ig-story.mjs ... --clean   # without the sticker guides
 import fs from 'node:fs';
 import path from 'node:path';
@@ -33,6 +33,7 @@ const opts = {
   month: arg('month', 'NOV'),
   day: arg('day', '??'),
   weekday: arg('weekday', 'RELEASE DAY'),
+  own: arg('own', '@wordcat.app'),
   clean: process.argv.includes('--clean'),
 };
 
@@ -331,7 +332,8 @@ function frameDate() {
     ${stamp({ x: 250, y: 1270, r: 96, rot: -16, top: 'FREE ON IPHONE', big: 'NEW', bottom: 'WORDCAT', z: 6 })}
 
     ${guide(240, 1380, 600, 170, 'COUNTDOWN STICKER')}
-    ${hand(1585, 'search “WordCat” on the App Store', { size: 46, rot: -1.5 })}
+    ${hand(1572, 'search “WordCat” on the App Store', { size: 46, rot: -1.5 })}
+    ${hand(1630, `&amp; follow ${esc(opts.own)} for the cat’s daily sass`, { size: 38, rot: -1.5, color: C.deep })}
   `);
 }
 

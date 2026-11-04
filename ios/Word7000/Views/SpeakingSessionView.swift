@@ -93,6 +93,7 @@ struct SpeakingSessionView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
+                if started { trackPicker }
                 Group {
                     if !started {
                         ProgressView()
@@ -150,9 +151,11 @@ struct SpeakingSessionView: View {
                         .accessibilityValue(scopeNarrowed ? model.bankName : "")
                         .accessibilityIdentifier("speaking-filters")
                     }
-                    Button { scenariosOpen = true } label: { Image(systemName: "map") }
-                        .accessibilityLabel(L.t("所有情境", "All scenarios"))
-                        .accessibilityIdentifier("speaking-scenarios")
+                    if scenarioRef != nil {
+                        Button { scenariosOpen = true } label: { Image(systemName: "map") }
+                            .accessibilityLabel(L.t("所有情境", "All scenarios"))
+                            .accessibilityIdentifier("speaking-scenarios")
+                    }
                 }
             }
         }
@@ -219,9 +222,9 @@ struct SpeakingSessionView: View {
             }
         }
         .sheet(isPresented: $scenariosOpen) {
-            ScenarioPickerView(progress: model.speakingPath, current: source) { picked in
+            ScenarioPickerView(progress: model.speakingPath, current: scenarioRef) { picked in
                 scenariosOpen = false
-                start(picked)
+                start(.scenario(picked))
             }
         }
         .catTip(.speaking, at: .top, inset: 60)
@@ -273,12 +276,31 @@ struct SpeakingSessionView: View {
         }
     }
 
-    /// Starts a stage: the one given, or the path's next.
+    /// Everyday scenarios or word practice, side by side at the top.
+    private var trackPicker: some View {
+        Picker(L.t("練習方式", "Practice"), selection: Binding(
+            get: { scenarioRef == nil },
+            set: { words in
+                guard words != (scenarioRef == nil) else { return }
+                model.settings.speakingWordsTab = words
+                start(words ? .words : nil)
+            }
+        )) {
+            Text(L.t("生活情境", "Scenarios")).tag(false)
+            Text(L.t("單字口說", "Words")).tag(true)
+        }
+        .pickerStyle(.segmented)
+        .accessibilityIdentifier("speaking-track")
+    }
+
+    /// Starts a stage: the one given, or the next on the tab last used (the
+    /// scenario path's next stage, or a set of words).
     private func start(_ requested: Source? = nil) {
         clearCoach()
         Speaker.shared.stop()
         historyOwnerKey = model.speakingHistoryOwnerKey
-        var next = requested ?? SpeakingScenarios.next(after: model.speakingPath).map(Source.scenario) ?? .words
+        let wordsTab = model.settings.speakingWordsTab ?? false
+        var next = requested ?? (wordsTab ? nil : SpeakingScenarios.next(after: model.speakingPath).map(Source.scenario)) ?? .words
         if case .scenario(let ref) = next, let stage = SpeakingScenarios.stage(ref) {
             turns = stage.turns
         } else {

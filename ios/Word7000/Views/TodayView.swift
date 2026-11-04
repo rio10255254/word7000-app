@@ -582,6 +582,9 @@ struct TodayView: View {
     /// The speaking path: the stage to play today, or that today's is done.
     private var speakingDetail: String {
         let path = model.speakingPath
+        if model.settings.speakingWordsTab == true, !path.clearedToday(model.today) {
+            return L.t("單字口說", "Word practice")
+        }
         if path.clearedToday(model.today) {
             return L.t("今日已過關 ✓ 連續 \(path.currentStreak(today: model.today)) 天", "Done today ✓ \(path.currentStreak(today: model.today))-day streak")
         }

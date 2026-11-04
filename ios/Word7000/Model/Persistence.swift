@@ -45,6 +45,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     /// The speaking path (stages and their stars) of each owner and study
     /// mode, keyed `owner|mode` with the owner keyed as for speaking history.
     var speakingPathByOwner: [String: SpeakingPath.Progress]?
+    /// Speaking opens on word practice rather than the scenario path; nil means the path.
+    var speakingWordsTab: Bool?
     /// The look of the whole app; nil means the default, the paper collage.
     var appStyle: AppStyle?
     /// The learner has chosen a style (in the one-time chooser or Settings).

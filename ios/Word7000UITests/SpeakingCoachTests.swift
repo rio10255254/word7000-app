@@ -74,7 +74,7 @@ final class SpeakingCoachTests: XCTestCase {
         }
     }
 
-    func testAnyScenarioCanBePickedFromTheList() {
+    func testScenarioListAndTheWordPracticeTab() {
         let app = launch(englishUI: true)
         tap(app.buttons["today-speaking"], in: app)
         XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
@@ -91,6 +91,16 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.descendants(matching: .any)["speaking-role"].firstMatch.exists)
         snapshot(app, "speaking-scenario-question-en")
+        // Word practice is the other tab, and is remembered for next time.
+        app.segmentedControls["speaking-track"].buttons["Words"].tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
+        XCTAssertFalse(app.buttons["speaking-scenarios"].exists, "The scenario list belongs to the scenario tab")
+        XCTAssertTrue(app.buttons["speaking-filters"].exists)
+        app.buttons["speaking-close"].tap()
+        tap(app.buttons["today-speaking"], in: app)
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
+        app.segmentedControls["speaking-track"].buttons["Scenarios"].tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Restaurant'")
     }
 
     func testMockSuccessTypingCheckAndProgressInLightEnglishUI() {

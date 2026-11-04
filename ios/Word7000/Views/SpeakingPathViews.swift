@@ -120,13 +120,12 @@ struct StagePathView: View {
     }
 }
 
-/// Every scenario and its stages with their stars, to play any of them, and
-/// word practice from a word list.
+/// Every scenario and its stages with their stars, to play any of them.
 struct ScenarioPickerView: View {
     @Environment(\.dismiss) private var dismiss
     let progress: SpeakingPath.Progress
-    let current: SpeakingSessionView.Source
-    let onPick: (SpeakingSessionView.Source) -> Void
+    let current: SpeakingScenarios.StageRef?
+    let onPick: (SpeakingScenarios.StageRef) -> Void
 
     var body: some View {
         let next = SpeakingScenarios.next(after: progress)
@@ -137,7 +136,7 @@ struct ScenarioPickerView: View {
                     Section {
                         ForEach(scenario.stages.indices, id: \.self) { stageIndex in
                             let ref = SpeakingScenarios.StageRef(scenario: scenarioIndex, stage: stageIndex)
-                            Button { onPick(.scenario(ref)) } label: {
+                            Button { onPick(ref) } label: {
                                 row(ref, title: L.t(scenario.stages[stageIndex].title.zh, scenario.stages[stageIndex].title.en), next: ref == next)
                             }
                             .accessibilityIdentifier("speaking-stage-\(SpeakingScenarios.key(ref))")
@@ -148,23 +147,6 @@ struct ScenarioPickerView: View {
                             .foregroundStyle(Palette.accent)
                             .textCase(nil)
                     }
-                }
-                Section {
-                    Button { onPick(.words) } label: {
-                        HStack(spacing: 12) {
-                            Image(systemName: "character.book.closed.fill").foregroundStyle(Palette.accent).frame(width: 28)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(L.t("單字口說", "Word practice")).foregroundStyle(.primary)
-                                Text(L.t("用詞庫裡的單字，回答問題、延伸例句", "Answer questions and build on examples with your word list"))
-                                    .font(.footnote).foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                            if current == .words { Image(systemName: "checkmark").foregroundStyle(Palette.accent) }
-                        }
-                    }
-                    .accessibilityIdentifier("speaking-words-mode")
-                } header: {
-                    Text(L.t("其他練習", "More practice")).textCase(nil)
                 }
               }
               .listRowBackground(StyledRowBackground())
@@ -203,7 +185,7 @@ struct ScenarioPickerView: View {
             }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(L.t("\(stars) 顆星", "\(stars) of 3 stars"))
-            if current == .scenario(ref) { Image(systemName: "checkmark").foregroundStyle(Palette.accent) }
+            if current == ref { Image(systemName: "checkmark").foregroundStyle(Palette.accent) }
         }
         .contentShape(Rectangle())
     }

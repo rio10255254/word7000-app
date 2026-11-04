@@ -131,6 +131,8 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         if let recognizer, let request = recognitionRequest {
             request.requiresOnDeviceRecognition = true
             request.shouldReportPartialResults = true
+            // The recognizer's own punctuation, so answers read as sentences.
+            request.addsPunctuation = true
             request.contextualStrings = hints
             self.request = request
             recognitionRequest = request

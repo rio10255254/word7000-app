@@ -159,16 +159,33 @@ struct SpeakingAnswerPanel: View {
             answer = corrected.text
             needsTranscriptReview = true
             session.reset()
+            // A take that came back without punctuation gets it, where this
+            // iPhone's model can add it without touching a word.
+            let text = corrected.text
+            Task {
+                guard let punctuated = await DeviceAssist.punctuate(text, chinese: chinese), answer == text else { return }
+                answer = punctuated
+            }
         }
-        // A long pause ends the take; so does the minute.
+        // A long pause ends the take; so does the minute. A shorter pause
+        // ends it where this iPhone's model reads the answer as finished.
         .task(id: live) {
             guard live else { return }
+            var asked = ""
             while !Task.isCancelled, recording.listening {
                 do { try await Task.sleep(for: .milliseconds(300)) } catch { return }
+                let text = recording.text
                 if recording.seconds >= 60
-                    || (!recording.text.isEmpty && recording.quietFor > 5)
-                    || (recording.text.isEmpty && recording.quietFor > 15) {
+                    || (!text.isEmpty && recording.quietFor > 5)
+                    || (text.isEmpty && recording.quietFor > 15) {
                     recording.stop(); return
+                }
+                if !text.isEmpty, recording.quietFor > 1.4, text != asked {
+                    asked = text
+                    if await DeviceAssist.seemsFinished(text, question: question, chinese: chinese) == true,
+                       recording.listening, recording.text == text {
+                        recording.stop(); return
+                    }
                 }
             }
         }

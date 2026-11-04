@@ -1,0 +1,148 @@
+{
+  "bpm": 120,
+  "quantizeBeats": 2,
+  "barPhaseBeats": 2,
+  "hold": 24,
+  "full": [
+    {
+      "id": "hook",
+      "duration": 60
+    },
+    {
+      "id": "meet",
+      "duration": 42,
+      "enter": "circle",
+      "music": "drop",
+      "accents": [
+        {
+          "at": 16,
+          "sfx": "stamp"
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "enter": "push",
+      "steps": [
+        {
+          "id": "explain",
+          "duration": 105,
+          "accents": [
+            {
+              "at": 17,
+              "sfx": "tap"
+            }
+          ]
+        },
+        {
+          "id": "ask",
+          "duration": 90,
+          "enter": "push",
+          "accents": [
+            {
+              "at": 18,
+              "sfx": "tap"
+            }
+          ]
+        },
+        {
+          "id": "why",
+          "duration": 80,
+          "enter": "push",
+          "accents": [
+            {
+              "at": 8,
+              "sfx": "tap"
+            },
+            {
+              "at": 20,
+              "sfx": "tap"
+            }
+          ]
+        },
+        {
+          "id": "coach",
+          "duration": 93,
+          "enter": "push",
+          "accents": [
+            {
+              "at": 10,
+              "sfx": "tap"
+            }
+          ]
+        },
+        {
+          "id": "analysis",
+          "duration": 78,
+          "enter": "push",
+          "accents": [
+            {
+              "at": 9,
+              "sfx": "tap"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scan",
+      "duration": 90,
+      "enter": "zoom",
+      "accents": [
+        {
+          "at": 70,
+          "sfx": "tap"
+        },
+        {
+          "at": 74,
+          "sfx": "stamp"
+        }
+      ],
+      "music": "chorus",
+      "onBar": true
+    },
+    {
+      "id": "style",
+      "duration": 78,
+      "enter": "circle",
+      "accents": [
+        {
+          "at": 30,
+          "sfx": "tap"
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "duration": 72,
+      "enter": "push"
+    },
+    {
+      "id": "reminder",
+      "duration": 64,
+      "enter": "pull",
+      "music": "breakdown",
+      "accents": [
+        {
+          "at": 8,
+          "sfx": "ding"
+        }
+      ],
+      "onBar": true
+    },
+    {
+      "id": "end",
+      "duration": 48,
+      "enter": "dissolve",
+      "turnBeats": 2,
+      "music": "end",
+      "accents": [
+        {
+          "at": 14,
+          "sfx": "stamp"
+        }
+      ],
+      "onBar": true
+    }
+  ]
+}

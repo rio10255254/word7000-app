@@ -1,0 +1,317 @@
+{
+  "voice": "zf_017",
+  "speed": 1.08,
+  "outro": "追蹤小笨貓，明天繼續被罵。",
+  "outroNote": "下載連結在個人簡介",
+  "episodes": [
+    {
+      "id": "ep01",
+      "series": "小笨貓日記 #1",
+      "voice": false,
+      "hook": [
+        "欸，又在滑手機喔？"
+      ],
+      "lines": [
+        {
+          "text": "欸，又在**滑手機**喔？",
+          "beats": 4,
+          "cues": [
+            [
+              0,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "我是 **SillyCat**，專門盯你背單字。",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "對，App 裡真的會這樣**嗆你**。",
+          "beats": 5,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ]
+          ]
+        },
+        {
+          "text": "**7000 單字**，我陪你背完。",
+          "beats": 6,
+          "cues": [
+            [
+              0.8,
+              "tap"
+            ],
+            [
+              1,
+              "whoosh"
+            ],
+            [
+              3,
+              "tap"
+            ],
+            [
+              4.4,
+              "tap"
+            ],
+            [
+              4.5,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "明天見，敢放我**鴿子**試試看。",
+          "beats": 5,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "pop"
+            ]
+          ]
+        }
+      ],
+      "app": "單字貓",
+      "tagline": "背 7000 單字的 App",
+      "shots": {
+        "today": "today",
+        "study": "study",
+        "answer": "study-answer"
+      }
+    },
+    {
+      "id": "ep01-en",
+      "series": "SillyCat Diaries #1",
+      "voice": false,
+      "hook": [
+        "Hey. Scrolling again?"
+      ],
+      "lines": [
+        {
+          "text": "Hey. **Scrolling** again?",
+          "beats": 4,
+          "cues": [
+            [
+              0,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "I'm **SillyCat**. I make sure you study.",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "Yep. The app really **roasts** you.",
+          "beats": 5,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ]
+          ]
+        },
+        {
+          "text": "**Taiwan Mandarin**, one word at a time.",
+          "beats": 6,
+          "cues": [
+            [
+              0.8,
+              "tap"
+            ],
+            [
+              1,
+              "whoosh"
+            ],
+            [
+              3,
+              "tap"
+            ],
+            [
+              4.4,
+              "tap"
+            ],
+            [
+              4.5,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "See you tomorrow. Don't you dare **ghost** me.",
+          "beats": 5,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "pop"
+            ]
+          ]
+        }
+      ],
+      "app": "WordCat",
+      "tagline": "Learn Taiwan Mandarin",
+      "shots": {
+        "today": "today-en",
+        "study": "study-en",
+        "answer": "study-answer-en"
+      },
+      "lang": "en",
+      "outro": "Follow SillyCat. Get roasted daily.",
+      "outroNote": "Download link in bio",
+      "catTop": 365
+    },
+    {
+      "id": "ep02",
+      "series": "小笨貓日記 #2",
+      "hook": [
+        "一天只背 7 個",
+        "就想睡？"
+      ],
+      "lines": [
+        {
+          "text": "才 7 個？笑死。",
+          "say": "才七個？笑死。",
+          "shot": "today",
+          "crop": [
+            420,
+            360,
+            1170,
+            620
+          ],
+          "mood": "smug"
+        },
+        {
+          "text": "每天背幾個，是你自己訂的。",
+          "shot": "goal",
+          "crop": [
+            30,
+            600,
+            1176,
+            1720
+          ],
+          "mood": "idle"
+        },
+        {
+          "text": "說好 20 個，還差 13 個。",
+          "say": "說好二十個，還差十三個。",
+          "shot": "today",
+          "crop": [
+            60,
+            540,
+            940,
+            900
+          ],
+          "mood": "annoyed"
+        },
+        {
+          "text": "別看我。去按「繼續學習」。",
+          "say": "別看我。去按繼續學習。",
+          "shot": "today",
+          "crop": [
+            40,
+            900,
+            1166,
+            1170
+          ],
+          "tap": [
+            650,
+            1032
+          ],
+          "mood": "smug"
+        }
+      ]
+    },
+    {
+      "id": "ep03",
+      "series": "小笨貓日記 #3",
+      "hook": [
+        "all 是什麼意思？",
+        "答錯會被貓念"
+      ],
+      "lines": [
+        {
+          "text": "考你一題：all 是什麼意思？",
+          "say": "考你一題。all，是什麼意思？",
+          "shot": "quiz",
+          "crop": [
+            20,
+            470,
+            1186,
+            1530
+          ],
+          "mood": "smug"
+        },
+        {
+          "text": "你選了「金屬的」？",
+          "say": "你選了，金屬的？",
+          "shot": "quiz-answered",
+          "crop": [
+            20,
+            470,
+            1186,
+            1530
+          ],
+          "tap": [
+            287,
+            870
+          ],
+          "sfx": "wrong",
+          "mood": "annoyed"
+        },
+        {
+          "text": "那是 metallic 的意思。",
+          "shot": "quiz-answered",
+          "crop": [
+            20,
+            1500,
+            1186,
+            1780
+          ],
+          "mood": "annoyed"
+        },
+        {
+          "text": "all 是「所有的」。記好，我不想說第二次。",
+          "say": "all 是，所有的。記好，我不想說第二次。",
+          "shot": "quiz-answered",
+          "crop": [
+            20,
+            470,
+            1186,
+            1530
+          ],
+          "mood": "smug"
+        }
+      ]
+    }
+  ]
+}

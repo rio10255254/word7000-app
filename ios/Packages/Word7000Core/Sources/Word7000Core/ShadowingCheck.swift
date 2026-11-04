@@ -121,6 +121,31 @@ public struct ShadowingCheck: Equatable, Sendable {
         score = n == 0 ? 0 : points / Double(n)
     }
 
+    private init(units: [Unit], score: Double) {
+        self.units = units
+        self.score = score
+    }
+
+    /// The same check after measuring pitch: characters recognized right
+    /// but said with another tone (by unit id, with the reading heard)
+    /// become tone slips, worth half.
+    public func withToneSlips(_ slips: [Int: String]) -> ShadowingCheck {
+        guard !slips.isEmpty else { return self }
+        var units = self.units
+        for index in units.indices {
+            if let heard = slips[units[index].id], units[index].mark == .heard { units[index].mark = .tone(heard: heard) }
+        }
+        let scored = units.filter(\.scored)
+        let points = scored.reduce(0.0) { total, unit in
+            switch unit.mark {
+            case .heard: total + 1
+            case .tone: total + 0.5
+            default: total
+            }
+        }
+        return ShadowingCheck(units: units, score: scored.isEmpty ? 0 : points / Double(scored.count))
+    }
+
     /// The sentence to say after the model: the first sentence of a model
     /// answer, with the next one too when the first is very short.
     public static func sentence(from text: String, chinese: Bool) -> String {

@@ -36,6 +36,8 @@ struct ShadowStepView: View {
     @State private var showsTranslation = false
     /// Counting down to the next step after a sentence said well.
     @State private var advancing = false
+    /// Learning Chinese: each character's measured pitch, by unit id.
+    @State private var tones: [Int: ToneAnalysis.Syllable] = [:]
 
     private var language: String { chinese ? "zh-TW" : "en-US" }
     private var live: Bool { listener.listening }
@@ -103,7 +105,10 @@ struct ShadowStepView: View {
             } else if listener.support == .live {
                 withAnimation { check = ShadowingCheck(target: sentence, heard: "", chinese: chinese) }
             }
-            if said { advancing = true }
+            Task {
+                if chinese { await measureTones() }
+                if said { advancing = true }
+            }
         }
         // Stops by itself: everything heard, or a pause after speaking.
         .task(id: live) {
@@ -214,7 +219,7 @@ struct ShadowStepView: View {
         VStack(alignment: .leading, spacing: 6) {
             FlowLayout(spacing: chinese ? 2 : 7, lineSpacing: chinese ? 10 : 6) {
                 ForEach(shownUnits) { unit in
-                    ShadowUnitView(unit: unit, chinese: chinese, showsPinyin: chinese)
+                    ShadowUnitView(unit: unit, chinese: chinese, showsPinyin: chinese, tone: tones[unit.id])
                 }
             }
             .accessibilityElement(children: .ignore)
@@ -272,8 +277,13 @@ struct ShadowStepView: View {
                     .foregroundStyle(check.passed ? Palette.known : Palette.review)
                     .font(.title3)
                     .symbolEffect(.bounce, value: reduceMotion ? false : check.passed)
-                Text(check.passed ? L.t("說得很好！", "Nicely said!") : L.t("差一點，再試一次？", "Almost. One more try?"))
-                    .font(.headline)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(check.passed ? L.t("說得很好！", "Nicely said!") : L.t("差一點，再試一次？", "Almost. One more try?"))
+                        .font(.headline)
+                    if let note = toneNote(check) {
+                        Text(note).font(.subheadline).foregroundStyle(Palette.review)
+                    }
+                }
                 Spacer()
                 Text("\(Int((check.score * 100).rounded()))%")
                     .font(.display(.title3, weight: .bold))
@@ -321,7 +331,7 @@ struct ShadowStepView: View {
                     }
                     Button {
                         advancing = false
-                        if live { listener.stop() } else { Speaker.shared.stop(); check = nil; listener.start() }
+                        if live { listener.stop() } else { Speaker.shared.stop(); check = nil; tones = [:]; listener.start() }
                     } label: {
                         Image(systemName: live ? "stop.fill" : (tried ? "arrow.counterclockwise" : "mic.fill"))
                             .font(.system(size: 40, weight: .semibold))
@@ -381,6 +391,47 @@ struct ShadowStepView: View {
         .accessibilityIdentifier("shadow-play")
     }
 
+    /// Learning Chinese: the pitch of each character said, against the tone
+    /// it should have. Recognition writes a character right even when its
+    /// tone was off; the pitch tells.
+    private func measureTones() async {
+        guard let current = check else { return }
+        let scored = current.units.filter(\.scored)
+        let (samples, rate) = listener.samples
+        guard !scored.isEmpty, !samples.isEmpty else { return }
+        let characters = scored.map(\.text)
+        let expected = ToneAnalysis.spokenTones(characters: characters, syllables: scored.map(\.pinyin))
+        let pieces = listener.segments.map { (text: $0.text, start: $0.start, duration: $0.duration) }
+        let measured = await Task.detached(priority: .userInitiated) { () -> [ToneAnalysis.Syllable?] in
+            var spans = ToneAnalysis.spans(of: characters, in: pieces)
+            if spans.allSatisfy({ $0 == nil }) {
+                spans = ToneAnalysis.evenSpans(samples: samples, rate: rate, count: characters.count)
+            }
+            return ToneAnalysis.analyze(samples: samples, rate: rate, spans: spans, expected: expected)
+        }.value
+        guard check == current else { return }
+        var found: [Int: ToneAnalysis.Syllable] = [:]
+        var slips: [Int: String] = [:]
+        for (unit, syllable) in zip(scored, measured) {
+            guard let syllable else { continue }
+            found[unit.id] = syllable
+            if syllable.mismatched, let heard = syllable.heard, unit.mark == .heard {
+                slips[unit.id] = ToneAnalysis.syllable(unit.pinyin, withTone: heard)
+            }
+        }
+        withAnimation(reduceMotion ? nil : .spring(duration: 0.4)) {
+            tones = found
+            check = current.withToneSlips(slips)
+        }
+    }
+
+    /// "馬 sounded like a first tone", for the first tone slip.
+    private func toneNote(_ check: ShadowingCheck) -> String? {
+        guard let unit = check.units.first(where: { if case .tone = $0.mark { true } else { false } }),
+              let heard = tones[unit.id]?.heard else { return nil }
+        return L.t("「\(unit.text)」聽起來像\(ToneAnalysis.toneName(heard))", "\u{201C}\(unit.text)\u{201D} sounded like tone \(heard)")
+    }
+
     private func finish() {
         advancing = false
         listener.interrupt()
@@ -411,6 +462,8 @@ private struct ShadowUnitView: View {
     let unit: ShadowingCheck.Unit
     let chinese: Bool
     let showsPinyin: Bool
+    /// The pitch measured for this character, drawn under it.
+    var tone: ToneAnalysis.Syllable? = nil
 
     private var color: Color {
         switch unit.mark {
@@ -432,6 +485,11 @@ private struct ShadowUnitView: View {
                 Text(unit.text)
                     .font(.title.weight(.semibold))
                     .foregroundStyle(unit.scored ? color : Palette.secondaryLabel)
+                if unit.scored {
+                    ToneCurve(syllable: tone, color: color)
+                        .frame(width: 28, height: 12)
+                        .opacity(tone == nil ? 0 : 1)
+                }
             }
             .frame(minWidth: unit.scored ? 34 : 0)
             // Full-width punctuation sits close to the character before it.
@@ -513,5 +571,31 @@ struct BubbleShape: Shape {
         path.addQuadCurve(to: CGPoint(x: x - out * 2, y: rect.maxY - 4), control: CGPoint(x: x - out * 0.5, y: rect.maxY))
         path.closeSubpath()
         return path
+    }
+}
+
+/// One character's pitch: the tone's shape as a faint dashed line, the
+/// learner's own as a solid one, on the same low-to-high scale.
+struct ToneCurve: View {
+    let syllable: ToneAnalysis.Syllable?
+    let color: Color
+
+    var body: some View {
+        Canvas { context, size in
+            guard let syllable else { return }
+            func path(_ values: [Double]) -> Path {
+                var path = Path()
+                for (index, value) in values.enumerated() {
+                    let x = size.width * CGFloat(index) / CGFloat(max(values.count - 1, 1))
+                    let y = size.height * (1 - CGFloat((value - 1) / 4))
+                    if index == 0 { path.move(to: CGPoint(x: x, y: y)) } else { path.addLine(to: CGPoint(x: x, y: y)) }
+                }
+                return path
+            }
+            context.stroke(path(ToneAnalysis.shape(of: syllable.expected)), with: .color(Palette.secondaryLabel.opacity(0.6)),
+                           style: StrokeStyle(lineWidth: 1.2, lineCap: .round, dash: [2, 2]))
+            context.stroke(path(syllable.contour), with: .color(color), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+        }
+        .accessibilityHidden(true)
     }
 }

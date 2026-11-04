@@ -53,21 +53,23 @@ if (SUPABASE_ACCESS_TOKEN && PROJECT_REF) {
     if (!response.ok || body.error) return { error: JSON.stringify(body.error ?? body).slice(0, 200) };
     return { rows: body.result ?? [] };
   };
+  const stamp = (t) => String(t).replace('T', ' ').slice(0, 19);
   say('');
   say('## 📜 最近 24 小時的 Apple 登入／刪除帳號呼叫');
-  const calls = await query(`select timestamp, request.pathname as path, response.status_code as status
-    from edge_logs cross join unnest(metadata) as m cross join unnest(m.request) as request cross join unnest(m.response) as response
-    where request.pathname like '%apple-token%' or request.pathname like '%delete-account%'
+  const calls = await query(`select timestamp, log_attributes['request.pathname'] as path, log_attributes['response.status_code'] as status
+    from logs where source = 'function_edge_logs'
+    and (log_attributes['request.pathname'] like '%apple-token%' or log_attributes['request.pathname'] like '%delete-account%')
     order by timestamp desc limit 20`);
   if (calls.error) say(`- 讀不到：${calls.error}`);
   else if (!calls.rows.length) say('- 沒有');
-  else for (const row of calls.rows) say(`- ${new Date(Number(row.timestamp) / 1000).toISOString().slice(0, 19)} ${row.path} → ${row.status}`);
-  const logs = await query(`select timestamp, event_message from function_logs
-    where event_message like '%apple%' or event_message like '%revoke%'
+  else for (const row of calls.rows) say(`- ${stamp(row.timestamp)} ${row.path} → ${row.status}`);
+  const logs = await query(`select timestamp, event_message from logs where source = 'function_logs'
+    and (event_message like '%apple%' or event_message like '%revoke%')
     order by timestamp desc limit 20`);
-  if (!logs.error && logs.rows.length) {
+  if (logs.error) say(`- 函式紀錄讀不到：${logs.error}`);
+  else if (logs.rows.length) {
     say('');
     say('**函式紀錄**');
-    for (const row of logs.rows) say(`- ${new Date(Number(row.timestamp) / 1000).toISOString().slice(0, 19)} ${String(row.event_message).slice(0, 200)}`);
+    for (const row of logs.rows) say(`- ${stamp(row.timestamp)} ${String(row.event_message).slice(0, 200)}`);
   }
 }

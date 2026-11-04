@@ -304,6 +304,10 @@ final class SpeakingCoachTests: XCTestCase {
             }
             XCTAssertFalse(allow.exists)
         } else if system.buttons["OK"].exists { system.buttons["OK"].tap() }
+        // Live transcription may also ask for speech recognition, once.
+        for label in ["Allow", "OK"] where system.buttons[label].waitForExistence(timeout: 3) {
+            system.buttons[label].tap()
+        }
         let duration = app.staticTexts["coach-recording-duration"]
         let ticking = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let number = Int(duration.label.split(separator: " ").first ?? "0") ?? 0

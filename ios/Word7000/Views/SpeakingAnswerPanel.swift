@@ -25,7 +25,12 @@ struct SpeakingAnswerPanel: View {
     /// Called once something was said or written for this question.
     var onAttempt: () -> Void
 
-    @State private var recording = SpeakingRecorder()
+    @State private var recording = LiveListener()
+    /// This take was started from the notepad (record again), so its words
+    /// go straight onto the notepad as they are heard.
+    @State private var takeFromPad = false
+    /// Words recognition got wrong and were put right, to show and undo.
+    @State private var fixes: [TranscriptCorrection.Fix] = []
     @State private var typing = false
     @State private var answerFocused = false
     @State private var pendingSubmission = false
@@ -50,11 +55,11 @@ struct SpeakingAnswerPanel: View {
     private var question: String { followUpQuestion ?? request.question }
     private var answerLanguage: String { chinese ? "zh-TW" : "en-US" }
     private var hasText: Bool { !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-    private var live: Bool { recording.state == .recording }
+    private var live: Bool { recording.listening }
     /// The notepad shows once there is something to show or to write on.
     private var showsPad: Bool {
         typing || hasText || recording.hasRecording
-            || recording.state == .transcribing
+            || recording.state == .finishing
     }
 
     private var canSubmitAnswer: Bool {
@@ -138,26 +143,33 @@ struct SpeakingAnswerPanel: View {
             guard !Task.isCancelled, answer == text else { return }
             reflection = result
         }
-        .onChange(of: recording.transcript) { _, value in
-            guard let value else { return }
-            answer = value
+        // Words appear as they are said: on the notepad when recording again
+        // from it, otherwise in a bubble over the big key until the take ends.
+        .onChange(of: recording.text) { _, value in
+            if takeFromPad, live || recording.state == .finishing { answer = value }
+        }
+        .onChange(of: recording.isFinal) { _, final in
+            guard final else { return }
+            onAttempt()
+            // A new take is a new answer: its words replace the notepad's,
+            // with what recognition plainly misheard put right (and shown).
+            guard !recording.text.isEmpty else { return }
+            let corrected = TranscriptCorrection.correct(recording.text, keyPhrase: request.keyword, chinese: chinese)
+            fixes = corrected.fixes
+            answer = corrected.text
             needsTranscriptReview = true
             session.reset()
         }
-        .onChange(of: recording.state) { old, new in
-            if old == .recording, new == .ready {
-                onAttempt()
-                // Stopping a take is when it becomes text. A new take is a new
-                // answer, so its words replace whatever was on the notepad.
-                if recording.support == .modern || recording.support == .legacy {
-                    recording.transcribe(hints: transcriptionHints)
+        // A long pause ends the take; so does the minute.
+        .task(id: live) {
+            guard live else { return }
+            while !Task.isCancelled, recording.listening {
+                do { try await Task.sleep(for: .milliseconds(300)) } catch { return }
+                if recording.seconds >= 60
+                    || (!recording.text.isEmpty && recording.quietFor > 5)
+                    || (recording.text.isEmpty && recording.quietFor > 15) {
+                    recording.stop(); return
                 }
-            }
-        }
-        .onChange(of: recording.support) { _, support in
-            // A take recorded while speech recognition was still arriving.
-            if support == .modern, recording.state == .ready, recording.hasRecording, recording.transcript == nil {
-                recording.transcribe(hints: transcriptionHints)
             }
         }
         .onChange(of: plus.subscribed) { _, subscribed in
@@ -203,7 +215,6 @@ struct SpeakingAnswerPanel: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 provider.refreshAvailability()
-                if recording.preparationFailed { Task { await recording.refresh(language: answerLanguage) } }
             }
             else if phase == .background { pendingSubmission = false; session.cancel(); recording.interrupt(); Speaker.shared.stop() }
         }
@@ -216,8 +227,8 @@ struct SpeakingAnswerPanel: View {
         }
         .sensoryFeedback(trigger: recording.state) { old, new in
             guard model.settings.hapticsEnabled ?? true else { return nil }
-            if new == .recording { return .impact(weight: .medium) }
-            if old == .recording { return .impact(weight: .light) }
+            if new == .listening { return .impact(weight: .medium) }
+            if old == .listening { return .impact(weight: .light) }
             return nil
         }
     }
@@ -227,6 +238,21 @@ struct SpeakingAnswerPanel: View {
     /// Before anything is said: one big key, and a way to type instead.
     private var recorderKey: some View {
         VStack(spacing: 12) {
+            if live, !recording.text.isEmpty {
+                // What is being heard, as one's own chat message.
+                HStack {
+                    Spacer(minLength: 40)
+                    Text(recording.text)
+                        .font(.title3.weight(.semibold))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Palette.accent.opacity(0.12), in: BubbleShape(tail: .trailing))
+                        .contentTransition(.opacity)
+                        .accessibilityIdentifier("coach-live-text")
+                }
+                .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .bottomTrailing)))
+            }
             ZStack {
                 if live && !reduceMotion {
                     Circle()
@@ -262,6 +288,7 @@ struct SpeakingAnswerPanel: View {
             }
             Text(live ? L.t("說完再按一下", "Tap again when you're done") : L.t("按一下開始說", "Tap and say your answer"))
                 .font(.headline)
+                .contentTransition(.opacity)
             if !live {
                 Button {
                     typing = true
@@ -272,9 +299,6 @@ struct SpeakingAnswerPanel: View {
                 }
                 .buttonStyle(.borderless)
                 .accessibilityIdentifier("coach-type-instead")
-            } else {
-                Text(L.t("結束後會自動轉成文字", "It turns into text when you stop"))
-                    .font(.footnote).foregroundStyle(.secondary)
             }
             recorderMessages
         }
@@ -303,7 +327,10 @@ struct SpeakingAnswerPanel: View {
         dismissKeyboard()
         session.cancel()
         Speaker.shared.stop()
-        recording.start()
+        takeFromPad = showsPad
+        fixes = []
+        if takeFromPad { answer = "" }
+        recording.start(hints: transcriptionHints)
     }
 
     // MARK: The notepad
@@ -347,10 +374,12 @@ struct SpeakingAnswerPanel: View {
     private var notepad: some View {
         let font = UIFont.preferredFont(forTextStyle: .body)
         let editor = PracticeAnswerEditor(text: $answer, focused: $answerFocused,
-                                          editable: !live && recording.state != .transcribing,
+                                          editable: !live && recording.state != .finishing,
                                           ruled: collage,
                                           onEdit: { text in
                                               if text != submittedAnswer { session.reset() }
+                                              // Edited by hand: the fixes are theirs now.
+                                              if !fixes.isEmpty { fixes = [] }
                                               inputCommitFailed = false
                                               Speaker.shared.stop()
                                           }, onCommit: { finishInput(committedText: $0) },
@@ -363,7 +392,7 @@ struct SpeakingAnswerPanel: View {
                                           })
             .accessibilityLabel(L.t("你的回答", "Your answer"))
             .accessibilityIdentifier("coach-answer")
-        let placeholder = recording.state == .transcribing ? L.t("轉成文字中…", "Turning it into text…")
+        let placeholder = live ? L.t("請說…", "Go ahead…")
             : chinese ? L.t("在這裡用中文寫下你的回答", "Write your answer in Chinese here")
             : L.t("在這裡用英文寫下你的回答", "Write your answer in English here")
         return VStack(spacing: 0) {
@@ -453,37 +482,34 @@ struct SpeakingAnswerPanel: View {
     /// Progress and the rare manual step under the notepad.
     @ViewBuilder
     private var padStatus: some View {
-        if recording.state == .transcribing || recording.state == .requesting {
+        if recording.state == .requesting {
             HStack {
                 ProgressView()
-                Text(recording.state == .transcribing ? L.t("轉成文字中…", "Turning it into text…") : L.t("處理中…", "Processing…"))
-                    .font(.subheadline)
+                Text(L.t("準備中…", "Getting ready…")).font(.subheadline)
                 Spacer()
-                Button(L.t("取消", "Cancel")) { recording.interrupt() }.buttonStyle(.borderless)
             }
-        } else if recording.support == .download && recording.hasRecording {
-            // The speech model is fetched on its own; the take waits for it.
-            HStack(spacing: 8) {
-                if recording.preparing { ProgressView() }
-                Text(recording.preparing
-                     ? L.t("第一次使用，正在準備語音辨識，好了會自動轉成文字…", "Getting speech recognition ready for the first time. Your take turns into text as soon as it's done…")
-                     : L.t("語音辨識要連上網路下載一次，連線後會自動完成；也可以回放後自己輸入。", "Speech recognition downloads once over the internet and finishes on its own when you're online. You can also replay and type."))
-                    .font(.footnote).foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityIdentifier("coach-preparing-speech")
-        } else if recording.hasRecording, recording.transcript == nil, recording.message != nil,
-                  recording.state == .ready, recording.support == .modern || recording.support == .legacy {
-            // Only when turning the take into text failed: try it again.
-            Button { recording.transcribe(hints: transcriptionHints) } label: {
-                Label(L.t("再轉一次文字", "Try turning it into text again"), systemImage: "arrow.clockwise")
-            }
-            .buttonStyle(.borderless)
-            .disabled(recording.busy || session.isBusy)
-            .accessibilityIdentifier("coach-transcribe")
-        } else if recording.support == .unavailable && recording.hasRecording {
+        } else if recording.support == .recordOnly && recording.hasRecording && !hasText {
             Text(L.t("這部手機沒有離線辨識，可以回放後自己輸入。", "No offline transcription on this iPhone. Replay and type your answer."))
                 .font(.footnote).foregroundStyle(.secondary)
+        }
+        if !fixes.isEmpty, hasText {
+            // What recognition misheard and was put right, undone in one tap.
+            HStack(spacing: 8) {
+                Image(systemName: "wand.and.stars").foregroundStyle(Palette.accent)
+                Text(fixes.map { "\($0.heard) → \($0.corrected)" }.joined(separator: "、"))
+                    .font(.footnote.weight(.semibold))
+                Text(L.t("已自動修正", "fixed")).font(.footnote).foregroundStyle(.secondary)
+                Spacer(minLength: 4)
+                Button(L.t("還原", "Undo")) {
+                    answer = TranscriptCorrection.undo(fixes, in: answer)
+                    fixes = []
+                }
+                .font(.footnote.weight(.semibold))
+                .buttonStyle(.borderless)
+                .accessibilityIdentifier("coach-undo-fix")
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("coach-fixes")
         }
         if recording.hasRecording || hasText { recorderMessages }
         if needsTranscriptReview, hasText {

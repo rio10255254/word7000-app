@@ -23,7 +23,13 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     /// Recognized pieces with where they fall in the take, for pitch.
     private(set) var segments: [Segment] = []
     private(set) var hasRecording = false
-    private(set) var message: String?
+    /// Seconds recorded so far.
+    private(set) var seconds: TimeInterval = 0
+    private(set) var message: String? {
+        didSet { messageNeedsSettings = false }
+    }
+    /// Only permission problems are fixed in Settings.
+    private(set) var messageNeedsSettings = false
     /// Seconds since the last change to the text (or since listening began).
     var quietFor: TimeInterval { Date().timeIntervalSince(lastChange) }
 
@@ -83,7 +89,8 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             guard let self, self.generation == id else { return }
             guard allowed else {
                 self.state = .idle
-                self.message = L.t("未開啟麥克風權限，可以到系統設定開啟。", "Microphone access is off. You can turn it on in Settings.")
+                self.message = L.t("未開啟麥克風權限。你仍可輸入回答，或到系統設定開啟。", "Microphone access is off. You can still type, or turn it on in Settings.")
+                self.messageNeedsSettings = true
                 return
             }
             if self.support == .live {
@@ -145,9 +152,11 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             recognitionRequest?.append(buffer)
             try? output.write(from: buffer)
             let level = store.append(buffer)
+            let seconds = store.seconds
             Task { @MainActor in
                 guard let self, self.generation == id, self.state == .listening else { return }
                 self.level = level
+                self.seconds = seconds
             }
         }
         engine.prepare()
@@ -169,7 +178,13 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     func stop() {
         guard state == .listening || state == .requesting else { return }
         #if DEBUG
-        if simulated { simulation?.cancel(); complete(); hasRecording = true; return }
+        if simulated {
+            // Recognition settles on the whole take once it ends.
+            simulation?.cancel()
+            let full = simulatedText ?? "I practice with my friend every day."
+            receive(text: full, segments: nil, final: false)
+            complete(); hasRecording = true; return
+        }
         #endif
         stopEngine()
         hasRecording = file != nil && store.count > 0
@@ -248,7 +263,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         if let file { try? FileManager.default.removeItem(at: file) }
         file = nil
         store.reset(rate: 0)
-        text = ""; segments = []; isFinal = false; hasRecording = false
+        text = ""; segments = []; isFinal = false; hasRecording = false; seconds = 0
         message = nil; level = 0; state = .idle
         if hadAudio { WordAudioSession.release() }
     }
@@ -264,6 +279,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     private func simulate(_ id: UUID) {
         state = .listening
         level = 0.4
+        seconds = 3
         let full = simulatedText ?? "I practice with my friend every day."
         let pieces: [String] = full.contains(where: { $0.unicodeScalars.contains { $0.value >= 0x4E00 } })
             ? full.map(String.init)
@@ -290,6 +306,8 @@ private final class SampleStore: @unchecked Sendable {
     private let limit: TimeInterval = 30
 
     var count: Int { lock.withLock { values.count } }
+    /// Seconds kept so far.
+    var seconds: TimeInterval { lock.withLock { rate > 0 ? Double(values.count) / rate : 0 } }
 
     func reset(rate: Double) {
         lock.withLock {

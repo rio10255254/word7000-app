@@ -525,6 +525,41 @@ final class AccountModel {
         if !remindersDisabled { message = A.signedOutReminderUnconfirmed }
     }
 
+    func deleteAccount() async {
+        guard let client, let current = session else { return }
+        // A signed-in account comes from Sign in with Apple. Confirming with
+        // Apple once more gives the backend a fresh code to revoke WordCat's
+        // access to the Apple ID with, so it leaves Settings > Sign in with
+        // Apple too (App Review 5.1.1(v)). Cancelling keeps the account.
+        var appleCode: String?
+        if !current.user.anonymous {
+            switch await AppleReauthorization.code() {
+            case let .code(code): appleCode = code
+            case .cancelled:
+                message = A.deleteCancelled
+                return
+            case .unavailable: break
+            }
+        }
+        busy = true
+        defer { busy = false }
+        message = A.deleting
+        do {
+            let revoked = try await client.deleteAccount(appleCode: appleCode, session: try await validSession(client: client, current))
+            Outbox.clear(userId: current.user.id)
+            app.forgetSpeakingHistory(ownerId: current.user.id, anonymous: current.user.anonymous)
+            store(nil)
+            app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
+            app.setLocalOwner(nil, anonymous: true)
+            message = A.deleted
+            Usage.log("account_deleted", current.user.anonymous ? "guest" : revoked ? "apple_revoked" : "apple_listed")
+            await bootstrap()
+            if !current.user.anonymous && !revoked { message = A.deletedAppleStillListed }
+        } catch {
+            fail(error, fallback: A.deleteFailed)
+        }
+    }
+
     /// Whether the signed-in account still exists: it may have been deleted
     /// on another iPhone with the same Apple ID. Checked when the app comes
     /// back; offline or server trouble changes nothing.
@@ -563,41 +598,6 @@ final class AccountModel {
         dirty = SyncDirty()
         app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
         app.setLocalOwner(nil, anonymous: true)
-    }
-
-    func deleteAccount() async {
-        guard let client, let current = session else { return }
-        // A signed-in account comes from Sign in with Apple. Confirming with
-        // Apple once more gives the backend a fresh code to revoke WordCat's
-        // access to the Apple ID with, so it leaves Settings > Sign in with
-        // Apple too (App Review 5.1.1(v)). Cancelling keeps the account.
-        var appleCode: String?
-        if !current.user.anonymous {
-            switch await AppleReauthorization.code() {
-            case let .code(code): appleCode = code
-            case .cancelled:
-                message = A.deleteCancelled
-                return
-            case .unavailable: break
-            }
-        }
-        busy = true
-        defer { busy = false }
-        message = A.deleting
-        do {
-            let revoked = try await client.deleteAccount(appleCode: appleCode, session: try await validSession(client: client, current))
-            Outbox.clear(userId: current.user.id)
-            app.forgetSpeakingHistory(ownerId: current.user.id, anonymous: current.user.anonymous)
-            store(nil)
-            app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
-            app.setLocalOwner(nil, anonymous: true)
-            message = A.deleted
-            Usage.log("account_deleted", current.user.anonymous ? "guest" : revoked ? "apple_revoked" : "apple_listed")
-            await bootstrap()
-            if !current.user.anonymous && !revoked { message = A.deletedAppleStillListed }
-        } catch {
-            fail(error, fallback: A.deleteFailed)
-        }
     }
 }
 

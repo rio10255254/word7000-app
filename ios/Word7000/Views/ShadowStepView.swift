@@ -410,6 +410,14 @@ struct ShadowStepView: View {
     private func measureTones() async {
         guard let current = check else { return }
         let scored = current.units.filter(\.scored)
+        #if DEBUG
+        // App Store screens: the pitch lines as a real take draws them, with
+        // one tone slip, since the simulator has no voice to measure.
+        if ProcessInfo.processInfo.arguments.contains("-uiTestingToneShowcase") {
+            showcaseTones(current, scored: scored)
+            return
+        }
+        #endif
         let (samples, rate) = listener.samples
         guard !scored.isEmpty, !samples.isEmpty else { return }
         let characters = scored.map(\.text)
@@ -437,6 +445,33 @@ struct ShadowStepView: View {
             check = current.withToneSlips(slips)
         }
     }
+
+    #if DEBUG
+    private func showcaseTones(_ current: ShadowingCheck, scored: [ShadowingCheck.Unit]) {
+        let expected = ToneAnalysis.spokenTones(characters: scored.map(\.text), syllables: scored.map(\.pinyin))
+        func contour(_ tone: Int) -> [Double] {
+            switch tone {
+            case 1: [4.5, 4.6, 4.6, 4.5]
+            case 2: [2.8, 3.1, 3.8, 4.5]
+            case 3: [2.4, 1.6, 1.3, 2.1]
+            case 4: [4.7, 4.0, 3.0, 1.9]
+            default: [3.0, 2.8, 2.7]
+            }
+        }
+        // The second syllable that has a tone of its own comes out flat.
+        let slipAt = expected.indices.filter { expected[$0] != 5 && expected[$0] != 1 }.dropFirst().first
+        var found: [Int: ToneAnalysis.Syllable] = [:]
+        var slips: [Int: String] = [:]
+        for (index, unit) in scored.enumerated() {
+            let tone = expected[index]
+            let heard = index == slipAt ? 1 : tone
+            found[unit.id] = ToneAnalysis.Syllable(expected: tone, heard: heard, contour: contour(heard))
+            if heard != tone { slips[unit.id] = ToneAnalysis.syllable(unit.pinyin, withTone: heard) }
+        }
+        tones = found
+        check = current.withToneSlips(slips)
+    }
+    #endif
 
     /// "馬 sounded like a first tone", for the first tone slip.
     private func toneNote(_ check: ShadowingCheck) -> String? {

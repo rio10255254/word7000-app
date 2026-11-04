@@ -55,7 +55,8 @@ final class AppStoreScreenshotTests: XCTestCase {
 
         // Speaking, checked by the coach.
         app = launch(chineseMode: chineseMode, ["-uiTestingCoach", chineseMode ? "showcase" : "showcaseEnglish",
-                                                "-uiTestingSpeakingWord", chineseMode ? "貼上" : "改善"])
+                                                "-uiTestingSpeakingWord", chineseMode ? "貼上" : "改善",
+                                                "-uiTestingRecording", "-uiTestingToneShowcase"])
         let speaking = app.buttons["today-speaking"]
         speaking.scrollIntoView(in: app, swipes: 4)
         speaking.tap()
@@ -64,9 +65,21 @@ final class AppStoreScreenshotTests: XCTestCase {
         if skip.waitForExistence(timeout: 5) {
             sleep(1)
             snap(app, "\(prefix)-4-speaking-shadow")
-            skip.tap()
+            // Say it: each word lights up as it is heard (a simulated take),
+            // and for Chinese the pitch of each character is drawn under it.
+            let record = app.buttons["shadow-record"]
+            if record.waitForExistence(timeout: 3) {
+                record.tap()
+                if app.descendants(matching: .any)["shadow-result"].firstMatch.waitForExistence(timeout: 10) {
+                    sleep(1)
+                    snap(app, "\(prefix)-4-speaking-shadow-result")
+                }
+            } else {
+                skip.tap()
+            }
         }
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5), app.debugDescription)
+        // The question follows by itself after a short countdown.
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 12), app.debugDescription)
         sleep(1)
         snap(app, "\(prefix)-4-speaking-question")
         // The coach's sample answer fits a word question, so check it under Words.
@@ -94,6 +107,19 @@ final class AppStoreScreenshotTests: XCTestCase {
         app.swipeUp()
         sleep(1)
         snap(app, "\(prefix)-5-coach-more")
+        app.terminate()
+
+        // The scenario map: ten everyday scenes, two stages each.
+        app = launch(chineseMode: chineseMode)
+        let practice = app.buttons["today-speaking"]
+        practice.scrollIntoView(in: app, swipes: 4)
+        practice.tap()
+        let map = app.buttons["speaking-scenarios"]
+        if map.waitForExistence(timeout: 5) {
+            map.tap()
+            sleep(2)
+            snap(app, "\(prefix)-4-speaking-map")
+        }
         app.terminate()
 
         // The cat's chat.

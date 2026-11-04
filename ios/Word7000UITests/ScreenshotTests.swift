@@ -172,6 +172,129 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "zh-4-speaking")
     }
 
+    // MARK: Promotional screens
+    // The English interface (learning Chinese) through each ability, for the
+    // launch stories. Run with the workflow's `promo` checks.
+
+    private func promoApp(_ extra: [String] = []) -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight",
+                               "-uiTestingChineseMode", "-uiTestingFakePlans", "-uiTestingPlus"] + extra
+        app.launch()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        sleep(1)
+        return app
+    }
+
+    func testPromoStudyAndWords() {
+        let app = promoApp()
+        snap(app, "promo-1-today")
+        app.buttons["today-start"].tap()
+        XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-2-study")
+        app.buttons["study-show-answer"].tap()
+        XCTAssertTrue(app.buttons["study-grade-known"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-3-study-answer")
+        app.buttons["study-close"].tap()
+
+        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 5))
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-4-words")
+        app.cells.element(boundBy: 2).tap()
+        sleep(1)
+        snap(app, "promo-5-word-detail")
+        app.swipeUp()
+        sleep(1)
+        snap(app, "promo-5-word-detail-more")
+    }
+
+    func testPromoQuiz() {
+        let app = promoApp()
+        let quiz = app.buttons["today-quiz"]
+        quiz.scrollIntoView(in: app, swipes: 4)
+        quiz.tap()
+        XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-6-quiz-setup")
+        app.buttons["quiz-start"].tap()
+        XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-7-quiz")
+        app.buttons["quiz-option-0"].tap()
+        XCTAssertTrue(app.buttons["quiz-next"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-8-quiz-answered")
+    }
+
+    func testPromoWriting() {
+        let app = promoApp()
+        let writing = app.buttons["today-spelling"]
+        writing.scrollIntoView(in: app, swipes: 4)
+        writing.tap()
+        let input = app.textFields["spelling-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 10))
+        sleep(1)
+        snap(app, "promo-9-writing")
+        if app.buttons["spelling-hint"].isEnabled {
+            app.buttons["spelling-hint"].tap()
+            sleep(1)
+            snap(app, "promo-10-writing-hint")
+        }
+        input.tap()
+        input.typeText("qqqq\n")
+        XCTAssertTrue(app.staticTexts["spelling-answer"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-11-writing-answer")
+    }
+
+    func testPromoSpeaking() {
+        let app = promoApp(["-uiTestingCoach", "showcase", "-uiTestingSpeakingWord", "貼上"])
+        let speaking = app.buttons["today-speaking"]
+        speaking.scrollIntoView(in: app, swipes: 4)
+        speaking.tap()
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "promo-12-speaking")
+        let typeInstead = app.buttons["coach-type-instead"]
+        typeInstead.scrollIntoView(in: app, swipes: 4)
+        typeInstead.tap()
+        let answer = app.textViews["coach-answer"]
+        XCTAssertTrue(answer.waitForExistence(timeout: 5))
+        if !app.keyboards.firstMatch.waitForExistence(timeout: 2) { answer.tap() }
+        sleep(1)
+        answer.typeText("x")
+        let check = app.buttons["coach-submit"]
+        XCTAssertTrue(check.waitForExistence(timeout: 5))
+        check.tap()
+        XCTAssertTrue(app.staticTexts["coach-rewrite"].waitForExistence(timeout: 10), app.debugDescription)
+        sleep(2)
+        snap(app, "promo-13-coach-a")
+        for step in ["b", "c", "d"] {
+            app.swipeUp()
+            sleep(1)
+            snap(app, "promo-13-coach-\(step)")
+        }
+    }
+
+    func testPromoCat() {
+        let app = promoApp(["-uiTestingCatShowcase"])
+        let input = app.descendants(matching: .any)["mascot-chat-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 10), "The cat's chat did not open")
+        sleep(1)
+        snap(app, "promo-14-cat-chat")
+        app.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(input.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
+        app.buttons["today-start"].tap()
+        XCTAssertTrue(app.descendants(matching: .any)["study-stuck-tip"].waitForExistence(timeout: 5), "No tip on the third slip")
+        sleep(1)
+        snap(app, "promo-15-cat-tip")
+    }
+
     func testTrialExpiresWhileAppRemainsOpen() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingTrialEndsSoon", "-uiTestingFakePlans"]

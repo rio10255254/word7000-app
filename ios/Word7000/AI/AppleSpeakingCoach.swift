@@ -183,7 +183,7 @@ final class AppleSpeakingCoach {
     }
 
     #if DEBUG
-    enum Fixture: String { case success, commitCorrection, errorOnce, slow, timeout, unavailable }
+    enum Fixture: String { case success, commitCorrection, errorOnce, slow, timeout, unavailable, showcase }
 
     private var fixture: Fixture? {
         let arguments = ProcessInfo.processInfo.arguments
@@ -193,7 +193,12 @@ final class AppleSpeakingCoach {
 
     var testingTimeout: Duration? { fixture == .timeout ? .milliseconds(250) : nil }
     var testingCommittedAnswer: String? {
-        fixture == .commitCorrection ? "I practice with my friend every day." : nil
+        switch fixture {
+        case .commitCorrection: "I practice with my friend every day."
+        // A learner of Chinese answering the 貼上 question, with one slip.
+        case .showcase: "會，我常常從網路上找資料，然後貼上到我的報告。"
+        default: nil
+        }
     }
     @ObservationIgnored private var didFailFixture = false
 
@@ -206,6 +211,18 @@ final class AppleSpeakingCoach {
         let delay: Duration = fixture == .slow ? .seconds(10) : (fixture == .timeout ? .seconds(2) : .milliseconds(150))
         try await Task.sleep(for: delay)
         try Task.checkCancellation()
+        if fixture == .showcase {
+            // Promotional screenshots: a reply in the shape the coach gives a
+            // learner of Chinese (rewrite and follow-up in Chinese, tip in English).
+            return try SpeakingCoach.Feedback(
+                rewrite: "會啊，我常常上網找資料，再貼到報告裡。",
+                tip: "So close. When you say where it goes, drop the 上: 貼到報告裡, not 貼上到.",
+                followUp: "你怎麼確定網路上的資料是對的？",
+                followUpTranslation: "How do you make sure what you find online is right?",
+                corrections: [SpeakingCoach.Correction(original: "貼上到我的報告", replacement: "貼到報告裡",
+                                                       reason: "貼上 already means \u{201C}paste\u{201D}; use 貼到 + the place.")]
+            ).validated(answer: request.answer)
+        }
         return try SpeakingCoach.Feedback(
             rewrite: request.mode == .english ? "I enjoy learning something new with my friends." : "我喜歡和朋友一起學習新事物。",
             tip: request.mode == .english ? "已收到：\(request.answer.prefix(200))" : "Received: \(request.answer.prefix(200))",

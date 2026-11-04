@@ -59,7 +59,14 @@ final class AppStoreScreenshotTests: XCTestCase {
         let speaking = app.buttons["today-speaking"]
         speaking.scrollIntoView(in: app, swipes: 4)
         speaking.tap()
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        // Each word opens on saying its model sentence first.
+        let skip = app.buttons["shadow-skip"]
+        if skip.waitForExistence(timeout: 5) {
+            sleep(1)
+            snap(app, "\(prefix)-4-speaking-shadow")
+            skip.tap()
+        }
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5), app.debugDescription)
         sleep(1)
         snap(app, "\(prefix)-4-speaking-question")
         let typeInstead = app.buttons["coach-type-instead"]

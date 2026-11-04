@@ -57,10 +57,13 @@ jobs:
       fail-fast: false
       matrix:
         # Small fixes can check the newest iOS alone; releases and pushes run all three.
-        # The full check (pushes and `all`) runs each iOS in two halves at once
-        # (shard 1 and 2), about 35 minutes of UI tests each instead of 70 in a row;
-        # other checks run whole (shard 0).
-        include: ${{ fromJSON(inputs.ios == '27' && ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]') || ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":18,"xcode":26,"runner":"macos-15","shard":1},{"ios":18,"xcode":26,"runner":"macos-15","shard":2},{"ios":26,"xcode":26,"runner":"macos-15","shard":1},{"ios":26,"xcode":26,"runner":"macos-15","shard":2},{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":0},{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]')) }}
+        # The full check (pushes and `all`) splits iOS 26 and 27 into two halves run
+        # at once (shard 1 and 2), about 35 minutes of UI tests each instead of 70 in
+        # a row. iOS 18, on the quicker macos-15 simulator (about 45 minutes of UI
+        # tests), runs whole (shard 0), so the full check is five jobs: the account's
+        # limit of five macOS jobs at a time, all starting together. Other checks
+        # run whole too.
+        include: ${{ fromJSON(inputs.ios == '27' && ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]') || ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":1},{"ios":26,"xcode":26,"runner":"macos-15","shard":2},{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":0},{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]')) }}
     runs-on: ${{ matrix.runner }}
     # One half of the full check takes about 55 minutes with build and setup;
     # the whole walk-through in one job ran past 90 (run 369), so the limit stays generous.

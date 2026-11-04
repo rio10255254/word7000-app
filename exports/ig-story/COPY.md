@@ -18,7 +18,7 @@ two short lines and each description to about two lines on a phone.
 ## 3. Quizzes and writing
 
 - Title: Check what / you remember
-- Text: Quick quizzes and writing practice, with pinyin hints when you get stuck.
+- Text: Quick quizzes and writing drills. Get one wrong and the cat shows you what mixed you up.
 
 ## 4. Speaking
 

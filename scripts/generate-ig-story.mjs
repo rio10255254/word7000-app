@@ -20,7 +20,13 @@ import { chromium } from 'playwright';
 const W = 1080;
 const H = 1920;
 const OUT = 'exports/ig-story';
-const SHOTS = process.env.SHOTS ?? 'origin/native-promo-screenshots:native-screenshots-ios-27';
+// The run's folder on the screenshots branch, e.g. native-screenshots-335-ios-27.
+const SHOTS = process.env.SHOTS ?? (() => {
+  const files = execFileSync('git', ['ls-tree', '-r', '--name-only', 'origin/native-promo-screenshots']).toString().split('\n');
+  const today = files.find((f) => f.endsWith('/promo-1-today.png'));
+  if (!today) throw new Error('No promo screenshots: git fetch origin native-promo-screenshots');
+  return `origin/native-promo-screenshots:${path.dirname(today)}`;
+})();
 const ICON = 'ios/Word7000/Assets.xcassets/AppIcon.appiconset/icon-1024.png';
 const FS = 'https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/files';
 const clean = process.argv.includes('--clean');
@@ -38,7 +44,7 @@ const COPY = {
   },
   quiz: {
     title: 'Check what<br>you remember',
-    text: 'Quick quizzes and writing practice, with pinyin hints when you get stuck.',
+    text: 'Quick quizzes and writing drills. Get one wrong and the cat shows you what mixed you up.',
   },
   speaking: {
     title: 'Practice<br>speaking',
@@ -55,10 +61,10 @@ const COPY = {
 
 /** Which screen each page shows (file names in SHOTS). */
 const SCREENS = JSON.parse(process.env.SCREENS ?? 'null') ?? {
-  overview: ['promo-3-study-answer', 'promo-7-quiz', 'promo-12-speaking'],
+  overview: ['promo-3-study-answer', 'promo-8-quiz-answered', 'promo-13-coach-a'],
   study: 'promo-3-study-answer',
-  quiz: 'promo-10-writing-hint',
-  speaking: 'promo-13-coach-b',
+  quiz: 'promo-8-quiz-answered',
+  speaking: 'promo-13-coach-a',
 };
 
 const C = { bg: '#F5EFE6', ink: '#24170F', soft: '#6E5444', accent: '#C9623F', cream: '#FFF4E4' };

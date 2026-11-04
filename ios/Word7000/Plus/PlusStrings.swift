@@ -10,8 +10,8 @@ enum P {
         case .trialScansUsed:
             return L.t("試用期的 \(PlusPolicy.trialScanLimit) 次掃描已經用完，訂閱後就能無限掃描。", "You have used the \(PlusPolicy.trialScanLimit) trial scans. Subscribe for unlimited scanning.")
         case .speakingCoach:
-            return L.t("訂閱 Premium，小笨貓就能批改你的口說：改成更自然的說法、指出錯誤，再追問一題。不需要 Apple Intelligence，任何 iPhone 都能用。",
-                       "With Premium, Silly Cat checks your speaking: a more natural version, what to fix, and a follow-up question. No Apple Intelligence needed; it works on any iPhone.")
+            return L.t("訂閱 Premium，小笨貓就能批改你的口說：改成更自然的說法、指出錯誤，再追問一題。",
+                       "With Premium, Silly Cat checks your speaking: a more natural version, what to fix, and a follow-up question.")
         case let .trialEnding(days):
             return L.t("試用剩 \(days) 天。現在訂閱，到期後也不會中斷。", "\(days) trial days left. Subscribe now and nothing stops when it ends.")
         case let .locked(feature):

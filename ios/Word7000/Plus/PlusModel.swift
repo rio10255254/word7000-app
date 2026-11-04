@@ -345,7 +345,7 @@ enum PaywallReason: Identifiable, Equatable {
     case locked(PlusFeature)
     case trialScansUsed
     case trialEnding(daysLeft: Int)
-    /// Checking a speaking answer, on an iPhone without Apple Intelligence.
+    /// Checking a speaking answer (the online AI is Premium).
     case speakingCoach
 
     var id: String {

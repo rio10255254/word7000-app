@@ -563,9 +563,8 @@ struct SpeakingAnswerPanel: View {
         }
     }
 
-    /// Without Apple Intelligence on this iPhone, Premium's online AI checks
-    /// the answer instead, so the Check key leads straight to subscribing
-    /// rather than to a message about what the phone cannot do.
+    /// Checking is Premium's online AI, so for everyone else the Check key
+    /// leads straight to subscribing.
     private var premiumUnlocksChecking: Bool {
         provider.availability != .paused && !plus.subscribed
             && IntelligenceSettings.shared.coachAllowed && IntelligenceSettings.shared.cloudOffered
@@ -602,17 +601,8 @@ struct SpeakingAnswerPanel: View {
     }
 
     private var premiumNote: String {
-        switch provider.availability {
-        case .disabled:
-            L.t("訂閱 Premium，小笨貓就幫你改成更自然的說法、再追問一題。或在 iPhone 設定開啟 Apple Intelligence，免費在手機上批改。",
-                "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Or turn on Apple Intelligence in Settings to check for free on this iPhone.")
-        case .preparing:
-            L.t("訂閱 Premium 現在就能批改。Apple Intelligence 準備好之後，也能免費在手機上批改。",
-                "Premium checks it right now. Once Apple Intelligence is ready, checking on this iPhone is free too.")
-        default:
-            L.t("訂閱 Premium，小笨貓就幫你改成更自然的說法、再追問一題。任何 iPhone 都能用。",
-                "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Works on any iPhone.")
-        }
+        L.t("訂閱 Premium，小笨貓就幫你改成更自然的說法、指出錯誤，再追問一題。",
+            "With Premium, Silly Cat rewrites it more naturally, points out what to fix and asks a follow-up.")
     }
 
     private func submit() {
@@ -645,7 +635,7 @@ struct SpeakingAnswerPanel: View {
         #if DEBUG
         if let timeout = provider.testingTimeout { session.submit(submitted, timeout: timeout); return }
         #endif
-        // Room for both online models and then the on-device one.
+        // Room for the online model to answer.
         session.submit(submitted, timeout: provider.usesOnline ? .seconds(50) : .seconds(30))
     }
 
@@ -820,11 +810,8 @@ struct SpeakingAnswerPanel: View {
             return L.t("錄音只留在這部手機，離開即刪除。批改時，回答文字會傳送到 Anthropic 的 Claude 線上 AI 處理。AI 建議可能有誤，也不評分發音。",
                        "Recordings stay on this iPhone and are deleted when you leave. To check an answer, its text is sent to Anthropic's Claude online AI. AI suggestions may be wrong and do not score pronunciation.")
         }
-        return provider.usesCloud
-            ? L.t("錄音只留在這部手機，離開即刪除。批改時，回答文字交給 Apple 的 Private Cloud Compute 處理，Apple 表示不會保存。AI 建議可能有誤，也不評分發音。",
-                  "Recordings stay on this iPhone and are deleted when you leave. To check an answer, its text goes to Apple's Private Cloud Compute, which Apple says is not stored. AI suggestions may be wrong and do not score pronunciation.")
-            : L.t("錄音與回答只留在這部手機，離開即刪除錄音。AI 建議可能有誤，也不評分發音。",
-                  "Recordings and answers stay on this iPhone; leaving deletes the recording. AI suggestions may be wrong and do not score pronunciation.")
+        return L.t("錄音與回答只留在這部手機，離開即刪除錄音。",
+                   "Recordings and answers stay on this iPhone; leaving deletes the recording.")
     }
 
     private var unavailableIsSettled: Bool {
@@ -834,18 +821,12 @@ struct SpeakingAnswerPanel: View {
     private var unavailableMessage: String {
         switch provider.availability {
         case .unsupported:
-            L.t("這部 iPhone 不支援 AI 批改。錄音、回放和轉成文字都能照常使用。",
-                "AI checking isn't available on this iPhone. Recording, playback and transcription still work.")
+            L.t("AI 批改目前無法使用。錄音、回放和轉成文字都能照常使用。",
+                "AI checking isn't available right now. Recording, playback and transcription still work.")
         case .paused where !IntelligenceSettings.shared.enabled:
             L.t("你已關閉 AI 建議，可在「設定 → AI 與錄音」重新開啟。", "You turned AI suggestions off. Turn them back on in Settings → AI and recording.")
         case .paused:
             L.t("AI 批改目前已關閉。錄音和文字仍可使用。", "AI checking is currently off. Recording and text still work.")
-        case .disabled:
-            L.t("請在系統設定中開啟 Apple Intelligence，再回來檢查。", "Turn on Apple Intelligence in Settings, then check again.")
-        case .preparing:
-            L.t("Apple Intelligence 還在準備中，請稍後再檢查。", "Apple Intelligence is still getting ready. Check again later.")
-        case .unsupportedLanguage:
-            L.t("這個裝置模型目前未同時支援英文與繁體中文。", "This on-device model does not currently support both English and Traditional Chinese.")
         default:
             L.t("這部裝置目前無法使用 AI 批改。", "AI checking is currently unavailable on this device.")
         }

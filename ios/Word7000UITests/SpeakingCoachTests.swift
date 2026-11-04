@@ -208,11 +208,10 @@ final class SpeakingCoachTests: XCTestCase {
         let completed = completionValue(app)
         enterAnswer("I practice daily.", in: app)
         dismissKeyboard(app)
-        // Without the on-device AI, checking leads straight to Premium,
-        // and still says the free way is to turn Apple Intelligence on.
+        // The free app has no AI: checking leads straight to Premium.
         let premium = app.buttons["coach-premium-check"]
         reveal(premium, in: app)
-        XCTAssertTrue(app.staticTexts["coach-premium-note"].label.contains("Apple Intelligence"))
+        XCTAssertTrue(app.staticTexts["coach-premium-note"].label.contains("Premium"))
         XCTAssertFalse(app.buttons["coach-submit"].exists)
         XCTAssertFalse(app.descendants(matching: .any)["coach-unavailable"].firstMatch.exists)
         assertNoFeedback(app)

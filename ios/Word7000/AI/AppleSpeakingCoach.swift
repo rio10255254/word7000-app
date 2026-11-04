@@ -1,10 +1,9 @@
 import Foundation
 import Observation
 import Word7000Core
-#if canImport(FoundationModels)
-import FoundationModels
-#endif
 
+/// Speaking suggestions: Premium's online AI (Claude) only. The free app has
+/// no AI at all; recording, transcription, shadowing and tones work without it.
 @MainActor @Observable
 final class AppleSpeakingCoach {
     static let shared = AppleSpeakingCoach()
@@ -16,64 +15,27 @@ final class AppleSpeakingCoach {
     }
 
     private(set) var availability: Availability = .unsupported
-    /// Apple's model on this iPhone, whatever the online AI is doing.
-    private(set) var deviceAvailability: Availability = .unsupported
-    /// Suggestions come from the online AI (Claude) first; Apple's model is the fallback.
+    /// Suggestions come from the online AI.
     private(set) var usesOnline = false
     private(set) var isBusy = false
-    /// Answers go to Apple's server model rather than staying on this iPhone.
-    private(set) var usesCloud = false
-
-    /// Apple's server model (iOS 27) is far stronger than the on-device one
-    /// but needs the Private Cloud Compute entitlement. Turn this on only once
-    /// Apple has assigned it and it is in Word7000.entitlements.
-    private static let privateCloudComputeEntitled = false
 
     private init() { refreshAvailability() }
 
     func refreshAvailability() {
-        refreshDeviceAvailability()
-        // The online AI makes the coach available on every iPhone, with or
-        // without Apple Intelligence.
-        usesOnline = IntelligenceSettings.shared.coachAllowed && CloudAssistant.shared.offered && !testingFixtureActive
-        availability = usesOnline ? .ready : deviceAvailability
-    }
-
-    private var testingFixtureActive: Bool {
-        #if DEBUG
-        return fixture != nil
-        #else
-        return false
-        #endif
-    }
-
-    private func refreshDeviceAvailability() {
-        usesCloud = false
-        guard IntelligenceSettings.shared.coachAllowed else { deviceAvailability = .paused; return }
+        guard IntelligenceSettings.shared.coachAllowed else {
+            usesOnline = false
+            availability = .paused
+            return
+        }
         #if DEBUG
         if let fixture {
-            deviceAvailability = fixture == .unavailable ? .disabled : .ready
+            usesOnline = false
+            availability = fixture == .unavailable ? .unsupported : .ready
             return
         }
         #endif
-        #if canImport(FoundationModels)
-        if #available(iOS 26.0, *) {
-            let model = SystemLanguageModel.default
-            switch model.availability {
-            case .available:
-                deviceAvailability = model.supportsLocale(Locale(identifier: "en-US"))
-                    && model.supportsLocale(Locale(identifier: "zh-Hant-TW")) ? .ready : .unsupportedLanguage
-                usesCloud = deviceAvailability == .ready && cloudReady
-            case .unavailable(.deviceNotEligible): deviceAvailability = .unsupported
-            case .unavailable(.appleIntelligenceNotEnabled): deviceAvailability = .disabled
-            case .unavailable(.modelNotReady): deviceAvailability = .preparing
-            case .unavailable: deviceAvailability = .unavailable
-            @unknown default: deviceAvailability = .unavailable
-            }
-            return
-        }
-        #endif
-        deviceAvailability = .unsupported
+        usesOnline = CloudAssistant.shared.offered
+        availability = usesOnline ? .ready : .unsupported
     }
 
     func generate(_ request: SpeakingCoach.Request) async throws -> SpeakingCoach.Feedback {
@@ -88,98 +50,17 @@ final class AppleSpeakingCoach {
         #if DEBUG
         if let fixture { return try await generateFixture(request, fixture: fixture) }
         #endif
-        if usesOnline, CloudAssistant.shared.ready {
-            do {
-                let feedback = try await CloudAssistant.shared.run(.coach, request.cloudInput, as: SpeakingCoach.Feedback.self)
-                try Task.checkCancellation()
-                return try feedback.validated(for: request)
-            } catch {
-                try Task.checkCancellation()
-                if error is CancellationError { throw CancellationError() }
-                // Busy, over today's allowance, offline or an unusable reply:
-                // this iPhone's own model answers when it can.
-                refreshAvailability()
-                guard deviceAvailability == .ready else {
-                    if let failure = error as? SpeakingCoach.Failure { throw failure }
-                    throw (error as? CloudAI.Failure) == .busy ? SpeakingCoach.Failure.busy : SpeakingCoach.Failure.unavailable
-                }
-            }
-        }
-        guard deviceAvailability == .ready else { throw SpeakingCoach.Failure.unavailable }
-        #if canImport(FoundationModels)
-        if #available(iOS 26.0, *) {
-            do {
-                let feedback = try await coach(request)
-                try Task.checkCancellation()
-                refreshAvailability()
-                guard deviceAvailability == .ready else { throw SpeakingCoach.Failure.unavailable }
-                return feedback
-            } catch {
-                try Task.checkCancellation()
-                if error is CancellationError { throw CancellationError() }
-                refreshAvailability()
-                guard deviceAvailability == .ready else { throw SpeakingCoach.Failure.unavailable }
-                if let failure = error as? SpeakingCoach.Failure { throw failure }
-                if let failure = error as? LanguageModelSession.GenerationError {
-                    switch failure {
-                    case .assetsUnavailable, .unsupportedLanguageOrLocale: throw SpeakingCoach.Failure.unavailable
-                    case .exceededContextWindowSize: throw SpeakingCoach.Failure.tooLong
-                    case .concurrentRequests, .rateLimited: throw SpeakingCoach.Failure.busy
-                    default: break
-                    }
-                }
-                throw SpeakingCoach.Failure.generationFailed
-            }
-        }
-        #endif
-        throw SpeakingCoach.Failure.unavailable
-    }
-
-    #if canImport(FoundationModels)
-    /// The on-device model sometimes answers in the wrong language. A fresh
-    /// session usually does not, so one more try before giving up.
-    @available(iOS 26.0, *)
-    private func coach(_ request: SpeakingCoach.Request) async throws -> SpeakingCoach.Feedback {
-        for attempt in 1...2 {
-            let reply = request.mode == .english
-                ? try await respond(request, as: EnglishPracticeReply.self)
-                : try await respond(request, as: ChinesePracticeReply.self)
+        guard CloudAssistant.shared.ready else { throw SpeakingCoach.Failure.unavailable }
+        do {
+            let feedback = try await CloudAssistant.shared.run(.coach, request.cloudInput, as: SpeakingCoach.Feedback.self)
             try Task.checkCancellation()
-            do { return try reply.validated(for: request) }
-            catch SpeakingCoach.Failure.wrongLanguage where attempt == 1 { continue }
+            return try feedback.validated(for: request)
+        } catch {
+            try Task.checkCancellation()
+            if error is CancellationError { throw CancellationError() }
+            if let failure = error as? SpeakingCoach.Failure { throw failure }
+            throw (error as? CloudAI.Failure) == .busy ? SpeakingCoach.Failure.busy : SpeakingCoach.Failure.unavailable
         }
-        throw SpeakingCoach.Failure.wrongLanguage
-    }
-
-    @available(iOS 26.0, *)
-    private func respond<Reply: CoachReply>(_ request: SpeakingCoach.Request, as reply: Reply.Type) async throws -> SpeakingCoach.Feedback {
-        let options = GenerationOptions(temperature: 0.3, maximumResponseTokens: SpeakingCoach.maximumResponseTokens)
-        #if compiler(>=6.4)
-        if #available(iOS 27.0, *), cloudReady {
-            do {
-                let session = LanguageModelSession(model: PrivateCloudComputeLanguageModel(), instructions: request.instructions)
-                return try await session.respond(to: request.prompt(), generating: Reply.self, options: options,
-                                                 contextOptions: ContextOptions(includeSchemaInPrompt: true, reasoningLevel: .light)).content.feedback
-            } catch {
-                // Offline, over the daily limit or a service problem: this
-                // iPhone's own model still answers.
-                if error is CancellationError || Task.isCancelled { throw error }
-            }
-        }
-        #endif
-        let session = LanguageModelSession(model: SystemLanguageModel.default, instructions: request.instructions)
-        return try await session.respond(to: request.prompt(), generating: Reply.self, options: options).content.feedback
-    }
-    #endif
-
-    private var cloudReady: Bool {
-        #if compiler(>=6.4) && canImport(FoundationModels)
-        if #available(iOS 27.0, *), Self.privateCloudComputeEntitled {
-            let model = PrivateCloudComputeLanguageModel()
-            return model.isAvailable && !model.quotaUsage.isLimitReached
-        }
-        #endif
-        return false
     }
 
     #if DEBUG
@@ -215,85 +96,6 @@ final class AppleSpeakingCoach {
     }
     #endif
 }
-
-#if canImport(FoundationModels)
-/// One schema per practice language: "the language being learned" was too
-/// vague for the on-device model, which then replied in Chinese.
-@available(iOS 26.0, *)
-private protocol CoachReply: Generable {
-    var feedback: SpeakingCoach.Feedback { get }
-}
-
-@available(iOS 26.0, *)
-@Generable
-private struct EnglishPracticeReply {
-    @Guide(description: "The student's answer rewritten in natural English, keeping their meaning. A statement that answers the question, never the question itself. English only.")
-    var rewrite: String
-    @Guide(description: "One short, constructive tip about the student's English, written in Traditional Chinese as used in Taiwan. No score.")
-    var tip: String
-    @Guide(description: "One brief related follow-up question, in English.")
-    var followUp: String
-    @Guide(description: "The follow-up question translated into Traditional Chinese as used in Taiwan, plain and faithful.")
-    var followUpTranslation: String
-    @Guide(description: "Zero to two clear errors, not stylistic preferences. Empty if the answer is correct or you are uncertain.")
-    var corrections: [EnglishCorrection]
-}
-
-@available(iOS 26.0, *)
-@Generable
-private struct EnglishCorrection {
-    @Guide(description: "Exact quote from the student's answer, at most 120 characters. Never invent a quote.")
-    var original: String
-    @Guide(description: "The corrected English, preserving the learner's meaning, at most 160 characters.")
-    var replacement: String
-    @Guide(description: "Brief reason in Traditional Chinese as used in Taiwan, at most 180 characters.")
-    var reason: String
-}
-
-@available(iOS 26.0, *)
-@Generable
-private struct ChinesePracticeReply {
-    @Guide(description: "The student's answer rewritten in natural Traditional Chinese as used in Taiwan, keeping their meaning. A statement that answers the question, never the question itself.")
-    var rewrite: String
-    @Guide(description: "One short, constructive tip about the student's Chinese, written in English. No score.")
-    var tip: String
-    @Guide(description: "One brief related follow-up question, in Traditional Chinese as used in Taiwan.")
-    var followUp: String
-    @Guide(description: "The follow-up question translated into English, plain and faithful, so the learner understands it.")
-    var followUpTranslation: String
-    @Guide(description: "Zero to two clear errors, not stylistic preferences. Empty if the answer is correct or you are uncertain.")
-    var corrections: [ChineseCorrection]
-}
-
-@available(iOS 26.0, *)
-@Generable
-private struct ChineseCorrection {
-    @Guide(description: "Exact quote from the student's answer, at most 120 characters. Never invent a quote.")
-    var original: String
-    @Guide(description: "The corrected Traditional Chinese, preserving the learner's meaning, at most 160 characters.")
-    var replacement: String
-    @Guide(description: "Brief reason in English, at most 180 characters.")
-    var reason: String
-}
-
-@available(iOS 26.0, *)
-extension EnglishPracticeReply: CoachReply {
-    var feedback: SpeakingCoach.Feedback {
-        SpeakingCoach.Feedback(rewrite: rewrite, tip: tip, followUp: followUp, followUpTranslation: followUpTranslation, corrections: corrections.map {
-            .init(original: $0.original, replacement: $0.replacement, reason: $0.reason)
-        })
-    }
-}
-
-@available(iOS 26.0, *)
-extension ChinesePracticeReply: CoachReply {
-    var feedback: SpeakingCoach.Feedback {
-        SpeakingCoach.Feedback(rewrite: rewrite, tip: tip, followUp: followUp, followUpTranslation: followUpTranslation, corrections: corrections.map {
-            .init(original: $0.original, replacement: $0.replacement, reason: $0.reason)
-        })
-    }
-}
-#endif
 
 extension SpeakingCoach.Request {
     /// The fields the online coach needs; the server writes the instructions.

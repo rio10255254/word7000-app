@@ -35,8 +35,8 @@ struct IntelligenceSettingsView: View {
                         .accessibilityIdentifier("settings-ai-status")
                     LabeledContent(L.t("掃描整理", "Scan assistance"), value: SmartScan.canOrganize ? L.t("可使用", "Available") : L.t("未啟用", "Unavailable"))
                 } footer: {
-                    Text(L.t("線上 AI 由 Anthropic 的 Claude 回答，連不上時改用裝置內 AI。關掉也不影響單字與練習。",
-                             "Online AI is Anthropic's Claude, with on-device AI as a fallback. Turning it off leaves words and practice as they are."))
+                    Text(L.t("AI 是 Premium 功能，由 Anthropic 的 Claude 線上回答。關掉也不影響單字與練習。",
+                             "AI is a Premium feature, answered online by Anthropic's Claude. Turning it off leaves words and practice as they are."))
                 }
                 if CloudAssistant.shared.offered { plan }
                 Section {
@@ -135,10 +135,8 @@ struct IntelligenceSettingsView: View {
     private var coachStatus: String {
         switch AppleSpeakingCoach.shared.availability {
         case .ready: L.t("可使用", "Available")
-        case .unsupported: L.t("此手機不支援", "Unsupported iPhone")
-        case .disabled: L.t("請開啟 Apple Intelligence", "Enable Apple Intelligence")
-        case .preparing: L.t("系統模型準備中", "Model preparing")
-        case .unsupportedLanguage: L.t("語言未支援", "Language unsupported")
+        case .unsupported: L.t("Premium 功能", "Premium feature")
+        case .disabled, .preparing, .unsupportedLanguage: L.t("暫時無法使用", "Temporarily unavailable")
         case .paused: L.t("目前已關閉", "Currently off")
         case .unavailable: L.t("暫時無法使用", "Temporarily unavailable")
         }

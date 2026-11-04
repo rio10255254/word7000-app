@@ -4,7 +4,7 @@ import SwiftUI
 import Word7000Core
 
 /// First choice for every AI feature: Anthropic's Claude through the `ai` service.
-/// Callers fall back to the on-device model (or to no AI) whenever this throws.
+/// There is no other AI: when this throws, the feature simply is not available.
 @MainActor @Observable
 final class CloudAssistant {
     static let shared = CloudAssistant()
@@ -17,7 +17,7 @@ final class CloudAssistant {
     /// The plan and today's allowance, as the server last reported them.
     private(set) var usage: CloudAI.Usage?
     /// After Claude was rate limited or overloaded, wait a moment before asking again
-    /// so learners get the on-device answer quickly instead of another wait.
+    /// so learners are not kept waiting on another try.
     @ObservationIgnored private var pausedUntil: Date?
 
     private init() {}
@@ -73,10 +73,10 @@ final class CloudAssistant {
         if !reachable { return L.t("連線後可使用", "Available when online") }
         switch IntelligenceSettings.shared.cloudConsent {
         case nil: return L.t("第一次使用時詢問", "Asks before first use")
-        case false?: return L.t("只用裝置內 AI", "On-device only")
+        case false?: return L.t("不使用", "Not used")
         case true?:
             if lastFailure == .quota, sameDay { return L.t("今日額度已用完", "Today's allowance used") }
-            if lastFailure == .busy { return L.t("使用人數多，暫用裝置內 AI", "Busy, using on-device AI") }
+            if lastFailure == .busy { return L.t("使用人數多，請稍後再試", "Busy, try again shortly") }
             return planLabel
         }
     }
@@ -123,7 +123,7 @@ extension L {
           "The speaking coach, word explanations and questions, quiz explanations, scan tidy-up, word suggestions and learning insights can use smarter online AI (Anthropic's Claude). When used, the text you type or say and the related words are sent to Anthropic (USA) for processing, without recordings, your account name or email. You can turn this off anytime in AI and recording.")
     }
     static var cloudConsentAllow: String { t("使用線上 AI", "Use online AI") }
-    static var cloudConsentDecline: String { t("只用裝置內", "On-device only") }
+    static var cloudConsentDecline: String { t("先不要", "Not now") }
 }
 
 /// The one-time question before any text is sent to the online AI. Apple asks

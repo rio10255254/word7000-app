@@ -128,7 +128,8 @@ public enum SpeakingPractice {
             questionSupport: chinese ? "Answer in Chinese and try to use \u{201C}\(entry.keywordZh)\u{201D}." : "試著用 \(entry.word) 回答兩到三句，說出自己的經驗或想法。",
             referenceAnswer: chinese ? entry.answerZh : entry.answerEn,
             referenceTranslation: chinese ? entry.answerEn : entry.answerZh,
-            questionGloss: chinese && entry.questionZh != nil ? entry.question : nil
+            // The question in the learner's own language, shown when they tap it.
+            questionGloss: chinese ? (entry.questionZh != nil ? entry.question : nil) : entry.questionZh
         )
     }
 
@@ -149,7 +150,7 @@ public enum SpeakingPractice {
             referenceTranslation: chinese ? word.example : word.exampleZh,
             questionGloss: chinese
                 ? (example.isEmpty ? "Describe a situation in which you could use \u{201C}\(keyword)\u{201D}." : "Add a detail to this example. What could happen next?")
-                : nil
+                : (example.isEmpty ? "說說看，你在什麼情況下會用到 \(keyword)。" : "幫這個例句多加一個細節：接下來可能發生什麼事？")
         )
     }
 }

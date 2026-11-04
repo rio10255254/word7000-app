@@ -579,12 +579,28 @@ struct TodayView: View {
         }
     }
 
+    /// The speaking path: the stage to play today, or that today's is done.
+    private var speakingDetail: String {
+        let path = model.speakingPath
+        if model.settings.speakingWordsTab == true, !path.clearedToday(model.today) {
+            return L.t("單字口說", "Word practice")
+        }
+        if path.clearedToday(model.today) {
+            return L.t("今日已過關 ✓ 連續 \(path.currentStreak(today: model.today)) 天", "Done today ✓ \(path.currentStreak(today: model.today))-day streak")
+        }
+        guard let next = SpeakingScenarios.next(after: path), let scenario = SpeakingScenarios.scenario(next) else {
+            return L.t("開口說說看", "Say it out loud")
+        }
+        let number = SpeakingScenarios.number(next)
+        return L.t("第 \(number) 關 · \(scenario.title.zh)", "Stage \(number) · \(scenario.title.en)")
+    }
+
     private var tiles: [PracticeTileItem] {
         var items: [PracticeTileItem] = []
         items.append(PracticeTileItem(id: "today-quiz", icon: "checklist", tint: Palette.chinese, title: L.quickQuiz,
                                       detail: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions")) { quizSetupOpen = true })
         items.append(PracticeTileItem(id: "today-speaking", icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking,
-                                      detail: L.t("開口說說看", "Say it out loud")) { start(.speaking) })
+                                      detail: speakingDetail) { start(.speaking) })
         // Learners of English spell the word; learners of Chinese write it
         // in characters or pinyin.
         items.append(PracticeTileItem(id: "today-spelling", icon: model.studyMode == .english ? "character.cursor.ibeam" : "pencil.and.scribble",

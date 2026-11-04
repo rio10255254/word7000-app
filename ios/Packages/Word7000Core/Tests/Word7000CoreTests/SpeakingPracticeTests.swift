@@ -28,7 +28,8 @@ final class SpeakingPracticeTests: XCTestCase {
             // Learners of Chinese read the question in Chinese, with the English to hand.
             XCTAssertEqual(chinese.question, try XCTUnwrap(entry.questionZh, entry.word))
             XCTAssertEqual(chinese.questionGloss, entry.question)
-            XCTAssertNil(english.questionGloss)
+            // Learners of English can tap the question to read it in Chinese.
+            XCTAssertEqual(english.questionGloss, entry.questionZh)
             XCTAssertEqual(english.referenceAnswer, entry.answerEn)
             XCTAssertEqual(chinese.referenceAnswer, entry.answerZh)
             XCTAssertEqual(chinese.referenceTranslation, english.referenceAnswer)
@@ -36,6 +37,14 @@ final class SpeakingPracticeTests: XCTestCase {
             XCTAssertEqual(chinese.keyword, entry.keywordZh)
             XCTAssertNotEqual(english.referenceAnswer, word.example, entry.word)
         }
+    }
+
+    func testExampleExercisesCanBeReadInTheLearnersOwnLanguage() throws {
+        let word = try XCTUnwrap(ParityTests.words.first { !$0.example.isEmpty })
+        let english = SpeakingPractice.exampleExercise(for: word, mode: .english)
+        let chinese = SpeakingPractice.exampleExercise(for: word, mode: .chinese)
+        XCTAssertEqual(english.questionGloss, chinese.question)
+        XCTAssertEqual(chinese.questionGloss, english.question)
     }
 
     func testExpandedQuestionsSurviveLevelFiltersAndRandomSessions() {

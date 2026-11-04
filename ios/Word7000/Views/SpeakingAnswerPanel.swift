@@ -25,7 +25,12 @@ struct SpeakingAnswerPanel: View {
     /// Called once something was said or written for this question.
     var onAttempt: () -> Void
 
-    @State private var recording = SpeakingRecorder()
+    @State private var recording = LiveListener()
+    /// This take was started from the notepad (record again), so its words
+    /// go straight onto the notepad as they are heard.
+    @State private var takeFromPad = false
+    /// Words recognition got wrong and were put right, to show and undo.
+    @State private var fixes: [TranscriptCorrection.Fix] = []
     @State private var typing = false
     @State private var answerFocused = false
     @State private var pendingSubmission = false
@@ -50,11 +55,11 @@ struct SpeakingAnswerPanel: View {
     private var question: String { followUpQuestion ?? request.question }
     private var answerLanguage: String { chinese ? "zh-TW" : "en-US" }
     private var hasText: Bool { !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-    private var live: Bool { recording.state == .recording }
+    private var live: Bool { recording.listening }
     /// The notepad shows once there is something to show or to write on.
     private var showsPad: Bool {
         typing || hasText || recording.hasRecording
-            || recording.state == .transcribing
+            || recording.state == .finishing
     }
 
     private var canSubmitAnswer: Bool {
@@ -138,26 +143,51 @@ struct SpeakingAnswerPanel: View {
             guard !Task.isCancelled, answer == text else { return }
             reflection = result
         }
-        .onChange(of: recording.transcript) { _, value in
-            guard let value else { return }
-            answer = value
+        // Words appear as they are said: on the notepad when recording again
+        // from it, otherwise in a bubble over the big key until the take ends.
+        .onChange(of: recording.text) { _, value in
+            if takeFromPad, live || recording.state == .finishing { answer = value }
+        }
+        .onChange(of: recording.isFinal) { _, final in
+            guard final else { return }
+            onAttempt()
+            // A new take is a new answer: its words replace the notepad's,
+            // with what recognition plainly misheard put right (and shown).
+            guard !recording.text.isEmpty else { return }
+            let corrected = TranscriptCorrection.correct(recording.text, keyPhrase: request.keyword, chinese: chinese)
+            fixes = corrected.fixes
+            answer = corrected.text
             needsTranscriptReview = true
             session.reset()
-        }
-        .onChange(of: recording.state) { old, new in
-            if old == .recording, new == .ready {
-                onAttempt()
-                // Stopping a take is when it becomes text. A new take is a new
-                // answer, so its words replace whatever was on the notepad.
-                if recording.support == .modern || recording.support == .legacy {
-                    recording.transcribe(hints: transcriptionHints)
-                }
+            // A take that came back without punctuation gets it, where this
+            // iPhone's model can add it without touching a word.
+            let text = corrected.text
+            Task {
+                guard let punctuated = await DeviceAssist.punctuate(text, chinese: chinese), answer == text else { return }
+                answer = punctuated
             }
         }
-        .onChange(of: recording.support) { _, support in
-            // A take recorded while speech recognition was still arriving.
-            if support == .modern, recording.state == .ready, recording.hasRecording, recording.transcript == nil {
-                recording.transcribe(hints: transcriptionHints)
+        // A long pause ends the take; so does the minute. A shorter pause
+        // ends it where this iPhone's model reads the answer as finished.
+        .task(id: live) {
+            guard live else { return }
+            var asked = ""
+            while !Task.isCancelled, recording.listening {
+                do { try await Task.sleep(for: .milliseconds(300)) } catch { return }
+                let text = recording.text
+                let liveText = recording.support == .live
+                if recording.seconds >= 60
+                    || (liveText && !text.isEmpty && recording.quietFor > 5)
+                    || (liveText && text.isEmpty && recording.quietFor > 15) {
+                    recording.stop(); return
+                }
+                if !text.isEmpty, recording.quietFor > 1.4, text != asked {
+                    asked = text
+                    if await DeviceAssist.seemsFinished(text, question: question, chinese: chinese) == true,
+                       recording.listening, recording.text == text {
+                        recording.stop(); return
+                    }
+                }
             }
         }
         .onChange(of: plus.subscribed) { _, subscribed in
@@ -203,7 +233,6 @@ struct SpeakingAnswerPanel: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 provider.refreshAvailability()
-                if recording.preparationFailed { Task { await recording.refresh(language: answerLanguage) } }
             }
             else if phase == .background { pendingSubmission = false; session.cancel(); recording.interrupt(); Speaker.shared.stop() }
         }
@@ -216,8 +245,8 @@ struct SpeakingAnswerPanel: View {
         }
         .sensoryFeedback(trigger: recording.state) { old, new in
             guard model.settings.hapticsEnabled ?? true else { return nil }
-            if new == .recording { return .impact(weight: .medium) }
-            if old == .recording { return .impact(weight: .light) }
+            if new == .listening { return .impact(weight: .medium) }
+            if old == .listening { return .impact(weight: .light) }
             return nil
         }
     }
@@ -227,6 +256,21 @@ struct SpeakingAnswerPanel: View {
     /// Before anything is said: one big key, and a way to type instead.
     private var recorderKey: some View {
         VStack(spacing: 12) {
+            if live, !recording.text.isEmpty {
+                // What is being heard, as one's own chat message.
+                HStack {
+                    Spacer(minLength: 40)
+                    Text(recording.text)
+                        .font(.title3.weight(.semibold))
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Palette.accent.opacity(0.12), in: BubbleShape(tail: .trailing))
+                        .contentTransition(.opacity)
+                        .accessibilityIdentifier("coach-live-text")
+                }
+                .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .bottomTrailing)))
+            }
             ZStack {
                 if live && !reduceMotion {
                     Circle()
@@ -262,6 +306,7 @@ struct SpeakingAnswerPanel: View {
             }
             Text(live ? L.t("說完再按一下", "Tap again when you're done") : L.t("按一下開始說", "Tap and say your answer"))
                 .font(.headline)
+                .contentTransition(.opacity)
             if !live {
                 Button {
                     typing = true
@@ -272,9 +317,6 @@ struct SpeakingAnswerPanel: View {
                 }
                 .buttonStyle(.borderless)
                 .accessibilityIdentifier("coach-type-instead")
-            } else {
-                Text(L.t("結束後會自動轉成文字", "It turns into text when you stop"))
-                    .font(.footnote).foregroundStyle(.secondary)
             }
             recorderMessages
         }
@@ -303,7 +345,10 @@ struct SpeakingAnswerPanel: View {
         dismissKeyboard()
         session.cancel()
         Speaker.shared.stop()
-        recording.start()
+        takeFromPad = showsPad
+        fixes = []
+        if takeFromPad { answer = "" }
+        recording.start(hints: transcriptionHints)
     }
 
     // MARK: The notepad
@@ -347,10 +392,12 @@ struct SpeakingAnswerPanel: View {
     private var notepad: some View {
         let font = UIFont.preferredFont(forTextStyle: .body)
         let editor = PracticeAnswerEditor(text: $answer, focused: $answerFocused,
-                                          editable: !live && recording.state != .transcribing,
+                                          editable: !live && recording.state != .finishing,
                                           ruled: collage,
                                           onEdit: { text in
                                               if text != submittedAnswer { session.reset() }
+                                              // Edited by hand: the fixes are theirs now.
+                                              if !fixes.isEmpty { fixes = [] }
                                               inputCommitFailed = false
                                               Speaker.shared.stop()
                                           }, onCommit: { finishInput(committedText: $0) },
@@ -363,7 +410,7 @@ struct SpeakingAnswerPanel: View {
                                           })
             .accessibilityLabel(L.t("你的回答", "Your answer"))
             .accessibilityIdentifier("coach-answer")
-        let placeholder = recording.state == .transcribing ? L.t("轉成文字中…", "Turning it into text…")
+        let placeholder = live ? L.t("請說…", "Go ahead…")
             : chinese ? L.t("在這裡用中文寫下你的回答", "Write your answer in Chinese here")
             : L.t("在這裡用英文寫下你的回答", "Write your answer in English here")
         return VStack(spacing: 0) {
@@ -453,37 +500,34 @@ struct SpeakingAnswerPanel: View {
     /// Progress and the rare manual step under the notepad.
     @ViewBuilder
     private var padStatus: some View {
-        if recording.state == .transcribing || recording.state == .requesting {
+        if recording.state == .requesting {
             HStack {
                 ProgressView()
-                Text(recording.state == .transcribing ? L.t("轉成文字中…", "Turning it into text…") : L.t("處理中…", "Processing…"))
-                    .font(.subheadline)
+                Text(L.t("準備中…", "Getting ready…")).font(.subheadline)
                 Spacer()
-                Button(L.t("取消", "Cancel")) { recording.interrupt() }.buttonStyle(.borderless)
             }
-        } else if recording.support == .download && recording.hasRecording {
-            // The speech model is fetched on its own; the take waits for it.
-            HStack(spacing: 8) {
-                if recording.preparing { ProgressView() }
-                Text(recording.preparing
-                     ? L.t("第一次使用，正在準備語音辨識，好了會自動轉成文字…", "Getting speech recognition ready for the first time. Your take turns into text as soon as it's done…")
-                     : L.t("語音辨識要連上網路下載一次，連線後會自動完成；也可以回放後自己輸入。", "Speech recognition downloads once over the internet and finishes on its own when you're online. You can also replay and type."))
-                    .font(.footnote).foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .accessibilityIdentifier("coach-preparing-speech")
-        } else if recording.hasRecording, recording.transcript == nil, recording.message != nil,
-                  recording.state == .ready, recording.support == .modern || recording.support == .legacy {
-            // Only when turning the take into text failed: try it again.
-            Button { recording.transcribe(hints: transcriptionHints) } label: {
-                Label(L.t("再轉一次文字", "Try turning it into text again"), systemImage: "arrow.clockwise")
-            }
-            .buttonStyle(.borderless)
-            .disabled(recording.busy || session.isBusy)
-            .accessibilityIdentifier("coach-transcribe")
-        } else if recording.support == .unavailable && recording.hasRecording {
+        } else if recording.support == .recordOnly && recording.hasRecording && !hasText {
             Text(L.t("這部手機沒有離線辨識，可以回放後自己輸入。", "No offline transcription on this iPhone. Replay and type your answer."))
                 .font(.footnote).foregroundStyle(.secondary)
+        }
+        if !fixes.isEmpty, hasText {
+            // What recognition misheard and was put right, undone in one tap.
+            HStack(spacing: 8) {
+                Image(systemName: "wand.and.stars").foregroundStyle(Palette.accent)
+                Text(fixes.map { "\($0.heard) → \($0.corrected)" }.joined(separator: "、"))
+                    .font(.footnote.weight(.semibold))
+                Text(L.t("已自動修正", "fixed")).font(.footnote).foregroundStyle(.secondary)
+                Spacer(minLength: 4)
+                Button(L.t("還原", "Undo")) {
+                    answer = TranscriptCorrection.undo(fixes, in: answer)
+                    fixes = []
+                }
+                .font(.footnote.weight(.semibold))
+                .buttonStyle(.borderless)
+                .accessibilityIdentifier("coach-undo-fix")
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("coach-fixes")
         }
         if recording.hasRecording || hasText { recorderMessages }
         if needsTranscriptReview, hasText {
@@ -563,9 +607,8 @@ struct SpeakingAnswerPanel: View {
         }
     }
 
-    /// Without Apple Intelligence on this iPhone, Premium's online AI checks
-    /// the answer instead, so the Check key leads straight to subscribing
-    /// rather than to a message about what the phone cannot do.
+    /// Checking is Premium's online AI, so for everyone else the Check key
+    /// leads straight to subscribing.
     private var premiumUnlocksChecking: Bool {
         provider.availability != .paused && !plus.subscribed
             && IntelligenceSettings.shared.coachAllowed && IntelligenceSettings.shared.cloudOffered
@@ -602,17 +645,8 @@ struct SpeakingAnswerPanel: View {
     }
 
     private var premiumNote: String {
-        switch provider.availability {
-        case .disabled:
-            L.t("訂閱 Premium，傻貓就幫你改成更自然的說法、再追問一題。或在 iPhone 設定開啟 Apple Intelligence，免費在手機上批改。",
-                "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Or turn on Apple Intelligence in Settings to check for free on this iPhone.")
-        case .preparing:
-            L.t("訂閱 Premium 現在就能批改。Apple Intelligence 準備好之後，也能免費在手機上批改。",
-                "Premium checks it right now. Once Apple Intelligence is ready, checking on this iPhone is free too.")
-        default:
-            L.t("訂閱 Premium，傻貓就幫你改成更自然的說法、再追問一題。任何 iPhone 都能用。",
-                "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Works on any iPhone.")
-        }
+        L.t("訂閱 Premium，傻貓就幫你改成更自然的說法、指出錯誤，再追問一題。",
+            "With Premium, Silly Cat rewrites it more naturally, points out what to fix and asks a follow-up.")
     }
 
     private func submit() {
@@ -646,7 +680,7 @@ struct SpeakingAnswerPanel: View {
         if let timeout = provider.testingTimeout { session.submit(submitted, timeout: timeout); return }
         #endif
         Usage.log("coach_check", provider.usesOnline ? "online" : "device")
-        // Room for both online models and then the on-device one.
+        // Room for the online model to answer.
         session.submit(submitted, timeout: provider.usesOnline ? .seconds(50) : .seconds(30))
     }
 
@@ -821,11 +855,8 @@ struct SpeakingAnswerPanel: View {
             return L.t("錄音只留在這部手機，離開即刪除。批改時，回答文字會傳送到 Anthropic 的 Claude 線上 AI 處理。AI 建議可能有誤，也不評分發音。",
                        "Recordings stay on this iPhone and are deleted when you leave. To check an answer, its text is sent to Anthropic's Claude online AI. AI suggestions may be wrong and do not score pronunciation.")
         }
-        return provider.usesCloud
-            ? L.t("錄音只留在這部手機，離開即刪除。批改時，回答文字交給 Apple 的 Private Cloud Compute 處理，Apple 表示不會保存。AI 建議可能有誤，也不評分發音。",
-                  "Recordings stay on this iPhone and are deleted when you leave. To check an answer, its text goes to Apple's Private Cloud Compute, which Apple says is not stored. AI suggestions may be wrong and do not score pronunciation.")
-            : L.t("錄音與回答只留在這部手機，離開即刪除錄音。AI 建議可能有誤，也不評分發音。",
-                  "Recordings and answers stay on this iPhone; leaving deletes the recording. AI suggestions may be wrong and do not score pronunciation.")
+        return L.t("錄音與回答只留在這部手機，離開即刪除錄音。",
+                   "Recordings and answers stay on this iPhone; leaving deletes the recording.")
     }
 
     private var unavailableIsSettled: Bool {
@@ -835,18 +866,12 @@ struct SpeakingAnswerPanel: View {
     private var unavailableMessage: String {
         switch provider.availability {
         case .unsupported:
-            L.t("這部 iPhone 不支援 AI 批改。錄音、回放和轉成文字都能照常使用。",
-                "AI checking isn't available on this iPhone. Recording, playback and transcription still work.")
+            L.t("AI 批改目前無法使用。錄音、回放和轉成文字都能照常使用。",
+                "AI checking isn't available right now. Recording, playback and transcription still work.")
         case .paused where !IntelligenceSettings.shared.enabled:
             L.t("你已關閉 AI 建議，可在「設定 → AI 與錄音」重新開啟。", "You turned AI suggestions off. Turn them back on in Settings → AI and recording.")
         case .paused:
             L.t("AI 批改目前已關閉。錄音和文字仍可使用。", "AI checking is currently off. Recording and text still work.")
-        case .disabled:
-            L.t("請在系統設定中開啟 Apple Intelligence，再回來檢查。", "Turn on Apple Intelligence in Settings, then check again.")
-        case .preparing:
-            L.t("Apple Intelligence 還在準備中，請稍後再檢查。", "Apple Intelligence is still getting ready. Check again later.")
-        case .unsupportedLanguage:
-            L.t("這個裝置模型目前未同時支援英文與繁體中文。", "This on-device model does not currently support both English and Traditional Chinese.")
         default:
             L.t("這部裝置目前無法使用 AI 批改。", "AI checking is currently unavailable on this device.")
         }

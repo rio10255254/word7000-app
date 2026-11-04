@@ -162,6 +162,12 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["scan-close"].tap()
         app.tabBars.buttons.element(boundBy: 0).tap()
         app.buttons["today-speaking"].tap()
+        // Speaking opens on the scenario path; the word list is a tab beside it.
+        let track = app.segmentedControls["speaking-track"]
+        XCTAssertTrue(track.waitForExistence(timeout: 10))
+        track.buttons["單字口說"].tap()
+        // A word with an example opens on saying it; one without goes straight to the question.
+        if app.buttons["shadow-skip"].waitForExistence(timeout: 5) { app.buttons["shadow-skip"].tap() }
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), app.debugDescription)
         XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
         XCTAssertFalse(app.buttons["speaking-use-core"].exists)

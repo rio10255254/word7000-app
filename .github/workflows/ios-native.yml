@@ -27,6 +27,7 @@ on:
       - 'scripts/test-native-speaking-recency.mjs'
       - 'src/nativeSpeakingRecency.test.ts'
       - 'content/speaking/**'
+      - 'scripts/build-speaking-scenarios.mjs'
       - '.github/workflows/ios-native.yml'
   workflow_dispatch:
     inputs:
@@ -93,6 +94,9 @@ jobs:
 
       - name: Speaking questions match their editorial sources
         run: node scripts/build-native-speaking-library.mjs --check
+
+      - name: Speaking scenarios match their editorial source
+        run: node scripts/build-speaking-scenarios.mjs --check
 
       - name: Coaching evaluation cases match their authored sources
         run: node scripts/build-coach-evaluation.mjs --check

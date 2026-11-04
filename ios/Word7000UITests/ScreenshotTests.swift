@@ -165,11 +165,16 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["study-close"].tap()
         XCTAssertTrue(app.buttons["today-speaking"].waitForExistence(timeout: 5))
         app.buttons["today-speaking"].tap()
-        // One practice, questions and examples mixed: no mode picker.
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        // One practice, questions and examples mixed: no mode picker. Each
+        // word opens on saying its model sentence, then the question.
+        XCTAssertTrue(app.buttons["shadow-skip"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
-        sleep(1)
+        sleep(2)
         snap(app, "zh-4-speaking")
+        app.buttons["shadow-skip"].tap()
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "zh-4b-speaking-question")
     }
 
     func testTrialExpiresWhileAppRemainsOpen() {

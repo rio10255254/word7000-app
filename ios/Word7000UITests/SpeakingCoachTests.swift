@@ -38,6 +38,72 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertEqual(completionValue(app), completed)
     }
 
+    func testSayingTheModelThenTheStageIsClearedAndThePathMoves() {
+        for englishUI in [false, true] {
+            let app = launch(englishUI: englishUI, recording: true)
+            tap(app.buttons["today-speaking"], in: app)
+            XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
+            let firstStage = app.staticTexts["speaking-stage"].label
+            // First step: hear the model sentence and say it back. It is heard
+            // as it is said, stops by itself once all of it was heard, and
+            // moves on by itself after a short countdown.
+            tap(app.buttons["shadow-record"], in: app)
+            let result = app.descendants(matching: .any)["shadow-result"].firstMatch
+            XCTAssertTrue(result.waitForExistence(timeout: 10))
+            XCTAssertTrue(result.label.contains("100%"), result.label)
+            snapshot(app, englishUI ? "speaking-shadow-en" : "speaking-shadow-zh")
+            // Second step: the question.
+            XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), "Moves on by itself")
+            sleep(1)
+            snapshot(app, englishUI ? "speaking-question-en" : "speaking-question-zh")
+            // The rest of the stage is skipped.
+            for position in 2...5 {
+                tap(app.buttons["speaking-next"], in: app)
+                wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '\(position) /'")
+                skipShadowing(app)
+            }
+            tap(app.buttons["speaking-next"], in: app)
+            let cleared = app.staticTexts["speaking-stage-result"]
+            XCTAssertTrue(cleared.waitForExistence(timeout: 5))
+            XCTAssertTrue(app.descendants(matching: .any)["speaking-stars"].firstMatch.label.hasPrefix("1"))
+            XCTAssertTrue(app.descendants(matching: .any)["speaking-streak"].firstMatch.exists)
+            snapshot(app, englishUI ? "speaking-stage-cleared-en" : "speaking-stage-cleared-zh")
+            tap(app.buttons["speaking-again"], in: app)
+            XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
+            XCTAssertNotEqual(app.staticTexts["speaking-stage"].label, firstStage, "The next stage follows")
+            app.terminate()
+        }
+    }
+
+    func testScenarioListAndTheWordPracticeTab() {
+        let app = launch(englishUI: true)
+        tap(app.buttons["today-speaking"], in: app)
+        XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["speaking-stage"].label.contains("Restaurant"), "The path starts at the restaurant")
+        XCTAssertTrue(app.staticTexts["shadow-partner-line"].waitForExistence(timeout: 5), "A role-play opens on what the server says")
+        tap(app.buttons["speaking-scenarios"], in: app)
+        let shopping = app.buttons["speaking-stage-shopping-1"]
+        for _ in 0..<6 where !shopping.isHittable { app.swipeUp() }
+        snapshot(app, "speaking-scenario-list-en")
+        shopping.tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Department'")
+        XCTAssertTrue(app.staticTexts["speaking-position"].label.hasPrefix("1 /"))
+        skipShadowing(app)
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["speaking-role"].firstMatch.exists)
+        snapshot(app, "speaking-scenario-question-en")
+        // Word practice is the other tab, and is remembered for next time.
+        app.segmentedControls["speaking-track"].buttons["Words"].tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
+        XCTAssertFalse(app.buttons["speaking-scenarios"].exists, "The scenario list belongs to the scenario tab")
+        XCTAssertTrue(app.buttons["speaking-filters"].exists)
+        app.buttons["speaking-close"].tap()
+        tap(app.buttons["today-speaking"], in: app)
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
+        app.segmentedControls["speaking-track"].buttons["Scenarios"].tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Restaurant'")
+    }
+
     func testMockSuccessTypingCheckAndProgressInLightEnglishUI() {
         let app = launch(coach: "commitCorrection", englishUI: true)
         let completedBefore = weeklySpeakingCount(app)
@@ -84,6 +150,8 @@ final class SpeakingCoachTests: XCTestCase {
         // Something was written: Next counts the question.
         tap(app.buttons["speaking-next"], in: app)
         wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
+        skipShadowing(app)
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
         XCTAssertNotEqual(app.staticTexts["speaking-question"].label, question)
         XCTAssertFalse(app.textViews["coach-answer"].exists, "A new question starts without an answer")
         assertNoFeedback(app)
@@ -140,11 +208,10 @@ final class SpeakingCoachTests: XCTestCase {
         let completed = completionValue(app)
         enterAnswer("I practice daily.", in: app)
         dismissKeyboard(app)
-        // Without the on-device AI, checking leads straight to Premium,
-        // and still says the free way is to turn Apple Intelligence on.
+        // The free app has no AI: checking leads straight to Premium.
         let premium = app.buttons["coach-premium-check"]
         reveal(premium, in: app)
-        XCTAssertTrue(app.staticTexts["coach-premium-note"].label.contains("Apple Intelligence"))
+        XCTAssertTrue(app.staticTexts["coach-premium-note"].label.contains("Premium"))
         XCTAssertFalse(app.buttons["coach-submit"].exists)
         XCTAssertFalse(app.descendants(matching: .any)["coach-unavailable"].firstMatch.exists)
         assertNoFeedback(app)
@@ -237,6 +304,10 @@ final class SpeakingCoachTests: XCTestCase {
             }
             XCTAssertFalse(allow.exists)
         } else if system.buttons["OK"].exists { system.buttons["OK"].tap() }
+        // Live transcription may also ask for speech recognition, once.
+        for label in ["Allow", "OK"] where system.buttons[label].waitForExistence(timeout: 3) {
+            system.buttons[label].tap()
+        }
         let duration = app.staticTexts["coach-recording-duration"]
         let ticking = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let number = Int(duration.label.split(separator: " ").first ?? "0") ?? 0
@@ -305,7 +376,14 @@ final class SpeakingCoachTests: XCTestCase {
 
     private func openSpeaking(_ app: XCUIApplication) {
         tap(app.buttons["today-speaking"], in: app)
+        skipShadowing(app)
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+    }
+
+    /// Each word opens on saying its model sentence; these tests are about answering.
+    private func skipShadowing(_ app: XCUIApplication) {
+        let skip = app.buttons["shadow-skip"]
+        if skip.waitForExistence(timeout: 5) { tap(skip, in: app) }
     }
 
     private func enterAnswer(_ text: String, in app: XCUIApplication) {

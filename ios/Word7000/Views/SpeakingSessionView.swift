@@ -763,12 +763,17 @@ private struct TranslatableQuestion: View {
                     }
                 }
             }
+            // The question is what the other person says: a chat bubble on the left.
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(Palette.fill, in: BubbleShape(tail: .leading))
             .contentShape(Rectangle())
             .onTapGesture { toggle() }
             VStack(spacing: 14) {
                 SpeakButton(text: question, language: language)
                 if canTranslate { translateKey }
             }
+            Spacer(minLength: 0)
         }
         .sensoryFeedback(.selection, trigger: translated) { _, _ in model.settings.hapticsEnabled ?? true }
     }

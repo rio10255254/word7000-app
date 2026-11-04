@@ -4,10 +4,6 @@
 # session. It needs one repository secret, EXPO_TOKEN (an Expo access token):
 # Settings > Secrets and variables > Actions > New repository secret.
 #
-#   build-testflight  Builds on Expo's servers with the iOS credentials Expo
-#                     already stores, then uploads the build to TestFlight.
-#   ota-update        Sends JavaScript and UI changes to installed builds of
-#                     the same app version, without a new TestFlight build.
 #   native-testflight Builds the native SwiftUI app in ios/ (see
 #                     ios/Release/README.md) and uploads it to TestFlight.
 name: iOS release
@@ -16,14 +12,10 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: 'build-testflight: React Native build to TestFlight. ota-update: push JS/UI changes to installed RN builds. native-testflight: native SwiftUI build to TestFlight.'
+        description: 'native-testflight: native SwiftUI build to TestFlight. The React Native operations (build-testflight, ota-update) were removed with the React Native app.'
         type: choice
-        options: ['build-testflight', 'ota-update', 'native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status']
-        default: 'build-testflight'
-      message:
-        description: 'Short note shown for an OTA update'
-        type: string
-        default: ''
+        options: ['native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status']
+        default: 'native-testflight'
       full_validation:
         description: 'native-testflight only: wait for a passed full Native iOS run of this source before uploading. Off by default; turn it on when a full test is wanted.'
         type: boolean
@@ -197,18 +189,6 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Build and upload to TestFlight
-        if: inputs.operation == 'build-testflight'
-        run: eas build --platform ios --profile production --non-interactive --auto-submit --wait
-
-      - name: Publish an OTA update
-        if: inputs.operation == 'ota-update'
-        env:
-          MESSAGE: ${{ inputs.message }}
-        run: |
-          eas update --channel production --environment production --platform ios --non-interactive \
-            --message "${MESSAGE:-$(git log -1 --pretty=%s)}"
 
       - name: Build the native app and upload it to TestFlight
         if: inputs.operation == 'native-testflight'

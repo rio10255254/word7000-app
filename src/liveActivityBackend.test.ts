@@ -3,21 +3,12 @@ import path from 'node:path';
 import { describe, expect, test } from 'vitest';
 
 describe('Lock Screen learning reminder backend', () => {
-  const appSource = fs.readFileSync(path.join(process.cwd(), 'App.tsx'), 'utf8');
   const edgeFunction = fs.readFileSync(
     path.join(process.cwd(), 'supabase', 'functions', 'send-streak-live-activities', 'index.ts'),
     'utf8',
   );
   const migration = fs.readFileSync(
     path.join(process.cwd(), 'supabase', 'migrations', '20260813120000_noon_live_activity.sql'),
-    'utf8',
-  );
-  const registration = fs.readFileSync(
-    path.join(process.cwd(), 'src', 'lib', 'streakReminderRegistration.ts'),
-    'utf8',
-  );
-  const liveActivityLayout = fs.readFileSync(
-    path.join(process.cwd(), 'src', 'liveActivity', 'StreakLiveActivity.tsx'),
     'utf8',
   );
 
@@ -32,27 +23,10 @@ describe('Lock Screen learning reminder backend', () => {
   });
 
   test('personalizes noon copy from the latest daily progress registration', () => {
-    expect(registration).toContain('daily_target: Math.max(1, Math.round(registration.dailyTarget))');
-    expect(registration).toContain('studied_today: Math.max(0, Math.round(registration.studiedToday))');
-    expect(registration).toContain('progress_date: registration.progressDate');
-    expect(appSource).toContain('dailyTarget: progress.dailyTarget');
-    expect(appSource).toContain('studiedToday: progress.studiedToday');
     expect(edgeFunction).toContain(`title: chinese ? '單字不會自己背好喔' : "Those words won't learn themselves"`);
     expect(edgeFunction).toContain('noon_activity_expires_at');
     expect(edgeFunction).toContain("activityKind: 'noon'");
     expect(edgeFunction).toContain('progressCurrent: studiedToday');
     expect(edgeFunction).toContain('progressTarget: Math.max(1, device.daily_target)');
-  });
-
-  test('provides distinct glanceable layouts for every Dynamic Island presentation', () => {
-    expect(liveActivityLayout).toContain("props.activityKind === 'noon'");
-    expect(liveActivityLayout).toContain('bannerSmall:');
-    expect(liveActivityLayout).toContain('compactLeading:');
-    expect(liveActivityLayout).toContain('compactTrailing,');
-    expect(liveActivityLayout).toContain('minimal: isNoon');
-    expect(liveActivityLayout).toContain('expandedCenter:');
-    expect(liveActivityLayout).toContain('expandedBottom:');
-    expect(liveActivityLayout).toContain("contentTransition('numericText')");
-    expect(liveActivityLayout).toContain('activityBackgroundTint(activityBackground)');
   });
 });

@@ -12,17 +12,6 @@ final class OfficialBankTests: XCTestCase {
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.element(boundBy: 1).tap()
 
-        // The built-in "adapt" carries the published correction.
-        let search = app.searchFields.firstMatch
-        XCTAssertTrue(search.waitForExistence(timeout: 5))
-        search.tap()
-        search.typeText("adapt")
-        XCTAssertTrue(containing("已校正", in: app).waitForExistence(timeout: 10), app.debugDescription)
-        // Leave search so the shelf and the tab bar come back.
-        let cancel = app.buttons.matching(NSPredicate(format: "label IN %@", ["取消", "Cancel"])).firstMatch
-        if cancel.exists { cancel.tap() } else { search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5)) }
-        XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
-
         let bank = app.buttons["bank-official:medical"]
         XCTAssertTrue(bank.waitForExistence(timeout: 5))
         bank.tap()
@@ -38,6 +27,18 @@ final class OfficialBankTests: XCTestCase {
         let words = ["diagnosis", "symptom", "prescription"]
         let shown = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@ OR label CONTAINS %@", words[0], words[1], words[2]))
         XCTAssertTrue(shown.firstMatch.waitForExistence(timeout: 5), app.debugDescription)
+        app.buttons["study-close"].tap()
+
+        // The built-in "adapt" carries the published correction (checked last:
+        // search keeps the keyboard over the tab bar).
+        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 5))
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.buttons["bank-core"].tap()
+        let search = app.searchFields.firstMatch
+        XCTAssertTrue(search.waitForExistence(timeout: 5))
+        search.tap()
+        search.typeText("adapt")
+        XCTAssertTrue(containing("已校正", in: app).waitForExistence(timeout: 10), app.debugDescription)
     }
 
     private func containing(_ text: String, in app: XCUIApplication) -> XCUIElement {

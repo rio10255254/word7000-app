@@ -235,7 +235,7 @@ struct ShadowStepView: View {
 
     private var replyText: some View {
         VStack(alignment: .leading, spacing: 6) {
-            FlowLayout(spacing: chinese ? 2 : 7, lineSpacing: chinese ? 10 : 6) {
+            FlowLayout(spacing: chinese ? 2 : 7, lineSpacing: chinese ? 10 : 6, balanced: true) {
                 ForEach(shownUnits) { unit in
                     ShadowUnitView(unit: unit, chinese: chinese, showsPinyin: chinese, tone: tones[unit.id])
                 }
@@ -384,7 +384,8 @@ struct ShadowStepView: View {
                     Text(L.t("馬上進入下一步", "On to the next step"))
                 } else if tried {
                     Text(L.t("按一下再說一次", "Tap to say it again"))
-                } else {
+                } else if earlier.isEmpty {
+                    // Once a line of the role-play has been said, the key explains itself.
                     Text(L.t("聽完後，按一下跟著說", "Listen, then tap and say it"))
                 }
             }
@@ -628,9 +629,12 @@ private struct ShadowUnitView: View {
 }
 
 /// Lays children out in rows, wrapping to the next row when one is full.
+/// Balanced, the rows come out about the same length (as CSS `text-wrap: balance`),
+/// so a sentence never ends with one word or character alone on its last row.
 struct FlowLayout: Layout {
     var spacing: CGFloat = 6
     var lineSpacing: CGFloat = 6
+    var balanced = false
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let rows = arrange(width: proposal.width ?? .infinity, subviews: subviews)
@@ -655,6 +659,20 @@ struct FlowLayout: Layout {
     private struct Row { var indices: [Int] = []; var width: CGFloat = 0; var height: CGFloat = 0 }
 
     private func arrange(width: CGFloat, subviews: Subviews) -> [Row] {
+        let rows = greedyRows(width: width, subviews: subviews)
+        guard balanced, rows.count > 1, width.isFinite else { return rows }
+        // The narrowest width that still needs no more rows.
+        var low = subviews.map { $0.sizeThatFits(.unspecified).width }.max() ?? 0
+        var high = width
+        guard low < high else { return rows }
+        while high - low > 1 {
+            let middle = (low + high) / 2
+            if greedyRows(width: middle, subviews: subviews).count > rows.count { low = middle } else { high = middle }
+        }
+        return greedyRows(width: high, subviews: subviews)
+    }
+
+    private func greedyRows(width: CGFloat, subviews: Subviews) -> [Row] {
         var rows: [Row] = []
         var row = Row()
         for index in subviews.indices {

@@ -158,8 +158,16 @@ const hand = (y, text, { size = 46, rot = -2, color = C.brown } = {}) =>
 const bubble = (x, y, text, rot = 3, z = 6) =>
   `<div class="abs bubble" style="left:${x}px;top:${y}px;z-index:${z};transform:rotate(${rot}deg)">${text}</div>`;
 
-const guide = (x, y, w, h, label) =>
-  opts.clean ? '' : `<div class="guide" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${label}</div>`;
+/** Where an Instagram sticker goes: a taped paper slip with a handwritten
+ * hint above it, and in the draft a dashed outline naming the sticker. */
+const guide = (x, y, w, h, label, hint) => `
+  ${hint ? `<div class="abs hand" style="left:0;width:${W}px;text-align:center;top:${y - 62}px;font-size:40px;color:${C.deep};z-index:7;transform:rotate(-1.5deg)">${hint}</div>` : ''}
+  <div class="abs" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;z-index:4;transform:rotate(-1deg);
+    background:${C.paper};border-radius:10px;box-shadow:0 12px 26px rgba(58,36,16,.16);
+    background-image:repeating-linear-gradient(transparent 0 37px, rgba(150,180,205,.3) 37px 39px)"></div>
+  ${tape(x - 34, y - 6, 120, -32, { h: 38 })}
+  ${tape(x + w - 86, y + h - 34, 120, -32, { h: 38 })}
+  ${opts.clean ? '' : `<div class="guide" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${label}</div>`}`;
 
 const kicker = (text, center) =>
   `<div class="abs kicker" style="${center ? `left:0;width:${W}px;text-align:center` : 'left:90px'};top:262px">${text}</div>`;
@@ -318,8 +326,8 @@ function frameShout() {
     ${bubble(640, 540, '“Fine. Follow me.”', 5)}
     ${stamp({ x: 905, y: 1265, r: 92, rot: -12, top: 'WORDCAT', big: '✓', bottom: 'THE REAL ONE', z: 6 })}
 
-    ${guide(240, 1360, 600, 150, 'MENTION STICKER')}
-    ${hand(1550, 'new words, cat sass &amp; launch news', { size: 50 })}
+    ${guide(240, 1380, 600, 150, 'MENTION STICKER', 'tap to follow ↓')}
+    ${hand(1572, 'new words, cat sass &amp; launch news', { size: 46 })}
   `);
 }
 
@@ -346,9 +354,9 @@ function frameDate() {
     ${bubble(90, 560, '“Don’t be late.”', -4)}
     ${stamp({ x: 250, y: 1270, r: 96, rot: -16, top: 'COMING TO IPHONE', big: 'NEW', bottom: 'WORDCAT', z: 6 })}
 
-    ${guide(240, 1380, 600, 170, 'COUNTDOWN STICKER')}
-    ${hand(1572, 'search “WordCat” on the App Store', { size: 46, rot: -1.5 })}
-    ${hand(1622, 'tap the countdown so the cat can remind you', { size: 38, rot: -1.5, color: C.deep })}
+    ${guide(240, 1392, 600, 150, 'COUNTDOWN STICKER')}
+    ${hand(1578, 'search “WordCat” on the App Store', { size: 46, rot: -1.5 })}
+    ${hand(1628, 'tap the countdown so the cat can remind you', { size: 38, rot: -1.5, color: C.deep })}
   `);
 }
 

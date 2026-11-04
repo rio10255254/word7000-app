@@ -47,30 +47,40 @@ const detailText = (event, detail) => {
 
 const u = report.users;
 const a = report.active;
-say(`# 📈 使用數據（最近 ${report.days} 天，從 ${report.since} 起，UTC）`);
+const both = (all, apple) => `${all}（Apple ${apple}）`;
+say(`# 📈 使用數據（最近 ${report.days} 天，${report.since} 到 ${report.today}，台灣時間）`);
 say('');
 say('## 👥 使用者');
 say('');
-say('| 全部帳號 | Apple 登入 | 訪客 | 期間新增 | 期間新增的 Apple 登入 | Premium 訂閱中 |');
-say('|---|---|---|---|---|---|');
-say(`| ${u.total} | ${u.apple} | ${u.guests} | ${u.new} | ${u.new_apple} | ${u.subscribers} |`);
+say('| 全部 | Apple 登入 | 訪客 | 期間新增（Apple／訪客） | Premium 訂閱中 |');
+say('|---|---|---|---|---|');
+say(`| ${u.total} | ${u.apple} | ${u.guests} | ${u.new}（${u.new_apple}／${u.new_guests}） | ${u.subscribers} |`);
 say('');
+const leftOut = (u.left_out_merged ?? 0) + (u.left_out_empty ?? 0);
+if (leftOut) {
+  say(`> 沒算進來的訪客 ${leftOut} 個：${u.left_out_merged ?? 0} 個已經併進原本的 Apple 帳號、${u.left_out_empty ?? 0} 個是加入超過 7 天、只打開過一天的空帳號。資料沒有刪除。`);
+  say('');
+}
 say('## 🔥 活躍');
 say('');
 say('| 今天 | 昨天 | 7 天內 | 30 天內 |');
 say('|---|---|---|---|');
-say(`| ${a.today} | ${a.yesterday} | ${a.last_7_days} | ${a.last_30_days} |`);
+say(`| ${both(a.today, a.today_apple)} | ${both(a.yesterday, a.yesterday_apple)} | ${both(a.last_7_days, a.last_7_days_apple)} | ${both(a.last_30_days, a.last_30_days_apple)} |`);
 say('');
-say('| 日期 | 活躍人數 | 新帳號 |');
+say('| 日期 | 活躍（Apple） | 新帳號（Apple） |');
 say('|---|---|---|');
-for (const d of report.daily) say(`| ${d.day} | ${d.active} | ${d.new} |`);
+for (const d of report.daily) say(`| ${d.day} | ${both(d.active, d.active_apple)} | ${both(d.new, d.new_apple)} |`);
 say('');
-const r = report.retention;
+say('「Apple」是用 Apple 登入的帳號，最接近真人數；訪客可能是同一個人換手機或重新安裝。');
+say('');
 say('## 🔁 留存（最近 90 天加入的人）');
 say('');
-say('| 隔天回來 | 第 7 天那週回來 | 第 30 天那週回來 |');
-say('|---|---|---|');
-say(`| ${pct(r.d1.back, r.d1.cohort)} | ${pct(r.d7.back, r.d7.cohort)} | ${pct(r.d30.back, r.d30.cohort)} |`);
+say('| | 隔天回來 | 第 7 天那週回來 | 第 30 天那週回來 |');
+say('|---|---|---|---|');
+for (const [kind, label] of [['apple', 'Apple 登入'], ['guests', '訪客']]) {
+  const r = report.retention?.[kind];
+  if (r) say(`| ${label} | ${pct(r.d1.back, r.d1.cohort)} | ${pct(r.d7.back, r.d7.cohort)} | ${pct(r.d30.back, r.d30.cohort)} |`);
+}
 say('');
 
 const events = report.events;

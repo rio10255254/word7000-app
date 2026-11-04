@@ -447,9 +447,13 @@ final class AccountModel {
         do {
             var newSession: AuthSession
             if let current = session, current.user.anonymous {
+                let guest = try await validSession(client: client, current)
                 do {
-                    newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode, linkTo: try await validSession(client: client, current))
+                    newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode, linkTo: guest)
                 } catch let error as SupabaseError where error.isIdentityAlreadyLinked {
+                    // This Apple ID already has an account: the guest's progress moves
+                    // into it, so the guest no longer counts as a person of its own.
+                    try? await client.retireGuest(session: guest)
                     newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode)
                 }
             } else {

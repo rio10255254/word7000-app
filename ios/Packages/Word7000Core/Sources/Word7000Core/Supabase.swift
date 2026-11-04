@@ -304,6 +304,12 @@ public struct SupabaseClient: Sendable {
         ]), session: session)
     }
 
+    /// Marks this guest as merged into an Apple account that already existed,
+    /// so the usage report doesn't count it as a separate person.
+    public func retireGuest(session: AuthSession) async throws {
+        _ = try await request("POST", "rest/v1/rpc/retire_guest", body: .object([:]), session: session)
+    }
+
     /// Sends usage counts (see UsageCounter); the server skips malformed rows.
     public func logUsage(_ rows: [JSONValue], session: AuthSession) async throws {
         guard !rows.isEmpty else { return }

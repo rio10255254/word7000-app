@@ -25,10 +25,15 @@ await db.exec(`
   insert into auth.users (id, created_at) values ('${me}', now() - interval '8 days');
   insert into auth.users (id, is_anonymous) values ('${guest}', true);
   insert into public.daily_active_users values ('${me}', current_date - 8), ('${me}', current_date - 7), ('${me}', current_date), ('${guest}', current_date);
+  insert into auth.users (id, is_anonymous, created_at) values
+    ('00000000-0000-0000-0000-000000000003', true, now() - interval '20 days'),
+    ('00000000-0000-0000-0000-000000000004', true, now() - interval '2 days');
+  insert into public.daily_active_users values ('00000000-0000-0000-0000-000000000003', current_date - 20);
   insert into word7000_private.ai_usage values ('${me}', current_date, 12);
   insert into word7000_private.plus_claims (original_transaction_id, user_id) values ('t1', '${me}');
 `);
 await db.exec(await fs.readFile('supabase/migrations/20261104120000_usage_events.sql', 'utf8'));
+await db.exec(await fs.readFile('supabase/migrations/20261104140000_usage_report_by_account_type.sql', 'utf8'));
 const one = async (sql, args = []) => (await db.query(sql, args)).rows[0];
 
 await assert.rejects(db.query(`select public.log_usage('[]'::jsonb)`), /sign in required/);
@@ -53,14 +58,27 @@ await assert.rejects(db.query(`select public.log_usage('{}'::jsonb)`), /invalid 
 await db.query(`update caller set id = $1`, [guest]);
 await db.query(`select public.log_usage($1::jsonb)`, [JSON.stringify([{ day: today, event: 'speaking', detail: 'completed', count: 1 }])]);
 
+// The second guest moved into an Apple account; only its own session can retire it.
+await db.query(`update caller set id = '00000000-0000-0000-0000-000000000004'`);
+await db.query(`select public.retire_guest()`);
+await db.query(`update caller set id = $1`, [me]);
+await db.query(`select public.retire_guest()`); // an Apple account is never retired
+assert.equal((await one(`select count(*)::int as n from word7000_private.retired_guests`)).n, 1);
 const report = (await one(`select public.usage_report(7) as r`)).r;
-assert.equal(report.users.total, 2);
+assert.equal(report.users.total, 2, 'the empty old guest and the merged guest are left out');
 assert.equal(report.users.guests, 1);
+assert.equal(report.users.apple, 1);
+assert.equal(report.users.left_out_merged, 1);
+assert.equal(report.users.left_out_empty, 1);
+assert.equal(report.active.today_apple, 1);
+assert.equal(report.time_zone, 'Asia/Taipei');
 assert.equal(report.users.subscribers, 1);
 assert.equal(report.active.today, 2);
-assert.equal(report.retention.d1.cohort, 1);
-assert.equal(report.retention.d1.back, 1);
-assert.equal(report.retention.d7.back, 1);
+assert.equal(report.retention.apple.d1.cohort, 1);
+assert.equal(report.retention.apple.d1.back, 1);
+assert.equal(report.retention.apple.d7.back, 1);
+assert.equal(report.retention.guests.d7.cohort, 1, 'retention still counts the guest that tried once and left');
+assert.equal(report.retention.guests.d7.back, 0);
 assert.equal(report.daily.length, 7);
 const speaking = report.events.find((e) => e.event === 'speaking' && e.detail === 'completed');
 assert.equal(speaking.users, 2);

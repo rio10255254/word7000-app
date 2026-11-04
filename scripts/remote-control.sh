@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The remote control behind the broadcast workflows (see .github/workflows/remote-*.yml).
-# ACTION: post | status | usage | take-down | lift-update. Needs SUPABASE_ACCESS_TOKEN and PROJECT_REF.
+# ACTION: post | status | usage | fix | bank-publish | bank-remove | take-down | lift-update. Needs SUPABASE_ACCESS_TOKEN and PROJECT_REF.
 set -euo pipefail
 : "${TITLE_ZH:=}" "${BODY_ZH:=}" "${TITLE_EN:=}" "${BODY_EN:=}" "${AUDIENCE:=all}" "${BELOW:=}" "${DAYS:=7}"
 : "${LINK:=}" "${LINK_ZH:=}" "${LINK_EN:=}" "${PUSH:=false}" "${REQUIRE:=}"
@@ -40,9 +40,18 @@ status)
   reply=$(call "$rest/announcements?select=created_at,audience,title_zh,below_version,below_build,ends_at,push,pushed_at&active=eq.true&or=(ends_at.is.null,ends_at.gt.$now)&order=created_at.desc")
   body_of "$reply" | jq -r 'if length == 0 then "- 沒有" else .[] | "- **\(.title_zh)**：對象 \(.audience)\(if .below_version then "，只給 \(.below_version)\(if .below_build then " (\(.below_build))" else "" end) 以前" else "" end)；\(if .ends_at then "到 \(.ends_at[0:16]) UTC" else "直到下架" end)\(if .push then "；推播 \(if .pushed_at then "已送出" else "未送出" end)" else "" end)" end' | while read -r line; do say "$line"; done
   say ""
+  say "## 📚 官方字庫"
+  reply=$(call "$rest/official_banks?select=id,mode,name_zh,premium,active,updated_at,words&order=mode,sort,id")
+  body_of "$reply" | jq -r 'if length == 0 then "- 沒有" else .[] | "- \(if .active then "🟢" else "⚪️ 已下架" end) **\(.name_zh)**（代號 \(.id)，\(if .mode == "chinese" then "學中文" else "學英文" end)，\(.words | length) 字\(if .premium then "，Premium" else "" end)，更新於 \(.updated_at[0:16]) UTC）" end' | while read -r line; do say "$line"; done
+  reply=$(call "$rest/content_corrections?select=mode&active=eq.true")
+  say "- 目前生效的單字校正：$(body_of "$reply" | jq length) 個"
+  say ""
   say "## ⛔ 強制更新"
   reply=$(call "$rest/update_requirements?select=created_at,min_version,min_build&active=eq.true&order=created_at.desc&limit=1")
   body_of "$reply" | jq -r 'if length == 0 then "- 沒有" else .[] | "- 低於 **\(.min_version)\(if .min_build then " (\(.min_build))" else "" end)** 的都要更新（從 \(.created_at[0:16]) UTC 起）" end' | while read -r line; do say "$line"; done
+  ;;
+fix|bank-publish|bank-remove)
+  SERVICE_KEY="$service" REST="$rest" node scripts/word-content.mjs
   ;;
 usage)
   days="${DAYS:-7}"

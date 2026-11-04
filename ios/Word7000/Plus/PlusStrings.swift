@@ -12,6 +12,9 @@ enum P {
         case .speakingCoach:
             return L.t("訂閱 Premium，小笨貓就能批改你的口說：改成更自然的說法、指出錯誤，再追問一題。不需要 Apple Intelligence，任何 iPhone 都能用。",
                        "With Premium, Silly Cat checks your speaking: a more natural version, what to fix, and a follow-up question. No Apple Intelligence needed; it works on any iPhone.")
+        case let .officialBank(name):
+            return L.t("「\(name)」是 Premium 字庫。訂閱後所有官方字庫都能學，之後上架的新字庫也一樣。",
+                       "\u{201C}\(name)\u{201D} is a Premium word bank. Subscribe to study every official bank, including new ones as they arrive.")
         case let .trialEnding(days):
             return L.t("試用剩 \(days) 天。現在訂閱，到期後也不會中斷。", "\(days) trial days left. Subscribe now and nothing stops when it ends.")
         case let .locked(feature):

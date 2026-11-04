@@ -34,7 +34,8 @@ const detailText = (event, detail) => {
   if (event === 'study_session') {
     const [scope, levels] = detail.split(':');
     const [m, bank] = scope.split('.');
-    return `${mode[m] ?? m}・${bank === 'core' ? `內建字庫 ${levels === 'all' ? '全部級數' : levels}` : '自己的字庫'}`;
+    const where = bank === 'core' ? `內建字庫 ${levels === 'all' ? '全部級數' : levels}` : bank === 'official' ? `官方字庫 ${levels}` : '自己的字庫';
+    return `${mode[m] ?? m}・${where}`;
   }
   return detail.split(/[.:]/).map((part) => mode[part] ?? {
     completed: '完成', skipped: '略過', online: '線上 AI', device: '手機內建 AI', started: '按下購買',

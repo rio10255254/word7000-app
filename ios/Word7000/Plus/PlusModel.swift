@@ -361,11 +361,14 @@ enum PaywallReason: Identifiable, Equatable {
     case trialEnding(daysLeft: Int)
     /// Checking a speaking answer, on an iPhone without Apple Intelligence.
     case speakingCoach
+    /// Opening an official word bank the developer made part of Premium.
+    case officialBank(name: String)
 
     var id: String {
         switch self {
         case .general: "general"
         case .speakingCoach: "speaking-coach"
+        case .officialBank: "official-bank"
         case let .locked(feature): "locked-\(feature.rawValue)"
         case .trialScansUsed: "scans"
         case let .trialEnding(days): "ending-\(days)"
@@ -384,7 +387,7 @@ enum PaywallReason: Identifiable, Equatable {
         case let .locked(feature): feature
         case .trialScansUsed: .scan
         case .speakingCoach: .smartAI
-        case .general, .trialEnding: nil
+        case .general, .trialEnding, .officialBank: nil
         }
     }
 

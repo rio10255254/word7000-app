@@ -6,6 +6,7 @@ import Word7000Core
 /// say the answer, see it as text, have it checked, go on.
 struct SpeakingSessionView: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -140,13 +141,18 @@ struct SpeakingSessionView: View {
     }
 
     private var scopeNarrowed: Bool {
-        model.activeSet != nil || (model.settings.speakingFilter ?? FilterSelection()).isActive
+        model.usesOtherBank || (model.settings.speakingFilter ?? FilterSelection()).isActive
     }
 
     private var scopePicker: some View {
         Menu {
             Button { model.selectBank(WordBanks.coreBankId) } label: {
-                Label(L.coreBankName, systemImage: model.activeSet == nil ? "checkmark" : "character.book.closed")
+                Label(L.coreBankName, systemImage: model.usesOtherBank ? "character.book.closed" : "checkmark")
+            }
+            ForEach(model.officialBanks.filter { !$0.premium || plus.subscribed }) { bank in
+                Button { model.selectBank(bank.selectionId) } label: {
+                    Label(bank.localizedName, systemImage: model.settings.activeBankId == bank.selectionId ? "checkmark" : "books.vertical")
+                }
             }
             ForEach(model.customSets.sets) { set in
                 Button { model.selectBank(set.id) } label: {
@@ -171,7 +177,7 @@ struct SpeakingSessionView: View {
         } description: {
             Text(model.bankName)
         } actions: {
-            if model.activeSet != nil {
+            if model.usesOtherBank {
                 Button(L.coreBankName) {
                     model.selectBank(WordBanks.coreBankId)
                 }

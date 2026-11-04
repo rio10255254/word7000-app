@@ -379,6 +379,12 @@ final class AccountModel {
         do { return .some(try await client.updateRequirement(session: session)) } catch { return nil }
     }
 
+    /// Published word list content; nil when it could not be fetched.
+    func fetchRemoteContent(cached: RemoteContent) async -> RemoteContent? {
+        guard let client, !AppRuntime.uiTesting else { return nil }
+        return try? await client.remoteContent(cached: cached, session: session)
+    }
+
     func fetchAnnouncements() async -> [Announcement] {
         guard let client else { return [] }
         return (try? await client.announcements(session: session)) ?? []

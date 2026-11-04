@@ -108,6 +108,10 @@ struct Word7000App: App {
                 account.heartbeat()
                 Usage.log("app_open", model.studyMode.rawValue)
                 Task {
+                    if let content = await account.fetchRemoteContent(cached: model.remoteContent) {
+                        model.applyRemoteContent(content)
+                        model.saveRemoteContent()
+                    }
                     await account.sendUsage()
                     await plus.refreshEntitlements()
                     // Picks up what other devices saved while this one was away.

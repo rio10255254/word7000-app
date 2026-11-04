@@ -317,6 +317,32 @@ public struct SupabaseClient: Sendable {
         return (try? JSONDecoder().decode([Announcement].self, from: data)) ?? []
     }
 
+    /// Everything published as word list content, reusing banks from `cached`
+    /// whose `updated_at` has not changed (so only new or edited banks are
+    /// downloaded). Throws when the server could not be reached.
+    public func remoteContent(cached: RemoteContent, session: AuthSession?) async throws -> RemoteContent {
+        let fixes = try await request("GET", "rest/v1/content_corrections",
+                                      query: ["select": "mode,word_id,fields,hidden", "limit": "5000"], session: session)
+        let corrections = (try? JSONDecoder().decode([WordCorrection].self, from: fixes)) ?? []
+        let listing = try await request("GET", "rest/v1/official_banks", query: ["select": "id,updated_at"], session: session)
+        let versions = ((try? JSONDecoder().decode([[String: JSONValue]].self, from: listing)) ?? []).compactMap { row -> (String, String)? in
+            guard case let .string(id)? = row["id"], case let .string(updated)? = row["updated_at"] else { return nil }
+            return (id, updated)
+        }
+        let known = Dictionary(cached.banks.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        var banks: [OfficialBank] = []
+        var changed: [String] = []
+        for (id, updated) in versions {
+            if let bank = known[id], bank.updatedAt == updated { banks.append(bank) } else { changed.append(id) }
+        }
+        if !changed.isEmpty {
+            let ids = changed.map { "\"\($0)\"" }.joined(separator: ",")
+            let data = try await request("GET", "rest/v1/official_banks", query: ["select": "*", "id": "in.(\(ids))"], session: session)
+            banks += (try? JSONDecoder().decode([OfficialBank].self, from: data)) ?? []
+        }
+        return RemoteContent(corrections: corrections, banks: banks)
+    }
+
     /// The newest live requirement for the oldest app version allowed to run.
     public func updateRequirement(session: AuthSession?) async throws -> UpdateRequirement? {
         let data = try await request("GET", "rest/v1/update_requirements",

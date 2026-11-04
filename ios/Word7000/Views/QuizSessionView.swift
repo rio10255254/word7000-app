@@ -178,6 +178,7 @@ struct QuizSessionView: View {
                 if !chosen.correct, let correct = options.first(where: \.correct) {
                     QuizContrast(word: word, chosen: chosen.text, correct: correct.text)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityIdentifier("quiz-contrast")
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                     QuizWhyView(word: word,
                                 question: model.studyMode == .chinese ? (ChineseDisplay.meaningParts(word.meaningZh).first ?? face.prompt) : face.prompt,

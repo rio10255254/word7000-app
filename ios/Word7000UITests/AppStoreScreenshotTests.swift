@@ -41,9 +41,14 @@ final class AppStoreScreenshotTests: XCTestCase {
         quiz.tap()
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.buttons["quiz-start"].tap()
-        XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
-        app.buttons["quiz-option-0"].tap()
-        XCTAssertTrue(app.buttons["quiz-next"].waitForExistence(timeout: 5))
+        // The page is about getting one wrong: answer until a miss shows the contrast.
+        for attempt in 0..<8 {
+            XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
+            app.buttons["quiz-option-\(attempt % 2)"].tap()
+            XCTAssertTrue(app.buttons["quiz-next"].waitForExistence(timeout: 5))
+            if app.descendants(matching: .any)["quiz-contrast"].waitForExistence(timeout: 1) { break }
+            app.buttons["quiz-next"].tap()
+        }
         sleep(1)
         snap(app, "\(prefix)-3-quiz")
         app.terminate()
@@ -85,7 +90,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 
         // Scanning a printed list into a word bank.
         let sheet = chineseMode
-            ? "醫院 hospital\n掛號 to register\n藥局 pharmacy\n發燒 to have a fever"
+            ? "hospital n. 醫院\npharmacy n. 藥局\nfever n. 發燒\nregister v. 掛號"
             : "objectively adv. 客觀地\nobjective n. 目標\ncarefully adv. 小心地\nconsiderable adj. 相當大的"
         app = launch(chineseMode: chineseMode, ["-uiTestingScanText"], environment: ["WORD7000_SCAN_TEST_TEXT": sheet])
         app.tabBars.buttons.element(boundBy: 1).tap()

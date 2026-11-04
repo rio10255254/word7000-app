@@ -42,6 +42,9 @@ struct AppSettings: Codable, Equatable, Sendable {
     var recentSpeakingIds: [String]?
     /// Local account copies, oldest first; guests never share an account's copy.
     var speakingHistoryByOwner: [String: [String]]?
+    /// The speaking path (stages and their stars) of each owner and study
+    /// mode, keyed `owner|mode` with the owner keyed as for speaking history.
+    var speakingPathByOwner: [String: SpeakingPath.Progress]?
     /// The look of the whole app; nil means the default, the paper collage.
     var appStyle: AppStyle?
     /// The learner has chosen a style (in the one-time chooser or Settings).
@@ -102,6 +105,7 @@ struct AppSettings: Codable, Equatable, Sendable {
                 SpeakingPractice.remembering($1, in: $0)
             }
             speakingHistoryByOwner?[key] = history
+            moveSpeakingPath(from: "guest", to: key)
         }
         // Linking preserves the same learner; signing into a different ID
         // must leave the anonymous history with its original owner.
@@ -114,6 +118,7 @@ struct AppSettings: Codable, Equatable, Sendable {
                 }
                 speakingHistoryByOwner?[key] = history
             }
+            moveSpeakingPath(from: guestKey, to: Self.speakingHistoryKey(ownerId: ownerId, anonymous: false))
         }
         localOwnerId = ownerId
         localOwnerIsAnonymous = anonymous
@@ -121,7 +126,32 @@ struct AppSettings: Codable, Equatable, Sendable {
 
     mutating func forgetSpeakingHistory(ownerId: String, anonymous: Bool) {
         migrateSpeakingHistory()
-        speakingHistoryByOwner?.removeValue(forKey: Self.speakingHistoryKey(ownerId: ownerId, anonymous: anonymous))
+        let owner = Self.speakingHistoryKey(ownerId: ownerId, anonymous: anonymous)
+        speakingHistoryByOwner?.removeValue(forKey: owner)
+        for mode in StudyMode.allCases { speakingPathByOwner?.removeValue(forKey: Self.speakingPathKey(owner: owner, mode: mode)) }
+    }
+
+    static func speakingPathKey(owner: String, mode: StudyMode) -> String { "\(owner)|\(mode.rawValue)" }
+
+    var currentSpeakingPath: SpeakingPath.Progress {
+        speakingPathByOwner?[Self.speakingPathKey(owner: speakingHistoryOwnerKey, mode: studyMode ?? .english)] ?? SpeakingPath.Progress()
+    }
+
+    mutating func clearSpeakingStage(stars: Int, today: String) {
+        let key = Self.speakingPathKey(owner: speakingHistoryOwnerKey, mode: studyMode ?? .english)
+        var paths = speakingPathByOwner ?? [:]
+        paths[key] = currentSpeakingPath.clearing(stars: stars, today: today)
+        speakingPathByOwner = paths
+    }
+
+    /// The same learner under a new owner key keeps the path walked further,
+    /// in each study mode; a path is never copied to another learner.
+    private mutating func moveSpeakingPath(from old: String, to new: String) {
+        for mode in StudyMode.allCases {
+            guard let moved = speakingPathByOwner?.removeValue(forKey: Self.speakingPathKey(owner: old, mode: mode)) else { continue }
+            let key = Self.speakingPathKey(owner: new, mode: mode)
+            if (speakingPathByOwner?[key]?.cleared ?? -1) < moved.cleared { speakingPathByOwner?[key] = moved }
+        }
     }
 }
 

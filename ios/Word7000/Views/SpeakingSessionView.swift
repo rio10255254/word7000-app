@@ -1,9 +1,11 @@
 import SwiftUI
 import Word7000Core
 
-/// Ten short questions to answer out loud, each built around one word. Each
-/// question is one page: read it (it is read aloud too), tap the big key and
-/// say the answer, see it as text, have it checked, go on.
+/// One stage of the speaking path: five words, each in two steps. First say
+/// a model sentence after hearing it and see what came across; then answer a
+/// question out loud in one's own words (read it, tap the big key, see it as
+/// text, have it checked). A cleared stage earns up to three stars and moves
+/// the path, and the first stage of the day keeps the streak going.
 struct SpeakingSessionView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -24,6 +26,16 @@ struct SpeakingSessionView: View {
     /// The question was tapped for its translation in this practice, so the
     /// hint showing how is put away until the next practice.
     @State private var translationTried = false
+    /// The current word is on its first step, saying the model sentence.
+    @State private var shadowing = true
+    /// Model sentences said well enough in this stage.
+    @State private var shadowed = 0
+    /// This word's model sentence was said, which counts as practice too.
+    @State private var shadowedThisWord = false
+    /// The stage being played, and how it went once it is over.
+    @State private var stage = 1
+    @State private var stageResult: SpeakingPath.Result?
+    @State private var bannerShown = false
     @State private var coachAnswer = ""
     @State private var coachTranscriptNeedsReview = false
     @State private var coachContextID = UUID()
@@ -67,11 +79,17 @@ struct SpeakingSessionView: View {
                 }
                 ToolbarItem(placement: .principal) {
                     if index < words.count {
-                        Text("\(index + 1) / \(words.count)")
-                            .font(.display(.subheadline, weight: .semibold))
-                            .monospacedDigit()
-                            .accessibilityIdentifier("speaking-position")
-                            .accessibilityValue(L.t("已完成 \(answered) 題", "Completed: \(answered)"))
+                        VStack(spacing: 0) {
+                            Text(L.t("第 \(stage) 關", "Stage \(stage)"))
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Palette.accent)
+                                .accessibilityIdentifier("speaking-stage")
+                            Text("\(index + 1) / \(words.count)")
+                                .font(.display(.subheadline, weight: .semibold))
+                                .monospacedDigit()
+                                .accessibilityIdentifier("speaking-position")
+                                .accessibilityValue(L.t("已完成 \(answered) 題", "Completed: \(answered)"))
+                        }
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -104,12 +122,16 @@ struct SpeakingSessionView: View {
         .onDisappear { coachSession.cancel(); Speaker.shared.stop() }
         .sensoryFeedback(.success, trigger: attempted) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         // Each new question is read aloud once (Settings → Reading voice).
-        .task(id: "\(started)-\(index)-\(words.count)") {
+        .task(id: "\(started)-\(index)-\(words.count)-\(shadowing)") {
             guard started, index < words.count, !AppRuntime.uiTesting,
                   model.settings.speech?.autoReadQuestions ?? true else { return }
-            do { try await Task.sleep(for: .milliseconds(450)) } catch { return }
-            let card = practiceCard(words[index])
-            Speaker.shared.speak(card.question, language: model.face(words[index]).speakLanguage,
+            // The stage's opening banner goes first.
+            do { try await Task.sleep(for: .milliseconds(index == 0 && shadowing ? 1500 : 450)) } catch { return }
+            let word = words[index]
+            let card = practiceCard(word)
+            let sentence = shadowSentence(card)
+            Speaker.shared.speak(shadowing && !sentence.isEmpty ? sentence : card.question,
+                                 language: model.face(word).speakLanguage,
                                  preferences: model.settings.speech ?? SpeechPreferences())
         }
         .sheet(isPresented: $filtersOpen, onDismiss: {
@@ -195,7 +217,7 @@ struct SpeakingSessionView: View {
         let candidates = model.speakingCandidates
         // One practice: conversation questions and example sentences, mixed.
         availableCount = candidates.count
-        let mixed = SpeakingPractice.mixedSession(from: candidates, recent: model.recentSpeakingIds, count: 10)
+        let mixed = SpeakingPractice.mixedSession(from: candidates, recent: model.recentSpeakingIds, count: SpeakingPath.wordsPerStage)
         words = mixed.map(\.word)
         kinds = Dictionary(mixed.map { ($0.word.id, $0.activity) }, uniquingKeysWith: { first, _ in first })
         index = 0
@@ -203,6 +225,12 @@ struct SpeakingSessionView: View {
         revealed = false
         attempted = false
         translationTried = false
+        shadowing = true
+        shadowed = 0
+        shadowedThisWord = false
+        stage = model.speakingPath.nextStage
+        stageResult = nil
+        bannerShown = false
         started = true
     }
 
@@ -220,13 +248,52 @@ struct SpeakingSessionView: View {
             : (SpeakingPractice.card(for: word, mode: mode) ?? SpeakingPractice.exampleExercise(for: word, mode: mode))
     }
 
+    /// The model sentence said on a word's first step: the opening of the
+    /// sample answer, or the example sentence itself.
+    private func shadowSentence(_ card: ConversationPromptCard) -> String {
+        ShadowingCheck.sentence(from: card.referenceAnswer, chinese: model.studyMode == .chinese)
+    }
+
+    @ViewBuilder
     private func prompt(_ word: WordEntry) -> some View {
         let card = practiceCard(word)
+        let sentence = shadowSentence(card)
+        if shadowing, !sentence.isEmpty {
+            VStack(spacing: 16) {
+                progressBar
+                ShadowStepView(
+                    keyword: card.keyword,
+                    sentence: sentence,
+                    translation: ShadowingCheck.sentence(from: card.referenceTranslation, chinese: model.studyMode != .chinese),
+                    chinese: model.studyMode == .chinese,
+                    onDone: { said in
+                        if said, !shadowedThisWord { shadowed += 1; shadowedThisWord = true }
+                        withAnimation(reduceMotion ? nil : Motion.reveal) { shadowing = false }
+                    }
+                )
+                .modifier(PromptArrival())
+                .id("shadow-\(index)")
+            }
+            .overlay(alignment: .top) {
+                if index == 0, !bannerShown { StageBanner(stage: stage) { bannerShown = true } }
+            }
+        } else {
+            answerPage(word, card: card, builtOnSentence: !sentence.isEmpty)
+        }
+    }
+
+    /// Two steps a word: the bar moves half a word for each.
+    private var progressBar: some View {
+        let steps = Double(index * 2 + (shadowing ? 0 : 1) + (attempted ? 1 : 0))
+        return BuddyProgressBar(fraction: steps / Double(max(1, words.count * 2)),
+                                tint: Palette.known, mood: attempted || shadowedThisWord ? .happy : .thinking, hop: index)
+    }
+
+    private func answerPage(_ word: WordEntry, card: ConversationPromptCard, builtOnSentence: Bool) -> some View {
         let examplesOnly = isExample(word)
         let face = model.face(word)
         return VStack(spacing: 16) {
-            BuddyProgressBar(fraction: Double(index + (attempted ? 1 : 0)) / Double(max(1, words.count)),
-                             tint: Palette.known, mood: attempted ? .happy : .thinking, hop: index)
+            progressBar
             ScrollViewReader { proxy in
             ScrollView {
               VStack(spacing: 16) {
@@ -289,6 +356,13 @@ struct SpeakingSessionView: View {
                     Text(card.questionSupport)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    if builtOnSentence, !examplesOnly {
+                        // The ladder's second rung: reuse the sentence just said.
+                        Label(L.t("可以借用剛剛跟讀的句子，換成你自己的經驗。", "Borrow the sentence you just said and make it about you."),
+                              systemImage: "arrow.turn.down.right")
+                            .font(.footnote)
+                            .foregroundStyle(Palette.accent)
+                    }
                     if revealed, !card.referenceAnswer.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
                             Divider().padding(.bottom, 6)
@@ -378,50 +452,92 @@ struct SpeakingSessionView: View {
     private func next() {
         guard historyOwnerKey == model.speakingHistoryOwnerKey else { start(); return }
         guard index < words.count else { return }
-        // Saying or writing an answer is the practice; skipping is not.
-        model.recordSpeaking(completed: attempted)
+        // Saying the model or answering is the practice; skipping is not.
+        model.recordSpeaking(completed: attempted || shadowedThisWord)
         if attempted { answered += 1 }
         clearCoach()
         model.noteSpeakingPractised(words[index].id)
         Speaker.shared.stop()
         attempted = false
         revealed = false
+        shadowing = true
+        shadowedThisWord = false
         index += 1
+        if index >= words.count {
+            let result = SpeakingPath.Result(words: words.count, shadowed: shadowed, answered: answered)
+            model.finishSpeakingStage(result)
+            stageResult = result
+        }
     }
 
     private var finished: some View {
-        VStack(spacing: 18) {
+        let result = stageResult ?? SpeakingPath.Result(words: words.count, answered: answered)
+        let path = model.speakingPath
+        let streak = path.currentStreak(today: model.today)
+        return VStack(spacing: 18) {
             Spacer()
-            Mascot(mood: answered > 0 ? .cheer : .encourage, size: 104, hop: finishedBounce)
+            Mascot(mood: result.cleared ? .cheer : .encourage, size: 96, hop: finishedBounce)
                 .popIn()
-            Text(L.speakingFinished).font(.display(.title, weight: .bold))
+            Text(result.cleared ? L.t("第 \(stage) 關 過關！", "Stage \(stage) cleared!") : L.t("這關還沒過", "Not cleared yet"))
+                .font(.display(.title, weight: .bold))
                 .entrance(1)
-            Text(L.speakingScore(answered)).foregroundStyle(.secondary)
+                .accessibilityIdentifier("speaking-stage-result")
+            StageStars(count: result.stars)
                 .entrance(2)
-            CatVerdict(text: CatQuips.speakingDone(answered: answered), mood: answered > 0 ? .happy : .smug)
-                .padding(.horizontal, Metrics.gutter)
-                .entrance(3)
+            if result.cleared {
+                StagePathView(stars: path.stars)
+                    .entrance(3)
+                Label(path.clearedToday(model.today)
+                      ? L.t("今天的關卡完成 · 連續 \(streak) 天", "Today's stage done · \(streak)-day streak")
+                      : L.t("連續 \(streak) 天", "\(streak)-day streak"),
+                      systemImage: "flame.fill")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Palette.accent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Palette.accent.opacity(0.12), in: Capsule())
+                    .entrance(4)
+                    .accessibilityIdentifier("speaking-streak")
+                Text(starHint(result)).font(.footnote).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .entrance(5)
+            } else {
+                CatVerdict(text: CatQuips.speakingDone(answered: 0), mood: .smug)
+                    .padding(.horizontal, Metrics.gutter)
+                    .entrance(3)
+            }
             Spacer()
             VStack(spacing: 12) {
-                Button { dismiss() } label: {
-                    Text(L.done).font(.headline).frame(maxWidth: .infinity)
+                Button { start() } label: {
+                    Text(result.cleared ? L.t("下一關", "Next stage") : L.t("再試一次", "Try again"))
+                        .font(.headline).frame(maxWidth: .infinity)
                 }
                 .prominentAction()
-                Button { start() } label: {
-                    Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
+                .accessibilityIdentifier("speaking-again")
+                Button { dismiss() } label: {
+                    Text(result.cleared ? L.t("今天先到這裡", "That's it for today") : L.done)
+                        .font(.headline).frame(maxWidth: .infinity)
                 }
                 .secondaryAction()
-                .accessibilityIdentifier("speaking-again")
             }
         }
         .overlay(alignment: .top) {
-            // Every question answered out loud earns a shower of paper.
-            if !reduceMotion, !words.isEmpty, answered == words.count { ConfettiBurst().allowsHitTesting(false) }
+            // Three stars earn a shower of paper.
+            if !reduceMotion, result.stars == 3 { ConfettiBurst().allowsHitTesting(false) }
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))
             if !reduceMotion { finishedBounce += 1 }
         }
+    }
+
+    /// How the stars missing from this stage are earned.
+    private func starHint(_ result: SpeakingPath.Result) -> String {
+        if result.stars == 3 { return L.t("滿分三顆星！", "All three stars!") }
+        if result.shadowed < result.words {
+            return L.t("每句都跟讀成功，可以多拿一顆星。", "Say every model sentence well for another star.")
+        }
+        return L.t("每題都開口回答，可以多拿一顆星。", "Answer every question for another star.")
     }
 }
 

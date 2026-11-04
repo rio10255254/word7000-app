@@ -38,6 +38,42 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertEqual(completionValue(app), completed)
     }
 
+    func testSayingTheModelThenTheStageIsClearedAndThePathMoves() {
+        for englishUI in [false, true] {
+            let app = launch(englishUI: englishUI, recording: true)
+            tap(app.buttons["today-speaking"], in: app)
+            XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
+            let firstStage = app.staticTexts["speaking-stage"].label
+            // First step: hear the model sentence and say it back.
+            let record = app.buttons["shadow-record"]
+            tap(record, in: app)
+            record.tap()
+            let result = app.descendants(matching: .any)["shadow-result"].firstMatch
+            reveal(result, in: app, scrollingUp: false)
+            XCTAssertTrue(result.label.contains("100%"), result.label)
+            snapshot(app, englishUI ? "speaking-shadow-en" : "speaking-shadow-zh")
+            tap(app.buttons["shadow-next"], in: app)
+            // Second step: the question, with the hint to build on the sentence.
+            XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+            // The rest of the stage is skipped.
+            for position in 2...5 {
+                tap(app.buttons["speaking-next"], in: app)
+                wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '\(position) /'")
+                skipShadowing(app)
+            }
+            tap(app.buttons["speaking-next"], in: app)
+            let cleared = app.staticTexts["speaking-stage-result"]
+            XCTAssertTrue(cleared.waitForExistence(timeout: 5))
+            XCTAssertTrue(app.descendants(matching: .any)["speaking-stars"].firstMatch.label.hasPrefix("1"))
+            XCTAssertTrue(app.descendants(matching: .any)["speaking-streak"].firstMatch.exists)
+            snapshot(app, englishUI ? "speaking-stage-cleared-en" : "speaking-stage-cleared-zh")
+            tap(app.buttons["speaking-again"], in: app)
+            XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
+            XCTAssertNotEqual(app.staticTexts["speaking-stage"].label, firstStage, "The next stage follows")
+            app.terminate()
+        }
+    }
+
     func testMockSuccessTypingCheckAndProgressInLightEnglishUI() {
         let app = launch(coach: "commitCorrection", englishUI: true)
         let completedBefore = weeklySpeakingCount(app)
@@ -84,6 +120,8 @@ final class SpeakingCoachTests: XCTestCase {
         // Something was written: Next counts the question.
         tap(app.buttons["speaking-next"], in: app)
         wait(app.staticTexts["speaking-position"], matching: "label BEGINSWITH '2 /'")
+        skipShadowing(app)
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
         XCTAssertNotEqual(app.staticTexts["speaking-question"].label, question)
         XCTAssertFalse(app.textViews["coach-answer"].exists, "A new question starts without an answer")
         assertNoFeedback(app)
@@ -305,7 +343,14 @@ final class SpeakingCoachTests: XCTestCase {
 
     private func openSpeaking(_ app: XCUIApplication) {
         tap(app.buttons["today-speaking"], in: app)
+        skipShadowing(app)
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+    }
+
+    /// Each word opens on saying its model sentence; these tests are about answering.
+    private func skipShadowing(_ app: XCUIApplication) {
+        let skip = app.buttons["shadow-skip"]
+        if skip.waitForExistence(timeout: 5) { tap(skip, in: app) }
     }
 
     private func enterAnswer(_ text: String, in app: XCUIApplication) {

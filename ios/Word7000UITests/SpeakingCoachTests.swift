@@ -55,6 +55,8 @@ final class SpeakingCoachTests: XCTestCase {
             tap(app.buttons["shadow-next"], in: app)
             // Second step: the question, with the hint to build on the sentence.
             XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+            sleep(1)
+            snapshot(app, englishUI ? "speaking-question-en" : "speaking-question-zh")
             // The rest of the stage is skipped.
             for position in 2...5 {
                 tap(app.buttons["speaking-next"], in: app)

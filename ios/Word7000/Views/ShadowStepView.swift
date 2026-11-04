@@ -192,14 +192,16 @@ struct ShadowStepView: View {
             }
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("shadow-result")
-            // What the colours mean, only for colours that appear.
-            HStack(spacing: 12) {
-                legend(Palette.known, L.t("聽到了", "Heard"))
-                if check.toneCount > 0 { legend(Palette.review, L.t("聲調不同", "Other tone")) }
-                if check.units.contains(where: { $0.mark == .missed }) { legend(Palette.miss, L.t("沒聽到", "Not heard")) }
+            // What the colours mean, only when something was not heard as written.
+            if check.heardCount < check.units.filter(\.scored).count {
+                HStack(spacing: 12) {
+                    legend(Palette.known, L.t("聽到了", "Heard"))
+                    if check.toneCount > 0 { legend(Palette.review, L.t("聲調不同", "Other tone")) }
+                    if check.units.contains(where: { $0.mark == .missed }) { legend(Palette.miss, L.t("沒聽到", "Not heard")) }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
         }
         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
     }
@@ -307,7 +309,9 @@ private struct ShadowUnitView: View {
                     .font(.title2.weight(.semibold))
                     .foregroundStyle(unit.scored ? color : Palette.secondaryLabel)
             }
-            .frame(minWidth: unit.scored ? 30 : 12)
+            .frame(minWidth: unit.scored ? 30 : 0)
+            // Full-width punctuation sits close to the character before it.
+            .padding(.horizontal, unit.scored ? 0 : -6)
         } else {
             Text(unit.text)
                 .font(.title3.weight(.semibold))

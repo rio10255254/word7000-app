@@ -93,7 +93,8 @@ struct SpeakingSessionView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 12) {
-                if started { trackPicker }
+                // Hidden on a finished stage, where it would only compete with the result.
+                if started, index < count || count == 0 { trackPicker }
                 Group {
                     if !started {
                         ProgressView()
@@ -395,26 +396,11 @@ struct SpeakingSessionView: View {
     @ViewBuilder
     private func header(at index: Int, card: ConversationPromptCard) -> some View {
         if scenarioRef != nil {
-            let turn = turns[index]
-            VStack(alignment: .leading, spacing: 6) {
-                Label(turn.role.practised(mode), systemImage: "person.wave.2.fill")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Palette.accent)
-                    .accessibilityIdentifier("speaking-role")
-                HStack(spacing: 6) {
-                    Text(L.t("重點", "Key phrase")).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
-                    Text(card.keyword).font(.subheadline.weight(.semibold))
-                    if !card.keywordPronunciation.isEmpty {
-                        Text(card.keywordPronunciation).font(.caption).foregroundStyle(.secondary)
-                    }
-                    Text(turn.key.own(mode)).font(.caption).foregroundStyle(.secondary)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(Palette.accent.opacity(0.1), in: Capsule())
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier("speaking-keyword-meaning")
-            }
+            // Who is speaking; the line itself is the question below.
+            Label(turns[index].role.practised(mode), systemImage: "person.wave.2.fill")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("speaking-role")
         } else {
             let word = words[index]
             let face = model.face(word)
@@ -487,11 +473,9 @@ struct SpeakingSessionView: View {
                     Text(card.questionSupport)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
-                    if builtOnSentence, !examplesOnly {
+                    if builtOnSentence, !examplesOnly, scenarioRef == nil {
                         // The ladder's second rung: reuse the sentence just said.
-                        Label(scenarioRef == nil
-                              ? L.t("可以借用剛剛跟讀的句子，換成你自己的經驗。", "Borrow the sentence you just said and make it about you.")
-                              : L.t("先用剛剛那句回答，再加上你自己的細節。", "Start from the reply you just said, then add your own details."),
+                        Label(L.t("可以借用剛剛跟讀的句子，換成你自己的經驗。", "Borrow the sentence you just said and make it about you."),
                               systemImage: "arrow.turn.down.right")
                             .font(.footnote)
                             .foregroundStyle(Palette.accent)

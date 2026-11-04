@@ -139,6 +139,7 @@ struct ScenarioPickerView: View {
                             Button { onPick(ref) } label: {
                                 row(ref, title: L.t(scenario.stages[stageIndex].title.zh, scenario.stages[stageIndex].title.en), next: ref == next)
                             }
+                            .buttonStyle(.plain)
                             .accessibilityIdentifier("speaking-stage-\(SpeakingScenarios.key(ref))")
                         }
                     } header: {
@@ -185,7 +186,6 @@ struct ScenarioPickerView: View {
             }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(L.t("\(stars) 顆星", "\(stars) of 3 stars"))
-            if current == ref { Image(systemName: "checkmark").foregroundStyle(Palette.accent) }
         }
         .contentShape(Rectangle())
     }

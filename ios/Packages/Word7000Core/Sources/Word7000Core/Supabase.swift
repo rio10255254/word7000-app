@@ -369,11 +369,19 @@ public struct SupabaseClient: Sendable {
         return object?["stored"] == .bool(true)
     }
 
-    public func deleteAccount(session: AuthSession) async throws {
-        let data = try await request("POST", "functions/v1/delete-account", body: .object([:]), session: session)
-        if let object = try? JSONDecoder().decode([String: JSONValue].self, from: data), case let .string(message)? = object["error"] {
+    /// Deletes the account. `appleCode`, a fresh Sign in with Apple
+    /// authorization code, lets the backend revoke the app's access to the
+    /// Apple ID. True when that access is known to be revoked.
+    @discardableResult
+    public func deleteAccount(appleCode: String? = nil, session: AuthSession) async throws -> Bool {
+        var body: [String: JSONValue] = [:]
+        if let appleCode, !appleCode.isEmpty { body["code"] = .string(appleCode) }
+        let data = try await request("POST", "functions/v1/delete-account", body: .object(body), session: session)
+        let object = try? JSONDecoder().decode([String: JSONValue].self, from: data)
+        if case let .string(message)? = object?["error"] {
             throw SupabaseError(status: 200, code: nil, message: message)
         }
+        return object?["apple_revoked"] == .bool(true)
     }
 
     // MARK: Plumbing

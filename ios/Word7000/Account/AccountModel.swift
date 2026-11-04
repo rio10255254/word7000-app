@@ -482,11 +482,25 @@ final class AccountModel {
 
     func deleteAccount() async {
         guard let client, let current = session else { return }
+        // A signed-in account comes from Sign in with Apple. Confirming with
+        // Apple once more gives the backend a fresh code to revoke WordCat's
+        // access to the Apple ID with, so it leaves Settings > Sign in with
+        // Apple too (App Review 5.1.1(v)). Cancelling keeps the account.
+        var appleCode: String?
+        if !current.user.anonymous {
+            switch await AppleReauthorization.code() {
+            case let .code(code): appleCode = code
+            case .cancelled:
+                message = A.deleteCancelled
+                return
+            case .unavailable: break
+            }
+        }
         busy = true
         defer { busy = false }
         message = A.deleting
         do {
-            try await client.deleteAccount(session: try await validSession(client: client, current))
+            let revoked = try await client.deleteAccount(appleCode: appleCode, session: try await validSession(client: client, current))
             Outbox.clear(userId: current.user.id)
             app.forgetSpeakingHistory(ownerId: current.user.id, anonymous: current.user.anonymous)
             store(nil)
@@ -494,6 +508,7 @@ final class AccountModel {
             app.setLocalOwner(nil, anonymous: true)
             message = A.deleted
             await bootstrap()
+            if !current.user.anonymous && !revoked { message = A.deletedAppleStillListed }
         } catch {
             fail(error, fallback: A.deleteFailed)
         }
@@ -558,4 +573,6 @@ enum A {
     static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
     static var deleted: String { L.t("帳號已刪除", "Account deleted") }
     static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }
+    static var deleteCancelled: String { L.t("沒有刪除：需要用 Apple 確認才能刪除帳號", "Not deleted: confirm with Apple to delete the account") }
+    static var deletedAppleStillListed: String { L.t("帳號已刪除。若「設定 → Apple 帳號 → 使用 Apple 登入」還看得到單字貓，可以在那裡按「刪除」。", "Account deleted. If WordCat still shows in Settings > Apple Account > Sign in with Apple, you can remove it there.") }
 }

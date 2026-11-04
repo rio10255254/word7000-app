@@ -230,10 +230,11 @@ struct AccountSection: View {
             Button(L.cancel, role: .cancel) {}
             Button(L.t("刪除", "Delete"), role: .destructive) { Task { await account.deleteAccount() } }
         } message: {
-            Text(plus.storeSubscribed
+            Text((plus.storeSubscribed
                  ? L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。刪除帳號不會取消 App Store 的 Premium 訂閱，請到「管理訂閱」取消。",
                        "Progress, banks and daily records are deleted for good. This cannot be undone. Deleting the account doesn't cancel your App Store Premium subscription; cancel it in Manage subscription.")
                  : L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
+                 + (account.isPermanent ? L.t("\n接著會請你用 Apple 確認一次，單字貓也會從 Apple 帳號的登入清單移除。", "\nYou'll confirm with Apple once, and WordCat is removed from your Apple Account's sign-in list too.") : ""))
         }
 
         if includeDeletion, account.configured, account.session != nil {

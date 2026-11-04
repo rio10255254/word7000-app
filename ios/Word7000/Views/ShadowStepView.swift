@@ -188,8 +188,12 @@ struct ShadowStepView: View {
             .background(Palette.fill, in: BubbleShape(tail: .leading))
             .contentShape(Rectangle())
             .onTapGesture { toggleTranslation() }
-            SpeakButton(text: partner.line, language: language)
-                .simultaneousGesture(TapGesture().onEnded { advancing = false })
+            // Hear it, and see the whole exchange translated.
+            VStack(spacing: 12) {
+                SpeakButton(text: partner.line, language: language)
+                    .simultaneousGesture(TapGesture().onEnded { advancing = false })
+                translateKey
+            }
             Spacer(minLength: 24)
         }
     }
@@ -199,9 +203,11 @@ struct ShadowStepView: View {
     @ViewBuilder
     private var replyBlock: some View {
         if partner != nil {
-            HStack(alignment: .bottom, spacing: 8) {
+            HStack(alignment: .center, spacing: 8) {
                 Spacer(minLength: 24)
-                replyKeys
+                SpeakButton(text: sentence, language: language)
+                    .simultaneousGesture(TapGesture().onEnded { advancing = false })
+                    .accessibilityIdentifier("shadow-listen")
                 replyText
                     .padding(.horizontal, 14)
                     .padding(.vertical, 12)
@@ -242,16 +248,21 @@ struct ShadowStepView: View {
             SpeakButton(text: sentence, language: language)
                 .simultaneousGesture(TapGesture().onEnded { advancing = false })
                 .accessibilityIdentifier("shadow-listen")
-            if !translation.isEmpty {
-                Button { toggleTranslation() } label: {
-                    Image(systemName: showsTranslation ? "character.bubble.fill" : "character.bubble")
-                        .font(.title3)
-                        .foregroundStyle(Palette.accent)
-                }
-                .buttonStyle(.borderless)
-                .accessibilityLabel(showsTranslation ? L.t("收起翻譯", "Hide translation") : L.t("看翻譯", "Show translation"))
-                .accessibilityIdentifier("shadow-translation")
+            translateKey
+        }
+    }
+
+    @ViewBuilder
+    private var translateKey: some View {
+        if !translation.isEmpty || !(partner?.gloss ?? "").isEmpty {
+            Button { toggleTranslation() } label: {
+                Image(systemName: showsTranslation ? "character.bubble.fill" : "character.bubble")
+                    .font(.title3)
+                    .foregroundStyle(Palette.accent)
             }
+            .buttonStyle(.borderless)
+            .accessibilityLabel(showsTranslation ? L.t("收起翻譯", "Hide translation") : L.t("看翻譯", "Show translation"))
+            .accessibilityIdentifier("shadow-translation")
         }
     }
 

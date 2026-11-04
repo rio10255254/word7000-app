@@ -50,6 +50,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     @ObservationIgnored private var task: SFSpeechRecognitionTask?
     @ObservationIgnored private var file: URL?
     @ObservationIgnored private var player: AVAudioPlayer?
+    /// When the live audio engine cannot start (an unusual audio route, or
+    /// a simulator), a plain recorder takes the take instead, as before.
+    @ObservationIgnored private var recorder: AVAudioRecorder?
+    @ObservationIgnored private var meter: Task<Void, Never>?
     @ObservationIgnored private var finishing: Task<Void, Never>?
     @ObservationIgnored private let store = SampleStore()
     @ObservationIgnored private var lastChange = Date()
@@ -117,12 +121,99 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             do {
                 try await WordAudioSession.activate(recording: true)
                 guard self.generation == id else { return }
-                try self.begin(hints: hints, id: id)
+                do {
+                    try self.begin(hints: hints, id: id)
+                } catch {
+                    // No live audio here: record plainly and turn it into text afterwards.
+                    self.abandonLive()
+                    try self.beginRecorder(id: id)
+                }
             } catch {
-                self.stopEngine()
+                self.abandonLive()
                 self.state = .idle
                 self.message = L.t("無法開始錄音，請確認麥克風沒有被其他 App 使用。", "Recording could not start. Check whether another app is using the microphone.")
                 WordAudioSession.release()
+            }
+        }
+    }
+
+    private func abandonLive() {
+        stopEngine()
+        task?.cancel(); task = nil
+        request = nil
+        if let file { try? FileManager.default.removeItem(at: file) }
+        file = nil
+    }
+
+    private func beginRecorder(id: UUID) throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("word7000-take-\(UUID().uuidString).m4a")
+        let recorder = try AVAudioRecorder(url: url, settings: [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC), AVSampleRateKey: 44_100,
+            AVNumberOfChannelsKey: 1, AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ])
+        recorder.isMeteringEnabled = true
+        guard recorder.prepareToRecord(), recorder.record(forDuration: 60) else { throw ListenError.noInput }
+        try? FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: url.path)
+        file = url
+        self.recorder = recorder
+        state = .listening
+        meter = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .milliseconds(100))
+                guard let self, self.generation == id, self.state == .listening, let recorder = self.recorder else { return }
+                recorder.updateMeters()
+                self.seconds = recorder.currentTime
+                self.level = max(0, min(1, (recorder.averagePower(forChannel: 0) + 50) / 50))
+            }
+        }
+    }
+
+    /// Ends a plain recording and turns it into text with whichever
+    /// recognizer this iPhone has on the device.
+    private func stopRecorder(_ recorder: AVAudioRecorder) {
+        seconds = max(seconds, recorder.currentTime)
+        recorder.stop()
+        self.recorder = nil
+        meter?.cancel(); meter = nil
+        hasRecording = seconds > 0.2 && file != nil
+        guard hasRecording, let file, support != .recordOnly else { complete(); return }
+        state = .finishing
+        let id = generation
+        let language = language
+        let live = support == .live
+        finishing = Task { [weak self] in
+            var text = ""
+            if #available(iOS 26.0, *), !live {
+                text = (try? await LiveListener.transcribe(file: file, language: language)) ?? ""
+            } else {
+                text = await LiveListener.transcribeOnDevice(file: file, language: language)
+            }
+            guard let self, self.generation == id, self.state == .finishing else { return }
+            if !text.isEmpty { self.text = text }
+            self.complete()
+        }
+    }
+
+    /// A finished take as text with the older recognizer, on the device only.
+    private static func transcribeOnDevice(file: URL, language: String) async -> String {
+        guard let recognizer = SFSpeechRecognizer(locale: Locale(identifier: language)),
+              recognizer.supportsOnDeviceRecognition else { return "" }
+        let request = SFSpeechURLRecognitionRequest(url: file)
+        request.requiresOnDeviceRecognition = true
+        request.shouldReportPartialResults = false
+        request.addsPunctuation = true
+        return await withCheckedContinuation { continuation in
+            var resumed = false
+            let lock = NSLock()
+            func finish(_ text: String) {
+                lock.lock(); defer { lock.unlock() }
+                guard !resumed else { return }
+                resumed = true
+                continuation.resume(returning: text)
+            }
+            _ = recognizer.recognitionTask(with: request) { result, error in
+                if let result, result.isFinal { finish(result.bestTranscription.formattedString) }
+                else if error != nil { finish("") }
             }
         }
     }
@@ -199,6 +290,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             complete(); hasRecording = true; return
         }
         #endif
+        if let recorder { stopRecorder(recorder); return }
         stopEngine()
         hasRecording = file != nil && store.count > 0
         if request == nil, support == .afterwards, hasRecording, let file {
@@ -252,7 +344,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
 
     private func complete() {
         guard state == .listening || state == .finishing || state == .requesting else { return }
-        if state == .listening { stopEngine(); hasRecording = file != nil && store.count > 0 }
+        if state == .listening { stopEngine(); if store.count > 0 { hasRecording = file != nil } }
         finishing?.cancel(); finishing = nil
         task?.cancel(); task = nil
         request = nil
@@ -305,6 +397,8 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         simulation?.cancel(); simulation = nil
         #endif
         let hadAudio = busy || state == .playing
+        recorder?.stop(); recorder = nil
+        meter?.cancel(); meter = nil
         stopEngine()
         finishing?.cancel(); finishing = nil
         task?.cancel(); task = nil

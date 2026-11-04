@@ -730,7 +730,7 @@ private struct TranslatableQuestion: View {
                 }
                 ZStack(alignment: .topLeading) {
                     if translated, let translation {
-                        Text(translation).font(.title.weight(.semibold)).lineSpacing(4)
+                        Text(translation).font(.title2.weight(.semibold)).lineSpacing(4)
                             .foregroundStyle(Palette.accent)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .accessibilityIdentifier("speaking-question-gloss")
@@ -738,7 +738,7 @@ private struct TranslatableQuestion: View {
                             .transition(flip(from: -90))
                     } else {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(question).font(.title.weight(.semibold)).lineSpacing(4)
+                            Text(question).font(.title2.weight(.semibold)).lineSpacing(4)
                                 .accessibilityIdentifier("speaking-question")
                                 .accessibilityAction(named: L.t("看中文翻譯", "Show in English")) { toggle() }
                             if !pinyin.isEmpty {
@@ -748,18 +748,6 @@ private struct TranslatableQuestion: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .transition(flip(from: -90))
-                    }
-                }
-                .background {
-                    // A soft glow behind the question while the hint is showing.
-                    if hintVisible {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(Palette.accent)
-                            .padding(-6)
-                            .phaseAnimator(reduceMotion ? [0.06] : [0.0, 0.1]) { glow, opacity in
-                                glow.opacity(opacity)
-                            } animation: { _ in .easeInOut(duration: 1.1) }
-                            .accessibilityHidden(true)
                     }
                 }
             }

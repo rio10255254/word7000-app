@@ -198,7 +198,17 @@ struct SpeakingSessionView: View {
         let candidates = model.speakingCandidates
         // One practice: conversation questions and example sentences, mixed.
         availableCount = candidates.count
-        let mixed = SpeakingPractice.mixedSession(from: candidates, recent: model.recentSpeakingIds, count: 10)
+        var mixed = SpeakingPractice.mixedSession(from: candidates, recent: model.recentSpeakingIds, count: 10)
+        #if DEBUG
+        // Promotional screenshots ask about one chosen word first, so a sample
+        // answer fits the question.
+        let arguments = ProcessInfo.processInfo.arguments
+        if let flag = arguments.firstIndex(of: "-uiTestingSpeakingWord"), arguments.indices.contains(flag + 1),
+           let word = candidates.first(where: { SpeakingPractice.entry(for: $0)?.keywordZh == arguments[flag + 1] }) {
+            mixed.removeAll { $0.word.id == word.id }
+            mixed.insert((word: word, activity: .questions), at: 0)
+        }
+        #endif
         words = mixed.map(\.word)
         kinds = Dictionary(mixed.map { ($0.word.id, $0.activity) }, uniquingKeysWith: { first, _ in first })
         index = 0

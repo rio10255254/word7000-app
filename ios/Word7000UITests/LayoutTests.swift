@@ -172,6 +172,7 @@ final class LayoutTests: XCTestCase {
         onScreen(record, in: window, "shadow-record")
         let skip = app.buttons["shadow-skip"]
         onScreen(skip, in: window, "shadow-skip")
+        above(record, skip, "shadow-record")
         skip.tap()
         let moveOn = app.buttons["speaking-next"]
         XCTAssertTrue(moveOn.waitForExistence(timeout: 5))
@@ -185,6 +186,14 @@ final class LayoutTests: XCTestCase {
         snap(app, "tour-7-speaking-turn2")
         XCTAssertTrue(app.descendants(matching: .any)["speaking-earlier-line"].firstMatch.exists, "The line said before stays above")
         onScreen(app.buttons["shadow-record"], in: window, "shadow-record (turn 2)")
+        // With three bubbles the page scrolls itself so the key is clear of the buttons below.
+        above(app.buttons["shadow-record"], skip, "shadow-record (turn 2)")
+    }
+
+    /// Wholly above the row of buttons at the bottom, not tucked under it.
+    private func above(_ element: XCUIElement, _ bar: XCUIElement, _ name: String, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertLessThanOrEqual(element.frame.maxY, bar.frame.minY + 1,
+                                 "\(name) \(element.frame) is partly under the buttons below (top \(bar.frame.minY))", file: file, line: line)
     }
 
     /// Fully on the screen, so it can be seen and tapped.

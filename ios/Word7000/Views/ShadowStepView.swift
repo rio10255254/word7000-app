@@ -70,14 +70,28 @@ struct ShadowStepView: View {
         }
     }
 
+    private static let recorderID = "shadow-recorder"
+
     var body: some View {
         VStack(spacing: 16) {
-            ScrollView {
-                VStack(spacing: 20) {
-                    sentenceCard
-                    recorderKey
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 20) {
+                        sentenceCard
+                        recorderKey.id(Self.recorderID)
+                    }
+                    .padding(.bottom, 12)
                 }
-                .padding(.bottom, 12)
+                // A later turn of a role-play scrolls like a chat: on a small phone
+                // the oldest line moves up out of the way, so the new lines and the
+                // key stay in full view.
+                .task(id: sentence) {
+                    guard !earlier.isEmpty else { return }
+                    do { try await Task.sleep(for: .milliseconds(reduceMotion ? 50 : 450)) } catch { return }
+                    withAnimation(reduceMotion ? nil : .easeOut(duration: 0.35)) {
+                        proxy.scrollTo(Self.recorderID, anchor: .bottom)
+                    }
+                }
             }
             ButtonRow {
                 Button { finish() } label: {

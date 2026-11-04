@@ -1,0 +1,46 @@
+# 📚 Publish, update or take down an official word bank (content/banks/<id>.json)
+# in everyone's app right away, without an app update.
+# 使用說明：docs/遠端控制說明.md
+name: 📚 上架字庫
+
+run-name: "${{ inputs.dry_run && '👀 預覽' || (inputs.action == '下架' && '🧹 已下架' || '📚 已上架') }}：${{ inputs.bank }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '👀 只預覽（勾著＝不會真的上架；確認後取消勾選再按一次）'
+        type: boolean
+        default: true
+      bank:
+        description: '① 字庫代號（content/banks/ 裡的檔名，例：medical）'
+        type: string
+        required: true
+      action:
+        description: '② 要做什麼'
+        type: choice
+        options: ['上架或更新', '下架']
+        default: '上架或更新'
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_REF: byyaepkhxexppjrdhcaw
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: 字庫
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ACTION: ${{ inputs.action == '下架' && 'bank-remove' || 'bank-publish' }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          BANK: ${{ inputs.bank }}
+        run: scripts/remote-control.sh

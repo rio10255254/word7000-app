@@ -19,7 +19,7 @@ struct GuideChecklist: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 8) {
                 Mascot(mood: .happy, size: 30)
-                Text(L.t("小笨貓的新手任務", "Silly Cat's starter quests"))
+                Text(L.t("傻貓的新手任務", "Silly Cat's starter quests"))
                     .font(.display(.headline, weight: .bold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)

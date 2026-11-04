@@ -3,7 +3,7 @@ import Observation
 import SwiftUI
 import Word7000Core
 
-/// What 小笨貓 remembers about the learner: an exam date, a goal, what to call
+/// What 傻貓 remembers about the learner: an exam date, a goal, what to call
 /// them and a few short notes. Kept only on this iPhone; sent along with the
 /// cat's AI requests so it can talk about them. The learner can see, change
 /// and wipe all of it in Me.
@@ -267,7 +267,7 @@ struct CatMemoryView: View {
                         .accessibilityIdentifier("cat-memory-nickname")
                 }
                 if !memory.notes.isEmpty {
-                    Section(L.t("小笨貓的筆記", "Silly Cat's notes")) {
+                    Section(L.t("傻貓的筆記", "Silly Cat's notes")) {
                         ForEach(memory.notes, id: \.self) { note in
                             Text(note)
                                 .swipeActions { Button(role: .destructive) { memory.removeNote(note) } label: { Label(L.t("刪除", "Delete"), systemImage: "trash") } }
@@ -278,15 +278,15 @@ struct CatMemoryView: View {
                     Button(L.t("全部忘掉", "Forget everything"), role: .destructive) { confirmForget = true }
                         .disabled(memory.isEmpty)
                 } footer: {
-                    Text(L.t("只存在這支 iPhone，跟小笨貓聊天時才會一起送出。", "Kept on this iPhone; sent only with your chats."))
+                    Text(L.t("只存在這支 iPhone，跟傻貓聊天時才會一起送出。", "Kept on this iPhone; sent only with your chats."))
                 }
             }
             .listRowBackground(StyledRowBackground())
         }
         .warmList()
-        .navigationTitle(L.t("小笨貓記得的事", "What Silly Cat remembers"))
+        .navigationTitle(L.t("傻貓記得的事", "What Silly Cat remembers"))
         .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog(L.t("要小笨貓全部忘掉？", "Make Silly Cat forget everything?"), isPresented: $confirmForget, titleVisibility: .visible) {
+        .confirmationDialog(L.t("要傻貓全部忘掉？", "Make Silly Cat forget everything?"), isPresented: $confirmForget, titleVisibility: .visible) {
             Button(L.t("全部忘掉", "Forget everything"), role: .destructive) { memory.forgetAll() }
             Button(L.cancel, role: .cancel) {}
         } message: {

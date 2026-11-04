@@ -593,7 +593,7 @@ struct SessionSummary: View {
             }
             if !session.reviewIds.isEmpty, !AppRuntime.uiTesting {
                 PlusUpsellCard(feature: .smartAI,
-                               title: L.t("這 \(session.reviewIds.count) 個字，讓小笨貓講給你聽", "Let Silly Cat explain these \(session.reviewIds.count) words"),
+                               title: L.t("這 \(session.reviewIds.count) 個字，讓傻貓講給你聽", "Let Silly Cat explain these \(session.reviewIds.count) words"),
                                detail: L.t("用法、例句、跟哪個字容易搞混，一個一個說清楚，下次就記得。", "Usage, examples and what they get mixed up with, one by one, so they stick."))
                     .entrance(4)
             }

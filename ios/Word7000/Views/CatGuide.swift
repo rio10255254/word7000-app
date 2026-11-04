@@ -62,7 +62,7 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .spelling: L.t("拼字", "Write")
         case .exam: L.t("模擬考", "Mock exam")
         case .scan: L.t("掃描", "Scan")
-        case .chat: L.t("問小笨貓", "Ask the cat")
+        case .chat: L.t("問傻貓", "Ask the cat")
         }
     }
 

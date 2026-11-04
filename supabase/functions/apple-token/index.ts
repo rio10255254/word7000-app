@@ -40,7 +40,10 @@ Deno.serve(async (request) => {
   if (!data.user.identities?.some((identity) => identity.provider === 'apple')) return reply({ stored: false });
 
   const refreshToken = await exchangeAppleCode(code, key);
-  if (!refreshToken) return reply({ stored: false });
+  if (!refreshToken) {
+    console.error(JSON.stringify({ apple: 'code_exchange_failed', user: data.user.id }));
+    return reply({ stored: false });
+  }
   const service = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
   const { error: saveError } = await service.rpc('save_apple_token_for', { p_user: data.user.id, p_refresh_token: refreshToken });
   if (saveError) {

@@ -599,7 +599,7 @@ private enum S {
         L.t("一行一個字，英文、中文或兩個都寫\nabandon\n好處\nbenefit n. 好處", "One word a line: English, Chinese or both\nabandon\n好處\nbenefit n. 好處")
     }
     static var paste: String { L.t("貼上", "Paste") }
-    static var catSuggests: String { L.t("小笨貓幫你補", "Silly Cat fills in") }
+    static var catSuggests: String { L.t("傻貓幫你補", "Silly Cat fills in") }
     static var fillAll: String { L.t("全部補上", "Fill all") }
     static func fillLine(_ line: String, _ entry: String) -> String { L.t("把「\(line)」補成 \(entry)", "Fill in \u{201C}\(line)\u{201D} as \(entry)") }
     static func lookingUp(_ line: String) -> String { L.t("正在查「\(line)」…", "Looking up \u{201C}\(line)\u{201D}…") }

@@ -1,0 +1,22 @@
+{
+  "mode": "english",
+  "name_zh": "醫護英文",
+  "name_en": "Medical English",
+  "description_zh": "醫院、看診與護理常用字",
+  "description_en": "Words for hospitals, check-ups and nursing",
+  "icon": "cross.case.fill",
+  "color": "#FF2D55",
+  "premium": false,
+  "sort": 10,
+  "words": [
+    {
+      "word": "diagnosis",
+      "partOfSpeech": "n",
+      "pronunciation": "/ˌdaɪəɡˈnoʊsɪs/",
+      "meaningZh": "診斷",
+      "example": "The doctor explained the diagnosis clearly.",
+      "exampleZh": "醫生清楚說明了診斷結果。",
+      "group": "Level 1"
+    }
+  ]
+}

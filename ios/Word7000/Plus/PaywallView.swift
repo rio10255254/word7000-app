@@ -45,7 +45,10 @@ struct PaywallView: View {
             if plus.plansState != .loaded { await plus.loadPlans() }
             if selectedID == nil { selectedID = plus.plans.first(where: \.yearly)?.id ?? plus.plans.first?.id }
         }
-        .onAppear { withAnimation(.smooth(duration: 0.6)) { appeared = true } }
+        .onAppear {
+            withAnimation(.smooth(duration: 0.6)) { appeared = true }
+            Usage.log("paywall_view", reason.usageSource)
+        }
         .onChange(of: plus.subscribed) { _, subscribed in
             if subscribed { purchased = true }
         }

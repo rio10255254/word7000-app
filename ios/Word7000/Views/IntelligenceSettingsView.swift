@@ -93,7 +93,7 @@ struct IntelligenceSettingsView: View {
             }
             if tier != .plus {
                 Button { paywall = .locked(.smartAI) } label: {
-                    Label(L.t("訂閱 Premium，打開小笨貓的 AI 老師", "Subscribe to Premium for Silly Cat's AI tutor"), systemImage: "sparkles")
+                    Label(L.t("訂閱 Premium，打開傻貓的 AI 老師", "Subscribe to Premium for Silly Cat's AI tutor"), systemImage: "sparkles")
                 }
                 .accessibilityIdentifier("settings-ai-upgrade")
             }

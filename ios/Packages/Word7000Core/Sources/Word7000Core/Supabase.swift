@@ -304,11 +304,43 @@ public struct SupabaseClient: Sendable {
         ]), session: session)
     }
 
+    /// Sends usage counts (see UsageCounter); the server skips malformed rows.
+    public func logUsage(_ rows: [JSONValue], session: AuthSession) async throws {
+        guard !rows.isEmpty else { return }
+        _ = try await request("POST", "rest/v1/rpc/log_usage", body: .object(["p_events": .array(rows)]), session: session)
+    }
+
     /// The developer's live messages to everyone, newest first.
     public func announcements(session: AuthSession?) async throws -> [Announcement] {
         let data = try await request("GET", "rest/v1/announcements",
                                      query: ["select": "*", "order": "starts_at.desc", "limit": "5"], session: session)
         return (try? JSONDecoder().decode([Announcement].self, from: data)) ?? []
+    }
+
+    /// Everything published as word list content, reusing banks from `cached`
+    /// whose `updated_at` has not changed (so only new or edited banks are
+    /// downloaded). Throws when the server could not be reached.
+    public func remoteContent(cached: RemoteContent, session: AuthSession?) async throws -> RemoteContent {
+        let fixes = try await request("GET", "rest/v1/content_corrections",
+                                      query: ["select": "mode,word_id,fields,hidden", "limit": "5000"], session: session)
+        let corrections = (try? JSONDecoder().decode([WordCorrection].self, from: fixes)) ?? []
+        let listing = try await request("GET", "rest/v1/official_banks", query: ["select": "id,updated_at"], session: session)
+        let versions = ((try? JSONDecoder().decode([[String: JSONValue]].self, from: listing)) ?? []).compactMap { row -> (String, String)? in
+            guard case let .string(id)? = row["id"], case let .string(updated)? = row["updated_at"] else { return nil }
+            return (id, updated)
+        }
+        let known = Dictionary(cached.banks.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        var banks: [OfficialBank] = []
+        var changed: [String] = []
+        for (id, updated) in versions {
+            if let bank = known[id], bank.updatedAt == updated { banks.append(bank) } else { changed.append(id) }
+        }
+        if !changed.isEmpty {
+            let ids = changed.map { "\"\($0)\"" }.joined(separator: ",")
+            let data = try await request("GET", "rest/v1/official_banks", query: ["select": "*", "id": "in.(\(ids))"], session: session)
+            banks += (try? JSONDecoder().decode([OfficialBank].self, from: data)) ?? []
+        }
+        return RemoteContent(corrections: corrections, banks: banks)
     }
 
     /// The newest live requirement for the oldest app version allowed to run.
@@ -369,11 +401,19 @@ public struct SupabaseClient: Sendable {
         return object?["stored"] == .bool(true)
     }
 
-    public func deleteAccount(session: AuthSession) async throws {
-        let data = try await request("POST", "functions/v1/delete-account", body: .object([:]), session: session)
-        if let object = try? JSONDecoder().decode([String: JSONValue].self, from: data), case let .string(message)? = object["error"] {
+    /// Deletes the account. `appleCode`, a fresh Sign in with Apple
+    /// authorization code, lets the backend revoke the app's access to the
+    /// Apple ID. True when that access is known to be revoked.
+    @discardableResult
+    public func deleteAccount(appleCode: String? = nil, session: AuthSession) async throws -> Bool {
+        var body: [String: JSONValue] = [:]
+        if let appleCode, !appleCode.isEmpty { body["code"] = .string(appleCode) }
+        let data = try await request("POST", "functions/v1/delete-account", body: .object(body), session: session)
+        let object = try? JSONDecoder().decode([String: JSONValue].self, from: data)
+        if case let .string(message)? = object?["error"] {
             throw SupabaseError(status: 200, code: nil, message: message)
         }
+        return object?["apple_revoked"] == .bool(true)
     }
 
     // MARK: Plumbing

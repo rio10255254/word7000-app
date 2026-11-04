@@ -259,6 +259,7 @@ struct BankShelf: View {
     var manage: (CustomVocabSet) -> Void
     var rename: (CustomVocabSet) -> Void
     @State private var deleting: CustomVocabSet?
+    @State private var paywall: PaywallReason?
     @ScaledMetric(relativeTo: .body) private var shelfWidth = 140.0
     @ScaledMetric(relativeTo: .body) private var shelfHeight = 124.0
 
@@ -266,6 +267,17 @@ struct BankShelf: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 card(id: WordBanks.coreBankId, name: L.coreBankName, count: model.vocabularyWords.count, icon: "character.book.closed.fill", color: Palette.accent)
+                // The developer's official banks, published without an app update.
+                ForEach(model.officialBanks) { bank in
+                    let locked = bank.premium && !plus.subscribed
+                    card(id: bank.selectionId, name: bank.localizedName, count: bank.words.count, icon: bank.icon,
+                         color: Color(hex: bank.color) ?? Palette.accent,
+                         locked: locked ? { paywall = .officialBank(name: bank.localizedName) } : nil)
+                        .overlay(alignment: .topTrailing) {
+                            if bank.premium { PlusBadge().padding(10).allowsHitTesting(false) }
+                        }
+                        .accessibilityHint(bank.localizedDescription)
+                }
                 ForEach(model.customSets.sets) { set in
                     let scanned = set.wordIds.contains(where: WordBanks.isScannedWordId)
                     card(id: set.id, name: set.name, count: WordBanks.words(of: set, in: model.allWords).count,
@@ -345,6 +357,7 @@ struct BankShelf: View {
         }
         // Lets the chosen card's coloured shadow show above and below the shelf.
         .scrollClipDisabled()
+        .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         .sensoryFeedback(.selection, trigger: model.settings.activeBankId) { _, _ in model.settings.hapticsEnabled ?? true }
         .confirmationDialog(L.t("刪除「\(deleting?.name ?? "")」？", "Delete \u{201C}\(deleting?.name ?? "")\u{201D}?"),
                             isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }), titleVisibility: .visible) {
@@ -378,12 +391,14 @@ struct BankShelf: View {
         }
     }
 
-    private func card(id: String, name: String, count: Int, icon: String, color: Color) -> some View {
+    /// `locked`: what tapping does instead of choosing the bank (a Premium bank without Premium).
+    private func card(id: String, name: String, count: Int, icon: String, color: Color, locked: (() -> Void)? = nil) -> some View {
         let active = model.settings.activeBankId == id
         let collage = appStyle == .collage
         // Leather fills the chosen card with its colour; the collage tapes it down and stamps it.
         let filled = active && !collage
         return Button {
+            if let locked { locked(); return }
             withAnimation(reduceMotion ? nil : Motion.reveal) { model.selectBank(id) }
         } label: {
             VStack(alignment: .leading, spacing: 0) {

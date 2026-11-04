@@ -50,7 +50,7 @@ struct MeView: View {
     
                 Section {
                     NavigationLink { CatMemoryView() } label: {
-                        Label(L.t("小笨貓記得的事", "What Silly Cat remembers"), systemImage: "pawprint")
+                        Label(L.t("傻貓記得的事", "What Silly Cat remembers"), systemImage: "pawprint")
                     }
                     .accessibilityIdentifier("me-cat-memory")
                     NavigationLink { SettingsView() } label: {

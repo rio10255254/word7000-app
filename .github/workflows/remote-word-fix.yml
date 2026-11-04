@@ -1,0 +1,62 @@
+# ✏️ Fix a word in everyone's app right away, without an app update.
+# 使用說明：docs/遠端控制說明.md
+name: ✏️ 校正單字
+
+run-name: "${{ inputs.dry_run && '👀 預覽' || '✏️ 已校正' }}：${{ inputs.word }}・${{ inputs.field }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '👀 只預覽（勾著＝不會真的改；確認後取消勾選再按一次）'
+        type: boolean
+        default: true
+      mode:
+        description: '① 哪個模式的字'
+        type: choice
+        options: ['學英文（7000 單字與官方字庫）', '學中文（台灣華語與官方字庫）']
+        default: '學英文（7000 單字與官方字庫）'
+      word:
+        description: '② 單字（英文單字或中文詞都可以；同名的字會列出代號讓你改填代號）'
+        type: string
+        required: true
+      field:
+        description: '③ 要改什麼'
+        type: choice
+        options: ['中文意思／中文詞', '補充意思', '詞性', '音標／拼音', '例句', '例句翻譯', '英文單字／英文解釋', '級數', '隱藏這個字', '恢復顯示這個字', '取消這個字的所有校正']
+        default: '中文意思／中文詞'
+      value:
+        description: '④ 改成（隱藏／恢復／取消不用填；補充意思填空白＝刪掉）'
+        type: string
+        default: ''
+      note:
+        description: '備註（選填，例如：使用者回報）'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_REF: byyaepkhxexppjrdhcaw
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: 校正單字
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          ACTION: fix
+          DRY_RUN: ${{ inputs.dry_run }}
+          MODE: ${{ inputs.mode }}
+          WORD: ${{ inputs.word }}
+          FIELD: ${{ inputs.field }}
+          VALUE: ${{ inputs.value }}
+          NOTE: ${{ inputs.note }}
+        run: scripts/remote-control.sh

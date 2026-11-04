@@ -299,6 +299,15 @@ final class AccountModel {
         }
     }
 
+    func sendUsageBeforeBackground() {
+        guard session != nil, !AppRuntime.uiTesting else { return }
+        let identifier = UIApplication.shared.beginBackgroundTask(withName: "word7000-usage")
+        Task {
+            await sendUsage()
+            UIApplication.shared.endBackgroundTask(identifier)
+        }
+    }
+
     /// Counts the learner as active today (guest or signed in).
     func heartbeat() {
         guard let client, let current = session else { return }
@@ -350,12 +359,30 @@ final class AccountModel {
                                            os: UIDevice.current.systemVersion, language: L.zh ? "zh" : "en", session: valid)
     }
 
+    /// Sends the usage counts gathered since the last send (see Usage).
+    func sendUsage() async {
+        guard let client, let current = session, !AppRuntime.uiTesting else { return }
+        let batch = Usage.take()
+        guard !batch.isEmpty else { return }
+        do {
+            try await client.logUsage(batch.rows, session: try await validSession(client: client, current))
+        } catch {
+            Usage.restore(batch)
+        }
+    }
+
     /// The developer's live messages; none without an account service or a
     /// connection.
     /// nil when the check could not be made; .some(nil) when no rule is live.
     func fetchUpdateRequirement() async -> UpdateRequirement?? {
         guard let client else { return nil }
         do { return .some(try await client.updateRequirement(session: session)) } catch { return nil }
+    }
+
+    /// Published word list content; nil when it could not be fetched.
+    func fetchRemoteContent(cached: RemoteContent) async -> RemoteContent? {
+        guard let client, !AppRuntime.uiTesting else { return nil }
+        return try? await client.remoteContent(cached: cached, session: session)
     }
 
     func fetchAnnouncements() async -> [Announcement] {
@@ -375,7 +402,14 @@ final class AccountModel {
         do { valid = try await validSession(client: client, current) }
         catch is CancellationError { throw CancellationError() }
         catch { throw CloudAI.Failure.unavailable }
-        return try await client.runAI(kind, input: input, session: valid, entitlement: entitlement, as: type)
+        do {
+            let result = try await client.runAI(kind, input: input, session: valid, entitlement: entitlement, as: type)
+            Usage.log("ai", "\(kind.rawValue):\(result.usage?.tier.rawValue ?? "unknown")")
+            return result
+        } catch let failure as CloudAI.Failure {
+            Usage.log("ai_failed", "\(kind.rawValue):\(failure)")
+            throw failure
+        }
     }
 
     func saveLiveActivityDevice(_ row: [String: JSONValue]) async -> Bool {
@@ -430,6 +464,7 @@ final class AccountModel {
             if let email, !email.isEmpty { metadata["email"] = .string(email) }
             if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
             await activate(newSession, fallbackEmail: email)
+            Usage.log("sign_in", "apple")
             // So that deleting the account later also revokes this app's
             // access to the Apple ID. Signing in never waits on or fails for it.
             if let authorizationCode, !authorizationCode.isEmpty {
@@ -482,18 +517,34 @@ final class AccountModel {
 
     func deleteAccount() async {
         guard let client, let current = session else { return }
+        // A signed-in account comes from Sign in with Apple. Confirming with
+        // Apple once more gives the backend a fresh code to revoke WordCat's
+        // access to the Apple ID with, so it leaves Settings > Sign in with
+        // Apple too (App Review 5.1.1(v)). Cancelling keeps the account.
+        var appleCode: String?
+        if !current.user.anonymous {
+            switch await AppleReauthorization.code() {
+            case let .code(code): appleCode = code
+            case .cancelled:
+                message = A.deleteCancelled
+                return
+            case .unavailable: break
+            }
+        }
         busy = true
         defer { busy = false }
         message = A.deleting
         do {
-            try await client.deleteAccount(session: try await validSession(client: client, current))
+            let revoked = try await client.deleteAccount(appleCode: appleCode, session: try await validSession(client: client, current))
             Outbox.clear(userId: current.user.id)
             app.forgetSpeakingHistory(ownerId: current.user.id, anonymous: current.user.anonymous)
             store(nil)
             app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
             app.setLocalOwner(nil, anonymous: true)
             message = A.deleted
+            Usage.log("account_deleted", current.user.anonymous ? "guest" : revoked ? "apple_revoked" : "apple_listed")
             await bootstrap()
+            if !current.user.anonymous && !revoked { message = A.deletedAppleStillListed }
         } catch {
             fail(error, fallback: A.deleteFailed)
         }
@@ -558,4 +609,6 @@ enum A {
     static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
     static var deleted: String { L.t("帳號已刪除", "Account deleted") }
     static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }
+    static var deleteCancelled: String { L.t("沒有刪除：需要用 Apple 確認才能刪除帳號", "Not deleted: confirm with Apple to delete the account") }
+    static var deletedAppleStillListed: String { L.t("帳號已刪除。若「設定 → Apple 帳號 → 使用 Apple 登入」還看得到單字貓，可以在那裡按「刪除」。", "Account deleted. If WordCat still shows in Settings > Apple Account > Sign in with Apple, you can remove it there.") }
 }

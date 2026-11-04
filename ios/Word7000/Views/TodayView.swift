@@ -635,7 +635,7 @@ struct TodayView: View {
         }
         .entrance(order, distance: 12)
         .accessibilityIdentifier(item.id)
-        .accessibilityValue(model.guideStep?.tileId == item.id ? L.t("小笨貓推薦", "Silly Cat suggests") : "")
+        .accessibilityValue(model.guideStep?.tileId == item.id ? L.t("傻貓推薦", "Silly Cat suggests") : "")
     }
 
     private static let deep = Color(red: 0.45, green: 0.27, blue: 0.16)

@@ -9,11 +9,18 @@ import Word7000Core
 @MainActor
 @Observable
 final class AppModel {
-    /// The 7000 English words learners of English study.
-    let englishCoreWords: [WordEntry]
+    /// The 7000 English words learners of English study, with the
+    /// developer's published corrections (see `RemoteContent`).
+    private(set) var englishCoreWords: [WordEntry]
     /// Everyday Taiwan Mandarin, in TOCFL-style bands, for learners of
-    /// Chinese (`words-zh.json`).
-    let chineseCoreWords: [WordEntry]
+    /// Chinese (`words-zh.json`), corrected the same way.
+    private(set) var chineseCoreWords: [WordEntry]
+    @ObservationIgnored private let bundledEnglishWords: [WordEntry]
+    @ObservationIgnored private let bundledChineseWords: [WordEntry]
+    /// Corrections and official banks published without an app update.
+    private(set) var remoteContent = RemoteContent.empty
+    @ObservationIgnored private var officialBanksByMode: [String: [OfficialBank]] = [:]
+    private var contentRevision = 0
     /// The built-in words for the current study mode.
     var coreWords: [WordEntry] {
         studyMode == .chinese && !chineseCoreWords.isEmpty ? chineseCoreWords : englishCoreWords
@@ -76,6 +83,8 @@ final class AppModel {
         settings.migrateSpeakingHistory()
         self.englishCoreWords = coreWords
         self.chineseCoreWords = chineseWords
+        self.bundledEnglishWords = coreWords
+        self.bundledChineseWords = chineseWords
         let normalized = LearningEngine.normalizeForDate(progress, today: today)
         let chinese = settings.studyMode == .chinese
         self.progress = ModeProgress.view(normalized, chinese: chinese)
@@ -185,8 +194,19 @@ final class AppModel {
         if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
             model.restoreStudySession(saved)
         }
+        if let cached = persistence.load(RemoteContent.self, from: "remote-content.json"), !AppRuntime.uiTesting {
+            model.applyRemoteContent(cached)
+        }
+        #if DEBUG
+        if arguments.contains("-uiTestingOfficialBank") { model.applyRemoteContent(SampleData.officialContent) }
+        #endif
         model.saveNow()
         return model
+    }
+
+    /// Keeps published word list content for the next launch and offline use.
+    func saveRemoteContent() {
+        _ = persistence.save(remoteContent, to: "remote-content.json")
     }
 
     static func loadBundledWords(named name: String = "words") -> [WordEntry] {
@@ -195,6 +215,25 @@ final class AppModel {
               let words = try? WordData.decode(data)
         else { return [] }
         return words
+    }
+
+    /// Applies word list content the developer published: corrected built-in
+    /// words and official banks. Progress is keyed by word id, so nothing a
+    /// learner has done is lost; a bank taken down falls back to the built-in words.
+    func applyRemoteContent(_ content: RemoteContent) {
+        guard content != remoteContent else { return }
+        remoteContent = content
+        englishCoreWords = content.corrected(bundledEnglishWords, mode: StudyMode.english.rawValue)
+        chineseCoreWords = content.corrected(bundledChineseWords, mode: StudyMode.chinese.rawValue)
+        officialBanksByMode = Dictionary(uniqueKeysWithValues: StudyMode.allCases.map { ($0.rawValue, content.banks(for: $0.rawValue)) })
+        preparedCache = nil
+        mergedWordsCache = nil
+        vocabularyCache = nil
+        contentRevision &+= 1
+        libraryRevision &+= 1
+        if settings.activeBankId.hasPrefix(OfficialBank.selectionPrefix), activeOfficialBank == nil {
+            selectBank(WordBanks.coreBankId)
+        }
     }
 
     /// Swaps in merged data (after sign-in or sign-out) without echoing it
@@ -270,6 +309,7 @@ final class AppModel {
     /// streak and daily goal carry over.
     func setStudyMode(_ mode: StudyMode) {
         guard mode != studyMode else { return }
+        Usage.log("mode_switch", mode.rawValue)
         let stored = syncedProgress
         settings.studyMode = mode
         replacing = true
@@ -283,6 +323,10 @@ final class AppModel {
         libraryRevision &+= 1
         studySession = nil
         studyUndoStack = []
+        // An official bank belongs to one mode.
+        if settings.activeBankId.hasPrefix(OfficialBank.selectionPrefix), activeOfficialBank == nil {
+            selectBank(WordBanks.coreBankId)
+        }
     }
 
     func face(_ word: WordEntry) -> WordFace { WordFace(word, mode: studyMode) }
@@ -293,6 +337,7 @@ final class AppModel {
     var allWords: [WordEntry] {
         if let cached = mergedWordsCache { return cached }
         let words = WordBanks.mergeCustomWords(base: coreWords, custom: customSets.customWords, includeBankCopies: true)
+            + officialBanks.flatMap(\.words)
         mergedWordsCache = words
         return words
     }
@@ -307,16 +352,28 @@ final class AppModel {
         settings.activeBankId == WordBanks.coreBankId ? nil : customSets.sets.first { $0.id == settings.activeBankId }
     }
 
-    var bankName: String { activeSet?.name ?? L.coreBankName }
+    /// The developer's official banks for the current study mode.
+    var officialBanks: [OfficialBank] { officialBanksByMode[studyMode.rawValue] ?? [] }
+
+    var activeOfficialBank: OfficialBank? {
+        guard settings.activeBankId.hasPrefix(OfficialBank.selectionPrefix) else { return nil }
+        return officialBanks.first { $0.selectionId == settings.activeBankId }
+    }
+
+    /// Whether a bank other than the built-in words is chosen.
+    var usesOtherBank: Bool { activeSet != nil || activeOfficialBank != nil }
+
+    var bankName: String { activeSet?.name ?? activeOfficialBank.map(\.localizedName) ?? L.coreBankName }
     var bankIsScan: Bool { activeSet.map { set in set.wordIds.contains(where: WordBanks.isScannedWordId) } ?? false }
 
     var bankWords: [WordEntry] {
         if let set = activeSet { return WordBanks.words(of: set, in: allWords) }
+        if let official = activeOfficialBank { return official.words }
         return vocabularyWords
     }
 
     var bank: PreparedVocabulary {
-        let key = "\(studyMode.rawValue)|\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)"
+        let key = "\(studyMode.rawValue)|\(settings.activeBankId)|\(customSets.customWords.count)|\(activeSet?.updatedAt ?? "")|\(coreWords.count)|\(contentRevision)"
         if let cached = preparedCache, cached.key == key { return cached.vocabulary }
         let prepared = PreparedVocabulary(bankWords)
         preparedCache = (key, prepared)
@@ -367,6 +424,8 @@ final class AppModel {
         studySession = nil
         studyUndoStack = []
         scheduleSave()
+        Usage.log("scan_saved", studyMode.rawValue)
+        Usage.log("scan_words", "", count: words.count)
         return (setId, words.count, set.name)
     }
 
@@ -526,6 +585,7 @@ final class AppModel {
         refreshToday()
         progress = Placement.apply(knownIds: knownIds, to: progress, today: today)
         scheduleSave()
+        Usage.log("placement", studyMode.rawValue)
     }
 
     func setDailyTarget(_ target: Int) {
@@ -575,6 +635,17 @@ final class AppModel {
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studyUndoStack = []
         scheduleSave()
+        Usage.log("study_session", usageScope)
+    }
+
+    /// Which word bank and levels are in use, for the usage report:
+    /// "english.core:Level1,Level2", "chinese.core:all", "english.custom".
+    var usageScope: String {
+        if let official = activeOfficialBank { return "\(studyMode.rawValue).official:\(official.id)" }
+        let bankKind = settings.activeBankId == WordBanks.coreBankId ? "core" : "custom"
+        guard bankKind == "core" else { return "\(studyMode.rawValue).custom" }
+        let levels = settings.studyFilter.levels
+        return "\(studyMode.rawValue).core:" + (levels.isEmpty ? "all" : levels.joined(separator: ","))
     }
 
     func word(id: String) -> WordEntry? {
@@ -600,6 +671,7 @@ final class AppModel {
         gradingStudyCard = false
         studySession = session.grading(cardId, as: grade)
         scheduleSave()
+        Usage.log("study_card", studyMode.rawValue)
     }
 
     func undoStudyGrade() {
@@ -713,12 +785,14 @@ final class AppModel {
             if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
         }
         scheduleSave()
+        Usage.log("quiz_answer", studyMode.rawValue)
     }
 
     /// A typed answer. Right with at most the first letter given counts as a
     /// right quiz answer; with more help it is practice that leaves the
     /// schedule alone; anything else sends the word back to review.
     func recordSpellingAnswer(wordId: String, result: Spelling.Result, hints: Int) {
+        Usage.log("spelling_answer", studyMode.rawValue)
         guard result == .correct, hints >= 2 else {
             recordQuizAnswer(wordId: wordId, correct: result == .correct)
             return
@@ -742,6 +816,7 @@ final class AppModel {
             }
         }
         scheduleSave()
+        Usage.log("speaking", "\(studyMode.rawValue).\(completed ? "completed" : "skipped")")
     }
 
     var quizMode: QuizAnswerMode { studyMode == .english ? .meaning : .word }
@@ -867,4 +942,25 @@ enum SampleData {
         state = LearningEngine.toggleFavorite(state, wordId: words[2].id)
         return state
     }
+
+    /// A published official bank and a correction to the first built-in
+    /// word ("adapt"), for UI tests of remote word list content.
+    static let officialContent = RemoteContent(
+        corrections: [WordCorrection(mode: "english", wordId: "w0001", fields: ["meaningZh": "適應（已校正）"])],
+        banks: [OfficialBank(id: "medical", mode: "english", nameZh: "醫護英文", nameEn: "Medical English",
+                             descriptionZh: "醫院、看診與護理常用字", descriptionEn: "Words for hospitals, check-ups and nursing",
+                             icon: "cross.case.fill", color: "#FF2D55", updatedAt: "2026-11-04T00:00:00Z",
+                             words: [
+                                WordEntry(id: "pack-medical-diagnosis", word: "diagnosis", partOfSpeech: "n", pronunciation: "/ˌdaɪəɡˈnoʊsɪs/",
+                                          meaningZh: "診斷", example: "The doctor explained the diagnosis clearly.", exampleZh: "醫生清楚說明了診斷結果。", group: "Level 1"),
+                                WordEntry(id: "pack-medical-symptom", word: "symptom", partOfSpeech: "n", pronunciation: "/ˈsɪmptəm/",
+                                          meaningZh: "症狀", example: "A fever is a common symptom of the flu.", exampleZh: "發燒是流感常見的症狀。", group: "Level 1"),
+                                WordEntry(id: "pack-medical-prescription", word: "prescription", partOfSpeech: "n", pronunciation: "/prɪˈskrɪpʃən/",
+                                          meaningZh: "處方", example: "Take this prescription to the pharmacy.", exampleZh: "拿這張處方去藥局。", group: "Level 2"),
+                             ])])
+}
+
+extension OfficialBank {
+    var localizedName: String { L.zh || nameEn.isEmpty ? nameZh : nameEn }
+    var localizedDescription: String { L.zh || descriptionEn.isEmpty ? descriptionZh : descriptionEn }
 }

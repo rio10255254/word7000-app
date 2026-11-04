@@ -6,6 +6,7 @@ import Word7000Core
 /// say the answer, see it as text, have it checked, go on.
 struct SpeakingSessionView: View {
     @Environment(AppModel.self) private var model
+    @Environment(PlusModel.self) private var plus
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -140,13 +141,18 @@ struct SpeakingSessionView: View {
     }
 
     private var scopeNarrowed: Bool {
-        model.activeSet != nil || (model.settings.speakingFilter ?? FilterSelection()).isActive
+        model.usesOtherBank || (model.settings.speakingFilter ?? FilterSelection()).isActive
     }
 
     private var scopePicker: some View {
         Menu {
             Button { model.selectBank(WordBanks.coreBankId) } label: {
-                Label(L.coreBankName, systemImage: model.activeSet == nil ? "checkmark" : "character.book.closed")
+                Label(L.coreBankName, systemImage: model.usesOtherBank ? "character.book.closed" : "checkmark")
+            }
+            ForEach(model.officialBanks.filter { !$0.premium || plus.subscribed }) { bank in
+                Button { model.selectBank(bank.selectionId) } label: {
+                    Label(bank.localizedName, systemImage: model.settings.activeBankId == bank.selectionId ? "checkmark" : "books.vertical")
+                }
             }
             ForEach(model.customSets.sets) { set in
                 Button { model.selectBank(set.id) } label: {
@@ -171,7 +177,7 @@ struct SpeakingSessionView: View {
         } description: {
             Text(model.bankName)
         } actions: {
-            if model.activeSet != nil {
+            if model.usesOtherBank {
                 Button(L.coreBankName) {
                     model.selectBank(WordBanks.coreBankId)
                 }
@@ -192,7 +198,17 @@ struct SpeakingSessionView: View {
         let candidates = model.speakingCandidates
         // One practice: conversation questions and example sentences, mixed.
         availableCount = candidates.count
-        let mixed = SpeakingPractice.mixedSession(from: candidates, recent: model.recentSpeakingIds, count: 10)
+        var mixed = SpeakingPractice.mixedSession(from: candidates, recent: model.recentSpeakingIds, count: 10)
+        #if DEBUG
+        // Promotional screenshots ask about one chosen word first, so a sample
+        // answer fits the question.
+        let arguments = ProcessInfo.processInfo.arguments
+        if let flag = arguments.firstIndex(of: "-uiTestingSpeakingWord"), arguments.indices.contains(flag + 1),
+           let word = candidates.first(where: { SpeakingPractice.entry(for: $0)?.keywordZh == arguments[flag + 1] }) {
+            mixed.removeAll { $0.word.id == word.id }
+            mixed.insert((word: word, activity: .questions), at: 0)
+        }
+        #endif
         words = mixed.map(\.word)
         kinds = Dictionary(mixed.map { ($0.word.id, $0.activity) }, uniquingKeysWith: { first, _ in first })
         index = 0

@@ -23,7 +23,7 @@ struct SignInSheet: View {
             case .general: L.t("訪客的進度不會保存。登入後會保存，並同步到你的每一台裝置。", "A guest's progress isn't kept. Signed in, it is kept and synced to every device.")
             case .scan: L.t("掃描是 Premium 功能，掃描的字庫會跟著你的帳號走。先用 Apple 登入。", "Scanning is part of Premium, and scanned banks go with your account. Sign in with Apple first.")
             case .plus: L.t("Premium 綁定你的 Apple ID，換手機登入就會回來，進度也會同步。", "Premium belongs to your Apple ID: sign in on a new iPhone and it is there, with your progress.")
-            case .ai: L.t("小笨貓的 AI 是 Premium 功能，每天 \(PlusAI.plusDaily) 次。先用 Apple 登入。", "Silly Cat's AI is part of Premium, \(PlusAI.plusDaily) answers a day. Sign in with Apple first.")
+            case .ai: L.t("傻貓的 AI 是 Premium 功能，每天 \(PlusAI.plusDaily) 次。先用 Apple 登入。", "Silly Cat's AI is part of Premium, \(PlusAI.plusDaily) answers a day. Sign in with Apple first.")
             }
         }
 
@@ -230,10 +230,11 @@ struct AccountSection: View {
             Button(L.cancel, role: .cancel) {}
             Button(L.t("刪除", "Delete"), role: .destructive) { Task { await account.deleteAccount() } }
         } message: {
-            Text(plus.storeSubscribed
+            Text((plus.storeSubscribed
                  ? L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。刪除帳號不會取消 App Store 的 Premium 訂閱，請到「管理訂閱」取消。",
                        "Progress, banks and daily records are deleted for good. This cannot be undone. Deleting the account doesn't cancel your App Store Premium subscription; cancel it in Manage subscription.")
                  : L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
+                 + (account.isPermanent ? L.t("\n接著會請你用 Apple 確認一次，單字貓也會從 Apple 帳號的登入清單移除。", "\nYou'll confirm with Apple once, and WordCat is removed from your Apple Account's sign-in list too.") : ""))
         }
 
         if includeDeletion, account.configured, account.session != nil {

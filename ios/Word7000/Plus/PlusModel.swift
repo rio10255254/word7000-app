@@ -217,6 +217,14 @@ final class PlusModel {
     enum PurchaseOutcome { case purchased, pending, cancelled, failed }
 
     func purchase(_ plan: PlusPlan, with action: PurchaseAction) async -> PurchaseOutcome {
+        let kind = "\(plan.yearly ? "yearly" : "monthly")\(plan.freeTrialDays != nil ? ".trial" : "")"
+        Usage.log("purchase", "\(kind):started")
+        let outcome = await buy(plan, with: action)
+        Usage.log("purchase", "\(kind):\(outcome)")
+        return outcome
+    }
+
+    private func buy(_ plan: PlusPlan, with action: PurchaseAction) async -> PurchaseOutcome {
         guard let product = plan.product else { return .failed }
         // The purchase carries the account's id, so the App Store's record of
         // it (and its renewals) points back to this learner's account.
@@ -245,6 +253,12 @@ final class PlusModel {
     enum RestoreOutcome { case restored, noneFound, cancelled, failed }
 
     func restore() async -> RestoreOutcome {
+        let outcome = await restoreFromStore()
+        Usage.log("restore", "\(outcome)")
+        return outcome
+    }
+
+    private func restoreFromStore() async -> RestoreOutcome {
         do {
             try await AppStore.sync()
         } catch StoreKitError.userCancelled {
@@ -347,15 +361,24 @@ enum PaywallReason: Identifiable, Equatable {
     case trialEnding(daysLeft: Int)
     /// Checking a speaking answer, on an iPhone without Apple Intelligence.
     case speakingCoach
+    /// Opening an official word bank the developer made part of Premium.
+    case officialBank(name: String)
 
     var id: String {
         switch self {
         case .general: "general"
         case .speakingCoach: "speaking-coach"
+        case .officialBank: "official-bank"
         case let .locked(feature): "locked-\(feature.rawValue)"
         case .trialScansUsed: "scans"
         case let .trialEnding(days): "ending-\(days)"
         }
+    }
+
+    /// For the usage report: where the paywall was opened from.
+    var usageSource: String {
+        if case .trialEnding = self { return "ending" }
+        return id
     }
 
     /// The feature the learner reached for, if any.
@@ -364,7 +387,7 @@ enum PaywallReason: Identifiable, Equatable {
         case let .locked(feature): feature
         case .trialScansUsed: .scan
         case .speakingCoach: .smartAI
-        case .general, .trialEnding: nil
+        case .general, .trialEnding, .officialBank: nil
         }
     }
 

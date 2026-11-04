@@ -511,7 +511,7 @@ struct SpeakingAnswerPanel: View {
                             .symbolEffect(.variableColor.iterative.reversing, options: .repeating)
                             .accessibilityHidden(true)
                     }
-                    Text(pendingSubmission ? L.t("正在完成輸入…", "Finishing input…") : L.t("小笨貓批改中…", "Silly Cat is checking…"))
+                    Text(pendingSubmission ? L.t("正在完成輸入…", "Finishing input…") : L.t("傻貓批改中…", "Silly Cat is checking…"))
                         .font(.subheadline)
                     Spacer()
                     Button(L.t("取消", "Cancel")) { pendingSubmission = false; session.cancel() }
@@ -604,13 +604,13 @@ struct SpeakingAnswerPanel: View {
     private var premiumNote: String {
         switch provider.availability {
         case .disabled:
-            L.t("訂閱 Premium，小笨貓就幫你改成更自然的說法、再追問一題。或在 iPhone 設定開啟 Apple Intelligence，免費在手機上批改。",
+            L.t("訂閱 Premium，傻貓就幫你改成更自然的說法、再追問一題。或在 iPhone 設定開啟 Apple Intelligence，免費在手機上批改。",
                 "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Or turn on Apple Intelligence in Settings to check for free on this iPhone.")
         case .preparing:
             L.t("訂閱 Premium 現在就能批改。Apple Intelligence 準備好之後，也能免費在手機上批改。",
                 "Premium checks it right now. Once Apple Intelligence is ready, checking on this iPhone is free too.")
         default:
-            L.t("訂閱 Premium，小笨貓就幫你改成更自然的說法、再追問一題。任何 iPhone 都能用。",
+            L.t("訂閱 Premium，傻貓就幫你改成更自然的說法、再追問一題。任何 iPhone 都能用。",
                 "With Premium, Silly Cat rewrites it more naturally and asks a follow-up. Works on any iPhone.")
         }
     }
@@ -645,6 +645,7 @@ struct SpeakingAnswerPanel: View {
         #if DEBUG
         if let timeout = provider.testingTimeout { session.submit(submitted, timeout: timeout); return }
         #endif
+        Usage.log("coach_check", provider.usesOnline ? "online" : "device")
         // Room for both online models and then the on-device one.
         session.submit(submitted, timeout: provider.usesOnline ? .seconds(50) : .seconds(30))
     }

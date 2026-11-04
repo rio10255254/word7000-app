@@ -2,10 +2,11 @@ import SwiftUI
 import AVFoundation
 import Word7000Core
 
-/// The first step of each word on the speaking path: hear a model sentence,
-/// say it back, and see which words (or, in Chinese, which characters and
-/// tones) came across. Then on to answering the question in one's own words,
-/// where the sentence just said is something to build on.
+/// The first step of each item on the speaking path: hear a model sentence,
+/// then say it back. Words (in Chinese, characters) light up as they are
+/// heard; once all are, or after a pause, listening stops by itself and shows
+/// what came across. A sentence said well moves on after a short countdown
+/// that any touch on the sentence cancels.
 @MainActor
 struct ShadowStepView: View {
     struct Partner {
@@ -30,16 +31,31 @@ struct ShadowStepView: View {
     /// all, where this phone cannot turn speech into text).
     let onDone: (_ said: Bool) -> Void
 
-    @State private var recording = SpeakingRecorder()
+    @State private var listener = LiveListener()
     @State private var check: ShadowingCheck?
     @State private var showsTranslation = false
+    /// Counting down to the next step after a sentence said well.
+    @State private var advancing = false
 
     private var language: String { chinese ? "zh-TW" : "en-US" }
-    private var live: Bool { recording.state == .recording }
-    /// This phone cannot check the take, so saying it is enough.
-    private var uncheckable: Bool { recording.support == .unavailable }
-    private var said: Bool { check?.passed ?? (uncheckable && recording.hasRecording) }
-    private var tried: Bool { check != nil || recording.hasRecording }
+    private var live: Bool { listener.listening }
+    /// This phone cannot turn speech into text, so saying it is enough.
+    private var uncheckable: Bool { listener.support == .recordOnly }
+    private var said: Bool { check?.passed ?? (uncheckable && listener.hasRecording) }
+    private var tried: Bool { check != nil || listener.hasRecording }
+    /// How long the result shows before moving on by itself.
+    private var countdown: Duration { AppRuntime.uiTesting ? .seconds(4) : .milliseconds(1600) }
+
+    /// While listening only what was heard is coloured; the rest waits.
+    private var shownUnits: [ShadowingCheck.Unit] {
+        if let check, listener.isFinal { return check.units }
+        let units = (check ?? ShadowingCheck(target: sentence, chinese: chinese)).units
+        return units.map { unit in
+            var shown = unit
+            if unit.mark != .heard { shown.mark = nil }
+            return shown
+        }
+    }
 
     var body: some View {
         VStack(spacing: 16) {
@@ -60,47 +76,84 @@ struct ShadowStepView: View {
                     Text(L.t("下一步：回答問題", "Next: answer")).font(.headline).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: said ? Palette.known : Palette.accent)
-                .disabled(!tried || recording.busy)
+                .overlay(alignment: .leading) { countdownFill }
+                .disabled(!tried || listener.busy)
                 .accessibilityIdentifier("shadow-next")
             }
         }
-        .task { await recording.refresh(language: language) }
+        .task { await listener.refresh(language: language) }
         .onAppear {
             #if DEBUG
             // A simulated take says the sentence back.
-            recording.simulatedTranscript = sentence
+            listener.simulatedText = sentence
             #endif
         }
-        .onDisappear { recording.clear() }
-        .onChange(of: recording.state) { old, new in
-            if old == .recording, new == .ready, recording.support == .modern || recording.support == .legacy {
-                recording.transcribe(hints: [keyword])
+        .onDisappear { listener.clear() }
+        .onChange(of: listener.text) { _, heard in
+            guard !heard.isEmpty else { return }
+            let next = ShadowingCheck(target: sentence, heard: heard, chinese: chinese)
+            withAnimation(reduceMotion ? nil : .spring(duration: 0.3)) { check = next }
+        }
+        .onChange(of: listener.isFinal) { _, final in
+            guard final else { return }
+            if !listener.text.isEmpty {
+                withAnimation(reduceMotion ? nil : .spring(duration: 0.5, bounce: 0.3)) {
+                    check = ShadowingCheck(target: sentence, heard: listener.text, chinese: chinese)
+                }
+            } else if listener.support == .live {
+                withAnimation { check = ShadowingCheck(target: sentence, heard: "", chinese: chinese) }
+            }
+            if said { advancing = true }
+        }
+        // Stops by itself: everything heard, or a pause after speaking.
+        .task(id: live) {
+            guard live else { return }
+            while !Task.isCancelled, listener.listening {
+                do { try await Task.sleep(for: .milliseconds(200)) } catch { return }
+                let complete = check.map { $0.heardCount == $0.scoredCount && $0.scoredCount > 0 } ?? false
+                if complete, listener.quietFor > 0.35 { listener.stop(); return }
+                if !listener.text.isEmpty, listener.quietFor > 2.2 { listener.stop(); return }
+                if listener.text.isEmpty, listener.quietFor > 8 { listener.stop(); return }
             }
         }
-        .onChange(of: recording.support) { _, support in
-            if support == .modern, recording.state == .ready, recording.hasRecording, recording.transcript == nil {
-                recording.transcribe(hints: [keyword])
-            }
-        }
-        .onChange(of: recording.transcript) { _, heard in
-            guard let heard else { return }
-            withAnimation(reduceMotion ? nil : .spring(duration: 0.5, bounce: 0.3)) {
-                check = ShadowingCheck(target: sentence, heard: heard, chinese: chinese)
-            }
+        .task(id: advancing) {
+            guard advancing else { return }
+            do { try await Task.sleep(for: countdown) } catch { return }
+            guard advancing else { return }
+            finish()
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { recording.interrupt(); Speaker.shared.stop() }
+            if phase == .background { advancing = false; listener.interrupt(); Speaker.shared.stop() }
         }
-        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in recording.interrupt() }
-        .sensoryFeedback(trigger: check?.passed) { _, passed in
+        .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in listener.interrupt() }
+        // A light tick for each newly heard word, a success at the end.
+        .sensoryFeedback(trigger: check?.heardCount ?? 0) { old, new in
+            guard model.settings.hapticsEnabled ?? true, live, new > old else { return nil }
+            return .selection
+        }
+        .sensoryFeedback(trigger: listener.isFinal ? check?.passed : nil) { _, passed in
             guard model.settings.hapticsEnabled ?? true, let passed else { return nil }
             return passed ? .success : .warning
         }
-        .sensoryFeedback(trigger: recording.state) { old, new in
+        .sensoryFeedback(trigger: live) { _, new in
             guard model.settings.hapticsEnabled ?? true else { return nil }
-            if new == .recording { return .impact(weight: .medium) }
-            if old == .recording { return .impact(weight: .light) }
-            return nil
+            return .impact(weight: new ? .medium : .light)
+        }
+    }
+
+    /// The Next key filling up while it counts down.
+    @ViewBuilder
+    private var countdownFill: some View {
+        if advancing {
+            GeometryReader { proxy in
+                Rectangle()
+                    .fill(.white.opacity(0.22))
+                    .frame(width: proxy.size.width)
+                    .modifier(CountdownWipe(duration: countdown, reduceMotion: reduceMotion))
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
         }
     }
 
@@ -130,6 +183,7 @@ struct ShadowStepView: View {
             .contentShape(Rectangle())
             .onTapGesture { toggleTranslation() }
             SpeakButton(text: partner.line, language: language)
+                .simultaneousGesture(TapGesture().onEnded { advancing = false })
             Spacer(minLength: 24)
         }
     }
@@ -159,7 +213,7 @@ struct ShadowStepView: View {
     private var replyText: some View {
         VStack(alignment: .leading, spacing: 6) {
             FlowLayout(spacing: chinese ? 2 : 7, lineSpacing: chinese ? 10 : 6) {
-                ForEach((check ?? ShadowingCheck(target: sentence, chinese: chinese)).units) { unit in
+                ForEach(shownUnits) { unit in
                     ShadowUnitView(unit: unit, chinese: chinese, showsPinyin: chinese)
                 }
             }
@@ -180,6 +234,7 @@ struct ShadowStepView: View {
     private var replyKeys: some View {
         VStack(spacing: 12) {
             SpeakButton(text: sentence, language: language)
+                .simultaneousGesture(TapGesture().onEnded { advancing = false })
                 .accessibilityIdentifier("shadow-listen")
             if !translation.isEmpty {
                 Button { toggleTranslation() } label: {
@@ -195,6 +250,7 @@ struct ShadowStepView: View {
     }
 
     private func toggleTranslation() {
+        advancing = false
         guard !translation.isEmpty || !(partner?.gloss ?? "").isEmpty else { return }
         withAnimation(reduceMotion ? nil : Motion.reveal) { showsTranslation.toggle() }
     }
@@ -203,7 +259,7 @@ struct ShadowStepView: View {
         VStack(alignment: .leading, spacing: 16) {
             if let partner { partnerBubble(partner) }
             replyBlock
-            if let check { result(check) }
+            if let check, listener.isFinal { result(check) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .card(radius: Metrics.wordCardRadius, padding: 18)
@@ -227,7 +283,7 @@ struct ShadowStepView: View {
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("shadow-result")
             // What the colours mean, only when something was not heard as written.
-            if check.heardCount < check.units.filter(\.scored).count {
+            if check.heardCount < check.scoredCount {
                 HStack(spacing: 12) {
                     legend(Palette.known, L.t("聽到了", "Heard"))
                     if check.toneCount > 0 { legend(Palette.review, L.t("聲調不同", "Other tone")) }
@@ -254,25 +310,26 @@ struct ShadowStepView: View {
     private var recorderKey: some View {
         VStack(spacing: 8) {
             HStack(spacing: 28) {
-                playKey.opacity(recording.hasRecording && !live ? 1 : 0)
+                playKey.opacity(listener.hasRecording && !live ? 1 : 0)
                 ZStack {
                     if live && !reduceMotion {
                         Circle()
                             .stroke(Palette.miss.opacity(0.3), lineWidth: 3)
                             .frame(width: 112, height: 112)
-                            .scaleEffect(1.15 + CGFloat(recording.level) * 0.35)
-                            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: recording.level)
+                            .scaleEffect(1.15 + CGFloat(listener.level) * 0.35)
+                            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: listener.level)
                     }
                     Button {
-                        if live { recording.stop() } else { Speaker.shared.stop(); recording.start() }
+                        advancing = false
+                        if live { listener.stop() } else { Speaker.shared.stop(); check = nil; listener.start() }
                     } label: {
                         Image(systemName: live ? "stop.fill" : (tried ? "arrow.counterclockwise" : "mic.fill"))
                             .font(.system(size: 40, weight: .semibold))
                             .contentTransition(.symbolEffect(.replace))
                     }
                     .buttonStyle(MicKeyStyle(live: live))
-                    .disabled(recording.busy && !live)
-                    .accessibilityLabel(live ? L.t("停止錄音", "Stop recording") : tried ? L.t("再說一次", "Say it again") : L.t("開始說", "Start speaking"))
+                    .disabled(listener.state == .requesting || listener.state == .finishing)
+                    .accessibilityLabel(live ? L.t("停止", "Stop") : tried ? L.t("再說一次", "Say it again") : L.t("開始說", "Start speaking"))
                     .accessibilityIdentifier("shadow-record")
                 }
                 .frame(height: 136)
@@ -281,9 +338,11 @@ struct ShadowStepView: View {
             }
             Group {
                 if live {
-                    Text(L.t("說完再按一下", "Tap again when you're done"))
-                } else if recording.state == .transcribing {
+                    Text(listener.text.isEmpty ? L.t("請說…", "Go ahead…") : L.t("繼續說，說完會自動停", "Keep going; it stops when you're done"))
+                } else if listener.state == .finishing {
                     HStack(spacing: 6) { ProgressView(); Text(L.t("聽聽看你說了什麼…", "Listening back…")) }
+                } else if advancing {
+                    Text(L.t("馬上進入下一步", "On to the next step"))
                 } else if tried {
                     Text(L.t("按一下再說一次", "Tap to say it again"))
                 } else {
@@ -291,11 +350,12 @@ struct ShadowStepView: View {
                 }
             }
             .font(.headline)
-            if let message = recording.message {
+            .contentTransition(.opacity)
+            if let message = listener.message {
                 Text(message).font(.footnote).foregroundStyle(Palette.miss)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
-            } else if uncheckable, recording.hasRecording {
+            } else if uncheckable, listener.hasRecording {
                 Text(L.t("這支手機無法自動比對，聽聽自己的錄音，和示範比較看看。", "This iPhone can't check it. Play your take back and compare it with the model."))
                     .font(.footnote).foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -305,23 +365,44 @@ struct ShadowStepView: View {
     }
 
     private var playKey: some View {
-        Button { recording.togglePlayback() } label: {
-            Image(systemName: recording.state == .playing ? "stop.fill" : "play.fill")
+        Button {
+            advancing = false
+            listener.togglePlayback()
+        } label: {
+            Image(systemName: listener.state == .playing ? "stop.fill" : "play.fill")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(Palette.accent)
                 .frame(width: 48, height: 48)
                 .background(Palette.accent.opacity(0.12), in: Circle())
         }
         .buttonStyle(.plain)
-        .disabled(!recording.hasRecording || live || (recording.busy && recording.state != .playing))
-        .accessibilityLabel(recording.state == .playing ? L.t("停止播放", "Stop playback") : L.t("聽自己的錄音", "Hear yourself"))
+        .disabled(!listener.hasRecording || live)
+        .accessibilityLabel(listener.state == .playing ? L.t("停止播放", "Stop playback") : L.t("聽自己的錄音", "Hear yourself"))
         .accessibilityIdentifier("shadow-play")
     }
 
     private func finish() {
-        recording.interrupt()
+        advancing = false
+        listener.interrupt()
         Speaker.shared.stop()
         onDone(said)
+    }
+}
+
+/// Fills a bar from left to right over `duration`.
+private struct CountdownWipe: ViewModifier {
+    let duration: Duration
+    let reduceMotion: Bool
+    @State private var progress: CGFloat = 0
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(x: reduceMotion ? 1 : progress, y: 1, anchor: .leading)
+            .opacity(reduceMotion ? 0 : 1)
+            .onAppear {
+                let seconds = Double(duration.components.seconds) + Double(duration.components.attoseconds) / 1e18
+                withAnimation(.linear(duration: seconds)) { progress = 1 }
+            }
     }
 }
 

@@ -44,17 +44,16 @@ final class SpeakingCoachTests: XCTestCase {
             tap(app.buttons["today-speaking"], in: app)
             XCTAssertTrue(app.staticTexts["speaking-stage"].waitForExistence(timeout: 5))
             let firstStage = app.staticTexts["speaking-stage"].label
-            // First step: hear the model sentence and say it back.
-            let record = app.buttons["shadow-record"]
-            tap(record, in: app)
-            record.tap()
+            // First step: hear the model sentence and say it back. It is heard
+            // as it is said, stops by itself once all of it was heard, and
+            // moves on by itself after a short countdown.
+            tap(app.buttons["shadow-record"], in: app)
             let result = app.descendants(matching: .any)["shadow-result"].firstMatch
-            reveal(result, in: app, scrollingUp: false)
+            XCTAssertTrue(result.waitForExistence(timeout: 10))
             XCTAssertTrue(result.label.contains("100%"), result.label)
             snapshot(app, englishUI ? "speaking-shadow-en" : "speaking-shadow-zh")
-            tap(app.buttons["shadow-next"], in: app)
-            // Second step: the question, with the hint to build on the sentence.
-            XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+            // Second step: the question.
+            XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), "Moves on by itself")
             sleep(1)
             snapshot(app, englishUI ? "speaking-question-en" : "speaking-question-zh")
             // The rest of the stage is skipped.

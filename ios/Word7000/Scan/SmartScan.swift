@@ -67,3 +67,19 @@ enum SmartScan {
         return try? await CloudAssistant.shared.run(.scan, ["text": .string(String(source.prefix(4000)))], as: CloudAI.ScanEntries.self).entries
     }
 }
+
+extension CGImagePropertyOrientation {
+    init(uiOrientation orientation: UIImage.Orientation) {
+        switch orientation {
+        case .up: self = .up
+        case .upMirrored: self = .upMirrored
+        case .down: self = .down
+        case .downMirrored: self = .downMirrored
+        case .left: self = .left
+        case .leftMirrored: self = .leftMirrored
+        case .right: self = .right
+        case .rightMirrored: self = .rightMirrored
+        @unknown default: self = .up
+        }
+    }
+}

@@ -135,7 +135,6 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             request.addsPunctuation = true
             request.contextualStrings = hints
             self.request = request
-            recognitionRequest = request
             task = recognizer.recognitionTask(with: request) { [weak self] result, error in
                 let text = result?.bestTranscription.formattedString
                 let segments = result?.bestTranscription.segments.map {

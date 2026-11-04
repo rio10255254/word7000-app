@@ -106,45 +106,59 @@ struct ShadowStepView: View {
 
     // MARK: The sentence
 
-    /// What the other person says, as a speech bubble above the reply.
+    /// The other person's line, on the left like a chat message, with who
+    /// says it in small type. Tapping it shows the translation.
     private func partnerBubble(_ partner: Partner) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Label(partner.role, systemImage: "person.wave.2.fill")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-            HStack(alignment: .top, spacing: 8) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(partner.line).font(.headline)
-                        .accessibilityIdentifier("shadow-partner-line")
-                    if chinese {
-                        let pinyin = ChineseDisplay.sentencePinyin(partner.line)
-                        if !pinyin.isEmpty { Text(pinyin).font(.caption).foregroundStyle(.secondary) }
-                    }
-                    if showsTranslation, !partner.gloss.isEmpty {
-                        Text(partner.gloss).font(.footnote).foregroundStyle(.secondary)
-                    }
+        HStack(alignment: .bottom, spacing: 8) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(partner.role).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+                Text(partner.line).font(.title3.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("shadow-partner-line")
+                if chinese {
+                    let pinyin = ChineseDisplay.sentencePinyin(partner.line)
+                    if !pinyin.isEmpty { Text(pinyin).font(.footnote).foregroundStyle(.secondary) }
                 }
-                Spacer(minLength: 0)
-                SpeakButton(text: partner.line, language: language)
+                if showsTranslation, !partner.gloss.isEmpty {
+                    Text(partner.gloss).font(.subheadline).foregroundStyle(Palette.accent)
+                        .transition(.opacity)
+                }
             }
-            .padding(12)
-            .background(Palette.fill.opacity(0.7), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .background(Palette.fill, in: BubbleShape(tail: .leading))
+            .contentShape(Rectangle())
+            .onTapGesture { toggleTranslation() }
+            SpeakButton(text: partner.line, language: language)
+            Spacer(minLength: 24)
         }
     }
 
-    private var sentenceCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            if let partner { partnerBubble(partner) }
-            HStack(alignment: .center) {
-                Label(partner == nil ? L.t("先跟著說", "Say it after me") : L.t("你可以這樣回，跟著說", "Reply like this: say it after me"),
-                      systemImage: partner == nil ? "ear" : "arrowshape.turn.up.left.fill")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Palette.accent)
-                Spacer()
-                SpeakButton(text: sentence, language: language)
-                    .accessibilityIdentifier("shadow-listen")
+    /// The sentence to say, large: on the right like one's own message in a
+    /// role-play, plain otherwise. Tapping it shows the translation.
+    @ViewBuilder
+    private var replyBlock: some View {
+        if partner != nil {
+            HStack(alignment: .bottom, spacing: 8) {
+                Spacer(minLength: 24)
+                replyKeys
+                replyText
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+                    .background(Palette.accent.opacity(0.12), in: BubbleShape(tail: .trailing))
             }
-            FlowLayout(spacing: chinese ? 2 : 6, lineSpacing: chinese ? 10 : 6) {
+        } else {
+            HStack(alignment: .top, spacing: 8) {
+                replyText
+                Spacer(minLength: 0)
+                replyKeys
+            }
+        }
+    }
+
+    private var replyText: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            FlowLayout(spacing: chinese ? 2 : 7, lineSpacing: chinese ? 10 : 6) {
                 ForEach((check ?? ShadowingCheck(target: sentence, chinese: chinese)).units) { unit in
                     ShadowUnitView(unit: unit, chinese: chinese, showsPinyin: chinese)
                 }
@@ -152,31 +166,51 @@ struct ShadowStepView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(sentence)
             .accessibilityIdentifier("shadow-sentence")
+            if showsTranslation, !translation.isEmpty {
+                Text(translation).font(.subheadline).foregroundStyle(Palette.accent)
+                    .accessibilityIdentifier("shadow-translation-text")
+                    .transition(.opacity)
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { toggleTranslation() }
+    }
+
+    /// Hear the sentence, and see it translated.
+    private var replyKeys: some View {
+        VStack(spacing: 12) {
+            SpeakButton(text: sentence, language: language)
+                .accessibilityIdentifier("shadow-listen")
             if !translation.isEmpty {
-                Button {
-                    withAnimation(reduceMotion ? nil : Motion.reveal) { showsTranslation.toggle() }
-                } label: {
-                    if showsTranslation {
-                        Text(translation).font(.subheadline).foregroundStyle(.secondary)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    } else {
-                        Label(L.t("看中文意思", "See it in English"), systemImage: "character.bubble")
-                            .font(.footnote.weight(.semibold))
-                    }
+                Button { toggleTranslation() } label: {
+                    Image(systemName: showsTranslation ? "character.bubble.fill" : "character.bubble")
+                        .font(.title3)
+                        .foregroundStyle(Palette.accent)
                 }
                 .buttonStyle(.borderless)
+                .accessibilityLabel(showsTranslation ? L.t("收起翻譯", "Hide translation") : L.t("看翻譯", "Show translation"))
                 .accessibilityIdentifier("shadow-translation")
             }
+        }
+    }
+
+    private func toggleTranslation() {
+        guard !translation.isEmpty || !(partner?.gloss ?? "").isEmpty else { return }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { showsTranslation.toggle() }
+    }
+
+    private var sentenceCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            if let partner { partnerBubble(partner) }
+            replyBlock
             if let check { result(check) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .card(radius: Metrics.wordCardRadius, padding: 20)
+        .card(radius: Metrics.wordCardRadius, padding: 18)
     }
 
     private func result(_ check: ShadowingCheck) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Divider()
+        VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
                 Image(systemName: check.passed ? "checkmark.seal.fill" : "arrow.counterclockwise.circle.fill")
                     .foregroundStyle(check.passed ? Palette.known : Palette.review)
@@ -186,7 +220,7 @@ struct ShadowStepView: View {
                     .font(.headline)
                 Spacer()
                 Text("\(Int((check.score * 100).rounded()))%")
-                    .font(.display(.headline, weight: .bold))
+                    .font(.display(.title3, weight: .bold))
                     .monospacedDigit()
                     .foregroundStyle(check.passed ? Palette.known : Palette.review)
             }
@@ -203,6 +237,7 @@ struct ShadowStepView: View {
                 .foregroundStyle(.secondary)
             }
         }
+        .padding(.top, 4)
         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
     }
 
@@ -215,29 +250,35 @@ struct ShadowStepView: View {
 
     // MARK: Recording
 
+    /// The big key, with hearing one's own take as a small key beside it.
     private var recorderKey: some View {
-        VStack(spacing: 10) {
-            ZStack {
-                if live && !reduceMotion {
-                    Circle()
-                        .stroke(Palette.miss.opacity(0.3), lineWidth: 3)
-                        .frame(width: 112, height: 112)
-                        .scaleEffect(1.15 + CGFloat(recording.level) * 0.35)
-                        .animation(.spring(response: 0.2, dampingFraction: 0.6), value: recording.level)
+        VStack(spacing: 8) {
+            HStack(spacing: 28) {
+                playKey.opacity(recording.hasRecording && !live ? 1 : 0)
+                ZStack {
+                    if live && !reduceMotion {
+                        Circle()
+                            .stroke(Palette.miss.opacity(0.3), lineWidth: 3)
+                            .frame(width: 112, height: 112)
+                            .scaleEffect(1.15 + CGFloat(recording.level) * 0.35)
+                            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: recording.level)
+                    }
+                    Button {
+                        if live { recording.stop() } else { Speaker.shared.stop(); recording.start() }
+                    } label: {
+                        Image(systemName: live ? "stop.fill" : (tried ? "arrow.counterclockwise" : "mic.fill"))
+                            .font(.system(size: 40, weight: .semibold))
+                            .contentTransition(.symbolEffect(.replace))
+                    }
+                    .buttonStyle(MicKeyStyle(live: live))
+                    .disabled(recording.busy && !live)
+                    .accessibilityLabel(live ? L.t("停止錄音", "Stop recording") : tried ? L.t("再說一次", "Say it again") : L.t("開始說", "Start speaking"))
+                    .accessibilityIdentifier("shadow-record")
                 }
-                Button {
-                    if live { recording.stop() } else { Speaker.shared.stop(); recording.start() }
-                } label: {
-                    Image(systemName: live ? "stop.fill" : (tried ? "arrow.counterclockwise" : "mic.fill"))
-                        .font(.system(size: 40, weight: .semibold))
-                        .contentTransition(.symbolEffect(.replace))
-                }
-                .buttonStyle(MicKeyStyle(live: live))
-                .disabled(recording.busy && !live)
-                .accessibilityLabel(live ? L.t("停止錄音", "Stop recording") : tried ? L.t("再說一次", "Say it again") : L.t("開始說", "Start speaking"))
-                .accessibilityIdentifier("shadow-record")
+                .frame(height: 136)
+                // Balances the play key so the big key stays centred.
+                Color.clear.frame(width: 48, height: 48)
             }
-            .frame(height: 140)
             Group {
                 if live {
                     Text(L.t("說完再按一下", "Tap again when you're done"))
@@ -250,18 +291,6 @@ struct ShadowStepView: View {
                 }
             }
             .font(.headline)
-            if recording.hasRecording, !live {
-                Button {
-                    recording.togglePlayback()
-                } label: {
-                    Label(recording.state == .playing ? L.t("停止", "Stop") : L.t("聽自己的錄音", "Hear yourself"),
-                          systemImage: recording.state == .playing ? "stop.fill" : "play.fill")
-                        .font(.subheadline.weight(.semibold))
-                }
-                .buttonStyle(.borderless)
-                .disabled(recording.busy && recording.state != .playing)
-                .accessibilityIdentifier("shadow-play")
-            }
             if let message = recording.message {
                 Text(message).font(.footnote).foregroundStyle(Palette.miss)
                     .multilineTextAlignment(.center)
@@ -273,6 +302,20 @@ struct ShadowStepView: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private var playKey: some View {
+        Button { recording.togglePlayback() } label: {
+            Image(systemName: recording.state == .playing ? "stop.fill" : "play.fill")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(Palette.accent)
+                .frame(width: 48, height: 48)
+                .background(Palette.accent.opacity(0.12), in: Circle())
+        }
+        .buttonStyle(.plain)
+        .disabled(!recording.hasRecording || live || (recording.busy && recording.state != .playing))
+        .accessibilityLabel(recording.state == .playing ? L.t("停止播放", "Stop playback") : L.t("聽自己的錄音", "Hear yourself"))
+        .accessibilityIdentifier("shadow-play")
     }
 
     private func finish() {
@@ -301,20 +344,20 @@ private struct ShadowUnitView: View {
         if chinese {
             VStack(spacing: 1) {
                 Text(pinyin)
-                    .font(.caption2.weight(unit.mark == nil ? .regular : .semibold))
+                    .font(.caption.weight(unit.mark == nil ? .regular : .semibold))
                     .foregroundStyle(unit.mark == nil ? Palette.secondaryLabel : color)
                     .lineLimit(1)
                     .fixedSize()
                 Text(unit.text)
-                    .font(.title2.weight(.semibold))
+                    .font(.title.weight(.semibold))
                     .foregroundStyle(unit.scored ? color : Palette.secondaryLabel)
             }
-            .frame(minWidth: unit.scored ? 30 : 0)
+            .frame(minWidth: unit.scored ? 34 : 0)
             // Full-width punctuation sits close to the character before it.
             .padding(.horizontal, unit.scored ? 0 : -6)
         } else {
             Text(unit.text)
-                .font(.title3.weight(.semibold))
+                .font(.title2.weight(.semibold))
                 .foregroundStyle(color)
                 .underline(unit.mark == .missed, color: Palette.miss)
         }
@@ -371,5 +414,23 @@ struct FlowLayout: Layout {
         }
         if !row.indices.isEmpty { rows.append(row) }
         return rows
+    }
+}
+
+/// A chat bubble with a small tail at the bottom, on the speaker's side.
+struct BubbleShape: Shape {
+    enum Tail { case leading, trailing }
+    var tail: Tail
+
+    func path(in rect: CGRect) -> Path {
+        let radius: CGFloat = 18
+        var path = Path(roundedRect: rect, cornerSize: CGSize(width: radius, height: radius), style: .continuous)
+        let x = tail == .leading ? rect.minX + 6 : rect.maxX - 6
+        let out: CGFloat = tail == .leading ? -6 : 6
+        path.move(to: CGPoint(x: x, y: rect.maxY - 14))
+        path.addQuadCurve(to: CGPoint(x: x + out, y: rect.maxY + 2), control: CGPoint(x: x, y: rect.maxY - 2))
+        path.addQuadCurve(to: CGPoint(x: x - out * 2, y: rect.maxY - 4), control: CGPoint(x: x - out * 0.5, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }

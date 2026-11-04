@@ -395,13 +395,7 @@ struct SpeakingSessionView: View {
     /// or who is speaking in a role-play and the chunk the turn teaches.
     @ViewBuilder
     private func header(at index: Int, card: ConversationPromptCard) -> some View {
-        if scenarioRef != nil {
-            // Who is speaking; the line itself is the question below.
-            Label(turns[index].role.practised(mode), systemImage: "person.wave.2.fill")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier("speaking-role")
-        } else {
+        if scenarioRef == nil {
             let word = words[index]
             let face = model.face(word)
             VStack(alignment: .leading, spacing: 2) {
@@ -433,6 +427,7 @@ struct SpeakingSessionView: View {
             ScrollView {
               VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 16) {
+                    if scenarioRef == nil {
                     HStack(alignment: .firstTextBaseline) {
                         header(at: index, card: card)
                         Spacer()
@@ -443,7 +438,8 @@ struct SpeakingSessionView: View {
                                 .transition(reduceMotion ? .opacity : .scale(scale: 0.3).combined(with: .opacity))
                                 .accessibilityLabel(L.t("已練習", "Practiced"))
                         }
-                        if scenarioRef == nil { SpeakButton(text: card.keyword, language: speakLanguage) }
+                        SpeakButton(text: card.keyword, language: speakLanguage)
+                    }
                     }
                     if examplesOnly, !card.referenceAnswer.isEmpty {
                         // The example with its translation at once: the task is to
@@ -457,21 +453,19 @@ struct SpeakingSessionView: View {
                             }
                         }
                     }
-                    HStack(alignment: .top, spacing: 8) {
-                        // Tapping the question turns it into the learner's own
-                        // language and back; the first questions show how.
-                        TranslatableQuestion(
-                            question: card.question,
-                            pinyin: model.studyMode == .chinese ? ChineseDisplay.sentencePinyin(card.question) : "",
-                            translation: card.questionGloss,
-                            showsHint: !translationTried,
-                            onTranslate: { translationTried = true }
-                        )
-                        Spacer(minLength: 0)
-                        SpeakButton(text: card.question, language: speakLanguage)
-                    }
+                    // Tapping the question (or the key beside it) turns it into
+                    // the learner's own language and back.
+                    TranslatableQuestion(
+                        caption: scenarioRef == nil ? nil : turns[index].role.practised(mode),
+                        question: card.question,
+                        pinyin: model.studyMode == .chinese ? ChineseDisplay.sentencePinyin(card.question) : "",
+                        translation: card.questionGloss,
+                        language: speakLanguage,
+                        showsHint: !translationTried,
+                        onTranslate: { translationTried = true }
+                    )
                     Text(card.questionSupport)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(.secondary)
                     if builtOnSentence, !examplesOnly, scenarioRef == nil {
                         // The ladder's second rung: reuse the sentence just said.
@@ -713,10 +707,13 @@ private struct PromptArrival: ViewModifier {
 private struct TranslatableQuestion: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Who asks, in small type above the question (a role-play).
+    var caption: String? = nil
     let question: String
     /// Shown under the question for learners of Chinese.
     let pinyin: String
     let translation: String?
+    let language: String
     let showsHint: Bool
     let onTranslate: () -> Void
 
@@ -725,74 +722,90 @@ private struct TranslatableQuestion: View {
     private var canTranslate: Bool { !(translation ?? "").isEmpty }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            ZStack(alignment: .topLeading) {
-                if translated, let translation {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(L.t("中文翻譯", "In English"))
-                            .font(.caption.weight(.semibold))
+        HStack(alignment: .top, spacing: 10) {
+            VStack(alignment: .leading, spacing: 6) {
+                if let caption {
+                    Text(caption).font(.subheadline.weight(.semibold)).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("speaking-role")
+                }
+                ZStack(alignment: .topLeading) {
+                    if translated, let translation {
+                        Text(translation).font(.title.weight(.semibold)).lineSpacing(4)
                             .foregroundStyle(Palette.accent)
-                        Text(translation).font(.title2.weight(.semibold)).lineSpacing(4)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .accessibilityIdentifier("speaking-question-gloss")
                             .accessibilityAction(named: L.t("看原文", "Show the original")) { toggle() }
-                        Text(L.t("再點一下看英文原文", "Tap again for the Chinese"))
-                            .font(.footnote).foregroundStyle(.tertiary)
+                            .transition(flip(from: -90))
+                    } else {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(question).font(.title.weight(.semibold)).lineSpacing(4)
+                                .accessibilityIdentifier("speaking-question")
+                                .accessibilityAction(named: L.t("看中文翻譯", "Show in English")) { toggle() }
+                            if !pinyin.isEmpty {
+                                Text(pinyin).font(.subheadline).foregroundStyle(.secondary)
+                                    .accessibilityIdentifier("speaking-question-pinyin")
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .transition(flip(from: -90))
+                    }
+                }
+                .background {
+                    // A soft glow behind the question while the hint is showing.
+                    if hintVisible {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Palette.accent)
+                            .padding(-6)
+                            .phaseAnimator(reduceMotion ? [0.06] : [0.0, 0.1]) { glow, opacity in
+                                glow.opacity(opacity)
+                            } animation: { _ in .easeInOut(duration: 1.1) }
                             .accessibilityHidden(true)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .transition(flip(from: -90))
-                } else {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(question).font(.title2.weight(.semibold)).lineSpacing(4)
-                            .accessibilityIdentifier("speaking-question")
-                            .accessibilityAction(named: L.t("看中文翻譯", "Show in English")) { toggle() }
-                        if !pinyin.isEmpty {
-                            Text(pinyin).font(.footnote).foregroundStyle(.secondary)
-                                .accessibilityIdentifier("speaking-question-pinyin")
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .transition(flip(from: -90))
                 }
             }
-            .background {
-                // A soft glow behind the question while the hint is showing.
-                if hintVisible {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Palette.accent)
-                        .padding(-6)
-                        .phaseAnimator(reduceMotion ? [0.06] : [0.0, 0.1]) { glow, opacity in
-                            glow.opacity(opacity)
-                        } animation: { _ in .easeInOut(duration: 1.1) }
-                        .accessibilityHidden(true)
-                }
-            }
-            if hintVisible {
-                hint.transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .leading)))
+            .contentShape(Rectangle())
+            .onTapGesture { toggle() }
+            VStack(spacing: 14) {
+                SpeakButton(text: question, language: language)
+                if canTranslate { translateKey }
             }
         }
-        .contentShape(Rectangle())
-        .onTapGesture { toggle() }
         .sensoryFeedback(.selection, trigger: translated) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 
     private var hintVisible: Bool { showsHint && canTranslate && !translated }
 
-    /// A hand tapping, with what the tap does.
-    private var hint: some View {
-        HStack(spacing: 6) {
-            Image(systemName: "hand.tap.fill")
-                .phaseAnimator(reduceMotion ? [false] : [false, true, false]) { hand, pressed in
-                    hand.scaleEffect(pressed ? 0.8 : 1).offset(y: pressed ? 2 : 0)
-                } animation: { pressed in pressed ? .easeIn(duration: 0.18) : .spring(duration: 0.5) }
-            Text(L.t("點一下題目，看中文翻譯", "Tap the question to read it in English"))
+    /// Translation on a key beside the question. Until it has been used in a
+    /// practice, a hand taps it over and over to show what it does.
+    private var translateKey: some View {
+        Button { toggle() } label: {
+            Image(systemName: translated ? "character.bubble.fill" : "character.bubble")
+                .font(.title2)
+                .foregroundStyle(Palette.accent)
+                .frame(width: 40, height: 40)
+                .background {
+                    if hintVisible {
+                        Circle().fill(Palette.accent.opacity(0.14))
+                            .phaseAnimator(reduceMotion ? [1.0] : [0.85, 1.2]) { ring, scale in
+                                ring.scaleEffect(scale)
+                            } animation: { _ in .easeInOut(duration: 0.9) }
+                    }
+                }
+                .overlay(alignment: .bottomTrailing) {
+                    if hintVisible {
+                        Image(systemName: "hand.tap.fill")
+                            .font(.footnote)
+                            .foregroundStyle(Palette.accent)
+                            .phaseAnimator(reduceMotion ? [false] : [false, true, false]) { hand, pressed in
+                                hand.scaleEffect(pressed ? 0.8 : 1).offset(x: 8, y: pressed ? 8 : 10)
+                            } animation: { pressed in pressed ? .easeIn(duration: 0.18) : .spring(duration: 0.5) }
+                            .transition(.opacity)
+                    }
+                }
         }
-        .font(.footnote.weight(.semibold))
-        .foregroundStyle(Palette.accent)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .background(Palette.accent.opacity(0.12), in: Capsule())
-        .accessibilityHidden(true)
+        .buttonStyle(.plain)
+        .accessibilityLabel(translated ? L.t("看原文", "Show the original") : L.t("看中文翻譯", "Show in English"))
+        .accessibilityIdentifier("speaking-translate")
     }
 
     private func toggle() {

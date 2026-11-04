@@ -18,7 +18,10 @@ final class OfficialBankTests: XCTestCase {
         search.tap()
         search.typeText("adapt")
         XCTAssertTrue(containing("已校正", in: app).waitForExistence(timeout: 10), app.debugDescription)
-        search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5))
+        // Leave search so the shelf and the tab bar come back.
+        let cancel = app.buttons.matching(NSPredicate(format: "label IN %@", ["取消", "Cancel"])).firstMatch
+        if cancel.exists { cancel.tap() } else { search.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5)) }
+        XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
 
         let bank = app.buttons["bank-official:medical"]
         XCTAssertTrue(bank.waitForExistence(timeout: 5))
@@ -29,6 +32,7 @@ final class OfficialBankTests: XCTestCase {
 
         // Studying it uses only its words.
         app.tabBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5), app.debugDescription)
         app.buttons["today-start"].tap()
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
         let words = ["diagnosis", "symptom", "prescription"]

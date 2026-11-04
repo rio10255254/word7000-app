@@ -1,7 +1,10 @@
 # App Store 上架文案
 
+- 支援網址（Support URL）：https://word7000-app.rio10255254.workers.dev/support.html
+- 隱私權政策網址（Privacy Policy URL）：https://word7000-app.rio10255254.workers.dev/privacy.html
+
 兩個語系：**繁體中文（台灣）**給學英文的人，**英文（美國）**給學中文的人。
-截圖由 `scripts/generate-app-store-screenshots.mjs` 產生，在 `exports/app-store/<語系>/`。
+截圖由 `scripts/generate-app-store-screenshots.mjs` 產生，在 `exports/app-store/<語系>/`（JPEG，App Store Connect 可直接上傳）。
 
 ## 繁體中文（台灣）
 

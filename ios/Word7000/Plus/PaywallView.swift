@@ -120,7 +120,7 @@ struct PaywallView: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 4)
-            .background(.bar)
+            .background { PaperBarBackground(edge: .top) }
         }
     }
 
@@ -247,7 +247,7 @@ struct PaywallView: View {
         .padding(.horizontal, 20)
         .padding(.top, 12)
         .padding(.bottom, 8)
-        .background(.bar)
+        .background { PaperBarBackground() }
         .animation(.smooth, value: notice)
     }
 

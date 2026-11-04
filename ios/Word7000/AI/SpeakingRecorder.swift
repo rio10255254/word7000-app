@@ -41,6 +41,8 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     private var language = "en-US"
     #if DEBUG
     private var simulated: Bool { ProcessInfo.processInfo.arguments.contains("-uiTestingRecording") }
+    /// UI tests: what a simulated take "says" (a fixed answer when nil).
+    @ObservationIgnored var simulatedTranscript: String?
     #endif
 
     func refresh(language: String) async {
@@ -198,7 +200,7 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
     func transcribe(hints: [String] = []) {
         #if DEBUG
         if simulated, hasRecording, !busy {
-            transcript = "I practice with my friend every day."
+            transcript = simulatedTranscript ?? "I practice with my friend every day."
             state = .ready
             return
         }

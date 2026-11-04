@@ -15,8 +15,9 @@ public struct ConversationPromptCard: Codable, Equatable, Hashable, Sendable {
     public var questionSupport: String
     public var referenceAnswer: String
     public var referenceTranslation: String
-    /// The question in the learner's own language, when it is asked in the
-    /// language they are learning (learners of Chinese read it in Chinese).
+    /// The question in the learner's own language (Chinese for learners of
+    /// English, English for learners of Chinese), revealed by tapping the
+    /// question. It says nothing about which language the question is in.
     public var questionGloss: String?
 
     public init(keyword: String, keywordPronunciation: String, question: String, questionSupport: String, referenceAnswer: String, referenceTranslation: String,

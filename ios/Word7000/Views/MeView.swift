@@ -363,10 +363,13 @@ struct SettingsLabel: View {
                 .frame(width: 29, height: 29)
                 .background(tint.gradient, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
                 .accessibilityHidden(true)
-            Text(title).foregroundStyle(.primary)
+            // Color.primary, not .primary: inside a Button the hierarchical
+            // style takes the button's tint, which turned rows like
+            // "Announcement pushes" red.
+            Text(title).foregroundStyle(Color.primary)
             if value != nil || external { Spacer(minLength: 8) }
             if let value {
-                Text(value).foregroundStyle(.secondary).lineLimit(1)
+                Text(value).foregroundStyle(Color.secondary).lineLimit(1)
                     .contentTransition(.opacity)
             }
             if external {

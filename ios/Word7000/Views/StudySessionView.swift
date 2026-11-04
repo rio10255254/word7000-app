@@ -101,6 +101,13 @@ struct StudySessionView: View {
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
+            // No set to show (the data was swapped underneath, e.g. a sign-in):
+            // close instead of leaving an empty page.
+            .task(id: model.studySession == nil) {
+                guard model.studySession == nil else { return }
+                try? await Task.sleep(for: .milliseconds(400))
+                if model.studySession == nil { dismiss() }
+            }
             .overlay(alignment: .top) {
                 if goalBanner {
                     Label {
@@ -589,7 +596,6 @@ struct SessionSummary: View {
             if account.configured, !account.isPermanent {
                 GuestKeepCard(count: session.knownIds.count + session.reviewIds.count) { signInOpen = true }
                     .entrance(3)
-                    .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
             }
             if !session.reviewIds.isEmpty, !AppRuntime.uiTesting {
                 PlusUpsellCard(feature: .smartAI,
@@ -647,6 +653,7 @@ struct SessionSummary: View {
         .overlay(alignment: .top) {
             if reachedGoal && appeared && !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
         }
+        .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .onAppear { appeared = true }
         .accessibilityIdentifier("study-summary")
         // After a first round, a good moment to ask about notifications.
@@ -683,7 +690,14 @@ private struct SummaryChip: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        // A card of its own on the paper: the ivory surface tinted by the
+        // stat's colour and edged in it, so it reads at a glance.
+        .background {
+            let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+            shape.fill(Palette.surface)
+                .overlay(shape.fill(tint.opacity(0.14)))
+                .overlay(shape.strokeBorder(tint.opacity(0.28), lineWidth: 1))
+        }
         .accessibilityElement(children: .combine)
         .task {
             guard !rolled else { return }

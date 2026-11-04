@@ -140,7 +140,7 @@ public enum ChineseDisplay {
 
     // MARK: - Pinyin
 
-    static func isHan(_ character: Character) -> Bool {
+    public static func isHan(_ character: Character) -> Bool {
         character.unicodeScalars.contains { scalar in
             switch scalar.value {
             case 0x3007, 0x3400...0x4DBF, 0x4E00...0x9FFF, 0xF900...0xFAFF, 0x20000...0x323AF: return true

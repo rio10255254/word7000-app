@@ -66,6 +66,15 @@ if (SUPABASE_ACCESS_TOKEN && PROJECT_REF) {
   const logs = await query(`select timestamp, event_message from logs where source = 'function_logs'
     and (event_message like '%apple%' or event_message like '%revoke%')
     order by timestamp desc limit 20`);
+  const auth = await query(`select timestamp, event_message from logs where source = 'auth_logs'
+    and (event_message like '%error%' or event_message like '%apple%' or event_message like '%id_token%')
+    order by timestamp desc limit 30`);
+  say('');
+  say('## 🔐 最近 24 小時的登入伺服器紀錄（錯誤與 Apple 登入）');
+  say('');
+  if (auth.error) say(`- 讀不到：${auth.error}`);
+  else if (!auth.rows.length) say('- 沒有');
+  else for (const row of auth.rows) say(`- ${stamp(row.timestamp)} ${String(row.event_message).slice(0, 300)}`);
   if (logs.error) say(`- 函式紀錄讀不到：${logs.error}`);
   else if (logs.rows.length) {
     say('');

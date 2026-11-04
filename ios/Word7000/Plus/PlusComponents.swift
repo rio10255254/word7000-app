@@ -231,7 +231,7 @@ struct TrialRecapView: View {
             }
             .padding(.horizontal, 20)
             .padding(.top, 10)
-            .background(.bar)
+            .background { PaperBarBackground() }
         }
         .background { AmbientBackground(tint: Palette.review) }
         .onAppear {

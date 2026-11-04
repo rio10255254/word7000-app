@@ -447,9 +447,13 @@ final class AccountModel {
         do {
             var newSession: AuthSession
             if let current = session, current.user.anonymous {
+                let guest = try await validSession(client: client, current)
                 do {
-                    newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode, linkTo: try await validSession(client: client, current))
+                    newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode, linkTo: guest)
                 } catch let error as SupabaseError where error.isIdentityAlreadyLinked {
+                    // This Apple ID already has an account: the guest's progress moves
+                    // into it, so the guest no longer counts as a person of its own.
+                    try? await client.retireGuest(session: guest)
                     newSession = try await client.signInWithIdToken(provider: "apple", idToken: idToken, nonce: rawNonce, accessToken: authorizationCode)
                 }
             } else {
@@ -479,6 +483,12 @@ final class AccountModel {
         let text = (error as? SupabaseError)?.message ?? fallback
         status = .error(text)
         message = text
+    }
+
+    /// Sign in with Apple itself failed (before our server was reached).
+    func noteAppleFailure() {
+        status = .error(A.appleUnavailable)
+        message = A.appleUnavailable
     }
 
     func noteCancelled() {
@@ -549,6 +559,46 @@ final class AccountModel {
             fail(error, fallback: A.deleteFailed)
         }
     }
+
+    /// Whether the signed-in account still exists: it may have been deleted
+    /// on another iPhone with the same Apple ID. Checked when the app comes
+    /// back; offline or server trouble changes nothing.
+    func confirmAccountExists() async {
+        guard let client, let current = session, !current.user.anonymous, !AppRuntime.uiTesting, !busy else { return }
+        do {
+            _ = try await client.user(session: current)
+        } catch let error as SupabaseError where error.isUserGone {
+            await accountRemovedElsewhere(current)
+        } catch let error as SupabaseError where [401, 403, 404].contains(error.status) {
+            // An expired access token also answers 401; only a refresh that is
+            // refused too means the account is gone.
+            do {
+                let refreshed = try await client.refresh(refreshToken: current.refreshToken)
+                if session?.user.id == current.user.id { store(refreshed) }
+            } catch let refused as SupabaseError where (400..<500).contains(refused.status) {
+                await accountRemovedElsewhere(current)
+            } catch {}
+        } catch {}
+    }
+
+    /// The account was deleted elsewhere: drop its data from this iPhone
+    /// and carry on as a fresh guest.
+    private func accountRemovedElsewhere(_ gone: AuthSession) async {
+        guard session?.user.id == gone.user.id else { return }
+        forgetLocalAccount(gone)
+        await bootstrap()
+        message = A.deletedElsewhere
+    }
+
+    private func forgetLocalAccount(_ gone: AuthSession) {
+        flushTask?.cancel()
+        Outbox.clear(userId: gone.user.id)
+        app.forgetSpeakingHistory(ownerId: gone.user.id, anonymous: false)
+        store(nil)
+        dirty = SyncDirty()
+        app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
+        app.setLocalOwner(nil, anonymous: true)
+    }
 }
 
 /// Changes that have not reached the cloud yet, kept per user on disk.
@@ -603,11 +653,13 @@ enum A {
     static var signingIn: String { L.t("登入中…", "Signing in…") }
     static var signInFailed: String { L.t("登入失敗，請再試一次", "Sign-in failed. Please try again.") }
     static var appleFailed: String { L.t("Apple 登入失敗，請再試一次", "Sign in with Apple failed. Please try again.") }
+    static var appleUnavailable: String { L.t("Apple 登入沒有完成，請再按一次。一直不行的話，到「設定」確認已登入 Apple 帳號並連上網路。", "Sign in with Apple didn't finish. Try again; if it keeps failing, check you're signed in to your Apple Account in Settings and online.") }
     static var cancelled: String { L.t("已取消登入", "Sign-in cancelled") }
     static var signedOut: String { L.t("已登出", "Signed out") }
     static var signedOutReminderUnconfirmed: String { L.t("已登出，但尚未確認停用這支手機的舊帳號提醒。", "Signed out, but reminders for the previous account on this iPhone could not be confirmed off.") }
     static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
     static var deleted: String { L.t("帳號已刪除", "Account deleted") }
+    static var deletedElsewhere: String { L.t("這個帳號已經在另一支手機刪除，這支 iPhone 改回訪客。", "This account was deleted on another iPhone, so this one is back to a guest.") }
     static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }
     static var deleteCancelled: String { L.t("沒有刪除：需要用 Apple 確認才能刪除帳號", "Not deleted: confirm with Apple to delete the account") }
     static var deletedAppleStillListed: String { L.t("帳號已刪除。若「設定 → Apple 帳號 → 使用 Apple 登入」還看得到單字貓，可以在那裡按「刪除」。", "Account deleted. If WordCat still shows in Settings > Apple Account > Sign in with Apple, you can remove it there.") }

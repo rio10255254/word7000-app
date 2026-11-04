@@ -132,7 +132,7 @@ struct QuizConfiguration: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.top, 10)
             .padding(.bottom, 8)
-            .background(.bar)
+            .background { PaperBarBackground() }
         }
         .navigationTitle(L.quickQuiz)
         .animation(reduceMotion ? nil : Motion.reveal, value: model.settings.quizQuestionCount)

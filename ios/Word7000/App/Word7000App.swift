@@ -64,6 +64,7 @@ struct Word7000App: App {
                         }
                     }
                     await account.bootstrap()
+                    await account.confirmAccountExists()
                     await account.checkReminderSupport()
                     await refreshReminders()
                 }
@@ -108,6 +109,7 @@ struct Word7000App: App {
                 account.heartbeat()
                 Usage.log("app_open", model.studyMode.rawValue)
                 Task {
+                    await account.confirmAccountExists()
                     if let content = await account.fetchRemoteContent(cached: model.remoteContent) {
                         model.applyRemoteContent(content)
                         model.saveRemoteContent()

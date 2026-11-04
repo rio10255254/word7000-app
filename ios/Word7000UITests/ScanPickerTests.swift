@@ -162,6 +162,12 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["scan-close"].tap()
         app.tabBars.buttons.element(boundBy: 0).tap()
         app.buttons["today-speaking"].tap()
+        // Speaking opens on the scenario path; the word list is a tab beside it.
+        let track = app.segmentedControls["speaking-track"]
+        XCTAssertTrue(track.waitForExistence(timeout: 10))
+        track.buttons["單字口說"].tap()
+        // A word with an example opens on saying it; one without goes straight to the question.
+        if app.buttons["shadow-skip"].waitForExistence(timeout: 5) { app.buttons["shadow-skip"].tap() }
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), app.debugDescription)
         XCTAssertFalse(app.segmentedControls["speaking-activity"].exists)
         XCTAssertFalse(app.buttons["speaking-use-core"].exists)
@@ -292,10 +298,25 @@ final class ScanPickerTests: XCTestCase {
                     app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: centre.x, dy: centre.y)).tap()
                 }
             }
-            let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: choose)
-            if XCTWaiter.wait(for: [ready], timeout: 8) == .completed { return }
+            if waitUntilBack(choose, in: app, timeout: 8) { return }
         }
         XCTFail("The photo picker did not close\n\(app.debugDescription)")
+    }
+
+    /// Reading `hittable` while the picker is still sliding away can fail the
+    /// test outright ("Activation point invalid"). So the picker's Cancel must be
+    /// gone and the button must have a settled on-screen frame first.
+    private func waitUntilBack(_ button: XCUIElement, in app: XCUIApplication, timeout: TimeInterval) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            let frame = button.exists ? button.frame : .null
+            if !cancelButton(in: app).exists, !frame.isEmpty, frame.midX.isFinite, frame.midY.isFinite,
+               app.frame.contains(CGPoint(x: frame.midX, y: frame.midY)), button.isHittable {
+                return true
+            }
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+        return false
     }
 
     /// Right after the picker closes, a tap on Save can land while the sheet is

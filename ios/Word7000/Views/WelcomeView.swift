@@ -336,6 +336,10 @@ private struct StickyNote: View {
             }
             .rotationEffect(.degrees(selected ? 0 : tilt))
             .scaleEffect(selected ? 1.04 : 1)
+            // The chosen note stands out; the others step back, so a bright
+            // paper (the mustard 20) never reads as the choice.
+            .saturation(selected ? 1 : 0.55)
+            .opacity(selected ? 1 : 0.82)
             .contentShape(Rectangle())
         }
         .buttonStyle(SoftPressStyle())

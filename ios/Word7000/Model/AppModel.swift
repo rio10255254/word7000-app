@@ -616,8 +616,10 @@ final class AppModel {
     }
 
     private func restoreStudySession(_ saved: StudySession) {
-        guard !saved.isComplete, saved.sourceKey == studySourceKey,
-              saved.cardIds.allSatisfy({ bank.index(of: $0) != nil }) else { return }
+        // A finished set is kept too: signing in from its summary must not
+        // leave the summary with nothing to show.
+        guard saved.sourceKey == studySourceKey,
+              saved.isComplete || saved.cardIds.allSatisfy({ bank.index(of: $0) != nil }) else { return }
         studySession = saved
     }
 
@@ -838,6 +840,17 @@ final class AppModel {
     /// about other words first.
     func noteSpeakingPractised(_ wordId: String) {
         settings.rememberSpeaking(wordId)
+    }
+
+    /// This learner's speaking path in the current study mode.
+    var speakingPath: SpeakingPath.Progress { settings.currentSpeakingPath }
+
+    /// Records a played stage (`stage` is its key; nil for word practice);
+    /// one with nothing said is not cleared.
+    func finishSpeakingStage(_ stage: String?, result: SpeakingPath.Result) {
+        guard result.cleared else { return }
+        refreshToday()
+        settings.clearSpeakingStage(stage, stars: result.stars, today: today)
     }
 
     var speakingCandidates: [WordEntry] {

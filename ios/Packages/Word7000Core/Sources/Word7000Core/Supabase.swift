@@ -147,6 +147,12 @@ public struct SupabaseError: Error, Equatable, Sendable {
         self.message = message
     }
 
+    /// The signed-in account no longer exists (deleted, e.g. on another iPhone).
+    public var isUserGone: Bool {
+        if code == "user_not_found" { return true }
+        return (status == 403 || status == 404) && message.lowercased().contains("does not exist")
+    }
+
     /// "This Google or Apple account already belongs to someone else."
     public var isIdentityAlreadyLinked: Bool {
         if code == "identity_already_exists" { return true }
@@ -302,6 +308,12 @@ public struct SupabaseClient: Sendable {
             "p_version": .string(version), "p_build": build.map { .number(Double($0)) } ?? .null,
             "p_os": .string(os), "p_language": .string(language),
         ]), session: session)
+    }
+
+    /// Marks this guest as merged into an Apple account that already existed,
+    /// so the usage report doesn't count it as a separate person.
+    public func retireGuest(session: AuthSession) async throws {
+        _ = try await request("POST", "rest/v1/rpc/retire_guest", body: .object([:]), session: session)
     }
 
     /// Sends usage counts (see UsageCounter); the server skips malformed rows.

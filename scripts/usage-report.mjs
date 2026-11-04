@@ -11,7 +11,7 @@ const labels = {
   app_open: '打開 App', study_session: '開始一輪學習', study_card: '學習卡片', quiz_answer: '測驗作答',
   spelling_answer: '拼字作答', speaking: '口說練習', coach_check: '口說批改', scan_saved: '掃描存入字庫',
   scan_words: '掃描加入的單字', ai: 'AI 使用成功', ai_failed: 'AI 失敗', paywall_view: '看到付費頁',
-  purchase: '購買', restore: '恢復購買', sign_in: 'Apple 登入', account_deleted: '刪除帳號',
+  purchase: '購買', restore: '恢復購買', sign_in: 'Apple 登入', sign_in_failed: 'Apple 登入失敗', account_deleted: '刪除帳號',
   placement: '完成程度測驗', mode_switch: '切換學習模式',
 };
 const aiKinds = {
@@ -47,30 +47,40 @@ const detailText = (event, detail) => {
 
 const u = report.users;
 const a = report.active;
-say(`# 📈 使用數據（最近 ${report.days} 天，從 ${report.since} 起，UTC）`);
+const both = (all, apple) => `${all}（Apple ${apple}）`;
+say(`# 📈 使用數據（最近 ${report.days} 天，${report.since} 到 ${report.today}，台灣時間）`);
 say('');
 say('## 👥 使用者');
 say('');
-say('| 全部帳號 | Apple 登入 | 訪客 | 期間新增 | 期間新增的 Apple 登入 | Premium 訂閱中 |');
-say('|---|---|---|---|---|---|');
-say(`| ${u.total} | ${u.apple} | ${u.guests} | ${u.new} | ${u.new_apple} | ${u.subscribers} |`);
+say('| 全部 | Apple 登入 | 訪客 | 期間新增（Apple／訪客） | Premium 訂閱中 |');
+say('|---|---|---|---|---|');
+say(`| ${u.total} | ${u.apple} | ${u.guests} | ${u.new}（${u.new_apple}／${u.new_guests}） | ${u.subscribers} |`);
 say('');
+const leftOut = (u.left_out_merged ?? 0) + (u.left_out_empty ?? 0);
+if (leftOut) {
+  say(`> 沒算進來的訪客 ${leftOut} 個：${u.left_out_merged ?? 0} 個已經併進原本的 Apple 帳號、${u.left_out_empty ?? 0} 個是加入超過 7 天、只打開過一天的空帳號。資料沒有刪除。`);
+  say('');
+}
 say('## 🔥 活躍');
 say('');
 say('| 今天 | 昨天 | 7 天內 | 30 天內 |');
 say('|---|---|---|---|');
-say(`| ${a.today} | ${a.yesterday} | ${a.last_7_days} | ${a.last_30_days} |`);
+say(`| ${both(a.today, a.today_apple)} | ${both(a.yesterday, a.yesterday_apple)} | ${both(a.last_7_days, a.last_7_days_apple)} | ${both(a.last_30_days, a.last_30_days_apple)} |`);
 say('');
-say('| 日期 | 活躍人數 | 新帳號 |');
+say('| 日期 | 活躍（Apple） | 新帳號（Apple） |');
 say('|---|---|---|');
-for (const d of report.daily) say(`| ${d.day} | ${d.active} | ${d.new} |`);
+for (const d of report.daily) say(`| ${d.day} | ${both(d.active, d.active_apple)} | ${both(d.new, d.new_apple)} |`);
 say('');
-const r = report.retention;
+say('「Apple」是用 Apple 登入的帳號，最接近真人數；訪客可能是同一個人換手機或重新安裝。');
+say('');
 say('## 🔁 留存（最近 90 天加入的人）');
 say('');
-say('| 隔天回來 | 第 7 天那週回來 | 第 30 天那週回來 |');
-say('|---|---|---|');
-say(`| ${pct(r.d1.back, r.d1.cohort)} | ${pct(r.d7.back, r.d7.cohort)} | ${pct(r.d30.back, r.d30.cohort)} |`);
+say('| | 隔天回來 | 第 7 天那週回來 | 第 30 天那週回來 |');
+say('|---|---|---|---|');
+for (const [kind, label] of [['apple', 'Apple 登入'], ['guests', '訪客']]) {
+  const r = report.retention?.[kind];
+  if (r) say(`| ${label} | ${pct(r.d1.back, r.d1.cohort)} | ${pct(r.d7.back, r.d7.cohort)} | ${pct(r.d30.back, r.d30.cohort)} |`);
+}
 say('');
 
 const events = report.events;
@@ -100,7 +110,7 @@ section('💰 付費', ['paywall_view', 'purchase', 'restore']);
 const eu = report.event_users;
 say(`付費漏斗（人數）：看到付費頁 ${eu.paywall_view ?? 0} → 按下購買 ${events.filter((e) => e.event === 'purchase' && e.detail.endsWith(':started')).reduce((n, e) => n + e.users, 0)} → 購買成功 ${events.filter((e) => e.event === 'purchase' && e.detail.endsWith(':purchased')).reduce((n, e) => n + e.users, 0)}`);
 say('');
-section('🙋 帳號', ['sign_in', 'account_deleted']);
+section('🙋 帳號', ['sign_in', 'sign_in_failed', 'account_deleted']);
 say('> 只統計 2.0.2 (6) 以後的 App。訂閱收入、試用轉換、下載量請看 App Store Connect 的「分析」與「銷售和趨勢」。');
 
 const text = out.join('\n') + '\n';

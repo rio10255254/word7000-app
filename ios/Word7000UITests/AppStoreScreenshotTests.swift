@@ -55,13 +55,50 @@ final class AppStoreScreenshotTests: XCTestCase {
 
         // Speaking, checked by the coach.
         app = launch(chineseMode: chineseMode, ["-uiTestingCoach", chineseMode ? "showcase" : "showcaseEnglish",
-                                                "-uiTestingSpeakingWord", chineseMode ? "貼上" : "改善"])
+                                                "-uiTestingSpeakingWord", chineseMode ? "貼上" : "改善",
+                                                "-uiTestingRecording", "-uiTestingToneShowcase"])
         let speaking = app.buttons["today-speaking"]
         speaking.scrollIntoView(in: app, swipes: 4)
         speaking.tap()
-        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
+        // Each word opens on saying its model sentence first.
+        let skip = app.buttons["shadow-skip"]
+        if skip.waitForExistence(timeout: 5) {
+            sleep(1)
+            snap(app, "\(prefix)-4-speaking-shadow")
+            // Say it: each word lights up as it is heard (a simulated take),
+            // and for Chinese the pitch of each character is drawn under it.
+            let record = app.buttons["shadow-record"]
+            if record.waitForExistence(timeout: 3) {
+                record.tap()
+                if app.descendants(matching: .any)["shadow-result"].firstMatch.waitForExistence(timeout: 10) {
+                    sleep(1)
+                    snap(app, "\(prefix)-4-speaking-shadow-result")
+                }
+            } else {
+                skip.tap()
+            }
+        }
+        // The question follows by itself after a short countdown.
+        XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 12), app.debugDescription)
         sleep(1)
         snap(app, "\(prefix)-4-speaking-question")
+        // On to the next turn: the line said before stays above, faded.
+        let next = app.buttons["speaking-next"]
+        if next.waitForExistence(timeout: 3) {
+            next.tap()
+            if skip.waitForExistence(timeout: 5) {
+                sleep(2)
+                snap(app, "\(prefix)-4-speaking-turn2")
+            }
+        }
+        // The coach's sample answer fits a word question, so check it under Words.
+        let track = app.segmentedControls["speaking-track"]
+        if track.waitForExistence(timeout: 3) {
+            track.buttons.element(boundBy: 1).tap()
+            if skip.waitForExistence(timeout: 5) { skip.tap() }
+            XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5), app.debugDescription)
+            sleep(1)
+        }
         let typeInstead = app.buttons["coach-type-instead"]
         typeInstead.scrollIntoView(in: app, swipes: 4)
         typeInstead.tap()
@@ -79,6 +116,19 @@ final class AppStoreScreenshotTests: XCTestCase {
         app.swipeUp()
         sleep(1)
         snap(app, "\(prefix)-5-coach-more")
+        app.terminate()
+
+        // The scenario map: ten everyday scenes, two stages each.
+        app = launch(chineseMode: chineseMode)
+        let practice = app.buttons["today-speaking"]
+        practice.scrollIntoView(in: app, swipes: 4)
+        practice.tap()
+        let map = app.buttons["speaking-scenarios"]
+        if map.waitForExistence(timeout: 5) {
+            map.tap()
+            sleep(2)
+            snap(app, "\(prefix)-4-speaking-map")
+        }
         app.terminate()
 
         // The cat's chat.

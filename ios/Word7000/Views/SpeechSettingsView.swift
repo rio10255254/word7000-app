@@ -16,7 +16,11 @@ struct SpeechSettingsView: View {
                 if !loading, Self.canSoundBetter {
                     // Apps cannot download voices; the learner can, for free.
                     Section {
-                        Label {
+                        // The icon sits by the title, not halfway down the paragraph.
+                        HStack(alignment: .top, spacing: 14) {
+                            Image(systemName: "waveform.badge.plus").foregroundStyle(Palette.accent)
+                                .font(.title3).padding(.top, 2)
+                                .accessibilityHidden(true)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(L.t("下載更自然的聲音", "Get a more natural voice")).font(.headline)
                                 Text(L.t("iPhone 內建的標準聲音比較生硬。到 iPhone「設定 → 輔助使用 → 朗讀內容 → 聲音」，下載英文的 Ava（優質）和中文（台灣）的美佳（增強），單字貓會自動改用。",
@@ -24,9 +28,8 @@ struct SpeechSettingsView: View {
                                     .font(.subheadline).foregroundStyle(.secondary)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
-                        } icon: {
-                            Image(systemName: "waveform.badge.plus").foregroundStyle(Palette.accent)
                         }
+                        .accessibilityElement(children: .combine)
                         .accessibilityIdentifier("speech-better-voice")
                     }
                 }

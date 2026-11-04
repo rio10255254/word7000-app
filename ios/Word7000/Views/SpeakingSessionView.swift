@@ -361,6 +361,17 @@ struct SpeakingSessionView: View {
         scenarioRef == nil ? practiceCard(words[index]) : SpeakingScenarios.card(turns[index], mode: mode)
     }
 
+    /// What was said before turn `index` of a role-play: each earlier turn's
+    /// line from the other person and the reply the learner said back.
+    private func earlierLines(before index: Int) -> [ShadowStepView.ChatLine] {
+        guard scenarioRef != nil, index > 0 else { return [] }
+        return turns.prefix(index).enumerated().flatMap { item -> [ShadowStepView.ChatLine] in
+            let card = SpeakingScenarios.card(item.element, mode: mode)
+            return [ShadowStepView.ChatLine(id: "\(item.offset)-partner", text: card.question, mine: false),
+                    ShadowStepView.ChatLine(id: "\(item.offset)-reply", text: shadowSentence(card), mine: true)]
+        }
+    }
+
     /// The model sentence said on an item's first step: the reply in a
     /// role-play, the opening of the sample answer, or the example sentence.
     private func shadowSentence(_ card: ConversationPromptCard) -> String {
@@ -381,12 +392,14 @@ struct SpeakingSessionView: View {
                     translation: ShadowingCheck.sentence(from: card.referenceTranslation, chinese: model.studyMode != .chinese),
                     chinese: model.studyMode == .chinese,
                     partner: turn.map { ShadowStepView.Partner(role: $0.role.practised(mode), line: card.question, gloss: card.questionGloss ?? "") },
+                    earlier: earlierLines(before: index),
                     onDone: { said in
                         if said, !shadowedThisWord { shadowed += 1; shadowedThisWord = true }
                         withAnimation(reduceMotion ? nil : Motion.reveal) { shadowing = false }
                     }
                 )
-                .modifier(PromptArrival())
+                // A role-play rolls on like a chat; a word slides in from the side.
+                .modifier(PromptArrival(slides: turn == nil))
                 .id("shadow-\(index)")
             }
             .overlay(alignment: .top) {
@@ -468,6 +481,10 @@ struct SpeakingSessionView: View {
                                     .accessibilityIdentifier("speaking-example-translation")
                             }
                         }
+                    }
+                    // A role-play: the line said before stays above, faded.
+                    if scenarioRef != nil, let last = earlierLines(before: index).last {
+                        EarlierChatLine(line: last)
                     }
                     // Tapping the question (or the key beside it) turns it into
                     // the learner's own language and back.
@@ -704,10 +721,12 @@ private struct NextKey: ViewModifier {
 private struct PromptArrival: ViewModifier {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var delay: Double = 0
+    /// Off for a role-play, whose bubbles rise in like a chat instead.
+    var slides = true
     @State private var arrived = false
 
     func body(content: Content) -> some View {
-        let settled = arrived || reduceMotion
+        let settled = arrived || reduceMotion || !slides
         return content
             .opacity(settled ? 1 : 0.3)
             .offset(x: settled ? 0 : 28)

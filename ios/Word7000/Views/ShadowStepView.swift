@@ -16,6 +16,14 @@ struct ShadowStepView: View {
         let gloss: String
     }
 
+    /// A line said earlier in the conversation.
+    struct ChatLine: Equatable, Identifiable {
+        let id: String
+        let text: String
+        /// Said by the learner (on the right), or by the other person.
+        let mine: Bool
+    }
+
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
@@ -27,6 +35,9 @@ struct ShadowStepView: View {
     let chinese: Bool
     /// In a role-play, who speaks first and what they say; the sentence is the reply.
     var partner: Partner? = nil
+    /// In a role-play, what was said before this turn. The last line stays
+    /// above, faded, so three bubbles show the conversation going on.
+    var earlier: [ChatLine] = []
     /// Called with whether the sentence was said well enough (or said at
     /// all, where this phone cannot turn speech into text).
     let onDone: (_ said: Bool) -> Void
@@ -274,8 +285,13 @@ struct ShadowStepView: View {
 
     private var sentenceCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if let partner { partnerBubble(partner) }
-            replyBlock
+            if partner != nil, let last = earlier.last {
+                EarlierChatLine(line: last)
+                    .modifier(ChatRise(step: 0, from: 64))
+            }
+            if let partner { partnerBubble(partner).modifier(ChatRise(step: 1)) }
+            // Only a role-play rolls on like a chat.
+            replyBlock.modifier(ChatRise(step: 2, enabled: partner != nil))
             if let check, listener.isFinal { result(check) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -485,6 +501,55 @@ struct ShadowStepView: View {
         listener.interrupt()
         Speaker.shared.stop()
         onDone(said)
+    }
+}
+
+/// The last line said before this turn, small and faded above it, so the
+/// conversation reads on from where it was.
+struct EarlierChatLine: View {
+    let line: ShadowStepView.ChatLine
+
+    var body: some View {
+        HStack {
+            if line.mine { Spacer(minLength: 56) }
+            Text(line.text)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+                .truncationMode(.head)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background((line.mine ? Palette.accent.opacity(0.07) : Palette.fill.opacity(0.55)),
+                            in: BubbleShape(tail: line.mine ? .trailing : .leading))
+            if !line.mine { Spacer(minLength: 56) }
+        }
+        .opacity(0.8)
+        .accessibilityLabel(L.t("上一句：\(line.text)", "Before: \(line.text)"))
+        .accessibilityIdentifier("speaking-earlier-line")
+    }
+}
+
+/// A turn of the conversation arriving like a chat scrolling on: the line
+/// from before rises into place above, then the new bubbles come up from
+/// below, one after the other.
+struct ChatRise: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// 0 first; each step a little later.
+    var step: Int
+    /// How far below it starts.
+    var from: CGFloat = 36
+    var enabled = true
+    @State private var risen = false
+
+    func body(content: Content) -> some View {
+        let settled = risen || reduceMotion || !enabled
+        return content
+            .offset(y: settled ? 0 : from)
+            .opacity(settled || step == 0 ? 1 : 0)
+            .onAppear {
+                guard !risen, !reduceMotion else { return }
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.86).delay(0.05 + Double(step) * 0.14)) { risen = true }
+            }
     }
 }
 

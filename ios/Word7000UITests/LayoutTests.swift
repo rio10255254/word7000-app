@@ -123,6 +123,78 @@ final class LayoutTests: XCTestCase {
 
     // MARK: Checks
 
+    /// The main screens on this phone: each one's key buttons fully on the
+    /// screen, and a screenshot of each to look over at every size.
+    func testMainScreensFitThisPhone() {
+        let app = launch()
+        let window = app.windows.firstMatch.frame
+
+        app.buttons["today-start"].tap()
+        let showAnswer = app.buttons["study-show-answer"]
+        XCTAssertTrue(showAnswer.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "tour-1-card")
+        onScreen(showAnswer, in: window, "study-show-answer")
+        showAnswer.tap()
+        let known = app.buttons["study-grade-known"]
+        XCTAssertTrue(known.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "tour-2-answer")
+        onScreen(known, in: window, "study-grade-known")
+        onScreen(app.buttons["study-grade-review"], in: window, "study-grade-review")
+        app.buttons["study-close"].tap()
+
+        let quiz = app.buttons["today-quiz"]
+        XCTAssertTrue(quiz.waitForExistence(timeout: 5))
+        quiz.tap()
+        let start = app.buttons["quiz-start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "tour-3-quiz-setup")
+        onScreen(start, in: window, "quiz-start")
+        start.tap()
+        XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
+        app.buttons["quiz-option-0"].tap()
+        let next = app.buttons["quiz-next"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "tour-4-quiz-answered")
+        onScreen(next, in: window, "quiz-next")
+        app.buttons["quiz-close"].tap()
+
+        let speaking = app.buttons["today-speaking"]
+        XCTAssertTrue(speaking.waitForExistence(timeout: 5))
+        speaking.tap()
+        let record = app.buttons["shadow-record"]
+        XCTAssertTrue(record.waitForExistence(timeout: 5))
+        sleep(2)
+        snap(app, "tour-5-speaking")
+        onScreen(record, in: window, "shadow-record")
+        let skip = app.buttons["shadow-skip"]
+        onScreen(skip, in: window, "shadow-skip")
+        skip.tap()
+        let moveOn = app.buttons["speaking-next"]
+        XCTAssertTrue(moveOn.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "tour-6-speaking-question")
+        onScreen(moveOn, in: window, "speaking-next")
+        moveOn.tap()
+        // The next turn keeps the line said before, faded, above the new ones.
+        XCTAssertTrue(skip.waitForExistence(timeout: 5))
+        sleep(2)
+        snap(app, "tour-7-speaking-turn2")
+        XCTAssertTrue(app.descendants(matching: .any)["speaking-earlier-line"].firstMatch.exists, "The line said before stays above")
+        onScreen(app.buttons["shadow-record"], in: window, "shadow-record (turn 2)")
+    }
+
+    /// Fully on the screen, so it can be seen and tapped.
+    private func onScreen(_ element: XCUIElement, in window: CGRect, _ name: String, file: StaticString = #filePath, line: UInt = #line) {
+        guard element.exists else { return XCTFail("\(name) is missing", file: file, line: line) }
+        let frame = element.frame
+        XCTAssertTrue(window.insetBy(dx: -1, dy: -1).contains(frame), "\(name) runs off the screen: \(frame) in \(window)", file: file, line: line)
+        XCTAssertTrue(element.isHittable, "\(name) can't be tapped", file: file, line: line)
+    }
+
     private func checkToday(_ app: XCUIApplication, name: String, tiles: [String], file: StaticString = #filePath, line: UInt = #line) {
         snap(app, name)
         let window = app.windows.firstMatch.frame

@@ -82,6 +82,15 @@ final class AppStoreScreenshotTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 12), app.debugDescription)
         sleep(1)
         snap(app, "\(prefix)-4-speaking-question")
+        // On to the next turn: the line said before stays above, faded.
+        let next = app.buttons["speaking-next"]
+        if next.waitForExistence(timeout: 3) {
+            next.tap()
+            if skip.waitForExistence(timeout: 5) {
+                sleep(2)
+                snap(app, "\(prefix)-4-speaking-turn2")
+            }
+        }
         // The coach's sample answer fits a word question, so check it under Words.
         let track = app.segmentedControls["speaking-track"]
         if track.waitForExistence(timeout: 3) {

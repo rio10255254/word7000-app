@@ -59,9 +59,11 @@ jobs:
         # Small fixes can check the newest iOS alone; releases and pushes run all three.
         include: ${{ fromJSON(inputs.ios == '27' && '[{"ios":27,"xcode":27,"runner":"xcode-27"}]' || '[{"ios":18,"xcode":26,"runner":"macos-15"},{"ios":26,"xcode":26,"runner":"macos-15"},{"ios":27,"xcode":27,"runner":"xcode-27"}]') }}
     runs-on: ${{ matrix.runner }}
-    # The full iOS 27 walk-through on the xcode-27 runners takes 50-55 minutes,
-    # too close to an hour once the simulator is slow to boot.
-    timeout-minutes: 90
+    # The full iOS 27 walk-through on the xcode-27 runners now takes 85-95
+    # minutes with build and setup: its UI tests alone ran 70 minutes once the
+    # App Store screens and the every-screen layout walk joined it (run 369 was
+    # stopped at the old 90-minute limit with tests still to go).
+    timeout-minutes: 120
     env:
       IOS_MAJOR: ${{ matrix.ios }}
       XCODE_MAJOR: ${{ matrix.xcode }}

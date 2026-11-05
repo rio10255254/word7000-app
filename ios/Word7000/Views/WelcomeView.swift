@@ -280,8 +280,8 @@ struct WelcomeView: View {
     private var leadQuestion: some View {
         VStack(spacing: 18) {
             CatLine(mood: .happy, hop: hop,
-                    text: text("想先練單字，還是先練口說？兩個每天都會有，先做的那張卡會變大。",
-                               "Words first, or speaking? You'll get both every day; the one you pick comes first."))
+                    text: text("想先練單字，還是先練口說？兩個每天都會有，先選的排在今天的路最前面。",
+                               "Words first, or speaking? You'll get both every day; the one you pick comes first on today's path."))
             HStack(spacing: 14) {
                 PillarChoice(icon: "rectangle.on.rectangle.angled", title: text("先背單字", "Words first"),
                              detail: text("翻卡・拼字・考考看", "Cards, spelling, quiz"), tint: Palette.accent,

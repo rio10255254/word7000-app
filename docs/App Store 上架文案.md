@@ -117,3 +117,13 @@ Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 - Premium 是自動續訂訂閱（月訂、年訂），付費頁有恢復購買、隱私權政策和使用條款連結。
 - 線上 AI 功能（口說批改等）第一次使用前會請使用者同意傳送文字；不傳錄音、照片、姓名或 Email。
 - 介面依「學英文／學中文」切換中文或英文；設定在「我」頁。
+
+## Review Notes (English)
+
+`scripts/asc-prepare-version.mjs` 會把這段貼進 App Store Connect 的審查備註。
+
+- Every free feature works without signing in (as a guest).
+- Sign in with Apple syncs progress. Me → Account → Delete Account and Data permanently deletes the account; the app asks the user to confirm with Apple first and revokes the Sign in with Apple authorization.
+- Premium is an auto-renewing subscription (monthly and yearly). The paywall links to Restore Purchases, the Privacy Policy and the Terms of Use.
+- Before online AI features (such as speaking feedback) are used for the first time, the app asks the user to agree to send text. Recordings, photos, names and email addresses are never sent.
+- The interface is Chinese for learners of English and English for learners of Chinese; switch on the Me tab.

@@ -14,7 +14,7 @@ on:
       operation:
         description: 'native-testflight: native SwiftUI build to TestFlight. The React Native operations (build-testflight, ota-update) were removed with the React Native app.'
         type: choice
-        options: ['native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status', 'store-readiness']
+        options: ['native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status', 'store-readiness', 'store-prepare']
         default: 'native-testflight'
       full_validation:
         description: 'native-testflight only: wait for a passed full Native iOS run of this source before uploading. Off by default; turn it on when a full test is wanted.'
@@ -33,7 +33,7 @@ on:
         type: string
         default: ''
       submit_build:
-        description: 'testflight-submit only: build number already uploaded to add to the group and submit for Beta App Review (e.g. when an earlier build of the version was still in review)'
+        description: 'testflight-submit: build number already uploaded to add to the group and submit for Beta App Review. store-prepare: build to put on the App Store version (empty: newest processed)'
         type: string
         default: ''
       native_validation_run:
@@ -54,7 +54,7 @@ jobs:
   # An uploaded build into the TestFlight group and Beta App Review, for a
   # release run that could not submit it while another build was in review.
   testflight-submit:
-    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status' || inputs.operation == 'beta-status' || inputs.operation == 'store-readiness'
+    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status' || inputs.operation == 'beta-status' || inputs.operation == 'store-readiness' || inputs.operation == 'store-prepare'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -83,6 +83,18 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: node scripts/asc-store-readiness.mjs --bundle com.rio.word7000 --version "$(node -p 'require("./ios/Release/app.json").expo.version')"
+      # Fills in the App Store version page (never submits it); submit_build
+      # picks the build, otherwise the newest processed one of the version.
+      - name: Fill in the App Store version page from the repo
+        if: inputs.operation == 'store-prepare'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          BUILD: ${{ inputs.submit_build }}
+        run: |
+          node scripts/asc-prepare-version.mjs --bundle com.rio.word7000 \
+            --version "$(node -p 'require("./ios/Release/app.json").expo.version')" ${BUILD:+--build "$BUILD"}
       - name: Add to the group and submit for Beta App Review
         if: inputs.operation == 'testflight-submit'
         env:
@@ -99,7 +111,7 @@ jobs:
             --group "${GROUP:-Wordcat Public Testing 1}" --wait-minutes 2
 
   release:
-    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status' && inputs.operation != 'beta-status' && inputs.operation != 'store-readiness'
+    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status' && inputs.operation != 'beta-status' && inputs.operation != 'store-readiness' && inputs.operation != 'store-prepare'
     runs-on: ${{ inputs.operation == 'native-testflight' && 'macos-15' || 'ubuntu-latest' }}
     timeout-minutes: 120
     env:

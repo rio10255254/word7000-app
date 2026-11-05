@@ -177,6 +177,8 @@ struct SpeakingAnswerPanel: View {
                 let text = recording.text
                 let liveText = recording.support == .live
                 if recording.seconds >= 60
+                    // A voice that stopped a while ago: the answer is over.
+                    || (recording.heardVoice && recording.silentFor > 2.5)
                     || (liveText && !text.isEmpty && recording.quietFor > 5)
                     || (liveText && text.isEmpty && recording.quietFor > 15) {
                     recording.stop(); return
@@ -256,11 +258,11 @@ struct SpeakingAnswerPanel: View {
     /// Before anything is said: one big key, and a way to type instead.
     private var recorderKey: some View {
         VStack(spacing: 12) {
-            if live, !recording.text.isEmpty {
-                // What is being heard, as one's own chat message.
+            if live, !recording.text.isEmpty || recording.heardVoice {
+                // What is being heard, as one's own chat message, a word at a time.
                 HStack {
                     Spacer(minLength: 40)
-                    Text(recording.text)
+                    TypingText(text: recording.text.isEmpty ? "…" : recording.text, reduceMotion: reduceMotion)
                         .font(.title3.weight(.semibold))
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal, 14)
@@ -901,5 +903,27 @@ private struct CheckKey: ViewModifier {
 
     func body(content: Content) -> some View {
         if again { content.secondaryAction() } else { content.prominentAction() }
+    }
+}
+
+/// Text that comes in a character at a time, so words heard in a burst
+/// still appear one after another as they are said; a correction shows
+/// at once.
+struct TypingText: View {
+    let text: String
+    var reduceMotion = false
+    @State private var shown = ""
+
+    var body: some View {
+        Text(shown)
+            .task(id: text) {
+                guard !reduceMotion, text.hasPrefix(shown), text.count > shown.count else { shown = text; return }
+                while shown.count < text.count {
+                    // Faster when far behind, so it never lags the voice.
+                    let behind = text.count - shown.count
+                    do { try await Task.sleep(for: .milliseconds(behind > 12 ? 15 : 45)) } catch { return }
+                    shown = String(text.prefix(shown.count + 1))
+                }
+            }
     }
 }

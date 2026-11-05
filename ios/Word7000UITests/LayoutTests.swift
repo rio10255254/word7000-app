@@ -9,7 +9,7 @@ final class LayoutTests: XCTestCase {
     override func setUp() { continueAfterFailure = true }
 
     /// WordCat Next: the controls on Today besides the header and today-start.
-    private static let home = ["today-streak", "today-shelf", "today-chapter", "today-node-cards"]
+    private static let home = ["today-streak", "today-shelf", "today-node-cards", "today-spelling", "today-quiz", "today-speaking"]
 
     private func launch(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()

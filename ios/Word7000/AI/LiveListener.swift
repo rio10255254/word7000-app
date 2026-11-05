@@ -42,10 +42,14 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     private(set) var heardVoice = false
     /// Seconds since the voice was last heard; 0 until it was.
     var silentFor: TimeInterval { heardVoice ? Date().timeIntervalSince(lastVoice) : 0 }
-    /// Which recognizer took this take, for test phones: "new", "old" or "none".
+    /// Which recognizer took this take, for test phones: "new", "old",
+    /// "both" or "none".
     private(set) var recognizerUsed = "none"
     /// How many times the text changed while the learner was still speaking.
     private(set) var liveUpdates = 0
+    /// For test phones: live answers from each recognizer in this take.
+    private(set) var newUpdates = 0
+    private(set) var oldUpdates = 0
 
     struct Segment: Equatable, Sendable {
         let text: String
@@ -56,7 +60,16 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     var listening: Bool { state == .listening }
     var busy: Bool { state == .requesting || state == .listening || state == .finishing }
 
-    @ObservationIgnored private let engine = AVAudioEngine()
+    /// Made afresh for each take, once the audio session records: an engine
+    /// whose microphone input was first touched while the session only
+    /// played (after the model sentence) has no input, and live listening
+    /// then fell back to recording plainly, with text only at the end.
+    @ObservationIgnored private var engine = AVAudioEngine()
+    @ObservationIgnored private var tapInstalled = false
+    /// For the usage report: how this take was listened to.
+    @ObservationIgnored private var path = "engine"
+    /// For test phones: "engine" (live) or "rec-…" (recorded plainly, and why).
+    var takePath: String { path }
     @ObservationIgnored private var request: SFSpeechAudioBufferRecognitionRequest?
     @ObservationIgnored private var task: SFSpeechRecognitionTask?
     @ObservationIgnored private var file: URL?
@@ -70,6 +83,9 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     @ObservationIgnored private var lastChange = Date()
     @ObservationIgnored private var lastVoice = Date()
     @ObservationIgnored private var loudSince: Date?
+    /// How loud this voice is, so its pauses count as quiet even in a
+    /// noisy room; 0 until a voice was heard.
+    @ObservationIgnored private var voicePeak: Float = 0
     /// The room's own level, learned from the quietest moments; -1 until measured.
     @ObservationIgnored private var noiseFloor: Float = -1
     /// Apple's newer recognizer has this language on the phone: it listens live.
@@ -82,6 +98,11 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     @ObservationIgnored private var streamingFinish: (() async -> Void)?
     @ObservationIgnored private var streamingCancel: (() -> Void)?
     @ObservationIgnored private var generation = UUID()
+    /// Both recognizers can listen to one take: what each heard so far.
+    @ObservationIgnored private var newText = ""
+    @ObservationIgnored private var newSegments: [Segment] = []
+    @ObservationIgnored private var oldText = ""
+    @ObservationIgnored private var oldSegments: [Segment] = []
     @ObservationIgnored private var language = "en-US"
     #if DEBUG
     @ObservationIgnored private var simulation: Task<Void, Never>?
@@ -141,12 +162,21 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                 self.messageNeedsSettings = true
                 return
             }
-            if self.support == .live, !self.useAnalyzer {
+            // The older recognizer listens too, also next to the newer one:
+            // whichever gives text first colours the sentence as it is said.
+            // Next to the newer one only where speech recognition was
+            // already allowed, so no extra question comes up for it.
+            var legacy = self.support == .live && self.legacyLive
+                && (!self.useAnalyzer || SFSpeechRecognizer.authorizationStatus() == .authorized)
+            if legacy {
                 let status = await withCheckedContinuation { continuation in
                     SFSpeechRecognizer.requestAuthorization { continuation.resume(returning: $0) }
                 }
                 guard self.generation == id else { return }
-                if status != .authorized { self.support = .recordOnly }
+                if status != .authorized {
+                    legacy = false
+                    if !self.useAnalyzer { self.support = .recordOnly }
+                }
             }
             await Speaker.shared.stopAndRelease()
             guard self.generation == id else { return }
@@ -158,11 +188,13 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                     feed = await self.startStreaming(id: id)
                     guard self.generation == id else { return }
                 }
-                self.recognizerUsed = feed != nil ? "new" : (self.legacyLive && self.support == .live ? "old" : "none")
+                self.recognizerUsed = feed != nil ? (legacy ? "both" : "new") : (legacy ? "old" : "none")
                 do {
-                    try self.begin(hints: hints, id: id, feed: feed)
+                    self.path = "engine"
+                    try self.begin(hints: hints, id: id, feed: feed, legacy: legacy)
                 } catch {
                     // No live audio here: record plainly and turn it into text afterwards.
+                    self.path = (error as? ListenError) == .noInput ? "rec-noinput" : "rec-\((error as NSError).code)"
                     self.abandonLive()
                     try self.beginRecorder(id: id)
                 }
@@ -288,7 +320,11 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
 
     /// `feed`, when set, takes the audio for the newer recognizer; otherwise
     /// the older one listens, where it can on the device.
-    private func begin(hints: [String], id: UUID, feed: ((AVAudioPCMBuffer) -> Void)?) throws {
+    private func begin(hints: [String], id: UUID, feed: ((AVAudioPCMBuffer) -> Void)?, legacy: Bool) throws {
+        // Never reuse an engine across takes or session changes.
+        if engine.isRunning { engine.stop() }
+        engine = AVAudioEngine()
+        tapInstalled = false
         let input = engine.inputNode
         let format = input.outputFormat(forBus: 0)
         guard format.sampleRate > 0, format.channelCount > 0 else { throw ListenError.noInput }
@@ -298,7 +334,8 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         file = url
         store.reset(rate: format.sampleRate)
 
-        let recognizer = feed == nil && legacyLive && support == .live ? SFSpeechRecognizer(locale: Locale(identifier: language)) : nil
+        let recognizer = legacy ? SFSpeechRecognizer(locale: Locale(identifier: language)) : nil
+        let alongside = feed != nil
         let recognitionRequest: SFSpeechAudioBufferRecognitionRequest? =
             recognizer?.supportsOnDeviceRecognition == true ? SFSpeechAudioBufferRecognitionRequest() : nil
         if let recognizer, let request = recognitionRequest {
@@ -316,12 +353,14 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                 let final = result?.isFinal == true || (error != nil)
                 Task { @MainActor in
                     guard let self, self.generation == id else { return }
-                    self.receive(text: text, segments: segments, final: final)
+                    if alongside { self.hearOld(text: text, segments: segments) }
+                    else { self.receive(text: text, segments: segments, final: final) }
                 }
             }
         }
 
         let store = self.store
+        tapInstalled = true
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
             recognitionRequest?.append(buffer)
             feed?(buffer)
@@ -338,6 +377,34 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         try engine.start()
         hasRecording = false
         state = .listening
+    }
+
+    /// The newer recognizer, when the older one listens alongside it.
+    private func hearNew(text: String, segments: [Segment], final: Bool) {
+        if text != newText, state == .listening, !final { newUpdates += 1 }
+        newText = text; newSegments = segments
+        publish(final: final)
+    }
+
+    /// The older recognizer next to the newer one: only while speaking; the
+    /// newer one says when the take is done.
+    private func hearOld(text: String?, segments: [Segment]?) {
+        if let text, text != oldText {
+            if state == .listening { oldUpdates += 1 }
+            oldText = text
+        }
+        if let segments { oldSegments = segments }
+        publish(final: false)
+    }
+
+    /// While speaking, whichever has heard more; at the end the newer one,
+    /// which hears Taiwan Mandarin better, unless it heard nothing.
+    private func publish(final: Bool) {
+        let settled = final || state != .listening
+        let useNew = settled ? !newText.isEmpty : (!newText.isEmpty && newText.count >= oldText.count)
+        let text = useNew ? newText : oldText
+        let segments = !newSegments.isEmpty ? newSegments : oldSegments
+        receive(text: text, segments: segments, final: final)
     }
 
     private func receive(text: String?, segments: [Segment]?, final: Bool) {
@@ -376,10 +443,15 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         noiseFloor += (level - noiseFloor) * (level < noiseFloor ? 0.5 : 0.003)
         let threshold = min(0.8, max(0.28, noiseFloor + 0.16))
         let now = Date()
-        guard level > threshold else { loudSince = nil; return }
+        // Once the voice is known, well below it (about 15 dB) is a pause,
+        // even where the room itself is loud.
+        voicePeak = max(voicePeak * 0.998, heardVoice ? level : 0)
+        let voiced = max(threshold, voicePeak - 0.3)
+        guard level > voiced else { loudSince = nil; return }
         if loudSince == nil { loudSince = now }
         if heardVoice || now.timeIntervalSince(loudSince ?? now) >= 0.06 {
             heardVoice = true
+            voicePeak = max(voicePeak, level)
             lastVoice = now
         }
     }
@@ -412,11 +484,11 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                     latestSegments = settledSegments + pieceSegments
                     if result.isFinal { settled = latest; settledSegments = latestSegments }
                     guard let self, self.generation == id else { return }
-                    self.receive(text: latest, segments: latestSegments, final: false)
+                    self.hearNew(text: latest, segments: latestSegments, final: false)
                 }
             } catch {}
             guard let self, self.generation == id else { return }
-            self.receive(text: latest, segments: latestSegments, final: true)
+            self.hearNew(text: latest, segments: latestSegments, final: true)
         }
         return { streaming.append($0) }
     }
@@ -444,6 +516,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         hasRecording = file != nil && store.count > 0
         if let finish = streamingFinish {
             // The last words settle once the recognizer knows the take is over.
+            request?.endAudio()
             state = .finishing
             let id = generation
             finishing = Task { [weak self] in
@@ -513,12 +586,17 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         isFinal = true
         level = 0
         state = .ready
+        Usage.log("speech_take", "\(language.prefix(2)).\(recognizerUsed).\(path).n\(Self.bucket(newUpdates)).o\(Self.bucket(oldUpdates)).l\(Self.bucket(liveUpdates)).t\(text.isEmpty ? 0 : 1)")
         WordAudioSession.release()
     }
 
+    private static func bucket(_ count: Int) -> String { count == 0 ? "0" : count <= 3 ? "1-3" : "4p" }
+
     private func stopEngine() {
         if engine.isRunning { engine.stop() }
-        engine.inputNode.removeTap(onBus: 0)
+        // Only an engine that listened is touched: asking for its input
+        // makes one, with whatever the audio session is doing right now.
+        if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
     }
 
     func togglePlayback() {
@@ -571,7 +649,8 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         file = nil
         store.reset(rate: 0)
         text = ""; segments = []; isFinal = false; hasRecording = false; seconds = 0
-        heardVoice = false; loudSince = nil; noiseFloor = -1; liveUpdates = 0
+        heardVoice = false; loudSince = nil; noiseFloor = -1; voicePeak = 0; liveUpdates = 0
+        newText = ""; newSegments = []; oldText = ""; oldSegments = []; newUpdates = 0; oldUpdates = 0
         message = nil; level = 0; state = .idle
         if hadAudio { WordAudioSession.release() }
     }

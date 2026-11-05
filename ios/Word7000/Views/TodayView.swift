@@ -165,7 +165,9 @@ struct TodayView: View {
     /// Epop keeps the home to one thing: the greeting, one big card for the
     /// step to do now, and at most one note. Everything else is a tap away.
     private func page(roomy: Bool) -> some View {
-        VStack(alignment: .leading, spacing: roomy ? 18 : 12) {
+        // Roomier now the language switch has left the header: the card sits a
+        // little lower instead of leaving the bottom of a tall phone empty.
+        VStack(alignment: .leading, spacing: roomy ? 24 : 12) {
             header
             focusCard(roomy: roomy)
             if let nudge = plus.nudge {

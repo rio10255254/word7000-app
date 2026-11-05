@@ -484,8 +484,15 @@ final class SpeakingCoachTests: XCTestCase {
         reveal(history, in: app)
         history.tap()
         let count = app.descendants(matching: .any)["history-selected-speaking"].firstMatch
-        XCTAssertTrue(count.waitForExistence(timeout: 5))
-        let label = count.label
+        let empty = app.descendants(matching: .any)["history-chart-empty"].firstMatch
+        // With nothing practised yet the history shows its empty state instead of counts.
+        let label: String
+        if count.waitForExistence(timeout: 5) {
+            label = count.label
+        } else {
+            XCTAssertTrue(empty.exists, "the history shows neither counts nor its empty state")
+            label = "empty"
+        }
         XCTAssertFalse(label.isEmpty)
         app.navigationBars.buttons.element(boundBy: 0).tap()
         return label

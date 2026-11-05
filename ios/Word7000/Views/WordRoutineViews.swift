@@ -134,6 +134,8 @@ struct RoutineChecksView: View {
             .padding(.bottom, 8)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // A container: its buttons keep their own identifiers.
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("routine-hand-off")
     }
 }
@@ -580,6 +582,7 @@ struct RoutineSummaryView: View {
         }
         .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .onAppear { appeared = true }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("routine-summary")
     }
 

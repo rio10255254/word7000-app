@@ -4,9 +4,12 @@ import Speech
 import Word7000Core
 
 /// Listens while the learner speaks and turns it into text as it goes, on
-/// this iPhone only. The take is kept (temporarily) to play back and to
-/// measure its pitch; nothing is uploaded. Where this iPhone cannot
-/// recognize the language on the device, it still records.
+/// this iPhone only: with Apple's newer recognizer (iOS 26) where its model
+/// for the language is on the phone, otherwise with the older one. The take
+/// is kept (temporarily) to play back and to measure its pitch; nothing is
+/// uploaded. Where this iPhone cannot recognize the language on the device,
+/// it still records. Its loudness tells when the learner has stopped
+/// speaking, with or without text.
 @MainActor @Observable
 final class LiveListener: NSObject, AVAudioPlayerDelegate {
     enum State { case idle, requesting, listening, finishing, ready, playing }
@@ -35,6 +38,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     private(set) var messageNeedsSettings = false
     /// Seconds since the last change to the text (or since listening began).
     var quietFor: TimeInterval { Date().timeIntervalSince(lastChange) }
+    /// A voice was heard in this take, by its loudness against the room's.
+    private(set) var heardVoice = false
+    /// Seconds since the voice was last heard; 0 until it was.
+    var silentFor: TimeInterval { heardVoice ? Date().timeIntervalSince(lastVoice) : 0 }
 
     struct Segment: Equatable, Sendable {
         let text: String
@@ -57,6 +64,19 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     @ObservationIgnored private var finishing: Task<Void, Never>?
     @ObservationIgnored private let store = SampleStore()
     @ObservationIgnored private var lastChange = Date()
+    @ObservationIgnored private var lastVoice = Date()
+    @ObservationIgnored private var loudSince: Date?
+    /// The room's own level, learned from the quietest moments; -1 until measured.
+    @ObservationIgnored private var noiseFloor: Float = -1
+    /// Apple's newer recognizer has this language on the phone: it listens live.
+    @ObservationIgnored private var useAnalyzer = false
+    /// The older recognizer can listen live on the device.
+    @ObservationIgnored private var legacyLive = false
+    /// A finished take can still become text with the newer recognizer.
+    @ObservationIgnored private var canTranscribeFile = false
+    /// The newer recognizer's live session: no more audio, then the last words settle.
+    @ObservationIgnored private var streamingFinish: (() async -> Void)?
+    @ObservationIgnored private var streamingCancel: (() -> Void)?
     @ObservationIgnored private var generation = UUID()
     @ObservationIgnored private var language = "en-US"
     #if DEBUG
@@ -75,16 +95,20 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         if simulated { support = .live; return }
         #endif
         let expected = language
-        var result: Support = .recordOnly
-        if SFSpeechRecognizer(locale: Locale(identifier: language))?.supportsOnDeviceRecognition == true {
-            result = .live
-        } else if #available(iOS 26.0, *), SpeechTranscriber.isAvailable,
-                  let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)),
-                  await AssetInventory.status(forModules: [SpeechTranscriber(locale: locale, preset: .transcription)]) == .installed {
-            result = .afterwards
+        // The newer recognizer first: it hears Taiwan Mandarin much better,
+        // and gives text while the learner is still speaking.
+        var analyzer = false
+        if #available(iOS 26.0, *), SpeechTranscriber.isAvailable,
+           let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)),
+           await AssetInventory.status(forModules: [SpeechTranscriber(locale: locale, preset: .transcription)]) == .installed {
+            analyzer = true
         }
+        let legacy = SFSpeechRecognizer(locale: Locale(identifier: language))?.supportsOnDeviceRecognition == true
         guard self.language == expected else { return }
-        support = result
+        useAnalyzer = analyzer
+        legacyLive = legacy
+        canTranscribeFile = analyzer
+        support = analyzer || legacy ? .live : .recordOnly
     }
 
     /// Starts a take. `hints` only bias recognition (none when the exact
@@ -109,7 +133,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                 self.messageNeedsSettings = true
                 return
             }
-            if self.support == .live {
+            if self.support == .live, !self.useAnalyzer {
                 let status = await withCheckedContinuation { continuation in
                     SFSpeechRecognizer.requestAuthorization { continuation.resume(returning: $0) }
                 }
@@ -121,8 +145,13 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             do {
                 try await WordAudioSession.activate(recording: true)
                 guard self.generation == id else { return }
+                var feed: ((AVAudioPCMBuffer) -> Void)?
+                if self.useAnalyzer, #available(iOS 26.0, *) {
+                    feed = await self.startStreaming(id: id)
+                    guard self.generation == id else { return }
+                }
                 do {
-                    try self.begin(hints: hints, id: id)
+                    try self.begin(hints: hints, id: id, feed: feed)
                 } catch {
                     // No live audio here: record plainly and turn it into text afterwards.
                     self.abandonLive()
@@ -141,6 +170,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         stopEngine()
         task?.cancel(); task = nil
         request = nil
+        streamingCancel?(); streamingCancel = nil; streamingFinish = nil
         if let file { try? FileManager.default.removeItem(at: file) }
         file = nil
     }
@@ -163,7 +193,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                 guard let self, self.generation == id, self.state == .listening, let recorder = self.recorder else { return }
                 recorder.updateMeters()
                 self.seconds = recorder.currentTime
-                self.level = max(0, min(1, (recorder.averagePower(forChannel: 0) + 50) / 50))
+                self.hear(max(0, min(1, (recorder.averagePower(forChannel: 0) + 50) / 50)))
             }
         }
     }
@@ -180,10 +210,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         state = .finishing
         let id = generation
         let language = language
-        let live = support == .live
+        let newer = canTranscribeFile
         finishing = Task { [weak self] in
             var text = ""
-            if #available(iOS 26.0, *), !live {
+            if #available(iOS 26.0, *), newer {
                 text = (try? await LiveListener.transcribe(file: file, language: language)) ?? ""
             } else {
                 text = await LiveListener.transcribeOnDevice(file: file, language: language)
@@ -218,7 +248,9 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         }
     }
 
-    private func begin(hints: [String], id: UUID) throws {
+    /// `feed`, when set, takes the audio for the newer recognizer; otherwise
+    /// the older one listens, where it can on the device.
+    private func begin(hints: [String], id: UUID, feed: ((AVAudioPCMBuffer) -> Void)?) throws {
         let input = engine.inputNode
         let format = input.outputFormat(forBus: 0)
         guard format.sampleRate > 0, format.channelCount > 0 else { throw ListenError.noInput }
@@ -228,7 +260,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         file = url
         store.reset(rate: format.sampleRate)
 
-        let recognizer = support == .live ? SFSpeechRecognizer(locale: Locale(identifier: language)) : nil
+        let recognizer = feed == nil && legacyLive && support == .live ? SFSpeechRecognizer(locale: Locale(identifier: language)) : nil
         let recognitionRequest: SFSpeechAudioBufferRecognitionRequest? =
             recognizer?.supportsOnDeviceRecognition == true ? SFSpeechAudioBufferRecognitionRequest() : nil
         if let recognizer, let request = recognitionRequest {
@@ -254,12 +286,13 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         let store = self.store
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
             recognitionRequest?.append(buffer)
+            feed?(buffer)
             try? output.write(from: buffer)
             let level = store.append(buffer)
             let seconds = store.seconds
             Task { @MainActor in
                 guard let self, self.generation == id, self.state == .listening else { return }
-                self.level = level
+                self.hear(level)
                 self.seconds = seconds
             }
         }
@@ -275,7 +308,84 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             lastChange = Date()
         }
         if let segments { self.segments = segments }
-        if final { complete() }
+        if final { settle() }
+    }
+
+    /// The live recognizer is done. When the older one heard nothing although
+    /// someone spoke, the newer one still gets a go at the recording.
+    private func settle() {
+        if text.isEmpty, heardVoice, canTranscribeFile, streamingFinish == nil,
+           state == .listening || state == .finishing, let file, store.count > 0 {
+            stopEngine()
+            finishing?.cancel(); finishing = nil
+            task?.cancel(); task = nil
+            request = nil
+            hasRecording = true
+            transcribeAfterwards(file)
+            return
+        }
+        complete()
+    }
+
+    /// Learns the room's level and notes when a voice rises above it. A
+    /// sound counts as a voice once it lasts a moment, so a tap or a click
+    /// does not.
+    private func hear(_ level: Float) {
+        self.level = level
+        if noiseFloor < 0 { noiseFloor = level }
+        // Down quickly to a quieter room, up only slowly while someone speaks.
+        noiseFloor += (level - noiseFloor) * (level < noiseFloor ? 0.5 : 0.003)
+        let threshold = min(0.8, max(0.28, noiseFloor + 0.16))
+        let now = Date()
+        guard level > threshold else { loudSince = nil; return }
+        if loudSince == nil { loudSince = now }
+        if heardVoice || now.timeIntervalSince(loudSince ?? now) >= 0.06 {
+            heardVoice = true
+            lastVoice = now
+        }
+    }
+
+    /// Starts the newer recognizer on this take and returns where its audio
+    /// goes; nil when it cannot start, and the older recognizer listens.
+    @available(iOS 26.0, *)
+    private func startStreaming(id: UUID) async -> ((AVAudioPCMBuffer) -> Void)? {
+        let language = language
+        guard let streaming = try? await StreamingTranscription.start(language: language) else { return nil }
+        guard generation == id else { streaming.cancel(); return nil }
+        streamingFinish = { await streaming.finish() }
+        streamingCancel = { streaming.cancel() }
+        let chinese = language.hasPrefix("zh")
+        Task { @MainActor [weak self] in
+            // Settled text, then what is still being heard after it.
+            var settled = "", settledSegments: [Segment] = []
+            var latest = "", latestSegments: [Segment] = []
+            do {
+                for try await result in streaming.transcriber.results {
+                    let piece = String(result.text.characters)
+                    var pieceSegments: [Segment] = []
+                    for run in result.text.runs {
+                        guard let range = run.audioTimeRange else { continue }
+                        let text = String(result.text[run.range].characters)
+                        guard !text.trimmingCharacters(in: .whitespaces).isEmpty else { continue }
+                        pieceSegments.append(Segment(text: text, start: range.start.seconds, duration: range.duration.seconds))
+                    }
+                    latest = Self.join(settled, piece, chinese: chinese)
+                    latestSegments = settledSegments + pieceSegments
+                    if result.isFinal { settled = latest; settledSegments = latestSegments }
+                    guard let self, self.generation == id else { return }
+                    self.receive(text: latest, segments: latestSegments, final: false)
+                }
+            } catch {}
+            guard let self, self.generation == id else { return }
+            self.receive(text: latest, segments: latestSegments, final: true)
+        }
+        return { streaming.append($0) }
+    }
+
+    private static func join(_ before: String, _ piece: String, chinese: Bool) -> String {
+        if before.isEmpty { return piece.trimmingCharacters(in: .whitespaces) }
+        if chinese || before.hasSuffix(" ") || piece.hasPrefix(" ") { return before + piece }
+        return before + " " + piece
     }
 
     /// Ends the take; the text becomes final shortly after.
@@ -293,7 +403,19 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         if let recorder { stopRecorder(recorder); return }
         stopEngine()
         hasRecording = file != nil && store.count > 0
-        if request == nil, support == .afterwards, hasRecording, let file {
+        if let finish = streamingFinish {
+            // The last words settle once the recognizer knows the take is over.
+            state = .finishing
+            let id = generation
+            finishing = Task { [weak self] in
+                await finish()
+                try? await Task.sleep(for: .seconds(2))
+                guard let self, self.generation == id, self.state == .finishing else { return }
+                self.complete()
+            }
+            return
+        }
+        if request == nil, support == .afterwards || canTranscribeFile, hasRecording, let file {
             transcribeAfterwards(file)
             return
         }
@@ -305,7 +427,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         finishing = Task { [weak self] in
             try? await Task.sleep(for: .seconds(2.5))
             guard let self, self.generation == id, self.state == .finishing else { return }
-            self.complete()
+            self.settle()
         }
     }
 
@@ -348,6 +470,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         finishing?.cancel(); finishing = nil
         task?.cancel(); task = nil
         request = nil
+        streamingCancel?(); streamingCancel = nil; streamingFinish = nil
         isFinal = true
         level = 0
         state = .ready
@@ -403,11 +526,13 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         finishing?.cancel(); finishing = nil
         task?.cancel(); task = nil
         request = nil
+        streamingCancel?(); streamingCancel = nil; streamingFinish = nil
         player?.stop(); player = nil
         if let file { try? FileManager.default.removeItem(at: file) }
         file = nil
         store.reset(rate: 0)
         text = ""; segments = []; isFinal = false; hasRecording = false; seconds = 0
+        heardVoice = false; loudSince = nil; noiseFloor = -1
         message = nil; level = 0; state = .idle
         if hadAudio { WordAudioSession.release() }
     }
@@ -439,6 +564,83 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         }
     }
     #endif
+}
+
+/// Apple's newer on-device recognizer, fed while the learner speaks. Text
+/// comes back as it is heard (volatile results) and settles as it goes;
+/// each piece knows where it falls in the take, for pitch.
+@available(iOS 26.0, *)
+private final class StreamingTranscription: @unchecked Sendable {
+    let transcriber: SpeechTranscriber
+    private let analyzer: SpeechAnalyzer
+    private let input: AsyncStream<AnalyzerInput>.Continuation
+    /// What the recognizer takes; the microphone's audio is converted to it.
+    private let format: AVAudioFormat?
+    private let lock = NSLock()
+    private var converter: AVAudioConverter?
+
+    private init(transcriber: SpeechTranscriber, analyzer: SpeechAnalyzer,
+                 input: AsyncStream<AnalyzerInput>.Continuation, format: AVAudioFormat?) {
+        self.transcriber = transcriber
+        self.analyzer = analyzer
+        self.input = input
+        self.format = format
+    }
+
+    /// Nil when this language's model is not on the phone.
+    static func start(language: String) async throws -> StreamingTranscription? {
+        guard SpeechTranscriber.isAvailable,
+              let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)) else { return nil }
+        let transcriber = SpeechTranscriber(locale: locale, transcriptionOptions: [],
+                                            reportingOptions: [.volatileResults], attributeOptions: [.audioTimeRange])
+        guard await AssetInventory.status(forModules: [transcriber]) == .installed else { return nil }
+        let analyzer = SpeechAnalyzer(modules: [transcriber])
+        let format = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [transcriber])
+        let (stream, input) = AsyncStream<AnalyzerInput>.makeStream()
+        try await analyzer.start(inputSequence: stream)
+        return StreamingTranscription(transcriber: transcriber, analyzer: analyzer, input: input, format: format)
+    }
+
+    /// From the audio thread: one buffer of the take.
+    func append(_ buffer: AVAudioPCMBuffer) {
+        lock.lock(); defer { lock.unlock() }
+        // Always a copy: the engine reuses its buffers, the recognizer reads later.
+        guard let converted = convert(buffer) else { return }
+        input.yield(AnalyzerInput(buffer: converted))
+    }
+
+    func finish() async {
+        input.finish()
+        try? await analyzer.finalizeAndFinishThroughEndOfInput()
+    }
+
+    func cancel() {
+        input.finish()
+        let analyzer = analyzer
+        Task { await analyzer.cancelAndFinishNow() }
+    }
+
+    private func convert(_ buffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer? {
+        let target = format ?? buffer.format
+        if converter == nil || converter?.inputFormat != buffer.format {
+            converter = AVAudioConverter(from: buffer.format, to: target)
+            converter?.primeMethod = .none
+        }
+        guard let converter, buffer.format.sampleRate > 0 else { return nil }
+        let ratio = target.sampleRate / buffer.format.sampleRate
+        let capacity = AVAudioFrameCount((Double(buffer.frameLength) * ratio).rounded(.up)) + 1
+        guard let output = AVAudioPCMBuffer(pcmFormat: target, frameCapacity: capacity) else { return nil }
+        var given = false
+        var error: NSError?
+        let status = converter.convert(to: output, error: &error) { _, inputStatus in
+            if given { inputStatus.pointee = .noDataNow; return nil }
+            given = true
+            inputStatus.pointee = .haveData
+            return buffer
+        }
+        guard status != .error, output.frameLength > 0 else { return nil }
+        return output
+    }
 }
 
 /// Mono samples of a take, written from the audio thread.

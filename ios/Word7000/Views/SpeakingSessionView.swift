@@ -491,7 +491,7 @@ struct SpeakingSessionView: View {
                     TranslatableQuestion(
                         caption: scenarioRef == nil ? nil : turns[index].role.practised(mode),
                         question: card.question,
-                        pinyin: model.studyMode == .chinese ? ChineseDisplay.sentencePinyin(card.question) : "",
+                        pinyin: model.studyMode == .chinese ? ChineseDisplay.readablePinyin(ChineseDisplay.sentencePinyin(card.question)) : "",
                         translation: card.questionGloss,
                         language: speakLanguage,
                         showsHint: !translationTried,

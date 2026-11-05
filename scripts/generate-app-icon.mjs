@@ -73,9 +73,10 @@ const variants = [
   },
 ];
 
-// The main icon: the same cat and notebook on olive green, the colour of
-// Today's "goal done" card and the Instagram avatar, lighter at the top left
-// like that card, with its paper grain. The notebook stays terracotta, the
+// The main icon: the same cat and notebook on a light olive green, the hue
+// of Today's "goal done" card and the Instagram avatar, lighter at the top
+// left like that card, with its paper grain; the dark icon is a mid olive,
+// not near-black. The notebook stays terracotta, the
 // olive's complement, so the pair reads at home-screen size. The leather one
 // above is the alternate.
 const grayPalette = variants[2].palette;
@@ -85,8 +86,8 @@ variants.push(
     file: 'icon-1024.png',
     palette: warm,
     book: { fill: '#C96442' },
-    background: ['#93A066', '#778A53', '#5F7340'],
-    glow: 'rgba(255, 248, 220, 0.22)',
+    background: ['#AFBC84', '#93A46B', '#7C8E56'],
+    glow: 'rgba(255, 250, 225, 0.30)',
     grain: 0.08,
   },
   {
@@ -94,8 +95,8 @@ variants.push(
     file: 'icon-1024-dark.png',
     palette: warm,
     book: { fill: '#D97757' },
-    background: ['#4C5A36', '#36412A', '#20271A'],
-    glow: 'rgba(220, 235, 190, 0.10)',
+    background: ['#6E7E4C', '#5A693F', '#475433'],
+    glow: 'rgba(230, 240, 200, 0.14)',
     grain: 0.06,
   },
   {

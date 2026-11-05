@@ -745,7 +745,7 @@ struct SpeakingAnswerPanel: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityIdentifier("coach-follow-up")
                     if chinese {
-                        let pinyin = ChineseDisplay.sentencePinyin(feedback.followUp)
+                        let pinyin = ChineseDisplay.readablePinyin(ChineseDisplay.sentencePinyin(feedback.followUp))
                         if !pinyin.isEmpty {
                             Text(pinyin).font(.footnote).foregroundStyle(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -782,7 +782,7 @@ struct SpeakingAnswerPanel: View {
                     Text(followUp).font(.headline).fixedSize(horizontal: false, vertical: true)
                         .accessibilityIdentifier("coach-question")
                     if chinese {
-                        let pinyin = ChineseDisplay.sentencePinyin(followUp)
+                        let pinyin = ChineseDisplay.readablePinyin(ChineseDisplay.sentencePinyin(followUp))
                         if !pinyin.isEmpty { Text(pinyin).font(.footnote).foregroundStyle(.secondary) }
                     }
                     if let followUpTranslation, !followUpTranslation.isEmpty {

@@ -111,6 +111,21 @@ public enum ChineseDisplay {
         #endif
     }
 
+    /// Pinyin as it reads under a sentence: Chinese punctuation becomes the
+    /// Latin mark, with no space before it and one after, so
+    /// "zhè biān qǐng， zhè shì cài dān. yào" reads "zhè biān qǐng, zhè shì cài dān. yào".
+    public static func readablePinyin(_ pinyin: String) -> String {
+        let marks: [Character: String] = ["，": ",", "、": ",", "。": ".", "？": "?", "！": "!", "：": ":", "；": ";",
+                                          "「": "\u{201C}", "」": "\u{201D}", "『": "\u{201C}", "』": "\u{201D}"]
+        var text = String(pinyin.flatMap { marks[$0] ?? String($0) })
+        text = text.replacingOccurrences(of: #"\s+([,.?!:;\u201D])"#, with: "$1", options: .regularExpression)
+        text = text.replacingOccurrences(of: #"([,.?!:;\u201D])(?=\p{L})"#, with: "$1 ", options: .regularExpression)
+        text = text.replacingOccurrences(of: #"(\u201C)\s+"#, with: "$1", options: .regularExpression)
+        text = text.replacingOccurrences(of: #"(\p{L})\u201C"#, with: "$1 \u{201C}", options: .regularExpression)
+        text = text.replacingOccurrences(of: #"\s{2,}"#, with: " ", options: .regularExpression)
+        return text.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     /// Native reading support keeps tone marks and the separator between senses.
     public static func pronunciationWithTones(_ meaning: String) -> String {
         let key = "tones:\(meaning)"

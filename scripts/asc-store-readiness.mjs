@@ -39,11 +39,13 @@ const ok = (text) => say(`- ✅ ${text}`);
 const bad = (text) => { todo += 1; say(`- ❌ ${text}`); };
 const hand = (text) => say(`- 👀 ${text}（API 查不到，要手動看）`);
 const filled = (value) => typeof value === 'string' && value.trim().length > 0;
-const lang = (locale) => ({ 'zh-Hant': '繁體中文', 'en-US': '英文（美國）' }[locale] ?? locale);
+const LOCALES = ['zh-Hant', 'en-US', 'en-CA'];
+const lang = (locale) => ({ 'zh-Hant': '繁體中文', 'en-US': '英文（美國）', 'en-CA': '英文（加拿大）' }[locale] ?? locale);
 
 const app = (await api(`/v1/apps?filter[bundleId]=${encodeURIComponent(bundle)}&limit=1`)).data[0];
 if (!app) throw new Error(`No app with bundle id ${bundle}`);
 say(`# App Store 上架檢查：${app.attributes.name}（${bundle}）`);
+say(`主要語言：${app.attributes.primaryLocale}（某地區的商店沒有對應語言時，會顯示這個語言）`);
 say('只讀，不會改任何東西。');
 
 // App information: name, subtitle, privacy policy, category, age rating.
@@ -55,14 +57,14 @@ else {
   const category = info.relationships?.primaryCategory?.data?.id;
   category ? ok(`主要類別：${category}`) : bad('還沒選主要類別');
   const localizations = (await tryApi(`/v1/appInfos/${info.id}/appInfoLocalizations?limit=50`)).data ?? [];
-  for (const locale of ['zh-Hant', 'en-US']) {
+  for (const locale of LOCALES) {
     const l = localizations.find((x) => x.attributes.locale === locale);
     if (!l) { bad(`${lang(locale)}：還沒新增這個語言`); continue; }
     const a = l.attributes;
     const missing = [!filled(a.name) && '名稱', !filled(a.privacyPolicyUrl) && '隱私權政策網址'].filter(Boolean);
     missing.length ? bad(`${lang(locale)}：缺 ${missing.join('、')}`) : ok(`${lang(locale)}：名稱「${a.name}」${filled(a.subtitle) ? `，副標題「${a.subtitle}」` : '（沒有副標題，可留空）'}，隱私權網址已填`);
   }
-  const extra = localizations.map((x) => x.attributes.locale).filter((x) => !['zh-Hant', 'en-US'].includes(x));
+  const extra = localizations.map((x) => x.attributes.locale).filter((x) => !LOCALES.includes(x));
   if (extra.length) say(`- ℹ️ 其他語言：${extra.join('、')}`);
   const age = await tryApi(`/v1/appInfos/${info.id}/ageRatingDeclaration`);
   if (age.error) bad(`年齡分級：讀不到（${age.error}）`);
@@ -113,7 +115,7 @@ if (!version) {
   version.attributes.copyright ? ok(`版權：${version.attributes.copyright}`) : bad('版權欄位空白（填「2026 你的名字」）');
 
   const vls = (await tryApi(`/v1/appStoreVersions/${version.id}/appStoreVersionLocalizations?limit=50`)).data ?? [];
-  for (const locale of ['zh-Hant', 'en-US']) {
+  for (const locale of LOCALES) {
     say(`\n### ${lang(locale)}`);
     const l = vls.find((x) => x.attributes.locale === locale);
     if (!l) { bad('這個版本還沒有這個語言'); continue; }
@@ -154,8 +156,10 @@ for (const group of groups) {
   say(`\n### 群組：${group.attributes.referenceName}`);
   const gls = (await tryApi(`/v1/subscriptionGroups/${group.id}/subscriptionGroupLocalizations?limit=20`)).data ?? [];
   for (const locale of ['zh-Hant', 'en-US']) {
-    const l = gls.find((x) => x.attributes.locale === locale);
-    l ? ok(`群組顯示名稱（${lang(locale)}）：${l.attributes.name}`) : bad(`群組還沒有${lang(locale)}的顯示名稱`);
+    // An approved name and the edit waiting for review are two rows of one language.
+    const rows = gls.filter((x) => x.attributes.locale === locale);
+    if (!rows.length) bad(`群組還沒有${lang(locale)}的顯示名稱`);
+    for (const l of rows) ok(`群組顯示名稱（${lang(locale)}）：${l.attributes.name}${l.attributes.customAppName ? `，App 名稱「${l.attributes.customAppName}」` : ''}（${l.attributes.state ?? '?'}）`);
   }
   const subs = (await tryApi(`/v1/subscriptionGroups/${group.id}/subscriptions?limit=20`)).data ?? [];
   for (const sub of subs) {

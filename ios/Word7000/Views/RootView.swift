@@ -159,7 +159,10 @@ struct RootView: View {
         // The speech model for spoken answers arrives before the first take.
         .task(id: model.studyMode) {
             guard !AppRuntime.uiTesting else { return }
-            await SpeakingRecorder().refresh(language: model.studyMode == .chinese ? "zh-TW" : "en-US")
+            let language = model.studyMode == .chinese ? "zh-TW" : "en-US"
+            // The model that turns speech into text while speaking, too.
+            LiveListener.prepareLiveModel(language: language)
+            await SpeakingRecorder().refresh(language: language)
         }
         // The developer's messages to everyone: checked on launch and on
         // coming back, each shown once when nothing else is on screen.

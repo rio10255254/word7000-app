@@ -1,0 +1,167 @@
+Attributes: Application, 0x1060a4c90, pid: 65803, label: 'WordCat'
+Element subtree:
+ →Application, 0x1060a4c90, pid: 65803, label: 'WordCat'
+    Window (Main), 0x1060a3df0, {{0.0, 0.0}, {375.0, 812.0}}
+      Other, 0x1060ef150, {{0.0, 0.0}, {375.0, 812.0}}
+        Other, 0x10607f8a0, {{0.0, 0.0}, {375.0, 812.0}}
+          Other, 0x1060dafd0, {{0.0, 0.0}, {375.0, 812.0}}
+            Other, 0x1060a5640, {{0.0, 0.0}, {375.0, 812.0}}
+              Other, 0x1062aea90, {{0.0, 0.0}, {375.0, 812.0}}
+                Other, 0x106081b00, {{0.0, 0.0}, {375.0, 812.0}}
+                  Other, 0x1060a6250, {{0.0, 0.0}, {375.0, 812.0}}
+                    Other, 0x106077910, {{0.0, 0.0}, {375.0, 812.0}}
+                      Other, 0x1060774f0, {{0.0, 0.0}, {375.0, 812.0}}
+                        Other, 0x1060a6670, {{0.0, 0.0}, {376.7, 812.0}}
+                          Image, 0x106090450, {{0.0, 0.0}, {375.0, 812.0}}, label: 'PaperGrain'
+                          Image, 0x1060a4450, {{269.9, 174.6}, {106.8, 213.1}}, label: 'PaperGrain'
+                          Image, 0x1060c9920, {{16.0, 169.0}, {343.3, 208.3}}, label: 'PaperGrain'
+                          Other, 0x1060caa00, {{16.0, 317.3}, {110.0, 60.0}}
+                          Other, 0x1060d1c10, {{33.0, 155.3}, {64.0, 27.4}}
+                          StaticText, 0x1060a5a10, {{16.2, 169.2}, {139.7, 139.7}}, label: '7、/ 20 個', value: 35%
+                            Other, 0x1060a4030, {{16.2, 169.2}, {139.7, 139.7}}
+                            StaticText, 0x1060a4870, {{77.5, 215.5}, {17.0, 33.7}}, label: '7'
+                            StaticText, 0x1060a5e30, {{69.0, 249.2}, {34.0, 13.3}}, label: '/ 20 個'
+                          StaticText, 0x106095050, {{154.0, 200.0}, {82.0, 20.0}}, label: '今天的單字'
+                          StaticText, 0x106094c30, {{154.0, 228.0}, {124.0, 15.7}}, label: '7 個待複習 · 6 個新字'
+                          Image, 0x1060812a0, {{165.0, 257.7}, {11.0, 14.3}}, identifier: 'flame.fill', label: '連續 2 天'
+                          StaticText, 0x106077d30, {{154.0, 251.7}, {58.7, 26.3}}, label: '連續 2 天'
+                          Image, 0x1060edc70, {{229.7, 258.3}, {13.3, 13.3}}, identifier: 'target', label: '還差 13 個'
+                          StaticText, 0x1060ed850, {{218.7, 252.3}, {78.3, 25.3}}, label: '還差 13 個'
+                          Button, 0x1060ed430, {{36.0, 307.0}, {303.3, 50.3}}, identifier: 'today-start', label: '繼續學習'
+                            StaticText, 0x1060ee8d0, {{139.8, 322.0}, {67.7, 20.3}}, label: '繼續學習'
+                            Image, 0x1060d8430, {{217.3, 325.7}, {16.0, 13.3}}, identifier: 'arrow.right', label: '向右'
+                          Button, 0x1060ef950, {{274.5, 112.2}, {75.6, 75.6}}, identifier: 'today-mascot', label: '傻貓'
+                            Other, 0x1060f0550, {{274.5, 112.2}, {75.6, 75.6}}
+                          StaticText, 0x1060f0130, {{20.0, 393.3}, {38.3, 24.0}}, label: '練習'
+                          Button, 0x1060ee090, {{15.6, 425.8}, {344.1, 90.3}}, identifier: 'today-review', label: '複習不熟的字、練到熟為止、8、個字'
+                            Image, 0x1060ef530, {{15.6, 425.8}, {344.1, 90.3}}, label: 'PaperGrain'
+                            Image, 0x1060eecf0, {{43.9, 462.1}, {16.5, 20.1}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                            StaticText, 0x1060ee4b0, {{85.8, 448.9}, {115.2, 25.0}}, label: '複習不熟的字'
+                            StaticText, 0x1060ed010, {{86.0, 475.2}, {74.8, 18.7}}, label: '練到熟為止'
+                            StaticText, 0x1060ecbf0, {{326.4, 444.5}, {19.0, 37.2}}, label: '8'
+                            StaticText, 0x1060ec7d0, {{323.4, 481.5}, {22.1, 13.5}}, label: '個字'
+                            Other, 0x1060ec3b0, {{157.6, 416.1}, {59.4, 24.5}}
+                          Button, 0x1060ebf90, {{15.5, 523.8}, {167.6, 89.1}}, identifier: 'today-quiz', label: '小測驗、10 題'
+                            Image, 0x1060ebb70, {{15.5, 523.8}, {167.6, 89.1}}, label: 'PaperGrain'
+                            Image, 0x1060e8760, {{41.2, 558.4}, {21.5, 18.9}}, identifier: 'checklist', label: 'checklist'
+                            StaticText, 0x1060ea970, {{86.0, 546.2}, {57.9, 24.6}}, label: '小測驗'
+                            StaticText, 0x1060ead90, {{85.8, 572.2}, {35.2, 18.4}}, label: '10 題'
+                            Other, 0x1060de8a0, {{-131.3, 384.5}, {366.7, 366.7}}
+                          Button, 0x1060de9c0, {{192.1, 523.7}, {167.7, 89.4}}, identifier: 'today-speaking', label: '口說練習、第 1 關 · 餐廳'
+                            Image, 0x1060deae0, {{192.1, 523.7}, {167.7, 89.4}}, label: 'PaperGrain'
+                            Other, 0x1060dec00, {{288.8, 523.7}, {70.6, 50.9}}
+                            Image, 0x1060ded20, {{215.2, 557.4}, {28.6, 23.0}}, identifier: 'bubble.left.and.text.bubble.right.fill', label: 'bubble.left.and.text.bubble.right.fill'
+                            StaticText, 0x1060dee40, {{262.4, 549.2}, {68.9, 21.5}}, label: '口說練習'
+                            StaticText, 0x1060def60, {{262.7, 572.0}, {55.5, 15.0}}, label: '第 1 關 · 餐廳'
+                            Other, 0x1060df080, {{45.3, 385.6}, {366.7, 366.7}}
+                          Button, 0x1060df1a0, {{15.6, 620.9}, {167.4, 88.8}}, identifier: 'today-spelling', label: '拼字練習、10 題'
+                            Image, 0x1060df2c0, {{15.6, 620.9}, {167.4, 88.8}}, label: 'PaperGrain'
+                            Image, 0x10ab11390, {{40.9, 654.8}, {22.2, 19.9}}, identifier: 'character.cursor.ibeam', label: '插入文字'
+                            StaticText, 0x1061f0bd0, {{86.0, 644.9}, {68.8, 21.3}}, label: '拼字練習'
+                            StaticText, 0x1061c4bf0, {{85.8, 667.6}, {35.2, 18.3}}, label: '10 題'
+                          Button, 0x1061cb410, {{192.4, 621.2}, {166.8, 88.2}}, identifier: 'today-exam', label: '模擬考、限時 15 分鐘'
+                            Image, 0x1061e2ef0, {{192.4, 621.2}, {166.8, 88.2}}, label: 'PaperGrain'
+                            Other, 0x1061aaa50, {{288.8, 621.2}, {70.3, 50.4}}
+                            Image, 0x1061aa370, {{219.3, 656.2}, {19.1, 19.1}}, identifier: 'timer', label: '計時器'
+                            StaticText, 0x1061ad310, {{262.6, 644.9}, {57.8, 24.3}}, label: '模擬考'
+                            StaticText, 0x1061ac5a0, {{262.7, 670.9}, {67.7, 14.7}}, label: '限時 15 分鐘'
+                          StaticText, 0x1061ae0c0, {{16.0, 62.0}, {63.0, 26.3}}, label: '晚安！'
+                          Image, 0x1061acc60, {{17.7, 90.7}, {13.0, 13.3}}, identifier: 'moon.stars.fill', label: '無雲的夜晚'
+                          StaticText, 0x1061a4da0, {{34.0, 89.3}, {75.3, 15.7}}, label: '11月5日 週四'
+                          Other, 0x1061ab4a0, {{144.3, 65.7}, {76.0, 36.0}}, identifier: 'today-language', label: '學習語言'
+                            Image, 0x1061ae440, {{144.3, 65.7}, {76.0, 36.0}}, label: 'PaperGrain'
+                            Button, 0x1061ab810, {{147.3, 68.7}, {34.0, 30.0}}, identifier: 'today-language-en', label: '學英文', Selected
+                            Button, 0x1061a9920, {{183.3, 68.7}, {34.0, 30.0}}, identifier: 'today-language-zh', label: '學中文'
+                          Button, 0x1061add70, {{228.3, 65.7}, {130.7, 36.0}}, identifier: 'today-study-filter', label: '學習範圍：7000 單字'
+                            Image, 0x1061aadd0, {{228.3, 65.7}, {130.7, 36.0}}, label: 'PaperGrain'
+                            Image, 0x1061ac250, {{242.0, 76.3}, {16.3, 14.3}}, identifier: 'books.vertical.fill', label: '書架'
+                            StaticText, 0x1061ac900, {{266.0, 75.8}, {62.3, 15.7}}, label: '7000 單字'
+                            Image, 0x1061aeb10, {{335.7, 80.7}, {10.0, 6.0}}, identifier: 'chevron.down', label: '往下'
+                Other, 0x1061af200, {{0.0, 729.0}, {375.0, 83.0}}
+                  Other, 0x1061abb60, {{0.0, 0.0}, {375.0, 812.0}}
+                    TabBar, 0x1061a6fb0, {{0.0, 729.0}, {375.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x1061a79c0, {{51.0, 729.0}, {274.0, 62.0}}
+                        Other, 0x1061acfd0, {{51.0, 729.0}, {94.0, 54.0}}
+                        Other, 0x1061a7300, {{51.0, 729.0}, {274.0, 62.0}}
+                          Button, 0x1061a8ac0, {{55.0, 733.0}, {94.0, 54.0}}, identifier: 'sun.max.fill', label: '今天', Selected
+                            Image, 0x1061ab150, {{88.0, 738.0}, {29.0, 29.3}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                          Button, 0x106171870, {{141.0, 733.0}, {94.0, 54.0}}, identifier: 'books.vertical.fill', label: '單字'
+                            Image, 0x1061a57f0, {{171.0, 738.0}, {33.3, 29.3}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                          Button, 0x1061a83b0, {{227.0, 733.0}, {94.0, 54.0}}, identifier: 'person.crop.circle.fill', label: '我'
+                            Image, 0x1061a4a40, {{260.0, 739.3}, {27.3, 27.3}}, identifier: 'person.crop.circle.fill', label: 'account'
+                        Other, 0x1061a5b50, {{55.0, 733.0}, {94.0, 54.0}}
+                          Other, 0x10618b250, {{55.0, 733.0}, {94.0, 54.0}}
+                            Other, 0x10618ca40, {{55.0, 733.0}, {94.0, 54.0}}
+                            Other, 0x10616eb50, {{55.0, 733.0}, {94.0, 54.0}}
+                              Other, 0x1061deeb0, {{55.0, 733.0}, {94.0, 54.0}}
+                                Other, 0x1061f1610, {{55.0, 733.0}, {94.0, 54.0}}
+                                  Other, 0x1061d1e70, {{55.0, 733.0}, {94.0, 54.0}}
+                                Other, 0x1061eb350, {{55.0, 733.0}, {94.0, 54.0}}
+                              Other, 0x1061c1570, {{55.0, 733.0}, {94.0, 54.0}}
+                  Other, 0x1061c3580, {{0.0, 729.0}, {375.0, 83.0}}
+                    Other, 0x1061ce8d0, {{0.0, 729.0}, {375.0, 83.0}}
+                      Other, 0x1061c77d0, {{0.0, 729.0}, {375.0, 83.0}}
+                        Other, 0x1061da970, {{0.0, 729.0}, {375.0, 83.0}}
+                          Other, 0x1061e4c70, {{0.0, 729.0}, {375.0, 83.0}}
+                            Other, 0x1061d0df0, {{0.0, 729.0}, {375.0, 83.0}}
+                        Other, 0x1061cc010, {{0.0, 729.0}, {375.0, 83.0}}
+                          Other, 0x1061da550, {{0.0, 729.0}, {375.0, 83.0}}
+      Other, 0x1061f2050, {{0.0, 0.0}, {375.0, 812.0}}
+        Other, 0x1061cf530, {{0.0, 0.0}, {375.0, 812.0}}
+          Other, 0x1061cfd70, {{0.0, 0.0}, {375.0, 812.0}}
+            Other, 0x1061d1630, {{0.0, 0.0}, {375.0, 812.0}}
+              NavigationBar, 0x1061c1170, {{0.0, 50.0}, {375.0, 54.0}}, identifier: '_TtGC7SwiftUI32NavigationStackHosting'
+                Other, 0x1061d09d0, {{20.0, 54.0}, {36.0, 36.0}}, identifier: 'speaking-close', label: '關閉'
+                  Other, 0x1062c0ec0, {{20.0, 54.0}, {36.0, 36.0}}
+                    Button, 0x10627dcb0, {{24.7, 54.0}, {26.7, 36.0}}, identifier: 'speaking-close', label: '關閉'
+                Other, 0x1060df3e0, {{152.0, 55.7}, {70.7, 32.7}}
+                  Other, 0x1061d2290, {{152.0, 55.7}, {70.7, 32.7}}
+                    StaticText, 0x1061c3bc0, {{152.0, 56.0}, {70.7, 14.3}}, identifier: 'speaking-stage', label: '第 1 關 · 餐廳'
+                    StaticText, 0x1060df500, {{172.0, 70.3}, {31.0, 18.0}}, identifier: 'speaking-position', label: '2 / 5', value: 已完成 0 題
+                Other, 0x1060df620, {{319.0, 54.0}, {36.0, 36.0}}, identifier: 'speaking-scenarios', label: '所有情境'
+                  Other, 0x1061ff690, {{319.0, 54.0}, {36.0, 36.0}}
+                    Button, 0x1061e7630, {{321.0, 54.0}, {32.0, 36.0}}, identifier: 'speaking-scenarios', label: '所有情境'
+              Other, 0x1061c3160, {{0.0, 0.0}, {375.0, 812.0}}
+                Other, 0x10ab13790, {{0.0, 0.0}, {375.0, 812.0}}
+                  Other, 0x10ab1e140, {{0.0, 0.0}, {375.0, 812.0}}
+                    Other, 0x10ab046c0, {{0.0, 0.0}, {375.0, 812.0}}
+                      Image, 0x10ab28a60, {{0.0, 0.0}, {375.0, 812.0}}, label: 'PaperGrain'
+                      SegmentedControl, 0x10ab04ae0, {{16.0, 104.0}, {343.0, 31.0}}, identifier: 'speaking-track'
+                        Button, 0x1062e3e00, {{16.0, 104.0}, {171.0, 32.0}}, label: '生活情境', Selected
+                        Button, 0x1062ba2a0, {{187.0, 104.0}, {172.0, 32.0}}, label: '單字口說'
+                      Other, 0x10ab08340, {{16.0, 169.3}, {343.0, 6.0}}
+                      Other, 0x10ab08b80, {{67.0, 148.5}, {27.2, 25.5}}
+                      ScrollView, 0x10ab09c00, {{16.0, 191.3}, {343.0, 512.7}}
+                        Other, 0x10ab093c0, {{16.0, 191.3}, {343.0, 491.3}}
+                          StaticText, 0x10ab08760, {{194.3, 209.3}, {146.7, 37.3}}, identifier: 'speaking-earlier-line', label: '上一句：Just two, thanks.'
+                          StaticText, 0x10ab07f20, {{48.0, 272.7}, {39.0, 14.3}}, label: 'Server'
+                          StaticText, 0x10ab097e0, {{48.0, 291.0}, {167.0, 99.0}}, identifier: 'shadow-partner-line', label: 'Right this way. Here's the menu. Can I start you off with drinks?'
+                          Button, 0x10ab371f0, {{248.0, 336.3}, {22.0, 17.3}}, identifier: 'speaker.wave.2.fill', label: '發音'
+                          Button, 0x10ab37310, {{246.0, 379.0}, {26.3, 23.0}}, identifier: 'shadow-translation', label: '看翻譯'
+                          Button, 0x10ab27100, {{70.3, 434.3}, {22.0, 17.3}}, identifier: 'shadow-listen', label: '發音'
+                          Other, 0x10ab27220, {{123.3, 430.0}, {203.7, 26.3}}, identifier: 'shadow-sentence', label: 'I'll have an iced tea.'
+                            StaticText, 0x10ab27340, {{123.3, 430.0}, {22.7, 26.3}}, label: 'I'll'
+                            StaticText, 0x10ab27460, {{153.0, 430.0}, {48.0, 26.3}}, label: 'have'
+                            StaticText, 0x10ab27580, {{208.0, 430.0}, {24.7, 26.3}}, label: 'an'
+                            StaticText, 0x10ab276a0, {{239.7, 430.0}, {42.7, 26.3}}, label: 'iced'
+                            StaticText, 0x10ab277c0, {{289.3, 430.0}, {37.7, 26.3}}, label: 'tea.'
+                          Button, 0x10ab278e0, {{131.7, 518.3}, {112.0, 112.0}}, identifier: 'shadow-record', label: '開始說'
+                        Other, 0x10ab27a00, {{326.0, 191.3}, {30.0, 512.7}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x10ab27b20, {{353.0, 694.0}, {3.0, 7.0}}
+                        Other, 0x10ab27c40, {{326.0, 191.3}, {30.0, 512.7}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x10ab27d60, {{353.0, 694.0}, {3.0, 7.0}}
+                      Button, 0x10ab27e80, {{16.0, 720.0}, {115.0, 50.0}}, identifier: 'shadow-skip', label: '跳過'
+                        Image, 0x10ab27fa0, {{16.0, 720.0}, {115.0, 50.0}}, label: 'PaperGrain'
+                        StaticText, 0x106290a70, {{16.0, 720.0}, {115.0, 50.0}}, label: '跳過'
+                      Button, 0x106281a30, {{143.0, 720.0}, {216.0, 50.0}}, identifier: 'shadow-next', label: '下一步：回答問題', Disabled
+                        Image, 0x1062eecc0, {{143.0, 720.0}, {216.0, 50.0}}, label: 'PaperGrain', Disabled
+                        StaticText, 0x1062ee730, {{143.0, 720.0}, {216.0, 50.0}}, label: '下一步：回答問題', Disabled
+              Other, 0x1062e9cf0, {{0.0, 0.0}, {375.0, 812.0}}
+                Other, 0x1062af480, {{0.0, 0.0}, {375.0, 812.0}}
+Path to element:
+ →Application, 0x1060a4c90, pid: 65803, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x10ab258d0, pid: 65803, label: 'WordCat'
+  }

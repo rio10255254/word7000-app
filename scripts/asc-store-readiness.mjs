@@ -155,7 +155,7 @@ for (const group of groups) {
   const gls = (await tryApi(`/v1/subscriptionGroups/${group.id}/subscriptionGroupLocalizations?limit=20`)).data ?? [];
   for (const locale of ['zh-Hant', 'en-US']) {
     const l = gls.find((x) => x.attributes.locale === locale);
-    l ? ok(`群組顯示名稱（${lang(locale)}）：${l.attributes.name}`) : bad(`群組還沒有${lang(locale)}的顯示名稱`);
+    l ? ok(`群組顯示名稱（${lang(locale)}）：${l.attributes.name}${l.attributes.customAppName ? `，App 名稱「${l.attributes.customAppName}」` : ''}（${l.attributes.state ?? '?'}）`) : bad(`群組還沒有${lang(locale)}的顯示名稱`);
   }
   const subs = (await tryApi(`/v1/subscriptionGroups/${group.id}/subscriptions?limit=20`)).data ?? [];
   for (const sub of subs) {

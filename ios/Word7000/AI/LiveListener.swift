@@ -155,7 +155,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
             }
             // The older recognizer listens too, also next to the newer one:
             // whichever gives text first colours the sentence as it is said.
+            // Next to the newer one only where speech recognition was
+            // already allowed, so no extra question comes up for it.
             var legacy = self.support == .live && self.legacyLive
+                && (!self.useAnalyzer || SFSpeechRecognizer.authorizationStatus() == .authorized)
             if legacy {
                 let status = await withCheckedContinuation { continuation in
                     SFSpeechRecognizer.requestAuthorization { continuation.resume(returning: $0) }

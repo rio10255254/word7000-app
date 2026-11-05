@@ -85,6 +85,8 @@ const listing = {
     keywords: field(en, 'Keywords'), description: field(en, 'Description'), screenshots: 'exports/app-store/en-US',
   },
 };
+// Canada's store shows English (Canada); it gets the U.S. English listing.
+listing['en-CA'] = { ...listing['en-US'] };
 const reviewNotes = section('Review Notes (English)').split('\n').filter((l) => l.startsWith('- ')).map((l) => l.slice(2)).join('\n');
 for (const [locale, l] of Object.entries(listing)) {
   if ([...l.name].length > 30 || [...l.subtitle].length > 30) throw new Error(`${locale}: name and subtitle must be at most 30 characters`);

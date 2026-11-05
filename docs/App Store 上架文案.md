@@ -15,97 +15,99 @@ WordCat 單字貓：你的英文單字口說家教
 背單字、練口說，有隻嘴賤的貓
 
 **宣傳文字**（170 字內，隨時可改、不用送審）
-口說練習改版了：講出來，傻貓跟你說怎麼講比較順。背單字一直都免費。
+口說練習大改版！點餐、問路、看醫生，開口講講看，傻貓幫你改成更順的說法。背單字永遠免費，不用登入就能開始。
 
-**關鍵字**（100 字內，逗號分隔、不加空格）
-7000單字,英文單字,背單字,學測,單字卡,英文口說,AI英文,英文會話,詞彙,拼字,測驗,記憶,掃描講義,高中英文
+**關鍵字**（100 字內，逗號分隔、不加空格；名稱和副標題裡的字不用重複）
+7000單字,學測,分科測驗,統測,英檢,高中英文,單字卡,英文會話,AI英文,詞彙,拼字,記憶法,講義,背英文
 
 **描述**
 
-高中 7000 單字，一天一點點。有隻嘴有點賤的貓陪你背到考完。
+學測必背 7000 單字，每天一點點就好。還有一隻嘴有點賤的貓，陪你背到考完。
 
 【每天背一點就好】
-・傻貓幫你排好今天要背的字，新字、複習一起安排
+・傻貓幫你排好今天的進度，新字、複習一起安排
 ・每張卡都有音標、發音和例句
-・不熟的字隔幾天會再出現，直到真的記住
+・不熟的字過幾天會再出現，背到真的記住為止
+
+【開口說英文】
+・點餐、問路、看醫生……10 個生活情境，一來一往像真的在對話
+・跟著示範念，念對的字會變綠，念完自動跳下一步
+・講完傻貓幫你改成更自然的說法，告訴你哪裡要改、為什麼
+・錄音只留在你的 iPhone，不會上傳
 
 【錯了，馬上知道錯在哪】
 ・快速測驗、拼字練習、限時模擬考
-・選錯時傻貓直接告訴你跟哪個字搞混了
-・同一個字錯第三次，送你一個記憶法
-
-【開口說英文】
-・用說的或用打的回答生活化的問題
-・AI 改成更自然的說法，標出哪裡要改、為什麼
-・再追問你一題，像真的在聊天
-・錄音只留在你的 iPhone
+・選錯時，傻貓直接告訴你跟哪個字搞混了
+・同一個字錯第三次，送你一招記憶法
 
 【一隻嘴很賤的貓】
-・記得你的考試日和目標，會催你、會吐槽
-・可以直接問它單字、文法，或聊聊今天背得怎樣
+・記得你的考試日和目標，該催就催、該唸就唸
+・單字、文法有問題直接問它，也能跟它聊聊今天背得怎樣
 
 【講義拍一下，變成單字卡】
-・印的、手寫的單字表都讀得懂
+・印刷的、手寫的單字表都認得出來
 ・照片只在你的 iPhone 上處理
 
-【永遠免費的部分】
-單字卡、測驗、拼字、口說練習、學習紀錄都免費，不用登入也能開始。
-用 Apple 登入就能保存進度、換手機也找得回來。
+【免費就能用】
+單字卡、測驗、拼字、口說練習、學習紀錄通通免費，不用登入就能開始。
+用 Apple 登入可以保存進度，換手機也找得回來。
 
 【Premium】
 AI 老師（口說批改、單字解說、學習分析）、掃描講義、限時模擬考和完整學習紀錄。
-訂閱會自動續訂，可隨時在「設定 → Apple 帳號 → 訂閱」取消。
+訂閱會自動續訂，可隨時到 iPhone「設定 → Apple 帳號 → 訂閱項目」取消。
 
 隱私權政策：https://word7000-app.rio10255254.workers.dev/privacy.html
 使用條款：https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 ## English (U.S.)
 
+英文（加拿大）沿用這一段：`scripts/asc-prepare-version.mjs` 也會把它填進 en-CA，讓加拿大的商店顯示英文。
+
 **Name** (30)
-WordCat: Ur Chinese Tutor
+WordCat: Your Chinese Tutor
 
 **Subtitle** (30)
-Taiwan Mandarin, a bit a day
+Learn Mandarin the Taiwan way
 
 **Promotional text** (170)
-New: say your answers out loud and the cat shows you a smoother way to say it. Studying words is still free.
+New: role-play everyday moments like ordering food or seeing a doctor, and the cat shows you a more natural way to say it. Flashcards are always free.
 
 **Keywords** (100)
-mandarin,traditional,taiwan,pinyin,flashcards,vocabulary,tocfl,speaking,characters,hanzi,words
+traditional,pinyin,flashcards,vocab,tocfl,speaking,characters,hanzi,conversation,words,study
 
 **Description**
 
-Learn Traditional Chinese as it’s spoken in Taiwan, a few words a day, with a cat that keeps you going.
+Learn Traditional Chinese the way it's actually spoken in Taiwan, a few words a day, with a cat that keeps you honest.
 
 DAILY FLASHCARDS
-• A short plan for today: new words and reviews, chosen for you
+• A short daily plan that mixes new words with reviews
 • Pinyin, audio and an example sentence on every card
-• Words you miss come back until they stick
+• Words you miss keep coming back until they stick
 
-QUIZZES AND WRITING
-• Quick quizzes and writing drills
-• Get one wrong and the cat shows you what mixed you up
-• Miss a word three times and you get a memory trick
-
-PRACTICE SPEAKING
-• Answer everyday questions out loud or by typing
-• The AI tutor shows a more natural way to say it and what to fix
-• Then it asks a follow-up, like a real conversation
+SPEAKING PRACTICE
+• Role-play 10 everyday scenes: ordering food, asking for directions, seeing a doctor and more
+• Shadow the model sentence, see your tones, and watch each word turn green when you get it right
+• The cat suggests a more natural way to say it and explains what to fix
 • Recordings stay on your iPhone
 
+QUIZZES AND WRITING
+• Quick quizzes, writing drills and timed mock exams
+• Pick the wrong answer and the cat shows you what you mixed up
+• Miss a word three times and you'll get a memory trick
+
 A CAT WITH OPINIONS
-• It remembers your goals and nudges you, a little rudely
-• Ask it about a word or grammar any time
+• It remembers your goals and nudges you, not always politely
+• Ask it about words or grammar anytime
 
 SNAP A WORD LIST
-• Printed or handwritten lists become flashcards
+• Turn printed or handwritten lists into flashcards
 • Photos are processed on your iPhone
 
-FREE FOREVER
-Flashcards, quizzes, writing and speaking practice are free, with no sign-in needed to start. Sign in with Apple to keep your progress across devices.
+FREE TO USE
+Flashcards, quizzes, writing and speaking practice are free, and you can start without signing in. Sign in with Apple to keep your progress across devices.
 
 PREMIUM
-The AI tutor (speaking feedback, word explanations, learning insights), scanning, timed mock exams and your full history. The subscription renews automatically; cancel any time in Settings → Apple Account → Subscriptions.
+The AI tutor (speaking feedback, word explanations, learning insights), scanning, timed mock exams and your full history. Subscriptions renew automatically; cancel anytime in Settings → Apple Account → Subscriptions.
 
 Privacy Policy: https://word7000-app.rio10255254.workers.dev/privacy.html
 Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/

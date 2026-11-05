@@ -67,7 +67,9 @@ else {
   const age = await tryApi(`/v1/appInfos/${info.id}/ageRatingDeclaration`);
   if (age.error) bad(`年齡分級：讀不到（${age.error}）`);
   else {
-    const unanswered = Object.entries(age.data?.attributes ?? {}).filter(([, v]) => v === null).map(([k]) => k);
+    // Optional answers: the Kids category band, Korea's GRAC number and an age rating info page.
+    const optional = new Set(['kidsAgeBand', 'gracRatingClassificationNumber', 'developerAgeRatingInfoUrl', 'koreaAgeRatingOverride', 'ageRatingOverride', 'ageRatingOverrideV2']);
+    const unanswered = Object.entries(age.data?.attributes ?? {}).filter(([k, v]) => v === null && !optional.has(k)).map(([k]) => k);
     unanswered.length ? bad(`年齡分級問卷還有 ${unanswered.length} 題沒答：${unanswered.join('、')}`) : ok('年齡分級問卷已填完');
   }
 }
@@ -86,6 +88,7 @@ else {
   else {
     const all = territories.data ?? [];
     const on = all.filter((t) => t.attributes.available);
+    if (!on.length) say(`- ℹ️ 第一筆：${JSON.stringify(all[0]?.attributes)}`);
     const states = [...new Set(all.map((t) => t.attributes.contentStatuses?.join('/')).filter(Boolean))];
     on.length ? ok(`在 ${on.length}${territories.links?.next ? '+' : ''} 個地區供應${states.length ? `（狀態：${states.join('、')}）` : ''}`) : bad(`沒有任何供應地區（讀到 ${all.length} 筆）`);
   }

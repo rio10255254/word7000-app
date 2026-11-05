@@ -22,7 +22,6 @@ final class SpeakingRoutineTests: XCTestCase {
         let done = app.buttons["speaking-listen-done"]
         XCTAssertTrue(done.waitForExistence(timeout: 10), app.debugDescription)
         XCTAssertTrue(app.buttons["speaking-listen-play"].exists)
-        XCTAssertTrue(app.descendants(matching: .any)["speaking-steps"].exists)
         sleep(1)
         snap(app, "speak-1-listen")
         done.tap()

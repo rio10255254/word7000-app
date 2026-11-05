@@ -1,0 +1,80 @@
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/sys_types-5XKFLXPWZA96ATHI70V9OVEVN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_tgmath-7F815N4W9RLLRNGQTCH232HB5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_DarwinFoundation3-BJ51PL8RMHBIG5W3LLSS4RTLD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_intrinsics-3NKJ58MOZNXRRCTMYHQ4TXGLT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdatomic-9AYE8F5TL26SUCHRCPWP98Y8S.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_inttypes-6VBKRRVD08AFJG7RYCB5IWMA5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Darwin-5ZTACD3DFOCBRGXGIG0QSUUNK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/simd-BLMZ69N2VSMVZ9RI8UTQBB87C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ObjectiveC-C1N5DPSG9BAXKHE6PPOA5S7ZU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/MachO-8ODYI51RQXDMOC4X4GSDNUU25.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os_object-8D7KXEQ5WETNCXT23PPFMTZDM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os_workgroup-AVWY4EZA6Q8A65L575TV3PH4E.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Dispatch-4TP2IO7EDPCO2HC9YNUDP3L8G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/XPC-D1DNM1QBUCGGQN02N4WIB1D31.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreFoundation-B8SC8GX9E0UAYTTJRUOS2QJI2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os-277IVJ6NKJ21NPQST26434XEK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/dnssd-D82MEYTZEO1WAY838YT6MIEQ3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreGraphics-3K40EX3UCJ4OGGTMTZZNQNBL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CFNetwork-1C5PWWL224XZT8DDJ1B8BYGVZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Security-7LKWP49B0GZU509RQ428QAF3F.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Spatial-CHOYMHI2W3JT0ORPJL2V6M62Y.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ImageIO-53HRE6A9OD3TDAVUJEMZGHNJU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Foundation-AQT4XINGTAZ905FD2ITM4BWT7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreText-EOLGYQG7319JBCNKOFP9VIBEC.pcm
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlusPolicy.swift, Progress.swift, Quiz.swift, ReminderRegistrationCoordinator.swift, RemoteContent.swift, ScanGrounding.swift, ScanImport.swift, ScanParser.swift, SeededRandom.swift, ShadowingCheck.swift, SpeakingCoach.swift, SpeakingPath.swift, SpeakingPractice.swift, SpeakingReflection.swift (in target 'Word7000Core' from project 'Word7000Core')
+
+SwiftDriver\ Compilation Word7000Core normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-Swift-Compilation -- /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Word7000Core -Onone -enforce-exclusivity\=checked @/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftFileList -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -DXcode -plugin-path /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -suppress-warnings -index-store-path /Users/runner/work/_temp/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk/Developer/Library/Frameworks -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/_temp/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache -output-file-map /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Session.modulevalidation -package-name word7000core -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_const_extract_protocols.json -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-Swift.h -working-directory /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.o normal (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -r -isysroot /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -O0 -w -L/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -L/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -iframework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -iframework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk/Developer/Library/Frameworks -filelist /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.LinkFileList -nostdlib -Xlinker -object_path_lto -Xlinker /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule @/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-linker-args.resp -o /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.o
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/OSLog-E3G0CX5OPXT45W4GEPNEAL0IQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreTransferable-9ZEFWAXIYDM7O3NTX40HUK55G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/UniformTypeIdentifiers-1794HE2XG363TJ3BMNUQHNZD2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Network-BSCHF2WGVYSY5Z97VX3TB44GA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/RelevanceKit-1FK1GTTGLZCKX1HOEHNL6GNJM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreSpotlight-8I5SOYEOFKS18RRTF57U6LAWF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/OpenGLES-2ZCHEBJ8KAYT0HMA4JP0X5T50.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/IOSurface-97RXNUBSGUWIG8RQ56IP4XJP6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/UserNotifications-L0CB3L7TF7IA2HO4D1XU8ZPL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Symbols-E65RJD9O6A0UE7BX18COBA5V0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Metal-25F9V4E48G509Q0YGUV5GW082.pcm

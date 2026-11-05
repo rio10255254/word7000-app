@@ -1,0 +1,821 @@
+Command line invocation:
+    /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/xcodebuild build-for-testing -project ios/Word7000.xcodeproj -scheme Word7000 -destination id=4F81E126-BE3E-449A-94EC-1FD73DB135B2 -derivedDataPath /Users/runner/work/_temp/DerivedData CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Word7000Core: /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core @ local
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:4F81E126-BE3E-449A-94EC-1FD73DB135B2, OS:18.6, name:iPhone SE (3rd generation) }
+{ platform:iOS Simulator, arch:x86_64, id:4F81E126-BE3E-449A-94EC-1FD73DB135B2, OS:18.6, name:iPhone SE (3rd generation) }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (6 targets)
+    Target 'Word7000UITests' in project 'Word7000'
+        ➜ Explicit dependency on target 'Word7000' in project 'Word7000'
+    Target 'Word7000' in project 'Word7000'
+        ➜ Explicit dependency on target 'Word7000Widgets' in project 'Word7000'
+        ➜ Explicit dependency on target 'Word7000Core' in project 'Word7000Core'
+    Target 'Word7000Widgets' in project 'Word7000'
+        ➜ Explicit dependency on target 'Word7000Core' in project 'Word7000Core'
+    Target 'Word7000Core' in project 'Word7000Core'
+        ➜ Explicit dependency on target 'Word7000Core' in project 'Word7000Core'
+        ➜ Explicit dependency on target 'Word7000Core_Word7000Core' in project 'Word7000Core'
+    Target 'Word7000Core' in project 'Word7000Core'
+        ➜ Explicit dependency on target 'Word7000Core_Word7000Core' in project 'Word7000Core'
+    Target 'Word7000Core_Word7000Core' in project 'Word7000Core' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+ExecuteExternalTool /Applications/Xcode_26.3.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+Build description signature: 4d7f51593ea81e80faf4ff04de327392
+Build description path: /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/XCBuildData/4d7f51593ea81e80faf4ff04de327392.xcbuilddata
+ClangStatCache /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk /Users/runner/work/_temp/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -o /Users/runner/work/_temp/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache
+
+CreateBuildDirectory /Users/runner/work/_temp/DerivedData/Build/Products
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-create-build-directory /Users/runner/work/_temp/DerivedData/Build/Products
+
+CreateBuildDirectory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-create-build-directory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex
+
+CreateBuildDirectory /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-create-build-directory /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000-c89228cb6e65a6416db15fc8dc18628f-VFS-iphonesimulator/all-product-headers.yaml
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000-c89228cb6e65a6416db15fc8dc18628f-VFS-iphonesimulator/all-product-headers.yaml
+
+CreateBuildDirectory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-create-build-directory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-create-build-directory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-create-build-directory /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+
+CreateBuildDirectory /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/PackageFrameworks
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-create-build-directory /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/PackageFrameworks
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets.hmap (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets.DependencyStaticMetadataFileList (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets.DependencyMetadataFileList (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-project-headers.hmap (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-project-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-own-target-headers.hmap (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-generated-files.hmap (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-generated-files.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-all-target-headers.hmap (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-all-non-framework-target-headers.hmap (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-DebugEntryPoint-normal-arm64.txt (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-DebugEntryPoint-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-DebugDylibPath-normal-arm64.txt (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-DebugDylibInstallName-normal-arm64.txt (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets_const_extract_protocols.json (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.SwiftFileList (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.SwiftFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.SwiftConstValuesFileList (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.LinkFileList (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.LinkFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets-OutputFileMap.json (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/empty-Word7000UITests.plist (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/empty-Word7000UITests.plist
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests.hmap (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests.DependencyStaticMetadataFileList (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests.DependencyMetadataFileList (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-project-headers.hmap (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-project-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-own-target-headers.hmap (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-generated-files.hmap (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-generated-files.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-all-target-headers.hmap (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-all-non-framework-target-headers.hmap (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Word7000UITests-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/ProductTypeInfoPlistAdditions.plist (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/ProductTypeInfoPlistAdditions.plist
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests_const_extract_protocols.json (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests.SwiftFileList (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests.SwiftFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests.SwiftConstValuesFileList (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests.LinkFileList (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests.LinkFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests-OutputFileMap.json (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000UITests.build/Objects-normal/arm64/Word7000UITests-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/empty-Word7000Core_Word7000Core.plist (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/empty-Word7000Core_Word7000Core.plist
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/Word7000Core_Word7000Core.DependencyStaticMetadataFileList (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/Word7000Core_Word7000Core.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/Word7000Core_Word7000Core.DependencyMetadataFileList (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/Word7000Core_Word7000Core.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.modulemap (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.modulemap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.DependencyStaticMetadataFileList (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.DependencyMetadataFileList (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_const_extract_protocols.json (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftFileList (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftConstValuesFileList (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.LinkFileList (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.LinkFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-OutputFileMap.json (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/resource_bundle_accessor.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/resource_bundle_accessor.swift
+
+Copy /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/Word7000Core.modulemap /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.modulemap (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.modulemap /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000.hmap (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000.DependencyStaticMetadataFileList (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000.DependencyMetadataFileList (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-project-headers.hmap (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-project-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-own-target-headers.hmap (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-generated-files.hmap (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-generated-files.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-all-target-headers.hmap (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-all-non-framework-target-headers.hmap (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-DebugDylibPath-normal-arm64.txt (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-DebugDylibInstallName-normal-arm64.txt (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Word7000-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000_const_extract_protocols.json (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000.SwiftFileList (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000.SwiftFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000.SwiftConstValuesFileList (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000.LinkFileList (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000.LinkFileList
+
+WriteAuxiliaryFile /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000-OutputFileMap.json (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    write-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/Objects-normal/arm64/Word7000-OutputFileMap.json
+
+MkDir /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    /bin/mkdir -p /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex
+
+MkDir /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000UITests-Runner.app/PlugIns/Word7000UITests.xctest (in target 'Word7000UITests' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    /bin/mkdir -p /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000UITests-Runner.app/PlugIns/Word7000UITests.xctest
+
+MkDir /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    /bin/mkdir -p /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle
+
+MkDir /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000.app/PlugIns (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    /bin/mkdir -p /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000.app/PlugIns
+
+MkDir /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000.app (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    /bin/mkdir -p /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000.app
+
+ProcessInfoPlistFile /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle/Info.plist /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/empty-Word7000Core_Word7000Core.plist (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-infoPlistUtility /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core_Word7000Core.build/empty-Word7000Core_Word7000Core.plist -producttype com.apple.product-type.bundle -expandbuildsettings -format binary -platform iphonesimulator -o /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle/Info.plist
+
+CpResource /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle/speaking-zh.json /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-zh.json (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-zh.json /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle
+
+CpResource /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle/speaking-scenarios.json /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-scenarios.json (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-scenarios.json /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle
+
+CpResource /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle/speaking-prompts.json /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle
+
+CpResource /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle/pinyin-lexicon.json /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/pinyin-lexicon.json (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Resources/pinyin-lexicon.json /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle
+
+RegisterExecutionPolicyException /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-RegisterExecutionPolicyException /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle
+
+Touch /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle (in target 'Word7000Core_Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    /usr/bin/touch -c /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle
+
+SwiftDriver Word7000Core normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-SwiftDriver -- /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Word7000Core -Onone -enforce-exclusivity\=checked @/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftFileList -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -DXcode -plugin-path /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -suppress-warnings -index-store-path /Users/runner/work/_temp/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk/Developer/Library/Frameworks -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/_temp/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache -output-file-map /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Session.modulevalidation -package-name word7000core -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_const_extract_protocols.json -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-Swift.h -working-directory /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_AvailabilityInternal-C56DNK2V5YO44ZLOQZNKB38U1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_float-AYDUA4AL1PKGAPINHBKVFR97X.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdbool-8OOWAD9GW74JV3SKWTW3SXXEF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/SwiftShims-5MJA9EX4PW8F0OIHSOEYYJKM8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ActivityKit-6YL5QE3DU7I7TO4U6UJ96RQLW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ptrauth-7A9IN2034LYRSKN69P85HR5XO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_SwiftConcurrencyShims-DZ0WFXJTOGHD4UCN0QX7VGJ9T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ptrcheck-EGHR8VUC8PM49P7RM8ZEW5YFK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdarg-ACFQU6PKD40FWX6XI3SAFNQJK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stddef-1OZC4XQ5Z065I0TPCA03QD8K2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_DarwinFoundation1-3JO6P1SPD3C0F4H7WX9KP4ERB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_limits-1B38UAOVANZFO7EON29FJB31F.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_DarwinFoundation2-95R4L4DYD4YS31TQ20BQZ8ZVH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdint-38TP5T4FFF2D7LWILIZGXBF3L.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/sys_types-80REKLO5Z9QW8J18K6ETVLHUU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_DarwinFoundation3-6FTF8EC6O55NFCY7OJGKVCH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_inttypes-3PIMTZSEIGLYRMUO52V4I80QM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Darwin-4YLZTJ8O54DX9C85HYIL4F90P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ObjectiveC-CZQU6SY1ZJUU0DD7BQK1Y30DK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os_object-1A91I1XRR7VFMDZFR0V7OMOJF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os_workgroup-CS55LO198Q4C2E8KVH0RG7GKP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Dispatch-4BI73QNLE5YWAS6Z09IPZ6Z8P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreFoundation-540TSG1J6QPH26VMXQ1KG9Z4A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/XPC-CQ1O47RKROWLXL15Y326IA6AB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CFNetwork-8TMNFLIBIVKLH4GEDL45M8NY3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Security-ASTYNJRQ7L093B628HFKHTZ2I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Foundation-6Q6ZBKMFT44A1VHMZXHEFN7L9.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Word7000Core (in target 'Word7000Core' from project 'Word7000Core')
+
+EmitSwiftModule normal arm64 (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 Compiling\ PlusPolicy.swift,\ Progress.swift,\ Quiz.swift,\ ReminderRegistrationCoordinator.swift,\ RemoteContent.swift,\ ScanGrounding.swift,\ ScanImport.swift,\ ScanParser.swift,\ SeededRandom.swift,\ ShadowingCheck.swift,\ SpeakingCoach.swift,\ SpeakingPath.swift,\ SpeakingPractice.swift,\ SpeakingReflection.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/PlusPolicy.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Progress.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Quiz.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ReminderRegistrationCoordinator.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/RemoteContent.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ScanGrounding.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ScanImport.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ScanParser.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SeededRandom.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ShadowingCheck.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingCoach.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingPath.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingPractice.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingReflection.swift (in target 'Word7000Core' from project 'Word7000Core')
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/PlusPolicy.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Progress.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Quiz.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ReminderRegistrationCoordinator.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/RemoteContent.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ScanGrounding.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ScanImport.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ScanParser.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SeededRandom.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ShadowingCheck.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingCoach.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingPath.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingPractice.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingReflection.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 Compiling\ resource_bundle_accessor.swift,\ ChineseDisplay.swift,\ ChineseSpelling.swift,\ CloudAI.swift,\ CloudSync.swift,\ ConversationPrompts.swift,\ CustomSets.swift,\ DayMath.swift,\ HomeWidget.swift,\ LearningAnalytics.swift,\ LearningFileStore.swift,\ Library.swift,\ ModeProgress.swift,\ Placement.swift /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/resource_bundle_accessor.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ChineseDisplay.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ChineseSpelling.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/CloudAI.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/CloudSync.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ConversationPrompts.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/CustomSets.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/DayMath.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/HomeWidget.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/LearningAnalytics.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/LearningFileStore.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Library.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ModeProgress.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Placement.swift (in target 'Word7000Core' from project 'Word7000Core')
+
+SwiftCompile normal arm64 /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/resource_bundle_accessor.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ChineseDisplay.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ChineseSpelling.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/CloudAI.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/CloudSync.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ConversationPrompts.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/CustomSets.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/DayMath.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/HomeWidget.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/LearningAnalytics.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/LearningFileStore.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Library.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ModeProgress.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Placement.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 Compiling\ SpeakingScenarios.swift,\ Speech.swift,\ Spelling.swift,\ StreakReminder.swift,\ StudySession.swift,\ Supabase.swift,\ ToneAnalysis.swift,\ TranscriptCorrection.swift,\ UsageCounter.swift,\ WordBanks.swift,\ WordEntry.swift,\ WordNotes.swift,\ WordSuggester.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingScenarios.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Speech.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Spelling.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/StreakReminder.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/StudySession.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Supabase.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ToneAnalysis.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/TranscriptCorrection.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/UsageCounter.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordBanks.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordEntry.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordNotes.swift /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordSuggester.swift (in target 'Word7000Core' from project 'Word7000Core')
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/SpeakingScenarios.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Speech.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Spelling.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/StreakReminder.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/StudySession.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/Supabase.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/ToneAnalysis.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/TranscriptCorrection.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/UsageCounter.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordBanks.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordEntry.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordNotes.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core/Sources/Word7000Core/WordSuggester.swift (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for Word7000Core (in target 'Word7000Core' from project 'Word7000Core')
+
+SwiftDriver\ Compilation\ Requirements Word7000Core normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Word7000Core -Onone -enforce-exclusivity\=checked @/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftFileList -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -DXcode -plugin-path /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -suppress-warnings -index-store-path /Users/runner/work/_temp/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk/Developer/Library/Frameworks -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/_temp/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache -output-file-map /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Session.modulevalidation -package-name word7000core -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_const_extract_protocols.json -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-Swift.h -working-directory /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling resource_bundle_accessor.swift, ChineseDisplay.swift, ChineseSpelling.swift, CloudAI.swift, CloudSync.swift, ConversationPrompts.swift, CustomSets.swift, DayMath.swift, HomeWidget.swift, LearningAnalytics.swift, LearningFileStore.swift, Library.swift, ModeProgress.swift, Placement.swift (in target 'Word7000Core' from project 'Word7000Core')
+
+SwiftMergeGeneratedHeaders /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/Word7000Core-Swift.h /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-Swift.h (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-swiftHeaderTool -arch arm64 /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-Swift.h -o /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/Word7000Core-Swift.h
+
+Copy /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/arm64-apple-ios-simulator.swiftdoc /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftdoc (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftdoc /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/arm64-apple-ios-simulator.abi.json /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.abi.json (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.abi.json /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftsourceinfo (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftsourceinfo /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+SwiftDriver Word7000Widgets normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    builtin-SwiftDriver -- /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Word7000Widgets -Onone -enforce-exclusivity\=checked @/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -application-extension -enable-testing -index-store-path /Users/runner/work/_temp/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -F /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -emit-localized-strings -emit-localized-strings-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64 -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/_temp/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache -output-file-map /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-generated-files.hmap -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-own-target-headers.hmap -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000-c89228cb6e65a6416db15fc8dc18628f-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Word7000Widgets-project-headers.hmap -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets-Swift.h -working-directory /Users/runner/work/word7000-app/word7000-app/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling SpeakingScenarios.swift, Speech.swift, Spelling.swift, StreakReminder.swift, StudySession.swift, Supabase.swift, ToneAnalysis.swift, TranscriptCorrection.swift, UsageCounter.swift, WordBanks.swift, WordEntry.swift, WordNotes.swift, WordSuggester.swift (in target 'Word7000Core' from project 'Word7000Core')
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_SwiftConcurrencyShims-8B77H1CM7NGIKKH50VRIWC8WR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/DeveloperToolsSupport-10H47ALZX1GPDKHLQ9V5DZ0A4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_float-PEH3KPNUXKIYHU29UBZUFVGW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdbool-35Y9G7T76FTI9HSPIU2FTZ0KO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdarg-99H3V9RON5WQT2JJ3KHKRN1KF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ptrauth-7YU4WZP0U6H714MYQKVV25VN9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ActivityKit-EZ8EXB0LQLF0D42NE1PYPQV0M.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/SwiftShims-2TCHN5VSGYZKNBJ7RXYUZW5J4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ptrcheck-4JK554BV7JAXPWYS36CBVAMOV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stddef-NFE3SBU3UQSL22AY7715NZTG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_AvailabilityInternal-5HHE14BYB9PXA6CXJDC4U4LD0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_DarwinFoundation1-49XRCITFVULSX7U0CUP3K2P78.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ExtensionFoundation-960B154LJE5BB1V7CY21RVR7N.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_DarwinFoundation2-KZBNMC7Z4ZXEVL902QTXUWTP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_limits-B4YYZVUA9N0CISQKMFDKCLAXE.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdint-CZPVPRLB5OBTTWIV0K40WX5UV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_tgmath-7F815N4W9RLLRNGQTCH232HB5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/sys_types-5XKFLXPWZA96ATHI70V9OVEVN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_stdatomic-9AYE8F5TL26SUCHRCPWP98Y8S.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_DarwinFoundation3-BJ51PL8RMHBIG5W3LLSS4RTLD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_intrinsics-3NKJ58MOZNXRRCTMYHQ4TXGLT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_Builtin_inttypes-6VBKRRVD08AFJG7RYCB5IWMA5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Darwin-5ZTACD3DFOCBRGXGIG0QSUUNK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/simd-BLMZ69N2VSMVZ9RI8UTQBB87C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/MachO-8ODYI51RQXDMOC4X4GSDNUU25.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ObjectiveC-C1N5DPSG9BAXKHE6PPOA5S7ZU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os_object-8D7KXEQ5WETNCXT23PPFMTZDM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os_workgroup-AVWY4EZA6Q8A65L575TV3PH4E.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Dispatch-4TP2IO7EDPCO2HC9YNUDP3L8G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/XPC-D1DNM1QBUCGGQN02N4WIB1D31.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/dnssd-D82MEYTZEO1WAY838YT6MIEQ3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreFoundation-B8SC8GX9E0UAYTTJRUOS2QJI2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Spatial-CHOYMHI2W3JT0ORPJL2V6M62Y.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/os-277IVJ6NKJ21NPQST26434XEK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreGraphics-3K40EX3UCJ4OGGTMTZZNQNBL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CFNetwork-1C5PWWL224XZT8DDJ1B8BYGVZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Security-7LKWP49B0GZU509RQ428QAF3F.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreText-EOLGYQG7319JBCNKOFP9VIBEC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/ImageIO-53HRE6A9OD3TDAVUJEMZGHNJU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Foundation-AQT4XINGTAZ905FD2ITM4BWT7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/OpenGLES-2ZCHEBJ8KAYT0HMA4JP0X5T50.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreTransferable-9ZEFWAXIYDM7O3NTX40HUK55G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/IOSurface-97RXNUBSGUWIG8RQ56IP4XJP6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_LocationEssentials-2ZYMJAV1LZUQKIPVAH9XR2NB1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/UniformTypeIdentifiers-1794HE2XG363TJ3BMNUQHNZD2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/UIUtilities-BT24T183V9E3PZA45QCCCGOKU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Accessibility-A2JMW2Y94I51EHUHRHMW2MFIG.pcm
+
+SwiftDriverJobDiscovery normal arm64 Compiling PlusPolicy.swift, Progress.swift, Quiz.swift, ReminderRegistrationCoordinator.swift, RemoteContent.swift, ScanGrounding.swift, ScanImport.swift, ScanParser.swift, SeededRandom.swift, ShadowingCheck.swift, SpeakingCoach.swift, SpeakingPath.swift, SpeakingPractice.swift, SpeakingReflection.swift (in target 'Word7000Core' from project 'Word7000Core')
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreLocation-9N9ZWRPCD2D9A1YGWITD2VGE7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreData-4PB065ANWEVKWANG60X25PP5C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/UserNotifications-L0CB3L7TF7IA2HO4D1XU8ZPL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/AppIntents-BDDB4QNUZ6O7FRAW74JFY40W9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Symbols-E65RJD9O6A0UE7BX18COBA5V0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Metal-25F9V4E48G509Q0YGUV5GW082.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/RelevanceKit-1FK1GTTGLZCKX1HOEHNL6GNJM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/FileProvider-C64DHYFJBPO5T96ZYEB28VDI6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/OSLog-E3G0CX5OPXT45W4GEPNEAL0IQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Intents-3ET12IGQOMIBIYMC0DUA1XUZ9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/WidgetKit-7NYYWWSPIOH5D7NFXAGC0B5C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreSpotlight-8I5SOYEOFKS18RRTF57U6LAWF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/DataDetection-7SGR73BC943K8856WDX4GYEJN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreVideo-8SL38HZS2AJ6HIG5CW5AN3VUP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Network-BSCHF2WGVYSY5Z97VX3TB44GA.pcm
+
+SwiftDriver\ Compilation Word7000Core normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj
+    builtin-Swift-Compilation -- /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Word7000Core -Onone -enforce-exclusivity\=checked @/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftFileList -DSWIFT_PACKAGE -DDEBUG -DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE -DXcode -plugin-path /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -suppress-warnings -index-store-path /Users/runner/work/_temp/DerivedData/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk/Developer/Library/Frameworks -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/_temp/DerivedData/SDKStatCaches.noindex/iphonesimulator26.2-23C57-dc75598d0054f22ec865fa860f139d72e244bd9a5feaf902f95f61bf06266e52.sdkstatcache -output-file-map /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/_temp/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Session.modulevalidation -package-name word7000core -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_const_extract_protocols.json -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-Swift.h -working-directory /Users/runner/work/word7000-app/word7000-app/ios/Word7000.xcodeproj -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/QuartzCore-BUJNU89BRTDMM1VIHH9VYJ5CT.pcm
+
+Ld /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.o normal (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -r -isysroot /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -O0 -w -L/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -L/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -iframework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -iframework /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk/Developer/Library/Frameworks -filelist /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.LinkFileList -nostdlib -Xlinker -object_path_lto -Xlinker /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.swiftmodule @/Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core-linker-args.resp -o /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.o
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreImage-40OEPFBNGB2IIGVLUW00B4QUW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/SwiftUICore-5VWY28L996J8J8F7EPT0SHPV0.pcm
+
+ExtractAppIntentsMetadata (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.3.7003.10.g7UnGe/Metal.xctoolchain --module-name Word7000Core --sdk-root /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk --xcode-version 17C529 --platform-family iOS --deployment-target 17.0 --bundle-identifier word7000core.Word7000Core --output /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.appintents --target-triple arm64-apple-ios17.0-simulator --binary-file /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.o --dependency-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core_dependency_info.dat --stringsdata-file /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftFileList --metadata-file-list /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.DependencyMetadataFileList --static-metadata-file-list /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Word7000Core.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000Core.build/Debug-iphonesimulator/Word7000Core.build/Objects-normal/arm64/Word7000Core.SwiftConstValuesFileList --force --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-11-05 03:01:49.457 appintentsmetadataprocessor[9291:31631] Starting appintentsmetadataprocessor export
+2026-11-05 03:01:49.611 appintentsmetadataprocessor[9291:31631] Extracted no relevant App Intents symbols, skipping writing output
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/UIKit-5FLXP3N5XZ07UD5HIEJBNMSQS.pcm
+
+RegisterExecutionPolicyException /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.o (in target 'Word7000Core' from project 'Word7000Core')
+    cd /Users/runner/work/word7000-app/word7000-app/ios/Packages/Word7000Core
+    builtin-RegisterExecutionPolicyException /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core.o
+
+Copy /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex/Word7000Core_Word7000Core.bundle /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Core_Word7000Core.bundle /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex
+
+Ld /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex/__preview.dylib normal (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -dynamiclib -isysroot /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk -O0 -L/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -F/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/PackageFrameworks -F/Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator -install_name @rpath/Word7000Widgets.debug.dylib -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000Widgets.build/Objects-normal/arm64/Word7000Widgets_dependency_info.dat -o /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex/__preview.dylib
+
+ProcessInfoPlistFile /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex/Info.plist /Users/runner/work/word7000-app/word7000-app/ios/Word7000Widgets-Info.plist (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    builtin-infoPlistUtility /Users/runner/work/word7000-app/word7000-app/ios/Word7000Widgets-Info.plist -producttype com.apple.product-type.app-extension -expandbuildsettings -format binary -platform iphonesimulator -scanforprivacyfile /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex/Word7000Core_Word7000Core.bundle -o /Users/runner/work/_temp/DerivedData/Build/Products/Debug-iphonesimulator/Word7000Widgets.appex/Info.plist
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/SwiftUI-77N1THF0H9MUEXUH04HZ3UGV2.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Word7000Widgets (in target 'Word7000Widgets' from project 'Word7000')
+
+EmitSwiftModule normal arm64 (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    
+
+SwiftCompile normal arm64 Compiling\ TodayWidget.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000Widgets/TodayWidget.swift (in target 'Word7000Widgets' from project 'Word7000')
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Word7000Widgets/TodayWidget.swift (in target 'Word7000Widgets' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    

@@ -1,0 +1,80 @@
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/OSLog-5G5OR2RZ74KGULGKEO31CLJL1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Network-DWN2SAWDKYW6WTKWG2ZZPEZK5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/WidgetKit-2ZSR0P5CKJFUY99J25O3DUF4M.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/_LocationEssentials-5177MERD5AUZH29TU1G70TKO1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/AVRouting-AVV9KEU5UP5U7D2V6SM4FAUVM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreVideo-2B2AS2373HB0I5439HQTN3ARY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreLocation-62TO48RF0N9WBIJFX254LWUCW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/AudioToolbox-2MN38NS6JO8FGZMVRU4EP6QQ9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreImage-8G3Q89QN1B48UJQ81DSG7ZYS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Intents-F1MZW7U7CM0GRU7RWNPLMDCWR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/QuartzCore-72H1RZ0ENHPKTUE9WI7TWCDHD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Accelerate-ZMJZ36QGUBITOID4D18I65Q6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/SwiftUICore-3URRJEF1MCO96N52APXRVHD6F.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreMedia-7L8QRUX7LDBGYH9BAZU3OUR0T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/UIKit-3S7J60M7T09IF8LHWF8FVZ33E.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/AVFAudio-A9U00115B5QPYQ4QUVYDA7L1F.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/MediaToolbox-1IYDULEKDW5ESR69KK16SFUG1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/CoreML-DKA18QAJ25T79YX4O8NOVBDT8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/AVFoundation-2VQDWRBXUX3EX78189G03ILN5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Vision-CYT7U8LNHGOD98F9B0VDYYMKH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Photos-1SG9ALPUBZMGG20GTMDP5U4GY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/AuthenticationServices-C70GTR7ZEFIVG4ZK2KQ9HHGHW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/StoreKit-2K3KR490H85DJ61TQA5GXOCZ2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/PhotosUI-D1LCLCJB3L3A8PVFO3ZYR9EB1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/SwiftUI-7BLCLPLYR175S3Y3F3OMSXEYM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/VisionKit-5YTXMMYSJ20F8UT0Q5SQUA81L.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/Speech-47FCKPR52VJ1HWO88EU9FUTU0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/RelevanceKit-7YYJGR0Q7RZ1Z12SSI69GYQAM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/_temp/DerivedData/ModuleCache.noindex/LocalAuthentication-CJI461IF6RBYN9K2KJJDI3CG8.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Word7000 (in target 'Word7000' from project 'Word7000')
+EmitSwiftModule normal arm64 (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000/Plus/PlusModel.swift:352:32: warning: main actor-isolated static property 'productIDs' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode
+        PlusPlan(id: PlusModel.productIDs[1], yearly: true, displayPrice: "NT$790", perMonth: "NT$65.83", monthsSaved: 2),
+                               ^
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000/Plus/PlusModel.swift:17:16: note: static property declared here
+    static let productIDs = ["com.rio.word7000.plus.monthly", "com.rio.word7000.plus.yearly"]
+               ^
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000/Plus/PlusModel.swift:353:32: warning: main actor-isolated static property 'productIDs' can not be referenced from a nonisolated context; this is an error in the Swift 6 language mode
+        PlusPlan(id: PlusModel.productIDs[0], yearly: false, displayPrice: "NT$79", perMonth: nil, monthsSaved: 0),
+                               ^
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000/Plus/PlusModel.swift:17:16: note: static property declared here
+    static let productIDs = ["com.rio.word7000.plus.monthly", "com.rio.word7000.plus.yearly"]
+               ^
+
+SwiftCompile normal arm64 Compiling\ BankManagementView.swift,\ CatGuide.swift,\ CoachStyles.swift,\ GuideChecklist.swift,\ IntelligenceSettingsView.swift,\ MeView.swift,\ PracticeAnswerEditor.swift,\ PracticeSettings.swift,\ QuizSessionView.swift,\ RootView.swift,\ ShadowStepView.swift,\ Shared.swift,\ SpeakingAnswerPanel.swift,\ SpeakingPathViews.swift,\ SpeakingSessionView.swift,\ SpeechSettingsView.swift,\ SpellingSessionView.swift,\ StudySessionView.swift,\ TodayView.swift,\ WelcomeView.swift,\ WordNoteView.swift,\ WordsView.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/BankManagementView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/CatGuide.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/CoachStyles.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/GuideChecklist.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/IntelligenceSettingsView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/MeView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/PracticeAnswerEditor.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/PracticeSettings.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/QuizSessionView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/RootView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/ShadowStepView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/Shared.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/SpeakingAnswerPanel.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/SpeakingPathViews.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/SpeakingSessionView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/SpeechSettingsView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/SpellingSessionView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/StudySessionView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/TodayView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/WelcomeView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/WordNoteView.swift /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/WordsView.swift /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/Word7000.build/Debug-iphonesimulator/Word7000.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Word7000' from project 'Word7000')
+SwiftCompile normal arm64 /Users/runner/work/word7000-app/word7000-app/ios/Word7000/Views/BankManagementView.swift (in target 'Word7000' from project 'Word7000')
+    cd /Users/runner/work/word7000-app/word7000-app/ios
+    

@@ -68,7 +68,7 @@ else {
   if (age.error) bad(`年齡分級：讀不到（${age.error}）`);
   else {
     const unanswered = Object.entries(age.data?.attributes ?? {}).filter(([, v]) => v === null).map(([k]) => k);
-    unanswered.length ? bad(`年齡分級問卷還有 ${unanswered.length} 題沒答`) : ok('年齡分級問卷已填完');
+    unanswered.length ? bad(`年齡分級問卷還有 ${unanswered.length} 題沒答：${unanswered.join('、')}`) : ok('年齡分級問卷已填完');
   }
 }
 const rights = app.attributes.contentRightsDeclaration;
@@ -81,9 +81,14 @@ schedule.error ? bad(`App 價格還沒設定（${schedule.error}）`) : ok(`App 
 const availability = await tryApi(`/v1/apps/${app.id}/appAvailabilityV2`);
 if (availability.error) bad(`供應地區還沒設定（${availability.error}）`);
 else {
-  const territories = await tryApi(`/v2/appAvailabilities/${availability.data.id}/territoryAvailabilities?limit=200&filter[available]=true`);
-  const count = territories.data?.filter((t) => t.attributes.available).length;
-  count ? ok(`在 ${count}${territories.links?.next ? '+' : ''} 個地區上架`) : bad('沒有任何上架地區');
+  const territories = await tryApi(`/v2/appAvailabilities/${availability.data.id}/territoryAvailabilities?limit=200`);
+  if (territories.error) bad(`讀不到供應地區（${territories.error}）`);
+  else {
+    const all = territories.data ?? [];
+    const on = all.filter((t) => t.attributes.available);
+    const states = [...new Set(all.map((t) => t.attributes.contentStatuses?.join('/')).filter(Boolean))];
+    on.length ? ok(`在 ${on.length}${territories.links?.next ? '+' : ''} 個地區供應${states.length ? `（狀態：${states.join('、')}）` : ''}`) : bad(`沒有任何供應地區（讀到 ${all.length} 筆）`);
+  }
 }
 
 // The version being prepared, its build, store text, screenshots and review details.
